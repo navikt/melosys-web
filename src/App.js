@@ -1,23 +1,43 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
-import SokBruker from './sok-bruker';
+//import { Container, Row, Column } from 'nav-frontend-grid';
+import Header from './components/Header';
+import Main from './Main';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loaded: false,
+      saksbehandler: {"brukernavn": "bareare","navn": "King Arthur"}
+    }
+  }
+  componentDidMount() {
+    //let self = this;
+    let API_MELOSYS_URL = 'http://localhost:3002/api/';
+
+    fetch(API_MELOSYS_URL+'saksbehandler')
+      .then(response => response.json())
+      .then(result => this.setState({saksbehandler: result}))
+      //.then(data => window.console.log('"saksbehandler:'+JSON.stringify(self.state.saksbehandler)))
+      .catch(error => {
+        // eslint-disable-next-line
+        console.log(`request failed ${error}`);
+      });
+  }
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-                <SokBruker />
-      </div>
+      <RootApp>
+        <Header saksbehandlerName={this.state.saksbehandler.navn}/>
+        <Main/>
+      </RootApp>
     );
   }
 }
+
+
+const RootApp = (props) => (
+  <div className="App" {...props}/>)
+
 
 export default App;
