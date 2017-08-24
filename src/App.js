@@ -9,17 +9,14 @@ class App extends Component {
     super(props);
     this.state = {
       loaded: false,
-      saksbehandler: {"brukernavn": "bareare","navn": "King Arthur"}
+      saksbehandler: {}
     }
   }
   componentDidMount() {
-    //let self = this;
     let API_MELOSYS_URL = 'http://localhost:3002/api/';
-
     fetch(API_MELOSYS_URL+'saksbehandler')
       .then(response => response.json())
       .then(result => this.setState({saksbehandler: result}))
-      //.then(data => window.console.log('"saksbehandler:'+JSON.stringify(self.state.saksbehandler)))
       .catch(error => {
         // eslint-disable-next-line
         console.log(`request failed ${error}`);
