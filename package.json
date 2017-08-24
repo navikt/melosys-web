@@ -16,6 +16,7 @@
     "nav-frontend-skjema-style": "^0.3.1",
     "nav-frontend-typografi": "^1.0.4",
     "nav-frontend-typografi-style": "^1.0.1",
+    "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.1.2",

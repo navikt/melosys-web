@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom'
+//import { Route } from 'react-router-dom'
+//import PropTypes from 'prop-types'
+
+
 import { Input } from 'nav-frontend-skjema';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import './sok-arbeidsforhold.css';
 
 class SokArbeidsforhold extends Component {
-    state = {
+
+  state = {
         fnr: ''
     };
     onChange = (event) => {
@@ -12,13 +18,15 @@ class SokArbeidsforhold extends Component {
     };
 
     onSubmit = (event) => {
-        console.log('this.refs.fnr', this.state.fnr);
+        //console.log('this.refs.fnr', this.state.fnr);
         event.preventDefault();
-        window.location = '/melosys/arbeidsforhold/'+this.state.fnr;
+        this.props.history.push('/arbeidsforhold/'+this.state.fnr);
+        // window.location = '/melosys/arbeidsforhold/'+this.state.fnr;
     };
 
     render() {
-        return (
+      console.log('this.props', this.props);
+      return (
           <ArbeidsforholdContainer>
             <h2 className="typo-undertittel"><span>Søk på person</span></h2>
             <form onSubmit={this.onSubmit}>
@@ -32,4 +40,5 @@ class SokArbeidsforhold extends Component {
 const ArbeidsforholdContainer = (props) => (
   <div className="arbeidsforholdContainer" {...props}/>
 )
-export default SokArbeidsforhold;
+export default withRouter(SokArbeidsforhold);
+// export default SokArbeidsforhold;
