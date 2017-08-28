@@ -5,16 +5,17 @@ const ArbeidsforholdRad = ({data}) => {
   const fnr = data.arbeidstaker.ident.ident;
   const orgnr = data.arbeidsgiver.orgnummer;
   const linkTo = `/arbeidsforholdet/${fnr}/${orgnr}`;
+  let permisjonsPeriode = (data.permisjonOgPermittering && data.permisjonOgPermittering.length > 0) ? data.permisjonOgPermittering[0].permisjonsPeriode.permisjonsprosent: '';
   return (
     <tr>
       <td>{data.arbeidsgiver.orgnummer}</td>
       <td>TODO:OrgNavn</td>
-      <td>{data.ansettelsesPeriode.periode.fom && data.ansettelsesPeriode.periode.fom.slice(0, 10)}</td>
-      <td>{data.ansettelsesPeriode.periode.tom && data.ansettelsesPeriode.periode.tom.slice(0, 10)}</td>
+      <td>{data.ansettelsesPeriode && data.ansettelsesPeriode.periode.fom}</td>
+      <td>{data.ansettelsesPeriode && data.ansettelsesPeriode.periode.tom}</td>
       <td>{data.arbeidsavtale[0].stillingsprosent}%</td>
       <td>{data.arbeidsforholdstype}</td>
       <td>{data.arbeidsavtale[0].yrke.termnavn}</td>
-      <td>{data.permisjonOgPermittering[0].permisjonsPeriode.permisjonsprosent}</td>
+      <td>{permisjonsPeriode}</td>
       <td>Bekreftet</td>
       <td><Link to={linkTo}>Vis</Link></td>
     </tr>
