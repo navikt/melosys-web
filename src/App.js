@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-//import { Container, Row, Column } from 'nav-frontend-grid';
+
 import Header from './components/Header';
 import Main from './Main';
 
@@ -34,7 +34,7 @@ class App extends Component {
 
 
 const RootApp = (props) => (
-  <div className="App " {...props}/>)
-
+  <div className="App" {...props} />
+)
 
 export default App;
