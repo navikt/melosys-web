@@ -34,7 +34,7 @@ class App extends Component {
 
 
 const RootApp = (props) => (
-  <div className="App" {...props}/>)
+  <div className="App " {...props}/>)
 
 
 export default App;

@@ -1,5 +1,21 @@
 import React, { Component } from 'react';
-import ArbeidsforholdTabell from './components/arbeidsforhold-tabell';
+/*import ArbeidsforholdTabell from './components/arbeidsforhold-tabell';*/
+import {Panel} from "nav-frontend-paneler";
+import Lenkepanel from 'nav-frontend-lenkepanel';
+import './arbeidsforhold.css';
+
+const ArbeidsforholdRad = ({data}) => {
+  const fnr = data.arbeidstaker.ident.ident;
+  const orgnr = data.arbeidsgiver.orgnummer;
+  const linkTo = `/arbeidsforholdet/${fnr}/${orgnr}`;
+  //let permisjonsPeriode = (data.permisjonOgPermittering && data.permisjonOgPermittering.length > 0) ? data.permisjonOgPermittering[0].permisjonsPeriode.permisjonsprosent: '';
+  const arbeidsavtaler = `, arbeidsavtaler(${data.arbeidsavtale.length})`
+  return (
+    <Lenkepanel tittelProps="innholdstittel" href={linkTo}>
+      {orgnr}, {data.arbeidsforholdstype}{arbeidsavtaler}
+    </Lenkepanel>
+  );
+};
 
 class Arbeidsforhold extends Component {
   constructor(props) {
@@ -25,12 +41,16 @@ class Arbeidsforhold extends Component {
     });
   }
   render() {
+    const rows = this.state.arbeidsforhold.map((item) => <ArbeidsforholdRad key={item.arbeidsforholdID} data={item}/>);
     return (
-      <div>
-        <h1>Arbeidsforhold</h1>
-        <p>{this.props.match && this.props.match.params.fnr}</p>
-        <ArbeidsforholdTabell arbeidsforhold={this.state.arbeidsforhold}/>
-      </div>
+      <section className="arbeidsforhold">
+        <Panel>
+          <h1>Arbeidsforhold</h1>
+          <p>{this.props.match && this.props.match.params.fnr}</p>
+          {rows}
+          {/*<ArbeidsforholdTabell arbeidsforhold={this.state.arbeidsforhold}/>*/}
+        </Panel>
+      </section>
     );
   }
 }
