@@ -1,5 +1,4 @@
 import React from 'react';
-// import {Component, Row, Column} from 'nav-frontend-grid';
 
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import './arbeidsforholdDetalj.css';
@@ -34,18 +33,7 @@ const ArbeidsAvtaleRad  = ({
    data,
    antall
 }) => {
-  let endringsdatoStillingsprosent = data.endringsdatoStillingsprosent ? data.endringsdatoStillingsprosent.slice(0,10): '';
-  let sisteLoennsendringsdato = data.sisteLoennsendringsdato ? data.sisteLoennsendringsdato.slice(0,10): '';
-  const tittel = `Arbeidsforhold (${antall})`
-  /*return (
-    <tr>
-      <td>{data.stillingsprosent}%</td>
-      <td>{data.avtaltArbeidstimerPerUke}</td>
-      <td>{data.beregnetAntallTimerPrUke}</td>
-      <td>{sisteLoennsendringsdato}</td>
-      <td>{""+endringsdatoStillingsprosent}</td>
-    </tr>
-  );*/
+  const tittel = `Arbeidsforhold (${antall})`;
   return (
     <Ekspanderbartpanel tittel={tittel}>
       <Normaltekst>
@@ -64,39 +52,6 @@ const Oversikt = ({arbeidsforhold}) => {
     [rows]
   );
 }
-/*const YrkeRad = ({data}) => {
-  return (
-    <tr>
-      <td>{data.yrke.kodenavn}</td>
-      <td>{data.yrke.termnavn}</td>
-      <td width="2rem">&nbsp;&nbsp;</td>
-      <td>{data.avloenningstype}</td>
-      <td>{data.arbeidstidsordning}</td>
-    </tr>
-  );
-}
-const Yrke = ({arbeidsforhold}) => {
-  if (!arbeidsforhold || !arbeidsforhold.arbeidsforholdID) {
-    return null;
-  }
-  const rows = arbeidsforhold.arbeidsavtale.map((item) => <YrkeRad key={uuid.v1()} data={item}/>);
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th>Yrke</th>
-          <th>Yrke</th>
-          <td width="2rem">&nbsp;&nbsp;</td>
-          <th>Lønnstype</th>
-          <th>Arb. tidsordning</th>
-        </tr>
-      </thead>
-      <tbody>
-      {rows}
-      </tbody>
-    </table>
-  );
-}*/
 
 const PPRow = ({data}) => {
   return (
@@ -120,8 +75,6 @@ const PermisjonOgPermittering = ({arbeidsforhold}) => {
   const tittel = `Permisjon/Permittering (${permisjonOgPermittering.length})`;
   return (
     <Ekspanderbartpanel tittel={tittel}>
-      {/*<Normaltekst>
-      </Normaltekst>*/}
       {rows}
     </Ekspanderbartpanel>
   );
@@ -280,15 +233,6 @@ class ArbeidsforholdDetalj extends React.Component {
             <h4>TODO: Søknad</h4>
           </Panel>
         </section>
-        {/*<hr/>
-          <Oversikt arbeidsforhold={this.state.arbeidsforhold}/>
-        <Detaljer arbeidsforhold={this.state.arbeidsforhold}/>
-        <hr/>
-        <Oversikt arbeidsforhold={this.state.arbeidsforhold}/>
-        <hr/>
-        <Yrke arbeidsforhold={this.state.arbeidsforhold}/>
-        <hr/>
-        <PermisjonOgPermittering arbeidsforhold={this.state.arbeidsforhold}/>*/}
       </JustChildren>
     )
   }
