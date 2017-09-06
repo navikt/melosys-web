@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-/*import ArbeidsforholdTabell from './components/arbeidsforhold-tabell';*/
 import {Panel} from "nav-frontend-paneler";
 import Lenkepanel from 'nav-frontend-lenkepanel';
 import './arbeidsforhold.css';
+import * as Api from './ducks/api';
+import {CONTEXT_PATH} from './constants';
 
 const ArbeidsforholdRad = ({data}) => {
   const fnr = data.arbeidstaker.ident.ident;
   const orgnr = data.arbeidsgiver.orgnummer;
-  const linkTo = `/arbeidsforholdet/${fnr}/${orgnr}`;
-  //let permisjonsPeriode = (data.permisjonOgPermittering && data.permisjonOgPermittering.length > 0) ? data.permisjonOgPermittering[0].permisjonsPeriode.permisjonsprosent: '';
+  const linkTo = `${CONTEXT_PATH}/arbeidsforholdet/${fnr}/${orgnr}`;
   const arbeidsavtaler = `, arbeidsavtaler(${data.arbeidsavtale.length})`
   return (
     <Lenkepanel tittelProps="innholdstittel" href={linkTo}>
@@ -26,11 +26,10 @@ class Arbeidsforhold extends Component {
     }
   }
   componentDidMount() {
-    let API_MELOSYS_URL = 'http://localhost:3002/api/';
 
     let fnr = this.props.match.params.fnr;
-    fetch(API_MELOSYS_URL+'arbeidsforhold/'+fnr)
-    .then(response => response.json())
+    debugger;
+    Api.hentArbeidsforhold(fnr)
     .then(result => this.setState({
       arbeidsforhold: result.arbeidsforhold,
       loaded: true
