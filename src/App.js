@@ -3,6 +3,7 @@ import './App.css';
 
 import Header from './components/Header';
 import Main from './Main';
+import * as Api from './ducks/api';
 
 class App extends Component {
   constructor(props) {
@@ -13,9 +14,7 @@ class App extends Component {
     }
   }
   componentDidMount() {
-    let API_MELOSYS_URL = 'http://localhost:3002/api/';
-    fetch(API_MELOSYS_URL+'saksbehandler')
-      .then(response => response.json())
+    Api.hentSaksbehandler()
       .then(result => this.setState({saksbehandler: result}))
       .catch(error => {
         // eslint-disable-next-line

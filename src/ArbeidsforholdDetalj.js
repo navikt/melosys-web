@@ -5,7 +5,8 @@ import './arbeidsforholdDetalj.css';
 import JustChildren from './just-children';
 import {Panel} from 'nav-frontend-paneler';
 import { Normaltekst } from 'nav-frontend-typografi';
-import moment from 'moment-es6';
+import moment from 'moment';
+import * as Api from './ducks/api';
 
 var uuid = require('react-native-uuid');
 
@@ -136,13 +137,10 @@ class ArbeidsforholdDetalj extends React.Component {
     }
   }
   componentDidMount() {
-    let API_MELOSYS_URL = 'http://localhost:3002/api/';
     let {fnr, orgnr} = this.props.match.params;
 
 
-    const URI_ORGANISASJON = `${API_MELOSYS_URL}organisasjon/${orgnr}`;
-    fetch(URI_ORGANISASJON)
-      .then(response => response.json())
+    Api.hentOrganisasjon(orgnr)
       .then(result => this.setState({
         organisasjon: result
       }))
@@ -151,9 +149,7 @@ class ArbeidsforholdDetalj extends React.Component {
         console.log(`request failed ${error}`);
       });
 
-    const URI_ARBEIDSFORHOLD = `${API_MELOSYS_URL}arbeidsforhold/${fnr}/${orgnr}`;
-    fetch(URI_ARBEIDSFORHOLD)
-      .then(response => response.json())
+    Api.hentArbeidsforholdDetalj(fnr,orgnr)
       .then(result => this.setState({
         arbeidsforhold: result,
         loaded: true
@@ -163,9 +159,7 @@ class ArbeidsforholdDetalj extends React.Component {
         console.log(`request failed ${error}`);
       });
 
-    let URI_PERSON = `${API_MELOSYS_URL}v3/person/${fnr}`;
-    fetch(URI_PERSON)
-      .then(response => response.json())
+    Api.hentPerson(fnr)
       .then(result => this.setState({
         person: result
       }))
