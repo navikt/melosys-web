@@ -6,7 +6,11 @@ import JustChildren from './just-children';
 import {Panel} from 'nav-frontend-paneler';
 import { Normaltekst } from 'nav-frontend-typografi';
 import moment from 'moment';
-import * as Api from './ducks/api';
+
+import { connect } from 'react-redux';
+import { hentPerson } from './ducks/person';
+import { hentOrganisasjon } from './ducks/organisasjon';
+import { hentArbeidsforholdDetalj } from './ducks/arbeidsforholdDetalj';
 
 var uuid = require('react-native-uuid');
 
@@ -127,64 +131,32 @@ const Person = ({
 
 class ArbeidsforholdDetalj extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loaded: false,
-      arbeidsforhold: {},
-      person: {},
-      organisasjon: {}
-    }
-  }
   componentDidMount() {
     let {fnr, orgnr} = this.props.match.params;
-
-
-    Api.hentOrganisasjon(orgnr)
-      .then(result => this.setState({
-        organisasjon: result
-      }))
-      .catch(error => {
-        // eslint-disable-next-line
-        console.log(`request failed ${error}`);
-      });
-
-    Api.hentArbeidsforholdDetalj(fnr,orgnr)
-      .then(result => this.setState({
-        arbeidsforhold: result,
-        loaded: true
-      }))
-      .catch(error => {
-        // eslint-disable-next-line
-        console.log(`request failed ${error}`);
-      });
-
-    Api.hentPerson(fnr)
-      .then(result => this.setState({
-        person: result
-      }))
-      .catch(error => {
-        // eslint-disable-next-line
-        console.log(`request failed ${error}`);
-      });
+    this.props.hentPerson(fnr);
+    this.props.hentOrganisasjon(orgnr);
+    this.props.hentArbeidsforholdDetalj(fnr, orgnr);
   }
+
   render() {
+    const { fnr } = this.props.match.params;
+    const { person, organisasjon, arbeidsforhold } = this.props;
 
     return (
       <JustChildren>
         <section className="arbeidsforhold-arbeidstaker">
           <Panel>
-            <Person person={this.state.person} fnr={this.props.match.params.fnr}/>
+            <Person person={person} fnr={fnr}/>
           </Panel>
           <br />
           <Panel>
             <Ekspanderbartpanel tittel="Arbeidstaker/Næringsdrivende">
               <Normaltekst>Arbeidsforhold</Normaltekst>
-              <Detaljer arbeidsforhold={this.state.arbeidsforhold}/>
-              <Oversikt arbeidsforhold={this.state.arbeidsforhold}/>
+              <Detaljer arbeidsforhold={arbeidsforhold}/>
+              <Oversikt arbeidsforhold={arbeidsforhold}/>
             </Ekspanderbartpanel>
             <br/>
-            <PermisjonOgPermittering arbeidsforhold={this.state.arbeidsforhold}/>
+            <PermisjonOgPermittering arbeidsforhold={arbeidsforhold}/>
           </Panel>
           <Panel>
             <Ekspanderbartpanel tittel="Utsendings periode">
@@ -198,8 +170,8 @@ class ArbeidsforholdDetalj extends React.Component {
         <section className="arbeidsforhold-virksomhet">
           <Panel>
             <h4>Virksomhet i Norge</h4>
-            <OrganisasjonTittel organisasjon={this.state.organisasjon}/>
-            <OrganisasjonDetalj organisasjon={this.state.organisasjon}/>
+            <OrganisasjonTittel organisasjon={organisasjon}/>
+            <OrganisasjonDetalj organisasjon={organisasjon}/>
           </Panel>
           <br />
           <Panel>
@@ -232,4 +204,18 @@ class ArbeidsforholdDetalj extends React.Component {
   }
 }
 
-export default ArbeidsforholdDetalj;
+const mapStateToProps = (state) => {
+  return ({
+    person: state.person.data,
+    organisasjon: state.organisasjon.data,
+    arbeidsforhold: state.arbeidsforholdDetalj.data
+  });
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  hentPerson: (fnr) => dispatch(hentPerson(fnr)),
+  hentOrganisasjon: (orgnr) => dispatch(hentOrganisasjon(orgnr)),
+  hentArbeidsforholdDetalj: (fnr, orgnr) => dispatch(hentArbeidsforholdDetalj(fnr, orgnr))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);
