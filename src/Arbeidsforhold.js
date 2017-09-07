@@ -7,17 +7,14 @@ import { connect } from 'react-redux';
 import { hentPerson } from './ducks/person';
 import { hentArbeidsforhold } from './ducks/arbeidsforhold';
 
-const ArbeidsforholdRad = ({
-   data, person
-}) => {
-  const sammensattNavn = person ? person.personnavn.sammensattNavn: '';
+const ArbeidsforholdRad = ({data}) => {
   const fnr = data.arbeidstaker.ident.ident;
   const orgnr = data.arbeidsgiver.orgnummer;
   const linkTo = `${CONTEXT_PATH}/arbeidsforholdet/${fnr}/${orgnr}`;
   const arbeidsavtaler = `, arbeidsavtaler(${data.arbeidsavtale.length})`
   return (
-    <Lenkepanel tittelProps="innholdstittel" href={linkTo}>
-      {sammensattNavn}, {orgnr}, {data.arbeidsforholdstype}{arbeidsavtaler}
+    <Lenkepanel tittelProps="undertittel" href={linkTo}>
+      OrgNr:{orgnr}, {data.arbeidsforholdstype}{arbeidsavtaler}
     </Lenkepanel>
   );
 };
@@ -31,12 +28,22 @@ class Arbeidsforhold extends Component {
   }
   render() {
     const { person, arbeidsforhold } = this.props;
-    const rows = arbeidsforhold.map((item) => <ArbeidsforholdRad key={item.arbeidsforholdID} data={item} person={person}/>);
+    const { personnavn, bostedsadresse } = person;
+    if (!arbeidsforhold.length)
+      return null;
+    const rows = arbeidsforhold.map((item) =>
+          <ArbeidsforholdRad key={item.arbeidsforholdID} data={item}/>
+    );
     return (
       <section className="arbeidsforhold">
+        <h1>Arbeidsforhold</h1>
+        <p>Fødselsnr: {this.props.match && this.props.match.params.fnr}</p>
         <Panel>
-          <h1>Arbeidsforhold</h1>
-          <p>{this.props.match && this.props.match.params.fnr}</p>
+          <p>{personnavn && personnavn.sammensattNavn}</p>
+          {bostedsadresse && bostedsadressen(bostedsadresse)}
+        </Panel>
+        <br/>
+        <Panel>
           {rows}
         </Panel>
       </section>
@@ -44,6 +51,19 @@ class Arbeidsforhold extends Component {
   }
 }
 
+const bostedsadressen = (bosted) => {
+  if (!bosted)
+    return null;
+
+  const sa = bosted.strukturertAdresse;
+  let sammensattAdresse = '' + sa.gatenavn;
+  if (sa.husnummer) sammensattAdresse += ' ' + sa.husnummer;
+  if (sa.husbokstav) sammensattAdresse += ' ' + sa.husbokstav;
+  return (
+    <p>{sammensattAdresse}<br/>{sa.poststed} BERGEN</p>
+  )
+
+}
 
 const mapStateToProps = (state) => {
   return ({
