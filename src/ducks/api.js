@@ -10,6 +10,7 @@ function erDev() {
 //const API_MELOSYS_URL = erDev() ? `${MOCK_API_SERVER}${API_BASE_URL}` : '/api';
 const API_MELOSYS_URL = erDev() ? 'http://localhost:3002/api/' : '/api';
 export function hentSaksbehandler() {
+  debugger;
   const URI_SAKSBEHANDLER = `${API_MELOSYS_URL}saksbehandler`;
   return fetchToJson(URI_SAKSBEHANDLER);
 }
