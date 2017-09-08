@@ -6,6 +6,7 @@ import {CONTEXT_PATH} from './constants';
 import { connect } from 'react-redux';
 import { hentPerson } from './ducks/person';
 import { hentArbeidsforhold } from './ducks/arbeidsforhold';
+import { Systemtittel } from "nav-frontend-typografi";
 
 const ArbeidsforholdRad = ({data}) => {
   const fnr = data.arbeidstaker.ident.ident;
@@ -36,14 +37,16 @@ class Arbeidsforhold extends Component {
     );
     return (
       <section className="arbeidsforhold">
-        <h1>Arbeidsforhold</h1>
-        <p>Fødselsnr: {this.props.match && this.props.match.params.fnr}</p>
         <Panel>
+          <Systemtittel>
+            Fødselsnr: {this.props.match && this.props.match.params.fnr}
+          </Systemtittel>
           <p>{personnavn && personnavn.sammensattNavn}</p>
           {bostedsadresse && bostedsadressen(bostedsadresse)}
         </Panel>
         <br/>
         <Panel>
+          <Systemtittel className="blokk-xs">Arbeidsforhold</Systemtittel>
           {rows}
         </Panel>
       </section>
