@@ -74,7 +74,7 @@ const PermisjonOgPermittering = ({arbeidsforhold}) => {
   if (!arbeidsforhold || !arbeidsforhold.permisjonOgPermittering) {
     return null;
   }
-  debugger;
+
   let {permisjonOgPermittering} = arbeidsforhold;
   const rows = permisjonOgPermittering.map((item) => <PPRow key={uuid.v1()} data={item}/>);
   const tittel = `Permisjon/Permittering (${permisjonOgPermittering.length})`;
