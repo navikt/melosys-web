@@ -5,7 +5,12 @@ import './arbeidsforholdDetalj.css';
 import JustChildren from './just-children';
 import {Panel} from 'nav-frontend-paneler';
 import { Normaltekst } from 'nav-frontend-typografi';
-import moment from 'moment-es6';
+import moment from 'moment';
+
+import { connect } from 'react-redux';
+import { hentPerson } from './ducks/person';
+import { hentOrganisasjon } from './ducks/organisasjon';
+import { hentArbeidsforholdDetalj } from './ducks/arbeidsforholdDetalj';
 
 var uuid = require('react-native-uuid');
 
@@ -69,7 +74,7 @@ const PermisjonOgPermittering = ({arbeidsforhold}) => {
   if (!arbeidsforhold || !arbeidsforhold.permisjonOgPermittering) {
     return null;
   }
-  debugger;
+
   let {permisjonOgPermittering} = arbeidsforhold;
   const rows = permisjonOgPermittering.map((item) => <PPRow key={uuid.v1()} data={item}/>);
   const tittel = `Permisjon/Permittering (${permisjonOgPermittering.length})`;
@@ -126,71 +131,32 @@ const Person = ({
 
 class ArbeidsforholdDetalj extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      loaded: false,
-      arbeidsforhold: {},
-      person: {},
-      organisasjon: {}
-    }
-  }
   componentDidMount() {
-    let API_MELOSYS_URL = 'http://localhost:3002/api/';
     let {fnr, orgnr} = this.props.match.params;
-
-
-    const URI_ORGANISASJON = `${API_MELOSYS_URL}organisasjon/${orgnr}`;
-    fetch(URI_ORGANISASJON)
-      .then(response => response.json())
-      .then(result => this.setState({
-        organisasjon: result
-      }))
-      .catch(error => {
-        // eslint-disable-next-line
-        console.log(`request failed ${error}`);
-      });
-
-    const URI_ARBEIDSFORHOLD = `${API_MELOSYS_URL}arbeidsforhold/${fnr}/${orgnr}`;
-    fetch(URI_ARBEIDSFORHOLD)
-      .then(response => response.json())
-      .then(result => this.setState({
-        arbeidsforhold: result,
-        loaded: true
-      }))
-      .catch(error => {
-        // eslint-disable-next-line
-        console.log(`request failed ${error}`);
-      });
-
-    let URI_PERSON = `${API_MELOSYS_URL}v3/person/${fnr}`;
-    fetch(URI_PERSON)
-      .then(response => response.json())
-      .then(result => this.setState({
-        person: result
-      }))
-      .catch(error => {
-        // eslint-disable-next-line
-        console.log(`request failed ${error}`);
-      });
+    this.props.hentPerson(fnr);
+    this.props.hentOrganisasjon(orgnr);
+    this.props.hentArbeidsforholdDetalj(fnr, orgnr);
   }
+
   render() {
+    const { fnr } = this.props.match.params;
+    const { person, organisasjon, arbeidsforhold } = this.props;
 
     return (
       <JustChildren>
         <section className="arbeidsforhold-arbeidstaker">
           <Panel>
-            <Person person={this.state.person} fnr={this.props.match.params.fnr}/>
+            <Person person={person} fnr={fnr}/>
           </Panel>
           <br />
           <Panel>
             <Ekspanderbartpanel tittel="Arbeidstaker/Næringsdrivende">
               <Normaltekst>Arbeidsforhold</Normaltekst>
-              <Detaljer arbeidsforhold={this.state.arbeidsforhold}/>
-              <Oversikt arbeidsforhold={this.state.arbeidsforhold}/>
+              <Detaljer arbeidsforhold={arbeidsforhold}/>
+              <Oversikt arbeidsforhold={arbeidsforhold}/>
             </Ekspanderbartpanel>
             <br/>
-            <PermisjonOgPermittering arbeidsforhold={this.state.arbeidsforhold}/>
+            <PermisjonOgPermittering arbeidsforhold={arbeidsforhold}/>
           </Panel>
           <Panel>
             <Ekspanderbartpanel tittel="Utsendings periode">
@@ -204,8 +170,8 @@ class ArbeidsforholdDetalj extends React.Component {
         <section className="arbeidsforhold-virksomhet">
           <Panel>
             <h4>Virksomhet i Norge</h4>
-            <OrganisasjonTittel organisasjon={this.state.organisasjon}/>
-            <OrganisasjonDetalj organisasjon={this.state.organisasjon}/>
+            <OrganisasjonTittel organisasjon={organisasjon}/>
+            <OrganisasjonDetalj organisasjon={organisasjon}/>
           </Panel>
           <br />
           <Panel>
@@ -238,4 +204,18 @@ class ArbeidsforholdDetalj extends React.Component {
   }
 }
 
-export default ArbeidsforholdDetalj;
+const mapStateToProps = (state) => {
+  return ({
+    person: state.person.data,
+    organisasjon: state.organisasjon.data,
+    arbeidsforhold: state.arbeidsforholdDetalj.data
+  });
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  hentPerson: (fnr) => dispatch(hentPerson(fnr)),
+  hentOrganisasjon: (orgnr) => dispatch(hentOrganisasjon(orgnr)),
+  hentArbeidsforholdDetalj: (fnr, orgnr) => dispatch(hentArbeidsforholdDetalj(fnr, orgnr))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);
