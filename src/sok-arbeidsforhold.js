@@ -25,7 +25,6 @@ class SokArbeidsforhold extends Component {
     };
 
     render() {
-      console.log('this.props', this.props);
       return (
           <ArbeidsforholdContainer>
             <h2 className="typo-undertittel"><span>Søk på person</span></h2>
