@@ -31,3 +31,9 @@ export function hentArbeidsforholdDetalj(fnr, orgnr) {
   const URI_ARBEIDSFORHOLD_DETALJ = `${API_MELOSYS_URL}arbeidsforhold/${fnr}/${orgnr}`;
   return fetchToJson(URI_ARBEIDSFORHOLD_DETALJ);
 }
+
+export function hentSaksopplysninger(fnr) {
+  const URI_SAMMENSATT_ARBEIDSFORHOLD = `${API_MELOSYS_URL}saksopplysninger/${fnr}`;
+  return fetchToJson(URI_SAMMENSATT_ARBEIDSFORHOLD);
+
+}

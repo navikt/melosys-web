@@ -2,9 +2,9 @@ import * as Api from './api';
 import { STATUS, doThenDispatch } from './utils';
 
 // Actions
-const OK = 'arbeidsforholdDetalj/OK';
-const FEILET = 'arbeidsforholdDetalj/FEILET';
-const PENDING = 'arbeidsforholdDetalj/PENDING';
+const OK = 'saksopplysninger/OK';
+const FEILET = 'saksopplysninger/FEILET';
+const PENDING = 'saksopplysninger/PENDING';
 
 const initialState = {
   data: {},
@@ -26,8 +26,8 @@ export default function reducer(state = initialState, action) {
 }
 
 // Action Creators
-export function hentArbeidsforholdDetalj(fnr, orgnr) {
-  return doThenDispatch(() => Api.hentArbeidsforholdDetalj(fnr, orgnr), {
+export function hentSaksopplysninger(fnr) {
+  return doThenDispatch(() => Api.hentSaksopplysninger(fnr), {
     OK,
     FEILET,
     PENDING
