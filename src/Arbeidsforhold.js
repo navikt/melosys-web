@@ -1,53 +1,83 @@
 import React, { Component } from 'react';
-import {Panel} from 'nav-frontend-paneler';
-import Lenkepanel from 'nav-frontend-lenkepanel';
-import './arbeidsforhold.css';
-import {CONTEXT_PATH} from './constants';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { hentPerson } from './ducks/person';
-import { hentArbeidsforhold } from './ducks/arbeidsforhold';
+import { hentSaksopplysninger } from './ducks/saksopplysninger';
+
+import {Panel} from 'nav-frontend-paneler';
+import './arbeidsforhold.css';
 import { Systemtittel } from "nav-frontend-typografi";
 
-const ArbeidsforholdRad = ({data}) => {
-  const fnr = data.arbeidstaker.ident.ident;
+const ArbeidsforholdListe = ({data}) => {
+  const fnr = data.arbeidstaker;
   const orgnr = data.arbeidsgiver.orgnummer;
-  const linkTo = `${CONTEXT_PATH}/arbeidsforholdet/${fnr}/${orgnr}`;
-  const arbeidsavtaler = `, arbeidsavtaler(${data.arbeidsavtale.length})`
+  const arbeidsforholdIDnav = data.arbeidsforholdIDnav;
+  const linkTo = `/arbeidsforholdet/${fnr}/${orgnr}/${arbeidsforholdIDnav}`;
+
   return (
-    <Lenkepanel tittelProps="undertittel" href={linkTo}>
-      OrgNr:{orgnr}, {data.arbeidsforholdstype}{arbeidsavtaler}
-    </Lenkepanel>
+    <tr>
+      <td>{data.arbeidsgiver.orgnummer}</td>
+      <td>{data.arbeidsgiver.navn}</td>
+      <td>{data.ansettelsesPeriode.fom}</td>
+      <td>{data.ansettelsesPeriode.tom}</td>
+      <td><Link to={linkTo} alt="Arbeidsforhold detalj">Lenke</Link></td>
+    </tr>
   );
-};
+}
 
 class Arbeidsforhold extends Component {
   componentDidMount() {
 
     let fnr = this.props.match.params.fnr;
-    this.props.hentPerson(fnr);
-    this.props.hentArbeidsforhold(fnr);
+    this.props.hentSaksopplysninger(fnr);
   }
   render() {
-    const { person, arbeidsforhold } = this.props;
-    const { personnavn, bostedsadresse } = person;
-    if (!arbeidsforhold.length)
+    const { fnr } = this.props.match.params;
+    const { saksopplysninger } = this.props;
+
+    if (!saksopplysninger.arbeidsforhold) {
       return null;
-    const rows = arbeidsforhold.map((item) =>
-          <ArbeidsforholdRad key={item.arbeidsforholdID} data={item}/>
-    );
+    }
+    let person = (saksopplysninger && saksopplysninger.person) ? saksopplysninger.person : {};
+    const { sammensattNavn, bostedsadresse } = person;
+
+    const liste = (saksopplysninger && saksopplysninger.arbeidsforhold) ? saksopplysninger.arbeidsforhold: [];
+
+    const tabell = (liste) => {
+      if (!liste || !liste.length)
+        return null;
+      const sammensattListe = liste.map((item) =>
+        <ArbeidsforholdListe key={item.arbeidsforholdID} data={item}/>
+      );
+     return (
+       <table>
+         <thead>
+          <tr>
+            <th>Orgnr</th>
+            <th>Navn</th>
+            <th>FOM</th>
+            <th>TOM</th>
+            <th>LENKE</th>
+          </tr>
+         </thead>
+         <tbody>
+         {sammensattListe}
+         </tbody>
+       </table>
+     );
+    };
     return (
       <section className="arbeidsforhold">
         <Panel>
           <Systemtittel>
-            Fødselsnr: {this.props.match && this.props.match.params.fnr}
+            Fødselsnr: {fnr}
           </Systemtittel>
-          <p>{personnavn && personnavn.sammensattNavn}</p>
-          {bostedsadresse && bostedsadressen(bostedsadresse)}
+          <p>{sammensattNavn}</p>
+          {bostedsadressen(bostedsadresse)}
         </Panel>
         <br/>
         <Panel>
           <Systemtittel className="blokk-xs">Arbeidsforhold</Systemtittel>
-          {rows}
+          {tabell(liste)}
         </Panel>
       </section>
     );
@@ -58,25 +88,22 @@ const bostedsadressen = (bosted) => {
   if (!bosted)
     return null;
 
-  const sa = bosted.strukturertAdresse;
-  let sammensattAdresse = '' + sa.gatenavn;
-  if (sa.husnummer) sammensattAdresse += ' ' + sa.husnummer;
-  if (sa.husbokstav) sammensattAdresse += ' ' + sa.husbokstav;
+  let sammensattAdresse = '' + bosted.gateadresse.gatenavn;
+  if (bosted.husnummer) sammensattAdresse += ' ' + bosted.gateadresse.husnummer;
+  if (bosted.husbokstav) sammensattAdresse += bosted.gateadresse.husbokstav;
   return (
-    <p>{sammensattAdresse}<br/>{sa.poststed} BERGEN</p>
+    <p>{sammensattAdresse}<br/>{bosted.postnr}&nbsp;{bosted.poststed}</p>
   )
 
 }
 
 const mapStateToProps = (state) => {
   return ({
-    person: state.person.data,
-    arbeidsforhold: state.arbeidsforhold.data
+    saksopplysninger: state.saksopplysninger.data
   })
 };
 const mapDispatchToProps = (dispatch) => ({
-  hentPerson: (fnr) => dispatch(hentPerson(fnr)),
-  hentArbeidsforhold: (fnr) => dispatch(hentArbeidsforhold(fnr))
+  hentSaksopplysninger: (fnr) => dispatch(hentSaksopplysninger(fnr))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Arbeidsforhold);

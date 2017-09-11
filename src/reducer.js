@@ -6,6 +6,7 @@ import personReducer from './ducks/person';
 import organisasjonReducer from './ducks/organisasjon';
 import arbeidsforholdReducer from './ducks/arbeidsforhold';
 import arbeidsforholdDetaljReducer from './ducks/arbeidsforholdDetalj';
+import saksopplysningerReducer from './ducks/saksopplysninger';
 /*
 export const RESET_STORE = { type: 'store/reset' };
 
@@ -32,5 +33,6 @@ export default combineReducers({
   person: personReducer,
   organisasjon: organisasjonReducer,
   arbeidsforhold: arbeidsforholdReducer,
-  arbeidsforholdDetalj: arbeidsforholdDetaljReducer
+  arbeidsforholdDetalj: arbeidsforholdDetaljReducer,
+  saksopplysninger: saksopplysningerReducer
 });
