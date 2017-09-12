@@ -6,12 +6,19 @@ import { hentSaksopplysninger } from './ducks/saksopplysninger';
 import {Panel} from 'nav-frontend-paneler';
 import './arbeidsforhold.css';
 import { Systemtittel } from "nav-frontend-typografi";
+import moment from 'moment';
 
 const ArbeidsforholdListe = ({data}) => {
   const fnr = data.arbeidstaker;
   const orgnr = data.arbeidsgiver.orgnummer;
   const arbeidsforholdIDnav = data.arbeidsforholdIDnav;
   const linkTo = `/arbeidsforholdet/${fnr}/${orgnr}/${arbeidsforholdIDnav}`;
+  /*const pathname = `/arbeidsforholdet/${fnr}/${orgnr}/`;
+  const search = `?navid=${arbeidsforholdIDnav}`;
+  const linkTo = {
+    pathname: pathname,
+    search: search
+  }*/
 
   return (
     <tr>
@@ -19,11 +26,23 @@ const ArbeidsforholdListe = ({data}) => {
       <td>{data.arbeidsgiver.navn}</td>
       <td>{data.ansettelsesPeriode.fom}</td>
       <td>{data.ansettelsesPeriode.tom}</td>
-      <td><Link to={linkTo} alt="Arbeidsforhold detalj">Lenke</Link></td>
+      <td><Link to={linkTo} alt="Arbeidsforhold detalj">Vis</Link></td>
     </tr>
   );
 }
-
+const sortByDateDescending = (a, b) => {
+  let afom = moment(a.ansettelsesPeriode.fom);
+  let bfom = moment(b.ansettelsesPeriode.fom);
+  if (afom.isAfter(bfom)) {
+    return -1;
+  }
+  else if (afom.isSame(bfom)) {
+    return 0;
+  }
+  else {
+    return 1;
+  }
+}
 class Arbeidsforhold extends Component {
   componentDidMount() {
 
@@ -45,6 +64,8 @@ class Arbeidsforhold extends Component {
     const tabell = (liste) => {
       if (!liste || !liste.length)
         return null;
+
+      //const sammensattListe = liste.sort(sortByDateDescending).map((item) =>
       const sammensattListe = liste.map((item) =>
         <ArbeidsforholdListe key={item.arbeidsforholdID} data={item}/>
       );
@@ -56,7 +77,7 @@ class Arbeidsforhold extends Component {
             <th>Navn</th>
             <th>FOM</th>
             <th>TOM</th>
-            <th>LENKE</th>
+            <th>&nbsp;</th>
           </tr>
          </thead>
          <tbody>

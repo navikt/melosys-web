@@ -11,7 +11,7 @@ import routerHistory from './history';
 import registerServiceWorker from './registerServiceWorker';
 
 const store = createStore(routerHistory);
-
+window.msys = {store: store};
 ReactDOM.render(
   <ReduxProvider store={store}>
     <ReduxRouter history={routerHistory}>
