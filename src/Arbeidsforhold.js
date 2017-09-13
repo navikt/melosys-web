@@ -2,15 +2,16 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { hentSaksopplysninger } from './ducks/saksopplysninger';
-
 import {Panel} from 'nav-frontend-paneler';
 import './arbeidsforhold.css';
 import { Systemtittel } from "nav-frontend-typografi";
-import moment from 'moment';
 
-const ArbeidsforholdListe = ({data}) => {
-  const fnr = data.arbeidstaker;
-  const orgnr = data.arbeidsgiver.orgnummer;
+const ArbeidsforholdListe = ({data, organisasjoner}) => {
+  const {arbeidstaker:fnr, arbeidsgiver: {navn, orgnummer: orgnr}, ansettelsesPeriode} = data;
+  const organisasjon = organisasjoner.find((item) => item.orgnummer === orgnr);
+  if (!organisasjon) {
+    return null;
+  }
   const arbeidsforholdIDnav = data.arbeidsforholdIDnav;
   const linkTo = `/arbeidsforholdet/${fnr}/${orgnr}/${arbeidsforholdIDnav}`;
   /*const pathname = `/arbeidsforholdet/${fnr}/${orgnr}/`;
@@ -22,33 +23,21 @@ const ArbeidsforholdListe = ({data}) => {
 
   return (
     <tr>
-      <td>{data.arbeidsgiver.orgnummer}</td>
-      <td>{data.arbeidsgiver.navn}</td>
-      <td>{data.ansettelsesPeriode.fom}</td>
-      <td>{data.ansettelsesPeriode.tom}</td>
+      <td>{orgnr}</td>
+      <td>{navn}</td>
+      <td>{ansettelsesPeriode.fom}</td>
+      <td>{ansettelsesPeriode.tom}</td>
       <td><Link to={linkTo} alt="Arbeidsforhold detalj">Vis</Link></td>
     </tr>
   );
 }
-const sortByDateDescending = (a, b) => {
-  let afom = moment(a.ansettelsesPeriode.fom);
-  let bfom = moment(b.ansettelsesPeriode.fom);
-  if (afom.isAfter(bfom)) {
-    return -1;
-  }
-  else if (afom.isSame(bfom)) {
-    return 0;
-  }
-  else {
-    return 1;
-  }
-}
 class Arbeidsforhold extends Component {
-  componentDidMount() {
 
-    let fnr = this.props.match.params.fnr;
+  componentDidMount() {
+    const { fnr } = this.props.match.params;
     this.props.hentSaksopplysninger(fnr);
   }
+
   render() {
     const { fnr } = this.props.match.params;
     const { saksopplysninger } = this.props;
@@ -56,19 +45,15 @@ class Arbeidsforhold extends Component {
     if (!saksopplysninger.arbeidsforhold) {
       return null;
     }
-    let person = (saksopplysninger && saksopplysninger.person) ? saksopplysninger.person : {};
-    const { sammensattNavn, bostedsadresse } = person;
-
-    const liste = (saksopplysninger && saksopplysninger.arbeidsforhold) ? saksopplysninger.arbeidsforhold: [];
+    const { person: { sammensattNavn, bostedsadresse }, arbeidsforhold, organisasjoner } = saksopplysninger;
 
     const tabell = (liste) => {
       if (!liste || !liste.length)
         return null;
-
-      //const sammensattListe = liste.sort(sortByDateDescending).map((item) =>
-      const sammensattListe = liste.map((item) =>
-        <ArbeidsforholdListe key={item.arbeidsforholdID} data={item}/>
+      let sammensattListe = liste.map((item) =>
+        <ArbeidsforholdListe key={item.arbeidsforholdID} data={item} organisasjoner={organisasjoner}/>
       );
+
      return (
        <table>
          <thead>
@@ -98,13 +83,12 @@ class Arbeidsforhold extends Component {
         <br/>
         <Panel>
           <Systemtittel className="blokk-xs">Arbeidsforhold</Systemtittel>
-          {tabell(liste)}
+          {tabell(arbeidsforhold)}
         </Panel>
       </section>
     );
   }
 }
-
 const bostedsadressen = (bosted) => {
   if (!bosted)
     return null;
@@ -115,7 +99,6 @@ const bostedsadressen = (bosted) => {
   return (
     <p>{sammensattAdresse}<br/>{bosted.postnr}&nbsp;{bosted.poststed}</p>
   )
-
 }
 
 const mapStateToProps = (state) => {
