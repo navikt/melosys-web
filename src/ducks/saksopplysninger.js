@@ -35,11 +35,13 @@ export function hentSaksopplysninger(fnr) {
     PENDING
   });
 }
+
 function sorterSaksopplysninger(saksopplysninger) {
   sorterArbeidsForholdPaaAnsettelsePeriode(saksopplysninger);
   sorterOrganisasjoner(saksopplysninger);
   return saksopplysninger;
 }
+
 function sorterArbeidsForholdPaaAnsettelsePeriode(saksopplysninger) {
   saksopplysninger.arbeidsforhold.sort(function (a, b) {
     if (a.ansettelsesPeriode.fom && b.ansettelsesPeriode.fom)
@@ -48,6 +50,7 @@ function sorterArbeidsForholdPaaAnsettelsePeriode(saksopplysninger) {
       return -1;
   });
 }
+
 function sorterOrganisasjoner(saksopplysninger) {
   saksopplysninger.organisasjoner.sort((a, b) => {
     if (a.orgnummer > b.orgnummer) {
@@ -72,4 +75,4 @@ const sortByDateDescending = (adate, bdate) => {
   else {
     return 1;
   }
-}
+};
