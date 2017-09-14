@@ -3,31 +3,30 @@
 import { fetchToJson } from './../ducks/utils';
 
 function erDev() {
-  const url = window.location.href;
-  return url.includes('debug=true') ||  url.includes('localhost:');
+  /*const url = window.location.href;
+  return url.includes('debug=true') ||  url.includes('localhost:');*/
+  return false;
+
 }
-//const MOCK_API_SERVER = 'http://localhost:3002';
-//const API_MELOSYS_URL = erDev() ? `${MOCK_API_SERVER}${API_BASE_URL}` : '/api';
-const API_MELOSYS_URL = erDev() ? 'http://localhost:3002/api/' : '/api';
+const MOCK_API_SERVER = erDev() ? 'http://localhost:3002' : 'https://e34jbsl01783.devillo.no:8443';
+const API_BASE_URL = erDev() ? '/api/' : '/system/melosys/api/';
+const API_MELOSYS_URL = `${MOCK_API_SERVER}${API_BASE_URL}`;
+
+//const API_MELOSYS_URL = erDev() ? 'http://localhost:3002/api/' : '/api';
+const headers = new Headers({
+  'Accept': 'application/json',
+  'Accept-Charset': 'utf-8'
+});
+
 export function hentSaksbehandler() {
   const URI_SAKSBEHANDLER = `${API_MELOSYS_URL}saksbehandler`;
-  return fetchToJson(URI_SAKSBEHANDLER);
-}
-export function hentPerson(fnr) {
-  const URI_PERSON = `${API_MELOSYS_URL}v3/person/${fnr}`;
-  return fetchToJson(URI_PERSON);
-}
-export function hentOrganisasjon(orgnr) {
-  const URI_ORGANISASJON = `${API_MELOSYS_URL}organisasjon/${orgnr}`;
-  return fetchToJson(URI_ORGANISASJON);
+  return fetchToJson(URI_SAKSBEHANDLER, {headers: headers});
 }
 
-export function hentArbeidsforhold(fnr) {
-  const URI_ARBEIDSFORHOLD = `${API_MELOSYS_URL}arbeidsforhold/${fnr}`;
-  return fetchToJson(URI_ARBEIDSFORHOLD);
-}
+export function hentSaksopplysninger(fnr) {
+  const saksopplysningerOgArbeidsforhold = erDev() ? 'saksopplysninger/' : 'arbeidsforhold/';
+  const URI_SAMMENSATT_ARBEIDSFORHOLD = `${API_MELOSYS_URL}${saksopplysningerOgArbeidsforhold}${fnr}`;
+  //const URI_SAMMENSATT_ARBEIDSFORHOLD = `https://e34jbsl01783.devillo.no:8443/system/melosys/api/arbeidsforhold/${fnr}`;
+  return fetchToJson(URI_SAMMENSATT_ARBEIDSFORHOLD, {headers: headers});
 
-export function hentArbeidsforholdDetalj(fnr, orgnr) {
-  const URI_ARBEIDSFORHOLD_DETALJ = `${API_MELOSYS_URL}arbeidsforhold/${fnr}/${orgnr}`;
-  return fetchToJson(URI_ARBEIDSFORHOLD_DETALJ);
 }

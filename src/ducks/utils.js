@@ -54,10 +54,32 @@ export function handterFeil(dispatch, action) {
 }
 
 export function fetchToJson(url, config = {}) {
+/*
+  if (config.headers) {
+    for (let entry of config.headers) {
+      console.log(entry);
+    }
+  }
+*/
+
   return fetch(url, config)// eslint-disable-line no-undef
     .then(sjekkStatuskode)
     .then(toJson);
 }
+/*
+function methodToJson(method, url, data, config) {
+  return fetchToJson(url, {
+    ...{
+      method,
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      }),
+      body: JSON.stringify(data),
+    },
+    ...config,
+  });
+}
+*/
 
 export function doThenDispatch(fn, { OK, FEILET, PENDING }) {
   return (dispatch, getState) => {
