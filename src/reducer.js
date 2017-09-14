@@ -2,10 +2,7 @@ import { combineReducers } from 'redux';
 //import { reducer as formReducer } from 'react-redux-form-validation';
 
 //import saksbehandlerReducer from './ducks/saksbehandler';
-import personReducer from './ducks/person';
-import organisasjonReducer from './ducks/organisasjon';
-import arbeidsforholdReducer from './ducks/arbeidsforhold';
-import arbeidsforholdDetaljReducer from './ducks/arbeidsforholdDetalj';
+import saksopplysningerReducer from './ducks/saksopplysninger';
 /*
 export const RESET_STORE = { type: 'store/reset' };
 
@@ -29,8 +26,5 @@ export default function(state, action) {
 */
 export default combineReducers({
   //saksbehandler: saksbehandlerReducer,
-  person: personReducer,
-  organisasjon: organisasjonReducer,
-  arbeidsforhold: arbeidsforholdReducer,
-  arbeidsforholdDetalj: arbeidsforholdDetaljReducer
+  saksopplysninger: saksopplysningerReducer
 });
