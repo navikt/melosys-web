@@ -7,51 +7,53 @@ import {Panel} from 'nav-frontend-paneler';
 import { Normaltekst } from 'nav-frontend-typografi';
 import moment from 'moment';
 
+
 import { connect } from 'react-redux';
 import { hentSaksopplysninger } from './ducks/saksopplysninger';
 
 var uuid = require('react-native-uuid');
+const queryString = require('query-string');
 
-
-const DatoFormattering = (dato) => {
+const datoFormattering = (dato) => {
   return moment(dato).format('DD.MM.YYYY');
-}
+};
 
-const Detaljer = ({arbeidsforhold}) => {
+const Arbeidsforhold = ({arbeidsforhold}) => {
   if (!arbeidsforhold || !arbeidsforhold.arbeidsforholdID) {
     return null;
   }
   const {ansettelsesPeriode: {fom, tom}, arbeidsforholdstype} = arbeidsforhold;
   return (
       <p>
-        <span>Arbeidsforhold start: </span><span>{DatoFormattering(fom)}</span><br/>
-        <span>Sluttdato: </span><span>{tom && DatoFormattering(tom)}</span><br/>
+        <span>Arbeidsforhold start: </span><span>{fom && datoFormattering(fom)}</span><br/>
+        <span>Sluttdato: </span><span>{tom && datoFormattering(tom)}</span><br/>
         <span>Type arbeidsforhold: </span><span>{arbeidsforholdstype}</span>
       </p>
   );
-}
+};
 
 const ArbeidsAvtaleRad  = ({
-   data,
+   arbeidsavtale,
    antall
 }) => {
-  const tittel = `Arbeidsforhold (${antall})`;
-  const { stillingsprosent, avloenningstype} = data;
+  const tittel = `Arbeidsavtale (${antall})`;
+  const { stillingsprosent, avloenningstype} =  arbeidsavtale;
   return (
     <Ekspanderbartpanel tittel={tittel}>
       <Normaltekst>
-        <span>Stillingsprosent:</span>&nbsp;<span>{stillingsprosent}%</span><br />
-        <span>Lønnstype:</span>&nbsp;<span>{avloenningstype}</span>
+        <span>Stillingsprosent:</span>&nbsp;<span>{stillingsprosent ? stillingsprosent+'%': 'ukjent'}</span><br />
+        <span>Lønnstype:</span>&nbsp;<span>{avloenningstype ? avloenningstype: 'ukjent'}</span>
       </Normaltekst>
     </Ekspanderbartpanel>
   );
-}
-const Oversikt = ({arbeidsforhold}) => {
+};
+
+const ArbeidsforholdListe = ({arbeidsforhold}) => {
   if (!arbeidsforhold || !arbeidsforhold.arbeidsforholdID) {
     return null;
   }
   const { arbeidsavtale, arbeidsforholdIDnav } = arbeidsforhold;
-  const rows = arbeidsavtale.map((item) => <ArbeidsAvtaleRad key={arbeidsforholdIDnav} data={item} antall={arbeidsavtale.length}/>);
+  const rows = arbeidsavtale.map((item) => <ArbeidsAvtaleRad key={arbeidsforholdIDnav} arbeidsavtale={item} antall={arbeidsavtale.length}/>);
   return (
     [rows]
   );
@@ -63,8 +65,8 @@ const PPRow = ({data}) => {
     <div>
       <span>ID:</span><span>{permisjonsId}</span><br/>
       <span>Type:</span><span>{permisjonOgPermittering}</span><br/>
-      <span>FOM:</span><span>{fom && DatoFormattering(fom)}</span><br/>
-      <span>TOM:</span><span>{tom && DatoFormattering(tom)}</span><br/>
+      <span>FOM:</span><span>{fom && datoFormattering(fom)}</span><br/>
+      <span>TOM:</span><span>{tom && datoFormattering(tom)}</span><br/>
       <span>permisjonsprosent:</span><span>{""+permisjonsprosent}</span>
     </div>
   );
@@ -74,62 +76,71 @@ const PermisjonOgPermittering = ({arbeidsforhold}) => {
   if (!arbeidsforhold || !arbeidsforhold.permisjonOgPermittering) {
     return null;
   }
-
   const { permisjonOgPermittering } = arbeidsforhold;
-  const rows = permisjonOgPermittering.map((item) => <PPRow key={uuid.v1()} data={item}/>);
+
   const tittel = `Permisjon/Permittering (${permisjonOgPermittering.length})`;
+  const rows = permisjonOgPermittering.map((item) => <PPRow key={uuid.v1()} data={item}/>);
+
   return (
     <Ekspanderbartpanel tittel={tittel}>
       {rows}
     </Ekspanderbartpanel>
   );
-}
+};
 
-const OrganisasjonTittel = ({organisasjon}) => {
-  if (!organisasjon || !organisasjon.orgnummer) {
-    return null;
-  }
-  const { navn, orgnummer } = organisasjon;
-  return (
-    <p>Arbeidsgiver:&nbsp;{navn} {orgnummer}</p>
-  )
+function gateAdresse(bostedsadresse) {
+  const {gatenavn, husnummer, husbokstav} = bostedsadresse;
+  let gateadressen = gatenavn;
+  if (husnummer) gateadressen += ' '+husnummer;
+  if (husbokstav) gateadressen += husbokstav;
+  return gateadressen;
+};
+
+function antallAar(dato) {
+  let now = moment();
+  let mdato = moment(dato);
+  let aar = now.diff(mdato, 'years');
+  return aar;
 }
-const OrganisasjonDetalj  = ({organisasjon}) => {
-  if (!organisasjon || !organisasjon.orgnummer) {
-    return null;
-  }
-  const { forretningsadresse: {postnr, poststed, gateadresse: {gatenavn}} } = organisasjon;
-  return (
-    <p>Forretningsadresse:&nbsp;{gatenavn}, {postnr}&nbsp;{poststed}</p>
-  );
-}
-const Person = ({
-  person
-}) => {
+const Person = ({person}) => {
   if (!person || !person.fnr) {
     return null;
   }
-  let foedselsdato = moment(person.foedselsdato);
-  let now = moment();
-  let alder = now.diff(foedselsdato, 'years');
-  let { land, postnr, poststed } = person.bostedsadresse;
-  let {gatenavn, husnummer, husbokstav} = person.bostedsadresse.gateadresse;
-  let sammensatt = gatenavn;
-  if (husnummer) sammensatt += ' '+husnummer;
-  if (husbokstav) sammensatt += husbokstav;
+  const { 
+    sammensattNavn,foedselsdato, fnr, 
+    bostedsadresse: {land, postnr, poststed, gateadresse},
+    statsborgerskap
+  } = person;
+
+  let alder = antallAar(foedselsdato);
+  let gateadressen = gateAdresse(gateadresse);
+
   return (
-    <Ekspanderbartpanel tittel={person.sammensattNavn +' ('+ alder + ' år)'}>
-      <Normaltekst>{person.fnr}</Normaltekst>
+    <Ekspanderbartpanel tittel={sammensattNavn +' ('+ alder + ' år)'}>
+      <Normaltekst>{fnr}</Normaltekst>
       <h4>Personopplysninger</h4>
       <p>
-        <span>Adresse: </span><span>{sammensatt}</span><br/>
+        <span>Adresse: </span><span>{gateadressen}</span><br/>
         <span>Postnr/Sted: </span><span>{postnr}&nbsp;{poststed}</span><br/>
         <span>Land: </span><span>{land}</span><br/>
-        <span>Statsborgerskap: </span><span>{person.statsborgerskap}</span>
+        <span>Statsborgerskap: </span><span>{statsborgerskap}</span>
       </p>
     </Ekspanderbartpanel>
   );
-}
+};
+
+const Virksomhet = ({organisasjoner, orgnr}) => {
+  const organisasjon = organisasjoner.find((item) => item.orgnummer === orgnr);
+  if (!organisasjon) {
+   return (
+     <p>Ukjent virksomhet for: {orgnr}</p>
+   )
+  }
+  const { navn, orgnummer, forretningsadresse: {postnr, poststed, gateadresse: {gatenavn}} } = organisasjon;
+  return (
+    <p>Arbeidsgiver:&nbsp;{navn} {orgnummer}<br/>Forretningsadresse:&nbsp;{gatenavn}, {postnr}&nbsp;{poststed}</p>
+  )
+};
 
 class ArbeidsforholdDetalj extends React.Component {
 
@@ -139,15 +150,23 @@ class ArbeidsforholdDetalj extends React.Component {
   }
 
   render() {
-    const { orgnr, arbeidsforholdID } = this.props.match.params;
+    const { search } = this.props.location;
+    const qs = queryString.parse(search);
+    const arbeidsforholdID = qs.navid; // TODO validate navid !!!
     const { saksopplysninger } = this.props;
 
     if (!saksopplysninger.arbeidsforhold) {
       return null;
     }
+
     const { person, arbeidsforhold, organisasjoner } = saksopplysninger;
-    const arbeidsforholdet = arbeidsforhold.find((item) => item.arbeidsforholdIDnav.toString() === arbeidsforholdID);
-    const organisasjon = organisasjoner.find((item) => item.orgnummer === orgnr);
+    let arbeidsforholdet = arbeidsforhold.find((item) => item.arbeidsforholdIDnav.toString() === arbeidsforholdID);
+
+    // If no arbeidsforhold found by arbeidsforholdID query param, return first item in arbeidsforhold array
+    if (!arbeidsforholdet) {
+      [arbeidsforholdet] = arbeidsforhold
+    }
+    const { arbeidsgiver: {orgnummer} } = arbeidsforholdet;
 
     return (
       <JustChildren>
@@ -159,8 +178,8 @@ class ArbeidsforholdDetalj extends React.Component {
           <Panel>
             <Ekspanderbartpanel tittel="Arbeidstaker/Næringsdrivende">
               <Normaltekst>Arbeidsforhold</Normaltekst>
-              <Detaljer arbeidsforhold={arbeidsforholdet}/>
-              <Oversikt arbeidsforhold={arbeidsforholdet}/>
+              <Arbeidsforhold arbeidsforhold={arbeidsforholdet}/>
+              <ArbeidsforholdListe arbeidsforhold={arbeidsforholdet}/>
             </Ekspanderbartpanel>
             <br/>
             <PermisjonOgPermittering arbeidsforhold={arbeidsforholdet}/>
@@ -177,8 +196,7 @@ class ArbeidsforholdDetalj extends React.Component {
         <section className="arbeidsforhold-virksomhet">
           <Panel>
             <h4>Virksomhet i Norge</h4>
-            <OrganisasjonTittel organisasjon={organisasjon}/>
-            <OrganisasjonDetalj organisasjon={organisasjon}/>
+            <Virksomhet organisasjoner={organisasjoner} orgnr={orgnummer}/>
           </Panel>
           <br />
           <Panel>

@@ -12,7 +12,7 @@ class Main extends Component {
         <Switch>
           <Route exact path='/' component={Home}/>
           <Route path="/arbeidsforhold/:fnr" component={Arbeidsforhold}/>
-          <Route path="/arbeidsforholdet/:fnr/:orgnr/:arbeidsforholdID" component={ArbeidsforholdDetalj}/>
+          <Route path="/arbeidsforholdet/:fnr/" component={ArbeidsforholdDetalj}/>
         </Switch>
       </div>
     );
