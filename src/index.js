@@ -8,6 +8,7 @@ import App from './App';
 
 import createStore from './store';
 import routerHistory from './history';
+import Routing from './routing';
 import registerServiceWorker from './registerServiceWorker';
 
 const store = createStore(routerHistory);
@@ -15,7 +16,9 @@ const store = createStore(routerHistory);
 ReactDOM.render(
   <ReduxProvider store={store}>
     <ReduxRouter history={routerHistory}>
-      <App/>
+      <App>
+        <Routing/>
+      </App>
     </ReduxRouter>
   </ReduxProvider>,
   document.getElementById('root')
