@@ -3,6 +3,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import freeze from 'redux-freeze';
 import { routerMiddleware } from 'react-router-redux';
+import logger from 'redux-logger';
 import reducer from './reducer';
 
 /* eslint-disable no-underscore-dangle */
@@ -11,7 +12,7 @@ function getStoreCompose(history) {
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   return composeEnhancers(
-    applyMiddleware(thunkMiddleware, routerMiddleware(history), freeze)
+    applyMiddleware(thunkMiddleware, routerMiddleware(history), freeze, logger)
   );
 }
 /* eslint-enable */
