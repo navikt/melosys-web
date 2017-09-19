@@ -6,15 +6,26 @@ import { Field, reduxForm } from 'redux-form'
 //import Input from './felles-komponenter/skjema/input/input';
 
 import { Hovedknapp } from 'nav-frontend-knapper';
-
+/*
+// Field level validations
 const required = value => (value ? undefined : 'Required');
-const fnr11digits = value => (/^[0-9]{11}$/.test(value) ? value: 'Fnr må ha 11 siffer');
-
+const fnr11digits = value => (/^[0-9]{11}$/.test(value) ? undefined: 'Fnr må ha 11 siffer');
+*/
+const formValidator = (values) => {
+  const errors = {};
+  if (!values.fnr) {
+    errors.fnr = 'Required';
+  }
+  else if (!/^[0-9]{11}$/.test(values.fnr)) {
+    errors.fnr = 'Fnr må ha 11 siffer';
+  }
+  return errors;
+};
 const renderFnrField = ({input, name, label, bredde, type, meta: {touched, error}}) => (
   <div>
     <label htmlFor={name} className="skjemaelement__label">{label}</label>
     <div>
-      <input {...input} type={type}  className={`skjemaelement__input input--${bredde}`}/>
+      <input {...input} type={type} className={`skjemaelement__input input--${bredde}`}/>
       {touched && ((error && <div className="skjemaelement__feilmelding">{error}</div>))}
     </div>
   </div>
@@ -29,7 +40,8 @@ class SokeForm extends Component {
         <form onSubmit={ handleSubmit }>
           {/*<Input label="Fnr. eller dnr. " bredde="xl" value={this.state.fnr} onChange={handleChange}/>*/}
           <div className="skjemaelement">
-            <Field name="fnr" type="text" component={renderFnrField} label="Fnr. eller dnr." validate={[required, fnr11digits]} bredde="xl"/>
+            {/*<Field name="fnr" type="text" component={renderFnrField} label="Fnr. eller dnr." validate={[required,fnr11digits]} bredde="xl"/>*/}
+            <Field name="fnr" type="text" component={renderFnrField} label="Fnr. eller dnr." bredde="xl"/>
           </div>
           <Hovedknapp>Søk</Hovedknapp>
         </form>
@@ -45,7 +57,8 @@ SokeForm.propTypes = {
 
 
 SokeForm = reduxForm({
-  form:'sokeform'
+  form:'sokeform',
+  validate:formValidator
 })(SokeForm);
 
 export default SokeForm;
