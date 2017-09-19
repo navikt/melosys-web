@@ -25,7 +25,7 @@ export default function(state, action) {
 }
 */
 export default combineReducers({
-  saksbehandler: saksbehandlerReducer,
+  form: formReducer,
   saksopplysninger: saksopplysningerReducer,
-  form: formReducer
+  saksbehandler: saksbehandlerReducer
 });
