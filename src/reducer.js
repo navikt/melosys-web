@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux';
-//import { reducer as formReducer } from 'react-redux-form-validation';
-import { reducer as formReducer } from 'redux-form';
+import { reducer as formReducer } from 'react-redux-form-validation';
 
 import saksbehandlerReducer from './ducks/saksbehandler';
 import saksopplysningerReducer from './ducks/saksopplysninger';

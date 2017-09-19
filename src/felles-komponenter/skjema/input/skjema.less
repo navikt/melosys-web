@@ -1,0 +1,41 @@
+@coreModulePath: "./../../../../node_modules/";
+@frontendModuler: "@{coreModulePath}nav-frontend-";
+@import "@{frontendModuler}core/less/core.less";
+
+.feedbacksummary {
+  .blokk-m();
+  padding: 1.5rem;
+  border-radius: @border-radius-base;
+  background-color: @redError;
+  color: @white;
+  list-style-position: inside;
+
+  ul {
+    margin: 0;
+    padding-left: 0;
+  }
+
+  h3 {
+    margin: 0;
+
+    margin-bottom: 0.5rem;
+  }
+
+  a {
+    color: @white;
+    border-bottom: 1px solid @white;
+    text-decoration: none;
+
+    &:focus {
+      outline: none;
+      background-color: @orangeFocus;
+      color: @navMorkGra;
+      border-bottom: 1px solid @orangeFocus;
+    }
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px @orangeFocus;
+  }
+}

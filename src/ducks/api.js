@@ -3,9 +3,9 @@
 import { fetchToJson } from './../ducks/utils';
 
 function erDev() {
-  /*const url = window.location.href;
-  return url.includes('debug=true') ||  url.includes('localhost:');*/
-  return false;
+  const url = window.location.href;
+  return url.includes('debug=true') ||  url.includes('localhost:');
+  //return false;
 
 }
 const MOCK_API_SERVER = erDev() ? 'http://localhost:3002' : 'https://e34jbsl01783.devillo.no:8443';
