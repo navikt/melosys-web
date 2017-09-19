@@ -3,7 +3,6 @@ import PT from 'prop-types';
 import { validForm, rules } from 'react-redux-form-validation';
 
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { formNavn } from './arbeidsforhold-utils';
 import Input from '../../felles-komponenter/skjema/input/input';
 
 const fnrValid = (value) => {
@@ -38,7 +37,7 @@ SokeForm.propTypes = {
 };
 
 export default validForm({
-  form:formNavn,
+  form: 'sokeform',
   errorSummaryTitle: 'Fix these errors',
   validate: {
     fnr: [rules.required, fnrValid]
