@@ -1,24 +1,27 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { formValueSelector, isDirty } from 'redux-form'
-import { connect } from 'react-redux';
 import { validForm, rules } from 'react-redux-form-validation';
 
 import { Hovedknapp } from 'nav-frontend-knapper';
 import { formNavn } from './arbeidsforhold-utils';
 import Input from '../../felles-komponenter/skjema/input/input';
 
+const fnrValid = (value) => {
+  return /^[0-9]{11}$/.test(value) ? undefined : 'Fnr må ha 11 siffer';
+};
 
 
 class SokeForm extends Component {
   render() {
-    const { handleSubmit } = this.props;
+    const { handleSubmit, errorSummary } = this.props;
+
     return (
       <div className="search-container">
         <h2 className="typo-undertittel"><span>Søk på person</span></h2>
         <form onSubmit={ handleSubmit }>
+          {errorSummary}
           <Input
-            feltnavn="fnr"
+            feltNavn="fnr"
             label="Fnr. eller dnr."
             bredde="xl"
             autoFocus
@@ -31,25 +34,13 @@ class SokeForm extends Component {
 }
 
 SokeForm.propTypes = {
-  fields: PT.object.isRequired,
   handleSubmit: PT.func.isRequired
 };
 
-const SokeReduxForm = validForm({
+export default validForm({
   form:formNavn,
   errorSummaryTitle: 'Fix these errors',
-  onSubmit:alert('onSubmit'),
   validate: {
-    fnr: [rules.required]
+    fnr: [rules.required, fnrValid]
   }
 })(SokeForm);
-
-const mapStateToProps = (state, props) => {
-  const selector = formValueSelector(formNavn);
-  return {
-    fnr: selector(state, 'fnr'),
-    isDirty: isDirty(formNavn)(state)
-  }
-};
-
-export default connect(mapStateToProps)(SokeReduxForm);

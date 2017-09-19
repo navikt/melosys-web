@@ -2,6 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import { Input as NavInput } from 'nav-frontend-skjema';
 import { CustomField } from 'react-redux-form-validation';
+import './skjema.css';
 
 // eslint-disable-next-line no-unused-vars
 function InnerInputComponent({ input, label, errorMessage, meta, ...rest }) {
