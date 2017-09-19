@@ -9,27 +9,24 @@ const fnrValid = (value) => {
   return /^[0-9]{11}$/.test(value) ? undefined : 'Fnr må ha 11 siffer';
 };
 
-
-class SokeForm extends Component {
-  render() {
-    const { handleSubmit, errorSummary } = this.props;
-
-    return (
-      <div className="search-container">
-        <h2 className="typo-undertittel"><span>Søk på person</span></h2>
-        <form onSubmit={ handleSubmit }>
-          {errorSummary}
-          <Input
-            feltNavn="fnr"
-            label="Fnr. eller dnr."
-            bredde="xl"
-            autoFocus
-          />
-          <Hovedknapp>Søk</Hovedknapp>
-        </form>
-      </div>
-    );
-  }
+function SokeForm({
+  handleSubmit, errorSummary
+}) {
+  return (
+    <div className="search-container">
+      <h2 className="typo-undertittel"><span>Søk på person</span></h2>
+      <form onSubmit={ handleSubmit }>
+        {errorSummary}
+        <Input
+          feltNavn="fnr"
+          label="Fnr. eller dnr."
+          bredde="xl"
+          autoFocus
+        />
+        <Hovedknapp>Søk</Hovedknapp>
+      </form>
+    </div>
+  );
 }
 
 SokeForm.propTypes = {
