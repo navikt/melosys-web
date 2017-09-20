@@ -7,9 +7,8 @@ import {Panel} from 'nav-frontend-paneler';
 import { Normaltekst } from 'nav-frontend-typografi';
 import moment from 'moment';
 
-
 import { connect } from 'react-redux';
-import { hentSaksopplysninger } from './ducks/saksopplysninger';
+import {hentSaksopplysninger, getPersonState, getAlleOrganisasjonerState} from './ducks/saksopplysninger';
 
 var uuid = require('react-native-uuid');
 const queryString = require('query-string');
@@ -142,6 +141,7 @@ const Virksomhet = ({organisasjoner, orgnr}) => {
   )
 };
 
+//=======================================================================================
 class ArbeidsforholdDetalj extends React.Component {
 
   componentDidMount() {
@@ -150,16 +150,14 @@ class ArbeidsforholdDetalj extends React.Component {
   }
 
   render() {
-    const { search } = this.props.location;
-    const qs = queryString.parse(search);
-    const arbeidsforholdID = qs.navid; // TODO validate navid !!!
-    const { saksopplysninger } = this.props;
+    const { person, organisasjoner, saksopplysninger } = this.props;
 
     if (!saksopplysninger.arbeidsforhold) {
       return null;
     }
 
-    const { person, arbeidsforhold, organisasjoner } = saksopplysninger;
+    const { arbeidsforhold} = saksopplysninger;
+    const arbeidsforholdID = arbeidsforholdIDfromQueryParam(this.props);
     let arbeidsforholdet = arbeidsforhold.find((item) => item.arbeidsforholdIDnav.toString() === arbeidsforholdID);
 
     // If no arbeidsforhold found by arbeidsforholdID query param, return first item in arbeidsforhold array
@@ -229,8 +227,33 @@ class ArbeidsforholdDetalj extends React.Component {
   }
 }
 
+const arbeidsforholdIDfromQueryParam = (props) => {
+  const { search } = props.location;
+  const qs = queryString.parse(search);
+  const arbeidsforholdID = qs.navid; // TODO validate navid !!!
+  return arbeidsforholdID;
+
+};
+/*
+const makeMapStateToProps = () => {
+  const getArbeidsforholdetState = makeGetArbeidsforholdetState();
+  const getOrganisasjonState = makeGetOrganisasjonState();
+  const mapStateToProps = (state, props) => {
+
+    const arbeidsforholdID = arbeidsforholdIDfromQueryParam(props);
+    return ({
+      person: getPersonState(state),
+      saksopplysninger: state.saksopplysninger.data
+    });
+  }
+  return mapStateToProps;
+};
+*/
+
 const mapStateToProps = (state) => {
   return ({
+    person: getPersonState(state),
+    organisasjoner: getAlleOrganisasjonerState(state),
     saksopplysninger: state.saksopplysninger.data
   });
 };
@@ -240,3 +263,4 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);
+//export default connect(makeMapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);
