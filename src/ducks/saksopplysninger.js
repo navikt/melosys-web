@@ -1,6 +1,7 @@
 import * as Api from './api';
 import { STATUS, doThenDispatch } from './utils';
 
+import { createSelector } from 'reselect';
 import moment from 'moment';
 
 // Actions
@@ -35,7 +36,47 @@ export function hentSaksopplysninger(fnr) {
     PENDING
   });
 }
+// selector
+const getPerson = (state) => state.saksopplysninger.data.person;
+const getAlleOrganisasjoner = (state) => state.saksopplysninger.data.organisasjoner;
+const getAlleArbeidsforhold = (state) => state.saksopplysninger.data.arbeidsforhold;
+const getArbeidsforholdet = (state, arbeidsforholdID) => {
+  if (state.saksopplysninger.status === 'OK') {
+    return state.saksopplysninger.data.arbeidsforhold.find((item) => item.arbeidsforholdIDnav.toString() === arbeidsforholdID);
+  }
+  return state;
+};
+const getOrganisasjon =  (state, orgnummer) => {
+  if (state.saksopplysninger.status === 'OK') {
+    return state.saksopplysninger.data.organisasjon.find((item) => item.orgnummer === orgnummer);
+  }
+  return state;
+};
 
+// reselect function
+export const getPersonState = createSelector(
+  [ getPerson ],
+  (person) => person
+);
+
+export const getAlleOrganisasjonerState = createSelector(
+  [ getAlleOrganisasjoner ],
+  (organisasjoner) => organisasjoner
+);
+
+export const getAlleArbeidsforholdState = createSelector(
+  [ getAlleArbeidsforhold ],
+  (arbeidsforhold) => arbeidsforhold
+);
+export const makeGetArbeidsforholdetState = () => createSelector(
+  getArbeidsforholdet,
+  (arbeidsforholdet) => ({arbeidsforholdet})
+);
+export const makeGetOrganisasjonState = () => createSelector(
+  getOrganisasjon,
+  (organisasjon) => ({organisasjon})
+);
+//------
 function sorterSaksopplysninger(saksopplysninger) {
   sorterArbeidsForholdPaaAnsettelsePeriode(saksopplysninger);
   sorterOrganisasjoner(saksopplysninger);

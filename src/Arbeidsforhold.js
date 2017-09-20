@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { hentSaksopplysninger } from './ducks/saksopplysninger';
+import {hentSaksopplysninger, getPersonState, getAlleArbeidsforholdState} from './ducks/saksopplysninger';
 import {Panel} from 'nav-frontend-paneler';
 import './arbeidsforhold.css';
 import { Systemtittel } from "nav-frontend-typografi";
@@ -73,12 +73,12 @@ class Arbeidsforhold extends Component {
 
   render() {
     const { fnr } = this.props.match.params;
-    const { saksopplysninger } = this.props;
+    const { person, arbeidsforhold } = this.props;
 
-    if (!saksopplysninger.arbeidsforhold) {
+    if (!arbeidsforhold) {
       return null;
     }
-    const { person: { sammensattNavn, bostedsadresse }, arbeidsforhold } = saksopplysninger;
+    const { sammensattNavn, bostedsadresse } = person;
     return (
       <section className="arbeidsforhold">
         <Panel>
@@ -100,7 +100,8 @@ class Arbeidsforhold extends Component {
 
 const mapStateToProps = (state) => {
   return ({
-    saksopplysninger: state.saksopplysninger.data
+    person: getPersonState(state),
+    arbeidsforhold: getAlleArbeidsforholdState(state)
   })
 };
 const mapDispatchToProps = (dispatch) => ({
