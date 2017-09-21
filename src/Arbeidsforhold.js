@@ -7,7 +7,7 @@ import './arbeidsforhold.css';
 import { Systemtittel } from "nav-frontend-typografi";
 
 const ArbeidsforholdRad = ({arbeidsforhold}) => {
-  const { arbeidsforholdIDnav, arbeidstaker:fnr, arbeidsgiver: {navn, orgnummer: orgnr}, ansettelsesPeriode} = arbeidsforhold;
+  const { arbeidsforholdIDnav, arbeidstakerID:fnr, arbeidsgiver: {navn, orgnummer: orgnr}, ansettelsesPeriode} = arbeidsforhold;
 
   const pathname = `/arbeidsforholdet/${fnr}/`;
   const search = `?navid=${arbeidsforholdIDnav}`;
