@@ -3,16 +3,23 @@
 import { fetchToJson } from './../ducks/utils';
 
 function erDev() {
-  const url = window.location.href;
-  return url.includes('debug=true') ||  url.includes('localhost:');
+  // const url = window.location.href;
+  // return url.includes('debug=true') ||  url.includes('localhost:');
   //return false;
-
+  // from .env or .env.local
+  return process.env.NODE_PATH === 'production';
 }
+/*
 const MOCK_API_SERVER = erDev() ? 'http://localhost:3002' : 'https://e34jbsl01783.devillo.no:8443';
 const API_BASE_URL = erDev() ? '/api/' : '/system/melosys/api/';
 const API_MELOSYS_URL = `${MOCK_API_SERVER}${API_BASE_URL}`;
+*/
 
-//const API_MELOSYS_URL = erDev() ? 'http://localhost:3002/api/' : '/api';
+// from .env or .env.local
+console.log('process.env',process.env);
+const API_MELOSYS_URL = `${process.env.REACT_APP_API_SERVER}${process.env.REACT_APP_API_BASE_URL}`;
+
+
 const headers = new Headers({
   'Accept': 'application/json',
   'Accept-Charset': 'utf-8'
