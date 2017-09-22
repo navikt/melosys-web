@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {hentSaksopplysninger, getPersonState, getAlleArbeidsforholdState} from './ducks/saksopplysninger';
+import {hentSaksopplysninger, PersonSelector, ArbeidsforholdSelector} from './ducks/saksopplysninger';
 import {Panel} from 'nav-frontend-paneler';
 import './arbeidsforhold.css';
 import { Systemtittel } from "nav-frontend-typografi";
@@ -100,8 +100,8 @@ class Arbeidsforhold extends Component {
 
 const mapStateToProps = (state) => {
   return ({
-    person: getPersonState(state),
-    arbeidsforhold: getAlleArbeidsforholdState(state)
+    person: PersonSelector(state),
+    arbeidsforhold: ArbeidsforholdSelector(state)
   })
 };
 const mapDispatchToProps = (dispatch) => ({

@@ -37,70 +37,36 @@ export function hentSaksopplysninger(fnr) {
   });
 }
 // selector(s)
-const getPerson = (state) => state.saksopplysninger.data.person;
-const getAlleOrganisasjoner = (state) => state.saksopplysninger.data.organisasjoner;
-const getAlleArbeidsforhold = (state) => state.saksopplysninger.data.arbeidsforhold;
-const getArbeidsforholdet = (state, arbeidsforholdID) => {
-  if (state.saksopplysninger.status === 'OK') {
-    console.assert(/^[0-9]{8}$/.test(arbeidsforholdID), 'Ugyldig arbeidsforholdID:', arbeidsforholdID);
-    return state.saksopplysninger.data.arbeidsforhold.find((item) => item.arbeidsforholdIDnav.toString() === arbeidsforholdID);
-  }
-  return state;
-};
-
-const getOrganisasjonByOrgnummer = (state, orgnummer) => {
-  if (state.saksopplysninger.status === 'OK') {
-    console.assert(/^[0-9]{9}$/.test(orgnummer), 'Ugyldig orgnummer:', orgnummer);
-    if (!/^[0-9]{9}$/.test(orgnummer))
-      return {};
-    const organisasjoner = getAlleOrganisasjonerState(state);
-    const organisasjon = organisasjoner.find((item) => item.orgnummer === orgnummer);
-    return organisasjon;
-  }
-  return state;
-};
-
-const getOrganisasjonByArbeidsforholdID =  (state, arbeidsforholdID) => {
-  if (state.saksopplysninger.status === 'OK') {
-    console.assert(/^[0-9]{8}$/.test(arbeidsforholdID), 'Ugyldig arbeidsforholdID:', arbeidsforholdID);
-    const getArbeidsforholdetState = makeGetArbeidsforholdetState();
-    const arbeidsforholdet = getArbeidsforholdetState(state, arbeidsforholdID);
-
-    if (!arbeidsforholdet) {
-      return {};
-    }
-    const { arbeidsgiver: {orgnummer} } = arbeidsforholdet;
-    return getOrganisasjonByOrgnummer(state, orgnummer);
-  }
-  return state;
-};
-
-// reselect functions
-export const getPersonState = createSelector(
-  [ getPerson ],
+export const PersonSelector = createSelector(
+  (state) => state.saksopplysninger.data.person,
   (person) => person
 );
 
-export const getAlleOrganisasjonerState = createSelector(
-  [ getAlleOrganisasjoner ],
+export const OrganisasjonerSelector = createSelector(
+  (state) => state.saksopplysninger.data.organisasjoner,
   (organisasjoner) => organisasjoner
 );
 
-export const getAlleArbeidsforholdState = createSelector(
-  [ getAlleArbeidsforhold ],
+export const ArbeidsforholdSelector = createSelector(
+  (state) => state.saksopplysninger.data.arbeidsforhold,
   (arbeidsforhold) => arbeidsforhold
 );
-export const makeGetArbeidsforholdetState = () => createSelector(
-  [ getArbeidsforholdet ],
-  (arbeidsforholdet) => arbeidsforholdet
+
+export const ArbeidsforholdetSelector = createSelector(
+  (state, arbeidsforholdID) => arbeidsforholdID,
+  (state) => state.saksopplysninger.data.arbeidsforhold || [],
+  (arbeidsforholdID, arbeidsforhold) => arbeidsforhold.find((item) => item.arbeidsforholdIDnav.toString() === arbeidsforholdID)
 );
-export const makeGetOrganisasjonStateByArbeidsforholdID = () => createSelector(
-  [ getOrganisasjonByArbeidsforholdID ],
-  (organisasjon) => organisasjon
+
+export const OrganisasjonSelector = createSelector(
+  (state, orgnummer) => orgnummer,
+  (state) => state.saksopplysninger.data.organisasjoner || [],
+  (orgnummer, organisasjoner) => organisasjoner.find((item) => item.orgnummer === orgnummer)
 );
-export const makeGetOrganisasjonStateByOrgnummer = () => createSelector(
-  [ getOrganisasjonByOrgnummer ],
-  (organisasjon) => organisasjon
+
+export const OrganisasjonSelectorByNavID = createSelector(
+  [ArbeidsforholdetSelector, OrganisasjonerSelector],
+  (arbeidsforholdet, organisasjoner) => organisasjoner ? organisasjoner.find((item) => item.orgnummer === arbeidsforholdet.arbeidsgiver.orgnummer): {}
 );
 
 // Private utility methods
