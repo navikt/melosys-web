@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import { validForm, rules } from 'react-redux-form-validation';
 
