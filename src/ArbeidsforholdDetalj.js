@@ -8,7 +8,10 @@ import { Normaltekst } from 'nav-frontend-typografi';
 import moment from 'moment';
 
 import { connect } from 'react-redux';
-import {hentSaksopplysninger, getPersonState, makeGetOrganisasjonStateByArbeidsforholdID, makeGetArbeidsforholdetState} from './ducks/saksopplysninger';
+import {
+  hentSaksopplysninger, PersonSelector, ArbeidsforholdetSelector,
+  OrganisasjonSelectorByNavID
+} from './ducks/saksopplysninger';
 
 var uuid = require('react-native-uuid');
 const queryString = require('query-string');
@@ -152,7 +155,7 @@ class ArbeidsforholdDetalj extends React.Component {
     const { person, organisasjon, arbeidsforholdet } = this.props;
 
     if (!person || !arbeidsforholdet) {
-      return <h1>FEILMELDING</h1>;
+      return <p>FEILMELDING</p>;
     }
 
     return (
@@ -223,23 +226,16 @@ const arbeidsforholdIDfromQueryParam = (props) => {
   return arbeidsforholdID;
 
 };
-const makeMapStateToProps = () => {
-  const getArbeidsforholdetState = makeGetArbeidsforholdetState();
-  const getOrganisasjonState = makeGetOrganisasjonStateByArbeidsforholdID();
-  const mapStateToProps = (state, props) => {
 
-    const arbeidsforholdID = arbeidsforholdIDfromQueryParam(props);
-    return ({
-      person: getPersonState(state),
-      arbeidsforholdet: getArbeidsforholdetState(state, arbeidsforholdID),
-      organisasjon: getOrganisasjonState(state, arbeidsforholdID)
-    });
-  }
-  return mapStateToProps;
+const mapStateToProps = (state, props) => {
+  const arbeidsforholdID = arbeidsforholdIDfromQueryParam(props);
+  return ({
+    person: PersonSelector(state),
+    organisasjon: OrganisasjonSelectorByNavID(state, arbeidsforholdID),
+    arbeidsforholdet: ArbeidsforholdetSelector(state, arbeidsforholdID)
+  });
 };
-
 const mapDispatchToProps = (dispatch) => ({
   hentSaksopplysninger: (fnr) => dispatch(hentSaksopplysninger(fnr))
 });
-
-export default connect(makeMapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);
+export default connect(mapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);
