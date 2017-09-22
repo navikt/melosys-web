@@ -1,3 +1,4 @@
+import { createSelector } from 'reselect';
 import * as Api from './api';
 import { STATUS, doThenDispatch } from './utils';
 
@@ -17,9 +18,8 @@ export default function reducer(state = initalState, action) {
       return { ...state, status: STATUS.PENDING };
     case FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
-    case OK: {
+    case OK:
       return { ...state, status: STATUS.OK, data: action.data };
-    }
     default:
       return state;
   }
@@ -33,3 +33,11 @@ export function hentSaksbehandler() {
     PENDING
   });
 }
+// selector
+const getSaksbehandler = (state) => state.saksbehandler.data;
+
+// reselect function
+export const getSaksbehandlerState = createSelector(
+  [ getSaksbehandler ],
+  (saksbehandler) => saksbehandler
+);

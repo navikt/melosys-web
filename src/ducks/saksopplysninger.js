@@ -1,6 +1,7 @@
 import * as Api from './api';
 import { STATUS, doThenDispatch } from './utils';
 
+import { createSelector } from 'reselect';
 import moment from 'moment';
 
 // Actions
@@ -35,7 +36,40 @@ export function hentSaksopplysninger(fnr) {
     PENDING
   });
 }
+// selector(s)
+export const PersonSelector = createSelector(
+  (state) => state.saksopplysninger.data.person,
+  (person) => person
+);
 
+export const OrganisasjonerSelector = createSelector(
+  (state) => state.saksopplysninger.data.organisasjoner,
+  (organisasjoner) => organisasjoner
+);
+
+export const ArbeidsforholdSelector = createSelector(
+  (state) => state.saksopplysninger.data.arbeidsforhold,
+  (arbeidsforhold) => arbeidsforhold
+);
+
+export const ArbeidsforholdetSelector = createSelector(
+  (state, arbeidsforholdID) => arbeidsforholdID,
+  (state) => state.saksopplysninger.data.arbeidsforhold || [],
+  (arbeidsforholdID, arbeidsforhold) => arbeidsforhold.find((item) => item.arbeidsforholdIDnav.toString() === arbeidsforholdID)
+);
+
+export const OrganisasjonSelector = createSelector(
+  (state, orgnummer) => orgnummer,
+  (state) => state.saksopplysninger.data.organisasjoner || [],
+  (orgnummer, organisasjoner) => organisasjoner.find((item) => item.orgnummer === orgnummer)
+);
+
+export const OrganisasjonSelectorByNavID = createSelector(
+  [ArbeidsforholdetSelector, OrganisasjonerSelector],
+  (arbeidsforholdet, organisasjoner) => organisasjoner ? organisasjoner.find((item) => item.orgnummer === arbeidsforholdet.arbeidsgiver.orgnummer): {}
+);
+
+// Private utility methods
 function sorterSaksopplysninger(saksopplysninger) {
   sorterArbeidsForholdPaaAnsettelsePeriode(saksopplysninger);
   sorterOrganisasjoner(saksopplysninger);

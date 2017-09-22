@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { hentSaksbehandler } from './ducks/saksbehandler';
+import { hentSaksbehandler, getSaksbehandlerState } from './ducks/saksbehandler';
 import Header from './components/Header';
 
 class Topplinje extends Component {
@@ -18,7 +18,7 @@ class Topplinje extends Component {
 
 const mapStateToProps = (state) => {
   return ({
-    saksbehandler: state.saksbehandler.data
+    saksbehandler: getSaksbehandlerState(state)
   })
 };
 const mapDispatchToProps = (dispatch) => ({
