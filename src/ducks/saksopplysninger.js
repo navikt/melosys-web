@@ -36,24 +36,46 @@ export function hentSaksopplysninger(fnr) {
     PENDING
   });
 }
-// selector
+// selector(s)
 const getPerson = (state) => state.saksopplysninger.data.person;
 const getAlleOrganisasjoner = (state) => state.saksopplysninger.data.organisasjoner;
 const getAlleArbeidsforhold = (state) => state.saksopplysninger.data.arbeidsforhold;
 const getArbeidsforholdet = (state, arbeidsforholdID) => {
   if (state.saksopplysninger.status === 'OK') {
+    console.assert(/^[0-9]{8}$/.test(arbeidsforholdID), 'Ugyldig arbeidsforholdID:', arbeidsforholdID);
     return state.saksopplysninger.data.arbeidsforhold.find((item) => item.arbeidsforholdIDnav.toString() === arbeidsforholdID);
   }
   return state;
 };
-const getOrganisasjon =  (state, orgnummer) => {
+
+const getOrganisasjonByOrgnummer = (state, orgnummer) => {
   if (state.saksopplysninger.status === 'OK') {
-    return state.saksopplysninger.data.organisasjon.find((item) => item.orgnummer === orgnummer);
+    console.assert(/^[0-9]{9}$/.test(orgnummer), 'Ugyldig orgnummer:', orgnummer);
+    if (!/^[0-9]{9}$/.test(orgnummer))
+      return {};
+    const organisasjoner = getAlleOrganisasjonerState(state);
+    const organisasjon = organisasjoner.find((item) => item.orgnummer === orgnummer);
+    return organisasjon;
   }
   return state;
 };
 
-// reselect function
+const getOrganisasjonByArbeidsforholdID =  (state, arbeidsforholdID) => {
+  if (state.saksopplysninger.status === 'OK') {
+    console.assert(/^[0-9]{8}$/.test(arbeidsforholdID), 'Ugyldig arbeidsforholdID:', arbeidsforholdID);
+    const getArbeidsforholdetState = makeGetArbeidsforholdetState();
+    const arbeidsforholdet = getArbeidsforholdetState(state, arbeidsforholdID);
+
+    if (!arbeidsforholdet) {
+      return {};
+    }
+    const { arbeidsgiver: {orgnummer} } = arbeidsforholdet;
+    return getOrganisasjonByOrgnummer(state, orgnummer);
+  }
+  return state;
+};
+
+// reselect functions
 export const getPersonState = createSelector(
   [ getPerson ],
   (person) => person
@@ -69,14 +91,19 @@ export const getAlleArbeidsforholdState = createSelector(
   (arbeidsforhold) => arbeidsforhold
 );
 export const makeGetArbeidsforholdetState = () => createSelector(
-  getArbeidsforholdet,
-  (arbeidsforholdet) => ({arbeidsforholdet})
+  [ getArbeidsforholdet ],
+  (arbeidsforholdet) => arbeidsforholdet
 );
-export const makeGetOrganisasjonState = () => createSelector(
-  getOrganisasjon,
-  (organisasjon) => ({organisasjon})
+export const makeGetOrganisasjonStateByArbeidsforholdID = () => createSelector(
+  [ getOrganisasjonByArbeidsforholdID ],
+  (organisasjon) => organisasjon
 );
-//------
+export const makeGetOrganisasjonStateByOrgnummer = () => createSelector(
+  [ getOrganisasjonByOrgnummer ],
+  (organisasjon) => organisasjon
+);
+
+// Private utility methods
 function sorterSaksopplysninger(saksopplysninger) {
   sorterArbeidsForholdPaaAnsettelsePeriode(saksopplysninger);
   sorterOrganisasjoner(saksopplysninger);

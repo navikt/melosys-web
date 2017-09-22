@@ -8,7 +8,7 @@ import { Normaltekst } from 'nav-frontend-typografi';
 import moment from 'moment';
 
 import { connect } from 'react-redux';
-import {hentSaksopplysninger, getPersonState, getAlleOrganisasjonerState} from './ducks/saksopplysninger';
+import {hentSaksopplysninger, getPersonState, makeGetOrganisasjonStateByArbeidsforholdID, makeGetArbeidsforholdetState} from './ducks/saksopplysninger';
 
 var uuid = require('react-native-uuid');
 const queryString = require('query-string');
@@ -128,12 +128,11 @@ const Person = ({person}) => {
   );
 };
 
-const Virksomhet = ({organisasjoner, orgnr}) => {
-  const organisasjon = organisasjoner.find((item) => item.orgnummer === orgnr);
-  if (!organisasjon) {
-   return (
-     <p>Ukjent virksomhet for: {orgnr}</p>
-   )
+const Virksomhet = ({organisasjon}) => {
+  if (!organisasjon || !organisasjon.navn || !organisasjon.forretningsadresse) {
+    return (
+      <p>Ukjent virksomhet</p>
+    )
   }
   const { navn, orgnummer, forretningsadresse: {postnr, poststed, gateadresse: {gatenavn}} } = organisasjon;
   return (
@@ -150,21 +149,11 @@ class ArbeidsforholdDetalj extends React.Component {
   }
 
   render() {
-    const { person, organisasjoner, saksopplysninger } = this.props;
+    const { person, organisasjon, arbeidsforholdet } = this.props;
 
-    if (!saksopplysninger.arbeidsforhold) {
-      return null;
+    if (!person || !arbeidsforholdet) {
+      return <h1>FEILMELDING</h1>;
     }
-
-    const { arbeidsforhold} = saksopplysninger;
-    const arbeidsforholdID = arbeidsforholdIDfromQueryParam(this.props);
-    let arbeidsforholdet = arbeidsforhold.find((item) => item.arbeidsforholdIDnav.toString() === arbeidsforholdID);
-
-    // If no arbeidsforhold found by arbeidsforholdID query param, return first item in arbeidsforhold array
-    if (!arbeidsforholdet) {
-      [arbeidsforholdet] = arbeidsforhold
-    }
-    const { arbeidsgiver: {orgnummer} } = arbeidsforholdet;
 
     return (
       <JustChildren>
@@ -194,7 +183,7 @@ class ArbeidsforholdDetalj extends React.Component {
         <section className="arbeidsforhold-virksomhet">
           <Panel>
             <h4>Virksomhet i Norge</h4>
-            <Virksomhet organisasjoner={organisasjoner} orgnr={orgnummer}/>
+            <Virksomhet organisasjon={organisasjon} />
           </Panel>
           <br />
           <Panel>
@@ -234,33 +223,23 @@ const arbeidsforholdIDfromQueryParam = (props) => {
   return arbeidsforholdID;
 
 };
-/*
 const makeMapStateToProps = () => {
   const getArbeidsforholdetState = makeGetArbeidsforholdetState();
-  const getOrganisasjonState = makeGetOrganisasjonState();
+  const getOrganisasjonState = makeGetOrganisasjonStateByArbeidsforholdID();
   const mapStateToProps = (state, props) => {
 
     const arbeidsforholdID = arbeidsforholdIDfromQueryParam(props);
     return ({
       person: getPersonState(state),
-      saksopplysninger: state.saksopplysninger.data
+      arbeidsforholdet: getArbeidsforholdetState(state, arbeidsforholdID),
+      organisasjon: getOrganisasjonState(state, arbeidsforholdID)
     });
   }
   return mapStateToProps;
-};
-*/
-
-const mapStateToProps = (state) => {
-  return ({
-    person: getPersonState(state),
-    organisasjoner: getAlleOrganisasjonerState(state),
-    saksopplysninger: state.saksopplysninger.data
-  });
 };
 
 const mapDispatchToProps = (dispatch) => ({
   hentSaksopplysninger: (fnr) => dispatch(hentSaksopplysninger(fnr))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);
-//export default connect(makeMapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);
+export default connect(makeMapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);
