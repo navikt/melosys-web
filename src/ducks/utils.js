@@ -66,20 +66,22 @@ export function fetchToJson(url, config = {}) {
     .then(sjekkStatuskode)
     .then(toJson);
 }
-/*
 function methodToJson(method, url, data, config) {
   return fetchToJson(url, {
     ...{
       method,
       headers: new Headers({
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json;charset=UTF-8',
       }),
       body: JSON.stringify(data),
     },
     ...config,
   });
 }
-*/
+
+export function postAsJson(url, data = {}, config = {}) {
+  return methodToJson('post', url, data, config);
+}
 
 export function doThenDispatch(fn, { OK, FEILET, PENDING }) {
   return (dispatch, getState) => {
