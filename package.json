@@ -58,10 +58,14 @@
     "start": "npm-run-all -p start:*",
     "build": "npm run build:css && npm run build:js",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "mock": "node scripts/mock_api_server.js"
   },
   "devDependencies": {
     "autoless": "^0.1.7",
-    "npm-run-all": "^4.0.2"
+    "body-parser": "^1.18.2",
+    "express": "^4.15.5",
+    "npm-run-all": "^4.0.2",
+    "underscore": "^1.8.3"
   }
 }
