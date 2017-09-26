@@ -1,6 +1,6 @@
 //import {CONTEXT_PATH, API_BASE_URL} from '../constants';
 //import { fetchToJson, postAsJson, putAsJson } from './../ducks/utils';
-import { fetchToJson } from './../ducks/utils';
+import { fetchToJson, postAsJson } from './utils';
 /*
 function erDev() {
   // const url = window.location.href;
@@ -33,5 +33,11 @@ export function hentSaksbehandler() {
 export function hentSaksopplysninger(fnr) {
   const URI_SAMMENSATT_ARBEIDSFORHOLD = `${API_MELOSYS_URL}${API_SAKSOPPLYSNINGER}/${fnr}`;
   return fetchToJson(URI_SAMMENSATT_ARBEIDSFORHOLD, {headers: headers});
+}
 
+export function nyHenvendelse(henvendelse) {
+  //const URI_HENVENDELSE =`${API_MELOSYS_URL}henvendelse`;
+  //return postAsJson(URI_HENVENDELSE, henvendelse);
+  const URI_HENVENDELSE = 'http://10.33.46.106:3002/api/henvendelse';
+  return postAsJson(URI_HENVENDELSE, henvendelse);
 }

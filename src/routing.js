@@ -5,12 +5,14 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import Home from './Home';
 import Arbeidsforhold from './Arbeidsforhold';
 import ArbeidsforholdDetalj from './ArbeidsforholdDetalj';
+import Registrere from './Registrere';
 
 const Routing = ({ location }) =>
   <Switch location={location}>
     <Route exact path='/' component={Home}/>
     <Route path="/arbeidsforhold/:fnr" component={Arbeidsforhold}/>
     <Route path="/arbeidsforholdet/:fnr/" component={ArbeidsforholdDetalj}/>
+    <Route path="/registrere" component={Registrere}/>
   </Switch>;
 
 Routing.propTypes = {
