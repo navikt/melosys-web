@@ -34,8 +34,15 @@ router.get('/saksopplysninger/:fnr', function (req, res) {
     const saksopplysning = _.find(data.response, function(item){
       return item.person.fnr === fnr;
     });
-    return res.json(saksopplysning);
+
+    if (saksopplysning) {
+      return res.json(saksopplysning);
+    }
+    else {
+      return res.status(404).send("Not found");
+    }
   } catch (err) {
+    res.status(500).send(err);
     console.log(err)
   }
 });
