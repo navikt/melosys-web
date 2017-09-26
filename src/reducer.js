@@ -3,6 +3,7 @@ import { reducer as formReducer } from 'react-redux-form-validation';
 
 import saksbehandlerReducer from './ducks/saksbehandler';
 import saksopplysningerReducer from './ducks/saksopplysninger';
+import arbeidsgiverReducer from './ducks/arbeidsgiver';
 /*
 export const RESET_STORE = { type: 'store/reset' };
 
@@ -27,5 +28,6 @@ export default function(state, action) {
 export default combineReducers({
   form: formReducer,
   saksopplysninger: saksopplysningerReducer,
-  saksbehandler: saksbehandlerReducer
+  saksbehandler: saksbehandlerReducer,
+  arbeidsgiver: arbeidsgiverReducer
 });
