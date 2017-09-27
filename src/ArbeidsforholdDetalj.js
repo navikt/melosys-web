@@ -13,7 +13,7 @@ import {
   OrganisasjonSelectorByNavID
 } from './ducks/saksopplysninger';
 
-var uuid = require('react-native-uuid');
+var uuid = require('uuid/v5');
 const queryString = require('query-string');
 
 const datoFormattering = (dato) => {
