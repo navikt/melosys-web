@@ -29,7 +29,7 @@ router.post('/henvendelse', function(req, res) {
 
 router.get('/saksopplysninger/:fnr', function (req, res) {
   try {
-    var fnr = req.params.fnr;
+    const fnr = req.params.fnr;
     const data = JSON.parse(fs.readFileSync("./scripts/mock_data/saksopplysninger.json", "utf8"));
     const saksopplysning = _.find(data.response, function(item){
       return item.person.fnr === fnr;
@@ -49,7 +49,7 @@ router.get('/saksopplysninger/:fnr', function (req, res) {
 
 router.get('/saksbehandler', function (req, res) {
   try {
-    var saksbehandlere =  JSON.parse(fs.readFileSync("./scripts/mock_data/saksbehandler.json", "utf8"))
+    const saksbehandlere =  JSON.parse(fs.readFileSync("./scripts/mock_data/saksbehandler.json", "utf8"))
     // return a random sakbehandler from list of sakbehandlere
     return res.json(_.sample(saksbehandlere));
   } catch (err) {
@@ -62,10 +62,24 @@ app.use('/vedtak/api', router);
 app.use('/api', router);
 
 app.listen(port);
-let interfaces = os.networkInterfaces();
-//console.log(interfaces.Ethernet0);
-let ipv4 = _.find(interfaces.Ethernet0, function(item){
-  return item.family === 'IPv4';
-});
 
-console.log('Test MeloSys mock API server running on http://'+ipv4.address+':' + port+'/api');
+function platformNIC() {
+  const interfaces = os.networkInterfaces();
+  switch (process.platform) {
+    case 'darwin':
+      return interfaces.lo0;
+    default: //win32
+      return interfaces.Ethernet0
+  }
+}
+
+function getIpAdress() {
+  const nic = platformNIC();
+  const ipv4 = _.find(nic, function(item){
+    return item.family === 'IPv4';
+  });
+  return ipv4.address;
+}
+
+
+console.log('Test MeloSys mock API server running on http://'+getIpAdress()+':' + port+'/api');
