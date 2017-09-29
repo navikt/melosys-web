@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
 
-import * as navLogo from '../images/nav.svg';
-import * as saksbehandlerIkon from '../images/saksbehandler.svg';
+import * as navLogo from '../resources/images/nav.svg';
+import * as saksbehandlerIkon from '../resources/images/saksbehandler.svg';
 import '../index.css'
 import './header.css'
 
