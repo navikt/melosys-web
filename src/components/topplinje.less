@@ -33,7 +33,41 @@
     display: flex;
     padding-left: 15px;
     color:@color-white;
-    font-size: @font-size * 1.4;
+    font-size: @font-size * 1;
+  }
+}
+
+// Søkefunksjonalitet
+.topplinje__sok {
+  display: flex;
+  flex-grow:1;
+  flex-direction: row;
+  align-items:center;
+
+  .sok__felt {
+    display: flex;
+    flex-grow:0;
+    height:2em;
+    justify-self: center;
+    background-color: @color-purple-light;
+    border:0px;
+    outline:0;
+    border-radius: 2px;
+    padding:0 10px;
+    color:@color-white;
+    font-size: @font-size;
+  }
+
+  .sok__button {
+    display: flex;
+    width:20px;
+    height:20px;
+    margin: 0 -30px;
+    background-image: url('../resources/images/icon-search.svg');
+    background-repeat:no-repeat;
+    background-color:transparent;
+    background-size:contain;
+    border:0;
   }
 }
 

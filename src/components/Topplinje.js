@@ -23,7 +23,11 @@ class Topplinje extends Component {
                         />
                     </Link>
                     <div className="brand__skillelinje"/>
-                    <h4 className="brand__tittel"><span>Medlemsskap og lovvalgssystem</span></h4>
+                    <h4 className="brand__tittel">Melosys</h4>
+                </div>
+                <div className="topplinje__sok">
+                    <input type="text" className="sok__felt" />
+                    <button className="sok__button"></button>
                 </div>
                 <div className="topplinje__bruker">
                     <div className="bruker__navn">{navn}</div>
