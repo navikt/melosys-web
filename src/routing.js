@@ -3,8 +3,8 @@ import PT from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
 import Home from './Home';
-import Arbeidsforhold from './Arbeidsforhold';
-import ArbeidsforholdDetalj from './ArbeidsforholdDetalj';
+import Arbeidsforhold from './containers/Arbeidsforhold';
+import ArbeidsforholdDetalj from './containers/ArbeidsforholdDetalj';
 import Registrere from './Registrere';
 
 const Routing = ({ location }) =>

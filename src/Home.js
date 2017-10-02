@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SokArbeidsforhold from "./sok-arbeidsforhold";
+import SokArbeidsforhold from "./containers/sok-arbeidsforhold";
 
 class Home extends Component {
   render() {

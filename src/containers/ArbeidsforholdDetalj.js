@@ -2,7 +2,7 @@ import React from 'react';
 
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import './arbeidsforholdDetalj.css';
-import JustChildren from './just-children';
+import JustChildren from '../utils/just-children';
 import {Panel} from 'nav-frontend-paneler';
 import { Normaltekst } from 'nav-frontend-typografi';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import { connect } from 'react-redux';
 import {
   hentSaksopplysninger, PersonSelector, ArbeidsforholdetSelector,
   OrganisasjonSelectorByNavID
-} from './ducks/saksopplysninger';
+} from './../ducks/saksopplysninger';
 
 var uuid = require('uuid/v5');
 const queryString = require('query-string');

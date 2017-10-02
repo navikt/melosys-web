@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import Topplinje from './topplinje';
+import Topplinje from '../components/Topplinje';
 import './hovedside.css';
 function Hovedside({children}) {
   return (
