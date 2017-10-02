@@ -1,74 +1,56 @@
-.header {
-  height: 4rem;
-  background: #3e3832;
-  display: -ms-flexbox;
-  display: flex;
-  -ms-flex-align: center;
-  align-items: center;
-}
-.headerContainer {
-  position: relative;
-  top: 0px;
-  width: 100%;
-  z-index: 100;
-}
+@import '../globals';
 
 .topplinje {
-  background-color: purple;
-  color: white;
-  font-family: Arial;
-  font-size: 20px;
-  height: 3rem;
-  padding-top: 10px;
+  display: flex;
+  flex-direction: row;
+  height: 4rem;
+  background-color: @color-purple;
 }
 
-.nav {
-  display: inline;
-  float: left;
-  padding-right: 15px;
+
+// Logo og navn på Melosys-systemet
+.topplinje__brand {
+  display:flex;
+  flex-direction: row;
+  flex-grow:1;
+  align-items: center;
+
+  .brand__logo {
+    display: flex;
+    padding-left: 20px;
+    padding-right: 15px;
+    height: auto;
+    width: 85px;
+  }
+
+  .brand__skillelinje {
+    display: flex;
+    border-left: 1px solid white;
+    height: 30px;
+  }
+
+  .brand__tittel {
+    display: flex;
+    padding-left: 15px;
+    color:@color-white;
+    font-size: @font-size * 1.4;
+  }
 }
 
-.logo {
-  display: inline;
-  float: left;
-  padding-left: 20px;
-  padding-right: 15px;
+// Brukernavn for innlogget bruker
+.topplinje__bruker {
+  display:flex;
+  flex-grow:1;
+  flex-direction: column;
+  align-items:flex-end;
+
+  .bruker__navn {
+    display: flex;
+    margin:auto 0;
+    padding:0.3em;
+    color:@color-white;
+  }
 }
 
-.headerIkon {
-  height: 30px;
-  width: 45px;
-}
 
-.headerDivider {
-  border-left: 1px solid white;
-  border-right: 0px solid white;
-  display: inline;
-  float: right;
-  height: 30px;
-  position: absolute;
-  top: 10px;
-}
 
-.text {
-  display: inline;
-  padding-left: 15px;
-}
-
-.saksbehandlerIkon {
-  display: inline;
-  float: left;
-  height: 30px;
-  width: 45px;
-}
-
-.saksbehandlerTekst {
-  display: inline;
-  float: right;
-}
-
-.saksbehandler {
-  display: inline;
-  float: right;
-  padding-right: 20px;
-}
