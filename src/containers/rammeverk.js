@@ -1,8 +1,8 @@
 import React from 'react';
 import PT from 'prop-types';
 import Topplinje from '../components/Topplinje';
-import './hovedside.css';
-function Hovedside({children}) {
+import './rammeverk.css';
+function Rammeverk({children}) {
   return (
     <div className="hovedside">
       <Topplinje/>
@@ -14,17 +14,17 @@ function Hovedside({children}) {
 }
 
 
-Hovedside.defaultProps = {
+Rammeverk.defaultProps = {
   children: null,
   routes: null,
 };
 
-Hovedside.propTypes = {
+Rammeverk.propTypes = {
   children: PT.node,
 };
 
-Hovedside.defaultProps = {
+Rammeverk.defaultProps = {
   children: undefined,
 };
 
-export default Hovedside;
+export default Rammeverk;
