@@ -3,8 +3,11 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import {hentSaksopplysninger, PersonSelector, ArbeidsforholdSelector} from '../ducks/saksopplysninger';
 import {Panel} from 'nav-frontend-paneler';
+import AlertStripe from 'nav-frontend-alertstriper';
+
+import {STATUS} from '../ducks/utils';
 import './arbeidsforhold.css';
-import { Systemtittel } from "nav-frontend-typografi";
+import {Systemtittel} from "nav-frontend-typografi";
 
 const ArbeidsforholdRad = ({arbeidsforhold}) => {
   const { arbeidsforholdIDnav, arbeidstakerID:fnr, arbeidsgiver: {navn, orgnummer: orgnr}, ansettelsesPeriode} = arbeidsforhold;
