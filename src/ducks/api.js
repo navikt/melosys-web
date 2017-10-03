@@ -1,12 +1,12 @@
-//import {CONTEXT_PATH, API_BASE_URL} from '../constants';
-//import { fetchToJson, postAsJson, putAsJson } from './../ducks/utils';
+/* eslint-disable */
 import { fetchToJson, postAsJson } from './utils';
+
 /*
 function erDev() {
-  // const url = window.location.href;
-  // return url.includes('debug=true') ||  url.includes('localhost:');
-  //return false;
-  // from .env or .env.local
+  const url = window.location.href;
+  return url.includes('debug=true') ||  url.includes('localhost:');
+  return false;
+  //from .env or .env.local
   return process.env.NODE_PATH !== 'production';
 }
 */
