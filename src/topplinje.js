@@ -24,11 +24,10 @@ Topplinje.propTypes = {
   saksbehandler: PT.object.isRequired,
 };
 
-function mapStateToProps(state) {
-  return {
-    saksbehandler: getSaksbehandlerState(state),
-  };
-}
+const mapStateToProps = state => ({
+  saksbehandler: getSaksbehandlerState(state),
+});
+
 const mapDispatchToProps = dispatch => ({
     hentSaksbehandler: () => dispatch(hentSaksbehandler()),
 });
