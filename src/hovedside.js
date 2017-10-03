@@ -2,6 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import Topplinje from './topplinje';
 import './hovedside.css';
+
 function Hovedside({ children }) {
     return (
         <div className="hovedside">

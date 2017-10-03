@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import PT from 'prop-types';
 import { connect } from 'react-redux';
 import {
     hentSaksbehandler,
     getSaksbehandlerState,
 } from './ducks/saksbehandler';
+
 import Header from './components/Header';
 
 class Topplinje extends Component {
@@ -17,11 +19,16 @@ class Topplinje extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        saksbehandler: getSaksbehandlerState(state),
-    };
+Topplinje.propTypes = {
+  hentSaksbehandler: PT.func.isRequired,
+  saksbehandler: PT.object.isRequired,
 };
+
+function mapStateToProps(state) {
+  return {
+    saksbehandler: getSaksbehandlerState(state),
+  };
+}
 const mapDispatchToProps = dispatch => ({
     hentSaksbehandler: () => dispatch(hentSaksbehandler()),
 });

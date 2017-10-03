@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import PT from 'prop-types';
 
 import './sok-arbeidsforhold.css';
 import SokeForm from './moduler/arbeidsforhold/soke-form';
 
 class SokArbeidsforhold extends Component {
     submit = values => {
-        this.props.history.push('/arbeidsforhold/' + values.fnr);
+        this.props.history.push(`/arbeidsforhold/${values.fnr}`);
     };
     render() {
         return (
@@ -16,5 +17,9 @@ class SokArbeidsforhold extends Component {
         );
     }
 }
+
+SokArbeidsforhold.propTypes = {
+  history: PT.any.isRequired,
+};
 
 export default withRouter(SokArbeidsforhold);

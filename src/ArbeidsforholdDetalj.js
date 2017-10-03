@@ -15,7 +15,7 @@ import {
     OrganisasjonSelectorByNavID,
 } from './ducks/saksopplysninger';
 
-var uuid = require('uuid/v5');
+let uuid = require('uuid/v5');
 const queryString = require('query-string');
 
 const datoFormattering = dato => {

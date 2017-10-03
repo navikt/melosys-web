@@ -5,9 +5,9 @@ import { validForm, rules } from 'react-redux-form-validation';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Input from '../../felles-komponenter/skjema/input/input';
 
-const fnrValid = value => {
-    return /^[0-9]{11}$/.test(value) ? undefined : 'Fnr må ha 11 siffer';
-};
+function fnrValid(value) {
+ return /^[0-9]{11}$/.test(value) ? undefined : 'Fnr må ha 11 siffer';
+}
 
 function SokeForm({ handleSubmit, errorSummary }) {
     return (
@@ -30,7 +30,12 @@ function SokeForm({ handleSubmit, errorSummary }) {
 }
 
 SokeForm.propTypes = {
-    handleSubmit: PT.func.isRequired,
+  handleSubmit: PT.func.isRequired,
+  errorSummary: PT.object,
+};
+
+SokeForm.defaultProps = {
+  errorSummary: {},
 };
 
 export default validForm({
