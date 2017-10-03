@@ -1,8 +1,7 @@
+import { createSelector } from 'reselect';
 import * as Api from './api';
 import { STATUS, doThenDispatch } from './utils';
-
-import { createSelector } from 'reselect';
-import moment from 'moment';
+import sorterSaksopplysninger from './saksopplysninger-utils';
 
 // Actions
 const OK = 'saksopplysninger/OK';
@@ -71,55 +70,14 @@ export const OrganisasjonSelector = createSelector(
     (orgnummer, organisasjoner) =>
         organisasjoner.find(item => item.orgnummer === orgnummer)
 );
-
 export const OrganisasjonSelectorByNavID = createSelector(
     [ArbeidsforholdetSelector, OrganisasjonerSelector],
-    (arbeidsforholdet, organisasjoner) =>
+    (arbeidsforholdet, organisasjoner) => (
         organisasjoner
             ? organisasjoner.find(
                   item =>
                       item.orgnummer === arbeidsforholdet.arbeidsgiver.orgnummer
               )
             : {}
+      )
 );
-
-// Private utility methods
-function sorterSaksopplysninger(saksopplysninger) {
-    sorterArbeidsForholdPaaAnsettelsePeriode(saksopplysninger);
-    sorterOrganisasjoner(saksopplysninger);
-    return saksopplysninger;
-}
-
-function sorterArbeidsForholdPaaAnsettelsePeriode(saksopplysninger) {
-    saksopplysninger.arbeidsforhold.sort(function(a, b) {
-        if (a.ansettelsesPeriode.fom && b.ansettelsesPeriode.fom)
-            return sortByDateDescending(
-                a.ansettelsesPeriode.fom,
-                b.ansettelsesPeriode.fom
-            );
-        else return -1;
-    });
-}
-
-function sorterOrganisasjoner(saksopplysninger) {
-    saksopplysninger.organisasjoner.sort((a, b) => {
-        if (a.orgnummer > b.orgnummer) {
-            return 1;
-        } else if (a.orgnummer === b.orgnummer) {
-            return 0;
-        }
-        return -1;
-    });
-}
-
-const sortByDateDescending = (adate, bdate) => {
-    let amom = moment(adate);
-    let bmom = moment(bdate);
-    if (amom.isAfter(bmom)) {
-        return -1;
-    } else if (amom.isSame(bmom)) {
-        return 0;
-    } else {
-        return 1;
-    }
-};
