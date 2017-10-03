@@ -12,6 +12,7 @@ package-lock.json
 
 # misc
 .idea
+!.idea/runConfigurations/
 .DS_Store
 .env.local
 .env.development.local
