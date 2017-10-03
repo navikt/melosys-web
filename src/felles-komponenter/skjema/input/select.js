@@ -18,11 +18,7 @@ function InnerInputComponent({
         ...rest,
     };
     return (
-        <NavSelect
-            label={label}
-            feil={feil}
-            {...inputProps}
-        >
+        <NavSelect label={label} feil={feil} {...inputProps}>
             <option />
             {children}
         </NavSelect>
