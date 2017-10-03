@@ -4,6 +4,7 @@ import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 import { Normaltekst } from 'nav-frontend-typografi';
 import moment from 'moment';
+import 'moment/locale/nb';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import './arbeidsforholdDetalj.css';
 import JustChildren from './just-children';
@@ -19,7 +20,7 @@ const uuid = require('uuid/v5');
 const queryString = require('query-string');
 
 const datoFormattering = dato => (
-  moment(dato).format('DD.MM.YYYY')
+  moment(dato).format('LL')
 );
 
 const Arbeidsforhold = ({ arbeidsforhold }) => {
