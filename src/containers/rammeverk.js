@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import Topplinje from '../components/Topplinje';
+import Topplinje from '../components/topplinje';
 import './rammeverk.css';
 function Rammeverk({children}) {
   return (

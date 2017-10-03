@@ -1,28 +1,24 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {hentSaksopplysninger, PersonSelector, ArbeidsforholdSelector} from '../ducks/saksopplysninger';
-import {Panel} from 'nav-frontend-paneler';
-import './arbeidsforhold.css';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import {Container, Row, Column} from 'nav-frontend-grid';
 
+import Soknadsinfo from '../components/soknadsinfo';
+import Vilkarsvurdering from '../components/vilkarsvurdering';
+
+import './saksbehandling.css';
 
 class Saksbehandling extends Component {
-
-    componentDidMount() {
-        const {fnr} = this.props.match.params;
-        //this.props.hentSaksopplysninger(fnr);
-    }
-
     expandHandler = (e) => {
         console.log('expanding', e);
     }
 
     render() {
         return (
-            <Container>
+            <Container className="Saksbehandling">
                 <Row>
                     <Column xs={"7"}>
+                        <Vilkarsvurdering />
                         <Ekspanderbartpanel tittel="OLA NORDMANN (44 ÅR)" tittelProps="innholdstittel"
                                             onClick={this.expandHandler}>
                             <div>
@@ -67,6 +63,7 @@ class Saksbehandling extends Component {
 
                     </Column>
                     <Column xs={"5"}>
+                        <Soknadsinfo/>
 
                     </Column>
                 </Row>

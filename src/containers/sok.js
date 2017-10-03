@@ -3,8 +3,6 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 
 
-import {Input} from 'nav-frontend-skjema';
-import {Hovedknapp} from 'nav-frontend-knapper';
 import {Container, Row, Column} from 'nav-frontend-grid';
 
 import SokeForm from '../moduler/arbeidsforhold/soke-form';
@@ -12,9 +10,6 @@ import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import './sok.less';
 
 class Sok extends Component {
-    constructor(props) {
-        super(props);
-    }
 
     submit = (values) => {
         this.props.history.push('/saksbehandling/'+values.fnr);
