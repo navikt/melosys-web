@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import {
-    hentSaksopplysninger,
-    PersonSelector,
-    ArbeidsforholdSelector,
-} from './ducks/saksopplysninger';
+import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 import AlertStripe from 'nav-frontend-alertstriper';
-
-import { STATUS } from './ducks/utils';
-import './arbeidsforhold.css';
 import { Systemtittel } from 'nav-frontend-typografi';
+import { STATUS } from './ducks/utils';
+import {
+  hentSaksopplysninger,
+  PersonSelector,
+  ArbeidsforholdSelector,
+} from './ducks/saksopplysninger';
+import './arbeidsforhold.css';
 
 const ArbeidsforholdRad = ({ arbeidsforhold }) => {
     const {
@@ -24,8 +24,8 @@ const ArbeidsforholdRad = ({ arbeidsforhold }) => {
     const pathname = `/arbeidsforholdet/${fnr}/`;
     const search = `?navid=${arbeidsforholdIDnav}`;
     const linkToArbeidsforholdet = {
-        pathname: pathname,
-        search: search,
+        pathname,
+        search,
     };
 
     return (
@@ -43,9 +43,13 @@ const ArbeidsforholdRad = ({ arbeidsforhold }) => {
     );
 };
 
+ArbeidsforholdRad.propTypes = {
+  arbeidsforhold: PT.object.isRequired,
+};
+
 const ArbeidsforholdTabell = ({ arbeidsforhold }) => {
     if (!arbeidsforhold || !arbeidsforhold.length) return null;
-    let tableBody = arbeidsforhold.map(item => (
+    const tableBody = arbeidsforhold.map(item => (
         <ArbeidsforholdRad key={item.arbeidsforholdID} arbeidsforhold={item} />
     ));
 
@@ -64,18 +68,29 @@ const ArbeidsforholdTabell = ({ arbeidsforhold }) => {
         </table>
     );
 };
+ArbeidsforholdTabell.propTypes = {
+  arbeidsforhold: PT.object.isRequired,
+};
 
+const gateadresse = ({ bostedsadresse }) => {
+  const {
+    gateadresse: { gatenavn, husnummer, husbokstav },
+  } = bostedsadresse;
+  const gnavn = gatenavn ? `${gatenavn} ` : '';
+  const hnr = husnummer ? `${husnummer} ` : '';
+  const hb = husbokstav ? `${husbokstav} ` : '';
+  return (
+    `${gnavn}${hnr}${hb}`
+  );
+};
 const BostedsAdresse = ({ bostedsadresse }) => {
     if (!bostedsadresse) return null;
     const {
-        gateadresse: { gatenavn, husnummer, husbokstav },
         postnr,
         poststed,
         land,
     } = bostedsadresse;
-    let gateadressen = '' + gatenavn;
-    if (husnummer) gateadressen += ' ' + husnummer;
-    if (husbokstav) gateadressen += husbokstav;
+  const gateadressen = gateadresse(bostedsadresse);
     return (
         <p>
             {gateadressen}
@@ -85,6 +100,10 @@ const BostedsAdresse = ({ bostedsadresse }) => {
             {land}
         </p>
     );
+};
+
+BostedsAdresse.propTypes = {
+  bostedsadresse: PT.object.isRequired,
 };
 
 class Arbeidsforhold extends Component {
@@ -100,7 +119,7 @@ class Arbeidsforhold extends Component {
         if (!arbeidsforhold || status === STATUS.ERROR) {
             return (
                 <div>
-                    <AlertStripe type="advarsel" solid={true}>
+                    <AlertStripe type="advarsel" solid={'true'}>
                         Fant ingen arbeidsforhold
                     </AlertStripe>
                 </div>
@@ -127,13 +146,20 @@ class Arbeidsforhold extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        person: PersonSelector(state),
-        arbeidsforhold: ArbeidsforholdSelector(state),
-        status: state.status,
-    };
+Arbeidsforhold.propTypes = {
+  match: PT.any.isRequired,
+  hentSaksopplysninger: PT.func.isRequired,
+  person: PT.object.isRequired,
+  arbeidsforhold: PT.object.isRequired,
+  status: PT.object.isRequired,
 };
+
+const mapStateToProps = state => ({
+  person: PersonSelector(state),
+  arbeidsforhold: ArbeidsforholdSelector(state),
+  status: state.status,
+});
+
 const mapDispatchToProps = dispatch => ({
     hentSaksopplysninger: fnr => dispatch(hentSaksopplysninger(fnr)),
 });

@@ -1,13 +1,13 @@
 import React from 'react';
-
-import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
-import './arbeidsforholdDetalj.css';
-import JustChildren from './just-children';
+import { connect } from 'react-redux';
+import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 import { Normaltekst } from 'nav-frontend-typografi';
 import moment from 'moment';
+import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
+import './arbeidsforholdDetalj.css';
+import JustChildren from './just-children';
 
-import { connect } from 'react-redux';
 import {
     hentSaksopplysninger,
     PersonSelector,
@@ -15,12 +15,12 @@ import {
     OrganisasjonSelectorByNavID,
 } from './ducks/saksopplysninger';
 
-let uuid = require('uuid/v5');
+const uuid = require('uuid/v5');
 const queryString = require('query-string');
 
-const datoFormattering = dato => {
-    return moment(dato).format('DD.MM.YYYY');
-};
+const datoFormattering = dato => (
+  moment(dato).format('DD.MM.YYYY')
+);
 
 const Arbeidsforhold = ({ arbeidsforhold }) => {
     if (!arbeidsforhold || !arbeidsforhold.arbeidsforholdID) {
@@ -43,6 +43,9 @@ const Arbeidsforhold = ({ arbeidsforhold }) => {
         </p>
     );
 };
+Arbeidsforhold.propTypes = {
+  arbeidsforhold: PT.object.isRequired,
+};
 
 const ArbeidsAvtaleRad = ({ arbeidsavtale, antall }) => {
     const tittel = `Arbeidsavtale (${antall})`;
@@ -51,15 +54,19 @@ const ArbeidsAvtaleRad = ({ arbeidsavtale, antall }) => {
         <Ekspanderbartpanel tittel={tittel}>
             <Normaltekst>
                 <span>Stillingsprosent:</span>&nbsp;<span>
-                    {stillingsprosent ? stillingsprosent + '%' : 'ukjent'}
+                    {stillingsprosent ? `${stillingsprosent}%` : 'ukjent'}
                 </span>
                 <br />
                 <span>Lønnstype:</span>&nbsp;<span>
-                    {avloenningstype ? avloenningstype : 'ukjent'}
+                    {avloenningstype ? `${avloenningstype}` : 'ukjent'}
                 </span>
             </Normaltekst>
         </Ekspanderbartpanel>
     );
+};
+ArbeidsAvtaleRad.propTypes = {
+  arbeidsavtale: PT.object.isRequired,
+  antall: PT.string.isRequired,
 };
 
 const ArbeidsforholdListe = ({ arbeidsforhold }) => {
@@ -84,6 +91,7 @@ const PPRow = ({ data }) => {
         permisjonsprosent,
         permisjonsPeriode: { fom, tom },
     } = data;
+    const prosent = `${permisjonsprosent}`;
     return (
         <div>
             <span>ID:</span>
@@ -99,9 +107,12 @@ const PPRow = ({ data }) => {
             <span>{tom && datoFormattering(tom)}</span>
             <br />
             <span>permisjonsprosent:</span>
-            <span>{'' + permisjonsprosent}</span>
+            <span>{prosent}</span>
         </div>
     );
+};
+PPRow.propTypes = {
+  data: PT.object.isRequired,
 };
 
 const PermisjonOgPermittering = ({ arbeidsforhold }) => {
@@ -117,19 +128,27 @@ const PermisjonOgPermittering = ({ arbeidsforhold }) => {
 
     return <Ekspanderbartpanel tittel={tittel}>{rows}</Ekspanderbartpanel>;
 };
+PermisjonOgPermittering.propTypes = {
+  arbeidsforhold: PT.object.isRequired,
+};
 
-function gateAdresse(bostedsadresse) {
-    const { gatenavn, husnummer, husbokstav } = bostedsadresse;
-    let gateadressen = gatenavn;
-    if (husnummer) gateadressen += ' ' + husnummer;
-    if (husbokstav) gateadressen += husbokstav;
-    return gateadressen;
-}
+const gateAdresse = bostedsadresse => {
+  const {
+    gateadresse: { gatenavn, husnummer, husbokstav },
+  } = bostedsadresse;
+  const gnavn = gatenavn ? `${gatenavn} ` : '';
+  const hnr = husnummer ? `${husnummer} ` : '';
+  const hb = husbokstav ? `${husbokstav} ` : '';
+  return (
+    `${gnavn}${hnr}${hb}`
+  );
+};
+
 
 function antallAar(dato) {
-    let now = moment();
-    let mdato = moment(dato);
-    let aar = now.diff(mdato, 'years');
+    const now = moment();
+    const mdato = moment(dato);
+    const aar = now.diff(mdato, 'years');
     return aar;
 }
 const Person = ({ person }) => {
@@ -140,15 +159,17 @@ const Person = ({ person }) => {
         sammensattNavn,
         foedselsdato,
         fnr,
-        bostedsadresse: { land, postnr, poststed, gateadresse },
+        bostedsadresse,
         statsborgerskap,
     } = person;
 
-    let alder = antallAar(foedselsdato);
-    let gateadressen = gateAdresse(gateadresse);
+    const { land, postnr, poststed } = bostedsadresse;
+    const alder = antallAar(foedselsdato);
 
+    const gateadressen = bostedsadresse ? gateAdresse(bostedsadresse) : '';
+    const tittel = `${sammensattNavn} (${alder} år`;
     return (
-        <Ekspanderbartpanel tittel={sammensattNavn + ' (' + alder + ' år)'}>
+        <Ekspanderbartpanel tittel={tittel}>
             <Normaltekst>{fnr}</Normaltekst>
             <h4>Personopplysninger</h4>
             <p>
@@ -168,6 +189,9 @@ const Person = ({ person }) => {
             </p>
         </Ekspanderbartpanel>
     );
+};
+Person.propTypes = {
+  person: PT.object.isRequired,
 };
 
 const Virksomhet = ({ organisasjon }) => {
@@ -190,11 +214,13 @@ const Virksomhet = ({ organisasjon }) => {
         </p>
     );
 };
+Virksomhet.propTypes = {
+  organisasjon: PT.object.isRequired,
+};
 
-//=======================================================================================
 class ArbeidsforholdDetalj extends React.Component {
     componentDidMount() {
-        let { fnr } = this.props.match.params;
+        const { fnr } = this.props.match.params;
         this.props.hentSaksopplysninger(fnr);
     }
 
@@ -282,7 +308,13 @@ class ArbeidsforholdDetalj extends React.Component {
         );
     }
 }
-
+ArbeidsforholdDetalj.propTypes = {
+  match: PT.any.isRequired,
+  hentSaksopplysninger: PT.func.isRequired,
+  person: PT.object.isRequired,
+  organisasjon: PT.object.isRequired,
+  arbeidsforholdet: PT.object.isRequired,
+};
 const arbeidsforholdIDfromQueryParam = props => {
     const { search } = props.location;
     const qs = queryString.parse(search);
