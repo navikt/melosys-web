@@ -1,0 +1,90 @@
+@import '../globals';
+
+.topplinje {
+  display: flex;
+  flex-direction: row;
+  height: 4rem;
+  background-color: @color-purple;
+}
+
+
+// Logo og navn på Melosys-systemet
+.topplinje__brand {
+  display:flex;
+  flex-direction: row;
+  flex-grow:1;
+  align-items: center;
+
+  .brand__logo {
+    display: flex;
+    padding-left: 20px;
+    padding-right: 15px;
+    height: auto;
+    width: 85px;
+  }
+
+  .brand__skillelinje {
+    display: flex;
+    border-left: 1px solid white;
+    height: 30px;
+  }
+
+  .brand__tittel {
+    display: flex;
+    padding-left: 15px;
+    color:@color-white;
+    font-size: @font-size * 1;
+  }
+}
+
+// Søkefunksjonalitet
+.topplinje__sok {
+  display: flex;
+  flex-grow:1;
+  flex-direction: row;
+  align-items:center;
+
+  .sok__felt {
+    display: flex;
+    flex-grow:0;
+    height:2em;
+    justify-self: center;
+    background-color: @color-purple-light;
+    border:0px;
+    outline:0;
+    border-radius: 2px;
+    padding:0 10px;
+    color:@color-white;
+    font-size: @font-size;
+  }
+
+  .sok__button {
+    display: flex;
+    width:20px;
+    height:20px;
+    margin: 0 -30px;
+    background-image: url('../resources/images/icon-search.svg');
+    background-repeat:no-repeat;
+    background-color:transparent;
+    background-size:contain;
+    border:0;
+  }
+}
+
+// Brukernavn for innlogget bruker
+.topplinje__bruker {
+  display:flex;
+  flex-grow:1;
+  flex-direction: column;
+  align-items:flex-end;
+
+  .bruker__navn {
+    display: flex;
+    margin:auto 0;
+    padding:0.3em;
+    color:@color-white;
+  }
+}
+
+
+

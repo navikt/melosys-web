@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom'
 
 import './sok-arbeidsforhold.css';
-import SokeForm from './moduler/arbeidsforhold/soke-form';
+import SokeForm from '../moduler/arbeidsforhold/soke-form';
 
 class SokArbeidsforhold extends Component {
   submit = (values) => {
@@ -18,4 +18,3 @@ class SokArbeidsforhold extends Component {
 }
 
 export default withRouter(SokArbeidsforhold);
-
