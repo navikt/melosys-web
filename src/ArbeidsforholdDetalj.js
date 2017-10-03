@@ -215,7 +215,7 @@ const Virksomhet = ({ organisasjon }) => {
     );
 };
 Virksomhet.propTypes = {
-  organisasjon: PT.object.isRequired,
+  organisasjon: PT.any.isRequired,
 };
 
 class ArbeidsforholdDetalj extends React.Component {
@@ -226,7 +226,6 @@ class ArbeidsforholdDetalj extends React.Component {
 
     render() {
         const { person, organisasjon, arbeidsforholdet } = this.props;
-
         if (!person || !arbeidsforholdet) {
             return <p>FEILMELDING</p>;
         }
@@ -311,10 +310,16 @@ class ArbeidsforholdDetalj extends React.Component {
 ArbeidsforholdDetalj.propTypes = {
   match: PT.any.isRequired,
   hentSaksopplysninger: PT.func.isRequired,
-  person: PT.object.isRequired,
-  organisasjon: PT.object.isRequired,
-  arbeidsforholdet: PT.object.isRequired,
+  person: PT.object,
+  organisasjon: PT.object,
+  arbeidsforholdet: PT.object,
 };
+ArbeidsforholdDetalj.defaultProps = {
+  person: {},
+  organisasjon: {},
+  arbeidsforholdet: {},
+};
+
 const arbeidsforholdIDfromQueryParam = props => {
     const { search } = props.location;
     const qs = queryString.parse(search);
