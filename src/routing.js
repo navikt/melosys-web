@@ -7,16 +7,20 @@ import Arbeidsforhold from './Arbeidsforhold';
 import ArbeidsforholdDetalj from './ArbeidsforholdDetalj';
 import Registrere from './Registrere';
 
-const Routing = ({ location }) =>
-  <Switch location={location}>
-    <Route exact path='/' component={Home}/>
-    <Route path="/arbeidsforhold/:fnr" component={Arbeidsforhold}/>
-    <Route path="/arbeidsforholdet/:fnr/" component={ArbeidsforholdDetalj}/>
-    <Route path="/registrere" component={Registrere}/>
-  </Switch>;
+const Routing = ({ location }) => (
+    <Switch location={location}>
+        <Route exact path="/" component={Home} />
+        <Route path="/arbeidsforhold/:fnr" component={Arbeidsforhold} />
+        <Route
+            path="/arbeidsforholdet/:fnr/"
+            component={ArbeidsforholdDetalj}
+        />
+        <Route path="/registrere" component={Registrere} />
+    </Switch>
+);
 
 Routing.propTypes = {
-  location: PT.object.isRequired
+    location: PT.object.isRequired,
 };
 
 export default withRouter(Routing);

@@ -8,13 +8,7 @@ import './skjema.css';
 function InnerInputComponent({ input, label, errorMessage, meta, ...rest }) {
     const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
     const inputProps = { ...input, ...rest };
-    return (
-        <NavInput
-            label={label}
-            feil={feil}
-            {...inputProps}
-        />
-    );
+    return <NavInput label={label} feil={feil} {...inputProps} />;
 }
 
 InnerInputComponent.propTypes = {

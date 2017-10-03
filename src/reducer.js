@@ -26,8 +26,8 @@ export default function(state, action) {
 }
 */
 export default combineReducers({
-  form: formReducer,
-  saksopplysninger: saksopplysningerReducer,
-  saksbehandler: saksbehandlerReducer,
-  arbeidsgiver: arbeidsgiverReducer
+    form: formReducer,
+    saksopplysninger: saksopplysningerReducer,
+    saksbehandler: saksbehandlerReducer,
+    arbeidsgiver: arbeidsgiverReducer,
 });

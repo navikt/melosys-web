@@ -13,19 +13,17 @@ import history from './history';
 const store = createStore(history);
 
 function Provider({ children }) {
-  return (
-    <ReduxProvider store={store}>
-      <IntlProvider defaultLocale="nb" locale="nb" messages={{}}>
-        <FnrProvider>
-          {children}
-        </FnrProvider>
-      </IntlProvider>
-    </ReduxProvider>
-  );
+    return (
+        <ReduxProvider store={store}>
+            <IntlProvider defaultLocale="nb" locale="nb" messages={{}}>
+                <FnrProvider>{children}</FnrProvider>
+            </IntlProvider>
+        </ReduxProvider>
+    );
 }
 
 Provider.propTypes = {
-  children: PT.node.isRequired,
+    children: PT.node.isRequired,
 };
 
 export default DragDropContext(HTML5Backend)(componentize()(Provider));
