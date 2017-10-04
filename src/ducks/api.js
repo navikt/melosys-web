@@ -35,8 +35,6 @@ export function hentSaksopplysninger(fnr) {
 }
 
 export function nyHenvendelse(henvendelse) {
-  //const URI_HENVENDELSE =`${API_MELOSYS_URL}henvendelse`;
-  //return postAsJson(URI_HENVENDELSE, henvendelse);
-  const URI_HENVENDELSE = 'http://10.33.46.106:3002/api/henvendelse';
+  const URI_HENVENDELSE =`${API_MELOSYS_URL}henvendelse`;
   return postAsJson(URI_HENVENDELSE, henvendelse);
 }
