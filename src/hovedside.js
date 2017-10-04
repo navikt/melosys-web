@@ -4,25 +4,25 @@ import Topplinje from './topplinje';
 import './hovedside.css';
 
 function Hovedside({ children }) {
-    return (
-        <div className="hovedside">
-            <Topplinje />
-            <div className="main-container">{children}</div>
-        </div>
-    );
+  return (
+    <div className="hovedside">
+      <Topplinje />
+      <div className="main-container">{children}</div>
+    </div>
+  );
 }
 
 Hovedside.defaultProps = {
-    children: null,
-    routes: null,
+  children: null,
+  routes: null,
 };
 
 Hovedside.propTypes = {
-    children: PT.node,
+  children: PT.node,
 };
 
 Hovedside.defaultProps = {
-    children: undefined,
+  children: undefined,
 };
 
 export default Hovedside;

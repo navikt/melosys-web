@@ -8,15 +8,15 @@ import reducer from './reducer';
 
 /* eslint-disable no-underscore-dangle */
 function getStoreCompose(history) {
-    const composeEnhancers =
-        window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+  const composeEnhancers =
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-    return composeEnhancers(
-        applyMiddleware(thunkMiddleware, routerMiddleware(history), freeze)
-    );
+  return composeEnhancers(
+    applyMiddleware(thunkMiddleware, routerMiddleware(history), freeze)
+  );
 }
 /* eslint-enable */
 
 export default function create(history) {
-    return getStoreCompose(history)(createStore)(reducer, {});
+  return getStoreCompose(history)(createStore)(reducer, {});
 }

@@ -14,33 +14,33 @@ import {
 import './arbeidsforhold.css';
 
 const ArbeidsforholdRad = ({ arbeidsforhold }) => {
-    const {
-        arbeidsforholdIDnav,
-        arbeidstakerID: fnr,
-        arbeidsgiver: { navn, orgnummer: orgnr },
-        ansettelsesPeriode,
-    } = arbeidsforhold;
+  const {
+    arbeidsforholdIDnav,
+    arbeidstakerID: fnr,
+    arbeidsgiver: { navn, orgnummer: orgnr },
+    ansettelsesPeriode,
+  } = arbeidsforhold;
 
-    const pathname = `/arbeidsforholdet/${fnr}/`;
-    const search = `?navid=${arbeidsforholdIDnav}`;
-    const linkToArbeidsforholdet = {
-        pathname,
-        search,
-    };
+  const pathname = `/arbeidsforholdet/${fnr}/`;
+  const search = `?navid=${arbeidsforholdIDnav}`;
+  const linkToArbeidsforholdet = {
+    pathname,
+    search,
+  };
 
-    return (
-        <tr>
-            <td>{orgnr}</td>
-            <td>{navn}</td>
-            <td>{ansettelsesPeriode.fom}</td>
-            <td>{ansettelsesPeriode.tom}</td>
-            <td>
-                <Link to={linkToArbeidsforholdet} alt="Arbeidsforhold detalj">
-                    Vis
-                </Link>
-            </td>
-        </tr>
-    );
+  return (
+    <tr>
+      <td>{orgnr}</td>
+      <td>{navn}</td>
+      <td>{ansettelsesPeriode.fom}</td>
+      <td>{ansettelsesPeriode.tom}</td>
+      <td>
+        <Link to={linkToArbeidsforholdet} alt="Arbeidsforhold detalj">
+          Vis
+        </Link>
+      </td>
+    </tr>
+  );
 };
 
 ArbeidsforholdRad.propTypes = {
@@ -48,25 +48,25 @@ ArbeidsforholdRad.propTypes = {
 };
 
 const ArbeidsforholdTabell = ({ arbeidsforhold }) => {
-    if (!arbeidsforhold || !arbeidsforhold.length) return null;
-    const tableBody = arbeidsforhold.map(item => (
-        <ArbeidsforholdRad key={item.arbeidsforholdID} arbeidsforhold={item} />
-    ));
+  if (!arbeidsforhold || !arbeidsforhold.length) return null;
+  const tableBody = arbeidsforhold.map(item => (
+    <ArbeidsforholdRad key={item.arbeidsforholdID} arbeidsforhold={item} />
+  ));
 
-    return (
-        <table>
-            <thead>
-                <tr>
-                    <th>Orgnr</th>
-                    <th>Navn</th>
-                    <th>FOM</th>
-                    <th>TOM</th>
-                    <th>&nbsp;</th>
-                </tr>
-            </thead>
-            <tbody>{tableBody}</tbody>
-        </table>
-    );
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Orgnr</th>
+          <th>Navn</th>
+          <th>FOM</th>
+          <th>TOM</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>{tableBody}</tbody>
+    </table>
+  );
 };
 ArbeidsforholdTabell.propTypes = {
   arbeidsforhold: PT.array.isRequired,
@@ -83,18 +83,18 @@ const gateadresseNY = bostedsadresse => {
 };
 
 const BostedsAdresse = ({ bostedsadresse, bostedsadresse: { postnr }, bostedsadresse: { land } }) => {
-    if (!bostedsadresse) return null;
+  if (!bostedsadresse) return null;
 
   const gateadressen = gateadresseNY(bostedsadresse);
-    return (
-        <p>
-            {gateadressen}
-            <br />
-            {postnr}
-            <br />
-            {land}
-        </p>
-    );
+  return (
+    <p>
+      {gateadressen}
+      <br />
+      {postnr}
+      <br />
+      {land}
+    </p>
+  );
 };
 
 BostedsAdresse.propTypes = {
@@ -103,10 +103,10 @@ BostedsAdresse.propTypes = {
 BostedsAdresse.defaultProps = {
   bostedsadresse: {
     gateadresse: {
-    gatenavn: '',
+      gatenavn: '',
       husnummer: '',
       husbokstav: '',
-  },
+    },
     postnr: '',
     poststed: '',
     land: '',
@@ -114,57 +114,57 @@ BostedsAdresse.defaultProps = {
 };
 
 class Arbeidsforhold extends Component {
-    static propTypes = {
-      match: PT.any.isRequired,
-      hentSaksopplysninger: PT.func.isRequired,
-      person: PT.object,
-      arbeidsforhold: PT.arrayOf(PT.object),
-      status: PT.string,
-    };
+  static propTypes = {
+    match: PT.any.isRequired,
+    hentSaksopplysninger: PT.func.isRequired,
+    person: PT.object,
+    arbeidsforhold: PT.arrayOf(PT.object),
+    status: PT.string,
+  };
 
-   static defaultProps = {
+  static defaultProps = {
     person: {},
     arbeidsforhold: [],
     status: STATUS.NOT_STARTED,
   };
 
-    componentDidMount() {
-        const { fnr } = this.props.match.params;
-        this.props.hentSaksopplysninger(fnr);
+  componentDidMount() {
+    const { fnr } = this.props.match.params;
+    this.props.hentSaksopplysninger(fnr);
+  }
+
+  render() {
+    const { fnr } = this.props.match.params;
+    const { person, arbeidsforhold, status } = this.props;
+
+    if (arbeidsforhold.length === 0 || status === STATUS.ERROR) {
+      return (
+        <div>
+          <AlertStripe type="advarsel" solid>
+            Fant ingen arbeidsforhold
+          </AlertStripe>
+        </div>
+      );
     }
 
-    render() {
-        const { fnr } = this.props.match.params;
-        const { person, arbeidsforhold, status } = this.props;
-
-        if (arbeidsforhold.length === 0 || status === STATUS.ERROR) {
-            return (
-                <div>
-                    <AlertStripe type="advarsel" solid>
-                        Fant ingen arbeidsforhold
-                    </AlertStripe>
-                </div>
-            );
-        }
-
-        const { sammensattNavn, bostedsadresse } = person;
-        return (
-            <section className="arbeidsforhold">
-                <Panel>
-                    <Systemtittel>Fødselsnr: {fnr}</Systemtittel>
-                    <p>{sammensattNavn}</p>
-                    <BostedsAdresse bostedsadresse={bostedsadresse} />
-                </Panel>
-                <br />
-                <Panel>
-                    <Systemtittel className="blokk-xs">
-                        Arbeidsforhold
-                    </Systemtittel>
-                    <ArbeidsforholdTabell arbeidsforhold={arbeidsforhold} />
-                </Panel>
-            </section>
-        );
-    }
+    const { sammensattNavn, bostedsadresse } = person;
+    return (
+      <section className="arbeidsforhold">
+        <Panel>
+          <Systemtittel>Fødselsnr: {fnr}</Systemtittel>
+          <p>{sammensattNavn}</p>
+          <BostedsAdresse bostedsadresse={bostedsadresse} />
+        </Panel>
+        <br />
+        <Panel>
+          <Systemtittel className="blokk-xs">
+            Arbeidsforhold
+          </Systemtittel>
+          <ArbeidsforholdTabell arbeidsforhold={arbeidsforhold} />
+        </Panel>
+      </section>
+    );
+  }
 }
 
 
@@ -175,7 +175,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    hentSaksopplysninger: fnr => dispatch(hentSaksopplysninger(fnr)),
+  hentSaksopplysninger: fnr => dispatch(hentSaksopplysninger(fnr)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Arbeidsforhold);

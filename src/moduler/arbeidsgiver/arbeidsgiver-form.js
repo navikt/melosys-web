@@ -83,23 +83,23 @@ const ArbeidsgiverForm = ({ handleSubmit, errorSummary }) => (
 );
 
 ArbeidsgiverForm.propTypes = {
-    handleSubmit: PT.func.isRequired,
-    errorSummary: PT.object,
+  handleSubmit: PT.func.isRequired,
+  errorSummary: PT.object,
 };
 
 ArbeidsgiverForm.defaultProps = {
-    errorSummary: {},
+  errorSummary: {},
 };
 
 const ArbeidsgiverReduxForm = validForm({
-    form: 'arbeidsgiverform',
-    errorSummaryTitle: 'Fix these errors',
-    validate: {
-        fnr: [rules.required, fnrValid],
-        tekst: [],
-        frukt: [],
-        snacks: [],
-    },
+  form: 'arbeidsgiverform',
+  errorSummaryTitle: 'Fix these errors',
+  validate: {
+    fnr: [rules.required, fnrValid],
+    tekst: [],
+    frukt: [],
+    snacks: [],
+  },
 })(ArbeidsgiverForm);
 
 const fnr = '12345678901';
@@ -111,23 +111,23 @@ const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = () => ({
-    onSubmit: (dialogData, dispatch, props) => {
-        const nyHenvendelsePromise = nyHenvendelse({
-            ...dialogData,
-        })(dispatch);
-        const onComplete = props.onComplete;
-        nyHenvendelsePromise.then(action => {
-            props.reset();
-            if (onComplete) {
-                onComplete(action.data);
-            }
-        });
-    },
+  onSubmit: (dialogData, dispatch, props) => {
+    const nyHenvendelsePromise = nyHenvendelse({
+      ...dialogData,
+    })(dispatch);
+    const onComplete = props.onComplete;
+    nyHenvendelsePromise.then(action => {
+      props.reset();
+      if (onComplete) {
+        onComplete(action.data);
+      }
+    });
+  },
 });
 
 const ArbeidsgiverFormReduxFormConnected = connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(ArbeidsgiverReduxForm);
 
 export default ArbeidsgiverFormReduxFormConnected;
