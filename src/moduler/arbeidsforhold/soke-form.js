@@ -10,23 +10,23 @@ const fnrValid = value => (
 );
 
 function SokeForm({ handleSubmit, errorSummary }) {
-    return (
-        <div className="search-container">
-            <h2 className="typo-undertittel">
-                <span>Søk på person</span>
-            </h2>
-            <form onSubmit={handleSubmit}>
-                {errorSummary}
-                <Input
-                    feltNavn="fnr"
-                    label="Fnr. eller dnr."
-                    bredde="xl"
-                    autoFocus
-                />
-                <Hovedknapp>Søk</Hovedknapp>
-            </form>
-        </div>
-    );
+  return (
+    <div className="search-container">
+      <h2 className="typo-undertittel">
+        <span>Søk på person</span>
+      </h2>
+      <form onSubmit={handleSubmit}>
+        {errorSummary}
+        <Input
+          feltNavn="fnr"
+          label="Fnr. eller dnr."
+          bredde="xl"
+          autoFocus
+        />
+        <Hovedknapp>Søk</Hovedknapp>
+      </form>
+    </div>
+  );
 }
 
 SokeForm.propTypes = {
@@ -39,9 +39,9 @@ SokeForm.defaultProps = {
 };
 
 export default validForm({
-    form: 'sokeform',
-    errorSummaryTitle: 'Fix these errors',
-    validate: {
-        fnr: [rules.required, fnrValid],
-    },
+  form: 'sokeform',
+  errorSummaryTitle: 'Fix these errors',
+  validate: {
+    fnr: [rules.required, fnrValid],
+  },
 })(SokeForm);

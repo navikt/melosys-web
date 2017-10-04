@@ -14,14 +14,14 @@ import registerServiceWorker from './registerServiceWorker';
 const store = createStore(routerHistory);
 
 ReactDOM.render(
-    <ReduxProvider store={store}>
-        <ReduxRouter history={routerHistory}>
-            <App>
-                <Routing />
-            </App>
-        </ReduxRouter>
-    </ReduxProvider>,
-    document.getElementById('root')
+  <ReduxProvider store={store}>
+    <ReduxRouter history={routerHistory}>
+      <App>
+        <Routing />
+      </App>
+    </ReduxRouter>
+  </ReduxProvider>,
+  document.getElementById('root')
 );
 
 registerServiceWorker();

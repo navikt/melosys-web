@@ -36,7 +36,7 @@ function sorterOrganisasjoner(saksopplysninger) {
   });
 }
 
- export default function sorterSaksopplysninger(saksopplysninger) {
+export default function sorterSaksopplysninger(saksopplysninger) {
   sorterArbeidsForholdPaaAnsettelsePeriode(saksopplysninger);
   sorterOrganisasjoner(saksopplysninger);
   return saksopplysninger;

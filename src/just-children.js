@@ -2,7 +2,7 @@
 // Trenger react@16.x.x for at denne skal fungere som forventet.
 
 function JustChildren({ children }) {
-    return children;
+  return children;
 }
 
 export default JustChildren;
