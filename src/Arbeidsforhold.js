@@ -114,6 +114,20 @@ BostedsAdresse.defaultProps = {
 };
 
 class Arbeidsforhold extends Component {
+    static propTypes = {
+      match: PT.any.isRequired,
+      hentSaksopplysninger: PT.func.isRequired,
+      person: PT.object,
+      arbeidsforhold: PT.array,
+      status: PT.string,
+    };
+
+   static defaultProps = {
+    person: {},
+    arbeidsforhold: [],
+    status: STATUS.NOT_STARTED,
+  };
+
     componentDidMount() {
         const { fnr } = this.props.match.params;
         this.props.hentSaksopplysninger(fnr);
@@ -153,19 +167,6 @@ class Arbeidsforhold extends Component {
     }
 }
 
-Arbeidsforhold.propTypes = {
-  match: PT.any.isRequired,
-  hentSaksopplysninger: PT.func.isRequired,
-  person: PT.object,
-  arbeidsforhold: PT.array,
-  status: PT.string,
-};
-
-Arbeidsforhold.defaultProps = {
-  person: {},
-  arbeidsforhold: [],
-  status: STATUS.NOT_STARTED,
-};
 
 const mapStateToProps = state => ({
   person: PersonSelector(state),
