@@ -73,8 +73,7 @@ ArbeidsforholdTabell.propTypes = {
 };
 
 const gateadresseNY = bostedsadresse => {
-  debugger;
-  const {gatenavn, husnummer, husbokstav } = bostedsadresse;
+  const { gatenavn, husnummer, husbokstav } = bostedsadresse;
   const gnavn = gatenavn ? `${gatenavn.trim()} ` : '';
   const hnr = husnummer ? `${husnummer}` : '';
   const hb = husbokstav ? `${husbokstav}` : '';
@@ -82,18 +81,18 @@ const gateadresseNY = bostedsadresse => {
     `${gnavn}${hnr}${hb}`
   );
 };
-const BostedsAdresse = ({ bostedsadresse }) => {
-  debugger;
+
+const BostedsAdresse = ({ bostedsadresse, bostedsadresse: { postnr }, bostedsadresse: { land } }) => {
     if (!bostedsadresse) return null;
 
   const gateadressen = gateadresseNY(bostedsadresse);
     return (
         <p>
             {gateadressen}
-            {/*<br />
-            {postnr}&nbsp;{poststed}
             <br />
-            {land}*/}
+            {postnr}
+            <br />
+            {land}
         </p>
     );
 };
@@ -103,10 +102,15 @@ BostedsAdresse.propTypes = {
 };
 BostedsAdresse.defaultProps = {
   bostedsadresse: {
-    gatenavn: 'gatenavn',
-    husnummer: 'husnummer',
-    husbokstav: 'husbokstav',
-  }
+    gateadresse: {
+    gatenavn: '',
+      husnummer: '',
+      husbokstav: '',
+  },
+    postnr: '',
+    poststed: '',
+    land: '',
+  },
 };
 
 class Arbeidsforhold extends Component {
@@ -130,7 +134,6 @@ class Arbeidsforhold extends Component {
         }
 
         const { sammensattNavn, bostedsadresse } = person;
-        console.log(bostedsadresse);
         return (
             <section className="arbeidsforhold">
                 <Panel>
