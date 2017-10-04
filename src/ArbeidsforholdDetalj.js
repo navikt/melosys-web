@@ -15,6 +15,7 @@ import {
   ArbeidsforholdetSelector,
   OrganisasjonSelectorByNavID,
 } from './ducks/saksopplysninger';
+import * as MPT from './proptypes';
 
 const uuid = require('uuid/v5');
 const queryString = require('query-string');
@@ -33,19 +34,19 @@ const Arbeidsforhold = ({ arbeidsforhold }) => {
   } = arbeidsforhold;
   return (
     <p>
-      <span>Arbeidsforhold start: </span>
+      <span>Startdato: </span>
       <span>{fom && datoFormattering(fom)}</span>
       <br />
       <span>Sluttdato: </span>
       <span>{tom && datoFormattering(tom)}</span>
       <br />
-      <span>Type arbeidsforhold: </span>
+      <span>Type: </span>
       <span>{arbeidsforholdstype}</span>
     </p>
   );
 };
 Arbeidsforhold.propTypes = {
-  arbeidsforhold: PT.object.isRequired,
+  arbeidsforhold: MPT.ArbeidsforholdPropType.isRequired,
 };
 
 const ArbeidsAvtaleRad = ({ arbeidsavtale, antall }) => {
@@ -66,8 +67,8 @@ const ArbeidsAvtaleRad = ({ arbeidsavtale, antall }) => {
   );
 };
 ArbeidsAvtaleRad.propTypes = {
-  arbeidsavtale: PT.object.isRequired,
-  antall: PT.string.isRequired,
+  arbeidsavtale: MPT.ArbeidsavtalePropType.isRequired,
+  antall: PT.number.isRequired,
 };
 
 const ArbeidsforholdListe = ({ arbeidsforhold }) => {
@@ -85,13 +86,13 @@ const ArbeidsforholdListe = ({ arbeidsforhold }) => {
   return [rows];
 };
 
-const PPRow = ({ data }) => {
+const PPRow = ({ PermisjonOgPermittering }) => {
   const {
     permisjonsId,
     permisjonOgPermittering,
     permisjonsprosent,
     permisjonsPeriode: { fom, tom },
-  } = data;
+  } = PermisjonOgPermittering;
   const prosent = `${permisjonsprosent}`;
   return (
     <div>
@@ -112,8 +113,9 @@ const PPRow = ({ data }) => {
     </div>
   );
 };
+
 PPRow.propTypes = {
-  data: PT.object.isRequired,
+  PermisjonOgPermittering: MPT.PermisjonOgPermitteringPropType.isRequired,
 };
 
 const PermisjonOgPermittering = ({ arbeidsforhold }) => {
@@ -130,7 +132,7 @@ const PermisjonOgPermittering = ({ arbeidsforhold }) => {
   return <Ekspanderbartpanel tittel={tittel}>{rows}</Ekspanderbartpanel>;
 };
 PermisjonOgPermittering.propTypes = {
-  arbeidsforhold: PT.object.isRequired,
+  arbeidsforhold: MPT.ArbeidsforholdPropType.isRequired,
 };
 
 const gateAdresse = bostedsadresse => {
@@ -168,7 +170,7 @@ const Person = ({ person }) => {
   const alder = antallAar(foedselsdato);
 
   const gateadressen = bostedsadresse ? gateAdresse(bostedsadresse) : '';
-  const tittel = `${sammensattNavn} (${alder} år)`;
+  const tittel = `${sammensattNavn} (${alder}) år`;
   return (
     <Ekspanderbartpanel tittel={tittel}>
       <Normaltekst>{fnr}</Normaltekst>
@@ -190,7 +192,7 @@ const Person = ({ person }) => {
   );
 };
 Person.propTypes = {
-  person: PT.object.isRequired,
+  person: MPT.PeriodePropType.isRequired,
 };
 const forretningsAdresse = forretningsadresse => {
   const { postnr, poststed, gateadresse: { gatenavn } } = forretningsadresse;
@@ -228,6 +230,21 @@ Virksomhet.propTypes = {
 };
 
 class ArbeidsforholdDetalj extends React.Component {
+  static propTypes = {
+    match: PT.any.isRequired,
+    hentSaksopplysninger: PT.func.isRequired,
+    person: MPT.PersonPropType.isRequired,
+    organisasjon: MPT.OrganisasjonPropType.isRequired,
+    arbeidsforholdet: MPT.ArbeidsforholdPropType.isRequired,
+  };
+  static defaultProps = {
+    person: {
+      fnr: '',
+    },
+    organisasjon: {},
+    arbeidsforholdet: {},
+  };
+
   componentDidMount() {
     const { fnr } = this.props.match.params;
     this.props.hentSaksopplysninger(fnr);
@@ -316,18 +333,6 @@ class ArbeidsforholdDetalj extends React.Component {
     );
   }
 }
-ArbeidsforholdDetalj.propTypes = {
-  match: PT.any.isRequired,
-  hentSaksopplysninger: PT.func.isRequired,
-  person: PT.object,
-  organisasjon: PT.object,
-  arbeidsforholdet: PT.object,
-};
-ArbeidsforholdDetalj.defaultProps = {
-  person: {},
-  organisasjon: {},
-  arbeidsforholdet: {},
-};
 
 const arbeidsforholdIDfromQueryParam = props => {
   const { search } = props.location;

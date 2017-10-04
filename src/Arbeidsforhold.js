@@ -5,6 +5,8 @@ import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 import AlertStripe from 'nav-frontend-alertstriper';
 import { Systemtittel } from 'nav-frontend-typografi';
+import moment from 'moment';
+import 'moment/locale/nb';
 import { STATUS } from './ducks/utils';
 import {
   hentSaksopplysninger,
@@ -12,6 +14,11 @@ import {
   ArbeidsforholdSelector,
 } from './ducks/saksopplysninger';
 import './arbeidsforhold.css';
+import * as MPT from './proptypes';
+
+const datoFormat = dato => (
+  moment(dato).format('DD MMM YYYY')
+);
 
 const ArbeidsforholdRad = ({ arbeidsforhold }) => {
   const {
@@ -32,8 +39,8 @@ const ArbeidsforholdRad = ({ arbeidsforhold }) => {
     <tr>
       <td>{orgnr}</td>
       <td>{navn}</td>
-      <td>{ansettelsesPeriode.fom}</td>
-      <td>{ansettelsesPeriode.tom}</td>
+      <td>{datoFormat(ansettelsesPeriode.fom)}</td>
+      <td>{datoFormat(ansettelsesPeriode.tom)}</td>
       <td>
         <Link to={linkToArbeidsforholdet} alt="Arbeidsforhold detalj">
           Vis
@@ -44,7 +51,7 @@ const ArbeidsforholdRad = ({ arbeidsforhold }) => {
 };
 
 ArbeidsforholdRad.propTypes = {
-  arbeidsforhold: PT.object.isRequired,
+  arbeidsforhold: MPT.ArbeidsforholdPropType.isRequired,
 };
 
 const ArbeidsforholdTabell = ({ arbeidsforhold }) => {
@@ -69,10 +76,10 @@ const ArbeidsforholdTabell = ({ arbeidsforhold }) => {
   );
 };
 ArbeidsforholdTabell.propTypes = {
-  arbeidsforhold: PT.array.isRequired,
+  arbeidsforhold: PT.arrayOf(MPT.ArbeidsforholdPropType).isRequired,
 };
 
-const gateadresseNY = bostedsadresse => {
+const gateAdresse = bostedsadresse => {
   const { gatenavn, husnummer, husbokstav } = bostedsadresse;
   const gnavn = gatenavn ? `${gatenavn.trim()} ` : '';
   const hnr = husnummer ? `${husnummer}` : '';
@@ -85,7 +92,7 @@ const gateadresseNY = bostedsadresse => {
 const BostedsAdresse = ({ bostedsadresse, bostedsadresse: { postnr }, bostedsadresse: { land } }) => {
   if (!bostedsadresse) return null;
 
-  const gateadressen = gateadresseNY(bostedsadresse);
+  const gateadressen = gateAdresse(bostedsadresse);
   return (
     <p>
       {gateadressen}
@@ -98,32 +105,22 @@ const BostedsAdresse = ({ bostedsadresse, bostedsadresse: { postnr }, bostedsadr
 };
 
 BostedsAdresse.propTypes = {
-  bostedsadresse: PT.object,
-};
-BostedsAdresse.defaultProps = {
-  bostedsadresse: {
-    gateadresse: {
-      gatenavn: '',
-      husnummer: '',
-      husbokstav: '',
-    },
-    postnr: '',
-    poststed: '',
-    land: '',
-  },
+  bostedsadresse: MPT.BostedsAdressePropType.isRequired,
 };
 
 class Arbeidsforhold extends Component {
   static propTypes = {
     match: PT.any.isRequired,
     hentSaksopplysninger: PT.func.isRequired,
-    person: PT.object,
-    arbeidsforhold: PT.arrayOf(PT.object),
+    person: MPT.PersonPropType.isRequired,
+    arbeidsforhold: PT.arrayOf(MPT.ArbeidsforholdPropType),
     status: PT.string,
   };
 
   static defaultProps = {
-    person: {},
+    person: {
+      fnr: '',
+    },
     arbeidsforhold: [],
     status: STATUS.NOT_STARTED,
   };
