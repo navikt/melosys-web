@@ -118,7 +118,7 @@ class Arbeidsforhold extends Component {
       match: PT.any.isRequired,
       hentSaksopplysninger: PT.func.isRequired,
       person: PT.object,
-      arbeidsforhold: PT.array,
+      arbeidsforhold: PT.arrayOf(PT.object),
       status: PT.string,
     };
 
