@@ -137,10 +137,10 @@ class Arbeidsforhold extends Component {
         const { fnr } = this.props.match.params;
         const { person, arbeidsforhold, status } = this.props;
 
-        if (!arbeidsforhold || status === STATUS.ERROR) {
+        if (arbeidsforhold.length === 0 || status === STATUS.ERROR) {
             return (
                 <div>
-                    <AlertStripe type="advarsel" solid={'true'}>
+                    <AlertStripe type="advarsel" solid>
                         Fant ingen arbeidsforhold
                     </AlertStripe>
                 </div>
