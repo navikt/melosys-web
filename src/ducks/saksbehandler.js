@@ -9,7 +9,7 @@ export const PENDING = 'saksbehandler/PENDING';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
-  data: { }
+  data: {},
 };
 // Reducer
 export default function reducer(state = initalState, action) {
@@ -30,14 +30,14 @@ export function hentSaksbehandler() {
   return doThenDispatch(() => Api.hentSaksbehandler(), {
     OK,
     FEILET,
-    PENDING
+    PENDING,
   });
 }
 // selector
-const getSaksbehandler = (state) => state.saksbehandler.data;
+const getSaksbehandler = state => state.saksbehandler.data;
 
 // reselect function
 export const getSaksbehandlerState = createSelector(
-  [ getSaksbehandler ],
-  (saksbehandler) => saksbehandler
+  [getSaksbehandler],
+  saksbehandler => saksbehandler
 );

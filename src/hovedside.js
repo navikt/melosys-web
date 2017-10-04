@@ -2,17 +2,15 @@ import React from 'react';
 import PT from 'prop-types';
 import Topplinje from './topplinje';
 import './hovedside.css';
-function Hovedside({children}) {
+
+function Hovedside({ children }) {
   return (
     <div className="hovedside">
-      <Topplinje/>
-      <div className="main-container">
-      {children}
-      </div>
+      <Topplinje />
+      <div className="main-container">{children}</div>
     </div>
   );
 }
-
 
 Hovedside.defaultProps = {
   children: null,

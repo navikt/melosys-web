@@ -1,13 +1,13 @@
-var express = require('express');
-var _ = require('underscore');
-var app = express();
-var bodyParser = require('body-parser');
+const express = require('express');
+const _ = require('underscore');
+const app = express();
+const bodyParser = require('body-parser');
 
 const fs = require('fs');
-const path = require('path');
+//const path = require('path');
 const os = require('os');
 
-var allowCrossDomain = function (req, res, next) {
+const allowCrossDomain = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -17,8 +17,8 @@ var allowCrossDomain = function (req, res, next) {
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 3002;
-var router = express.Router();
+const port = process.env.PORT || 3002;
+const router = express.Router();
 
 router.post('/henvendelse', function(req, res) {
   console.log('henvendelse POST');
@@ -49,7 +49,7 @@ router.get('/saksopplysninger/:fnr', function (req, res) {
 
 router.get('/saksbehandler', function (req, res) {
   try {
-    const saksbehandlere =  JSON.parse(fs.readFileSync("./scripts/mock_data/saksbehandler.json", "utf8"))
+    const saksbehandlere =  JSON.parse(fs.readFileSync("./scripts/mock_data/saksbehandler.json", "utf8"));
     // return a random sakbehandler from list of sakbehandlere
     return res.json(_.sample(saksbehandlere));
   } catch (err) {
@@ -58,7 +58,7 @@ router.get('/saksbehandler', function (req, res) {
 });
 
 app.use(allowCrossDomain);
-app.use('/vedtak/api', router);
+app.use('/system/melosys/api', router);
 app.use('/api', router);
 
 app.listen(port);
