@@ -69,41 +69,44 @@ const ArbeidsforholdTabell = ({ arbeidsforhold }) => {
     );
 };
 ArbeidsforholdTabell.propTypes = {
-  arbeidsforhold: PT.object.isRequired,
+  arbeidsforhold: PT.array.isRequired,
 };
 
-const gateadresse = ({ bostedsadresse }) => {
-  const {
-    gateadresse: { gatenavn, husnummer, husbokstav },
-  } = bostedsadresse;
-  const gnavn = gatenavn ? `${gatenavn} ` : '';
-  const hnr = husnummer ? `${husnummer} ` : '';
-  const hb = husbokstav ? `${husbokstav} ` : '';
+const gateadresseNY = bostedsadresse => {
+  debugger;
+  const {gatenavn, husnummer, husbokstav } = bostedsadresse;
+  const gnavn = gatenavn ? `${gatenavn.trim()} ` : '';
+  const hnr = husnummer ? `${husnummer}` : '';
+  const hb = husbokstav ? `${husbokstav}` : '';
   return (
     `${gnavn}${hnr}${hb}`
   );
 };
 const BostedsAdresse = ({ bostedsadresse }) => {
+  debugger;
     if (!bostedsadresse) return null;
-    const {
-        postnr,
-        poststed,
-        land,
-    } = bostedsadresse;
-  const gateadressen = gateadresse(bostedsadresse);
+
+  const gateadressen = gateadresseNY(bostedsadresse);
     return (
         <p>
             {gateadressen}
-            <br />
+            {/*<br />
             {postnr}&nbsp;{poststed}
             <br />
-            {land}
+            {land}*/}
         </p>
     );
 };
 
 BostedsAdresse.propTypes = {
-  bostedsadresse: PT.object.isRequired,
+  bostedsadresse: PT.object,
+};
+BostedsAdresse.defaultProps = {
+  bostedsadresse: {
+    gatenavn: 'gatenavn',
+    husnummer: 'husnummer',
+    husbokstav: 'husbokstav',
+  }
 };
 
 class Arbeidsforhold extends Component {
@@ -127,6 +130,7 @@ class Arbeidsforhold extends Component {
         }
 
         const { sammensattNavn, bostedsadresse } = person;
+        console.log(bostedsadresse);
         return (
             <section className="arbeidsforhold">
                 <Panel>
@@ -149,9 +153,15 @@ class Arbeidsforhold extends Component {
 Arbeidsforhold.propTypes = {
   match: PT.any.isRequired,
   hentSaksopplysninger: PT.func.isRequired,
-  person: PT.object.isRequired,
-  arbeidsforhold: PT.object.isRequired,
-  status: PT.object.isRequired,
+  person: PT.object,
+  arbeidsforhold: PT.array,
+  status: PT.string,
+};
+
+Arbeidsforhold.defaultProps = {
+  person: {},
+  arbeidsforhold: [],
+  status: STATUS.NOT_STARTED,
 };
 
 const mapStateToProps = state => ({

@@ -168,7 +168,7 @@ const Person = ({ person }) => {
     const alder = antallAar(foedselsdato);
 
     const gateadressen = bostedsadresse ? gateAdresse(bostedsadresse) : '';
-    const tittel = `${sammensattNavn} (${alder} år`;
+    const tittel = `${sammensattNavn} (${alder} år)`;
     return (
         <Ekspanderbartpanel tittel={tittel}>
             <Normaltekst>{fnr}</Normaltekst>
@@ -194,7 +194,15 @@ const Person = ({ person }) => {
 Person.propTypes = {
   person: PT.object.isRequired,
 };
-
+const forretningsAdresse = forretningsadresse => {
+  const { postnr, poststed, gateadresse: { gatenavn } } = forretningsadresse;
+  const gnavn = gatenavn ? `${gatenavn.trim()}, ` : '';
+  const pnr = postnr ? `${postnr} ` : '';
+  const psted = poststed ? `${poststed} ` : '';
+  return (
+    `${gnavn}${pnr}${psted}`
+  );
+};
 const Virksomhet = ({ organisasjon }) => {
     if (
         !organisasjon ||
@@ -206,12 +214,14 @@ const Virksomhet = ({ organisasjon }) => {
     const {
         navn,
         orgnummer,
-        forretningsadresse: { postnr, poststed, gateadresse: { gatenavn } },
+        forretningsadresse,
     } = organisasjon;
+
+    const adresse = forretningsAdresse(forretningsadresse);
     return (
         <p>
             Arbeidsgiver:&nbsp;{navn} {orgnummer}
-            <br />Forretningsadresse:&nbsp;{gatenavn}, {postnr}&nbsp;{poststed}
+            <br />Forretningsadresse:&nbsp;{adresse}
         </p>
     );
 };
