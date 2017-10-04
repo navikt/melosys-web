@@ -1,28 +1,35 @@
 import React, { Component } from 'react';
+import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { hentSaksbehandler, getSaksbehandlerState } from './ducks/saksbehandler';
+import {
+  hentSaksbehandler,
+  getSaksbehandlerState,
+} from './ducks/saksbehandler';
+
 import Header from './components/Header';
 
 class Topplinje extends Component {
   componentDidMount() {
-    this.props.hentSaksbehandler()
+    this.props.hentSaksbehandler();
   }
 
   render() {
-    const {saksbehandler: {navn}} = this.props;
-    return (
-      <Header saksbehandlerName={navn}/>
-    );
+    const { saksbehandler: { navn } } = this.props;
+    return <Header saksbehandlerName={navn} />;
   }
 }
 
-const mapStateToProps = (state) => {
-  return ({
-    saksbehandler: getSaksbehandlerState(state)
-  })
+Topplinje.propTypes = {
+  hentSaksbehandler: PT.func.isRequired,
+  saksbehandler: PT.object.isRequired,
 };
-const mapDispatchToProps = (dispatch) => ({
-  hentSaksbehandler: () => dispatch(hentSaksbehandler())
+
+const mapStateToProps = state => ({
+  saksbehandler: getSaksbehandlerState(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  hentSaksbehandler: () => dispatch(hentSaksbehandler()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Topplinje);

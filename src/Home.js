@@ -1,16 +1,6 @@
-import React, { Component } from 'react';
-import SokArbeidsforhold from "./sok-arbeidsforhold";
+import React from 'react';
+import SokArbeidsforhold from './sok-arbeidsforhold';
 
-class Home extends Component {
-  render() {
-    return (
-      <HomeContainer>
-        <SokArbeidsforhold/>
-      </HomeContainer>
-    );
-  }
+const Home = () => <SokArbeidsforhold />;
 
-}
-const HomeContainer = (props) => (
-  <div {...props}/>)
 export default Home;

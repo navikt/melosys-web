@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {Router as ReduxRouter} from 'react-router-dom';
+import { Router as ReduxRouter } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
 
 import './index.css';
@@ -17,7 +17,7 @@ ReactDOM.render(
   <ReduxProvider store={store}>
     <ReduxRouter history={routerHistory}>
       <App>
-        <Routing/>
+        <Routing />
       </App>
     </ReduxRouter>
   </ReduxProvider>,

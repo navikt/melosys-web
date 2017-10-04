@@ -29,5 +29,5 @@ export default combineReducers({
   form: formReducer,
   saksopplysninger: saksopplysningerReducer,
   saksbehandler: saksbehandlerReducer,
-  arbeidsgiver: arbeidsgiverReducer
+  arbeidsgiver: arbeidsgiverReducer,
 });

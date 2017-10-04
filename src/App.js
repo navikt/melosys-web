@@ -2,12 +2,10 @@ import React from 'react';
 import PT from 'prop-types';
 import Hovedside from './hovedside';
 
-function App({children}) {
+function App({ children }) {
   return (
     <div className="App">
-      <Hovedside>
-        {children}
-      </Hovedside>
+      <Hovedside>{children}</Hovedside>
     </div>
   );
 }

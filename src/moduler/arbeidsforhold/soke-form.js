@@ -5,17 +5,17 @@ import { validForm, rules } from 'react-redux-form-validation';
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Input from '../../felles-komponenter/skjema/input/input';
 
-const fnrValid = (value) => {
-  return /^[0-9]{11}$/.test(value) ? undefined : 'Fnr må ha 11 siffer';
-};
+const fnrValid = value => (
+  /^[0-9]{11}$/.test(value) ? undefined : 'Fnr må ha 11 siffer'
+);
 
-function SokeForm({
-  handleSubmit, errorSummary
-}) {
+function SokeForm({ handleSubmit, errorSummary }) {
   return (
     <div className="search-container">
-      <h2 className="typo-undertittel"><span>Søk på person</span></h2>
-      <form onSubmit={ handleSubmit }>
+      <h2 className="typo-undertittel">
+        <span>Søk på person</span>
+      </h2>
+      <form onSubmit={handleSubmit}>
         {errorSummary}
         <Input
           feltNavn="fnr"
@@ -30,13 +30,18 @@ function SokeForm({
 }
 
 SokeForm.propTypes = {
-  handleSubmit: PT.func.isRequired
+  handleSubmit: PT.func.isRequired,
+  errorSummary: PT.object,
+};
+
+SokeForm.defaultProps = {
+  errorSummary: {},
 };
 
 export default validForm({
   form: 'sokeform',
   errorSummaryTitle: 'Fix these errors',
   validate: {
-    fnr: [rules.required, fnrValid]
-  }
+    fnr: [rules.required, fnrValid],
+  },
 })(SokeForm);

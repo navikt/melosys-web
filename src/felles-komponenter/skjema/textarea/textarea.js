@@ -10,29 +10,25 @@ function getTellerTekst(antallTegn, maxLength, visTellerFra) {
 
   if (tegnForMange > 0) {
     const text = `tekstfelt.antalltegn.for-mange antall:${tegnForMange}`;
-    return (
-    <span>{text}</span>
-    );
+    return <span>{text}</span>;
   } else if (tegnIgjen <= tellerFra) {
     const text = `tekstfelt.antalltegn.flere-igjen antall:${tegnIgjen}`;
-    return (
-      <span>{text}</span>
-    );
+    return <span>{text}</span>;
   }
   return <span>&nbsp;</span>;
 }
 
-function InnerTextAreaComponent({
-                                  input,
-                                  label,
-                                  placeholder,
-                                  maxLength,
-                                  errorMessage,
-                                  visTellerFra,
-                                  meta, // eslint-disable-line no-unused-vars
-                                  ...rest
-                                }) {
-
+function InnerTextAreaComponent(
+  {
+    input,
+    label,
+    placeholder,
+    maxLength,
+    errorMessage,
+    visTellerFra,
+    meta, // eslint-disable-line no-unused-vars
+    ...rest
+  }) {
   const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
   return (
     <NavFrontendTextarea
@@ -85,6 +81,5 @@ Textarea.defaultProps = {
   feltNavn: undefined,
   visTellerFra: 0,
 };
-
 
 export default Textarea;

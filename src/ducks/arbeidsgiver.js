@@ -9,7 +9,7 @@ export const OPPDATER_ARBEIDSGIVER_FEILET = 'arbeidsgiver/oppdater/fail';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
-  data: { }
+  data: {},
 };
 
 // Reducer
@@ -19,7 +19,7 @@ export default function reducer(state = initalState, action) {
     case OPPDATER_ARBEIDSGIVER_FEILET:
       return { ...state, status: STATUS.ERROR, feil: data };
     case OPPDATER_ARBEIDSGIVER_OK:
-      return {...state, status: STATUS.OK, data: {...data}};
+      return { ...state, status: STATUS.OK, data: { ...data } };
     default:
       return state;
   }
@@ -32,4 +32,3 @@ export function nyHenvendelse(henvendelse) {
     PENDING: OPPDATER_ARBEIDSGIVER,
   });
 }
-

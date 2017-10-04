@@ -3,7 +3,7 @@ export const STATUS = {
   PENDING: 'PENDING',
   OK: 'OK',
   RELOADING: 'RELOADING',
-  ERROR: 'ERROR'
+  ERROR: 'ERROR',
 };
 
 export function sjekkStatuskode(response) {
@@ -11,7 +11,7 @@ export function sjekkStatuskode(response) {
     return response;
   }
   if (response.status === 401) {
-    window.location.href = 'feilsider/401.html';// eslint-disable-line no-undef
+    window.location.href = 'feilsider/401.html'; // eslint-disable-line no-undef
   }
   const error = new Error(response.statusText);
   error.response = response;
@@ -19,7 +19,8 @@ export function sjekkStatuskode(response) {
 }
 
 export function toJson(response) {
-  if (response.status !== 204) { // No content
+  if (response.status !== 204) {
+    // No content
     return response.json();
   }
   return response;
@@ -40,11 +41,14 @@ export function sendResultatTilDispatch(dispatch, action) {
 }
 
 export function handterFeil(dispatch, action) {
-  return (error) => {
+  return error => {
     if (error.response) {
-      error.response.text().then((data) => {
+      error.response.text().then(data => {
         console.error(error, error.stack, data); // eslint-disable-line no-console
-        dispatch({ type: action, data: { response: error.response, data } });
+        dispatch({
+          type: action,
+          data: { response: error.response, data },
+        });
       });
     } else {
       console.error(error, error.stack); // eslint-disable-line no-console
@@ -54,15 +58,15 @@ export function handterFeil(dispatch, action) {
 }
 
 export function fetchToJson(url, config = {}) {
-/*
-  if (config.headers) {
-    for (let entry of config.headers) {
-      console.log(entry);
-    }
+  /*
+if (config.headers) {
+  for (let entry of config.headers) {
+    console.log(entry);
   }
+}
 */
 
-  return fetch(url, config)// eslint-disable-line no-undef
+  return fetch(url, config) // eslint-disable-line no-undef
     .then(sjekkStatuskode)
     .then(toJson);
 }
