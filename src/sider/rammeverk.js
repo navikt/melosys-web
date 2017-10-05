@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import Topplinje from '../components/topplinje';
+import Topplinje from '../felles-komponenter/topplinje';
 import './rammeverk.css';
 
 function Hovedside({ children }) {

@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import Rammeverk from './containers/rammeverk';
+import Rammeverk from './sider/rammeverk';
 
 function App({ children }) {
   return (
