@@ -7,15 +7,15 @@ import moment from 'moment';
 import 'moment/locale/nb';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import './arbeidsforholdDetalj.css';
-import JustChildren from './just-children';
+import JustChildren from '../just-children';
 
 import {
   hentSaksopplysninger,
   PersonSelector,
   ArbeidsforholdetSelector,
   OrganisasjonSelectorByNavID,
-} from './ducks/saksopplysninger';
-import * as MPT from './proptypes';
+} from '../ducks/saksopplysninger';
+import * as MPT from '../proptypes';
 
 const uuid = require('uuid/v5');
 const queryString = require('query-string');
