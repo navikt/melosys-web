@@ -140,7 +140,7 @@ const gateAdresse = bostedsadresse => {
     gateadresse: { gatenavn, husnummer, husbokstav },
   } = bostedsadresse;
   const gnavn = gatenavn ? `${gatenavn} ` : '';
-  const hnr = husnummer ? `${husnummer} ` : '';
+  const hnr = husnummer ? `${husnummer}` : '';
   const hb = husbokstav ? `${husbokstav} ` : '';
   return (
     `${gnavn}${hnr}${hb}`
@@ -200,7 +200,7 @@ const forretningsAdresse = forretningsadresse => {
   const pnr = postnr ? `${postnr} ` : '';
   const psted = poststed ? `${poststed} ` : '';
   return (
-    `${gnavn}${pnr}${psted}`
+    `${gnavn}${pnr}${psted}`.toUpperCase()
   );
 };
 const Virksomhet = ({ organisasjon }) => {
