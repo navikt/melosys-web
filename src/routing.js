@@ -2,10 +2,10 @@ import React from 'react';
 import PT from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import Sok from './containers/sok';
-import Arbeidsforhold from './containers/Arbeidsforhold';
-import ArbeidsforholdDetalj from './containers/ArbeidsforholdDetalj';
-import Registrere from './containers/Registrere';
+import Sok from './sider/sok';
+import Arbeidsforhold from './sider/Arbeidsforhold';
+import ArbeidsforholdDetalj from './sider/ArbeidsforholdDetalj';
+import Registrere from './sider/Registrere';
 
 const Routing = ({ location }) => (
   <Switch location={location}>
