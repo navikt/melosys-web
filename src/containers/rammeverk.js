@@ -1,7 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import Topplinje from '../components/topplinje';
-import './hovedside.css';
+import './rammeverk.css';
 
 function Hovedside({ children }) {
   return (
@@ -14,7 +14,6 @@ function Hovedside({ children }) {
 
 Hovedside.defaultProps = {
   children: null,
-  routes: null,
 };
 
 Hovedside.propTypes = {
