@@ -1,3 +1,5 @@
 {
-  "excludedFiles": ["arbeidsforholdd.less"]
+  "excludedFiles": [],
+  "propertyOrdering":false,
+  "zeroUnit":"no_unit"
 }
