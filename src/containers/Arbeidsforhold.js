@@ -7,14 +7,14 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Systemtittel } from 'nav-frontend-typografi';
 import moment from 'moment';
 import 'moment/locale/nb';
-import { STATUS } from './ducks/utils';
+import { STATUS } from '../ducks/utils';
 import {
   hentSaksopplysninger,
   PersonSelector,
   ArbeidsforholdSelector,
-} from './ducks/saksopplysninger';
+} from '../ducks/saksopplysninger';
 import './arbeidsforhold.css';
-import * as MPT from './proptypes';
+import * as MPT from '../proptypes';
 
 const datoFormat = dato => (
   moment(dato).format('DD MMM YYYY')

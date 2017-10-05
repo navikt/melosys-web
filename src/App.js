@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import Hovedside from './hovedside';
+import Hovedside from './containers/hovedside';
 
 function App({ children }) {
   return (

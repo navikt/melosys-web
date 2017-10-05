@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
 import './sok-arbeidsforhold.css';
-import SokeForm from './moduler/arbeidsforhold/soke-form';
+import SokeForm from '../moduler/arbeidsforhold/soke-form';
 
 class SokArbeidsforhold extends Component {
   submit = values => {
