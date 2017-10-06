@@ -6,6 +6,7 @@ import { Undertittel } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
 import './saksbehandling.css';
 
+import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurdering';
 
 class Saksbehandling extends Component {
   componentDidMount() {
@@ -18,9 +19,7 @@ class Saksbehandling extends Component {
         <Container fluid>
           <Row>
             <Column xs="7">
-              <div className="saksbehandling__vurdering">
-                (vurderingsveileder)
-              </div>
+              <Vilkarsvurdering />
             </Column>
             <Column xs="5">
               <Panel className="saksbehandling__soknadSammendrag">
