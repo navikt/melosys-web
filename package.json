@@ -97,6 +97,9 @@
     "lint-staged": "^4.2.3",
     "npm-run-all": "^4.0.2",
     "prettier": "^1.7.4",
+    "react-day-picker": "^6.2.1",
+    "react-intl": "^2.4.0",
+    "react-maskedinput": "^4.0.0",
     "underscore": "^1.8.3"
   }
 }
