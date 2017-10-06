@@ -7,15 +7,15 @@ import moment from 'moment';
 import 'moment/locale/nb';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import './arbeidsforholdDetalj.css';
-import JustChildren from './just-children';
+import JustChildren from '../just-children';
 
 import {
   hentSaksopplysninger,
   PersonSelector,
   ArbeidsforholdetSelector,
   OrganisasjonSelectorByNavID,
-} from './ducks/saksopplysninger';
-import * as MPT from './proptypes';
+} from '../ducks/saksopplysninger';
+import * as MPT from '../proptypes';
 
 const uuid = require('uuid/v5');
 const queryString = require('query-string');
@@ -140,7 +140,7 @@ const gateAdresse = bostedsadresse => {
     gateadresse: { gatenavn, husnummer, husbokstav },
   } = bostedsadresse;
   const gnavn = gatenavn ? `${gatenavn} ` : '';
-  const hnr = husnummer ? `${husnummer} ` : '';
+  const hnr = husnummer ? `${husnummer}` : '';
   const hb = husbokstav ? `${husbokstav} ` : '';
   return (
     `${gnavn}${hnr}${hb}`
@@ -200,7 +200,7 @@ const forretningsAdresse = forretningsadresse => {
   const pnr = postnr ? `${postnr} ` : '';
   const psted = poststed ? `${poststed} ` : '';
   return (
-    `${gnavn}${pnr}${psted}`
+    `${gnavn}${pnr}${psted}`.toUpperCase()
   );
 };
 const Virksomhet = ({ organisasjon }) => {
