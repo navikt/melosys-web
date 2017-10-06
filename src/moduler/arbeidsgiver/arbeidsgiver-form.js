@@ -3,14 +3,15 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { validForm, rules } from 'react-redux-form-validation';
 import { Hovedknapp } from 'nav-frontend-knapper';
+import { IntlProvider } from 'react-intl';
 
 import { nyHenvendelse } from '../../ducks/arbeidsgiver';
-
 
 import Input from '../../felles-komponenter/skjema/input/input';
 import Radio from '../../felles-komponenter/skjema/input/radio';
 import Select from '../../felles-komponenter/skjema/input/select';
 import Textarea from '../../felles-komponenter/skjema/textarea/textarea';
+import Datovelger from '../../felles-komponenter/skjema/datovelger/datovelger';
 
 const fnrValid = value => (
   /^[0-9]{11}$/.test(value) ? undefined : 'Fnr må ha 11 siffer'
@@ -31,6 +32,15 @@ const ArbeidsgiverForm = ({ handleSubmit, errorSummary }) => (
         bredde="xl"
         autoFocus
       />
+      <IntlProvider locale="en">
+        <Datovelger
+          className="datovelger"
+          feltNavn="Et navn"
+          labelId="ID"
+          tidligsteFom={new Date()}
+          tidligsteTom={new Date()}
+        />
+      </IntlProvider>
       <div className="skjema">
         <Radio
           feltNavn="frukt"
