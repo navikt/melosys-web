@@ -1,11 +1,11 @@
 import React from 'react';
 import PT from 'prop-types';
-import Hovedside from './hovedside';
+import Rammeverk from './sider/rammeverk';
 
 function App({ children }) {
   return (
     <div className="App">
-      <Hovedside>{children}</Hovedside>
+      <Rammeverk>{children}</Rammeverk>
     </div>
   );
 }

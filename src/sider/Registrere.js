@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import ArbeidsgiverForm from './moduler/arbeidsgiver/arbeidsgiver-form';
+import ArbeidsgiverForm from '../moduler/arbeidsgiver/arbeidsgiver-form';
 
 class Registrere extends Component {
   constructor (props) {
