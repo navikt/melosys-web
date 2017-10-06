@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import moment from 'moment';
-import { FormattedDate, injectIntl, intlShape } from 'react-intl';
 import DayPicker, { DateUtils } from 'react-day-picker';
 import MomentLocaleUtils from 'react-day-picker/moment';
 
@@ -12,6 +11,9 @@ const localeUtils = {
     MomentLocaleUtils.formatWeekdayLong(i, locale).substring(0, 3),
 };
 
+const FormattedDate = value => (
+  moment(value).format('Do MMMM').toUpperCase()
+);
 export const Caption = ({ date }) =>
   <div
     className="DayPicker-Caption"
@@ -19,7 +21,7 @@ export const Caption = ({ date }) =>
     aria-live="assertive"
     aria-atomic="true"
   >
-    <FormattedDate month="long" year="numeric" value={date} />
+    <FormattedDate value={date} />
   </div>;
 
 Caption.propTypes = {
@@ -30,15 +32,13 @@ Caption.defaultProps = {
   date: undefined,
 };
 
-export const NavBar = ({ onNextClick, onPreviousClick, showPreviousButton, showNextButton, intl }) => {
+export const NavBar = ({ onNextClick, onPreviousClick, showPreviousButton, showNextButton }) => {
   const className = 'DayPicker-NavButton';
   return (
     <div role="toolbar">
       <button
         tabIndex="0"
-        aria-label={intl.formatMessage({
-          id: 'datepicker.forrige-maaned',
-        })}
+        aria-label={'Forrige måned'}
         className={`${className} DayPicker-NavButton--prev`}
         disabled={!showPreviousButton}
         type="button"
@@ -49,9 +49,7 @@ export const NavBar = ({ onNextClick, onPreviousClick, showPreviousButton, showN
       />
       <button
         tabIndex="0"
-        aria-label={intl.formatMessage({
-          id: 'datepicker.neste-maaned',
-        })}
+        aria-label={'Neste måned'}
         className={`${className} DayPicker-NavButton--next`}
         disabled={!showNextButton}
         type="button"
@@ -69,7 +67,6 @@ NavBar.propTypes = {
   onPreviousClick: PT.func,
   showPreviousButton: PT.bool,
   showNextButton: PT.bool,
-  intl: intlShape.isRequired,
 };
 
 NavBar.defaultProps = {
@@ -122,7 +119,7 @@ class DayPickerComponent extends Component {
           localeUtils={localeUtils}
           firstDayOfWeek={1}
           captionElement={<Caption />}
-          navbarElement={<NavBar intl={this.props.intl} />}
+          navbarElement={<NavBar />}
           selectedDays={day => this.selectedDays(day)}
           onDayClick={(event, jsDato) =>
             this.props.onDayClick(event, jsDato)}
@@ -139,7 +136,6 @@ DayPickerComponent.propTypes = {
   ariaControlledBy: PT.string,
   onDayClick: PT.func.isRequired,
   tidligsteFom: PT.instanceOf(Date),
-  intl: intlShape.isRequired,
 };
 
 DayPickerComponent.defaultProps = {
@@ -147,4 +143,4 @@ DayPickerComponent.defaultProps = {
   tidligsteFom: undefined,
 };
 
-export default injectIntl(DayPickerComponent);
+export default DayPickerComponent;
