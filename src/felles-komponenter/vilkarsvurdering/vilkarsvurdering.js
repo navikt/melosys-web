@@ -13,6 +13,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import './vilkarsvurdering.css';
 
 class Vilkarsvurdering extends Component {
+  // Todo 1: Sett steg-innold inn via JSON for enklere feed inn senere.
+  // Todo 2: Bygg om stegvelger og dropp material-ui. Den bygger 100-120kb ekstra og er ikke verdt det.
+  // Todo 3: Sett opp evt. prop types og hook opp mot Redux med dispatch.
+
   static propTypes = {};
 
   static defaultProps = {};
@@ -52,9 +56,14 @@ class Vilkarsvurdering extends Component {
           </div>
         );
       case 2:
-        return 'This is the bit I really care about!';
+        return '';
       default:
-        return 'You\'re a long way from home sonny jim!';
+        return (
+          <div>
+            <p>Dette er en veileder for vilkårsvurdering som skal hjelpe deg som sakebehandler med å vurdere søknaden. Naviger fanene med punktene øverst</p>
+            <Knapp onClick={() => this.goTo(0)} type="hoved" className="fane__nesteknapp">Begynn</Knapp>
+          </div>
+        );
     }
   }
 
@@ -78,24 +87,22 @@ class Vilkarsvurdering extends Component {
     return (
       <MuiThemeProvider>
         <div className="vilkarsvurdering">
-          <div>
-            <Stepper linear={false}>
-              <Step completed={visited.indexOf(0) !== -1} active={stepIndex === 0}>
-                <StepButton onClick={() => this.goTo(0)} />
-              </Step>
-              <Step completed={visited.indexOf(1) !== -1} active={stepIndex === 1}>
-                <StepButton onClick={() => this.goTo(1)} />
-              </Step>
-              <Step completed={visited.indexOf(2) !== -1} active={stepIndex === 2}>
-                <StepButton onClick={() => this.goTo(2)} />
-              </Step>
-            </Stepper>
-            <div>
-              <p>{this.getStepContent(stepIndex)}</p>
-              {stepIndex !== null && (
-                <Knapp onClick={this.handleNext} type="hoved">Neste</Knapp>
-              )}
-            </div>
+          <Stepper linear={false}>
+            <Step completed={visited.indexOf(0) !== -1} active={stepIndex === 0}>
+              <StepButton onClick={() => this.goTo(0)} />
+            </Step>
+            <Step completed={visited.indexOf(1) !== -1} active={stepIndex === 1}>
+              <StepButton onClick={() => this.goTo(1)} />
+            </Step>
+            <Step completed={visited.indexOf(2) !== -1} active={stepIndex === 2}>
+              <StepButton onClick={() => this.goTo(2)} />
+            </Step>
+          </Stepper>
+          <div className="vilkarsvurdering__fane">
+            {this.getStepContent(stepIndex)}
+            {stepIndex !== null && (
+              <Knapp onClick={this.handleNext} type="hoved" className="fane__nesteknapp">Bekreft og fortsett</Knapp>
+            )}
           </div>
         </div>
       </MuiThemeProvider>
