@@ -2,7 +2,7 @@ import moment from 'moment';
 import { toDatePrettyPrint, erGyldigISODato } from '../../../utils/utils';
 
 // eslint-disable-next-line import/prefer-default-export
-export function validerDatoField(input, intl, alternativer) {
+export function validerDatoField(input, alternativer) {
   const { fra, til } = alternativer;
   const inputDato = moment(input);
 
@@ -10,9 +10,7 @@ export function validerDatoField(input, intl, alternativer) {
   const tilDato = moment(til);
 
   if (input && !erGyldigISODato(input)) {
-    return intl.formatMessage({
-      id: 'datepicker.feilmelding.ugyldig-dato',
-    });
+    return 'Ugyldig dato';
   } else if (
     fra &&
     til &&
@@ -25,10 +23,7 @@ export function validerDatoField(input, intl, alternativer) {
       fradato: toDatePrettyPrint(fraDato.toDate()),
       tildato: toDatePrettyPrint(tilDato.toDate()),
     };
-    return intl.formatMessage({
-      id: 'datepicker.feilmelding.innenfor-periode',
-      values: msgValues,
-    });
+    return `Innenfor Periode ${msgValues.fradato}:${msgValues.fradato}`;
   }
   return undefined;
 }

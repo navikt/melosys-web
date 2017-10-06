@@ -3,7 +3,6 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { validForm, rules } from 'react-redux-form-validation';
 import { Hovedknapp } from 'nav-frontend-knapper';
-import { IntlProvider } from 'react-intl';
 
 import { nyHenvendelse } from '../../ducks/arbeidsgiver';
 
@@ -32,15 +31,13 @@ const ArbeidsgiverForm = ({ handleSubmit, errorSummary }) => (
         bredde="xl"
         autoFocus
       />
-      <IntlProvider locale="en">
-        <Datovelger
-          className="datovelger"
-          feltNavn="Et navn"
-          labelId="ID"
-          tidligsteFom={new Date()}
-          tidligsteTom={new Date()}
-        />
-      </IntlProvider>
+      <Datovelger
+        className="datovelger"
+        feltNavn="Et navn"
+        label="Datovelger"
+        tidligsteFom={new Date()}
+        tidligsteTom={new Date()}
+      />
       <div className="skjema">
         <Radio
           feltNavn="frukt"

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { FormattedMessage, injectIntl, intlShape } from 'react-intl';
 import { CustomField } from 'react-redux-form-validation';
 import { connect } from 'react-redux';
 import { change, touch } from 'redux-form';
@@ -207,11 +206,11 @@ function parseDato(dato) {
 const ConnectedDatoField = connect()(DatoField);
 
 function Datovelger(props) {
-  const { feltNavn, labelId, tidligsteFom, senesteTom, intl } = props;
+  const { feltNavn, label, tidligsteFom, senesteTom } = props;
 
   const datoFelt = (
     <ConnectedDatoField
-      label={<FormattedMessage id={labelId} />}
+      label={label}
       {...props}
     />
   );
@@ -222,7 +221,7 @@ function Datovelger(props) {
       errorClass="skjemaelement--harFeil"
       customComponent={datoFelt}
       validate={value =>
-        validerDatoField(value, intl, {
+        validerDatoField(value, {
           fra: tidligsteFom,
           til: senesteTom,
         })}
@@ -232,10 +231,9 @@ function Datovelger(props) {
 
 Datovelger.propTypes = {
   feltNavn: PT.string.isRequired,
-  labelId: PT.string.isRequired,
+  label: PT.string.isRequired,
   tidligsteFom: PT.instanceOf(Date),
   senesteTom: PT.instanceOf(Date),
-  intl: intlShape.isRequired,
 };
 
 Datovelger.defaultProps = {
@@ -243,4 +241,4 @@ Datovelger.defaultProps = {
   senesteTom: undefined,
 };
 
-export default injectIntl(Datovelger);
+export default Datovelger;

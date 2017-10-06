@@ -5,7 +5,6 @@ import classNames from 'classnames';
 import { CustomField } from 'react-redux-form-validation';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { injectIntl, intlShape } from 'react-intl';
 
 function isValidDate(dato) {
   return dato && moment(dato).isValid();
@@ -75,18 +74,11 @@ function PeriodeValidering(props) {
     fraDato,
     tilDato,
     feltNavn,
-    errorMessageId,
+    errorMessage,
     children,
-    intl,
   } = props;
 
   const valid = validerPeriode(fraDato, tilDato);
-
-  function errorMessage() {
-    return intl.formatMessage({
-      id: errorMessageId,
-    });
-  }
 
   return (
     <div
@@ -122,8 +114,7 @@ PeriodeValidering.propTypes = {
   feltNavn: PT.string.isRequired,
   fraDato: PT.object, // eslint-disable-line react/forbid-prop-types
   tilDato: PT.object, // eslint-disable-line react/forbid-prop-types
-  errorMessageId: PT.string.isRequired,
-  intl: intlShape.isRequired,
+  errorMessage: PT.string.isRequired,
   children: PT.node,
 };
 
@@ -135,4 +126,4 @@ PeriodeValidering.defaultProps = {
 
 export const PeriodeValideringPure = PeriodeValidering;
 
-export default injectIntl(PeriodeValideringPure);
+export default PeriodeValideringPure;
