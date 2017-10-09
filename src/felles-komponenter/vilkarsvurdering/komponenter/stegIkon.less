@@ -1,0 +1,31 @@
+.stegIkon {
+  display: flex;
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-color:transparent;
+  background-image:url('vilkarsvurdering_inaktivtsteg.svg');
+  width:30px;
+  height:30px;
+  margin:0.5em;
+  border:0;
+  cursor:pointer;
+  transition:all .1s;
+  outline:none;
+
+  &:active, &:focus, &:hover {
+    transform:scale(1.1);
+  }
+
+  &:focus, &:active {
+    box-shadow: 0 0 3px 0.1875em #ffbd66;
+  }
+
+  &.stegIkon--aktiv {
+    background-image:url('vilkarsvurdering_aktivtsteg.svg');
+  }
+
+  &.stegIkon--vedtak {
+    background-image:url('vilkarsvurdering_vedtak.svg');
+  }
+}
+
