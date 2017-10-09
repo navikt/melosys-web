@@ -1,30 +1,32 @@
-import React, { Component} from 'react';
+import React, { Component } from 'react';
 import PT from 'prop-types';
 
 import { connect } from 'react-redux';
 import { Knapp } from 'nav-frontend-knapper';
+import { Panel } from 'nav-frontend-paneler';
 import './stegFane.css';
 
 class StegFane extends Component {
   static propTypes = {
     visNesteKnapp: PT.bool,
+    nesteKnappKlikk: PT.func,
     children: PT.any.isRequired,
   }
 
   static defaultProps = {
     visNesteKnapp: false,
+    nesteKnappKlikk: () => { throw new Error('INGEN_EVENT_KOBLET'); },
   }
 
   render() {
     const { visNesteKnapp, children } = this.props;
-    const knapp = visNesteKnapp ? <Knapp type="hoved" className="fane__nesteknapp">Bekreft og fortsett</Knapp> : '';
+    const knapp = visNesteKnapp ? <Knapp type="hoved" className="fane__nesteknapp" onClick={this.props.nesteKnappKlikk}>Bekreft og fortsett</Knapp> : '';
 
     return (
-      <div className="stegVelger__fane">
+      <Panel className="stegVelger__fane">
         {children}
         {knapp}
-
-      </div>
+      </Panel>
     );
   }
 }
