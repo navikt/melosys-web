@@ -7,8 +7,13 @@ import StegVelger from './komponenter/stegVelger';
 import StegFane from './komponenter/stegFane';
 import './vilkarsvurdering.css';
 
+import ikonUbehandlet from '../../resources/images/ikon-steg-ubehandlet.svg';
+import ikonFerdig from '../../resources/images/ikon-steg-ferdig.svg';
+import ikonVarsel from '../../resources/images/ikon-steg-varsel.svg';
+
 class Vilkarsvurdering extends Component {
-  // Todo 1: Sett opp evt. prop types og hook opp mot Redux med dispatch.
+  // Todo 1: Ikoner klippes i portview i svg etter import.
+  // Todo 2: Sett opp evt. prop types og hook opp mot Redux med dispatch.
 
   static propTypes = {};
   static defaultProps = {};
@@ -26,7 +31,11 @@ class Vilkarsvurdering extends Component {
   render() {
     const valg = {
       visNesteKnapp: true,
-      stegvis: true,
+      ikoner: {
+        ikonUbehandlet,
+        ikonFerdig,
+        ikonVarsel,
+      },
     };
 
     return (
@@ -68,6 +77,10 @@ class Vilkarsvurdering extends Component {
               <Radio id="steg2_arbeidsgiverfordeling_ettland" name="arbeidsgiverfordeling" label="Samme land" />
               <Radio id="steg2_arbeidsgiverfordeling_ulikeland" name="arbeidsgiverfordeling" label="Ulike land" />
             </Fieldset>
+          </StegFane>
+          <StegFane>
+            <Innholdstittel type="innholdstittel">Foreslått vedtak:</Innholdstittel>
+
           </StegFane>
         </StegVelger>
       </div>
