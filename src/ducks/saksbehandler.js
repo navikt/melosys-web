@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import * as Api from './api';
-import { STATUS, doThenDispatch } from './utils';
+import * as Api from '../services/api';
+import { STATUS, doThenDispatch } from '../services/utils';
 
 // Actions
 export const OK = 'saksbehandler/OK';
