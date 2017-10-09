@@ -33,11 +33,9 @@ export function hentSaksbehandler() {
     PENDING,
   });
 }
-// selector
-const getSaksbehandler = state => state.saksbehandler.data;
 
-// reselect function
-export const getSaksbehandlerState = createSelector(
-  [getSaksbehandler],
+// selector
+export const SaksbehandlerSelector = createSelector(
+  state => state.saksbehandler.data,
   saksbehandler => saksbehandler
 );
