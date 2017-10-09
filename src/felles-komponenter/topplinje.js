@@ -6,13 +6,23 @@ import { Link } from 'react-router-dom';
 import * as navLogo from '../resources/images/nav.svg';
 
 import './topplinje.css';
+import * as MPT from '../proptypes';
 
 import {
   hentSaksbehandler,
-  getSaksbehandlerState,
+  SaksbehandlerSelector,
 } from '../ducks/saksbehandler';
 
 class Topplinje extends Component {
+  static propTypes = {
+    hentSaksbehandler: PT.func.isRequired,
+    saksbehandler: MPT.SaksbehandlerPropType.isRequired,
+  };
+  static defaultProps = {
+    saksbehandler: {
+      navn: '',
+    },
+  };
   componentDidMount() {
     this.props.hentSaksbehandler();
   }
@@ -44,17 +54,8 @@ class Topplinje extends Component {
   }
 }
 
-Topplinje.propTypes = {
-  hentSaksbehandler: PT.func.isRequired,
-  saksbehandler: PT.object.isRequired,
-};
-
-Topplinje.defaultProps = {
-  saksbehandler: { navn: '' },
-};
-
 const mapStateToProps = state => ({
-  saksbehandler: getSaksbehandlerState(state),
+  saksbehandler: SaksbehandlerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
