@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Checkbox, Radio, Fieldset } from 'nav-frontend-skjema';
-import { Innholdstittel } from 'nav-frontend-typografi';
+import { Innholdstittel, Undertittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
+import { Container, Row, Column } from 'nav-frontend-grid';
 
 import StegVelger from './komponenter/stegVelger';
 import StegFane from './komponenter/stegFane';
@@ -94,7 +95,37 @@ class Vilkarsvurdering extends Component {
             </Fieldset>
           </StegFane>
           <StegFane ikoner={vedtakIkoner}>
-            <Innholdstittel type="innholdstittel">Foreslått vedtak:</Innholdstittel>
+            <Container fluid>
+              <Row>
+                <Column xs="12">
+                  <Innholdstittel type="innholdstittel">Foreslått vedtak:</Innholdstittel>
+                </Column>
+              </Row>
+              <Row>
+                <Column xs="12">
+                  <Normaltekst type="element">Resultat:</Normaltekst>
+                  <UndertekstBold>Medlemsskap i norsk folketrygd er innvilget, etter artikkel 12.1</UndertekstBold>
+                </Column>
+              </Row>
+              <Row>
+                <Column xs="6" md="3">
+                  <Element type="element">Antall måneder i utlandet</Element>
+                  <Normaltekst>11</Normaltekst>
+                </Column>
+                <Column xs="6" md="3">
+                  <Element type="element">Land</Element>
+                  <Normaltekst>Tyskland og Sverige</Normaltekst>
+                </Column>
+                <Column xs="6" md="3">
+                  <Element type="element">Søker er</Element>
+                  <Normaltekst>Arbeidstaker</Normaltekst>
+                </Column>
+                <Column xs="6" md="3">
+                  <Element type="element">Navn på arbeidsgiver</Element>
+                  <Normaltekst>Hagemøbler Import AS</Normaltekst>
+                </Column>
+              </Row>
+            </Container>
           </StegFane>
         </StegVelger>
       </div>
