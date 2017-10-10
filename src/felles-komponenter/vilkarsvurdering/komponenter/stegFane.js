@@ -11,11 +11,13 @@ class StegFane extends Component {
     visNesteKnapp: PT.bool,
     nesteKnappKlikk: PT.func,
     children: PT.any.isRequired,
+    ikoner: PT.object,
   }
 
   static defaultProps = {
     visNesteKnapp: false,
     nesteKnappKlikk: () => { throw new Error('INGEN_EVENT_KOBLET'); },
+    ikoner: {},
   }
 
   render() {

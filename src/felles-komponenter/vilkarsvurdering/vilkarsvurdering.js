@@ -8,12 +8,16 @@ import StegFane from './komponenter/stegFane';
 import './vilkarsvurdering.css';
 
 import ikonUbehandlet from '../../resources/images/ikon-steg-ubehandlet.svg';
+import ikonAktivt from '../../resources/images/ikon-steg-aktivt.svg';
 import ikonFerdig from '../../resources/images/ikon-steg-ferdig.svg';
 import ikonVarsel from '../../resources/images/ikon-steg-varsel.svg';
+import ikonFeil from '../../resources/images/ikon-steg-feil.svg';
+import ikonVedtakAvslatt from '../../resources/images/ikon-vedtak-avslatt.svg';
+import ikonVedakUbehandlet from '../../resources/images/ikon-vedtak-ubehandlet.svg';
+import ikonVedtakGodkjent from '../../resources/images/ikon-vedtak-godkjent.svg';
 
 class Vilkarsvurdering extends Component {
-  // Todo 1: Ikoner klippes i portview i svg etter import.
-  // Todo 2: Sett opp evt. prop types og hook opp mot Redux med dispatch.
+  // Todo: Sett opp evt. prop types og hook opp mot Redux med dispatch.
 
   static propTypes = {};
   static defaultProps = {};
@@ -31,17 +35,28 @@ class Vilkarsvurdering extends Component {
   render() {
     const valg = {
       visNesteKnapp: true,
-      ikoner: {
-        ikonUbehandlet,
-        ikonFerdig,
-        ikonVarsel,
-      },
+    };
+
+    const stegIkoner = {
+      UBEHANDLET: ikonUbehandlet,
+      AKTIVT: ikonAktivt,
+      BEHANDLET: ikonFerdig,
+      ADVARSEL: ikonVarsel,
+      FEIL: ikonFeil,
+    };
+
+    const vedtakIkoner = {
+      UBEHANDLET: ikonVedakUbehandlet,
+      AKTIVT: ikonVedtakGodkjent,
+      BEHANDLET: ikonVedtakGodkjent,
+      ADVARSEL: ikonVedtakAvslatt,
+      FEIL: ikonVedtakAvslatt,
     };
 
     return (
       <div className="vilkarsvurdering">
         <StegVelger valg={valg}>
-          <StegFane>
+          <StegFane ikoner={stegIkoner}>
             <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>
             <Fieldset legend="Vurder om søkeren er:">
               <Radio id="steg0_ikke_arbeidende" name="arbeidssted" label="Ikke arbeidende / yrkesmottaker" />
@@ -50,16 +65,16 @@ class Vilkarsvurdering extends Component {
               <Radio id="steg0_arbeidstaker_selvstendig" name="arbeidssted" label="Både arbeidstakende og selvstendig" />
             </Fieldset>
           </StegFane>
-          <StegFane>
+          <StegFane ikoner={stegIkoner}>
             <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>
-            <Fieldset legend="Gjelder én eller flere av dissefor søkeren?">
+            <Fieldset legend="Gjelder én eller flere av disse for søkeren?">
               <Checkbox id="steg1_ansatt_offentlig" label="Offentlig tjenestepensjon (relevant for 11.3 b)" />
               <Checkbox id="steg1_ansatt_skip" label="Ansatt på skip (relevant for 11.4" />
               <Checkbox id="steg1_ansatt_sokkel" label="Ansatt på sokkel (relevant for 11.3 a)" />
               <Checkbox id="steg1_ansatt_flyvende" label="Flyvende personell (relevant for 11.5)" />
             </Fieldset>
           </StegFane>
-          <StegFane>
+          <StegFane ikoner={stegIkoner}>
             <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>
             <Fieldset legend="Hvor mange land skal søker arbeide/drive virsomhet i?">
               <Radio id="steg2_land_ett" name="land" label="Ett" />
@@ -78,9 +93,8 @@ class Vilkarsvurdering extends Component {
               <Radio id="steg2_arbeidsgiverfordeling_ulikeland" name="arbeidsgiverfordeling" label="Ulike land" />
             </Fieldset>
           </StegFane>
-          <StegFane>
+          <StegFane ikoner={vedtakIkoner}>
             <Innholdstittel type="innholdstittel">Foreslått vedtak:</Innholdstittel>
-
           </StegFane>
         </StegVelger>
       </div>

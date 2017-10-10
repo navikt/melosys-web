@@ -21,12 +21,39 @@ class StegVelger extends Component {
     aktivtSteg: 0,
   }
 
+  componentWillMount() {
+    this.settOppStegvelger(this.props);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.children !== this.props.children) {
+      this.settOppStegvelger(this.props);
+    }
+  }
+
+  /** Bygg et objekt for å holde status på diverste steg
+   * i tillegg til vedtakssteg.
+   * @param props
+   */
+  settOppStegvelger(props) {
+    const localProps = props || this.props;
+    const stegVelger = localProps.children.map(() => (
+      {
+        stegStatus: 'UBEHANDLET',
+      }
+    ));
+    this.setState({ stegVelger });
+  }
+
   /** Gå til et konkret steg i steglisten, angitt av en indek
    * som begynnner med 0.
    * @param nyttSteg Number Steget som det skal byttes til.
    */
   tilSteg = nyttSteg => {
-    this.setState({ aktivtSteg: nyttSteg });
+    const stegVelger = [...this.state.stegVelger];
+    stegVelger[this.state.aktivtSteg].stegStatus = 'BEHANDLET';
+    stegVelger[nyttSteg].stegStatus = 'AKTIVT';
+    this.setState({ stegVelger, aktivtSteg: nyttSteg });
   }
 
   /** Gå til neste steg i rekken, men ikke lenger enn
@@ -36,7 +63,7 @@ class StegVelger extends Component {
   nestSteg = () => {
     const maksSteg = this.props.children.length;
     const nyttSteg = (this.state.aktivtSteg + 1 < maksSteg) ? this.state.aktivtSteg + 1 : this.state.aktivtSteg;
-    this.setState({ aktivtSteg: nyttSteg });
+    this.tilSteg(nyttSteg);
   }
 
   render() {
@@ -52,7 +79,7 @@ class StegVelger extends Component {
         key={uuid()}
         onClick={() => this.tilSteg(index)}
         erAktiv={this.state.aktivtSteg === index}
-        ikon={valg.ikoner.ikonFerdig}
+        ikon={item.props.ikoner[this.state.stegVelger[index].stegStatus]}
       />));
 
     const faneInnhold = React.cloneElement(children[this.state.aktivtSteg], valg);
