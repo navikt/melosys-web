@@ -29,6 +29,11 @@ export function hentNyesaker(fnr) {
   return fetchToJson(URI_NYESAKER, { headers: headers });
 }
 
+export function hentTidligeresaker(brukernavn) {
+  const URI_NYESAKER = `${API_MELOSYS_URL}tidligeresaker/${brukernavn}`;
+  return fetchToJson(URI_NYESAKER, { headers: headers });
+}
+
 export function hentSaksbehandler() {
   const URI_SAKSBEHANDLER = `${API_MELOSYS_URL}${API_SAKSBEHANDLER}`;
   return fetchToJson(URI_SAKSBEHANDLER, { headers: headers });
