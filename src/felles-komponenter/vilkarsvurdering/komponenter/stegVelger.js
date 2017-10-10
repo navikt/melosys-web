@@ -37,9 +37,9 @@ class StegVelger extends Component {
    */
   settOppStegvelger(props) {
     const localProps = props || this.props;
-    const stegVelger = localProps.children.map(() => (
+    const stegVelger = localProps.children.map((item, index) => (
       {
-        stegStatus: 'UBEHANDLET',
+        stegStatus: (this.state.aktivtSteg === index ? 'AKTIVT' : 'UBEHANDLET'),
       }
     ));
     this.setState({ stegVelger });

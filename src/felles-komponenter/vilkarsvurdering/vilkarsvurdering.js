@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Checkbox, Radio, Fieldset } from 'nav-frontend-skjema';
-import { Innholdstittel, Undertittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
+import { Innholdstittel, Systemtittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
+import { Knapp } from 'nav-frontend-knapper';
 import { Container, Row, Column } from 'nav-frontend-grid';
 
 import StegVelger from './komponenter/stegVelger';
@@ -56,8 +57,8 @@ class Vilkarsvurdering extends Component {
 
     return (
       <div className="vilkarsvurdering">
-        <StegVelger valg={valg}>
-          <StegFane ikoner={stegIkoner}>
+        <StegVelger>
+          <StegFane ikoner={stegIkoner} visNesteKnapp>
             <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>
             <Fieldset legend="Vurder om søkeren er:">
               <Radio id="steg0_ikke_arbeidende" name="arbeidssted" label="Ikke arbeidende / yrkesmottaker" />
@@ -66,7 +67,7 @@ class Vilkarsvurdering extends Component {
               <Radio id="steg0_arbeidstaker_selvstendig" name="arbeidssted" label="Både arbeidstakende og selvstendig" />
             </Fieldset>
           </StegFane>
-          <StegFane ikoner={stegIkoner}>
+          <StegFane ikoner={stegIkoner} visNesteKnapp>
             <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>
             <Fieldset legend="Gjelder én eller flere av disse for søkeren?">
               <Checkbox id="steg1_ansatt_offentlig" label="Offentlig tjenestepensjon (relevant for 11.3 b)" />
@@ -75,7 +76,7 @@ class Vilkarsvurdering extends Component {
               <Checkbox id="steg1_ansatt_flyvende" label="Flyvende personell (relevant for 11.5)" />
             </Fieldset>
           </StegFane>
-          <StegFane ikoner={stegIkoner}>
+          <StegFane ikoner={stegIkoner} visNesteKnapp>
             <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>
             <Fieldset legend="Hvor mange land skal søker arbeide/drive virsomhet i?">
               <Radio id="steg2_land_ett" name="land" label="Ett" />
@@ -98,12 +99,12 @@ class Vilkarsvurdering extends Component {
             <Container fluid>
               <Row>
                 <Column xs="12">
-                  <Innholdstittel type="innholdstittel">Foreslått vedtak:</Innholdstittel>
+                  <Systemtittel type="systemtittel">Foreslått vedtak:</Systemtittel>
                 </Column>
               </Row>
               <Row>
                 <Column xs="12">
-                  <Normaltekst type="element">Resultat:</Normaltekst>
+                  <Normaltekst type="normaltekst">Resultat:</Normaltekst>
                   <UndertekstBold>Medlemsskap i norsk folketrygd er innvilget, etter artikkel 12.1</UndertekstBold>
                 </Column>
               </Row>
@@ -123,6 +124,14 @@ class Vilkarsvurdering extends Component {
                 <Column xs="6" md="3">
                   <Element type="element">Navn på arbeidsgiver</Element>
                   <Normaltekst>Hagemøbler Import AS</Normaltekst>
+                </Column>
+              </Row>
+              <Row>
+                <Column xs="6" className="fane__fot">
+                  <Knapp type="hoved">Fatt vedtak</Knapp>
+                </Column>
+                <Column xs="6" className="fane__fot">
+                  <a href="http://localhost">Forhåndsvis vedtaksbrev</a>
                 </Column>
               </Row>
             </Container>
