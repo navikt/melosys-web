@@ -72,6 +72,7 @@ class StegVelger extends Component {
     // Sett inn relasjon til eventen this.nesteKnappKlikk slik at knapper i barne-noder
     // kan trigge en event oppover i stack.
     valg.nesteKnappKlikk = this.nestSteg;
+    valg.aktivtSteg = this.state.aktivtSteg;
 
     // Klargjør betingede elementer.
     const stegKnapper = children.map((item, index) => (
