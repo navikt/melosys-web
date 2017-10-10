@@ -5,7 +5,7 @@ import PT from 'prop-types';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import './sok.css';
 import SokeForm from '../moduler/arbeidsforhold/soke-form';
-import { hentNyesaker } from '../ducks/nyesaker';
+import { hentNyesaker, NyesakerSelector } from '../ducks/nyesaker';
 
 const uuid = require('uuid/v4');
 
@@ -40,9 +40,9 @@ Sok.propTypes = {
   hentNyesaker: PT.func.isRequired,
 };
 
-const mapStateToProps = ({ nyesaker }) => (
-  { nyesaker: nyesaker.data }
-);
+const mapStateToProps = state => ({
+  nyesaker: NyesakerSelector(state),
+});
 
 const mapDispatchToProps = dispatch => ({
   hentNyesaker: fnr => dispatch(hentNyesaker(fnr)),

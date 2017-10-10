@@ -42,10 +42,6 @@ class Topplinje extends Component {
           <div className="brand__skillelinje" />
           <div className="brand__tittel"><span>Medlemsskap og lovvalgssystem</span></div>
         </div>
-        <div className="topplinje__sok">
-          <input className="sok__felt" />
-          <button className="sok__button" />
-        </div>
         <div className="topplinje__saksbehandler">
           <div className="saksbehandler__navn">{navn}</div>
         </div>
