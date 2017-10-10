@@ -27,6 +27,26 @@ router.post('/henvendelse', function(req, res) {
   res.json({message:'GOT a POST request:'+JSON.stringify(req.body)})
 });
 
+router.get('/nyesaker/:fnr', function (req, res) {
+  try {
+    const fnr = req.params.fnr.toString();
+    const nyesaker = JSON.parse(fs.readFileSync("./scripts/mock_data/nyesaker.json", "utf8"));
+    const sak = _.filter(nyesaker, function(item){
+      return item.fnr === fnr;
+    });
+
+    if (sak && sak.length) {
+      return res.json(sak);
+    }
+    else {
+      return res.status(404).send("Not found");
+    }
+  } catch (err) {
+    res.status(500).send(err);
+    console.log(err)
+  }
+});
+
 router.get('/saksopplysninger/:fnr', function (req, res) {
   try {
     const fnr = req.params.fnr;
