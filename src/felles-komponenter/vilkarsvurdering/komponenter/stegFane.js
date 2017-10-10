@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import classnames from 'classnames';
 
 import { connect } from 'react-redux';
 import { Knapp } from 'nav-frontend-knapper';
@@ -12,6 +13,7 @@ class StegFane extends Component {
     nesteKnappKlikk: PT.func,
     children: PT.any.isRequired,
     ikoner: PT.object,
+    aktivtSteg: PT.number.isRequired,
   }
 
   static defaultProps = {
@@ -23,9 +25,10 @@ class StegFane extends Component {
   render() {
     const { visNesteKnapp, children } = this.props;
     const knapp = visNesteKnapp ? <Knapp type="hoved" className="fane__nesteknapp" onClick={this.props.nesteKnappKlikk}>Bekreft og fortsett</Knapp> : '';
+    const stegFaneKlasse = classnames('stegVelger__fane', `steg${this.props.aktivtSteg}`);
 
     return (
-      <Panel className="stegVelger__fane">
+      <Panel className={stegFaneKlasse}>
         {children}
         {knapp}
       </Panel>
