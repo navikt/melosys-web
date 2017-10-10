@@ -24,6 +24,11 @@ const headers = new Headers({
   'Accept-Charset': 'utf-8',
 });
 
+export function hentNyesaker(fnr) {
+  const URI_NYESAKER = `${API_MELOSYS_URL}nyesaker/${fnr}`;
+  return fetchToJson(URI_NYESAKER, { headers: headers });
+}
+
 export function hentSaksbehandler() {
   const URI_SAKSBEHANDLER = `${API_MELOSYS_URL}${API_SAKSBEHANDLER}`;
   return fetchToJson(URI_SAKSBEHANDLER, { headers: headers });

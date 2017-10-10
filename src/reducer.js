@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'react-redux-form-validation';
 
+import nyesakerReducer from './ducks/nyesaker';
 import saksbehandlerReducer from './ducks/saksbehandler';
 import saksopplysningerReducer from './ducks/saksopplysninger';
 import arbeidsgiverReducer from './ducks/arbeidsgiver';
@@ -27,6 +28,7 @@ export default function(state, action) {
 */
 export default combineReducers({
   form: formReducer,
+  nyesaker: nyesakerReducer,
   saksopplysninger: saksopplysningerReducer,
   saksbehandler: saksbehandlerReducer,
   arbeidsgiver: arbeidsgiverReducer,
