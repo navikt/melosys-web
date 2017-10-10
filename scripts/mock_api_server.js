@@ -47,10 +47,10 @@ router.get('/nyesaker/:fnr', function (req, res) {
   }
 });
 
-router.get('/tidligeresaker/:brukernavn', function (req, res) {
+router.get('/sakerbehandles/:brukernavn', function (req, res) {
   try {
     const brukernavn = req.params.brukernavn;
-    const tidligeresaker = JSON.parse(fs.readFileSync("./scripts/mock_data/tidligere-saker-under-behandling.json", "utf8"));
+    const tidligeresaker = JSON.parse(fs.readFileSync("./scripts/mock_data/saker-under-behandling.json", "utf8"));
     const data = _.find(tidligeresaker, function(item){
       return item.brukernavn === brukernavn;
     });
