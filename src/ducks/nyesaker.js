@@ -9,7 +9,7 @@ export const PENDING = 'nyesaker/PENDING';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
-  data: {},
+  data: [],
 };
 // Reducer
 export default function reducer(state = initalState, action) {
@@ -26,8 +26,8 @@ export default function reducer(state = initalState, action) {
 }
 
 // Action Creators
-export function hentNyesaker() {
-  return doThenDispatch(() => Api.hentNyesaker(), {
+export function hentNyesaker(fnr) {
+  return doThenDispatch(() => Api.hentNyesaker(fnr), {
     OK,
     FEILET,
     PENDING,
