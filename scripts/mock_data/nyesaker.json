@@ -2,7 +2,16 @@
   {
     "fnr": "01015900543",
     "kjoenn": "K",
-    "sammensattNavn": "KVALUY HANNA MARIA M",
+    "sammensattNavn": "KVALUY HANNA MARIA #1",
+    "periode": {
+      "fom": "2013-08-19",
+      "tom": "2015-05-31"
+    }
+  },
+  {
+    "fnr": "01015900543",
+    "kjoenn": "K",
+    "sammensattNavn": "KVALUY HANNA MARIA #2",
     "periode": {
       "fom": "2013-08-19",
       "tom": "2015-05-31"

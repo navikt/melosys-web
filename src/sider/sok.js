@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { Container, Row, Column } from 'nav-frontend-grid';
@@ -10,6 +10,15 @@ import { hentNyesaker, NyesakerSelector } from '../ducks/nyesaker';
 const uuid = require('uuid/v4');
 
 class Sok extends Component {
+  constructor(props) {
+    super(props);
+    this.update = this.update.bind(this);
+  }
+
+  update(value) {
+    this.props.hentNyesaker(value.fnr);
+  }
+
   render() {
     const { nyesaker } = this.props;
 
@@ -19,9 +28,10 @@ class Sok extends Component {
           <Row>
             <Column xs="7">
               <h1>Søk</h1>
-              <SokeForm onSubmit={values => this.props.hentNyesaker(values.fnr)} />
-              {nyesaker.map(item => <Link key={uuid()} to={`saksbehandling/${item.fnr}`}>{item.sammensattNavn}</Link>)}
-
+              <SokeForm onSubmit={this.update} />
+              <ul>
+                {nyesaker && nyesaker.map(item => <li key={uuid()}><Link to={`saksbehandling/${item.fnr}`}>{item.sammensattNavn}</Link></li>)}
+              </ul>
             </Column>
             <Column xs="5">
               <h1>Siste søknader</h1>
@@ -48,5 +58,4 @@ const mapDispatchToProps = dispatch => ({
   hentNyesaker: fnr => dispatch(hentNyesaker(fnr)),
 });
 
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok));
+export default connect(mapStateToProps, mapDispatchToProps)(Sok);
