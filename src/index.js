@@ -13,7 +13,7 @@ import Routing from './routing';
 import registerServiceWorker from './registerServiceWorker';
 
 const store = createStore(routerHistory);
-loadInitialData(store.dispatch);
+loadInitialData(store);
 
 
 ReactDOM.render(
