@@ -3,13 +3,13 @@ import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 
 // Actions
-export const OK = 'saksbehandler/OK';
-export const FEILET = 'saksbehandler/FEILET';
-export const PENDING = 'saksbehandler/PENDING';
+export const OK = 'nyesaker/OK';
+export const FEILET = 'nyesaker/FEILET';
+export const PENDING = 'nyesaker/PENDING';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
-  data: {},
+  data: [],
 };
 // Reducer
 export default function reducer(state = initalState, action) {
@@ -26,8 +26,8 @@ export default function reducer(state = initalState, action) {
 }
 
 // Action Creators
-export function hentSaksbehandler() {
-  return doThenDispatch(() => Api.hentSaksbehandler(), {
+export function hentNyesaker(fnr) {
+  return doThenDispatch(() => Api.hentNyesaker(fnr), {
     OK,
     FEILET,
     PENDING,
@@ -35,7 +35,7 @@ export function hentSaksbehandler() {
 }
 
 // selector
-export const SaksbehandlerSelector = createSelector(
-  state => state.saksbehandler.data,
-  saksbehandler => saksbehandler
+export const NyesakerSelector = createSelector(
+  state => state.nyesaker.data,
+  nyesaker => nyesaker
 );
