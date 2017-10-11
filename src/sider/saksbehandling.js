@@ -39,17 +39,12 @@ class Saksbehandling extends Component {
   }
 
   render() {
-    const { person } = this.props;
-
     return (
       <div className="saksbehandling">
         <Container fluid>
           <Row>
             <Column xs="7">
-              <div className="saksbehandling__vurdering">
-                (vurderingsveileder)
-                <p>{person.sammensattNavn}</p>
-              </div>
+              <Vilkarsvurdering />
             </Column>
             <Column xs="5">
               <Panel className="saksbehandling__soknadSammendrag">
