@@ -16,18 +16,19 @@ const LenkeListe = ({ saker }) => {
     return null;
   }
   const lenker = saker.map(item => {
-      const {fnr, sammensattNavn} = item;
-      const link = `/saksbehandling/${fnr}`;
-      return (
-        <li key={uuid()}><Link to={link}>{sammensattNavn}</Link></li>
-      )
-    }
+    const { fnr, sammensattNavn } = item;
+    const link = `/saksbehandling/${fnr}`;
+    return <li key={uuid()}><Link to={link}>{sammensattNavn}</Link></li>;
+  }
   );
   return (
     <ul>
       {lenker}
     </ul>
   );
+};
+LenkeListe.propTypes = {
+  saker: PT.array.isRequired,
 };
 
 class Sok extends Component {
@@ -50,13 +51,13 @@ class Sok extends Component {
             <Column xs="7">
               <h1>Søk</h1>
               <SokeForm onSubmit={this.update} />
-              <LenkeListe saker={nyesaker}/>
+              <LenkeListe saker={nyesaker} />
             </Column>
             <Column xs="5">
               <h1>Saker under behandling</h1>
-              <LenkeListe saker={sakerbehandles}/>
+              <LenkeListe saker={sakerbehandles} />
               <h1>Tidlgere behandlede saker</h1>
-              <LenkeListe saker={tidligeresaker}/>
+              <LenkeListe saker={tidligeresaker} />
             </Column>
           </Row>
         </Container>
