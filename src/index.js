@@ -5,6 +5,7 @@ import { Provider as ReduxProvider } from 'react-redux';
 
 import './index.css';
 import App from './App';
+import loadInitialData from './startupDataLoader';
 
 import createStore from './store';
 import routerHistory from './history';
@@ -12,6 +13,8 @@ import Routing from './routing';
 import registerServiceWorker from './registerServiceWorker';
 
 const store = createStore(routerHistory);
+loadInitialData(store.dispatch);
+
 
 ReactDOM.render(
   <ReduxProvider store={store}>

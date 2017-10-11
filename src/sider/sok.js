@@ -34,8 +34,8 @@ class Sok extends Component {
               </ul>
             </Column>
             <Column xs="5">
-              <h1>Siste søknader</h1>
-              <h1>Behandlede søknader</h1>
+              <h1>Saker under behandling</h1>
+              <h1>Tidlgere behandlede saker</h1>
             </Column>
           </Row>
         </Container>
