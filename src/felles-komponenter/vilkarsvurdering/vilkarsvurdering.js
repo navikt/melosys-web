@@ -4,30 +4,23 @@ import { Checkbox, Radio, Fieldset } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 import { Knapp } from 'nav-frontend-knapper';
 import { Container, Row, Column } from 'nav-frontend-grid';
-
 import StegVelger from './komponenter/stegVelger';
 import StegFane from './komponenter/stegFane';
 import './vilkarsvurdering.css';
-
-import ikonUbehandlet from '../../resources/images/ikon-steg-ubehandlet.svg';
-import ikonAktivt from '../../resources/images/ikon-steg-aktivt.svg';
-import ikonFerdig from '../../resources/images/ikon-steg-ferdig.svg';
-import ikonVarsel from '../../resources/images/ikon-steg-varsel.svg';
-import ikonFeil from '../../resources/images/ikon-steg-feil.svg';
-import ikonVedtakAvslatt from '../../resources/images/ikon-vedtak-avslatt.svg';
-import ikonVedakUbehandlet from '../../resources/images/ikon-vedtak-ubehandlet.svg';
-import ikonVedtakGodkjent from '../../resources/images/ikon-vedtak-godkjent.svg';
+import * as Ikon from '../../resources/images';
 
 class Vilkarsvurdering extends Component {
   // Todo: Sett opp evt. prop types og hook opp mot Redux med dispatch.
-
   static propTypes = {};
   static defaultProps = {};
 
-  state = {
-    stepIndex: null,
-    visited: [],
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      stepIndex: null,
+      visited: [],
+    };
+  }
 
   componentWillMount() {
     const { stepIndex, visited } = this.state;
@@ -40,19 +33,19 @@ class Vilkarsvurdering extends Component {
     };
 
     const stegIkoner = {
-      UBEHANDLET: ikonUbehandlet,
-      AKTIVT: ikonAktivt,
-      BEHANDLET: ikonFerdig,
-      ADVARSEL: ikonVarsel,
-      FEIL: ikonFeil,
+      UBEHANDLET: Ikon.Ubehandlet,
+      AKTIVT: Ikon.Aktivt,
+      BEHANDLET: Ikon.Ferdig,
+      ADVARSEL: Ikon.Varsel,
+      FEIL: Ikon.Feil,
     };
 
     const vedtakIkoner = {
-      UBEHANDLET: ikonVedakUbehandlet,
-      AKTIVT: ikonVedtakGodkjent,
-      BEHANDLET: ikonVedtakGodkjent,
-      ADVARSEL: ikonVedtakAvslatt,
-      FEIL: ikonVedtakAvslatt,
+      UBEHANDLET: Ikon.VedakUbehandlet,
+      AKTIVT: Ikon.VedtakGodkjent,
+      BEHANDLET: Ikon.VedtakGodkjent,
+      ADVARSEL: Ikon.VedtakAvslatt,
+      FEIL: Ikon.VedtakAvslatt,
     };
 
     return (
