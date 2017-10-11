@@ -50,7 +50,27 @@ router.get('/nyesaker/:fnr', function (req, res) {
 router.get('/sakerbehandles/:brukernavn', function (req, res) {
   try {
     const brukernavn = req.params.brukernavn;
-    const tidligeresaker = JSON.parse(fs.readFileSync("./scripts/mock_data/saker-under-behandling.json", "utf8"));
+    const sakerbehandles = JSON.parse(fs.readFileSync("./scripts/mock_data/saker-under-behandling.json", "utf8"));
+    const data = _.find(sakerbehandles, function(item){
+      return item.brukernavn === brukernavn;
+    });
+
+    if (data && data.saker.length) {
+      return res.json(data.saker);
+    }
+    else {
+      return res.status(404).send("Not found");
+    }
+  } catch (err) {
+    res.status(500).send(err);
+    console.log(err)
+  }
+});
+
+router.get('/tidligeresaker/:brukernavn', function (req, res) {
+  try {
+    const brukernavn = req.params.brukernavn;
+    const tidligeresaker = JSON.parse(fs.readFileSync("./scripts/mock_data/tidligere-saker-under-behandling.json", "utf8"));
     const data = _.find(tidligeresaker, function(item){
       return item.brukernavn === brukernavn;
     });

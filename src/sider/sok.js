@@ -6,6 +6,8 @@ import { Container, Row, Column } from 'nav-frontend-grid';
 import './sok.css';
 import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import { hentNyesaker, NyesakerSelector } from '../ducks/nyesaker';
+import { SakerbehandlesSelector } from '../ducks/sakerbehandles'
+import { TidligeresakerSelector } from '../ducks/tidligeresaker'
 
 const uuid = require('uuid/v4');
 
@@ -20,7 +22,7 @@ class Sok extends Component {
   }
 
   render() {
-    const { nyesaker } = this.props;
+    const { nyesaker, sakerbehandles, tidligeresaker } = this.props;
 
     return (
       <div className="sok">
@@ -35,7 +37,9 @@ class Sok extends Component {
             </Column>
             <Column xs="5">
               <h1>Saker under behandling</h1>
+              {sakerbehandles && sakerbehandles.map(item => <li key={uuid()}><Link to={`saksbehandling/${item.fnr}`}>{item.sammensattNavn}</Link></li>)}
               <h1>Tidlgere behandlede saker</h1>
+              {tidligeresaker && tidligeresaker.map(item => <li key={uuid()}><Link to={`saksbehandling/${item.fnr}`}>{item.sammensattNavn}</Link></li>)}
             </Column>
           </Row>
         </Container>
@@ -48,10 +52,14 @@ Sok.propTypes = {
   history: PT.any.isRequired,
   nyesaker: PT.array.isRequired,
   hentNyesaker: PT.func.isRequired,
+  tidligeresaker: PT.func.isRequired,
+  sakerbehandler: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   nyesaker: NyesakerSelector(state),
+  sakerbehandles: SakerbehandlesSelector(state),
+  tidligeresaker: TidligeresakerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
