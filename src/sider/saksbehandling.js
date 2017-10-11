@@ -7,6 +7,7 @@ import { Panel } from 'nav-frontend-paneler';
 import './saksbehandling.css';
 
 import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurdering';
+import Personopplysninger from '../felles-komponenter/personopplysninger';
 
 class Saksbehandling extends Component {
   componentDidMount() {
@@ -20,6 +21,7 @@ class Saksbehandling extends Component {
           <Row>
             <Column xs="7">
               <Vilkarsvurdering />
+              <Personopplysninger />
             </Column>
             <Column xs="5">
               <Panel className="saksbehandling__soknadSammendrag">
