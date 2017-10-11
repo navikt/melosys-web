@@ -1,18 +1,45 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PT from 'prop-types';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Knapp } from 'nav-frontend-knapper';
 import { Undertittel } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
+import * as MPT from '../proptypes';
+import { STATUS } from '../services/utils';
+import {
+  hentSaksopplysninger,
+  PersonSelector,
+  ArbeidsforholdSelector,
+} from '../ducks/saksopplysninger';
 import './saksbehandling.css';
 
 
 class Saksbehandling extends Component {
-  componentDidMount() {
+  static propTypes = {
+    match: PT.any.isRequired,
+    hentSaksopplysninger: PT.func.isRequired,
+    person: MPT.PersonPropType.isRequired,
+    arbeidsforhold: PT.arrayOf(MPT.ArbeidsforholdPropType),
+    status: PT.string,
+  };
 
+  static defaultProps = {
+    person: {
+      fnr: '',
+    },
+    arbeidsforhold: [],
+    status: STATUS.NOT_STARTED,
+  };
+
+  componentDidMount() {
+    const { fnr } = this.props.match.params;
+    this.props.hentSaksopplysninger(fnr);
   }
 
   render() {
+    const { person } = this.props;
+
     return (
       <div className="saksbehandling">
         <Container fluid>
@@ -20,6 +47,7 @@ class Saksbehandling extends Component {
             <Column xs="7">
               <div className="saksbehandling__vurdering">
                 (vurderingsveileder)
+                <p>{person.sammensattNavn}</p>
               </div>
             </Column>
             <Column xs="5">
@@ -41,4 +69,15 @@ class Saksbehandling extends Component {
   }
 }
 
-export default withRouter(Saksbehandling);
+
+const mapStateToProps = state => ({
+  person: PersonSelector(state),
+  arbeidsforhold: ArbeidsforholdSelector(state),
+  status: state.status,
+});
+
+const mapDispatchToProps = dispatch => ({
+  hentSaksopplysninger: fnr => dispatch(hentSaksopplysninger(fnr)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Saksbehandling);
