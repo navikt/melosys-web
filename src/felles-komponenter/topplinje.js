@@ -9,13 +9,11 @@ import './topplinje.css';
 import * as MPT from '../proptypes';
 
 import {
-  hentSaksbehandler,
   SaksbehandlerSelector,
 } from '../ducks/saksbehandler';
 
 class Topplinje extends Component {
   static propTypes = {
-    hentSaksbehandler: PT.func.isRequired,
     saksbehandler: MPT.SaksbehandlerPropType.isRequired,
   };
   static defaultProps = {
@@ -23,9 +21,6 @@ class Topplinje extends Component {
       navn: '',
     },
   };
-  componentDidMount() {
-    this.props.hentSaksbehandler();
-  }
 
   render() {
     const { saksbehandler: { navn } } = this.props;
@@ -55,7 +50,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentSaksbehandler: () => dispatch(hentSaksbehandler()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Topplinje);
