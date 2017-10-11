@@ -11,16 +11,21 @@ import { TidligeresakerSelector } from '../ducks/tidligeresaker';
 
 const uuid = require('uuid/v4');
 
+function Lenke(item) {
+  const { fnr, sammensattNavn } = item;
+  const link = `/saksbehandling/${fnr}`;
+  return <li><Link to={link}>{sammensattNavn}</Link></li>;
+}
+Lenke.propTypes = {
+  fnr: PT.string.isRequired,
+  sammensattNavn: PT.string.isRequired,
+};
+
 const LenkeListe = ({ saker }) => {
   if (!saker || !saker.length) {
     return null;
   }
-  const lenker = saker.map(item => {
-    const { fnr, sammensattNavn } = item;
-    const link = `/saksbehandling/${fnr}`;
-    return <li key={uuid()}><Link to={link}>{sammensattNavn}</Link></li>;
-  }
-  );
+  const lenker = saker.map(item => <Lenke key={uuid()} {...item} />);
   return (
     <ul>
       {lenker}
@@ -67,7 +72,6 @@ class Sok extends Component {
 }
 
 Sok.propTypes = {
-  history: PT.any.isRequired,
   nyesaker: PT.array.isRequired,
   hentNyesaker: PT.func.isRequired,
   tidligeresaker: PT.array.isRequired,
