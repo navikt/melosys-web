@@ -7,7 +7,7 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Systemtittel } from 'nav-frontend-typografi';
 import moment from 'moment';
 import 'moment/locale/nb';
-import { STATUS } from '../ducks/utils';
+import { STATUS } from '../services/utils';
 import {
   hentSaksopplysninger,
   PersonSelector,

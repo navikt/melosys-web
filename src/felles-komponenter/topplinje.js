@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
-import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import * as navLogo from '../resources/images/nav.svg';
 
 import './topplinje.css';
+import * as MPT from '../proptypes';
 
 import {
-  hentSaksbehandler,
-  getSaksbehandlerState,
+  SaksbehandlerSelector,
 } from '../ducks/saksbehandler';
 
 class Topplinje extends Component {
-  componentDidMount() {
-    this.props.hentSaksbehandler();
-  }
+  static propTypes = {
+    saksbehandler: MPT.SaksbehandlerPropType.isRequired,
+  };
+  static defaultProps = {
+    saksbehandler: {
+      navn: '',
+    },
+  };
 
   render() {
     const { saksbehandler: { navn } } = this.props;
@@ -32,10 +36,6 @@ class Topplinje extends Component {
           <div className="brand__skillelinje" />
           <div className="brand__tittel"><span>Medlemsskap og lovvalgssystem</span></div>
         </div>
-        <div className="topplinje__sok">
-          <input className="sok__felt" />
-          <button className="sok__button" />
-        </div>
         <div className="topplinje__saksbehandler">
           <div className="saksbehandler__navn">{navn}</div>
         </div>
@@ -44,21 +44,9 @@ class Topplinje extends Component {
   }
 }
 
-Topplinje.propTypes = {
-  hentSaksbehandler: PT.func.isRequired,
-  saksbehandler: PT.object.isRequired,
-};
-
-Topplinje.defaultProps = {
-  saksbehandler: { navn: '' },
-};
-
 const mapStateToProps = state => ({
-  saksbehandler: getSaksbehandlerState(state),
+  saksbehandler: SaksbehandlerSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  hentSaksbehandler: () => dispatch(hentSaksbehandler()),
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Topplinje);
+export default connect(mapStateToProps)(Topplinje);

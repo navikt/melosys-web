@@ -1,5 +1,10 @@
 import PT from 'prop-types';
 
+export const SaksbehandlerPropType = PT.shape({
+  brukernavn: PT.string,
+  navn: PT.string,
+});
+
 export const BostedsAdressePropType = PT.shape({
   gateadresse: PT.shape({
     gatenavn: PT.string.isRequired,
