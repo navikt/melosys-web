@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Knapp } from 'nav-frontend-knapper';
 import { Undertittel } from 'nav-frontend-typografi';
@@ -40,4 +40,9 @@ class Saksbehandling extends Component {
   }
 }
 
-export default withRouter(Saksbehandling);
+
+const mapStateToProps = () => ({});
+
+const mapDispatchToProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Saksbehandling);

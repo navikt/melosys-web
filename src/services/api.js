@@ -24,6 +24,21 @@ const headers = new Headers({
   'Accept-Charset': 'utf-8',
 });
 
+export function hentNyesaker(fnr) {
+  const URI_NYESAKER = `${API_MELOSYS_URL}nyesaker/${fnr}`;
+  return fetchToJson(URI_NYESAKER, { headers: headers });
+}
+
+export function hentSakerbehandles(brukernavn) {
+  const URI_SAKERBEHANDLES = `${API_MELOSYS_URL}sakerbehandles/${brukernavn}`;
+  return fetchToJson(URI_SAKERBEHANDLES, { headers: headers });
+}
+
+export function hentTidligeresaker(brukernavn) {
+  const URI_TIDLIGERESAKER = `${API_MELOSYS_URL}tidligeresaker/${brukernavn}`;
+  return fetchToJson(URI_TIDLIGERESAKER, { headers: headers });
+}
+
 export function hentSaksbehandler() {
   const URI_SAKSBEHANDLER = `${API_MELOSYS_URL}${API_SAKSBEHANDLER}`;
   return fetchToJson(URI_SAKSBEHANDLER, { headers: headers });
