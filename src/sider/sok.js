@@ -6,8 +6,8 @@ import { Container, Row, Column } from 'nav-frontend-grid';
 import './sok.css';
 import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import { hentNyesaker, NyesakerSelector } from '../ducks/nyesaker';
-import { SakerbehandlesSelector } from '../ducks/sakerbehandles'
-import { TidligeresakerSelector } from '../ducks/tidligeresaker'
+import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
+import { TidligeresakerSelector } from '../ducks/tidligeresaker';
 
 const uuid = require('uuid/v4');
 
@@ -52,8 +52,8 @@ Sok.propTypes = {
   history: PT.any.isRequired,
   nyesaker: PT.array.isRequired,
   hentNyesaker: PT.func.isRequired,
-  tidligeresaker: PT.func.isRequired,
-  sakerbehandler: PT.func.isRequired,
+  tidligeresaker: PT.array.isRequired,
+  sakerbehandles: PT.array.isRequired,
 };
 
 const mapStateToProps = state => ({
