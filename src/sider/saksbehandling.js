@@ -8,6 +8,7 @@ import './saksbehandling.css';
 
 import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurdering';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
+import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 
 class Saksbehandling extends Component {
   componentDidMount() {
@@ -22,6 +23,7 @@ class Saksbehandling extends Component {
             <Column xs="7">
               <Vilkarsvurdering />
               <Personopplysninger />
+              <Tilleggsopplysninger />
             </Column>
             <Column xs="5">
               <Panel className="saksbehandling__soknadSammendrag">
