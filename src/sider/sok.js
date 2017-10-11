@@ -11,6 +11,25 @@ import { TidligeresakerSelector } from '../ducks/tidligeresaker';
 
 const uuid = require('uuid/v4');
 
+const LenkeListe = ({ saker }) => {
+  if (!saker) {
+    return null;
+  }
+  const lenker = saker.map(item => {
+      const {fnr, sammensattNavn} = item;
+      const link = `/saksbehandling/${fnr}`;
+      return (
+        <li key={uuid()}><Link to={link}>{sammensattNavn}</Link></li>
+      )
+    }
+  );
+  return (
+    <ul>
+      {lenker}
+    </ul>
+  );
+};
+
 class Sok extends Component {
   constructor(props) {
     super(props);
@@ -31,15 +50,13 @@ class Sok extends Component {
             <Column xs="7">
               <h1>Søk</h1>
               <SokeForm onSubmit={this.update} />
-              <ul>
-                {nyesaker && nyesaker.map(item => <li key={uuid()}><Link to={`saksbehandling/${item.fnr}`}>{item.sammensattNavn}</Link></li>)}
-              </ul>
+              <LenkeListe saker={nyesaker}/>
             </Column>
             <Column xs="5">
               <h1>Saker under behandling</h1>
-              {sakerbehandles && sakerbehandles.map(item => <li key={uuid()}><Link to={`saksbehandling/${item.fnr}`}>{item.sammensattNavn}</Link></li>)}
+              <LenkeListe saker={sakerbehandles}/>
               <h1>Tidlgere behandlede saker</h1>
-              {tidligeresaker && tidligeresaker.map(item => <li key={uuid()}><Link to={`saksbehandling/${item.fnr}`}>{item.sammensattNavn}</Link></li>)}
+              <LenkeListe saker={tidligeresaker}/>
             </Column>
           </Row>
         </Container>
