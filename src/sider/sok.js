@@ -12,7 +12,7 @@ import { TidligeresakerSelector } from '../ducks/tidligeresaker';
 const uuid = require('uuid/v4');
 
 const LenkeListe = ({ saker }) => {
-  if (!saker) {
+  if (!saker || !saker.length) {
     return null;
   }
   const lenker = saker.map(item => {
