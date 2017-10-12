@@ -13,10 +13,10 @@ import './sideDialog.css';
 const uuid = require('uuid/v4');
 
 
-const Fane = function(props) {
-  return (
-    <div className="dialog__fane">{props.children}</div>
-  );
+const Fane = props => (<div className="dialog__fane">{props.children}</div>);
+
+Fane.propTypes = {
+  children: PT.any.isRequired,
 };
 
 class SideDialog extends Component {
@@ -28,7 +28,7 @@ class SideDialog extends Component {
     faner: [
       { navn: 'historikk', tittel: 'Historikk', komponent: <SideDialogHistorikk key={uuid()} /> },
       { navn: 'melding', tittel: 'Melding', komponent: <SideDialogMelding key={uuid()} /> },
-      { navn: 'dokumenter', tittel: 'dokumenter', komponent: <SideDialogDokumenter key={uuid()} /> },
+      { navn: 'dokumenter', tittel: 'Dokumenter', komponent: <SideDialogDokumenter key={uuid()} /> },
     ],
   };
 
