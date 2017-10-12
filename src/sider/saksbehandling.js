@@ -1,41 +1,17 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PT from 'prop-types';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Knapp } from 'nav-frontend-knapper';
 import { Undertittel } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
-import * as MPT from '../proptypes';
-import { STATUS } from '../services/utils';
-import {
-  hentSaksopplysninger,
-  PersonSelector,
-  ArbeidsforholdSelector,
-} from '../ducks/saksopplysninger';
 import './saksbehandling.css';
-
 import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurdering';
+import Personopplysninger from '../felles-komponenter/personopplysninger';
+import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 
 class Saksbehandling extends Component {
-  static propTypes = {
-    match: PT.any.isRequired,
-    hentSaksopplysninger: PT.func.isRequired,
-    person: MPT.PersonPropType.isRequired,
-    arbeidsforhold: PT.arrayOf(MPT.ArbeidsforholdPropType),
-    status: PT.string,
-  };
-
-  static defaultProps = {
-    person: {
-      fnr: '',
-    },
-    arbeidsforhold: [],
-    status: STATUS.NOT_STARTED,
-  };
-
   componentDidMount() {
-    const { fnr } = this.props.match.params;
-    this.props.hentSaksopplysninger(fnr);
+
   }
 
   render() {
@@ -45,6 +21,8 @@ class Saksbehandling extends Component {
           <Row>
             <Column xs="7">
               <Vilkarsvurdering />
+              <Personopplysninger />
+              <Tilleggsopplysninger />
             </Column>
             <Column xs="5">
               <Panel className="saksbehandling__soknadSammendrag">
@@ -66,14 +44,8 @@ class Saksbehandling extends Component {
 }
 
 
-const mapStateToProps = state => ({
-  person: PersonSelector(state),
-  arbeidsforhold: ArbeidsforholdSelector(state),
-  status: state.status,
-});
+const mapStateToProps = () => ({});
 
-const mapDispatchToProps = dispatch => ({
-  hentSaksopplysninger: fnr => dispatch(hentSaksopplysninger(fnr)),
-});
+const mapDispatchToProps = () => ({});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Saksbehandling);
