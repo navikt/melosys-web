@@ -5252,6 +5252,10 @@ nav-frontend-lenkepanel@^0.3.11:
   version "0.3.11"
   resolved "https://registry.yarnpkg.com/nav-frontend-lenkepanel/-/nav-frontend-lenkepanel-0.3.11.tgz#7064ee6e51b5ecb8098d81dcbb2d184a3d1572f3"
 
+nav-frontend-lenker-style@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/nav-frontend-lenker-style/-/nav-frontend-lenker-style-0.2.4.tgz#b1383ff64ef7ad2380a551906e79be9864d7db69"
+
 nav-frontend-paneler-style@^0.3.6:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/nav-frontend-paneler-style/-/nav-frontend-paneler-style-0.3.6.tgz#fb50d4292a3e4498c620315281363f69c97fb8bf"
