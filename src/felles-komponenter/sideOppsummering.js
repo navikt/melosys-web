@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import { Knapp } from 'nav-frontend-knapper';
 import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
 import { Panel } from 'nav-frontend-paneler';
-import { Container, Row, Column } from 'nav-frontend-grid';
+import { Row, Column } from 'nav-frontend-grid';
 
 import './sideOppsummering.css';
 
@@ -40,7 +40,7 @@ class SideOppsummering extends Component {
       statusDetalj } = this.props.oppsummering;
 
     return (
-      <div className="sideOppsummering">
+      <div className="sideOppsummering panelSeksjon">
         <Panel className="saksbehandling__soknadSammendrag">
           <Row>
             <Column xs="12" md="6">

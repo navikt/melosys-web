@@ -41,7 +41,7 @@ class Personopplysninger extends Component {
       medfolgende } = this.props.personopplysninger;
 
     return (
-      <div className="personopplysninger">
+      <div className="personopplysninger panelSeksjon">
         <EkspanderbartPanel tittel="Ola Nordmann" apen>
           <Container fluid>
             {/* START PERSONNUMMER */}

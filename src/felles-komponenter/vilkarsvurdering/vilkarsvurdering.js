@@ -35,10 +35,6 @@ class Vilkarsvurdering extends Component {
   }
 
   render() {
-    const valg = {
-      visNesteKnapp: true,
-    };
-
     const stegIkoner = {
       UBEHANDLET: ikonUbehandlet,
       AKTIVT: ikonAktivt,
@@ -56,7 +52,7 @@ class Vilkarsvurdering extends Component {
     };
 
     return (
-      <div className="vilkarsvurdering">
+      <div className="vilkarsvurdering panelSeksjon">
         <StegVelger>
           <StegFane ikoner={stegIkoner} visNesteKnapp>
             <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>

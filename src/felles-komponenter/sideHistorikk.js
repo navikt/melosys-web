@@ -21,7 +21,7 @@ class SideHistorikk extends Component {
 
   render() {
     return (
-      <div className="tilleggsopplysninger">
+      <div className="tilleggsopplysninger panelSeksjon">
         <Panel className="saksbehandling__soknadSammendrag">
           Historikk
         </Panel>
