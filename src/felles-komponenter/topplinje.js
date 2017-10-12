@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
@@ -49,7 +48,5 @@ const mapStateToProps = state => ({
   saksbehandler: SaksbehandlerSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Topplinje);
+export default connect(mapStateToProps)(Topplinje);
