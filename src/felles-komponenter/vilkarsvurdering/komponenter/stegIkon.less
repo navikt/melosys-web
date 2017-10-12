@@ -1,0 +1,25 @@
+.stegIkon {
+  display: flex;
+  background-repeat:no-repeat;
+  background-size:contain;
+  background-color:transparent;
+  width:30px;
+  height:30px;
+  margin:0.5em;
+  border:0;
+  cursor:pointer;
+  transition:all 0.1s;
+  outline:none;
+
+  &:active,
+  &:focus,
+  &:hover {
+    transform:scale(1.1);
+  }
+
+  &:focus,
+  &:active {
+    box-shadow: 0 0 3px 0.1875em #ffbd66;
+  }
+}
+
