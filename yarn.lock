@@ -5284,6 +5284,10 @@ nav-frontend-tabell-style@^0.2.4:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/nav-frontend-tabell-style/-/nav-frontend-tabell-style-0.2.4.tgz#c7767031061a19804d86d85d405e5a4369323feb"
 
+nav-frontend-tekstomrade@^0.1.10:
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/nav-frontend-tekstomrade/-/nav-frontend-tekstomrade-0.1.10.tgz#f4d5a739fc0d1a81a635e0b9d457403305df6484"
+
 nav-frontend-typografi-style@^1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/nav-frontend-typografi-style/-/nav-frontend-typografi-style-1.0.6.tgz#36b7c723781a6b3c3ee72579988aeecedb1a3ae2"

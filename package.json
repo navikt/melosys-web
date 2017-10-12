@@ -38,6 +38,7 @@
     "nav-frontend-snakkeboble": "^0.1.13",
     "nav-frontend-snakkeboble-style": "^0.2.3",
     "nav-frontend-tabell-style": "^0.2.4",
+    "nav-frontend-tekstomrade": "^0.1.10",
     "nav-frontend-typografi": "^1.0.9",
     "nav-frontend-typografi-style": "^1.0.6",
     "prop-types": "^15.6.0",
