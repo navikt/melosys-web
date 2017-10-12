@@ -10,6 +10,9 @@ import SideDialogDokumenter from './sideDialogDokumenter';
 
 import './sideDialog.css';
 
+const uuid = require('uuid/v4');
+
+
 const Fane = function(props) {
   return (
     <div className="dialog__fane">{props.children}</div>
@@ -18,27 +21,42 @@ const Fane = function(props) {
 
 class SideDialog extends Component {
   static propTypes = {
-    historikk: PT.object,
+    faner: PT.array,
   };
-  static defaultProps = {
-    historikk: {
 
-    },
+  static defaultProps = {
+    faner: [
+      { navn: 'historikk', tittel: 'Historikk', komponent: <SideDialogHistorikk key={uuid()} /> },
+      { navn: 'melding', tittel: 'Melding', komponent: <SideDialogMelding key={uuid()} /> },
+      { navn: 'dokumenter', tittel: 'dokumenter', komponent: <SideDialogDokumenter key={uuid()} /> },
+    ],
   };
+
+  state = {
+    aktivFane: '',
+  }
+
+  componentWillMount() {
+    this.setState({ aktivFane: this.props.faner[0].navn });
+  }
+
+  tilFane = navn => {
+    this.setState({ aktivFane: navn });
+  }
 
   render() {
     return (
       <div className="dialog panelSeksjon">
         <Panel>
           <div className="dialog__meny" role="navigation">
-            <button className="meny__element meny__element--aktiv">Historikk</button>
-            <button className="meny__element">Send melding</button>
-            <button className="meny__element">Dokumenter</button>
+            { this.props.faner.map(item => (
+              <button
+                className={classnames({ meny__element: true, 'meny__element--aktiv': (item.navn === this.state.aktivFane) })}
+                key={uuid()}
+                onClick={() => this.tilFane(item.navn)}>{item.tittel}</button>))}
           </div>
           <Fane id="historikk">
-            <SideDialogHistorikk />
-            <SideDialogMelding />
-            <SideDialogDokumenter />
+            { this.props.faner.find(item => item.navn === this.state.aktivFane).komponent }
           </Fane>
         </Panel>
       </div>
