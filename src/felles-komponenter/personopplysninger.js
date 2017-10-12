@@ -4,8 +4,9 @@ import PT from 'prop-types';
 import EkspanderbartPanel from 'nav-frontend-ekspanderbartpanel';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
-
 import './personopplysninger.less';
+
+const uuid = require('uuid/v4');
 
 class Personopplysninger extends Component {
   static propTypes = {
@@ -109,7 +110,7 @@ class Personopplysninger extends Component {
               <Column xs="6">
                 <section arial-label="Barn">
                   <Undertittel type="undertittel">Barn:</Undertittel>
-                  {barn.map(item => <Normaltekst>{item}</Normaltekst>)}
+                  {barn.map(item => <Normaltekst key={uuid()}>{item}</Normaltekst>)}
                 </section>
               </Column>
               <Column xs="6">

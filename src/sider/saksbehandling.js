@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import './saksbehandling.css';
-
 import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurdering';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
