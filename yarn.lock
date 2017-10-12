@@ -5268,6 +5268,14 @@ nav-frontend-skjema@^0.1.17:
   version "0.1.17"
   resolved "https://registry.yarnpkg.com/nav-frontend-skjema/-/nav-frontend-skjema-0.1.17.tgz#11bb47d77c356fff071e897aa1622457a27678c9"
 
+nav-frontend-snakkeboble-style@^0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/nav-frontend-snakkeboble-style/-/nav-frontend-snakkeboble-style-0.2.3.tgz#3c9ee46d258aeeb0f282cb73bd5220f0869af918"
+
+nav-frontend-snakkeboble@^0.1.13:
+  version "0.1.13"
+  resolved "https://registry.yarnpkg.com/nav-frontend-snakkeboble/-/nav-frontend-snakkeboble-0.1.13.tgz#2c0a82d7c4fd16a90d24ac3f57b93f40fee5dcf3"
+
 nav-frontend-tabell-style@^0.2.4:
   version "0.2.4"
   resolved "https://registry.yarnpkg.com/nav-frontend-tabell-style/-/nav-frontend-tabell-style-0.2.4.tgz#c7767031061a19804d86d85d405e5a4369323feb"

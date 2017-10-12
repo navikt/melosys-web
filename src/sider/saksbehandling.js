@@ -6,7 +6,7 @@ import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurd
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
-import SideHistorikk from '../felles-komponenter/sideHistorikk';
+import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 
 class Saksbehandling extends Component {
   componentDidMount() {
@@ -25,7 +25,7 @@ class Saksbehandling extends Component {
             </Column>
             <Column xs="5">
               <SideOppsummering />
-              <SideHistorikk />
+              <SideDialog />
             </Column>
           </Row>
         </Container>
