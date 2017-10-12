@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 import EkspanderbartPanel from 'nav-frontend-ekspanderbartpanel';
 import { Container, Row, Column } from 'nav-frontend-grid';
-import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
 
 import './personopplysninger.less';
 
@@ -22,7 +21,7 @@ class Personopplysninger extends Component {
     const { tilleggsopplysninger } = this.props;
 
     return (
-      <div className="tilleggsopplysninger">
+      <div className="tilleggsopplysninger panelSeksjon">
         <EkspanderbartPanel tittel="Tilleggsopplysninger" apen>
           <Container fluid>
             {/* START TILLEGGSOPPLYSNINGER */}
