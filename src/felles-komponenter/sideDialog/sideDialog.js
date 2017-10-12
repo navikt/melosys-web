@@ -12,13 +12,6 @@ import './sideDialog.css';
 
 const uuid = require('uuid/v4');
 
-
-const Fane = props => (<div className="dialog__fane">{props.children}</div>);
-
-Fane.propTypes = {
-  children: PT.any.isRequired,
-};
-
 class SideDialog extends Component {
   static propTypes = {
     faner: PT.array,
@@ -32,14 +25,17 @@ class SideDialog extends Component {
     ],
   };
 
+  // Forvent at minst én fane finnes og sett denne som standard aktiv.
   state = {
-    aktivFane: '',
+    aktivFane: this.props.faner[0].navn,
   }
 
-  componentWillMount() {
-    this.setState({ aktivFane: this.props.faner[0].navn });
-  }
-
+  /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
+   * slik at riktig komponent under menyen vises. Data fra komponenten slik som navn ligger under
+   * props.faner-objektet.
+   *
+   * @param navn {string} Navnet på komponenten som skal settes til aktiv.
+   */
   tilFane = navn => {
     this.setState({ aktivFane: navn });
   }
@@ -53,11 +49,12 @@ class SideDialog extends Component {
               <button
                 className={classnames({ meny__element: true, 'meny__element--aktiv': (item.navn === this.state.aktivFane) })}
                 key={uuid()}
-                onClick={() => this.tilFane(item.navn)}>{item.tittel}</button>))}
+                onClick={() => this.tilFane(item.navn)}>{item.tittel}</button>)
+            )}
           </div>
-          <Fane id="historikk">
+          <div>
             { this.props.faner.find(item => item.navn === this.state.aktivFane).komponent }
-          </Fane>
+          </div>
         </Panel>
       </div>
     );
