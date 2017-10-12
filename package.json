@@ -1,8 +1,8 @@
 {
   "name": "melosys-web-proto",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Medlemsskap og lovvalgssystem",
-  "author": "are.bjolseth@navn.no",
+  "author": "are.bjolseth@nav.no",
   "keywords": [
     "medlemsskap",
     "lovvalg"

@@ -28,10 +28,6 @@ class Vilkarsvurdering extends Component {
   }
 
   render() {
-    const valg = {
-      visNesteKnapp: true,
-    };
-
     const stegIkoner = {
       UBEHANDLET: Ikon.Ubehandlet,
       AKTIVT: Ikon.Aktivt,
