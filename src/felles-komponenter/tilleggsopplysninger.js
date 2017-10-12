@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 import EkspanderbartPanel from 'nav-frontend-ekspanderbartpanel';
 import { Container, Row, Column } from 'nav-frontend-grid';
-import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
 
 import './personopplysninger.less';
 
 class Personopplysninger extends Component {
   static propTypes = {
-    tilleggsopplysninger: PT.object,
+    tilleggsopplysninger: PT.string,
   };
   static defaultProps = {
     tilleggsopplysninger: 'Jeg håper denne søknaden kan behandles så fort som mulig. I lys av en tverrfaglig oppgaveløsning spores kompetansehevingen ' +
