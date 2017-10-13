@@ -48,5 +48,7 @@ const mapStateToProps = state => ({
   saksbehandler: SaksbehandlerSelector(state),
 });
 
+const mapDispatchToProps = () => ({
+});
 
-export default connect(mapStateToProps)(Topplinje);
+export default connect(mapStateToProps, mapDispatchToProps)(Topplinje);
