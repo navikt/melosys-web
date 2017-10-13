@@ -10,7 +10,7 @@ import './sideKommentarer.css';
 const SideKommentarer = () => (
   <div className="sideKommentar panelSeksjon">
     <Panel>
-      <form onSubmit={this.lagreKommentar}>
+      <form onSubmit={() => f => f}>
         <Undertittel>Kommentarer:</Undertittel>
         <TextareaControlled textareaClass="kommentar__tekst" label="" />
         <p className="kommentar__advarsel">Merk: Fremtidige innsynskdrav vil også medføre utlevering av kommentarer. Ta hensyn til dette når du skriver.</p>
