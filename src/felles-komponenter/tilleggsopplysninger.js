@@ -21,7 +21,7 @@ class Personopplysninger extends Component {
     const { tilleggsopplysninger } = this.props;
 
     return (
-      <div className="tilleggsopplysninger">
+      <div className="tilleggsopplysninger panelSeksjon">
         <EkspanderbartPanel tittel="Tilleggsopplysninger" apen>
           <Container fluid>
             {/* START TILLEGGSOPPLYSNINGER */}

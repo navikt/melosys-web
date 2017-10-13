@@ -45,7 +45,7 @@ class Vilkarsvurdering extends Component {
     };
 
     return (
-      <div className="vilkarsvurdering">
+      <div className="vilkarsvurdering panelSeksjon">
         <StegVelger>
           <StegFane ikoner={stegIkoner} visNesteKnapp>
             <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>
