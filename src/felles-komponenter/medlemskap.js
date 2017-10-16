@@ -30,11 +30,10 @@ DatoOmrade.propTypes = {
 /** MedlemskapsSeksjon inneholdet ett enkelt medlemskap. Hver søker kan ha
  * flere medlemskap. Se Confluence for definisjon av "medlemskap".
  *
- * @param props
  * @constructor
  */
 const MedlemskapSeksjon = () => (
-  <div className="medlemsskap__gruppe" aria-label="Enkeltmedlemsskap">
+  <div className="medlemskap__enkelt" aria-label="Enkeltmedlemsskap">
     <Row>
       {/* START DATO RANGE */}
       <Column xs="5">
