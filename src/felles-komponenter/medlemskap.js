@@ -44,6 +44,7 @@ const MedlemskapSeksjon = () => (
         </Container>
       </Column>
       {/* SLUTT DATO RANGE */}
+
       {/* START DETALJER */}
       <Column xs="7">
         <dl>
@@ -69,10 +70,8 @@ const MedlemskapSeksjon = () => (
 );
 
 class Medlemskap extends Component {
-  static propTypes = {
-  };
-  static defaultProps = {
-  };
+  static propTypes = {};
+  static defaultProps = {};
 
   render() {
     return (
