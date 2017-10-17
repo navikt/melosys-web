@@ -6,11 +6,12 @@ import EkspanderbartPanel from 'nav-frontend-ekspanderbartpanel';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
 import { PersonSelector, hentSaksopplysninger } from '../ducks/saksopplysninger';
+import { PersonPropType } from '../proptypes';
 import './personopplysninger.less';
 
 class Personopplysninger extends Component {
   static propTypes = {
-    person: PT.object.isRequired,
+    person: PersonPropType,
     match: PT.object.isRequired,
     hentSaksopplysninger: PT.func.isRequired,
   };
@@ -25,7 +26,7 @@ class Personopplysninger extends Component {
       etternavn: '',
       sammensattNavn: '',
       foedselsdato: '',
-      bostedsadresse: { gateadresse: { gatenavn: '', husnummer: '', husbokstav: '' }, postnr: '', poststed: '', land: '' },
+      bostedsadresse: { gateadresse: { gatenavn: '', husnummer: 0, husbokstav: '' }, postnr: '', poststed: '', land: '' },
     },
   };
 
@@ -44,7 +45,6 @@ class Personopplysninger extends Component {
       sammensattNavn,
       foedselsdato,
       bostedsadresse } = this.props.person;
-
 
     const { poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav } } = bostedsadresse;
 
