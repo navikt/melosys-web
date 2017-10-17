@@ -7,6 +7,8 @@ import { Element } from 'nav-frontend-typografi';
 
 import './medlemskap.css';
 
+const uuid = require('uuid/v4');
+
 /** Dato-område
  *
  * @param tittel
@@ -69,8 +71,13 @@ const MedlemskapSeksjon = () => (
 );
 
 class Medlemskap extends Component {
-  static propTypes = {};
-  static defaultProps = {};
+  static propTypes = {
+    medlemskapsPeriode: PT.array.isRequired,
+  };
+
+  static defaultProps = {
+    medlemskapsPeriode: [{ }, { }],
+  };
 
   render() {
     return (
@@ -79,8 +86,7 @@ class Medlemskap extends Component {
           <section aria-label="Medlemskap">
             <Container fluid>
               {/* START MEDLEMSKAP-REPEAT */}
-              <MedlemskapSeksjon />
-              <MedlemskapSeksjon />
+              {this.props.medlemskapsPeriode.map(() => <MedlemskapSeksjon key={uuid()} />)}
               {/* SLUTT MEDLEMSKAP-REPEAT */}
             </Container>
           </section>
