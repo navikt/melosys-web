@@ -5,6 +5,7 @@ import './saksbehandling.css';
 import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurdering';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
+import Medlemskap from '../felles-komponenter/medlemskap';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
@@ -23,6 +24,7 @@ class Saksbehandling extends Component {
               <Vilkarsvurdering />
               <Personopplysninger />
               <Tilleggsopplysninger />
+              <Medlemskap />
             </Column>
             <Column xs="5">
               <SideOppsummering />
