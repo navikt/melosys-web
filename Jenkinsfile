@@ -17,12 +17,13 @@ node {
   echo 'Jenkins Ci Test'
   stage('Checkout') {
     sh 'pwd'
-      //deleteDir()
-      def scmVars = checkout scm
-      commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    //deleteDir()
+    def scmVars = checkout scm
+    print scmVars
+    commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
-      author = sh(returnStdout: true, script: 'git --no-pager show -s --format="%an <%ae>" HEAD').trim()
-      //notifyGithub("${project}", "${repoName}", "${commitHash}", 'pending', "Build #${env.BUILD_NUMBER} has started")
+    author = sh(returnStdout: true, script: 'git --no-pager show -s --format="%an <%ae>" HEAD').trim()
+    //notifyGithub("${project}", "${repoName}", "${commitHash}", 'pending', "Build #${env.BUILD_NUMBER} has started")
     echo "${project}, ${repoName}, ${commitHash}, 'pending', Build #${env.BUILD_NUMBER} has started"
   }
 
