@@ -5,6 +5,7 @@ node {
     stage('Checkout') {
       echo 'Checkout...'
       checkout scm
+      sh 'pwd'
     }
     stage('Build') {
       echo 'Building....'
