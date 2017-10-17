@@ -1,0 +1,28 @@
+@import '../../node_modules/nav-frontend-typografi-style/src/mixins';
+
+.detaljertliste-mixin() {
+  margin:0;
+  display:block;
+  flex-direction: row;
+  flex-wrap:wrap;
+
+  dt,
+  dd {
+    display:block;
+    float:left;
+    width:50%;
+    margin:0;
+  }
+
+  dt {
+    font-weight:600;
+  }
+}
+
+.seksjonmixin() {
+  margin:0 0 3em;
+
+  &:last-child {
+    margin:0;
+  }
+}
