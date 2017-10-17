@@ -4,10 +4,9 @@ import { withRouter } from 'react-router';
 import PT from 'prop-types';
 import EkspanderbartPanel from 'nav-frontend-ekspanderbartpanel';
 import { Container, Row, Column } from 'nav-frontend-grid';
-import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
 import { PersonSelector, hentSaksopplysninger } from '../ducks/saksopplysninger';
 import { PersonPropType } from '../proptypes';
-import './personopplysninger.less';
+import './personopplysninger.css';
 
 class Personopplysninger extends Component {
   static propTypes = {
@@ -53,50 +52,33 @@ class Personopplysninger extends Component {
         <EkspanderbartPanel tittel={sammensattNavn} apen>
           <Container fluid>
             {/* START PERSONINFO */}
-            <Row>
+            <Row className="person__seksjon">
               <Column xs="6">
-                <section aria-label="Fornavn">
-                  <Undertittel type="undertittel">Fornavn:</Undertittel>
-                  <Normaltekst>{fornavn}</Normaltekst>
-                </section>
-                <section aria-label="Etternavn">
-                  <Undertittel type="undertittel">Etternavn:</Undertittel>
-                  <Normaltekst>{etternavn}</Normaltekst>
-                </section>
-                <section aria-label="Fødselsnummer">
-                  <Undertittel type="undertittel">Fødselsnummer:</Undertittel>
-                  <Normaltekst>{fnr}</Normaltekst>
-                </section>
-                <section aria-label="Kjønn">
-                  <Undertittel type="undertittel">Kjønn:</Undertittel>
-                  <Normaltekst>{kjoenn}</Normaltekst>
-                </section>
-                <section aria-label="Fødselsdato">
-                  <Undertittel type="undertittel">Fødselsdato:</Undertittel>
-                  <Normaltekst>{foedselsdato}</Normaltekst>
-                </section>
+                <dl className="person__detaljer">
+                  <dt>Fornavn:</dt><dd>{fornavn}</dd>
+                  <dt>Etternavn:</dt><dd>{etternavn}</dd>
+                  <dt>Fødselsnummer:</dt><dd>{fnr}</dd>
+                  <dt>Kjønn:</dt><dd>{kjoenn}</dd>
+                </dl>
               </Column>
               <Column xs="6">
-                <section aria-label="Statsborgerskap">
-                  <Undertittel type="undertittel">Statsborgerskap:</Undertittel>
-                  <Normaltekst>{statsborgerskap}</Normaltekst>
-                </section>
-                <section aria-label="Sivilstand">
-                  <Undertittel type="undertittel">Sivilstand:</Undertittel>
-                  <Normaltekst>{sivilstand}</Normaltekst>
-                </section>
+                <dl className="person__detaljer">
+                  <dt>Fødselsdato:</dt><dd>{foedselsdato}</dd>
+                  <dt>Statsborgerskap:</dt><dd>{statsborgerskap}</dd>
+                  <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
+                </dl>
               </Column>
             </Row>
             {/* SLUTT PERSONINFO */}
             {/* START ADRESSE */}
-            <Row>
+            <Row className="person__seksjon">
               <Column xs="6">
-                <section arial-label="Adresse">
-                  <Undertittel type="undertittel">Bostedsadresse</Undertittel>
-                  <Normaltekst>{`${gatenavn} ${husnummer}${husbokstav}`}</Normaltekst>
-                  <Normaltekst>{`${postnr} ${poststed}`}</Normaltekst>
-                  <Normaltekst>{`${land}`}</Normaltekst>
-                </section>
+                <dl className="person__detaljer">
+                  <dt>Bostedsadresse</dt>
+                  <dd>{`${gatenavn} ${husnummer} ${husbokstav}`}</dd>
+                  <dd>{`${postnr} ${poststed}`}</dd>
+                  <dd>{`${land}`}</dd>
+                </dl>
               </Column>
             </Row>
             {/* SLUTT ADRESSE */}
