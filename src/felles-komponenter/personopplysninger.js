@@ -45,7 +45,8 @@ class Personopplysninger extends Component {
       foedselsdato,
       bostedsadresse } = this.props.person;
 
-    const { poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav } } = bostedsadresse;
+    // Påkrevde felter fra API
+    const { poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav = '' } } = bostedsadresse;
 
     return (
       <div className="personopplysninger panelSeksjon">
