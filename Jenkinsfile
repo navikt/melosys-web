@@ -13,7 +13,7 @@ def returnOk(message, buildNr) {
   //notifyGithub("${project}", "${repoName}", "${commitHash}", 'success', "Build #${buildNr}")
   print("${project}", "${repoName}", "${commitHash}", 'success', "Build #${buildNr}")
 }
-node("develop") {
+node {
 
     stage('Checkout') {
         deleteDir()
