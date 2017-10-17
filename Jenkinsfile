@@ -14,7 +14,7 @@ def returnOk(message, buildNr) {
   print("${project}", "${repoName}", "${commitHash}", 'success', "Build #${buildNr}")
 }
 node {
-
+    echo 'Jenkins Ci Test'
     stage('Checkout') {
       sh 'pwd'
         //deleteDir()
