@@ -14,6 +14,7 @@
     font-weight:600;
   }
 }
+
 .beskrivliste-mixin(@dir) when (@dir = 'row') {
   dt,
   dd {
@@ -23,7 +24,7 @@
 }
 
 .beskrivliste-mixin(@dir) when (@dir = 'col') {
-  dt:not(:first-child){
+  dt:not(:first-child) {
     margin-top:0.5em;
   }
 }
