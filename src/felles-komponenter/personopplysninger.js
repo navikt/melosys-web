@@ -1,127 +1,105 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import PT from 'prop-types';
 import EkspanderbartPanel from 'nav-frontend-ekspanderbartpanel';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
+import { PersonSelector, hentSaksopplysninger } from '../ducks/saksopplysninger';
 import './personopplysninger.less';
-
-const uuid = require('uuid/v4');
 
 class Personopplysninger extends Component {
   static propTypes = {
-    personopplysninger: PT.object,
+    person: PT.object.isRequired,
+    match: PT.object.isRequired,
+    hentSaksopplysninger: PT.func.isRequired,
   };
+
   static defaultProps = {
-    personopplysninger: {
-      personnummer: '01017712345',
-      personnummerUtland: '111 222 333',
-      adresse: 'Adresseveien 123, 1234 Adresseby, Norge',
-      bostedsadresse: 'Gateadressen 99, 9999 Gateby, Norge',
-      mobil: '(+47) 123 123 123',
-      telefon: '(+47) 222 333 444',
-      epost: 'ola.nordmann@domenet.no',
-      arbeidsgiver: 'Hagemøbler AS',
-      ektefelle: 'Kari Nordmann (40 år)',
-      barn: ['Lea Nordmann (13 år)', 'Trym Nordmann (7 år)'],
-      medfolgende: false,
+    person: {
+      fnr: '',
+      sivilstand: '',
+      statsborgerskap: '',
+      kjoenn: '',
+      fornavn: '',
+      etternavn: '',
+      sammensattNavn: '',
+      foedselsdato: '',
+      bostedsadresse: { gateadresse: { gatenavn: '', husnummer: '', husbokstav: '' }, postnr: '', poststed: '', land: '' },
     },
   };
 
+  componentWillMount() {
+    const { saksnr } = this.props.match.params;
+    this.props.hentSaksopplysninger(saksnr);
+  }
+
   render() {
-    const { personnummer,
-      personnummerUtland,
-      adresse,
-      bostedsadresse,
-      mobil,
-      telefon,
-      epost,
-      arbeidsgiver,
-      ektefelle,
-      barn,
-      medfolgende } = this.props.personopplysninger;
+    const { fnr,
+      sivilstand,
+      statsborgerskap,
+      kjoenn,
+      fornavn,
+      etternavn,
+      sammensattNavn,
+      foedselsdato,
+      bostedsadresse } = this.props.person;
+
+
+    const { poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav } } = bostedsadresse;
 
     return (
       <div className="personopplysninger panelSeksjon">
-        <EkspanderbartPanel tittel="Ola Nordmann" apen>
+        <EkspanderbartPanel tittel={sammensattNavn} apen>
           <Container fluid>
-            {/* START PERSONNUMMER */}
+            {/* START PERSONINFO */}
             <Row>
               <Column xs="6">
-                <section aria-label="Personnummer">
-                  <Undertittel type="undertittel">Personnummer:</Undertittel>
-                  <Normaltekst>{personnummer}</Normaltekst>
+                <section aria-label="Fornavn">
+                  <Undertittel type="undertittel">Fornavn:</Undertittel>
+                  <Normaltekst>{fornavn}</Normaltekst>
+                </section>
+                <section aria-label="Etternavn">
+                  <Undertittel type="undertittel">Etternavn:</Undertittel>
+                  <Normaltekst>{etternavn}</Normaltekst>
+                </section>
+                <section aria-label="Fødselsnummer">
+                  <Undertittel type="undertittel">Fødselsnummer:</Undertittel>
+                  <Normaltekst>{fnr}</Normaltekst>
+                </section>
+                <section aria-label="Kjønn">
+                  <Undertittel type="undertittel">Kjønn:</Undertittel>
+                  <Normaltekst>{kjoenn}</Normaltekst>
+                </section>
+                <section aria-label="Fødselsdato">
+                  <Undertittel type="undertittel">Fødselsdato:</Undertittel>
+                  <Normaltekst>{foedselsdato}</Normaltekst>
                 </section>
               </Column>
               <Column xs="6">
-                <section aria-label="Personnummer">
-                  <Undertittel type="undertittel">Utenlandsk id:</Undertittel>
-                  <Normaltekst>{personnummerUtland}</Normaltekst>
+                <section aria-label="Statsborgerskap">
+                  <Undertittel type="undertittel">Statsborgerskap:</Undertittel>
+                  <Normaltekst>{statsborgerskap}</Normaltekst>
+                </section>
+                <section aria-label="Sivilstand">
+                  <Undertittel type="undertittel">Sivilstand:</Undertittel>
+                  <Normaltekst>{sivilstand}</Normaltekst>
                 </section>
               </Column>
             </Row>
-            {/* SLUTT PERSONNUMMER */}
+            {/* SLUTT PERSONINFO */}
             {/* START ADRESSE */}
             <Row>
               <Column xs="6">
-                <section arial-label="Adresse TPS">
-                  <Undertittel type="undertittel">Adresse (TPS):</Undertittel>
-                  <Normaltekst>{adresse}</Normaltekst>
-                </section>
-              </Column>
-              <Column xs="6">
-                <section arial-label="Bostedsadresse søker">
-                  <Undertittel type="undertittel">Bostedsadresse (Søker):</Undertittel>
-                  <Normaltekst>{bostedsadresse}</Normaltekst>
+                <section arial-label="Adresse">
+                  <Undertittel type="undertittel">Bostedsadresse</Undertittel>
+                  <Normaltekst>{`${gatenavn} ${husnummer}${husbokstav}`}</Normaltekst>
+                  <Normaltekst>{`${postnr} ${poststed}`}</Normaltekst>
+                  <Normaltekst>{`${land}`}</Normaltekst>
                 </section>
               </Column>
             </Row>
             {/* SLUTT ADRESSE */}
-            {/* START KONTAKTINFO */}
-            <Row>
-              <Column xs="6">
-                <section arial-label="Kontaktinfo">
-                  <Undertittel type="undertittel">Kontaktinfo:</Undertittel>
-                  <Normaltekst>Mobil: {mobil}</Normaltekst>
-                  <Normaltekst>Telefon: {telefon}</Normaltekst>
-                  <Normaltekst>E-post: {epost}</Normaltekst>
-                </section>
-              </Column>
-              <Column xs="6">
-                <section arial-label="Arbeidstaker hos">
-                  <Undertittel type="undertittel">Arbeidstaker hos:</Undertittel>
-                  <Normaltekst>{arbeidsgiver}</Normaltekst>
-                </section>
-              </Column>
-            </Row>
-            {/* SLUTT KONTAKTINFO */}
-            {/* START EKTEFELLE */}
-            <Row>
-              <Column xs="6">
-                <section arial-label="Ektefelle">
-                  <Undertittel type="undertittel">Ektefelle (nåværende):</Undertittel>
-                  <Normaltekst>{ektefelle}</Normaltekst>
-                </section>
-              </Column>
-            </Row>
-            {/* SLUTT EKTEFELLE */}
-            {/* START BARN */}
-            <Row>
-              <Column xs="6">
-                <section arial-label="Barn">
-                  <Undertittel type="undertittel">Barn:</Undertittel>
-                  {barn.map(item => <Normaltekst key={uuid()}>{item}</Normaltekst>)}
-                </section>
-              </Column>
-              <Column xs="6">
-                <section arial-label="Medfølgende barn?">
-                  <Undertittel type="undertittel">Medfølgende barn?</Undertittel>
-                  <Normaltekst>Skal barn under 18 år oppholde seg i utlandet sammen med søkeren i perioden?</Normaltekst>
-                  <Normaltekst>{medfolgende ? 'JA' : 'NEI'}</Normaltekst>
-                </section>
-              </Column>
-            </Row>
-            {/* SLUTT BARN */}
           </Container>
         </EkspanderbartPanel>
       </div>
@@ -129,8 +107,12 @@ class Personopplysninger extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  person: PersonSelector(state),
+});
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = dispatch => ({
+  hentSaksopplysninger: saksnr => dispatch(hentSaksopplysninger(saksnr)),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(Personopplysninger);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Personopplysninger));
