@@ -1,13 +1,16 @@
-import { React, Component, connect, withRouter, PT, EkspanderbartPanel, Container, Row, Column } from '../utils/defaultImports';
-
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
+import PT from 'prop-types';
+import * as Nav from '../utils/navFrontend';
 import { PersonSelector, hentSaksopplysninger } from '../ducks/saksopplysninger';
-import { PersonPropType } from '../proptypes';
+import * as MPT from '../proptypes';
 
 import './personopplysninger.css';
 
 class Personopplysninger extends Component {
   static propTypes = {
-    person: PersonPropType,
+    person: MPT.PersonPropType,
     match: PT.object.isRequired,
     hentSaksopplysninger: PT.func.isRequired,
   };
@@ -47,41 +50,41 @@ class Personopplysninger extends Component {
 
     return (
       <div className="personopplysninger panelSeksjon">
-        <EkspanderbartPanel tittel={sammensattNavn} apen>
-          <Container fluid>
+        <Nav.EkspanderbartPanel tittel={sammensattNavn} apen>
+          <Nav.Container fluid>
             {/* START PERSONINFO */}
-            <Row className="person__seksjon">
-              <Column xs="6">
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="6">
                 <dl className="person__detaljer">
                   <dt>Fornavn:</dt><dd>{fornavn}</dd>
                   <dt>Etternavn:</dt><dd>{etternavn}</dd>
                   <dt>Fødselsnummer:</dt><dd>{fnr}</dd>
                   <dt>Kjønn:</dt><dd>{kjoenn}</dd>
                 </dl>
-              </Column>
-              <Column xs="6">
+              </Nav.Column>
+              <Nav.Column xs="6">
                 <dl className="person__detaljer">
                   <dt>Fødselsdato:</dt><dd>{foedselsdato}</dd>
                   <dt>Statsborgerskap:</dt><dd>{statsborgerskap}</dd>
                   <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
                 </dl>
-              </Column>
-            </Row>
+              </Nav.Column>
+            </Nav.Row>
             {/* SLUTT PERSONINFO */}
             {/* START ADRESSE */}
-            <Row className="person__seksjon">
-              <Column xs="6">
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="6">
                 <dl className="person__detaljer">
                   <dt>Bostedsadresse</dt>
                   <dd>{`${gatenavn} ${husnummer} ${husbokstav}`}</dd>
                   <dd>{`${postnr} ${poststed}`}</dd>
                   <dd>{`${land}`}</dd>
                 </dl>
-              </Column>
-            </Row>
+              </Nav.Column>
+            </Nav.Row>
             {/* SLUTT ADRESSE */}
-          </Container>
-        </EkspanderbartPanel>
+          </Nav.Container>
+        </Nav.EkspanderbartPanel>
       </div>
     );
   }
@@ -94,5 +97,5 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentSaksopplysninger: saksnr => dispatch(hentSaksopplysninger(saksnr)),
 });
-
+// withRouter required, to provide; this.props.match.params;
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Personopplysninger));
