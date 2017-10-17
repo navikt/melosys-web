@@ -16,7 +16,8 @@ def returnOk(message, buildNr) {
 node {
 
     stage('Checkout') {
-        deleteDir()
+      sh 'pwd'
+        //deleteDir()
         checkout scm
         commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
 
