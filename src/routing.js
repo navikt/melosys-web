@@ -11,7 +11,7 @@ import Registrere from './sider/Registrere';
 const Routing = ({ location }) => (
   <Switch location={location}>
     <Route exact path="/" component={Sok} />
-    <Route path="/saksbehandling/:fnr" component={Saksbehandling} />
+    <Route path="/saksbehandling/:saksnr" component={Saksbehandling} />
     <Route path="/arbeidsforhold/:fnr" component={Arbeidsforhold} />
     <Route path="/arbeidsforholdet/:fnr/" component={ArbeidsforholdDetalj} />
     <Route path="/registrere" component={Registrere} />
