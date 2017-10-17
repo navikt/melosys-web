@@ -9,6 +9,7 @@ node {
     }
     stage('Build') {
       echo 'Building....'
+      sh 'npm install'
     }
     stage('Test') {
       echo 'Building....'
