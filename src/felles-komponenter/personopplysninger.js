@@ -1,11 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import PT from 'prop-types';
-import EkspanderbartPanel from 'nav-frontend-ekspanderbartpanel';
-import { Container, Row, Column } from 'nav-frontend-grid';
+import { React, Component, connect, withRouter, PT, EkspanderbartPanel, Container, Row, Column } from '../utils/defaultImports';
+
 import { PersonSelector, hentSaksopplysninger } from '../ducks/saksopplysninger';
 import { PersonPropType } from '../proptypes';
+
 import './personopplysninger.css';
 
 class Personopplysninger extends Component {
