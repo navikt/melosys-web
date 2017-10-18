@@ -1,14 +1,15 @@
 #!groovy
 
 node {
+
 tool name: 'recent node', type: 'nodejs'
 env.NODEJS_HOME = "${tool 'recent node'}"
- // on linux / mac
- env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
-echo env.path
+env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
+
   try {
     stage('init') {
      echo 'Init...'
+     sh 'node --version'
      sh 'npm --version'
     }
     stage('Checkout') {
