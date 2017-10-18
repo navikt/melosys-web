@@ -35,8 +35,8 @@ const fagsaker = (req, res) => {
     return res.json(fagsaker);
   }
   catch (err) {
-    res.status(500).send(err);
     console.error(err);
+    return res.status(500).send(err);
   }
 };
 router.get('/fagsaker', fagsaker);
