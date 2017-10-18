@@ -16,15 +16,6 @@ export const BostedsAdressePropType = PT.shape({
   land: PT.string.isRequired,
 });
 
-export const ForretningsadressePropType = PT.shape({
-  gateadresse: PT.shape({
-    gatenavn: PT.string.isRequired,
-  }),
-  postnr: PT.string.isRequired,
-  poststed: PT.string.isRequired,
-  land: PT.string.isRequired,
-});
-
 export const PersonPropType = PT.shape({
   fnr: PT.string.isRequired,
   sivilstand: PT.string,
@@ -84,4 +75,15 @@ export const OrganisasjonPropType = PT.shape({
   navn: PT.string,
   forretningsadresse: ForretningsadressePropType,
   postadresse: PT.string,
+});
+
+export const OrganisasjonerPropType = PT.arrayOf(OrganisasjonPropType);
+
+export const ForretningsadressePropType = PT.shape({
+  gateadresse: PT.shape({
+    gatenavn: PT.string.isRequired,
+  }),
+  postnr: PT.string.isRequired,
+  poststed: PT.string.isRequired,
+  land: PT.string.isRequired,
 });
