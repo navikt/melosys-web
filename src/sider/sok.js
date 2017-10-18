@@ -16,6 +16,7 @@ function Lenke(item) {
   const link = `/saksbehandling/${fnr}`;
   return <li><Link to={link}>{sammensattNavn}</Link></li>;
 }
+
 Lenke.propTypes = {
   fnr: PT.string.isRequired,
   sammensattNavn: PT.string.isRequired,
@@ -32,6 +33,7 @@ const LenkeListe = ({ saker }) => {
     </ul>
   );
 };
+
 LenkeListe.propTypes = {
   saker: PT.array.isRequired,
 };

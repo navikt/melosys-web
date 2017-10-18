@@ -1,136 +1,101 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router';
 import PT from 'prop-types';
-import EkspanderbartPanel from 'nav-frontend-ekspanderbartpanel';
-import { Container, Row, Column } from 'nav-frontend-grid';
-import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
-import './personopplysninger.less';
+import * as Nav from '../utils/navFrontend';
+import { PersonSelector, hentSaksopplysninger } from '../ducks/saksopplysninger';
+import * as MPT from '../proptypes';
 
-const uuid = require('uuid/v4');
+import './personopplysninger.css';
 
 class Personopplysninger extends Component {
   static propTypes = {
-    personopplysninger: PT.object,
+    person: MPT.PersonPropType,
+    match: PT.object.isRequired,
+    hentSaksopplysninger: PT.func.isRequired,
   };
+
   static defaultProps = {
-    personopplysninger: {
-      personnummer: '01017712345',
-      personnummerUtland: '111 222 333',
-      adresse: 'Adresseveien 123, 1234 Adresseby, Norge',
-      bostedsadresse: 'Gateadressen 99, 9999 Gateby, Norge',
-      mobil: '(+47) 123 123 123',
-      telefon: '(+47) 222 333 444',
-      epost: 'ola.nordmann@domenet.no',
-      arbeidsgiver: 'Hagemøbler AS',
-      ektefelle: 'Kari Nordmann (40 år)',
-      barn: ['Lea Nordmann (13 år)', 'Trym Nordmann (7 år)'],
-      medfolgende: false,
+    person: {
+      fnr: '',
+      sivilstand: '',
+      statsborgerskap: '',
+      kjoenn: '',
+      fornavn: '',
+      etternavn: '',
+      sammensattNavn: '',
+      foedselsdato: '',
+      bostedsadresse: { gateadresse: { gatenavn: '', husnummer: 0, husbokstav: '' }, postnr: '', poststed: '', land: '' },
     },
   };
 
+  componentWillMount() {
+    const { saksnr } = this.props.match.params;
+    this.props.hentSaksopplysninger(saksnr);
+  }
+
   render() {
-    const { personnummer,
-      personnummerUtland,
-      adresse,
-      bostedsadresse,
-      mobil,
-      telefon,
-      epost,
-      arbeidsgiver,
-      ektefelle,
-      barn,
-      medfolgende } = this.props.personopplysninger;
+    const { fnr,
+      sivilstand,
+      statsborgerskap,
+      kjoenn,
+      fornavn,
+      etternavn,
+      sammensattNavn,
+      foedselsdato,
+      bostedsadresse } = this.props.person;
+
+    // Påkrevde felter fra API
+    const { poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav = '' } } = bostedsadresse;
 
     return (
       <div className="personopplysninger panelSeksjon">
-        <EkspanderbartPanel tittel="Ola Nordmann" apen>
-          <Container fluid>
-            {/* START PERSONNUMMER */}
-            <Row>
-              <Column xs="6">
-                <section aria-label="Personnummer">
-                  <Undertittel type="undertittel">Personnummer:</Undertittel>
-                  <Normaltekst>{personnummer}</Normaltekst>
-                </section>
-              </Column>
-              <Column xs="6">
-                <section aria-label="Personnummer">
-                  <Undertittel type="undertittel">Utenlandsk id:</Undertittel>
-                  <Normaltekst>{personnummerUtland}</Normaltekst>
-                </section>
-              </Column>
-            </Row>
-            {/* SLUTT PERSONNUMMER */}
+        <Nav.EkspanderbartPanel tittel={sammensattNavn} apen>
+          <Nav.Container fluid>
+            {/* START PERSONINFO */}
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="6">
+                <dl className="person__detaljer">
+                  <dt>Fornavn:</dt><dd>{fornavn}</dd>
+                  <dt>Etternavn:</dt><dd>{etternavn}</dd>
+                  <dt>Fødselsnummer:</dt><dd>{fnr}</dd>
+                  <dt>Kjønn:</dt><dd>{kjoenn}</dd>
+                </dl>
+              </Nav.Column>
+              <Nav.Column xs="6">
+                <dl className="person__detaljer">
+                  <dt>Fødselsdato:</dt><dd>{foedselsdato}</dd>
+                  <dt>Statsborgerskap:</dt><dd>{statsborgerskap}</dd>
+                  <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
+                </dl>
+              </Nav.Column>
+            </Nav.Row>
+            {/* SLUTT PERSONINFO */}
             {/* START ADRESSE */}
-            <Row>
-              <Column xs="6">
-                <section arial-label="Adresse TPS">
-                  <Undertittel type="undertittel">Adresse (TPS):</Undertittel>
-                  <Normaltekst>{adresse}</Normaltekst>
-                </section>
-              </Column>
-              <Column xs="6">
-                <section arial-label="Bostedsadresse søker">
-                  <Undertittel type="undertittel">Bostedsadresse (Søker):</Undertittel>
-                  <Normaltekst>{bostedsadresse}</Normaltekst>
-                </section>
-              </Column>
-            </Row>
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="6">
+                <dl className="person__detaljer">
+                  <dt>Bostedsadresse</dt>
+                  <dd>{`${gatenavn} ${husnummer} ${husbokstav}`}</dd>
+                  <dd>{`${postnr} ${poststed}`}</dd>
+                  <dd>{`${land}`}</dd>
+                </dl>
+              </Nav.Column>
+            </Nav.Row>
             {/* SLUTT ADRESSE */}
-            {/* START KONTAKTINFO */}
-            <Row>
-              <Column xs="6">
-                <section arial-label="Kontaktinfo">
-                  <Undertittel type="undertittel">Kontaktinfo:</Undertittel>
-                  <Normaltekst>Mobil: {mobil}</Normaltekst>
-                  <Normaltekst>Telefon: {telefon}</Normaltekst>
-                  <Normaltekst>E-post: {epost}</Normaltekst>
-                </section>
-              </Column>
-              <Column xs="6">
-                <section arial-label="Arbeidstaker hos">
-                  <Undertittel type="undertittel">Arbeidstaker hos:</Undertittel>
-                  <Normaltekst>{arbeidsgiver}</Normaltekst>
-                </section>
-              </Column>
-            </Row>
-            {/* SLUTT KONTAKTINFO */}
-            {/* START EKTEFELLE */}
-            <Row>
-              <Column xs="6">
-                <section arial-label="Ektefelle">
-                  <Undertittel type="undertittel">Ektefelle (nåværende):</Undertittel>
-                  <Normaltekst>{ektefelle}</Normaltekst>
-                </section>
-              </Column>
-            </Row>
-            {/* SLUTT EKTEFELLE */}
-            {/* START BARN */}
-            <Row>
-              <Column xs="6">
-                <section arial-label="Barn">
-                  <Undertittel type="undertittel">Barn:</Undertittel>
-                  {barn.map(item => <Normaltekst key={uuid()}>{item}</Normaltekst>)}
-                </section>
-              </Column>
-              <Column xs="6">
-                <section arial-label="Medfølgende barn?">
-                  <Undertittel type="undertittel">Medfølgende barn?</Undertittel>
-                  <Normaltekst>Skal barn under 18 år oppholde seg i utlandet sammen med søkeren i perioden?</Normaltekst>
-                  <Normaltekst>{medfolgende ? 'JA' : 'NEI'}</Normaltekst>
-                </section>
-              </Column>
-            </Row>
-            {/* SLUTT BARN */}
-          </Container>
-        </EkspanderbartPanel>
+          </Nav.Container>
+        </Nav.EkspanderbartPanel>
       </div>
     );
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  person: PersonSelector(state),
+});
 
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Personopplysninger);
+const mapDispatchToProps = dispatch => ({
+  hentSaksopplysninger: saksnr => dispatch(hentSaksopplysninger(saksnr)),
+});
+// withRouter required, to provide; this.props.match.params;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Personopplysninger));

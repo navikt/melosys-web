@@ -1,21 +1,31 @@
 @import '../../node_modules/nav-frontend-typografi-style/src/mixins';
 
-.detaljertliste-mixin() {
+.beskrivliste-mixin(@dir) {
   margin:0;
   display:block;
-  flex-direction: row;
-  flex-wrap:wrap;
 
   dt,
   dd {
     display:block;
-    float:left;
-    width:50%;
     margin:0;
   }
 
   dt {
     font-weight:600;
+  }
+}
+
+.beskrivliste-mixin(@dir) when (@dir = 'row') {
+  dt,
+  dd {
+    float:left;
+    width:50%;
+  }
+}
+
+.beskrivliste-mixin(@dir) when (@dir = 'col') {
+  dt:not(:first-child) {
+    margin-top:0.5em;
   }
 }
 
