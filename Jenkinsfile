@@ -19,13 +19,13 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
       checkout scm
       sh 'ls -la'
     }
-    stage('Build') {
-      echo 'Building....'
+    stage('npm install') {
+      echo 'npm install....'
       echo 'RUN npm install'
       sh returnStdout: true, script: 'npm install'
       echo 'After npm install'
     }
-    stage('Test') {
+    stage('Building') {
       echo 'Building....'
       sh returnStdout: true, script: 'npm run build:css && npm run build:js'
     }
