@@ -27,7 +27,7 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
     }
     stage('Test') {
       echo 'Building....'
-      sh returnStdout: true, script: 'npm build'
+      sh returnStdout: true, script: 'npm run build:css && npm run build:js'
     }
     stage('Deploy') {
       echo 'Deploying....'
