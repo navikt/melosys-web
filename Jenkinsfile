@@ -9,7 +9,7 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
   try {
     stage('init') {
      echo 'Init...'
-     echo $PATH
+     sh 'echo $PATH'
      sh 'node --version'
      sh 'npm --version'
     }
@@ -30,6 +30,6 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
     }
   }
   catch (err) {
-    echo 'Build failded: ${err}'
+    echo 'Build failed: ${err}'
   }
 }
