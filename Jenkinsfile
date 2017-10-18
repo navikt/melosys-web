@@ -10,7 +10,7 @@ node {
     stage('Build') {
       echo 'Building....'
       tool name: 'recent node', type: 'nodejs'
-      sh 'node --version'
+      sh '/var/jenkins_home/tools/jenkins.plugins.nodejs.tools.NodeJSInstallation/recent_node/node --version'
     }
     stage('Test') {
       echo 'Building....'
