@@ -12,12 +12,14 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
      sh 'echo $PATH'
      sh 'node --version'
      sh 'npm --version'
-     sh returnStdout: true, script: 'npm install'
+     sh 'pwd'
+     echo 'RUN npm install'
+     //sh returnStdout: true, script: 'npm install'
+
     }
     stage('Checkout') {
       echo 'Checkout...'
       //checkout scm
-      sh 'pwd'
     }
     stage('Build') {
       echo 'Building....'
