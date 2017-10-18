@@ -9,7 +9,8 @@ node {
     }
     stage('Build') {
       echo 'Building....'
-      sh 'npm install'
+      tool name: 'recent node', type: 'nodejs'
+      //sh 'npm install'
     }
     stage('Test') {
       echo 'Building....'
