@@ -28,7 +28,8 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
       echo 'After npm install'
     }
     stage('Test') {
-      sh 'CI=true npm test'
+      echo 'CI=true npm test....'
+      sh returnStdout: true, script: CI=true npm test'
     }
     stage('Building') {
       echo 'Building....'
