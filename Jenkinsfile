@@ -23,9 +23,11 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
       echo 'Building....'
       echo 'RUN npm install'
       sh returnStdout: true, script: 'npm install'
+      echo 'After npm install'
     }
     stage('Test') {
       echo 'Building....'
+      sh 'npm build'
     }
     stage('Deploy') {
       echo 'Deploying....'
