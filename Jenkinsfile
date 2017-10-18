@@ -13,9 +13,6 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
      sh 'node --version'
      sh 'npm --version'
      sh 'pwd'
-     echo 'RUN npm install'
-     //sh returnStdout: true, script: 'npm install'
-
     }
     stage('Checkout') {
       echo 'Checkout...'
@@ -24,7 +21,9 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
     }
     stage('Build') {
       echo 'Building....'
-      //tool name: 'recent node', type: 'nodejs'
+      echo 'RUN npm install'
+      sh 'npm install'
+      echo 'After npm install'
     }
     stage('Test') {
       echo 'Building....'
