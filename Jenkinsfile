@@ -22,7 +22,7 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
     stage('npm install') {
       echo 'npm install....'
       echo 'RUN npm install'
-      deleteDir('node_modules')
+      sh 'rm -rf node_modules'
       sh 'ls -la'
       sh returnStdout: true, script: 'npm install'
       echo 'After npm install'
