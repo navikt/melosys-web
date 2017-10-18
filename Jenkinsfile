@@ -29,7 +29,7 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
     }
     stage('Test') {
       echo 'CI=true npm test....'
-      sh returnStdout: true, script: CI=true npm test'
+      sh returnStdout: true, script: 'CI=true npm test'
     }
     stage('Building') {
       echo 'Building....'
