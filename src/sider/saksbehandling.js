@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { Container, Row, Column } from 'nav-frontend-grid';
+import PT from 'prop-types';
 import './saksbehandling.css';
 import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurdering';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
@@ -13,6 +14,11 @@ import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import { hentSaksopplysninger } from '../ducks/saksopplysninger';
 
 class Saksbehandling extends Component {
+  static propTypes = {
+    hentSaksopplysninger: PT.func.isRequired,
+    match: PT.object.isRequired,
+  }
+
   componentDidMount() {
     const { saksnr } = this.props.match.params;
     this.props.hentSaksopplysninger(saksnr);
