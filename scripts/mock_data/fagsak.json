@@ -219,18 +219,51 @@
       },
       "medlemsskap": {
         "aktorID": "",
-        "periode": [
+        "periodeListe": [
           {
-            "grunnlagstype": "",
-            "land": "",
-            "trygdedekning": "",
-            "fom": "",
-            "tom": "",
-            "type": "",
-            "status": {
-              "kode": "Uavklart|Gyldig"
+            "meta": {
+              "opprinneligOpprettetAv": "PMEDL003",
+              "sistEndretAv": "BASIS-319",
+              "tidspunktOpprinneligOpprettet": "2011-05-13T09:27:20.223+02:00",
+              "tidspunktSistEndret": "2012-03-24T04:00:14.069+01:00"
             },
-            "kildeDokument": "SED, forvaltningsnotat, A1",
+            "tom": "2011-12-31",
+            "fom": "2011-01-01",
+            "id": 2084473,
+            "version": 0,
+            "dato": {
+              "registrert": "2013-01-21",
+              "besluttet": "2013-01-21"
+            },
+            "status": {
+              "kode": "GYLD",
+              "term": "Gyldig"
+            },
+            "helsedel": false,
+            "type": {
+              "kode": "PUMEDSKP",
+              "term": "Periode uten medlemsskap"
+            },
+            "lovvalg": {
+              "kode": "ENDL",
+              "term": "Endelig"
+            },
+            "grunnlagstype": {
+              "kode": "IMEDEOS",
+              "term": "Ikke medlem, EØS-avtalen"
+            },
+            "land": {
+              "kode": "SWE",
+              "term": "SVERIGE"
+            },
+            "trygdedekning": {
+              "kode": "Untatt",
+              "term": "Untatt"
+            },
+            "kildedokumenttype": {
+              "kode": "E101",
+              "term": "E101"
+            },
             "register": "Gosys, Infotrygd, Avgiftssystemet, Lånekassen, ..."
           }
         ]
