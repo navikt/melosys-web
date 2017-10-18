@@ -23,6 +23,7 @@ env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
       echo 'npm install....'
       echo 'RUN npm install'
       deleteDir('node_modules')
+      sh 'ls -la'
       sh returnStdout: true, script: 'npm install'
       echo 'After npm install'
     }
