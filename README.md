@@ -26,6 +26,12 @@ sider. Komponenter kan også nøste hverandre.
 | Navn             | Beskrivelse      |
 | ---------------- | ---------------- |
 | Topplinje | Dette er containeren som inneholder logo, søk, saksbehandlernavn etc. |
+| Medlemskap | Dette er panelet hvor medlemskap vises som en del av saksopplysningen. |
+| Personopplysninger | Dette er panelet hvor personopplysninger som fødselsnummer, adresse, nasjonalitet og annen generell informasjon vises. |
+| SideKommentarer | Her kan saksbehandleren skrive et ett-felts-kommentar som gjelder for den aktuelle saken. |
+| SideOppsummering | Oppsummeringen er ment å gi saksbehandleren en rask forståelse av søknadens natur og status. |
+| SideDialog | Dette er en fane hvor dialog, historikk og samhandling med søker er synlig. |
+| Tilleggsopplysninger | Her har søkeren selv skrevet inn tilleggsopplysninger som er relevant for søknaden. |
 
 ## Routes
 Applikasjonen har ingen omfattende navigasjon, og hele saksbehandlingen
