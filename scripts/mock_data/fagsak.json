@@ -1,0 +1,240 @@
+{
+  "behandlinger": [
+    {
+      "person": {
+        "fnr": "01015900543",
+        "sivilstand": "Ugift",
+        "statsborgerskap": "SVERIGE",
+        "kjoenn": "K",
+        "fornavn": "UNNI FOS",
+        "etternavn": "KVALUY",
+        "sammensattNavn": "KVALUY HANNA MARIA M",
+        "foedselsdato": "1983-04-10",
+        "bostedsadresse": {
+          "gateadresse": {
+            "gatenavn": "EINERHAUGEN",
+            "husnummer": 7,
+            "husbokstav": "A"
+          },
+          "postnr": "5141",
+          "poststed": "FYLLINGSDALEN",
+          "land": "NORGE"
+        },
+        "*mobiltelefon": "",
+        "*epost": "",
+        "*familerelasjon": {
+          "ektefelle": {
+            "navn": "",
+            "alder": ""
+          },
+          "barn": [
+            {
+              "navn": "",
+              "alder": ""
+            }
+          ]
+        }
+      },
+      "inntekt": {
+        "sluttvederlag": {
+          "belop": "",
+          "valuta": "",
+          "periode": {
+            "fom": "",
+            "tom": ""
+          }
+        },
+        "normal": [
+          {
+            "arbeidsgiver": {
+              "navn": "",
+              "orgnummer": ""
+            },
+            "periode": {
+              "fom": "",
+              "tom": ""
+            }
+          }
+        ],
+        "utdanning": [
+          {
+            "arbeidsgiver": {
+              "navn": "",
+              "orgnummer": ""
+            },
+            "periode": {
+              "fom": "",
+              "tom": ""
+            }
+          }
+        ],
+        "frilans": [
+          {
+            "arbeidsgiver": {
+              "navn": "",
+              "orgnummer": ""
+            },
+            "periode": {
+              "fom": "",
+              "tom": ""
+            }
+          }
+        ]
+      },
+      "arbeidsforhold": [
+        {
+          "arbeidsforholdID": "konvertert_3ca4d061-a2a3-4b31-a3f7-7ef310e8608c",
+          "arbeidsforholdIDnav": 6767328,
+          "*registrertDato": "timestamp",
+          "*bekreftetDato": "timestamp",
+          "*ordning": "NY|GAMMEL",
+          "*timelonnet": [
+            {
+              "antallTimer": 10,
+              "periode": {
+                "fom": "2010-01-05",
+                "tom": "2010-01-31"
+              }
+            }
+          ],
+          "*arbeidstidsordning": "Ikke Skift, KODEVERK",
+          "ansettelsesPeriode": {
+            "fom": "2010-01-05",
+            "tom": "2010-01-31"
+          },
+          "arbeidsforholdstype": "Ordinært arbeidsforhold",
+          "permisjonOgPermittering": [
+            {
+              "grad": "xxx%",
+              "inntektstype": "Lønnet|Ulønnet",
+              "permisjonstype": "string",
+              "periode": {
+                "fom": "",
+                "tom": ""
+              },
+              "innmeldt": "dato"
+            }
+          ],
+          "utenlandsopphold": [
+            {
+              "landkode": "kodeverk",
+              "rapporteringsperiode": "yyyymm",
+              "hjemmekontor": false,
+              "fysiskAdresse": {
+              },
+              "firmaNavn": ""
+            }
+          ],
+          "arbeidsavtale": [
+            {
+              "yrke": "PLEIEMEDHJELPER",
+              "beregnetAntallTimerPrUke": 6.89,
+              "endringsdatoStillingsprosent": "2010-01-05"
+            }
+          ],
+          "arbeidsgiver": {
+            "orgnummer": "973982427",
+            "navn": "VÅGSØY KOMMUNE MILJØTENESTA"
+          },
+          "arbeidstakerID": "01015900543",
+          "opplysningspliktig": {
+            "orgnummer": "942952880",
+            "navn": "VÅGSØY KOMMUNE"
+          },
+          "arbeidsforholdInnrapportertEtterAOrdningen": false
+        }
+      ],
+      "bekreftelser": {
+        "utsendt": false,
+        "ansatt": false,
+        "erstatter": false,
+        "over24m": false,
+        "arbeidsgiveravgift": false,
+        "trygdeavgift": {
+          "trukket": false,
+          "tom": ""
+        }
+      },
+      "organisasjoner": [
+        {
+          "orgnummer": "964338531",
+          "navn": "BERGEN KOMMUNE",
+          "forretningsadresse": {
+            "gateadresse": {
+              "gatenavn": "Rådhusgaten 10 "
+            },
+            "postnr": "5014",
+            "poststed": "BERGEN",
+            "land": "NORGE"
+          },
+          "postadresse": "Postboks 7700 5020 BERGEN NORGE"
+        }
+      ],
+      "soknaden": {
+        "inntekt": {
+          "naringsinntekt": {
+            "innlands": {
+              "lonnPrManed": 22000,
+              "valuta": "NOK"
+            },
+            "utreise": {
+              "lonnPrManed": 2200,
+              "valuta": "EUR"
+            }
+          },
+          "mottattLonn": {
+            "innlands": {
+              "periode": {
+                "fom": "",
+                "tom": ""
+              },
+              "lonnPrManed": 22000,
+              "valuta": "NOK"
+            },
+            "utenlands": {
+              "periode": {
+                "fom": "",
+                "tom": ""
+              },
+              "lonnPrManed": 2200,
+              "valuta": "EUR"
+            }
+          }
+        },
+        "arbeidsgiverUtland": {
+          "orgnummer": "",
+          "firmanavn": "",
+          "adresseUtland": {
+            "Alixx": "U figure out this structure"
+          },
+          "kontaktPerson": {
+            "navn": "",
+            "telefon": "",
+            "epost": ""
+          },
+          "oppholdsland": "https://jira.adeo.no/browse/BEGREP-1731",
+          "bosted": "https://jira.adeo.no/browse/BEGREP-1690",
+          "utenlandskID": "?????"
+        }
+      },
+      "medlemsskap": {
+        "aktorID": "",
+        "periode": [
+          {
+            "grunnlagstype": "",
+            "land": "",
+            "trygdedekning": "",
+            "fom": "",
+            "tom": "",
+            "type": "",
+            "status": {
+              "kode": "Uavklart|Gyldig"
+            },
+            "kildeDokument": "SED, forvaltningsnotat, A1",
+            "register": "Gosys, Infotrygd, Avgiftssystemet, Lånekassen, ..."
+          }
+        ]
+      }
+    }
+  ]
+}
