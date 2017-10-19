@@ -46,7 +46,7 @@ const Arbeidsforhold = ({ arbeidsforhold }) => {
   );
 };
 Arbeidsforhold.propTypes = {
-  arbeidsforhold: MPT.ArbeidsforholdPropType.isRequired,
+  arbeidsforhold: MPT.Arbeidsforhold.isRequired,
 };
 
 const ArbeidsAvtaleRad = ({ arbeidsavtale, antall }) => {
@@ -67,7 +67,7 @@ const ArbeidsAvtaleRad = ({ arbeidsavtale, antall }) => {
   );
 };
 ArbeidsAvtaleRad.propTypes = {
-  arbeidsavtale: MPT.ArbeidsavtalePropType.isRequired,
+  arbeidsavtale: MPT.Arbeidsavtale.isRequired,
   antall: PT.number.isRequired,
 };
 
@@ -115,7 +115,7 @@ const PPRow = ({ PermisjonOgPermittering }) => {
 };
 
 PPRow.propTypes = {
-  PermisjonOgPermittering: MPT.PermisjonOgPermitteringPropType.isRequired,
+  PermisjonOgPermittering: MPT.PermisjonOgPermittering.isRequired,
 };
 
 const PermisjonOgPermittering = ({ arbeidsforhold }) => {
@@ -132,7 +132,7 @@ const PermisjonOgPermittering = ({ arbeidsforhold }) => {
   return <Ekspanderbartpanel tittel={tittel}>{rows}</Ekspanderbartpanel>;
 };
 PermisjonOgPermittering.propTypes = {
-  arbeidsforhold: MPT.ArbeidsforholdPropType.isRequired,
+  arbeidsforhold: MPT.Arbeidsforhold.isRequired,
 };
 
 const gateAdresse = bostedsadresse => {
@@ -192,7 +192,7 @@ const Person = ({ person }) => {
   );
 };
 Person.propTypes = {
-  person: MPT.PeriodePropType.isRequired,
+  person: MPT.Person.isRequired,
 };
 const forretningsAdresse = forretningsadresse => {
   const { postnr, poststed, gateadresse: { gatenavn } } = forretningsadresse;
@@ -233,9 +233,9 @@ class ArbeidsforholdDetalj extends React.Component {
   static propTypes = {
     match: PT.any.isRequired,
     hentSaksopplysninger: PT.func.isRequired,
-    person: MPT.PersonPropType.isRequired,
-    organisasjon: MPT.OrganisasjonPropType.isRequired,
-    arbeidsforholdet: MPT.ArbeidsforholdPropType.isRequired,
+    person: MPT.Person.isRequired,
+    organisasjon: MPT.Organisasjon.isRequired,
+    arbeidsforholdet: MPT.Arbeidsforhold.isRequired,
   };
   static defaultProps = {
     person: {
@@ -352,6 +352,5 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => ({
   hentSaksopplysninger: fnr => dispatch(hentSaksopplysninger(fnr)),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(
-  ArbeidsforholdDetalj
-);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);

@@ -43,35 +43,35 @@ export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].person : state.fagsaker.data),
   person => person
 );
-export const Inntekt = createSelector(
-  state => state.fagsaker.data.inntekt,
+export const InntektSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].inntekt : state.fagsaker.data),
   inntekt => inntekt
 );
-export const Bekreftelser = createSelector(
-  state => state.fagsaker.data.bekreftelser,
+export const BekreftelserSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].bekreftelser : state.fagsaker.data),
   bekreftelser => bekreftelser
 );
-export const Soknaden = createSelector(
-  state => state.fagsaker.data.soknaden,
+export const SoknadenSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].soknaden : state.fagsaker.data),
   soknaden => soknaden
 );
-export const Medlemsskap = createSelector(
-  state => state.fagsaker.data.medlemsskap,
+export const MedlemsskapSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].medlemsskap : state.fagsaker.data),
   medlemsskap => medlemsskap
 );
 export const OrganisasjonerSelector = createSelector(
-  state => state.fagsaker.data.organisasjoner,
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].organisasjoner : state.fagsaker.data),
   organisasjoner => organisasjoner
 );
 
 export const ArbeidsforholdSelector = createSelector(
-  state => state.fagsaker.data.arbeidsforhold,
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].arbeidsforhold : state.fagsaker.data),
   arbeidsforhold => arbeidsforhold
 );
 
 export const ArbeidsforholdetSelector = createSelector(
   (state, arbeidsforholdID) => arbeidsforholdID,
-  state => state.fagsaker.data.arbeidsforhold || [],
+  state => state.fagsaker.data.behandlinger[0].arbeidsforhold || [],
   (arbeidsforholdID, arbeidsforhold) =>
     arbeidsforhold.find(
       item => item.arbeidsforholdIDnav.toString() === arbeidsforholdID
@@ -80,7 +80,7 @@ export const ArbeidsforholdetSelector = createSelector(
 
 export const OrganisasjonSelector = createSelector(
   (state, orgnummer) => orgnummer,
-  state => state.fagsaker.data.organisasjoner || [],
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].organisasjoner : []),
   (orgnummer, organisasjoner) =>
     organisasjoner.find(item => item.orgnummer === orgnummer)
 );

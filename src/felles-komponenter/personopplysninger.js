@@ -63,7 +63,7 @@ const Personopplysninger = props => {
 };
 
 Personopplysninger.propTypes = {
-  person: MPT.PersonPropType.isRequired,
+  person: MPT.Person.isRequired,
 };
 
 const mapStateToProps = () => ({});
