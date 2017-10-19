@@ -1,5 +1,8 @@
 import PT from 'prop-types';
 
+
+//Todo: Eksportere i BUNN, etter at alle propTypes er definert. Da slipper vi no-use-before-define-issues.
+
 export const SaksbehandlerPropType = PT.shape({
   brukernavn: PT.string,
   navn: PT.string,
@@ -70,15 +73,6 @@ export const ArbeidsforholdPropType = PT.shape({
   arbeidsforholdInnrapportertEtterAOrdningen: PT.bool,
 });
 
-export const OrganisasjonPropType = PT.shape({
-  orgnummer: PT.string,
-  navn: PT.string,
-  forretningsadresse: ForretningsadressePropType,
-  postadresse: PT.string,
-});
-
-export const OrganisasjonerPropType = PT.arrayOf(OrganisasjonPropType);
-
 export const ForretningsadressePropType = PT.shape({
   gateadresse: PT.shape({
     gatenavn: PT.string.isRequired,
@@ -87,3 +81,12 @@ export const ForretningsadressePropType = PT.shape({
   poststed: PT.string.isRequired,
   land: PT.string.isRequired,
 });
+
+export const OrganisasjonPropType = PT.shape({
+  orgnummer: PT.string,
+  navn: PT.string,
+  forretningsadresse: ForretningsadressePropType,
+  postadresse: PT.string,
+});
+
+export const OrganisasjonerPropType = PT.arrayOf(OrganisasjonPropType);
