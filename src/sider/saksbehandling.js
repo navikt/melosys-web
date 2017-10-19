@@ -12,12 +12,14 @@ import OrganisasjonerNorge from '../felles-komponenter/arbeidsgiverNorge';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
-import { hentFagsaker } from '../ducks/fagsaker';
+import { hentFagsaker, PersonSelector } from '../ducks/fagsaker';
+import * as MPT from '../proptypes';
 
 class Saksbehandling extends Component {
   static propTypes = {
     hentFagsaker: PT.func.isRequired,
     match: PT.object.isRequired,
+    person: MPT.PersonPropType.isRequired,
   }
 
   componentDidMount() {
@@ -32,7 +34,7 @@ class Saksbehandling extends Component {
           <Row>
             <Column xs="7">
               <Vilkarsvurdering />
-              <Personopplysninger />
+              <Personopplysninger person={this.props.person} />
               <Tilleggsopplysninger />
               <OrganisasjonerNorge />
               <Medlemskap />
@@ -49,8 +51,9 @@ class Saksbehandling extends Component {
   }
 }
 
-
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  person: PersonSelector(state),
+});
 
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnr => dispatch(hentFagsaker(saksnr)),

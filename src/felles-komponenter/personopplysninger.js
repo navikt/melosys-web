@@ -1,31 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as Nav from '../utils/navFrontend';
-import { PersonSelector } from '../ducks/saksopplysninger';
 import * as MPT from '../proptypes';
 
 import './personopplysninger.css';
 
 class Personopplysninger extends Component {
   static propTypes = {
-    person: MPT.PersonPropType,
-  };
-
-  static defaultProps = {
-    person: {
-      fnr: '',
-      sivilstand: '',
-      statsborgerskap: '',
-      kjoenn: '',
-      fornavn: '',
-      etternavn: '',
-      sammensattNavn: '',
-      foedselsdato: '',
-      bostedsadresse: { gateadresse: { gatenavn: '', husnummer: 0, husbokstav: '' }, postnr: '', poststed: '', land: '' },
-    },
+    person: MPT.PersonPropType.isRequired,
   };
 
   render() {
+    if (Object.keys(this.props.person).length === 0) return (<div />);
+
     const { fnr,
       sivilstand,
       statsborgerskap,
@@ -81,9 +68,7 @@ class Personopplysninger extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  person: PersonSelector(state),
-});
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = () => ({});
 

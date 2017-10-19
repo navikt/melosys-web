@@ -40,7 +40,7 @@ export function hentFagsaker(snr) {
 }
 // selector(s)
 export const PersonSelector = createSelector(
-  state => state.fagsaker.data.person,
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].person : state.fagsaker.data),
   person => person
 );
 export const Inntekt = createSelector(
