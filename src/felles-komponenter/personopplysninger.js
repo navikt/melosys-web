@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
-import PT from 'prop-types';
 import * as Nav from '../utils/navFrontend';
-import { PersonSelector, hentSaksopplysninger } from '../ducks/saksopplysninger';
+import { PersonSelector } from '../ducks/saksopplysninger';
 import * as MPT from '../proptypes';
 
 import './personopplysninger.css';
@@ -11,8 +9,6 @@ import './personopplysninger.css';
 class Personopplysninger extends Component {
   static propTypes = {
     person: MPT.PersonPropType,
-    match: PT.object.isRequired,
-    hentSaksopplysninger: PT.func.isRequired,
   };
 
   static defaultProps = {
@@ -28,11 +24,6 @@ class Personopplysninger extends Component {
       bostedsadresse: { gateadresse: { gatenavn: '', husnummer: 0, husbokstav: '' }, postnr: '', poststed: '', land: '' },
     },
   };
-
-  componentWillMount() {
-    const { saksnr } = this.props.match.params;
-    this.props.hentSaksopplysninger(saksnr);
-  }
 
   render() {
     const { fnr,
@@ -94,8 +85,7 @@ const mapStateToProps = state => ({
   person: PersonSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  hentSaksopplysninger: saksnr => dispatch(hentSaksopplysninger(saksnr)),
-});
+const mapDispatchToProps = () => ({});
+
 // withRouter required, to provide; this.props.match.params;
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Personopplysninger));
+export default connect(mapStateToProps, mapDispatchToProps)(Personopplysninger);
