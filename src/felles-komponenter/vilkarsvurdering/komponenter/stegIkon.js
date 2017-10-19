@@ -1,13 +1,16 @@
 import React from 'react';
 import PT from 'prop-types';
-import { connect } from 'react-redux';
 import classnames from 'classnames';
 
 import './stegIkon.css';
 
-const StegIkon = props => (
-  <li><button className={classnames('stegIkon', props.erAktiv ? 'stegIkon--aktiv' : '')} onClick={props.onClick} style={{ backgroundImage: `url(${props.ikon})` }} /></li>
-);
+function StegIkon(props) {
+  return (
+    <li>
+      <button className={classnames('stegIkon', props.erAktiv ? 'stegIkon--aktiv' : '')} onClick={props.onClick} style={{ backgroundImage: `url(${props.ikon})` }} />
+    </li>
+  );
+}
 
 StegIkon.propTypes = {
   ikon: PT.string,
@@ -20,8 +23,4 @@ StegIkon.defaultProps = {
   ikon: '',
 };
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(StegIkon);
+export default StegIkon;

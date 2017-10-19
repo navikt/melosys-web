@@ -1,11 +1,10 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 
 import './personopplysninger.css';
 
-const Personopplysninger = props => {
+function Personopplysninger(props) {
   if (Object.keys(props.person).length === 0) return (<div />);
 
   const { fnr,
@@ -60,15 +59,10 @@ const Personopplysninger = props => {
       </Nav.EkspanderbartPanel>
     </div>
   );
-};
+}
 
 Personopplysninger.propTypes = {
   person: MPT.Person.isRequired,
 };
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = () => ({});
-
-// withRouter required, to provide; this.props.match.params;
-export default connect(mapStateToProps, mapDispatchToProps)(Personopplysninger);
+export default Personopplysninger;
