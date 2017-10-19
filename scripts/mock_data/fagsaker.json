@@ -174,7 +174,7 @@
           "arbeidsforholdstype": "Ordinært arbeidsforhold",
           "permisjonOgPermittering": [
             {
-              "grad": 10,
+              "grad": "10",
               "inntektstype": "Lønnet",
               "permisjonstype": "Permisjon",
               "periode": {
@@ -184,7 +184,7 @@
               "innmeldt": "2014-12-14"
             }
           ,{
-              "grad": 100,
+              "grad": "100",
               "inntektstype": "Ulønnet",
               "permisjonstype": "Permittering",
               "periode": {
@@ -207,7 +207,7 @@
           "arbeidsavtale": [
             {
               "yrke": "REGNSKAPSFØRER",
-              "beregnetAntallTimerPrUke": 37.5,
+              "beregnetAntallTimerPrUke": "37.5",
               "endringsdatoStillingsprosent": "2010-01-05"
             }
           ],
@@ -267,7 +267,7 @@
                 "fom": "17-01-01",
                 "tom": "17-12-31"
               },
-              "lonnPrManed": 22000,
+              "prMaaned": 22000,
               "valuta": "NOK"
             },
             "utenlands": {
@@ -275,7 +275,7 @@
                 "fom": "16.06.01",
                 "tom": "16.12.31"
               },
-              "lonnPrManed": 2200,
+              "prMaaned": 2200,
               "valuta": "EUR"
             }
           }
@@ -300,10 +300,13 @@
         "aktorID": "",
         "periodeListe": [
           {
-            
+
             "id": 2084473,
-            "tom": "2011-12-31",
-            "fom": "2011-01-01","meta": {
+            "periode":{
+              "tom": "2011-12-31",
+              "fom": "2011-01-01"
+            },
+            "meta": {
               "opprinneligOpprettetAv": "PMEDL003",
               "sistEndretAv": "BASIS-319",
               "tidspunktOpprinneligOpprettet": "2011-05-13T09:27:20.223+02:00",
