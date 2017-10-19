@@ -1,5 +1,8 @@
 import PT from 'prop-types';
 
+
+// Todo: Foreslår å gjøre eksport i BUNN, etter at alle propTypes er definert. Da slipper vi no-use-before-define-issues og kan gruppere litt friere.
+
 export const SaksbehandlerPropType = PT.shape({
   brukernavn: PT.string,
   navn: PT.string,
@@ -16,17 +19,8 @@ export const BostedsAdressePropType = PT.shape({
   land: PT.string.isRequired,
 });
 
-export const ForretningsadressePropType = PT.shape({
-  gateadresse: PT.shape({
-    gatenavn: PT.string.isRequired,
-  }),
-  postnr: PT.string.isRequired,
-  poststed: PT.string.isRequired,
-  land: PT.string.isRequired,
-});
-
 export const PersonPropType = PT.shape({
-  fnr: PT.string.isRequired,
+  fnr: PT.string,
   sivilstand: PT.string,
   statsborgerskap: PT.string,
   kjoenn: PT.string,
@@ -79,9 +73,20 @@ export const ArbeidsforholdPropType = PT.shape({
   arbeidsforholdInnrapportertEtterAOrdningen: PT.bool,
 });
 
+export const ForretningsadressePropType = PT.shape({
+  gateadresse: PT.shape({
+    gatenavn: PT.string.isRequired,
+  }),
+  postnr: PT.string.isRequired,
+  poststed: PT.string.isRequired,
+  land: PT.string.isRequired,
+});
+
 export const OrganisasjonPropType = PT.shape({
   orgnummer: PT.string,
   navn: PT.string,
   forretningsadresse: ForretningsadressePropType,
   postadresse: PT.string,
 });
+
+export const OrganisasjonerPropType = PT.arrayOf(OrganisasjonPropType);

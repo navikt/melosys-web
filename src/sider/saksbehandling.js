@@ -1,46 +1,64 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Container, Row, Column } from 'nav-frontend-grid';
+import { withRouter } from 'react-router';
+import PT from 'prop-types';
+import * as Nav from '../utils/navFrontend';
 import './saksbehandling.css';
 import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurdering';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
+import OrganisasjonerNorge from '../felles-komponenter/arbeidsgiverNorge';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
+import { hentFagsaker, PersonSelector } from '../ducks/fagsaker';
+import * as MPT from '../proptypes';
 
 class Saksbehandling extends Component {
-  componentDidMount() {
+  static propTypes = {
+    hentFagsaker: PT.func.isRequired,
+    match: PT.object.isRequired,
+    person: MPT.PersonPropType.isRequired,
+  }
 
+  componentDidMount() {
+    const { saksnr } = this.props.match.params;
+    this.props.hentFagsaker(saksnr);
   }
 
   render() {
+    const { person } = this.props;
+
     return (
       <div className="saksbehandling">
-        <Container fluid>
-          <Row>
-            <Column xs="7">
+        <Nav.Container fluid>
+          <Nav.Row>
+            <Nav.Column xs="7">
               <Vilkarsvurdering />
-              <Personopplysninger />
+              <Personopplysninger person={person} />
               <Tilleggsopplysninger />
+              <OrganisasjonerNorge />
               <Medlemskap />
-            </Column>
-            <Column xs="5">
+            </Nav.Column>
+            <Nav.Column xs="5">
               <SideOppsummering />
               <SideDialog />
               <SideKommentarer />
-            </Column>
-          </Row>
-        </Container>
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Container>
       </div>
     );
   }
 }
 
+const mapStateToProps = state => ({
+  person: PersonSelector(state),
+});
 
-const mapStateToProps = () => ({});
+const mapDispatchToProps = dispatch => ({
+  hentFagsaker: saksnr => dispatch(hentFagsaker(saksnr)),
+});
 
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Saksbehandling);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

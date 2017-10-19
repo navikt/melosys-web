@@ -1,12 +1,11 @@
 import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
-import sorterSaksopplysninger from './saksopplysninger-utils';
 
 // Actions
-const OK = 'saksopplysninger/OK';
-const FEILET = 'saksopplysninger/FEILET';
-const PENDING = 'saksopplysninger/PENDING';
+const OK = 'fagsaker/OK';
+const FEILET = 'fagsaker/FEILET';
+const PENDING = 'fagsaker/PENDING';
 
 const initialState = {
   data: {},
@@ -24,7 +23,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         status: STATUS.OK,
-        data: sorterSaksopplysninger(action.data),
+        data: action.data,
       };
     default:
       return state;
@@ -32,8 +31,8 @@ export default function reducer(state = initialState, action) {
 }
 
 // Action Creators
-export function hentSaksopplysninger(fnr) {
-  return doThenDispatch(() => Api.hentSaksopplysninger(fnr), {
+export function hentFagsaker(snr) {
+  return doThenDispatch(() => Api.hentFagsaker(snr), {
     OK,
     FEILET,
     PENDING,
@@ -41,28 +40,38 @@ export function hentSaksopplysninger(fnr) {
 }
 // selector(s)
 export const PersonSelector = createSelector(
-  state => state.saksopplysninger.data.person,
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].person : state.fagsaker.data),
   person => person
 );
-
+export const Inntekt = createSelector(
+  state => state.fagsaker.data.inntekt,
+  inntekt => inntekt
+);
+export const Bekreftelser = createSelector(
+  state => state.fagsaker.data.bekreftelser,
+  bekreftelser => bekreftelser
+);
+export const Soknaden = createSelector(
+  state => state.fagsaker.data.soknaden,
+  soknaden => soknaden
+);
+export const Medlemsskap = createSelector(
+  state => state.fagsaker.data.medlemsskap,
+  medlemsskap => medlemsskap
+);
 export const OrganisasjonerSelector = createSelector(
-  state => state.saksopplysninger.data.organisasjoner,
+  state => state.fagsaker.data.organisasjoner,
   organisasjoner => organisasjoner
 );
 
 export const ArbeidsforholdSelector = createSelector(
-  state => state.saksopplysninger.data.arbeidsforhold,
-  arbeidsforhold => arbeidsforhold
-);
-
-export const ArbeidsgiverSelector = createSelector(
-  state => state.saksopplysninger.data.arbeidsforhold,
+  state => state.fagsaker.data.arbeidsforhold,
   arbeidsforhold => arbeidsforhold
 );
 
 export const ArbeidsforholdetSelector = createSelector(
   (state, arbeidsforholdID) => arbeidsforholdID,
-  state => state.saksopplysninger.data.arbeidsforhold || [],
+  state => state.fagsaker.data.arbeidsforhold || [],
   (arbeidsforholdID, arbeidsforhold) =>
     arbeidsforhold.find(
       item => item.arbeidsforholdIDnav.toString() === arbeidsforholdID
@@ -71,15 +80,7 @@ export const ArbeidsforholdetSelector = createSelector(
 
 export const OrganisasjonSelector = createSelector(
   (state, orgnummer) => orgnummer,
-  state => state.saksopplysninger.data.organisasjoner || [],
+  state => state.fagsaker.data.organisasjoner || [],
   (orgnummer, organisasjoner) =>
     organisasjoner.find(item => item.orgnummer === orgnummer)
-);
-export const OrganisasjonSelectorByNavID = createSelector(
-  [ArbeidsforholdetSelector, OrganisasjonerSelector],
-  (arbeidsforholdet, organisasjoner) => (
-    organisasjoner
-      ? organisasjoner.find(item => item.orgnummer === arbeidsforholdet.arbeidsgiver.orgnummer)
-      : {}
-  )
 );
