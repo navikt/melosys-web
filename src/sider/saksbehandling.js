@@ -8,7 +8,7 @@ import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurd
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
-import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
+import OrganisasjonerNorge from '../felles-komponenter/arbeidsgiverNorge';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
@@ -32,10 +32,10 @@ class Saksbehandling extends Component {
           <Row>
             <Column xs="7">
               <Vilkarsvurdering />
+              <OrganisasjonerNorge />
               <Personopplysninger />
               <Tilleggsopplysninger />
               <Medlemskap />
-              <OrganisasjonerNorge />
             </Column>
             <Column xs="5">
               <SideOppsummering />
