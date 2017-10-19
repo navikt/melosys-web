@@ -30,7 +30,7 @@ router.post('/henvendelse', function(req, res) {
 
 const fagsaker = (req, res) => {
   try {
-    //const snr = req.params.snr.toString();
+    const fnr = req.params.fnr && req.params.fnr.toString() || '';
     const fagsaker = JSON.parse(fs.readFileSync("./scripts/mock_data/fagsaker.json", "utf8"));
     return res.json(fagsaker);
   }
@@ -39,7 +39,7 @@ const fagsaker = (req, res) => {
     console.error(err);
   }
 };
-router.get('/fagsaker', fagsaker);
+router.get('/fagsaker/:fnr?', fagsaker);
 
 router.get('/nyesaker/:fnr', function (req, res) {
   try {
@@ -104,9 +104,9 @@ router.get('/tidligeresaker/:brukernavn', function (req, res) {
 router.get('/saksopplysninger/:fnr', function (req, res) {
   try {
     const fnr = req.params.fnr;
-    const data = JSON.parse(fs.readFileSync("./scripts/mock_data/fagsaker.json", "utf8"));
-    const saksopplysning = _.find(data, function(item){
-      return item.behandlinger[0].person.fnr === fnr;
+    const data = JSON.parse(fs.readFileSync("./scripts/mock_data/saksopplysninger.json", "utf8"));
+    const saksopplysning = _.find(data.response, function(item){
+      return item.person.fnr === fnr;
     });
 
     if (saksopplysning) {

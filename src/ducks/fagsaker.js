@@ -31,7 +31,7 @@ export default function reducer(state = initialState, action) {
 }
 
 // Action Creators
-export function hentSaksopplysninger(snr) {
+export function hentFagsaker(snr) {
   return doThenDispatch(() => Api.hentFagsaker(snr), {
     OK,
     FEILET,
