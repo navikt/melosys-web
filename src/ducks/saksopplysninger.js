@@ -55,11 +55,6 @@ export const ArbeidsforholdSelector = createSelector(
   arbeidsforhold => arbeidsforhold
 );
 
-export const ArbeidsgiverSelector = createSelector(
-  state => state.saksopplysninger.data.arbeidsforhold,
-  arbeidsforhold => arbeidsforhold
-);
-
 export const ArbeidsforholdetSelector = createSelector(
   (state, arbeidsforholdID) => arbeidsforholdID,
   state => state.saksopplysninger.data.arbeidsforhold || [],

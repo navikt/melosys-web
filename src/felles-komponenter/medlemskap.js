@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
 import PT from 'prop-types';
-import EkspanderbartPanel from 'nav-frontend-ekspanderbartpanel';
-import { Container, Row, Column } from 'nav-frontend-grid';
-import { Element } from 'nav-frontend-typografi';
+import * as Nav from '../utils/navFrontend';
 
+import * as MPT from '../proptypes';
 import './medlemskap.css';
 
 const uuid = require('uuid/v4');
@@ -16,10 +14,10 @@ const uuid = require('uuid/v4');
  * @constructor
  */
 const DatoOmrade = ({ tittel1, tittel2, dato1, dato2 }) => (
-  <Row>
-    <Column xs="6" className="blokk-xs"><Element>{tittel1}</Element>{dato1}</Column>
-    <Column xs="6" className="blokk-xs"><Element>{tittel2}</Element>{dato2}</Column>
-  </Row>
+  <Nav.Row>
+    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>{tittel1}</Nav.Element>{dato1}</Nav.Column>
+    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>{tittel2}</Nav.Element>{dato2}</Nav.Column>
+  </Nav.Row>
 );
 
 DatoOmrade.propTypes = {
@@ -34,70 +32,67 @@ DatoOmrade.propTypes = {
  *
  * @constructor
  */
-const MedlemskapSeksjon = () => (
-  <div className="medlemskap__enkelt" aria-label="Enkeltmedlemsskap">
-    <Row>
-      {/* START DATO RANGE */}
-      <Column xs="5">
-        <Container fluid>
-          <DatoOmrade tittel1="Fra" dato1="01.01.17" tittel2="Til" dato2="01.01.18" />
-          <DatoOmrade tittel1="Registrert" dato1="01.02.17" tittel2="Besluttet" dato2="01.02.18" />
-        </Container>
-      </Column>
-      {/* SLUTT DATO RANGE */}
+function MedlemskapSeksjon(seksjon) {
+  const { periode, dato } = seksjon;
+  return (
+    <div className="medlemskap__enkelt" aria-label="Enkeltmedlemsskap">
+      <Nav.Row>
+        {/* START DATO RANGE */}
+        <Nav.Column xs="5">
+          <Nav.Container fluid>
+            <DatoOmrade tittel1="Fra" dato1={periode.fom} tittel2="Til" dato2={periode.tom} />
+            <DatoOmrade tittel1="Registrert" dato1={dato.registrert} tittel2="Besluttet" dato2={dato.besluttet} />
+          </Nav.Container>
+        </Nav.Column>
+        {/* SLUTT DATO RANGE */}
 
-      {/* START DETALJER */}
-      <Column xs="7">
-        <dl>
-          <dt>Lovvalgsland:</dt>
-          <dd>Norge</dd>
-          <dt>Periodetype:</dt>
-          <dd>404 Utilgjengelig</dd>
-          <dt>Status:</dt>
-          <dd>Gyldig</dd>
-          <dt>Statusårsak:</dt>
-          <dd>-</dd>
-          <dt>Grunnlagshjemmel:</dt>
-          <dd>12.1</dd>
-          <dt>Delingskode:</dt>
-          <dd>12345</dd>
-          <dt>Lovvalgsperiodetype:</dt>
-          <dd>Utsendt arbeidstaker</dd>
-        </dl>
-      </Column>
-      {/* SLUTT DETALJER */}
-    </Row>
-  </div>
-);
+        {/* START DETALJER */}
+        <Nav.Column xs="7">
+          <dl>
+            <dt>Lovvalgsland:</dt>
+            <dd>Norge</dd>
+            <dt>Periodetype:</dt>
+            <dd>404 Utilgjengelig</dd>
+            <dt>Status:</dt>
+            <dd>Gyldig</dd>
+            <dt>Statusårsak:</dt>
+            <dd>-</dd>
+            <dt>Grunnlagshjemmel:</dt>
+            <dd>12.1</dd>
+            <dt>Delingskode:</dt>
+            <dd>12345</dd>
+            <dt>Lovvalgsperiodetype:</dt>
+            <dd>Utsendt arbeidstaker</dd>
+          </dl>
+        </Nav.Column>
+        {/* SLUTT DETALJER */}
+      </Nav.Row>
+    </div>
+  );
+}
+MedlemskapSeksjon.propTypes = {
+  seksjon: MPT.MedlemskapPeriode.isRequired,
+};
 
-class Medlemskap extends Component {
-  static propTypes = {
-    medlemskapsPeriode: PT.array.isRequired,
-  };
-
-  static defaultProps = {
-    medlemskapsPeriode: [{ }, { }],
-  };
-
-  render() {
-    return (
-      <div className="medlemskap panelSeksjon">
-        <EkspanderbartPanel tittel="Medlemskap">
-          <section aria-label="Medlemskap">
-            <Container fluid>
-              {/* START MEDLEMSKAP-REPEAT */}
-              {this.props.medlemskapsPeriode.map(() => <MedlemskapSeksjon key={uuid()} />)}
-              {/* SLUTT MEDLEMSKAP-REPEAT */}
-            </Container>
-          </section>
-        </EkspanderbartPanel>
-      </div>
-    );
-  }
+function Medlemskap({ medlemsskap }) {
+  const { periodeListe } = medlemsskap;
+  return (
+    <div className="medlemskap panelSeksjon">
+      <Nav.EkspanderbartPanel tittel="Medlemskap">
+        <section aria-label="Medlemskap">
+          <Nav.Container fluid>
+            {/* START MEDLEMSKAP-REPEAT */}
+            {periodeListe.map(periode => <MedlemskapSeksjon key={uuid()} seksjon={periode} />)}
+            {/* SLUTT MEDLEMSKAP-REPEAT */}
+          </Nav.Container>
+        </section>
+      </Nav.EkspanderbartPanel>
+    </div>
+  );
 }
 
-const mapStateToProps = () => ({});
+Medlemskap.propTypes = {
+  medlemsskap: MPT.Medlemskap.isRequired,
+};
 
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Medlemskap);
+export default Medlemskap;
