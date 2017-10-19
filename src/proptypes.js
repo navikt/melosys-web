@@ -20,7 +20,7 @@ export const BostedsAdressePropType = PT.shape({
 });
 
 export const PersonPropType = PT.shape({
-  fnr: PT.string.isRequired,
+  fnr: PT.string,
   sivilstand: PT.string,
   statsborgerskap: PT.string,
   kjoenn: PT.string,
