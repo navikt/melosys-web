@@ -28,7 +28,11 @@
             "alder": 58
           },
           "barn": [
-            {"sammensattNavn":"TRYM FOS","alder":16},{
+            {
+              "sammensattNavn": "TRYM FOS",
+              "alder": 16
+            },
+            {
               "sammensattNavn": "EMMA FOS",
               "alder": 17
             }
@@ -54,8 +58,8 @@
               "fom": "2010-04-03",
               "tom": ""
             }
-          }
-        ,{
+          },
+          {
             "arbeidsgiver": {
               "navn": "REGNSKAPSFIRMA AS",
               "orgnummer": "345678912"
@@ -64,8 +68,8 @@
               "fom": "2000-08-22",
               "tom": "2010-03-20"
             }
-          }
-        ,{
+          },
+          {
             "arbeidsgiver": {
               "navn": "KREDITTFIRMAET DA",
               "orgnummer": "223344559"
@@ -119,57 +123,59 @@
                 "fom": "2010-04-03",
                 "tom": "2010-12-31"
               }
-            }
-          ,{
+            },
+            {
               "antallTimer": 1950,
               "periode": {
                 "fom": "2011-01-01",
                 "tom": "2011-12-31"
               }
-            }
-          ,{
+            },
+            {
               "antallTimer": 1950,
               "periode": {
                 "fom": "2012-01-01",
                 "tom": "2012-12-31"
               }
-            }
-          ,{
+            },
+            {
               "antallTimer": 1950,
               "periode": {
                 "fom": "2013-01-01",
                 "tom": "2013-12-31"
               }
-            }
-          ,{
+            },
+            {
               "antallTimer": 1950,
               "periode": {
                 "fom": "2014-01-01",
                 "tom": "2014-12-31"
               }
-            }
-          ,{
+            },
+            {
               "antallTimer": 1950,
               "periode": {
                 "fom": "2015-01-01",
                 "tom": "2015-12-31"
               }
-            }
-          ,{
+            },
+            {
               "antallTimer": 1950,
               "periode": {
                 "fom": "2016-01-01",
                 "tom": "2016-12-31"
               }
-            }
-          ,{
+            },
+            {
               "antallTimer": 1950,
               "periode": {
                 "fom": "2017-01-01",
                 "tom": "2017-12-31"
               }
             }
-          ],"yrkeskode":"3432 101","yrke":"REGNSKAPSFØRER",
+          ],
+          "yrkeskode": "3432 101",
+          "yrke": "REGNSKAPSFØRER",
           "arbeidstidsordning": "Ikke Skift, KODEVERK",
           "arbeidsforholdstype": "Ordinært arbeidsforhold",
           "permisjonOgPermittering": [
@@ -182,8 +188,8 @@
                 "tom": "2015-07-01"
               },
               "innmeldt": "2014-12-14"
-            }
-          ,{
+            },
+            {
               "grad": "100",
               "inntektstype": "Ulønnet",
               "permisjonstype": "Permittering",
@@ -200,6 +206,7 @@
               "rapporteringsperiode": "yyyymm",
               "hjemmekontor": false,
               "fysiskAdresse": {
+
               },
               "firmaNavn": ""
             }
@@ -300,9 +307,8 @@
         "aktorID": "",
         "periodeListe": [
           {
-
             "id": 2084473,
-            "periode":{
+            "periode": {
               "tom": "2011-12-31",
               "fom": "2011-01-01"
             },
