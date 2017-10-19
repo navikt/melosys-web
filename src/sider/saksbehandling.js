@@ -12,17 +12,17 @@ import OrganisasjonerNorge from '../felles-komponenter/arbeidsgiverNorge';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
-import { hentSaksopplysninger } from '../ducks/saksopplysninger';
+import { hentFagsaker } from '../ducks/fagsaker';
 
 class Saksbehandling extends Component {
   static propTypes = {
-    hentSaksopplysninger: PT.func.isRequired,
+    hentFagsaker: PT.func.isRequired,
     match: PT.object.isRequired,
   }
 
   componentDidMount() {
     const { saksnr } = this.props.match.params;
-    this.props.hentSaksopplysninger(saksnr);
+    this.props.hentFagsaker(saksnr);
   }
 
   render() {
@@ -53,7 +53,7 @@ class Saksbehandling extends Component {
 const mapStateToProps = () => ({});
 
 const mapDispatchToProps = dispatch => ({
-  hentSaksopplysninger: saksnr => dispatch(hentSaksopplysninger(saksnr)),
+  hentFagsaker: saksnr => dispatch(hentFagsaker(saksnr)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
