@@ -24,7 +24,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         status: STATUS.OK,
-        data: sorterSaksopplysninger(action.data),
+        data: sorterSaksopplysninger(action.data.behandlinger[0]),
       };
     default:
       return state;

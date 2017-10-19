@@ -104,9 +104,9 @@ router.get('/tidligeresaker/:brukernavn', function (req, res) {
 router.get('/saksopplysninger/:fnr', function (req, res) {
   try {
     const fnr = req.params.fnr;
-    const data = JSON.parse(fs.readFileSync("./scripts/mock_data/saksopplysninger.json", "utf8"));
-    const saksopplysning = _.find(data.response, function(item){
-      return item.person.fnr === fnr;
+    const data = JSON.parse(fs.readFileSync("./scripts/mock_data/fagsaker.json", "utf8"));
+    const saksopplysning = _.find(data, function(item){
+      return item.behandlinger[0].person.fnr === fnr;
     });
 
     if (saksopplysning) {

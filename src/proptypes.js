@@ -1,7 +1,7 @@
 import PT from 'prop-types';
 
 
-//Todo: Eksportere i BUNN, etter at alle propTypes er definert. Da slipper vi no-use-before-define-issues.
+// Todo: Foreslår å gjøre eksport i BUNN, etter at alle propTypes er definert. Da slipper vi no-use-before-define-issues og kan gruppere litt friere.
 
 export const SaksbehandlerPropType = PT.shape({
   brukernavn: PT.string,
