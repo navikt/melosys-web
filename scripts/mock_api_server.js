@@ -30,7 +30,7 @@ router.post('/henvendelse', function(req, res) {
 
 const fagsaker = (req, res) => {
   try {
-    //const snr = req.params.snr.toString();
+    const fnr = req.params.fnr && req.params.fnr.toString() || '';
     const fagsaker = JSON.parse(fs.readFileSync("./scripts/mock_data/fagsaker.json", "utf8"));
     return res.json(fagsaker);
   }
@@ -39,7 +39,7 @@ const fagsaker = (req, res) => {
     return res.status(500).send(err);
   }
 };
-router.get('/fagsaker', fagsaker);
+router.get('/fagsaker/:fnr?', fagsaker);
 
 router.get('/nyesaker/:fnr', function (req, res) {
   try {
