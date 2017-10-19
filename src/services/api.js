@@ -23,6 +23,7 @@ const headers = new Headers({
   Accept: 'application/json',
   'Accept-Charset': 'utf-8',
 });
+
 export function hentFagsaker(snr) {
   const URI_FAGSAKER =  `${API_MELOSYS_URL}fagsaker/${snr}`;
   return fetchToJson(URI_FAGSAKER, { headers: headers });

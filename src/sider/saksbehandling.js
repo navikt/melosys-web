@@ -32,9 +32,9 @@ class Saksbehandling extends Component {
           <Row>
             <Column xs="7">
               <Vilkarsvurdering />
-              <OrganisasjonerNorge />
               <Personopplysninger />
               <Tilleggsopplysninger />
+              <OrganisasjonerNorge />
               <Medlemskap />
             </Column>
             <Column xs="5">
