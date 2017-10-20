@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Checkbox, Radio, Fieldset } from 'nav-frontend-skjema';
-import { Innholdstittel, Systemtittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
-import { Knapp } from 'nav-frontend-knapper';
-import { Container, Row, Column } from 'nav-frontend-grid';
+
+import * as Nav from '../../utils/navFrontend';
 import StegVelger from './komponenter/stegVelger';
 import StegFane from './komponenter/stegFane';
 import './vilkarsvurdering.css';
@@ -48,82 +46,82 @@ class Vilkarsvurdering extends Component {
       <div className="vilkarsvurdering panelSeksjon">
         <StegVelger>
           <StegFane ikoner={stegIkoner} visNesteKnapp>
-            <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>
-            <Fieldset legend="Vurder om søkeren er:">
-              <Radio id="steg0_ikke_arbeidende" name="arbeidssted" label="Ikke arbeidende / yrkesmottaker" />
-              <Radio id="steg0_arbeidstaker" name="arbeidssted" label="Arbeidstaker" />
-              <Radio id="steg0_selvstendig" name="arbeidssted"label="Selvstendig næringsdrivende" />
-              <Radio id="steg0_arbeidstaker_selvstendig" name="arbeidssted" label="Både arbeidstakende og selvstendig" />
-            </Fieldset>
+            <Nav.Innholdstittel type="innholdstittel">Vurdering:</Nav.Innholdstittel>
+            <Nav.Fieldset legend="Vurder om søkeren er:">
+              <Nav.Radio id="steg0_ikke_arbeidende" name="arbeidssted" label="Ikke arbeidende / yrkesmottaker" />
+              <Nav.Radio id="steg0_arbeidstaker" name="arbeidssted" label="Arbeidstaker" />
+              <Nav.Radio id="steg0_selvstendig" name="arbeidssted"label="Selvstendig næringsdrivende" />
+              <Nav.Radio id="steg0_arbeidstaker_selvstendig" name="arbeidssted" label="Både arbeidstakende og selvstendig" />
+            </Nav.Fieldset>
           </StegFane>
           <StegFane ikoner={stegIkoner} visNesteKnapp>
-            <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>
-            <Fieldset legend="Gjelder én eller flere av disse for søkeren?">
-              <Checkbox id="steg1_ansatt_offentlig" label="Offentlig tjenestepensjon (relevant for 11.3 b)" />
-              <Checkbox id="steg1_ansatt_skip" label="Ansatt på skip (relevant for 11.4" />
-              <Checkbox id="steg1_ansatt_sokkel" label="Ansatt på sokkel (relevant for 11.3 a)" />
-              <Checkbox id="steg1_ansatt_flyvende" label="Flyvende personell (relevant for 11.5)" />
-            </Fieldset>
+            <Nav.Innholdstittel type="innholdstittel">Vurdering:</Nav.Innholdstittel>
+            <Nav.Fieldset legend="Gjelder én eller flere av disse for søkeren?">
+              <Nav.Checkbox id="steg1_ansatt_offentlig" label="Offentlig tjenestepensjon (relevant for 11.3 b)" />
+              <Nav.Checkbox id="steg1_ansatt_skip" label="Ansatt på skip (relevant for 11.4" />
+              <Nav.Checkbox id="steg1_ansatt_sokkel" label="Ansatt på sokkel (relevant for 11.3 a)" />
+              <Nav.Checkbox id="steg1_ansatt_flyvende" label="Flyvende personell (relevant for 11.5)" />
+            </Nav.Fieldset>
           </StegFane>
           <StegFane ikoner={stegIkoner} visNesteKnapp>
-            <Innholdstittel type="innholdstittel">Vurdering:</Innholdstittel>
-            <Fieldset legend="Hvor mange land skal søker arbeide/drive virsomhet i?">
-              <Radio id="steg2_land_ett" name="land" label="Ett" />
-              <Radio id="steg2_land_flere" name="land" label="To eller flere" />
-            </Fieldset>
-            <Fieldset legend="Hvor mye av aktiviteten skjed i Norge?">
-              <Radio id="steg2_aktivitet_under25" name="aktivitet" label="Mindre enn 25%" />
-              <Radio id="steg2_aktivitet_over25" name="aktivitet" label="25% eller mer" />
-            </Fieldset>
-            <Fieldset legend="Hvor mange arbeidsgivere har søker?">
-              <Radio id="steg2_arbeidsgivere_en" name="arbeidsgivere" label="Èn" />
-              <Radio id="steg2_arbeidsgivere_fler" name="arbeidsgivere" label="To eller fler" />
-            </Fieldset>
-            <Fieldset legend="Er arbeidsgivere i sammme land eller i ulike land?">
-              <Radio id="steg2_arbeidsgiverfordeling_ettland" name="arbeidsgiverfordeling" label="Samme land" />
-              <Radio id="steg2_arbeidsgiverfordeling_ulikeland" name="arbeidsgiverfordeling" label="Ulike land" />
-            </Fieldset>
+            <Nav.Innholdstittel type="innholdstittel">Vurdering:</Nav.Innholdstittel>
+            <Nav.Fieldset legend="Hvor mange land skal søker arbeide/drive virsomhet i?">
+              <Nav.Radio id="steg2_land_ett" name="land" label="Ett" />
+              <Nav.Radio id="steg2_land_flere" name="land" label="To eller flere" />
+            </Nav.Fieldset>
+            <Nav.Fieldset legend="Hvor mye av aktiviteten skjed i Norge?">
+              <Nav.Radio id="steg2_aktivitet_under25" name="aktivitet" label="Mindre enn 25%" />
+              <Nav.Radio id="steg2_aktivitet_over25" name="aktivitet" label="25% eller mer" />
+            </Nav.Fieldset>
+            <Nav.Fieldset legend="Hvor mange arbeidsgivere har søker?">
+              <Nav.Radio id="steg2_arbeidsgivere_en" name="arbeidsgivere" label="Èn" />
+              <Nav.Radio id="steg2_arbeidsgivere_fler" name="arbeidsgivere" label="To eller fler" />
+            </Nav.Fieldset>
+            <Nav.Fieldset legend="Er arbeidsgivere i sammme land eller i ulike land?">
+              <Nav.Radio id="steg2_arbeidsgiverfordeling_ettland" name="arbeidsgiverfordeling" label="Samme land" />
+              <Nav.Radio id="steg2_arbeidsgiverfordeling_ulikeland" name="arbeidsgiverfordeling" label="Ulike land" />
+            </Nav.Fieldset>
           </StegFane>
           <StegFane ikoner={vedtakIkoner}>
-            <Container fluid>
-              <Row>
-                <Column xs="12">
-                  <Systemtittel type="systemtittel">Foreslått vedtak:</Systemtittel>
-                </Column>
-              </Row>
-              <Row>
-                <Column xs="12">
-                  <Normaltekst type="normaltekst">Resultat:</Normaltekst>
-                  <UndertekstBold>Medlemsskap i norsk folketrygd er innvilget, etter artikkel 12.1</UndertekstBold>
-                </Column>
-              </Row>
-              <Row>
-                <Column xs="6" md="3">
-                  <Element type="element">Antall måneder i utlandet</Element>
-                  <Normaltekst>11</Normaltekst>
-                </Column>
-                <Column xs="6" md="3">
-                  <Element type="element">Land</Element>
-                  <Normaltekst>Tyskland og Sverige</Normaltekst>
-                </Column>
-                <Column xs="6" md="3">
-                  <Element type="element">Søker er</Element>
-                  <Normaltekst>Arbeidstaker</Normaltekst>
-                </Column>
-                <Column xs="6" md="3">
-                  <Element type="element">Navn på arbeidsgiver</Element>
-                  <Normaltekst>Hagemøbler Import AS</Normaltekst>
-                </Column>
-              </Row>
-              <Row>
-                <Column xs="6" className="fane__fot">
-                  <Knapp type="hoved">Fatt vedtak</Knapp>
-                </Column>
-                <Column xs="6" className="fane__fot">
+            <Nav.Container fluid>
+              <Nav.Row>
+                <Nav.Column xs="12">
+                  <Nav.Systemtittel type="systemtittel">Foreslått vedtak:</Nav.Systemtittel>
+                </Nav.Column>
+              </Nav.Row>
+              <Nav.Row>
+                <Nav.Column xs="12">
+                  <Nav.Normaltekst type="normaltekst">Resultat:</Nav.Normaltekst>
+                  <Nav.UndertekstBold>Medlemsskap i norsk folketrygd er innvilget, etter artikkel 12.1</Nav.UndertekstBold>
+                </Nav.Column>
+              </Nav.Row>
+              <Nav.Row>
+                <Nav.Column xs="6" md="3">
+                  <Nav.Element type="element">Antall måneder i utlandet</Nav.Element>
+                  <Nav.Normaltekst>11</Nav.Normaltekst>
+                </Nav.Column>
+                <Nav.Column xs="6" md="3">
+                  <Nav.Element type="element">Land</Nav.Element>
+                  <Nav.Normaltekst>Tyskland og Sverige</Nav.Normaltekst>
+                </Nav.Column>
+                <Nav.Column xs="6" md="3">
+                  <Nav.Element type="element">Søker er</Nav.Element>
+                  <Nav.Normaltekst>Arbeidstaker</Nav.Normaltekst>
+                </Nav.Column>
+                <Nav.Column xs="6" md="3">
+                  <Nav.Element type="element">Navn på arbeidsgiver</Nav.Element>
+                  <Nav.Normaltekst>Hagemøbler Import AS</Nav.Normaltekst>
+                </Nav.Column>
+              </Nav.Row>
+              <Nav.Row>
+                <Nav.Column xs="6" className="fane__fot">
+                  <Nav.Knapp type="hoved">Fatt vedtak</Nav.Knapp>
+                </Nav.Column>
+                <Nav.Column xs="6" className="fane__fot">
                   <a href="http://localhost">Forhåndsvis vedtaksbrev</a>
-                </Column>
-              </Row>
-            </Container>
+                </Nav.Column>
+              </Nav.Row>
+            </Nav.Container>
           </StegFane>
         </StegVelger>
       </div>

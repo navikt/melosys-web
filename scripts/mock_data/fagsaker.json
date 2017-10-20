@@ -1,0 +1,361 @@
+{
+  "behandlinger": [
+    {
+      "person": {
+        "fnr": "01016500543",
+        "sivilstand": "Gift",
+        "statsborgerskap": "SVERIGE",
+        "kjoenn": "K",
+        "fornavn": "UNNI FOS",
+        "etternavn": "KVALUY",
+        "sammensattNavn": "UNNI FOS KVALUY ",
+        "foedselsdato": "1959-01-01",
+        "bostedsadresse": {
+          "gateadresse": {
+            "gatenavn": "EINERHAUGEN",
+            "husnummer": 123,
+            "husbokstav": "A"
+          },
+          "postnr": "5003",
+          "poststed": "BERGEN",
+          "land": "NORGE"
+        },
+        "mobiltelefon": "99 99 99 99",
+        "epost": "UNNI.FOS@DOMENET.COM",
+        "familerelasjon": {
+          "ektefelle": {
+            "sammensattNavn": "OLA NORDMANN FOS",
+            "alder": 58
+          },
+          "barn": [
+            {
+              "sammensattNavn": "TRYM FOS",
+              "alder": 16
+            },
+            {
+              "sammensattNavn": "EMMA FOS",
+              "alder": 17
+            }
+          ]
+        }
+      },
+      "inntekt": {
+        "sluttvederlag": {
+          "belop": "",
+          "valuta": "",
+          "periode": {
+            "fom": "",
+            "tom": ""
+          }
+        },
+        "normal": [
+          {
+            "arbeidsgiver": {
+              "navn": "BERGENSFINANS AS",
+              "orgnummer": "123456789"
+            },
+            "periode": {
+              "fom": "2010-04-03",
+              "tom": ""
+            }
+          },
+          {
+            "arbeidsgiver": {
+              "navn": "REGNSKAPSFIRMA AS",
+              "orgnummer": "345678912"
+            },
+            "periode": {
+              "fom": "2000-08-22",
+              "tom": "2010-03-20"
+            }
+          },
+          {
+            "arbeidsgiver": {
+              "navn": "KREDITTFIRMAET DA",
+              "orgnummer": "223344559"
+            },
+            "periode": {
+              "fom": "1990-06-01",
+              "tom": "2000-08-01"
+            }
+          }
+        ],
+        "utdanning": [
+          {
+            "arbeidsgiver": {
+              "navn": "KREDITTFIRMAET DA",
+              "orgnummer": "223344559"
+            },
+            "periode": {
+              "fom": "1985-08-02",
+              "tom": "1990-06-01"
+            }
+          }
+        ],
+        "frilans": [
+          {
+            "arbeidsgiver": {
+              "navn": "FREELANCEFINANS AS",
+              "orgnummer": "776655666"
+            },
+            "periode": {
+              "fom": "2010-05-06",
+              "tom": "2010-12-31"
+            }
+          }
+        ]
+      },
+      "arbeidsforhold": [
+        {
+          "arbeidsforholdID": "konvertert_3ca4d061-a2a3-4b31-a3f7-7ef310e8608c",
+          "arbeidsforholdIDnav": 6767328,
+          "ansettelsesPeriode": {
+            "fom": "2010-04-03",
+            "tom": ""
+          },
+          "registrertDato": "2010-04-01",
+          "bekreftetDato": "2017-01-10",
+          "ordning": "NY",
+          "timelonnet": [
+            {
+              "antallTimer": 1800,
+              "periode": {
+                "fom": "2010-04-03",
+                "tom": "2010-12-31"
+              }
+            },
+            {
+              "antallTimer": 1950,
+              "periode": {
+                "fom": "2011-01-01",
+                "tom": "2011-12-31"
+              }
+            },
+            {
+              "antallTimer": 1950,
+              "periode": {
+                "fom": "2012-01-01",
+                "tom": "2012-12-31"
+              }
+            },
+            {
+              "antallTimer": 1950,
+              "periode": {
+                "fom": "2013-01-01",
+                "tom": "2013-12-31"
+              }
+            },
+            {
+              "antallTimer": 1950,
+              "periode": {
+                "fom": "2014-01-01",
+                "tom": "2014-12-31"
+              }
+            },
+            {
+              "antallTimer": 1950,
+              "periode": {
+                "fom": "2015-01-01",
+                "tom": "2015-12-31"
+              }
+            },
+            {
+              "antallTimer": 1950,
+              "periode": {
+                "fom": "2016-01-01",
+                "tom": "2016-12-31"
+              }
+            },
+            {
+              "antallTimer": 1950,
+              "periode": {
+                "fom": "2017-01-01",
+                "tom": "2017-12-31"
+              }
+            }
+          ],
+          "yrkeskode": "3432 101",
+          "yrke": "REGNSKAPSFØRER",
+          "arbeidstidsordning": "Ikke Skift, KODEVERK",
+          "arbeidsforholdstype": "Ordinært arbeidsforhold",
+          "permisjonOgPermittering": [
+            {
+              "grad": "10",
+              "inntektstype": "Lønnet",
+              "permisjonstype": "Permisjon",
+              "periode": {
+                "fom": "2015-01-01",
+                "tom": "2015-07-01"
+              },
+              "innmeldt": "2014-12-14"
+            },
+            {
+              "grad": "100",
+              "inntektstype": "Ulønnet",
+              "permisjonstype": "Permittering",
+              "periode": {
+                "fom": "2013-01-01",
+                "tom": "2013-07-01"
+              },
+              "innmeldt": "2013-01-02"
+            }
+          ],
+          "utenlandsopphold": [
+            {
+              "landkode": "kodeverk",
+              "rapporteringsperiode": "yyyymm",
+              "hjemmekontor": false,
+              "fysiskAdresse": {
+
+              },
+              "firmaNavn": ""
+            }
+          ],
+          "arbeidsavtale": [
+            {
+              "yrke": "REGNSKAPSFØRER",
+              "beregnetAntallTimerPrUke": "37.5",
+              "endringsdatoStillingsprosent": "2010-01-05"
+            }
+          ],
+          "arbeidsgiver": {
+            "orgnummer": "123456789",
+            "navn": "BERGENSFINANS AS"
+          },
+          "arbeidstakerID": "01015900543",
+          "opplysningspliktig": {
+            "orgnummer": "123456789",
+            "navn": "BERGENSFINANS AS"
+          },
+          "arbeidsforholdInnrapportertEtterAOrdningen": false
+        }
+      ],
+      "bekreftelser": {
+        "utsendt": true,
+        "ansatt": true,
+        "erstatter": false,
+        "over24m": false,
+        "arbeidsgiveravgift": false,
+        "trygdeavgift": {
+          "trukket": false,
+          "tom": ""
+        }
+      },
+      "organisasjoner": [
+        {
+          "orgnummer": "123456789",
+          "navn": "BERGENSFINANS AS",
+          "forretningsadresse": {
+            "gateadresse": {
+              "gatenavn": "Rådhusgaten 999 "
+            },
+            "postnr": "5000",
+            "poststed": "BERGEN",
+            "land": "NORGE"
+          },
+          "postadresse": "Postboks 1234 5000 BERGEN NORGE"
+        }
+      ],
+      "soknaden": {
+        "inntekt": {
+          "naringsinntekt": {
+            "innlands": {
+              "prMaaned": 8000,
+              "valuta": "NOK"
+            },
+            "utenlands": {
+              "prMaaned": 1500,
+              "valuta": "EUR"
+            }
+          },
+          "lonnsinntekt": {
+            "innlands": {
+              "periode": {
+                "fom": "17-01-01",
+                "tom": "17-12-31"
+              },
+              "prMaaned": 22000,
+              "valuta": "NOK"
+            },
+            "utenlands": {
+              "periode": {
+                "fom": "16.06.01",
+                "tom": "16.12.31"
+              },
+              "prMaaned": 2200,
+              "valuta": "EUR"
+            }
+          }
+        },
+        "arbeidsgiverUtland": {
+          "orgnummer": "1293-2123-34241-2233 U 23",
+          "firmanavn": "",
+          "adresseUtland": [
+            "U figure out this structure"
+          ],
+          "kontaktPerson": {
+            "sammensattNavn": "Wolfgang Schaube",
+            "telefon": "00 49 123-1234-333333",
+            "epost": "wolfang.schaube@derdeutchefinancecompany.com"
+          },
+          "oppholdsland": "Tyskland",
+          "bosted": "Tyskland",
+          "utenlandskID": "ukjent"
+        }
+      },
+      "medlemsskap": {
+        "aktorID": "",
+        "periodeListe": [
+          {
+            "id": 2084473,
+            "periode": {
+              "tom": "2011-12-31",
+              "fom": "2011-01-01"
+            },
+            "meta": {
+              "opprinneligOpprettetAv": "PMEDL003",
+              "sistEndretAv": "BASIS-319",
+              "tidspunktOpprinneligOpprettet": "2011-05-13T09:27:20.223+02:00",
+              "tidspunktSistEndret": "2012-03-24T04:00:14.069+01:00"
+            },
+            "version": 0,
+            "dato": {
+              "registrert": "2013-01-21",
+              "besluttet": "2013-01-21"
+            },
+            "status": {
+              "kode": "GYLD",
+              "term": "Gyldig"
+            },
+            "helsedel": false,
+            "type": {
+              "kode": "PUMEDSKP",
+              "term": "Periode uten medlemsskap"
+            },
+            "lovvalg": {
+              "kode": "ENDL",
+              "term": "Endelig"
+            },
+            "grunnlagstype": {
+              "kode": "IMEDEOS",
+              "term": "Ikke medlem, EØS-avtalen"
+            },
+            "land": {
+              "kode": "SWE",
+              "term": "SVERIGE"
+            },
+            "trygdedekning": {
+              "kode": "Untatt",
+              "term": "Untatt"
+            },
+            "kildedokumenttype": {
+              "kode": "E101",
+              "term": "E101"
+            },
+            "register": "Gosys, Infotrygd, Avgiftssystemet, Lånekassen, ..."
+          }
+        ]
+      }
+    }
+  ]
+}
