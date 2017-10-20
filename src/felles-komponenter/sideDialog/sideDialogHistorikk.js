@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import './sideDialogHistorikk.css';
@@ -14,8 +13,4 @@ const SideDialogHistorikk = () => (
   </div>
 );
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SideDialogHistorikk);
+export default SideDialogHistorikk;

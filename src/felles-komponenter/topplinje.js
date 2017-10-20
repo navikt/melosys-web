@@ -13,7 +13,7 @@ import {
 
 class Topplinje extends Component {
   static propTypes = {
-    saksbehandler: MPT.SaksbehandlerPropType.isRequired,
+    saksbehandler: MPT.Saksbehandler.isRequired,
   };
   static defaultProps = {
     saksbehandler: {

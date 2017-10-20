@@ -1,5 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import './sideDialogDokumenter.css';
@@ -15,8 +14,4 @@ const SideDialogDokumenter = () => (
   </div>
 );
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SideDialogDokumenter);
+export default SideDialogDokumenter;

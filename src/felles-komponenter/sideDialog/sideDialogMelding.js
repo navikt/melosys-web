@@ -8,7 +8,7 @@ import './sideDialogMelding.css';
 class SideDialogMelding extends Component {
   sendMessage = event => {
     event.preventDefault();
-  }
+  };
 
   render() {
     return (

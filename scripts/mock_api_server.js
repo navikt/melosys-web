@@ -1,3 +1,4 @@
+/* eslint-disable */
 const express = require('express');
 const _ = require('underscore');
 const app = express();
@@ -26,6 +27,19 @@ router.post('/henvendelse', function(req, res) {
   console.log('henvendelse',req.body);
   res.json({message:'GOT a POST request:'+JSON.stringify(req.body)})
 });
+
+const fagsaker = (req, res) => {
+  try {
+    const fnr = req.params.fnr && req.params.fnr.toString() || '';
+    const fagsaker = JSON.parse(fs.readFileSync("./scripts/mock_data/fagsaker.json", "utf8"));
+    return res.json(fagsaker);
+  }
+  catch (err) {
+    console.error(err);
+    return res.status(500).send(err);
+  }
+};
+router.get('/fagsaker/:fnr?', fagsaker);
 
 router.get('/nyesaker/:fnr', function (req, res) {
   try {
