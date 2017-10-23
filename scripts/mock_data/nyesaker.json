@@ -1,0 +1,55 @@
+[
+  {
+    "fnr": "01016500543",
+    "kjoenn": "K",
+    "sammensattNavn": "UNNI FOS KVALUY",
+    "periode": {
+      "fom": "16-06-01",
+      "tom": "16-12-31"
+    }
+  },
+  {
+    "fnr": "20039235073",
+    "kjoenn": "K",
+    "sammensattNavn": "KVALUY HANNA MARIA #2",
+    "periode": {
+      "fom": "2013-08-19",
+      "tom": "2015-05-31"
+    }
+  },
+  {
+    "fnr": "01016900733",
+    "kjoenn": "K",
+    "sammensattNavn": "ZIA NAZRIA FOS",
+    "periode": {
+      "fom": "2016-04-01"
+    }
+  },
+  {
+    "fnr": "01016902582",
+    "kjoenn": "K",
+    "sammensattNavn": "HALVORSEN SIGRUN FOS",
+    "periode": {
+      "fom": "2006-12-27",
+      "tom": "2009-05-01"
+    }
+  },
+  {
+    "fnr": "20039235073",
+    "kjoenn": "K",
+    "sammensattNavn": "MONKVIK MONIKA FOS",
+    "periode": {
+      "fom": "2010-06-21",
+      "tom": "2010-08-15"
+    }
+  },
+  {
+    "fnr": "05056335023",
+    "kjoenn": "K",
+    "sammensattNavn": "GRINDE JULIE FOS",
+    "periode": {
+      "fom": "1978-08-19",
+      "tom": "1979-07-15"
+    }
+  }
+]

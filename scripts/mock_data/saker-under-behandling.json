@@ -1,0 +1,24 @@
+[
+  {
+    "brukernavn": "Z991001",
+    "saker": [
+      {
+        "fnr": "01016902582",
+        "kjoenn": "K",
+        "sammensattNavn": "HALVORSEN SIGRUN FOS",
+        "arbeidsforholdIDnav": 16849217
+      }
+    ]
+  },
+  {
+    "brukernavn": "Z990405",
+    "saker": [
+      {
+        "fnr": "20039235073",
+        "kjoenn": "K",
+        "sammensattNavn": "MONKVIK MONIKA FOS",
+        "arbeidsforholdIDnav": 35516487
+      }
+    ]
+  }
+]

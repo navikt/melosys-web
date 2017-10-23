@@ -1,6 +1,14 @@
 import PT from 'prop-types';
 
-export const BostedsAdressePropType = PT.shape({
+
+// Todo: Foreslår å gjøre eksport i BUNN, etter at alle propTypes er definert. Da slipper vi no-use-before-define-issues og kan gruppere litt friere.
+
+const SaksbehandlerPropType = PT.shape({
+  brukernavn: PT.string,
+  navn: PT.string,
+});
+
+const BostedsAdressePropType = PT.shape({
   gateadresse: PT.shape({
     gatenavn: PT.string.isRequired,
     husnummer: PT.number.isRequired,
@@ -11,17 +19,8 @@ export const BostedsAdressePropType = PT.shape({
   land: PT.string.isRequired,
 });
 
-export const ForretningsadressePropType = PT.shape({
-  gateadresse: PT.shape({
-    gatenavn: PT.string.isRequired,
-  }),
-  postnr: PT.string.isRequired,
-  poststed: PT.string.isRequired,
-  land: PT.string.isRequired,
-});
-
-export const PersonPropType = PT.shape({
-  fnr: PT.string.isRequired,
+const PersonPropType = PT.shape({
+  fnr: PT.string,
   sivilstand: PT.string,
   statsborgerskap: PT.string,
   kjoenn: PT.string,
@@ -32,12 +31,12 @@ export const PersonPropType = PT.shape({
   bostedsadresse: BostedsAdressePropType,
 });
 
-export const PeriodePropType = PT.shape({
+const PeriodePropType = PT.shape({
   fom: PT.string,
   tom: PT.string,
 });
 
-export const ArbeidsavtalePropType = PT.shape({
+const ArbeidsavtalePropType = PT.shape({
   arbeidstidsordning: PT.string,
   avloenningstype: PT.string,
   yrke: PT.string,
@@ -48,19 +47,19 @@ export const ArbeidsavtalePropType = PT.shape({
   endringsdatoStillingsprosent: PT.string,
 });
 
-export const OrgnummerNavnPropType = PT.shape({
+const OrgnummerNavnPropType = PT.shape({
   orgnummer: PT.string,
   navn: PT.string,
 });
 
-export const PermisjonOgPermitteringPropType = PT.shape({
+const PermisjonOgPermitteringPropType = PT.shape({
   permisjonsId: PT.number,
   permisjonOgPermittering: PT.string,
   permisjonsprosent: PT.number,
   permisjonsPeriode: PeriodePropType,
 });
 
-export const ArbeidsforholdPropType = PT.shape({
+const ArbeidsforholdPropType = PT.shape({
   arbeidsforholdID: PT.string,
   arbeidsforholdIDnav: PT.number,
   ansettelsesPeriode: PeriodePropType,
@@ -74,9 +73,86 @@ export const ArbeidsforholdPropType = PT.shape({
   arbeidsforholdInnrapportertEtterAOrdningen: PT.bool,
 });
 
-export const OrganisasjonPropType = PT.shape({
+const ForretningsadressePropType = PT.shape({
+  gateadresse: PT.shape({
+    gatenavn: PT.string.isRequired,
+  }),
+  postnr: PT.string.isRequired,
+  poststed: PT.string.isRequired,
+  land: PT.string.isRequired,
+});
+
+const OrganisasjonPropType = PT.shape({
   orgnummer: PT.string,
   navn: PT.string,
   forretningsadresse: ForretningsadressePropType,
   postadresse: PT.string,
+  kontakt: PT.shape({
+    navn: PT.string.isRequired,
+    telefon: PT.string.isRequired,
+    epost: PT.string,
+  }),
 });
+
+const OrganisasjonerPropType = PT.arrayOf(OrganisasjonPropType);
+
+
+const KodeverkPropType = PT.shape({
+  kode: PT.string,
+  term: PT.string,
+});
+const MedlemskapPeriodePropType = PT.shape({
+  id: PT.number,
+  periode: PeriodePropType,
+  meta: PT.shape({
+    opprinneligOpprettetAv: PT.string,
+    sistEndretAv: PT.string,
+    tidspunktOpprinneligOpprettet: PT.string,
+    tidspunktSistEndret: PT.string,
+  }),
+  version: PT.number,
+  dato: PT.shape({
+    registrert: PT.string,
+    besluttet: PT.string,
+  }),
+  status: KodeverkPropType,
+  helsedel: PT.bool,
+  type: KodeverkPropType,
+  lovvalg: KodeverkPropType,
+  grunnlagstype: KodeverkPropType,
+  land: KodeverkPropType,
+  trygdedekning: KodeverkPropType,
+  kildedokumenttype: KodeverkPropType,
+  register: PT.string,
+});
+const MedlemskapPropType = PT.shape({
+  aktorID: PT.string,
+  periodeListe: PT.arrayOf(MedlemskapPeriodePropType),
+});
+
+const BekreftelserPropType = PT.shape({
+  utsendt: PT.bool,
+  ansatt: PT.bool,
+  erstatter: PT.bool,
+  over24m: PT.bool,
+  arbeidsgiveravgift: PT.bool,
+  trygdeavgift: PT.shape({
+    trukket: PT.bool,
+    tom: PT.string,
+  }),
+});
+export {
+  SaksbehandlerPropType as Saksbehandler,
+  BostedsAdressePropType as BostedsAdresse,
+  PersonPropType as Person,
+  PeriodePropType as Periode,
+  ArbeidsavtalePropType as Arbeidsavtale,
+  OrgnummerNavnPropType as OrgnummerNavn,
+  PermisjonOgPermitteringPropType as PermisjonOgPermittering,
+  ArbeidsforholdPropType as Arbeidsforhold,
+  OrganisasjonPropType as Organisasjon,
+  OrganisasjonerPropType as Organisasjoner,
+  MedlemskapPeriodePropType as MedlemskapPeriode,
+  MedlemskapPropType as Medlemskap,
+  BekreftelserPropType as Bekreftelser,
+};

@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import * as Api from './api';
-import { STATUS, doThenDispatch } from './utils';
+import * as Api from '../services/api';
+import { STATUS, doThenDispatch } from '../services/utils';
 
 // Actions
 export const OK = 'saksbehandler/OK';
@@ -33,11 +33,9 @@ export function hentSaksbehandler() {
     PENDING,
   });
 }
-// selector
-const getSaksbehandler = state => state.saksbehandler.data;
 
-// reselect function
-export const getSaksbehandlerState = createSelector(
-  [getSaksbehandler],
+// selector
+export const SaksbehandlerSelector = createSelector(
+  state => state.saksbehandler.data,
   saksbehandler => saksbehandler
 );

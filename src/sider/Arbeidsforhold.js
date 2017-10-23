@@ -7,14 +7,14 @@ import AlertStripe from 'nav-frontend-alertstriper';
 import { Systemtittel } from 'nav-frontend-typografi';
 import moment from 'moment';
 import 'moment/locale/nb';
-import { STATUS } from './ducks/utils';
+import { STATUS } from '../services/utils';
 import {
   hentSaksopplysninger,
   PersonSelector,
   ArbeidsforholdSelector,
-} from './ducks/saksopplysninger';
+} from '../ducks/saksopplysninger';
 import './arbeidsforhold.css';
-import * as MPT from './proptypes';
+import * as MPT from '../proptypes';
 
 const datoFormat = dato => (
   moment(dato).format('DD MMM YYYY')
@@ -51,7 +51,7 @@ const ArbeidsforholdRad = ({ arbeidsforhold }) => {
 };
 
 ArbeidsforholdRad.propTypes = {
-  arbeidsforhold: MPT.ArbeidsforholdPropType.isRequired,
+  arbeidsforhold: MPT.Arbeidsforhold.isRequired,
 };
 
 const ArbeidsforholdTabell = ({ arbeidsforhold }) => {
@@ -76,7 +76,7 @@ const ArbeidsforholdTabell = ({ arbeidsforhold }) => {
   );
 };
 ArbeidsforholdTabell.propTypes = {
-  arbeidsforhold: PT.arrayOf(MPT.ArbeidsforholdPropType).isRequired,
+  arbeidsforhold: PT.arrayOf(MPT.Arbeidsforhold).isRequired,
 };
 
 const gateAdresse = bostedsadresse => {
@@ -105,15 +105,15 @@ const BostedsAdresse = ({ bostedsadresse, bostedsadresse: { postnr }, bostedsadr
 };
 
 BostedsAdresse.propTypes = {
-  bostedsadresse: MPT.BostedsAdressePropType.isRequired,
+  bostedsadresse: MPT.BostedsAdresse.isRequired,
 };
 
 class Arbeidsforhold extends Component {
   static propTypes = {
     match: PT.any.isRequired,
     hentSaksopplysninger: PT.func.isRequired,
-    person: MPT.PersonPropType.isRequired,
-    arbeidsforhold: PT.arrayOf(MPT.ArbeidsforholdPropType),
+    person: MPT.Person.isRequired,
+    arbeidsforhold: PT.arrayOf(MPT.Arbeidsforhold),
     status: PT.string,
   };
 

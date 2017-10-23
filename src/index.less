@@ -4,15 +4,6 @@
 @frontendModuler: '@{nodeModulesPath}nav-frontend-';
 @indexFil: '-style/src/index';
 
-body {
-  background-color: #efefef;
-  color: #3e3832;
-  font-family: Arial, sans-serif;
-  line-height: 1.42857143;
-  margin: 0px;
-  padding: 0px;
-}
-
 @import '@{frontendModuler}typografi@{indexFil}';
 @import '@{frontendModuler}chevron@{indexFil}';
 @import '@{frontendModuler}alertstriper@{indexFil}';
@@ -23,3 +14,34 @@ body {
 @import '@{frontendModuler}ekspanderbartpanel@{indexFil}';
 @import '@{frontendModuler}tabell@{indexFil}';
 @import '@{frontendModuler}alertstriper@{indexFil}';
+@import '@{frontendModuler}grid@{indexFil}';
+
+//Disse må importeres separat siden de ikke inneholder src/index.less.
+@import '@{frontendModuler}lenker-style/src/lenker-style';
+@import '@{frontendModuler}snakkeboble-style/src/snakkeboble-style';
+
+@import './constants';
+
+
+/** Denne løsningen har en avhengighet av nav-frontend-typografi-* for å hente inn
+ * riktig typografi/fonter i tillegg til riktig base fontstørrelse (se mixin .typo-normal-mixin());
+ */
+
+body {
+  margin: 0px;
+  padding: 0px;
+
+  background-color: @white-off;
+  color: @font-color;
+
+  .typo-normal-mixin();
+  line-height: 1.42857143;
+}
+
+section {
+  margin:0.5em 0;
+}
+
+.panelSeksjon {
+  margin:1em 0;
+}
