@@ -32,23 +32,23 @@ DatoOmrade.propTypes = {
  *
  * @constructor
  */
-function MedlemskapSeksjon(seksjon) {
-  const { periode, dato } = seksjon;
+function MedlemskapSeksjon() {
+  // const { periode, dato } = seksjon;
   return (
     <div className="medlemskap__enkelt" aria-label="Enkeltmedlemsskap">
       <Nav.Row>
         {/* START DATO RANGE */}
         <Nav.Column xs="5">
           <Nav.Container fluid>
-            <DatoOmrade tittel1="Fra" dato1={periode.fom} tittel2="Til" dato2={periode.tom} />
-            <DatoOmrade tittel1="Registrert" dato1={dato.registrert} tittel2="Besluttet" dato2={dato.besluttet} />
+            <DatoOmrade tittel1="Fra" dato1="2010-10-12" tittel2="Til" dato2="2015-10-12" />
+            <DatoOmrade tittel1="Registrert" dato1="2010-10-14" tittel2="Besluttet" dato2="2010-10-28" />
           </Nav.Container>
         </Nav.Column>
         {/* SLUTT DATO RANGE */}
 
         {/* START DETALJER */}
         <Nav.Column xs="7">
-          <dl>
+          <dl className="medlemskap__detaljer">
             <dt>Lovvalgsland:</dt>
             <dd>Norge</dd>
             <dt>Periodetype:</dt>
@@ -70,6 +70,7 @@ function MedlemskapSeksjon(seksjon) {
     </div>
   );
 }
+
 MedlemskapSeksjon.propTypes = {
   seksjon: MPT.MedlemskapPeriode.isRequired,
 };
