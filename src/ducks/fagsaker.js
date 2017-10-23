@@ -64,12 +64,12 @@ export const OrganisasjonerSelector = createSelector(
   organisasjoner => organisasjoner
 );
 
-export const ArbeidsforholdSelector = createSelector(
+export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].arbeidsforhold : []),
   arbeidsforhold => arbeidsforhold
 );
 
-export const ArbeidsforholdetSelector = createSelector(
+export const ArbeidsforholdSelector = createSelector(
   (state, arbeidsforholdID) => arbeidsforholdID,
   state => state.fagsaker.data.behandlinger[0].arbeidsforhold || [],
   (arbeidsforholdID, arbeidsforhold) =>
@@ -84,9 +84,9 @@ export const ArbeidsforholdetSelector = createSelector(
  */
 export const OrganisasjonSelector = createSelector(
   state => OrganisasjonerSelector(state),
-  state => ArbeidsforholdSelector(state),
-  (organisasjoner, arbeidsforhold) => {
-    const alleRelevanteOrgnummer = arbeidsforhold.reduce((samling, element) => [...samling, element.arbeidsgiver.orgnummer], []);
+  state => ArbeidsforholdeneSelector(state),
+  (organisasjoner, arbeidsforholdene) => {
+    const alleRelevanteOrgnummer = arbeidsforholdene.reduce((samling, element) => [...samling, element.arbeidsgiver.orgnummer], []);
     const alleRelevanteOrganisasjoner = organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnummer));
     return alleRelevanteOrganisasjoner;
   }

@@ -8,7 +8,7 @@ import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurd
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
-import Arbeidsforhold from '../felles-komponenter/arbeidsforhold';
+import Arbeidsforholdene from '../felles-komponenter/arbeidsforholdene';
 import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
@@ -18,7 +18,7 @@ import {
   PersonSelector,
   OrganisasjonSelector,
   MedlemsskapSelector,
-  ArbeidsforholdSelector,
+  ArbeidsforholdeneSelector,
 } from '../ducks/fagsaker';
 
 import * as MPT from '../proptypes';
@@ -30,14 +30,14 @@ class Saksbehandling extends Component {
     person: MPT.Person,
     organisasjoner: MPT.Organisasjoner,
     medlemsskap: MPT.Medlemskap,
-    arbeidsforhold: MPT.Arbeidsforhold,
+    arbeidsforholdene: MPT.Arbeidsforholdene,
   }
 
   static defaultProps = {
     person: {},
     organisasjoner: [],
     medlemsskap: {},
-    arbeidsforhold: [],
+    arbeidsforholdene: [],
   };
 
   componentDidMount() {
@@ -46,7 +46,7 @@ class Saksbehandling extends Component {
   }
 
   render() {
-    const { person, organisasjoner, medlemsskap, arbeidsforhold } = this.props;
+    const { person, organisasjoner, medlemsskap, arbeidsforholdene } = this.props;
     if (!person || !person.fnr) {
       return null;
     }
@@ -58,7 +58,7 @@ class Saksbehandling extends Component {
               <Vilkarsvurdering />
               <Personopplysninger person={person} />
               <Tilleggsopplysninger />
-              {arbeidsforhold && <Arbeidsforhold arbeidsforhold={arbeidsforhold} />}
+              {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
               {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
               {medlemsskap && <Medlemskap medlemsskap={medlemsskap} />}
             </Nav.Column>
@@ -78,7 +78,7 @@ const mapStateToProps = state => ({
   person: PersonSelector(state),
   organisasjoner: OrganisasjonSelector(state),
   medlemsskap: MedlemsskapSelector(state),
-  arbeidsforhold: ArbeidsforholdSelector(state),
+  arbeidsforholdene: ArbeidsforholdeneSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
