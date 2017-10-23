@@ -18,12 +18,12 @@ node {
             // sh('ls -la')
             sh (returnStdout: true, script: 'npm install')
         }
+        stage('Test') {
+            echo('CI=true npm test')
+        }
         stage('Build') {
             echo('Build...')
             sh(returnStdout: true, script: 'npm run build')
-        }
-        stage('Test') {
-            echo('CI=true npm test')
         }
         stage('Deploy') {
             echo('TODO Deploy')
