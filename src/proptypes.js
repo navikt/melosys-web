@@ -43,7 +43,7 @@ const ArbeidsavtalePropType = PT.shape({
   avtaltArbeidstimerPerUke: PT.number,
   stillingsprosent: PT.number,
   sisteLoennsendringsdato: PT.string,
-  beregnetAntallTimerPrUke: PT.number,
+  beregnetAntallTimerPrUke: PT.string,
   endringsdatoStillingsprosent: PT.string,
 });
 
@@ -72,6 +72,8 @@ const ArbeidsforholdPropType = PT.shape({
   opplysningspliktig: OrgnummerNavnPropType,
   arbeidsforholdInnrapportertEtterAOrdningen: PT.bool,
 });
+
+const ArbeidsforholdenePropType = PT.arrayOf(ArbeidsforholdPropType);
 
 const ForretningsadressePropType = PT.shape({
   gateadresse: PT.shape({
@@ -141,6 +143,7 @@ const BekreftelserPropType = PT.shape({
     tom: PT.string,
   }),
 });
+
 export {
   SaksbehandlerPropType as Saksbehandler,
   BostedsAdressePropType as BostedsAdresse,
@@ -150,6 +153,7 @@ export {
   OrgnummerNavnPropType as OrgnummerNavn,
   PermisjonOgPermitteringPropType as PermisjonOgPermittering,
   ArbeidsforholdPropType as Arbeidsforhold,
+  ArbeidsforholdenePropType as Arbeidsforholdene,
   OrganisasjonPropType as Organisasjon,
   OrganisasjonerPropType as Organisasjoner,
   MedlemskapPeriodePropType as MedlemskapPeriode,
