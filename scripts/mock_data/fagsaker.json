@@ -40,70 +40,80 @@
         }
       },
       "inntekt": {
-        "sluttvederlag": {
-          "belop": "",
-          "valuta": "",
-          "periode": {
-            "fom": "",
-            "tom": ""
-          }
+        "ident": {
+          "personIdent": "16016939696"
         },
-        "normal": [
-          {
-            "arbeidsgiver": {
-              "navn": "BERGENSFINANS AS",
-              "orgnummer": "123456789"
-            },
-            "periode": {
-              "fom": "2010-04-03",
-              "tom": ""
-            }
-          },
-          {
-            "arbeidsgiver": {
-              "navn": "REGNSKAPSFIRMA AS",
-              "orgnummer": "345678912"
-            },
-            "periode": {
-              "fom": "2000-08-22",
-              "tom": "2010-03-20"
-            }
-          },
-          {
-            "arbeidsgiver": {
-              "navn": "KREDITTFIRMAET DA",
-              "orgnummer": "223344559"
-            },
-            "periode": {
-              "fom": "1990-06-01",
-              "tom": "2000-08-01"
+        "arbeidsInntektIdent": {
+          "arbeidsInntektMaaned": {
+            "aarMaaned": "2017-06",
+            "arbeidsInntektInformasjon": {
+              "inntektListe": [
+                {
+                  "beloep": "25000",
+                  "fordel": "kontantytelse",
+                  "inntektskilde": "A-ordningen",
+                  "inntektsperiodetype": "Maaned",
+                  "inntektsstatus": "LoependeInnrapportert",
+                  "levereringstidspunkt": "2017-10-06T12:52:58.993+02:00",
+                  "utbetaltIPeriode": "2017-06",
+                  "opplysningspliktig": {
+                    "orgnummer": "873152362"
+                  },
+                  "virksomhet": {
+                    "orgnummer": "873152362"
+                  },
+                  "tilleggsinformasjon": {
+                    "kategori": "Periode",
+                    "tilleggsinformasjonDetaljer": {
+                      "etterbetalingsperiode": {
+                        "startDato": "2017-03-01",
+                        "sluttDato": "2017-03-31"
+                      }
+                    }
+                  },
+                  "inntektsmottaker": {
+                    "personIdent": "16016939696"
+                  },
+                  "inngaarIGrunnlagForTrekk": "true",
+                  "utloeserArbeidsgiveravgift": "true",
+                  "informasjonsstatus": "InngaarAlltid",
+                  "beskrivelse": "fastloenn"
+                },
+                {
+                  "beloep": "25000",
+                  "fordel": "kontantytelse",
+                  "inntektskilde": "A-ordningen",
+                  "inntektsperiodetype": "Maaned",
+                  "inntektsstatus": "LoependeInnrapportert",
+                  "levereringstidspunkt": "2017-10-06T12:52:58.999+02:00",
+                  "utbetaltIPeriode": "2017-06",
+                  "opplysningspliktig": {
+                    "orgnummer": "873152362"
+                  },
+                  "virksomhet": {
+                    "orgnummer": "873152362"
+                  },
+                  "tilleggsinformasjon": {
+                    "kategori": "AldersUfoereEtterlatteAvtalefestetOgKrigspensjon",
+                    "tilleggsinformasjonDetaljer": {
+                      "tidsrom": {
+                        "startDato": "2017-04-01",
+                        "sluttDato": "2017-04-30"
+                      }
+                    }
+                  },
+                  "inntektsmottaker": {
+                    "personIdent": "16016939696"
+                  },
+                  "inngaarIGrunnlagForTrekk": "true",
+                  "utloeserArbeidsgiveravgift": "true",
+                  "informasjonsstatus": "InngaarAlltid",
+                  "beskrivelse": "fastloenn"
+                }
+              ]
             }
           }
-        ],
-        "utdanning": [
-          {
-            "arbeidsgiver": {
-              "navn": "KREDITTFIRMAET DA",
-              "orgnummer": "223344559"
-            },
-            "periode": {
-              "fom": "1985-08-02",
-              "tom": "1990-06-01"
-            }
-          }
-        ],
-        "frilans": [
-          {
-            "arbeidsgiver": {
-              "navn": "FREELANCEFINANS AS",
-              "orgnummer": "776655666"
-            },
-            "periode": {
-              "fom": "2010-05-06",
-              "tom": "2010-12-31"
-            }
-          }
-        ]
+        }
       },
       "arbeidsforhold": [
         {
@@ -253,10 +263,16 @@
             "poststed": "BERGEN",
             "land": "NORGE"
           },
-          "postadresse": "Postboks 1234 5000 BERGEN NORGE"
+          "postadresse": "Postboks 1234 5000 BERGEN NORGE",
+          "kontakt": {
+            "navn": "Ola Nordmann",
+            "telefon": "+47 12 34 56 78",
+            "epost": "ola.nordmann@arbeidsgiveren.no"
+          }
         }
       ],
       "soknaden": {
+        "tilleggsopplysninger": "Jeg håper denne søknaden kan behandles så fort som mulig. I lys av en tverrfaglig oppgaveløsning spores kompetansehevingen med henblikk på resultatoppnåelsen. Etter en totalvurdering av en økt målsetting forankres risikofaktorene i relasjon til beskaffenheten. I forhold til en bærekraftig implementering tilgjengeliggjøres forankringen innenfor rammen av ressurssituasjonen. Under forutsetning av en tiltagende avveining identifiseres relasjonene i forlengelsen av konseptet.",
         "inntekt": {
           "naringsinntekt": {
             "innlands": {
