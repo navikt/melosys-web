@@ -9,7 +9,7 @@ import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
 import Arbeidsforhold from '../felles-komponenter/arbeidsforhold';
-import OrganisasjonerNorge from '../felles-komponenter/arbeidsgiverNorge';
+import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
@@ -28,14 +28,14 @@ class Saksbehandling extends Component {
     hentFagsaker: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
-    organisasjon: MPT.Organisasjon,
+    organisasjoner: MPT.Organisasjoner,
     medlemsskap: MPT.Medlemskap,
     arbeidsforhold: MPT.Arbeidsforhold,
   }
 
   static defaultProps = {
     person: {},
-    organisasjon: {},
+    organisasjoner: [],
     medlemsskap: {},
     arbeidsforhold: [],
   };
@@ -46,7 +46,7 @@ class Saksbehandling extends Component {
   }
 
   render() {
-    const { person, organisasjon, medlemsskap, arbeidsforhold } = this.props;
+    const { person, organisasjoner, medlemsskap, arbeidsforhold } = this.props;
     if (!person || !person.fnr) {
       return null;
     }
@@ -56,11 +56,10 @@ class Saksbehandling extends Component {
           <Nav.Row>
             <Nav.Column xs="7">
               <Vilkarsvurdering />
-              <Arbeidsforhold />
               <Personopplysninger person={person} />
               <Tilleggsopplysninger />
               {arbeidsforhold && <Arbeidsforhold arbeidsforhold={arbeidsforhold} />}
-              {organisasjon && <OrganisasjonerNorge organisasjon={organisasjon} />}
+              {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
               {medlemsskap && <Medlemskap medlemsskap={medlemsskap} />}
             </Nav.Column>
             <Nav.Column xs="5">
@@ -75,15 +74,12 @@ class Saksbehandling extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  const mockOrgnummer = 123456789;
-  return {
-    person: PersonSelector(state),
-    organisasjon: OrganisasjonSelector(state, mockOrgnummer),
-    medlemsskap: MedlemsskapSelector(state),
-    arbeidsforhold: ArbeidsforholdSelector(state),
-  };
-};
+const mapStateToProps = state => ({
+  person: PersonSelector(state),
+  organisasjoner: OrganisasjonSelector(state),
+  medlemsskap: MedlemsskapSelector(state),
+  arbeidsforhold: ArbeidsforholdSelector(state),
+});
 
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: fnr => dispatch(hentFagsaker(fnr)),
