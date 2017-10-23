@@ -87,6 +87,11 @@ const OrganisasjonPropType = PT.shape({
   navn: PT.string,
   forretningsadresse: ForretningsadressePropType,
   postadresse: PT.string,
+  kontakt: PT.shape({
+    navn: PT.string.isRequired,
+    telefon: PT.string.isRequired,
+    epost: PT.string,
+  }),
 });
 
 const OrganisasjonerPropType = PT.arrayOf(OrganisasjonPropType);

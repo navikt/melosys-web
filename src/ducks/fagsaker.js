@@ -60,12 +60,12 @@ export const MedlemsskapSelector = createSelector(
   medlemsskap => medlemsskap
 );
 export const OrganisasjonerSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].organisasjoner : state.fagsaker.data),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].organisasjoner : []),
   organisasjoner => organisasjoner
 );
 
 export const ArbeidsforholdSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].arbeidsforhold : state.fagsaker.data),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].arbeidsforhold : []),
   arbeidsforhold => arbeidsforhold
 );
 
@@ -78,9 +78,16 @@ export const ArbeidsforholdetSelector = createSelector(
     )
 );
 
+/** Finner alle organisasjonsnummer som er listet i arbeidsforhold.
+ * Det er range i arbeidsforhold som avgjør hvilke organisasjoner som selectoren
+ * regner som relevante å vise.
+ */
 export const OrganisasjonSelector = createSelector(
-  (state, orgnummer) => orgnummer,
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].organisasjoner : []),
-  (orgnummer, organisasjoner) =>
-    organisasjoner.find(item => item.orgnummer === orgnummer)
+  state => OrganisasjonerSelector(state),
+  state => ArbeidsforholdSelector(state),
+  (organisasjoner, arbeidsforhold) => {
+    const alleRelevanteOrgnummer = arbeidsforhold.reduce((samling, element) => [...samling, element.arbeidsgiver.orgnummer], []);
+    const alleRelevanteOrganisasjoner = organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnummer));
+    return alleRelevanteOrganisasjoner;
+  }
 );
