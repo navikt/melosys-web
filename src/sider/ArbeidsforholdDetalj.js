@@ -7,15 +7,15 @@ import moment from 'moment';
 import 'moment/locale/nb';
 import Ekspanderbartpanel from 'nav-frontend-ekspanderbartpanel';
 import './arbeidsforholdDetalj.css';
-import JustChildren from './just-children';
+import JustChildren from '../just-children';
 
 import {
   hentSaksopplysninger,
   PersonSelector,
   ArbeidsforholdetSelector,
   OrganisasjonSelectorByNavID,
-} from './ducks/saksopplysninger';
-import * as MPT from './proptypes';
+} from '../ducks/saksopplysninger';
+import * as MPT from '../proptypes';
 
 const uuid = require('uuid/v5');
 const queryString = require('query-string');
@@ -46,7 +46,7 @@ const Arbeidsforhold = ({ arbeidsforhold }) => {
   );
 };
 Arbeidsforhold.propTypes = {
-  arbeidsforhold: MPT.ArbeidsforholdPropType.isRequired,
+  arbeidsforhold: MPT.Arbeidsforhold.isRequired,
 };
 
 const ArbeidsAvtaleRad = ({ arbeidsavtale, antall }) => {
@@ -67,7 +67,7 @@ const ArbeidsAvtaleRad = ({ arbeidsavtale, antall }) => {
   );
 };
 ArbeidsAvtaleRad.propTypes = {
-  arbeidsavtale: MPT.ArbeidsavtalePropType.isRequired,
+  arbeidsavtale: MPT.Arbeidsavtale.isRequired,
   antall: PT.number.isRequired,
 };
 
@@ -115,7 +115,7 @@ const PPRow = ({ PermisjonOgPermittering }) => {
 };
 
 PPRow.propTypes = {
-  PermisjonOgPermittering: MPT.PermisjonOgPermitteringPropType.isRequired,
+  PermisjonOgPermittering: MPT.PermisjonOgPermittering.isRequired,
 };
 
 const PermisjonOgPermittering = ({ arbeidsforhold }) => {
@@ -132,7 +132,7 @@ const PermisjonOgPermittering = ({ arbeidsforhold }) => {
   return <Ekspanderbartpanel tittel={tittel}>{rows}</Ekspanderbartpanel>;
 };
 PermisjonOgPermittering.propTypes = {
-  arbeidsforhold: MPT.ArbeidsforholdPropType.isRequired,
+  arbeidsforhold: MPT.Arbeidsforhold.isRequired,
 };
 
 const gateAdresse = bostedsadresse => {
@@ -140,7 +140,7 @@ const gateAdresse = bostedsadresse => {
     gateadresse: { gatenavn, husnummer, husbokstav },
   } = bostedsadresse;
   const gnavn = gatenavn ? `${gatenavn} ` : '';
-  const hnr = husnummer ? `${husnummer} ` : '';
+  const hnr = husnummer ? `${husnummer}` : '';
   const hb = husbokstav ? `${husbokstav} ` : '';
   return (
     `${gnavn}${hnr}${hb}`
@@ -192,7 +192,7 @@ const Person = ({ person }) => {
   );
 };
 Person.propTypes = {
-  person: MPT.PeriodePropType.isRequired,
+  person: MPT.Person.isRequired,
 };
 const forretningsAdresse = forretningsadresse => {
   const { postnr, poststed, gateadresse: { gatenavn } } = forretningsadresse;
@@ -200,7 +200,7 @@ const forretningsAdresse = forretningsadresse => {
   const pnr = postnr ? `${postnr} ` : '';
   const psted = poststed ? `${poststed} ` : '';
   return (
-    `${gnavn}${pnr}${psted}`
+    `${gnavn}${pnr}${psted}`.toUpperCase()
   );
 };
 const Virksomhet = ({ organisasjon }) => {
@@ -233,9 +233,9 @@ class ArbeidsforholdDetalj extends React.Component {
   static propTypes = {
     match: PT.any.isRequired,
     hentSaksopplysninger: PT.func.isRequired,
-    person: MPT.PersonPropType.isRequired,
-    organisasjon: MPT.OrganisasjonPropType.isRequired,
-    arbeidsforholdet: MPT.ArbeidsforholdPropType.isRequired,
+    person: MPT.Person.isRequired,
+    organisasjon: MPT.Organisasjon.isRequired,
+    arbeidsforholdet: MPT.Arbeidsforhold.isRequired,
   };
   static defaultProps = {
     person: {
@@ -352,6 +352,5 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => ({
   hentSaksopplysninger: fnr => dispatch(hentSaksopplysninger(fnr)),
 });
-export default connect(mapStateToProps, mapDispatchToProps)(
-  ArbeidsforholdDetalj
-);
+
+export default connect(mapStateToProps, mapDispatchToProps)(ArbeidsforholdDetalj);

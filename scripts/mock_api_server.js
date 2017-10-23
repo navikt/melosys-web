@@ -1,3 +1,4 @@
+/* eslint-disable */
 const express = require('express');
 const _ = require('underscore');
 const app = express();
@@ -25,6 +26,79 @@ router.post('/henvendelse', function(req, res) {
   console.log('content-type', req.get('content-type'));
   console.log('henvendelse',req.body);
   res.json({message:'GOT a POST request:'+JSON.stringify(req.body)})
+});
+
+const fagsaker = (req, res) => {
+  try {
+    const fnr = req.params.fnr && req.params.fnr.toString() || '';
+    const fagsaker = JSON.parse(fs.readFileSync("./scripts/mock_data/fagsaker.json", "utf8"));
+    return res.json(fagsaker);
+  }
+  catch (err) {
+    console.error(err);
+    return res.status(500).send(err);
+  }
+};
+router.get('/fagsaker/:fnr?', fagsaker);
+
+router.get('/nyesaker/:fnr', function (req, res) {
+  try {
+    const fnr = req.params.fnr.toString();
+    const nyesaker = JSON.parse(fs.readFileSync("./scripts/mock_data/nyesaker.json", "utf8"));
+    const sak = _.filter(nyesaker, function(item){
+      return item.fnr === fnr;
+    });
+
+    if (sak && sak.length) {
+      return res.json(sak);
+    }
+    else {
+      return res.status(404).send("Not found");
+    }
+  } catch (err) {
+    res.status(500).send(err);
+    console.log(err)
+  }
+});
+
+router.get('/sakerbehandles/:brukernavn', function (req, res) {
+  try {
+    const brukernavn = req.params.brukernavn;
+    const sakerbehandles = JSON.parse(fs.readFileSync("./scripts/mock_data/saker-under-behandling.json", "utf8"));
+    const data = _.find(sakerbehandles, function(item){
+      return item.brukernavn === brukernavn;
+    });
+
+    if (data && data.saker.length) {
+      return res.json(data.saker);
+    }
+    else {
+      return res.status(404).send("Not found");
+    }
+  } catch (err) {
+    res.status(500).send(err);
+    console.log(err)
+  }
+});
+
+router.get('/tidligeresaker/:brukernavn', function (req, res) {
+  try {
+    const brukernavn = req.params.brukernavn;
+    const tidligeresaker = JSON.parse(fs.readFileSync("./scripts/mock_data/tidligere-saker-under-behandling.json", "utf8"));
+    const data = _.find(tidligeresaker, function(item){
+      return item.brukernavn === brukernavn;
+    });
+
+    if (data && data.saker.length) {
+      return res.json(data.saker);
+    }
+    else {
+      return res.status(404).send("Not found");
+    }
+  } catch (err) {
+    res.status(500).send(err);
+    console.log(err)
+  }
 });
 
 router.get('/saksopplysninger/:fnr', function (req, res) {

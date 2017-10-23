@@ -1,0 +1,50 @@
+@import '../../../constants';
+
+.stegVelger__fane {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  background-color: @white;
+
+  &:before {
+    position:absolute;
+    content: '';
+    width: 30px;
+    height: 30px;
+    top:-30px;
+    left:0.5em;
+    border-right:15px solid transparent;
+    border-left:15px solid transparent;
+    border-bottom:15px solid #ffffff;
+  }
+
+  .fane__nesteknapp {
+    display: flex;
+    align-self: flex-end;
+  }
+
+  &.steg0 {
+    &:before {
+      transform:translateX(0);
+    }
+  }
+
+  &.steg1 {
+    &:before {
+      transform:translateX(45px);
+    }
+  }
+
+  &.steg2 {
+    &:before {
+      transform:translateX(90px);
+    }
+  }
+
+  &.steg3 {
+    &:before {
+      transform:translateX(135px);
+    }
+  }
+}
+
