@@ -4,7 +4,7 @@ node {
     tool name: 'recent node', type: 'nodejs'
     env.NODEJS_HOME = "${tool 'recent node'}"
     env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
-    echo('${env.PATH}')
+    echo("${env.PATH}")
 
     try {
         stage('Checkout') {
@@ -14,8 +14,8 @@ node {
 
         stage('npm install ') {
             echo('npm install')
-            sh('rm -rf node_modules')
-            sh('ls -la')
+            // sh('rm -rf node_modules')
+            // sh('ls -la')
             sh (returnStdout: true, script: 'npm install')
         }
         stage('Build') {
