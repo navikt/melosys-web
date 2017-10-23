@@ -16,7 +16,7 @@ node('develop') {
             echo('npm install')
             sh('rm -rf node_modules')
             sh('ls -la')
-            sh (eturnStdout: true, script: 'npm install')
+            sh (returnStdout: true, script: 'npm install')
         }
         stage('Build') {
             echo('Build...')
