@@ -41,7 +41,7 @@ function OrganisasjonerNorge ({ organisasjoner }) {
   /* const { orgnummer, navn, forretningsadresse: {gateadresse: {postnr, poststed, land}}, postadresse } = organisasjon; */
   return (
     <div className="organisasjonerNorge panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Arbeidsgiver i Norge" apen>
+      <Nav.EkspanderbartPanel tittel="Arbeidsgiver i Norge">
         <Nav.Container fluid>
           {organisasjoner.map(item => <EnkeltOrganisasjon key={uuid()} organisasjon={item} />)}
         </Nav.Container>
