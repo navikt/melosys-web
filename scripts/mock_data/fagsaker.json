@@ -253,7 +253,12 @@
             "poststed": "BERGEN",
             "land": "NORGE"
           },
-          "postadresse": "Postboks 1234 5000 BERGEN NORGE"
+          "postadresse": "Postboks 1234 5000 BERGEN NORGE",
+          "kontakt": {
+            "navn": "Ola Nordmann",
+            "telefon": "+47 12 34 56 78",
+            "epost": "ola.nordmann@arbeidsgiveren.no"
+          }
         }
       ],
       "soknaden": {
