@@ -1,6 +1,6 @@
 #! groovy
 
-node('develop') {
+node {
     tool name: 'recent node', type: 'nodejs'
     env.NODEJS_HOME = "${tool 'recent node'}"
     env.PATH="${env.NODEJS_HOME}/bin:${env.PATH}"
