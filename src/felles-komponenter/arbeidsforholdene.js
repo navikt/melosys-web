@@ -27,11 +27,10 @@ Arbeidsavtalen.propTypes = {
   avtalen: MPT.Arbeidsavtale.isRequired,
 };
 
-
 /** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
  * kun av komponenten Arbeidsforholdene.
  *
- * @param props.arbeidsforhld Object Et objekt med det aktuelle arbeidsforholdet.
+ * @param props.arbeidsforhold Object Et objekt med det aktuelle arbeidsforholdet.
  * @returns {XML}
  */
 function Arbeidsforhold({ arbeidsforhold }) {
