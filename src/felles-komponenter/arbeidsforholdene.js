@@ -66,42 +66,45 @@ function Arbeidsforhold({ arbeidsforhold }) {
     arbeidstidsordning,
     arbeidsforholdstype,
     arbeidsavtale,
+    arbeidsgiver,
   } = arbeidsforhold;
 
   return (
-    <div className="arbeidsforholdene panelSeksjon">
-      <Nav.Row className="arbeidsforhold__enkelt">
-        {/* START DATO RANGE */}
-        <Nav.Column xs="5">
-          <Nav.Container fluid>
-            <DatoOmrade tittel1="Fra" dato1={ansettelsesPeriode.fom} tittel2="Til" dato2={ansettelsesPeriode.tom || '-'} />
-            <DatoOmrade tittel1="Registrert" dato1={registrertDato} tittel2="Besluttet" dato2={bekreftetDato} />
-            <dl className="arbeidsforhold__detaljer">
-              <dt>Ordning:</dt>
-              <dd>{ordning}</dd>
-            </dl>
-          </Nav.Container>
-        </Nav.Column>
-        {/* SLUTT DATO RANGE */}
-
-        {/* START DETALJER */}
-        <Nav.Column xs="7">
-          <dl className="arbeidsforhold__detaljer">
-            <dt>Yrkeskode:</dt>
-            <dd>{yrkeskode}</dd>
-            <dt>Yrke:</dt>
-            <dd>{yrke}</dd>
-            <dt>Arbeidstidsordning:</dt>
-            <dd>{arbeidstidsordning}</dd>
-            <dt>Type:</dt>
-            <dd>{arbeidsforholdstype}</dd>
-          </dl>
-          <dl className="arbeidsforhold__detaljer">
-            { arbeidsavtale.map(avtalen => <Arbeidsavtalen key={uuid()} avtalen={avtalen} />)}
-          </dl>
-        </Nav.Column>
-        {/* SLUTT DETALJER */}
-      </Nav.Row>
+    <div className="panelSeksjon">
+      <Nav.EkspanderbartPanel tittel={`Arbeidsforhold: ${arbeidsgiver.navn}`}>
+        <Nav.Row className="arbeidsforhold__enkelt">
+          <div className="arbeidsforholdene panelSeksjon">
+            <Nav.Row className="arbeidsforhold__enkelt">
+              {/* START DATO RANGE */}
+              <Nav.Column xs="5">
+                <Nav.Container fluid>
+                  <DatoOmrade tittel1="Fra" dato1={ansettelsesPeriode.fom} tittel2="Til" dato2={ansettelsesPeriode.tom || '-'} />
+                  <DatoOmrade tittel1="Registrert" dato1={registrertDato} tittel2="Besluttet" dato2={bekreftetDato} />
+                  <dl className="arbeidsforhold__detaljer">
+                    <dt>Ordning:</dt>
+                    <dd>{ordning}</dd>
+                  </dl>
+                </Nav.Container>
+              </Nav.Column>
+              <Nav.Column xs="7">
+                <dl className="arbeidsforhold__detaljer">
+                  <dt>Yrkeskode:</dt>
+                  <dd>{yrkeskode}</dd>
+                  <dt>Yrke:</dt>
+                  <dd>{yrke}</dd>
+                  <dt>Arbeidstidsordning:</dt>
+                  <dd>{arbeidstidsordning}</dd>
+                  <dt>Type:</dt>
+                  <dd>{arbeidsforholdstype}</dd>
+                </dl>
+                <dl className="arbeidsforhold__detaljer">
+                  { arbeidsavtale.map(avtalen => <Arbeidsavtalen key={uuid()} avtalen={avtalen} />)}
+                </dl>
+              </Nav.Column>
+            </Nav.Row>
+          </div>
+        </Nav.Row>
+      </Nav.EkspanderbartPanel>
     </div>
   );
 }
@@ -119,12 +122,8 @@ Arbeidsforhold.propTypes = {
  */
 function Arbeidsforholdene ({ arbeidsforholdene }) {
   return (
-    <div className="arbeidsforholdene panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Arbeidsforhold" apen>
-        <Nav.Row className="arbeidsforhold__enkelt">
-          {arbeidsforholdene.map(arbeidsforhold => <Arbeidsforhold key={uuid()} arbeidsforhold={arbeidsforhold} />)}
-        </Nav.Row>
-      </Nav.EkspanderbartPanel>
+    <div className="arbeidsforholdene">
+      {arbeidsforholdene.map(arbeidsforhold => <Arbeidsforhold key={uuid()} arbeidsforhold={arbeidsforhold} />)}
     </div>
   );
 }
