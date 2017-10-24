@@ -97,7 +97,7 @@ function Medlemskap({ medlemsskap }) {
 
   return (
     <div className="medlemskap panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Medlemskap" apen>
+      <Nav.EkspanderbartPanel tittel="Medlemskap">
         <section aria-label="Medlemskap">
           <Nav.Container fluid>
             {periodeListe.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />)}
