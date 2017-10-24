@@ -41,6 +41,7 @@ class Saksbehandling extends Component {
     organisasjoner: [],
     medlemsskap: {},
     arbeidsforholdene: [],
+    inntekt: {},
   };
 
   componentDidMount() {

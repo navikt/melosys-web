@@ -2,12 +2,47 @@
 
 .inntekt {
 
-  .inntektsseksjon__seksjon {
+  .inntekt__seksjon {
     .seksjonmixin();
-  }
 
-  .enkeltorganisasjon__detaljer {
-    .beskrivliste-mixin('col');
-  }
+    .inntekt__soknad {
+      .beskrivliste-mixin('col');
+    }
 
+    .inntekt__detaljer {
+      width:100%;
+
+      .detaljer__fom {
+        width:15%;
+        white-space: nowrap;
+      }
+
+      .detaljer__tom {
+        width:15%;
+        white-space: nowrap;
+      }
+
+      .detaljer__firma {
+        width:30%;
+      }
+
+      .detaljer__orgnr {
+        width:20%;
+      }
+
+      .detaljer__inntekt {
+        width:20%;
+        white-space: nowrap;
+      }
+    }
+
+    th {
+      text-align:left;
+      padding:0;
+    }
+
+    td {
+      padding:0 0.5em 0 0;
+    }
+  }
 }
