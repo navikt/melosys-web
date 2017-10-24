@@ -3,24 +3,9 @@ import * as Nav from '../utils/navFrontend';
 
 import * as MPT from '../proptypes';
 import './medlemskap.css';
+import DatoOmrade from './datoOmrade/datoOmrade';
 
 const uuid = require('uuid/v4');
-
-/** Dato-område med mulighet for Periode.
- *
- * @param props.periode Object Periode i formatet {fom:'',tom:''}
- * Todo 24/10/17: Vurder å løfte denne komponenten ut som en egen fil for gjenburk andre steder om hensiktsmessig.
- */
-const DatoOmrade = ({ periode }) => (
-  <Nav.Row>
-    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Fra</Nav.Element>{periode.fom}</Nav.Column>
-    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Til</Nav.Element>{periode.tom}</Nav.Column>
-  </Nav.Row>
-);
-
-DatoOmrade.propTypes = {
-  periode: MPT.Periode.isRequired,
-};
 
 /** MedlemskapsSeksjon inneholdet ett enkelt medlemskap. Hver søker kan ha
  * flere medlemskap. Se Confluence for definisjon av "medlemskap".
