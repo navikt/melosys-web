@@ -4,8 +4,7 @@ import * as MPT from '../../proptypes';
 
 /** Dato-område som viser fra- og til-dato.
  *
- * @param tittel
- * @param dato
+ * @param props.periode
  * @constructor
  */
 const DatoOmrade = ({ periode }) => (
