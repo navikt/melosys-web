@@ -8,6 +8,7 @@ import './arbeidsforholdene.css';
 const uuid = require('uuid/v4');
 
 /** Dato-område
+ * Todo: se datoområde i Medlemmer. Mulig denne løftes ut i egen fil for gjenbruk.
  *
  * @param tittel
  * @param dato
@@ -48,6 +49,12 @@ Arbeidsavtalen.propTypes = {
 };
 
 
+/** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
+ * kun av komponenten Arbeidsforholdene.
+ *
+ * @param props.arbeidsforhld Object Et objekt med det aktuelle arbeidsforholdet.
+ * @returns {XML}
+ */
 function Arbeidsforhold({ arbeidsforhold }) {
   const {
     ansettelsesPeriode,
@@ -72,8 +79,6 @@ function Arbeidsforhold({ arbeidsforhold }) {
             <dl className="arbeidsforhold__detaljer">
               <dt>Ordning:</dt>
               <dd>{ordning}</dd>
-              <dt>Periodetype:</dt>
-              <dd>404 Utilgjengelig</dd>
             </dl>
           </Nav.Container>
         </Nav.Column>
@@ -105,9 +110,16 @@ Arbeidsforhold.propTypes = {
   arbeidsforhold: MPT.Arbeidsforhold.isRequired,
 };
 
+/** Dette er grunnkomponenten som eksporteres til omverden.
+ * Flertall: Arbeidsforholdene - en array med alle arbeidsforhold, hver som ett objekt.
+ * Entall: Arbeidsforhold - et objekt med ett enkelt arbeidsforhold.
+ *
+ * @param props.arbeidsforholdene Array En liste over alle arbeidforhold, hvert som et objekt
+ * @returns {XML}
+ */
 function Arbeidsforholdene ({ arbeidsforholdene }) {
   return (
-    <div className="arbeidsforhold panelSeksjon">
+    <div className="arbeidsforholdene panelSeksjon">
       <Nav.EkspanderbartPanel tittel="Arbeidsforhold" apen>
         <Nav.Row className="arbeidsforhold__enkelt">
           {arbeidsforholdene.map(arbeidsforhold => <Arbeidsforhold key={uuid()} arbeidsforhold={arbeidsforhold} />)}
