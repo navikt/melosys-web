@@ -11,8 +11,8 @@ node {
   /* tools */
   tool name: 'recent node', type: 'nodejs'
   def NODEJS_HOME = "${tool 'recent node'}"
-  def node = "${NODEJS_HOME}/node"
-  def npm = "${NODEJS_HOME}/npm"
+  def node = "${NODEJS_HOME}/bin/node"
+  def npm = "${NODEJS_HOME}/bin/npm"
   //env.NODEJS_HOME = "${tool 'recent node'}"
   //env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
   //echo("${env.PATH}")
