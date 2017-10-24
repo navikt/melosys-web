@@ -97,7 +97,7 @@ function Arbeidsforhold({ arbeidsforhold }) {
             <dd>{arbeidsforholdstype}</dd>
           </dl>
           <dl className="arbeidsforhold__detaljer">
-            { arbeidsavtale.map(avtalen => <Arbeidsavtalen avtalen={avtalen} />)}
+            { arbeidsavtale.map(avtalen => <Arbeidsavtalen key={uuid()} avtalen={avtalen} />)}
           </dl>
         </Nav.Column>
         {/* SLUTT DETALJER */}
