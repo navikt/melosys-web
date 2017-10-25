@@ -48,7 +48,7 @@ class Vilkarsvurdering extends Component {
           <StegFane ikoner={stegIkoner} visNesteKnapp>
             <Nav.Innholdstittel type="innholdstittel">Vurdering:</Nav.Innholdstittel>
             <Nav.Fieldset legend="Vurder om søkeren er:">
-              <Nav.Radio id="steg0_ikke_arbeidende" name="arbeidssted" label="Ikke arbeidende / yrkesmottaker" />
+              <Nav.Radio id="steg0_ikke_arbeidende" name="arbeidssted" label="Ikke arbeidende / ytelsesmottaker" />
               <Nav.Radio id="steg0_arbeidstaker" name="arbeidssted" label="Arbeidstaker" />
               <Nav.Radio id="steg0_selvstendig" name="arbeidssted"label="Selvstendig næringsdrivende" />
               <Nav.Radio id="steg0_arbeidstaker_selvstendig" name="arbeidssted" label="Både arbeidstakende og selvstendig" />
@@ -77,7 +77,7 @@ class Vilkarsvurdering extends Component {
               <Nav.Radio id="steg2_arbeidsgivere_en" name="arbeidsgivere" label="Èn" />
               <Nav.Radio id="steg2_arbeidsgivere_fler" name="arbeidsgivere" label="To eller fler" />
             </Nav.Fieldset>
-            <Nav.Fieldset legend="Er arbeidsgivere i sammme land eller i ulike land?">
+            <Nav.Fieldset legend="Er arbeidsgivere i samme land eller i ulike land?">
               <Nav.Radio id="steg2_arbeidsgiverfordeling_ettland" name="arbeidsgiverfordeling" label="Samme land" />
               <Nav.Radio id="steg2_arbeidsgiverfordeling_ulikeland" name="arbeidsgiverfordeling" label="Ulike land" />
             </Nav.Fieldset>

@@ -62,6 +62,8 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
             <dt>Kildedokumenttype:</dt>
             <dd>{kildedokumenttype.term}</dd>
             <dt>Register:</dt>
+            <dd>MEDL</dd>
+            <dt>Hentet fra:</dt>
             <dd>{register}</dd>
           </dl>
         </Nav.Column>
