@@ -39,7 +39,6 @@ node {
         sh "${npm} install"
       }
     }
-    /*
     stage('Test') {
       echo('CI=true npm test')
     }
@@ -47,6 +46,7 @@ node {
       echo('Build...')
       sh(returnStdout: true, script: 'npm run build')
     }
+    /*
     stage('Deploy') {
       echo('TODO Deploy')
     }
