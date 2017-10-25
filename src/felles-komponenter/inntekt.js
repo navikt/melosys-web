@@ -7,9 +7,7 @@ import './inntekt.css';
 // const uuid = require('uuid/v4');
 
 
-function Inntekt ({ inntekt }) {
-  console.log(inntekt);
-
+function Inntekt () {
   return (
     <div className="inntekt panelSeksjon">
       <Nav.EkspanderbartPanel tittel="Inntekt" apen>
