@@ -34,8 +34,9 @@ node {
       echo('npm install')
       // sh('rm -rf node_modules')
       // sh('ls -la')
-      withEnv(['HTTP_PROXY=http://webproxy-utvikler.nav.no:8088', 'NO_PROXY=adeo.no']) {
-        sh(returnStdout: true, script: "${npm} install")
+      withEnv(["PATH+NODE=${NODEJS_HOME}",'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088', 'NO_PROXY=adeo.no']) {
+        //sh(returnStdout: true, script: "${npm} install")
+        sh "${npm} install"
       }
     }
     /*
