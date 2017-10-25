@@ -41,10 +41,11 @@ node {
     }
     stage('Test') {
       echo('CI=true npm test')
+      sh "CI=true ${npm} test"
     }
     stage('Build') {
       echo('Build...')
-      sh(returnStdout: true, script: 'npm run build')
+      sh(returnStdout: true, script: "${npm} run build")
     }
     /*
     stage('Deploy') {
