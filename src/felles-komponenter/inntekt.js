@@ -7,14 +7,13 @@ import './inntekt.css';
 // const uuid = require('uuid/v4');
 
 
-function Inntekt ({ inntekt }) {
+function Inntekt ({ inntekt, soknaden }) {
   console.log(inntekt);
 
   return (
     <div className="inntekt panelSeksjon">
       <Nav.EkspanderbartPanel tittel="Inntekt" apen>
         <Nav.Row className="inntekt__seksjon">
-          {/* START DATO RANGE */}
           <Nav.Column xs="12">
             <Nav.Element>Arbeidsforholdsperioder med inntekt</Nav.Element>
             <table className="inntekt__detaljer">
