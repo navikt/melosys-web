@@ -14,16 +14,6 @@ function Inntekt ({ inntekt }) {
     <div className="inntekt panelSeksjon">
       <Nav.EkspanderbartPanel tittel="Inntekt" apen>
         <Nav.Row className="inntekt__seksjon">
-          <Nav.Column xs="12">
-            <dl className="inntekt__soknad">
-              <dt>Inntekt fra Der Investition Ghmb</dt>
-              <dd>65.000 pr mnd</dd>
-              <dt>Inntekt fra næringsvirksomhet fra utenlandsk oppdragsgiver</dt>
-              <dd>ingen</dd>
-            </dl>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row className="inntekt__seksjon">
           {/* START DATO RANGE */}
           <Nav.Column xs="12">
             <Nav.Element>Arbeidsforholdsperioder med inntekt</Nav.Element>
@@ -100,6 +90,16 @@ function Inntekt ({ inntekt }) {
                 </tr>
               </tbody>
             </table>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row className="inntekt__seksjon">
+          <Nav.Column xs="12">
+            <dl className="inntekt__soknad">
+              <dt>Inntekt fra utenlandsk arbeidsgiver: Der Investition Ghmb</dt>
+              <dd>65.000 pr mnd</dd>
+              <dt>Inntekt fra næringsvirksomhet fra utenlandsk oppdragsgiver</dt>
+              <dd>ingen</dd>
+            </dl>
           </Nav.Column>
         </Nav.Row>
       </Nav.EkspanderbartPanel>

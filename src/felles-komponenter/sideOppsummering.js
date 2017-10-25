@@ -23,7 +23,7 @@ class SideOppsummering extends Component {
       opprettetDato: '22.09.2017',
       medlemskap: '4833 NAV Medlemsskap',
       status: 'Åpen',
-      statusDetalj: 'Vurderer inngangsvilkår',
+      statusDetalj: 'Vurderer vilkår',
     },
   };
 
