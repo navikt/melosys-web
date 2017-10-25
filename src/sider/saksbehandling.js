@@ -20,7 +20,7 @@ import {
   OrganisasjonSelector,
   MedlemsskapSelector,
   ArbeidsforholdeneSelector,
-  InntektSelector,
+  InntektSoknadenSelector,
 } from '../ducks/fagsaker';
 
 import * as MPT from '../proptypes';
@@ -91,7 +91,7 @@ const mapStateToProps = state => ({
   organisasjoner: OrganisasjonSelector(state),
   medlemsskap: MedlemsskapSelector(state),
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
-  inntekt: InntektSelector(state),
+  inntekt: InntektSoknadenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
