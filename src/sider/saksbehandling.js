@@ -72,7 +72,7 @@ class Saksbehandling extends Component {
               {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
               {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
               {medlemsskap && <Medlemskap medlemsskap={medlemsskap} />}
-              {inntekt && <Inntekt innntekt={inntekt} />}
+              {inntekt && <Inntekt inntekt={inntekt} />}
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering />

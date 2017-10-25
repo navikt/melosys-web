@@ -8,6 +8,8 @@ import './inntekt.css';
 
 
 function Inntekt ({ inntekt }) {
+  console.log(inntekt);
+
   return (
     <div className="inntekt panelSeksjon">
       <Nav.EkspanderbartPanel tittel="Inntekt" apen>
