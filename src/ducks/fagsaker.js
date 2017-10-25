@@ -55,7 +55,7 @@ export const SoknadenSelector = createSelector(
 
 export const InntektSoknadenSelector = createStructuredSelector({
   inntekt: InntektSelector,
-  soknad: SoknadenSelector,
+  soknaden: SoknadenSelector,
 });
 
 export const BekreftelserSelector = createSelector(
