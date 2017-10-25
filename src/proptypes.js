@@ -73,6 +73,38 @@ const ArbeidsforholdPropType = PT.shape({
   arbeidsforholdInnrapportertEtterAOrdningen: PT.bool,
 });
 
+const InntektLinjePropType = PT.shape({
+  beloep: PT.string,
+  fordel: PT.string,
+  inntektskilde: PT.string,
+  inntektsperiodetype: PT.string,
+  inntektsstatus: PT.string,
+  levereringstidspunkt: PT.string,
+  utbetaltIPeriode: PT.string,
+  opplysningspliktig: PT.shape({
+    orgnummer: PT.string,
+  }),
+  virksomhet: PT.shape({
+    orgnummer: PT.string,
+  }),
+  tilleggsinformasjon: PT.shape({
+    kategori: PT.string,
+    tilleggsinformasjonDetaljer: PT.shape({
+      etterbetalingsperiode: PT.shape({
+        startDato: PT.string,
+        sluttDato: PT.string,
+      }),
+    }),
+  }),
+  inntektsmottaker: PT.shape({
+    personIdent: PT.string,
+  }),
+  inngaarIGrunnlagForTrekk: PT.string,
+  utloeserArbeidsgiveravgift: PT.string,
+  informasjonsstatus: PT.string,
+  beskrivelse: PT.string,
+});
+
 const InntektPropType = PT.shape({
   ident: PT.shape({
     personIdent: PT.string,
@@ -81,38 +113,7 @@ const InntektPropType = PT.shape({
     arbeidsInntektMaaned: PT.shape({
       aarMaaned: PT.string,
       arbeidsInntektInformasjon: PT.shape({
-        inntektListe: PT.arrayOf(
-          PT.shape({
-            beloep: PT.string,
-            fordel: PT.string,
-            inntektskilde: PT.string,
-            inntektsperiodetype: PT.string,
-            inntektsstatus: PT.string,
-            levereringstidspunkt: PT.string,
-            utbetaltIPeriode: PT.string,
-            opplysningspliktig: PT.shape({
-              orgnummer: PT.string,
-            }),
-            virksomhet: PT.shape({
-              orgnummer: PT.string,
-            }),
-            tilleggsinformasjon: PT.shape({
-              kategori: PT.string,
-              tilleggsinformasjonDetaljer: PT.shape({
-                etterbetalingsperiode: PT.shape({
-                  startDato: PT.string,
-                  sluttDato: PT.string,
-                }),
-              }),
-            }),
-            inntektsmottaker: PT.shape({
-              personIdent: PT.string,
-            }),
-            inngaarIGrunnlagForTrekk: PT.string,
-            utloeserArbeidsgiveravgift: PT.string,
-            informasjonsstatus: PT.string,
-            beskrivelse: PT.string,
-          })),
+        inntektListe: InntektLinjePropType,
       }),
     }),
   }),
@@ -205,4 +206,5 @@ export {
   MedlemskapPropType as Medlemskap,
   BekreftelserPropType as Bekreftelser,
   InntektPropType as Inntekt,
+  InntektLinjePropType as InntektLinje,
 };
