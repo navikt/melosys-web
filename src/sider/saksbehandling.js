@@ -11,6 +11,7 @@ import Medlemskap from '../felles-komponenter/medlemskap';
 import Arbeidsforholdene from '../felles-komponenter/arbeidsforholdene';
 import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
 import Inntekt from '../felles-komponenter/inntekt';
+import Bekreftelser from '../felles-komponenter/bekreftelser';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
@@ -21,6 +22,7 @@ import {
   MedlemsskapSelector,
   ArbeidsforholdeneSelector,
   InntektSoknadenSelector,
+  BekreftelserSelector,
 } from '../ducks/fagsaker';
 
 import * as MPT from '../proptypes';
@@ -34,6 +36,7 @@ class Saksbehandling extends Component {
     medlemsskap: MPT.Medlemskap,
     arbeidsforholdene: MPT.Arbeidsforholdene,
     inntekt: MPT.Inntekt,
+    bekreftelser: MPT.Bekreftelser,
   }
 
   static defaultProps = {
@@ -42,6 +45,7 @@ class Saksbehandling extends Component {
     medlemsskap: {},
     arbeidsforholdene: [],
     inntekt: {},
+    bekreftelser: [],
   };
 
   componentDidMount() {
@@ -56,6 +60,7 @@ class Saksbehandling extends Component {
       medlemsskap,
       arbeidsforholdene,
       inntekt,
+      bekreftelser,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -73,6 +78,7 @@ class Saksbehandling extends Component {
               {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
               {medlemsskap && <Medlemskap medlemsskap={medlemsskap} />}
               {inntekt && <Inntekt inntekt={inntekt} />}
+              {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering />
@@ -92,6 +98,7 @@ const mapStateToProps = state => ({
   medlemsskap: MedlemsskapSelector(state),
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
   inntekt: InntektSoknadenSelector(state),
+  bekreftelser: BekreftelserSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
