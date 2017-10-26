@@ -8,43 +8,29 @@ import { Row, Column } from 'nav-frontend-grid';
 
 import './sideOppsummering.css';
 
+const uuid = require('uuid/v4');
+
 class SideOppsummering extends Component {
   static propTypes = {
-    oppsummering: PT.object,
-  };
-  static defaultProps = {
-    oppsummering: {
-      soknadsType: 'A1',
-      summertStatus: '123456 - Under behandling',
-      arbeidsStatus: 'Arbeidsgiver',
-      arbeidsLand: 'Skal til Tyskland',
-      arbeidsPeriode: '20.11.17 - 15.10.18 (11 mnd)',
-      behandlingsType: 'Førstegangsbehandling',
-      opprettetDato: '22.09.2017',
-      medlemskap: '4833 NAV Medlemsskap',
-      status: 'Åpen',
-      statusDetalj: 'Vurderer vilkår',
-    },
+    oppsummering: PT.object.isRequired,
   };
 
   render() {
-    const { soknadsType,
-      summertStatus,
-      arbeidsStatus,
-      arbeidsLand,
-      arbeidsPeriode,
+    const {
+      soknaden,
+      behandlingsStatus,
+      opprettet,
+      oppdatert,
       behandlingsType,
-      opprettetDato,
-      medlemskap,
-      status,
-      statusDetalj } = this.props.oppsummering;
+      behandlingsMedlemskap,
+    } = this.props.oppsummering;
 
     return (
       <div className="sideOppsummering panelSeksjon">
         <Panel className="saksbehandling__soknadSammendrag">
           <Row>
             <Column xs="12" md="6">
-              <Undertittel className="soknadSammendrag__header">Søknad om {soknadsType}</Undertittel>
+              <Undertittel className="soknadSammendrag__header">Søknad om {soknaden.soknadsType}</Undertittel>
             </Column>
             <Column xs="12" md="6">
               <Knapp>Behandlingsmeny</Knapp>
@@ -53,7 +39,7 @@ class SideOppsummering extends Component {
           {/* START SØKNADSSTATUS */}
           <Row>
             <Column xs="12">
-              {summertStatus}
+              {behandlingsStatus.kode} - {behandlingsStatus.term}
             </Column>
           </Row>
           {/* SLUTT SØKNADSSTATUS */}
@@ -61,9 +47,8 @@ class SideOppsummering extends Component {
           <Row>
             <Column xs="12">
               <section>
-                <Normaltekst>{arbeidsStatus}</Normaltekst>
-                <Normaltekst>{arbeidsLand}</Normaltekst>
-                <Normaltekst>{arbeidsPeriode}</Normaltekst>
+                <Normaltekst>{soknaden.arbeidsgiverUtland.oppholdsland}</Normaltekst>
+                {soknaden.soknadsPerioder.map(periode => <Normaltekst key={uuid()}>Fra: {periode.fom} Til: {periode.tom} </Normaltekst>)}
               </section>
             </Column>
           </Row>
@@ -72,9 +57,10 @@ class SideOppsummering extends Component {
           <Row>
             <Column xs="12">
               <section>
-                <Undertittel>{behandlingsType} - {medlemskap}</Undertittel>
-                <Normaltekst>Opprettet: {opprettetDato}</Normaltekst>
-                <Normaltekst>Behandlingsstatus: {status} - {statusDetalj}</Normaltekst>
+                <Undertittel>{behandlingsType} - {behandlingsMedlemskap}</Undertittel>
+                <Normaltekst>Opprettet: {opprettet}</Normaltekst>
+                <Normaltekst>Opprettet: {oppdatert}</Normaltekst>
+                <Normaltekst>Behandlingsstatus: {behandlingsStatus.kode} - {behandlingsStatus.term}</Normaltekst>
               </section>
             </Column>
           </Row>

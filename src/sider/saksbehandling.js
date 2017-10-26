@@ -23,6 +23,7 @@ import {
   ArbeidsforholdeneSelector,
   InntektSoknadenSelector,
   BekreftelserSelector,
+  OppsummeringSelector,
 } from '../ducks/fagsaker';
 
 import * as MPT from '../proptypes';
@@ -37,6 +38,7 @@ class Saksbehandling extends Component {
     arbeidsforholdene: MPT.Arbeidsforholdene,
     inntekt: MPT.Inntekt,
     bekreftelser: MPT.Bekreftelser,
+    oppsummering: MPT.Oppsummering,
   }
 
   static defaultProps = {
@@ -46,6 +48,7 @@ class Saksbehandling extends Component {
     arbeidsforholdene: [],
     inntekt: {},
     bekreftelser: [],
+    oppsummering: {},
   };
 
   componentDidMount() {
@@ -61,6 +64,7 @@ class Saksbehandling extends Component {
       arbeidsforholdene,
       inntekt,
       bekreftelser,
+      oppsummering,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -81,7 +85,7 @@ class Saksbehandling extends Component {
               {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
             </Nav.Column>
             <Nav.Column xs="5">
-              <SideOppsummering />
+              {oppsummering && <SideOppsummering oppsummering={oppsummering} />}
               <SideDialog />
               <SideKommentarer />
             </Nav.Column>
@@ -99,6 +103,7 @@ const mapStateToProps = state => ({
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
   inntekt: InntektSoknadenSelector(state),
   bekreftelser: BekreftelserSelector(state),
+  oppsummering: OppsummeringSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
