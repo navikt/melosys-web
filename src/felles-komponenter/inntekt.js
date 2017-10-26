@@ -4,88 +4,43 @@ import * as MPT from '../proptypes';
 
 import './inntekt.css';
 
-// const uuid = require('uuid/v4');
+const uuid = require('uuid/v4');
 
+function InntektPeriode({ inntekt }) {
+  const { beloep, inntektsperiodetype, virksomhet: { orgnummer }, beskrivelse } = inntekt;
+  const etterbetalingsperiode = inntekt.tilleggsinformasjon.tilleggsinformasjonDetaljer.etterbetalingsperiode || { startDato: '-', sluttDato: '-' };
 
-function Inntekt () {
+  return (
+    <tr>
+      <td className="detaljer__fom">{etterbetalingsperiode.startDato}</td>
+      <td className="detaljer__tom">{etterbetalingsperiode.sluttDato}</td>
+      <td className="detaljer__orgnr">{orgnummer}</td>
+      <td className="detaljer__inntekt">{beloep} pr {inntektsperiodetype}</td>
+      <td className="detaljer__inntekt">{beskrivelse}</td>
+    </tr>
+  );
+}
+
+InntektPeriode.propTypes = {
+  inntekt: MPT.InntektLinje.isRequired,
+};
+
+function Inntekt ({ inntekt: { inntekt, soknaden } }) {
+  const { inntektListe } = inntekt.arbeidsInntektIdent.arbeidsInntektMaaned.arbeidsInntektInformasjon;
+  const { prMaaned: utenlandsNaeringPrMaaned, valuta: utenlandsNaeringValuta } = soknaden.inntekt.naringsinntekt.utenlands;
+  const { prMaaned: utenlandsLonnPrMaaned, valuta: utenlandsLonnValuta } = soknaden.inntekt.lonnsinntekt.utenlands;
+
   return (
     <div className="inntekt panelSeksjon">
       <Nav.EkspanderbartPanel tittel="Inntekt" apen>
         <Nav.Row className="inntekt__seksjon">
-          {/* START DATO RANGE */}
           <Nav.Column xs="12">
-            <Nav.Element>Arbeidsforholdsperioder med inntekt</Nav.Element>
             <table className="inntekt__detaljer">
               <tbody>
                 <tr>
-                  <th>Fra dato</th><th>Til dato</th><th>Arbeidsgiver</th><th>Org.nr</th><th>Inntekt</th>
+                  <th>Fra dato</th><th>Til dato</th><th>Org.nr</th><th>Inntekt</th><th>Beskrivelse</th>
                 </tr>
-                <tr>
-                  <td className="detaljer__fom">2010-10-01</td>
-                  <td className="detaljer__tom">-</td>
-                  <td className="detaljer__firma">Bergensfinans A</td>
-                  <td className="detaljer__orgnr">123456789</td>
-                  <td className="detaljer__inntekt">65.000 pr mnd</td>
-                </tr>
-                <tr>
-                  <td className="detaljer__fom">2000-10-01</td>
-                  <td className="detaljer__tom">2009-10-01</td>
-                  <td className="detaljer__firma">Bergen Finans & Forsikring AS</td>
-                  <td className="detaljer__orgnr">372251637</td>
-                  <td className="detaljer__inntekt">55.000 pr mnd</td>
-                </tr>
-                <tr>
-                  <td className="detaljer__fom">2000-10-01</td>
-                  <td className="detaljer__tom">2009-10-01</td>
-                  <td className="detaljer__firma">Oslo Risikoinvestering AS</td>
-                  <td className="detaljer__orgnr">745236019</td>
-                  <td className="detaljer__inntekt">43.000 pr mnd</td>
-                </tr>
-                <tr>
-                  <td className="detaljer__fom">2000-10-01</td>
-                  <td className="detaljer__tom">2009-10-01</td>
-                  <td className="detaljer__firma">UIO FINANS- OG INVESTERINGSFORENING</td>
-                  <td className="detaljer__orgnr">445234643</td>
-                  <td className="detaljer__inntekt">40.000 pr mnd</td>
-                </tr>
-              </tbody>
-            </table>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row className="inntekt__seksjon">
-          <Nav.Column xs="12">
-            <Nav.Element>Periode med lønn fra arbeidsgiver, under utdanning</Nav.Element>
-            <table className="inntekt__detaljer">
-              <tbody>
-                <tr>
-                  <th>Fra dato</th><th>Til dato</th><th>Arbeidsgiver</th><th>Org.nr</th><th>Inntekt</th>
-                </tr>
-                <tr>
-                  <td className="detaljer__fom">2003-10-01</td>
-                  <td className="detaljer__tom">2004-04-01</td>
-                  <td className="detaljer__firma">Bergensfinans AS</td>
-                  <td className="detaljer__orgnr">123456789</td>
-                  <td className="detaljer__inntekt">10.000 pr mnd</td>
-                </tr>
-              </tbody>
-            </table>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row className="inntekt__seksjon">
-          <Nav.Column xs="12">
-            <Nav.Element>Periode med frilandsvirksomhet</Nav.Element>
-            <table className="inntekt__detaljer">
-              <tbody>
-                <tr>
-                  <th>Fra dato</th><th>Til dato</th><th>Arbeidsgiver</th><th>Org.nr</th><th>Inntekt</th>
-                </tr>
-                <tr>
-                  <td className="detaljer__fom">2003-10-01</td>
-                  <td className="detaljer__tom">2005-09-10</td>
-                  <td className="detaljer__firma">Unni Finans</td>
-                  <td className="detaljer__orgnr">762637108</td>
-                  <td className="detaljer__inntekt">34.000 pr mnd</td>
-                </tr>
+                {inntektListe.map(inntektLinje => <InntektPeriode key={uuid()} inntekt={inntektLinje} />)}
               </tbody>
             </table>
           </Nav.Column>
@@ -94,9 +49,9 @@ function Inntekt () {
           <Nav.Column xs="12">
             <dl className="inntekt__soknad">
               <dt>Inntekt fra utenlandsk arbeidsgiver: Der Investition Ghmb</dt>
-              <dd>65.000 pr mnd</dd>
+              <dd>{utenlandsLonnPrMaaned} {utenlandsLonnValuta} pr måned</dd>
               <dt>Inntekt fra næringsvirksomhet fra utenlandsk oppdragsgiver</dt>
-              <dd>ingen</dd>
+              <dd>{utenlandsNaeringPrMaaned} {utenlandsNaeringValuta} pr måned</dd>
             </dl>
           </Nav.Column>
         </Nav.Row>

@@ -1,4 +1,4 @@
-import { createSelector } from 'reselect';
+import { createSelector, createStructuredSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 
@@ -45,17 +45,24 @@ export const PersonSelector = createSelector(
 );
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].inntekt : {}),
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].soknaden : {}),
-  (inntekt, soknaden) => ({ inntekt, soknaden })
+  inntekt => inntekt
 );
-export const BekreftelserSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].bekreftelser : state.fagsaker.data),
-  bekreftelser => bekreftelser
-);
+
 export const SoknadenSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].soknaden : state.fagsaker.data),
   soknaden => soknaden
 );
+
+export const InntektSoknadenSelector = createStructuredSelector({
+  inntekt: InntektSelector,
+  soknaden: SoknadenSelector,
+});
+
+export const BekreftelserSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].bekreftelser : state.fagsaker.data),
+  bekreftelser => bekreftelser
+);
+
 export const MedlemsskapSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].medlemsskap : state.fagsaker.data),
   medlemsskap => medlemsskap
