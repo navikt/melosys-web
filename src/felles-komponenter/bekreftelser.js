@@ -4,20 +4,22 @@ import * as MPT from '../proptypes';
 
 import './bekreftelser.css';
 
-// const uuid = require('uuid/v4');
-
 function boolTilNorsk (value) {
   return value ? 'JA' : 'NEI';
 }
 
 function Bekreftelser ({ bekreftelser }) {
-  const utsendt = boolTilNorsk(bekreftelser.utsendt);
-  const ansatt = boolTilNorsk(bekreftelser.utsendt);
-  const erstatter = boolTilNorsk(bekreftelser.utsendt);
-  const over24m = boolTilNorsk(bekreftelser.over24m);
-  const arbeidsgiveravgift = boolTilNorsk(bekreftelser.arbeidsgiveravgift);
-  const trygdeavgiftTrukket = boolTilNorsk(bekreftelser.trygdeavgift.trukket);
-  const trygdeavgiftTrukketDato = bekreftelser.trygdeavgift.tom;
+  const {
+    utsendt,
+    ansatt,
+    erstatter,
+    over24m,
+    arbeidsgiveravgift,
+    trygdeavgift: {
+      trukket: trygdeavgiftTrukket,
+      tom: trygdeavgiftTrukketDato,
+    },
+  } = bekreftelser;
 
   return (
     <div className="bekreftelser panelSeksjon">
@@ -27,17 +29,17 @@ function Bekreftelser ({ bekreftelser }) {
           <Nav.Column xs="12">
             <dl className="bekreftelser__detaljer">
               <dt>Arbeidsgiver bekrefter at abeidstaker er utsendt?</dt>
-              <dd>{utsendt}</dd>
+              <dd>{boolTilNorsk(utsendt)}</dd>
               <dt>Er arbeidstakeren ansatt under utsendingen?</dt>
-              <dd>{ansatt}</dd>
+              <dd>{boolTilNorsk(ansatt)}</dd>
               <dt>Erstatter arbeidstakeren en eller flere utsendte?</dt>
-              <dd>{erstatter}</dd>
+              <dd>{boolTilNorsk(erstatter)}</dd>
               <dt>Er arbeidstaker tidligere utsendt i en periode over 24 mnd?</dt>
-              <dd>{over24m}</dd>
+              <dd>{boolTilNorsk(over24m)}</dd>
               <dt>Plikter arbeidsgiver å betale arbeidsgiveravgift?</dt>
-              <dd>{arbeidsgiveravgift}</dd>
+              <dd>{boolTilNorsk(arbeidsgiveravgift)}</dd>
               <dt>Blir trygdeavgift trukket gjennom skatten under utenlandsoppholdet?</dt>
-              <dd>{trygdeavgiftTrukket} - gjelder t.o.m {trygdeavgiftTrukketDato}</dd>
+              <dd>{boolTilNorsk(trygdeavgiftTrukket)} - gjelder t.o.m {trygdeavgiftTrukketDato}</dd>
             </dl>
           </Nav.Column>
         </Nav.Row>
