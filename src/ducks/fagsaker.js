@@ -44,8 +44,9 @@ export const PersonSelector = createSelector(
   person => person
 );
 export const InntektSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].inntekt : state.fagsaker.data),
-  inntekt => inntekt
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].inntekt : {}),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].soknaden : {}),
+  (inntekt, soknaden) => ({ inntekt, soknaden })
 );
 export const BekreftelserSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].bekreftelser : state.fagsaker.data),
