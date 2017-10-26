@@ -99,3 +99,9 @@ export const OrganisasjonSelector = createSelector(
     return alleRelevanteOrganisasjoner;
   }
 );
+
+export const OppsummeringSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].oppsummering : {}),
+  state => SoknadenSelector(state),
+  (oppsummering, soknaden) => ({ ...oppsummering, soknaden })
+);
