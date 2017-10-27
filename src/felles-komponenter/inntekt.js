@@ -37,7 +37,7 @@ function Inntekt ({ inntekt: { inntekt, soknaden } }) {
       <Nav.EkspanderbartPanel tittel="Inntekt" apen>
         <Nav.Row className="inntekt__seksjon">
           <Nav.Column xs="12">
-            <table className="inntekt__detaljer">
+            <table className="tabellutlisting inntekt__detaljer">
               <tbody>
                 <tr>
                   <th>Fra dato</th><th>Til dato</th><th>Org.nr</th><th>Inntekt</th><th>Beskrivelse</th>
