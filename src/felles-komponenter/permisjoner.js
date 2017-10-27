@@ -29,11 +29,11 @@ Permisjonen.propTypes = {
 
 function Permisjoner({ permisjoner }) {
   return (
-    <div className="medlemskap panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Permisjoner" apen>
+    <div className="permisjoner panelSeksjon">
+      <Nav.EkspanderbartPanel tittel="Permisjoner">
         <section aria-label="permisjoner">
           <Nav.Container fluid>
-            <table>
+            <table className="tabellutlisting permisjoner__detaljer">
               <tbody>
                 <tr>
                   <th>Fra</th>

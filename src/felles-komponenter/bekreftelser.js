@@ -3,7 +3,6 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
-
 import './bekreftelser.css';
 
 function boolTilNorsk (value) {

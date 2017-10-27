@@ -114,7 +114,7 @@ export const PermisjonerSelector = createSelector(
   arbeidsforholdene => {
     // Reduce alle permisjoner fra flere arbeidsforhold inn i én array.
     const permisjoner = arbeidsforholdene.reduce((samling, forhold) => {
-      // Slå sammen hver permisjon i ett arbeidsforhold med en kopi av arbeidsforholdet.
+      // Slå sammen hver permisjon i ett arbeidsforhold med en kopi av kopi av "arbeidstiver"-objektet.
       const permisjonerIForhold = forhold.permisjonOgPermittering.map(permisjon => ({ ...permisjon, arbeidsgiver: forhold.arbeidsgiver }));
       return [...samling, ...permisjonerIForhold];
     }, []);

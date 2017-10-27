@@ -4,7 +4,7 @@ import PT from 'prop-types';
 /** EnkeltDato gjør det lettere å følge UU der datoer skal benyttes i tillegg til at
  * en konsekvent "-" vises der dato er ukjent eller ikke relevant.
  *
- * @param props.periode
+ * @param props.dato
  * @constructor
  */
 function EnkeltDato(props) {
