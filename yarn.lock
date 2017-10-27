@@ -5192,13 +5192,13 @@ natural-compare@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
 
-nav-frontend-alertstriper-style@^0.2.13:
-  version "0.2.13"
-  resolved "https://registry.yarnpkg.com/nav-frontend-alertstriper-style/-/nav-frontend-alertstriper-style-0.2.13.tgz#9e22880de0fae652e87ddb5d0a5ee17c6ada6e6e"
+nav-frontend-alertstriper-style@^0.2.18:
+  version "0.2.18"
+  resolved "https://registry.yarnpkg.com/nav-frontend-alertstriper-style/-/nav-frontend-alertstriper-style-0.2.18.tgz#9511bb8a3303584ef0b85d95d1638f9a4438d0ce"
 
-nav-frontend-alertstriper@^0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/nav-frontend-alertstriper/-/nav-frontend-alertstriper-0.2.3.tgz#8b54308b132eac7e476700f9c9f7d855265f9eb7"
+nav-frontend-alertstriper@^0.2.9:
+  version "0.2.9"
+  resolved "https://registry.yarnpkg.com/nav-frontend-alertstriper/-/nav-frontend-alertstriper-0.2.9.tgz#a90562765e4608d748ea6dad62452a72634e35cc"
 
 nav-frontend-chevron-style@^0.3.3:
   version "0.3.3"
@@ -5228,21 +5228,21 @@ nav-frontend-grid@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/nav-frontend-grid/-/nav-frontend-grid-0.1.8.tgz#1ae877df8698ec29dee9d8e1d6a10e57622f7715"
 
-nav-frontend-ikoner-assets@^0.2.11:
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/nav-frontend-ikoner-assets/-/nav-frontend-ikoner-assets-0.2.11.tgz#300b8946e73964c33013890e6f143424ef88bd15"
+nav-frontend-ikoner-assets@^0.2.16:
+  version "0.2.16"
+  resolved "https://registry.yarnpkg.com/nav-frontend-ikoner-assets/-/nav-frontend-ikoner-assets-0.2.16.tgz#9ee0eb8526f12cdb0fae80783ba54672c13ba2e9"
 
 nav-frontend-js-utils@^0.2.9:
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/nav-frontend-js-utils/-/nav-frontend-js-utils-0.2.9.tgz#98c57167bc604c4ae5378f2c71a969269bfb19ad"
 
-nav-frontend-knapper-style@^0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/nav-frontend-knapper-style/-/nav-frontend-knapper-style-0.3.3.tgz#882bf896b6a051539a0026ecbf0e0fe88dce418e"
+nav-frontend-knapper-style@^0.3.4:
+  version "0.3.4"
+  resolved "https://registry.yarnpkg.com/nav-frontend-knapper-style/-/nav-frontend-knapper-style-0.3.4.tgz#918d9ef40993da00202d9cfabe591c15b81fc394"
 
-nav-frontend-knapper@^0.2.11:
-  version "0.2.11"
-  resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-0.2.11.tgz#0d95309a09244094db3c1ed30ba7fd65d31017f6"
+nav-frontend-knapper@^0.2.12:
+  version "0.2.12"
+  resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-0.2.12.tgz#94718db8ad9b6ae7ee0dda46492e4b2002a4ea38"
 
 nav-frontend-lenkepanel-style@^0.3.4:
   version "0.3.4"

@@ -190,6 +190,15 @@ const BekreftelserPropType = PT.shape({
   }),
 });
 
+const OppsummeringPropType = PT.shape({
+  behandlingsStatus: PT.shape({
+    kode: PT.string,
+    term: PT.string,
+  }),
+  opprettet: PT.string,
+  sistOppdatert: PT.string,
+});
+
 export {
   SaksbehandlerPropType as Saksbehandler,
   BostedsAdressePropType as BostedsAdresse,
@@ -207,4 +216,5 @@ export {
   BekreftelserPropType as Bekreftelser,
   InntektPropType as Inntekt,
   InntektLinjePropType as InntektLinje,
+  OppsummeringPropType as Oppsummering,
 };

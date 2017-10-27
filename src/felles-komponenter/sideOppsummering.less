@@ -1,3 +1,14 @@
+@import '../utils/mixins';
+
 .sideOppsummering {
   margin-bottom:0.5em;
+
+  .oppsummering__detaljer {
+    .beskrivliste-mixin('col');
+    margin-bottom:1em;
+  }
+
+  .oppsummering__detaljer--rad {
+    .beskrivliste-mixin('row');
+  }
 }

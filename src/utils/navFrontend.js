@@ -1,13 +1,14 @@
 import EkspanderbartPanel from 'nav-frontend-ekspanderbartpanel';
+import { Panel } from 'nav-frontend-paneler';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Checkbox, Radio, Fieldset } from 'nav-frontend-skjema';
-import { Innholdstittel, Systemtittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
+import { Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 import { Knapp } from 'nav-frontend-knapper';
 
 export {
-  EkspanderbartPanel,
+  EkspanderbartPanel, Panel,
   Container, Row, Column,
   Checkbox, Radio, Fieldset,
-  Innholdstittel, Systemtittel, Element, Normaltekst, UndertekstBold,
+  Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold,
   Knapp,
 };
