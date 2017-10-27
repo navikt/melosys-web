@@ -199,6 +199,18 @@ const OppsummeringPropType = PT.shape({
   sistOppdatert: PT.string,
 });
 
+const PermisjonerPropType = PT.arrayOf(PT.shape({
+  grad: PT.string,
+  inntektstype: PT.string,
+  permisjonstype: PT.string,
+  periode: PT.shape({
+    fom: PT.string,
+    tom: PT.string,
+  }),
+  innmeldt: PT.string,
+}));
+
+
 export {
   SaksbehandlerPropType as Saksbehandler,
   BostedsAdressePropType as BostedsAdresse,
@@ -217,4 +229,5 @@ export {
   InntektPropType as Inntekt,
   InntektLinjePropType as InntektLinje,
   OppsummeringPropType as Oppsummering,
+  PermisjonerPropType as Permisjoner,
 };

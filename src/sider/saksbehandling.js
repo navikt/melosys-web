@@ -11,6 +11,7 @@ import Medlemskap from '../felles-komponenter/medlemskap';
 import Arbeidsforholdene from '../felles-komponenter/arbeidsforholdene';
 import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
 import Inntekt from '../felles-komponenter/inntekt';
+import Permisjoner from '../felles-komponenter/permisjoner';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
@@ -24,6 +25,7 @@ import {
   InntektSoknadenSelector,
   BekreftelserSelector,
   OppsummeringSelector,
+  PermisjonerSelector,
 } from '../ducks/fagsaker';
 
 import * as MPT from '../proptypes';
@@ -39,6 +41,7 @@ class Saksbehandling extends Component {
     inntekt: MPT.Inntekt,
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
+    permisjoner: MPT.Permisjoner,
   }
 
   static defaultProps = {
@@ -49,6 +52,7 @@ class Saksbehandling extends Component {
     inntekt: {},
     bekreftelser: [],
     oppsummering: {},
+    permisjoner: [],
   };
 
   componentDidMount() {
@@ -65,6 +69,7 @@ class Saksbehandling extends Component {
       inntekt,
       bekreftelser,
       oppsummering,
+      permisjoner,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -78,6 +83,7 @@ class Saksbehandling extends Component {
               <Vilkarsvurdering />
               <Personopplysninger person={person} />
               <Tilleggsopplysninger />
+              {permisjoner && <Permisjoner permisjoner={permisjoner} />}
               {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
               {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
               {medlemsskap && <Medlemskap medlemsskap={medlemsskap} />}
@@ -104,6 +110,7 @@ const mapStateToProps = state => ({
   inntekt: InntektSoknadenSelector(state),
   bekreftelser: BekreftelserSelector(state),
   oppsummering: OppsummeringSelector(state),
+  permisjoner: PermisjonerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
