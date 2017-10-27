@@ -2,6 +2,8 @@ import React from 'react';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 
+import EnkeltDato from './datoOmrade/enkeltDato';
+
 import './inntekt.css';
 
 const uuid = require('uuid/v4');
@@ -12,8 +14,8 @@ function InntektPeriode({ inntekt }) {
 
   return (
     <tr>
-      <td className="detaljer__fom">{etterbetalingsperiode.startDato}</td>
-      <td className="detaljer__tom">{etterbetalingsperiode.sluttDato}</td>
+      <td className="detaljer__fom"><EnkeltDato dato={etterbetalingsperiode.startDato} /></td>
+      <td className="detaljer__tom"><EnkeltDato dato={etterbetalingsperiode.sluttDato} /></td>
       <td className="detaljer__orgnr">{orgnummer}</td>
       <td className="detaljer__inntekt">{beloep} pr {inntektsperiodetype}</td>
       <td className="detaljer__inntekt">{beskrivelse}</td>
@@ -35,7 +37,7 @@ function Inntekt ({ inntekt: { inntekt, soknaden } }) {
       <Nav.EkspanderbartPanel tittel="Inntekt" apen>
         <Nav.Row className="inntekt__seksjon">
           <Nav.Column xs="12">
-            <table className="inntekt__detaljer">
+            <table className="tabellutlisting inntekt__detaljer">
               <tbody>
                 <tr>
                   <th>Fra dato</th><th>Til dato</th><th>Org.nr</th><th>Inntekt</th><th>Beskrivelse</th>
