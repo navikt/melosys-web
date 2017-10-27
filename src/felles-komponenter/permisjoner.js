@@ -23,6 +23,10 @@ function Permisjonen({ permisjonen }) {
   );
 }
 
+Permisjonen.propTypes = {
+  permisjonen: MPT.Permisjonen.isRequired,
+};
+
 function Permisjoner({ permisjoner }) {
   return (
     <div className="medlemskap panelSeksjon">
