@@ -3,6 +3,8 @@ import moment from 'moment';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 
+import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
+
 import './personopplysninger.css';
 
 const uuid = require('uuid/v4');
@@ -45,7 +47,7 @@ function Personopplysninger(props) {
             </Nav.Column>
             <Nav.Column xs="6">
               <dl className="person__detaljer">
-                <dt>Fødselsdato:</dt><dd>{foedselsdato}</dd>
+                <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
                 <dt>Statsborgerskap:</dt><dd>{statsborgerskap}</dd>
                 <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
               </dl>
