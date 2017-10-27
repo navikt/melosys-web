@@ -105,3 +105,18 @@ export const OppsummeringSelector = createSelector(
   state => SoknadenSelector(state),
   (oppsummering, soknaden) => ({ ...oppsummering, soknaden })
 );
+
+/** Hent alle arbeidsforhold, og trekk ut permisjoner. I tillegg skal hver permisjon ha en kopi av arbeidsgiver
+ * for enklere looping av komponenten.
+ */
+export const PermisjonerSelector = createSelector(
+  state => ArbeidsforholdeneSelector(state),
+  arbeidsforholdene => {
+    const permisjoner = arbeidsforholdene.reduce((samling, forhold) => {
+      const permisjonsforhold = forhold.permisjonOgPermittering.map(permisjon => ({ ...permisjon, arbeidsgiver: forhold.arbeidsgiver }));
+      return [...samling, ...permisjonsforhold];
+    }, []);
+
+    return permisjoner;
+  }
+);
