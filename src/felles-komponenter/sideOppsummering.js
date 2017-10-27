@@ -1,78 +1,80 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import PT from 'prop-types';
-import { Knapp } from 'nav-frontend-knapper';
-import { Undertittel, Normaltekst } from 'nav-frontend-typografi';
-import { Panel } from 'nav-frontend-paneler';
-import { Row, Column } from 'nav-frontend-grid';
+import React from 'react';
+import * as Nav from '../utils/navFrontend';
+import * as MPT from '../proptypes';
 
 import './sideOppsummering.css';
 
 const uuid = require('uuid/v4');
 
-class SideOppsummering extends Component {
-  static propTypes = {
-    oppsummering: PT.object.isRequired,
-  };
+function SideOppsummering(props) {
+  const {
+    soknaden,
+    behandlingsStatus,
+    opprettet,
+    sistOppdatert,
+    behandlingsType,
+    behandlingsMedlemskap,
+  } = props.oppsummering;
 
-  render() {
-    const {
-      soknaden,
-      behandlingsStatus,
-      opprettet,
-      oppdatert,
-      behandlingsType,
-      behandlingsMedlemskap,
-    } = this.props.oppsummering;
-
-    return (
-      <div className="sideOppsummering panelSeksjon">
-        <Panel className="saksbehandling__soknadSammendrag">
-          <Row>
-            <Column xs="12" md="6">
-              <Undertittel className="soknadSammendrag__header">Søknad om {soknaden.soknadsType}</Undertittel>
-            </Column>
-            <Column xs="12" md="6">
-              <Knapp>Behandlingsmeny</Knapp>
-            </Column>
-          </Row>
-          {/* START SØKNADSSTATUS */}
-          <Row>
-            <Column xs="12">
-              {behandlingsStatus.kode} - {behandlingsStatus.term}
-            </Column>
-          </Row>
-          {/* SLUTT SØKNADSSTATUS */}
-          {/* START ARBEIDSFORHOLD */}
-          <Row>
-            <Column xs="12">
-              <section>
-                <Normaltekst>{soknaden.arbeidsgiverUtland.oppholdsland}</Normaltekst>
-                {soknaden.soknadsPerioder.map(periode => <Normaltekst key={uuid()}>Fra: {periode.fom} Til: {periode.tom} </Normaltekst>)}
-              </section>
-            </Column>
-          </Row>
-          {/* SLUTT ARBEIDSFORHOLD */}
-          {/* START SØKNADSSTATUS */}
-          <Row>
-            <Column xs="12">
-              <section>
-                <Undertittel>{behandlingsType} - {behandlingsMedlemskap}</Undertittel>
-                <Normaltekst>Opprettet: {opprettet}</Normaltekst>
-                <Normaltekst>Opprettet: {oppdatert}</Normaltekst>
-                <Normaltekst>Behandlingsstatus: {behandlingsStatus.kode} - {behandlingsStatus.term}</Normaltekst>
-              </section>
-            </Column>
-          </Row>
-          {/* SLUTT SØKNADSSTATUS */}
-        </Panel>
-      </div>
-    );
-  }
+  return (
+    <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
+      <Nav.Panel className="saksbehandling__soknadSammendrag">
+        <Nav.Row>
+          <Nav.Column xs="12" md="6">
+            <Nav.Undertittel className="soknadSammendrag__header">Søknad om {soknaden.soknadsType}</Nav.Undertittel>
+          </Nav.Column>
+          <Nav.Column xs="12" md="6">
+            <Nav.Knapp>Behandlingsmeny</Nav.Knapp>
+          </Nav.Column>
+        </Nav.Row>
+        {/* START BEHANDLINGSSTATUS */}
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <dl aria-label="opphold og periode" className="oppsummering__detaljer">
+              <dt>Behandlingsstatus:</dt>
+              <dd>{behandlingsStatus.kode} - {behandlingsStatus.term}</dd>
+            </dl>
+          </Nav.Column>
+        </Nav.Row>
+        {/* SLUTT BEHANDLINGSSTATUS */}
+        {/* START OPPHOLDSINFORMASJON OG PERIODE */}
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <dl aria-label="opphold og periode" className="oppsummering__detaljer">
+              <dt>Oppholdsland:</dt>
+              <dd>{soknaden.arbeidsgiverUtland.oppholdsland}</dd>
+              <dt>Oppholdsperioder:</dt>
+              <dd>
+                {soknaden.soknadsPerioder.map((periode, index) => (
+                  <Nav.Normaltekst key={uuid()}>Periode #{index + 1}: <time dateTime={periode.fom}>{periode.fom}</time> - <time dateTime={periode.tom}>{periode.tom}</time></Nav.Normaltekst>
+                ))}
+              </dd>
+            </dl>
+          </Nav.Column>
+        </Nav.Row>
+        {/* SLUTT OPPHOLDSINFORMASJON OG PERIODE */}
+        {/* START BEHANDLINGSSTATUS */}
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.Systemtittel>{behandlingsType} - {behandlingsMedlemskap}</Nav.Systemtittel>
+            <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
+              <dt>Opprettet:</dt>
+              <dl><time dateTime={opprettet}>{opprettet}</time></dl>
+              <dt>Oppdatert:</dt>
+              <dl><time dateTime={sistOppdatert}>{sistOppdatert}</time></dl>
+              <dt>Behandlingsstatus:</dt>
+              <dl>{behandlingsStatus.kode} - {behandlingsStatus.term}</dl>
+            </dl>
+          </Nav.Column>
+        </Nav.Row>
+        {/* SLUTT BEHANDLINGSSTATUS */}
+      </Nav.Panel>
+    </section>
+  );
 }
 
-const mapStateToProps = () => ({});
+SideOppsummering.propTypes = {
+  oppsummering: MPT.Oppsummering.isRequired,
+};
 
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
+export default SideOppsummering;
