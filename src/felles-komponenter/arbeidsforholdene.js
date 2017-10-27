@@ -4,6 +4,7 @@ import * as MPT from '../proptypes';
 
 import './arbeidsforholdene.css';
 import DatoOmrade from './datoOmrade/datoOmrade';
+import EnkeltDato from './datoOmrade/enkeltDato';
 
 const uuid = require('uuid/v4');
 
@@ -57,8 +58,8 @@ function Arbeidsforhold({ arbeidsforhold }) {
                 <Nav.Container fluid>
                   <DatoOmrade periode={ansettelsesPeriode} />
                   <Nav.Row>
-                    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Registrert</Nav.Element>{registrertDato}</Nav.Column>
-                    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Besluttet</Nav.Element>{bekreftetDato}</Nav.Column>
+                    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Registrert</Nav.Element><EnkeltDato dato={registrertDato} /></Nav.Column>
+                    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Besluttet</Nav.Element><EnkeltDato dato={bekreftetDato} /></Nav.Column>
                   </Nav.Row>
                   <dl className="arbeidsforhold__detaljer">
                     <dt>Ordning:</dt>
