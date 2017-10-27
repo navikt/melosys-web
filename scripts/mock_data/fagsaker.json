@@ -1,6 +1,15 @@
 {
-  "behandlinger": [
-    {
+  "behandlinger": [{
+      "oppsummering": {
+        "behandlingsType": "Førstegangs behandling",
+        "behandlingsMedlemskap": "4833 Nav Medlemskap",
+        "behandlingsStatus": {
+          "kode": "12345678",
+          "term": "Under behandling"
+        },
+        "opprettet": "2018-05-10",
+        "sistOppdatert": "2018-05-10"
+      },
       "person": {
         "fnr": "01016500543",
         "sivilstand": "Gift",
@@ -272,6 +281,21 @@
         }
       ],
       "soknaden": {
+        "soknadStatus": {
+          "kode": "3344",
+          "term": "Under behandling"
+        },
+        "soknadsPerioder": [
+          {
+            "fom": "2017-10-01",
+            "tom": "2018-03-31"
+          },
+          {
+            "fom": "2018-05-01",
+            "tom": "2018-08-31"
+          }
+        ],
+        "soknadsType": "A1",
         "tilleggsopplysninger": "Jeg håper denne søknaden kan behandles så fort som mulig. I lys av en tverrfaglig oppgaveløsning spores kompetansehevingen med henblikk på resultatoppnåelsen. Etter en totalvurdering av en økt målsetting forankres risikofaktorene i relasjon til beskaffenheten. I forhold til en bærekraftig implementering tilgjengeliggjøres forankringen innenfor rammen av ressurssituasjonen. Under forutsetning av en tiltagende avveining identifiseres relasjonene i forlengelsen av konseptet.",
         "inntekt": {
           "naringsinntekt": {
@@ -305,7 +329,7 @@
         },
         "arbeidsgiverUtland": {
           "orgnummer": "1293-2123-34241-2233 U 23",
-          "firmanavn": "",
+          "firmanavn": "Der Deutche Financecompany",
           "adresseUtland": [
             "U figure out this structure"
           ],
