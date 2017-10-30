@@ -59,11 +59,12 @@ node {
       echo('Build...')
       sh(returnStdout: true, script: "${npm} run build")
       //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
-      withCredentials([usernamePassword(credentialsId: 'A150244', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+      //withCredentials([usernamePassword(credentialsId: 'A150244', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
         // available as an env variable, but will be masked if you try to print it out any which way
-        sh 'echo $PASSWORD'
+        sh 'echo $env.PASSWORD'
         // also available as a Groovy variable—note double quotes for string interpolation
-        echo "$USERNAME"
+        echo "$GIT_USERNAME"
       }
 
     }
