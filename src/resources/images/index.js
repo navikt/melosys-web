@@ -6,6 +6,8 @@ import * as Feil from './ikon-steg-feil.svg';
 import * as VedtakAvslatt from './ikon-vedtak-avslatt.svg';
 import * as VedakUbehandlet from './ikon-vedtak-ubehandlet.svg';
 import * as VedtakGodkjent from './ikon-vedtak-godkjent.svg';
+import * as Mann from './ikon-mann.svg';
+import * as Kvinne from './ikon-kvinne.svg';
 
 export { Ubehandlet };
 export { Aktivt };
@@ -15,4 +17,6 @@ export { Feil };
 export { VedtakAvslatt };
 export { VedakUbehandlet };
 export { VedtakGodkjent };
+export { Mann };
+export { Kvinne };
 
