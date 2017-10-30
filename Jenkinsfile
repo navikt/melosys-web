@@ -55,11 +55,8 @@ node {
     stage('Build') {
       echo('Build...')
       sh(returnStdout: true, script: "${npm} run build")
-      //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
-      withCredentials([string(credentialsId: 'navikt-jenkins', variable:'GITHUB_OAUTH_TOKEN')]) {
+      sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
 
-        echo "TESTING"
-      }
     }
     /*
     stage('Deploy') {
