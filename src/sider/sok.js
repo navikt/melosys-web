@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import { Container, Row, Column } from 'nav-frontend-grid';
 
 import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import * as Nav from '../utils/navFrontend';
@@ -36,21 +35,21 @@ class Sok extends Component {
 
     return (
       <div className="sok">
-        <Container>
-          <Row>
-            <Column xs="7">
+        <Nav.Container>
+          <Nav.Row>
+            <Nav.Column xs="7">
               <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
               {visSokefelt && <SokeForm onSubmit={this.update} /> }
               {visResultat && <SokResultat saker={nyesaker} aria-describedby="something" /> }
-            </Column>
-            <Column xs="5">
+            </Nav.Column>
+            <Nav.Column xs="5">
               <Nav.Innholdstittel id="overskriftUnderbehandling">Saker under behandling</Nav.Innholdstittel>
               <SokListe saker={sakerbehandles} kanViseFlereSaker aria-describedby="overskriftUnderbehandling" />
               <Nav.Innholdstittel id="overskriftTitligeresaker">Tidligere behandlede saker</Nav.Innholdstittel>
               <SokListe saker={tidligeresaker} kanViseFlereSaker aria-describedby="overskriftTitligeresaker" />
-            </Column>
-          </Row>
-        </Container>
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Container>
       </div>
     );
   }
