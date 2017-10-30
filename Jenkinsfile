@@ -56,11 +56,9 @@ node {
       echo('Build...')
       sh(returnStdout: true, script: "${npm} run build")
       //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
-      withCredentials([usernamePassword(credentialsId: 'navikt-jenkins', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-        // available as an env variable, but will be masked if you try to print it out any which way
-        sh 'echo $PASSWORD'
-        // also available as a Groovy variable—note double quotes for string interpolation
-        echo "$USERNAME"
+      withCredentials([string(credentialsId: 'navikt-jenkins', variable:'GITHUB_OAUTH_TOKEN')]) {
+
+        echo "TESTING"
       }
     }
     /*
