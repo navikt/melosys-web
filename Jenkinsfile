@@ -32,11 +32,14 @@ node {
 
     stage('initialize') {
       commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+      echo "commitHash=${commitHash}"
       commitHashShort = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+      echo "commitHashShort=${commitHashShort}"
       commitUrl = "https://github.com/${project}/${application}/commit/${commitHash}"
-
+      echo "commitUrl=${commitUrl}"
       /* gets the person who committed last as "Surname, First name" */
       committer = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
+      echo "committer=${committer}"
     }
 
     stage('npm install ') {
@@ -55,7 +58,13 @@ node {
     stage('Build') {
       echo('Build...')
       sh(returnStdout: true, script: "${npm} run build")
-      sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
+      //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
+      withCredentials([usernamePassword(credentialsId: 'A150244', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+        // available as an env variable, but will be masked if you try to print it out any which way
+        sh 'echo $PASSWORD'
+        // also available as a Groovy variable—note double quotes for string interpolation
+        echo "$USERNAME"
+      }
 
     }
     /*
