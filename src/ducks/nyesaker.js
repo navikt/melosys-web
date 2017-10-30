@@ -11,6 +11,7 @@ const initalState = {
   status: STATUS.NOT_STARTED,
   data: [],
 };
+
 // Reducer
 export default function reducer(state = initalState, action) {
   switch (action.type) {

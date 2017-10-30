@@ -1,42 +1,18 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import { Container, Row, Column } from 'nav-frontend-grid';
-import './sok.css';
+
 import SokeForm from '../moduler/arbeidsforhold/soke-form';
+import * as Nav from '../utils/navFrontend';
+import SokListe from '../felles-komponenter/sok/sokListe';
+import SokResultat from '../felles-komponenter/sok/sokResultat';
 import { hentNyesaker, NyesakerSelector } from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
 import { TidligeresakerSelector } from '../ducks/tidligeresaker';
 
-const uuid = require('uuid/v4');
-
-function Lenke(item) {
-  const { fnr, sammensattNavn } = item;
-  const link = `/saksbehandling/${fnr}`;
-  return <li><Link to={link}>{sammensattNavn}</Link></li>;
-}
-
-Lenke.propTypes = {
-  fnr: PT.string.isRequired,
-  sammensattNavn: PT.string.isRequired,
-};
-
-const LenkeListe = ({ saker }) => {
-  if (!saker || !saker.length) {
-    return null;
-  }
-  const lenker = saker.map(item => <Lenke key={uuid()} {...item} />);
-  return (
-    <ul>
-      {lenker}
-    </ul>
-  );
-};
-
-LenkeListe.propTypes = {
-  saker: PT.array.isRequired,
-};
+import './sok.css';
 
 class Sok extends Component {
   constructor(props) {
@@ -44,27 +20,34 @@ class Sok extends Component {
     this.update = this.update.bind(this);
   }
 
+  componentWillMount() {
+    this.setState({ brukerHarGjortSok: false });
+  }
+
   update(value) {
+    this.setState({ brukerHarGjortSok: true });
     this.props.hentNyesaker(value.fnr);
   }
 
   render() {
     const { nyesaker, sakerbehandles, tidligeresaker } = this.props;
+    const visSokefelt = !this.state.brukerHarGjortSok;
+    const visResultat = this.state.brukerHarGjortSok;
 
     return (
       <div className="sok">
         <Container>
           <Row>
             <Column xs="7">
-              <h1>Søk</h1>
-              <SokeForm onSubmit={this.update} />
-              <LenkeListe saker={nyesaker} />
+              <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
+              {visSokefelt && <SokeForm onSubmit={this.update} /> }
+              {visResultat && <SokResultat saker={nyesaker} aria-describedby="something" /> }
             </Column>
             <Column xs="5">
-              <h1>Saker under behandling</h1>
-              <LenkeListe saker={sakerbehandles} />
-              <h1>Tidlgere behandlede saker</h1>
-              <LenkeListe saker={tidligeresaker} />
+              <Nav.Innholdstittel id="overskriftUnderbehandling">Saker under behandling</Nav.Innholdstittel>
+              <SokListe saker={sakerbehandles} kanViseFlereSaker aria-describedby="overskriftUnderbehandling" />
+              <Nav.Innholdstittel id="overskriftTitligeresaker">Tidligere behandlede saker</Nav.Innholdstittel>
+              <SokListe saker={tidligeresaker} kanViseFlereSaker aria-describedby="overskriftTitligeresaker" />
             </Column>
           </Row>
         </Container>
@@ -90,4 +73,4 @@ const mapDispatchToProps = dispatch => ({
   hentNyesaker: fnr => dispatch(hentNyesaker(fnr)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sok);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok));
