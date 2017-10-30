@@ -6,7 +6,7 @@ node {
   def application = "melosys"
 
   /* metadata */
-  def commitHash, commitHashShort, commitUrl, committer, pom, currentVersion, releaseVersion
+  def commitHash, commitHashShort, commitUrl, committer
 
   /* tools */
   //tool name: 'recent node', type: 'nodejs'
@@ -30,6 +30,15 @@ node {
       checkout scm
     }
 
+    stage('initialize') {
+      commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+      commitHashShort = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+      commitUrl = "https://github.com/${project}/${application}/commit/${commitHash}"
+
+      /* gets the person who committed last as "Surname, First name" */
+      committer = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
+    }
+
     stage('npm install ') {
       echo('npm install')
       // sh('rm -rf node_modules')
@@ -46,6 +55,7 @@ node {
     stage('Build') {
       echo('Build...')
       sh(returnStdout: true, script: "${npm} run build")
+      sh(returnStdout: true, script: "docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
     }
     /*
     stage('Deploy') {
