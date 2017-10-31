@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import * as Nav from '../../utils/navFrontend';
 import StegVelger from './komponenter/stegVelger';
 import StegFane from './komponenter/stegFane';
-import './vilkarsvurdering.css';
 import * as Ikon from '../../resources/images';
+
+import './vilkarsveileder.css';
 
 class Vilkarsvurdering extends Component {
   // Todo: Sett opp evt. prop types og hook opp mot Redux med dispatch.
@@ -25,6 +26,10 @@ class Vilkarsvurdering extends Component {
     this.setState({ visited: visited.concat(stepIndex) });
   }
 
+  handleSubmit = () => {
+  }
+
+
   render() {
     const stegIkoner = {
       UBEHANDLET: Ikon.Ubehandlet,
@@ -43,19 +48,42 @@ class Vilkarsvurdering extends Component {
     };
 
     return (
-      <div className="vilkarsvurdering panelSeksjon">
+      <div className="vilkarsveileder panelSeksjon">
         <StegVelger>
           <StegFane ikoner={stegIkoner} visNesteKnapp>
-            <Nav.Innholdstittel type="innholdstittel">Vurdering:</Nav.Innholdstittel>
+            <Nav.Undertittel>Saken er opprettet:</Nav.Undertittel>
+            <Nav.Normaltekst>Velg type søknad og legg inn periode</Nav.Normaltekst>
+            <Nav.Container fluid>
+              <Nav.Row>
+                <Nav.Fieldset>
+                  <Nav.Column xs="4">
+                    <Nav.Select label="Type søknad" bredde="s">
+                      <option value="A1">A1</option>
+                      <option value="A2">A2</option>
+                      <option value="annen">Annen</option>
+                    </Nav.Select>
+                  </Nav.Column>
+                  <Nav.Column xs="4">
+                    <Nav.Input label="Fra" bredde="s" />
+                  </Nav.Column>
+                  <Nav.Column xs="4">
+                    <Nav.Input label="Til" bredde="s" />
+                  </Nav.Column>
+                </Nav.Fieldset>
+              </Nav.Row>
+            </Nav.Container>
+          </StegFane>
+          <StegFane ikoner={stegIkoner} visNesteKnapp>
+            <Nav.Systemtittel>Vurdering:</Nav.Systemtittel>
             <Nav.Fieldset legend="Vurder om søkeren er:">
               <Nav.Radio id="steg0_ikke_arbeidende" name="arbeidssted" label="Ikke arbeidende / ytelsesmottaker" />
               <Nav.Radio id="steg0_arbeidstaker" name="arbeidssted" label="Arbeidstaker" />
-              <Nav.Radio id="steg0_selvstendig" name="arbeidssted"label="Selvstendig næringsdrivende" />
+              <Nav.Radio id="steg0_selvstendig" name="arbeidssted" label="Selvstendig næringsdrivende" />
               <Nav.Radio id="steg0_arbeidstaker_selvstendig" name="arbeidssted" label="Både arbeidstakende og selvstendig" />
             </Nav.Fieldset>
           </StegFane>
           <StegFane ikoner={stegIkoner} visNesteKnapp>
-            <Nav.Innholdstittel type="innholdstittel">Vurdering:</Nav.Innholdstittel>
+            <Nav.Systemtittel>Vurdering:</Nav.Systemtittel>
             <Nav.Fieldset legend="Gjelder én eller flere av disse for søkeren?">
               <Nav.Checkbox id="steg1_ansatt_offentlig" label="Offentlig tjenestepensjon (relevant for 11.3 b)" />
               <Nav.Checkbox id="steg1_ansatt_skip" label="Ansatt på skip (relevant for 11.4" />
@@ -64,7 +92,7 @@ class Vilkarsvurdering extends Component {
             </Nav.Fieldset>
           </StegFane>
           <StegFane ikoner={stegIkoner} visNesteKnapp>
-            <Nav.Innholdstittel type="innholdstittel">Vurdering:</Nav.Innholdstittel>
+            <Nav.Systemtittel>Vurdering:</Nav.Systemtittel>
             <Nav.Fieldset legend="Hvor mange land skal søker arbeide/drive virsomhet i?">
               <Nav.Radio id="steg2_land_ett" name="land" label="Ett" />
               <Nav.Radio id="steg2_land_flere" name="land" label="To eller flere" />
@@ -86,7 +114,7 @@ class Vilkarsvurdering extends Component {
             <Nav.Container fluid>
               <Nav.Row>
                 <Nav.Column xs="12">
-                  <Nav.Systemtittel type="systemtittel">Foreslått vedtak:</Nav.Systemtittel>
+                  <Nav.Systemtittel>Foreslått vedtak:</Nav.Systemtittel>
                 </Nav.Column>
               </Nav.Row>
               <Nav.Row>
