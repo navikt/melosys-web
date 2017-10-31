@@ -7,22 +7,24 @@ import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import * as Nav from '../utils/navFrontend';
 import SokListe from '../felles-komponenter/sok/sokListe';
 import SokResultat from '../felles-komponenter/sok/sokResultat';
-import { hentNyesaker, NyesakerSelector } from '../ducks/nyesaker';
+import * as NyeSaker from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
 import { TidligeresakerSelector } from '../ducks/tidligeresaker';
-import { queryParam } from '../utils/utils';
 
 import './sok.css';
+
+const queryString = require('query-string');
 
 class Sok extends Component {
   constructor(props) {
     super(props);
-    this.hentNyeSaker = this.hentNyeSaker.bind(this);
+    this.queryStringHandler = this.queryStringHandler.bind(this);
   }
 
   componentWillMount() {
     this.setState({ brukerHarGjortSok: false });
-    const fnr = queryParam(this.props.location.search).fnr;
+    const queryParams = queryString.parse(this.props.location.search);
+    const { fnr } = queryParams;
 
     if (fnr) { this.props.hentNyesaker(fnr); }
   }
@@ -32,10 +34,11 @@ class Sok extends Component {
    *
    * @param value
    */
-  hentNyeSaker(value) {
+  queryStringHandler(value) {
     this.setState({ brukerHarGjortSok: true });
-    this.props.history.push(`?fnr=${value.fnr}`);
-    this.props.hentNyesaker(value.fnr);
+    const { history, hentNyesaker } = this.props;
+    history.push(`?fnr=${value.fnr}`);
+    hentNyesaker(value.fnr);
   }
 
   render() {
@@ -48,7 +51,7 @@ class Sok extends Component {
           <Nav.Row>
             <Nav.Column xs="7">
               <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
-              <SokeForm onSubmit={this.hentNyeSaker} />
+              <SokeForm onSubmit={this.queryStringHandler} />
               { visSokResultat && <SokResultat saker={nyesaker} /> }
             </Nav.Column>
             <Nav.Column xs="5">
@@ -75,14 +78,14 @@ Sok.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  nyesaker: NyesakerSelector(state),
+  nyesaker: NyeSaker.NyesakerSelector(state),
   sakerbehandles: SakerbehandlesSelector(state),
   tidligeresaker: TidligeresakerSelector(state),
   visSokResultat: (state.nyesaker.status === 'OK'),
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentNyesaker: fnr => dispatch(hentNyesaker(fnr)),
+  hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok));
