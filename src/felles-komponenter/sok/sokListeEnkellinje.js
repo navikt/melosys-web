@@ -8,7 +8,7 @@ import EnkeltDato from '../datoOmrade/enkeltDato';
 
 import './sokListeEnkeltlinje.css';
 
-const createPeriodeElem = periode => (
+const Periode = periode => (
   periode ?
     <Nav.UndertekstBold>Periode: <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} /></Nav.UndertekstBold>
     : null
@@ -19,9 +19,6 @@ function SokListeEnkeltlinje({ sak }) {
   const link = `/saksbehandling/${fnr}`;
   const ikon = sak.kjoenn === 'M' ? Ikon.Mann : Ikon.Kvinne;
   const ikonAlt = sak.kjoenn === 'M' ? 'mann' : 'kvinne';
-
-
-  const periodeElement = createPeriodeElem(periode);
 
   return (
     <div className="sokliste__enkeltlinje">
@@ -34,7 +31,7 @@ function SokListeEnkeltlinje({ sak }) {
             <Nav.Undertittel>{sammensattNavn}</Nav.Undertittel>
             <Nav.Element>Fødselsnr: {fnr}</Nav.Element>
             <Nav.UndertekstBold>Mottatt: <EnkeltDato dato={mottatt} /></Nav.UndertekstBold>
-            {periodeElement}
+            <Periode periode={periode} />
             <Nav.UndertekstBold>Status: {status}</Nav.UndertekstBold>
           </div>
         </Nav.Panel>
