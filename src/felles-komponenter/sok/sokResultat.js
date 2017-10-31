@@ -17,11 +17,11 @@ function SokResultat(props) {
     'Ingen funnet';
 
   return (
-    <div className="sokresultat">
+    <section className="sokresultat" arial-label={`Søkeresultat: Fikk ${saker.length} treff`}>
       <p>{introText}</p>
       {saker.map(sak => <SokListeEnkellinje key={uuid()} sak={sak} />)}
       <Link to="">Legg til sak</Link>
-    </div>
+    </section>
   );
 }
 
