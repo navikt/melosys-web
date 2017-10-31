@@ -40,7 +40,7 @@ class Sok extends Component {
             <Nav.Column xs="7">
               <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
               {visSokefelt && <SokeForm onSubmit={this.update} /> }
-              {visResultat && <SokResultat saker={nyesaker} aria-describedby="something" /> }
+              {visResultat && <SokResultat saker={nyesaker} /> }
             </Nav.Column>
             <Nav.Column xs="5">
               <Nav.Innholdstittel id="overskriftUnderbehandling">Saker under behandling</Nav.Innholdstittel>

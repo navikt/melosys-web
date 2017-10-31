@@ -12,6 +12,8 @@ function SokListeEnkeltlinje({ sak }) {
   const { fnr, sammensattNavn, mottatt, status, periode } = sak;
   const link = `/saksbehandling/${fnr}`;
   const ikon = sak.kjoenn === 'M' ? Ikon.Mann : Ikon.Kvinne;
+  const ikonAlt = sak.kjoenn === 'M' ? 'mann' : 'kvinne';
+
 
   const periodeElement = periode ? <Nav.UndertekstBold>Periode: <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} /></Nav.UndertekstBold> : null;
 
@@ -20,7 +22,7 @@ function SokListeEnkeltlinje({ sak }) {
       <Link to={link} className="enkeltlinje__link">
         <Nav.Panel className="enkeltlinje__panel">
           <div className="enkeltlinje__kjoenn">
-            <img src={ikon} alt="Ikon for kjønn" className="kjonn__ikon" />
+            <img src={ikon} alt={`Ikon for ${ikonAlt}`} className="kjonn__ikon" />
           </div>
           <div className="enkeltlinje__info">
             <Nav.Undertittel>{sammensattNavn}</Nav.Undertittel>
