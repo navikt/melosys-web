@@ -57,6 +57,8 @@ node {
       echo('Build...')
       sh(returnStdout: true, script: "${npm} run build")
       //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
+      sh "whoami"
+      sh "groups"
       sh "sudo docker build -t ${dockerRepo}/${application}${commitHashShort} ."
       /*
       //withCredentials([usernamePassword(credentialsId: 'A150244', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
