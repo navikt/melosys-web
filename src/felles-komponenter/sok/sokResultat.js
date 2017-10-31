@@ -8,18 +8,26 @@ import * as MPT from '../../proptypes';
 
 const uuid = require('uuid/v4');
 
-function SokResultat(props) {
-  const { saker } = props;
-
-  const introText = saker.length > 0 ?
+const IntroText = ({ saker }) => {
+  const introText = saker && saker.length > 0 ?
     'Knytt opplysningene til en eksisterende sak, eller legg til en ny sak på denne personen.'
     :
     'Ingen funnet';
+  return (
+    <p>{introText}</p>
+  );
+};
+IntroText.propTypes = {
+  saker: MPT.SokListe.isRequired,
+};
+
+function SokResultat(props) {
+  const { saker } = props;
 
   return (
     <section className="sokresultat" arial-label={`Søkeresultat: Fikk ${saker.length} treff`}>
-      <p>{introText}</p>
-      {saker.map(sak => <SokListeEnkellinje key={uuid()} sak={sak} />)}
+      <IntroText saker={saker} />
+      {saker && saker.map(sak => <SokListeEnkellinje key={uuid()} sak={sak} />)}
       <Link to="">Legg til sak</Link>
     </section>
   );
