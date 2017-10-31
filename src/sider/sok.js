@@ -10,28 +10,37 @@ import SokResultat from '../felles-komponenter/sok/sokResultat';
 import { hentNyesaker, NyesakerSelector } from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
 import { TidligeresakerSelector } from '../ducks/tidligeresaker';
+import { queryParam } from '../utils/utils';
 
 import './sok.css';
 
 class Sok extends Component {
   constructor(props) {
     super(props);
-    this.update = this.update.bind(this);
+    this.hentNyeSaker = this.hentNyeSaker.bind(this);
   }
 
   componentWillMount() {
     this.setState({ brukerHarGjortSok: false });
+    const fnr = queryParam(this.props.location.search).fnr;
+
+    if (fnr) { this.props.hentNyesaker(fnr); }
   }
 
-  update(value) {
+  /** Henter saker basert på fødselsnummer og setter query string 'fnr=xxxxxxxxxxx' slik at
+   * deter mulig å linke direkte til et søk.
+   *
+   * @param value
+   */
+  hentNyeSaker(value) {
     this.setState({ brukerHarGjortSok: true });
+    this.props.history.push(`?fnr=${value.fnr}`);
     this.props.hentNyesaker(value.fnr);
   }
 
   render() {
     const { nyesaker, sakerbehandles, tidligeresaker } = this.props;
-    const visSokefelt = !this.state.brukerHarGjortSok;
-    const visResultat = this.state.brukerHarGjortSok;
+    const { visSokResultat } = this.props;
 
     return (
       <div className="sok">
@@ -39,8 +48,8 @@ class Sok extends Component {
           <Nav.Row>
             <Nav.Column xs="7">
               <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
-              {visSokefelt && <SokeForm onSubmit={this.update} /> }
-              {visResultat && <SokResultat saker={nyesaker} /> }
+              <SokeForm onSubmit={this.hentNyeSaker} />
+              { visSokResultat && <SokResultat saker={nyesaker} /> }
             </Nav.Column>
             <Nav.Column xs="5">
               <Nav.Innholdstittel id="overskriftUnderbehandling">Saker under behandling</Nav.Innholdstittel>
@@ -60,12 +69,16 @@ Sok.propTypes = {
   hentNyesaker: PT.func.isRequired,
   tidligeresaker: PT.array.isRequired,
   sakerbehandles: PT.array.isRequired,
+  location: PT.object.isRequired,
+  visSokResultat: PT.bool.isRequired,
+  history: PT.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   nyesaker: NyesakerSelector(state),
   sakerbehandles: SakerbehandlesSelector(state),
   tidligeresaker: TidligeresakerSelector(state),
+  visSokResultat: (state.nyesaker.status === 'OK'),
 });
 
 const mapDispatchToProps = dispatch => ({
