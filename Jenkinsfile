@@ -2,8 +2,7 @@
 
 node {
   def project = "navikt"
-  def repoName = "melosys-web-proto"
-  def application = "melosys-web"
+  def application = "melosys-web-proto"
   def appConfig = "app-config.yaml"
   def dockerRepo = "docker.adeo.no:5000"
   def groupId = "nais"
@@ -12,8 +11,6 @@ node {
   def commitHash, commitHashShort, commitUrl, committer
 
   /* tools */
-  //tool name: 'recent node', type: 'nodejs'
-  //def NODEJS_HOME = "${tool 'recent node'}"
   def NODEJS_HOME = tool "node-6.2.1"
   def node = "${NODEJS_HOME}/bin/node"
   def npm = "${NODEJS_HOME}/bin/npm"
@@ -59,7 +56,7 @@ node {
       //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
       sh "whoami"
       sh "groups"
-      sh "docker build -t ${dockerRepo}/${application}${commitHashShort} ."
+      sh "docker build -t ${dockerRepo}/${application}:${commitHashShort} ."
       /*
       //withCredentials([usernamePassword(credentialsId: 'A150244', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
