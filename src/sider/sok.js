@@ -1,73 +1,67 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import { Container, Row, Column } from 'nav-frontend-grid';
-import './sok.css';
+
 import SokeForm from '../moduler/arbeidsforhold/soke-form';
-import { hentNyesaker, NyesakerSelector } from '../ducks/nyesaker';
+import * as Nav from '../utils/navFrontend';
+import SokListe from '../felles-komponenter/sok/sokListe';
+import SokResultat from '../felles-komponenter/sok/sokResultat';
+import * as NyeSaker from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
 import { TidligeresakerSelector } from '../ducks/tidligeresaker';
 
-const uuid = require('uuid/v4');
+import './sok.css';
 
-function Lenke(item) {
-  const { fnr, sammensattNavn } = item;
-  const link = `/saksbehandling/${fnr}`;
-  return <li><Link to={link}>{sammensattNavn}</Link></li>;
-}
-
-Lenke.propTypes = {
-  fnr: PT.string.isRequired,
-  sammensattNavn: PT.string.isRequired,
-};
-
-const LenkeListe = ({ saker }) => {
-  if (!saker || !saker.length) {
-    return null;
-  }
-  const lenker = saker.map(item => <Lenke key={uuid()} {...item} />);
-  return (
-    <ul>
-      {lenker}
-    </ul>
-  );
-};
-
-LenkeListe.propTypes = {
-  saker: PT.array.isRequired,
-};
+const queryString = require('query-string');
 
 class Sok extends Component {
   constructor(props) {
     super(props);
-    this.update = this.update.bind(this);
+    this.queryStringHandler = this.queryStringHandler.bind(this);
   }
 
-  update(value) {
-    this.props.hentNyesaker(value.fnr);
+  componentWillMount() {
+    this.setState({ brukerHarGjortSok: false });
+    const queryParams = queryString.parse(this.props.location.search);
+    const { fnr } = queryParams;
+
+    if (fnr) { this.props.hentNyesaker(fnr); }
+  }
+
+  /** Henter saker basert på fødselsnummer og setter query string 'fnr=xxxxxxxxxxx' slik at
+   * deter mulig å linke direkte til et søk.
+   *
+   * @param value
+   */
+  queryStringHandler(value) {
+    this.setState({ brukerHarGjortSok: true });
+    const { history, hentNyesaker } = this.props;
+    history.push(`?fnr=${value.fnr}`);
+    hentNyesaker(value.fnr);
   }
 
   render() {
     const { nyesaker, sakerbehandles, tidligeresaker } = this.props;
+    const { visSokResultat } = this.props;
 
     return (
       <div className="sok">
-        <Container>
-          <Row>
-            <Column xs="7">
-              <h1>Søk</h1>
-              <SokeForm onSubmit={this.update} />
-              <LenkeListe saker={nyesaker} />
-            </Column>
-            <Column xs="5">
-              <h1>Saker under behandling</h1>
-              <LenkeListe saker={sakerbehandles} />
-              <h1>Tidlgere behandlede saker</h1>
-              <LenkeListe saker={tidligeresaker} />
-            </Column>
-          </Row>
-        </Container>
+        <Nav.Container>
+          <Nav.Row>
+            <Nav.Column xs="7">
+              <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
+              <SokeForm onSubmit={this.queryStringHandler} />
+              { visSokResultat && <SokResultat saker={nyesaker} /> }
+            </Nav.Column>
+            <Nav.Column xs="5">
+              <Nav.Innholdstittel id="overskriftUnderbehandling">Saker under behandling</Nav.Innholdstittel>
+              <SokListe saker={sakerbehandles} kanViseFlereSaker aria-describedby="overskriftUnderbehandling" />
+              <Nav.Innholdstittel id="overskriftTitligeresaker">Tidligere behandlede saker</Nav.Innholdstittel>
+              <SokListe saker={tidligeresaker} kanViseFlereSaker aria-describedby="overskriftTitligeresaker" />
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Container>
       </div>
     );
   }
@@ -78,16 +72,20 @@ Sok.propTypes = {
   hentNyesaker: PT.func.isRequired,
   tidligeresaker: PT.array.isRequired,
   sakerbehandles: PT.array.isRequired,
+  location: PT.object.isRequired,
+  visSokResultat: PT.bool.isRequired,
+  history: PT.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  nyesaker: NyesakerSelector(state),
+  nyesaker: NyeSaker.NyesakerSelector(state),
   sakerbehandles: SakerbehandlesSelector(state),
   tidligeresaker: TidligeresakerSelector(state),
+  visSokResultat: (state.nyesaker.status === 'OK'),
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentNyesaker: fnr => dispatch(hentNyesaker(fnr)),
+  hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Sok);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok));
