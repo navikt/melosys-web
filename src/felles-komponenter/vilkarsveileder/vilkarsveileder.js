@@ -50,28 +50,28 @@ class Vilkarsvurdering extends Component {
     return (
       <div className="vilkarsveileder panelSeksjon">
         <StegVelger>
-          <StegFane ikoner={stegIkoner} visNesteKnapp>
+          <StegFane ikoner={stegIkoner}>
             <Nav.Undertittel>Saken er opprettet:</Nav.Undertittel>
             <Nav.Normaltekst>Velg type søknad og legg inn periode</Nav.Normaltekst>
-            <Nav.Container fluid>
-              <Nav.Row>
-                <Nav.Fieldset>
-                  <Nav.Column xs="4">
-                    <Nav.Select label="Type søknad" bredde="s">
-                      <option value="A1">A1</option>
-                      <option value="A2">A2</option>
-                      <option value="annen">Annen</option>
-                    </Nav.Select>
-                  </Nav.Column>
-                  <Nav.Column xs="4">
-                    <Nav.Input label="Fra" bredde="s" />
-                  </Nav.Column>
-                  <Nav.Column xs="4">
-                    <Nav.Input label="Til" bredde="s" />
-                  </Nav.Column>
-                </Nav.Fieldset>
-              </Nav.Row>
-            </Nav.Container>
+            <Nav.Row>
+              <Nav.Fieldset legend="">
+                <Nav.Column xs="4">
+                  <Nav.Select label="Type søknad" bredde="s">
+                    <option value="A1">A1</option>
+                    <option value="A2">A2</option>
+                    <option value="annen">Annen</option>
+                  </Nav.Select>
+                </Nav.Column>
+                <Nav.Column xs="4">
+                  <Nav.Input label="Fra dato" bredde="s" />
+                </Nav.Column>
+                <Nav.Column xs="4">
+                  <Nav.Input label="Til dato" bredde="s" />
+                </Nav.Column>
+              </Nav.Fieldset>
+              <Nav.Knapp className="fane__nesteknapp" onClick={this.props.nesteKnappKlikk}>Avbryt</Nav.Knapp>
+              <Nav.Knapp type="hoved" className="fane__nesteknapp" onClick={() => {}}>Bekreft og fortsett</Nav.Knapp>
+            </Nav.Row>
           </StegFane>
           <StegFane ikoner={stegIkoner} visNesteKnapp>
             <Nav.Systemtittel>Vurdering:</Nav.Systemtittel>
