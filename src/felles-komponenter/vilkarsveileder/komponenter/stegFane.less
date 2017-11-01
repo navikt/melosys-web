@@ -1,10 +1,11 @@
 @import '../../../constants';
 
-.stegVelger__fane {
-  display: flex;
+.stegFane {
+  display: none;
   position: relative;
   flex-direction: column;
   background-color: @white;
+  border-left: 6px solid @orange;
 
   &:before {
     position:absolute;
@@ -18,9 +19,17 @@
     border-bottom:15px solid #ffffff;
   }
 
-  .fane__nesteknapp {
+  .fane__knapplinje {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 2em 0 0 0;
+  }
+
+  .fane__navigasjonsknapp {
     display: flex;
     align-self: flex-end;
+    margin:0 0 0 1em;
   }
 
   &.steg0 {
@@ -48,3 +57,6 @@
   }
 }
 
+.stegFane--aktiv {
+  display:flex;
+}

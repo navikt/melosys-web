@@ -5,21 +5,28 @@ import classnames from 'classnames';
 import './stegIkon.css';
 
 function StegIkon(props) {
+  const className = classnames('stegIkon', !props.tilgjengelig ? 'stegIkon--utilgjengelig' : '');
+
   return (
     <li>
-      <button className={classnames('stegIkon', props.erAktiv ? 'stegIkon--aktiv' : '')} onClick={props.onClick} style={{ backgroundImage: `url(${props.ikon})` }} />
+      <button
+        className={className}
+        onClick={props.onClick}
+        style={{ backgroundImage: `url(${props.ikon})` }}
+        aria-disabled={!props.tilgjengelig}
+      />
     </li>
   );
 }
 
 StegIkon.propTypes = {
   ikon: PT.string,
-  erAktiv: PT.bool,
+  tilgjengelig: PT.bool,
   onClick: PT.func.isRequired,
 };
 
 StegIkon.defaultProps = {
-  erAktiv: false,
+  tilgjengelig: true,
   ikon: '',
 };
 
