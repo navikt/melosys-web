@@ -3,17 +3,14 @@ import PT from 'prop-types';
 import classnames from 'classnames';
 
 import { connect } from 'react-redux';
-import { Knapp } from 'nav-frontend-knapper';
 import { Panel } from 'nav-frontend-paneler';
 import './stegFane.css';
 
 class StegFane extends Component {
   static propTypes = {
-    visNesteKnapp: PT.bool,
-    nesteKnappKlikk: PT.func,
     children: PT.any.isRequired,
-    ikoner: PT.object,
     aktivtSteg: PT.number.isRequired,
+    stegNummer: PT.number.isRequired,
   }
 
   static defaultProps = {
@@ -23,14 +20,12 @@ class StegFane extends Component {
   }
 
   render() {
-    const { visNesteKnapp, children } = this.props;
-    const knapp = visNesteKnapp ? <Knapp type="hoved" className="fane__nesteknapp" onClick={this.props.nesteKnappKlikk}>Bekreft og fortsett</Knapp> : '';
-    const stegFaneKlasse = classnames('stegVelger__fane', `steg${this.props.aktivtSteg}`);
+    const { children, stegNummer } = this.props;
+    const stegFaneKlasse = classnames({ stegFane: true, 'stegFane--aktiv': this.props.aktivtSteg === stegNummer });
 
     return (
       <Panel className={stegFaneKlasse}>
         {children}
-        {knapp}
       </Panel>
     );
   }
