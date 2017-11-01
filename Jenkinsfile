@@ -56,7 +56,9 @@ node {
       //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
       sh "whoami"
       sh "groups"
-      sh "docker build -t ${dockerRepo}/${application}:${commitHashShort} ."
+      def imageName = "${dockerRepo}/${application}:${commitHashShort}"
+      sh "docker build -t ${imageName} ."
+      sh "docker push ${imageName}"
       /*
       //withCredentials([usernamePassword(credentialsId: 'A150244', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
