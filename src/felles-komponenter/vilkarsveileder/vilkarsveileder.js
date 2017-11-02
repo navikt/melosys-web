@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+
 import * as Ikon from '../../resources/images';
 import * as MPT from '../../proptypes';
 
