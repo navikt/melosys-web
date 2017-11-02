@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 
 function OppretteSak(props) {
-  const { bekreftOgFortsett, avbryt } = props;
+  const { bekreftOgFortsett, avbrytOpprettSak } = props;
 
   return (
     <div>
@@ -26,7 +26,7 @@ function OppretteSak(props) {
           </Nav.Column>
         </Nav.Fieldset>
         <div className="fane__knapplinje">
-          <Nav.Knapp className="fane__navigasjonsknapp" onClick={avbryt}>Avbryt</Nav.Knapp>
+          <Nav.Knapp className="fane__navigasjonsknapp" onClick={avbrytOpprettSak}>Avbryt</Nav.Knapp>
           <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </Nav.Row>
@@ -36,7 +36,7 @@ function OppretteSak(props) {
 
 OppretteSak.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  avbryt: PT.func.isRequired,
+  avbrytOpprettSak: PT.func.isRequired,
 };
 
 export default OppretteSak;
