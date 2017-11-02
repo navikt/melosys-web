@@ -68,11 +68,11 @@ class Vilkarsveileder extends Component {
       aktivtSteg: 0,
       steg: [
         { status: Vilkarsveileder.status.AKTIV, id: 0, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 1, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 2, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 3, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 4, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 5, ikoner: Vilkarsveileder.vedtakIkoner, tilgjengelig: true },
+        { status: Vilkarsveileder.status.UBEHANDLET, id: 1, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
+        { status: Vilkarsveileder.status.UBEHANDLET, id: 2, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
+        { status: Vilkarsveileder.status.FEIL, id: 3, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
+        { status: Vilkarsveileder.status.UBEHANDLET, id: 4, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
+        { status: Vilkarsveileder.status.UBEHANDLET, id: 5, ikoner: Vilkarsveileder.vedtakIkoner, tilgjengelig: false },
       ] });
   }
 
@@ -81,7 +81,7 @@ class Vilkarsveileder extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
-    this.nestSteg();
+    this.nesteSteg();
   }
 
   /** Setter igang behandling av en ny sak. Her vil vi legge inn
@@ -104,6 +104,7 @@ class Vilkarsveileder extends Component {
     const nyStegIkonState = { ...this.state.steg[nyttStegNummer] };
     const gammelStegIkonState = { ...this.state.steg[this.state.aktivtSteg] };
     nyStegIkonState.status = Vilkarsveileder.status.AKTIV;
+    nyStegIkonState.tilgjengelig = true;
     gammelStegIkonState.status = Vilkarsveileder.status.BEHANDLET;
 
     const nyeSteg = [...this.state.steg];
@@ -118,7 +119,7 @@ class Vilkarsveileder extends Component {
    * maks antall steg. Ved forsøk på å gå ytterligere steg
    * enn hva som er mulig skal funksjonen defaulte til siste steg.
    */
-  nestSteg = () => {
+  nesteSteg = () => {
     const maksSteg = this.state.steg.length;
     const nyttSteg = (this.state.aktivtSteg + 1 < maksSteg) ? this.state.aktivtSteg + 1 : this.state.aktivtSteg;
     this.tilSteg(nyttSteg);
