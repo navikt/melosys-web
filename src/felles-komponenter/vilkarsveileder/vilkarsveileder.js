@@ -26,7 +26,7 @@ class Vilkarsveileder extends Component {
     history: {},
   };
 
-  /** Hver fane kan ha en rekke forskjellige statuser som erment å indikere
+  /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
    * feil eller varsler som saksbehandleren må håndtere.
    *
    * @type {{UBEHANDLET: string, AKTIV: string, BEHANDLET: string, ADVARSEL: string, FEIL: string}}
@@ -92,7 +92,7 @@ class Vilkarsveileder extends Component {
     this.nesteSteg();
   }
 
-  avbryt = () => {
+  avbrytOpprettSak = () => {
     this.props.history.push(`/?fnr=${this.props.person.fnr}`);
   }
 
@@ -134,7 +134,7 @@ class Vilkarsveileder extends Component {
         <StegFane stegNummer={0} aktivtSteg={aktivtSteg}>
           <OppretteSak
             bekreftOgFortsett={this.bekreftOgFortsett}
-            avbryt={this.avbryt}
+            avbrytOpprettSak={this.avbrytOpprettSak}
           />
         </StegFane>
         <StegFane stegNummer={1} aktivtSteg={aktivtSteg}>
