@@ -40,16 +40,16 @@ export function hentFagsaker(snr) {
 }
 // selector(s)
 export const PersonSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].person : state.fagsaker.data),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
   person => person
 );
 export const InntektSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].inntekt : {}),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
   inntekt => inntekt
 );
 
 export const SoknadenSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].soknaden : state.fagsaker.data),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.soknaden : state.fagsaker.data),
   soknaden => soknaden
 );
 
@@ -59,27 +59,27 @@ export const InntektSoknadenSelector = createStructuredSelector({
 });
 
 export const BekreftelserSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].bekreftelser : state.fagsaker.data),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.bekreftelser : state.fagsaker.data),
   bekreftelser => bekreftelser
 );
 
 export const MedlemsskapSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].medlemsskap : state.fagsaker.data),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemsskap : state.fagsaker.data),
   medlemsskap => medlemsskap
 );
 export const OrganisasjonerSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].organisasjoner : []),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.organisasjoner : []),
   organisasjoner => organisasjoner
 );
 
 export const ArbeidsforholdeneSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].arbeidsforhold : []),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   arbeidsforhold => arbeidsforhold
 );
 
 export const ArbeidsforholdSelector = createSelector(
   (state, arbeidsforholdID) => arbeidsforholdID,
-  state => state.fagsaker.data.behandlinger[0].arbeidsforhold || [],
+  state => state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold || [],
   (arbeidsforholdID, arbeidsforhold) =>
     arbeidsforhold.find(
       item => item.arbeidsforholdIDnav.toString() === arbeidsforholdID
@@ -104,4 +104,21 @@ export const OppsummeringSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].oppsummering : {}),
   state => SoknadenSelector(state),
   (oppsummering, soknaden) => ({ ...oppsummering, soknaden })
+);
+
+/** Hent alle arbeidsforhold og trekk ut permisjoner. I tillegg skal hver permisjon ha en kopi av arbeidsgiver
+ * slik at komponenten enklere kan loope ut hver permisjon med tilhørende arbeidsgiver i en tabell.
+ */
+export const PermisjonerSelector = createSelector(
+  state => ArbeidsforholdeneSelector(state),
+  arbeidsforholdene => {
+    // Reduce alle permisjoner fra flere arbeidsforhold inn i én array.
+    const permisjoner = arbeidsforholdene.reduce((samling, forhold) => {
+      // Slå sammen hver permisjon i ett arbeidsforhold med en kopi av kopi av "arbeidstiver"-objektet.
+      const permisjonerIForhold = forhold.permisjonOgPermittering.map(permisjon => ({ ...permisjon, arbeidsgiver: forhold.arbeidsgiver }));
+      return [...samling, ...permisjonerIForhold];
+    }, []);
+
+    return permisjoner;
+  }
 );
