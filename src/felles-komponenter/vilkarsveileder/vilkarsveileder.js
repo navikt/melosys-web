@@ -82,6 +82,7 @@ class Vilkarsveileder extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
+    // 'this' for å henvise til class.
     this.nesteSteg();
   }
 
