@@ -54,9 +54,12 @@ node {
       echo('Build...')
       sh(returnStdout: true, script: "${npm} run build")
       //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
-      sh "whoami"
-      sh "groups"
+      sh "scp -r build/ B150245@e34apvl00327.devillo.no:melosys/build/"
       def imageName = "${dockerRepo}/${application}:${commitHashShort}"
+      sh "mkdir -p docker/build"
+      sh "cp Dockerfile docker"
+      sh "cp -r build docker/build"
+      sh "cd docker"
       sh "docker build -t ${imageName} ."
       sh "docker push ${imageName}"
       /*
