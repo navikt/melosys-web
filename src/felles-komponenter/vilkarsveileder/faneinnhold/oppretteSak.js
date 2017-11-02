@@ -2,8 +2,6 @@ import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 
-import '../komponenter/stegIkon.css';
-
 function OppretteSak(props) {
   const { bekreftOgFortsett, avbryt } = props;
 
@@ -39,10 +37,6 @@ function OppretteSak(props) {
 OppretteSak.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   avbryt: PT.func.isRequired,
-};
-
-OppretteSak.defaultProps = {
-
 };
 
 export default OppretteSak;

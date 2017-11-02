@@ -3,11 +3,12 @@ import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as Ikon from '../../resources/images';
 import * as MPT from '../../proptypes';
+
 import StegLinje from './komponenter/stegLinje';
 import StegFane from './komponenter/stegFane';
 
 import OppretteSak from './faneinnhold/oppretteSak';
-import StartVurdering from './faneinnhold/startVurdering';
+import StartBehandling from './faneinnhold/startBehandling';
 import VurderingArbeidstype from './faneinnhold/vurderingArbeidstype';
 import VurderingSektor from './faneinnhold/vurderingSektor';
 import VurderingLand from './faneinnhold/vurderingLand';
@@ -25,6 +26,11 @@ class Vilkarsveileder extends Component {
     history: {},
   };
 
+  /** Hver fane kan ha en rekke forskjellige statuser som erment å indikere
+   * feil eller varsler som saksbehandleren må håndtere.
+   *
+   * @type {{UBEHANDLET: string, AKTIV: string, BEHANDLET: string, ADVARSEL: string, FEIL: string}}
+   */
   static status = {
     UBEHANDLET: 'UBEHANDLET',
     AKTIV: 'AKTIV',
@@ -33,6 +39,10 @@ class Vilkarsveileder extends Component {
     FEIL: 'FEIL',
   };
 
+  /** Avhengig av status viser StegLinjen (med StegIkon) tilhørende status-ikon.
+   *
+   * @type {{UBEHANDLET, AKTIV, BEHANDLET, ADVARSEL, FEIL}}
+   */
   static stegIkoner = {
     UBEHANDLET: Ikon.Ubehandlet,
     AKTIV: Ikon.Aktivt,
@@ -41,6 +51,10 @@ class Vilkarsveileder extends Component {
     FEIL: Ikon.Feil,
   };
 
+  /** Vedtak (siste fane) har egne ikonsett
+   *
+   * @type {{UBEHANDLET, AKTIV, BEHANDLET, ADVARSEL, FEIL}}
+   */
   static vedtakIkoner = {
     UBEHANDLET: Ikon.VedakUbehandlet,
     AKTIV: Ikon.VedtakGodkjent,
@@ -62,16 +76,20 @@ class Vilkarsveileder extends Component {
       ] });
   }
 
-  handleSubmit = () => {
-
-  }
-
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
     this.nestSteg();
+  }
+
+  /** Setter igang behandling av en ny sak. Her vil vi legge inn
+   * evt action dispatch for async API requests, men TBA enn så lenge.
+   *
+   */
+  startBehandling = () => {
+    this.nesteSteg();
   }
 
   avbryt = () => {
@@ -119,16 +137,24 @@ class Vilkarsveileder extends Component {
           />
         </StegFane>
         <StegFane stegNummer={1} aktivtSteg={aktivtSteg}>
-          <StartVurdering />
+          <StartBehandling
+            startBehandling={this.startBehandling}
+          />
         </StegFane>
         <StegFane stegNummer={2} aktivtSteg={aktivtSteg}>
-          <VurderingArbeidstype />
+          <VurderingArbeidstype
+            bekreftOgFortsett={this.bekreftOgFortsett}
+          />
         </StegFane>
         <StegFane stegNummer={3} aktivtSteg={aktivtSteg}>
-          <VurderingSektor />
+          <VurderingSektor
+            bekreftOgFortsett={this.bekreftOgFortsett}
+          />
         </StegFane>
         <StegFane stegNummer={4} aktivtSteg={aktivtSteg}>
-          <VurderingLand />
+          <VurderingLand
+            bekreftOgFortsett={this.bekreftOgFortsett}
+          />
         </StegFane>
         <StegFane stegNummer={5} aktivtSteg={aktivtSteg}>
           <Vedtak />
