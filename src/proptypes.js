@@ -212,6 +212,12 @@ const PermisjonenPropType = PT.shape({
 
 const PermisjonerPropType = PT.arrayOf(PermisjonenPropType);
 
+const SokListeEnkeltlinjePropType = PT.shape({
+  fnr: PT.string.isRequired,
+  sammensattNavn: PT.string.isRequired,
+});
+
+const SokListePropType = PT.arrayOf(SokListeEnkeltlinjePropType);
 
 export {
   SaksbehandlerPropType as Saksbehandler,
@@ -233,4 +239,6 @@ export {
   OppsummeringPropType as Oppsummering,
   PermisjonenPropType as Permisjonen,
   PermisjonerPropType as Permisjoner,
+  SokListePropType as SokListe,
+  SokListeEnkeltlinjePropType as SokListeEnkeltlinje,
 };
