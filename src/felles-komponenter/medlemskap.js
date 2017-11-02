@@ -4,6 +4,7 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 import './medlemskap.css';
 import DatoOmrade from './datoOmrade/datoOmrade';
+import EnkeltDato from './datoOmrade/enkeltDato';
 
 const uuid = require('uuid/v4');
 
@@ -34,8 +35,8 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
         <Nav.Column xs="6" lg="5">
           <DatoOmrade periode={periode} titler={{ fom: 'Fra', tom: 'Til' }} />
           <Nav.Row>
-            <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Registrert</Nav.Element>{dato.registrert}</Nav.Column>
-            <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Besluttet</Nav.Element>{dato.besluttet}</Nav.Column>
+            <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Registrert</Nav.Element><EnkeltDato dato={dato.registrert} /></Nav.Column>
+            <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Besluttet</Nav.Element><EnkeltDato dato={dato.besluttet} /></Nav.Column>
           </Nav.Row>
         </Nav.Column>
         {/* SLUTT DATO RANGE */}

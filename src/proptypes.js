@@ -199,6 +199,26 @@ const OppsummeringPropType = PT.shape({
   sistOppdatert: PT.string,
 });
 
+const PermisjonenPropType = PT.shape({
+  grad: PT.string,
+  inntektstype: PT.string,
+  permisjonstype: PT.string,
+  periode: PT.shape({
+    fom: PT.string,
+    tom: PT.string,
+  }),
+  innmeldt: PT.string,
+});
+
+const PermisjonerPropType = PT.arrayOf(PermisjonenPropType);
+
+const SokListeEnkeltlinjePropType = PT.shape({
+  fnr: PT.string.isRequired,
+  sammensattNavn: PT.string.isRequired,
+});
+
+const SokListePropType = PT.arrayOf(SokListeEnkeltlinjePropType);
+
 export {
   SaksbehandlerPropType as Saksbehandler,
   BostedsAdressePropType as BostedsAdresse,
@@ -217,4 +237,8 @@ export {
   InntektPropType as Inntekt,
   InntektLinjePropType as InntektLinje,
   OppsummeringPropType as Oppsummering,
+  PermisjonenPropType as Permisjonen,
+  PermisjonerPropType as Permisjoner,
+  SokListePropType as SokListe,
+  SokListeEnkeltlinjePropType as SokListeEnkeltlinje,
 };

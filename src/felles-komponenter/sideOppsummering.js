@@ -1,6 +1,7 @@
 import React from 'react';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
+import EnkeltDato from './datoOmrade/enkeltDato';
 
 import './sideOppsummering.css';
 
@@ -46,7 +47,7 @@ function SideOppsummering(props) {
               <dt>Oppholdsperioder:</dt>
               <dd>
                 {soknaden.soknadsPerioder.map((periode, index) => (
-                  <Nav.Normaltekst key={uuid()}>Periode #{index + 1}: <time dateTime={periode.fom}>{periode.fom}</time> - <time dateTime={periode.tom}>{periode.tom}</time></Nav.Normaltekst>
+                  <Nav.Normaltekst key={uuid()}>Periode #{index + 1}: <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} /></Nav.Normaltekst>
                 ))}
               </dd>
             </dl>
@@ -59,9 +60,9 @@ function SideOppsummering(props) {
             <Nav.Systemtittel>{behandlingsType} - {behandlingsMedlemskap}</Nav.Systemtittel>
             <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
               <dt>Opprettet:</dt>
-              <dl><time dateTime={opprettet}>{opprettet}</time></dl>
+              <dl><EnkeltDato dato={opprettet} /></dl>
               <dt>Oppdatert:</dt>
-              <dl><time dateTime={sistOppdatert}>{sistOppdatert}</time></dl>
+              <dl><EnkeltDato dato={sistOppdatert} /></dl>
               <dt>Behandlingsstatus:</dt>
               <dl>{behandlingsStatus.kode} - {behandlingsStatus.term}</dl>
             </dl>

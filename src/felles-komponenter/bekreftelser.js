@@ -2,6 +2,7 @@ import React from 'react';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 
+import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 import './bekreftelser.css';
 
 function boolTilNorsk (value) {
@@ -39,7 +40,7 @@ function Bekreftelser ({ bekreftelser }) {
               <dt>Plikter arbeidsgiver å betale arbeidsgiveravgift?</dt>
               <dd>{boolTilNorsk(arbeidsgiveravgift)}</dd>
               <dt>Blir trygdeavgift trukket gjennom skatten under utenlandsoppholdet?</dt>
-              <dd>{boolTilNorsk(trygdeavgiftTrukket)} - gjelder t.o.m {trygdeavgiftTrukketDato}</dd>
+              <dd>{boolTilNorsk(trygdeavgiftTrukket)} - gjelder t.o.m <EnkeltDato dato={trygdeavgiftTrukketDato} /></dd>
             </dl>
           </Nav.Column>
         </Nav.Row>
