@@ -15,7 +15,7 @@ import {
   ArbeidsforholdetSelector,
   OrganisasjonSelectorByNavID,
 } from '../ducks/saksopplysninger';
-import * as MPT from '../proptypes';
+import * as MPT from '../proptypes/';
 
 const uuid = require('uuid/v5');
 const queryString = require('query-string');

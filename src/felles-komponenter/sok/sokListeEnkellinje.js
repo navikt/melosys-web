@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import * as MPT from '../../proptypes';
+import * as MPT from '../../proptypes/';
 import * as Nav from '../../utils/navFrontend';
 import * as Ikon from '../../resources/images/index';
+
 import EnkeltDato from '../datoOmrade/enkeltDato';
 
 import './sokListeEnkeltlinje.css';

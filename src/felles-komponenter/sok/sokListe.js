@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PT from 'prop-types';
 
+import * as MPT from '../../proptypes/';
+
 import SokListeEnkellinje from './sokListeEnkellinje';
+
 import './sokListe.css';
-import * as MPT from '../../proptypes';
 
 const uuid = require('uuid/v4');
 
