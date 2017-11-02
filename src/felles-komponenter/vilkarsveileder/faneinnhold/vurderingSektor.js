@@ -1,9 +1,10 @@
 import React from 'react';
+import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 
-import '../komponenter/stegIkon.css';
+const VurderingSektor = props => {
+  const { bekreftOgFortsett } = props;
 
-function VurderingSektor() {
   return (
     <div>
       <Nav.Undertittel>Vurdering:</Nav.Undertittel>
@@ -14,18 +15,14 @@ function VurderingSektor() {
         <Nav.Checkbox id="steg1_ansatt_flyvende" label="Flyvende personell (relevant for 11.5)" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={() => this.bekreftOgFortsett()}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
-}
-
-VurderingSektor.propTypes = {
-
 };
 
-VurderingSektor.defaultProps = {
-
+VurderingSektor.propTypes = {
+  bekreftOgFortsett: PT.func.isRequired,
 };
 
 export default VurderingSektor;
