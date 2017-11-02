@@ -14,7 +14,7 @@ import {
   ArbeidsforholdSelector,
 } from '../ducks/saksopplysninger';
 import './arbeidsforhold.css';
-import * as MPT from '../proptypes';
+import * as MPT from '../proptypes/';
 
 const datoFormat = dato => (
   moment(dato).format('DD MMM YYYY')

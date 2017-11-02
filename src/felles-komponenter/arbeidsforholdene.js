@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes';
+import * as MPT from '../proptypes/';
 
 import './arbeidsforholdene.css';
 import DatoOmrade from './datoOmrade/datoOmrade';
