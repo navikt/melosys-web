@@ -4,7 +4,7 @@ import { withRouter } from 'react-router';
 import PT from 'prop-types';
 import * as Nav from '../utils/navFrontend';
 import './saksbehandling.css';
-import Vilkarsvurdering from '../felles-komponenter/vilkarsvurdering/vilkarsvurdering';
+import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
@@ -80,7 +80,7 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Vilkarsvurdering />
+              <Vilkarsveileder person={person} />
               <Personopplysninger person={person} />
               <Tilleggsopplysninger />
               {permisjoner && <Permisjoner permisjoner={permisjoner} />}

@@ -1,0 +1,76 @@
+@import '../../../constants';
+
+.stegFane {
+  display: none;
+  position: relative;
+  flex-direction: column;
+  background-color: @white;
+  border-left: 6px solid @orange;
+
+  &:before {
+    position:absolute;
+    content: '';
+    width: 30px;
+    height: 30px;
+    top:-30px;
+    left:0.5em;
+    border-right:15px solid transparent;
+    border-left:15px solid transparent;
+    border-bottom:15px solid #ffffff;
+  }
+
+  .fane__knapplinje {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    margin: 2em 0 0 0;
+  }
+
+  .fane__navigasjonsknapp {
+    display: flex;
+    align-self: flex-end;
+    margin:0 0 0 1em;
+  }
+
+  @stegSpacing: 46px;
+
+  &.steg0 {
+    &:before {
+      transform:translateX(@stegSpacing * 0);
+    }
+  }
+
+  &.steg1 {
+    &:before {
+      transform:translateX(@stegSpacing * 1);
+    }
+  }
+
+  &.steg2 {
+    &:before {
+      transform:translateX(@stegSpacing * 2);
+    }
+  }
+
+  &.steg3 {
+    &:before {
+      transform:translateX(@stegSpacing * 3);
+    }
+  }
+
+  &.steg4 {
+    &:before {
+      transform:translateX(@stegSpacing * 4);
+    }
+  }
+
+  &.steg5 {
+    &:before {
+      transform:translateX(@stegSpacing * 5);
+    }
+  }
+}
+
+.stegFane--aktiv {
+  display:flex;
+}
