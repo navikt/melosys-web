@@ -2,7 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 
-function OppretteSak(props) {
+const OppretteSak = props => {
   const { bekreftOgFortsett, avbrytOpprettSak } = props;
 
   return (
@@ -14,7 +14,6 @@ function OppretteSak(props) {
           <Nav.Column xs="4">
             <Nav.Select label="Type søknad" bredde="s">
               <option value="A1">A1</option>
-              <option value="A2">A2</option>
               <option value="annen">Annen</option>
             </Nav.Select>
           </Nav.Column>
@@ -32,7 +31,7 @@ function OppretteSak(props) {
       </Nav.Row>
     </div>
   );
-}
+};
 
 OppretteSak.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
