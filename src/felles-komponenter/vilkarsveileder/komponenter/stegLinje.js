@@ -3,11 +3,11 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import StegIkon from './stegIkon';
-import './stegVelger.css';
+import './stegLinje.css';
 
 const uuid = require('uuid/v4');
 
-class StegVelger extends Component {
+class StegLinje extends Component {
   static defaultProps = {
     steg: [],
   }
@@ -43,4 +43,4 @@ const mapStateToProps = () => ({});
 
 const mapDispatchToProps = () => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(StegVelger);
+export default connect(mapStateToProps, mapDispatchToProps)(StegLinje);
