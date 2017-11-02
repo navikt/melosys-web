@@ -241,3 +241,13 @@ export function HiddenIf({ hidden, children }) {
   }
   return children;
 }
+
+export function queryParam(sporreStreng){
+  return sporreStreng
+    .replace('?','')
+    .split('&')
+    .reduce((samling, enkeltSporring) => {
+      const [key, value] = enkeltSporring.split('=');
+      return key ? { ...samling, [key]:value } : { ...samling }
+    },{});
+}
