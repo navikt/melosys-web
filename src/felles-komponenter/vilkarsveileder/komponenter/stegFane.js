@@ -1,38 +1,34 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import classnames from 'classnames';
 
-import { connect } from 'react-redux';
-import { Panel } from 'nav-frontend-paneler';
+import * as Nav from '../../../utils/navFrontend';
+
 import './stegFane.css';
 
-class StegFane extends Component {
-  static propTypes = {
-    children: PT.any.isRequired,
-    aktivtSteg: PT.number.isRequired,
-    stegNummer: PT.number.isRequired,
-  }
+const StegFane = props => {
+  const { children, stegNummer, aktivtSteg } = props;
 
-  static defaultProps = {
-    visNesteKnapp: false,
-    nesteKnappKlikk: () => { throw new Error('INGEN_EVENT_KOBLET'); },
-    ikoner: {},
-  }
+  const stegFaneKlasse = classnames({ stegFane: true, [`steg${stegNummer}`]: true, 'stegFane--aktiv': aktivtSteg === stegNummer });
 
-  render() {
-    const { children, stegNummer } = this.props;
-    const stegFaneKlasse = classnames({ stegFane: true, [`steg${stegNummer}`]: true, 'stegFane--aktiv': this.props.aktivtSteg === stegNummer });
+  return (
+    <Nav.Panel className={stegFaneKlasse}>
+      {children}
+    </Nav.Panel>
+  );
+};
 
-    return (
-      <Panel className={stegFaneKlasse}>
-        {children}
-      </Panel>
-    );
-  }
-}
+StegFane.propTypes = {
+  children: PT.any.isRequired,
+  aktivtSteg: PT.number.isRequired,
+  stegNummer: PT.number.isRequired,
+};
 
-const mapStateToProps = () => ({});
+StegFane.defaultProps = {
+  visNesteKnapp: false,
+  nesteKnappKlikk: () => { throw new Error('INGEN_EVENT_KOBLET'); },
+  ikoner: {},
+};
 
-const mapDispatchToProps = () => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(StegFane);
+export default StegFane;

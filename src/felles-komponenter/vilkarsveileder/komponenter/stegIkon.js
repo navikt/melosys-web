@@ -4,7 +4,7 @@ import classnames from 'classnames';
 
 import './stegIkon.css';
 
-function StegIkon(props) {
+const StegIkon = props => {
   const className = classnames('stegIkon', !props.tilgjengelig ? 'stegIkon--utilgjengelig' : '');
 
   return (
@@ -17,7 +17,7 @@ function StegIkon(props) {
       />
     </li>
   );
-}
+};
 
 StegIkon.propTypes = {
   ikon: PT.string,
