@@ -21,7 +21,7 @@ class StegFane extends Component {
 
   render() {
     const { children, stegNummer } = this.props;
-    const stegFaneKlasse = classnames({ stegFane: true, 'stegFane--aktiv': this.props.aktivtSteg === stegNummer });
+    const stegFaneKlasse = classnames({ stegFane: true, [`steg${stegNummer}`]: true, 'stegFane--aktiv': this.props.aktivtSteg === stegNummer });
 
     return (
       <Panel className={stegFaneKlasse}>

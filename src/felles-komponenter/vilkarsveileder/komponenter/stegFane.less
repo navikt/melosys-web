@@ -32,27 +32,41 @@
     margin:0 0 0 1em;
   }
 
+  @stegSpacing: 46px;
+
   &.steg0 {
     &:before {
-      transform:translateX(0);
+      transform:translateX(@stegSpacing * 0);
     }
   }
 
   &.steg1 {
     &:before {
-      transform:translateX(45px);
+      transform:translateX(@stegSpacing * 1);
     }
   }
 
   &.steg2 {
     &:before {
-      transform:translateX(90px);
+      transform:translateX(@stegSpacing * 2);
     }
   }
 
   &.steg3 {
     &:before {
-      transform:translateX(135px);
+      transform:translateX(@stegSpacing * 3);
+    }
+  }
+
+  &.steg4 {
+    &:before {
+      transform:translateX(@stegSpacing * 4);
+    }
+  }
+
+  &.steg5 {
+    &:before {
+      transform:translateX(@stegSpacing * 5);
     }
   }
 }

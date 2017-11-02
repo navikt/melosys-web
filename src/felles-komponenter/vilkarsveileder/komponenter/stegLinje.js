@@ -31,7 +31,7 @@ class StegLinje extends Component {
 
     return (
       <div>
-        <ul className="stegVelger">
+        <ul className="stegLinje">
           {stegKnapper}
         </ul>
       </div>
