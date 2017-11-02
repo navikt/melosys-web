@@ -28,7 +28,7 @@ import {
   PermisjonerSelector,
 } from '../ducks/fagsaker';
 
-import * as MPT from '../proptypes';
+import * as MPT from '../proptypes/';
 
 class Saksbehandling extends Component {
   static propTypes = {

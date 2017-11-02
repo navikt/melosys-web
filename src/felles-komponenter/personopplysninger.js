@@ -1,7 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes';
+import * as MPT from '../proptypes/';
 
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 

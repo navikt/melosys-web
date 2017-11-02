@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import * as navLogo from '../resources/images/nav.svg';
 
 import './topplinje.css';
-import * as MPT from '../proptypes';
+import * as MPT from '../proptypes/';
 
 import {
   SaksbehandlerSelector,
