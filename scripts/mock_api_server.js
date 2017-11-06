@@ -39,7 +39,22 @@ const fagsaker = (req, res) => {
     return res.status(500).send(err);
   }
 };
-router.get('/fagsaker/:fnr?', fagsaker);
+//router.get('/fagsaker/:fnr?', fagsaker);
+const nyefagsaker = (req, res) => {
+  try {
+    const fnr = req.params.fnr && req.params.fnr.toString() || '';
+    const data = JSON.parse(fs.readFileSync("./scripts/mock_data/nyefagsaker.json", "utf8"));
+    const fagsak = _.find(data.response, function (fagsakitem) {
+      return fagsakitem.behandlinger[0].saksopplysninger.person.fnr === fnr;
+    });
+    return res.json(fagsak);
+  }
+  catch (err) {
+    console.error(err);
+    return res.status(500).send(err);
+  }
+};
+router.get('/fagsaker/:fnr', nyefagsaker);
 
 router.get('/nyesaker/:fnr', function (req, res) {
   try {
@@ -132,7 +147,7 @@ router.get('/saksbehandler', function (req, res) {
 });
 
 app.use(allowCrossDomain);
-app.use('/system/melosys/api', router);
+app.use('/melosys/api', router);
 app.use('/api', router);
 
 app.listen(port);

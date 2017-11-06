@@ -1,0 +1,2140 @@
+{"response":[
+  {
+    "saksnummer": 120,
+    "type": "SØKNAD_A1",
+    "status": "OPPRETTET",
+    "registrertDato": "2017-10-19T12:31:36",
+    "behandlinger": [{
+      "oppsummering": {
+        "gsakID": 123,
+        "status": "Under behandling",
+        "type": "SØKNAD",
+        "registrertDato": "2018-05-10T14:35:54"
+      },
+      "saksopplysninger": {
+        "person": {
+          "fnr": "01016500543",
+          "sivilstand": "Gift",
+          "statsborgerskap": "SVERIGE",
+          "kjoenn": "K",
+          "fornavn": "UNNI FOS",
+          "etternavn": "KVALUY",
+          "sammensattNavn": "UNNI FOS KVALUY ",
+          "foedselsdato": "1959-01-01",
+          "bostedsadresse": {
+            "gateadresse": {
+              "gatenavn": "EINERHAUGEN",
+              "husnummer": 123,
+              "husbokstav": "A"
+            },
+            "postnr": "5003",
+            "poststed": "BERGEN",
+            "land": "NORGE"
+          },
+          "mobiltelefon": "99 99 99 99",
+          "epost": "UNNI.FOS@DOMENET.COM",
+          "familerelasjon": {
+            "ektefelle": {
+              "sammensattNavn": "OLA NORDMANN FOS",
+              "alder": 58
+            },
+            "barn": [
+              {
+                "sammensattNavn": "TRYM FOS",
+                "alder": 16
+              },
+              {
+                "sammensattNavn": "EMMA FOS",
+                "alder": 17
+              }
+            ]
+          }
+        },
+        "inntekt": {
+          "arbeidsInntektMaanedListe": [
+            {
+              "aarMaaned": "2017-06",
+              "arbeidsInntektInformasjon": {
+                "inntektListe": [
+                  {
+                    "beloep": 25000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2017-10-06T12:52:58.993",
+                    "utbetaltIPeriode": "2017-06",
+                    "opplysningspliktigID": "873152362",
+                    "virksomhetID": "873152362",
+                    "inntektsmottakerID": "16016939696",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "beskrivelse": "fastloenn"
+                  },
+                  {
+                    "beloep": 25000,
+                    "fordel": "kontantytelse",
+                    "inntektskilde": "A-ordningen",
+                    "inntektsperiodetype": "Maaned",
+                    "inntektsstatus": "LoependeInnrapportert",
+                    "levereringstidspunkt": "2017-10-06T12:52:58.999",
+                    "utbetaltIPeriode": "2017-06",
+                    "opplysningspliktigID": "873152362",
+                    "virksomhetID": "873152362",
+                    "inntektsmottakerID": "16016939696",
+                    "inngaarIGrunnlagForTrekk": true,
+                    "utloeserArbeidsgiveravgift": true,
+                    "beskrivelse": "fastloenn"
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "arbeidsforhold": [
+          {
+            "arbeidsforholdID": "konvertert_3ca4d061-a2a3-4b31-a3f7-7ef310e8608c",
+            "arbeidsforholdIDnav": 6767328,
+            "ansettelsesPeriode": {
+              "fom": "2010-04-03",
+              "tom": ""
+            },
+            "registrertDato": "2010-04-01",
+            "bekreftetDato": "2017-01-10",
+            "ordning": "NY",
+            "timelonnet": [
+              {
+                "antallTimer": 1800,
+                "periode": {
+                  "fom": "2010-04-03",
+                  "tom": "2010-12-31"
+                }
+              },
+              {
+                "antallTimer": 1950,
+                "periode": {
+                  "fom": "2011-01-01",
+                  "tom": "2011-12-31"
+                }
+              },
+              {
+                "antallTimer": 1950,
+                "periode": {
+                  "fom": "2012-01-01",
+                  "tom": "2012-12-31"
+                }
+              },
+              {
+                "antallTimer": 1950,
+                "periode": {
+                  "fom": "2013-01-01",
+                  "tom": "2013-12-31"
+                }
+              },
+              {
+                "antallTimer": 1950,
+                "periode": {
+                  "fom": "2014-01-01",
+                  "tom": "2014-12-31"
+                }
+              },
+              {
+                "antallTimer": 1950,
+                "periode": {
+                  "fom": "2015-01-01",
+                  "tom": "2015-12-31"
+                }
+              },
+              {
+                "antallTimer": 1950,
+                "periode": {
+                  "fom": "2016-01-01",
+                  "tom": "2016-12-31"
+                }
+              },
+              {
+                "antallTimer": 1950,
+                "periode": {
+                  "fom": "2017-01-01",
+                  "tom": "2017-12-31"
+                }
+              }
+            ],
+            "yrkeskode": "3432 101",
+            "yrke": "REGNSKAPSFØRER",
+            "arbeidstidsordning": "Ikke Skift, KODEVERK",
+            "arbeidsforholdstype": "Ordinært arbeidsforhold",
+            "permisjonOgPermittering": [
+              {
+                "grad": "10",
+                "inntektstype": "Lønnet",
+                "permisjonstype": "Permisjon",
+                "periode": {
+                  "fom": "2015-01-01",
+                  "tom": "2015-07-01"
+                },
+                "innmeldt": "2014-12-14"
+              },
+              {
+                "grad": "100",
+                "inntektstype": "Ulønnet",
+                "permisjonstype": "Permittering",
+                "periode": {
+                  "fom": "2013-01-01",
+                  "tom": "2013-07-01"
+                },
+                "innmeldt": "2013-01-02"
+              }
+            ],
+            "utenlandsopphold": [
+              {
+                "landkode": "kodeverk",
+                "rapporteringsperiode": "yyyymm",
+                "hjemmekontor": false,
+                "fysiskAdresse": {
+
+                },
+                "firmaNavn": ""
+              }
+            ],
+            "arbeidsavtale": [
+              {
+                "yrke": "REGNSKAPSFØRER",
+                "beregnetAntallTimerPrUke": "37.5",
+                "endringsdatoStillingsprosent": "2010-01-05"
+              }
+            ],
+            "arbeidsgiver": {
+              "orgnummer": "123456789",
+              "navn": "BERGENSFINANS AS"
+            },
+            "arbeidstakerID": "01015900543",
+            "opplysningspliktig": {
+              "orgnummer": "123456789",
+              "navn": "BERGENSFINANS AS"
+            },
+            "arbeidsforholdInnrapportertEtterAOrdningen": false
+          }
+        ],
+        "bekreftelser": {
+          "utsendt": true,
+          "ansatt": true,
+          "erstatter": false,
+          "over24m": false,
+          "arbeidsgiveravgift": false,
+          "trygdeavgift": {
+            "trukket": false,
+            "tom": ""
+          }
+        },
+        "organisasjoner": [
+          {
+            "orgnummer": "123456789",
+            "navn": "BERGENSFINANS AS",
+            "forretningsadresse": {
+              "gateadresse": {
+                "gatenavn": "Rådhusgaten 999 "
+              },
+              "postnr": "5000",
+              "poststed": "BERGEN",
+              "land": "NORGE"
+            },
+            "postadresse": "Postboks 1234 5000 BERGEN NORGE",
+            "kontakt": {
+              "navn": "Ola Nordmann",
+              "telefon": "+47 12 34 56 78",
+              "epost": "ola.nordmann@arbeidsgiveren.no"
+            }
+          }
+        ],
+        "soknaden": {
+          "soknadStatus": {
+            "kode": "3344",
+            "term": "Under behandling"
+          },
+          "soknadsPerioder": [
+            {
+              "fom": "2017-10-01",
+              "tom": "2018-03-31"
+            },
+            {
+              "fom": "2018-05-01",
+              "tom": "2018-08-31"
+            }
+          ],
+          "soknadsType": "A1",
+          "tilleggsopplysninger": "Jeg håper denne søknaden kan behandles så fort som mulig. I lys av en tverrfaglig oppgaveløsning spores kompetansehevingen med henblikk på resultatoppnåelsen. Etter en totalvurdering av en økt målsetting forankres risikofaktorene i relasjon til beskaffenheten. I forhold til en bærekraftig implementering tilgjengeliggjøres forankringen innenfor rammen av ressurssituasjonen. Under forutsetning av en tiltagende avveining identifiseres relasjonene i forlengelsen av konseptet.",
+          "inntekt": {
+            "naringsinntekt": {
+              "innlands": {
+                "prMaaned": 8000,
+                "valuta": "NOK"
+              },
+              "utenlands": {
+                "prMaaned": 1500,
+                "valuta": "EUR"
+              }
+            },
+            "lonnsinntekt": {
+              "innlands": {
+                "periode": {
+                  "fom": "17-01-01",
+                  "tom": "17-12-31"
+                },
+                "prMaaned": 22000,
+                "valuta": "NOK"
+              },
+              "utenlands": {
+                "periode": {
+                  "fom": "16.06.01",
+                  "tom": "16.12.31"
+                },
+                "prMaaned": 2200,
+                "valuta": "EUR"
+              }
+            }
+          },
+          "arbeidsgiverUtland": {
+            "orgnummer": "1293-2123-34241-2233 U 23",
+            "firmanavn": "Der Deutche Financecompany",
+            "adresseUtland": [
+              "U figure out this structure"
+            ],
+            "kontaktPerson": {
+              "sammensattNavn": "Wolfgang Schaube",
+              "telefon": "00 49 123-1234-333333",
+              "epost": "wolfang.schaube@derdeutchefinancecompany.com"
+            },
+            "oppholdsland": "Tyskland",
+            "bosted": "Tyskland",
+            "utenlandskID": "ukjent"
+          }
+        },
+        "medlemsskap": {
+          "aktorID": "",
+          "periodeListe": [
+            {
+              "id": 2084473,
+              "periode": {
+                "tom": "2011-12-31",
+                "fom": "2011-01-01"
+              },
+              "meta": {
+                "opprinneligOpprettetAv": "PMEDL003",
+                "sistEndretAv": "BASIS-319",
+                "tidspunktOpprinneligOpprettet": "2011-05-13T09:27:20.223+02:00",
+                "tidspunktSistEndret": "2012-03-24T04:00:14.069+01:00"
+              },
+              "version": 0,
+              "dato": {
+                "registrert": "2013-01-21",
+                "besluttet": "2013-01-21"
+              },
+              "status": {
+                "kode": "GYLD",
+                "term": "Gyldig"
+              },
+              "helsedel": false,
+              "type": {
+                "kode": "PUMEDSKP",
+                "term": "Periode uten medlemsskap"
+              },
+              "lovvalg": {
+                "kode": "ENDL",
+                "term": "Endelig"
+              },
+              "grunnlagstype": {
+                "kode": "IMEDEOS",
+                "term": "Ikke medlem, EØS-avtalen"
+              },
+              "land": {
+                "kode": "SWE",
+                "term": "SVERIGE"
+              },
+              "trygdedekning": {
+                "kode": "Untatt",
+                "term": "Untatt"
+              },
+              "kildedokumenttype": {
+                "kode": "E101",
+                "term": "E101"
+              },
+              "register": "Gosys, Infotrygd, Avgiftssystemet, Lånekassen, ..."
+            }
+          ]
+        }
+      },
+      "behandlingshistorikk": []
+    }]
+  },
+  {
+    "saksnummer": 123,
+    "type": "SØKNAD_A1",
+    "status": "OPPRETTET",
+    "registrertDato": "2017-10-19T12:31:36",
+    "behandlinger": [
+      {
+        "oppsummering": {
+          "gsakID": 123,
+          "status": "AVSLUTTET",
+          "type": "SØKNAD",
+          "registrertDato": "2017-10-16T14:35:54"
+        },
+        "saksopplysninger": {
+          "person": {
+            "fnr": "05056335023",
+            "sivilstand": "Gift",
+            "statsborgerskap": "NOR",
+            "sammensattNavn": "HAUKÅS MARIT",
+            "bostedsadresse": {
+              "gateadresse": {
+                "gatenavn": "VILHELM BJERKNES' VEI",
+                "gatenummer": 0,
+                "husnummer": 58,
+                "husbokstav": "A"
+              },
+              "postnr": "5081",
+              "land": "NOR"
+            },
+            "kjoenn": "K",
+            "foedselsdato": "1963-05-05"
+          },
+          "inntekt": {
+            "arbeidsInntektMaanedListe": [
+              {
+                "aarMaaned": "2017-06",
+                "arbeidsInntektInformasjon": {
+                  "inntektListe": [
+                    {
+                      "beloep": 25000,
+                      "fordel": "kontantytelse",
+                      "inntektskilde": "A-ordningen",
+                      "inntektsperiodetype": "Maaned",
+                      "inntektsstatus": "LoependeInnrapportert",
+                      "levereringstidspunkt": "2017-10-06T12:52:58.993",
+                      "utbetaltIPeriode": "2017-06",
+                      "opplysningspliktigID": "873152362",
+                      "virksomhetID": "873152362",
+                      "inntektsmottakerID": "16016939696",
+                      "inngaarIGrunnlagForTrekk": true,
+                      "utloeserArbeidsgiveravgift": true,
+                      "beskrivelse": "fastloenn"
+                    },
+                    {
+                      "beloep": 25000,
+                      "fordel": "kontantytelse",
+                      "inntektskilde": "A-ordningen",
+                      "inntektsperiodetype": "Maaned",
+                      "inntektsstatus": "LoependeInnrapportert",
+                      "levereringstidspunkt": "2017-10-06T12:52:58.999",
+                      "utbetaltIPeriode": "2017-06",
+                      "opplysningspliktigID": "873152362",
+                      "virksomhetID": "873152362",
+                      "inntektsmottakerID": "16016939696",
+                      "inngaarIGrunnlagForTrekk": true,
+                      "utloeserArbeidsgiveravgift": true,
+                      "beskrivelse": "fastloenn"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "bekreftelser": {
+            "utsendt": true,
+            "ansatt": true,
+            "erstatter": false,
+            "over24m": false,
+            "arbeidsgiveravgift": false,
+            "trygdeavgift": {
+              "trukket": false,
+              "tom": ""
+            }
+          },
+          "arbeidsforhold": [
+            {
+              "arbeidsforholdID": "konvertert_97a38348-1041-4037-9ebe-f00aea12b1a8",
+              "arbeidsforholdIDnav": 12498433,
+              "ansettelsesPeriode": {
+                "fom": "1978-08-19",
+                "tom": "1979-07-15"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "",
+                  "beregnetAntallTimerPrUke": 19,
+                  "endringsdatoStillingsprosent": "1978-08-19"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "68628695001",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "68628695001",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_8bff2b7e-00e1-4c35-bebc-01a75203b690",
+              "arbeidsforholdIDnav": 12498434,
+              "ansettelsesPeriode": {
+                "fom": "1979-07-02",
+                "tom": "1979-08-03"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "1979-07-02"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973162144",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "951237116",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_8d5297c3-a409-4fcf-a41f-6a8c95b42dce",
+              "arbeidsforholdIDnav": 12498435,
+              "ansettelsesPeriode": {
+                "fom": "1980-06-23",
+                "tom": "1980-08-01"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "1980-06-23"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973162144",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "951237116",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_9936a0a6-f990-40bb-92a4-cb8509686d6c",
+              "arbeidsforholdIDnav": 12498436,
+              "ansettelsesPeriode": {
+                "fom": "1981-06-22",
+                "tom": "1981-07-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "1981-06-22"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973162152",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "951237116",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_aca3f831-5d71-4640-9171-10c7b57cd482",
+              "arbeidsforholdIDnav": 12498437,
+              "ansettelsesPeriode": {
+                "fom": "1982-06-21",
+                "tom": "1982-07-30"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "1982-06-21"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973162152",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "951237116",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_e3f3220d-d31d-4573-916b-4bb8f2359685",
+              "arbeidsforholdIDnav": 12498438,
+              "ansettelsesPeriode": {
+                "fom": "1984-08-30",
+                "tom": "1984-12-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "1984-08-30"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973162152",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "951237116",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_3284aaaa-cd1f-4aab-9cea-54104b3f2c13",
+              "arbeidsforholdIDnav": 12498439,
+              "ansettelsesPeriode": {
+                "fom": "1985-02-06",
+                "tom": "1985-03-04"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "",
+                  "beregnetAntallTimerPrUke": 29,
+                  "endringsdatoStillingsprosent": "1985-02-06"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973271334",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "971432063",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_1f24b5d7-df9c-4870-b10c-23f7aa6502a0",
+              "arbeidsforholdIDnav": 12498443,
+              "ansettelsesPeriode": {
+                "fom": "1994-01-01",
+                "tom": "2007-12-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "HJELPEPLEIER",
+                  "beregnetAntallTimerPrUke": 26.81,
+                  "endringsdatoStillingsprosent": "2006-02-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973960679",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "974774577",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_20bff9b5-47f2-46b7-97aa-d45373726cbd",
+              "arbeidsforholdIDnav": 12498440,
+              "ansettelsesPeriode": {
+                "fom": "1986-07-15",
+                "tom": "1986-12-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "1986-07-15"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974116944",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "938277184",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_1e144a65-6cb5-4f1b-8cf2-61acd5ca84be",
+              "arbeidsforholdIDnav": 12498442,
+              "ansettelsesPeriode": {
+                "fom": "1990-05-01",
+                "tom": "1993-12-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "",
+                  "beregnetAntallTimerPrUke": 29,
+                  "endringsdatoStillingsprosent": "1990-05-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974600862",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "964338442",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_93bb1f11-1d2a-429a-81a0-08a8ab48c464",
+              "arbeidsforholdIDnav": 12498441,
+              "ansettelsesPeriode": {
+                "fom": "1987-01-05",
+                "tom": "1989-04-30"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "",
+                  "beregnetAntallTimerPrUke": 19,
+                  "endringsdatoStillingsprosent": "1989-01-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974737779",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "971561718",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_c54be14f-c115-4508-904c-cd7ec7eae37a",
+              "arbeidsforholdIDnav": 12498444,
+              "ansettelsesPeriode": {
+                "fom": "2008-01-01",
+                "tom": "2008-05-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "HJELPEPLEIER",
+                  "beregnetAntallTimerPrUke": 26.55,
+                  "endringsdatoStillingsprosent": "2008-05-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "982715261",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "974773880",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_cb1a6129-d056-4ce3-8430-2a1530070596",
+              "arbeidsforholdIDnav": 12498445,
+              "ansettelsesPeriode": {
+                "fom": "2008-06-01",
+                "tom": "2010-07-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "HJELPEPLEIER",
+                  "beregnetAntallTimerPrUke": 22.17,
+                  "endringsdatoStillingsprosent": "2010-05-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "982715261",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "974773880",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_17dd807a-4040-41a8-839a-fd694b5b7864",
+              "arbeidsforholdIDnav": 12498446,
+              "ansettelsesPeriode": {
+                "fom": "2010-08-01",
+                "tom": "2014-12-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "HJELPEPLEIER",
+                  "beregnetAntallTimerPrUke": 22.17,
+                  "endringsdatoStillingsprosent": "2011-07-31"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "995816598",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "974773880",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "V995816598R69435S1001L0001",
+              "arbeidsforholdIDnav": 34697962,
+              "ansettelsesPeriode": {
+                "fom": "2013-11-01"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "Døgnkontinuerlig skiftarbeid og\n                    turnusarbeid (35,5 t/u)\n                ",
+                  "avloenningstype": "Fastlønn",
+                  "yrke": "HJELPEPLEIER",
+                  "avtaltArbeidstimerPerUke": 35.5,
+                  "stillingsprosent": 62.44,
+                  "sisteLoennsendringsdato": "2014-05-01",
+                  "beregnetAntallTimerPrUke": 22.1662,
+                  "endringsdatoStillingsprosent": "2013-11-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "995816598",
+              "arbeidstakerID": "05056335023",
+              "opplysningspliktigID": "964338531",
+              "A-ordning": true
+            }
+          ],
+          "organisasjoner": [
+            {
+              "orgnr": "873102322",
+              "navn": "MULTICONSULT ASA",
+              "forretningsadresse": {
+                "gateadresse": {
+                  "gatenavn": "Nesttunbrekka 99"
+                },
+                "postnr": "5221",
+                "land": "NO"
+              }
+            }
+          ],
+          "soknaden": {},
+          "medlemsskap": {}
+        },
+        "behandlingshistorikk": [
+          {
+            "dato": "2017-10-31T13:58:10",
+            "status": "UNDER_BEHANDLING",
+            "steg": "KLARGJORT",
+            "ident": "A150244",
+            "kommentar": "......."
+          },
+          {
+            "dato": "2017-10-31T13:58:10",
+            "status": "OPPRETTET",
+            "steg": "NY",
+            "ident": "A150244",
+            "kommentar": "..."
+          }
+        ]
+      },
+      {
+        "oppsummering": {
+          "gsakID": 123,
+          "status": "UNDER_BEHANDLING",
+          "type": "PÅSTAND_UTL",
+          "registrertDato": "2017-10-17T14:35:54"
+        },
+        "saksopplysninger": {
+          "person": {
+            "fnr": "05056335023",
+            "sivilstand": "Ugift",
+            "statsborgerskap": "NOR",
+            "sammensattNavn": "HAUKÅS MARIT",
+            "bostedsadresse": {
+              "gateadresse": {
+                "gatenavn": "VILHELM BJERKNES' VEI",
+                "gatenummer": 0,
+                "husnummer": 58,
+                "husbokstav": "A"
+              },
+              "postnr": "5081",
+              "land": "NOR"
+            },
+            "kjoenn": "K",
+            "foedselsdato": "1963-05-05"
+          },
+          "inntekt": {},
+          "bekreftelser": {},
+          "organisasjoner": [
+            {
+              "orgnr": "910253158",
+              "navn": "MULTICONSULT ASA",
+              "forretningsadresse": {
+                "gateadresse": {
+                  "gatenavn": "Nedre Skøyen vei 2"
+                },
+                "postnr": "0276",
+                "land": "NO"
+              },
+              "postadresse": {
+                "gateadresse": {
+                  "gatenavn": "Postboks 265  Skøyen"
+                },
+                "postnr": "0213",
+                "land": "NO"
+              }
+            }
+          ],
+          "arbeidsforhold": [
+            {
+              "arbeidsforholdID": "GABGPX9O59IZTRD5ILIT60N8",
+              "arbeidsforholdIDnav": 35516487,
+              "ansettelsesPeriode": {
+                "fom": "2013-08-19",
+                "tom": "2015-05-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "Ikke skift",
+                  "avloenningstype": "Fastlønn",
+                  "yrke": "SIVILINGENIØR (BYGG OG ANLEGG)",
+                  "avtaltArbeidstimerPerUke": 40,
+                  "stillingsprosent": 100,
+                  "sisteLoennsendringsdato": "2014-07-01",
+                  "beregnetAntallTimerPrUke": 40,
+                  "endringsdatoStillingsprosent": "2013-08-19"
+                }
+              ],
+              "permisjonOgPermittering": [
+                {
+                  "permisjonsId": "RHFZHKEHZQ3N4F39ZVK1LURO",
+                  "permisjonsPeriode": {
+                    "fom": "2014-08-21",
+                    "tom": "2014-08-21"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "24MHXNSR0KYP118IQLFWK0TR",
+                  "permisjonsPeriode": {
+                    "fom": "2014-08-18",
+                    "tom": "2014-08-18"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                }
+              ],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "873102322",
+              "arbeidstakerID": "10048332876",
+              "opplysningspliktigID": "910253158",
+              "A-ordning": true
+            },
+            {
+              "arbeidsforholdID": "konvertert_d1fbb862-9605-48fb-9be3-6d66b193b00a",
+              "arbeidsforholdIDnav": 6767325,
+              "ansettelsesPeriode": {
+                "fom": "2013-08-19",
+                "tom": "2014-12-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "SIVILINGENIØR (BYGG OG ANLEGG)",
+                  "beregnetAntallTimerPrUke": 40,
+                  "endringsdatoStillingsprosent": "2013-08-19"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "873102322",
+              "arbeidstakerID": "10048332876",
+              "opplysningspliktigID": "910253158",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_0aa2654e-0c10-406f-933d-52ab7f5a20a4",
+              "arbeidsforholdIDnav": 6768424,
+              "ansettelsesPeriode": {
+                "fom": "2010-06-01",
+                "tom": "2010-08-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "PLEIEMEDHJELPER",
+                  "beregnetAntallTimerPrUke": 8.98,
+                  "endringsdatoStillingsprosent": "2010-08-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973982427",
+              "arbeidstakerID": "10048332876",
+              "opplysningspliktigID": "942952880",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_3ca4d061-a2a3-4b31-a3f7-7ef310e8608c",
+              "arbeidsforholdIDnav": 6767328,
+              "ansettelsesPeriode": {
+                "fom": "2010-01-05",
+                "tom": "2010-01-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "PLEIEMEDHJELPER",
+                  "beregnetAntallTimerPrUke": 6.89,
+                  "endringsdatoStillingsprosent": "2010-01-05"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973982427",
+              "arbeidstakerID": "10048332876",
+              "opplysningspliktigID": "942952880",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_83b47566-253d-433b-9d80-851a8cc9c8cc",
+              "arbeidsforholdIDnav": 6767327,
+              "ansettelsesPeriode": {
+                "fom": "2009-07-01",
+                "tom": "2009-08-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "PLEIEMEDHJELPER",
+                  "beregnetAntallTimerPrUke": 17.27,
+                  "endringsdatoStillingsprosent": "2009-07-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973982427",
+              "arbeidstakerID": "10048332876",
+              "opplysningspliktigID": "942952880",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "V974600951R100636S1001L0001",
+              "arbeidsforholdIDnav": 36958123,
+              "ansettelsesPeriode": {
+                "fom": "2015-06-01"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "Ikke skift",
+                  "avloenningstype": "Fastlønn",
+                  "yrke": "INGENIØR (ØVRIG TEKNISK VIRKSOMHET)",
+                  "avtaltArbeidstimerPerUke": 37.5,
+                  "stillingsprosent": 100,
+                  "sisteLoennsendringsdato": "2015-06-01",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "2015-06-01"
+                }
+              ],
+              "permisjonOgPermittering": [
+                {
+                  "permisjonsId": "P00006",
+                  "permisjonsPeriode": {
+                    "fom": "2017-02-15",
+                    "tom": "2017-02-20"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00001",
+                  "permisjonsPeriode": {
+                    "fom": "2015-09-02",
+                    "tom": "2015-09-04"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00004",
+                  "permisjonsPeriode": {
+                    "fom": "2016-09-01",
+                    "tom": "2016-09-02"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00005",
+                  "permisjonsPeriode": {
+                    "fom": "2016-08-22",
+                    "tom": "2016-08-26"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00002",
+                  "permisjonsPeriode": {
+                    "fom": "2016-02-18",
+                    "tom": "2016-02-22"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00003",
+                  "permisjonsPeriode": {
+                    "fom": "2016-03-31",
+                    "tom": "2016-04-01"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00007",
+                  "permisjonsPeriode": {
+                    "fom": "2017-05-05",
+                    "tom": "2017-05-05"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                }
+              ],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974600951",
+              "arbeidstakerID": "10048332876",
+              "opplysningspliktigID": "964338531",
+              "A-ordning": true
+            },
+            {
+              "arbeidsforholdID": "konvertert_d0aac8f0-9011-4e11-b3d2-a37b624e1787",
+              "arbeidsforholdIDnav": 6768427,
+              "ansettelsesPeriode": {
+                "fom": "2011-02-07",
+                "tom": "2013-08-02"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "AVDELINGSINGENIØR (MATFORSKNING)",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "2011-02-07"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974600951",
+              "arbeidstakerID": "10048332876",
+              "opplysningspliktigID": "976821580",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_cac9778e-dd0d-4228-b4da-01f0a73b66d6",
+              "arbeidsforholdIDnav": 6767326,
+              "ansettelsesPeriode": {
+                "fom": "2007-05-18",
+                "tom": "2007-08-05"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "BARISTA",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "2007-05-18"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "981541677",
+              "arbeidstakerID": "10048332876",
+              "opplysningspliktigID": "981527615",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_b5e5e15e-5d8a-4f1c-a525-17f3bacd5ea6",
+              "arbeidsforholdIDnav": 6768425,
+              "ansettelsesPeriode": {
+                "fom": "2010-09-01",
+                "tom": "2010-09-30"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "BARNEHAGEASSISTENT",
+                  "beregnetAntallTimerPrUke": 8.87,
+                  "endringsdatoStillingsprosent": "2010-09-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "991895299",
+              "arbeidstakerID": "10048332876",
+              "opplysningspliktigID": "976994434",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_f6af66d1-55e3-409a-86b9-27c9af8ea7f7",
+              "arbeidsforholdIDnav": 6768426,
+              "ansettelsesPeriode": {
+                "fom": "2010-11-01",
+                "tom": "2011-01-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "BARNEHAGEASSISTENT",
+                  "beregnetAntallTimerPrUke": 28.56,
+                  "endringsdatoStillingsprosent": "2011-01-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "991895299",
+              "arbeidstakerID": "10048332876",
+              "opplysningspliktigID": "976994434",
+              "A-ordning": false
+            }
+          ],
+          "soknaden": {},
+          "medlemsskap": {}
+        },
+        "behandlingshistorikk": []
+      },
+      {
+        "oppsummering": {
+          "gsakID": 123,
+          "status": "OPPRETTET",
+          "type": "KLAGE",
+          "registrertDato": "2017-10-19T14:35:54"
+        },
+        "saksopplysninger": {
+          "person": {
+            "fnr": "05056335023",
+            "sivilstand": "Gift",
+            "statsborgerskap": "PAK",
+            "sammensattNavn": "ZIA NAZIA",
+            "bostedsadresse": {
+              "gateadresse": {
+                "gatenavn": "JOHAN HJORTS VEI",
+                "gatenummer": 0,
+                "husnummer": 22,
+                "husbokstav": ""
+              },
+              "postnr": "5081",
+              "land": "NOR"
+            },
+            "kjoenn": "K",
+            "foedselsdato": "1981-02-18"
+          },
+          "inntekt": {},
+          "bekreftelser": {},
+          "arbeidsforhold": [
+            {
+              "arbeidsforholdID": "V974600951R131438S1001L0001",
+              "arbeidsforholdIDnav": 39525427,
+              "ansettelsesPeriode": {
+                "fom": "2016-04-01"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "Ikke skift",
+                  "avloenningstype": "Fastlønn",
+                  "yrke": "INGENIØR (ØVRIG TEKNISK VIRKSOMHET)",
+                  "avtaltArbeidstimerPerUke": 37.5,
+                  "stillingsprosent": 100,
+                  "sisteLoennsendringsdato": "2016-04-01",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "2016-04-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974600951",
+              "arbeidstakerID": "18028121071",
+              "opplysningspliktigID": "964338531",
+              "A-ordning": true
+            }
+          ],
+          "organisasjoner": [
+            {
+              "orgnr": "920165931",
+              "navn": "KRISTIANSAND DYREPARK AS",
+              "forretningsadresse": {
+                "gateadresse": {
+                  "gatenavn": "Kardemomme by"
+                },
+                "postnr": "4609",
+                "land": "NO"
+              }
+            }
+          ],
+          "soknaden": {},
+          "medlemsskap": {}
+        },
+        "behandlingshistorikk": []
+      }
+    ]
+  },
+  {
+    "saksnummer": 124,
+    "type": "SØKNAD_A1",
+    "status": "OPPHØRT",
+    "registrertDato": "2017-10-19T12:31:36",
+    "behandlinger": [
+      {
+        "oppsummering": {
+          "gsakID": 124,
+          "status": "UNDER_BEHANDLING",
+          "type": "SØKNAD",
+          "registrertDato": "2017-10-16T14:35:54"
+        },
+        "saksopplysninger": {
+          "person": {
+            "fnr": "01016902582",
+            "sivilstand": "Ugift",
+            "statsborgerskap": "NOR",
+            "sammensattNavn": "FALLBERG TORDIS",
+            "bostedsadresse": {
+              "gateadresse": {
+                "gatenavn": "STONGAFJELLSVEGEN",
+                "gatenummer": 0,
+                "husnummer": 310,
+                "husbokstav": ""
+              },
+              "postnr": "5301",
+              "land": "NOR"
+            },
+            "kjoenn": "K",
+            "foedselsdato": "1992-03-20"
+          },
+          "inntekt": {},
+          "bekreftelser": {},
+          "arbeidsforhold": [
+            {
+              "arbeidsforholdID": "konvertert_e184423b-060e-4600-a635-e79f34acc2a8",
+              "arbeidsforholdIDnav": 19353321,
+              "ansettelsesPeriode": {
+                "fom": "2010-06-21",
+                "tom": "2010-08-15"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "SERVERINGSHJELP",
+                  "beregnetAntallTimerPrUke": 30,
+                  "endringsdatoStillingsprosent": "2010-06-21"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "973147536",
+              "arbeidstakerID": "01016902582",
+              "opplysningspliktigID": "920165931",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_953cfb6a-de9d-45f9-ae73-4797f57e69e6",
+              "arbeidsforholdIDnav": 19353320,
+              "ansettelsesPeriode": {
+                "fom": "2014-05-03",
+                "tom": "2014-05-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "HELSEINSTITUSJONSASSISTENT",
+                  "beregnetAntallTimerPrUke": 4.15,
+                  "endringsdatoStillingsprosent": "2014-05-03"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "975270211",
+              "arbeidstakerID": "01016902582",
+              "opplysningspliktigID": "940493021",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_020c103f-ce5c-43bf-b523-022138a414c5",
+              "arbeidsforholdIDnav": 19353323,
+              "ansettelsesPeriode": {
+                "fom": "2011-09-01",
+                "tom": "2011-09-30"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "HELSEINSTITUSJONSASSISTENT",
+                  "beregnetAntallTimerPrUke": 23.65,
+                  "endringsdatoStillingsprosent": "2011-09-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "988991708",
+              "arbeidstakerID": "01016902582",
+              "opplysningspliktigID": "940493021",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_847485b8-c211-434f-a4e7-f3deabd1d750",
+              "arbeidsforholdIDnav": 19353322,
+              "ansettelsesPeriode": {
+                "fom": "2011-08-01",
+                "tom": "2011-08-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "HELSEINSTITUSJONSASSISTENT",
+                  "beregnetAntallTimerPrUke": 25.73,
+                  "endringsdatoStillingsprosent": "2011-08-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "988991708",
+              "arbeidstakerID": "01016902582",
+              "opplysningspliktigID": "940493021",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "V995816598R111289S1001L0001",
+              "arbeidsforholdIDnav": 34697783,
+              "ansettelsesPeriode": {
+                "fom": "2013-11-01",
+                "tom": "2014-10-26"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "Døgnkontinuerlig skiftarbeid og turnusarbeid (35,5 t/u)",
+                  "avloenningstype": "Fastlønn",
+                  "yrke": "VERNEPLEIER",
+                  "avtaltArbeidstimerPerUke": 35.5,
+                  "stillingsprosent": 30.52,
+                  "sisteLoennsendringsdato": "2014-05-01",
+                  "beregnetAntallTimerPrUke": 10.834599999999998
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "995816598",
+              "arbeidstakerID": "01016902582",
+              "opplysningspliktigID": "964338531",
+              "A-ordning": true
+            },
+            {
+              "arbeidsforholdID": "konvertert_fecf93c9-c401-44ac-bb3c-87b5132047b7",
+              "arbeidsforholdIDnav": 19353324,
+              "ansettelsesPeriode": {
+                "fom": "2012-08-27",
+                "tom": "2014-12-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "VERNEPLEIER",
+                  "beregnetAntallTimerPrUke": 35.5,
+                  "endringsdatoStillingsprosent": "2014-07-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "995816598",
+              "arbeidstakerID": "01016902582",
+              "opplysningspliktigID": "974773880",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "V995816598R111289S1003L0003",
+              "arbeidsforholdIDnav": 34697960,
+              "ansettelsesPeriode": {
+                "fom": "2014-10-27"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "Døgnkontinuerlig skiftarbeid og turnusarbeid (35,5 t/u)",
+                  "avloenningstype": "Fastlønn",
+                  "yrke": "VERNEPLEIER",
+                  "avtaltArbeidstimerPerUke": 35.5,
+                  "stillingsprosent": 100,
+                  "sisteLoennsendringsdato": "2014-10-27",
+                  "beregnetAntallTimerPrUke": 35.5,
+                  "endringsdatoStillingsprosent": "2014-10-27"
+                }
+              ],
+              "permisjonOgPermittering": [
+                {
+                  "permisjonsId": "P00001",
+                  "permisjonsPeriode": {
+                    "fom": "2015-05-20",
+                    "tom": "2015-05-21"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00010",
+                  "permisjonsPeriode": {
+                    "fom": "2017-03-01",
+                    "tom": "2017-03-31"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00008",
+                  "permisjonsPeriode": {
+                    "fom": "2017-01-01",
+                    "tom": "2017-01-31"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00009",
+                  "permisjonsPeriode": {
+                    "fom": "2017-02-01",
+                    "tom": "2017-02-28"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00017",
+                  "permisjonsPeriode": {
+                    "fom": "2017-10-01",
+                    "tom": "2017-10-28"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00007",
+                  "permisjonsPeriode": {
+                    "fom": "2016-08-10",
+                    "tom": "2016-08-11"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00015",
+                  "permisjonsPeriode": {
+                    "fom": "2017-08-01",
+                    "tom": "2017-08-31"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00016",
+                  "permisjonsPeriode": {
+                    "fom": "2017-09-01",
+                    "tom": "2017-09-30"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00013",
+                  "permisjonsPeriode": {
+                    "fom": "2017-06-01",
+                    "tom": "2017-06-11"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00014",
+                  "permisjonsPeriode": {
+                    "fom": "2017-07-10",
+                    "tom": "2017-07-31"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00011",
+                  "permisjonsPeriode": {
+                    "fom": "2017-04-01",
+                    "tom": "2017-04-30"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00012",
+                  "permisjonsPeriode": {
+                    "fom": "2017-05-01",
+                    "tom": "2017-05-31"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00005",
+                  "permisjonsPeriode": {
+                    "fom": "2016-05-02",
+                    "tom": "2016-05-02"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00002",
+                  "permisjonsPeriode": {
+                    "fom": "2015-11-03",
+                    "tom": "2015-11-05"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00003",
+                  "permisjonsPeriode": {
+                    "fom": "2015-12-12",
+                    "tom": "2015-12-12"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00004",
+                  "permisjonsPeriode": {
+                    "fom": "2016-02-13",
+                    "tom": "2016-02-14"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00006",
+                  "permisjonsPeriode": {
+                    "fom": "2016-05-06",
+                    "tom": "2016-05-06"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                }
+              ],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "995816598",
+              "arbeidstakerID": "01016902582",
+              "opplysningspliktigID": "964338531",
+              "A-ordning": true
+            },
+            {
+              "arbeidsforholdID": "V995816598R111289S1002L0002",
+              "arbeidsforholdIDnav": 34697784,
+              "ansettelsesPeriode": {
+                "fom": "2014-05-28",
+                "tom": "2014-10-26"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "Døgnkontinuerlig skiftarbeid og turnusarbeid (35,5 t/u)",
+                  "avloenningstype": "Fastlønn",
+                  "yrke": "VERNEPLEIER",
+                  "avtaltArbeidstimerPerUke": 35.5,
+                  "stillingsprosent": 100,
+                  "sisteLoennsendringsdato": "2014-05-28",
+                  "beregnetAntallTimerPrUke": 35.5
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "995816598",
+              "arbeidstakerID": "01016902582",
+              "opplysningspliktigID": "964338531",
+              "A-ordning": true
+            }
+          ],
+          "organisasjoner": [
+            {
+              "orgnr": "920643043",
+              "navn": "METODE RENHOLD AS",
+              "forretningsadresse": {
+                "gateadresse": {
+                  "gatenavn": "Varnaveien 34"
+                },
+                "postnr": "1523",
+                "land": "NO"
+              },
+              "postadresse": {
+                "gateadresse": {
+                  "gatenavn": "Skuteviksbodene 1"
+                },
+                "postnr": "5035",
+                "land": "NO"
+              }
+            }
+          ],
+          "soknaden": {},
+          "meldlemsskap": {}
+        },
+        "behandlingshistorikk": []
+      }
+    ]
+  },
+  {
+    "saksnummer": 125,
+    "type": "SØKNAD_A1",
+    "status": "OPPRETTET",
+    "registrertDato": "2017-10-18T12:31:36",
+    "behandlinger": [
+      {
+        "oppsummering": {
+          "gsakID": 125,
+          "status": "OPPRETTET",
+          "type": "SØKNAD",
+          "registrertDato": "2017-10-16T14:35:54"
+        },
+        "saksopplysninger": {
+          "person": {
+            "fnr": "05056335011",
+            "sivilstand": "Gift",
+            "statsborgerskap": "NOR",
+            "sammensattNavn": "OSTOJIC ANDREJA",
+            "bostedsadresse": {
+              "gateadresse": {
+                "gatenavn": "DAMSGÅRDSVEIEN",
+                "gatenummer": 0,
+                "husnummer": 43,
+                "husbokstav": ""
+              },
+              "postnr": "5058",
+              "land": "NOR"
+            },
+            "kjoenn": "K",
+            "foedselsdato": "1984-05-25"
+          },
+          "inntekt": {},
+          "bekreftelser": {},
+          "arbeidsforhold": [
+            {
+              "arbeidsforholdID": "konvertert_1052cd80-bd9a-46a3-bf33-ad3fbbe8611a",
+              "arbeidsforholdIDnav": 16849217,
+              "ansettelsesPeriode": {
+                "fom": "2006-12-27",
+                "tom": "2009-05-01"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "RENHOLDER (BEDRIFTER)",
+                  "beregnetAntallTimerPrUke": 15,
+                  "endringsdatoStillingsprosent": "2008-01-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "971879246",
+              "arbeidstakerID": "25058427414",
+              "opplysningspliktigID": "920643043",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_1046bf05-693a-4409-99ed-ca0e0ee1de88",
+              "arbeidsforholdIDnav": 16849216,
+              "ansettelsesPeriode": {
+                "fom": "2005-03-29",
+                "tom": "2006-09-30"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "RENHOLDER (BEDRIFTER)",
+                  "beregnetAntallTimerPrUke": 23.04,
+                  "endringsdatoStillingsprosent": "2005-03-29"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "971947578",
+              "arbeidstakerID": "25058427414",
+              "opplysningspliktigID": "941873170",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_2ef30bbb-3fb6-45fb-9a1d-73f560a64a73",
+              "arbeidsforholdIDnav": 16849219,
+              "ansettelsesPeriode": {
+                "fom": "2009-11-16",
+                "tom": "2013-08-16"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "INGENIØR (BYGGELEDELSE)",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "2009-11-16"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "972286311",
+              "arbeidstakerID": "25058427414",
+              "opplysningspliktigID": "964453152",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "V974600951R117052S1001L0001",
+              "arbeidsforholdIDnav": 34723983,
+              "ansettelsesPeriode": {
+                "fom": "2013-11-01"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "Ikke skift",
+                  "avloenningstype": "Fastlønn",
+                  "yrke": "INGENIØR (BYGGELEDELSE)",
+                  "avtaltArbeidstimerPerUke": 37.5,
+                  "stillingsprosent": 100,
+                  "sisteLoennsendringsdato": "2014-05-01",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "2013-11-01"
+                }
+              ],
+              "permisjonOgPermittering": [
+                {
+                  "permisjonsId": "P00010",
+                  "permisjonsPeriode": {
+                    "fom": "2014-07-01",
+                    "tom": "2014-07-01"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00009",
+                  "permisjonsPeriode": {
+                    "fom": "2014-06-01",
+                    "tom": "2014-06-01"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00011",
+                  "permisjonsPeriode": {
+                    "fom": "2014-08-01",
+                    "tom": "2014-08-01"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00008",
+                  "permisjonsPeriode": {
+                    "fom": "2014-05-01",
+                    "tom": "2014-05-01"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00012",
+                  "permisjonsPeriode": {
+                    "fom": "2015-01-01",
+                    "tom": "2015-01-15"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00007",
+                  "permisjonsPeriode": {
+                    "fom": "2014-09-06",
+                    "tom": "2014-09-06"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00006",
+                  "permisjonsPeriode": {
+                    "fom": "2014-10-01",
+                    "tom": "2014-10-01"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00005",
+                  "permisjonsPeriode": {
+                    "fom": "2014-11-01",
+                    "tom": "2014-11-01"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00004",
+                  "permisjonsPeriode": {
+                    "fom": "2014-12-25",
+                    "tom": "2014-12-25"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00003",
+                  "permisjonsPeriode": {
+                    "fom": "2014-12-01",
+                    "tom": "2014-12-01"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00002",
+                  "permisjonsPeriode": {
+                    "fom": "2015-01-01",
+                    "tom": "2015-01-01"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00001",
+                  "permisjonsPeriode": {
+                    "fom": "2014-04-15",
+                    "tom": "2014-04-15"
+                  },
+                  "permisjonsprosent": 0,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00013",
+                  "permisjonsPeriode": {
+                    "fom": "2015-08-11",
+                    "tom": "2015-08-13"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                }
+              ],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974600951",
+              "arbeidstakerID": "25058427414",
+              "opplysningspliktigID": "964338531",
+              "A-ordning": true
+            },
+            {
+              "arbeidsforholdID": "konvertert_60730d9f-d6b4-4a48-83c2-842bb9fc62ae",
+              "arbeidsforholdIDnav": 16849214,
+              "ansettelsesPeriode": {
+                "fom": "2013-08-19",
+                "tom": "2014-04-14"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "INGENIØR (BYGGELEDELSE)",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "2013-08-19"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974600951",
+              "arbeidstakerID": "25058427414",
+              "opplysningspliktigID": "976821580",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_c83253b7-9c06-4d2e-97e1-5d0b6dcb32a2",
+              "arbeidsforholdIDnav": 16849213,
+              "ansettelsesPeriode": {
+                "fom": "2014-08-11",
+                "tom": "2014-09-05"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "INGENIØR (BYGGELEDELSE)",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "2014-08-11"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974600951",
+              "arbeidstakerID": "25058427414",
+              "opplysningspliktigID": "976821580",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_1dd587cf-26d6-4813-ae7f-da5ab87be062",
+              "arbeidsforholdIDnav": 16849218,
+              "ansettelsesPeriode": {
+                "fom": "2008-08-01",
+                "tom": "2009-05-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "BETJENT",
+                  "beregnetAntallTimerPrUke": 10.15,
+                  "endringsdatoStillingsprosent": "2009-05-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974799588",
+              "arbeidstakerID": "25058427414",
+              "opplysningspliktigID": "974652366",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_fd917667-f508-4c5d-9646-6b90deff3fb1",
+              "arbeidsforholdIDnav": 16849220,
+              "ansettelsesPeriode": {
+                "fom": "2009-09-01",
+                "tom": "2010-02-28"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "BETJENT",
+                  "beregnetAntallTimerPrUke": 6.46,
+                  "endringsdatoStillingsprosent": "2010-02-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974799588",
+              "arbeidstakerID": "25058427414",
+              "opplysningspliktigID": "974652366",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "konvertert_a2d71c02-8f23-48d2-ba1f-8a15714a611b",
+              "arbeidsforholdIDnav": 16849215,
+              "ansettelsesPeriode": {
+                "fom": "2005-10-01",
+                "tom": "2006-01-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "RENHOLDSASSISTENT",
+                  "beregnetAntallTimerPrUke": 37.5,
+                  "endringsdatoStillingsprosent": "2005-10-01"
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "987814020",
+              "arbeidstakerID": "25058427414",
+              "opplysningspliktigID": "963423446",
+              "A-ordning": false
+            },
+            {
+              "arbeidsforholdID": "tilpasset_51806c7f-db32-4497-ae64-741eb4fe5564",
+              "arbeidsforholdIDnav": 33124179,
+              "ansettelsesPeriode": {
+                "fom": "2014-12-01",
+                "tom": "2014-12-31"
+              },
+              "arbeidsforholdstype": "Ordinært arbeidsforhold",
+              "arbeidsavtaler": [
+                {
+                  "arbeidstidsordning": "",
+                  "avloenningstype": "",
+                  "yrke": "INGENIØR (BYGGELEDELSE)",
+                  "beregnetAntallTimerPrUke": 37.5
+                }
+              ],
+              "permisjonOgPermittering": [],
+              "utenlandsopphold": [],
+              "arbeidsgiverID": "974600951",
+              "arbeidstakerID": "25058427414",
+              "opplysningspliktigID": "976821580",
+              "A-ordning": false
+            }
+          ],
+          "organisasjoner": [
+            {
+              "orgnr": "938277184",
+              "navn": "DOMKIRKEHJEMMET I BERGEN STIFTELSEN",
+              "forretningsadresse": {
+                "gateadresse": {
+                  "gatenavn": "Kong Oscars gate 86"
+                },
+                "postnr": "5018",
+                "land": "NO"
+              }
+            }
+          ],
+          "soknaden": {},
+          "medlemsskap": {}
+        },
+        "behandlingshistorikk": []
+      }
+    ]
+  }
+]}
