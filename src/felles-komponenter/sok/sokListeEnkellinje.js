@@ -9,11 +9,15 @@ import EnkeltDato from '../datoOmrade/enkeltDato';
 
 import './sokListeEnkeltlinje.css';
 
-const Periode = periode => (
+const Periode = ({ periode }) => (
   periode ?
     <Nav.UndertekstBold>Periode: <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} /></Nav.UndertekstBold>
     : null
 );
+
+Periode.propTypes = {
+  periode: MPT.Periode.isRequired,
+};
 
 function SokListeEnkeltlinje({ sak }) {
   const { fnr, sammensattNavn, mottatt, status, periode } = sak;
