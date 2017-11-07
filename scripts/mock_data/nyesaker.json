@@ -1,6 +1,7 @@
 [
   {
     "fnr": "01016500543",
+    "saksnummer": "123",
     "kjoenn": "K",
     "sammensattNavn": "UNNI FOS KVALUY",
     "mottatt": "2016-10-01",
@@ -12,6 +13,7 @@
   },
   {
     "fnr": "01016500543",
+    "saksnummer": "123",
     "kjoenn": "K",
     "sammensattNavn": "UNNI FOS KVALUY",
     "mottatt": "2016-07-10",
@@ -23,6 +25,7 @@
   },
   {
     "fnr": "01016500543",
+    "saksnummer": "123",
     "kjoenn": "K",
     "sammensattNavn": "UNNI FOS KVALUY",
     "mottatt": "2016-07-10",
@@ -33,18 +36,8 @@
     }
   },
   {
-    "fnr": "20039235073",
-    "kjoenn": "K",
-    "sammensattNavn": "KVALUY HANNA MARIA #2",
-    "mottatt": "2016-07-10",
-    "status": "Under behandling",
-    "periode": {
-      "fom": "2013-08-19",
-      "tom": "2015-05-31"
-    }
-  },
-  {
     "fnr": "01016900733",
+    "saksnummer": "124",
     "kjoenn": "K",
     "sammensattNavn": "ZIA NAZRIA FOS",
     "mottatt": "2016-07-10",
@@ -55,6 +48,7 @@
   },
   {
     "fnr": "01016902582",
+    "saksnummer": "125",
     "kjoenn": "K",
     "sammensattNavn": "HALVORSEN SIGRUN FOS",
     "mottatt": "2016-07-10",
@@ -66,6 +60,7 @@
   },
   {
     "fnr": "20039235073",
+    "saksnummer": "126",
     "kjoenn": "K",
     "sammensattNavn": "MONKVIK MONIKA FOS",
     "mottatt": "2016-07-10",
@@ -77,6 +72,7 @@
   },
   {
     "fnr": "05056335023",
+    "saksnummer": "127",
     "kjoenn": "K",
     "sammensattNavn": "GRINDE JULIE FOS",
     "mottatt": "2016-07-10",
