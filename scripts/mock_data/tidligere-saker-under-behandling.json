@@ -2,6 +2,7 @@
   "brukernavn": "Z991001",
   "saker": [{
     "fnr": "01016902582",
+    "saksnummer": 123,
     "kjoenn": "M",
     "sammensattNavn": "DANSSON OSKAR",
     "arbeidsforholdIDnav": 16849217,
@@ -14,6 +15,7 @@
   },
     {
       "fnr": "01016902582",
+      "saksnummer": 123,
       "kjoenn": "K",
       "sammensattNavn": "HALVORSEN SIGRUN FOS",
       "arbeidsforholdIDnav": 16849217,
@@ -26,6 +28,7 @@
     },
     {
       "fnr": "01016902582",
+      "saksnummer": 123,
       "kjoenn": "K",
       "sammensattNavn": "SVENSSON KALLE",
       "arbeidsforholdIDnav": 16849217,
@@ -40,6 +43,7 @@
     "brukernavn": "Z990405",
     "saker": [{
       "fnr": "01016902582",
+      "saksnummer": 123,
       "kjoenn": "M",
       "sammensattNavn": "RIIS-NILSEN OSKAR",
       "arbeidsforholdIDnav": 16849217,
@@ -52,6 +56,7 @@
     },
       {
         "fnr": "01016902582",
+        "saksnummer": 123,
         "kjoenn": "K",
         "sammensattNavn": "HALVORSEN SIGRUN FOS",
         "arbeidsforholdIDnav": 16849217,
@@ -64,6 +69,7 @@
       },
       {
         "fnr": "01016902582",
+        "saksnummer": 123,
         "kjoenn": "K",
         "sammensattNavn": "HALVORSEN KIM",
         "arbeidsforholdIDnav": 16849217,
