@@ -43,9 +43,22 @@ export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
   person => person
 );
+
+/** InntektLinjer leveres gruppert inn i maaned. Denne selectoren gjør derfor en reduce slik at alle inntekter
+ * leveres som én array, hvert element er da én inntektLinje.
+ *
+ * @return { inntekstListe } Et objekt med array for all inntekt.
+ */
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
-  inntekt => inntekt
+  inntekt => {
+    const inntektListe = Array.isArray(inntekt.arbeidsInntektMaanedListe)
+      ?
+      inntekt.arbeidsInntektMaanedListe.reduce((samling, element) => [...samling, element.arbeidsInntektInformasjon.inntektListe], [])
+      :
+      [];
+    return { inntektListe };
+  }
 );
 
 export const SoknadenSelector = createSelector(
