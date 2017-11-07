@@ -12,7 +12,7 @@ const info = {
 function Personopplysninger() {
   return (
     <div className="tilleggsopplysninger panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Tilleggsopplysninger" apen>
+      <Nav.EkspanderbartPanel tittel="Tilleggsopplysninger">
         <Nav.Container fluid>
           {/* START TILLEGGSOPPLYSNINGER */}
           <Nav.Row>

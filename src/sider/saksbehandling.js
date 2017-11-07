@@ -81,7 +81,7 @@ class Saksbehandling extends Component {
           <Nav.Row>
             <Nav.Column xs="7">
               <Vilkarsveileder person={person} />
-              <Personopplysninger person={person} />
+              {person && <Personopplysninger person={person} />}
               <Tilleggsopplysninger />
               {permisjoner && <Permisjoner permisjoner={permisjoner} />}
               {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
