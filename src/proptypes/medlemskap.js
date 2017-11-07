@@ -1,6 +1,7 @@
 import PT from 'prop-types';
 
-import { Kodeverk, Periode } from './';
+import { Kodeverk } from './kodeverk';
+import { Periode } from './periode';
 
 const MedlemskapPeriodePropType = PT.shape({
   id: PT.number,
