@@ -44,13 +44,12 @@ function Arbeidsforhold({ arbeidsforhold }) {
     yrke,
     arbeidstidsordning,
     arbeidsforholdstype,
-    arbeidsavtale,
-    arbeidsgiver,
+    arbeidsgiver: { navn: arbeidsgiverNavn },
   } = arbeidsforhold;
 
   return (
     <div className="panelSeksjon">
-      <Nav.EkspanderbartPanel tittel={`Arbeidsforhold: ${arbeidsgiver.navn}`}>
+      <Nav.EkspanderbartPanel tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`}>
         <Nav.Row className="arbeidsforhold__enkelt">
           <div className="arbeidsforholdene panelSeksjon">
             <Nav.Row className="arbeidsforhold__enkelt">
@@ -79,7 +78,7 @@ function Arbeidsforhold({ arbeidsforhold }) {
                   <dd>{arbeidsforholdstype}</dd>
                 </dl>
                 <dl className="arbeidsforhold__detaljer">
-                  { arbeidsavtale.map(avtalen => <Arbeidsavtalen key={uuid()} avtalen={avtalen} />)}
+                  { /* arbeidsavtale.map(avtalen => <Arbeidsavtalen key={uuid()} avtalen={avtalen} />) */}
                 </dl>
               </Nav.Column>
             </Nav.Row>

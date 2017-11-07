@@ -87,9 +87,21 @@ export const OrganisasjonerSelector = createSelector(
 
 export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
-  arbeidsforhold => arbeidsforhold
+  state => OrganisasjonerSelector(state),
+  (arbeidsforhold, organisasjoner) => {
+    const populertArbeidsforhold = arbeidsforhold.map(item => {
+      const arbeid = { ...item };
+      arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
+      return arbeid;
+    });
+
+    return populertArbeidsforhold;
+  }
 );
 
+/**
+ *  Denne er depricated når vi fjerner spikes fra tidlig prototype
+ *  */
 export const ArbeidsforholdSelector = createSelector(
   (state, arbeidsforholdID) => arbeidsforholdID,
   state => state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold || [],
