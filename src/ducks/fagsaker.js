@@ -57,7 +57,6 @@ export const InntektSelector = createSelector(
       inntekt.arbeidsInntektMaanedListe.reduce((samling, element) => [...samling, ...element.arbeidsInntektInformasjon.inntektListe], [])
       :
       [];
-    console.log(inntektListe);
     return inntektListe;
   }
 );
@@ -108,7 +107,7 @@ export const OrganisasjonSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   (organisasjoner, arbeidsforholdene) => {
-    const alleRelevanteOrgnummer = arbeidsforholdene.reduce((samling, element) => [...samling, element.arbeidsgiver.orgnummer], []);
+    const alleRelevanteOrgnummer = arbeidsforholdene.reduce((samling, element) => [...samling, element.arbeidsgiverID], []);
     const alleRelevanteOrganisasjoner = organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnummer));
     return alleRelevanteOrganisasjoner;
   }

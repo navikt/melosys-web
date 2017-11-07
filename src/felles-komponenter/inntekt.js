@@ -26,11 +26,9 @@ InntektLinje.propTypes = {
 };
 
 function Inntekt ({ inntekt: { inntekt } }) {
-  const { inntektListe } = inntekt;
   const { prMaaned: utenlandsNaeringPrMaaned, valuta: utenlandsNaeringValuta } = { prMaaned: '2000', valuta: 'EUR' };
   const { prMaaned: utenlandsLonnPrMaaned, valuta: utenlandsLonnValuta } = { prMaaned: '1150', valuta: 'GBP' };
 
-  console.log(inntekt);
 
   return (
     <div className="inntekt panelSeksjon">
@@ -42,7 +40,7 @@ function Inntekt ({ inntekt: { inntekt } }) {
                 <tr>
                   <th>Fra dato</th><th>Til dato</th><th>Org.nr</th><th>Inntekt</th><th>Beskrivelse</th>
                 </tr>
-                {inntektListe.map(inntektLinje => <InntektLinje key={uuid()} inntektLinje={inntektLinje} />)}
+                {inntekt.map(inntektLinje => <InntektLinje key={uuid()} inntektLinje={inntektLinje} />)}
               </tbody>
             </table>
           </Nav.Column>
