@@ -1,7 +1,9 @@
 /* eslint import/prefer-default-export:"off" */
 import PT from 'prop-types';
 
-import { Periode, Arbeidsavtale, OrgnummerNavn } from './';
+import { Periode } from './periode';
+import { Arbeidsavtale } from './arbeidsavtale';
+import { OrgnummerNavn } from './organisasjon';
 
 const ArbeidsforholdPropType = PT.shape({
   arbeidsforholdID: PT.string,
