@@ -1,6 +1,6 @@
 import PT from 'prop-types';
 
-import { Periode } from './';
+import { Periode } from './periode';
 
 const PermisjonOgPermitteringPropType = PT.shape({
   permisjonsId: PT.number,
