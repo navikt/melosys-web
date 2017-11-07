@@ -33,7 +33,7 @@ function SideOppsummering(props) {
           <Nav.Column xs="12">
             <dl aria-label="opphold og periode" className="oppsummering__detaljer">
               <dt>Behandlingsstatus:</dt>
-              <dd>{behandlingsStatus.kode} - {behandlingsStatus.term}</dd>
+              <dd>{behandlingsStatus}</dd>
             </dl>
           </Nav.Column>
         </Nav.Row>
@@ -64,7 +64,7 @@ function SideOppsummering(props) {
               <dt>Oppdatert:</dt>
               <dl><EnkeltDato dato={sistOppdatert} /></dl>
               <dt>Behandlingsstatus:</dt>
-              <dl>{behandlingsStatus.kode} - {behandlingsStatus.term}</dl>
+              <dl>{behandlingsStatus}</dl>
             </dl>
           </Nav.Column>
         </Nav.Row>

@@ -8,7 +8,7 @@ const ArbeidsavtalePropType = PT.shape({
   avtaltArbeidstimerPerUke: PT.number,
   stillingsprosent: PT.number,
   sisteLoennsendringsdato: PT.string,
-  beregnetAntallTimerPrUke: PT.string,
+  beregnetAntallTimerPrUke: PT.number,
   endringsdatoStillingsprosent: PT.string,
 });
 
