@@ -11,7 +11,6 @@ const uuid = require('uuid/v4');
 
 function InntektLinje({ inntektLinje }) {
   const { beloep, inntektsperiodetype, virksomhetID, beskrivelse, utbetaltIPeriode } = inntektLinje;
-
   return (
     <tr>
       <td className="detaljer__periode">{ utbetaltIPeriode }</td>
@@ -30,6 +29,8 @@ function Inntekt ({ inntekt: { inntekt } }) {
   const { inntektListe } = inntekt;
   const { prMaaned: utenlandsNaeringPrMaaned, valuta: utenlandsNaeringValuta } = { prMaaned: '2000', valuta: 'EUR' };
   const { prMaaned: utenlandsLonnPrMaaned, valuta: utenlandsLonnValuta } = { prMaaned: '1150', valuta: 'GBP' };
+
+  console.log(inntekt);
 
   return (
     <div className="inntekt panelSeksjon">

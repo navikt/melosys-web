@@ -54,10 +54,11 @@ export const InntektSelector = createSelector(
   inntekt => {
     const inntektListe = Array.isArray(inntekt.arbeidsInntektMaanedListe)
       ?
-      inntekt.arbeidsInntektMaanedListe.reduce((samling, element) => [...samling, element.arbeidsInntektInformasjon.inntektListe], [])
+      inntekt.arbeidsInntektMaanedListe.reduce((samling, element) => [...samling, ...element.arbeidsInntektInformasjon.inntektListe], [])
       :
       [];
-    return { inntektListe };
+    console.log(inntektListe);
+    return inntektListe;
   }
 );
 

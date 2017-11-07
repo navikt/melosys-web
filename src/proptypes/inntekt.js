@@ -8,27 +8,11 @@ const InntektLinjePropType = PT.shape({
   inntektsstatus: PT.string,
   levereringstidspunkt: PT.string,
   utbetaltIPeriode: PT.string,
-  opplysningspliktig: PT.shape({
-    orgnummer: PT.string,
-  }),
-  virksomhet: PT.shape({
-    orgnummer: PT.string,
-  }),
-  tilleggsinformasjon: PT.shape({
-    kategori: PT.string,
-    tilleggsinformasjonDetaljer: PT.shape({
-      etterbetalingsperiode: PT.shape({
-        startDato: PT.string,
-        sluttDato: PT.string,
-      }),
-    }),
-  }),
-  inntektsmottaker: PT.shape({
-    personIdent: PT.string,
-  }),
+  opplysningspliktigID: PT.string,
+  virksomhetID: PT.string,
+  inntektsmottakerID: PT.string,
   inngaarIGrunnlagForTrekk: PT.string,
-  utloeserArbeidsgiveravgift: PT.string,
-  informasjonsstatus: PT.string,
+  utloeserArbeidsgiveravgift: PT.bool,
   beskrivelse: PT.string,
 });
 
