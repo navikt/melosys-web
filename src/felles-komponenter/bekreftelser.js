@@ -16,10 +16,8 @@ function Bekreftelser ({ bekreftelser }) {
     erstatter,
     over24m,
     arbeidsgiveravgift,
-    trygdeavgift: {
-      trukket: trygdeavgiftTrukket,
-      tom: trygdeavgiftTrukketDato,
-    },
+    trygdeavgiftTrukket,
+    trygdeavgiftTrukketDato,
   } = bekreftelser;
 
   return (

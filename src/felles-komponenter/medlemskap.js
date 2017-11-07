@@ -86,7 +86,7 @@ function Medlemskap({ medlemsskap }) {
       <Nav.EkspanderbartPanel tittel="Medlemskap">
         <section aria-label="Medlemskap">
           <Nav.Container fluid>
-            {periodeListe.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />)}
+            { /* periodeListe.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) */ }
           </Nav.Container>
         </section>
       </Nav.EkspanderbartPanel>

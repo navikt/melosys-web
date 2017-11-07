@@ -38,7 +38,7 @@ function Inntekt ({ inntekt: { inntekt } }) {
             <table className="tabellutlisting inntekt__detaljer">
               <tbody>
                 <tr>
-                  <th>Fra dato</th><th>Til dato</th><th>Org.nr</th><th>Inntekt</th><th>Beskrivelse</th>
+                  <th>Utbetalt</th><th>Organisasjon</th><th>Inntekt</th><th>Beskrivelse</th>
                 </tr>
                 {inntekt.map(inntektLinje => <InntektLinje key={uuid()} inntektLinje={inntektLinje} />)}
               </tbody>

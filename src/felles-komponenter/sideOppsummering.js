@@ -9,7 +9,7 @@ const uuid = require('uuid/v4');
 
 function SideOppsummering(props) {
   const {
-    soknaden,
+    soknadsType,
     behandlingsStatus,
     opprettet,
     sistOppdatert,
@@ -22,7 +22,7 @@ function SideOppsummering(props) {
       <Nav.Panel className="saksbehandling__soknadSammendrag">
         <Nav.Row>
           <Nav.Column xs="12" md="6">
-            <Nav.Undertittel className="soknadSammendrag__header">Søknad om {soknaden.soknadsType}</Nav.Undertittel>
+            <Nav.Undertittel className="soknadSammendrag__header">Søknad om {soknadsType}</Nav.Undertittel>
           </Nav.Column>
           <Nav.Column xs="12" md="6">
             <Nav.Knapp>Behandlingsmeny</Nav.Knapp>
@@ -43,12 +43,9 @@ function SideOppsummering(props) {
           <Nav.Column xs="12">
             <dl aria-label="opphold og periode" className="oppsummering__detaljer">
               <dt>Oppholdsland:</dt>
-              <dd>{soknaden.arbeidsgiverUtland.oppholdsland}</dd>
+              <dd>(Mangler fra backend)</dd>
               <dt>Oppholdsperioder:</dt>
-              <dd>
-                {soknaden.soknadsPerioder.map((periode, index) => (
-                  <Nav.Normaltekst key={uuid()}>Periode #{index + 1}: <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} /></Nav.Normaltekst>
-                ))}
+              <dd>(Mangler fra backend)
               </dd>
             </dl>
           </Nav.Column>

@@ -42,10 +42,10 @@ const fagsaker = (req, res) => {
 //router.get('/fagsaker/:fnr?', fagsaker);
 const nyefagsaker = (req, res) => {
   try {
-    const fnr = req.params.fnr && req.params.fnr.toString() || '';
+    const saksnummer = req.params.saksnummer && req.params.saksnummer.toString() || '';
     const data = JSON.parse(fs.readFileSync("./scripts/mock_data/nyefagsaker.json", "utf8"));
     const fagsak = _.find(data.response, function (fagsakitem) {
-      return fagsakitem.behandlinger[0].saksopplysninger.person.fnr === fnr;
+      return parseInt(fagsakitem.saksnummer) === parseInt(saksnummer);
     });
     return res.json(fagsak);
   }
@@ -54,7 +54,7 @@ const nyefagsaker = (req, res) => {
     return res.status(500).send(err);
   }
 };
-router.get('/fagsaker/:fnr', nyefagsaker);
+router.get('/fagsaker/:saksnummer', nyefagsaker);
 
 router.get('/nyesaker/:fnr', function (req, res) {
   try {
