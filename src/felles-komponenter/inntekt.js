@@ -8,29 +8,28 @@ import './inntekt.css';
 
 const uuid = require('uuid/v4');
 
-function InntektPeriode({ inntekt }) {
-  const { beloep, inntektsperiodetype, virksomhet: { orgnummer }, beskrivelse } = inntekt;
-  const etterbetalingsperiode = inntekt.tilleggsinformasjon.tilleggsinformasjonDetaljer.etterbetalingsperiode || { startDato: '-', sluttDato: '-' };
+
+function InntektLinje({ inntektLinje }) {
+  const { beloep, inntektsperiodetype, virksomhetID, beskrivelse, utbetaltIPeriode } = inntektLinje;
 
   return (
     <tr>
-      <td className="detaljer__fom"><EnkeltDato dato={etterbetalingsperiode.startDato} /></td>
-      <td className="detaljer__tom"><EnkeltDato dato={etterbetalingsperiode.sluttDato} /></td>
-      <td className="detaljer__orgnr">{orgnummer}</td>
+      <td className="detaljer__periode">{ utbetaltIPeriode }</td>
+      <td className="detaljer__orgnr">{virksomhetID}</td>
       <td className="detaljer__inntekt">{beloep} pr {inntektsperiodetype}</td>
-      <td className="detaljer__inntekt">{beskrivelse}</td>
+      <td className="detaljer__beskrivelse">{beskrivelse}</td>
     </tr>
   );
 }
 
-InntektPeriode.propTypes = {
-  inntekt: MPT.InntektLinje.isRequired,
+InntektLinje.propTypes = {
+  inntektLinje: MPT.InntektLinje.isRequired,
 };
 
-function Inntekt ({ inntekt: { inntekt, soknaden } }) {
-  const { inntektListe } = inntekt.arbeidsInntektIdent.arbeidsInntektMaaned.arbeidsInntektInformasjon;
-  const { prMaaned: utenlandsNaeringPrMaaned, valuta: utenlandsNaeringValuta } = soknaden.inntekt.naringsinntekt.utenlands;
-  const { prMaaned: utenlandsLonnPrMaaned, valuta: utenlandsLonnValuta } = soknaden.inntekt.lonnsinntekt.utenlands;
+function Inntekt ({ inntekt: { inntekt } }) {
+  const { inntektListe } = inntekt;
+  const { prMaaned: utenlandsNaeringPrMaaned, valuta: utenlandsNaeringValuta } = { prMaaned: '2000', valuta: 'EUR' };
+  const { prMaaned: utenlandsLonnPrMaaned, valuta: utenlandsLonnValuta } = { prMaaned: '1150', valuta: 'GBP' };
 
   return (
     <div className="inntekt panelSeksjon">
@@ -42,7 +41,7 @@ function Inntekt ({ inntekt: { inntekt, soknaden } }) {
                 <tr>
                   <th>Fra dato</th><th>Til dato</th><th>Org.nr</th><th>Inntekt</th><th>Beskrivelse</th>
                 </tr>
-                {inntektListe.map(inntektLinje => <InntektPeriode key={uuid()} inntekt={inntektLinje} />)}
+                {inntektListe.map(inntektLinje => <InntektLinje key={uuid()} inntektLinje={inntektLinje} />)}
               </tbody>
             </table>
           </Nav.Column>
