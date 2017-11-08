@@ -22,8 +22,6 @@ function Personopplysninger(props) {
     sammensattNavn,
     foedselsdato,
     bostedsadresse,
-    mobiltelefon,
-    epost,
   } = props.person;
 
   // Påkrevde felter fra API
@@ -62,8 +60,6 @@ function Personopplysninger(props) {
                 <dd>{`${gatenavn} ${husnummer} ${husbokstav}`}</dd>
                 <dd>{`${postnr} ${poststed}`}</dd>
                 <dd>{`${land}`}</dd>
-                <dt>Mobil:</dt><dd>{mobiltelefon}</dd>
-                <dt>E-post:</dt><dd>{epost}</dd>
               </dl>
             </Nav.Column>
           </Nav.Row>

@@ -77,7 +77,7 @@ export const BekreftelserSelector = createSelector(
 );
 
 export const MedlemsskapSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemsskap : state.fagsaker.data),
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : state.fagsaker.data),
   medlemsskap => medlemsskap
 );
 export const OrganisasjonerSelector = createSelector(
@@ -85,6 +85,12 @@ export const OrganisasjonerSelector = createSelector(
   organisasjoner => organisasjoner
 );
 
+/**
+ * Arbeidsforhold refererer til organisasjon med arbeidsforholdID. For at komponenten skal kunne vise
+ * navn på arbeidsgiver og evt adresse etc må dette flettes inn i arbeidsforhold. Selectoren gjør en map p
+ * alle arbeidsforhold og finner relevant organisasjon etter orgnr og setter hele dette objektet inn
+ * i arbeidsforholdet dersom det finnes.
+ */
 export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => OrganisasjonerSelector(state),
