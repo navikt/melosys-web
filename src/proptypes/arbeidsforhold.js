@@ -2,21 +2,21 @@
 import PT from 'prop-types';
 
 import { Periode } from './periode';
+import { Permisjoner } from './permisjon';
 import { Arbeidsavtale } from './arbeidsavtale';
-import { OrgnummerNavn } from './organisasjon';
 
 const ArbeidsforholdPropType = PT.shape({
   arbeidsforholdID: PT.string,
   arbeidsforholdIDnav: PT.number,
   ansettelsesPeriode: Periode,
   arbeidsforholdstype: PT.string,
-  permisjonOgPermittering: PT.array,
+  permisjonOgPermittering: PT.arrayOf(Permisjoner),
   utenlandsopphold: PT.array,
-  arbeidsavtale: PT.arrayOf(Arbeidsavtale),
-  arbeidsgiver: OrgnummerNavn,
+  arbeidsgiverID: PT.string,
   arbeidstakerID: PT.string,
-  opplysningspliktig: OrgnummerNavn,
-  arbeidsforholdInnrapportertEtterAOrdningen: PT.bool,
+  opplysningspliktigID: PT.string,
+  Aordning: PT.bool,
+  arbeidsavtale: PT.arrayOf(Arbeidsavtale),
 });
 
 const ArbeidsforholdenePropType = PT.arrayOf(ArbeidsforholdPropType);
