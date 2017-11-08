@@ -72,13 +72,13 @@ export const InntektSoknadenSelector = createStructuredSelector({
 });
 
 export const BekreftelserSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.bekreftelser : state.fagsaker.data),
+  state => (state.fagsaker.data.behandlinger ? {} : {}),
   bekreftelser => bekreftelser
 );
 
-export const MedlemsskapSelector = createSelector(
+export const MedlemskapSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : state.fagsaker.data),
-  medlemsskap => medlemsskap
+  medlemskap => medlemskap
 );
 export const OrganisasjonerSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.organisasjoner : []),
@@ -125,16 +125,22 @@ export const OrganisasjonSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   (organisasjoner, arbeidsforholdene) => {
+    // Lag en array med orgnummer (arbeidsgiverID)
     const alleRelevanteOrgnummer = arbeidsforholdene.reduce((samling, element) => [...samling, element.arbeidsgiverID], []);
-    const alleRelevanteOrganisasjoner = organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnummer));
+    // Filter organisasjoner hvis orgnr er inkludert i arrayen alleRelevanteOrgnummer.
+    const alleRelevanteOrganisasjoner = organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnr));
     return alleRelevanteOrganisasjoner;
   }
 );
 
 export const OppsummeringSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].oppsummering : {}),
-  state => SoknadenSelector(state),
-  (oppsummering, soknaden) => ({ ...oppsummering, soknaden })
+  state => (state.fagsaker.data ? state.fagsaker.data : {}),
+  saksdata => ({
+    saksnummer: saksdata.saksnummer,
+    type: saksdata.type,
+    status: saksdata.status,
+    registrertDato: saksdata.registrertDato,
+  })
 );
 
 /** Hent alle arbeidsforhold og trekk ut permisjoner. I tillegg skal hver permisjon ha en kopi av arbeidsgiver
