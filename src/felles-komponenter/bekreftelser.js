@@ -8,6 +8,7 @@ import './bekreftelser.css';
 
 
 function Bekreftelser ({ bekreftelser }) {
+  // Todo: Denne er ikke koblet mot data fra backend. Avventer tilbakemelding etter arbeid med søknaden.
   const {
     utsendt,
     ansatt,

@@ -1,7 +1,7 @@
 import PT from 'prop-types';
 
 const InntektLinjePropType = PT.shape({
-  beloep: PT.string,
+  beloep: PT.number,
   fordel: PT.string,
   inntektskilde: PT.string,
   inntektsperiodetype: PT.string,
@@ -11,7 +11,7 @@ const InntektLinjePropType = PT.shape({
   opplysningspliktigID: PT.string,
   virksomhetID: PT.string,
   inntektsmottakerID: PT.string,
-  inngaarIGrunnlagForTrekk: PT.string,
+  inngaarIGrunnlagForTrekk: PT.bool,
   utloeserArbeidsgiveravgift: PT.bool,
   beskrivelse: PT.string,
 });

@@ -10,7 +10,7 @@ const ArbeidsforholdPropType = PT.shape({
   arbeidsforholdIDnav: PT.number,
   ansettelsesPeriode: Periode,
   arbeidsforholdstype: PT.string,
-  permisjonOgPermittering: PT.arrayOf(Permisjoner),
+  permisjonOgPermittering: Permisjoner,
   utenlandsopphold: PT.array,
   arbeidsgiverID: PT.string,
   arbeidstakerID: PT.string,
