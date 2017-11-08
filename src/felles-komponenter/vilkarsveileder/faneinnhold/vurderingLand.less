@@ -1,0 +1,40 @@
+@import '../../../constants';
+
+.vurderingLand {
+  .landliste {
+
+  }
+
+  .landliste__enkeltlinje {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin:0 0 1em 0;
+
+    .landliste__enkeltlinje__input {
+      width:150px;
+      margin-bottom:0;
+    }
+
+    .landliste__enkeltlinje__navn {
+      width:150px;
+
+    }
+
+    .landliste__enkeltlinje__knapp {
+      background-color: transparent;
+      border-radius: 20px;
+      width:40px;
+      height:40px;
+      border:1px solid @gray;
+      color:@gray-dark;
+      font-size:1.2rem;
+      margin:0 0 0 1em;
+    }
+
+    .landliste__enkeltlinje__knapp--leggtil {
+      align-self:flex-end;
+    }
+  }
+
+}
