@@ -3,11 +3,9 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
+import { boolTilNorsk } from '../utils/utils';
 import './bekreftelser.css';
 
-function boolTilNorsk (value) {
-  return value ? 'JA' : 'NEI';
-}
 
 function Bekreftelser ({ bekreftelser }) {
   const {
