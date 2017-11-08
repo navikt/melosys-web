@@ -136,9 +136,6 @@ class Vilkarsveileder extends Component {
       <div className="vilkarsveileder panelSeksjon">
         <StegLinje steg={this.state.steg} stegKlikk={this.tilSteg} />
         <StegFane stegNummer={0} aktivtSteg={aktivtSteg}>
-          <VurderingLand
-            bekreftOgFortsett={this.bekreftOgFortsett}
-          />
           <OppretteSak
             bekreftOgFortsett={this.bekreftOgFortsett}
             avbrytOpprettSak={this.avbrytOpprettSak}

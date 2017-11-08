@@ -57,7 +57,15 @@ class VurderingLand extends Component {
     });
   }
 
+  /** Legg til land, enten som en direkte parameter til funksjonen ('land') eller
+   * via lokal state.landVelger. Dersom landet allerede er lagt til i state.valgteLand,
+   * returner i stillhet.
+   *
+   * @param e Syntetisk objekt Fra React dersom bruker klikker 'legg-til'-knappen.
+   * @param land
+   */
   leggTilLand = (e, land = null) => {
+    // Todo: Skill ut denne slik at eventHandler fra knappepress er separat. Ryddigere slik enn å kalle eventhandler direkte.
     const landForTillegg = land || this.state.landVelger;
 
     if (!this.state.valgteLand.includes(landForTillegg)) {
@@ -70,15 +78,20 @@ class VurderingLand extends Component {
     }
   }
 
+  /** Sletter et land fra state.valgteLand.
+   *
+   * @param land String Landet i sin helhet som skal slettes.
+   */
   slettLand = land => {
     this.setState({ valgteLand: [...this.state.valgteLand.filter(item => item !== land)] });
   }
 
-  landVelgerEndring = e => {
-    this.setState({ landVelger: e.target.value });
-  }
-
-  landVelgerTastNed = e => {
+  /** Event handler for håndtering av enter-tasten slik at saksbehandler kan skrive inn deler
+   * av land-navnet. Dersom kun én match oppstår (feks 'frank' -> 'Frankrike'), så regnes dette som
+   * et ønsket valg og leggTilLand kalles med det ene treffet som parameter.
+   * @param e SyntetiskEvent React syntetisk event ved KeyDown.
+   */
+  landVelgerTastNedHandler = e => {
     if (e.keyCode === 13) {
       const landTreff = this.state.tilgjengeligeLand.filter(item => item.toLowerCase().includes(this.state.landVelger.toLowerCase()));
 
@@ -86,6 +99,14 @@ class VurderingLand extends Component {
         this.leggTilLand(null, landTreff[0]);
       }
     }
+  }
+
+  /** Håndter endringer slik at inntasting oppdateres til lokal state og deretter tilbake til
+   * form. (Standard React forms).
+   * @param e SyntetiskEvent React syntetisk event ved onChange.
+   */
+  landVelgerEndringHandler = e => {
+    this.setState({ landVelger: e.target.value });
   }
 
   render() {
@@ -113,8 +134,8 @@ class VurderingLand extends Component {
                   bredde="s"
                   className="landliste__enkeltlinje__input"
                   value={this.state.landVelger}
-                  onChange={this.landVelgerEndring}
-                  onKeyDown={this.landVelgerTastNed}
+                  onChange={this.landVelgerEndringHandler}
+                  onKeyDown={this.landVelgerTastNedHandler}
                   onBlur={this.landVelgerFokusVekk}
                 />
                 <button
