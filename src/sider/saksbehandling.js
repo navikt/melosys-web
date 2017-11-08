@@ -114,7 +114,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentFagsaker: fnr => dispatch(hentFagsaker(fnr)),
+  hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

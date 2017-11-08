@@ -132,7 +132,7 @@ router.get('/saksbehandler', function (req, res) {
 });
 
 app.use(allowCrossDomain);
-app.use('/system/melosys/api', router);
+app.use('/melosys/api', router);
 app.use('/api', router);
 
 app.listen(port);

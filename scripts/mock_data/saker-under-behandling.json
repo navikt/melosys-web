@@ -4,6 +4,7 @@
     "saker": [
       {
         "fnr": "01016902582",
+        "saksnummer": 123,
         "kjoenn": "K",
         "sammensattNavn": "HALVORSEN SIGRUN FOS",
         "arbeidsforholdIDnav": 16849217,
@@ -16,6 +17,7 @@
       },
       {
         "fnr": "01016902582",
+        "saksnummer": 123,
         "kjoenn": "M",
         "sammensattNavn": "NORDMANN OLA",
         "arbeidsforholdIDnav": 16849217,
@@ -28,6 +30,7 @@
       },
       {
         "fnr": "01016902582",
+        "saksnummer": 123,
         "kjoenn": "K",
         "sammensattNavn": "HANSEN KARI",
         "arbeidsforholdIDnav": 16849217,
@@ -45,6 +48,7 @@
     "saker": [
       {
         "fnr": "01016902582",
+        "saksnummer": 123,
         "kjoenn": "M",
         "sammensattNavn": "RIIS KHURRAM",
         "arbeidsforholdIDnav": 16849217,
@@ -57,6 +61,7 @@
       },
       {
         "fnr": "01016902582",
+        "saksnummer": 123,
         "kjoenn": "K",
         "sammensattNavn": "HANSEN LISE",
         "arbeidsforholdIDnav": 16849217,
@@ -69,6 +74,7 @@
       },
       {
         "fnr": "01016902582",
+        "saksnummer": 123,
         "kjoenn": "M",
         "sammensattNavn": "HANSEN KARI",
         "arbeidsforholdIDnav": 16849217,
