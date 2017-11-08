@@ -15,17 +15,8 @@ const uuid = require('uuid/v4');
  */
 function MedlemskapPeriode({ medlemskapPeriode }) {
   const {
-    periode,
-    dato,
-    status,
-    helsedel,
     type,
-    lovvalg,
-    grunnlagstype,
-    land,
-    trygdedekning,
-    kildedokumenttype,
-    register,
+
   } = medlemskapPeriode;
 
   return (
@@ -33,10 +24,9 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
       <Nav.Row>
         {/* START DATO RANGE */}
         <Nav.Column xs="6" lg="5">
-          <DatoOmrade periode={periode} titler={{ fom: 'Fra', tom: 'Til' }} />
           <Nav.Row>
-            <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Registrert</Nav.Element><EnkeltDato dato={dato.registrert} /></Nav.Column>
-            <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Besluttet</Nav.Element><EnkeltDato dato={dato.besluttet} /></Nav.Column>
+            <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Registrert</Nav.Element></Nav.Column>
+            <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Besluttet</Nav.Element></Nav.Column>
           </Nav.Row>
         </Nav.Column>
         {/* SLUTT DATO RANGE */}
@@ -47,25 +37,9 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
             <dt>Lovvalgsland:</dt>
             <dd>Norge</dd>
             <dt>Periodetype:</dt>
-            <dd>{type.term}</dd>
+            <dd>{type}</dd>
             <dt>Status:</dt>
-            <dd>{status.term}</dd>
-            <dt>Helsedel:</dt>
-            <dd>{helsedel ? 'JA' : 'NEI'}</dd>
-            <dt>Lovvalg:</dt>
-            <dd>{lovvalg.term}</dd>
-            <dt>Grunnlagstype:</dt>
-            <dd>{grunnlagstype.term}</dd>
-            <dt>Land:</dt>
-            <dd>{land.term}</dd>
-            <dt>Trygdedekning:</dt>
-            <dd>{trygdedekning.term}</dd>
-            <dt>Kildedokumenttype:</dt>
-            <dd>{kildedokumenttype.term}</dd>
-            <dt>Register:</dt>
-            <dd>MEDL</dd>
-            <dt>Hentet fra:</dt>
-            <dd>{register}</dd>
+
           </dl>
         </Nav.Column>
         {/* SLUTT DETALJER */}
@@ -79,14 +53,14 @@ MedlemskapPeriode.propTypes = {
 };
 
 function Medlemskap({ medlemsskap }) {
-  const { periodeListe } = medlemsskap;
+  const { medlemsperiode } = medlemsskap;
 
   return (
     <div className="medlemskap panelSeksjon">
       <Nav.EkspanderbartPanel tittel="Medlemskap">
         <section aria-label="Medlemskap">
           <Nav.Container fluid>
-            { /* periodeListe.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) */ }
+            { medlemsperiode.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) }
           </Nav.Container>
         </section>
       </Nav.EkspanderbartPanel>

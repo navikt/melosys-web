@@ -31,7 +31,35 @@
                   "endringsdatoStillingsprosent": "1978-08-19"
                 }
               ],
-              "permisjonOgPermittering": [],
+              "permisjonOgPermittering": [
+                {
+                  "permisjonsId": "P00006",
+                  "permisjonsPeriode": {
+                    "fom": "2017-02-15",
+                    "tom": "2017-02-20"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00001",
+                  "permisjonsPeriode": {
+                    "fom": "2015-09-02",
+                    "tom": "2015-09-04"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                },
+                {
+                  "permisjonsId": "P00004",
+                  "permisjonsPeriode": {
+                    "fom": "2016-09-01",
+                    "tom": "2016-09-02"
+                  },
+                  "permisjonsprosent": 100,
+                  "permisjonOgPermittering": "Permisjon"
+                }
+              ],
               "utenlandsopphold": [],
               "arbeidsgiverID": "873102322",
               "arbeidstakerID": "873102322",

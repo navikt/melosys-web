@@ -2,7 +2,7 @@ import React from 'react';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
-import EnkeltDato from './datoOmrade/enkeltDato';
+// import EnkeltDato from './datoOmrade/enkeltDato';
 
 import './inntekt.css';
 
