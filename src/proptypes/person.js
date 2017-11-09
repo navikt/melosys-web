@@ -7,12 +7,10 @@ const PersonPropType = PT.shape({
   fnr: PT.string,
   sivilstand: PT.string,
   statsborgerskap: PT.string,
-  kjoenn: PT.string,
-  fornavn: PT.string,
-  etternavn: PT.string,
   sammensattNavn: PT.string,
-  foedselsdato: PT.string,
   bostedsadresse: BostedsAdresse,
+  kjoenn: PT.string,
+  foedselsdato: PT.string,
 });
 
 export {

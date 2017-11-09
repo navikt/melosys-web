@@ -20,7 +20,7 @@ import {
   hentFagsaker,
   PersonSelector,
   OrganisasjonSelector,
-  MedlemsskapSelector,
+  MedlemskapSelector,
   ArbeidsforholdeneSelector,
   InntektSoknadenSelector,
   BekreftelserSelector,
@@ -36,7 +36,7 @@ class Saksbehandling extends Component {
     match: PT.object.isRequired,
     person: MPT.Person,
     organisasjoner: MPT.Organisasjoner,
-    medlemsskap: MPT.Medlemskap,
+    medlemskap: MPT.Medlemskap,
     arbeidsforholdene: MPT.Arbeidsforholdene,
     inntekt: MPT.Inntekt,
     bekreftelser: MPT.Bekreftelser,
@@ -47,7 +47,7 @@ class Saksbehandling extends Component {
   static defaultProps = {
     person: {},
     organisasjoner: [],
-    medlemsskap: {},
+    medlemskap: {},
     arbeidsforholdene: [],
     inntekt: {},
     bekreftelser: [],
@@ -64,7 +64,7 @@ class Saksbehandling extends Component {
     const {
       person,
       organisasjoner,
-      medlemsskap,
+      medlemskap,
       arbeidsforholdene,
       inntekt,
       bekreftelser,
@@ -86,7 +86,7 @@ class Saksbehandling extends Component {
               {permisjoner && <Permisjoner permisjoner={permisjoner} />}
               {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
               {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
-              {medlemsskap && <Medlemskap medlemsskap={medlemsskap} />}
+              {medlemskap && <Medlemskap medlemskap={medlemskap} />}
               {inntekt && <Inntekt inntekt={inntekt} />}
               {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
             </Nav.Column>
@@ -105,7 +105,7 @@ class Saksbehandling extends Component {
 const mapStateToProps = state => ({
   person: PersonSelector(state),
   organisasjoner: OrganisasjonSelector(state),
-  medlemsskap: MedlemsskapSelector(state),
+  medlemskap: MedlemskapSelector(state),
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
   inntekt: InntektSoknadenSelector(state),
   bekreftelser: BekreftelserSelector(state),

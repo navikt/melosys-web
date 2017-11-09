@@ -7,7 +7,7 @@ import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 
 import './personopplysninger.css';
 
-const uuid = require('uuid/v4');
+// const uuid = require('uuid/v4');
 
 function Personopplysninger(props) {
   if (Object.keys(props.person).length === 0) return (<div />);
@@ -22,9 +22,7 @@ function Personopplysninger(props) {
     sammensattNavn,
     foedselsdato,
     bostedsadresse,
-    mobiltelefon,
-    epost,
-    familerelasjon: { ektefelle, barn } } = props.person;
+  } = props.person;
 
   // Påkrevde felter fra API
   const { poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav = '' } } = bostedsadresse;
@@ -62,16 +60,6 @@ function Personopplysninger(props) {
                 <dd>{`${gatenavn} ${husnummer} ${husbokstav}`}</dd>
                 <dd>{`${postnr} ${poststed}`}</dd>
                 <dd>{`${land}`}</dd>
-                <dt>Mobil:</dt><dd>{mobiltelefon}</dd>
-                <dt>E-post:</dt><dd>{epost}</dd>
-              </dl>
-            </Nav.Column>
-            <Nav.Column xs="6">
-              <dl className="person__detaljer">
-                <dt>Ektefelle:</dt><dd>{ektefelle.sammensattNavn} ({ektefelle.alder})</dd>
-                <dt>Barn:</dt>
-                { barn.map(item => <dd key={uuid()}>{item.sammensattNavn} ({item.alder})</dd>)}
-
               </dl>
             </Nav.Column>
           </Nav.Row>

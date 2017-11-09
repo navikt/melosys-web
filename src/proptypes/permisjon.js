@@ -10,14 +10,13 @@ const PermisjonOgPermitteringPropType = PT.shape({
 });
 
 const PermisjonenPropType = PT.shape({
-  grad: PT.string,
-  inntektstype: PT.string,
-  permisjonstype: PT.string,
-  periode: PT.shape({
+  permisjonsId: PT.string,
+  permisjonsPeriode: PT.shape({
     fom: PT.string,
     tom: PT.string,
   }),
-  innmeldt: PT.string,
+  permisjonsprosent: PT.number,
+  permisjonOgPermittering: PT.string,
 });
 
 const PermisjonerPropType = PT.arrayOf(PermisjonenPropType);
