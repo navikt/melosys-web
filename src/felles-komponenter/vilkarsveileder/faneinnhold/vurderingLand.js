@@ -127,6 +127,7 @@ class VurderingLand extends Component {
         <Nav.Fieldset legend="Hvilke land skal søker arbeide i?">
           <Nav.Column xs="12">
             <div className="landliste">
+              {this.state.valgteLand.map(item => <ValgtLand key={item} land={item} slettLand={this.slettLand} />)}
               <div className="landliste__enkeltlinje">
                 <Nav.Input
                   list="land"
@@ -145,7 +146,6 @@ class VurderingLand extends Component {
                   {tilgjengeligeLand.map(item => (!valgteLand.includes(item) ? <option key={item} value={item} /> : ''))}
                 </datalist>
               </div>
-              {this.state.valgteLand.map(item => <ValgtLand key={item} land={item} slettLand={this.slettLand} />)}
             </div>
           </Nav.Column>
         </Nav.Fieldset>
