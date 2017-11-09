@@ -20,8 +20,8 @@ Periode.propTypes = {
 };
 
 function SokListeEnkeltlinje({ sak }) {
-  const { fnr, sammensattNavn, mottatt, status, periode } = sak;
-  const link = `/saksbehandling/${fnr}`;
+  const { saksnummer, fnr, sammensattNavn, mottatt, status, periode } = sak;
+  const link = `/saksbehandling/${saksnummer}`;
   const ikon = sak.kjoenn === 'M' ? Ikon.Mann : Ikon.Kvinne;
   const ikonAlt = sak.kjoenn === 'M' ? 'mann' : 'kvinne';
 

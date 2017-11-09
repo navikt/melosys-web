@@ -30,7 +30,7 @@ router.post('/henvendelse', function(req, res) {
 
 const fagsaker = (req, res) => {
   try {
-    const fnr = req.params.fnr && req.params.fnr.toString() || '';
+    const snr = req.params.snr && req.params.snr.toString() || '';
     const fagsaker = JSON.parse(fs.readFileSync("./scripts/mock_data/fagsaker.json", "utf8"));
     return res.json(fagsaker);
   }
@@ -39,24 +39,9 @@ const fagsaker = (req, res) => {
     return res.status(500).send(err);
   }
 };
-//router.get('/fagsaker/:fnr?', fagsaker);
-const nyefagsaker = (req, res) => {
-  try {
-    const saksnummer = req.params.saksnummer && req.params.saksnummer.toString() || '';
-    const data = JSON.parse(fs.readFileSync("./scripts/mock_data/nyefagsaker.json", "utf8"));
-    const fagsak = _.find(data.response, function (fagsakitem) {
-      return parseInt(fagsakitem.saksnummer) === parseInt(saksnummer);
-    });
-    return res.json(fagsak);
-  }
-  catch (err) {
-    console.error(err);
-    return res.status(500).send(err);
-  }
-};
-router.get('/fagsaker/:saksnummer', nyefagsaker);
+router.get('/fagsaker/:snr', fagsaker);
 
-router.get('/nyesaker/:fnr', function (req, res) {
+router.get('/fagsaker/fnr/:fnr', function (req, res) {
   try {
     const fnr = req.params.fnr.toString();
     const nyesaker = JSON.parse(fs.readFileSync("./scripts/mock_data/nyesaker.json", "utf8"));

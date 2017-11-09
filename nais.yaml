@@ -8,14 +8,8 @@ port: 80
 healthcheck:
     liveness:
       initialDelay: 60
-      path: rest/internal/isAlive
+      path: /
     readiness:
       initialDelay: 60
-      path: rest/internal/isAlive
-resources:
-    limits:
-      cpu: 1500m
-      memory: 3072Mi
-    requests:
-      cpu: 1000m
-      memory: 1536Mi
+      path: /
+
