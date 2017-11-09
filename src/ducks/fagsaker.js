@@ -43,9 +43,22 @@ export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
   person => person
 );
+
+/** InntektLinjer leveres gruppert inn i maaned. Denne selectoren gjør derfor en reduce slik at alle inntekter
+ * leveres som én array, hvert element er da én inntektLinje.
+ *
+ * @return { inntekstListe } Et objekt med array for all inntekt.
+ */
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
-  inntekt => inntekt
+  inntekt => {
+    const inntektListe = Array.isArray(inntekt.arbeidsInntektMaanedListe)
+      ?
+      inntekt.arbeidsInntektMaanedListe.reduce((samling, element) => [...samling, ...element.arbeidsInntektInformasjon.inntektListe], [])
+      :
+      [];
+    return inntektListe;
+  }
 );
 
 export const SoknadenSelector = createSelector(
@@ -59,24 +72,42 @@ export const InntektSoknadenSelector = createStructuredSelector({
 });
 
 export const BekreftelserSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.bekreftelser : state.fagsaker.data),
+  state => (state.fagsaker.data.behandlinger ? {} : {}),
   bekreftelser => bekreftelser
 );
 
-export const MedlemsskapSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemsskap : state.fagsaker.data),
-  medlemsskap => medlemsskap
+export const MedlemskapSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : state.fagsaker.data),
+  medlemskap => medlemskap
 );
 export const OrganisasjonerSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.organisasjoner : []),
   organisasjoner => organisasjoner
 );
 
+/**
+ * Arbeidsforhold refererer til organisasjon med arbeidsforholdID. For at komponenten skal kunne vise
+ * navn på arbeidsgiver og evt adresse etc må dette flettes inn i arbeidsforhold. Selectoren gjør en map p
+ * alle arbeidsforhold og finner relevant organisasjon etter orgnr og setter hele dette objektet inn
+ * i arbeidsforholdet dersom det finnes.
+ */
 export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
-  arbeidsforhold => arbeidsforhold
+  state => OrganisasjonerSelector(state),
+  (arbeidsforhold, organisasjoner) => {
+    const populertArbeidsforhold = arbeidsforhold.map(item => {
+      const arbeid = { ...item };
+      arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
+      return arbeid;
+    });
+
+    return populertArbeidsforhold;
+  }
 );
 
+/**
+ *  Denne er depricated når vi fjerner spikes fra tidlig prototype
+ *  */
 export const ArbeidsforholdSelector = createSelector(
   (state, arbeidsforholdID) => arbeidsforholdID,
   state => state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold || [],
@@ -94,16 +125,22 @@ export const OrganisasjonSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   (organisasjoner, arbeidsforholdene) => {
-    const alleRelevanteOrgnummer = arbeidsforholdene.reduce((samling, element) => [...samling, element.arbeidsgiver.orgnummer], []);
-    const alleRelevanteOrganisasjoner = organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnummer));
+    // Lag en array med orgnummer (arbeidsgiverID)
+    const alleRelevanteOrgnummer = arbeidsforholdene.reduce((samling, element) => [...samling, element.arbeidsgiverID], []);
+    // Filter organisasjoner hvis orgnr er inkludert i arrayen alleRelevanteOrgnummer.
+    const alleRelevanteOrganisasjoner = organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnr));
     return alleRelevanteOrganisasjoner;
   }
 );
 
 export const OppsummeringSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].oppsummering : {}),
-  state => SoknadenSelector(state),
-  (oppsummering, soknaden) => ({ ...oppsummering, soknaden })
+  state => (state.fagsaker.data ? state.fagsaker.data : {}),
+  saksdata => ({
+    saksnummer: saksdata.saksnummer,
+    type: saksdata.type,
+    status: saksdata.status,
+    registrertDato: saksdata.registrertDato,
+  })
 );
 
 /** Hent alle arbeidsforhold og trekk ut permisjoner. I tillegg skal hver permisjon ha en kopi av arbeidsgiver

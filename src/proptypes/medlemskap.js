@@ -1,36 +1,18 @@
 import PT from 'prop-types';
 
-import { Kodeverk } from './kodeverk';
-import { Periode } from './periode';
-
 const MedlemskapPeriodePropType = PT.shape({
-  id: PT.number,
-  periode: Periode,
-  meta: PT.shape({
-    opprinneligOpprettetAv: PT.string,
-    sistEndretAv: PT.string,
-    tidspunktOpprinneligOpprettet: PT.string,
-    tidspunktSistEndret: PT.string,
-  }),
-  version: PT.number,
-  dato: PT.shape({
-    registrert: PT.string,
-    besluttet: PT.string,
-  }),
-  status: Kodeverk,
-  helsedel: PT.bool,
-  type: Kodeverk,
-  lovvalg: Kodeverk,
-  grunnlagstype: Kodeverk,
-  land: Kodeverk,
-  trygdedekning: Kodeverk,
-  kildedokumenttype: Kodeverk,
-  register: PT.string,
+  type: PT.string,
+  status: PT.string,
+  grunnlagstype: PT.string,
+  land: PT.string,
+  lovvalg: PT.string,
+  trygdedekning: PT.string,
+  kildedokumenttype: PT.string,
+  kilde: PT.string,
 });
 
 const MedlemskapPropType = PT.shape({
-  aktorID: PT.string,
-  periodeListe: PT.arrayOf(MedlemskapPeriodePropType),
+  medlemsperiode: PT.arrayOf(MedlemskapPeriodePropType),
 });
 
 

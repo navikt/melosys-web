@@ -3,8 +3,6 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import './medlemskap.css';
-import DatoOmrade from './datoOmrade/datoOmrade';
-import EnkeltDato from './datoOmrade/enkeltDato';
 
 const uuid = require('uuid/v4');
 
@@ -15,57 +13,39 @@ const uuid = require('uuid/v4');
  */
 function MedlemskapPeriode({ medlemskapPeriode }) {
   const {
-    periode,
-    dato,
-    status,
-    helsedel,
     type,
-    lovvalg,
+    status,
     grunnlagstype,
     land,
+    lovvalg,
     trygdedekning,
     kildedokumenttype,
-    register,
+    kilde,
   } = medlemskapPeriode;
 
   return (
-    <div className="medlemskap__enkelt" aria-label="Enkeltmedlemsskap">
+    <div className="medlemskap__enkelt" aria-label="Enkelt medlemskap">
       <Nav.Row>
-        {/* START DATO RANGE */}
-        <Nav.Column xs="6" lg="5">
-          <DatoOmrade periode={periode} titler={{ fom: 'Fra', tom: 'Til' }} />
-          <Nav.Row>
-            <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Registrert</Nav.Element><EnkeltDato dato={dato.registrert} /></Nav.Column>
-            <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Besluttet</Nav.Element><EnkeltDato dato={dato.besluttet} /></Nav.Column>
-          </Nav.Row>
-        </Nav.Column>
-        {/* SLUTT DATO RANGE */}
-
         {/* START DETALJER */}
         <Nav.Column xs="12" lg="7">
           <dl className="medlemskap__detaljer">
-            <dt>Lovvalgsland:</dt>
-            <dd>Norge</dd>
             <dt>Periodetype:</dt>
-            <dd>{type.term}</dd>
+            <dd>{type || '-'}</dd>
             <dt>Status:</dt>
-            <dd>{status.term}</dd>
-            <dt>Helsedel:</dt>
-            <dd>{helsedel ? 'JA' : 'NEI'}</dd>
-            <dt>Lovvalg:</dt>
-            <dd>{lovvalg.term}</dd>
+            <dd>{status || '-'}</dd>
             <dt>Grunnlagstype:</dt>
-            <dd>{grunnlagstype.term}</dd>
+            <dd>{grunnlagstype || '-'}</dd>
             <dt>Land:</dt>
-            <dd>{land.term}</dd>
+            <dd>{land || '-'}</dd>
+            <dt>Lovvalg:</dt>
+            <dd>{lovvalg || '-'}</dd>
             <dt>Trygdedekning:</dt>
-            <dd>{trygdedekning.term}</dd>
+            <dd>{trygdedekning || '-'}</dd>
             <dt>Kildedokumenttype:</dt>
-            <dd>{kildedokumenttype.term}</dd>
-            <dt>Register:</dt>
-            <dd>MEDL</dd>
-            <dt>Hentet fra:</dt>
-            <dd>{register}</dd>
+            <dd>{kildedokumenttype || '-'}</dd>
+            <dt>Kilde:</dt>
+            <dd>{kilde || '-'}</dd>
+
           </dl>
         </Nav.Column>
         {/* SLUTT DETALJER */}
@@ -78,15 +58,15 @@ MedlemskapPeriode.propTypes = {
   medlemskapPeriode: MPT.MedlemskapPeriode.isRequired,
 };
 
-function Medlemskap({ medlemsskap }) {
-  const { periodeListe } = medlemsskap;
+function Medlemskap({ medlemskap }) {
+  const { medlemsperiode } = medlemskap;
 
   return (
     <div className="medlemskap panelSeksjon">
       <Nav.EkspanderbartPanel tittel="Medlemskap">
         <section aria-label="Medlemskap">
           <Nav.Container fluid>
-            {periodeListe.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />)}
+            { medlemsperiode.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) }
           </Nav.Container>
         </section>
       </Nav.EkspanderbartPanel>
@@ -95,7 +75,7 @@ function Medlemskap({ medlemsskap }) {
 }
 
 Medlemskap.propTypes = {
-  medlemsskap: MPT.Medlemskap.isRequired,
+  medlemskap: MPT.Medlemskap.isRequired,
 };
 
 export default Medlemskap;

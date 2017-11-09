@@ -5,7 +5,7 @@ import PT from 'prop-types';
 
 import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import * as Nav from '../utils/navFrontend';
-import SokListe from '../felles-komponenter/sok/sokListe';
+// import SokListe from '../felles-komponenter/sok/sokListe';
 import SokResultat from '../felles-komponenter/sok/sokResultat';
 import * as NyeSaker from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
@@ -42,7 +42,8 @@ class Sok extends Component {
   }
 
   render() {
-    const { nyesaker, sakerbehandles, tidligeresaker } = this.props;
+    // const { nyesaker, sakerbehandles, tidligeresaker } = this.props;
+    const { nyesaker } = this.props;
     const { visSokResultat } = this.props;
 
     return (
@@ -54,12 +55,15 @@ class Sok extends Component {
               <SokeForm onSubmit={this.queryStringHandler} />
               { visSokResultat && <SokResultat saker={nyesaker} /> }
             </Nav.Column>
+
+            {/*
             <Nav.Column xs="5">
               <Nav.Innholdstittel id="overskriftUnderbehandling">Saker under behandling</Nav.Innholdstittel>
               <SokListe saker={sakerbehandles} kanViseFlereSaker aria-describedby="overskriftUnderbehandling" />
               <Nav.Innholdstittel id="overskriftTitligeresaker">Tidligere behandlede saker</Nav.Innholdstittel>
               <SokListe saker={tidligeresaker} kanViseFlereSaker aria-describedby="overskriftTitligeresaker" />
             </Nav.Column>
+            */}
           </Nav.Row>
         </Nav.Container>
       </div>
