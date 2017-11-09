@@ -2,12 +2,10 @@
 import PT from 'prop-types';
 
 const OppsummeringPropType = PT.shape({
-  behandlingsStatus: PT.shape({
-    kode: PT.string,
-    term: PT.string,
-  }),
-  opprettet: PT.string,
-  sistOppdatert: PT.string,
+  saksnummer: PT.number,
+  type: PT.string,
+  status: PT.string,
+  registrertDato: PT.string,
 });
 
 export {

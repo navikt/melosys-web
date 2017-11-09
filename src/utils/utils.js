@@ -251,3 +251,7 @@ export function queryParam(sporreStreng){
       return key ? { ...samling, [key]:value } : { ...samling }
     },{});
 }
+
+export function boolTilNorsk (value) {
+  return value ? 'JA' : 'NEI';
+}

@@ -4,22 +4,32 @@ import * as MPT from '../proptypes/';
 
 import './arbeidsforholdene.css';
 import DatoOmrade from './datoOmrade/datoOmrade';
-import EnkeltDato from './datoOmrade/enkeltDato';
+import { boolTilNorsk } from '../utils/utils';
 
 const uuid = require('uuid/v4');
 
 function Arbeidsavtalen({ avtalen }) {
-  const { yrke, beregnetAntallTimerPrUke, endringsdatoStillingsprosent } = avtalen;
+  const {
+    arbeidstidsordning,
+    avloenningstype,
+    yrke,
+    beregnetAntallTimerPrUke,
+    endringsdatoStillingsprosent,
+  } = avtalen;
 
   return (
     <div className="arbeidsavtale">
       <Nav.Element>Arbeidsavtale</Nav.Element>
-      <dt>Yrke</dt>
-      <dd>{yrke}</dd>
+      <dt>Ordning</dt>
+      <dd>{arbeidstidsordning || '-'}</dd>
       <dt>Timer pr uke</dt>
-      <dd>{beregnetAntallTimerPrUke}</dd>
+      <dd>{beregnetAntallTimerPrUke || '-'}</dd>
       <dt>Sist endret</dt>
-      <dd>{endringsdatoStillingsprosent}</dd>
+      <dd>{endringsdatoStillingsprosent || '-'}</dd>
+      <dt>Yrke</dt>
+      <dd>{yrke || '-'}</dd>
+      <dt>Lønnstype</dt>
+      <dd>{avloenningstype || '-'}</dd>
     </div>
   );
 }
@@ -36,50 +46,38 @@ Arbeidsavtalen.propTypes = {
  */
 function Arbeidsforhold({ arbeidsforhold }) {
   const {
+    arbeidsforholdIDnav,
     ansettelsesPeriode,
-    registrertDato,
-    bekreftetDato,
-    ordning,
-    yrkeskode,
-    yrke,
-    arbeidstidsordning,
     arbeidsforholdstype,
-    arbeidsavtale,
-    arbeidsgiver,
+    Aordning,
+    arbeidsgiver: { navn: arbeidsgiverNavn },
+    arbeidsavtaler,
   } = arbeidsforhold;
 
   return (
     <div className="panelSeksjon">
-      <Nav.EkspanderbartPanel tittel={`Arbeidsforhold: ${arbeidsgiver.navn}`}>
+      <Nav.EkspanderbartPanel tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`}>
         <Nav.Row className="arbeidsforhold__enkelt">
           <div className="arbeidsforholdene panelSeksjon">
             <Nav.Row className="arbeidsforhold__enkelt">
               <Nav.Column xs="5">
                 <Nav.Container fluid>
                   <DatoOmrade periode={ansettelsesPeriode} />
-                  <Nav.Row>
-                    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Registrert</Nav.Element><EnkeltDato dato={registrertDato} /></Nav.Column>
-                    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Besluttet</Nav.Element><EnkeltDato dato={bekreftetDato} /></Nav.Column>
-                  </Nav.Row>
                   <dl className="arbeidsforhold__detaljer">
-                    <dt>Ordning:</dt>
-                    <dd>{ordning}</dd>
+                    <dt>A-ordning:</dt>
+                    <dd>{boolTilNorsk(Aordning)}</dd>
                   </dl>
                 </Nav.Container>
               </Nav.Column>
               <Nav.Column xs="7">
                 <dl className="arbeidsforhold__detaljer">
-                  <dt>Yrkeskode:</dt>
-                  <dd>{yrkeskode}</dd>
-                  <dt>Yrke:</dt>
-                  <dd>{yrke}</dd>
-                  <dt>Arbeidstidsordning:</dt>
-                  <dd>{arbeidstidsordning}</dd>
+                  <dt>NAV-ID:</dt>
+                  <dd>{arbeidsforholdIDnav}</dd>
                   <dt>Type:</dt>
                   <dd>{arbeidsforholdstype}</dd>
                 </dl>
                 <dl className="arbeidsforhold__detaljer">
-                  { arbeidsavtale.map(avtalen => <Arbeidsavtalen key={uuid()} avtalen={avtalen} />)}
+                  { arbeidsavtaler.map(avtalen => <Arbeidsavtalen key={uuid()} avtalen={avtalen} />) }
                 </dl>
               </Nav.Column>
             </Nav.Row>
