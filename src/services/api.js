@@ -29,7 +29,7 @@ export function hentFagsaker(snr) {
   return fetchToJson(URI_FAGSAKER, { headers: headers });
 }
 export function hentNyesaker(fnr) {
-  const URI_NYESAKER = `${API_MELOSYS_URL}nyesaker/${fnr}`;
+  const URI_NYESAKER = `${API_MELOSYS_URL}fagsaker/fnr/${fnr}`;
   return fetchToJson(URI_NYESAKER, { headers: headers });
 }
 
