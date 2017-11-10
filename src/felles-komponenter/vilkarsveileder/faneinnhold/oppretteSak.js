@@ -2,6 +2,8 @@ import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 
+import DatoFelt from '../../skjema/datofelt';
+
 const OppretteSak = props => {
   const { bekreftOgFortsett, avbrytOpprettSak } = props;
 
@@ -17,7 +19,7 @@ const OppretteSak = props => {
             </Nav.Select>
           </Nav.Column>
           <Nav.Column xs="4">
-            <Nav.Input label="Opprettet dato" bredde="s" />
+            <DatoFelt />
           </Nav.Column>
         </Nav.Fieldset>
         <div className="fane__knapplinje">
