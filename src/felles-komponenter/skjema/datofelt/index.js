@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import * as Nav from '../../../utils/navFrontend';
-import vaskInputDato from '../../../utils/dato';
+import { vaskInputDato } from '../../../utils/dato';
 
 import './datofelt.css';
 
