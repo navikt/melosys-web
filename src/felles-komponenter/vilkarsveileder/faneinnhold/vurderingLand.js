@@ -64,8 +64,7 @@ class VurderingLand extends Component {
    * @param e Syntetisk objekt Fra React dersom bruker klikker 'legg-til'-knappen.
    * @param land
    */
-  leggTilLand = (e, land = null) => {
-    // Todo: Skill ut denne slik at eventHandler fra knappepress er separat. Ryddigere slik enn å kalle eventhandler direkte.
+  leggTilLandHandler = (e, land = null) => {
     const landForTillegg = land || this.state.landVelger;
 
     if (!this.state.valgteLand.includes(landForTillegg)) {
@@ -82,7 +81,7 @@ class VurderingLand extends Component {
    *
    * @param land String Landet i sin helhet som skal slettes.
    */
-  slettLand = land => {
+  slettLandHandler = land => {
     this.setState({ valgteLand: [...this.state.valgteLand.filter(item => item !== land)] });
   }
 
@@ -96,7 +95,7 @@ class VurderingLand extends Component {
       const landTreff = this.state.tilgjengeligeLand.filter(item => item.toLowerCase().includes(this.state.landVelger.toLowerCase()));
 
       if (landTreff.length === 1) {
-        this.leggTilLand(null, landTreff[0]);
+        this.leggTilLandHandler(null, landTreff[0]);
       }
     }
   }
@@ -127,7 +126,7 @@ class VurderingLand extends Component {
         <Nav.Fieldset legend="Hvilke land skal søker arbeide i?">
           <Nav.Column xs="12">
             <div className="landliste">
-              {this.state.valgteLand.map(item => <ValgtLand key={item} land={item} slettLand={this.slettLand} />)}
+              {this.state.valgteLand.map(item => <ValgtLand key={item} land={item} slettLand={this.slettLandHandler} />)}
               <div className="landliste__enkeltlinje">
                 <Nav.Input
                   list="land"
@@ -141,7 +140,7 @@ class VurderingLand extends Component {
                 />
                 <button
                   className="landliste__enkeltlinje__knapp landliste__enkeltlinje__knapp--leggtil"
-                  onClick={this.leggTilLand}>+</button>
+                  onClick={this.leggTilLandHandler}>+</button>
                 <datalist id="land">
                   {tilgjengeligeLand.map(item => (!valgteLand.includes(item) ? <option key={item} value={item} /> : ''))}
                 </datalist>

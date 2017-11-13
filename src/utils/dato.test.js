@@ -18,7 +18,6 @@ it('godtar alle tillatte datoformater', () => {
     const vasketDato = vaskInputDato(datoTest.test);
     expect(vasketDato).toEqual(datoTest.forvent);
   })
-
 });
 
 it('tolker årstall med 2 siffer riktig', () => {
