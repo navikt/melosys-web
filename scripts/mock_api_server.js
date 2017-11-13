@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 //const path = require('path');
 const os = require('os');
+const moment = require('moment');
 
 const allowCrossDomain = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
@@ -21,11 +22,20 @@ app.use(bodyParser.json());
 const port = process.env.PORT || 3002;
 const router = express.Router();
 
-router.post('/henvendelse', function(req, res) {
-  console.log('henvendelse POST');
+router.post('/opprettsak/:fnr', function(req, res) {
+  console.log('opprettsak POST');
   console.log('content-type', req.get('content-type'));
-  console.log('henvendelse',req.body);
-  res.json({message:'GOT a POST request:'+JSON.stringify(req.body)})
+  console.log('opprettsak',req.body);
+  const fnr = req.params.fnr.toString();
+  const nysak = {
+    fnr: fnr,
+    saksnummer: _.random(100,9999).toString(),
+    kjoenn: 'K',
+    sammensattNavn: 'UNNI FOS KVALUY',
+    registrertDato: moment(),
+    status: 'Ikke påbegynnt'
+  };
+  res.json(nysak);
 });
 
 const fagsaker = (req, res) => {
