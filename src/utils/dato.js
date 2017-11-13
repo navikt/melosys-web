@@ -9,7 +9,7 @@ import moment from 'moment';
  * @param dato String Datoen som sakebehandleren har tastet inn.
  * @returns String Datoen som er vasket og stringified.
  */
-const MAX_AR_FREM_I_TID = 15;
+const MAX_AR_FREM_I_TID = 10;
 
 const vaskInputDato = dato => {
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
