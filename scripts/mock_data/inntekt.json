@@ -1,0 +1,80 @@
+{
+  "hentInntektListeResponse": {
+    "response": {
+      "ident": {
+        "personIdent": "16016939696"
+      },
+      "arbeidsInntektIdent": {
+        "arbeidsInntektMaaned": {
+          "aarMaaned": "2017-06+02:00",
+          "arbeidsInntektInformasjon": {
+            "inntektListe": [
+              {
+                "beloep": "25000",
+                "fordel": "kontantytelse",
+                "inntektskilde": "A-ordningen",
+                "inntektsperiodetype": "Maaned",
+                "inntektsstatus": "LoependeInnrapportert",
+                "levereringstidspunkt": "2017-10-06T12:52:58.993+02:00",
+                "utbetaltIPeriode": "2017-06",
+                "opplysningspliktig": {
+                  "orgnummer": "873152362"
+                },
+                "virksomhet": {
+                  "orgnummer": "873152362"
+                },
+                "tilleggsinformasjon": {
+                  "kategori": "Periode",
+                  "tilleggsinformasjonDetaljer": {
+                    "etterbetalingsperiode": {
+                      "startDato": "2017-03-01+01:00",
+                      "sluttDato": "2017-03-31+02:00"
+                    }
+                  }
+                },
+                "inntektsmottaker": {
+                  "personIdent": "16016939696"
+                },
+                "inngaarIGrunnlagForTrekk": "true",
+                "utloeserArbeidsgiveravgift": "true",
+                "informasjonsstatus": "InngaarAlltid",
+                "beskrivelse": "fastloenn"
+              },
+              {
+                "beloep": "25000",
+                "fordel": "kontantytelse",
+                "inntektskilde": "A-ordningen",
+                "inntektsperiodetype": "Maaned",
+                "inntektsstatus": "LoependeInnrapportert",
+                "levereringstidspunkt": "2017-10-06T12:52:58.999+02:00",
+                "utbetaltIPeriode": "2017-06",
+                "opplysningspliktig": {
+                  "orgnummer": "873152362"
+                },
+                "virksomhet": {
+                  "orgnummer": "873152362"
+                },
+                "tilleggsinformasjon": {
+                  "kategori": "AldersUfoereEtterlatteAvtalefestetOgKrigspensjon",
+                  "tilleggsinformasjonDetaljer": {
+                    "tidsrom": {
+                      "startDato": "2017-04-01+02:00",
+                      "sluttDato": "2017-04-30+02:00"
+                    }
+                  }
+                },
+                "inntektsmottaker": {
+                  "personIdent": "16016939696"
+                },
+                "inngaarIGrunnlagForTrekk": "true",
+                "utloeserArbeidsgiveravgift": "true",
+                "informasjonsstatus": "InngaarAlltid",
+                "beskrivelse": "fastloenn"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

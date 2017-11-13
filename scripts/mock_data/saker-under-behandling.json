@@ -1,0 +1,90 @@
+[
+  {
+    "brukernavn": "Z991001",
+    "saker": [
+      {
+        "fnr": "01016902582",
+        "saksnummer": 123,
+        "kjoenn": "K",
+        "sammensattNavn": "HALVORSEN SIGRUN FOS",
+        "arbeidsforholdIDnav": 16849217,
+        "mottatt": "2017-10-01",
+        "status": "Under behandling",
+        "periode": {
+          "fom": "2016-06-01",
+          "tom": "2016-12-31"
+        }
+      },
+      {
+        "fnr": "01016902582",
+        "saksnummer": 123,
+        "kjoenn": "M",
+        "sammensattNavn": "NORDMANN OLA",
+        "arbeidsforholdIDnav": 16849217,
+        "mottatt": "2017-11-01",
+        "status": "Under behandling",
+        "periode": {
+          "fom": "2018-05-01",
+          "tom": "2018-12-31"
+        }
+      },
+      {
+        "fnr": "01016902582",
+        "saksnummer": 123,
+        "kjoenn": "K",
+        "sammensattNavn": "HANSEN KARI",
+        "arbeidsforholdIDnav": 16849217,
+        "mottatt": "2017-09-20",
+        "status": "Under behandling",
+        "periode": {
+          "fom": "2018-01-01",
+          "tom": "2018-06-31"
+        }
+      }
+    ]
+  },
+  {
+    "brukernavn": "Z990405",
+    "saker": [
+      {
+        "fnr": "01016902582",
+        "saksnummer": 123,
+        "kjoenn": "M",
+        "sammensattNavn": "RIIS KHURRAM",
+        "arbeidsforholdIDnav": 16849217,
+        "mottatt": "2017-10-15",
+        "status": "Under behandling",
+        "periode": {
+          "fom": "2016-06-01",
+          "tom": "2016-12-31"
+        }
+      },
+      {
+        "fnr": "01016902582",
+        "saksnummer": 123,
+        "kjoenn": "K",
+        "sammensattNavn": "HANSEN LISE",
+        "arbeidsforholdIDnav": 16849217,
+        "mottatt": "2017-11-15",
+        "status": "Under behandling",
+        "periode": {
+          "fom": "2018-05-01",
+          "tom": "2018-12-31"
+        }
+      },
+      {
+        "fnr": "01016902582",
+        "saksnummer": 123,
+        "kjoenn": "M",
+        "sammensattNavn": "HANSEN KARI",
+        "arbeidsforholdIDnav": 16849217,
+        "mottatt": "2017-09-10",
+        "status": "Under behandling",
+        "periode": {
+          "fom": "2018-01-01",
+          "tom": "2018-06-31"
+        }
+      }
+    ]
+  }
+]
