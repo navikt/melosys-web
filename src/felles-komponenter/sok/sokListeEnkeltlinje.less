@@ -10,7 +10,24 @@
     display:flex;
     flex-direction: row;
     flex-grow:1;
+    border:3px solid transparent;
+    transition: all .5s;
   }
+
+  &.ny {
+    .enkeltlinje__panel{
+      animation: 1s linear slidein;
+      animation-iteration-count: 3
+    }
+
+    @keyframes slidein {
+      0% { border-color: transparent; }
+      50%   { border-color: @orange; }
+      100% { border-color: transparent; }
+    }
+  }
+
+
 
   .enkeltlinje__link:link,
   .enkeltlinje__link:visited,
