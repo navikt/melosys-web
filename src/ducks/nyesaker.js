@@ -22,11 +22,8 @@ export default function reducer(state = initalState, action) {
       return { ...state, status: STATUS.ERROR, data: action.data };
     case OK:
       return { ...state, status: STATUS.OK, data: action.data };
-    case OPPRETT: {
-      const nySak = { ...action.data };
-      nySak.sakErNy = true;
-      return { ...state, data: [nySak, ...state.data] };
-    }
+    case OPPRETT:
+      return { ...state, data: [{ ...action.data }, ...state.data] };
     default:
       return state;
   }
