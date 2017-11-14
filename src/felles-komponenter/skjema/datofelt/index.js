@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import * as Nav from '../../../utils/navFrontend';
 import { vaskInputDato } from '../../../utils/dato';
 
@@ -14,13 +15,24 @@ class DatoFelt extends Component {
   }
 
   vedFokusUtHandler = () => {
-    this.setState({ dato: vaskInputDato(this.state.dato) });
+    if (this.state.dato === '') { this.setState({ datoFeil: null }); return; }
+    const vasketDato = vaskInputDato(this.state.dato);
+
+    this.setState({ dato: (vasketDato || this.state.dato) });
+    this.setState({ datoFeil: !vasketDato ? { feilmelding: 'Datoen ovenfor er ikke gyldig.' } : null });
   }
 
   render() {
     return (
       <div className="datofelt">
-        <Nav.Input label="Opprettet dato" bredde="s" onBlur={this.vedFokusUtHandler} onChange={this.vedEndringHandler} value={this.state.dato} />
+        <Nav.Input
+          bredde="s"
+          onBlur={this.vedFokusUtHandler}
+          onChange={this.vedEndringHandler}
+          value={this.state.dato}
+          feil={this.state.datoFeil}
+          {...this.props}
+        />
       </div>
     );
   }

@@ -19,7 +19,7 @@ const OppretteSak = props => {
             </Nav.Select>
           </Nav.Column>
           <Nav.Column xs="4">
-            <DatoFelt />
+            <DatoFelt label="Opprettet Dato" />
           </Nav.Column>
         </Nav.Fieldset>
         <div className="fane__knapplinje">

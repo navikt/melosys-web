@@ -33,7 +33,13 @@ const vaskInputDato = dato => {
     dateArray[2] = parseInt(`${guessCentury}${dateArray[2]}`, 10);
   }
 
-  return moment(dateArray.join(), 'DDMMYYYY').format('DD.MM.YYYY');
+  const returnDate = moment(dateArray.join(), 'DDMMYYYY').format('DD.MM.YYYY');
+
+  if (!moment(dateArray.join(), 'DDMMYYYY').isValid()) {
+    return false;
+  }
+
+  return returnDate;
 };
 
 export {

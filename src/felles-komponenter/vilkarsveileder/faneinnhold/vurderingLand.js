@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
+import DatoFelt from '../../skjema/datofelt';
 
 import './vurderingLand.css';
 
@@ -66,6 +67,7 @@ class VurderingLand extends Component {
    */
   leggTilLandHandler = (e, land = null) => {
     const landForTillegg = land || this.state.landVelger;
+    if (landForTillegg === '') { return; }
 
     if (!this.state.valgteLand.includes(landForTillegg)) {
       this.setState(
@@ -117,10 +119,10 @@ class VurderingLand extends Component {
         <Nav.Undertittel>Utenlandsoppholdet:</Nav.Undertittel>
         <Nav.Fieldset legend="Når er søker i utlandet?">
           <Nav.Column xs="4">
-            <Nav.Input label="Fra" bredde="s" />
+            <DatoFelt label="Fra" />
           </Nav.Column>
           <Nav.Column xs="4">
-            <Nav.Input label="Til" bredde="s" />
+            <DatoFelt label="Til" />
           </Nav.Column>
         </Nav.Fieldset>
         <Nav.Fieldset legend="Hvilke land skal søker arbeide i?">
