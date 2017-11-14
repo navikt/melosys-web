@@ -152,7 +152,9 @@ function platformNIC() {
   switch (process.platform) {
     case 'darwin':
       return interfaces.lo0;
-    default: //win32
+    case 'linux':
+      return interfaces.eno16780032;
+    default: // win32
       return interfaces.Ethernet0
   }
 }
