@@ -1,16 +1,29 @@
 {
-  "name": "Melosys Web",
+  "name": "melosys-web",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "classnames": "^2.2.5",
+    "nav-frontend-core": "^4.0.5",
+    "nav-frontend-typografi": "^1.0.9",
+    "nav-frontend-typografi-style": "^1.0.6",
+    "prop-types": "^15.6.0",
     "react": "^16.1.1",
     "react-dom": "^16.1.1",
     "react-scripts": "1.0.17"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start:js": "react-scripts start",
+    "build:js": "react-scripts build",
+    "start:css": "autoless src",
+    "build:css": "autoless --no-watch src",
+    "start": "npm-run-all -p start:*",
+    "build": "npm run build:css && npm run build:js",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "autoless": "^0.1.7",
+    "npm-run-all": "^4.1.2"
   }
 }
