@@ -9,6 +9,9 @@
 # production
 /build
 
+# mock data
+/scripts/mock_data
+
 # misc
 .idea
 !.idea/runConfigurations/
