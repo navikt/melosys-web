@@ -33,6 +33,11 @@ export function hentNyesaker(fnr) {
   return fetchToJson(URI_NYESAKER, { headers: headers });
 }
 
+export function opprettSak(fnr) {
+  const URI_OPPRETTSAK = `${API_MELOSYS_URL}opprettsak/${fnr}`;
+  return fetchToJson(URI_OPPRETTSAK, { headers: headers, method: 'POST' });
+}
+
 export function hentSakerbehandles(brukernavn) {
   const URI_SAKERBEHANDLES = `${API_MELOSYS_URL}sakerbehandles/${brukernavn}`;
   return fetchToJson(URI_SAKERBEHANDLES, { headers: headers });
