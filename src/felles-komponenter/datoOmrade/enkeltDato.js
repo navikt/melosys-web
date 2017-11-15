@@ -1,5 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
+import moment from 'moment';
 
 /** EnkeltDato gjør det lettere å følge UU der datoer skal benyttes i tillegg til at
  * en konsekvent "-" vises der dato er ukjent eller ikke relevant.
@@ -8,16 +9,21 @@ import PT from 'prop-types';
  * @constructor
  */
 function EnkeltDato(props) {
-  const { dato } = props;
-  return (dato ? <time dateTime={dato}>{dato}</time> : '-');
+  const { dato, visTidspunkt } = props;
+  const momentFormat = visTidspunkt ? 'DD.MM.YYYY HH:MM' : 'DD.MM.YYYY';
+
+  const lesbarDato = moment(dato).format(momentFormat);
+  return (dato ? <time dateTime={dato}>{lesbarDato}</time> : '-');
 }
 
 EnkeltDato.propTypes = {
   dato: PT.string,
+  visTidspunkt: PT.bool,
 };
 
 EnkeltDato.defaultProps = {
   dato: '',
+  visTidspunkt: false,
 };
 
 export default EnkeltDato;
