@@ -1,6 +1,6 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PT from 'prop-types';
+import * as Nav from '../../utils/navFrontend';
 
 import * as MPT from '../../proptypes/index';
 
@@ -14,7 +14,7 @@ const IntroText = ({ saker }) => {
   const introText = saker && saker.length > 0 ?
     'Knytt opplysningene til en eksisterende sak, eller legg til en ny sak på denne personen.'
     :
-    'Ingen funnet';
+    'Ingen eksisterende saker funnet. Klikk "Legg til sak" for å opprette en ny.';
   return (
     <p>{introText}</p>
   );
@@ -29,8 +29,8 @@ function SokResultat(props) {
   return (
     <section className="sokresultat" arial-label={`Søkeresultat: Fikk ${saker.length} treff`}>
       <IntroText saker={saker} />
+      <Nav.Knapp onClick={props.opprettSak}>+ Opprett sak</Nav.Knapp>
       {saker && saker.map(sak => <SokListeEnkellinje key={uuid()} sak={sak} />)}
-      <Link to="">Legg til sak</Link>
     </section>
   );
 }
@@ -38,6 +38,7 @@ function SokResultat(props) {
 SokResultat.propTypes = {
   saker: MPT.SokListe.isRequired,
   kanViseFlereSaker: PT.bool,
+  opprettSak: PT.func.isRequired,
 };
 
 SokResultat.defaultProps = {

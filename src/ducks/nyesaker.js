@@ -6,6 +6,7 @@ import { STATUS, doThenDispatch } from '../services/utils';
 export const OK = 'nyesaker/OK';
 export const FEILET = 'nyesaker/FEILET';
 export const PENDING = 'nyesaker/PENDING';
+export const OPPRETT = 'nyesaker/OPPRETT';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
@@ -21,6 +22,8 @@ export default function reducer(state = initalState, action) {
       return { ...state, status: STATUS.ERROR, data: action.data };
     case OK:
       return { ...state, status: STATUS.OK, data: action.data };
+    case OPPRETT:
+      return { ...state, data: [{ ...action.data }, ...state.data] };
     default:
       return state;
   }
@@ -33,6 +36,17 @@ export function hentNyesaker(fnr) {
     FEILET,
     PENDING,
   });
+}
+
+export function opprettSak(fnr) {
+  return dispatch => {
+    Api.opprettSak(fnr).then(data => {
+      dispatch({
+        type: OPPRETT,
+        data,
+      });
+    });
+  };
 }
 
 // selector

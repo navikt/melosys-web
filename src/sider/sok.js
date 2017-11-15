@@ -26,7 +26,10 @@ class Sok extends Component {
     const queryParams = queryString.parse(this.props.location.search);
     const { fnr } = queryParams;
 
-    if (fnr) { this.props.hentNyesaker(fnr); }
+    if (fnr) {
+      this.setState({ fnr });
+      this.props.hentNyesaker(fnr);
+    }
   }
 
   /** Henter saker basert på fødselsnummer og setter query string 'fnr=xxxxxxxxxxx' slik at
@@ -53,7 +56,7 @@ class Sok extends Component {
             <Nav.Column xs="7">
               <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
               <SokeForm onSubmit={this.queryStringHandler} />
-              { visSokResultat && <SokResultat saker={nyesaker} /> }
+              { visSokResultat && <SokResultat saker={nyesaker} opprettSak={() => this.props.opprettSak(this.state.fnr)} /> }
             </Nav.Column>
 
             {/*
@@ -79,6 +82,7 @@ Sok.propTypes = {
   location: PT.object.isRequired,
   visSokResultat: PT.bool.isRequired,
   history: PT.object.isRequired,
+  opprettSak: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -90,6 +94,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
+  opprettSak: fnr => dispatch(NyeSaker.opprettSak(fnr)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok));
