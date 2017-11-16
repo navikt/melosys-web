@@ -8,6 +8,7 @@ import VedakUbehandlet from './ikon-vedtak-ubehandlet.svg';
 import VedtakGodkjent from './ikon-vedtak-godkjent.svg';
 import Mann from './ikon-mann.svg';
 import Kvinne from './ikon-kvinne.svg';
+import Ukjentkjoenn from './ikon-ukjentkjonn.svg';
 
 export { Ubehandlet };
 export { Aktivt };
@@ -19,4 +20,5 @@ export { VedakUbehandlet };
 export { VedtakGodkjent };
 export { Mann };
 export { Kvinne };
+export { Ukjentkjoenn };
 
