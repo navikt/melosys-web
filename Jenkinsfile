@@ -2,15 +2,6 @@
 import groovy.json.JsonSlurper
 import jenkins.model.*
 
-@NonCPS
-def jsonParse(def json) {
-  def object = new JsonSlurper().parseText(json)
-  if (object instanceof groovy.json.internal.LazyMap) {
-    return new HashMap<>(object)
-  }
-  return object
-}
-
 node {
   def project = "navikt"
   def application = "melosys-web"
@@ -68,21 +59,8 @@ node {
       echo("version=${version}")
       env.WORKSPACE = pwd()
       echo("workspace=${env.WORKSPACE}")
-      def jsonText = readFile "package.json"
-      def jsonMap = jsonParse(jsonText)
-      /*
-      def slurper = new JsonSlurper()
-      def jsonMap = (Map)slurper.parseText(jsonText)
-      */
-      def v = jsonMap.get("version")
-      println v
-      /*
-      def fileContents = new File('${workspace}/package.json').getText('UTF-8')
-      def slurper = new JsonSlurper()
-      def jsonMap = (Map)slurper.parseText(fileContents)
-      def version = jsonMap.get("version")
-      println version
-      */
+      def semver = version.stripMargin('v')
+      echo("semver=${semver}")
       /*
       withEnv(["PATH+NODE=${NODEJS_HOME}",'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088', 'NO_PROXY=adeo.no']) {
         sh(returnStdout: true, script: "git push && git push --tag")
