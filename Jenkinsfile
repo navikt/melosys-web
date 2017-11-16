@@ -1,5 +1,15 @@
 #! groovy
-import groovy.json.JsonSlurperClassic
+import groovy.json.JsonSlurper
+import jenkins.model.*
+
+@NonCPS
+def jsonParse(def json) {
+  def object = new JsonSlurper().parseText(json)
+  if (object instanceof groovy.json.internal.LazyMap) {
+    return new HashMap<>(object)
+  }
+  return object
+}
 
 node {
   def project = "navikt"
@@ -59,8 +69,11 @@ node {
       env.WORKSPACE = pwd()
       echo("workspace=${env.WORKSPACE}")
       def jsonText = readFile "package.json"
-      def slurper = new JsonSlurperClassic()
+      def jsonMap = jsonParse(jsonText)
+      /*
+      def slurper = new JsonSlurper()
       def jsonMap = (Map)slurper.parseText(jsonText)
+      */
       def v = jsonMap.get("version")
       println v
       /*
