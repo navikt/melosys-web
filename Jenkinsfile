@@ -55,9 +55,14 @@ node {
     stage('Build') {
       echo('Build...')
       def version = sh(returnStdout: true, script: "${npm} version minor")
-      println("version", version)
-      def workspace = pwd()
-      println("pwd", workspace)
+      echo("version=${version}")
+      env.WORKSPACE = pwd()
+      echo("workspace=${env.WORKSPACE}")
+      def jsonText = readFile "env.WORKSPACE/package.json"
+      def slurper = new JsonSlurper()
+      def jsonMap = (Map)slurper.parseText(jsonText)
+      def v = jsonMap.get("version")
+      println v
       /*
       def fileContents = new File('${workspace}/package.json').getText('UTF-8')
       def slurper = new JsonSlurper()
