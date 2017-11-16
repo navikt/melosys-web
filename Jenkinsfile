@@ -9,7 +9,7 @@ node {
 
   /* metadata */
   def commitHash, commitHashShort, commitUrl, committer
-
+  def scmVars
   /* tools */
   def NODEJS_HOME = tool "node-6.2.1"
   def node = "${NODEJS_HOME}/bin/node"
@@ -27,7 +27,8 @@ node {
 
     stage('Checkout') {
       echo('Checkout ...')
-      checkout scm
+      scmVars = checkout scm
+      scmVars.each { print it }
     }
 
     stage('initialize') {
