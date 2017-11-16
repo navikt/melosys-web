@@ -53,7 +53,7 @@ node {
     }
     stage('Build') {
       echo('Build...')
-      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+      withEnv(["PATH+NODE=${NODEJS_HOME}",'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088', 'NO_PROXY=adeo.no']) {
         sh(returnStdout: true, script: "${npm} version minor")
         sh(returnStdout: true, script: "git push && git push --tag")
       }
