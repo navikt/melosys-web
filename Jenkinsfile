@@ -60,7 +60,7 @@ node {
       echo("workspace=${env.WORKSPACE}")
       def jsonText = readFile "package.json"
       def slurper = new JsonSlurper()
-      def jsonMap = (Map)slurper.parseText(jsonText)
+      def jsonMap = new HashMap<>(slurper.parseText(jsonText))
       def v = jsonMap.get("version")
       println v
       /*
