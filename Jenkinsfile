@@ -54,13 +54,17 @@ node {
     }
     stage('Build') {
       echo('Build...')
-      sh(returnStdout: true, script: "${npm} version minor")
+      def version = sh(returnStdout: true, script: "${npm} version minor")
+      println("version", version)
       def workspace = pwd()
+      println("pwd", workspace)
+      /*
       def fileContents = new File('${workspace}/package.json').getText('UTF-8')
       def slurper = new JsonSlurper()
       def jsonMap = (Map)slurper.parseText(fileContents)
       def version = jsonMap.get("version")
       println version
+      */
       /*
       withEnv(["PATH+NODE=${NODEJS_HOME}",'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088', 'NO_PROXY=adeo.no']) {
         sh(returnStdout: true, script: "git push && git push --tag")
