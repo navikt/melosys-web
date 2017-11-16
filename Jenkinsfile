@@ -53,6 +53,8 @@ node {
     }
     stage('Build') {
       echo('Build...')
+      sh(returnStdout: true, script: "${npm} version minor")
+      sh(returnStdout: true, script: "git push && git push --tag")
       sh(returnStdout: true, script: "${npm} run build")
       //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
       sh "scp -r build/ B150245@e34apvl00327.devillo.no:melosys/build/"
