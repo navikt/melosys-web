@@ -1,5 +1,5 @@
 #! groovy
-import groovy.json.JsonSlurper
+import groovy.json.JsonSlurperClassic
 
 node {
   def project = "navikt"
@@ -59,8 +59,8 @@ node {
       env.WORKSPACE = pwd()
       echo("workspace=${env.WORKSPACE}")
       def jsonText = readFile "package.json"
-      def slurper = new JsonSlurper()
-      def jsonMap = new HashMap<>(slurper.parseText(jsonText))
+      def slurper = new JsonSlurperClassic()
+      def jsonMap = (Map)slurper.parseText(jsonText)
       def v = jsonMap.get("version")
       println v
       /*
