@@ -1,28 +1,30 @@
 import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
+import DatoFelt from '../../skjema/datofelt';
+
+import LandVelger from '../../skjema/landvelger';
+
+import './vurderingLand.css';
 
 const VurderingLand = props => {
   const { bekreftOgFortsett } = props;
 
   return (
-    <div>
-      <Nav.Undertittel>Vurdering:</Nav.Undertittel>
-      <Nav.Fieldset legend="Hvor mange land skal søker arbeide/drive virsomhet i?">
-        <Nav.Radio id="steg2_land_ett" name="land" label="Ett" />
-        <Nav.Radio id="steg2_land_flere" name="land" label="To eller flere" />
+    <div className="vurderingLand">
+      <Nav.Undertittel>Utenlandsoppholdet:</Nav.Undertittel>
+      <Nav.Fieldset legend="Når er søker i utlandet?">
+        <Nav.Column xs="4">
+          <DatoFelt label="Fra" />
+        </Nav.Column>
+        <Nav.Column xs="4">
+          <DatoFelt label="Til" />
+        </Nav.Column>
       </Nav.Fieldset>
-      <Nav.Fieldset legend="Hvor mye av aktiviteten skjed i Norge?">
-        <Nav.Radio id="steg2_aktivitet_under25" name="aktivitet" label="Mindre enn 25%" />
-        <Nav.Radio id="steg2_aktivitet_over25" name="aktivitet" label="25% eller mer" />
-      </Nav.Fieldset>
-      <Nav.Fieldset legend="Hvor mange arbeidsgivere har søker?">
-        <Nav.Radio id="steg2_arbeidsgivere_en" name="arbeidsgivere" label="Èn" />
-        <Nav.Radio id="steg2_arbeidsgivere_fler" name="arbeidsgivere" label="To eller fler" />
-      </Nav.Fieldset>
-      <Nav.Fieldset legend="Er arbeidsgivere i samme land eller i ulike land?">
-        <Nav.Radio id="steg2_arbeidsgiverfordeling_ettland" name="arbeidsgiverfordeling" label="Samme land" />
-        <Nav.Radio id="steg2_arbeidsgiverfordeling_ulikeland" name="arbeidsgiverfordeling" label="Ulike land" />
+      <Nav.Fieldset legend="Hvilke land skal søker arbeide i?">
+        <Nav.Column xs="12">
+          <LandVelger />
+        </Nav.Column>
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -34,5 +36,6 @@ const VurderingLand = props => {
 VurderingLand.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
 };
+
 
 export default VurderingLand;
