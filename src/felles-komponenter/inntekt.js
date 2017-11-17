@@ -38,7 +38,7 @@ function Inntekt ({ inntekt: { inntekt } }) {
     <div className="inntekt panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Inntekt" undertittel={panelUndertittel} />}
-        ariaTittel="Panel for personinformasjon" >
+        ariaTittel="Panel for inntekt" >
         <Nav.Row className="inntekt__seksjon">
           <Nav.Column xs="12">
             <table className="tabellutlisting inntekt__detaljer">
