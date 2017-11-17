@@ -2,8 +2,10 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import PT from 'prop-types';
+
 import * as Nav from '../utils/navFrontend';
-import './saksbehandling.css';
+import * as MPT from '../proptypes/';
+
 import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
@@ -28,7 +30,7 @@ import {
   PermisjonerSelector,
 } from '../ducks/fagsaker';
 
-import * as MPT from '../proptypes/';
+import './saksbehandling.css';
 
 class Saksbehandling extends Component {
   static propTypes = {
@@ -82,13 +84,13 @@ class Saksbehandling extends Component {
             <Nav.Column xs="7">
               <Vilkarsveileder person={person} />
               {person && <Personopplysninger person={person} />}
-              <Tilleggsopplysninger />
               {permisjoner && <Permisjoner permisjoner={permisjoner} />}
               {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
               {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
               {medlemskap && <Medlemskap medlemskap={medlemskap} />}
               {inntekt && <Inntekt inntekt={inntekt} />}
               {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
+              <Tilleggsopplysninger />
             </Nav.Column>
             <Nav.Column xs="5">
               {oppsummering && <SideOppsummering oppsummering={oppsummering} />}

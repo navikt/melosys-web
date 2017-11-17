@@ -1,9 +1,10 @@
 import React from 'react';
 import moment from 'moment';
+
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
-
 import * as Ikoner from '../resources/images';
+
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
@@ -37,7 +38,7 @@ function Personopplysninger(props) {
   return (
     <div className="personopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={ikonFraKjonn(kjoenn)} tittel={`${sammensattNavn} (${aar})`} undertittel="En undertittel om vedkommende er her" />}
+        heading={<PanelHeader ikon={ikonFraKjonn(kjoenn)} tittel={`${sammensattNavn} (${aar})`} undertittel={`Fødselsnummer: ${fnr}`} />}
         ariaTittel="Panel for personinformasjon" >
         <Nav.Container fluid>
           {/* START PERSONINFO */}
