@@ -69,7 +69,7 @@ function Medlemskap({ medlemskap }) {
     <div className="medlemskap panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Medlemskap" undertittel="" />}
-        ariaTittel="Panel for personinformasjon" >
+        ariaTittel="Panel for medlemskap" >
         <section aria-label="Panel for medlemskap">
           <Nav.Container fluid>
             { medlemsperiode.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) }
