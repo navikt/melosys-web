@@ -1,10 +1,14 @@
 import React from 'react';
+
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as Ikoner from '../resources/images';
+
+import DatoOmrade from './datoOmrade/datoOmrade';
+import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import { boolTilNorsk } from '../utils/utils';
 
 import './arbeidsforholdene.css';
-import DatoOmrade from './datoOmrade/datoOmrade';
-import { boolTilNorsk } from '../utils/utils';
 
 const uuid = require('uuid/v4');
 
@@ -56,7 +60,9 @@ function Arbeidsforhold({ arbeidsforhold }) {
 
   return (
     <div className="panelSeksjon">
-      <Nav.EkspanderbartPanel tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`}>
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`} undertittel={`Periode: ${ansettelsesPeriode.fom} - ${ansettelsesPeriode.tom}`} />}
+        ariaTittel="Panel for personinformasjon" >
         <Nav.Row className="arbeidsforhold__enkelt">
           <div className="arbeidsforholdene panelSeksjon">
             <Nav.Row className="arbeidsforhold__enkelt">
@@ -83,7 +89,7 @@ function Arbeidsforhold({ arbeidsforhold }) {
             </Nav.Row>
           </div>
         </Nav.Row>
-      </Nav.EkspanderbartPanel>
+      </Nav.EkspanderbartpanelBase>
     </div>
   );
 }

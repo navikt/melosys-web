@@ -1,11 +1,14 @@
 import React from 'react';
+
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as Ikoner from '../resources/images';
 
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
+import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import { boolTilNorsk } from '../utils/utils';
-import './bekreftelser.css';
 
+import './bekreftelser.css';
 
 function Bekreftelser ({ bekreftelser }) {
   // Todo: Denne er ikke koblet mot data fra backend. Avventer tilbakemelding etter arbeid med søknaden.
@@ -21,7 +24,9 @@ function Bekreftelser ({ bekreftelser }) {
 
   return (
     <div className="bekreftelser panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Arbeidsgivers bekreftelse">
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Arbeidsgivers bekreftelse" undertittel="" />}
+        ariaTittel="Panel for personinformasjon" >
         <Nav.Row className="bekreftelser__seksjon">
           {/* START DATO RANGE */}
           <Nav.Column xs="12">
@@ -41,7 +46,7 @@ function Bekreftelser ({ bekreftelser }) {
             </dl>
           </Nav.Column>
         </Nav.Row>
-      </Nav.EkspanderbartPanel>
+      </Nav.EkspanderbartpanelBase>
     </div>
   );
 }
