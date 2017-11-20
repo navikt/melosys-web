@@ -1,7 +1,11 @@
 import React from 'react';
-import * as Nav from '../utils/navFrontend';
 
-import './personopplysninger.less';
+import * as Nav from '../utils/navFrontend';
+import * as Ikoner from '../resources/images';
+
+import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+
+import './personopplysninger.css';
 
 const info = {
   tilleggsopplysninger: 'Jeg håper denne søknaden kan behandles så fort som mulig. I lys av en tverrfaglig oppgaveløsning spores kompetansehevingen ' +
@@ -12,7 +16,9 @@ const info = {
 function Personopplysninger() {
   return (
     <div className="tilleggsopplysninger panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Tilleggsopplysninger">
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Tilleggsinformasjon" undertittel="" />}
+        ariaTittel="Panel for tilleggsinformasjon" >
         <Nav.Container fluid>
           {/* START TILLEGGSOPPLYSNINGER */}
           <Nav.Row>
@@ -23,7 +29,7 @@ function Personopplysninger() {
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
-      </Nav.EkspanderbartPanel>
+      </Nav.EkspanderbartpanelBase>
     </div>
   );
 }
