@@ -46,7 +46,6 @@ Arbeidsavtalen.propTypes = {
  * kun av komponenten Arbeidsforholdene.
  *
  * @param { arbeidsforhold } Object Et objekt med det aktuelle arbeidsforholdet.
- * @returns {XML}
  */
 function Arbeidsforhold({ arbeidsforhold }) {
   const {
