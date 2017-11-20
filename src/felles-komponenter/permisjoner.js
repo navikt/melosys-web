@@ -1,8 +1,11 @@
 import React from 'react';
+
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as Ikoner from '../resources/images';
 
 import EnkeltDato from './datoOmrade/enkeltDato';
+import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './permisjoner.css';
 
@@ -27,10 +30,19 @@ Permisjonen.propTypes = {
 };
 
 function Permisjoner({ permisjoner }) {
+  const nyestePermisjon = permisjoner[0];
+  const panelUndertittel = nyestePermisjon ?
+    `Nyeste permisjon: ${nyestePermisjon.permisjonsprosent}%
+    i perioden ${nyestePermisjon.permisjonsPeriode.fom} - ${nyestePermisjon.permisjonsPeriode.fom}`
+    :
+    '';
+
   return (
     <div className="permisjoner panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Permisjoner">
-        <section aria-label="permisjoner">
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Permisjoner" undertittel={panelUndertittel} />}
+        ariaTittel="Panel for permisjoner" >
+        <section>
           <Nav.Container fluid>
             <table className="tabellutlisting permisjoner__detaljer">
               <tbody>
@@ -47,7 +59,7 @@ function Permisjoner({ permisjoner }) {
             </table>
           </Nav.Container>
         </section>
-      </Nav.EkspanderbartPanel>
+      </Nav.EkspanderbartpanelBase>
     </div>
   );
 }

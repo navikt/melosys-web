@@ -1,6 +1,10 @@
 import React from 'react';
+
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as Ikoner from '../resources/images';
+
+import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './organisasjonerNorge.css';
 
@@ -34,11 +38,13 @@ EnkeltOrganisasjon.propTypes = {
 function OrganisasjonerNorge ({ organisasjoner }) {
   return (
     <div className="organisasjonerNorge panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Arbeidsgiver i Norge">
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Arbeidsgiver i Norge" undertittel="" />}
+        ariaTittel="Panel for arbeidsgiver i Norge" >
         <Nav.Container fluid>
           {organisasjoner.map(organisasjon => <EnkeltOrganisasjon key={uuid()} organisasjon={organisasjon} />)}
         </Nav.Container>
-      </Nav.EkspanderbartPanel>
+      </Nav.EkspanderbartpanelBase>
     </div>
   );
 }
