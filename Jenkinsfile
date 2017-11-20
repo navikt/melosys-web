@@ -56,8 +56,9 @@ node {
     echo('CI=true npm test')
     sh "CI=true ${npm} test"
   }
+
   stage('Build') {
-    echo('Build...')
+    echo('Build Web App')
 /*
     def version = sh(returnStdout: true, script: "${npm} version minor")
     echo("version=${version}")
@@ -90,12 +91,16 @@ echo("GIT_PASSWORD:${passwordVariable}")
       */
     }
 
+
     sh(returnStdout: true, script: "${npm} run build")
-    //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
-    sh "scp -r build/ B150245@e34apvl00327.devillo.no:melosys/build/"
+    //sh "scp -r build/ B150245@e34apvl00327.devillo.no:melosys/build/"
     def majorMinor = semver.split("\\.").take(2).join('.')
     buildVersion ="${majorMinor}.${BUILD_NUMBER}"
     echo("buildVersion=${buildVersion}")
+  }
+
+  stage('Docker') {
+    echo("Build docker image.")
     def imageName = "${dockerRepo}/${application}:${buildVersion}"
     sh "mkdir -p docker/build"
     sh "cp Dockerfile docker"
@@ -103,21 +108,9 @@ echo("GIT_PASSWORD:${passwordVariable}")
     sh "cd docker"
     sh "docker build -t ${imageName} ."
     sh "docker push ${imageName}"
-
-    /*
-    //withCredentials([usernamePassword(credentialsId: 'A150244', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-      // available as an env variable, but will be masked if you try to print it out any which way
-      sh 'echo $env.PASSWORD'
-      // also available as a Groovy variable—note double quotes for string interpolation
-      echo "$GIT_USERNAME"
-    }
-    */
-
   }
 
   stage('Deploy') {
-    echo('TODO Deploy')
     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'B150245',
                       usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
 
