@@ -69,7 +69,7 @@ class Vilkarsveileder extends Component {
 
   componentWillMount() {
     this.setState({
-      aktivtSteg: 3,
+      aktivtSteg: 0,
       steg: [
         { status: Vilkarsveileder.status.AKTIV, id: 0, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true },
         { status: Vilkarsveileder.status.UBEHANDLET, id: 1, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
@@ -105,7 +105,7 @@ class Vilkarsveileder extends Component {
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
-   * @param nyttSteg Number Steget som det skal byttes til.
+   * @param nyttStegNummer Number Steget som det skal byttes til.
    */
   tilSteg = nyttStegNummer => {
     const nyStegIkonState = { ...this.state.steg[nyttStegNummer] };
