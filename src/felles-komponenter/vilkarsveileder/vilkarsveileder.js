@@ -23,6 +23,7 @@ class Vilkarsveileder extends Component {
   static propTypes = {
     history: PT.object.isRequired,
     person: MPT.Person.isRequired,
+    arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
   };
 
   static defaultProps = {
@@ -68,7 +69,7 @@ class Vilkarsveileder extends Component {
 
   componentWillMount() {
     this.setState({
-      aktivtSteg: 0,
+      aktivtSteg: 3,
       steg: [
         { status: Vilkarsveileder.status.AKTIV, id: 0, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true },
         { status: Vilkarsveileder.status.UBEHANDLET, id: 1, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
@@ -133,6 +134,7 @@ class Vilkarsveileder extends Component {
 
   render() {
     const { aktivtSteg } = this.state;
+    const { arbeidsforholdene } = this.props;
 
     return (
       <div className="vilkarsveileder panelSeksjon">
@@ -155,6 +157,7 @@ class Vilkarsveileder extends Component {
         </StegFane>
         <StegFane stegNummer={3} aktivtSteg={aktivtSteg}>
           <VurderingArbeidsforhold
+            arbeidsforholdene={arbeidsforholdene}
             bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
