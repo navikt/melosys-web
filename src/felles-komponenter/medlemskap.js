@@ -1,6 +1,10 @@
 import React from 'react';
+
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as Ikoner from '../resources/images';
+
+import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './medlemskap.css';
 
@@ -63,13 +67,15 @@ function Medlemskap({ medlemskap }) {
 
   return (
     <div className="medlemskap panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Medlemskap">
-        <section aria-label="Medlemskap">
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Medlemskap" undertittel="" />}
+        ariaTittel="Panel for medlemskap" >
+        <section aria-label="Panel for medlemskap">
           <Nav.Container fluid>
             { medlemsperiode.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) }
           </Nav.Container>
         </section>
-      </Nav.EkspanderbartPanel>
+      </Nav.EkspanderbartpanelBase>
     </div>
   );
 }
