@@ -76,6 +76,9 @@ node {
     ]) {
       sh("git remote -v")
       echo("${scmVars.GIT_BRANCH}")
+      sh(returnStdout: true, script: "${npm} version patch")
+      sh(returnStdout: true, script: "git push origin")
+      sh(returnStdout: true, script: "git push origin --tags")
       /*
       sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH}")
       sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH}")
