@@ -32,8 +32,10 @@ Permisjonen.propTypes = {
 function Permisjoner({ permisjoner }) {
   const nyestePermisjon = permisjoner[0];
   const panelUndertittel = nyestePermisjon ?
-    `Nyeste permisjon: ${nyestePermisjon.permisjonsprosent}%
-    i perioden ${nyestePermisjon.permisjonsPeriode.fom} - ${nyestePermisjon.permisjonsPeriode.fom}`
+    <div>
+      Nyeste permisjon: {nyestePermisjon.permisjonsprosent}%
+      i perioden <EnkeltDato dato={nyestePermisjon.permisjonsPeriode.fom} /> - <EnkeltDato dato={nyestePermisjon.permisjonsPeriode.tom} />
+    </div>
     :
     '';
 
