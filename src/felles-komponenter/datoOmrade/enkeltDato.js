@@ -4,7 +4,10 @@ import moment from 'moment';
 
 /** EnkeltDato gjør det lettere å følge UU der datoer skal benyttes i tillegg til at
  * en konsekvent "-" vises der dato er ukjent eller ikke relevant.
- * @constructor
+ *
+ *
+ * @param { dato } String Datoen som skal settess inn
+ * @param { visTidspunkt } Boolean Hvorvidt klokkeslett i datoen skal vises.
  */
 function EnkeltDato(props) {
   const { dato, visTidspunkt } = props;
