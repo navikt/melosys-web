@@ -11,6 +11,7 @@ import StegFane from './komponenter/stegFane';
 import OppretteSak from './faneinnhold/oppretteSak';
 import StartBehandling from './faneinnhold/startBehandling';
 import VurderingLand from './faneinnhold/vurderingLand';
+import VurderingArbeidsforhold from './faneinnhold/vurderingArbeidsforhold';
 import VurderingArbeidstype from './faneinnhold/vurderingArbeidstype';
 import VurderingSektor from './faneinnhold/vurderingSektor';
 import VurderingVirksomhet from './faneinnhold/vurderingVirksomhet';
@@ -73,9 +74,10 @@ class Vilkarsveileder extends Component {
         { status: Vilkarsveileder.status.UBEHANDLET, id: 1, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
         { status: Vilkarsveileder.status.UBEHANDLET, id: 2, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
         { status: Vilkarsveileder.status.UBEHANDLET, id: 3, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
-        { status: Vilkarsveileder.status.FEIL, id: 4, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 5, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 6, ikoner: Vilkarsveileder.vedtakIkoner, tilgjengelig: false },
+        { status: Vilkarsveileder.status.UBEHANDLET, id: 4, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
+        { status: Vilkarsveileder.status.FEIL, id: 5, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
+        { status: Vilkarsveileder.status.UBEHANDLET, id: 6, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
+        { status: Vilkarsveileder.status.UBEHANDLET, id: 7, ikoner: Vilkarsveileder.vedtakIkoner, tilgjengelig: false },
       ] });
   }
 
@@ -152,21 +154,26 @@ class Vilkarsveileder extends Component {
           />
         </StegFane>
         <StegFane stegNummer={3} aktivtSteg={aktivtSteg}>
-          <VurderingArbeidstype
+          <VurderingArbeidsforhold
             bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
         <StegFane stegNummer={4} aktivtSteg={aktivtSteg}>
-          <VurderingSektor
+          <VurderingArbeidstype
             bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
         <StegFane stegNummer={5} aktivtSteg={aktivtSteg}>
-          <VurderingVirksomhet
+          <VurderingSektor
             bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
         <StegFane stegNummer={6} aktivtSteg={aktivtSteg}>
+          <VurderingVirksomhet
+            bekreftOgFortsett={this.bekreftOgFortsett}
+          />
+        </StegFane>
+        <StegFane stegNummer={7} aktivtSteg={aktivtSteg}>
           <Vedtak />
         </StegFane>
       </div>
