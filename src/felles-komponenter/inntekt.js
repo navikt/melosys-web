@@ -1,8 +1,10 @@
 import React from 'react';
+
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as Ikoner from '../resources/images';
 
-// import EnkeltDato from './datoOmrade/enkeltDato';
+import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './inntekt.css';
 
@@ -26,13 +28,17 @@ InntektLinje.propTypes = {
 };
 
 function Inntekt ({ inntekt: { inntekt } }) {
+  // TODO (17. nov): Neste 2 linjer må kobles mot informasjon fra søknaden når denne er klar
   const { prMaaned: utenlandsNaeringPrMaaned, valuta: utenlandsNaeringValuta } = { prMaaned: '2000', valuta: 'EUR' };
   const { prMaaned: utenlandsLonnPrMaaned, valuta: utenlandsLonnValuta } = { prMaaned: '1150', valuta: 'GBP' };
 
+  const panelUndertittel = inntekt[0] ? `Nyeste inntekt: ${inntekt[0].beloep} i perioden ${inntekt[0].utbetaltIPeriode}` : '';
 
   return (
     <div className="inntekt panelSeksjon">
-      <Nav.EkspanderbartPanel tittel="Inntekt" apen>
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Inntekt" undertittel={panelUndertittel} />}
+        ariaTittel="Panel for inntekt" >
         <Nav.Row className="inntekt__seksjon">
           <Nav.Column xs="12">
             <table className="tabellutlisting inntekt__detaljer">
@@ -55,7 +61,7 @@ function Inntekt ({ inntekt: { inntekt } }) {
             </dl>
           </Nav.Column>
         </Nav.Row>
-      </Nav.EkspanderbartPanel>
+      </Nav.EkspanderbartpanelBase>
     </div>
   );
 }

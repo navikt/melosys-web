@@ -5216,9 +5216,9 @@ nav-frontend-ekspanderbartpanel-style@^0.3.6:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/nav-frontend-ekspanderbartpanel-style/-/nav-frontend-ekspanderbartpanel-style-0.3.6.tgz#7a5a3f2e6884c123f447226fed93209c911574aa"
 
-nav-frontend-ekspanderbartpanel@^0.2.14:
-  version "0.2.14"
-  resolved "https://registry.yarnpkg.com/nav-frontend-ekspanderbartpanel/-/nav-frontend-ekspanderbartpanel-0.2.14.tgz#fa808662e9eace35f5cb2d6216a77c790ef07499"
+nav-frontend-ekspanderbartpanel@^0.2.16:
+  version "0.2.16"
+  resolved "https://registry.yarnpkg.com/nav-frontend-ekspanderbartpanel/-/nav-frontend-ekspanderbartpanel-0.2.16.tgz#b53b29e95442131666c9a68c27d2f2bb106bfc7c"
 
 nav-frontend-grid-style@^0.2.3:
   version "0.2.3"

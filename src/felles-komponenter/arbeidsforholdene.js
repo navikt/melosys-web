@@ -1,10 +1,14 @@
 import React from 'react';
+
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as Ikoner from '../resources/images';
+
+import DatoOmrade from './datoOmrade/datoOmrade';
+import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import { boolTilNorsk } from '../utils/utils';
 
 import './arbeidsforholdene.css';
-import DatoOmrade from './datoOmrade/datoOmrade';
-import { boolTilNorsk } from '../utils/utils';
 
 const uuid = require('uuid/v4');
 
@@ -41,8 +45,7 @@ Arbeidsavtalen.propTypes = {
 /** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
  * kun av komponenten Arbeidsforholdene.
  *
- * @param props.arbeidsforhold Object Et objekt med det aktuelle arbeidsforholdet.
- * @returns {XML}
+ * @param { arbeidsforhold } Object Et objekt med det aktuelle arbeidsforholdet.
  */
 function Arbeidsforhold({ arbeidsforhold }) {
   const {
@@ -56,7 +59,9 @@ function Arbeidsforhold({ arbeidsforhold }) {
 
   return (
     <div className="panelSeksjon">
-      <Nav.EkspanderbartPanel tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`}>
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`} undertittel={`Periode: ${ansettelsesPeriode.fom} - ${ansettelsesPeriode.tom}`} />}
+        ariaTittel={`Panel for arbeidsforhold hos ${arbeidsgiverNavn}`} >
         <Nav.Row className="arbeidsforhold__enkelt">
           <div className="arbeidsforholdene panelSeksjon">
             <Nav.Row className="arbeidsforhold__enkelt">
@@ -83,7 +88,7 @@ function Arbeidsforhold({ arbeidsforhold }) {
             </Nav.Row>
           </div>
         </Nav.Row>
-      </Nav.EkspanderbartPanel>
+      </Nav.EkspanderbartpanelBase>
     </div>
   );
 }
@@ -96,7 +101,7 @@ Arbeidsforhold.propTypes = {
  * Flertall: Arbeidsforholdene - en array med alle arbeidsforhold, hver som ett objekt.
  * Entall: Arbeidsforhold - et objekt med ett enkelt arbeidsforhold.
  *
- * @param props.arbeidsforholdene Array En liste over alle arbeidforhold, hvert som et objekt
+ * @param { arbeidsforholdene } Array En liste over alle arbeidforhold, hvert som et objekt
  * @returns {XML}
  */
 function Arbeidsforholdene ({ arbeidsforholdene }) {
