@@ -75,6 +75,7 @@ node {
       'NO_PROXY=adeo.no'
     ]) {
       sh("git remote -v")
+      echo("${scmVars.GIT_BRANCH}")
       /*
       sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH}")
       sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH}")
