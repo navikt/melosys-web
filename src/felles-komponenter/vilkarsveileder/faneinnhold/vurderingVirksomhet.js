@@ -7,7 +7,6 @@ const VurderingVirksomhet = props => {
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering:</Nav.Undertittel>
       <Nav.Fieldset legend="Hvor mange land skal søker arbeide/drive virsomhet i?">
         <Nav.Radio id="steg2_land_ett" name="land" label="Ett" />
         <Nav.Radio id="steg2_land_flere" name="land" label="To eller flere" />

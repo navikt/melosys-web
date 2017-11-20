@@ -7,7 +7,6 @@ const VurderingSektor = props => {
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering:</Nav.Undertittel>
       <Nav.Fieldset legend="Hva gjelder for søkeren?">
         <Nav.Radio name="ansatt-sektor" id="steg1_ansatt_offentlig" label="Offentlig tjenesteperson (relevant for 11.3 b)" />
         <Nav.Radio name="ansatt-sektor" id="steg1_ansatt_skip" label="Ansatt på skip (relevant for 11.4" />
