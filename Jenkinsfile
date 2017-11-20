@@ -21,79 +21,87 @@ node {
   //echo("${env.PATH}")
   echo "${NODEJS_HOME}"
 
-  try {
-    // delete whole workspace before starting the build,
-    // so that the 'git clone' command below doesn't fail due to
-    // directory not being empty
-    cleanWs()
+  // delete whole workspace before starting the build,
+  // so that the 'git clone' command below doesn't fail due to
+  // directory not being empty
+  cleanWs()
 
-    stage('Checkout') {
-      echo('Checkout ...')
-      scmVars = checkout scm
-      scmVars.each { print it }
-    }
+  stage('Checkout') {
+    echo('Checkout ...')
+    scmVars = checkout scm
+    scmVars.each { print it }
+  }
 
-    stage('initialize') {
-      commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
-      commitHashShort = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-      commitUrl = "https://github.com/${project}/${application}/commit/${commitHash}"
-      /* gets the person who committed last as "Surname, First name" */
-      committer = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
-    }
+  stage('initialize') {
+    commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    commitHashShort = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+    commitUrl = "https://github.com/${project}/${application}/commit/${commitHash}"
+    /* gets the person who committed last as "Surname, First name" */
+    committer = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
+  }
 
-    stage('npm install ') {
-      echo('npm install')
-      // sh('ls -la')
-      withEnv(["PATH+NODE=${NODEJS_HOME}",'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088', 'NO_PROXY=adeo.no']) {
-        //sh(returnStdout: true, script: "${npm} install")
-        sh "${npm} install"
-      }
+  stage('npm install ') {
+    echo('npm install')
+    // sh('ls -la')
+    withEnv(["PATH+NODE=${NODEJS_HOME}", 'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088', 'NO_PROXY=adeo.no']) {
+      //sh(returnStdout: true, script: "${npm} install")
+      sh "${npm} install"
     }
-    stage('Test') {
-      echo('CI=true npm test')
-      sh "CI=true ${npm} test"
-    }
-    stage('Build') {
-      echo('Build...')
-      def version = sh(returnStdout: true, script: "${npm} version minor")
-      echo("version=${version}")
-      env.WORKSPACE = pwd()
-      echo("workspace=${env.WORKSPACE}")
-      def semver = version.stripMargin('v')
-      echo("semver=${semver}")
-      /*
-      withEnv(["PATH+NODE=${NODEJS_HOME}",'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088', 'NO_PROXY=adeo.no']) {
-        sh(returnStdout: true, script: "git push && git push --tag")
-      }
-      */
-      sh(returnStdout: true, script: "${npm} run build")
-      //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
-      sh "scp -r build/ B150245@e34apvl00327.devillo.no:melosys/build/"
-      def imageName = "${dockerRepo}/${application}:${commitHashShort}"
-      sh "mkdir -p docker/build"
-      sh "cp Dockerfile docker"
-      sh "cp -r build docker/build"
-      sh "cd docker"
-      sh "docker build -t ${imageName} ."
-      sh "docker push ${imageName}"
-      /*
-      //withCredentials([usernamePassword(credentialsId: 'A150244', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+  }
+  stage('Test') {
+    echo('CI=true npm test')
+    sh "CI=true ${npm} test"
+  }
+  stage('Build') {
+    echo('Build...')
+    def version = sh(returnStdout: true, script: "${npm} version minor")
+    echo("version=${version}")
+    env.WORKSPACE = pwd()
+    echo("workspace=${env.WORKSPACE}")
+    def semver = version.stripMargin('v')
+    echo("semver=${semver}")
+
+    withEnv([
+      "PATH+NODE=${NODEJS_HOME}",
+      'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088',
+      'HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088',
+      'NO_PROXY=adeo.no'
+    ]) {
+
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-        // available as an env variable, but will be masked if you try to print it out any which way
-        sh 'echo $env.PASSWORD'
-        // also available as a Groovy variable—note double quotes for string interpolation
-        echo "$GIT_USERNAME"
-      }
-      */
 
+        sh(returnStdout: true, script: "git push")
+        sh(returnStdout: true, script: "git push --tags")
+
+      }
     }
+
+    sh(returnStdout: true, script: "${npm} run build")
+    //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
+    sh "scp -r build/ B150245@e34apvl00327.devillo.no:melosys/build/"
+    def imageName = "${dockerRepo}/${application}:${semver}"
+    sh "mkdir -p docker/build"
+    sh "cp Dockerfile docker"
+    sh "cp -r build docker/build"
+    sh "cd docker"
+    sh "docker build -t ${imageName} ."
+    sh "docker push ${imageName}"
+
     /*
-    stage('Deploy') {
-      echo('TODO Deploy')
+    //withCredentials([usernamePassword(credentialsId: 'A150244', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+      // available as an env variable, but will be masked if you try to print it out any which way
+      sh 'echo $env.PASSWORD'
+      // also available as a Groovy variable—note double quotes for string interpolation
+      echo "$GIT_USERNAME"
     }
     */
+
   }
-  catch (err) {
-    echo("Build failed! ${err}")
+
+  /*
+  stage('Deploy') {
+    echo('TODO Deploy')
   }
+  */
 }
