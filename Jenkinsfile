@@ -1,5 +1,4 @@
 #! groovy
-import groovy.json.JsonSlurper
 import jenkins.model.*
 
 node {
@@ -10,7 +9,8 @@ node {
   def groupId = "nais"
 
   /* metadata */
-  def buildVersion = "${BUILD_NUMBER}"
+  def buildVersion // major.minor.BUILD_NUMBER
+  def semver
   def commitHash, commitHashShort, commitUrl, committer
   def scmVars
   /* tools */
@@ -61,8 +61,9 @@ node {
     env.WORKSPACE = pwd()
     echo("workspace=${env.WORKSPACE}")
     def semver = version.stripMargin('v')
-    echo("semver=${semver}")
 */
+    semver = sh(returnStdout: true, script: "node -pe \"require('./package.json').version\"")
+    echo("semver=${semver}")
     withEnv([
       "PATH+NODE=${NODEJS_HOME}",
       'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088',
@@ -89,7 +90,10 @@ echo("GIT_PASSWORD:${passwordVariable}")
     sh(returnStdout: true, script: "${npm} run build")
     //sh(returnStdout: true, script: "sudo docker build -t docker.adeo.no:5000/${application}/${commitHashShort} .")
     sh "scp -r build/ B150245@e34apvl00327.devillo.no:melosys/build/"
-    def imageName = "${dockerRepo}/${application}:${semver}"
+    def majorMinor = semver.split("\\.").take(2).join('.')
+    buildVersion ="${majorMinor}.${BUILD_NUMBER}"
+    echo("buildVersion=${buildVersion}")
+    def imageName = "${dockerRepo}/${application}:${buildVersion}"
     sh "mkdir -p docker/build"
     sh "cp Dockerfile docker"
     sh "cp -r build docker/build"
@@ -118,7 +122,7 @@ echo("GIT_PASSWORD:${passwordVariable}")
       def naisLocation = "~/../../../opt/"
 
       // Validate the nais.yaml file
-      sh "$naisLocation./nais validate -f $appLoc/nais.yaml"
+      sh "$naisLocation./nais validate -f nais.yaml"
 
       // Upload the nais.yaml file to Nexus
       sh "$naisLocation./nais upload -a '$application_name' -v '$application_version' -u 'deployment' -p 'd3pl0y' -f $appLoc/nais.yaml"
