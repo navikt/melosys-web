@@ -8,6 +8,9 @@ node {
   def dockerRepo = "docker.adeo.no:5000"
   def groupId = "nais"
 
+  def nais_cluster = "preprod-fss"
+  def nav_environment = "t0"
+
   /* metadata */
   def buildVersion // major.minor.BUILD_NUMBER
   def semver
@@ -125,10 +128,10 @@ echo("GIT_PASSWORD:${passwordVariable}")
       sh "$naisLocation./nais validate -f nais.yaml"
 
       // Upload the nais.yaml file to Nexus
-      sh "$naisLocation./nais upload -a '$application_name' -v '$application_version' -u 'deployment' -p 'd3pl0y' -f $appLoc/nais.yaml"
+      sh "$naisLocation./nais upload -a '$application' -v '$buildVersion' -u 'deployment' -p 'd3pl0y' -f nais.yaml"
 
       // Deploy the application to the NAIS cluster
-      sh "$naisLocation./nais deploy -a '$application_name' -v '$application_version' -c '$nais_cluster' -e '$nav_environment' -u '$USERNAME' -p '$PASSWORD' --wait"
+      sh "$naisLocation./nais deploy -a '$application' -v '$buildVersion' -c '$nais_cluster' -e '$nav_environment' -u '$USERNAME' -p '$PASSWORD' --wait"
 
       // Use
       // https://daemon.nais.preprod.local/deploystatus/default/eux-app
