@@ -12,7 +12,6 @@ const VurderingLand = props => {
 
   return (
     <div className="vurderingLand">
-      <Nav.Undertittel>Utenlandsoppholdet:</Nav.Undertittel>
       <Nav.Fieldset legend="Når er søker i utlandet?">
         <Nav.Column xs="4">
           <DatoFelt label="Fra" />

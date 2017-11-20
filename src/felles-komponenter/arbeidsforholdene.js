@@ -9,6 +9,7 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import { boolTilNorsk } from '../utils/utils';
 
 import './arbeidsforholdene.css';
+import EnkeltDato from './datoOmrade/enkeltDato';
 
 const uuid = require('uuid/v4');
 
@@ -29,7 +30,7 @@ function Arbeidsavtalen({ avtalen }) {
       <dt>Timer pr uke</dt>
       <dd>{beregnetAntallTimerPrUke || '-'}</dd>
       <dt>Sist endret</dt>
-      <dd>{endringsdatoStillingsprosent || '-'}</dd>
+      <dd><EnkeltDato dato={endringsdatoStillingsprosent} /></dd>
       <dt>Yrke</dt>
       <dd>{yrke || '-'}</dd>
       <dt>Lønnstype</dt>
@@ -60,7 +61,11 @@ function Arbeidsforhold({ arbeidsforhold }) {
   return (
     <div className="panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`} undertittel={`Periode: ${ansettelsesPeriode.fom} - ${ansettelsesPeriode.tom}`} />}
+        heading={<PanelHeader
+          ikon={Ikoner.Ferdig}
+          tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`}
+          undertittel={<div>Periode: <EnkeltDato dato={ansettelsesPeriode.fom} /> - <EnkeltDato dato={ansettelsesPeriode.tom} /> </div>}
+        />}
         ariaTittel={`Panel for arbeidsforhold hos ${arbeidsgiverNavn}`} >
         <Nav.Row className="arbeidsforhold__enkelt">
           <div className="arbeidsforholdene panelSeksjon">

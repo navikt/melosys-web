@@ -7,7 +7,6 @@ const VurderingArbeidstype = props => {
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering:</Nav.Undertittel>
       <Nav.Fieldset legend="Vurder om søkeren er:">
         <Nav.Radio id="steg0_ikke_arbeidende" name="arbeidssted" label="Ikke arbeidende / ytelsesmottaker" />
         <Nav.Radio id="steg0_arbeidstaker" name="arbeidssted" label="Arbeidstaker" />
