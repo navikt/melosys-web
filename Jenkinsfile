@@ -67,8 +67,8 @@ node {
       'HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088',
       'NO_PROXY=adeo.no'
     ]) {
-      sh(returnStdout: true, script: "git push")
-      sh(returnStdout: true, script: "git push --tags")
+      sh(returnStdout: true, script: "git push origin HEAD:${scm.GIT_BRANCH}")
+      sh(returnStdout: true, script: "git push origin HEAD:${scm.GIT_BRANCH} --tags")
 /*
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
 echo("GIT_USERNAME:${usernameVariable}")
