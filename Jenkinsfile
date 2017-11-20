@@ -69,7 +69,8 @@ node {
     ]) {
 
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-
+echo("GIT_USERNAME:${usernameVariable}")
+echo("GIT_PASSWORD:${passwordVariable}")
         sh(returnStdout: true, script: "git push")
         sh(returnStdout: true, script: "git push --tags")
 
