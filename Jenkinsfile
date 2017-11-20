@@ -10,6 +10,7 @@ node {
   def groupId = "nais"
 
   /* metadata */
+  def buildVersion = "${BUILD_NUMBER}"
   def commitHash, commitHashShort, commitUrl, committer
   def scmVars
   /* tools */
@@ -54,21 +55,26 @@ node {
   }
   stage('Build') {
     echo('Build...')
+/*
     def version = sh(returnStdout: true, script: "${npm} version minor")
     echo("version=${version}")
     env.WORKSPACE = pwd()
     echo("workspace=${env.WORKSPACE}")
     def semver = version.stripMargin('v')
     echo("semver=${semver}")
-
+*/
     withEnv([
       "PATH+NODE=${NODEJS_HOME}",
       'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088',
       'HTTPS_PROXY=http://webproxy-utvikler.nav.no:8088',
       'NO_PROXY=adeo.no'
     ]) {
+      sh("git remote -v")
+      /*
+      sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH}")
       sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH}")
       sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH} --tags")
+      */
 /*
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
 echo("GIT_USERNAME:${usernameVariable}")
