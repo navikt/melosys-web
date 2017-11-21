@@ -14,7 +14,7 @@ node {
   /* metadata */
   def buildVersion // major.minor.BUILD_NUMBER
   def semver
-  //def commitHash, commitHashShort, commitUrl, committer
+  def commitHash, commitHashShort, commitUrl, committer
   def scmVars
 
   /* tools */
@@ -36,7 +36,6 @@ node {
     scmVars.each { print it }
   }
 
-/*
   stage('Initialize scm') {
     commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
     commitHashShort = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
@@ -44,7 +43,6 @@ node {
     // gets the person who committed last as "Surname, First name"
     committer = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
   }
-*/
 
   stage('npm install ') {
     echo('npm install')
