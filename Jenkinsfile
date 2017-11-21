@@ -105,34 +105,45 @@ node {
 
   stage('Docker') {
     echo("Build docker image.")
-    def imageName = "${dockerRepo}/${application}:${buildVersion}"
-    sh "mkdir -p docker/build"
-    sh "cp Dockerfile docker"
-    sh "cp -r build docker/build"
-    sh "cd docker"
-    sh "docker build -t ${imageName} ."
-    sh "docker push ${imageName}"
+
+    if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+      def imageName = "${dockerRepo}/${application}:${buildVersion}"
+      sh "mkdir -p docker/build"
+      sh "cp Dockerfile docker"
+      sh "cp -r build docker/build"
+      sh "cd docker"
+      sh "docker build -t ${imageName} ."
+      sh "docker push ${imageName}"
+    }
+    else {
+      echo("PR branches are not used in docker images")
+    }
   }
 
   stage('Deploy') {
-    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'B150245',
-                      usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+    if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'B150245',
+                        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
 
-      // Should really be gotten through Custom Tools Plugin or somesuch
-      def naisLocation = "~/../../../opt/"
+        // Should really be gotten through Custom Tools Plugin or somesuch
+        def naisLocation = "~/../../../opt/"
 
-      // Validate the nais.yaml file
-      sh "$naisLocation./nais validate -f nais.yaml"
+        // Validate the nais.yaml file
+        sh "$naisLocation./nais validate -f nais.yaml"
 
-      // Upload the nais.yaml file to Nexus
-      sh "$naisLocation./nais upload -a '$application' -v '$buildVersion' -u 'deployment' -p 'd3pl0y' -f nais.yaml"
+        // Upload the nais.yaml file to Nexus
+        sh "$naisLocation./nais upload -a '$application' -v '$buildVersion' -u 'deployment' -p 'd3pl0y' -f nais.yaml"
 
-      // Deploy the application to the NAIS cluster
-      sh "$naisLocation./nais deploy -a '$application' -v '$buildVersion' -c '$nais_cluster' -e '$nav_environment' -u '$USERNAME' -p '$PASSWORD' --wait"
+        // Deploy the application to the NAIS cluster
+        sh "$naisLocation./nais deploy -a '$application' -v '$buildVersion' -c '$nais_cluster' -e '$nav_environment' -u '$USERNAME' -p '$PASSWORD' --wait"
 
-      // Use
-      // https://daemon.nais.preprod.local/deploystatus/default/eux-app
-      // to check status
+        // Use
+        // https://daemon.nais.preprod.local/deploystatus/default/eux-app
+        // to check status
+      }
+    }
+    else {
+      echo("PR branches are not used in NAIS deployment")
     }
   }
 }
