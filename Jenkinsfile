@@ -14,16 +14,16 @@ node {
   /* metadata */
   def buildVersion // major.minor.BUILD_NUMBER
   def semver
-  def commitHash, commitHashShort, commitUrl, committer
+  //def commitHash, commitHashShort, commitUrl, committer
   def scmVars
+
   /* tools */
   def NODEJS_HOME = tool "node-6.2.1"
+  echo "${NODEJS_HOME}"
   def node = "${NODEJS_HOME}/bin/node"
   def npm = "${NODEJS_HOME}/bin/npm"
-  //env.NODEJS_HOME = "${tool 'recent node'}"
   //env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
   //echo("${env.PATH}")
-  echo "${NODEJS_HOME}"
 
   // delete whole workspace before starting the build,
   // so that the 'git clone' command below doesn't fail due to
@@ -31,43 +31,42 @@ node {
   cleanWs()
 
   stage('Checkout') {
-    echo('Checkout ...')
+    echo('Checkout from Github ...')
     scmVars = checkout scm
     scmVars.each { print it }
   }
 
-  stage('initialize') {
+/*
+  stage('Initialize scm') {
     commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
     commitHashShort = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
     commitUrl = "https://github.com/${project}/${application}/commit/${commitHash}"
-    /* gets the person who committed last as "Surname, First name" */
+    // gets the person who committed last as "Surname, First name"
     committer = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
   }
+*/
 
   stage('npm install ') {
     echo('npm install')
     // sh('ls -la')
     withEnv(["PATH+NODE=${NODEJS_HOME}", 'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088', 'NO_PROXY=adeo.no']) {
-      //sh(returnStdout: true, script: "${npm} install")
       sh "${npm} install"
     }
   }
+
   stage('Test') {
     echo('CI=true npm test')
     sh "CI=true ${npm} test"
   }
-
-  stage('Build') {
-    echo('Build Web App')
 /*
-    def version = sh(returnStdout: true, script: "${npm} version minor")
-    echo("version=${version}")
-    env.WORKSPACE = pwd()
-    echo("workspace=${env.WORKSPACE}")
-    def semver = version.stripMargin('v')
-*/
-    semver = sh(returnStdout: true, script: "node -pe \"require('./package.json').version\"")
-    echo("semver=${semver}")
+  stage('GitHub version') {
+    echo('Create a tagged release version @Github releases')
+//    def version = sh(returnStdout: true, script: "${npm} version minor")
+//    echo("version=${version}")
+//    env.WORKSPACE = pwd()
+//    echo("workspace=${env.WORKSPACE}")
+//    def semver = version.stripMargin('v')
+
     withEnv([
       "PATH+NODE=${NODEJS_HOME}",
       'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088',
@@ -79,21 +78,24 @@ node {
       sh(returnStdout: true, script: "${npm} version patch")
       sh(returnStdout: true, script: "git push origin")
       sh(returnStdout: true, script: "git push origin --tags")
-      /*
-      sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH}")
-      sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH}")
-      sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH} --tags")
-      */
-/*
-      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
-echo("GIT_USERNAME:${usernameVariable}")
-echo("GIT_PASSWORD:${passwordVariable}")
-        sh(returnStdout: true, script: "git push")
-        sh(returnStdout: true, script: "git push --tags")
+//      sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH}")
+//      sh(returnStdout: true, script: "git push origin HEAD:${scmVars.GIT_BRANCH} --tags")
 
-      }
-      */
+//      withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'navikt-jenkins', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
+//echo("GIT_USERNAME:${usernameVariable}")
+//echo("GIT_PASSWORD:${passwordVariable}")
+//        sh(returnStdout: true, script: "git push")
+//        sh(returnStdout: true, script: "git push --tags")
+//
+//      }
     }
+  }
+*/
+  stage('Build') {
+    echo('Build Web App')
+
+    semver = sh(returnStdout: true, script: "node -pe \"require('./package.json').version\"")
+    echo("semver=${semver}")
 
 
     sh(returnStdout: true, script: "${npm} run build")
