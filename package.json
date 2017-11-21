@@ -1,5 +1,5 @@
 {
-  "name": "melosys-web-proto",
+  "name": "melosys-web",
   "version": "0.2.0",
   "description": "Medlemsskap og lovvalgssystem",
   "author": "are.bjolseth@nav.no",
@@ -111,6 +111,7 @@
     "npm-run-all": "^4.0.2",
     "prettier": "^1.7.4",
     "react-test-renderer": "^16.0.0",
+    "semver": "^5.4.1",
     "underscore": "^1.8.3"
   }
 }
