@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { reduxForm, arrayPush } from 'redux-form';
+import { arrayPush } from 'redux-form';
+import { validForm, rules } from 'react-redux-form-validation';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
@@ -17,7 +18,6 @@ const uuid = require('uuid/v4');
 
 function Arbeidsavtalen({ avtalen }) {
   const {
-    arbeidstidsordning,
     avloenningstype,
     yrke,
     beregnetAntallTimerPrUke,
@@ -26,9 +26,6 @@ function Arbeidsavtalen({ avtalen }) {
 
   return (
     <div className="arbeidsavtale">
-      <Nav.Element>Arbeidsavtale</Nav.Element>
-      <dt>Ordning</dt>
-      <dd>{arbeidstidsordning || '-'}</dd>
       <dt>Timer pr uke</dt>
       <dd>{beregnetAntallTimerPrUke || '-'}</dd>
       <dt>Sist endret</dt>
@@ -45,10 +42,11 @@ Arbeidsavtalen.propTypes = {
   avtalen: MPT.Arbeidsavtale.isRequired,
 };
 
+
 /** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
  * kun av komponenten Arbeidsforholdene.
  *
- * @param { arbeidsforhold } Object Et objekt med det aktuelle arbeidsforholdet.
+ * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
 const Arbeidsforhold = props => {
   const {
@@ -143,6 +141,9 @@ Arbeidsforholdene.propTypes = {
   dispatch: PT.func.isRequired,
 };
 
-export default reduxForm({
+export default validForm({
   form: 'vurderingArbeidsforhold',
+  validate: {
+    arbeidsforholdene: [rules.required],
+  },
 })(Arbeidsforholdene);

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { Field, FieldArray, reduxForm, arrayPush } from 'redux-form';
+import { Field, FieldArray, reduxForm, initialize } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
@@ -59,7 +59,8 @@ const Arbeidsforholdene = props => {
           type="text"
           component={linjeProps => <ArbeidsforholdLinje {...linjeProps} arbeidsforholdene={arbeidsforholdene} />}
           removeArbeidsforhold={() => valgteArbeidsforhold.remove(index)}
-        />)
+        />
+      )
       )}
     </div>
   );
@@ -77,7 +78,9 @@ Arbeidsforholdene.defaultProps = {
 class VurderingArbeidsforhold extends Component {
   componentWillMount() {
     const { dispatch } = this.props;
-    this.props.arbeidsforholdene.map(arbeidsforholdet => dispatch(arrayPush('vurderingArbeidsforhold', 'arbeidsforholdene', arbeidsforholdet.arbeidsforholdID)));
+    dispatch(initialize('vurderingArbeidsforhold', {
+      arbeidsforholdene: this.props.arbeidsforholdene.map(arbeidsforholdet => arbeidsforholdet.arbeidsforholdID),
+    }));
   }
 
   render () {
