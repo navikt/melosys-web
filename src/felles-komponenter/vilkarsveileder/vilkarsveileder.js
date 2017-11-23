@@ -69,7 +69,7 @@ class Vilkarsveileder extends Component {
 
   componentWillMount() {
     this.setState({
-      aktivtSteg: 0,
+      aktivtSteg: 3,
       steg: [
         { status: Vilkarsveileder.status.AKTIV, id: 0, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true },
         { status: Vilkarsveileder.status.UBEHANDLET, id: 1, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },

@@ -11,6 +11,11 @@ import './vurderingArbeidsforhold.css';
 
 const uuid = require('uuid/v4');
 
+/** Ekeltlinje for arbeidsforholdet som saksbehandleren har valgt
+ *
+ * @param props Objekt Diverse props (se propTypes)
+ * @constructor
+ */
 const ArbeidsforholdLinje = props => {
   const { value } = props.input;
   const { removeArbeidsforhold, arbeidsforholdene } = props;
@@ -21,8 +26,7 @@ const ArbeidsforholdLinje = props => {
       <div className="arbeidsforhold_enkeltlinje_tekst">
         <div className="arbeidsforhold__enkeltlinje__navn">{arbeidsforholdet.arbeidsgiver.navn}</div>
         <div className="arbeidsforhold__enkeltlinje__periode">
-          Periode:
-          <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} /></div>
+          Periode: <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} /></div>
       </div>
       <button className="arbeidsforhold__enkeltlinje__knapp" onClick={() => removeArbeidsforhold()}>-</button>
     </div>
@@ -39,6 +43,11 @@ ArbeidsforholdLinje.defaultProps = {
   arbeidsforholdene: [],
 };
 
+/**
+ *
+ * @param props Objekt Diverse props Se prop types
+ * @constructor
+ */
 const Arbeidsforholdene = props => {
   const { fields: valgteArbeidsforhold, arbeidsforholdene } = props;
   return (
@@ -78,9 +87,11 @@ class VurderingArbeidsforhold extends Component {
       <div className="vurderingarbeidsforhold">
         <form onSubmit={handleSubmit}>
           <Nav.Undertittel>Velg relevante arbeidsforhold:</Nav.Undertittel>
-          <FieldArray name="arbeidsforholdene" component={props => <Arbeidsforholdene {...props} arbeidsforholdene={arbeidsforholdene} />} />
-          <div className="fane__knapplinje">
-            <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <div className="arbeidsforhold">
+            <FieldArray name="arbeidsforholdene" component={props => <Arbeidsforholdene {...props} arbeidsforholdene={arbeidsforholdene} />} />
+            <div className="fane__knapplinje">
+              <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+            </div>
           </div>
         </form>
       </div>
