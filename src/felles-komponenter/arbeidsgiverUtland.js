@@ -1,5 +1,6 @@
 import React from 'react';
-import { validForm, rules } from 'react-redux-form-validation';
+import { validForm } from 'react-redux-form-validation';
+import * as Validering from './skjema/validering';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -20,9 +21,8 @@ function ArbeidsgiverUtland () {
         ariaTittel="Panel for arbeidsgiver i utlandet" >
         <Nav.Container fluid>
           <Input bredde="m" label="Navn" feltNavn="navn" />
-          <Input bredde="m" label="Organisasjonsnr" feltNavn="organisasjonsnr" />
+          <Input bredde="m" label="Orgnr / ID nr" feltNavn="organisasjonsnr" />
           <Textarea bredde="m" label="Adresse" feltNavn="adresse" maxLength={100} />
-
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>
@@ -40,8 +40,8 @@ ArbeidsgiverUtland.defaultProps = {
 export default validForm({
   form: 'soknaden',
   validate: {
-    navn: [rules.required],
-    organisasjonsnr: [rules.required],
-    adresse: [rules.required],
+    navn: [Validering.erPakrevet],
+    organisasjonsnr: [Validering.erPakrevet, value => Validering.minLengde(value, 9)],
+    adresse: [Validering.erPakrevet],
   },
 })(ArbeidsgiverUtland);

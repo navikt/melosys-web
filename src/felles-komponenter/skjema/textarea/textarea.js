@@ -52,6 +52,7 @@ function InnerTextAreaComponent(
     />
   );
 }
+
 InnerTextAreaComponent.propTypes = {
   label: PT.string,
   placeholder: PT.string,
