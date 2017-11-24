@@ -1,21 +1,30 @@
 import React from 'react';
 import PT from 'prop-types';
 import { CustomField } from 'react-redux-form-validation';
-import { Textarea as NavFrontendTextarea } from 'nav-frontend-skjema';
+import * as Nav from '../../../utils/navFrontend';
 
+/** Returnerer en tekst som gir brukeren en indikasjon på hvor mange tegn
+ * hun har igjen eller hvor mange tegn hun har overskridet. visTellerFra gjør at denne teksten ikke vises
+ * før brukeren faktisk begynner å nærme seg en grense.
+ *
+ * @param antallTegn Antall tegn som brukeren har skrevet
+ * @param maxLength Totalt antall tegn som godtas
+ * @param visTellerFra Hvor mange tegn brukeren må være fra maks-grensen før linjen vises.
+ * @returns {XML}
+ */
 function getTellerTekst(antallTegn, maxLength, visTellerFra) {
   const tegnIgjen = maxLength - antallTegn;
   const tegnForMange = antallTegn - maxLength;
   const tellerFra = visTellerFra || maxLength / 10;
 
   if (tegnForMange > 0) {
-    const text = `tekstfelt.antalltegn.for-mange antall:${tegnForMange}`;
+    const text = `Du har skrevet ${tegnForMange} tegn for mye.`;
     return <span>{text}</span>;
   } else if (tegnIgjen <= tellerFra) {
-    const text = `tekstfelt.antalltegn.flere-igjen antall:${tegnIgjen}`;
+    const text = `Du har ${tegnIgjen} tegn igjen.`;
     return <span>{text}</span>;
   }
-  return <span>&nbsp;</span>;
+  return null;
 }
 
 function InnerTextAreaComponent(
@@ -26,12 +35,11 @@ function InnerTextAreaComponent(
     maxLength,
     errorMessage,
     visTellerFra,
-    meta, // eslint-disable-line no-unused-vars
     ...rest
   }) {
   const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
   return (
-    <NavFrontendTextarea
+    <Nav.Textarea
       textareaClass="skjemaelement__input input--fullbredde"
       label={label}
       maxLength={maxLength}

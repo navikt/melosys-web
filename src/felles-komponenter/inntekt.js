@@ -28,10 +28,6 @@ InntektLinje.propTypes = {
 };
 
 function Inntekt ({ inntekt: { inntekt } }) {
-  // TODO (17. nov): Neste 2 linjer må kobles mot informasjon fra søknaden når denne er klar
-  const { prMaaned: utenlandsNaeringPrMaaned, valuta: utenlandsNaeringValuta } = { prMaaned: '2000', valuta: 'EUR' };
-  const { prMaaned: utenlandsLonnPrMaaned, valuta: utenlandsLonnValuta } = { prMaaned: '1150', valuta: 'GBP' };
-
   const panelUndertittel = inntekt[0] ? `Nyeste inntekt: ${inntekt[0].beloep} i perioden ${inntekt[0].utbetaltIPeriode}` : '';
 
   return (
@@ -53,12 +49,9 @@ function Inntekt ({ inntekt: { inntekt } }) {
         </Nav.Row>
         <Nav.Row className="inntekt__seksjon">
           <Nav.Column xs="12">
-            <dl className="inntekt__soknad">
-              <dt>Inntekt fra utenlandsk arbeidsgiver: Der Investition Ghmb</dt>
-              <dd>{utenlandsLonnPrMaaned} {utenlandsLonnValuta} pr måned</dd>
-              <dt>Inntekt fra næringsvirksomhet fra utenlandsk oppdragsgiver</dt>
-              <dd>{utenlandsNaeringPrMaaned} {utenlandsNaeringValuta} pr måned</dd>
-            </dl>
+            <Nav.Input bredde="m" label="Inntekt fra norsk arbeidsgiver opp gitt i søknaden" />
+            <Nav.Input bredde="m" label="Inntekt fra utenlandsk arbeidsgiver opp gitt i søknaden" />
+            <Nav.Input bredde="m" label="Inntekt fra næringsvirksomhet fra utenlandsk arbeidsgiver oppgitt i søknaden" />
           </Nav.Column>
         </Nav.Row>
       </Nav.EkspanderbartpanelBase>
