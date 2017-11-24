@@ -1,5 +1,6 @@
 import React from 'react';
 import { validForm } from 'react-redux-form-validation';
+import PT from 'prop-types';
 import * as Validering from './skjema/validering';
 
 import * as Nav from '../utils/navFrontend';
@@ -13,16 +14,22 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './arbeidsgiverUtland.css';
 
-function ArbeidsgiverUtland () {
+function ArbeidsgiverUtland (props) {
+  const panelIkon = (props.valid) ? Ikoner.Ferdig : Ikoner.Varsel;
+
   return (
     <div className="organisasjonerNorge panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Arbeidsgiver i utlandet" undertittel="" />}
-        ariaTittel="Panel for arbeidsgiver i utlandet" >
+        heading={<PanelHeader ikon={panelIkon} tittel="Arbeidsgiver i utlandet" undertittel="" />}
+        ariaTittel="Panel for arbeidsgiver i utlandet">
         <Nav.Container fluid>
-          <Input bredde="m" label="Navn" feltNavn="navn" />
-          <Input bredde="m" label="Orgnr / ID nr" feltNavn="organisasjonsnr" />
-          <Textarea bredde="m" label="Adresse" feltNavn="adresse" maxLength={100} />
+          <Nav.Column xs="6">
+            <Input label="Firmanavn" feltNavn="navn" />
+            <Input label="Orgnr / ID nr" feltNavn="organisasjonsnr" />
+            <Textarea bredde="m" label="Adresse" feltNavn="adresse" maxLength={100} />
+            <Input label="Kontaktperson" feltNavn="kontaktperson" />
+            <Input label="Telefon" feltNavn="telefon" />
+          </Nav.Column>
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>
@@ -31,6 +38,7 @@ function ArbeidsgiverUtland () {
 
 ArbeidsgiverUtland.propTypes = {
   organisasjoner: MPT.Organisasjoner,
+  valid: PT.bool.isRequired,
 };
 
 ArbeidsgiverUtland.defaultProps = {
@@ -38,10 +46,12 @@ ArbeidsgiverUtland.defaultProps = {
 };
 
 export default validForm({
-  form: 'soknaden',
+  form: 'arbeidsgiverUtlandet',
   validate: {
     navn: [Validering.erPakrevet],
-    organisasjonsnr: [Validering.erPakrevet, value => Validering.minLengde(value, 9)],
+    organisasjonsnr: [Validering.erPakrevet],
     adresse: [Validering.erPakrevet],
+    kontaktperson: [Validering.erPakrevet, Validering.fulltNavn],
+    telefon: [Validering.erPakrevet],
   },
 })(ArbeidsgiverUtland);
