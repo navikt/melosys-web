@@ -1,8 +1,8 @@
 import React from 'react';
 import { validForm } from 'react-redux-form-validation';
 import PT from 'prop-types';
-import * as Validering from './skjema/validering';
 
+import * as Validering from './skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
@@ -17,6 +17,8 @@ import './arbeidsgiverUtland.css';
 function ArbeidsgiverUtland (props) {
   const panelIkon = (props.valid) ? Ikoner.Ferdig : Ikoner.Varsel;
 
+  console.log('render');
+
   return (
     <div className="organisasjonerNorge panelSeksjon">
       <Nav.EkspanderbartpanelBase
@@ -26,6 +28,8 @@ function ArbeidsgiverUtland (props) {
           <Nav.Column xs="6">
             <Input label="Firmanavn" feltNavn="navn" />
             <Input label="Orgnr / ID nr" feltNavn="organisasjonsnr" />
+          </Nav.Column>
+          <Nav.Column xs="6">
             <Textarea bredde="m" label="Adresse" feltNavn="adresse" maxLength={100} />
             <Input label="Kontaktperson" feltNavn="kontaktperson" />
             <Input label="Telefon" feltNavn="telefon" />

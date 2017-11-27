@@ -1,10 +1,14 @@
 import React from 'react';
+import { validForm } from 'react-redux-form-validation';
 
+import * as Ikoner from '../resources/images';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
-import * as Ikoner from '../resources/images';
+import * as Validering from './skjema/validering';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import Input from './skjema/input/input';
+import Checkbox from './skjema/input/checkbox';
 
 import './inntekt.css';
 
@@ -48,10 +52,14 @@ function Inntekt ({ inntekt: { inntekt } }) {
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="inntekt__seksjon">
-          <Nav.Column xs="12">
-            <Nav.Input bredde="m" label="Inntekt fra norsk arbeidsgiver opp gitt i søknaden" />
-            <Nav.Input bredde="m" label="Inntekt fra utenlandsk arbeidsgiver opp gitt i søknaden" />
-            <Nav.Input bredde="m" label="Inntekt fra næringsvirksomhet fra utenlandsk arbeidsgiver oppgitt i søknaden" />
+          <Nav.Column xs="6">
+            <Nav.Element>Lønn / inntekt i utlandet (NOK pr måned)</Nav.Element>
+            <Input feltNavn="lonnNorskArbeidsgiver" label="Lønn fra norsk arbeidsgiver" />
+            <Input feltNavn="lonnUtenlandskArbeidsgiver" label="Lønn fra utenlandsk arbeidsgiver" />
+            <Input feltNavn="inntektUtenlandskNaering" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
+            <Input feltNavn="inntektUtenlandskNaering" label="Naturalytelser betalt av norsk eller utenlandsk arbeidsgiver" />
+            <Checkbox feltNavn="inntektErInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." />
+            <Checkbox feltNavn="trygdeavgiftBlirTrukketMedSkatt" label="Trygdeavgift blir trukket med skatten." />
           </Nav.Column>
         </Nav.Row>
       </Nav.EkspanderbartpanelBase>
@@ -67,4 +75,11 @@ Inntekt.defaultProps = {
   inntekt: {},
 };
 
-export default Inntekt;
+export default validForm({
+  form: 'inntekt',
+  validate: {
+    lonnNorskArbeidsgiver: [Validering.kunTall],
+    lonnUtenlandskArbeidsgiver: [Validering.kunTall],
+    inntektUtenlandskNaering: [Validering.kunTall],
+  },
+})(Inntekt);
