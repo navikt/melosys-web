@@ -68,7 +68,7 @@ function Medlemskap({ medlemskap }) {
   return (
     <div className="medlemskap panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Medlemskap" undertittel="" />}
+        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Medlemskap" undertittel="" />}
         ariaTittel="Panel for medlemskap" >
         <section aria-label="Panel for medlemskap">
           <Nav.Container fluid>

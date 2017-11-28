@@ -15,9 +15,7 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import './arbeidsgiverUtland.css';
 
 function ArbeidsgiverUtland (props) {
-  const panelIkon = (props.valid) ? Ikoner.Ferdig : Ikoner.Varsel;
-
-  console.log('render');
+  const panelIkon = (props.pristine || props.invalid) ? Ikoner.Varsel : Ikoner.Ferdig;
 
   return (
     <div className="organisasjonerNorge panelSeksjon">
@@ -42,7 +40,8 @@ function ArbeidsgiverUtland (props) {
 
 ArbeidsgiverUtland.propTypes = {
   organisasjoner: MPT.Organisasjoner,
-  valid: PT.bool.isRequired,
+  invalid: PT.bool.isRequired,
+  pristine: PT.bool.isRequired,
 };
 
 ArbeidsgiverUtland.defaultProps = {
@@ -56,6 +55,6 @@ export default validForm({
     organisasjonsnr: [Validering.erPakrevet],
     adresse: [Validering.erPakrevet],
     kontaktperson: [Validering.erPakrevet, Validering.fulltNavn],
-    telefon: [Validering.erPakrevet],
+    telefon: [],
   },
 })(ArbeidsgiverUtland);

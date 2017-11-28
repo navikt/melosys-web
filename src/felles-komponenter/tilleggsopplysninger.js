@@ -17,7 +17,7 @@ function Personopplysninger() {
   return (
     <div className="tilleggsopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Tilleggsinformasjon" undertittel="" />}
+        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Tilleggsinformasjon" undertittel="" />}
         ariaTittel="Panel for tilleggsinformasjon" >
         <Nav.Container fluid>
           {/* START TILLEGGSOPPLYSNINGER */}
