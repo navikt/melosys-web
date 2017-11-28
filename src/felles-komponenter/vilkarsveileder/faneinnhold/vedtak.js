@@ -22,7 +22,7 @@ const Vedtak = () => (
         </Nav.Column>
         <Nav.Column xs="6" md="3">
           <Nav.Element type="element">Land</Nav.Element>
-          <Nav.Normaltekst>Tyskland og Sverige</Nav.Normaltekst>
+          <Nav.Normaltekst>Tyskland</Nav.Normaltekst>
         </Nav.Column>
         <Nav.Column xs="6" md="3">
           <Nav.Element type="element">Søker er</Nav.Element>
@@ -30,7 +30,7 @@ const Vedtak = () => (
         </Nav.Column>
         <Nav.Column xs="6" md="3">
           <Nav.Element type="element">Navn på arbeidsgiver</Nav.Element>
-          <Nav.Normaltekst>Hagemøbler Import AS</Nav.Normaltekst>
+          <Nav.Normaltekst>Multiconsult ASA</Nav.Normaltekst>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
