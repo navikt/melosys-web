@@ -57,18 +57,18 @@ function Inntekt (props) {
         <Nav.Row className="inntekt__seksjon">
           <Nav.Column xs="8">
             <Nav.Fieldset legend="Lønn / inntekt i utlandet (NOK pr måned)">
-              <Input feltNavn="lonnNorskArbeidsgiver" label="Lønn fra norsk arbeidsgiver" />
-              <Input feltNavn="lonnUtenlandskArbeidsgiver" label="Lønn fra utenlandsk arbeidsgiver" />
-              <Input feltNavn="inntektUtenlandskNaering" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
+              <Input feltNavn="inntektNorskIPerioden" label="Lønn fra norsk arbeidsgiver" />
+              <Input feltNavn="inntektUtenlandskIPerioden" label="Lønn fra utenlandsk arbeidsgiver" />
+              <Input feltNavn="inntektNaeringIPerioden" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
             </Nav.Fieldset>
             <Nav.Fieldset legend="Naturalytelser betalt av norsk eller utenlandsk arbeidsgiver">
-              <Checkbox feltNavn="inntektUtenlandskNaturalBolig" label="Fri bolig" />
-              <Checkbox feltNavn="inntektUtenlandskNaturalBil" label="Fri bil" />
-              <Input feltNavn="inntektUtenlandskNaturalAnnet" label="Annen naturalytelse" />
+              <Checkbox feltNavn="inntektNaturalIPerioden" label="Fri bolig" />
+              <Checkbox feltNavn="inntektNaturalIPerioden" label="Fri bil" />
+              <Input feltNavn="inntektNaturalIPerioden" label="Annen naturalytelse" />
             </Nav.Fieldset>
             <Nav.Fieldset legend="Annet">
-              <Checkbox feltNavn="inntektErInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." />
-              <Checkbox feltNavn="trygdeavgiftBlirTrukketMedSkatt" label="Trygdeavgift blir trukket med skatten." />
+              <Checkbox feltNavn="inntektInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." />
+              <Checkbox feltNavn="inntektTrygdeavgiftBlirTrukket" label="Trygdeavgift blir trukket med skatten." />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -92,8 +92,8 @@ export default validForm({
   initialValues: { lonnNorskArbeidsgiver: '', lonnUtenlandskArbeidsgiver: '', inntektUtenlandskNaering: '' },
   pure: false,
   validate: {
-    lonnNorskArbeidsgiver: [Validering.erPakrevet, Validering.kunTall],
-    lonnUtenlandskArbeidsgiver: [Validering.erPakrevet, Validering.kunTall],
-    inntektUtenlandskNaering: [Validering.erPakrevet, Validering.kunTall],
+    inntektNorskIPerioden: [Validering.erPakrevet, Validering.kunTall],
+    inntektUtenlandskIPerioden: [Validering.erPakrevet, Validering.kunTall],
+    inntektNaeringIPerioden: [Validering.erPakrevet, Validering.kunTall],
   },
 })(Inntekt);
