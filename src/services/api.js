@@ -10,18 +10,17 @@ function erDev() {
   return process.env.NODE_PATH !== 'production';
 }
 */
-/*
 // from .env or .env.local
 const API_SERVER = `${process.env.REACT_APP_API_SERVER}`;
 const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 const API_MELOSYS_URL = `${API_SERVER}${API_BASE_URL}`;
 const API_SAKSBEHANDLER = `${process.env.REACT_APP_API_SAKSBEHANDLER}`;
 const API_SAKSOPPLYSNINGER = `${process.env.REACT_APP_API_SAKSOPPLYSNINGER}`;
-*/
+/*
 const API_MELOSYS_URL = 'http://a34apvl00025:3002/melosys/api/';
 const API_SAKSBEHANDLER = 'saksbehandler';
 const API_SAKSOPPLYSNINGER = 'arbeidsforhold';
-
+*/
 console.log('process.env', process.env);
 
 const headers = new Headers({
@@ -31,10 +30,12 @@ const headers = new Headers({
 
 export function hentFagsaker(snr) {
   const URI_FAGSAKER =  `${API_MELOSYS_URL}fagsaker/${snr}`;
+  console.log('URI_FAGSAKER', URI_FAGSAKER);
   return fetchToJson(URI_FAGSAKER, { headers: headers });
 }
 export function hentNyesaker(fnr) {
   const URI_NYESAKER = `${API_MELOSYS_URL}sok/fagsaker/?fnr=${fnr}`;
+  console.log('URI_NYESAKER', URI_NYESAKER);
   return fetchToJson(URI_NYESAKER, { headers: headers });
 }
 
