@@ -17,8 +17,8 @@ function ArbeidsgiverUtland (props) {
   return (
     <div className="arbeidsgiverUtland panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Arbeidsgiver i utlandet" undertittel="" />}
-        ariaTittel="Panel for arbeidsgiver i utlandet">
+        heading={<PanelHeader ikon={panelIkon} tittel="Arbeidssted i utlandet" undertittel="" />}
+        ariaTittel="Panel for arbeidssted i utlandet">
         <Nav.Container fluid>
           <Nav.Column xs="6">
             <Skjema.Input label="Firmanavn" feltNavn="foretakUtlandNavn" />
