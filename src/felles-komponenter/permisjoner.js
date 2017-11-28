@@ -42,7 +42,7 @@ function Permisjoner({ permisjoner }) {
   return (
     <div className="permisjoner panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Permisjoner" undertittel={panelUndertittel} />}
+        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Permisjoner" undertittel={panelUndertittel} />}
         ariaTittel="Panel for permisjoner" >
         <section>
           <Nav.Container fluid>

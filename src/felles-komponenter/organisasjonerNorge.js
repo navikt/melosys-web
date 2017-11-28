@@ -39,7 +39,7 @@ function OrganisasjonerNorge ({ organisasjoner }) {
   return (
     <div className="organisasjonerNorge panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Arbeidsgiver i Norge" undertittel="" />}
+        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Arbeidsgiver i Norge" undertittel="" />}
         ariaTittel="Panel for arbeidsgiver i Norge" >
         <Nav.Container fluid>
           {organisasjoner.map(organisasjon => <EnkeltOrganisasjon key={uuid()} organisasjon={organisasjon} />)}

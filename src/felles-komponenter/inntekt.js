@@ -1,5 +1,6 @@
 import React from 'react';
 import { validForm } from 'react-redux-form-validation';
+import PT from 'prop-types';
 
 import * as Ikoner from '../resources/images';
 import * as Nav from '../utils/navFrontend';
@@ -31,14 +32,16 @@ InntektLinje.propTypes = {
   inntektLinje: MPT.InntektLinje.isRequired,
 };
 
-function Inntekt ({ inntekt: { inntekt } }) {
+function Inntekt (props) {
+  const { inntekt: { inntekt } } = props;
   const panelUndertittel = inntekt[0] ? `Nyeste inntekt: ${inntekt[0].beloep} i perioden ${inntekt[0].utbetaltIPeriode}` : '';
+  const panelIkon = (props.pristine || props.invalid) ? Ikoner.Varsel : Ikoner.Ferdig;
 
   return (
     <div className="inntekt panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Inntekt" undertittel={panelUndertittel} />}
-        ariaTittel="Panel for inntekt" >
+        heading={<PanelHeader ikon={panelIkon} tittel="Inntekt" undertittel={panelUndertittel} />}
+        ariaTittel="Panel for inntekt">
         <Nav.Row className="inntekt__seksjon">
           <Nav.Column xs="12">
             <table className="tabellutlisting inntekt__detaljer">
@@ -53,13 +56,20 @@ function Inntekt ({ inntekt: { inntekt } }) {
         </Nav.Row>
         <Nav.Row className="inntekt__seksjon">
           <Nav.Column xs="6">
-            <Nav.Element>Lønn / inntekt i utlandet (NOK pr måned)</Nav.Element>
-            <Input feltNavn="lonnNorskArbeidsgiver" label="Lønn fra norsk arbeidsgiver" />
-            <Input feltNavn="lonnUtenlandskArbeidsgiver" label="Lønn fra utenlandsk arbeidsgiver" />
-            <Input feltNavn="inntektUtenlandskNaering" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
-            <Input feltNavn="inntektUtenlandskNaering" label="Naturalytelser betalt av norsk eller utenlandsk arbeidsgiver" />
-            <Checkbox feltNavn="inntektErInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." />
-            <Checkbox feltNavn="trygdeavgiftBlirTrukketMedSkatt" label="Trygdeavgift blir trukket med skatten." />
+            <Nav.Fieldset legend="Lønn / inntekt i utlandet (NOK pr måned)">
+              <Input feltNavn="lonnNorskArbeidsgiver" label="Lønn fra norsk arbeidsgiver" />
+              <Input feltNavn="lonnUtenlandskArbeidsgiver" label="Lønn fra utenlandsk arbeidsgiver" />
+              <Input feltNavn="inntektUtenlandskNaering" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
+            </Nav.Fieldset>
+            <Nav.Fieldset legend="Naturalytelser betalt av norsk eller utenlandsk arbeidsgiver">
+              <Checkbox feltNavn="inntektUtenlandskNaturalBolig" label="Fri bolig" />
+              <Checkbox feltNavn="inntektUtenlandskNaturalBil" label="Fri bil" />
+              <Input feltNavn="inntektUtenlandskNaturalAnnet" label="Annen naturalytelse" />
+            </Nav.Fieldset>
+            <Nav.Fieldset legend="Annet">
+              <Checkbox feltNavn="inntektErInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." />
+              <Checkbox feltNavn="trygdeavgiftBlirTrukketMedSkatt" label="Trygdeavgift blir trukket med skatten." />
+            </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
       </Nav.EkspanderbartpanelBase>
@@ -69,6 +79,8 @@ function Inntekt ({ inntekt: { inntekt } }) {
 
 Inntekt.propTypes = {
   inntekt: MPT.Inntekt,
+  invalid: PT.bool.isRequired,
+  pristine: PT.bool.isRequired,
 };
 
 Inntekt.defaultProps = {
@@ -77,9 +89,11 @@ Inntekt.defaultProps = {
 
 export default validForm({
   form: 'inntekt',
+  initialValues: { lonnNorskArbeidsgiver: '', lonnUtenlandskArbeidsgiver: '', inntektUtenlandskNaering: '' },
+  pure: false,
   validate: {
-    lonnNorskArbeidsgiver: [Validering.kunTall],
-    lonnUtenlandskArbeidsgiver: [Validering.kunTall],
-    inntektUtenlandskNaering: [Validering.kunTall],
+    lonnNorskArbeidsgiver: [Validering.erPakrevet, Validering.kunTall],
+    lonnUtenlandskArbeidsgiver: [Validering.erPakrevet, Validering.kunTall],
+    inntektUtenlandskNaering: [Validering.erPakrevet, Validering.kunTall],
   },
 })(Inntekt);
