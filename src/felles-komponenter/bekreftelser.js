@@ -25,7 +25,7 @@ function Bekreftelser ({ bekreftelser }) {
   return (
     <div className="bekreftelser panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Varsel} tittel="Arbeidsgivers bekreftelse" undertittel="" />}
+        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Arbeidsgivers bekreftelse" undertittel="" />}
         ariaTittel="Panel for bekreftelser" >
         <Nav.Row className="bekreftelser__seksjon">
           {/* START DATO RANGE */}

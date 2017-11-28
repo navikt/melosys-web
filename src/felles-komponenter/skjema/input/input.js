@@ -1,14 +1,17 @@
 import React from 'react';
 import PT from 'prop-types';
-import { Input as NavInput } from 'nav-frontend-skjema';
 import { CustomField } from 'react-redux-form-validation';
+
+import * as Nav from '../../../utils/navFrontend';
 import './skjema.css';
 
-// eslint-disable-next-line no-unused-vars
-function InnerInputComponent({ input, label, errorMessage, meta, ...rest }) {
+/** Komponenten nedenfor tar imot errorMessage (og alle andre props). ErrorMessage gjøres om til
+ * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
+ */
+function InnerInputComponent({ input, label, errorMessage, ...rest }) {
   const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
   const inputProps = { ...input, ...rest };
-  return <NavInput label={label} feil={feil} {...inputProps} />;
+  return <Nav.Input label={label} feil={feil} {...inputProps} />;
 }
 
 InnerInputComponent.propTypes = {
@@ -25,6 +28,7 @@ InnerInputComponent.defaultProps = {
   meta: undefined,
   input: undefined,
 };
+
 
 function Input({ feltNavn, ...rest }) {
   return (
