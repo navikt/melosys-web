@@ -12,6 +12,7 @@ import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
 import Arbeidsforholdene from '../felles-komponenter/arbeidsforholdene';
 import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
+import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
 import Inntekt from '../felles-komponenter/inntekt';
 import Permisjoner from '../felles-komponenter/permisjoner';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
@@ -87,6 +88,7 @@ class Saksbehandling extends Component {
               {permisjoner && <Permisjoner permisjoner={permisjoner} />}
               {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
               {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
+              <ArbeidsgiverUtland />
               {medlemskap && <Medlemskap medlemskap={medlemskap} />}
               {inntekt && <Inntekt inntekt={inntekt} />}
               {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
