@@ -5,23 +5,22 @@ import PT from 'prop-types';
 import * as Ikoner from '../resources/images';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
-import * as Validering from './skjema/validering';
+import * as Skjema from './skjema';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
-import Input from './skjema/input/input';
-import Checkbox from './skjema/input/checkbox';
 
 import './inntekt.css';
 
 const uuid = require('uuid/v4');
 
-
 function InntektLinje({ inntektLinje }) {
-  const { beloep, inntektsperiodetype, virksomhetID, beskrivelse, utbetaltIPeriode } = inntektLinje;
+  const { beloep, inntektsperiodetype, virksomhet, beskrivelse, utbetaltIPeriode } = inntektLinje;
+  const { navn } = virksomhet;
+
   return (
     <tr>
       <td className="detaljer__periode">{ utbetaltIPeriode }</td>
-      <td className="detaljer__orgnr">{virksomhetID}</td>
+      <td className="detaljer__firma">{navn}</td>
       <td className="detaljer__inntekt">{beloep} pr {inntektsperiodetype}</td>
       <td className="detaljer__beskrivelse">{beskrivelse}</td>
     </tr>
@@ -34,7 +33,7 @@ InntektLinje.propTypes = {
 
 function Inntekt (props) {
   const { inntekt: { inntekt } } = props;
-  const panelUndertittel = inntekt[0] ? `Nyeste inntekt: ${inntekt[0].beloep} i perioden ${inntekt[0].utbetaltIPeriode}` : '';
+  const panelUndertittel = inntekt[0] ? `Nyeste inntekt: ${inntekt[0].beloep} fra ${inntekt[0].virksomhet.navn} i perioden ${inntekt[0].utbetaltIPeriode}` : '';
   const panelIkon = (props.pristine || props.invalid) ? Ikoner.Varsel : Ikoner.Ferdig;
 
   return (
@@ -57,18 +56,18 @@ function Inntekt (props) {
         <Nav.Row className="inntekt__seksjon">
           <Nav.Column xs="8">
             <Nav.Fieldset legend="Lønn / inntekt i utlandet (NOK pr måned)">
-              <Input feltNavn="inntektNorskIPerioden" label="Lønn fra norsk arbeidsgiver" />
-              <Input feltNavn="inntektUtenlandskIPerioden" label="Lønn fra utenlandsk arbeidsgiver" />
-              <Input feltNavn="inntektNaeringIPerioden" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
+              <Skjema.Input feltNavn="inntektNorskIPerioden" label="Lønn fra norsk arbeidsgiver" />
+              <Skjema.Input feltNavn="inntektUtenlandskIPerioden" label="Lønn fra utenlandsk arbeidsgiver" />
+              <Skjema.Input feltNavn="inntektNaeringIPerioden" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
             </Nav.Fieldset>
             <Nav.Fieldset legend="Naturalytelser betalt av norsk eller utenlandsk arbeidsgiver">
-              <Checkbox feltNavn="inntektNaturalIPerioden" label="Fri bolig" />
-              <Checkbox feltNavn="inntektNaturalIPerioden" label="Fri bil" />
-              <Input feltNavn="inntektNaturalIPerioden" label="Annen naturalytelse" />
+              <Skjema.Checkbox feltNavn="inntektNaturalIPerioden" label="Fri bolig" />
+              <Skjema.Checkbox feltNavn="inntektNaturalIPerioden" label="Fri bil" />
+              <Skjema.Input feltNavn="inntektNaturalIPerioden" label="Annen naturalytelse" />
             </Nav.Fieldset>
             <Nav.Fieldset legend="Annet">
-              <Checkbox feltNavn="inntektInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." />
-              <Checkbox feltNavn="inntektTrygdeavgiftBlirTrukket" label="Trygdeavgift blir trukket med skatten." />
+              <Skjema.Checkbox feltNavn="inntektInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." />
+              <Skjema.Checkbox feltNavn="inntektTrygdeavgiftBlirTrukket" label="Trygdeavgift blir trukket med skatten." />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -92,8 +91,8 @@ export default validForm({
   initialValues: { lonnNorskArbeidsgiver: '', lonnUtenlandskArbeidsgiver: '', inntektUtenlandskNaering: '' },
   pure: false,
   validate: {
-    inntektNorskIPerioden: [Validering.erPakrevet, Validering.kunTall],
-    inntektUtenlandskIPerioden: [Validering.erPakrevet, Validering.kunTall],
-    inntektNaeringIPerioden: [Validering.erPakrevet, Validering.kunTall],
+    inntektNorskIPerioden: [Skjema.Validering.erPakrevet, Skjema.Validering.kunTall],
+    inntektUtenlandskIPerioden: [Skjema.Validering.erPakrevet, Skjema.Validering.kunTall],
+    inntektNaeringIPerioden: [Skjema.Validering.erPakrevet, Skjema.Validering.kunTall],
   },
 })(Inntekt);
