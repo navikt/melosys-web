@@ -18,19 +18,17 @@ function ArbeidsgiverUtland (props) {
   const panelIkon = (props.pristine || props.invalid) ? Ikoner.Varsel : Ikoner.Ferdig;
 
   return (
-    <div className="organisasjonerNorge panelSeksjon">
+    <div className="arbeidsgiverUtland panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={panelIkon} tittel="Arbeidsgiver i utlandet" undertittel="" />}
         ariaTittel="Panel for arbeidsgiver i utlandet">
         <Nav.Container fluid>
           <Nav.Column xs="6">
-            <Input label="Firmanavn" feltNavn="navn" />
-            <Input label="Orgnr / ID nr" feltNavn="organisasjonsnr" />
+            <Input label="Firmanavn" feltNavn="foretakUtlandNavn" />
+            <Input label="Orgnr / ID nr" feltNavn="foretakUtlandOrgnr" />
           </Nav.Column>
           <Nav.Column xs="6">
-            <Textarea bredde="m" label="Adresse" feltNavn="adresse" maxLength={100} />
-            <Input label="Kontaktperson" feltNavn="kontaktperson" />
-            <Input label="Telefon" feltNavn="telefon" />
+            <Textarea bredde="m" label="Adresse" feltNavn="foretakUtlandAdresse" maxLength={100} />
           </Nav.Column>
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
@@ -54,7 +52,5 @@ export default validForm({
     navn: [Validering.erPakrevet],
     organisasjonsnr: [Validering.erPakrevet],
     adresse: [Validering.erPakrevet],
-    kontaktperson: [Validering.erPakrevet, Validering.fulltNavn],
-    telefon: [],
   },
 })(ArbeidsgiverUtland);
