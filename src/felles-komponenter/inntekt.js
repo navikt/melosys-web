@@ -55,7 +55,7 @@ function Inntekt (props) {
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="inntekt__seksjon">
-          <Nav.Column xs="6">
+          <Nav.Column xs="8">
             <Nav.Fieldset legend="Lønn / inntekt i utlandet (NOK pr måned)">
               <Input feltNavn="lonnNorskArbeidsgiver" label="Lønn fra norsk arbeidsgiver" />
               <Input feltNavn="lonnUtenlandskArbeidsgiver" label="Lønn fra utenlandsk arbeidsgiver" />
