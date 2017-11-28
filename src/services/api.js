@@ -10,13 +10,18 @@ function erDev() {
   return process.env.NODE_PATH !== 'production';
 }
 */
-
+/*
 // from .env or .env.local
 const API_SERVER = `${process.env.REACT_APP_API_SERVER}`;
 const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 const API_MELOSYS_URL = `${API_SERVER}${API_BASE_URL}`;
 const API_SAKSBEHANDLER = `${process.env.REACT_APP_API_SAKSBEHANDLER}`;
 const API_SAKSOPPLYSNINGER = `${process.env.REACT_APP_API_SAKSOPPLYSNINGER}`;
+*/
+const API_MELOSYS_URL = 'http://a34apvl00025:3002/melosys/api/';
+const API_SAKSBEHANDLER = 'saksbehandler';
+const API_SAKSOPPLYSNINGER = 'arbeidsforhold';
+
 console.log('process.env', process.env);
 
 const headers = new Headers({
