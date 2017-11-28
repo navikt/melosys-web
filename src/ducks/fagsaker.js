@@ -44,22 +44,29 @@ export const PersonSelector = createSelector(
   person => person
 );
 
+export const OrganisasjonerSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.organisasjoner : []),
+  organisasjoner => organisasjoner
+);
+
 /** InntektLinjer leveres gruppert inn i maaned. Denne selectoren gjør derfor en reduce slik at alle inntekter
- * leveres som én array, hvert element er da én inntektLinje.
+ * leveres som én array, hvert element er da én inntektLinje. I tillegg hekter den på "virksomhet"-objekt
+ * fra organisasjoner-selector slik at navnet på organisasjonen kan listes.
  *
- * @return { inntekstListe } Et objekt med array for all inntekt.
+ * @return Inntektliste Et objekt med array for all inntekt.
  */
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
-  inntekt => {
-    const inntektListe = Array.isArray(inntekt.arbeidsInntektMaanedListe)
-      ?
-      inntekt.arbeidsInntektMaanedListe.reduce((samling, element) => [...samling, ...element.arbeidsInntektInformasjon.inntektListe], [])
-      :
-      [];
-    return inntektListe;
-  }
-);
+  state => OrganisasjonerSelector(state),
+  (inntekt, organisasjoner) => (Array.isArray(inntekt.arbeidsInntektMaanedListe)
+    ?
+    inntekt.arbeidsInntektMaanedListe
+      .reduce((samling, element) => {
+        const subIntektliste = element.arbeidsInntektInformasjon.inntektListe.map(item => ({ ...item, virksomhet: organisasjoner.find(subItem => item.orgnr === subItem.virksomhetID) }));
+        return ([...samling, ...subIntektliste]);
+      }, [])
+    :
+    []));
 
 export const SoknadenSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.soknaden : state.fagsaker.data),
@@ -80,10 +87,7 @@ export const MedlemskapSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : state.fagsaker.data),
   medlemskap => medlemskap
 );
-export const OrganisasjonerSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.organisasjoner : []),
-  organisasjoner => organisasjoner
-);
+
 
 /**
  * Arbeidsforhold refererer til organisasjon med arbeidsforholdID. For at komponenten skal kunne vise
@@ -94,15 +98,11 @@ export const OrganisasjonerSelector = createSelector(
 export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => OrganisasjonerSelector(state),
-  (arbeidsforhold, organisasjoner) => {
-    const populertArbeidsforhold = arbeidsforhold.map(item => {
-      const arbeid = { ...item };
-      arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
-      return arbeid;
-    });
-
-    return populertArbeidsforhold;
-  }
+  (arbeidsforhold, organisasjoner) => (arbeidsforhold.map(item => {
+    const arbeid = { ...item };
+    arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
+    return arbeid;
+  }))
 );
 
 /**

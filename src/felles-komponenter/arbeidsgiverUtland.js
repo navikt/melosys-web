@@ -2,13 +2,10 @@ import React from 'react';
 import { validForm } from 'react-redux-form-validation';
 import PT from 'prop-types';
 
-import * as Validering from './skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
-
-import Input from './skjema/input/input';
-import Textarea from './skjema/textarea/textarea';
+import * as Skjema from './skjema';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
@@ -24,11 +21,11 @@ function ArbeidsgiverUtland (props) {
         ariaTittel="Panel for arbeidsgiver i utlandet">
         <Nav.Container fluid>
           <Nav.Column xs="6">
-            <Input label="Firmanavn" feltNavn="foretakUtlandNavn" />
-            <Input label="Orgnr / ID nr" feltNavn="foretakUtlandOrgnr" />
+            <Skjema.Input label="Firmanavn" feltNavn="foretakUtlandNavn" />
+            <Skjema.Input label="Orgnr / ID nr" feltNavn="foretakUtlandOrgnr" />
           </Nav.Column>
           <Nav.Column xs="6">
-            <Textarea bredde="m" label="Adresse" feltNavn="foretakUtlandAdresse" maxLength={100} />
+            <Skjema.Textarea bredde="m" label="Adresse" feltNavn="foretakUtlandAdresse" maxLength={100} />
           </Nav.Column>
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
@@ -49,8 +46,8 @@ ArbeidsgiverUtland.defaultProps = {
 export default validForm({
   form: 'arbeidsgiverUtlandet',
   validate: {
-    navn: [Validering.erPakrevet],
-    organisasjonsnr: [Validering.erPakrevet],
-    adresse: [Validering.erPakrevet],
+    foretakUtlandNavn: [Skjema.Validering.erPakrevet],
+    foretakUtlandOrgnr: [Skjema.Validering.erPakrevet],
+    foretakUtlandAdresse: [Skjema.Validering.erPakrevet],
   },
 })(ArbeidsgiverUtland);
