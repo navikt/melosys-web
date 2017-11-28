@@ -17,7 +17,7 @@ const PanelHeader = ({ ikon, tittel, undertittel }) => (
 PanelHeader.propTypes = {
   tittel: PT.string.isRequired,
   ikon: PT.string,
-  undertittel: PT.string,
+  undertittel: PT.oneOfType([PT.string, PT.node]),
 };
 
 PanelHeader.defaultProps = {
