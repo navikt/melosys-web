@@ -34,6 +34,7 @@ import {
 
 import {
   hentSoknader,
+  SoknadenSelector,
 } from '../ducks/soknader';
 
 import './saksbehandling.css';
@@ -51,6 +52,7 @@ class Saksbehandling extends Component {
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
     permisjoner: MPT.Permisjoner,
+    soknaden: PT.object,
   };
 
   static defaultProps = {
@@ -62,6 +64,7 @@ class Saksbehandling extends Component {
     bekreftelser: [],
     oppsummering: {},
     permisjoner: [],
+    soknaden: {},
   };
 
   componentDidMount() {
@@ -80,6 +83,7 @@ class Saksbehandling extends Component {
       bekreftelser,
       oppsummering,
       permisjoner,
+      soknaden,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -90,7 +94,7 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Vilkarsveileder person={person} arbeidsforholdene={arbeidsforholdene} />
+              <Vilkarsveileder person={person} arbeidsforholdene={arbeidsforholdene} soknaden={soknaden} />
               {person && <Personopplysninger person={person} />}
               {permisjoner && <Permisjoner permisjoner={permisjoner} />}
               {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
@@ -122,6 +126,7 @@ const mapStateToProps = state => ({
   bekreftelser: BekreftelserSelector(state),
   oppsummering: OppsummeringSelector(state),
   permisjoner: PermisjonerSelector(state),
+  soknaden: SoknadenSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
