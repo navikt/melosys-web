@@ -17,7 +17,7 @@ const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 const API_MELOSYS_URL = `${API_SERVER}${API_BASE_URL}`;
 const API_SAKSBEHANDLER = `${process.env.REACT_APP_API_SAKSBEHANDLER}`;
 const API_SAKSOPPLYSNINGER = `${process.env.REACT_APP_API_SAKSOPPLYSNINGER}`;
-//console.log('process.env', process.env);
+console.log('process.env', process.env);
 
 const headers = new Headers({
   Accept: 'application/json',
@@ -25,11 +25,11 @@ const headers = new Headers({
 });
 
 export function hentFagsaker(snr) {
-  const URI_FAGSAKER =  `${API_MELOSYS_URL}fagsaker/${snr}`;
+  const URI_FAGSAKER =  `${API_MELOSYS_URL}/sok/fagsaker/${snr}`;
   return fetchToJson(URI_FAGSAKER, { headers: headers });
 }
 export function hentNyesaker(fnr) {
-  const URI_NYESAKER = `${API_MELOSYS_URL}sok/fagsaker/?fnr=${fnr}`;
+  const URI_NYESAKER = `${API_MELOSYS_URL}/sok/fagsaker/fnr/${fnr}`;
   return fetchToJson(URI_NYESAKER, { headers: headers });
 }
 
