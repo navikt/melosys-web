@@ -61,9 +61,9 @@ function Inntekt (props) {
               <Skjema.Input feltNavn="inntektNaeringIPerioden" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
             </Nav.Fieldset>
             <Nav.Fieldset legend="Naturalytelser betalt av norsk eller utenlandsk arbeidsgiver">
-              <Skjema.Checkbox feltNavn="inntektNaturalIPerioden" label="Fri bolig" />
-              <Skjema.Checkbox feltNavn="inntektNaturalIPerioden" label="Fri bil" />
-              <Skjema.Input feltNavn="inntektNaturalIPerioden" label="Annen naturalytelse" />
+              <Skjema.Checkbox feltNavn="inntektNaturalFribolig" label="Fri bolig" />
+              <Skjema.Checkbox feltNavn="inntektNaturalFribil" label="Fri bil" />
+              <Skjema.Input feltNavn="inntektNaturalIAnnet" label="Annen naturalytelse" />
             </Nav.Fieldset>
             <Nav.Fieldset legend="Annet">
               <Skjema.Checkbox feltNavn="inntektInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." />
