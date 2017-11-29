@@ -1,3 +1,4 @@
+import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 
@@ -37,3 +38,9 @@ export function hentSoknader(snr) {
     PENDING,
   });
 }
+
+// selector(s)
+export const SoknadenSelector = createSelector(
+  state => state.soknader.data,
+  soknad => soknad,
+);
