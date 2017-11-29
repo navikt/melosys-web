@@ -34,7 +34,7 @@ import {
 
 import {
   hentSoknader,
-  SoknadenSelector,
+  ArbeidsinntektSelector,
 } from '../ducks/soknader';
 
 import './saksbehandling.css';
@@ -52,7 +52,7 @@ class Saksbehandling extends Component {
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
     permisjoner: MPT.Permisjoner,
-    soknaden: PT.object,
+    soknadenArbeidsinntekt: PT.object,
   };
 
   static defaultProps = {
@@ -65,6 +65,7 @@ class Saksbehandling extends Component {
     oppsummering: {},
     permisjoner: [],
     soknaden: {},
+    soknadenArbeidsinntekt: {},
   };
 
   componentDidMount() {
@@ -83,7 +84,7 @@ class Saksbehandling extends Component {
       bekreftelser,
       oppsummering,
       permisjoner,
-      soknaden,
+      soknadenArbeidsinntekt,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -94,14 +95,14 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Vilkarsveileder person={person} arbeidsforholdene={arbeidsforholdene} soknaden={soknaden} />
+              <Vilkarsveileder person={person} arbeidsforholdene={arbeidsforholdene} />
               {person && <Personopplysninger person={person} />}
               {permisjoner && <Permisjoner permisjoner={permisjoner} />}
               {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
               {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
               <ArbeidsgiverUtland />
               {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-              {inntekt && <Inntekt inntekt={inntekt} />}
+              {inntekt && <Inntekt inntekt={inntekt} soknadenArbeidsinntekt={soknadenArbeidsinntekt} />}
               {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
               <Tilleggsopplysninger />
             </Nav.Column>
@@ -126,7 +127,7 @@ const mapStateToProps = state => ({
   bekreftelser: BekreftelserSelector(state),
   oppsummering: OppsummeringSelector(state),
   permisjoner: PermisjonerSelector(state),
-  soknaden: SoknadenSelector(state),
+  soknadenArbeidsinntekt: ArbeidsinntektSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

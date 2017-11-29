@@ -1,5 +1,6 @@
 import React from 'react';
 import { validForm } from 'react-redux-form-validation';
+import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Ikoner from '../resources/images';
@@ -41,36 +42,38 @@ function Inntekt (props) {
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={panelIkon} tittel="Inntekt" undertittel={panelUndertittel} />}
         ariaTittel="Panel for inntekt">
-        <Nav.Row className="inntekt__seksjon">
-          <Nav.Column xs="12">
-            <table className="tabellutlisting inntekt__detaljer">
-              <tbody>
-                <tr>
-                  <th>Utbetalt</th><th>Organisasjon</th><th>Inntekt</th><th>Beskrivelse</th>
-                </tr>
-                {inntekt.map(inntektLinje => <InntektLinje key={uuid()} inntektLinje={inntektLinje} />)}
-              </tbody>
-            </table>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row className="inntekt__seksjon">
-          <Nav.Column xs="8">
-            <Nav.Fieldset legend="Lønn / inntekt i utlandet (NOK pr måned)">
-              <Skjema.Input feltNavn="inntektNorskIPerioden" label="Lønn fra norsk arbeidsgiver" />
-              <Skjema.Input feltNavn="inntektUtenlandskIPerioden" label="Lønn fra utenlandsk arbeidsgiver" />
-              <Skjema.Input feltNavn="inntektNaeringIPerioden" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
-            </Nav.Fieldset>
-            <Nav.Fieldset legend="Naturalytelser betalt av norsk eller utenlandsk arbeidsgiver">
-              <Skjema.Checkbox feltNavn="inntektNaturalFribolig" label="Fri bolig" />
-              <Skjema.Checkbox feltNavn="inntektNaturalFribil" label="Fri bil" />
-              <Skjema.Input feltNavn="inntektNaturalIAnnet" label="Annen naturalytelse" />
-            </Nav.Fieldset>
-            <Nav.Fieldset legend="Annet">
-              <Skjema.Checkbox feltNavn="inntektInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." />
-              <Skjema.Checkbox feltNavn="inntektTrygdeavgiftBlirTrukket" label="Trygdeavgift blir trukket med skatten." />
-            </Nav.Fieldset>
-          </Nav.Column>
-        </Nav.Row>
+        <form name="inntekt" id="inntekt">
+          <Nav.Row className="inntekt__seksjon">
+            <Nav.Column xs="12">
+              <table className="tabellutlisting inntekt__detaljer">
+                <tbody>
+                  <tr>
+                    <th>Utbetalt</th><th>Organisasjon</th><th>Inntekt</th><th>Beskrivelse</th>
+                  </tr>
+                  {inntekt.map(inntektLinje => <InntektLinje key={uuid()} inntektLinje={inntektLinje} />)}
+                </tbody>
+              </table>
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row className="inntekt__seksjon">
+            <Nav.Column xs="8">
+              <Nav.Fieldset legend="Lønn / inntekt i utlandet (NOK pr måned)">
+                <Skjema.Input feltNavn="inntektNorskIPerioden" label="Lønn fra norsk arbeidsgiver" />
+                <Skjema.Input feltNavn="inntektUtenlandskIPerioden" label="Lønn fra utenlandsk arbeidsgiver" />
+                <Skjema.Input feltNavn="inntektNaeringIPerioden" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Naturalytelser betalt av norsk eller utenlandsk arbeidsgiver">
+                <Skjema.Checkbox feltNavn="inntektNaturalFribolig" label="Fri bolig" />
+                <Skjema.Checkbox feltNavn="inntektNaturalFribil" label="Fri bil" />
+                <Skjema.Input feltNavn="inntektNaturalIAnnet" label="Annen naturalytelse" />
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Annet">
+                <Skjema.Checkbox feltNavn="inntektInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." />
+                <Skjema.Checkbox feltNavn="inntektTrygdeavgiftBlirTrukket" label="Trygdeavgift blir trukket med skatten." />
+              </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>
+        </form>
       </Nav.EkspanderbartpanelBase>
     </div>
   );
@@ -86,13 +89,25 @@ Inntekt.defaultProps = {
   inntekt: {},
 };
 
-export default validForm({
+function mapStateToProps(state, ownProps) {
+  return {
+    initialValues: {
+      inntektNorskIPerioden: ownProps.soknadenArbeidsinntekt.inntektNorskIPerioden,
+      inntektUtenlandskIPerioden: ownProps.soknadenArbeidsinntekt.inntektUtenlandskIPerioden,
+      inntektNaeringIPerioden: ownProps.soknadenArbeidsinntekt.inntektNaeringIPerioden,
+    },
+  };
+}
+
+const FormComponent = validForm({
   form: 'inntekt',
-  initialValues: { lonnNorskArbeidsgiver: '', lonnUtenlandskArbeidsgiver: '', inntektUtenlandskNaering: '' },
-  pure: false,
+  enableReinitialize: true,
   validate: {
     inntektNorskIPerioden: [Skjema.Validering.erPakrevet, Skjema.Validering.kunTall],
     inntektUtenlandskIPerioden: [Skjema.Validering.erPakrevet, Skjema.Validering.kunTall],
     inntektNaeringIPerioden: [Skjema.Validering.erPakrevet, Skjema.Validering.kunTall],
   },
 })(Inntekt);
+
+
+export default connect(mapStateToProps)(FormComponent);
