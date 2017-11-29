@@ -20,7 +20,7 @@ function Bekreftelser ({ bekreftelser }) {
     arbeidsgiveravgift,
     trygdeavgiftTrukket,
     trygdeavgiftTrukketDato,
-  } = { utsendt: true, ansatt: true, erstatter: false, over24m: false, arbeidsgiver: true, trygdeavgiftTrukket: true, trygdeavgiftTrukketDato: '2018-10-11' };
+  } = { utsendt: true, ansatt: true, erstatter: false, over24m: false, arbeidsgiveravgift: true, trygdeavgiftTrukket: true, trygdeavgiftTrukketDato: '2018-10-11' };
 
   return (
     <div className="bekreftelser panelSeksjon">
