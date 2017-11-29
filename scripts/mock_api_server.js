@@ -11,13 +11,13 @@ const moment = require('moment');
 
 const allowCrossDomain = function (req, res, next) {
   res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,PATCH,DELETE');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
   next();
 };
-
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(bodyParser.raw());
 
 const port = process.env.PORT || 3002;
 const router = express.Router();
@@ -38,7 +38,29 @@ router.post('/opprettsak/:fnr', function(req, res) {
   res.json(nysak);
 });
 
-const fagsaker = (req, res) => {
+function getSoknad(req, res) {
+  try {
+    const id = req.params.id && req.params.id.toString() || '';
+    const soknad = JSON.parse(fs.readFileSync("./scripts/mock_data/soknad.json", "utf8"));
+    return res.json(soknad);
+  }
+  catch (err) {
+    console.error(err);
+    return res.status(500).send(err);
+  }
+}
+
+router.get('/soknad/:id', getSoknad);
+router.post('/soknad', function (req, res) {
+  console.log('opprett soknadDokument');
+  console.log('content-type', req.get('content-type'));
+  var body= req.body;
+  console.log('soknadDokument',body);
+  body.soknadDokument.id = _.random(1000,99999);
+  return res.status(201).send(JSON.stringify(body));
+});
+
+function fagsaker(req, res) {
   try {
     const snr = req.params.snr && req.params.snr.toString() || '';
     const fagsaker = JSON.parse(fs.readFileSync("./scripts/mock_data/fagsaker.json", "utf8"));
@@ -48,12 +70,13 @@ const fagsaker = (req, res) => {
     console.error(err);
     return res.status(500).send(err);
   }
-};
+}
+
 router.get('/fagsaker/:snr', fagsaker);
 
-router.get('/fagsaker/fnr/:fnr', function (req, res) {
+router.get('/sok/fagsaker', function (req, res) {
   try {
-    const fnr = req.params.fnr.toString();
+    const fnr = req.query.fnr.toString();
     const nyesaker = JSON.parse(fs.readFileSync("./scripts/mock_data/nyesaker.json", "utf8"));
     const sak = _.filter(nyesaker, function(item){
       return item.fnr === fnr;
