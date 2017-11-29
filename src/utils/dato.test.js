@@ -1,15 +1,19 @@
 /* eslint-disable */
 
-import {vaskInputDato, MAX_AR_FREM_I_TID} from './dato';
+import {vaskInputDato} from './dato';
 
 import MockDate from 'mockdate';
 
 
 it('godtar alle tillatte datoformater', () => {
   const tillatteDatoer = [
+    {test: '010113', 'forvent': '01.01.2013'},
+    {test: '300113', 'forvent': '30.01.2013'},
+    {test: '060479', 'forvent': '06.04.1979'},
     {test: '260479', 'forvent': '26.04.1979'},
     {test: '26041979', 'forvent': '26.04.1979'},
     {test: '26-04-79', 'forvent': '26.04.1979'},
+    {test: '01-01-79', 'forvent': '01.01.1979'},
     {test: '26-04-1979', 'forvent': '26.04.1979'},
     {test: '26-04-1979', 'forvent': '26.04.1979'},
     {test: '1979-07-02', 'forvent': false},

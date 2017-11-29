@@ -17,7 +17,7 @@ const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 const API_MELOSYS_URL = `${API_SERVER}${API_BASE_URL}`;
 const API_SAKSBEHANDLER = `${process.env.REACT_APP_API_SAKSBEHANDLER}`;
 const API_SAKSOPPLYSNINGER = `${process.env.REACT_APP_API_SAKSOPPLYSNINGER}`;
-console.log('process.env', process.env);
+//console.log('process.env', process.env);
 
 const headers = new Headers({
   Accept: 'application/json',
