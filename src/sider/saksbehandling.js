@@ -19,6 +19,7 @@ import Bekreftelser from '../felles-komponenter/bekreftelser';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
+
 import {
   hentFagsaker,
   PersonSelector,
@@ -31,11 +32,16 @@ import {
   PermisjonerSelector,
 } from '../ducks/fagsaker';
 
+import {
+  hentSoknader,
+} from '../ducks/soknader';
+
 import './saksbehandling.css';
 
 class Saksbehandling extends Component {
   static propTypes = {
     hentFagsaker: PT.func.isRequired,
+    hentSoknader: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
     organisasjoner: MPT.Organisasjoner,
@@ -45,7 +51,7 @@ class Saksbehandling extends Component {
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
     permisjoner: MPT.Permisjoner,
-  }
+  };
 
   static defaultProps = {
     person: {},
@@ -59,8 +65,9 @@ class Saksbehandling extends Component {
   };
 
   componentDidMount() {
-    const { fnr } = this.props.match.params;
-    this.props.hentFagsaker(fnr);
+    const { snr } = this.props.match.params;
+    this.props.hentFagsaker(snr);
+    this.props.hentSoknader(snr);
   }
 
   render() {
@@ -119,6 +126,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
+  hentSoknader: saksnummer => dispatch(hentSoknader(saksnummer)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
