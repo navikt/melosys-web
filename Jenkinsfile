@@ -53,8 +53,8 @@ node {
   }
 
   stage('Test') {
-    echo('CI=true npm test')
-    sh "CI=true ${npm} test"
+    echo('CI=true && npm run-script test:ci')
+    sh "CI=true && ${npm} run-script test:ci"
   }
 /*
   stage('GitHub version') {
