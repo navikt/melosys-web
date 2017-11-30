@@ -82,6 +82,10 @@ class Vilkarsveileder extends Component {
       ] });
   }
 
+  fattVedtak = () => {
+    console.log('fatting vedtak');
+  }
+
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
    * har bekreftet valgene.
@@ -177,7 +181,7 @@ class Vilkarsveileder extends Component {
           />
         </StegFane>
         <StegFane stegNummer={7} aktivtSteg={aktivtSteg}>
-          <Vedtak />
+          <Vedtak fattVedtakHandler={this.fattVedtak} />
         </StegFane>
       </div>
     );

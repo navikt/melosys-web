@@ -1,7 +1,9 @@
 import React from 'react';
+import PT from 'prop-types';
+
 import * as Nav from '../../../utils/navFrontend';
 
-const Vedtak = () => (
+const Vedtak = props => (
   <div>
     <Nav.Container fluid>
       <Nav.Row>
@@ -35,7 +37,7 @@ const Vedtak = () => (
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6" className="fane__fot">
-          <Nav.Knapp type="hoved">Fatt vedtak</Nav.Knapp>
+          <Nav.Knapp type="hoved" onClick={() => props.fattVedtakHandler()}>Fatt vedtak</Nav.Knapp>
         </Nav.Column>
         <Nav.Column xs="6" className="fane__fot">
           <a href="http://localhost">Forhåndsvis vedtaksbrev</a>
@@ -44,5 +46,9 @@ const Vedtak = () => (
     </Nav.Container>
   </div>
 );
+
+Vedtak.propTypes = {
+  fattVedtakHandler: PT.func.isRequired,
+};
 
 export default Vedtak;

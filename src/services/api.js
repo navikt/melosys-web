@@ -29,17 +29,17 @@ const headers = new Headers({
 });
 
 export function hentFagsaker(snr) {
-  const URI_FAGSAKER =  `${API_MELOSYS_URL}/fagsaker/${snr}`;
+  const URI_FAGSAKER =  `${API_MELOSYS_URL}fagsaker/${snr}`;
   return fetchToJson(URI_FAGSAKER, { headers: headers });
 }
 
 export function hentSoknad(snr) {
-  const URI_SOKNAD =  `${API_MELOSYS_URL}soknad/${snr}`;
+  const URI_SOKNAD =  `${API_MELOSYS_URL}soknad`;
   return fetchToJson(URI_SOKNAD, { headers: headers });
 }
 
 export function hentNyesaker(fnr) {
-  const URI_NYESAKER = `${API_MELOSYS_URL}/sok/fagsaker/?fnr=${fnr}`;
+  const URI_NYESAKER = `${API_MELOSYS_URL}sok/fagsaker/?fnr=${fnr}`;
   console.log('URI_NYESAKER', URI_NYESAKER);
   return fetchToJson(URI_NYESAKER, { headers: headers });
 }
