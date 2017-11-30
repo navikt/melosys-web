@@ -92,9 +92,9 @@ Inntekt.defaultProps = {
 function mapStateToProps(state, ownProps) {
   return {
     initialValues: {
-      inntektNorskIPerioden: ownProps.soknadenArbeidsinntekt.inntektNorskIPerioden,
-      inntektUtenlandskIPerioden: ownProps.soknadenArbeidsinntekt.inntektUtenlandskIPerioden,
-      inntektNaeringIPerioden: ownProps.soknadenArbeidsinntekt.inntektNaeringIPerioden,
+      inntektNorskIPerioden: ownProps.soknadArbeidsinntekt.inntektNorskIPerioden,
+      inntektUtenlandskIPerioden: ownProps.soknadArbeidsinntekt.inntektUtenlandskIPerioden,
+      inntektNaeringIPerioden: ownProps.soknadArbeidsinntekt.inntektNaeringIPerioden,
     },
   };
 }
