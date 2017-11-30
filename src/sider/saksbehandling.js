@@ -33,16 +33,16 @@ import {
 } from '../ducks/fagsaker';
 
 import {
-  hentSoknader,
+  hentSoknad,
   ArbeidsinntektSelector,
-} from '../ducks/soknader';
+} from '../ducks/soknad';
 
 import './saksbehandling.css';
 
 class Saksbehandling extends Component {
   static propTypes = {
     hentFagsaker: PT.func.isRequired,
-    hentSoknader: PT.func.isRequired,
+    hentSoknad: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
     organisasjoner: MPT.Organisasjoner,
@@ -71,7 +71,7 @@ class Saksbehandling extends Component {
   componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentFagsaker(snr);
-    this.props.hentSoknader(snr);
+    this.props.hentSoknad(snr);
   }
 
   render() {
@@ -132,7 +132,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
-  hentSoknader: saksnummer => dispatch(hentSoknader(saksnummer)),
+  hentSoknad: saksnummer => dispatch(hentSoknad(saksnummer)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
