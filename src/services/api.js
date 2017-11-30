@@ -33,9 +33,9 @@ export function hentFagsaker(snr) {
   return fetchToJson(URI_FAGSAKER, { headers: headers });
 }
 
-export function hentSoknader(snr) {
-  const URI_SOKNADER =  `${API_MELOSYS_URL}soknad/${snr}`;
-  return fetchToJson(URI_SOKNADER, { headers: headers });
+export function hentSoknad(snr) {
+  const URI_SOKNAD =  `${API_MELOSYS_URL}soknad/${snr}`;
+  return fetchToJson(URI_SOKNAD, { headers: headers });
 }
 
 export function hentNyesaker(fnr) {

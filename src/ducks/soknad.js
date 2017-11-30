@@ -3,9 +3,9 @@ import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 
 // Actions
-const OK = 'soknader/OK';
-const FEILET = 'soknader/FEILET';
-const PENDING = 'soknader/PENDING';
+const OK = 'soknad/OK';
+const FEILET = 'soknad/FEILET';
+const PENDING = 'soknad/PENDING';
 
 const initialState = {
   data: {},
@@ -31,8 +31,16 @@ export default function reducer(state = initialState, action) {
 }
 
 // Action Creators
-export function hentSoknader(snr) {
-  return doThenDispatch(() => Api.hentSoknader(snr), {
+export function hentSoknad(snr) {
+  return doThenDispatch(() => Api.hentSoknad(snr), {
+    OK,
+    FEILET,
+    PENDING,
+  });
+}
+
+export function lagreSoknad(snr) {
+  return doThenDispatch(() => Api.hentSoknad(snr), {
     OK,
     FEILET,
     PENDING,
@@ -40,47 +48,47 @@ export function hentSoknader(snr) {
 }
 
 // selector(s)
-export const SoknadenSelector = createSelector(
-  state => state.soknader.data.soknadDokument && state.soknader.data,
+export const SoknadSelector = createSelector(
+  state => state.soknad.data.soknadDokument && state.soknad.data,
   soknad => soknad
 );
 
 export const SoknadIDSelector = createSelector(
-  state => state.soknader.data.soknadDokument && state.soknader.data,
+  state => state.soknad.data.soknadDokument && state.soknad.data,
   soknad => soknad.id
 );
 
 export const ArbeidNorgeSelector = createSelector(
-  state => state.soknader.data.soknadDokument && state.soknader.data.soknadDokument.arbeidNorge,
+  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.arbeidNorge,
   soknad => soknad
 );
 
 export const ArbeidUtlandSelector = createSelector(
-  state => state.soknader.data.soknadDokument && state.soknader.data.soknadDokument.arbeidUtland,
+  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.arbeidUtland,
   soknad => soknad
 );
 
 export const ArbeidsinntektSelector = createSelector(
-  state => state.soknader.data.soknadDokument && state.soknader.data.soknadDokument.arbeidsinntekt,
+  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.arbeidsinntekt,
   soknad => soknad
 );
 
 export const ForetakUtlandSelector = createSelector(
-  state => state.soknader.data.soknadDokument && state.soknader.data.soknadDokument.foretakUtland,
+  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.foretakUtland,
   soknad => soknad
 );
 
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(
-  state => state.soknader.data.soknadDokument && state.soknader.data.soknadDokument.juridiskArbeidsgiverNorge,
+  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.juridiskArbeidsgiverNorge,
   soknad => soknad
 );
 
 export const OppholdUtlandSelector = createSelector(
-  state => state.soknader.data.soknadDokument && state.soknader.data.soknadDokument.oppholdUtland,
+  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.oppholdUtland,
   soknad => soknad
 );
 
 export const OvrigSelector = createSelector(
-  state => state.soknader.data.soknadDokument && state.soknader.data.soknadDokument.ovrig,
+  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.ovrig,
   soknad => soknad
 );
