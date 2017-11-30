@@ -32,9 +32,10 @@ export function hentSoknad() {
   const URI_SOKNAD =  `${API_MELOSYS_URL}soknad/`;
   return fetchToJson(URI_SOKNAD, { headers: headers });
 }
-export function sendSoknad(dokument) {
+
+export function lagreSoknad(dokument) {
   const URI_SOKNAD =`${API_MELOSYS_URL}soknad`;
-  return postAsJson(URI_SOKNAD, dokument);
+  return postAsJson(URI_SOKNAD, dokument, { headers: headers, method: 'POST' });
 }
 
 export function hentFagsaker(snr) {

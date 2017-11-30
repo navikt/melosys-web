@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { formValueSelector } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
@@ -34,6 +35,8 @@ import {
 
 import {
   hentSoknad,
+  lagreSoknad,
+  SoknadSelector,
   ArbeidsinntektSelector,
 } from '../ducks/soknad';
 
@@ -43,6 +46,7 @@ class Saksbehandling extends Component {
   static propTypes = {
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
+    lagreSoknad: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
     organisasjoner: MPT.Organisasjoner,
@@ -52,7 +56,9 @@ class Saksbehandling extends Component {
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
     permisjoner: MPT.Permisjoner,
-    soknadenArbeidsinntekt: PT.object,
+    soknad: PT.object,
+    soknadArbeidsinntekt: PT.object,
+    allForms: PT.func.isRequired,
   };
 
   static defaultProps = {
@@ -64,14 +70,20 @@ class Saksbehandling extends Component {
     bekreftelser: [],
     oppsummering: {},
     permisjoner: [],
-    soknaden: {},
-    soknadenArbeidsinntekt: {},
+    soknad: {},
+    soknadArbeidsinntekt: {},
   };
 
   componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentFagsaker(snr);
     this.props.hentSoknad(snr);
+  }
+
+  fattVedtakHandler = () => {
+    console.log(this.props.allForms());
+    // const { soknad } = this.props;
+    // this.props.lagreSoknad(soknad);
   }
 
   render() {
@@ -84,7 +96,7 @@ class Saksbehandling extends Component {
       bekreftelser,
       oppsummering,
       permisjoner,
-      soknadenArbeidsinntekt,
+      soknadArbeidsinntekt,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -95,14 +107,14 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Vilkarsveileder person={person} arbeidsforholdene={arbeidsforholdene} />
+              <Vilkarsveileder person={person} arbeidsforholdene={arbeidsforholdene} fattVedtakHandler={this.fattVedtakHandler} />
               {person && <Personopplysninger person={person} />}
               {permisjoner && <Permisjoner permisjoner={permisjoner} />}
               {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
               {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
               <ArbeidsgiverUtland />
               {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-              {inntekt && <Inntekt inntekt={inntekt} soknadenArbeidsinntekt={soknadenArbeidsinntekt} />}
+              {inntekt && <Inntekt inntekt={inntekt} soknadArbeidsinntekt={soknadArbeidsinntekt} />}
               {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
               <Tilleggsopplysninger />
             </Nav.Column>
@@ -127,12 +139,18 @@ const mapStateToProps = state => ({
   bekreftelser: BekreftelserSelector(state),
   oppsummering: OppsummeringSelector(state),
   permisjoner: PermisjonerSelector(state),
-  soknadenArbeidsinntekt: ArbeidsinntektSelector(state),
+  soknad: SoknadSelector(state),
+  soknadArbeidsinntekt: ArbeidsinntektSelector(state),
+  allForms: () => {
+    const selector = formValueSelector('inntekt');
+    return { ...selector(state, 'inntektNorskIPerioden', 'inntektUtenlandskIPerioden', 'inntektNaeringIPerioden') };
+  },
 });
 
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
   hentSoknad: saksnummer => dispatch(hentSoknad(saksnummer)),
+  lagreSoknad: dokument => dispatch(lagreSoknad(dokument)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

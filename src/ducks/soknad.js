@@ -39,8 +39,8 @@ export function hentSoknad(snr) {
   });
 }
 
-export function lagreSoknad(snr) {
-  return doThenDispatch(() => Api.hentSoknad(snr), {
+export function lagreSoknad(dokument) {
+  return doThenDispatch(() => Api.lagreSoknad(dokument), {
     OK,
     FEILET,
     PENDING,
