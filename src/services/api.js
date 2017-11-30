@@ -28,6 +28,15 @@ const headers = new Headers({
   'Accept-Charset': 'utf-8',
 });
 
+export function hentSoknad() {
+  const URI_SOKNAD =  `${API_MELOSYS_URL}soknad/`;
+  return fetchToJson(URI_SOKNAD, { headers: headers });
+}
+export function sendSoknad(dokument) {
+  const URI_SOKNAD =`${API_MELOSYS_URL}soknad`;
+  return postAsJson(URI_SOKNAD, dokument);
+}
+
 export function hentFagsaker(snr) {
   const URI_FAGSAKER =  `${API_MELOSYS_URL}fagsaker/${snr}`;
   return fetchToJson(URI_FAGSAKER, { headers: headers });
@@ -40,7 +49,6 @@ export function hentSoknad(snr) {
 
 export function hentNyesaker(fnr) {
   const URI_NYESAKER = `${API_MELOSYS_URL}sok/fagsaker/?fnr=${fnr}`;
-  console.log('URI_NYESAKER', URI_NYESAKER);
   return fetchToJson(URI_NYESAKER, { headers: headers });
 }
 
