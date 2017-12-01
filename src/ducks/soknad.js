@@ -51,7 +51,7 @@ export function hentSoknad(snr) {
   });
 }
 
-export function sendSoknadTilBackend(dokument) {
+export function sendSoknad(dokument) {
   return doThenDispatch(() => Api.sendSoknad(dokument), {
     OK,
     FEILET,

@@ -40,6 +40,7 @@ export function sendResultatTilDispatch(dispatch, action) {
   };
 }
 
+// TODO Validate
 export function handterFeil(dispatch, action) {
   return error => {
     if (error.response) {

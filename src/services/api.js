@@ -35,7 +35,15 @@ export function hentSoknad() {
 
 export function sendSoknad(dokument) {
   const URI_SOKNAD =`${API_MELOSYS_URL}soknad`;
-  return postAsJson(URI_SOKNAD, dokument, { headers: headers });
+  /*
+  const soknadHeader = new Headers({
+    Accept: 'application/json',
+    'Accept-Charset': 'utf-8',
+    'Content-Type': 'application/json;charset=UTF-8',
+  });
+  //return postAsJson(URI_SOKNAD, dokument, { headers: soknadHeader });
+  */
+  return postAsJson(URI_SOKNAD, dokument);
 }
 
 export function hentFagsaker(snr) {

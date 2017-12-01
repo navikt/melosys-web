@@ -36,7 +36,7 @@ import {
 
 import {
   hentSoknad,
-  sendSoknadTilBackend,
+  sendSoknad,
   oppdaterSoknadState,
   SoknadSelector,
   ArbeidsinntektSelector,
@@ -48,7 +48,7 @@ class Saksbehandling extends Component {
   static propTypes = {
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
-    sendSoknadTilBackend: PT.func.isRequired,
+    sendSoknad: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
     organisasjoner: MPT.Organisasjoner,
@@ -83,7 +83,7 @@ class Saksbehandling extends Component {
   }
 
   fattVedtakHandler = () => {
-    this.props.sendSoknadTilBackend(this.props.soknad);
+    this.props.sendSoknad(this.props.soknad);
   }
 
   render() {
@@ -158,8 +158,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
   hentSoknad: saksnummer => dispatch(hentSoknad(saksnummer)),
-  sendSoknad: dokument => dispatch(sendSoknadTilBackend(dokument)),
-  sendSoknadTilBackend: dokument => dispatch(sendSoknadTilBackend(dokument)),
+  sendSoknad: dokument => dispatch(sendSoknad(dokument)),
   onSubmit: values => dispatch(oppdaterSoknadState(values)),
 });
 
