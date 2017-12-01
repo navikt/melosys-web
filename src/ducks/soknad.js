@@ -51,15 +51,15 @@ export function hentSoknad(snr) {
   });
 }
 
-export function lagreSoknad(dokument) {
-  return doThenDispatch(() => Api.lagreSoknad(dokument), {
+export function sendSoknadTilBackend(dokument) {
+  return doThenDispatch(() => Api.sendSoknad(dokument), {
     OK,
     FEILET,
     PENDING,
   });
 }
 
-export function oppdaterSoknad(dokument) {
+export function oppdaterSoknadState(dokument) {
   return ({
     type: OPPDATER_SOKNAD,
     dokument,

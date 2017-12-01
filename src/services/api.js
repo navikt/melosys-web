@@ -33,9 +33,9 @@ export function hentSoknad() {
   return fetchToJson(URI_SOKNAD, { headers: headers });
 }
 
-export function lagreSoknad(dokument) {
+export function sendSoknad(dokument) {
   const URI_SOKNAD =`${API_MELOSYS_URL}soknad`;
-  return postAsJson(URI_SOKNAD, dokument, { headers: headers, method: 'POST' });
+  return postAsJson(URI_SOKNAD, dokument, { headers: headers });
 }
 
 export function hentFagsaker(snr) {
