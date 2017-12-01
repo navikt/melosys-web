@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
+import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { validForm } from 'react-redux-form-validation';
 import * as Skjema from '../felles-komponenter/skjema';
-import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -36,8 +36,8 @@ import {
 
 import {
   hentSoknad,
-  lagreSoknad,
-  oppdaterSoknad,
+  sendSoknadTilBackend,
+  oppdaterSoknadState,
   SoknadSelector,
   ArbeidsinntektSelector,
 } from '../ducks/soknad';
@@ -48,7 +48,7 @@ class Saksbehandling extends Component {
   static propTypes = {
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
-    lagreSoknad: PT.func.isRequired,
+    sendSoknadTilBackend: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
     organisasjoner: MPT.Organisasjoner,
@@ -83,7 +83,7 @@ class Saksbehandling extends Component {
   }
 
   fattVedtakHandler = () => {
-    console.log('fatt vedtak');
+    this.props.sendSoknadTilBackend(this.props.soknad);
   }
 
   render() {
@@ -103,6 +103,7 @@ class Saksbehandling extends Component {
     if (!person || !person.fnr) {
       return null;
     }
+
     return (
       <div className="saksbehandling">
         <Nav.Container fluid>
@@ -157,8 +158,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
   hentSoknad: saksnummer => dispatch(hentSoknad(saksnummer)),
-  lagreSoknad: dokument => dispatch(lagreSoknad(dokument)),
-  onSubmit: values => dispatch(oppdaterSoknad(values)),
+  sendSoknad: dokument => dispatch(sendSoknadTilBackend(dokument)),
+  sendSoknadTilBackend: dokument => dispatch(sendSoknadTilBackend(dokument)),
+  onSubmit: values => dispatch(oppdaterSoknadState(values)),
 });
 
 const SaksbehandlingForm = validForm({
