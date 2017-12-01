@@ -84,19 +84,17 @@ class VurderingArbeidsforhold extends Component {
   }
 
   render () {
-    const { handleSubmit, bekreftOgFortsett, arbeidsforholdene } = this.props;
+    const { bekreftOgFortsett, arbeidsforholdene } = this.props;
 
     return (
       <div className="vurderingarbeidsforhold">
-        <form onSubmit={handleSubmit}>
-          <Nav.Undertittel>Velg relevante arbeidsforhold:</Nav.Undertittel>
-          <div className="arbeidsforhold">
-            <FieldArray name="arbeidsforholdene" component={props => <Arbeidsforholdene {...props} arbeidsforholdene={arbeidsforholdene} />} />
-            <div className="fane__knapplinje">
-              <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
-            </div>
+        <Nav.Undertittel>Velg relevante arbeidsforhold:</Nav.Undertittel>
+        <div className="arbeidsforhold">
+          <FieldArray name="arbeidsforholdene" component={props => <Arbeidsforholdene {...props} arbeidsforholdene={arbeidsforholdene} />} />
+          <div className="fane__knapplinje">
+            <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
           </div>
-        </form>
+        </div>
       </div>
     );
   }
@@ -105,10 +103,9 @@ class VurderingArbeidsforhold extends Component {
 VurderingArbeidsforhold.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
-  handleSubmit: PT.func.isRequired,
   dispatch: PT.func.isRequired,
 };
 
 export default reduxForm({
-  form: 'vurderingArbeidsforhold',
+  form: 'soknad',
 })(VurderingArbeidsforhold);
