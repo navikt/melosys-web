@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { formValueSelector } from 'redux-form';
+import { validForm } from 'react-redux-form-validation';
+import * as Skjema from '../felles-komponenter/skjema';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
@@ -36,6 +37,7 @@ import {
 import {
   hentSoknad,
   lagreSoknad,
+  oppdaterSoknad,
   SoknadSelector,
   ArbeidsinntektSelector,
 } from '../ducks/soknad';
@@ -58,7 +60,7 @@ class Saksbehandling extends Component {
     permisjoner: MPT.Permisjoner,
     soknad: PT.object,
     soknadArbeidsinntekt: PT.object,
-    allForms: PT.func.isRequired,
+    handleSubmit: PT.func.isRequired,
   };
 
   static defaultProps = {
@@ -81,9 +83,7 @@ class Saksbehandling extends Component {
   }
 
   fattVedtakHandler = () => {
-    console.log(this.props.allForms());
-    // const { soknad } = this.props;
-    // this.props.lagreSoknad(soknad);
+    console.log('fatt vedtak');
   }
 
   render() {
@@ -97,6 +97,7 @@ class Saksbehandling extends Component {
       oppsummering,
       permisjoner,
       soknadArbeidsinntekt,
+      handleSubmit,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -107,16 +108,21 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Vilkarsveileder person={person} arbeidsforholdene={arbeidsforholdene} fattVedtakHandler={this.fattVedtakHandler} />
-              {person && <Personopplysninger person={person} />}
-              {permisjoner && <Permisjoner permisjoner={permisjoner} />}
-              {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
-              {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
-              <ArbeidsgiverUtland />
-              {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-              {inntekt && <Inntekt inntekt={inntekt} soknadArbeidsinntekt={soknadArbeidsinntekt} />}
-              {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
-              <Tilleggsopplysninger />
+              <form name="soknad" id="soknad" onSubmit={handleSubmit}>
+                <Vilkarsveileder
+                  person={person}
+                  arbeidsforholdene={arbeidsforholdene}
+                  fattVedtakHandler={this.fattVedtakHandler} />
+                {person && <Personopplysninger person={person} />}
+                {permisjoner && <Permisjoner permisjoner={permisjoner} />}
+                {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
+                {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
+                <ArbeidsgiverUtland />
+                {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+                {inntekt && <Inntekt inntekt={inntekt} soknadArbeidsinntekt={soknadArbeidsinntekt} />}
+                {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
+                <Tilleggsopplysninger />
+              </form>
             </Nav.Column>
             <Nav.Column xs="5">
               {oppsummering && <SideOppsummering oppsummering={oppsummering} />}
@@ -141,9 +147,10 @@ const mapStateToProps = state => ({
   permisjoner: PermisjonerSelector(state),
   soknad: SoknadSelector(state),
   soknadArbeidsinntekt: ArbeidsinntektSelector(state),
-  allForms: () => {
-    const selector = formValueSelector('inntekt');
-    return { ...selector(state, 'inntektNorskIPerioden', 'inntektUtenlandskIPerioden', 'inntektNaeringIPerioden') };
+  initialValues: {
+    inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
+    inntektUtenlandskIPerioden: ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
+    inntektNaeringIPerioden: ArbeidsinntektSelector(state).inntektNaeringIPerioden,
   },
 });
 
@@ -151,6 +158,17 @@ const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
   hentSoknad: saksnummer => dispatch(hentSoknad(saksnummer)),
   lagreSoknad: dokument => dispatch(lagreSoknad(dokument)),
+  onSubmit: values => dispatch(oppdaterSoknad(values)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
+const SaksbehandlingForm = validForm({
+  form: 'soknad',
+  enableReinitialize: true,
+  validate: {
+    inntektNorskIPerioden: [Skjema.Validering.kunTall],
+    inntektUtenlandskIPerioden: [Skjema.Validering.kunTall],
+    inntektNaeringIPerioden: [Skjema.Validering.kunTall],
+  },
+})(Saksbehandling);
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksbehandlingForm));

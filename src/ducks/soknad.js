@@ -6,6 +6,7 @@ import { STATUS, doThenDispatch } from '../services/utils';
 const OK = 'soknad/OK';
 const FEILET = 'soknad/FEILET';
 const PENDING = 'soknad/PENDING';
+const OPPDATER_SOKNAD = 'sokna/OPPDATER_SOKNAD';
 
 const initialState = {
   data: {},
@@ -25,6 +26,17 @@ export default function reducer(state = initialState, action) {
         status: STATUS.OK,
         data: action.data,
       };
+    case OPPDATER_SOKNAD: {
+      const { dokument } = action;
+      const soknad = {
+        ...state.data.soknadDokument,
+        inntektNorskIPerioden: parseInt(dokument.inntektNorskIPerioden, 10),
+        inntektUtenlandskIPerioden: parseInt(dokument.inntektUtenlandskIPerioden, 10),
+        inntektNaeringIPerioden: parseInt(dokument.inntektNaeringIPerioden, 10),
+      };
+
+      return { ...state, data: { ...state.data, soknadDokument: soknad } };
+    }
     default:
       return state;
   }
@@ -44,6 +56,13 @@ export function lagreSoknad(dokument) {
     OK,
     FEILET,
     PENDING,
+  });
+}
+
+export function oppdaterSoknad(dokument) {
+  return ({
+    type: OPPDATER_SOKNAD,
+    dokument,
   });
 }
 
@@ -69,7 +88,7 @@ export const ArbeidUtlandSelector = createSelector(
 );
 
 export const ArbeidsinntektSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.arbeidsinntekt,
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsinntekt : {}),
   soknad => soknad
 );
 
