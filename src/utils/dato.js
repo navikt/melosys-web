@@ -16,12 +16,12 @@ const vaskInputDato = dato => {
   const newDate = dato.replace(/[-./]/g, '');
 
   // Hvis datoen fortsatt ikke er et heltall eller er mindre enn 6 siffer så er noe galt skrevet inn. Returner ''.
-  if (isNaN(newDate) || parseInt(newDate, 10) < 100000) {
+  if (newDate.length < 6) {
     return ('');
   }
 
   // const dateArray = newDate.match(/(..?)/g);
-  const dateArray = [parseInt(newDate.substr(0, 2), 10), parseInt(newDate.substr(2, 2), 10), parseInt(newDate.substr(4), 10)];
+  const dateArray = [newDate.substr(0, 2), parseInt(newDate.substr(2, 2), 10), parseInt(newDate.substr(4), 10)];
 
   // Hvis kun de to siste årstallene er tastet inn, må vi gjøre en gjetning på hvilket århundre det
   // dreier seg om. Det er ikke sannsynlig at datoen gjelder for mer enn 10 år frem tid, så gjett da
