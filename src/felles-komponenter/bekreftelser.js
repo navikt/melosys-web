@@ -10,8 +10,8 @@ import { boolTilNorsk } from '../utils/utils';
 
 import './bekreftelser.css';
 
+/* eslint no-unused-vars: 0 */
 function Bekreftelser ({ bekreftelser }) {
-  // Todo: Denne er ikke koblet mot data fra backend. Avventer tilbakemelding etter arbeid med søknaden.
   const {
     utsendt,
     ansatt,
@@ -20,7 +20,7 @@ function Bekreftelser ({ bekreftelser }) {
     arbeidsgiveravgift,
     trygdeavgiftTrukket,
     trygdeavgiftTrukketDato,
-  } = bekreftelser;
+  } = { utsendt: true, ansatt: true, erstatter: false, over24m: false, arbeidsgiver: true, trygdeavgiftTrukket: true, trygdeavgiftTrukketDato: '2018-10-11' };
 
   return (
     <div className="bekreftelser panelSeksjon">

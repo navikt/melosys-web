@@ -1,7 +1,9 @@
 import React from 'react';
+import PT from 'prop-types';
+
 import * as Nav from '../../../utils/navFrontend';
 
-const Vedtak = () => (
+const Vedtak = props => (
   <div>
     <Nav.Container fluid>
       <Nav.Row>
@@ -22,7 +24,7 @@ const Vedtak = () => (
         </Nav.Column>
         <Nav.Column xs="6" md="3">
           <Nav.Element type="element">Land</Nav.Element>
-          <Nav.Normaltekst>Tyskland og Sverige</Nav.Normaltekst>
+          <Nav.Normaltekst>Tyskland</Nav.Normaltekst>
         </Nav.Column>
         <Nav.Column xs="6" md="3">
           <Nav.Element type="element">Søker er</Nav.Element>
@@ -30,12 +32,12 @@ const Vedtak = () => (
         </Nav.Column>
         <Nav.Column xs="6" md="3">
           <Nav.Element type="element">Navn på arbeidsgiver</Nav.Element>
-          <Nav.Normaltekst>Hagemøbler Import AS</Nav.Normaltekst>
+          <Nav.Normaltekst>Multiconsult ASA</Nav.Normaltekst>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6" className="fane__fot">
-          <Nav.Knapp type="hoved">Fatt vedtak</Nav.Knapp>
+          <Nav.Knapp type="hoved" onClick={() => props.fattVedtakHandler()}>Fatt vedtak</Nav.Knapp>
         </Nav.Column>
         <Nav.Column xs="6" className="fane__fot">
           <a href="http://localhost">Forhåndsvis vedtaksbrev</a>
@@ -44,5 +46,9 @@ const Vedtak = () => (
     </Nav.Container>
   </div>
 );
+
+Vedtak.propTypes = {
+  fattVedtakHandler: PT.func.isRequired,
+};
 
 export default Vedtak;

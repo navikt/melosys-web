@@ -62,8 +62,8 @@ export const InntektSelector = createSelector(
     ?
     inntekt.arbeidsInntektMaanedListe
       .reduce((samling, element) => {
-        const subIntektliste = element.arbeidsInntektInformasjon.inntektListe.map(item => ({ ...item, virksomhet: organisasjoner.find(subItem => item.orgnr === subItem.virksomhetID) }));
-        return ([...samling, ...subIntektliste]);
+        const subInntektliste = element.arbeidsInntektInformasjon.inntektListe.map(item => ({ ...item, virksomhet: organisasjoner.find(subItem => item.virksomhetID === subItem.orgnr) }));
+        return ([...samling, ...subInntektliste]);
       }, [])
     :
     []));

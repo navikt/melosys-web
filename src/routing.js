@@ -8,7 +8,7 @@ import Saksbehandling from './sider/saksbehandling';
 const Routing = ({ location }) => (
   <Switch location={location}>
     <Route exact path="/" component={Sok} />
-    <Route path="/saksbehandling/:fnr" component={Saksbehandling} />
+    <Route path="/saksbehandling/:snr" component={Saksbehandling} />
   </Switch>
 );
 
