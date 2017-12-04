@@ -43,7 +43,7 @@ export function sendSoknad(dokument) {
   });
   //return postAsJson(URI_SOKNAD, dokument, { headers: soknadHeader });
   */
-  return postAsJson(URI_SOKNAD, dokument);
+  return postAsJson(URI_SOKNAD, dokument, { headers: headers });
 }
 
 export function hentFagsaker(snr) {
