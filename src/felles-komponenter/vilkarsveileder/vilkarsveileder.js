@@ -24,6 +24,7 @@ class Vilkarsveileder extends Component {
     history: PT.object.isRequired,
     person: MPT.Person.isRequired,
     arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
+    fattVedtakHandler: PT.func.isRequired,
   };
 
   static defaultProps = {
@@ -82,6 +83,10 @@ class Vilkarsveileder extends Component {
       ] });
   }
 
+  fattVedtak = () => {
+    this.props.fattVedtakHandler();
+  }
+
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
    * har bekreftet valgene.
@@ -101,6 +106,10 @@ class Vilkarsveileder extends Component {
 
   avbrytOpprettSak = () => {
     this.props.history.push(`/?fnr=${this.props.person.fnr}`);
+  }
+
+  handleSubmit = e => {
+    e.preventDefault();
   }
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
@@ -159,6 +168,7 @@ class Vilkarsveileder extends Component {
           <VurderingArbeidsforhold
             arbeidsforholdene={arbeidsforholdene}
             bekreftOgFortsett={this.bekreftOgFortsett}
+            handleSubmit={this.handleSubmit}
           />
         </StegFane>
         <StegFane stegNummer={4} aktivtSteg={aktivtSteg}>
@@ -177,7 +187,7 @@ class Vilkarsveileder extends Component {
           />
         </StegFane>
         <StegFane stegNummer={7} aktivtSteg={aktivtSteg}>
-          <Vedtak />
+          <Vedtak fattVedtakHandler={this.fattVedtak} />
         </StegFane>
       </div>
     );

@@ -28,14 +28,31 @@ const headers = new Headers({
   'Accept-Charset': 'utf-8',
 });
 
+export function hentSoknad() {
+  const URI_SOKNAD =  `${API_MELOSYS_URL}soknad/`;
+  return fetchToJson(URI_SOKNAD, { headers: headers });
+}
+
+export function sendSoknad(dokument) {
+  const URI_SOKNAD =`${API_MELOSYS_URL}soknad`;
+  /*
+  const soknadHeader = new Headers({
+    Accept: 'application/json',
+    'Accept-Charset': 'utf-8',
+    'Content-Type': 'application/json;charset=UTF-8',
+  });
+  //return postAsJson(URI_SOKNAD, dokument, { headers: soknadHeader });
+  */
+  return postAsJson(URI_SOKNAD, dokument, { headers: headers });
+}
+
 export function hentFagsaker(snr) {
-  const URI_FAGSAKER =  `${API_MELOSYS_URL}/sok/fagsaker/${snr}`;
+  const URI_FAGSAKER =  `${API_MELOSYS_URL}fagsaker/${snr}`;
   return fetchToJson(URI_FAGSAKER, { headers: headers });
 }
 
 export function hentNyesaker(fnr) {
-  const URI_NYESAKER = `${API_MELOSYS_URL}/sok/fagsaker/fnr/${fnr}`;
-  console.log('URI_NYESAKER', URI_NYESAKER);
+  const URI_NYESAKER = `${API_MELOSYS_URL}sok/fagsaker/?fnr=${fnr}`;
   return fetchToJson(URI_NYESAKER, { headers: headers });
 }
 

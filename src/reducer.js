@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'react-redux-form-validation';
 
 import fagsakerReducer from './ducks/fagsaker';
+import soknadReducer from './ducks/soknad';
 import nyesakerReducer from './ducks/nyesaker';
 import sakerbehandlesReducer from './ducks/sakerbehandles';
 import tidligeresakerReducer from './ducks/tidligeresaker';
@@ -32,6 +33,7 @@ export default function(state, action) {
 export default combineReducers({
   form: formReducer,
   fagsaker: fagsakerReducer,
+  soknad: soknadReducer,
   nyesaker: nyesakerReducer,
   tidligeresaker: tidligeresakerReducer,
   sakerbehandles: sakerbehandlesReducer,
