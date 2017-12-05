@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import { submit } from 'redux-form';
 import { Checkbox as NavCheckbox } from 'nav-frontend-skjema';
 import { CustomField } from 'react-redux-form-validation';
-import './skjema.css';
+import '../skjema.css';
 
 function InnerCheckboxComponent(
   {

@@ -43,6 +43,7 @@ import {
 } from '../ducks/soknad';
 
 import './saksbehandling.css';
+import '../felles-komponenter/skjema/skjema.css';
 
 class Saksbehandling extends Component {
   static propTypes = {
@@ -169,6 +170,7 @@ const SaksbehandlingForm = validForm({
     inntektNorskIPerioden: [Skjema.Validering.kunTall],
     inntektUtenlandskIPerioden: [Skjema.Validering.kunTall],
     inntektNaeringIPerioden: [Skjema.Validering.kunTall],
+    arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
   },
 })(Saksbehandling);
 
