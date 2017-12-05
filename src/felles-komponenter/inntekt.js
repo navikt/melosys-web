@@ -13,7 +13,7 @@ const uuid = require('uuid/v4');
 
 function InntektLinje({ inntektLinje }) {
   const { beloep, inntektsperiodetype, virksomhet, beskrivelse, utbetaltIPeriode } = inntektLinje;
-  const { navn } = virksomhet;
+  const navn = virksomhet ? virksomhet.navn : '';
 
   return (
     <tr>
@@ -31,7 +31,7 @@ InntektLinje.propTypes = {
 
 function Inntekt (props) {
   const { inntekt: { inntekt } } = props;
-  const panelUndertittel = inntekt[0] ? `Nyeste inntekt: ${inntekt[0].beloep} fra ${inntekt[0].virksomhet.navn} i perioden ${inntekt[0].utbetaltIPeriode}` : '';
+  const panelUndertittel = inntekt[0] ? `Nyeste inntekt: ${inntekt[0].beloep} fra ${inntekt[0].virksomhet && inntekt[0].virksomhet.navn} i perioden ${inntekt[0].utbetaltIPeriode}` : '';
   const panelIkon = Ikoner.Ferdig;
 
   return (
