@@ -2,7 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import classNames from 'classnames';
 import { CustomField } from 'react-redux-form-validation';
-import './skjema.css';
+import '../skjema.css';
 
 function InnerInputComponent({ label, feltNavn, children, errorMessage }) {
   return (

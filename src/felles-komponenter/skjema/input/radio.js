@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import { Radio as NavRadio } from 'nav-frontend-skjema';
 import { CustomField } from 'react-redux-form-validation';
 import { touch } from 'redux-form';
-import './skjema.css';
+import '../skjema.css';
 
 function InnerInputComponent(
   {

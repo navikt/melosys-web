@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import { CustomField } from 'react-redux-form-validation';
 
 import * as Nav from '../../../utils/navFrontend';
-import './skjema.css';
+import '../skjema.css';
 
 /** Komponenten nedenfor tar imot errorMessage (og alle andre props). ErrorMessage gjøres om til
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.

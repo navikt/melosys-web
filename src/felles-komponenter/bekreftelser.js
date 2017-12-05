@@ -4,46 +4,57 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 
-import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
-import { boolTilNorsk } from '../utils/utils';
+import DatoFelt from './skjema/datofelt';
 
 import './bekreftelser.css';
 
 /* eslint no-unused-vars: 0 */
-function Bekreftelser ({ bekreftelser }) {
-  const {
-    utsendt,
-    ansatt,
-    erstatter,
-    over24m,
-    arbeidsgiveravgift,
-    trygdeavgiftTrukket,
-    trygdeavgiftTrukketDato,
-  } = { utsendt: true, ansatt: true, erstatter: false, over24m: false, arbeidsgiver: true, trygdeavgiftTrukket: true, trygdeavgiftTrukketDato: '2018-10-11' };
-
+function Bekreftelser () {
   return (
     <div className="bekreftelser panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Arbeidsgivers bekreftelse" undertittel="" />}
         ariaTittel="Panel for bekreftelser" >
         <Nav.Row className="bekreftelser__seksjon">
-          {/* START DATO RANGE */}
           <Nav.Column xs="12">
-            <dl className="bekreftelser__detaljer">
-              <dt>Arbeidsgiver bekrefter at abeidstaker er utsendt?</dt>
-              <dd>{boolTilNorsk(utsendt)}</dd>
-              <dt>Er arbeidstakeren ansatt under utsendingen?</dt>
-              <dd>{boolTilNorsk(ansatt)}</dd>
-              <dt>Erstatter arbeidstakeren en eller flere utsendte?</dt>
-              <dd>{boolTilNorsk(erstatter)}</dd>
-              <dt>Er arbeidstaker tidligere utsendt i en periode over 24 mnd?</dt>
-              <dd>{boolTilNorsk(over24m)}</dd>
-              <dt>Plikter arbeidsgiver å betale arbeidsgiveravgift?</dt>
-              <dd>{boolTilNorsk(arbeidsgiveravgift)}</dd>
-              <dt>Blir trygdeavgift trukket gjennom skatten under utenlandsoppholdet?</dt>
-              <dd>{boolTilNorsk(trygdeavgiftTrukket)} - gjelder t.o.m <EnkeltDato dato={trygdeavgiftTrukketDato} /></dd>
-            </dl>
+            <Nav.Fieldset legend="Arbeidsgiver bekrefter at arbeidstaker er utsendt?">
+              <div className="skjema__horisontalefelter">
+                <Nav.Radio name="arbeidsgiverBekrefterUtsendelse" label="Ja" />
+                <Nav.Radio name="arbeidsgiverBekrefterUtsendelse" label="nei" />
+              </div>
+            </Nav.Fieldset>
+            <Nav.Fieldset legend="Er arbeidstaker ansatt under utsendelsen?">
+              <div className="skjema__horisontalefelter">
+                <Nav.Radio name="arbeidstakerAnsattUnderUtsendelsen" label="Ja" />
+                <Nav.Radio name="arbeidstakerAnsattUnderUtsendelsen" label="nei" />
+              </div>
+            </Nav.Fieldset>
+            <Nav.Fieldset legend="Erstatter arbeidstakeren en eller flere utsendte?">
+              <div className="skjema__horisontalefelter">
+                <Nav.Radio name="erstatterArbeidstakerenUtsendte" label="Ja" />
+                <Nav.Radio name="erstatterArbeidstakerenUtsendte" label="nei" />
+              </div>
+            </Nav.Fieldset>
+            <Nav.Fieldset legend="Er arbeidstaker tidligere utsendt i en periode over 24 mnd?">
+              <div className="skjema__horisontalefelter">
+                <Nav.Radio name="arbeidstakerTidligereUtsendt24Mnd" label="Ja" />
+                <Nav.Radio name="arbeidstakerTidligereUtsendt24Mnd" label="nei" />
+              </div>
+            </Nav.Fieldset>
+            <Nav.Fieldset legend="Plikter arbeidsgiver å betale arbeidsgiveravgift?">
+              <div className="skjema__horisontalefelter">
+                <Nav.Radio name="arbeidsgiverBetalerArbeidsgiveravgift" label="Ja" />
+                <Nav.Radio name="arbeidsgiverBetalerArbeidsgiveravgift" label="nei" />
+              </div>
+            </Nav.Fieldset>
+            <Nav.Fieldset legend="Blir trygdeavgift trukket gjennom skatten under utenlandsoppholdet?">
+              <div className="skjema__horisontalefelter">
+                <Nav.Radio name="trygdeavgiftTrukketGjennomSkatt" label="Ja" />
+                <Nav.Radio name="trygdeavgiftTrukketGjennomSkatt" label="nei" />
+              </div>
+              <DatoFelt name="trygdeavgiftTrukketGjennomSkattDato" label="Til dato:" />
+            </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
       </Nav.EkspanderbartpanelBase>
