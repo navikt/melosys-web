@@ -1,6 +1,4 @@
 import React from 'react';
-import { validForm } from 'react-redux-form-validation';
-import PT from 'prop-types';
 
 import * as Ikoner from '../resources/images';
 import * as Nav from '../utils/navFrontend';
@@ -34,7 +32,7 @@ InntektLinje.propTypes = {
 function Inntekt (props) {
   const { inntekt: { inntekt } } = props;
   const panelUndertittel = inntekt[0] ? `Nyeste inntekt: ${inntekt[0].beloep} fra ${inntekt[0].virksomhet.navn} i perioden ${inntekt[0].utbetaltIPeriode}` : '';
-  const panelIkon = (props.pristine || props.invalid) ? Ikoner.Varsel : Ikoner.Ferdig;
+  const panelIkon = Ikoner.Ferdig;
 
   return (
     <div className="inntekt panelSeksjon">
@@ -78,21 +76,10 @@ function Inntekt (props) {
 
 Inntekt.propTypes = {
   inntekt: MPT.Inntekt,
-  invalid: PT.bool.isRequired,
-  pristine: PT.bool.isRequired,
 };
 
 Inntekt.defaultProps = {
   inntekt: {},
 };
 
-export default validForm({
-  form: 'inntekt',
-  initialValues: { lonnNorskArbeidsgiver: '', lonnUtenlandskArbeidsgiver: '', inntektUtenlandskNaering: '' },
-  pure: false,
-  validate: {
-    inntektNorskIPerioden: [Skjema.Validering.erPakrevet, Skjema.Validering.kunTall],
-    inntektUtenlandskIPerioden: [Skjema.Validering.erPakrevet, Skjema.Validering.kunTall],
-    inntektNaeringIPerioden: [Skjema.Validering.erPakrevet, Skjema.Validering.kunTall],
-  },
-})(Inntekt);
+export default Inntekt;

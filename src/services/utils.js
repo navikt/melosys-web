@@ -40,6 +40,7 @@ export function sendResultatTilDispatch(dispatch, action) {
   };
 }
 
+// TODO Validate
 export function handterFeil(dispatch, action) {
   return error => {
     if (error.response) {
@@ -56,6 +57,11 @@ export function handterFeil(dispatch, action) {
     }
   };
 }
+export const getCookie = name => {
+  const re = new RegExp(`${name}=([^;]+)`);
+  const match = re.exec(document.cookie);
+  return match !== null ? match[1] : '';
+};
 
 export function fetchToJson(url, config = {}) {
   /*
@@ -85,6 +91,10 @@ function methodToJson(method, url, data, config) {
 
 export function postAsJson(url, data = {}, config = {}) {
   return methodToJson('post', url, data, config);
+}
+
+export function putAsJson(url, data = {}, config = {}) {
+  return methodToJson('put', url, data, config);
 }
 
 export function doThenDispatch(fn, { OK, FEILET, PENDING }) {
