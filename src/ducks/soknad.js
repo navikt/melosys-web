@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
+import { norskTilBool } from '../utils/utils';
 
 // Actions
 const OK = 'soknad/OK';
@@ -33,12 +34,12 @@ export default function reducer(state = initialState, action) {
         inntektNorskIPerioden: parseInt(dokument.inntektNorskIPerioden, 10),
         inntektUtenlandskIPerioden: parseInt(dokument.inntektUtenlandskIPerioden, 10),
         inntektNaeringIPerioden: parseInt(dokument.inntektNaeringIPerioden, 10),
-        arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
-        arbeidstakerAnsattUnderUtsendelsen: dokument.arbeidstakerAnsattUnderUtsendelsen,
-        erstatterArbeidstakerenUtsendte: dokument.erstatterArbeidstakerenUtsendte,
-        arbeidstakerTidligereUtsendt24Mnd: dokument.arbeidstakerTidligereUtsendt24Mnd,
-        arbeidsgiverBetalerArbeidsgiveravgift: dokument.arbeidsgiverBetalerArbeidsgiveravgift,
-        trygdeavgiftTrukketGjennomSkatt: dokument.trygdeavgiftTrukketGjennomSkatt,
+        arbeidsgiverBekrefterUtsendelse: norskTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
+        arbeidstakerAnsattUnderUtsendelsen: norskTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
+        erstatterArbeidstakerenUtsendte: norskTilBool(dokument.erstatterArbeidstakerenUtsendte),
+        arbeidstakerTidligereUtsendt24Mnd: norskTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
+        arbeidsgiverBetalerArbeidsgiveravgift: norskTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
+        trygdeavgiftTrukketGjennomSkatt: norskTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
         trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato,
       };
 
