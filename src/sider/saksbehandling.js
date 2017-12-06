@@ -153,6 +153,7 @@ const mapStateToProps = state => ({
     inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
     inntektNaeringIPerioden: ArbeidsinntektSelector(state).inntektNaeringIPerioden,
+    arbeidsgiverBekrefterUtsendelse: true,
   },
 });
 

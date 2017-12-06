@@ -1,8 +1,10 @@
 import React from 'react';
 import PT from 'prop-types';
-import { Radio as NavRadio } from 'nav-frontend-skjema';
 import { CustomField } from 'react-redux-form-validation';
 import { touch } from 'redux-form';
+
+import * as Nav from '../../../utils/navFrontend';
+
 import '../skjema.css';
 
 function InnerInputComponent(
@@ -19,8 +21,9 @@ function InnerInputComponent(
   };
   const gjeldendeFeltVerdi = input.value;
   const radioButtonVerdi = rest.value;
+
   return (
-    <NavRadio
+    <Nav.Radio
       {...inputProps}
       checked={gjeldendeFeltVerdi === radioButtonVerdi || forhandsvalgt}
       // Fikser fokus/markering feil i IE
