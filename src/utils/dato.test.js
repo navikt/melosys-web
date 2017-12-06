@@ -17,7 +17,9 @@ it('godtar alle tillatte datoformater', () => {
     {test: '26-04-1979', 'forvent': '26.04.1979'},
     {test: '26-04-1979', 'forvent': '26.04.1979'},
     {test: '1979-07-02', 'forvent': false},
-    {test: '29-02-17', 'forvent': false}
+    {test: '29-02-17', 'forvent': false},
+    {test: '121979', 'forvent': false},
+    {test: 'abcdef', 'forvent': false},
    ];
 
   tillatteDatoer.map(datoTest => {

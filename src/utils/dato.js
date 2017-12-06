@@ -11,13 +11,18 @@ import moment from 'moment';
  */
 const MAX_AR_FREM_I_TID = 10;
 
+/** Gjør et beste forsøk på å vaske inputdato. Dersom vask ikke er mulig (feks ved helt feil datoformat eller
+ * ugyldig dato, returner false.
+ * @param dato
+ * @returns {String | Bool } Datoen
+ */
 const vaskInputDato = dato => {
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
   const newDate = dato.replace(/[-./]/g, '');
 
   // Hvis datoen fortsatt ikke er et heltall eller er mindre enn 6 siffer så er noe galt skrevet inn. Returner ''.
   if (newDate.length < 6) {
-    return ('');
+    return false;
   }
 
   // const dateArray = newDate.match(/(..?)/g);
@@ -42,7 +47,10 @@ const vaskInputDato = dato => {
   return returnDate;
 };
 
+const normaliserInputDato = (verdi, forrigeVerdi) => ((verdi === forrigeVerdi) ? vaskInputDato(verdi) : verdi);
+
 export {
   vaskInputDato,
+  normaliserInputDato,
   MAX_AR_FREM_I_TID,
 };
