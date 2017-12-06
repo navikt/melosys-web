@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import {vaskInputDato} from './dato';
+import {vaskInputDato, normaliserInputDato} from './dato';
 
 import MockDate from 'mockdate';
 
@@ -40,4 +40,20 @@ it('tolker årstall med 2 siffer riktig', () => {
     const vasketDato = vaskInputDato(datoTest.test);
     expect(vasketDato).toEqual(datoTest.forvent);
   });
+});
+
+it('normaliserer ikke dersom verdiene er forskjellige, dvs at brukeren fortsatt står i felt (focus)', () => {
+  const verdi = '123456';
+  const forrigeVerdi = '12345';
+
+  expect(normaliserInputDato(verdi, forrigeVerdi)).toEqual(verdi);
+});
+
+it('normaliserer dersom begge verdiene er like (indikerer forlatt felt / blur field)', () => {
+  const verdi = '011217';
+  const forrigeVerdi = '011217';
+
+  // Forvent en eller annen form for normalisering. Sjekker IKKE selve formatet, men kun at det
+  // har skjedd en endring fra verdi.
+  expect(normaliserInputDato(verdi, forrigeVerdi)).not.toEqual(false);
 });
