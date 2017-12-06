@@ -47,7 +47,18 @@ const vaskInputDato = dato => {
   return returnDate;
 };
 
-const normaliserInputDato = (verdi, forrigeVerdi) => ((verdi === forrigeVerdi) ? vaskInputDato(verdi) : verdi);
+/** Normalisering gjennom Redux prop (normaize) sender 2 argumenter. Dersom disse er forskjellige,
+ * indikerer det at brukeren ikke har forlatt skjemafeltet. Normalize kalles altså en ekstra gang onBlur.
+ * Først dersom begge verdiene er like skal normalisering skje.
+ *
+ * @param verdi Totalverdien av feltet ETTER siste tastetrykk
+ * @param forrigeVerdi Totalverdien av feltet FØR siste tastetrykk
+ * @returns {String}
+ */
+const normaliserInputDato = (verdi, forrigeVerdi) => {
+  const vasketDato = vaskInputDato(verdi) ? vaskInputDato(verdi) : verdi;
+  return ((verdi === forrigeVerdi) ? vasketDato : verdi);
+};
 
 export {
   vaskInputDato,

@@ -40,6 +40,7 @@ import {
   oppdaterSoknadState,
   SoknadSelector,
   ArbeidsinntektSelector,
+  ArbeidsgiversBekreftelse,
 } from '../ducks/soknad';
 
 import './saksbehandling.css';
@@ -153,7 +154,13 @@ const mapStateToProps = state => ({
     inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
     inntektNaeringIPerioden: ArbeidsinntektSelector(state).inntektNaeringIPerioden,
-    arbeidsgiverBekrefterUtsendelse: true,
+    arbeidsgiverBekrefterUtsendelse: ArbeidsgiversBekreftelse(state).arbeidsgiverBekrefterUtsendelse,
+    arbeidstakerAnsattUnderUtsendelsen: ArbeidsgiversBekreftelse(state).arbeidstakerAnsattUnderUtsendelsen,
+    erstatterArbeidstakerenUtsendte: ArbeidsgiversBekreftelse(state).erstatterArbeidstakerenUtsendte,
+    arbeidstakerTidligereUtsendt24Mnd: ArbeidsgiversBekreftelse(state).arbeidstakerTidligereUtsendt24Mnd,
+    arbeidsgiverBetalerArbeidsgiveravgift: ArbeidsgiversBekreftelse(state).arbeidsgiverBetalerArbeidsgiveravgift,
+    trygdeavgiftTrukketGjennomSkatt: ArbeidsgiversBekreftelse(state).trygdeavgiftTrukketGjennomSkatt,
+    trygdeavgiftTrukketGjennomSkattDato: ArbeidsgiversBekreftelse(state).trygdeavgiftTrukketGjennomSkattDato,
   },
 });
 
