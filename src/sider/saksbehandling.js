@@ -182,8 +182,8 @@ const SaksbehandlingForm = validForm({
     inntektNorskIPerioden: [Skjema.Validering.kunTall],
     inntektUtenlandskIPerioden: [Skjema.Validering.kunTall],
     inntektNaeringIPerioden: [Skjema.Validering.kunTall],
-    arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
-    trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet, Skjema.Validering.erDato],
+    // arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
+    trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet],
   },
 })(Saksbehandling);
 
