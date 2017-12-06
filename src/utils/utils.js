@@ -257,5 +257,5 @@ export function boolTilNorsk (value) {
 }
 
 export function norskTilBool (value) {
-  return (value.toLowerCase() === 'ja');
+  return value ? (value.toLowerCase() === 'ja') : false;
 }
