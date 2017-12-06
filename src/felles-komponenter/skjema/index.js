@@ -1,5 +1,6 @@
 import Checkbox from './input/checkbox';
 import Input from './input/input';
+import InputDate from './input/inputDate';
 import Radio from './input/radio';
 import RadioGruppe from './input/radio-gruppe';
 import Select from './input/select';
@@ -9,6 +10,7 @@ import * as Validering from './validering';
 export {
   Checkbox,
   Input,
+  InputDate,
   Radio,
   RadioGruppe,
   Select,

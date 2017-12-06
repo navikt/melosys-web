@@ -54,7 +54,7 @@ function Bekreftelser () {
                 <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="ja" value="ja" />
                 <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="nei" value="nei" />
               </div>
-              <DatoFelt feltNavn="trygdeavgiftTrukketGjennomSkattDato" label="Til dato:" />
+              <Skjema.InputDate feltNavn="trygdeavgiftTrukketGjennomSkattDato" label="Til dato:" />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
