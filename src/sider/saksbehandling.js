@@ -139,6 +139,10 @@ class Saksbehandling extends Component {
   }
 }
 
+/** Mapper både fast tekst inn til de forskjellige panelene i tillegg til å
+ * mappe verdier fra søknaden (soknad) ut til Redux Form via initialValue.
+ * @param state
+ */
 const mapStateToProps = state => ({
   person: PersonSelector(state),
   organisasjoner: OrganisasjonSelector(state),
