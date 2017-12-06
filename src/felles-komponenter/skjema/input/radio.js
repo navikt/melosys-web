@@ -45,7 +45,7 @@ InnerInputComponent.defaultProps = {
 
 InnerInputComponent.propTypes = {
   input: PT.object, // eslint-disable-line react/forbid-prop-types
-  errorMessage: PT.object, // eslint-disable-line react/forbid-prop-types
+  errorMessage: PT.arrayOf(PT.node), // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   forhandsvalgt: PT.bool,
 };

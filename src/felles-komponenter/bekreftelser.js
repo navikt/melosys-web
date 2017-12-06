@@ -6,7 +6,6 @@ import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
-import DatoFelt from './skjema/datofelt';
 
 import './bekreftelser.css';
 
@@ -54,7 +53,7 @@ function Bekreftelser () {
                 <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="ja" value="ja" />
                 <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="nei" value="nei" />
               </div>
-              <Skjema.InputDate feltNavn="trygdeavgiftTrukketGjennomSkattDato" label="Til dato:" />
+              <Skjema.Input bredde="s" feltNavn="trygdeavgiftTrukketGjennomSkattDato" datoFelt label="Til dato:" />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
