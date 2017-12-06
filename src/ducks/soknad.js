@@ -33,6 +33,13 @@ export default function reducer(state = initialState, action) {
         inntektNorskIPerioden: parseInt(dokument.inntektNorskIPerioden, 10),
         inntektUtenlandskIPerioden: parseInt(dokument.inntektUtenlandskIPerioden, 10),
         inntektNaeringIPerioden: parseInt(dokument.inntektNaeringIPerioden, 10),
+        arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
+        arbeidstakerAnsattUnderUtsendelsen: dokument.arbeidstakerAnsattUnderUtsendelsen,
+        erstatterArbeidstakerenUtsendte: dokument.erstatterArbeidstakerenUtsendte,
+        arbeidstakerTidligereUtsendt24Mnd: dokument.arbeidstakerTidligereUtsendt24Mnd,
+        arbeidsgiverBetalerArbeidsgiveravgift: dokument.arbeidsgiverBetalerArbeidsgiveravgift,
+        trygdeavgiftTrukketGjennomSkatt: dokument.trygdeavgiftTrukketGjennomSkatt,
+        trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato,
       };
 
       return { ...state, data: { ...state.data, soknadDokument: soknad } };
@@ -106,6 +113,12 @@ export const OppholdUtlandSelector = createSelector(
   state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.oppholdUtland,
   soknad => soknad
 );
+
+export const ArbeidsgiversBekreftelse = createSelector(
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
+  soknad => soknad || {}
+);
+
 
 export const OvrigSelector = createSelector(
   state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.ovrig,
