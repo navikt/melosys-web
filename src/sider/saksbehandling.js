@@ -63,6 +63,8 @@ class Saksbehandling extends Component {
     soknad: PT.object,
     soknadArbeidsinntekt: PT.object,
     handleSubmit: PT.func.isRequired,
+    errorSummary: PT.object,
+    errorSummaryTitle: PT.string,
   };
 
   static defaultProps = {
@@ -76,6 +78,8 @@ class Saksbehandling extends Component {
     permisjoner: [],
     soknad: {},
     soknadArbeidsinntekt: {},
+    errorSummary: {},
+    errorSummaryTitle: '',
   };
 
   componentDidMount() {
@@ -100,6 +104,7 @@ class Saksbehandling extends Component {
       permisjoner,
       soknadArbeidsinntekt,
       handleSubmit,
+      errorSummary,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -116,6 +121,7 @@ class Saksbehandling extends Component {
                   person={person}
                   arbeidsforholdene={arbeidsforholdene}
                   fattVedtakHandler={this.fattVedtakHandler} />
+                {errorSummary}
                 {person && <Personopplysninger person={person} />}
                 {permisjoner && <Permisjoner permisjoner={permisjoner} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
@@ -178,12 +184,16 @@ const mapDispatchToProps = dispatch => ({
 const SaksbehandlingForm = validForm({
   form: 'soknad',
   enableReinitialize: true,
+  errorSummaryTitle: 'Please fix',
+  fields: [
+    'trygdeavgiftTrukketGjennomSkattDato',
+  ],
   validate: {
     inntektNorskIPerioden: [Skjema.Validering.kunTall],
     inntektUtenlandskIPerioden: [Skjema.Validering.kunTall],
     inntektNaeringIPerioden: [Skjema.Validering.kunTall],
-    // arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
-    trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet],
+    arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
+    trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet, Skjema.Validering.erDato],
   },
 })(Saksbehandling);
 
