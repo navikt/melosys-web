@@ -183,6 +183,7 @@ const SaksbehandlingForm = validForm({
     inntektUtenlandskIPerioden: [Skjema.Validering.kunTall],
     inntektNaeringIPerioden: [Skjema.Validering.kunTall],
     arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
+    trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet, Skjema.Validering.erDato],
   },
 })(Saksbehandling);
 
