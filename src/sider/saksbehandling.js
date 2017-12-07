@@ -5,6 +5,8 @@ import { withRouter } from 'react-router';
 import { validForm } from 'react-redux-form-validation';
 import * as Skjema from '../felles-komponenter/skjema';
 
+import { gyldigePaneler, feltGrupper, alleFelter } from '../utils/panelValidator';
+
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
@@ -43,6 +45,10 @@ import {
   ArbeidsgiversBekreftelse,
 } from '../ducks/soknad';
 
+import {
+  SoknadenFormSelector,
+} from '../ducks/form';
+
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
 
@@ -65,6 +71,7 @@ class Saksbehandling extends Component {
     handleSubmit: PT.func.isRequired,
     errorSummary: PT.object,
     errorSummaryTitle: PT.string,
+    soknadForm: PT.object.isRequired,
   };
 
   static defaultProps = {
@@ -82,10 +89,20 @@ class Saksbehandling extends Component {
     errorSummaryTitle: '',
   };
 
+  componentWillMount() {
+    this.setState({ gyldigePaneler: {} });
+  }
+
   componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentFagsaker(snr);
     this.props.hentSoknad(snr);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { syncErrors } = nextProps.soknadForm;
+
+    this.setState({ gyldigePaneler: gyldigePaneler(syncErrors) });
   }
 
   fattVedtakHandler = () => {
@@ -129,7 +146,7 @@ class Saksbehandling extends Component {
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt inntekt={inntekt} soknadArbeidsinntekt={soknadArbeidsinntekt} />}
-                {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
+                {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erGyldig={this.state.gyldigePaneler.bekreftelser} />}
                 <Tilleggsopplysninger />
               </form>
             </Nav.Column>
@@ -159,6 +176,7 @@ const mapStateToProps = state => ({
   oppsummering: OppsummeringSelector(state),
   permisjoner: PermisjonerSelector(state),
   soknad: SoknadSelector(state),
+  soknadForm: SoknadenFormSelector(state),
   soknadArbeidsinntekt: ArbeidsinntektSelector(state),
   initialValues: {
     inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
@@ -184,10 +202,9 @@ const mapDispatchToProps = dispatch => ({
 const SaksbehandlingForm = validForm({
   form: 'soknad',
   enableReinitialize: true,
+  destroyOnUnmount: false,
   errorSummaryTitle: 'Følgende må vurderes eller oppgis:',
-  fields: [
-    'trygdeavgiftTrukketGjennomSkattDato',
-  ],
+  fields: alleFelter(feltGrupper),
   validate: {
     inntektNorskIPerioden: [Skjema.Validering.kunTall],
     inntektUtenlandskIPerioden: [Skjema.Validering.kunTall],
