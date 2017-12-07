@@ -3,9 +3,13 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { validForm } from 'react-redux-form-validation';
-import * as Skjema from '../felles-komponenter/skjema';
 
-import { gyldigePaneler, feltGrupper, alleFelter } from '../utils/panelValidator';
+import {
+  gyldigePaneler,
+  feltGrupper,
+  alleFeltNavn,
+  alleValideringer,
+} from '../utils/panelValidator';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -204,19 +208,8 @@ const SaksbehandlingForm = validForm({
   enableReinitialize: true,
   destroyOnUnmount: false,
   errorSummaryTitle: 'Følgende må vurderes eller oppgis:',
-  fields: alleFelter(feltGrupper),
-  validate: {
-    inntektNorskIPerioden: [Skjema.Validering.kunTall],
-    inntektUtenlandskIPerioden: [Skjema.Validering.kunTall],
-    inntektNaeringIPerioden: [Skjema.Validering.kunTall],
-    arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
-    arbeidstakerAnsattUnderUtsendelsen: [Skjema.Validering.erPakrevet],
-    erstatterArbeidstakerenUtsendte: [Skjema.Validering.erPakrevet],
-    arbeidstakerTidligereUtsendt24Mnd: [Skjema.Validering.erPakrevet],
-    arbeidsgiverBetalerArbeidsgiveravgift: [Skjema.Validering.erPakrevet],
-    trygdeavgiftTrukketGjennomSkatt: [Skjema.Validering.erPakrevet],
-    trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet, Skjema.Validering.erDato],
-  },
+  fields: alleFeltNavn(feltGrupper),
+  validate: alleValideringer(feltGrupper),
 })(Saksbehandling);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksbehandlingForm));
