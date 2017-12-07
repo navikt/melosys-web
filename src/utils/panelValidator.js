@@ -18,9 +18,17 @@ export const feltGrupper = {
  *
  * @param grupper Objekt med felter gruppert.
  */
-export const alleFelter = grupper => (Object.keys(grupper).reduce((samling, gruppe) =>
+export const alleFeltNavn = grupper => (Object.keys(grupper).reduce((samling, gruppe) =>
   ([...samling, ...Object.keys(grupper[gruppe])])
   , []));
+
+/** Traverserer feltGrupper og returnerer kun feltnavn i form av en string-array.
+ *
+ * @param grupper Objekt med felter gruppert.
+ */
+export const alleValideringer = grupper => (Object.keys(grupper).reduce((samling, gruppe) =>
+  ({ ...samling, ...grupper[gruppe] })
+  , {}));
 
 /** Traverser alle feil som finnes i skjemaet (på grunnlag av validering) og mål opp mot kjente
  * felter i grupper (paneler) slik at det er mulig å avgjøre om et panel i sin helhet validerer korrekt.
