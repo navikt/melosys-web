@@ -31,13 +31,13 @@ InnerInputComponent.defaultProps = {
 };
 
 function Input({ feltNavn, bredde, datoFelt, ...rest }) {
-  const normalizeFunction = datoFelt ? normaliserInputDato : null;
+  const normaliserDatoFunksjon = datoFelt ? normaliserInputDato : null;
   return (
     <CustomField
       bredde={bredde}
       name={feltNavn}
       errorClass="skjemaelement--harFeil"
-      normalize={normalizeFunction}
+      normalize={normaliserDatoFunksjon}
       customComponent={<InnerInputComponent {...rest} />}
     />
   );

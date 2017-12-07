@@ -9,7 +9,7 @@ import {
   feltGrupper,
   alleFeltNavn,
   alleValideringer,
-} from '../utils/panelValidator';
+} from '../utils/panelFelter';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -93,9 +93,7 @@ class Saksbehandling extends Component {
     errorSummaryTitle: '',
   };
 
-  componentWillMount() {
-    this.setState({ gyldigePaneler: {} });
-  }
+  state = { gyldigePaneler: {} };
 
   componentDidMount() {
     const { snr } = this.props.match.params;
@@ -105,7 +103,8 @@ class Saksbehandling extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { syncErrors } = nextProps.soknadForm;
-
+    // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
+    // i panelet lenger er ugyldig (ikke validerer).
     this.setState({ gyldigePaneler: gyldigePaneler(syncErrors) });
   }
 
@@ -150,7 +149,7 @@ class Saksbehandling extends Component {
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt inntekt={inntekt} soknadArbeidsinntekt={soknadArbeidsinntekt} />}
-                {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erGyldig={this.state.gyldigePaneler.bekreftelser} />}
+                {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
                 <Tilleggsopplysninger />
               </form>
             </Nav.Column>
