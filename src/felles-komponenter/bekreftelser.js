@@ -12,7 +12,7 @@ import './bekreftelser.css';
 
 /* eslint no-unused-vars: 0 */
 function Bekreftelser (props) {
-  const panelIkon = props.erGyldig ? Ikoner.Ferdig : Ikoner.Varsel;
+  const panelIkon = props.erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
 
   return (
     <div className="bekreftelser panelSeksjon">
@@ -67,12 +67,12 @@ function Bekreftelser (props) {
 
 Bekreftelser.propTypes = {
   bekreftelser: MPT.Bekreftelser,
-  erGyldig: PT.bool,
+  erValidert: PT.bool,
 };
 
 Bekreftelser.defaultProps = {
   bekreftelser: {},
-  erGyldig: false,
+  erValidert: false,
 };
 
 export default Bekreftelser;
