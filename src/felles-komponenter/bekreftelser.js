@@ -24,7 +24,7 @@ function Bekreftelser () {
                 <Skjema.Radio feltNavn="arbeidsgiverBekrefterUtsendelse" label="nei" value="nei" />
               </div>
             </Skjema.RadioGruppe>
-            <Skjema.RadioGruppe feltNavn="arbeidsgiverBekrefterUtsendelse" label="Er arbeidstaker ansatt under utsendelsen?">
+            <Skjema.RadioGruppe feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="Er arbeidstaker ansatt under utsendelsen?">
               <div className="skjema__horisontalefelter">
                 <Skjema.Radio feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="ja" value="ja" />
                 <Skjema.Radio feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="nei" value="nei" />

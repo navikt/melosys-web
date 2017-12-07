@@ -184,7 +184,7 @@ const mapDispatchToProps = dispatch => ({
 const SaksbehandlingForm = validForm({
   form: 'soknad',
   enableReinitialize: true,
-  errorSummaryTitle: 'Please fix',
+  errorSummaryTitle: 'Følgende må vurderes eller oppgis:',
   fields: [
     'trygdeavgiftTrukketGjennomSkattDato',
   ],
@@ -193,6 +193,11 @@ const SaksbehandlingForm = validForm({
     inntektUtenlandskIPerioden: [Skjema.Validering.kunTall],
     inntektNaeringIPerioden: [Skjema.Validering.kunTall],
     arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
+    arbeidstakerAnsattUnderUtsendelsen: [Skjema.Validering.erPakrevet],
+    erstatterArbeidstakerenUtsendte: [Skjema.Validering.erPakrevet],
+    arbeidstakerTidligereUtsendt24Mnd: [Skjema.Validering.erPakrevet],
+    arbeidsgiverBetalerArbeidsgiveravgift: [Skjema.Validering.erPakrevet],
+    trygdeavgiftTrukketGjennomSkatt: [Skjema.Validering.erPakrevet],
     trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet, Skjema.Validering.erDato],
   },
 })(Saksbehandling);
