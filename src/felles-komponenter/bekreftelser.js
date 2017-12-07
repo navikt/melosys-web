@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -10,11 +11,13 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import './bekreftelser.css';
 
 /* eslint no-unused-vars: 0 */
-function Bekreftelser () {
+function Bekreftelser (props) {
+  const panelIkon = props.erGyldig ? Ikoner.Ferdig : Ikoner.Varsel;
+
   return (
     <div className="bekreftelser panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Arbeidsgivers bekreftelse" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel="Arbeidsgivers bekreftelse" undertittel="" />}
         ariaTittel="Panel for bekreftelser" >
         <Nav.Row className="bekreftelser__seksjon">
           <Nav.Column xs="12">
@@ -64,10 +67,12 @@ function Bekreftelser () {
 
 Bekreftelser.propTypes = {
   bekreftelser: MPT.Bekreftelser,
+  erGyldig: PT.bool,
 };
 
 Bekreftelser.defaultProps = {
   bekreftelser: {},
+  erGyldig: false,
 };
 
 export default Bekreftelser;
