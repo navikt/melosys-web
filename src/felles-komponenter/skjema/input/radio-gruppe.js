@@ -28,7 +28,7 @@ InnerInputComponent.propTypes = {
   label: PT.string.isRequired,
   feltNavn: PT.string.isRequired,
   children: PT.node,
-  errorMessage: PT.string,
+  errorMessage: PT.arrayOf(PT.node),
 };
 
 InnerInputComponent.defaultProps = {
