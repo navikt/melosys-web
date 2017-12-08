@@ -20,7 +20,8 @@ const vaskInputDato = dato => {
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
   const newDate = dato.replace(/[-./]/g, '');
 
-  // Hvis datoen fortsatt ikke er et heltall eller er mindre enn 6 siffer så er noe galt skrevet inn. Returner ''.
+  // Hvis datoen er mindre enn 6 tegn - dvs at dag, måned eller år er tastet med
+  // kun 1 siffer ("51217" istedet for "051217"), returner ''.
   if (newDate.length < 6) {
     return false;
   }
