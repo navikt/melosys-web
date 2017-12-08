@@ -10,17 +10,8 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './bekreftelser.css';
 
-/* eslint no-unused-vars: 0 */
-function Bekreftelser ({ bekreftelser }) {
-  const {
-    utsendt,
-    ansatt,
-    erstatter,
-    over24m,
-    arbeidsgiveravgift,
-    trygdeavgiftTrukket,
-    trygdeavgiftTrukketDato,
-  } = { utsendt: true, ansatt: true, erstatter: false, over24m: false, arbeidsgiver: true, trygdeavgiftTrukket: true, trygdeavgiftTrukketDato: '2018-10-11' };
+function Bekreftelser (props) {
+  const panelIkon = props.erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
 
   return (
     <div className="bekreftelser panelSeksjon">
