@@ -259,3 +259,12 @@ export function boolTilNorsk (value) {
 export function norskTilBool (value) {
   return value ? (value.toLowerCase() === 'ja') : false;
 }
+
+export function boolTilStreng (value) {
+  if(value === undefined) { return undefined };
+  return value ? 'true' : 'false';
+}
+
+export function strengTilBool (value) {
+  return value === 'true' ? true : false;
+}
