@@ -1,6 +1,7 @@
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
 import { Inntekt, InntektLinje } from './inntekt';
 import { Arbeidsforhold, Arbeidsforholdene } from './arbeidsforhold';
+import { OppholdUtland } from './oppholdUtland';
 import { MedlemskapPeriode, Medlemskap } from './medlemskap';
 import { Arbeidsavtale } from './arbeidsavtale';
 import { Kodeverk } from './kodeverk';
@@ -23,6 +24,7 @@ export {
   PermisjonOgPermittering,
   Arbeidsforhold,
   Arbeidsforholdene,
+  OppholdUtland,
   Organisasjon,
   Organisasjoner,
   MedlemskapPeriode,

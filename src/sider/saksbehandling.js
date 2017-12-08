@@ -15,6 +15,7 @@ import Medlemskap from '../felles-komponenter/medlemskap';
 import Arbeidsforholdene from '../felles-komponenter/arbeidsforholdene';
 import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
+import OppholdUtland from '../felles-komponenter/oppholdUtland';
 import Inntekt from '../felles-komponenter/inntekt';
 import Permisjoner from '../felles-komponenter/permisjoner';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
@@ -40,6 +41,7 @@ import {
   oppdaterSoknadState,
   SoknadSelector,
   ArbeidsinntektSelector,
+  OppholdUtlandSelector,
 } from '../ducks/soknad';
 
 import './saksbehandling.css';
@@ -60,6 +62,7 @@ class Saksbehandling extends Component {
     permisjoner: MPT.Permisjoner,
     soknad: PT.object,
     soknadArbeidsinntekt: PT.object,
+    soknadOppholdUtland: MPT.OppholdUtland,
     handleSubmit: PT.func.isRequired,
   };
 
@@ -74,6 +77,7 @@ class Saksbehandling extends Component {
     permisjoner: [],
     soknad: {},
     soknadArbeidsinntekt: {},
+    soknadOppholdUtland: {},
   };
 
   componentDidMount() {
@@ -97,6 +101,7 @@ class Saksbehandling extends Component {
       oppsummering,
       permisjoner,
       soknadArbeidsinntekt,
+      soknadOppholdUtland,
       handleSubmit,
     } = this.props;
 
@@ -118,6 +123,7 @@ class Saksbehandling extends Component {
                 {permisjoner && <Permisjoner permisjoner={permisjoner} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
                 {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
+                <OppholdUtland oppholdUtland={soknadOppholdUtland} />
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt inntekt={inntekt} soknadArbeidsinntekt={soknadArbeidsinntekt} />}
@@ -148,6 +154,7 @@ const mapStateToProps = state => ({
   permisjoner: PermisjonerSelector(state),
   soknad: SoknadSelector(state),
   soknadArbeidsinntekt: ArbeidsinntektSelector(state),
+  soknadOppholdUtland: OppholdUtlandSelector(state),
   initialValues: {
     inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
