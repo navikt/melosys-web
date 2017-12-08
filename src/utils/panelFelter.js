@@ -8,6 +8,13 @@ export const feltGrupper = {
     inntektUtenlandskIPerioden: [],
     inntektNaeringIPerioden: [],
   },
+  oppholdUtland: {
+    studentIEOS: [],
+    studentSkole: [(value, props) => Skjema.Validering.avhengerAvSann(value, props, 'studentIEOS')],
+    studentSemester: [],
+    studieLand: [],
+    studentFinansiering: [],
+  },
   bekreftelser: {
     arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
     arbeidstakerAnsattUnderUtsendelsen: [Skjema.Validering.erPakrevet],

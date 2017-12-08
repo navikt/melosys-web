@@ -31,16 +31,20 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
       const soknad = {
         ...state.data.soknadDokument,
-        inntektNorskIPerioden: parseInt(dokument.inntektNorskIPerioden, 10),
-        inntektUtenlandskIPerioden: parseInt(dokument.inntektUtenlandskIPerioden, 10),
-        inntektNaeringIPerioden: parseInt(dokument.inntektNaeringIPerioden, 10),
-        arbeidsgiverBekrefterUtsendelse: norskTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
-        arbeidstakerAnsattUnderUtsendelsen: norskTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
-        erstatterArbeidstakerenUtsendte: norskTilBool(dokument.erstatterArbeidstakerenUtsendte),
-        arbeidstakerTidligereUtsendt24Mnd: norskTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
-        arbeidsgiverBetalerArbeidsgiveravgift: norskTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
-        trygdeavgiftTrukketGjennomSkatt: norskTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
-        trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato,
+        arbeidsinntekt: {
+          inntektNorskIPerioden: parseInt(dokument.inntektNorskIPerioden, 10),
+          inntektUtenlandskIPerioden: parseInt(dokument.inntektUtenlandskIPerioden, 10),
+          inntektNaeringIPerioden: parseInt(dokument.inntektNaeringIPerioden, 10),
+        },
+        arbeidsgiversBekreftelse: {
+          arbeidsgiverBekrefterUtsendelse: norskTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
+          arbeidstakerAnsattUnderUtsendelsen: norskTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
+          erstatterArbeidstakerenUtsendte: norskTilBool(dokument.erstatterArbeidstakerenUtsendte),
+          arbeidstakerTidligereUtsendt24Mnd: norskTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
+          arbeidsgiverBetalerArbeidsgiveravgift: norskTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
+          trygdeavgiftTrukketGjennomSkatt: norskTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
+          trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato,
+        },
       };
 
       return { ...state, data: { ...state.data, soknadDokument: soknad } };
