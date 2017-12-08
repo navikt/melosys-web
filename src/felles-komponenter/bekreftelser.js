@@ -1,49 +1,62 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
+import * as Skjema from './skjema';
 
-import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
-import { boolTilNorsk } from '../utils/utils';
 
 import './bekreftelser.css';
 
-/* eslint no-unused-vars: 0 */
-function Bekreftelser ({ bekreftelser }) {
-  const {
-    utsendt,
-    ansatt,
-    erstatter,
-    over24m,
-    arbeidsgiveravgift,
-    trygdeavgiftTrukket,
-    trygdeavgiftTrukketDato,
-  } = { utsendt: true, ansatt: true, erstatter: false, over24m: false, arbeidsgiveravgift: true, trygdeavgiftTrukket: true, trygdeavgiftTrukketDato: '2018-10-11' };
+function Bekreftelser (props) {
+  const panelIkon = props.erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
 
   return (
     <div className="bekreftelser panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Arbeidsgivers bekreftelse" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel="Arbeidsgivers bekreftelse" undertittel="" />}
         ariaTittel="Panel for bekreftelser" >
         <Nav.Row className="bekreftelser__seksjon">
-          {/* START DATO RANGE */}
           <Nav.Column xs="12">
-            <dl className="bekreftelser__detaljer">
-              <dt>Arbeidsgiver bekrefter at abeidstaker er utsendt?</dt>
-              <dd>{boolTilNorsk(utsendt)}</dd>
-              <dt>Er arbeidstakeren ansatt under utsendingen?</dt>
-              <dd>{boolTilNorsk(ansatt)}</dd>
-              <dt>Erstatter arbeidstakeren en eller flere utsendte?</dt>
-              <dd>{boolTilNorsk(erstatter)}</dd>
-              <dt>Er arbeidstaker tidligere utsendt i en periode over 24 mnd?</dt>
-              <dd>{boolTilNorsk(over24m)}</dd>
-              <dt>Plikter arbeidsgiver å betale arbeidsgiveravgift?</dt>
-              <dd>{boolTilNorsk(arbeidsgiveravgift)}</dd>
-              <dt>Blir trygdeavgift trukket gjennom skatten under utenlandsoppholdet?</dt>
-              <dd>{boolTilNorsk(trygdeavgiftTrukket)} - gjelder t.o.m <EnkeltDato dato={trygdeavgiftTrukketDato} /></dd>
-            </dl>
+            <Skjema.RadioGruppe feltNavn="arbeidsgiverBekrefterUtsendelse" label="Arbeidsgiver bekrefter at arbeidstaker er utsendt?">
+              <div className="skjema__horisontalefelter">
+                <Skjema.Radio feltNavn="arbeidsgiverBekrefterUtsendelse" label="ja" value="ja" />
+                <Skjema.Radio feltNavn="arbeidsgiverBekrefterUtsendelse" label="nei" value="nei" />
+              </div>
+            </Skjema.RadioGruppe>
+            <Skjema.RadioGruppe feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="Er arbeidstaker ansatt under utsendelsen?">
+              <div className="skjema__horisontalefelter">
+                <Skjema.Radio feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="ja" value="ja" />
+                <Skjema.Radio feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="nei" value="nei" />
+              </div>
+            </Skjema.RadioGruppe>
+            <Skjema.RadioGruppe feltNavn="erstatterArbeidstakerenUtsendte" label="Erstatter arbeidstakeren en eller flere utsendte?">
+              <div className="skjema__horisontalefelter">
+                <Skjema.Radio feltNavn="erstatterArbeidstakerenUtsendte" label="ja" value="ja" />
+                <Skjema.Radio feltNavn="erstatterArbeidstakerenUtsendte" label="nei" value="nei" />
+              </div>
+            </Skjema.RadioGruppe>
+            <Skjema.RadioGruppe feltNavn="arbeidstakerTidligereUtsendt24Mnd" label="Er arbeidstaker tidligere utsendt i en periode over 24 mnd?">
+              <div className="skjema__horisontalefelter">
+                <Skjema.Radio feltNavn="arbeidstakerTidligereUtsendt24Mnd" label="ja" value="ja" />
+                <Skjema.Radio feltNavn="arbeidstakerTidligereUtsendt24Mnd" label="nei" value="nei" />
+              </div>
+            </Skjema.RadioGruppe>
+            <Skjema.RadioGruppe feltNavn="arbeidsgiverBetalerArbeidsgiveravgift" label="Plikter arbeidsgiver å betale arbeidsgiveravgift?">
+              <div className="skjema__horisontalefelter">
+                <Skjema.Radio feltNavn="arbeidsgiverBetalerArbeidsgiveravgift" label="ja" value="ja" />
+                <Skjema.Radio feltNavn="arbeidsgiverBetalerArbeidsgiveravgift" label="nei" value="nei" />
+              </div>
+            </Skjema.RadioGruppe>
+            <Skjema.RadioGruppe feltNavn="trygdeavgiftTrukketGjennomSkatt" label="Blir trygdeavgift trukket gjennom skatten under utenlandsoppholdet?">
+              <div className="skjema__horisontalefelter">
+                <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="ja" value="ja" />
+                <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="nei" value="nei" />
+              </div>
+            </Skjema.RadioGruppe>
+            <Skjema.Input bredde="s" feltNavn="trygdeavgiftTrukketGjennomSkattDato" datoFelt label="Til dato:" />
           </Nav.Column>
         </Nav.Row>
       </Nav.EkspanderbartpanelBase>
@@ -53,10 +66,12 @@ function Bekreftelser ({ bekreftelser }) {
 
 Bekreftelser.propTypes = {
   bekreftelser: MPT.Bekreftelser,
+  erValidert: PT.bool,
 };
 
 Bekreftelser.defaultProps = {
   bekreftelser: {},
+  erValidert: false,
 };
 
 export default Bekreftelser;

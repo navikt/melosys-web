@@ -11,6 +11,11 @@ import moment from 'moment';
  */
 const MAX_AR_FREM_I_TID = 10;
 
+/** Gjør et beste forsøk på å vaske inputdato. Dersom vask ikke er mulig (feks ved helt feil datoformat eller
+ * ugyldig dato, returner false.
+ * @param dato
+ * @returns {String | Bool } Datoen
+ */
 const vaskInputDato = dato => {
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
   const newDate = dato.replace(/[-./]/g, '');
@@ -18,7 +23,7 @@ const vaskInputDato = dato => {
   // Hvis datoen er mindre enn 6 tegn - dvs at dag, måned eller år er tastet med
   // kun 1 siffer ("51217" istedet for "051217"), returner ''.
   if (newDate.length < 6) {
-    return ('');
+    return false;
   }
 
   // const dateArray = newDate.match(/(..?)/g);
@@ -43,7 +48,21 @@ const vaskInputDato = dato => {
   return returnDate;
 };
 
+/** Normalisering gjennom Redux prop (normaize) sender 2 argumenter. Dersom disse er forskjellige,
+ * indikerer det at brukeren ikke har forlatt skjemafeltet. Normalize kalles altså en ekstra gang onBlur.
+ * Først dersom begge verdiene er like skal normalisering skje.
+ *
+ * @param verdi Totalverdien av feltet ETTER siste tastetrykk
+ * @param forrigeVerdi Totalverdien av feltet FØR siste tastetrykk
+ * @returns {String}
+ */
+const normaliserInputDato = (verdi, forrigeVerdi) => {
+  const vasketDato = vaskInputDato(verdi) ? vaskInputDato(verdi) : verdi;
+  return ((verdi === forrigeVerdi) ? vasketDato : verdi);
+};
+
 export {
   vaskInputDato,
+  normaliserInputDato,
   MAX_AR_FREM_I_TID,
 };

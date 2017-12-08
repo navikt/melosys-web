@@ -3,7 +3,13 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { validForm } from 'react-redux-form-validation';
-import * as Skjema from '../felles-komponenter/skjema';
+
+import {
+  gyldigePaneler,
+  feltGrupper,
+  alleFeltNavn,
+  alleValideringer,
+} from '../utils/panelFelter';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -40,9 +46,15 @@ import {
   oppdaterSoknadState,
   SoknadSelector,
   ArbeidsinntektSelector,
+  ArbeidsgiversBekreftelse,
 } from '../ducks/soknad';
 
+import {
+  SoknadenFormSelector,
+} from '../ducks/form';
+
 import './saksbehandling.css';
+import '../felles-komponenter/skjema/skjema.css';
 
 class Saksbehandling extends Component {
   static propTypes = {
@@ -61,6 +73,9 @@ class Saksbehandling extends Component {
     soknad: PT.object,
     soknadArbeidsinntekt: PT.object,
     handleSubmit: PT.func.isRequired,
+    errorSummary: PT.object,
+    errorSummaryTitle: PT.string,
+    soknadForm: PT.object.isRequired,
   };
 
   static defaultProps = {
@@ -74,12 +89,23 @@ class Saksbehandling extends Component {
     permisjoner: [],
     soknad: {},
     soknadArbeidsinntekt: {},
+    errorSummary: {},
+    errorSummaryTitle: '',
   };
+
+  state = { gyldigePaneler: {} };
 
   componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentFagsaker(snr);
     this.props.hentSoknad(snr);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { syncErrors } = nextProps.soknadForm;
+    // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
+    // i panelet lenger er ugyldig (ikke validerer).
+    this.setState({ gyldigePaneler: gyldigePaneler(syncErrors) });
   }
 
   fattVedtakHandler = () => {
@@ -98,6 +124,7 @@ class Saksbehandling extends Component {
       permisjoner,
       soknadArbeidsinntekt,
       handleSubmit,
+      errorSummary,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -114,6 +141,7 @@ class Saksbehandling extends Component {
                   person={person}
                   arbeidsforholdene={arbeidsforholdene}
                   fattVedtakHandler={this.fattVedtakHandler} />
+                {errorSummary}
                 {person && <Personopplysninger person={person} />}
                 {permisjoner && <Permisjoner permisjoner={permisjoner} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
@@ -121,7 +149,7 @@ class Saksbehandling extends Component {
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt inntekt={inntekt} soknadArbeidsinntekt={soknadArbeidsinntekt} />}
-                {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} />}
+                {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
                 <Tilleggsopplysninger />
               </form>
             </Nav.Column>
@@ -137,6 +165,10 @@ class Saksbehandling extends Component {
   }
 }
 
+/** Mapper både fast tekst inn til de forskjellige panelene i tillegg til å
+ * mappe verdier fra søknaden (soknad) ut til Redux Form via initialValue.
+ * @param state
+ */
 const mapStateToProps = state => ({
   person: PersonSelector(state),
   organisasjoner: OrganisasjonSelector(state),
@@ -147,11 +179,19 @@ const mapStateToProps = state => ({
   oppsummering: OppsummeringSelector(state),
   permisjoner: PermisjonerSelector(state),
   soknad: SoknadSelector(state),
+  soknadForm: SoknadenFormSelector(state),
   soknadArbeidsinntekt: ArbeidsinntektSelector(state),
   initialValues: {
     inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
     inntektNaeringIPerioden: ArbeidsinntektSelector(state).inntektNaeringIPerioden,
+    arbeidsgiverBekrefterUtsendelse: ArbeidsgiversBekreftelse(state).arbeidsgiverBekrefterUtsendelse,
+    arbeidstakerAnsattUnderUtsendelsen: ArbeidsgiversBekreftelse(state).arbeidstakerAnsattUnderUtsendelsen,
+    erstatterArbeidstakerenUtsendte: ArbeidsgiversBekreftelse(state).erstatterArbeidstakerenUtsendte,
+    arbeidstakerTidligereUtsendt24Mnd: ArbeidsgiversBekreftelse(state).arbeidstakerTidligereUtsendt24Mnd,
+    arbeidsgiverBetalerArbeidsgiveravgift: ArbeidsgiversBekreftelse(state).arbeidsgiverBetalerArbeidsgiveravgift,
+    trygdeavgiftTrukketGjennomSkatt: ArbeidsgiversBekreftelse(state).trygdeavgiftTrukketGjennomSkatt,
+    trygdeavgiftTrukketGjennomSkattDato: ArbeidsgiversBekreftelse(state).trygdeavgiftTrukketGjennomSkattDato,
   },
 });
 
@@ -165,11 +205,10 @@ const mapDispatchToProps = dispatch => ({
 const SaksbehandlingForm = validForm({
   form: 'soknad',
   enableReinitialize: true,
-  validate: {
-    inntektNorskIPerioden: [Skjema.Validering.kunTall],
-    inntektUtenlandskIPerioden: [Skjema.Validering.kunTall],
-    inntektNaeringIPerioden: [Skjema.Validering.kunTall],
-  },
+  destroyOnUnmount: false,
+  errorSummaryTitle: 'Følgende må vurderes eller oppgis:',
+  fields: alleFeltNavn(feltGrupper),
+  validate: alleValideringer(feltGrupper),
 })(Saksbehandling);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksbehandlingForm));
