@@ -255,3 +255,7 @@ export function queryParam(sporreStreng){
 export function boolTilNorsk (value) {
   return value ? 'JA' : 'NEI';
 }
+
+export function norskTilBool (value) {
+  return value ? (value.toLowerCase() === 'ja') : false;
+}

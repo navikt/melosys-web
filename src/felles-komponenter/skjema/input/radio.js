@@ -1,9 +1,11 @@
 import React from 'react';
 import PT from 'prop-types';
-import { Radio as NavRadio } from 'nav-frontend-skjema';
 import { CustomField } from 'react-redux-form-validation';
 import { touch } from 'redux-form';
-import './skjema.css';
+
+import * as Nav from '../../../utils/navFrontend';
+
+import '../skjema.css';
 
 function InnerInputComponent(
   {
@@ -19,8 +21,9 @@ function InnerInputComponent(
   };
   const gjeldendeFeltVerdi = input.value;
   const radioButtonVerdi = rest.value;
+
   return (
-    <NavRadio
+    <Nav.Radio
       {...inputProps}
       checked={gjeldendeFeltVerdi === radioButtonVerdi || forhandsvalgt}
       // Fikser fokus/markering feil i IE
@@ -42,7 +45,7 @@ InnerInputComponent.defaultProps = {
 
 InnerInputComponent.propTypes = {
   input: PT.object, // eslint-disable-line react/forbid-prop-types
-  errorMessage: PT.object, // eslint-disable-line react/forbid-prop-types
+  errorMessage: PT.arrayOf(PT.node), // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   forhandsvalgt: PT.bool,
 };

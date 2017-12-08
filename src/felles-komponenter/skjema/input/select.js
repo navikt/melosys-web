@@ -2,7 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import { Select as NavSelect } from 'nav-frontend-skjema';
 import { CustomField } from 'react-redux-form-validation';
-import './skjema.css';
+import '../skjema.css';
 
 function InnerInputComponent(
   {
