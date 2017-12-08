@@ -10,7 +10,7 @@ export const feltGrupper = {
   },
   oppholdUtland: {
     studentIEOS: [],
-    studentSkole: [(value, props) => Skjema.Validering.avhengerAvSann(value, props, 'studentIEOS')],
+    studentSkole: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
     studentSemester: [],
     studieLand: [],
     studentFinansiering: [],
