@@ -4,10 +4,12 @@ const minLengde = (value, min) => (value && value.length < min ? `Minimum ${min}
 const erPakrevet = value => (!value ? 'Dette feltet er påkrevet.' : null);
 const kunTall = value => (isNaN(value) ? 'Skriv inn kun hele tall' : null);
 const erDato = value => (!moment(value, 'DD.MM.YYYY', true).isValid() ? 'Skriv inn korrekt dato.' : null);
+const avhengerAvSann = (value, props, depencancy) => (props.values[depencancy] && !value ? 'Oppgi navn på studiestedet.' : null);
 
 export {
   minLengde,
   erPakrevet,
   kunTall,
   erDato,
+  avhengerAvSann,
 };
