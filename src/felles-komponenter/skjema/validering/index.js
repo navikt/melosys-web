@@ -1,5 +1,5 @@
 import { adresseKreves, norskPostNummer } from './adresse';
-import { minLengde, erPakrevet, kunTall } from './generelt';
+import { minLengde, erPakrevet, kunTall, erDato } from './generelt';
 import { fulltNavn, fnr } from './person';
 
 export {
@@ -10,4 +10,5 @@ export {
   fulltNavn,
   fnr,
   kunTall,
+  erDato,
 };

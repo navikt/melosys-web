@@ -3,7 +3,8 @@ import PT from 'prop-types';
 import { CustomField } from 'react-redux-form-validation';
 
 import * as Nav from '../../../utils/navFrontend';
-import './skjema.css';
+import { normaliserInputDato } from '../../../utils/dato';
+import '../skjema.css';
 
 /** Komponenten nedenfor tar imot errorMessage (og alle andre props). ErrorMessage gjøres om til
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
@@ -29,19 +30,28 @@ InnerInputComponent.defaultProps = {
   input: undefined,
 };
 
-
-function Input({ feltNavn, ...rest }) {
+function Input({ feltNavn, bredde, datoFelt, ...rest }) {
+  const normaliserDatoFunksjon = datoFelt ? normaliserInputDato : null;
   return (
     <CustomField
+      bredde={bredde}
       name={feltNavn}
       errorClass="skjemaelement--harFeil"
+      normalize={normaliserDatoFunksjon}
       customComponent={<InnerInputComponent {...rest} />}
     />
   );
 }
 
 Input.propTypes = {
+  bredde: PT.string,
   feltNavn: PT.string.isRequired,
+  datoFelt: PT.bool,
+};
+
+Input.defaultProps = {
+  bredde: 'fullbredde',
+  datoFelt: false,
 };
 
 export default Input;
