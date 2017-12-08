@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
-import { norskTilBool } from '../utils/utils';
+import { strengTilBool } from '../utils/utils';
 
 // Actions
 const OK = 'soknad/OK';
@@ -37,12 +37,12 @@ export default function reducer(state = initialState, action) {
           inntektNaeringIPerioden: parseInt(dokument.inntektNaeringIPerioden, 10),
         },
         arbeidsgiversBekreftelse: {
-          arbeidsgiverBekrefterUtsendelse: norskTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
-          arbeidstakerAnsattUnderUtsendelsen: norskTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
-          erstatterArbeidstakerenUtsendte: norskTilBool(dokument.erstatterArbeidstakerenUtsendte),
-          arbeidstakerTidligereUtsendt24Mnd: norskTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
-          arbeidsgiverBetalerArbeidsgiveravgift: norskTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
-          trygdeavgiftTrukketGjennomSkatt: norskTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
+          arbeidsgiverBekrefterUtsendelse: strengTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
+          arbeidstakerAnsattUnderUtsendelsen: strengTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
+          erstatterArbeidstakerenUtsendte: strengTilBool(dokument.erstatterArbeidstakerenUtsendte),
+          arbeidstakerTidligereUtsendt24Mnd: strengTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
+          arbeidsgiverBetalerArbeidsgiveravgift: strengTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
+          trygdeavgiftTrukketGjennomSkatt: strengTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
           trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato,
         },
         oppholdUtland: {
@@ -123,7 +123,7 @@ export const JuridiskArbeidsgiverNorgeSelector = createSelector(
 
 export const OppholdUtlandSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
-  soknad => soknad
+  soknad => soknad || {}
 );
 
 export const ArbeidsgiversBekreftelseSelector = createSelector(
