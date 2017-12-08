@@ -5,7 +5,6 @@ import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 import LandVelger from './skjema/landvelger';
-import DatoFelt from './skjema/datofelt';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
@@ -20,13 +19,6 @@ function OppholdUtland ({ oppholdUtland }) {
         heading={<PanelHeader ikon={panelIkon} tittel="Opphold i utlandet" undertittel="" />}
         ariaTittel="Panel for arbeidssted i utlandet">
         <Nav.Container fluid>
-          <Nav.Column xs="6">
-            <DatoFelt label="Fra dato" feltNavn="oppholdsPeriodeFra" />
-            <DatoFelt label="Til dato" feltNavn="oppholdsPeriodeTil" />
-          </Nav.Column>
-          <Nav.Column xs="6">
-            <LandVelger label="Studieland" feltNavn="oppholdsland" />
-          </Nav.Column>
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Student i EØS-land">
