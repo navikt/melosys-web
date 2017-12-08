@@ -45,6 +45,13 @@ export default function reducer(state = initialState, action) {
           trygdeavgiftTrukketGjennomSkatt: norskTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
           trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato,
         },
+        oppholdUtland: {
+          studentIEOS: dokument.studentIEOS,
+          studentSkole: dokument.studentSkole,
+          studentSemester: dokument.studentSemester,
+          studieLand: dokument.studieLand,
+          studentFinansiering: dokument.studentFinansiering,
+        },
       };
 
       return { ...state, data: { ...state.data, soknadDokument: soknad } };
@@ -115,11 +122,11 @@ export const JuridiskArbeidsgiverNorgeSelector = createSelector(
 );
 
 export const OppholdUtlandSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.oppholdUtland,
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
   soknad => soknad
 );
 
-export const ArbeidsgiversBekreftelse = createSelector(
+export const ArbeidsgiversBekreftelseSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
   soknad => soknad || {}
 );

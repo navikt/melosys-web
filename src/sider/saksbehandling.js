@@ -48,7 +48,7 @@ import {
   SoknadSelector,
   ArbeidsinntektSelector,
   OppholdUtlandSelector,
-  ArbeidsgiversBekreftelse,
+  ArbeidsgiversBekreftelseSelector,
 } from '../ducks/soknad';
 
 import {
@@ -192,13 +192,18 @@ const mapStateToProps = state => ({
     inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
     inntektNaeringIPerioden: ArbeidsinntektSelector(state).inntektNaeringIPerioden,
-    arbeidsgiverBekrefterUtsendelse: ArbeidsgiversBekreftelse(state).arbeidsgiverBekrefterUtsendelse,
-    arbeidstakerAnsattUnderUtsendelsen: ArbeidsgiversBekreftelse(state).arbeidstakerAnsattUnderUtsendelsen,
-    erstatterArbeidstakerenUtsendte: ArbeidsgiversBekreftelse(state).erstatterArbeidstakerenUtsendte,
-    arbeidstakerTidligereUtsendt24Mnd: ArbeidsgiversBekreftelse(state).arbeidstakerTidligereUtsendt24Mnd,
-    arbeidsgiverBetalerArbeidsgiveravgift: ArbeidsgiversBekreftelse(state).arbeidsgiverBetalerArbeidsgiveravgift,
-    trygdeavgiftTrukketGjennomSkatt: ArbeidsgiversBekreftelse(state).trygdeavgiftTrukketGjennomSkatt,
-    trygdeavgiftTrukketGjennomSkattDato: ArbeidsgiversBekreftelse(state).trygdeavgiftTrukketGjennomSkattDato,
+    arbeidsgiverBekrefterUtsendelse: ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBekrefterUtsendelse,
+    arbeidstakerAnsattUnderUtsendelsen: ArbeidsgiversBekreftelseSelector(state).arbeidstakerAnsattUnderUtsendelsen,
+    erstatterArbeidstakerenUtsendte: ArbeidsgiversBekreftelseSelector(state).erstatterArbeidstakerenUtsendte,
+    arbeidstakerTidligereUtsendt24Mnd: ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd,
+    arbeidsgiverBetalerArbeidsgiveravgift: ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift,
+    trygdeavgiftTrukketGjennomSkatt: ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt,
+    trygdeavgiftTrukketGjennomSkattDato: ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato,
+    studentIEOS: OppholdUtlandSelector(state).studentIEOS,
+    studentSkole: OppholdUtlandSelector(state).studentSkole,
+    studentSemester: OppholdUtlandSelector(state).studentSemester,
+    studieLand: OppholdUtlandSelector(state).studieLand,
+    studentFinansiering: OppholdUtlandSelector(state).studentFinansiering,
   },
 });
 
