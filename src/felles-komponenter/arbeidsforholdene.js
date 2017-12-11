@@ -5,7 +5,7 @@ import PT from 'prop-types';
 
 import * as MPT from '../proptypes/';
 
-import Arbeidsforholdet from './arbeidsforholdet';
+import Arbeidsforholdet from './arbeidsforhold/arbeidsforholdet';
 
 import './arbeidsforholdene.css';
 
