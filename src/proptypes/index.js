@@ -13,6 +13,7 @@ import { Saksbehandler } from './saksbehandler';
 import { Oppsummering } from './oppsummering';
 import { Periode } from './periode';
 import { Bekreftelser } from './bekreftelser';
+import { SoknadForm } from './soknadForm';
 
 export {
   Saksbehandler,
@@ -38,4 +39,5 @@ export {
   SokListe,
   SokListeEnkeltlinje,
   Kodeverk,
+  SoknadForm,
 };
