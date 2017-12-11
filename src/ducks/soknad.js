@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
-import { strengTilBool } from '../utils/utils';
+import { strengTilBool, strengTilInt } from '../utils/utils';
 
 // Actions
 const OK = 'soknad/OK';
@@ -32,9 +32,9 @@ export default function reducer(state = initialState, action) {
       const soknad = {
         ...state.data.soknadDokument,
         arbeidsinntekt: {
-          inntektNorskIPerioden: parseInt(dokument.inntektNorskIPerioden, 10),
-          inntektUtenlandskIPerioden: parseInt(dokument.inntektUtenlandskIPerioden, 10),
-          inntektNaeringIPerioden: parseInt(dokument.inntektNaeringIPerioden, 10),
+          inntektNorskIPerioden: strengTilInt(dokument.inntektNorskIPerioden),
+          inntektUtenlandskIPerioden: strengTilInt(dokument.inntektUtenlandskIPerioden),
+          inntektNaeringIPerioden: strengTilInt(dokument.inntektNaeringIPerioden),
         },
         arbeidsgiversBekreftelse: {
           arbeidsgiverBekrefterUtsendelse: strengTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
