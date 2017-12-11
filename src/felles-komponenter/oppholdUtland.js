@@ -4,7 +4,6 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
-import LandVelger from './skjema/landvelger';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
@@ -30,7 +29,7 @@ function OppholdUtland ({ soknadForm: { values: { studentIEOS } } }) {
                   <Skjema.Input label="Semester" feltNavn="studentSemester" disabled={!studentIEOS} />
                 </Nav.Column>
                 <Nav.Column xs="6">
-                  <LandVelger label="Studieland" feltNavn="studieLand" disabled={!studentIEOS} />
+                  <Skjema.Input label="Studieland" feltNavn="studieLand" disabled={!studentIEOS} />
                   <Skjema.Textarea
                     maxLength={1000}
                     label="Beskrivelse av finansiering"
