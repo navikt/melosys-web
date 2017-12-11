@@ -268,3 +268,7 @@ export function boolTilStreng (value) {
 export function strengTilBool (value) {
   return value === 'true' ? true : false;
 }
+
+export function strengTilInt (value) {
+  return parseInt(value, 10) || 0;
+}
