@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
-import { norskTilBool } from '../utils/utils';
+import { strengTilBool, strengTilInt } from '../utils/utils';
 
 // Actions
 const OK = 'soknad/OK';
@@ -31,16 +31,27 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
       const soknad = {
         ...state.data.soknadDokument,
-        inntektNorskIPerioden: parseInt(dokument.inntektNorskIPerioden, 10),
-        inntektUtenlandskIPerioden: parseInt(dokument.inntektUtenlandskIPerioden, 10),
-        inntektNaeringIPerioden: parseInt(dokument.inntektNaeringIPerioden, 10),
-        arbeidsgiverBekrefterUtsendelse: norskTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
-        arbeidstakerAnsattUnderUtsendelsen: norskTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
-        erstatterArbeidstakerenUtsendte: norskTilBool(dokument.erstatterArbeidstakerenUtsendte),
-        arbeidstakerTidligereUtsendt24Mnd: norskTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
-        arbeidsgiverBetalerArbeidsgiveravgift: norskTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
-        trygdeavgiftTrukketGjennomSkatt: norskTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
-        trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato,
+        arbeidsinntekt: {
+          inntektNorskIPerioden: strengTilInt(dokument.inntektNorskIPerioden),
+          inntektUtenlandskIPerioden: strengTilInt(dokument.inntektUtenlandskIPerioden),
+          inntektNaeringIPerioden: strengTilInt(dokument.inntektNaeringIPerioden),
+        },
+        arbeidsgiversBekreftelse: {
+          arbeidsgiverBekrefterUtsendelse: strengTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
+          arbeidstakerAnsattUnderUtsendelsen: strengTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
+          erstatterArbeidstakerenUtsendte: strengTilBool(dokument.erstatterArbeidstakerenUtsendte),
+          arbeidstakerTidligereUtsendt24Mnd: strengTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
+          arbeidsgiverBetalerArbeidsgiveravgift: strengTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
+          trygdeavgiftTrukketGjennomSkatt: strengTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
+          trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato,
+        },
+        oppholdUtland: {
+          studentIEOS: dokument.studentIEOS,
+          studentSkole: dokument.studentSkole,
+          studentSemester: dokument.studentSemester,
+          studieLand: dokument.studieLand,
+          studentFinansiering: dokument.studentFinansiering,
+        },
       };
 
       return { ...state, data: { ...state.data, soknadDokument: soknad } };
@@ -111,11 +122,11 @@ export const JuridiskArbeidsgiverNorgeSelector = createSelector(
 );
 
 export const OppholdUtlandSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.oppholdUtland,
-  soknad => soknad
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
+  soknad => soknad || {}
 );
 
-export const ArbeidsgiversBekreftelse = createSelector(
+export const ArbeidsgiversBekreftelseSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
   soknad => soknad || {}
 );

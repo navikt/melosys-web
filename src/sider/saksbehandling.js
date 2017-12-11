@@ -21,6 +21,7 @@ import Medlemskap from '../felles-komponenter/medlemskap';
 import Arbeidsforholdene from '../felles-komponenter/arbeidsforholdene';
 import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
+import OppholdUtland from '../felles-komponenter/oppholdUtland';
 import Inntekt from '../felles-komponenter/inntekt';
 import Permisjoner from '../felles-komponenter/permisjoner';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
@@ -46,8 +47,11 @@ import {
   oppdaterSoknadState,
   SoknadSelector,
   ArbeidsinntektSelector,
-  ArbeidsgiversBekreftelse,
+  OppholdUtlandSelector,
+  ArbeidsgiversBekreftelseSelector,
 } from '../ducks/soknad';
+
+import { boolTilStreng } from '../utils/utils';
 
 import {
   SoknadenFormSelector,
@@ -72,6 +76,7 @@ class Saksbehandling extends Component {
     permisjoner: MPT.Permisjoner,
     soknad: PT.object,
     soknadArbeidsinntekt: PT.object,
+    soknadOppholdUtland: MPT.OppholdUtland,
     handleSubmit: PT.func.isRequired,
     errorSummary: PT.object,
     errorSummaryTitle: PT.string,
@@ -89,6 +94,7 @@ class Saksbehandling extends Component {
     permisjoner: [],
     soknad: {},
     soknadArbeidsinntekt: {},
+    soknadOppholdUtland: {},
     errorSummary: {},
     errorSummaryTitle: '',
   };
@@ -123,8 +129,10 @@ class Saksbehandling extends Component {
       oppsummering,
       permisjoner,
       soknadArbeidsinntekt,
+      soknadOppholdUtland,
       handleSubmit,
       errorSummary,
+      soknadForm,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -146,6 +154,7 @@ class Saksbehandling extends Component {
                 {permisjoner && <Permisjoner permisjoner={permisjoner} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
                 {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
+                <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt inntekt={inntekt} soknadArbeidsinntekt={soknadArbeidsinntekt} />}
@@ -181,17 +190,23 @@ const mapStateToProps = state => ({
   soknad: SoknadSelector(state),
   soknadForm: SoknadenFormSelector(state),
   soknadArbeidsinntekt: ArbeidsinntektSelector(state),
+  soknadOppholdUtland: OppholdUtlandSelector(state),
   initialValues: {
     inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
     inntektNaeringIPerioden: ArbeidsinntektSelector(state).inntektNaeringIPerioden,
-    arbeidsgiverBekrefterUtsendelse: ArbeidsgiversBekreftelse(state).arbeidsgiverBekrefterUtsendelse,
-    arbeidstakerAnsattUnderUtsendelsen: ArbeidsgiversBekreftelse(state).arbeidstakerAnsattUnderUtsendelsen,
-    erstatterArbeidstakerenUtsendte: ArbeidsgiversBekreftelse(state).erstatterArbeidstakerenUtsendte,
-    arbeidstakerTidligereUtsendt24Mnd: ArbeidsgiversBekreftelse(state).arbeidstakerTidligereUtsendt24Mnd,
-    arbeidsgiverBetalerArbeidsgiveravgift: ArbeidsgiversBekreftelse(state).arbeidsgiverBetalerArbeidsgiveravgift,
-    trygdeavgiftTrukketGjennomSkatt: ArbeidsgiversBekreftelse(state).trygdeavgiftTrukketGjennomSkatt,
-    trygdeavgiftTrukketGjennomSkattDato: ArbeidsgiversBekreftelse(state).trygdeavgiftTrukketGjennomSkattDato,
+    arbeidsgiverBekrefterUtsendelse: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBekrefterUtsendelse),
+    arbeidstakerAnsattUnderUtsendelsen: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidstakerAnsattUnderUtsendelsen),
+    erstatterArbeidstakerenUtsendte: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).erstatterArbeidstakerenUtsendte),
+    arbeidstakerTidligereUtsendt24Mnd: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd),
+    arbeidsgiverBetalerArbeidsgiveravgift: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift),
+    trygdeavgiftTrukketGjennomSkatt: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
+    trygdeavgiftTrukketGjennomSkattDato: ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato,
+    studentIEOS: OppholdUtlandSelector(state).studentIEOS,
+    studentSkole: OppholdUtlandSelector(state).studentSkole,
+    studentSemester: OppholdUtlandSelector(state).studentSemester,
+    studieLand: OppholdUtlandSelector(state).studieLand,
+    studentFinansiering: OppholdUtlandSelector(state).studentFinansiering,
   },
 });
 
