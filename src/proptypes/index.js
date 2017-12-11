@@ -1,6 +1,7 @@
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
 import { Inntekt, InntektLinje } from './inntekt';
 import { Arbeidsforhold, Arbeidsforholdene } from './arbeidsforhold';
+import { OppholdUtland } from './oppholdUtland';
 import { MedlemskapPeriode, Medlemskap } from './medlemskap';
 import { Arbeidsavtale } from './arbeidsavtale';
 import { Kodeverk } from './kodeverk';
@@ -12,6 +13,7 @@ import { Saksbehandler } from './saksbehandler';
 import { Oppsummering } from './oppsummering';
 import { Periode } from './periode';
 import { Bekreftelser } from './bekreftelser';
+import { SoknadForm } from './soknadForm';
 
 export {
   Saksbehandler,
@@ -23,6 +25,7 @@ export {
   PermisjonOgPermittering,
   Arbeidsforhold,
   Arbeidsforholdene,
+  OppholdUtland,
   Organisasjon,
   Organisasjoner,
   MedlemskapPeriode,
@@ -36,4 +39,5 @@ export {
   SokListe,
   SokListeEnkeltlinje,
   Kodeverk,
+  SoknadForm,
 };
