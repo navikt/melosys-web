@@ -11,9 +11,9 @@ export const feltGrupper = {
   oppholdUtland: {
     studentIEOS: [],
     studentSkole: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
-    studentSemester: [],
-    studieLand: [],
-    studentFinansiering: [],
+    studentSemester: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
+    studieLand: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
+    studentFinansiering: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
   },
   bekreftelser: {
     arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
