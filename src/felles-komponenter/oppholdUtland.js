@@ -10,7 +10,7 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './arbeidsgiverUtland.css';
 
-function OppholdUtland ({ oppholdUtland }) {
+function OppholdUtland ({ soknadForm: { values: { studentIEOS } } }) {
   const panelIkon = Ikoner.Ferdig;
 
   return (
@@ -26,16 +26,16 @@ function OppholdUtland ({ oppholdUtland }) {
                   <Skjema.Checkbox label="Søkeren er student i EØS-land" feltNavn="studentIEOS" />
                 </Nav.Column>
                 <Nav.Column xs="6">
-                  <Skjema.Input label="Skole" feltNavn="studentSkole" disabled={!oppholdUtland.studentIEOS} />
-                  <Skjema.Input label="Semester" feltNavn="studentSemester" disabled={!oppholdUtland.studentIEOS} />
+                  <Skjema.Input label="Skole" feltNavn="studentSkole" disabled={!studentIEOS} />
+                  <Skjema.Input label="Semester" feltNavn="studentSemester" disabled={!studentIEOS} />
                 </Nav.Column>
                 <Nav.Column xs="6">
-                  <LandVelger label="Studieland" feltNavn="studieLand" disabled={!oppholdUtland.studentIEOS} />
+                  <LandVelger label="Studieland" feltNavn="studieLand" disabled={!studentIEOS} />
                   <Skjema.Textarea
                     maxLength={1000}
                     label="Beskrivelse av finansiering"
                     feltNavn="studentFinansiering"
-                    disabled={!oppholdUtland.studentIEOS}
+                    disabled={!studentIEOS}
                   />
                 </Nav.Column>
               </Nav.Fieldset>
@@ -48,11 +48,11 @@ function OppholdUtland ({ oppholdUtland }) {
 }
 
 OppholdUtland.propTypes = {
-  oppholdUtland: MPT.OppholdUtland,
+  soknadForm: MPT.SoknadForm,
 };
 
 OppholdUtland.defaultProps = {
-  oppholdUtland: {},
+  soknadForm: {},
 };
 
 export default OppholdUtland;

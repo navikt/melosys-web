@@ -132,6 +132,7 @@ class Saksbehandling extends Component {
       soknadOppholdUtland,
       handleSubmit,
       errorSummary,
+      soknadForm,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -153,7 +154,7 @@ class Saksbehandling extends Component {
                 {permisjoner && <Permisjoner permisjoner={permisjoner} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
                 {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
-                <OppholdUtland oppholdUtland={soknadOppholdUtland} />
+                <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt inntekt={inntekt} soknadArbeidsinntekt={soknadArbeidsinntekt} />}
