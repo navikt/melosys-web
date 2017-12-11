@@ -7,7 +7,7 @@ import * as Ikoner from '../resources/images';
 
 import DatoOmrade from './datoOmrade/datoOmrade';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
-import { boolTilNorsk } from '../utils/utils';
+import { boolTilNorsk, datoDiff } from '../utils/utils';
 
 import './arbeidsforholdet.css';
 import EnkeltDato from './datoOmrade/enkeltDato';
@@ -55,6 +55,9 @@ const Arbeidsforholdet = props => {
     arbeidsavtaler,
   } = props.arbeidsforhold;
 
+  const varighet = datoDiff(ansettelsesPeriode.fom, ansettelsesPeriode.tom);
+  const varighetLabel = `${varighet} måned${varighet > 1 && 'er'}`;
+
   return (
     <div className="panelSeksjon arbeidsforholdet">
       <Nav.EkspanderbartpanelBase
@@ -70,6 +73,7 @@ const Arbeidsforholdet = props => {
               <Nav.Column xs="5">
                 <Nav.Container fluid>
                   <DatoOmrade periode={ansettelsesPeriode} />
+                  Varighet: {ansettelsesPeriode.tom ? varighetLabel : '(ikke avsluttet)'}
                   <dl className="arbeidsforholdet__detaljer">
                     <dt>A-ordning:</dt>
                     <dd>{boolTilNorsk(Aordning)}</dd>
