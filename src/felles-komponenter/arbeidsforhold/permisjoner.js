@@ -1,11 +1,11 @@
 import React from 'react';
 
-import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
-import * as Ikoner from '../resources/images';
+import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../proptypes/index';
+import * as Ikoner from '../../resources/images/index';
 
-import EnkeltDato from './datoOmrade/enkeltDato';
-import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import EnkeltDato from '../datoOmrade/enkeltDato';
+import PanelHeader from '../panelHeader/panelHeader';
 
 import './permisjoner.css';
 
