@@ -272,3 +272,8 @@ export function strengTilBool (value) {
 export function strengTilInt (value) {
   return parseInt(value, 10) || 0;
 }
+
+export function datoDiff (fom, tom, enhet = "months") {
+  if(!fom || !tom) return false;
+  return moment(tom).diff(fom, enhet);
+}

@@ -3,10 +3,10 @@ import PT from 'prop-types';
 
 const ArbeidsavtalePropType = PT.shape({
   arbeidstidsordning: PT.string,
-  avloenningstype: PT.string,
   yrke: PT.string,
   beregnetAntallTimerPrUke: PT.number,
   endringsdatoStillingsprosent: PT.string,
+  antallTimerFraGammeltRegister: PT.string,
 });
 
 export {
