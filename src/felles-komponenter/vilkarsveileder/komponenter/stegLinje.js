@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -7,37 +7,35 @@ import './stegLinje.css';
 
 const uuid = require('uuid/v4');
 
-class StegLinje extends Component {
-  static defaultProps = {
-    steg: [],
-  }
+const StegLinje = props => {
+  const { steg } = props;
 
-  static propTypes = {
-    steg: PT.arrayOf(PT.object).isRequired,
-    stegKlikk: PT.func.isRequired,
-  }
+  // Klargjør betingede elementer.
+  const stegKnapper = steg.map((item, index) => (
+    <StegIkon
+      key={uuid()}
+      onClick={() => this.props.stegKlikk(index)}
+      ikon={item.ikoner[item.status]}
+      tilgjengelig={item.tilgjengelig}
+    />));
 
-  render() {
-    const { steg } = this.props;
+  return (
+    <div>
+      <ul className="stegLinje">
+        {stegKnapper}
+      </ul>
+    </div>
+  );
+};
 
-    // Klargjør betingede elementer.
-    const stegKnapper = steg.map((item, index) => (
-      <StegIkon
-        key={uuid()}
-        onClick={() => this.props.stegKlikk(index)}
-        ikon={item.ikoner[item.status]}
-        tilgjengelig={item.tilgjengelig}
-      />));
+StegLinje.defaultProps = {
+  steg: [],
+};
 
-    return (
-      <div>
-        <ul className="stegLinje">
-          {stegKnapper}
-        </ul>
-      </div>
-    );
-  }
-}
+StegLinje.propTypes = {
+  steg: PT.arrayOf(PT.object).isRequired,
+  stegKlikk: PT.func.isRequired,
+};
 
 const mapStateToProps = () => ({});
 
