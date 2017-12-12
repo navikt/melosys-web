@@ -14,11 +14,16 @@ import EnkeltDato from '../datoOmrade/enkeltDato';
 
 const uuid = require('uuid/v4');
 
+/** Dette er komponent for iterering av arbeidsavtaler slik den leveres innenfor ett
+ * arbeidsforhold
+ * @param props.avtalen Den enkelte avtale.
+ */
 function Arbeidsavtalen({ avtalen }) {
   const {
     arbeidstidsordning,
     yrke,
     beregnetAntallTimerPrUke,
+    antallTimerFraGammeltRegister,
   } = avtalen;
 
   return (
@@ -38,8 +43,7 @@ function Arbeidsavtalen({ avtalen }) {
             <dd>{beregnetAntallTimerPrUke || '-'}</dd>
             <dt>Antall timer pr uke</dt>
             <dd>{beregnetAntallTimerPrUke || '-'}</dd>
-            <dt>Antall timer fra gammelt register</dt>
-            <dd>37,5</dd>
+            {antallTimerFraGammeltRegister && <div><dt>Antall timer fra gammelt register</dt><dd>37,5</dd></div> }
           </dl>
         </Nav.Column>
       </div>
