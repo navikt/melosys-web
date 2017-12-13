@@ -7,6 +7,7 @@ import * as Ikoner from '../../resources/images/index';
 
 import DatoOmrade from '../datoOmrade/datoOmrade';
 import PanelHeader from '../panelHeader/panelHeader';
+import TimerTimelonnet from './timertimelonnet';
 import { boolTilNorsk, datoDiff } from '../../utils/utils';
 
 import './arbeidsforholdet.css';
@@ -68,6 +69,7 @@ const Arbeidsforholdet = props => {
     Aordning,
     arbeidsgiver,
     arbeidsavtaler,
+    timerTimelonnet,
   } = props.arbeidsforhold;
 
   const { navn: arbeidsgiverNavn } = arbeidsgiver;
@@ -116,6 +118,7 @@ const Arbeidsforholdet = props => {
           </Nav.Row>
           <Nav.Row>
             <Nav.Undertittel>Timer timelønnet</Nav.Undertittel>
+            <TimerTimelonnet timerTimelonnet={timerTimelonnet} />
             <Nav.Undertittel>Utenlandsopphold</Nav.Undertittel>
             <Nav.Undertittel>Permisjoner</Nav.Undertittel>
           </Nav.Row>
