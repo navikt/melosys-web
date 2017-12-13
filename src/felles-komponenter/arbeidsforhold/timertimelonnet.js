@@ -1,6 +1,7 @@
 import React from 'react';
 
 import * as MPT from '../../proptypes/index';
+import * as Nav from '../../utils/navFrontend';
 
 import EnkeltDato from '../datoOmrade/enkeltDato';
 
@@ -8,7 +9,7 @@ const uuid = require('uuid/v4');
 
 /** Lister en enkeltlinje for antall timer timelønnet.
  *
- * @param { props.timeLine } Enkeltlinje for timelønn.
+ * @param { props.timeLinje } Enkeltlinje for timelønn.
  */
 const TimeLinje = ({ timeLinje }) => {
   const { timelonnetPeriode, rapporteringsPeriode, antallTimer } = timeLinje;
@@ -32,6 +33,7 @@ TimeLinje.propTypes = {
  */
 const TimerTimelonnet = ({ timerTimelonnet }) => (
   <div className="permisjoner">
+    <Nav.Undertittel>Timer timelønnet</Nav.Undertittel>
     <table className="tabellutlisting">
       <tbody>
         <tr>

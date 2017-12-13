@@ -17,7 +17,7 @@ const uuid = require('uuid/v4');
 
 /** Dette er komponent for iterering av arbeidsavtaler slik den leveres innenfor ett
  * arbeidsforhold
- * @param props.avtalen Den enkelte avtale.
+ * @param { props.avtalen } Den enkelte avtale.
  */
 function Arbeidsavtalen({ avtalen }) {
   const {
@@ -117,8 +117,7 @@ const Arbeidsforholdet = props => {
             </div>
           </Nav.Row>
           <Nav.Row>
-            <Nav.Undertittel>Timer timelønnet</Nav.Undertittel>
-            <TimerTimelonnet timerTimelonnet={timerTimelonnet} />
+            {timerTimelonnet && <TimerTimelonnet timerTimelonnet={timerTimelonnet} /> }
             <Nav.Undertittel>Utenlandsopphold</Nav.Undertittel>
             <Nav.Undertittel>Permisjoner</Nav.Undertittel>
           </Nav.Row>
