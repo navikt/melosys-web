@@ -7,6 +7,7 @@ import * as Ikoner from '../../resources/images/index';
 
 import DatoOmrade from '../datoOmrade/datoOmrade';
 import PanelHeader from '../panelHeader/panelHeader';
+import Permisjoner from './permisjoner';
 import { boolTilNorsk, datoDiff } from '../../utils/utils';
 
 import './arbeidsforholdet.css';
@@ -16,7 +17,7 @@ const uuid = require('uuid/v4');
 
 /** Dette er komponent for iterering av arbeidsavtaler slik den leveres innenfor ett
  * arbeidsforhold
- * @param props.avtalen Den enkelte avtale.
+ * @param { props.avtalen } Den enkelte avtale.
  */
 function Arbeidsavtalen({ avtalen }) {
   const {
@@ -68,6 +69,7 @@ const Arbeidsforholdet = props => {
     Aordning,
     arbeidsgiver,
     arbeidsavtaler,
+    permisjonOgPermittering,
   } = props.arbeidsforhold;
 
   const { navn: arbeidsgiverNavn } = arbeidsgiver;
@@ -118,6 +120,7 @@ const Arbeidsforholdet = props => {
             <Nav.Undertittel>Timer timelønnet</Nav.Undertittel>
             <Nav.Undertittel>Utenlandsopphold</Nav.Undertittel>
             <Nav.Undertittel>Permisjoner</Nav.Undertittel>
+            <Permisjoner permisjoner={permisjonOgPermittering} />
           </Nav.Row>
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
