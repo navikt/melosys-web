@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import classnames from 'classnames';
 
 import * as MPT from '../../proptypes/index';
@@ -56,7 +55,7 @@ class TimerTimelonnet extends Component {
     const sideNav = [];
     for (let side = 0; side < Math.ceil(timerTimelonnet.length / this.state.linjePerSide); side += 1) {
       const classname = classnames({ paginering__nav: true, 'paginering__nav--aktiv': side === this.state.side });
-      sideNav.push(<Link to={'#'} key={uuid()} className={classname} onClick={() => this.visListeSide(side)}>{side + 1}</Link>);
+      sideNav.push(<button key={uuid()} className={classname} onClick={() => this.visListeSide(side)}>{side + 1}</button>);
     }
 
     return (
