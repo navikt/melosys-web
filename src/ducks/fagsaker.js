@@ -142,20 +142,3 @@ export const OppsummeringSelector = createSelector(
     registrertDato: saksdata.registrertDato,
   })
 );
-
-/** Hent alle arbeidsforhold og trekk ut permisjoner. I tillegg skal hver permisjon ha en kopi av arbeidsgiver
- * slik at komponenten enklere kan loope ut hver permisjon med tilhørende arbeidsgiver i en tabell.
- */
-export const PermisjonerSelector = createSelector(
-  state => ArbeidsforholdeneSelector(state),
-  arbeidsforholdene => {
-    // Reduce alle permisjoner fra flere arbeidsforhold inn i én array.
-    const permisjoner = arbeidsforholdene.reduce((samling, forhold) => {
-      // Slå sammen hver permisjon i ett arbeidsforhold med en kopi av kopi av "arbeidstiver"-objektet.
-      const permisjonerIForhold = forhold.permisjonOgPermittering.map(permisjon => ({ ...permisjon, arbeidsgiver: forhold.arbeidsgiver }));
-      return [...samling, ...permisjonerIForhold];
-    }, []);
-
-    return permisjoner;
-  }
-);

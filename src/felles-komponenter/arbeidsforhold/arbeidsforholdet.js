@@ -8,6 +8,7 @@ import * as Ikoner from '../../resources/images/index';
 import DatoOmrade from '../datoOmrade/datoOmrade';
 import PanelHeader from '../panelHeader/panelHeader';
 import TimerTimelonnet from './timertimelonnet';
+import Permisjoner from './permisjoner';
 import { boolTilNorsk, datoDiff } from '../../utils/utils';
 
 import './arbeidsforholdet.css';
@@ -70,6 +71,7 @@ const Arbeidsforholdet = props => {
     arbeidsgiver,
     arbeidsavtaler,
     timerTimelonnet,
+    permisjonOgPermittering,
   } = props.arbeidsforhold;
 
   const { navn: arbeidsgiverNavn } = arbeidsgiver;
@@ -119,7 +121,7 @@ const Arbeidsforholdet = props => {
           <Nav.Row>
             {timerTimelonnet && <TimerTimelonnet timerTimelonnet={timerTimelonnet} /> }
             <Nav.Undertittel>Utenlandsopphold</Nav.Undertittel>
-            <Nav.Undertittel>Permisjoner</Nav.Undertittel>
+            {permisjonOgPermittering && <Permisjoner permisjoner={permisjonOgPermittering} /> }
           </Nav.Row>
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
