@@ -1,6 +1,7 @@
 import React from 'react';
 
 import * as MPT from '../../proptypes/index';
+import * as Nav from '../../utils/navFrontend';
 import Tabell from '../tabell/tabell';
 
 import EnkeltDato from '../datoOmrade/enkeltDato';
@@ -21,12 +22,14 @@ const TimerTimelonnet = ({ timerTimelonnet }) => {
   });
 
   return (
-    <Tabell
-      className="timertimelonnet"
-      kolonneNavn={['Startdato', 'Sluttdato', 'Rapporteringsperiode', 'Antall timer']}
-      tabellData={timelonnetArrayed}
-      linjerPerSide={5}
-    />
+    <div>
+      <Nav.Undertittel>Antall timer timelønnet</Nav.Undertittel>
+      <Tabell
+        kolonneNavn={['Startdato', 'Sluttdato', 'Rapporteringsperiode', 'Antall timer']}
+        tabellData={timelonnetArrayed}
+        linjerPerSide={5}
+      />
+    </div>
   );
 };
 
