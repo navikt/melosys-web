@@ -31,8 +31,12 @@ class Tabell extends Component {
     aktivSide: 0,
   }
 
-  visListeSide = aktivSide => {
-    this.setState({ aktivSide });
+  /** Håndterer klikk på pagineringsknapper for å bytte visningsside
+   *
+   * @param nySide Siden som brukeren vil gå til (starter på 0).
+   */
+  tilSideHandler = nySide => {
+    this.setState({ aktivSide: nySide });
   }
 
   render() {
@@ -55,7 +59,7 @@ class Tabell extends Component {
     // array length være lik 0 som gjør at ingen knapper rendres dersom hele tabellen vises som én side uten paginering.
     const sideNav = new Array(totaltSider).fill(undefined).map((item, index) => {
       const classname = classnames({ paginering__nav: true, 'paginering__nav--aktiv': index === this.state.aktivSide });
-      return (<button key={uuid()} className={classname} onClick={() => this.visListeSide(index)}>{index + 1}</button>);
+      return (<button key={uuid()} className={classname} onClick={() => this.tilSideHandler(index)}>{index + 1}</button>);
     });
 
     const paginering = sideNav.length > 0
