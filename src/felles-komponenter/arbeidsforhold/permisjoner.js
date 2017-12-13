@@ -1,70 +1,52 @@
 import React from 'react';
 
-import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/index';
-import * as Ikoner from '../../resources/images/index';
 
 import EnkeltDato from '../datoOmrade/enkeltDato';
-import PanelHeader from '../panelHeader/panelHeader';
 
 import './permisjoner.css';
 
 const uuid = require('uuid/v4');
 
-function Permisjonen({ permisjonen }) {
-  const { permisjonsPeriode, permisjonsId, permisjonsprosent, permisjonOgPermittering, arbeidsgiver } = permisjonen;
+/** Lister en enkeltpermisjon (én linje)
+ *
+ * @param permisjonen
+ */
+const Permisjonen = ({ permisjonen }) => {
+  const { permisjonsPeriode, permisjonsprosent, permisjonOgPermittering } = permisjonen;
   return (
-    <tr>
+    <tr className="border-bottom">
       <td>{<EnkeltDato dato={permisjonsPeriode.fom} />} </td>
       <td>{<EnkeltDato dato={permisjonsPeriode.tom} />}</td>
-      <td>{permisjonsId}</td>
-      <td>{permisjonsprosent}</td>
-      <td>{arbeidsgiver.navn}</td>
       <td>{permisjonOgPermittering}</td>
+      <td>{permisjonsprosent}</td>
     </tr>
   );
-}
+};
 
 Permisjonen.propTypes = {
   permisjonen: MPT.Permisjonen.isRequired,
 };
 
-function Permisjoner({ permisjoner }) {
-  const nyestePermisjon = permisjoner[0];
-  const panelUndertittel = nyestePermisjon ?
-    <div>
-      Nyeste permisjon: {nyestePermisjon.permisjonsprosent}%
-      i perioden <EnkeltDato dato={nyestePermisjon.permisjonsPeriode.fom} /> - <EnkeltDato dato={nyestePermisjon.permisjonsPeriode.tom} />
-    </div>
-    :
-    '';
-
-  return (
-    <div className="permisjoner panelSeksjon">
-      <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Permisjoner" undertittel={panelUndertittel} />}
-        ariaTittel="Panel for permisjoner" >
-        <section>
-          <Nav.Container fluid>
-            <table className="tabellutlisting permisjoner__detaljer">
-              <tbody>
-                <tr>
-                  <th>Fra</th>
-                  <th>Til</th>
-                  <th>ID</th>
-                  <th>Prosent</th>
-                  <th>Arbeidsgiver</th>
-                  <th>Type</th>
-                </tr>
-                { permisjoner.map(permisjonen => <Permisjonen key={uuid()} permisjonen={permisjonen} />) }
-              </tbody>
-            </table>
-          </Nav.Container>
-        </section>
-      </Nav.EkspanderbartpanelBase>
-    </div>
-  );
-}
+/** Lister alle permisjoner i form av en table.
+ *
+ * @param permisjoner Array med permisjoner.
+ */
+const Permisjoner = ({ permisjoner }) => (
+  <div className="permisjoner">
+    <table className="tabellutlisting">
+      <tbody>
+        <tr>
+          <th>Fra</th>
+          <th>Til</th>
+          <th>Type</th>
+          <th>Prosent</th>
+        </tr>
+        { permisjoner.map(permisjonen => <Permisjonen key={uuid()} permisjonen={permisjonen} />) }
+      </tbody>
+    </table>
+  </div>
+);
 
 Permisjoner.propTypes = {
   permisjoner: MPT.Permisjoner.isRequired,
