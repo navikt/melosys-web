@@ -119,8 +119,7 @@ const Arbeidsforholdet = props => {
           <Nav.Row>
             <Nav.Undertittel>Timer timelønnet</Nav.Undertittel>
             <Nav.Undertittel>Utenlandsopphold</Nav.Undertittel>
-            <Nav.Undertittel>Permisjoner</Nav.Undertittel>
-            <Permisjoner permisjoner={permisjonOgPermittering} />
+            {permisjonOgPermittering && <Permisjoner permisjoner={permisjonOgPermittering} /> }
           </Nav.Row>
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>

@@ -1,6 +1,7 @@
 import React from 'react';
 
 import * as MPT from '../../proptypes/index';
+import * as Nav from '../../utils/navFrontend';
 
 import EnkeltDato from '../datoOmrade/enkeltDato';
 
@@ -34,6 +35,7 @@ Permisjonen.propTypes = {
  */
 const Permisjoner = ({ permisjoner }) => (
   <div className="permisjoner">
+    <Nav.Undertittel>Permisjoner</Nav.Undertittel>
     <table className="tabellutlisting">
       <tbody>
         <tr>
