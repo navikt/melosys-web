@@ -23,7 +23,6 @@ import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
 import OppholdUtland from '../felles-komponenter/oppholdUtland';
 import Inntekt from '../felles-komponenter/inntekt';
-import Permisjoner from '../felles-komponenter/permisjoner';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
@@ -38,7 +37,6 @@ import {
   InntektSoknadenSelector,
   BekreftelserSelector,
   OppsummeringSelector,
-  PermisjonerSelector,
 } from '../ducks/fagsaker';
 
 import {
@@ -73,7 +71,6 @@ class Saksbehandling extends Component {
     inntekt: MPT.Inntekt,
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
-    permisjoner: MPT.Permisjoner,
     soknad: PT.object,
     soknadArbeidsinntekt: PT.object,
     soknadOppholdUtland: MPT.OppholdUtland,
@@ -91,7 +88,6 @@ class Saksbehandling extends Component {
     inntekt: {},
     bekreftelser: [],
     oppsummering: {},
-    permisjoner: [],
     soknad: {},
     soknadArbeidsinntekt: {},
     soknadOppholdUtland: {},
@@ -127,7 +123,6 @@ class Saksbehandling extends Component {
       inntekt,
       bekreftelser,
       oppsummering,
-      permisjoner,
       soknadArbeidsinntekt,
       soknadOppholdUtland,
       handleSubmit,
@@ -151,7 +146,6 @@ class Saksbehandling extends Component {
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {errorSummary}
                 {person && <Personopplysninger person={person} />}
-                {permisjoner && <Permisjoner permisjoner={permisjoner} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
                 {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
@@ -186,7 +180,6 @@ const mapStateToProps = state => ({
   inntekt: InntektSoknadenSelector(state),
   bekreftelser: BekreftelserSelector(state),
   oppsummering: OppsummeringSelector(state),
-  permisjoner: PermisjonerSelector(state),
   soknad: SoknadSelector(state),
   soknadForm: SoknadenFormSelector(state),
   soknadArbeidsinntekt: ArbeidsinntektSelector(state),
