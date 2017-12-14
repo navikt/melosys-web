@@ -10,6 +10,7 @@ import EnkeltDato from '../datoOmrade/enkeltDato';
 import PanelHeader from '../panelHeader/panelHeader';
 import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';
+import Utenlandsopphold from './utenlandsopphold';
 
 import { boolTilNorsk, datoDiff } from '../../utils/utils';
 
@@ -72,6 +73,7 @@ const Arbeidsforholdet = props => {
     arbeidsgiver,
     arbeidsavtaler,
     timerTimelonnet,
+    utenlandsopphold,
     permisjonOgPermittering,
   } = props.arbeidsforhold;
 
@@ -120,9 +122,9 @@ const Arbeidsforholdet = props => {
             </div>
           </Nav.Row>
           <Nav.Row>
-            {timerTimelonnet && <TimerTimelonnet timerTimelonnet={timerTimelonnet} /> }
-            {permisjonOgPermittering && <Permisjoner permisjoner={permisjonOgPermittering} /> }
-            <Nav.Undertittel>Utenlandsopphold</Nav.Undertittel>
+            {timerTimelonnet && (timerTimelonnet.length > 0) && <TimerTimelonnet timerTimelonnet={timerTimelonnet} /> }
+            {permisjonOgPermittering && (permisjonOgPermittering.length > 0) && <Permisjoner permisjoner={permisjonOgPermittering} /> }
+            {utenlandsopphold && (utenlandsopphold.length > 0) && <Utenlandsopphold utenlandsopphold={utenlandsopphold} /> }
           </Nav.Row>
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
