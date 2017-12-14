@@ -6,12 +6,14 @@ import * as MPT from '../../proptypes/index';
 import * as Ikoner from '../../resources/images/index';
 
 import DatoOmrade from '../datoOmrade/datoOmrade';
+import EnkeltDato from '../datoOmrade/enkeltDato';
 import PanelHeader from '../panelHeader/panelHeader';
 import Permisjoner from './permisjoner';
+import TimerTimelonnet from './timertimelonnet';
+
 import { boolTilNorsk, datoDiff } from '../../utils/utils';
 
 import './arbeidsforholdet.css';
-import EnkeltDato from '../datoOmrade/enkeltDato';
 
 const uuid = require('uuid/v4');
 
@@ -69,6 +71,7 @@ const Arbeidsforholdet = props => {
     Aordning,
     arbeidsgiver,
     arbeidsavtaler,
+    timerTimelonnet,
     permisjonOgPermittering,
   } = props.arbeidsforhold;
 
@@ -117,9 +120,9 @@ const Arbeidsforholdet = props => {
             </div>
           </Nav.Row>
           <Nav.Row>
-            <Nav.Undertittel>Timer timelønnet</Nav.Undertittel>
-            <Nav.Undertittel>Utenlandsopphold</Nav.Undertittel>
+            {timerTimelonnet && <TimerTimelonnet timerTimelonnet={timerTimelonnet} /> }
             {permisjonOgPermittering && <Permisjoner permisjoner={permisjonOgPermittering} /> }
+            <Nav.Undertittel>Utenlandsopphold</Nav.Undertittel>
           </Nav.Row>
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
