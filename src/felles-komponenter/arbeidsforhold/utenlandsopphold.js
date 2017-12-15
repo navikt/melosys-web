@@ -15,7 +15,7 @@ const Utenlandsopphold = ({ utenlandsopphold }) => {
     // Tabell-komponenten er generisk og trenger at hver linje
     // kommer inn som en ren array og som rendres gjennomsiktig ut i GUI.
     // All formattering eller komponent-innsett må derfor gjøres her og returnere
-    // en ny ferdigtygget array (timelonnetArrayed).
+    // en ny ferdigtygget array.
     [
       <EnkeltDato dato={linje.oppholdsPeriode.fom} />,
       <EnkeltDato dato={linje.oppholdsPeriode.tom} />,
@@ -23,7 +23,7 @@ const Utenlandsopphold = ({ utenlandsopphold }) => {
       linje.oppholdsland,
     ]));
 
-  return (
+  return utenlandsopphold.length > 0 ? (
     <div>
       <Nav.Undertittel>Utenlandsopphold</Nav.Undertittel>
       <Tabell
@@ -32,7 +32,7 @@ const Utenlandsopphold = ({ utenlandsopphold }) => {
         linjerPerSide={5}
       />
     </div>
-  );
+  ) : null;
 };
 
 Utenlandsopphold.propTypes = {
