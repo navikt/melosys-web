@@ -15,7 +15,7 @@ const TimerTimelonnet = ({ timerTimelonnet }) => {
     // Tabell-komponenten er generisk og trenger at hver linje
     // kommer inn som en ren array og som rendres gjennomsiktig ut i GUI.
     // All formattering eller komponent-innsett må derfor gjøres her og returnere
-    // en ny ferdigtygget array (timelonnetArrayed).
+    // en ny ferdigtygget array.
     [
       <EnkeltDato dato={linje.timelonnetPeriode.fom} />,
       <EnkeltDato dato={linje.timelonnetPeriode.tom} />,
@@ -23,7 +23,7 @@ const TimerTimelonnet = ({ timerTimelonnet }) => {
       linje.antallTimer,
     ]));
 
-  return (
+  return timerTimelonnet.length > 0 ? (
     <div>
       <Nav.Undertittel>Antall timer timelønnet</Nav.Undertittel>
       <Tabell
@@ -32,7 +32,7 @@ const TimerTimelonnet = ({ timerTimelonnet }) => {
         linjerPerSide={5}
       />
     </div>
-  );
+  ) : null;
 };
 
 TimerTimelonnet.propTypes = {

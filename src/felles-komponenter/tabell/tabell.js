@@ -62,7 +62,7 @@ class Tabell extends Component {
       return (<button key={uuid()} className={classname} onClick={() => this.tilSideHandler(index)}>{index + 1}</button>);
     });
 
-    const paginering = sideNav.length > 0
+    const paginering = sideNav.length > 1
       ?
       <div className="paginering" aria-label="Naviger blant flere sider i dennne tabellen">
         {sideNav.map(nav => nav)}
@@ -75,7 +75,7 @@ class Tabell extends Component {
         <table className="tabellutlisting">
           <tbody>
             <tr>
-              {kolonneNavn.map(kolonne => <th key={uuid()}>{kolonne}</th>)}
+              {kolonneNavn.map(kolonne => <th key={uuid()} scope="col">{kolonne}</th>)}
             </tr>
             {timeLinjeChunk.map(linjeData => <TabellLinje key={uuid()} linjeData={linjeData} />)}
           </tbody>
