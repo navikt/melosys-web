@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { fetchToJson, postAsJson } from './utils';
+import {fetchToJson, postAsJson, print, sjekkStatuskode, toJson} from './utils';
 
 /*
 function erDev() {
@@ -21,12 +21,16 @@ const API_MELOSYS_URL = 'http://a34apvl00025:3002/melosys/api/';
 const API_SAKSBEHANDLER = 'saksbehandler';
 const API_SAKSOPPLYSNINGER = 'arbeidsforhold';
 */
-console.log('process.env', process.env);
+console.trace('process.env', process.env);
 
 const headers = new Headers({
   Accept: 'application/json',
   'Accept-Charset': 'utf-8',
+  'Content-Type': 'text/plain',
+  'Access-Control-Allow-Credentials': true,
+  'Access-Control-Request-Method': 'GET',
 });
+
 
 export function hentSoknad() {
   const URI_SOKNAD =  `${API_MELOSYS_URL}soknad/`;
@@ -35,15 +39,13 @@ export function hentSoknad() {
 
 export function sendSoknad(dokument) {
   const URI_SOKNAD =`${API_MELOSYS_URL}soknad`;
-  /*
   const soknadHeader = new Headers({
     Accept: 'application/json',
     'Accept-Charset': 'utf-8',
-    'Content-Type': 'application/json;charset=UTF-8',
+    'Content-Type': 'text/plain',
+    'Access-Control-Request-Method': 'POST',
   });
-  //return postAsJson(URI_SOKNAD, dokument, { headers: soknadHeader });
-  */
-  return postAsJson(URI_SOKNAD, dokument, { headers: headers });
+  return postAsJson(URI_SOKNAD, dokument, { headers: soknadHeader });
 }
 
 export function hentFagsaker(snr) {
@@ -73,7 +75,22 @@ export function hentTidligeresaker(brukernavn) {
 
 export function hentSaksbehandler() {
   const URI_SAKSBEHANDLER = `${API_MELOSYS_URL}${API_SAKSBEHANDLER}`;
-  return fetchToJson(URI_SAKSBEHANDLER, { headers: headers });
+  let myHeaders = new Headers();
+  myHeaders.set('Accept', 'application/json');
+  myHeaders.set('Accept-Charset', 'UTF-8');
+  myHeaders.set('Access-Control-Request-Method', 'GET');
+  myHeaders.set('Origin', 'http://localhost:3000');
+  let myConfig = {
+    method: 'GET',
+    headers: myHeaders,
+    credentials: 'include',
+    mode: 'cors',
+    cache: 'default'
+  };
+  let myRequest = new Request(URI_SAKSBEHANDLER, myConfig);
+
+  return fetch(myRequest, myConfig).then(print).then(sjekkStatuskode).then(toJson);
+  //return fetchToJson(URI_SAKSBEHANDLER, { headers: headers });
 }
 
 export function hentSaksopplysninger(fnr) {

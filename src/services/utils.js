@@ -27,7 +27,14 @@ export function toJson(response) {
 }
 
 export function print(response) {
-  console.log(response); // eslint-disable-line no-console
+  if (response && response.ok) {
+    console.log(response); // eslint-disable-line no-console
+    if (response.headers) {
+      for (let entry of response.headers) {
+        console.log(entry);
+      }
+    }
+  }
   return response;
 }
 
