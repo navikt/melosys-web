@@ -83,25 +83,31 @@ if (config.headers) {
     .then(sjekkStatuskode)
     .then(toJson);
 }
-function methodToJson(method, url, data, config) {
-  return fetchToJson(url, {
-    ...{
-      method,
-      headers: new Headers({
-        'Content-Type': 'application/json;charset=UTF-8',
-      }),
-      body: JSON.stringify(data),
-    },
-    ...config,
-  });
-}
+function methodToJson(method, url, data) {
+  const headers = new Headers();
+  headers.set('Accept', 'application/json');
+  headers.set('Accept-Charset', 'UTF-8');
+  headers.set('Access-Control-Request-Method', method);
+  headers.set('Origin', window.location.origin);
+  const fetchConfig = {
+    method,
+    headers,
+    credentials: 'include',
+    mode: 'cors',
+    cache: 'default',
+  };
+  if (method === 'POST') {
+    fetchConfig.body = JSON.stringify(data);
+    fetchConfig.headers.append('Content-Type', 'text/plain');
+  }
 
-export function postAsJson(url, data = {}, config = {}) {
-  return methodToJson('post', url, data, config);
+  return fetchToJson(url, fetchConfig);
 }
-
-export function putAsJson(url, data = {}, config = {}) {
-  return methodToJson('put', url, data, config);
+export function getAsJson(url) {
+  return methodToJson('GET', url);
+}
+export function postAsJson(url, data = {}) {
+  return methodToJson('POST', url, data);
 }
 
 export function doThenDispatch(fn, { OK, FEILET, PENDING }) {

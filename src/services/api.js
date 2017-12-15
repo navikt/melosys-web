@@ -1,5 +1,5 @@
 /* eslint-disable */
-import {fetchToJson, postAsJson, print, sjekkStatuskode, toJson} from './utils';
+import {getAsJson, postAsJson, print, sjekkStatuskode, toJson} from './utils';
 
 /*
 function erDev() {
@@ -21,60 +21,48 @@ const API_MELOSYS_URL = 'http://a34apvl00025:3002/melosys/api/';
 const API_SAKSBEHANDLER = 'saksbehandler';
 const API_SAKSOPPLYSNINGER = 'arbeidsforhold';
 */
-console.trace('process.env', process.env);
+console.log('process.env', process.env);
 
-const headers = new Headers({
-  Accept: 'application/json',
-  'Accept-Charset': 'utf-8',
-  'Content-Type': 'text/plain',
-  'Access-Control-Allow-Credentials': true,
-  'Access-Control-Request-Method': 'GET',
-});
 
 
 export function hentSoknad() {
   const URI_SOKNAD =  `${API_MELOSYS_URL}soknad/`;
-  return fetchToJson(URI_SOKNAD, { headers: headers });
+  return getAsJson(URI_SOKNAD);
 }
 
 export function sendSoknad(dokument) {
   const URI_SOKNAD =`${API_MELOSYS_URL}soknad`;
-  const soknadHeader = new Headers({
-    Accept: 'application/json',
-    'Accept-Charset': 'utf-8',
-    'Content-Type': 'text/plain',
-    'Access-Control-Request-Method': 'POST',
-  });
-  return postAsJson(URI_SOKNAD, dokument, { headers: soknadHeader });
+  return postAsJson(URI_SOKNAD, dokument);
 }
 
 export function hentFagsaker(snr) {
   const URI_FAGSAKER =  `${API_MELOSYS_URL}fagsaker/${snr}`;
-  return fetchToJson(URI_FAGSAKER, { headers: headers });
+  return getAsJson(URI_FAGSAKER);
 }
 
 export function hentNyesaker(fnr) {
   const URI_NYESAKER = `${API_MELOSYS_URL}sok/fagsaker/?fnr=${fnr}`;
-  return fetchToJson(URI_NYESAKER, { headers: headers });
+  return getAsJson(URI_NYESAKER);
 }
 
 export function opprettSak(fnr) {
   const URI_OPPRETTSAK = `${API_MELOSYS_URL}opprettsak/${fnr}`;
-  return fetchToJson(URI_OPPRETTSAK, { headers: headers, method: 'POST' });
+  return postAsJson(URI_OPPRETTSAK);
 }
 
 export function hentSakerbehandles(brukernavn) {
   const URI_SAKERBEHANDLES = `${API_MELOSYS_URL}sakerbehandles/${brukernavn}`;
-  return fetchToJson(URI_SAKERBEHANDLES, { headers: headers });
+  return getAsJson(URI_SAKERBEHANDLES);
 }
 
 export function hentTidligeresaker(brukernavn) {
   const URI_TIDLIGERESAKER = `${API_MELOSYS_URL}tidligeresaker/${brukernavn}`;
-  return fetchToJson(URI_TIDLIGERESAKER, { headers: headers });
+  return getAsJson(URI_TIDLIGERESAKER);
 }
 
 export function hentSaksbehandler() {
   const URI_SAKSBEHANDLER = `${API_MELOSYS_URL}${API_SAKSBEHANDLER}`;
+  /*
   let myHeaders = new Headers();
   myHeaders.set('Accept', 'application/json');
   myHeaders.set('Accept-Charset', 'UTF-8');
@@ -88,14 +76,14 @@ export function hentSaksbehandler() {
     cache: 'default'
   };
   let myRequest = new Request(URI_SAKSBEHANDLER, myConfig);
-
   return fetch(myRequest, myConfig).then(print).then(sjekkStatuskode).then(toJson);
-  //return fetchToJson(URI_SAKSBEHANDLER, { headers: headers });
+  */
+  return getAsJson(URI_SAKSBEHANDLER);
 }
 
 export function hentSaksopplysninger(fnr) {
   const URI_SAMMENSATT_ARBEIDSFORHOLD = `${API_MELOSYS_URL}${API_SAKSOPPLYSNINGER}/${fnr}`;
-  return fetchToJson(URI_SAMMENSATT_ARBEIDSFORHOLD, { headers: headers });
+  return getAsJson(URI_SAMMENSATT_ARBEIDSFORHOLD);
 }
 
 export function nyHenvendelse(henvendelse) {
