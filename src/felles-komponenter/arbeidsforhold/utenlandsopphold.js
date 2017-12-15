@@ -1,0 +1,46 @@
+import React from 'react';
+
+import * as MPT from '../../proptypes/index';
+import * as Nav from '../../utils/navFrontend';
+
+import EnkeltDato from '../datoOmrade/enkeltDato';
+import Tabell from '../tabell/tabell';
+
+/** Lister alle timer utenlandsopphold i form av en table.
+ *
+ * @param permisjoner Array med timelonnet.
+ */
+const Utenlandsopphold = ({ utenlandsopphold }) => {
+  const utenlandsoppholdArrayed = utenlandsopphold.map(linje => (
+    // Tabell-komponenten er generisk og trenger at hver linje
+    // kommer inn som en ren array og som rendres gjennomsiktig ut i GUI.
+    // All formattering eller komponent-innsett må derfor gjøres her og returnere
+    // en ny ferdigtygget array.
+    [
+      <EnkeltDato dato={linje.oppholdsPeriode.fom} />,
+      <EnkeltDato dato={linje.oppholdsPeriode.tom} />,
+      linje.rapporteringsPeriode,
+      linje.oppholdsland,
+    ]));
+
+  return utenlandsopphold.length > 0 ? (
+    <div>
+      <Nav.Undertittel>Utenlandsopphold</Nav.Undertittel>
+      <Tabell
+        kolonneNavn={['Startdato', 'Sluttdato', 'Rapporteringsperiode', 'Land']}
+        tabellData={utenlandsoppholdArrayed}
+        linjerPerSide={5}
+      />
+    </div>
+  ) : null;
+};
+
+Utenlandsopphold.propTypes = {
+  utenlandsopphold: MPT.Utenlandsopphold,
+};
+
+Utenlandsopphold.defaultProps = {
+  utenlandsopphold: [],
+};
+
+export default Utenlandsopphold;

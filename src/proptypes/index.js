@@ -15,6 +15,7 @@ import { Oppsummering } from './oppsummering';
 import { Periode } from './periode';
 import { Bekreftelser } from './bekreftelser';
 import { SoknadForm } from './soknadForm';
+import { Utenlandsopphold } from './utenlandsopphold';
 
 export {
   Saksbehandler,
@@ -43,4 +44,5 @@ export {
   SokListeEnkeltlinje,
   Kodeverk,
   SoknadForm,
+  Utenlandsopphold,
 };
