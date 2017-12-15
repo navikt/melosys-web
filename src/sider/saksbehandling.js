@@ -19,7 +19,7 @@ import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
 import Arbeidsforholdene from '../felles-komponenter/arbeidsforholdene';
-import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
+import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
 import OppholdUtland from '../felles-komponenter/oppholdUtland';
 import Inntekt from '../felles-komponenter/inntekt';
@@ -147,7 +147,7 @@ class Saksbehandling extends Component {
                 {errorSummary}
                 {person && <Personopplysninger person={person} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
-                {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
+                {organisasjoner && <UtsendendeArbeidsgiver organisasjoner={organisasjoner} />}
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
