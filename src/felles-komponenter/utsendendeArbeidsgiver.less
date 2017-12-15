@@ -1,14 +1,18 @@
 @import '../utils/mixins';
 
-.organisasjonerNorge {
+.utsendendeArbeidsgiver {
 
-  .enkeltorganisasjon__seksjon {
+  .arbeidsgiver__seksjon {
     .seksjonmixin();
   }
 
-  .enkeltorganisasjon__detaljer {
+  .arbeidsgiver__detaljer {
     .beskrivliste-mixin('col');
     margin-bottom:2em;
   }
 
+  .juridisk__detaljer {
+    .beskrivliste-mixin('col');
+    margin-bottom:2em;
+  }
 }
