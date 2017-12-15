@@ -122,9 +122,9 @@ const Arbeidsforholdet = props => {
             </div>
           </Nav.Row>
           <Nav.Row>
-            {timerTimelonnet && (timerTimelonnet.length > 0) && <TimerTimelonnet timerTimelonnet={timerTimelonnet} /> }
-            {permisjonOgPermittering && (permisjonOgPermittering.length > 0) && <Permisjoner permisjoner={permisjonOgPermittering} /> }
-            {utenlandsopphold && (utenlandsopphold.length > 0) && <Utenlandsopphold utenlandsopphold={utenlandsopphold} /> }
+            {timerTimelonnet && <TimerTimelonnet timerTimelonnet={timerTimelonnet} /> }
+            {permisjonOgPermittering && <Permisjoner permisjoner={permisjonOgPermittering} /> }
+            {utenlandsopphold && <Utenlandsopphold utenlandsopphold={utenlandsopphold} /> }
           </Nav.Row>
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
