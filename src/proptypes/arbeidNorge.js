@@ -2,6 +2,7 @@
 import PT from 'prop-types';
 
 const ArbeidNorgePropType = PT.shape({
+  utsendendeOrgnr: PT.string,
   arbeidsforholdOpprettholdIHelePerioden: PT.bool,
   brukerErSelvstendigNaeringsdrivende: PT.bool,
   selvstendigFortsetterEtterArbeidIUtlandet: PT.bool,
