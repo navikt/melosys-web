@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -40,9 +41,9 @@ Arbeidsgiver.defaultProps = {
   arbeidsgiver: null,
 };
 
-function UtsendendeArbeidsgiver ({ organisasjoner, soknadArbeidNorge }) {
-  const { orgnr } = soknadArbeidNorge;
-  const arbeidsgiver = organisasjoner ? organisasjoner.find(item => item.orgnr === orgnr) : {};
+function UtsendendeArbeidsgiver ({ organisasjoner, soknadForm }) {
+  const { utsendendeOrgnr } = soknadForm.values;
+  const arbeidsgiver = organisasjoner ? organisasjoner.find(item => item.orgnr === utsendendeOrgnr) : {};
 
   return (
     <div className="utsendendeArbeidsgiver panelSeksjon">
@@ -52,7 +53,7 @@ function UtsendendeArbeidsgiver ({ organisasjoner, soknadArbeidNorge }) {
         <Nav.Container fluid>
           <Nav.Row className="arbeidsgiver__seksjon">
             <Nav.Column xs="6">
-              <Arbeidsgiver arbeidsgiver={arbeidsgiver} />
+              {arbeidsgiver && <Arbeidsgiver arbeidsgiver={arbeidsgiver} /> }
             </Nav.Column>
             <Nav.Column xs="6">
               <dl className="arbeidsgiver__detaljer">
@@ -75,11 +76,13 @@ function UtsendendeArbeidsgiver ({ organisasjoner, soknadArbeidNorge }) {
 UtsendendeArbeidsgiver.propTypes = {
   organisasjoner: MPT.Organisasjoner,
   soknadArbeidNorge: MPT.ArbeidNorge,
+  soknadForm: PT.object,
 };
 
 UtsendendeArbeidsgiver.defaultProps = {
   organisasjoner: [],
   soknadArbeidNorge: {},
+  soknadForm: {},
 };
 
 export default UtsendendeArbeidsgiver;

@@ -151,7 +151,7 @@ class Saksbehandling extends Component {
                 {errorSummary}
                 {person && <Personopplysninger person={person} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
-                <UtsendendeArbeidsgiver organisasjoner={organisasjoner} soknadArbeidNorge={soknadArbeidNorge} />
+                <UtsendendeArbeidsgiver organisasjoner={organisasjoner} soknadArbeidNorge={soknadArbeidNorge} soknadForm={soknadForm} />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
@@ -213,6 +213,7 @@ const mapStateToProps = state => ({
     fullmektigFirma: ArbeidNorgeSelector(state).fullmektigFirma,
     fullmektigNavn: ArbeidNorgeSelector(state).fullmektigNavn,
     fullmektigTelefon: ArbeidNorgeSelector(state).fullmektigTelefon,
+    utsendendeOrgnr: ArbeidNorgeSelector(state).utsendendeOrgnr,
   },
 });
 
