@@ -1,5 +1,5 @@
 import React from 'react';
-import PT from 'prop-types';
+import * as MPT from '../../proptypes';
 
 /** Forretningsadresse formatterer adressen korrekt med sjekk på
  * varierende keys i objektet.
@@ -19,7 +19,7 @@ const Forretningsadresse = ({ forretningsadresse }) => {
 };
 
 Forretningsadresse.propTypes = {
-  forretningsadresse: PT.object.isRequired,
+  forretningsadresse: MPT.BostedsAdresse,
 };
 
 Forretningsadresse.defaultProps = {
