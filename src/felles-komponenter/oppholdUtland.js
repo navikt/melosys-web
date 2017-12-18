@@ -9,7 +9,8 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './arbeidsgiverUtland.css';
 
-function OppholdUtland ({ soknadForm: { values: { studentIEOS } } }) {
+function OppholdUtland ({ soknadForm }) {
+  const { studentIEOS } = soknadForm.values ? soknadForm.values : false;
   const panelIkon = Ikoner.Ferdig;
 
   return (
