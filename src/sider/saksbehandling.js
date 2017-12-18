@@ -45,6 +45,7 @@ import {
   oppdaterSoknadState,
   SoknadSelector,
   ArbeidsinntektSelector,
+  ArbeidNorgeSelector,
   OppholdUtlandSelector,
   ArbeidsgiversBekreftelseSelector,
 } from '../ducks/soknad';
@@ -74,6 +75,7 @@ class Saksbehandling extends Component {
     soknad: PT.object,
     soknadArbeidsinntekt: PT.object,
     soknadOppholdUtland: MPT.OppholdUtland,
+    soknadArbeidNorge: MPT.ArbeidNorge,
     handleSubmit: PT.func.isRequired,
     errorSummary: PT.object,
     errorSummaryTitle: PT.string,
@@ -91,6 +93,7 @@ class Saksbehandling extends Component {
     soknad: {},
     soknadArbeidsinntekt: {},
     soknadOppholdUtland: {},
+    soknadArbeidNorge: {},
     errorSummary: {},
     errorSummaryTitle: '',
   };
@@ -125,6 +128,7 @@ class Saksbehandling extends Component {
       oppsummering,
       soknadArbeidsinntekt,
       soknadOppholdUtland,
+      soknadArbeidNorge,
       handleSubmit,
       errorSummary,
       soknadForm,
@@ -147,7 +151,7 @@ class Saksbehandling extends Component {
                 {errorSummary}
                 {person && <Personopplysninger person={person} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
-                {organisasjoner && <UtsendendeArbeidsgiver organisasjoner={organisasjoner} />}
+                <UtsendendeArbeidsgiver organisasjoner={organisasjoner} soknadArbeidNorge={soknadArbeidNorge} />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
@@ -184,6 +188,7 @@ const mapStateToProps = state => ({
   soknadForm: SoknadenFormSelector(state),
   soknadArbeidsinntekt: ArbeidsinntektSelector(state),
   soknadOppholdUtland: OppholdUtlandSelector(state),
+  soknadArbeidNorge: ArbeidNorgeSelector(state),
   initialValues: {
     inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
@@ -200,6 +205,14 @@ const mapStateToProps = state => ({
     studentSemester: OppholdUtlandSelector(state).studentSemester,
     studieLand: OppholdUtlandSelector(state).studieLand,
     studentFinansiering: OppholdUtlandSelector(state).studentFinansiering,
+    kontaktNavn: ArbeidNorgeSelector(state).kontaktNavn,
+    kontaktTelefon: ArbeidNorgeSelector(state).kontaktTelefon,
+    kontaktEpost: ArbeidNorgeSelector(state).kontaktEpost,
+    fullmektigAdresse: ArbeidNorgeSelector(state).fullmektigAdresse,
+    fullmektigEpost: ArbeidNorgeSelector(state).fullmektigEpost,
+    fullmektigFirma: ArbeidNorgeSelector(state).fullmektigFirma,
+    fullmektigNavn: ArbeidNorgeSelector(state).fullmektigNavn,
+    fullmektigTelefon: ArbeidNorgeSelector(state).fullmektigTelefon,
   },
 });
 
