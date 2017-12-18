@@ -57,16 +57,16 @@ export const OrganisasjonerSelector = createSelector(
  */
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
-  state => OrganisasjonerSelector(state),
-  (inntekt, organisasjoner) => (Array.isArray(inntekt.arbeidsInntektMaanedListe)
+  inntekt => (Array.isArray(inntekt.arbeidsInntektMaanedListe)
     ?
     inntekt.arbeidsInntektMaanedListe
       .reduce((samling, element) => {
-        const subInntektliste = element.arbeidsInntektInformasjon.inntektListe.map(item => ({ ...item, virksomhet: organisasjoner.find(subItem => item.virksomhetID === subItem.orgnr) }));
+        const subInntektliste = [...element.arbeidsInntektInformasjon.inntektListe];
         return ([...samling, ...subInntektliste]);
       }, [])
     :
-    []));
+    [])
+);
 
 export const SoknadenSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.soknaden : state.fagsaker.data),
@@ -98,9 +98,11 @@ export const MedlemskapSelector = createSelector(
 export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => OrganisasjonerSelector(state),
-  (arbeidsforhold, organisasjoner) => (arbeidsforhold.map(item => {
+  state => InntektSelector(state),
+  (arbeidsforhold, organisasjoner, inntekt) => (arbeidsforhold.map(item => {
     const arbeid = { ...item };
     arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
+    arbeid.inntekt = inntekt.filter(linje => linje.opplysningspliktigID === arbeid.arbeidsgiverID) || [];
     return arbeid;
   }))
 );

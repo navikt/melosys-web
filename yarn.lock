@@ -6427,6 +6427,13 @@ rcfinder@^0.1.8:
   dependencies:
     lodash.clonedeep "^4.3.2"
 
+react-chartjs-2@^2.6.4:
+  version "2.6.4"
+  resolved "https://registry.yarnpkg.com/react-chartjs-2/-/react-chartjs-2-2.6.4.tgz#6474d4480a6c74f2061ee0bbbe6d0f4db2170a81"
+  dependencies:
+    lodash "^4.17.4"
+    prop-types "^15.5.8"
+
 react-collapse@^4.0.3:
   version "4.0.3"
   resolved "https://registry.yarnpkg.com/react-collapse/-/react-collapse-4.0.3.tgz#b96de959ed0092a43534630b599a4753dd76d543"

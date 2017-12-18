@@ -1,11 +1,11 @@
 import React from 'react';
 
-import * as Ikoner from '../resources/images';
+import * as Ikoner from '../resources/images/index';
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
-import * as Skjema from './skjema';
+import * as MPT from '../proptypes/index';
+import * as Skjema from './skjema/index';
 
-import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import PanelHeader from './panelHeader/panelHeader';
 
 import './inntekt.css';
 
