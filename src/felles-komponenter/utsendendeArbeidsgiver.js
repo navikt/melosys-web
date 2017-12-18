@@ -5,12 +5,45 @@ import * as MPT from '../proptypes/';
 import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
 
-import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import PanelHeader from './panelHeader/panelHeader';
+import Forretningsadresse from './adresser/forretningsadresse';
+import Postadresse from './adresser/postadresse';
 
 import './utsendendeArbeidsgiver.css';
 
-function UtsendendeArbeidsgiver ({ soknadArbeidNorge }) {
-  console.log(soknadArbeidNorge);
+const Arbeidsgiver = ({ arbeidsgiver }) => {
+  const { orgnr, navn, forretningsadresse, postadresse } = arbeidsgiver;
+  const postAdresseKomp = postadresse ? <div><dt>Postdresse</dt><dd><Postadresse postadresse={postadresse} /></dd></div> : null;
+  const forretningsadresseKomp = forretningsadresse ? <div><dt>Forretningsadresse</dt><dd><Forretningsadresse forretningsadresse={forretningsadresse} /></dd></div> : null;
+
+  return arbeidsgiver ? (
+    <dl className="arbeidsgiver__detaljer">
+      <dt>Navn</dt>
+      <dd>{ navn } </dd>
+      <dt>Orgnr / IDnr</dt>
+      <dd>{ orgnr } </dd>
+      <dt>Opprettet dato</dt>
+      <dd>(mangler fra backend)</dd>
+      <dt>Organisasjonsform</dt>
+      <dd>(mangler fra backend)</dd>
+      {postAdresseKomp}
+      {forretningsadresseKomp}
+    </dl>
+  ) : null;
+};
+
+Arbeidsgiver.propTypes = {
+  arbeidsgiver: MPT.Organisasjon,
+};
+
+Arbeidsgiver.defaultProps = {
+  arbeidsgiver: null,
+};
+
+function UtsendendeArbeidsgiver ({ organisasjoner, soknadArbeidNorge }) {
+  const { orgnr } = soknadArbeidNorge;
+  const arbeidsgiver = organisasjoner ? organisasjoner.find(item => item.orgnr === orgnr) : {};
+
   return (
     <div className="utsendendeArbeidsgiver panelSeksjon">
       <Nav.EkspanderbartpanelBase
@@ -19,22 +52,7 @@ function UtsendendeArbeidsgiver ({ soknadArbeidNorge }) {
         <Nav.Container fluid>
           <Nav.Row className="arbeidsgiver__seksjon">
             <Nav.Column xs="6">
-              <dl className="arbeidsgiver__detaljer">
-                <dt>Orgnr / IDnr</dt>
-                <dd>12345678</dd>
-                <dt>Opprettet dato</dt>
-                <dd>26.04.1979</dd>
-                <dt>Organisasjonsform</dt>
-                <dd>Allmennaksjeselskap (ASA)</dd>
-                <dt>Postadresse</dt>
-                <dd>Postboks 7700</dd>
-                <dd>5020 Bergen</dd>
-                <dd>NORGE</dd>
-                <dt>Forretningsadresse</dt>
-                <dd>Postboks 7700</dd>
-                <dd>5020 Bergen</dd>
-                <dd>NORGE</dd>
-              </dl>
+              <Arbeidsgiver arbeidsgiver={arbeidsgiver} />
             </Nav.Column>
             <Nav.Column xs="6">
               <dl className="arbeidsgiver__detaljer">
