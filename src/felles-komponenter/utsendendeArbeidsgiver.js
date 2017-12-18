@@ -35,22 +35,6 @@ function UtsendendeArbeidsgiver ({ soknadArbeidNorge }) {
                 <dd>5020 Bergen</dd>
                 <dd>NORGE</dd>
               </dl>
-              <dl className="juridisk__detaljer">
-                <dt>Antall ansatte:</dt>
-                <dd>350</dd>
-                <dt>Antall adm. ansatte:</dt>
-                <dd>250</dd>
-                <dt>Andel omsetning i Norge:</dt>
-                <dd>78.5</dd>
-                <dt>Kontrakter i Norge:</dt>
-                <dd>50.5</dd>
-                <dt>Er bemanningsbyrå:</dt>
-                <dd>NEI</dd>
-                <dt>Drift siste 24 mnd:</dt>
-                <dd>JA</dd>
-                <dt>Antall utsendte:</dt>
-                <dd>30</dd>
-              </dl>
             </Nav.Column>
             <Nav.Column xs="6">
               <dl className="arbeidsgiver__detaljer">
