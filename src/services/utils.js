@@ -71,32 +71,30 @@ export const getCookie = name => {
 };
 
 export function fetchToJson(url, config = {}) {
-  /*
-if (config.headers) {
-  for (let entry of config.headers) {
-    console.log(entry);
-  }
-}
-*/
-
   return fetch(url, config) // eslint-disable-line no-undef
     .then(sjekkStatuskode)
     .then(toJson);
 }
+
 function methodToJson(method, url, data) {
-  const headers = new Headers();
-  headers.set('Accept', 'application/json');
-  headers.set('Accept-Charset', 'UTF-8');
-  headers.set('Access-Control-Request-Method', method);
-  headers.set('Origin', window.location.origin);
+  const headers = {
+    Accept: 'application/json',
+    'Accept-Charset': 'UTF-8',
+    Origin: window.location.origin, // Set by fetch() automagically
+    // 'Access-Control-Request-Method': method, // Kun ved preflight
+  };
+
   const fetchConfig = {
+    // method: Set by fetch() automagically
     method,
-    headers,
+    headers: new Headers(headers),
     credentials: 'include',
     mode: 'cors',
     cache: 'default',
   };
-  if (method === 'POST') {
+
+  const httpVerbsWithBody = ['POST', 'PUT'];
+  if (httpVerbsWithBody.includes(method)) {
     fetchConfig.body = JSON.stringify(data);
     fetchConfig.headers.append('Content-Type', 'text/plain');
   }

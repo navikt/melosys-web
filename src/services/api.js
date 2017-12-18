@@ -16,11 +16,6 @@ const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 const API_MELOSYS_URL = `${API_SERVER}${API_BASE_URL}`;
 const API_SAKSBEHANDLER = `${process.env.REACT_APP_API_SAKSBEHANDLER}`;
 const API_SAKSOPPLYSNINGER = `${process.env.REACT_APP_API_SAKSOPPLYSNINGER}`;
-/*
-const API_MELOSYS_URL = 'http://a34apvl00025:3002/melosys/api/';
-const API_SAKSBEHANDLER = 'saksbehandler';
-const API_SAKSOPPLYSNINGER = 'arbeidsforhold';
-*/
 console.log('process.env', process.env);
 
 
@@ -62,22 +57,6 @@ export function hentTidligeresaker(brukernavn) {
 
 export function hentSaksbehandler() {
   const URI_SAKSBEHANDLER = `${API_MELOSYS_URL}${API_SAKSBEHANDLER}`;
-  /*
-  let myHeaders = new Headers();
-  myHeaders.set('Accept', 'application/json');
-  myHeaders.set('Accept-Charset', 'UTF-8');
-  myHeaders.set('Access-Control-Request-Method', 'GET');
-  myHeaders.set('Origin', 'http://localhost:3000');
-  let myConfig = {
-    method: 'GET',
-    headers: myHeaders,
-    credentials: 'include',
-    mode: 'cors',
-    cache: 'default'
-  };
-  let myRequest = new Request(URI_SAKSBEHANDLER, myConfig);
-  return fetch(myRequest, myConfig).then(print).then(sjekkStatuskode).then(toJson);
-  */
   return getAsJson(URI_SAKSBEHANDLER);
 }
 
