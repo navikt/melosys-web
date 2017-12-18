@@ -11,9 +11,9 @@ const Postadresse = ({ postadresse }) => {
 
   return postadresse ? (
     <div>
-      {gatenavn}<br />
-      {postnr} {poststed}<br />
-      {land}
+      {gatenavn || '-'}<br />
+      {postnr || '-'} {poststed || '-'}<br />
+      {land || '-'}
     </div>
   ) : null;
 };

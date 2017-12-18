@@ -11,9 +11,9 @@ const Forretningsadresse = ({ forretningsadresse }) => {
 
   return forretningsadresse ? (
     <div>
-      {gatenavn}<br />
-      {postnr} {poststed}<br />
-      {land}
+      {gatenavn || '-'}<br />
+      {postnr || '-'} {poststed || '-'}<br />
+      {land || '-'}
     </div>
   ) : null;
 };
