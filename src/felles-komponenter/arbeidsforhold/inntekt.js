@@ -31,7 +31,7 @@ const Inntekt = ({ inntekt }) => {
         <Chart
           chartType="ColumnChart"
           data={[['Periode', 'Inntekt'], ...inntektGrafData]}
-          options={{ legend: { position: 'none' } }}
+          options={{ legend: { position: 'none' }, isStacked: true }}
           graph_id="BarChart"
           width="100%"
           height="400px"
