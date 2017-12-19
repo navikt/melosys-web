@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router as ReduxRouter } from 'react-router-dom';
 import { Provider as ReduxProvider } from 'react-redux';
+import ReactHighcharts from 'react-highcharts';
 
 import './index.css';
 import App from './App';
@@ -26,5 +27,7 @@ ReactDOM.render(
   </ReduxProvider>,
   document.getElementById('root')
 );
+
+//ReactDOM.render(<ReactHighcharts config={{}} />, document.getElementById('root'));
 
 registerServiceWorker();
