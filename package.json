@@ -83,6 +83,7 @@
     "2precommit": "lint-staged",
     "mocha": "mocha"
   },
+  "homepage": "https://github.com/navikt/melosys-web",
   "lint-staged": {
     "*.js": [
       "prettier --write --single-quote --trailing-comma es5 --tab-width 4",
