@@ -1,10 +1,10 @@
 import React from 'react';
-import { Chart } from 'react-google-charts';
+import ReactHighcharts from 'react-highcharts';
 
 import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
-
 import Tabell from '../tabell/tabell';
+
 
 /** Lister alle permisjoner i form av en table.
  *
@@ -23,20 +23,69 @@ const Inntekt = ({ inntekt }) => {
     ])
   );
 
-  const inntektGrafData = inntekt.map(linje => ([linje.utbetaltIPeriode, linje.beloep]));
+  //const inntektGrafData = inntekt.map(linje => ([linje.utbetaltIPeriode, linje.beloep]));
+  const sikkerInntekt = [45000, 43000, 43000, 43000, 33300, 50000];
+
+  const usikkerInntekt = [10000, 12000];
+
+  const config = {
+    rangeSelector: {
+      selected: 0,
+    },
+    title: {
+      text: '',
+    },
+    chart: {
+      type: 'column',
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: ''
+      }
+    },
+    xAxis: {
+      categories: [
+        '2017/01',
+        '2017/02',
+        '2017/03',
+        '2017/04',
+        '2017/05',
+        '2017/06',
+      ],
+      crosshair: true,
+    },
+    plotOptions: {
+      series: {
+        stacking: 'normal'
+      }
+    },
+    series: [
+      {
+        name: 'Usikkert',
+        data: usikkerInntekt,
+        color: '#b7b1a9',
+        tooltip: {
+          valueDecimals: 2,
+        }
+      },
+      {
+        name: 'Sikkert',
+        data: sikkerInntekt,
+        color: '#0067c5',
+        tooltip: {
+          valueDecimals: 2,
+        }
+      }
+    ]
+  };
+
 
   return inntekt.length > 0 ? (
     <div className="inntekt">
       <div className={'my-pretty-chart-container'}>
-        <Chart
-          chartType="ColumnChart"
-          data={[['Periode', 'Inntekt'], ...inntektGrafData]}
-          options={{ legend: { position: 'none' }, isStacked: true }}
-          graph_id="BarChart"
-          width="100%"
-          height="400px"
-          legend_toggle={false}
-        />
+        <ReactHighcharts config={config} />
+
       </div>
       <Nav.Undertittel>Inntekt</Nav.Undertittel>
       <Tabell
