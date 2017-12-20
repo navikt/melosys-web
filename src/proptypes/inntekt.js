@@ -7,7 +7,6 @@ const InntektLinjePropType = PT.shape({
   inntektskilde: PT.string,
   inntektsperiodetype: PT.string,
   inntektsstatus: PT.string,
-  usikkerhet: PT.bool,
   levereringstidspunkt: PT.string,
   utbetaltIPeriode: PT.string,
   opplysningspliktigID: PT.string,
