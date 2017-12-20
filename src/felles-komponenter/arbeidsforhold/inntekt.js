@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactHighcharts from 'react-highcharts';
+import moment from 'moment';
 
 import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
@@ -23,10 +24,29 @@ const Inntekt = ({ inntekt }) => {
     ])
   );
 
-  //const inntektGrafData = inntekt.map(linje => ([linje.utbetaltIPeriode, linje.beloep]));
-  const sikkerInntekt = [45000, 43000, 43000, 43000, 33300, 50000];
+  const grafInntekt = inntekt.reduce((samling, linje) => {
+    // Sjekk om det finnes en opptjeningsperiode. Hvis ikke er denne inntekten usikker og blir senere
+    // markert deretter i grafen.
+    const harOpptjeningsPeriode = (linje.opptjeningsperiode && linje.opptjeningsperiode.fom);
+    const inntektPeriode = harOpptjeningsPeriode ? moment(linje.opptjeningsperiode.fom, 'YYYYMMDD').format('YYYY-MM') : linje.utbetaltIPeriode;
+    // Lag objektet som skal settes inn i graf-modellen. Objektet får nøkkelen 'sikkertBeloep' eller 'usikkertBeloep'
+    // avhengig av om inntekten har en definert opptjeningsperiode eller ikke.
+    const inntektDelObjekt = harOpptjeningsPeriode ? { sikkertBeloep: linje.beloep, usikkertBeloep: 0 } : { usikkertBeloep: linje.beloep, sikkertBeloep: 0 };
 
-  const usikkerInntekt = [10000, 12000];
+    return { ...samling, [inntektPeriode]: { ...inntektDelObjekt } };
+  }, {});
+
+
+  console.log(grafInntekt);
+
+  const dummy = {
+    '2017/01': { sikkertBeloep: 44000, usikkertBeloep: 0 },
+    '2017/02': { sikkertBeloep: 44000, usikkertBeloep: 1000 },
+    '2017/03': { sikkertBeloep: 44000, usikkertBeloep: 20000 },
+    '2017/04': { sikkertBeloep: 44000, usikkertBeloep: 0 },
+    '2017/05': { sikkertBeloep: 44000, usikkertBeloep: 20000 },
+    '2017/06': { sikkertBeloep: 44000, usikkertBeloep: 0 },
+  };
 
   const config = {
     rangeSelector: {
@@ -41,43 +61,36 @@ const Inntekt = ({ inntekt }) => {
     yAxis: {
       min: 0,
       title: {
-        text: ''
-      }
+        text: '',
+      },
     },
     xAxis: {
-      categories: [
-        '2017/01',
-        '2017/02',
-        '2017/03',
-        '2017/04',
-        '2017/05',
-        '2017/06',
-      ],
+      categories: Object.keys(grafInntekt),
       crosshair: true,
     },
     plotOptions: {
       series: {
-        stacking: 'normal'
-      }
+        stacking: 'normal',
+      },
     },
     series: [
       {
         name: 'Usikkert',
-        data: usikkerInntekt,
+        data: Object.values(grafInntekt).map(linje => linje.usikkertBeloep),
         color: '#b7b1a9',
         tooltip: {
           valueDecimals: 2,
-        }
+        },
       },
       {
         name: 'Sikkert',
-        data: sikkerInntekt,
+        data: Object.values(grafInntekt).map(linje => linje.sikkertBeloep),
         color: '#0067c5',
         tooltip: {
           valueDecimals: 2,
-        }
-      }
-    ]
+        },
+      },
+    ],
   };
 
 
