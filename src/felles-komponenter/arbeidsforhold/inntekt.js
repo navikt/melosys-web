@@ -24,29 +24,30 @@ const Inntekt = ({ inntekt }) => {
     ])
   );
 
+  /**
+   * Reduser inntekt for det aktuelle arbeidsforholdet ved å gjennomgå og vurdere hvilke inntekter
+   * som er sikre og ikke. Det resulterende objektet ser slik ut
+   * {
+    '2017/01': { sikkertBeloep: 44000, usikkertBeloep: 0 },
+    '2017/02': { sikkertBeloep: 44000, usikkertBeloep: 1000 },
+    '2017/03': { sikkertBeloep: 44000, usikkertBeloep: 20000 },
+    }
+   */
   const grafInntekt = inntekt.reduce((samling, linje) => {
     // Sjekk om det finnes en opptjeningsperiode. Hvis ikke er denne inntekten usikker og blir senere
     // markert deretter i grafen.
     const harOpptjeningsPeriode = (linje.opptjeningsperiode && linje.opptjeningsperiode.fom);
     const inntektPeriode = harOpptjeningsPeriode ? moment(linje.opptjeningsperiode.fom, 'YYYYMMDD').format('YYYY-MM') : linje.utbetaltIPeriode;
-    // Lag objektet som skal settes inn i graf-modellen. Objektet får nøkkelen 'sikkertBeloep' eller 'usikkertBeloep'
-    // avhengig av om inntekten har en definert opptjeningsperiode eller ikke.
-    const inntektDelObjekt = harOpptjeningsPeriode ? { sikkertBeloep: linje.beloep, usikkertBeloep: 0 } : { usikkertBeloep: linje.beloep, sikkertBeloep: 0 };
+    // Lag et kopi av objektet fra samlingen for den aktuelle inntektPeriode. Dette gjør at vi kan legge til beløp (sikkert eller usikkert)
+    // dersom vi har fått flere inntekter innenfor samme periode.
+    const inntektDelObjekt = samling[inntektPeriode] ? { ...samling[inntektPeriode] } : { sikkertBeloep: 0, usikkertBeloep: 0 };
 
-    return { ...samling, [inntektPeriode]: { ...inntektDelObjekt } };
+    // Sett inn oppdaterte beløp (pluss evt tidligere inn i del-objektet.
+    inntektDelObjekt.sikkertBeloep = harOpptjeningsPeriode ? (inntektDelObjekt.sikkertBeloep + linje.beloep) : inntektDelObjekt.sikkertBeloep;
+    inntektDelObjekt.usikkertBeloep = !harOpptjeningsPeriode ? (inntektDelObjekt.usikkertBeloep + linje.beloep) : inntektDelObjekt.usikkertBeloep;
+
+    return { ...samling, [inntektPeriode]: inntektDelObjekt };
   }, {});
-
-
-  console.log(grafInntekt);
-
-  const dummy = {
-    '2017/01': { sikkertBeloep: 44000, usikkertBeloep: 0 },
-    '2017/02': { sikkertBeloep: 44000, usikkertBeloep: 1000 },
-    '2017/03': { sikkertBeloep: 44000, usikkertBeloep: 20000 },
-    '2017/04': { sikkertBeloep: 44000, usikkertBeloep: 0 },
-    '2017/05': { sikkertBeloep: 44000, usikkertBeloep: 20000 },
-    '2017/06': { sikkertBeloep: 44000, usikkertBeloep: 0 },
-  };
 
   const config = {
     rangeSelector: {
