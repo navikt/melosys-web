@@ -49,7 +49,7 @@ const Inntekt = ({ inntekt }) => {
     return { ...samling, [inntektPeriode]: inntektDelObjekt };
   }, {});
 
-  const config = {
+  const grafConfig = {
     rangeSelector: {
       selected: 0,
     },
@@ -79,27 +79,19 @@ const Inntekt = ({ inntekt }) => {
         name: 'Usikkert',
         data: Object.values(grafInntekt).map(linje => linje.usikkertBeloep),
         color: '#b7b1a9',
-        tooltip: {
-          valueDecimals: 2,
-        },
       },
       {
         name: 'Sikkert',
         data: Object.values(grafInntekt).map(linje => linje.sikkertBeloep),
         color: '#0067c5',
-        tooltip: {
-          valueDecimals: 2,
-        },
       },
     ],
   };
 
-
   return inntekt.length > 0 ? (
     <div className="inntekt">
       <div className={'my-pretty-chart-container'}>
-        <ReactHighcharts config={config} />
-
+        <ReactHighcharts config={grafConfig} />
       </div>
       <Nav.Undertittel>Inntekt</Nav.Undertittel>
       <Tabell
