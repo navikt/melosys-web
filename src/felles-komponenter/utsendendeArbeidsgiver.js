@@ -51,7 +51,7 @@ function UtsendendeArbeidsgiver (props) {
   const { organisasjoner, utsendendeOrgnr, soknadArbeidNorge } = props;
   const arbeidsgiver = organisasjoner ? organisasjoner.find(item => item.orgnr === utsendendeOrgnr) : {};
 
-  return Object.keys(soknadArbeidNorge) > 0 ? (
+  return Object.keys(soknadArbeidNorge).length > 0 ? (
     <div className="utsendendeArbeidsgiver panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Utsendende arbeidsgiver" undertittel="" />}
