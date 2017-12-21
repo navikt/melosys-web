@@ -1,4 +1,5 @@
 import PT from 'prop-types';
+import { Periode } from './periode';
 
 const InntektLinjePropType = PT.shape({
   beloep: PT.number,
@@ -9,6 +10,7 @@ const InntektLinjePropType = PT.shape({
   levereringstidspunkt: PT.string,
   utbetaltIPeriode: PT.string,
   opplysningspliktigID: PT.string,
+  opptjeningsperiode: Periode,
   virksomhetID: PT.string,
   inntektsmottakerID: PT.string,
   inngaarIGrunnlagForTrekk: PT.bool,
@@ -29,7 +31,6 @@ const InntektPropType = PT.shape({
     }),
   }),
 });
-
 
 export {
   InntektLinjePropType as InntektLinje,
