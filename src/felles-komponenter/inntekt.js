@@ -9,51 +9,17 @@ import PanelHeader from './panelHeader/panelHeader';
 
 import './inntekt.css';
 
-const uuid = require('uuid/v4');
-
-function InntektLinje({ inntektLinje }) {
-  const { beloep, inntektsperiodetype, virksomhet, beskrivelse, utbetaltIPeriode } = inntektLinje;
-  const navn = virksomhet ? virksomhet.navn : '';
-
-  return (
-    <tr>
-      <td className="detaljer__periode">{ utbetaltIPeriode }</td>
-      <td className="detaljer__firma">{navn}</td>
-      <td className="detaljer__inntekt">{beloep} pr {inntektsperiodetype}</td>
-      <td className="detaljer__beskrivelse">{beskrivelse}</td>
-    </tr>
-  );
-}
-
-InntektLinje.propTypes = {
-  inntektLinje: MPT.InntektLinje.isRequired,
-};
-
-function Inntekt (props) {
-  const { inntekt: { inntekt } } = props;
-  const panelUndertittel = inntekt[0] ? `Nyeste inntekt: ${inntekt[0].beloep} fra ${inntekt[0].virksomhet && inntekt[0].virksomhet.navn} i perioden ${inntekt[0].utbetaltIPeriode}` : '';
+function Inntekt () {
   const panelIkon = Ikoner.Ferdig;
 
   return (
     <div className="inntekt panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Inntekt" undertittel={panelUndertittel} />}
-        ariaTittel="Panel for inntekt">
+        heading={<PanelHeader ikon={panelIkon} tittel="Inntekt under oppholdet" undertittel="" />}
+        ariaTittel="Panel for inntekt under oppholdet">
         <Nav.Row className="inntekt__seksjon">
-          <Nav.Column xs="12">
-            <table className="tabellutlisting inntekt__detaljer">
-              <tbody>
-                <tr>
-                  <th>Utbetalt</th><th>Organisasjon</th><th>Inntekt</th><th>Beskrivelse</th>
-                </tr>
-                {inntekt.map(inntektLinje => <InntektLinje key={uuid()} inntektLinje={inntektLinje} />)}
-              </tbody>
-            </table>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row className="inntekt__seksjon">
-          <Nav.Column xs="8">
-            <Nav.Fieldset legend="Lønn / inntekt i utlandet (NOK pr måned)">
+          <Nav.Column xs="9">
+            <Nav.Fieldset legend="Lønn / inntekt i utlandet(NOK pr måned)">
               <Skjema.Input feltNavn="inntektNorskIPerioden" label="Lønn fra norsk arbeidsgiver" />
               <Skjema.Input feltNavn="inntektUtenlandskIPerioden" label="Lønn fra utenlandsk arbeidsgiver" />
               <Skjema.Input feltNavn="inntektNaeringIPerioden" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" />
