@@ -150,7 +150,7 @@ class Saksbehandling extends Component {
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-                {inntekt && <Inntekt inntekt={inntekt} soknadArbeidsinntekt={soknadArbeidsinntekt} />}
+                {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
                 {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
                 <Tilleggsopplysninger />
               </form>

@@ -11,6 +11,7 @@ import PanelHeader from '../panelHeader/panelHeader';
 import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
+import Inntekt from './inntekt';
 
 import { boolTilNorsk, datoDiff } from '../../utils/utils';
 
@@ -76,6 +77,7 @@ const Arbeidsforholdet = props => {
     timerTimelonnet,
     utenlandsopphold,
     permisjonOgPermittering,
+    inntekt,
   } = props.arbeidsforhold;
 
   const { navn: arbeidsgiverNavn } = arbeidsgiver;
@@ -126,6 +128,7 @@ const Arbeidsforholdet = props => {
             </div>
           </Nav.Row>
           <Nav.Row>
+            {inntekt && <Inntekt inntekt={inntekt} /> }
             {timerTimelonnet && <TimerTimelonnet timerTimelonnet={timerTimelonnet} /> }
             {permisjonOgPermittering && <Permisjoner permisjoner={permisjonOgPermittering} /> }
             {utenlandsopphold && <Utenlandsopphold utenlandsopphold={utenlandsopphold} /> }
