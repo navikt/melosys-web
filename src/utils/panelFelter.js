@@ -29,13 +29,9 @@ export const feltGrupper = {
     skipFartsomrade: [],
     skipFlaggLand: [],
     kontaktNavn: [],
-    kontaktTelefon: [],
     kontaktEpost: [],
     fullmektigFirma: [],
-    fullmektigNavn: [],
     fullmektigAdresse: [],
-    fullmektigTelefon: [],
-    fullmektigEpost: [],
   },
   bekreftelser: {
     arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],

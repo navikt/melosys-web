@@ -64,12 +64,10 @@ function UtsendendeArbeidsgiver (props) {
             <Nav.Column xs="6">
               <dl className="arbeidsgiver__detaljer">
                 <Skjema.Input label="Kontaktperson" feltNavn="kontaktNavn" />
-                <Skjema.Input label="Telefon" feltNavn="kontaktTelefon" />
                 <Skjema.Input label="E-post" feltNavn="kontaktEpost" />
-                <Skjema.Input label="Fullmektig for arbeidsgiver" feltNavn="fullmektigFirma" />
+                <Nav.Element>Dersom fullmektig har sendt søknaden på vegne av arbeidsgiver:</Nav.Element>
+                <Skjema.Input label="Fullmektig firma" feltNavn="fullmektigFirma" />
                 <Skjema.Textarea label="Fullmektig adresse" maxLength={200} feltNavn="fullmektigAdresse" />
-                <Skjema.Input label="Fullmektig telefon" feltNavn="fullmektigTelefon" />
-                <Skjema.Input label="Fullmektig e-post" feltNavn="fullmektigEpost" />
               </dl>
             </Nav.Column>
           </Nav.Row>
