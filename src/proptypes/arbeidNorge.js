@@ -15,13 +15,9 @@ const ArbeidNorgePropType = PT.shape({
   skipFartsomrade: PT.string,
   skipFlaggLand: PT.string,
   kontaktNavn: PT.string,
-  kontaktTelefon: PT.string,
   kontaktEpost: PT.string,
   fullmektigFirma: PT.string,
-  fullmektigNavn: PT.string,
   fullmektigAdresse: PT.string,
-  fullmektigTelefon: PT.string,
-  fullmektigEpost: PT.string,
 });
 
 export {
