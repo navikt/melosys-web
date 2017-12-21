@@ -97,7 +97,7 @@ export const SoknadIDSelector = createSelector(
 );
 
 export const ArbeidNorgeSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.arbeidNorge,
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidNorge : {}),
   soknad => soknad
 );
 

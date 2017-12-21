@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { arrayPush } from 'redux-form';
-import { validForm, rules } from 'react-redux-form-validation';
+import { change, reduxForm } from 'redux-form';
 import PT from 'prop-types';
 
 import * as MPT from '../proptypes/';
@@ -18,9 +17,10 @@ const uuid = require('uuid/v4');
  * @param { arbeidsforholdene } Array En liste over alle arbeidforhold, hvert som et objekt
  */
 class Arbeidsforholdene extends Component {
-  leggtilArbeidsforholdHandler = arbeidsforholdID => {
+  leggtilArbeidsforholdHandler = (e, arbeidsgiverID) => {
+    e.preventDefault();
     const { dispatch } = this.props;
-    dispatch(arrayPush('vurderingArbeidsforhold', 'arbeidsforholdene', arbeidsforholdID));
+    dispatch(change('soknad', 'utsendendeOrgnr', arbeidsgiverID));
   }
 
   render () {
@@ -44,9 +44,6 @@ Arbeidsforholdene.propTypes = {
   dispatch: PT.func.isRequired,
 };
 
-export default validForm({
-  form: 'vurderingArbeidsforhold',
-  validate: {
-    arbeidsforholdene: [rules.required],
-  },
+export default reduxForm({
+  form: 'soknad',
 })(Arbeidsforholdene);
