@@ -7,14 +7,13 @@ import * as Nav from '../../../utils/navFrontend';
 
 import '../skjema.css';
 
-function InnerInputComponent(
-  {
-    input,
-    forhandsvalgt,
-    errorMessage, // eslint-disable-line no-unused-vars
-    meta, // eslint-disable-line no-unused-vars
-    ...rest
-  }) {
+function InnerInputComponent({
+  input,
+  forhandsvalgt,
+  errorMessage, // eslint-disable-line no-unused-vars
+  meta, // eslint-disable-line no-unused-vars
+  ...rest
+}) {
   const inputProps = {
     ...input,
     ...rest,
@@ -50,7 +49,9 @@ InnerInputComponent.propTypes = {
   forhandsvalgt: PT.bool,
 };
 
-function Radio({ id, feltNavn, className, ...rest }) {
+function Radio({
+  id, feltNavn, className, ...rest
+}) {
   return (
     <CustomField
       name={feltNavn}

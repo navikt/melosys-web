@@ -23,7 +23,6 @@ class LandVelger extends Component {
     this.setState({
       valgteLand: [],
       inputVerdi: '',
-      inputLandObject: {},
       tilgjengeligeLand: [
         { kode: 'BE', term: 'Belgia' },
         { kode: 'BG', term: 'Bulgaria' },
@@ -71,12 +70,10 @@ class LandVelger extends Component {
     if (landForTillegg === undefined) { return; }
 
     if (!this.state.valgteLand.includes(landForTillegg)) {
-      this.setState(
-        {
-          valgteLand: [...this.state.valgteLand, landForTillegg],
-          inputVerdi: '',
-        }
-      );
+      this.setState({
+        valgteLand: [...this.state.valgteLand, landForTillegg],
+        inputVerdi: '',
+      });
     }
   }
 
@@ -96,8 +93,7 @@ class LandVelger extends Component {
   inputTastNedHandler = e => {
     if (e.keyCode === 13) {
       const landTreff = this.state.tilgjengeligeLand.filter(item => (
-        landTekstFormat(item).toLowerCase().includes(this.state.inputVerdi.toLowerCase()))
-      );
+        landTekstFormat(item).toLowerCase().includes(this.state.inputVerdi.toLowerCase())));
 
       if (landTreff.length === 1) {
         this.leggTilLandHandler(landTreff[0]);
@@ -123,7 +119,7 @@ class LandVelger extends Component {
           <Nav.Input
             list="land"
             label="Tast inn land"
-            bredde="l"
+            bredde="L"
             className="landliste__enkeltlinje__input"
             value={this.state.inputVerdi}
             onChange={this.inputEndringHandler}
@@ -131,7 +127,8 @@ class LandVelger extends Component {
           />
           <button
             className="landliste__enkeltlinje__knapp landliste__enkeltlinje__knapp--leggtil"
-            onClick={() => this.leggTilLandHandler(null)}>+</button>
+            onClick={() => this.leggTilLandHandler(null)}>+
+          </button>
           <datalist id="land">
             {tilgjengeligeLand.map(item => (!valgteLand.includes(item) ? <option key={item.kode} value={landTekstFormat(item)} /> : ''))}
           </datalist>

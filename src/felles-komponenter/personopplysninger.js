@@ -32,7 +32,9 @@ function Personopplysninger(props) {
   } = props.person;
 
   // Påkrevde felter fra API
-  const { poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav = '' } } = bostedsadresse;
+  const {
+    poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav = '' },
+  } = bostedsadresse;
   const aar = moment().diff(foedselsdato, 'years');
 
   return (
