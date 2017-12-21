@@ -24,7 +24,7 @@ function SokListeEnkeltlinje({ sak }) {
 
   return (
     <div className={cssKlasser}>
-      <Link href={link} className="enkeltlinje__link">
+      <Link to={link} className="enkeltlinje__link">
         <Nav.Panel className="enkeltlinje__panel">
           <div className="enkeltlinje__kjoenn">
             <img src={ikon} alt={`Ikon for ${ikonAlt}`} className="kjonn__ikon" />
