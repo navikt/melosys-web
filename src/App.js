@@ -17,6 +17,7 @@ App.defaultProps = {
 
 App.propTypes = {
   children: PT.node,
+  routes: PT.node,
 };
 
 App.defaultProps = {

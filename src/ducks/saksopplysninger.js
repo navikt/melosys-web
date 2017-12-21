@@ -59,9 +59,7 @@ export const ArbeidsforholdetSelector = createSelector(
   (state, arbeidsforholdID) => arbeidsforholdID,
   state => state.saksopplysninger.data.arbeidsforhold || [],
   (arbeidsforholdID, arbeidsforhold) =>
-    arbeidsforhold.find(
-      item => item.arbeidsforholdIDnav.toString() === arbeidsforholdID
-    )
+    arbeidsforhold.find(item => item.arbeidsforholdIDnav.toString() === arbeidsforholdID)
 );
 
 export const OrganisasjonSelector = createSelector(

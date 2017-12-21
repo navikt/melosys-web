@@ -103,8 +103,7 @@ class Inntekt extends Component {
         periode,
         grafInntekt[periode].sikkertBeloep,
         grafInntekt[periode].usikkertBeloep,
-      ])
-    );
+      ]));
 
     const uuTabell = this.state.visInntektTabell ? (
       <div>
@@ -119,7 +118,7 @@ class Inntekt extends Component {
 
     return inntekt.length > 0 ? (
       <div className="inntekt">
-        <div className={'my-pretty-chart-container'}>
+        <div className="my-pretty-chart-container">
           <ReactHighcharts config={grafConfig} />
         </div>
         <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">Vis tabell for inntekten</Nav.Knapp>

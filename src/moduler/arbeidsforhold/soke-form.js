@@ -20,7 +20,7 @@ function SokeForm({ handleSubmit, errorSummary }) {
         <Input
           feltNavn="fnr"
           label="Fnr. eller dnr."
-          bredde="xl"
+          bredde="XL"
           autoFocus
         />
         <Hovedknapp>Søk</Hovedknapp>

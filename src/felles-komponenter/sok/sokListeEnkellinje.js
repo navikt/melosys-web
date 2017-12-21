@@ -12,7 +12,9 @@ import EnkeltDato from '../datoOmrade/enkeltDato';
 import './sokListeEnkeltlinje.css';
 
 function SokListeEnkeltlinje({ sak }) {
-  const { saksnummer, fnr, sammensattNavn, registrertDato, status } = sak;
+  const {
+    saksnummer, fnr, sammensattNavn, registrertDato, status,
+  } = sak;
   const link = `/saksbehandling/${saksnummer}`;
   const ikon = sak.kjoenn === 'M' ? Ikon.Mann : Ikon.Kvinne;
   const ikonAlt = sak.kjoenn === 'M' ? 'mann' : 'kvinne';
@@ -22,7 +24,7 @@ function SokListeEnkeltlinje({ sak }) {
 
   return (
     <div className={cssKlasser}>
-      <Link to={link} className="enkeltlinje__link">
+      <Link href={link} className="enkeltlinje__link">
         <Nav.Panel className="enkeltlinje__panel">
           <div className="enkeltlinje__kjoenn">
             <img src={ikon} alt={`Ikon for ${ikonAlt}`} className="kjonn__ikon" />

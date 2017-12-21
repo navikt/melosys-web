@@ -37,12 +37,6 @@ Topplinje.propTypes = {
   saksbehandler: MPT.Saksbehandler.isRequired,
 };
 
-Topplinje.defaultProps = {
-  saksbehandler: {
-    navn: '',
-  },
-};
-
 const mapStateToProps = state => ({
   saksbehandler: SaksbehandlerSelector(state),
 });
