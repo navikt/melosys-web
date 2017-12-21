@@ -19,7 +19,7 @@ import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
 import Arbeidsforholdene from '../felles-komponenter/arbeidsforholdene';
-import OrganisasjonerNorge from '../felles-komponenter/organisasjonerNorge';
+import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
 import OppholdUtland from '../felles-komponenter/oppholdUtland';
 import Inntekt from '../felles-komponenter/inntekt';
@@ -31,7 +31,6 @@ import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import {
   hentFagsaker,
   PersonSelector,
-  OrganisasjonSelector,
   MedlemskapSelector,
   ArbeidsforholdeneSelector,
   InntektSoknadenSelector,
@@ -45,6 +44,7 @@ import {
   oppdaterSoknadState,
   SoknadSelector,
   ArbeidsinntektSelector,
+  ArbeidNorgeSelector,
   OppholdUtlandSelector,
   ArbeidsgiversBekreftelseSelector,
 } from '../ducks/soknad';
@@ -65,7 +65,6 @@ class Saksbehandling extends Component {
     sendSoknad: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
-    organisasjoner: MPT.Organisasjoner,
     medlemskap: MPT.Medlemskap,
     arbeidsforholdene: MPT.Arbeidsforholdene,
     inntekt: MPT.Inntekt,
@@ -74,6 +73,7 @@ class Saksbehandling extends Component {
     soknad: PT.object,
     soknadArbeidsinntekt: PT.object,
     soknadOppholdUtland: MPT.OppholdUtland,
+    soknadArbeidNorge: MPT.ArbeidNorge,
     handleSubmit: PT.func.isRequired,
     errorSummary: PT.object,
     errorSummaryTitle: PT.string,
@@ -82,7 +82,6 @@ class Saksbehandling extends Component {
 
   static defaultProps = {
     person: {},
-    organisasjoner: [],
     medlemskap: {},
     arbeidsforholdene: [],
     inntekt: {},
@@ -91,6 +90,7 @@ class Saksbehandling extends Component {
     soknad: {},
     soknadArbeidsinntekt: {},
     soknadOppholdUtland: {},
+    soknadArbeidNorge: {},
     errorSummary: {},
     errorSummaryTitle: '',
   };
@@ -117,7 +117,6 @@ class Saksbehandling extends Component {
   render() {
     const {
       person,
-      organisasjoner,
       medlemskap,
       arbeidsforholdene,
       inntekt,
@@ -147,7 +146,7 @@ class Saksbehandling extends Component {
                 {errorSummary}
                 {person && <Personopplysninger person={person} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
-                {organisasjoner && <OrganisasjonerNorge organisasjoner={organisasjoner} />}
+                <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
@@ -174,7 +173,6 @@ class Saksbehandling extends Component {
  */
 const mapStateToProps = state => ({
   person: PersonSelector(state),
-  organisasjoner: OrganisasjonSelector(state),
   medlemskap: MedlemskapSelector(state),
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
   inntekt: InntektSoknadenSelector(state),
@@ -184,6 +182,7 @@ const mapStateToProps = state => ({
   soknadForm: SoknadenFormSelector(state),
   soknadArbeidsinntekt: ArbeidsinntektSelector(state),
   soknadOppholdUtland: OppholdUtlandSelector(state),
+  soknadArbeidNorge: ArbeidNorgeSelector(state),
   initialValues: {
     inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
@@ -200,6 +199,11 @@ const mapStateToProps = state => ({
     studentSemester: OppholdUtlandSelector(state).studentSemester,
     studieLand: OppholdUtlandSelector(state).studieLand,
     studentFinansiering: OppholdUtlandSelector(state).studentFinansiering,
+    kontaktNavn: ArbeidNorgeSelector(state).kontaktNavn,
+    kontaktEpost: ArbeidNorgeSelector(state).kontaktEpost,
+    fullmektigFirma: ArbeidNorgeSelector(state).fullmektigFirma,
+    fullmektigAdresse: ArbeidNorgeSelector(state).fullmektigAdresse,
+    utsendendeOrgnr: ArbeidNorgeSelector(state).utsendendeOrgnr,
   },
 });
 
