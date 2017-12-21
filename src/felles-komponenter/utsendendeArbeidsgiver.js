@@ -1,10 +1,16 @@
 import React from 'react';
 import PT from 'prop-types';
+import { connect } from 'react-redux';
+import { reduxForm } from 'redux-form';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
+
+import { OrganisasjonSelector } from '../ducks/fagsaker';
+import { ArbeidNorgeSelector } from '../ducks/soknad';
+import { SoknadenFormSelector } from '../ducks/form';
 
 import PanelHeader from './panelHeader/panelHeader';
 import Forretningsadresse from './adresser/forretningsadresse';
@@ -41,15 +47,15 @@ Arbeidsgiver.defaultProps = {
   arbeidsgiver: null,
 };
 
-function UtsendendeArbeidsgiver ({ organisasjoner, soknadForm }) {
-  const { utsendendeOrgnr } = soknadForm.values;
+function UtsendendeArbeidsgiver (props) {
+  const { organisasjoner, utsendendeOrgnr, soknadArbeidNorge } = props;
   const arbeidsgiver = organisasjoner ? organisasjoner.find(item => item.orgnr === utsendendeOrgnr) : {};
 
-  return (
+  return Object.keys(soknadArbeidNorge) > 0 ? (
     <div className="utsendendeArbeidsgiver panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Utsendende arbeidsgiver" undertittel="" />}
-        ariaTittel="Panel for utsendende arbeidsgiver i Norge" >
+        ariaTittel="Panel for utsendende arbeidsgiver i Norge">
         <Nav.Container fluid>
           <Nav.Row className="arbeidsgiver__seksjon">
             <Nav.Column xs="6">
@@ -70,19 +76,25 @@ function UtsendendeArbeidsgiver ({ organisasjoner, soknadForm }) {
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>
-  );
+  ) : null;
 }
 
 UtsendendeArbeidsgiver.propTypes = {
   organisasjoner: MPT.Organisasjoner,
   soknadArbeidNorge: MPT.ArbeidNorge,
-  soknadForm: PT.object,
+  utsendendeOrgnr: PT.string,
 };
 
 UtsendendeArbeidsgiver.defaultProps = {
   organisasjoner: [],
   soknadArbeidNorge: {},
-  soknadForm: {},
+  utsendendeOrgnr: '',
 };
 
-export default UtsendendeArbeidsgiver;
+const mapStateToProps = state => ({
+  organisasjoner: OrganisasjonSelector(state),
+  soknadArbeidNorge: ArbeidNorgeSelector(state),
+  utsendendeOrgnr: SoknadenFormSelector(state).values.utsendendeOrgnr,
+});
+
+export default reduxForm({ form: 'soknad' })(connect(mapStateToProps)(UtsendendeArbeidsgiver));
