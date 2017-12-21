@@ -31,7 +31,6 @@ import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import {
   hentFagsaker,
   PersonSelector,
-  OrganisasjonSelector,
   MedlemskapSelector,
   ArbeidsforholdeneSelector,
   InntektSoknadenSelector,
@@ -66,7 +65,6 @@ class Saksbehandling extends Component {
     sendSoknad: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
-    organisasjoner: MPT.Organisasjoner,
     medlemskap: MPT.Medlemskap,
     arbeidsforholdene: MPT.Arbeidsforholdene,
     inntekt: MPT.Inntekt,
@@ -84,7 +82,6 @@ class Saksbehandling extends Component {
 
   static defaultProps = {
     person: {},
-    organisasjoner: [],
     medlemskap: {},
     arbeidsforholdene: [],
     inntekt: {},
@@ -120,7 +117,6 @@ class Saksbehandling extends Component {
   render() {
     const {
       person,
-      organisasjoner,
       medlemskap,
       arbeidsforholdene,
       inntekt,
@@ -128,7 +124,6 @@ class Saksbehandling extends Component {
       oppsummering,
       soknadArbeidsinntekt,
       soknadOppholdUtland,
-      soknadArbeidNorge,
       handleSubmit,
       errorSummary,
       soknadForm,
@@ -151,7 +146,7 @@ class Saksbehandling extends Component {
                 {errorSummary}
                 {person && <Personopplysninger person={person} />}
                 {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
-                <UtsendendeArbeidsgiver organisasjoner={organisasjoner} soknadArbeidNorge={soknadArbeidNorge} soknadForm={soknadForm} />
+                <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
@@ -178,7 +173,6 @@ class Saksbehandling extends Component {
  */
 const mapStateToProps = state => ({
   person: PersonSelector(state),
-  organisasjoner: OrganisasjonSelector(state),
   medlemskap: MedlemskapSelector(state),
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
   inntekt: InntektSoknadenSelector(state),
