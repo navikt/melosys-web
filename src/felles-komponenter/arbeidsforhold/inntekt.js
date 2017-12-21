@@ -103,7 +103,6 @@ class Inntekt extends Component {
         periode,
         grafInntekt[periode].sikkertBeloep,
         grafInntekt[periode].usikkertBeloep,
-        grafInntekt[periode].beskrivelse,
       ])
     );
 
