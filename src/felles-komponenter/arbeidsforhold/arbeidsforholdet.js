@@ -72,6 +72,7 @@ const Arbeidsforholdet = props => {
     arbeidsforholdstype,
     Aordning,
     arbeidsgiver,
+    arbeidsgiverID,
     arbeidsavtaler,
     timerTimelonnet,
     utenlandsopphold,
@@ -96,6 +97,9 @@ const Arbeidsforholdet = props => {
         <Nav.Container fluid>
           <Nav.Row className="arbeidsforholdet__enkelt">
             <div className="arbeidsforholdene panelSeksjon">
+              <Nav.Row>
+                <Nav.Knapp className="arbeidsforholdet__relevantknapp" onClick={e => props.leggtilArbeidsforhold(e, arbeidsgiverID)}>Sett som utsendende</Nav.Knapp>
+              </Nav.Row>
               <Nav.Row className="arbeidsforhold__enkelt">
                 <Nav.Column xs="6">
                   <DatoOmrade periode={ansettelsesPeriode} />

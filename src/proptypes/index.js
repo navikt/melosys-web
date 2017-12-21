@@ -16,8 +16,10 @@ import { Periode } from './periode';
 import { Bekreftelser } from './bekreftelser';
 import { SoknadForm } from './soknadForm';
 import { Utenlandsopphold } from './utenlandsopphold';
+import { ArbeidNorge } from './arbeidNorge';
 
 export {
+  ArbeidNorge,
   Saksbehandler,
   BostedsAdresse,
   Person,
