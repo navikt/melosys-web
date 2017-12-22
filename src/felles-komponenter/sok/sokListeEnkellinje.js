@@ -12,7 +12,9 @@ import EnkeltDato from '../datoOmrade/enkeltDato';
 import './sokListeEnkeltlinje.css';
 
 function SokListeEnkeltlinje({ sak }) {
-  const { saksnummer, fnr, sammensattNavn, registrertDato, status } = sak;
+  const {
+    saksnummer, fnr, sammensattNavn, registrertDato, status,
+  } = sak;
   const link = `/saksbehandling/${saksnummer}`;
   const ikon = sak.kjoenn === 'M' ? Ikon.Mann : Ikon.Kvinne;
   const ikonAlt = sak.kjoenn === 'M' ? 'mann' : 'kvinne';

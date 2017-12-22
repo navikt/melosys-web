@@ -27,16 +27,15 @@ function getTellerTekst(antallTegn, maxLength, visTellerFra) {
   return null;
 }
 
-function InnerTextAreaComponent(
-  {
-    input,
-    label,
-    placeholder,
-    maxLength,
-    errorMessage,
-    visTellerFra,
-    ...rest
-  }) {
+function InnerTextAreaComponent({
+  input,
+  label,
+  placeholder,
+  maxLength,
+  errorMessage,
+  visTellerFra,
+  ...rest
+}) {
   const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
   return (
     <Nav.Textarea

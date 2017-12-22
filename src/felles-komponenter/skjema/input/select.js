@@ -4,15 +4,14 @@ import { Select as NavSelect } from 'nav-frontend-skjema';
 import { CustomField } from 'react-redux-form-validation';
 import '../skjema.css';
 
-function InnerInputComponent(
-  {
-    input,
-    label,
-    children,
-    errorMessage,
-    meta, // eslint-disable-line no-unused-vars
-    ...rest
-  }) {
+function InnerInputComponent({
+  input,
+  label,
+  children,
+  errorMessage,
+  meta, // eslint-disable-line no-unused-vars
+  ...rest
+}) {
   const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
   const inputProps = {
     ...input,
@@ -40,7 +39,9 @@ InnerInputComponent.propTypes = {
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
 };
 
-function Select({ id, feltNavn, className, ...rest }) {
+function Select({
+  id, feltNavn, className, ...rest
+}) {
   return (
     <CustomField
       name={feltNavn}

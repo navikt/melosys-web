@@ -26,7 +26,7 @@ class DatoFelt extends Component {
     return (
       <div className="datofelt">
         <Nav.Input
-          bredde="s"
+          bredde="S"
           onBlur={this.vedFokusUtHandler}
           onChange={this.vedEndringHandler}
           value={this.state.dato}
