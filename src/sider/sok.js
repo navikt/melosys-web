@@ -22,7 +22,6 @@ class Sok extends Component {
   }
 
   componentWillMount() {
-    this.setState({ brukerHarGjortSok: false });
     const queryParams = queryString.parse(this.props.location.search);
     const { fnr } = queryParams;
 
@@ -38,7 +37,6 @@ class Sok extends Component {
    * @param value
    */
   queryStringHandler(value) {
-    this.setState({ brukerHarGjortSok: true });
     const { history, hentNyesaker } = this.props;
     history.push(`?fnr=${value.fnr}`);
     hentNyesaker(value.fnr);

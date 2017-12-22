@@ -5,14 +5,13 @@ import { Checkbox as NavCheckbox } from 'nav-frontend-skjema';
 import { CustomField } from 'react-redux-form-validation';
 import '../skjema.css';
 
-function InnerCheckboxComponent(
-  {
-    input,
-    meta,
-    label,
-    errorMessage,
-    submitOnChange,
-  }) {
+function InnerCheckboxComponent({
+  input,
+  meta,
+  label,
+  errorMessage,
+  submitOnChange,
+}) {
   const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
 
   function onChange(...args) {

@@ -14,7 +14,7 @@ const initalState = {
 
 // Reducer
 export default function reducer(state = initalState, action) {
-  const data = action.data;
+  const { data } = action;
   switch (action.type) {
     case OPPDATER_ARBEIDSGIVER_FEILET:
       return { ...state, status: STATUS.ERROR, feil: data };
