@@ -49,8 +49,8 @@ class SideDialog extends Component {
               <button
                 className={classnames({ meny__element: true, 'meny__element--aktiv': (item.navn === this.state.aktivFane) })}
                 key={uuid()}
-                onClick={() => this.tilFane(item.navn)}>{item.tittel}</button>)
-            )}
+                onClick={() => this.tilFane(item.navn)}>{item.tittel}
+              </button>))}
           </div>
           <div>
             { this.props.faner.find(item => item.navn === this.state.aktivFane).komponent }

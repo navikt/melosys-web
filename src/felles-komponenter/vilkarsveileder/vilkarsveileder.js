@@ -27,10 +27,6 @@ class Vilkarsveileder extends Component {
     fattVedtakHandler: PT.func.isRequired,
   };
 
-  static defaultProps = {
-    history: {},
-  };
-
   /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
    * feil eller varsler som saksbehandleren må håndtere.
    *
@@ -72,15 +68,32 @@ class Vilkarsveileder extends Component {
     this.setState({
       aktivtSteg: 0,
       steg: [
-        { status: Vilkarsveileder.status.AKTIV, id: 0, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 1, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 2, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 3, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 4, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
-        { status: Vilkarsveileder.status.FEIL, id: 5, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 6, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false },
-        { status: Vilkarsveileder.status.UBEHANDLET, id: 7, ikoner: Vilkarsveileder.vedtakIkoner, tilgjengelig: false },
-      ] });
+        {
+          status: Vilkarsveileder.status.AKTIV, id: 0, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true,
+        },
+        {
+          status: Vilkarsveileder.status.UBEHANDLET, id: 1, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
+        },
+        {
+          status: Vilkarsveileder.status.UBEHANDLET, id: 2, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
+        },
+        {
+          status: Vilkarsveileder.status.UBEHANDLET, id: 3, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
+        },
+        {
+          status: Vilkarsveileder.status.UBEHANDLET, id: 4, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
+        },
+        {
+          status: Vilkarsveileder.status.FEIL, id: 5, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
+        },
+        {
+          status: Vilkarsveileder.status.UBEHANDLET, id: 6, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
+        },
+        {
+          status: Vilkarsveileder.status.UBEHANDLET, id: 7, ikoner: Vilkarsveileder.vedtakIkoner, tilgjengelig: false,
+        },
+      ],
+    });
   }
 
   fattVedtak = () => {

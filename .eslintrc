@@ -6,6 +6,7 @@
     "react/jsx-indent-props": "off",
     "react/forbid-prop-types": "off",
     "react/no-unused-prop-types": "off",
+    "react/no-typos": "off",
     "react/jsx-wrap-multilines": "off",
     "react/jsx-closing-bracket-location": "off",
     "react/jsx-indent": "off",
@@ -41,6 +42,10 @@
     "jsx-a11y/role-supports-aria-props": 2,
     "jsx-a11y/tabindex-no-positive": 2,
     "jsx-a11y/no-noninteractive-tabindex" : "off",
+    "jsx-a11y/anchor-is-valid": [ "error", {
+      "components": [ "Link" ],
+      "specialLink": [ "to" ]
+    }],
     "linebreak-style": "off",
     "no-bitwise": [ "error", {"allow" : ["^"]} ]
   },

@@ -28,10 +28,6 @@ const StegLinje = props => {
   );
 };
 
-StegLinje.defaultProps = {
-  steg: [],
-};
-
 StegLinje.propTypes = {
   steg: PT.arrayOf(PT.object).isRequired,
   stegKlikk: PT.func.isRequired,

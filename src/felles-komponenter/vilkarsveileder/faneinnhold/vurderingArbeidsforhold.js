@@ -26,7 +26,8 @@ const ArbeidsforholdLinje = props => {
       <div className="arbeidsforhold_enkeltlinje_tekst">
         <div className="arbeidsforhold__enkeltlinje__navn">{arbeidsforholdet.arbeidsgiver.navn}</div>
         <div className="arbeidsforhold__enkeltlinje__periode">
-          Periode: <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} /></div>
+          Periode: <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} />
+        </div>
       </div>
       <button className="arbeidsforhold__enkeltlinje__knapp" onClick={() => removeArbeidsforhold()}>-</button>
     </div>
@@ -60,8 +61,7 @@ const Arbeidsforholdene = props => {
           component={linjeProps => <ArbeidsforholdLinje {...linjeProps} arbeidsforholdene={arbeidsforholdene} />}
           removeArbeidsforhold={() => valgteArbeidsforhold.remove(index)}
         />
-      )
-      )}
+      ))}
     </div>
   );
 };
