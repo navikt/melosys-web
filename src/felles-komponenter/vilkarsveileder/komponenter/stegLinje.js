@@ -14,7 +14,7 @@ const StegLinje = props => {
   const stegKnapper = steg.map((item, index) => (
     <StegIkon
       key={uuid()}
-      onClick={() => this.props.stegKlikk(index)}
+      onClick={() => props.stegKlikk(index)}
       ikon={item.ikoner[item.status]}
       tilgjengelig={item.tilgjengelig}
     />));
