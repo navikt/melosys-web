@@ -56,7 +56,7 @@ function Bekreftelser (props) {
                 <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="nei" value="false" />
               </div>
             </Skjema.RadioGruppe>
-            <Skjema.Input bredde="s" feltNavn="trygdeavgiftTrukketGjennomSkattDato" datoFelt label="Til dato:" />
+            <Skjema.Input bredde="S" feltNavn="trygdeavgiftTrukketGjennomSkattDato" datoFelt label="Til dato:" />
           </Nav.Column>
         </Nav.Row>
       </Nav.EkspanderbartpanelBase>

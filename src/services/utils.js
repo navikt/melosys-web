@@ -76,25 +76,37 @@ if (config.headers) {
     .then(sjekkStatuskode)
     .then(toJson);
 }
-function methodToJson(method, url, data, config) {
-  return fetchToJson(url, {
-    ...{
-      method,
-      headers: new Headers({
-        'Content-Type': 'application/json;charset=UTF-8',
-      }),
-      body: JSON.stringify(data),
-    },
-    ...config,
-  });
-}
 
-export function postAsJson(url, data = {}, config = {}) {
-  return methodToJson('post', url, data, config);
-}
+function methodToJson(method, url, data) {
+  const headers = {
+    Accept: 'application/json',
+    'Accept-Charset': 'UTF-8',
+    // Origin: window.location.origin, // Set by fetch() automagically
+    // 'Access-Control-Request-Method': method, // Kun ved preflight
+  };
 
-export function putAsJson(url, data = {}, config = {}) {
-  return methodToJson('put', url, data, config);
+  const fetchConfig = {
+    // method: Set by fetch() automagically
+    method,
+    headers: new Headers(headers),
+    // credentials: 'include',
+    // mode: 'cors',
+    //cache: 'default',
+  };
+
+  const httpVerbsWithBody = ['POST', 'PUT'];
+  if (httpVerbsWithBody.includes(method)) {
+    fetchConfig.body = JSON.stringify(data);
+    fetchConfig.headers.append('Content-Type', 'text/plain');
+  }
+
+  return fetchToJson(url, fetchConfig);
+}
+export function getAsJson(url) {
+  return methodToJson('GET', url);
+}
+export function postAsJson(url, data = {}) {
+  return methodToJson('POST', url, data);
 }
 
 export function doThenDispatch(fn, { OK, FEILET, PENDING }) {

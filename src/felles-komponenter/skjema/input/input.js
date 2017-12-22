@@ -9,7 +9,9 @@ import '../skjema.css';
 /** Komponenten nedenfor tar imot errorMessage (og alle andre props). ErrorMessage gjøres om til
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
  */
-function InnerInputComponent({ input, label, errorMessage, ...rest }) {
+function InnerInputComponent({
+  input, label, errorMessage, ...rest
+}) {
   const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
   const inputProps = { ...input, ...rest };
   return <Nav.Input label={label} feil={feil} {...inputProps} />;
@@ -30,7 +32,9 @@ InnerInputComponent.defaultProps = {
   input: undefined,
 };
 
-function Input({ feltNavn, bredde, datoFelt, ...rest }) {
+function Input({
+  feltNavn, bredde, datoFelt, ...rest
+}) {
   const normaliserDatoFunksjon = datoFelt ? normaliserInputDato : null;
   return (
     <CustomField

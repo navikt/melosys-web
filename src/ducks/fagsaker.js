@@ -114,9 +114,7 @@ export const ArbeidsforholdSelector = createSelector(
   (state, arbeidsforholdID) => arbeidsforholdID,
   state => state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold || [],
   (arbeidsforholdID, arbeidsforhold) =>
-    arbeidsforhold.find(
-      item => item.arbeidsforholdIDnav.toString() === arbeidsforholdID
-    )
+    arbeidsforhold.find(item => item.arbeidsforholdIDnav.toString() === arbeidsforholdID)
 );
 
 /** Finner alle organisasjonsnummer som er listet i arbeidsforhold.

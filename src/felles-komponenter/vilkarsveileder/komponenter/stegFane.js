@@ -24,11 +24,4 @@ StegFane.propTypes = {
   stegNummer: PT.number.isRequired,
 };
 
-StegFane.defaultProps = {
-  visNesteKnapp: false,
-  nesteKnappKlikk: () => { throw new Error('INGEN_EVENT_KOBLET'); },
-  ikoner: {},
-};
-
-
 export default StegFane;

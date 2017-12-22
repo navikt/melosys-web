@@ -40,7 +40,9 @@ class Tabell extends Component {
   }
 
   render() {
-    const { tabellData, kolonneNavn, linjerPerSide, className } = this.props;
+    const {
+      tabellData, kolonneNavn, linjerPerSide, className,
+    } = this.props;
 
     // Filter ut delen av datasettet som representerer aktive siden (paginering). Dersom
     // linjerPerSide <= 0, vis hele datasettet (dvs, tabellData.length)

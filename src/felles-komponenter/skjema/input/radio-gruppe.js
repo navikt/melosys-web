@@ -4,7 +4,9 @@ import classNames from 'classnames';
 import { CustomField } from 'react-redux-form-validation';
 import '../skjema.css';
 
-function InnerInputComponent({ label, feltNavn, children, errorMessage }) {
+function InnerInputComponent({
+  label, feltNavn, children, errorMessage,
+}) {
   return (
     <div className={classNames({ 'skjema--harFeil': errorMessage })}>
       <div className={classNames({ skjema__feilomrade: errorMessage })}>
