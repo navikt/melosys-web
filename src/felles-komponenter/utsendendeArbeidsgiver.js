@@ -19,7 +19,9 @@ import Postadresse from './adresser/postadresse';
 import './utsendendeArbeidsgiver.css';
 
 const Arbeidsgiver = ({ arbeidsgiver }) => {
-  const { orgnr, navn, forretningsadresse, postadresse } = arbeidsgiver;
+  const {
+    orgnr, navn, forretningsadresse, postadresse,
+  } = arbeidsgiver;
   const postAdresseKomp = postadresse ? <div><dt>Postdresse</dt><dd><Postadresse postadresse={postadresse} /></dd></div> : null;
   const forretningsadresseKomp = forretningsadresse ? <div><dt>Forretningsadresse</dt><dd><Forretningsadresse forretningsadresse={forretningsadresse} /></dd></div> : null;
 
