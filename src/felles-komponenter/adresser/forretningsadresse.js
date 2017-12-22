@@ -6,7 +6,9 @@ import * as MPT from '../../proptypes';
  *
  */
 const Forretningsadresse = ({ forretningsadresse }) => {
-  const { gateadresse, land, postnr, poststed } = forretningsadresse;
+  const {
+    gateadresse, land, postnr, poststed,
+  } = forretningsadresse;
   const gatenavn = gateadresse ? gateadresse.gatenavn : '';
 
   return forretningsadresse ? (
