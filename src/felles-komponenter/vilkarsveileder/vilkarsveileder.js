@@ -12,6 +12,7 @@ import OppretteSak from './faneinnhold/oppretteSak';
 import StartBehandling from './faneinnhold/startBehandling';
 import VurderingLand from './faneinnhold/vurderingLand';
 import VurderingArbeidsforhold from './faneinnhold/vurderingArbeidsforhold';
+import VurderingUtsending from './faneinnhold/vurderingUtsending';
 import VurderingArbeidstype from './faneinnhold/vurderingArbeidstype';
 import VurderingSektor from './faneinnhold/vurderingSektor';
 import VurderingVirksomhet from './faneinnhold/vurderingVirksomhet';
@@ -84,13 +85,16 @@ class Vilkarsveileder extends Component {
           status: Vilkarsveileder.status.UBEHANDLET, id: 4, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
         },
         {
-          status: Vilkarsveileder.status.FEIL, id: 5, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
+          status: Vilkarsveileder.status.UBEHANDLET, id: 5, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
         },
         {
-          status: Vilkarsveileder.status.UBEHANDLET, id: 6, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
+          status: Vilkarsveileder.status.FEIL, id: 6, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
         },
         {
-          status: Vilkarsveileder.status.UBEHANDLET, id: 7, ikoner: Vilkarsveileder.vedtakIkoner, tilgjengelig: false,
+          status: Vilkarsveileder.status.UBEHANDLET, id: 7, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
+        },
+        {
+          status: Vilkarsveileder.status.UBEHANDLET, id: 8, ikoner: Vilkarsveileder.vedtakIkoner, tilgjengelig: false,
         },
       ],
     });
@@ -190,16 +194,21 @@ class Vilkarsveileder extends Component {
           />
         </StegFane>
         <StegFane stegNummer={5} aktivtSteg={aktivtSteg}>
-          <VurderingSektor
+          <VurderingUtsending
             bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
         <StegFane stegNummer={6} aktivtSteg={aktivtSteg}>
-          <VurderingVirksomhet
+          <VurderingSektor
             bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
         <StegFane stegNummer={7} aktivtSteg={aktivtSteg}>
+          <VurderingVirksomhet
+            bekreftOgFortsett={this.bekreftOgFortsett}
+          />
+        </StegFane>
+        <StegFane stegNummer={8} aktivtSteg={aktivtSteg}>
           <Vedtak fattVedtakHandler={this.fattVedtak} />
         </StegFane>
       </div>
