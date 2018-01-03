@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { change, reduxForm } from 'redux-form';
+import { arrayPush, reduxForm } from 'redux-form';
 import PT from 'prop-types';
 
 import * as MPT from '../proptypes/';
@@ -17,10 +17,10 @@ const uuid = require('uuid/v4');
  * @param { arbeidsforholdene } Array En liste over alle arbeidforhold, hvert som et objekt
  */
 class Arbeidsforholdene extends Component {
-  leggtilArbeidsforholdHandler = (e, arbeidsgiverID) => {
+  leggtilArbeidsforholdHandler = (e, arbeidsforholdID) => {
     e.preventDefault();
     const { dispatch } = this.props;
-    dispatch(change('soknad', 'utsendendeOrgnr', arbeidsgiverID));
+    dispatch(arrayPush('soknad', 'valgteArbeidsforhold', arbeidsforholdID));
   }
 
   render () {
