@@ -18,7 +18,10 @@ const API_SAKSBEHANDLER = `${process.env.REACT_APP_API_SAKSBEHANDLER}`;
 const API_SAKSOPPLYSNINGER = `${process.env.REACT_APP_API_SAKSOPPLYSNINGER}`;
 console.log('process.env', process.env);
 
-
+export function health() {
+  const URI_HEALTH = `/melosys/internal/health`;
+  return getAsJson(URI_HEALTH);
+}
 
 export function hentSoknad() {
   const URI_SOKNAD =  `${API_MELOSYS_URL}soknad/`;
@@ -56,7 +59,7 @@ export function hentTidligeresaker(brukernavn) {
 }
 
 export function hentSaksbehandler() {
-  const URI_SAKSBEHANDLER = `${API_MELOSYS_URL}${API_SAKSBEHANDLER}`;
+  const URI_SAKSBEHANDLER = `${API_BASE_URL}${API_SAKSBEHANDLER}`;
   return getAsJson(URI_SAKSBEHANDLER);
 }
 
