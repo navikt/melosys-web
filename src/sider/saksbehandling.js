@@ -203,7 +203,7 @@ const mapStateToProps = state => ({
     kontaktEpost: ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: ArbeidNorgeSelector(state).fullmektigFirma,
     fullmektigAdresse: ArbeidNorgeSelector(state).fullmektigAdresse,
-    utsendendeOrgnr: ArbeidNorgeSelector(state).utsendendeOrgnr,
+    valgteArbeidsforhold: ArbeidNorgeSelector(state).valgteArbeidsforhold,
   },
 });
 

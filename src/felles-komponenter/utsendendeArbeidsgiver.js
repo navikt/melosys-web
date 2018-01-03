@@ -8,9 +8,9 @@ import * as MPT from '../proptypes/';
 import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
 
-import { OrganisasjonSelector } from '../ducks/fagsaker';
 import { ArbeidNorgeSelector } from '../ducks/soknad';
 import { SoknadenFormSelector } from '../ducks/form';
+import { ArbeidsforholdeneSelector } from '../ducks/fagsaker';
 
 import PanelHeader from './panelHeader/panelHeader';
 import Forretningsadresse from './adresser/forretningsadresse';
@@ -50,18 +50,20 @@ Arbeidsgiver.defaultProps = {
 };
 
 function UtsendendeArbeidsgiver (props) {
-  const { organisasjoner, utsendendeOrgnr, soknadArbeidNorge } = props;
-  const arbeidsgiver = organisasjoner ? organisasjoner.find(item => item.orgnr === utsendendeOrgnr) : {};
+  const { arbeidsforholdene, valgteArbeidsforhold, soknadArbeidNorge } = props;
+  const valgteOrganisasjon = arbeidsforholdene && arbeidsforholdene.reduce((samling, arbeidsforholdet) =>
+    (valgteArbeidsforhold.includes(arbeidsforholdet.arbeidsforholdID) ? [...samling, arbeidsforholdet.arbeidsgiver] : [...samling]), []);
+  const panelIkon = valgteOrganisasjon.length === 1 ? Ikoner.Ferdig : Ikoner.Varsel;
 
   return Object.keys(soknadArbeidNorge).length > 0 ? (
     <div className="utsendendeArbeidsgiver panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Utsendende arbeidsgiver" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel="Utsendende arbeidsgiver" undertittel="" />}
         ariaTittel="Panel for utsendende arbeidsgiver i Norge">
         <Nav.Container fluid>
           <Nav.Row className="arbeidsgiver__seksjon">
             <Nav.Column xs="6">
-              {arbeidsgiver && <Arbeidsgiver arbeidsgiver={arbeidsgiver} /> }
+              {valgteOrganisasjon.map(item => <Arbeidsgiver key={item.orgnr} arbeidsgiver={item} />) }
             </Nav.Column>
             <Nav.Column xs="6">
               <dl className="arbeidsgiver__detaljer">
@@ -80,21 +82,21 @@ function UtsendendeArbeidsgiver (props) {
 }
 
 UtsendendeArbeidsgiver.propTypes = {
-  organisasjoner: MPT.Organisasjoner,
+  arbeidsforholdene: MPT.Arbeidsforholdene,
   soknadArbeidNorge: MPT.ArbeidNorge,
-  utsendendeOrgnr: PT.string,
+  valgteArbeidsforhold: PT.array,
 };
 
 UtsendendeArbeidsgiver.defaultProps = {
-  organisasjoner: [],
+  arbeidsforholdene: [],
   soknadArbeidNorge: {},
-  utsendendeOrgnr: '',
+  valgteArbeidsforhold: [],
 };
 
 const mapStateToProps = state => ({
-  organisasjoner: OrganisasjonSelector(state),
+  arbeidsforholdene: ArbeidsforholdeneSelector(state),
   soknadArbeidNorge: ArbeidNorgeSelector(state),
-  utsendendeOrgnr: SoknadenFormSelector(state).values.utsendendeOrgnr,
+  valgteArbeidsforhold: SoknadenFormSelector(state).values.valgteArbeidsforhold,
 });
 
 export default reduxForm({ form: 'soknad' })(connect(mapStateToProps)(UtsendendeArbeidsgiver));

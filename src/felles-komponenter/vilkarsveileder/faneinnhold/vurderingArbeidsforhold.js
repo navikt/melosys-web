@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { Field, FieldArray, reduxForm, initialize } from 'redux-form';
+import { Field, FieldArray, reduxForm, arrayRemoveAll, arrayPush } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-
 import EnkeltDato from '../../datoOmrade/enkeltDato';
+
 
 import './vurderingArbeidsforhold.css';
 
@@ -17,31 +17,26 @@ const uuid = require('uuid/v4');
  * @constructor
  */
 const ArbeidsforholdLinje = props => {
-  const { value } = props.input;
-  const { removeArbeidsforhold, arbeidsforholdene } = props;
-  const arbeidsforholdet = arbeidsforholdene.find(forholdet => forholdet.arbeidsforholdID === value);
+  const { arbeidsforholdet, erValgt } = props;
 
   return (
     <div className="arbeidsforhold__enkeltlinje">
-      <div className="arbeidsforhold_enkeltlinje_tekst">
-        <div className="arbeidsforhold__enkeltlinje__navn">{arbeidsforholdet.arbeidsgiver.navn}</div>
-        <div className="arbeidsforhold__enkeltlinje__periode">
-          Periode: <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} />
-        </div>
-      </div>
-      <button className="arbeidsforhold__enkeltlinje__knapp" onClick={() => removeArbeidsforhold()}>-</button>
+      <Nav.Checkbox checked={erValgt} onChange={() => props.checkboxKlikkHandler(arbeidsforholdet.arbeidsforholdID)} label={`${arbeidsforholdet.arbeidsgiver.navn}`} />
+      <div className="enkeltlinje__periode"><EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} /></div>
     </div>
   );
 };
 
 ArbeidsforholdLinje.propTypes = {
-  removeArbeidsforhold: PT.func.isRequired,
   input: PT.object.isRequired,
-  arbeidsforholdene: PT.array,
+  arbeidsforholdet: MPT.Arbeidsforhold,
+  checkboxKlikkHandler: PT.func.isRequired,
+  erValgt: PT.bool,
 };
 
 ArbeidsforholdLinje.defaultProps = {
-  arbeidsforholdene: [],
+  arbeidsforholdet: [],
+  erValgt: false,
 };
 
 /**
@@ -49,56 +44,65 @@ ArbeidsforholdLinje.defaultProps = {
  * @param props Objekt Diverse props Se prop types
  * @constructor
  */
-const Arbeidsforholdene = props => {
-  const { fields: valgteArbeidsforhold, arbeidsforholdene } = props;
-  return (
-    <div>
-      {valgteArbeidsforhold.map((arbeidsforhold, index) => (
-        <Field
-          key={uuid()}
-          name={`${arbeidsforhold}`}
-          type="text"
-          component={linjeProps => <ArbeidsforholdLinje {...linjeProps} arbeidsforholdene={arbeidsforholdene} />}
-          removeArbeidsforhold={() => valgteArbeidsforhold.remove(index)}
-        />
-      ))}
-    </div>
-  );
-};
+class Arbeidsforholdene extends Component {
+  checkboxKlikkHandler = arbeidsforholdID => {
+    const { fields, dispatch } = this.props;
+
+    const alleOpprinneligValgte = fields.getAll();
+    const alleNyeValgte = alleOpprinneligValgte.includes(arbeidsforholdID) ? alleOpprinneligValgte.filter(item => item !== arbeidsforholdID) : [...alleOpprinneligValgte, arbeidsforholdID];
+    dispatch(arrayRemoveAll('soknad', 'valgteArbeidsforhold'));
+    alleNyeValgte.map(valgt => (dispatch(arrayPush('soknad', 'valgteArbeidsforhold', valgt))));
+  }
+
+  render() {
+    const { fields, arbeidsforholdene } = this.props;
+    const valgteArbeidsforhold = fields.getAll();
+
+    return (
+      <div>
+        {arbeidsforholdene.map(arbeidsforholdet => (
+          <Field
+            key={uuid()}
+            name="valgteArbeidsforhold"
+            type="text"
+            component={linjeProps => <ArbeidsforholdLinje
+              {...linjeProps}
+              arbeidsforholdet={arbeidsforholdet}
+              erValgt={valgteArbeidsforhold ? valgteArbeidsforhold.includes(arbeidsforholdet.arbeidsforholdID) : false}
+              checkboxKlikkHandler={this.checkboxKlikkHandler}
+            />}
+          />
+        ))}
+      </div>
+    );
+  }
+}
 
 Arbeidsforholdene.propTypes = {
   fields: PT.object.isRequired,
   arbeidsforholdene: PT.array,
+  dispatch: PT.func.isRequired,
 };
 
 Arbeidsforholdene.defaultProps = {
   arbeidsforholdene: [],
 };
 
-class VurderingArbeidsforhold extends Component {
-  componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch(initialize('vurderingArbeidsforhold', {
-      arbeidsforholdene: this.props.arbeidsforholdene.map(arbeidsforholdet => arbeidsforholdet.arbeidsforholdID),
-    }));
-  }
+const VurderingArbeidsforhold = props => {
+  const { bekreftOgFortsett, arbeidsforholdene, dispatch } = props;
 
-  render () {
-    const { bekreftOgFortsett, arbeidsforholdene } = this.props;
-
-    return (
-      <div className="vurderingarbeidsforhold">
-        <Nav.Undertittel>Velg relevante arbeidsforhold:</Nav.Undertittel>
-        <div className="arbeidsforhold">
-          <FieldArray name="arbeidsforholdene" component={props => <Arbeidsforholdene {...props} arbeidsforholdene={arbeidsforholdene} />} />
-          <div className="fane__knapplinje">
-            <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
-          </div>
+  return (
+    <div className="vurderingarbeidsforhold">
+      <Nav.Undertittel>Velg arbeidsforhold:</Nav.Undertittel>
+      <div className="arbeidsforhold">
+        <FieldArray name="valgteArbeidsforhold" component={arrayProps => <Arbeidsforholdene {...arrayProps} dispatch={dispatch} arbeidsforholdene={arbeidsforholdene} />} />
+        <div className="fane__knapplinje">
+          <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 VurderingArbeidsforhold.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
