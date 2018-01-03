@@ -7,17 +7,8 @@ export const STATUS = {
 };
 
 export function sjekkStatuskode(response) {
-  console.log('status', response.statusText);
   if (response.status >= 200 && response.status < 300 && response.ok) {
     return response;
-  }
-  if (response.status === 302) {
-    // window.location.href = response.location;
-    window.location.href = 'http://localhost:4000/melosys/openid_connect_login';
-    // return Response.redirect('/melosys/openid_connect_login', 302);
-  }
-  if (response.status === 401) {
-    window.location.href = 'feilsider/401.html'; // eslint-disable-line no-undef
   }
   const error = new Error(response.statusText);
   error.response = response;
@@ -92,7 +83,6 @@ function methodToJson(method, url, data) {
   };
 
   const fetchConfig = {
-    // method: Set by fetch() automagically
     method,
     headers: new Headers(headers),
     redirect: 'follow',
