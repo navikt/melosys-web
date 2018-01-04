@@ -16,7 +16,7 @@ export const feltGrupper = {
     studentFinansiering: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
   },
   arbeidNorge: {
-    utsendendeOrgnr: [],
+    valgteArbeidsforhold: [],
     arbeidsforholdOpprettholdIHelePerioden: [],
     brukerErSelvstendigNaeringsdrivende: [],
     selvstendigFortsetterEtterArbeidIUtlandet: [],

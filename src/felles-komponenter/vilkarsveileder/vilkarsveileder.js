@@ -125,10 +125,6 @@ class Vilkarsveileder extends Component {
     this.props.history.push(`/?fnr=${this.props.person.fnr}`);
   }
 
-  handleSubmit = e => {
-    e.preventDefault();
-  }
-
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
    * @param nyttStegNummer Number Steget som det skal byttes til.
@@ -185,7 +181,6 @@ class Vilkarsveileder extends Component {
           <VurderingArbeidsforhold
             arbeidsforholdene={arbeidsforholdene}
             bekreftOgFortsett={this.bekreftOgFortsett}
-            handleSubmit={this.handleSubmit}
           />
         </StegFane>
         <StegFane stegNummer={4} aktivtSteg={aktivtSteg}>
