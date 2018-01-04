@@ -9,7 +9,6 @@ import StegLinje from './komponenter/stegLinje';
 import StegFane from './komponenter/stegFane';
 
 import OppretteSak from './faneinnhold/oppretteSak';
-import StartBehandling from './faneinnhold/startBehandling';
 import VurderingLand from './faneinnhold/vurderingLand';
 import VurderingArbeidsforhold from './faneinnhold/vurderingArbeidsforhold';
 import VurderingUtsending from './faneinnhold/vurderingUtsending';
@@ -93,9 +92,6 @@ class Vilkarsveileder extends Component {
         {
           status: Vilkarsveileder.status.UBEHANDLET, id: 7, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
         },
-        {
-          status: Vilkarsveileder.status.UBEHANDLET, id: 8, ikoner: Vilkarsveileder.vedtakIkoner, tilgjengelig: false,
-        },
       ],
     });
   }
@@ -168,12 +164,12 @@ class Vilkarsveileder extends Component {
           />
         </StegFane>
         <StegFane stegNummer={1} aktivtSteg={aktivtSteg}>
-          <StartBehandling
-            startBehandling={this.startBehandling}
+          <VurderingLand
+            bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
         <StegFane stegNummer={2} aktivtSteg={aktivtSteg}>
-          <VurderingLand
+          <VurderingArbeidstype
             bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
@@ -184,26 +180,21 @@ class Vilkarsveileder extends Component {
           />
         </StegFane>
         <StegFane stegNummer={4} aktivtSteg={aktivtSteg}>
-          <VurderingArbeidstype
-            bekreftOgFortsett={this.bekreftOgFortsett}
-          />
-        </StegFane>
-        <StegFane stegNummer={5} aktivtSteg={aktivtSteg}>
           <VurderingUtsending
             bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
-        <StegFane stegNummer={6} aktivtSteg={aktivtSteg}>
+        <StegFane stegNummer={5} aktivtSteg={aktivtSteg}>
           <VurderingSektor
             bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
-        <StegFane stegNummer={7} aktivtSteg={aktivtSteg}>
+        <StegFane stegNummer={6} aktivtSteg={aktivtSteg}>
           <VurderingVirksomhet
             bekreftOgFortsett={this.bekreftOgFortsett}
           />
         </StegFane>
-        <StegFane stegNummer={8} aktivtSteg={aktivtSteg}>
+        <StegFane stegNummer={7} aktivtSteg={aktivtSteg}>
           <Vedtak fattVedtakHandler={this.fattVedtak} />
         </StegFane>
       </div>
