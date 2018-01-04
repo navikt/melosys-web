@@ -36,6 +36,9 @@ export default function reducer(state = initialState, action) {
           inntektUtenlandskIPerioden: strengTilInt(dokument.inntektUtenlandskIPerioden),
           inntektNaeringIPerioden: strengTilInt(dokument.inntektNaeringIPerioden),
         },
+        arbeidNorge: {
+          valgteArbeidsforhold: dokument.valgteArbeidsforhold,
+        },
         arbeidsgiversBekreftelse: {
           arbeidsgiverBekrefterUtsendelse: strengTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
           arbeidstakerAnsattUnderUtsendelsen: strengTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
