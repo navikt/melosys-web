@@ -12,7 +12,7 @@ const VurderingLand = props => {
 
   return (
     <div className="vurderingLand">
-      <Nav.Fieldset legend="Når er søker i utlandet?">
+      <Nav.Fieldset legend="Periode for søknad?">
         <Nav.Column xs="4">
           <DatoFelt label="Fra" />
         </Nav.Column>
@@ -20,7 +20,7 @@ const VurderingLand = props => {
           <DatoFelt label="Til" />
         </Nav.Column>
       </Nav.Fieldset>
-      <Nav.Fieldset legend="Hvilke land skal søker arbeide i?">
+      <Nav.Fieldset legend="Land som søker skal arbeide eller oppholde seg i:">
         <Nav.Column xs="12">
           <LandVelger />
         </Nav.Column>
