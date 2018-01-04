@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { Field, FieldArray, reduxForm, initialize } from 'redux-form';
+import { Field, FieldArray, reduxForm, arrayRemoveAll, arrayPush } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
@@ -11,94 +11,115 @@ import './vurderingArbeidsforhold.css';
 
 const uuid = require('uuid/v4');
 
-/** Ekeltlinje for arbeidsforholdet som saksbehandleren har valgt
+/**
+ * Enkeltsjekkboks for ett arbeidsforhold. Perioden er lagt inn slik at
+ * saksbehandler lettere kan differiensiere mellom like arbeidsforhold.
  *
  * @param props Objekt Diverse props (se propTypes)
- * @constructor
  */
 const ArbeidsforholdLinje = props => {
-  const { value } = props.input;
-  const { removeArbeidsforhold, arbeidsforholdene } = props;
-  const arbeidsforholdet = arbeidsforholdene.find(forholdet => forholdet.arbeidsforholdID === value);
+  const { arbeidsforholdet, erValgt, arbeidsforholdKlikkHandler } = props;
 
   return (
     <div className="arbeidsforhold__enkeltlinje">
-      <div className="arbeidsforhold_enkeltlinje_tekst">
-        <div className="arbeidsforhold__enkeltlinje__navn">{arbeidsforholdet.arbeidsgiver.navn}</div>
-        <div className="arbeidsforhold__enkeltlinje__periode">
-          Periode: <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} />
-        </div>
-      </div>
-      <button className="arbeidsforhold__enkeltlinje__knapp" onClick={() => removeArbeidsforhold()}>-</button>
+      <Nav.Checkbox checked={erValgt} onChange={() => arbeidsforholdKlikkHandler(arbeidsforholdet.arbeidsforholdID)} label={`${arbeidsforholdet.arbeidsgiver.navn}`} />
+      <div className="enkeltlinje__periode"><EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} /></div>
     </div>
   );
 };
 
 ArbeidsforholdLinje.propTypes = {
-  removeArbeidsforhold: PT.func.isRequired,
   input: PT.object.isRequired,
-  arbeidsforholdene: PT.array,
+  arbeidsforholdet: MPT.Arbeidsforhold,
+  arbeidsforholdKlikkHandler: PT.func.isRequired,
+  erValgt: PT.bool,
 };
 
 ArbeidsforholdLinje.defaultProps = {
-  arbeidsforholdene: [],
+  arbeidsforholdet: [],
+  erValgt: false,
 };
 
 /**
+ * FieldArray trenger en egen komponent-container for å rendre ut hvert enkelt felt som er lagret i store (dvs avkryssede arbeidsforhold).
+ * Rendre ut ALLE arbeidsforhold og kryss av de som samsvarer med arbeidsforholdID.
+ *
+ * Komponenten har er stateful fordi vi trenger å lese fields-objektet (som er et ArrayField i redux form, "valgteArbeidsforhold").
+ * Det gir mest mening å la denne listekomponenten håndtere klikk-events selv.
  *
  * @param props Objekt Diverse props Se prop types
- * @constructor
  */
-const Arbeidsforholdene = props => {
-  const { fields: valgteArbeidsforhold, arbeidsforholdene } = props;
-  return (
-    <div>
-      {valgteArbeidsforhold.map((arbeidsforhold, index) => (
-        <Field
-          key={uuid()}
-          name={`${arbeidsforhold}`}
-          type="text"
-          component={linjeProps => <ArbeidsforholdLinje {...linjeProps} arbeidsforholdene={arbeidsforholdene} />}
-          removeArbeidsforhold={() => valgteArbeidsforhold.remove(index)}
-        />
-      ))}
-    </div>
-  );
-};
+class ArbeidsforholdeneListe extends Component {
+  arbeidsforholdKlikkHandler = arbeidsforholdID => {
+    const { fields, dispatch } = this.props;
+    const alleOpprinneligValgte = fields.getAll();
+    const alleNyeValgte = alleOpprinneligValgte.includes(arbeidsforholdID)
+      ?
+      alleOpprinneligValgte.filter(item => item !== arbeidsforholdID)
+      :
+      [...alleOpprinneligValgte, arbeidsforholdID];
 
-Arbeidsforholdene.propTypes = {
-  fields: PT.object.isRequired,
-  arbeidsforholdene: PT.array,
-};
+    dispatch(arrayRemoveAll('soknad', 'valgteArbeidsforhold'));
 
-Arbeidsforholdene.defaultProps = {
-  arbeidsforholdene: [],
-};
-
-class VurderingArbeidsforhold extends Component {
-  componentWillMount() {
-    const { dispatch } = this.props;
-    dispatch(initialize('vurderingArbeidsforhold', {
-      arbeidsforholdene: this.props.arbeidsforholdene.map(arbeidsforholdet => arbeidsforholdet.arbeidsforholdID),
-    }));
+    // Finnes p.t. ingen måte å pushe en hel Array, så hver verdi må pushes én og én. Dette er også anbefalt av erikras.
+    alleNyeValgte.forEach(valgt => (dispatch(arrayPush('soknad', 'valgteArbeidsforhold', valgt))));
   }
 
-  render () {
-    const { bekreftOgFortsett, arbeidsforholdene } = this.props;
+  render() {
+    const { fields, arbeidsforholdene } = this.props;
+    const valgteArbeidsforhold = fields.getAll();
 
     return (
-      <div className="vurderingarbeidsforhold">
-        <Nav.Undertittel>Velg relevante arbeidsforhold:</Nav.Undertittel>
-        <div className="arbeidsforhold">
-          <FieldArray name="arbeidsforholdene" component={props => <Arbeidsforholdene {...props} arbeidsforholdene={arbeidsforholdene} />} />
-          <div className="fane__knapplinje">
-            <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
-          </div>
-        </div>
+      <div>
+        {arbeidsforholdene.map(arbeidsforholdet => (
+          <Field
+            key={uuid()}
+            name="valgteArbeidsforhold"
+            type="text"
+            component={linjeProps => <ArbeidsforholdLinje
+              {...linjeProps}
+              arbeidsforholdet={arbeidsforholdet}
+              erValgt={valgteArbeidsforhold ? valgteArbeidsforhold.includes(arbeidsforholdet.arbeidsforholdID) : false}
+              arbeidsforholdKlikkHandler={this.arbeidsforholdKlikkHandler}
+            />}
+          />
+        ))}
       </div>
     );
   }
 }
+
+ArbeidsforholdeneListe.propTypes = {
+  fields: PT.object.isRequired,
+  arbeidsforholdene: PT.array,
+  dispatch: PT.func.isRequired,
+};
+
+ArbeidsforholdeneListe.defaultProps = {
+  arbeidsforholdene: [],
+};
+
+/**
+ * Dette er hovedkomponenten for fanen "Velg Arbeidsforhold". Denne trekker innn ArbeidsforholdListe som er den egentlige utlistingen av sjekkbokser og håndtereren
+ * av event handlers hvor bruker velger et arbeidsforhold.
+ *
+ * @param props
+ */
+const VurderingArbeidsforhold = props => {
+  const { bekreftOgFortsett, arbeidsforholdene, dispatch } = props;
+
+  return (
+    <div className="vurderingarbeidsforhold">
+      <Nav.Undertittel>Velg arbeidsforhold:</Nav.Undertittel>
+      <div className="arbeidsforhold">
+        <FieldArray name="valgteArbeidsforhold" component={arrayProps => <ArbeidsforholdeneListe {...arrayProps} dispatch={dispatch} arbeidsforholdene={arbeidsforholdene} />} />
+        <div className="fane__knapplinje">
+          <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 VurderingArbeidsforhold.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
