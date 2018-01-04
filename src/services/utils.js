@@ -10,9 +10,6 @@ export function sjekkStatuskode(response) {
   if (response.status >= 200 && response.status < 300 && response.ok) {
     return response;
   }
-  if (response.status === 401) {
-    window.location.href = 'feilsider/401.html'; // eslint-disable-line no-undef
-  }
   const error = new Error(response.statusText);
   error.response = response;
   throw error;
@@ -86,12 +83,12 @@ function methodToJson(method, url, data) {
   };
 
   const fetchConfig = {
-    // method: Set by fetch() automagically
     method,
     headers: new Headers(headers),
-    // credentials: 'include',
-    // mode: 'cors',
-    // cache: 'default',
+    redirect: 'follow',
+    credentials: 'include',
+    mode: 'cors',
+    cache: 'default',
   };
 
   const httpVerbsWithBody = ['POST', 'PUT'];
