@@ -91,7 +91,7 @@ function methodToJson(method, url, data) {
     headers: new Headers(headers),
     // credentials: 'include',
     // mode: 'cors',
-    //cache: 'default',
+    // cache: 'default',
   };
 
   const httpVerbsWithBody = ['POST', 'PUT'];

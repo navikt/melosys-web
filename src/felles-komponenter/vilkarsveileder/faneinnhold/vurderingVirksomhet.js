@@ -11,7 +11,7 @@ const VurderingVirksomhet = props => {
         <Nav.Radio id="steg2_land_ett" name="land" label="Ett" />
         <Nav.Radio id="steg2_land_flere" name="land" label="To eller flere" />
       </Nav.Fieldset>
-      <Nav.Fieldset legend="Hvor mye av aktiviteten skjed i Norge?">
+      <Nav.Fieldset legend="Hvor mye av aktiviteten skjer i Norge?">
         <Nav.Radio id="steg2_aktivitet_under25" name="aktivitet" label="Mindre enn 25%" />
         <Nav.Radio id="steg2_aktivitet_over25" name="aktivitet" label="25% eller mer" />
       </Nav.Fieldset>
