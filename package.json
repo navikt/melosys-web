@@ -79,7 +79,6 @@
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
     "mocha": "mocha"
   },
-  "homepage": "https://github.com/navikt/melosys-web",
   "jest-junit": {
     "suiteName": "jest tests",
     "output": "test/junit.xml",
@@ -112,5 +111,16 @@
     "semver": "^5.4.1",
     "source-map-explorer": "^1.5.0",
     "underscore": "^1.8.3"
+  },
+  "proxy": {
+    "/api": {
+      "target": "http://localhost:3002",
+      "pathRewrite": {
+        "^/api/": "/melosys/api/"
+      }
+    },
+    "/melosys/api": {
+      "target": "https://app-t5.adeo.no"
+    }
   }
 }
