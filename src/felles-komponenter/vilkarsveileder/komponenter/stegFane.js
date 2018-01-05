@@ -7,21 +7,20 @@ import * as Nav from '../../../utils/navFrontend';
 import './stegFane.css';
 
 const StegFane = props => {
-  const { children, stegNummer, aktivtSteg } = props;
+  const { faneData } = props;
+  const componentProps = { ...faneData.data, ...faneData.handlers };
 
-  const stegFaneKlasse = classnames({ stegFane: true, [`steg${stegNummer}`]: true, 'stegFane--aktiv': aktivtSteg === stegNummer });
+  const stegFaneKlasse = classnames({ stegFane: true, [`steg${faneData.stegPosisjon}`]: true, 'stegFane--aktiv': faneData.aktivtSteg });
 
   return (
     <Nav.Panel className={stegFaneKlasse}>
-      {children}
+      <div>{React.createElement(faneData.komponent, componentProps)}</div>
     </Nav.Panel>
   );
 };
 
 StegFane.propTypes = {
-  children: PT.any.isRequired,
-  aktivtSteg: PT.number.isRequired,
-  stegNummer: PT.number.isRequired,
+  faneData: PT.object.isRequired,
 };
 
 export default StegFane;
