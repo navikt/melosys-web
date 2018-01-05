@@ -23,50 +23,6 @@ import { OppsummeringSelector } from '../../ducks/fagsaker';
 import './vilkarsveileder.css';
 
 class Vilkarsveileder extends Component {
-  static propTypes = {
-    history: PT.object.isRequired,
-    person: MPT.Person.isRequired,
-    arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
-    fattVedtakHandler: PT.func.isRequired,
-  };
-
-  /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
-   * feil eller varsler som saksbehandleren må håndtere.
-   *
-   * @type {{UBEHANDLET: string, AKTIV: string, BEHANDLET: string, ADVARSEL: string, FEIL: string}}
-   */
-  static status = {
-    UBEHANDLET: 'UBEHANDLET',
-    AKTIV: 'AKTIV',
-    BEHANDLET: 'BEHANDLET',
-    ADVARSEL: 'ADVARSEL',
-    FEIL: 'FEIL',
-  };
-
-  /** Avhengig av status viser StegLinjen (med StegIkon) tilhørende status-ikon.
-   *
-   * @type {{UBEHANDLET, AKTIV, BEHANDLET, ADVARSEL, FEIL}}
-   */
-  static stegIkoner = {
-    UBEHANDLET: Ikon.Ubehandlet,
-    AKTIV: Ikon.Aktivt,
-    BEHANDLET: Ikon.Ferdig,
-    ADVARSEL: Ikon.Varsel,
-    FEIL: Ikon.Feil,
-  };
-
-  /** Vedtak (siste fane) har egne ikonsett
-   *
-   * @type {{UBEHANDLET, AKTIV, BEHANDLET, ADVARSEL, FEIL}}
-   */
-  static vedtakIkoner = {
-    UBEHANDLET: Ikon.VedakUbehandlet,
-    AKTIV: Ikon.VedtakGodkjent,
-    BEHANDLET: Ikon.VedtakGodkjent,
-    ADVARSEL: Ikon.VedtakAvslatt,
-    FEIL: Ikon.VedtakAvslatt,
-  };
-
   componentWillMount() {
     this.setState({
       aktivtSteg: 0,
@@ -79,10 +35,10 @@ class Vilkarsveileder extends Component {
           },
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
-            avbrytOpprettSak: this.avbrytOpprettSak,
+            avbrytOpprettSak: this.avbrytVurdering,
           },
-          status: Vilkarsveileder.status.BEHANDLET,
-          ikoner: Vilkarsveileder.stegIkoner,
+          status: this.FANE_STATUS.BEHANDLET,
+          ikoner: this.IKONER.STEG,
           tilgjengelig: true,
           aktivtSteg: true,
         },
@@ -93,8 +49,8 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: Vilkarsveileder.status.AKTIV,
-          ikoner: Vilkarsveileder.stegIkoner,
+          status: this.FANE_STATUS.AKTIV,
+          ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
         {
@@ -104,8 +60,8 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: Vilkarsveileder.status.AKTIV,
-          ikoner: Vilkarsveileder.stegIkoner,
+          status: this.FANE_STATUS.AKTIV,
+          ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
         {
@@ -117,8 +73,8 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: Vilkarsveileder.status.AKTIV,
-          ikoner: Vilkarsveileder.stegIkoner,
+          status: this.FANE_STATUS.AKTIV,
+          ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
         {
@@ -128,8 +84,8 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: Vilkarsveileder.status.AKTIV,
-          ikoner: Vilkarsveileder.stegIkoner,
+          status: this.FANE_STATUS.AKTIV,
+          ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
         {
@@ -139,8 +95,8 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: Vilkarsveileder.status.AKTIV,
-          ikoner: Vilkarsveileder.stegIkoner,
+          status: this.FANE_STATUS.AKTIV,
+          ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
         {
@@ -150,8 +106,8 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: Vilkarsveileder.status.AKTIV,
-          ikoner: Vilkarsveileder.stegIkoner,
+          status: this.FANE_STATUS.AKTIV,
+          ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
         {
@@ -161,12 +117,45 @@ class Vilkarsveileder extends Component {
           handlers: {
             fattVedtakHandler: this.fattVedtak,
           },
-          status: Vilkarsveileder.status.UBEHANDLET,
-          ikoner: Vilkarsveileder.vedtakIkoner,
+          status: this.FANE_STATUS.UBEHANDLET,
+          ikoner: this.IKONER.VEDTAK,
           tilgjengelig: false,
         },
       ],
     });
+  }
+
+  /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
+   * feil eller varsler som saksbehandleren må håndtere.
+   *
+   * @type {{UBEHANDLET: string, AKTIV: string, BEHANDLET: string, ADVARSEL: string, FEIL: string}}
+   */
+  FANE_STATUS = {
+    UBEHANDLET: 'UBEHANDLET',
+    AKTIV: 'AKTIV',
+    BEHANDLET: 'BEHANDLET',
+    ADVARSEL: 'ADVARSEL',
+    FEIL: 'FEIL',
+  };
+
+  /** Avhengig av status viser StegLinjen (med StegIkon) tilhørende status-ikon.
+   *
+   */
+  IKONER = {
+    STEG: {
+      UBEHANDLET: Ikon.Ubehandlet,
+      AKTIV: Ikon.Aktivt,
+      BEHANDLET: Ikon.Ferdig,
+      ADVARSEL: Ikon.Varsel,
+      FEIL: Ikon.Feil,
+    },
+    VEDTAK: {
+      UBEHANDLET: Ikon.VedakUbehandlet,
+      AKTIV: Ikon.VedtakGodkjent,
+      BEHANDLET: Ikon.VedtakGodkjent,
+      ADVARSEL: Ikon.VedtakAvslatt,
+      FEIL: Ikon.VedtakAvslatt,
+    },
   }
 
   fattVedtak = () => {
@@ -182,7 +171,10 @@ class Vilkarsveileder extends Component {
     this.nesteSteg();
   }
 
-  avbrytOpprettSak = () => {
+  /** Saken er allerede opprettet, så denne funksjonen router kun brukeren tilbake til søket
+   * på forsiden uten å sende request til backend om at saksbehandlingen ble avbrutt. (Avgjørelse for V0 pr des2017)
+   */
+  avbrytVurdering = () => {
     this.props.history.push(`/?fnr=${this.props.person.fnr}`);
   }
 
@@ -193,10 +185,13 @@ class Vilkarsveileder extends Component {
   tilSteg = nyttStegNummer => {
     const nyeSteg = [...this.state.steg];
 
+    // Oppdater både aktivt stegobjekt og nytt stegobjekt. Disse er allerede linket inn som props
+    // til child components og gjør at hver enkelt fane oppdaterer tilsvarende. Det samme gjelder
+    // StegLinje som viser ikonene ovenfor hver fane.
     nyeSteg[this.state.aktivtSteg].aktivtSteg = false;
     nyeSteg[nyttStegNummer].aktivtSteg = true;
     nyeSteg[nyttStegNummer].stegPosisjon = nyttStegNummer;
-    nyeSteg[nyttStegNummer].status = Vilkarsveileder.status.BEHANDLET;
+    nyeSteg[nyttStegNummer].status = this.FANE_STATUS.BEHANDLET;
     nyeSteg[nyttStegNummer].tilgjengelig = true;
 
     this.setState({ steg: nyeSteg });
@@ -226,6 +221,10 @@ class Vilkarsveileder extends Component {
 }
 
 Vilkarsveileder.propTypes = {
+  history: PT.object.isRequired,
+  person: MPT.Person.isRequired,
+  arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
+  fattVedtakHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
 };
 
