@@ -66,6 +66,7 @@ it('formatterer datoen riktig til norsk format DD.MM.YYYY HH:mm:ss og med evt kl
     {test: '2017-12-01T01:08:01', 'forvent': '01.12.2017 01:08', klokkeslett: true},
     {test: '01.02.1979', 'forvent': '01.02.1979', klokkeslett: false},
     {test: '01.02.1979', 'forvent': '01.02.1979', klokkeslett: false},
+    {test: '12.02.2000 20:00:1', 'forvent': '12.02.2000 20:00', klokkeslett: true},
   ];
 
   tillatteDatoer.forEach(datoTest => {
