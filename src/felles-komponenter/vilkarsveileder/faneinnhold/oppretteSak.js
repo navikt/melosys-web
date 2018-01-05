@@ -1,11 +1,13 @@
 import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes';
 
-import DatoFelt from '../../skjema/datofelt';
+import { FormatterDato } from '../../datoOmrade/enkeltDato';
 
 const OppretteSak = props => {
-  const { bekreftOgFortsett, avbrytOpprettSak } = props;
+  const { bekreftOgFortsett, avbrytOpprettSak, oppsummering } = props;
+  const registrertDato = FormatterDato(oppsummering.registrertDato, true);
 
   return (
     <div>
@@ -19,7 +21,7 @@ const OppretteSak = props => {
             </Nav.Select>
           </Nav.Column>
           <Nav.Column xs="4">
-            <DatoFelt label="Opprettet Dato" />
+            <Nav.Input label="Opprettet Dato" value={registrertDato} readOnly disabled />
           </Nav.Column>
         </Nav.Fieldset>
         <div className="fane__knapplinje">
@@ -34,6 +36,7 @@ const OppretteSak = props => {
 OppretteSak.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   avbrytOpprettSak: PT.func.isRequired,
+  oppsummering: MPT.Oppsummering.isRequired,
 };
 
 export default OppretteSak;
