@@ -1,14 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
-import moment from 'moment';
 
-/** Gjør en vurdering av innkomne datoformat og formatter til korrekt DD.MM.YYY, med eller uten tidspunkt
- *
- */
-function FormatterDato(dato, visTidspunkt) {
-  const momentFormat = visTidspunkt ? 'DD.MM.YYYY HH:MM' : 'DD.MM.YYYY';
-  return moment(dato).format(momentFormat);
-}
+import { formatterDatoTilNorsk } from '../../utils/dato';
 
 /** EnkeltDato gjør det lettere å følge UU der datoer skal benyttes i tillegg til at
  * en konsekvent "-" vises der dato er ukjent eller ikke relevant.
@@ -18,7 +11,7 @@ function FormatterDato(dato, visTidspunkt) {
  */
 function EnkeltDato(props) {
   const { dato, visTidspunkt } = props;
-  const lesbarDato = FormatterDato(dato, visTidspunkt);
+  const lesbarDato = formatterDatoTilNorsk(dato, visTidspunkt);
 
   return (dato ? <time dateTime={dato}>{lesbarDato}</time> : '-');
 }
@@ -35,4 +28,3 @@ EnkeltDato.defaultProps = {
 
 
 export default EnkeltDato;
-export { FormatterDato };

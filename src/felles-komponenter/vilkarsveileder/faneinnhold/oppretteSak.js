@@ -3,11 +3,11 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
-import { FormatterDato } from '../../datoOmrade/enkeltDato';
+import { formatterDatoTilNorsk } from '../../../utils/dato';
 
 const OppretteSak = props => {
   const { bekreftOgFortsett, avbrytOpprettSak, oppsummering } = props;
-  const registrertDato = FormatterDato(oppsummering.registrertDato, true);
+  const registrertDato = formatterDatoTilNorsk(oppsummering.registrertDato, true);
 
   return (
     <div>
