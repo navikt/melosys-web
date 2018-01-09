@@ -13,8 +13,7 @@ const Vedtak = props => (
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Normaltekst type="normaltekst">Resultat:</Nav.Normaltekst>
-          <Nav.UndertekstBold>Medlemsskap i norsk folketrygd er innvilget, etter artikkel 12.1</Nav.UndertekstBold>
+          <Nav.Normaltekst>Medlemsskap i norsk folketrygd er innvilget, etter artikkel 12.1</Nav.Normaltekst>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

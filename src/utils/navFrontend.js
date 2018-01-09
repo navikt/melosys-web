@@ -1,4 +1,5 @@
 import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
+import { AlertStripeSuksess } from 'nav-frontend-alertstriper';
 import { Panel } from 'nav-frontend-paneler';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Checkbox, Radio, RadioGruppe, Fieldset, Select, Input, Textarea } from 'nav-frontend-skjema';
@@ -11,4 +12,5 @@ export {
   Checkbox, Radio, RadioGruppe, Fieldset, Select, Input, Textarea,
   Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold,
   Knapp,
+  AlertStripeSuksess,
 };
