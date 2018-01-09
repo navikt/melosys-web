@@ -25,7 +25,7 @@ import './vilkarsveileder.css';
 class Vilkarsveileder extends Component {
   componentWillMount() {
     this.setState({
-      aktivtSteg: 0,
+      aktivtSteg: 6,
       steg: [
         {
           id: 'OPPRETT_SAK',
@@ -40,7 +40,6 @@ class Vilkarsveileder extends Component {
           status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
           tilgjengelig: true,
-          aktivtSteg: true,
         },
         {
           id: 'VURDERING_LAND',
@@ -49,7 +48,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: this.FANE_STATUS.AKTIV,
+          status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
@@ -60,7 +59,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: this.FANE_STATUS.AKTIV,
+          status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
@@ -73,7 +72,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: this.FANE_STATUS.AKTIV,
+          status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
@@ -84,7 +83,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: this.FANE_STATUS.AKTIV,
+          status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
@@ -95,7 +94,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: this.FANE_STATUS.AKTIV,
+          status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
           tilgjengelig: true,
         },
@@ -109,6 +108,7 @@ class Vilkarsveileder extends Component {
           status: this.FANE_STATUS.AKTIV,
           ikoner: this.IKONER.STEG,
           tilgjengelig: true,
+          aktivtSteg: true,
         },
         {
           id: 'VEDTAK',
@@ -123,6 +123,10 @@ class Vilkarsveileder extends Component {
         },
       ],
     });
+  }
+
+  componentDidMount() {
+    this.tilSteg(6);
   }
 
   /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
@@ -178,6 +182,7 @@ class Vilkarsveileder extends Component {
     this.props.history.push(`/?fnr=${this.props.person.fnr}`);
   }
 
+
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
    * @param nyttStegNummer Number Steget som det skal byttes til.
@@ -189,9 +194,10 @@ class Vilkarsveileder extends Component {
     // til child components og gjør at hver enkelt fane oppdaterer tilsvarende. Det samme gjelder
     // StegLinje som viser ikonene ovenfor hver fane.
     nyeSteg[this.state.aktivtSteg].aktivtSteg = false;
+    nyeSteg[this.state.aktivtSteg].status = this.FANE_STATUS.BEHANDLET;
     nyeSteg[nyttStegNummer].aktivtSteg = true;
     nyeSteg[nyttStegNummer].stegPosisjon = nyttStegNummer;
-    nyeSteg[nyttStegNummer].status = this.FANE_STATUS.BEHANDLET;
+    nyeSteg[nyttStegNummer].status = this.FANE_STATUS.AKTIV;
     nyeSteg[nyttStegNummer].tilgjengelig = true;
 
     this.setState({ steg: nyeSteg });
