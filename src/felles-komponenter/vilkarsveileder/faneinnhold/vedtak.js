@@ -3,6 +3,8 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 
+import './vedtak.css';
+
 const Vedtak = props => (
   <div>
     <Nav.Container fluid>
@@ -16,7 +18,7 @@ const Vedtak = props => (
           <Nav.Normaltekst>Medlemsskap i norsk folketrygd er innvilget, etter artikkel 12.1</Nav.Normaltekst>
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
+      <Nav.Row className="vedtak__betingelser">
         <Nav.Column xs="6" md="3">
           <Nav.Element type="element">Antall måneder i utlandet</Nav.Element>
           <Nav.Normaltekst>11</Nav.Normaltekst>
