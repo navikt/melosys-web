@@ -77,7 +77,7 @@ export function hentFaktaavklaring(behandlingID) {
 }
 
 export function sendFaktaavklaring(dokument) {
-  return doThenDispatch(() => Api.sendSoknad(dokument), {
+  return doThenDispatch(() => Api.sendFaktaavklaring(dokument), {
     OK,
     FEILET,
     PENDING,
@@ -93,26 +93,26 @@ export function oppdaterFaktaavklaringState(dokument) {
 
 // selector(s)
 export const FaktaavklaringSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.soknad.faktaavklaring : {}),
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring : {}),
   faktaavklaring => faktaavklaring
 );
 
 export const FaktaavklaringArbeidstypeSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.soknad.faktaavklaring.arbeidstype : {}),
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.arbeidstype : {}),
   arbeidstype => arbeidstype
 );
 
 export const FaktaavklaringUtsendingSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.soknad.faktaavklaring.utsending : {}),
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.utsending : {}),
   utsending => utsending
 );
 
 export const FaktaavklaringSektorSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.soknad.faktaavklaring.sektor : {}),
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.sektor : {}),
   sektor => sektor
 );
 
 export const FaktaavklaringVirksomhetSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.soknad.faktaavklaring.virksomhet : {}),
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.virksomhet : {}),
   virksomhet => virksomhet
 );
