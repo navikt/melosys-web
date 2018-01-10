@@ -68,8 +68,8 @@ export default function reducer(state = initialState, action) {
 }
 
 // Action Creators
-export function hentFaktaavklaring(behandlingsID) {
-  return doThenDispatch(() => Api.hentFaktaavklaring(behandlingsID), {
+export function hentFaktaavklaring(behandlingID) {
+  return doThenDispatch(() => Api.hentFaktaavklaring(behandlingID), {
     OK,
     FEILET,
     PENDING,
