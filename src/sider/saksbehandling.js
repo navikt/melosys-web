@@ -114,9 +114,10 @@ class Saksbehandling extends Component {
     this.props.sendSoknad(this.props.soknad);
   }
 
-  lagreOgLukk = () => {}
-
-  avslaSoknad = () => {}
+  /* eslint-disable */
+  lagreOgLukk = () => { alert('Ikke implementert'); }
+  avslaSoknad = () => { alert('Ikke implementert'); }
+  /* eslint-enable */
 
   render() {
     const {
