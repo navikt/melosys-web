@@ -22,7 +22,7 @@ export function health() {
 }
 
 export function hentSoknad(behandlingID) {
-  const URI_SOKNAD =  `${API_BASE_URL}soknad/${behandlingID}`;
+  const URI_SOKNAD = `${API_BASE_URL}soknad/${behandlingID}`;
   return getAsJson(URI_SOKNAD);
 }
 
@@ -32,7 +32,7 @@ export function sendSoknad(dokument) {
 }
 
 export function hentFaktaavklaring(behandlingID) {
-  const URI_FAKTAAVKLARING =  `${API_BASE_URL}faktaavklaring/${behandlingID}`;
+  const URI_FAKTAAVKLARING = `${API_BASE_URL}faktaavklaring/${behandlingID}`;
   return getAsJson(URI_FAKTAAVKLARING);
 }
 
@@ -42,12 +42,12 @@ export function sendFaktaavklaring(dokument) {
 }
 
 export function hentVurdering(behandlingID) {
-  const URI_VURDERING =  `${API_BASE_URL}vurdering/${behandlingID}`;
+  const URI_VURDERING = `${API_BASE_URL}vurdering/${behandlingID}`;
   return getAsJson(URI_VURDERING);
 }
 
 export function hentFagsaker(snr) {
-  const URI_FAGSAKER =  `${API_BASE_URL}fagsaker/${snr}`;
+  const URI_FAGSAKER = `${API_BASE_URL}fagsaker/${snr}`;
   return getAsJson(URI_FAGSAKER);
 }
 
