@@ -65,8 +65,8 @@ export default function reducer(state = initialState, action) {
 }
 
 // Action Creators
-export function hentSoknad(snr) {
-  return doThenDispatch(() => Api.hentSoknad(snr), {
+export function hentSoknad(behandlingID) {
+  return doThenDispatch(() => Api.hentSoknad(behandlingID), {
     OK,
     FEILET,
     PENDING,
