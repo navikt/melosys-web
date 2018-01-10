@@ -41,11 +41,11 @@ export function hentVurdering(behandlingID) {
 
 // selector(s)
 export const VurderingLovvalgbestemmelserSelector = createSelector(
-  state => (state.vurdering.data.vurdering ? state.vurdering.data.lovvalgsbestemmelser : {}),
+  state => (state.vurdering.data.vurdering ? state.vurdering.data.vurdering.lovvalgsbestemmelser : {}),
   lovvalgsbestemmelser => lovvalgsbestemmelser
 );
 
 export const VurderingFeilmeldingSelector = createSelector(
-  state => (state.vurdering.data.vurdering ? state.vurdering.data.feilmeldinger : {}),
+  state => (state.vurdering.data.vurdering ? state.vurdering.data.vurdering.feilmeldinger : {}),
   feilmeldinger => feilmeldinger
 );
