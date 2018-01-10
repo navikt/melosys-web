@@ -49,6 +49,11 @@ import {
   ArbeidsgiversBekreftelseSelector,
 } from '../ducks/soknad';
 
+import {
+  hentFaktaavklaring,
+  sendFaktaavklaring,
+} from '../ducks/faktaavklaring';
+
 import { boolTilStreng } from '../utils/utils';
 
 import {
@@ -63,6 +68,7 @@ class Saksbehandling extends Component {
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     sendSoknad: PT.func.isRequired,
+    hentFaktaavklaring: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
     medlemskap: MPT.Medlemskap,
@@ -101,6 +107,7 @@ class Saksbehandling extends Component {
     const { snr } = this.props.match.params;
     this.props.hentFagsaker(snr);
     this.props.hentSoknad(snr);
+    this.props.hentFaktaavklaring(snr);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -211,6 +218,8 @@ const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
   hentSoknad: saksnummer => dispatch(hentSoknad(saksnummer)),
   sendSoknad: dokument => dispatch(sendSoknad(dokument)),
+  hentFaktaavklaring: saksnummer => dispatch(hentFaktaavklaring(saksnummer)),
+  sendFaktaavklaring: dokument => dispatch(sendFaktaavklaring(dokument)),
   onSubmit: values => dispatch(oppdaterSoknadState(values)),
 });
 
