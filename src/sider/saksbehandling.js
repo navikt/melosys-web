@@ -114,6 +114,10 @@ class Saksbehandling extends Component {
     this.props.sendSoknad(this.props.soknad);
   }
 
+  lagreOgLukk = () => {}
+
+  avslaSoknad = () => {}
+
   render() {
     const {
       person,
@@ -156,7 +160,7 @@ class Saksbehandling extends Component {
               </form>
             </Nav.Column>
             <Nav.Column xs="5">
-              {oppsummering && <SideOppsummering oppsummering={oppsummering} />}
+              {oppsummering && <SideOppsummering oppsummering={oppsummering} avslaSoknadHandle={this.avslaSoknad} lagreOgLukkHandle={this.lagreOgLukk} />}
               <SideDialog />
               <SideKommentarer />
             </Nav.Column>
