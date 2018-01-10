@@ -17,7 +17,7 @@ const API_SAKSOPPLYSNINGER = `${process.env.REACT_APP_API_SAKSOPPLYSNINGER}`;
 console.log('process.env', process.env);
 
 export function health() {
-  const URI_HEALTH = `/melosys/internal/health`;
+  const URI_HEALTH = `/melosys/internal/health/`;
   return getAsJson(URI_HEALTH);
 }
 
@@ -27,7 +27,17 @@ export function hentSoknad() {
 }
 
 export function sendSoknad(dokument) {
-  const URI_SOKNAD =`${API_BASE_URL}soknad`;
+  const URI_SOKNAD =`${API_BASE_URL}soknad/`;
+  return postAsJson(URI_SOKNAD, dokument);
+}
+
+export function hentFaktaavklaring() {
+  const URI_SOKNAD =  `${API_BASE_URL}faktaavklaring/`;
+  return getAsJson(URI_SOKNAD);
+}
+
+export function sendFaktaavklaring(dokument) {
+  const URI_SOKNAD =`${API_BASE_URL}faktaavklaring/`;
   return postAsJson(URI_SOKNAD, dokument);
 }
 
@@ -67,6 +77,6 @@ export function hentSaksopplysninger(fnr) {
 }
 
 export function nyHenvendelse(henvendelse) {
-  const URI_HENVENDELSE =`${API_BASE_URL}henvendelse`;
+  const URI_HENVENDELSE =`${API_BASE_URL}henvendelse/`;
   return postAsJson(URI_HENVENDELSE, henvendelse);
 }
