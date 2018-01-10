@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
-import { strengTilBool, strengTilInt } from '../utils/utils';
+import { strengTilInt } from '../utils/utils';
 
 // Actions
 const OK = 'faktaavklaring/OK';
@@ -29,35 +29,38 @@ export default function reducer(state = initialState, action) {
       };
     case OPPDATER_FAKTAAVKLARING: {
       const { dokument } = action;
-      const soknad = {
-        ...state.data.soknadDokument,
-        arbeidsinntekt: {
-          inntektNorskIPerioden: strengTilInt(dokument.inntektNorskIPerioden),
-          inntektUtenlandskIPerioden: strengTilInt(dokument.inntektUtenlandskIPerioden),
-          inntektNaeringIPerioden: strengTilInt(dokument.inntektNaeringIPerioden),
+      const faktaavklaring = {
+        ...state.data.faktaavklaring,
+        arbeidstype: {
+          ikkeArbeidende: strengTilInt(dokument.faktaavklaringIkkeArbeidende),
+          arbeidstaker: strengTilInt(dokument.faktaavklaringAreidstaker),
+          selvstendig: strengTilInt(dokument.faktaavklaringSelvstendig),
+          arbeidstakerOgSelvstendig: strengTilInt(dokument.faktaavklaringArbeidstakerOgSelvstendig),
         },
-        arbeidNorge: {
-          valgteArbeidsforhold: dokument.valgteArbeidsforhold,
+        utsending: {
+          ansattINorskSelskap: strengTilInt(dokument.faktaavklaringAnsattINorskSelskap),
+          erstatterTidligereUtsendt: strengTilInt(dokument.faktaavklaringErstatterTidligereUtsendt),
+          utsendingMindreEnn24Mnd: strengTilInt(dokument.faktaavklaringUtsendingMindreEnn24Mnd),
         },
-        arbeidsgiversBekreftelse: {
-          arbeidsgiverBekrefterUtsendelse: strengTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
-          arbeidstakerAnsattUnderUtsendelsen: strengTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
-          erstatterArbeidstakerenUtsendte: strengTilBool(dokument.erstatterArbeidstakerenUtsendte),
-          arbeidstakerTidligereUtsendt24Mnd: strengTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
-          arbeidsgiverBetalerArbeidsgiveravgift: strengTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
-          trygdeavgiftTrukketGjennomSkatt: strengTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
-          trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato,
+        sektor: {
+          ansattOffentlig: strengTilInt(dokument.faktaavklaringAnsattOffentlig),
+          ansattSokkel: strengTilInt(dokument.faktaavklaringAnsattSokkel),
+          ansattSkip: strengTilInt(dokument.faktaavklaringAnsattSkip),
+          ansattFlyvende: strengTilInt(dokument.faktaavklaringAnsattFlyvende),
+          ansattIngen: strengTilInt(dokument.faktaavklaringAnsattIngen),
         },
-        oppholdUtland: {
-          studentIEOS: dokument.studentIEOS,
-          studentSkole: dokument.studentSkole,
-          studentSemester: dokument.studentSemester,
-          studieLand: dokument.studieLand,
-          studentFinansiering: dokument.studentFinansiering,
+        virksomhet: {
+          antallLandEtt: strengTilInt(dokument.faktaavklaringAntallLandEtt),
+          antallLandToEllerFlere: strengTilInt(dokument.faktaavklaringAntallLandToEllerFlere),
+          aktivitetUnder25: strengTilInt(dokument.faktaavklaringAktivitetUnder25),
+          aktivitetOver25: strengTilInt(dokument.faktaavklaringAktivitetOver25),
+          arbeidsgiverToEllerFlere: strengTilInt(dokument.faktaavklaringArbeidsgiverToEllerFlere),
+          arbeidsgiverSammeLand: strengTilInt(dokument.faktaavklaringArbeidsgiverSammeLand),
+          arbeidsgiverUlikeLand: strengTilInt(dokument.faktaavklaringArbeidsgiverUlikeLand),
         },
       };
 
-      return { ...state, data: { ...state.data, soknadDokument: soknad } };
+      return { ...state, data: { ...state.data, faktaavklaring } };
     }
     default:
       return state;
