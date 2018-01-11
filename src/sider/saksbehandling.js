@@ -116,7 +116,6 @@ class Saksbehandling extends Component {
   componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentFagsaker(snr);
-    this.props.hentFaktaavklaring(snr);
   }
 
   componentWillReceiveProps(nextProps) {
