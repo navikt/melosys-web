@@ -146,6 +146,11 @@ class Saksbehandling extends Component {
     this.props.sendSoknad(this.props.soknad);
   }
 
+  /* eslint-disable */
+  lagreOgLukk = () => { alert('Ikke implementert'); }
+  avslaSoknad = () => { alert('Ikke implementert'); }
+  /* eslint-enable */
+
   render() {
     const {
       person,
@@ -188,7 +193,7 @@ class Saksbehandling extends Component {
               </form>
             </Nav.Column>
             <Nav.Column xs="5">
-              {oppsummering && <SideOppsummering oppsummering={oppsummering} />}
+              {oppsummering && <SideOppsummering oppsummering={oppsummering} avslaSoknadHandle={this.avslaSoknad} lagreOgLukkHandle={this.lagreOgLukk} />}
               <SideDialog />
               <SideKommentarer />
             </Nav.Column>
