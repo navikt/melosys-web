@@ -44,9 +44,9 @@ export const feltGrupper = {
   },
   faktaavklaring: {
     faktaavklaringArbeidstype: [],
-    ansattINorskSelskap: [],
-    erstatterTidligereUtsendt: [],
-    utsendingMindreEnn24Mnd: [],
+    faktaavklaringAnsattINorskSelskap: [],
+    faktaavklaringErstatterTidligereUtsendt: [],
+    faktaavklaringUtsendingMindreEnn24Mnd: [],
     faktaavklaringSektor: [],
     faktaavklaringAntallLand: [],
     faktaavklaringAktivitet: [],

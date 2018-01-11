@@ -32,7 +32,7 @@ export default function reducer(state = initialState, action) {
       const faktaavklaring = {
         ...state.data.faktaavklaring,
         arbeidstype: {
-          arbeidstype: 'arbeidstaker',
+          arbeidstype: dokument.faktaavklaringArbeidstype,
         },
         utsending: {
           ansattINorskSelskap: strengTilInt(dokument.faktaavklaringAnsattINorskSelskap),
@@ -40,21 +40,13 @@ export default function reducer(state = initialState, action) {
           utsendingMindreEnn24Mnd: strengTilInt(dokument.faktaavklaringUtsendingMindreEnn24Mnd),
         },
         sektor: {
-          ansattOffentlig: strengTilInt(dokument.faktaavklaringAnsattOffentlig),
-          ansattSokkel: strengTilInt(dokument.faktaavklaringAnsattSokkel),
-          ansattSkip: strengTilInt(dokument.faktaavklaringAnsattSkip),
-          ansattFlyvende: strengTilInt(dokument.faktaavklaringAnsattFlyvende),
-          ansattIngen: strengTilInt(dokument.faktaavklaringAnsattIngen),
+          ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
         virksomhet: {
-          antallLandEtt: strengTilInt(dokument.faktaavklaringAntallLandEtt),
-          antallLandToEllerFlere: strengTilInt(dokument.faktaavklaringAntallLandToEllerFlere),
-          aktivitetUnder25: strengTilInt(dokument.faktaavklaringAktivitetUnder25),
-          aktivitetOver25: strengTilInt(dokument.faktaavklaringAktivitetOver25),
-          arbeidsgiverEn: strengTilInt(dokument.faktaavklaringarbeidsgiverEn),
-          arbeidsgiverToEllerFlere: strengTilInt(dokument.faktaavklaringArbeidsgiverToEllerFlere),
-          arbeidsgiverSammeLand: strengTilInt(dokument.faktaavklaringArbeidsgiverSammeLand),
-          arbeidsgiverUlikeLand: strengTilInt(dokument.faktaavklaringArbeidsgiverUlikeLand),
+          antallLand: dokument.faktaavklaringAntallLand,
+          aktivitet: dokument.faktaavklaringAktivitet,
+          arbeidsgivere: dokument.faktaavklaringAntallArbeidsgivere,
+          arbeidsgiverLand: dokument.faktaavklaringArbeidsgiverLand,
         },
       };
 
