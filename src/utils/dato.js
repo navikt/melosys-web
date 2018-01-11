@@ -61,8 +61,20 @@ const normaliserInputDato = (verdi, forrigeVerdi) => {
   return ((verdi === forrigeVerdi) ? vasketDato : verdi);
 };
 
+/** Gjør en vurdering av innkomne datoformat og formatter til korrekt DD.MM.YYY, med eller uten tidspunkt.
+ * Moment kunne ha vært benyttet direkte i hver komponent, men denne funksjonen tillater begge datoformater i tillegg
+ * til å enklere åpne opp for dato med eller uten tidspunkt.
+ *
+ */
+function formatterDatoTilNorsk(dato, visTidspunkt) {
+  const inputFormat = ['YYYY-MM-DD', 'YYYY-MM-DDTHH:mm:ss', 'DD-MM-YYYY', 'DD-MM-YYYY HH:mm'];
+  const momentFormat = visTidspunkt ? 'DD.MM.YYYY HH:mm' : 'DD.MM.YYYY';
+  return moment(dato, inputFormat).format(momentFormat);
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
+  formatterDatoTilNorsk,
   MAX_AR_FREM_I_TID,
 };

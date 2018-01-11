@@ -92,6 +92,7 @@ class LandVelger extends Component {
    */
   inputTastNedHandler = e => {
     if (e.keyCode === 13) {
+      e.preventDefault();
       const landTreff = this.state.tilgjengeligeLand.filter(item => (
         landTekstFormat(item).toLowerCase().includes(this.state.inputVerdi.toLowerCase())));
 
