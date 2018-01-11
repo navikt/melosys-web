@@ -32,10 +32,7 @@ export default function reducer(state = initialState, action) {
       const faktaavklaring = {
         ...state.data.faktaavklaring,
         arbeidstype: {
-          ikkeArbeidende: strengTilInt(dokument.faktaavklaringIkkeArbeidende),
-          arbeidstaker: strengTilInt(dokument.faktaavklaringAreidstaker),
-          selvstendig: strengTilInt(dokument.faktaavklaringSelvstendig),
-          arbeidstakerOgSelvstendig: strengTilInt(dokument.faktaavklaringArbeidstakerOgSelvstendig),
+          arbeidstype: 'arbeidstaker',
         },
         utsending: {
           ansattINorskSelskap: strengTilInt(dokument.faktaavklaringAnsattINorskSelskap),
@@ -54,6 +51,7 @@ export default function reducer(state = initialState, action) {
           antallLandToEllerFlere: strengTilInt(dokument.faktaavklaringAntallLandToEllerFlere),
           aktivitetUnder25: strengTilInt(dokument.faktaavklaringAktivitetUnder25),
           aktivitetOver25: strengTilInt(dokument.faktaavklaringAktivitetOver25),
+          arbeidsgiverEn: strengTilInt(dokument.faktaavklaringarbeidsgiverEn),
           arbeidsgiverToEllerFlere: strengTilInt(dokument.faktaavklaringArbeidsgiverToEllerFlere),
           arbeidsgiverSammeLand: strengTilInt(dokument.faktaavklaringArbeidsgiverSammeLand),
           arbeidsgiverUlikeLand: strengTilInt(dokument.faktaavklaringArbeidsgiverUlikeLand),
