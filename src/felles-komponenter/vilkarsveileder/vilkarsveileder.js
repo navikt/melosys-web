@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
@@ -9,7 +10,6 @@ import StegLinje from './komponenter/stegLinje';
 import StegFane from './komponenter/stegFane';
 
 import OppretteSak from './faneinnhold/oppretteSak';
-import StartBehandling from './faneinnhold/startBehandling';
 import VurderingLand from './faneinnhold/vurderingLand';
 import VurderingArbeidsforhold from './faneinnhold/vurderingArbeidsforhold';
 import VurderingUtsending from './faneinnhold/vurderingUtsending';
@@ -18,22 +18,123 @@ import VurderingSektor from './faneinnhold/vurderingSektor';
 import VurderingVirksomhet from './faneinnhold/vurderingVirksomhet';
 import Vedtak from './faneinnhold/vedtak';
 
+import { OppsummeringSelector } from '../../ducks/fagsaker';
+
 import './vilkarsveileder.css';
 
 class Vilkarsveileder extends Component {
-  static propTypes = {
-    history: PT.object.isRequired,
-    person: MPT.Person.isRequired,
-    arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
-    fattVedtakHandler: PT.func.isRequired,
-  };
+  componentWillMount() {
+    this.setState({
+      aktivtSteg: 6,
+      steg: [
+        {
+          id: 'OPPRETT_SAK',
+          komponent: OppretteSak,
+          data: {
+            oppsummering: this.props.oppsummering,
+          },
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+            avbrytOpprettSak: this.avbrytVurdering,
+          },
+          status: this.FANE_STATUS.BEHANDLET,
+          ikoner: this.IKONER.STEG,
+          tilgjengelig: true,
+        },
+        {
+          id: 'VURDERING_LAND',
+          komponent: VurderingLand,
+          data: {},
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: this.FANE_STATUS.BEHANDLET,
+          ikoner: this.IKONER.STEG,
+          tilgjengelig: true,
+        },
+        {
+          id: 'VURDERING_ARBEIDSTYPE',
+          komponent: VurderingArbeidstype,
+          data: {},
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: this.FANE_STATUS.BEHANDLET,
+          ikoner: this.IKONER.STEG,
+          tilgjengelig: true,
+        },
+        {
+          id: 'VURDERING_ARBEIDSFORHOLD',
+          komponent: VurderingArbeidsforhold,
+          data: {
+            arbeidsforholdene: this.props.arbeidsforholdene,
+          },
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: this.FANE_STATUS.BEHANDLET,
+          ikoner: this.IKONER.STEG,
+          tilgjengelig: true,
+        },
+        {
+          id: 'VURDERING_UTSENDING',
+          komponent: VurderingUtsending,
+          data: {},
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: this.FANE_STATUS.BEHANDLET,
+          ikoner: this.IKONER.STEG,
+          tilgjengelig: true,
+        },
+        {
+          id: 'VURDERING_SEKTOR',
+          komponent: VurderingSektor,
+          data: {},
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: this.FANE_STATUS.BEHANDLET,
+          ikoner: this.IKONER.STEG,
+          tilgjengelig: true,
+        },
+        {
+          id: 'VURDERING_VIRKSOMHET',
+          komponent: VurderingVirksomhet,
+          data: {},
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: this.FANE_STATUS.AKTIV,
+          ikoner: this.IKONER.STEG,
+          tilgjengelig: true,
+          aktivtSteg: true,
+        },
+        {
+          id: 'VEDTAK',
+          komponent: Vedtak,
+          data: {},
+          handlers: {
+            fattVedtakHandler: this.fattVedtak,
+          },
+          status: this.FANE_STATUS.UBEHANDLET,
+          ikoner: this.IKONER.VEDTAK,
+          tilgjengelig: false,
+        },
+      ],
+    });
+  }
+
+  componentDidMount() {
+    this.tilSteg(6);
+  }
 
   /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
    * feil eller varsler som saksbehandleren må håndtere.
    *
    * @type {{UBEHANDLET: string, AKTIV: string, BEHANDLET: string, ADVARSEL: string, FEIL: string}}
    */
-  static status = {
+  FANE_STATUS = {
     UBEHANDLET: 'UBEHANDLET',
     AKTIV: 'AKTIV',
     BEHANDLET: 'BEHANDLET',
@@ -43,61 +144,22 @@ class Vilkarsveileder extends Component {
 
   /** Avhengig av status viser StegLinjen (med StegIkon) tilhørende status-ikon.
    *
-   * @type {{UBEHANDLET, AKTIV, BEHANDLET, ADVARSEL, FEIL}}
    */
-  static stegIkoner = {
-    UBEHANDLET: Ikon.Ubehandlet,
-    AKTIV: Ikon.Aktivt,
-    BEHANDLET: Ikon.Ferdig,
-    ADVARSEL: Ikon.Varsel,
-    FEIL: Ikon.Feil,
-  };
-
-  /** Vedtak (siste fane) har egne ikonsett
-   *
-   * @type {{UBEHANDLET, AKTIV, BEHANDLET, ADVARSEL, FEIL}}
-   */
-  static vedtakIkoner = {
-    UBEHANDLET: Ikon.VedakUbehandlet,
-    AKTIV: Ikon.VedtakGodkjent,
-    BEHANDLET: Ikon.VedtakGodkjent,
-    ADVARSEL: Ikon.VedtakAvslatt,
-    FEIL: Ikon.VedtakAvslatt,
-  };
-
-  componentWillMount() {
-    this.setState({
-      aktivtSteg: 0,
-      steg: [
-        {
-          status: Vilkarsveileder.status.AKTIV, id: 0, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: true,
-        },
-        {
-          status: Vilkarsveileder.status.UBEHANDLET, id: 1, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
-        },
-        {
-          status: Vilkarsveileder.status.UBEHANDLET, id: 2, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
-        },
-        {
-          status: Vilkarsveileder.status.UBEHANDLET, id: 3, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
-        },
-        {
-          status: Vilkarsveileder.status.UBEHANDLET, id: 4, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
-        },
-        {
-          status: Vilkarsveileder.status.UBEHANDLET, id: 5, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
-        },
-        {
-          status: Vilkarsveileder.status.FEIL, id: 6, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
-        },
-        {
-          status: Vilkarsveileder.status.UBEHANDLET, id: 7, ikoner: Vilkarsveileder.stegIkoner, tilgjengelig: false,
-        },
-        {
-          status: Vilkarsveileder.status.UBEHANDLET, id: 8, ikoner: Vilkarsveileder.vedtakIkoner, tilgjengelig: false,
-        },
-      ],
-    });
+  IKONER = {
+    STEG: {
+      UBEHANDLET: Ikon.Ubehandlet,
+      AKTIV: Ikon.Aktivt,
+      BEHANDLET: Ikon.Ferdig,
+      ADVARSEL: Ikon.Varsel,
+      FEIL: Ikon.Feil,
+    },
+    VEDTAK: {
+      UBEHANDLET: Ikon.VedakUbehandlet,
+      AKTIV: Ikon.VedtakGodkjent,
+      BEHANDLET: Ikon.VedtakGodkjent,
+      ADVARSEL: Ikon.VedtakAvslatt,
+      FEIL: Ikon.VedtakAvslatt,
+    },
   }
 
   fattVedtak = () => {
@@ -113,39 +175,37 @@ class Vilkarsveileder extends Component {
     this.nesteSteg();
   }
 
-  /** Setter igang behandling av en ny sak. Her vil vi legge inn
-   * evt action dispatch for async API requests, men TBA enn så lenge.
-   *
+  /** Saken er allerede opprettet, så denne funksjonen router kun brukeren tilbake til søket
+   * på forsiden uten å sende request til backend om at saksbehandlingen ble avbrutt. (Avgjørelse for V0 pr des2017)
    */
-  startBehandling = () => {
-    this.nesteSteg();
-  }
-
-  avbrytOpprettSak = () => {
+  avbrytVurdering = () => {
     this.props.history.push(`/?fnr=${this.props.person.fnr}`);
   }
+
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
    * @param nyttStegNummer Number Steget som det skal byttes til.
    */
   tilSteg = nyttStegNummer => {
-    const nyStegIkonState = { ...this.state.steg[nyttStegNummer] };
-    const gammelStegIkonState = { ...this.state.steg[this.state.aktivtSteg] };
-    nyStegIkonState.status = Vilkarsveileder.status.AKTIV;
-    nyStegIkonState.tilgjengelig = true;
-    gammelStegIkonState.status = Vilkarsveileder.status.BEHANDLET;
-
     const nyeSteg = [...this.state.steg];
-    nyeSteg[this.state.aktivtSteg] = gammelStegIkonState;
-    nyeSteg[nyttStegNummer] = nyStegIkonState;
+
+    // Oppdater både aktivt stegobjekt og nytt stegobjekt. Disse er allerede linket inn som props
+    // til child components og gjør at hver enkelt fane oppdaterer tilsvarende. Det samme gjelder
+    // StegLinje som viser ikonene ovenfor hver fane.
+    nyeSteg[this.state.aktivtSteg].aktivtSteg = false;
+    nyeSteg[this.state.aktivtSteg].status = this.FANE_STATUS.BEHANDLET;
+    nyeSteg[nyttStegNummer].aktivtSteg = true;
+    nyeSteg[nyttStegNummer].stegPosisjon = nyttStegNummer;
+    nyeSteg[nyttStegNummer].status = this.FANE_STATUS.AKTIV;
+    nyeSteg[nyttStegNummer].tilgjengelig = true;
 
     this.setState({ steg: nyeSteg });
     this.setState({ aktivtSteg: nyttStegNummer });
   }
 
   /** Gå til neste steg i rekken, men ikke lenger enn
-   * maks antall steg. Ved forsøk på å gå ytterligere steg
+   * maks antall steg (til og med vedtak). Ved forsøk på å gå ytterligere steg
    * enn hva som er mulig skal funksjonen defaulte til siste steg.
    */
   nesteSteg = () => {
@@ -155,60 +215,31 @@ class Vilkarsveileder extends Component {
   }
 
   render() {
-    const { aktivtSteg } = this.state;
-    const { arbeidsforholdene } = this.props;
-
     return (
       <div className="vilkarsveileder panelSeksjon">
         <StegLinje steg={this.state.steg} stegKlikk={this.tilSteg} />
-        <StegFane stegNummer={0} aktivtSteg={aktivtSteg}>
-          <OppretteSak
-            bekreftOgFortsett={this.bekreftOgFortsett}
-            avbrytOpprettSak={this.avbrytOpprettSak}
-          />
-        </StegFane>
-        <StegFane stegNummer={1} aktivtSteg={aktivtSteg}>
-          <StartBehandling
-            startBehandling={this.startBehandling}
-          />
-        </StegFane>
-        <StegFane stegNummer={2} aktivtSteg={aktivtSteg}>
-          <VurderingLand
-            bekreftOgFortsett={this.bekreftOgFortsett}
-          />
-        </StegFane>
-        <StegFane stegNummer={3} aktivtSteg={aktivtSteg}>
-          <VurderingArbeidsforhold
-            arbeidsforholdene={arbeidsforholdene}
-            bekreftOgFortsett={this.bekreftOgFortsett}
-          />
-        </StegFane>
-        <StegFane stegNummer={4} aktivtSteg={aktivtSteg}>
-          <VurderingArbeidstype
-            bekreftOgFortsett={this.bekreftOgFortsett}
-          />
-        </StegFane>
-        <StegFane stegNummer={5} aktivtSteg={aktivtSteg}>
-          <VurderingUtsending
-            bekreftOgFortsett={this.bekreftOgFortsett}
-          />
-        </StegFane>
-        <StegFane stegNummer={6} aktivtSteg={aktivtSteg}>
-          <VurderingSektor
-            bekreftOgFortsett={this.bekreftOgFortsett}
-          />
-        </StegFane>
-        <StegFane stegNummer={7} aktivtSteg={aktivtSteg}>
-          <VurderingVirksomhet
-            bekreftOgFortsett={this.bekreftOgFortsett}
-          />
-        </StegFane>
-        <StegFane stegNummer={8} aktivtSteg={aktivtSteg}>
-          <Vedtak fattVedtakHandler={this.fattVedtak} />
-        </StegFane>
+        {
+          this.state.steg.map(item => <StegFane key={item.id} faneData={item} />)
+        }
       </div>
     );
   }
 }
 
-export default withRouter(Vilkarsveileder);
+Vilkarsveileder.propTypes = {
+  history: PT.object.isRequired,
+  person: MPT.Person.isRequired,
+  arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
+  fattVedtakHandler: PT.func.isRequired,
+  oppsummering: MPT.Oppsummering,
+};
+
+Vilkarsveileder.defaultProps = {
+  oppsummering: [],
+};
+
+const mapStateToProps = state => ({
+  oppsummering: OppsummeringSelector(state),
+});
+
+export default withRouter(connect(mapStateToProps)(Vilkarsveileder));
