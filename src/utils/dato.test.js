@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import {vaskInputDato, normaliserInputDato} from './dato';
+import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk } from './dato';
 
 import MockDate from 'mockdate';
 
@@ -57,3 +57,21 @@ it('normaliserer dersom begge verdiene er like (indikerer forlatt felt / blur fi
   // har skjedd en endring fra verdi.
   expect(normaliserInputDato(verdi, forrigeVerdi)).not.toEqual(false);
 });
+
+it('formatterer datoen riktig til norsk format DD.MM.YYYY HH:mm:ss og med evt klokkeslett', () => {
+  const tillatteDatoer = [
+    {test: '2016-01-12', 'forvent': '12.01.2016', klokkeslett: false},
+    {test: '2017-12-01T20:58:01', 'forvent': '01.12.2017', klokkeslett: false},
+    {test: '2017-12-01T20:58:01', 'forvent': '01.12.2017 20:58', klokkeslett: true},
+    {test: '2017-12-01T01:08:01', 'forvent': '01.12.2017 01:08', klokkeslett: true},
+    {test: '01.02.1979', 'forvent': '01.02.1979', klokkeslett: false},
+    {test: '01.02.1979', 'forvent': '01.02.1979', klokkeslett: false},
+    {test: '12.02.2000 20:00:1', 'forvent': '12.02.2000 20:00', klokkeslett: true},
+  ];
+
+  tillatteDatoer.forEach(datoTest => {
+    const formattertDato = formatterDatoTilNorsk(datoTest.test, datoTest.klokkeslett);
+    expect(formattertDato).toEqual(datoTest.forvent);
+  });
+
+})

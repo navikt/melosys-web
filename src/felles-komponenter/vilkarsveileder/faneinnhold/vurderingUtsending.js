@@ -8,7 +8,6 @@ const VurderingUtsending = props => {
   return (
     <div>
       <Nav.Fieldset legend="Hva gjelder for søkeren?">
-        <Nav.Checkbox name="ansatt-sektor" id="utsending_virksomhetinorge" label="Er personen ansatt i et foretak som driver virksomhet i Norge?" />
         <Nav.Checkbox name="ansatt-sektor" id="utsending_annsattinorskselskap" label="Skal personen være ansatt i det norske selskapet i hele utsendingsperioden?" />
         <Nav.Checkbox name="ansatt-sektor" id="utsending_erstatter" label="Skal personen erstatte en annen?" />
         <Nav.Checkbox name="ansatt-sektor" id="utsending_mindreenn24" label="Er utsendingsperioden mindre enn 24 mnd?" />
