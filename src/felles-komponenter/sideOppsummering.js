@@ -1,6 +1,9 @@
 import React from 'react';
+import PT from 'prop-types';
+
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+
 import EnkeltDato from './datoOmrade/enkeltDato';
 
 import './sideOppsummering.css';
@@ -13,15 +16,31 @@ function SideOppsummering(props) {
     registrertDato,
   } = props.oppsummering;
 
+  const {
+    lagreOgLukkHandle,
+    avslaSoknadHandle,
+  } = props;
+
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
       <Nav.Panel className="saksbehandling__soknadSammendrag">
+        {/* START BEHANDLINGSMENY */}
+        <Nav.Row>
+          <Nav.Column xs="12" md="12">
+            <div className="oppsummering__menylinje">
+              <Nav.EkspanderbartpanelBase ariaTittel="Behandlingsmeny" className="oppsummering__meny" heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}>
+                <div className="meny__innhold">
+                  <Nav.Knapp type="hoved" mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp>
+                  <Nav.Knapp type="hoved" mini className="innhold__element" onClick={avslaSoknadHandle}>Avslå søknad</Nav.Knapp>
+                </div>
+              </Nav.EkspanderbartpanelBase>
+            </div>
+          </Nav.Column>
+        </Nav.Row>
+        {/* END BEHANDLINGSMENY */}
         <Nav.Row>
           <Nav.Column xs="12" md="6">
             <Nav.Undertittel className="soknadSammendrag__header">Søknad om {type || '-'}</Nav.Undertittel>
-          </Nav.Column>
-          <Nav.Column xs="12" md="6">
-            <Nav.Knapp>Behandlingsmeny</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
         {/* START BEHANDLINGSSTATUS */}
@@ -47,6 +66,8 @@ function SideOppsummering(props) {
 
 SideOppsummering.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
+  avslaSoknadHandle: PT.func.isRequired,
+  lagreOgLukkHandle: PT.func.isRequired,
 };
 
 export default SideOppsummering;
