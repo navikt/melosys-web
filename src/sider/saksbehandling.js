@@ -49,6 +49,15 @@ import {
   ArbeidsgiversBekreftelseSelector,
 } from '../ducks/soknad';
 
+import {
+  hentFaktaavklaring,
+  sendFaktaavklaring,
+} from '../ducks/faktaavklaring';
+
+import {
+  hentVurdering,
+} from '../ducks/vurdering';
+
 import { boolTilStreng } from '../utils/utils';
 
 import {
@@ -63,6 +72,8 @@ class Saksbehandling extends Component {
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     sendSoknad: PT.func.isRequired,
+    hentFaktaavklaring: PT.func.isRequired,
+    hentVurdering: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
     medlemskap: MPT.Medlemskap,
@@ -95,19 +106,40 @@ class Saksbehandling extends Component {
     errorSummaryTitle: '',
   };
 
-  state = { gyldigePaneler: {} };
+  state = {
+    gyldigePaneler: {},
+    hentetSoknad: false,
+    hentetFaktaavklaring: false,
+    hentetVurdering: false,
+  };
 
   componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentFagsaker(snr);
-    this.props.hentSoknad(snr);
+    this.props.hentFaktaavklaring(snr);
   }
 
   componentWillReceiveProps(nextProps) {
     const { syncErrors } = nextProps.soknadForm;
+    const { behandlingID } = nextProps.oppsummering;
     // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
     // i panelet lenger er ugyldig (ikke validerer).
     this.setState({ gyldigePaneler: gyldigePaneler(syncErrors) });
+
+    if (behandlingID && !this.state.hentetSoknad) {
+      this.props.hentSoknad(behandlingID);
+      this.setState({ hentetSoknad: true });
+    }
+
+    if (behandlingID && !this.state.hentetFaktaavklaring) {
+      this.props.hentFaktaavklaring(behandlingID);
+      this.setState({ hentetFaktaavklaring: true });
+    }
+
+    if (behandlingID && !this.state.hentetVurdering) {
+      this.props.hentVurdering(behandlingID);
+      this.setState({ hentetVurdering: true });
+    }
   }
 
   fattVedtakHandler = () => {
@@ -216,6 +248,9 @@ const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
   hentSoknad: saksnummer => dispatch(hentSoknad(saksnummer)),
   sendSoknad: dokument => dispatch(sendSoknad(dokument)),
+  hentFaktaavklaring: saksnummer => dispatch(hentFaktaavklaring(saksnummer)),
+  sendFaktaavklaring: dokument => dispatch(sendFaktaavklaring(dokument)),
+  hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
   onSubmit: values => dispatch(oppdaterSoknadState(values)),
 });
 

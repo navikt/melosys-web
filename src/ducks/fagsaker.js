@@ -135,10 +135,13 @@ export const OrganisasjonSelector = createSelector(
 
 export const OppsummeringSelector = createSelector(
   state => (state.fagsaker.data ? state.fagsaker.data : {}),
-  saksdata => ({
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].oppsummering : []),
+  (saksdata, behandlingsdata) => ({
     saksnummer: saksdata.saksnummer,
+    behandlingID: behandlingsdata.behandlingID,
     type: saksdata.type,
-    status: saksdata.status,
-    registrertDato: saksdata.registrertDato,
+    status: behandlingsdata.status,
+    registrertDato: behandlingsdata.registrertDato,
   })
 );
+

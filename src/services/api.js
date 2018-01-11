@@ -17,22 +17,37 @@ const API_SAKSOPPLYSNINGER = `${process.env.REACT_APP_API_SAKSOPPLYSNINGER}`;
 console.log('process.env', process.env);
 
 export function health() {
-  const URI_HEALTH = `/melosys/internal/health`;
+  const URI_HEALTH = `/melosys/internal/health/`;
   return getAsJson(URI_HEALTH);
 }
 
-export function hentSoknad() {
-  const URI_SOKNAD =  `${API_BASE_URL}soknad/`;
+export function hentSoknad(behandlingID) {
+  const URI_SOKNAD = `${API_BASE_URL}soknad/${behandlingID}`;
   return getAsJson(URI_SOKNAD);
 }
 
 export function sendSoknad(dokument) {
-  const URI_SOKNAD =`${API_BASE_URL}soknad`;
+  const URI_SOKNAD =`${API_BASE_URL}soknad/`;
   return postAsJson(URI_SOKNAD, dokument);
 }
 
+export function hentFaktaavklaring(behandlingID) {
+  const URI_FAKTAAVKLARING = `${API_BASE_URL}faktaavklaring/${behandlingID}`;
+  return getAsJson(URI_FAKTAAVKLARING);
+}
+
+export function sendFaktaavklaring(dokument) {
+  const URI_FAKTAAVKLARING =`${API_BASE_URL}faktaavklaring/`;
+  return postAsJson(URI_FAKTAAVKLARING, dokument);
+}
+
+export function hentVurdering(behandlingID) {
+  const URI_VURDERING = `${API_BASE_URL}vurdering/${behandlingID}`;
+  return getAsJson(URI_VURDERING);
+}
+
 export function hentFagsaker(snr) {
-  const URI_FAGSAKER =  `${API_BASE_URL}fagsaker/${snr}`;
+  const URI_FAGSAKER = `${API_BASE_URL}fagsaker/${snr}`;
   return getAsJson(URI_FAGSAKER);
 }
 
@@ -67,6 +82,6 @@ export function hentSaksopplysninger(fnr) {
 }
 
 export function nyHenvendelse(henvendelse) {
-  const URI_HENVENDELSE =`${API_BASE_URL}henvendelse`;
+  const URI_HENVENDELSE =`${API_BASE_URL}henvendelse/`;
   return postAsJson(URI_HENVENDELSE, henvendelse);
 }
