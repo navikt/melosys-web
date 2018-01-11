@@ -52,7 +52,7 @@ import {
 import {
   hentFaktaavklaring,
   sendFaktaavklaring,
-  oppdaterFaktaavklaringState,
+  oppdaterFaktaavklaringState, FaktaavklaringArbeidstypeSelector, FaktaavklaringUtsendingSelector, FaktaavklaringSektorSelector, FaktaavklaringVirksomhetSelector,
 } from '../ducks/faktaavklaring';
 
 import {
@@ -241,6 +241,15 @@ const mapStateToProps = state => ({
     fullmektigFirma: ArbeidNorgeSelector(state).fullmektigFirma,
     fullmektigAdresse: ArbeidNorgeSelector(state).fullmektigAdresse,
     valgteArbeidsforhold: ArbeidNorgeSelector(state).valgteArbeidsforhold,
+    faktaavklaringArbeidstype: FaktaavklaringArbeidstypeSelector(state).arbeidstype,
+    faktaavklaringAnsattINorskSelskap: FaktaavklaringUtsendingSelector(state).ansattINorskSelskap,
+    faktaavklaringErstatterTidligereUtsendt: FaktaavklaringUtsendingSelector(state).erstatterTidligereUtsendt,
+    faktaavklaringUtsendingMindreEnn24Mnd: FaktaavklaringUtsendingSelector(state).utsendingMindreEnn24Mnd,
+    faktaavklaringAnsattISektor: FaktaavklaringSektorSelector(state).ansattISektor,
+    faktaavklaringAntallLand: FaktaavklaringVirksomhetSelector(state).antallLand,
+    faktaavklaringAktivitet: FaktaavklaringVirksomhetSelector(state).aktivitet,
+    faktaavklaringAntallArbeidsgivere: FaktaavklaringVirksomhetSelector(state).arbeidsgivere,
+    faktaavklaringArbeidsgiverLand: FaktaavklaringVirksomhetSelector(state).arbeidsgiverLand,
   },
 });
 

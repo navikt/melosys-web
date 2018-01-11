@@ -10,7 +10,7 @@ const VurderingArbeidstype = props => {
     <div>
       <Nav.Fieldset legend="Vurder om søkeren er:">
         <Skjema.Radio feltNavn="faktaavklaringArbeidstype" value="ikkeArbeidende" label="Ikke arbeidende / ytelsesmottaker" />
-        <Skjema.Radio feltNavn="faktaavklaringArbeidstype" value="arbeistaker" label="Arbeidstaker" />
+        <Skjema.Radio feltNavn="faktaavklaringArbeidstype" value="arbeidstaker" label="Arbeidstaker" />
         <Skjema.Radio feltNavn="faktaavklaringArbeidstype" value="selvstendig" label="Selvstendig næringsdrivende" />
         <Skjema.Radio feltNavn="faktaavklaringArbeidstype" value="arbeidstakerOgSelvstendig" label="Både arbeidstakende og selvstendig" />
       </Nav.Fieldset>

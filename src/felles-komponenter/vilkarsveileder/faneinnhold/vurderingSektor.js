@@ -9,11 +9,11 @@ const VurderingSektor = props => {
   return (
     <div>
       <Nav.Fieldset legend="Hva gjelder for søkeren?">
-        <Skjema.Radio feltNavn="faktaavklaringSektor" value="ansattOffentlig" label="Offentlig tjenesteperson (relevant for 11.3 b)" />
-        <Skjema.Radio feltNavn="faktaavklaringSektor" value="ansattSokkel" label="Ansatt på skip (relevant for 11.4" />
-        <Skjema.Radio feltNavn="faktaavklaringSektor" value="ansattSkip" label="Ansatt på sokkel (relevant for 11.3 a)" />
-        <Skjema.Radio feltNavn="faktaavklaringSektor" value="ansattFlyvende" label="Flyvende personell (relevant for 11.5)" />
-        <Skjema.Radio feltNavn="faktaavklaringSektor" value="ansattIngen" label="Ingen av disse" />
+        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value="offentlig" label="Offentlig tjenesteperson (relevant for 11.3 b)" />
+        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value="skip" label="Ansatt på skip (relevant for 11.4" />
+        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value="sokkel" label="Ansatt på sokkel (relevant for 11.3 a)" />
+        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value="flyvende" label="Flyvende personell (relevant for 11.5)" />
+        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value="ingenAvDisse" label="Ingen av disse" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
