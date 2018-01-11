@@ -7,7 +7,7 @@ import { strengTilBool, strengTilInt } from '../utils/utils';
 const OK = 'soknad/OK';
 const FEILET = 'soknad/FEILET';
 const PENDING = 'soknad/PENDING';
-const OPPDATER_SOKNAD = 'sokna/OPPDATER_SOKNAD';
+const OPPDATER_SOKNAD = 'soknad/OPPDATER_SOKNAD';
 
 const initialState = {
   data: {},

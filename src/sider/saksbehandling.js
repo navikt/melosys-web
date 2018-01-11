@@ -52,6 +52,7 @@ import {
 import {
   hentFaktaavklaring,
   sendFaktaavklaring,
+  oppdaterFaktaavklaringState,
 } from '../ducks/faktaavklaring';
 
 import {
@@ -250,7 +251,7 @@ const mapDispatchToProps = dispatch => ({
   hentFaktaavklaring: saksnummer => dispatch(hentFaktaavklaring(saksnummer)),
   sendFaktaavklaring: dokument => dispatch(sendFaktaavklaring(dokument)),
   hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
-  onSubmit: values => dispatch(oppdaterSoknadState(values)),
+  onSubmit: values => { dispatch(oppdaterSoknadState(values)); dispatch(oppdaterFaktaavklaringState(values)); },
 });
 
 const SaksbehandlingForm = validForm({
