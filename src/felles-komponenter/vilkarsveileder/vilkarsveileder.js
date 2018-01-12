@@ -25,7 +25,7 @@ import './vilkarsveileder.css';
 class Vilkarsveileder extends Component {
   componentWillMount() {
     this.setState({
-      aktivtSteg: 6,
+      aktivtSteg: 0,
       steg: [
         {
           id: 'OPPRETT_SAK',
@@ -126,7 +126,7 @@ class Vilkarsveileder extends Component {
   }
 
   componentDidMount() {
-    this.tilSteg(6);
+    this.tilSteg(1);
   }
 
   /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
