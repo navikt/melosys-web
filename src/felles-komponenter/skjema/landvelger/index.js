@@ -149,6 +149,18 @@ class CustomLandVelger extends Component {
     this.setState({ inputVerdi: e.target.value });
   }
 
+  /** Enkelte brukertester har vist at saksbehandlere velger land fra listen uten å faktisk
+   * legge de til (enten via ENTER eller pluss-knapp). Derfor legg til det som evt ligger i
+   * input-feltet ved blur.
+   * @param e
+   */
+  fokusUtHandler = e => {
+    const { alleLand } = this.state;
+    const inputVerdi = e.target.value;
+
+    this.finnLandOgLeggTil(alleLand, inputVerdi);
+  }
+
   render () {
     const { alleLand } = this.state;
     const { fields, multiLand } = this.props;
@@ -160,11 +172,12 @@ class CustomLandVelger extends Component {
       (
         <div className="landliste__linje">
           <Nav.Input
-            list="land"
+            list="alleLand"
             label="Tast inn land"
             bredde="L"
             className="landliste__linje__input"
             value={this.state.inputVerdi}
+            onBlur={this.fokusUtHandler}
             onChange={this.inputEndringHandler}
             onKeyDown={this.inputTastNedHandler}
           />
@@ -172,7 +185,7 @@ class CustomLandVelger extends Component {
             className="landliste__linje__knapp landliste__linje__knapp--leggtil"
             onClick={this.leggTilLandHandler}>+
           </button>
-          <datalist id="land">
+          <datalist id="alleLand">
             {alleLand.map(item => (!valgteLand.includes(item) ? <option key={item.kode} value={landTekstFormat(item)} /> : ''))}
           </datalist>
         </div>
