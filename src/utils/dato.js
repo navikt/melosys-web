@@ -72,9 +72,20 @@ function formatterDatoTilNorsk(dato, visTidspunkt) {
   return moment(dato, inputFormat).format(momentFormat);
 }
 
+/** Forutsatt at datoen er validert korrekt norsk (DD.MM.YYYY HH:mm), formatter den til det maskinlesbare
+ * formatet "YYYY-MM-DDTHH:mm:ss"
+ *
+ */
+function formatterDatoTilMaskin(dato) {
+  const inputFormat = ['DD.MM.YYYY HH:mm', 'YDD.MM.YYYY'];
+  const momentFormat = 'YYYY/MM/DDTHH:mm:ss';
+  return moment(dato, inputFormat).format(momentFormat);
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
   formatterDatoTilNorsk,
+  formatterDatoTilMaskin,
   MAX_AR_FREM_I_TID,
 };

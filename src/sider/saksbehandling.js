@@ -52,7 +52,12 @@ import {
 import {
   hentFaktaavklaring,
   sendFaktaavklaring,
-  oppdaterFaktaavklaringState, FaktaavklaringArbeidstypeSelector, FaktaavklaringUtsendingSelector, FaktaavklaringSektorSelector, FaktaavklaringVirksomhetSelector,
+  oppdaterFaktaavklaringState,
+  FaktaavklaringPeriodeSelector,
+  FaktaavklaringArbeidstypeSelector,
+  FaktaavklaringUtsendingSelector,
+  FaktaavklaringSektorSelector,
+  FaktaavklaringVirksomhetSelector,
 } from '../ducks/faktaavklaring';
 
 import {
@@ -60,6 +65,7 @@ import {
 } from '../ducks/vurdering';
 
 import { boolTilStreng } from '../utils/utils';
+import { formatterDatoTilNorsk } from '../utils/dato';
 
 import {
   SoknadenFormSelector,
@@ -241,15 +247,18 @@ const mapStateToProps = state => ({
     fullmektigFirma: ArbeidNorgeSelector(state).fullmektigFirma,
     fullmektigAdresse: ArbeidNorgeSelector(state).fullmektigAdresse,
     valgteArbeidsforhold: ArbeidNorgeSelector(state).valgteArbeidsforhold,
+    faktaavklaringLand: FaktaavklaringPeriodeSelector(state).land,
+    faktaavklaringPeriodeFraOgMed: formatterDatoTilNorsk(FaktaavklaringPeriodeSelector(state).periodeFraOgMed),
+    faktaavklaringPeriodeTilOgMed: formatterDatoTilNorsk(FaktaavklaringPeriodeSelector(state).periodeTilOgMed),
     faktaavklaringArbeidstype: FaktaavklaringArbeidstypeSelector(state).arbeidstype,
     faktaavklaringAnsattINorskSelskap: FaktaavklaringUtsendingSelector(state).ansattINorskSelskap,
     faktaavklaringErstatterTidligereUtsendt: FaktaavklaringUtsendingSelector(state).erstatterTidligereUtsendt,
     faktaavklaringUtsendingMindreEnn24Mnd: FaktaavklaringUtsendingSelector(state).utsendingMindreEnn24Mnd,
     faktaavklaringAnsattISektor: FaktaavklaringSektorSelector(state).ansattISektor,
     faktaavklaringAntallLand: FaktaavklaringVirksomhetSelector(state).antallLand,
-    faktaavklaringAktivitet: FaktaavklaringVirksomhetSelector(state).aktivitet,
-    faktaavklaringAntallArbeidsgivere: FaktaavklaringVirksomhetSelector(state).arbeidsgivere,
-    faktaavklaringArbeidsgiverLand: FaktaavklaringVirksomhetSelector(state).arbeidsgiverLand,
+    faktaavklaringAktivitetINorge: FaktaavklaringVirksomhetSelector(state).aktivitetINorge,
+    faktaavklaringAntallArbeidsgivere: FaktaavklaringVirksomhetSelector(state).antallArbeidsgivere,
+    faktaavklaringFordelingArbeidsgivere: FaktaavklaringVirksomhetSelector(state).fordelingArbeidsgivere,
   },
 });
 
