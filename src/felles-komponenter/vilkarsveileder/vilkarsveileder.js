@@ -25,7 +25,7 @@ import './vilkarsveileder.css';
 class Vilkarsveileder extends Component {
   componentWillMount() {
     this.setState({
-      aktivtSteg: 0,
+      aktivtSteg: 1,
       steg: [
         {
           id: 'OPPRETT_SAK',
