@@ -53,6 +53,7 @@ import {
   hentFaktaavklaring,
   sendFaktaavklaring,
   oppdaterFaktaavklaringState,
+  FaktaavklaringSelector,
   FaktaavklaringPeriodeSelector,
   FaktaavklaringArbeidstypeSelector,
   FaktaavklaringUtsendingSelector,
@@ -80,6 +81,7 @@ class Saksbehandling extends Component {
     hentSoknad: PT.func.isRequired,
     sendSoknad: PT.func.isRequired,
     hentFaktaavklaring: PT.func.isRequired,
+    sendFaktaavklaring: PT.func.isRequired,
     hentVurdering: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
@@ -89,6 +91,7 @@ class Saksbehandling extends Component {
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
     soknad: PT.object,
+    faktaavklaring: PT.object,
     soknadArbeidsinntekt: PT.object,
     soknadOppholdUtland: MPT.OppholdUtland,
     soknadArbeidNorge: MPT.ArbeidNorge,
@@ -106,6 +109,7 @@ class Saksbehandling extends Component {
     bekreftelser: [],
     oppsummering: {},
     soknad: {},
+    faktaavklaring: {},
     soknadArbeidsinntekt: {},
     soknadOppholdUtland: {},
     soknadArbeidNorge: {},
@@ -150,6 +154,7 @@ class Saksbehandling extends Component {
 
   fattVedtakHandler = () => {
     this.props.sendSoknad(this.props.soknad);
+    this.props.sendFaktaavklaring(this.props.faktaavklaring);
   }
 
   /* eslint-disable */
@@ -222,6 +227,7 @@ const mapStateToProps = state => ({
   bekreftelser: BekreftelserSelector(state),
   oppsummering: OppsummeringSelector(state),
   soknad: SoknadSelector(state),
+  faktaavklaring: FaktaavklaringSelector(state),
   soknadForm: SoknadenFormSelector(state),
   soknadArbeidsinntekt: ArbeidsinntektSelector(state),
   soknadOppholdUtland: OppholdUtlandSelector(state),
@@ -236,7 +242,7 @@ const mapStateToProps = state => ({
     arbeidstakerTidligereUtsendt24Mnd: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd),
     arbeidsgiverBetalerArbeidsgiveravgift: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift),
     trygdeavgiftTrukketGjennomSkatt: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
-    trygdeavgiftTrukketGjennomSkattDato: ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato,
+    trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
     studentIEOS: OppholdUtlandSelector(state).studentIEOS,
     studentSkole: OppholdUtlandSelector(state).studentSkole,
     studentSemester: OppholdUtlandSelector(state).studentSemester,

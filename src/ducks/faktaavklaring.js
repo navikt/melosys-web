@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
-import { strengTilInt } from '../utils/utils';
 
 // Actions
 const OK = 'faktaavklaring/OK';
@@ -40,9 +39,9 @@ export default function reducer(state = initialState, action) {
           arbeidstype: dokument.faktaavklaringArbeidstype,
         },
         utsending: {
-          ansattINorskSelskap: strengTilInt(dokument.faktaavklaringAnsattINorskSelskap),
-          erstatterTidligereUtsendt: strengTilInt(dokument.faktaavklaringErstatterTidligereUtsendt),
-          utsendingMindreEnn24Mnd: strengTilInt(dokument.faktaavklaringUtsendingMindreEnn24Mnd),
+          ansattINorskSelskap: dokument.faktaavklaringAnsattINorskSelskap,
+          erstatterTidligereUtsendt: dokument.faktaavklaringErstatterTidligereUtsendt,
+          utsendingMindreEnn24Mnd: dokument.faktaavklaringUtsendingMindreEnn24Mnd,
         },
         sektor: {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
@@ -88,7 +87,7 @@ export function oppdaterFaktaavklaringState(dokument) {
 
 // selector(s)
 export const FaktaavklaringSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring : {}),
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data : {}),
   faktaavklaring => faktaavklaring
 );
 
