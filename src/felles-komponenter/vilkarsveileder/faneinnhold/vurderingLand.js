@@ -22,7 +22,7 @@ const VurderingLand = props => {
       </Nav.Fieldset>
       <Nav.Fieldset legend="Land som søker skal arbeide eller oppholde seg i:">
         <Nav.Column xs="12">
-          <LandVelger />
+          <LandVelger feltNavn="faktaavklaringLand" multiLand />
         </Nav.Column>
       </Nav.Fieldset>
       <div className="fane__knapplinje">

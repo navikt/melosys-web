@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import { FieldArray } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 
@@ -9,7 +10,7 @@ const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`
 
 const ValgtLand = ({ landObjekt, slettLand }) => (
   <div className="landliste__enkeltlinje">
-    <div className="landliste__enkeltlinje__navn">{landTekstFormat(landObjekt)}</div><button className="landliste__enkeltlinje__knapp" onClick={() => slettLand(landObjekt.kode)}>-</button>
+    <div className="landliste__enkeltlinje__navn">{landTekstFormat(landObjekt)}</div><button className="landliste__enkeltlinje__knapp" onClick={e => slettLand(e, landObjekt.kode)}>-</button>
   </div>
 );
 
@@ -18,44 +19,42 @@ ValgtLand.propTypes = {
   slettLand: PT.func.isRequired,
 };
 
-class LandVelger extends Component {
-  componentWillMount() {
-    this.setState({
-      valgteLand: [],
-      inputVerdi: '',
-      tilgjengeligeLand: [
-        { kode: 'BE', term: 'Belgia' },
-        { kode: 'BG', term: 'Bulgaria' },
-        { kode: 'DK', term: 'Danmark' },
-        { kode: 'EE', term: 'Estland' },
-        { kode: 'FI', term: 'Finland' },
-        { kode: 'FR', term: 'Frankrike' },
-        { kode: 'GR', term: 'Hellas' },
-        { kode: 'IE', term: 'Irland' },
-        { kode: 'IS', term: 'Island' },
-        { kode: 'IT', term: 'Italia' },
-        { kode: 'HR', term: 'Kroatia' },
-        { kode: 'CY', term: 'Kypros' },
-        { kode: 'LV', term: 'Latvia' },
-        { kode: 'LI', term: 'Liechtenstein' },
-        { kode: 'LT', term: 'Litauen' },
-        { kode: 'LU', term: 'Luxembourg' },
-        { kode: 'MT', term: 'Malta' },
-        { kode: 'NL', term: 'Nederland' },
-        { kode: 'NO', term: 'Norge' },
-        { kode: 'PL', term: 'Polen' },
-        { kode: 'PT', term: 'Portugal' },
-        { kode: 'RO', term: 'Romania' },
-        { kode: 'SK', term: 'Slovakia' },
-        { kode: 'SI', term: 'Slovenia' },
-        { kode: 'ES', term: 'Spania' },
-        { kode: 'GB', term: 'Storbritannia' },
-        { kode: 'SE', term: 'Sverige' },
-        { kode: 'DE', term: 'Tyskland' },
-        { kode: 'HU', term: 'Ungarn' },
-        { kode: 'AT', term: 'Østerrike' },
-      ],
-    });
+class CustomLandVelger extends Component {
+  state = {
+    valgteLand: [],
+    inputVerdi: '',
+    tilgjengeligeLand: [
+      { kode: 'BE', term: 'Belgia' },
+      { kode: 'BG', term: 'Bulgaria' },
+      { kode: 'DK', term: 'Danmark' },
+      { kode: 'EE', term: 'Estland' },
+      { kode: 'FI', term: 'Finland' },
+      { kode: 'FR', term: 'Frankrike' },
+      { kode: 'GR', term: 'Hellas' },
+      { kode: 'IE', term: 'Irland' },
+      { kode: 'IS', term: 'Island' },
+      { kode: 'IT', term: 'Italia' },
+      { kode: 'HR', term: 'Kroatia' },
+      { kode: 'CY', term: 'Kypros' },
+      { kode: 'LV', term: 'Latvia' },
+      { kode: 'LI', term: 'Liechtenstein' },
+      { kode: 'LT', term: 'Litauen' },
+      { kode: 'LU', term: 'Luxembourg' },
+      { kode: 'MT', term: 'Malta' },
+      { kode: 'NL', term: 'Nederland' },
+      { kode: 'NO', term: 'Norge' },
+      { kode: 'PL', term: 'Polen' },
+      { kode: 'PT', term: 'Portugal' },
+      { kode: 'RO', term: 'Romania' },
+      { kode: 'SK', term: 'Slovakia' },
+      { kode: 'SI', term: 'Slovenia' },
+      { kode: 'ES', term: 'Spania' },
+      { kode: 'GB', term: 'Storbritannia' },
+      { kode: 'SE', term: 'Sverige' },
+      { kode: 'DE', term: 'Tyskland' },
+      { kode: 'HU', term: 'Ungarn' },
+      { kode: 'AT', term: 'Østerrike' },
+    ],
   }
 
   /** Legg til land, enten som en direkte parameter til funksjonen ('land') eller
@@ -70,8 +69,8 @@ class LandVelger extends Component {
     if (landForTillegg === undefined) { return; }
 
     if (!this.state.valgteLand.includes(landForTillegg)) {
+      this.props.fields.push(landForTillegg.kode);
       this.setState({
-        valgteLand: [...this.state.valgteLand, landForTillegg],
         inputVerdi: '',
       });
     }
@@ -81,8 +80,10 @@ class LandVelger extends Component {
    *
    * @param land String Landet i sin helhet som skal slettes.
    */
-  slettLandHandler = landKode => {
-    this.setState({ valgteLand: [...this.state.valgteLand.filter(item => item.kode !== landKode)] });
+  slettLandHandler = (e, landKode) => {
+    e.preventDefault();
+    const index = this.props.fields.getAll().findIndex(item => item === landKode);
+    return (index && this.props.fields.remove(index));
   }
 
   /** Event handler for håndtering av enter-tasten slik at saksbehandler kan skrive inn deler
@@ -111,11 +112,18 @@ class LandVelger extends Component {
   }
 
   render () {
-    const { tilgjengeligeLand, valgteLand } = this.state;
+    const { tilgjengeligeLand } = this.state;
+    const valgteLand = this.props.fields.getAll() || [];
 
     return (
       <div className="landliste">
-        {this.state.valgteLand.map(item => <ValgtLand key={item.kode} landObjekt={item} slettLand={this.slettLandHandler} />)}
+        {valgteLand.map(valgtLand => (
+          <ValgtLand
+            key={valgtLand}
+            landObjekt={this.state.tilgjengeligeLand.find(land => land.kode === valgtLand)}
+            slettLand={this.slettLandHandler}
+          />))
+        }
         <div className="landliste__enkeltlinje">
           <Nav.Input
             list="land"
@@ -138,5 +146,17 @@ class LandVelger extends Component {
     );
   }
 }
+
+CustomLandVelger.propTypes = {
+  fields: PT.object.isRequired,
+};
+
+const LandVelger = props => (
+  <div><FieldArray name={props.feltNavn} component={CustomLandVelger} /></div>
+);
+
+LandVelger.propTypes = {
+  feltNavn: PT.string.isRequired,
+};
 
 export default LandVelger;
