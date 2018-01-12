@@ -31,6 +31,11 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
       const faktaavklaring = {
         ...state.data.faktaavklaring,
+        periode: {
+          land: dokument.faktaavklaringLand,
+          periodeFraOgMed: dokument.faktaavklaringPeriodeFraOgMed,
+          periodeTilOgMed: dokument.faktaavklaringPeriodeTilOgMed,
+        },
         arbeidstype: {
           arbeidstype: dokument.faktaavklaringArbeidstype,
         },
@@ -44,9 +49,9 @@ export default function reducer(state = initialState, action) {
         },
         virksomhet: {
           antallLand: dokument.faktaavklaringAntallLand,
-          aktivitet: dokument.faktaavklaringAktivitet,
-          arbeidsgivere: dokument.faktaavklaringAntallArbeidsgivere,
-          arbeidsgiverLand: dokument.faktaavklaringArbeidsgiverLand,
+          aktivitetINorge: dokument.faktaavklaringAktivitetINorge,
+          antallArbeidsgivere: dokument.faktaavklaringAntallArbeidsgivere,
+          fordelingArbeidsgivere: dokument.faktaavklaringFordelingArbeidsgivere,
         },
       };
 
@@ -85,6 +90,11 @@ export function oppdaterFaktaavklaringState(dokument) {
 export const FaktaavklaringSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring : {}),
   faktaavklaring => faktaavklaring
+);
+
+export const FaktaavklaringPeriodeSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.periode : {}),
+  periode => periode
 );
 
 export const FaktaavklaringArbeidstypeSelector = createSelector(

@@ -1,7 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
-import DatoFelt from '../../skjema/datofelt';
+import * as Skjema from '../../skjema';
 
 import LandVelger from '../../skjema/landvelger';
 
@@ -14,10 +14,10 @@ const VurderingLand = props => {
     <div className="vurderingLand">
       <Nav.Fieldset legend="Periode for søknad?">
         <Nav.Column xs="4">
-          <DatoFelt label="Fra" />
+          <Skjema.Input datoFelt label="Fra" feltNavn="faktaavklaringPeriodeFraOgMed" />
         </Nav.Column>
         <Nav.Column xs="4">
-          <DatoFelt label="Til" />
+          <Skjema.Input datoFelt label="Til" feltNavn="faktaavklaringPeriodeTilOgMed" />
         </Nav.Column>
       </Nav.Fieldset>
       <Nav.Fieldset legend="Land som søker skal arbeide eller oppholde seg i:">
