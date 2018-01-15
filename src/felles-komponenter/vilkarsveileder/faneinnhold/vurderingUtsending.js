@@ -1,6 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
+import * as Skjema from '../../skjema';
 
 const VurderingUtsending = props => {
   const { bekreftOgFortsett } = props;
@@ -8,9 +9,9 @@ const VurderingUtsending = props => {
   return (
     <div>
       <Nav.Fieldset legend="Hva gjelder for søkeren?">
-        <Nav.Checkbox name="ansatt-sektor" id="utsending_annsattinorskselskap" label="Skal personen være ansatt i det norske selskapet i hele utsendingsperioden?" />
-        <Nav.Checkbox name="ansatt-sektor" id="utsending_erstatter" label="Skal personen erstatte en annen?" />
-        <Nav.Checkbox name="ansatt-sektor" id="utsending_mindreenn24" label="Er utsendingsperioden mindre enn 24 mnd?" />
+        <Skjema.Checkbox feltNavn="faktaavklaringAnsattINorskSelskap" value="true" label="Skal personen være ansatt i det norske selskapet i hele utsendingsperioden?" />
+        <Skjema.Checkbox feltNavn="faktaavklaringErstatterTidligereUtsendt" value="true" label="Skal personen erstatte en annen?" />
+        <Skjema.Checkbox feltNavn="faktaavklaringUtsendingMindreEnn24Mnd" value="true" label="Er utsendingsperioden mindre enn 24 mnd?" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

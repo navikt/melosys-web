@@ -1,7 +1,6 @@
 import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
-import { strengTilInt } from '../utils/utils';
 
 // Actions
 const OK = 'faktaavklaring/OK';
@@ -31,32 +30,27 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
       const faktaavklaring = {
         ...state.data.faktaavklaring,
+        periode: {
+          land: dokument.faktaavklaringLand,
+          periodeFraOgMed: dokument.faktaavklaringPeriodeFraOgMed,
+          periodeTilOgMed: dokument.faktaavklaringPeriodeTilOgMed,
+        },
         arbeidstype: {
-          ikkeArbeidende: strengTilInt(dokument.faktaavklaringIkkeArbeidende),
-          arbeidstaker: strengTilInt(dokument.faktaavklaringAreidstaker),
-          selvstendig: strengTilInt(dokument.faktaavklaringSelvstendig),
-          arbeidstakerOgSelvstendig: strengTilInt(dokument.faktaavklaringArbeidstakerOgSelvstendig),
+          arbeidstype: dokument.faktaavklaringArbeidstype,
         },
         utsending: {
-          ansattINorskSelskap: strengTilInt(dokument.faktaavklaringAnsattINorskSelskap),
-          erstatterTidligereUtsendt: strengTilInt(dokument.faktaavklaringErstatterTidligereUtsendt),
-          utsendingMindreEnn24Mnd: strengTilInt(dokument.faktaavklaringUtsendingMindreEnn24Mnd),
+          ansattINorskSelskap: dokument.faktaavklaringAnsattINorskSelskap,
+          erstatterTidligereUtsendt: dokument.faktaavklaringErstatterTidligereUtsendt,
+          utsendingMindreEnn24Mnd: dokument.faktaavklaringUtsendingMindreEnn24Mnd,
         },
         sektor: {
-          ansattOffentlig: strengTilInt(dokument.faktaavklaringAnsattOffentlig),
-          ansattSokkel: strengTilInt(dokument.faktaavklaringAnsattSokkel),
-          ansattSkip: strengTilInt(dokument.faktaavklaringAnsattSkip),
-          ansattFlyvende: strengTilInt(dokument.faktaavklaringAnsattFlyvende),
-          ansattIngen: strengTilInt(dokument.faktaavklaringAnsattIngen),
+          ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
         virksomhet: {
-          antallLandEtt: strengTilInt(dokument.faktaavklaringAntallLandEtt),
-          antallLandToEllerFlere: strengTilInt(dokument.faktaavklaringAntallLandToEllerFlere),
-          aktivitetUnder25: strengTilInt(dokument.faktaavklaringAktivitetUnder25),
-          aktivitetOver25: strengTilInt(dokument.faktaavklaringAktivitetOver25),
-          arbeidsgiverToEllerFlere: strengTilInt(dokument.faktaavklaringArbeidsgiverToEllerFlere),
-          arbeidsgiverSammeLand: strengTilInt(dokument.faktaavklaringArbeidsgiverSammeLand),
-          arbeidsgiverUlikeLand: strengTilInt(dokument.faktaavklaringArbeidsgiverUlikeLand),
+          antallLand: dokument.faktaavklaringAntallLand,
+          aktivitetINorge: dokument.faktaavklaringAktivitetINorge,
+          antallArbeidsgivere: dokument.faktaavklaringAntallArbeidsgivere,
+          fordelingArbeidsgivere: dokument.faktaavklaringFordelingArbeidsgivere,
         },
       };
 
@@ -93,8 +87,13 @@ export function oppdaterFaktaavklaringState(dokument) {
 
 // selector(s)
 export const FaktaavklaringSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring : {}),
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data : {}),
   faktaavklaring => faktaavklaring
+);
+
+export const FaktaavklaringPeriodeSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.periode : {}),
+  periode => periode
 );
 
 export const FaktaavklaringArbeidstypeSelector = createSelector(

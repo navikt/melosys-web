@@ -94,7 +94,7 @@ function methodToJson(method, url, data) {
   const httpVerbsWithBody = ['POST', 'PUT'];
   if (httpVerbsWithBody.includes(method)) {
     fetchConfig.body = JSON.stringify(data);
-    fetchConfig.headers.append('Content-Type', 'text/plain');
+    fetchConfig.headers.append('Content-Type', 'application/json');
   }
 
   return fetchToJson(url, fetchConfig);

@@ -52,6 +52,13 @@ import {
 import {
   hentFaktaavklaring,
   sendFaktaavklaring,
+  oppdaterFaktaavklaringState,
+  FaktaavklaringSelector,
+  FaktaavklaringPeriodeSelector,
+  FaktaavklaringArbeidstypeSelector,
+  FaktaavklaringUtsendingSelector,
+  FaktaavklaringSektorSelector,
+  FaktaavklaringVirksomhetSelector,
 } from '../ducks/faktaavklaring';
 
 import {
@@ -59,6 +66,7 @@ import {
 } from '../ducks/vurdering';
 
 import { boolTilStreng } from '../utils/utils';
+import { formatterDatoTilNorsk } from '../utils/dato';
 
 import {
   SoknadenFormSelector,
@@ -73,6 +81,7 @@ class Saksbehandling extends Component {
     hentSoknad: PT.func.isRequired,
     sendSoknad: PT.func.isRequired,
     hentFaktaavklaring: PT.func.isRequired,
+    sendFaktaavklaring: PT.func.isRequired,
     hentVurdering: PT.func.isRequired,
     match: PT.object.isRequired,
     person: MPT.Person,
@@ -82,6 +91,7 @@ class Saksbehandling extends Component {
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
     soknad: PT.object,
+    faktaavklaring: PT.object,
     soknadArbeidsinntekt: PT.object,
     soknadOppholdUtland: MPT.OppholdUtland,
     soknadArbeidNorge: MPT.ArbeidNorge,
@@ -99,6 +109,7 @@ class Saksbehandling extends Component {
     bekreftelser: [],
     oppsummering: {},
     soknad: {},
+    faktaavklaring: {},
     soknadArbeidsinntekt: {},
     soknadOppholdUtland: {},
     soknadArbeidNorge: {},
@@ -116,7 +127,6 @@ class Saksbehandling extends Component {
   componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentFagsaker(snr);
-    this.props.hentFaktaavklaring(snr);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -144,6 +154,7 @@ class Saksbehandling extends Component {
 
   fattVedtakHandler = () => {
     this.props.sendSoknad(this.props.soknad);
+    this.props.sendFaktaavklaring(this.props.faktaavklaring);
   }
 
   /* eslint-disable */
@@ -216,6 +227,7 @@ const mapStateToProps = state => ({
   bekreftelser: BekreftelserSelector(state),
   oppsummering: OppsummeringSelector(state),
   soknad: SoknadSelector(state),
+  faktaavklaring: FaktaavklaringSelector(state),
   soknadForm: SoknadenFormSelector(state),
   soknadArbeidsinntekt: ArbeidsinntektSelector(state),
   soknadOppholdUtland: OppholdUtlandSelector(state),
@@ -230,7 +242,7 @@ const mapStateToProps = state => ({
     arbeidstakerTidligereUtsendt24Mnd: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd),
     arbeidsgiverBetalerArbeidsgiveravgift: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift),
     trygdeavgiftTrukketGjennomSkatt: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
-    trygdeavgiftTrukketGjennomSkattDato: ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato,
+    trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
     studentIEOS: OppholdUtlandSelector(state).studentIEOS,
     studentSkole: OppholdUtlandSelector(state).studentSkole,
     studentSemester: OppholdUtlandSelector(state).studentSemester,
@@ -241,6 +253,18 @@ const mapStateToProps = state => ({
     fullmektigFirma: ArbeidNorgeSelector(state).fullmektigFirma,
     fullmektigAdresse: ArbeidNorgeSelector(state).fullmektigAdresse,
     valgteArbeidsforhold: ArbeidNorgeSelector(state).valgteArbeidsforhold,
+    faktaavklaringLand: FaktaavklaringPeriodeSelector(state).land,
+    faktaavklaringPeriodeFraOgMed: formatterDatoTilNorsk(FaktaavklaringPeriodeSelector(state).periodeFraOgMed),
+    faktaavklaringPeriodeTilOgMed: formatterDatoTilNorsk(FaktaavklaringPeriodeSelector(state).periodeTilOgMed),
+    faktaavklaringArbeidstype: FaktaavklaringArbeidstypeSelector(state).arbeidstype,
+    faktaavklaringAnsattINorskSelskap: FaktaavklaringUtsendingSelector(state).ansattINorskSelskap,
+    faktaavklaringErstatterTidligereUtsendt: FaktaavklaringUtsendingSelector(state).erstatterTidligereUtsendt,
+    faktaavklaringUtsendingMindreEnn24Mnd: FaktaavklaringUtsendingSelector(state).utsendingMindreEnn24Mnd,
+    faktaavklaringAnsattISektor: FaktaavklaringSektorSelector(state).ansattISektor,
+    faktaavklaringAntallLand: FaktaavklaringVirksomhetSelector(state).antallLand,
+    faktaavklaringAktivitetINorge: FaktaavklaringVirksomhetSelector(state).aktivitetINorge,
+    faktaavklaringAntallArbeidsgivere: FaktaavklaringVirksomhetSelector(state).antallArbeidsgivere,
+    faktaavklaringFordelingArbeidsgivere: FaktaavklaringVirksomhetSelector(state).fordelingArbeidsgivere,
   },
 });
 
@@ -251,7 +275,7 @@ const mapDispatchToProps = dispatch => ({
   hentFaktaavklaring: saksnummer => dispatch(hentFaktaavklaring(saksnummer)),
   sendFaktaavklaring: dokument => dispatch(sendFaktaavklaring(dokument)),
   hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
-  onSubmit: values => dispatch(oppdaterSoknadState(values)),
+  onSubmit: values => { dispatch(oppdaterSoknadState(values)); dispatch(oppdaterFaktaavklaringState(values)); },
 });
 
 const SaksbehandlingForm = validForm({
