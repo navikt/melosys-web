@@ -63,6 +63,7 @@ import {
 
 import {
   hentVurdering,
+  VurderingSelector,
 } from '../ducks/vurdering';
 
 import { boolTilStreng } from '../utils/utils';
@@ -88,6 +89,7 @@ class Saksbehandling extends Component {
     medlemskap: MPT.Medlemskap,
     arbeidsforholdene: MPT.Arbeidsforholdene,
     inntekt: MPT.Inntekt,
+    vurdering: PT.object,
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
     soknad: PT.object,
@@ -106,6 +108,7 @@ class Saksbehandling extends Component {
     medlemskap: {},
     arbeidsforholdene: [],
     inntekt: {},
+    vurdering: {},
     bekreftelser: [],
     oppsummering: {},
     soknad: {},
@@ -157,6 +160,11 @@ class Saksbehandling extends Component {
     this.props.sendFaktaavklaring(this.props.faktaavklaring);
   }
 
+  beOmVurdering = () => {
+    const { behandlingID } = this.props.oppsummering;
+    this.props.hentVurdering(behandlingID);
+  }
+
   /* eslint-disable */
   lagreOgLukk = () => { alert('Ikke implementert'); }
   avslaSoknad = () => { alert('Ikke implementert'); }
@@ -168,6 +176,7 @@ class Saksbehandling extends Component {
       medlemskap,
       arbeidsforholdene,
       inntekt,
+      vurdering,
       bekreftelser,
       oppsummering,
       soknadArbeidsinntekt,
@@ -190,6 +199,8 @@ class Saksbehandling extends Component {
                 <Vilkarsveileder
                   person={person}
                   arbeidsforholdene={arbeidsforholdene}
+                  vurdering={vurdering}
+                  beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {errorSummary}
                 {person && <Personopplysninger person={person} />}
@@ -224,6 +235,7 @@ const mapStateToProps = state => ({
   medlemskap: MedlemskapSelector(state),
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
   inntekt: InntektSoknadenSelector(state),
+  vurdering: VurderingSelector(state),
   bekreftelser: BekreftelserSelector(state),
   oppsummering: OppsummeringSelector(state),
   soknad: SoknadSelector(state),
