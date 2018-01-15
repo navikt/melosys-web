@@ -1,6 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
+import * as Skjema from '../../skjema';
 
 const VurderingArbeidstype = props => {
   const { bekreftOgFortsett } = props;
@@ -8,10 +9,10 @@ const VurderingArbeidstype = props => {
   return (
     <div>
       <Nav.Fieldset legend="Vurder om søkeren er:">
-        <Nav.Radio id="steg0_ikke_arbeidende" name="arbeidssted" label="Ikke arbeidende / ytelsesmottaker" />
-        <Nav.Radio id="steg0_arbeidstaker" name="arbeidssted" label="Arbeidstaker" />
-        <Nav.Radio id="steg0_selvstendig" name="arbeidssted" label="Selvstendig næringsdrivende" />
-        <Nav.Radio id="steg0_arbeidstaker_selvstendig" name="arbeidssted" label="Både arbeidstakende og selvstendig" />
+        <Skjema.Radio feltNavn="faktaavklaringArbeidstype" value="IKKE_ARBEIDENDE" label="Ikke arbeidende / ytelsesmottaker" />
+        <Skjema.Radio feltNavn="faktaavklaringArbeidstype" value="ARBEIDSTAKER" label="Arbeidstaker" />
+        <Skjema.Radio feltNavn="faktaavklaringArbeidstype" value="SELVSTENDIG" label="Selvstendig næringsdrivende" />
+        <Skjema.Radio feltNavn="faktaavklaringArbeidstype" value="ARBEIDSTAKER_OG_SELVSTENDIG" label="Både arbeidstakende og selvstendig" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

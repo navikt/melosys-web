@@ -42,6 +42,20 @@ export const feltGrupper = {
     trygdeavgiftTrukketGjennomSkatt: [Skjema.Validering.erPakrevet],
     trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet, Skjema.Validering.erDato],
   },
+  faktaavklaring: {
+    faktaavklaringLand: [],
+    faktaavklaringPeriodeFraOgMed: [],
+    faktaavklaringPeriodeTilOgMed: [],
+    faktaavklaringArbeidstype: [],
+    faktaavklaringAnsattINorskSelskap: [],
+    faktaavklaringErstatterTidligereUtsendt: [],
+    faktaavklaringUtsendingMindreEnn24Mnd: [],
+    faktaavklaringSektor: [],
+    faktaavklaringAntallLand: [],
+    faktaavklaringAktivitetINorge: [],
+    faktaavklaringAntallArbeidsgivere: [],
+    faktaavklaringFordelingArbeidsgivere: [],
+  },
 };
 
 /** Traverserer feltGrupper og returnerer kun feltnavn i form av en string-array.

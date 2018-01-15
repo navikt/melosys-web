@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import { FieldArray } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 
@@ -8,8 +9,8 @@ import './landvelger.css';
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 
 const ValgtLand = ({ landObjekt, slettLand }) => (
-  <div className="landliste__enkeltlinje">
-    <div className="landliste__enkeltlinje__navn">{landTekstFormat(landObjekt)}</div><button className="landliste__enkeltlinje__knapp" onClick={() => slettLand(landObjekt.kode)}>-</button>
+  <div className="landliste__linje">
+    <div className="landliste__linje__navn">{landTekstFormat(landObjekt)}</div><button className="landliste__linje__knapp" onClick={e => slettLand(e, landObjekt.kode)}>-</button>
   </div>
 );
 
@@ -18,125 +19,217 @@ ValgtLand.propTypes = {
   slettLand: PT.func.isRequired,
 };
 
-class LandVelger extends Component {
-  componentWillMount() {
-    this.setState({
-      valgteLand: [],
-      inputVerdi: '',
-      tilgjengeligeLand: [
-        { kode: 'BE', term: 'Belgia' },
-        { kode: 'BG', term: 'Bulgaria' },
-        { kode: 'DK', term: 'Danmark' },
-        { kode: 'EE', term: 'Estland' },
-        { kode: 'FI', term: 'Finland' },
-        { kode: 'FR', term: 'Frankrike' },
-        { kode: 'GR', term: 'Hellas' },
-        { kode: 'IE', term: 'Irland' },
-        { kode: 'IS', term: 'Island' },
-        { kode: 'IT', term: 'Italia' },
-        { kode: 'HR', term: 'Kroatia' },
-        { kode: 'CY', term: 'Kypros' },
-        { kode: 'LV', term: 'Latvia' },
-        { kode: 'LI', term: 'Liechtenstein' },
-        { kode: 'LT', term: 'Litauen' },
-        { kode: 'LU', term: 'Luxembourg' },
-        { kode: 'MT', term: 'Malta' },
-        { kode: 'NL', term: 'Nederland' },
-        { kode: 'NO', term: 'Norge' },
-        { kode: 'PL', term: 'Polen' },
-        { kode: 'PT', term: 'Portugal' },
-        { kode: 'RO', term: 'Romania' },
-        { kode: 'SK', term: 'Slovakia' },
-        { kode: 'SI', term: 'Slovenia' },
-        { kode: 'ES', term: 'Spania' },
-        { kode: 'GB', term: 'Storbritannia' },
-        { kode: 'SE', term: 'Sverige' },
-        { kode: 'DE', term: 'Tyskland' },
-        { kode: 'HU', term: 'Ungarn' },
-        { kode: 'AT', term: 'Østerrike' },
-      ],
-    });
+class CustomLandVelger extends Component {
+  state = {
+    inputVerdi: '',
+    alleLand: [
+      { kode: 'BE', term: 'Belgia' },
+      { kode: 'BG', term: 'Bulgaria' },
+      { kode: 'DK', term: 'Danmark' },
+      { kode: 'EE', term: 'Estland' },
+      { kode: 'FI', term: 'Finland' },
+      { kode: 'FR', term: 'Frankrike' },
+      { kode: 'GR', term: 'Hellas' },
+      { kode: 'IE', term: 'Irland' },
+      { kode: 'IS', term: 'Island' },
+      { kode: 'IT', term: 'Italia' },
+      { kode: 'HR', term: 'Kroatia' },
+      { kode: 'CY', term: 'Kypros' },
+      { kode: 'LV', term: 'Latvia' },
+      { kode: 'LI', term: 'Liechtenstein' },
+      { kode: 'LT', term: 'Litauen' },
+      { kode: 'LU', term: 'Luxembourg' },
+      { kode: 'MT', term: 'Malta' },
+      { kode: 'NL', term: 'Nederland' },
+      { kode: 'NO', term: 'Norge' },
+      { kode: 'PL', term: 'Polen' },
+      { kode: 'PT', term: 'Portugal' },
+      { kode: 'RO', term: 'Romania' },
+      { kode: 'SK', term: 'Slovakia' },
+      { kode: 'SI', term: 'Slovenia' },
+      { kode: 'ES', term: 'Spania' },
+      { kode: 'GB', term: 'Storbritannia' },
+      { kode: 'SE', term: 'Sverige' },
+      { kode: 'DE', term: 'Tyskland' },
+      { kode: 'HU', term: 'Ungarn' },
+      { kode: 'AT', term: 'Østerrike' },
+    ],
   }
 
-  /** Legg til land, enten som en direkte parameter til funksjonen ('land') eller
-   * via lokal state.landVelger. Dersom landet allerede er lagt til i state.valgteLand,
-   * returner i stillhet.
+  /** Legg til land i redux-arrayen.
    *
-   * @param e Syntetisk objekt Fra React dersom bruker klikker 'legg-til'-knappen.
-   * @param land
+   * @param landKode Landkoden som skal legges til
    */
-  leggTilLandHandler = (landObjekt = null) => {
-    const landForTillegg = landObjekt || this.state.tilgjengeligeLand.find(item => this.state.inputVerdi === landTekstFormat(item));
-    if (landForTillegg === undefined) { return; }
+  leggTilLand = landKode => {
+    const { fields } = this.props;
+    const valgteLand = fields.getAll();
 
-    if (!this.state.valgteLand.includes(landForTillegg)) {
-      this.setState({
-        valgteLand: [...this.state.valgteLand, landForTillegg],
-        inputVerdi: '',
-      });
+    if (!valgteLand.includes(landKode)) {
+      fields.push(landKode);
     }
   }
 
-  /** Sletter et land fra state.valgteLand.
+  /**
+   * * For å kunne søke på både landkode og land-navnslik det står i listen, feks "Storbrittannia (GB)",
+   * brukes 'landTekstFormat' for å sette sammen dette til en string før det søkes i denne stringen.
    *
-   * @param land String Landet i sin helhet som skal slettes.
+   * @param alleLand Array Liste over alle tilgjengelige land, bestående av landobjekt.
+   * @param inputVerdi String Verdien det skal søkes etter.
+   * @return Array med landObjekter som matcher.
    */
-  slettLandHandler = landKode => {
-    this.setState({ valgteLand: [...this.state.valgteLand.filter(item => item.kode !== landKode)] });
+  finnLandOgLeggTil = (alleLand, inputVerdi) => {
+    const landSomInneholderInntastetVerdi = alleLand.filter(land => (
+      landTekstFormat(land)
+        .toLowerCase()
+        .includes(inputVerdi.toLowerCase())
+    ));
+
+    if (landSomInneholderInntastetVerdi.length === 1) {
+      this.leggTilLand(landSomInneholderInntastetVerdi[0].kode);
+      this.setState({ inputVerdi: '' });
+    }
   }
 
-  /** Event handler for håndtering av enter-tasten slik at saksbehandler kan skrive inn deler
-   * av land-navnet. Dersom kun én match oppstår (feks 'frank' -> 'Frankrike'), så regnes dette som
-   * et ønsket valg og leggTilLand kalles med det ene treffet som parameter.
+  /** Sletter et land fra listen.
+   *
+   * @param landKode Koden på landet som skal slettes.
+   */
+  slettLand = landKode => {
+    const index = this.props.fields.getAll().findIndex(item => item === landKode);
+    return (index > -1 && this.props.fields.remove(index));
+  }
+
+  /** ----------------------------------------------------------------------
+   *                           EVENT HANDLERS
+   * -----------------------------------------------------------------------
+   */
+
+  /** Håndterer klikk på sletteknapp.
+   *
+   * @param e Syntetisk event
+   * @param landKode Koden på landet som skal slettes.
+   */
+  slettLandHandler = (e, landKode) => {
+    e.preventDefault();
+    this.slettLand(landKode);
+  }
+
+  /** Hvis brukeren har skrevet inn deler av et land og trykket ENTER ønsker vi å
+   * sjekke om kun ETT land vises i listen. I såfall skal dette landet legges til på samme måte
+   * som om brukeren klikket på landet var listen og deretter klikket "+"-knappen.
+   *
+   *
    * @param e SyntetiskEvent React syntetisk event ved KeyDown.
    */
   inputTastNedHandler = e => {
     if (e.keyCode === 13) {
       e.preventDefault();
-      const landTreff = this.state.tilgjengeligeLand.filter(item => (
-        landTekstFormat(item).toLowerCase().includes(this.state.inputVerdi.toLowerCase())));
+      const { alleLand, inputVerdi } = this.state;
 
-      if (landTreff.length === 1) {
-        this.leggTilLandHandler(landTreff[0]);
-      }
+      this.finnLandOgLeggTil(alleLand, inputVerdi);
     }
   }
 
-  /** Håndter endringer slik at inntasting oppdateres til lokal state og deretter tilbake til
-   * form. (Standard React forms).
+  /** Håndterer klikk på pluss-knappen ved land dersom brukeren har valgt et land manuelt.
+   *
+   * @param e
+   */
+  leggTilLandHandler = e => {
+    e.preventDefault();
+    const { alleLand, inputVerdi } = this.state;
+
+    this.finnLandOgLeggTil(alleLand, inputVerdi);
+  }
+
+  /** Håndter endringer slik at inntasting oppdateres til lokal state. Denne staten er knyttet til
+   * det faktiske input-feltet gjennom "value"-attributt.
    * @param e SyntetiskEvent React syntetisk event ved onChange.
    */
   inputEndringHandler = e => {
     this.setState({ inputVerdi: e.target.value });
   }
 
-  render () {
-    const { tilgjengeligeLand, valgteLand } = this.state;
+  /** Enkelte brukertester har vist at saksbehandlere velger land fra listen uten å faktisk
+   * legge de til (enten via ENTER eller pluss-knapp). Derfor legg til det som evt ligger i
+   * input-feltet ved blur.
+   * @param e
+   */
+  fokusUtHandler = e => {
+    const { alleLand } = this.state;
+    const inputVerdi = e.target.value;
 
-    return (
-      <div className="landliste">
-        {this.state.valgteLand.map(item => <ValgtLand key={item.kode} landObjekt={item} slettLand={this.slettLandHandler} />)}
-        <div className="landliste__enkeltlinje">
+    this.finnLandOgLeggTil(alleLand, inputVerdi);
+  }
+
+  render () {
+    const { alleLand } = this.state;
+    const { fields, multiLand } = this.props;
+
+    const valgteLand = fields.getAll() || [];
+
+    const tilgjengeligeLandListe = (multiLand || valgteLand.length === 0)
+      ?
+      (
+        <div className="landliste__linje">
           <Nav.Input
-            list="land"
+            list="alleLand"
             label="Tast inn land"
             bredde="L"
-            className="landliste__enkeltlinje__input"
+            className="landliste__linje__input"
             value={this.state.inputVerdi}
+            onBlur={this.fokusUtHandler}
             onChange={this.inputEndringHandler}
             onKeyDown={this.inputTastNedHandler}
           />
           <button
-            className="landliste__enkeltlinje__knapp landliste__enkeltlinje__knapp--leggtil"
-            onClick={() => this.leggTilLandHandler(null)}>+
+            className="landliste__linje__knapp landliste__linje__knapp--leggtil"
+            onClick={this.leggTilLandHandler}>+
           </button>
-          <datalist id="land">
-            {tilgjengeligeLand.map(item => (!valgteLand.includes(item) ? <option key={item.kode} value={landTekstFormat(item)} /> : ''))}
+          <datalist id="alleLand">
+            {alleLand.map(item => (!valgteLand.includes(item) ? <option key={item.kode} value={landTekstFormat(item)} /> : ''))}
           </datalist>
         </div>
+      )
+      :
+      null;
+
+    return (
+      <div className="landliste">
+        {valgteLand.map(valgtLand => (
+          <ValgtLand
+            key={valgtLand}
+            landObjekt={this.state.alleLand.find(land => land.kode === valgtLand)}
+            slettLand={this.slettLandHandler}
+          />
+        ))
+        }
+        {tilgjengeligeLandListe}
       </div>
     );
   }
 }
+
+CustomLandVelger.propTypes = {
+  fields: PT.object.isRequired,
+  multiLand: PT.bool.isRequired,
+};
+
+/** Dette er bootstrapper-komponenten som eksponeres utenfor pakken. Komponenten forventer et feltNavn for å kunne vite
+ * hvilket felt i redux form den skal hekte seg på. Deretter er det Redux Forms FieldArray som gjør selve connect-jobben
+ * under panseret. Det er derfor ingen HOC som feks connecter komponenten til Redux.
+ * @param props
+ */
+const LandVelger = props => (
+  <div><FieldArray name={props.feltNavn} multiLand={props.multiLand} component={CustomLandVelger} /></div>
+);
+
+LandVelger.propTypes = {
+  feltNavn: PT.string.isRequired,
+  multiLand: PT.bool,
+};
+
+LandVelger.defaultProps = {
+  multiLand: false,
+};
 
 export default LandVelger;
