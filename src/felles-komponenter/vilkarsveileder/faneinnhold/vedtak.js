@@ -7,9 +7,13 @@ import * as Nav from '../../../utils/navFrontend';
 import { datoDiff } from '../../../utils/utils';
 
 import './vedtak.css';
+
+import { FaktaavklaringArbeidstypeSelector } from '../../../ducks/faktaavklaring';
+
 import {
   VurderingLovvalgbestemmelserSelector,
 } from '../../../ducks/vurdering';
+
 import {
   ArbeidUtlandSelector,
   ValgteArbeidsforhold,
@@ -19,8 +23,9 @@ const uuid = require('uuid/v4');
 
 const LovvalgBestemmelse = props => {
   const { bestemmelse } = props;
-  const { betingelser } = bestemmelse;
-
+  // Neste linje hvor bestemmelsene listes ut må avvente til designet er på plass, men
+  // den skal inn igjen om kort tid, så foreslår å ikke kaste ut koden.
+  const { betingelser } = { betingelser: [] }; // bestemmelse;
 
   return (
     <div>
@@ -53,9 +58,12 @@ const Vedtak = props => {
     lovvalgbestemmelser,
     arbeidUtland,
     valgteArbeidsforhold,
+    arbeidstype,
   } = props;
 
   const { arbeidsperiode = {} } = arbeidUtland;
+
+  const { arbeidstype: arbeidstypen = '' } = arbeidstype;
 
   const antallManeder = datoDiff(arbeidsperiode.fom, arbeidsperiode.tom, 'months');
   const { arbeidsland = [] } = arbeidUtland;
@@ -87,7 +95,7 @@ const Vedtak = props => {
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Søker er</Nav.Element>
-            <Nav.Normaltekst>Arbeidstaker</Nav.Normaltekst>
+            <Nav.Normaltekst>{arbeidstypen}</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Navn på arbeidsgiver</Nav.Element>
@@ -112,12 +120,14 @@ Vedtak.propTypes = {
   lovvalgbestemmelser: PT.array.isRequired,
   arbeidUtland: PT.object.isRequired,
   valgteArbeidsforhold: PT.array.isRequired,
+  arbeidstype: PT.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
   arbeidUtland: ArbeidUtlandSelector(state),
   valgteArbeidsforhold: ValgteArbeidsforhold(state),
+  arbeidstype: FaktaavklaringArbeidstypeSelector(state),
 });
 
 export default connect(mapStateToProps)(Vedtak);
