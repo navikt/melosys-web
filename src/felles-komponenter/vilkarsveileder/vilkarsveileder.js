@@ -6,15 +6,16 @@ import PT from 'prop-types';
 import * as Ikon from '../../resources/images';
 import * as MPT from '../../proptypes/';
 
-import StegLinje from './komponenter/stegLinje';
-import StegFane from './komponenter/stegFane';
+import StegLinje from './felles/stegLinje';
+import StegFane from './felles/stegFane';
+// import Logikk from './logikk/logikk';
 
-import VurderingArbeidsforhold from './faneinnhold/vurderingArbeidsforhold';
-import VurderingUtsending from './faneinnhold/vurderingUtsending';
-import VurderingSysselsetting from './faneinnhold/vurderingSysselsetting';
-import VurderingSektor from './faneinnhold/vurderingSektor';
-import VurderingVirksomhet from './faneinnhold/vurderingVirksomhet';
-import Vedtak from './faneinnhold/vedtak';
+import VurderingArbeidsforhold from './vurderinger/vurderingArbeidsforhold';
+import VurderingUtsending from './vurderinger/vurderingUtsending';
+import VurderingSysselsetting from './vurderinger/vurderingSysselsetting';
+import VurderingSektor from './vurderinger/vurderingSektor';
+import VurderingVirksomhet from './vurderinger/vurderingVirksomhet';
+import Vedtak from './vurderinger/vedtak';
 
 import { OppsummeringSelector } from '../../ducks/fagsaker';
 
@@ -23,10 +24,10 @@ import './vilkarsveileder.css';
 class Vilkarsveileder extends Component {
   componentWillMount() {
     this.setState({
-      aktivtSteg: 4,
+      aktivtSteg: 'SYSSELSETTING',
       steg: [
         {
-          id: 'VURDERING_ARBEIDSTYPE',
+          id: 'SYSSELSETTING',
           komponent: VurderingSysselsetting,
           data: {},
           handlers: {
@@ -37,7 +38,7 @@ class Vilkarsveileder extends Component {
           tilgjengelig: true,
         },
         {
-          id: 'VURDERING_ARBEIDSFORHOLD',
+          id: 'ARBEIDSFORHOLD',
           komponent: VurderingArbeidsforhold,
           data: {
             arbeidsforholdene: this.props.arbeidsforholdene,
@@ -50,7 +51,7 @@ class Vilkarsveileder extends Component {
           tilgjengelig: true,
         },
         {
-          id: 'VURDERING_UTSENDING',
+          id: 'UTSENDING',
           komponent: VurderingUtsending,
           data: {},
           handlers: {
@@ -61,7 +62,7 @@ class Vilkarsveileder extends Component {
           tilgjengelig: true,
         },
         {
-          id: 'VURDERING_SEKTOR',
+          id: 'SEKTOR',
           komponent: VurderingSektor,
           data: {},
           handlers: {
@@ -72,7 +73,7 @@ class Vilkarsveileder extends Component {
           tilgjengelig: true,
         },
         {
-          id: 'VURDERING_VIRKSOMHET',
+          id: 'VIRKSOMHET',
           komponent: VurderingVirksomhet,
           data: {},
           handlers: {
@@ -81,7 +82,6 @@ class Vilkarsveileder extends Component {
           status: this.FANE_STATUS.AKTIV,
           ikoner: this.IKONER.STEG,
           tilgjengelig: true,
-          aktivtSteg: true,
         },
         {
           id: 'VEDTAK',
@@ -99,7 +99,7 @@ class Vilkarsveileder extends Component {
   }
 
   componentDidMount() {
-    this.tilSteg(4);
+    this.tilSteg('SYSSELSETTING');
   }
 
   /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
@@ -150,6 +150,7 @@ class Vilkarsveileder extends Component {
    */
   bekreftOgFortsett = () => {
     // 'this' for å henvise til class.
+
     this.nesteSteg();
   }
 
@@ -165,21 +166,23 @@ class Vilkarsveileder extends Component {
    * som begynnner med 0.
    * @param nyttStegNummer Number Steget som det skal byttes til.
    */
-  tilSteg = nyttStegNummer => {
+  tilSteg = tilStegID => {
     const nyeSteg = [...this.state.steg];
 
     // Oppdater både aktivt stegobjekt og nytt stegobjekt. Disse er allerede linket inn som props
     // til child components og gjør at hver enkelt fane oppdaterer tilsvarende. Det samme gjelder
     // StegLinje som viser ikonene ovenfor hver fane.
-    nyeSteg[this.state.aktivtSteg].aktivtSteg = false;
-    nyeSteg[this.state.aktivtSteg].status = this.FANE_STATUS.BEHANDLET;
-    nyeSteg[nyttStegNummer].aktivtSteg = true;
-    nyeSteg[nyttStegNummer].stegPosisjon = nyttStegNummer;
-    nyeSteg[nyttStegNummer].status = this.FANE_STATUS.AKTIV;
-    nyeSteg[nyttStegNummer].tilgjengelig = true;
+    const aktivtStegIndeks = this.state.steg.findIndex(steg => steg.id === this.state.aktivtSteg);
+    const nesteStegIndeks = this.state.steg.findIndex(steg => steg.id === tilStegID);
+    nyeSteg[aktivtStegIndeks].aktivtSteg = false;
+    nyeSteg[aktivtStegIndeks].status = this.FANE_STATUS.BEHANDLET;
+    nyeSteg[nesteStegIndeks].aktivtSteg = true;
+    nyeSteg[nesteStegIndeks].stegPosisjon = nesteStegIndeks;
+    nyeSteg[nesteStegIndeks].status = this.FANE_STATUS.AKTIV;
+    nyeSteg[nesteStegIndeks].tilgjengelig = true;
 
     this.setState({ steg: nyeSteg });
-    this.setState({ aktivtSteg: nyttStegNummer });
+    this.setState({ aktivtSteg: tilStegID });
   }
 
   /** Gå til neste steg i rekken, men ikke lenger enn
@@ -188,8 +191,11 @@ class Vilkarsveileder extends Component {
    */
   nesteSteg = () => {
     const maksSteg = this.state.steg.length;
-    const nyttSteg = (this.state.aktivtSteg + 1 < maksSteg) ? this.state.aktivtSteg + 1 : this.state.aktivtSteg;
-    this.tilSteg(nyttSteg);
+    const aktivtStegIndeks = this.state.steg.findIndex(steg => steg.id === this.state.aktivtSteg);
+    const nesteStegIndeks = (aktivtStegIndeks + 1 < maksSteg) ? aktivtStegIndeks + 1 : aktivtStegIndeks;
+    const nesteStegID = this.state.steg[nesteStegIndeks].id;
+
+    this.tilSteg(nesteStegID);
   }
 
   render() {
