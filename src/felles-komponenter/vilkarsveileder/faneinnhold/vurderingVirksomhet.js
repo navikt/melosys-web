@@ -25,7 +25,7 @@ const VurderingVirksomhet = props => {
         <Skjema.Radio feltNavn="faktaavklaringFordelingArbeidsgivere" value="ULIKE_LAND" label="Ulike land" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Fortsett til vilkårsforslag</Nav.Knapp>
+        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Fortsett til vedtaksforslag</Nav.Knapp>
       </div>
     </div>
   );
