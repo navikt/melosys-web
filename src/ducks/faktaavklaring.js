@@ -39,7 +39,7 @@ export default function reducer(state = initialState, action) {
           aktivitetLand: dokument.faktaavklaringAktivitetLand,
         },
         sysselsetting: {
-          sysselsettingType: dokument.faktaavklaringSysselsetting,
+          sysselsettingType: dokument.faktaavklaringSysselsettingType,
         },
         utsending: {
           ansattINorskSelskap: dokument.faktaavklaringAnsattINorskSelskap,
