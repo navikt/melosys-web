@@ -47,7 +47,7 @@ export const feltGrupper = {
     faktaavklaringAktivitetLand: [],
     faktaavklaringPeriodeFraOgMed: [],
     faktaavklaringPeriodeTilOgMed: [],
-    faktaavklaringArbeidstype: [],
+    faktaavklaringSysselsetting: [],
     faktaavklaringAnsattINorskSelskap: [],
     faktaavklaringErstatterTidligereUtsendt: [],
     faktaavklaringUtsendingMindreEnn24Mnd: [],

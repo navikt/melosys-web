@@ -11,7 +11,7 @@ import StegFane from './komponenter/stegFane';
 
 import VurderingArbeidsforhold from './faneinnhold/vurderingArbeidsforhold';
 import VurderingUtsending from './faneinnhold/vurderingUtsending';
-import VurderingArbeidstype from './faneinnhold/vurderingArbeidstype';
+import VurderingSysselsetting from './faneinnhold/vurderingSysselsetting';
 import VurderingSektor from './faneinnhold/vurderingSektor';
 import VurderingVirksomhet from './faneinnhold/vurderingVirksomhet';
 import Vedtak from './faneinnhold/vedtak';
@@ -27,7 +27,7 @@ class Vilkarsveileder extends Component {
       steg: [
         {
           id: 'VURDERING_ARBEIDSTYPE',
-          komponent: VurderingArbeidstype,
+          komponent: VurderingSysselsetting,
           data: {},
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
