@@ -40,12 +40,17 @@ export function hentVurdering(behandlingID) {
 }
 
 // selector(s)
+export const VurderingSelector = createSelector(
+  state => (state.vurdering.data.vurdering ? state.vurdering.data : {}),
+  vurdering => vurdering
+);
+
 export const VurderingLovvalgbestemmelserSelector = createSelector(
-  state => (state.vurdering.data.vurdering ? state.vurdering.data.vurdering.lovvalgsbestemmelser : {}),
+  state => (state.vurdering.data.vurdering ? state.vurdering.data.vurdering.lovvalgsbestemmelser : []),
   lovvalgsbestemmelser => lovvalgsbestemmelser
 );
 
 export const VurderingFeilmeldingSelector = createSelector(
-  state => (state.vurdering.data.vurdering ? state.vurdering.data.vurdering.feilmeldinger : {}),
+  state => (state.vurdering.data.vurdering ? state.vurdering.data.vurdering.feilmeldinger : []),
   feilmeldinger => feilmeldinger
 );

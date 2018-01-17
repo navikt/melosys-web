@@ -1,3 +1,40 @@
-.vedtak__betingelser {
-  margin-top: 1em;
+@import '../../../constants';
+
+.vedtak {
+  .vedtak__betingelser {
+    margin-top: 1em;
+  }
+
+  .vedtak__oppsummering {
+    margin-top: 2em;
+  }
+
+  .betingelser__liste {
+    margin: 0px;
+    padding-left: 2em;
+    list-style: none;
+  }
+
+  .liste__element {
+    margin: 0 0 1em 0;
+  }
+
+  .liste__element--oppfylt {
+    position: relative;
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 1.5em;
+      height: 1.5em;
+      top: 0;
+      left:-2em;
+      background-image: url('../../../resources/images/ikon-steg-ferdig.svg');
+      background-size: contain;
+    }
+  }
+
+  .liste__element--ikkeoppfylt {
+  }
 }
