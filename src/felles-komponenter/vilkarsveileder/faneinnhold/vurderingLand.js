@@ -5,8 +5,6 @@ import * as Skjema from '../../skjema';
 
 import LandVelger from '../../skjema/landvelger';
 
-import './vurderingLand.css';
-
 const VurderingLand = props => {
   const { bekreftOgFortsett } = props;
 
@@ -22,7 +20,7 @@ const VurderingLand = props => {
       </Nav.Fieldset>
       <Nav.Fieldset legend="Land som søker skal arbeide eller oppholde seg i:">
         <Nav.Column xs="12">
-          <LandVelger feltNavn="faktaavklaringLand" multiLand />
+          <LandVelger feltNavn="faktaavklaringOppholdsLand" multiLand />
         </Nav.Column>
       </Nav.Fieldset>
       <div className="fane__knapplinje">
