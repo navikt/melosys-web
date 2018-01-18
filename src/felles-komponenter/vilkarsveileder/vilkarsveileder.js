@@ -173,11 +173,8 @@ class Vilkarsveileder extends Component {
     const aktuelleSteg = this.state.alleSteg.filter(steg => Motor.beregnAlleSteg(faktaavklaring).includes(steg.id));
     const alleSteg = [...this.state.alleSteg];
 
-    // Oppdater både aktivt stegobjekt og nytt stegobjekt. Disse er allerede linket inn som props
-    // til child components og gjør at hver enkelt fane oppdaterer tilsvarende. Det samme gjelder
-    // StegLinje som viser ikonene ovenfor hver fane.
-    const aktivtStegIndeks = this.state.alleSteg.findIndex(muligSteg => muligSteg.id === this.state.aktivtSteg);
-    const nesteStegIndeks = aktuelleSteg.length - 1;
+    const aktivtStegIndeks = aktuelleSteg.findIndex(muligSteg => muligSteg.id === this.state.aktivtSteg);
+    const nesteStegIndeks = aktuelleSteg.findIndex(muligSteg => muligSteg.id === tilStegID);
 
     aktuelleSteg[aktivtStegIndeks].aktivtSteg = false;
     aktuelleSteg[aktivtStegIndeks].status = this.FANE_STATUS.BEHANDLET;
