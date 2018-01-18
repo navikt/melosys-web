@@ -4,7 +4,7 @@ import VurderingSektor from '../vurderinger/vurderingSektor';
 import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
 
 
-class Motor {
+class StegLogikk {
   static stier = {
     SYSSELSETTING: [
       {
@@ -28,28 +28,43 @@ class Motor {
         til: 'SELVSTENDIG',
       },
     ],
+    VEDTAK: [
+      {
+        valg: null,
+        til: null,
+      },
+    ],
   }
 
-  static beregnAlleSteg = valg => {
+  static beregnNesteSteg = (gjeldendeSteg, vurderingerIForrigeSteg) => {
+    if (!vurderingerIForrigeSteg) return null;
+
+    switch (gjeldendeSteg) {
+      case 'SYSSELSETTING': {
+        const { sysselsettingType } = vurderingerIForrigeSteg;
+        return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType)).til;
+      }
+      case 'SEKTOR': {
+        return 'VEDTAK';
+      }
+      default:
+        return 'VEDTAK';
+    }
+  }
+
+  static beregnAlleSteg = faktaavklaring => {
     const stegBygger = [];
 
     // Stegene begynner alltid med 'SYSSELSETTING'
     let gjeldendeSteg = 'SYSSELSETTING';
-    stegBygger.push(gjeldendeSteg)
+    stegBygger.push(gjeldendeSteg);
 
-    Object.values(valg).forEach(value => {
-      console.log(value)
-      //stegBygger.push(Motor.beregnAlleSteg(gjeldendeSteg, )
-    });
-
+    while (gjeldendeSteg !== 'VEDTAK') {
+      gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, faktaavklaring[gjeldendeSteg.toLowerCase()]);
+      stegBygger.push(gjeldendeSteg);
+    }
     return stegBygger;
-  }
-
-  static beregnNesteSteg = (gjeldendeSteg, saksbehandlersVurderingsValg) => {
-    const muligeStiValg = Motor.stier[gjeldendeSteg];
-    const funnetSti = muligeStiValg.find(sti => sti.valg.includes(saksbehandlersVurderingsValg));
-    return funnetSti.til;
   }
 }
 
-export default Motor;
+export default StegLogikk;
