@@ -8,7 +8,7 @@ import { datoDiff } from '../../../utils/utils';
 
 import './vedtak.css';
 
-import { FaktaavklaringArbeidstypeSelector } from '../../../ducks/faktaavklaring';
+import { FaktaavklaringSysselsettingSelector } from '../../../ducks/faktaavklaring';
 
 import {
   VurderingLovvalgbestemmelserSelector,
@@ -127,7 +127,7 @@ const mapStateToProps = state => ({
   lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
   arbeidUtland: ArbeidUtlandSelector(state),
   valgteArbeidsforhold: ValgteArbeidsforhold(state),
-  arbeidstype: FaktaavklaringArbeidstypeSelector(state),
+  arbeidstype: FaktaavklaringSysselsettingSelector(state),
 });
 
 export default connect(mapStateToProps)(Vedtak);
