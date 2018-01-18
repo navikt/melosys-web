@@ -4,7 +4,7 @@ import VurderingSektor from '../vurderinger/vurderingSektor';
 import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
 
 
-class Logikk {
+class Motor {
   static stier = {
     SYSSELSETTING: [
       {
@@ -30,11 +30,26 @@ class Logikk {
     ],
   }
 
+  static beregnAlleSteg = valg => {
+    const stegBygger = [];
+
+    // Stegene begynner alltid med 'SYSSELSETTING'
+    let gjeldendeSteg = 'SYSSELSETTING';
+    stegBygger.push(gjeldendeSteg)
+
+    Object.values(valg).forEach(value => {
+      console.log(value)
+      //stegBygger.push(Motor.beregnAlleSteg(gjeldendeSteg, )
+    });
+
+    return stegBygger;
+  }
+
   static beregnNesteSteg = (gjeldendeSteg, saksbehandlersVurderingsValg) => {
-    const muligeStiValg = Logikk.stier[gjeldendeSteg];
+    const muligeStiValg = Motor.stier[gjeldendeSteg];
     const funnetSti = muligeStiValg.find(sti => sti.valg.includes(saksbehandlersVurderingsValg));
     return funnetSti.til;
   }
 }
 
-export default Logikk;
+export default Motor;

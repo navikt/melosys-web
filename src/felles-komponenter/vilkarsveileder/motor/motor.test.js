@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import Logikk from './logikk';
+import Logikk from './motor';
 
 import VurderingSysselsetting from '../vurderinger/vurderingSysselsetting';
 

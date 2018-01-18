@@ -21,6 +21,7 @@ const VurderingSysselsetting = props => {
   );
 };
 
+VurderingSysselsetting.ID = 'SYSSELSETTING';
 VurderingSysselsetting.IKKE_ARBEIDENDE = 'IKKE_ARBEIDENDE';
 VurderingSysselsetting.ARBEIDSTAKER = 'ARBEIDSTAKER';
 VurderingSysselsetting.SELVSTENDIG = 'SELVSTENDIG';

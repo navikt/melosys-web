@@ -31,6 +31,7 @@ const VurderingVirksomhet = props => {
   );
 };
 
+VurderingVirksomhet.ID = 'VIRKSOMHET';
 VurderingVirksomhet.ETT_LAND = 'ETT_LAND';
 VurderingVirksomhet.FLERE_LAND = 'FLERE_LAND';
 VurderingVirksomhet.UNDER_25_PROSENT = 'UNDER_25_PROSENT';

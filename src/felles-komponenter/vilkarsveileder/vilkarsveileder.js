@@ -8,7 +8,7 @@ import * as MPT from '../../proptypes/';
 
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
-// import Logikk from './logikk/logikk';
+import Motor from './motor/motor';
 
 import VurderingArbeidsforhold from './vurderinger/vurderingArbeidsforhold';
 import VurderingUtsending from './vurderinger/vurderingUtsending';
@@ -19,13 +19,16 @@ import Vedtak from './vurderinger/vedtak';
 
 import { OppsummeringSelector } from '../../ducks/fagsaker';
 
+import { FaktaavklaringSelector } from '../../ducks/faktaavklaring'
+
 import './vilkarsveileder.css';
 
 class Vilkarsveileder extends Component {
   componentWillMount() {
     this.setState({
       aktivtSteg: 'SYSSELSETTING',
-      steg: [
+      aktuelleSteg: [],
+      alleSteg: [
         {
           id: 'SYSSELSETTING',
           komponent: VurderingSysselsetting,
@@ -98,7 +101,7 @@ class Vilkarsveileder extends Component {
     });
   }
 
-  componentDidMount() {
+  componentWillReceiveProps() {
     this.tilSteg('SYSSELSETTING');
   }
 
@@ -148,10 +151,9 @@ class Vilkarsveileder extends Component {
    * opp for nye tilgjengelige faner etter at saksbehandler
    * har bekreftet valgene.
    */
-  bekreftOgFortsett = () => {
-    // 'this' for å henvise til class.
-
-    this.nesteSteg();
+  bekreftOgFortsett = (valg = '') => {
+    if (valg === '') return;
+    const beregnetSteg = Motor.beregnNesteSteg(this.state.aktivtSteg, valg);
   }
 
   /** Saken er allerede opprettet, så denne funksjonen router kun brukeren tilbake til søket
@@ -161,27 +163,31 @@ class Vilkarsveileder extends Component {
     this.props.history.push(`/?fnr=${this.props.person.fnr}`);
   }
 
-
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
    * @param nyttStegNummer Number Steget som det skal byttes til.
    */
   tilSteg = tilStegID => {
-    const nyeSteg = [...this.state.steg];
+    const { faktaavklaring } = this.props;
+
+    const aktuelleSteg = this.state.alleSteg.filter(steg => Motor.beregnAlleSteg(faktaavklaring).includes(steg.id));
+    const alleSteg = [...this.state.alleSteg];
 
     // Oppdater både aktivt stegobjekt og nytt stegobjekt. Disse er allerede linket inn som props
     // til child components og gjør at hver enkelt fane oppdaterer tilsvarende. Det samme gjelder
     // StegLinje som viser ikonene ovenfor hver fane.
-    const aktivtStegIndeks = this.state.steg.findIndex(steg => steg.id === this.state.aktivtSteg);
-    const nesteStegIndeks = this.state.steg.findIndex(steg => steg.id === tilStegID);
-    nyeSteg[aktivtStegIndeks].aktivtSteg = false;
-    nyeSteg[aktivtStegIndeks].status = this.FANE_STATUS.BEHANDLET;
-    nyeSteg[nesteStegIndeks].aktivtSteg = true;
-    nyeSteg[nesteStegIndeks].stegPosisjon = nesteStegIndeks;
-    nyeSteg[nesteStegIndeks].status = this.FANE_STATUS.AKTIV;
-    nyeSteg[nesteStegIndeks].tilgjengelig = true;
+    const aktivtStegIndeks = this.state.alleSteg.findIndex(muligSteg => muligSteg.id === this.state.aktivtSteg);
+    const nesteStegIndeks = aktuelleSteg.length - 1;
 
-    this.setState({ steg: nyeSteg });
+    alleSteg[aktivtStegIndeks].aktivtSteg = false;
+    alleSteg[aktivtStegIndeks].status = this.FANE_STATUS.BEHANDLET;
+    alleSteg[nesteStegIndeks].aktivtSteg = true;
+    alleSteg[nesteStegIndeks].stegPosisjon = nesteStegIndeks;
+    alleSteg[nesteStegIndeks].status = this.FANE_STATUS.AKTIV;
+    alleSteg[nesteStegIndeks].tilgjengelig = true;
+
+    this.setState({ alleSteg });
+    this.setState({ aktuelleSteg });
     this.setState({ aktivtSteg: tilStegID });
   }
 
@@ -190,10 +196,10 @@ class Vilkarsveileder extends Component {
    * enn hva som er mulig skal funksjonen defaulte til siste steg.
    */
   nesteSteg = () => {
-    const maksSteg = this.state.steg.length;
-    const aktivtStegIndeks = this.state.steg.findIndex(steg => steg.id === this.state.aktivtSteg);
+    const maksSteg = this.state.alleSteg.length;
+    const aktivtStegIndeks = this.state.alleSteg.findIndex(steg => steg.id === this.state.aktivtSteg);
     const nesteStegIndeks = (aktivtStegIndeks + 1 < maksSteg) ? aktivtStegIndeks + 1 : aktivtStegIndeks;
-    const nesteStegID = this.state.steg[nesteStegIndeks].id;
+    const nesteStegID = this.state.alleSteg[nesteStegIndeks].id;
 
     this.tilSteg(nesteStegID);
   }
@@ -201,9 +207,9 @@ class Vilkarsveileder extends Component {
   render() {
     return (
       <div className="vilkarsveileder panelSeksjon">
-        <StegLinje steg={this.state.steg} stegKlikk={this.tilSteg} />
+        <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.tilSteg} />
         {
-          this.state.steg.map(item => <StegFane key={item.id} faneData={item} />)
+          this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
         }
       </div>
     );
@@ -218,14 +224,17 @@ Vilkarsveileder.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
   beOmVurderingHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
+  faktaavklaring: PT.object,
 };
 
 Vilkarsveileder.defaultProps = {
   oppsummering: [],
+  faktaavklaring: {},
 };
 
 const mapStateToProps = state => ({
   oppsummering: OppsummeringSelector(state),
+  faktaavklaring: FaktaavklaringSelector(state).faktaavklaring,
 });
 
 export default withRouter(connect(mapStateToProps)(Vilkarsveileder));
