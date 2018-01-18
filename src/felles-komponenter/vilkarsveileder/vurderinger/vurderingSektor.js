@@ -22,6 +22,7 @@ const VurderingSektor = props => {
   );
 };
 
+VurderingSektor.ID = 'SEKTOR';
 VurderingSektor.OFFENTLIG = 'OFFENTLIG';
 VurderingSektor.SKIP = 'SKIP';
 VurderingSektor.SOKKEL = 'SOKKEL';
