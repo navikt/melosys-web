@@ -43,10 +43,7 @@ export const feltGrupper = {
     trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet, Skjema.Validering.erDato],
   },
   faktaavklaring: {
-    faktaavklaringLand: [],
-    faktaavklaringPeriodeFraOgMed: [],
-    faktaavklaringPeriodeTilOgMed: [],
-    faktaavklaringArbeidstype: [],
+    faktaavklaringSysselsetting: [],
     faktaavklaringAnsattINorskSelskap: [],
     faktaavklaringErstatterTidligereUtsendt: [],
     faktaavklaringUtsendingMindreEnn24Mnd: [],

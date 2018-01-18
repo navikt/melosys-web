@@ -30,13 +30,8 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
       const faktaavklaring = {
         ...state.data.faktaavklaring,
-        periode: {
-          land: dokument.faktaavklaringLand,
-          periodeFraOgMed: dokument.faktaavklaringPeriodeFraOgMed,
-          periodeTilOgMed: dokument.faktaavklaringPeriodeTilOgMed,
-        },
-        arbeidstype: {
-          arbeidstype: dokument.faktaavklaringArbeidstype,
+        sysselsetting: {
+          sysselsettingType: dokument.faktaavklaringSysselsettingType,
         },
         utsending: {
           ansattINorskSelskap: dokument.faktaavklaringAnsattINorskSelskap,
@@ -91,14 +86,9 @@ export const FaktaavklaringSelector = createSelector(
   faktaavklaring => faktaavklaring
 );
 
-export const FaktaavklaringPeriodeSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.periode : {}),
-  periode => periode
-);
-
-export const FaktaavklaringArbeidstypeSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.arbeidstype : {}),
-  arbeidstype => arbeidstype
+export const FaktaavklaringSysselsettingSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.sysselsetting : {}),
+  sysselsetting => sysselsetting
 );
 
 export const FaktaavklaringUtsendingSelector = createSelector(

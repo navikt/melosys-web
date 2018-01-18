@@ -9,11 +9,9 @@ import * as MPT from '../../proptypes/';
 import StegLinje from './komponenter/stegLinje';
 import StegFane from './komponenter/stegFane';
 
-import OppretteSak from './faneinnhold/oppretteSak';
-import VurderingLand from './faneinnhold/vurderingLand';
 import VurderingArbeidsforhold from './faneinnhold/vurderingArbeidsforhold';
 import VurderingUtsending from './faneinnhold/vurderingUtsending';
-import VurderingArbeidstype from './faneinnhold/vurderingArbeidstype';
+import VurderingSysselsetting from './faneinnhold/vurderingSysselsetting';
 import VurderingSektor from './faneinnhold/vurderingSektor';
 import VurderingVirksomhet from './faneinnhold/vurderingVirksomhet';
 import Vedtak from './faneinnhold/vedtak';
@@ -25,36 +23,11 @@ import './vilkarsveileder.css';
 class Vilkarsveileder extends Component {
   componentWillMount() {
     this.setState({
-      aktivtSteg: 6,
+      aktivtSteg: 4,
       steg: [
         {
-          id: 'OPPRETT_SAK',
-          komponent: OppretteSak,
-          data: {
-            oppsummering: this.props.oppsummering,
-          },
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-            avbrytOpprettSak: this.avbrytVurdering,
-          },
-          status: this.FANE_STATUS.BEHANDLET,
-          ikoner: this.IKONER.STEG,
-          tilgjengelig: true,
-        },
-        {
-          id: 'VURDERING_LAND',
-          komponent: VurderingLand,
-          data: {},
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: this.FANE_STATUS.BEHANDLET,
-          ikoner: this.IKONER.STEG,
-          tilgjengelig: true,
-        },
-        {
           id: 'VURDERING_ARBEIDSTYPE',
-          komponent: VurderingArbeidstype,
+          komponent: VurderingSysselsetting,
           data: {},
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
@@ -126,7 +99,7 @@ class Vilkarsveileder extends Component {
   }
 
   componentDidMount() {
-    this.tilSteg(6);
+    this.tilSteg(4);
   }
 
   /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
