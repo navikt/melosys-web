@@ -8,7 +8,7 @@ import * as MPT from '../../proptypes/';
 
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
-import Motor from './motor/motor';
+import Motor from './stegLogikk/stegLogikk';
 
 import VurderingArbeidsforhold from './vurderinger/vurderingArbeidsforhold';
 import VurderingUtsending from './vurderinger/vurderingUtsending';
@@ -19,7 +19,7 @@ import Vedtak from './vurderinger/vedtak';
 
 import { OppsummeringSelector } from '../../ducks/fagsaker';
 
-import { FaktaavklaringSelector } from '../../ducks/faktaavklaring'
+import { FaktaavklaringSelector } from '../../ducks/faktaavklaring';
 
 import './vilkarsveileder.css';
 
@@ -151,9 +151,8 @@ class Vilkarsveileder extends Component {
    * opp for nye tilgjengelige faner etter at saksbehandler
    * har bekreftet valgene.
    */
-  bekreftOgFortsett = (valg = '') => {
-    if (valg === '') return;
-    const beregnetSteg = Motor.beregnNesteSteg(this.state.aktivtSteg, valg);
+  bekreftOgFortsett = () => {
+    this.nesteSteg();
   }
 
   /** Saken er allerede opprettet, så denne funksjonen router kun brukeren tilbake til søket
@@ -165,10 +164,11 @@ class Vilkarsveileder extends Component {
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
-   * @param nyttStegNummer Number Steget som det skal byttes til.
+   * @param tilStegID Number Steget som det skal byttes til.
    */
   tilSteg = tilStegID => {
     const { faktaavklaring } = this.props;
+    if (Object.keys(faktaavklaring).length === 0) return;
 
     const aktuelleSteg = this.state.alleSteg.filter(steg => Motor.beregnAlleSteg(faktaavklaring).includes(steg.id));
     const alleSteg = [...this.state.alleSteg];
@@ -179,12 +179,12 @@ class Vilkarsveileder extends Component {
     const aktivtStegIndeks = this.state.alleSteg.findIndex(muligSteg => muligSteg.id === this.state.aktivtSteg);
     const nesteStegIndeks = aktuelleSteg.length - 1;
 
-    alleSteg[aktivtStegIndeks].aktivtSteg = false;
-    alleSteg[aktivtStegIndeks].status = this.FANE_STATUS.BEHANDLET;
-    alleSteg[nesteStegIndeks].aktivtSteg = true;
-    alleSteg[nesteStegIndeks].stegPosisjon = nesteStegIndeks;
-    alleSteg[nesteStegIndeks].status = this.FANE_STATUS.AKTIV;
-    alleSteg[nesteStegIndeks].tilgjengelig = true;
+    aktuelleSteg[aktivtStegIndeks].aktivtSteg = false;
+    aktuelleSteg[aktivtStegIndeks].status = this.FANE_STATUS.BEHANDLET;
+    aktuelleSteg[nesteStegIndeks].aktivtSteg = true;
+    aktuelleSteg[nesteStegIndeks].stegPosisjon = nesteStegIndeks;
+    aktuelleSteg[nesteStegIndeks].status = this.FANE_STATUS.AKTIV;
+    aktuelleSteg[nesteStegIndeks].tilgjengelig = true;
 
     this.setState({ alleSteg });
     this.setState({ aktuelleSteg });
