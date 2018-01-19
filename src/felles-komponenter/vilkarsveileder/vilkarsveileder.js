@@ -168,35 +168,41 @@ class Vilkarsveileder extends Component {
     this.nesteSteg();
   }
 
-  /** Saken er allerede opprettet, så denne funksjonen router kun brukeren tilbake til søket
-   * på forsiden uten å sende request til backend om at saksbehandlingen ble avbrutt. (Avgjørelse for V0 pr des2017)
-   */
-  avbrytVurdering = () => {
-    this.props.history.push(`/?fnr=${this.props.person.fnr}`);
+  oppdaterAktuelleSteg = faktaavklaring => {
+    const aktuelleSteg = this.state.alleSteg
+      .filter(steg => Motor.beregnAlleSteg(faktaavklaring).includes(steg.id))
+      .map((steg, index) => ({ ...steg, stegPosisjon: index, aktivtSteg: false }));
+
+    aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
+
+    this.setState({ aktuelleSteg });
+    return aktuelleSteg;
   }
 
-  oppdaterAktuelleSteg = faktaavklaring => {
-    const aktuelleSteg = this.state.alleSteg.filter(steg => Motor.beregnAlleSteg(faktaavklaring).includes(steg.id));
-    this.setState({ aktuelleSteg });
+  oppdaterNyttSteg = (forrigeStegNummer, nyttStegNummmer) => {
+    const aktuelleSteg = [...this.state.aktuelleSteg];
+
+    if (forrigeStegNummer) { aktuelleSteg[forrigeStegNummer].aktivtSteg = false; }
+    if (forrigeStegNummer) { aktuelleSteg[forrigeStegNummer].status = this.FANE_STATUS.BEHANDLET; }
+    aktuelleSteg[nyttStegNummmer].aktivtSteg = true;
+    aktuelleSteg[nyttStegNummmer].stegPosisjon = nyttStegNummmer;
+    aktuelleSteg[nyttStegNummmer].status = this.FANE_STATUS.AKTIV;
+    aktuelleSteg[nyttStegNummmer].tilgjengelig = true;
   }
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
-   * @param tilStegID Number Steget som det skal byttes til.
+   * @param tilStegNummer Number Steget som det skal byttes til.
    */
   tilSteg = tilStegNummer => {
-    const { aktuelleSteg, aktivtStegNummer } = this.state;
+    const { aktivtStegNummer } = this.state;
+    const aktuelleSteg = [...this.state.aktuelleSteg];
 
     if (aktuelleSteg.length === 0) { return; }
 
-    // TODO: Hvis aktivt seg ikke lenger er aktuelt (eks "VIRKSOMHET"), så finn et annet som faktisk ER synlig.
-    aktuelleSteg[aktivtStegNummer].aktivtSteg = false;
-    aktuelleSteg[aktivtStegNummer].status = this.FANE_STATUS.BEHANDLET;
-    aktuelleSteg[tilStegNummer].aktivtSteg = true;
-    aktuelleSteg[tilStegNummer].stegPosisjon = tilStegNummer;
-    aktuelleSteg[tilStegNummer].status = this.FANE_STATUS.AKTIV;
-    aktuelleSteg[tilStegNummer].tilgjengelig = true;
+    this.oppdaterNyttSteg(aktivtStegNummer, tilStegNummer);
 
+    this.setState({ aktuelleSteg });
     this.setState({ aktivtStegNummer: tilStegNummer });
   }
 
@@ -209,7 +215,7 @@ class Vilkarsveileder extends Component {
     const maksSteg = this.state.aktuelleSteg.length;
     const { aktivtStegNummer } = this.state;
     const nesteStegNummmer = (aktivtStegNummer + 1 < maksSteg) ? aktivtStegNummer + 1 : aktivtStegNummer;
-
+    console.log('nesteStegNummmer', nesteStegNummmer);
     this.tilSteg(nesteStegNummmer);
   }
 
