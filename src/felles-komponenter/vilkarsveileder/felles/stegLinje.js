@@ -11,10 +11,10 @@ const StegLinje = props => {
   const { steg } = props;
 
   // Klargjør betingede elementer.
-  const stegKnapper = steg.map(item => (
+  const stegKnapper = steg.map((item, index) => (
     <StegIkon
       key={uuid()}
-      onClick={() => props.stegKlikk(item.id)}
+      onClick={() => props.stegKlikk(index)}
       ikon={item.ikoner[item.status]}
       tilgjengelig={item.tilgjengelig}
     />));

@@ -17,3 +17,10 @@ it('treffer riktig stivalg FRA SYSSELSETTING med valg SELVSTENDIG', () => {
 
   expect(Logikk.beregnNesteSteg(gjeldendeSteg, saksbehandlersVurdering)).toEqual('VIRKSOMHET');
 });
+
+it('treffer riktig stivalg FRA VIRKSOMHET med valg (ANYTHING)', () => {
+  const gjeldendeSteg = 'VIRKSOMHET';
+  const saksbehandlersVurdering = { };
+
+  expect(Logikk.beregnNesteSteg(gjeldendeSteg, saksbehandlersVurdering)).toEqual('VEDTAK');
+});
