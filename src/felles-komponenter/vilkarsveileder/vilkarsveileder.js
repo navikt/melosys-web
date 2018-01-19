@@ -10,15 +10,15 @@ import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import Motor from './stegLogikk/stegLogikk';
 
+// Importer alle fanene
 import VurderingArbeidsforhold from './vurderinger/vurderingArbeidsforhold';
 import VurderingUtsending from './vurderinger/vurderingUtsending';
 import VurderingSysselsetting from './vurderinger/vurderingSysselsetting';
 import VurderingSektor from './vurderinger/vurderingSektor';
 import VurderingVirksomhet from './vurderinger/vurderingVirksomhet';
-import Vedtak from './vurderinger/vedtak';
+import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector } from '../../ducks/fagsaker';
-
 import { FaktaavklaringSelector } from '../../ducks/faktaavklaring';
 
 import './vilkarsveileder.css';
@@ -26,7 +26,7 @@ import './vilkarsveileder.css';
 class Vilkarsveileder extends Component {
   componentWillMount() {
     this.setState({
-      aktivtSteg: 'SYSSELSETTING',
+      aktivtStegNummer: 0,
       aktuelleSteg: [],
       alleSteg: [
         {
@@ -39,6 +39,7 @@ class Vilkarsveileder extends Component {
           status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
           tilgjengelig: true,
+          aktivtSteg: true,
         },
         {
           id: 'ARBEIDSFORHOLD',
@@ -88,7 +89,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'VEDTAK',
-          komponent: Vedtak,
+          komponent: VurderingVedtak,
           data: {},
           handlers: {
             fattVedtakHandler: this.fattVedtak,
@@ -101,8 +102,20 @@ class Vilkarsveileder extends Component {
     });
   }
 
-  componentWillReceiveProps() {
-    this.tilSteg('SYSSELSETTING');
+  componentWillUpdate(nextProps) {
+    if (JSON.stringify(this.props.faktaavklaring) !== JSON.stringify(nextProps.faktaavklaring)) {
+      this.oppdaterAktuelleSteg(nextProps.faktaavklaring);
+    }
+  }
+
+  /** Komponenten får ikke props fra faktaavklaring før den er lastet fra backend. Dvs at den er mountet
+   * en god stund før dataene faktisk kommer. Lytt derfor til nye props, men bygg veilederen
+   * kun én gang, men kjør oppdatering dersom faktaavklaring har endret seg siden sist.
+   */
+  componentDidUpdate(prevProps) {
+    if (Object.keys(prevProps.faktaavklaring).length === 0 && Object.keys(this.props.faktaavklaring).length > 0) {
+      this.tilSteg(0);
+    }
   }
 
   /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
@@ -162,30 +175,29 @@ class Vilkarsveileder extends Component {
     this.props.history.push(`/?fnr=${this.props.person.fnr}`);
   }
 
+  oppdaterAktuelleSteg = faktaavklaring => {
+    const aktuelleSteg = this.state.alleSteg.filter(steg => Motor.beregnAlleSteg(faktaavklaring).includes(steg.id));
+    this.setState({ aktuelleSteg });
+  }
+
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
    * @param tilStegID Number Steget som det skal byttes til.
    */
-  tilSteg = tilStegID => {
-    const { faktaavklaring } = this.props;
-    if (Object.keys(faktaavklaring).length === 0) return;
+  tilSteg = tilStegNummer => {
+    const { aktuelleSteg, aktivtStegNummer } = this.state;
 
-    const aktuelleSteg = this.state.alleSteg.filter(steg => Motor.beregnAlleSteg(faktaavklaring).includes(steg.id));
-    const alleSteg = [...this.state.alleSteg];
+    if (aktuelleSteg.length === 0) { return; }
 
-    const aktivtStegIndeks = aktuelleSteg.findIndex(muligSteg => muligSteg.id === this.state.aktivtSteg);
-    const nesteStegIndeks = aktuelleSteg.findIndex(muligSteg => muligSteg.id === tilStegID);
+    // TODO: Hvis aktivt seg ikke lenger er aktuelt (eks "VIRKSOMHET"), så finn et annet som faktisk ER synlig.
+    aktuelleSteg[aktivtStegNummer].aktivtSteg = false;
+    aktuelleSteg[aktivtStegNummer].status = this.FANE_STATUS.BEHANDLET;
+    aktuelleSteg[tilStegNummer].aktivtSteg = true;
+    aktuelleSteg[tilStegNummer].stegPosisjon = tilStegNummer;
+    aktuelleSteg[tilStegNummer].status = this.FANE_STATUS.AKTIV;
+    aktuelleSteg[tilStegNummer].tilgjengelig = true;
 
-    aktuelleSteg[aktivtStegIndeks].aktivtSteg = false;
-    aktuelleSteg[aktivtStegIndeks].status = this.FANE_STATUS.BEHANDLET;
-    aktuelleSteg[nesteStegIndeks].aktivtSteg = true;
-    aktuelleSteg[nesteStegIndeks].stegPosisjon = nesteStegIndeks;
-    aktuelleSteg[nesteStegIndeks].status = this.FANE_STATUS.AKTIV;
-    aktuelleSteg[nesteStegIndeks].tilgjengelig = true;
-
-    this.setState({ alleSteg });
-    this.setState({ aktuelleSteg });
-    this.setState({ aktivtSteg: tilStegID });
+    this.setState({ aktivtStegNummer: tilStegNummer });
   }
 
   /** Gå til neste steg i rekken, men ikke lenger enn
@@ -193,12 +205,12 @@ class Vilkarsveileder extends Component {
    * enn hva som er mulig skal funksjonen defaulte til siste steg.
    */
   nesteSteg = () => {
-    const maksSteg = this.state.alleSteg.length;
-    const aktivtStegIndeks = this.state.alleSteg.findIndex(steg => steg.id === this.state.aktivtSteg);
-    const nesteStegIndeks = (aktivtStegIndeks + 1 < maksSteg) ? aktivtStegIndeks + 1 : aktivtStegIndeks;
-    const nesteStegID = this.state.alleSteg[nesteStegIndeks].id;
+    // 1. Beregn kommende steg basert på valget som er gjort.
+    const maksSteg = this.state.aktuelleSteg.length;
+    const { aktivtStegNummer } = this.state;
+    const nesteStegNummmer = (aktivtStegNummer + 1 < maksSteg) ? aktivtStegNummer + 1 : aktivtStegNummer;
 
-    this.tilSteg(nesteStegID);
+    this.tilSteg(nesteStegNummmer);
   }
 
   render() {

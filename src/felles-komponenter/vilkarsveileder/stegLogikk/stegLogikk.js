@@ -19,13 +19,13 @@ class StegLogikk {
     SEKTOR: [
       {
         valg: VurderingSektor.FLYVENDE,
-        til: 'SELVSTENDIG',
+        til: 'VEDTAK',
       },
     ],
     VIRKSOMHET: [
       {
         valg: VurderingVirksomhet.ULIKE_LAND,
-        til: 'SELVSTENDIG',
+        til: 'VEDTAK',
       },
     ],
     VEDTAK: [
@@ -47,8 +47,11 @@ class StegLogikk {
       case 'SEKTOR': {
         return 'VEDTAK';
       }
-      default:
+      case 'VIRKSOMHET': {
         return 'VEDTAK';
+      }
+      default:
+        return 'FEIL'; // TODO: Kast Unntaksfeil.
     }
   }
 
@@ -59,6 +62,7 @@ class StegLogikk {
     let gjeldendeSteg = 'SYSSELSETTING';
     stegBygger.push(gjeldendeSteg);
 
+    // TODO: Refactor to recursive for better safety.
     while (gjeldendeSteg !== 'VEDTAK') {
       gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, faktaavklaring[gjeldendeSteg.toLowerCase()]);
       stegBygger.push(gjeldendeSteg);
