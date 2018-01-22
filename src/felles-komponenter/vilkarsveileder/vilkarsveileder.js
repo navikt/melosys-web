@@ -179,15 +179,15 @@ class Vilkarsveileder extends Component {
     return aktuelleSteg;
   }
 
-  oppdaterNyttSteg = (forrigeStegNummer, nyttStegNummmer) => {
+  oppdaterNyttSteg = (forrigeStegNummer, nyttStegNummer) => {
     const aktuelleSteg = [...this.state.aktuelleSteg];
 
     if (forrigeStegNummer) { aktuelleSteg[forrigeStegNummer].aktivtSteg = false; }
     if (forrigeStegNummer) { aktuelleSteg[forrigeStegNummer].status = this.FANE_STATUS.BEHANDLET; }
-    aktuelleSteg[nyttStegNummmer].aktivtSteg = true;
-    aktuelleSteg[nyttStegNummmer].stegPosisjon = nyttStegNummmer;
-    aktuelleSteg[nyttStegNummmer].status = this.FANE_STATUS.AKTIV;
-    aktuelleSteg[nyttStegNummmer].tilgjengelig = true;
+    aktuelleSteg[nyttStegNummer].aktivtSteg = true;
+    aktuelleSteg[nyttStegNummer].stegPosisjon = nyttStegNummer;
+    aktuelleSteg[nyttStegNummer].status = this.FANE_STATUS.AKTIV;
+    aktuelleSteg[nyttStegNummer].tilgjengelig = true;
   }
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
@@ -197,6 +197,8 @@ class Vilkarsveileder extends Component {
   tilSteg = tilStegNummer => {
     const { aktivtStegNummer } = this.state;
     const aktuelleSteg = [...this.state.aktuelleSteg];
+
+    console.log(aktuelleSteg);
 
     if (aktuelleSteg.length === 0) { return; }
 
@@ -215,7 +217,6 @@ class Vilkarsveileder extends Component {
     const maksSteg = this.state.aktuelleSteg.length;
     const { aktivtStegNummer } = this.state;
     const nesteStegNummmer = (aktivtStegNummer + 1 < maksSteg) ? aktivtStegNummer + 1 : aktivtStegNummer;
-    console.log('nesteStegNummmer', nesteStegNummmer);
     this.tilSteg(nesteStegNummmer);
   }
 
