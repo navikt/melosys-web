@@ -12,6 +12,7 @@ import StegLogikk from './stegLogikk/stegLogikk';
 import { FANE_STATUS } from './stegLogikk/typer';
 
 // Importer alle fanene
+import VurderingPeriode from './vurderinger/vurderingPeriode';
 import VurderingArbeidsforhold from './vurderinger/vurderingArbeidsforhold';
 import VurderingUtsending from './vurderinger/vurderingUtsending';
 import VurderingSysselsetting from './vurderinger/vurderingSysselsetting';
@@ -30,6 +31,16 @@ class Vilkarsveileder extends Component {
       aktivtStegNummer: 0,
       aktuelleSteg: [],
       alleSteg: [
+        {
+          id: 'PERIODE',
+          komponent: VurderingPeriode,
+          data: {},
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: FANE_STATUS.OK,
+          aktivtSteg: true,
+        },
         {
           id: 'SYSSELSETTING',
           komponent: VurderingSysselsetting,
