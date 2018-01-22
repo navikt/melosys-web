@@ -70,7 +70,6 @@ class StegLogikk {
     stegBygger.push(gjeldendeSteg);
 
     while (gjeldendeSteg !== 'VEDTAK') {
-      // console.log(gjeldendeSteg);
       gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, faktaavklaring[gjeldendeSteg.toLowerCase()]);
       stegBygger.push(gjeldendeSteg);
     }
