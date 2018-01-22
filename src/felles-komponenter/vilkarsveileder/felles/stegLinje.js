@@ -15,8 +15,8 @@ const StegLinje = props => {
     <StegIkon
       key={uuid()}
       onClick={() => props.stegKlikk(index)}
-      ikon={item.ikoner[item.status]}
-      tilgjengelig={item.tilgjengelig}
+      id={item.id}
+      status={item.status}
     />));
 
   return (

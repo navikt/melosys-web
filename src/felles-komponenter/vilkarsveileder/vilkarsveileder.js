@@ -3,12 +3,13 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
-import * as Ikon from '../../resources/images';
 import * as MPT from '../../proptypes/';
 
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import Motor from './stegLogikk/stegLogikk';
+
+import { FANE_STATUS } from './stegLogikk/typer';
 
 // Importer alle fanene
 import VurderingArbeidsforhold from './vurderinger/vurderingArbeidsforhold';
@@ -36,8 +37,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: this.FANE_STATUS.BEHANDLET,
-          ikoner: this.IKONER.STEG,
+          status: FANE_STATUS.OK,
           aktivtSteg: true,
         },
         {
@@ -49,8 +49,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: this.FANE_STATUS.BEHANDLET,
-          ikoner: this.IKONER.STEG,
+          status: FANE_STATUS.OK,
         },
         {
           id: 'UTSENDING',
@@ -59,8 +58,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: this.FANE_STATUS.BEHANDLET,
-          ikoner: this.IKONER.STEG,
+          status: FANE_STATUS.OK,
         },
         {
           id: 'SEKTOR',
@@ -69,8 +67,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
-          status: this.FANE_STATUS.BEHANDLET,
-          ikoner: this.IKONER.STEG,
+          status: FANE_STATUS.OK,
         },
         {
           id: 'VIRKSOMHET',
@@ -79,8 +76,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             bekreftOgFortsett: this.beOmVurdering,
           },
-          status: this.FANE_STATUS.AKTIV,
-          ikoner: this.IKONER.STEG,
+          status: FANE_STATUS.OK,
         },
         {
           id: 'VEDTAK',
@@ -89,8 +85,7 @@ class Vilkarsveileder extends Component {
           handlers: {
             fattVedtakHandler: this.fattVedtak,
           },
-          status: this.FANE_STATUS.UBEHANDLET,
-          ikoner: this.IKONER.VEDTAK,
+          status: FANE_STATUS.OK,
         },
       ],
     });
@@ -100,39 +95,6 @@ class Vilkarsveileder extends Component {
     if (Object.keys(nextProps.faktaavklaring).length > 0) {
       this.oppdaterAktuelleSteg(nextProps.faktaavklaring);
     }
-  }
-
-  /** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
-   * feil eller varsler som saksbehandleren må håndtere.
-   *
-   * @type {{UBEHANDLET: string, AKTIV: string, BEHANDLET: string, ADVARSEL: string, FEIL: string}}
-   */
-  FANE_STATUS = {
-    UBEHANDLET: 'UBEHANDLET',
-    AKTIV: 'AKTIV',
-    BEHANDLET: 'BEHANDLET',
-    ADVARSEL: 'ADVARSEL',
-    FEIL: 'FEIL',
-  };
-
-  /** Avhengig av status viser StegLinjen (med StegIkon) tilhørende status-ikon.
-   *
-   */
-  IKONER = {
-    STEG: {
-      UBEHANDLET: Ikon.Ubehandlet,
-      AKTIV: Ikon.Aktivt,
-      BEHANDLET: Ikon.Ferdig,
-      ADVARSEL: Ikon.Varsel,
-      FEIL: Ikon.Feil,
-    },
-    VEDTAK: {
-      UBEHANDLET: Ikon.VedakUbehandlet,
-      AKTIV: Ikon.VedtakGodkjent,
-      BEHANDLET: Ikon.VedtakGodkjent,
-      ADVARSEL: Ikon.VedtakAvslatt,
-      FEIL: Ikon.VedtakAvslatt,
-    },
   }
 
   fattVedtak = () => {
