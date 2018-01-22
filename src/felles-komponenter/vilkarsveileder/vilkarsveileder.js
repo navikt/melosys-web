@@ -115,8 +115,10 @@ class Vilkarsveileder extends Component {
   }
 
   oppdaterAktuelleSteg = faktaavklaring => {
-    const aktuelleSteg = this.state.alleSteg
-      .filter(steg => Motor.beregnAlleSteg(faktaavklaring).includes(steg.id))
+    const beregnedeSteg = Motor.beregnAlleSteg(faktaavklaring);
+
+    const aktuelleSteg = beregnedeSteg
+      .map(aktueltSteg => this.state.alleSteg.find(steg => steg.id === aktueltSteg))
       .map((steg, index) => ({ ...steg, stegPosisjon: index, aktivtSteg: false }));
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
