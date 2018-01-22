@@ -28,6 +28,12 @@ class StegLogikk {
         til: 'VEDTAK',
       },
     ],
+    ARBEIDSFORHOLD: [
+      {
+        valg: [],
+        til: 'VEDTAK',
+      },
+    ],
     VEDTAK: [
       {
         valg: null,
@@ -37,21 +43,22 @@ class StegLogikk {
   }
 
   static beregnNesteSteg = (gjeldendeSteg, vurderingerIForrigeSteg) => {
-    if (!vurderingerIForrigeSteg) return null;
-
     switch (gjeldendeSteg) {
       case 'SYSSELSETTING': {
         const { sysselsettingType } = vurderingerIForrigeSteg;
         return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType)).til;
       }
       case 'SEKTOR': {
-        return 'VEDTAK';
+        return 'VIRKSOMHET';
       }
       case 'VIRKSOMHET': {
+        return 'ARBEIDSFORHOLD';
+      }
+      case 'ARBEIDSFORHOLD': {
         return 'VEDTAK';
       }
       default:
-        return 'FEIL'; // TODO: Kast Unntaksfeil.
+        return 'FEIL';
     }
   }
 
@@ -62,8 +69,8 @@ class StegLogikk {
     let gjeldendeSteg = 'SYSSELSETTING';
     stegBygger.push(gjeldendeSteg);
 
-    // TODO: Refactor to recursive for better safety.
     while (gjeldendeSteg !== 'VEDTAK') {
+      // console.log(gjeldendeSteg);
       gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, faktaavklaring[gjeldendeSteg.toLowerCase()]);
       stegBygger.push(gjeldendeSteg);
     }
