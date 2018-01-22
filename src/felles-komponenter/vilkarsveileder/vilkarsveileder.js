@@ -120,6 +120,7 @@ class Vilkarsveileder extends Component {
       .map((steg, index) => ({ ...steg, stegPosisjon: index, aktivtSteg: false }));
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
+    aktuelleSteg[this.state.aktivtStegNummer].status = FANE_STATUS.AKTIV;
 
     this.setState({ aktuelleSteg });
     return aktuelleSteg;

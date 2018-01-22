@@ -26,7 +26,7 @@ const StegIkon = props => {
     },
   };
 
-  const erTilgjengelig = props.status === FANE_STATUS.OK;
+  const erTilgjengelig = props.status !== FANE_STATUS.UBEHANDLET;
   const ikon = props.id === 'VEDTAK' ? IKONER.VEDTAK[props.status] : IKONER.STEG[props.status];
   const className = classnames('stegIkon', !erTilgjengelig ? 'stegIkon--utilgjengelig' : '');
 
