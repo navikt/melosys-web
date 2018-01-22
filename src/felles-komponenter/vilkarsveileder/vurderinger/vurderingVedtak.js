@@ -6,7 +6,7 @@ import * as Nav from '../../../utils/navFrontend';
 
 import { datoDiff } from '../../../utils/utils';
 
-import './vedtak.css';
+import './vurderingVedtak.css';
 
 import { FaktaavklaringSysselsettingSelector } from '../../../ducks/faktaavklaring';
 
@@ -53,7 +53,7 @@ LovvalgBestemmelse.propTypes = {
   bestemmelse: PT.object.isRequired,
 };
 
-const Vedtak = props => {
+const VurderingVedtak = props => {
   const {
     lovvalgbestemmelser,
     arbeidUtland,
@@ -115,7 +115,7 @@ const Vedtak = props => {
   );
 };
 
-Vedtak.propTypes = {
+VurderingVedtak.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
   lovvalgbestemmelser: PT.array.isRequired,
   arbeidUtland: PT.object.isRequired,
@@ -130,4 +130,4 @@ const mapStateToProps = state => ({
   arbeidstype: FaktaavklaringSysselsettingSelector(state),
 });
 
-export default connect(mapStateToProps)(Vedtak);
+export default connect(mapStateToProps)(VurderingVedtak);
