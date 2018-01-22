@@ -9,11 +9,11 @@ const VurderingSektor = props => {
   return (
     <div>
       <Nav.Fieldset legend="Hva gjelder for søkeren?">
-        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value="OFFENTLIG" label="Offentlig tjenesteperson (relevant for 11.3 b)" />
-        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value="SKIP" label="Ansatt på skip (relevant for 11.4)" />
-        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value="SOKKEL" label="Ansatt på sokkel (relevant for 11.3 a)" />
-        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value="FLYVENDE" label="Flyvende personell (relevant for 11.5)" />
-        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value="INGEN_AV_DISSE" label="Ingen av disse" />
+        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value={VurderingSektor.OFFENTLIG} label="Offentlig tjenesteperson (relevant for 11.3 b)" />
+        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value={VurderingSektor.SKIP} label="Ansatt på skip (relevant for 11.4)" />
+        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value={VurderingSektor.SOKKEL} label="Ansatt på sokkel (relevant for 11.3 a)" />
+        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value={VurderingSektor.FLYVENDE} label="Flyvende personell (relevant for 11.5)" />
+        <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value={VurderingSektor.INGEN_AV_DISSE} label="Ingen av disse" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

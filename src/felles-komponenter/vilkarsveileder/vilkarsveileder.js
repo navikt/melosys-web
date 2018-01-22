@@ -7,7 +7,7 @@ import * as MPT from '../../proptypes/';
 
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
-import Motor from './stegLogikk/stegLogikk';
+import StegLogikk from './stegLogikk/stegLogikk';
 
 import { FANE_STATUS } from './stegLogikk/typer';
 
@@ -115,7 +115,7 @@ class Vilkarsveileder extends Component {
   }
 
   oppdaterAktuelleSteg = faktaavklaring => {
-    const beregnedeSteg = Motor.beregnAlleSteg(faktaavklaring);
+    const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
     const aktuelleSteg = beregnedeSteg
       .map(aktueltSteg => this.state.alleSteg.find(steg => steg.id === aktueltSteg))
