@@ -38,7 +38,6 @@ class Vilkarsveileder extends Component {
           },
           status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
-          tilgjengelig: true,
           aktivtSteg: true,
         },
         {
@@ -52,7 +51,6 @@ class Vilkarsveileder extends Component {
           },
           status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
-          tilgjengelig: true,
         },
         {
           id: 'UTSENDING',
@@ -63,7 +61,6 @@ class Vilkarsveileder extends Component {
           },
           status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
-          tilgjengelig: true,
         },
         {
           id: 'SEKTOR',
@@ -74,7 +71,6 @@ class Vilkarsveileder extends Component {
           },
           status: this.FANE_STATUS.BEHANDLET,
           ikoner: this.IKONER.STEG,
-          tilgjengelig: true,
         },
         {
           id: 'VIRKSOMHET',
@@ -85,7 +81,6 @@ class Vilkarsveileder extends Component {
           },
           status: this.FANE_STATUS.AKTIV,
           ikoner: this.IKONER.STEG,
-          tilgjengelig: true,
         },
         {
           id: 'VEDTAK',
@@ -96,25 +91,14 @@ class Vilkarsveileder extends Component {
           },
           status: this.FANE_STATUS.UBEHANDLET,
           ikoner: this.IKONER.VEDTAK,
-          tilgjengelig: false,
         },
       ],
     });
   }
 
-  componentWillUpdate(nextProps) {
-    if (JSON.stringify(this.props.faktaavklaring) !== JSON.stringify(nextProps.faktaavklaring)) {
+  componentWillReceiveProps(nextProps) {
+    if (Object.keys(nextProps.faktaavklaring).length > 0) {
       this.oppdaterAktuelleSteg(nextProps.faktaavklaring);
-    }
-  }
-
-  /** Komponenten får ikke props fra faktaavklaring før den er lastet fra backend. Dvs at den er mountet
-   * en god stund før dataene faktisk kommer. Lytt derfor til nye props, men bygg veilederen
-   * kun én gang, men kjør oppdatering dersom faktaavklaring har endret seg siden sist.
-   */
-  componentDidUpdate(prevProps) {
-    if (Object.keys(prevProps.faktaavklaring).length === 0 && Object.keys(this.props.faktaavklaring).length > 0) {
-      this.tilSteg(0);
     }
   }
 
@@ -157,7 +141,7 @@ class Vilkarsveileder extends Component {
 
   beOmVurdering = () => {
     this.props.beOmVurderingHandler();
-    this.nesteSteg();
+    this.tilSteg(this.beregnNesteSteg());
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
@@ -165,7 +149,7 @@ class Vilkarsveileder extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
-    this.nesteSteg();
+    this.tilSteg(this.beregnNesteSteg());
   }
 
   oppdaterAktuelleSteg = faktaavklaring => {
@@ -179,45 +163,22 @@ class Vilkarsveileder extends Component {
     return aktuelleSteg;
   }
 
-  oppdaterNyttSteg = (forrigeStegNummer, nyttStegNummer) => {
-    const aktuelleSteg = [...this.state.aktuelleSteg];
-
-    if (forrigeStegNummer) { aktuelleSteg[forrigeStegNummer].aktivtSteg = false; }
-    if (forrigeStegNummer) { aktuelleSteg[forrigeStegNummer].status = this.FANE_STATUS.BEHANDLET; }
-    aktuelleSteg[nyttStegNummer].aktivtSteg = true;
-    aktuelleSteg[nyttStegNummer].stegPosisjon = nyttStegNummer;
-    aktuelleSteg[nyttStegNummer].status = this.FANE_STATUS.AKTIV;
-    aktuelleSteg[nyttStegNummer].tilgjengelig = true;
-  }
-
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
-   * @param tilStegNummer Number Steget som det skal byttes til.
+   * @param nyttStegNummer Number Steget som det skal byttes til.
    */
-  tilSteg = tilStegNummer => {
-    const { aktivtStegNummer } = this.state;
-    const aktuelleSteg = [...this.state.aktuelleSteg];
-
-    console.log(aktuelleSteg);
-
-    if (aktuelleSteg.length === 0) { return; }
-
-    this.oppdaterNyttSteg(aktivtStegNummer, tilStegNummer);
-
-    this.setState({ aktuelleSteg });
-    this.setState({ aktivtStegNummer: tilStegNummer });
+  tilSteg = nyttStegNummer => {
+    this.setState({ aktivtStegNummer: nyttStegNummer });
   }
 
-  /** Gå til neste steg i rekken, men ikke lenger enn
+  /** Beregn neste steg i rekken, men ikke lenger enn
    * maks antall steg (til og med vedtak). Ved forsøk på å gå ytterligere steg
-   * enn hva som er mulig skal funksjonen defaulte til siste steg.
+   * enn hva som er mulig skal funksjonen defaulte til det aktive stegnummeret.
    */
-  nesteSteg = () => {
-    // 1. Beregn kommende steg basert på valget som er gjort.
+  beregnNesteSteg = () => {
     const maksSteg = this.state.aktuelleSteg.length;
     const { aktivtStegNummer } = this.state;
-    const nesteStegNummmer = (aktivtStegNummer + 1 < maksSteg) ? aktivtStegNummer + 1 : aktivtStegNummer;
-    this.tilSteg(nesteStegNummmer);
+    return (aktivtStegNummer + 1 < maksSteg) ? aktivtStegNummer + 1 : aktivtStegNummer;
   }
 
   render() {
