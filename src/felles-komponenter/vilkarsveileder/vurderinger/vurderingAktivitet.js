@@ -18,10 +18,8 @@ const VurderingAktivitet = props => {
   );
 };
 
-
 VurderingAktivitet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
 };
-
 
 export default VurderingAktivitet;
