@@ -273,6 +273,7 @@ const mapStateToProps = state => ({
     faktaavklaringAktivitetINorge: FaktaavklaringVirksomhetSelector(state).aktivitetINorge,
     faktaavklaringAntallArbeidsgivere: FaktaavklaringVirksomhetSelector(state).antallArbeidsgivere,
     faktaavklaringFordelingArbeidsgivere: FaktaavklaringVirksomhetSelector(state).fordelingArbeidsgivere,
+    faktaavklaringAktivitetland: FaktaavklaringVirksomhetSelector(state).aktivitetLand,
   },
 });
 
