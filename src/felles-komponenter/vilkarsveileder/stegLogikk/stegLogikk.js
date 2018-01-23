@@ -5,6 +5,8 @@ import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
 
 
 class StegLogikk {
+  static SISTE_STEG = null;
+
   static stier = {
     PERIODE: [
       {
@@ -42,8 +44,8 @@ class StegLogikk {
     ],
     VEDTAK: [
       {
-        valg: null,
-        til: null,
+        valg: StegLogikk.SISTE_STEG,
+        til: StegLogikk.SISTE_STEG,
       },
     ],
   }
