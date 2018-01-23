@@ -111,5 +111,5 @@ export const FaktaavklaringVirksomhetSelector = createSelector(
 
 export const FaktaavklaringAktivitetSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.aktivitet : {}),
-  virksomhet => virksomhet
+  aktivitet => aktivitet
 );
