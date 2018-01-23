@@ -21,6 +21,16 @@ class StegLogikk {
         valg: VurderingSektor.FLYVENDE,
         til: 'VEDTAK',
       },
+      {
+        valg: VurderingSektor.INGEN_AV_DISSE,
+        til: 'UTSENDING',
+      },
+    ],
+    UTSENDING: [
+      {
+        valg: [],
+        til: 'VEDTAK',
+      },
     ],
     VIRKSOMHET: [
       {
@@ -42,17 +52,22 @@ class StegLogikk {
     ],
   }
 
-  static beregnNesteSteg = (gjeldendeSteg, vurderingerIForrigeSteg) => {
+  static beregnNesteSteg = (gjeldendeSteg, vurderingerIDetteSteget) => {
     switch (gjeldendeSteg) {
       case 'SYSSELSETTING': {
-        const { sysselsettingType } = vurderingerIForrigeSteg;
+        const { sysselsettingType } = vurderingerIDetteSteget;
         return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType)).til;
       }
       case 'SEKTOR': {
-        return 'VIRKSOMHET';
+        const { ansattISektor } = vurderingerIDetteSteget;
+        return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(ansattISektor)).til;
       }
       case 'VIRKSOMHET': {
         return 'ARBEIDSFORHOLD';
+      }
+      case 'UTSENDING': {
+        console.log(vurderingerIDetteSteget);
+        return 'VEDTAK';
       }
       case 'ARBEIDSFORHOLD': {
         return 'VEDTAK';
