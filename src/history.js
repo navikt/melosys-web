@@ -1,5 +1,6 @@
 import { createBrowserHistory } from 'history';
-import { CONTEXT_PATH } from './constants'; // eslint-disable-line
+
+const CONTEXT_PATH = '/melosys-web';
 
 function isProductionEnv() {
   return `${process.env.NODE_ENV}` === 'production';
