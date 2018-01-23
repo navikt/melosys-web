@@ -8,7 +8,7 @@ const VurderingVirksomhet = props => {
 
   return (
     <div>
-      <Nav.Fieldset legend="Hvor mange land skal søker arbeide/drive virksomhet i?">
+      <Nav.Fieldset legend="Hvor mange land skal søker ha yrkesaktivitet i?">
         <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.ETT_LAND} label="Ett" />
         <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.FLERE_LAND} label="To eller flere" />
       </Nav.Fieldset>
