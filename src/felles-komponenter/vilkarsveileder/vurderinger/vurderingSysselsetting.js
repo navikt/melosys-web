@@ -9,8 +9,8 @@ const VurderingSysselsetting = props => {
   return (
     <div>
       <Nav.Fieldset legend="Vurder om søkeren er:">
-        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.IKKE_ARBEIDENDE} label="Ikke arbeidende / ytelsesmottaker" />
-        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.ARBEIDSTAKER} label="Arbeidstaker" />
+        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.IKKE_ARBEIDENDE} label="Ikke yrkesaktiv" />
+        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.ARBEIDSTAKER} label="Arbeidstaker / frilanser" />
         <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.SELVSTENDIG} label="Selvstendig næringsdrivende" />
         <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.ARBEIDSTAKER_OG_SELVSTENDIG} label="Både arbeidstakende og selvstendig" />
       </Nav.Fieldset>
