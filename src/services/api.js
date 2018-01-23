@@ -7,13 +7,12 @@ function erDev() {
   return url.includes('debug=true') ||  url.includes('localhost:');
   return false;
   //from .env or .env.local
-  return process.env.NODE_PATH !== 'production';
+  return process.env.NODE_ENV !== 'production';
 }
 */
 // from .env or .env.local
 const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 const API_SAKSBEHANDLER = `${process.env.REACT_APP_API_SAKSBEHANDLER}`;
-const API_SAKSOPPLYSNINGER = `${process.env.REACT_APP_API_SAKSOPPLYSNINGER}`;
 console.log('process.env', process.env);
 
 export function health() {
@@ -74,11 +73,6 @@ export function hentTidligeresaker(brukernavn) {
 export function hentSaksbehandler() {
   const URI_SAKSBEHANDLER = `${API_BASE_URL}${API_SAKSBEHANDLER}`;
   return getAsJson(URI_SAKSBEHANDLER);
-}
-
-export function hentSaksopplysninger(fnr) {
-  const URI_SAMMENSATT_ARBEIDSFORHOLD = `${API_BASE_URL}${API_SAKSOPPLYSNINGER}/${fnr}`;
-  return getAsJson(URI_SAMMENSATT_ARBEIDSFORHOLD);
 }
 
 export function nyHenvendelse(henvendelse) {
