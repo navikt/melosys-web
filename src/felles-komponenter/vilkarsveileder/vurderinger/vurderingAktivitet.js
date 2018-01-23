@@ -8,8 +8,8 @@ const VurderingAktivitet = props => {
 
   return (
     <div>
-      <Nav.Fieldset legend="Hvor utføres aktiviteten=">
-        <LandVelger feltNavn="faktaavklaringAktivitetland" multiland={false} />
+      <Nav.Fieldset legend="Hvor utføres aktiviteten?">
+        <LandVelger feltNavn="faktaavklaringAktivitetLand" multiland={false} />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
