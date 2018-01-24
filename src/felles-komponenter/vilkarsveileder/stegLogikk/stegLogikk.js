@@ -5,7 +5,15 @@ import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
 
 
 class StegLogikk {
+  static SISTE_STEG = null;
+
   static stier = {
+    PERIODE: [
+      {
+        valg: [],
+        til: 'SYSSELSETTING',
+      },
+    ],
     SYSSELSETTING: [
       {
         valg: [VurderingSysselsetting.ARBEIDSTAKER, VurderingSysselsetting.ARBEIDSTAKER_OG_SELVSTENDIG],
@@ -38,6 +46,12 @@ class StegLogikk {
         til: 'VEDTAK',
       },
     ],
+    AKTIVITET: [
+      {
+        valg: [],
+        til: 'VEDTAK',
+      },
+    ],
     ARBEIDSFORHOLD: [
       {
         valg: [],
@@ -46,27 +60,37 @@ class StegLogikk {
     ],
     VEDTAK: [
       {
-        valg: null,
-        til: null,
+        valg: StegLogikk.SISTE_STEG,
+        til: StegLogikk.SISTE_STEG,
       },
     ],
   }
 
   static beregnNesteSteg = (gjeldendeSteg, vurderingerIDetteSteget) => {
     switch (gjeldendeSteg) {
+      case 'PERIODE': {
+        return 'SYSSELSETTING';
+      }
       case 'SYSSELSETTING': {
         const { sysselsettingType } = vurderingerIDetteSteget;
         return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType)).til;
       }
       case 'SEKTOR': {
         const { ansattISektor } = vurderingerIDetteSteget;
-        return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(ansattISektor)).til;
+        if (ansattISektor === VurderingSektor.SOKKEL || ansattISektor === VurderingSektor.INGEN_AV_DISSE) {
+          return 'AKTIVITET';
+        }
+
+        return 'VIRKSOMHET';
       }
       case 'VIRKSOMHET': {
         return 'ARBEIDSFORHOLD';
       }
       case 'UTSENDING': {
         console.log(vurderingerIDetteSteget);
+        return 'VEDTAK';
+      }
+      case 'AKTIVITET': {
         return 'VEDTAK';
       }
       case 'ARBEIDSFORHOLD': {
@@ -80,8 +104,8 @@ class StegLogikk {
   static beregnAlleSteg = faktaavklaring => {
     const stegBygger = [];
 
-    // Stegene begynner alltid med 'SYSSELSETTING'
-    let gjeldendeSteg = 'SYSSELSETTING';
+    // Stegene begynner alltid med 'PERIODE'
+    let gjeldendeSteg = 'PERIODE';
     stegBygger.push(gjeldendeSteg);
 
     while (gjeldendeSteg !== 'VEDTAK') {

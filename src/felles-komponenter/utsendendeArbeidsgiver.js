@@ -18,6 +18,8 @@ import Postadresse from './adresser/postadresse';
 
 import './utsendendeArbeidsgiver.css';
 
+const uuid = require('uuid/v4');
+
 const Arbeidsgiver = ({ arbeidsgiver }) => {
   const {
     orgnr, navn, forretningsadresse, postadresse,
@@ -63,7 +65,7 @@ function UtsendendeArbeidsgiver (props) {
         <Nav.Container fluid>
           <Nav.Row className="arbeidsgiver__seksjon">
             <Nav.Column xs="6">
-              {valgteOrganisasjon.map(item => <Arbeidsgiver key={item.orgnr} arbeidsgiver={item} />) }
+              {valgteOrganisasjon.map(item => <Arbeidsgiver key={uuid()} arbeidsgiver={item} />) }
             </Nav.Column>
             <Nav.Column xs="6">
               <dl className="arbeidsgiver__detaljer">
