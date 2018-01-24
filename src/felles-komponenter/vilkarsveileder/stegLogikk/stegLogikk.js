@@ -47,7 +47,7 @@ class StegLogikk {
     VIRKSOMHET: [
       {
         valg: [],
-        til: 'UTSENDING',
+        til: 'AKTIVITET',
       },
     ],
     AKTIVITET: [
@@ -87,7 +87,7 @@ class StegLogikk {
         const { fordelingArbeidsgivere } = vurderingerIDetteSteget;
 
         if (fordelingArbeidsgivere === VurderingVirksomhet.ULIKE_LAND) {
-          return 'UTSENDING';
+          return 'AKTIVITET';
         }
 
         return 'VEDTAK';
