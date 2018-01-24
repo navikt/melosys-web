@@ -81,6 +81,7 @@ const Arbeidsforholdet = props => {
   } = props.arbeidsforhold;
 
   const { navn: arbeidsgiverNavn } = arbeidsgiver;
+  const { forretningsadresse = { gateadresse: { gatenavn: '' }, postnr: '', land: '' } } = arbeidsgiver;
 
   const varighet = datoDiff(ansettelsesPeriode.fom, ansettelsesPeriode.tom);
   const varighetLabel = `${varighet} mnd`;
@@ -116,9 +117,9 @@ const Arbeidsforholdet = props => {
                     <dt>Org. nr</dt>
                     <dd>{arbeidsgiver.orgnr}</dd>
                     <dt>Forretningsadresse:</dt>
-                    <dd>{arbeidsgiver.forretningsadresse.gateadresse.gatenavn}</dd>
-                    <dd>{arbeidsgiver.forretningsadresse.postnr}</dd>
-                    <dd>{arbeidsgiver.forretningsadresse.land}</dd>
+                    <dd>{forretningsadresse.gateadresse.gatenavn}</dd>
+                    <dd>{forretningsadresse.postnr}</dd>
+                    <dd>{forretningsadresse.land}</dd>
                     <dt>A-ordning:</dt>
                     <dd>{boolTilNorsk(Aordning)}</dd>
                   </dl>
