@@ -53,7 +53,7 @@ export const feltGrupper = {
     faktaavklaringSektor: [],
     faktaavklaringAntallLand: [],
     faktaavklaringAktivitetINorge: [],
-    faktaavklaringAntallArbeidsgivere: [],
+    faktaavklaringMarginaltArbeid: [],
     faktaavklaringVekslingMellomLand: [],
     faktaavklaringAktivitetLand: [],
   },

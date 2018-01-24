@@ -17,13 +17,13 @@ const VurderingVirksomhet = props => {
         <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhet.EN_ELLER_BEGGE} label="Ja, en eller begge" />
         <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhet.INGEN} label="Nei, ingen av delene" />
       </Nav.Fieldset>
+      <Nav.Fieldset legend="Utgjør arbeidet i hvert av landene mer enn 25%? (Er det mer enn marginalt arbeid?)">
+        <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhet.MARGINALT_JA} label="Ja" />
+        <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhet.MARGINALT_NEI} label="Nei" />
+      </Nav.Fieldset>
       <Nav.Fieldset legend="Hvor mye av aktiviteten skjer i Norge?">
         <Skjema.Radio feltNavn="faktaavklaringAktivitetINorge" value={VurderingVirksomhet.UNDER_25_PROSENT} label="Mindre enn 25%" />
         <Skjema.Radio feltNavn="faktaavklaringAktivitetINorge" value={VurderingVirksomhet.OVER_25_PROSENT} label="25% eller mer" />
-      </Nav.Fieldset>
-      <Nav.Fieldset legend="Hvor mange arbeidsgivere har søker?">
-        <Skjema.Radio feltNavn="faktaavklaringAntallArbeidsgivere" value={VurderingVirksomhet.EN_ARBEIDSGIVER} label="Èn" />
-        <Skjema.Radio feltNavn="faktaavklaringAntallArbeidsgivere" value={VurderingVirksomhet.FLERE_ARBEIDSGIVERE} label="To eller fler" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Fortsett til vedtaksforslag</Nav.Knapp>
@@ -36,12 +36,12 @@ VurderingVirksomhet.ID = 'VIRKSOMHET';
 VurderingVirksomhet.ETT_LAND = 'ETT_LAND';
 VurderingVirksomhet.KUN_NORGE = 'KUN_NORGE';
 VurderingVirksomhet.FLERE_LAND = 'FLERE_LAND';
-VurderingVirksomhet.UNDER_25_PROSENT = 'UNDER_25_PROSENT';
-VurderingVirksomhet.OVER_25_PROSENT = 'OVER_25_PROSENT';
-VurderingVirksomhet.EN_ARBEIDSGIVER = 'EN_ARBEIDSGIVER';
-VurderingVirksomhet.FLERE_ARBEIDSGIVERE = 'FLERE_ARBEIDSGIVERE';
 VurderingVirksomhet.EN_ELLER_BEGGE = 'SAMME_LAND';
 VurderingVirksomhet.INGEN = 'INGEN';
+VurderingVirksomhet.MARGINALT_JA = 'MARGINALT_JA';
+VurderingVirksomhet.MARGINALT_NEI = 'MARGINALT_NEI';
+VurderingVirksomhet.UNDER_25_PROSENT = 'UNDER_25_PROSENT';
+VurderingVirksomhet.OVER_25_PROSENT = 'OVER_25_PROSENT';
 
 VurderingVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
