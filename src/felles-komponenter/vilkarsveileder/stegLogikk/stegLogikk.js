@@ -26,14 +26,28 @@ class StegLogikk {
     ],
     SEKTOR: [
       {
-        valg: VurderingSektor.FLYVENDE,
+        valg: [VurderingSektor.FLYVENDE, VurderingSektor.OFFENTLIG],
+        til: 'VEDTAK',
+      },
+      {
+        valg: VurderingSektor.SOKKEL,
+        til: 'VEDTAK',
+      },
+      {
+        valg: VurderingSektor.INGEN_AV_DISSE,
+        til: 'VIRKSOMHET',
+      },
+    ],
+    UTSENDING: [
+      {
+        valg: [],
         til: 'VEDTAK',
       },
     ],
     VIRKSOMHET: [
       {
-        valg: VurderingVirksomhet.ULIKE_LAND,
-        til: 'VEDTAK',
+        valg: [],
+        til: 'UTSENDING',
       },
     ],
     AKTIVITET: [
@@ -56,25 +70,30 @@ class StegLogikk {
     ],
   }
 
-  static beregnNesteSteg = (gjeldendeSteg, vurderingerIForrigeSteg) => {
+  static beregnNesteSteg = (gjeldendeSteg, vurderingerIDetteSteget) => {
     switch (gjeldendeSteg) {
       case 'PERIODE': {
         return 'SYSSELSETTING';
       }
       case 'SYSSELSETTING': {
-        const { sysselsettingType } = vurderingerIForrigeSteg;
+        const { sysselsettingType } = vurderingerIDetteSteget;
         return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType)).til;
       }
       case 'SEKTOR': {
-        const { ansattISektor } = vurderingerIForrigeSteg;
-        if (ansattISektor === VurderingSektor.SOKKEL || ansattISektor === VurderingSektor.INGEN_AV_DISSE) {
-          return 'AKTIVITET';
-        }
-
-        return 'VIRKSOMHET';
+        const { ansattISektor } = vurderingerIDetteSteget;
+        return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(ansattISektor)).til;
       }
       case 'VIRKSOMHET': {
-        return 'ARBEIDSFORHOLD';
+        const { fordelingArbeidsgivere } = vurderingerIDetteSteget;
+
+        if (fordelingArbeidsgivere === VurderingVirksomhet.ULIKE_LAND) {
+          return 'UTSENDING';
+        }
+
+        return 'VEDTAK';
+      }
+      case 'UTSENDING': {
+        return 'VEDTAK';
       }
       case 'AKTIVITET': {
         return 'VEDTAK';
@@ -90,7 +109,7 @@ class StegLogikk {
   static beregnAlleSteg = faktaavklaring => {
     const stegBygger = [];
 
-    // Stegene begynner alltid med 'SYSSELSETTING'
+    // Stegene begynner alltid med 'PERIODE'
     let gjeldendeSteg = 'PERIODE';
     stegBygger.push(gjeldendeSteg);
 
