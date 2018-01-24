@@ -26,12 +26,16 @@ class StegLogikk {
     ],
     SEKTOR: [
       {
-        valg: VurderingSektor.FLYVENDE,
+        valg: [VurderingSektor.FLYVENDE, VurderingSektor.OFFENTLIG],
+        til: 'VEDTAK',
+      },
+      {
+        valg: VurderingSektor.SOKKEL,
         til: 'VEDTAK',
       },
       {
         valg: VurderingSektor.INGEN_AV_DISSE,
-        til: 'UTSENDING',
+        til: 'VIRKSOMHET',
       },
     ],
     UTSENDING: [
@@ -42,8 +46,8 @@ class StegLogikk {
     ],
     VIRKSOMHET: [
       {
-        valg: VurderingVirksomhet.ULIKE_LAND,
-        til: 'VEDTAK',
+        valg: [],
+        til: 'UTSENDING',
       },
     ],
     AKTIVITET: [
@@ -77,17 +81,17 @@ class StegLogikk {
       }
       case 'SEKTOR': {
         const { ansattISektor } = vurderingerIDetteSteget;
-        if (ansattISektor === VurderingSektor.SOKKEL || ansattISektor === VurderingSektor.INGEN_AV_DISSE) {
-          return 'AKTIVITET';
-        }
-
-        return 'VIRKSOMHET';
+        return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(ansattISektor)).til;
       }
       case 'VIRKSOMHET': {
-        return 'ARBEIDSFORHOLD';
+        const { fordelingArbeidsgivere } = vurderingerIDetteSteget;
+        if (fordelingArbeidsgivere === VurderingVirksomhet.ULIKE_LAND) {
+          return 'UTSENDING';
+        }
+
+        return 'VEDTAK';
       }
       case 'UTSENDING': {
-        console.log(vurderingerIDetteSteget);
         return 'VEDTAK';
       }
       case 'AKTIVITET': {
