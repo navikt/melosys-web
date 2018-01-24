@@ -52,8 +52,8 @@ export default function reducer(state = initialState, action) {
         virksomhet: {
           antallLand: dokument.faktaavklaringAntallLand,
           aktivitetINorge: dokument.faktaavklaringAktivitetINorge,
-          antallArbeidsgivere: dokument.faktaavklaringAntallArbeidsgivere,
-          fordelingArbeidsgivere: dokument.faktaavklaringFordelingArbeidsgivere,
+          marginaltArbeid: dokument.faktaavklaringMarginaltArbeid,
+          vekslingMellomLand: dokument.faktaavklaringVekslingMellomLand,
         },
       };
 
