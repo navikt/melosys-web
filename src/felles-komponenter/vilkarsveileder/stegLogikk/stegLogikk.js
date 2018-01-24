@@ -86,8 +86,8 @@ class StegLogikk {
       case 'VIRKSOMHET': {
         const { fordelingArbeidsgivere } = vurderingerIDetteSteget;
 
-        if (fordelingArbeidsgivere === VurderingVirksomhet.ULIKE_LAND) {
-          return 'AKTIVITET';
+        if (fordelingArbeidsgivere === VurderingVirksomhet.FLERE_LAND) {
+          return 'UTSENDING';
         }
 
         return 'VEDTAK';
