@@ -4,16 +4,22 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
 const VurderingSysselsetting = props => {
-  const { bekreftOgFortsett } = props;
+  const { bekreftOgFortsett, tilstand } = props;
+
+  const sysselsettingType = tilstand.faktaavklaringSysselsettingType
+    ?
+    <Nav.Fieldset legend="Vurder om søkeren er:">
+      <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.IKKE_ARBEIDENDE} label="Ikke yrkesaktiv" />
+      <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.ARBEIDSTAKER} label="Arbeidstaker / frilanser" />
+      <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.SELVSTENDIG} label="Selvstendig næringsdrivende" />
+      <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.ARBEIDSTAKER_OG_SELVSTENDIG} label="Både arbeidstakende og selvstendig" />
+    </Nav.Fieldset>
+    :
+    null;
 
   return (
     <div>
-      <Nav.Fieldset legend="Vurder om søkeren er:">
-        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.IKKE_ARBEIDENDE} label="Ikke yrkesaktiv" />
-        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.ARBEIDSTAKER} label="Arbeidstaker / frilanser" />
-        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.SELVSTENDIG} label="Selvstendig næringsdrivende" />
-        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.ARBEIDSTAKER_OG_SELVSTENDIG} label="Både arbeidstakende og selvstendig" />
-      </Nav.Fieldset>
+      { sysselsettingType }
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
@@ -29,6 +35,11 @@ VurderingSysselsetting.ARBEIDSTAKER_OG_SELVSTENDIG = 'ARBEIDSTAKER_OG_SELVSTENDI
 
 VurderingSysselsetting.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  tilstand: PT.object,
+};
+
+VurderingSysselsetting.defaultProps = {
+  tilstand: {},
 };
 
 

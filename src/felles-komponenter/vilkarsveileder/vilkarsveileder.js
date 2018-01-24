@@ -8,6 +8,7 @@ import * as MPT from '../../proptypes/';
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegLogikk from './stegLogikk/stegLogikk';
+import TilstandsLogikk from './stegLogikk/tilstandsLogikk';
 
 import { FANE_STATUS } from './stegLogikk/typer';
 
@@ -142,7 +143,12 @@ class Vilkarsveileder extends Component {
 
     const aktuelleSteg = beregnedeSteg
       .map(aktueltSteg => this.state.alleSteg.find(steg => steg.id === aktueltSteg))
-      .map((steg, index) => ({ ...steg, stegPosisjon: index, aktivtSteg: false }));
+      .map((steg, index) => ({
+        ...steg,
+        stegPosisjon: index,
+        aktivtSteg: false,
+        data: { tilstand: TilstandsLogikk.beregnTilstand(steg.id, faktaavklaring) },
+      }));
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
     aktuelleSteg[this.state.aktivtStegNummer].status = FANE_STATUS.AKTIV;

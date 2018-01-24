@@ -4,27 +4,51 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
 const VurderingVirksomhet = props => {
-  const { bekreftOgFortsett } = props;
+  const { bekreftOgFortsett, tilstand } = props;
+
+  const antallLand = tilstand.faktaavklaringAntallLand
+    ?
+    <Nav.Fieldset legend="Hvor mange land skal søker ha yrkesaktivitet i?">
+      <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.ETT_LAND} label="Ett land, ikke Norge" />
+      <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.KUN_NORGE} label="Kun Norge" />
+      <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.FLERE_LAND} label="To eller flere land" />
+    </Nav.Fieldset>
+    :
+    null;
+
+  const vekslingMellomLand = tilstand.faktaavklaringVekslingMellomLand
+    ?
+    <Nav.Fieldset legend="Veksler søker regelmessig mellom arbeid i flere land eller arbeider søker i flere land?">
+      <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhet.EN_ELLER_BEGGE} label="Ja, en eller begge" />
+      <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhet.INGEN_VEKSLING} label="Nei, ingen av delene" />
+    </Nav.Fieldset>
+    :
+    null;
+
+  const marginaltArbeid = tilstand.faktaavklaringMarginaltArbeid
+    ?
+    <Nav.Fieldset legend="Utgjør arbeidet i hvert av landene mer enn 5%? (Er det mer enn marginalt arbeid?)">
+      <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhet.MARGINALT_JA} label="Ja" />
+      <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhet.MARGINALT_NEI} label="Nei" />
+    </Nav.Fieldset>
+    :
+    null;
+
+  const aktivitetINorge = tilstand.faktaavklaringAktivitetINorge
+    ?
+    <Nav.Fieldset legend="Hvor mye av aktiviteten skjer i Norge?">
+      <Skjema.Radio feltNavn="faktaavklaringAktivitetINorge" value={VurderingVirksomhet.UNDER_25_PROSENT} label="Mindre enn 25%" />
+      <Skjema.Radio feltNavn="faktaavklaringAktivitetINorge" value={VurderingVirksomhet.OVER_25_PROSENT} label="25% eller mer" />
+    </Nav.Fieldset>
+    :
+    null;
 
   return (
     <div>
-      <Nav.Fieldset legend="Hvor mange land skal søker ha yrkesaktivitet i?">
-        <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.ETT_LAND} label="Ett land, ikke Norge" />
-        <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.KUN_NORGE} label="Kun Norge" />
-        <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.FLERE_LAND} label="To eller flere land" />
-      </Nav.Fieldset>
-      <Nav.Fieldset legend="Veksler søker regelmessig mellom arbeid i flere land eller arbeider søker i flere land?">
-        <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhet.EN_ELLER_BEGGE} label="Ja, en eller begge" />
-        <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhet.INGEN_VEKSLING} label="Nei, ingen av delene" />
-      </Nav.Fieldset>
-      <Nav.Fieldset legend="Utgjør arbeidet i hvert av landene mer enn 5%? (Er det mer enn marginalt arbeid?)">
-        <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhet.MARGINALT_JA} label="Ja" />
-        <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhet.MARGINALT_NEI} label="Nei" />
-      </Nav.Fieldset>
-      <Nav.Fieldset legend="Hvor mye av aktiviteten skjer i Norge?">
-        <Skjema.Radio feltNavn="faktaavklaringAktivitetINorge" value={VurderingVirksomhet.UNDER_25_PROSENT} label="Mindre enn 25%" />
-        <Skjema.Radio feltNavn="faktaavklaringAktivitetINorge" value={VurderingVirksomhet.OVER_25_PROSENT} label="25% eller mer" />
-      </Nav.Fieldset>
+      { antallLand }
+      { vekslingMellomLand }
+      { marginaltArbeid }
+      { aktivitetINorge }
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Fortsett til vedtaksforslag</Nav.Knapp>
       </div>
@@ -45,6 +69,11 @@ VurderingVirksomhet.OVER_25_PROSENT = 'OVER_25_PROSENT';
 
 VurderingVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  tilstand: PT.object,
+};
+
+VurderingVirksomhet.defaultProps = {
+  tilstand: {},
 };
 
 export default VurderingVirksomhet;
