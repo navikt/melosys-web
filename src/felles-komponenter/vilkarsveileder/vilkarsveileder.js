@@ -14,6 +14,7 @@ import { FANE_STATUS } from './stegLogikk/typer';
 // Importer alle fanene
 import VurderingPeriode from './vurderinger/vurderingPeriode';
 import VurderingArbeidsforhold from './vurderinger/vurderingArbeidsforhold';
+import VurderingAktivitet from './vurderinger/vurderingAktivitet';
 import VurderingUtsending from './vurderinger/vurderingUtsending';
 import VurderingSysselsetting from './vurderinger/vurderingSysselsetting';
 import VurderingSektor from './vurderinger/vurderingSektor';
@@ -54,6 +55,17 @@ class Vilkarsveileder extends Component {
         {
           id: 'ARBEIDSFORHOLD',
           komponent: VurderingArbeidsforhold,
+          data: {
+            arbeidsforholdene: this.props.arbeidsforholdene,
+          },
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: FANE_STATUS.OK,
+        },
+        {
+          id: 'AKTIVITET',
+          komponent: VurderingAktivitet,
           data: {
             arbeidsforholdene: this.props.arbeidsforholdene,
           },

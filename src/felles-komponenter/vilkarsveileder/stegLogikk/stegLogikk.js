@@ -36,6 +36,12 @@ class StegLogikk {
         til: 'VEDTAK',
       },
     ],
+    AKTIVITET: [
+      {
+        valg: [],
+        til: 'VEDTAK',
+      },
+    ],
     ARBEIDSFORHOLD: [
       {
         valg: [],
@@ -60,10 +66,18 @@ class StegLogikk {
         return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType)).til;
       }
       case 'SEKTOR': {
+        const { ansattISektor } = vurderingerIForrigeSteg;
+        if (ansattISektor === VurderingSektor.SOKKEL || ansattISektor === VurderingSektor.INGEN_AV_DISSE) {
+          return 'AKTIVITET';
+        }
+
         return 'VIRKSOMHET';
       }
       case 'VIRKSOMHET': {
         return 'ARBEIDSFORHOLD';
+      }
+      case 'AKTIVITET': {
+        return 'VEDTAK';
       }
       case 'ARBEIDSFORHOLD': {
         return 'VEDTAK';
