@@ -53,7 +53,7 @@ export default function reducer(state = initialState, action) {
           antallLand: dokument.faktaavklaringAntallLand,
           aktivitetINorge: dokument.faktaavklaringAktivitetINorge,
           antallArbeidsgivere: dokument.faktaavklaringAntallArbeidsgivere,
-          fordelingArbeidsgivere: dokument.faktaavklaringFordelingArbeidsgivere,
+          vekslingMellomLand: dokument.faktaavklaringVekslingMellomLand,
         },
       };
 
