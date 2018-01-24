@@ -86,7 +86,7 @@ class StegLogikk {
       case 'VIRKSOMHET': {
         const { fordelingArbeidsgivere } = vurderingerIDetteSteget;
 
-        if (fordelingArbeidsgivere === VurderingVirksomhet.ULIKE_LAND) {
+        if (fordelingArbeidsgivere === VurderingVirksomhet.FLERE_LAND) {
           return 'UTSENDING';
         }
 
