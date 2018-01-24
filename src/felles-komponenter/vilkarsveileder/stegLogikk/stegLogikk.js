@@ -90,7 +90,7 @@ class StegLogikk {
           return 'UTSENDING';
         }
 
-        return 'VEDTAK';
+        return 'AKTIVITET';
       }
       case 'UTSENDING': {
         return 'VEDTAK';
