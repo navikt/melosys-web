@@ -15,9 +15,9 @@ const VurderingVirksomhet = props => {
       </Nav.Fieldset>
       <Nav.Fieldset legend="Veksler søker regelmessig mellom arbeid i flere land eller arbeider søker i flere land?">
         <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhet.EN_ELLER_BEGGE} label="Ja, en eller begge" />
-        <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhet.INGEN} label="Nei, ingen av delene" />
+        <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhet.INGEN_VEKSLING} label="Nei, ingen av delene" />
       </Nav.Fieldset>
-      <Nav.Fieldset legend="Utgjør arbeidet i hvert av landene mer enn 25%? (Er det mer enn marginalt arbeid?)">
+      <Nav.Fieldset legend="Utgjør arbeidet i hvert av landene mer enn 5%? (Er det mer enn marginalt arbeid?)">
         <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhet.MARGINALT_JA} label="Ja" />
         <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhet.MARGINALT_NEI} label="Nei" />
       </Nav.Fieldset>
@@ -36,8 +36,8 @@ VurderingVirksomhet.ID = 'VIRKSOMHET';
 VurderingVirksomhet.ETT_LAND = 'ETT_LAND';
 VurderingVirksomhet.KUN_NORGE = 'KUN_NORGE';
 VurderingVirksomhet.FLERE_LAND = 'FLERE_LAND';
-VurderingVirksomhet.EN_ELLER_BEGGE = 'SAMME_LAND';
-VurderingVirksomhet.INGEN = 'INGEN';
+VurderingVirksomhet.EN_ELLER_BEGGE = 'EN_ELLER_BEGGE';
+VurderingVirksomhet.INGEN_VEKSLING = 'INGEN_VEKSLING';
 VurderingVirksomhet.MARGINALT_JA = 'MARGINALT_JA';
 VurderingVirksomhet.MARGINALT_NEI = 'MARGINALT_NEI';
 VurderingVirksomhet.UNDER_25_PROSENT = 'UNDER_25_PROSENT';
