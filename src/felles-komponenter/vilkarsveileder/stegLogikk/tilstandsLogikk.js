@@ -1,22 +1,23 @@
 import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
+import { STEG } from './typer';
 
 class TilstandsLogikk {
   static beregnTilstand = (gjeldendeSteg, skjema) => {
     switch (gjeldendeSteg) {
-      case 'PERIODE': {
+      case STEG.PERIODE: {
         return {};
       }
-      case 'SYSSELSETTING': {
+      case STEG.SYSSELSETTING: {
         return {
           visSysselsettingType: true,
         };
       }
-      case 'SEKTOR': {
+      case STEG.SEKTOR: {
         return {
           visAnsattISektor: true,
         };
       }
-      case 'VIRKSOMHET': {
+      case STEG.VIRKSOMHET: {
         const { faktaavklaringAntallLand } = skjema;
 
         return {
@@ -26,21 +27,21 @@ class TilstandsLogikk {
           visAktivitetINorge: faktaavklaringAntallLand === VurderingVirksomhet.TO_ELLER_FLERE_LAND,
         };
       }
-      case 'UTSENDING': {
+      case STEG.UTSENDING: {
         return {
           visUtsendingMindreEnn24Mnd: true,
           visAnsattINorskSelskap: true,
           visErstatterTidligereUtsendt: false,
         };
       }
-      case 'AKTIVITET': {
+      case STEG.AKTIVITET: {
         return {};
       }
-      case 'ARBEIDSFORHOLD': {
+      case STEG.ARBEIDSFORHOLD: {
         return {};
       }
       default:
-        return 'FEIL';
+        return STEG.VEDTAK;
     }
   }
 }

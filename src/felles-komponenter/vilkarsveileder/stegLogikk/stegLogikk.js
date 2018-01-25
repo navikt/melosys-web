@@ -3,6 +3,7 @@ import VurderingSysselsetting from '../vurderinger/vurderingSysselsetting';
 import VurderingSektor from '../vurderinger/vurderingSektor';
 import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
 
+import { STEG } from './typer';
 
 class StegLogikk {
   static SISTE_STEG = null;
@@ -11,55 +12,55 @@ class StegLogikk {
     PERIODE: [
       {
         valg: [],
-        til: 'SYSSELSETTING',
+        til: STEG.SYSSELSETTING,
       },
     ],
     SYSSELSETTING: [
       {
         valg: [VurderingSysselsetting.ARBEIDSTAKER, VurderingSysselsetting.ARBEIDSTAKER_OG_SELVSTENDIG],
-        til: 'SEKTOR',
+        til: STEG.SEKTOR,
       },
       {
         valg: [VurderingSysselsetting.SELVSTENDIG],
-        til: 'VIRKSOMHET',
+        til: STEG.VIRKSOMHET,
       },
     ],
     SEKTOR: [
       {
         valg: [VurderingSektor.FLYVENDE, VurderingSektor.OFFENTLIG],
-        til: 'VEDTAK',
+        til: STEG.VEDTAK,
       },
       {
         valg: VurderingSektor.SOKKEL,
-        til: 'VEDTAK',
+        til: STEG.VEDTAK,
       },
       {
         valg: VurderingSektor.INGEN_AV_DISSE,
-        til: 'VIRKSOMHET',
+        til: STEG.VIRKSOMHET,
       },
     ],
     UTSENDING: [
       {
         valg: [],
-        til: 'VEDTAK',
+        til: STEG.VEDTAK,
       },
     ],
     VIRKSOMHET: [
       {
         valg: [],
-        til: 'AKTIVITET',
+        til: STEG.AKTIVITET,
       },
     ],
     AKTIVITET: [
       {
         valg: [],
-        til: 'VEDTAK',
+        til: STEG.VEDTAK,
       },
     ],
     ARBEIDSFORHOLD: [
       {
         valg: [],
-        til: 'VEDTAK',
+        til: STEG.VEDTAK,
       },
     ],
     VEDTAK: [
