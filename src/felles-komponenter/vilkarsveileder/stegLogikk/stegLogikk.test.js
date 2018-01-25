@@ -22,5 +22,5 @@ it('treffer riktig stivalg FRA VIRKSOMHET med valg (ANYTHING)', () => {
   const gjeldendeSteg = 'VIRKSOMHET';
   const saksbehandlersVurdering = { };
 
-  expect(Logikk.beregnNesteSteg(gjeldendeSteg, saksbehandlersVurdering)).toEqual('ARBEIDSFORHOLD');
+  expect(Logikk.beregnNesteSteg(gjeldendeSteg, saksbehandlersVurdering)).toEqual('UTSENDING');
 });
