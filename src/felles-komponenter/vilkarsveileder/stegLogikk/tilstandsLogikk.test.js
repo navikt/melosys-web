@@ -1,10 +1,9 @@
 /* eslint-disable */
 
-import Logikk from './stegLogikk';
+import TilstandsLogikk from './tilstandsLogikk';
 
-import VurderingSysselsetting from '../vurderinger/vurderingSysselsetting';
+it('returnerer et objekt', () => {
 
-it('viser korrekt tilstand i SYSSELSETTING', () => {
-
-  expect(true).toBe(true);
+  const retur = TilstandsLogikk.beregnTilstand('STEG', {});
+  expect(typeof retur).toBe('object');
 });

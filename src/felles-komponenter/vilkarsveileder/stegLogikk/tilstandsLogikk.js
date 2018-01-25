@@ -41,7 +41,7 @@ class TilstandsLogikk {
         return {};
       }
       default:
-        return STEG.VEDTAK;
+        return {};
     }
   }
 }
