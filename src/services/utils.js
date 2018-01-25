@@ -9,6 +9,9 @@ export const STATUS = {
 export function sjekkStatuskode(response) {
   if (response.status >= 200 && response.status < 300 && response.ok) {
     return response;
+  } else if (response.status === 501) {
+    console.warn('501:', response.statusText, response.url.split('/').slice(3).join('/'));
+    return response;
   }
   const error = new Error(response.statusText);
   error.response = response;
