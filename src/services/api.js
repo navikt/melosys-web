@@ -21,12 +21,12 @@ export function health() {
 }
 
 export function hentSoknad(behandlingID) {
-  const URI_SOKNAD = `${API_BASE_URL}soknad/${behandlingID}`;
+  const URI_SOKNAD = `${API_BASE_URL}soknader/${behandlingID}`;
   return getAsJson(URI_SOKNAD);
 }
 
 export function sendSoknad(dokument) {
-  const URI_SOKNAD =`${API_BASE_URL}soknad/`;
+  const URI_SOKNAD =`${API_BASE_URL}soknader/`;
   return postAsJson(URI_SOKNAD, dokument);
 }
 
