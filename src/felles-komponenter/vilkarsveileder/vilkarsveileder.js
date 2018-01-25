@@ -24,6 +24,7 @@ import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector } from '../../ducks/fagsaker';
 import { FaktaavklaringSelector } from '../../ducks/faktaavklaring';
+import { SoknadenFormSelector } from '../../ducks/form';
 
 import './vilkarsveileder.css';
 
@@ -196,6 +197,7 @@ Vilkarsveileder.propTypes = {
   beOmVurderingHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   faktaavklaring: PT.object,
+  skjema: PT.object.isRequired,
 };
 
 Vilkarsveileder.defaultProps = {
@@ -206,6 +208,7 @@ Vilkarsveileder.defaultProps = {
 const mapStateToProps = state => ({
   oppsummering: OppsummeringSelector(state),
   faktaavklaring: FaktaavklaringSelector(state).faktaavklaring,
+  skjema: SoknadenFormSelector(state).values,
 });
 
 export default withRouter(connect(mapStateToProps)(Vilkarsveileder));

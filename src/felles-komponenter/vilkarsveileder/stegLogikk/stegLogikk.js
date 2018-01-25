@@ -84,9 +84,9 @@ class StegLogikk {
         return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(ansattISektor)).til;
       }
       case 'VIRKSOMHET': {
-        const { fordelingArbeidsgivere } = vurderingerIDetteSteget;
+        const { antallLand } = vurderingerIDetteSteget;
 
-        if (fordelingArbeidsgivere === VurderingVirksomhet.FLERE_LAND) {
+        if (antallLand === VurderingVirksomhet.FLERE_LAND) {
           return 'UTSENDING';
         }
 

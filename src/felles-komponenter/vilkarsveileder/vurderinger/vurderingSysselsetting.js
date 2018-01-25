@@ -6,7 +6,7 @@ import * as Skjema from '../../skjema';
 const VurderingSysselsetting = props => {
   const { bekreftOgFortsett, tilstand } = props;
 
-  const sysselsettingType = tilstand.faktaavklaringSysselsettingType
+  const sysselsettingType = tilstand.visSysselsettingType
     ?
     <Nav.Fieldset legend="Vurder om søkeren er:">
       <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.IKKE_ARBEIDENDE} label="Ikke yrkesaktiv" />

@@ -1,35 +1,43 @@
+import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
+
 class TilstandsLogikk {
   static beregnTilstand = (gjeldendeSteg, faktaavklaring) => {
     switch (gjeldendeSteg) {
       case 'PERIODE': {
-        return 'SYSSELSETTING';
+        return {};
       }
       case 'SYSSELSETTING': {
         return {
-          faktaavklaringSysselsettingType: true,
+          visSysselsettingType: true,
         };
       }
       case 'SEKTOR': {
         return {
-          faktaavklaringAnsattISektor: true,
+          visAnsattISektor: true,
         };
       }
       case 'VIRKSOMHET': {
+        const { virksomhet } = faktaavklaring;
+
         return {
-          faktaavklaringAntallLand: true,
-          faktaavklaringVekslingMellomLand: true,
-          faktaavklaringMarginaltArbeid: true,
-          faktaavklaringAktivitetINorge: true,
+          visAntallLand: true,
+          visVekslingMellomLand: virksomhet.antallLand === VurderingVirksomhet.FLERE_LAND,
+          visMarginaltArbeid: true,
+          visAktivitetINorge: true,
         };
       }
       case 'UTSENDING': {
-        return 'VEDTAK';
+        return {
+          visUtsendingMindreEnn24Mnd: true,
+          visAnsattINorskSelskap: true,
+          visErstatterTidligereUtsendt: false,
+        };
       }
       case 'AKTIVITET': {
-        return 'VEDTAK';
+        return {};
       }
       case 'ARBEIDSFORHOLD': {
-        return 'VEDTAK';
+        return {};
       }
       default:
         return 'FEIL';

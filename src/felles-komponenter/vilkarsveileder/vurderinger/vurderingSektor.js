@@ -6,7 +6,7 @@ import * as Skjema from '../../skjema';
 const VurderingSektor = props => {
   const { bekreftOgFortsett, tilstand } = props;
 
-  const ansattISektor = tilstand.faktaavklaringAnsattISektor
+  const ansattISektor = tilstand.visAnsattISektor
     ?
     <Nav.Fieldset legend="Hva gjelder for søkeren?">
       <Skjema.Radio feltNavn="faktaavklaringAnsattISektor" value={VurderingSektor.OFFENTLIG} label="Offentlig tjenesteperson (relevant for 11.3 b)" />
