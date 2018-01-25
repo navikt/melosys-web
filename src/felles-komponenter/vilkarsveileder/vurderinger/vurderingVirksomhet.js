@@ -9,9 +9,9 @@ const VurderingVirksomhet = props => {
   const antallLand = tilstand.visAntallLand
     ?
     <Nav.Fieldset legend="Hvor mange land skal søker ha yrkesaktivitet i?">
-      <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.ETT_LAND} label="Ett land, ikke Norge" />
+      <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.ETT_LAND_IKKE_NORGE} label="Ett land, ikke Norge" />
       <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.KUN_NORGE} label="Kun Norge" />
-      <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.FLERE_LAND} label="To eller flere land" />
+      <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.TO_ELLER_FLERE_LAND} label="To eller flere land" />
     </Nav.Fieldset>
     :
     null;
@@ -57,9 +57,9 @@ const VurderingVirksomhet = props => {
 };
 
 VurderingVirksomhet.ID = 'VIRKSOMHET';
-VurderingVirksomhet.ETT_LAND = 'ETT_LAND';
+VurderingVirksomhet.ETT_LAND_IKKE_NORGE = 'ETT_LAND_IKKE_NORGE';
 VurderingVirksomhet.KUN_NORGE = 'KUN_NORGE';
-VurderingVirksomhet.FLERE_LAND = 'FLERE_LAND';
+VurderingVirksomhet.TO_ELLER_FLERE_LAND = 'TO_ELLER_FLERE_LAND';
 VurderingVirksomhet.EN_ELLER_BEGGE = 'EN_ELLER_BEGGE';
 VurderingVirksomhet.INGEN_VEKSLING = 'INGEN_VEKSLING';
 VurderingVirksomhet.MARGINALT_JA = 'MARGINALT_JA';
