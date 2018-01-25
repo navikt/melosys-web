@@ -1,7 +1,7 @@
 import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
 
 class TilstandsLogikk {
-  static beregnTilstand = (gjeldendeSteg, faktaavklaring) => {
+  static beregnTilstand = (gjeldendeSteg, skjema) => {
     switch (gjeldendeSteg) {
       case 'PERIODE': {
         return {};
@@ -17,13 +17,13 @@ class TilstandsLogikk {
         };
       }
       case 'VIRKSOMHET': {
-        const { virksomhet } = faktaavklaring;
+        const { faktaavklaringAntallLand } = skjema;
 
         return {
           visAntallLand: true,
-          visVekslingMellomLand: virksomhet.antallLand === VurderingVirksomhet.FLERE_LAND,
-          visMarginaltArbeid: true,
-          visAktivitetINorge: true,
+          visVekslingMellomLand: faktaavklaringAntallLand === VurderingVirksomhet.TO_ELLER_FLERE_LAND,
+          visMarginaltArbeid: faktaavklaringAntallLand === VurderingVirksomhet.TO_ELLER_FLERE_LAND,
+          visAktivitetINorge: faktaavklaringAntallLand === VurderingVirksomhet.TO_ELLER_FLERE_LAND,
         };
       }
       case 'UTSENDING': {

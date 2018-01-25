@@ -118,7 +118,7 @@ class Vilkarsveileder extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (Object.keys(nextProps.faktaavklaring).length > 0) {
-      this.oppdaterAktuelleSteg(nextProps.faktaavklaring);
+      this.oppdaterAktuelleSteg(nextProps.faktaavklaring, nextProps.skjema);
     }
   }
 
@@ -139,7 +139,7 @@ class Vilkarsveileder extends Component {
     this.tilSteg(this.beregnNesteSteg());
   }
 
-  oppdaterAktuelleSteg = faktaavklaring => {
+  oppdaterAktuelleSteg = (faktaavklaring, skjema) => {
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
     const aktuelleSteg = beregnedeSteg
@@ -148,7 +148,7 @@ class Vilkarsveileder extends Component {
         ...steg,
         stegPosisjon: index,
         aktivtSteg: false,
-        data: { tilstand: TilstandsLogikk.beregnTilstand(steg.id, faktaavklaring) },
+        data: { tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
       }));
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
