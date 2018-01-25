@@ -20,6 +20,11 @@ const VurderingAktivitet = props => {
 
 VurderingAktivitet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  tilstand: PT.object,
+};
+
+VurderingAktivitet.defaultProps = {
+  tilstand: {},
 };
 
 export default VurderingAktivitet;

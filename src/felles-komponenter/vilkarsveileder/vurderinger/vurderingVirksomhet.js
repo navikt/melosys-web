@@ -6,7 +6,7 @@ import * as Skjema from '../../skjema';
 const VurderingVirksomhet = props => {
   const { bekreftOgFortsett, tilstand } = props;
 
-  const antallLand = tilstand.faktaavklaringAntallLand
+  const antallLand = tilstand.visAntallLand
     ?
     <Nav.Fieldset legend="Hvor mange land skal søker ha yrkesaktivitet i?">
       <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhet.ETT_LAND} label="Ett land, ikke Norge" />
@@ -16,7 +16,7 @@ const VurderingVirksomhet = props => {
     :
     null;
 
-  const vekslingMellomLand = tilstand.faktaavklaringVekslingMellomLand
+  const vekslingMellomLand = tilstand.visVekslingMellomLand
     ?
     <Nav.Fieldset legend="Veksler søker regelmessig mellom arbeid i flere land eller arbeider søker i flere land?">
       <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhet.EN_ELLER_BEGGE} label="Ja, en eller begge" />
@@ -25,7 +25,7 @@ const VurderingVirksomhet = props => {
     :
     null;
 
-  const marginaltArbeid = tilstand.faktaavklaringMarginaltArbeid
+  const marginaltArbeid = tilstand.visMarginaltArbeid
     ?
     <Nav.Fieldset legend="Utgjør arbeidet i hvert av landene mer enn 5%? (Er det mer enn marginalt arbeid?)">
       <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhet.MARGINALT_JA} label="Ja" />
@@ -34,7 +34,7 @@ const VurderingVirksomhet = props => {
     :
     null;
 
-  const aktivitetINorge = tilstand.faktaavklaringAktivitetINorge
+  const aktivitetINorge = tilstand.visAktivitetINorge
     ?
     <Nav.Fieldset legend="Hvor mye av aktiviteten skjer i Norge?">
       <Skjema.Radio feltNavn="faktaavklaringAktivitetINorge" value={VurderingVirksomhet.UNDER_25_PROSENT} label="Mindre enn 25%" />
