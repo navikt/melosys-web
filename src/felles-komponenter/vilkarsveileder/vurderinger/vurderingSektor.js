@@ -27,7 +27,7 @@ const VurderingSektor = props => {
 
   return (
     <div>
-      { tilstand.visAnsattISektor && AnsattISektor }
+      { tilstand.visAnsattISektor && <AnsattISektor /> }
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>

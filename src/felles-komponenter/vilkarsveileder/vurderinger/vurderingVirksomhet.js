@@ -49,10 +49,10 @@ const VurderingVirksomhet = props => {
 
   return (
     <div>
-      { tilstand.visAntallLand && AntallLand }
-      { tilstand.visVekslingMellomLand && VekslingMellomLand }
-      { tilstand.visMarginaltArbeid && MarginaltArbeid }
-      { tilstand.visAktivitetINorge && AktivitetINorge }
+      { tilstand.visAntallLand && <AntallLand /> }
+      { tilstand.visVekslingMellomLand && <VekslingMellomLand /> }
+      { tilstand.visMarginaltArbeid && <MarginaltArbeid /> }
+      { tilstand.visAktivitetINorge && <AktivitetINorge /> }
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Fortsett til vedtaksforslag</Nav.Knapp>
       </div>
