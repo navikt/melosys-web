@@ -78,9 +78,9 @@ function methodToJson(method, url, data) {
   const headers = {
     Accept: 'application/json',
     'Accept-Charset': 'UTF-8',
-    //'Cache-control': 'no-store, must-revalidate, no-cache, max-age=0',
-    //Expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
-    //Pragma: 'no-cache',
+    // 'Cache-control': 'no-store, must-revalidate, no-cache, max-age=0',
+    // Expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+    // Pragma: 'no-cache',
     // Origin: window.location.origin, // Set by fetch() automagically
     // 'Access-Control-Request-Method': method, // Kun ved preflight
   };
