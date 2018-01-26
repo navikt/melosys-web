@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { Field, FieldArray, reduxForm, arrayRemoveAll, arrayPush } from 'redux-form';
+import { Field, FieldArray } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
@@ -51,18 +51,11 @@ ArbeidsforholdLinje.defaultProps = {
  */
 class ArbeidsforholdeneListe extends Component {
   arbeidsforholdKlikkHandler = arbeidsforholdID => {
-    const { fields, dispatch } = this.props;
+    const { fields } = this.props;
     const alleOpprinneligValgte = fields.getAll();
-    const alleNyeValgte = alleOpprinneligValgte.includes(arbeidsforholdID)
-      ?
-      alleOpprinneligValgte.filter(item => item !== arbeidsforholdID)
-      :
-      [...alleOpprinneligValgte, arbeidsforholdID];
 
-    dispatch(arrayRemoveAll('soknad', 'valgteArbeidsforhold'));
-
-    // Finnes p.t. ingen måte å pushe en hel Array, så hver verdi må pushes én og én. Dette er også anbefalt av erikras.
-    alleNyeValgte.forEach(valgt => (dispatch(arrayPush('soknad', 'valgteArbeidsforhold', valgt))));
+    const indexPosition = alleOpprinneligValgte.findIndex(valgt => valgt === arbeidsforholdID);
+    return indexPosition >= 0 ? fields.remove(indexPosition) : fields.push(arbeidsforholdID);
   }
 
   render() {
@@ -92,7 +85,6 @@ class ArbeidsforholdeneListe extends Component {
 ArbeidsforholdeneListe.propTypes = {
   fields: PT.object.isRequired,
   arbeidsforholdene: PT.array,
-  dispatch: PT.func.isRequired,
 };
 
 ArbeidsforholdeneListe.defaultProps = {
@@ -106,13 +98,13 @@ ArbeidsforholdeneListe.defaultProps = {
  * @param props
  */
 const VurderingArbeidsforhold = props => {
-  const { bekreftOgFortsett, arbeidsforholdene, dispatch } = props;
+  const { bekreftOgFortsett, arbeidsforholdene } = props;
 
   return (
     <div className="vurderingarbeidsforhold">
       <Nav.Undertittel>Velg arbeidsforhold:</Nav.Undertittel>
       <div className="arbeidsforhold">
-        <FieldArray name="valgteArbeidsforhold" component={arrayProps => <ArbeidsforholdeneListe {...arrayProps} dispatch={dispatch} arbeidsforholdene={arbeidsforholdene} />} />
+        <FieldArray name="valgteArbeidsforhold" component={arrayProps => <ArbeidsforholdeneListe {...arrayProps} arbeidsforholdene={arbeidsforholdene} />} />
         <div className="fane__knapplinje">
           <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
@@ -124,9 +116,6 @@ const VurderingArbeidsforhold = props => {
 VurderingArbeidsforhold.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
-  dispatch: PT.func.isRequired,
 };
 
-export default reduxForm({
-  form: 'soknad',
-})(VurderingArbeidsforhold);
+export default VurderingArbeidsforhold;
