@@ -12,7 +12,7 @@ const VurderingBostedsland = props => {
     <div>
       <Nav.Fieldset legend="Jeg bekrefter å ha vurdert:">
         <Skjema.Checkbox feltNavn="faktaavklaringBekrefterFamiliebosted" value={VurderingBostedsland.TRUE} label="Hvor søkers nærmeste familie bor" />
-        <Skjema.Checkbox feltNavn="faktaavklaringBekrefterFamiliebosted" value={VurderingBostedsland.TRUE} label="Hvor søker disponerer" />
+        <Skjema.Checkbox feltNavn="faktaavklaringBekrefterDisponering" value={VurderingBostedsland.TRUE} label="Hvor søker disponerer" />
       </Nav.Fieldset>
       <Nav.Fieldset legend="Basert på dette vurderes bosted til:">
         <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} />
