@@ -1,4 +1,4 @@
-import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
+import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
 import { STEG } from './typer';
 
 class TilstandsLogikk {
@@ -22,9 +22,9 @@ class TilstandsLogikk {
 
         return {
           visAntallLand: true,
-          visVekslingMellomLand: faktaavklaringAntallLand === VurderingVirksomhet.TO_ELLER_FLERE_LAND,
-          visMarginaltArbeid: faktaavklaringAntallLand === VurderingVirksomhet.TO_ELLER_FLERE_LAND,
-          visAktivitetINorge: faktaavklaringAntallLand === VurderingVirksomhet.TO_ELLER_FLERE_LAND,
+          visVekslingMellomLand: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
+          visMarginaltArbeid: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
+          visAktivitetINorge: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
         };
       }
       case STEG.UTSENDING: {
