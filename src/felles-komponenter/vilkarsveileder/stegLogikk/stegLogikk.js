@@ -1,7 +1,7 @@
 // import { SYSSELSETTING } from './typer';
-import VurderingSysselsetting from '../vurderinger/vurderingSysselsetting';
-import VurderingSektor from '../vurderinger/vurderingSektor';
-import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
+import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetting';
+import { VurderingSektorTyper } from '../vurderinger/vurderingSektor';
+import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
 
 import { STEG } from './typer';
 
@@ -17,25 +17,25 @@ class StegLogikk {
     ],
     SYSSELSETTING: [
       {
-        valg: [VurderingSysselsetting.ARBEIDSTAKER, VurderingSysselsetting.ARBEIDSTAKER_OG_SELVSTENDIG],
+        valg: [VurderingSysselsettingTyper.ARBEIDSTAKER, VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG],
         til: STEG.SEKTOR,
       },
       {
-        valg: [VurderingSysselsetting.SELVSTENDIG],
+        valg: [VurderingSysselsettingTyper.SELVSTENDIG],
         til: STEG.VIRKSOMHET,
       },
     ],
     SEKTOR: [
       {
-        valg: [VurderingSektor.FLYVENDE, VurderingSektor.OFFENTLIG],
+        valg: [VurderingSektorTyper.FLYVENDE, VurderingSektorTyper.OFFENTLIG],
         til: STEG.VEDTAK,
       },
       {
-        valg: VurderingSektor.SOKKEL,
+        valg: VurderingSektorTyper.SOKKEL,
         til: STEG.VEDTAK,
       },
       {
-        valg: VurderingSektor.INGEN_AV_DISSE,
+        valg: VurderingSektorTyper.INGEN_AV_DISSE,
         til: STEG.VIRKSOMHET,
       },
     ],
@@ -87,7 +87,7 @@ class StegLogikk {
       case 'VIRKSOMHET': {
         const { antallLand } = vurderingerIDetteSteget;
 
-        if (antallLand === VurderingVirksomhet.FLERE_LAND) {
+        if (antallLand === VurderingVirksomhetTyper.FLERE_LAND) {
           return 'UTSENDING';
         }
 
