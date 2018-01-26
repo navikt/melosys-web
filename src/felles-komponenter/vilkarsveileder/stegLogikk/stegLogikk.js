@@ -77,7 +77,8 @@ class StegLogikk {
       }
       case 'SYSSELSETTING': {
         const { sysselsettingType } = vurderingerIDetteSteget;
-        return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType)).til;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType));
+        return nesteStiObjekt ? nesteStiObjekt.til : 'VEDTAK';
       }
       case 'SEKTOR': {
         const { ansattISektor } = vurderingerIDetteSteget;
