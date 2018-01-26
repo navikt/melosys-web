@@ -12,7 +12,6 @@ function erDev() {
 */
 // from .env or .env.local
 const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
-const API_SAKSBEHANDLER = `${process.env.REACT_APP_API_SAKSBEHANDLER}`;
 console.log('process.env', process.env);
 
 export function health() {
@@ -20,9 +19,9 @@ export function health() {
   return getAsJson(URI_HEALTH);
 }
 
-export function hentSoknad(behandlingID) {
-  const URI_SOKNAD = `${API_BASE_URL}soknader/${behandlingID}`;
-  return getAsJson(URI_SOKNAD);
+export function hentSoknader(behandlingID) {
+  const URI_SOKNADER = `${API_BASE_URL}soknader/${behandlingID}`;
+  return getAsJson(URI_SOKNADER);
 }
 
 export function sendSoknad(dokument) {
@@ -71,7 +70,7 @@ export function hentTidligeresaker(brukernavn) {
 }
 
 export function hentSaksbehandler() {
-  const URI_SAKSBEHANDLER = `${API_BASE_URL}${API_SAKSBEHANDLER}`;
+  const URI_SAKSBEHANDLER = `${API_BASE_URL}saksbehandler`;
   return getAsJson(URI_SAKSBEHANDLER);
 }
 
