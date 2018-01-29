@@ -49,10 +49,10 @@ export default function reducer(state = initialState, action) {
         sektor: {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
-        bosted: {
+        bostedsland: {
           bekrefterFamiliebosted: dokument.faktaavklaringBekrefterFamiliebosted,
           bekrefterDisponering: dokument.faktaavklaringBekrefterDisponering,
-          faktaavklaringBostedsland: dokument.faktaavklaringBostedsland,
+          bostedsLand: dokument.faktaavklaringBostedsland,
         },
         virksomhet: {
           antallLand: dokument.faktaavklaringAntallLand,
@@ -125,7 +125,7 @@ export const FaktaavklaringVirksomhetSelector = createSelector(
 );
 
 export const FaktaavklaringBostedslandSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bosted : {}),
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bostedsland : {}),
   periode => periode
 );
 
