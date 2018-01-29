@@ -24,9 +24,9 @@ export function hentSoknader(bid) {
   return getAsJson(URI_SOKNADER);
 }
 
-export function sendSoknad(bid, dokument) {
+export function sendSoknad(bid, soknad) {
   const URI_SOKNAD =`${API_BASE_URL}soknader/${bid}`;
-  return postAsJson(URI_SOKNAD, dokument);
+  return postAsJson(URI_SOKNAD, soknad);
 }
 
 export function hentFaktaavklaring(bid) {
