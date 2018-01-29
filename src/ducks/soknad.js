@@ -97,8 +97,8 @@ export function hentSoknad(behandlingID) {
   });
 }
 
-export function sendSoknad(bid, dokument) {
-  return doThenDispatch(() => Api.sendSoknad(bid, dokument), {
+export function sendSoknad(bid, soknad) {
+  return doThenDispatch(() => Api.sendSoknad(bid, soknad), {
     OK,
     FEILET,
     PENDING,
