@@ -16,6 +16,18 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
+const soknadTemplate = {
+  opplysningerOmBrukeren: {},
+  arbeidUtland: {},
+  oretakUtland: {},
+  oppholdUtland: {},
+  arbeidNorge: {},
+  juridiskArbeidsgiverNorge: {},
+  arbeidsinntekt: {},
+  arbeidsgiversBekreftelse: {},
+  tilleggsopplysninger: {},
+};
+
 // Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -23,12 +35,18 @@ export default function reducer(state = initialState, action) {
       return { ...state, status: STATUS.PENDING };
     case FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
-    case OK:
+    case OK: {
+      const soknadData = action.data;
+
+      if (!soknadData.soknadDokument) {
+        soknadData.soknadDokument = { ...soknadTemplate };
+      }
       return {
         ...state,
         status: STATUS.OK,
-        data: action.data,
+        data: soknadData,
       };
+    }
     case OPPDATER_SOKNAD: {
       const { dokument } = action;
       const soknad = {
@@ -114,28 +132,29 @@ export const ValgteArbeidsforhold = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidNorge.valgteArbeidsforhold : []),
   state => ArbeidsforholdeneSelector(state),
   (valgteArbeidsforhold, alleArbeidsforhold) => (
-    valgteArbeidsforhold.map(valgtArbeidsforholdID => alleArbeidsforhold.find(arbeidsforholdet => arbeidsforholdet.arbeidsforholdID === valgtArbeidsforholdID))
+    valgteArbeidsforhold ? valgteArbeidsforhold.map(valgtArbeidsforholdID => alleArbeidsforhold.find(arbeidsforholdet => arbeidsforholdet.arbeidsforholdID === valgtArbeidsforholdID)) : []
+
   )
 );
 
 export const ArbeidUtlandSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidUtland : {}),
-  soknad => soknad
+  soknad => soknad || {}
 );
 
 export const ArbeidsinntektSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsinntekt : {}),
-  soknad => soknad
+  soknad => soknad || {}
 );
 
 export const ForetakUtlandSelector = createSelector(
   state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.foretakUtland,
-  soknad => soknad
+  soknad => soknad || {}
 );
 
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(
   state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.juridiskArbeidsgiverNorge,
-  soknad => soknad
+  soknad => soknad || {}
 );
 
 export const OppholdUtlandSelector = createSelector(
