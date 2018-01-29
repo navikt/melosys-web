@@ -158,8 +158,9 @@ class Saksbehandling extends Component {
 
   fattVedtakHandler = () => {
     const bid = this.props.oppsummering.behandlingID;
+    const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
 
-    this.props.sendSoknad(bid, this.props.soknad.soknadDokument);
+    this.props.sendSoknad(bid, soknad);
     this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
   }
 
