@@ -17,6 +17,23 @@ const ikonFraKjonn = kjoenn => {
     default: { return Ikoner.Ukjentkjoenn; }
   }
 };
+const visBostedsAdresse = bostedsadresse => {
+  if (bostedsadresse) {
+    const {
+      poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav = '' },
+    } = bostedsadresse;
+
+    return (
+      <div>
+        <dd>{`${gatenavn} ${husnummer} ${husbokstav}`}</dd>
+        <dd>{`${postnr} ${poststed}`}</dd>
+        <dd>{`${land}`}</dd>
+      </div>
+    );
+  }
+
+  return null;
+};
 
 function Personopplysninger(props) {
   if (Object.keys(props.person).length === 0) return (<div />);
@@ -31,10 +48,7 @@ function Personopplysninger(props) {
     bostedsadresse,
   } = props.person;
 
-  // Påkrevde felter fra API
-  const {
-    poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav = '' },
-  } = bostedsadresse;
+
   const aar = moment().diff(foedselsdato, 'years');
 
   return (
@@ -49,10 +63,9 @@ function Personopplysninger(props) {
               <dl className="person__detaljer">
                 <dt>Fødselsnummer:</dt><dd>{fnr}</dd>
                 <dt>Kjønn:</dt><dd>{kjoenn}</dd>
+
                 <dt>Bostedsadresse</dt>
-                <dd>{`${gatenavn} ${husnummer} ${husbokstav}`}</dd>
-                <dd>{`${postnr} ${poststed}`}</dd>
-                <dd>{`${land}`}</dd>
+                {visBostedsAdresse(bostedsadresse)}
               </dl>
             </Nav.Column>
             <Nav.Column xs="6">

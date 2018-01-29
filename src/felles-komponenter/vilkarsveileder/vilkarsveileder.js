@@ -8,6 +8,7 @@ import * as MPT from '../../proptypes/';
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegLogikk from './stegLogikk/stegLogikk';
+import TilstandsLogikk from './stegLogikk/tilstandsLogikk';
 
 import { FANE_STATUS } from './stegLogikk/typer';
 
@@ -23,6 +24,7 @@ import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector } from '../../ducks/fagsaker';
 import { FaktaavklaringSelector } from '../../ducks/faktaavklaring';
+import { SoknadenFormSelector } from '../../ducks/form';
 
 import './vilkarsveileder.css';
 
@@ -116,7 +118,7 @@ class Vilkarsveileder extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (Object.keys(nextProps.faktaavklaring).length > 0) {
-      this.oppdaterAktuelleSteg(nextProps.faktaavklaring);
+      this.oppdaterAktuelleSteg(nextProps.faktaavklaring, nextProps.skjema);
     }
   }
 
@@ -137,12 +139,17 @@ class Vilkarsveileder extends Component {
     this.tilSteg(this.beregnNesteSteg());
   }
 
-  oppdaterAktuelleSteg = faktaavklaring => {
+  oppdaterAktuelleSteg = (faktaavklaring, skjema) => {
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
     const aktuelleSteg = beregnedeSteg
       .map(aktueltSteg => this.state.alleSteg.find(steg => steg.id === aktueltSteg))
-      .map((steg, index) => ({ ...steg, stegPosisjon: index, aktivtSteg: false }));
+      .map((steg, index) => ({
+        ...steg,
+        stegPosisjon: index,
+        aktivtSteg: false,
+        data: { tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
+      }));
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
     aktuelleSteg[this.state.aktivtStegNummer].status = FANE_STATUS.AKTIV;
@@ -190,6 +197,7 @@ Vilkarsveileder.propTypes = {
   beOmVurderingHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   faktaavklaring: PT.object,
+  skjema: PT.object.isRequired,
 };
 
 Vilkarsveileder.defaultProps = {
@@ -200,6 +208,7 @@ Vilkarsveileder.defaultProps = {
 const mapStateToProps = state => ({
   oppsummering: OppsummeringSelector(state),
   faktaavklaring: FaktaavklaringSelector(state).faktaavklaring,
+  skjema: SoknadenFormSelector(state).values,
 });
 
 export default withRouter(connect(mapStateToProps)(Vilkarsveileder));

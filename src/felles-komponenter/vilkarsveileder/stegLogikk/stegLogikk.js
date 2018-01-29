@@ -1,8 +1,9 @@
 // import { SYSSELSETTING } from './typer';
-import VurderingSysselsetting from '../vurderinger/vurderingSysselsetting';
-import VurderingSektor from '../vurderinger/vurderingSektor';
-import VurderingVirksomhet from '../vurderinger/vurderingVirksomhet';
+import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetting';
+import { VurderingSektorTyper } from '../vurderinger/vurderingSektor';
+import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
 
+import { STEG } from './typer';
 
 class StegLogikk {
   static SISTE_STEG = null;
@@ -11,55 +12,55 @@ class StegLogikk {
     PERIODE: [
       {
         valg: [],
-        til: 'SYSSELSETTING',
+        til: STEG.SYSSELSETTING,
       },
     ],
     SYSSELSETTING: [
       {
-        valg: [VurderingSysselsetting.ARBEIDSTAKER, VurderingSysselsetting.ARBEIDSTAKER_OG_SELVSTENDIG],
-        til: 'SEKTOR',
+        valg: [VurderingSysselsettingTyper.ARBEIDSTAKER, VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG],
+        til: STEG.SEKTOR,
       },
       {
-        valg: [VurderingSysselsetting.SELVSTENDIG],
-        til: 'VIRKSOMHET',
+        valg: [VurderingSysselsettingTyper.SELVSTENDIG],
+        til: STEG.VIRKSOMHET,
       },
     ],
     SEKTOR: [
       {
-        valg: [VurderingSektor.FLYVENDE, VurderingSektor.OFFENTLIG],
-        til: 'VEDTAK',
+        valg: [VurderingSektorTyper.FLYVENDE, VurderingSektorTyper.OFFENTLIG],
+        til: STEG.VEDTAK,
       },
       {
-        valg: VurderingSektor.SOKKEL,
-        til: 'VEDTAK',
+        valg: VurderingSektorTyper.SOKKEL,
+        til: STEG.VEDTAK,
       },
       {
-        valg: VurderingSektor.INGEN_AV_DISSE,
-        til: 'VIRKSOMHET',
+        valg: VurderingSektorTyper.INGEN_AV_DISSE,
+        til: STEG.VIRKSOMHET,
       },
     ],
     UTSENDING: [
       {
         valg: [],
-        til: 'VEDTAK',
+        til: STEG.VEDTAK,
       },
     ],
     VIRKSOMHET: [
       {
         valg: [],
-        til: 'UTSENDING',
+        til: STEG.AKTIVITET,
       },
     ],
     AKTIVITET: [
       {
         valg: [],
-        til: 'VEDTAK',
+        til: STEG.VEDTAK,
       },
     ],
     ARBEIDSFORHOLD: [
       {
         valg: [],
-        til: 'VEDTAK',
+        til: STEG.VEDTAK,
       },
     ],
     VEDTAK: [
@@ -77,20 +78,21 @@ class StegLogikk {
       }
       case 'SYSSELSETTING': {
         const { sysselsettingType } = vurderingerIDetteSteget;
-        return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType)).til;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType));
+        return nesteStiObjekt ? nesteStiObjekt.til : 'VEDTAK';
       }
       case 'SEKTOR': {
         const { ansattISektor } = vurderingerIDetteSteget;
         return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(ansattISektor)).til;
       }
       case 'VIRKSOMHET': {
-        const { fordelingArbeidsgivere } = vurderingerIDetteSteget;
+        const { antallLand } = vurderingerIDetteSteget;
 
-        if (fordelingArbeidsgivere === VurderingVirksomhet.FLERE_LAND) {
+        if (antallLand === VurderingVirksomhetTyper.FLERE_LAND) {
           return 'UTSENDING';
         }
 
-        return 'VEDTAK';
+        return 'AKTIVITET';
       }
       case 'UTSENDING': {
         return 'VEDTAK';
