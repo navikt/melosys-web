@@ -5,6 +5,10 @@ import * as Skjema from '../../skjema';
 
 import LandVelger from '../../skjema/landvelger/';
 
+export const VurderingBostedslandTyper = {
+  TRUE: 'true',
+};
+
 const VurderingBostedsland = props => {
   const { bekreftOgFortsett } = props;
 
@@ -32,7 +36,5 @@ VurderingBostedsland.propTypes = {
 VurderingBostedsland.defaultProps = {
   tilstand: {},
 };
-
-VurderingBostedsland.TRUE = 'true';
 
 export default VurderingBostedsland;

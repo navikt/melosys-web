@@ -25,9 +25,9 @@ const VurderingUtsending = props => {
   return (
     <div>
       <Nav.Fieldset legend="Hva gjelder for søkeren?">
-        {tilstand.visUtsendingMindreEnn24Mnd && UtsendingMindreEnn24Mnd}
-        {tilstand.visErstatterTidligereUtsendt && ErstatterTidligereUtsendt}
-        {tilstand.visAnsattINorskSelskap && AnsattINorskSelskap}
+        {tilstand.visUtsendingMindreEnn24Mnd && <UtsendingMindreEnn24Mnd />}
+        {tilstand.visErstatterTidligereUtsendt && <ErstatterTidligereUtsendt />}
+        {tilstand.visAnsattINorskSelskap && <AnsattINorskSelskap />}
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
