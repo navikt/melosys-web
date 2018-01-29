@@ -126,7 +126,7 @@ export const FaktaavklaringVirksomhetSelector = createSelector(
 
 export const FaktaavklaringBostedslandSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bostedsland : {}),
-  periode => periode
+  bostedsland => bostedsland || {}
 );
 
 export const FaktaavklaringAktivitetSelector = createSelector(
