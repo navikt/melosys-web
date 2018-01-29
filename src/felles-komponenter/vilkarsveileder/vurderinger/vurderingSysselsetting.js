@@ -3,17 +3,28 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
+export const VurderingSysselsettingTyper = {
+  IKKE_ARBEIDENDE: 'IKKE_ARBEIDENDE',
+  ARBEIDSTAKER: 'ARBEIDSTAKER',
+  SELVSTENDIG: 'SELVSTENDIG',
+  ARBEIDSTAKER_OG_SELVSTENDIG: 'ARBEIDSTAKER_OG_SELVSTENDIG',
+};
+
+const Sysselsetting = () => (
+  <Nav.Fieldset legend="Vurder om søkeren er:">
+    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.IKKE_ARBEIDENDE} label="Ikke yrkesaktiv" />
+    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.ARBEIDSTAKER} label="Arbeidstaker / frilanser" />
+    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.SELVSTENDIG} label="Selvstendig næringsdrivende" />
+    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG} label="Både arbeidstakende og selvstendig" />
+  </Nav.Fieldset>
+);
+
 const VurderingSysselsetting = props => {
-  const { bekreftOgFortsett } = props;
+  const { bekreftOgFortsett, tilstand } = props;
 
   return (
     <div>
-      <Nav.Fieldset legend="Vurder om søkeren er:">
-        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.IKKE_ARBEIDENDE} label="Ikke yrkesaktiv" />
-        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.ARBEIDSTAKER} label="Arbeidstaker / frilanser" />
-        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.SELVSTENDIG} label="Selvstendig næringsdrivende" />
-        <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsetting.ARBEIDSTAKER_OG_SELVSTENDIG} label="Både arbeidstakende og selvstendig" />
-      </Nav.Fieldset>
+      { tilstand.visSysselsettingType && <Sysselsetting /> }
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
@@ -22,13 +33,15 @@ const VurderingSysselsetting = props => {
 };
 
 VurderingSysselsetting.ID = 'SYSSELSETTING';
-VurderingSysselsetting.IKKE_ARBEIDENDE = 'IKKE_ARBEIDENDE';
-VurderingSysselsetting.ARBEIDSTAKER = 'ARBEIDSTAKER';
-VurderingSysselsetting.SELVSTENDIG = 'SELVSTENDIG';
-VurderingSysselsetting.ARBEIDSTAKER_OG_SELVSTENDIG = 'ARBEIDSTAKER_OG_SELVSTENDIG';
+
 
 VurderingSysselsetting.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  tilstand: PT.object,
+};
+
+VurderingSysselsetting.defaultProps = {
+  tilstand: {},
 };
 
 
