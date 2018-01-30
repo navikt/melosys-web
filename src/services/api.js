@@ -19,28 +19,28 @@ export function health() {
   return getAsJson(URI_HEALTH);
 }
 
-export function hentSoknader(bid) {
-  const URI_SOKNADER = `${API_BASE_URL}soknader/${bid}`;
+export function hentSoknader(behandlingID) {
+  const URI_SOKNADER = `${API_BASE_URL}soknader/${behandlingID}`;
   return getAsJson(URI_SOKNADER);
 }
 
-export function sendSoknad(bid, dokument) {
-  const URI_SOKNAD =`${API_BASE_URL}soknader/${bid}`;
+export function sendSoknad(dokument) {
+  const URI_SOKNAD =`${API_BASE_URL}soknader/`;
   return postAsJson(URI_SOKNAD, dokument);
 }
 
-export function hentFaktaavklaring(bid) {
-  const URI_FAKTAAVKLARING = `${API_BASE_URL}faktaavklaring/${bid}`;
+export function hentFaktaavklaring(behandlingID) {
+  const URI_FAKTAAVKLARING = `${API_BASE_URL}faktaavklaring/${behandlingID}`;
   return getAsJson(URI_FAKTAAVKLARING);
 }
 
-export function sendFaktaavklaring(bid, dokument) {
-  const URI_FAKTAAVKLARING =`${API_BASE_URL}faktaavklaring/${bid}`;
+export function sendFaktaavklaring(dokument) {
+  const URI_FAKTAAVKLARING =`${API_BASE_URL}faktaavklaring/`;
   return postAsJson(URI_FAKTAAVKLARING, dokument);
 }
 
-export function hentVurdering(bid) {
-  const URI_VURDERING = `${API_BASE_URL}vurdering/${bid}`;
+export function hentVurdering(behandlingID) {
+  const URI_VURDERING = `${API_BASE_URL}vurdering/${behandlingID}`;
   return getAsJson(URI_VURDERING);
 }
 
