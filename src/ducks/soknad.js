@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 import { strengTilBool, strengTilInt } from '../utils/utils';
-import { formatterDatoTilMaskin } from '../utils/dato';
+import { formatterDatoTilISO } from '../utils/dato';
 
 import { ArbeidsforholdeneSelector } from './fagsaker';
 
@@ -70,7 +70,7 @@ export default function reducer(state = initialState, action) {
           arbeidstakerTidligereUtsendt24Mnd: strengTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
           arbeidsgiverBetalerArbeidsgiveravgift: strengTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
           trygdeavgiftTrukketGjennomSkatt: strengTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
-          trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilMaskin(dokument.trygdeavgiftTrukketGjennomSkattDato),
+          trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato),
         },
         oppholdUtland: {
           ...state.data.soknadDokument.oppholdUtland,
