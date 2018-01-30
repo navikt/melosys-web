@@ -78,10 +78,10 @@ it('formatterer datoen riktig til norsk format DD.MM.YYYY HH:mm:ss og med evt kl
 
 it('formatterer norsk dato korrekt tilbake til maskinlesbar dato', () => {
   const tillatteDatoer = [
-    {test: '01.01.2018 10:34', forvent: '2018/01/01T10:34:00'},
-    {test: '01.01.2018', forvent: '2018/01/01T00:00:00'},
-    {test: '10.12.2018 10:34', forvent: '2018/12/10T10:34:00'},
-    {test: '10.12.2018', forvent: '2018/12/10T00:00:00'}
+    {test: '01.01.2018 10:34', forvent: '2018-01-01T10:34:00'},
+    {test: '01.01.2018', forvent: '2018-01-01T00:00:00'},
+    {test: '10.12.2018 10:34', forvent: '2018-12-10T10:34:00'},
+    {test: '10.12.2018', forvent: '2018-12-10T00:00:00'}
   ]
 
   tillatteDatoer.forEach(datoTest => {
