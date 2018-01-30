@@ -34,6 +34,9 @@ class TilstandsLogikk {
           visErstatterTidligereUtsendt: false,
         };
       }
+      case STEG.BOSTEDSLAND: {
+        return {};
+      }
       case STEG.AKTIVITET: {
         return {};
       }

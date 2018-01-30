@@ -60,6 +60,7 @@ import {
   FaktaavklaringSektorSelector,
   FaktaavklaringVirksomhetSelector,
   FaktaavklaringAktivitetSelector,
+  FaktaavklaringBostedslandSelector,
 } from '../ducks/faktaavklaring';
 
 import {
@@ -282,6 +283,9 @@ const mapStateToProps = state => ({
     faktaavklaringMarginaltArbeid: FaktaavklaringVirksomhetSelector(state).marginaltArbeid,
     faktaavklaringVekslingMellomLand: FaktaavklaringVirksomhetSelector(state).vekslingMellomLand,
     faktaavklaringAktivitetLand: FaktaavklaringAktivitetSelector(state).aktivitetLand,
+    faktaavklaringBekrefterFamiliebosted: FaktaavklaringBostedslandSelector(state).bekrefterFamiliebosted,
+    faktaavklaringBekrefterDisponering: FaktaavklaringBostedslandSelector(state).bekrefterFamiliebosted,
+    faktaavklaringBostedsland: FaktaavklaringBostedslandSelector(state).bostedsLand,
   },
 });
 
