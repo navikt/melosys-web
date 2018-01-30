@@ -3,9 +3,9 @@ import PT from 'prop-types';
 import { Periode } from './periode';
 
 const UtenlandsoppholdLinjePropType = PT.shape({
-  oppholdsPeriode: Periode,
-  rapporteringsPeriode: PT.string,
-  oppholdsland: PT.string,
+  periode: Periode,
+  rapporteringsperiode: PT.string,
+  land: PT.string,
 });
 
 const UtenlandsoppholdPropType = PT.arrayOf(UtenlandsoppholdLinjePropType);
