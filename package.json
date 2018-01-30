@@ -1,6 +1,6 @@
 {
   "name": "melosys-web",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Medlemsskap og lovvalgssystem",
   "author": "are.bjolseth@nav.no",
   "keywords": [
@@ -64,7 +64,7 @@
     "sanitize-html": "^1.16.3",
     "uuid": "^3.1.0"
   },
-  "homepage":"http://eesi2.no/melosys-web",
+  "homepage": "http://eesi2.no/melosys-web",
   "scripts": {
     "analyze": "source-map-explorer build/static/js/main.*",
     "start:js": "react-scripts start",
