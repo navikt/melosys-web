@@ -54,7 +54,7 @@ Arbeidsgiver.defaultProps = {
 function UtsendendeArbeidsgiver (props) {
   const { arbeidsforholdene, valgteArbeidsforhold, soknadArbeidNorge } = props;
   const valgteOrganisasjon = arbeidsforholdene && arbeidsforholdene.reduce((samling, arbeidsforholdet) =>
-    (valgteArbeidsforhold.includes(arbeidsforholdet.arbeidsforholdID) ? [...samling, arbeidsforholdet.arbeidsgiver] : [...samling]), []);
+    (valgteArbeidsforhold.includes(arbeidsforholdet.arbeidsforholdIDnav) ? [...samling, arbeidsforholdet.arbeidsgiver] : [...samling]), []);
   const panelIkon = valgteOrganisasjon.length === 1 ? Ikoner.Ferdig : Ikoner.Varsel;
 
   return Object.keys(soknadArbeidNorge).length > 0 ? (

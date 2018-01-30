@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 import { strengTilBool, strengTilInt } from '../utils/utils';
+import { formatterDatoTilISO } from '../utils/dato';
 
 import { ArbeidsforholdeneSelector } from './fagsaker';
 
@@ -16,6 +17,18 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
+const soknadTemplate = {
+  opplysningerOmBrukeren: {},
+  arbeidUtland: {},
+  oretakUtland: {},
+  oppholdUtland: {},
+  arbeidNorge: {},
+  juridiskArbeidsgiverNorge: {},
+  arbeidsinntekt: {},
+  arbeidsgiversBekreftelse: {},
+  tilleggsopplysninger: {},
+};
+
 // Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -23,12 +36,18 @@ export default function reducer(state = initialState, action) {
       return { ...state, status: STATUS.PENDING };
     case FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
-    case OK:
+    case OK: {
+      const soknadData = action.data;
+
+      if (!soknadData.soknadDokument) {
+        soknadData.soknadDokument = { ...soknadTemplate };
+      }
       return {
         ...state,
         status: STATUS.OK,
-        data: action.data,
+        data: soknadData,
       };
+    }
     case OPPDATER_SOKNAD: {
       const { dokument } = action;
       const soknad = {
@@ -51,7 +70,7 @@ export default function reducer(state = initialState, action) {
           arbeidstakerTidligereUtsendt24Mnd: strengTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
           arbeidsgiverBetalerArbeidsgiveravgift: strengTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
           trygdeavgiftTrukketGjennomSkatt: strengTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
-          trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato,
+          trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato),
         },
         oppholdUtland: {
           ...state.data.soknadDokument.oppholdUtland,
@@ -79,8 +98,8 @@ export function hentSoknad(behandlingID) {
   });
 }
 
-export function sendSoknad(dokument) {
-  return doThenDispatch(() => Api.sendSoknad(dokument), {
+export function sendSoknad(bid, soknad) {
+  return doThenDispatch(() => Api.sendSoknad(bid, soknad), {
     OK,
     FEILET,
     PENDING,
@@ -114,28 +133,30 @@ export const ValgteArbeidsforhold = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidNorge.valgteArbeidsforhold : []),
   state => ArbeidsforholdeneSelector(state),
   (valgteArbeidsforhold, alleArbeidsforhold) => (
-    valgteArbeidsforhold.map(valgtArbeidsforholdID => alleArbeidsforhold.find(arbeidsforholdet => arbeidsforholdet.arbeidsforholdID === valgtArbeidsforholdID))
-  )
+    valgteArbeidsforhold ? valgteArbeidsforhold.reduce((samling, valgtArbeidsforholdID) => {
+      const funnetArbeidsforhold = alleArbeidsforhold.find(arbeidsforholdet => arbeidsforholdet.arbeidsforholdIDnav === valgtArbeidsforholdID);
+      return funnetArbeidsforhold ? [...samling, funnetArbeidsforhold] : [...samling];
+    }, []) : [])
 );
 
 export const ArbeidUtlandSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidUtland : {}),
-  soknad => soknad
+  soknad => soknad || {}
 );
 
 export const ArbeidsinntektSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsinntekt : {}),
-  soknad => soknad
+  soknad => soknad || {}
 );
 
 export const ForetakUtlandSelector = createSelector(
   state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.foretakUtland,
-  soknad => soknad
+  soknad => soknad || {}
 );
 
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(
   state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.juridiskArbeidsgiverNorge,
-  soknad => soknad
+  soknad => soknad || {}
 );
 
 export const OppholdUtlandSelector = createSelector(
