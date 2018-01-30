@@ -132,9 +132,10 @@ export const ValgteArbeidsforhold = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidNorge.valgteArbeidsforhold : []),
   state => ArbeidsforholdeneSelector(state),
   (valgteArbeidsforhold, alleArbeidsforhold) => (
-    valgteArbeidsforhold ? valgteArbeidsforhold.map(valgtArbeidsforholdID => alleArbeidsforhold.find(arbeidsforholdet => arbeidsforholdet.arbeidsforholdID === valgtArbeidsforholdID)) : []
-
-  )
+    valgteArbeidsforhold ? valgteArbeidsforhold.reduce((samling, valgtArbeidsforholdID) => {
+      const funnetArbeidsforhold = alleArbeidsforhold.find(arbeidsforholdet => arbeidsforholdet.arbeidsforholdID === valgtArbeidsforholdID);
+      return funnetArbeidsforhold ? [...samling, funnetArbeidsforhold] : [...samling];
+    }, []) : [])
 );
 
 export const ArbeidUtlandSelector = createSelector(
