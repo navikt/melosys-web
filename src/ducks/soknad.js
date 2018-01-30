@@ -133,7 +133,7 @@ export const ValgteArbeidsforhold = createSelector(
   state => ArbeidsforholdeneSelector(state),
   (valgteArbeidsforhold, alleArbeidsforhold) => (
     valgteArbeidsforhold ? valgteArbeidsforhold.reduce((samling, valgtArbeidsforholdID) => {
-      const funnetArbeidsforhold = alleArbeidsforhold.find(arbeidsforholdet => arbeidsforholdet.arbeidsforholdID === valgtArbeidsforholdID);
+      const funnetArbeidsforhold = alleArbeidsforhold.find(arbeidsforholdet => arbeidsforholdet.arbeidsforholdIDnav === valgtArbeidsforholdID);
       return funnetArbeidsforhold ? [...samling, funnetArbeidsforhold] : [...samling];
     }, []) : [])
 );
