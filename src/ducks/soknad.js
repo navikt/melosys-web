@@ -79,8 +79,8 @@ export function hentSoknad(behandlingID) {
   });
 }
 
-export function sendSoknad(bid, dokument) {
-  return doThenDispatch(() => Api.sendSoknad(bid, dokument), {
+export function sendSoknad(dokument) {
+  return doThenDispatch(() => Api.sendSoknad(dokument), {
     OK,
     FEILET,
     PENDING,
