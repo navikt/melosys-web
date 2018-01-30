@@ -8,14 +8,14 @@ it('treffer riktig stivalg FRA SYSSELSETTING med valg ARBEIDSTAKER', () => {
   const gjeldendeSteg = 'SYSSELSETTING';
   const saksbehandlersVurdering = { sysselsettingType: VurderingSysselsetting.ARBEIDSTAKER };
 
-  expect(Logikk.beregnNesteSteg(gjeldendeSteg, saksbehandlersVurdering)).toEqual('SEKTOR');
+  expect(Logikk.beregnNesteSteg(gjeldendeSteg, saksbehandlersVurdering)).toEqual('VEDTAK');
 });
 
 it('treffer riktig stivalg FRA SYSSELSETTING med valg SELVSTENDIG', () => {
   const gjeldendeSteg = 'SYSSELSETTING';
   const saksbehandlersVurdering = { sysselsettingType: VurderingSysselsetting.SELVSTENDIG };
 
-  expect(Logikk.beregnNesteSteg(gjeldendeSteg, saksbehandlersVurdering)).toEqual('VIRKSOMHET');
+  expect(Logikk.beregnNesteSteg(gjeldendeSteg, saksbehandlersVurdering)).toEqual('VEDTAK');
 });
 
 it('treffer riktig stivalg FRA VIRKSOMHET med valg (ANYTHING)', () => {

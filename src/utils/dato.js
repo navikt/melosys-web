@@ -78,7 +78,7 @@ function formatterDatoTilNorsk(dato, visTidspunkt) {
  */
 function formatterDatoTilMaskin(dato) {
   const inputFormat = ['DD.MM.YYYY HH:mm', 'DD.MM.YYYY'];
-  const momentFormat = 'YYYY/MM/DDTHH:mm:ss';
+  const momentFormat = 'YYYY-MM-DDTHH:mm:ss';
   return moment(dato, inputFormat).format(momentFormat);
 }
 
