@@ -73,8 +73,8 @@ export function hentFaktaavklaring(behandlingID) {
   });
 }
 
-export function sendFaktaavklaring(dokument) {
-  return doThenDispatch(() => Api.sendFaktaavklaring(dokument), {
+export function sendFaktaavklaring(bid, dokument) {
+  return doThenDispatch(() => Api.sendFaktaavklaring(bid, dokument), {
     OK,
     FEILET,
     PENDING,

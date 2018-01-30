@@ -17,10 +17,10 @@ const Utenlandsopphold = ({ utenlandsopphold }) => {
     // All formattering eller komponent-innsett må derfor gjøres her og returnere
     // en ny ferdigtygget array.
     [
-      <EnkeltDato dato={linje.oppholdsPeriode.fom} />,
-      <EnkeltDato dato={linje.oppholdsPeriode.tom} />,
-      linje.rapporteringsPeriode,
-      linje.oppholdsland,
+      <EnkeltDato dato={linje.periode.fom} />,
+      <EnkeltDato dato={linje.periode.tom} />,
+      linje.rapporteringsperiode,
+      linje.land,
     ]));
 
   return utenlandsopphold.length > 0 ? (

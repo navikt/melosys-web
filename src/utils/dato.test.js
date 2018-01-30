@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilMaskin } from './dato';
+import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilISO } from './dato';
 
 import MockDate from 'mockdate';
 
@@ -78,14 +78,14 @@ it('formatterer datoen riktig til norsk format DD.MM.YYYY HH:mm:ss og med evt kl
 
 it('formatterer norsk dato korrekt tilbake til maskinlesbar dato', () => {
   const tillatteDatoer = [
-    {test: '01.01.2018 10:34', forvent: '2018/01/01T10:34:00'},
-    {test: '01.01.2018', forvent: '2018/01/01T00:00:00'},
-    {test: '10.12.2018 10:34', forvent: '2018/12/10T10:34:00'},
-    {test: '10.12.2018', forvent: '2018/12/10T00:00:00'}
+    {test: '01.01.2018 10:34', tid: true, forvent: '2018-01-01T10:34:00'},
+    {test: '01.01.2018', tid: false, forvent: '2018-01-01'},
+    {test: '10.12.2018 10:34', tid: true, forvent: '2018-12-10T10:34:00'},
+    {test: '10.12.2018', tid: false, forvent: '2018-12-10'}
   ]
 
   tillatteDatoer.forEach(datoTest => {
-    const formattertDato = formatterDatoTilMaskin(datoTest.test);
+    const formattertDato = formatterDatoTilISO(datoTest.test, datoTest.tid);
     expect(formattertDato).toEqual(datoTest.forvent);
   });
 })
