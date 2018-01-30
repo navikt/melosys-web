@@ -76,9 +76,9 @@ function formatterDatoTilNorsk(dato, visTidspunkt) {
  * formatet "YYYY-MM-DDTHH:mm:ss"
  *
  */
-function formatterDatoTilMaskin(dato) {
+function formatterDatoTilISO(dato, tid = false) {
   const inputFormat = ['DD.MM.YYYY HH:mm', 'DD.MM.YYYY'];
-  const momentFormat = 'YYYY-MM-DDTHH:mm:ss';
+  const momentFormat = tid ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD';
   return moment(dato, inputFormat).format(momentFormat);
 }
 
@@ -86,6 +86,6 @@ export {
   vaskInputDato,
   normaliserInputDato,
   formatterDatoTilNorsk,
-  formatterDatoTilMaskin,
+  formatterDatoTilISO,
   MAX_AR_FREM_I_TID,
 };
