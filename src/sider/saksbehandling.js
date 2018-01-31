@@ -158,8 +158,11 @@ class Saksbehandling extends Component {
   }
 
   fattVedtakHandler = () => {
-    this.props.sendSoknad(this.props.soknad);
-    this.props.sendFaktaavklaring(this.props.faktaavklaring);
+    const bid = this.props.oppsummering.behandlingID;
+    const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
+
+    this.props.sendSoknad(bid, soknad);
+    this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
   }
 
   beOmVurdering = () => {
@@ -289,9 +292,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
   hentSoknad: saksnummer => dispatch(hentSoknad(saksnummer)),
-  sendSoknad: dokument => dispatch(sendSoknad(dokument)),
+  sendSoknad: (bid, dokument) => dispatch(sendSoknad(bid, dokument)),
   hentFaktaavklaring: saksnummer => dispatch(hentFaktaavklaring(saksnummer)),
-  sendFaktaavklaring: dokument => dispatch(sendFaktaavklaring(dokument)),
+  sendFaktaavklaring: (bid, dokument) => dispatch(sendFaktaavklaring(bid, dokument)),
   hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
   onSubmit: values => { dispatch(oppdaterSoknadState(values)); dispatch(oppdaterFaktaavklaringState(values)); },
 });
