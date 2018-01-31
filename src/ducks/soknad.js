@@ -126,11 +126,11 @@ export const SoknadIDSelector = createSelector(
 
 export const ArbeidNorgeSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidNorge : {}),
-  soknad => soknad
+  arbeidNorge => arbeidNorge || {}
 );
 
 export const ValgteArbeidsforhold = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidNorge.valgteArbeidsforhold : []),
+  state => ArbeidNorgeSelector(state).valgteArbeidsforhold || [],
   state => ArbeidsforholdeneSelector(state),
   (valgteArbeidsforhold, alleArbeidsforhold) => (
     valgteArbeidsforhold ? valgteArbeidsforhold.reduce((samling, valgtArbeidsforholdID) => {
