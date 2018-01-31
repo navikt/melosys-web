@@ -46,7 +46,7 @@ export const PersonSelector = createSelector(
 
 export const OrganisasjonerSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.organisasjoner : []),
-  organisasjoner => organisasjoner
+  organisasjoner => organisasjoner || []
 );
 
 /** InntektLinjer leveres gruppert inn i maaned. Denne selectoren gjør derfor en reduce slik at alle inntekter
@@ -103,7 +103,7 @@ export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => OrganisasjonerSelector(state),
   state => InntektSelector(state),
-  (arbeidsforhold, organisasjoner, inntekt) => (arbeidsforhold.map(item => {
+  (arbeidsforhold = [], organisasjoner = [], inntekt = []) => (arbeidsforhold.map(item => {
     const arbeid = { ...item };
     arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
     arbeid.inntekt = inntekt.filter(linje => linje.opplysningspliktigID === arbeid.arbeidsgiverID) || [];
