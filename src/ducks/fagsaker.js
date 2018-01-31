@@ -57,15 +57,19 @@ export const OrganisasjonerSelector = createSelector(
  */
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
-  inntekt => (Array.isArray(inntekt.arbeidsInntektMaanedListe)
-    ?
-    inntekt.arbeidsInntektMaanedListe
+  inntekt => {
+    if (!inntekt) return [];
+
+    const { arbeidsInntektMaanedListe = [] } = inntekt;
+
+    return arbeidsInntektMaanedListe
       .reduce((samling, element) => {
-        const subInntektliste = [...element.arbeidsInntektInformasjon.inntektListe];
+        const { arbeidsInntektInformasjon = {} } = element;
+        const inntektListe = arbeidsInntektInformasjon.inntektListe ? arbeidsInntektInformasjon.inntektListe : [];
+        const subInntektliste = [...inntektListe];
         return ([...samling, ...subInntektliste]);
-      }, [])
-    :
-    [])
+      }, []);
+  }
 );
 
 export const SoknadenSelector = createSelector(
