@@ -63,7 +63,7 @@ MedlemskapPeriode.propTypes = {
 };
 
 function Medlemskap({ medlemskap }) {
-  const { medlemsperiode } = medlemskap;
+  const { medlemsperiode = [] } = medlemskap;
 
   return (
     <div className="medlemskap panelSeksjon">

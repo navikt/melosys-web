@@ -88,8 +88,8 @@ export const BekreftelserSelector = createSelector(
 );
 
 export const MedlemskapSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : state.fagsaker.data),
-  medlemskap => medlemskap
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : {}),
+  medlemskap => medlemskap || {}
 );
 
 
