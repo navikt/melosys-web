@@ -56,6 +56,9 @@ export const feltGrupper = {
     faktaavklaringMarginaltArbeid: [],
     faktaavklaringVekslingMellomLand: [],
     faktaavklaringAktivitetLand: [],
+    faktaavklaringBekrefterFamiliebosted: [],
+    faktaavklaringBekrefterDisponering: [],
+    faktaavklaringBostedsland: [],
   },
 };
 
