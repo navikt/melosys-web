@@ -17,17 +17,67 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
-const soknadTemplate = {
-  opplysningerOmBrukeren: {},
-  arbeidUtland: {},
-  oretakUtland: {},
-  oppholdUtland: {},
-  arbeidNorge: {},
-  juridiskArbeidsgiverNorge: {},
-  arbeidsinntekt: {},
-  arbeidsgiversBekreftelse: {},
-  tilleggsopplysninger: {},
-};
+const soknadTemplate =
+  {
+    arbeidUtland: {
+      arbeidsland: [],
+      arbeidsperiode: { fom: undefined, tom: undefined },
+      arbeidsandelNorge: undefined,
+      arbeidsandelUtland: undefined,
+      bostedsland: undefined,
+      erstatterTidligereUtsendt: undefined,
+    },
+    foretakUtland: { foretakUtlandNavn: undefined, foretakUtlandOrgnr: undefined },
+    oppholdUtland: {
+      oppholdsland: undefined,
+      oppholdsPeriode: { fom: undefined, tom: undefined },
+      studentIEOS: undefined,
+      studentFinansiering: undefined,
+      studentSemester: undefined,
+      studieLand: undefined,
+    },
+    arbeidNorge: {
+      arbeidsforholdOpprettholdIHelePerioden: undefined,
+      selvstendigFortsetterEtterArbeidIUtlandet: undefined,
+      vikarOrgnr: undefined,
+      flyendePersonellHjemmebase: undefined,
+      navnSkipEllerSokkel: undefined,
+      sokkelLand: undefined,
+      skipFlaggLand: undefined,
+      brukerErSelvstendigNaeringsdrivende: undefined,
+      ansattPaSokkelEllerSkip: undefined,
+      skipFartsomrade: undefined,
+    },
+    juridiskArbeidsgiverNorge: {
+      antallAnsatte: undefined,
+      antallAdminAnsatte: undefined,
+      andelOmsetningINorge: undefined,
+      andelKontrakterINorge: undefined,
+      erBemanningsbyra: undefined,
+      hattDriftSiste12Mnd: undefined,
+      antallUtsendte: undefined,
+      antallAdminAnsatteEOS: undefined,
+    },
+    arbeidsgiversBekreftelse: {
+      arbeidsgiverBekrefterUtsendelse: undefined,
+      arbeidstakerAnsattUnderUtsendelsen: undefined,
+      erstatterArbeidstakerenUtsendte: undefined,
+      arbeidstakerTidligereUtsendt24Mnd: undefined,
+      arbeidsgiverBetalerArbeidsgiveravgift: undefined,
+      trygdeavgiftTrukketGjennomSkatt: undefined,
+      trygdeavgiftTrukketGjennomSkattDato: undefined,
+    },
+    arbeidsinntekt: {
+      inntektNorskIPerioden: undefined,
+      inntektUtenlandskIPerioden: undefined,
+      inntektNaeringIPerioden: undefined,
+      inntektNaturalYtelser: [],
+      inntektErInnrapporteringspliktig: undefined,
+      inntektTrygdeavgiftBlirTrukket: undefined,
+    },
+    tilleggsopplysninger: undefined,
+  };
+
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -42,6 +92,7 @@ export default function reducer(state = initialState, action) {
       if (!soknadData.soknadDokument) {
         soknadData.soknadDokument = { ...soknadTemplate };
       }
+
       return {
         ...state,
         status: STATUS.OK,
