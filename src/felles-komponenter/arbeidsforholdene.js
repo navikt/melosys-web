@@ -17,10 +17,10 @@ const uuid = require('uuid/v4');
  * @param { arbeidsforholdene } Array En liste over alle arbeidforhold, hvert som et objekt
  */
 class Arbeidsforholdene extends Component {
-  leggtilArbeidsforholdHandler = (e, arbeidsforholdID) => {
+  leggtilArbeidsforholdHandler = (e, arbeidsforholdIDnav) => {
     e.preventDefault();
     const { dispatch } = this.props;
-    dispatch(arrayPush('soknad', 'valgteArbeidsforhold', arbeidsforholdID));
+    dispatch(arrayPush('soknad', 'valgteArbeidsforhold', arbeidsforholdIDnav));
   }
 
   render () {

@@ -1,7 +1,6 @@
-// import { SYSSELSETTING } from './typer';
-import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetting';
 import { VurderingSektorTyper } from '../vurderinger/vurderingSektor';
 import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
+// import { VurderingBostedslandTyper } from '../vurderinger/vurderingBostedsland';
 
 import { STEG } from './typer';
 
@@ -17,12 +16,8 @@ class StegLogikk {
     ],
     SYSSELSETTING: [
       {
-        valg: [VurderingSysselsettingTyper.ARBEIDSTAKER, VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG],
-        til: STEG.SEKTOR,
-      },
-      {
-        valg: [VurderingSysselsettingTyper.SELVSTENDIG],
-        til: STEG.VIRKSOMHET,
+        valg: [],
+        til: STEG.ARBEIDSFORHOLD,
       },
     ],
     SEKTOR: [
@@ -51,6 +46,12 @@ class StegLogikk {
         til: STEG.AKTIVITET,
       },
     ],
+    BOSTEDSLAND: [
+      {
+        valg: [],
+        til: STEG.SEKTOR,
+      },
+    ],
     AKTIVITET: [
       {
         valg: [],
@@ -73,38 +74,40 @@ class StegLogikk {
 
   static beregnNesteSteg = (gjeldendeSteg, vurderingerIDetteSteget) => {
     switch (gjeldendeSteg) {
-      case 'PERIODE': {
+      case STEG.PERIODE: {
         return 'SYSSELSETTING';
       }
-      case 'SYSSELSETTING': {
-        const { sysselsettingType } = vurderingerIDetteSteget;
-        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType));
-        return nesteStiObjekt ? nesteStiObjekt.til : 'VEDTAK';
+      case STEG.SYSSELSETTING: {
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt || STEG.VEDTAK;
       }
-      case 'SEKTOR': {
+      case STEG.ARBEIDSFORHOLD: {
+        return STEG.SEKTOR;
+      }
+      case STEG.SEKTOR: {
         const { ansattISektor } = vurderingerIDetteSteget;
         return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(ansattISektor)).til;
       }
-      case 'VIRKSOMHET': {
+      case STEG.VIRKSOMHET: {
         const { antallLand } = vurderingerIDetteSteget;
 
-        if (antallLand === VurderingVirksomhetTyper.FLERE_LAND) {
-          return 'UTSENDING';
+        if (antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND) {
+          return STEG.BOSTEDSLAND;
         }
 
-        return 'AKTIVITET';
+        return STEG.AKTIVITET;
       }
-      case 'UTSENDING': {
-        return 'VEDTAK';
+      case STEG.UTSENDING: {
+        return STEG.VEDTAK;
       }
-      case 'AKTIVITET': {
-        return 'VEDTAK';
+      case STEG.AKTIVITET: {
+        return StegLogikk.stier[gjeldendeSteg][0].til;
       }
-      case 'ARBEIDSFORHOLD': {
-        return 'VEDTAK';
+      case STEG.BOSTEDSLAND: {
+        return STEG.UTSENDING;
       }
       default:
-        return 'FEIL';
+        return {};
     }
   }
 

@@ -46,7 +46,7 @@ export const PersonSelector = createSelector(
 
 export const OrganisasjonerSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.organisasjoner : []),
-  organisasjoner => organisasjoner
+  organisasjoner => organisasjoner || []
 );
 
 /** InntektLinjer leveres gruppert inn i maaned. Denne selectoren gjør derfor en reduce slik at alle inntekter
@@ -57,15 +57,19 @@ export const OrganisasjonerSelector = createSelector(
  */
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
-  inntekt => (Array.isArray(inntekt.arbeidsInntektMaanedListe)
-    ?
-    inntekt.arbeidsInntektMaanedListe
+  inntekt => {
+    if (!inntekt) return [];
+
+    const { arbeidsInntektMaanedListe = [] } = inntekt;
+
+    return arbeidsInntektMaanedListe
       .reduce((samling, element) => {
-        const subInntektliste = [...element.arbeidsInntektInformasjon.inntektListe];
+        const { arbeidsInntektInformasjon = {} } = element;
+        const inntektListe = arbeidsInntektInformasjon.inntektListe ? arbeidsInntektInformasjon.inntektListe : [];
+        const subInntektliste = [...inntektListe];
         return ([...samling, ...subInntektliste]);
-      }, [])
-    :
-    [])
+      }, []);
+  }
 );
 
 export const SoknadenSelector = createSelector(
@@ -84,8 +88,8 @@ export const BekreftelserSelector = createSelector(
 );
 
 export const MedlemskapSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : state.fagsaker.data),
-  medlemskap => medlemskap
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : {}),
+  medlemskap => medlemskap || {}
 );
 
 
@@ -99,7 +103,7 @@ export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => OrganisasjonerSelector(state),
   state => InntektSelector(state),
-  (arbeidsforhold, organisasjoner, inntekt) => (arbeidsforhold.map(item => {
+  (arbeidsforhold = [], organisasjoner = [], inntekt = []) => (arbeidsforhold.map(item => {
     const arbeid = { ...item };
     arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
     arbeid.inntekt = inntekt.filter(linje => linje.opplysningspliktigID === arbeid.arbeidsgiverID) || [];
