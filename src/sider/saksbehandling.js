@@ -275,7 +275,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
-  hentSoknad: saksnummer => dispatch(hentSoknad(saksnummer)),
+  hentSoknad: bid => dispatch(hentSoknad(bid)),
   sendSoknad: (bid, dokument) => dispatch(sendSoknad(bid, dokument)),
   hentFaktaavklaring: saksnummer => dispatch(hentFaktaavklaring(saksnummer)),
   sendFaktaavklaring: (bid, dokument) => dispatch(sendFaktaavklaring(bid, dokument)),
