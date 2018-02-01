@@ -123,37 +123,25 @@ class Saksbehandling extends Component {
 
   state = {
     gyldigePaneler: {},
-    hentetSoknad: false,
-    hentetFaktaavklaring: false,
-    hentetVurdering: false,
   };
 
   componentDidMount() {
     const { snr } = this.props.match.params;
-    this.props.hentFagsaker(snr);
+    this.props.hentFagsaker(snr).then(response => {
+      const { behandlinger = [] } = response.data;
+      const { oppsummering: { behandlingID } } = behandlinger[0];
+      this.props.hentSoknad(behandlingID);
+      this.props.hentFaktaavklaring(behandlingID);
+      this.props.hentVurdering(behandlingID);
+    });
   }
 
   componentWillReceiveProps(nextProps) {
     const { syncErrors } = nextProps.soknadForm;
-    const { behandlingID } = nextProps.oppsummering;
+
     // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
     // i panelet lenger er ugyldig (ikke validerer).
     this.setState({ gyldigePaneler: gyldigePaneler(syncErrors) });
-
-    if (behandlingID && !this.state.hentetSoknad) {
-      this.props.hentSoknad(behandlingID);
-      this.setState({ hentetSoknad: true });
-    }
-
-    if (behandlingID && !this.state.hentetFaktaavklaring) {
-      this.props.hentFaktaavklaring(behandlingID);
-      this.setState({ hentetFaktaavklaring: true });
-    }
-
-    if (behandlingID && !this.state.hentetVurdering) {
-      this.props.hentVurdering(behandlingID);
-      this.setState({ hentetVurdering: true });
-    }
   }
 
   fattVedtakHandler = () => {
@@ -287,7 +275,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
-  hentSoknad: saksnummer => dispatch(hentSoknad(saksnummer)),
+  hentSoknad: bid => dispatch(hentSoknad(bid)),
   sendSoknad: (bid, dokument) => dispatch(sendSoknad(bid, dokument)),
   hentFaktaavklaring: saksnummer => dispatch(hentFaktaavklaring(saksnummer)),
   sendFaktaavklaring: (bid, dokument) => dispatch(sendFaktaavklaring(bid, dokument)),

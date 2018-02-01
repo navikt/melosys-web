@@ -72,7 +72,7 @@ const Arbeidsforholdet = props => {
     arbeidsforholdstype,
     Aordning,
     arbeidsgiver,
-    arbeidsforholdID,
+    arbeidsforholdIDnav,
     arbeidsavtaler,
     timerTimelonnet,
     utenlandsopphold,
@@ -99,7 +99,7 @@ const Arbeidsforholdet = props => {
           <Nav.Row className="arbeidsforholdet__enkelt">
             <div className="arbeidsforholdene panelSeksjon">
               <Nav.Row>
-                <Nav.Knapp className="arbeidsforholdet__relevantknapp" onClick={e => props.leggtilArbeidsforhold(e, arbeidsforholdID)}>Sett som utsendende</Nav.Knapp>
+                <Nav.Knapp className="arbeidsforholdet__relevantknapp" onClick={e => props.leggtilArbeidsforhold(e, arbeidsforholdIDnav)}>Sett som utsendende</Nav.Knapp>
               </Nav.Row>
               <Nav.Row className="arbeidsforhold__enkelt">
                 <Nav.Column xs="6">

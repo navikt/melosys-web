@@ -69,7 +69,6 @@ class Vilkarsveileder extends Component {
           id: 'AKTIVITET',
           komponent: VurderingAktivitet,
           data: {
-            arbeidsforholdene: this.props.arbeidsforholdene,
           },
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
@@ -148,7 +147,7 @@ class Vilkarsveileder extends Component {
         ...steg,
         stegPosisjon: index,
         aktivtSteg: false,
-        data: { tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
+        data: { ...steg.data, tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
       }));
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
