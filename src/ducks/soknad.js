@@ -44,7 +44,7 @@ const soknadTemplate =
       navnSkipEllerSokkel: undefined,
       sokkelLand: undefined,
       skipFlaggLand: undefined,
-      brukerErSelvstendigNaeringsdrivende: true,
+      brukerErSelvstendigNaeringsdrivende: undefined,
       ansattPaSokkelEllerSkip: undefined,
       skipFartsomrade: undefined,
     },
