@@ -17,6 +17,7 @@ import { Bekreftelser } from './bekreftelser';
 import { SoknadForm } from './soknadForm';
 import { Utenlandsopphold } from './utenlandsopphold';
 import { ArbeidNorge } from './arbeidNorge';
+import { Landkode, Landkoder } from './landkoder';
 
 export {
   ArbeidNorge,
@@ -47,4 +48,6 @@ export {
   Kodeverk,
   SoknadForm,
   Utenlandsopphold,
+  Landkode,
+  Landkoder,
 };

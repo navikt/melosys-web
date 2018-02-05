@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
+import { connect } from 'react-redux';
 
 import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes';
 
 import './landvelger.css';
+import {
+  LandkoderSelector,
+} from '../../../ducks/landkoder';
 
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 
@@ -22,38 +27,6 @@ ValgtLand.propTypes = {
 class CustomLandVelger extends Component {
   state = {
     inputVerdi: '',
-    alleLand: [
-      { kode: 'BE', term: 'Belgia' },
-      { kode: 'BG', term: 'Bulgaria' },
-      { kode: 'DK', term: 'Danmark' },
-      { kode: 'EE', term: 'Estland' },
-      { kode: 'FI', term: 'Finland' },
-      { kode: 'FR', term: 'Frankrike' },
-      { kode: 'GR', term: 'Hellas' },
-      { kode: 'IE', term: 'Irland' },
-      { kode: 'IS', term: 'Island' },
-      { kode: 'IT', term: 'Italia' },
-      { kode: 'HR', term: 'Kroatia' },
-      { kode: 'CY', term: 'Kypros' },
-      { kode: 'LV', term: 'Latvia' },
-      { kode: 'LI', term: 'Liechtenstein' },
-      { kode: 'LT', term: 'Litauen' },
-      { kode: 'LU', term: 'Luxembourg' },
-      { kode: 'MT', term: 'Malta' },
-      { kode: 'NL', term: 'Nederland' },
-      { kode: 'NO', term: 'Norge' },
-      { kode: 'PL', term: 'Polen' },
-      { kode: 'PT', term: 'Portugal' },
-      { kode: 'RO', term: 'Romania' },
-      { kode: 'SK', term: 'Slovakia' },
-      { kode: 'SI', term: 'Slovenia' },
-      { kode: 'ES', term: 'Spania' },
-      { kode: 'GB', term: 'Storbritannia' },
-      { kode: 'SE', term: 'Sverige' },
-      { kode: 'DE', term: 'Tyskland' },
-      { kode: 'HU', term: 'Ungarn' },
-      { kode: 'AT', term: 'Østerrike' },
-    ],
   }
 
   /** Legg til land i redux-arrayen.
@@ -77,8 +50,8 @@ class CustomLandVelger extends Component {
    * @param inputVerdi String Verdien det skal søkes etter.
    * @return Array med landObjekter som matcher.
    */
-  finnLandOgLeggTil = (alleLand, inputVerdi) => {
-    const landSomInneholderInntastetVerdi = alleLand.filter(land => (
+  finnLandOgLeggTil = (landkoder, inputVerdi) => {
+    const landSomInneholderInntastetVerdi = landkoder.filter(land => (
       landTekstFormat(land)
         .toLowerCase()
         .includes(inputVerdi.toLowerCase())
@@ -124,9 +97,10 @@ class CustomLandVelger extends Component {
   inputTastNedHandler = e => {
     if (e.keyCode === 13) {
       e.preventDefault();
-      const { alleLand, inputVerdi } = this.state;
+      const { inputVerdi } = this.state;
+      const { landkoder } = this.props;
 
-      this.finnLandOgLeggTil(alleLand, inputVerdi);
+      this.finnLandOgLeggTil(landkoder, inputVerdi);
     }
   }
 
@@ -136,9 +110,10 @@ class CustomLandVelger extends Component {
    */
   leggTilLandHandler = e => {
     e.preventDefault();
-    const { alleLand, inputVerdi } = this.state;
+    const { inputVerdi } = this.state;
+    const { landkoder } = this.props;
 
-    this.finnLandOgLeggTil(alleLand, inputVerdi);
+    this.finnLandOgLeggTil(landkoder, inputVerdi);
   }
 
   /** Håndter endringer slik at inntasting oppdateres til lokal state. Denne staten er knyttet til
@@ -155,14 +130,14 @@ class CustomLandVelger extends Component {
    * @param e
    */
   fokusUtHandler = e => {
-    const { alleLand } = this.state;
+    const { landkoder } = this.props;
     const inputVerdi = e.target.value;
 
-    this.finnLandOgLeggTil(alleLand, inputVerdi);
+    this.finnLandOgLeggTil(landkoder, inputVerdi);
   }
 
   render () {
-    const { alleLand } = this.state;
+    const { landkoder } = this.props;
     const { fields, multiLand } = this.props;
 
     const valgteLand = fields.getAll() || [];
@@ -186,7 +161,7 @@ class CustomLandVelger extends Component {
             onClick={this.leggTilLandHandler}>+
           </button>
           <datalist id="alleLand">
-            {alleLand.map(item => (!valgteLand.includes(item) ? <option key={item.kode} value={landTekstFormat(item)} /> : ''))}
+            {landkoder.map(item => (!valgteLand.includes(item) ? <option key={item.kode} value={landTekstFormat(item)} /> : ''))}
           </datalist>
         </div>
       )
@@ -198,7 +173,7 @@ class CustomLandVelger extends Component {
         {valgteLand.map(valgtLand => (
           <ValgtLand
             key={valgtLand}
-            landObjekt={this.state.alleLand.find(land => land.kode === valgtLand)}
+            landObjekt={this.props.landkoder.find(land => land.kode === valgtLand)}
             slettLand={this.slettLandHandler}
           />
         ))
@@ -208,10 +183,14 @@ class CustomLandVelger extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  landkoder: LandkoderSelector(state),
+});
 
 CustomLandVelger.propTypes = {
   fields: PT.object.isRequired,
   multiLand: PT.bool.isRequired,
+  landkoder: MPT.Landkoder.isRequired,
 };
 
 /** Dette er bootstrapper-komponenten som eksponeres utenfor pakken. Komponenten forventer et feltNavn for å kunne vite
@@ -220,16 +199,18 @@ CustomLandVelger.propTypes = {
  * @param props
  */
 const LandVelger = props => (
-  <div><FieldArray name={props.feltNavn} multiLand={props.multiLand} component={CustomLandVelger} /></div>
+  <div><FieldArray name={props.feltNavn} multiLand={props.multiLand} component={CustomLandVelger} {...props} /></div>
 );
 
 LandVelger.propTypes = {
   feltNavn: PT.string.isRequired,
   multiLand: PT.bool,
+  landkoder: MPT.Landkoder,
 };
 
 LandVelger.defaultProps = {
   multiLand: false,
+  landkoder: [],
 };
 
-export default LandVelger;
+export default connect(mapStateToProps)(LandVelger);
