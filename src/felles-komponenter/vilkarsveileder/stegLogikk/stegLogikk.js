@@ -23,7 +23,7 @@ class StegLogikk {
     SEKTOR: [
       {
         valg: [VurderingSektorTyper.FLYVENDE, VurderingSektorTyper.OFFENTLIG],
-        til: STEG.VEDTAK,
+        til: STEG.TJENESTEMANN,
       },
       {
         valg: VurderingSektorTyper.SOKKEL,
@@ -50,6 +50,12 @@ class StegLogikk {
       {
         valg: [],
         til: STEG.SEKTOR,
+      },
+    ],
+    TJENESTEMANN: [
+      {
+        valg: [],
+        til: STEG.VEDTAK,
       },
     ],
     AKTIVITET: [
@@ -105,6 +111,9 @@ class StegLogikk {
       }
       case STEG.BOSTEDSLAND: {
         return STEG.UTSENDING;
+      }
+      case STEG.TJENESTEMANN: {
+        return STEG.VEDTAK;
       }
       default:
         return {};
