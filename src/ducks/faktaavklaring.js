@@ -96,32 +96,32 @@ export function oppdaterFaktaavklaringState(dokument) {
 // selector(s)
 export const FaktaavklaringSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data : {}),
-  faktaavklaring => faktaavklaring
+  faktaavklaring => faktaavklaring || {}
 );
 
 export const FaktaavklaringPeriodeSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.periode : {}),
-  periode => periode
+  periode => periode || {}
 );
 
 export const FaktaavklaringSysselsettingSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.sysselsetting : {}),
-  sysselsetting => sysselsetting
+  sysselsetting => sysselsetting || {}
 );
 
 export const FaktaavklaringUtsendingSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.utsending : {}),
-  utsending => utsending
+  utsending => utsending || {}
 );
 
 export const FaktaavklaringSektorSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.sektor : {}),
-  sektor => sektor
+  sektor => sektor || {}
 );
 
 export const FaktaavklaringVirksomhetSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.virksomhet : {}),
-  virksomhet => virksomhet
+  virksomhet => virksomhet || {}
 );
 
 export const FaktaavklaringBostedslandSelector = createSelector(
@@ -131,5 +131,5 @@ export const FaktaavklaringBostedslandSelector = createSelector(
 
 export const FaktaavklaringAktivitetSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.aktivitet : {}),
-  aktivitet => aktivitet
+  aktivitet => aktivitet || {}
 );
