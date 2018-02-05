@@ -1,4 +1,3 @@
-import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetting';
 import { VurderingSektorTyper } from '../vurderinger/vurderingSektor';
 import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
 // import { VurderingBostedslandTyper } from '../vurderinger/vurderingBostedsland';
@@ -17,12 +16,8 @@ class StegLogikk {
     ],
     SYSSELSETTING: [
       {
-        valg: [VurderingSysselsettingTyper.ARBEIDSTAKER, VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG],
-        til: STEG.SEKTOR,
-      },
-      {
-        valg: [VurderingSysselsettingTyper.SELVSTENDIG],
-        til: STEG.VIRKSOMHET,
+        valg: [],
+        til: STEG.ARBEIDSFORHOLD,
       },
     ],
     SEKTOR: [
@@ -83,9 +78,11 @@ class StegLogikk {
         return 'SYSSELSETTING';
       }
       case STEG.SYSSELSETTING: {
-        const { sysselsettingType } = vurderingerIDetteSteget;
-        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType));
-        return nesteStiObjekt ? nesteStiObjekt.til : 'VEDTAK';
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt || STEG.VEDTAK;
+      }
+      case STEG.ARBEIDSFORHOLD: {
+        return STEG.SEKTOR;
       }
       case STEG.SEKTOR: {
         const { ansattISektor } = vurderingerIDetteSteget;
@@ -104,13 +101,10 @@ class StegLogikk {
         return STEG.VEDTAK;
       }
       case STEG.AKTIVITET: {
-        return STEG.VEDTAK;
+        return StegLogikk.stier[gjeldendeSteg][0].til;
       }
       case STEG.BOSTEDSLAND: {
         return STEG.UTSENDING;
-      }
-      case STEG.ARBEIDSFORHOLD: {
-        return STEG.VEDTAK;
       }
       default:
         return {};

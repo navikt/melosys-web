@@ -22,7 +22,7 @@ const ArbeidsforholdLinje = props => {
 
   return (
     <div className="arbeidsforhold__enkeltlinje">
-      <Nav.Checkbox checked={erValgt} onChange={() => arbeidsforholdKlikkHandler(arbeidsforholdet.arbeidsforholdID)} label={`${arbeidsforholdet.arbeidsgiver.navn}`} />
+      <Nav.Checkbox checked={erValgt} onChange={() => arbeidsforholdKlikkHandler(arbeidsforholdet.arbeidsforholdIDnav)} label={`${arbeidsforholdet.arbeidsgiver.navn}`} />
       <div className="enkeltlinje__periode"><EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} /></div>
     </div>
   );
@@ -50,12 +50,12 @@ ArbeidsforholdLinje.defaultProps = {
  * @param props Objekt Diverse props Se prop types
  */
 class ArbeidsforholdeneListe extends Component {
-  arbeidsforholdKlikkHandler = arbeidsforholdID => {
+  arbeidsforholdKlikkHandler = arbeidsforholdIDnav => {
     const { fields } = this.props;
-    const alleOpprinneligValgte = fields.getAll();
+    const alleOpprinneligValgte = fields.getAll() || [];
 
-    const indexPosition = alleOpprinneligValgte.findIndex(valgt => valgt === arbeidsforholdID);
-    return indexPosition >= 0 ? fields.remove(indexPosition) : fields.push(arbeidsforholdID);
+    const indexPosition = alleOpprinneligValgte.findIndex(valgt => valgt === arbeidsforholdIDnav);
+    return indexPosition >= 0 ? fields.remove(indexPosition) : fields.push(arbeidsforholdIDnav);
   }
 
   render() {
@@ -72,7 +72,7 @@ class ArbeidsforholdeneListe extends Component {
             component={linjeProps => <ArbeidsforholdLinje
               {...linjeProps}
               arbeidsforholdet={arbeidsforholdet}
-              erValgt={valgteArbeidsforhold ? valgteArbeidsforhold.includes(arbeidsforholdet.arbeidsforholdID) : false}
+              erValgt={valgteArbeidsforhold ? valgteArbeidsforhold.includes(arbeidsforholdet.arbeidsforholdIDnav) : false}
               arbeidsforholdKlikkHandler={this.arbeidsforholdKlikkHandler}
             />}
           />
