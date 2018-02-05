@@ -17,7 +17,7 @@ const VurderingTjenestemann = props => {
 
   return (
     <div>
-      <Nav.Fieldset legend="Hvor utføres aktiviteten?">
+      <Nav.Fieldset legend="Vurder om søker:">
         <Skjema.Radio
           feltNavn="faktaavklaringTjenestemann"
           value={VurderingTjenestemannTyper.ETT_LAND}
