@@ -60,6 +60,9 @@ export default function reducer(state = initialState, action) {
           marginaltArbeid: dokument.faktaavklaringMarginaltArbeid,
           vekslingMellomLand: dokument.faktaavklaringVekslingMellomLand,
         },
+        tjenestemann: {
+          tjenestemann: dokument.faktaavklaringTjenestemann,
+        },
       };
 
       return { ...state, data: { ...state.data, faktaavklaring } };
@@ -127,6 +130,11 @@ export const FaktaavklaringVirksomhetSelector = createSelector(
 export const FaktaavklaringBostedslandSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bostedsland : {}),
   bostedsland => bostedsland || {}
+);
+
+export const FaktaavklaringTjenestemannSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.tjenestemann : {}),
+  tjenestemann => tjenestemann || {}
 );
 
 export const FaktaavklaringAktivitetSelector = createSelector(
