@@ -74,6 +74,11 @@ export function hentSaksbehandler() {
   return getAsJson(URI_SAKSBEHANDLER);
 }
 
+export function hentLandkoder() {
+  const URI_LANDKODER = `${API_BASE_URL}landkoder`;
+  return getAsJson(URI_LANDKODER);
+}
+
 export function nyHenvendelse(henvendelse) {
   const URI_HENVENDELSE =`${API_BASE_URL}henvendelse/`;
   return postAsJson(URI_HENVENDELSE, henvendelse);
