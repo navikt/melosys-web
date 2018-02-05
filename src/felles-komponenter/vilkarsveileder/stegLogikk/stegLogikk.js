@@ -1,3 +1,4 @@
+import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetting';
 import { VurderingSektorTyper } from '../vurderinger/vurderingSektor';
 import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
 // import { VurderingBostedslandTyper } from '../vurderinger/vurderingBostedsland';
@@ -16,14 +17,18 @@ class StegLogikk {
     ],
     SYSSELSETTING: [
       {
-        valg: [],
-        til: STEG.ARBEIDSFORHOLD,
+        valg: [VurderingSysselsettingTyper.ARBEIDSTAKER, VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG],
+        til: STEG.SEKTOR,
+      },
+      {
+        valg: [VurderingSysselsettingTyper.SELVSTENDIG],
+        til: STEG.VIRKSOMHET,
       },
     ],
     SEKTOR: [
       {
         valg: [VurderingSektorTyper.FLYVENDE, VurderingSektorTyper.OFFENTLIG],
-        til: STEG.VEDTAK,
+        til: STEG.TJENESTEMANN,
       },
       {
         valg: VurderingSektorTyper.SOKKEL,
@@ -52,6 +57,12 @@ class StegLogikk {
         til: STEG.SEKTOR,
       },
     ],
+    TJENESTEMANN: [
+      {
+        valg: [],
+        til: STEG.VEDTAK,
+      },
+    ],
     AKTIVITET: [
       {
         valg: [],
@@ -78,11 +89,9 @@ class StegLogikk {
         return 'SYSSELSETTING';
       }
       case STEG.SYSSELSETTING: {
-        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
-        return nesteStiObjekt || STEG.VEDTAK;
-      }
-      case STEG.ARBEIDSFORHOLD: {
-        return STEG.SEKTOR;
+        const { sysselsettingType } = vurderingerIDetteSteget;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType));
+        return nesteStiObjekt ? nesteStiObjekt.til : 'VEDTAK';
       }
       case STEG.SEKTOR: {
         const { ansattISektor } = vurderingerIDetteSteget;
@@ -101,10 +110,16 @@ class StegLogikk {
         return STEG.VEDTAK;
       }
       case STEG.AKTIVITET: {
-        return StegLogikk.stier[gjeldendeSteg][0].til;
+        return STEG.VEDTAK;
       }
       case STEG.BOSTEDSLAND: {
         return STEG.UTSENDING;
+      }
+      case STEG.TJENESTEMANN: {
+        return STEG.VEDTAK;
+      }
+      case STEG.ARBEIDSFORHOLD: {
+        return STEG.VEDTAK;
       }
       default:
         return {};
