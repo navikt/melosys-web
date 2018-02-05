@@ -27,6 +27,7 @@ import Bekreftelser from '../felles-komponenter/bekreftelser';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
+import { hentLandkoder } from '../ducks/landkoder';
 
 import {
   hentFagsaker,
@@ -81,6 +82,7 @@ import '../felles-komponenter/skjema/skjema.css';
 
 class Saksbehandling extends Component {
   static propTypes = {
+    hentLandkoder: PT.func.isRequired,
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     sendSoknad: PT.func.isRequired,
@@ -136,6 +138,7 @@ class Saksbehandling extends Component {
       this.props.hentFaktaavklaring(behandlingID);
       this.props.hentVurdering(behandlingID);
     });
+    this.props.hentLandkoder();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -280,6 +283,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  hentLandkoder: () => dispatch(hentLandkoder()),
   hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
   hentSoknad: bid => dispatch(hentSoknad(bid)),
   sendSoknad: (bid, dokument) => dispatch(sendSoknad(bid, dokument)),
