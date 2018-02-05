@@ -21,6 +21,7 @@ import VurderingSysselsetting from './vurderinger/vurderingSysselsetting';
 import VurderingSektor from './vurderinger/vurderingSektor';
 import VurderingVirksomhet from './vurderinger/vurderingVirksomhet';
 import VurderingBostedsland from './vurderinger/vurderingBostedsland';
+import VurderingTjenestemann from './vurderinger/vurderingTjenestemann';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector } from '../../ducks/fagsaker';
@@ -97,6 +98,15 @@ class Vilkarsveileder extends Component {
         {
           id: 'BOSTEDSLAND',
           komponent: VurderingBostedsland,
+          data: {},
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: FANE_STATUS.OK,
+        },
+        {
+          id: 'TJENESTEMANN',
+          komponent: VurderingTjenestemann,
           data: {},
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
