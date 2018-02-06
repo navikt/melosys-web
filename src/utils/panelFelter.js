@@ -59,6 +59,12 @@ export const feltGrupper = {
     faktaavklaringBekrefterFamiliebosted: [],
     faktaavklaringBekrefterDisponering: [],
     faktaavklaringBostedsland: [],
+    faktaavkaringForretningsstedBeslutningLand1: [],
+    faktaavkaringForretningsstedVesentligLand1: [],
+    faktaavkaringForretningsstedBeslutningLand2: [],
+    faktaavkaringForretningsstedVesentligLand2: [],
+    faktaavkaringForretningsstedBeslutningLand3: [],
+    faktaavkaringForretningsstedVesentligLand3: [],
   },
 };
 

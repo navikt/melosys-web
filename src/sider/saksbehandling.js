@@ -286,7 +286,6 @@ const mapStateToProps = state => ({
     faktaavkaringForretningsstedVesentligLand2: FaktaavklaringForretningsstedSelector(state).vesentligLand2,
     faktaavkaringForretningsstedBeslutningLand3: FaktaavklaringForretningsstedSelector(state).beslutningLand3,
     faktaavkaringForretningsstedVesentligLand3: FaktaavklaringForretningsstedSelector(state).vesentligLand3,
-
   },
 });
 

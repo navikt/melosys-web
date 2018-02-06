@@ -154,4 +154,3 @@ export const FaktaavklaringForretningsstedSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.forretningssted : {}),
   forretningssted => forretningssted || {}
 );
-
