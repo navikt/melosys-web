@@ -4,11 +4,13 @@ import * as Nav from '../../../utils/navFrontend';
 import LandVelger from '../../skjema/landvelger/';
 
 const VurderingAktivitet = props => {
-  const { bekreftOgFortsett } = props;
+  const { bekreftOgFortsett, tilstand } = props;
+
+  const sporsmal = tilstand.sporOmHovedtyngden ? 'Hvor skjer hovedtyngden av aktiviteten?' : 'Hvor utføres aktiviteten?';
 
   return (
     <div>
-      <Nav.Fieldset legend="Hvor utføres aktiviteten?">
+      <Nav.Fieldset legend={sporsmal}>
         <LandVelger feltNavn="faktaavklaringAktivitetLand" multiland={false} />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
@@ -20,6 +22,11 @@ const VurderingAktivitet = props => {
 
 VurderingAktivitet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  tilstand: PT.object,
+};
+
+VurderingAktivitet.defaultProps = {
+  tilstand: {},
 };
 
 export default VurderingAktivitet;
