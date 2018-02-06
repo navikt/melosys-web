@@ -64,12 +64,14 @@ export default function reducer(state = initialState, action) {
           tjenestemann: dokument.faktaavklaringTjenestemann,
         },
         forretningssted: {
-          beslutningLand1: dokument.faktaavkaringForretningsstedBeslutningLand1,
-          vesentligLand1: dokument.faktaavkaringForretningsstedVesentligLand1,
-          beslutningLand2: dokument.faktaavkaringForretningsstedBeslutningLand2,
-          vesentligLand2: dokument.faktaavkaringForretningsstedVesentligLand2,
-          beslutningLand3: dokument.faktaavkaringForretningsstedBeslutningLand3,
-          vesentligLand3: dokument.faktaavkaringForretningsstedVesentligLand3,
+          beslutningLand1: dokument.faktaavklaringForretningsstedBeslutningLand1,
+          vesentligLand1: dokument.faktaavklaringForretningsstedVesentligLand1,
+          beslutningLand2: dokument.faktaavklaringForretningsstedBeslutningLand2,
+          vesentligLand2: dokument.faktaavklaringForretningsstedVesentligLand2,
+          beslutningLand3: dokument.faktaavklaringForretningsstedBeslutningLand3,
+          vesentligLand3: dokument.faktaavklaringForretningsstedVesentligLand3,
+          antallArbeidsgivere: dokument.faktaavklaringForretningsstedAntallArbeidsgivere,
+          fordelingArbeidsgivere: dokument.faktaavklaringForretningsstedFordelingArbeidsgivere,
         },
       };
 
