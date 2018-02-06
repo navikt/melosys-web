@@ -170,6 +170,7 @@ class CustomLandVelger extends Component {
 
     return (
       <div className="landliste">
+        {multiLand === false && label}
         {valgteLand.map(valgtLand => (
           <ValgtLand
             key={valgtLand}

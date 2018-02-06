@@ -19,16 +19,16 @@ const VurderingForretningssted = props => {
     <div>
       <Nav.Undertittel>Vurder arbeidsgivers forretningssted</Nav.Undertittel>
       <Nav.Fieldset legend="Arbeidsgiver 1:">
-        <LandVelger feltNavn="faktaavklaringForretningsstedBeslutningLand1" label="Tar viktige besluttninger i" multiland={false} />
-        <LandVelger feltNavn="faktaavklaringForretningsstedVesentligLand1" label="Har vesentlig virksomhet i" multiland={false} />
+        <LandVelger feltNavn="faktaavklaringForretningsstedBeslutningLand1" label="Tar viktige besluttninger i:" multiland={false} />
+        <LandVelger feltNavn="faktaavklaringForretningsstedVesentligLand1" label="Har vesentlig virksomhet i:" multiland={false} />
       </Nav.Fieldset>
       <Nav.Fieldset legend="Arbeidsgiver 2:">
-        <LandVelger feltNavn="faktaavklaringForretningsstedBeslutningLand2" label="Tar viktige besluttninger i" multiland={false} />
-        <LandVelger feltNavn="faktaavklaringForretningsstedVesentligLand2" label="Har vesentlig virksomhet i" multiland={false} />
+        <LandVelger feltNavn="faktaavklaringForretningsstedBeslutningLand2" label="Tar viktige besluttninger i:" multiland={false} />
+        <LandVelger feltNavn="faktaavklaringForretningsstedVesentligLand2" label="Har vesentlig virksomhet i:" multiland={false} />
       </Nav.Fieldset>
       <Nav.Fieldset legend="Arbeidsgiver 3:">
-        <LandVelger feltNavn="faktaavklaringForretningsstedBeslutningLand3" label="Tar viktige besluttninger i" multiland={false} />
-        <LandVelger feltNavn="faktaavklaringForretningsstedVesentligLand3" label="Har vesentlig virksomhet i" multiland={false} />
+        <LandVelger feltNavn="faktaavklaringForretningsstedBeslutningLand3" label="Tar viktige besluttninger i:" multiland={false} />
+        <LandVelger feltNavn="faktaavklaringForretningsstedVesentligLand3" label="Har vesentlig virksomhet i:" multiland={false} />
       </Nav.Fieldset>
       <Nav.Fieldset legend="Hvor mange arbeidsgivere har søker?">
         <Skjema.Radio feltNavn="faktaavklaringForretningsstedAntallArbeidsgivere" value={VurderingForretningsstedTyper.EN_ARBEIDSGIVER} label="Én" />
