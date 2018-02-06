@@ -51,6 +51,12 @@ class StegLogikk {
         til: STEG.AKTIVITET,
       },
     ],
+    FORRETNINGSSTED: [
+      {
+        valg: [],
+        til: STEG.VEDTAK,
+      },
+    ],
     BOSTEDSLAND: [
       {
         valg: [],
@@ -113,7 +119,10 @@ class StegLogikk {
         return STEG.VEDTAK;
       }
       case STEG.BOSTEDSLAND: {
-        return STEG.UTSENDING;
+        return STEG.FORRETNINGSSTED;
+      }
+      case STEG.FORRETNINGSSTED: {
+        return STEG.VEDTAK;
       }
       case STEG.TJENESTEMANN: {
         return STEG.VEDTAK;

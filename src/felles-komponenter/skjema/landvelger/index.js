@@ -137,7 +137,7 @@ class CustomLandVelger extends Component {
   }
 
   render () {
-    const { landkoder } = this.props;
+    const { landkoder, label } = this.props;
     const { fields, multiLand } = this.props;
 
     const valgteLand = fields.getAll() || [];
@@ -148,8 +148,8 @@ class CustomLandVelger extends Component {
         <div className="landliste__linje">
           <Nav.Input
             list="alleLand"
-            label="Tast inn land"
-            bredde="L"
+            label={label}
+            bredde="XXL"
             className="landliste__linje__input"
             value={this.state.inputVerdi}
             onBlur={this.fokusUtHandler}
@@ -191,6 +191,7 @@ CustomLandVelger.propTypes = {
   fields: PT.object.isRequired,
   multiLand: PT.bool.isRequired,
   landkoder: MPT.Landkoder.isRequired,
+  label: PT.string.isRequired,
 };
 
 /** Dette er bootstrapper-komponenten som eksponeres utenfor pakken. Komponenten forventer et feltNavn for å kunne vite
@@ -206,11 +207,13 @@ LandVelger.propTypes = {
   feltNavn: PT.string.isRequired,
   multiLand: PT.bool,
   landkoder: MPT.Landkoder,
+  label: PT.string,
 };
 
 LandVelger.defaultProps = {
   multiLand: false,
   landkoder: [],
+  label: 'Tast inn land',
 };
 
 export default connect(mapStateToProps)(LandVelger);

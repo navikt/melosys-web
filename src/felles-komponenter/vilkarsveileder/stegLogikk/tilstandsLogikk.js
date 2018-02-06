@@ -37,6 +37,9 @@ class TilstandsLogikk {
       case STEG.BOSTEDSLAND: {
         return {};
       }
+      case STEG.FORRETNINGSSTED: {
+        return {};
+      }
       case STEG.AKTIVITET: {
         return {};
       }
