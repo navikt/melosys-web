@@ -173,7 +173,6 @@ class Saksbehandling extends Component {
       medlemskap,
       arbeidsforholdene,
       inntekt,
-      vurdering,
       bekreftelser,
       oppsummering,
       soknadArbeidsinntekt,
@@ -194,9 +193,6 @@ class Saksbehandling extends Component {
             <Nav.Column xs="7">
               <form name="soknad" id="soknad" onSubmit={handleSubmit}>
                 <Vilkarsveileder
-                  person={person}
-                  arbeidsforholdene={arbeidsforholdene}
-                  vurdering={vurdering}
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {errorSummary}

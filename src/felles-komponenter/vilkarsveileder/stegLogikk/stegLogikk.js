@@ -36,7 +36,7 @@ class StegLogikk {
       },
       {
         valg: VurderingSektorTyper.INGEN_AV_DISSE,
-        til: STEG.VIRKSOMHET,
+        til: STEG.ARBEIDSFORHOLD,
       },
     ],
     UTSENDING: [
