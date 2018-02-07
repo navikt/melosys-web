@@ -26,6 +26,7 @@ import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector } from '../../ducks/fagsaker';
+import { ValgteArbeidsforhold } from '../../ducks/soknad';
 import { FaktaavklaringSelector } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
 
@@ -40,7 +41,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'PERIODE',
           komponent: VurderingPeriode,
-          data: {},
+          dataHenter: () => ({}),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -50,7 +51,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'SYSSELSETTING',
           komponent: VurderingSysselsetting,
-          data: {},
+          dataHenter: () => ({}),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -60,9 +61,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'ARBEIDSFORHOLD',
           komponent: VurderingArbeidsforhold,
-          data: {
-            arbeidsforholdene: this.props.arbeidsforholdene,
-          },
+          dataHenter: () => ({ arbeidsforholdene: this.props.arbeidsforholdene }),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -71,8 +70,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'AKTIVITET',
           komponent: VurderingAktivitet,
-          data: {
-          },
+          dataHenter: () => ({}),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -81,7 +79,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'UTSENDING',
           komponent: VurderingUtsending,
-          data: {},
+          dataHenter: () => ({}),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -90,7 +88,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'SEKTOR',
           komponent: VurderingSektor,
-          data: {},
+          dataHenter: () => ({}),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -99,7 +97,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'BOSTEDSLAND',
           komponent: VurderingBostedsland,
-          data: {},
+          dataHenter: () => ({}),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -108,7 +106,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'FORRETNINGSSTED',
           komponent: VurderingForretningssted,
-          data: {},
+          dataHenter: () => ({ valgteArbeidsforhold: this.props.skjema.valgteArbeidsforhold }),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -117,7 +115,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'TJENESTEMANN',
           komponent: VurderingTjenestemann,
-          data: {},
+          dataHenter: () => ({}),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -126,7 +124,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'VIRKSOMHET',
           komponent: VurderingVirksomhet,
-          data: {},
+          dataHenter: () => ({}),
           handlers: {
             bekreftOgFortsett: this.beOmVurdering,
           },
@@ -135,7 +133,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'VEDTAK',
           komponent: VurderingVedtak,
-          data: {},
+          dataHenter: () => ({}),
           handlers: {
             fattVedtakHandler: this.fattVedtak,
           },
@@ -177,7 +175,7 @@ class Vilkarsveileder extends Component {
         ...steg,
         stegPosisjon: index,
         aktivtSteg: false,
-        data: { ...steg.data, tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
+        data: { ...steg.dataHenter(), tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
       }));
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
@@ -227,16 +225,19 @@ Vilkarsveileder.propTypes = {
   oppsummering: MPT.Oppsummering,
   faktaavklaring: PT.object,
   skjema: PT.object.isRequired,
+  valgteArbeidsforhold: PT.array,
 };
 
 Vilkarsveileder.defaultProps = {
   oppsummering: [],
   faktaavklaring: {},
+  valgteArbeidsforhold: [],
 };
 
 const mapStateToProps = state => ({
   oppsummering: OppsummeringSelector(state),
   faktaavklaring: FaktaavklaringSelector(state).faktaavklaring,
+  valgteArbeidsforhold: ValgteArbeidsforhold(state),
   skjema: SoknadenFormSelector(state).values,
 });
 
