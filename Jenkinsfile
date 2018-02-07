@@ -97,7 +97,7 @@ node {
 
     sh(returnStdout: true, script: "${npm} run build")
     sh "rm -rf /var/lib/jenkins/melosys-web/*"
-    sh "cp -r build/  /var/lib/jenkins/melosys-web/"
+    sh "cp -r build/*  /var/lib/jenkins/melosys-web/"
     //sh "scp -r build/ B150245@e34apvl00327.devillo.no:melosys/build/"
     def majorMinor = semver.split("\\.").take(2).join('.')
     buildVersion ="${majorMinor}.${BUILD_NUMBER}"
