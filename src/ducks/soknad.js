@@ -167,11 +167,6 @@ export const SoknadSelector = createSelector(
   soknad => soknad
 );
 
-export const SoknadIDSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data,
-  soknad => soknad.id
-);
-
 export const ArbeidNorgeSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidNorge : {}),
   arbeidNorge => arbeidNorge || {}
@@ -205,9 +200,4 @@ export const OppholdUtlandSelector = createSelector(
 export const ArbeidsgiversBekreftelseSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
   soknad => soknad || {}
-);
-
-export const OvrigSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.ovrig,
-  soknad => soknad
 );
