@@ -17,7 +17,7 @@ import {
 } from '../../../ducks/soknad';
 
 import {
-  FaktaavklaringArbeidsforholdSelector,
+  FaktaavklaringValgteArbeidsforholdDetaljerSelector,
   FaktaavklaringSysselsettingSelector,
 } from '../../../ducks/faktaavklaring';
 
@@ -59,7 +59,7 @@ const VurderingVedtak = props => {
   const {
     lovvalgbestemmelser,
     arbeidUtland,
-    arbeidsforhold,
+    valgteArbeidsforhold,
     arbeidstype,
   } = props;
 
@@ -69,7 +69,7 @@ const VurderingVedtak = props => {
 
   const antallManeder = datoDiff(arbeidsperiode.fom, arbeidsperiode.tom, 'months');
   const { arbeidsland = [] } = arbeidUtland;
-  const arbeidsgivereForVedtaket = arbeidsforhold
+  const arbeidsgivereForVedtaket = valgteArbeidsforhold
     .reduce((collection, arbeidsforholdet) => [...collection, arbeidsforholdet.arbeidsgiver.navn], [])
     .join(', ');
 
@@ -121,14 +121,14 @@ VurderingVedtak.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
   lovvalgbestemmelser: PT.array.isRequired,
   arbeidUtland: PT.object.isRequired,
-  arbeidsforhold: PT.array.isRequired,
+  valgteArbeidsforhold: PT.array.isRequired,
   arbeidstype: PT.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
   arbeidUtland: ArbeidUtlandSelector(state),
-  arbeidsforhold: FaktaavklaringArbeidsforholdSelector(state),
+  valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   arbeidstype: FaktaavklaringSysselsettingSelector(state),
 });
 
