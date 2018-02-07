@@ -31,12 +31,14 @@ class StegLogikk {
         til: STEG.TJENESTEMANN,
       },
       {
-        valg: VurderingSektorTyper.SOKKEL,
-        til: STEG.VEDTAK,
+        valg: [VurderingSektorTyper.INGEN_AV_DISSE, VurderingSektorTyper.SOKKEL],
+        til: STEG.ARBEIDSFORHOLD,
       },
+    ],
+    ARBEIDSFORHOLD: [
       {
-        valg: VurderingSektorTyper.INGEN_AV_DISSE,
-        til: STEG.VIRKSOMHET,
+        valg: [],
+        til: STEG.FORRETNINGSSTED,
       },
     ],
     UTSENDING: [
@@ -66,16 +68,10 @@ class StegLogikk {
     TJENESTEMANN: [
       {
         valg: [],
-        til: STEG.VEDTAK,
+        til: STEG.ARBEIDSFORHOLD,
       },
     ],
     AKTIVITET: [
-      {
-        valg: [],
-        til: STEG.VEDTAK,
-      },
-    ],
-    ARBEIDSFORHOLD: [
       {
         valg: [],
         til: STEG.VEDTAK,
@@ -109,8 +105,11 @@ class StegLogikk {
         if (antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND) {
           return STEG.BOSTEDSLAND;
         }
-
         return STEG.AKTIVITET;
+      }
+      case STEG.ARBEIDSFORHOLD: {
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
       }
       case STEG.UTSENDING: {
         return STEG.VEDTAK;
@@ -125,9 +124,6 @@ class StegLogikk {
         return STEG.VEDTAK;
       }
       case STEG.TJENESTEMANN: {
-        return STEG.VEDTAK;
-      }
-      case STEG.ARBEIDSFORHOLD: {
         return STEG.VEDTAK;
       }
       default:
