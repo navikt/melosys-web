@@ -48,7 +48,7 @@ export default function reducer(state = initialState, action) {
           erstatterTidligereUtsendt: dokument.faktaavklaringErstatterTidligereUtsendt,
           utsendingMindreEnn24Mnd: dokument.faktaavklaringUtsendingMindreEnn24Mnd,
         },
-        arbeidsforhold: [...dokument.faktaavklaringArbeidsforhold],
+        valgteArbeidsforhold: [...dokument.faktaavklaringValgteArbeidsforhold],
         sektor: {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
@@ -145,8 +145,13 @@ export const FaktaavklaringAktivitetSelector = createSelector(
   aktivitet => aktivitet || {}
 );
 
-export const FaktaavklaringArbeidsforholdSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.arbeidsforhold : []),
+export const FaktaavklaringValgteArbeidsforholdSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.valgteArbeidsforhold : []),
+  valgteArbeidsforhold => valgteArbeidsforhold || []
+);
+
+export const FaktaavklaringValgteArbeidsforholdDetaljerSelector = createSelector(
+  state => FaktaavklaringValgteArbeidsforholdSelector(state) || [],
   state => ArbeidsforholdeneSelector(state) || [],
   (valgteArbeidsforholdIDnav, alleArbeidsforhold) => {
     if (!valgteArbeidsforholdIDnav) return [];
