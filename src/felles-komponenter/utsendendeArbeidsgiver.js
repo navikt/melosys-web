@@ -51,7 +51,7 @@ Arbeidsgiver.defaultProps = {
   arbeidsgiver: null,
 };
 
-function UtsendendeArbeidsgiver (props) {
+const UtsendendeArbeidsgiver = props => {
   const { arbeidsforholdene, valgteArbeidsforhold, soknadArbeidNorge } = props;
   const valgteOrganisasjon = arbeidsforholdene && arbeidsforholdene.reduce((samling, arbeidsforholdet) =>
     (valgteArbeidsforhold.includes(arbeidsforholdet.arbeidsforholdIDnav) ? [...samling, arbeidsforholdet.arbeidsgiver] : [...samling]), []);
@@ -81,7 +81,7 @@ function UtsendendeArbeidsgiver (props) {
       </Nav.EkspanderbartpanelBase>
     </div>
   ) : null;
-}
+};
 
 UtsendendeArbeidsgiver.propTypes = {
   arbeidsforholdene: MPT.Arbeidsforholdene,
