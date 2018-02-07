@@ -106,7 +106,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'FORRETNINGSSTED',
           komponent: VurderingForretningssted,
-          dataHenter: () => ({ valgteArbeidsforhold: this.props.skjema.valgteArbeidsforhold }),
+          dataHenter: props => ({ valgteArbeidsforhold: props.valgteArbeidsforhold }),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -145,7 +145,7 @@ class Vilkarsveileder extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (Object.keys(nextProps.faktaavklaring).length > 0) {
-      this.oppdaterAktuelleSteg(nextProps.faktaavklaring, nextProps.skjema);
+      this.oppdaterAktuelleSteg(nextProps);
     }
   }
 
@@ -166,7 +166,8 @@ class Vilkarsveileder extends Component {
     this.tilSteg(this.beregnNesteSteg());
   }
 
-  oppdaterAktuelleSteg = (faktaavklaring, skjema) => {
+  oppdaterAktuelleSteg = props => {
+    const { faktaavklaring, skjema } = props;
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
     const aktuelleSteg = beregnedeSteg
@@ -175,7 +176,7 @@ class Vilkarsveileder extends Component {
         ...steg,
         stegPosisjon: index,
         aktivtSteg: false,
-        data: { ...steg.dataHenter(), tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
+        data: { ...steg.dataHenter(props), tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
       }));
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
@@ -231,7 +232,7 @@ Vilkarsveileder.propTypes = {
 Vilkarsveileder.defaultProps = {
   oppsummering: [],
   faktaavklaring: {},
-  valgteArbeidsforhold: [],
+  valgteArbeidsforhold: {},
 };
 
 const mapStateToProps = state => ({
