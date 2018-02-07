@@ -20,7 +20,6 @@ const Forretningsstedet = props => {
   const { arbeidsgiver = {} } = props.forretningsstedet;
   const { navn = '' } = arbeidsgiver;
 
-  console.log(props);
   return (
     <Nav.Fieldset legend={navn}>
       <LandVelger feltNavn="faktaavklaringForretningsstedBeslutningLand1" label="Tar viktige besluttninger i:" multiland={false} />
