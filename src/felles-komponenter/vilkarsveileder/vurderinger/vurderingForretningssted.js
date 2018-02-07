@@ -13,7 +13,7 @@ export const VurderingForretningsstedTyper = {
 };
 
 const VurderingForretningssted = props => {
-  const { bekreftOgFortsett, tilstand } = props;
+  const { bekreftOgFortsett, tilstand, valgteArbeidsforhold } = props;
 
   return (
     <div>
@@ -48,10 +48,12 @@ const VurderingForretningssted = props => {
 VurderingForretningssted.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
+  valgteArbeidsforhold: PT.array,
 };
 
 VurderingForretningssted.defaultProps = {
   tilstand: {},
+  valgteArbeidsforhold: [],
 };
 
 export default VurderingForretningssted;
