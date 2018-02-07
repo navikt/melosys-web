@@ -31,7 +31,7 @@ class StegLogikk {
         til: STEG.TJENESTEMANN,
       },
       {
-        valg: VurderingSektorTyper.SOKKEL,
+        valg: [VurderingSektorTyper.SOKKEL, VurderingSektorTyper.SKIP],
         til: STEG.VEDTAK,
       },
       {
