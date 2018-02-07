@@ -209,7 +209,6 @@ class Vilkarsveileder extends Component {
 
 Vilkarsveileder.propTypes = {
   history: PT.object.isRequired,
-  person: MPT.Person.isRequired,
   vurdering: PT.object.isRequired,
   arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
   fattVedtakHandler: PT.func.isRequired,
