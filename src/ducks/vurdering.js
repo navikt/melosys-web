@@ -41,7 +41,7 @@ export function hentVurdering(behandlingID) {
 
 // selector(s)
 export const VurderingSelector = createSelector(
-  state => (state.vurdering.data.vurdering ? state.vurdering.data : {}),
+  state => (state.vurdering.data.vurdering ? state.vurdering.data.vurdering : {}),
   vurdering => vurdering
 );
 

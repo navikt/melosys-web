@@ -2,6 +2,8 @@ import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 
+import { ArbeidsforholdeneSelector } from './fagsaker';
+
 // Actions
 const OK = 'faktaavklaring/OK';
 const FEILET = 'faktaavklaring/FEILET';
@@ -46,6 +48,7 @@ export default function reducer(state = initialState, action) {
           erstatterTidligereUtsendt: dokument.faktaavklaringErstatterTidligereUtsendt,
           utsendingMindreEnn24Mnd: dokument.faktaavklaringUtsendingMindreEnn24Mnd,
         },
+        arbeidsforhold: [...dokument.faktaavklaringArbeidsforhold],
         sektor: {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
@@ -140,4 +143,14 @@ export const FaktaavklaringTjenestemannSelector = createSelector(
 export const FaktaavklaringAktivitetSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.aktivitet : {}),
   aktivitet => aktivitet || {}
+);
+
+export const FaktaavklaringArbeidsforholdSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.arbeidsforhold : []),
+  state => ArbeidsforholdeneSelector(state) || [],
+  (valgteArbeidsforholdIDnav, alleArbeidsforhold) => {
+    if (!valgteArbeidsforholdIDnav) return [];
+    const valgteArbeidsforhold = alleArbeidsforhold.filter(arbeidsforholdet => valgteArbeidsforholdIDnav.includes(arbeidsforholdet.arbeidsforholdIDnav));
+    return (valgteArbeidsforhold || []);
+  }
 );

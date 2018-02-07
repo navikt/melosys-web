@@ -8,16 +8,18 @@ import { datoDiff } from '../../../utils/utils';
 
 import './vurderingVedtak.css';
 
-import { FaktaavklaringSysselsettingSelector } from '../../../ducks/faktaavklaring';
-
 import {
   VurderingLovvalgbestemmelserSelector,
 } from '../../../ducks/vurdering';
 
 import {
   ArbeidUtlandSelector,
-  ValgteArbeidsforhold,
 } from '../../../ducks/soknad';
+
+import {
+  FaktaavklaringArbeidsforholdSelector,
+  FaktaavklaringSysselsettingSelector,
+} from '../../../ducks/faktaavklaring';
 
 const uuid = require('uuid/v4');
 
@@ -57,7 +59,7 @@ const VurderingVedtak = props => {
   const {
     lovvalgbestemmelser,
     arbeidUtland,
-    valgteArbeidsforhold,
+    arbeidsforhold,
     arbeidstype,
   } = props;
 
@@ -67,8 +69,8 @@ const VurderingVedtak = props => {
 
   const antallManeder = datoDiff(arbeidsperiode.fom, arbeidsperiode.tom, 'months');
   const { arbeidsland = [] } = arbeidUtland;
-  const arbeidsgivere = valgteArbeidsforhold
-    .reduce((collection, arbeidsforhold) => [...collection, arbeidsforhold.arbeidsgiver.navn], [])
+  const arbeidsgivereForVedtaket = arbeidsforhold
+    .reduce((collection, arbeidsforholdet) => [...collection, arbeidsforholdet.arbeidsgiver.navn], [])
     .join(', ');
 
   return (
@@ -99,7 +101,7 @@ const VurderingVedtak = props => {
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Navn på arbeidsgiver</Nav.Element>
-            <Nav.Normaltekst>{arbeidsgivere}</Nav.Normaltekst>
+            <Nav.Normaltekst>{arbeidsgivereForVedtaket}</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -119,14 +121,14 @@ VurderingVedtak.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
   lovvalgbestemmelser: PT.array.isRequired,
   arbeidUtland: PT.object.isRequired,
-  valgteArbeidsforhold: PT.array.isRequired,
+  arbeidsforhold: PT.array.isRequired,
   arbeidstype: PT.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
   arbeidUtland: ArbeidUtlandSelector(state),
-  valgteArbeidsforhold: ValgteArbeidsforhold(state),
+  arbeidsforhold: FaktaavklaringArbeidsforholdSelector(state),
   arbeidstype: FaktaavklaringSysselsettingSelector(state),
 });
 
