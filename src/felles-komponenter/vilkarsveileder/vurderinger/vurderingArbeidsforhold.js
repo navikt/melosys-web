@@ -67,7 +67,7 @@ class ArbeidsforholdeneListe extends Component {
         {arbeidsforholdene.map(arbeidsforholdet => (
           <Field
             key={uuid()}
-            name="valgteArbeidsforhold"
+            name="faktaavklaringValgteArbeidsforhold"
             type="text"
             component={linjeProps => <ArbeidsforholdLinje
               {...linjeProps}
@@ -104,7 +104,7 @@ const VurderingArbeidsforhold = props => {
     <div className="vurderingarbeidsforhold">
       <Nav.Undertittel>Velg arbeidsforhold:</Nav.Undertittel>
       <div className="arbeidsforhold">
-        <FieldArray name="valgteArbeidsforhold" component={arrayProps => <ArbeidsforholdeneListe {...arrayProps} arbeidsforholdene={arbeidsforholdene} />} />
+        <FieldArray name="faktaavklaringArbeidsforhold" component={arrayProps => <ArbeidsforholdeneListe {...arrayProps} arbeidsforholdene={arbeidsforholdene} />} />
         <div className="fane__knapplinje">
           <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>

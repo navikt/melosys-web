@@ -4,8 +4,6 @@ import { STATUS, doThenDispatch } from '../services/utils';
 import { strengTilBool, strengTilInt } from '../utils/utils';
 import { formatterDatoTilISO } from '../utils/dato';
 
-import { ArbeidsforholdeneSelector } from './fagsaker';
-
 // Actions
 const OK = 'soknad/OK';
 const FEILET = 'soknad/FEILET';
@@ -111,7 +109,6 @@ export default function reducer(state = initialState, action) {
         },
         arbeidNorge: {
           ...state.data.soknadDokument.arbeidNorge,
-          valgteArbeidsforhold: dokument.valgteArbeidsforhold,
         },
         arbeidsgiversBekreftelse: {
           ...state.data.soknadDokument.arbeidsgiversBekreftelse,
@@ -180,16 +177,6 @@ export const ArbeidNorgeSelector = createSelector(
   arbeidNorge => arbeidNorge || {}
 );
 
-export const ValgteArbeidsforhold = createSelector(
-  state => ArbeidNorgeSelector(state).valgteArbeidsforhold || [],
-  state => ArbeidsforholdeneSelector(state),
-  (valgteArbeidsforhold, alleArbeidsforhold) => (
-    valgteArbeidsforhold ? valgteArbeidsforhold.reduce((samling, valgtArbeidsforholdID) => {
-      const funnetArbeidsforhold = alleArbeidsforhold.find(arbeidsforholdet => arbeidsforholdet.arbeidsforholdIDnav === valgtArbeidsforholdID);
-      return funnetArbeidsforhold ? [...samling, funnetArbeidsforhold] : [...samling];
-    }, []) : [])
-);
-
 export const ArbeidUtlandSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidUtland : {}),
   soknad => soknad || {}
@@ -219,7 +206,6 @@ export const ArbeidsgiversBekreftelseSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
   soknad => soknad || {}
 );
-
 
 export const OvrigSelector = createSelector(
   state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.ovrig,

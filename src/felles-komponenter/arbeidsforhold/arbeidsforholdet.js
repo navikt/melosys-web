@@ -1,5 +1,4 @@
 import React from 'react';
-import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/index';
@@ -72,7 +71,6 @@ const Arbeidsforholdet = props => {
     arbeidsforholdstype,
     Aordning,
     arbeidsgiver,
-    arbeidsforholdIDnav,
     arbeidsavtaler,
     timerTimelonnet,
     utenlandsopphold,
@@ -98,9 +96,6 @@ const Arbeidsforholdet = props => {
         <Nav.Container fluid>
           <Nav.Row className="arbeidsforholdet__enkelt">
             <div className="arbeidsforholdene panelSeksjon">
-              <Nav.Row>
-                <Nav.Knapp className="arbeidsforholdet__relevantknapp" onClick={e => props.leggtilArbeidsforhold(e, arbeidsforholdIDnav)}>Sett som utsendende</Nav.Knapp>
-              </Nav.Row>
               <Nav.Row className="arbeidsforhold__enkelt">
                 <Nav.Column xs="6">
                   <DatoOmrade periode={ansettelsesPeriode} />
@@ -142,7 +137,6 @@ const Arbeidsforholdet = props => {
 
 Arbeidsforholdet.propTypes = {
   arbeidsforhold: MPT.Arbeidsforhold.isRequired,
-  leggtilArbeidsforhold: PT.func.isRequired,
 };
 
 
