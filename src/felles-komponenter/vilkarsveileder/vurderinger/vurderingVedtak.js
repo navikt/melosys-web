@@ -57,12 +57,12 @@ const VurderingVedtak = props => {
     lovvalgbestemmelser,
     opphold,
     valgteArbeidsforhold,
-    arbeidstype,
+    sysselsetting,
   } = props;
 
   const { land = [], periode = {} } = opphold;
 
-  const { arbeidstype: arbeidstypen = '' } = arbeidstype;
+  const { sysselsettingType = '' } = sysselsetting;
 
   const antallManeder = datoDiff(periode.fom, periode.tom, 'months');
   const arbeidsgivereForVedtaket = valgteArbeidsforhold
@@ -93,7 +93,7 @@ const VurderingVedtak = props => {
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Søker er</Nav.Element>
-            <Nav.Normaltekst>{arbeidstypen}</Nav.Normaltekst>
+            <Nav.Normaltekst>{sysselsettingType}</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Navn på arbeidsgiver</Nav.Element>
@@ -118,14 +118,14 @@ VurderingVedtak.propTypes = {
   lovvalgbestemmelser: PT.array.isRequired,
   opphold: PT.object.isRequired,
   valgteArbeidsforhold: PT.array.isRequired,
-  arbeidstype: PT.object.isRequired,
+  sysselsetting: PT.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
   opphold: FaktaavklaringOppholdSelector(state),
   valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
-  arbeidstype: FaktaavklaringSysselsettingSelector(state),
+  sysselsetting: FaktaavklaringSysselsettingSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVedtak);
