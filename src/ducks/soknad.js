@@ -122,6 +122,11 @@ export default function reducer(state = initialState, action) {
         },
         oppholdUtland: {
           ...state.data.soknadDokument.oppholdUtland,
+          oppholdsland: dokument.faktaavklaringOppholdsLand,
+          oppholdsPeriode: {
+            fom: document.faktaavklaringPeriodeFraOgMed,
+            tom: document.faktaavklaringPeriodeTilOgMed,
+          },
           studentIEOS: dokument.studentIEOS,
           studentSkole: dokument.studentSkole,
           studentSemester: dokument.studentSemester,
