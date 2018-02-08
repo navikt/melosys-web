@@ -59,7 +59,7 @@ export default function reducer(state = initialState, action) {
         bostedsland: {
           bekrefterFamiliebosted: dokument.faktaavklaringBekrefterFamiliebosted,
           bekrefterDisponering: dokument.faktaavklaringBekrefterDisponering,
-          bostedsLand: dokument.faktaavklaringBostedsland,
+          bostedsland: dokument.faktaavklaringBostedsland,
         },
         virksomhet: {
           antallLand: dokument.faktaavklaringAntallLand,
