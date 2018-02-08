@@ -13,12 +13,9 @@ import {
 } from '../../../ducks/vurdering';
 
 import {
-  ArbeidUtlandSelector,
-} from '../../../ducks/soknad';
-
-import {
   FaktaavklaringValgteArbeidsforholdDetaljerSelector,
   FaktaavklaringSysselsettingSelector,
+  FaktaavklaringOppholdSelector,
 } from '../../../ducks/faktaavklaring';
 
 const uuid = require('uuid/v4');
@@ -58,17 +55,16 @@ LovvalgBestemmelse.propTypes = {
 const VurderingVedtak = props => {
   const {
     lovvalgbestemmelser,
-    arbeidUtland,
+    opphold,
     valgteArbeidsforhold,
     arbeidstype,
   } = props;
 
-  const { arbeidsperiode = {} } = arbeidUtland;
+  const { land = [], periode = {} } = opphold;
 
   const { arbeidstype: arbeidstypen = '' } = arbeidstype;
 
-  const antallManeder = datoDiff(arbeidsperiode.fom, arbeidsperiode.tom, 'months');
-  const { arbeidsland = [] } = arbeidUtland;
+  const antallManeder = datoDiff(periode.fom, periode.tom, 'months');
   const arbeidsgivereForVedtaket = valgteArbeidsforhold
     .reduce((collection, arbeidsforholdet) => [...collection, arbeidsforholdet.arbeidsgiver.navn], [])
     .join(', ');
@@ -93,7 +89,7 @@ const VurderingVedtak = props => {
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Land</Nav.Element>
-            <Nav.Normaltekst>{ arbeidsland.join(', ') }</Nav.Normaltekst>
+            <Nav.Normaltekst>{ land.join(', ') }</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Søker er</Nav.Element>
@@ -120,14 +116,14 @@ const VurderingVedtak = props => {
 VurderingVedtak.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
   lovvalgbestemmelser: PT.array.isRequired,
-  arbeidUtland: PT.object.isRequired,
+  opphold: PT.object.isRequired,
   valgteArbeidsforhold: PT.array.isRequired,
   arbeidstype: PT.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
-  arbeidUtland: ArbeidUtlandSelector(state),
+  opphold: FaktaavklaringOppholdSelector(state),
   valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   arbeidstype: FaktaavklaringSysselsettingSelector(state),
 });
