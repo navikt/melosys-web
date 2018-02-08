@@ -4,6 +4,8 @@ import { STATUS, doThenDispatch } from '../services/utils';
 
 import { ArbeidsforholdeneSelector } from './fagsaker';
 
+import { formatterDatoTilISO } from '../utils/dato';
+
 // Actions
 const OK = 'faktaavklaring/OK';
 const FEILET = 'faktaavklaring/FEILET';
@@ -32,10 +34,12 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
       const faktaavklaring = {
         ...state.data.faktaavklaring,
-        periode: {
+        opphold: {
           land: dokument.faktaavklaringOppholdsLand,
-          periodeFraOgMed: dokument.faktaavklaringPeriodeFraOgMed,
-          periodeTilOgMed: dokument.faktaavklaringPeriodeTilOgMed,
+          periode: {
+            fom: formatterDatoTilISO(dokument.faktaavklaringPeriodeFraOgMed),
+            tom: formatterDatoTilISO(dokument.faktaavklaringPeriodeTilOgMed),
+          },
         },
         sysselsetting: {
           sysselsettingType: dokument.faktaavklaringSysselsettingType,
@@ -105,9 +109,14 @@ export const FaktaavklaringSelector = createSelector(
   faktaavklaring => faktaavklaring || {}
 );
 
-export const FaktaavklaringPeriodeSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.periode : {}),
-  periode => periode || {}
+export const FaktaavklaringOppholdSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.opphold : {}),
+  opphold => opphold || {}
+);
+
+export const FaktaavklaringOppholdPeriodeSelector = createSelector(
+  state => FaktaavklaringOppholdSelector(state),
+  oppholdet => (oppholdet.periode ? oppholdet.periode : {})
 );
 
 export const FaktaavklaringSysselsettingSelector = createSelector(

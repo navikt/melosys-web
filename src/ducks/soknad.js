@@ -124,8 +124,9 @@ export default function reducer(state = initialState, action) {
           ...state.data.soknadDokument.oppholdUtland,
           oppholdsland: dokument.faktaavklaringOppholdsLand,
           oppholdsPeriode: {
-            fom: document.faktaavklaringPeriodeFraOgMed,
-            tom: document.faktaavklaringPeriodeTilOgMed,
+            ...state.data.soknadDokument.oppholdUtland.oppholdsPeriode,
+            fom: formatterDatoTilISO(dokument.faktaavklaringPeriodeFraOgMed),
+            tom: formatterDatoTilISO(dokument.faktaavklaringPeriodeTilOgMed),
           },
           studentIEOS: dokument.studentIEOS,
           studentSkole: dokument.studentSkole,
@@ -178,7 +179,7 @@ export const ArbeidNorgeSelector = createSelector(
 );
 
 export const ArbeidUtlandSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidUtland : {}),
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
   soknad => soknad || {}
 );
 
