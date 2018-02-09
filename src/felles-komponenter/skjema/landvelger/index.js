@@ -35,7 +35,7 @@ class CustomLandVelger extends Component {
    */
   leggTilLand = landKode => {
     const { fields } = this.props;
-    const valgteLand = fields.getAll();
+    const valgteLand = fields.getAll() || [];
 
     if (!valgteLand.includes(landKode)) {
       fields.push(landKode);
