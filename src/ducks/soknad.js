@@ -4,8 +4,6 @@ import { STATUS, doThenDispatch } from '../services/utils';
 import { strengTilBool, strengTilInt } from '../utils/utils';
 import { formatterDatoTilISO } from '../utils/dato';
 
-import { ArbeidsforholdeneSelector } from './fagsaker';
-
 // Actions
 const OK = 'soknad/OK';
 const FEILET = 'soknad/FEILET';
@@ -111,7 +109,6 @@ export default function reducer(state = initialState, action) {
         },
         arbeidNorge: {
           ...state.data.soknadDokument.arbeidNorge,
-          valgteArbeidsforhold: dokument.valgteArbeidsforhold,
         },
         arbeidsgiversBekreftelse: {
           ...state.data.soknadDokument.arbeidsgiversBekreftelse,
@@ -125,6 +122,12 @@ export default function reducer(state = initialState, action) {
         },
         oppholdUtland: {
           ...state.data.soknadDokument.oppholdUtland,
+          oppholdsland: dokument.faktaavklaringOppholdsLand,
+          oppholdsPeriode: {
+            ...state.data.soknadDokument.oppholdUtland.oppholdsPeriode,
+            fom: formatterDatoTilISO(dokument.faktaavklaringPeriodeFraOgMed),
+            tom: formatterDatoTilISO(dokument.faktaavklaringPeriodeTilOgMed),
+          },
           studentIEOS: dokument.studentIEOS,
           studentSkole: dokument.studentSkole,
           studentSemester: dokument.studentSemester,
@@ -170,28 +173,13 @@ export const SoknadSelector = createSelector(
   soknad => soknad
 );
 
-export const SoknadIDSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data,
-  soknad => soknad.id
-);
-
 export const ArbeidNorgeSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidNorge : {}),
   arbeidNorge => arbeidNorge || {}
 );
 
-export const ValgteArbeidsforhold = createSelector(
-  state => ArbeidNorgeSelector(state).valgteArbeidsforhold || [],
-  state => ArbeidsforholdeneSelector(state),
-  (valgteArbeidsforhold, alleArbeidsforhold) => (
-    valgteArbeidsforhold ? valgteArbeidsforhold.reduce((samling, valgtArbeidsforholdID) => {
-      const funnetArbeidsforhold = alleArbeidsforhold.find(arbeidsforholdet => arbeidsforholdet.arbeidsforholdIDnav === valgtArbeidsforholdID);
-      return funnetArbeidsforhold ? [...samling, funnetArbeidsforhold] : [...samling];
-    }, []) : [])
-);
-
 export const ArbeidUtlandSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidUtland : {}),
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
   soknad => soknad || {}
 );
 
@@ -218,10 +206,4 @@ export const OppholdUtlandSelector = createSelector(
 export const ArbeidsgiversBekreftelseSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
   soknad => soknad || {}
-);
-
-
-export const OvrigSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.ovrig,
-  soknad => soknad
 );
