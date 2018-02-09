@@ -26,8 +26,7 @@ import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker';
-import { ValgteArbeidsforhold } from '../../ducks/soknad';
-import { FaktaavklaringSelector } from '../../ducks/faktaavklaring';
+import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
 
 import './vilkarsveileder.css';
@@ -237,7 +236,7 @@ Vilkarsveileder.defaultProps = {
 const mapStateToProps = state => ({
   oppsummering: OppsummeringSelector(state),
   faktaavklaring: FaktaavklaringSelector(state).faktaavklaring,
-  valgteArbeidsforhold: ValgteArbeidsforhold(state),
+  valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
   skjema: SoknadenFormSelector(state).values,
 });
