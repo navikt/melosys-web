@@ -55,7 +55,8 @@ import {
   sendFaktaavklaring,
   oppdaterFaktaavklaringState,
   FaktaavklaringSelector,
-  FaktaavklaringPeriodeSelector,
+  FaktaavklaringOppholdSelector,
+  FaktaavklaringOppholdPeriodeSelector,
   FaktaavklaringSysselsettingSelector,
   FaktaavklaringUtsendingSelector,
   FaktaavklaringSektorSelector,
@@ -63,6 +64,7 @@ import {
   FaktaavklaringAktivitetSelector,
   FaktaavklaringBostedslandSelector,
   FaktaavklaringTjenestemannSelector,
+  FaktaavklaringValgteArbeidsforholdSelector,
   FaktaavklaringForretningsstedSelector,
 } from '../ducks/faktaavklaring';
 
@@ -174,7 +176,6 @@ class Saksbehandling extends Component {
       medlemskap,
       arbeidsforholdene,
       inntekt,
-      vurdering,
       bekreftelser,
       oppsummering,
       soknadArbeidsinntekt,
@@ -195,9 +196,6 @@ class Saksbehandling extends Component {
             <Nav.Column xs="7">
               <form name="soknad" id="soknad" onSubmit={handleSubmit}>
                 <Vilkarsveileder
-                  person={person}
-                  arbeidsforholdene={arbeidsforholdene}
-                  vurdering={vurdering}
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {errorSummary}
@@ -262,10 +260,9 @@ const mapStateToProps = state => ({
     kontaktEpost: ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: ArbeidNorgeSelector(state).fullmektigFirma,
     fullmektigAdresse: ArbeidNorgeSelector(state).fullmektigAdresse,
-    valgteArbeidsforhold: ArbeidNorgeSelector(state).valgteArbeidsforhold,
-    faktaavklaringOppholdsLand: FaktaavklaringPeriodeSelector(state).land,
-    faktaavklaringPeriodeFraOgMed: formatterDatoTilNorsk(FaktaavklaringPeriodeSelector(state).periodeFraOgMed),
-    faktaavklaringPeriodeTilOgMed: formatterDatoTilNorsk(FaktaavklaringPeriodeSelector(state).periodeTilOgMed),
+    faktaavklaringOppholdsLand: FaktaavklaringOppholdSelector(state).land,
+    faktaavklaringPeriodeFraOgMed: formatterDatoTilNorsk(FaktaavklaringOppholdPeriodeSelector(state).fom),
+    faktaavklaringPeriodeTilOgMed: formatterDatoTilNorsk(FaktaavklaringOppholdPeriodeSelector(state).tom),
     faktaavklaringSysselsettingType: FaktaavklaringSysselsettingSelector(state).sysselsettingType,
     faktaavklaringAnsattINorskSelskap: FaktaavklaringUtsendingSelector(state).ansattINorskSelskap,
     faktaavklaringErstatterTidligereUtsendt: FaktaavklaringUtsendingSelector(state).erstatterTidligereUtsendt,
@@ -278,8 +275,9 @@ const mapStateToProps = state => ({
     faktaavklaringAktivitetLand: FaktaavklaringAktivitetSelector(state).aktivitetLand,
     faktaavklaringBekrefterFamiliebosted: FaktaavklaringBostedslandSelector(state).bekrefterFamiliebosted,
     faktaavklaringBekrefterDisponering: FaktaavklaringBostedslandSelector(state).bekrefterFamiliebosted,
-    faktaavklaringBostedsland: FaktaavklaringBostedslandSelector(state).bostedsLand,
+    faktaavklaringBostedsland: FaktaavklaringBostedslandSelector(state).bostedsland,
     faktaavklaringTjenestemann: FaktaavklaringTjenestemannSelector(state).tjenestemann,
+    faktaavklaringValgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdSelector(state),
     faktaavklaringForretningsstedBeslutningLand1: FaktaavklaringForretningsstedSelector(state).beslutningLand1,
     faktaavklaringForretningsstedVesentligLand1: FaktaavklaringForretningsstedSelector(state).vesentligLand1,
     faktaavklaringForretningsstedBeslutningLand2: FaktaavklaringForretningsstedSelector(state).beslutningLand2,

@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import { Periode } from './periode';
 
 const OppholdUtlandPropType = PT.shape({
-  oppholdsland: PT.string,
+  oppholdsland: PT.arrayOf(PT.string),
   oppholdsPeriode: Periode,
   studentIEOS: PT.bool,
   studentFinansiering: PT.string,

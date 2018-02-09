@@ -41,7 +41,11 @@ class TilstandsLogikk {
         return {};
       }
       case STEG.AKTIVITET: {
-        return {};
+        const { faktaavklaringAntallLand, faktaavklaringAktivitetINorge } = skjema;
+
+        return {
+          sporOmHovedtyngden: (faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND && faktaavklaringAktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT),
+        };
       }
       case STEG.ARBEIDSFORHOLD: {
         return {};

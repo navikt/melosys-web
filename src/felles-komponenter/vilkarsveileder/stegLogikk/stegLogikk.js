@@ -31,7 +31,11 @@ class StegLogikk {
         til: STEG.TJENESTEMANN,
       },
       {
-        valg: [VurderingSektorTyper.INGEN_AV_DISSE, VurderingSektorTyper.SOKKEL],
+        valg: [VurderingSektorTyper.SOKKEL, VurderingSektorTyper.SKIP],
+        til: STEG.VEDTAK,
+      },
+      {
+        valg: [VurderingSektorTyper.INGEN_AV_DISSE],
         til: STEG.ARBEIDSFORHOLD,
       },
     ],
@@ -100,10 +104,8 @@ class StegLogikk {
         return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(ansattISektor)).til;
       }
       case STEG.VIRKSOMHET: {
-        const { antallLand } = vurderingerIDetteSteget;
-
-        if (antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND) {
-          return STEG.BOSTEDSLAND;
+        if (vurderingerIDetteSteget.antallLand === VurderingVirksomhetTyper.KUN_NORGE) {
+          return STEG.VEDTAK;
         }
         return STEG.AKTIVITET;
       }

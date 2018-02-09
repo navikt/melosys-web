@@ -8,16 +8,15 @@ import { datoDiff } from '../../../utils/utils';
 
 import './vurderingVedtak.css';
 
-import { FaktaavklaringSysselsettingSelector } from '../../../ducks/faktaavklaring';
-
 import {
   VurderingLovvalgbestemmelserSelector,
 } from '../../../ducks/vurdering';
 
 import {
-  ArbeidUtlandSelector,
-  ValgteArbeidsforhold,
-} from '../../../ducks/soknad';
+  FaktaavklaringValgteArbeidsforholdDetaljerSelector,
+  FaktaavklaringSysselsettingSelector,
+  FaktaavklaringOppholdSelector,
+} from '../../../ducks/faktaavklaring';
 
 const uuid = require('uuid/v4');
 
@@ -56,19 +55,18 @@ LovvalgBestemmelse.propTypes = {
 const VurderingVedtak = props => {
   const {
     lovvalgbestemmelser,
-    arbeidUtland,
+    opphold,
     valgteArbeidsforhold,
-    arbeidstype,
+    sysselsetting,
   } = props;
 
-  const { arbeidsperiode = {} } = arbeidUtland;
+  const { land = [], periode = {} } = opphold;
 
-  const { arbeidstype: arbeidstypen = '' } = arbeidstype;
+  const { sysselsettingType = '' } = sysselsetting;
 
-  const antallManeder = datoDiff(arbeidsperiode.fom, arbeidsperiode.tom, 'months');
-  const { arbeidsland = [] } = arbeidUtland;
-  const arbeidsgivere = valgteArbeidsforhold
-    .reduce((collection, arbeidsforhold) => [...collection, arbeidsforhold.arbeidsgiver.navn], [])
+  const antallManeder = datoDiff(periode.fom, periode.tom, 'months');
+  const arbeidsgivereForVedtaket = valgteArbeidsforhold
+    .reduce((collection, arbeidsforholdet) => [...collection, arbeidsforholdet.arbeidsgiver.navn], [])
     .join(', ');
 
   return (
@@ -91,15 +89,15 @@ const VurderingVedtak = props => {
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Land</Nav.Element>
-            <Nav.Normaltekst>{ arbeidsland.join(', ') }</Nav.Normaltekst>
+            <Nav.Normaltekst>{ land.join(', ') }</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Søker er</Nav.Element>
-            <Nav.Normaltekst>{arbeidstypen}</Nav.Normaltekst>
+            <Nav.Normaltekst>{sysselsettingType}</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Navn på arbeidsgiver</Nav.Element>
-            <Nav.Normaltekst>{arbeidsgivere}</Nav.Normaltekst>
+            <Nav.Normaltekst>{arbeidsgivereForVedtaket}</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -118,16 +116,16 @@ const VurderingVedtak = props => {
 VurderingVedtak.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
   lovvalgbestemmelser: PT.array.isRequired,
-  arbeidUtland: PT.object.isRequired,
+  opphold: PT.object.isRequired,
   valgteArbeidsforhold: PT.array.isRequired,
-  arbeidstype: PT.object.isRequired,
+  sysselsetting: PT.object.isRequired,
 };
 
 const mapStateToProps = state => ({
   lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
-  arbeidUtland: ArbeidUtlandSelector(state),
-  valgteArbeidsforhold: ValgteArbeidsforhold(state),
-  arbeidstype: FaktaavklaringSysselsettingSelector(state),
+  opphold: FaktaavklaringOppholdSelector(state),
+  valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
+  sysselsetting: FaktaavklaringSysselsettingSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVedtak);
