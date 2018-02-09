@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { arrayPush, reduxForm } from 'redux-form';
+import React from 'react';
+import { reduxForm } from 'redux-form';
 import PT from 'prop-types';
 
 import * as MPT from '../proptypes/';
@@ -16,28 +16,18 @@ const uuid = require('uuid/v4');
  *
  * @param { arbeidsforholdene } Array En liste over alle arbeidforhold, hvert som et objekt
  */
-class Arbeidsforholdene extends Component {
-  leggtilArbeidsforholdHandler = (e, arbeidsforholdIDnav) => {
-    e.preventDefault();
-    const { dispatch } = this.props;
-    dispatch(arrayPush('soknad', 'valgteArbeidsforhold', arbeidsforholdIDnav));
-  }
+const Arbeidsforholdene = props => {
+  const { arbeidsforholdene } = props;
 
-  render () {
-    const { arbeidsforholdene } = this.props;
-    const { leggtilArbeidsforholdHandler } = this;
-
-    return (
-      <div className="arbeidsforholdene">
-        {arbeidsforholdene.map(arbeidsforhold => <Arbeidsforholdet
-          key={uuid()}
-          arbeidsforhold={arbeidsforhold}
-          leggtilArbeidsforhold={leggtilArbeidsforholdHandler}
-        />)}
-      </div>
-    );
-  }
-}
+  return (
+    <div className="arbeidsforholdene">
+      {arbeidsforholdene.map(arbeidsforhold => <Arbeidsforholdet
+        key={uuid()}
+        arbeidsforhold={arbeidsforhold}
+      />)}
+    </div>
+  );
+};
 
 Arbeidsforholdene.propTypes = {
   arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,

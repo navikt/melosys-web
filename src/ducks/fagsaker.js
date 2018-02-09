@@ -111,16 +111,6 @@ export const ArbeidsforholdeneSelector = createSelector(
   }))
 );
 
-/**
- *  Denne er depricated når vi fjerner spikes fra tidlig prototype
- *  */
-export const ArbeidsforholdSelector = createSelector(
-  (state, arbeidsforholdID) => arbeidsforholdID,
-  state => state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold || [],
-  (arbeidsforholdID, arbeidsforhold) =>
-    arbeidsforhold.find(item => item.arbeidsforholdIDnav.toString() === arbeidsforholdID)
-);
-
 /** Finner alle organisasjonsnummer som er listet i arbeidsforhold.
  * Det er range i arbeidsforhold som avgjør hvilke organisasjoner som selectoren
  * regner som relevante å vise.
