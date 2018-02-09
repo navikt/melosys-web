@@ -17,6 +17,14 @@ export const VurderingForretningsstedTyper = {
   ULIKE_LAND: 'ULIKE_LAND',
 };
 
+/** Det gir ingen mening å legge inn input=hidden i Redux Form, men vi trenger allikevel å knytte et felt
+ * med arbeidsgiverID til hver gruppe av svar slik at vi vet hvilke arbeidsgivere som saksbehandler har gitt vilke svar til.
+ * Løsningen på dette ble å lage en egen custom component som ikke returnerer noe synlig felt, men som umiddelbart
+ * ved mount lagrer arbeidsgiverID (onChange) til sitt tilhørende objekt.
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
 const ArbeidsgiverIDField = props => {
   props.input.onChange(props.arbeidsgiverID);
   return (<div />);
@@ -27,6 +35,11 @@ ArbeidsgiverIDField.propTypes = {
   arbeidsgiverID: PT.string.isRequired,
 };
 
+/** Dette er enkeltkomponenten for hver gruppe av valgte arbeidsforhold.
+ *
+ * @param props
+ * @returns {React Node}
+ */
 const Forretningsstedet = props => {
   const { index } = props;
   const { arbeidsgiver = {}, arbeidsgiverID } = props.forretningsstedet;
@@ -46,6 +59,14 @@ Forretningsstedet.propTypes = {
   index: PT.number.isRequired,
 };
 
+/** Dette er komponenten som benyttes av FieldArray og som gjør at felter for hver valgte arbeidsforhold kan
+ * legges inn som array og underliggende felter kan fylles ut. Merk at istedet for å loope igjennom ArrayField for å finne
+ * alle felter (slik man vanligvis ville ha gjort) looper denne komponenten igjennom 'valgteArbeidsforhold'-arrayen
+ * som består av alle arbeidsgiverID'er som saksbehandleren har valgt i tidligere steg.
+ *
+ * @param props
+ * @returns {React Node}
+ */
 const Forretningssteder = props => {
   const { valgteArbeidsforhold } = props;
   return (
@@ -61,6 +82,11 @@ Forretningssteder.propTypes = {
   valgteArbeidsforhold: PT.array.isRequired,
 };
 
+/** Hovedkomponenten som rigges opp mot stegvelgeren.
+ *
+ * @param props
+ * @returns {React Node}
+ */
 const VurderingForretningssted = props => {
   const { bekreftOgFortsett, valgteArbeidsforhold } = props;
 
