@@ -31,12 +31,12 @@ class StegLogikk {
         til: STEG.TJENESTEMANN,
       },
       {
-        valg: VurderingSektorTyper.SOKKEL,
+        valg: [VurderingSektorTyper.SOKKEL, VurderingSektorTyper.SKIP],
         til: STEG.VEDTAK,
       },
       {
         valg: VurderingSektorTyper.INGEN_AV_DISSE,
-        til: STEG.VIRKSOMHET,
+        til: STEG.ARBEIDSFORHOLD,
       },
     ],
     UTSENDING: [

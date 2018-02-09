@@ -24,7 +24,7 @@ import VurderingBostedsland from './vurderinger/vurderingBostedsland';
 import VurderingTjenestemann from './vurderinger/vurderingTjenestemann';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
-import { OppsummeringSelector } from '../../ducks/fagsaker';
+import { ArbeidsforholdeneSelector, OppsummeringSelector } from '../../ducks/fagsaker';
 import { FaktaavklaringSelector } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
 
@@ -209,9 +209,7 @@ class Vilkarsveileder extends Component {
 
 Vilkarsveileder.propTypes = {
   history: PT.object.isRequired,
-  person: MPT.Person.isRequired,
-  vurdering: PT.object.isRequired,
-  arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
+  arbeidsforholdene: MPT.Arbeidsforholdene,
   fattVedtakHandler: PT.func.isRequired,
   beOmVurderingHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
@@ -222,11 +220,13 @@ Vilkarsveileder.propTypes = {
 Vilkarsveileder.defaultProps = {
   oppsummering: [],
   faktaavklaring: {},
+  arbeidsforholdene: [],
 };
 
 const mapStateToProps = state => ({
   oppsummering: OppsummeringSelector(state),
   faktaavklaring: FaktaavklaringSelector(state).faktaavklaring,
+  arbeidsforholdene: ArbeidsforholdeneSelector(state),
   skjema: SoknadenFormSelector(state).values,
 });
 
