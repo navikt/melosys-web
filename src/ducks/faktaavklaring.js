@@ -71,12 +71,7 @@ export default function reducer(state = initialState, action) {
           tjenestemann: dokument.faktaavklaringTjenestemann,
         },
         forretningssted: {
-          beslutningLand1: dokument.faktaavklaringForretningsstedBeslutningLand1,
-          vesentligLand1: dokument.faktaavklaringForretningsstedVesentligLand1,
-          beslutningLand2: dokument.faktaavklaringForretningsstedBeslutningLand2,
-          vesentligLand2: dokument.faktaavklaringForretningsstedVesentligLand2,
-          beslutningLand3: dokument.faktaavklaringForretningsstedBeslutningLand3,
-          vesentligLand3: dokument.faktaavklaringForretningsstedVesentligLand3,
+          land: dokument.faktaavklaringForretningsstedLand,
           antallArbeidsgivere: dokument.faktaavklaringForretningsstedAntallArbeidsgivere,
           fordelingArbeidsgivere: dokument.faktaavklaringForretningsstedFordelingArbeidsgivere,
         },
