@@ -17,6 +17,13 @@ node {
   def commitHash, commitHashShort, commitUrl, committer
   def scmVars
 
+  /* tools */
+  def NODEJS_HOME = tool "node-8.9.4" // => "installation directory" = "/opt/node"
+  echo "${NODEJS_HOME}"
+  def node = "${NODEJS_HOME}/bin/node"
+  def npm = "${NODEJS_HOME}/bin/npm"
+  //env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
+  //echo("${env.PATH}")
 
   // delete whole workspace before starting the build,
   // so that the 'git clone' command below doesn't fail due to
@@ -39,14 +46,14 @@ node {
 
   stage('npm install ') {
     echo('Step: npm install package depenencies')
-    sh "node -v"
-    sh "npm -v"
-    sh "npm install"
+    sh "${node} -v"
+    sh "${npm} -v"
+    sh "${npm} install"
   }
 
   stage('Test') {
     echo('CI=true && npm run-script test:ci')
-    sh "CI=true && npm run-script test:ci"
+    sh "CI=true && ${npm} run-script test:ci"
   }
 /*
   stage('GitHub version') {
