@@ -60,13 +60,13 @@ class StegLogikk {
     FORRETNINGSSTED: [
       {
         valg: [],
-        til: STEG.VEDTAK,
+        til: STEG.BOSTEDSLAND,
       },
     ],
     BOSTEDSLAND: [
       {
         valg: [],
-        til: STEG.SEKTOR,
+        til: STEG.VEDTAK,
       },
     ],
     TJENESTEMANN: [
@@ -114,19 +114,24 @@ class StegLogikk {
         return nesteStiObjekt;
       }
       case STEG.UTSENDING: {
-        return STEG.VEDTAK;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
       }
       case STEG.AKTIVITET: {
-        return STEG.VEDTAK;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
       }
       case STEG.BOSTEDSLAND: {
-        return STEG.FORRETNINGSSTED;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
       }
       case STEG.FORRETNINGSSTED: {
-        return STEG.VEDTAK;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
       }
       case STEG.TJENESTEMANN: {
-        return STEG.VEDTAK;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
       }
       default:
         return {};
