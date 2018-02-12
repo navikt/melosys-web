@@ -141,9 +141,9 @@ VurderingVedtak.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
   lovvalgbestemmelser: PT.arrayOf(MPT.Lovvalgsbestemmelse).isRequired,
   feilmeldinger: PT.arrayOf(MPT.Feilmelding).isRequired,
-  opphold: PT.object.isRequired,
-  valgteArbeidsforhold: PT.array.isRequired,
-  sysselsetting: PT.object.isRequired,
+  opphold: MPT.Opphold.isRequired,
+  valgteArbeidsforhold: PT.arrayOf(MPT.Arbeidsforhold).isRequired,
+  sysselsetting: MPT.Sysselsetting.isRequired,
 };
 
 const mapStateToProps = state => ({

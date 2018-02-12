@@ -19,6 +19,8 @@ import { Utenlandsopphold } from './utenlandsopphold';
 import { ArbeidNorge } from './arbeidNorge';
 import { Landkode, Landkoder } from './landkoder';
 import { Lovvalgsbestemmelse, Feilmelding } from './vurdering';
+import { Opphold } from './opphold';
+import { Sysselsetting } from './sysselsetting';
 
 export {
   ArbeidNorge,
@@ -53,4 +55,6 @@ export {
   Landkoder,
   Lovvalgsbestemmelse,
   Feilmelding,
+  Opphold,
+  Sysselsetting,
 };
