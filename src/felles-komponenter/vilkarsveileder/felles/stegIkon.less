@@ -1,5 +1,8 @@
+@import '../../../constants';
+
 .stegIkon {
   display: flex;
+  position: relative;
   background-repeat:no-repeat;
   background-size:contain;
   background-color:transparent;
@@ -21,6 +24,19 @@
   &:active {
     box-shadow: 0 0 3px 0.1875em #ffbd66;
   }
+}
+
+.stegIkon--aktiv {
+   &:after {
+     content: '';
+     position: absolute;
+     border: 3px solid @green;
+     width: 30px;
+     height: 30px;
+     top: 0;
+     left: 0;
+     border-radius: 15px;
+   }
 }
 
 .stegIkon--utilgjengelig {
