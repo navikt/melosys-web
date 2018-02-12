@@ -136,7 +136,7 @@ const Arbeidsforholdet = props => {
 };
 
 Arbeidsforholdet.propTypes = {
-  arbeidsforhold: MPT.Arbeidsforhold.isRequired,
+  arbeidsforhold: MPT.Arbeidsforholdet.isRequired,
 };
 
 
