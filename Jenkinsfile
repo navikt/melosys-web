@@ -18,7 +18,7 @@ node {
   def scmVars
 
   /* tools */
-  def NODEJS_HOME = tool "node-6.2.1"
+  def NODEJS_HOME = tool "node-8.9.4" // => "installation directory" = "/opt/node"
   echo "${NODEJS_HOME}"
   def node = "${NODEJS_HOME}/bin/node"
   def npm = "${NODEJS_HOME}/bin/npm"
@@ -45,11 +45,10 @@ node {
   }
 
   stage('npm install ') {
-    echo('npm install')
-    // sh('ls -la')
-    withEnv(["PATH+NODE=${NODEJS_HOME}", 'HTTP_PROXY=http://webproxy-utvikler.nav.no:8088', 'NO_PROXY=adeo.no']) {
-      sh "${npm} install"
-    }
+    echo('Step: npm install package depenencies')
+    sh "${node} -v"
+    sh "${npm} -v"
+    sh "${npm} install"
   }
 
   stage('Test') {
