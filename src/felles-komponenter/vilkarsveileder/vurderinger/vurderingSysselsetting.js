@@ -8,6 +8,7 @@ export const VurderingSysselsettingTyper = {
   ARBEIDSTAKER: 'ARBEIDSTAKER',
   SELVSTENDIG: 'SELVSTENDIG',
   ARBEIDSTAKER_OG_SELVSTENDIG: 'ARBEIDSTAKER_OG_SELVSTENDIG',
+  VERNEPLIKTIG: 'VERNEPLIKTIG',
 };
 
 const Sysselsetting = () => (
@@ -16,6 +17,7 @@ const Sysselsetting = () => (
     <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.ARBEIDSTAKER} label="Arbeidstaker / frilanser" />
     <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.SELVSTENDIG} label="Selvstendig næringsdrivende" />
     <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG} label="Både arbeidstakende og selvstendig" />
+    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.VERNEPLIKTIG} label="Vernepliktig" />
   </Nav.Fieldset>
 );
 
