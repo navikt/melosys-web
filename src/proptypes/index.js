@@ -18,6 +18,7 @@ import { SoknadForm } from './soknadForm';
 import { Utenlandsopphold } from './utenlandsopphold';
 import { ArbeidNorge } from './arbeidNorge';
 import { Landkode, Landkoder } from './landkoder';
+import { Lovvalgsbestemmelse, Feilmelding } from './vurdering';
 
 export {
   ArbeidNorge,
@@ -50,4 +51,6 @@ export {
   Utenlandsopphold,
   Landkode,
   Landkoder,
+  Lovvalgsbestemmelse,
+  Feilmelding,
 };
