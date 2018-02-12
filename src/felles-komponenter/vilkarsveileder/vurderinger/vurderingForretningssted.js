@@ -18,9 +18,9 @@ export const VurderingForretningsstedTyper = {
 };
 
 /** Det gir ingen mening å legge inn input=hidden i Redux Form, men vi trenger allikevel å knytte et felt
- * med arbeidsgiverID til hver gruppe av svar slik at vi vet hvilke arbeidsgivere som saksbehandler har gitt vilke svar til.
+ * med arbeidsgiverID til hver gruppe av svar slik at vi vet hvilken arbeidsgiverID som saksbehandler har gitt vilke svar til.
  * Løsningen på dette ble å lage en egen custom component som ikke returnerer noe synlig felt, men som umiddelbart
- * ved mount lagrer arbeidsgiverID (onChange) til sitt tilhørende objekt.
+ * ved mount lagrer arbeidsgiverID (onChange) til sitt tilhørende object i den tilhørende form field arrayen.
  * @param props
  * @returns {*}
  * @constructor
@@ -35,10 +35,11 @@ ArbeidsgiverIDField.propTypes = {
   arbeidsgiverID: PT.string.isRequired,
 };
 
-/** Dette er enkeltkomponenten for hver gruppe av valgte arbeidsforhold.
+/** Dette er enkeltkomponenten for hver gruppe av valgte arbeidsforhold. Komponenten itereres av Forretningssteder
+ * slik at alle valgte arbeidsgivere blir listet, uavhengig av om saksbehandler har besvart spørsmålene eller ikke.
  *
  * @param props
- * @returns {React Node}
+ * @returns {Object}
  */
 const Forretningsstedet = props => {
   const { index } = props;
@@ -65,7 +66,7 @@ Forretningsstedet.propTypes = {
  * som består av alle arbeidsgiverID'er som saksbehandleren har valgt i tidligere steg.
  *
  * @param props
- * @returns {React Node}
+ * @returns {Object}
  */
 const Forretningssteder = props => {
   const { valgteArbeidsforhold } = props;
@@ -85,7 +86,7 @@ Forretningssteder.propTypes = {
 /** Hovedkomponenten som rigges opp mot stegvelgeren.
  *
  * @param props
- * @returns {React Node}
+ * @returns {Object}
  */
 const VurderingForretningssted = props => {
   const { bekreftOgFortsett, valgteArbeidsforhold } = props;
