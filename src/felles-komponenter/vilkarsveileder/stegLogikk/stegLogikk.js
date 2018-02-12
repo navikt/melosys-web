@@ -35,8 +35,14 @@ class StegLogikk {
         til: STEG.VEDTAK,
       },
       {
-        valg: VurderingSektorTyper.INGEN_AV_DISSE,
+        valg: [VurderingSektorTyper.INGEN_AV_DISSE],
         til: STEG.ARBEIDSFORHOLD,
+      },
+    ],
+    ARBEIDSFORHOLD: [
+      {
+        valg: [],
+        til: STEG.FORRETNINGSSTED,
       },
     ],
     UTSENDING: [
@@ -51,25 +57,25 @@ class StegLogikk {
         til: STEG.AKTIVITET,
       },
     ],
+    FORRETNINGSSTED: [
+      {
+        valg: [],
+        til: STEG.BOSTEDSLAND,
+      },
+    ],
     BOSTEDSLAND: [
       {
         valg: [],
-        til: STEG.SEKTOR,
+        til: STEG.VEDTAK,
       },
     ],
     TJENESTEMANN: [
       {
         valg: [],
-        til: STEG.VEDTAK,
+        til: STEG.ARBEIDSFORHOLD,
       },
     ],
     AKTIVITET: [
-      {
-        valg: [],
-        til: STEG.VEDTAK,
-      },
-    ],
-    ARBEIDSFORHOLD: [
       {
         valg: [],
         til: STEG.VEDTAK,
@@ -103,20 +109,29 @@ class StegLogikk {
         }
         return STEG.AKTIVITET;
       }
+      case STEG.ARBEIDSFORHOLD: {
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
+      }
       case STEG.UTSENDING: {
-        return STEG.VEDTAK;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
       }
       case STEG.AKTIVITET: {
-        return STEG.VEDTAK;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
       }
       case STEG.BOSTEDSLAND: {
-        return STEG.UTSENDING;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
+      }
+      case STEG.FORRETNINGSSTED: {
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
       }
       case STEG.TJENESTEMANN: {
-        return STEG.VEDTAK;
-      }
-      case STEG.ARBEIDSFORHOLD: {
-        return STEG.VEDTAK;
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
       }
       default:
         return {};

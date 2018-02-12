@@ -14,9 +14,22 @@ const VurderingBostedsland = props => {
 
   return (
     <div>
+      <div>
+        <Nav.Normaltekst>Vurdering av bosted er en sammensatt vurdering. Som regel vil søker være bosatt der han har oppgitt sin adresse,
+          men i noen tilfeller vil det være behov for nærmere undersøkelser. Noen idikasjoner på at det bør gjøre nærmere undersøkelser er:
+        </Nav.Normaltekst>
+        <ul>
+          <li>Søker har d-nr</li>
+          <li>Søker mottat EØS-barnetrygd</li>
+          <li>Søker har oppgitt utenlandsk adresse</li>
+          <li>Mistenkelig bostedsadresse. Er den lik arbeidsgivers?</li>
+          <li>Er det mange som er registrert på adressen?</li>
+          <li>Søker har ikke oppgitt aktivitet i landet de har bostedsadresse</li>
+        </ul>
+      </div>
       <Nav.Fieldset legend="Jeg bekrefter å ha vurdert:">
-        <Skjema.Checkbox feltNavn="faktaavklaringBekrefterFamiliebosted" value={VurderingBostedsland.TRUE} label="Hvor søkers nærmeste familie bor" />
-        <Skjema.Checkbox feltNavn="faktaavklaringBekrefterDisponering" value={VurderingBostedsland.TRUE} label="Hvor søker disponerer" />
+        <Skjema.Checkbox feltNavn="faktaavklaringBekrefterFamiliebosted" value={VurderingBostedslandTyper.TRUE} label="Hvor søkers nærmeste familie bor" />
+        <Skjema.Checkbox feltNavn="faktaavklaringBekrefterDisponering" value={VurderingBostedslandTyper.TRUE} label="Hvor søker disponerer bolig" />
       </Nav.Fieldset>
       <Nav.Fieldset legend="Basert på dette vurderes bosted til:">
         <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} />
