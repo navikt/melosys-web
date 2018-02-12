@@ -52,20 +52,20 @@ LovvalgBestemmelse.propTypes = {
 };
 
 const VurderingFeilmeldinger = props => {
-  const { melding } = props;
-  const { kategori, alvorlighetsgrad, feilmelding } = melding;
+  const { feilmelding } = props;
+  const { kategori, alvorlighetsgrad, melding } = feilmelding;
   return (
     <div>
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Normaltekst key={uuid()}>{kategori}: {alvorlighetsgrad}: {feilmelding}</Nav.Normaltekst>
+          <Nav.Normaltekst key={uuid()}>{kategori}: {alvorlighetsgrad}: {melding}</Nav.Normaltekst>
         </Nav.Column>
       </Nav.Row>
     </div>
   );
 };
 VurderingFeilmeldinger.propTypes = {
-  melding: MPT.Feilmelding.isRequired,
+  feilmelding: MPT.Feilmelding.isRequired,
 };
 
 
@@ -102,8 +102,8 @@ const VurderingVedtak = props => {
         }
         <p>Feilmeldinger</p>
         {
-          feilmeldinger && feilmeldinger.map(melding => (
-            <VurderingFeilmeldinger key={uuid()} melding={melding} />
+          feilmeldinger && feilmeldinger.map(feilmelding => (
+            <VurderingFeilmeldinger key={uuid()} feilmelding={feilmelding} />
           ))
         }
         <Nav.Row className="vedtak__oppsummering">
@@ -139,10 +139,10 @@ const VurderingVedtak = props => {
 
 VurderingVedtak.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
-  lovvalgbestemmelser: PT.arrayOf(MPT.Lovvalgsbestemmelse).isRequired,
-  feilmeldinger: PT.arrayOf(MPT.Feilmelding).isRequired,
+  lovvalgbestemmelser: MPT.Lovvalgsbestemmelser.isRequired,
+  feilmeldinger: MPT.Feilmeldinger.isRequired,
   opphold: MPT.Opphold.isRequired,
-  valgteArbeidsforhold: PT.arrayOf(MPT.Arbeidsforhold).isRequired,
+  valgteArbeidsforhold: MPT.Arbeidsforholdene.isRequired,
   sysselsetting: MPT.Sysselsetting.isRequired,
 };
 

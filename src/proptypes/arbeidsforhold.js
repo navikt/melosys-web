@@ -7,7 +7,7 @@ import { TimerTimelonnet } from './timerTimelonnet';
 import { Arbeidsavtale } from './arbeidsavtale';
 import { InntektLinje } from './inntekt';
 
-const ArbeidsforholdPropType = PT.shape({
+const ArbeidsforholdetPropType = PT.shape({
   arbeidsforholdID: PT.string,
   arbeidsforholdIDnav: PT.number,
   ansettelsesPeriode: Periode,
@@ -23,9 +23,9 @@ const ArbeidsforholdPropType = PT.shape({
   arbeidsavtale: PT.arrayOf(Arbeidsavtale),
 });
 
-const ArbeidsforholdenePropType = PT.arrayOf(ArbeidsforholdPropType);
+const ArbeidsforholdenePropType = PT.arrayOf(ArbeidsforholdetPropType);
 
 export {
   ArbeidsforholdenePropType as Arbeidsforholdene,
-  ArbeidsforholdPropType as Arbeidsforhold,
+  ArbeidsforholdetPropType as Arbeidsforholdet,
 };
