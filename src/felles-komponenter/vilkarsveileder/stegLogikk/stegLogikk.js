@@ -35,8 +35,14 @@ class StegLogikk {
         til: STEG.VEDTAK,
       },
       {
-        valg: VurderingSektorTyper.INGEN_AV_DISSE,
+        valg: [VurderingSektorTyper.INGEN_AV_DISSE],
         til: STEG.ARBEIDSFORHOLD,
+      },
+    ],
+    ARBEIDSFORHOLD: [
+      {
+        valg: [],
+        til: STEG.FORRETNINGSSTED,
       },
     ],
     UTSENDING: [
@@ -51,6 +57,12 @@ class StegLogikk {
         til: STEG.AKTIVITET,
       },
     ],
+    FORRETNINGSSTED: [
+      {
+        valg: [],
+        til: STEG.VEDTAK,
+      },
+    ],
     BOSTEDSLAND: [
       {
         valg: [],
@@ -60,16 +72,10 @@ class StegLogikk {
     TJENESTEMANN: [
       {
         valg: [],
-        til: STEG.VEDTAK,
+        til: STEG.ARBEIDSFORHOLD,
       },
     ],
     AKTIVITET: [
-      {
-        valg: [],
-        til: STEG.VEDTAK,
-      },
-    ],
-    ARBEIDSFORHOLD: [
       {
         valg: [],
         til: STEG.VEDTAK,
@@ -103,6 +109,10 @@ class StegLogikk {
         }
         return STEG.AKTIVITET;
       }
+      case STEG.ARBEIDSFORHOLD: {
+        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
+        return nesteStiObjekt;
+      }
       case STEG.UTSENDING: {
         return STEG.VEDTAK;
       }
@@ -110,12 +120,12 @@ class StegLogikk {
         return STEG.VEDTAK;
       }
       case STEG.BOSTEDSLAND: {
-        return STEG.UTSENDING;
+        return STEG.FORRETNINGSSTED;
       }
-      case STEG.TJENESTEMANN: {
+      case STEG.FORRETNINGSSTED: {
         return STEG.VEDTAK;
       }
-      case STEG.ARBEIDSFORHOLD: {
+      case STEG.TJENESTEMANN: {
         return STEG.VEDTAK;
       }
       default:
