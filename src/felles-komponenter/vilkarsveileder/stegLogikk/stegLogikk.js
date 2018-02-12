@@ -1,7 +1,7 @@
 import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetting';
 import { VurderingSektorTyper } from '../vurderinger/vurderingSektor';
 import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
-// import { VurderingBostedslandTyper } from '../vurderinger/vurderingBostedsland';
+import { VurderingTjenestemannTyper } from '../vurderinger/vurderingTjenestemann';
 
 import { STEG } from './typer';
 
@@ -18,7 +18,7 @@ class StegLogikk {
     SYSSELSETTING: [
       {
         valg: [VurderingSysselsettingTyper.ARBEIDSTAKER, VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG],
-        til: STEG.SEKTOR,
+        til: STEG.ARBEIDSFORHOLD,
       },
       {
         valg: [VurderingSysselsettingTyper.SELVSTENDIG],
@@ -27,6 +27,18 @@ class StegLogikk {
       {
         valg: [VurderingSysselsettingTyper.IKKE_ARBEIDENDE],
         til: STEG.BOSTEDSLAND,
+      },
+    ],
+    ARBEIDSFORHOLD: [
+      {
+        valg: [],
+        til: STEG.FORRETNINGSSTED,
+      },
+    ],
+    FORRETNINGSSTED: [
+      {
+        valg: [],
+        til: STEG.SEKTOR,
       },
     ],
     SEKTOR: [
@@ -40,28 +52,35 @@ class StegLogikk {
       },
       {
         valg: [VurderingSektorTyper.INGEN_AV_DISSE],
-        til: STEG.ARBEIDSFORHOLD,
+        til: STEG.VIRKSOMHET,
       },
     ],
-    ARBEIDSFORHOLD: [
+    TJENESTEMANN: [
       {
-        valg: [],
-        til: STEG.FORRETNINGSSTED,
-      },
-    ],
-    UTSENDING: [
-      {
-        valg: [],
+        valg: [
+          VurderingTjenestemannTyper.ETT_LAND,
+          VurderingTjenestemannTyper.ETT_LAND_YRKESAKTIVITET_ANDRE_LAND,
+          VurderingTjenestemannTyper.FLERE_LAND,
+          VurderingTjenestemannTyper.FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND,
+        ],
         til: STEG.VEDTAK,
+      },
+      {
+        valg: [VurderingTjenestemannTyper.IKKE_TJENESTEMANN],
+        til: STEG.VIRKSOMHET,
       },
     ],
     VIRKSOMHET: [
+      {
+        valg: [VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND, VurderingVirksomhetTyper.ETT_LAND_IKKE_NORGE],
+        til: STEG.UTSENDING,
+      },
       {
         valg: [],
         til: STEG.AKTIVITET,
       },
     ],
-    FORRETNINGSSTED: [
+    UTSENDING: [
       {
         valg: [],
         til: STEG.BOSTEDSLAND,
@@ -71,12 +90,6 @@ class StegLogikk {
       {
         valg: [],
         til: STEG.VEDTAK,
-      },
-    ],
-    TJENESTEMANN: [
-      {
-        valg: [],
-        til: STEG.ARBEIDSFORHOLD,
       },
     ],
     AKTIVITET: [
@@ -114,28 +127,22 @@ class StegLogikk {
         return STEG.AKTIVITET;
       }
       case STEG.ARBEIDSFORHOLD: {
-        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
-        return nesteStiObjekt;
+        return StegLogikk.stier[gjeldendeSteg][0].til;
       }
       case STEG.UTSENDING: {
-        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
-        return nesteStiObjekt;
+        return StegLogikk.stier[gjeldendeSteg][0].til;
       }
       case STEG.AKTIVITET: {
-        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
-        return nesteStiObjekt;
+        return StegLogikk.stier[gjeldendeSteg][0].til;
       }
       case STEG.BOSTEDSLAND: {
-        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
-        return nesteStiObjekt;
+        return StegLogikk.stier[gjeldendeSteg][0].til;
       }
       case STEG.FORRETNINGSSTED: {
-        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
-        return nesteStiObjekt;
+        return StegLogikk.stier[gjeldendeSteg][0].til;
       }
       case STEG.TJENESTEMANN: {
-        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg][0].til;
-        return nesteStiObjekt;
+        return StegLogikk.stier[gjeldendeSteg][0].til;
       }
       default:
         return {};
@@ -152,6 +159,10 @@ class StegLogikk {
     while (gjeldendeSteg !== 'VEDTAK') {
       gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, faktaavklaring[gjeldendeSteg.toLowerCase()]);
       stegBygger.push(gjeldendeSteg);
+
+      // Bryt ut av loopen dersom flere enn 30 steg er funnet - da har det oppstått
+      // en sirkulær feil.
+      if (stegBygger.length > 30) { gjeldendeSteg = 'VEDTAK'; }
     }
     return stegBygger;
   }
