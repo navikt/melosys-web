@@ -139,7 +139,7 @@ const VurderingVedtak = props => {
 
 VurderingVedtak.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
-  lovvalgbestemmelser: PT.arrayOf(MPT.LovvalgBestemmelse).isRequired,
+  lovvalgbestemmelser: PT.arrayOf(MPT.Lovvalgsbestemmelse).isRequired,
   feilmeldinger: PT.arrayOf(MPT.Feilmelding).isRequired,
   opphold: PT.object.isRequired,
   valgteArbeidsforhold: PT.array.isRequired,
