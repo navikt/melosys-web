@@ -171,7 +171,6 @@ class Vilkarsveileder extends Component {
       }));
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
-    aktuelleSteg[this.state.aktivtStegNummer].status = FANE_STATUS.AKTIV;
 
     this.setState({ aktuelleSteg });
     return aktuelleSteg;

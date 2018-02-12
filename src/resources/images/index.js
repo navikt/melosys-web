@@ -1,5 +1,4 @@
 import Ubehandlet from './ikon-steg-ubehandlet.svg';
-import Aktivt from './ikon-steg-aktivt.svg';
 import Ferdig from './ikon-steg-ferdig.svg';
 import Varsel from './ikon-steg-varsel.svg';
 import Feil from './ikon-steg-feil.svg';
@@ -11,7 +10,6 @@ import Kvinne from './ikon-kvinne.svg';
 import Ukjentkjoenn from './ikon-ukjentkjonn.svg';
 
 export { Ubehandlet };
-export { Aktivt };
 export { Ferdig };
 export { Varsel };
 export { Feil };
