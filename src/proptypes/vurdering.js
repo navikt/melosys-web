@@ -10,11 +10,15 @@ const LovvalgsbestemmelsePropType = PT.shape({
   betingelser: PT.arrayOf(BetingelsePropType),
 });
 
+const LovvalgsbestemmelserPropType = PT.arrayOf(LovvalgsbestemmelsePropType);
+
 const FeilmeldingPropType = PT.shape({
   kategori: PT.string,
   alvorlighetsgrad: PT.string,
-  feilmelding: PT.string,
+  melding: PT.string,
 });
+
+const FeilmeldingerPropType = PT.arrayOf(FeilmeldingPropType);
 
 const VurderingPropType = PT.shape({
   lovvalgsbestemmelser: PT.arrayOf(LovvalgsbestemmelsePropType),
@@ -23,6 +27,8 @@ const VurderingPropType = PT.shape({
 
 export {
   LovvalgsbestemmelsePropType as Lovvalgsbestemmelse,
+  LovvalgsbestemmelserPropType as Lovvalgsbestemmelser,
   FeilmeldingPropType as Feilmelding,
+  FeilmeldingerPropType as Feilmeldinger,
   VurderingPropType as Vurdering,
 };
