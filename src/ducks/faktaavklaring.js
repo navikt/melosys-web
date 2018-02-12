@@ -70,6 +70,11 @@ export default function reducer(state = initialState, action) {
         tjenestemann: {
           tjenestemann: dokument.faktaavklaringTjenestemann,
         },
+        forretningssted: {
+          land: dokument.faktaavklaringForretningsstedLand,
+          antallArbeidsgivere: dokument.faktaavklaringForretningsstedAntallArbeidsgivere,
+          fordelingArbeidsgivere: dokument.faktaavklaringForretningsstedFordelingArbeidsgivere,
+        },
       };
 
       return { ...state, data: { ...state.data, faktaavklaring } };
@@ -167,4 +172,9 @@ export const FaktaavklaringValgteArbeidsforholdDetaljerSelector = createSelector
     const valgteArbeidsforhold = alleArbeidsforhold.filter(arbeidsforholdet => valgteArbeidsforholdIDnav.includes(arbeidsforholdet.arbeidsforholdIDnav));
     return (valgteArbeidsforhold || []);
   }
+);
+
+export const FaktaavklaringForretningsstedSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.forretningssted : {}),
+  forretningssted => forretningssted || {}
 );
