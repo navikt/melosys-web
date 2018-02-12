@@ -24,6 +24,10 @@ class StegLogikk {
         valg: [VurderingSysselsettingTyper.SELVSTENDIG],
         til: STEG.VIRKSOMHET,
       },
+      {
+        valg: [VurderingSysselsettingTyper.IKKE_ARBEIDENDE],
+        til: STEG.BOSTEDSLAND,
+      },
     ],
     SEKTOR: [
       {
