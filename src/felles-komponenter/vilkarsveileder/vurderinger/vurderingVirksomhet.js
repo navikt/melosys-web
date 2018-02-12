@@ -17,8 +17,8 @@ export const VurderingVirksomhetTyper = {
 
 const AntallLand = () => (
   <Nav.Fieldset legend="Hvor mange land skal søker ha yrkesaktivitet i?">
-    <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.ETT_LAND_IKKE_NORGE} label="Ett land, ikke Norge" />
     <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.KUN_NORGE} label="Kun Norge" />
+    <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.ETT_LAND_IKKE_NORGE} label="Ett land, ikke Norge" />
     <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND} label="To eller flere land" />
   </Nav.Fieldset>
 );
