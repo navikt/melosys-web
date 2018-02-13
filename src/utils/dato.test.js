@@ -1,9 +1,26 @@
 /* eslint-disable */
 
-import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilISO } from './dato';
+import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilISO, formatterKortDatoTilNorsk } from './dato';
 
 import MockDate from 'mockdate';
+import moment from 'moment/moment'
 
+moment.updateLocale('nb', {
+  monthsShort: [
+    'jan',
+    'feb',
+    'mar',
+    'apr',
+    'mai',
+    'jun',
+    'jul',
+    'aug',
+    'sep',
+    'okt',
+    'nov',
+    'des',
+  ],
+});
 
 it('godtar alle tillatte datoformater', () => {
   const tillatteDatoer = [
@@ -73,7 +90,6 @@ it('formatterer datoen riktig til norsk format DD.MM.YYYY HH:mm:ss og med evt kl
     const formattertDato = formatterDatoTilNorsk(datoTest.test, datoTest.klokkeslett);
     expect(formattertDato).toEqual(datoTest.forvent);
   });
-
 })
 
 it('formatterer norsk dato korrekt tilbake til maskinlesbar dato', () => {
@@ -89,3 +105,16 @@ it('formatterer norsk dato korrekt tilbake til maskinlesbar dato', () => {
     expect(formattertDato).toEqual(datoTest.forvent);
   });
 })
+
+it('formatterer kort-datoene korrekt til lesbar dato', () => {
+  const tillatteDatoer = [
+    {test: '2007-01', forvent: 'jan - 2007'},
+    {test: '2014-05', forvent: 'mai - 2014'},
+    {test: '2016-10-31', forvent: 'okt - 2016'},
+  ]
+
+  tillatteDatoer.forEach(datoTest => {
+    const formattertDato = formatterKortDatoTilNorsk(datoTest.test);
+    expect(formattertDato).toEqual(datoTest.forvent);
+  });
+});
