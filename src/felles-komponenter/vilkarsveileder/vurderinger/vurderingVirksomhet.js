@@ -17,8 +17,8 @@ export const VurderingVirksomhetTyper = {
 
 const AntallLand = () => (
   <Nav.Fieldset legend="Hvor mange land skal søker ha yrkesaktivitet i?">
-    <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.ETT_LAND_IKKE_NORGE} label="Ett land, ikke Norge" />
     <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.KUN_NORGE} label="Kun Norge" />
+    <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.ETT_LAND_IKKE_NORGE} label="Ett land, ikke Norge" />
     <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND} label="To eller flere land" />
   </Nav.Fieldset>
 );
@@ -31,7 +31,7 @@ const VekslingMellomLand = () => (
 );
 
 const MarginaltArbeid = () => (
-  <Nav.Fieldset legend="Utgjør arbeidet i hvert av landene mer enn 5%? (Er det mer enn marginalt arbeid?)">
+  <Nav.Fieldset legend="Er arbeidet søker utfører som offentlig tjenesteperson for Norsk forvaltning marginalt (mindre enn 5%)?">
     <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhetTyper.MARGINALT_JA} label="Ja" />
     <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhetTyper.MARGINALT_NEI} label="Nei" />
   </Nav.Fieldset>
