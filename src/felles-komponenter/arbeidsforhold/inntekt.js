@@ -7,9 +7,7 @@ import Tabell from '../tabell/tabell';
 
 import './inntekt.css';
 
-/** Lister alle permisjoner i form av en table.
- *
- * @param permisjoner Array med permisjoner.
+/** Lister alle inntekter fra juridisk arbeidsgiver.
  */
 class Inntekt extends Component {
   state = { visInntektTabell: false }
@@ -22,13 +20,8 @@ class Inntekt extends Component {
   render() {
     const { inntekt } = this.props;
     /**
-     * Reduser inntekt for det aktuelle arbeidsforholdet ved å gjennomgå og vurdere hvilke inntekter
-     * som er sikre og ikke. Det resulterende objektet ser slik ut
-     * {
-    '2017/01': { sikkertBeloep: 44000, usikkertBeloep: 0 },
-    '2017/02': { sikkertBeloep: 44000, usikkertBeloep: 1000 },
-    '2017/03': { sikkertBeloep: 44000, usikkertBeloep: 20000 },
-    }
+     * Listen over inntekt fra inntektskomponenten kan inneholde flere typer inntekter
+     * i samme periode. Disse må derfor summeres slik at de representeres som én type inntekt.
      */
     const grafInntekt = inntekt
       .reduce((samling, linje) => {
