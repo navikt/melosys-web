@@ -113,7 +113,7 @@ class Inntekt extends Component {
 }
 
 Inntekt.propTypes = {
-  inntekt: MPT.Permisjoner,
+  inntekt: MPT.Inntekt,
 };
 
 Inntekt.defaultProps = {
