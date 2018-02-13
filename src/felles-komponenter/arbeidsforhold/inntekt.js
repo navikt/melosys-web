@@ -5,6 +5,8 @@ import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
 import Tabell from '../tabell/tabell';
 
+import { formatterKortDatoTilNorsk } from '../../utils/dato';
+
 import './inntekt.css';
 
 /** Lister alle inntekter fra juridisk arbeidsgiver.
@@ -28,9 +30,9 @@ class Inntekt extends Component {
         const { utbetaltIPeriode, beloep } = linje;
         const utbetaltTotaltIPeriode = samling[utbetaltIPeriode] || 0;
 
-        return [...samling, { periode: utbetaltIPeriode, beloep: (utbetaltTotaltIPeriode + beloep) }];
+        return [...samling, { utbetalt: utbetaltIPeriode, beloep: (utbetaltTotaltIPeriode + beloep) }];
       }, [])
-      .sort((a, b) => ((a.periode > b.periode) ? 1 : -1));
+      .sort((a, b) => ((a.utbetalt > b.utbetalt) ? 1 : -1));
 
 
     const grafConfig = {
@@ -54,7 +56,7 @@ class Inntekt extends Component {
         },
       },
       xAxis: {
-        categories: grafInntekt.map(linje => linje.periode),
+        categories: grafInntekt.map(linje => formatterKortDatoTilNorsk(linje.utbetalt)),
         crosshair: true,
         description: 'Perioder med inntekt.',
       },
@@ -82,10 +84,10 @@ class Inntekt extends Component {
      * en ny ferdigtygget array.
      */
     const inntektArrayed = grafInntekt
-      .sort((a, b) => ((a.periode < b.periode) ? 1 : -1))
+      .sort((a, b) => ((a.utbetalt < b.utbetalt) ? 1 : -1))
       .map(linje => (
         [
-          linje.periode,
+          formatterKortDatoTilNorsk(linje.utbetalt),
           linje.beloep,
         ]));
 
