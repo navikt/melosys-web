@@ -3,13 +3,14 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
-
+import * as MPT from '../../../proptypes/';
 import { datoDiff } from '../../../utils/utils';
 
 import './vurderingVedtak.css';
 
 import {
   VurderingLovvalgbestemmelserSelector,
+  VurderingFeilmeldingSelector,
 } from '../../../ducks/vurdering';
 
 import {
@@ -22,9 +23,7 @@ const uuid = require('uuid/v4');
 
 const LovvalgBestemmelse = props => {
   const { bestemmelse } = props;
-  // Neste linje hvor bestemmelsene listes ut må avvente til designet er på plass, men
-  // den skal inn igjen om kort tid, så foreslår å ikke kaste ut koden.
-  const { betingelser } = { betingelser: [] }; // bestemmelse;
+  const { betingelser } = bestemmelse;
 
   return (
     <div>
@@ -49,12 +48,31 @@ const LovvalgBestemmelse = props => {
 };
 
 LovvalgBestemmelse.propTypes = {
-  bestemmelse: PT.object.isRequired,
+  bestemmelse: MPT.Lovvalgsbestemmelse.isRequired,
 };
+
+const VurderingFeilmeldinger = props => {
+  const { feilmelding } = props;
+  const { kategori, alvorlighetsgrad, melding } = feilmelding;
+  return (
+    <div>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Nav.Normaltekst key={uuid()}>{kategori}: {alvorlighetsgrad}: {melding}</Nav.Normaltekst>
+        </Nav.Column>
+      </Nav.Row>
+    </div>
+  );
+};
+VurderingFeilmeldinger.propTypes = {
+  feilmelding: MPT.Feilmelding.isRequired,
+};
+
 
 const VurderingVedtak = props => {
   const {
     lovvalgbestemmelser,
+    feilmeldinger,
     opphold,
     valgteArbeidsforhold,
     sysselsetting,
@@ -80,6 +98,12 @@ const VurderingVedtak = props => {
         {
           lovvalgbestemmelser.map(bestemmelse => (
             <LovvalgBestemmelse key={uuid()} bestemmelse={bestemmelse} />
+          ))
+        }
+        <p>Feilmeldinger</p>
+        {
+          feilmeldinger && feilmeldinger.map(feilmelding => (
+            <VurderingFeilmeldinger key={uuid()} feilmelding={feilmelding} />
           ))
         }
         <Nav.Row className="vedtak__oppsummering">
@@ -115,14 +139,16 @@ const VurderingVedtak = props => {
 
 VurderingVedtak.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
-  lovvalgbestemmelser: PT.array.isRequired,
-  opphold: PT.object.isRequired,
-  valgteArbeidsforhold: PT.array.isRequired,
-  sysselsetting: PT.object.isRequired,
+  lovvalgbestemmelser: MPT.Lovvalgsbestemmelser.isRequired,
+  feilmeldinger: MPT.Feilmeldinger.isRequired,
+  opphold: MPT.Opphold.isRequired,
+  valgteArbeidsforhold: MPT.Arbeidsforholdene.isRequired,
+  sysselsetting: MPT.Sysselsetting.isRequired,
 };
 
 const mapStateToProps = state => ({
   lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
+  feilmeldinger: VurderingFeilmeldingSelector(state),
   opphold: FaktaavklaringOppholdSelector(state),
   valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   sysselsetting: FaktaavklaringSysselsettingSelector(state),
