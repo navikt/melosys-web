@@ -1,6 +1,6 @@
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
 import { Inntekt, InntektLinje } from './inntekt';
-import { Arbeidsforhold, Arbeidsforholdene } from './arbeidsforhold';
+import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
 import { TimerTimelonnet, TimerTimelonnetLinje } from './timerTimelonnet';
 import { OppholdUtland } from './oppholdUtland';
 import { MedlemskapPeriode, Medlemskap } from './medlemskap';
@@ -18,6 +18,9 @@ import { SoknadForm } from './soknadForm';
 import { Utenlandsopphold } from './utenlandsopphold';
 import { ArbeidNorge } from './arbeidNorge';
 import { Landkode, Landkoder } from './landkoder';
+import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger } from './vurdering';
+import { Opphold } from './opphold';
+import { Sysselsetting } from './sysselsetting';
 
 export {
   ArbeidNorge,
@@ -28,7 +31,7 @@ export {
   Arbeidsavtale,
   OrgnummerNavn,
   PermisjonOgPermittering,
-  Arbeidsforhold,
+  Arbeidsforholdet,
   Arbeidsforholdene,
   TimerTimelonnet,
   TimerTimelonnetLinje,
@@ -50,4 +53,10 @@ export {
   Utenlandsopphold,
   Landkode,
   Landkoder,
+  Lovvalgsbestemmelse,
+  Lovvalgsbestemmelser,
+  Feilmelding,
+  Feilmeldinger,
+  Opphold,
+  Sysselsetting,
 };

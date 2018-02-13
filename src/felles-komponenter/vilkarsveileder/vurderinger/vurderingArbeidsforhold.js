@@ -30,7 +30,7 @@ const ArbeidsforholdLinje = props => {
 
 ArbeidsforholdLinje.propTypes = {
   input: PT.object.isRequired,
-  arbeidsforholdet: MPT.Arbeidsforhold,
+  arbeidsforholdet: MPT.Arbeidsforholdet,
   arbeidsforholdKlikkHandler: PT.func.isRequired,
   erValgt: PT.bool,
 };
