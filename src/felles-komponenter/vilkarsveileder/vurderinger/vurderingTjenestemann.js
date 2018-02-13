@@ -21,27 +21,27 @@ const VurderingTjenestemann = props => {
         <Skjema.Radio
           feltNavn="faktaavklaringTjenestemann"
           value={VurderingTjenestemannTyper.ETT_LAND}
-          label="Er kun lønnet som tjenestemann, ett land."
+          label="Er kun lønnet som tjenesteperson, ett land."
         />
         <Skjema.Radio
           feltNavn="faktaavklaringTjenestemann"
           value={VurderingTjenestemannTyper.ETT_LAND_YRKESAKTIVITET_ANDRE_LAND}
-          label="Er tjenestemann for ett land, har yrkesaktivitet i andre land."
+          label="Er tjenesteperson for ett land, har yrkesaktivitet i andre land."
         />
         <Skjema.Radio
           feltNavn="faktaavklaringTjenestemann"
           value={VurderingTjenestemannTyper.FLERE_LAND}
-          label="Er tjenestemann for flere land."
+          label="Er tjenesteperson for flere land."
         />
         <Skjema.Radio
           feltNavn="faktaavklaringTjenestemann"
           value={VurderingTjenestemannTyper.FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND}
-          label="Er tjenestemann for flere land, har yrkesaktivitet i andre land."
+          label="Er tjenesteperson for flere land, har yrkesaktivitet i andre land."
         />
         <Skjema.Radio
           feltNavn="faktaavklaringTjenestemann"
           value={VurderingTjenestemannTyper.IKKE_TJENESTEMANN}
-          label="Er ikke tjenestemann."
+          label="Er ikke tjenesteperson."
         />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
