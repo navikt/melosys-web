@@ -54,11 +54,13 @@ class Inntekt extends Component {
         title: {
           text: '',
         },
+        labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
       },
       xAxis: {
         categories: grafInntekt.map(linje => formatterKortDatoTilNorsk(linje.utbetalt)),
         crosshair: true,
         description: 'Perioder med inntekt.',
+        labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
       },
       plotOptions: {
         series: {
