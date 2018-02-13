@@ -82,10 +82,19 @@ function formatterDatoTilISO(dato, tid = false) {
   return moment(dato, inputFormat).format(momentFormat);
 }
 
+/** Enkelte data kommer fra backend i form av en "kortdato", feks 2017-01. Denne funksjonen
+ * formatterer om datoen til "jan - 2017" for bedre lesbarhet.
+ */
+function formatterKortDatoTilNorsk(kortDato) {
+  const dato = moment(kortDato, 'YYYY-MM');
+  return `${dato.format('MMM')} - ${dato.format('YYYY')}`;
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
   formatterDatoTilNorsk,
   formatterDatoTilISO,
+  formatterKortDatoTilNorsk,
   MAX_AR_FREM_I_TID,
 };
