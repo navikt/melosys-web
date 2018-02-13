@@ -22,5 +22,5 @@ it('treffer riktig stivalg FRA SYSSELSETTING med valg ARBEIDSTAKER', () => {
   const gjeldendeSteg = 'SYSSELSETTING';
   const saksbehandlersVurdering = { sysselsettingType: VurderingSysselsettingTyper.ARBEIDSTAKER };
 
-  expect(Logikk.beregnNesteSteg(gjeldendeSteg, saksbehandlersVurdering)).toEqual('SEKTOR');
+  expect(Logikk.beregnNesteSteg(gjeldendeSteg, saksbehandlersVurdering)).toEqual('ARBEIDSFORHOLD');
 });
