@@ -35,13 +35,13 @@ class StegLogikk {
     ],
     SEKTOR: [
       {
-        kriterier: 'sektorType ER LIK "OFFENTLIG',
-        oppfylt: ({ sektorType }) => sektorType === VurderingSektorTyper.OFFENTLIG,
+        kriterier: 'ansattISektor ER LIK "OFFENTLIG',
+        oppfylt: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.OFFENTLIG,
         nesteSteg: STEG.TJENESTEMANN,
       },
       {
-        kriterier: 'sektorType ER LIK "SOKKEL" eller sektorTyp ER LIK "SKIP"',
-        oppfylt: ({ sektorType }) => sektorType === VurderingSektorTyper.SOKKEL || sektorType === VurderingSektorTyper.SKIP,
+        kriterier: 'ansattISektor ER LIK "SOKKEL" eller ansattISektor ER LIK "SKIP"',
+        oppfylt: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.SOKKEL || ansattISektor === VurderingSektorTyper.SKIP,
         nesteSteg: STEG.VEDTAK,
       },
       {
@@ -85,15 +85,15 @@ class StegLogikk {
       },
       {
         valg: 'alle andre valg',
-        nesteSteg: STEG.SEKTOR,
+        nesteSteg: STEG.VEDTAK,
       },
     ],
     VIRKSOMHET: [
       {
-        kriterier: 'faktaavklaringAntallLand ER LIK "TO_ELLER_FLERE_LAND" OG faktaavklaringAktivitetINorge ER LIK "UNDER_25_PROSENT"',
-        oppfylt: ({ faktaavklaringAntallLand, faktaavklaringAktivitetINorge }) => (
-          faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND &&
-          faktaavklaringAktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
+        kriterier: 'antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
+        oppfylt: ({ antallLand, aktivitetINorge }) => (
+          antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND &&
+          aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
         ),
         nesteSteg: STEG.BOSTEDSLAND,
       },
@@ -107,7 +107,7 @@ class StegLogikk {
       {
         kriterier: 'alle andre valg',
         oppfylt: () => true,
-        nesteSteg: STEG.UTSENDING,
+        nesteSteg: STEG.VEDTAK,
       },
     ],
     UTSENDING: [
@@ -119,9 +119,10 @@ class StegLogikk {
     ],
   }
 
-  static beregnNesteSteg = (gjeldendeSteg, vurderingerIDetteSteget) => {
+  static beregnNesteSteg = (gjeldendeSteg, vurderingerIDetteSteget, alleVurderinger) => {
+    console.log(gjeldendeSteg, vurderingerIDetteSteget);
     const regelsettForGjeldendeSteg = StegLogikk.stier[gjeldendeSteg];
-    const nesteStiObjekt = regelsettForGjeldendeSteg.find((regel, index) => (index === regelsettForGjeldendeSteg.length - 1 ? true : regel.oppfylt(vurderingerIDetteSteget)));
+    const nesteStiObjekt = regelsettForGjeldendeSteg.find((regel, index) => (index === regelsettForGjeldendeSteg.length - 1 ? true : regel.oppfylt(vurderingerIDetteSteget, alleVurderinger)));
     return nesteStiObjekt.nesteSteg;
   }
 
@@ -133,7 +134,7 @@ class StegLogikk {
     stegBygger.push(gjeldendeSteg);
 
     while (gjeldendeSteg !== 'VEDTAK') {
-      gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, faktaavklaring[gjeldendeSteg.toLowerCase()]);
+      gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, faktaavklaring[gjeldendeSteg.toLowerCase()], faktaavklaring);
       stegBygger.push(gjeldendeSteg);
 
       // Bryt ut av loopen dersom flere enn 30 steg er funnet - da har det oppstått
