@@ -11,140 +11,118 @@ class StegLogikk {
   static stier = {
     PERIODE: [
       {
-        valg: [],
-        til: STEG.SYSSELSETTING,
+        kriterier: 'alle andre valg',
+        oppfylt: () => true,
+        nesteSteg: STEG.SYSSELSETTING,
       },
     ],
     SYSSELSETTING: [
       {
-        valg: [VurderingSysselsettingTyper.ARBEIDSTAKER, VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG],
-        til: STEG.SEKTOR,
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" eller sysselsettingType ER LIK "ARBEIDSTAKER__OG__SELVSTENDIG"',
+        oppfylt: ({ sysselsettingType }) => (sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER || sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG),
+        nesteSteg: STEG.SEKTOR,
       },
       {
-        valg: [VurderingSysselsettingTyper.SELVSTENDIG],
-        til: STEG.AKTIVITET,
+        kriterier: 'sysselsettingType ER LIK "SELVSTENDIG"',
+        oppfylt: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG,
+        nesteSteg: STEG.AKTIVITET,
       },
       {
-        valg: [VurderingSysselsettingTyper.IKKE_ARBEIDENDE],
-        til: STEG.BOSTEDSLAND,
+        kriterier: 'alle andre valg',
+        oppfylt: () => true,
+        nesteSteg: STEG.BOSTEDSLAND,
       },
     ],
     SEKTOR: [
       {
-        valg: [VurderingSektorTyper.FLYVENDE, VurderingSektorTyper.OFFENTLIG],
-        til: STEG.TJENESTEMANN,
+        kriterier: 'sektorType ER LIK "OFFENTLIG',
+        oppfylt: ({ sektorType }) => sektorType === VurderingSektorTyper.OFFENTLIG,
+        nesteSteg: STEG.TJENESTEMANN,
       },
       {
-        valg: [VurderingSektorTyper.SOKKEL, VurderingSektorTyper.SKIP],
-        til: STEG.VEDTAK,
+        kriterier: 'sektorType ER LIK "SOKKEL" eller sektorTyp ER LIK "SKIP"',
+        oppfylt: ({ sektorType }) => sektorType === VurderingSektorTyper.SOKKEL || sektorType === VurderingSektorTyper.SKIP,
+        nesteSteg: STEG.VEDTAK,
       },
       {
-        valg: [VurderingSektorTyper.INGEN_AV_DISSE],
-        til: STEG.VIRKSOMHET,
+        kriterier: 'alle andre valg',
+        oppfylt: () => true,
+        nesteSteg: STEG.VIRKSOMHET,
       },
     ],
     AKTIVITET: [
       {
-        valg: [],
-        til: STEG.VIRKSOMHET,
+        kriterier: 'alle andre valg',
+        oppfylt: () => true,
+        nesteSteg: STEG.VIRKSOMHET,
       },
     ],
     ARBEIDSFORHOLD: [
       {
-        valg: [],
-        til: STEG.FORRETNINGSSTED,
+        kriterier: 'alle andre valg',
+        oppfylt: () => true,
+        nesteSteg: STEG.FORRETNINGSSTED,
       },
     ],
     FORRETNINGSSTED: [
       {
-        valg: [],
-        til: STEG.SEKTOR,
+        kriterier: 'alle andre valg',
+        oppfylt: () => true,
+        nesteSteg: STEG.SEKTOR,
       },
     ],
     TJENESTEMANN: [
       {
-        valg: [
-          VurderingTjenestemannTyper.ETT_LAND,
-          VurderingTjenestemannTyper.ETT_LAND_YRKESAKTIVITET_ANDRE_LAND,
-          VurderingTjenestemannTyper.FLERE_LAND,
-          VurderingTjenestemannTyper.FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND,
-        ],
-        til: STEG.VEDTAK,
+        kriterier: 'vurderingTjenestemann ER LIK "ETT_LAND" eller vurderingTjenestemann ER LIK "ETT_LAND_YRKESAKTIVITET_ANDRE_LAND" ' +
+        'eller vurderingTjenestemann ER LIK "FLERE_LAND" eller vurderingTjenestemann ER LIK "FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND"',
+        oppfylt: ({ vurderingTjenestemann }) => (
+          vurderingTjenestemann === VurderingTjenestemannTyper.ETT_LAND ||
+          vurderingTjenestemann === VurderingTjenestemannTyper.ETT_LAND_YRKESAKTIVITET_ANDRE_LAND ||
+          vurderingTjenestemann === VurderingTjenestemannTyper.FLERE_LAND ||
+          vurderingTjenestemann === VurderingTjenestemannTyper.FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND
+        ),
+        nesteSteg: STEG.VEDTAK,
       },
       {
-        valg: [VurderingTjenestemannTyper.IKKE_TJENESTEMANN],
-        til: STEG.VIRKSOMHET,
+        valg: 'alle andre valg',
+        nesteSteg: STEG.SEKTOR,
       },
     ],
     VIRKSOMHET: [
       {
-        valg: [VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND],
-        til: STEG.BOSTEDSLAND,
+        kriterier: 'faktaavklaringAntallLand ER LIK "TO_ELLER_FLERE_LAND" OG faktaavklaringAktivitetINorge ER LIK "UNDER_25_PROSENT"',
+        oppfylt: ({ faktaavklaringAntallLand, faktaavklaringAktivitetINorge }) => (
+          faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND &&
+          faktaavklaringAktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
+        ),
+        nesteSteg: STEG.BOSTEDSLAND,
       },
       {
-        valg: [],
-        til: STEG.VEDTAK,
+        kriterier: 'alle andre valg',
+        oppfylt: () => true,
+        nesteSteg: STEG.VEDTAK,
       },
     ],
     BOSTEDSLAND: [
       {
-        valg: [],
-        til: STEG.UTSENDING,
+        kriterier: 'alle andre valg',
+        oppfylt: () => true,
+        nesteSteg: STEG.UTSENDING,
       },
     ],
     UTSENDING: [
       {
-        valg: [],
-        til: STEG.VEDTAK,
-      },
-    ],
-    VEDTAK: [
-      {
-        valg: StegLogikk.SISTE_STEG,
-        til: StegLogikk.SISTE_STEG,
+        kriterier: 'alle andre valg',
+        oppfylt: () => true,
+        nesteSteg: STEG.VEDTAK,
       },
     ],
   }
 
   static beregnNesteSteg = (gjeldendeSteg, vurderingerIDetteSteget) => {
-    switch (gjeldendeSteg) {
-      case STEG.PERIODE: {
-        return 'SYSSELSETTING';
-      }
-      case STEG.SYSSELSETTING: {
-        const { sysselsettingType } = vurderingerIDetteSteget;
-        const nesteStiObjekt = StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(sysselsettingType));
-        return nesteStiObjekt ? nesteStiObjekt.til : 'VEDTAK';
-      }
-      case STEG.SEKTOR: {
-        const { ansattISektor } = vurderingerIDetteSteget;
-        return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(ansattISektor)).til;
-      }
-      case STEG.VIRKSOMHET: {
-        console.log('virksomhetsvurderinger', vurderingerIDetteSteget);
-        return StegLogikk.stier[gjeldendeSteg][0].til;
-      }
-      case STEG.ARBEIDSFORHOLD: {
-        return StegLogikk.stier[gjeldendeSteg][0].til;
-      }
-      case STEG.UTSENDING: {
-        return StegLogikk.stier[gjeldendeSteg][0].til;
-      }
-      case STEG.AKTIVITET: {
-        return StegLogikk.stier[gjeldendeSteg][0].til;
-      }
-      case STEG.BOSTEDSLAND: {
-        return StegLogikk.stier[gjeldendeSteg][0].til;
-      }
-      case STEG.FORRETNINGSSTED: {
-        return StegLogikk.stier[gjeldendeSteg][0].til;
-      }
-      case STEG.TJENESTEMANN: {
-        return StegLogikk.stier[gjeldendeSteg][0].til;
-      }
-      default:
-        return {};
-    }
+    const regelsettForGjeldendeSteg = StegLogikk.stier[gjeldendeSteg];
+    const nesteStiObjekt = regelsettForGjeldendeSteg.find((regel, index) => (index === regelsettForGjeldendeSteg.length - 1 ? true : regel.oppfylt(vurderingerIDetteSteget)));
+    return nesteStiObjekt.nesteSteg;
   }
 
   static beregnAlleSteg = faktaavklaring => {
