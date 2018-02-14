@@ -90,12 +90,24 @@ class StegLogikk {
     ],
     VIRKSOMHET: [
       {
-        kriterier: 'antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
-        oppfylt: ({ antallLand, aktivitetINorge }) => (
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
+        oppfylt: ({ antallLand, aktivitetINorge }, { sysselsetting: { sysselsettingType } }) => (
+          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
           antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND &&
           aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
         ),
         nesteSteg: STEG.BOSTEDSLAND,
+      },
+      {
+        kriterier: 'sysselsettingType ER LIK "SELVSTENDIG" OG ENTEN antallLand ER LIK "TO_ELLER_FLERE_LAND" ELLER antallLand ER LIK "ETT_LAND_IKKE_NORGE',
+        oppfylt: ({ antallLand }, { sysselsetting: { sysselsettingType } }) => (
+          sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
+          (
+            antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND ||
+            antallLand === VurderingVirksomhetTyper.ETT_LAND_IKKE_NORGE
+          )
+        ),
+        nesteSteg: STEG.UTSENDING,
       },
       {
         kriterier: 'alle andre valg',
