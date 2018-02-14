@@ -64,13 +64,6 @@ class StegLogikk {
         nesteSteg: STEG.FORRETNINGSSTED,
       },
     ],
-    FORRETNINGSSTED: [
-      {
-        kriterier: 'alle andre valg',
-        oppfylt: () => true,
-        nesteSteg: STEG.SEKTOR,
-      },
-    ],
     TJENESTEMANN: [
       {
         kriterier: 'vurderingTjenestemann ER LIK "ETT_LAND" eller vurderingTjenestemann ER LIK "ETT_LAND_YRKESAKTIVITET_ANDRE_LAND" ' +
@@ -116,6 +109,27 @@ class StegLogikk {
       },
     ],
     BOSTEDSLAND: [
+      {
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG' +
+        'aktivitetINorge ER LIK "UNDER_25_PROSENT" OG bostedsLand INNEHOLDER "NO" OG' +
+        'antallLand ER LIK "TO_ELLER_FLERE_LAND"',
+        oppfylt: ({ }, { virksomhet: { antallLand }, sysselsetting: { sysselsettingType }, virksomhet: { aktivitetINorge }, bostedsland: { bostedsland } }) => {
+          return (
+            sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
+            aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT &&
+            bostedsland.includes('NO') &&
+            antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND
+          );
+        },
+        nesteSteg: STEG.FORRETNINGSSTED,
+      },
+      {
+        kriterier: 'alle andre valg',
+        oppfylt: () => true,
+        nesteSteg: STEG.VEDTAK,
+      },
+    ],
+    FORRETNINGSSTED: [
       {
         kriterier: 'alle andre valg',
         oppfylt: () => true,
