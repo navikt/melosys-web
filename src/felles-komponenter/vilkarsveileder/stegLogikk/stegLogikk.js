@@ -18,27 +18,15 @@ class StegLogikk {
     SYSSELSETTING: [
       {
         valg: [VurderingSysselsettingTyper.ARBEIDSTAKER, VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG],
-        til: STEG.ARBEIDSFORHOLD,
+        til: STEG.SEKTOR,
       },
       {
         valg: [VurderingSysselsettingTyper.SELVSTENDIG],
-        til: STEG.VIRKSOMHET,
+        til: STEG.AKTIVITET,
       },
       {
         valg: [VurderingSysselsettingTyper.IKKE_ARBEIDENDE],
         til: STEG.BOSTEDSLAND,
-      },
-    ],
-    ARBEIDSFORHOLD: [
-      {
-        valg: [],
-        til: STEG.FORRETNINGSSTED,
-      },
-    ],
-    FORRETNINGSSTED: [
-      {
-        valg: [],
-        til: STEG.SEKTOR,
       },
     ],
     SEKTOR: [
@@ -53,6 +41,24 @@ class StegLogikk {
       {
         valg: [VurderingSektorTyper.INGEN_AV_DISSE],
         til: STEG.VIRKSOMHET,
+      },
+    ],
+    AKTIVITET: [
+      {
+        valg: [],
+        til: STEG.VIRKSOMHET,
+      },
+    ],
+    ARBEIDSFORHOLD: [
+      {
+        valg: [],
+        til: STEG.FORRETNINGSSTED,
+      },
+    ],
+    FORRETNINGSSTED: [
+      {
+        valg: [],
+        til: STEG.SEKTOR,
       },
     ],
     TJENESTEMANN: [
@@ -72,27 +78,21 @@ class StegLogikk {
     ],
     VIRKSOMHET: [
       {
-        valg: [VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND, VurderingVirksomhetTyper.ETT_LAND_IKKE_NORGE],
-        til: STEG.UTSENDING,
-      },
-      {
-        valg: [],
-        til: STEG.AKTIVITET,
-      },
-    ],
-    UTSENDING: [
-      {
-        valg: [],
+        valg: [VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND],
         til: STEG.BOSTEDSLAND,
       },
-    ],
-    BOSTEDSLAND: [
       {
         valg: [],
         til: STEG.VEDTAK,
       },
     ],
-    AKTIVITET: [
+    BOSTEDSLAND: [
+      {
+        valg: [],
+        til: STEG.UTSENDING,
+      },
+    ],
+    UTSENDING: [
       {
         valg: [],
         til: STEG.VEDTAK,
@@ -121,10 +121,8 @@ class StegLogikk {
         return StegLogikk.stier[gjeldendeSteg].find(sti => sti.valg.includes(ansattISektor)).til;
       }
       case STEG.VIRKSOMHET: {
-        if (vurderingerIDetteSteget.antallLand === VurderingVirksomhetTyper.KUN_NORGE) {
-          return STEG.VEDTAK;
-        }
-        return STEG.AKTIVITET;
+        console.log('virksomhetsvurderinger', vurderingerIDetteSteget);
+        return StegLogikk.stier[gjeldendeSteg][0].til;
       }
       case STEG.ARBEIDSFORHOLD: {
         return StegLogikk.stier[gjeldendeSteg][0].til;
