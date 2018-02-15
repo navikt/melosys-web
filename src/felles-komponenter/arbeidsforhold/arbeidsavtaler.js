@@ -19,13 +19,36 @@ class Arbeidsavtaler extends Component {
   render() {
     const { arbeidsavtaler = [] } = this.props;
     const { visHostoriskeArbeidsavtaler } = this.state;
-    const grafArbeidsavtale = arbeidsavtaler.reduce((samling, arbeidsavtale) => {
+
+    const nyesteArbeidsavtale = arbeidsavtaler[0] || {};
+    const historiskeArbeidsavtaler = arbeidsavtaler.filter((arbeidsavtalen, index) => index > 0);
+
+    // Tabell-komponenten er agnostisk med tanke på colonner og trenger disse som en array. Gjør derfor
+    // en reducer slik at hvert felt kommer inn i rekkefølge som en array istedet for et key/value-objekt.
+    const tabellTilpassetArbeidsavtaler = historiskeArbeidsavtaler.reduce((samling, arbeidsavtale) => {
       const {
         yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, stillingsprosent, antallTimerFraGammeltRegister = '-', endringsdatoStillingsprosent,
       } = arbeidsavtale;
       return [...samling, [yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, antallTimerFraGammeltRegister, stillingsprosent, EnkeltDato(endringsdatoStillingsprosent)]];
     }, []);
-    const nyesteArbeidsavtale = arbeidsavtaler[0] || [];
+
+    // Lag eventuelle elementer som skal rendres ut senere, slik at vi slipper mye logikk i selve return-blokken.
+    const visMerKnappElement = historiskeArbeidsavtaler.length > 0 ? (
+      <Nav.Knapp
+        mini
+        onClick={this.toggleInntektTabellHandler}
+        className="vistabell__knapp">{visHostoriskeArbeidsavtaler ? 'Skjul' : 'Vis'} tidligere arbeidsavtaler
+      </Nav.Knapp>) : null;
+
+    const historiskeArbeidsAvtalerElement = visHostoriskeArbeidsavtaler ? (
+      <div><Nav.Undertittel>Tidligere arbeidsavtaler</Nav.Undertittel><Tabell
+        tabellData={tabellTilpassetArbeidsavtaler}
+        kolonneNavn={['Yrke', 'Arbeidsordning', 'Timer pr uke', 'Timer gammelt reg.', 'Stillingsprosent', 'Sist endret']}
+        linjerPerSide={5}
+      />
+      </div>)
+      :
+      null;
 
     return (
       <div className="arbeidsavtaler">
@@ -50,16 +73,8 @@ class Arbeidsavtaler extends Component {
             </dl>
           </Nav.Column>
         </div>
-        <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">{visHostoriskeArbeidsavtaler ? 'Skjul' : 'Vis'} tidligere arbeidsavtaler</Nav.Knapp>
-
-        {visHostoriskeArbeidsavtaler && (
-          <div><Nav.Undertittel>Tidligere arbeidsavtaler</Nav.Undertittel><Tabell
-            tabellData={grafArbeidsavtale}
-            kolonneNavn={['Yrke', 'Arbeidsordning', 'Timer pr uke', 'Timer gammelt reg.', 'Stillingsprosent', 'Sist endret']}
-            linjerPerSide={5}
-          />
-          </div>
-        )}
+        { visMerKnappElement }
+        { historiskeArbeidsAvtalerElement}
       </div>
     );
   }
