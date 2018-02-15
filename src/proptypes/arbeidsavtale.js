@@ -2,6 +2,7 @@
 import PT from 'prop-types';
 
 const ArbeidsavtalePropType = PT.shape({
+  gyldigTil: PT.string,
   arbeidstidsordning: PT.string,
   yrke: PT.string,
   avtaltArbeidstimerPerUke: PT.number,
