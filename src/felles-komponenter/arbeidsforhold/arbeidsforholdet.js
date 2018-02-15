@@ -17,8 +17,6 @@ import { boolTilNorsk, datoDiff } from '../../utils/utils';
 
 import './arbeidsforholdet.css';
 
-const uuid = require('uuid/v4');
-
 /** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
  * kun av komponenten Arbeidsforholdene.
  *
@@ -80,10 +78,10 @@ const Arbeidsforholdet = props => {
                   </dl>
                 </Nav.Column>
               </Nav.Row>
-              { arbeidsavtaler.map(avtalen => <Arbeidsavtalen key={uuid()} avtalen={avtalen} />) }
             </div>
           </Nav.Row>
           <Nav.Row>
+            {arbeidsavtaler && <Arbeidsavtaler arbeidsavtaler={arbeidsavtaler} />}
             {inntekt && <Inntekt inntekt={inntekt} /> }
             {timerTimelonnet && <TimerTimelonnet timerTimelonnet={timerTimelonnet} /> }
             {permisjonOgPermittering && <Permisjoner permisjoner={permisjonOgPermittering} /> }
