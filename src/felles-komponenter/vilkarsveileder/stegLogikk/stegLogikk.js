@@ -84,7 +84,7 @@ class StegLogikk {
     VIRKSOMHET: [
       {
         kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
-        oppfylt: ({ antallLand, aktivitetINorge }, { sysselsetting: { sysselsettingType } }) => (
+        oppfylt: ({ sysselsettingType, antallLand, aktivitetINorge }) => (
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
           antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND &&
           aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
@@ -93,7 +93,7 @@ class StegLogikk {
       },
       {
         kriterier: 'sysselsettingType ER LIK "SELVSTENDIG" OG ENTEN antallLand ER LIK "TO_ELLER_FLERE_LAND" ELLER antallLand ER LIK "ETT_LAND_IKKE_NORGE',
-        oppfylt: ({ antallLand }, { sysselsetting: { sysselsettingType } }) => (
+        oppfylt: ({ sysselsettingType, antallLand }) => (
           sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
           (
             antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND ||
@@ -113,14 +113,14 @@ class StegLogikk {
         kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG' +
         'aktivitetINorge ER LIK "UNDER_25_PROSENT" OG bostedsLand INNEHOLDER "NO" OG' +
         'antallLand ER LIK "TO_ELLER_FLERE_LAND"',
-        oppfylt: ({ }, { virksomhet: { antallLand }, sysselsetting: { sysselsettingType }, virksomhet: { aktivitetINorge }, bostedsland: { bostedsland } }) => {
-          return (
-            sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
-            aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT &&
-            bostedsland.includes('NO') &&
-            antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND
-          );
-        },
+        oppfylt: ({
+          antallLand, sysselsettingType, aktivitetINorge, bostedsland,
+        }) => (
+          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
+          aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT &&
+          bostedsland.includes('NO') &&
+          antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND
+        ),
         nesteSteg: STEG.FORRETNINGSSTED,
       },
       {
@@ -146,7 +146,6 @@ class StegLogikk {
   }
 
   static beregnNesteSteg = (gjeldendeSteg, vurderingerIDetteSteget, alleVurderinger) => {
-    console.log(gjeldendeSteg, vurderingerIDetteSteget);
     const regelsettForGjeldendeSteg = StegLogikk.stier[gjeldendeSteg];
     const nesteStiObjekt = regelsettForGjeldendeSteg.find((regel, index) => (index === regelsettForGjeldendeSteg.length - 1 ? true : regel.oppfylt(vurderingerIDetteSteget, alleVurderinger)));
     return nesteStiObjekt.nesteSteg;
@@ -154,13 +153,14 @@ class StegLogikk {
 
   static beregnAlleSteg = faktaavklaring => {
     const stegBygger = [];
+    const flatFaktaavklaring = Object.keys(faktaavklaring).reduce((collection, key) => ({ ...collection, ...faktaavklaring[key] }), {});
 
     // Stegene begynner alltid med 'PERIODE'
     let gjeldendeSteg = 'PERIODE';
     stegBygger.push(gjeldendeSteg);
 
     while (gjeldendeSteg !== 'VEDTAK') {
-      gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, faktaavklaring[gjeldendeSteg.toLowerCase()], faktaavklaring);
+      gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, flatFaktaavklaring);
       stegBygger.push(gjeldendeSteg);
 
       // Bryt ut av loopen dersom flere enn 30 steg er funnet - da har det oppstått
