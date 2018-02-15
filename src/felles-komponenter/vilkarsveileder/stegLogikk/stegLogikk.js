@@ -12,55 +12,55 @@ class StegLogikk {
     PERIODE: [
       {
         kriterier: 'alle andre valg',
-        oppfylt: () => true,
+        erOppfylt: () => true,
         nesteSteg: STEG.SYSSELSETTING,
       },
     ],
     SYSSELSETTING: [
       {
         kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" eller sysselsettingType ER LIK "ARBEIDSTAKER__OG__SELVSTENDIG"',
-        oppfylt: ({ sysselsettingType }) => (sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER || sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG),
+        erOppfylt: ({ sysselsettingType }) => (sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER || sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG),
         nesteSteg: STEG.SEKTOR,
       },
       {
         kriterier: 'sysselsettingType ER LIK "SELVSTENDIG"',
-        oppfylt: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG,
+        erOppfylt: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG,
         nesteSteg: STEG.AKTIVITET,
       },
       {
         kriterier: 'alle andre valg',
-        oppfylt: () => true,
+        erOppfylt: () => true,
         nesteSteg: STEG.BOSTEDSLAND,
       },
     ],
     SEKTOR: [
       {
         kriterier: 'ansattISektor ER LIK "OFFENTLIG',
-        oppfylt: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.OFFENTLIG,
+        erOppfylt: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.OFFENTLIG,
         nesteSteg: STEG.TJENESTEMANN,
       },
       {
         kriterier: 'ansattISektor ER LIK "SOKKEL" eller ansattISektor ER LIK "SKIP"',
-        oppfylt: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.SOKKEL || ansattISektor === VurderingSektorTyper.SKIP,
+        erOppfylt: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.SOKKEL || ansattISektor === VurderingSektorTyper.SKIP,
         nesteSteg: STEG.VEDTAK,
       },
       {
         kriterier: 'alle andre valg',
-        oppfylt: () => true,
+        erOppfylt: () => true,
         nesteSteg: STEG.VIRKSOMHET,
       },
     ],
     AKTIVITET: [
       {
         kriterier: 'alle andre valg',
-        oppfylt: () => true,
+        erOppfylt: () => true,
         nesteSteg: STEG.VIRKSOMHET,
       },
     ],
     ARBEIDSFORHOLD: [
       {
         kriterier: 'alle andre valg',
-        oppfylt: () => true,
+        erOppfylt: () => true,
         nesteSteg: STEG.FORRETNINGSSTED,
       },
     ],
@@ -68,7 +68,7 @@ class StegLogikk {
       {
         kriterier: 'vurderingTjenestemann ER LIK "ETT_LAND" eller vurderingTjenestemann ER LIK "ETT_LAND_YRKESAKTIVITET_ANDRE_LAND" ' +
         'eller vurderingTjenestemann ER LIK "FLERE_LAND" eller vurderingTjenestemann ER LIK "FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND"',
-        oppfylt: ({ vurderingTjenestemann }) => (
+        erOppfylt: ({ vurderingTjenestemann }) => (
           vurderingTjenestemann === VurderingTjenestemannTyper.ETT_LAND ||
           vurderingTjenestemann === VurderingTjenestemannTyper.ETT_LAND_YRKESAKTIVITET_ANDRE_LAND ||
           vurderingTjenestemann === VurderingTjenestemannTyper.FLERE_LAND ||
@@ -84,7 +84,7 @@ class StegLogikk {
     VIRKSOMHET: [
       {
         kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
-        oppfylt: ({ sysselsettingType, antallLand, aktivitetINorge }) => (
+        erOppfylt: ({ sysselsettingType, antallLand, aktivitetINorge }) => (
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
           antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND &&
           aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
@@ -93,7 +93,7 @@ class StegLogikk {
       },
       {
         kriterier: 'sysselsettingType ER LIK "SELVSTENDIG" OG ENTEN antallLand ER LIK "TO_ELLER_FLERE_LAND" ELLER antallLand ER LIK "ETT_LAND_IKKE_NORGE',
-        oppfylt: ({ sysselsettingType, antallLand }) => (
+        erOppfylt: ({ sysselsettingType, antallLand }) => (
           sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
           (
             antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND ||
@@ -104,7 +104,7 @@ class StegLogikk {
       },
       {
         kriterier: 'alle andre valg',
-        oppfylt: () => true,
+        erOppfylt: () => true,
         nesteSteg: STEG.VEDTAK,
       },
     ],
@@ -113,7 +113,7 @@ class StegLogikk {
         kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG' +
         'aktivitetINorge ER LIK "UNDER_25_PROSENT" OG bostedsLand INNEHOLDER "NO" OG' +
         'antallLand ER LIK "TO_ELLER_FLERE_LAND"',
-        oppfylt: ({
+        erOppfylt: ({
           antallLand, sysselsettingType, aktivitetINorge, bostedsland,
         }) => (
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
@@ -125,42 +125,42 @@ class StegLogikk {
       },
       {
         kriterier: 'alle andre valg',
-        oppfylt: () => true,
+        erOppfylt: () => true,
         nesteSteg: STEG.VEDTAK,
       },
     ],
     FORRETNINGSSTED: [
       {
         kriterier: 'alle andre valg',
-        oppfylt: () => true,
+        erOppfylt: () => true,
         nesteSteg: STEG.VEDTAK,
       },
     ],
     UTSENDING: [
       {
         kriterier: 'alle andre valg',
-        oppfylt: () => true,
+        erOppfylt: () => true,
         nesteSteg: STEG.VEDTAK,
       },
     ],
   }
 
-  static beregnNesteSteg = (gjeldendeSteg, vurderingerIDetteSteget, alleVurderinger) => {
+  static beregnNesteSteg = (gjeldendeSteg, flatFaktaAvklaring) => {
     const regelsettForGjeldendeSteg = StegLogikk.stier[gjeldendeSteg];
-    const nesteStiObjekt = regelsettForGjeldendeSteg.find((regel, index) => (index === regelsettForGjeldendeSteg.length - 1 ? true : regel.oppfylt(vurderingerIDetteSteget, alleVurderinger)));
+    const nesteStiObjekt = regelsettForGjeldendeSteg.find((regel, index) => (index === regelsettForGjeldendeSteg.length - 1 ? true : regel.erOppfylt(flatFaktaAvklaring)));
     return nesteStiObjekt.nesteSteg;
   }
 
-  static beregnAlleSteg = faktaavklaring => {
+  static beregnAlleSteg = faktaAvklaring => {
     const stegBygger = [];
-    const flatFaktaavklaring = Object.keys(faktaavklaring).reduce((collection, key) => ({ ...collection, ...faktaavklaring[key] }), {});
+    const flatFaktaAvklaring = Object.keys(faktaAvklaring).reduce((collection, key) => ({ ...collection, ...faktaAvklaring[key] }), {});
 
     // Stegene begynner alltid med 'PERIODE'
     let gjeldendeSteg = 'PERIODE';
     stegBygger.push(gjeldendeSteg);
 
     while (gjeldendeSteg !== 'VEDTAK') {
-      gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, flatFaktaavklaring);
+      gjeldendeSteg = StegLogikk.beregnNesteSteg(gjeldendeSteg, flatFaktaAvklaring);
       stegBygger.push(gjeldendeSteg);
 
       // Bryt ut av loopen dersom flere enn 30 steg er funnet - da har det oppstått
