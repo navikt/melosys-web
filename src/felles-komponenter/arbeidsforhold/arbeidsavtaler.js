@@ -1,66 +1,40 @@
 import React from 'react';
 
-import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/index';
-import * as Ikoner from '../../resources/images/index';
+import * as Nav from '../../utils/navFrontend';
+import Tabell from '../tabell/tabell';
 
-import DatoOmrade from '../datoOmrade/datoOmrade';
 import EnkeltDato from '../datoOmrade/enkeltDato';
-import PanelHeader from '../panelHeader/panelHeader';
-import Permisjoner from './permisjoner';
-import TimerTimelonnet from './timertimelonnet';
-import Utenlandsopphold from './utenlandsopphold';
-import Inntekt from './inntekt';
-
-import { boolTilNorsk, datoDiff } from '../../utils/utils';
 
 import './arbeidsforholdet.css';
 
-const uuid = require('uuid/v4');
-
-/** Dette er komponent for iterering av arbeidsavtaler slik den leveres innenfor ett
- * arbeidsforhold
- * @param { props.avtalen } Den enkelte avtale.
- */
-function Arbeidsavtalen({ avtalen }) {
-  const {
-    arbeidstidsordning,
-    yrke,
-    beregnetAntallTimerPrUke,
-    antallTimerFraGammeltRegister,
-  } = avtalen;
+const Arbeidsavtaler = props => {
+  const { arbeidsavtaler = [] } = props;
+  const grafArbeidsavtale = arbeidsavtaler.reduce((samling, arbeidsavtale) => {
+    const {
+      yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, stillingsprosent, antallTimerFraGammeltRegister = '-', endringsdatoStillingsprosent,
+    } = arbeidsavtale;
+    return [...samling, [yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, antallTimerFraGammeltRegister, stillingsprosent, EnkeltDato(endringsdatoStillingsprosent)]];
+  }, []);
 
   return (
-    <Nav.Row>
-      <div className="arbeidsavtale">
-        <Nav.Column xs="6">
-          <dl className="arbeidsforholdet__detaljer">
-            <dt>Yrke</dt>
-            <dd>{yrke || '-'}</dd>
-            <dt>Arbeidstidsordning</dt>
-            <dd>{arbeidstidsordning}</dd>
-          </dl>
-        </Nav.Column>
-        <Nav.Column xs="6">
-          <dl className="arbeidsforholdet__detaljer">
-            <dt>Stillingsprosent</dt>
-            <dd>{beregnetAntallTimerPrUke || '-'}</dd>
-            <dt>Antall timer pr uke</dt>
-            <dd>{beregnetAntallTimerPrUke || '-'}</dd>
-            {antallTimerFraGammeltRegister && <div><dt>Antall timer fra gammelt register</dt><dd>37,5</dd></div> }
-          </dl>
-        </Nav.Column>
-      </div>
-    </Nav.Row>
+    <div>
+      <Nav.Undertittel>Arbeidsavtaler</Nav.Undertittel>
+      <Tabell
+        tabellData={grafArbeidsavtale}
+        kolonneNavn={['Yrke', 'Arbeidsordning', 'Timer pr uke', 'Timer gammelt reg.', 'Stillingsprosent', 'Sist endret']}
+        linjerPerSide={5}
+      />
+    </div>
   );
-}
-
-Arbeidsavtalen.propTypes = {
-  avtalen: MPT.Arbeidsavtale.isRequired,
 };
 
-const Arbeidsavtaler = () =>{
+Arbeidsavtaler.propTypes = {
+  arbeidsavtaler: MPT.Arbeidsavtaler,
+};
 
-}
+Arbeidsavtaler.defaultProps = {
+  arbeidsavtaler: [],
+};
 
 export default Arbeidsavtaler;
