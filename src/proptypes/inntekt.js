@@ -1,7 +1,7 @@
 import PT from 'prop-types';
 import { Periode } from './periode';
 
-const InntektLinjePropType = PT.shape({
+const InntektEnkeltLinjePropType = PT.shape({
   beloep: PT.number,
   fordel: PT.string,
   inntektskilde: PT.string,
@@ -18,7 +18,7 @@ const InntektLinjePropType = PT.shape({
   beskrivelse: PT.string,
 });
 
-const InntektListePropType = PT.arrayOf(InntektLinjePropType);
+const InntektListePropType = PT.arrayOf(InntektEnkeltLinjePropType);
 
 const InntektPropType = PT.shape({
   ident: PT.shape({
@@ -28,14 +28,14 @@ const InntektPropType = PT.shape({
     arbeidsInntektMaaned: PT.shape({
       aarMaaned: PT.string,
       arbeidsInntektInformasjon: PT.shape({
-        inntektListe: InntektLinjePropType,
+        inntektListe: InntektEnkeltLinjePropType,
       }),
     }),
   }),
 });
 
 export {
-  InntektLinjePropType as InntektLinje,
+  InntektEnkeltLinjePropType as InntektEnkeltLinje,
   InntektListePropType as InntektListe,
   InntektPropType as Inntekt,
 };
