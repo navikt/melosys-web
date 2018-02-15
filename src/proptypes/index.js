@@ -1,5 +1,5 @@
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
-import { Inntekt, InntektLinje } from './inntekt';
+import { Inntekt, InntektListe, InntektLinje } from './inntekt';
 import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
 import { TimerTimelonnet, TimerTimelonnetLinje } from './timerTimelonnet';
 import { OppholdUtland } from './oppholdUtland';
@@ -42,6 +42,7 @@ export {
   Medlemskap,
   Bekreftelser,
   Inntekt,
+  InntektListe,
   InntektLinje,
   Oppsummering,
   Permisjonen,

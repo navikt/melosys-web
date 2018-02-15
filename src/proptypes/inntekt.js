@@ -18,6 +18,8 @@ const InntektLinjePropType = PT.shape({
   beskrivelse: PT.string,
 });
 
+const InntektListePropType = PT.arrayOf(InntektLinjePropType);
+
 const InntektPropType = PT.shape({
   ident: PT.shape({
     personIdent: PT.string,
@@ -34,5 +36,6 @@ const InntektPropType = PT.shape({
 
 export {
   InntektLinjePropType as InntektLinje,
+  InntektListePropType as InntektListe,
   InntektPropType as Inntekt,
 };
