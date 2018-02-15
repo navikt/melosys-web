@@ -27,9 +27,9 @@ class Arbeidsavtaler extends Component {
     // en reducer slik at hvert felt kommer inn i rekkefølge som en array istedet for et key/value-objekt.
     const tabellTilpassetArbeidsavtaler = historiskeArbeidsavtaler.reduce((samling, arbeidsavtale) => {
       const {
-        yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, stillingsprosent, antallTimerFraGammeltRegister = '-', endringsdatoStillingsprosent,
+        gyldigTil = '-', yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, stillingsprosent, antallTimerFraGammeltRegister = '-', endringsdatoStillingsprosent,
       } = arbeidsavtale;
-      return [...samling, [yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, antallTimerFraGammeltRegister, stillingsprosent, EnkeltDato(endringsdatoStillingsprosent)]];
+      return [...samling, [gyldigTil, yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, antallTimerFraGammeltRegister, stillingsprosent, EnkeltDato(endringsdatoStillingsprosent)]];
     }, []);
 
     // Lag eventuelle elementer som skal rendres ut senere, slik at vi slipper mye logikk i selve return-blokken.
@@ -43,7 +43,7 @@ class Arbeidsavtaler extends Component {
     const historiskeArbeidsAvtalerElement = visHostoriskeArbeidsavtaler ? (
       <div><Nav.Undertittel>Tidligere arbeidsavtaler</Nav.Undertittel><Tabell
         tabellData={tabellTilpassetArbeidsavtaler}
-        kolonneNavn={['Yrke', 'Arbeidsordning', 'Timer pr uke', 'Timer gammelt reg.', 'Stillingsprosent', 'Sist endret']}
+        kolonneNavn={['Gyldig til', 'Yrke', 'Arbeidsordning', 'Timer pr uke', 'Timer gammelt reg.', 'Stillingsprosent', 'Sist endret']}
         linjerPerSide={5}
       />
       </div>)
