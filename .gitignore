@@ -13,7 +13,8 @@
 /scripts/mock_data
 
 # mocha + coverage
-/test
+/test/coverage
+/test/junit.xml
 
 # misc
 .idea

@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { getAsJson, postAsJson } from './utils';
-
 /*
 function erDev() {
   const url = window.location.href;
@@ -12,7 +11,8 @@ function erDev() {
 */
 // from .env or .env.local
 const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
-console.log('process.env', process.env);
+// console.log('process.env', process.env);
+
 
 export function health() {
   const URI_HEALTH = `/melosys/internal/health/`;
@@ -54,6 +54,11 @@ export function hentNyesaker(fnr) {
   return getAsJson(URI_NYESAKER);
 }
 
+export function hentNyesakerPact(host, port, fnr) {
+  const URI_NYESAKER = URI_NYESAKER`${host}:${port}/api/sok/fagsaker/?fnr=${fnr}`;
+  return getAsJson(URI_NYESAKER);
+}
+
 export function opprettSak(fnr) {
   const URI_OPPRETTSAK = `${API_BASE_URL}opprettsak/${fnr}`;
   return postAsJson(URI_OPPRETTSAK);
@@ -73,12 +78,20 @@ export function hentSaksbehandler() {
   const URI_SAKSBEHANDLER = `${API_BASE_URL}saksbehandler`;
   return getAsJson(URI_SAKSBEHANDLER);
 }
+export function hentSaksbehandlerPact(host, port) {
+  const URI_SAKSBEHANDLER = `${host}:${port}/api/saksbehandler`;
+  return getAsJson(URI_SAKSBEHANDLER);
+}
 
 export function hentLandkoder() {
   const URI_LANDKODER = `${API_BASE_URL}landkoder`;
   return getAsJson(URI_LANDKODER);
 }
 
+export function hentLandkoderPact(host, port) {
+  const URI_LANDKODER = `${host}:${port}/api/landkoder`;
+  return getAsJson(URI_LANDKODER);
+}
 export function nyHenvendelse(henvendelse) {
   const URI_HENVENDELSE =`${API_BASE_URL}henvendelse/`;
   return postAsJson(URI_HENVENDELSE, henvendelse);
