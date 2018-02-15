@@ -64,7 +64,7 @@ class Arbeidsavtaler extends Component {
           <Nav.Column xs="6">
             <dl className="arbeidsforholdet__detaljer">
               <dt>Stillingsprosent</dt>
-              <dd>{nyesteArbeidsavtale.avtaltArbeidstimerPerUke || '-'}</dd>
+              <dd>{nyesteArbeidsavtale.stillingsprosent || '-'}</dd>
               <dt>Antall timer pr uke</dt>
               <dd>{nyesteArbeidsavtale.beregnetAntallTimerPrUke || '-'}</dd>
               {nyesteArbeidsavtale.antallTimerFraGammeltRegister && <div><dt>Antall timer fra gammelt register</dt><dd>nyesteArbeidsavtale.antallTimerFraGammeltRegister</dd></div> }
