@@ -45,7 +45,6 @@ const Arbeidsforholdet = props => {
     <div className="panelSeksjon arbeidsforholdet">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader
-          ikon={Ikoner.Ferdig}
           tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`}
           undertittel={<div>Periode: <EnkeltDato dato={ansettelsesPeriode.fom} /> - <EnkeltDato dato={ansettelsesPeriode.tom} /> </div>}
         />}
