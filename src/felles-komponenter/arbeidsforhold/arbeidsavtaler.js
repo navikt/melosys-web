@@ -9,16 +9,16 @@ import EnkeltDato from '../datoOmrade/enkeltDato';
 import './arbeidsavtaler.css';
 
 class Arbeidsavtaler extends Component {
-  state = { visHostoriskeArbeidsavtaler: false }
+  state = { visHistoriskeArbeidsavtaler: false }
 
   toggleInntektTabellHandler = e => {
     e.preventDefault();
-    this.setState({ visHostoriskeArbeidsavtaler: !this.state.visHostoriskeArbeidsavtaler });
+    this.setState({ visHistoriskeArbeidsavtaler: !this.state.visHistoriskeArbeidsavtaler });
   }
 
   render() {
     const { arbeidsavtaler = [] } = this.props;
-    const { visHostoriskeArbeidsavtaler } = this.state;
+    const { visHistoriskeArbeidsavtaler } = this.state;
 
     const nyesteArbeidsavtale = arbeidsavtaler[0] || {};
     const historiskeArbeidsavtaler = arbeidsavtaler.filter((arbeidsavtalen, index) => index > 0);
@@ -37,10 +37,10 @@ class Arbeidsavtaler extends Component {
       <Nav.Knapp
         mini
         onClick={this.toggleInntektTabellHandler}
-        className="vistabell__knapp">{visHostoriskeArbeidsavtaler ? 'Skjul' : 'Vis'} tidligere arbeidsavtaler
+        className="vistabell__knapp">{visHistoriskeArbeidsavtaler ? 'Skjul' : 'Vis'} tidligere arbeidsavtaler
       </Nav.Knapp>) : null;
 
-    const historiskeArbeidsAvtalerElement = visHostoriskeArbeidsavtaler ? (
+    const historiskeArbeidsAvtalerElement = visHistoriskeArbeidsavtaler ? (
       <div><Nav.Undertittel>Tidligere arbeidsavtaler</Nav.Undertittel><Tabell
         tabellData={tabellTilpassetArbeidsavtaler}
         kolonneNavn={['Gyldig til', 'Yrke', 'Arbeidsordning', 'Timer pr uke', 'Timer gammelt reg.', 'Stillingsprosent', 'Sist endret']}
