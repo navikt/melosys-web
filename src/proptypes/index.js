@@ -21,6 +21,7 @@ import { Landkode, Landkoder } from './landkoder';
 import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger } from './vurdering';
 import { Opphold } from './opphold';
 import { Sysselsetting } from './sysselsetting';
+import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
 
 export {
   ArbeidNorge,
@@ -59,4 +60,5 @@ export {
   Feilmeldinger,
   Opphold,
   Sysselsetting,
+  ArbeidsgivereNorge,
 };

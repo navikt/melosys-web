@@ -127,6 +127,15 @@ export const OrganisasjonSelector = createSelector(
   }
 );
 
+export const ArbeidsgivereSelector = createSelector(
+  state => OrganisasjonerSelector(state),
+  state => ArbeidsforholdeneSelector(state),
+  state => InntektSelector(state),
+  (organisasjoner, arbeidsforholdene, inntekter) => {
+
+  }
+);
+
 export const OppsummeringSelector = createSelector(
   state => (state.fagsaker.data ? state.fagsaker.data : {}),
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].oppsummering : []),
