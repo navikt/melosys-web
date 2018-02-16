@@ -127,12 +127,13 @@ export const OrganisasjonSelector = createSelector(
   }
 );
 
-export const ArbeidsgivereSelector = createSelector(
+export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter) => {
-
+    const arbeidsgivere = organisasjoner.reduce((samling, organisasjon) => ([...samling, { organisasjon, arbeidsforholdene, inntekter }]), []);
+    return arbeidsgivere;
   }
 );
 
