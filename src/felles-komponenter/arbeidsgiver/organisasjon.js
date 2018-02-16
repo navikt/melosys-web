@@ -29,13 +29,16 @@ const Organisasjon = props => {
         heading={<PanelHeader
           ikon={Ikoner.Ferdig}
           tittel={`Arbeidsgiver i Norge: ${navn}`}
-          undertittel={<div>{`Org.nr:${orgnr}`} </div>}
+          undertittel={<div>{`Org.nr: ${orgnr}`} </div>}
         />}
         ariaTittel={`Panel for arbeidsgiveren ${navn}`} >
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="6">
-              {<Forretningsadresse forretningsadresse={forretningsadresse} />}
+              <dl className="organisasjon__detaljer">
+                <dt>Forretningsadresse</dt>
+                <dd>{<Forretningsadresse forretningsadresse={forretningsadresse} />}</dd>
+              </dl>
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
