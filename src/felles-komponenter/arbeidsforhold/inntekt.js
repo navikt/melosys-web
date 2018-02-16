@@ -118,7 +118,7 @@ class Inntekt extends Component {
 }
 
 Inntekt.propTypes = {
-  inntekt: MPT.Inntekt,
+  inntekt: MPT.InntektListe,
 };
 
 Inntekt.defaultProps = {
