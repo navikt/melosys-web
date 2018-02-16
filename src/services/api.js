@@ -13,12 +13,6 @@ function erDev() {
 const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 // console.log('process.env', process.env);
 
-
-export function health() {
-  const URI_HEALTH = `/melosys/internal/health/`;
-  return getAsJson(URI_HEALTH);
-}
-
 export function hentSoknader(bid) {
   const URI_SOKNADER = `${API_BASE_URL}soknader/${bid}`;
   return getAsJson(URI_SOKNADER);
@@ -49,13 +43,18 @@ export function hentFagsaker(snr) {
   return getAsJson(URI_FAGSAKER);
 }
 
+export function hentFagsakerPact(host, port, snr) {
+  const URI_FAGSAKER = `${host}:${port}/api/fagsaker/${snr}`;
+  return getAsJson(URI_FAGSAKER);
+}
+
 export function hentNyesaker(fnr) {
   const URI_NYESAKER = `${API_BASE_URL}sok/fagsaker/?fnr=${fnr}`;
   return getAsJson(URI_NYESAKER);
 }
 
 export function hentNyesakerPact(host, port, fnr) {
-  const URI_NYESAKER = URI_NYESAKER`${host}:${port}/api/sok/fagsaker/?fnr=${fnr}`;
+  const URI_NYESAKER = `${host}:${port}/api/sok/fagsaker/?fnr=${fnr}`;
   return getAsJson(URI_NYESAKER);
 }
 

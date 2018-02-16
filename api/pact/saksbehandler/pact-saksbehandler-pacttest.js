@@ -18,9 +18,6 @@ import saksbehandler_body from './pact-saksbehandler-body';
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
-
-
-
 const { Matchers } = require('@pact-foundation/pact');
 
 describe('SaksbehandlerPactApi', () => {
@@ -28,15 +25,13 @@ describe('SaksbehandlerPactApi', () => {
   const { like } = Matchers;
   const port = 8990;
 
-  let dir = path.resolve(process.cwd(), 'pacts');
-
   const provider = new Pact({
     port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
-    dir: dir.replace(/\\/g, "/"),
+    dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
     consumer: 'melosys-web',
-    provider: 'melosys-api',
+    provider: 'melosys-api-saksbehandler',
     pactfileWriteMode: 'merge',
     logLevel: LOG_LEVEL,
   });

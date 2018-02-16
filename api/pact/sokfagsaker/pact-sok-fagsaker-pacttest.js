@@ -12,18 +12,20 @@ const assert = chai.assert;
 
 const path = require('path');
 const { Pact } = require('@pact-foundation/pact');
-const LANDKODER_API_URL = '/api/landkoder';
-import landkoder_body from './pact-landkoder-body';
-
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 const { Matchers } = require('@pact-foundation/pact');
+import sok_fagsaker_body from './pack-sok-fagsaker-body';
 
-describe('LandkoderPactApi', () => {
+const fnr = '05056335023';
+const SOK_FAGSAKER_API_URL = `/api/sok/fagsaker/`;
+
+
+describe('SokFagsakerPactApi', () => {
   let url = 'http://localhost';
   const { like } = Matchers;
-  const port = 8991;
+  const port = 8992;
 
 
   const provider = new Pact({
@@ -32,7 +34,7 @@ describe('LandkoderPactApi', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
     consumer: 'melosys-web',
-    provider: 'melosys-api-landkoder',
+    provider: 'melosys-api-sokfagsaker',
     pactfileWriteMode: 'merge',
     logLevel: LOG_LEVEL,
   });
@@ -41,40 +43,41 @@ describe('LandkoderPactApi', () => {
     return provider.setup()
       .then(() => {
         provider.addInteraction({
-          state: 'has an array of landkoder',
-          uponReceiving: 'a request for an array of landkoder',
+          state: 'has an array of fagsaker',
+          uponReceiving: 'a request for an array of fagsaker',
           withRequest: {
             method: 'GET',
-            path: `${LANDKODER_API_URL}`,
+            path: `${SOK_FAGSAKER_API_URL}`,
+            query: {fnr}
           },
           willRespondWith: {
             status: 200,
             headers: {
               'Content-Type': 'application/json',
             },
-            body: landkoder_body,
+            body: sok_fagsaker_body,
           },
         });
       });
   });
 
-  it('returns an array of landkoder response', done => {
-    /*
-    const landkoder = Api.hentLandkoderPact(url, port);
-    expect(landkoder).to.eventually.be.a('array').and.notify(done);
-    */
-    Api.hentLandkoderPact(url, port)
-      .then((landkoder) => {
-        expect(landkoder).to.be.a('array');
-        expect(landkoder).to.have.lengthOf(1);
+  it('returns an array of fagsaker response', done => {
+    Api.hentNyesakerPact(url, port, fnr)
+      .then((fagsaker) => {
+        expect(fagsaker).to.be.a('array');
+        expect(fagsaker).to.have.lengthOf(1);
       })
       .then(done, done);
   });
 
-  it('to have a landkode object with property kode and term', done => {
-    Api.hentLandkoderPact(url, port).then(landkoder => landkoder.forEach(landkode => {
-      expect(landkode).to.have.property('kode');
-      expect(landkode).to.have.property('term');
+  it('to have a fagsak object with required properties', done => {
+    Api.hentNyesakerPact(url, port, fnr).then(fagsaker => fagsaker.forEach(fagsak => {
+      expect(fagsak).to.have.property('saksnummer');
+      expect(fagsak).to.have.property('sammensattNavn');
+      expect(fagsak).to.have.property('type');
+      expect(fagsak).to.have.property('status');
+      expect(fagsak).to.have.property('registrertDato');
+      expect(fagsak).to.have.property('kjoenn');
     })).then(done, done);
   });
 
