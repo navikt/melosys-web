@@ -20,7 +20,7 @@ class Arbeidsavtaler extends Component {
     const { arbeidsavtaler = [] } = this.props;
     const { visHistoriskeArbeidsavtaler } = this.state;
 
-    const nyesteArbeidsavtale = arbeidsavtaler[0] || {};
+    const nyesteArbeidsavtale = arbeidsavtaler.length > 0 ? arbeidsavtaler[0] : {};
     const historiskeArbeidsavtaler = arbeidsavtaler.filter((arbeidsavtalen, index) => index > 0);
 
     // Tabell-komponenten er agnostisk med tanke på colonner og trenger disse som en array. Gjør derfor
