@@ -21,19 +21,24 @@ const ArbeidsgivereEnkeltNorge = props => {
   );
 };
 
+ArbeidsgivereEnkeltNorge.propTypes = {
+  organisasjon: MPT.Organisasjon.isRequired,
+  arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
+  inntekt: MPT.Inntekt.isRequired,
+};
 
 const ArbeidsgivereNorge = props => {
-  const { arbeidsgivere } = props;
+  const { arbeidsgivereNorge } = props;
 
   return (
     <div className="arbeidsgivereNorge">
-      {arbeidsgivere.map(arbeidsgiver => <ArbeidsgivereEnkeltNorge {...arbeidsgiver} />)}
+      {arbeidsgivereNorge.map(arbeidsgiver => <ArbeidsgivereEnkeltNorge key={uuid()} {...arbeidsgiver} />)}
     </div>
   );
 };
 
 ArbeidsgivereNorge.propTypes = {
-  arbeidsgivere: MPT.ArbeidsgivereNorge.isRequired,
+  arbeidsgivereNorge: MPT.ArbeidsgivereNorge.isRequired,
 };
 
 export default ArbeidsgivereNorge;

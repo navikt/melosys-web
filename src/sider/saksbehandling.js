@@ -18,7 +18,7 @@ import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveiled
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
-import Arbeidsforholdene from '../felles-komponenter/arbeidsgivereNorge';
+import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
 import OppholdUtland from '../felles-komponenter/oppholdUtland';
@@ -33,7 +33,7 @@ import {
   hentFagsaker,
   PersonSelector,
   MedlemskapSelector,
-  ArbeidsforholdeneSelector,
+  ArbeidsgivereNorgeSelector,
   InntektSoknadenSelector,
   BekreftelserSelector,
   OppsummeringSelector,
@@ -95,7 +95,7 @@ class Saksbehandling extends Component {
     match: PT.object.isRequired,
     person: MPT.Person,
     medlemskap: MPT.Medlemskap,
-    arbeidsforholdene: MPT.Arbeidsforholdene,
+    arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
     inntekt: MPT.Inntekt,
     vurdering: PT.object,
     bekreftelser: MPT.Bekreftelser,
@@ -114,7 +114,7 @@ class Saksbehandling extends Component {
   static defaultProps = {
     person: {},
     medlemskap: {},
-    arbeidsforholdene: [],
+    arbeidsgivereNorge: [],
     inntekt: {},
     vurdering: {},
     bekreftelser: [],
@@ -174,7 +174,7 @@ class Saksbehandling extends Component {
     const {
       person,
       medlemskap,
-      arbeidsforholdene,
+      arbeidsgivereNorge,
       inntekt,
       bekreftelser,
       oppsummering,
@@ -200,7 +200,7 @@ class Saksbehandling extends Component {
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {errorSummary}
                 {person && <Personopplysninger person={person} />}
-                {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
+                {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
@@ -229,7 +229,7 @@ class Saksbehandling extends Component {
 const mapStateToProps = state => ({
   person: PersonSelector(state),
   medlemskap: MedlemskapSelector(state),
-  arbeidsforholdene: ArbeidsforholdeneSelector(state),
+  arbeidsgivereNorge: ArbeidsgivereNorgeSelector(state),
   inntekt: InntektSoknadenSelector(state),
   vurdering: VurderingSelector(state),
   bekreftelser: BekreftelserSelector(state),
