@@ -18,7 +18,7 @@ import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveiled
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
-import Arbeidsforholdene from '../felles-komponenter/arbeidsforholdene';
+import Arbeidsforholdene from '../felles-komponenter/arbeidsgivereNorge';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
 import OppholdUtland from '../felles-komponenter/oppholdUtland';
