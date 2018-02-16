@@ -9,7 +9,7 @@ const ArbeidsgivereNorgePropType = PT.arrayOf(PT.shape({
   arbeidsgiver: PT.shape({
     organisasjon: Organisasjon,
     arbeidsforhold: Arbeidsforholdene,
-    inntekt: Inntekt,
+    inntektListe: Inntekt,
   }),
 }));
 

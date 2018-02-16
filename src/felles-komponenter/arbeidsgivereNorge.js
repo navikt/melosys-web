@@ -10,12 +10,12 @@ import Inntekt from './arbeidsgiver/inntekt';
 const uuid = require('uuid/v4');
 
 const ArbeidsgivereEnkeltNorge = props => {
-  const { organisasjon, arbeidsforholdene, inntekt } = props;
+  const { organisasjon, arbeidsforholdene, inntektListe } = props;
 
   return (
     <div>
       <Organisasjon organisasjon={organisasjon} />
-      <Inntekt inntekt={inntekt} />
+      <Inntekt inntektListe={inntektListe} />
       <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />
     </div>
   );
@@ -24,7 +24,7 @@ const ArbeidsgivereEnkeltNorge = props => {
 ArbeidsgivereEnkeltNorge.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
   arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
-  inntekt: MPT.Inntekt.isRequired,
+  inntektListe: MPT.InntektListe.isRequired,
 };
 
 const ArbeidsgivereNorge = props => {
