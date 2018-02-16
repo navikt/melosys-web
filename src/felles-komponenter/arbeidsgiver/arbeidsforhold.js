@@ -12,10 +12,12 @@ import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
 import Arbeidsavtaler from './arbeidsavtaler';
 
+
 import { boolTilNorsk, datoDiff } from '../../utils/utils';
 
 import './arbeidsforhold.css';
 
+const uuid = require('uuid/v4');
 
 /** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
  * kun av komponenten Arbeidsforholdene.
@@ -98,7 +100,7 @@ const Arbeidsforholdene = props => {
   const { arbeidsforholdene } = props;
   return (
     <div>
-      { arbeidsforholdene.map(arbeidsforholdet => <Arbeidsforholdet arbeidsforholdet={arbeidsforholdet} />)}
+      { arbeidsforholdene.map(arbeidsforholdet => <Arbeidsforholdet key={uuid()} arbeidsforholdet={arbeidsforholdet} />)}
     </div>
   );
 };

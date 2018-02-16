@@ -22,7 +22,7 @@ import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
 import OppholdUtland from '../felles-komponenter/oppholdUtland';
-import Inntekt from '../felles-komponenter/inntekt';
+import Inntekt from '../felles-komponenter/inntektUtland';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
