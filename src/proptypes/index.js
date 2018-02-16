@@ -1,10 +1,10 @@
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
-import { Inntekt, InntektLinje } from './inntekt';
+import { Inntekt, InntektListe, InntektEnkeltLinje } from './inntekt';
 import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
 import { TimerTimelonnet, TimerTimelonnetLinje } from './timerTimelonnet';
 import { OppholdUtland } from './oppholdUtland';
 import { MedlemskapPeriode, Medlemskap } from './medlemskap';
-import { Arbeidsavtale } from './arbeidsavtale';
+import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
 import { Kodeverk } from './kodeverk';
 import { Person } from './person';
 import { BostedsAdresse } from './bosted';
@@ -30,6 +30,7 @@ export {
   Person,
   Periode,
   Arbeidsavtale,
+  Arbeidsavtaler,
   OrgnummerNavn,
   PermisjonOgPermittering,
   Arbeidsforholdet,
@@ -43,7 +44,8 @@ export {
   Medlemskap,
   Bekreftelser,
   Inntekt,
-  InntektLinje,
+  InntektListe,
+  InntektEnkeltLinje,
   Oppsummering,
   Permisjonen,
   Permisjoner,
