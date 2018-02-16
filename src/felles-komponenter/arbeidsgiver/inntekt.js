@@ -106,6 +106,7 @@ class Inntekt extends Component {
 
     return inntekt.length > 0 ? (
       <div className="inntekt">
+        <Nav.Undertittel>Inntektgraf</Nav.Undertittel>
         <div className="inntekt__graf">
           <ReactHighcharts config={grafConfig} />
           <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">Vis tabell for inntekten</Nav.Knapp>
@@ -117,7 +118,7 @@ class Inntekt extends Component {
 }
 
 Inntekt.propTypes = {
-  inntekt: MPT.Inntekt,
+  inntekt: MPT.InntektListe,
 };
 
 Inntekt.defaultProps = {
