@@ -133,9 +133,12 @@ export const RelevanteArbeidsforholdeneSelector = createSelector(
       // Til-og-med-periode for et arbeidsforhold kan være undefined og dermed et fortsatt
       // løpende arbeidsforhold. For at arbeidsforholdet dermed skal komme med i listen,
       // sett dagens moment() slik at diff blir riktig.
-      const { tom = moment() } = arbeidsforholdet.ansettelsesPeriode;
-      const { fom: oppholdFom } = opphold;
-      return (moment(oppholdFom, 'YYYY-MM-DD').diff(moment(tom, 'YYYY-MM-DD')) < 0);
+      const { fom: ansattFom = moment(), tom: ansattTom = moment() } = arbeidsforholdet.ansettelsesPeriode;
+      const { fom: oppholdFom, tom: oppholdTom } = opphold;
+
+      const arbeidsforholdetPreSoknadsPeriode = moment(oppholdFom, 'YYYY-MM-DD').diff(moment(ansattTom, 'YYYY-MM-DD'));
+      const arbeidsforholdetPostSoknadsPeriode = moment(oppholdTom, 'YYYY-MM-DD').diff(moment(ansattFom, 'YYYY-MM-DD'));
+      return (arbeidsforholdetPreSoknadsPeriode <= 0 && arbeidsforholdetPostSoknadsPeriode >= 0);
     })
 );
 
