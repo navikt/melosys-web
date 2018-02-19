@@ -61,12 +61,12 @@ class ArbeidsforholdeneListe extends Component {
   }
 
   render() {
-    const { fields, arbeidsforholdene } = this.props;
+    const { fields, relevanteArbeidsforholdene } = this.props;
     const valgteArbeidsforhold = fields.getAll();
 
     return (
       <div>
-        {arbeidsforholdene.map(arbeidsforholdet => (
+        {relevanteArbeidsforholdene.map(arbeidsforholdet => (
           <Field
             key={uuid()}
             name="faktaavklaringValgteArbeidsforhold"
@@ -86,11 +86,11 @@ class ArbeidsforholdeneListe extends Component {
 
 ArbeidsforholdeneListe.propTypes = {
   fields: PT.object.isRequired,
-  arbeidsforholdene: PT.array,
+  relevanteArbeidsforholdene: PT.array,
 };
 
 ArbeidsforholdeneListe.defaultProps = {
-  arbeidsforholdene: [],
+  relevanteArbeidsforholdene: [],
 };
 
 /**
@@ -106,7 +106,7 @@ const VurderingArbeidsforhold = props => {
     <div className="vurderingarbeidsforhold">
       <Nav.Undertittel>Velg arbeidsforhold:</Nav.Undertittel>
       <div className="arbeidsforhold">
-        <FieldArray name="faktaavklaringValgteArbeidsforhold" component={arrayProps => <ArbeidsforholdeneListe {...arrayProps} arbeidsforholdene={relevanteArbeidsforholdene} />} />
+        <FieldArray name="faktaavklaringValgteArbeidsforhold" component={arrayProps => <ArbeidsforholdeneListe {...arrayProps} relevanteArbeidsforholdene={relevanteArbeidsforholdene} />} />
         <div className="fane__knapplinje">
           <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
