@@ -9,7 +9,6 @@ import PanelHeader from '../panelHeader/panelHeader';
 import { formatterKortDatoTilNorsk } from '../../utils/dato';
 
 import './inntekt.css';
-import * as Ikoner from '../../resources/images'
 
 /** Lister alle inntekter fra juridisk arbeidsgiver.
  */
@@ -29,13 +28,12 @@ class Inntekt extends Component {
      */
     const grafInntekt = inntektListe
       .reduce((samling, linje) => {
-        const { utbetaltIPeriode, beloep } = linje;
+        const { utbetaltIPeriode, beskrivelse, beloep } = linje;
         const utbetaltTotaltIPeriode = samling[utbetaltIPeriode] || 0;
 
-        return [...samling, { utbetalt: utbetaltIPeriode, beloep: (utbetaltTotaltIPeriode + beloep) }];
+        return [...samling, { utbetalt: utbetaltIPeriode, beskrivelse, beloep: (utbetaltTotaltIPeriode + beloep) }];
       }, [])
       .sort((a, b) => ((a.utbetalt > b.utbetalt) ? 1 : -1));
-
 
     const grafConfig = {
       rangeSelector: {
@@ -79,8 +77,6 @@ class Inntekt extends Component {
       ],
     };
 
-    const panelIkon = Ikoner.Ferdig;
-
     /** Basert på grafInntekt (som nå har gjort en vurdering av sikker vs usikker periode), lag en array-versjon som
      * kan serveres til Tabell-komponenten. Denne trengs for UU, men vises kun ved klikk.
      *
@@ -94,6 +90,7 @@ class Inntekt extends Component {
       .map(linje => (
         [
           formatterKortDatoTilNorsk(linje.utbetalt),
+          linje.beskrivelse,
           linje.beloep,
         ]));
 
@@ -101,7 +98,7 @@ class Inntekt extends Component {
       <div>
         <Nav.Undertittel>Inntekt</Nav.Undertittel>
         <Tabell
-          kolonneNavn={['Periode', 'Samlet inntekt']}
+          kolonneNavn={['Periode', 'Beskrivelse', 'Samlet inntekt']}
           tabellData={inntektArrayed}
           linjerPerSide={5}
         />
@@ -114,7 +111,6 @@ class Inntekt extends Component {
           heading={<PanelHeader tittel="Inntekt" undertittel="" />}
           ariaTittel="Panel for inntekt">
           <div className="inntekt">
-            <Nav.Undertittel>Inntektgraf</Nav.Undertittel>
             <div className="inntekt__graf">
               <ReactHighcharts config={grafConfig} />
               <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">Vis tabell for inntekten</Nav.Knapp>
