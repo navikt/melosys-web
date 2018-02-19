@@ -133,10 +133,11 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   state => InntektSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter) => {
     const arbeidsgivere = organisasjoner.reduce((samling, organisasjon) => {
-      const filtrerteArbeidsforholdene = arbeidsforholdene.filter(arbeidsforhold => arbeidsforhold.opplysningspliktigID === organisasjon.orgnr);
+      const filtrerteArbeidsforholdene = arbeidsforholdene.filter(arbeidsforholdet => arbeidsforholdet.opplysningspliktigID === organisasjon.orgnr);
       const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === organisasjon.orgnr);
       return ([...samling, { organisasjon, arbeidsforholdene: filtrerteArbeidsforholdene, inntektListe: filtrerteInntekter }]);
-    }, []);
+    }, [])
+      .filter(arbeidsgiver => arbeidsgiver.arbeidsforholdene.length > 0);
     return arbeidsgivere;
   }
 );
