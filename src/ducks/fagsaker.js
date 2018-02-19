@@ -137,7 +137,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === organisasjon.orgnr);
       return ([...samling, { organisasjon, arbeidsforholdene: filtrerteArbeidsforholdene, inntektListe: filtrerteInntekter }]);
     }, [])
-      .filter(arbeidsgiver => arbeidsgiver.arbeidsforholdene.length > 0);
+      .filter(arbeidsgiver => arbeidsgiver.arbeidsforholdene.length > 0 || arbeidsgiver.inntektListe.length > 0);
     return arbeidsgivere;
   }
 );
