@@ -42,7 +42,7 @@ class StegLogikk {
     ],
     SEKTOR: [
       {
-        kriterier: 'ansattISektor ER LIK "OFFENTLIG',
+        kriterier: 'ansattISektor ER LIK "OFFENTLIG"',
         erOppfylt: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.OFFENTLIG,
         nesteSteg: STEG.TJENESTEMANN,
       },
