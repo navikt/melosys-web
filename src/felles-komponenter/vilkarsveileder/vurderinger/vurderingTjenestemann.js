@@ -26,7 +26,7 @@ const VurderingTjenestemann = props => {
         <Skjema.Radio
           feltNavn="faktaavklaringTjenestemann"
           value={VurderingTjenestemannTyper.ETT_LAND_YRKESAKTIVITET_ANDRE_LAND}
-          label="Er tjenesteperson for ett land, har yrkesaktivitet i andre land."
+          label="Er tjenesteperson for Norge, har yrkesaktivitet i andre land."
         />
         <Skjema.Radio
           feltNavn="faktaavklaringTjenestemann"
