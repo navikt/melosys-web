@@ -9,6 +9,11 @@ import Mann from './ikon-mann.svg';
 import Kvinne from './ikon-kvinne.svg';
 import Ukjentkjoenn from './ikon-ukjentkjonn.svg';
 
+import Arbeidsgiver from './ikon-arbeidsgiver.svg';
+import Arbeidsforhold from './ikon-arbeidsforhold.svg';
+import Medlemskap from './ikon-medlemsskap.svg';
+import Inntekt from './ikon-inntekt.svg';
+
 export { Ubehandlet };
 export { Ferdig };
 export { Varsel };
@@ -19,4 +24,7 @@ export { VedtakGodkjent };
 export { Mann };
 export { Kvinne };
 export { Ukjentkjoenn };
-
+export { Arbeidsgiver };
+export { Arbeidsforhold };
+export { Medlemskap };
+export { Inntekt };
