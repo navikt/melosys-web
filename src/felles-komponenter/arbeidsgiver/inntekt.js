@@ -4,6 +4,7 @@ import ReactHighcharts from 'react-highcharts';
 import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
 import Tabell from '../tabell/tabell';
+import * as Ikoner from '../../resources/images';
 
 import PanelHeader from '../panelHeader/panelHeader';
 import { formatterKortDatoTilNorsk } from '../../utils/dato';
@@ -108,7 +109,7 @@ class Inntekt extends Component {
     return inntektListe.length > 0 ? (
       <div className="inntekt panelSeksjon">
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader tittel="Inntekt" undertittel="" />}
+          heading={<PanelHeader tittel="Inntekt" undertittel="" ikon={Ikoner.Inntekt} />}
           ariaTittel="Panel for inntekt">
           <div className="inntekt">
             <div className="inntekt__graf">
