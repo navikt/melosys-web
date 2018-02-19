@@ -41,7 +41,7 @@ class Arbeidsavtaler extends Component {
       </Nav.Knapp>) : null;
 
     const historiskeArbeidsAvtalerElement = visHistoriskeArbeidsavtaler ? (
-      <div><Nav.Undertittel>Tidligere arbeidsavtaler</Nav.Undertittel><Tabell
+      <div><Nav.Undertittel className="arbeidsavtaler__historisk__overskrift">Tidligere arbeidsavtaler</Nav.Undertittel><Tabell
         tabellData={tabellTilpassetArbeidsavtaler}
         kolonneNavn={['Gyldig til', 'Yrke', 'Arbeidsordning', 'Timer pr uke', 'Timer gammelt reg.', 'Stillingsprosent', 'Sist endret']}
         linjerPerSide={5}
@@ -52,9 +52,9 @@ class Arbeidsavtaler extends Component {
 
     return (
       <div className="arbeidsavtaler">
-        <div className="arbeidsavtale">
+        <div className="arbeidsavtale__nyeste">
           <Nav.Column xs="6">
-            <dl className="arbeidsforholdet__detaljer">
+            <dl className="arbeidsavtaler__detaljer">
               <dt>Yrke</dt>
               <dd>{nyesteArbeidsavtale.yrke || '-'}</dd>
               <dt>Arbeidstidsordning</dt>
@@ -62,7 +62,7 @@ class Arbeidsavtaler extends Component {
             </dl>
           </Nav.Column>
           <Nav.Column xs="6">
-            <dl className="arbeidsforholdet__detaljer">
+            <dl className="arbeidsavtaler__detaljer">
               <dt>Stillingsprosent</dt>
               <dd>{nyesteArbeidsavtale.stillingsprosent || '-'}</dd>
               <dt>Antall timer pr uke</dt>
