@@ -26,7 +26,7 @@ import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker';
-import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector } from '../../ducks/faktaavklaring';
+import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
 
 import './vilkarsveileder.css';
@@ -60,7 +60,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'ARBEIDSFORHOLD',
           komponent: VurderingArbeidsforhold,
-          dataHenter: () => ({ arbeidsforholdene: this.props.arbeidsforholdene }),
+          dataHenter: props => ({ relevanteArbeidsforholdene: props.relevanteArbeidsforholdene }),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -217,6 +217,7 @@ class Vilkarsveileder extends Component {
 Vilkarsveileder.propTypes = {
   history: PT.object.isRequired,
   arbeidsforholdene: MPT.Arbeidsforholdene,
+  relevanteArbeidsforholdene: MPT.Arbeidsforholdene,
   fattVedtakHandler: PT.func.isRequired,
   beOmVurderingHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
@@ -229,6 +230,7 @@ Vilkarsveileder.defaultProps = {
   oppsummering: [],
   faktaavklaring: {},
   arbeidsforholdene: [],
+  relevanteArbeidsforholdene: [],
   valgteArbeidsforhold: {},
 };
 
@@ -237,6 +239,7 @@ const mapStateToProps = state => ({
   faktaavklaring: FaktaavklaringSelector(state).faktaavklaring,
   valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
+  relevanteArbeidsforholdene: RelevanteArbeidsforholdeneSelector(state),
   skjema: SoknadenFormSelector(state).values,
 });
 
