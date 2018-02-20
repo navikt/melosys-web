@@ -25,8 +25,8 @@ import VurderingTjenestemann from './vurderinger/vurderingTjenestemann';
 import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
-import { OppsummeringSelector, ArbeidsforholdeneSelector, RelevanteArbeidsforholdeneSelector } from '../../ducks/fagsaker';
-import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector } from '../../ducks/faktaavklaring';
+import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker';
+import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
 
 import './vilkarsveileder.css';
@@ -60,7 +60,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'ARBEIDSFORHOLD',
           komponent: VurderingArbeidsforhold,
-          dataHenter: () => ({ relevanteArbeidsforholdene: this.props.relevanteArbeidsforholdene }),
+          dataHenter: props => ({ relevanteArbeidsforholdene: props.relevanteArbeidsforholdene }),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },

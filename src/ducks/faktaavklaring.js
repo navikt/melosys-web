@@ -2,9 +2,11 @@ import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 
-import { ArbeidsforholdeneSelector } from './fagsaker';
+import { ArbeidsforholdeneSelector, OrganisasjonerSelector } from './fagsaker';
 
 import { formatterDatoTilISO } from '../utils/dato';
+
+const moment = require('moment');
 
 // Actions
 const OK = 'faktaavklaring/OK';
@@ -172,6 +174,32 @@ export const FaktaavklaringValgteArbeidsforholdDetaljerSelector = createSelector
     const valgteArbeidsforhold = alleArbeidsforhold.filter(arbeidsforholdet => valgteArbeidsforholdIDnav.includes(arbeidsforholdet.arbeidsforholdIDnav));
     return (valgteArbeidsforhold || []);
   }
+);
+
+/**
+ * Kun arbeidsforhold som tangerer innenfor perioden som er lagt inn i faktaavklaringen skal
+ * vises i listen over valgbare arbeidsforhold i stegvelgeren (vurderingArbeidsforhold).
+ */
+export const RelevanteArbeidsforholdeneSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
+  state => OrganisasjonerSelector(state),
+  state => FaktaavklaringOppholdPeriodeSelector(state),
+  (arbeidsforhold = [], organisasjoner = [], opphold = {}) => (arbeidsforhold.map(item => {
+    const arbeid = { ...item };
+    arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
+    return arbeid;
+  }))
+    .filter(arbeidsforholdet => {
+      // Til-og-med-periode for et arbeidsforhold kan være undefined og dermed et fortsatt
+      // løpende arbeidsforhold. For at arbeidsforholdet dermed skal komme med i listen,
+      // sett dagens moment() slik at diff blir riktig.
+      const { fom: ansattFom = moment(), tom: ansattTom = moment() } = arbeidsforholdet.ansettelsesPeriode;
+      const { fom: oppholdFom, tom: oppholdTom } = opphold;
+
+      const arbeidsforholdetPreSoknadsPeriode = moment(oppholdFom, 'YYYY-MM-DD').diff(moment(ansattTom, 'YYYY-MM-DD'));
+      const arbeidsforholdetPostSoknadsPeriode = moment(oppholdTom, 'YYYY-MM-DD').diff(moment(ansattFom, 'YYYY-MM-DD'));
+      return (arbeidsforholdetPreSoknadsPeriode <= 0 && arbeidsforholdetPostSoknadsPeriode >= 0);
+    })
 );
 
 export const FaktaavklaringForretningsstedSelector = createSelector(
