@@ -6,8 +6,6 @@ import * as Nav from '../utils/navFrontend';
 import { SaksbehandlerSelector, SaksbehandlerStatusSelector } from '../ducks/saksbehandler';
 
 const withErrorHandling = WrappedComponent => props => {
-  const { children } = props;
-
   const ErrorComponent = errorProps => {
     const { saksbehandlerStatus, saksbehandler } = errorProps;
 
@@ -21,7 +19,7 @@ const withErrorHandling = WrappedComponent => props => {
       <div className="error-message">
         <Nav.AlertStripeAdvarsel>{saksbehandlerError} {saksbehandlerErrorMeldig}</Nav.AlertStripeAdvarsel>
       </div>;
-  }
+  };
 
   const mapStateToProps = state => ({
     saksbehandler: SaksbehandlerSelector(state),
