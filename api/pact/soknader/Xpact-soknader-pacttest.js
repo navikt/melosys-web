@@ -1,6 +1,7 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
 import PORT from '../constants';
+
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 const chai = require('chai');
@@ -12,18 +13,18 @@ const assert = chai.assert;
 
 const path = require('path');
 const { Pact } = require('@pact-foundation/pact');
-const snr = 3;
-const FAGSAKER_API_URL = `/api/fagsaker/${snr}`;
-import fagsaker_body from './pact-fagsaker-body';
+const bid = 3;
+const SOKNADER_API_URL = `/api/soknader/${bid}`;
+import soknader_body from './pact-soknader-body';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 const { Matchers } = require('@pact-foundation/pact');
 
-describe('FagsakerPactApi', () => {
+describe('SoknaderPactApi', () => {
   let url = 'http://localhost';
-  const port = PORT.FAGSAKER;
+  const port = PORT.SOKNADER;
 
   const provider = new Pact({
     port,
@@ -31,7 +32,7 @@ describe('FagsakerPactApi', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
     consumer: 'melosys-web',
-    provider: 'melosys-api-fagsaker',
+    provider: 'melosys-api-soknader',
     pactfileWriteMode: 'merge',
     logLevel: LOG_LEVEL,
   });
@@ -40,40 +41,34 @@ describe('FagsakerPactApi', () => {
     return provider.setup()
       .then(() => {
         provider.addInteraction({
-          state: 'has an array of fagsaker',
-          uponReceiving: 'a request for an array of fagsaker',
+          state: 'has an soknader object',
+          uponReceiving: 'a request with an valid soknader object',
           withRequest: {
             method: 'GET',
-            path: `${FAGSAKER_API_URL}`,
+            path: `${SOKNADER_API_URL}`,
           },
           willRespondWith: {
             status: 200,
             headers: {
               'Content-Type': 'application/json',
             },
-            body: fagsaker_body,
+            body: soknader_body,
           },
         });
       });
   });
+  it('returns a valid soknader', done => {
+    Api.hentSoknaderPact(url, port, bid)
+      .then((soknader) => {
+        expect(soknader).to.be.a('object');
+        expect(soknader).to.have.property('behandlingID');
+        const { soknadDokument } = soknader;
+        expect(soknadDokument).to.have.property('opplysningerOmBrukeren');
+        expect(soknadDokument).to.have.property('arbeidUtland')
 
-  it('returns a fagsak object with an array of hehandlinger response', done => {
-    Api.hentFagsakerPact(url, port, snr)
-      .then((fagsaker) => {
-        expect(fagsaker).to.be.a('object');
-        expect(fagsaker).to.have.property('saksnummer');
-        expect(fagsaker).to.have.property('type');
-        expect(fagsaker).to.have.property('status');
-        expect(fagsaker).to.have.property('registrertDato');
-        expect(fagsaker).to.have.property('behandlinger');
-/*
-        expect(fagsaker.behandlinger).to.be.a('array');
-        expect(fagsaker.behandlinger).to.have.lengthOf(1);
-        */
       })
       .then(done, done);
   });
-
   after(() => {
     console.log("Verifing interactions on the contract.");
     return provider.verify().then(() => {

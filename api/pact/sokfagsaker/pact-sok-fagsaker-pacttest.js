@@ -1,5 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
+import PORT from '../constants';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
@@ -24,10 +25,7 @@ const SOK_FAGSAKER_API_URL = `/api/sok/fagsaker/`;
 
 describe('SokFagsakerPactApi', () => {
   let url = 'http://localhost';
-  const { like } = Matchers;
-  const port = 8992;
-
-
+  const port = PORT.SOK_FAGSAKER;
   const provider = new Pact({
     port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),

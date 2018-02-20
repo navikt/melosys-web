@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-
+import PORT from '../constants';
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 const chai = require('chai');
@@ -17,14 +17,10 @@ import saksbehandler_body from './pact-saksbehandler-body';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
-
-const { Matchers } = require('@pact-foundation/pact');
-
+console.log(PORT);
 describe('SaksbehandlerPactApi', () => {
   let url = 'http://localhost';
-  const { like } = Matchers;
-  const port = 8990;
-
+  const port = PORT.SAKSBEHANDLER;
   const provider = new Pact({
     port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),

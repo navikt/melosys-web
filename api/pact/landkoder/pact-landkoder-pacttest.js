@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-
+import PORT from '../constants';
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 const chai = require('chai');
@@ -18,13 +18,9 @@ import landkoder_body from './pact-landkoder-body';
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
-const { Matchers } = require('@pact-foundation/pact');
-
 describe('LandkoderPactApi', () => {
   let url = 'http://localhost';
-  const { like } = Matchers;
-  const port = 8991;
-
+  const port = PORT.LANDKODER;
 
   const provider = new Pact({
     port,

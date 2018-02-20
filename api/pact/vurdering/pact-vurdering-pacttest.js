@@ -1,6 +1,7 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
 import PORT from '../constants';
+
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 const chai = require('chai');
@@ -12,26 +13,23 @@ const assert = chai.assert;
 
 const path = require('path');
 const { Pact } = require('@pact-foundation/pact');
-const snr = 3;
-const FAGSAKER_API_URL = `/api/fagsaker/${snr}`;
-import fagsaker_body from './pact-fagsaker-body';
+const bid = 3;
+const VURDERING_API_URL = `/api/vurdering/${bid}`;
+import vurdering_body from './pact-vurdering-body';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
-const { Matchers } = require('@pact-foundation/pact');
-
-describe('FagsakerPactApi', () => {
+describe('VurderingPactApi', () => {
   let url = 'http://localhost';
-  const port = PORT.FAGSAKER;
-
+  const port = PORT.VURDERING;
   const provider = new Pact({
     port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
     consumer: 'melosys-web',
-    provider: 'melosys-api-fagsaker',
+    provider: 'melosys-api-vurdering',
     pactfileWriteMode: 'merge',
     logLevel: LOG_LEVEL,
   });
@@ -40,40 +38,35 @@ describe('FagsakerPactApi', () => {
     return provider.setup()
       .then(() => {
         provider.addInteraction({
-          state: 'has an array of fagsaker',
-          uponReceiving: 'a request for an array of fagsaker',
+          state: 'has an vurdering object',
+          uponReceiving: 'a request with an valid vurdering object',
           withRequest: {
             method: 'GET',
-            path: `${FAGSAKER_API_URL}`,
+            path: `${VURDERING_API_URL}`,
           },
           willRespondWith: {
             status: 200,
             headers: {
               'Content-Type': 'application/json',
             },
-            body: fagsaker_body,
+            body: vurdering_body,
           },
         });
       });
   });
+  it('returns a valid vurdering', done => {
+    Api.hentVurderingPact(url, port, bid)
+      .then((vurderingen) => {
+        expect(vurderingen).to.be.a('object');
+        expect(vurderingen).to.have.property('behandlingID');
+        expect(vurderingen).to.have.property('vurdering');
+        const { vurdering } = vurderingen;
+        expect(vurdering).to.have.property('lovvalgsbestemmelser');
+        expect(vurdering).to.have.property('feilmeldinger');
 
-  it('returns a fagsak object with an array of hehandlinger response', done => {
-    Api.hentFagsakerPact(url, port, snr)
-      .then((fagsaker) => {
-        expect(fagsaker).to.be.a('object');
-        expect(fagsaker).to.have.property('saksnummer');
-        expect(fagsaker).to.have.property('type');
-        expect(fagsaker).to.have.property('status');
-        expect(fagsaker).to.have.property('registrertDato');
-        expect(fagsaker).to.have.property('behandlinger');
-/*
-        expect(fagsaker.behandlinger).to.be.a('array');
-        expect(fagsaker.behandlinger).to.have.lengthOf(1);
-        */
       })
       .then(done, done);
   });
-
   after(() => {
     console.log("Verifing interactions on the contract.");
     return provider.verify().then(() => {

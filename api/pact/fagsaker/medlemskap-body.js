@@ -1,4 +1,4 @@
-import periode from './periode-body';
+import periode from '../periode-body';
 
 const { Matchers } = require('@pact-foundation/pact');
 

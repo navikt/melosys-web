@@ -17,6 +17,10 @@ export function hentSoknader(bid) {
   const URI_SOKNADER = `${API_BASE_URL}soknader/${bid}`;
   return getAsJson(URI_SOKNADER);
 }
+export function hentSoknaderPact(host, port, bid) {
+  const URI_SOKNADER = `${host}:${port}/api/soknader/${bid}`;
+  return getAsJson(URI_SOKNADER);
+}
 
 export function sendSoknad(bid, soknad) {
   const URI_SOKNAD =`${API_BASE_URL}soknader/${bid}`;
@@ -27,6 +31,10 @@ export function hentFaktaavklaring(bid) {
   const URI_FAKTAAVKLARING = `${API_BASE_URL}faktaavklaring/${bid}`;
   return getAsJson(URI_FAKTAAVKLARING);
 }
+export function hentFaktaavklaringPact(host, port, bid) {
+  const URI_FAKTAAVKLARING = `${host}:${port}/api/faktaavklaring/${bid}`;
+  return getAsJson(URI_FAKTAAVKLARING);
+}
 
 export function sendFaktaavklaring(bid, dokument) {
   const URI_FAKTAAVKLARING =`${API_BASE_URL}faktaavklaring/${bid}`;
@@ -35,6 +43,10 @@ export function sendFaktaavklaring(bid, dokument) {
 
 export function hentVurdering(bid) {
   const URI_VURDERING = `${API_BASE_URL}vurdering/${bid}`;
+  return getAsJson(URI_VURDERING);
+}
+export function hentVurderingPact(host, port, bid) {
+  const URI_VURDERING = `${host}:${port}/api/vurdering/${bid}`;
   return getAsJson(URI_VURDERING);
 }
 
