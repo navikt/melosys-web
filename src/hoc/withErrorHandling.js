@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import { SaksbehandlerSelector, SaksbehandlerStatusSelector } from '../ducks/saksbehandler';
@@ -30,9 +29,5 @@ const withErrorHandling = WrappedComponent => props => {
 
   return (<ReturnComponent />);
 };
-
-withErrorHandling.propTypes = ({
-  children: PT.node.isRequired,
-});
 
 export default withErrorHandling;
