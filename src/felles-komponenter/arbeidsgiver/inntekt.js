@@ -5,6 +5,7 @@ import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
 import Tabell from '../tabell/tabell';
 
+import PanelHeader from '../panelHeader/panelHeader';
 import { formatterKortDatoTilNorsk } from '../../utils/dato';
 
 import './inntekt.css';
@@ -20,20 +21,19 @@ class Inntekt extends Component {
   }
 
   render() {
-    const { inntekt } = this.props;
+    const { inntektListe } = this.props;
     /**
      * Listen over inntekt fra inntektskomponenten kan inneholde flere typer inntekter
      * i samme periode. Disse må derfor summeres slik at de representeres som én type inntekt.
      */
-    const grafInntekt = inntekt
+    const grafInntekt = inntektListe
       .reduce((samling, linje) => {
-        const { utbetaltIPeriode, beloep } = linje;
+        const { utbetaltIPeriode, beskrivelse, beloep } = linje;
         const utbetaltTotaltIPeriode = samling[utbetaltIPeriode] || 0;
 
-        return [...samling, { utbetalt: utbetaltIPeriode, beloep: (utbetaltTotaltIPeriode + beloep) }];
+        return [...samling, { utbetalt: utbetaltIPeriode, beskrivelse, beloep: (utbetaltTotaltIPeriode + beloep) }];
       }, [])
       .sort((a, b) => ((a.utbetalt > b.utbetalt) ? 1 : -1));
-
 
     const grafConfig = {
       rangeSelector: {
@@ -90,6 +90,7 @@ class Inntekt extends Component {
       .map(linje => (
         [
           formatterKortDatoTilNorsk(linje.utbetalt),
+          linje.beskrivelse,
           linje.beloep,
         ]));
 
@@ -97,32 +98,37 @@ class Inntekt extends Component {
       <div>
         <Nav.Undertittel>Inntekt</Nav.Undertittel>
         <Tabell
-          kolonneNavn={['Periode', 'Samlet inntekt']}
+          kolonneNavn={['Periode', 'Beskrivelse', 'Samlet inntekt']}
           tabellData={inntektArrayed}
           linjerPerSide={5}
         />
       </div>
     ) : null;
 
-    return inntekt.length > 0 ? (
-      <div className="inntekt">
-        <Nav.Undertittel>Inntektgraf</Nav.Undertittel>
-        <div className="inntekt__graf">
-          <ReactHighcharts config={grafConfig} />
-          <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">Vis tabell for inntekten</Nav.Knapp>
-        </div>
-        {uuTabell}
+    return inntektListe.length > 0 ? (
+      <div className="inntekt panelSeksjon">
+        <Nav.EkspanderbartpanelBase
+          heading={<PanelHeader tittel="Inntekt" undertittel="" />}
+          ariaTittel="Panel for inntekt">
+          <div className="inntekt">
+            <div className="inntekt__graf">
+              <ReactHighcharts config={grafConfig} />
+              <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">Vis tabell for inntekten</Nav.Knapp>
+            </div>
+            {uuTabell}
+          </div>
+        </Nav.EkspanderbartpanelBase>
       </div>
     ) : null;
   }
 }
 
 Inntekt.propTypes = {
-  inntekt: MPT.InntektListe,
+  inntektListe: MPT.InntektListe,
 };
 
 Inntekt.defaultProps = {
-  inntekt: [],
+  inntektListe: [],
 };
 
 export default Inntekt;

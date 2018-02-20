@@ -127,6 +127,21 @@ export const OrganisasjonSelector = createSelector(
   }
 );
 
+export const ArbeidsgivereNorgeSelector = createSelector(
+  state => OrganisasjonerSelector(state),
+  state => ArbeidsforholdeneSelector(state),
+  state => InntektSelector(state),
+  (organisasjoner, arbeidsforholdene, inntekter) => {
+    const arbeidsgivere = organisasjoner.reduce((samling, organisasjon) => {
+      const filtrerteArbeidsforholdene = arbeidsforholdene.filter(arbeidsforholdet => arbeidsforholdet.opplysningspliktigID === organisasjon.orgnr);
+      const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === organisasjon.orgnr);
+      return ([...samling, { organisasjon, arbeidsforholdene: filtrerteArbeidsforholdene, inntektListe: filtrerteInntekter }]);
+    }, [])
+      .filter(arbeidsgiver => arbeidsgiver.arbeidsforholdene.length > 0 || arbeidsgiver.inntektListe.length > 0);
+    return arbeidsgivere;
+  }
+);
+
 export const OppsummeringSelector = createSelector(
   state => (state.fagsaker.data ? state.fagsaker.data : {}),
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].oppsummering : []),
