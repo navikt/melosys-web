@@ -55,10 +55,6 @@ describe('LandkoderPactApi', () => {
   });
 
   it('returns an array of landkoder response', done => {
-    /*
-    const landkoder = Api.hentLandkoderPact(url, port);
-    expect(landkoder).to.eventually.be.a('array').and.notify(done);
-    */
     Api.hentLandkoderPact(url, port)
       .then((landkoder) => {
         expect(landkoder).to.be.a('array');
