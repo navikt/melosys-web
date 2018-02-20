@@ -2,7 +2,7 @@ import React from 'react';
 
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/index';
-import * as Ikoner from '../../resources/images/index';
+import * as Ikoner from '../../resources/images';
 
 import DatoOmrade from '../datoOmrade/datoOmrade';
 import EnkeltDato from '../datoOmrade/enkeltDato';
@@ -10,13 +10,14 @@ import PanelHeader from '../panelHeader/panelHeader';
 import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
-import Inntekt from './inntekt';
 import Arbeidsavtaler from './arbeidsavtaler';
+
 
 import { boolTilNorsk, datoDiff } from '../../utils/utils';
 
-import './arbeidsforholdet.css';
+import './arbeidsforhold.css';
 
+const uuid = require('uuid/v4');
 
 /** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
  * kun av komponenten Arbeidsforholdene.
@@ -34,8 +35,7 @@ const Arbeidsforholdet = props => {
     timerTimelonnet,
     utenlandsopphold,
     permisjonOgPermittering,
-    inntekt,
-  } = props.arbeidsforhold;
+  } = props.arbeidsforholdet;
 
   const { navn: arbeidsgiverNavn } = arbeidsgiver;
   const { forretningsadresse = { gateadresse: { gatenavn: '' }, postnr: '', land: '' } } = arbeidsgiver;
@@ -47,7 +47,7 @@ const Arbeidsforholdet = props => {
     <div className="panelSeksjon arbeidsforholdet">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader
-          ikon={Ikoner.Ferdig}
+          ikon={Ikoner.Arbeidsforhold}
           tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`}
           undertittel={<div>Periode: <EnkeltDato dato={ansettelsesPeriode.fom} /> - <EnkeltDato dato={ansettelsesPeriode.tom} /> </div>}
         />}
@@ -83,7 +83,6 @@ const Arbeidsforholdet = props => {
             </div>
           </Nav.Row>
           <Nav.Row>
-            {inntekt && <Inntekt inntekt={inntekt} /> }
             {timerTimelonnet && <TimerTimelonnet timerTimelonnet={timerTimelonnet} /> }
             {permisjonOgPermittering && <Permisjoner permisjoner={permisjonOgPermittering} /> }
             {utenlandsopphold && <Utenlandsopphold utenlandsopphold={utenlandsopphold} /> }
@@ -95,8 +94,21 @@ const Arbeidsforholdet = props => {
 };
 
 Arbeidsforholdet.propTypes = {
-  arbeidsforhold: MPT.Arbeidsforholdet.isRequired,
+  arbeidsforholdet: MPT.Arbeidsforholdet.isRequired,
+};
+
+const Arbeidsforholdene = props => {
+  const { arbeidsforholdene } = props;
+  return (
+    <div>
+      { arbeidsforholdene.map(arbeidsforholdet => <Arbeidsforholdet key={uuid()} arbeidsforholdet={arbeidsforholdet} />)}
+    </div>
+  );
+};
+
+Arbeidsforholdene.propTypes = {
+  arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
 };
 
 
-export default Arbeidsforholdet;
+export default Arbeidsforholdene;

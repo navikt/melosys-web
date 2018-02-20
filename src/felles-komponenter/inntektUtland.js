@@ -7,17 +7,17 @@ import * as Skjema from './skjema/index';
 
 import PanelHeader from './panelHeader/panelHeader';
 
-import './inntekt.css';
+import './inntektUtland.css';
 
 function Inntekt () {
   const panelIkon = Ikoner.Ferdig;
 
   return (
-    <div className="inntekt panelSeksjon">
+    <div className="inntektUtland panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={panelIkon} tittel="Inntekt under oppholdet" undertittel="" />}
         ariaTittel="Panel for inntekt under oppholdet">
-        <Nav.Row className="inntekt__seksjon">
+        <Nav.Row className="iinntektUtland__seksjon">
           <Nav.Column xs="9">
             <Nav.Fieldset legend="Lønn / inntekt i utlandet(NOK pr måned)">
               <Skjema.Input feltNavn="inntektNorskIPerioden" label="Lønn fra norsk arbeidsgiver" />
