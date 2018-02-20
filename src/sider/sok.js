@@ -98,4 +98,4 @@ const mapDispatchToProps = dispatch => ({
   opprettSak: fnr => dispatch(NyeSaker.opprettSak(fnr)),
 });
 
-export default withErrorHandling(withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withErrorHandling(Sok)));
