@@ -20,7 +20,7 @@ class StegLogikk {
       {
         kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" eller sysselsettingType ER LIK "ARBEIDSTAKER__OG__SELVSTENDIG"',
         erOppfylt: ({ sysselsettingType }) => (sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER || sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG),
-        nesteSteg: STEG.SEKTOR,
+        nesteSteg: STEG.ARBEIDSFORHOLD,
       },
       {
         kriterier: 'sysselsettingType ER LIK "SELVSTENDIG"',
@@ -33,9 +33,16 @@ class StegLogikk {
         nesteSteg: STEG.BOSTEDSLAND,
       },
     ],
+    ARBEIDSFORHOLD: [
+      {
+        kriterier: 'alle andre valg',
+        erOppfylt: () => true,
+        nesteSteg: STEG.SEKTOR,
+      },
+    ],
     SEKTOR: [
       {
-        kriterier: 'ansattISektor ER LIK "OFFENTLIG',
+        kriterier: 'ansattISektor ER LIK "OFFENTLIG"',
         erOppfylt: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.OFFENTLIG,
         nesteSteg: STEG.TJENESTEMANN,
       },
@@ -55,13 +62,6 @@ class StegLogikk {
         kriterier: 'alle andre valg',
         erOppfylt: () => true,
         nesteSteg: STEG.VIRKSOMHET,
-      },
-    ],
-    ARBEIDSFORHOLD: [
-      {
-        kriterier: 'alle andre valg',
-        erOppfylt: () => true,
-        nesteSteg: STEG.FORRETNINGSSTED,
       },
     ],
     TJENESTEMANN: [
