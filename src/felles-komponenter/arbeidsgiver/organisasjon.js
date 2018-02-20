@@ -27,7 +27,7 @@ const Organisasjon = props => {
     <div className="panelSeksjon organisasjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader
-          ikon={Ikoner.Ferdig}
+          ikon={Ikoner.Arbeidsgiver}
           tittel={`Arbeidsgiver i Norge: ${navn}`}
           undertittel={<div>{`Org.nr: ${orgnr}`} </div>}
         />}
