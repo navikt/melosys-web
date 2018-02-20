@@ -83,6 +83,11 @@ Sok.propTypes = {
   visSokResultat: PT.bool.isRequired,
   history: PT.object.isRequired,
   opprettSak: PT.func.isRequired,
+  children: PT.node,
+};
+
+Sok.defaultProps = {
+  children: null,
 };
 
 const mapStateToProps = state => ({
@@ -97,4 +102,4 @@ const mapDispatchToProps = dispatch => ({
   opprettSak: fnr => dispatch(NyeSaker.opprettSak(fnr)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withErrorHandling(Sok)));
+export default withErrorHandling(withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
