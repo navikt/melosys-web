@@ -83,6 +83,7 @@ Sok.propTypes = {
   visSokResultat: PT.bool.isRequired,
   history: PT.object.isRequired,
   opprettSak: PT.func.isRequired,
+  children: PT.node.isRequired,
 };
 
 const mapStateToProps = state => ({
