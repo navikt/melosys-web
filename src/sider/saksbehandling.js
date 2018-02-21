@@ -165,6 +165,12 @@ class Saksbehandling extends Component {
     this.props.hentVurdering(behandlingID);
   }
 
+  sjekkSubmit = event => {
+    event.preventDefault();
+
+    //this.props.handleSubmit(event);
+  }
+
   /* eslint-disable */
   lagreOgLukk = () => { alert('Ikke implementert'); }
   avslaSoknad = () => { alert('Ikke implementert'); }
@@ -194,7 +200,7 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <form name="soknad" id="soknad" onSubmit={handleSubmit}>
+              <form name="soknad" id="soknad" onSubmit={this.sjekkSubmit}>
                 <Vilkarsveileder
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />

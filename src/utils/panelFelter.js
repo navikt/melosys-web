@@ -43,7 +43,7 @@ export const feltGrupper = {
   },
   faktaavklaring: {
     faktaavklaringOppholdsLand: [],
-    faktaavklaringPeriodeFraOgMed: [],
+    faktaavklaringPeriodeFraOgMed: [Skjema.Validering.erPakrevet],
     faktaavklaringPeriodeTilOgMed: [],
     faktaavklaringSysselsetting: [],
     faktaavklaringAnsattINorskSelskap: [],

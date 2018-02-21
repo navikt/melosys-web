@@ -41,7 +41,7 @@ const StegIkon = props => {
     <li>
       <button
         className={className}
-        onClick={onClick}
+        onClick={event => { onClick(event); }}
         style={{ backgroundImage: `url(${ikon})` }}
         aria-disabled={!tilgjengelig}
       />
