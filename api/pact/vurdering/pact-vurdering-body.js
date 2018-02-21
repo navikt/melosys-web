@@ -11,9 +11,12 @@ const lovvalgsbestemmelse = {
   artikkel: '12.1',
   betingelser: eachLike(betingelse),
 };
-const feilmelding = {
-  kategori: 'VALIDERINGSFEIL',
+const kategori = {
   alvorlighetsgrad: 'FEIL',
+  beskrivelse: 'Det er implementert delvis maskinell støtte for denne forespørselen.',
+};
+const feilmelding = {
+  kategori,
   melding: 'Søkeren kan ikke arbeide på både skip og sokkel.',
 };
 const vurdering = {
