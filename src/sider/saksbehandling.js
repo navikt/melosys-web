@@ -155,6 +155,7 @@ class Saksbehandling extends Component {
   fattVedtakHandler = () => {
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
+    this.props.handleSubmit();
 
     this.props.sendSoknad(bid, soknad);
     this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
@@ -167,8 +168,6 @@ class Saksbehandling extends Component {
 
   sjekkSubmit = event => {
     event.preventDefault();
-
-    //this.props.handleSubmit(event);
   }
 
   /* eslint-disable */
@@ -186,7 +185,6 @@ class Saksbehandling extends Component {
       oppsummering,
       soknadArbeidsinntekt,
       soknadOppholdUtland,
-      handleSubmit,
       errorSummary,
       soknadForm,
     } = this.props;
