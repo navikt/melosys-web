@@ -26,7 +26,7 @@ import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker';
-import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector } from '../../ducks/faktaavklaring';
+import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector, oppdaterFaktaavklaringState } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
 
 import './vilkarsveileder.css';
@@ -162,10 +162,12 @@ class Vilkarsveileder extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
+    console.log('bekreftOgFortsett()');
     this.tilSteg(this.beregnNesteSteg());
   }
 
   oppdaterAktuelleSteg = props => {
+    console.log('oppdaterAktuelleSteg');
     const { faktaavklaring, skjema } = props;
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
@@ -189,7 +191,13 @@ class Vilkarsveileder extends Component {
    * @param nyttStegNummer Number Steget som det skal byttes til.
    */
   tilSteg = nyttStegNummer => {
+    console.log(`tilSteg(${nyttStegNummer})`);
     this.setState({ aktivtStegNummer: nyttStegNummer });
+    this.oppdaterFaktaavklaring();
+  }
+
+  oppdaterFaktaavklaring = () => {
+    this.props.oppdaterFaktaavklaringState(this.props.skjema);
   }
 
   /** Beregn neste steg i rekken, men ikke lenger enn
@@ -243,4 +251,8 @@ const mapStateToProps = state => ({
   skjema: SoknadenFormSelector(state).values,
 });
 
-export default withRouter(connect(mapStateToProps)(Vilkarsveileder));
+const mapDispatchToProps = dispatch => ({
+  oppdaterFaktaavklaringState: skjema => dispatch(oppdaterFaktaavklaringState(skjema)),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));
