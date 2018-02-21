@@ -162,13 +162,10 @@ class Vilkarsveileder extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
-    console.log('bekreftOgFortsett()');
     this.tilSteg(this.beregnNesteSteg());
   }
 
   oppdaterAktuelleSteg = props => {
-    console.log('oppdaterAktuelleSteg()');
-    console.log('oppdaterAktuelleSteg(): aktivtStegNummer', this.state.aktivtStegNummer);
     const { faktaavklaring, skjema } = props;
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
@@ -192,7 +189,6 @@ class Vilkarsveileder extends Component {
    * @param nyttStegNummer Number Steget som det skal byttes til.
    */
   tilSteg = nyttStegNummer => {
-    console.log(`tilSteg(${nyttStegNummer})`);
     this.setState({ aktivtStegNummer: nyttStegNummer }, () => {
       this.props.oppdaterFaktaavklaringState(this.props.skjema);
     });
@@ -230,6 +226,7 @@ Vilkarsveileder.propTypes = {
   faktaavklaring: PT.object,
   skjema: PT.object.isRequired,
   valgteArbeidsforhold: PT.array,
+  oppdaterFaktaavklaringState: PT.func.isRequired,
 };
 
 Vilkarsveileder.defaultProps = {
