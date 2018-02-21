@@ -7,10 +7,10 @@ export const STATUS = {
 };
 
 export function sjekkStatuskode(response) {
-  if (response.status >= 200 && response.status < 300 && response.ok) {
+  if (response.status >= 200 && response.status < 300 && response.ok && !response.redirected) {
     return response;
   }
-  const error = new Error(response.statusText);
+  const error = new Error(response.statusText || response.type);
   error.response = response;
   throw error;
 }
@@ -54,6 +54,45 @@ export function handterFeil(dispatch, action) {
     }
   };
 }
+/*
+function parseError(errorData) {
+  try {
+    return JSON.parse(errorData);
+  } catch (e) {
+    console.error(e); // eslint-disable-line no-console
+    return errorData;
+  }
+}
+
+export function handterFeil(dispatch, FEILET_TYPE) {
+  return error => {
+    const { response } = error;
+    if (response) {
+      response.text().then(data => {
+        console.error(error, error.stack, data); // eslint-disable-line no-console
+        dispatch({
+          type: FEILET_TYPE,
+          data: {
+            type: FEILET_TYPE,
+            httpStatus: response.status,
+            melding: parseError(data),
+          },
+        });
+      });
+    } else {
+      console.error(error, error.stack); // eslint-disable-line no-console
+      dispatch({
+        type: FEILET_TYPE,
+        data: {
+          type: FEILET_TYPE,
+          melding: error.toString(),
+        },
+      });
+    }
+    return Promise.reject(error);
+  };
+}
+*/
 export const getCookie = name => {
   const re = new RegExp(`${name}=([^;]+)`);
   const match = re.exec(document.cookie);
@@ -89,7 +128,7 @@ function methodToJson(method, url, data) {
     method,
     headers: new Headers(headers),
     redirect: 'follow',
-    credentials: 'include',
+    credentials: 'same-origin',
     mode: 'cors',
     cache: 'no-cache',
   };
