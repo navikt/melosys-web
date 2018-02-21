@@ -167,7 +167,8 @@ class Vilkarsveileder extends Component {
   }
 
   oppdaterAktuelleSteg = props => {
-    console.log('oppdaterAktuelleSteg');
+    console.log('oppdaterAktuelleSteg()');
+    console.log('oppdaterAktuelleSteg(): aktivtStegNummer', this.state.aktivtStegNummer);
     const { faktaavklaring, skjema } = props;
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
@@ -192,12 +193,9 @@ class Vilkarsveileder extends Component {
    */
   tilSteg = nyttStegNummer => {
     console.log(`tilSteg(${nyttStegNummer})`);
-    this.setState({ aktivtStegNummer: nyttStegNummer });
-    this.oppdaterFaktaavklaring();
-  }
-
-  oppdaterFaktaavklaring = () => {
-    this.props.oppdaterFaktaavklaringState(this.props.skjema);
+    this.setState({ aktivtStegNummer: nyttStegNummer }, () => {
+      this.props.oppdaterFaktaavklaringState(this.props.skjema);
+    });
   }
 
   /** Beregn neste steg i rekken, men ikke lenger enn
