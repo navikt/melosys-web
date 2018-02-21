@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
+import withErrorHandling from '../hoc/withErrorHandling';
 import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import * as Nav from '../utils/navFrontend';
 // import SokListe from '../felles-komponenter/sok/sokListe';
@@ -44,11 +45,12 @@ class Sok extends Component {
 
   render() {
     // const { nyesaker, sakerbehandles, tidligeresaker } = this.props;
-    const { nyesaker } = this.props;
+    const { nyesaker, children } = this.props;
     const { visSokResultat } = this.props;
 
     return (
       <div className="sok">
+        { children }
         <Nav.Container>
           <Nav.Row>
             <Nav.Column xs="7">
@@ -81,6 +83,11 @@ Sok.propTypes = {
   visSokResultat: PT.bool.isRequired,
   history: PT.object.isRequired,
   opprettSak: PT.func.isRequired,
+  children: PT.node,
+};
+
+Sok.defaultProps = {
+  children: null,
 };
 
 const mapStateToProps = state => ({
@@ -95,4 +102,4 @@ const mapDispatchToProps = dispatch => ({
   opprettSak: fnr => dispatch(NyeSaker.opprettSak(fnr)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok));
+export default withErrorHandling(withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
