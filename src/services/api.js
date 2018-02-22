@@ -31,7 +31,6 @@ export function hentSoknader(bid) {
 }
 
 export function sendSoknad(bid, soknad) {
-  console.log('XXXXXXXXXXXXX sendSoknad() ZZZZZZZZZZZZZZZZZZZZZZZ');
   const args = [...arguments];
   const URI_SOKNADER = makeRestUri(args, `soknader/${bid}`);
   return postAsJson(URI_SOKNADER, soknad);
