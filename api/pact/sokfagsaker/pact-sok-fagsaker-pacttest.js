@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-import PORT from '../constants';
+import { MOCK_ENV } from '../constants';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
@@ -19,15 +19,14 @@ require('isomorphic-fetch');
 const { Matchers } = require('@pact-foundation/pact');
 import sok_fagsaker_body from './pack-sok-fagsaker-body';
 
-const fnr = '05056335023';
-const SOK_FAGSAKER_API_URL = `/api/sok/fagsaker/`;
 
 
 describe('SokFagsakerPactApi', () => {
-  let url = 'http://localhost';
-  const port = PORT.SOK_FAGSAKER;
+  const fnr = '05056335023';
+  const SOK_FAGSAKER_API_URL = `${MOCK_ENV.SOK_FAGSAKER.path}/`;
+
   const provider = new Pact({
-    port,
+    port: MOCK_ENV.SOK_FAGSAKER.port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
@@ -60,7 +59,7 @@ describe('SokFagsakerPactApi', () => {
   });
 
   it('returns an array of fagsaker response', done => {
-    Api.hentNyesakerPact(url, port, fnr)
+    Api.hentNyesaker(fnr, MOCK_ENV.SOK_FAGSAKER)
       .then((fagsaker) => {
         expect(fagsaker).to.be.a('array');
         expect(fagsaker).to.have.lengthOf(1);
@@ -69,7 +68,7 @@ describe('SokFagsakerPactApi', () => {
   });
 
   it('to have a fagsak object with required properties', done => {
-    Api.hentNyesakerPact(url, port, fnr).then(fagsaker => fagsaker.forEach(fagsak => {
+    Api.hentNyesaker(fnr, MOCK_ENV.SOK_FAGSAKER).then(fagsaker => fagsaker.forEach(fagsak => {
       expect(fagsak).to.have.property('saksnummer');
       expect(fagsak).to.have.property('sammensattNavn');
       expect(fagsak).to.have.property('type');

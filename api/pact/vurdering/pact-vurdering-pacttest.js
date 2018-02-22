@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-import PORT from '../constants';
+import { MOCK_ENV } from '../constants';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
@@ -13,18 +13,18 @@ const assert = chai.assert;
 
 const path = require('path');
 const { Pact } = require('@pact-foundation/pact');
-const bid = 3;
-const VURDERING_API_URL = `/api/vurdering/${bid}`;
 import vurdering_body from './pact-vurdering-body';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 describe('VurderingPactApi', () => {
-  let url = 'http://localhost';
-  const port = PORT.VURDERING;
+
+  const bid = 3;
+  const VURDERING_API_URL = `/api/vurdering/${bid}`;
+
   const provider = new Pact({
-    port,
+    port: MOCK_ENV.VURDERING.port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
@@ -55,7 +55,7 @@ describe('VurderingPactApi', () => {
       });
   });
   it('returns a valid vurdering', done => {
-    Api.hentVurderingPact(url, port, bid)
+    Api.hentVurdering(bid, MOCK_ENV.VURDERING)
       .then((vurderingen) => {
         expect(vurderingen).to.be.a('object');
         expect(vurderingen).to.have.property('behandlingID');

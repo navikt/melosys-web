@@ -1,7 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-import PORT from '../constants';
-const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
+import { MOCK_ENV } from '../constants';
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -12,18 +11,17 @@ const assert = chai.assert;
 
 const path = require('path');
 const { Pact } = require('@pact-foundation/pact');
-const LANDKODER_API_URL = '/api/landkoder';
 import landkoder_body from './pact-landkoder-body';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
 
 describe('LandkoderPactApi', () => {
-  let url = 'http://localhost';
-  const port = PORT.LANDKODER;
+  const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
+  const LANDKODER_API_URL = MOCK_ENV.LANDKODER.path;
 
   const provider = new Pact({
-    port,
+    port: MOCK_ENV.LANDKODER.port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
@@ -55,7 +53,7 @@ describe('LandkoderPactApi', () => {
   });
 
   it('returns an array of landkoder response', done => {
-    Api.hentLandkoderPact(url, port)
+    Api.hentLandkoder(MOCK_ENV.LANDKODER)
       .then((landkoder) => {
         expect(landkoder).to.be.a('array');
         expect(landkoder).to.have.lengthOf(1);
@@ -64,7 +62,7 @@ describe('LandkoderPactApi', () => {
   });
 
   it('to have a landkode object with property kode and term', done => {
-    Api.hentLandkoderPact(url, port).then(landkoder => landkoder.forEach(landkode => {
+    Api.hentLandkoder(MOCK_ENV.LANDKODER).then(landkoder => landkoder.forEach(landkode => {
       expect(landkode).to.have.property('kode');
       expect(landkode).to.have.property('term');
     })).then(done, done);

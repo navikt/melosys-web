@@ -1,32 +1,32 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-import PORT from '../constants';
-const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
-
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-chai.should();
-chai.use(chaiAsPromised);
-const expect = chai.expect;
-const assert = chai.assert;
+import { MOCK_ENV } from '../constants';
+import fagsaker_body from './pact-fagsaker-body';
 
 const path = require('path');
-const { Pact } = require('@pact-foundation/pact');
-const snr = 3;
-const FAGSAKER_API_URL = `/api/fagsaker/${snr}`;
-import fagsaker_body from './pact-fagsaker-body';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
+const {
+  describe, before, after, it,
+} = require('mocha');
+const { Pact } = require('@pact-foundation/pact');
+const chai = require('chai');
+chai.should();
+const chaiAsPromised = require('chai-as-promised');
 
-const { Matchers } = require('@pact-foundation/pact');
+chai.use(chaiAsPromised);
+const expect = chai.expect;
+//const assert = chai.assert;
+
 
 describe('FagsakerPactApi', () => {
-  let url = 'http://localhost';
-  const port = PORT.FAGSAKER;
+  const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
+  const snr = 3;
+  const FAGSAKER_API_URL = `${MOCK_ENV.FAGSAKER.path}/${snr}`;
 
   const provider = new Pact({
-    port,
+    port: MOCK_ENV.FAGSAKER.port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
@@ -57,8 +57,8 @@ describe('FagsakerPactApi', () => {
       });
   });
 
-  it('returns a fagsak object with an array of hehandlinger response', done => {
-    Api.hentFagsakerPact(url, port, snr)
+  it('returns a fagsak object with an array of behandlinger response', done => {
+    Api.hentFagsaker(snr, MOCK_ENV.FAGSAKER)
       .then((fagsaker) => {
         expect(fagsaker).to.be.a('object');
         expect(fagsaker).to.have.property('saksnummer');
@@ -66,10 +66,6 @@ describe('FagsakerPactApi', () => {
         expect(fagsaker).to.have.property('status');
         expect(fagsaker).to.have.property('registrertDato');
         expect(fagsaker).to.have.property('behandlinger');
-/*
-        expect(fagsaker.behandlinger).to.be.a('array');
-        expect(fagsaker.behandlinger).to.have.lengthOf(1);
-        */
       })
       .then(done, done);
   });

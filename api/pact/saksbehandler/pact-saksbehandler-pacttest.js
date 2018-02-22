@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-import PORT from '../constants';
+import PORT, {MOCK_ENV} from '../constants';
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
 const chai = require('chai');
@@ -12,17 +12,16 @@ const assert = chai.assert;
 
 const path = require('path');
 const { Pact } = require('@pact-foundation/pact');
-const SAKSBEHANDLER_API_URL = '/api/saksbehandler';
 import saksbehandler_body from './pact-saksbehandler-body';
 
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
-console.log(PORT);
+
 describe('SaksbehandlerPactApi', () => {
-  let url = 'http://localhost';
-  const port = PORT.SAKSBEHANDLER;
+  const SAKSBEHANDLER_API_URL = MOCK_ENV.SAKSBEHANDLER.path;
+
   const provider = new Pact({
-    port,
+    port: MOCK_ENV.SAKSBEHANDLER.port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
@@ -54,7 +53,7 @@ describe('SaksbehandlerPactApi', () => {
   });
 
   it('returns a saksbehandler response', done => {
-    expect(Api.hentSaksbehandlerPact(url, port)).to.eventually.have.property('brukernavn').and.notify(done);
+    expect(Api.hentSaksbehandler(MOCK_ENV.SAKSBEHANDLER)).to.eventually.have.property('brukernavn').and.notify(done);
   });
 
   after(() => {

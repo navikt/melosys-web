@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-import PORT from '../constants';
+import { MOCK_ENV } from '../constants';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
@@ -13,8 +13,7 @@ const assert = chai.assert;
 
 const path = require('path');
 const { Pact } = require('@pact-foundation/pact');
-const bid = 3;
-const FAKTAAVKLARING_API_URL = `/api/faktaavklaring/${bid}`;
+
 import faktaavklaring_body from './pact-faktaavklaring-body';
 
 require('es6-promise').polyfill();
@@ -23,11 +22,11 @@ require('isomorphic-fetch');
 const { Matchers } = require('@pact-foundation/pact');
 
 describe('FaktaavklaringPactApi', () => {
-  let url = 'http://localhost';
-  const port = PORT.FAKTAAVKLARING;
+  const bid = 3;
+  const FAKTAAVKLARING_API_URL = `${MOCK_ENV.FAKTAAVKLARING.path}/${bid}`;
 
   const provider = new Pact({
-    port,
+    port: MOCK_ENV.FAKTAAVKLARING.port,
     log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
@@ -58,7 +57,7 @@ describe('FaktaavklaringPactApi', () => {
       });
   });
   it('returns a valid faktaavklaring', done => {
-    Api.hentFaktaavklaringPact(url, port, bid)
+    Api.hentFaktaavklaring(bid, MOCK_ENV.FAKTAAVKLARING)
       .then((faktaavklaring) => {
         expect(faktaavklaring).to.be.a('object');
         expect(faktaavklaring).to.have.property('opphold');
