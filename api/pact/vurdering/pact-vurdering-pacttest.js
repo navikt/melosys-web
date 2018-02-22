@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-import { MOCK_ENV } from '../constants';
+import { MOCK_ENV } from '../mock_env';
 
 const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
 
@@ -29,7 +29,7 @@ describe('VurderingPactApi', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
     consumer: 'melosys-web',
-    provider: 'melosys-api-vurdering',
+    provider: 'melosys-api',
     pactfileWriteMode: 'merge',
     logLevel: LOG_LEVEL,
   });

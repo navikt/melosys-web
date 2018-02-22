@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-import { MOCK_ENV } from '../constants';
+import { MOCK_ENV } from '../mock_env';
 import fagsaker_body from './pact-fagsaker-body';
 
 const path = require('path');
@@ -31,7 +31,7 @@ describe('FagsakerPactApi', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
     consumer: 'melosys-web',
-    provider: 'melosys-api-fagsaker',
+    provider: 'melosys-api',
     pactfileWriteMode: 'merge',
     logLevel: LOG_LEVEL,
   });

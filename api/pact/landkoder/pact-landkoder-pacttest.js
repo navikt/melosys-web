@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Api from '../../../src/services/api';
-import { MOCK_ENV } from '../constants';
+import { MOCK_ENV } from '../mock_env';
 
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
@@ -26,7 +26,7 @@ describe('LandkoderPactApi', () => {
     dir: path.resolve(process.cwd(), 'pacts'),
     spec: 2,
     consumer: 'melosys-web',
-    provider: 'melosys-api-landkoder',
+    provider: 'melosys-api',
     pactfileWriteMode: 'merge',
     logLevel: LOG_LEVEL,
   });

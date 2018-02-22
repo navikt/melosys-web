@@ -16,6 +16,10 @@
 /test/coverage
 /test/junit.xml
 
+# pact
+/pact
+/logs
+
 # misc
 .idea
 !.idea/runConfigurations/
