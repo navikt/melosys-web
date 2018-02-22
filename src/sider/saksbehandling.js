@@ -303,6 +303,7 @@ const SaksbehandlingForm = validForm({
   form: 'soknad',
   enableReinitialize: true,
   destroyOnUnmount: false,
+  updateUnregisteredFields: true,
   errorSummaryTitle: 'Følgende må vurderes eller oppgis:',
   fields: alleFeltNavn(feltGrupper),
   validate: alleValideringer(feltGrupper),
