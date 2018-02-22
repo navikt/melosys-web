@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 const host = 'http://localhost';
 const port = {
   SAKSBEHANDLER: 8990,
@@ -9,7 +10,19 @@ const port = {
   SOKNADER: 8996,
 };
 const API_BASE_URL = '/api/';
+const pact_config = {
+  spec: 2,
+  consumer_name: 'melosys-web',
+  provider_name: 'melosys-api',
+  pactfileWriteMode: 'merge',
+  log: {
+    dir: 'logs',
+    logfile: 'mockserver-integration.log',
+  },
+  dir: 'pacts',
+}
 const MOCK_ENV = {
+  PACT_CONFIG: pact_config,
   SAKSBEHANDLER: {
     host,
     port: port.SAKSBEHANDLER,
@@ -47,8 +60,6 @@ const MOCK_ENV = {
   },
 };
 export {
-  host as HOST,
-  port as PORT,
   API_BASE_URL,
   MOCK_ENV,
 };

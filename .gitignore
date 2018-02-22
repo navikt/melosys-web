@@ -17,10 +17,11 @@
 /test/junit.xml
 
 # pact
-/pact
+/pacts
 /logs
 
 # misc
+.vscode
 .idea
 !.idea/runConfigurations/
 .DS_Store

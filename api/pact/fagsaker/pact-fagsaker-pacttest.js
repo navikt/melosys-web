@@ -24,15 +24,14 @@ describe('FagsakerPactApi', () => {
   const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
   const snr = 3;
   const FAGSAKER_API_URL = `${MOCK_ENV.FAGSAKER.path}/${snr}`;
-
   const provider = new Pact({
     port: MOCK_ENV.FAGSAKER.port,
-    log: path.resolve(process.cwd(), 'logs', 'mockserver-integration.log'),
-    dir: path.resolve(process.cwd(), 'pacts'),
-    spec: 2,
-    consumer: 'melosys-web',
-    provider: 'melosys-api',
-    pactfileWriteMode: 'merge',
+    log: path.resolve(process.cwd(), MOCK_ENV.PACT_CONFIG.log.dir, MOCK_ENV.PACT_CONFIG.log.logfile),
+    dir: path.resolve(process.cwd(), MOCK_ENV.PACT_CONFIG.dir),
+    spec: MOCK_ENV.PACT_CONFIG.spec,
+    consumer: MOCK_ENV.PACT_CONFIG.consumer_name,
+    provider: MOCK_ENV.PACT_CONFIG.provider_name,
+    pactfileWriteMode: MOCK_ENV.PACT_CONFIG.pactfileWriteMode,
     logLevel: LOG_LEVEL,
   });
 
