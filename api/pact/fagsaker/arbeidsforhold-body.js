@@ -19,7 +19,7 @@ const arbeidsforholdet = {
   arbeidsforholdID: like('konvertert_97a38348-1041-4037-9ebe-f00aea12b1a8'),
   arbeidsforholdIDnav: integer(12345678),
   ansettelsesPeriode: periode,
-  arbeidsforholdstype: like('Ordinært arbeidsforhold'),
+  arbeidsforholdstype: like('Ordinart arbeidsforhold'),
   arbeidsavtaler: eachLike(arbeidsavtale, {
     min: 1,
   }),

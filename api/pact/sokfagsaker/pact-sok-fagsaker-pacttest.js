@@ -23,7 +23,7 @@ import sok_fagsaker_body from './pack-sok-fagsaker-body';
 
 describe('SokFagsakerPactApi', () => {
   const fnr = '05056335023';
-  const SOK_FAGSAKER_API_URL = `${MOCK_ENV.SOK_FAGSAKER.path}/`;
+  const SOK_FAGSAKER_API_URL = `${MOCK_ENV.SOK_FAGSAKER.path}/`; //NB! Ikke legg på fnr her. pga /?fnr=${fnr} som query param
 
   const provider = new Pact({
     port: MOCK_ENV.SOK_FAGSAKER.port,

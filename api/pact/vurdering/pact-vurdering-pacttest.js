@@ -21,7 +21,7 @@ require('isomorphic-fetch');
 describe('VurderingPactApi', () => {
 
   const bid = 3;
-  const VURDERING_API_URL = `/api/vurdering/${bid}`;
+  const VURDERING_API_URL = `${MOCK_ENV.VURDERING.path}/${bid}`;
 
   const provider = new Pact({
     port: MOCK_ENV.VURDERING.port,

@@ -12,7 +12,7 @@ const oppsummering = {
   behandlingID: integer(3),
   gsakId: integer(123),
   status: like('OPPRETTET'),
-  type: like('SØKNAD'),
+  type: like('SOKNAD'),
   registrertDato: like('2017-10-19T14:35:54'),
 };
 
