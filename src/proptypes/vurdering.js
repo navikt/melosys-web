@@ -13,8 +13,10 @@ const LovvalgsbestemmelsePropType = PT.shape({
 const LovvalgsbestemmelserPropType = PT.arrayOf(LovvalgsbestemmelsePropType);
 
 const FeilmeldingPropType = PT.shape({
-  kategori: PT.string,
-  alvorlighetsgrad: PT.string,
+  kategori: PT.shape({
+    alvorlighetsgrad: PT.string,
+    beskrivelse: PT.string,
+  }),
   melding: PT.string,
 });
 
