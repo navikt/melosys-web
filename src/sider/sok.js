@@ -102,4 +102,5 @@ const mapDispatchToProps = dispatch => ({
   opprettSak: fnr => dispatch(NyeSaker.opprettSak(fnr)),
 });
 
-export default withErrorHandling(withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
+const kontekster = ['saksbehandler', 'fagsaker'];
+export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
