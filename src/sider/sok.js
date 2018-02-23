@@ -75,7 +75,7 @@ class Sok extends Component {
 }
 
 Sok.propTypes = {
-  nyesaker: PT.array.isRequired,
+  nyesaker: PT.any,
   hentNyesaker: PT.func.isRequired,
   tidligeresaker: PT.array.isRequired,
   sakerbehandles: PT.array.isRequired,
@@ -88,6 +88,7 @@ Sok.propTypes = {
 
 Sok.defaultProps = {
   children: null,
+  nyesaker: [],
 };
 
 const mapStateToProps = state => ({
