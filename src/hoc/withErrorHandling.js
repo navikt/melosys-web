@@ -5,7 +5,9 @@ import * as Nav from '../utils/navFrontend';
 import { SaksbehandlerSelector, SaksbehandlerStatusSelector } from '../ducks/saksbehandler';
 
 const withErrorHandling = WrappedComponent => props => {
+  console.log('props', props);
   const ErrorComponent = errorProps => {
+    console.log('errorProps', errorProps);
     const { saksbehandlerStatus, saksbehandler } = errorProps;
 
     const saksbehandlerError = saksbehandlerStatus === 'ERROR' ? 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' : null;
