@@ -1,6 +1,7 @@
 import PT from 'prop-types';
 
 const BetingelsePropType = PT.shape({
+  argument: PT.string,
   krav: PT.string,
   resultat: PT.string,
 });

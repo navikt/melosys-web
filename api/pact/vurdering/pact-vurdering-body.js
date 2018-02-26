@@ -1,23 +1,23 @@
 const { Matchers } = require('@pact-foundation/pact');
 
-const { eachLike } = Matchers;
+const { integer, like, eachLike } = Matchers;
 const betingelse =
   {
-    argument: 'Arbeidsgiver har virksomhet i landet arbeidstakeren sendes fra',
-    krav: 'er sann',
-    resultat: 'OPPFYLT',
+    argument: like('Arbeidsgiver har virksomhet i landet arbeidstakeren sendes fra'),
+    krav: like('er sann'),
+    resultat: like('OPPFYLT'),
   };
 const lovvalgsbestemmelse = {
-  artikkel: '12.1',
+  artikkel: like('12.1'),
   betingelser: eachLike(betingelse),
 };
-const kategori = {
-  alvorlighetsgrad: 'FEIL',
-  beskrivelse: 'Det er implementert delvis maskinell støtte for denne forespørselen.',
-};
+
 const feilmelding = {
-  kategori,
-  melding: 'Søkeren kan ikke arbeide på både skip og sokkel.',
+  kategori: like({
+    alvorlighetsgrad: like('FEIL'),
+    beskrivelse: like('Det er implementert delvis maskinell stotte for denne foresporselen.'),
+  }),
+  melding: like('Sokeren kan ikke arbeide på både skip og sokkel.'),
 };
 const vurdering = {
   lovvalgsbestemmelser: eachLike(lovvalgsbestemmelse),
@@ -25,7 +25,7 @@ const vurdering = {
 };
 
 const vurderingen = {
-  behandlingID: 3,
+  behandlingID: integer(3),
   vurdering,
 };
 
