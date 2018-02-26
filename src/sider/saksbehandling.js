@@ -268,6 +268,7 @@ const mapStateToProps = state => ({
     faktaavklaringForetakDriverINorge: FaktaavklaringUtsendingSelector(state).foretakDriverINorge,
     faktaavklaringHarForutgaendeMedlemskap: FaktaavklaringUtsendingSelector(state).harForutgaendeMedlemskap,
     faktaavklaringArbeidKnyttetTilVirksomhetUtlandet: FaktaavklaringUtsendingSelector(state).arbeidKnyttetTilVirksomhetUtlandet,
+    faktaavklaringSammeTypeVirksomhet: FaktaavklaringUtsendingSelector(state).sammeTypeVirksomhet,
     faktaavklaringAnsattISektor: FaktaavklaringSektorSelector(state).ansattISektor,
     faktaavklaringAntallLand: FaktaavklaringVirksomhetSelector(state).antallLand,
     faktaavklaringAktivitetINorge: FaktaavklaringVirksomhetSelector(state).aktivitetINorge,
