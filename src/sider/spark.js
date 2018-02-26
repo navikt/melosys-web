@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { health } from '../services/api';
 
 import { sendSoknad } from '../ducks/soknad';
+import { opprettNyFagsak } from '../ducks/fagsaker';
 
 class Spark extends Component {
   constructor(props) {
@@ -21,11 +22,22 @@ class Spark extends Component {
     this.props.sendSoknad(bid, soknad);
   }
 
+  opprettNyFagsakSubmit = event => {
+    event.preventDefault();
+    const fnr = event.target.fnr.value;
+    this.props.opprettNyFagsak(fnr);
+  }
+
   render() {
     return (
       <div>
         <h1>Health</h1>
         <button onClick={() => console.log(health())} >sjekk health</button>
+        <h1>Opprett sak</h1>
+        <form onSubmit={this.opprettNyFagsakSubmit}>
+          <input type="text" name="fnr" /><br />
+          <input type="submit" label="Send" />
+        </form>
         <h1>Populere søknad manuelt</h1>
         <form onSubmit={this.soknadSubmit}>
           <label>behandlingID:</label><br />
@@ -45,6 +57,7 @@ const mapStateToProps = () => ({
 
 const mapDispatchToProps = dispatch => ({
   sendSoknad: (bid, soknad) => dispatch(sendSoknad(bid, soknad)),
+  opprettNyFagsak: fnr => dispatch(opprettNyFagsak(fnr)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Spark));
