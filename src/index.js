@@ -10,7 +10,7 @@ import loadInitialData from './startupDataLoader';
 import createStore from './store';
 import routerHistory from './history';
 import Routing from './routing';
-import registerServiceWorker from './registerServiceWorker';
+import { unregister } from './registerServiceWorker';
 
 const store = createStore(routerHistory);
 loadInitialData(store);
@@ -27,4 +27,4 @@ ReactDOM.render(
   document.getElementById('root')
 );
 
-registerServiceWorker();
+unregister();
