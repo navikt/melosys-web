@@ -8,6 +8,4 @@ const OppsummeringPropType = PT.shape({
   registrertDato: PT.string,
 });
 
-export {
-  OppsummeringPropType as Oppsummering,
-};
+export { OppsummeringPropType as Oppsummering };
