@@ -20,6 +20,9 @@ const faktaavklaring = {
     ansattINorskSelskap: boolean(true),
     erstatterTidligereUtsendt: boolean(false),
     utsendingMindreEnn24Mnd: boolean(true),
+    foretakDriverINorge: boolean(true),
+    harForutgaendeMedlemskap: boolean(true),
+    arbeidKnyttetTilVirksomhetUtlandet: boolean(true),
   },
   bostedsland: {
     bekrefterFamiliebosted: null,
@@ -35,9 +38,9 @@ const faktaavklaring = {
   valgteArbeidsforhold: [],
   virksomhet: {
     antallLand: like('ETT_LAND_IKKE_NORGE'),
-    aktivitetINorge: 'OVER_25_PROSENT',
-    marginaltArbeid: 'MARGINALT_JA',
-    vekslingMellomLand: 'EN_ELLER_BEGGE',
+    aktivitetINorge: like('OVER_25_PROSENT'),
+    marginaltArbeid: like('MARGINALT_JA'),
+    vekslingMellomLand: like('EN_ELLER_BEGGE'),
   },
 };
 export default faktaavklaring;
