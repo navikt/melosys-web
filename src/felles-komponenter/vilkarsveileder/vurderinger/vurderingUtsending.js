@@ -31,6 +31,10 @@ const ArbeidKnyttetTilVirksomhetUtlandet = () => (
   <Skjema.Checkbox feltNavn="faktaavklaringArbeidKnyttetTilVirksomhetUtlandet" value={VurderingUtsendingTyper.TRUE} label="Søkers arbeid er knyttet til virksomhet i utlandet." />
 );
 
+const SammeTypeVirksomhet = () => (
+  <Skjema.Checkbox feltNavn="faktaavklaringSammeTypeVirksomhet" value={VurderingUtsendingTyper.TRUE} label="Innen samme type virksomhet?" />
+);
+
 const VurderingUtsending = props => {
   const { bekreftOgFortsett, tilstand } = props;
 
@@ -43,6 +47,7 @@ const VurderingUtsending = props => {
         {tilstand.visForetakDriverINorge && <ForetakDriverINorge />}
         {tilstand.visHarForutgaendeMedlemskap && <HarForutgaendeMedlemskap />}
         {tilstand.visArbeidKnyttetTilVirksomhetUtlandet && <ArbeidKnyttetTilVirksomhetUtlandet />}
+        {tilstand.visSammeTypeVirksomhet && <SammeTypeVirksomhet />}
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

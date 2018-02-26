@@ -56,6 +56,7 @@ export default function reducer(state = initialState, action) {
           foretakDriverINorge: dokument.faktaavklaringForetakDriverINorge,
           harForutgaendeMedlemskap: dokument.faktaavklaringHarForutgaendeMedlemskap,
           arbeidKnyttetTilVirksomhetUtlandet: dokument.faktaavklaringArbeidKnyttetTilVirksomhetUtlandet,
+          sammeTypeVirksomhet: dokument.faktaavklaringSammeTypeVirksomhet,
         },
         valgteArbeidsforhold: [...dokument.faktaavklaringValgteArbeidsforhold],
         sektor: {
