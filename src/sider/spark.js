@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { health } from '../services/api';
 
+import { sendSoknad } from '../ducks/soknad';
+
 class Spark extends Component {
   constructor(props) {
     super(props);
@@ -12,10 +14,26 @@ class Spark extends Component {
   componentWillMount() {
   }
 
+  soknadSubmit = event => {
+    event.preventDefault();
+    const bid = event.target.behandlingID.value;
+    const soknad = JSON.parse(event.target.soknadBody.value);
+    this.props.sendSoknad(bid, soknad);
+  }
+
   render() {
     return (
       <div>
+        <h1>Health</h1>
         <button onClick={() => console.log(health())} >sjekk health</button>
+        <h1>Populere søknad manuelt</h1>
+        <form onSubmit={this.soknadSubmit}>
+          <label>behandlingID:</label><br />
+          <input type="text" name="behandlingID" /><br />
+          <label>json:</label><br />
+          <textarea name="soknadBody" cols="150" rows="20"></textarea><br />
+          <input type="submit" label="Send" />
+        </form>
       </div>
     );
   }
@@ -25,8 +43,8 @@ const mapStateToProps = () => ({
 
 });
 
-const mapDispatchToProps = () => ({
-
+const mapDispatchToProps = dispatch => ({
+  sendSoknad: (bid, soknad) => dispatch(sendSoknad(bid, soknad)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Spark));
