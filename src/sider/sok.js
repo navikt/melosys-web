@@ -99,7 +99,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
-  opprettSak: fnr => dispatch(NyeSaker.opprettSak(fnr)),
+  opprettSak: fnr => dispatch(NyeSaker.opprettNyFagsak(fnr)),
 });
 
 export default withErrorHandling(withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
