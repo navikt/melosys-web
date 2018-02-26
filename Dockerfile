@@ -6,7 +6,8 @@ ENV LC_ALL="no_NB.UTF-8"
 ENV LANG="no_NB.UTF-8"
 ENV TZ="Europe/Oslo"
 
-COPY build /usr/share/nginx/html/melosys-web
+COPY build /usr/share/nginx/html/
+COPY melosys.conf /etc/nginx/conf.d/default.conf
 #COPY nginx.conf /etc/nginx/nginx.conf
 #COPY default.conf /etc/nginx/conf.d/default.conf
 
