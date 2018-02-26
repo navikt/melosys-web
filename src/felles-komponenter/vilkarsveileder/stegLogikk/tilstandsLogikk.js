@@ -31,7 +31,10 @@ class TilstandsLogikk {
         return {
           visUtsendingMindreEnn24Mnd: true,
           visAnsattINorskSelskap: true,
-          visErstatterTidligereUtsendt: false,
+          visErstatterTidligereUtsendt: true,
+          visForetakDriverINorge: true,
+          visHarForutgaendeMedlemskap: true,
+          visArbeidKnyttetTilVirksomhetUtlandet: true,
         };
       }
       case STEG.BOSTEDSLAND: {
