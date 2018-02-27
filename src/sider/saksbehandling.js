@@ -164,7 +164,7 @@ class Saksbehandling extends Component {
     this.props.hentVurdering(behandlingID);
   }
 
-  sjekkSubmit = event => {
+  overstyrSubmit = event => {
     event.preventDefault();
   }
 
@@ -196,7 +196,7 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <form name="soknad" id="soknad" onSubmit={this.sjekkSubmit}>
+              <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
                 <Vilkarsveileder
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
