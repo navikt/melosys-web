@@ -53,12 +53,13 @@ LovvalgBestemmelse.propTypes = {
 
 const VurderingFeilmeldinger = props => {
   const { feilmelding } = props;
-  const { kategori, alvorlighetsgrad, melding } = feilmelding;
+  const { kategori, melding } = feilmelding;
+  const { alvorlighetsgrad, beskrivelse } = kategori;
   return (
     <div>
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Normaltekst key={uuid()}>{kategori}: {alvorlighetsgrad}: {melding}</Nav.Normaltekst>
+          <Nav.Normaltekst key={uuid()}>{beskrivelse}: {alvorlighetsgrad}: {melding}</Nav.Normaltekst>
         </Nav.Column>
       </Nav.Row>
     </div>

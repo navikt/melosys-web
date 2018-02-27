@@ -20,6 +20,4 @@ const ArbeidNorgePropType = PT.shape({
   fullmektigAdresse: PT.string,
 });
 
-export {
-  ArbeidNorgePropType as ArbeidNorge,
-};
+export { ArbeidNorgePropType as ArbeidNorge };
