@@ -38,6 +38,15 @@ export function hentFagsaker(snr) {
     PENDING,
   });
 }
+
+export function opprettNyFagsak(fnr) {
+  return doThenDispatch(() => Api.opprettNyFagsak(fnr), {
+    OK,
+    FEILET,
+    PENDING,
+  });
+}
+
 // selector(s)
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
