@@ -4,9 +4,6 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
 export const VurderingVirksomhetTyper = {
-  ETT_LAND_IKKE_NORGE: 'ETT_LAND_IKKE_NORGE',
-  KUN_NORGE: 'KUN_NORGE',
-  TO_ELLER_FLERE_LAND: 'TO_ELLER_FLERE_LAND',
   EN_ELLER_BEGGE: 'EN_ELLER_BEGGE',
   INGEN_VEKSLING: 'INGEN_VEKSLING',
   MARGINALT_JA: 'MARGINALT_JA',
