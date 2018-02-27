@@ -7,6 +7,4 @@ const OppholdPropType = PT.shape({
   periode: Periode,
 });
 
-export {
-  OppholdPropType as Opphold,
-};
+export { OppholdPropType as Opphold };
