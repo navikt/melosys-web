@@ -67,6 +67,14 @@ class StegLogikk {
         nesteSteg: STEG.UTSENDING,
       },
       {
+        kriterier: 'sysselsettingType ER LIK "SELVSTENDIG" OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
+        erOppfylt: ({ sysselsettingType, antallLand }) => (
+          sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
+          antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
+        ),
+        nesteSteg: STEG.UTSENDING,
+      },
+      {
         kriterier: 'alle andre valg',
         erOppfylt: () => true,
         nesteSteg: STEG.VIRKSOMHET,
