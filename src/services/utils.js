@@ -130,8 +130,8 @@ function methodToJson(method, url, data) {
     cache: 'no-cache', // *default, no-cache, force-cache, only-if-cached
     headers: new Headers(headers),
     method, // *GET, POST, ....
-    // mode: 'same-origin', // *same-origin, no-cors, cors
-    // redirect: 'follow', // *manual, follow, error
+    mode: 'same-origin', // *same-origin, no-cors, cors
+    redirect: 'follow', // *manual, follow, error
     // referrer: // *client, no-referrer
   };
 
