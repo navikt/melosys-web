@@ -5,7 +5,5 @@ const SysselsettingPropType = PT.shape({
   SysselsettingType: PT.string,
 });
 
-export {
-  SysselsettingPropType as Sysselsetting,
-};
+export { SysselsettingPropType as Sysselsetting };
 

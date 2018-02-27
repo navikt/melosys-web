@@ -13,6 +13,4 @@ const PersonPropType = PT.shape({
   foedselsdato: PT.string,
 });
 
-export {
-  PersonPropType as Person,
-};
+export { PersonPropType as Person };
