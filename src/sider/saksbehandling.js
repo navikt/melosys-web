@@ -60,6 +60,7 @@ import {
   FaktaavklaringSysselsettingSelector,
   FaktaavklaringUtsendingSelector,
   FaktaavklaringSektorSelector,
+  FaktaavklaringYrkesaktivitetFordelingSelector,
   FaktaavklaringVirksomhetSelector,
   FaktaavklaringAktivitetSelector,
   FaktaavklaringBostedslandSelector,
@@ -76,9 +77,7 @@ import {
 import { boolTilStreng } from '../utils/utils';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
-import {
-  SoknadenFormSelector,
-} from '../ducks/form';
+import { SoknadenFormSelector } from '../ducks/form';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
@@ -268,7 +267,7 @@ const mapStateToProps = state => ({
     faktaavklaringErstatterTidligereUtsendt: FaktaavklaringUtsendingSelector(state).erstatterTidligereUtsendt,
     faktaavklaringUtsendingMindreEnn24Mnd: FaktaavklaringUtsendingSelector(state).utsendingMindreEnn24Mnd,
     faktaavklaringAnsattISektor: FaktaavklaringSektorSelector(state).ansattISektor,
-    faktaavklaringAntallLand: FaktaavklaringVirksomhetSelector(state).antallLand,
+    faktaavklaringAntallLand: FaktaavklaringYrkesaktivitetFordelingSelector(state).antallLand,
     faktaavklaringAktivitetINorge: FaktaavklaringVirksomhetSelector(state).aktivitetINorge,
     faktaavklaringMarginaltArbeid: FaktaavklaringVirksomhetSelector(state).marginaltArbeid,
     faktaavklaringVekslingMellomLand: FaktaavklaringVirksomhetSelector(state).vekslingMellomLand,

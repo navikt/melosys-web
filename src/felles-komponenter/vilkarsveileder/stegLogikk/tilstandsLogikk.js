@@ -17,11 +17,15 @@ class TilstandsLogikk {
           visAnsattISektor: true,
         };
       }
+      case STEG.YRKESAKTIVITET_FORDELING: {
+        return {
+          visAntallLand: true,
+        };
+      }
       case STEG.VIRKSOMHET: {
         const { faktaavklaringAntallLand } = skjema;
 
         return {
-          visAntallLand: true,
           visVekslingMellomLand: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
           visMarginaltArbeid: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
           visAktivitetINorge: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
