@@ -54,9 +54,9 @@ export function hentNyesaker(fnr) {
   return getAsJson(URI_NYESAKER);
 }
 
-export function opprettSak(fnr) {
-  const URI_OPPRETTSAK = `${API_BASE_URL}opprettsak/${fnr}`;
-  return postAsJson(URI_OPPRETTSAK);
+export function opprettNyFagsak(fnr) {
+  const URI_OPPRETTSAK = `${API_BASE_URL}fagsaker/ny/${fnr}`;
+  return getAsJson(URI_OPPRETTSAK);
 }
 
 export function hentSakerbehandles(brukernavn) {
