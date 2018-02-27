@@ -15,14 +15,6 @@ export const VurderingVirksomhetTyper = {
   OVER_25_PROSENT: 'OVER_25_PROSENT',
 };
 
-const AntallLand = () => (
-  <Nav.Fieldset legend="Hvor mange land skal søker ha yrkesaktivitet i?">
-    <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.KUN_NORGE} label="Kun Norge" />
-    <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.ETT_LAND_IKKE_NORGE} label="Ett land, ikke Norge" />
-    <Skjema.Radio feltNavn="faktaavklaringAntallLand" value={VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND} label="To eller flere land" />
-  </Nav.Fieldset>
-);
-
 const VekslingMellomLand = () => (
   <Nav.Fieldset legend="Veksler søker regelmessig mellom arbeid i flere land eller arbeider søker i flere land?">
     <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhetTyper.EN_ELLER_BEGGE} label="Ja, en eller begge" />
@@ -49,12 +41,11 @@ const VurderingVirksomhet = props => {
 
   return (
     <div>
-      { tilstand.visAntallLand && <AntallLand /> }
       { tilstand.visVekslingMellomLand && <VekslingMellomLand /> }
       { tilstand.visMarginaltArbeid && <MarginaltArbeid /> }
       { tilstand.visAktivitetINorge && <AktivitetINorge /> }
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Fortsett til vedtaksforslag</Nav.Knapp>
+        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );

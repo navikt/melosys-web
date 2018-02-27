@@ -2,12 +2,11 @@ import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetti
 import { VurderingSektorTyper } from '../vurderinger/vurderingSektor';
 import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
 import { VurderingTjenestemannTyper } from '../vurderinger/vurderingTjenestemann';
+import { VurderingYrkesaktivitetFordelingTyper } from '../vurderinger/vurderingYrkesaktivitetFordeling';
 
 import { STEG } from './typer';
 
 class StegLogikk {
-  static SISTE_STEG = null;
-
   static stier = {
     PERIODE: [
       {
@@ -50,6 +49,22 @@ class StegLogikk {
         kriterier: 'ansattISektor ER LIK "SOKKEL" eller ansattISektor ER LIK "SKIP"',
         erOppfylt: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.SOKKEL || ansattISektor === VurderingSektorTyper.SKIP,
         nesteSteg: STEG.VEDTAK,
+      },
+      {
+        kriterier: 'alle andre valg',
+        erOppfylt: () => true,
+        nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
+      },
+    ],
+    YRKESAKTIVITET_FORDELING: [
+      {
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN"  OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
+        erOppfylt: ({ sysselsettingType, ansattISektor, yrkesaktivitetFordeling }) => (
+          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
+          ansattISektor === VurderingSektorTyper.INGEN &&
+          yrkesaktivitetFordeling === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
+        ),
+        nesteSteg: STEG.VIRKSOMHET,
       },
       {
         kriterier: 'alle andre valg',
