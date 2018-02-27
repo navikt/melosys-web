@@ -6,6 +6,4 @@ const SaksbehandlerPropType = PT.shape({
   navn: PT.string,
 });
 
-export {
-  SaksbehandlerPropType as Saksbehandler,
-};
+export { SaksbehandlerPropType as Saksbehandler };

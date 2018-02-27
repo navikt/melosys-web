@@ -12,6 +12,4 @@ const OppholdUtlandPropType = PT.shape({
   studieLand: PT.string,
 });
 
-export {
-  OppholdUtlandPropType as OppholdUtland,
-};
+export { OppholdUtlandPropType as OppholdUtland };

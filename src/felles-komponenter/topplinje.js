@@ -7,9 +7,7 @@ import * as navLogo from '../resources/images/nav.svg';
 import './topplinje.css';
 import * as MPT from '../proptypes/';
 
-import {
-  SaksbehandlerSelector,
-} from '../ducks/saksbehandler';
+import { SaksbehandlerSelector } from '../ducks/saksbehandler';
 
 const Topplinje = props => {
   const { saksbehandler: { navn } } = props;
