@@ -1,4 +1,5 @@
 import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
+import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetting';
 import { STEG } from './typer';
 
 class TilstandsLogikk {
@@ -28,11 +29,33 @@ class TilstandsLogikk {
         };
       }
       case STEG.UTSENDING: {
-        return {
-          visUtsendingMindreEnn24Mnd: true,
-          visAnsattINorskSelskap: true,
-          visErstatterTidligereUtsendt: false,
-        };
+        const { faktaavklaringSysselsettingType } = skjema;
+
+        if (faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER) {
+          return {
+            visUtsendingMindreEnn24Mnd: true,
+            visAnsattINorskSelskap: true,
+            visErstatterTidligereUtsendt: true,
+            visForetakDriverINorge: true,
+            visHarForutgaendeMedlemskap: true,
+            visArbeidKnyttetTilVirksomhetUtlandet: true,
+            visSammeTypeVirksomhet: true,
+          };
+        }
+
+        if (faktaavklaringSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG) {
+          return {
+            visUtsendingMindreEnn24Mnd: true,
+            visAnsattINorskSelskap: false,
+            visErstatterTidligereUtsendt: false,
+            visForetakDriverINorge: true,
+            visHarForutgaendeMedlemskap: false,
+            visArbeidKnyttetTilVirksomhetUtlandet: false,
+            visSammeTypeVirksomhet: true,
+          };
+        }
+
+        return {};
       }
       case STEG.BOSTEDSLAND: {
         return {};

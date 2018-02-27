@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import PT from 'prop-types';
 
 import withErrorHandling from '../hoc/withErrorHandling';
@@ -69,6 +69,7 @@ class Sok extends Component {
             */}
           </Nav.Row>
         </Nav.Container>
+        <Link to="/spark" className="sok__sparklink">Debug</Link>
       </div>
     );
   }
@@ -100,7 +101,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
-  opprettSak: fnr => dispatch(NyeSaker.opprettSak(fnr)),
+  opprettSak: fnr => dispatch(NyeSaker.opprettNyFagsak(fnr)),
 });
 
 const kontekster = ['saksbehandler', 'fagsaker'];

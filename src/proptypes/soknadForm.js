@@ -6,6 +6,4 @@ const SoknadFormPropType = PT.shape({
   term: PT.string,
 });
 
-export {
-  SoknadFormPropType as SoknadForm,
-};
+export { SoknadFormPropType as SoknadForm };
