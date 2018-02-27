@@ -41,7 +41,7 @@ class TilstandsLogikk {
             visForetakDriverINorge: true,
             visHarForutgaendeMedlemskap: true,
             visArbeidKnyttetTilVirksomhetUtlandet: true,
-            visSammeTypeVirksomhet: true,
+            visSammeTypeVirksomhet: false,
           };
         }
 
