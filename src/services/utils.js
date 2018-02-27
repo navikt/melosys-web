@@ -125,12 +125,14 @@ function methodToJson(method, url, data) {
   };
 
   const fetchConfig = {
-    method,
+    // body: below, for POST, PUT
+    credentials: 'include', // *same-origin, include, omit; NB! MUST use 'include' to pass fetchConfig to fetch(),
+    cache: 'no-cache', // *default, no-cache, force-cache, only-if-cached
     headers: new Headers(headers),
-    redirect: 'follow',
-    credentials: 'same-origin',
-    mode: 'cors',
-    cache: 'no-cache',
+    method, // *GET, POST, ....
+    // mode: 'same-origin', // *same-origin, no-cors, cors
+    // redirect: 'follow', // *manual, follow, error
+    // referrer: // *client, no-referrer
   };
 
   const httpVerbsWithBody = ['POST', 'PUT'];
