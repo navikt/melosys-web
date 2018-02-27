@@ -13,6 +13,4 @@ const ArbeidsgivereNorgePropType = PT.arrayOf(PT.shape({
   }),
 }));
 
-export {
-  ArbeidsgivereNorgePropType as ArbeidsgivereNorge,
-};
+export { ArbeidsgivereNorgePropType as ArbeidsgivereNorge };

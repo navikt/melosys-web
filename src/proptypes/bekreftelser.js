@@ -13,6 +13,4 @@ const BekreftelserPropType = PT.shape({
   }),
 });
 
-export {
-  BekreftelserPropType as Bekreftelser,
-};
+export { BekreftelserPropType as Bekreftelser };
