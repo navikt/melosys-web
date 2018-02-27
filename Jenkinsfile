@@ -9,7 +9,7 @@ node {
   def groupId = "nais"
 
   def nais_cluster = "preprod-fss"
-  def nav_environment = "t0"
+  def nav_environment = "t8"
 
   /* metadata */
   def buildVersion // major.minor.BUILD_NUMBER

@@ -29,7 +29,7 @@ class Arbeidsavtaler extends Component {
       const {
         gyldigTil = '-', yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, stillingsprosent, antallTimerFraGammeltRegister = '-', endringsdatoStillingsprosent,
       } = arbeidsavtale;
-      return [...samling, [gyldigTil, yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, antallTimerFraGammeltRegister, stillingsprosent, EnkeltDato(endringsdatoStillingsprosent)]];
+      return [...samling, [gyldigTil, yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, antallTimerFraGammeltRegister, stillingsprosent, <EnkeltDato dato={endringsdatoStillingsprosent} />]];
     }, []);
 
     // Lag eventuelle elementer som skal rendres ut senere, slik at vi slipper mye logikk i selve return-blokken.
