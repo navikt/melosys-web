@@ -23,12 +23,10 @@ class TilstandsLogikk {
         };
       }
       case STEG.VIRKSOMHET: {
-        const { faktaavklaringAntallLand } = skjema;
-
         return {
-          visVekslingMellomLand: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
-          visMarginaltArbeid: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
-          visAktivitetINorge: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
+          visVekslingMellomLand: true,
+          visMarginaltArbeid: true,
+          visAktivitetINorge: true,
         };
       }
       case STEG.UTSENDING: {

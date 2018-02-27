@@ -24,7 +24,7 @@ class StegLogikk {
       {
         kriterier: 'sysselsettingType ER LIK "SELVSTENDIG"',
         erOppfylt: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG,
-        nesteSteg: STEG.AKTIVITET,
+        nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
       },
       {
         kriterier: 'alle andre valg',
@@ -58,13 +58,13 @@ class StegLogikk {
     ],
     YRKESAKTIVITET_FORDELING: [
       {
-        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN"  OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
-        erOppfylt: ({ sysselsettingType, ansattISektor, yrkesaktivitetFordeling }) => (
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE"  OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
+        erOppfylt: ({ sysselsettingType, ansattISektor, antallLand }) => (
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
-          ansattISektor === VurderingSektorTyper.INGEN &&
-          yrkesaktivitetFordeling === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
+          ansattISektor === VurderingSektorTyper.INGEN_AV_DISSE &&
+          antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
         ),
-        nesteSteg: STEG.VIRKSOMHET,
+        nesteSteg: STEG.UTSENDING,
       },
       {
         kriterier: 'alle andre valg',
