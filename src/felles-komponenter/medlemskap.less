@@ -5,9 +5,24 @@
 
   .medlemskap__enkelt {
     .seksjonmixin();
+    border-bottom: 1px solid @gray-dark;
+
+    &:last-child {
+      border-bottom: 0px;
+    }
+  }
+
+  .medlemskap__gruppeoverskrift{
+    margin: 2em 0 1em 0;
   }
 
   .medlemskap__detaljer {
     .beskrivliste-mixin('row');
+  }
+
+  .visavvist__knapp {
+    float:right;
+    margin-top: 2em;
+    margin-bottom: 2em;
   }
 }

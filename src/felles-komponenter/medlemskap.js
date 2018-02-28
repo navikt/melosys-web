@@ -81,11 +81,13 @@ function MedlemskapGruppe(props) {
   const { perioder, overskrift } = props;
 
   return (
-    <section aria-label="Panel for medlemskap">
-      <Nav.Undertittel>{overskrift}</Nav.Undertittel>
-      { perioder.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) }
-      { perioder.length === 0 && '(ingen funnet)'}
-    </section>
+    <div>
+      <Nav.Undertittel className="medlemskap__gruppeoverskrift">{overskrift}</Nav.Undertittel>
+      <section aria-label="Panel for medlemskap">
+        { perioder.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) }
+        { perioder.length === 0 && '(ingen funnet)'}
+      </section>
+    </div>
   );
 }
 
@@ -129,7 +131,7 @@ class Medlemskap extends Component {
               <Nav.Knapp
                 mini
                 onClick={toggleAvvisteMedlemskapHandler}
-                className="vistabell__knapp">{visAvvisteMedlemskap ? 'Skjul' : 'Vis'} avviste medlemskap
+                className="visavvist__knapp">{visAvvisteMedlemskap ? 'Skjul' : 'Vis'} avviste medlemskap
               </Nav.Knapp>
             </Nav.Container>
           </section>
