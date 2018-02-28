@@ -98,7 +98,22 @@ export const BekreftelserSelector = createSelector(
 
 export const MedlemskapSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : {}),
-  medlemskap => medlemskap || {}
+  medlemskap => {
+    // Medlemskapskoder fra kodeverk
+    const PERIODE_MED_MEDLEMSKAP = 'PMMEDSKP';
+    const PERIODE_UTEN_MEDLEMSKAP = 'PUMEDSKP';
+    const GYLDIG_MEDLEMSKAP = 'GYLD';
+    const AVVIST_MEDLEMSKAP = 'AVST';
+    const UAVKLART_MEDLEMSKAP = 'UAVK';
+
+    const { medlemsperiode = [] } = medlemskap;
+    return {
+      periodeMed: medlemsperiode.filter(periode => periode.type.kode === PERIODE_MED_MEDLEMSKAP),
+      periodeUten: medlemsperiode.filter(periode => periode.type.kode === PERIODE_UTEN_MEDLEMSKAP),
+      perioderUavklart: medlemsperiode.filter(periode => periode.status.kode === UAVKLART_MEDLEMSKAP),
+      perioderAvvist: medlemsperiode.filter(periode => periode.status.kode === AVVIST_MEDLEMSKAP),
+    };
+  }
 );
 
 
