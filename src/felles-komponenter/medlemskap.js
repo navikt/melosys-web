@@ -5,6 +5,7 @@ import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import DatoOmrade from '../felles-komponenter/datoOmrade/datoOmrade';
 
 import './medlemskap.css';
 
@@ -17,6 +18,7 @@ const uuid = require('uuid/v4');
  */
 function MedlemskapPeriode({ medlemskapPeriode }) {
   const {
+    periode,
     type,
     status,
     grunnlagstype,
@@ -31,7 +33,10 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
     <div className="medlemskap__enkelt" aria-label="Enkelt medlemskap">
       <Nav.Row>
         {/* START DETALJER */}
-        <Nav.Column xs="12" lg="7">
+        <Nav.Column xs="4">
+          <DatoOmrade periode={periode} />
+        </Nav.Column>
+        <Nav.Column xs="8">
           <dl className="medlemskap__detaljer">
             <dt>Periodetype:</dt>
             <dd>{type || '-'}</dd>
@@ -49,7 +54,6 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
             <dd>{kildedokumenttype || '-'}</dd>
             <dt>Kilde:</dt>
             <dd>{kilde || '-'}</dd>
-
           </dl>
         </Nav.Column>
         {/* SLUTT DETALJER */}
