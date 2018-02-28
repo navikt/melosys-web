@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -13,7 +14,7 @@ import './medlemskap.css';
 
 const uuid = require('uuid/v4');
 
-/** MedlemskapsSeksjon inneholdet ett enkelt medlemskap. Hver søker kan ha
+/** MedlemskapPeriode inneholdet ett enkelt medlemskap. Hver søker kan ha
  * flere medlemskap. Se Confluence for definisjon av "medlemskap".
  *
  * @constructor
@@ -65,12 +66,43 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
 }
 
 MedlemskapPeriode.propTypes = {
-  medlemskapPeriode: MPT.MedlemskapPeriode.isRequired,
+  medlemskapPeriode: MPT.MedlemskapEnkeltPeriode.isRequired,
 };
 
-function Medlemskap({ medlemskap }) {
-  const { medlemsperiode = [] } = medlemskap;
+/** En MedlemskapGruppe er en gruppering eller samling av flere medlemskap
+ * som har samme status eller type, feks "AVVIST", "PERIODE MED MEDLEMSKAP" eller liknende. Grupperingen
+ * gjøres i MedlemskapSelector.
+ *
+ * Målet med grupperingen er at saksbehandler raskere skal kunne finne frem til relevante perioder
+ * hvor søkeren har eller ikke har medlemskap. Dette kan være avgjørende for vurdering av søknaden.
+ *
+ */
+function MedlemskapGruppe(props) {
+  const { perioder, overskrift } = props;
 
+  return (
+    <section aria-label="Panel for medlemskap">
+      <Nav.Undertittel>{overskrift}</Nav.Undertittel>
+      { perioder.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) }
+      { perioder.length === 0 && '(ingen funnet)'}
+    </section>
+  );
+}
+
+MedlemskapGruppe.propTypes = {
+  perioder: MPT.MedlemskapPerioder.isRequired,
+  overskrift: PT.string,
+};
+
+MedlemskapGruppe.defaultProps = {
+  overskrift: '',
+};
+
+/** Dette er grunn-komponenten for Medlemskap som eksponeres ut av modulen og som også
+ * settes inn som egen fane med overskriften "Medlemskap" i saksopplysningene.
+ *
+ */
+function Medlemskap({ medlemskap }) {
   return (
     <div className="medlemskap panelSeksjon">
       <Nav.EkspanderbartpanelBase
@@ -78,7 +110,9 @@ function Medlemskap({ medlemskap }) {
         ariaTittel="Panel for medlemskap" >
         <section aria-label="Panel for medlemskap">
           <Nav.Container fluid>
-            { medlemsperiode.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) }
+            <MedlemskapGruppe perioder={medlemskap.perioderMed} overskrift="Perioder med medlemskap" />
+            <MedlemskapGruppe perioder={medlemskap.perioderUten} overskrift="Perioder uten medlemskap" />
+            <MedlemskapGruppe perioder={medlemskap.perioderUavklart} overskrift="Perioder med uavklart medlemskap" />
           </Nav.Container>
         </section>
       </Nav.EkspanderbartpanelBase>

@@ -108,8 +108,8 @@ export const MedlemskapSelector = createSelector(
 
     const { medlemsperiode = [] } = medlemskap;
     return {
-      periodeMed: medlemsperiode.filter(periode => periode.type.kode === PERIODE_MED_MEDLEMSKAP),
-      periodeUten: medlemsperiode.filter(periode => periode.type.kode === PERIODE_UTEN_MEDLEMSKAP),
+      perioderMed: medlemsperiode.filter(periode => periode.type.kode === PERIODE_MED_MEDLEMSKAP && periode.status.kode === GYLDIG_MEDLEMSKAP),
+      perioderUten: medlemsperiode.filter(periode => periode.type.kode === PERIODE_UTEN_MEDLEMSKAP),
       perioderUavklart: medlemsperiode.filter(periode => periode.status.kode === UAVKLART_MEDLEMSKAP),
       perioderAvvist: medlemsperiode.filter(periode => periode.status.kode === AVVIST_MEDLEMSKAP),
     };
