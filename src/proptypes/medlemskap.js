@@ -1,11 +1,14 @@
 import PT from 'prop-types';
+import { Periode } from './periode';
+import { Kodeverk } from './kodeverk';
 
 const MedlemskapPeriodePropType = PT.shape({
-  type: PT.string,
-  status: PT.string,
-  grunnlagstype: PT.string,
-  land: PT.string,
-  lovvalg: PT.string,
+  periode: Periode,
+  type: Kodeverk,
+  status: Kodeverk,
+  grunnlagstype: Kodeverk,
+  land: Kodeverk,
+  lovvalg: Kodeverk,
   trygdedekning: PT.string,
   kildedokumenttype: PT.string,
   kilde: PT.string,
@@ -14,7 +17,6 @@ const MedlemskapPeriodePropType = PT.shape({
 const MedlemskapPropType = PT.shape({
   medlemsperiode: PT.arrayOf(MedlemskapPeriodePropType),
 });
-
 
 export {
   MedlemskapPeriodePropType as MedlemskapPeriode,
