@@ -34,12 +34,15 @@ function Input({
   feltNavn, bredde, datoFelt, ...rest
 }) {
   const normaliserDatoFunksjon = datoFelt ? normaliserInputDato : null;
+  const placeholderTekst = datoFelt ? 'ddmmåå' : null;
+
   return (
     <Field
       bredde={bredde}
       name={feltNavn}
       normalize={normaliserDatoFunksjon}
       component={InnerInputComponent}
+      placeholder={placeholderTekst}
       props={rest}
     />
   );
