@@ -1,4 +1,5 @@
 import periode from '../periode-body';
+import kodeverk from '../kodeverk-body';
 
 const { Matchers } = require('@pact-foundation/pact');
 
@@ -6,11 +7,11 @@ const { like, eachLike } = Matchers;
 
 const medlemskapsperiode = eachLike({
   periode,
-  type: like('PMMEDSKP'),
-  status: like('AVST'),
-  grunnlagstype: like('MEDEOS'),
-  land: like('NOR'),
-  lovvalg: like('ENDL'),
+  type: kodeverk,
+  status: kodeverk,
+  grunnlagstype: kodeverk,
+  land: kodeverk,
+  lovvalg: kodeverk,
   trygdedekning: like('Full'),
   kildedokumenttype: like('E101'),
   kilde: like('FS22'),
