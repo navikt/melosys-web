@@ -277,3 +277,7 @@ export function datoDiff (fom, tom, enhet = "months") {
   if(!fom || !tom) return false;
   return moment(tom).diff(fom, enhet);
 }
+
+export function tekstEllerDash(data) {
+  return data || '-';
+}
