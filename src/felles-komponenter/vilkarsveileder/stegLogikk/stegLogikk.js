@@ -70,13 +70,13 @@ class StegLogikk {
         nesteSteg: STEG.UTSENDING,
       },
       {
-        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE"  OG yrkesaktivitetFordeling ER LIK "KUN_NORGE"',
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE" OG yrkesaktivitetFordeling ER LIK "KUN_NORGE"',
         erOppfylt: ({ sysselsettingType, ansattISektor, antallLand }) => (
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
           ansattISektor === VurderingSektorTyper.INGEN_AV_DISSE &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.KUN_NORGE
         ),
-        nesteSteg: STEG.AKTIVITET,
+        nesteSteg: STEG.VEDTAK,
       },
       {
         kriterier: 'sysselsettingType ER LIK "SELVSTENDIG" OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
@@ -92,7 +92,7 @@ class StegLogikk {
           sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.KUN_NORGE
         ),
-        nesteSteg: STEG.AKTIVITET,
+        nesteSteg: STEG.VEDTAK,
       },
       {
         kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER_OG_SELVSTENDIG" OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
