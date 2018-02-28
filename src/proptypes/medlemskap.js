@@ -15,7 +15,10 @@ const MedlemskapPeriodePropType = PT.shape({
 });
 
 const MedlemskapPropType = PT.shape({
-  medlemsperiode: PT.arrayOf(MedlemskapPeriodePropType),
+  perioderMed: PT.arrayOf(MedlemskapPeriodePropType),
+  perioderUten: PT.arrayOf(MedlemskapPeriodePropType),
+  perioderUavklart: PT.arrayOf(MedlemskapPeriodePropType),
+  perioderAvvist: PT.arrayOf(MedlemskapPeriodePropType),
 });
 
 export {
