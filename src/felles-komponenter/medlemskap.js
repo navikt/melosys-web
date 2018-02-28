@@ -18,12 +18,12 @@ const uuid = require('uuid/v4');
  */
 function MedlemskapPeriode({ medlemskapPeriode }) {
   const {
-    periode,
-    type,
-    status,
-    grunnlagstype,
-    land,
-    lovvalg,
+    periode = {},
+    type = {},
+    status = {},
+    grunnlagstype = {},
+    land = {},
+    lovvalg = {},
     trygdedekning,
     kildedokumenttype,
     kilde,
@@ -39,15 +39,15 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
         <Nav.Column xs="8">
           <dl className="medlemskap__detaljer">
             <dt>Periodetype:</dt>
-            <dd>{type || '-'}</dd>
+            <dd>{type.term || '-'}</dd>
             <dt>Status:</dt>
-            <dd>{status || '-'}</dd>
+            <dd>{status.term || '-'}</dd>
             <dt>Grunnlagstype:</dt>
-            <dd>{grunnlagstype || '-'}</dd>
+            <dd>{grunnlagstype.term || '-'}</dd>
             <dt>Land:</dt>
-            <dd>{land || '-'}</dd>
+            <dd>{land.term || '-'}</dd>
             <dt>Lovvalg:</dt>
-            <dd>{lovvalg || '-'}</dd>
+            <dd>{lovvalg.term || '-'}</dd>
             <dt>Trygdedekning:</dt>
             <dd>{trygdedekning || '-'}</dd>
             <dt>Kildedokumenttype:</dt>
