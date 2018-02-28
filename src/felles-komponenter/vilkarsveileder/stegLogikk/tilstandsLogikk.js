@@ -18,14 +18,16 @@ class TilstandsLogikk {
           visAnsattISektor: true,
         };
       }
-      case STEG.VIRKSOMHET: {
-        const { faktaavklaringAntallLand } = skjema;
-
+      case STEG.YRKESAKTIVITET_FORDELING: {
         return {
           visAntallLand: true,
-          visVekslingMellomLand: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
-          visMarginaltArbeid: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
-          visAktivitetINorge: faktaavklaringAntallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND,
+        };
+      }
+      case STEG.VIRKSOMHET: {
+        return {
+          visVekslingMellomLand: true,
+          visMarginaltArbeid: true,
+          visAktivitetINorge: true,
         };
       }
       case STEG.UTSENDING: {
@@ -39,7 +41,7 @@ class TilstandsLogikk {
             visForetakDriverINorge: true,
             visHarForutgaendeMedlemskap: true,
             visArbeidKnyttetTilVirksomhetUtlandet: true,
-            visSammeTypeVirksomhet: true,
+            visSammeTypeVirksomhet: false,
           };
         }
 
