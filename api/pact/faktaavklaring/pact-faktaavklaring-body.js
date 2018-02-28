@@ -23,6 +23,7 @@ const faktaavklaring = {
     foretakDriverINorge: boolean(true),
     harForutgaendeMedlemskap: boolean(true),
     arbeidKnyttetTilVirksomhetUtlandet: boolean(true),
+    sammeTypeVirksomhet: boolean(true),
   },
   bostedsland: {
     bekrefterFamiliebosted: null,
