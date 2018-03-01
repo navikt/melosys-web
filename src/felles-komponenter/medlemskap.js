@@ -14,12 +14,12 @@ import './medlemskap.css';
 
 const uuid = require('uuid/v4');
 
-/** MedlemskapPeriode inneholdet ett enkelt medlemskap. Hver søker kan ha
+/** MedlemskapEnkeltPeriode inneholdet ett enkelt medlemskap. Hver søker kan ha
  * flere medlemskap. Se Confluence for definisjon av "medlemskap".
  *
  * @constructor
  */
-function MedlemskapPeriode({ medlemskapPeriode }) {
+function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
   const {
     periode = {},
     type = {},
@@ -30,7 +30,7 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
     trygdedekning,
     kildedokumenttype,
     kilde,
-  } = medlemskapPeriode;
+  } = enkeltPeriode;
 
   return (
     <div className="medlemskap__enkelt" aria-label="Enkelt medlemskap">
@@ -65,8 +65,8 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
   );
 }
 
-MedlemskapPeriode.propTypes = {
-  medlemskapPeriode: MPT.MedlemskapEnkeltPeriode.isRequired,
+MedlemskapEnkeltPeriode.propTypes = {
+  enkeltPeriode: MPT.MedlemskapEnkeltPeriode.isRequired,
 };
 
 /** En MedlemskapGruppe er en gruppering eller samling av flere medlemskap
@@ -84,7 +84,7 @@ function MedlemskapGruppe(props) {
     <div>
       <Nav.Undertittel className="medlemskap__gruppeoverskrift">{overskrift}</Nav.Undertittel>
       <section aria-label="Panel for medlemskap">
-        { perioder.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) }
+        { perioder.map(enkeltPeriode => <MedlemskapEnkeltPeriode key={uuid()} enkeltPeriode={enkeltPeriode} />) }
         { perioder.length === 0 && '(ingen funnet)'}
       </section>
     </div>
@@ -100,7 +100,7 @@ MedlemskapGruppe.defaultProps = {
   overskrift: '',
 };
 
-/** Dette er grunn-komponenten for Medlemskap som eksponeres ut av modulen og som også
+/** Dette er hoved-komponenten for Medlemskap som eksponeres ut av modulen og som også
  * settes inn som egen fane med overskriften "Medlemskap" i saksopplysningene.
  *
  */
@@ -131,7 +131,8 @@ class Medlemskap extends Component {
               <Nav.Knapp
                 mini
                 onClick={toggleAvvisteMedlemskapHandler}
-                className="visavvist__knapp">{visAvvisteMedlemskap ? 'Skjul' : 'Vis'} avviste medlemskap
+                className="visavvist__knapp">
+                {visAvvisteMedlemskap ? 'Skjul avviste medlemskap' : 'Vis avviste medlemskap'}
               </Nav.Knapp>
             </Nav.Container>
           </section>
