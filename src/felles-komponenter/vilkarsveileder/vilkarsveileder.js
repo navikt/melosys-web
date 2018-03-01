@@ -135,7 +135,7 @@ class Vilkarsveileder extends Component {
           komponent: VurderingVirksomhet,
           dataHenter: () => ({}),
           handlers: {
-            bekreftOgFortsett: this.beOmVurdering,
+            bekreftOgFortsett: this.bekreftOgFortsett,
           },
           status: FANE_STATUS.OK,
         },
@@ -144,7 +144,7 @@ class Vilkarsveileder extends Component {
           komponent: VurderingVedtak,
           dataHenter: () => ({}),
           handlers: {
-            fattVedtakHandler: this.fattVedtak,
+            fattVedtakHandler: () => { this.fattVedtak(); this.beOmVurdering(); },
           },
           status: FANE_STATUS.OK,
         },
