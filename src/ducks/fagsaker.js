@@ -38,6 +38,15 @@ export function hentFagsaker(snr) {
     PENDING,
   });
 }
+
+export function opprettNyFagsak(fnr) {
+  return doThenDispatch(() => Api.opprettNyFagsak(fnr), {
+    OK,
+    FEILET,
+    PENDING,
+  });
+}
+
 // selector(s)
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
@@ -124,6 +133,21 @@ export const OrganisasjonSelector = createSelector(
     // Filter organisasjoner hvis orgnr er inkludert i arrayen alleRelevanteOrgnummer.
     const alleRelevanteOrganisasjoner = organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnr));
     return alleRelevanteOrganisasjoner;
+  }
+);
+
+export const ArbeidsgivereNorgeSelector = createSelector(
+  state => OrganisasjonerSelector(state),
+  state => ArbeidsforholdeneSelector(state),
+  state => InntektSelector(state),
+  (organisasjoner, arbeidsforholdene, inntekter) => {
+    const arbeidsgivere = organisasjoner.reduce((samling, organisasjon) => {
+      const filtrerteArbeidsforholdene = arbeidsforholdene.filter(arbeidsforholdet => arbeidsforholdet.opplysningspliktigID === organisasjon.orgnr);
+      const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === organisasjon.orgnr);
+      return ([...samling, { organisasjon, arbeidsforholdene: filtrerteArbeidsforholdene, inntektListe: filtrerteInntekter }]);
+    }, [])
+      .filter(arbeidsgiver => arbeidsgiver.arbeidsforholdene.length > 0 || arbeidsgiver.inntektListe.length > 0);
+    return arbeidsgivere;
   }
 );
 

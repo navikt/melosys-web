@@ -2,9 +2,11 @@ import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 
-import { ArbeidsforholdeneSelector } from './fagsaker';
+import { ArbeidsforholdeneSelector, OrganisasjonerSelector } from './fagsaker';
 
 import { formatterDatoTilISO } from '../utils/dato';
+
+const moment = require('moment');
 
 // Actions
 const OK = 'faktaavklaring/OK';
@@ -51,6 +53,10 @@ export default function reducer(state = initialState, action) {
           ansattINorskSelskap: dokument.faktaavklaringAnsattINorskSelskap,
           erstatterTidligereUtsendt: dokument.faktaavklaringErstatterTidligereUtsendt,
           utsendingMindreEnn24Mnd: dokument.faktaavklaringUtsendingMindreEnn24Mnd,
+          foretakDriverINorge: dokument.faktaavklaringForetakDriverINorge,
+          harForutgaendeMedlemskap: dokument.faktaavklaringHarForutgaendeMedlemskap,
+          arbeidKnyttetTilVirksomhetUtlandet: dokument.faktaavklaringArbeidKnyttetTilVirksomhetUtlandet,
+          sammeTypeVirksomhet: dokument.faktaavklaringSammeTypeVirksomhet,
         },
         valgteArbeidsforhold: [...dokument.faktaavklaringValgteArbeidsforhold],
         sektor: {
@@ -61,8 +67,10 @@ export default function reducer(state = initialState, action) {
           bekrefterDisponering: dokument.faktaavklaringBekrefterDisponering,
           bostedsland: dokument.faktaavklaringBostedsland,
         },
-        virksomhet: {
+        yrkesaktivitetFordeling: {
           antallLand: dokument.faktaavklaringAntallLand,
+        },
+        virksomhet: {
           aktivitetINorge: dokument.faktaavklaringAktivitetINorge,
           marginaltArbeid: dokument.faktaavklaringMarginaltArbeid,
           vekslingMellomLand: dokument.faktaavklaringVekslingMellomLand,
@@ -139,6 +147,11 @@ export const FaktaavklaringSektorSelector = createSelector(
   sektor => sektor || {}
 );
 
+export const FaktaavklaringYrkesaktivitetFordelingSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.yrkesaktivitetFordeling : {}),
+  yrkesaktivitetFordeling => yrkesaktivitetFordeling || {}
+);
+
 export const FaktaavklaringVirksomhetSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.virksomhet : {}),
   virksomhet => virksomhet || {}
@@ -172,6 +185,34 @@ export const FaktaavklaringValgteArbeidsforholdDetaljerSelector = createSelector
     const valgteArbeidsforhold = alleArbeidsforhold.filter(arbeidsforholdet => valgteArbeidsforholdIDnav.includes(arbeidsforholdet.arbeidsforholdIDnav));
     return (valgteArbeidsforhold || []);
   }
+);
+
+/**
+ * Kun arbeidsforhold som tangerer innenfor perioden som er lagt inn i faktaavklaringen skal
+ * vises i listen over valgbare arbeidsforhold i stegvelgeren (vurderingArbeidsforhold).
+ */
+export const RelevanteArbeidsforholdeneSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
+  state => OrganisasjonerSelector(state),
+  state => FaktaavklaringOppholdPeriodeSelector(state),
+  (arbeidsforholdene = [], organisasjoner = [], opphold = {}) => (
+    arbeidsforholdene
+      .map(forholdet => {
+        const forholdetsArbeidsgiver = organisasjoner.find(org => org.orgnr === forholdet.arbeidsgiverID) || {};
+        return ({ ...forholdet, arbeidsgiver: forholdetsArbeidsgiver });
+      })
+      .filter(arbeidsforholdet => {
+        // Til-og-med-periode for et arbeidsforhold kan være undefined og dermed et fortsatt
+        // løpende arbeidsforhold. For at arbeidsforholdet dermed skal komme med i listen,
+        // sett dagens moment() slik at diff blir riktig.
+        const { fom: ansattStartDato = moment(), tom: ansattSluttDato = moment() } = arbeidsforholdet.ansettelsesPeriode;
+        const { fom: oppholdStartDato, tom: oppholdSluttDato } = opphold;
+
+        const erAnsattVedPeriodeStart = moment(oppholdStartDato, 'YYYY-MM-DD').diff(moment(ansattSluttDato, 'YYYY-MM-DD')) <= 0;
+        const erAnsattVedPeriodeSlutt = moment(oppholdSluttDato, 'YYYY-MM-DD').diff(moment(ansattStartDato, 'YYYY-MM-DD')) >= 0;
+        return erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt;
+      })
+  )
 );
 
 export const FaktaavklaringForretningsstedSelector = createSelector(

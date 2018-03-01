@@ -6,6 +6,4 @@ const PeriodePropType = PT.shape({
   tom: PT.string,
 });
 
-export {
-  PeriodePropType as Periode,
-};
+export { PeriodePropType as Periode };

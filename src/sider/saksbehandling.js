@@ -18,11 +18,11 @@ import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveiled
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
-import Arbeidsforholdene from '../felles-komponenter/arbeidsforholdene';
+import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
 import OppholdUtland from '../felles-komponenter/oppholdUtland';
-import Inntekt from '../felles-komponenter/inntekt';
+import Inntekt from '../felles-komponenter/inntektUtland';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
@@ -33,7 +33,7 @@ import {
   hentFagsaker,
   PersonSelector,
   MedlemskapSelector,
-  ArbeidsforholdeneSelector,
+  ArbeidsgivereNorgeSelector,
   InntektSoknadenSelector,
   BekreftelserSelector,
   OppsummeringSelector,
@@ -60,6 +60,7 @@ import {
   FaktaavklaringSysselsettingSelector,
   FaktaavklaringUtsendingSelector,
   FaktaavklaringSektorSelector,
+  FaktaavklaringYrkesaktivitetFordelingSelector,
   FaktaavklaringVirksomhetSelector,
   FaktaavklaringAktivitetSelector,
   FaktaavklaringBostedslandSelector,
@@ -76,9 +77,7 @@ import {
 import { boolTilStreng } from '../utils/utils';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
-import {
-  SoknadenFormSelector,
-} from '../ducks/form';
+import { SoknadenFormSelector } from '../ducks/form';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
@@ -95,7 +94,7 @@ class Saksbehandling extends Component {
     match: PT.object.isRequired,
     person: MPT.Person,
     medlemskap: MPT.Medlemskap,
-    arbeidsforholdene: MPT.Arbeidsforholdene,
+    arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
     inntekt: MPT.Inntekt,
     vurdering: PT.object,
     bekreftelser: MPT.Bekreftelser,
@@ -114,7 +113,7 @@ class Saksbehandling extends Component {
   static defaultProps = {
     person: {},
     medlemskap: {},
-    arbeidsforholdene: [],
+    arbeidsgivereNorge: [],
     inntekt: {},
     vurdering: {},
     bekreftelser: [],
@@ -155,6 +154,7 @@ class Saksbehandling extends Component {
   fattVedtakHandler = () => {
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
+    this.props.handleSubmit();
 
     this.props.sendSoknad(bid, soknad);
     this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
@@ -163,6 +163,10 @@ class Saksbehandling extends Component {
   beOmVurdering = () => {
     const { behandlingID } = this.props.oppsummering;
     this.props.hentVurdering(behandlingID);
+  }
+
+  overstyrSubmit = event => {
+    event.preventDefault();
   }
 
   /* eslint-disable */
@@ -174,13 +178,12 @@ class Saksbehandling extends Component {
     const {
       person,
       medlemskap,
-      arbeidsforholdene,
+      arbeidsgivereNorge,
       inntekt,
       bekreftelser,
       oppsummering,
       soknadArbeidsinntekt,
       soknadOppholdUtland,
-      handleSubmit,
       errorSummary,
       soknadForm,
     } = this.props;
@@ -194,13 +197,13 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <form name="soknad" id="soknad" onSubmit={handleSubmit}>
+              <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
                 <Vilkarsveileder
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {errorSummary}
                 {person && <Personopplysninger person={person} />}
-                {arbeidsforholdene && <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />}
+                {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
@@ -229,7 +232,7 @@ class Saksbehandling extends Component {
 const mapStateToProps = state => ({
   person: PersonSelector(state),
   medlemskap: MedlemskapSelector(state),
-  arbeidsforholdene: ArbeidsforholdeneSelector(state),
+  arbeidsgivereNorge: ArbeidsgivereNorgeSelector(state),
   inntekt: InntektSoknadenSelector(state),
   vurdering: VurderingSelector(state),
   bekreftelser: BekreftelserSelector(state),
@@ -267,8 +270,12 @@ const mapStateToProps = state => ({
     faktaavklaringAnsattINorskSelskap: FaktaavklaringUtsendingSelector(state).ansattINorskSelskap,
     faktaavklaringErstatterTidligereUtsendt: FaktaavklaringUtsendingSelector(state).erstatterTidligereUtsendt,
     faktaavklaringUtsendingMindreEnn24Mnd: FaktaavklaringUtsendingSelector(state).utsendingMindreEnn24Mnd,
+    faktaavklaringForetakDriverINorge: FaktaavklaringUtsendingSelector(state).foretakDriverINorge,
+    faktaavklaringHarForutgaendeMedlemskap: FaktaavklaringUtsendingSelector(state).harForutgaendeMedlemskap,
+    faktaavklaringArbeidKnyttetTilVirksomhetUtlandet: FaktaavklaringUtsendingSelector(state).arbeidKnyttetTilVirksomhetUtlandet,
+    faktaavklaringSammeTypeVirksomhet: FaktaavklaringUtsendingSelector(state).sammeTypeVirksomhet,
     faktaavklaringAnsattISektor: FaktaavklaringSektorSelector(state).ansattISektor,
-    faktaavklaringAntallLand: FaktaavklaringVirksomhetSelector(state).antallLand,
+    faktaavklaringAntallLand: FaktaavklaringYrkesaktivitetFordelingSelector(state).antallLand,
     faktaavklaringAktivitetINorge: FaktaavklaringVirksomhetSelector(state).aktivitetINorge,
     faktaavklaringMarginaltArbeid: FaktaavklaringVirksomhetSelector(state).marginaltArbeid,
     faktaavklaringVekslingMellomLand: FaktaavklaringVirksomhetSelector(state).vekslingMellomLand,
@@ -299,6 +306,7 @@ const SaksbehandlingForm = validForm({
   form: 'soknad',
   enableReinitialize: true,
   destroyOnUnmount: false,
+  updateUnregisteredFields: true,
   errorSummaryTitle: 'Følgende må vurderes eller oppgis:',
   fields: alleFeltNavn(feltGrupper),
   validate: alleValideringer(feltGrupper),
