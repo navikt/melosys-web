@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PT from 'prop-types';
 import * as Nav from '../utils/navFrontend';
 import { isJSON } from '../utils/utils';
 
@@ -30,18 +31,25 @@ const withErrorHandling = (kontekster, WrappedComponent) => props => {
     // Sorter feilkoder med synkende verdi
     feilObjekter.sort((a, b) => b.status - a.status);
 
-    const feilKomponent = (
+    const FeilKomponent = ({ feilobjekt }) => (
       <div className="error-message">
-        <Nav.AlertStripeAdvarsel>{ feilObjekter[0].status } : { feilObjekter[0].statusText }<br />{ feilObjekter[0].fetchdata.timestamp}<br />{ feilObjekter[0].message }</Nav.AlertStripeAdvarsel>
+        <Nav.AlertStripeAdvarsel>{ feilobjekt.status } : { feilobjekt.statusText }<br />{ feilobjekt.fetchdata.timestamp}<br />{ feilobjekt.message }</Nav.AlertStripeAdvarsel>
       </div>
     );
+    FeilKomponent.propTypes = {
+      feilobjekt: PT.shape({
+        status: PT.number,
+        statusText: PT.string,
+        fetchdata: PT.object,
+      }).isRequired,
+    };
 
-      // Dersom 404 så skal både alertstripe og kompoonent vises.
+    // Dersom 404 så skal både alertstripe og kompoonent vises.
     if (feilObjekter[0].status === 404) {
-      return (<div {...props} ><WrappedComponent {...props} />{feilKomponent}</div>);
+      return (<div {...props} ><WrappedComponent {...props} /><FeilKomponent feilobjekt={feilObjekter[0]} /></div>);
     }
     // alle andre feilkoder gir full stopp uten å vise komponenten.
-    return (<div>{feilKomponent}</div>);
+    return (<div><FeilKomponent feilobjekt={feilObjekter[0]} /></div>);
   };
 
   const mapStateToProps = state => ({
