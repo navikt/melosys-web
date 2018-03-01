@@ -76,7 +76,7 @@
     "test": "npm run build:css && react-scripts test --env=jsdom",
     "test:ci": "npm run build:css && react-scripts test --env=jsdom --testResultsProcessor ./node_modules/jest-junit --coverage --coverageDirectory=test/coverage",
     "eject": "react-scripts eject",
-    "eslint": "eslint src --ext .js --ext .jsx",
+    "eslint": "eslint src --ext .js",
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
     "mocha": "mocha"
   },
