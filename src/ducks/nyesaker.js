@@ -39,9 +39,9 @@ export function hentNyesaker(fnr) {
   });
 }
 
-export function opprettSak(fnr) {
+export function opprettNyFagsak(fnr) {
   return dispatch => {
-    Api.opprettSak(fnr).then(data => {
+    Api.opprettNyFagsak(fnr).then(data => {
       dispatch({
         type: OPPRETT,
         data,

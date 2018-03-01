@@ -6,7 +6,7 @@ import './panelHeader.css';
 
 const PanelHeader = ({ ikon, tittel, undertittel }) => (
   <div className="panelheader">
-    <div className="panelheader__ikon" style={{ backgroundImage: `url('${ikon}')` }} />
+    { ikon && <div className="panelheader__ikon" style={{ backgroundImage: `url('${ikon}')` }} /> }
     <div className="panelheader__tittel">
       <Nav.Undertittel className="panelheader__tittel__hoved">{tittel}</Nav.Undertittel>
       <span className="panelheader__tittel__under">{undertittel}</span>

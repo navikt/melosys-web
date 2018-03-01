@@ -1,14 +1,16 @@
 import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import { Panel } from 'nav-frontend-paneler';
+import { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Checkbox, Radio, RadioGruppe, Fieldset, Select, Input, Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 import { Knapp } from 'nav-frontend-knapper';
 
 export {
-  EkspanderbartpanelBase, Panel,
+  AlertStripeAdvarsel,
   Container, Row, Column,
   Checkbox, Radio, RadioGruppe, Fieldset, Select, Input, Textarea,
+  EkspanderbartpanelBase, Panel,
   Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold,
   Knapp,
 };

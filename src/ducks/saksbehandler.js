@@ -39,3 +39,8 @@ export const SaksbehandlerSelector = createSelector(
   state => state.saksbehandler.data,
   saksbehandler => saksbehandler
 );
+
+export const SaksbehandlerStatusSelector = createSelector(
+  state => state.saksbehandler.status,
+  saksbehandler => saksbehandler
+);

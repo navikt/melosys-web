@@ -23,7 +23,9 @@ const ArbeidsforholdLinje = props => {
   return (
     <div className="arbeidsforhold__enkeltlinje">
       <Nav.Checkbox checked={erValgt} onChange={() => arbeidsforholdKlikkHandler(arbeidsforholdet.arbeidsforholdIDnav)} label={`${arbeidsforholdet.arbeidsgiver.navn}`} />
-      <div className="enkeltlinje__periode"><EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} /></div>
+      <div className="enkeltlinje__periode">
+        Periode: <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.fom} /> - <EnkeltDato dato={arbeidsforholdet.ansettelsesPeriode.tom} />
+      </div>
     </div>
   );
 };
@@ -59,12 +61,12 @@ class ArbeidsforholdeneListe extends Component {
   }
 
   render() {
-    const { fields, arbeidsforholdene } = this.props;
+    const { fields, relevanteArbeidsforholdene } = this.props;
     const valgteArbeidsforhold = fields.getAll();
 
     return (
       <div>
-        {arbeidsforholdene.map(arbeidsforholdet => (
+        {relevanteArbeidsforholdene.map(arbeidsforholdet => (
           <Field
             key={uuid()}
             name="faktaavklaringValgteArbeidsforhold"
@@ -84,11 +86,11 @@ class ArbeidsforholdeneListe extends Component {
 
 ArbeidsforholdeneListe.propTypes = {
   fields: PT.object.isRequired,
-  arbeidsforholdene: PT.array,
+  relevanteArbeidsforholdene: PT.array,
 };
 
 ArbeidsforholdeneListe.defaultProps = {
-  arbeidsforholdene: [],
+  relevanteArbeidsforholdene: [],
 };
 
 /**
@@ -98,13 +100,13 @@ ArbeidsforholdeneListe.defaultProps = {
  * @param props
  */
 const VurderingArbeidsforhold = props => {
-  const { bekreftOgFortsett, arbeidsforholdene } = props;
+  const { bekreftOgFortsett, relevanteArbeidsforholdene } = props;
 
   return (
     <div className="vurderingarbeidsforhold">
-      <Nav.Undertittel>Velg arbeidsforhold:</Nav.Undertittel>
+      <Nav.Undertittel>Velg arbeidsgiver:</Nav.Undertittel>
       <div className="arbeidsforhold">
-        <FieldArray name="faktaavklaringValgteArbeidsforhold" component={arrayProps => <ArbeidsforholdeneListe {...arrayProps} arbeidsforholdene={arbeidsforholdene} />} />
+        <FieldArray name="faktaavklaringValgteArbeidsforhold" component={arrayProps => <ArbeidsforholdeneListe {...arrayProps} relevanteArbeidsforholdene={relevanteArbeidsforholdene} />} />
         <div className="fane__knapplinje">
           <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
@@ -115,7 +117,7 @@ const VurderingArbeidsforhold = props => {
 
 VurderingArbeidsforhold.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
+  relevanteArbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
 };
 
 export default VurderingArbeidsforhold;
