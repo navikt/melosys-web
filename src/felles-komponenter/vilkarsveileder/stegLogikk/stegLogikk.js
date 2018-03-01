@@ -2,12 +2,11 @@ import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetti
 import { VurderingSektorTyper } from '../vurderinger/vurderingSektor';
 import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
 import { VurderingTjenestemannTyper } from '../vurderinger/vurderingTjenestemann';
+import { VurderingYrkesaktivitetFordelingTyper } from '../vurderinger/vurderingYrkesaktivitetFordeling';
 
 import { STEG } from './typer';
 
 class StegLogikk {
-  static SISTE_STEG = null;
-
   static stier = {
     PERIODE: [
       {
@@ -19,13 +18,13 @@ class StegLogikk {
     SYSSELSETTING: [
       {
         kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" eller sysselsettingType ER LIK "ARBEIDSTAKER__OG__SELVSTENDIG"',
-        erOppfylt: ({ sysselsettingType }) => (sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER || sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG),
+        erOppfylt: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER,
         nesteSteg: STEG.ARBEIDSFORHOLD,
       },
       {
-        kriterier: 'sysselsettingType ER LIK "SELVSTENDIG"',
-        erOppfylt: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG,
-        nesteSteg: STEG.AKTIVITET,
+        kriterier: 'sysselsettingType ER LIK "SELVSTENDIG" eller sysselsettingType ER LIK "ARBEIDSTAKER_OG_SELVSTENDIG"',
+        erOppfylt: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG || sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG,
+        nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
       },
       {
         kriterier: 'alle andre valg',
@@ -47,9 +46,61 @@ class StegLogikk {
         nesteSteg: STEG.TJENESTEMANN,
       },
       {
-        kriterier: 'ansattISektor ER LIK "SOKKEL" eller ansattISektor ER LIK "SKIP"',
-        erOppfylt: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.SOKKEL || ansattISektor === VurderingSektorTyper.SKIP,
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "SOKKEL"',
+        erOppfylt: ({ sysselsettingType, ansattISektor }) => (
+          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
+          ansattISektor === VurderingSektorTyper.SOKKEL
+        ),
+        nesteSteg: STEG.AKTIVITET,
+      },
+      {
+        kriterier: 'alle andre valg',
+        erOppfylt: () => true,
+        nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
+      },
+    ],
+    YRKESAKTIVITET_FORDELING: [
+      {
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE"  OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
+        erOppfylt: ({ sysselsettingType, ansattISektor, antallLand }) => (
+          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
+          ansattISektor === VurderingSektorTyper.INGEN_AV_DISSE &&
+          antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
+        ),
+        nesteSteg: STEG.UTSENDING,
+      },
+      {
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE" OG yrkesaktivitetFordeling ER LIK "KUN_NORGE"',
+        erOppfylt: ({ sysselsettingType, ansattISektor, antallLand }) => (
+          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
+          ansattISektor === VurderingSektorTyper.INGEN_AV_DISSE &&
+          antallLand === VurderingYrkesaktivitetFordelingTyper.KUN_NORGE
+        ),
         nesteSteg: STEG.VEDTAK,
+      },
+      {
+        kriterier: 'sysselsettingType ER LIK "SELVSTENDIG" OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
+        erOppfylt: ({ sysselsettingType, antallLand }) => (
+          sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
+          antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
+        ),
+        nesteSteg: STEG.UTSENDING,
+      },
+      {
+        kriterier: 'sysselsettingType ER LIK "SELVSTENDIG" OG yrkesaktivitetFordeling ER LIK "KUN_NORGE"',
+        erOppfylt: ({ sysselsettingType, antallLand }) => (
+          sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
+          antallLand === VurderingYrkesaktivitetFordelingTyper.KUN_NORGE
+        ),
+        nesteSteg: STEG.VEDTAK,
+      },
+      {
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER_OG_SELVSTENDIG" OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
+        erOppfylt: ({ sysselsettingType, antallLand }) => (
+          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG &&
+          antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
+        ),
+        nesteSteg: STEG.AKTIVITET,
       },
       {
         kriterier: 'alle andre valg',
@@ -83,24 +134,24 @@ class StegLogikk {
     ],
     VIRKSOMHET: [
       {
-        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
-        erOppfylt: ({ sysselsettingType, antallLand, aktivitetINorge }) => (
+        kriterier: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG sektorINorge ER LIK "INGEN_AV_DISSE" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
+        erOppfylt: ({
+          sysselsettingType, ansattISektor, antallLand, aktivitetINorge,
+        }) => (
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
-          antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND &&
+          ansattISektor === VurderingSektorTyper.INGEN_AV_DISSE &&
+          antallLand === VurderingYrkesaktivitetFordelingTyper.TO_ELLER_FLERE_LAND &&
           aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
         ),
         nesteSteg: STEG.BOSTEDSLAND,
       },
       {
-        kriterier: 'sysselsettingType ER LIK "SELVSTENDIG" OG ENTEN antallLand ER LIK "TO_ELLER_FLERE_LAND" ELLER antallLand ER LIK "ETT_LAND_IKKE_NORGE',
+        kriterier: 'sysselsettingType ER LIK "SELVSTENDIG" OG ENTEN antallLand ER LIK "TO_ELLER_FLERE_LAND"',
         erOppfylt: ({ sysselsettingType, antallLand }) => (
           sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
-          (
-            antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND ||
-            antallLand === VurderingVirksomhetTyper.ETT_LAND_IKKE_NORGE
-          )
+          antallLand === VurderingYrkesaktivitetFordelingTyper.TO_ELLER_FLERE_LAND
         ),
-        nesteSteg: STEG.UTSENDING,
+        nesteSteg: STEG.BOSTEDSLAND,
       },
       {
         kriterier: 'alle andre valg',
@@ -119,7 +170,7 @@ class StegLogikk {
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
           aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT &&
           bostedsland.includes('NO') &&
-          antallLand === VurderingVirksomhetTyper.TO_ELLER_FLERE_LAND
+          antallLand === VurderingYrkesaktivitetFordelingTyper.TO_ELLER_FLERE_LAND
         ),
         nesteSteg: STEG.FORRETNINGSSTED,
       },

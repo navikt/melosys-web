@@ -5,6 +5,9 @@ import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import DatoOmrade from '../felles-komponenter/datoOmrade/datoOmrade';
+
+import { tekstEllerDash } from '../utils/utils';
 
 import './medlemskap.css';
 
@@ -17,11 +20,12 @@ const uuid = require('uuid/v4');
  */
 function MedlemskapPeriode({ medlemskapPeriode }) {
   const {
-    type,
-    status,
-    grunnlagstype,
-    land,
-    lovvalg,
+    periode = {},
+    type = {},
+    status = {},
+    grunnlagstype = {},
+    land = {},
+    lovvalg = {},
     trygdedekning,
     kildedokumenttype,
     kilde,
@@ -31,25 +35,27 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
     <div className="medlemskap__enkelt" aria-label="Enkelt medlemskap">
       <Nav.Row>
         {/* START DETALJER */}
-        <Nav.Column xs="12" lg="7">
+        <Nav.Column xs="4">
+          <DatoOmrade periode={periode} />
+        </Nav.Column>
+        <Nav.Column xs="8">
           <dl className="medlemskap__detaljer">
             <dt>Periodetype:</dt>
-            <dd>{type || '-'}</dd>
+            <dd>{tekstEllerDash(type.term)}</dd>
             <dt>Status:</dt>
-            <dd>{status || '-'}</dd>
+            <dd>{tekstEllerDash(status.term)}</dd>
             <dt>Grunnlagstype:</dt>
-            <dd>{grunnlagstype || '-'}</dd>
+            <dd>{tekstEllerDash(grunnlagstype.term)}</dd>
             <dt>Land:</dt>
-            <dd>{land || '-'}</dd>
+            <dd>{tekstEllerDash(land.term)}</dd>
             <dt>Lovvalg:</dt>
-            <dd>{lovvalg || '-'}</dd>
+            <dd>{tekstEllerDash(lovvalg.term)}</dd>
             <dt>Trygdedekning:</dt>
-            <dd>{trygdedekning || '-'}</dd>
+            <dd>{tekstEllerDash(trygdedekning)}</dd>
             <dt>Kildedokumenttype:</dt>
-            <dd>{kildedokumenttype || '-'}</dd>
+            <dd>{tekstEllerDash(kildedokumenttype)}</dd>
             <dt>Kilde:</dt>
-            <dd>{kilde || '-'}</dd>
-
+            <dd>{tekstEllerDash(kilde)}</dd>
           </dl>
         </Nav.Column>
         {/* SLUTT DETALJER */}

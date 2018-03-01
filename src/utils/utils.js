@@ -281,6 +281,10 @@ export function strengTilInt (value) {
 }
 
 export function datoDiff (fom, tom, enhet = "months") {
-  if(!fom || !tom) return false;
+  if(!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
   return moment(tom).diff(fom, enhet);
+}
+
+export function tekstEllerDash(data) {
+  return data || '-';
 }
