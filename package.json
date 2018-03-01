@@ -79,7 +79,8 @@
     "eslint": "eslint src --ext .js --ext .jsx",
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
     "pact:test": "mocha --opts ./test/mocha-pact.opts",
-    "pact:publish": "curl -v -k -u $PACT_USERNAME:$PACT_PASSWORD -X PUT \\-H 'Content-Type: application/json' -d@pacts/melosys-web-melosys-api.json https://pact-broker.nais.preprod.local/pacts/provider/melosys-api/consumer/melosys-web/version/$npm_package_version"
+    "pact:publish": "cross-env-shell \"curl -v -k -u $PACT_USERNAME:$PACT_PASSWORD -X PUT \\-H 'Content-Type: application/json' -d@pacts/melosys-web-melosys-api.json https://pact-broker.nais.preprod.local/pacts/provider/melosys-api/consumer/melosys-web/version/$npm_package_version\"",
+    "pact:echo": "cross-env-shell \"echo Pact-config $PACT_USERNAME:$PACT_PASSWORD $npm_package_version\""
   },
   "jest-junit": {
     "suiteName": "jest tests",
@@ -97,6 +98,7 @@
     "body-parser": "^1.18.2",
     "chai": "^4.1.2",
     "chai-as-promised": "^7.1.1",
+    "cross-env": "^5.1.3",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "es6-promise": "^4.2.4",
