@@ -40,8 +40,8 @@ describe('SokFagsakerPactApi', () => {
     return provider.setup()
       .then(() => {
         provider.addInteraction({
-          state: 'has an array of fagsaker',
-          uponReceiving: 'a request for an array of fagsaker',
+          state: 'has an array of sok fagsakinfo',
+          uponReceiving: 'a request for an array of sok fagsakinfo',
           withRequest: {
             method: 'GET',
             path: `${SOK_FAGSAKER_API_URL}`,
