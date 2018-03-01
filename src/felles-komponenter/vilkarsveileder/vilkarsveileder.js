@@ -27,7 +27,7 @@ import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker';
-import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector } from '../../ducks/faktaavklaring';
+import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector, oppdaterFaktaavklaringState } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
 
 import './vilkarsveileder.css';
@@ -135,7 +135,7 @@ class Vilkarsveileder extends Component {
           komponent: VurderingVirksomhet,
           dataHenter: () => ({}),
           handlers: {
-            bekreftOgFortsett: this.beOmVurdering,
+            bekreftOgFortsett: this.bekreftOgFortsett,
           },
           status: FANE_STATUS.OK,
         },
@@ -144,7 +144,7 @@ class Vilkarsveileder extends Component {
           komponent: VurderingVedtak,
           dataHenter: () => ({}),
           handlers: {
-            fattVedtakHandler: this.fattVedtak,
+            fattVedtakHandler: () => { this.fattVedtak(); this.beOmVurdering(); },
           },
           status: FANE_STATUS.OK,
         },
@@ -199,7 +199,9 @@ class Vilkarsveileder extends Component {
    * @param nyttStegNummer Number Steget som det skal byttes til.
    */
   tilSteg = nyttStegNummer => {
-    this.setState({ aktivtStegNummer: nyttStegNummer });
+    this.setState({ aktivtStegNummer: nyttStegNummer }, () => {
+      this.props.oppdaterFaktaavklaringState(this.props.skjema);
+    });
   }
 
   /** Beregn neste steg i rekken, men ikke lenger enn
@@ -234,6 +236,7 @@ Vilkarsveileder.propTypes = {
   faktaavklaring: PT.object,
   skjema: PT.object.isRequired,
   valgteArbeidsforhold: PT.array,
+  oppdaterFaktaavklaringState: PT.func.isRequired,
 };
 
 Vilkarsveileder.defaultProps = {
@@ -253,4 +256,8 @@ const mapStateToProps = state => ({
   skjema: SoknadenFormSelector(state).values,
 });
 
-export default withRouter(connect(mapStateToProps)(Vilkarsveileder));
+const mapDispatchToProps = dispatch => ({
+  oppdaterFaktaavklaringState: skjema => dispatch(oppdaterFaktaavklaringState(skjema)),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));
