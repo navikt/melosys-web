@@ -39,7 +39,7 @@ SokeForm.defaultProps = {
   errorSummary: {},
 };
 
-const kontekster = ['nyesaker'];
+const kontekster = [{ name: 'nyesaker', message: 'Det har oppstått en feil: Kunne ikke hente ny fagsaker.' }];
 
 export default withErrorHandling(kontekster, validForm({
   form: 'sokeform',
