@@ -35,37 +35,42 @@ FeilKomponent.propTypes = {
 const withErrorHandling = (kontekster, WrappedComponent) => props => {
   const ErrorComponent = errorProps => {
     const { reduxRootState } = errorProps;
-    const feilObjekter = [];
+    const feilSamling = [];
 
     kontekster.forEach(kontekst => {
-      const { name, message } = kontekst;
-      const { status: feilstatus } = reduxRootState[name];
+      const { navn, melding } = kontekst;
+      const { status: feilStatus } = reduxRootState[navn];
 
-      if (feilstatus === 'ERROR') {
-        const { response, data: fetch } = reduxRootState[name].data;
-        const fetchdata = isJSON(fetch) ? JSON.parse(fetch) : fetch;
+      if (feilStatus === 'ERROR') {
+        // Siden fetch-APIet resulterer i en modell med strukturen 'data.data', lager vi aliaset 'payload'.
+        const { data: payload } = reduxRootState[navn];
+
+        // Deretter kan vi bruke 'data' slik vi mener å bruke den.
+        const { response, data } = payload;
+        const fetchdata = isJSON(data) ? JSON.parse(data) : data;
+
         const { status, statusText } = response;
-        feilObjekter.push({
-          status, statusText, message, fetchdata,
+        feilSamling.push({
+          status, statusText, melding, fetchdata,
         });
       }
     });
 
     // Dersom ingen feilstatus er funnet returner wrappet component.
-    if (feilObjekter.length === 0) {
+    if (feilSamling.length === 0) {
       return (<WrappedComponent {...props} />);
     }
 
     // Finn hvilke feil kode(r) som finnes og legg til kun 1 alert stripe.
     // Sorter feilkoder med synkende verdi
-    feilObjekter.sort((a, b) => b.status - a.status);
+    feilSamling.sort((a, b) => b.status - a.status);
 
     // Dersom 404 så skal både alertstripe og kompoonent vises.
-    if (feilObjekter[0].status === 404) {
-      return (<div {...props} className="errorContainer"><WrappedComponent {...props} /><FeilKomponent feilobjekt={feilObjekter[0]} /></div>);
+    if (feilSamling[0].status === 404) {
+      return (<div {...props} className="errorContainer"><WrappedComponent {...props} /><FeilKomponent feilobjekt={feilSamling[0]} /></div>);
     }
     // alle andre feilkoder gir full stopp uten å vise komponenten.
-    return (<div className="errorContainer"><FeilKomponent feilobjekt={feilObjekter[0]} /></div>);
+    return (<div className="errorContainer"><FeilKomponent feilobjekt={feilSamling[0]} /></div>);
   };
 
   const mapStateToProps = state => ({

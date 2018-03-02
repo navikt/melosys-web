@@ -105,7 +105,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const kontekster = [
-  { name: 'saksbehandler', message: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
-  { name: 'fagsaker', message: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
+  { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
+  { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
 ];
 export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
