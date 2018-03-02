@@ -7,9 +7,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
 import './landvelger.css';
-import {
-  LandkoderSelector,
-} from '../../../ducks/landkoder';
+import { LandkoderSelector } from '../../../ducks/landkoder';
 
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 

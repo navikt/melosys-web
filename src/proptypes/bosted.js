@@ -14,6 +14,4 @@ const BostedsAdressePropType = PT.shape({
 });
 
 
-export {
-  BostedsAdressePropType as BostedsAdresse,
-};
+export { BostedsAdressePropType as BostedsAdresse };

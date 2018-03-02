@@ -76,9 +76,7 @@ import {
 import { boolTilStreng } from '../utils/utils';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
-import {
-  SoknadenFormSelector,
-} from '../ducks/form';
+import { SoknadenFormSelector } from '../ducks/form';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';

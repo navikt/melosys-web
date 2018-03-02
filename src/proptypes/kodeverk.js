@@ -6,6 +6,4 @@ const KodeverkPropType = PT.shape({
   term: PT.string,
 });
 
-export {
-  KodeverkPropType as Kodeverk,
-};
+export { KodeverkPropType as Kodeverk };
