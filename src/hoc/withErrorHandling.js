@@ -1,8 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+
 import * as Nav from '../utils/navFrontend';
 import { isJSON } from '../utils/utils';
+
+import './withErrorHandling.css';
 
 const withErrorHandling = (kontekster, WrappedComponent) => props => {
   const ErrorComponent = errorProps => {
@@ -46,10 +49,10 @@ const withErrorHandling = (kontekster, WrappedComponent) => props => {
 
     // Dersom 404 så skal både alertstripe og kompoonent vises.
     if (feilObjekter[0].status === 404) {
-      return (<div {...props} ><WrappedComponent {...props} /><FeilKomponent feilobjekt={feilObjekter[0]} /></div>);
+      return (<div {...props} className="errorContainer"><WrappedComponent {...props} /><FeilKomponent feilobjekt={feilObjekter[0]} /></div>);
     }
     // alle andre feilkoder gir full stopp uten å vise komponenten.
-    return (<div><FeilKomponent feilobjekt={feilObjekter[0]} /></div>);
+    return (<div className="errorContainer"><FeilKomponent feilobjekt={feilObjekter[0]} /></div>);
   };
 
   const mapStateToProps = state => ({
