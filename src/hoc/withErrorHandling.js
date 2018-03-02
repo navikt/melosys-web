@@ -7,16 +7,42 @@ import { isJSON } from '../utils/utils';
 
 import './withErrorHandling.css';
 
+/** Dette er komponenten for selve feilmeldingsgrensesnittet. Det kan teknisk sett være flere av denne i en view,
+ * men Melosys viser den feilen som ansees som mest alvorlig.
+ *
+ * @param feilobjekt Inneholder all hensiktsmessig informasjon og data.
+ */
+const FeilKomponent = ({ feilobjekt }) => (
+  <div className="error-message">
+    <Nav.AlertStripeAdvarsel>{ feilobjekt.status } : { feilobjekt.statusText }<br />{ feilobjekt.fetchdata.timestamp}<br />{ feilobjekt.message }</Nav.AlertStripeAdvarsel>
+  </div>
+);
+
+FeilKomponent.propTypes = {
+  feilobjekt: PT.shape({
+    status: PT.number,
+    statusText: PT.string,
+    fetchdata: PT.object,
+  }).isRequired,
+};
+
+/** Dette er en HOC som benyttes til å wrappe rundt alle komponenter som
+ * skal støttes av en feilhåndtering.
+ *
+ * @param kontekster Array av reducer-modeller ('fagsak', 'saksbehandler' etc) som instansen skal ta hensyn til og sjekke for feil.
+ * @param WrappedComponent React-komponenten som wrappes.
+ */
 const withErrorHandling = (kontekster, WrappedComponent) => props => {
   const ErrorComponent = errorProps => {
-    const { state } = errorProps;
+    const { reduxRootState } = errorProps;
     const feilObjekter = [];
 
     kontekster.forEach(kontekst => {
       const { name, message } = kontekst;
-      const { status: feilstatus } = state[name];
+      const { status: feilstatus } = reduxRootState[name];
+
       if (feilstatus === 'ERROR') {
-        const { response, data: fetch } = state[name].data;
+        const { response, data: fetch } = reduxRootState[name].data;
         const fetchdata = isJSON(fetch) ? JSON.parse(fetch) : fetch;
         const { status, statusText } = response;
         feilObjekter.push({
@@ -34,19 +60,6 @@ const withErrorHandling = (kontekster, WrappedComponent) => props => {
     // Sorter feilkoder med synkende verdi
     feilObjekter.sort((a, b) => b.status - a.status);
 
-    const FeilKomponent = ({ feilobjekt }) => (
-      <div className="error-message">
-        <Nav.AlertStripeAdvarsel>{ feilobjekt.status } : { feilobjekt.statusText }<br />{ feilobjekt.fetchdata.timestamp}<br />{ feilobjekt.message }</Nav.AlertStripeAdvarsel>
-      </div>
-    );
-    FeilKomponent.propTypes = {
-      feilobjekt: PT.shape({
-        status: PT.number,
-        statusText: PT.string,
-        fetchdata: PT.object,
-      }).isRequired,
-    };
-
     // Dersom 404 så skal både alertstripe og kompoonent vises.
     if (feilObjekter[0].status === 404) {
       return (<div {...props} className="errorContainer"><WrappedComponent {...props} /><FeilKomponent feilobjekt={feilObjekter[0]} /></div>);
@@ -56,7 +69,7 @@ const withErrorHandling = (kontekster, WrappedComponent) => props => {
   };
 
   const mapStateToProps = state => ({
-    state,
+    reduxRootState: state,
   });
 
   const ReturnComponent = connect(mapStateToProps)(ErrorComponent);
