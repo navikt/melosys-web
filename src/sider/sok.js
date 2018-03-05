@@ -76,7 +76,7 @@ class Sok extends Component {
 }
 
 Sok.propTypes = {
-  nyesaker: PT.array.isRequired,
+  nyesaker: PT.any,
   hentNyesaker: PT.func.isRequired,
   tidligeresaker: PT.array.isRequired,
   sakerbehandles: PT.array.isRequired,
@@ -89,6 +89,7 @@ Sok.propTypes = {
 
 Sok.defaultProps = {
   children: null,
+  nyesaker: [],
 };
 
 const mapStateToProps = state => ({
@@ -103,4 +104,8 @@ const mapDispatchToProps = dispatch => ({
   opprettSak: fnr => dispatch(NyeSaker.opprettNyFagsak(fnr)),
 });
 
-export default withErrorHandling(withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
+const kontekster = [
+  { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
+  { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
+];
+export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
