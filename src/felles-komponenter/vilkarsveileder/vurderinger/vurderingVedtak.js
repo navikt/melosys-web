@@ -101,7 +101,7 @@ const VurderingVedtak = props => {
             <LovvalgBestemmelse key={uuid()} bestemmelse={bestemmelse} />
           ))
         }
-        <p>Feilmeldinger</p>
+        { feilmeldinger && feilmeldinger.length > 0 && <p>Feilmeldinger</p>}
         {
           feilmeldinger && feilmeldinger.map(feilmelding => (
             <VurderingFeilmeldinger key={uuid()} feilmelding={feilmelding} />
