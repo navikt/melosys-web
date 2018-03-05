@@ -88,52 +88,62 @@ const VurderingVedtak = props => {
     .reduce((collection, arbeidsforholdet) => [...collection, arbeidsforholdet.arbeidsgiver.navn], [])
     .join(', ');
 
+  const isFetching = true;
+
   return (
     <div className="vedtak">
-      <Nav.Container fluid>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <Nav.Undertittel>Foreslått vedtak:</Nav.Undertittel>
-          </Nav.Column>
-        </Nav.Row>
-        {
-          lovvalgbestemmelser.map(bestemmelse => (
-            <LovvalgBestemmelse key={uuid()} bestemmelse={bestemmelse} />
-          ))
-        }
-        <p>Feilmeldinger</p>
-        {
-          feilmeldinger && feilmeldinger.map(feilmelding => (
-            <VurderingFeilmeldinger key={uuid()} feilmelding={feilmelding} />
-          ))
-        }
-        <Nav.Row className="vedtak__oppsummering">
-          <Nav.Column xs="6" md="3">
-            <Nav.Element type="element">Antall måneder i utlandet</Nav.Element>
-            <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
-          </Nav.Column>
-          <Nav.Column xs="6" md="3">
-            <Nav.Element type="element">Land</Nav.Element>
-            <Nav.Normaltekst>{ land.join(', ') }</Nav.Normaltekst>
-          </Nav.Column>
-          <Nav.Column xs="6" md="3">
-            <Nav.Element type="element">Søker er</Nav.Element>
-            <Nav.Normaltekst>{sysselsettingType}</Nav.Normaltekst>
-          </Nav.Column>
-          <Nav.Column xs="6" md="3">
-            <Nav.Element type="element">Navn på arbeidsgiver</Nav.Element>
-            <Nav.Normaltekst>{arbeidsgivereForVedtaket}</Nav.Normaltekst>
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp type="hoved" onClick={() => props.fattVedtakHandler()}>Fatt vedtak</Nav.Knapp>
-          </Nav.Column>
-          <Nav.Column xs="6" className="fane__fot">
-            <a href="http://localhost">Forhåndsvis vedtaksbrev</a>
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Container>
+      {isFetching && (
+        <div className="vedtak__venteskjerm">
+          <Nav.NavFrontendSpinner type="XL" />
+          <Nav.Element>Lagrer faktaavklaring og ber om vedtaksforslag</Nav.Element>
+        </div>
+      )}
+      {!isFetching && (
+        <Nav.Container fluid>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Nav.Undertittel>Foreslått vedtak:</Nav.Undertittel>
+            </Nav.Column>
+          </Nav.Row>
+          {
+            lovvalgbestemmelser.map(bestemmelse => (
+              <LovvalgBestemmelse key={uuid()} bestemmelse={bestemmelse} />
+            ))
+          }
+          <p>Feilmeldinger</p>
+          {
+            feilmeldinger && feilmeldinger.map(feilmelding => (
+              <VurderingFeilmeldinger key={uuid()} feilmelding={feilmelding} />
+            ))
+          }
+          <Nav.Row className="vedtak__oppsummering">
+            <Nav.Column xs="6" md="3">
+              <Nav.Element type="element">Antall måneder i utlandet</Nav.Element>
+              <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
+            </Nav.Column>
+            <Nav.Column xs="6" md="3">
+              <Nav.Element type="element">Land</Nav.Element>
+              <Nav.Normaltekst>{ land.join(', ') }</Nav.Normaltekst>
+            </Nav.Column>
+            <Nav.Column xs="6" md="3">
+              <Nav.Element type="element">Søker er</Nav.Element>
+              <Nav.Normaltekst>{sysselsettingType}</Nav.Normaltekst>
+            </Nav.Column>
+            <Nav.Column xs="6" md="3">
+              <Nav.Element type="element">Navn på arbeidsgiver</Nav.Element>
+              <Nav.Normaltekst>{arbeidsgivereForVedtaket}</Nav.Normaltekst>
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="6" className="fane__fot">
+              <Nav.Knapp type="hoved" onClick={() => props.fattVedtakHandler()}>Fatt vedtak</Nav.Knapp>
+            </Nav.Column>
+            <Nav.Column xs="6" className="fane__fot">
+              <a href="http://localhost">Forhåndsvis vedtaksbrev</a>
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Container>
+      )}
     </div>
   );
 };
