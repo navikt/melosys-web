@@ -4,6 +4,7 @@ import { validForm, rules } from 'react-redux-form-validation';
 
 import { Hovedknapp } from 'nav-frontend-knapper';
 import Input from '../../felles-komponenter/skjema/input/input';
+import withErrorHandling from '../../hoc/withErrorHandling';
 
 const fnrValid = value => (
   /^[0-9]{11}$/.test(value) ? undefined : 'Fnr må ha 11 siffer'
@@ -38,10 +39,12 @@ SokeForm.defaultProps = {
   errorSummary: {},
 };
 
-export default validForm({
+const kontekster = [{ navn: 'nyesaker', melding: 'Det har oppstått en feil: Kunne ikke hente ny fagsaker.' }];
+
+export default withErrorHandling(kontekster, validForm({
   form: 'sokeform',
   errorSummaryTitle: 'Fix these errors',
   validate: {
     fnr: [rules.required, fnrValid],
   },
-})(SokeForm);
+})(SokeForm));

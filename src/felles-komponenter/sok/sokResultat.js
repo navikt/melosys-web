@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import * as Nav from '../../utils/navFrontend';
+// Midlertidig disablet: import * as Nav from '../../utils/navFrontend';
 
 import * as MPT from '../../proptypes/index';
 
@@ -29,7 +29,7 @@ function SokResultat(props) {
   return (
     <section className="sokresultat">
       <IntroText saker={saker} />
-      <Nav.Knapp onClick={props.opprettSak}>+ Opprett sak</Nav.Knapp>
+      { /* <Nav.Knapp onClick={props.opprettSak}>+ Opprett sak</Nav.Knapp> */ }
       {saker && saker.map(sak => <SokListeEnkellinje key={uuid()} sak={sak} />)}
     </section>
   );

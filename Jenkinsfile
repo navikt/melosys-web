@@ -124,6 +124,7 @@ node {
     }
   }
 
+  /* Disable nais deployment
   stage('Deploy') {
     if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'B150245',
@@ -150,4 +151,5 @@ node {
       echo("PR branches are not used in NAIS deployment")
     }
   }
+  */
 }
