@@ -30,6 +30,13 @@ export function mergeObject(mergeFn) {
   });
 }
 
+export function isJSON(str) {
+  try {
+    return (JSON.parse(str) && !!str);
+  } catch (e) {
+    return false;
+  }
+}
 /* eslint-disable */
 export function throttle(fn, threshold = 250) {
   let last;
