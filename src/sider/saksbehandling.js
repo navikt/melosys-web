@@ -154,17 +154,17 @@ class Saksbehandling extends Component {
   }
 
   fattVedtakHandler = () => {
-    const bid = this.props.oppsummering.behandlingID;
-    const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
-    this.props.handleSubmit();
+    // const bid = this.props.oppsummering.behandlingID;
+    // const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
+    // this.props.handleSubmit();
 
-    this.props.sendSoknad(bid, soknad);
-    this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
+    // this.props.sendSoknad(bid, soknad);
+    // this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
   }
 
   beOmVurdering = () => {
-    const { behandlingID } = this.props.oppsummering;
-    this.props.hentVurdering(behandlingID);
+    // const { behandlingID } = this.props.oppsummering;
+    // this.props.hentVurdering(behandlingID);
   }
 
   overstyrSubmit = event => {
