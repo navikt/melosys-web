@@ -27,6 +27,7 @@ import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker';
+import { hentVurdering } from '../../ducks/vurdering';
 import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector, oppdaterFaktaavklaringState } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
 
@@ -190,6 +191,10 @@ class Vilkarsveileder extends Component {
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
 
+    if (this.state.aktivtStegNummer === beregnedeSteg.length - 1) {
+      this.props.hentVurdering(this.props.oppsummering.behandlingID);
+    }
+
     this.setState({ aktuelleSteg });
     return aktuelleSteg;
   }
@@ -237,6 +242,7 @@ Vilkarsveileder.propTypes = {
   skjema: PT.object.isRequired,
   valgteArbeidsforhold: PT.array,
   oppdaterFaktaavklaringState: PT.func.isRequired,
+  hentVurdering: PT.func.isRequired,
 };
 
 Vilkarsveileder.defaultProps = {
@@ -258,6 +264,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   oppdaterFaktaavklaringState: skjema => dispatch(oppdaterFaktaavklaringState(skjema)),
+  hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));
