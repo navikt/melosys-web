@@ -3,7 +3,7 @@ import { Inntekt, InntektListe, InntektEnkeltLinje } from './inntekt';
 import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
 import { TimerTimelonnet, TimerTimelonnetLinje } from './timerTimelonnet';
 import { OppholdUtland } from './oppholdUtland';
-import { MedlemskapPeriode, Medlemskap } from './medlemskap';
+import { MedlemskapEnkeltPeriode, MedlemskapPerioder, Medlemskap } from './medlemskap';
 import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
 import { Kodeverk } from './kodeverk';
 import { Person } from './person';
@@ -40,7 +40,8 @@ export {
   OppholdUtland,
   Organisasjon,
   Organisasjoner,
-  MedlemskapPeriode,
+  MedlemskapEnkeltPeriode,
+  MedlemskapPerioder,
   Medlemskap,
   Bekreftelser,
   Inntekt,
