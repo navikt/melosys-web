@@ -39,7 +39,7 @@ const LovvalgBestemmelse = props => {
           <ul className="betingelser__liste">
             {
               betingelser.map(betingelse => (
-                <li key={uuid()} className="liste__element liste__element--oppfylt">{betingelse.krav}</li>
+                <li key={uuid()} className="liste__element liste__element--oppfylt">{betingelse.argument}</li>
               ))
             }
           </ul>
