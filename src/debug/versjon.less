@@ -1,0 +1,47 @@
+.App__versjonering {
+  position: relative;
+  color: #3e3832;
+  max-height: 20px;
+  overflow: hidden;
+  padding-left: 25px;
+  margin: 0;
+
+  &:before {
+    content: '»';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #3e3832;
+    line-height: 17px;
+  }
+
+  dt {
+    float: left;
+    clear:both;
+    font-weight: bold;
+  }
+
+  dd {
+    float:right;
+  }
+}
+
+.App__versjonering--vis {
+  max-height: inherit;
+  &:before {
+    transform: rotateZ(90deg);
+  }
+}
+
+.App__versjonering__ekspandknapp {
+  border: 0;
+  background-color: transparent;
+  outline: none;
+}
+
+.App__versjonering__kopierknapp {
+  display: block;
+  margin: 0 0 10px 27px;
+}
