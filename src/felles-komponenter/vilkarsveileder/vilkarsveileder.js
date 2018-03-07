@@ -199,9 +199,7 @@ class Vilkarsveileder extends Component {
    * @param nyttStegNummer Number Steget som det skal byttes til.
    */
   tilSteg = nyttStegNummer => {
-    this.setState({ aktivtStegNummer: nyttStegNummer }, () => {
-      this.props.oppdaterFaktaavklaringState(this.props.skjema);
-    });
+    this.setState({ aktivtStegNummer: nyttStegNummer });
   }
 
   /** Beregn neste steg i rekken, men ikke lenger enn
