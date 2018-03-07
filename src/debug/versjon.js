@@ -13,10 +13,10 @@ class Versjon extends Component {
     this.setState({ visVersjonDetaljer: !this.state.visVersjonDetaljer });
   }
 
-  versjon = () => process.env.REACT_APP_VERSION;
-  byggTidspunkt = () => moment(process.env.REACT_APP_DATETIME).format('DD/MM/YYYY HH:mm');
-  byggVersjon = () => process.env.REACT_APP_BUILD_VERSION;
-  branchVersjon = () => process.env.REACT_APP_BRANCH_NAME;
+  versjon = () => process.env.REACT_APP_VERSION || '(ukjent)';
+  byggTidspunkt = () => moment(process.env.REACT_APP_DATETIME).format('DD/MM/YYYY HH:mm') || '(ukjent)';
+  byggVersjon = () => process.env.REACT_APP_BUILD_VERSION || '(ukjent)';
+  branchVersjon = () => process.env.REACT_APP_BRANCH_NAME || '(lokal)';
 
   copyToClipBoard = () => {
     const versionString = `Versjon: ${this.versjon()}, Byggetidspunkt: ${this.byggTidspunkt()}, Byggeversjon: ${this.byggVersjon()}, Branch: ${this.branchVersjon()}`; // eslint-disable-line max-len
