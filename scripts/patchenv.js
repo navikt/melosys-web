@@ -10,3 +10,4 @@ dotenv.set('REACT_APP_VERSION', version);
 dotenv.set('REACT_APP_BUILD_DATETIME', moment().format('DDMMMYYYY-HH:mm:ss'));
 dotenv.set('REACT_APP_BUILD_VERSION', buildNumber);
 dotenv.set('REACT_APP_BRANCH_NAME', branchName);
+

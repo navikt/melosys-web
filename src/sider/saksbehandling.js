@@ -108,6 +108,8 @@ class Saksbehandling extends Component {
     errorSummary: PT.object,
     errorSummaryTitle: PT.string,
     soknadForm: PT.object.isRequired,
+    oppdaterSoknad: PT.func.isRequired,
+    oppdaterFaktaavklaring: PT.func.isRequired,
   };
 
   static defaultProps = {
@@ -152,21 +154,23 @@ class Saksbehandling extends Component {
   }
 
   fattVedtakHandler = () => {
-    // Midlertidig disable: const bid = this.props.oppsummering.behandlingID;
-    // Midlertidig disable:  const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
-    this.props.handleSubmit();
+    // Midlertidig disable:   const bid = this.props.oppsummering.behandlingID;
+    // Midlertidig disable:   const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
+    // Midlertidig disable:   this.props.handleSubmit();
 
-    // Midlertidig disable:  this.props.sendSoknad(bid, soknad);
-    // Midlertidig disable:  this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
+    // Midlertidig disable:   this.props.sendSoknad(bid, soknad);
+    // Midlertidig disable:   this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
   }
 
   beOmVurdering = () => {
-    // Midlertidig disable:  const { behandlingID } = this.props.oppsummering;
-    // Midlertidig disable:  this.props.hentVurdering(behandlingID);
+    // Midlertidig disable:   const { behandlingID } = this.props.oppsummering;
+    // Midlertidig disable:   this.props.hentVurdering(behandlingID);
   }
 
   overstyrSubmit = event => {
     event.preventDefault();
+    this.props.oppdaterSoknad(this.props.soknadForm.values);
+    this.props.oppdaterFaktaavklaring(this.props.soknadForm.values);
   }
 
   /* eslint-disable */
@@ -299,7 +303,8 @@ const mapDispatchToProps = dispatch => ({
   hentFaktaavklaring: saksnummer => dispatch(hentFaktaavklaring(saksnummer)),
   sendFaktaavklaring: (bid, dokument) => dispatch(sendFaktaavklaring(bid, dokument)),
   hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
-  onSubmit: values => { dispatch(oppdaterSoknadState(values)); dispatch(oppdaterFaktaavklaringState(values)); },
+  oppdaterSoknad: values => { dispatch(oppdaterSoknadState(values)); },
+  oppdaterFaktaavklaring: values => { dispatch(oppdaterFaktaavklaringState(values)); },
 });
 
 const SaksbehandlingForm = validForm({
