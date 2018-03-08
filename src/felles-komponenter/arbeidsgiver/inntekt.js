@@ -114,7 +114,9 @@ class Inntekt extends Component {
           <div className="inntekt">
             <div className="inntekt__graf">
               <ReactHighcharts config={grafConfig} />
-              <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">Vis tabell for inntekten</Nav.Knapp>
+              <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">
+                { this.state.visInntektTabell ? 'Skjul tabellen' : 'Vis grafen som tabell' }
+              </Nav.Knapp>
             </div>
             {uuTabell}
           </div>
