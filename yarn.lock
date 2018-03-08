@@ -5707,6 +5707,14 @@ nav-frontend-snakkeboble@^0.1.18:
   version "0.1.18"
   resolved "https://registry.yarnpkg.com/nav-frontend-snakkeboble/-/nav-frontend-snakkeboble-0.1.18.tgz#4eb6e24107ea29c13e7f847c96133fafb4a089e9"
 
+nav-frontend-spinner-style@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/nav-frontend-spinner-style/-/nav-frontend-spinner-style-0.2.4.tgz#2c851f5bd4ffe21b2802a9b2f16fade1506a961a"
+
+nav-frontend-spinner@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/nav-frontend-spinner/-/nav-frontend-spinner-1.0.5.tgz#3345d3f9764bf485ac3e4e558b1c3914c8d87b2c"
+
 nav-frontend-tabell-style@^0.2.5:
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/nav-frontend-tabell-style/-/nav-frontend-tabell-style-0.2.5.tgz#fcecb5d1b0c6cb685504bb2241049de47dbccb53"
