@@ -159,6 +159,11 @@ class Vilkarsveileder extends Component {
     }
   }
 
+  /** Sjekker om det aktive steget som saksbehandler har klikket seg inn på
+   * er det siste steget, altså Vedtak.
+   */
+  erDetteSisteSteg = totaltAntallSteg => (this.state.aktivtStegNummer === totaltAntallSteg - 1);
+
   fattVedtak = () => {
     this.props.fattVedtakHandler();
   }
@@ -178,6 +183,7 @@ class Vilkarsveileder extends Component {
 
   oppdaterAktuelleSteg = props => {
     const { faktaavklaring, skjema } = props;
+    const { erDetteSisteSteg } = this;
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
     const aktuelleSteg = beregnedeSteg
@@ -191,7 +197,7 @@ class Vilkarsveileder extends Component {
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
 
-    if (this.state.aktivtStegNummer === beregnedeSteg.length - 1) {
+    if (erDetteSisteSteg()) {
       this.props.hentVurdering(this.props.oppsummering.behandlingID);
     }
 
