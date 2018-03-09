@@ -49,7 +49,7 @@ const Forretningsstedet = props => {
   return (
     <Nav.Fieldset legend={navn}>
       <Field name={`faktaavklaringForretningsstedLand[${index}].arbeidsgiverID`} value={arbeidsgiverID} component={ArbeidsgiverIDField} arbeidsgiverID={arbeidsgiverID} />
-      <LandVelger feltNavn={`faktaavklaringForretningsstedLand[${index}].beslutninger`} label="Tar viktige besluttninger i:" multiland={false} />
+      <LandVelger feltNavn={`faktaavklaringForretningsstedLand[${index}].beslutninger`} label="Tar viktige beslutninger i:" multiland={false} />
       <LandVelger feltNavn={`faktaavklaringForretningsstedLand[${index}].virksomhet`} label="Har vesentlig virksomhet i:" multiland={false} />
     </Nav.Fieldset>
   );
