@@ -88,7 +88,7 @@ class Inntekt extends Component {
         <Tabell
           kolonneNavn={['Periode', 'Samlet inntekt']}
           tabellData={inntektArrayed}
-          linjerPerSide={5}
+          linjerPerSide={6}
         />
       </div>
     ) : null;
