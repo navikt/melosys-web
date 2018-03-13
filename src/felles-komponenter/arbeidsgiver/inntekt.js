@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import ReactHighcharts from 'react-highcharts';
-import moment from 'moment';
 
 import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';

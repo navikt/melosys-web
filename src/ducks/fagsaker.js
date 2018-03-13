@@ -1,8 +1,8 @@
 import { createSelector, createStructuredSelector } from 'reselect';
+import moment from 'moment';
+
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
-
-import moment from 'moment';
 
 import { FaktaavklaringOppholdPeriodeSelector } from './faktaavklaring';
 
@@ -68,8 +68,8 @@ export const OrganisasjonerSelector = createSelector(
  *
  */
 
-const lagFlatInntektListe = arbeidsInntektMaanedListe => {
-  return arbeidsInntektMaanedListe.reduce((oppsamletMaanedListe, enkeltMaaned) => {
+const lagFlatInntektListe = arbeidsInntektMaanedListe => (
+  arbeidsInntektMaanedListe.reduce((oppsamletMaanedListe, enkeltMaaned) => {
     const { arbeidsInntektInformasjon = {}, aarMaaned } = enkeltMaaned;
     const { inntektListe = [] } = arbeidsInntektInformasjon;
 
@@ -80,11 +80,11 @@ const lagFlatInntektListe = arbeidsInntektMaanedListe => {
     }, []);
 
     return [...oppsamletMaanedListe, ...inntektListeInnenforEnkeltMaaned];
-  }, []);
-};
+  }, [])
+);
 
-const summerDuplikateInntekter = flatInntektListe => {
-  return flatInntektListe.reduce((samling, nyInntekt) => {
+const summerDuplikateInntekter = flatInntektListe => (
+  flatInntektListe.reduce((samling, nyInntekt) => {
     const samlingKopi = [...samling];
     const index = samlingKopi.findIndex(element => (element.opplysningspliktigID === nyInntekt.opplysningspliktigID) && element.aarMaaned === nyInntekt.aarMaaned);
     const inntektForInnlegg = index > -1 ? samling[index] : nyInntekt;
@@ -95,15 +95,28 @@ const summerDuplikateInntekter = flatInntektListe => {
     }
 
     return [...samlingKopi, inntektForInnlegg];
-  }, []);
-};
+  }, [])
+);
 
-const inntektSiste6Maaneder = (startDato, allInntekt) => {
-  return Array(6).fill(undefined).reduce((samling, verdi, index) => {
+const inntektSiste6Maaneder = (startDato, allInntekt) => (
+  Array(6).fill(undefined).reduce((samling, verdi, index) => {
     const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
     const inntekten = allInntekt.find(inntekt => inntekt.aarMaaned === aarMaaned);
     return inntekten ? [...samling, inntekten] : [...samling];
-  }, []);
+  }, [])
+);
+
+const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
+  const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
+  if (filtrerteInntekter.length > 0) {
+    return Array(6).fill(undefined).map((val, index) => {
+      const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
+      const inntektIndex = filtrerteInntekter.findIndex(inn => inn.aarMaaned === aarMaaned);
+      return inntektIndex > -1 ? filtrerteInntekter[inntektIndex] : { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
+    });
+  }
+
+  return filtrerteInntekter;
 };
 
 export const InntektSelector = createSelector(
@@ -190,17 +203,6 @@ export const OrganisasjonSelector = createSelector(
     return alleRelevanteOrganisasjoner;
   }
 );
-
-const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
-  const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
-  const spredtInntekt = Array(6).fill(undefined).map((val, index) => {
-    const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
-    const inntektIndex = filtrerteInntekter.findIndex(inn => inn.aarMaaned === aarMaaned);
-    return inntektIndex > -1 ? filtrerteInntekter[inntektIndex] : { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
-  });
-
-  return spredtInntekt;
-};
 
 export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
