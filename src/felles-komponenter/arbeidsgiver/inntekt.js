@@ -27,14 +27,6 @@ class Inntekt extends Component {
      * Listen over inntekt fra inntektskomponenten kan inneholde flere typer inntekter
      * i samme periode. Disse må derfor summeres slik at de representeres som én type inntekt.
      */
-    const grafInntekt = inntektListe
-      .reduce((samling, linje) => {
-        const { utbetaltIPeriode, beskrivelse, beloep } = linje;
-        const utbetaltTotaltIPeriode = samling[utbetaltIPeriode] || 0;
-
-        return [...samling, { utbetalt: utbetaltIPeriode, beskrivelse, beloep: (utbetaltTotaltIPeriode + beloep) }];
-      }, [])
-      .sort((a, b) => ((a.utbetalt > b.utbetalt) ? 1 : -1));
 
     const grafConfig = {
       rangeSelector: {
@@ -58,7 +50,7 @@ class Inntekt extends Component {
         labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
       },
       xAxis: {
-        categories: grafInntekt.map(linje => formatterKortDatoTilNorsk(linje.utbetalt)),
+        categories: inntektListe.map(linje => formatterKortDatoTilNorsk(linje.aarMaaned)),
         crosshair: true,
         description: 'Perioder med inntekt.',
         labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
@@ -71,7 +63,7 @@ class Inntekt extends Component {
       series: [
         {
           name: 'Samlet  i én periode',
-          data: grafInntekt.map(linje => linje.beloep),
+          data: inntektListe.map(linje => linje.inntekten),
           color: '#0067c5',
           description: 'Inntekt',
         },
@@ -86,20 +78,19 @@ class Inntekt extends Component {
      * All formattering eller komponent-innsett må derfor gjøres her og returnere
      * en ny ferdigtygget array.
      */
-    const inntektArrayed = grafInntekt
-      .sort((a, b) => ((a.utbetalt < b.utbetalt) ? 1 : -1))
+    const inntektArrayed = inntektListe
+      .sort((a, b) => ((a.aarMaaned < b.aarMaaned) ? 1 : -1))
       .map(linje => (
         [
-          formatterKortDatoTilNorsk(linje.utbetalt),
-          linje.beskrivelse,
-          linje.beloep,
+          formatterKortDatoTilNorsk(linje.aarMaaned),
+          linje.inntekten,
         ]));
 
     const uuTabell = this.state.visInntektTabell ? (
       <div>
         <Nav.Undertittel>Inntekt</Nav.Undertittel>
         <Tabell
-          kolonneNavn={['Periode', 'Beskrivelse', 'Samlet inntekt']}
+          kolonneNavn={['Periode', 'Samlet inntekt']}
           tabellData={inntektArrayed}
           linjerPerSide={5}
         />

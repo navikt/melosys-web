@@ -2,6 +2,10 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 
+import moment from 'moment';
+
+import { FaktaavklaringOppholdPeriodeSelector } from './faktaavklaring';
+
 // Actions
 const OK = 'fagsaker/OK';
 const FEILET = 'fagsaker/FEILET';
@@ -58,26 +62,57 @@ export const OrganisasjonerSelector = createSelector(
   organisasjoner => organisasjoner || []
 );
 
-/** InntektLinjer leveres gruppert inn i maaned. Denne selectoren gjør derfor en reduce slik at alle inntekter
- * leveres som én array, hvert element er da én inntektLinje. I tillegg hekter den på "virksomhet"-objekt
- * fra organisasjoner-selector slik at navnet på organisasjonen kan listes.
+/** InntektLinjer leveres i en array av aarMaaned, men med potensielt flere del-inntekter innenfor en enkelt-
+ * måned. Derfor må disse inntektene summeres slik at vi sitter med én totalinntekt pr måned. Deretter kan vi
+ * bygge opp en array hvor også måneder som mangler er med (men dermed inntekt === 0)
  *
- * @return Inntektliste Et objekt med array for all inntekt.
  */
+
+const lagFlatInntektListe = arbeidsInntektMaanedListe => {
+  return arbeidsInntektMaanedListe.reduce((oppsamletMaanedListe, enkeltMaaned) => {
+    const { arbeidsInntektInformasjon = {}, aarMaaned } = enkeltMaaned;
+    const { inntektListe = [] } = arbeidsInntektInformasjon;
+
+    const inntektListeInnenforEnkeltMaaned = inntektListe.reduce((samling, inntekten) => {
+      const { opplysningspliktigID, beloep } = inntekten;
+
+      return [...samling, { opplysningspliktigID, beloep, aarMaaned }];
+    }, []);
+
+    return [...oppsamletMaanedListe, ...inntektListeInnenforEnkeltMaaned];
+  }, []);
+};
+
+const summerDuplikateInntekter = flatInntektListe => {
+  return flatInntektListe.reduce((samling, nyInntekt) => {
+    const samlingKopi = [...samling];
+    const index = samlingKopi.findIndex(element => (element.opplysningspliktigID === nyInntekt.opplysningspliktigID) && element.aarMaaned === nyInntekt.aarMaaned);
+    const inntektForInnlegg = index > -1 ? samling[index] : nyInntekt;
+
+    if (index > -1) {
+      inntektForInnlegg.beloep += nyInntekt.beloep;
+      samlingKopi.splice(index, 1);
+    }
+
+    return [...samlingKopi, inntektForInnlegg];
+  }, []);
+};
+
+
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
-  inntekt => {
+  state => FaktaavklaringOppholdPeriodeSelector(state),
+  (inntekt, periode) => {
     if (!inntekt) return [];
 
+    const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
     const { arbeidsInntektMaanedListe = [] } = inntekt;
 
-    return arbeidsInntektMaanedListe
-      .reduce((samling, element) => {
-        const { arbeidsInntektInformasjon = {} } = element;
-        const inntektListe = arbeidsInntektInformasjon.inntektListe ? arbeidsInntektInformasjon.inntektListe : [];
-        const subInntektliste = [...inntektListe];
-        return ([...samling, ...subInntektliste]);
-      }, []);
+    const flatInntektsListe = lagFlatInntektListe(arbeidsInntektMaanedListe);
+    const summDuplikater = summerDuplikateInntekter(flatInntektsListe);
+
+    console.log(summDuplikater);
+    return [];
   }
 );
 
