@@ -81,7 +81,8 @@
     "eject": "react-scripts eject",
     "eslint": "eslint src --ext .js",
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
-    "mocha": "mocha"
+    "mocha": "mocha",
+    "pact:echo": "cross-env-shell \"echo Pact-config $PACT_USERNAME:$PACT_PASSWORD $npm_package_version\""
   },
   "jest-junit": {
     "suiteName": "jest tests",
