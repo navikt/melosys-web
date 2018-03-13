@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactHighcharts from 'react-highcharts';
+import moment from 'moment';
 
 import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
@@ -23,10 +24,6 @@ class Inntekt extends Component {
 
   render() {
     const { inntektListe } = this.props;
-    /**
-     * Listen over inntekt fra inntektskomponenten kan inneholde flere typer inntekter
-     * i samme periode. Disse må derfor summeres slik at de representeres som én type inntekt.
-     */
 
     const grafConfig = {
       rangeSelector: {
@@ -63,7 +60,7 @@ class Inntekt extends Component {
       series: [
         {
           name: 'Samlet  i én periode',
-          data: inntektListe.map(linje => linje.inntekten),
+          data: inntektListe.map(linje => linje.beloep),
           color: '#0067c5',
           description: 'Inntekt',
         },
