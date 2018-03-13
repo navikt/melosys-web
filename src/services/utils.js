@@ -41,6 +41,7 @@ export function handterFeil(dispatch, action) {
   return error => {
     if (error.response) {
       error.response.text().then(data => {
+        window.frontendlogger.error(error);
         console.error(error, error.stack, data); // eslint-disable-line no-console
         dispatch({
           type: action,
@@ -49,6 +50,7 @@ export function handterFeil(dispatch, action) {
       });
     } else {
       console.error(error, error.stack); // eslint-disable-line no-console
+      window.frontendlogger.error(error);
       dispatch({ type: action, data: error.toString() });
     }
   };
