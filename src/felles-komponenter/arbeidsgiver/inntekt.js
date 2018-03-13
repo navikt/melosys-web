@@ -79,7 +79,7 @@ class Inntekt extends Component {
       .map(linje => (
         [
           formatterKortDatoTilNorsk(linje.aarMaaned),
-          linje.inntekten,
+          linje.beloep,
         ]));
 
     const uuTabell = this.state.visInntektTabell ? (
