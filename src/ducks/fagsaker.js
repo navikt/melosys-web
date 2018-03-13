@@ -98,6 +98,13 @@ const summerDuplikateInntekter = flatInntektListe => {
   }, []);
 };
 
+const inntektSiste6Maaneder = (startDato, allInntekt) => {
+  return Array(6).fill(undefined).reduce((samling, verdi, index) => {
+    const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
+    const inntekten = allInntekt.find(inntekt => inntekt.aarMaaned === aarMaaned);
+    return inntekten ? [...samling, inntekten] : [...samling];
+  }, []);
+};
 
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
@@ -109,10 +116,8 @@ export const InntektSelector = createSelector(
     const { arbeidsInntektMaanedListe = [] } = inntekt;
 
     const flatInntektsListe = lagFlatInntektListe(arbeidsInntektMaanedListe);
-    const summDuplikater = summerDuplikateInntekter(flatInntektsListe);
-
-    console.log(summDuplikater);
-    return [];
+    const summerteDuplikatInntekt = summerDuplikateInntekter(flatInntektsListe);
+    return inntektSiste6Maaneder(startDato, summerteDuplikatInntekt);
   }
 );
 
@@ -186,14 +191,27 @@ export const OrganisasjonSelector = createSelector(
   }
 );
 
+const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
+  const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
+  const spredtInntekt = Array(6).fill(undefined).map((val, index) => {
+    const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
+    const inntektIndex = filtrerteInntekter.findIndex(inn => inn.aarMaaned === aarMaaned);
+    return inntektIndex > -1 ? filtrerteInntekter[inntektIndex] : { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
+  });
+
+  return spredtInntekt;
+};
+
 export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
-  (organisasjoner, arbeidsforholdene, inntekter) => {
+  state => FaktaavklaringOppholdPeriodeSelector(state),
+  (organisasjoner, arbeidsforholdene, inntekter, periode) => {
+    const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
     const arbeidsgivere = organisasjoner.reduce((samling, organisasjon) => {
       const filtrerteArbeidsforholdene = arbeidsforholdene.filter(arbeidsforholdet => arbeidsforholdet.opplysningspliktigID === organisasjon.orgnr);
-      const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === organisasjon.orgnr);
+      const filtrerteInntekter = filtrerOgSpreInntekt(startDato, organisasjon.orgnr, inntekter);
       return ([...samling, { organisasjon, arbeidsforholdene: filtrerteArbeidsforholdene, inntektListe: filtrerteInntekter }]);
     }, [])
       .filter(arbeidsgiver => arbeidsgiver.arbeidsforholdene.length > 0 || arbeidsgiver.inntektListe.length > 0);
