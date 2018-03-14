@@ -103,7 +103,6 @@ export const MedlemskapSelector = createSelector(
     const PERIODE_MED_MEDLEMSKAP = 'PMMEDSKP';
     const PERIODE_UTEN_MEDLEMSKAP = 'PUMEDSKP';
     const GYLDIG_MEDLEMSKAP = 'GYLD';
-    const AVVIST_MEDLEMSKAP = 'AVST';
     const UAVKLART_MEDLEMSKAP = 'UAVK';
 
     const { medlemsperiode = [] } = medlemskap;
@@ -111,7 +110,6 @@ export const MedlemskapSelector = createSelector(
       perioderMed: medlemsperiode.filter(periode => periode.type.kode === PERIODE_MED_MEDLEMSKAP && periode.status.kode === GYLDIG_MEDLEMSKAP),
       perioderUten: medlemsperiode.filter(periode => periode.type.kode === PERIODE_UTEN_MEDLEMSKAP),
       perioderUavklart: medlemsperiode.filter(periode => periode.status.kode === UAVKLART_MEDLEMSKAP),
-      perioderAvvist: medlemsperiode.filter(periode => periode.status.kode === AVVIST_MEDLEMSKAP),
     };
   }
 );
