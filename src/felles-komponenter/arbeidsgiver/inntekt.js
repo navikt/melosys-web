@@ -24,6 +24,8 @@ class Inntekt extends Component {
   render() {
     const { inntektListe } = this.props;
 
+    const omvendtInntektListe = [...inntektListe].sort((a, b) => a.aarMaaned > b.aarMaaned);
+
     const grafConfig = {
       rangeSelector: {
         selected: 0,
@@ -46,7 +48,7 @@ class Inntekt extends Component {
         labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
       },
       xAxis: {
-        categories: inntektListe.map(linje => formatterKortDatoTilNorsk(linje.aarMaaned)),
+        categories: omvendtInntektListe.map(linje => formatterKortDatoTilNorsk(linje.aarMaaned)),
         crosshair: true,
         description: 'Perioder med inntekt.',
         labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
@@ -59,7 +61,7 @@ class Inntekt extends Component {
       series: [
         {
           name: 'Samlet  i én periode',
-          data: inntektListe.map(linje => linje.beloep),
+          data: omvendtInntektListe.map(linje => linje.beloep),
           color: '#0067c5',
           description: 'Inntekt',
         },
@@ -75,7 +77,6 @@ class Inntekt extends Component {
      * en ny ferdigtygget array.
      */
     const inntektArrayed = inntektListe
-      .sort((a, b) => ((a.aarMaaned < b.aarMaaned) ? 1 : -1))
       .map(linje => (
         [
           formatterKortDatoTilNorsk(linje.aarMaaned),

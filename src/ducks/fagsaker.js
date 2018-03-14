@@ -111,6 +111,7 @@ const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
 
     const nyEnkeltInntekt = eksisterendeInntektFunnetVedIndeks > -1 ? samling[eksisterendeInntektFunnetVedIndeks] : enkeltInntekt;
     nyEnkeltInntekt.beloep = eksisterendeInntektFunnetVedIndeks > -1 ? nyEnkeltInntekt.beloep + enkeltInntekt.beloep : nyEnkeltInntekt.beloep;
+    nyEnkeltInntekt.beloep = Math.max(nyEnkeltInntekt.beloep, 0);
 
     // Dersom ingen eksisterende inntekt på opplysningspliktigID ble funnet vil eksisterendeInntektFunnetVedIndeks være 0
     // og samlingen vil dermed ikke påvirkes av filteret nedenfor
