@@ -130,16 +130,13 @@ const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
  * @returns {any[]}
  */
 const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
-  const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
-  if (filtrerteInntekter.length > 0) {
-    return Array(6).fill(undefined).map((val, index) => {
-      const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
-      const inntektIndex = filtrerteInntekter.findIndex(inn => inn.aarMaaned === aarMaaned);
-      return inntektIndex > -1 ? filtrerteInntekter[inntektIndex] : { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
-    });
-  }
+  const filtrerteInntekterFraOpplysningspliktig = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
 
-  return filtrerteInntekter;
+  return Array(6).fill({}).map((val, index) => {
+    const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
+    const inntektIndex = filtrerteInntekterFraOpplysningspliktig.findIndex(inn => inn.aarMaaned === aarMaaned);
+    return inntektIndex > -1 ? filtrerteInntekterFraOpplysningspliktig[inntektIndex] : { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
+  });
 };
 
 export const InntektSelector = createSelector(
