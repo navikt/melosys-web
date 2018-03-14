@@ -132,10 +132,14 @@ const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
 const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
   const filtrerteInntekterFraOpplysningspliktig = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
 
-  return Array(6).fill({}).map((val, index) => {
+  return Array(6).fill({}).map((verdi, index) => {
     const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
-    const inntektIndex = filtrerteInntekterFraOpplysningspliktig.findIndex(inn => inn.aarMaaned === aarMaaned);
-    return inntektIndex > -1 ? filtrerteInntekterFraOpplysningspliktig[inntektIndex] : { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
+    const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(enkeltInntekt => enkeltInntekt.aarMaaned === aarMaaned);
+    return eksisterendeInntektFunnetVedIndeks > -1
+      ?
+      filtrerteInntekterFraOpplysningspliktig[eksisterendeInntektFunnetVedIndeks]
+      :
+      { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
   });
 };
 
