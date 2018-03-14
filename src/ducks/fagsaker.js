@@ -62,43 +62,65 @@ export const OrganisasjonerSelector = createSelector(
   organisasjoner => organisasjoner || []
 );
 
-/** InntektLinjer leveres i en array av aarMaaned, men med potensielt flere del-inntekter innenfor en enkelt-
- * måned. Derfor må disse inntektene summeres slik at vi sitter med én totalinntekt pr måned. Deretter kan vi
- * bygge opp en array hvor også måneder som mangler er med (men dermed inntekt === 0)
+/**
+ * INNTEKT
+ * ---------------------------------------------------------------------------------------
+ * Denne seksjonen inneholder selectorer og delfunksjoner for å håndtere, omstrukturere og
+ * vise inntekt. Inntekt i en fagsak kommer inn som ett objekt med nøstede arrays hvor flere
+ * typer inntekt kommer inn fra en eller flere opplysningspliktige.
  *
  */
 
+/**
+ * Inntekt er nøstet inn i måned og deretter en blanding av flere typer fra samme
+ * opplysningspliktigID og forskjellige opplysningspliktigID. I tillegg er det mye data
+ * som vi ikke har behov for. For å kunne gjøre fremtidige filtreringer ønsker vi å omforme
+ * den opprinnelige modellen til en flatere modell:
+ *
+ * [{ opplysningspliktigID: '123456789', beloep: 100000, aarMaaned: '2017-18' }]
+ *
+ * @param arbeidsInntektMaanedListe Det opprinnelige objektet for inntekten.
+ */
 const lagFlatInntektListe = arbeidsInntektMaanedListe => (
-  arbeidsInntektMaanedListe.reduce((oppsamletMaanedListe, enkeltMaaned) => {
+  arbeidsInntektMaanedListe.reduce((samling, enkeltMaaned) => {
     const { arbeidsInntektInformasjon = {}, aarMaaned } = enkeltMaaned;
     const { inntektListe = [] } = arbeidsInntektInformasjon;
 
-    const inntektListeInnenforEnkeltMaaned = inntektListe.reduce((samling, inntekten) => {
-      const { opplysningspliktigID, beloep } = inntekten;
-
-      return [...samling, { opplysningspliktigID, beloep, aarMaaned }];
+    const inntekterForEnkeltMaaned = inntektListe.reduce((samlingAvInntekterDenneMaaneden, enkelInntekt) => {
+      const { opplysningspliktigID, beloep } = enkelInntekt;
+      return [...samlingAvInntekterDenneMaaneden, { opplysningspliktigID, beloep, aarMaaned }];
     }, []);
 
-    return [...oppsamletMaanedListe, ...inntektListeInnenforEnkeltMaaned];
+    return [...samling, ...inntekterForEnkeltMaaned];
   }, [])
 );
 
-const summerDuplikateInntekter = flatInntektListe => (
-  flatInntektListe.reduce((samling, nyInntekt) => {
-    const samlingKopi = [...samling];
-    const index = samlingKopi.findIndex(element => (element.opplysningspliktigID === nyInntekt.opplysningspliktigID) && element.aarMaaned === nyInntekt.aarMaaned);
-    const inntektForInnlegg = index > -1 ? samling[index] : nyInntekt;
+/**
+ * Inntekter fra samme opplysningspliktigID kan ha flere typer og dermed komme inn som
+ * separate objekter. Type inntekt kan være 'lønnsinntekt', 'bonusinntekt', 'feriepenger' etc.
+ * Navn på typene er ikke viktige, men vi ønsker bare å vise én inntektssum fra samme opplysningspliktigID
+ * i en enkelt måned.
+ *
+ * Funksjonen nedenfor traverserer alle intekter og summerer de som kommer fra samme opplysningspliktigID.
+ * @param flatInntektListe Den flate inntektslisten som inneholder alle del-inntekter.
+ */
+const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
+  flatInntektListe.reduce((samling, enkeltInntekt) => {
+    const eksisterendeInntektFunnetVedIndeks = samling
+      .findIndex(element => (element.opplysningspliktigID === enkeltInntekt.opplysningspliktigID) && element.aarMaaned === enkeltInntekt.aarMaaned);
 
-    if (index > -1) {
-      inntektForInnlegg.beloep += nyInntekt.beloep;
-      samlingKopi.splice(index, 1);
-    }
+    const nyEnkeltInntekt = eksisterendeInntektFunnetVedIndeks > -1 ? samling[eksisterendeInntektFunnetVedIndeks] : enkeltInntekt;
+    nyEnkeltInntekt.beloep = eksisterendeInntektFunnetVedIndeks > -1 ? nyEnkeltInntekt.beloep + enkeltInntekt.beloep : nyEnkeltInntekt.beloep;
 
-    return [...samlingKopi, inntektForInnlegg];
+    // Dersom ingen eksisterende inntekt på opplysningspliktigID ble funnet vil eksisterendeInntektFunnetVedIndeks være 0
+    // og samlingen vil dermed ikke påvirkes av filteret nedenfor
+    const nySamling = samling.filter((enkelt, indeks) => indeks !== eksisterendeInntektFunnetVedIndeks);
+
+    return [...nySamling, nyEnkeltInntekt];
   }, [])
 );
 
-const inntektSiste6Maaneder = (startDato, allInntekt) => (
+const inntektSisteSeksMaaneder = (startDato, allInntekt) => (
   Array(6).fill(undefined).reduce((samling, verdi, index) => {
     const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
     const inntekten = allInntekt.find(inntekt => inntekt.aarMaaned === aarMaaned);
@@ -129,8 +151,8 @@ export const InntektSelector = createSelector(
     const { arbeidsInntektMaanedListe = [] } = inntekt;
 
     const flatInntektsListe = lagFlatInntektListe(arbeidsInntektMaanedListe);
-    const summerteDuplikatInntekt = summerDuplikateInntekter(flatInntektsListe);
-    return inntektSiste6Maaneder(startDato, summerteDuplikatInntekt);
+    const summerteDuplikatInntekt = summerInntektsTyperFraSammeOpplysningspliktig(flatInntektsListe);
+    return inntektSisteSeksMaaneder(startDato, summerteDuplikatInntekt);
   }
 );
 
