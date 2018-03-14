@@ -120,20 +120,15 @@ const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
   }, [])
 );
 
-/**
- * Det er kun inntekt for siste 6 måneder som skal vises i inntektslisten.
- * @param startDato StartDato fra søknadsperioden.
- * @param allInntekt Hele listen over inntekter som skal filtreres.
- * @returns {any}
+/** Denne funksjonen filtrerer inntekten på siste 6 måneder fra startdato og
+ * sprer den over tilsvarende måneder slik at evt manglende inntektsdata vises som beloep:0 for den
+ * aktuelle måneden.
+ *
+ * @param startDato Startdatoen for når vi teller bakover.
+ * @param orgnr Organisasjonsnummmeret som det filtreres på.
+ * @param inntekter Listen over ufiltrerte inntekter.
+ * @returns {any[]}
  */
-const inntektSisteSeksMaaneder = (startDato, allInntekt) => (
-  Array(6).fill(undefined).reduce((samling, verdi, index) => {
-    const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
-    const inntekten = allInntekt.find(inntekt => inntekt.aarMaaned === aarMaaned);
-    return inntekten ? [...samling, inntekten] : [...samling];
-  }, [])
-);
-
 const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
   const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
   if (filtrerteInntekter.length > 0) {
@@ -149,16 +144,13 @@ const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
 
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
-  state => FaktaavklaringOppholdPeriodeSelector(state),
-  (inntekt, periode) => {
+  inntekt => {
     if (!inntekt) return [];
 
-    const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
     const { arbeidsInntektMaanedListe = [] } = inntekt;
 
     const flatInntektsListe = lagFlatInntektListe(arbeidsInntektMaanedListe);
-    const summerteDuplikatInntekt = summerInntektsTyperFraSammeOpplysningspliktig(flatInntektsListe);
-    return inntektSisteSeksMaaneder(startDato, summerteDuplikatInntekt);
+    return summerInntektsTyperFraSammeOpplysningspliktig(flatInntektsListe);
   }
 );
 
