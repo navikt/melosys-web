@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
@@ -104,43 +104,25 @@ MedlemskapGruppe.defaultProps = {
  * settes inn som egen fane med overskriften "Medlemskap" i saksopplysningene.
  *
  */
-class Medlemskap extends Component {
-  state = { visAvvisteMedlemskap: false }
+const Medlemskap = props => {
+  const { medlemskap } = props;
 
-  toggleAvvisteMedlemskapHandler = e => {
-    e.preventDefault();
-    this.setState({ visAvvisteMedlemskap: !this.state.visAvvisteMedlemskap });
-  }
-
-  render() {
-    const { medlemskap } = this.props;
-    const { visAvvisteMedlemskap } = this.state;
-    const { toggleAvvisteMedlemskapHandler } = this;
-
-    return (
-      <div className="medlemskap panelSeksjon">
-        <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={Ikoner.Medlemskap} tittel="Medlemskap" undertittel="" />}
-          ariaTittel="Panel for medlemskap">
-          <section aria-label="Panel for medlemskap">
-            <Nav.Container fluid>
-              <MedlemskapGruppe perioder={medlemskap.perioderMed} overskrift="Perioder med medlemskap" />
-              <MedlemskapGruppe perioder={medlemskap.perioderUten} overskrift="Perioder uten medlemskap" />
-              <MedlemskapGruppe perioder={medlemskap.perioderUavklart} overskrift="Perioder med uavklart medlemskap" />
-              {visAvvisteMedlemskap && <MedlemskapGruppe perioder={medlemskap.perioderAvvist} overskrift="Perioder med avvist medlemskap" /> }
-              <Nav.Knapp
-                mini
-                onClick={toggleAvvisteMedlemskapHandler}
-                className="visavvist__knapp">
-                {visAvvisteMedlemskap ? 'Skjul avviste medlemskap' : 'Vis avviste medlemskap'}
-              </Nav.Knapp>
-            </Nav.Container>
-          </section>
-        </Nav.EkspanderbartpanelBase>
-      </div>
-    );
-  }
-}
+  return (
+    <div className="medlemskap panelSeksjon">
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader ikon={Ikoner.Medlemskap} tittel="Medlemskap" undertittel="" />}
+        ariaTittel="Panel for medlemskap">
+        <section aria-label="Panel for medlemskap">
+          <Nav.Container fluid>
+            <MedlemskapGruppe perioder={medlemskap.perioderMed} overskrift="Perioder med medlemskap" />
+            <MedlemskapGruppe perioder={medlemskap.perioderUten} overskrift="Perioder uten medlemskap" />
+            <MedlemskapGruppe perioder={medlemskap.perioderUavklart} overskrift="Perioder med uavklart medlemskap" />
+          </Nav.Container>
+        </section>
+      </Nav.EkspanderbartpanelBase>
+    </div>
+  );
+};
 
 Medlemskap.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
