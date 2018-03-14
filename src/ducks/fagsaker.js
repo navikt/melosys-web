@@ -120,6 +120,12 @@ const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
   }, [])
 );
 
+/**
+ * Det er kun inntekt for siste 6 måneder som skal vises i inntektslisten.
+ * @param startDato StartDato fra søknadsperioden.
+ * @param allInntekt Hele listen over inntekter som skal filtreres.
+ * @returns {any}
+ */
 const inntektSisteSeksMaaneder = (startDato, allInntekt) => (
   Array(6).fill(undefined).reduce((samling, verdi, index) => {
     const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
