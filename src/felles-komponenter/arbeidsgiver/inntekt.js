@@ -93,23 +93,29 @@ class Inntekt extends Component {
       </div>
     ) : null;
 
-    return inntektListe.length > 0 ? (
+    const harMinstEnInntekt = inntektListe.some(inntekt => inntekt.beloep > 0);
+
+    const inntektInnhold = harMinstEnInntekt ? (
+      <div className="inntekt">
+        <div className="inntekt__graf">
+          <ReactHighcharts config={grafConfig} />
+          <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">
+            { this.state.visInntektTabell ? 'Skjul tabellen' : 'Vis grafen som tabell' }
+          </Nav.Knapp>
+        </div>
+        {uuTabell}
+      </div>)
+      :
+      <div>Finner ingen inntekt registrert i arbeidsforholdet 6 måned forut for søknadsperioden.</div>;
+
+    return (
       <div className="inntekt panelSeksjon">
         <Nav.EkspanderbartpanelBase
           heading={<PanelHeader tittel="Inntekt" undertittel="" ikon={Ikoner.Inntekt} />}
           ariaTittel="Panel for inntekt">
-          <div className="inntekt">
-            <div className="inntekt__graf">
-              <ReactHighcharts config={grafConfig} />
-              <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">
-                { this.state.visInntektTabell ? 'Skjul tabellen' : 'Vis grafen som tabell' }
-              </Nav.Knapp>
-            </div>
-            {uuTabell}
-          </div>
+          { inntektInnhold }
         </Nav.EkspanderbartpanelBase>
-      </div>
-    ) : null;
+      </div>);
   }
 }
 
