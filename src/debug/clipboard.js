@@ -1,3 +1,5 @@
+/* eslint-disable func-names */
+
 export default (function(window, document, navigator) {
   let textArea;
 
