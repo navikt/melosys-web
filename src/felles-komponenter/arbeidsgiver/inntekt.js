@@ -107,7 +107,7 @@ class Inntekt extends Component {
         {uuTabell}
       </div>)
       :
-      <div>Finner ingen inntekt registrert i arbeidsforholdet 6 måned forut for søknadsperioden.</div>;
+      <div>Finner ingen inntekt registrert i arbeidsforholdet 6 måneder forut for søknadsperioden.</div>;
 
     return (
       <div className="inntekt panelSeksjon">
