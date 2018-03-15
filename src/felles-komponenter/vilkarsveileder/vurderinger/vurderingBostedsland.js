@@ -16,16 +16,16 @@ const VurderingBostedsland = props => {
     <div>
       <div>
         <Nav.Normaltekst>
-          Vurdering av bosted er en sammensatt vurdering. Som regel vil søker være bosatt der han har oppgitt sin adresse, men i noen tilfeller vil det være behov for nærmere undersøkelser.
+          Vurdering av bosted er en sammensatt vurdering. Som regel vil søker være bosatt på oppgitt adresse, men i noen tilfeller vil det være behov for nærmere undersøkelse.
           Noen indikasjoner på at det bør gjøres nærmere undersøkelser er:
         </Nav.Normaltekst>
         <ul>
-          <li>Søker har d-nr.</li>
-          <li>Søker har mottatt EØS-barnetrygd.</li>
-          <li>Søker har oppgitt utenlandsk adresse.</li>
-          <li>Mistenkelig bostedsadresse. Er den lik arbeidsgivers?</li>
-          <li>Er det mange som er registrert på adressen?</li>
-          <li>Søker har ikke oppgitt aktivitet i landet de har bostedsadresse.</li>
+          <li>Søker har D-nummer</li>
+          <li>Søker mottar eller har mottatt EØS-barnetrygd</li>
+          <li>Søker har oppgitt adresse i utlandet</li>
+          <li>Er bostedsadresse lik arbeidsgivers adresse?</li>
+          <li>Er det mange personer registrert på adressen?</li>
+          <li>Søker har ikke oppgitt aktivitet i landet der vedkommende har bostedsadresse</li>
         </ul>
       </div>
       <Nav.Fieldset legend="Jeg bekrefter å ha vurdert:">
