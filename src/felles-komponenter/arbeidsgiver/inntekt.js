@@ -23,18 +23,8 @@ class Inntekt extends Component {
 
   render() {
     const { inntektListe } = this.props;
-    /**
-     * Listen over inntekt fra inntektskomponenten kan inneholde flere typer inntekter
-     * i samme periode. Disse må derfor summeres slik at de representeres som én type inntekt.
-     */
-    const grafInntekt = inntektListe
-      .reduce((samling, linje) => {
-        const { utbetaltIPeriode, beskrivelse, beloep } = linje;
-        const utbetaltTotaltIPeriode = samling[utbetaltIPeriode] || 0;
 
-        return [...samling, { utbetalt: utbetaltIPeriode, beskrivelse, beloep: (utbetaltTotaltIPeriode + beloep) }];
-      }, [])
-      .sort((a, b) => ((a.utbetalt > b.utbetalt) ? 1 : -1));
+    const omvendtInntektListe = [...inntektListe].sort((a, b) => a.aarMaaned > b.aarMaaned);
 
     const grafConfig = {
       rangeSelector: {
@@ -58,7 +48,7 @@ class Inntekt extends Component {
         labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
       },
       xAxis: {
-        categories: grafInntekt.map(linje => formatterKortDatoTilNorsk(linje.utbetalt)),
+        categories: omvendtInntektListe.map(linje => formatterKortDatoTilNorsk(linje.aarMaaned)),
         crosshair: true,
         description: 'Perioder med inntekt.',
         labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
@@ -71,7 +61,7 @@ class Inntekt extends Component {
       series: [
         {
           name: 'Samlet  i én periode',
-          data: grafInntekt.map(linje => linje.beloep),
+          data: omvendtInntektListe.map(linje => linje.beloep),
           color: '#0067c5',
           description: 'Inntekt',
         },
@@ -86,12 +76,10 @@ class Inntekt extends Component {
      * All formattering eller komponent-innsett må derfor gjøres her og returnere
      * en ny ferdigtygget array.
      */
-    const inntektArrayed = grafInntekt
-      .sort((a, b) => ((a.utbetalt < b.utbetalt) ? 1 : -1))
+    const inntektArrayed = inntektListe
       .map(linje => (
         [
-          formatterKortDatoTilNorsk(linje.utbetalt),
-          linje.beskrivelse,
+          formatterKortDatoTilNorsk(linje.aarMaaned),
           linje.beloep,
         ]));
 
@@ -99,30 +87,36 @@ class Inntekt extends Component {
       <div>
         <Nav.Undertittel>Inntekt</Nav.Undertittel>
         <Tabell
-          kolonneNavn={['Periode', 'Beskrivelse', 'Samlet inntekt']}
+          kolonneNavn={['Periode', 'Samlet inntekt']}
           tabellData={inntektArrayed}
-          linjerPerSide={5}
+          linjerPerSide={6}
         />
       </div>
     ) : null;
 
-    return inntektListe.length > 0 ? (
+    const harMinstEnInntekt = inntektListe.some(inntekt => inntekt.beloep > 0);
+
+    const inntektInnhold = harMinstEnInntekt ? (
+      <div className="inntekt">
+        <div className="inntekt__graf">
+          <ReactHighcharts config={grafConfig} />
+          <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">
+            { this.state.visInntektTabell ? 'Skjul tabellen' : 'Vis grafen som tabell' }
+          </Nav.Knapp>
+        </div>
+        {uuTabell}
+      </div>)
+      :
+      <div>Finner ingen inntekt registrert i arbeidsforholdet 6 måned forut for søknadsperioden.</div>;
+
+    return (
       <div className="inntekt panelSeksjon">
         <Nav.EkspanderbartpanelBase
           heading={<PanelHeader tittel="Inntekt" undertittel="" ikon={Ikoner.Inntekt} />}
           ariaTittel="Panel for inntekt">
-          <div className="inntekt">
-            <div className="inntekt__graf">
-              <ReactHighcharts config={grafConfig} />
-              <Nav.Knapp mini onClick={this.toggleInntektTabellHandler} className="vistabell__knapp">
-                { this.state.visInntektTabell ? 'Skjul tabellen' : 'Vis grafen som tabell' }
-              </Nav.Knapp>
-            </div>
-            {uuTabell}
-          </div>
+          { inntektInnhold }
         </Nav.EkspanderbartpanelBase>
-      </div>
-    ) : null;
+      </div>);
   }
 }
 
