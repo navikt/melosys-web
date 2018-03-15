@@ -15,6 +15,7 @@ import { FANE_STATUS } from './stegLogikk/typer';
 // Importer alle fanene
 import VurderingPeriode from './vurderinger/vurderingPeriode';
 import VurderingArbeidsforhold from './vurderinger/vurderingArbeidsforhold';
+import VurderingYrkesaktivitetFordeling from './vurderinger/vurderingYrkesaktivitetFordeling';
 import VurderingAktivitet from './vurderinger/vurderingAktivitet';
 import VurderingUtsending from './vurderinger/vurderingUtsending';
 import VurderingSysselsetting from './vurderinger/vurderingSysselsetting';
@@ -26,7 +27,8 @@ import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker';
-import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector } from '../../ducks/faktaavklaring';
+import { hentVurdering } from '../../ducks/vurdering';
+import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector, oppdaterFaktaavklaringState } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
 
 import './vilkarsveileder.css';
@@ -61,6 +63,15 @@ class Vilkarsveileder extends Component {
           id: 'ARBEIDSFORHOLD',
           komponent: VurderingArbeidsforhold,
           dataHenter: props => ({ relevanteArbeidsforholdene: props.relevanteArbeidsforholdene }),
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: FANE_STATUS.OK,
+        },
+        {
+          id: 'YRKESAKTIVITET_FORDELING',
+          komponent: VurderingYrkesaktivitetFordeling,
+          dataHenter: () => ({}),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -125,7 +136,7 @@ class Vilkarsveileder extends Component {
           komponent: VurderingVirksomhet,
           dataHenter: () => ({}),
           handlers: {
-            bekreftOgFortsett: this.beOmVurdering,
+            bekreftOgFortsett: this.bekreftOgFortsett,
           },
           status: FANE_STATUS.OK,
         },
@@ -134,7 +145,7 @@ class Vilkarsveileder extends Component {
           komponent: VurderingVedtak,
           dataHenter: () => ({}),
           handlers: {
-            fattVedtakHandler: this.fattVedtak,
+            fattVedtakHandler: () => { this.fattVedtak(); this.beOmVurdering(); },
           },
           status: FANE_STATUS.OK,
         },
@@ -147,6 +158,11 @@ class Vilkarsveileder extends Component {
       this.oppdaterAktuelleSteg(nextProps);
     }
   }
+
+  /** Sjekker om det aktive steget som saksbehandler har klikket seg inn på
+   * er det siste steget, altså Vedtak.
+   */
+  erDetteSisteSteg = totaltAntallSteg => (this.state.aktivtStegNummer === totaltAntallSteg - 1);
 
   fattVedtak = () => {
     this.props.fattVedtakHandler();
@@ -167,6 +183,7 @@ class Vilkarsveileder extends Component {
 
   oppdaterAktuelleSteg = props => {
     const { faktaavklaring, skjema } = props;
+    const { erDetteSisteSteg } = this;
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
     const aktuelleSteg = beregnedeSteg
@@ -179,6 +196,10 @@ class Vilkarsveileder extends Component {
       }));
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
+
+    if (erDetteSisteSteg()) {
+      this.props.hentVurdering(this.props.oppsummering.behandlingID);
+    }
 
     this.setState({ aktuelleSteg });
     return aktuelleSteg;
@@ -224,6 +245,8 @@ Vilkarsveileder.propTypes = {
   faktaavklaring: PT.object,
   skjema: PT.object.isRequired,
   valgteArbeidsforhold: PT.array,
+  oppdaterFaktaavklaringState: PT.func.isRequired,
+  hentVurdering: PT.func.isRequired,
 };
 
 Vilkarsveileder.defaultProps = {
@@ -243,4 +266,9 @@ const mapStateToProps = state => ({
   skjema: SoknadenFormSelector(state).values,
 });
 
-export default withRouter(connect(mapStateToProps)(Vilkarsveileder));
+const mapDispatchToProps = dispatch => ({
+  oppdaterFaktaavklaringState: skjema => dispatch(oppdaterFaktaavklaringState(skjema)),
+  hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
+});
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));

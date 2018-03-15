@@ -1,22 +1,30 @@
 import PT from 'prop-types';
+import { Periode } from './periode';
+import { Kodeverk } from './kodeverk';
 
-const MedlemskapPeriodePropType = PT.shape({
-  type: PT.string,
-  status: PT.string,
-  grunnlagstype: PT.string,
-  land: PT.string,
-  lovvalg: PT.string,
+const MedlemskapEnkeltPeriodePropType = PT.shape({
+  periode: Periode,
+  type: Kodeverk,
+  status: Kodeverk,
+  grunnlagstype: Kodeverk,
+  land: Kodeverk,
+  lovvalg: Kodeverk,
   trygdedekning: PT.string,
   kildedokumenttype: PT.string,
   kilde: PT.string,
 });
 
+const MedlemskapPerioderPropType = PT.arrayOf(MedlemskapEnkeltPeriodePropType);
+
 const MedlemskapPropType = PT.shape({
-  medlemsperiode: PT.arrayOf(MedlemskapPeriodePropType),
+  perioderMed: PT.arrayOf(MedlemskapEnkeltPeriodePropType),
+  perioderUten: PT.arrayOf(MedlemskapEnkeltPeriodePropType),
+  perioderUavklart: PT.arrayOf(MedlemskapEnkeltPeriodePropType),
+  perioderAvvist: PT.arrayOf(MedlemskapEnkeltPeriodePropType),
 });
 
-
 export {
-  MedlemskapPeriodePropType as MedlemskapPeriode,
+  MedlemskapEnkeltPeriodePropType as MedlemskapEnkeltPeriode,
+  MedlemskapPerioderPropType as MedlemskapPerioder,
   MedlemskapPropType as Medlemskap,
 };

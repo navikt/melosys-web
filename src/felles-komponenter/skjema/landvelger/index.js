@@ -44,7 +44,7 @@ class CustomLandVelger extends Component {
    * * For å kunne søke på både landkode og land-navnslik det står i listen, feks "Storbrittannia (GB)",
    * brukes 'landTekstFormat' for å sette sammen dette til en string før det søkes i denne stringen.
    *
-   * @param alleLand Array Liste over alle tilgjengelige land, bestående av landobjekt.
+   * @param landkoder Array Liste over alle tilgjengelige land, bestående av landobjekt.
    * @param inputVerdi String Verdien det skal søkes etter.
    * @return Array med landObjekter som matcher.
    */

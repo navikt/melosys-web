@@ -2,7 +2,7 @@
 import * as Api from '../../../src/services/api';
 import { MOCK_ENV } from '../mock_env';
 import fagsaker_body from './pact-fagsaker-body';
-
+console.log('fagsaker_body=>',JSON.stringify(fagsaker_body));
 const path = require('path');
 
 require('es6-promise').polyfill();
@@ -18,7 +18,6 @@ const chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 //const assert = chai.assert;
-
 
 describe('FagsakerPactApi', () => {
   const LOG_LEVEL = process.env.LOG_LEVEL || 'INFO';
@@ -39,7 +38,7 @@ describe('FagsakerPactApi', () => {
     return provider.setup()
       .then(() => {
         provider.addInteraction({
-          state: 'has an array of fagsaker',
+          state: 'as an array of fagsaker',
           uponReceiving: 'a request for an array of fagsaker',
           withRequest: {
             method: 'GET',
@@ -65,6 +64,13 @@ describe('FagsakerPactApi', () => {
         expect(fagsaker).to.have.property('status');
         expect(fagsaker).to.have.property('registrertDato');
         expect(fagsaker).to.have.property('behandlinger');
+
+        const { saksnummer, type, status, registrertDato, behandlinger } = fagsaker;
+        expect(saksnummer).to.be.a('number');
+        expect(type).to.be.a('string');
+        expect(registrertDato).to.be.a('string');
+        expect(behandlinger).to.be.a('array');
+        //expect(fagsaker).to.have.property('behandlinger');
       })
       .then(done, done);
   });
@@ -74,13 +80,12 @@ describe('FagsakerPactApi', () => {
     return provider.verify().then(() => {
       console.log("Writing pact files.");
       return provider.finalize().catch(err => {
-        console.error("Coulndt write pact files:");
+        console.error("Verification FAILED!");
         console.error(err);
       });
     });
   });
 });
-
 
 process.on('unhandledRejection', (err) => {
   console.error("An error occurred.");

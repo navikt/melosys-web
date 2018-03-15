@@ -1,6 +1,8 @@
 @import '../../node_modules/nav-frontend-typografi-style/src/mixins';
 @import '../../node_modules/nav-frontend-core/less/_mixins';
 
+@import '../constants';
+
 .beskrivliste-mixin(@dir) {
   margin:0;
   display:block;
@@ -36,7 +38,8 @@
 }
 
 .seksjonmixin() {
-  margin:0 0 2em;
+  margin:0 0 1em;
+  padding:0 0 1em;
 
   &:last-child {
     margin:0;

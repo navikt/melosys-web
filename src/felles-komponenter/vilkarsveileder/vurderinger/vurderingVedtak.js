@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
@@ -11,6 +12,7 @@ import './vurderingVedtak.css';
 import {
   VurderingLovvalgbestemmelserSelector,
   VurderingFeilmeldingSelector,
+  VurderingStatusSelector,
 } from '../../../ducks/vurdering';
 
 import {
@@ -37,7 +39,7 @@ const LovvalgBestemmelse = props => {
           <ul className="betingelser__liste">
             {
               betingelser.map(betingelse => (
-                <li key={uuid()} className="liste__element liste__element--oppfylt">{betingelse.krav}</li>
+                <li key={uuid()} className="liste__element liste__element--oppfylt">{betingelse.argument}</li>
               ))
             }
           </ul>
@@ -88,8 +90,14 @@ const VurderingVedtak = props => {
     .reduce((collection, arbeidsforholdet) => [...collection, arbeidsforholdet.arbeidsgiver.navn], [])
     .join(', ');
 
+  const venteskjermKlasser = classnames({ vedtak__venteskjerm: true, 'vedtak__venteskjerm--skjult': props.vurderingStatus !== 'PENDING' });
+
   return (
     <div className="vedtak">
+      <div className={venteskjermKlasser}>
+        <Nav.NavFrontendSpinner type="XL" />
+        <Nav.Element>Lagrer faktaavklaring og ber om vedtaksforslag</Nav.Element>
+      </div>
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12">
@@ -101,7 +109,7 @@ const VurderingVedtak = props => {
             <LovvalgBestemmelse key={uuid()} bestemmelse={bestemmelse} />
           ))
         }
-        <p>Feilmeldinger</p>
+        { feilmeldinger && feilmeldinger.length > 0 && <p>Feilmeldinger</p>}
         {
           feilmeldinger && feilmeldinger.map(feilmelding => (
             <VurderingFeilmeldinger key={uuid()} feilmelding={feilmelding} />
@@ -141,6 +149,7 @@ const VurderingVedtak = props => {
 VurderingVedtak.propTypes = {
   fattVedtakHandler: PT.func.isRequired,
   lovvalgbestemmelser: MPT.Lovvalgsbestemmelser.isRequired,
+  vurderingStatus: PT.string.isRequired,
   feilmeldinger: MPT.Feilmeldinger.isRequired,
   opphold: MPT.Opphold.isRequired,
   valgteArbeidsforhold: MPT.Arbeidsforholdene.isRequired,
@@ -150,6 +159,7 @@ VurderingVedtak.propTypes = {
 const mapStateToProps = state => ({
   lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
   feilmeldinger: VurderingFeilmeldingSelector(state),
+  vurderingStatus: VurderingStatusSelector(state),
   opphold: FaktaavklaringOppholdSelector(state),
   valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   sysselsetting: FaktaavklaringSysselsettingSelector(state),

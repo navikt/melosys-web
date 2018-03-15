@@ -9,7 +9,7 @@ node {
   def groupId = "nais"
 
   def nais_cluster = "preprod-fss"
-  def nav_environment = "t0"
+  def nav_environment = "t8"
 
   /* metadata */
   def buildVersion // major.minor.BUILD_NUMBER
@@ -95,12 +95,10 @@ node {
     echo("semver=${semver}")
 
     sh(returnStdout: true, script: "${npm} run build")
-    /*
     if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
       sh "rm -rf /var/lib/jenkins/melosys-web/*"
       sh "cp -r build/*  /var/lib/jenkins/melosys-web/"
     }
-    */
     //sh "scp -r build/ B150245@e34apvl00327.devillo.no:melosys/build/"
     def majorMinor = semver.split("\\.").take(2).join('.')
     buildVersion ="${majorMinor}.${BUILD_NUMBER}"
@@ -124,6 +122,7 @@ node {
     }
   }
 
+  /* Disable nais deployment
   stage('Deploy') {
     if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
       withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'B150245',
@@ -150,4 +149,5 @@ node {
       echo("PR branches are not used in NAIS deployment")
     }
   }
+  */
 }

@@ -1,55 +1,62 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import DatoOmrade from '../felles-komponenter/datoOmrade/datoOmrade';
+
+import { tekstEllerDash } from '../utils/utils';
 
 import './medlemskap.css';
 
 const uuid = require('uuid/v4');
 
-/** MedlemskapsSeksjon inneholdet ett enkelt medlemskap. Hver søker kan ha
+/** MedlemskapEnkeltPeriode inneholdet ett enkelt medlemskap. Hver søker kan ha
  * flere medlemskap. Se Confluence for definisjon av "medlemskap".
  *
  * @constructor
  */
-function MedlemskapPeriode({ medlemskapPeriode }) {
+function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
   const {
-    type,
-    status,
-    grunnlagstype,
-    land,
-    lovvalg,
+    periode = {},
+    type = {},
+    status = {},
+    grunnlagstype = {},
+    land = {},
+    lovvalg = {},
     trygdedekning,
     kildedokumenttype,
     kilde,
-  } = medlemskapPeriode;
+  } = enkeltPeriode;
 
   return (
     <div className="medlemskap__enkelt" aria-label="Enkelt medlemskap">
       <Nav.Row>
         {/* START DETALJER */}
-        <Nav.Column xs="12" lg="7">
+        <Nav.Column xs="4">
+          <DatoOmrade periode={periode} />
+        </Nav.Column>
+        <Nav.Column xs="8">
           <dl className="medlemskap__detaljer">
             <dt>Periodetype:</dt>
-            <dd>{type || '-'}</dd>
+            <dd>{tekstEllerDash(type.term)}</dd>
             <dt>Status:</dt>
-            <dd>{status || '-'}</dd>
+            <dd>{tekstEllerDash(status.term)}</dd>
             <dt>Grunnlagstype:</dt>
-            <dd>{grunnlagstype || '-'}</dd>
+            <dd>{tekstEllerDash(grunnlagstype.term)}</dd>
             <dt>Land:</dt>
-            <dd>{land || '-'}</dd>
+            <dd>{tekstEllerDash(land.term)}</dd>
             <dt>Lovvalg:</dt>
-            <dd>{lovvalg || '-'}</dd>
+            <dd>{tekstEllerDash(lovvalg.term)}</dd>
             <dt>Trygdedekning:</dt>
-            <dd>{trygdedekning || '-'}</dd>
+            <dd>{tekstEllerDash(trygdedekning)}</dd>
             <dt>Kildedokumenttype:</dt>
-            <dd>{kildedokumenttype || '-'}</dd>
+            <dd>{tekstEllerDash(kildedokumenttype)}</dd>
             <dt>Kilde:</dt>
-            <dd>{kilde || '-'}</dd>
-
+            <dd>{tekstEllerDash(kilde)}</dd>
           </dl>
         </Nav.Column>
         {/* SLUTT DETALJER */}
@@ -58,27 +65,64 @@ function MedlemskapPeriode({ medlemskapPeriode }) {
   );
 }
 
-MedlemskapPeriode.propTypes = {
-  medlemskapPeriode: MPT.MedlemskapPeriode.isRequired,
+MedlemskapEnkeltPeriode.propTypes = {
+  enkeltPeriode: MPT.MedlemskapEnkeltPeriode.isRequired,
 };
 
-function Medlemskap({ medlemskap }) {
-  const { medlemsperiode = [] } = medlemskap;
+/** En MedlemskapGruppe er en gruppering eller samling av flere medlemskap
+ * som har samme status eller type, feks "AVVIST", "PERIODE MED MEDLEMSKAP" eller liknende. Grupperingen
+ * gjøres i MedlemskapSelector.
+ *
+ * Målet med grupperingen er at saksbehandler raskere skal kunne finne frem til relevante perioder
+ * hvor søkeren har eller ikke har medlemskap. Dette kan være avgjørende for vurdering av søknaden.
+ *
+ */
+function MedlemskapGruppe(props) {
+  const { perioder, overskrift } = props;
+
+  return (
+    <div>
+      <Nav.Undertittel className="medlemskap__gruppeoverskrift">{overskrift}</Nav.Undertittel>
+      <section aria-label="Panel for medlemskap">
+        { perioder.map(enkeltPeriode => <MedlemskapEnkeltPeriode key={uuid()} enkeltPeriode={enkeltPeriode} />) }
+        { perioder.length === 0 && '(ingen funnet)'}
+      </section>
+    </div>
+  );
+}
+
+MedlemskapGruppe.propTypes = {
+  perioder: MPT.MedlemskapPerioder.isRequired,
+  overskrift: PT.string,
+};
+
+MedlemskapGruppe.defaultProps = {
+  overskrift: '',
+};
+
+/** Dette er hoved-komponenten for Medlemskap som eksponeres ut av modulen og som også
+ * settes inn som egen fane med overskriften "Medlemskap" i saksopplysningene.
+ *
+ */
+const Medlemskap = props => {
+  const { medlemskap } = props;
 
   return (
     <div className="medlemskap panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={Ikoner.Medlemskap} tittel="Medlemskap" undertittel="" />}
-        ariaTittel="Panel for medlemskap" >
+        ariaTittel="Panel for medlemskap">
         <section aria-label="Panel for medlemskap">
           <Nav.Container fluid>
-            { medlemsperiode.map(periode => <MedlemskapPeriode key={uuid()} medlemskapPeriode={periode} />) }
+            <MedlemskapGruppe perioder={medlemskap.perioderMed} overskrift="Perioder med medlemskap" />
+            <MedlemskapGruppe perioder={medlemskap.perioderUten} overskrift="Perioder uten medlemskap" />
+            <MedlemskapGruppe perioder={medlemskap.perioderUavklart} overskrift="Perioder med uavklart medlemskap" />
           </Nav.Container>
         </section>
       </Nav.EkspanderbartpanelBase>
     </div>
   );
-}
+};
 
 Medlemskap.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,

@@ -1,6 +1,10 @@
 import { createSelector, createStructuredSelector } from 'reselect';
+import moment from 'moment';
+
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
+
+import { FaktaavklaringOppholdPeriodeSelector } from './faktaavklaring';
 
 // Actions
 const OK = 'fagsaker/OK';
@@ -38,6 +42,15 @@ export function hentFagsaker(snr) {
     PENDING,
   });
 }
+
+export function opprettNyFagsak(fnr) {
+  return doThenDispatch(() => Api.opprettNyFagsak(fnr), {
+    OK,
+    FEILET,
+    PENDING,
+  });
+}
+
 // selector(s)
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
@@ -49,12 +62,88 @@ export const OrganisasjonerSelector = createSelector(
   organisasjoner => organisasjoner || []
 );
 
-/** InntektLinjer leveres gruppert inn i maaned. Denne selectoren gjør derfor en reduce slik at alle inntekter
- * leveres som én array, hvert element er da én inntektLinje. I tillegg hekter den på "virksomhet"-objekt
- * fra organisasjoner-selector slik at navnet på organisasjonen kan listes.
+/**
+ * INNTEKT
+ * ---------------------------------------------------------------------------------------
+ * Denne seksjonen inneholder selectorer og delfunksjoner for å håndtere, omstrukturere og
+ * vise inntekt. Inntekt i en fagsak kommer inn som ett objekt med nøstede arrays hvor flere
+ * typer inntekt kommer inn fra en eller flere opplysningspliktige.
  *
- * @return Inntektliste Et objekt med array for all inntekt.
  */
+
+/**
+ * Inntekt er nøstet inn i måned og deretter en blanding av flere typer fra samme
+ * opplysningspliktigID og forskjellige opplysningspliktigID. I tillegg er det mye data
+ * som vi ikke har behov for. For å kunne gjøre fremtidige filtreringer ønsker vi å omforme
+ * den opprinnelige modellen til en flatere modell:
+ *
+ * [{ opplysningspliktigID: '123456789', beloep: 100000, aarMaaned: '2017-18' }]
+ *
+ * @param arbeidsInntektMaanedListe Det opprinnelige objektet for inntekten.
+ */
+const lagFlatInntektListe = arbeidsInntektMaanedListe => (
+  arbeidsInntektMaanedListe.reduce((samling, enkeltMaaned) => {
+    const { arbeidsInntektInformasjon = {}, aarMaaned } = enkeltMaaned;
+    const { inntektListe = [] } = arbeidsInntektInformasjon;
+
+    const inntekterForEnkeltMaaned = inntektListe.reduce((samlingAvInntekterDenneMaaneden, enkelInntekt) => {
+      const { opplysningspliktigID, beloep } = enkelInntekt;
+      return [...samlingAvInntekterDenneMaaneden, { opplysningspliktigID, beloep, aarMaaned }];
+    }, []);
+
+    return [...samling, ...inntekterForEnkeltMaaned];
+  }, [])
+);
+
+/**
+ * Inntekter fra samme opplysningspliktigID kan ha flere typer og dermed komme inn som
+ * separate objekter. Type inntekt kan være 'lønnsinntekt', 'bonusinntekt', 'feriepenger' etc.
+ * Navn på typene er ikke viktige, men vi ønsker bare å vise én inntektssum fra samme opplysningspliktigID
+ * i en enkelt måned.
+ *
+ * Funksjonen nedenfor traverserer alle intekter og summerer de som kommer fra samme opplysningspliktigID.
+ * @param flatInntektListe Den flate inntektslisten som inneholder alle del-inntekter.
+ */
+const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
+  flatInntektListe.reduce((samling, enkeltInntekt) => {
+    const eksisterendeInntektFunnetVedIndeks = samling
+      .findIndex(element => (element.opplysningspliktigID === enkeltInntekt.opplysningspliktigID) && element.aarMaaned === enkeltInntekt.aarMaaned);
+
+    const nyEnkeltInntekt = eksisterendeInntektFunnetVedIndeks > -1 ? samling[eksisterendeInntektFunnetVedIndeks] : enkeltInntekt;
+    nyEnkeltInntekt.beloep = eksisterendeInntektFunnetVedIndeks > -1 ? nyEnkeltInntekt.beloep + enkeltInntekt.beloep : nyEnkeltInntekt.beloep;
+    nyEnkeltInntekt.beloep = Math.max(nyEnkeltInntekt.beloep, 0);
+
+    // Dersom ingen eksisterende inntekt på opplysningspliktigID ble funnet vil eksisterendeInntektFunnetVedIndeks være 0
+    // og samlingen vil dermed ikke påvirkes av filteret nedenfor
+    const nySamling = samling.filter((enkelt, indeks) => indeks !== eksisterendeInntektFunnetVedIndeks);
+
+    return [...nySamling, nyEnkeltInntekt];
+  }, [])
+);
+
+/** Denne funksjonen filtrerer inntekten på siste 6 måneder fra startdato og
+ * sprer den over tilsvarende måneder slik at evt manglende inntektsdata vises som beloep:0 for den
+ * aktuelle måneden.
+ *
+ * @param startDato Startdatoen for når vi teller bakover.
+ * @param orgnr Organisasjonsnummmeret som det filtreres på.
+ * @param inntekter Listen over ufiltrerte inntekter.
+ * @returns {any[]}
+ */
+const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
+  const filtrerteInntekterFraOpplysningspliktig = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
+
+  return Array(6).fill({}).map((verdi, index) => {
+    const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
+    const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(enkeltInntekt => enkeltInntekt.aarMaaned === aarMaaned);
+    return eksisterendeInntektFunnetVedIndeks > -1
+      ?
+      filtrerteInntekterFraOpplysningspliktig[eksisterendeInntektFunnetVedIndeks]
+      :
+      { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
+  });
+};
+
 export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
   inntekt => {
@@ -62,13 +151,8 @@ export const InntektSelector = createSelector(
 
     const { arbeidsInntektMaanedListe = [] } = inntekt;
 
-    return arbeidsInntektMaanedListe
-      .reduce((samling, element) => {
-        const { arbeidsInntektInformasjon = {} } = element;
-        const inntektListe = arbeidsInntektInformasjon.inntektListe ? arbeidsInntektInformasjon.inntektListe : [];
-        const subInntektliste = [...inntektListe];
-        return ([...samling, ...subInntektliste]);
-      }, []);
+    const flatInntektsListe = lagFlatInntektListe(arbeidsInntektMaanedListe);
+    return summerInntektsTyperFraSammeOpplysningspliktig(flatInntektsListe);
   }
 );
 
@@ -89,7 +173,20 @@ export const BekreftelserSelector = createSelector(
 
 export const MedlemskapSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : {}),
-  medlemskap => medlemskap || {}
+  medlemskap => {
+    // Medlemskapskoder fra kodeverk
+    const PERIODE_MED_MEDLEMSKAP = 'PMMEDSKP';
+    const PERIODE_UTEN_MEDLEMSKAP = 'PUMEDSKP';
+    const GYLDIG_MEDLEMSKAP = 'GYLD';
+    const UAVKLART_MEDLEMSKAP = 'UAVK';
+
+    const { medlemsperiode = [] } = medlemskap;
+    return {
+      perioderMed: medlemsperiode.filter(periode => periode.type.kode === PERIODE_MED_MEDLEMSKAP && periode.status.kode === GYLDIG_MEDLEMSKAP),
+      perioderUten: medlemsperiode.filter(periode => periode.type.kode === PERIODE_UTEN_MEDLEMSKAP),
+      perioderUavklart: medlemsperiode.filter(periode => periode.status.kode === UAVKLART_MEDLEMSKAP),
+    };
+  }
 );
 
 
@@ -131,10 +228,12 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
-  (organisasjoner, arbeidsforholdene, inntekter) => {
+  state => FaktaavklaringOppholdPeriodeSelector(state),
+  (organisasjoner, arbeidsforholdene, inntekter, periode) => {
+    const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
     const arbeidsgivere = organisasjoner.reduce((samling, organisasjon) => {
       const filtrerteArbeidsforholdene = arbeidsforholdene.filter(arbeidsforholdet => arbeidsforholdet.opplysningspliktigID === organisasjon.orgnr);
-      const filtrerteInntekter = inntekter.filter(inntekt => inntekt.opplysningspliktigID === organisasjon.orgnr);
+      const filtrerteInntekter = filtrerOgSpreInntekt(startDato, organisasjon.orgnr, inntekter);
       return ([...samling, { organisasjon, arbeidsforholdene: filtrerteArbeidsforholdene, inntektListe: filtrerteInntekter }]);
     }, [])
       .filter(arbeidsgiver => arbeidsgiver.arbeidsforholdene.length > 0 || arbeidsgiver.inntektListe.length > 0);

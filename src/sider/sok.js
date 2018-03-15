@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import PT from 'prop-types';
 
 import withErrorHandling from '../hoc/withErrorHandling';
@@ -69,13 +69,14 @@ class Sok extends Component {
             */}
           </Nav.Row>
         </Nav.Container>
+        <Link to="/spark" className="sok__sparklink">Debug</Link>
       </div>
     );
   }
 }
 
 Sok.propTypes = {
-  nyesaker: PT.array.isRequired,
+  nyesaker: PT.any,
   hentNyesaker: PT.func.isRequired,
   tidligeresaker: PT.array.isRequired,
   sakerbehandles: PT.array.isRequired,
@@ -88,6 +89,7 @@ Sok.propTypes = {
 
 Sok.defaultProps = {
   children: null,
+  nyesaker: [],
 };
 
 const mapStateToProps = state => ({
@@ -99,7 +101,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
-  opprettSak: fnr => dispatch(NyeSaker.opprettSak(fnr)),
+  opprettSak: fnr => dispatch(NyeSaker.opprettNyFagsak(fnr)),
 });
 
-export default withErrorHandling(withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
+const kontekster = [
+  { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
+  { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
+];
+export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));

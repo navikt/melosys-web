@@ -53,6 +53,10 @@ export default function reducer(state = initialState, action) {
           ansattINorskSelskap: dokument.faktaavklaringAnsattINorskSelskap,
           erstatterTidligereUtsendt: dokument.faktaavklaringErstatterTidligereUtsendt,
           utsendingMindreEnn24Mnd: dokument.faktaavklaringUtsendingMindreEnn24Mnd,
+          foretakDriverINorge: dokument.faktaavklaringForetakDriverINorge,
+          harForutgaendeMedlemskap: dokument.faktaavklaringHarForutgaendeMedlemskap,
+          arbeidKnyttetTilVirksomhetUtlandet: dokument.faktaavklaringArbeidKnyttetTilVirksomhetUtlandet,
+          sammeTypeVirksomhet: dokument.faktaavklaringSammeTypeVirksomhet,
         },
         valgteArbeidsforhold: [...dokument.faktaavklaringValgteArbeidsforhold],
         sektor: {
@@ -63,8 +67,10 @@ export default function reducer(state = initialState, action) {
           bekrefterDisponering: dokument.faktaavklaringBekrefterDisponering,
           bostedsland: dokument.faktaavklaringBostedsland,
         },
-        virksomhet: {
+        yrkesaktivitetFordeling: {
           antallLand: dokument.faktaavklaringAntallLand,
+        },
+        virksomhet: {
           aktivitetINorge: dokument.faktaavklaringAktivitetINorge,
           marginaltArbeid: dokument.faktaavklaringMarginaltArbeid,
           vekslingMellomLand: dokument.faktaavklaringVekslingMellomLand,
@@ -139,6 +145,11 @@ export const FaktaavklaringUtsendingSelector = createSelector(
 export const FaktaavklaringSektorSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.sektor : {}),
   sektor => sektor || {}
+);
+
+export const FaktaavklaringYrkesaktivitetFordelingSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.yrkesaktivitetFordeling : {}),
+  yrkesaktivitetFordeling => yrkesaktivitetFordeling || {}
 );
 
 export const FaktaavklaringVirksomhetSelector = createSelector(
