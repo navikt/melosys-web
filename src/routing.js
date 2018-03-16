@@ -4,12 +4,10 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 
 import Sok from './sider/sok';
 import Saksbehandling from './sider/saksbehandling';
-import Spark from './sider/spark';
 
 const Routing = ({ location }) => (
   <Switch location={location}>
     <Route exact path="/" component={Sok} />
-    <Route exact path="/spark" component={Spark} />
     <Route path="/saksbehandling/:snr" component={Saksbehandling} />
   </Switch>
 );

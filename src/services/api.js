@@ -1,6 +1,5 @@
 /* eslint-disable */
 import { getAsJson, postAsJson } from './utils';
-
 /*
 function erDev() {
   const url = window.location.href;
@@ -11,75 +10,92 @@ function erDev() {
 }
 */
 // from .env or .env.local
-const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
-console.log('process.env', process.env);
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL ? `${process.env.REACT_APP_API_BASE_URL}`: null;
+//console.log('process.env', process.env);
 
-export function health() {
-  const URI_HEALTH = `/melosys/internal/health/`;
-  return getAsJson(URI_HEALTH);
+function makeRestUri(args, endpoint) {
+  // API_BASE_URL is configured in .env || .env.local, and injected by webpack
+  if (API_BASE_URL) {
+    return `${API_BASE_URL}${endpoint}`;
+  }
+  // Run by mocha, runner. and does NOT read .env and inject API_BASE_URL
+  const mock_env = args[args.length - 1];
+  const { host, port } = mock_env;
+  return `${host}:${port}/api/${endpoint}`;
 }
 
 export function hentSoknader(bid) {
-  const URI_SOKNADER = `${API_BASE_URL}soknader/${bid}`;
+  const args = [...arguments];
+  const URI_SOKNADER = makeRestUri(args, `soknader/${bid}`);
   return getAsJson(URI_SOKNADER);
 }
 
 export function sendSoknad(bid, soknad) {
-  const URI_SOKNAD =`${API_BASE_URL}soknader/${bid}`;
-  return postAsJson(URI_SOKNAD, soknad);
+  const args = [...arguments];
+  const URI_SOKNADER = makeRestUri(args, `soknader/${bid}`);
+  return postAsJson(URI_SOKNADER, soknad);
 }
 
 export function hentFaktaavklaring(bid) {
-  const URI_FAKTAAVKLARING = `${API_BASE_URL}faktaavklaring/${bid}`;
+  const args = [...arguments];
+  const URI_FAKTAAVKLARING = makeRestUri(args, `faktaavklaring/${bid}`);
   return getAsJson(URI_FAKTAAVKLARING);
 }
 
 export function sendFaktaavklaring(bid, dokument) {
-  const URI_FAKTAAVKLARING =`${API_BASE_URL}faktaavklaring/${bid}`;
+  const args = [...arguments];
+  const URI_FAKTAAVKLARING = makeRestUri(args, `faktaavklaring/${bid}`);
   return postAsJson(URI_FAKTAAVKLARING, dokument);
 }
 
 export function hentVurdering(bid) {
-  const URI_VURDERING = `${API_BASE_URL}vurdering/${bid}`;
+  const args = [...arguments];
+  const URI_VURDERING = makeRestUri(args, `vurdering/${bid}`);
   return getAsJson(URI_VURDERING);
 }
 
 export function hentFagsaker(snr) {
-  const URI_FAGSAKER = `${API_BASE_URL}fagsaker/${snr}`;
+  const args = [...arguments];
+  const URI_FAGSAKER = makeRestUri(args, `fagsaker/${snr}`);
   return getAsJson(URI_FAGSAKER);
 }
 
 export function hentNyesaker(fnr) {
-  const URI_NYESAKER = `${API_BASE_URL}sok/fagsaker/?fnr=${fnr}`;
+  const args = [...arguments];
+  const URI_NYESAKER = makeRestUri(args, `sok/fagsaker/?fnr=${fnr}`);
   return getAsJson(URI_NYESAKER);
 }
 
-export function opprettNyFagsak(fnr) {
-  const URI_OPPRETTSAK = `${API_BASE_URL}fagsaker/ny/${fnr}`;
+export function opprettSak(fnr) {
+  const args = [...arguments];
+  const URI_OPPRETTSAK = makeRestUri(args, `opprettsak/${fnr}`);
   return getAsJson(URI_OPPRETTSAK);
 }
 
 export function hentSakerbehandles(brukernavn) {
-  const URI_SAKERBEHANDLES = `${API_BASE_URL}sakerbehandles/${brukernavn}`;
+  const args = [...arguments];
+  const URI_SAKERBEHANDLES = makeRestUri(args, `sakerbehandles/${brukernavn}`);
   return getAsJson(URI_SAKERBEHANDLES);
 }
-
 export function hentTidligeresaker(brukernavn) {
-  const URI_TIDLIGERESAKER = `${API_BASE_URL}tidligeresaker/${brukernavn}`;
+  const args = [...arguments];
+  const URI_TIDLIGERESAKER = makeRestUri(args, `tidligeresaker/${brukernavn}`);
   return getAsJson(URI_TIDLIGERESAKER);
 }
-
 export function hentSaksbehandler() {
-  const URI_SAKSBEHANDLER = `${API_BASE_URL}saksbehandler`;
+  const args = [...arguments];
+  const URI_SAKSBEHANDLER = makeRestUri(args, 'saksbehandler');
   return getAsJson(URI_SAKSBEHANDLER);
 }
 
 export function hentLandkoder() {
-  const URI_LANDKODER = `${API_BASE_URL}landkoder`;
+  const args = [...arguments];
+  const URI_LANDKODER = makeRestUri(args, 'landkoder');
   return getAsJson(URI_LANDKODER);
 }
 
 export function nyHenvendelse(henvendelse) {
-  const URI_HENVENDELSE =`${API_BASE_URL}henvendelse/`;
+  const args = [...arguments];
+  const URI_HENVENDELSE = makeRestUri(args, 'henvendelse');
   return postAsJson(URI_HENVENDELSE, henvendelse);
 }

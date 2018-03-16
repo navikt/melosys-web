@@ -13,9 +13,15 @@
 /scripts/mock_data
 
 # mocha + coverage
-/test
+/test/coverage
+/test/junit.xml
+
+# pact
+/pacts
+/logs
 
 # misc
+.vscode
 .idea
 !.idea/runConfigurations/
 .DS_Store
