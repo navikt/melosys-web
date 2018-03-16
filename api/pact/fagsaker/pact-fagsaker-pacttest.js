@@ -2,7 +2,12 @@
 import * as Api from '../../../src/services/api';
 import { MOCK_ENV } from '../mock_env';
 import fagsaker_body from './pact-fagsaker-body';
-console.log('fagsaker_body=>',JSON.stringify(fagsaker_body));
+import arbeidsforhold from "./arbeidsforhold-body";
+import organiasjoner from "./organisasjoner-body";
+import medlemskap from "./medlemskap-body";
+import inntekt from "./inntekt-body";
+import person from "./person-body";
+
 const path = require('path');
 
 require('es6-promise').polyfill();
@@ -68,9 +73,75 @@ describe('FagsakerPactApi', () => {
         const { saksnummer, type, status, registrertDato, behandlinger } = fagsaker;
         expect(saksnummer).to.be.a('number');
         expect(type).to.be.a('string');
+        expect(status).to.be.a('string');
         expect(registrertDato).to.be.a('string');
+
         expect(behandlinger).to.be.a('array');
-        //expect(fagsaker).to.have.property('behandlinger');
+        const [behandling] = behandlinger;
+        expect(behandling).to.be.a('object');
+        expect(behandling).to.have.property('oppsummering');
+        expect(behandling).to.have.property('saksopplysninger');
+        expect(behandling).to.have.property('arbeidsforhold');
+        expect(behandling).to.have.property('organiasjoner');
+        expect(behandling).to.have.property('medlemskap');
+        expect(behandling).to.have.property('inntekt');
+        expect(behandling).to.have.property('behandlingshistorikk');
+        expect(behandling).to.have.property('oppsummering');
+
+        const { oppsummering, saksopplysninger, arbeidsforhold, organiasjoner, medlemskap, inntekt, behandlingshistorikk } = behandling;
+        expect(oppsummering).to.be.a('object');
+        expect(saksopplysninger).to.be.a('object');
+        expect(arbeidsforhold).to.be.a('array');
+        expect(organiasjoner).to.be.a('array');
+        expect(medlemskap).to.be.a('object');
+        expect(inntekt).to.be.a('object');
+        expect(behandlingshistorikk).to.be.a('array');
+
+        expect(oppsummering).to.have.property('behandlingID');
+        expect(oppsummering).to.have.property('gsakId');
+        expect(oppsummering).to.have.property('status');
+        const { behandlingID, gsakId, status: o_status, type: o_type, registrertDato: o_dato } = oppsummering;
+        expect(behandlingID).to.be.a('number');
+        expect(gsakId).to.be.a('number');
+        expect(o_status).to.be.a('string');
+        expect(o_type).to.be.a('string');
+        expect(o_dato).to.be.a('string');
+
+        expect(saksopplysninger).to.have.property('person');
+        const { person } = saksopplysninger;
+        expect(person).to.have.property('fnr');
+        expect(person).to.have.property('sivilstand');
+        expect(person).to.have.property('statsborgerskap');
+        expect(person).to.have.property('sammensattNavn');
+        expect(person).to.have.property('bostedsadresse');
+        expect(person).to.have.property('kjoenn');
+        expect(person).to.have.property('foedselsdato');
+        const { fnr, sivilstand, statsborgerskap, sammensattNavn, bostedsadresse, kjoenn, foedselsdato } = person;
+        expect(fnr).to.be.a('string');
+        expect(sivilstand).to.be.a('string');
+        expect(statsborgerskap).to.be.a('string');
+        expect(sammensattNavn).to.be.a('string');
+        expect(bostedsadresse).to.be.a('object');
+        expect(kjoenn).to.be.a('string');
+        expect(foedselsdato).to.be.a('string');
+
+        expect(arbeidsforhold).to.be.a('array');
+        const [arbeidsforholdet] = arbeidsforhold;
+        expect(arbeidsforholdet).to.have.property('arbeidsforholdID');
+        expect(arbeidsforholdet).to.have.property('arbeidsforholdIDnav');
+        expect(arbeidsforholdet).to.have.property('ansettelsesPeriode');
+        expect(arbeidsforholdet).to.have.property('arbeidsforholdstype');
+        expect(arbeidsforholdet).to.have.property('arbeidsavtaler');
+        expect(arbeidsforholdet).to.have.property('permisjonOgPermittering');
+        expect(arbeidsforholdet).to.have.property('utenlandsopphold');
+        expect(arbeidsforholdet).to.have.property('arbeidsgivertype');
+        expect(arbeidsforholdet).to.have.property('arbeidsgiverID');
+        expect(arbeidsforholdet).to.have.property('arbeidstakerID');
+        expect(arbeidsforholdet).to.have.property('opplysningspliktigtype');
+        expect(arbeidsforholdet).to.have.property('opplysningspliktigID');
+        expect(arbeidsforholdet).to.have.property('opprettelsestidspunkt');
+        expect(arbeidsforholdet).to.have.property('sistBekreftet');
+        expect(arbeidsforholdet).to.have.property('Aordning');
       })
       .then(done, done);
   });

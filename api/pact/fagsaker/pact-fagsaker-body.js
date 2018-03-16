@@ -28,14 +28,12 @@ const behandling = {
   inntekt,
   behandlingshistorikk: [],
 };
+const behandlinger = eachLike(behandling);
 
-const behandlinger = eachLike(behandling, {
-  min: 1,
-});
 const fagsak = {
-  saksnummer: 4,
-  type: 'A1',
-  status: 'OPPRETTET',
+  saksnummer: integer(4),
+  type: like('A1'),
+  status: like('OPPRETTET'),
   registrertDato: '2018-02-01T10:09:39.617',
   behandlinger,
 };

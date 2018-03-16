@@ -57,7 +57,6 @@ export function hentVurdering(bid) {
 export function hentFagsaker(snr) {
   const args = [...arguments];
   const URI_FAGSAKER = makeRestUri(args, `fagsaker/${snr}`);
-  console.log(URI_FAGSAKER);
   return getAsJson(URI_FAGSAKER);
 }
 
