@@ -37,7 +37,7 @@ import {
   InntektSoknadenSelector,
   BekreftelserSelector,
   OppsummeringSelector,
-} from '../ducks/fagsaker';
+} from '../ducks/fagsaker/fagsaker';
 
 import {
   hentSoknad,

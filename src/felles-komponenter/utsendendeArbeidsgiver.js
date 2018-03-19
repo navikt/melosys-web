@@ -9,7 +9,7 @@ import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
 
 import { ArbeidNorgeSelector } from '../ducks/soknad';
-import { ArbeidsforholdeneSelector } from '../ducks/fagsaker';
+import { ArbeidsforholdeneSelector } from '../ducks/fagsaker/fagsaker';
 
 import PanelHeader from './panelHeader/panelHeader';
 import Forretningsadresse from './adresser/forretningsadresse';

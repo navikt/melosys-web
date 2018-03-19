@@ -2,7 +2,7 @@ import { createSelector } from 'reselect';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 
-import { ArbeidsforholdeneSelector, OrganisasjonerSelector } from './fagsaker';
+import { ArbeidsforholdeneSelector, OrganisasjonerSelector } from './fagsaker/fagsaker';
 
 import { formatterDatoTilISO } from '../utils/dato';
 

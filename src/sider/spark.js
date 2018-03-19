@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { health } from '../services/api';
 
 import { sendSoknad } from '../ducks/soknad';
-import { opprettNyFagsak } from '../ducks/fagsaker';
+import { opprettNyFagsak } from '../ducks/fagsaker/fagsaker';
 
 class Spark extends Component {
   constructor(props) {

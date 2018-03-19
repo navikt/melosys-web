@@ -1,10 +1,10 @@
 import { createSelector, createStructuredSelector } from 'reselect';
 import moment from 'moment';
 
-import * as Api from '../services/api';
-import { STATUS, doThenDispatch } from '../services/utils';
+import * as Api from '../../services/api';
+import { STATUS, doThenDispatch } from '../../services/utils';
 
-import { FaktaavklaringOppholdPeriodeSelector } from './faktaavklaring';
+import { FaktaavklaringOppholdPeriodeSelector } from '../faktaavklaring';
 
 // Actions
 const OK = 'fagsaker/OK';

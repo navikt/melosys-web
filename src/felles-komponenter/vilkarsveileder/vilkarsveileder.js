@@ -26,7 +26,7 @@ import VurderingTjenestemann from './vurderinger/vurderingTjenestemann';
 import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
-import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker';
+import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker/fagsaker';
 import { hentVurdering } from '../../ducks/vurdering';
 import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector, oppdaterFaktaavklaringState } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
