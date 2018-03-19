@@ -38,7 +38,7 @@ class Versjon extends Component {
           </dl>
         </button>
         <button className="App__versjonering__kopierknapp" onClick={this.copyToClipBoard}>Klikk for å kopiere versjonsinfo</button>
-        <Link to="/spark" className="App__versjonering__spark">Spark</Link>
+        <Link to="/spark" className="App__versjonering__spark">Gå til spark-siden</Link>
       </div>
     );
   }
