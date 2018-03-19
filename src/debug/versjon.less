@@ -1,21 +1,12 @@
 .App__versjonering {
-  position: relative;
+  position: fixed;
+  bottom: 0;
+  right: 0;
   color: #3e3832;
-  max-height: 20px;
   overflow: hidden;
-  padding-left: 25px;
-  margin: 0;
-
-  &:before {
-    content: '»';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 20px;
-    height: 20px;
-    border: 1px solid #3e3832;
-    line-height: 17px;
-  }
+  max-height: 3.5em;
+  margin: 2px;
+  padding: 1em;
 
   dt {
     float: left;
@@ -30,18 +21,31 @@
 
 .App__versjonering--vis {
   max-height: inherit;
-  &:before {
-    transform: rotateZ(90deg);
-  }
+  overflow: visible;
+  background-color: #cbcbcb;
+  border: 1px solid #ababab;
 }
 
 .App__versjonering__ekspandknapp {
   border: 0;
   background-color: transparent;
   outline: none;
+  padding: 0;
 }
 
 .App__versjonering__kopierknapp {
   display: block;
-  margin: 0 0 10px 27px;
+  border: 0;
+  padding: 0;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+.App__versjonering__spark {
+  position: relative;
+
+  &:link,
+  &:visited {
+    color: #000000;
+  }
 }
