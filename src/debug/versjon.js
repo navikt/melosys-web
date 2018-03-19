@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import moment from 'moment';
 import { Link } from 'react-router-dom';
 
 import Clipboard from './clipboard';
@@ -8,21 +7,21 @@ import Clipboard from './clipboard';
 import './versjon.css';
 
 class Versjon extends Component {
-  state = { visVersjonDetaljer: false }
+  state = { visVersjonDetaljer: false };
 
   toggleVersjon = () => {
     this.setState({ visVersjonDetaljer: !this.state.visVersjonDetaljer });
-  }
+  };
 
-  versjon = () => process.env.REACT_APP_VERSION || '(ukjent)';
-  byggTidspunkt = () => moment(process.env.REACT_APP_DATETIME).format('DD/MM/YYYY HH:mm') || '(ukjent)';
+  versjon = () => (process.env.REACT_APP_VERSION ? `v${process.env.REACT_APP_VERSION}` : '(ukjent)');
+  byggTidspunkt = () => process.env.REACT_APP_BUILD_DATETIME || '(ukjent)';
   byggVersjon = () => process.env.REACT_APP_BUILD_VERSION || '(ukjent)';
   branchVersjon = () => process.env.REACT_APP_BRANCH_NAME || '(lokal)';
 
   copyToClipBoard = () => {
     const versionString = `Versjon: ${this.versjon()}, Byggetidspunkt: ${this.byggTidspunkt()}, Byggeversjon: ${this.byggVersjon()}, Branch: ${this.branchVersjon()}`; // eslint-disable-line max-len
     Clipboard.copy(versionString);
-  }
+  };
 
   render() {
     const versjonKlasse = classnames({ App__versjonering: true, 'App__versjonering--vis': this.state.visVersjonDetaljer });

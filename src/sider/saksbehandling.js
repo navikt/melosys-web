@@ -110,6 +110,7 @@ class Saksbehandling extends Component {
     soknadForm: PT.object.isRequired,
     oppdaterSoknad: PT.func.isRequired,
     oppdaterFaktaavklaring: PT.func.isRequired,
+    valid: PT.bool.isRequired,
   };
 
   static defaultProps = {
@@ -154,21 +155,25 @@ class Saksbehandling extends Component {
   }
 
   fattVedtakHandler = () => {
-    // Midlertidig disable:   const bid = this.props.oppsummering.behandlingID;
-    // Midlertidig disable:   const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
-    // Midlertidig disable:   this.props.handleSubmit();
+    const bid = this.props.oppsummering.behandlingID;
+    const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
 
-    // Midlertidig disable:   this.props.sendSoknad(bid, soknad);
-    // Midlertidig disable:   this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
+    if (this.props.valid) {
+      this.props.sendSoknad(bid, soknad);
+      this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
+    }
   }
 
   beOmVurdering = () => {
-    // Midlertidig disable:   const { behandlingID } = this.props.oppsummering;
-    // Midlertidig disable:   this.props.hentVurdering(behandlingID);
+    const { behandlingID } = this.props.oppsummering;
+    if (this.props.valid) {
+      this.props.hentVurdering(behandlingID);
+    }
   }
 
   overstyrSubmit = event => {
     event.preventDefault();
+
     this.props.oppdaterSoknad(this.props.soknadForm.values);
     this.props.oppdaterFaktaavklaring(this.props.soknadForm.values);
   }
