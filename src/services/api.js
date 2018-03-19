@@ -12,7 +12,7 @@ function erDev() {
 */
 // from .env or .env.local
 const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
-console.log('process.env', process.env);
+//console.log('process.env', process.env);
 
 export function health() {
   const URI_HEALTH = `/melosys/internal/health/`;
