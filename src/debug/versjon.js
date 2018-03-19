@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import classnames from 'classnames';
+import { Link } from 'react-router-dom';
 
 import Clipboard from './clipboard';
 
@@ -26,16 +27,17 @@ class Versjon extends Component {
     const versjonKlasse = classnames({ App__versjonering: true, 'App__versjonering--vis': this.state.visVersjonDetaljer });
 
     return (
-      <div>
+      <div className={versjonKlasse}>
         <button className="App__versjonering__ekspandknapp" onClick={this.toggleVersjon}>
-          <dl className={versjonKlasse}>
+          <dl>
             <dt>Versjon:</dt><dd>{this.versjon()}</dd>
             <dt>Build time:</dt><dd>{this.byggTidspunkt()}</dd>
             <dt>Build version:</dt><dd>{this.byggVersjon()}</dd>
             <dt>Branch:</dt><dd>{this.branchVersjon()}</dd>
           </dl>
         </button>
-        <button className="App__versjonering__kopierknapp" onClick={this.copyToClipBoard}>klikk for å kopiere versjonsinfo</button>
+        <button className="App__versjonering__kopierknapp" onClick={this.copyToClipBoard}>Klikk for å kopiere versjonsinfo</button>
+        <Link to="/spark" className="App__versjonering__spark">Gå til spark-siden</Link>
       </div>
     );
   }
