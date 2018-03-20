@@ -1,3 +1,10 @@
+/**
+ * Reducers
+ * ----------------------------------------------------------------------------------
+ * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
+ * action types som sendes inn sammen med dataene.
+ */
+
 import * as Types from './types';
 
 import { STATUS } from '../../services/utils';
@@ -7,6 +14,13 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
+/**
+ * Default reducer som i hovedsak håndterer lagring og feiling av inkomne data i tillegg til
+ * manipulasjon og oppdatering av state-data.
+ * @param state Object Default state før noen data er forsøkt sendt til reducer.
+ * @param action Object Bestående av type (action type) og data.
+ * @returns {{data: {}, status: string}}
+ */
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case Types.PENDING:
