@@ -9,7 +9,7 @@ import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
 
 import { ArbeidNorgeSelector } from '../ducks/soknad';
-import { ArbeidsforholdeneSelector } from '../ducks/fagsaker/fagsaker';
+import { fagsakSelectors } from '../ducks/fagsaker/';
 
 import PanelHeader from './panelHeader/panelHeader';
 import Forretningsadresse from './adresser/forretningsadresse';
@@ -95,7 +95,7 @@ UtsendendeArbeidsgiver.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  arbeidsforholdene: ArbeidsforholdeneSelector(state),
+  arbeidsforholdene: fagsakSelectors.ArbeidsforholdeneSelector(state),
   soknadArbeidNorge: ArbeidNorgeSelector(state),
   valgteArbeidsforhold: ArbeidNorgeSelector(state).valgteArbeidsforhold,
 });
