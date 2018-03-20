@@ -12,7 +12,7 @@ import * as Api from '../../services/api';
 import * as Types from './types';
 
 /**
- * Henter fagsaker. Dette er registerinformasjon som allerede er hentet backend i forbindelse
+ * Henter registerinformasjon som allerede er importert backend i forbindelse
  * med saken. Kallet får altså kun lagret fagsak fra backend og ikke nødvendigvis oppdatert
  * registerdata fra TPS, Aa-reg etc. Dette er det backend som er ansvarlig for,.
  *
