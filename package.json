@@ -81,9 +81,11 @@
     "eject": "react-scripts eject",
     "eslint": "eslint src --ext .js",
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
-    "pact:test": "mocha --opts ./test/mocha-pact.opts",
+    "pact:rm": "cross-env-shell \"rm pacts/*\"",
+    "pact:test": "npm run pact:clean && mocha --opts ./test/mocha-pact.opts",
     "pact:publish": "cross-env-shell \"curl -v -k -u $PACT_USERNAME:$PACT_PASSWORD -X PUT \\-H 'Content-Type: application/json' -d@pacts/melosys-web-melosys-api.json https://pact-broker.nais.preprod.local/pacts/provider/melosys-api/consumer/melosys-web/version/$npm_package_version\"",
-    "pact:echo": "cross-env-shell \"echo Pact-config $PACT_USERNAME:$PACT_PASSWORD $npm_package_version\""
+    "pact:echo": "cross-env-shell \"echo Pact-config $PACT_USERNAME:$PACT_PASSWORD $npm_package_version\"",
+    "pact:clean": "node ./scripts/cleanpacts.js"
   },
   "jest-junit": {
     "suiteName": "jest tests",
