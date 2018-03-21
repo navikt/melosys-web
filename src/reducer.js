@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'react-redux-form-validation';
 
 import fagsakerReducer from './ducks/fagsaker';
-import soknadReducer from './ducks/soknad';
+import soknadReducer from './ducks/soknad/';
 import faktaavklaringReducer from './ducks/faktaavklaring';
 import vurderingReducer from './ducks/vurdering';
 import nyesakerReducer from './ducks/nyesaker';

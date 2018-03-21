@@ -8,7 +8,7 @@ import * as MPT from '../proptypes/';
 import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
 
-import { ArbeidNorgeSelector } from '../ducks/soknad';
+import { soknadSelectors } from '../ducks/soknad/';
 import { ArbeidsforholdeneSelector } from '../ducks/fagsaker';
 
 import PanelHeader from './panelHeader/panelHeader';
@@ -96,8 +96,8 @@ UtsendendeArbeidsgiver.defaultProps = {
 
 const mapStateToProps = state => ({
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
-  soknadArbeidNorge: ArbeidNorgeSelector(state),
-  valgteArbeidsforhold: ArbeidNorgeSelector(state).valgteArbeidsforhold,
+  soknadArbeidNorge: soknadSelectors.ArbeidNorgeSelector(state),
+  valgteArbeidsforhold: soknadSelectors.ArbeidNorgeSelector(state).valgteArbeidsforhold,
 });
 
 export default reduxForm({ form: 'soknad' })(connect(mapStateToProps)(UtsendendeArbeidsgiver));
