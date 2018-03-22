@@ -12,7 +12,7 @@ import * as NyeSaker from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
 import { TidligeresakerSelector } from '../ducks/tidligeresaker';
 
-import './sok.css';
+import './forside.css';
 
 const queryString = require('query-string');
 

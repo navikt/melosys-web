@@ -2,7 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import Sok from './sider/sok';
+import Sok from './sider/forside';
 import Saksbehandling from './sider/saksbehandling';
 import Spark from './sider/spark';
 
