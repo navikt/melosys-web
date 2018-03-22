@@ -1,0 +1,35 @@
+import { STATUS } from '../../services/utils';
+
+import * as Types from './types';
+
+/**
+ * Reducers
+ * ----------------------------------------------------------------------------------
+ * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
+ * action types som sendes inn sammen med dataene.
+ */
+
+const initialState = {
+  data: {},
+  status: STATUS.NOT_STARTED,
+};
+
+// Reducer
+export default function reducer(state = initialState, action) {
+  switch (action.type) {
+    case Types.PENDING:
+      return { ...state, status: STATUS.PENDING };
+    case Types.FEILET:
+      return { ...state, status: STATUS.ERROR, data: action.data };
+    case Types.OK: {
+      const oppgaverData = action.data;
+      return { ...state, status: STATUS.OK, data: oppgaverData };
+    }
+    case Types.PLUKK_OPPGAVE: {
+      const oppgaveData = action.data;
+      return { ...state, status: STATUS.OK, data: oppgaveData };
+    }
+    default:
+      return state;
+  }
+}
