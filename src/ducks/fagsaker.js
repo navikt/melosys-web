@@ -4,7 +4,7 @@ import moment from 'moment';
 import * as Api from '../services/api';
 import { STATUS, doThenDispatch } from '../services/utils';
 
-import { FaktaavklaringOppholdPeriodeSelector } from './faktaavklaring';
+import { faktaavklaringSelectors } from './faktaavklaring/';
 
 // Actions
 const OK = 'fagsaker/OK';
@@ -228,7 +228,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
-  state => FaktaavklaringOppholdPeriodeSelector(state),
+  state => faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter, periode) => {
     const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
     const arbeidsgivere = organisasjoner.reduce((samling, organisasjon) => {

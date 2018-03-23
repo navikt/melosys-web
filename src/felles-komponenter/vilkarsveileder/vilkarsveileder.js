@@ -28,7 +28,7 @@ import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker';
 import { hentVurdering } from '../../ducks/vurdering';
-import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector, oppdaterFaktaavklaringState } from '../../ducks/faktaavklaring';
+import { faktaavklaringSelectors, faktaavklaringOperations } from '../../ducks/faktaavklaring/';
 import { SoknadenFormSelector } from '../../ducks/form';
 
 import './vilkarsveileder.css';
@@ -259,15 +259,15 @@ Vilkarsveileder.defaultProps = {
 
 const mapStateToProps = state => ({
   oppsummering: OppsummeringSelector(state),
-  faktaavklaring: FaktaavklaringSelector(state).faktaavklaring,
-  valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
+  faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state).faktaavklaring,
+  valgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   arbeidsforholdene: ArbeidsforholdeneSelector(state),
-  relevanteArbeidsforholdene: RelevanteArbeidsforholdeneSelector(state),
+  relevanteArbeidsforholdene: faktaavklaringSelectors.RelevanteArbeidsforholdeneSelector(state),
   skjema: SoknadenFormSelector(state).values,
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterFaktaavklaringState: skjema => dispatch(oppdaterFaktaavklaringState(skjema)),
+  oppdaterFaktaavklaringState: skjema => dispatch(faktaavklaringOperations.oppdaterFaktaavklaringState(skjema)),
   hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
 });
 
