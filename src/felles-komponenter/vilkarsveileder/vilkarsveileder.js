@@ -27,7 +27,7 @@ import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 
 import { OppsummeringSelector, ArbeidsforholdeneSelector } from '../../ducks/fagsaker';
-import { hentVurdering } from '../../ducks/vurdering';
+import { vurderingOperations } from '../../ducks/vurdering/';
 import { FaktaavklaringSelector, FaktaavklaringValgteArbeidsforholdDetaljerSelector, RelevanteArbeidsforholdeneSelector, oppdaterFaktaavklaringState } from '../../ducks/faktaavklaring';
 import { SoknadenFormSelector } from '../../ducks/form';
 
@@ -268,7 +268,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   oppdaterFaktaavklaringState: skjema => dispatch(oppdaterFaktaavklaringState(skjema)),
-  hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
+  hentVurdering: behandlingID => dispatch(vurderingOperations.hentVurdering(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));
