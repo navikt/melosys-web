@@ -16,10 +16,8 @@ import {
 } from '../../../ducks/vurdering';
 
 import {
-  FaktaavklaringValgteArbeidsforholdDetaljerSelector,
-  FaktaavklaringSysselsettingSelector,
-  FaktaavklaringOppholdSelector,
-} from '../../../ducks/faktaavklaring';
+  faktaavklaringSelectors,
+} from '../../../ducks/faktaavklaring/';
 
 const uuid = require('uuid/v4');
 
@@ -160,9 +158,9 @@ const mapStateToProps = state => ({
   lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
   feilmeldinger: VurderingFeilmeldingSelector(state),
   vurderingStatus: VurderingStatusSelector(state),
-  opphold: FaktaavklaringOppholdSelector(state),
-  valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
-  sysselsetting: FaktaavklaringSysselsettingSelector(state),
+  opphold: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state),
+  valgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
+  sysselsetting: faktaavklaringSelectors.FaktaavklaringSysselsettingSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVedtak);
