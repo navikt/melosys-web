@@ -70,9 +70,9 @@ import {
 } from '../ducks/faktaavklaring';
 
 import {
-  hentVurdering,
-  VurderingSelector,
-} from '../ducks/vurdering';
+  vurderingOperations,
+  vurderingSelectors,
+} from '../ducks/vurdering/';
 
 import { boolTilStreng } from '../utils/utils';
 import { formatterDatoTilNorsk } from '../utils/dato';
@@ -243,7 +243,7 @@ const mapStateToProps = state => ({
   medlemskap: MedlemskapSelector(state),
   arbeidsgivereNorge: ArbeidsgivereNorgeSelector(state),
   inntekt: InntektSoknadenSelector(state),
-  vurdering: VurderingSelector(state),
+  vurdering: vurderingSelectors.VurderingSelector(state),
   bekreftelser: BekreftelserSelector(state),
   oppsummering: OppsummeringSelector(state),
   soknad: SoknadSelector(state),
@@ -307,7 +307,7 @@ const mapDispatchToProps = dispatch => ({
   sendSoknad: (bid, dokument) => dispatch(sendSoknad(bid, dokument)),
   hentFaktaavklaring: saksnummer => dispatch(hentFaktaavklaring(saksnummer)),
   sendFaktaavklaring: (bid, dokument) => dispatch(sendFaktaavklaring(bid, dokument)),
-  hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
+  hentVurdering: behandlingID => dispatch(vurderingOperations.hentVurdering(behandlingID)),
   oppdaterSoknad: values => { dispatch(oppdaterSoknadState(values)); },
   oppdaterFaktaavklaring: values => { dispatch(oppdaterFaktaavklaringState(values)); },
 });
