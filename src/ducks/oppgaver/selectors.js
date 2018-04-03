@@ -7,7 +7,7 @@ import { createSelector } from 'reselect';
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-export const OppgaverMineSakerSelector = createSelector(
+export const MineSakerSelector = createSelector(
   state => state.oppgaver.data,
   oppgaver => oppgaver
 );

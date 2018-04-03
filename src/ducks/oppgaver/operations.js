@@ -28,7 +28,7 @@ export function hentMineSaker() {
   });
 }
 
-export function plukkOppgave(bid, oppgave) {
+export function oppgavePlukker(oppgave) {
   return doThenDispatch(() => Api.sendPlukkOppgave(oppgave), {
     OK: Types.OK,
     FEILET: Types.FEILET,

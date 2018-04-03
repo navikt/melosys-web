@@ -8,6 +8,7 @@ import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import * as Nav from '../utils/navFrontend';
 // import SokListe from '../felles-komponenter/sok/sokListe';
 import SokResultat from '../felles-komponenter/sok/sokResultat';
+import * as Oppgaver from '../ducks/oppgaver';
 import * as NyeSaker from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
 import { TidligeresakerSelector } from '../ducks/tidligeresaker';
@@ -30,6 +31,28 @@ class Sok extends Component {
       this.setState({ fnr });
       this.props.hentNyesaker(fnr);
     }
+    // this.props.hentMineSaker();
+    const behandling = {
+      oppgavetype: 'BEH_SAK',
+      sakstyper: [
+        'EU_EOS',
+        'TRYGDAVTALE',
+        'FOLKETRYGD',
+      ],
+      behandlingstyper: [
+        'ae0034',
+        'ae0058',
+      ],
+    };
+    const journalforing = {
+      oppgavetype: 'JFR',
+      sakstyper: [
+        'EU_EOS',
+        'TRYGDAVTALE',
+        'FOLKETRYGD',
+      ],
+    };
+    this.props.plukkOppgave(journalforing);
   }
 
   /** Henter saker basert på fødselsnummer og setter query string 'fnr=xxxxxxxxxxx' slik at
@@ -75,6 +98,7 @@ class Sok extends Component {
 }
 
 Sok.propTypes = {
+  hentMineSaker: PT.func.isRequired,
   nyesaker: PT.any,
   hentNyesaker: PT.func.isRequired,
   tidligeresaker: PT.array.isRequired,
@@ -92,6 +116,7 @@ Sok.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  oppgaver: Oppgaver.oppgaverSelectors.MineSakerSelector(state),
   nyesaker: NyeSaker.NyesakerSelector(state),
   sakerbehandles: SakerbehandlesSelector(state),
   tidligeresaker: TidligeresakerSelector(state),
@@ -99,6 +124,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  hentMineSaker: () => dispatch(Oppgaver.oppgaverOperations.hentMineSaker()),
+  plukkOppgave: oppgave => dispatch(Oppgaver.oppgaverOperations.oppgavePlukker(oppgave)),
   hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
   opprettSak: fnr => dispatch(NyeSaker.opprettNyFagsak(fnr)),
 });
