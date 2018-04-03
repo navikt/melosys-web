@@ -29,7 +29,7 @@ import VurderingVedtak from './vurderinger/vurderingVedtak';
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { vurderingOperations } from '../../ducks/vurdering/';
 import { faktaavklaringSelectors, faktaavklaringOperations } from '../../ducks/faktaavklaring/';
-import { SoknadenFormSelector } from '../../ducks/form';
+import { formSelectors } from '../../ducks/form/';
 
 import './vilkarsveileder.css';
 
@@ -263,7 +263,7 @@ const mapStateToProps = state => ({
   valgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   arbeidsforholdene: fagsakSelectors.ArbeidsforholdeneSelector(state),
   relevanteArbeidsforholdene: faktaavklaringSelectors.RelevanteArbeidsforholdeneSelector(state),
-  skjema: SoknadenFormSelector(state).values,
+  skjema: formSelectors.SoknadenFormSelector(state).values,
 });
 
 const mapDispatchToProps = dispatch => ({
