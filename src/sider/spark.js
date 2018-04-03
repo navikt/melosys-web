@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { health } from '../services/api';
 
-import { sendSoknad } from '../ducks/soknad';
-import { opprettNyFagsak } from '../ducks/fagsaker';
+import { soknadOperations } from '../ducks/soknad/';
+import { fagsakOperations } from '../ducks/fagsaker/';
 
 class Spark extends Component {
   constructor(props) {
@@ -36,15 +36,15 @@ class Spark extends Component {
         <h1>Opprett sak</h1>
         <form onSubmit={this.opprettNyFagsakSubmit}>
           <input type="text" name="fnr" /><br />
-          <input type="submit" label="Send" />
+          <input type="submit" value="Send" />
         </form>
         <h1>Populere søknad manuelt</h1>
         <form onSubmit={this.soknadSubmit}>
           <label>behandlingID:</label><br />
           <input type="text" name="behandlingID" /><br />
           <label>json:</label><br />
-          <textarea name="soknadBody" cols="150" rows="20"></textarea><br />
-          <input type="submit" label="Send" />
+          <textarea name="soknadBody" cols="150" rows="20" /><br />
+          <input type="submit" value="Send" />
         </form>
       </div>
     );
@@ -56,8 +56,8 @@ const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sendSoknad: (bid, soknad) => dispatch(sendSoknad(bid, soknad)),
-  opprettNyFagsak: fnr => dispatch(opprettNyFagsak(fnr)),
+  sendSoknad: (bid, soknad) => dispatch(soknadOperations.sendSoknad(bid, soknad)),
+  opprettNyFagsak: fnr => dispatch(fagsakOperations.opprettNyFagsak(fnr)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Spark));

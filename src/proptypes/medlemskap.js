@@ -9,9 +9,9 @@ const MedlemskapEnkeltPeriodePropType = PT.shape({
   grunnlagstype: Kodeverk,
   land: Kodeverk,
   lovvalg: Kodeverk,
-  trygdedekning: PT.string,
-  kildedokumenttype: PT.string,
-  kilde: PT.string,
+  trygdedekning: Kodeverk,
+  kildedokumenttype: Kodeverk,
+  kilde: Kodeverk,
 });
 
 const MedlemskapPerioderPropType = PT.arrayOf(MedlemskapEnkeltPeriodePropType);

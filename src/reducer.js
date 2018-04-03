@@ -1,15 +1,14 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'react-redux-form-validation';
 
-import fagsakerReducer from './ducks/fagsaker';
-import soknadReducer from './ducks/soknad';
-import faktaavklaringReducer from './ducks/faktaavklaring';
-import vurderingReducer from './ducks/vurdering';
+import fagsakerReducer from './ducks/fagsaker/';
+import soknadReducer from './ducks/soknad/';
+import faktaavklaringReducer from './ducks/faktaavklaring/';
+import vurderingReducer from './ducks/vurdering/';
 import nyesakerReducer from './ducks/nyesaker';
 import sakerbehandlesReducer from './ducks/sakerbehandles';
 import tidligeresakerReducer from './ducks/tidligeresaker';
-import saksbehandlerReducer from './ducks/saksbehandler';
-import arbeidsgiverReducer from './ducks/arbeidsgiver';
+import saksbehandlerReducer from './ducks/saksbehandler/';
 import landkoderReducer from './ducks/landkoder';
 import oppgaverReducer from './ducks/oppgaver';
 
@@ -23,7 +22,6 @@ export default combineReducers({
   tidligeresaker: tidligeresakerReducer,
   sakerbehandles: sakerbehandlesReducer,
   saksbehandler: saksbehandlerReducer,
-  arbeidsgiver: arbeidsgiverReducer,
   landkoder: landkoderReducer,
   oppgaver: oppgaverReducer,
 });
