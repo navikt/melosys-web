@@ -13,13 +13,6 @@ import * as Types from './types';
  */
 
 // Action Creators
-export function hentOppgaveKodeverk() {
-  return doThenDispatch(() => Api.hentOppgaveKodeverk(), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
 export function hentMineSaker() {
   return doThenDispatch(() => Api.hentMineSaker(), {
     OK: Types.OK,

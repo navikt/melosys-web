@@ -24,10 +24,6 @@ export function hentKodeverk() {
   return getAsJson(URI_KODEVERK);
 }
 
-export function hentOppgaveKodeverk() {
-  const URI_OPPGAVER_KODEVERK = `${API_BASE_URL}oppgaver/kodeverk`;
-  return getAsJson(URI_OPPGAVER_KODEVERK);
-}
 export function hentMineSaker() {
   const URI_OPPGAVER_MINESAKER = `${API_BASE_URL}oppgaver/hentMineSaker`;
   return getAsJson(URI_OPPGAVER_MINESAKER);
