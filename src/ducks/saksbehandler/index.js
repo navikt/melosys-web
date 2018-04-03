@@ -1,15 +1,15 @@
-import * as vurderingOperations from './operations';
-import * as vurderingSelectors from './selectors';
-import * as vurderingActions from './actions';
-import * as vurderingTypes from './types';
+import * as saksbehandlerOperations from './operations';
+import * as saksbehandlerSelectors from './selectors';
+import * as saksbehandlerActions from './actions';
+import * as saksbehandlerTypes from './types';
 
 import vurderingReducers from './reducers';
 
 export {
-  vurderingOperations,
-  vurderingSelectors,
-  vurderingTypes,
-  vurderingActions,
+  saksbehandlerOperations,
+  saksbehandlerSelectors,
+  saksbehandlerTypes,
+  saksbehandlerActions,
 };
 
 export default vurderingReducers;
