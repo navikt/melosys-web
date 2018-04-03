@@ -30,14 +30,9 @@ import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import { hentLandkoder } from '../ducks/landkoder';
 
 import {
-  hentFagsaker,
-  PersonSelector,
-  MedlemskapSelector,
-  ArbeidsgivereNorgeSelector,
-  InntektSoknadenSelector,
-  BekreftelserSelector,
-  OppsummeringSelector,
-} from '../ducks/fagsaker';
+  fagsakOperations,
+  fagsakSelectors,
+} from '../ducks/fagsaker/';
 
 import {
   soknadOperations,
@@ -234,13 +229,13 @@ class Saksbehandling extends Component {
  * @param state
  */
 const mapStateToProps = state => ({
-  person: PersonSelector(state),
-  medlemskap: MedlemskapSelector(state),
-  arbeidsgivereNorge: ArbeidsgivereNorgeSelector(state),
-  inntekt: InntektSoknadenSelector(state),
+  person: fagsakSelectors.PersonSelector(state),
+  medlemskap: fagsakSelectors.MedlemskapSelector(state),
+  arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
+  inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   vurdering: VurderingSelector(state),
-  bekreftelser: BekreftelserSelector(state),
-  oppsummering: OppsummeringSelector(state),
+  bekreftelser: fagsakSelectors.BekreftelserSelector(state),
+  oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   faktaavklaring: FaktaavklaringSelector(state),
   soknadForm: SoknadenFormSelector(state),
@@ -297,7 +292,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentLandkoder: () => dispatch(hentLandkoder()),
-  hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
+  hentFagsaker: saksnummer => dispatch(fagsakOperations.hentFagsaker(saksnummer)),
   hentSoknad: bid => dispatch(soknadOperations.hentSoknad(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.sendSoknad(bid, dokument)),
   hentFaktaavklaring: saksnummer => dispatch(hentFaktaavklaring(saksnummer)),

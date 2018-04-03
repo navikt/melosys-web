@@ -1,57 +1,9 @@
-import { createSelector, createStructuredSelector } from 'reselect';
-import moment from 'moment';
-
-import * as Api from '../services/api';
-import { STATUS, doThenDispatch } from '../services/utils';
-
-import { FaktaavklaringOppholdPeriodeSelector } from './faktaavklaring';
-
-// Actions
-const OK = 'fagsaker/OK';
-const FEILET = 'fagsaker/FEILET';
-const PENDING = 'fagsaker/PENDING';
-
-const initialState = {
-  data: {},
-  status: STATUS.NOT_STARTED,
-};
-
-// Reducer
-export default function reducer(state = initialState, action) {
-  switch (action.type) {
-    case PENDING:
-      return { ...state, status: STATUS.PENDING };
-    case FEILET:
-      return { ...state, status: STATUS.ERROR, data: action.data };
-    case OK:
-      return {
-        ...state,
-        status: STATUS.OK,
-        data: action.data,
-      };
-    default:
-      return state;
-  }
-}
-
-// Action Creators
-export function hentFagsaker(snr) {
-  return doThenDispatch(() => Api.hentFagsaker(snr), {
-    OK,
-    FEILET,
-    PENDING,
-  });
-}
-
-export function opprettNyFagsak(fnr) {
-  return doThenDispatch(() => Api.opprettNyFagsak(fnr), {
-    OK,
-    FEILET,
-    PENDING,
-  });
-}
-
 // selector(s)
+import { createSelector, createStructuredSelector } from 'reselect';
+import moment from 'moment/moment';
+
+import { FaktaavklaringOppholdPeriodeSelector } from '../faktaavklaring';
+
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
   person => person
@@ -252,4 +204,3 @@ export const OppsummeringSelector = createSelector(
     registrertDato: behandlingsdata.registrertDato,
   })
 );
-
