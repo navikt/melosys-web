@@ -8,6 +8,12 @@ import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import * as Nav from '../utils/navFrontend';
 // import SokListe from '../felles-komponenter/sok/sokListe';
 import SokResultat from '../felles-komponenter/sok/sokResultat';
+import Statistikk from '../felles-komponenter/forside/statistikk';
+import Journalforing from '../felles-komponenter/forside/journalforing';
+import Behandling from '../felles-komponenter/forside/behandling';
+import Sok from '../felles-komponenter/forside/sok';
+import Logg from '../felles-komponenter/forside/logg';
+
 import * as Oppgaver from '../ducks/oppgaver';
 import * as NyeSaker from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
@@ -17,7 +23,7 @@ import './forside.css';
 
 const queryString = require('query-string');
 
-class Sok extends Component {
+class Forside extends Component {
   constructor(props) {
     super(props);
     this.queryStringHandler = this.queryStringHandler.bind(this);
@@ -72,7 +78,7 @@ class Sok extends Component {
     const { visSokResultat } = this.props;
 
     return (
-      <div className="sok">
+      <div className="forside">
         { children }
         <Nav.Container>
           <Nav.Row>
@@ -82,14 +88,13 @@ class Sok extends Component {
               { visSokResultat && <SokResultat saker={nyesaker} opprettSak={() => this.props.opprettSak(this.state.fnr)} /> }
             </Nav.Column>
 
-            {/*
             <Nav.Column xs="5">
-              <Nav.Innholdstittel id="overskriftUnderbehandling">Saker under behandling</Nav.Innholdstittel>
-              <SokListe saker={sakerbehandles} kanViseFlereSaker aria-describedby="overskriftUnderbehandling" />
-              <Nav.Innholdstittel id="overskriftTitligeresaker">Tidligere behandlede saker</Nav.Innholdstittel>
-              <SokListe saker={tidligeresaker} kanViseFlereSaker aria-describedby="overskriftTitligeresaker" />
+              <Statistikk />
+              <Journalforing />
+              <Behandling />
+              <Sok />
+              <Logg />
             </Nav.Column>
-            */}
           </Nav.Row>
         </Nav.Container>
       </div>
@@ -97,7 +102,7 @@ class Sok extends Component {
   }
 }
 
-Sok.propTypes = {
+Forside.propTypes = {
   hentMineSaker: PT.func.isRequired,
   nyesaker: PT.any,
   hentNyesaker: PT.func.isRequired,
@@ -110,7 +115,7 @@ Sok.propTypes = {
   children: PT.node,
 };
 
-Sok.defaultProps = {
+Forside.defaultProps = {
   children: null,
   nyesaker: [],
 };
@@ -134,4 +139,4 @@ const kontekster = [
   { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
   { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
 ];
-export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
+export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(Forside)));
