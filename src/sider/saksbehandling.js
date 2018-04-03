@@ -30,25 +30,15 @@ import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import { hentLandkoder } from '../ducks/landkoder';
 
 import {
-  hentFagsaker,
-  PersonSelector,
-  MedlemskapSelector,
-  ArbeidsgivereNorgeSelector,
-  InntektSoknadenSelector,
-  BekreftelserSelector,
-  OppsummeringSelector,
-} from '../ducks/fagsaker';
+  fagsakOperations,
+  fagsakSelectors,
+} from '../ducks/fagsaker/';
 
 import {
-  hentSoknad,
-  sendSoknad,
-  oppdaterSoknadState,
-  SoknadSelector,
-  ArbeidsinntektSelector,
-  ArbeidNorgeSelector,
-  OppholdUtlandSelector,
-  ArbeidsgiversBekreftelseSelector,
-} from '../ducks/soknad';
+  soknadOperations,
+  soknadActions,
+  soknadSelectors,
+} from '../ducks/soknad/';
 
 import {
   faktaavklaringOperations,
@@ -57,9 +47,9 @@ import {
 } from '../ducks/faktaavklaring/';
 
 import {
-  hentVurdering,
-  VurderingSelector,
-} from '../ducks/vurdering';
+  vurderingOperations,
+  vurderingSelectors,
+} from '../ducks/vurdering/';
 
 import { boolTilStreng } from '../utils/utils';
 import { formatterDatoTilNorsk } from '../utils/dato';
@@ -226,39 +216,39 @@ class Saksbehandling extends Component {
  * @param state
  */
 const mapStateToProps = state => ({
-  person: PersonSelector(state),
-  medlemskap: MedlemskapSelector(state),
-  arbeidsgivereNorge: ArbeidsgivereNorgeSelector(state),
-  inntekt: InntektSoknadenSelector(state),
-  vurdering: VurderingSelector(state),
-  bekreftelser: BekreftelserSelector(state),
-  oppsummering: OppsummeringSelector(state),
-  soknad: SoknadSelector(state),
+  person: fagsakSelectors.PersonSelector(state),
+  medlemskap: fagsakSelectors.MedlemskapSelector(state),
+  arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
+  inntekt: fagsakSelectors.InntektSoknadenSelector(state),
+  vurdering: vurderingSelectors.VurderingSelector(state),
+  bekreftelser: fagsakSelectors.BekreftelserSelector(state),
+  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  soknad: soknadSelectors.SoknadSelector(state),
   faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
   soknadForm: SoknadenFormSelector(state),
-  soknadArbeidsinntekt: ArbeidsinntektSelector(state),
-  soknadOppholdUtland: OppholdUtlandSelector(state),
-  soknadArbeidNorge: ArbeidNorgeSelector(state),
+  soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
+  soknadOppholdUtland: soknadSelectors.OppholdUtlandSelector(state),
+  soknadArbeidNorge: soknadSelectors.ArbeidNorgeSelector(state),
   initialValues: {
-    inntektNorskIPerioden: ArbeidsinntektSelector(state).inntektNorskIPerioden,
-    inntektUtenlandskIPerioden: ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
-    inntektNaeringIPerioden: ArbeidsinntektSelector(state).inntektNaeringIPerioden,
-    arbeidsgiverBekrefterUtsendelse: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBekrefterUtsendelse),
-    arbeidstakerAnsattUnderUtsendelsen: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidstakerAnsattUnderUtsendelsen),
-    erstatterArbeidstakerenUtsendte: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).erstatterArbeidstakerenUtsendte),
-    arbeidstakerTidligereUtsendt24Mnd: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd),
-    arbeidsgiverBetalerArbeidsgiveravgift: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift),
-    trygdeavgiftTrukketGjennomSkatt: boolTilStreng(ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
-    trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
-    studentIEOS: OppholdUtlandSelector(state).studentIEOS,
-    studentSkole: OppholdUtlandSelector(state).studentSkole,
-    studentSemester: OppholdUtlandSelector(state).studentSemester,
-    studieLand: OppholdUtlandSelector(state).studieLand,
-    studentFinansiering: OppholdUtlandSelector(state).studentFinansiering,
-    kontaktNavn: ArbeidNorgeSelector(state).kontaktNavn,
-    kontaktEpost: ArbeidNorgeSelector(state).kontaktEpost,
-    fullmektigFirma: ArbeidNorgeSelector(state).fullmektigFirma,
-    fullmektigAdresse: ArbeidNorgeSelector(state).fullmektigAdresse,
+    inntektNorskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
+    inntektUtenlandskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
+    inntektNaeringIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNaeringIPerioden,
+    arbeidsgiverBekrefterUtsendelse: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBekrefterUtsendelse),
+    arbeidstakerAnsattUnderUtsendelsen: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerAnsattUnderUtsendelsen),
+    erstatterArbeidstakerenUtsendte: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).erstatterArbeidstakerenUtsendte),
+    arbeidstakerTidligereUtsendt24Mnd: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd),
+    arbeidsgiverBetalerArbeidsgiveravgift: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift),
+    trygdeavgiftTrukketGjennomSkatt: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
+    trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
+    studentIEOS: soknadSelectors.OppholdUtlandSelector(state).studentIEOS,
+    studentSkole: soknadSelectors.OppholdUtlandSelector(state).studentSkole,
+    studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
+    studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
+    studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,
+    kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
+    kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
+    fullmektigFirma: soknadSelectors.ArbeidNorgeSelector(state).fullmektigFirma,
+    fullmektigAdresse: soknadSelectors.ArbeidNorgeSelector(state).fullmektigAdresse,
     faktaavklaringOppholdsLand: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state).land,
     faktaavklaringPeriodeFraOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).fom),
     faktaavklaringPeriodeTilOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).tom),
@@ -289,13 +279,13 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentLandkoder: () => dispatch(hentLandkoder()),
-  hentFagsaker: saksnummer => dispatch(hentFagsaker(saksnummer)),
-  hentSoknad: bid => dispatch(hentSoknad(bid)),
-  sendSoknad: (bid, dokument) => dispatch(sendSoknad(bid, dokument)),
+  hentFagsaker: saksnummer => dispatch(fagsakOperations.hentFagsaker(saksnummer)),
+  hentSoknad: bid => dispatch(soknadOperations.hentSoknad(bid)),
+  sendSoknad: (bid, dokument) => dispatch(soknadOperations.sendSoknad(bid, dokument)),
   hentFaktaavklaring: saksnummer => dispatch(faktaavklaringOperations.hentFaktaavklaring(saksnummer)),
   sendFaktaavklaring: (bid, dokument) => dispatch(faktaavklaringOperations.sendFaktaavklaring(bid, dokument)),
-  hentVurdering: behandlingID => dispatch(hentVurdering(behandlingID)),
-  oppdaterSoknad: values => { dispatch(oppdaterSoknadState(values)); },
+  hentVurdering: behandlingID => dispatch(vurderingOperations.hentVurdering(behandlingID)),
+  oppdaterSoknad: values => { dispatch(soknadActions.oppdaterSoknadState(values)); },
   oppdaterFaktaavklaring: values => { dispatch(faktaavklaringActions.oppdaterFaktaavklaringState(values)); },
 });
 

@@ -9,7 +9,7 @@
 import moment from 'moment';
 
 import { createSelector } from 'reselect';
-import { ArbeidsforholdeneSelector, OrganisasjonerSelector } from '../fagsaker';
+import { fagsakSelectors } from '../fagsaker/';
 
 // selector(s)
 export const FaktaavklaringSelector = createSelector(
@@ -74,7 +74,7 @@ export const FaktaavklaringValgteArbeidsforholdSelector = createSelector(
 
 export const FaktaavklaringValgteArbeidsforholdDetaljerSelector = createSelector(
   state => FaktaavklaringValgteArbeidsforholdSelector(state) || [],
-  state => ArbeidsforholdeneSelector(state) || [],
+  state => fagsakSelectors.ArbeidsforholdeneSelector(state) || [],
   (valgteArbeidsforholdIDnav, alleArbeidsforhold) => {
     if (!valgteArbeidsforholdIDnav) return [];
     const valgteArbeidsforhold = alleArbeidsforhold.filter(arbeidsforholdet => valgteArbeidsforholdIDnav.includes(arbeidsforholdet.arbeidsforholdIDnav));
@@ -88,7 +88,7 @@ export const FaktaavklaringValgteArbeidsforholdDetaljerSelector = createSelector
  */
 export const RelevanteArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
-  state => OrganisasjonerSelector(state),
+  state => fagsakSelectors.OrganisasjonerSelector(state),
   state => FaktaavklaringOppholdPeriodeSelector(state),
   (arbeidsforholdene = [], organisasjoner = [], opphold = {}) => (
     arbeidsforholdene
