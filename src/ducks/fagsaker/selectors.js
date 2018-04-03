@@ -180,7 +180,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
-  state => FaktaavklaringOppholdPeriodeSelector(state),
+  state => faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter, periode) => {
     const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
     const arbeidsgivere = organisasjoner.reduce((samling, organisasjon) => {
