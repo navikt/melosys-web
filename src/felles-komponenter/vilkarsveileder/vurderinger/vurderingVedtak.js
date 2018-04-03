@@ -10,10 +10,8 @@ import { datoDiff } from '../../../utils/utils';
 import './vurderingVedtak.css';
 
 import {
-  VurderingLovvalgbestemmelserSelector,
-  VurderingFeilmeldingSelector,
-  VurderingStatusSelector,
-} from '../../../ducks/vurdering';
+  vurderingSelectors,
+} from '../../../ducks/vurdering/';
 
 import {
   FaktaavklaringValgteArbeidsforholdDetaljerSelector,
@@ -157,9 +155,9 @@ VurderingVedtak.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
-  feilmeldinger: VurderingFeilmeldingSelector(state),
-  vurderingStatus: VurderingStatusSelector(state),
+  lovvalgbestemmelser: vurderingSelectors.VurderingLovvalgbestemmelserSelector(state),
+  feilmeldinger: vurderingSelectors.VurderingFeilmeldingSelector(state),
+  vurderingStatus: vurderingSelectors.VurderingStatusSelector(state),
   opphold: FaktaavklaringOppholdSelector(state),
   valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   sysselsetting: FaktaavklaringSysselsettingSelector(state),
