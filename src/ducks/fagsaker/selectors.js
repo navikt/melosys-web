@@ -2,7 +2,7 @@
 import { createSelector, createStructuredSelector } from 'reselect';
 import moment from 'moment/moment';
 
-import { FaktaavklaringOppholdPeriodeSelector } from '../faktaavklaring';
+import { faktaavklaringSelectors } from '../faktaavklaring/';
 
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
@@ -180,7 +180,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
-  state => FaktaavklaringOppholdPeriodeSelector(state),
+  state => faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter, periode) => {
     const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
     const arbeidsgivere = organisasjoner.reduce((samling, organisasjon) => {
