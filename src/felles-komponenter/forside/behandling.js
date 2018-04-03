@@ -1,12 +1,12 @@
 import React from 'react';
 import * as Nav from '../../utils/navFrontend';
 
-const Logg = props => {
+const Behandling = props => {
   return (
     <Nav.Panel className="forside__sidepanel">
-      <Nav.Undertittel>Logg / dagsoppsummering</Nav.Undertittel>
+      <Nav.Undertittel>Behandling</Nav.Undertittel>
     </Nav.Panel>
   );
 };
 
-export default Logg;
+export default Behandling;
