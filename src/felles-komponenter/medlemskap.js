@@ -52,11 +52,11 @@ function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
             <dt>Lovvalg:</dt>
             <dd>{tekstEllerDash(lovvalg.term)}</dd>
             <dt>Trygdedekning:</dt>
-            <dd>{tekstEllerDash(trygdedekning)}</dd>
+            <dd>{tekstEllerDash(trygdedekning.term)}</dd>
             <dt>Kildedokumenttype:</dt>
-            <dd>{tekstEllerDash(kildedokumenttype)}</dd>
+            <dd>{tekstEllerDash(kildedokumenttype.term)}</dd>
             <dt>Kilde:</dt>
-            <dd>{tekstEllerDash(kilde)}</dd>
+            <dd>{tekstEllerDash(kilde.term)}</dd>
           </dl>
         </Nav.Column>
         {/* SLUTT DETALJER */}
