@@ -1,5 +1,5 @@
-import { hentSaksbehandler } from './ducks/saksbehandler';
+import { saksbehandlerOperations } from './ducks/saksbehandler/';
 
 export default function loadInitialData(store) {
-  store.dispatch(hentSaksbehandler());
+  store.dispatch(saksbehandlerOperations.hentSaksbehandler());
 }
