@@ -54,7 +54,7 @@ import {
 import { boolTilStreng } from '../utils/utils';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
-import { SoknadenFormSelector } from '../ducks/form';
+import { formSelectors } from '../ducks/form/';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
@@ -225,7 +225,7 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
-  soknadForm: SoknadenFormSelector(state),
+  soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
   soknadOppholdUtland: soknadSelectors.OppholdUtlandSelector(state),
   soknadArbeidNorge: soknadSelectors.ArbeidNorgeSelector(state),
