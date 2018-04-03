@@ -8,7 +8,7 @@ import vurderingReducer from './ducks/vurdering/';
 import nyesakerReducer from './ducks/nyesaker';
 import sakerbehandlesReducer from './ducks/sakerbehandles';
 import tidligeresakerReducer from './ducks/tidligeresaker';
-import saksbehandlerReducer from './ducks/saksbehandler';
+import saksbehandlerReducer from './ducks/saksbehandler/';
 import arbeidsgiverReducer from './ducks/arbeidsgiver';
 import landkoderReducer from './ducks/landkoder';
 
