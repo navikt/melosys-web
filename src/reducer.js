@@ -9,7 +9,6 @@ import nyesakerReducer from './ducks/nyesaker';
 import sakerbehandlesReducer from './ducks/sakerbehandles';
 import tidligeresakerReducer from './ducks/tidligeresaker';
 import saksbehandlerReducer from './ducks/saksbehandler/';
-import arbeidsgiverReducer from './ducks/arbeidsgiver';
 import landkoderReducer from './ducks/landkoder';
 
 export default combineReducers({
@@ -22,6 +21,5 @@ export default combineReducers({
   tidligeresaker: tidligeresakerReducer,
   sakerbehandles: sakerbehandlesReducer,
   saksbehandler: saksbehandlerReducer,
-  arbeidsgiver: arbeidsgiverReducer,
   landkoder: landkoderReducer,
 });
