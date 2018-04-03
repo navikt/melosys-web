@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { health } from '../services/api';
 
-import { sendSoknad } from '../ducks/soknad';
+import { soknadOperations } from '../ducks/soknad/';
 import { fagsakOperations } from '../ducks/fagsaker/';
 
 class Spark extends Component {
@@ -56,7 +56,7 @@ const mapStateToProps = () => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sendSoknad: (bid, soknad) => dispatch(sendSoknad(bid, soknad)),
+  sendSoknad: (bid, soknad) => dispatch(soknadOperations.sendSoknad(bid, soknad)),
   opprettNyFagsak: fnr => dispatch(fagsakOperations.opprettNyFagsak(fnr)),
 });
 
