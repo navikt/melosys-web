@@ -7,7 +7,7 @@ import * as navLogo from '../resources/images/nav.svg';
 import './topplinje.css';
 import * as MPT from '../proptypes/';
 
-import { SaksbehandlerSelector } from '../ducks/saksbehandler';
+import { saksbehandlerSelectors } from '../ducks/saksbehandler/';
 
 const Topplinje = props => {
   const { saksbehandler: { navn } } = props;
@@ -36,7 +36,7 @@ Topplinje.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  saksbehandler: SaksbehandlerSelector(state),
+  saksbehandler: saksbehandlerSelectors.SaksbehandlerSelector(state),
 });
 
 const mapDispatchToProps = () => ({

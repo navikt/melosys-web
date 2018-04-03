@@ -1,120 +1,15 @@
+
+/**
+ * Selectors
+ * -----------------------------------------------------------------------------------------
+ * Målet med selectorer er å samle funksjonalitet som behandler, itererer og omformer
+ * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
+ */
+
+import moment from 'moment';
+
 import { createSelector } from 'reselect';
-import * as Api from '../services/api';
-import { STATUS, doThenDispatch } from '../services/utils';
-
-import { ArbeidsforholdeneSelector, OrganisasjonerSelector } from './fagsaker';
-
-import { formatterDatoTilISO } from '../utils/dato';
-
-const moment = require('moment');
-
-// Actions
-const OK = 'faktaavklaring/OK';
-const FEILET = 'faktaavklaring/FEILET';
-const PENDING = 'faktaavklaring/PENDING';
-const OPPDATER_FAKTAAVKLARING = 'faktaavklaring/OPPDATER_FAKTAAVKLARING';
-
-const initialState = {
-  data: {},
-  status: STATUS.NOT_STARTED,
-};
-
-// Reducer
-export default function reducer(state = initialState, action) {
-  switch (action.type) {
-    case PENDING:
-      return { ...state, status: STATUS.PENDING };
-    case FEILET:
-      return { ...state, status: STATUS.ERROR, data: action.data };
-    case OK:
-      return {
-        ...state,
-        status: STATUS.OK,
-        data: action.data,
-      };
-    case OPPDATER_FAKTAAVKLARING: {
-      const { dokument } = action;
-      const faktaavklaring = {
-        ...state.data.faktaavklaring,
-        opphold: {
-          land: dokument.faktaavklaringOppholdsLand,
-          periode: {
-            fom: formatterDatoTilISO(dokument.faktaavklaringPeriodeFraOgMed),
-            tom: formatterDatoTilISO(dokument.faktaavklaringPeriodeTilOgMed),
-          },
-        },
-        sysselsetting: {
-          sysselsettingType: dokument.faktaavklaringSysselsettingType,
-        },
-        aktivitet: {
-          aktivitetLand: dokument.faktaavklaringAktivitetLand,
-        },
-        utsending: {
-          ansattINorskSelskap: dokument.faktaavklaringAnsattINorskSelskap,
-          erstatterTidligereUtsendt: dokument.faktaavklaringErstatterTidligereUtsendt,
-          utsendingMindreEnn24Mnd: dokument.faktaavklaringUtsendingMindreEnn24Mnd,
-          foretakDriverINorge: dokument.faktaavklaringForetakDriverINorge,
-          harForutgaendeMedlemskap: dokument.faktaavklaringHarForutgaendeMedlemskap,
-          arbeidKnyttetTilVirksomhetUtlandet: dokument.faktaavklaringArbeidKnyttetTilVirksomhetUtlandet,
-          sammeTypeVirksomhet: dokument.faktaavklaringSammeTypeVirksomhet,
-        },
-        valgteArbeidsforhold: [...dokument.faktaavklaringValgteArbeidsforhold],
-        sektor: {
-          ansattISektor: dokument.faktaavklaringAnsattISektor,
-        },
-        bostedsland: {
-          bekrefterFamiliebosted: dokument.faktaavklaringBekrefterFamiliebosted,
-          bekrefterDisponering: dokument.faktaavklaringBekrefterDisponering,
-          bostedsland: dokument.faktaavklaringBostedsland,
-        },
-        yrkesaktivitetFordeling: {
-          antallLand: dokument.faktaavklaringAntallLand,
-        },
-        virksomhet: {
-          aktivitetINorge: dokument.faktaavklaringAktivitetINorge,
-          marginaltArbeid: dokument.faktaavklaringMarginaltArbeid,
-          vekslingMellomLand: dokument.faktaavklaringVekslingMellomLand,
-        },
-        tjenestemann: {
-          tjenestemann: dokument.faktaavklaringTjenestemann,
-        },
-        forretningssted: {
-          land: dokument.faktaavklaringForretningsstedLand,
-          antallArbeidsgivere: dokument.faktaavklaringForretningsstedAntallArbeidsgivere,
-          fordelingArbeidsgivere: dokument.faktaavklaringForretningsstedFordelingArbeidsgivere,
-        },
-      };
-
-      return { ...state, data: { ...state.data, faktaavklaring } };
-    }
-    default:
-      return state;
-  }
-}
-
-// Action Creators
-export function hentFaktaavklaring(behandlingID) {
-  return doThenDispatch(() => Api.hentFaktaavklaring(behandlingID), {
-    OK,
-    FEILET,
-    PENDING,
-  });
-}
-
-export function sendFaktaavklaring(bid, dokument) {
-  return doThenDispatch(() => Api.sendFaktaavklaring(bid, dokument), {
-    OK,
-    FEILET,
-    PENDING,
-  });
-}
-
-export function oppdaterFaktaavklaringState(dokument) {
-  return ({
-    type: OPPDATER_FAKTAAVKLARING,
-    dokument,
-  });
-}
+import { fagsakSelectors } from '../fagsaker/';
 
 // selector(s)
 export const FaktaavklaringSelector = createSelector(
@@ -179,7 +74,7 @@ export const FaktaavklaringValgteArbeidsforholdSelector = createSelector(
 
 export const FaktaavklaringValgteArbeidsforholdDetaljerSelector = createSelector(
   state => FaktaavklaringValgteArbeidsforholdSelector(state) || [],
-  state => ArbeidsforholdeneSelector(state) || [],
+  state => fagsakSelectors.ArbeidsforholdeneSelector(state) || [],
   (valgteArbeidsforholdIDnav, alleArbeidsforhold) => {
     if (!valgteArbeidsforholdIDnav) return [];
     const valgteArbeidsforhold = alleArbeidsforhold.filter(arbeidsforholdet => valgteArbeidsforholdIDnav.includes(arbeidsforholdet.arbeidsforholdIDnav));
@@ -193,7 +88,7 @@ export const FaktaavklaringValgteArbeidsforholdDetaljerSelector = createSelector
  */
 export const RelevanteArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
-  state => OrganisasjonerSelector(state),
+  state => fagsakSelectors.OrganisasjonerSelector(state),
   state => FaktaavklaringOppholdPeriodeSelector(state),
   (arbeidsforholdene = [], organisasjoner = [], opphold = {}) => (
     arbeidsforholdene
@@ -219,3 +114,4 @@ export const FaktaavklaringForretningsstedSelector = createSelector(
   state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.forretningssted : {}),
   forretningssted => forretningssted || {}
 );
+
