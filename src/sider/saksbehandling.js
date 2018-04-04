@@ -137,8 +137,8 @@ class Saksbehandling extends Component {
     const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
 
     if (this.props.valid) {
-      this.props.sendSoknad(bid, soknad);
-      this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
+      // this.props.sendSoknad(bid, soknad);
+      // this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
     }
     */
   }
