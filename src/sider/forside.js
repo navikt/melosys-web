@@ -11,10 +11,11 @@ import SokResultat from '../felles-komponenter/sok/sokResultat';
 import Statistikk from '../felles-komponenter/forside/statistikk';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
+import MineSaker from '../felles-komponenter/forside/minesaker';
 import Sok from '../felles-komponenter/forside/sok';
 import Logg from '../felles-komponenter/forside/logg';
 
-import * as Oppgaver from '../ducks/oppgaver';
+// import * as Oppgaver from '../ducks/oppgaver';
 import * as NyeSaker from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
 import { TidligeresakerSelector } from '../ducks/tidligeresaker';
@@ -38,6 +39,7 @@ class Forside extends Component {
       this.props.hentNyesaker(fnr);
     }
     // this.props.hentMineSaker();
+    /*
     const behandling = {
       oppgavetype: 'BEH_SAK',
       sakstyper: [
@@ -59,6 +61,7 @@ class Forside extends Component {
       ],
     };
     this.props.plukkOppgave(journalforing);
+    */
   }
 
   /** Henter saker basert på fødselsnummer og setter query string 'fnr=xxxxxxxxxxx' slik at
@@ -86,6 +89,8 @@ class Forside extends Component {
               <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
               <SokeForm onSubmit={this.queryStringHandler} />
               { visSokResultat && <SokResultat saker={nyesaker} opprettSak={() => this.props.opprettSak(this.state.fnr)} /> }
+
+              <MineSaker />
             </Nav.Column>
 
             <Nav.Column xs="5">
@@ -103,7 +108,6 @@ class Forside extends Component {
 }
 
 Forside.propTypes = {
-  hentMineSaker: PT.func.isRequired,
   nyesaker: PT.any,
   hentNyesaker: PT.func.isRequired,
   tidligeresaker: PT.array.isRequired,
@@ -121,7 +125,6 @@ Forside.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  oppgaver: Oppgaver.oppgaverSelectors.MineSakerSelector(state),
   nyesaker: NyeSaker.NyesakerSelector(state),
   sakerbehandles: SakerbehandlesSelector(state),
   tidligeresaker: TidligeresakerSelector(state),
@@ -129,8 +132,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentMineSaker: () => dispatch(Oppgaver.oppgaverOperations.hentMineSaker()),
-  plukkOppgave: oppgave => dispatch(Oppgaver.oppgaverOperations.oppgavePlukker(oppgave)),
+  // plukkOppgave: oppgave => dispatch(Oppgaver.oppgaverOperations.oppgavePlukker(oppgave)),
   hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
   opprettSak: fnr => dispatch(NyeSaker.opprettNyFagsak(fnr)),
 });
