@@ -68,6 +68,7 @@ class MineSaker extends Component {
     const { minesaker } = this.props;
     return (
       <div>
+        <h1>Mine Saker ({minesaker.length + 1})</h1>
         {minesaker && minesaker.map(sak => <MinSak key={uuid()} sak={sak} />)}
       </div>
     );
