@@ -41,10 +41,10 @@ SokeForm.defaultProps = {
 
 const kontekster = [{ navn: 'nyesaker', melding: 'Det har oppstått en feil: Kunne ikke hente ny fagsaker.' }];
 
-export default withErrorHandling(kontekster, validForm({
+export default validForm({
   form: 'sokeform',
   errorSummaryTitle: 'Fix these errors',
   validate: {
     fnr: [rules.required, fnrValid],
   },
-})(SokeForm));
+})(withErrorHandling(kontekster, SokeForm));
