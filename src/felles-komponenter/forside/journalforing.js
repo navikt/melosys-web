@@ -4,7 +4,7 @@ import * as Nav from '../../utils/navFrontend';
 const Journalforing = props => {
   return (
     <Nav.Panel className="forside__sidepanel">
-      <Nav.Undertittel>Journalføring</Nav.Undertittel>
+      <Nav.Systemtittel>Journalføring</Nav.Systemtittel>
     </Nav.Panel>
   );
 };
