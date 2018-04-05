@@ -89,7 +89,6 @@ class Forside extends Component {
               <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
               <SokeForm onSubmit={this.queryStringHandler} />
               { visSokResultat && <SokResultat saker={nyesaker} opprettSak={() => this.props.opprettSak(this.state.fnr)} /> }
-
               <MineSaker />
             </Nav.Column>
 
