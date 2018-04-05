@@ -1,19 +1,18 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import * as Oppgaver from '../../ducks/oppgaver';
 
+import * as Oppgaver from '../../ducks/oppgaver';
 import * as MPT from '../../proptypes/';
 import * as Nav from '../../utils/navFrontend';
 import * as Ikoner from '../../resources/images';
+
 import PanelHeader from '../panelHeader/panelHeader';
+import EnkeltDato from '../datoOmrade/enkeltDato';
 
 import './minesaker.css';
-import DatoOmrade from '../datoOmrade/datoOmrade'
-import EnkeltDato from '../datoOmrade/enkeltDato'
 
 const uuid = require('uuid/v4');
-
 
 const MinSakPropType = PT.shape({
   sammensattNavn: PT.string.isRequired,
@@ -72,7 +71,6 @@ MinSak.defaultProps = {
   sak: {},
 };
 
-
 class MineSaker extends Component {
   static propTypes = {
     hentMineSaker: PT.func.isRequired,
@@ -82,6 +80,7 @@ class MineSaker extends Component {
   static defaultProps = {
     minesaker: [],
   };
+
   componentDidMount() {
     this.props.hentMineSaker();
   }
@@ -89,7 +88,7 @@ class MineSaker extends Component {
     const { minesaker } = this.props;
     return (
       <div className="minesaker">
-        <h1>Mine Saker ({minesaker.length + 1})</h1>
+        <h1>Mine Saker ({minesaker.length})</h1>
         {minesaker && minesaker.map(sak => <MinSak key={uuid()} sak={sak} />)}
       </div>
     );
