@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-// import { withRouter } from 'react-router';
 import * as Oppgaver from '../../ducks/oppgaver';
 
 import * as MPT from '../../proptypes/';
@@ -9,7 +8,12 @@ import * as Nav from '../../utils/navFrontend';
 import * as Ikoner from '../../resources/images';
 import PanelHeader from '../panelHeader/panelHeader';
 
+import './minesaker.css';
+import DatoOmrade from '../datoOmrade/datoOmrade'
+import EnkeltDato from '../datoOmrade/enkeltDato'
+
 const uuid = require('uuid/v4');
+
 
 const MinSakPropType = PT.shape({
   sammensattNavn: PT.string.isRequired,
@@ -27,26 +31,43 @@ const MinSak = ({ sak }) => {
   } = sak;
   const { status, type } = behandling;
   const { fom, tom } = soknadsperiode;
-  // console.log(sak);
   const tittel = `${sakstype.term} ${sammensattNavn}`;
+
   return (
-    <div>
-      <Nav.Panel>
-        {sak && <PanelHeader ikon={Ikoner.Ferdig} tittel={tittel} undertittel={type.term} />}
-        <dl>
-          <dt>Status:{status.term}</dt>
-          <dd>Søknadsperiode:{fom}-{tom}</dd>
-          <dt>Frist:{aktivTil}</dt>
-          <dd>Land: TODO fra soknaden</dd>
-        </dl>
-      </Nav.Panel>
-    </div>
+    <Nav.Panel className="minesaker__minsak">
+      <PanelHeader
+        ikon={Ikoner.Ferdig}
+        tittel={tittel}
+        undertittel={
+          <Nav.Row>
+            <Nav.Column xs="12" md="6">
+              <dl className="minsak__meta">
+                <dt className="minsak__meta__term">Status:</dt>
+                <dd className="minsak__meta__detalj">{status.term}</dd>
+                <dt className="minsak__meta__term">Frist:</dt>
+                <dd className="minsak__meta__detalj">{aktivTil}</dd>
+              </dl>
+            </Nav.Column>
+            <Nav.Column xs="12" md="6">
+              <dl className="minsak__meta">
+                <dt className="minsak__meta__term">Søknadsperiode: </dt>
+                <dd className="minsak__meta__detalj"><EnkeltDato dato={fom} /> - <EnkeltDato dato={tom} /></dd>
+                <dt className="minsak__meta__term">Land:</dt>
+                <dd className="minsak__meta__detalj">TODO fra søknaden</dd>
+              </dl>
+            </Nav.Column>
+          </Nav.Row>
+        }
+      />
+
+    </Nav.Panel>
   );
 };
 
 MinSak.propTypes = {
   sak: MinSakPropType,
 };
+
 MinSak.defaultProps = {
   sak: {},
 };
@@ -67,7 +88,7 @@ class MineSaker extends Component {
   render() {
     const { minesaker } = this.props;
     return (
-      <div>
+      <div className="minesaker">
         <h1>Mine Saker ({minesaker.length + 1})</h1>
         {minesaker && minesaker.map(sak => <MinSak key={uuid()} sak={sak} />)}
       </div>
