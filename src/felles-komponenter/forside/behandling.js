@@ -12,7 +12,7 @@ const Behandling = props => {
 
   return (
     <Nav.Panel className="forside__sidepanel">
-      <Nav.Undertittel>Behandle sak</Nav.Undertittel>
+      <Nav.Systemtittel>Behandle sak</Nav.Systemtittel>
       <form onSubmit={handleSubmit}>
         <Nav.Fieldset legend="Saksområde (sakstype)">
           <Skjema.Checkbox label="EU/EØS" feltNavn="eueos" />

@@ -8,7 +8,7 @@ const Statistikk = props => {
   const { antallSaker } = props;
   return (
     <Nav.Panel className="forside__sidepanel">
-      <Nav.Undertittel>Statistikk</Nav.Undertittel>
+      <Nav.Systemtittel>Statistikk</Nav.Systemtittel>
       <h3>Mine Saker</h3>
       <h1>{antallSaker}</h1>
     </Nav.Panel>
