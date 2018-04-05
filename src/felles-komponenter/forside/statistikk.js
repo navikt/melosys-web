@@ -2,7 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import * as Nav from '../../utils/navFrontend';
-import * as Oppgaver from '../../ducks/oppgaver';
+import { oppgaverSelectors } from '../../ducks/oppgaver';
 
 import './statistikk.css';
 
@@ -19,13 +19,13 @@ const Statistikk = props => {
       <div>
         <dl className="statistikk__meta">
           <dt className="statistikk__meta__term">Journalføring med <br />frist i dag</dt>
-          <dd className="statistikk__meta__detalj">1837</dd>
+          <dd className="statistikk__meta__detalj">{antallSoknader}</dd>
         </dl>
       </div>
       <div>
         <dl className="statistikk__meta">
           <dt className="statistikk__meta__term">Søknader med <br />frist i dag</dt>
-          <dd className="statistikk__meta__detalj">863</dd>
+          <dd className="statistikk__meta__detalj">{antallJournalforing}</dd>
         </dl>
       </div>
     </Nav.Panel>
@@ -42,11 +42,10 @@ Statistikk.defaultProps = {
   antallSaker: 0,
   antallJournalforing: 0,
   antallSoknader: 0,
-}
-
+};
 
 const mapStateToProps = state => ({
-  antallSaker: Oppgaver.oppgaverSelectors.MineSakerAntallSelector(state),
+  antallSaker: oppgaverSelectors.MineSakerAntallSelector(state),
 });
 
 export default connect(mapStateToProps)(Statistikk);
