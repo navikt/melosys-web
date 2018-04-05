@@ -19,6 +19,11 @@ export function health() {
   return getAsJson(URI_HEALTH);
 }
 
+export function hentKodeverk() {
+  const URI_KODEVERK = `${API_BASE_URL}kodeverk`;
+  return getAsJson(URI_KODEVERK);
+}
+
 export function hentSoknader(bid) {
   const URI_SOKNADER = `${API_BASE_URL}soknader/${bid}`;
   return getAsJson(URI_SOKNADER);
