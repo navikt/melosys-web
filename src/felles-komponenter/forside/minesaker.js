@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import * as Oppgaver from '../../ducks/oppgaver';
 import * as MPT from '../../proptypes/';
@@ -26,40 +27,43 @@ const MinSakPropType = PT.shape({
 
 const MinSak = ({ sak }) => {
   const {
-    sammensattNavn, sakstype, behandling, aktivTil, soknadsperiode,
+    sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode,
   } = sak;
   const { status, type } = behandling;
   const { fom, tom } = soknadsperiode;
   const tittel = `${sakstype.term} ${sammensattNavn}`;
+  const link = `/saksbehandling/${saksnummer}`;
 
   return (
-    <Nav.Panel className="minesaker__minsak">
-      <PanelHeader
-        ikon={Ikoner.Ferdig}
-        tittel={tittel}
-        undertittel={
-          <Nav.Row>
-            <Nav.Column xs="12" md="6">
-              <dl className="minsak__meta">
-                <dt className="minsak__meta__term">Status:</dt>
-                <dd className="minsak__meta__detalj">{status.term}</dd>
-                <dt className="minsak__meta__term">Frist:</dt>
-                <dd className="minsak__meta__detalj">{aktivTil}</dd>
-              </dl>
-            </Nav.Column>
-            <Nav.Column xs="12" md="6">
-              <dl className="minsak__meta">
-                <dt className="minsak__meta__term">Søknadsperiode: </dt>
-                <dd className="minsak__meta__detalj"><EnkeltDato dato={fom} /> - <EnkeltDato dato={tom} /></dd>
-                <dt className="minsak__meta__term">Land:</dt>
-                <dd className="minsak__meta__detalj">TODO fra søknaden</dd>
-              </dl>
-            </Nav.Column>
-          </Nav.Row>
-        }
-      />
+    <Link to={link} className="minsak__link">
+      <Nav.Panel className="minesaker__minsak">
+        <PanelHeader
+          ikon={Ikoner.Ferdig}
+          tittel={tittel}
+          undertittel={
+            <Nav.Row>
+              <Nav.Column xs="12" md="6">
+                <dl className="minsak__meta">
+                  <dt className="minsak__meta__term">Status:</dt>
+                  <dd className="minsak__meta__detalj">{status.term}</dd>
+                  <dt className="minsak__meta__term">Frist:</dt>
+                  <dd className="minsak__meta__detalj">{aktivTil}</dd>
+                </dl>
+              </Nav.Column>
+              <Nav.Column xs="12" md="6">
+                <dl className="minsak__meta">
+                  <dt className="minsak__meta__term">Søknadsperiode: </dt>
+                  <dd className="minsak__meta__detalj"><EnkeltDato dato={fom} /> - <EnkeltDato dato={tom} /></dd>
+                  <dt className="minsak__meta__term">Land:</dt>
+                  <dd className="minsak__meta__detalj">TODO fra søknaden</dd>
+                </dl>
+              </Nav.Column>
+            </Nav.Row>
+          }
+        />
 
-    </Nav.Panel>
+      </Nav.Panel>
+    </Link>
   );
 };
 
