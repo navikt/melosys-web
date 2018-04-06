@@ -24,6 +24,14 @@ export function hentKodeverk() {
   return getAsJson(URI_KODEVERK);
 }
 
+export function hentMineSaker() {
+  const URI_OPPGAVER_MINESAKER = `${API_BASE_URL}oppgaver/hentMineSaker`;
+  return getAsJson(URI_OPPGAVER_MINESAKER);
+}
+export function sendPlukkOppgave(oppgave) {
+  const URI_OPPGAVER_PLUKK = `${API_BASE_URL}oppgaver/plukk`;
+  return postAsJson(URI_OPPGAVER_PLUKK, oppgave);
+}
 export function hentSoknader(bid) {
   const URI_SOKNADER = `${API_BASE_URL}soknader/${bid}`;
   return getAsJson(URI_SOKNADER);
