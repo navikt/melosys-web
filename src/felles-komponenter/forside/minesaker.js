@@ -15,28 +15,24 @@ import './minesaker.css';
 
 const uuid = require('uuid/v4');
 
-const MinSakPropType = PT.shape({
-  sammensattNavn: PT.string.isRequired,
-  sakstype: MPT.Kodeverk,
-  behandling: PT.shape({
-    status: MPT.Kodeverk,
-    type: MPT.Kodeverk,
-  }),
-  soknadsperiode: MPT.Periode,
-});
-
-const MinSak = ({ sak }) => {
+/**
+ * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
+ * for å gi saksbehandler en oversikt over sakens innhold før hun klikker
+ * seg inn på den.
+ */
+const MinSakEnkeltLinje = ({ sak }) => {
   const {
     sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode,
   } = sak;
+
   const { status } = behandling;
   const { fom, tom } = soknadsperiode;
-  const tittel = `${sakstype.term} ${sammensattNavn}`;
+  const tittel = `${sakstype.term} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
 
   return (
     <Link to={link} className="minsak__link">
-      <Nav.Panel className="minesaker__minsak">
+      <Nav.Panel className="minsak">
         <PanelHeader
           ikon={Ikoner.IkonSak}
           tittel={tittel}
@@ -61,47 +57,54 @@ const MinSak = ({ sak }) => {
             </Nav.Row>
           }
         />
-
       </Nav.Panel>
     </Link>
   );
 };
 
-MinSak.propTypes = {
-  sak: MinSakPropType,
+MinSakEnkeltLinje.propTypes = {
+  sak: MPT.MinSak,
 };
 
-MinSak.defaultProps = {
+MinSakEnkeltLinje.defaultProps = {
   sak: {},
 };
 
+/**
+ * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
+ */
 class MineSaker extends Component {
-  static propTypes = {
-    hentMineSaker: PT.func.isRequired,
-    minesaker: PT.array,
-  };
-
-  static defaultProps = {
-    minesaker: [],
-  };
-
   componentDidMount() {
     this.props.hentMineSaker();
   }
+
   render() {
     const { minesaker } = this.props;
+    const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra listen til venstre.';
+
     return (
       <div className="minesaker">
         <h1>Mine Saker ({minesaker.length})</h1>
-        {minesaker && minesaker.map(sak => <MinSak key={uuid()} sak={sak} />)}
+        {minesaker && minesaker.map(sak => <MinSakEnkeltLinje key={uuid()} sak={sak} />)}
+        {minesaker.length === 0 && ingenSakerMelding}
       </div>
     );
   }
 }
 
+MineSaker.propTypes = {
+  hentMineSaker: PT.func.isRequired,
+  minesaker: MPT.MineSaker,
+};
+
+MineSaker.defaultProps = {
+  minesaker: [],
+};
+
 const mapStateToProps = state => ({
   minesaker: Oppgaver.oppgaverSelectors.MineSakerSelector(state),
 });
+
 const mapDispatchToProps = dispatch => ({
   hentMineSaker: () => dispatch(Oppgaver.oppgaverOperations.hentMineSaker()),
 });
