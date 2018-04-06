@@ -11,7 +11,9 @@ class Spark extends Component {
   constructor(props) {
     super(props);
   }
-
+  static defaultProps = {
+    nyfagsak: undefined,
+  };
   componentWillMount() {
   }
 
@@ -29,15 +31,19 @@ class Spark extends Component {
   }
 
   render() {
+    const { nyfagsak } = this.props;
     return (
       <div>
         <h1>Health</h1>
+
         <button onClick={() => console.log(health())} >sjekk health</button>
         <h1>Opprett sak</h1>
         <form onSubmit={this.opprettNyFagsakSubmit}>
           <input type="text" name="fnr" /><br />
           <input type="submit" value="Send" />
         </form>
+        <p>{nyfagsak.saksnummer && JSON.stringify(nyfagsak)}</p>
+
         <h1>Populere søknad manuelt</h1>
         <form onSubmit={this.soknadSubmit}>
           <label>behandlingID:</label><br />
@@ -51,8 +57,8 @@ class Spark extends Component {
   }
 }
 
-const mapStateToProps = () => ({
-
+const mapStateToProps = (state) => ({
+  nyfagsak: state.fagsaker.data,
 });
 
 const mapDispatchToProps = dispatch => ({
