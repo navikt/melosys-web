@@ -27,7 +27,6 @@ import Bekreftelser from '../felles-komponenter/bekreftelser';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
-import { hentLandkoder } from '../ducks/landkoder';
 
 import {
   fagsakOperations,
@@ -61,7 +60,6 @@ import '../felles-komponenter/skjema/skjema.css';
 
 class Saksbehandling extends Component {
   static propTypes = {
-    hentLandkoder: PT.func.isRequired,
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     sendSoknad: PT.func.isRequired,
@@ -120,7 +118,6 @@ class Saksbehandling extends Component {
       this.props.hentFaktaavklaring(behandlingID);
       this.props.hentVurdering(behandlingID);
     });
-    this.props.hentLandkoder();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -132,6 +129,7 @@ class Saksbehandling extends Component {
   }
 
   fattVedtakHandler = () => {
+    /**
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
 
@@ -139,13 +137,16 @@ class Saksbehandling extends Component {
       this.props.sendSoknad(bid, soknad);
       this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
     }
+    */
   }
 
   beOmVurdering = () => {
+    /**
     const { behandlingID } = this.props.oppsummering;
     if (this.props.valid) {
       this.props.hentVurdering(behandlingID);
     }
+    */
   }
 
   overstyrSubmit = event => {
@@ -278,7 +279,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentLandkoder: () => dispatch(hentLandkoder()),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hentFagsaker(saksnummer)),
   hentSoknad: bid => dispatch(soknadOperations.hentSoknad(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.sendSoknad(bid, dokument)),
