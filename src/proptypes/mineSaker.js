@@ -14,6 +14,6 @@ const MinSakPropType = PT.shape({
 const MineSakerPropType = PT.arrayOf(MinSakPropType);
 
 export {
-  MinSakPropType,
-  MineSakerPropType,
+  MinSakPropType as MinSak,
+  MineSakerPropType as MineSaker,
 };
