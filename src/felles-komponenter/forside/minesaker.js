@@ -29,7 +29,7 @@ const MinSak = ({ sak }) => {
   const {
     sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode,
   } = sak;
-  const { status, type } = behandling;
+  const { status } = behandling;
   const { fom, tom } = soknadsperiode;
   const tittel = `${sakstype.term} ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
@@ -38,7 +38,7 @@ const MinSak = ({ sak }) => {
     <Link to={link} className="minsak__link">
       <Nav.Panel className="minesaker__minsak">
         <PanelHeader
-          ikon={Ikoner.Ferdig}
+          ikon={Ikoner.IkonSak}
           tittel={tittel}
           undertittel={
             <Nav.Row>
