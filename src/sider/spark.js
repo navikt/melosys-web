@@ -8,6 +8,8 @@ import { soknadOperations } from '../ducks/soknad/';
 import { fagsakOperations } from '../ducks/fagsaker/';
 import { oppgaverOperations } from '../ducks/oppgaver';
 
+import './spark.css';
+
 class Spark extends Component {
   constructor(props) {
     super(props);
@@ -41,33 +43,43 @@ class Spark extends Component {
   render() {
     const { nyfagsak, oppgave } = this.props;
     return (
-      <div>
-        <h1>Health</h1>
-        <button onClick={() => console.log(health())} >sjekk health</button>
+      <div className="spark">
+        <div className="spark__gruppe">
+          <h1>Health</h1>
+          <button onClick={() => console.log(health())} >sjekk health</button>
+        </div>
 
-        <h1>Plukk Oppgave (Behandling ELLER Journalføring)</h1>
-        <form onSubmit={this.plukkOppgaveSubmit}>
-          <label>Oppgave json:</label><br />
-          <textarea name="oppgaveBody" cols="150" rows="2" /><br />
-          <input type="submit" value="Send" />
-        </form>
-        <p>{oppgave.oppgaveID && JSON.stringify(oppgave)}</p>
+        <div className="spark__gruppe">
+          <h1>Plukk Oppgave (Behandling ELLER Journalføring)</h1>
+          <form onSubmit={this.plukkOppgaveSubmit}>
+            <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til plukk-endpoint.</p>
+            <textarea name="oppgaveBody" className="spark__oppgave__body" /><br />
+            <input type="submit" value="Send" />
+          </form>
+          <p>{oppgave.oppgaveID && JSON.stringify(oppgave)}</p>
+        </div>
 
-        <h1>Opprett sak</h1>
-        <form onSubmit={this.opprettNyFagsakSubmit}>
-          <input type="text" name="fnr" /><br />
-          <input type="submit" value="Send" />
-        </form>
-        <p>{nyfagsak.saksnummer && JSON.stringify(nyfagsak)}</p>
+        <div className="spark__gruppe">
+          <h1>Opprett sak</h1>
+          <p className="spark__gruppe__forklaring"><span>!</span>Tast inn fødselsnummer nedenfor for å opprette en ny sak på denne personen. Fødselsnummer må eksistere i testdata på det miljøet du befinner deg i (T5 / T8)</p>
+          <form onSubmit={this.opprettNyFagsakSubmit}>
+            <input type="text" name="fnr" /><br />
+            <input type="submit" value="Send" />
+          </form>
+          <p>{nyfagsak.saksnummer && JSON.stringify(nyfagsak)}</p>
+        </div>
 
-        <h1>Populere søknad manuelt</h1>
-        <form onSubmit={this.soknadSubmit}>
-          <label>behandlingID:</label><br />
-          <input type="text" name="behandlingID" /><br />
-          <label>json:</label><br />
-          <textarea name="soknadBody" cols="150" rows="20" /><br />
-          <input type="submit" value="Send" />
-        </form>
+        <div className="spark__gruppe">
+          <h1>Populere søknad manuelt</h1>
+          <p className="spark__gruppe__forklaring"><span>!</span>Legg inn hele JSON-objektet for søknaden og tast inn behandlingID for å teste lagring av søknaden og knytte den til en faktisk sak.</p>
+          <form onSubmit={this.soknadSubmit}>
+            <label>behandlingID:</label>
+            <input type="text" name="behandlingID" />
+            <label>json:</label>
+            <textarea name="soknadBody" className="spark__soknad__body" />
+            <input type="submit" value="Send" />
+          </form>
+        </div>
       </div>
     );
   }
