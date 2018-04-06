@@ -7,7 +7,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
 import './landvelger.css';
-import { LandkoderSelector } from '../../../ducks/landkoder';
+import { KodeverkSelectors } from '../../../ducks/kodeverk';
 
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 
@@ -183,7 +183,7 @@ class CustomLandVelger extends Component {
   }
 }
 const mapStateToProps = state => ({
-  landkoder: LandkoderSelector(state),
+  landkoder: KodeverkSelectors.landkoderSelector(state),
 });
 
 CustomLandVelger.propTypes = {

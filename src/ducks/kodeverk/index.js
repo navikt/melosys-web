@@ -1,15 +1,15 @@
-import * as kodeverkOperations from './operations';
-import * as kodeverkSelectors from './selectors';
-import * as kodeverkActions from './actions';
-import * as kodeverkTypes from './types';
+import * as KodeverkOperations from './operations';
+import * as KodeverkSelectors from './selectors';
+import * as KodeverkActions from './actions';
+import * as KodeverkTypes from './types';
 
-import vurderingReducers from './reducers';
+import KodeverkReducers from './reducers';
 
 export {
-  kodeverkOperations,
-  kodeverkSelectors,
-  kodeverkTypes,
-  kodeverkActions,
+  KodeverkOperations,
+  KodeverkSelectors,
+  KodeverkTypes,
+  KodeverkActions,
 };
+export default KodeverkReducers;
 
-export default vurderingReducers;

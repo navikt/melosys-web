@@ -7,27 +7,23 @@
 
 import { createSelector } from 'reselect';
 
-export const kodeverkSelector = createSelector(
-  state => state.kodeverk.data,
-  kodeverk => kodeverk
-);
 
-export const kodeverkLandkoderSelector = createSelector(
+export const landkoderSelector = createSelector(
   state => state.kodeverk.data.landkoder,
   landkoder => landkoder
 );
 
-export const kodeverkBehandlingsStatusSelector = createSelector(
+export const behandlingsStatusSelector = createSelector(
   state => state.kodeverk.data.behandlingsstatus,
   behandlingsstatus => behandlingsstatus
 );
 
-export const kodeverkBehandlingsTyperSelector = createSelector(
+export const behandlingsTyperSelector = createSelector(
   state => state.kodeverk.data.behandlingstyper,
   behandlingstyper => behandlingstyper
 );
 
-export const kodeverkSakstyperSelector = createSelector(
+export const sakstyperSelector = createSelector(
   state => state.kodeverk.data.sakstyper,
   sakstyper => sakstyper
 );
