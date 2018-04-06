@@ -58,7 +58,7 @@ const SakEnkeltLinje = ({ sak }) => {
 };
 
 SakEnkeltLinje.propTypes = {
-  sak: MPT.MinSak,
+  sak: MPT.SakEnkeltLinje,
 };
 
 SakEnkeltLinje.defaultProps = {
