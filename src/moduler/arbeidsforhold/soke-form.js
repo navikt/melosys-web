@@ -22,7 +22,6 @@ function SokeForm({ handleSubmit, errorSummary }) {
           feltNavn="fnr"
           label="Fnr. eller dnr."
           bredde="XL"
-          autoFocus
         />
         <Hovedknapp>Søk</Hovedknapp>
       </form>
