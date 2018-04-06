@@ -10,6 +10,7 @@ import sakerbehandlesReducer from './ducks/sakerbehandles';
 import tidligeresakerReducer from './ducks/tidligeresaker';
 import saksbehandlerReducer from './ducks/saksbehandler/';
 import kodeverkReducer from './ducks/kodeverk';
+import oppgaverReducer from './ducks/oppgaver';
 
 export default combineReducers({
   form: formReducer,
@@ -22,4 +23,5 @@ export default combineReducers({
   sakerbehandles: sakerbehandlesReducer,
   saksbehandler: saksbehandlerReducer,
   kodeverk: kodeverkReducer,
+  oppgaver: oppgaverReducer,
 });
