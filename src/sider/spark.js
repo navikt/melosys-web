@@ -8,6 +8,29 @@ import { soknadOperations } from '../ducks/soknad/';
 import { fagsakOperations } from '../ducks/fagsaker/';
 import { oppgaverOperations } from '../ducks/oppgaver';
 
+const behandleSakOppgave = {
+  oppgavetype: 'BEH_SAK',
+  sakstyper: [
+    'EU_EOS',
+    'TRYGDAVTALE',
+    'FOLKETRYGD',
+  ],
+  behandlingstyper: [
+    'ae0034',
+    'ae0058',
+  ],
+};
+
+const journalforingOppgave = {
+  oppgavetype: 'JFR',
+  sakstyper: [
+    'EU_EOS',
+    'TRYGDAVTALE',
+    'FOLKETRYGD',
+  ],
+};
+
+
 class Spark extends Component {
   constructor(props) {
     super(props);
@@ -37,7 +60,6 @@ class Spark extends Component {
     this.props.plukkOppgave(oppgaveBody);
   };
 
-
   render() {
     const { nyfagsak, oppgave } = this.props;
     return (
@@ -46,6 +68,8 @@ class Spark extends Component {
         <button onClick={() => console.log(health())} >sjekk health</button>
 
         <h1>Plukk Oppgave (Behandling ELLER Journalføring)</h1>
+        <p>Behandle sak:<br/><code>{JSON.stringify(behandleSakOppgave)}</code></p>
+        <p>Jornalføring:<br/><code>{JSON.stringify(journalforingOppgave)}</code></p>
         <form onSubmit={this.plukkOppgaveSubmit}>
           <label>Oppgave json:</label><br />
           <textarea name="oppgaveBody" cols="150" rows="2" /><br />
