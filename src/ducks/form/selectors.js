@@ -12,13 +12,3 @@ export const SoknadenFormSelector = createSelector(
   state => (state.form.soknad ? state.form.soknad : {}),
   soknaden => soknaden
 );
-
-export const SokFormSelector = createSelector(
-  state => (state.form.sokEtterSak || {}),
-  sokForm => sokForm
-);
-
-export const SokFormStrengSelector = createSelector(
-  state => (state.form.sokEtterSak || {}),
-  sokForm => (sokForm.values ? sokForm.values.sokFelt : '')
-);

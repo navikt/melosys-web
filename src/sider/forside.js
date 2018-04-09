@@ -9,7 +9,6 @@ import * as Nav from '../utils/navFrontend';
 import * as NyeSaker from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
 import { TidligeresakerSelector } from '../ducks/tidligeresaker';
-import { formSelectors } from '../ducks/form/';
 
 import Statistikk from '../felles-komponenter/forside/statistikk';
 import Journalforing from '../felles-komponenter/forside/journalforing';
@@ -64,7 +63,6 @@ const mapStateToProps = state => ({
   nyesaker: NyeSaker.NyesakerSelector(state),
   sakerbehandles: SakerbehandlesSelector(state),
   tidligeresaker: TidligeresakerSelector(state),
-  sokStreng: formSelectors.SokFormStrengSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

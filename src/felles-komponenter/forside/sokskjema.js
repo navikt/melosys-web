@@ -1,32 +1,45 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, change } from 'redux-form';
+import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as NyeSaker from '../../ducks/nyesaker';
 
 class SokSkjema extends Component {
-  state = { sokFelt: '' }
+  componentWillMount() {
+    const { fnr } = this.props.match.params;
+    this.oppdaterLokalSokeState(fnr);
+  }
 
-  submitHandler = form => {
-    this.props.lagreSokString(this.state.sokFelt);
-    this.props.handleSubmit(form);
+  vedSubmit = form => {
+    const { lagreSokString, handleSubmit, history } = this.props;
+    const { sokStreng } = this.state;
+
+    lagreSokString(sokStreng);
+    handleSubmit(form);
+    history.push(`/sok/${sokStreng}`);
   };
 
-  oppdaterLokalSokeState = event => {
-    this.setState({ sokFelt: event.target.value });
+  vedEndretFelt = event => {
+    this.setState({ sokStreng: event.target.value });
+  }
+
+  oppdaterLokalSokeState = sokStreng => {
+    this.setState({ sokStreng });
   }
 
   render () {
     return (
       <Nav.Panel>
         <Nav.Systemtittel>Søke etter sak</Nav.Systemtittel>
-        <form onSubmit={this.submitHandler}>
+        <form onSubmit={this.vedSubmit}>
           <Nav.Input
             label="Søk etter fødselsnummer:"
             bredde="XL"
-            onChange={this.oppdaterLokalSokeState}
+            onChange={this.vedEndretFelt}
+            ref={this.state.sokStreng}
           />
           <Nav.Knapp>Søk</Nav.Knapp>
         </form>
@@ -38,14 +51,16 @@ class SokSkjema extends Component {
 SokSkjema.propTypes = {
   handleSubmit: PT.func.isRequired,
   lagreSokString: PT.func.isRequired,
+  history: PT.object.isRequired,
+  match: PT.object.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
-  lagreSokString: verdi => dispatch(change('sokEtterSak', 'sokFelt', verdi)),
+  lagreSokString: verdi => dispatch(change('sokEtterSak', 'sokStreng', verdi)),
 });
 
-export default connect(null, mapDispatchToProps)(reduxForm({
+export default withRouter(connect(null, mapDispatchToProps)(reduxForm({
   form: 'sokEtterSak',
   initialValues: { sokFelt: '' },
-  onSubmit: (form, dispatch) => dispatch(NyeSaker.hentNyesaker(form.sokFelt)),
-})(SokSkjema));
+  onSubmit: (form, dispatch) => dispatch(NyeSaker.hentNyesaker(form.sokStreng)),
+})(SokSkjema)));

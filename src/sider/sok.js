@@ -4,10 +4,8 @@ import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
 import withErrorHandling from '../hoc/withErrorHandling';
-import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import * as Nav from '../utils/navFrontend';
-// import SokListe from '../felles-komponenter/sok/sokListe';
-import SokResultat from '../felles-komponenter/forside/sokResultat';
+import SakEnkeltLinje from '../felles-komponenter/forside/saksliste/sakEnkeltLinje';
 import Statistikk from '../felles-komponenter/forside/statistikk';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
@@ -15,11 +13,10 @@ import SokSkjema from '../felles-komponenter/forside/sokskjema';
 import Logg from '../felles-komponenter/forside/logg';
 
 import * as NyeSaker from '../ducks/nyesaker';
-import { formSelectors } from '../ducks/form/';
 
-import './forside.css';
+import './sok.css';
 
-const queryString = require('query-string');
+const uuid = require('uuid/v4');
 
 class Sok extends Component {
   constructor(props) {
@@ -28,41 +25,13 @@ class Sok extends Component {
   }
 
   componentWillMount() {
-    const queryParams = queryString.parse(this.props.location.search);
-    const { fnr } = queryParams;
-
-    if (fnr) {
-      this.setState({ fnr });
-      this.props.hentNyesaker(fnr);
-    }
-    // this.props.hentMineSaker();
-    /*
-    const behandling = {
-      oppgavetype: 'BEH_SAK',
-      sakstyper: [
-        'EU_EOS',
-        'TRYGDAVTALE',
-        'FOLKETRYGD',
-      ],
-      behandlingstyper: [
-        'ae0034',
-        'ae0058',
-      ],
-    };
-    const journalforing = {
-      oppgavetype: 'JFR',
-      sakstyper: [
-        'EU_EOS',
-        'TRYGDAVTALE',
-        'FOLKETRYGD',
-      ],
-    };
-    this.props.plukkOppgave(journalforing);
-    */
+    const { match, hentNyesaker } = this.props;
+    const { fnr } = match.params;
+    if (fnr) hentNyesaker(fnr);
   }
 
   /** Henter saker basert på fødselsnummer og setter query string 'fnr=xxxxxxxxxxx' slik at
-   * deter mulig å linke direkte til et søk.
+   * det er mulig å linke direkte til et søk.
    *
    * @param value
    */
@@ -73,17 +42,19 @@ class Sok extends Component {
   }
 
   render() {
-    // const { nyesaker, sakerbehandles, tidligeresaker } = this.props;
-    const { nyesaker, sokStreng, children } = this.props;
-    const visSokResultat = sokStreng !== '';
+    const { nyesaker, children } = this.props;
+    const { fnr } = this.props.match.params;
 
     return (
-      <div className="forside">
+      <div className="sok">
         { children }
         <Nav.Container>
           <Nav.Row>
             <Nav.Column xs="7">
-              { visSokResultat && <SokResultat saker={nyesaker} sokStreng={sokStreng} /> }
+              <section className="sokresultat">
+                <h1>Fant {nyesaker.length} treff etter søk på &quot;{fnr}&quot;</h1>
+                {nyesaker && nyesaker.map(sak => <SakEnkeltLinje key={uuid()} sak={sak} />)}
+              </section>
             </Nav.Column>
             <Nav.Column xs="5">
               <Statistikk />
@@ -104,9 +75,9 @@ Sok.propTypes = {
   hentNyesaker: PT.func.isRequired,
   location: PT.object.isRequired,
   history: PT.object.isRequired,
-  opprettSak: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
+  match: PT.object.isRequired,
 };
 
 Sok.defaultProps = {
@@ -117,7 +88,6 @@ Sok.defaultProps = {
 
 const mapStateToProps = state => ({
   nyesaker: NyeSaker.NyesakerSelector(state),
-  sokStreng: formSelectors.SokFormStrengSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
