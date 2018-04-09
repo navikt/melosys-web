@@ -8,15 +8,23 @@ import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import * as Nav from '../utils/navFrontend';
 // import SokListe from '../felles-komponenter/sok/sokListe';
 import SokResultat from '../felles-komponenter/sok/sokResultat';
+import Statistikk from '../felles-komponenter/forside/statistikk';
+import Journalforing from '../felles-komponenter/forside/journalforing';
+import Behandling from '../felles-komponenter/forside/behandling';
+import MineSaker from '../felles-komponenter/forside/minesaker';
+import Sok from '../felles-komponenter/forside/sok';
+import Logg from '../felles-komponenter/forside/logg';
+
+// import * as Oppgaver from '../ducks/oppgaver';
 import * as NyeSaker from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
 import { TidligeresakerSelector } from '../ducks/tidligeresaker';
 
-import './sok.css';
+import './forside.css';
 
 const queryString = require('query-string');
 
-class Sok extends Component {
+class Forside extends Component {
   constructor(props) {
     super(props);
     this.queryStringHandler = this.queryStringHandler.bind(this);
@@ -30,6 +38,30 @@ class Sok extends Component {
       this.setState({ fnr });
       this.props.hentNyesaker(fnr);
     }
+    // this.props.hentMineSaker();
+    /*
+    const behandling = {
+      oppgavetype: 'BEH_SAK',
+      sakstyper: [
+        'EU_EOS',
+        'TRYGDAVTALE',
+        'FOLKETRYGD',
+      ],
+      behandlingstyper: [
+        'ae0034',
+        'ae0058',
+      ],
+    };
+    const journalforing = {
+      oppgavetype: 'JFR',
+      sakstyper: [
+        'EU_EOS',
+        'TRYGDAVTALE',
+        'FOLKETRYGD',
+      ],
+    };
+    this.props.plukkOppgave(journalforing);
+    */
   }
 
   /** Henter saker basert på fødselsnummer og setter query string 'fnr=xxxxxxxxxxx' slik at
@@ -49,7 +81,7 @@ class Sok extends Component {
     const { visSokResultat } = this.props;
 
     return (
-      <div className="sok">
+      <div className="forside">
         { children }
         <Nav.Container>
           <Nav.Row>
@@ -57,16 +89,16 @@ class Sok extends Component {
               <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
               <SokeForm onSubmit={this.queryStringHandler} />
               { visSokResultat && <SokResultat saker={nyesaker} opprettSak={() => this.props.opprettSak(this.state.fnr)} /> }
+              <MineSaker />
             </Nav.Column>
 
-            {/*
             <Nav.Column xs="5">
-              <Nav.Innholdstittel id="overskriftUnderbehandling">Saker under behandling</Nav.Innholdstittel>
-              <SokListe saker={sakerbehandles} kanViseFlereSaker aria-describedby="overskriftUnderbehandling" />
-              <Nav.Innholdstittel id="overskriftTitligeresaker">Tidligere behandlede saker</Nav.Innholdstittel>
-              <SokListe saker={tidligeresaker} kanViseFlereSaker aria-describedby="overskriftTitligeresaker" />
+              <Statistikk />
+              <Journalforing />
+              <Behandling />
+              <Sok />
+              <Logg />
             </Nav.Column>
-            */}
           </Nav.Row>
         </Nav.Container>
       </div>
@@ -74,7 +106,7 @@ class Sok extends Component {
   }
 }
 
-Sok.propTypes = {
+Forside.propTypes = {
   nyesaker: PT.any,
   hentNyesaker: PT.func.isRequired,
   tidligeresaker: PT.array.isRequired,
@@ -86,7 +118,7 @@ Sok.propTypes = {
   children: PT.node,
 };
 
-Sok.defaultProps = {
+Forside.defaultProps = {
   children: null,
   nyesaker: [],
 };
@@ -99,6 +131,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  // plukkOppgave: oppgave => dispatch(Oppgaver.oppgaverOperations.oppgavePlukker(oppgave)),
   hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
   opprettSak: fnr => dispatch(NyeSaker.opprettNyFagsak(fnr)),
 });
@@ -107,4 +140,4 @@ const kontekster = [
   { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
   { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
 ];
-export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
+export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(Forside)));
