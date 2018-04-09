@@ -7,7 +7,7 @@ import withErrorHandling from '../hoc/withErrorHandling';
 import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import * as Nav from '../utils/navFrontend';
 // import SokListe from '../felles-komponenter/sok/sokListe';
-import SokResultat from '../felles-komponenter/sok/sokResultat';
+import SokResultat from '../felles-komponenter/forside/sokResultat';
 import Statistikk from '../felles-komponenter/forside/statistikk';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
@@ -88,7 +88,7 @@ class Forside extends Component {
             <Nav.Column xs="7">
               <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
               <SokeForm onSubmit={this.queryStringHandler} />
-              { visSokResultat && <SokResultat saker={nyesaker} opprettSak={() => this.props.opprettSak(this.state.fnr)} /> }
+              { nyesaker.length > 0 && <SokResultat saker={nyesaker} /> }
               <MineSaker />
             </Nav.Column>
 
@@ -127,7 +127,6 @@ const mapStateToProps = state => ({
   nyesaker: NyeSaker.NyesakerSelector(state),
   sakerbehandles: SakerbehandlesSelector(state),
   tidligeresaker: TidligeresakerSelector(state),
-  visSokResultat: (state.nyesaker.status === 'OK'),
 });
 
 const mapDispatchToProps = dispatch => ({
