@@ -10,16 +10,12 @@ import { datoDiff } from '../../../utils/utils';
 import './vurderingVedtak.css';
 
 import {
-  VurderingLovvalgbestemmelserSelector,
-  VurderingFeilmeldingSelector,
-  VurderingStatusSelector,
-} from '../../../ducks/vurdering';
+  vurderingSelectors,
+} from '../../../ducks/vurdering/';
 
 import {
-  FaktaavklaringValgteArbeidsforholdDetaljerSelector,
-  FaktaavklaringSysselsettingSelector,
-  FaktaavklaringOppholdSelector,
-} from '../../../ducks/faktaavklaring';
+  faktaavklaringSelectors,
+} from '../../../ducks/faktaavklaring/';
 
 const uuid = require('uuid/v4');
 
@@ -157,12 +153,12 @@ VurderingVedtak.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  lovvalgbestemmelser: VurderingLovvalgbestemmelserSelector(state),
-  feilmeldinger: VurderingFeilmeldingSelector(state),
-  vurderingStatus: VurderingStatusSelector(state),
-  opphold: FaktaavklaringOppholdSelector(state),
-  valgteArbeidsforhold: FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
-  sysselsetting: FaktaavklaringSysselsettingSelector(state),
+  lovvalgbestemmelser: vurderingSelectors.VurderingLovvalgbestemmelserSelector(state),
+  feilmeldinger: vurderingSelectors.VurderingFeilmeldingSelector(state),
+  vurderingStatus: vurderingSelectors.VurderingStatusSelector(state),
+  opphold: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state),
+  valgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
+  sysselsetting: faktaavklaringSelectors.FaktaavklaringSysselsettingSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVedtak);
