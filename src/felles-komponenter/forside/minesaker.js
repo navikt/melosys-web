@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import * as Oppgaver from '../../ducks/oppgaver';
 import * as MPT from '../../proptypes/';
 
-import SakEnkeltLinje from './sakEnkeltLinje';
+import SakEnkeltLinje from './saksliste/sakEnkeltLinje';
 
 import './minesaker.css';
 

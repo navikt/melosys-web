@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import * as MPT from '../../proptypes';
-import * as Ikoner from '../../resources/images';
-import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../../proptypes/index';
+import * as Ikoner from '../../../resources/images/index';
+import * as Nav from '../../../utils/navFrontend';
 
-import PanelHeader from '../panelHeader/panelHeader';
-import EnkeltDato from '../datoOmrade/enkeltDato';
+import PanelHeader from '../../panelHeader/panelHeader';
+import EnkeltDato from '../../datoOmrade/enkeltDato';
 
 import './sakEnkeltLinje.css';
 
