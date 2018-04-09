@@ -85,7 +85,8 @@ class MineSaker extends Component {
     return (
       <div className="minesaker">
         <h1>Mine Saker ({minesaker.length})</h1>
-        {minesaker && minesaker.map(sak => <MinSakEnkeltLinje key={uuid()} sak={sak} />)}
+        {console.log('minesaker', minesaker)}
+        {minesaker && minesaker.length && minesaker.map(sak => <MinSakEnkeltLinje key={uuid()} sak={sak} />)}
         {minesaker.length === 0 && ingenSakerMelding}
       </div>
     );
@@ -94,7 +95,8 @@ class MineSaker extends Component {
 
 MineSaker.propTypes = {
   hentMineSaker: PT.func.isRequired,
-  minesaker: MPT.MineSaker,
+  // TODO minesaker: MPT.MineSaker,
+  minesaker: PT.any,
 };
 
 MineSaker.defaultProps = {
