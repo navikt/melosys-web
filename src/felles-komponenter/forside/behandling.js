@@ -39,5 +39,5 @@ Behandling.propTypes = {
 
 export default reduxForm({
   form: 'behandlingsform',
-  onSubmit: (oppgave, dispatch) => dispatch(oppgaverOperations.oppgavePlukker('BEH_SAK', oppgave)),
+  onSubmit: (checkboxliste, dispatch) => dispatch(oppgaverOperations.oppgavePlukker('BEH_SAK', checkboxliste)),
 })(Behandling);

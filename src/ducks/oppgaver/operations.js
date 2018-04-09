@@ -21,9 +21,7 @@ export function hentMineSaker() {
 }
 
 export function oppgavePlukker(oppgavetype, checkboxliste) {
-  console.log(checkboxliste);
   const keys = Object.keys(checkboxliste);
-  console.log(keys);
   const behandlingstyper = ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'].filter(key => keys.includes(key));
   const sakstyper = ['EU_EOS', 'TRG_AVT', 'FLK_TRG'].filter(key => keys.includes(key));
   const oppgave = {

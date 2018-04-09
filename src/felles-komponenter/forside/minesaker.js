@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import * as Oppgaver from '../../ducks/oppgaver';
 import * as MPT from '../../proptypes/';
@@ -82,10 +82,18 @@ class MineSaker extends Component {
     const { minesaker } = this.props;
     const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra listen til venstre.';
 
+    if (minesaker && minesaker.oppgavetype) {
+      const { oppgavetype, saksnummer, journalPostID } = minesaker;
+      const saksbehandling = `/saksbehandling/${saksnummer}`;
+      const journalforing = `/journalforing/${journalPostID}`;
+      const pageurl = oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
+      return (
+        <Redirect to={pageurl} />
+      );
+    }
     return (
       <div className="minesaker">
         <h1>Mine Saker ({minesaker.length})</h1>
-        {console.log('minesaker', minesaker)}
         {minesaker && minesaker.length && minesaker.map(sak => <MinSakEnkeltLinje key={uuid()} sak={sak} />)}
         {minesaker.length === 0 && ingenSakerMelding}
       </div>
