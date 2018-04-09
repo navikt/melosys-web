@@ -1,14 +1,16 @@
-import { createSelector } from 'reselect';
-import * as Api from '../services/api';
-import { STATUS, doThenDispatch } from '../services/utils';
-import { strengTilBool, strengTilInt } from '../utils/utils';
-import { formatterDatoTilISO } from '../utils/dato';
+import { STATUS } from '../../services/utils';
 
-// Actions
-const OK = 'soknad/OK';
-const FEILET = 'soknad/FEILET';
-const PENDING = 'soknad/PENDING';
-const OPPDATER_SOKNAD = 'soknad/OPPDATER_SOKNAD';
+import * as Types from './types';
+
+import { strengTilBool, strengTilInt } from '../../utils/utils';
+import { formatterDatoTilISO } from '../../utils/dato';
+
+/**
+ * Reducers
+ * ----------------------------------------------------------------------------------
+ * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
+ * action types som sendes inn sammen med dataene.
+ */
 
 const initialState = {
   data: {},
@@ -80,11 +82,11 @@ const soknadTemplate =
 // Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
-    case PENDING:
+    case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
-    case FEILET:
+    case Types.FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
-    case OK: {
+    case Types.OK: {
       const soknadData = action.data;
 
       if (!soknadData.soknadDokument) {
@@ -97,7 +99,7 @@ export default function reducer(state = initialState, action) {
         data: soknadData,
       };
     }
-    case OPPDATER_SOKNAD: {
+    case Types.OPPDATER_SOKNAD: {
       const { dokument } = action;
       const soknad = {
         ...state.data.soknadDokument,
@@ -142,68 +144,3 @@ export default function reducer(state = initialState, action) {
       return state;
   }
 }
-
-// Action Creators
-export function hentSoknad(behandlingID) {
-  return doThenDispatch(() => Api.hentSoknader(behandlingID), {
-    OK,
-    FEILET,
-    PENDING,
-  });
-}
-
-export function sendSoknad(bid, soknad) {
-  return doThenDispatch(() => Api.sendSoknad(bid, soknad), {
-    OK,
-    FEILET,
-    PENDING,
-  });
-}
-
-export function oppdaterSoknadState(dokument) {
-  return ({
-    type: OPPDATER_SOKNAD,
-    dokument,
-  });
-}
-
-// selector(s)
-export const SoknadSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data,
-  soknad => soknad
-);
-
-export const ArbeidNorgeSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidNorge : {}),
-  arbeidNorge => arbeidNorge || {}
-);
-
-export const ArbeidUtlandSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
-  soknad => soknad || {}
-);
-
-export const ArbeidsinntektSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsinntekt : {}),
-  soknad => soknad || {}
-);
-
-export const ForetakUtlandSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.foretakUtland,
-  soknad => soknad || {}
-);
-
-export const JuridiskArbeidsgiverNorgeSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.juridiskArbeidsgiverNorge,
-  soknad => soknad || {}
-);
-
-export const OppholdUtlandSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
-  soknad => soknad || {}
-);
-
-export const ArbeidsgiversBekreftelseSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
-  soknad => soknad || {}
-);
