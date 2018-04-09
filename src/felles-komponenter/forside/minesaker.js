@@ -21,7 +21,7 @@ class MineSaker extends Component {
 
   render() {
     const { minesaker } = this.props;
-    const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra listen til venstre.';
+    const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra listen til høyre.';
 
     return (
       <div className="minesaker">
