@@ -5,7 +5,6 @@ import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-import * as NyeSaker from '../../ducks/nyesaker';
 
 class SokSkjema extends Component {
   componentWillMount() {
@@ -62,5 +61,5 @@ const mapDispatchToProps = dispatch => ({
 export default withRouter(connect(null, mapDispatchToProps)(reduxForm({
   form: 'sokEtterSak',
   initialValues: { sokFelt: '' },
-  onSubmit: (form, dispatch) => dispatch(NyeSaker.hentNyesaker(form.sokStreng)),
+  onSubmit: () => {},
 })(SokSkjema)));

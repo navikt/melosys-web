@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+
+import * as NyeSaker from '../ducks/nyesaker';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
@@ -12,33 +13,15 @@ import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
 import Logg from '../felles-komponenter/forside/logg';
 
-import * as NyeSaker from '../ducks/nyesaker';
-
 import './sok.css';
 
 const uuid = require('uuid/v4');
 
 class Sok extends Component {
-  constructor(props) {
-    super(props);
-    this.queryStringHandler = this.queryStringHandler.bind(this);
-  }
-
   componentWillMount() {
     const { match, hentNyesaker } = this.props;
     const { fnr } = match.params;
     if (fnr) hentNyesaker(fnr);
-  }
-
-  /** Henter saker basert på fødselsnummer og setter query string 'fnr=xxxxxxxxxxx' slik at
-   * det er mulig å linke direkte til et søk.
-   *
-   * @param value
-   */
-  queryStringHandler(value) {
-    const { history, hentNyesaker } = this.props;
-    history.push(`?fnr=${value.fnr}`);
-    hentNyesaker(value.fnr);
   }
 
   render() {
@@ -73,8 +56,6 @@ class Sok extends Component {
 Sok.propTypes = {
   nyesaker: PT.any,
   hentNyesaker: PT.func.isRequired,
-  location: PT.object.isRequired,
-  history: PT.object.isRequired,
   sokStreng: PT.string,
   children: PT.node,
   match: PT.object.isRequired,
@@ -98,4 +79,4 @@ const kontekster = [
   { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
   { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
 ];
-export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
+export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(Sok));
