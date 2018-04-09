@@ -25,7 +25,7 @@ export function hentKodeverk() {
 }
 
 export function hentMineSaker() {
-  const URI_OPPGAVER_MINESAKER = `${API_BASE_URL}oppgaver/hentMineSaker`;
+  const URI_OPPGAVER_MINESAKER = `${API_BASE_URL}oppgaver/oversikt`;
   return getAsJson(URI_OPPGAVER_MINESAKER);
 }
 export function sendPlukkOppgave(oppgave) {
