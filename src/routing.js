@@ -2,13 +2,15 @@ import React from 'react';
 import PT from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
 
-import Sok from './sider/forside';
+import Forside from './sider/forside';
+import Sok from './sider/sok';
 import Saksbehandling from './sider/saksbehandling';
 import Spark from './sider/spark';
 
 const Routing = ({ location }) => (
   <Switch location={location}>
-    <Route exact path="/" component={Sok} />
+    <Route exact path="/" component={Forside} />
+    <Route exact path="/sok/:fnr" component={Sok} />
     <Route exact path="/spark" component={Spark} />
     <Route path="/saksbehandling/:snr" component={Saksbehandling} />
   </Switch>

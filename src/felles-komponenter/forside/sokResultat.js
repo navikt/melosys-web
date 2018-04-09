@@ -10,11 +10,12 @@ import './sokResultat.css';
 const uuid = require('uuid/v4');
 
 function SokResultat(props) {
-  const { saker } = props;
+  const { saker, sokStreng } = props;
+
 
   return (
     <section className="sokresultat">
-      <h1>Fant Søk etter ()</h1>
+      <h1>Fant {saker.length} treff etter søk på &quot;{sokStreng}&quot;</h1>
       {saker && saker.map(sak => <SakEnkeltLinje key={uuid()} sak={sak} />)}
     </section>
   );
@@ -22,11 +23,7 @@ function SokResultat(props) {
 
 SokResultat.propTypes = {
   saker: MPT.SokListe.isRequired,
-  kanViseFlereSaker: PT.bool,
-};
-
-SokResultat.defaultProps = {
-  kanViseFlereSaker: false,
+  sokStreng: PT.string.isRequired,
 };
 
 export default SokResultat;
