@@ -10,10 +10,10 @@ import * as NyeSaker from '../../ducks/nyesaker';
 class SokSkjema extends Component {
   componentWillMount() {
     const { fnr } = this.props.match.params;
-    this.oppdaterLokalSokeState(fnr);
+    this.oppdaterLokalSokState(fnr);
   }
 
-  vedSubmit = form => {
+  vedSokSubmit = form => {
     const { lagreSokString, handleSubmit, history } = this.props;
     const { sokStreng } = this.state;
 
@@ -22,11 +22,11 @@ class SokSkjema extends Component {
     history.push(`/sok/${sokStreng}`);
   };
 
-  vedEndretFelt = event => {
+  vedEndretSokFelt = event => {
     this.setState({ sokStreng: event.target.value });
   }
 
-  oppdaterLokalSokeState = sokStreng => {
+  oppdaterLokalSokState = sokStreng => {
     this.setState({ sokStreng });
   }
 
@@ -34,11 +34,11 @@ class SokSkjema extends Component {
     return (
       <Nav.Panel>
         <Nav.Systemtittel>Søke etter sak</Nav.Systemtittel>
-        <form onSubmit={this.vedSubmit}>
+        <form onSubmit={this.vedSokSubmit}>
           <Nav.Input
             label="Søk etter fødselsnummer:"
             bredde="XL"
-            onChange={this.vedEndretFelt}
+            onChange={this.vedEndretSokFelt}
             ref={this.state.sokStreng}
           />
           <Nav.Knapp>Søk</Nav.Knapp>
