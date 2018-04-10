@@ -3,11 +3,15 @@ export const behandlingsoppgave = {
   oppgavetype: 'BEH_SAK',
   sakstyper: [
     'EU_EOS',
-    'TRYGDAVTALE',
-    'FOLKETRYGD',
+    'TRG_AVT',
+    'FLK_TRG',
   ],
   behandlingstyper: [
-    'ae0034',
-    'ae0058',
+    'SKND',
+    'UFM',
+    'KLG',
+    'REV',
+    'ML_U',
+    'PS_U',
   ],
 };
