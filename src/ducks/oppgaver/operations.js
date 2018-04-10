@@ -33,7 +33,7 @@ export function oppgavePlukker(oppgavetype, checkboxliste) {
   };
 
   Api.sendPlukkOppgave(oppgave).then(response => {
-    const { oppgavetype, saksnummer, journalPostID } = response;
+    const { saksnummer, journalPostID } = response;
     const saksbehandling = `/saksbehandling/${saksnummer}`;
     const journalforing = `/journalforing/${journalPostID}`;
     const pageurl = oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
