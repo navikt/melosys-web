@@ -31,9 +31,12 @@ export function oppgavePlukker(oppgavetype, checkboxliste) {
       behandlingstyper,
     },
   };
-  return doThenDispatch(() => Api.sendPlukkOppgave(oppgave), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
+
+  Api.sendPlukkOppgave(oppgave).then(response => {
+    const { oppgavetype, saksnummer, journalPostID } = response;
+    const saksbehandling = `/saksbehandling/${saksnummer}`;
+    const journalforing = `/journalforing/${journalPostID}`;
+    const pageurl = oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
+    window.location = pageurl;
   });
 }

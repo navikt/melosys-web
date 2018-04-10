@@ -82,15 +82,6 @@ class MineSaker extends Component {
     const { minesaker } = this.props;
     const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra listen til venstre.';
 
-    if (minesaker && minesaker.oppgavetype) {
-      const { oppgavetype, saksnummer, journalPostID } = minesaker;
-      const saksbehandling = `/saksbehandling/${saksnummer}`;
-      const journalforing = `/journalforing/${journalPostID}`;
-      const pageurl = oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
-      return (
-        <Redirect to={pageurl} />
-      );
-    }
     return (
       <div className="minesaker">
         <h1>Mine Saker ({minesaker.length})</h1>
@@ -103,7 +94,6 @@ class MineSaker extends Component {
 
 MineSaker.propTypes = {
   hentMineSaker: PT.func.isRequired,
-  // TODO minesaker: MPT.MineSaker,
   minesaker: PT.any,
 };
 
