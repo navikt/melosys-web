@@ -16,3 +16,4 @@ export const MineSakerAntallSelector = createSelector(
   state => state.oppgaver.data || [],
   minesaker => minesaker.length
 );
+

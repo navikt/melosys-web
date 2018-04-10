@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 import * as Oppgaver from '../../ducks/oppgaver';
 import * as MPT from '../../proptypes/';
@@ -85,7 +85,7 @@ class MineSaker extends Component {
     return (
       <div className="minesaker">
         <h1>Mine Saker ({minesaker.length})</h1>
-        {minesaker && minesaker.map(sak => <MinSakEnkeltLinje key={uuid()} sak={sak} />)}
+        {minesaker && minesaker.length && minesaker.map(sak => <MinSakEnkeltLinje key={uuid()} sak={sak} />)}
         {minesaker.length === 0 && ingenSakerMelding}
       </div>
     );
@@ -94,7 +94,7 @@ class MineSaker extends Component {
 
 MineSaker.propTypes = {
   hentMineSaker: PT.func.isRequired,
-  minesaker: MPT.MineSaker,
+  minesaker: PT.any,
 };
 
 MineSaker.defaultProps = {
