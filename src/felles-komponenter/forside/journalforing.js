@@ -21,5 +21,5 @@ Journalforing.propTypes = {
 
 export default reduxForm({
   form: 'journalforingsform',
-  onSubmit: (checkboxliste, dispatch) => dispatch(oppgaverOperations.oppgavePlukker('JFR', ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'])),
+  onSubmit: () => oppgaverOperations.oppgavePlukker('JFR', ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U']),
 })(Journalforing);
