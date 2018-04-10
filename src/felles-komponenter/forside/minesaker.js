@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
 
 import * as Oppgaver from '../../ducks/oppgaver';
 import * as MPT from '../../proptypes/';

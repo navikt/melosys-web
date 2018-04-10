@@ -1,13 +1,12 @@
-import { STATUS } from '../../services/utils';
-
-import * as Types from './types';
-
 /**
  * Reducers
  * ----------------------------------------------------------------------------------
  * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
  * action types som sendes inn sammen med dataene.
  */
+
+import { STATUS } from '../../services/utils';
+import * as Types from './types';
 
 const initialState = {
   data: [],
