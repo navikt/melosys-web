@@ -38,30 +38,6 @@ class Forside extends Component {
       this.setState({ fnr });
       this.props.hentNyesaker(fnr);
     }
-    // this.props.hentMineSaker();
-    /*
-    const behandling = {
-      oppgavetype: 'BEH_SAK',
-      sakstyper: [
-        'EU_EOS',
-        'TRYGDAVTALE',
-        'FOLKETRYGD',
-      ],
-      behandlingstyper: [
-        'ae0034',
-        'ae0058',
-      ],
-    };
-    const journalforing = {
-      oppgavetype: 'JFR',
-      sakstyper: [
-        'EU_EOS',
-        'TRYGDAVTALE',
-        'FOLKETRYGD',
-      ],
-    };
-    this.props.plukkOppgave(journalforing);
-    */
   }
 
   /** Henter saker basert på fødselsnummer og setter query string 'fnr=xxxxxxxxxxx' slik at
