@@ -99,7 +99,7 @@ const MinJournalForingLinje = ({ sak }) => {
 };
 MinJournalForingLinje.propTypes = {
   sak: PT.shape({
-    oppgavetype: PT.string.isRequired,
+    oppgavetype: MPT.Kodeverk.isRequired,
     journalPostID: PT.string.isRequired,
   }),
 };
@@ -110,17 +110,17 @@ MinJournalForingLinje.defaultProps = {
 
 const OppgaveVelger = ({ oppgave }) => {
   const { oppgavetype } = oppgave;
-  if (oppgavetype === 'behandling') {
+  if (oppgavetype.kode === 'BEH_SAK') {
     return (
       <MinSakEnkeltLinje sak={oppgave} />
     );
-  } else if (oppgavetype === 'journalforing') {
+  } else if (oppgavetype.kode === 'JFR') {
     return (
       <MinJournalForingLinje sak={oppgave} />
     );
   }
   return (
-    <p>Hei Are</p>
+    <p>Ukjent oppgavetype</p>
   );
 };
 OppgaveVelger.propTypes = {
