@@ -1,5 +1,6 @@
 import React from 'react';
 import { reduxForm } from 'redux-form';
+import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
@@ -39,5 +40,5 @@ Behandling.propTypes = {
 
 export default reduxForm({
   form: 'behandlingsform',
-  onSubmit: (checkboxliste, dispatch) => dispatch(oppgaverOperations.oppgavePlukker('BEH_SAK', checkboxliste)),
-})(Behandling);
+  onSubmit: checkboxliste => oppgaverOperations.oppgavePlukker('BEH_SAK', checkboxliste),
+})(withRouter((Behandling)));
