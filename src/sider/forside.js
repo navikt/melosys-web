@@ -8,12 +8,11 @@ import SokeForm from '../moduler/arbeidsforhold/soke-form';
 import * as Nav from '../utils/navFrontend';
 // import SokListe from '../felles-komponenter/sok/sokListe';
 import SokResultat from '../felles-komponenter/sok/sokResultat';
-import Statistikk from '../felles-komponenter/forside/statistikk';
+// import Statistikk from '../felles-komponenter/forside/statistikk';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import MineSaker from '../felles-komponenter/forside/minesaker';
 import Sok from '../felles-komponenter/forside/sok';
-import Logg from '../felles-komponenter/forside/logg';
 
 // import * as Oppgaver from '../ducks/oppgaver';
 import * as NyeSaker from '../ducks/nyesaker';
@@ -69,11 +68,9 @@ class Forside extends Component {
             </Nav.Column>
 
             <Nav.Column xs="5">
-              <Statistikk />
               <Journalforing />
               <Behandling />
               <Sok />
-              <Logg />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
