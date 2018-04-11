@@ -10,7 +10,7 @@ import PanelHeader from '../../../felles-komponenter/panelHeader/panelHeader';
 import './journalForingEnkeltLinje.css';
 
 const JournalForingEnkeltLinje = ({ sak }) => {
-  const { journalPostID: journalpostID, aktivTil } = sak;
+  const { journalpostID, aktivTil } = sak;
   const tittel = 'Journalføring';
   const link = `/journalforing/${journalpostID}`;
 
@@ -40,7 +40,7 @@ const JournalForingEnkeltLinje = ({ sak }) => {
 JournalForingEnkeltLinje.propTypes = {
   sak: PT.shape({
     oppgavetype: PT.object.isRequired,
-    journalPostID: PT.string.isRequired,
+    journalpostID: PT.string.isRequired,
   }),
 };
 
