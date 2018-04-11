@@ -18,7 +18,7 @@ class Journalforing extends Component {
   static defaultProps = {};
   componentDidMount() {
     const { journalpostID } = this.props.match.params;
-    this.hentJournalforingOppgave(journalpostID);
+    this.props.hentJournalforingOppgave(journalpostID);
   }
 
   render() {
