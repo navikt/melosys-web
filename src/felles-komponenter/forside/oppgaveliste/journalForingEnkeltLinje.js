@@ -39,7 +39,7 @@ const JournalForingEnkeltLinje = ({ sak }) => {
 
 JournalForingEnkeltLinje.propTypes = {
   sak: PT.shape({
-    oppgavetype: PT.string.isRequired,
+    oppgavetype: PT.object.isRequired,
     journalPostID: PT.string.isRequired,
   }),
 };

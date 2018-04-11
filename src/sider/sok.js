@@ -6,7 +6,7 @@ import * as NyeSaker from '../ducks/nyesaker';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
-import SakEnkeltLinje from '../felles-komponenter/forside/saksliste/sakEnkeltLinje';
+import SakEnkeltLinje from '../felles-komponenter/forside/oppgaveliste/sakEnkeltLinje';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
