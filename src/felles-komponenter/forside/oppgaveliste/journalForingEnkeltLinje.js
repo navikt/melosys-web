@@ -10,9 +10,9 @@ import PanelHeader from '../../../felles-komponenter/panelHeader/panelHeader';
 import './journalForingEnkeltLinje.css';
 
 const JournalForingEnkeltLinje = ({ sak }) => {
-  const { journalPostID, aktivTil } = sak;
+  const { journalPostID: journalpostID, aktivTil } = sak;
   const tittel = 'Journalføring';
-  const link = `/journalforing/${journalPostID}`;
+  const link = `/journalforing/${journalpostID}`;
 
   const undertittel = () => (
     <Nav.Row>
