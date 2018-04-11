@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import * as Oppgaver from '../../ducks/oppgaver';
 import * as MPT from '../../proptypes/';
 
-import SakEnkeltLinje from './saksliste/sakEnkeltLinje';
-import JournalForingEnkeltLinje from './saksliste/journalForingEnkeltLinje';
+import SakEnkeltLinje from './oppgaveliste/sakEnkeltLinje';
+import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
 
 import './minesaker.css';
 
@@ -15,11 +15,11 @@ const uuid = require('uuid/v4');
 const OppgaveKomponentRouter = ({ oppgave }) => {
   const { oppgavetype } = oppgave;
 
-  if (oppgavetype === 'BEH_SAK') {
+  if (oppgavetype.kode === 'BEH_SAK') {
     return (
       <SakEnkeltLinje sak={oppgave} />
     );
-  } else if (oppgavetype === 'JFR') {
+  } else if (oppgavetype.kode === 'JFR') {
     return (
       <JournalForingEnkeltLinje sak={oppgave} />
     );
