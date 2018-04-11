@@ -1,5 +1,4 @@
 import React from 'react';
-import PT from 'prop-types';
 import './informasjon.css';
 
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
@@ -8,8 +7,9 @@ import './informasjon.css';
  * @constructor
  */
 const Informasjon = () => {
+  const tekst = 'Informasjonsskjema her. Dette er en placeholdertekst.';
   return (
-    <div>Informasjonsskjema her</div>
+    <div>{tekst}</div>
   );
 };
 
