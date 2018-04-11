@@ -25,11 +25,9 @@ export function oppgavePlukker(oppgavetype, checkboxliste) {
   const behandlingstyper = ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'].filter(key => keys.includes(key));
   const sakstyper = ['EU_EOS', 'TRG_AVT', 'FLK_TRG'].filter(key => keys.includes(key));
   const oppgave = {
-    behandlingsoppgave: {
-      oppgavetype,
-      sakstyper,
-      behandlingstyper,
-    },
+    oppgavetype,
+    sakstyper,
+    behandlingstyper,
   };
 
   Api.sendPlukkOppgave(oppgave).then(response => {
