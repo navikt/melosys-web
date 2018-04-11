@@ -88,7 +88,3 @@ export function hentSaksbehandler() {
   return getAsJson(URI_SAKSBEHANDLER);
 }
 
-export function hentLandkoder() {
-  const URI_LANDKODER = `${API_BASE_URL}landkoder`;
-  return getAsJson(URI_LANDKODER);
-}
