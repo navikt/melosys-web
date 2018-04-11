@@ -1,9 +1,9 @@
 import React from 'react';
-import PT from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes/index';
 import * as Ikoner from '../../../resources/images';
+import * as Nav from '../../../utils/navFrontend';
 
 import PanelHeader from '../../../felles-komponenter/panelHeader/panelHeader';
 
@@ -38,10 +38,7 @@ const JournalForingEnkeltLinje = ({ sak }) => {
 };
 
 JournalForingEnkeltLinje.propTypes = {
-  sak: PT.shape({
-    oppgavetype: PT.object.isRequired,
-    journalpostID: PT.string.isRequired,
-  }),
+  sak: MPT.JournalForingEnkeltLinje,
 };
 
 JournalForingEnkeltLinje.defaultProps = {
