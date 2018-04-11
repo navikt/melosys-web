@@ -5,67 +5,15 @@ import { Link } from 'react-router-dom';
 
 import * as Oppgaver from '../../ducks/oppgaver';
 import * as MPT from '../../proptypes/';
+import * as Nav from '../../utils/navFrontend';
+import * as Ikoner from '../../resources/images';
 
 import SakEnkeltLinje from './saksliste/sakEnkeltLinje';
+import PanelHeader from '../../felles-komponenter/panelHeader/panelHeader';
 
 import './minesaker.css';
 
 const uuid = require('uuid/v4');
-
-/**
- * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
- * for å gi saksbehandler en oversikt over sakens innhold før hun klikker
- * seg inn på den.
- */
-const MinSakEnkeltLinje = ({ sak }) => {
-  const {
-    sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode,
-  } = sak;
-
-  const { status } = behandling;
-  const { fom, tom } = soknadsperiode;
-  const tittel = `${sakstype.term} - ${sammensattNavn}`;
-  const link = `/saksbehandling/${saksnummer}`;
-
-  return (
-    <Link to={link} className="minsak__link">
-      <Nav.Panel className="minsak">
-        <PanelHeader
-          ikon={Ikoner.IkonSak}
-          tittel={tittel}
-          undertittel={
-            <Nav.Row>
-              <Nav.Column xs="12" md="6">
-                <dl className="minsak__meta">
-                  <dt className="minsak__meta__term">Status:</dt>
-                  <dd className="minsak__meta__detalj">{status.term}</dd>
-                  <dt className="minsak__meta__term">Frist:</dt>
-                  <dd className="minsak__meta__detalj">{aktivTil}</dd>
-                </dl>
-              </Nav.Column>
-              <Nav.Column xs="12" md="6">
-                <dl className="minsak__meta">
-                  <dt className="minsak__meta__term">Søknadsperiode: </dt>
-                  <dd className="minsak__meta__detalj"><EnkeltDato dato={fom} /> - <EnkeltDato dato={tom} /></dd>
-                  <dt className="minsak__meta__term">Land:</dt>
-                  <dd className="minsak__meta__detalj">TODO fra søknaden</dd>
-                </dl>
-              </Nav.Column>
-            </Nav.Row>
-          }
-        />
-      </Nav.Panel>
-    </Link>
-  );
-};
-
-MinSakEnkeltLinje.propTypes = {
-  sak: MPT.MinSak,
-};
-
-MinSakEnkeltLinje.defaultProps = {
-  sak: {},
-};
 
 const MinJournalForingLinje = ({ sak }) => {
   const { journalPostID, aktivTil } = sak;
@@ -109,7 +57,7 @@ const OppgaveVelger = ({ oppgave }) => {
   const { oppgavetype } = oppgave;
   if (oppgavetype === 'behandling') {
     return (
-      <MinSakEnkeltLinje sak={oppgave} />
+      <SakEnkeltLinje sak={oppgave} />
     );
   } else if (oppgavetype === 'journalforing') {
     return (

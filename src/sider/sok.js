@@ -7,11 +7,9 @@ import * as NyeSaker from '../ducks/nyesaker';
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
 import SakEnkeltLinje from '../felles-komponenter/forside/saksliste/sakEnkeltLinje';
-import Statistikk from '../felles-komponenter/forside/statistikk';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
-import Logg from '../felles-komponenter/forside/logg';
 
 import './sok.css';
 
@@ -40,11 +38,9 @@ class Sok extends Component {
               </section>
             </Nav.Column>
             <Nav.Column xs="5">
-              <Statistikk />
               <Journalforing />
               <Behandling />
               <SokSkjema />
-              <Logg />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
