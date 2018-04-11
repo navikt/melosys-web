@@ -22,11 +22,11 @@ const uuid = require('uuid/v4');
  */
 const MinSakEnkeltLinje = ({ sak }) => {
   const {
-    sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode,
+    sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode = {},
   } = sak;
 
   const { status } = behandling;
-  const { fom, tom } = soknadsperiode;
+  const { fom = null, tom = null } = soknadsperiode;
   const tittel = `${sakstype.term} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
 
@@ -49,7 +49,7 @@ const MinSakEnkeltLinje = ({ sak }) => {
               <Nav.Column xs="12" md="6">
                 <dl className="minsak__meta">
                   <dt className="minsak__meta__term">Søknadsperiode: </dt>
-                  <dd className="minsak__meta__detalj"><EnkeltDato dato={fom} /> - <EnkeltDato dato={tom} /></dd>
+                  <dd className="minsak__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
                   <dt className="minsak__meta__term">Land:</dt>
                   <dd className="minsak__meta__detalj">TODO fra søknaden</dd>
                 </dl>
@@ -71,9 +71,9 @@ MinSakEnkeltLinje.defaultProps = {
 };
 
 const MinJournalForingLinje = ({ sak }) => {
-  const { journalPostID, aktivTil } = sak;
+  const { journalpostID, aktivTil } = sak;
   const tittel = 'Journalføring';
-  const link = `/journalforing/${journalPostID}`;
+  const link = `/journalforing/${journalpostID}`;
 
   const undertittel = () => (
     <Nav.Row>
