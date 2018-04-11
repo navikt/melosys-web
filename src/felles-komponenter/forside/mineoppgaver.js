@@ -7,25 +7,33 @@ import * as Oppgaver from '../../ducks/oppgaver';
 import SakEnkeltLinje from './oppgaveliste/sakEnkeltLinje';
 import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
 
-import './minesaker.css';
+import './mineoppgaver.css';
 
 const uuid = require('uuid/v4');
 
+/** Siden vi har mer enn én oppgavetype trenger vi en slags "kontroller"-komponent som
+ * kan hente inn riktig komponent av hengig av oppgavetype. Dette gjør at vi får små,
+ * og spesialiserte komponenter i listen fremfor én stor komponent som skal gjøre alt.
+ * @param oppgave {object} Objektet for den aktuelle oppgaven.
+ */
 const OppgaveKomponentSwitch = ({ oppgave }) => {
-  const { oppgavetype } = oppgave;
+  const { oppgavetype = {} } = oppgave;
 
-  if (oppgavetype.kode === 'BEH_SAK') {
-    return (
-      <SakEnkeltLinje sak={oppgave} />
-    );
-  } else if (oppgavetype.kode === 'JFR') {
-    return (
-      <JournalForingEnkeltLinje sak={oppgave} />
-    );
+  switch (oppgavetype.kode) {
+    case 'BEH_SAK': {
+      return (
+        <SakEnkeltLinje sak={oppgave} />
+      );
+    }
+    case 'JFR': {
+      return (
+        <JournalForingEnkeltLinje sak={oppgave} />
+      );
+    }
+    default: {
+      return (<div>Ukjent oppgavetype</div>);
+    }
   }
-  return (
-    <p>Ukjent oppgavetype</p>
-  );
 };
 
 OppgaveKomponentSwitch.propTypes = {
@@ -39,7 +47,7 @@ OppgaveKomponentSwitch.defaultProps = {
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
-class MineSaker extends Component {
+class MineOppgaver extends Component {
   componentDidMount() {
     this.props.hentMineSaker();
   }
@@ -58,12 +66,12 @@ class MineSaker extends Component {
   }
 }
 
-MineSaker.propTypes = {
+MineOppgaver.propTypes = {
   hentMineSaker: PT.func.isRequired,
   minesaker: PT.array,
 };
 
-MineSaker.defaultProps = {
+MineOppgaver.defaultProps = {
   minesaker: [],
 };
 
@@ -75,4 +83,4 @@ const mapDispatchToProps = dispatch => ({
   hentMineSaker: () => dispatch(Oppgaver.oppgaverOperations.hentMineSaker()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MineSaker);
+export default connect(mapStateToProps, mapDispatchToProps)(MineOppgaver);
