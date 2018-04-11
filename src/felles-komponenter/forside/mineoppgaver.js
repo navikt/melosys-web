@@ -7,7 +7,7 @@ import * as Oppgaver from '../../ducks/oppgaver';
 import SakEnkeltLinje from './oppgaveliste/sakEnkeltLinje';
 import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
 
-import './minesaker.css';
+import './mineoppgaver.css';
 
 const uuid = require('uuid/v4');
 
@@ -47,7 +47,7 @@ OppgaveKomponentSwitch.defaultProps = {
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
-class MineSaker extends Component {
+class MineOppgaver extends Component {
   componentDidMount() {
     this.props.hentMineSaker();
   }
@@ -66,12 +66,12 @@ class MineSaker extends Component {
   }
 }
 
-MineSaker.propTypes = {
+MineOppgaver.propTypes = {
   hentMineSaker: PT.func.isRequired,
   minesaker: PT.array,
 };
 
-MineSaker.defaultProps = {
+MineOppgaver.defaultProps = {
   minesaker: [],
 };
 
@@ -83,4 +83,4 @@ const mapDispatchToProps = dispatch => ({
   hentMineSaker: () => dispatch(Oppgaver.oppgaverOperations.hentMineSaker()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MineSaker);
+export default connect(mapStateToProps, mapDispatchToProps)(MineOppgaver);
