@@ -10,12 +10,11 @@ import * as NyeSaker from '../ducks/nyesaker';
 import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
 import { TidligeresakerSelector } from '../ducks/tidligeresaker';
 
-import Statistikk from '../felles-komponenter/forside/statistikk';
+// import Statistikk from '../felles-komponenter/forside/statistikk';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import MineSaker from '../felles-komponenter/forside/minesaker';
 import Sok from '../felles-komponenter/forside/sokskjema';
-import Logg from '../felles-komponenter/forside/logg';
 
 import './forside.css';
 
@@ -29,13 +28,10 @@ const Forside = props => {
           <Nav.Column xs="7">
             <MineSaker />
           </Nav.Column>
-
           <Nav.Column xs="5">
-            <Statistikk />
             <Journalforing />
             <Behandling />
             <Sok />
-            <Logg />
           </Nav.Column>
         </Nav.Row>
       </Nav.Container>
