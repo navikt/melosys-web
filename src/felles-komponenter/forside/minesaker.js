@@ -12,20 +12,23 @@ import './minesaker.css';
 const uuid = require('uuid/v4');
 
 const OppgaveKomponentSwitch = ({ oppgave }) => {
-  const { oppgavetype } = oppgave;
+  const { oppgavetype = {} } = oppgave;
 
-  if (oppgavetype.kode === 'BEH_SAK') {
-    return (
-      <SakEnkeltLinje sak={oppgave} />
-    );
-  } else if (oppgavetype.kode === 'JFR') {
-    return (
-      <JournalForingEnkeltLinje sak={oppgave} />
-    );
+  switch (oppgavetype.kode) {
+    case 'BEH_SAK': {
+      return (
+        <SakEnkeltLinje sak={oppgave} />
+      );
+    }
+    case 'JFR': {
+      return (
+        <JournalForingEnkeltLinje sak={oppgave} />
+      );
+    }
+    default: {
+      return (<div>Ukjent oppgavetype</div>);
+    }
   }
-  return (
-    <p>Ukjent oppgavetype</p>
-  );
 };
 
 OppgaveKomponentSwitch.propTypes = {
