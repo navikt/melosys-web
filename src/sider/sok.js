@@ -1,52 +1,30 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
-import withErrorHandling from '../hoc/withErrorHandling';
-import SokeForm from '../moduler/arbeidsforhold/soke-form';
-import * as Nav from '../utils/navFrontend';
-// import SokListe from '../felles-komponenter/sok/sokListe';
-import SokResultat from '../felles-komponenter/sok/sokResultat';
 import * as NyeSaker from '../ducks/nyesaker';
-import { SakerbehandlesSelector } from '../ducks/sakerbehandles';
-import { TidligeresakerSelector } from '../ducks/tidligeresaker';
+
+import withErrorHandling from '../hoc/withErrorHandling';
+import * as Nav from '../utils/navFrontend';
+import SakEnkeltLinje from '../felles-komponenter/forside/oppgaveliste/sakEnkeltLinje';
+import Journalforing from '../felles-komponenter/forside/journalforing';
+import Behandling from '../felles-komponenter/forside/behandling';
+import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
 import './sok.css';
 
-const queryString = require('query-string');
+const uuid = require('uuid/v4');
 
 class Sok extends Component {
-  constructor(props) {
-    super(props);
-    this.queryStringHandler = this.queryStringHandler.bind(this);
-  }
-
   componentWillMount() {
-    const queryParams = queryString.parse(this.props.location.search);
-    const { fnr } = queryParams;
-
-    if (fnr) {
-      this.setState({ fnr });
-      this.props.hentNyesaker(fnr);
-    }
-  }
-
-  /** Henter saker basert på fødselsnummer og setter query string 'fnr=xxxxxxxxxxx' slik at
-   * deter mulig å linke direkte til et søk.
-   *
-   * @param value
-   */
-  queryStringHandler(value) {
-    const { history, hentNyesaker } = this.props;
-    history.push(`?fnr=${value.fnr}`);
-    hentNyesaker(value.fnr);
+    const { match, hentNyesaker } = this.props;
+    const { fnr } = match.params;
+    if (fnr) hentNyesaker(fnr);
   }
 
   render() {
-    // const { nyesaker, sakerbehandles, tidligeresaker } = this.props;
     const { nyesaker, children } = this.props;
-    const { visSokResultat } = this.props;
+    const { fnr } = this.props.match.params;
 
     return (
       <div className="sok">
@@ -54,19 +32,16 @@ class Sok extends Component {
         <Nav.Container>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Nav.Innholdstittel id="soke">Velkommen til Melosys</Nav.Innholdstittel>
-              <SokeForm onSubmit={this.queryStringHandler} />
-              { visSokResultat && <SokResultat saker={nyesaker} opprettSak={() => this.props.opprettSak(this.state.fnr)} /> }
+              <section className="sokresultat">
+                <h1>Fant {nyesaker.length} treff etter søk på &quot;{fnr}&quot;</h1>
+                {nyesaker && nyesaker.map(sak => <SakEnkeltLinje key={uuid()} sak={sak} />)}
+              </section>
             </Nav.Column>
-
-            {/*
             <Nav.Column xs="5">
-              <Nav.Innholdstittel id="overskriftUnderbehandling">Saker under behandling</Nav.Innholdstittel>
-              <SokListe saker={sakerbehandles} kanViseFlereSaker aria-describedby="overskriftUnderbehandling" />
-              <Nav.Innholdstittel id="overskriftTitligeresaker">Tidligere behandlede saker</Nav.Innholdstittel>
-              <SokListe saker={tidligeresaker} kanViseFlereSaker aria-describedby="overskriftTitligeresaker" />
+              <Journalforing />
+              <Behandling />
+              <SokSkjema />
             </Nav.Column>
-            */}
           </Nav.Row>
         </Nav.Container>
       </div>
@@ -77,34 +52,27 @@ class Sok extends Component {
 Sok.propTypes = {
   nyesaker: PT.any,
   hentNyesaker: PT.func.isRequired,
-  tidligeresaker: PT.array.isRequired,
-  sakerbehandles: PT.array.isRequired,
-  location: PT.object.isRequired,
-  visSokResultat: PT.bool.isRequired,
-  history: PT.object.isRequired,
-  opprettSak: PT.func.isRequired,
+  sokStreng: PT.string,
   children: PT.node,
+  match: PT.object.isRequired,
 };
 
 Sok.defaultProps = {
   children: null,
+  sokStreng: '',
   nyesaker: [],
 };
 
 const mapStateToProps = state => ({
   nyesaker: NyeSaker.NyesakerSelector(state),
-  sakerbehandles: SakerbehandlesSelector(state),
-  tidligeresaker: TidligeresakerSelector(state),
-  visSokResultat: (state.nyesaker.status === 'OK'),
 });
 
 const mapDispatchToProps = dispatch => ({
   hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
-  opprettSak: fnr => dispatch(NyeSaker.opprettNyFagsak(fnr)),
 });
 
 const kontekster = [
   { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
   { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
 ];
-export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(Sok)));
+export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(Sok));

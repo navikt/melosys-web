@@ -20,10 +20,23 @@ export function hentMineSaker() {
   });
 }
 
-export function oppgavePlukker(oppgave) {
-  return doThenDispatch(() => Api.sendPlukkOppgave(oppgave), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
+export function oppgavePlukker(oppgavetype, checkboxliste) {
+  const keys = Object.keys(checkboxliste);
+  const behandlingstyper = ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'].filter(key => keys.includes(key));
+  const sakstyper = ['EU_EOS', 'TRG_AVT', 'FLK_TRG'].filter(key => keys.includes(key));
+  const oppgave = {
+    behandlingsoppgave: {
+      oppgavetype,
+      sakstyper,
+      behandlingstyper,
+    },
+  };
+
+  Api.sendPlukkOppgave(oppgave).then(response => {
+    const { saksnummer, journalPostID } = response;
+    const saksbehandling = `/saksbehandling/${saksnummer}`;
+    const journalforing = `/journalforing/${journalPostID}`;
+    const pageurl = oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
+    window.location = pageurl;
   });
 }
