@@ -11,6 +11,11 @@ import './minesaker.css';
 
 const uuid = require('uuid/v4');
 
+/** Siden vi har mer enn én oppgavetype trenger vi en slags "kontroller"-komponent som
+ * kan hente inn riktig komponent av hengig av oppgavetype. Dette gjør at vi får små,
+ * og spesialiserte komponenter i listen fremfor én stor komponent som skal gjøre alt.
+ * @param oppgave {object} Objektet for den aktuelle oppgaven.
+ */
 const OppgaveKomponentSwitch = ({ oppgave }) => {
   const { oppgavetype = {} } = oppgave;
 
