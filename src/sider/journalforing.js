@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PT from 'prop-types';
 import { reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
@@ -10,19 +11,29 @@ import {
   journalforingOperations,
   journalforingSelectors,
 } from '../ducks/journalforing/';
+
 import './journalforing.css';
-import {fagsakSelectors} from '../ducks/fagsaker';
 
 class Journalforing extends Component {
-  static propTypes = {};
-  static defaultProps = {};
+  static propTypes = {
+    match: PT.object.isRequired,
+    hentJournalOppgave: PT.func.isRequired,
+    journalforing: PT.object,
+    journalpostID: PT.string,
+  };
+  static defaultProps = {
+    journalforing: {},
+    journalpostID: 'DOC_321',
+  };
+
   componentDidMount() {
     const { journalpostID } = this.props.match.params;
-    this.props.hentJournalforingOppgave(journalpostID);
+    this.props.hentJournalOppgave(journalpostID);
   }
 
   render() {
-    // const { } = this.props;
+    const { journalforing } = this.props;
+    console.log(journalforing);
     return (
       <div className="journalforing">
         <h1>Journalforing</h1>
@@ -50,7 +61,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentJournalforingOppgave: journalpostID => dispatch(journalforingOperations.hentJournalforingOppgave(journalpostID)),
+  hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hentJournalOppgave(journalpostID)),
 });
 
 export default withRouter(reduxForm({
