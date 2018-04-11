@@ -28,14 +28,14 @@ class Versjon extends Component {
 
     return (
       <div className={versjonKlasse}>
-        <button className="App__versjonering__ekspandknapp" onClick={this.toggleVersjon}>
-          <dl>
-            <dt>Versjon:</dt><dd>{this.versjon()}</dd>
-            <dt>Build time:</dt><dd>{this.byggTidspunkt()}</dd>
-            <dt>Build version:</dt><dd>{this.byggVersjon()}</dd>
-            <dt>Branch:</dt><dd>{this.branchVersjon()}</dd>
-          </dl>
-        </button>
+          <button className="App__versjonering__ekspandknapp" onClick={this.toggleVersjon}>
+            {this.versjon()}
+          </button>
+        <dl>
+          <dt>Build time:</dt><dd>{this.byggTidspunkt()}</dd>
+          <dt>Build version:</dt><dd>{this.byggVersjon()}</dd>
+          <dt>Branch:</dt><dd>{this.branchVersjon()}</dd>
+        </dl>
         <button className="App__versjonering__kopierknapp" onClick={this.copyToClipBoard}>Klikk for å kopiere versjonsinfo</button>
         <Link to="/spark" className="App__versjonering__spark">Gå til spark-siden</Link>
       </div>
