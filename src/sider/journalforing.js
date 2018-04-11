@@ -20,7 +20,7 @@ class Journalforing extends Component {
     // const { } = this.props;
     return (
       <div className="journalforing">
-        <h1>Journalforing todo</h1>
+        <h1>Journalforing</h1>
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="6">
