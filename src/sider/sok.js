@@ -1,0 +1,78 @@
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PT from 'prop-types';
+
+import * as NyeSaker from '../ducks/nyesaker';
+
+import withErrorHandling from '../hoc/withErrorHandling';
+import * as Nav from '../utils/navFrontend';
+import SakEnkeltLinje from '../felles-komponenter/forside/oppgaveliste/sakEnkeltLinje';
+import Journalforing from '../felles-komponenter/forside/journalforing';
+import Behandling from '../felles-komponenter/forside/behandling';
+import SokSkjema from '../felles-komponenter/forside/sokskjema';
+
+import './sok.css';
+
+const uuid = require('uuid/v4');
+
+class Sok extends Component {
+  componentWillMount() {
+    const { match, hentNyesaker } = this.props;
+    const { fnr } = match.params;
+    if (fnr) hentNyesaker(fnr);
+  }
+
+  render() {
+    const { nyesaker, children } = this.props;
+    const { fnr } = this.props.match.params;
+
+    return (
+      <div className="sok">
+        { children }
+        <Nav.Container>
+          <Nav.Row>
+            <Nav.Column xs="7">
+              <section className="sokresultat">
+                <h1>Fant {nyesaker.length} treff etter søk på &quot;{fnr}&quot;</h1>
+                {nyesaker && nyesaker.map(sak => <SakEnkeltLinje key={uuid()} sak={sak} />)}
+              </section>
+            </Nav.Column>
+            <Nav.Column xs="5">
+              <Journalforing />
+              <Behandling />
+              <SokSkjema />
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Container>
+      </div>
+    );
+  }
+}
+
+Sok.propTypes = {
+  nyesaker: PT.any,
+  hentNyesaker: PT.func.isRequired,
+  sokStreng: PT.string,
+  children: PT.node,
+  match: PT.object.isRequired,
+};
+
+Sok.defaultProps = {
+  children: null,
+  sokStreng: '',
+  nyesaker: [],
+};
+
+const mapStateToProps = state => ({
+  nyesaker: NyeSaker.NyesakerSelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
+});
+
+const kontekster = [
+  { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
+  { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
+];
+export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(Sok));
