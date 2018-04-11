@@ -9,7 +9,6 @@ import { Kodeverk } from './kodeverk';
 import { Person } from './person';
 import { BostedsAdresse } from './bosted';
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
-import { SokListe, SokListeEnkeltlinje } from './sok';
 import { Saksbehandler } from './saksbehandler';
 import { Oppsummering } from './oppsummering';
 import { Periode } from './periode';
@@ -22,6 +21,7 @@ import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger }
 import { Opphold } from './opphold';
 import { Sysselsetting } from './sysselsetting';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
+import { SakEnkeltLinje, MineSaker } from './mineSaker';
 
 export {
   ArbeidNorge,
@@ -50,8 +50,6 @@ export {
   Oppsummering,
   Permisjonen,
   Permisjoner,
-  SokListe,
-  SokListeEnkeltlinje,
   Kodeverk,
   SoknadForm,
   Utenlandsopphold,
@@ -64,4 +62,6 @@ export {
   Opphold,
   Sysselsetting,
   ArbeidsgivereNorge,
+  SakEnkeltLinje,
+  MineSaker,
 };
