@@ -30,11 +30,10 @@ export function oppgavePlukker(oppgavetype, checkboxliste) {
     behandlingstyper,
   };
 
-  Api.sendPlukkOppgave(oppgave).then(response => {
-    const { saksnummer, journalpostID } = response;
+  return Api.sendPlukkOppgave(oppgave).then(response => {
+    const { saksnummer, journalPostID } = response;
     const saksbehandling = `/saksbehandling/${saksnummer}`;
-    const journalforing = `/journalforing/${journalpostID}`;
-    const pageurl = oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
-    window.location = pageurl;
+    const journalforing = `/journalforing/${journalPostID}`;
+    return oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
   });
 }

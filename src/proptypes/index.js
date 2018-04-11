@@ -21,7 +21,7 @@ import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger }
 import { Opphold } from './opphold';
 import { Sysselsetting } from './sysselsetting';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
-import { SakEnkeltLinje, MineSaker } from './mineSaker';
+import { SakEnkeltLinje, JournalForingEnkeltLinje, MineOppgaver } from './oppgaver';
 
 export {
   ArbeidNorge,
@@ -63,5 +63,6 @@ export {
   Sysselsetting,
   ArbeidsgivereNorge,
   SakEnkeltLinje,
-  MineSaker,
+  JournalForingEnkeltLinje,
+  MineOppgaver,
 };
