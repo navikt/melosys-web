@@ -16,7 +16,7 @@ class Journalforing extends Component {
     return (
       <div className="saksbehandling">
         <Nav.Container fluid>
-          <h1>Journalforing</h1>
+          <h1>Journalforing todo</h1>
         </Nav.Container>
       </div>
     );
