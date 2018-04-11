@@ -17,12 +17,12 @@ import './sakEnkeltLinje.css';
  */
 const SakEnkeltLinje = ({ sak }) => {
   const {
-    sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode = {},
+    sammensattNavn, sakstype = {}, saksnummer, behandling = {}, aktivTil, soknadsperiode = {},
   } = sak;
 
-  const { status } = behandling;
+  const { status = {} } = behandling;
   const { fom = null, tom = null } = soknadsperiode;
-  const tittel = `${sakstype.term} - ${sammensattNavn}`;
+  const tittel = `${sakstype.term || '(ukjent sakstype)'} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
 
   return (
@@ -36,9 +36,9 @@ const SakEnkeltLinje = ({ sak }) => {
               <Nav.Column xs="12" md="6">
                 <dl className="sakEnkeltLinje__meta">
                   <dt className="sakEnkeltLinje__meta__term">Status:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{status.term}</dd>
+                  <dd className="sakEnkeltLinje__meta__detalj">{status.term || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Frist:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{aktivTil}</dd>
+                  <dd className="sakEnkeltLinje__meta__detalj">{aktivTil || '(ukjent)'}</dd>
                 </dl>
               </Nav.Column>
               <Nav.Column xs="12" md="6">
