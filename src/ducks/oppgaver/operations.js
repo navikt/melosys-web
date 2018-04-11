@@ -13,7 +13,7 @@ import * as Types from './types';
 
 // Action Creators
 export function hentMineSaker() {
-  return doThenDispatch(() => Api.hentMineSaker(), {
+  return doThenDispatch(() => Api.hentOppgaveOversikt(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
