@@ -3,7 +3,6 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import * as Oppgaver from '../../ducks/oppgaver';
-import * as MPT from '../../proptypes/';
 
 import SakEnkeltLinje from './oppgaveliste/sakEnkeltLinje';
 import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';

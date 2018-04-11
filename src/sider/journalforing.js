@@ -23,9 +23,9 @@ class Journalforing extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = () => ({
 
 });
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = () => ({
 });
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Journalforing));
