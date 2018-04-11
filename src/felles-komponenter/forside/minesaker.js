@@ -12,7 +12,7 @@ import './minesaker.css';
 
 const uuid = require('uuid/v4');
 
-const OppgaveKomponentRouter = ({ oppgave }) => {
+const OppgaveKomponentSwitch = ({ oppgave }) => {
   const { oppgavetype } = oppgave;
 
   if (oppgavetype.kode === 'BEH_SAK') {
@@ -29,11 +29,11 @@ const OppgaveKomponentRouter = ({ oppgave }) => {
   );
 };
 
-OppgaveKomponentRouter.propTypes = {
+OppgaveKomponentSwitch.propTypes = {
   oppgave: PT.object,
 };
 
-OppgaveKomponentRouter.defaultProps = {
+OppgaveKomponentSwitch.defaultProps = {
   oppgave: {},
 };
 
@@ -52,7 +52,7 @@ class MineSaker extends Component {
     return (
       <div className="minesaker">
         <h1>Mine Oppgaver ({minesaker.length})</h1>
-        {minesaker && minesaker.length && minesaker.map(sak => <OppgaveKomponentRouter key={uuid()} oppgave={sak} />)}
+        {minesaker && minesaker.length && minesaker.map(sak => <OppgaveKomponentSwitch key={uuid()} oppgave={sak} />)}
         {minesaker.length === 0 && ingenSakerMelding}
       </div>
     );
@@ -61,7 +61,7 @@ class MineSaker extends Component {
 
 MineSaker.propTypes = {
   hentMineSaker: PT.func.isRequired,
-  minesaker: MPT.MineSaker,
+  minesaker: PT.array,
 };
 
 MineSaker.defaultProps = {
