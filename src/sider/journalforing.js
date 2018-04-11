@@ -6,21 +6,26 @@ import { withRouter } from 'react-router';
 import * as Nav from '../utils/navFrontend';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
-
+import {
+  journalforingOperations,
+  journalforingSelectors,
+} from '../ducks/journalforing/';
 import './journalforing.css';
+import {fagsakSelectors} from '../ducks/fagsaker';
 
 class Journalforing extends Component {
   static propTypes = {};
   static defaultProps = {};
   componentDidMount() {
-
+    const { journalpostID } = this.props.match.params;
+    this.hentJournalforingOppgave(journalpostID);
   }
 
   render() {
     // const { } = this.props;
     return (
       <div className="journalforing">
-        <h1>Journalforing todo</h1>
+        <h1>Journalforing</h1>
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="6">
@@ -40,9 +45,13 @@ class Journalforing extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  journalforing: journalforingSelectors.JournalforingSelector(state),
+});
 
-const mapDispatchToProps = () => ({});
+const mapDispatchToProps = dispatch => ({
+  hentJournalforingOppgave: journalpostID => dispatch(journalforingOperations.hentJournalforingOppgave(journalpostID)),
+});
 
 export default withRouter(reduxForm({
   form: 'journalforing',
