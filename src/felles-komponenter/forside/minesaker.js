@@ -15,17 +15,17 @@ const uuid = require('uuid/v4');
 const OppgaveKomponentRouter = ({ oppgave }) => {
   const { oppgavetype } = oppgave;
 
-  if (oppgavetype === 'behandling') {
+  if (oppgavetype === 'BEH_SAK') {
     return (
       <SakEnkeltLinje sak={oppgave} />
     );
-  } else if (oppgavetype === 'journalforing') {
+  } else if (oppgavetype === 'JFR') {
     return (
       <JournalForingEnkeltLinje sak={oppgave} />
     );
   }
   return (
-    <p>Hei Are</p>
+    <p>Ukjent oppgavetype</p>
   );
 };
 
