@@ -1,8 +1,8 @@
 import PT from 'prop-types';
 import * as MPT from './index';
 
-const MinSakPropType = PT.shape({
-  sammensattNavn: PT.string.isRequired,
+const SakEnkeltLinjePropType = PT.shape({
+  sammensattNavn: PT.string,
   sakstype: MPT.Kodeverk,
   behandling: PT.shape({
     status: MPT.Kodeverk,
@@ -11,9 +11,9 @@ const MinSakPropType = PT.shape({
   soknadsperiode: MPT.Periode,
 });
 
-const MineSakerPropType = PT.arrayOf(MinSakPropType);
+const MineSakerPropType = PT.arrayOf(SakEnkeltLinjePropType);
 
 export {
-  MinSakPropType as MinSak,
+  SakEnkeltLinjePropType as SakEnkeltLinje,
   MineSakerPropType as MineSaker,
 };
