@@ -9,7 +9,6 @@ import { Kodeverk } from './kodeverk';
 import { Person } from './person';
 import { BostedsAdresse } from './bosted';
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
-import { SokListe, SokListeEnkeltlinje } from './sok';
 import { Saksbehandler } from './saksbehandler';
 import { Oppsummering } from './oppsummering';
 import { Periode } from './periode';
@@ -51,8 +50,6 @@ export {
   Oppsummering,
   Permisjonen,
   Permisjoner,
-  SokListe,
-  SokListeEnkeltlinje,
   Kodeverk,
   SoknadForm,
   Utenlandsopphold,

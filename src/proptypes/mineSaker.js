@@ -2,7 +2,7 @@ import PT from 'prop-types';
 import * as MPT from './index';
 
 const SakEnkeltLinjePropType = PT.shape({
-  sammensattNavn: PT.string.isRequired,
+  sammensattNavn: PT.string,
   sakstype: MPT.Kodeverk,
   behandling: PT.shape({
     status: MPT.Kodeverk,
