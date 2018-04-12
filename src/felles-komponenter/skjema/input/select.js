@@ -19,7 +19,7 @@ function InnerInputComponent({
   };
   return (
     <NavSelect label={label} feil={feil} {...inputProps}>
-      <option />
+      <option disabled />
       {children}
     </NavSelect>
   );
