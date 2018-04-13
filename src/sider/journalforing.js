@@ -16,6 +16,10 @@ import {
   KodeverkSelectors,
 } from '../ducks/kodeverk/';
 
+import {
+  formSelectors,
+} from '../ducks/form/'
+
 import './journalforing.css';
 
 class Journalforing extends Component {
@@ -36,7 +40,7 @@ class Journalforing extends Component {
   }
 
   render() {
-    const { sakstyper } = this.props;
+    const { sakstyper, journalforingSkjemaVerdier = {} } = this.props;
 
     return (
       <div className="journalforing">
@@ -45,7 +49,7 @@ class Journalforing extends Component {
           <Nav.Row>
             <Nav.Column xs="6">
               <Nav.Panel>
-                <Informasjon sakstyper={sakstyper} />
+                <Informasjon sakstyper={sakstyper} journalforingSkjemaVerdier={journalforingSkjemaVerdier} />
               </Nav.Panel>
             </Nav.Column>
             <Nav.Column xs="6">
@@ -60,15 +64,18 @@ class Journalforing extends Component {
   }
 }
 
-Journalforing.validering = () => (true);
+Journalforing.validering = (value, props) => {
+  return true;
+};
 
 const mapStateToProps = state => ({
-  journalforing: journalforingSelectors.AlleJournalforingData(state),
+  journalforing: journalforingSelectors.JournalforingAlle(state),
   sakstyper: KodeverkSelectors.sakstyperSelector(state),
+  journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   initialValues: {
     brukersFnr: journalforingSelectors.JournalforingBruker(state).fnr,
     brukersNavn: journalforingSelectors.JournalforingBruker(state).sammensattNavn,
-    erBrukerAvsender: journalforingSelectors.AlleJournalforingData(state).erBrukerAvsender,
+    erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderFnrOrgnr: journalforingSelectors.JournalforingAvsender(state).fnr,
     avsenderNavn: journalforingSelectors.JournalforingAvsender(state).sammensattNavn,
   },
