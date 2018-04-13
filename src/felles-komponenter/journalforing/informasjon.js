@@ -22,8 +22,9 @@ class Informasjon extends Component {
       default: return false;
     }
   }
-  render() {
-    const { sakstyper, journalforingSkjemaVerdier } = this.props;
+
+  render() {
+    const { sakstyper } = this.props;
     const { skalFeltetDisables } = this;
 
     return (
@@ -63,9 +64,8 @@ class Informasjon extends Component {
         </div>
       </div>
     );
-
   }
-};
+}
 
 Informasjon.propTypes = {
   sakstyper: PT.arrayOf(MPT.Kodeverk),
