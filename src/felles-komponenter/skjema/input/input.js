@@ -14,7 +14,7 @@ function InnerInputComponent({
 }) {
   const feil = rest.meta.error ? { feilmelding: rest.meta.error } : undefined;
   const inputProps = { ...input, ...rest };
-  return <Nav.Input label={label} feil={feil} {...inputProps} />;
+  return !rest.hidden && <Nav.Input label={label} feil={feil} {...inputProps} />;
 }
 
 InnerInputComponent.propTypes = {
