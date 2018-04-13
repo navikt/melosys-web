@@ -24,13 +24,29 @@ class Informasjon extends Component {
 
     switch (feltNavn) {
       case 'avsenderNavn': { return journalforingSkjemaVerdier.avsenderFnrOrgnr !== ''; }
+      case 'avsenderFnrOrgnr': { return journalforingSkjemaVerdier.erBrukerAvsender; }
+      default: return false;
+    }
+  }
+
+  /** Noen felter skal skjules dersom andre felter er fylt inn eller andre
+   * forutsetninger for skjuling er tilstede.
+   * @param feltNavn {string} Navnet på feltet som skal skjules.
+   * @returns {boolean} Hvorvidt feltet skal disables eller ikke
+   */
+  skalFeltetVises = feltNavn => {
+    const { journalforingSkjemaVerdier } = this.props;
+
+    switch (feltNavn) {
+      case 'avsenderNavn': { return journalforingSkjemaVerdier.avsenderFnrOrgnr !== ''; }
+      case 'avsenderFnrOrgnr': { return journalforingSkjemaVerdier.erBrukerAvsender; }
       default: return false;
     }
   }
 
   render() {
     const { sakstyper } = this.props;
-    const { skalFeltetDisables } = this;
+    const { skalFeltetDisables, skalFeltetVises } = this;
 
     return (
       <div className="informasjon">
@@ -38,8 +54,8 @@ class Informasjon extends Component {
           <Skjema.Input feltNavn="brukersFnr" label="Brukers personnummer" />
           <Skjema.Input feltNavn="brukersNavn" label="Brukers navn" disabled />
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummmer / Organisasjonsnummer" />
-          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn" disabled={skalFeltetDisables('avsenderNavn')} />
+          <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummmer / Organisasjonsnummer" hidden={skalFeltetVises('avsenderFnrOrgnr')} />
+          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn" hidden={skalFeltetVises('avsenderNavn')} disabled={skalFeltetDisables('avsenderNavn')} />
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Link to="/foo/bar.pdf" className="informasjon__dokumentlenke">26.04.2018: Kort navn på dokumentet</Link>
@@ -64,7 +80,6 @@ class Informasjon extends Component {
         </Nav.Fieldset>
         <Skjema.Checkbox feltNavn="inneholderSensitivInfo" label="Inneholder sensitiv info" />
         <div className="informasjon__knapper">
-          <Nav.Knapp>Åpne i Gosys</Nav.Knapp>
           <Nav.Knapp>Avbryt</Nav.Knapp>
         </div>
       </div>

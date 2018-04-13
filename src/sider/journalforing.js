@@ -18,7 +18,7 @@ import {
 
 import {
   formSelectors,
-} from '../ducks/form/'
+} from '../ducks/form/';
 
 import './journalforing.css';
 
@@ -28,10 +28,14 @@ class Journalforing extends Component {
     hentJournalOppgave: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
+    sakstyper: PT.array,
+    journalforingSkjemaVerdier: PT.object,
   };
   static defaultProps = {
     journalforing: {},
     journalpostID: 'DOC_321',
+    sakstyper: [],
+    journalforingSkjemaVerdier: {},
   };
 
   componentDidMount() {
@@ -40,7 +44,7 @@ class Journalforing extends Component {
   }
 
   render() {
-    const { sakstyper, journalforingSkjemaVerdier = {} } = this.props;
+    const { sakstyper, journalforingSkjemaVerdier } = this.props;
 
     return (
       <div className="journalforing">
@@ -64,9 +68,10 @@ class Journalforing extends Component {
   }
 }
 
-Journalforing.validering = (value, props) => {
-  return true;
-};
+Journalforing.validering = value => ({
+  brukersFnr: value.brukersFnr === '' ? 'Vær snill å tast inn fødselsnummer eller D-nummer.' : false,
+  avsenderFnrOrgnr: !value.erBrukerAvsender && value.avsenderFnrOrgnr === '' ? 'Vær snill å tast inn fødselsnummer eller D-nummer.' : false,
+});
 
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
