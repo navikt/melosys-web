@@ -32,7 +32,6 @@ class Journalforing extends Component {
   }
 
   render() {
-    const { journalforing } = this.props;
     return (
       <div className="journalforing">
         <h1>Journalforing</h1>
@@ -55,21 +54,31 @@ class Journalforing extends Component {
   }
 }
 
-Journalforing.validering = form => {
-  console.log(form);
-  return true;
-};
+Journalforing.validering = () => (true);
 
 const mapStateToProps = state => ({
-  journalforing: journalforingSelectors.JournalforingSelector(state),
+  journalforing: journalforingSelectors.AlleJournalforingData(state),
+  initialValues: {
+    brukersFnr: journalforingSelectors.JournalforingBruker(state).fnr,
+    brukersNavn: journalforingSelectors.JournalforingBruker(state).sammensattNavn,
+    erBrukerAvsender: journalforingSelectors.AlleJournalforingData(state).erBrukerAvsender,
+    avsenderFnrOrgnr: journalforingSelectors.JournalforingAvsender(state).fnr,
+    avsenderNavn: journalforingSelectors.JournalforingAvsender(state).sammensattNavn,
+  },
 });
 
 const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hentJournalOppgave(journalpostID)),
 });
 
-export default withRouter(reduxForm({
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'journalforing',
+  enableReinitialize: true,
+  destroyOnUnmount: false,
+  fields: [
+    'brukersFnr',
+  ],
+  updateUnregisteredFields: true,
   validate: Journalforing.validering,
   onSubmit: () => console.log('journalføring sendes'),
-})(connect(mapStateToProps, mapDispatchToProps)(Journalforing)));
+})(Journalforing)));
