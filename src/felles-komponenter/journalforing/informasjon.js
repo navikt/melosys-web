@@ -1,17 +1,25 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import PT from 'prop-types';
 
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../proptypes/';
 
 import './informasjon.css';
+
+const uuid = require('uuid/v4');
 
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
  * slik som informasjon om bruker, informasjon om dokument etc.
  * @returns {*}
  * @constructor
  */
-const Informasjon = () => {
+const Informasjon = props => {
+  const { sakstyper } = props;
+
+  console.log(sakstyper)
+
   return (
     <div className="informasjon">
       <Nav.Fieldset legend="Informasjon om brukeren">
@@ -29,9 +37,7 @@ const Informasjon = () => {
           <option value="kategori3">Kategori 3</option>
         </Skjema.Select>
         <Skjema.Select feltNavn="saksType" label="Sakstype">
-          <option value="kategori1">Kategori 1</option>
-          <option value="kategori2">Kategori 2</option>
-          <option value="kategori3">Kategori 3</option>
+          {sakstyper.map(sakstype => (<option uuid={uuid()} value={sakstype.kode}>{sakstype.term}</option>))}
         </Skjema.Select>
         <Skjema.Select feltNavn="tittel" label="Tittel">
           <option value="kategori1">Kategori 1</option>
@@ -53,8 +59,12 @@ const Informasjon = () => {
   );
 };
 
-Informasjon.propTypes = {};
+Informasjon.propTypes = {
+  sakstyper: PT.arrayOf(MPT.Kodeverk),
+};
 
-Informasjon.defaultProps = {};
+Informasjon.defaultProps = {
+  sakstyper: [],
+};
 
 export default Informasjon;
