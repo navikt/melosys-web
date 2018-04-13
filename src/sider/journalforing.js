@@ -33,7 +33,6 @@ class Journalforing extends Component {
 
   render() {
     const { journalforing } = this.props;
-    console.log(journalforing);
     return (
       <div className="journalforing">
         <h1>Journalforing</h1>
@@ -56,6 +55,11 @@ class Journalforing extends Component {
   }
 }
 
+Journalforing.validering = form => {
+  console.log(form);
+  return true;
+};
+
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingSelector(state),
 });
@@ -66,5 +70,6 @@ const mapDispatchToProps = dispatch => ({
 
 export default withRouter(reduxForm({
   form: 'journalforing',
+  validate: Journalforing.validering,
   onSubmit: () => console.log('journalføring sendes'),
 })(connect(mapStateToProps, mapDispatchToProps)(Journalforing)));
