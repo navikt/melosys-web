@@ -14,6 +14,11 @@ const uuid = require('uuid/v4');
  * slik som informasjon om bruker, informasjon om dokument etc.
  */
 class Informasjon extends Component {
+  /** Noen felter skal disables dersom andre felter er fylt inn eller andre
+   * forutsetninger for disabling er tilstede.
+   * @param feltNavn {string} Navnet på feltet som skal disables.
+   * @returns {boolean} Hvorvidt feltet skal disables eller ikke
+   */
   skalFeltetDisables = feltNavn => {
     const { journalforingSkjemaVerdier } = this.props;
 
@@ -31,10 +36,10 @@ class Informasjon extends Component {
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
           <Skjema.Input feltNavn="brukersFnr" label="Brukers personnummer" />
-          <Skjema.Input feltNavn="brukersNavn" label="Brukers etternavn" disabled />
+          <Skjema.Input feltNavn="brukersNavn" label="Brukers navn" disabled />
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
           <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummmer / Organisasjonsnummer" />
-          <Skjema.Input feltNavn="avsenderNavn" label="Avsender fornavn" disabled={skalFeltetDisables('avsenderNavn')} />
+          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn" disabled={skalFeltetDisables('avsenderNavn')} />
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Link to="/foo/bar.pdf" className="informasjon__dokumentlenke">26.04.2018: Kort navn på dokumentet</Link>
