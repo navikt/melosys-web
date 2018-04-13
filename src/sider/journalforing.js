@@ -12,6 +12,10 @@ import {
   journalforingSelectors,
 } from '../ducks/journalforing/';
 
+import {
+  KodeverkSelectors,
+} from '../ducks/kodeverk/';
+
 import './journalforing.css';
 
 class Journalforing extends Component {
@@ -32,6 +36,8 @@ class Journalforing extends Component {
   }
 
   render() {
+    const { sakstyper } = this.props;
+
     return (
       <div className="journalforing">
         <h1>Journalforing</h1>
@@ -39,7 +45,7 @@ class Journalforing extends Component {
           <Nav.Row>
             <Nav.Column xs="6">
               <Nav.Panel>
-                <Informasjon />
+                <Informasjon sakstyper={sakstyper} />
               </Nav.Panel>
             </Nav.Column>
             <Nav.Column xs="6">
@@ -58,6 +64,7 @@ Journalforing.validering = () => (true);
 
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.AlleJournalforingData(state),
+  sakstyper: KodeverkSelectors.sakstyperSelector(state),
   initialValues: {
     brukersFnr: journalforingSelectors.JournalforingBruker(state).fnr,
     brukersNavn: journalforingSelectors.JournalforingBruker(state).sammensattNavn,

@@ -19,13 +19,14 @@ function InnerInputComponent({
   };
   return (
     <NavSelect label={label} feil={feil} {...inputProps}>
-      <option disabled />
+      <option />
       {children}
     </NavSelect>
   );
 }
 
 InnerInputComponent.defaultProps = {
+  children: <option disabled value="0">ingen valg tilgjengelig</option>,
   input: undefined,
   errorMessage: undefined,
   meta: undefined,
@@ -33,7 +34,7 @@ InnerInputComponent.defaultProps = {
 
 InnerInputComponent.propTypes = {
   label: PT.string.isRequired,
-  children: PT.node.isRequired,
+  children: PT.node,
   input: PT.object, // eslint-disable-line react/forbid-prop-types
   errorMessage: PT.object, // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
