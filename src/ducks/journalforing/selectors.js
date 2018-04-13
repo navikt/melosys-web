@@ -7,12 +7,17 @@
 
 import { createSelector } from 'reselect';
 
-export const JournalforingSelector = createSelector(
-  state => state.journalforing.data,
-  journalforing => journalforing
+export const AlleJournalforingData = createSelector(
+  state => state.journalforing.data || {},
+  journalforing => journalforing || {}
 );
 
-export const JournalforingStatusSelector = createSelector(
-  state => state.journalforing.status,
-  journalforing => journalforing
+export const JournalforingBruker = createSelector(
+  state => state.journalforing.data || {},
+  journalforing => journalforing.bruker || {}
+);
+
+export const JournalforingAvsender = createSelector(
+  state => state.journalforing.data || {},
+  journalforing => journalforing.avsender || {}
 );

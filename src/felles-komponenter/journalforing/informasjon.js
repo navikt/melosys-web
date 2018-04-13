@@ -15,16 +15,14 @@ const Informasjon = () => {
   return (
     <div className="informasjon">
       <Nav.Fieldset legend="Informasjon om brukeren">
-        <Skjema.Input feltNavn="brukersPersonnummer" label="Brukers personnummer" />
-        <Skjema.Input feltNavn="brukersFornavn" label="Brukers fornavn" />
-        <Skjema.Input feltNavn="brukersEtternavn" label="Brukers etternavn" />
-        <Skjema.Checkbox feltNavn="brukerErAvsender" label="Bruker er avsender" />
+        <Skjema.Input feltNavn="brukersFnr" label="Brukers personnummer" />
+        <Skjema.Input feltNavn="brukersNavn" label="Brukers etternavn" />
+        <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
         <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummmer / Organisasjonsnummer" />
-        <Skjema.Input feltNavn="avsenderFornavn" label="Avsender fornavn" />
-        <Skjema.Input feltNavn="avsenderEtternavn" label="Avsender etternavn" />
+        <Skjema.Input feltNavn="avsenderNavn" label="Avsender fornavn" />
       </Nav.Fieldset>
       <Nav.Fieldset legend="Informasjon om dokument">
-        <Link to="/foo/bar.pdf">26.04.2018: Kort navn på dokumentet</Link>
+        <Link to="/foo/bar.pdf" className="informasjon__dokumentlenke">26.04.2018: Kort navn på dokumentet</Link>
         <Skjema.Select feltNavn="dokumentKategori" label="Dokumentkategori">
           <option value="kategori1">Kategori 1</option>
           <option value="kategori2">Kategori 2</option>
