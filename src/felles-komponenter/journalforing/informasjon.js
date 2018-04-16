@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { change } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Skjema from '../skjema/';
@@ -7,6 +9,8 @@ import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 
 import './informasjon.css';
+import { PersonSelectors, PersonOperations } from '../../ducks/person';
+import { OrganisasjonSelectors, OrganisasjonOperations } from '../../ducks/organisasjon';
 
 const uuid = require('uuid/v4');
 
@@ -14,6 +18,34 @@ const uuid = require('uuid/v4');
  * slik som informasjon om bruker, informasjon om dokument etc.
  */
 class Informasjon extends Component {
+  onKeyUp = event => {
+    const { oppdaterAvsenderNavn, oppdaterBrukersNavn } = this.props;
+    const { id, value } = event.target;
+    if (!value || !value.length) {
+      return;
+    }
+    switch (id) {
+      case 'brukersFnr':
+        if (value.length === 11) {
+          this.props.hentPerson(value).then(response => oppdaterBrukersNavn(response.sammensattNavn));
+        } else {
+          oppdaterBrukersNavn('');
+        }
+        break;
+      case 'avsenderFnrOrgnr':
+        if (value.length === 9) {
+          this.props.hentOrganisasjon(value).then(response => oppdaterAvsenderNavn(response.navn));
+        } else if (value.length === 11) {
+          this.props.hentPerson(value).then(response => oppdaterAvsenderNavn(response.sammensattNavn));
+        } else {
+          oppdaterAvsenderNavn('');
+        }
+        break;
+      default:
+        break;
+    }
+  };
+
   /** Noen felter skal disables dersom andre felter er fylt inn eller andre
    * forutsetninger for disabling er tilstede.
    * @param feltNavn {string} Navnet på feltet som skal disables.
@@ -27,7 +59,8 @@ class Informasjon extends Component {
       case 'avsenderFnrOrgnr': { return journalforingSkjemaVerdier.erBrukerAvsender; }
       default: return false;
     }
-  }
+  };
+
 
   render() {
     const { sakstyper } = this.props;
@@ -36,10 +69,10 @@ class Informasjon extends Component {
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukersFnr" label="Brukers personnummer eller D-nummer" />
+          <Skjema.Input feltNavn="brukersFnr" label="Brukers personnummer eller D-nummer" onKeyUp={this.onKeyUp} />
           <Skjema.Input feltNavn="brukersNavn" label="Brukers navn" disabled />
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummer eller orgnr" />
+          <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummer eller orgnr" onKeyUp={this.onKeyUp} />
           <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn" disabled={skalFeltetDisables('avsenderNavn')} />
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
@@ -75,11 +108,25 @@ class Informasjon extends Component {
 Informasjon.propTypes = {
   sakstyper: PT.arrayOf(MPT.Kodeverk),
   journalforingSkjemaVerdier: PT.object,
+  hentPerson: PT.func.isRequired,
+  hentOrganisasjon: PT.func.isRequired,
+  oppdaterAvsenderNavn: PT.func.isRequired,
+  oppdaterBrukersNavn: PT.func.isRequired,
 };
 
 Informasjon.defaultProps = {
   sakstyper: [],
   journalforingSkjemaVerdier: {},
 };
+const mapStateToProps = state => ({
+  person: PersonSelectors.personSelector(state),
+  organisasjon: OrganisasjonSelectors.organisasjonSelector(state),
+});
 
-export default Informasjon;
+const mapDispatchToProps = dispatch => ({
+  hentPerson: fnr => PersonOperations.hentPerson(fnr),
+  hentOrganisasjon: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
+  oppdaterAvsenderNavn: navn => dispatch(change('journalforing', 'avsenderNavn', navn)),
+  oppdaterBrukersNavn: navn => dispatch(change('journalforing', 'brukersNavn', navn)),
+});
+export default connect(mapStateToProps, mapDispatchToProps)(Informasjon);

@@ -12,6 +12,8 @@ import saksbehandlerReducer from './ducks/saksbehandler/';
 import kodeverkReducer from './ducks/kodeverk';
 import oppgaverReducer from './ducks/oppgaver';
 import journalforingReducer from './ducks/journalforing';
+import organisasjonReducer from './ducks/organisasjon';
+import personReducer from './ducks/person';
 
 export default combineReducers({
   form: formReducer,
@@ -26,4 +28,6 @@ export default combineReducers({
   kodeverk: kodeverkReducer,
   oppgaver: oppgaverReducer,
   journalforing: journalforingReducer,
+  organisasjon: organisasjonReducer,
+  person: personReducer,
 });
