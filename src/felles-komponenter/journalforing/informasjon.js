@@ -38,7 +38,7 @@ class Informasjon extends Component {
     const { journalforingSkjemaVerdier } = this.props;
 
     switch (feltNavn) {
-      case 'avsenderNavn': { return journalforingSkjemaVerdier.avsenderFnrOrgnr !== ''; }
+      case 'avsenderNavn': { return journalforingSkjemaVerdier.erBrukerAvsender; }
       case 'avsenderFnrOrgnr': { return journalforingSkjemaVerdier.erBrukerAvsender; }
       default: return false;
     }
