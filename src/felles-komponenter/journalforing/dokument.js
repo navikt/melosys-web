@@ -46,7 +46,9 @@ class Dokument extends Component {
 
     return (
       <div className="dokument">
-        {pagination}
+        <div className="dokument__paginering">
+          {pagination}
+        </div>
         <PDF
           file="/dokumenttest.pdf"
           onDocumentComplete={this.onDocumentComplete}
