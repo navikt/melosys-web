@@ -2,48 +2,38 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import PDF from 'react-pdf-js';
 
-import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes/';
 
 import './dokument.css';
+
+const uuid = require('uuid/v4');
 
 /**
  */
 class Dokument extends Component {
   state = {};
 
-  onDocumentComplete = (pages) => {
+  onDocumentComplete = pages => {
     this.setState({ page: 1, pages });
   }
 
-  onPageComplete = (page) => {
+  onPageComplete = page => {
     this.setState({ page });
   }
 
-  handlePrevious = () => {
-    this.setState({ page: this.state.page - 1 });
-  }
-
-  handleNext = () => {
-    this.setState({ page: this.state.page + 1 });
+  tilSteg = steg => {
+    this.setState({ page: steg + 1 });
   }
 
   renderPagination = (page, pages) => {
-    let previousButton = <li className="previous" onClick={this.handlePrevious}><a href="#"><i className="fa fa-arrow-left"></i> Previous</a></li>;
-    if (page === 1) {
-      previousButton = <li className="previous disabled"><a href="#"><i className="fa fa-arrow-left"></i> Previous</a></li>;
-    }
-    let nextButton = <li className="next" onClick={this.handleNext}><a href="#">Next <i className="fa fa-arrow-right"></i></a></li>;
-    if (page === pages) {
-      nextButton = <li className="next disabled"><a href="#">Next <i className="fa fa-arrow-right"></i></a></li>;
-    }
+    const pageArray = new Array(pages).fill(null);
     return (
       <nav>
-        <ul className="pager">
-          {previousButton}
-          {nextButton}
-        </ul>
+        <Nav.Stegindikator onChange={this.tilSteg}>
+          {
+            pageArray.map((item, index) => <Nav.Stegindikator.Steg key={uuid()} aktiv={index === page - 1}>Side { index }</Nav.Stegindikator.Steg>)
+          }
+        </Nav.Stegindikator>
       </nav>
     );
   }
@@ -56,13 +46,14 @@ class Dokument extends Component {
 
     return (
       <div className="dokument">
+        {pagination}
         <PDF
           file="/dokumenttest.pdf"
           onDocumentComplete={this.onDocumentComplete}
           onPageComplete={this.onPageComplete}
           page={this.state.page}
+          fillWidth
         />
-        {pagination}
       </div>
     );
   }
