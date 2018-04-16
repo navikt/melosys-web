@@ -7,6 +7,8 @@ import { withRouter } from 'react-router';
 import * as Nav from '../utils/navFrontend';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
+import Dokument from '../felles-komponenter/journalforing/dokument';
+
 import {
   journalforingOperations,
   journalforingSelectors,
@@ -58,7 +60,7 @@ class Journalforing extends Component {
             </Nav.Column>
             <Nav.Column xs="7">
               <Nav.Panel>
-                dokumentvisning her
+                <Dokument />
               </Nav.Panel>
             </Nav.Column>
           </Nav.Row>
