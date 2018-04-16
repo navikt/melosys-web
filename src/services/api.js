@@ -33,7 +33,7 @@ export function sendPlukkOppgave(oppgave) {
   return postAsJson(URI_OPPGAVER_PLUKK, oppgave);
 }
 export function hentJournalOppgave(journalpostID) {
-  const URI_JOURNALFORING_OPPGAVE = `${API_BASE_URL}journalforing/oppgave/${journalpostID}`;
+  const URI_JOURNALFORING_OPPGAVE = `${API_BASE_URL}journalforing/${journalpostID}`;
   return getAsJson(URI_JOURNALFORING_OPPGAVE);
 }
 

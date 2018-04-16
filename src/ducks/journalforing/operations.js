@@ -12,8 +12,8 @@ import * as Api from '../../services/api';
 import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
-export function hentJournalOppgave() {
-  return doThenDispatch(() => Api.hentJournalOppgave(), {
+export function hentJournalOppgave(journalpostID) {
+  return doThenDispatch(() => Api.hentJournalOppgave(journalpostID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
