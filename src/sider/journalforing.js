@@ -51,12 +51,12 @@ class Journalforing extends Component {
         <h1>Journalforing</h1>
         <Nav.Container fluid>
           <Nav.Row>
-            <Nav.Column xs="5">
+            <Nav.Column xs="4">
               <Nav.Panel>
                 <Informasjon sakstyper={sakstyper} journalforingSkjemaVerdier={journalforingSkjemaVerdier} />
               </Nav.Panel>
             </Nav.Column>
-            <Nav.Column xs="7">
+            <Nav.Column xs="6">
               <Nav.Panel>
                 dokumentvisning her
               </Nav.Panel>
