@@ -50,7 +50,7 @@ class Journalforing extends Component {
 
     return (
       <div className="journalforing">
-        <h1>Journalforing</h1>
+        <h1>Journalføring</h1>
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="4">
