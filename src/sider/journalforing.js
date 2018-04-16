@@ -58,7 +58,7 @@ class Journalforing extends Component {
                 <Informasjon sakstyper={sakstyper} journalforingSkjemaVerdier={journalforingSkjemaVerdier} />
               </Nav.Panel>
             </Nav.Column>
-            <Nav.Column xs="6">
+            <Nav.Column xs="8">
               <Nav.Panel>
                 <Dokument />
               </Nav.Panel>
