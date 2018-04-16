@@ -1,0 +1,33 @@
+@import '../../../utils/mixins';
+
+.sakEnkeltLinje {
+  margin: 0.5em 0;
+  flex: 1;
+}
+
+.sakEnkeltLinje__link:link,
+.sakEnkeltLinje__link:visited,
+.sakEnkeltLinje__link:hover {
+  color: @black;
+  text-decoration: none;
+  flex-grow:1;
+  display: flex;
+}
+
+.sakEnkeltLinje__meta {
+  display: block;
+  margin: 0.5em 0;
+}
+
+.sakEnkeltLinje__meta__term {
+  float: left;
+  clear: left;
+  font-weight: bold;
+  margin-right: 0.4em;
+}
+
+.sakEnkeltLinje__meta__detalj {
+  float:left;
+  clear: right;
+  margin: 0;
+}
