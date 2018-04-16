@@ -24,13 +24,17 @@ export function hentKodeverk() {
   return getAsJson(URI_KODEVERK);
 }
 
-export function hentMineSaker() {
+export function hentOppgaveOversikt() {
   const URI_OPPGAVER_MINESAKER = `${API_BASE_URL}oppgaver/oversikt`;
   return getAsJson(URI_OPPGAVER_MINESAKER);
 }
 export function sendPlukkOppgave(oppgave) {
   const URI_OPPGAVER_PLUKK = `${API_BASE_URL}oppgaver/plukk`;
   return postAsJson(URI_OPPGAVER_PLUKK, oppgave);
+}
+export function hentJournalOppgave(journalpostID) {
+  const URI_JOURNALFORING_OPPGAVE = `${API_BASE_URL}journalforing/${journalpostID}`;
+  return getAsJson(URI_JOURNALFORING_OPPGAVE);
 }
 
 export function hentSoknader(bid) {
