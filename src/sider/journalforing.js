@@ -51,12 +51,12 @@ class Journalforing extends Component {
         <h1>Journalforing</h1>
         <Nav.Container fluid>
           <Nav.Row>
-            <Nav.Column xs="6">
+            <Nav.Column xs="5">
               <Nav.Panel>
                 <Informasjon sakstyper={sakstyper} journalforingSkjemaVerdier={journalforingSkjemaVerdier} />
               </Nav.Panel>
             </Nav.Column>
-            <Nav.Column xs="6">
+            <Nav.Column xs="7">
               <Nav.Panel>
                 dokumentvisning her
               </Nav.Panel>
@@ -70,7 +70,7 @@ class Journalforing extends Component {
 
 Journalforing.validering = value => ({
   brukersFnr: value.brukersFnr === '' ? 'Vær snill å tast inn fødselsnummer eller D-nummer.' : false,
-  avsenderFnrOrgnr: !value.erBrukerAvsender && value.avsenderFnrOrgnr === '' ? 'Vær snill å tast inn fødselsnummer eller D-nummer.' : false,
+  avsenderFnrOrgnr: false,
 });
 
 const mapStateToProps = state => ({

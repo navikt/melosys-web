@@ -51,11 +51,17 @@ class Informasjon extends Component {
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukersFnr" label="Brukers personnummer" />
-          <Skjema.Input feltNavn="brukersNavn" label="Brukers navn" disabled />
-          <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummmer / Organisasjonsnummer" hidden={skalFeltetVises('avsenderFnrOrgnr')} />
-          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn" hidden={skalFeltetVises('avsenderNavn')} disabled={skalFeltetDisables('avsenderNavn')} />
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Skjema.Input feltNavn="brukersFnr" label="Brukers personnummer eller D-nummer" />
+              <Skjema.Input feltNavn="brukersNavn" label="Brukers navn" disabled />
+              <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
+            </Nav.Column>
+            <Nav.Column xs="6">
+              <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummer eller orgnr" hidden={skalFeltetVises('avsenderFnrOrgnr')} />
+              <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn" hidden={skalFeltetVises('avsenderNavn')} disabled={skalFeltetDisables('avsenderNavn')} />
+            </Nav.Column>
+          </Nav.Row>
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Link to="/foo/bar.pdf" className="informasjon__dokumentlenke">26.04.2018: Kort navn på dokumentet</Link>
