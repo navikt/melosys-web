@@ -19,6 +19,15 @@ export function health() {
   return getAsJson(URI_HEALTH);
 }
 
+export function hentPerson(fnrdnr) {
+  const URI_PERSON = `${API_BASE_URL}person?fnr=${fnrdnr}`;
+  return getAsJson(URI_PERSON);
+}
+
+export function hentOrganisasjon(orgnr) {
+  const URI_ORGANISASJON = `${API_BASE_URL}organisasjon?orgnr=${orgnr}`;
+  return getAsJson(URI_ORGANISASJON);
+}
 export function hentKodeverk() {
   const URI_KODEVERK = `${API_BASE_URL}kodeverk`;
   return getAsJson(URI_KODEVERK);
