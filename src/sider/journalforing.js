@@ -70,7 +70,6 @@ class Journalforing extends Component {
 
 Journalforing.validering = value => ({
   brukersFnr: value.brukersFnr === '' ? 'Vær snill å tast inn fødselsnummer eller D-nummer.' : false,
-  avsenderFnrOrgnr: false,
 });
 
 const mapStateToProps = state => ({
