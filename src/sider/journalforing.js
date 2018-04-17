@@ -100,5 +100,5 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   ],
   updateUnregisteredFields: true,
   validate: Journalforing.validering,
-  onSubmit: () => alert('sending ikke implementert'),
+  onSubmit: () => {},
 })(Journalforing)));
