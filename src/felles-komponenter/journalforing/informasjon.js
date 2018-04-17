@@ -127,7 +127,7 @@ class Informasjon extends Component {
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
-          <Link to="/foo/bar.pdf" className="informasjon__dokumentlenke">26.04.2018: Kort navn på dokumentet</Link>
+          <Link to="/dokumenttest.pdf" target="_blank" className="informasjon__dokumentlenke">26.04.2018: Kort navn på dokumentet</Link>
           <Skjema.Select feltNavn="dokumentKategori" label="Dokumentkategori">
             <option value="ELEKTRONISK_DIALOG">Elektronisk dialog</option>
             <option value="ELEKTRONISK_SKJEMA">Elektronisk skjema</option>

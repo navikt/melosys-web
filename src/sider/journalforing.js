@@ -7,6 +7,8 @@ import { withRouter } from 'react-router';
 import * as Nav from '../utils/navFrontend';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
+import Dokument from '../felles-komponenter/journalforing/dokument';
+
 import {
   journalforingOperations,
   journalforingSelectors,
@@ -48,7 +50,7 @@ class Journalforing extends Component {
 
     return (
       <div className="journalforing">
-        <h1>Journalforing</h1>
+        <h1>Journalføring</h1>
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="4">
@@ -56,9 +58,9 @@ class Journalforing extends Component {
                 <Informasjon sakstyper={sakstyper} journalforingSkjemaVerdier={journalforingSkjemaVerdier} />
               </Nav.Panel>
             </Nav.Column>
-            <Nav.Column xs="6">
+            <Nav.Column xs="8">
               <Nav.Panel>
-                dokumentvisning her
+                <Dokument />
               </Nav.Panel>
             </Nav.Column>
           </Nav.Row>
@@ -98,5 +100,5 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   ],
   updateUnregisteredFields: true,
   validate: Journalforing.validering,
-  onSubmit: () => alert('sending ikke implementert'),
+  onSubmit: () => {},
 })(Journalforing)));
