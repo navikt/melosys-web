@@ -12,7 +12,7 @@ import '../skjema.css';
 function InnerInputComponent({
   input, label, ...rest
 }) {
-  const feil = rest.meta.error ? { feilmelding: rest.meta.error } : undefined;
+  const feil = (rest.meta.error && rest.meta.touched) ? { feilmelding: rest.meta.error } : undefined;
   const inputProps = { ...input, ...rest };
   return !rest.hidden && <Nav.Input label={label} feil={feil} {...inputProps} />;
 }

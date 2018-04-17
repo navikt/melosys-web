@@ -21,50 +21,64 @@ class Informasjon extends Component {
   state = { spinner: {} };
 
   onKeyUp = event => {
-    this.hentOppslag(event);
-  };
-
-  hentOppslag = event => {
-    const { oppdaterFormFelt } = this.props;
     const { id, value } = event.target;
 
-    if (!value || !value.length) {
-      return;
-    }
+    if (!value || !value.length) { return; }
 
     switch (id) {
       case 'brukersFnr':
-        if (value.length === 11) {
-          this.toggleSpinner('brukersNavn', true);
-          this.props.hentPerson(value).then(response => {
-            this.toggleSpinner('brukersNavn', false);
-            oppdaterFormFelt('brukersNavn', response.sammensattNavn);
-          });
-        } else {
-          oppdaterFormFelt('brukersNavn', '');
-        }
+        this.sjekkBrukersNavn(value);
         break;
       case 'avsenderFnrOrgnr':
-        if (value.length === 9) {
-          this.toggleSpinner('avsenderNavn', true);
-          this.props.hentOrganisasjon(value).then(response => {
-            this.toggleSpinner('avsenderNavn', false);
-            oppdaterFormFelt('avsenderNavn', response.navn);
-          });
-        } else if (value.length === 11) {
-          this.toggleSpinner('avsenderNavn', true);
-          this.props.hentPerson(value).then(response => {
-            this.toggleSpinner('avsenderNavn', false);
-            oppdaterFormFelt('avsenderNavn', response.sammensattNavn);
-          });
-        } else {
-          oppdaterFormFelt('avsenderNavn', '');
-        }
+        this.sjekkAvsendersNavn(value);
         break;
       default:
         break;
     }
   }
+
+  sjekkBrukersNavn = verdi => {
+    const { oppdaterFormFelt } = this.props;
+
+    if (this.verdiErFnr(verdi)) {
+      this.toggleSpinner('brukersNavn', true);
+      this.props.hentPerson(verdi).then(response => {
+        this.toggleSpinner('brukersNavn', false);
+        oppdaterFormFelt('brukersNavn', response.sammensattNavn);
+      });
+    } else {
+      oppdaterFormFelt('brukersNavn', '');
+    }
+  }
+
+  sjekkAvsendersNavn = verdi => {
+    const { oppdaterFormFelt } = this.props;
+
+    if (this.verdiErOrgnr(verdi)) {
+      this.toggleSpinner('avsenderNavn', true);
+      this.props.hentOrganisasjon(verdi).then(response => {
+        this.toggleSpinner('avsenderNavn', false);
+        oppdaterFormFelt('avsenderNavn', response.navn);
+      });
+    } else if (this.verdiErFnr(verdi)) {
+      this.toggleSpinner('avsenderNavn', true);
+      this.props.hentPerson(verdi).then(response => {
+        this.toggleSpinner('avsenderNavn', false);
+        oppdaterFormFelt('avsenderNavn', response.sammensattNavn);
+      });
+    } else {
+      oppdaterFormFelt('avsenderNavn', '');
+    }
+  }
+
+  /** Hjelpefubnksjoner for å avgjøre om en gitt verdi kan være et fødselsnummer
+   * eller et orgnummer.
+   * TODO: Flyttes til utils ved anledning?
+   * @param verdi
+   * @returns {boolean}
+   */
+  verdiErFnr = verdi => (verdi.length === 11 && !Number.isNaN(verdi));
+  verdiErOrgnr = verdi => (verdi.length === 9 && !Number.isNaN(verdi));
 
   /** Toggle spinneren av og på. Når spinner skjules, sett en timeout på 500ms.
    * Dette sikrer at spinneren ikke bare flasher dersom kallet til API går raskt. Dataene vises.
