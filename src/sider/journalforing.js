@@ -60,7 +60,7 @@ class Journalforing extends Component {
             </Nav.Column>
             <Nav.Column xs="8">
               <Nav.Panel>
-                <Dokument />
+                <Dokument dokumentURL="/dokumenttest.pdf" />
               </Nav.Panel>
             </Nav.Column>
           </Nav.Row>
