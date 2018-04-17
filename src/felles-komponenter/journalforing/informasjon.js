@@ -18,33 +18,67 @@ const uuid = require('uuid/v4');
  * slik som informasjon om bruker, informasjon om dokument etc.
  */
 class Informasjon extends Component {
+  state = { spinner: {} };
+
   onKeyUp = event => {
-    const { oppdaterAvsenderNavn, oppdaterBrukersNavn } = this.props;
+    this.hentOppslag(event);
+  };
+
+  hentOppslag = event => {
+    const { oppdaterFormFelt } = this.props;
     const { id, value } = event.target;
+
     if (!value || !value.length) {
       return;
     }
+
     switch (id) {
       case 'brukersFnr':
         if (value.length === 11) {
-          this.props.hentPerson(value).then(response => oppdaterBrukersNavn(response.sammensattNavn));
+          this.toggleSpinner('brukersNavn', true);
+          this.props.hentPerson(value).then(response => {
+            this.toggleSpinner('brukersNavn', false);
+            oppdaterFormFelt('brukersNavn', response.sammensattNavn);
+          });
         } else {
-          oppdaterBrukersNavn('');
+          oppdaterFormFelt('brukersNavn', '');
         }
         break;
       case 'avsenderFnrOrgnr':
         if (value.length === 9) {
-          this.props.hentOrganisasjon(value).then(response => oppdaterAvsenderNavn(response.navn));
+          this.toggleSpinner('avsenderNavn', true);
+          this.props.hentOrganisasjon(value).then(response => {
+            this.toggleSpinner('avsenderNavn', false);
+            oppdaterFormFelt('avsenderNavn', response.navn);
+          });
         } else if (value.length === 11) {
-          this.props.hentPerson(value).then(response => oppdaterAvsenderNavn(response.sammensattNavn));
+          this.toggleSpinner('avsenderNavn', true);
+          this.props.hentPerson(value).then(response => {
+            this.toggleSpinner('avsenderNavn', false);
+            oppdaterFormFelt('avsenderNavn', response.sammensattNavn);
+          });
         } else {
-          oppdaterAvsenderNavn('');
+          oppdaterFormFelt('avsenderNavn', '');
         }
         break;
       default:
         break;
     }
-  };
+  }
+
+  /** Toggle spinneren av og på. Når spinner skjules, sett en timeout på 500ms.
+   * Dette sikrer at spinneren ikke bare flasher dersom kallet til API går raskt. Dataene vises.
+   * umiddelbart fra payload, men spinneren har en levetid på minimum 500 ms som gir brukeren
+   * tid til å tolke grensesnittet, dvs spinneren.
+   * @param navn {String} Navnet på spinneren
+   * @param flagg {Boolean} Hvorvidt spinneren skal slåes på eller av.
+   */
+  toggleSpinner = (navn, flagg) => {
+    const timeoutCount = flagg ? 0 : 500;
+    setTimeout(() => {
+      this.setState({ spinner: { ...this.state.spinner, [navn]: flagg } });
+    }, timeoutCount);
+  }
 
   /** Noen felter skal disables dersom andre felter er fylt inn eller andre
    * forutsetninger for disabling er tilstede.
@@ -64,6 +98,7 @@ class Informasjon extends Component {
 
   render() {
     const { sakstyper } = this.props;
+    const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
 
     return (
@@ -71,9 +106,11 @@ class Informasjon extends Component {
         <Nav.Fieldset legend="Informasjon om brukeren">
           <Skjema.Input feltNavn="brukersFnr" label="Brukers personnummer eller D-nummer" onKeyUp={this.onKeyUp} />
           <Skjema.Input feltNavn="brukersNavn" label="Brukers navn" disabled />
+          { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
           <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummer eller orgnr" onKeyUp={this.onKeyUp} />
           <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn" disabled={skalFeltetDisables('avsenderNavn')} />
+          { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Link to="/foo/bar.pdf" className="informasjon__dokumentlenke">26.04.2018: Kort navn på dokumentet</Link>
@@ -110,8 +147,7 @@ Informasjon.propTypes = {
   journalforingSkjemaVerdier: PT.object,
   hentPerson: PT.func.isRequired,
   hentOrganisasjon: PT.func.isRequired,
-  oppdaterAvsenderNavn: PT.func.isRequired,
-  oppdaterBrukersNavn: PT.func.isRequired,
+  oppdaterFormFelt: PT.func.isRequired,
 };
 
 Informasjon.defaultProps = {
@@ -126,7 +162,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentPerson: fnr => PersonOperations.hentPerson(fnr),
   hentOrganisasjon: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
-  oppdaterAvsenderNavn: navn => dispatch(change('journalforing', 'avsenderNavn', navn)),
-  oppdaterBrukersNavn: navn => dispatch(change('journalforing', 'brukersNavn', navn)),
+  oppdaterFormFelt: (feltNavn, verdi) => dispatch(change('journalforing', feltNavn, verdi)),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Informasjon);
