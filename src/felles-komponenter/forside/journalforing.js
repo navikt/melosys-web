@@ -10,7 +10,7 @@ const Journalforing = props => {
     <Nav.Panel className="forside__sidepanel">
       <Nav.Systemtittel>Journalføring</Nav.Systemtittel>
       <form onSubmit={handleSubmit}>
-        <Nav.Knapp>Journalføring</Nav.Knapp>
+        <Nav.Knapp>Journalfør sak</Nav.Knapp>
       </form>
     </Nav.Panel>
   );
