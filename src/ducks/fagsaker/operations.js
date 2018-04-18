@@ -41,4 +41,3 @@ export function opprettNyFagsak(fnr) {
     PENDING: Types.PENDING,
   });
 }
-
