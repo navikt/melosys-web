@@ -25,28 +25,13 @@ import {
 import './journalforing.css';
 
 class Journalforing extends Component {
-  static propTypes = {
-    match: PT.object.isRequired,
-    hentJournalOppgave: PT.func.isRequired,
-    journalforing: PT.object,
-    journalpostID: PT.string,
-    sakstyper: PT.array,
-    journalforingSkjemaVerdier: PT.object,
-  };
-  static defaultProps = {
-    journalforing: {},
-    journalpostID: 'DOC_321',
-    sakstyper: [],
-    journalforingSkjemaVerdier: {},
-  };
-
   componentDidMount() {
     const { journalpostID } = this.props.match.params;
     this.props.hentJournalOppgave(journalpostID);
   }
 
   render() {
-    const { sakstyper, journalforingSkjemaVerdier } = this.props;
+    const { sakstyper, journalforingSkjemaVerdier, dokumentURL } = this.props;
 
     return (
       <div className="journalforing">
@@ -60,7 +45,7 @@ class Journalforing extends Component {
             </Nav.Column>
             <Nav.Column xs="8">
               <Nav.Panel>
-                <Dokument dokumentURL="/dokumenttest.pdf" />
+                <Dokument dokumentURL={dokumentURL} />
               </Nav.Panel>
             </Nav.Column>
           </Nav.Row>
@@ -70,6 +55,24 @@ class Journalforing extends Component {
   }
 }
 
+Journalforing.propTypes = {
+  match: PT.object.isRequired,
+  hentJournalOppgave: PT.func.isRequired,
+  journalforing: PT.object,
+  journalpostID: PT.string,
+  dokumentURL: PT.string,
+  sakstyper: PT.array,
+  journalforingSkjemaVerdier: PT.object,
+};
+
+Journalforing.defaultProps = {
+  journalforing: {},
+  journalpostID: 'DOC_321',
+  dokumentURL: '',
+  sakstyper: [],
+  journalforingSkjemaVerdier: {},
+};
+
 Journalforing.validering = value => ({
   brukersFnr: value.brukersFnr === '' ? 'Vær snill å tast inn fødselsnummer eller D-nummer.' : false,
 });
@@ -77,6 +80,7 @@ Journalforing.validering = value => ({
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   sakstyper: KodeverkSelectors.sakstyperSelector(state),
+  dokumentURL: journalforingSelectors.JournalforingAlle(state).dokumentURL,
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   initialValues: {
     brukersFnr: journalforingSelectors.JournalforingBruker(state).fnr,
