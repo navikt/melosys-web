@@ -4,8 +4,6 @@ import PT from 'prop-types';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import throttle from 'lodash.throttle';
 
-import * as Nav from '../../utils/navFrontend';
-
 import './dokument.css';
 
 const uuid = require('uuid/v4');
@@ -18,46 +16,25 @@ class PDFViser extends Component {
   state = {};
 
   onLoadSuccess = ({ numPages }) => {
-    this.setState({ page: 1, numPages });
-  }
-
-  onPageComplete = page => {
-    this.setState({ page });
-  }
-
-  tilSteg = steg => {
-    this.setState({ page: steg + 1 });
-  }
-
-  renderPagination = (page, pages) => {
-    const pageArray = new Array(pages).fill(null);
-    return (
-      <nav>
-        <Nav.Stegindikator onChange={this.tilSteg}>
-          {
-            pageArray.map((item, index) => <Nav.Stegindikator.Steg key={uuid()} aktiv={index === page - 1}>Side { index }</Nav.Stegindikator.Steg>)
-          }
-        </Nav.Stegindikator>
-      </nav>
-    );
+    this.setState({ numPages });
   }
 
   render() {
-    const { page, numPages } = this.state;
+    const { numPages } = this.state;
     const { dokumentURL } = this.props;
     const pageArray = new Array(numPages).fill(null);
-    const pagination = this.state.numPages && this.renderPagination(page, numPages);
 
     return (
       <div className="pdfviser">
-        <div className="pdfviser__paginering">
-          {pagination}
-        </div>
         <Document
           file={dokumentURL}
           onLoadSuccess={this.onLoadSuccess}
         >
-          { pageArray.map((item, index) => <Page key={uuid()} width={this.props.wrapperDivSize} pageNumber={index + 1} />)}
+          { pageArray.map((item, index) => (
+            <div key={uuid()} id={`section-${index + 1}`}>
+              <Page width={this.props.wrapperDivSize} pageNumber={index + 1} />
+            </div>
+          ))}
         </Document>
       </div>
     );
@@ -66,10 +43,12 @@ class PDFViser extends Component {
 
 PDFViser.propTypes = {
   dokumentURL: PT.string.isRequired,
-  wrapperDivSize: PT.number.isRequired,
+  wrapperDivSize: PT.number,
 };
 
-PDFViser.defaultProps = {};
+PDFViser.defaultProps = {
+  wrapperDivSize: 0,
+};
 
 /**
  * Dette er hovedkomponenten som eksponeres utenfor pakken. Den wrapper inn
