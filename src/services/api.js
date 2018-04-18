@@ -86,6 +86,10 @@ export function opprettNyFagsak(fnr) {
   return getAsJson(URI_OPPRETTSAK);
 }
 
+export function sendNyFagsakTilJournalforing(data) {
+  const URI_SEND_NY_FAGSAK_TIL_JOURNALFORING = `${API_BASE_URL}fagsaker/journalforing`;
+  return postAsJson(URI_SEND_NY_FAGSAK_TIL_JOURNALFORING, data);
+}
 export function hentSakerbehandles(brukernavn) {
   const URI_SAKERBEHANDLES = `${API_BASE_URL}sakerbehandles/${brukernavn}`;
   return getAsJson(URI_SAKERBEHANDLES);

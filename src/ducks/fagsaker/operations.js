@@ -40,3 +40,11 @@ export function opprettNyFagsak(fnr) {
     PENDING: Types.PENDING,
   });
 }
+
+export function sendNyFagsak(fnr, data) {
+  return doThenDispatch(() => Api.sendNyFagsakTilJournalforing(fnr, data), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
