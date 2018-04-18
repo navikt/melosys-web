@@ -16,7 +16,7 @@ class CustomRadioPanel extends Component {
 
   render() {
     const {
-      checked, disabled, label, feltNavn, onChange, inputProps,
+      checked, disabled, innhold, feltNavn, onChange, inputProps,
     } = this.props;
 
     const { hasFocus } = this.state;
@@ -40,7 +40,7 @@ class CustomRadioPanel extends Component {
           onBlur={() => this.toggleOutline()}
           onChange={event => onChange(event)}
         />
-        <span className="inputPanel__label">{label}</span>
+        <span className="inputPanel__label">{innhold}</span>
       </label>
     );
   }
@@ -85,13 +85,13 @@ CustomRadioPanelGruppe.propTypes = {
   feltNavn: PT.string.isRequired,
   onChange: PT.func.isRequired,
   legend: PT.string,
-  feil: PT.string,
+  feil: PT.object,
   checked: PT.string,
 };
 
 CustomRadioPanelGruppe.defaultProps = {
   legend: '',
-  feil: '',
+  feil: undefined,
   checked: '',
 };
 
