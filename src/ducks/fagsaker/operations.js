@@ -33,6 +33,7 @@ export function hentFagsaker(snr) {
  * @param fnr String Fødselsnummeret til vedkommende som det skal opprettes ny fagsak på.
  * @returns {*}
  */
+
 export function opprettNyFagsak(fnr) {
   return doThenDispatch(() => Api.opprettNyFagsak(fnr), {
     OK: Types.OK,
@@ -41,10 +42,3 @@ export function opprettNyFagsak(fnr) {
   });
 }
 
-export function sendNyFagsak(fnr, data) {
-  return doThenDispatch(() => Api.sendNyFagsakTilJournalforing(fnr, data), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
