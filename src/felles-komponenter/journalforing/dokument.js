@@ -49,8 +49,8 @@ class PDFViser extends Component {
     const pagination = this.state.numPages && this.renderPagination(page, numPages);
 
     return (
-      <div className="dokument">
-        <div className="dokument__paginering">
+      <div className="pdfviser">
+        <div className="pdfviser__paginering">
           {pagination}
         </div>
         <Document
@@ -91,17 +91,11 @@ class Dokument extends Component {
     const { dokumentURL } = this.props;
 
     return (
-      <div>
-        <div
-          id="row"
-          style={
-            {
-              height: 'auto', width: '100%', display: 'flex', overflow: 'hidden',
-            }
-          }>
-          <div id="pdfWrapper" style={{ width: '100%' }} ref={ref => { this.pdfWrapper = ref; }}>
-            <PDFViser wrapperDivSize={this.state.width} dokumentURL={dokumentURL} />
-          </div>
+      <div
+        id="row"
+        className="dokument">
+        <div id="pdfWrapper" className="dokument__pdfwrapper" ref={ref => { this.pdfWrapper = ref; }}>
+          <PDFViser wrapperDivSize={this.state.width} dokumentURL={dokumentURL} />
         </div>
       </div>
     );

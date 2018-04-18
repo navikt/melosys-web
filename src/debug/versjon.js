@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import classnames from 'classnames';
 import { Link } from 'react-router-dom';
@@ -25,19 +26,24 @@ class Versjon extends Component {
 
   render() {
     const versjonKlasse = classnames({ App__versjonering: true, 'App__versjonering--vis': this.state.visVersjonDetaljer });
-
-    return (
-      <div className={versjonKlasse}>
-        <button className="App__versjonering__ekspandknapp" onClick={this.toggleVersjon}>
-          <dl>
-            <dt>Versjon:</dt><dd>{this.versjon()}</dd>
-            <dt>Build time:</dt><dd>{this.byggTidspunkt()}</dd>
-            <dt>Build version:</dt><dd>{this.byggVersjon()}</dd>
-            <dt>Branch:</dt><dd>{this.branchVersjon()}</dd>
-          </dl>
-        </button>
+    const versjonInnhold = this.state.visVersjonDetaljer ?
+      <div className="versjonInnhold">
+        <dl>
+          <dt>Build time:</dt><dd>{this.byggTidspunkt()}</dd>
+          <dt>Build version:</dt><dd>{this.byggVersjon()}</dd>
+          <dt>Branch:</dt><dd>{this.branchVersjon()}</dd>
+        </dl>
         <button className="App__versjonering__kopierknapp" onClick={this.copyToClipBoard}>Klikk for å kopiere versjonsinfo</button>
         <Link to="/spark" className="App__versjonering__spark">Gå til spark-siden</Link>
+      </div>
+      : null;
+
+    return (
+      <div className={versjonKlasse} onClick={this.toggleVersjon}>
+        <button className="App__versjonering__ekspandknapp">
+          {this.versjon()}
+        </button>
+        { versjonInnhold }
       </div>
     );
   }
