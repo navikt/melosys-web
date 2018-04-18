@@ -31,7 +31,7 @@ class Behandling extends Component {
             <Skjema.Checkbox label="Melding fra utenlandsk myndighet" feltNavn="ML_U" />
             <Skjema.Checkbox label="Påstand fra utenlandsk myndighet" feltNavn="PS_U" />
           </Nav.Fieldset>
-          <Nav.Knapp>Hent ny sak til behandling</Nav.Knapp>
+          <Nav.Knapp>Behandle sak</Nav.Knapp>
         </form>
       </Nav.Panel>
     );
