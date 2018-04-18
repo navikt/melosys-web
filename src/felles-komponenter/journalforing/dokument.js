@@ -71,6 +71,11 @@ PDFViser.propTypes = {
 
 PDFViser.defaultProps = {};
 
+/**
+ * Dette er hovedkomponenten som eksponeres utenfor pakken. Den wrapper inn
+ * PDFLeser lenger opp, men sørger også for å finne korrekt bredde av containeren
+ * via eventlisteners ved mount.
+ */
 class Dokument extends Component {
   state = { width: null }
 
