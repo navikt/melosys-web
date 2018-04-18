@@ -76,7 +76,7 @@ export function hentFagsaker(snr) {
   return getAsJson(URI_FAGSAKER);
 }
 
-export function hentNyesaker(fnr) {
+export function hentBehandlingsOppgaver(fnr) {
   const URI_NYESAKER = `${API_BASE_URL}sok/fagsaker/?fnr=${fnr}`;
   return getAsJson(URI_NYESAKER);
 }
