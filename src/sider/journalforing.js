@@ -7,6 +7,7 @@ import { withRouter } from 'react-router';
 import * as Nav from '../utils/navFrontend';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
+import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import Dokument from '../felles-komponenter/journalforing/dokument';
 
 import {
@@ -30,13 +31,15 @@ class Journalforing extends Component {
     hentJournalOppgave: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
-    sakstyper: PT.array,
+    saksTyper: PT.array,
+    saksListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
   };
   static defaultProps = {
     journalforing: {},
     journalpostID: 'DOC_321',
-    sakstyper: [],
+    saksTyper: [],
+    saksListe: [],
     journalforingSkjemaVerdier: {},
   };
 
@@ -45,8 +48,13 @@ class Journalforing extends Component {
     this.props.hentJournalOppgave(journalpostID);
   }
 
+  velgEksisterendeSak = event => {
+    console.log('velger eksisterende sak: ', event);
+  }
+
   render() {
-    const { sakstyper, journalforingSkjemaVerdier } = this.props;
+    const { saksTyper, saksListe, journalforingSkjemaVerdier } = this.props;
+    const { velgEksisterendeSak } = this;
 
     return (
       <div className="journalforing">
@@ -55,7 +63,8 @@ class Journalforing extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Panel>
-                <Informasjon sakstyper={sakstyper} journalforingSkjemaVerdier={journalforingSkjemaVerdier} />
+                <Informasjon sakstyper={saksTyper} journalforingSkjemaVerdier={journalforingSkjemaVerdier} />
+                <EksisterendeSaker saksListe={saksListe} vedValgEndret={velgEksisterendeSak} />
               </Nav.Panel>
             </Nav.Column>
             <Nav.Column xs="8">
@@ -76,8 +85,9 @@ Journalforing.validering = value => ({
 
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
-  sakstyper: KodeverkSelectors.sakstyperSelector(state),
+  saksTyper: KodeverkSelectors.sakstyperSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
+  saksListe: journalforingSelectors.JournalforingAlle(state).saksListe,
   initialValues: {
     brukersFnr: journalforingSelectors.JournalforingBruker(state).fnr,
     brukersNavn: journalforingSelectors.JournalforingBruker(state).sammensattNavn,
