@@ -6,6 +6,8 @@ import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 
+import './sokeskjema.css';
+
 class SokSkjema extends Component {
   componentWillMount() {
     const { fnr } = this.props.match.params;
@@ -33,14 +35,15 @@ class SokSkjema extends Component {
     return (
       <Nav.Panel>
         <Nav.Systemtittel>Søke etter sak</Nav.Systemtittel>
-        <form onSubmit={this.vedSokSubmit}>
+        <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
           <Nav.Input
             label="Søk etter fødselsnummer:"
+            className="sokeskjema__input"
             bredde="XL"
             onChange={this.vedEndretSokFelt}
             ref={this.state.sokStreng}
           />
-          <Nav.Knapp>Søk</Nav.Knapp>
+          <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
         </form>
       </Nav.Panel>
     );
