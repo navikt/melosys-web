@@ -48,13 +48,13 @@ class Journalforing extends Component {
     this.props.hentJournalOppgave(journalpostID);
   }
 
-  velgEksisterendeSak = event => {
-    console.log('velger eksisterende sak: ', event);
+  knyttTilEksisterendeSak = () => {
+
   }
 
   render() {
     const { saksTyper, saksListe, journalforingSkjemaVerdier } = this.props;
-    const { velgEksisterendeSak } = this;
+    const { knyttTilEksisterendeSak } = this;
 
     return (
       <div className="journalforing">
@@ -64,7 +64,7 @@ class Journalforing extends Component {
             <Nav.Column xs="4">
               <Nav.Panel>
                 <Informasjon sakstyper={saksTyper} journalforingSkjemaVerdier={journalforingSkjemaVerdier} />
-                <EksisterendeSaker saksListe={saksListe} vedValgEndret={velgEksisterendeSak} />
+                <EksisterendeSaker saksListe={saksListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
               </Nav.Panel>
             </Nav.Column>
             <Nav.Column xs="8">
@@ -94,6 +94,7 @@ const mapStateToProps = state => ({
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderFnrOrgnr: journalforingSelectors.JournalforingAvsender(state).fnr,
     avsenderNavn: journalforingSelectors.JournalforingAvsender(state).sammensattNavn,
+    knyttTilSaksID: 3,
   },
 });
 
@@ -107,6 +108,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   destroyOnUnmount: false,
   fields: [
     'brukersFnr',
+    'knyttTilSaksID',
   ],
   updateUnregisteredFields: true,
   validate: Journalforing.validering,
