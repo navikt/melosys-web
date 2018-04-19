@@ -34,7 +34,7 @@ EnkeltSak.propTypes = {
 };
 
 const EksisterendeSaker = props => {
-  const { saksListe, knyttTilEksisterendeSak } = props;
+  const { saksListe, knyttTilEksisterendeSak, feil } = props;
 
   const radioValg = saksListe.reduce((samling, sak) => ([...samling, { value: sak.saksnummer, innhold: <EnkeltSak sak={sak} /> }]), []);
 
@@ -44,6 +44,7 @@ const EksisterendeSaker = props => {
         feltNavn="knyttTilSaksID"
         legend="Knytt til brukers eksisterende sak"
         radios={radioValg}
+        feil={feil}
       />}
       <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp>
     </div>
@@ -53,6 +54,11 @@ const EksisterendeSaker = props => {
 EksisterendeSaker.propTypes = {
   saksListe: PT.array.isRequired,
   knyttTilEksisterendeSak: PT.func.isRequired,
+  feil: PT.object,
+};
+
+EksisterendeSaker.defaultProps = {
+  feil: undefined,
 };
 
 export default EksisterendeSaker;

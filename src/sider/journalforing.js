@@ -49,7 +49,9 @@ class Journalforing extends Component {
   }
 
   knyttTilEksisterendeSak = () => {
+    const { journalforingSkjemaVerdier: { knyttTilSaksID } } = this.props;
 
+    return knyttTilSaksID !== undefined;
   }
 
   render() {
@@ -94,7 +96,6 @@ const mapStateToProps = state => ({
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderFnrOrgnr: journalforingSelectors.JournalforingAvsender(state).fnr,
     avsenderNavn: journalforingSelectors.JournalforingAvsender(state).sammensattNavn,
-    knyttTilSaksID: 3,
   },
 });
 
