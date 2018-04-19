@@ -1,43 +1,31 @@
 import React from 'react';
 import PT from 'prop-types';
-import { change } from 'redux-form';
-
-import * as Nav from '../../utils/navFrontend';
 import EnkeltDato from '../datoOmrade/enkeltDato';
 import * as Skjema from '../skjema/';
+import * as Nav from '../../utils/navFrontend';
 
 import './eksisterendeSaker.css';
 
-const uuid = require('uuid/v4');
-
-
 const EnkeltSak = props => {
-  const { mottatt, behandling = {}, soknadsperiode = {} } = props.sak;
+  const {
+    mottatt, behandling = {}, soknadsperiode = {}, land = [],
+  } = props.sak;
   const { status = {} } = behandling;
   const { fom = null, tom = null } = soknadsperiode;
 
   return (
-    <Nav.Row>
-      <Nav.Column xs="1">
-        <div className="sakEnkeltLinje__ikon" />
-      </Nav.Column>
-      <Nav.Column xs="5">
-        <dl className="sakEnkeltLinje__meta">
-          <dt className="sakEnkeltLinje__meta__term">Mottatt:</dt>
-          <dd className="sakEnkeltLinje__meta__detalj">{mottatt || '(ukjent)'}</dd>
-          <dt className="sakEnkeltLinje__meta__term">Søknadsperiode: </dt>
-          <dd className="sakEnkeltLinje__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
-        </dl>
-      </Nav.Column>
-      <Nav.Column xs="6">
-        <dl className="sakEnkeltLinje__meta">
-          <dt className="sakEnkeltLinje__meta__term">Status: </dt>
-          <dd className="sakEnkeltLinje__meta__detalj">{status.term || '(ukjent)'}</dd>
-          <dt className="sakEnkeltLinje__meta__term">Land:</dt>
-          <dd className="sakEnkeltLinje__meta__detalj">Norge, Sverige, Bergen</dd>
-        </dl>
-      </Nav.Column>
-    </Nav.Row>
+    <div className="enkeltSak__meta">
+      <dl className="enkeltSak__meta">
+        <dt className="enkeltSak__meta__term">Status: </dt>
+        <dd className="enkeltSak__meta__detalj">{status.term || '(ukjent)'}</dd>
+        <dt className="enkeltSak__meta__term">Mottatt:</dt>
+        <dd className="enkeltSak__meta__detalj">{<EnkeltDato dato={mottatt} />}</dd>
+        <dt className="enkeltSak__meta__term">Søknadsperiode: </dt>
+        <dd className="enkeltSak__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
+        <dt className="enkeltSak__meta__term">Land:</dt>
+        <dd className="enkeltSak__meta__detalj">{land.join(', ')}</dd>
+      </dl>
+    </div>
   );
 };
 
@@ -46,7 +34,7 @@ EnkeltSak.propTypes = {
 };
 
 const EksisterendeSaker = props => {
-  const { saksListe, vedValgEndret } = props;
+  const { saksListe, knyttTilEksisterendeSak } = props;
 
   const radioValg = saksListe.reduce((samling, sak) => ([...samling, { value: sak.saksnummer, innhold: <EnkeltSak sak={sak} /> }]), []);
 
@@ -54,16 +42,17 @@ const EksisterendeSaker = props => {
     <div className="eksisterendeSaker">
       {<Skjema.CustomRadioPanelGruppe
         feltNavn="knyttTilSaksID"
+        legend="Brukers eksisterende saker"
         radios={radioValg}
-        onChange={vedValgEndret}
       />}
+      <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp>
     </div>
   );
 };
 
 EksisterendeSaker.propTypes = {
   saksListe: PT.array.isRequired,
-  vedValgEndret: PT.func.isRequired,
+  knyttTilEksisterendeSak: PT.func.isRequired,
 };
 
 export default EksisterendeSaker;
