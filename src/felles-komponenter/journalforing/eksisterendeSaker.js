@@ -8,14 +8,16 @@ import './eksisterendeSaker.css';
 
 const EnkeltSak = props => {
   const {
-    mottatt, behandling = {}, soknadsperiode = {}, land = [],
+    mottatt, behandling = {}, soknadsperiode = {}, land = [], sakstype = {},
   } = props.sak;
-  const { status = {} } = behandling;
+  const { status = {}, type = {} } = behandling;
   const { fom = null, tom = null } = soknadsperiode;
 
   return (
     <div className="enkeltSak__meta">
       <dl className="enkeltSak__meta">
+        <dt className="enkeltSak__meta__term">Type: </dt>
+        <dd className="enkeltSak__meta__detalj">{sakstype.term || '(ukjent sakstype)'} - {type.term || '(ukjent behandlingstype)'}</dd>
         <dt className="enkeltSak__meta__term">Status: </dt>
         <dd className="enkeltSak__meta__detalj">{status.term || '(ukjent)'}</dd>
         <dt className="enkeltSak__meta__term">Mottatt:</dt>
@@ -46,7 +48,8 @@ const EksisterendeSaker = props => {
         radios={radioValg}
         feil={feil}
       />}
-      <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp>
+      { saksListe.length === 0 && 'Ingen eksisterende saker funnet.'}
+      { saksListe.length > 0 && <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp> }
     </div>
   );
 };
