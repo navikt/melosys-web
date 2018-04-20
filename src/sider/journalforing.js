@@ -79,11 +79,11 @@ const mapStateToProps = state => ({
   sakstyper: KodeverkSelectors.sakstyperSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   initialValues: {
-    brukersFnr: journalforingSelectors.JournalforingBruker(state).fnr,
-    brukersNavn: journalforingSelectors.JournalforingBruker(state).sammensattNavn,
+    brukersID: journalforingSelectors.JournalforingBruker(state).id,
+    brukersNavn: journalforingSelectors.JournalforingBruker(state).navn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
-    avsenderFnrOrgnr: journalforingSelectors.JournalforingAvsender(state).fnr,
-    avsenderNavn: journalforingSelectors.JournalforingAvsender(state).sammensattNavn,
+    avsendersID: journalforingSelectors.JournalforingAvsender(state).id,
+    avsendersNavn: journalforingSelectors.JournalforingAvsender(state).navn,
   },
 });
 
@@ -96,7 +96,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   enableReinitialize: true,
   destroyOnUnmount: false,
   fields: [
-    'brukersFnr',
+    'brukersID',
   ],
   updateUnregisteredFields: true,
   validate: Journalforing.validering,
