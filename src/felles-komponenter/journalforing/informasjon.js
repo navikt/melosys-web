@@ -12,8 +12,6 @@ import './informasjon.css';
 import { PersonSelectors, PersonOperations } from '../../ducks/person';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../ducks/organisasjon';
 
-const uuid = require('uuid/v4');
-
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
  * slik som informasjon om bruker, informasjon om dokument etc.
  */
@@ -109,45 +107,34 @@ class Informasjon extends Component {
     }
   };
 
-
   render() {
-    const { sakstyper } = this.props;
     const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
 
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukersFnr" label="Brukers personnummer eller D-nummer" onKeyUp={this.onKeyUp} />
+          <Skjema.Input feltNavn="brukersID" label="Brukers personnummer eller D-nummer" onKeyUp={this.onKeyUp} />
           <Skjema.Input feltNavn="brukersNavn" label="Brukers navn" disabled />
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummer eller orgnr" onKeyUp={this.onKeyUp} />
-          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn" disabled={skalFeltetDisables('avsenderNavn')} />
+          <Skjema.Input feltNavn="avsendersID" label="Avsender fødselsnummer eller orgnr" onKeyUp={this.onKeyUp} />
+          <Skjema.Input feltNavn="avsendersNavn" label="Avsenders navn eller firmanavn" disabled={skalFeltetDisables('avsenderNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Link to="/dokumenttest.pdf" target="_blank" className="informasjon__dokumentlenke">26.04.2018: Kort navn på dokumentet</Link>
-          <Skjema.Select feltNavn="dokumentKategori" label="Dokumentkategori">
+          <Skjema.Select feltNavn="hoveddokument" label="Tittel på hoveddokument">
             <option value="ELEKTRONISK_DIALOG">Elektronisk dialog</option>
             <option value="ELEKTRONISK_SKJEMA">Elektronisk skjema</option>
             <option value="FORVALTNINGSBREV">Forvaltningsbrev</option>
           </Skjema.Select>
-          <Skjema.Select feltNavn="saksType" label="Sakstype">
-            {sakstyper.map(sakstype => (<option key={uuid()} value={sakstype.kode}>{sakstype.term}</option>))}
-          </Skjema.Select>
-          <Skjema.Select feltNavn="tittel" label="Tittel">
-            <option value="STUDIEDOKUMENTASJON">Studiedokumentasjon</option>
-            <option value="SOKNAD">Søknad</option>
-            <option value="UNNTAK">Unntak</option>
-          </Skjema.Select>
-          <Skjema.Select feltNavn="vedleggsTittel" label="Vedleggstittel / beskrivelse">
+          <Skjema.Select feltNavn="vedlegg" label="Titler på vedlegg">
             <option value="STUDIEDOKUMENTASJON">Studiedokumentasjon</option>
             <option value="SOKNAD">Søknad</option>
             <option value="UNNTAK">Unntak</option>
           </Skjema.Select>
         </Nav.Fieldset>
-        <Skjema.Checkbox feltNavn="inneholderSensitivInfo" label="Inneholder sensitiv info" />
         <div className="informasjon__knapper">
           <Nav.Knapp>Avbryt</Nav.Knapp>
         </div>
