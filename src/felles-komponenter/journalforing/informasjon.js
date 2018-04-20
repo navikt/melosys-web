@@ -8,9 +8,13 @@ import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 
+import EnkeltDato from '../datoOmrade/enkeltDato';
+
 import './informasjon.css';
 import { PersonSelectors, PersonOperations } from '../../ducks/person';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../ducks/organisasjon';
+
+const uuid = require('uuid/v4');
 
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
  * slik som informasjon om bruker, informasjon om dokument etc.
@@ -108,6 +112,8 @@ class Informasjon extends Component {
   };
 
   render() {
+    const { journalforing, dokumenttitler, vedleggstitler } = this.props;
+    const { dokument = {} } = journalforing;
     const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
 
@@ -123,16 +129,12 @@ class Informasjon extends Component {
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
-          <Link to="/dokumenttest.pdf" target="_blank" className="informasjon__dokumentlenke">26.04.2018: Kort navn på dokumentet</Link>
-          <Skjema.Select feltNavn="hoveddokument" label="Tittel på hoveddokument">
-            <option value="ELEKTRONISK_DIALOG">Elektronisk dialog</option>
-            <option value="ELEKTRONISK_SKJEMA">Elektronisk skjema</option>
-            <option value="FORVALTNINGSBREV">Forvaltningsbrev</option>
+          { dokument.url && <Link to={dokument.url} target="_blank" className="informasjon__dokumentlenke"><EnkeltDato dato={dokument.mottattDato} />: {dokument.tittel.term}</Link> }
+          <Skjema.Select feltNavn="dokumentTittel" label="Tittel på hoveddokument">
+            { dokumenttitler.map(tittel => <option key={uuid()} value={tittel.kode}>{tittel.term}</option>)}
           </Skjema.Select>
           <Skjema.Select feltNavn="vedlegg" label="Titler på vedlegg">
-            <option value="STUDIEDOKUMENTASJON">Studiedokumentasjon</option>
-            <option value="SOKNAD">Søknad</option>
-            <option value="UNNTAK">Unntak</option>
+            { vedleggstitler.map(tittel => <option key={uuid()} value={tittel.kode}>{tittel.term}</option>)}
           </Skjema.Select>
         </Nav.Fieldset>
         <div className="informasjon__knapper">
@@ -144,7 +146,9 @@ class Informasjon extends Component {
 }
 
 Informasjon.propTypes = {
-  sakstyper: PT.arrayOf(MPT.Kodeverk),
+  journalforing: MPT.Journalforing.isRequired,
+  dokumenttitler: PT.array,
+  vedleggstitler: PT.array,
   journalforingSkjemaVerdier: PT.object,
   hentPerson: PT.func.isRequired,
   hentOrganisasjon: PT.func.isRequired,
@@ -152,8 +156,9 @@ Informasjon.propTypes = {
 };
 
 Informasjon.defaultProps = {
-  sakstyper: [],
   journalforingSkjemaVerdier: {},
+  dokumenttitler: [],
+  vedleggstitler: [],
 };
 const mapStateToProps = state => ({
   person: PersonSelectors.personSelector(state),

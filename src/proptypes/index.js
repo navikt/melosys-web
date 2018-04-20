@@ -22,6 +22,7 @@ import { Opphold } from './opphold';
 import { Sysselsetting } from './sysselsetting';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
 import { SakEnkeltLinje, JournalForingEnkeltLinje, MineOppgaver } from './oppgaver';
+import { Journalforing } from './journalforing';
 
 export {
   ArbeidNorge,
@@ -65,4 +66,5 @@ export {
   SakEnkeltLinje,
   JournalForingEnkeltLinje,
   MineOppgaver,
+  Journalforing,
 };

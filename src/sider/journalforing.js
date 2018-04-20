@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import * as Nav from '../utils/navFrontend';
+import * as MPT from '../proptypes';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import Dokument from '../felles-komponenter/journalforing/dokument';
@@ -30,13 +31,14 @@ class Journalforing extends Component {
     hentJournalOppgave: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
-    sakstyper: PT.array,
     journalforingSkjemaVerdier: PT.object,
+    dokumenttitler: PT.arrayOf(MPT.Kodeverk).isRequired,
+    vedleggstitler: PT.arrayOf(MPT.Kodeverk).isRequired,
   };
+
   static defaultProps = {
     journalforing: {},
     journalpostID: 'DOC_321',
-    sakstyper: [],
     journalforingSkjemaVerdier: {},
   };
 
@@ -46,7 +48,9 @@ class Journalforing extends Component {
   }
 
   render() {
-    const { sakstyper, journalforingSkjemaVerdier } = this.props;
+    const {
+      journalforing, dokumenttitler, vedleggstitler, journalforingSkjemaVerdier,
+    } = this.props;
 
     return (
       <div className="journalforing">
@@ -55,7 +59,7 @@ class Journalforing extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Panel>
-                <Informasjon sakstyper={sakstyper} journalforingSkjemaVerdier={journalforingSkjemaVerdier} />
+                <Informasjon journalforing={journalforing} journalforingSkjemaVerdier={journalforingSkjemaVerdier} dokumenttitler={dokumenttitler} vedleggstitler={vedleggstitler} />
               </Nav.Panel>
             </Nav.Column>
             <Nav.Column xs="8">
@@ -77,13 +81,16 @@ Journalforing.validering = value => ({
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   sakstyper: KodeverkSelectors.sakstyperSelector(state),
+  dokumenttitler: KodeverkSelectors.dokumenttitlerSelector(state),
+  vedleggstitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   initialValues: {
-    brukersID: journalforingSelectors.JournalforingBruker(state).id,
+    brukersID: journalforingSelectors.JournalforingBruker(state).ID,
     brukersNavn: journalforingSelectors.JournalforingBruker(state).navn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
-    avsendersID: journalforingSelectors.JournalforingAvsender(state).id,
+    avsendersID: journalforingSelectors.JournalforingAvsender(state).ID,
     avsendersNavn: journalforingSelectors.JournalforingAvsender(state).navn,
+    dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel.kode,
   },
 });
 
