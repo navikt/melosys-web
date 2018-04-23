@@ -80,7 +80,7 @@ Journalforing.validering = value => ({
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   sakstyper: KodeverkSelectors.sakstyperSelector(state),
-  dokumentURL: journalforingSelectors.JournalforingAlle(state).dokumentURL,
+  dokumentURL: journalforingSelectors.JournalforingDokument(state).url,
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   initialValues: {
     brukersFnr: journalforingSelectors.JournalforingBruker(state).fnr,
