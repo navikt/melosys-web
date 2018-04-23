@@ -28,15 +28,15 @@ class CustomListeVelger extends Component {
    */
   leggTilListe = listeKode => {
     const { fields } = this.props;
-    const valgteListe = fields.getAll() || [];
+    const alleValg = fields.getAll() || [];
 
-    if (!valgteListe.includes(listeKode)) {
+    if (!alleValg.includes(listeKode)) {
       fields.push(listeKode);
     }
   }
 
   /**
-   * * For å kunne søke på både listekode og liste-navnslik det står i listen, feks "Storbrittannia (GB)",
+   * * For å kunne søke på både listekode og liste-navnslik det står i listen, feks "FooBar",
    * brukes 'listeTekstFormat' for å sette sammen dette til en string før det søkes i denne stringen.
    *
    * @param muligeValg Array Liste over alle tilgjengelige liste, bestående av listeobjekt.
@@ -51,7 +51,7 @@ class CustomListeVelger extends Component {
     ));
 
     if (listeSomInneholderInntastetVerdi.length === 1) {
-      this.leggTilListe(listeSomInneholderInntastetVerdi[0].kode);
+      this.leggTilListe(listeSomInneholderInntastetVerdi[0]);
       this.setState({ inputVerdi: '' });
     }
   }
@@ -61,7 +61,7 @@ class CustomListeVelger extends Component {
    * @param listeKode Koden på listeet som skal slettes.
    */
   slettListe = listeKode => {
-    const index = this.props.fields.getAll().findIndex(item => item === listeKode);
+    const index = this.props.fields.getAll().findIndex(item => item.kode === listeKode);
     return (index > -1 && this.props.fields.remove(index));
   }
 
@@ -130,7 +130,7 @@ class CustomListeVelger extends Component {
   }
 
   render () {
-    const { muligeValg, label } = this.props;
+    const { muligeValg } = this.props;
     const { fields, multiListe } = this.props;
 
     const valgteListe = fields.getAll() || [];
@@ -141,7 +141,7 @@ class CustomListeVelger extends Component {
         <div className="listevelger__linje">
           <Nav.Input
             list="alleListe"
-            label={label}
+            label="Velg fra listen"
             bredde="XXL"
             className="listevelger__linje__input"
             value={this.state.inputVerdi}
@@ -163,7 +163,6 @@ class CustomListeVelger extends Component {
 
     return (
       <div className="listevelger">
-        {!multiListe && valgteListe.length > 0 && label}
         {valgteListe.map(valg => (
           <ValgtListe
             key={valg.kode}
@@ -182,13 +181,18 @@ CustomListeVelger.propTypes = {
   fields: PT.object.isRequired,
   multiListe: PT.bool.isRequired,
   muligeValg: PT.array.isRequired,
-  label: PT.string.isRequired,
 };
 
 /**
  * */
-const ListeVelger = props => (
-  <div><FieldArray name={props.feltNavn} multiListe={props.multiListe} component={CustomListeVelger} {...props} /></div>
+const ListeVelger = ({
+  feltNavn, multiListe, label, ...rest
+}) => (
+  <div>
+    <Nav.Fieldset legend={label}>
+      <FieldArray name={feltNavn} multiListe={multiListe} component={CustomListeVelger} {...rest} />
+    </Nav.Fieldset>
+  </div>
 );
 
 ListeVelger.propTypes = {
@@ -201,7 +205,7 @@ ListeVelger.propTypes = {
 ListeVelger.defaultProps = {
   multiListe: false,
   muligeValg: [],
-  label: 'Tast inn liste',
+  label: 'Tast inn valg',
 };
 
 export default ListeVelger;
