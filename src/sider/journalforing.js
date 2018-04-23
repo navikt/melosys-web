@@ -82,6 +82,7 @@ class Journalforing extends Component {
 
   render() {
     const { sakstyper, journalforingSkjemaVerdier, pdfDokument } = this.props;
+    const { opprettNyFagsakSubmit } = this;
 
     return (
       <div className="journalforing">
