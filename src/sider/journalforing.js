@@ -32,12 +32,14 @@ class Journalforing extends Component {
     sendNyFagsakTilJournalforing: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
+    pdfDokument: PT.string,
     sakstyper: PT.array,
     journalforingSkjemaVerdier: PT.object,
   };
   static defaultProps = {
     journalforing: {},
     journalpostID: 'DOC_321',
+    pdfDokument: '',
     sakstyper: [],
     journalforingSkjemaVerdier: {},
   };
@@ -78,7 +80,7 @@ class Journalforing extends Component {
   };
 
   render() {
-    const { sakstyper, journalforingSkjemaVerdier } = this.props;
+    const { sakstyper, journalforingSkjemaVerdier, pdfDokument } = this.props;
     const { opprettNyFagsakSubmit } = this;
 
     return (
@@ -95,7 +97,7 @@ class Journalforing extends Component {
               </Nav.Column>
               <Nav.Column xs="8">
                 <Nav.Panel>
-                  <Dokument />
+                  <Dokument pdfDokument={pdfDokument} />
                 </Nav.Panel>
               </Nav.Column>
             </Nav.Row>
@@ -113,6 +115,7 @@ Journalforing.validering = value => ({
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   sakstyper: KodeverkSelectors.sakstyperSelector(state),
+  pdfDokument: journalforingSelectors.JournalforingDokument(state).url,
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   initialValues: {
     brukersFnr: journalforingSelectors.JournalforingBruker(state).fnr,
