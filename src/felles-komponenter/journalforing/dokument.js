@@ -21,13 +21,13 @@ class PDFViser extends Component {
 
   render() {
     const { numPages } = this.state;
-    const { dokumentURL } = this.props;
+    const { pdfDokument } = this.props;
     const pageArray = new Array(numPages).fill(null);
 
     return (
       <div className="pdfviser">
         <Document
-          file={dokumentURL}
+          file={pdfDokument}
           onLoadSuccess={this.onLoadSuccess}
         >
           { pageArray.map((item, index) => (
@@ -42,7 +42,7 @@ class PDFViser extends Component {
 }
 
 PDFViser.propTypes = {
-  dokumentURL: PT.string.isRequired,
+  pdfDokument: PT.string.isRequired,
   wrapperDivSize: PT.number,
 };
 
@@ -72,14 +72,14 @@ class Dokument extends Component {
   }
 
   render() {
-    const { dokumentURL } = this.props;
+    const { pdfDokument } = this.props;
 
     return (
       <div
         id="row"
         className="dokument">
         <div id="pdfWrapper" className="dokument__pdfwrapper" ref={ref => { this.pdfWrapper = ref; }}>
-          <PDFViser wrapperDivSize={this.state.width} dokumentURL={dokumentURL} />
+          <PDFViser wrapperDivSize={this.state.width} pdfDokument={pdfDokument} />
         </div>
       </div>
     );
@@ -87,7 +87,7 @@ class Dokument extends Component {
 }
 
 Dokument.propTypes = {
-  dokumentURL: PT.string.isRequired,
+  pdfDokument: PT.string.isRequired,
 };
 
 export default Dokument;
