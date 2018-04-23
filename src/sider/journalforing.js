@@ -32,8 +32,8 @@ class Journalforing extends Component {
     journalforing: PT.object,
     journalpostID: PT.string,
     journalforingSkjemaVerdier: PT.object,
-    dokumenttitler: PT.arrayOf(MPT.Kodeverk).isRequired,
-    vedleggstitler: PT.arrayOf(MPT.Kodeverk).isRequired,
+    dokumentTittel: PT.arrayOf(MPT.Kodeverk).isRequired,
+    vedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
   };
 
   static defaultProps = {
@@ -49,7 +49,7 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing, dokumenttitler, vedleggstitler, journalforingSkjemaVerdier,
+      journalforing, dokumentTittel, vedleggsTitler, journalforingSkjemaVerdier,
     } = this.props;
 
     return (
@@ -59,7 +59,7 @@ class Journalforing extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Panel>
-                <Informasjon journalforing={journalforing} journalforingSkjemaVerdier={journalforingSkjemaVerdier} dokumenttitler={dokumenttitler} vedleggstitler={vedleggstitler} />
+                <Informasjon journalforing={journalforing} journalforingSkjemaVerdier={journalforingSkjemaVerdier} dokumentTittel={dokumentTittel} vedleggsTitler={vedleggsTitler} />
               </Nav.Panel>
             </Nav.Column>
             <Nav.Column xs="8">
@@ -81,8 +81,8 @@ Journalforing.validering = value => ({
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   sakstyper: KodeverkSelectors.sakstyperSelector(state),
-  dokumenttitler: KodeverkSelectors.dokumenttitlerSelector(state),
-  vedleggstitler: KodeverkSelectors.vedleggstitlerSelector(state),
+  dokumentTittel: KodeverkSelectors.dokumenttitlerSelector(state),
+  vedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   initialValues: {
     brukersID: journalforingSelectors.JournalforingBruker(state).ID,
@@ -91,6 +91,7 @@ const mapStateToProps = state => ({
     avsendersID: journalforingSelectors.JournalforingAvsender(state).ID,
     avsendersNavn: journalforingSelectors.JournalforingAvsender(state).navn,
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel.kode,
+    vedleggsTitler: journalforingSelectors.JournalforingDokument(state).vedleggstitler,
   },
 });
 

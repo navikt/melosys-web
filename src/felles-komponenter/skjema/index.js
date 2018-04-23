@@ -6,6 +6,7 @@ import Select from './input/select';
 import Textarea from './textarea/textarea';
 import Fieldset from '../../utils/navFrontend';
 import * as Validering from './validering';
+import ListeVelger from './listevelger';
 
 export {
   Checkbox,
@@ -16,4 +17,5 @@ export {
   Textarea,
   Validering,
   Fieldset,
+  ListeVelger,
 };

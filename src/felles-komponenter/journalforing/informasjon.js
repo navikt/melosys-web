@@ -112,7 +112,7 @@ class Informasjon extends Component {
   };
 
   render() {
-    const { journalforing, dokumenttitler, vedleggstitler } = this.props;
+    const { journalforing, dokumentTittel, vedleggsTitler } = this.props;
     const { dokument = {} } = journalforing;
     const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
@@ -131,11 +131,9 @@ class Informasjon extends Component {
         <Nav.Fieldset legend="Informasjon om dokument">
           { dokument.url && <Link to={dokument.url} target="_blank" className="informasjon__dokumentlenke"><EnkeltDato dato={dokument.mottattDato} />: {dokument.tittel.term}</Link> }
           <Skjema.Select feltNavn="dokumentTittel" label="Tittel på hoveddokument">
-            { dokumenttitler.map(tittel => <option key={uuid()} value={tittel.kode}>{tittel.term}</option>)}
+            { dokumentTittel.map(tittel => <option key={uuid()} value={tittel.kode}>{tittel.term}</option>)}
           </Skjema.Select>
-          <Skjema.Select feltNavn="vedlegg" label="Titler på vedlegg">
-            { vedleggstitler.map(tittel => <option key={uuid()} value={tittel.kode}>{tittel.term}</option>)}
-          </Skjema.Select>
+          <Skjema.ListeVelger feltNavn="vedleggsTitler" label="Titler på vedlegg" multiListe muligeValg={vedleggsTitler} />
         </Nav.Fieldset>
         <div className="informasjon__knapper">
           <Nav.Knapp>Avbryt</Nav.Knapp>
@@ -147,8 +145,8 @@ class Informasjon extends Component {
 
 Informasjon.propTypes = {
   journalforing: MPT.Journalforing.isRequired,
-  dokumenttitler: PT.array,
-  vedleggstitler: PT.array,
+  dokumentTittel: PT.array,
+  vedleggsTitler: PT.array,
   journalforingSkjemaVerdier: PT.object,
   hentPerson: PT.func.isRequired,
   hentOrganisasjon: PT.func.isRequired,
@@ -157,8 +155,8 @@ Informasjon.propTypes = {
 
 Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
-  dokumenttitler: [],
-  vedleggstitler: [],
+  dokumentTittel: '',
+  vedleggsTitler: [],
 };
 const mapStateToProps = state => ({
   person: PersonSelectors.personSelector(state),
