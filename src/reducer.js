@@ -5,7 +5,7 @@ import fagsakerReducer from './ducks/fagsaker/';
 import soknadReducer from './ducks/soknad/';
 import faktaavklaringReducer from './ducks/faktaavklaring/';
 import vurderingReducer from './ducks/vurdering/';
-import nyesakerReducer from './ducks/nyesaker';
+import sokbehandlingsoppgaveReducer from './ducks/sokbehandlingsoppgave';
 import sakerbehandlesReducer from './ducks/sakerbehandles';
 import tidligeresakerReducer from './ducks/tidligeresaker';
 import saksbehandlerReducer from './ducks/saksbehandler/';
@@ -21,7 +21,7 @@ export default combineReducers({
   soknad: soknadReducer,
   faktaavklaring: faktaavklaringReducer,
   vurdering: vurderingReducer,
-  nyesaker: nyesakerReducer,
+  sokbehandlingsoppgave: sokbehandlingsoppgaveReducer,
   tidligeresaker: tidligeresakerReducer,
   sakerbehandles: sakerbehandlesReducer,
   saksbehandler: saksbehandlerReducer,
