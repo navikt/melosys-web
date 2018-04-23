@@ -68,7 +68,8 @@ class Dokument extends Component {
   }
 
   setDivSize = () => {
-    this.setState({ width: this.pdfWrapper.getBoundingClientRect().width });
+    const width = this.pdfWrapper && this.pdfWrapper.getBoundingClientRect().width;
+    return width && this.setState({ width: this.pdfWrapper.getBoundingClientRect().width });
   }
 
   render() {
