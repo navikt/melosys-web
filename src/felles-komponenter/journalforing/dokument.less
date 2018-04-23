@@ -1,12 +1,25 @@
 @import '../../constants';
 
 .dokument {
+  height: auto;
+  width: 100%;
+  display: flex;
 
-  .dokument__paginering {
+  .dokument__pdfwrapper {
+    width: 100%;
+  }
+}
+
+.pdfviser {
+  display: block;
+  position: relative;
+
+  .pdfviser__paginering {
     position: sticky;
     top: 20px;
     background-color: @gray;
     padding: .5em;
     border-radius: 3px;
+    z-index: 2000;
   }
 }
