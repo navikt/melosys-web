@@ -28,7 +28,6 @@ import './journalforing.css';
 class Journalforing extends Component {
   static propTypes = {
     match: PT.object.isRequired,
-    history: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
     sendNyFagsakTilJournalforing: PT.func.isRequired,
     journalforing: PT.object,
@@ -54,7 +53,7 @@ class Journalforing extends Component {
 
   opprettNyFagsakSubmit = event => {
     event.preventDefault();
-    const { sendNyFagsakTilJournalforing, journalforingSkjemaVerdier, history } = this.props;
+    const { sendNyFagsakTilJournalforing, journalforingSkjemaVerdier } = this.props;
     const {
       brukersFnr, journalforingOppholdsLand, erBrukerAvsender, avsenderFnrOrgnr, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
@@ -71,10 +70,10 @@ class Journalforing extends Component {
     };
     sendNyFagsakTilJournalforing(data).then(response => {
       // TODO validate response before redirect
-      /* eslint-disable no-console */
+      /* eslint-disable */
       console.log(response);
-      /* eslint-enable no-console */
-      history.push('/');
+      alert('Denne er ikke avklart / implementert.');
+      /* eslint-enable */
     });
   };
 
