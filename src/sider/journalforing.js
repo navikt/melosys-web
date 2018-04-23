@@ -34,14 +34,16 @@ class Journalforing extends Component {
     journalforing: PT.object,
     journalpostID: PT.string,
     pdfDokument: PT.string,
-    sakstyper: PT.array,
+    saksTyper: PT.array,
+    saksListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
   };
   static defaultProps = {
     journalforing: {},
     journalpostID: 'DOC_321',
     pdfDokument: '',
-    sakstyper: [],
+    saksTyper: [],
+    saksListe: [],
     journalforingSkjemaVerdier: {},
   };
 
@@ -88,7 +90,7 @@ class Journalforing extends Component {
 
   render() {
     const {
-      saksTyper, saksListe, journalforingSkjemaVerdier, pdfDokument
+      saksTyper, saksListe, journalforingSkjemaVerdier, pdfDokument,
     } = this.props;
     const { knyttTilEksisterendeSak, opprettNyFagsakSubmit } = this;
 
