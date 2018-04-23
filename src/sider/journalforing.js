@@ -26,23 +26,6 @@ import {
 import './journalforing.css';
 
 class Journalforing extends Component {
-  static propTypes = {
-    match: PT.object.isRequired,
-    hentJournalOppgave: PT.func.isRequired,
-    journalforing: PT.object,
-    journalpostID: PT.string,
-    saksTyper: PT.array,
-    saksListe: PT.array,
-    journalforingSkjemaVerdier: PT.object,
-  };
-  static defaultProps = {
-    journalforing: {},
-    journalpostID: 'DOC_321',
-    saksTyper: [],
-    saksListe: [],
-    journalforingSkjemaVerdier: {},
-  };
-
   componentDidMount() {
     const { journalpostID } = this.props.match.params;
     this.props.hentJournalOppgave(journalpostID);
@@ -55,7 +38,7 @@ class Journalforing extends Component {
   }
 
   render() {
-    const { saksTyper, saksListe, journalforingSkjemaVerdier } = this.props;
+    const { saksTyper, saksListe, journalforingSkjemaVerdier, pdfDokument } = this.props;
     const { knyttTilEksisterendeSak } = this;
 
     return (
@@ -71,7 +54,7 @@ class Journalforing extends Component {
             </Nav.Column>
             <Nav.Column xs="8">
               <Nav.Panel>
-                <Dokument />
+                <Dokument pdfDokument={pdfDokument} />
               </Nav.Panel>
             </Nav.Column>
           </Nav.Row>
@@ -81,6 +64,27 @@ class Journalforing extends Component {
   }
 }
 
+Journalforing.propTypes = {
+  match: PT.object.isRequired,
+  hentJournalOppgave: PT.func.isRequired,
+  journalforing: PT.object,
+  journalpostID: PT.string,
+  pdfDokument: PT.string,
+  saksTyper: PT.array,
+  saksTyper: PT.array,
+  saksListe: PT.array,
+  journalforingSkjemaVerdier: PT.object,
+};
+
+Journalforing.defaultProps = {
+  journalforing: {},
+  journalpostID: 'DOC_321',
+  pdfDokument: '',
+  saksTyper: [],
+  saksListe: [],
+  journalforingSkjemaVerdier: {},
+};
+
 Journalforing.validering = value => ({
   brukersFnr: value.brukersFnr === '' ? 'Vær snill å tast inn fødselsnummer eller D-nummer.' : false,
 });
@@ -88,6 +92,7 @@ Journalforing.validering = value => ({
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   saksTyper: KodeverkSelectors.sakstyperSelector(state),
+  pdfDokument: journalforingSelectors.JournalforingDokument(state).url,
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   saksListe: journalforingSelectors.JournalforingAlle(state).saksListe,
   initialValues: {
