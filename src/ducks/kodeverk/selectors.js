@@ -29,7 +29,7 @@ export const sakstyperSelector = createSelector(
 );
 
 export const dokumenttitlerSelector = createSelector(
-  state => state.kodeverk.data.dokumentTittel,
+  state => state.kodeverk.data.dokumenttitler,
   dokumenttitler => dokumenttitler || []
 );
 
