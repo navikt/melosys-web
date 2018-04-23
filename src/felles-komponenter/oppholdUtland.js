@@ -26,7 +26,6 @@ function OppholdUtland ({ soknadForm }) {
                   <Skjema.Checkbox label="Søkeren er student i EØS-land" feltNavn="studentIEOS" />
                 </Nav.Column>
                 <Nav.Column xs="6">
-                  <Skjema.Input label="Skole" feltNavn="studentSkole" disabled={!studentIEOS} />
                   <Skjema.Input label="Semester" feltNavn="studentSemester" disabled={!studentIEOS} />
                 </Nav.Column>
                 <Nav.Column xs="6">
