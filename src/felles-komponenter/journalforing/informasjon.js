@@ -23,25 +23,15 @@ class Informasjon extends Component {
   vedIDFeltTastOpp = event => {
     const { id, value } = event.target;
     const { hentBruker, hentAvsender } = this.props;
-    const nummerAntallSomUtloserSok = [Konstanter.ANTALL_TALL_I_DNR, Konstanter.ANTALL_TALL_I_FNR, Konstanter.ANTALL_TALL_I_ORGNR];
 
-    if (!nummerAntallSomUtloserSok.includes(value.length)) { return; }
-
-    if (id === 'brukersID') {
+    if (id === 'brukersID' && (value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR)) {
       hentBruker(value, id);
-    } else if (id === 'avsenderID') {
+      this.toggleSpinner('brukersNavn');
+    } else if (id === 'avsenderID' && (value.length === Konstanter.ANTALL_TALL_I_ORGNR || value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR)) {
       hentAvsender(value, id);
+      this.toggleSpinner('avsenderNavn');
     }
   };
-
-  /** Hjelpefubnksjoner for å avgjøre om en gitt verdi kan være et fødselsnummer
-   * eller et orgnummer.
-   * TODO: Flyttes til utils ved anledning?
-   * @param verdi
-   * @returns {boolean}
-   */
-  verdiErFnr = verdi => (verdi.length === 11 && !Number.isNaN(verdi));
-  verdiErOrgnr = verdi => (verdi.length === 9 && !Number.isNaN(verdi));
 
   /** Toggle spinneren av og på. Når spinner skjules, sett en timeout på 500ms.
    * Dette sikrer at spinneren ikke bare flasher dersom kallet til API går raskt. Dataene vises.
@@ -50,11 +40,12 @@ class Informasjon extends Component {
    * @param navn {String} Navnet på spinneren
    * @param flagg {Boolean} Hvorvidt spinneren skal slåes på eller av.
    */
-  toggleSpinner = (navn, flagg) => {
-    const timeoutCount = flagg ? 0 : 500;
+  toggleSpinner = navn => {
+    this.setState({ spinner: { ...this.state.spinner, [navn]: true } });
+
     setTimeout(() => {
-      this.setState({ spinner: { ...this.state.spinner, [navn]: flagg } });
-    }, timeoutCount);
+      this.setState({ spinner: { ...this.state.spinner, [navn]: false } });
+    }, 1000);
   };
 
   /** Noen felter skal disables dersom andre felter er fylt inn eller andre
@@ -71,7 +62,6 @@ class Informasjon extends Component {
       default: return false;
     }
   };
-
 
   render() {
     const { sakstyper } = this.props;
@@ -135,7 +125,4 @@ const mapStateToProps = state => ({
   organisasjon: OrganisasjonSelectors.organisasjonSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-
-});
-export default connect(mapStateToProps, mapDispatchToProps)(Informasjon);
+export default connect(mapStateToProps)(Informasjon);
