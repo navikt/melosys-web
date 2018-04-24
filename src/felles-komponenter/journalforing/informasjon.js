@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { change } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
+import * as Konstanter from '../../constants';
 
 import './informasjon.css';
-import { PersonSelectors, PersonOperations } from '../../ducks/person';
-import { OrganisasjonSelectors, OrganisasjonOperations } from '../../ducks/organisasjon';
+import { PersonSelectors } from '../../ducks/person';
+import { OrganisasjonSelectors } from '../../ducks/organisasjon';
 
 const uuid = require('uuid/v4');
 
@@ -20,54 +20,17 @@ const uuid = require('uuid/v4');
 class Informasjon extends Component {
   state = { spinner: {} };
 
-  onKeyUp = event => {
+  vedIDFeltTastOpp = event => {
     const { id, value } = event.target;
+    const { hentBruker, hentAvsender } = this.props;
+    const nummerAntallSomUtloserSok = [Konstanter.ANTALL_TALL_I_DNR, Konstanter.ANTALL_TALL_I_FNR, Konstanter.ANTALL_TALL_I_ORGNR];
 
-    if (!value || !value.length) { return; }
+    if (!nummerAntallSomUtloserSok.includes(value.length)) { return; }
 
-    switch (id) {
-      case 'brukersFnr':
-        this.sjekkBrukersNavn(value);
-        break;
-      case 'avsenderFnrOrgnr':
-        this.sjekkAvsendersNavn(value);
-        break;
-      default:
-        break;
-    }
-  };
-
-  sjekkBrukersNavn = verdi => {
-    const { oppdaterFormFelt } = this.props;
-
-    if (this.verdiErFnr(verdi)) {
-      this.toggleSpinner('brukersNavn', true);
-      this.props.hentPerson(verdi).then(response => {
-        this.toggleSpinner('brukersNavn', false);
-        oppdaterFormFelt('brukersNavn', response.sammensattNavn);
-      });
-    } else {
-      oppdaterFormFelt('brukersNavn', '');
-    }
-  };
-
-  sjekkAvsendersNavn = verdi => {
-    const { oppdaterFormFelt } = this.props;
-
-    if (this.verdiErOrgnr(verdi)) {
-      this.toggleSpinner('avsenderNavn', true);
-      this.props.hentOrganisasjon(verdi).then(response => {
-        this.toggleSpinner('avsenderNavn', false);
-        oppdaterFormFelt('avsenderNavn', response.navn);
-      });
-    } else if (this.verdiErFnr(verdi)) {
-      this.toggleSpinner('avsenderNavn', true);
-      this.props.hentPerson(verdi).then(response => {
-        this.toggleSpinner('avsenderNavn', false);
-        oppdaterFormFelt('avsenderNavn', response.sammensattNavn);
-      });
-    } else {
-      oppdaterFormFelt('avsenderNavn', '');
+    if (id === 'brukersID') {
+      hentBruker(value, id);
+    } else if (id === 'avsenderID') {
+      hentAvsender(value, id);
     }
   };
 
@@ -118,11 +81,11 @@ class Informasjon extends Component {
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukersFnr" label="Brukers personnummer eller D-nummer" onKeyUp={this.onKeyUp} />
+          <Skjema.Input feltNavn="brukersID" label="Brukers personnummer eller D-nummer" onKeyUp={this.vedIDFeltTastOpp} />
           <Skjema.Input feltNavn="brukersNavn" label="Brukers navn" disabled />
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsenderFnrOrgnr" label="Avsender fødselsnummer eller orgnr" onKeyUp={this.onKeyUp} />
+          <Skjema.Input feltNavn="avsenderID" label="Avsender fødselsnummer eller orgnr" onKeyUp={this.vedIDFeltTastOpp} />
           <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn" disabled={skalFeltetDisables('avsenderNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
@@ -159,9 +122,8 @@ class Informasjon extends Component {
 Informasjon.propTypes = {
   sakstyper: PT.arrayOf(MPT.Kodeverk),
   journalforingSkjemaVerdier: PT.object,
-  hentPerson: PT.func.isRequired,
-  hentOrganisasjon: PT.func.isRequired,
-  oppdaterFormFelt: PT.func.isRequired,
+  hentBruker: PT.func.isRequired,
+  hentAvsender: PT.func.isRequired,
 };
 
 Informasjon.defaultProps = {
@@ -174,8 +136,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentPerson: fnr => PersonOperations.hentPerson(fnr),
-  hentOrganisasjon: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
-  oppdaterFormFelt: (feltNavn, verdi) => dispatch(change('journalforing', feltNavn, verdi)),
+
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Informasjon);
