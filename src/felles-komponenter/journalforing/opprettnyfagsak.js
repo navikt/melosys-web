@@ -12,7 +12,7 @@ const OpprettNyFagSak = props => {
   const { opprettNyFagsakSubmit } = props;
   return (
     <div className="opprettnysak">
-      <Nav.Systemtittel>...eller opprett ny sak</Nav.Systemtittel>
+      <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
       <Nav.Fieldset legend="Soknadperiode">
         <Nav.Column xs="4">
           <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
@@ -36,4 +36,5 @@ const OpprettNyFagSak = props => {
 OpprettNyFagSak.propTypes = {
   opprettNyFagsakSubmit: PT.func.isRequired,
 };
+
 export default OpprettNyFagSak;
