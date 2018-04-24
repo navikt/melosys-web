@@ -38,7 +38,6 @@ class Informasjon extends Component {
    * umiddelbart fra payload, men spinneren har en levetid på minimum 500 ms som gir brukeren
    * tid til å tolke grensesnittet, dvs spinneren.
    * @param navn {String} Navnet på spinneren
-   * @param flagg {Boolean} Hvorvidt spinneren skal slåes på eller av.
    */
   toggleSpinner = navn => {
     this.setState({ spinner: { ...this.state.spinner, [navn]: true } });
@@ -120,6 +119,7 @@ Informasjon.defaultProps = {
   sakstyper: [],
   journalforingSkjemaVerdier: {},
 };
+
 const mapStateToProps = state => ({
   person: PersonSelectors.personSelector(state),
   organisasjon: OrganisasjonSelectors.organisasjonSelector(state),
