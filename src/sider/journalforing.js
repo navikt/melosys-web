@@ -108,7 +108,8 @@ class Journalforing extends Component {
             <Nav.Row>
               <Nav.Column xs="4">
                 <Nav.Panel>
-                  <Informasjon journalforing={journalforing} journalforingSkjemaVerdier={journalforingSkjemaVerdier} dokumentTittel={dokumentTittel} vedleggsTitler={vedleggsTitler} />
+                  <Informasjon
+                    journalforing={journalforing} journalforingSkjemaVerdier={journalforingSkjemaVerdier} dokumentTittel={dokumentTittel} vedleggsTitler={vedleggsTitler} />
                   <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
                 </Nav.Panel>
               </Nav.Column>
