@@ -8,7 +8,7 @@ import './eksisterendeSaker.css';
 
 const EnkeltSak = props => {
   const {
-    mottatt, behandling = {}, soknadsperiode = {}, land = [], sakstype = {},
+    registrert, behandling = {}, soknadsperiode = {}, land = [], sakstype = {},
   } = props.sak;
   const { status = {}, type = {} } = behandling;
   const { fom = null, tom = null } = soknadsperiode;
@@ -20,8 +20,8 @@ const EnkeltSak = props => {
         <dd className="enkeltSak__meta__detalj">{sakstype.term || '(ukjent sakstype)'} - {type.term || '(ukjent behandlingstype)'}</dd>
         <dt className="enkeltSak__meta__term">Status: </dt>
         <dd className="enkeltSak__meta__detalj">{status.term || '(ukjent)'}</dd>
-        <dt className="enkeltSak__meta__term">Mottatt:</dt>
-        <dd className="enkeltSak__meta__detalj">{<EnkeltDato dato={mottatt} />}</dd>
+        <dt className="enkeltSak__meta__term">Registrert:</dt>
+        <dd className="enkeltSak__meta__detalj">{<EnkeltDato dato={registrert} />}</dd>
         <dt className="enkeltSak__meta__term">Søknadsperiode: </dt>
         <dd className="enkeltSak__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
         <dt className="enkeltSak__meta__term">Land:</dt>
@@ -42,9 +42,10 @@ const EksisterendeSaker = props => {
 
   return (
     <div className="eksisterendeSaker">
+      <Nav.Systemtittel>Knytt til brukers eksisterende sak</Nav.Systemtittel>
       {<Skjema.CustomRadioPanelGruppe
         feltNavn="knyttTilSaksID"
-        legend="Knytt til brukers eksisterende sak"
+        legend="Velg fra listen over saker:"
         radios={radioValg}
         feil={feil}
       />}
