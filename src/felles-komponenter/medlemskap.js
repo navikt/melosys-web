@@ -27,9 +27,9 @@ function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
     grunnlagstype = {},
     land = {},
     lovvalg = {},
-    trygdedekning,
-    kildedokumenttype,
-    kilde,
+    trygdedekning = {},
+    kildedokumenttype = {},
+    kilde = {},
   } = enkeltPeriode;
 
   return (
