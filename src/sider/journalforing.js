@@ -35,6 +35,7 @@ class Journalforing extends Component {
   static propTypes = {
     match: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
+    hentRelevanteFagsaker: PT.func.isRequired,
     sendNyFagsakTilJournalforing: PT.func.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
@@ -65,15 +66,16 @@ class Journalforing extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { erBrukerAvsender, brukersID } = nextProps.journalforingSkjemaVerdier;
+    const { erBrukerAvsender, brukersID, brukersNavn } = nextProps.journalforingSkjemaVerdier;
 
     if (erBrukerAvsender) {
-      const { brukersID, brukersNavn } = nextProps.journalforingSkjemaVerdier;
       this.props.settBrukerSomAvsender(brukersID, brukersNavn);
     }
 
-    if (brukersID.length === Konstanter.ANTALL_TALL_I_DNR || brukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
-      this.props.hentRelevanteFagsaker(brukersID);
+    if (brukersID) {
+      if (brukersID.length === Konstanter.ANTALL_TALL_I_DNR || brukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
+        this.props.hentRelevanteFagsaker(brukersID);
+      }
     }
   }
 
@@ -148,8 +150,6 @@ class Journalforing extends Component {
       knyttTilEksisterendeSak, opprettNyFagsakSubmit, hentAvsender, hentBruker,
     } = this;
 
-    const { opprettNyFagsakSubmit } = this;
-
     return (
       <div className="journalforing">
         <h1>Journalføring</h1>
@@ -159,6 +159,7 @@ class Journalforing extends Component {
               <Nav.Column xs="4">
                 <Nav.Panel>
                   <Informasjon
+                    journalforing={journalforing}
                     sakstyper={saksTyper}
                     journalforingSkjemaVerdier={journalforingSkjemaVerdier}
                     hentAvsender={hentAvsender}

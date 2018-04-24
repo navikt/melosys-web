@@ -12,7 +12,7 @@ const OpprettNyFagSak = props => {
   const { opprettNyFagsakSubmit } = props;
   return (
     <div className="opprettnysak">
-      <h2>Ny Sak</h2>
+      <Nav.Systemtittel>...eller opprett ny sak</Nav.Systemtittel>
       <Nav.Fieldset legend="Soknadperiode">
         <Nav.Column xs="4">
           <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
