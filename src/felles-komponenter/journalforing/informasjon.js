@@ -37,7 +37,7 @@ class Informasjon extends Component {
       default:
         break;
     }
-  }
+  };
 
   sjekkBrukersNavn = verdi => {
     const { oppdaterFormFelt } = this.props;
@@ -51,7 +51,7 @@ class Informasjon extends Component {
     } else {
       oppdaterFormFelt('brukersNavn', '');
     }
-  }
+  };
 
   sjekkAvsendersNavn = verdi => {
     const { oppdaterFormFelt } = this.props;
@@ -71,7 +71,7 @@ class Informasjon extends Component {
     } else {
       oppdaterFormFelt('avsenderNavn', '');
     }
-  }
+  };
 
   /** Hjelpefubnksjoner for å avgjøre om en gitt verdi kan være et fødselsnummer
    * eller et orgnummer.
@@ -94,7 +94,7 @@ class Informasjon extends Component {
     setTimeout(() => {
       this.setState({ spinner: { ...this.state.spinner, [navn]: flagg } });
     }, timeoutCount);
-  }
+  };
 
   /** Noen felter skal disables dersom andre felter er fylt inn eller andre
    * forutsetninger for disabling er tilstede.

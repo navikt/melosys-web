@@ -12,14 +12,9 @@ import { soknadDokument, behandlingsOppgave, journalforingOppgave } from '../deb
 import './spark.css';
 
 class Spark extends Component {
-  constructor(props) {
-    super(props);
-  }
   static defaultProps = {
     nyfagsak: undefined,
   };
-  componentWillMount() {
-  }
 
   soknadSubmit = event => {
     event.preventDefault();
