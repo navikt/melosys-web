@@ -145,9 +145,9 @@ class Informasjon extends Component {
 
 Informasjon.propTypes = {
   journalforing: MPT.Journalforing.isRequired,
-  dokumentTittel: PT.array,
-  vedleggsTitler: PT.array,
-  journalforingSkjemaVerdier: PT.object,
+  dokumentTittel: PT.arrayOf(MPT.Kodeverk),
+  vedleggsTitler: PT.arrayOf(MPT.Kodeverk),
+  journalforingSkjemaVerdier: PT.object, // TODO: Vurdere MPT.
   hentPerson: PT.func.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   oppdaterFormFelt: PT.func.isRequired,
