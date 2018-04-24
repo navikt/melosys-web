@@ -189,8 +189,9 @@ const ListeVelger = ({
   feltNavn, multiListe, label, ...rest
 }) => (
   <div>
-    <Nav.Fieldset legend={label}>
-      <FieldArray name={feltNavn} multiListe={multiListe} component={CustomListeVelger} {...rest} />
+    <Nav.Fieldset>
+      <label htmlFor="listeValg">{label}</label>
+      <FieldArray id="listeValg" name={feltNavn} multiListe={multiListe} component={CustomListeVelger} {...rest} />
     </Nav.Fieldset>
   </div>
 );
