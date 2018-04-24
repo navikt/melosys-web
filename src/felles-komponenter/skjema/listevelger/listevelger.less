@@ -1,0 +1,41 @@
+@import '../../../constants';
+
+.listevelger {
+
+  .listevelger__linje {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 0 1em 0;
+
+    .listevelger__linje__input {
+      width: 200px;
+      margin-bottom: 0;
+    }
+
+    .listevelger__linje__navn {
+      width: 200px;
+    }
+
+    .listevelger__linje__knapp {
+      background-color: transparent;
+      border-radius: 20px;
+      width: 40px;
+      height: 40px;
+      border: 2px solid @blue-nav;
+      color: @blue-nav;
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin: 0 0 0 1em;
+
+      &:focus {
+        box-shadow: 0 0 0 3px #ffbd66;
+        outline: none;
+      }
+    }
+
+    .listevelger__linje__knapp--leggtil {
+      align-self: flex-end;
+    }
+  }
+}

@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { change, reduxForm } from 'redux-form';
+import { reduxForm, change } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
+import * as MPT from '../proptypes';
 import * as Konstanter from '../constants';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
@@ -44,7 +45,11 @@ class Journalforing extends Component {
     saksTyper: PT.array,
     saksListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
+    dokumentTittel: PT.arrayOf(MPT.Kodeverk).isRequired,
+    vedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
+    settBrukerSomAvsender: PT.func.isRequired,
   };
+
   static defaultProps = {
     journalforing: {},
     journalpostID: 'DOC_321',
@@ -60,17 +65,16 @@ class Journalforing extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { brukersID } = nextProps.journalforingSkjemaVerdier;
+    const { erBrukerAvsender, brukersID } = nextProps.journalforingSkjemaVerdier;
 
-    if (!brukersID) return;
+    if (erBrukerAvsender) {
+      const { brukersID, brukersNavn } = nextProps.journalforingSkjemaVerdier;
+      this.props.settBrukerSomAvsender(brukersID, brukersNavn);
+    }
 
     if (brukersID.length === Konstanter.ANTALL_TALL_I_DNR || brukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
       this.props.hentRelevanteFagsaker(brukersID);
     }
-  }
-
-  oppdaterSkjemaMedRelevanteSaker = saker => {
-    this.setState({saksListe: saker});
   }
 
   knyttTilEksisterendeSak = () => {
@@ -137,12 +141,14 @@ class Journalforing extends Component {
 
   render() {
     const {
-      saksTyper, journalforingSkjemaVerdier, saksListe, pdfDokument,
+      journalforing, dokumentTittel, vedleggsTitler, saksTyper, journalforingSkjemaVerdier, saksListe, pdfDokument,
     } = this.props;
 
     const {
       knyttTilEksisterendeSak, opprettNyFagsakSubmit, hentAvsender, hentBruker,
     } = this;
+
+    const { opprettNyFagsakSubmit } = this;
 
     return (
       <div className="journalforing">
@@ -157,6 +163,8 @@ class Journalforing extends Component {
                     journalforingSkjemaVerdier={journalforingSkjemaVerdier}
                     hentAvsender={hentAvsender}
                     hentBruker={hentBruker}
+                    dokumentTittel={dokumentTittel}
+                    vedleggsTitler={vedleggsTitler}
                   />
                   <EksisterendeSaker saksListe={saksListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                   <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
@@ -183,14 +191,18 @@ const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   saksTyper: KodeverkSelectors.sakstyperSelector(state),
   pdfDokument: journalforingSelectors.JournalforingDokument(state).url,
+  dokumentTittel: KodeverkSelectors.dokumenttitlerSelector(state),
+  vedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   saksListe: journalforingSelectors.JournalforingAlle(state).saksListe,
   initialValues: {
     brukersID: journalforingSelectors.JournalforingBruker(state).ID,
-    brukersNavn: journalforingSelectors.JournalforingBruker(state).sammensattNavn,
+    brukersNavn: journalforingSelectors.JournalforingBruker(state).navn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
-    avsenderID: journalforingSelectors.JournalforingAvsender(state).ID,
-    avsenderNavn: journalforingSelectors.JournalforingAvsender(state).sammensattNavn,
+    avsendersID: journalforingSelectors.JournalforingAvsender(state).ID,
+    avsendersNavn: journalforingSelectors.JournalforingAvsender(state).navn,
+    dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel.kode,
+    vedleggsTitler: journalforingSelectors.JournalforingDokument(state).vedleggstitler,
   },
 });
 
@@ -201,6 +213,10 @@ const mapDispatchToProps = dispatch => ({
   sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
   sendNyFagsakTilJournalforing: data => Api.sendNyFagsakTilJournalforing(data),
   hentRelevanteFagsaker: id => dispatch(journalforingOperations.sokFagsaker(id)),
+  settBrukerSomAvsender: (id, navn) => {
+    dispatch(change('journalforing', 'avsendersID', id));
+    dispatch(change('journalforing', 'avsendersNavn', navn));
+  },
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm({
