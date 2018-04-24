@@ -23,6 +23,7 @@ import { Sysselsetting } from './sysselsetting';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
 import { SakEnkeltLinje, JournalForingEnkeltLinje, MineOppgaver } from './oppgaver';
 import { SokBehandlingsOppgave, SokBehandlingsOppgaver } from './sokbehandlingsoppgave';
+import { Journalforing } from './journalforing';
 
 export {
   ArbeidNorge,
@@ -68,4 +69,5 @@ export {
   TimerTimelonnet,
   TimerTimelonnetLinje,
   Utenlandsopphold,
+  Journalforing,
 };
