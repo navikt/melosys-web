@@ -4,18 +4,26 @@
   right: 0;
   color: #3e3832;
   overflow: hidden;
-  max-height: 3.5em;
+  max-height: 2.3em;
   margin: 2px;
-  padding: 1em;
+  padding: 0em 0.5em;
+
+  dl {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
 
   dt {
-    float: left;
     clear:both;
     font-weight: bold;
+    padding-right: 3px;
+    width: 30%;
   }
 
   dd {
-    float:right;
+    margin: 0;
+    width: 70%;
   }
 }
 
@@ -43,6 +51,7 @@
 
 .App__versjonering__spark {
   position: relative;
+  display: block;
 
   &:link,
   &:visited {

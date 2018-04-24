@@ -24,9 +24,10 @@ const Forside = props => {
             <MineOppgaver />
           </Nav.Column>
           <Nav.Column xs="5">
+            <h1>Behandle sak</h1>
+            <Sok />
             <Journalforing />
             <Behandling />
-            <Sok />
           </Nav.Column>
         </Nav.Row>
       </Nav.Container>
