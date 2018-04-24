@@ -129,7 +129,6 @@ class Saksbehandling extends Component {
   }
 
   fattVedtakHandler = () => {
-    /**
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
 
@@ -137,16 +136,13 @@ class Saksbehandling extends Component {
       this.props.sendSoknad(bid, soknad);
       this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
     }
-    */
   }
 
   beOmVurdering = () => {
-    /**
     const { behandlingID } = this.props.oppsummering;
     if (this.props.valid) {
       this.props.hentVurdering(behandlingID);
     }
-    */
   }
 
   overstyrSubmit = event => {
@@ -242,7 +238,6 @@ const mapStateToProps = state => ({
     trygdeavgiftTrukketGjennomSkatt: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
     trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
     studentIEOS: soknadSelectors.OppholdUtlandSelector(state).studentIEOS,
-    studentSkole: soknadSelectors.OppholdUtlandSelector(state).studentSkole,
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
     studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,
