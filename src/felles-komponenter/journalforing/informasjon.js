@@ -73,8 +73,8 @@ class Informasjon extends Component {
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukersID" label="Brukers personnummer eller D-nummer" onKeyUp={this.vedIDFeltTastOpp} />
-          <Skjema.Input feltNavn="brukersNavn" label="Brukers navn" disabled />
+          <Skjema.Input feltNavn="brukersID" label="Brukers fnr eller dnr:" onKeyUp={this.vedIDFeltTastOpp} />
+          <Skjema.Input feltNavn="brukersNavn" label="Brukers navn:" disabled />
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
@@ -86,7 +86,7 @@ class Informasjon extends Component {
           <Skjema.Select feltNavn="dokumentTittel" label="Tittel på hoveddokument:">
             { dokumentTittel.map(tittel => <option key={uuid()} value={tittel.kode}>{tittel.term}</option>)}
           </Skjema.Select>
-          <Skjema.ListeVelger feltNavn="vedleggsTitler" label="Titler på vedlegg" multiListe muligeValg={vedleggsTitler} />
+          <Skjema.ListeVelger feltNavn="vedleggsTitler" label="Titler på vedlegg:" multiListe muligeValg={vedleggsTitler} />
         </Nav.Fieldset>
         <div className="informasjon__knapper">
           <Nav.Knapp>Avbryt</Nav.Knapp>
