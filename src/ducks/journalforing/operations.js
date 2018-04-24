@@ -19,3 +19,11 @@ export function hentJournalOppgave(journalpostID) {
     PENDING: Types.PENDING,
   });
 }
+
+export function sokFagsaker(fnr) {
+  return doThenDispatch(() => Api.hentBehandlingsOppgaver(fnr), {
+    OK: Types.SAKSLISTE_OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
