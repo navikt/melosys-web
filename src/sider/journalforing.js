@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { reduxForm } from 'redux-form';
+import { change, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
+import * as Konstanter from '../constants';
+
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import Dokument from '../felles-komponenter/journalforing/dokument';
@@ -25,12 +27,17 @@ import {
 } from '../ducks/form/';
 
 import './journalforing.css';
+import { PersonOperations } from '../ducks/person';
+import { OrganisasjonOperations } from '../ducks/organisasjon';
 
 class Journalforing extends Component {
   static propTypes = {
     match: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
     sendNyFagsakTilJournalforing: PT.func.isRequired,
+    sokFnrDnr: PT.func.isRequired,
+    sokOrgnr: PT.func.isRequired,
+    oppdaterFormFelt: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
     pdfDokument: PT.string,
@@ -56,6 +63,32 @@ class Journalforing extends Component {
     const { journalforingSkjemaVerdier: { knyttTilSaksID } } = this.props;
 
     return knyttTilSaksID !== undefined;
+  }
+
+  hentBruker = value => {
+    const { sokFnrDnr, oppdaterFormFelt } = this.props;
+    const targetFeltNavn = 'brukersNavn';
+    if (value.length !== Konstanter.ANTALL_TALL_I_FNR && value.length !== Konstanter.ANTALL_TALL_I_DNR) { return; }
+
+    sokFnrDnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.sammensattNavn));
+  }
+
+  hentAvsender = value => {
+    const { sokOrgnr, sokFnrDnr, oppdaterFormFelt } = this.props;
+    const targetFeltNavn = 'avsenderNavn';
+
+    switch (value.length) {
+      case Konstanter.ANTALL_TALL_I_ORGNR: {
+        sokOrgnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.navn));
+        break;
+      }
+      case Konstanter.ANTALL_TALL_I_FNR:
+      case Konstanter.ANTALL_TALL_I_DNR: {
+        sokFnrDnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.sammensattNavn));
+        break;
+      }
+      default:
+    }
   }
 
   overstyrSubmit = event => {
@@ -92,7 +125,9 @@ class Journalforing extends Component {
     const {
       saksTyper, saksListe, journalforingSkjemaVerdier, pdfDokument,
     } = this.props;
-    const { knyttTilEksisterendeSak, opprettNyFagsakSubmit } = this;
+    const {
+      knyttTilEksisterendeSak, opprettNyFagsakSubmit, hentAvsender, hentBruker,
+    } = this;
 
     return (
       <div className="journalforing">
@@ -102,7 +137,12 @@ class Journalforing extends Component {
             <Nav.Row>
               <Nav.Column xs="4">
                 <Nav.Panel>
-                  <Informasjon sakstyper={saksTyper} journalforingSkjemaVerdier={journalforingSkjemaVerdier} />
+                  <Informasjon
+                    sakstyper={saksTyper}
+                    journalforingSkjemaVerdier={journalforingSkjemaVerdier}
+                    hentAvsender={hentAvsender}
+                    hentBruker={hentBruker}
+                  />
                   <EksisterendeSaker saksListe={saksListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                   <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
                 </Nav.Panel>
@@ -131,16 +171,19 @@ const mapStateToProps = state => ({
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   saksListe: journalforingSelectors.JournalforingAlle(state).saksListe,
   initialValues: {
-    brukersFnr: journalforingSelectors.JournalforingBruker(state).fnr,
+    brukersID: journalforingSelectors.JournalforingBruker(state).ID,
     brukersNavn: journalforingSelectors.JournalforingBruker(state).sammensattNavn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
-    avsenderFnrOrgnr: journalforingSelectors.JournalforingAvsender(state).fnr,
+    avsenderID: journalforingSelectors.JournalforingAvsender(state).ID,
     avsenderNavn: journalforingSelectors.JournalforingAvsender(state).sammensattNavn,
   },
 });
 
 const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hentJournalOppgave(journalpostID)),
+  oppdaterFormFelt: (feltNavn, verdi) => dispatch(change('journalforing', feltNavn, verdi)),
+  sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
+  sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
   sendNyFagsakTilJournalforing: data => Api.sendNyFagsakTilJournalforing(data),
 });
 
@@ -149,7 +192,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   enableReinitialize: true,
   destroyOnUnmount: false,
   fields: [
-    'brukersFnr',
+    'brukersID',
     'knyttTilSaksID',
   ],
   updateUnregisteredFields: true,
