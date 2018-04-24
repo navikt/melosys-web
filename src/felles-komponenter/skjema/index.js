@@ -7,6 +7,7 @@ import Textarea from './textarea/textarea';
 import Fieldset from '../../utils/navFrontend';
 import * as Validering from './validering';
 import CustomRadioPanelGruppe from './customRadioPanelGruppe';
+import ListeVelger from './listevelger';
 
 export {
   Checkbox,
@@ -18,4 +19,5 @@ export {
   Validering,
   Fieldset,
   CustomRadioPanelGruppe,
+  ListeVelger,
 };
