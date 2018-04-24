@@ -12,10 +12,7 @@ const JournalforingPropType = PT.shape({
     navn: PT.string,
     ID: PT.string,
   }),
-  sakstype: PT.shape({
-    kode: PT.string,
-    term: PT.string,
-  }),
+  sakstype: Kodeverk,
   dokument: PT.shape({
     navn: PT.string,
     mottattDato: PT.string,
