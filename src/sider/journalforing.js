@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { reduxForm } from 'redux-form';
+import { reduxForm, change } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -39,6 +39,7 @@ class Journalforing extends Component {
     journalforingSkjemaVerdier: PT.object,
     dokumentTittel: PT.arrayOf(MPT.Kodeverk).isRequired,
     vedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
+    settBrukerSomAvsender: PT.func.isRequired,
   };
 
   static defaultProps = {
@@ -52,6 +53,15 @@ class Journalforing extends Component {
   componentDidMount() {
     const { journalpostID } = this.props.match.params;
     this.props.hentJournalOppgave(journalpostID);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    const { erBrukerAvsender } = nextProps.journalforingSkjemaVerdier;
+
+    if (erBrukerAvsender) {
+      const { brukersID, brukersNavn } = nextProps.journalforingSkjemaVerdier;
+      this.props.settBrukerSomAvsender(brukersID, brukersNavn);
+    }
   }
 
   overstyrSubmit = event => {
@@ -140,6 +150,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hentJournalOppgave(journalpostID)),
   sendNyFagsakTilJournalforing: data => Api.sendNyFagsakTilJournalforing(data),
+  settBrukerSomAvsender: (id, navn) => {
+    dispatch(change('journalforing', 'avsendersID', id));
+    dispatch(change('journalforing', 'avsendersNavn', navn));
+  },
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm({
