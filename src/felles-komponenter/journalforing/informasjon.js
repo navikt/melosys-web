@@ -76,14 +76,14 @@ class Informasjon extends Component {
           <Skjema.Input feltNavn="brukersID" label="Brukers personnummer eller D-nummer" onKeyUp={this.vedIDFeltTastOpp} />
           <Skjema.Input feltNavn="brukersNavn" label="Brukers navn" disabled />
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-          <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsendersID" label="Avsenders fnr, dnr eller orgnr" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.vedIDFeltTastOpp} />
-          <Skjema.Input feltNavn="avsendersNavn" label="Avsenders navn eller firmanavn" disabled={skalFeltetDisables('avsendersNavn')} />
-          { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
+          <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
+          <Skjema.Input feltNavn="avsendersID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.vedIDFeltTastOpp} />
+          <Skjema.Input feltNavn="avsendersNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsendersNavn')} />
+          { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           { dokument.url && <Link to={dokument.url} target="_blank" className="informasjon__dokumentlenke"><EnkeltDato dato={dokument.mottattDato} />: {dokument.tittel.term}</Link> }
-          <Skjema.Select feltNavn="dokumentTittel" label="Tittel på hoveddokument">
+          <Skjema.Select feltNavn="dokumentTittel" label="Tittel på hoveddokument:">
             { dokumentTittel.map(tittel => <option key={uuid()} value={tittel.kode}>{tittel.term}</option>)}
           </Skjema.Select>
           <Skjema.ListeVelger feltNavn="vedleggsTitler" label="Titler på vedlegg" multiListe muligeValg={vedleggsTitler} />
