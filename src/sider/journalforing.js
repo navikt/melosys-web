@@ -59,6 +59,20 @@ class Journalforing extends Component {
     this.props.hentJournalOppgave(journalpostID);
   }
 
+  componentWillReceiveProps(nextProps) {
+    const { brukersID } = nextProps.journalforingSkjemaVerdier;
+
+    if (!brukersID) return;
+
+    if (brukersID.length === Konstanter.ANTALL_TALL_I_DNR || brukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
+      this.props.hentRelevanteFagsaker(brukersID);
+    }
+  }
+
+  oppdaterSkjemaMedRelevanteSaker = saker => {
+    this.setState({saksListe: saker});
+  }
+
   knyttTilEksisterendeSak = () => {
     const { journalforingSkjemaVerdier: { knyttTilSaksID } } = this.props;
 
@@ -123,8 +137,9 @@ class Journalforing extends Component {
 
   render() {
     const {
-      saksTyper, saksListe, journalforingSkjemaVerdier, pdfDokument,
+      saksTyper, journalforingSkjemaVerdier, saksListe, pdfDokument,
     } = this.props;
+
     const {
       knyttTilEksisterendeSak, opprettNyFagsakSubmit, hentAvsender, hentBruker,
     } = this;
@@ -185,6 +200,7 @@ const mapDispatchToProps = dispatch => ({
   sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
   sendNyFagsakTilJournalforing: data => Api.sendNyFagsakTilJournalforing(data),
+  hentRelevanteFagsaker: id => dispatch(journalforingOperations.sokFagsaker(id)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm({
