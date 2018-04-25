@@ -1,5 +1,5 @@
 /* eslint-disable */
-export const behandlingsoppgave = {
+export const behandlingsOppgave = {
   oppgavetype: 'BEH_SAK',
   sakstyper: [
     'EU_EOS',

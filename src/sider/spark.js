@@ -8,7 +8,6 @@ import { soknadOperations } from '../ducks/soknad/';
 import { fagsakOperations } from '../ducks/fagsaker/';
 import { oppgaverOperations } from '../ducks/oppgaver';
 
-// import { soknadDokument, behandlingsOppgave, journalforingOppgave } from '../debug/mock';
 import * as Mock from '../debug/mock';
 
 import './spark.css';
@@ -48,8 +47,8 @@ class Spark extends Component {
 
         <div className="spark__gruppe">
           <h1>Plukk Oppgave (Behandling ELLER Journalføring)</h1>
-          <p>Behandle sak:<br/><code>{JSON.stringify(Mock.behandlingsOppgave.behandlingsoppgave)}</code></p>
-          <p>Journalføring:<br/><code>{JSON.stringify(Mock.journalforingOppgave.journalforingoppgave)}</code></p>
+          <p>Behandle sak:<br/><code>{JSON.stringify(Mock.behandlingsOppgave)}</code></p>
+          <p>Journalføring:<br/><code>{JSON.stringify(Mock.journalforingOppgave)}</code></p>
           <form onSubmit={this.plukkOppgaveSubmit}>
             <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til plukk-endpoint.</p>
             <textarea name="oppgaveBody" className="spark__oppgave__body" /><br />
