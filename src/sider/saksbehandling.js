@@ -238,7 +238,6 @@ const mapStateToProps = state => ({
     trygdeavgiftTrukketGjennomSkatt: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
     trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
     studentIEOS: soknadSelectors.OppholdUtlandSelector(state).studentIEOS,
-    studentSkole: soknadSelectors.OppholdUtlandSelector(state).studentSkole,
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
     studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,

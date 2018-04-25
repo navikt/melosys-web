@@ -1,6 +1,9 @@
 /* eslint-disable */
 
 export const soknadDokument = {
+  opplysningerOmBrukeren: {
+    personUtenlandskID: '123-12-123456789',
+  },
   arbeidUtland: {
     arbeidsland: [
       'ES',
@@ -36,11 +39,12 @@ export const soknadDokument = {
   },
   arbeidNorge: {
     valgteArbeidsforhold: [
-      44137901,
+      '44137901',
     ],
     arbeidsforholdOpprettholdIHelePerioden: true,
     brukerErSelvstendigNaeringsdrivende: true,
     selvstendigFortsetterEtterArbeidIUtlandet: true,
+    arbeidsforholdVikarNavn: 'Vikarbyrået AS',
     vikarOrgnr: '22334455',
     flyendePersonellHjemmebase: 'Flybasen Int. Airport, ....',
     ansattPaSokkelEllerSkip: 'sokkel | skip',
@@ -48,6 +52,10 @@ export const soknadDokument = {
     sokkelLand: 'SE',
     skipFartsomrade: 'Europeisk fart',
     skipFlaggLand: 'SE',
+    kontaktNavn: 'Ola Nordmann',
+    kontaktEpost: 'ola.nordmann@fullmektigfirma.no',
+    fullmektigFirma: 'Advokatfullmektig AS',
+    fullmektigAdresse: 'Adresseveien 123, 1234 Byen',
   },
   juridiskArbeidsgiverNorge: {
     antallAnsatte: 350,
