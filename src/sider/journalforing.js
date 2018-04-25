@@ -67,15 +67,18 @@ class Journalforing extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { erBrukerAvsender, brukersID, brukersNavn } = nextProps.journalforingSkjemaVerdier;
+    const { brukersID } = this.props.journalforingSkjemaVerdier;
+    const { erBrukerAvsender, brukersID: nyBrukersID, brukersNavn: nyBrukersNavn } = nextProps.journalforingSkjemaVerdier;
+
+    if (!nyBrukersID) { return; }
 
     if (erBrukerAvsender) {
-      this.props.settBrukerSomAvsender(brukersID, brukersNavn);
+      this.props.settBrukerSomAvsender(nyBrukersID, nyBrukersNavn);
     }
 
-    if (brukersID) {
-      if (brukersID.length === Konstanter.ANTALL_TALL_I_DNR || brukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
-        this.props.hentRelevanteFagsaker(brukersID);
+    if (brukersID !== nyBrukersID) {
+      if (nyBrukersID.length === Konstanter.ANTALL_TALL_I_DNR || nyBrukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
+        this.props.hentRelevanteFagsaker(nyBrukersID);
       }
     }
   }
