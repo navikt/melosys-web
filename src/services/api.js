@@ -77,7 +77,7 @@ export function hentFagsaker(snr) {
 }
 
 export function hentBehandlingsOppgaver(fnr) {
-  const URI_NYESAKER = `${API_BASE_URL}sok/fagsaker/?fnr=${fnr}`;
+  const URI_NYESAKER = `${API_BASE_URL}fagsaker/sok/?fnr=${fnr}`;
   return getAsJson(URI_NYESAKER);
 }
 
