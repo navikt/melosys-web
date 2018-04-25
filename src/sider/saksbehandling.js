@@ -112,6 +112,7 @@ class Saksbehandling extends Component {
   componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentFagsaker(snr).then(response => {
+      console.log(response);
       const { behandlinger = [] } = response.data;
       const { oppsummering: { behandlingID } } = behandlinger[0];
       this.props.hentSoknad(behandlingID);
