@@ -88,9 +88,6 @@ class Informasjon extends Component {
           </Skjema.Select>
           <Skjema.ListeVelger feltNavn="vedleggsTitler" label="Titler på vedlegg:" multiListe muligeValg={vedleggsTitler} />
         </Nav.Fieldset>
-        <div className="informasjon__knapper">
-          <Nav.Knapp>Avbryt</Nav.Knapp>
-        </div>
       </div>
     );
   }

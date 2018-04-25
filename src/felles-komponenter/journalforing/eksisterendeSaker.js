@@ -6,6 +6,8 @@ import * as Nav from '../../utils/navFrontend';
 
 import './eksisterendeSaker.css';
 
+/** Den enkelte sak-elementet som brukes i iterasjon i listen
+ */
 const EnkeltSak = props => {
   const {
     registrert, behandling = {}, soknadsperiode = {}, land = [], sakstype = {},
@@ -16,8 +18,10 @@ const EnkeltSak = props => {
   return (
     <div className="enkeltSak__meta">
       <dl className="enkeltSak__meta">
-        <dt className="enkeltSak__meta__term">Type: </dt>
-        <dd className="enkeltSak__meta__detalj">{sakstype.term || '(ukjent sakstype)'} - {type.term || '(ukjent behandlingstype)'}</dd>
+        <dt className="enkeltSak__meta__term">Sakstype: </dt>
+        <dd className="enkeltSak__meta__detalj">{sakstype.term || '(ukjent sakstype)'}</dd>
+        <dt className="enkeltSak__meta__term">Behandlingstype: </dt>
+        <dd className="enkeltSak__meta__detalj">{type.term || '(ukjent behandlingstype)'}</dd>
         <dt className="enkeltSak__meta__term">Status: </dt>
         <dd className="enkeltSak__meta__detalj">{status.term || '(ukjent)'}</dd>
         <dt className="enkeltSak__meta__term">Registrert:</dt>
@@ -35,6 +39,10 @@ EnkeltSak.propTypes = {
   sak: PT.object.isRequired,
 };
 
+/** Eksisterende saker hentes fra endpointet /fagsaker/sok og merges inn i store via reduceren for journalforing under
+ * keyen saksListe. Denne komponenten får saksListe via props fra parent komponent Journalforing, med mål om å
+ * sentralisere ansvarsområder i større grad.
+ */
 const EksisterendeSaker = props => {
   const { saksListe, knyttTilEksisterendeSak, feil } = props;
 

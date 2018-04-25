@@ -26,8 +26,8 @@ const OpprettNyFagSak = props => {
           <LandVelger feltNavn="journalforingOppholdsLand" multiLand />
         </Nav.Column>
       </Nav.Fieldset>
-      <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={opprettNyFagsakSubmit}>Opprett ny sak</Nav.Knapp>
+      <div className="opprettnysak__knapper">
+        <Nav.Knapp className="knapp" onClick={opprettNyFagsakSubmit}>Opprett ny sak</Nav.Knapp>
       </div>
     </div>
   );
