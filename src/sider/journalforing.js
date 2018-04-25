@@ -85,9 +85,9 @@ class Journalforing extends Component {
   }
 
   knyttTilEksisterendeSak = () => {
-    const { journalforingSkjemaVerdier: { knyttTilSaksID } } = this.props;
+    const { journalforingSkjemaVerdier: { saksnummer } } = this.props;
 
-    return knyttTilSaksID !== undefined;
+    return saksnummer !== undefined;
   }
 
   hentBruker = value => {
@@ -234,7 +234,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   destroyOnUnmount: false,
   fields: [
     'brukersID',
-    'knyttTilSaksID',
+    'saksnummer',
   ],
   updateUnregisteredFields: true,
   validate: Journalforing.validering,

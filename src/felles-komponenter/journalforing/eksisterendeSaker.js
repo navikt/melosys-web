@@ -52,7 +52,7 @@ const EksisterendeSaker = props => {
     <div className="eksisterendeSaker">
       <Nav.Systemtittel>Knytt til brukers eksisterende sak</Nav.Systemtittel>
       {<Skjema.CustomRadioPanelGruppe
-        feltNavn="knyttTilSaksID"
+        feltNavn="saksnummer"
         legend="Velg fra listen over saker:"
         radios={radioValg}
         feil={feil}
