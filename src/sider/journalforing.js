@@ -7,8 +7,10 @@ import { withRouter } from 'react-router';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import * as MPT from '../proptypes';
+import * as Konstanter from '../constants';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
+import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import Dokument from '../felles-komponenter/journalforing/dokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
@@ -26,16 +28,24 @@ import {
 } from '../ducks/form/';
 
 import './journalforing.css';
+import { PersonOperations } from '../ducks/person';
+import { OrganisasjonOperations } from '../ducks/organisasjon';
 
 class Journalforing extends Component {
   static propTypes = {
     match: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
+    hentRelevanteFagsaker: PT.func.isRequired,
     sendNyFagsakTilJournalforing: PT.func.isRequired,
+    sokFnrDnr: PT.func.isRequired,
+    sokOrgnr: PT.func.isRequired,
+    history: PT.object.isRequired,
+    oppdaterFormFelt: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
     pdfDokument: PT.string,
-    sakstyper: PT.array,
+    saksTyper: PT.array,
+    fagsakListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
     dokumentTittel: PT.arrayOf(MPT.Kodeverk).isRequired,
     vedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -46,7 +56,8 @@ class Journalforing extends Component {
     journalforing: {},
     journalpostID: 'DOC_321',
     pdfDokument: '',
-    sakstyper: [],
+    saksTyper: [],
+    fagsakListe: [],
     journalforingSkjemaVerdier: {},
   };
 
@@ -56,11 +67,55 @@ class Journalforing extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { erBrukerAvsender } = nextProps.journalforingSkjemaVerdier;
+    const { brukersID } = this.props.journalforingSkjemaVerdier;
+    const { erBrukerAvsender, brukersID: nyBrukersID, brukersNavn: nyBrukersNavn } = nextProps.journalforingSkjemaVerdier;
+
+    if (!nyBrukersID) { return; }
 
     if (erBrukerAvsender) {
-      const { brukersID, brukersNavn } = nextProps.journalforingSkjemaVerdier;
-      this.props.settBrukerSomAvsender(brukersID, brukersNavn);
+      this.props.settBrukerSomAvsender(nyBrukersID, nyBrukersNavn);
+    }
+
+    if (brukersID === nyBrukersID) { return; }
+
+    if (nyBrukersID.length === Konstanter.ANTALL_TALL_I_DNR || nyBrukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
+      this.props.hentRelevanteFagsaker(nyBrukersID);
+    }
+  }
+
+  avbrytJournalforing = () => {
+    this.props.history.push('/');
+  }
+
+  knyttTilEksisterendeSak = () => {
+    const { journalforingSkjemaVerdier: { saksnummer } } = this.props;
+
+    return saksnummer !== undefined;
+  }
+
+  hentBruker = value => {
+    const { sokFnrDnr, oppdaterFormFelt } = this.props;
+    const targetFeltNavn = 'brukersNavn';
+    if (value.length !== Konstanter.ANTALL_TALL_I_FNR && value.length !== Konstanter.ANTALL_TALL_I_DNR) { return; }
+
+    sokFnrDnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.sammensattNavn));
+  }
+
+  hentAvsender = value => {
+    const { sokOrgnr, sokFnrDnr, oppdaterFormFelt } = this.props;
+    const targetFeltNavn = 'avsendersNavn';
+
+    switch (value.length) {
+      case Konstanter.ANTALL_TALL_I_ORGNR: {
+        sokOrgnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.navn));
+        break;
+      }
+      case Konstanter.ANTALL_TALL_I_FNR:
+      case Konstanter.ANTALL_TALL_I_DNR: {
+        sokFnrDnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.sammensattNavn));
+        break;
+      }
+      default:
     }
   }
 
@@ -96,9 +151,12 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing, dokumentTittel, vedleggsTitler, pdfDokument, journalforingSkjemaVerdier,
+      journalforing, dokumentTittel, vedleggsTitler, saksTyper, journalforingSkjemaVerdier, fagsakListe, pdfDokument,
     } = this.props;
-    const { opprettNyFagsakSubmit } = this;
+
+    const {
+      knyttTilEksisterendeSak, opprettNyFagsakSubmit, hentAvsender, hentBruker,
+    } = this;
 
     return (
       <div className="journalforing">
@@ -109,8 +167,19 @@ class Journalforing extends Component {
               <Nav.Column xs="4">
                 <Nav.Panel>
                   <Informasjon
-                    journalforing={journalforing} journalforingSkjemaVerdier={journalforingSkjemaVerdier} dokumentTittel={dokumentTittel} vedleggsTitler={vedleggsTitler} />
+                    journalforing={journalforing}
+                    sakstyper={saksTyper}
+                    journalforingSkjemaVerdier={journalforingSkjemaVerdier}
+                    hentAvsender={hentAvsender}
+                    hentBruker={hentBruker}
+                    dokumentTittel={dokumentTittel}
+                    vedleggsTitler={vedleggsTitler}
+                  />
+                  <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                   <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
+                  <div className="journalforing__fotknapper">
+                    <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                  </div>
                 </Nav.Panel>
               </Nav.Column>
               <Nav.Column xs="8">
@@ -132,11 +201,12 @@ Journalforing.validering = value => ({
 
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
-  sakstyper: KodeverkSelectors.sakstyperSelector(state),
+  saksTyper: KodeverkSelectors.sakstyperSelector(state),
   pdfDokument: journalforingSelectors.JournalforingDokument(state).url,
   dokumentTittel: KodeverkSelectors.dokumenttitlerSelector(state),
   vedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
+  fagsakListe: journalforingSelectors.JournalforingAlle(state).fagsakListe,
   initialValues: {
     brukersID: journalforingSelectors.JournalforingBruker(state).ID,
     brukersNavn: journalforingSelectors.JournalforingBruker(state).navn,
@@ -150,7 +220,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hentJournalOppgave(journalpostID)),
+  oppdaterFormFelt: (feltNavn, verdi) => dispatch(change('journalforing', feltNavn, verdi)),
+  sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
+  sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
   sendNyFagsakTilJournalforing: data => Api.sendNyFagsakTilJournalforing(data),
+  hentRelevanteFagsaker: id => dispatch(journalforingOperations.sokFagsaker(id)),
   settBrukerSomAvsender: (id, navn) => {
     dispatch(change('journalforing', 'avsendersID', id));
     dispatch(change('journalforing', 'avsendersNavn', navn));
@@ -163,6 +237,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   destroyOnUnmount: false,
   fields: [
     'brukersID',
+    'saksnummer',
   ],
   updateUnregisteredFields: true,
   validate: Journalforing.validering,
