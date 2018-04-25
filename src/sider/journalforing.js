@@ -76,10 +76,10 @@ class Journalforing extends Component {
       this.props.settBrukerSomAvsender(nyBrukersID, nyBrukersNavn);
     }
 
-    if (brukersID !== nyBrukersID) {
-      if (nyBrukersID.length === Konstanter.ANTALL_TALL_I_DNR || nyBrukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
-        this.props.hentRelevanteFagsaker(nyBrukersID);
-      }
+    if (brukersID === nyBrukersID) { return; }
+
+    if (nyBrukersID.length === Konstanter.ANTALL_TALL_I_DNR || nyBrukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
+      this.props.hentRelevanteFagsaker(nyBrukersID);
     }
   }
 
