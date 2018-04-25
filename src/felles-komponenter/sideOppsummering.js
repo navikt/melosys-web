@@ -11,8 +11,8 @@ import './sideOppsummering.css';
 function SideOppsummering(props) {
   const {
     saksnummer,
-    type,
-    status,
+    type = {},
+    status = {},
     registrertDato,
   } = props.oppsummering;
 
@@ -40,7 +40,7 @@ function SideOppsummering(props) {
         {/* END BEHANDLINGSMENY */}
         <Nav.Row>
           <Nav.Column xs="12" md="6">
-            <Nav.Undertittel className="soknadSammendrag__header">Søknad om {type || '-'}</Nav.Undertittel>
+            <Nav.Undertittel className="soknadSammendrag__header">Søknad om {type.term || '-'}</Nav.Undertittel>
           </Nav.Column>
         </Nav.Row>
         {/* START BEHANDLINGSSTATUS */}
@@ -50,7 +50,7 @@ function SideOppsummering(props) {
               <dt>Saksnummer:</dt>
               <dd>{saksnummer || '-'}</dd>
               <dt>Behandlingsstatus:</dt>
-              <dd>{status || '-'}</dd>
+              <dd>{status.term || '-'}</dd>
               <dt>Oppholdsland:</dt>
               <dd>-</dd>
               <dt>Registrert dato:</dt>
