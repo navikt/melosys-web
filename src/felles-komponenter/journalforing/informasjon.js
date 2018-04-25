@@ -24,7 +24,7 @@ class Informasjon extends Component {
 
   gyldigBruker = (id, value) => id === 'brukersID' && (value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR);
 
-  gyldigAvsender = (id, value) => id === 'avsenderID' && (
+  gyldigAvsender = (id, value) => id === 'avsendersID' && (
     value.length === Konstanter.ANTALL_TALL_I_ORGNR ||
     value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR
   );
