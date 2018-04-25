@@ -22,14 +22,21 @@ const uuid = require('uuid/v4');
 class Informasjon extends Component {
   state = { spinner: {} };
 
+  gyldigBruker = (id, value) => id === 'brukersID' && (value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR);
+
+  gyldigAvsender = (id, value) => id === 'avsenderID' && (
+    value.length === Konstanter.ANTALL_TALL_I_ORGNR ||
+    value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR
+  );
+
   vedIDFeltTastOpp = event => {
     const { id, value } = event.target;
     const { hentBruker, hentAvsender } = this.props;
 
-    if (id === 'brukersID' && (value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR)) {
+    if (this.gyldigBruker(id, value)) {
       hentBruker(value, id);
       this.toggleSpinner('brukersNavn');
-    } else if (id === 'avsenderID' && (value.length === Konstanter.ANTALL_TALL_I_ORGNR || value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR)) {
+    } else if (this.gyldigAvsender(id, value)) {
       hentAvsender(value, id);
       this.toggleSpinner('avsenderNavn');
     }
