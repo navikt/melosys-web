@@ -44,9 +44,9 @@ EnkeltSak.propTypes = {
  * sentralisere ansvarsområder i større grad.
  */
 const EksisterendeSaker = props => {
-  const { saksListe, knyttTilEksisterendeSak, feil } = props;
+  const { fagsakListe, knyttTilEksisterendeSak, feil } = props;
 
-  const radioValg = saksListe.reduce((samling, sak) => ([...samling, { value: sak.saksnummer, innhold: <EnkeltSak sak={sak} /> }]), []);
+  const radioValg = fagsakListe.reduce((samling, sak) => ([...samling, { value: sak.saksnummer, innhold: <EnkeltSak sak={sak} /> }]), []);
 
   return (
     <div className="eksisterendeSaker">
@@ -57,14 +57,14 @@ const EksisterendeSaker = props => {
         radios={radioValg}
         feil={feil}
       />}
-      { saksListe.length === 0 && 'Ingen eksisterende saker funnet.'}
-      { saksListe.length > 0 && <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp> }
+      { fagsakListe.length === 0 && 'Ingen eksisterende saker funnet.'}
+      { fagsakListe.length > 0 && <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp> }
     </div>
   );
 };
 
 EksisterendeSaker.propTypes = {
-  saksListe: PT.array.isRequired,
+  fagsakListe: PT.array.isRequired,
   knyttTilEksisterendeSak: PT.func.isRequired,
   feil: PT.object,
 };
