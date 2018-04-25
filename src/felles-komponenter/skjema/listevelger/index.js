@@ -6,6 +6,8 @@ import * as Nav from '../../../utils/navFrontend';
 
 import './listevelger.css';
 
+const uuid = require('uuid/v4');
+
 const ValgtListe = ({ listeObjekt, slettListe }) => (
   <div className="listevelger__linje">
     <div className="listevelger__linje__navn">{listeObjekt.term}</div><button className="listevelger__linje__knapp" onClick={e => slettListe(e, listeObjekt.kode)}>-</button>
@@ -28,11 +30,7 @@ class CustomListeVelger extends Component {
    */
   leggTilListe = listeKode => {
     const { fields } = this.props;
-    const alleValg = fields.getAll() || [];
-
-    if (!alleValg.includes(listeKode)) {
-      fields.push(listeKode);
-    }
+    fields.push(listeKode);
   }
 
   /**
@@ -154,7 +152,7 @@ class CustomListeVelger extends Component {
             onClick={this.leggTilListeHandler}>+
           </button>
           <datalist id="alleListe">
-            {muligeValg.map(item => (!valgteListe.includes(item) ? <option key={item.kode} value={item.term} /> : ''))}
+            {muligeValg.map(item => <option key={uuid()} value={item.term} />) }
           </datalist>
         </div>
       )
@@ -165,7 +163,7 @@ class CustomListeVelger extends Component {
       <div className="listevelger">
         {valgteListe.map(valg => (
           <ValgtListe
-            key={valg.kode}
+            key={uuid()}
             listeObjekt={this.props.muligeValg.find(liste => liste.kode === valg.kode)}
             slettListe={this.slettListeHandler}
           />
@@ -189,9 +187,8 @@ const ListeVelger = ({
   feltNavn, multiListe, label, ...rest
 }) => (
   <div>
-    <Nav.Fieldset legend={label}>
-      <FieldArray name={feltNavn} multiListe={multiListe} component={CustomListeVelger} {...rest} />
-    </Nav.Fieldset>
+    <label htmlFor="listeValg">{label}</label>
+    <FieldArray id="listeValg" name={feltNavn} multiListe={multiListe} component={CustomListeVelger} {...rest} />
   </div>
 );
 

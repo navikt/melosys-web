@@ -12,7 +12,7 @@ const OpprettNyFagSak = props => {
   const { opprettNyFagsakSubmit } = props;
   return (
     <div className="opprettnysak">
-      <h2>Ny Sak</h2>
+      <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
       <Nav.Fieldset legend="Soknadperiode">
         <Nav.Column xs="4">
           <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
@@ -26,8 +26,8 @@ const OpprettNyFagSak = props => {
           <LandVelger feltNavn="journalforingOppholdsLand" multiLand />
         </Nav.Column>
       </Nav.Fieldset>
-      <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={opprettNyFagsakSubmit}>Opprett ny sak</Nav.Knapp>
+      <div className="opprettnysak__knapper">
+        <Nav.Knapp className="knapp" onClick={opprettNyFagsakSubmit}>Opprett ny sak</Nav.Knapp>
       </div>
     </div>
   );
@@ -36,4 +36,5 @@ const OpprettNyFagSak = props => {
 OpprettNyFagSak.propTypes = {
   opprettNyFagsakSubmit: PT.func.isRequired,
 };
+
 export default OpprettNyFagSak;
