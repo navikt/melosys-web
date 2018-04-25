@@ -39,6 +39,7 @@ class Journalforing extends Component {
     sendNyFagsakTilJournalforing: PT.func.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
+    history: PT.object.isRequired,
     oppdaterFormFelt: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
@@ -77,6 +78,10 @@ class Journalforing extends Component {
         this.props.hentRelevanteFagsaker(brukersID);
       }
     }
+  }
+
+  avbrytJournalforing = () => {
+    this.props.history.push('/');
   }
 
   knyttTilEksisterendeSak = () => {
@@ -169,6 +174,9 @@ class Journalforing extends Component {
                   />
                   <EksisterendeSaker saksListe={saksListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                   <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
+                  <div className="journalforing__fotknapper">
+                    <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                  </div>
                 </Nav.Panel>
               </Nav.Column>
               <Nav.Column xs="8">
