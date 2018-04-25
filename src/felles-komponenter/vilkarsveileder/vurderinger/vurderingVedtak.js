@@ -97,7 +97,7 @@ const VurderingVedtak = props => {
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Undertittel>Foreslått vedtak:</Nav.Undertittel>
+            <Nav.Undertittel>Vilkårsresultat:</Nav.Undertittel>
           </Nav.Column>
         </Nav.Row>
         {
