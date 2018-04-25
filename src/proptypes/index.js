@@ -16,7 +16,6 @@ import { Bekreftelser } from './bekreftelser';
 import { SoknadForm } from './soknadForm';
 import { Utenlandsopphold } from './utenlandsopphold';
 import { ArbeidNorge } from './arbeidNorge';
-import { Landkode, Landkoder } from './landkoder';
 import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger } from './vurdering';
 import { Opphold } from './opphold';
 import { Sysselsetting } from './sysselsetting';
@@ -41,8 +40,6 @@ export {
   InntektListe,
   JournalForingEnkeltLinje,
   Kodeverk,
-  Landkode,
-  Landkoder,
   Lovvalgsbestemmelse,
   Lovvalgsbestemmelser,
   Medlemskap,
