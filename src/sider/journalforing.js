@@ -103,7 +103,7 @@ class Journalforing extends Component {
 
   hentAvsender = value => {
     const { sokOrgnr, sokFnrDnr, oppdaterFormFelt } = this.props;
-    const targetFeltNavn = 'avsenderNavn';
+    const targetFeltNavn = 'avsendersNavn';
 
     switch (value.length) {
       case Konstanter.ANTALL_TALL_I_ORGNR: {
