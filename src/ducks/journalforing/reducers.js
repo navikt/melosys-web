@@ -22,7 +22,7 @@ export default function reducer(state = initalState, action) {
     case Types.OK:
       return { ...state, status: STATUS.OK, data: action.data };
     case Types.SAKSLISTE_OK:
-      return { ...state, status: STATUS.OK, data: { ...state.data, saksListe: action.data } };
+      return { ...state, status: STATUS.OK, data: { ...state.data, fagsakListe: action.data } };
     default:
       return state;
   }

@@ -45,7 +45,7 @@ class Journalforing extends Component {
     journalpostID: PT.string,
     pdfDokument: PT.string,
     saksTyper: PT.array,
-    saksListe: PT.array,
+    fagsakListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
     dokumentTittel: PT.arrayOf(MPT.Kodeverk).isRequired,
     vedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -57,7 +57,7 @@ class Journalforing extends Component {
     journalpostID: 'DOC_321',
     pdfDokument: '',
     saksTyper: [],
-    saksListe: [],
+    fagsakListe: [],
     journalforingSkjemaVerdier: {},
   };
 
@@ -148,7 +148,7 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing, dokumentTittel, vedleggsTitler, saksTyper, journalforingSkjemaVerdier, saksListe, pdfDokument,
+      journalforing, dokumentTittel, vedleggsTitler, saksTyper, journalforingSkjemaVerdier, fagsakListe, pdfDokument,
     } = this.props;
 
     const {
@@ -172,7 +172,7 @@ class Journalforing extends Component {
                     dokumentTittel={dokumentTittel}
                     vedleggsTitler={vedleggsTitler}
                   />
-                  <EksisterendeSaker saksListe={saksListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
+                  <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                   <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
                   <div className="journalforing__fotknapper">
                     <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
@@ -203,7 +203,7 @@ const mapStateToProps = state => ({
   dokumentTittel: KodeverkSelectors.dokumenttitlerSelector(state),
   vedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
-  saksListe: journalforingSelectors.JournalforingAlle(state).saksListe,
+  fagsakListe: journalforingSelectors.JournalforingAlle(state).fagsakListe,
   initialValues: {
     brukersID: journalforingSelectors.JournalforingBruker(state).ID,
     brukersNavn: journalforingSelectors.JournalforingBruker(state).navn,
