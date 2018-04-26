@@ -20,12 +20,12 @@ export function health() {
 }
 
 export function hentPerson(fnrdnr) {
-  const URI_PERSON = `${API_BASE_URL}personer?fnr=${fnrdnr}`;
+  const URI_PERSON = `${API_BASE_URL}personer/?fnr=${fnrdnr}`;
   return getAsJson(URI_PERSON);
 }
 
 export function hentOrganisasjon(orgnr) {
-  const URI_ORGANISASJON = `${API_BASE_URL}organisasjoner?orgnr=${orgnr}`;
+  const URI_ORGANISASJON = `${API_BASE_URL}organisasjoner/?orgnr=${orgnr}`;
   return getAsJson(URI_ORGANISASJON);
 }
 export function hentKodeverk() {
