@@ -10,9 +10,8 @@ import './eksisterendeSaker.css';
  */
 const EnkeltSak = props => {
   const {
-    registrert, behandling = {}, soknadsperiode = {}, land = [], sakstype = {},
+    registrertDato, behandlingstype = {}, soknadsperiode = {}, behandlingsstatus = {}, land = [], sakstype = {},
   } = props.sak;
-  const { status = {}, type = {} } = behandling;
   const { fom = null, tom = null } = soknadsperiode;
 
   return (
@@ -21,11 +20,11 @@ const EnkeltSak = props => {
         <dt className="enkeltSak__meta__term">Sakstype: </dt>
         <dd className="enkeltSak__meta__detalj">{sakstype.term || '(ukjent sakstype)'}</dd>
         <dt className="enkeltSak__meta__term">Behandlingstype: </dt>
-        <dd className="enkeltSak__meta__detalj">{type.term || '(ukjent behandlingstype)'}</dd>
-        <dt className="enkeltSak__meta__term">Status: </dt>
-        <dd className="enkeltSak__meta__detalj">{status.term || '(ukjent)'}</dd>
+        <dd className="enkeltSak__meta__detalj">{behandlingstype.term || '(ukjent behandlingstype)'}</dd>
+        <dt className="enkeltSak__meta__term">Behandlingsstatus: </dt>
+        <dd className="enkeltSak__meta__detalj">{behandlingsstatus.term || '(ukjent)'}</dd>
         <dt className="enkeltSak__meta__term">Registrert:</dt>
-        <dd className="enkeltSak__meta__detalj">{<EnkeltDato dato={registrert} />}</dd>
+        <dd className="enkeltSak__meta__detalj">{<EnkeltDato dato={registrertDato} />}</dd>
         <dt className="enkeltSak__meta__term">Søknadsperiode: </dt>
         <dd className="enkeltSak__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
         <dt className="enkeltSak__meta__term">Land:</dt>
