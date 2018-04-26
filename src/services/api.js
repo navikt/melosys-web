@@ -76,6 +76,11 @@ export function hentFagsaker(snr) {
   return getAsJson(URI_FAGSAKER);
 }
 
+export function sokFagsaker(fnr) {
+  const URI_FAGSAKER = `${API_BASE_URL}fagsaker/sok/?fnr=${fnr}`;
+  return getAsJson(URI_FAGSAKER);
+}
+
 export function hentBehandlingsOppgaver(fnr) {
   const URI_NYESAKER = `${API_BASE_URL}oppgaver/sok/?fnr=${fnr}`;
   return getAsJson(URI_NYESAKER);
