@@ -82,8 +82,8 @@ export function sokFagsaker(fnr) {
 }
 
 export function hentBehandlingsOppgaver(fnr) {
-  const URI_NYESAKER = `${API_BASE_URL}oppgaver/sok/?fnr=${fnr}`;
-  return getAsJson(URI_NYESAKER);
+  const URI_BEHANDLINGS_OPPGAVER = `${API_BASE_URL}oppgaver/sok/?fnr=${fnr}`;
+  return getAsJson(URI_BEHANDLINGS_OPPGAVER);
 }
 
 export function opprettNyFagsak(fnr) {
