@@ -27,8 +27,10 @@ class Sok extends Component {
   }
 
   render() {
-    const { behandlingsoppgaver, children } = this.props;
+    const { behandlingsoppgaver = [], children } = this.props;
     const { fnr } = this.props.match.params;
+
+    if (!Array.isArray(behandlingsoppgaver)) { return null; }
 
     return (
       <div className="sok">
@@ -38,7 +40,7 @@ class Sok extends Component {
             <Nav.Column xs="7">
               <section className="sokresultat">
                 <h1>Fant {behandlingsoppgaver.length} treff etter søk på &quot;{fnr}&quot;</h1>
-                {behandlingsoppgaver && behandlingsoppgaver.map(oppgave => <SakEnkeltLinje key={uuid()} sak={oppgave} />)}
+                { behandlingsoppgaver.map(oppgave => <SakEnkeltLinje key={uuid()} sak={oppgave} />)}
               </section>
             </Nav.Column>
             <Nav.Column xs="5">
@@ -78,5 +80,6 @@ const mapDispatchToProps = dispatch => ({
 const kontekster = [
   { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
   { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
+  { navn: 'oppgaver', melding: 'Det har oppstått en feil: Kunne ikke søke etter oppgaver' },
 ];
 export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(Sok));
