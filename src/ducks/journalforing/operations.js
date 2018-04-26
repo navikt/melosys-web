@@ -21,7 +21,7 @@ export function hentJournalOppgave(journalpostID) {
 }
 
 export function sokFagsaker(fnr) {
-  return doThenDispatch(() => Api.hentBehandlingsOppgaver(fnr), {
+  return doThenDispatch(() => Api.sokFagsaker(fnr), {
     OK: Types.SAKSLISTE_OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
