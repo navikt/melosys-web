@@ -17,7 +17,7 @@ class PDFViser extends Component {
 
   onLoadSuccess = ({ numPages }) => {
     this.setState({ numPages });
-  }
+  };
 
   render() {
     const { numPages } = this.state;
@@ -56,7 +56,7 @@ PDFViser.defaultProps = {
  * via eventlisteners ved mount.
  */
 class Dokument extends Component {
-  state = { width: null }
+  state = { width: null };
 
   componentDidMount () {
     this.setDivSize();
@@ -70,17 +70,18 @@ class Dokument extends Component {
   setDivSize = () => {
     const width = this.pdfWrapper && this.pdfWrapper.getBoundingClientRect().width;
     return width && this.setState({ width: this.pdfWrapper.getBoundingClientRect().width });
-  }
+  };
 
   render() {
-    const { pdfDokument } = this.props;
+    // TODO const { pdfDokument } = this.props;
+    const pdfDokumentURI = 'http://localhost:3002/api/dokumenter/pdf/DOK_321/did';
 
     return (
       <div
         id="row"
         className="dokument">
         <div id="pdfWrapper" className="dokument__pdfwrapper" ref={ref => { this.pdfWrapper = ref; }}>
-          <PDFViser wrapperDivSize={this.state.width} pdfDokument={pdfDokument} />
+          <PDFViser wrapperDivSize={this.state.width} pdfDokument={pdfDokumentURI} />
         </div>
       </div>
     );
