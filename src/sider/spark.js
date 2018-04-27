@@ -8,18 +8,14 @@ import { soknadOperations } from '../ducks/soknad/';
 import { fagsakOperations } from '../ducks/fagsaker/';
 import { oppgaverOperations } from '../ducks/oppgaver';
 
-import { soknadDokument, behandlingsOppgave, journalforingOppgave } from '../debug/mock';
+import * as Mock from '../debug/mock';
+
 import './spark.css';
 
 class Spark extends Component {
-  constructor(props) {
-    super(props);
-  }
   static defaultProps = {
     nyfagsak: undefined,
   };
-  componentWillMount() {
-  }
 
   soknadSubmit = event => {
     event.preventDefault();
@@ -51,8 +47,8 @@ class Spark extends Component {
 
         <div className="spark__gruppe">
           <h1>Plukk Oppgave (Behandling ELLER Journalføring)</h1>
-          <p>Behandle sak:<br/><code>{JSON.stringify(behandlingsOppgave)}</code></p>
-          <p>Jornalføring:<br/><code>{JSON.stringify(journalforingOppgave)}</code></p>
+          <p>Behandle sak:<br/><code>{JSON.stringify(Mock.behandlingsOppgave)}</code></p>
+          <p>Journalføring:<br/><code>{JSON.stringify(Mock.journalforingOppgave)}</code></p>
           <form onSubmit={this.plukkOppgaveSubmit}>
             <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til plukk-endpoint.</p>
             <textarea name="oppgaveBody" className="spark__oppgave__body" /><br />
@@ -74,7 +70,7 @@ class Spark extends Component {
         <div className="spark__gruppe">
           <h1>Populere søknad manuelt</h1>
           <p className="spark__gruppe__forklaring"><span>!</span>Legg inn hele JSON-objektet for søknaden og tast inn behandlingID for å teste lagring av søknaden og knytte den til en faktisk sak.</p>
-          <p>soknad:<br/><code>{JSON.stringify(soknadDokument)}</code></p>
+          <p>soknad:<br/><code>{JSON.stringify(Mock.soknadDokument)}</code></p>
           <form onSubmit={this.soknadSubmit}>
             <label>behandlingID:</label>
             <input type="text" name="behandlingID" />

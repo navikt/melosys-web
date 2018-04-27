@@ -1,6 +1,6 @@
-import * as soknadDokument from './soknadtemplate';
-import * as behandlingsOppgave from './behandlingsoppgave';
-import * as journalforingOppgave from './journalforingoppgave';
+import { soknadDokument } from './soknadtemplate';
+import { behandlingsOppgave } from './behandlingsoppgave';
+import { journalforingOppgave } from './journalforingoppgave';
 
 export {
   soknadDokument,

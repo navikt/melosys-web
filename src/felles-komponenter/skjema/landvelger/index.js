@@ -189,7 +189,7 @@ const mapStateToProps = state => ({
 CustomLandVelger.propTypes = {
   fields: PT.object.isRequired,
   multiLand: PT.bool.isRequired,
-  landkoder: MPT.Landkoder.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string.isRequired,
 };
 
@@ -205,7 +205,7 @@ const LandVelger = props => (
 LandVelger.propTypes = {
   feltNavn: PT.string.isRequired,
   multiLand: PT.bool,
-  landkoder: MPT.Landkoder,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string,
 };
 

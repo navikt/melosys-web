@@ -2,14 +2,18 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import * as NyeSaker from '../ducks/nyesaker';
-
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
+import * as MPT from '../proptypes/';
 import SakEnkeltLinje from '../felles-komponenter/forside/oppgaveliste/sakEnkeltLinje';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
+
+import {
+  SokBehandlingsOppgaveOperations,
+  SokBehandlingsOppgaveSelectors,
+} from '../ducks/sokbehandlingsoppgave/';
 
 import './sok.css';
 
@@ -17,14 +21,16 @@ const uuid = require('uuid/v4');
 
 class Sok extends Component {
   componentWillMount() {
-    const { match, hentNyesaker } = this.props;
+    const { match, hentBehandlingsOppgaver } = this.props;
     const { fnr } = match.params;
-    if (fnr) hentNyesaker(fnr);
+    if (fnr) hentBehandlingsOppgaver(fnr);
   }
 
   render() {
-    const { nyesaker, children } = this.props;
+    const { behandlingsoppgaver = [], children } = this.props;
     const { fnr } = this.props.match.params;
+
+    if (!Array.isArray(behandlingsoppgaver)) { return null; }
 
     return (
       <div className="sok">
@@ -33,8 +39,8 @@ class Sok extends Component {
           <Nav.Row>
             <Nav.Column xs="7">
               <section className="sokresultat">
-                <h1>Fant {nyesaker.length} treff etter søk på &quot;{fnr}&quot;</h1>
-                {nyesaker && nyesaker.map(sak => <SakEnkeltLinje key={uuid()} sak={sak} />)}
+                <h1>Fant {behandlingsoppgaver.length} treff etter søk på &quot;{fnr}&quot;</h1>
+                { behandlingsoppgaver.map(oppgave => <SakEnkeltLinje key={uuid()} sak={oppgave} />)}
               </section>
             </Nav.Column>
             <Nav.Column xs="5">
@@ -50,8 +56,8 @@ class Sok extends Component {
 }
 
 Sok.propTypes = {
-  nyesaker: PT.any,
-  hentNyesaker: PT.func.isRequired,
+  behandlingsoppgaver: MPT.SokBehandlingsOppgaver,
+  hentBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
   match: PT.object.isRequired,
@@ -60,19 +66,20 @@ Sok.propTypes = {
 Sok.defaultProps = {
   children: null,
   sokStreng: '',
-  nyesaker: [],
+  behandlingsoppgaver: [],
 };
 
 const mapStateToProps = state => ({
-  nyesaker: NyeSaker.NyesakerSelector(state),
+  behandlingsoppgaver: SokBehandlingsOppgaveSelectors.OppgaveSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentNyesaker: fnr => dispatch(NyeSaker.hentNyesaker(fnr)),
+  hentBehandlingsOppgaver: fnr => dispatch(SokBehandlingsOppgaveOperations.hentBehandlingsOppgaver(fnr)),
 });
 
 const kontekster = [
   { navn: 'saksbehandler', melding: 'Det har oppstått en feil: Kunne ikke hente saksbehandler.' },
   { navn: 'fagsaker', melding: 'Det har oppstått en feil: Kunne ikke hente fagsaker' },
+  { navn: 'oppgaver', melding: 'Det har oppstått en feil: Kunne ikke søke etter oppgaver' },
 ];
 export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(Sok));
