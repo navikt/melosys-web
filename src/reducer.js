@@ -5,12 +5,15 @@ import fagsakerReducer from './ducks/fagsaker/';
 import soknadReducer from './ducks/soknad/';
 import faktaavklaringReducer from './ducks/faktaavklaring/';
 import vurderingReducer from './ducks/vurdering/';
-import nyesakerReducer from './ducks/nyesaker';
+import sokbehandlingsoppgaveReducer from './ducks/sokbehandlingsoppgave';
 import sakerbehandlesReducer from './ducks/sakerbehandles';
 import tidligeresakerReducer from './ducks/tidligeresaker';
 import saksbehandlerReducer from './ducks/saksbehandler/';
 import kodeverkReducer from './ducks/kodeverk';
 import oppgaverReducer from './ducks/oppgaver';
+import journalforingReducer from './ducks/journalforing';
+import organisasjonReducer from './ducks/organisasjon';
+import personReducer from './ducks/person';
 
 export default combineReducers({
   form: formReducer,
@@ -18,10 +21,13 @@ export default combineReducers({
   soknad: soknadReducer,
   faktaavklaring: faktaavklaringReducer,
   vurdering: vurderingReducer,
-  nyesaker: nyesakerReducer,
+  sokbehandlingsoppgave: sokbehandlingsoppgaveReducer,
   tidligeresaker: tidligeresakerReducer,
   sakerbehandles: sakerbehandlesReducer,
   saksbehandler: saksbehandlerReducer,
   kodeverk: kodeverkReducer,
   oppgaver: oppgaverReducer,
+  journalforing: journalforingReducer,
+  organisasjon: organisasjonReducer,
+  person: personReducer,
 });

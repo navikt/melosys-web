@@ -13,7 +13,7 @@ import * as Types from './types';
 
 // Action Creators
 export function hentMineSaker() {
-  return doThenDispatch(() => Api.hentMineSaker(), {
+  return doThenDispatch(() => Api.hentOppgaveOversikt(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -31,9 +31,9 @@ export function oppgavePlukker(oppgavetype, checkboxliste) {
   };
 
   return Api.sendPlukkOppgave(oppgave).then(response => {
-    const { saksnummer, journalPostID } = response;
+    const { saksnummer, oppgaveID, journalpostID } = response;
     const saksbehandling = `/saksbehandling/${saksnummer}`;
-    const journalforing = `/journalforing/${journalPostID}`;
+    const journalforing = `/journalforing/${oppgaveID}/${journalpostID}`;
     return oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
   });
 }

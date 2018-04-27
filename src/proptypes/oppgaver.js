@@ -5,7 +5,7 @@ const SakEnkeltLinjePropType = PT.shape({
   oppgaveID: PT.string,
   oppgavetype: MPT.Kodeverk,
   sammensattNavn: PT.string,
-  saksnummer: PT.number,
+  saksnummer: PT.string,
   sakstype: MPT.Kodeverk,
   behandling: PT.shape({
     status: MPT.Kodeverk,

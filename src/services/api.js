@@ -19,18 +19,31 @@ export function health() {
   return getAsJson(URI_HEALTH);
 }
 
+export function hentPerson(fnrdnr) {
+  const URI_PERSON = `${API_BASE_URL}personer/?fnr=${fnrdnr}`;
+  return getAsJson(URI_PERSON);
+}
+
+export function hentOrganisasjon(orgnr) {
+  const URI_ORGANISASJON = `${API_BASE_URL}organisasjoner/?orgnr=${orgnr}`;
+  return getAsJson(URI_ORGANISASJON);
+}
 export function hentKodeverk() {
   const URI_KODEVERK = `${API_BASE_URL}kodeverk`;
   return getAsJson(URI_KODEVERK);
 }
 
-export function hentMineSaker() {
+export function hentOppgaveOversikt() {
   const URI_OPPGAVER_MINESAKER = `${API_BASE_URL}oppgaver/oversikt`;
   return getAsJson(URI_OPPGAVER_MINESAKER);
 }
 export function sendPlukkOppgave(oppgave) {
   const URI_OPPGAVER_PLUKK = `${API_BASE_URL}oppgaver/plukk`;
   return postAsJson(URI_OPPGAVER_PLUKK, oppgave);
+}
+export function hentJournalOppgave(journalpostID) {
+  const URI_JOURNALFORING_OPPGAVE = `${API_BASE_URL}journalforing/${journalpostID}`;
+  return getAsJson(URI_JOURNALFORING_OPPGAVE);
 }
 
 export function hentSoknader(bid) {
@@ -63,9 +76,14 @@ export function hentFagsaker(snr) {
   return getAsJson(URI_FAGSAKER);
 }
 
-export function hentNyesaker(fnr) {
-  const URI_NYESAKER = `${API_BASE_URL}sok/fagsaker/?fnr=${fnr}`;
-  return getAsJson(URI_NYESAKER);
+export function sokFagsaker(fnr) {
+  const URI_FAGSAKER = `${API_BASE_URL}fagsaker/sok/?fnr=${fnr}`;
+  return getAsJson(URI_FAGSAKER);
+}
+
+export function hentBehandlingsOppgaver(fnr) {
+  const URI_BEHANDLINGS_OPPGAVER = `${API_BASE_URL}oppgaver/sok/?fnr=${fnr}`;
+  return getAsJson(URI_BEHANDLINGS_OPPGAVER);
 }
 
 export function opprettNyFagsak(fnr) {
@@ -73,6 +91,10 @@ export function opprettNyFagsak(fnr) {
   return getAsJson(URI_OPPRETTSAK);
 }
 
+export function sendNyFagsakTilJournalforing(data) {
+  const URI_SEND_NY_FAGSAK_TIL_JOURNALFORING = `${API_BASE_URL}fagsaker/journalforing`;
+  return postAsJson(URI_SEND_NY_FAGSAK_TIL_JOURNALFORING, data);
+}
 export function hentSakerbehandles(brukernavn) {
   const URI_SAKERBEHANDLES = `${API_BASE_URL}sakerbehandles/${brukernavn}`;
   return getAsJson(URI_SAKERBEHANDLES);

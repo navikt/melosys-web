@@ -6,4 +6,12 @@ export const journalforingOppgave = {
     'TRYGDAVTALE',
     'FOLKETRYGD',
   ],
+  behandlingstyper: [
+    'SKND',
+    'UFM',
+    'KLG',
+    'REV',
+    'ML_U',
+    'PS_U',
+  ],
 };
