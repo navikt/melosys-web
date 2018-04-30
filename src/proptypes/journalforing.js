@@ -16,7 +16,7 @@ const JournalforingPropType = PT.shape({
   dokument: PT.shape({
     navn: PT.string,
     mottattDato: PT.string,
-    tittel: Kodeverk,
+    tittel: PT.string,
     vedleggstitler: PT.arrayOf(Kodeverk),
     url: PT.string,
   }),
