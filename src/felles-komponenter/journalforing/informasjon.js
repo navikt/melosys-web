@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
@@ -89,7 +88,7 @@ class Informasjon extends Component {
           <Skjema.Input feltNavn="avsendersID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.vedIDFeltTastOpp} />
           <Skjema.Input feltNavn="avsendersNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsendersNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-          { dokument.url && <Link to={dokument.url} target="_blank" className="informasjon__dokumentlenke"><EnkeltDato dato={dokument.mottattDato} />: {dokument.tittel.term}</Link> }
+          <div>Navn på dokument:</div><EnkeltDato dato={dokument.mottattDato} />: {dokument.tittel}
           <Skjema.Select feltNavn="dokumentTittel" label="Tittel på hoveddokument:">
             { dokumentTittel.map(tittel => <option key={uuid()} value={tittel.kode}>{tittel.term}</option>)}
           </Skjema.Select>

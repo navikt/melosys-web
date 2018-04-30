@@ -65,16 +65,37 @@ class Journalforing extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { brukersID } = this.props.journalforingSkjemaVerdier;
-    const { erBrukerAvsender, brukersID: nyBrukersID, brukersNavn: nyBrukersNavn } = nextProps.journalforingSkjemaVerdier;
+    // Sjekk brukerID fra redux store.
+    const { brukerID: brukerIDStore } = this.props.journalforing;
+    const { brukerID: brukerIDForm } = this.props.journalforingSkjemaVerdier;
 
-    if (!nyBrukersID) { return; }
+    if ((brukerIDStore !== nextProps.journalforing.brukerID)) {
+      this.hentBruker(nextProps.journalforing.brukerID);
+    } else if ((brukerIDForm !== nextProps.journalforingSkjemaVerdier.brukerID)) {
+      this.hentBruker(nextProps.journalforingSkjemaVerdier.brukerID);
+    }
+
+    const { avsenderID: avsenderIDStore } = this.props.journalforing;
+    const { avsenderID: avsenderIDForm } = this.props.journalforingSkjemaVerdier;
+
+    if ((avsenderIDStore !== nextProps.journalforing.avsenderID)) {
+      this.hentAvsender(nextProps.journalforing.avsenderID);
+    } else if ((avsenderIDForm !== nextProps.journalforingSkjemaVerdier.avsenderID)) {
+      this.hentAvsender(nextProps.journalforingSkjemaVerdier.avsenderID);
+    }
+
+    // Sjekk brukerID fra redux form.
+
+    const { erBrukerAvsender } = nextProps.journalforingSkjemaVerdier;
+
+    const nyBrukersID = nextProps.journalforing.brukerID;
+    const nyBrukersNavn = nextProps.journalforingSkjemaVerdier.brukersNavn;
 
     if (erBrukerAvsender) {
       this.props.settBrukerSomAvsender(nyBrukersID, nyBrukersNavn);
     }
 
-    if (brukersID === nyBrukersID) { return; }
+    if (brukerIDStore === nyBrukersID) { return; }
 
     if (nyBrukersID.length === Konstanter.ANTALL_TALL_I_DNR || nyBrukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
       this.props.hentRelevanteFagsaker(nyBrukersID);
@@ -83,13 +104,13 @@ class Journalforing extends Component {
 
   avbrytJournalforing = () => {
     this.props.history.push('/');
-  }
+  };
 
   knyttTilEksisterendeSak = () => {
     const { journalforingSkjemaVerdier: { saksnummer } } = this.props;
 
     return saksnummer !== undefined;
-  }
+  };
 
   hentBruker = value => {
     const { sokFnrDnr, oppdaterFormFelt } = this.props;
@@ -97,7 +118,7 @@ class Journalforing extends Component {
     if (value.length !== Konstanter.ANTALL_TALL_I_FNR && value.length !== Konstanter.ANTALL_TALL_I_DNR) { return; }
 
     sokFnrDnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.sammensattNavn));
-  }
+  };
 
   hentAvsender = value => {
     const { sokOrgnr, sokFnrDnr, oppdaterFormFelt } = this.props;
@@ -115,11 +136,11 @@ class Journalforing extends Component {
       }
       default:
     }
-  }
+  };
 
   overstyrSubmit = event => {
     event.preventDefault();
-  }
+  };
 
   opprettNyFagsakSubmit = event => {
     event.preventDefault();
@@ -206,10 +227,10 @@ const mapStateToProps = state => ({
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: journalforingSelectors.JournalforingAlle(state).fagsakListe,
   initialValues: {
-    brukersID: journalforingSelectors.JournalforingBruker(state).ID,
+    brukersID: journalforingSelectors.JournalforingAlle(state).brukerID,
     brukersNavn: journalforingSelectors.JournalforingBruker(state).navn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
-    avsendersID: journalforingSelectors.JournalforingAvsender(state).ID,
+    avsendersID: journalforingSelectors.JournalforingAlle(state).avsenderID,
     avsendersNavn: journalforingSelectors.JournalforingAvsender(state).navn,
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel.kode,
     vedleggsTitler: journalforingSelectors.JournalforingDokument(state).vedleggstitler,
