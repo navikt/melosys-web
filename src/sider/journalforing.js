@@ -213,7 +213,7 @@ const mapStateToProps = state => ({
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsendersID: journalforingSelectors.JournalforingAvsender(state).ID,
     avsendersNavn: journalforingSelectors.JournalforingAvsender(state).navn,
-    dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel.kode,
+    dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel.term,
     vedleggsTitler: journalforingSelectors.JournalforingDokument(state).vedleggstitler,
   },
 });
