@@ -12,13 +12,12 @@ const JournalforingPropType = PT.shape({
     navn: PT.string,
     ID: PT.string,
   }),
-  sakstype: Kodeverk,
   dokument: PT.shape({
     navn: PT.string,
+    ID: PT.string.isRequired,
     mottattDato: PT.string,
-    tittel: Kodeverk,
+    tittel: PT.string,
     vedleggstitler: PT.arrayOf(Kodeverk),
-    url: PT.string,
   }),
 });
 
