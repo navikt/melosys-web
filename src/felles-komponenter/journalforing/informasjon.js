@@ -14,8 +14,6 @@ import './informasjon.css';
 import { PersonSelectors } from '../../ducks/person';
 import { OrganisasjonSelectors } from '../../ducks/organisasjon';
 
-const uuid = require('uuid/v4');
-
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
  * slik som informasjon om bruker, informasjon om dokument etc.
  */
