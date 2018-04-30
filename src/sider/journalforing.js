@@ -47,8 +47,8 @@ class Journalforing extends Component {
     saksTyper: PT.array,
     fagsakListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
-    dokumentTittel: PT.arrayOf(MPT.Kodeverk).isRequired,
-    vedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
+    valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
+    valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
     settBrukerSomAvsender: PT.func.isRequired,
   };
 
@@ -151,7 +151,7 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing, dokumentTittel, vedleggsTitler, saksTyper, journalforingSkjemaVerdier, fagsakListe, pdfDokument,
+      journalforing, valgbareDokumentTitler, valgbareVedleggsTitler, journalforingSkjemaVerdier, fagsakListe, pdfDokument,
     } = this.props;
 
     const {
@@ -168,12 +168,11 @@ class Journalforing extends Component {
                 <Nav.Panel>
                   <Informasjon
                     journalforing={journalforing}
-                    sakstyper={saksTyper}
                     journalforingSkjemaVerdier={journalforingSkjemaVerdier}
                     hentAvsender={hentAvsender}
                     hentBruker={hentBruker}
-                    dokumentTittel={dokumentTittel}
-                    vedleggsTitler={vedleggsTitler}
+                    valgbareDokumentTitler={valgbareDokumentTitler}
+                    valgbareVedleggsTitler={valgbareVedleggsTitler}
                   />
                   <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                   <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
@@ -203,18 +202,17 @@ const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   saksTyper: KodeverkSelectors.sakstyperSelector(state),
   pdfDokument: journalforingSelectors.JournalforingDokument(state).url,
-  dokumentTittel: KodeverkSelectors.dokumenttitlerSelector(state),
-  vedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
+  valgbareDokumentTitler: KodeverkSelectors.dokumenttitlerSelector(state),
+  valgbareVedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: journalforingSelectors.JournalforingAlle(state).fagsakListe,
   initialValues: {
-    brukersID: journalforingSelectors.JournalforingBruker(state).ID,
-    brukersNavn: journalforingSelectors.JournalforingBruker(state).navn,
+    brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
+    brukersNavn: journalforingSelectors.JournalforingAlle(state).brukersNavn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
-    avsendersID: journalforingSelectors.JournalforingAvsender(state).ID,
-    avsendersNavn: journalforingSelectors.JournalforingAvsender(state).navn,
-    dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel.term,
-    vedleggsTitler: journalforingSelectors.JournalforingDokument(state).vedleggstitler,
+    avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
+    avsendersNavn: journalforingSelectors.JournalforingAvsender(state).avsender,
+    dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
   },
 });
 

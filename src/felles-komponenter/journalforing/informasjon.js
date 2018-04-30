@@ -70,7 +70,7 @@ class Informasjon extends Component {
   };
 
   render() {
-    const { journalforing, dokumentTittel, vedleggsTitler } = this.props;
+    const { journalforing, valgbareDokumentTitler, valgbareVedleggsTitler } = this.props;
     const { dokument = {} } = journalforing;
     const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
@@ -78,27 +78,27 @@ class Informasjon extends Component {
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukersID" label="Brukers fnr eller dnr:" onKeyUp={this.vedIDFeltTastOpp} />
-          <Skjema.Input feltNavn="brukersNavn" label="Brukers navn:" disabled />
+          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.vedIDFeltTastOpp} />
+          <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsendersID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.vedIDFeltTastOpp} />
-          <Skjema.Input feltNavn="avsendersNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsendersNavn')} />
+          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.vedIDFeltTastOpp} />
+          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsendersNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           { dokument.url && <Link to={dokument.url} target="_blank" className="informasjon__dokumentlenke"><EnkeltDato dato={dokument.mottattDato} />: {dokument.tittel.term}</Link> }
           <Skjema.ListeVelger
             feltNavn="dokumentTittel"
             label="Tittel på hoveddokument:"
             placeholder="(velg eller skriv inn egen tittel)"
-            muligeValg={dokumentTittel}
+            muligeValg={valgbareDokumentTitler}
           />
           <Skjema.ListeVelger
             feltNavn="vedleggsTitler"
             label="Titler på vedlegg:"
             multiListe
-            muligeValg={vedleggsTitler}
+            muligeValg={valgbareVedleggsTitler}
             placeholder="(Velg eller skriv inn egen tittel)"
           />
         </Nav.Fieldset>
@@ -109,8 +109,8 @@ class Informasjon extends Component {
 
 Informasjon.propTypes = {
   journalforing: MPT.Journalforing.isRequired,
-  dokumentTittel: PT.arrayOf(MPT.Kodeverk),
-  vedleggsTitler: PT.arrayOf(MPT.Kodeverk),
+  valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk),
+  valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk),
   journalforingSkjemaVerdier: PT.object, // TODO: Vurdere MPT.
   hentBruker: PT.func.isRequired,
   hentAvsender: PT.func.isRequired,
@@ -118,8 +118,8 @@ Informasjon.propTypes = {
 
 Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
-  dokumentTittel: '',
-  vedleggsTitler: [],
+  valgbareDokumentTitler: [],
+  valgbareVedleggsTitler: [],
 };
 
 const mapStateToProps = state => ({
