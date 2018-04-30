@@ -9,7 +9,10 @@ import './listevelger.css';
 
 /** Listevelgeren tillater både én enkeltliste eller en array hvor
  * brukeren kan legge til flere valg. Hvilken av disse som skal benyttes
- * styres av multiListe-prop.
+ * styres av multiListe-prop som gis til komponenten.
+ *
+ * Komponenten forventer en array av strings for å vise listevalg. Det betyr at
+ * kodeverk-baserte objekter må reduces.
  */
 const Listevelger = ({
   id, feltNavn, className, multiListe, ...rest
