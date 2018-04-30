@@ -4,6 +4,8 @@ import PT from 'prop-types';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import throttle from 'lodash.throttle';
 
+import * as Api from '../../services/api';
+
 import './dokument.css';
 
 const uuid = require('uuid/v4');
@@ -73,9 +75,8 @@ class Dokument extends Component {
   };
 
   render() {
-    // TODO const { pdfDokument } = this.props;
-    const pdfDokumentURI = 'http://localhost:3002/api/dokumenter/pdf/DOK_321/did';
-
+    const { journalpostID, dokumentID = 'did' } = this.props;
+    const pdfDokumentURI = Api.PDFDokumentURI(journalpostID, dokumentID);
     return (
       <div
         id="row"
@@ -89,7 +90,8 @@ class Dokument extends Component {
 }
 
 Dokument.propTypes = {
-  pdfDokument: PT.string.isRequired,
+  journalpostID: PT.string.isRequired,
+  dokumentID: PT.string.isRequired,
 };
 
 export default Dokument;

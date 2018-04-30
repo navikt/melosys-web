@@ -43,7 +43,6 @@ class Journalforing extends Component {
     oppdaterFormFelt: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
-    pdfDokument: PT.string,
     saksTyper: PT.array,
     fagsakListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
@@ -55,7 +54,6 @@ class Journalforing extends Component {
   static defaultProps = {
     journalforing: {},
     journalpostID: 'DOC_321',
-    pdfDokument: '',
     saksTyper: [],
     fagsakListe: [],
     journalforingSkjemaVerdier: {},
@@ -151,12 +149,15 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing, dokumentTittel, vedleggsTitler, saksTyper, journalforingSkjemaVerdier, fagsakListe, pdfDokument,
+      journalforing, dokumentTittel, vedleggsTitler, saksTyper, journalforingSkjemaVerdier, fagsakListe,
     } = this.props;
-
     const {
       knyttTilEksisterendeSak, opprettNyFagsakSubmit, hentAvsender, hentBruker,
     } = this;
+
+    const { journalpostID } = this.props.match.params;
+    const { dokument = {} } = journalforing;
+    const dokumentID = dokument.ID ? `${dokument.ID}` : undefined;
 
     return (
       <div className="journalforing">
@@ -183,9 +184,7 @@ class Journalforing extends Component {
                 </Nav.Panel>
               </Nav.Column>
               <Nav.Column xs="8">
-                <Nav.Panel>
-                  <Dokument pdfDokument={pdfDokument} />
-                </Nav.Panel>
+                { dokumentID && <Nav.Panel><Dokument journalpostID={journalpostID} dokumentID={dokumentID} /></Nav.Panel> }
               </Nav.Column>
             </Nav.Row>
           </form>
@@ -202,7 +201,6 @@ Journalforing.validering = value => ({
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   saksTyper: KodeverkSelectors.sakstyperSelector(state),
-  pdfDokument: journalforingSelectors.JournalforingDokument(state).url,
   dokumentTittel: KodeverkSelectors.dokumenttitlerSelector(state),
   vedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
