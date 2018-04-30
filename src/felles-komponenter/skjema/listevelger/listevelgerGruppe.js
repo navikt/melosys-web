@@ -7,7 +7,10 @@ import './listevelger.css';
 
 const uuid = require('uuid/v4');
 
-const ListevelgerValgtListe = ({ label, slettElement }) => (
+/** Dette er komponent for ett enkeltvalg. Inneholder et ikon, navnet på valget
+ * og en sletteknapp.
+ */
+const ListevelgerValgtElement = ({ label, slettElement }) => (
   <div className="listevelger__linje">
     <div className="listevelger__innhold">
       <Icon kind="vedlegg" size={16} />
@@ -17,11 +20,14 @@ const ListevelgerValgtListe = ({ label, slettElement }) => (
   </div>
 );
 
-ListevelgerValgtListe.propTypes = {
+ListevelgerValgtElement.propTypes = {
   label: PT.string.isRequired,
   slettElement: PT.func.isRequired,
 };
 
+/** Komponenten lar brukeren legge til flere valg, men da kun ett valg pr liste.
+ * For hvert nye valg legges dette til som en FieldArray i Redux Form.
+ */
 class ListevelgerGruppe extends Component {
   state = { inputVerdi: '' }
 
@@ -33,10 +39,6 @@ class ListevelgerGruppe extends Component {
     if (event.key === 'Enter') { this.leggTilListeHandler(event); }
   }
 
-  /** Håndterer klikk på pluss-knappen ved liste dersom brukeren har valgt et liste manuelt.
-   *
-   * @param e
-   */
   leggTilListeHandler = e => {
     e.preventDefault();
     const { inputVerdi } = this.state;
@@ -66,7 +68,7 @@ class ListevelgerGruppe extends Component {
       <div>
         <label htmlFor={`listevelger-${fields.name}`}>{label}</label>
         {
-          alleFelter.map((verdi, index) => <ListevelgerValgtListe key={uuid()} label={verdi} slettElement={() => this.slettFraListen(index)} />)
+          alleFelter.map((verdi, index) => <ListevelgerValgtElement key={uuid()} label={verdi} slettElement={() => this.slettFraListen(index)} />)
         }
         <div className="listevelger__linje">
           <NavInput

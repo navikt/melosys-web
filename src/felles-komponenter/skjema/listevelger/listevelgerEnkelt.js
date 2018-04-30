@@ -6,8 +6,8 @@ import './listevelger.css';
 
 const uuid = require('uuid/v4');
 
-/** Enkeltlisten representerer ETT listevalg. Dersom den er en del av en array, dvs at
- * bruker kan gjøre inn flere valg, så er ListevelgerEnkeltListe komponenten inne i FieldArray.
+/** Enkeltlisten representerer ETT listevalg hvor brukeren kan velge fra listen eller skrive
+ * inn sin egen verdi.
  */
 const ListevelgerEnkelt = ({
   input,
@@ -15,7 +15,6 @@ const ListevelgerEnkelt = ({
   errorMessage,
   muligeValg,
   placeholder,
-  meta, // eslint-disable-line no-unused-vars
   ...rest
 }) => {
   const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
