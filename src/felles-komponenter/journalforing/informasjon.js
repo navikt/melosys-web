@@ -90,10 +90,19 @@ class Informasjon extends Component {
           <Skjema.Input feltNavn="avsendersNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsendersNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           { dokument.url && <Link to={dokument.url} target="_blank" className="informasjon__dokumentlenke"><EnkeltDato dato={dokument.mottattDato} />: {dokument.tittel.term}</Link> }
-          <Skjema.FriSelect feltNavn="dokumentTittel" label="Tittel på hoveddokument:">
-            { dokumentTittel.map(tittel => <option key={uuid()} value={tittel.term}>{tittel.term}</option>)}
-          </Skjema.FriSelect>
-          <Skjema.ListeVelger feltNavn="vedleggsTitler" label="Titler på vedlegg:" multiListe muligeValg={vedleggsTitler} />
+          <Skjema.ListeVelger
+            feltNavn="dokumentTittel"
+            label="Tittel på hoveddokument"
+            placeholder="(velg fra listen eller skriv egen tittel)"
+            muligeValg={dokumentTittel}
+          />
+          <Skjema.ListeVelger
+            feltNavn="vedleggsTitler"
+            label="Titler på vedlegg:"
+            multiListe
+            muligeValg={vedleggsTitler}
+            placeholder="(Velg fra listen eller skriv egen tittel)"
+          />
         </Nav.Fieldset>
       </div>
     );
