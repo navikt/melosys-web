@@ -14,23 +14,27 @@ import './listevelger.css';
 const Listevelger = ({
   id, feltNavn, className, multiListe, ...rest
 }) => (
-  multiListe ?
-    <FieldArray
-      id={id}
-      name={feltNavn}
-      multiListe={multiListe}
-      component={ListevelgerGruppe}
-      {...rest}
-    />
-    :
-    <Field
-      name={feltNavn}
-      errorClass="skjemaelement--harFeil"
-      className={className}
-      id={id}
-      component={ListevelgerEnkelt}
-      props={rest}
-    />
+  <div className="listevelger">
+    {
+      multiListe ?
+        <FieldArray
+          id={id}
+          name={feltNavn}
+          multiListe={multiListe}
+          component={ListevelgerGruppe}
+          {...rest}
+        />
+        :
+        <Field
+          name={feltNavn}
+          errorClass="skjemaelement--harFeil"
+          className={className}
+          id={id}
+          component={ListevelgerEnkelt}
+          props={rest}
+        />
+    }
+  </div>
 );
 
 Listevelger.propTypes = {
