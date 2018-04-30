@@ -26,7 +26,14 @@ const ListevelgerEnkelt = ({
 
   return (
     <div>
-      <NavInput label={label} feil={feil} placeholder={placeholder} {...input} list={`dataliste-${inputProps.name}`} />
+      <NavInput
+        label={label}
+        feil={feil}
+        placeholder={placeholder}
+        className="listevelger__linje__input"
+        list={`dataliste-${inputProps.name}`}
+        {...input}
+      />
       <datalist id={`dataliste-${inputProps.name}`}>
         {muligeValg.map(valg => <option key={uuid()} value={valg.term} />)}
       </datalist>

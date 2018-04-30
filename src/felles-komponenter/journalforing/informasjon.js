@@ -90,8 +90,8 @@ class Informasjon extends Component {
           { dokument.url && <Link to={dokument.url} target="_blank" className="informasjon__dokumentlenke"><EnkeltDato dato={dokument.mottattDato} />: {dokument.tittel.term}</Link> }
           <Skjema.ListeVelger
             feltNavn="dokumentTittel"
-            label="Tittel på hoveddokument"
-            placeholder="(velg fra listen eller skriv egen tittel)"
+            label="Tittel på hoveddokument:"
+            placeholder="(velg eller skriv inn egen tittel)"
             muligeValg={dokumentTittel}
           />
           <Skjema.ListeVelger
@@ -99,7 +99,7 @@ class Informasjon extends Component {
             label="Titler på vedlegg:"
             multiListe
             muligeValg={vedleggsTitler}
-            placeholder="(Velg fra listen eller skriv egen tittel)"
+            placeholder="(Velg eller skriv inn egen tittel)"
           />
         </Nav.Fieldset>
       </div>
