@@ -13,7 +13,7 @@ const uuid = require('uuid/v4');
 const ListevelgerValgtElement = ({ label, slettElement }) => (
   <div className="listevelger__linje">
     <div className="listevelger__innhold">
-      <Icon kind="vedlegg" size={16} />
+      <div className="listevelger__ikon"><Icon kind="vedlegg" width={16} height={16} /></div>
       <div className="listevelger__innhold__label">{label}</div>
     </div>
     <button className="listevelger__linje__knapp" onClick={slettElement}>-</button>
