@@ -11,7 +11,7 @@ import * as Konstanter from '../constants';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
-import Dokument from '../felles-komponenter/journalforing/dokument';
+import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
 import {
@@ -184,7 +184,7 @@ class Journalforing extends Component {
                 </Nav.Panel>
               </Nav.Column>
               <Nav.Column xs="8">
-                { dokumentID && <Nav.Panel><Dokument journalpostID={journalpostID} dokumentID={dokumentID} /></Nav.Panel> }
+                { dokumentID && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={dokumentID} /></Nav.Panel> }
               </Nav.Column>
             </Nav.Row>
           </form>

@@ -6,7 +6,7 @@ import throttle from 'lodash.throttle';
 
 import * as Api from '../../services/api';
 
-import './dokument.css';
+import './pdfdokument.css';
 
 const uuid = require('uuid/v4');
 
@@ -57,7 +57,7 @@ PDFViser.defaultProps = {
  * PDFLeser lenger opp, men sørger også for å finne korrekt bredde av containeren
  * via eventlisteners ved mount.
  */
-class Dokument extends Component {
+class PDFDokument extends Component {
   state = { width: null };
 
   componentDidMount () {
@@ -80,7 +80,7 @@ class Dokument extends Component {
     return (
       <div
         id="row"
-        className="dokument">
+        className="pdfdokument">
         <div id="pdfWrapper" className="dokument__pdfwrapper" ref={ref => { this.pdfWrapper = ref; }}>
           <PDFViser wrapperDivSize={this.state.width} pdfDokument={pdfDokumentURI} />
         </div>
@@ -89,9 +89,9 @@ class Dokument extends Component {
   }
 }
 
-Dokument.propTypes = {
+PDFDokument.propTypes = {
   journalpostID: PT.string.isRequired,
   dokumentID: PT.string.isRequired,
 };
 
-export default Dokument;
+export default PDFDokument;
