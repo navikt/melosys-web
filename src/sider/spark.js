@@ -8,6 +8,8 @@ import { soknadOperations } from '../ducks/soknad/';
 import { fagsakOperations } from '../ducks/fagsaker/';
 import { oppgaverOperations } from '../ducks/oppgaver';
 
+import * as Api from '../services/api';
+
 import * as Mock from '../debug/mock';
 
 import './spark.css';
@@ -36,6 +38,22 @@ class Spark extends Component {
     this.props.plukkOppgave(oppgaveBody);
   };
 
+  hentFagsakBasertPaFnr = event => {
+    event.preventDefault();
+    const { fnr : { value : fnr } } = event.target;
+    Api.sokFagsaker(fnr).then(response => {
+      const firstHit = response[0] || {};
+      const { saksnummer } = firstHit;
+      saksnummer && this.props.history.push(`/saksbehandling/${saksnummer}`);
+    });
+  }
+
+  resetOppgaver = () => {
+    Api.sparkResetOppgaver().then(() => {
+      document.location.href = '/';
+    });
+  }
+
   render() {
     const { nyfagsak, oppgave } = this.props;
     return (
@@ -43,6 +61,12 @@ class Spark extends Component {
         <div className="spark__gruppe">
           <h1>Health</h1>
           <button onClick={() => console.log(health())} >sjekk health</button>
+        </div>
+
+        <div className="spark__gruppe">
+          <h1>Reset mine oppgaver</h1>
+          <p>Denne funksjonen legger alle journalføringsoppgaver og behandlingsoppgaver registrert på din innlogged test-bruker tilbake i bingen slik at du kan plukke de på nytt.</p>
+          <button onClick={this.resetOppgaver}>reset</button>
         </div>
 
         <div className="spark__gruppe">
@@ -55,6 +79,16 @@ class Spark extends Component {
             <input type="submit" value="Send" />
           </form>
           <p>{oppgave.oppgaveID && JSON.stringify(oppgave)}</p>
+        </div>
+
+        <div className="spark__gruppe">
+          <h1>Vise fagsak basert på fnr</h1>
+          <form onSubmit={this.hentFagsakBasertPaFnr}>
+            <p>Merk: Denne funksjonen bypasser hele verdikjeden journalføringsoppgave -> behandlingsoppgave -> behandling. Den er derfor kun ment til bruk for å teste visningen av en fagsak.</p>
+            <label>Tast inn fnr på testpersonen du vil vise:</label>
+            <input type="text" name="fnr" /><br />
+            <input type="submit" value="Gå til fagsak" />
+          </form>
         </div>
 
         <div className="spark__gruppe">
