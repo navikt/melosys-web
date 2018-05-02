@@ -9,11 +9,13 @@ import * as Api from '../services/api';
 import * as MPT from '../proptypes';
 import * as Konstanter from '../constants';
 
+import { formatterDatoTilNorsk } from '../utils/dato';
+
 import Sticky from '../hjelpekomponenter/sticky';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
-import Dokument from '../felles-komponenter/journalforing/dokument';
+import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
 import {
@@ -29,9 +31,10 @@ import {
   formSelectors,
 } from '../ducks/form/';
 
-import './journalforing.css';
 import { PersonOperations } from '../ducks/person';
 import { OrganisasjonOperations } from '../ducks/organisasjon';
+
+import './journalforing.css';
 
 class Journalforing extends Component {
   static propTypes = {
@@ -45,7 +48,6 @@ class Journalforing extends Component {
     oppdaterFormFelt: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
-    pdfDokument: PT.string,
     saksTyper: PT.array,
     fagsakListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
@@ -56,8 +58,7 @@ class Journalforing extends Component {
 
   static defaultProps = {
     journalforing: {},
-    journalpostID: 'DOC_321',
-    pdfDokument: '',
+    journalpostID: '',
     saksTyper: [],
     fagsakListe: [],
     journalforingSkjemaVerdier: {},
@@ -68,44 +69,60 @@ class Journalforing extends Component {
     this.props.hentJournalOppgave(journalpostID);
   }
 
+  /** Logikken nedenfor trigges av 2 situasjoner. Enten fordi hentJournalOppgave
+   * returnerte en ny ID (orgnr, fnr eller dnr) som det må gjøres oppslag på. Eller
+   * fordi saksbehandler tastet inn en ID (orgnr, fnr eller dnr).
+   * @param nextProps
+   */
   componentWillReceiveProps(nextProps) {
-    const { brukersID } = this.props.journalforingSkjemaVerdier;
-    const { erBrukerAvsender, brukersID: nyBrukersID, brukersNavn: nyBrukersNavn } = nextProps.journalforingSkjemaVerdier;
+    // For lesbarhet, gi alias til verdier som vil påvirke hvorvidt vi gjør nye kall til backend
+    // for å hente via  /api/personer/ eller /api/organisasjoner
+    const { brukerID: gammelBrukerIDFraStore, avsenderID: gammelAvsenderIDFraStore } = this.props.journalforing;
+    const { brukerID: gammelBrukerIDFraSkjema, avsenderID: gammelAvsenderIDFraSkjema } = this.props.journalforingSkjemaVerdier;
+    const { brukerID: nyBrukerIDFraStore, avsenderID: nyAvsenderIDFraStore } = nextProps.journalforing;
+    const { brukerID: nyBrukerIDFraSkjema, avsenderID: nyAvsenderIDFraSkjema } = nextProps.journalforingSkjemaVerdier;
 
-    if (!nyBrukersID) { return; }
+    // Sjekk om brukerID har endret seg enten i Store eller direkte i Redux Form.
+    if (gammelBrukerIDFraStore !== nyBrukerIDFraStore) {
+      this.hentBruker(nyBrukerIDFraStore);
+    } else if (gammelBrukerIDFraSkjema !== nyBrukerIDFraSkjema) {
+      this.hentBruker(nyBrukerIDFraSkjema);
+    }
+
+    // Sjekk om avsenderID har endret seg enten i Store eller direkte i Redux Form.
+    if (gammelAvsenderIDFraStore !== nyAvsenderIDFraStore) {
+      this.hentAvsender(nyAvsenderIDFraStore);
+    } else if (gammelAvsenderIDFraSkjema !== nyAvsenderIDFraSkjema) {
+      this.hentAvsender(nyAvsenderIDFraSkjema);
+    }
+
+    // Ved å kalle funksjonen 'settBrukerSomAvsender' oppdaterer vi Redux Form som deretter vil oppdatere
+    // store ved post.
+    const { erBrukerAvsender } = nextProps.journalforingSkjemaVerdier;
 
     if (erBrukerAvsender) {
-      this.props.settBrukerSomAvsender(nyBrukersID, nyBrukersNavn);
+      this.props.settBrukerSomAvsender(nyBrukerIDFraSkjema, nextProps.journalforingSkjemaVerdier.brukerNavn);
     }
 
-    if (brukersID === nyBrukersID) { return; }
+    if (gammelBrukerIDFraSkjema === nyBrukerIDFraSkjema) { return; }
 
-    if (nyBrukersID.length === Konstanter.ANTALL_TALL_I_DNR || nyBrukersID.length === Konstanter.ANTALL_TALL_I_FNR) {
-      this.props.hentRelevanteFagsaker(nyBrukersID);
+    // Hent fagsaker som er knyttet til brukeren, men bare dersom lengden matcher fnr eller dnr.
+    if (nyBrukerIDFraSkjema.length === Konstanter.ANTALL_TALL_I_DNR || nyBrukerIDFraSkjema.length === Konstanter.ANTALL_TALL_I_FNR) {
+      this.props.hentRelevanteFagsaker(nyBrukerIDFraSkjema);
     }
-  }
-
-  avbrytJournalforing = () => {
-    this.props.history.push('/');
-  }
-
-  knyttTilEksisterendeSak = () => {
-    const { journalforingSkjemaVerdier: { saksnummer } } = this.props;
-
-    return saksnummer !== undefined;
   }
 
   hentBruker = value => {
     const { sokFnrDnr, oppdaterFormFelt } = this.props;
-    const targetFeltNavn = 'brukersNavn';
+    const targetFeltNavn = 'brukerNavn';
     if (value.length !== Konstanter.ANTALL_TALL_I_FNR && value.length !== Konstanter.ANTALL_TALL_I_DNR) { return; }
 
     sokFnrDnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.sammensattNavn));
-  }
+  };
 
   hentAvsender = value => {
     const { sokOrgnr, sokFnrDnr, oppdaterFormFelt } = this.props;
-    const targetFeltNavn = 'avsendersNavn';
+    const targetFeltNavn = 'avsenderNavn';
 
     switch (value.length) {
       case Konstanter.ANTALL_TALL_I_ORGNR: {
@@ -119,11 +136,21 @@ class Journalforing extends Component {
       }
       default:
     }
-  }
+  };
 
   overstyrSubmit = event => {
     event.preventDefault();
-  }
+  };
+
+  avbrytJournalforing = () => {
+    this.props.history.push('/');
+  };
+
+  knyttTilEksisterendeSak = () => {
+    const { journalforingSkjemaVerdier: { saksnummer } } = this.props;
+
+    return saksnummer !== undefined;
+  };
 
   opprettNyFagsakSubmit = event => {
     event.preventDefault();
@@ -153,25 +180,27 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing, dokumentTittel, vedleggsTitler, saksTyper, journalforingSkjemaVerdier, fagsakListe, pdfDokument,
+      journalforing, dokumentTittel, vedleggsTitler, saksTyper, journalforingSkjemaVerdier, fagsakListe,
     } = this.props;
-
     const {
       knyttTilEksisterendeSak, opprettNyFagsakSubmit, hentAvsender, hentBruker,
     } = this;
+
+    const { journalpostID } = this.props.match.params;
+    const { dokument = {} } = journalforing;
+    const dokumentID = dokument.ID ? `${dokument.ID}` : undefined;
 
     return (
       <div className="journalforing">
         <h1>Journalføring</h1>
         <Nav.Container fluid>
-          <form onSubmit={this.overstyrSubmit} >
+          <form onSubmit={this.overstyrSubmit}>
             <Nav.Row>
               <Nav.Column xs="4">
                 <Sticky>
                   <Nav.Panel className="journalforing__skjema">
                     <div className="journalforing__skjema__scroll">
                       <Informasjon
-                        journalforing={journalforing}
                         sakstyper={saksTyper}
                         journalforingSkjemaVerdier={journalforingSkjemaVerdier}
                         hentAvsender={hentAvsender}
@@ -189,9 +218,7 @@ class Journalforing extends Component {
                 </Sticky>
               </Nav.Column>
               <Nav.Column xs="8">
-                <Nav.Panel>
-                  <Dokument pdfDokument={pdfDokument} />
-                </Nav.Panel>
+                { dokumentID && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={dokumentID} /></Nav.Panel> }
               </Nav.Column>
             </Nav.Row>
           </form>
@@ -208,17 +235,17 @@ Journalforing.validering = value => ({
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   saksTyper: KodeverkSelectors.sakstyperSelector(state),
-  pdfDokument: journalforingSelectors.JournalforingDokument(state).url,
   dokumentTittel: KodeverkSelectors.dokumenttitlerSelector(state),
   vedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: journalforingSelectors.JournalforingAlle(state).fagsakListe,
   initialValues: {
-    brukersID: journalforingSelectors.JournalforingBruker(state).ID,
-    brukersNavn: journalforingSelectors.JournalforingBruker(state).navn,
+    brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
+    brukerNavn: journalforingSelectors.JournalforingAlle(state).brukerNavn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
-    avsendersID: journalforingSelectors.JournalforingAvsender(state).ID,
-    avsendersNavn: journalforingSelectors.JournalforingAvsender(state).navn,
+    avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
+    avsenderNavn: journalforingSelectors.JournalforingAlle(state).avsenderNavn,
+    mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel.kode,
     vedleggsTitler: journalforingSelectors.JournalforingDokument(state).vedleggstitler,
   },
@@ -230,10 +257,10 @@ const mapDispatchToProps = dispatch => ({
   sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
   sendNyFagsakTilJournalforing: data => Api.sendNyFagsakTilJournalforing(data),
-  hentRelevanteFagsaker: id => dispatch(journalforingOperations.sokFagsaker(id)),
-  settBrukerSomAvsender: (id, navn) => {
-    dispatch(change('journalforing', 'avsendersID', id));
-    dispatch(change('journalforing', 'avsendersNavn', navn));
+  hentRelevanteFagsaker: ID => dispatch(journalforingOperations.sokFagsaker(ID)),
+  settBrukerSomAvsender: (ID, navn) => {
+    dispatch(change('journalforing', 'avsenderID', ID));
+    dispatch(change('journalforing', 'avsenderNavn', navn));
   },
 });
 
@@ -241,10 +268,6 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   form: 'journalforing',
   enableReinitialize: true,
   destroyOnUnmount: false,
-  fields: [
-    'brukersID',
-    'saksnummer',
-  ],
   updateUnregisteredFields: true,
   validate: Journalforing.validering,
   onSubmit: () => {},
