@@ -200,18 +200,19 @@ class Journalforing extends Component {
                 <Sticky>
                   <Nav.Panel className="journalforing__skjema">
                     <div className="journalforing__skjema__scroll">
-                    <Informasjon
-                      sakstyper={saksTyper}
-                      journalforingSkjemaVerdier={journalforingSkjemaVerdier}
-                      hentAvsender={hentAvsender}
-                      hentBruker={hentBruker}
-                      dokumentTittel={dokumentTittel}
-                      vedleggsTitler={vedleggsTitler}
-                    />
-                    <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
-                    <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
-                    <div className="journalforing__fotknapper">
-                      <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp></div>
+                      <Informasjon
+                        sakstyper={saksTyper}
+                        journalforingSkjemaVerdier={journalforingSkjemaVerdier}
+                        hentAvsender={hentAvsender}
+                        hentBruker={hentBruker}
+                        dokumentTittel={dokumentTittel}
+                        vedleggsTitler={vedleggsTitler}
+                      />
+                      <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
+                      <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
+                      <div className="journalforing__fotknapper">
+                        <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                      </div>
                     </div>
                   </Nav.Panel>
                 </Sticky>
