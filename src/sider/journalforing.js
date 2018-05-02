@@ -227,7 +227,7 @@ const mapStateToProps = state => ({
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: journalforingSelectors.JournalforingAlle(state).fagsakListe,
   initialValues: {
-    brukersID: journalforingSelectors.JournalforingAlle(state).brukerID,
+    brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
     brukersNavn: journalforingSelectors.JournalforingBruker(state).navn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsendersID: journalforingSelectors.JournalforingAlle(state).avsenderID,
@@ -255,7 +255,7 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   enableReinitialize: true,
   destroyOnUnmount: false,
   fields: [
-    'brukersID',
+    'brukerID',
     'saksnummer',
   ],
   updateUnregisteredFields: true,
