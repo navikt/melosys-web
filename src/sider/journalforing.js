@@ -11,6 +11,8 @@ import * as Konstanter from '../constants';
 
 import { formatterDatoTilNorsk } from '../utils/dato';
 
+import Sticky from '../hjelpekomponenter/sticky';
+
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
@@ -195,21 +197,24 @@ class Journalforing extends Component {
           <form onSubmit={this.overstyrSubmit}>
             <Nav.Row>
               <Nav.Column xs="4">
-                <Nav.Panel>
-                  <Informasjon
-                    sakstyper={saksTyper}
-                    journalforingSkjemaVerdier={journalforingSkjemaVerdier}
-                    hentAvsender={hentAvsender}
-                    hentBruker={hentBruker}
-                    dokumentTittel={dokumentTittel}
-                    vedleggsTitler={vedleggsTitler}
-                  />
-                  <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
-                  <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
-                  <div className="journalforing__fotknapper">
-                    <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
-                  </div>
-                </Nav.Panel>
+                <Sticky>
+                  <Nav.Panel className="journalforing__skjema">
+                    <div className="journalforing__skjema__scroll">
+                    <Informasjon
+                      sakstyper={saksTyper}
+                      journalforingSkjemaVerdier={journalforingSkjemaVerdier}
+                      hentAvsender={hentAvsender}
+                      hentBruker={hentBruker}
+                      dokumentTittel={dokumentTittel}
+                      vedleggsTitler={vedleggsTitler}
+                    />
+                    <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
+                    <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
+                    <div className="journalforing__fotknapper">
+                      <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp></div>
+                    </div>
+                  </Nav.Panel>
+                </Sticky>
               </Nav.Column>
               <Nav.Column xs="8">
                 { dokumentID && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={dokumentID} /></Nav.Panel> }
