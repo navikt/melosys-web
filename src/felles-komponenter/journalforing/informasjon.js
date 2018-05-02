@@ -7,8 +7,6 @@ import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 import * as Konstanter from '../../constants';
 
-import EnkeltDato from '../datoOmrade/enkeltDato';
-
 import './informasjon.css';
 import { PersonSelectors } from '../../ducks/person';
 import { OrganisasjonSelectors } from '../../ducks/organisasjon';
@@ -21,21 +19,21 @@ const uuid = require('uuid/v4');
 class Informasjon extends Component {
   state = { spinner: {} };
 
-  gyldigBruker = (id, value) => id === 'brukersID' && (value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR);
+  erGyldigBrukerID = (id, value) => id === 'brukersID' && (value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR);
 
-  gyldigAvsender = (id, value) => id === 'avsendersID' && (
+  erGyldigAvsenderID = (id, value) => id === 'avsendersID' && (
     value.length === Konstanter.ANTALL_TALL_I_ORGNR ||
     value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR
   );
 
-  vedIDFeltTastOpp = event => {
+  IDFeltTastOppHandler = event => {
     const { id, value } = event.target;
     const { hentBruker, hentAvsender } = this.props;
 
-    if (this.gyldigBruker(id, value)) {
+    if (this.erGyldigBrukerID(id, value)) {
       hentBruker(value, id);
       this.toggleSpinner('brukersNavn');
-    } else if (this.gyldigAvsender(id, value)) {
+    } else if (this.erGyldigAvsenderID(id, value)) {
       hentAvsender(value, id);
       this.toggleSpinner('avsenderNavn');
     }
@@ -71,24 +69,23 @@ class Informasjon extends Component {
   };
 
   render() {
-    const { journalforing, dokumentTittel, vedleggsTitler } = this.props;
-    const { dokument = {} } = journalforing;
+    const { dokumentTittel, vedleggsTitler } = this.props;
     const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
 
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukersID" label="Brukers fnr eller dnr:" onKeyUp={this.vedIDFeltTastOpp} />
-          <Skjema.Input feltNavn="brukersNavn" label="Brukers navn:" disabled />
+          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
+          <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsendersID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.vedIDFeltTastOpp} />
-          <Skjema.Input feltNavn="avsendersNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsendersNavn')} />
+          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.IDFeltTastOppHandler} />
+          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsendersNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-          <div>Navn på dokument:</div><EnkeltDato dato={dokument.mottattDato} />: {dokument.tittel}
+          <Skjema.Input feltNavn="mottattDato" label="Dokument mottatt:" disabled />
           <Skjema.Select feltNavn="dokumentTittel" label="Tittel på hoveddokument:">
             { dokumentTittel.map(tittel => <option key={uuid()} value={tittel.kode}>{tittel.term}</option>)}
           </Skjema.Select>
@@ -100,7 +97,6 @@ class Informasjon extends Component {
 }
 
 Informasjon.propTypes = {
-  journalforing: MPT.Journalforing.isRequired,
   dokumentTittel: PT.arrayOf(MPT.Kodeverk),
   vedleggsTitler: PT.arrayOf(MPT.Kodeverk),
   journalforingSkjemaVerdier: PT.object, // TODO: Vurdere MPT.
