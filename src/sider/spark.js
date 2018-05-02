@@ -74,7 +74,7 @@ class Spark extends Component {
           <form onSubmit={this.hentFagsakBasertPaFnr}>
             <p>Merk: Denne funksjonen bypasser hele verdikjeden journalføringsoppgave -> behandlingsoppgave -> behandling. Den er derfor kun ment til bruk for å teste visningen av en fagsak.</p>
             <label>Tast inn fnr på testpersonen du vil vise:</label>
-            <input type="text" name="fnr" />
+            <input type="text" name="fnr" /><br />
             <input type="submit" value="Gå til fagsak" />
           </form>
         </div>
