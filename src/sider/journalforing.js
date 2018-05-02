@@ -9,6 +9,8 @@ import * as Api from '../services/api';
 import * as MPT from '../proptypes';
 import * as Konstanter from '../constants';
 
+import Sticky from '../hjelpekomponenter/sticky';
+
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import Dokument from '../felles-komponenter/journalforing/dokument';
@@ -165,22 +167,26 @@ class Journalforing extends Component {
           <form onSubmit={this.overstyrSubmit} >
             <Nav.Row>
               <Nav.Column xs="4">
-                <Nav.Panel>
-                  <Informasjon
-                    journalforing={journalforing}
-                    sakstyper={saksTyper}
-                    journalforingSkjemaVerdier={journalforingSkjemaVerdier}
-                    hentAvsender={hentAvsender}
-                    hentBruker={hentBruker}
-                    dokumentTittel={dokumentTittel}
-                    vedleggsTitler={vedleggsTitler}
-                  />
-                  <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
-                  <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
-                  <div className="journalforing__fotknapper">
-                    <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
-                  </div>
-                </Nav.Panel>
+                <Sticky>
+                  <Nav.Panel className="journalforing__skjema">
+                    <div className="journalforing__skjema__scroll">
+                      <Informasjon
+                        journalforing={journalforing}
+                        sakstyper={saksTyper}
+                        journalforingSkjemaVerdier={journalforingSkjemaVerdier}
+                        hentAvsender={hentAvsender}
+                        hentBruker={hentBruker}
+                        dokumentTittel={dokumentTittel}
+                        vedleggsTitler={vedleggsTitler}
+                      />
+                      <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
+                      <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
+                      <div className="journalforing__fotknapper">
+                        <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                      </div>
+                    </div>
+                  </Nav.Panel>
+                </Sticky>
               </Nav.Column>
               <Nav.Column xs="8">
                 <Nav.Panel>
