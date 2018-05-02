@@ -19,18 +19,14 @@ class Sticky extends Component {
     document.addEventListener('scroll', () => {
       const top = document.documentElement.scrollTop || document.body.scrollTop;
       const bottom = document.documentElement.scrollHeight || document.body.scrollHeight;
-      const stickyOffset = stickyDOM.offsetHeight - window.innerHeight;
-      console.log(stickyOffset);
 
       const stickyInitial = parseInt(stickyDOM.getAttribute('data-sticky-initial'), 10);
-      const stickyEnter = stickyInitial + stickyOffset || stickyInitial;
+      const stickyEnter = stickyInitial || stickyInitial;
       const stickyExit = parseInt(stickyDOM.getAttribute('data-sticky-exit'), 10) || bottom;
 
       if (top >= stickyEnter && top <= stickyExit) {
-        stickyDOM.setAttribute('style', `transform: translateY(${-stickyOffset}px)`);
         stickyDOM.classList.add('sticky');
       } else {
-        stickyDOM.setAttribute('style', 'transform: translateY(0px)');
         stickyDOM.classList.remove('sticky');
       }
     });

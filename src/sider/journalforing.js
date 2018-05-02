@@ -169,19 +169,21 @@ class Journalforing extends Component {
               <Nav.Column xs="4">
                 <Sticky enter={Sticky.CHILD_BOTTOM} className="formsticky">
                   <Nav.Panel className="journalforing__skjema">
-                    <Informasjon
-                      journalforing={journalforing}
-                      sakstyper={saksTyper}
-                      journalforingSkjemaVerdier={journalforingSkjemaVerdier}
-                      hentAvsender={hentAvsender}
-                      hentBruker={hentBruker}
-                      dokumentTittel={dokumentTittel}
-                      vedleggsTitler={vedleggsTitler}
-                    />
-                    <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
-                    <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
-                    <div className="journalforing__fotknapper">
-                      <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                    <div className="journalforing__skjema__scroll">
+                      <Informasjon
+                        journalforing={journalforing}
+                        sakstyper={saksTyper}
+                        journalforingSkjemaVerdier={journalforingSkjemaVerdier}
+                        hentAvsender={hentAvsender}
+                        hentBruker={hentBruker}
+                        dokumentTittel={dokumentTittel}
+                        vedleggsTitler={vedleggsTitler}
+                      />
+                      <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
+                      <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
+                      <div className="journalforing__fotknapper">
+                        <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                      </div>
                     </div>
                   </Nav.Panel>
                 </Sticky>
