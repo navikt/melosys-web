@@ -2,7 +2,7 @@
 import PT from 'prop-types';
 
 const OppsummeringPropType = PT.shape({
-  saksnummer: PT.number,
+  saksnummer: PT.string,
   type: PT.string,
   status: PT.string,
   registrertDato: PT.string,

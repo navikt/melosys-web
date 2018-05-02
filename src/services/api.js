@@ -110,3 +110,8 @@ export function hentSaksbehandler() {
   return getAsJson(URI_SAKSBEHANDLER);
 }
 
+export function sparkResetOppgaver() {
+  const URI_RESET = `${API_BASE_URL}oppgaver/reset`;
+  return getAsJson(URI_RESET);
+}
+
