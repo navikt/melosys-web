@@ -12,16 +12,6 @@ export const JournalforingAlle = createSelector(
   journalforing => journalforing || {}
 );
 
-export const JournalforingBruker = createSelector(
-  state => state.journalforing.data || {},
-  journalforing => journalforing.bruker || {}
-);
-
-export const JournalforingAvsender = createSelector(
-  state => state.journalforing.data || {},
-  journalforing => journalforing.avsender || {}
-);
-
 export const JournalforingDokument = createSelector(
   state => state.journalforing.data || {},
   journalforing => journalforing.dokument || { tittel: {}, vedleggstitler: [] }
