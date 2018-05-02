@@ -48,6 +48,12 @@ class Spark extends Component {
     });
   }
 
+  resetOppgaver = () => {
+    Api.sparkResetOppgaver().then(() => {
+      document.location.href = '/';
+    });
+  }
+
   render() {
     const { nyfagsak, oppgave } = this.props;
     return (
@@ -55,6 +61,12 @@ class Spark extends Component {
         <div className="spark__gruppe">
           <h1>Health</h1>
           <button onClick={() => console.log(health())} >sjekk health</button>
+        </div>
+
+        <div className="spark__gruppe">
+          <h1>Reset mine oppgaver</h1>
+          <p>Denne funksjonen legger alle journalføringsoppgaver og behandlingsoppgaver registrert på din innlogged test-bruker tilbake i bingen slik at du kan plukke de på nytt.</p>
+          <button onClick={this.resetOppgaver}>reset</button>
         </div>
 
         <div className="spark__gruppe">
