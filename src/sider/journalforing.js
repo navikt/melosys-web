@@ -167,7 +167,7 @@ class Journalforing extends Component {
           <form onSubmit={this.overstyrSubmit} >
             <Nav.Row>
               <Nav.Column xs="4">
-                <Sticky enter={Sticky.CHILD_BOTTOM} className="formsticky">
+                <Sticky>
                   <Nav.Panel className="journalforing__skjema">
                     <div className="journalforing__skjema__scroll">
                       <Informasjon

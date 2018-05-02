@@ -14,40 +14,39 @@ class Sticky extends Component {
 
   componentDidMount() {
     const { stickyDOM } = this;
-    this.setInitialHeights(stickyDOM);
+    this.settInnledendeHoyde(stickyDOM);
 
-    document.addEventListener('scroll', () => {
-      const top = document.documentElement.scrollTop || document.body.scrollTop;
-      const bottom = document.documentElement.scrollHeight || document.body.scrollHeight;
-
-      const stickyInitial = parseInt(stickyDOM.getAttribute('data-sticky-initial'), 10);
-      const stickyEnter = stickyInitial || stickyInitial;
-      const stickyExit = parseInt(stickyDOM.getAttribute('data-sticky-exit'), 10) || bottom;
-
-      if (top >= stickyEnter && top <= stickyExit) {
-        stickyDOM.classList.add('sticky');
-      } else {
-        stickyDOM.classList.remove('sticky');
-      }
-    });
+    document.addEventListener('scroll', this.scrollHandler);
   }
 
-  setInitialHeights = element => {
-    element.setAttribute('data-sticky-initial', element.getBoundingClientRect().top);
+  /** Setter høydeplassering til elementet ved oppstart. Dette trenger vi for
+   * referanse senere for å beregne på hvilket punkt sticky skal slå inn.
+   * @param element
+   */
+  settInnledendeHoyde = element => {
+    this.stickyStartY = element.getBoundingClientRect().top;
   };
+
+  scrollHandler = () => {
+    const { stickyDOM, stickyStartY } = this;
+    const scrollTopp = document.documentElement.scrollTop || document.body.scrollTop;
+
+    if (scrollTopp >= stickyStartY) {
+      stickyDOM.classList.add('erSticky');
+    } else {
+      stickyDOM.classList.remove('erSticky');
+    }
+  }
 
   render() {
     const {
-      className, enter, exit, children,
+      className, children,
     } = this.props;
 
     return (
       <div
         ref={this.setDomRef}
         className={`Sticky ${className}`}
-        data-sticky
-        data-sticky-enter={enter}
-        data-sticky-exit={exit}
       >
         {children}
       </div>
@@ -55,18 +54,13 @@ class Sticky extends Component {
   }
 }
 
-Sticky.CHILD_BOTTOM = 'CHILD_BOTTOM';
-
 Sticky.propTypes = {
   children: PT.node.isRequired,
-  enter: PT.string.isRequired,
-  exit: PT.string,
   className: PT.string,
 };
 
 Sticky.defaultProps = {
   className: '',
-  exit: undefined,
 };
 
 export default Sticky;
