@@ -4,32 +4,40 @@ import PT from 'prop-types';
 import './sticky.css';
 
 class Sticky extends Component {
+  constructor (props) {
+    super(props);
+    this.stickyDOM = null;
+    this.setDomRef = element => {
+      this.stickyDOM = element;
+    };
+  }
+
   componentDidMount() {
-    const stickies = document.querySelectorAll('[data-sticky]');
-    this.setInitialHeights(stickies);
+    const { stickyDOM } = this;
+    this.setInitialHeights(stickyDOM);
 
     document.addEventListener('scroll', () => {
       const top = document.documentElement.scrollTop || document.body.scrollTop;
       const bottom = document.documentElement.scrollHeight || document.body.scrollHeight;
+      const stickyOffset = stickyDOM.offsetHeight - window.innerHeight;
+      console.log(stickyOffset);
 
-      stickies.forEach(sticky => {
-        const stickyInitial = parseInt(sticky.getAttribute('data-sticky-initial'), 10);
-        const stickyEnter = parseInt(sticky.getAttribute('data-sticky-enter'), 10) || stickyInitial;
-        const stickyExit = parseInt(sticky.getAttribute('data-sticky-exit'), 10) || bottom;
+      const stickyInitial = parseInt(stickyDOM.getAttribute('data-sticky-initial'), 10);
+      const stickyEnter = stickyInitial + stickyOffset || stickyInitial;
+      const stickyExit = parseInt(stickyDOM.getAttribute('data-sticky-exit'), 10) || bottom;
 
-        if (top >= stickyEnter && top <= stickyExit) {
-          sticky.classList.add('sticky');
-        } else {
-          sticky.classList.remove('sticky');
-        }
-      });
+      if (top >= stickyEnter && top <= stickyExit) {
+        stickyDOM.setAttribute('style', `transform: translateY(${-stickyOffset}px)`);
+        stickyDOM.classList.add('sticky');
+      } else {
+        stickyDOM.setAttribute('style', 'transform: translateY(0px)');
+        stickyDOM.classList.remove('sticky');
+      }
     });
   }
 
-  setInitialHeights = elements => {
-    elements.forEach(sticky => {
-      sticky.setAttribute('data-sticky-initial', sticky.getBoundingClientRect().top);
-    });
+  setInitialHeights = element => {
+    element.setAttribute('data-sticky-initial', element.getBoundingClientRect().top);
   };
 
   render() {
@@ -39,6 +47,7 @@ class Sticky extends Component {
 
     return (
       <div
+        ref={this.setDomRef}
         className={`Sticky ${className}`}
         data-sticky
         data-sticky-enter={enter}
@@ -49,6 +58,8 @@ class Sticky extends Component {
     );
   }
 }
+
+Sticky.CHILD_BOTTOM = 'CHILD_BOTTOM';
 
 Sticky.propTypes = {
   children: PT.node.isRequired,
