@@ -242,10 +242,8 @@ const mapStateToProps = state => ({
   fagsakListe: journalforingSelectors.JournalforingAlle(state).fagsakListe,
   initialValues: {
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
-    brukersNavn: journalforingSelectors.JournalforingAlle(state).brukersNavn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
-    avsenderNavn: journalforingSelectors.JournalforingAlle(state).avsenderNavn,
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
   },
