@@ -62,20 +62,28 @@ class PDFDokument extends Component {
 
   componentDidMount () {
     this.setDivSize();
-    window.addEventListener('resize', throttle(this.setDivSize, 500));
+    window.addEventListener('resize', this.setDivSizeThrottled);
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const { journalpostID, dokumentID } = this.props;
+    const { width } = this.state;
+    return ((journalpostID !== nextProps.journalpostID) || (dokumentID !== nextProps.dokumentID) || (width !== nextState.width));
   }
 
   componentWillUnmount () {
-    window.removeEventListener('resize', throttle(this.setDivSize, 500));
+    window.removeEventListener('resize', this.setDivSizeThrottled);
   }
 
   setDivSize = () => {
     const width = this.pdfWrapper && this.pdfWrapper.getBoundingClientRect().width;
-    return width && this.setState({ width: this.pdfWrapper.getBoundingClientRect().width });
+    this.setState({ width });
   };
 
+  setDivSizeThrottled = throttle(this.setDivSize, 500);
+
   render() {
-    const { journalpostID, dokumentID = 'did' } = this.props;
+    const { journalpostID, dokumentID } = this.props;
     const pdfDokumentURI = Api.PDFDokumentURI(journalpostID, dokumentID);
     return (
       <div
