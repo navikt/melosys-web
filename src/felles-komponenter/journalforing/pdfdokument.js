@@ -4,7 +4,9 @@ import PT from 'prop-types';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import throttle from 'lodash.throttle';
 
-import './dokument.css';
+import * as Api from '../../services/api';
+
+import './pdfdokument.css';
 
 const uuid = require('uuid/v4');
 
@@ -17,7 +19,7 @@ class PDFViser extends Component {
 
   onLoadSuccess = ({ numPages }) => {
     this.setState({ numPages });
-  }
+  };
 
   render() {
     const { numPages } = this.state;
@@ -55,8 +57,8 @@ PDFViser.defaultProps = {
  * PDFLeser lenger opp, men sørger også for å finne korrekt bredde av containeren
  * via eventlisteners ved mount.
  */
-class Dokument extends Component {
-  state = { width: null }
+class PDFDokument extends Component {
+  state = { width: null };
 
   componentDidMount () {
     this.setDivSize();
@@ -70,25 +72,26 @@ class Dokument extends Component {
   setDivSize = () => {
     const width = this.pdfWrapper && this.pdfWrapper.getBoundingClientRect().width;
     return width && this.setState({ width: this.pdfWrapper.getBoundingClientRect().width });
-  }
+  };
 
   render() {
-    const { pdfDokument } = this.props;
-
+    const { journalpostID, dokumentID = 'did' } = this.props;
+    const pdfDokumentURI = Api.PDFDokumentURI(journalpostID, dokumentID);
     return (
       <div
         id="row"
-        className="dokument">
+        className="pdfdokument">
         <div id="pdfWrapper" className="dokument__pdfwrapper" ref={ref => { this.pdfWrapper = ref; }}>
-          <PDFViser wrapperDivSize={this.state.width} pdfDokument={pdfDokument} />
+          <PDFViser wrapperDivSize={this.state.width} pdfDokument={pdfDokumentURI} />
         </div>
       </div>
     );
   }
 }
 
-Dokument.propTypes = {
-  pdfDokument: PT.string.isRequired,
+PDFDokument.propTypes = {
+  journalpostID: PT.string.isRequired,
+  dokumentID: PT.string.isRequired,
 };
 
-export default Dokument;
+export default PDFDokument;

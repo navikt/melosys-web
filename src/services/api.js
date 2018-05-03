@@ -18,7 +18,10 @@ export function health() {
   const URI_HEALTH = `/melosys/internal/health/`;
   return getAsJson(URI_HEALTH);
 }
-
+export function PDFDokumentURI(journalforingID, dokumentID) {
+  const URI_DOKUMENT_PDF = `${API_BASE_URL}dokumenter/pdf/${journalforingID}/${dokumentID}`;
+  return URI_DOKUMENT_PDF;
+}
 export function hentPerson(fnrdnr) {
   const URI_PERSON = `${API_BASE_URL}personer/?fnr=${fnrdnr}`;
   return getAsJson(URI_PERSON);
@@ -108,5 +111,10 @@ export function hentTidligeresaker(brukernavn) {
 export function hentSaksbehandler() {
   const URI_SAKSBEHANDLER = `${API_BASE_URL}saksbehandler`;
   return getAsJson(URI_SAKSBEHANDLER);
+}
+
+export function sparkResetOppgaver() {
+  const URI_RESET = `${API_BASE_URL}oppgaver/reset`;
+  return getAsJson(URI_RESET);
 }
 
