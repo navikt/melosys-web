@@ -14,5 +14,5 @@ export const JournalforingAlle = createSelector(
 
 export const JournalforingDokument = createSelector(
   state => state.journalforing.data || {},
-  journalforing => journalforing.dokument || { tittel: {}, vedleggstitler: [] }
+  journalforing => journalforing.dokument || { tittel: '', vedleggstitler: [] }
 );

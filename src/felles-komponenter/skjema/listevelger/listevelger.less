@@ -1,41 +1,56 @@
 @import '../../../constants';
 
 .listevelger {
+  margin: 1em 0;
 
   .listevelger__linje {
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     margin: 0 0 1em 0;
+  }
 
-    .listevelger__linje__input {
-      width: 200px;
-      margin-bottom: 0;
+  .listevelger__innhold {
+    display: flex;
+    flex: 1;
+    align-items: center;
+
+    .listevelger__ikon {
+      display: flex;
+      flex: 1;
+      align-items: center;
     }
 
-    .listevelger__linje__navn {
-      width: 200px;
+    .listevelger__innhold__label {
+      flex: 20;
+      padding-left: .5em;
     }
+  }
 
-    .listevelger__linje__knapp {
-      background-color: transparent;
-      border-radius: 20px;
-      width: 40px;
-      height: 40px;
-      border: 2px solid @blue-nav;
-      color: @blue-nav;
-      font-size: 1.2rem;
-      font-weight: bold;
-      margin: 0 0 0 1em;
+  .listevelger__linje__input {
+    margin-bottom: 0;
+    flex: 6;
+  }
 
-      &:focus {
-        box-shadow: 0 0 0 3px #ffbd66;
-        outline: none;
-      }
+  .listevelger__linje__knapp {
+    background-color: transparent;
+    border-radius: 20px;
+    width: 40px;
+    height: 40px;
+    border: 2px solid @blue-nav;
+    color: @blue-nav;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 0 0 0 1em;
+
+    &:focus {
+      box-shadow: 0 0 0 3px #ffbd66;
+      outline: none;
     }
+  }
 
-    .listevelger__linje__knapp--leggtil {
-      align-self: flex-end;
-    }
+  .listevelger__linje__knapp--leggtil {
+    align-self: flex-end;
   }
 }
