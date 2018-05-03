@@ -44,9 +44,10 @@ class Sok extends Component {
               </section>
             </Nav.Column>
             <Nav.Column xs="5">
+              <h1>Behandle sak</h1>
+              <SokSkjema />
               <Journalforing />
               <Behandling />
-              <SokSkjema />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>

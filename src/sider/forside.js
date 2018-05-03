@@ -9,7 +9,7 @@ import * as Nav from '../utils/navFrontend';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import MineOppgaver from '../felles-komponenter/forside/mineoppgaver';
-import Sok from '../felles-komponenter/forside/sokskjema';
+import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
 import './forside.css';
 
@@ -25,7 +25,7 @@ const Forside = props => {
           </Nav.Column>
           <Nav.Column xs="5">
             <h1>Behandle sak</h1>
-            <Sok />
+            <SokSkjema />
             <Journalforing />
             <Behandling />
           </Nav.Column>
