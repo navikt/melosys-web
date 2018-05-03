@@ -149,6 +149,8 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = () => {
     const { journalforingSkjemaVerdier: { saksnummer } } = this.props;
 
+    alert('Denne er ikke avklart / implementert.');
+
     return saksnummer !== undefined;
   };
 
