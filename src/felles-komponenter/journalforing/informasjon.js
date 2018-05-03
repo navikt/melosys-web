@@ -67,8 +67,7 @@ class Informasjon extends Component {
   };
 
   render() {
-    const { journalforing, valgbareDokumentTitler, valgbareVedleggsTitler } = this.props;
-    const { dokument = {} } = journalforing;
+    const { valgbareDokumentTitler, valgbareVedleggsTitler } = this.props;
     const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
 
