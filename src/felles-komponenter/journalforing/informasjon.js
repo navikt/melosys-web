@@ -60,8 +60,8 @@ class Informasjon extends Component {
     const { journalforingSkjemaVerdier } = this.props;
 
     switch (feltNavn) {
-      case 'avsendersNavn': { return journalforingSkjemaVerdier.avsenderFnrOrgnr !== ''; }
-      case 'avsendersID': { return journalforingSkjemaVerdier.erBrukerAvsender; }
+      case 'avsenderNavn': { return journalforingSkjemaVerdier.avsenderID !== ''; }
+      case 'avsenderID': { return journalforingSkjemaVerdier.erBrukerAvsender; }
       default: return false;
     }
   };
@@ -80,8 +80,8 @@ class Informasjon extends Component {
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.IDFeltTastOppHandler} />
-          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsendersNavn')} />
+          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsenderID')} onKeyUp={this.IDFeltTastOppHandler} />
+          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsenderNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           <Skjema.Input feltNavn="mottattDato" label="Dokument mottatt:" disabled />
           <Skjema.ListeVelger
