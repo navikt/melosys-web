@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
@@ -7,8 +6,6 @@ import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 import * as Konstanter from '../../constants';
-
-import EnkeltDato from '../datoOmrade/enkeltDato';
 
 import './informasjon.css';
 import { PersonSelectors } from '../../ducks/person';
@@ -20,21 +17,21 @@ import { OrganisasjonSelectors } from '../../ducks/organisasjon';
 class Informasjon extends Component {
   state = { spinner: {} };
 
-  gyldigBruker = (id, value) => id === 'brukersID' && (value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR);
+  erGyldigBrukerID = (id, value) => id === 'brukersID' && (value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR);
 
-  gyldigAvsender = (id, value) => id === 'avsendersID' && (
+  erGyldigAvsenderID = (id, value) => id === 'avsendersID' && (
     value.length === Konstanter.ANTALL_TALL_I_ORGNR ||
     value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR
   );
 
-  vedIDFeltTastOpp = event => {
+  IDFeltTastOppHandler = event => {
     const { id, value } = event.target;
     const { hentBruker, hentAvsender } = this.props;
 
-    if (this.gyldigBruker(id, value)) {
+    if (this.erGyldigBrukerID(id, value)) {
       hentBruker(value, id);
       this.toggleSpinner('brukersNavn');
-    } else if (this.gyldigAvsender(id, value)) {
+    } else if (this.erGyldigAvsenderID(id, value)) {
       hentAvsender(value, id);
       this.toggleSpinner('avsenderNavn');
     }
@@ -78,16 +75,16 @@ class Informasjon extends Component {
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.vedIDFeltTastOpp} />
+          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
           <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.vedIDFeltTastOpp} />
+          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.IDFeltTastOppHandler} />
           <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsendersNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-          { dokument.url && <Link to={dokument.url} target="_blank" className="informasjon__dokumentlenke"><EnkeltDato dato={dokument.mottattDato} />: {dokument.tittel.term}</Link> }
+          <Skjema.Input feltNavn="mottattDato" label="Dokument mottatt:" disabled />
           <Skjema.ListeVelger
             feltNavn="dokumentTittel"
             label="Tittel på hoveddokument:"
@@ -108,7 +105,6 @@ class Informasjon extends Component {
 }
 
 Informasjon.propTypes = {
-  journalforing: MPT.Journalforing.isRequired,
   valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk),
   valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk),
   journalforingSkjemaVerdier: PT.object, // TODO: Vurdere MPT.

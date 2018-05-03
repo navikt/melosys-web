@@ -3,22 +3,14 @@ import PT from 'prop-types';
 import { Kodeverk } from './kodeverk';
 
 const JournalforingPropType = PT.shape({
-  bruker: PT.shape({
-    navn: PT.string,
-    ID: PT.string,
-  }),
+  brukerID: PT.string,
   erBrukerAvsender: PT.bool,
-  avsender: PT.shape({
-    navn: PT.string,
-    ID: PT.string,
-  }),
-  sakstype: Kodeverk,
+  avsenderID: PT.string,
   dokument: PT.shape({
-    navn: PT.string,
+    ID: PT.string.isRequired,
     mottattDato: PT.string,
     tittel: PT.string,
     vedleggstitler: PT.arrayOf(Kodeverk),
-    url: PT.string,
   }),
 });
 
