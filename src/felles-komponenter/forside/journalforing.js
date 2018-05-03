@@ -14,8 +14,9 @@ class Journalforing extends Component {
     return (
       <Nav.Panel className="forside__sidepanel">
         <Nav.Systemtittel>Journalføring</Nav.Systemtittel>
+        <p>Klikk &quot;journalfør sak&quot; for å starte en journalføringsoppgave.</p>
         <form onSubmit={this.submitOgVideresend}>
-          <Nav.Knapp>Journalføring</Nav.Knapp>
+          <Nav.Knapp>Journalfør sak</Nav.Knapp>
         </form>
       </Nav.Panel>
     );
