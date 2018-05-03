@@ -197,21 +197,25 @@ class Journalforing extends Component {
           <form onSubmit={this.overstyrSubmit}>
             <Nav.Row>
               <Nav.Column xs="4">
-                <Nav.Panel>
-                  <Informasjon
-                    journalforing={journalforing}
-                    journalforingSkjemaVerdier={journalforingSkjemaVerdier}
-                    hentAvsender={hentAvsender}
-                    hentBruker={hentBruker}
-                    valgbareDokumentTitler={valgbareDokumentTitler}
-                    valgbareVedleggsTitler={valgbareVedleggsTitler}
-                  />
-                  <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
-                  <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
-                  <div className="journalforing__fotknapper">
-                    <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
-                  </div>
-                </Nav.Panel>
+                <Sticky>
+                  <Nav.Panel className="journalforing__skjema">
+                    <div className="journalforing__skjema__scroll">
+                      <Informasjon
+                        journalforing={journalforing}
+                        journalforingSkjemaVerdier={journalforingSkjemaVerdier}
+                        hentAvsender={hentAvsender}
+                        hentBruker={hentBruker}
+                        valgbareDokumentTitler={valgbareDokumentTitler}
+                        valgbareVedleggsTitler={valgbareVedleggsTitler}
+                      />
+                      <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
+                      <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
+                      <div className="journalforing__fotknapper">
+                        <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                      </div>
+                    </div>
+                  </Nav.Panel>
+                </Sticky>
               </Nav.Column>
               <Nav.Column xs="8">
                 { dokumentID && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={dokumentID} /></Nav.Panel> }
@@ -241,7 +245,8 @@ const mapStateToProps = state => ({
     brukersNavn: journalforingSelectors.JournalforingAlle(state).brukersNavn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
-    avsendersNavn: journalforingSelectors.JournalforingAvsender(state).avsender,
+    avsenderNavn: journalforingSelectors.JournalforingAlle(state).avsenderNavn,
+    mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
   },
 });
