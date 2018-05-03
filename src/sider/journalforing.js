@@ -51,8 +51,8 @@ class Journalforing extends Component {
     saksTyper: PT.array,
     fagsakListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
-    dokumentTittel: PT.arrayOf(MPT.Kodeverk).isRequired,
-    vedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
+    valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
+    valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
     settBrukerSomAvsender: PT.func.isRequired,
   };
 
@@ -180,7 +180,7 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing, dokumentTittel, vedleggsTitler, saksTyper, journalforingSkjemaVerdier, fagsakListe,
+      journalforing, valgbareDokumentTitler, valgbareVedleggsTitler, journalforingSkjemaVerdier, fagsakListe,
     } = this.props;
     const {
       knyttTilEksisterendeSak, opprettNyFagsakSubmit, hentAvsender, hentBruker,
@@ -201,12 +201,12 @@ class Journalforing extends Component {
                   <Nav.Panel className="journalforing__skjema">
                     <div className="journalforing__skjema__scroll">
                       <Informasjon
-                        sakstyper={saksTyper}
+                        journalforing={journalforing}
                         journalforingSkjemaVerdier={journalforingSkjemaVerdier}
                         hentAvsender={hentAvsender}
                         hentBruker={hentBruker}
-                        dokumentTittel={dokumentTittel}
-                        vedleggsTitler={vedleggsTitler}
+                        valgbareDokumentTitler={valgbareDokumentTitler}
+                        valgbareVedleggsTitler={valgbareVedleggsTitler}
                       />
                       <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                       <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
@@ -235,19 +235,17 @@ Journalforing.validering = value => ({
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   saksTyper: KodeverkSelectors.sakstyperSelector(state),
-  dokumentTittel: KodeverkSelectors.dokumenttitlerSelector(state),
-  vedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
+  pdfDokument: journalforingSelectors.JournalforingDokument(state).url,
+  valgbareDokumentTitler: KodeverkSelectors.dokumenttitlerSelector(state),
+  valgbareVedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: journalforingSelectors.JournalforingAlle(state).fagsakListe,
   initialValues: {
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
-    brukerNavn: journalforingSelectors.JournalforingAlle(state).brukerNavn,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
-    avsenderNavn: journalforingSelectors.JournalforingAlle(state).avsenderNavn,
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
-    dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel.kode,
-    vedleggsTitler: journalforingSelectors.JournalforingDokument(state).vedleggstitler,
+    dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
   },
 });
 

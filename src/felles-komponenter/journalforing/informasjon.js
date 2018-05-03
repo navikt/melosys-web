@@ -11,8 +11,6 @@ import './informasjon.css';
 import { PersonSelectors } from '../../ducks/person';
 import { OrganisasjonSelectors } from '../../ducks/organisasjon';
 
-const uuid = require('uuid/v4');
-
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
  * slik som informasjon om bruker, informasjon om dokument etc.
  */
@@ -62,14 +60,14 @@ class Informasjon extends Component {
     const { journalforingSkjemaVerdier } = this.props;
 
     switch (feltNavn) {
-      case 'avsendersNavn': { return journalforingSkjemaVerdier.avsenderFnrOrgnr !== ''; }
-      case 'avsendersID': { return journalforingSkjemaVerdier.erBrukerAvsender; }
+      case 'avsenderNavn': { return journalforingSkjemaVerdier.avsenderID !== ''; }
+      case 'avsenderID': { return journalforingSkjemaVerdier.erBrukerAvsender; }
       default: return false;
     }
   };
 
   render() {
-    const { dokumentTittel, vedleggsTitler } = this.props;
+    const { valgbareDokumentTitler, valgbareVedleggsTitler } = this.props;
     const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
 
@@ -82,14 +80,23 @@ class Informasjon extends Component {
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsendersID')} onKeyUp={this.IDFeltTastOppHandler} />
-          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsendersNavn')} />
+          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsenderID')} onKeyUp={this.IDFeltTastOppHandler} />
+          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsenderNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           <Skjema.Input feltNavn="mottattDato" label="Dokument mottatt:" disabled />
-          <Skjema.Select feltNavn="dokumentTittel" label="Tittel på hoveddokument:">
-            { dokumentTittel.map(tittel => <option key={uuid()} value={tittel.kode}>{tittel.term}</option>)}
-          </Skjema.Select>
-          <Skjema.ListeVelger feltNavn="vedleggsTitler" label="Titler på vedlegg:" multiListe muligeValg={vedleggsTitler} />
+          <Skjema.ListeVelger
+            feltNavn="dokumentTittel"
+            label="Tittel på hoveddokument:"
+            placeholder="(velg eller skriv inn egen tittel)"
+            muligeValg={valgbareDokumentTitler}
+          />
+          <Skjema.ListeVelger
+            feltNavn="vedleggsTitler"
+            label="Titler på vedlegg:"
+            gruppe
+            muligeValg={valgbareVedleggsTitler}
+            placeholder="(Velg eller skriv inn egen tittel)"
+          />
         </Nav.Fieldset>
       </div>
     );
@@ -97,8 +104,8 @@ class Informasjon extends Component {
 }
 
 Informasjon.propTypes = {
-  dokumentTittel: PT.arrayOf(MPT.Kodeverk),
-  vedleggsTitler: PT.arrayOf(MPT.Kodeverk),
+  valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk),
+  valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk),
   journalforingSkjemaVerdier: PT.object, // TODO: Vurdere MPT.
   hentBruker: PT.func.isRequired,
   hentAvsender: PT.func.isRequired,
@@ -106,8 +113,8 @@ Informasjon.propTypes = {
 
 Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
-  dokumentTittel: '',
-  vedleggsTitler: [],
+  valgbareDokumentTitler: [],
+  valgbareVedleggsTitler: [],
 };
 
 const mapStateToProps = state => ({
