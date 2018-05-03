@@ -1,7 +1,7 @@
+/* eslint react/no-array-index-key:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { Input as NavInput } from 'nav-frontend-skjema';
-import Icon from 'nav-frontend-ikoner-assets';
+import * as Nav from '../../../utils/navFrontend';
 
 import './listevelger.css';
 
@@ -10,11 +10,10 @@ const uuid = require('uuid/v4');
 /** Dette er komponent for ett enkeltvalg. Inneholder et ikon, navnet på valget
  * og en sletteknapp.
  */
-const ListevelgerValgtElement = ({ label, slettElement }) => (
+const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement }) => (
   <div className="listevelger__linje">
     <div className="listevelger__innhold">
-      <div className="listevelger__ikon"><Icon kind="vedlegg" width={16} height={16} /></div>
-      <div className="listevelger__innhold__label">{label}</div>
+      <Nav.Input value={label} label="" className="listevelger__linje__input" onChange={oppdaterElement} onKeyDown={event => (event.key === 'Enter') && event.preventDefault()} />
     </div>
     <button className="listevelger__linje__knapp" onClick={slettElement}>-</button>
   </div>
@@ -23,6 +22,7 @@ const ListevelgerValgtElement = ({ label, slettElement }) => (
 ListevelgerValgtElement.propTypes = {
   label: PT.string.isRequired,
   slettElement: PT.func.isRequired,
+  oppdaterElement: PT.func.isRequired,
 };
 
 /** Komponenten lar brukeren legge til flere valg, men da kun ett valg pr liste.
@@ -48,9 +48,15 @@ class ListevelgerGruppe extends Component {
     this.setState({ inputVerdi: '' });
   }
 
-  slettFraListen = index => {
+  slettElement = index => {
     const { fields } = this.props;
     fields.remove(index);
+  }
+
+  oppdaterElement = (verdi, index) => {
+    const { fields } = this.props;
+    fields.remove(index);
+    fields.insert(index, verdi);
   }
 
   render() {
@@ -68,10 +74,15 @@ class ListevelgerGruppe extends Component {
       <div>
         <label htmlFor={`listevelger-${fields.name}`}>{label}</label>
         {
-          alleFelter.map((verdi, index) => <ListevelgerValgtElement key={uuid()} label={verdi} slettElement={() => this.slettFraListen(index)} />)
+          alleFelter.map((verdi, index) => <ListevelgerValgtElement
+            key={index}
+            label={verdi}
+            slettElement={() => this.slettElement(index)}
+            oppdaterElement={event => this.oppdaterElement(event.target.value, index)}
+          />)
         }
         <div className="listevelger__linje">
-          <NavInput
+          <Nav.Input
             id={`listevelger-${fields.name}`}
             label=""
             feil={feil}
