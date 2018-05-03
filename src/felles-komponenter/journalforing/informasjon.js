@@ -93,7 +93,7 @@ class Informasjon extends Component {
           <Skjema.ListeVelger
             feltNavn="vedleggsTitler"
             label="Titler på vedlegg:"
-            multiListe
+            gruppe
             muligeValg={valgbareVedleggsTitler}
             placeholder="(Velg eller skriv inn egen tittel)"
           />

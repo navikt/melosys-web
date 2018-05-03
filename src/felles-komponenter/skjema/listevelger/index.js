@@ -15,15 +15,15 @@ import './listevelger.css';
  * kodeverk-baserte objekter må reduces.
  */
 const Listevelger = ({
-  id, feltNavn, className, multiListe, ...rest
+  id, feltNavn, className, gruppe, ...rest
 }) => (
   <div className="listevelger">
     {
-      multiListe ?
+      gruppe ?
         <FieldArray
           id={id}
           name={feltNavn}
-          multiListe={multiListe}
+          multiListe={gruppe}
           component={ListevelgerGruppe}
           {...rest}
         />
@@ -44,13 +44,13 @@ Listevelger.propTypes = {
   feltNavn: PT.string.isRequired,
   id: PT.string,
   className: PT.string,
-  multiListe: PT.bool,
+  gruppe: PT.bool,
 };
 
 Listevelger.defaultProps = {
   className: '',
   id: undefined,
-  multiListe: false,
+  gruppe: false,
 };
 
 export default Listevelger;
