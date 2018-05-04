@@ -10,7 +10,7 @@ import './eksisterendeSaker.css';
  */
 const EnkeltSak = props => {
   const {
-    registrertDato, behandlingstype = {}, soknadsperiode = {}, behandlingsstatus = {}, land = [], sakstype = {},
+    opprettetDato, behandlingstype = {}, soknadsperiode = {}, behandlingsstatus = {}, land = [], sakstype = {},
   } = props.sak;
   const { fom = null, tom = null } = soknadsperiode;
 
@@ -24,7 +24,7 @@ const EnkeltSak = props => {
         <dt className="enkeltSak__meta__term">Behandlingsstatus: </dt>
         <dd className="enkeltSak__meta__detalj">{behandlingsstatus.term || '(ukjent)'}</dd>
         <dt className="enkeltSak__meta__term">Registrert:</dt>
-        <dd className="enkeltSak__meta__detalj">{<EnkeltDato dato={registrertDato} />}</dd>
+        <dd className="enkeltSak__meta__detalj">{<EnkeltDato dato={opprettetDato} />}</dd>
         <dt className="enkeltSak__meta__term">Søknadsperiode: </dt>
         <dd className="enkeltSak__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
         <dt className="enkeltSak__meta__term">Land:</dt>
