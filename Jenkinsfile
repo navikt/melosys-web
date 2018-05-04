@@ -95,6 +95,8 @@ node {
     echo("semver=${semver}")
 
     sh(returnStdout: true, script: "${npm} run build")
+    sh(returnStdout: true, script: "${npm} prune")
+
     if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
       sh "rm -rf /var/lib/jenkins/melosys-web/*"
       sh "cp -r build/*  /var/lib/jenkins/melosys-web/"
@@ -104,7 +106,7 @@ node {
     buildVersion ="${majorMinor}.${BUILD_NUMBER}"
     echo("buildVersion=${buildVersion}")
   }
-
+/* Disable Docker builds to save space
   stage('Docker') {
     echo("Build docker image.")
 
@@ -121,7 +123,7 @@ node {
       echo("PR branches are not used in docker images")
     }
   }
-
+*/
   /* Disable nais deployment
   stage('Deploy') {
     if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
