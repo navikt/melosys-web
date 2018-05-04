@@ -146,13 +146,31 @@ class Journalforing extends Component {
     this.props.history.push('/');
   };
 
+  plukkJournalDocParams = () => {
+    const { oppgaveID, journalpostID } = this.props.match.params;
+    const { journalforing, journalforingSkjemaVerdier } = this.props;
+    const { brukerID, avsenderID } = journalforing;
+    const { dokumentTittel, vedleggsTitler = [] } = journalforingSkjemaVerdier;
+    console.log('journalforing', journalforing);
+    console.log('journalforingSkjemaVerdier', journalforingSkjemaVerdier);
+    const jfdoc = {
+      journalpostID,
+      oppgaveID,
+      brukerID,
+      avsenderID,
+      dokumenttittel: dokumentTittel,
+      vedleggstitler: vedleggsTitler,
+    };
+    return jfdoc;
+  };
   knyttTilEksisterendeSak = () => {
     const { journalforingSkjemaVerdier: { saksnummer } } = this.props;
-
     // TODO validate response before redirect
     /* eslint-disable */
-    console.log(response);
-    alert('Denne er ikke avklart / implementert.');
+    const jfdoc = this.plukkJournalDocParams();
+    jfdoc.saksnummer = saksnummer;
+    console.log('jfdoc', jfdoc);
+    //alert('Denne er ikke avklart / implementert.');
     /* eslint-enable */
 
     return saksnummer !== undefined;
@@ -162,24 +180,24 @@ class Journalforing extends Component {
     event.preventDefault();
     const { sendNyFagsakTilJournalforing, journalforingSkjemaVerdier } = this.props;
     const {
-      brukersFnr, journalforingOppholdsLand, erBrukerAvsender, avsenderFnrOrgnr, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
+      journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
 
-    const data = {
-      brukersFnr,
-      erBrukerAvsender,
-      avsenderFnrOrgnr,
-      oppholdsLand: journalforingOppholdsLand,
-      periode: {
+    const fagsak = {
+      type: 'EU_EOS',
+      soknadsperiode: {
         fom: journalforingPeriodeFraOgMed,
         tom: journalforingPeriodeTilOgMed,
       },
+      land: journalforingOppholdsLand,
     };
-    sendNyFagsakTilJournalforing(data).then(response => {
+    const jfdoc = this.plukkJournalDocParams();
+    jfdoc.fagsak = fagsak;
+    sendNyFagsakTilJournalforing(jfdoc).then(response => {
       // TODO validate response before redirect
       /* eslint-disable */
       console.log(response);
-      alert('Denne er ikke avklart / implementert.');
+      //alert('Denne er ikke avklart / implementert.');
       /* eslint-enable */
     });
   };
