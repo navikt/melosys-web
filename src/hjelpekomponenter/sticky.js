@@ -19,6 +19,10 @@ class Sticky extends Component {
     document.addEventListener('scroll', this.scrollHandler);
   }
 
+  componentWillUnmount() {
+    document.removeEventListener('scroll', this.scrollHandler);
+  }
+
   /** Setter høydeplassering til elementet ved oppstart. Dette trenger vi for
    * referanse senere for å beregne på hvilket punkt sticky skal slå inn.
    * @param element
