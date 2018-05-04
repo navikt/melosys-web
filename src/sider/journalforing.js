@@ -149,7 +149,11 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = () => {
     const { journalforingSkjemaVerdier: { saksnummer } } = this.props;
 
+    // TODO validate response before redirect
+    /* eslint-disable */
+    console.log(response);
     alert('Denne er ikke avklart / implementert.');
+    /* eslint-enable */
 
     return saksnummer !== undefined;
   };
