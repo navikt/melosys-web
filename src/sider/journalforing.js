@@ -113,6 +113,10 @@ class Journalforing extends Component {
     }
   }
 
+  /** Vi ønsker bare å gjøre et søk dersom antall tegn matcher 11 (fnr og dnr).
+   * derfor, sjekk dette før vi evt kaller sokFnrDnr.
+   * @param value {string} Verdien vi ønsker å sjekke på.
+   */
   hentBruker = value => {
     const { sokFnrDnr } = this.props;
     const { preAutofyll } = this;
@@ -122,24 +126,33 @@ class Journalforing extends Component {
     sokFnrDnr(value).then(({ sammensattNavn = '' }) => preAutofyll('brukerID', 'brukerNavn', sammensattNavn));
   };
 
+  /** Vi ønsker bare å gjøre et søk dersom antall tegn matcher enten 9 (orgnr) eller 11 (fnr og dnr).
+   * Avsender kan nemlig være både person og organisasjon.
+   * Derfor, sjekk dette før vi evt kaller sokOrgnr eller sokFnrDnr.
+   * @param value {string} Verdien vi ønsker å sjekke på.
+   */
   hentAvsender = value => {
     const { sokOrgnr, sokFnrDnr } = this.props;
     const { preAutofyll } = this;
 
-    switch (value.length) {
-      case Konstanter.ANTALL_TALL_I_ORGNR: {
-        sokOrgnr(value).then(({ navn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', navn));
-        break;
-      }
-      case Konstanter.ANTALL_TALL_I_FNR:
-      case Konstanter.ANTALL_TALL_I_DNR: {
-        sokFnrDnr(value).then(({ sammensattNavn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', sammensattNavn));
-        break;
-      }
-      default:
+    if (value.length === Konstanter.ANTALL_TALL_I_DNR) {
+      sokOrgnr(value).then(({ navn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', navn));
+    }
+
+    if (value.length === Konstanter.ANTALL_TALL_I_FNR || value.length === Konstanter.ANTALL_TALL_I_DNR) {
+      sokFnrDnr(value).then(({ sammensattNavn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', sammensattNavn));
     }
   };
 
+  /** Mellomfunksjon som fyller ut treffet i brukerNavn eller avsenderNavn,
+   * uavhengig om faktisk verdi eller bare ''. I tillegg validerer skjemaet på disse feltene
+   * for å sjekke at de er korrekt. For å validere på ikke-treff gjør vi en eksplissit validering
+   * hvor vi antar at (1) noe er tastet inn i ID-feltet og (2) navn-feltet er tomt. Ergo fant vi ingenting og
+   * kan vise feilmelding i ID-feltet.
+   * @param opprinnelsesFelt {string} Det feltet som brukeren tastet inn (stort sett er dette ID-feltet)
+   * @param verdiFelt {string} Feltet som den funnene verdien skal settes inn i.
+   * @param verdi {string} Selve verdien som ble funnet.
+   */
   preAutofyll = (opprinnelsesFelt, verdiFelt, verdi) => {
     const { autofyllFormFelt } = this.props;
     this.props.triggeFeltFeil(opprinnelsesFelt);
