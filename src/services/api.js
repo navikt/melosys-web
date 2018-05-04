@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { getAsJson, postAsJson } from './utils';
-
+import { API_BASE_URL }  from './api-constants';
+import { PDFDokumentURI } from './dokumenter';
 /*
 function erDev() {
   const url = window.location.href;
@@ -11,17 +12,19 @@ function erDev() {
 }
 */
 // from .env or .env.local
-const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
+// const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 //console.log('process.env', process.env);
 
 export function health() {
   const URI_HEALTH = `/melosys/internal/health/`;
   return getAsJson(URI_HEALTH);
 }
+/*
 export function PDFDokumentURI(journalforingID, dokumentID) {
   const URI_DOKUMENT_PDF = `${API_BASE_URL}dokumenter/pdf/${journalforingID}/${dokumentID}`;
   return URI_DOKUMENT_PDF;
 }
+*/
 export function hentPerson(fnrdnr) {
   const URI_PERSON = `${API_BASE_URL}personer/?fnr=${fnrdnr}`;
   return getAsJson(URI_PERSON);
@@ -118,3 +121,6 @@ export function sparkResetOppgaver() {
   return getAsJson(URI_RESET);
 }
 
+export {
+  PDFDokumentURI
+}
