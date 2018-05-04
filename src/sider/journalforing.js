@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { reduxForm, change } from 'redux-form';
+import { reduxForm, autofill, setSubmitFailed } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -45,7 +45,8 @@ class Journalforing extends Component {
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
     history: PT.object.isRequired,
-    oppdaterFormFelt: PT.func.isRequired,
+    autofyllFormFelt: PT.func.isRequired,
+    triggeFeltFeil: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
     saksTyper: PT.array,
@@ -112,30 +113,50 @@ class Journalforing extends Component {
     }
   }
 
+  /** Vi ønsker bare å gjøre et søk dersom antall tegn matcher 11 (fnr og dnr).
+   * derfor, sjekk dette før vi evt kaller sokFnrDnr.
+   * @param value {string} Verdien vi ønsker å sjekke på.
+   */
   hentBruker = value => {
-    const { sokFnrDnr, oppdaterFormFelt } = this.props;
-    const targetFeltNavn = 'brukerNavn';
+    const { sokFnrDnr } = this.props;
+    const { preAutofyll } = this;
+
     if (value.length !== Konstanter.ANTALL_TALL_I_FNR && value.length !== Konstanter.ANTALL_TALL_I_DNR) { return; }
 
-    sokFnrDnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.sammensattNavn));
+    sokFnrDnr(value).then(({ sammensattNavn = '' }) => preAutofyll('brukerID', 'brukerNavn', sammensattNavn));
   };
 
+  /** Vi ønsker bare å gjøre et søk dersom antall tegn matcher enten 9 (orgnr) eller 11 (fnr og dnr).
+   * Avsender kan nemlig være både person og organisasjon.
+   * Derfor, sjekk dette før vi evt kaller sokOrgnr eller sokFnrDnr.
+   * @param value {string} Verdien vi ønsker å sjekke på.
+   */
   hentAvsender = value => {
-    const { sokOrgnr, sokFnrDnr, oppdaterFormFelt } = this.props;
-    const targetFeltNavn = 'avsenderNavn';
+    const { sokOrgnr, sokFnrDnr } = this.props;
+    const { preAutofyll } = this;
 
-    switch (value.length) {
-      case Konstanter.ANTALL_TALL_I_ORGNR: {
-        sokOrgnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.navn));
-        break;
-      }
-      case Konstanter.ANTALL_TALL_I_FNR:
-      case Konstanter.ANTALL_TALL_I_DNR: {
-        sokFnrDnr(value).then(response => oppdaterFormFelt(targetFeltNavn, response.sammensattNavn));
-        break;
-      }
-      default:
+    if (value.length === Konstanter.ANTALL_TALL_I_DNR) {
+      sokOrgnr(value).then(({ navn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', navn));
     }
+
+    if (value.length === Konstanter.ANTALL_TALL_I_FNR || value.length === Konstanter.ANTALL_TALL_I_DNR) {
+      sokFnrDnr(value).then(({ sammensattNavn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', sammensattNavn));
+    }
+  };
+
+  /** Mellomfunksjon som fyller ut treffet i brukerNavn eller avsenderNavn,
+   * uavhengig om faktisk verdi eller bare ''. I tillegg validerer skjemaet på disse feltene
+   * for å sjekke at de er korrekt. For å validere på ikke-treff gjør vi en eksplissit validering
+   * hvor vi antar at (1) noe er tastet inn i ID-feltet og (2) navn-feltet er tomt. Ergo fant vi ingenting og
+   * kan vise feilmelding i ID-feltet.
+   * @param opprinnelsesFelt {string} Det feltet som brukeren tastet inn (stort sett er dette ID-feltet)
+   * @param verdiFelt {string} Feltet som den funnene verdien skal settes inn i.
+   * @param verdi {string} Selve verdien som ble funnet.
+   */
+  preAutofyll = (opprinnelsesFelt, verdiFelt, verdi) => {
+    const { autofyllFormFelt } = this.props;
+    this.props.triggeFeltFeil(opprinnelsesFelt);
+    autofyllFormFelt(verdiFelt, verdi);
   };
 
   overstyrSubmit = event => {
@@ -252,9 +273,26 @@ class Journalforing extends Component {
   }
 }
 
-Journalforing.validering = value => ({
-  brukersFnr: value.brukersFnr === '' ? 'Vær snill å tast inn fødselsnummer eller D-nummer.' : false,
-});
+Journalforing.validering = verdier => {
+  const valideringsObjekt = {};
+
+  // Bruker
+  if (verdier.brukerID === '') { valideringsObjekt.brukerID = 'Tast inn fnr eller dnr.'; }
+  if (verdier.brukerNavn === '' && verdier.brukerID !== '') { valideringsObjekt.brukerID = 'Fant ingen navn på fnr eller dnr.'; }
+
+  // Avsender
+  if (verdier.avsenderNavn === '' && verdier.avsenderID.length === Konstanter.ANTALL_TALL_I_ORGNR) { valideringsObjekt.avsenderID = 'Fant ingen navn på dette organisasjonsnummeret.'; }
+  if (
+    verdier.avsenderNavn === '' && (
+      verdier.avsenderID.length === Konstanter.ANTALL_TALL_I_DNR ||
+      verdier.avsenderID.length === Konstanter.ANTALL_TALL_I_DNR
+    )
+  ) {
+    valideringsObjekt.avsenderID = 'Fant ingen navn på dette fnr eller dnr.';
+  }
+
+  return valideringsObjekt;
+};
 
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
@@ -275,21 +313,22 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hentJournalOppgave(journalpostID)),
-  oppdaterFormFelt: (feltNavn, verdi) => dispatch(change('journalforing', feltNavn, verdi)),
+  autofyllFormFelt: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
+  triggeFeltFeil: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
   sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
   sendNyFagsakTilJournalforing: data => Api.sendNyFagsakTilJournalforing(data),
   hentRelevanteFagsaker: ID => dispatch(journalforingOperations.sokFagsaker(ID)),
   settBrukerSomAvsender: (ID, navn) => {
-    dispatch(change('journalforing', 'avsenderID', ID));
-    dispatch(change('journalforing', 'avsenderNavn', navn));
+    dispatch(autofill('journalforing', 'avsenderID', ID));
+    dispatch(autofill('journalforing', 'avsenderNavn', navn));
   },
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm({
   form: 'journalforing',
   enableReinitialize: true,
-  destroyOnUnmount: false,
+  destroyOnUnmount: true,
   updateUnregisteredFields: true,
   validate: Journalforing.validering,
   onSubmit: () => {},
