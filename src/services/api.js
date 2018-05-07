@@ -1,7 +1,3 @@
-/* eslint-disable */
-import { getAsJson, postAsJson } from './utils';
-import { API_BASE_URL }  from './api-constants';
-
 import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker';
 import * as Faktaavklaring from './modules/faktaavklaring';
@@ -26,18 +22,8 @@ function erDev() {
 */
 // from .env or .env.local
 // const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
-//console.log('process.env', process.env);
+// console.log('process.env', process.env);
 
-// TODO Er disse to benyttet?
-export function hentSakerbehandles(brukernavn) {
-  const URI_SAKERBEHANDLES = `${API_BASE_URL}sakerbehandles/${brukernavn}`;
-  return getAsJson(URI_SAKERBEHANDLES);
-}
-
-export function hentTidligeresaker(brukernavn) {
-  const URI_TIDLIGERESAKER = `${API_BASE_URL}tidligeresaker/${brukernavn}`;
-  return getAsJson(URI_TIDLIGERESAKER);
-}
 
 export {
   Dokumenter,
@@ -52,4 +38,4 @@ export {
   Saksbehandler,
   Soknader,
   Vurdering,
-}
+};
