@@ -13,5 +13,5 @@ import * as Api from '../../services/api';
 
 /* eslint-disable import/prefer-default-export */
 export function hentPerson(fnr) {
-  return Api.hentPerson(fnr);
+  return Api.Personer.hentPerson(fnr);
 }

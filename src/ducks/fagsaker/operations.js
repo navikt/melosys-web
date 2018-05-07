@@ -20,7 +20,7 @@ import * as Types from './types';
  * @returns {*}
  */
 export function hentFagsaker(snr) {
-  return doThenDispatch(() => Api.hentFagsaker(snr), {
+  return doThenDispatch(() => Api.Fagsaker.hentFagsaker(snr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -35,7 +35,7 @@ export function hentFagsaker(snr) {
  */
 
 export function opprettNyFagsak(fnr) {
-  return doThenDispatch(() => Api.opprettNyFagsak(fnr), {
+  return doThenDispatch(() => Api.Fagsaker.opprettNyFagsak(fnr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

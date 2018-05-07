@@ -11,11 +11,12 @@ import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
 
-/* eslint-disable import/prefer-default-export */
+// eslint-disable-next-line import/prefer-default-export
 export function hentKodeverk() {
-  return doThenDispatch(() => Api.hentKodeverk(), {
+  return doThenDispatch(() => Api.Kodeverk.hentKodeverk(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
+

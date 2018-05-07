@@ -13,5 +13,5 @@ import * as Api from '../../services/api';
 
 /* eslint-disable import/prefer-default-export */
 export function hentOrganisasjon(orgnr) {
-  return Api.hentOrganisasjon(orgnr);
+  return Api.Organisasjoner.hentOrganisasjon(orgnr);
 }

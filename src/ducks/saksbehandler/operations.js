@@ -13,7 +13,7 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function hentSaksbehandler() {
-  return doThenDispatch(() => Api.hentSaksbehandler(), {
+  return doThenDispatch(() => Api.Saksbehandler.hentSaksbehandler(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

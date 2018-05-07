@@ -14,7 +14,7 @@ import * as Types from './types';
 
 // Action Creators
 export function hentSoknad(behandlingID) {
-  return doThenDispatch(() => Api.hentSoknader(behandlingID), {
+  return doThenDispatch(() => Api.Soknader.hentSoknader(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -22,7 +22,7 @@ export function hentSoknad(behandlingID) {
 }
 
 export function sendSoknad(bid, soknad) {
-  return doThenDispatch(() => Api.sendSoknad(bid, soknad), {
+  return doThenDispatch(() => Api.Soknader.sendSoknad(bid, soknad), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
