@@ -13,7 +13,7 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function hentJournalOppgave(journalpostID) {
-  return doThenDispatch(() => Api.hentJournalOppgave(journalpostID), {
+  return doThenDispatch(() => Api.Journalforing.hentJournalOppgave(journalpostID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -21,7 +21,7 @@ export function hentJournalOppgave(journalpostID) {
 }
 
 export function sokFagsaker(fnr) {
-  return doThenDispatch(() => Api.sokFagsaker(fnr), {
+  return doThenDispatch(() => Api.Fagsaker.sokFagsaker(fnr), {
     OK: Types.SAKSLISTE_OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

@@ -172,8 +172,6 @@ class Journalforing extends Component {
     const { journalforing, journalforingSkjemaVerdier } = this.props;
     const { brukerID, avsenderID } = journalforing;
     const { dokumentTittel, vedleggsTitler = [] } = journalforingSkjemaVerdier;
-    console.log('journalforing', journalforing);
-    console.log('journalforingSkjemaVerdier', journalforingSkjemaVerdier);
     const jfdoc = {
       journalpostID,
       oppgaveID,
@@ -317,7 +315,7 @@ const mapDispatchToProps = dispatch => ({
   triggeFeltFeil: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
   sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
-  sendNyFagsakTilJournalforing: data => Api.sendNyFagsakTilJournalforing(data),
+  sendNyFagsakTilJournalforing: data => Api.Fagsaker.sendNyFagsakTilJournalforing(data),
   hentRelevanteFagsaker: ID => dispatch(journalforingOperations.sokFagsaker(ID)),
   settBrukerSomAvsender: (ID, navn) => {
     dispatch(autofill('journalforing', 'avsenderID', ID));

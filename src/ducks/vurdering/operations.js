@@ -14,7 +14,7 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function hentVurdering(behandlingID) {
-  return doThenDispatch(() => Api.hentVurdering(behandlingID), {
+  return doThenDispatch(() => Api.Vurdering.hentVurdering(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { health } from '../services/api';
 
 import { soknadOperations } from '../ducks/soknad/';
 import { fagsakOperations } from '../ducks/fagsaker/';
@@ -41,7 +40,7 @@ class Spark extends Component {
   hentFagsakBasertPaFnr = event => {
     event.preventDefault();
     const { fnr : { value : fnr } } = event.target;
-    Api.sokFagsaker(fnr).then(response => {
+    Api.Journalforing.sokFagsaker(fnr).then(response => {
       const firstHit = response[0] || {};
       const { saksnummer } = firstHit;
       saksnummer && this.props.history.push(`/saksbehandling/${saksnummer}`);
@@ -49,7 +48,7 @@ class Spark extends Component {
   }
 
   resetOppgaver = () => {
-    Api.sparkResetOppgaver().then(() => {
+    Api.Oppgaver.sparkResetOppgaver().then(() => {
       document.location.href = '/';
     });
   }
@@ -60,7 +59,7 @@ class Spark extends Component {
       <div className="spark">
         <div className="spark__gruppe">
           <h1>Health</h1>
-          <button onClick={() => console.log(health())} >sjekk health</button>
+          <button onClick={() => console.log(Api.Health.health())} >sjekk health</button>
         </div>
 
         <div className="spark__gruppe">
