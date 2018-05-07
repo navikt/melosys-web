@@ -22,6 +22,10 @@ import {
   journalforingOperations,
   journalforingSelectors,
 } from '../ducks/journalforing/';
+import {
+  fagsakOperations,
+  fagsakSelectors,
+} from '../ducks/fagsaker';
 
 import {
   KodeverkSelectors,
@@ -299,7 +303,7 @@ const mapStateToProps = state => ({
   valgbareDokumentTitler: KodeverkSelectors.dokumenttitlerSelector(state),
   valgbareVedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
-  fagsakListe: journalforingSelectors.JournalforingAlle(state).fagsakListe,
+  fagsakListe: fagsakSelectors.FagsakSokSelector(state),
   initialValues: {
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
@@ -316,7 +320,7 @@ const mapDispatchToProps = dispatch => ({
   sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
   sendNyFagsakTilJournalforing: data => Api.Fagsaker.sendNyFagsakTilJournalforing(data),
-  hentRelevanteFagsaker: ID => dispatch(journalforingOperations.sokFagsaker(ID)),
+  hentRelevanteFagsaker: fnr => dispatch(fagsakOperations.sokFagsaker(fnr)),
   settBrukerSomAvsender: (ID, navn) => {
     dispatch(autofill('journalforing', 'avsenderID', ID));
     dispatch(autofill('journalforing', 'avsenderNavn', navn));

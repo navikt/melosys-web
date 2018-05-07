@@ -19,7 +19,7 @@ import * as Types from './types';
  * @param snr String Saksnummeret
  * @returns {*}
  */
-export function hentFagsaker(snr) {
+function hentFagsaker(snr) {
   return doThenDispatch(() => Api.Fagsaker.hentFagsaker(snr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -34,10 +34,29 @@ export function hentFagsaker(snr) {
  * @returns {*}
  */
 
-export function opprettNyFagsak(fnr) {
+function opprettNyFagsak(fnr) {
   return doThenDispatch(() => Api.Fagsaker.opprettNyFagsak(fnr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
+
+/**
+ * Søker på en liste av fagsaker knyttet til et fnr.
+ * @param fnr
+ * @returns {*}
+ */
+function sokFagsaker(fnr) {
+  return doThenDispatch(() => Api.Fagsaker.sokFagsaker(fnr), {
+    OK: Types.SAKSLISTE_OK,
+    FEILET: Types.SAKSLISTE_FEILET,
+    PENDING: Types.SAKSLISTE_PENDING,
+  });
+}
+
+export {
+  hentFagsaker,
+  opprettNyFagsak,
+  sokFagsaker,
+};
