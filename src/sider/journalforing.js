@@ -46,6 +46,8 @@ class Journalforing extends Component {
     hentJournalOppgave: PT.func.isRequired,
     hentRelevanteFagsaker: PT.func.isRequired,
     sendNyFagsakTilJournalforing: PT.func.isRequired,
+    tilordeSak: PT.func.isRequired,
+    opprettNySak: PT.func.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
     history: PT.object.isRequired,
@@ -187,7 +189,7 @@ class Journalforing extends Component {
     return jfdoc;
   };
   knyttTilEksisterendeSak = () => {
-    const { journalforingSkjemaVerdier: { saksnummer } } = this.props;
+    const { journalforingSkjemaVerdier: { saksnummer }, tilordeSak } = this.props;
     // TODO validate response before redirect
     /* eslint-disable */
     const jfdoc = this.plukkJournalDocParams();
@@ -196,12 +198,12 @@ class Journalforing extends Component {
     //alert('Denne er ikke avklart / implementert.');
     /* eslint-enable */
 
-    return saksnummer !== undefined;
+    return (saksnummer) ? tilordeSak(jfdoc) : false;
   };
 
   opprettNyFagsakSubmit = event => {
     event.preventDefault();
-    const { sendNyFagsakTilJournalforing, journalforingSkjemaVerdier } = this.props;
+    const { sendNyFagsakTilJournalforing, journalforingSkjemaVerdier, opprettNySak } = this.props;
     const {
       journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
@@ -222,6 +224,7 @@ class Journalforing extends Component {
       console.log(response);
       //alert('Denne er ikke avklart / implementert.');
       /* eslint-enable */
+      opprettNySak(jfdoc);
     });
   };
 
@@ -320,6 +323,8 @@ const mapDispatchToProps = dispatch => ({
   sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
   sendNyFagsakTilJournalforing: data => Api.Fagsaker.sendNyFagsakTilJournalforing(data),
+  opprettNySak: data => Api.Journalforing.sendOpprettNySak(data),
+  tilordeSak: data => Api.Journalforing.sendTilordneSak(data),
   hentRelevanteFagsaker: fnr => dispatch(fagsakOperations.sokFagsaker(fnr)),
   settBrukerSomAvsender: (ID, navn) => {
     dispatch(autofill('journalforing', 'avsenderID', ID));
