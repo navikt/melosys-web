@@ -13,7 +13,7 @@ import * as Types from './types';
 
 // eslint-disable-next-line import/prefer-default-export
 export function hentKodeverk() {
-  return doThenDispatch(() => Api.Kodeverk.hentKodeverk(), {
+  return doThenDispatch(() => Api.Kodeverk.hent(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
