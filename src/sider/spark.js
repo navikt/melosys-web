@@ -40,7 +40,7 @@ class Spark extends Component {
   hentFagsakBasertPaFnr = event => {
     event.preventDefault();
     const { fnr : { value : fnr } } = event.target;
-    Api.Journalforing.sokFagsaker(fnr).then(response => {
+    Api.Journalforing.hent(fnr).then(response => {
       const firstHit = response[0] || {};
       const { saksnummer } = firstHit;
       saksnummer && this.props.history.push(`/saksbehandling/${saksnummer}`);
