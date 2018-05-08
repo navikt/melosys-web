@@ -48,7 +48,7 @@ class Spark extends Component {
   }
 
   resetOppgaver = () => {
-    Api.Oppgaver.sparkResetOppgaver().then(() => {
+    Api.Oppgaver.sparkReset().then(() => {
       document.location.href = '/';
     });
   }
