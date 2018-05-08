@@ -11,7 +11,7 @@ import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
 import * as Types from './types';
 
-export function hentFaktaavklaring(behandlingID) {
+export function hent(behandlingID) {
   return doThenDispatch(() => Api.Faktaavklaring.hent(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -19,7 +19,7 @@ export function hentFaktaavklaring(behandlingID) {
   });
 }
 
-export function sendFaktaavklaring(bid, dokument) {
+export function send(bid, dokument) {
   return doThenDispatch(() => Api.Faktaavklaring.send(bid, dokument), {
     OK: Types.OK,
     FEILET: Types.FEILET,
