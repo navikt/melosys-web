@@ -124,7 +124,7 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = dispatch => ({
   sendSoknad: (bid, soknad) => dispatch(soknadOperations.sendSoknad(bid, soknad)),
-  opprettNyFagsak: fnr => dispatch(fagsakOperations.opprettNyFagsak(fnr)),
+  opprettNyFagsak: fnr => dispatch(fagsakOperations.opprett(fnr)),
   plukkOppgave: (oppgave) => dispatch(oppgaverOperations.oppgavePlukker(oppgave)),
 });
 
