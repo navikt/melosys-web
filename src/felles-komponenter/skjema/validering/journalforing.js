@@ -1,10 +1,10 @@
 import * as Person from './generisk/person';
 import * as Organisasjon from './generisk/organisasjon';
 
-const brukerIDErOppgitt = verdier => ((verdier.brukerID === '') ? 'Tast inn fnr eller dnr.' : null);
-const brukerIDFinnes = verdier => ((verdier.brukerNavn === '' && verdier.brukerID !== '') ? 'Fant ingen navn på fnr eller dnr.' : null);
-const avsenderIDErNummer = verdier => (Number.isNaN(verdier.brukerID) ? 'Kun tall er tillatt i dette feltet.' : null);
-const avsenderIDFinnes = ({ avsenderNavn, avsenderID }) => {
+const erIdOppgitt = verdier => ((verdier.brukerID === '') ? 'Tast inn fnr eller dnr.' : false);
+const erIdNummer = verdier => (Number.isNaN(verdier.brukerID) ? 'Tast inn kun nummer.' : false);
+const erIdFnr = verdier => (!Person.erFnr(verdier.brukerID) ? 'Tast inn gyldig fødselsnummer' : false);
+const eksistererId = ({ avsenderNavn, avsenderID }) => {
   if (avsenderNavn === '' && Organisasjon.erOrgnr(avsenderID)) {
     return 'Fant ingen navn på dette organisasjonsnummeret.';
   }
@@ -13,24 +13,23 @@ const avsenderIDFinnes = ({ avsenderNavn, avsenderID }) => {
   }
   return false;
 };
+const dokumentTittelErOppgitt = verdier => (verdier.dokumentTittel.length === 0 ? 'Velg dokumenttittel fra listen eller skriv din egen.' : false);
+const minstEnVedleggTittelErOppgitt = ({ vedleggsTitler = [] }) => (vedleggsTitler.length === 0 ? 'Velg minst én vedleggstittel eller skriv inn din egen' : false);
 
 const JournalforingValidering = verdier => {
-  const brukerID = brukerIDErOppgitt(verdier) || brukerIDFinnes(verdier) || false;
-  const avsenderID = avsenderIDErNummer(verdier) || avsenderIDFinnes(verdier) || false;
+  const brukerID = erIdOppgitt(verdier) || erIdNummer(verdier) || erIdFnr(verdier) || eksistererId(verdier) || false;
+  const avsenderID = erIdOppgitt(verdier) || erIdNummer(verdier) || erIdFnr(verdier) || eksistererId(verdier) || false;
+  const dokumentTittel = dokumentTittelErOppgitt(verdier) || false;
+  const vedleggsTitler = minstEnVedleggTittelErOppgitt(verdier) ? { _error: minstEnVedleggTittelErOppgitt(verdier) } : false;
 
   const valideringsObjekt = {
     brukerID,
     avsenderID,
+    dokumentTittel,
+    vedleggsTitler,
   };
 
   return valideringsObjekt;
-};
-
-export {
-  brukerIDErOppgitt,
-  brukerIDFinnes,
-  avsenderIDErNummer,
-  avsenderIDFinnes,
 };
 
 export default JournalforingValidering;
