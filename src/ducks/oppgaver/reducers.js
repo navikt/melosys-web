@@ -28,6 +28,14 @@ export default function reducer(state = initialState, action) {
       const oppgaveData = action.data;
       return { ...state, status: STATUS.OK, data: oppgaveData };
     }
+    case Types.SOK_PENDING:
+      return { ...state, status: STATUS.PENDING };
+    case Types.SOK_FEILET:
+      return { ...state, status: STATUS.ERROR, data: action.data };
+    case Types.SOK_OK: {
+      const sokeData = action.data;
+      return { ...state, status: STATUS.OK, data: sokeData };
+    }
     default:
       return state;
   }
