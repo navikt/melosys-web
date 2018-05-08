@@ -12,8 +12,8 @@ import * as Api from '../../services/api';
 import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
-export function hentSaksbehandler() {
-  return doThenDispatch(() => Api.Saksbehandler.hentSaksbehandler(), {
+export function hent() {
+  return doThenDispatch(() => Api.Saksbehandler.hent(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
