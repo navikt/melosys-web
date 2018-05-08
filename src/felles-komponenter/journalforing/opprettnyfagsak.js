@@ -45,8 +45,12 @@ const OpprettNyFagSak = props => {
 };
 
 OpprettNyFagSak.propTypes = {
-  valgbareSakstyper: PT.array.isRequired,
   opprettNyFagsakSubmit: PT.func.isRequired,
+  valgbareSakstyper: PT.array,
+};
+
+OpprettNyFagSak.defaultProps = {
+  valgbareSakstyper: [],
 };
 
 const mapStateToProps = state => ({
