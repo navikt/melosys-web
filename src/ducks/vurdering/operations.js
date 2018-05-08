@@ -13,8 +13,8 @@ import { doThenDispatch } from '../../services/utils';
 import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
-export function hentVurdering(behandlingID) {
-  return doThenDispatch(() => Api.Vurdering.hentVurdering(behandlingID), {
+export function hent(behandlingID) {
+  return doThenDispatch(() => Api.Vurdering.hent(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

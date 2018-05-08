@@ -11,7 +11,23 @@ import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
 
-// Action Creators
+/**
+ * Soknads sok
+ * @param fnr
+ * @returns {*}
+ */
+export function sok(fnr) {
+  return doThenDispatch(() => Api.Oppgaver.sok(fnr), {
+    OK: Types.SOK_OK,
+    FEILET: Types.SOK_FEILET,
+    PENDING: Types.SOK_PENDING,
+  });
+}
+
+/**
+ * Hent Soknad
+ * @returns {*}
+ */
 export function hent() {
   return doThenDispatch(() => Api.Oppgaver.oversikt(), {
     OK: Types.OK,
@@ -20,6 +36,12 @@ export function hent() {
   });
 }
 
+/**
+ * Send soknad
+ * @param oppgavetype
+ * @param checkboxliste
+ * @returns {Promise|*|Function|PromiseLike<string>|Promise<string>}
+ */
 export function send(oppgavetype, checkboxliste) {
   const keys = Object.keys(checkboxliste);
   const behandlingstyper = ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'].filter(key => keys.includes(key));

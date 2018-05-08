@@ -17,3 +17,7 @@ export const MineSakerAntallSelector = createSelector(
   minesaker => minesaker.length
 );
 
+export const SokOppgaveSelector = createSelector(
+  state => state.oppgaver.data || [],
+  oppgaver => oppgaver.filter(oppgave => oppgave.oppgavetype.kode !== 'JFR')
+);
