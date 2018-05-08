@@ -12,7 +12,7 @@ import * as Api from '../../services/api';
 import * as Types from './types';
 
 // eslint-disable-next-line import/prefer-default-export
-export function hentJournalOppgave(journalpostID) {
+export function hent(journalpostID) {
   return doThenDispatch(() => Api.Journalforing.hent(journalpostID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
