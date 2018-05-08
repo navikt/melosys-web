@@ -13,7 +13,7 @@ import * as Types from './types';
 
 // eslint-disable-next-line import/prefer-default-export
 export function hentJournalOppgave(journalpostID) {
-  return doThenDispatch(() => Api.Journalforing.hentJournalOppgave(journalpostID), {
+  return doThenDispatch(() => Api.Journalforing.hent(journalpostID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
