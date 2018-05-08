@@ -57,7 +57,7 @@ class Sok extends Component {
 }
 
 Sok.propTypes = {
-  behandlingsoppgaver: MPT.SokBehandlingsOppgaver,
+  behandlingsoppgaver: MPT.OppgaverSok,
   hentBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,

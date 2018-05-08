@@ -25,8 +25,22 @@ const JournalForingEnkeltLinjePropType = PT.shape({
 
 const MineOppgaverPropType = PT.arrayOf(PT.oneOf([JournalForingEnkeltLinjePropType, SakEnkeltLinjePropType]));
 
+const OppgaveSokPropType = PT.shape({
+  fnr: PT.string,
+  kjoenn: PT.string,
+  registrertDato: PT.string,
+  saksnummer: PT.string,
+  sammensattNavn: PT.string,
+  status: PT.string,
+  type: PT.string,
+});
+
+const OppgaverSokPropType = PT.arrayOf(OppgaveSokPropType);
+
 export {
   SakEnkeltLinjePropType as SakEnkeltLinje,
   JournalForingEnkeltLinjePropType as JournalForingEnkeltLinje,
   MineOppgaverPropType as MineOppgaver,
+  OppgaveSokPropType as OppgaveSok,
+  OppgaverSokPropType as OppgaverSok,
 };
