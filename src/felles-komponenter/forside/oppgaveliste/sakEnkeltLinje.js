@@ -12,7 +12,7 @@ import './sakEnkeltLinje.css';
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
- * for å gi saksbehandler en oversikt over sakens innhold før hun klikker
+ * for å gi saksbehandler en hent over sakens innhold før hun klikker
  * seg inn på den.
  */
 const SakEnkeltLinje = ({ sak }) => {
