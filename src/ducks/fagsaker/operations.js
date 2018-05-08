@@ -20,7 +20,7 @@ import * as Types from './types';
  * @returns {*}
  */
 function hentFagsaker(snr) {
-  return doThenDispatch(() => Api.Fagsaker.hentFagsaker(snr), {
+  return doThenDispatch(() => Api.Fagsaker.hent(snr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -35,7 +35,7 @@ function hentFagsaker(snr) {
  */
 
 function opprettNyFagsak(fnr) {
-  return doThenDispatch(() => Api.Fagsaker.opprettNyFagsak(fnr), {
+  return doThenDispatch(() => Api.Fagsaker.opprett(fnr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -48,7 +48,7 @@ function opprettNyFagsak(fnr) {
  * @returns {*}
  */
 function sokFagsaker(fnr) {
-  return doThenDispatch(() => Api.Fagsaker.sokFagsaker(fnr), {
+  return doThenDispatch(() => Api.Fagsaker.sok(fnr), {
     OK: Types.SAKSLISTE_OK,
     FEILET: Types.SAKSLISTE_FEILET,
     PENDING: Types.SAKSLISTE_PENDING,

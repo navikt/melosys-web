@@ -322,7 +322,7 @@ const mapDispatchToProps = dispatch => ({
   triggeFeltFeil: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
   sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
-  sendNyFagsakTilJournalforing: data => Api.Fagsaker.sendNyFagsakTilJournalforing(data),
+  sendNyFagsakTilJournalforing: data => Api.Fagsaker.send(data),
   opprettNySak: data => Api.Journalforing.sendOpprettNySak(data),
   tilordeSak: data => Api.Journalforing.sendTilordneSak(data),
   hentRelevanteFagsaker: fnr => dispatch(fagsakOperations.sokFagsaker(fnr)),
