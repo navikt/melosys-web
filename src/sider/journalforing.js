@@ -76,7 +76,7 @@ class Journalforing extends Component {
     this.props.hentJournalOppgave(journalpostID);
   }
 
-  /** Logikken nedenfor trigges av 2 situasjoner. Enten fordi hent
+  /** Logikken nedenfor trigges av 2 situasjoner. Enten fordi sok
    * returnerte en ny ID (orgnr, fnr eller dnr) som det må gjøres oppslag på. Eller
    * fordi saksbehandler tastet inn en ID (orgnr, fnr eller dnr).
    * @param nextProps

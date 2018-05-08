@@ -9,7 +9,7 @@ function send(oppgave) {
   const URI_OPPGAVER_PLUKK = `${API_BASE_URL}oppgaver/plukk`;
   return postAsJson(URI_OPPGAVER_PLUKK, oppgave);
 }
-function hent(fnr) {
+function sok(fnr) {
   const URI_BEHANDLINGS_OPPGAVER = `${API_BASE_URL}oppgaver/sok/?fnr=${fnr}`;
   return getAsJson(URI_BEHANDLINGS_OPPGAVER);
 }
@@ -21,6 +21,6 @@ function sparkReset() {
 export {
   oversikt,
   send,
-  hent,
+  sok,
   sparkReset,
 };
