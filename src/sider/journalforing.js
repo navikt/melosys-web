@@ -76,7 +76,7 @@ class Journalforing extends Component {
     this.props.hentJournalOppgave(journalpostID);
   }
 
-  /** Logikken nedenfor trigges av 2 situasjoner. Enten fordi hentJournalOppgave
+  /** Logikken nedenfor trigges av 2 situasjoner. Enten fordi hent
    * returnerte en ny ID (orgnr, fnr eller dnr) som det må gjøres oppslag på. Eller
    * fordi saksbehandler tastet inn en ID (orgnr, fnr eller dnr).
    * @param nextProps
@@ -323,8 +323,8 @@ const mapDispatchToProps = dispatch => ({
   sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
   sendNyFagsakTilJournalforing: data => Api.Fagsaker.send(data),
-  opprettNySak: data => Api.Journalforing.sendOpprettNySak(data),
-  tilordeSak: data => Api.Journalforing.sendTilordneSak(data),
+  opprettNySak: data => Api.Journalforing.opprett(data),
+  tilordeSak: data => Api.Journalforing.tilordne(data),
   hentRelevanteFagsaker: fnr => dispatch(fagsakOperations.sokFagsaker(fnr)),
   settBrukerSomAvsender: (ID, navn) => {
     dispatch(autofill('journalforing', 'avsenderID', ID));
