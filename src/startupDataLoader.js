@@ -6,8 +6,8 @@ export default function loadInitialData(store) {
   store.dispatch(saksbehandlerOperations.hentSaksbehandler())
     .then(response => {
       if (response.type === saksbehandlerTypes.OK) {
-        store.dispatch(KodeverkOperations.hentKodeverk());
+        store.dispatch(KodeverkOperations.hent());
       }
     });
-  store.dispatch(KodeverkOperations.hentKodeverk());
+  store.dispatch(KodeverkOperations.hent());
 }
