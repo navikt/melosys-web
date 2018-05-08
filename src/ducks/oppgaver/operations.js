@@ -12,7 +12,7 @@ import * as Api from '../../services/api';
 import * as Types from './types';
 
 // Action Creators
-export function hentMineSaker() {
+export function hent() {
   return doThenDispatch(() => Api.Oppgaver.oversikt(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -20,7 +20,7 @@ export function hentMineSaker() {
   });
 }
 
-export function oppgavePlukker(oppgavetype, checkboxliste) {
+export function send(oppgavetype, checkboxliste) {
   const keys = Object.keys(checkboxliste);
   const behandlingstyper = ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'].filter(key => keys.includes(key));
   const sakstyper = ['EU_EOS', 'TRG_AVT', 'FLK_TRG'].filter(key => keys.includes(key));

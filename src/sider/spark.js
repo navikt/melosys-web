@@ -125,7 +125,7 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = dispatch => ({
   sendSoknad: (bid, soknad) => dispatch(soknadOperations.sendSoknad(bid, soknad)),
   opprettNyFagsak: fnr => dispatch(fagsakOperations.opprett(fnr)),
-  plukkOppgave: (oppgave) => dispatch(oppgaverOperations.oppgavePlukker(oppgave)),
+  plukkOppgave: (oppgave) => dispatch(oppgaverOperations.send(oppgave)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Spark));
