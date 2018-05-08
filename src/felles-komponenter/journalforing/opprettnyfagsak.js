@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import PT from 'prop-types';
 
@@ -8,11 +9,21 @@ import * as Nav from '../../utils/navFrontend';
 import './opprettnyfagsak.css';
 import LandVelger from '../skjema/landvelger';
 
+import { KodeverkSelectors } from '../../ducks/kodeverk';
+
 const OpprettNyFagSak = props => {
-  const { opprettNyFagsakSubmit } = props;
+  const { opprettNyFagsakSubmit, valgbareSakstyper } = props;
   return (
     <div className="opprettnysak">
       <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
+      <Nav.Column xs="12">
+        <Skjema.ListeVelger
+          feltNavn="journalforingSakstype"
+          label="Sakstype:"
+          placeholder="(velg eller skriv inn egen tittel)"
+          muligeValg={valgbareSakstyper}
+        />
+      </Nav.Column>
       <Nav.Fieldset legend="Soknadperiode">
         <Nav.Column xs="4">
           <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
@@ -34,7 +45,12 @@ const OpprettNyFagSak = props => {
 };
 
 OpprettNyFagSak.propTypes = {
+  valgbareSakstyper: PT.array.isRequired,
   opprettNyFagsakSubmit: PT.func.isRequired,
 };
 
-export default OpprettNyFagSak;
+const mapStateToProps = state => ({
+  valgbareSakstyper: KodeverkSelectors.sakstyperSelector(state),
+});
+
+export default connect(mapStateToProps)(OpprettNyFagSak);
