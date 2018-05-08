@@ -12,12 +12,12 @@ const uuid = require('uuid/v4');
 const ListevelgerEnkelt = ({
   input,
   label,
-  errorMessage,
+  meta,
   muligeValg,
   placeholder,
   ...rest
 }) => {
-  const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
+  const feil = meta.invalid ? { feilmelding: meta.error } : null;
   const inputProps = {
     ...input,
     ...rest,

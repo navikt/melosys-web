@@ -63,12 +63,13 @@ class ListevelgerGruppe extends Component {
     const {
       fields,
       placeholder,
-      feil,
       label,
+      meta,
       muligeValg,
     } = this.props;
 
     const alleFelter = fields.getAll() || [];
+    const feil = meta.invalid ? { feilmelding: meta.error } : null;
 
     return (
       <div>
@@ -109,14 +110,13 @@ class ListevelgerGruppe extends Component {
 ListevelgerGruppe.propTypes = {
   fields: PT.object.isRequired,
   label: PT.string.isRequired,
+  meta: PT.object.isRequired,
   muligeValg: PT.array.isRequired,
   placeholder: PT.string,
-  feil: PT.string,
 };
 
 ListevelgerGruppe.defaultProps = {
   placeholder: '',
-  feil: undefined,
 };
 
 export default ListevelgerGruppe;

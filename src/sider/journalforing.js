@@ -272,6 +272,7 @@ const mapStateToProps = state => ({
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
+    vedleggsTitler: [],
   },
 });
 
