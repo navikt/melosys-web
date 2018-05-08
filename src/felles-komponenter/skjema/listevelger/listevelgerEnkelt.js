@@ -17,7 +17,7 @@ const ListevelgerEnkelt = ({
   placeholder,
   ...rest
 }) => {
-  const feil = meta.invalid ? { feilmelding: meta.error } : null;
+  const feil = (meta.invalid && meta.touched) ? { feilmelding: meta.error } : null;
   const inputProps = {
     ...input,
     ...rest,
