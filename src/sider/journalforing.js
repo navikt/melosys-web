@@ -321,7 +321,7 @@ const mapDispatchToProps = dispatch => ({
   autofyllFormFelt: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
   triggeFeltFeil: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
   sokFnrDnr: fnr => PersonOperations.hentPerson(fnr),
-  sokOrgnr: orgnr => OrganisasjonOperations.hentOrganisasjon(orgnr),
+  sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
   sendNyFagsakTilJournalforing: data => Api.Fagsaker.send(data),
   opprettNySak: data => Api.Journalforing.opprett(data),
   tilordeSak: data => Api.Journalforing.tilordne(data),
