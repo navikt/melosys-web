@@ -19,7 +19,7 @@ import * as Types from './types';
  * @param snr String Saksnummeret
  * @returns {*}
  */
-function hentFagsaker(snr) {
+function hent(snr) {
   return doThenDispatch(() => Api.Fagsaker.hent(snr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -34,7 +34,7 @@ function hentFagsaker(snr) {
  * @returns {*}
  */
 
-function opprettNyFagsak(fnr) {
+function opprett(fnr) {
   return doThenDispatch(() => Api.Fagsaker.opprett(fnr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -47,7 +47,7 @@ function opprettNyFagsak(fnr) {
  * @param fnr
  * @returns {*}
  */
-function sokFagsaker(fnr) {
+function sok(fnr) {
   return doThenDispatch(() => Api.Fagsaker.sok(fnr), {
     OK: Types.SAKSLISTE_OK,
     FEILET: Types.SAKSLISTE_FEILET,
@@ -56,7 +56,7 @@ function sokFagsaker(fnr) {
 }
 
 export {
-  hentFagsaker,
-  opprettNyFagsak,
-  sokFagsaker,
+  hent,
+  opprett,
+  sok,
 };

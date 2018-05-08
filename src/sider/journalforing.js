@@ -325,7 +325,7 @@ const mapDispatchToProps = dispatch => ({
   sendNyFagsakTilJournalforing: data => Api.Fagsaker.send(data),
   opprettNySak: data => Api.Journalforing.opprett(data),
   tilordeSak: data => Api.Journalforing.tilordne(data),
-  hentRelevanteFagsaker: fnr => dispatch(fagsakOperations.sokFagsaker(fnr)),
+  hentRelevanteFagsaker: fnr => dispatch(fagsakOperations.sok(fnr)),
   settBrukerSomAvsender: (ID, navn) => {
     dispatch(autofill('journalforing', 'avsenderID', ID));
     dispatch(autofill('journalforing', 'avsenderNavn', navn));
