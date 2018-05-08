@@ -1,6 +1,9 @@
 import * as Person from './generisk/person';
 import * as Organisasjon from './generisk/organisasjon';
 
+/** Mikrovalidering pr hendelse. Dette gjør at vi kan både kan spisse tekstlig tilbakemelding
+ * og validere på tvers av verdier.
+ */
 const erIdOppgitt = verdier => ((verdier.brukerID === '') ? 'Tast inn fnr eller dnr.' : false);
 const erIdNummer = verdier => (Number.isNaN(verdier.brukerID) ? 'Tast inn kun nummer.' : false);
 const erIdFnr = verdier => (!Person.erFnr(verdier.brukerID) ? 'Tast inn gyldig fødselsnummer' : false);
@@ -15,7 +18,12 @@ const eksistererId = ({ avsenderNavn, avsenderID }) => {
 };
 const dokumentTittelErOppgitt = verdier => (verdier.dokumentTittel.length === 0 ? 'Velg dokumenttittel fra listen eller skriv din egen.' : false);
 const minstEnVedleggTittelErOppgitt = ({ vedleggsTitler = [] }) => (vedleggsTitler.length === 0 ? 'Velg minst én vedleggstittel eller skriv inn din egen' : false);
+const eksisterendeSakErValgt = verdier => (!verdier.saksnummer ? 'velg sak' : false);
 
+/** Ved å short circuite igjennom alle forutsetninger helt til den siste som returnerer false,
+ * kan vi bygge opp sjekk per felt-navn. Rekkefølgen har betydning med tanke på hvilken feilmelding
+ * som er relevant. Feks: feilmelding om at et felt er tomt skal vises før feilmelding om at fødselsnummer ikke er gyldig.
+ */
 const JournalforingValidering = verdier => {
   const brukerID = erIdOppgitt(verdier) || erIdNummer(verdier) || erIdFnr(verdier) || eksistererId(verdier) || false;
   const avsenderID = erIdOppgitt(verdier) || erIdNummer(verdier) || erIdFnr(verdier) || eksistererId(verdier) || false;
@@ -30,6 +38,10 @@ const JournalforingValidering = verdier => {
   };
 
   return valideringsObjekt;
+};
+
+export {
+  eksisterendeSakErValgt,
 };
 
 export default JournalforingValidering;
