@@ -8,7 +8,6 @@ import * as Nav from '../../utils/navFrontend';
 import './opprettnyfagsak.css';
 import LandVelger from '../skjema/landvelger';
 
-
 const OpprettNyFagSak = props => {
   const { opprettNyFagsakSubmit } = props;
   return (
