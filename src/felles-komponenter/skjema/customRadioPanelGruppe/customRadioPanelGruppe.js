@@ -74,8 +74,10 @@ CustomRadioPanel.defaultProps = {
 
 const CustomRadioPanelGruppe = props => {
   const {
-    radios, feltNavn, legend, feil, input: { onChange, value: currentCheckedValue },
+    radios, feltNavn, legend, input: { onChange, value: currentCheckedValue }, meta,
   } = props;
+
+  const feil = (meta.invalid) ? { feilmelding: meta.error } : null;
 
   return (
     <Nav.SkjemaGruppe className="customRadioPanelGruppe" feil={feil}>
@@ -99,13 +101,12 @@ CustomRadioPanelGruppe.propTypes = {
   radios: PT.array.isRequired,
   feltNavn: PT.string.isRequired,
   input: PT.object.isRequired,
+  meta: PT.object.isRequired,
   legend: PT.string,
-  feil: PT.object,
 };
 
 CustomRadioPanelGruppe.defaultProps = {
   legend: '',
-  feil: undefined,
 };
 
 const CustomRadioPanelGruppeReduxForm = ({ feltNavn, ...rest }) => (<Field name={feltNavn} component={CustomRadioPanelGruppe} props={{ feltNavn, ...rest }} />);
