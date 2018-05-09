@@ -18,6 +18,8 @@ import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeS
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
+import JournalforingValidering from '../felles-komponenter/skjema/validering/journalforing';
+
 import {
   journalforingOperations,
   journalforingSelectors,
@@ -45,8 +47,7 @@ class Journalforing extends Component {
     match: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
     hentRelevanteFagsaker: PT.func.isRequired,
-    sendNyFagsakTilJournalforing: PT.func.isRequired,
-    tilordeSak: PT.func.isRequired,
+    tilordneSak: PT.func.isRequired,
     opprettNySak: PT.func.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
@@ -189,21 +190,27 @@ class Journalforing extends Component {
     return jfdoc;
   };
   knyttTilEksisterendeSak = () => {
-    const { journalforingSkjemaVerdier: { saksnummer }, tilordeSak } = this.props;
+    const { journalforingSkjemaVerdier: { saksnummer }, tilordneSak } = this.props;
     // TODO validate response before redirect
     /* eslint-disable */
     const jfdoc = this.plukkJournalDocParams();
     jfdoc.saksnummer = saksnummer;
     console.log('jfdoc', jfdoc);
-    //alert('Denne er ikke avklart / implementert.');
-    /* eslint-enable */
 
-    return (saksnummer) ? tilordeSak(jfdoc) : false;
+    if (saksnummer === undefined) return false;
+
+    tilordneSak(jfdoc).then(response => {
+      if (response.length === 0) {
+        history.push('/');
+      }
+    })
+
+    return true;
   };
 
   opprettNyFagsakSubmit = event => {
     event.preventDefault();
-    const { sendNyFagsakTilJournalforing, journalforingSkjemaVerdier, opprettNySak } = this.props;
+    const { journalforingSkjemaVerdier, opprettNySak, history } = this.props;
     const {
       journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
@@ -218,13 +225,10 @@ class Journalforing extends Component {
     };
     const jfdoc = this.plukkJournalDocParams();
     jfdoc.fagsak = fagsak;
-    sendNyFagsakTilJournalforing(jfdoc).then(response => {
-      // TODO validate response before redirect
-      /* eslint-disable */
-      console.log(response);
-      //alert('Denne er ikke avklart / implementert.');
-      /* eslint-enable */
-      opprettNySak(jfdoc);
+    opprettNySak(jfdoc).then(response => {
+      if (response.length === 0) {
+        history.push('/');
+      }
     });
   };
 
@@ -278,27 +282,6 @@ class Journalforing extends Component {
   }
 }
 
-Journalforing.validering = verdier => {
-  const valideringsObjekt = {};
-
-  // Bruker
-  if (verdier.brukerID === '') { valideringsObjekt.brukerID = 'Tast inn fnr eller dnr.'; }
-  if (verdier.brukerNavn === '' && verdier.brukerID !== '') { valideringsObjekt.brukerID = 'Fant ingen navn på fnr eller dnr.'; }
-
-  // Avsender
-  if (verdier.avsenderNavn === '' && verdier.avsenderID.length === Konstanter.ANTALL_TALL_I_ORGNR) { valideringsObjekt.avsenderID = 'Fant ingen navn på dette organisasjonsnummeret.'; }
-  if (
-    verdier.avsenderNavn === '' && (
-      verdier.avsenderID.length === Konstanter.ANTALL_TALL_I_DNR ||
-      verdier.avsenderID.length === Konstanter.ANTALL_TALL_I_DNR
-    )
-  ) {
-    valideringsObjekt.avsenderID = 'Fant ingen navn på dette fnr eller dnr.';
-  }
-
-  return valideringsObjekt;
-};
-
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   saksTyper: KodeverkSelectors.sakstyperSelector(state),
@@ -313,6 +296,7 @@ const mapStateToProps = state => ({
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
+    vedleggsTitler: [],
   },
 });
 
@@ -322,9 +306,8 @@ const mapDispatchToProps = dispatch => ({
   triggeFeltFeil: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
   sokFnrDnr: fnr => PersonOperations.hent(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
-  sendNyFagsakTilJournalforing: data => Api.Fagsaker.send(data),
   opprettNySak: data => Api.Journalforing.opprett(data),
-  tilordeSak: data => Api.Journalforing.tilordne(data),
+  tilordneSak: data => Api.Journalforing.tilordne(data),
   hentRelevanteFagsaker: fnr => dispatch(fagsakOperations.sok(fnr)),
   settBrukerSomAvsender: (ID, navn) => {
     dispatch(autofill('journalforing', 'avsenderID', ID));
@@ -337,6 +320,6 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: Journalforing.validering,
+  validate: JournalforingValidering,
   onSubmit: () => {},
 })(Journalforing)));
