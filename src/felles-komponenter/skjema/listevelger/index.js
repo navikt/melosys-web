@@ -15,13 +15,12 @@ import './listevelger.css';
  * kodeverk-baserte objekter må reduces.
  */
 const Listevelger = ({
-  id, feltNavn, className, gruppe, ...rest
+  feltNavn, className, gruppe, ...rest
 }) => (
   <div className="listevelger">
     {
       gruppe ?
         <FieldArray
-          id={id}
           name={feltNavn}
           multiListe={gruppe}
           component={ListevelgerGruppe}
@@ -30,9 +29,7 @@ const Listevelger = ({
         :
         <Field
           name={feltNavn}
-          errorClass="skjemaelement--harFeil"
           className={className}
-          id={id}
           component={ListevelgerEnkelt}
           props={rest}
         />
@@ -42,14 +39,12 @@ const Listevelger = ({
 
 Listevelger.propTypes = {
   feltNavn: PT.string.isRequired,
-  id: PT.string,
   className: PT.string,
   gruppe: PT.bool,
 };
 
 Listevelger.defaultProps = {
   className: '',
-  id: undefined,
   gruppe: false,
 };
 
