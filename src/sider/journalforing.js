@@ -47,7 +47,6 @@ class Journalforing extends Component {
     match: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
     hentRelevanteFagsaker: PT.func.isRequired,
-    sendNyFagsakTilJournalforing: PT.func.isRequired,
     tilordeSak: PT.func.isRequired,
     opprettNySak: PT.func.isRequired,
     sokFnrDnr: PT.func.isRequired,
@@ -205,7 +204,7 @@ class Journalforing extends Component {
 
   opprettNyFagsakSubmit = event => {
     event.preventDefault();
-    const { sendNyFagsakTilJournalforing, journalforingSkjemaVerdier, opprettNySak } = this.props;
+    const { journalforingSkjemaVerdier, opprettNySak } = this.props;
     const {
       journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
@@ -220,13 +219,12 @@ class Journalforing extends Component {
     };
     const jfdoc = this.plukkJournalDocParams();
     jfdoc.fagsak = fagsak;
-    sendNyFagsakTilJournalforing(jfdoc).then(response => {
+    opprettNySak(jfdoc).then(response => {
       // TODO validate response before redirect
       /* eslint-disable */
       console.log(response);
       //alert('Denne er ikke avklart / implementert.');
       /* eslint-enable */
-      opprettNySak(jfdoc);
     });
   };
 
