@@ -1,5 +1,6 @@
 import * as Person from './generisk/person';
 import * as Organisasjon from './generisk/organisasjon';
+import * as Dato from './generisk/dato';
 
 /** Mikrovalidering pr hendelse. Dette gjør at vi kan både kan spisse tekstlig tilbakemelding
  * og validere på tvers av verdier.
@@ -20,6 +21,7 @@ const idFinnesIkke = (navn, id) => {
 const dokumentTittelErBlank = verdier => (verdier.dokumentTittel.length === 0 ? 'Velg dokumenttittel fra listen eller skriv din egen.' : false);
 const vedleggTittelErBlank = ({ vedleggsTitler = [] }) => (vedleggsTitler.length === 0 ? 'Velg minst én vedleggstittel eller skriv inn din egen' : false);
 const eksisterendeSakIkkeValgt = verdier => (!verdier.saksnummer ? 'velg sak' : false);
+const datoErGyldig = verdi => (!Dato.datoErGyldig(verdi) ? 'Skriv inn en gyldig dato' : false);
 
 /** Ved å short circuite igjennom alle forutsetninger helt til den siste som returnerer false,
  * kan vi bygge opp sjekk per felt-navn. Rekkefølgen har betydning med hensyn til hvilken feilmelding
@@ -46,11 +48,16 @@ const JournalforingGenerellValidering = verdier => {
 
   const vedleggsTitler = vedleggTittelErBlank(verdier) ? { _error: vedleggTittelErBlank(verdier) } : false;
 
+  const journalforingPeriodeFraOgMed = verdier.journalforingPeriodeFraOgMed && datoErGyldig(verdier.journalforingPeriodeFraOgMed);
+  const journalforingPeriodeTilOgMed = verdier.journalforingPeriodeTilOgMed && datoErGyldig(verdier.journalforingPeriodeTilOgMed);
+
   const valideringsObjekt = {
     brukerID,
     avsenderID,
     dokumentTittel,
     vedleggsTitler,
+    journalforingPeriodeFraOgMed,
+    journalforingPeriodeTilOgMed,
   };
 
   return valideringsObjekt;

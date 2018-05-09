@@ -189,13 +189,12 @@ class Journalforing extends Component {
     };
     return jfdoc;
   };
+
   knyttTilEksisterendeSak = () => {
-    const { journalforingSkjemaVerdier: { saksnummer }, tilordneSak } = this.props;
-    // TODO validate response before redirect
-    /* eslint-disable */
+    const { journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history } = this.props;
+
     const jfdoc = this.plukkJournalDocParams();
     jfdoc.saksnummer = saksnummer;
-    console.log('jfdoc', jfdoc);
 
     if (saksnummer === undefined) return false;
 
@@ -203,7 +202,7 @@ class Journalforing extends Component {
       if (response.length === 0) {
         history.push('/');
       }
-    })
+    });
 
     return true;
   };
