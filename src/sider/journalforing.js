@@ -47,7 +47,7 @@ class Journalforing extends Component {
     match: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
     hentRelevanteFagsaker: PT.func.isRequired,
-    tilordeSak: PT.func.isRequired,
+    tilordneSak: PT.func.isRequired,
     opprettNySak: PT.func.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
@@ -190,21 +190,27 @@ class Journalforing extends Component {
     return jfdoc;
   };
   knyttTilEksisterendeSak = () => {
-    const { journalforingSkjemaVerdier: { saksnummer }, tilordeSak } = this.props;
+    const { journalforingSkjemaVerdier: { saksnummer }, tilordneSak } = this.props;
     // TODO validate response before redirect
     /* eslint-disable */
     const jfdoc = this.plukkJournalDocParams();
     jfdoc.saksnummer = saksnummer;
     console.log('jfdoc', jfdoc);
-    //alert('Denne er ikke avklart / implementert.');
-    /* eslint-enable */
 
-    return (saksnummer) ? tilordeSak(jfdoc) : false;
+    if (saksnummer === undefined) return false;
+
+    tilordneSak(jfdoc).then(response => {
+      if (response.length === 0) {
+        history.push('/');
+      }
+    })
+
+    return true;
   };
 
   opprettNyFagsakSubmit = event => {
     event.preventDefault();
-    const { journalforingSkjemaVerdier, opprettNySak } = this.props;
+    const { journalforingSkjemaVerdier, opprettNySak, history } = this.props;
     const {
       journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
@@ -220,11 +226,9 @@ class Journalforing extends Component {
     const jfdoc = this.plukkJournalDocParams();
     jfdoc.fagsak = fagsak;
     opprettNySak(jfdoc).then(response => {
-      // TODO validate response before redirect
-      /* eslint-disable */
-      console.log(response);
-      //alert('Denne er ikke avklart / implementert.');
-      /* eslint-enable */
+      if (response.length === 0) {
+        history.push('/');
+      }
     });
   };
 
@@ -302,9 +306,8 @@ const mapDispatchToProps = dispatch => ({
   triggeFeltFeil: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
   sokFnrDnr: fnr => PersonOperations.hent(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
-  sendNyFagsakTilJournalforing: data => Api.Fagsaker.send(data),
   opprettNySak: data => Api.Journalforing.opprett(data),
-  tilordeSak: data => Api.Journalforing.tilordne(data),
+  tilordneSak: data => Api.Journalforing.tilordne(data),
   hentRelevanteFagsaker: fnr => dispatch(fagsakOperations.sok(fnr)),
   settBrukerSomAvsender: (ID, navn) => {
     dispatch(autofill('journalforing', 'avsenderID', ID));
