@@ -26,7 +26,7 @@ const eksisterendeSakIkkeValgt = verdier => (!verdier.saksnummer ? 'velg sak' : 
  * som er relevant. Feks: feilmelding om at et felt er tomt skal vises før feilmelding om at fødselsnummer ikke er gyldig.
  */
 const JournalforingGenerellValidering = verdier => {
-  const brukerIDFeilmelding = (
+  const brukerID = (
     idErBlank(verdier.brukerID) ||
     idErIkkeNummer(verdier.brukerID) ||
     erIdErIkkeFnrEllerDnr(verdier.brukerID) ||
@@ -34,7 +34,7 @@ const JournalforingGenerellValidering = verdier => {
     false
   );
 
-  const avsenderIDFeilmelding = (
+  const avsenderID = (
     idErBlank(verdier.avsenderID) ||
     idErIkkeNummer(verdier.avsenderID) ||
     erIdErIkkeFnrEllerDnr(verdier.avsenderID) ||
@@ -42,15 +42,15 @@ const JournalforingGenerellValidering = verdier => {
     false
   );
 
-  const dokumentTittelFeilmelding = dokumentTittelErBlank(verdier) || false;
+  const dokumentTittel = dokumentTittelErBlank(verdier) || false;
 
-  const vedleggsTitlerFeilmelding = vedleggTittelErBlank(verdier) ? { _error: vedleggTittelErBlank(verdier) } : false;
+  const vedleggsTitler = vedleggTittelErBlank(verdier) ? { _error: vedleggTittelErBlank(verdier) } : false;
 
   const valideringsObjekt = {
-    brukerID: brukerIDFeilmelding,
-    avsenderID: avsenderIDFeilmelding,
-    dokumentTittel: dokumentTittelFeilmelding,
-    vedleggsTitler: vedleggsTitlerFeilmelding,
+    brukerID,
+    avsenderID,
+    dokumentTittel,
+    vedleggsTitler,
   };
 
   return valideringsObjekt;
