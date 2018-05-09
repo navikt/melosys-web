@@ -29,7 +29,7 @@ ListevelgerValgtElement.propTypes = {
  * For hvert nye valg legges dette til som en FieldArray i Redux Form.
  */
 class ListevelgerGruppe extends Component {
-  state = { inputVerdi: '', touched: false }
+  state = { inputVerdi: '', touched: false, active: false }
 
   onChange = event => {
     this.setState({ inputVerdi: event.target.value });
@@ -39,8 +39,12 @@ class ListevelgerGruppe extends Component {
     if (event.key === 'Enter') { this.leggTilListeHandler(event); }
   }
 
+  onFocus = () => {
+    this.setState({ touched: true, active: true });
+  }
+
   onBlur = () => {
-    this.setState({ touched: true });
+    this.setState({ touched: true, active: false });
   }
 
   leggTilListeHandler = e => {
@@ -73,7 +77,7 @@ class ListevelgerGruppe extends Component {
     } = this.props;
 
     const alleFelter = fields.getAll() || [];
-    const feil = (meta.invalid && this.state.touched) ? { feilmelding: meta.error } : null;
+    const feil = (meta.invalid && this.state.touched && !this.state.active) ? { feilmelding: meta.error } : null;
 
     return (
       <div>
@@ -93,6 +97,7 @@ class ListevelgerGruppe extends Component {
             feil={feil}
             placeholder={placeholder}
             onBlur={this.onBlur}
+            onFocus={this.onFocus}
             onChange={this.onChange}
             onKeyDown={this.onKeyDown}
             value={this.state.inputVerdi}
