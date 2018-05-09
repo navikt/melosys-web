@@ -18,6 +18,8 @@ import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeS
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
+import JournalforingValidering from '../felles-komponenter/skjema/validering/journalforing';
+
 import {
   journalforingOperations,
   journalforingSelectors,
@@ -278,27 +280,6 @@ class Journalforing extends Component {
   }
 }
 
-Journalforing.validering = verdier => {
-  const valideringsObjekt = {};
-
-  // Bruker
-  if (verdier.brukerID === '') { valideringsObjekt.brukerID = 'Tast inn fnr eller dnr.'; }
-  if (verdier.brukerNavn === '' && verdier.brukerID !== '') { valideringsObjekt.brukerID = 'Fant ingen navn på fnr eller dnr.'; }
-
-  // Avsender
-  if (verdier.avsenderNavn === '' && verdier.avsenderID.length === Konstanter.ANTALL_TALL_I_ORGNR) { valideringsObjekt.avsenderID = 'Fant ingen navn på dette organisasjonsnummeret.'; }
-  if (
-    verdier.avsenderNavn === '' && (
-      verdier.avsenderID.length === Konstanter.ANTALL_TALL_I_DNR ||
-      verdier.avsenderID.length === Konstanter.ANTALL_TALL_I_DNR
-    )
-  ) {
-    valideringsObjekt.avsenderID = 'Fant ingen navn på dette fnr eller dnr.';
-  }
-
-  return valideringsObjekt;
-};
-
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   saksTyper: KodeverkSelectors.sakstyperSelector(state),
@@ -313,6 +294,7 @@ const mapStateToProps = state => ({
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
+    vedleggsTitler: [],
   },
 });
 
@@ -337,6 +319,6 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: Journalforing.validering,
+  validate: JournalforingValidering,
   onSubmit: () => {},
 })(Journalforing)));
