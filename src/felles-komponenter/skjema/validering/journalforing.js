@@ -109,9 +109,9 @@ const journalforingOpprettSakValidering = verdier => {
  * @returns {*}
  */
 const journalforingSituasjonsbetingetValidering = verdier => {
-  const { skjemaHensikt } = verdier;
+  const { journalforingHensikt } = verdier;
 
-  switch (skjemaHensikt) {
+  switch (journalforingHensikt) {
     case Konstanter.JOURNALFORING_HENSIKT.OPPRETT:
       return journalforingOpprettSakValidering(verdier);
     case Konstanter.JOURNALFORING_HENSIKT.KNYTT:
@@ -138,8 +138,8 @@ const journalforingValidering = verdier => ({
  * @param hensikt
  * @returns {boolean}
  */
-const erSkjemaGyldig = (verdier, hensikt) => {
-  const verdiKopi = { ...verdier, skjemaHensikt: hensikt };
+const erSkjemaGyldig = (verdier, journalforingHensikt) => {
+  const verdiKopi = { ...verdier, journalforingHensikt };
   const validering = journalforingValidering(verdiKopi);
   return Object.values(validering).every(enkeltValidering => enkeltValidering === false);
 };
