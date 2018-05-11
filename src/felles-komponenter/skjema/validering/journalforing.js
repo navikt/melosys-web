@@ -60,6 +60,11 @@ const journalforingGenerellValidering = verdier => {
   return valideringsObjekt;
 };
 
+/** Dersom saksbehandler forsøker å knytte en sak til journalføringen, skal de relaterte
+ * feltene valideres.
+ * @param verdier {object} Alle skjemaverdiene i redux-form-skjemaet.
+ * @returns {{saksnummer: *}} Objekt med alle valideringene som er gjort.
+ */
 const journalforingTilknyttSakValidering = verdier => {
   const { saksnummer } = verdier;
 
@@ -68,6 +73,11 @@ const journalforingTilknyttSakValidering = verdier => {
   };
 };
 
+/** Dersom saksbehandler forsøker å opprette en ny fagsak, skal de relaterte
+ * feltene valideres.
+ * @param verdier {object} Alle skjemaverdiene i redux-form-skjemaet.
+ * @returns {{journalforingPeriodeFraOgMed: (*|boolean), journalforingPeriodeTilOgMed: (*|boolean), journalforingOppholdsLand: *}}
+ */
 const journalforingOpprettSakValidering = verdier => {
   const journalforingPeriodeFraOgMed = (
     datoErIkkeGyldig(verdier.journalforingPeriodeFraOgMed) ||
@@ -92,6 +102,11 @@ const journalforingOpprettSakValidering = verdier => {
   };
 };
 
+/** Samle sammen alle valideringsregler i ett objekt som returneres
+ * til redux form.
+ * @param verdier {Object} Alle skjemaverdier som det skal valdieres på.
+ * @returns {*}
+ */
 const journalforingSituasjonsbetingetValidering = verdier => {
   const { skjemaHensikt } = verdier;
 
