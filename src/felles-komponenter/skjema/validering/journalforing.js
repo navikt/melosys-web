@@ -1,6 +1,7 @@
 import * as Person from './generisk/person';
 import * as Organisasjon from './generisk/organisasjon';
 import * as Dato from './generisk/dato';
+import * as Konstanter from '../../../constants';
 
 /** Mikrovalidering pr hendelse. Dette gjør at vi kan både kan spisse tekstlig tilbakemelding
  * og validere på tvers av verdier.
@@ -102,7 +103,7 @@ const journalforingOpprettSakValidering = verdier => {
   };
 };
 
-/** Samle sammen alle valideringsregler i ett objekt som returneres
+/** Samle sammen alle situasjonsbestemte valideringsregler i ett objekt som returneres
  * til redux form.
  * @param verdier {Object} Alle skjemaverdier som det skal valdieres på.
  * @returns {*}
@@ -111,17 +112,37 @@ const journalforingSituasjonsbetingetValidering = verdier => {
   const { skjemaHensikt } = verdier;
 
   switch (skjemaHensikt) {
-    case 'OPPRETT':
+    case Konstanter.JOURNALFORING_HENSIKT.OPPRETT:
       return journalforingOpprettSakValidering(verdier);
-    case 'KNYTT':
+    case Konstanter.JOURNALFORING_HENSIKT.KNYTT:
       return journalforingTilknyttSakValidering(verdier);
     default: return {};
   }
 };
 
+/** Samle alle valideringsregler som feedes inn til Redux Form.
+ * @param verdier {object} Verdiene som skal valideres.
+ * @returns {{brukerID: (*|string|boolean), avsenderID: (*|string|boolean), dokumentTittel: (*|boolean), vedleggsTitler: *}}
+ */
 const journalforingValidering = verdier => ({
   ...journalforingGenerellValidering(verdier),
   ...journalforingSituasjonsbetingetValidering(verdier),
 });
 
-export default journalforingValidering;
+/** I et par tilfeller har vi en race condition hvor props ikke
+ * oppdateres raskt nok til å kunne intercepte en submit. Derfor trenger vi
+ * en funksjon som kjører en validering med riktig HENSIKT før denne
+ * er oppdatert i Redux. Denne påvirker i seg selv ikke UI, men returnerer kun en
+ * true | false.
+ * @param verdier
+ * @param hensikt
+ * @returns {boolean}
+ */
+const erSkjemaGyldig = (verdier, hensikt) => {
+  const verdiKopi = { ...verdier, skjemaHensikt: hensikt };
+  const validering = journalforingValidering(verdiKopi);
+  return Object.values(validering).every(enkeltValidering => enkeltValidering === false);
+};
+
+export { journalforingValidering, erSkjemaGyldig };
+

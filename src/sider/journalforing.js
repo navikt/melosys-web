@@ -18,7 +18,7 @@ import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeS
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
-import JournalforingValidering from '../felles-komponenter/skjema/validering/journalforing';
+import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
 
 import {
   journalforingOperations,
@@ -57,7 +57,6 @@ class Journalforing extends Component {
     settSkjemaHensikt: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
-    saksTyper: PT.array,
     fagsakListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
     valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -69,7 +68,6 @@ class Journalforing extends Component {
   static defaultProps = {
     journalforing: {},
     journalpostID: '',
-    saksTyper: [],
     fagsakListe: [],
     journalforingSkjemaVerdier: {},
   };
@@ -164,7 +162,6 @@ class Journalforing extends Component {
    */
   preAutofyll = (opprinnelsesFelt, verdiFelt, verdi) => {
     const { autofyllFormFelt } = this.props;
-    this.props.triggeFeltFeil(opprinnelsesFelt);
     autofyllFormFelt(verdiFelt, verdi);
   };
 
@@ -204,15 +201,22 @@ class Journalforing extends Component {
     };
   };
 
+  /** Når saksbehandler klikker "knytt til eksisterende sak" skal det åpnes for validering av
+   * relevante felter før saken tilordnes (sendes til API) og saksbehandler returneres til forsiden.
+   * @returns {boolean}
+   */
   knyttTilEksisterendeSak = () => {
     const {
-      journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settSkjemaHensikt, valid,
+      journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settSkjemaHensikt,
     } = this.props;
     const vasketJournalforing = { ...this.vaskDokumentInformasjon(), saksnummer };
 
-    settSkjemaHensikt('KNYTT');
+    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.KNYTT)) {
+      this.props.triggeFeltFeil('vedleggsTitler', 'saksnummer');
+      return false;
+    }
 
-    if (!valid) return false;
+    settSkjemaHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
 
     tilordneSak(vasketJournalforing).then(response => {
       if (response.length === 0) {
@@ -223,13 +227,22 @@ class Journalforing extends Component {
     return true;
   };
 
+  /** Når saksbehandler klikker "opprett sak" skal det åpnes for validering av
+   * relevante felter før ny sak opprettes (sendes til API) og saksbehandler returneres til forsiden.
+   * @returns {boolean}
+   */
   opprettFagsak = () => {
     const { journalforingSkjemaVerdier, opprettNySak, history } = this.props;
     const {
       journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
 
-    this.props.settSkjemaHensikt('OPPRETT');
+    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.OPPRETT)) {
+      this.props.triggeFeltFeil('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingOppholdsLand');
+      return false;
+    }
+
+    this.props.settSkjemaHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
 
     const fagsak = {
       soknadsperiode: {
@@ -246,6 +259,8 @@ class Journalforing extends Component {
         history.push('/');
       }
     });
+
+    return true;
   };
 
   render() {
@@ -300,7 +315,6 @@ class Journalforing extends Component {
 
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
-  saksTyper: KodeverkSelectors.sakstyperSelector(state),
   pdfDokument: journalforingSelectors.JournalforingDokument(state).url,
   valgbareDokumentTitler: KodeverkSelectors.dokumenttitlerSelector(state),
   valgbareVedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
@@ -337,6 +351,6 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: JournalforingValidering,
+  validate: journalforingValidering,
   onSubmit: () => {},
 })(Journalforing)));

@@ -77,7 +77,7 @@ class ListevelgerGruppe extends Component {
     } = this.props;
 
     const alleFelter = fields.getAll() || [];
-    const feil = (meta.invalid && this.state.touched && !this.state.active) ? { feilmelding: meta.error } : null;
+    const feil = (meta.invalid && (this.state.touched || meta.submitFailed) && !this.state.active) ? { feilmelding: meta.error } : null;
 
     return (
       <div>
