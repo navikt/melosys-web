@@ -18,16 +18,18 @@ const idFinnesIkke = (navn, id) => {
   return null;
 };
 
-const dokumentTittelErBlank = verdier => (verdier.dokumentTittel.length === 0 ? 'Velg dokumenttittel fra listen eller skriv din egen.' : false);
-const vedleggTittelErBlank = ({ vedleggsTitler = [] }) => (vedleggsTitler.length === 0 ? 'Velg minst én vedleggstittel eller skriv inn din egen' : false);
-const eksisterendeSakIkkeValgt = verdier => (!verdier.saksnummer ? 'velg sak' : false);
-const datoErGyldig = verdi => (!Dato.datoErGyldig(verdi) ? 'Skriv inn en gyldig dato' : false);
+const dokumentTittelErBlank = dokumentTittel => (dokumentTittel.length === 0 ? 'Velg dokumenttittel fra listen eller skriv din egen.' : false);
+const vedleggTittelErBlank = vedleggsTitler => (vedleggsTitler.length === 0 ? 'Velg minst én vedleggstittel eller skriv inn din egen' : false);
+const eksisterendeSakIkkeValgt = saksnummer => (!saksnummer ? 'Velg hvilken sak du ønsker å knytte journalføringen mot.' : false);
+const datoErIkkeGyldig = dato => (!Dato.datoErGyldig(dato) ? 'Skriv inn en gyldig dato' : false);
+const datoErBlank = dato => ((!dato || dato === '') ? 'Tast inn dato' : false);
+const landErIkkeValgt = (landListe = []) => (landListe.length === 0 ? 'Velg minst ett land.' : false);
 
 /** Ved å short circuite igjennom alle forutsetninger helt til den siste som returnerer false,
  * kan vi bygge opp sjekk per felt-navn. Rekkefølgen har betydning med hensyn til hvilken feilmelding
  * som er relevant. Feks: feilmelding om at et felt er tomt skal vises før feilmelding om at fødselsnummer ikke er gyldig.
  */
-const JournalforingGenerellValidering = verdier => {
+const journalforingGenerellValidering = verdier => {
   const brukerID = (
     idErBlank(verdier.brukerID) ||
     idErIkkeNummer(verdier.brukerID) ||
@@ -44,27 +46,67 @@ const JournalforingGenerellValidering = verdier => {
     false
   );
 
-  const dokumentTittel = dokumentTittelErBlank(verdier) || false;
+  const dokumentTittel = dokumentTittelErBlank(verdier.dokumentTittel) || false;
 
-  const vedleggsTitler = vedleggTittelErBlank(verdier) ? { _error: vedleggTittelErBlank(verdier) } : false;
-
-  const journalforingPeriodeFraOgMed = verdier.journalforingPeriodeFraOgMed && datoErGyldig(verdier.journalforingPeriodeFraOgMed);
-  const journalforingPeriodeTilOgMed = verdier.journalforingPeriodeTilOgMed && datoErGyldig(verdier.journalforingPeriodeTilOgMed);
+  const vedleggsTitler = vedleggTittelErBlank(verdier.vedleggsTitler) ? { _error: vedleggTittelErBlank(verdier.vedleggsTitler) } : false;
 
   const valideringsObjekt = {
     brukerID,
     avsenderID,
     dokumentTittel,
     vedleggsTitler,
-    journalforingPeriodeFraOgMed,
-    journalforingPeriodeTilOgMed,
   };
 
   return valideringsObjekt;
 };
 
-export {
-  eksisterendeSakIkkeValgt,
+const journalforingTilknyttSakValidering = verdier => {
+  const { saksnummer } = verdier;
+
+  return {
+    saksnummer: eksisterendeSakIkkeValgt(saksnummer),
+  };
 };
 
-export default JournalforingGenerellValidering;
+const journalforingOpprettSakValidering = verdier => {
+  const journalforingPeriodeFraOgMed = (
+    datoErIkkeGyldig(verdier.journalforingPeriodeFraOgMed) ||
+    datoErBlank(verdier.journalforingPeriodeFraOgMed) ||
+    false
+  );
+
+  const journalforingPeriodeTilOgMed = (
+    datoErIkkeGyldig(verdier.journalforingPeriodeTilOgMed) ||
+    datoErBlank(verdier.journalforingPeriodeTilOgMed) ||
+    false
+  );
+
+  const journalforingOppholdsLand = (
+    landErIkkeValgt(verdier.journalforingOppholdsLand)
+  );
+
+  return {
+    journalforingPeriodeFraOgMed,
+    journalforingPeriodeTilOgMed,
+    journalforingOppholdsLand,
+  };
+};
+
+const journalforingSituasjonsbetingetValidering = verdier => {
+  const { skjemaHensikt } = verdier;
+
+  switch (skjemaHensikt) {
+    case 'OPPRETT':
+      return journalforingOpprettSakValidering(verdier);
+    case 'KNYTT':
+      return journalforingTilknyttSakValidering(verdier);
+    default: return {};
+  }
+};
+
+const journalforingValidering = verdier => ({
+  ...journalforingGenerellValidering(verdier),
+  ...journalforingSituasjonsbetingetValidering(verdier),
+});
+
+export default journalforingValidering;

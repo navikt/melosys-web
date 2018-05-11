@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { reduxForm, autofill, setSubmitFailed } from 'redux-form';
+import { reduxForm, autofill, setSubmitFailed, change } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -54,6 +54,7 @@ class Journalforing extends Component {
     history: PT.object.isRequired,
     autofyllFormFelt: PT.func.isRequired,
     triggeFeltFeil: PT.func.isRequired,
+    settSkjemaHensikt: PT.func.isRequired,
     journalforing: PT.object,
     journalpostID: PT.string,
     saksTyper: PT.array,
@@ -166,6 +167,10 @@ class Journalforing extends Component {
     autofyllFormFelt(verdiFelt, verdi);
   };
 
+  /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
+   * funksjoner. Allikevel trenger vi en default handler som Redux Form hekter på gjennom <form onsubmit="" .../>
+   * @param event
+   */
   overstyrSubmit = event => {
     event.preventDefault();
   };
@@ -174,12 +179,21 @@ class Journalforing extends Component {
     this.props.history.push('/');
   };
 
-  plukkJournalDocParams = () => {
+  /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
+   * settes inn i skjemaet for å indikere informasjon som kommer fra backend. Dato skal ikke kunne endres i
+   * journalføring og skal derfor ikke returneres.
+   * Derfor må vi bygge opp og evt vaske et nytt objekt som kan sendes til backend.
+   *
+   * @returns {object} Objektet som skal sendes videre som payload.
+   */
+  vaskDokumentInformasjon = () => {
     const { oppgaveID, journalpostID } = this.props.match.params;
-    const { journalforing, journalforingSkjemaVerdier } = this.props;
-    const { brukerID, avsenderID } = journalforing;
-    const { dokumentTittel, vedleggsTitler = [] } = journalforingSkjemaVerdier;
-    const jfdoc = {
+    const { journalforingSkjemaVerdier } = this.props;
+    const {
+      brukerID, avsenderID, dokumentTittel, vedleggsTitler = [],
+    } = journalforingSkjemaVerdier;
+
+    return {
       journalpostID,
       oppgaveID,
       brukerID,
@@ -187,18 +201,17 @@ class Journalforing extends Component {
       dokumenttittel: dokumentTittel,
       vedleggstitler: vedleggsTitler,
     };
-    return jfdoc;
   };
 
   knyttTilEksisterendeSak = () => {
     const { journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history } = this.props;
+    const vasketJournalforing = { ...this.vaskDokumentInformasjon(), saksnummer };
 
-    const jfdoc = this.plukkJournalDocParams();
-    jfdoc.saksnummer = saksnummer;
+    this.props.settSkjemaHensikt('KNYTT');
 
     if (saksnummer === undefined) return false;
 
-    tilordneSak(jfdoc).then(response => {
+    tilordneSak(vasketJournalforing).then(response => {
       if (response.length === 0) {
         history.push('/');
       }
@@ -207,24 +220,25 @@ class Journalforing extends Component {
     return true;
   };
 
-  opprettNyFagsakSubmit = event => {
-    event.preventDefault();
+  opprettFagsak = () => {
     const { journalforingSkjemaVerdier, opprettNySak, history } = this.props;
     const {
       journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
 
+    this.props.settSkjemaHensikt('OPPRETT');
+
     const fagsak = {
-      type: 'EU_EOS',
       soknadsperiode: {
         fom: journalforingPeriodeFraOgMed,
         tom: journalforingPeriodeTilOgMed,
       },
       land: journalforingOppholdsLand,
     };
-    const jfdoc = this.plukkJournalDocParams();
-    jfdoc.fagsak = fagsak;
-    opprettNySak(jfdoc).then(response => {
+
+    const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
+
+    opprettNySak(journalforingData).then(response => {
       if (response.length === 0) {
         history.push('/');
       }
@@ -236,7 +250,7 @@ class Journalforing extends Component {
       journalforing, valgbareDokumentTitler, valgbareVedleggsTitler, journalforingSkjemaVerdier, fagsakListe,
     } = this.props;
     const {
-      knyttTilEksisterendeSak, opprettNyFagsakSubmit, hentAvsender, hentBruker,
+      knyttTilEksisterendeSak, opprettFagsak, hentAvsender, hentBruker,
     } = this;
 
     const { journalpostID } = this.props.match.params;
@@ -262,7 +276,7 @@ class Journalforing extends Component {
                         valgbareVedleggsTitler={valgbareVedleggsTitler}
                       />
                       <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
-                      <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
+                      <OpprettNyFagSak opprettFagsak={opprettFagsak} />
                       <div className="journalforing__fotknapper">
                         <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
                       </div>
@@ -305,6 +319,7 @@ const mapDispatchToProps = dispatch => ({
   triggeFeltFeil: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
   sokFnrDnr: fnr => PersonOperations.hent(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
+  settSkjemaHensikt: hensikt => dispatch(change('journalforing', 'skjemaHensikt', hensikt)),
   opprettNySak: data => Api.Journalforing.opprett(data),
   tilordneSak: data => Api.Journalforing.tilordne(data),
   hentRelevanteFagsaker: fnr => dispatch(fagsakOperations.sok(fnr)),
