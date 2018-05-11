@@ -63,6 +63,7 @@ class Journalforing extends Component {
     valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
     valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
     settBrukerSomAvsender: PT.func.isRequired,
+    valid: PT.bool.isRequired,
   };
 
   static defaultProps = {
@@ -204,12 +205,14 @@ class Journalforing extends Component {
   };
 
   knyttTilEksisterendeSak = () => {
-    const { journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history } = this.props;
+    const {
+      journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settSkjemaHensikt, valid,
+    } = this.props;
     const vasketJournalforing = { ...this.vaskDokumentInformasjon(), saksnummer };
 
-    this.props.settSkjemaHensikt('KNYTT');
+    settSkjemaHensikt('KNYTT');
 
-    if (saksnummer === undefined) return false;
+    if (!valid) return false;
 
     tilordneSak(vasketJournalforing).then(response => {
       if (response.length === 0) {
