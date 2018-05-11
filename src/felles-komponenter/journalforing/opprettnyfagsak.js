@@ -9,7 +9,7 @@ import './opprettnyfagsak.css';
 import LandVelger from '../skjema/landvelger';
 
 const OpprettNyFagSak = props => {
-  const { opprettNyFagsakSubmit } = props;
+  const { opprettFagsak } = props;
   return (
     <div className="opprettnysak">
       <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
@@ -27,14 +27,14 @@ const OpprettNyFagSak = props => {
         </Nav.Column>
       </Nav.Fieldset>
       <div className="opprettnysak__knapper">
-        <Nav.Knapp className="knapp" onClick={opprettNyFagsakSubmit}>Opprett ny sak</Nav.Knapp>
+        <Nav.Knapp className="knapp" onClick={opprettFagsak}>Opprett ny sak</Nav.Knapp>
       </div>
     </div>
   );
 };
 
 OpprettNyFagSak.propTypes = {
-  opprettNyFagsakSubmit: PT.func.isRequired,
+  opprettFagsak: PT.func.isRequired,
 };
 
 export default OpprettNyFagSak;
