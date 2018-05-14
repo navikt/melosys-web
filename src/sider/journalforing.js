@@ -290,7 +290,6 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing,
       journalforing: { dokument = {} },
       valgbareDokumentTitler,
       valgbareVedleggsTitler,
@@ -316,7 +315,8 @@ class Journalforing extends Component {
                   <Nav.Panel className="journalforing__skjema">
                     <div className="journalforing__skjema__scroll">
                       <Informasjon
-                        journalforing={journalforing}
+                        journalpostID={journalpostID}
+                        dokumentID={dokumentID}
                         journalforingSkjemaVerdier={journalforingSkjemaVerdier}
                         hentAvsender={hentAvsender}
                         hentBruker={hentBruker}
