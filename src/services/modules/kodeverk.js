@@ -1,4 +1,4 @@
-import {getAsJson, cachedGetAsJson } from '../utils';
+import { cachedGetAsJson } from '../utils';
 import { API_BASE_URL } from '../api-constants';
 
 // eslint-disable-next-line import/prefer-default-export
