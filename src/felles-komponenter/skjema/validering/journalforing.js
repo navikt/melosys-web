@@ -92,9 +92,7 @@ const journalforingOpprettSakValidering = verdier => {
     false
   );
 
-  const journalforingOppholdsLand = (
-    landErIkkeValgt(verdier.journalforingOppholdsLand)
-  );
+  const journalforingOppholdsLand = (landErIkkeValgt(verdier.journalforingOppholdsLand) ? { _error: landErIkkeValgt(verdier.journalforingOppholdsLand) } : false);
 
   return {
     journalforingPeriodeFraOgMed,
