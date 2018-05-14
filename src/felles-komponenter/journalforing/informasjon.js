@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
@@ -6,6 +7,8 @@ import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 import * as Konstanter from '../../constants';
+
+import * as Api from '../../services/api';
 
 import './informasjon.css';
 import { PersonSelectors } from '../../ducks/person';
@@ -67,9 +70,13 @@ class Informasjon extends Component {
   };
 
   render() {
-    const { valgbareDokumentTitler, valgbareVedleggsTitler } = this.props;
+    const {
+      valgbareDokumentTitler, valgbareVedleggsTitler, journalpostID, dokumentID,
+    } = this.props;
     const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
+
+    const dokumentURI = Api.Dokumenter.hentPdfURI(journalpostID, dokumentID);
 
     return (
       <div className="informasjon">
@@ -84,6 +91,7 @@ class Informasjon extends Component {
           <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsenderNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           <Skjema.Input feltNavn="mottattDato" label="Dokument mottatt:" disabled />
+          <Link to={dokumentURI} target="_blank">Åpne dokument i nytt vindu</Link>
           <Skjema.ListeVelger
             feltNavn="dokumentTittel"
             label="Tittel på hoveddokument:"
@@ -109,12 +117,16 @@ Informasjon.propTypes = {
   journalforingSkjemaVerdier: PT.object, // TODO: Vurdere MPT.
   hentBruker: PT.func.isRequired,
   hentAvsender: PT.func.isRequired,
+  journalpostID: PT.string,
+  dokumentID: PT.string,
 };
 
 Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
   valgbareDokumentTitler: [],
   valgbareVedleggsTitler: [],
+  journalpostID: '',
+  dokumentID: '',
 };
 
 const mapStateToProps = state => ({
