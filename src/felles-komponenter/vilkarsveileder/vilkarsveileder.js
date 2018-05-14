@@ -43,7 +43,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'INNGANG',
           komponent: VurderingInngang,
-          dataHenter: () => ({}),
+          dataHenter: props => ({ inngangsvilkar: props.faktaavklaring.inngang }),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
