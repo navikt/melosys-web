@@ -80,7 +80,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentMineSaker: () => dispatch(Oppgaver.oppgaverOperations.hentMineSaker()),
+  hentMineSaker: () => dispatch(Oppgaver.oppgaverOperations.hent()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MineOppgaver);

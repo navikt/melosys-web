@@ -11,16 +11,16 @@ import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
 import * as Types from './types';
 
-export function hentFaktaavklaring(behandlingID) {
-  return doThenDispatch(() => Api.hentFaktaavklaring(behandlingID), {
+export function hent(behandlingID) {
+  return doThenDispatch(() => Api.Faktaavklaring.hent(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function sendFaktaavklaring(bid, dokument) {
-  return doThenDispatch(() => Api.sendFaktaavklaring(bid, dokument), {
+export function send(bid, dokument) {
+  return doThenDispatch(() => Api.Faktaavklaring.send(bid, dokument), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

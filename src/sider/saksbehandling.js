@@ -274,12 +274,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentFagsaker: saksnummer => dispatch(fagsakOperations.hentFagsaker(saksnummer)),
-  hentSoknad: bid => dispatch(soknadOperations.hentSoknad(bid)),
-  sendSoknad: (bid, dokument) => dispatch(soknadOperations.sendSoknad(bid, dokument)),
-  hentFaktaavklaring: saksnummer => dispatch(faktaavklaringOperations.hentFaktaavklaring(saksnummer)),
-  sendFaktaavklaring: (bid, dokument) => dispatch(faktaavklaringOperations.sendFaktaavklaring(bid, dokument)),
-  hentVurdering: behandlingID => dispatch(vurderingOperations.hentVurdering(behandlingID)),
+  hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
+  hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
+  sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
+  hentFaktaavklaring: saksnummer => dispatch(faktaavklaringOperations.hent(saksnummer)),
+  sendFaktaavklaring: (bid, dokument) => dispatch(faktaavklaringOperations.send(bid, dokument)),
+  hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
   oppdaterSoknad: values => { dispatch(soknadActions.oppdaterSoknadState(values)); },
   oppdaterFaktaavklaring: values => { dispatch(faktaavklaringActions.oppdaterFaktaavklaringState(values)); },
 });
