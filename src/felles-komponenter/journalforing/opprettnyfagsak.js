@@ -9,32 +9,36 @@ import './opprettnyfagsak.css';
 import LandVelger from '../skjema/landvelger';
 
 const OpprettNyFagSak = props => {
-  const { opprettNyFagsakSubmit } = props;
+  const { opprettFagsak } = props;
   return (
     <div className="opprettnysak">
       <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
-      <Nav.Fieldset legend="Soknadperiode">
-        <Nav.Column xs="4">
-          <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
-        </Nav.Column>
-        <Nav.Column xs="4">
-          <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
-        </Nav.Column>
+      <Nav.Fieldset legend="Soknadperiode:" className="opprettnysak__soknadsperiode">
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
+          </Nav.Column>
+          <Nav.Column xs="6">
+            <Skjema.Input datoFelt label="Til" feltNavn="journalforingPeriodeTilOgMed" />
+          </Nav.Column>
+        </Nav.Row>
       </Nav.Fieldset>
       <Nav.Fieldset legend="Land:">
-        <Nav.Column xs="12">
-          <LandVelger feltNavn="journalforingOppholdsLand" multiLand />
-        </Nav.Column>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <LandVelger feltNavn="journalforingOppholdsLand" multiLand />
+          </Nav.Column>
+        </Nav.Row>
       </Nav.Fieldset>
       <div className="opprettnysak__knapper">
-        <Nav.Knapp className="knapp" onClick={opprettNyFagsakSubmit}>Opprett ny sak</Nav.Knapp>
+        <Nav.Knapp className="knapp" onClick={opprettFagsak}>Opprett ny sak</Nav.Knapp>
       </div>
     </div>
   );
 };
 
 OpprettNyFagSak.propTypes = {
-  opprettNyFagsakSubmit: PT.func.isRequired,
+  opprettFagsak: PT.func.isRequired,
 };
 
 export default OpprettNyFagSak;

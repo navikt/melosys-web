@@ -30,5 +30,5 @@ Journalforing.propTypes = {
 
 export default reduxForm({
   form: 'journalforingsform',
-  onSubmit: () => oppgaverOperations.oppgavePlukker('JFR', ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U']),
+  onSubmit: () => oppgaverOperations.send('JFR', ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U']),
 })(withRouter((Journalforing)));
