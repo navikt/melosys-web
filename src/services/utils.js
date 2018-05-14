@@ -128,7 +128,7 @@ const cachedFetch = (url, cacheDurationSec) => {
       // --------------------------------------------
       // Return cached content
       console.log('cache hit for ', url); // eslint-disable-line no-console
-      return Promise.resolve(response).then(toJson);
+      return response.json();
     }
     // --------------------------------------------
     // We need to clean up this old key, before fetching fresh data
