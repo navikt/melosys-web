@@ -119,10 +119,11 @@ const cachedFetch = (url, options) => {
     let age = (Date.now() - whenCached) / 1000
     if (age < expiry) {
       let response = new Response(new Blob([cached]))
+      console.log('cacheresponse', response);
       // --------------------------------------------
       // Return cached content
       console.log('cache hit for ', url);
-      return Promise.resolve(response)
+      return Promise.resolve(response).then(toJson)
     } else {
       // We need to clean up this old key
       console.log('Delete/invalidate cache, due to stale cacheDuration');
@@ -158,7 +159,7 @@ const cachedFetch = (url, options) => {
       }
     }
     return response
-  })
+  }).then(toJson);
 };
 
 export function fetchToJson(url, config = {}) {
