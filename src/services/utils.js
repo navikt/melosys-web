@@ -98,45 +98,62 @@ export const getCookie = name => {
   return match !== null ? match[1] : '';
 };
 
-const cachedFetch = (url, options) => {
-  let expiry = 5 * 60 // 5 min default
-  if (typeof options === 'number') {
-    expiry = options
-    options = undefined
-  } else if (typeof options === 'object') {
-    // I hope you didn't set it to 0 seconds
-    expiry = options.seconds || expiry
-  }
+const cachedFetch = (url, cacheDurationSec) => {
   // Use the URL as the cache key to sessionStorage
-  let cacheKey = url
-  let cached = localStorage.getItem(cacheKey)
-  let whenCached = localStorage.getItem(cacheKey + ':ts')
+  const cacheKey = url;
+  const cached = localStorage.getItem(cacheKey);
+  const cacheTS = `${cacheKey}:ts`;
+  const whenCached = localStorage.getItem(cacheTS);
   if (cached !== null && whenCached !== null) {
     // it was in sessionStorage!
     // Even though 'whenCached' is a string, this operation
     // works because the minus sign tries to convert the
     // string to an integer and it will work.
-    let age = (Date.now() - whenCached) / 1000
-    if (age < expiry) {
-      let response = new Response(new Blob([cached]))
-      console.log('cacheresponse', response);
+    const age = (Date.now() - whenCached) / 1000;
+    if (age < cacheDurationSec) {
+      const response = new Response(new Blob([cached]));
+      console.log('cacheresponse', response); // eslint-disable-line no-console
       // --------------------------------------------
       // Return cached content
-      console.log('cache hit for ', url);
-      return Promise.resolve(response).then(toJson)
-    } else {
-      // We need to clean up this old key
-      console.log('Delete/invalidate cache, due to stale cacheDuration');
-      localStorage.removeItem(cacheKey)
-      localStorage.removeItem(cacheKey + ':ts')
+      console.log('cache hit for ', url); // eslint-disable-line no-console
+      return Promise.resolve(response).then(toJson);
     }
+    // --------------------------------------------
+    // We need to clean up this old key, before fetching fresh data
+    console.log('Delete/invalidate cache, due to stale cacheDuration'); // eslint-disable-line no-console
+    localStorage.removeItem(cacheKey);
+    localStorage.removeItem(cacheTS);
   }
 
-  return fetch(url, options).then(response => {
+  // --------------------------------------------
+  // Prepare fetching fresh data with fetch
+  // --------------------------------------------
+  const headers = {
+    Accept: 'application/json',
+    'Accept-Charset': 'UTF-8',
+    // 'Cache-control': 'no-store, must-revalidate, no-cache, max-age=0',
+    // Expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+    // Pragma: 'no-cache',
+    // Origin: window.location.origin, // Set by fetch() automagically
+    // 'Access-Control-Request-Method': method, // Kun ved preflight
+  };
+
+  const fetchConfig = {
+    // body: below, for POST, PUT
+    credentials: 'include', // *same-origin, include, omit; NB! MUST use 'include' to pass fetchConfig to fetch(),
+    cache: 'default', // *default, no-cache, force-cache, only-if-cached
+    headers: new Headers(headers),
+    method: 'GET',
+    mode: 'same-origin', // *same-origin, no-cors, cors
+    redirect: 'follow', // *manual, follow, error
+    // referrer: // *client, no-referrer
+  };
+
+  return fetch(url, fetchConfig).then(response => {
     // let's only store in cache if the content-type is
     // JSON or something non-binary
     if (response.status === 200) {
-      let ct = response.headers.get('Content-Type')
+      const ct = response.headers.get('Content-Type');
       if (ct && (ct.match(/application\/json/i) || ct.match(/text\//i))) {
         // There is a .json() instead of .text() but
         // we're going to store it in sessionStorage as
@@ -145,20 +162,19 @@ const cachedFetch = (url, options) => {
         // consumed by the time it's returned. This
         // way we're being un-intrusive.
         if (!localStorage.getItem(cacheKey)) {
-          console.log('Insert fresh content into cache', url);
-        }
-        else {
-          console.log('Remove and update cache key', cacheKey);
-          localStorage.removeItem(cacheKey)
-          localStorage.removeItem(cacheKey + ':ts')
+          console.log('Insert fresh content into cache', url); // eslint-disable-line no-console
+        } else {
+          console.log('Remove and update cache key', cacheKey); // eslint-disable-line no-console
+          localStorage.removeItem(cacheKey);
+          localStorage.removeItem(cacheTS);
         }
         response.clone().text().then(content => {
-          localStorage.setItem(cacheKey, content)
-          localStorage.setItem(cacheKey + ':ts', Date.now())
-        })
+          localStorage.setItem(cacheKey, content);
+          localStorage.setItem(cacheTS, Date.now());
+        });
       }
     }
-    return response
+    return response;
   }).then(toJson);
 };
 
@@ -206,9 +222,8 @@ function methodToJson(method, url, data) {
 
   return fetchToJson(url, fetchConfig);
 }
-export function cachedGetAsJson(url, retention) {
-  const cacheDuration = retention ?  retention : 60;
-  return cachedFetch(url, cacheDuration);
+export function cachedGetAsJson(url, cacheDurationSec = 60) {
+  return cachedFetch(url, cacheDurationSec);
 }
 export function getAsJson(url) {
   return methodToJson('GET', url);
