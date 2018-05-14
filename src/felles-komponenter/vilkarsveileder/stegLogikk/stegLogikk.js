@@ -8,6 +8,13 @@ import { STEG } from './typer';
 
 class StegLogikk {
   static stier = {
+    INNGANG: [
+      {
+        kriterier: 'alle andre valg',
+        erOppfylt: () => true,
+        nesteSteg: STEG.PERIODE,
+      },
+    ],
     PERIODE: [
       {
         kriterier: 'alle andre valg',
@@ -207,7 +214,7 @@ class StegLogikk {
     const flatFaktaAvklaring = Object.keys(faktaAvklaring).reduce((collection, key) => ({ ...collection, ...faktaAvklaring[key] }), {});
 
     // Stegene begynner alltid med 'PERIODE'
-    let gjeldendeSteg = 'PERIODE';
+    let gjeldendeSteg = 'INNGANG';
     stegBygger.push(gjeldendeSteg);
 
     while (gjeldendeSteg !== 'VEDTAK') {
