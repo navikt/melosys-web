@@ -11,9 +11,9 @@ import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
 import {
-  SokBehandlingsOppgaveOperations,
-  SokBehandlingsOppgaveSelectors,
-} from '../ducks/sokbehandlingsoppgave/';
+  oppgaverOperations,
+  oppgaverSelectors,
+} from '../ducks/oppgaver';
 
 import './sok.css';
 
@@ -57,7 +57,7 @@ class Sok extends Component {
 }
 
 Sok.propTypes = {
-  behandlingsoppgaver: MPT.SokBehandlingsOppgaver,
+  behandlingsoppgaver: MPT.OppgaverSok,
   hentBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
@@ -71,11 +71,11 @@ Sok.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  behandlingsoppgaver: SokBehandlingsOppgaveSelectors.OppgaveSelector(state),
+  behandlingsoppgaver: oppgaverSelectors.SokOppgaveSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentBehandlingsOppgaver: fnr => dispatch(SokBehandlingsOppgaveOperations.hentBehandlingsOppgaver(fnr)),
+  hentBehandlingsOppgaver: fnr => dispatch(oppgaverOperations.sok(fnr)),
 });
 
 const kontekster = [

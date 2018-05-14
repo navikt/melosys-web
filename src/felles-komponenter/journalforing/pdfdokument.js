@@ -33,8 +33,9 @@ class PDFViser extends Component {
           onLoadSuccess={this.onLoadSuccess}
         >
           { pageArray.map((item, index) => (
-            <div key={uuid()} id={`section-${index + 1}`}>
+            <div key={uuid()} id={`section-${index + 1}`} className="pdfviser__side">
               <Page width={this.props.wrapperDivSize} pageNumber={index + 1} />
+              <div className="pdfviser__sideinfo">side {index + 1} av { pageArray.length}</div>
             </div>
           ))}
         </Document>
@@ -84,7 +85,7 @@ class PDFDokument extends Component {
 
   render() {
     const { journalpostID, dokumentID } = this.props;
-    const pdfDokumentURI = Api.PDFDokumentURI(journalpostID, dokumentID);
+    const pdfDokumentURI = Api.Dokumenter.pdfURI(journalpostID, dokumentID);
     return (
       <div
         id="row"

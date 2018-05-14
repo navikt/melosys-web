@@ -25,6 +25,7 @@ import VurderingBostedsland from './vurderinger/vurderingBostedsland';
 import VurderingTjenestemann from './vurderinger/vurderingTjenestemann';
 import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
+import VurderingInngang from './vurderinger/vurderingInngang';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { vurderingOperations } from '../../ducks/vurdering/';
@@ -40,6 +41,16 @@ class Vilkarsveileder extends Component {
       aktuelleSteg: [],
       alleSteg: [
         {
+          id: 'INNGANG',
+          komponent: VurderingInngang,
+          dataHenter: () => ({}),
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: FANE_STATUS.OK,
+          aktivtSteg: true,
+        },
+        {
           id: 'PERIODE',
           komponent: VurderingPeriode,
           dataHenter: () => ({}),
@@ -47,7 +58,6 @@ class Vilkarsveileder extends Component {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
           status: FANE_STATUS.OK,
-          aktivtSteg: true,
         },
         {
           id: 'SYSSELSETTING',
@@ -57,7 +67,6 @@ class Vilkarsveileder extends Component {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
           status: FANE_STATUS.OK,
-          aktivtSteg: true,
         },
         {
           id: 'ARBEIDSFORHOLD',
@@ -268,7 +277,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   oppdaterFaktaavklaringState: skjema => dispatch(faktaavklaringOperations.oppdaterFaktaavklaringState(skjema)),
-  hentVurdering: behandlingID => dispatch(vurderingOperations.hentVurdering(behandlingID)),
+  hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));

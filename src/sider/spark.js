@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { health } from '../services/api';
 
 import { soknadOperations } from '../ducks/soknad/';
 import { fagsakOperations } from '../ducks/fagsaker/';
@@ -41,7 +40,7 @@ class Spark extends Component {
   hentFagsakBasertPaFnr = event => {
     event.preventDefault();
     const { fnr : { value : fnr } } = event.target;
-    Api.sokFagsaker(fnr).then(response => {
+    Api.Journalforing.hent(fnr).then(response => {
       const firstHit = response[0] || {};
       const { saksnummer } = firstHit;
       saksnummer && this.props.history.push(`/saksbehandling/${saksnummer}`);
@@ -49,7 +48,7 @@ class Spark extends Component {
   }
 
   resetOppgaver = () => {
-    Api.sparkResetOppgaver().then(() => {
+    Api.Oppgaver.sparkReset().then(() => {
       document.location.href = '/';
     });
   }
@@ -60,7 +59,7 @@ class Spark extends Component {
       <div className="spark">
         <div className="spark__gruppe">
           <h1>Health</h1>
-          <button onClick={() => console.log(health())} >sjekk health</button>
+          <button onClick={() => console.log(Api.Health.health())} >sjekk health</button>
         </div>
 
         <div className="spark__gruppe">
@@ -124,9 +123,9 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sendSoknad: (bid, soknad) => dispatch(soknadOperations.sendSoknad(bid, soknad)),
-  opprettNyFagsak: fnr => dispatch(fagsakOperations.opprettNyFagsak(fnr)),
-  plukkOppgave: (oppgave) => dispatch(oppgaverOperations.oppgavePlukker(oppgave)),
+  sendSoknad: (bid, soknad) => dispatch(soknadOperations.send(bid, soknad)),
+  opprettNyFagsak: fnr => dispatch(fagsakOperations.opprett(fnr)),
+  plukkOppgave: (oppgave) => dispatch(oppgaverOperations.send(oppgave)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Spark));

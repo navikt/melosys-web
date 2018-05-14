@@ -3,11 +3,11 @@ import { KodeverkOperations } from './ducks/kodeverk/';
 
 
 export default function loadInitialData(store) {
-  store.dispatch(saksbehandlerOperations.hentSaksbehandler())
+  store.dispatch(saksbehandlerOperations.hent())
     .then(response => {
       if (response.type === saksbehandlerTypes.OK) {
-        store.dispatch(KodeverkOperations.hentKodeverk());
+        store.dispatch(KodeverkOperations.hent());
       }
     });
-  store.dispatch(KodeverkOperations.hentKodeverk());
+  store.dispatch(KodeverkOperations.hent());
 }
