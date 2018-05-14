@@ -98,20 +98,32 @@ export const getCookie = name => {
   return match !== null ? match[1] : '';
 };
 
+const getCacheTS = cacheKey => `${cacheKey}:ts`;
+const getCachedItem = cacheKey => localStorage.getItem(cacheKey);
+const getCachedItemTS = cacheKey => localStorage.getItem(getCacheTS(cacheKey));
+const removeCachedItem = cacheKey => {
+  localStorage.removeItem(cacheKey);
+  localStorage.removeItem(getCacheTS(cacheKey));
+};
+const setCachedItem = (cacheKey, content) => {
+  localStorage.setItem(cacheKey, content);
+  localStorage.setItem(getCacheTS(cacheKey), Date.now());
+};
+
 const cachedFetch = (url, cacheDurationSec) => {
   // Use the URL as the cache key to sessionStorage
   const cacheKey = url;
-  const cached = localStorage.getItem(cacheKey);
-  const cacheTS = `${cacheKey}:ts`;
-  const whenCached = localStorage.getItem(cacheTS);
-  if (cached !== null && whenCached !== null) {
+
+  const cachedItem = getCachedItem(cacheKey);
+  const whenCached = getCachedItemTS(cacheKey);
+  if (cachedItem !== null && whenCached !== null) {
     // it was in sessionStorage!
     // Even though 'whenCached' is a string, this operation
     // works because the minus sign tries to convert the
     // string to an integer and it will work.
     const age = (Date.now() - whenCached) / 1000;
     if (age < cacheDurationSec) {
-      const response = new Response(new Blob([cached]));
+      const response = new Response(new Blob([cachedItem]));
       console.log('cacheresponse', response); // eslint-disable-line no-console
       // --------------------------------------------
       // Return cached content
@@ -121,8 +133,7 @@ const cachedFetch = (url, cacheDurationSec) => {
     // --------------------------------------------
     // We need to clean up this old key, before fetching fresh data
     console.log('Delete/invalidate cache, due to stale cacheDuration'); // eslint-disable-line no-console
-    localStorage.removeItem(cacheKey);
-    localStorage.removeItem(cacheTS);
+    removeCachedItem(cacheKey);
   }
 
   // --------------------------------------------
@@ -161,16 +172,13 @@ const cachedFetch = (url, cacheDurationSec) => {
         // If we don't clone the response, it will be
         // consumed by the time it's returned. This
         // way we're being un-intrusive.
-        if (!localStorage.getItem(cacheKey)) {
-          console.log('Insert fresh content into cache', url); // eslint-disable-line no-console
-        } else {
-          console.log('Remove and update cache key', cacheKey); // eslint-disable-line no-console
-          localStorage.removeItem(cacheKey);
-          localStorage.removeItem(cacheTS);
+        if (localStorage.getItem(cacheKey)) {
+          console.log('Remove cache item', cacheKey); // eslint-disable-line no-console
+          removeCachedItem(cacheKey);
         }
+        console.log('Insert fresh content into cache item', url); // eslint-disable-line no-console
         response.clone().text().then(content => {
-          localStorage.setItem(cacheKey, content);
-          localStorage.setItem(cacheTS, Date.now());
+          setCachedItem(cacheKey, content);
         });
       }
     }
