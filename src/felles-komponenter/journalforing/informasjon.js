@@ -76,7 +76,7 @@ class Informasjon extends Component {
     const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
 
-    const dokumentURI = Api.Dokumenter.hentPdfURI(journalpostID, dokumentID);
+    const dokumentURI = Api.Dokumenter.pdfURI(journalpostID, dokumentID);
 
     return (
       <div className="informasjon">
