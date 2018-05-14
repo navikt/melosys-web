@@ -98,6 +98,70 @@ export const getCookie = name => {
   return match !== null ? match[1] : '';
 };
 
+const cachedFetch = (url, options) => {
+  let expiry = 5 * 60 // 5 min default
+  if (typeof options === 'number') {
+    expiry = options
+    options = undefined
+  } else if (typeof options === 'object') {
+    // I hope you didn't set it to 0 seconds
+    expiry = options.seconds || expiry
+  }
+  // Use the URL as the cache key to sessionStorage
+  let cacheKey = url
+  let cached = localStorage.getItem(cacheKey)
+  let whenCached = localStorage.getItem(cacheKey + ':ts')
+  if (cached !== null && whenCached !== null) {
+    // it was in sessionStorage!
+    // Even though 'whenCached' is a string, this operation
+    // works because the minus sign tries to convert the
+    // string to an integer and it will work.
+    let age = (Date.now() - whenCached) / 1000
+    if (age < expiry) {
+      let response = new Response(new Blob([cached]))
+      console.log('cacheresponse', response);
+      // --------------------------------------------
+      // Return cached content
+      console.log('cache hit for ', url);
+      return Promise.resolve(response).then(toJson)
+    } else {
+      // We need to clean up this old key
+      console.log('Delete/invalidate cache, due to stale cacheDuration');
+      localStorage.removeItem(cacheKey)
+      localStorage.removeItem(cacheKey + ':ts')
+    }
+  }
+
+  return fetch(url, options).then(response => {
+    // let's only store in cache if the content-type is
+    // JSON or something non-binary
+    if (response.status === 200) {
+      let ct = response.headers.get('Content-Type')
+      if (ct && (ct.match(/application\/json/i) || ct.match(/text\//i))) {
+        // There is a .json() instead of .text() but
+        // we're going to store it in sessionStorage as
+        // string anyway.
+        // If we don't clone the response, it will be
+        // consumed by the time it's returned. This
+        // way we're being un-intrusive.
+        if (!localStorage.getItem(cacheKey)) {
+          console.log('Insert fresh content into cache', url);
+        }
+        else {
+          console.log('Remove and update cache key', cacheKey);
+          localStorage.removeItem(cacheKey)
+          localStorage.removeItem(cacheKey + ':ts')
+        }
+        response.clone().text().then(content => {
+          localStorage.setItem(cacheKey, content)
+          localStorage.setItem(cacheKey + ':ts', Date.now())
+        })
+      }
+    }
+    return response
+  }).then(toJson);
+};
+
 export function fetchToJson(url, config = {}) {
   /*
 if (config.headers) {
@@ -141,6 +205,10 @@ function methodToJson(method, url, data) {
   }
 
   return fetchToJson(url, fetchConfig);
+}
+export function cachedGetAsJson(url, retention) {
+  const cacheDuration = retention ?  retention : 60;
+  return cachedFetch(url, cacheDuration);
 }
 export function getAsJson(url) {
   return methodToJson('GET', url);

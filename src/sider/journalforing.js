@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { reduxForm, autofill, setSubmitFailed } from 'redux-form';
+import { reduxForm, autofill, setSubmitFailed, change } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 
@@ -8,17 +8,16 @@ import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import * as MPT from '../proptypes';
 import * as Konstanter from '../constants';
+import Sticky from '../hjelpekomponenter/sticky';
 
 import { formatterDatoTilNorsk } from '../utils/dato';
-
-import Sticky from '../hjelpekomponenter/sticky';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
-import JournalforingValidering from '../felles-komponenter/skjema/validering/journalforing';
+import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
 
 import {
   journalforingOperations,
@@ -45,29 +44,27 @@ import './journalforing.css';
 class Journalforing extends Component {
   static propTypes = {
     match: PT.object.isRequired,
+    history: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
-    hentRelevanteFagsaker: PT.func.isRequired,
+    hentFagsakListe: PT.func.isRequired,
     tilordneSak: PT.func.isRequired,
     opprettNySak: PT.func.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
-    history: PT.object.isRequired,
-    autofyllFormFelt: PT.func.isRequired,
-    triggeFeltFeil: PT.func.isRequired,
+    settAutofyllFelt: PT.func.isRequired,
+    settFeilFelt: PT.func.isRequired,
+    settBrukerSomAvsender: PT.func.isRequired,
+    settJournalforingHensikt: PT.func.isRequired,
     journalforing: PT.object,
-    journalpostID: PT.string,
-    saksTyper: PT.array,
-    fagsakListe: PT.array,
     journalforingSkjemaVerdier: PT.object,
+    fagsakListe: PT.array,
     valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
     valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
-    settBrukerSomAvsender: PT.func.isRequired,
+    valid: PT.bool.isRequired,
   };
 
   static defaultProps = {
     journalforing: {},
-    journalpostID: '',
-    saksTyper: [],
     fagsakListe: [],
     journalforingSkjemaVerdier: {},
   };
@@ -116,11 +113,11 @@ class Journalforing extends Component {
 
     // Hent fagsaker som er knyttet til brukeren, men bare dersom lengden matcher fnr eller dnr.
     if (nyBrukerIDFraSkjema.length === Konstanter.ANTALL_TALL_I_DNR || nyBrukerIDFraSkjema.length === Konstanter.ANTALL_TALL_I_FNR) {
-      this.props.hentRelevanteFagsaker(nyBrukerIDFraSkjema);
+      this.props.hentFagsakListe(nyBrukerIDFraSkjema);
     }
   }
 
-  /** Vi ønsker bare å gjøre et søk dersom antall tegn matcher 11 (fnr og dnr).
+  /** Vi ønsker kun å gjøre et søk på brukerID dersom antall tegn matcher 11 (fnr og dnr).
    * derfor, sjekk dette før vi evt kaller sokFnrDnr.
    * @param value {string} Verdien vi ønsker å sjekke på.
    */
@@ -133,7 +130,7 @@ class Journalforing extends Component {
     sokFnrDnr(value).then(({ sammensattNavn = '' }) => preAutofyll('brukerID', 'brukerNavn', sammensattNavn));
   };
 
-  /** Vi ønsker bare å gjøre et søk dersom antall tegn matcher enten 9 (orgnr) eller 11 (fnr og dnr).
+  /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller 11 (fnr og dnr).
    * Avsender kan nemlig være både person og organisasjon.
    * Derfor, sjekk dette før vi evt kaller sokOrgnr eller sokFnrDnr.
    * @param value {string} Verdien vi ønsker å sjekke på.
@@ -152,34 +149,46 @@ class Journalforing extends Component {
   };
 
   /** Mellomfunksjon som fyller ut treffet i brukerNavn eller avsenderNavn,
-   * uavhengig om faktisk verdi eller bare ''. I tillegg validerer skjemaet på disse feltene
-   * for å sjekke at de er korrekt. For å validere på ikke-treff gjør vi en eksplissit validering
-   * hvor vi antar at (1) noe er tastet inn i ID-feltet og (2) navn-feltet er tomt. Ergo fant vi ingenting og
-   * kan vise feilmelding i ID-feltet.
+   * uavhengig om faktisk verdi eller bare ''.
    * @param opprinnelsesFelt {string} Det feltet som brukeren tastet inn (stort sett er dette ID-feltet)
    * @param verdiFelt {string} Feltet som den funnene verdien skal settes inn i.
    * @param verdi {string} Selve verdien som ble funnet.
    */
   preAutofyll = (opprinnelsesFelt, verdiFelt, verdi) => {
-    const { autofyllFormFelt } = this.props;
-    this.props.triggeFeltFeil(opprinnelsesFelt);
-    autofyllFormFelt(verdiFelt, verdi);
+    const { settAutofyllFelt } = this.props;
+    settAutofyllFelt(verdiFelt, verdi);
   };
 
+  /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
+   * funksjoner. Allikevel trenger vi en default handler som Redux Form hekter på gjennom <form onsubmit="" .../>
+   * @param event
+   */
   overstyrSubmit = event => {
     event.preventDefault();
   };
 
+  /** Selv om saksbehandler velger å avbryte journalføringsoppgaven vil den fortsatt ligge
+   * i "Mine Oppgaver"-listen. Vi trenger derfor ikke å gi noen melding til backend om at
+   * noe er avbrutt - kun redirecte til forsiden.
+   */
   avbrytJournalforing = () => {
     this.props.history.push('/');
   };
 
-  plukkJournalDocParams = () => {
+  /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
+   * settes inn i skjemaet kun til info - ikke til endring.
+   * Derfor må vi bygge opp og evt vaske et nytt objekt som kan sendes til backend.
+   *
+   * @returns {object} Objektet som skal sendes videre som payload.
+   */
+  vaskDokumentInformasjon = () => {
     const { oppgaveID, journalpostID } = this.props.match.params;
-    const { journalforing, journalforingSkjemaVerdier } = this.props;
-    const { brukerID, avsenderID } = journalforing;
-    const { dokumentTittel, vedleggsTitler = [] } = journalforingSkjemaVerdier;
-    const jfdoc = {
+    const { journalforingSkjemaVerdier } = this.props;
+    const {
+      brukerID, avsenderID, dokumentTittel, vedleggsTitler = [],
+    } = journalforingSkjemaVerdier;
+
+    return {
       journalpostID,
       oppgaveID,
       brukerID,
@@ -187,62 +196,91 @@ class Journalforing extends Component {
       dokumenttittel: dokumentTittel,
       vedleggstitler: vedleggsTitler,
     };
-    return jfdoc;
   };
+
+  /** Når saksbehandler klikker "knytt til eksisterende sak" skal det åpnes for validering av
+   * relevante felter før saken tilordnes (sendes til API) og saksbehandler returneres til forsiden.
+   * @returns {boolean}
+   */
   knyttTilEksisterendeSak = () => {
-    const { journalforingSkjemaVerdier: { saksnummer }, tilordneSak } = this.props;
-    // TODO validate response before redirect
-    /* eslint-disable */
-    const jfdoc = this.plukkJournalDocParams();
-    jfdoc.saksnummer = saksnummer;
-    console.log('jfdoc', jfdoc);
+    const {
+      journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
+    } = this.props;
+    const vasketJournalforing = { ...this.vaskDokumentInformasjon(), saksnummer };
 
-    if (saksnummer === undefined) return false;
+    settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
 
-    tilordneSak(jfdoc).then(response => {
+    // Manuell sjekk på validering og hensikt for å omgå race condition via props.
+    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.KNYTT)) {
+      settFeilFelt('vedleggsTitler', 'saksnummer');
+      return false;
+    }
+
+    tilordneSak(vasketJournalforing).then(response => {
       if (response.length === 0) {
         history.push('/');
       }
-    })
+    });
 
     return true;
   };
 
-  opprettNyFagsakSubmit = event => {
-    event.preventDefault();
-    const { journalforingSkjemaVerdier, opprettNySak, history } = this.props;
+  /** Når saksbehandler klikker "opprett sak" skal det åpnes for validering av
+   * relevante felter før ny sak opprettes (sendes til API) og saksbehandler returneres til forsiden.
+   * @returns {boolean}
+   */
+  opprettFagsak = () => {
+    const {
+      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
+    } = this.props;
     const {
       journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
 
+    settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
+
+    // Manuell sjekk på validering og hensikt for å omgå race condition via props.
+    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.OPPRETT)) {
+      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingOppholdsLand');
+      return false;
+    }
+
+
     const fagsak = {
-      type: 'EU_EOS',
       soknadsperiode: {
         fom: journalforingPeriodeFraOgMed,
         tom: journalforingPeriodeTilOgMed,
       },
       land: journalforingOppholdsLand,
     };
-    const jfdoc = this.plukkJournalDocParams();
-    jfdoc.fagsak = fagsak;
-    opprettNySak(jfdoc).then(response => {
+
+    const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
+
+    opprettNySak(journalforingData).then(response => {
       if (response.length === 0) {
         history.push('/');
       }
     });
+
+    return true;
   };
 
   render() {
     const {
-      journalforing, valgbareDokumentTitler, valgbareVedleggsTitler, journalforingSkjemaVerdier, fagsakListe,
+      journalforing,
+      journalforing: { dokument = {} },
+      valgbareDokumentTitler,
+      valgbareVedleggsTitler,
+      journalforingSkjemaVerdier,
+      fagsakListe,
     } = this.props;
+
     const {
-      knyttTilEksisterendeSak, opprettNyFagsakSubmit, hentAvsender, hentBruker,
+      knyttTilEksisterendeSak, opprettFagsak, hentAvsender, hentBruker,
     } = this;
 
     const { journalpostID } = this.props.match.params;
-    const { dokument = {} } = journalforing;
-    const dokumentID = dokument.ID ? `${dokument.ID}` : undefined;
+    const { ID: dokumentID } = dokument;
 
     return (
       <div className="journalforing">
@@ -263,7 +301,7 @@ class Journalforing extends Component {
                         valgbareVedleggsTitler={valgbareVedleggsTitler}
                       />
                       <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
-                      <OpprettNyFagSak opprettNyFagsakSubmit={opprettNyFagsakSubmit} />
+                      <OpprettNyFagSak opprettFagsak={opprettFagsak} />
                       <div className="journalforing__fotknapper">
                         <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
                       </div>
@@ -284,8 +322,6 @@ class Journalforing extends Component {
 
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
-  saksTyper: KodeverkSelectors.sakstyperSelector(state),
-  pdfDokument: journalforingSelectors.JournalforingDokument(state).url,
   valgbareDokumentTitler: KodeverkSelectors.dokumenttitlerSelector(state),
   valgbareVedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
@@ -302,17 +338,18 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
-  autofyllFormFelt: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
-  triggeFeltFeil: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
-  sokFnrDnr: fnr => PersonOperations.hent(fnr),
-  sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
-  opprettNySak: data => Api.Journalforing.opprett(data),
-  tilordneSak: data => Api.Journalforing.tilordne(data),
-  hentRelevanteFagsaker: fnr => dispatch(fagsakOperations.sok(fnr)),
+  hentFagsakListe: fnr => dispatch(fagsakOperations.sok(fnr)),
+  settAutofyllFelt: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
+  settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
   settBrukerSomAvsender: (ID, navn) => {
     dispatch(autofill('journalforing', 'avsenderID', ID));
     dispatch(autofill('journalforing', 'avsenderNavn', navn));
   },
+  settJournalforingHensikt: journalforingHensikt => dispatch(change('journalforing', 'journalforingHensikt', journalforingHensikt)),
+  sokFnrDnr: fnr => PersonOperations.hent(fnr),
+  sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
+  opprettNySak: data => Api.Journalforing.opprett(data),
+  tilordneSak: data => Api.Journalforing.tilordne(data),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm({
@@ -320,6 +357,6 @@ export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: JournalforingValidering,
+  validate: journalforingValidering,
   onSubmit: () => {},
 })(Journalforing)));
