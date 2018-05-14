@@ -52,6 +52,7 @@ class Journalforing extends Component {
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
     settAutofyllFelt: PT.func.isRequired,
+    settFeltInnhold: PT.func.isRequired,
     settFeilFelt: PT.func.isRequired,
     settBrukerSomAvsender: PT.func.isRequired,
     settJournalforingHensikt: PT.func.isRequired,
@@ -206,7 +207,12 @@ class Journalforing extends Component {
     const {
       journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
+
+    const { resetOpprettFagsakFelter } = this;
+
     const vasketJournalforing = { ...this.vaskDokumentInformasjon(), saksnummer };
+
+    resetOpprettFagsakFelter();
 
     settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
 
@@ -233,9 +239,14 @@ class Journalforing extends Component {
     const {
       journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
+
+    const { resetEksisterendeSakerFelter } = this;
+
     const {
       journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
+
+    resetEksisterendeSakerFelter();
 
     settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
 
@@ -264,6 +275,18 @@ class Journalforing extends Component {
 
     return true;
   };
+
+  resetOpprettFagsakFelter = () => {
+    const { settFeltInnhold } = this.props;
+    settFeltInnhold('journalforingPeriodeFraOgMed', '');
+    settFeltInnhold('journalforingPeriodeTilOgMed', '');
+    settFeltInnhold('journalforingOppholdsLand', []);
+  }
+
+  resetEksisterendeSakerFelter = () => {
+    const { settFeltInnhold } = this.props;
+    settFeltInnhold('saksnummer', '');
+  }
 
   render() {
     const {
@@ -341,6 +364,7 @@ const mapDispatchToProps = dispatch => ({
   hentFagsakListe: fnr => dispatch(fagsakOperations.sok(fnr)),
   settAutofyllFelt: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change('journalforing', feltNavn, verdi)),
   settBrukerSomAvsender: (ID, navn) => {
     dispatch(autofill('journalforing', 'avsenderID', ID));
     dispatch(autofill('journalforing', 'avsenderNavn', navn));
