@@ -277,7 +277,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   oppdaterFaktaavklaringState: skjema => dispatch(faktaavklaringOperations.oppdaterFaktaavklaringState(skjema)),
-  hentVurdering: behandlingID => dispatch(vurderingOperations.hentVurdering(behandlingID)),
+  hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));

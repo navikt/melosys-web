@@ -11,16 +11,38 @@ import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
 
-// Action Creators
-export function hentMineSaker() {
-  return doThenDispatch(() => Api.hentOppgaveOversikt(), {
+/**
+ * Soknads sok
+ * @param fnr
+ * @returns {*}
+ */
+export function sok(fnr) {
+  return doThenDispatch(() => Api.Oppgaver.sok(fnr), {
+    OK: Types.SOK_OK,
+    FEILET: Types.SOK_FEILET,
+    PENDING: Types.SOK_PENDING,
+  });
+}
+
+/**
+ * Hent Soknad
+ * @returns {*}
+ */
+export function hent() {
+  return doThenDispatch(() => Api.Oppgaver.oversikt(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function oppgavePlukker(oppgavetype, checkboxliste) {
+/**
+ * Send soknad
+ * @param oppgavetype
+ * @param checkboxliste
+ * @returns {Promise|*|Function|PromiseLike<string>|Promise<string>}
+ */
+export function send(oppgavetype, checkboxliste) {
   const keys = Object.keys(checkboxliste);
   const behandlingstyper = ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'].filter(key => keys.includes(key));
   const sakstyper = ['EU_EOS', 'TRG_AVT', 'FLK_TRG'].filter(key => keys.includes(key));
@@ -30,7 +52,7 @@ export function oppgavePlukker(oppgavetype, checkboxliste) {
     behandlingstyper,
   };
 
-  return Api.sendPlukkOppgave(oppgave).then(response => {
+  return Api.Oppgaver.send(oppgave).then(response => {
     const { saksnummer, oppgaveID, journalpostID } = response;
     const saksbehandling = `/saksbehandling/${saksnummer}`;
     const journalforing = `/journalforing/${oppgaveID}/${journalpostID}`;

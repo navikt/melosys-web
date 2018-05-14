@@ -135,8 +135,11 @@ class CustomLandVelger extends Component {
   }
 
   render () {
-    const { landkoder, label } = this.props;
-    const { fields, multiLand } = this.props;
+    const {
+      landkoder, label, fields, multiLand, meta,
+    } = this.props;
+
+    const feil = (meta.invalid && (this.state.touched || meta.submitFailed) && !this.state.active) ? { feilmelding: meta.error } : null;
 
     const valgteLand = fields.getAll() || [];
 
@@ -148,6 +151,7 @@ class CustomLandVelger extends Component {
             list="alleLand"
             label={label}
             bredde="XXL"
+            feil={feil}
             className="landliste__linje__input"
             value={this.state.inputVerdi}
             onBlur={this.fokusUtHandler}
@@ -191,6 +195,7 @@ CustomLandVelger.propTypes = {
   multiLand: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string.isRequired,
+  meta: PT.object.isRequired,
 };
 
 /** Dette er bootstrapper-komponenten som eksponeres utenfor pakken. Komponenten forventer et feltNavn for å kunne vite

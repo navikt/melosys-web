@@ -13,16 +13,16 @@ import * as Types from './types';
  */
 
 // Action Creators
-export function hentSoknad(behandlingID) {
-  return doThenDispatch(() => Api.hentSoknader(behandlingID), {
+export function hent(behandlingID) {
+  return doThenDispatch(() => Api.Soknader.hent(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function sendSoknad(bid, soknad) {
-  return doThenDispatch(() => Api.sendSoknad(bid, soknad), {
+export function send(bid, soknad) {
+  return doThenDispatch(() => Api.Soknader.send(bid, soknad), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
