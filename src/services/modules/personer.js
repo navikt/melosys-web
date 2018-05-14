@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '../api-constants';
 
-import { getAsJson, cachedGetAsJson } from '../utils';
+import { cachedGetAsJson } from '../utils';
 
 // eslint-disable-next-line import/prefer-default-export
 export function hentPerson(fnrdnr) {
