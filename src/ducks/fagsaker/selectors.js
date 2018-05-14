@@ -14,6 +14,11 @@ export const OrganisasjonerSelector = createSelector(
   organisasjoner => organisasjoner || []
 );
 
+export const FagsakSokSelector = createSelector(
+  state => (state.fagsaker.data.fagsakListe ? state.fagsaker.data.fagsakListe : []),
+  fagsakListe => fagsakListe || []
+);
+
 /**
  * INNTEKT
  * ---------------------------------------------------------------------------------------

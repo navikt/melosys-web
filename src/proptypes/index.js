@@ -20,8 +20,7 @@ import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger }
 import { Opphold } from './opphold';
 import { Sysselsetting } from './sysselsetting';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
-import { SakEnkeltLinje, JournalForingEnkeltLinje, MineOppgaver } from './oppgaver';
-import { SokBehandlingsOppgave, SokBehandlingsOppgaver } from './sokbehandlingsoppgave';
+import { SakEnkeltLinje, JournalForingEnkeltLinje, MineOppgaver, OppgaveSok, OppgaverSok } from './oppgaver';
 import { Journalforing } from './journalforing';
 
 export {
@@ -59,8 +58,8 @@ export {
   Person,
   SakEnkeltLinje,
   Saksbehandler,
-  SokBehandlingsOppgave,
-  SokBehandlingsOppgaver,
+  OppgaveSok,
+  OppgaverSok,
   SoknadForm,
   Sysselsetting,
   TimerTimelonnet,

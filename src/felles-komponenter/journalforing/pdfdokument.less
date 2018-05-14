@@ -14,12 +14,16 @@
   display: block;
   position: relative;
 
-  .pdfviser__paginering {
-    position: sticky;
-    top: 20px;
-    background-color: @gray;
-    padding: 0.5em;
-    border-radius: 3px;
-    z-index: 2000;
+  .pdfviser__side {
+    border-bottom: 4px dotted @gray-dark;
+  }
+
+  .pdfviser__side:last-of-type {
+    border-bottom: 0px;
+  }
+
+  .pdfviser__sideinfo {
+    text-align:center;
+    margin: 0 0 1em 0;
   }
 }
