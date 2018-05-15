@@ -29,6 +29,7 @@ import VurderingInngang from './vurderinger/vurderingInngang';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { vurderingOperations } from '../../ducks/vurdering/';
+import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { faktaavklaringSelectors, faktaavklaringOperations } from '../../ducks/faktaavklaring/';
 import { formSelectors } from '../../ducks/form/';
 
@@ -36,6 +37,9 @@ import './vilkarsveileder.css';
 
 class Vilkarsveileder extends Component {
   componentWillMount() {
+    const { snr } = this.props.match.params;
+    this.props.hentInngang(snr);
+
     this.setState({
       aktivtStegNummer: 0,
       aktuelleSteg: [],
@@ -43,7 +47,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'INNGANG',
           komponent: VurderingInngang,
-          dataHenter: props => ({ inngangsvilkar: props.faktaavklaring.inngang }),
+          dataHenter: props => ({ inngangsvilkar: props.inngang }),
           handlers: {
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
@@ -246,21 +250,25 @@ class Vilkarsveileder extends Component {
 
 Vilkarsveileder.propTypes = {
   history: PT.object.isRequired,
+  match: PT.object.isRequired,
   arbeidsforholdene: MPT.Arbeidsforholdene,
   relevanteArbeidsforholdene: MPT.Arbeidsforholdene,
   fattVedtakHandler: PT.func.isRequired,
   beOmVurderingHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   faktaavklaring: PT.object,
+  inngang: PT.object,
   skjema: PT.object.isRequired,
   valgteArbeidsforhold: PT.array,
   oppdaterFaktaavklaringState: PT.func.isRequired,
   hentVurdering: PT.func.isRequired,
+  hentInngang: PT.func.isRequired,
 };
 
 Vilkarsveileder.defaultProps = {
   oppsummering: [],
   faktaavklaring: {},
+  inngang: {},
   arbeidsforholdene: [],
   relevanteArbeidsforholdene: [],
   valgteArbeidsforhold: {},
@@ -269,6 +277,7 @@ Vilkarsveileder.defaultProps = {
 const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state).faktaavklaring,
+  inngang: inngangSelectors.InngangSelector(state),
   valgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   arbeidsforholdene: fagsakSelectors.ArbeidsforholdeneSelector(state),
   relevanteArbeidsforholdene: faktaavklaringSelectors.RelevanteArbeidsforholdeneSelector(state),
@@ -278,6 +287,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   oppdaterFaktaavklaringState: skjema => dispatch(faktaavklaringOperations.oppdaterFaktaavklaringState(skjema)),
   hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
+  hentInngang: snr => dispatch(inngangOperations.hent(snr)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));
