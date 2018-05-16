@@ -1,18 +1,20 @@
 import React from 'react';
 import PT from 'prop-types';
+import * as MPT from '../../../proptypes/';
 import * as Nav from '../../../utils/navFrontend';
 
 import './vurderingVedtak.css';
 
 const VurderingInngang = props => {
-  const { bekreftOgFortsett } = props;
+  const { bekreftOgFortsett, inngangsvilkar } = props;
+  const { vurdering: { term = '' } } = inngangsvilkar;
 
   return (
     <div className="inngang vedtak">
       <Nav.Fieldset legend="Inngangsvilkår">
         <ul className="betingelser__liste">
           <li className="liste__element liste__element--oppfylt">
-            Søknaden oppfyller inngangsvilkårene for EU/EØS-saker, etter forordning 883/2004.
+            { term }
           </li>
         </ul>
       </Nav.Fieldset>
@@ -25,7 +27,9 @@ const VurderingInngang = props => {
 
 VurderingInngang.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  inngangsvilkar: PT.shape({
+    vurdering: MPT.Kodeverk,
+  }).isRequired,
 };
-
 
 export default VurderingInngang;
