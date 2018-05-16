@@ -16,11 +16,11 @@ class Sticky extends Component {
     const { stickyDOM } = this;
     this.settInnledendeHoyde(stickyDOM);
 
-    document.addEventListener('scroll', this.scrollHandler);
+    window.addEventListener('scroll', this.scrollHandler);
   }
 
   componentWillUnmount() {
-    document.removeEventListener('scroll', this.scrollHandler);
+    window.removeEventListener('scroll', this.scrollHandler);
   }
 
   /** Setter høydeplassering til elementet ved oppstart. Dette trenger vi for
@@ -31,15 +31,21 @@ class Sticky extends Component {
     this.stickyStartY = element.getBoundingClientRect().top;
   };
 
+  /** For å unngå at journalføringsskjemaet havner under folden (gjør scrolling vanskeligere), må vi sette
+   * høyden innenfor viewport. Gjøres ved å kalkulere 100vh minus topp-plassering av skjemaet.
+   */
   scrollHandler = () => {
     const { stickyDOM, stickyStartY } = this;
     const scrollTopp = document.documentElement.scrollTop || document.body.scrollTop;
-
     if (scrollTopp >= stickyStartY) {
       stickyDOM.classList.add('erSticky');
     } else {
       stickyDOM.classList.remove('erSticky');
     }
+
+    const scrollContainer = document.getElementsByClassName('journalforing__skjema__scroll')[0];
+    const skjemaScrollTopp = scrollContainer.getBoundingClientRect().y;
+    scrollContainer.style.height = `calc(100vh - ${Math.round(skjemaScrollTopp + 20)}px)`;
   }
 
   render() {

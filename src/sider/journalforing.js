@@ -28,13 +28,9 @@ import {
   fagsakSelectors,
 } from '../ducks/fagsaker';
 
-import {
-  KodeverkSelectors,
-} from '../ducks/kodeverk/';
+import { KodeverkSelectors } from '../ducks/kodeverk/';
 
-import {
-  formSelectors,
-} from '../ducks/form/';
+import { formSelectors } from '../ducks/form/';
 
 import { PersonOperations } from '../ducks/person';
 import { OrganisasjonOperations } from '../ducks/organisasjon';
