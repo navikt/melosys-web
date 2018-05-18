@@ -51,6 +51,7 @@
     "react": "^16.2.0",
     "react-collapse": "^4.0.3",
     "react-dom": "^16.2.0",
+    "react-editable-json-tree": "^2.2.0",
     "react-highcharts": "^16.0.2",
     "react-maskedinput": "^4.0.0",
     "react-motion": "^0.5.2",
