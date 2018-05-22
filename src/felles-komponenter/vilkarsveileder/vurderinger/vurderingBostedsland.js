@@ -10,8 +10,27 @@ export const VurderingBostedslandTyper = {
   ANNET: 'ANNET',
 };
 
+const TipsBostedsvurderingYrkesaktiv = () => (
+  <ul>
+    <li>Sjekk om søker har aktivitet i Norge</li>
+    <li>Sjekk bostedsadressen er troverdig</li>
+    <li>Sjekk om ektefelle har ekte fødselsnummer eller d-nummer</li>
+    <li>Sjekk opplysninger om EØS-barnetrygd i Gosys</li>
+  </ul>
+);
+
+const TipsBostedsvurderingIkkeYrkesaktiv = () => (
+  <ul>
+    <li>Sjekk bostedsadressen er troverdig</li>
+    <li>Sjekk om ektefelle har ekte fødselsnummer eller d-nummer</li>
+    <li>Sjekk opplysninger om EØS-barnetrygd i Gosys</li>
+  </ul>
+);
+
+
 const VurderingBostedsland = props => {
-  const { bekreftOgFortsett } = props;
+  const { bekreftOgFortsett, tilstand } = props;
+  const { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv } = tilstand;
 
   return (
     <div>
@@ -21,12 +40,8 @@ const VurderingBostedsland = props => {
           Vennligst fyll ut panelet &quot;opplysninger om bosted&quot; med informasjon fra søknaden.
         </p>
         <Nav.Element>Tips for manuell bostedsvurdering:</Nav.Element>
-        <ul>
-          <li>Sjekk om søker har aktivitet i Norge</li>
-          <li>Sjekk bostedsadressen er troverdig</li>
-          <li>Sjekk om ektefelle har ekte fødselsnummer eller d-nummer</li>
-          <li>Sjekk opplysninger om EØS-barnetrygd i Gosys</li>
-        </ul>
+        {visTipsForYrkesaktiv && <TipsBostedsvurderingYrkesaktiv />}
+        {visTipsForIkkeYrkesaktiv && <TipsBostedsvurderingIkkeYrkesaktiv />}
       </div>
       <Nav.Fieldset legend="Bostedsland er:">
         <Skjema.Radio feltNavn="faktaavklaringBostedINorge" value={VurderingBostedslandTyper.NORGE} label="Norge" />
