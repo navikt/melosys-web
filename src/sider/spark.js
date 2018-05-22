@@ -157,7 +157,7 @@ class Spark extends Component {
 
         <div className="spark__gruppe">
           <h1>Populere eller oppdatere søknad</h1>
-          <p className="spark__gruppe__forklaring"><span>!</span>Legg inn hele JSON-objektet for søknaden og tast inn behandlingID for å teste lagring av søknaden og knytte den til en faktisk sak.</p>
+          <p className="spark__gruppe__forklaring"><span>!</span>Tast inn fødselsnummer først. Dersom behandlingen finnes, men har en ikke-registrert papirsøknad vil en ny søknadstemplate bli brukt.</p>
           <h2>1. Hent eksisterende søknad via fnr</h2>
           <form onSubmit={this.hentSisteSoknad}>
             <label>fnr:</label>
