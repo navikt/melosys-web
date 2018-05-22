@@ -57,11 +57,7 @@ export default function reducer(state = initialState, action) {
         sektor: {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
-        bostedsland: {
-          bekrefterFamiliebosted: dokument.faktaavklaringBekrefterFamiliebosted,
-          bekrefterDisponering: dokument.faktaavklaringBekrefterDisponering,
-          bostedsland: dokument.faktaavklaringBostedsland,
-        },
+        bostedsland: dokument.faktaavklaringBostedsland,
         yrkesaktivitetFordeling: {
           antallLand: dokument.faktaavklaringAntallLand,
         },

@@ -61,9 +61,9 @@ class TilstandsLogikk {
         return {};
       }
       case STEG.BOSTEDSLAND: {
-        const { faktaavklaringSysselsettingType, faktaavklaringBostedINorge } = skjema;
+        const { faktaavklaringSysselsettingType, faktaavklaringBostedslandSnarvei } = skjema;
 
-        const tilstandsObjekt = { visBostedslandVelger: faktaavklaringBostedINorge === VurderingBostedslandTyper.ANNET };
+        const tilstandsObjekt = { visBostedslandVelger: faktaavklaringBostedslandSnarvei === VurderingBostedslandTyper.ANNET };
 
         if (
           faktaavklaringSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG ||

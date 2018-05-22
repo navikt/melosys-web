@@ -53,8 +53,13 @@ export const FaktaavklaringVirksomhetSelector = createSelector(
 );
 
 export const FaktaavklaringBostedslandSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bostedsland : {}),
-  bostedsland => bostedsland || {}
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bostedsland : []),
+  bostedsland => bostedsland
+);
+
+export const FaktaavklaringBostedslandSnarveiSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bostedsland : []),
+  bostedsland => (bostedsland.includes('NO') ? 'NORGE' : 'ANNET')
 );
 
 export const FaktaavklaringTjenestemannSelector = createSelector(
