@@ -27,8 +27,15 @@ export function send(bid, dokument) {
   });
 }
 
-export function bosted(bid, data) {
-  return doThenDispatch(() => Api.Faktaavklaring.bosted(bid, data), {
+export function hentBosted(behandlingID) {
+  return doThenDispatch(() => Api.Faktaavklaring.hentBosted(behandlingID), {
+    OK: Types.OK_BOSTED,
+    FEILET: Types.FEILET_BOSTED,
+    PENDING: Types.PENDING_BOSTED,
+  });
+}
+export function sendBosted(bid, data) {
+  return doThenDispatch(() => Api.Faktaavklaring.sendBosted(bid, data), {
     OK: Types.OK_BOSTED,
     FEILET: Types.FEILET_BOSTED,
     PENDING: Types.PENDING_BOSTED,
