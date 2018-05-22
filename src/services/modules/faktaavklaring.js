@@ -13,12 +13,17 @@ function send(bid, dokument) {
   return postAsJson(URI_FAKTAAVKLARING, dokument);
 }
 
-function bosted(bid, data) {
+function hentBosted(bid) {
+  const URI_FAKTAAVKLARING_BOSTED = `${API_BASE_URL}${endepunkt}/bosted/${bid}`;
+  return getAsJson(URI_FAKTAAVKLARING_BOSTED);
+}
+function sendBosted(bid, data) {
   const URI_FAKTAAVKLARING_BOSTED = `${API_BASE_URL}${endepunkt}/bosted/${bid}`;
   return postAsJson(URI_FAKTAAVKLARING_BOSTED, data);
 }
 export {
   hent,
   send,
-  bosted,
+  hentBosted,
+  sendBosted,
 };
