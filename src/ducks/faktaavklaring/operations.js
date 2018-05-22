@@ -26,3 +26,11 @@ export function send(bid, dokument) {
     PENDING: Types.PENDING,
   });
 }
+
+export function bosted(bid, data) {
+  return doThenDispatch(() => Api.Faktaavklaring.bosted(bid, data), {
+    OK: Types.OK_BOSTED,
+    FEILET: Types.FEILET_BOSTED,
+    PENDING: Types.PENDING_BOSTED,
+  });
+}
