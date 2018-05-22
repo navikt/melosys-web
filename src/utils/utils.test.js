@@ -1,12 +1,10 @@
 /* eslint-disable */
 import { fn, isJSON } from './utils';
 
-function foo () {
-}
-
 describe('Tester utils.js:', () => {
   describe('Tester at fn', () => {
-    test('validerer et argument som en funksjon.', () => {
+    test('parser et funksjonsargument som funksjon.', () => {
+      function foo () {}
       expect(fn(foo)).toBe(foo);
     });
   });
@@ -17,7 +15,7 @@ describe('Tester utils.js:', () => {
       expect(isJSON(testString)).toEqual(true);
     });
 
-    test('validerer en ikke-json-string false', () => {
+    test('validerer en ikke-json-string som false', () => {
       const testString = 'dette er ikke en json';
       expect(isJSON(testString)).toEqual(false);
     });
