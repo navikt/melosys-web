@@ -14,6 +14,4 @@ const JournalforingPropType = PT.shape({
   }),
 });
 
-export {
-  JournalforingPropType as Journalforing,
-};
+export { JournalforingPropType as Journalforing };

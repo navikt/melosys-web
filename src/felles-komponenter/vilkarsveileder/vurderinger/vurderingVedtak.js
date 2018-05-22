@@ -9,13 +9,9 @@ import { datoDiff } from '../../../utils/utils';
 
 import './vurderingVedtak.css';
 
-import {
-  vurderingSelectors,
-} from '../../../ducks/vurdering/';
+import { vurderingSelectors } from '../../../ducks/vurdering/';
 
-import {
-  faktaavklaringSelectors,
-} from '../../../ducks/faktaavklaring/';
+import { faktaavklaringSelectors } from '../../../ducks/faktaavklaring/';
 
 const uuid = require('uuid/v4');
 
