@@ -6,7 +6,8 @@ import * as Skjema from '../../skjema';
 import LandVelger from '../../skjema/landvelger/';
 
 export const VurderingBostedslandTyper = {
-  TRUE: 'true',
+  NORGE: 'NORGE',
+  ANNET: 'ANNET',
 };
 
 const VurderingBostedsland = props => {
@@ -15,24 +16,21 @@ const VurderingBostedsland = props => {
   return (
     <div>
       <div>
-        <Nav.Normaltekst>
-          Vurdering av bosted er en sammensatt vurdering. Som regel vil søker være bosatt på oppgitt adresse, men i noen tilfeller vil det være behov for nærmere undersøkelse.
-          Noen indikasjoner på at det bør gjøres nærmere undersøkelser er:
-        </Nav.Normaltekst>
+        <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
+        <p>
+          Vennligst fyll ut panelet &quot;opplysninger om bosted&quot; med informasjon fra søknaden.
+        </p>
+        <Nav.Element>Tips for manuell bostedsvurdering:</Nav.Element>
         <ul>
-          <li>Søker har D-nummer</li>
-          <li>Søker mottar eller har mottatt EØS-barnetrygd</li>
-          <li>Søker har oppgitt adresse i utlandet</li>
-          <li>Er bostedsadresse lik arbeidsgivers adresse?</li>
-          <li>Er det mange personer registrert på adressen?</li>
-          <li>Søker har ikke oppgitt aktivitet i landet der vedkommende har bostedsadresse</li>
+          <li>Sjekk om søker har aktivitet i Norge</li>
+          <li>Sjekk bostedsadressen er troverdig</li>
+          <li>Sjekk om ektefelle har ekte fødselsnummer eller d-nummer</li>
+          <li>Sjekk opplysninger om EØS-barnetrygd i Gosys</li>
         </ul>
       </div>
-      <Nav.Fieldset legend="Jeg bekrefter å ha vurdert:">
-        <Skjema.Checkbox feltNavn="faktaavklaringBekrefterFamiliebosted" value={VurderingBostedslandTyper.TRUE} label="Hvor søkers nærmeste familie bor" />
-        <Skjema.Checkbox feltNavn="faktaavklaringBekrefterDisponering" value={VurderingBostedslandTyper.TRUE} label="Hvor søker disponerer bolig" />
-      </Nav.Fieldset>
-      <Nav.Fieldset legend="Basert på dette vurderes bosted til:">
+      <Nav.Fieldset legend="Bostedsland er:">
+        <Skjema.Radio feltNavn="faktaavklaringBostedINorge" value={VurderingBostedslandTyper.NORGE} label="Norge" />
+        <Skjema.Radio feltNavn="faktaavklaringBostedINorge" value={VurderingBostedslandTyper.ANNET} label="Annet" />
         <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
