@@ -29,7 +29,7 @@ class Spark extends Component {
 
   state = {
     soknad: {
-      soknadDokument: {},
+      soknadDokument: '',
       behandlingID: 0,
     }
   }
@@ -88,12 +88,13 @@ class Spark extends Component {
         const firstHit = response.behandlinger[0] || {};
         const { oppsummering: { behandlingID }} = firstHit;
         return Api.Soknader.hent(behandlingID);
-
       })
       .then(response => {
-        this.setState({soknad: response });
+        const {soknadDokument = Mock.soknadDokument, behandlingID} = response;
+        const erNySoknad = response.soknadDokument === undefined;
+        this.setState({soknad: {soknadDokument, behandlingID, erNySoknad} });
       })
-      .catch(error => this.setState({soknad: { ...this.state.soknad, error } }));
+      .catch(error => this.setState({soknad: { soknadDokument: '', behandlingID: '', error } }));
   }
 
   updateSoknadJSON = data => {
@@ -103,7 +104,8 @@ class Spark extends Component {
 
   render() {
     const { nyfagsak, oppgave } = this.props;
-    const soknadDokument = this.state.soknadDokument || Mock.soknadDokument;
+    const soknadDokument = this.state.soknad.soknadDokument;
+    const { erNySoknad } = this.state.soknad;
 
     const { error = {} } = this.state.soknad;
     const { message: feilmelding = ''} = error;
@@ -164,6 +166,7 @@ class Spark extends Component {
             <input type="submit" value="Hent søknad" />
           </form>
           <h2>2. Rediger direkte i JSON-treet nedenfor</h2>
+          {erNySoknad && <p>Fant ingen eksisterende søknader på dette fødselsnummeret. Søknaden nedenfor er generert utifra en template.</p>}
           {!feilmelding && <JsonTree
             data={this.state.soknad.soknadDokument}
             rootName="soknadDokument"
@@ -179,7 +182,7 @@ class Spark extends Component {
             <textarea
               name="soknadBody"
               className="spark__soknad__body"
-              value={JSON.stringify({soknadDokument: this.state.soknad.soknadDokument})}
+              value={JSON.stringify({soknadDokument})}
               onChange={() => {}}
             />
             <input type="submit" value="Lagre søknad" />
