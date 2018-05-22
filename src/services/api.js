@@ -2,6 +2,7 @@ import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker';
 import * as Faktaavklaring from './modules/faktaavklaring';
 import * as Health from './modules/health';
+import * as Inngang from './modules/inngang';
 import * as Journalforing from './modules/journalforing';
 import * as Kodeverk from './modules/kodeverk';
 import * as Personer from './modules/personer';
@@ -30,6 +31,7 @@ export {
   Fagsaker,
   Faktaavklaring,
   Health,
+  Inngang,
   Journalforing,
   Kodeverk,
   Oppgaver,
