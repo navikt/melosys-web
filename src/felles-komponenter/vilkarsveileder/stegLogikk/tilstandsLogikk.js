@@ -60,8 +60,23 @@ class TilstandsLogikk {
         return {};
       }
       case STEG.BOSTEDSLAND: {
-        return {};
+        const { faktaavklaringSysselsettingType } = skjema;
+
+        if (
+          faktaavklaringSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG ||
+          faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER ||
+          faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG
+        ) {
+          return {
+            visTipsForYrkesaktiv: true,
+          };
+        }
+
+        return {
+          visTipsForIkkeYrkesaktiv: true,
+        };
       }
+
       case STEG.FORRETNINGSSTED: {
         return {};
       }
