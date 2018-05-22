@@ -7,6 +7,15 @@ import { soknadOperations } from '../ducks/soknad/';
 import { fagsakOperations } from '../ducks/fagsaker/';
 import { oppgaverOperations } from '../ducks/oppgaver';
 
+import {
+  JsonTree,
+  ADD_DELTA_TYPE,
+  REMOVE_DELTA_TYPE,
+  UPDATE_DELTA_TYPE,
+  DATA_TYPES,
+  INPUT_USAGE_TYPES,
+} from 'react-editable-json-tree'
+
 import * as Api from '../services/api';
 
 import * as Mock from '../debug/mock';
@@ -17,6 +26,13 @@ class Spark extends Component {
   static defaultProps = {
     nyfagsak: undefined,
   };
+
+  state = {
+    soknad: {
+      soknadDokument: '',
+      behandlingID: 0,
+    }
+  }
 
   soknadSubmit = event => {
     event.preventDefault();
@@ -53,8 +69,47 @@ class Spark extends Component {
     });
   }
 
+  hentSisteSoknad = event => {
+    event.preventDefault();
+    const fnr = event.target.fnr.value;
+
+    if (!fnr) return;
+
+    Api.Fagsaker.sok(fnr)
+      .then(response => {
+        if(response.length === 0) {
+          throw Error('Fant ingen treff på fødselsnummer. Har du husket å opprette fagsaken først?');
+        }
+        const firstHit = response[0] || {};
+        const { saksnummer } = firstHit;
+        return Api.Fagsaker.hent(saksnummer)
+      })
+      .then(response => {
+        const firstHit = response.behandlinger[0] || {};
+        const { oppsummering: { behandlingID }} = firstHit;
+        return Api.Soknader.hent(behandlingID);
+      })
+      .then(response => {
+        const {soknadDokument = Mock.soknadDokument, behandlingID} = response;
+        const erNySoknad = response.soknadDokument === undefined;
+        this.setState({soknad: {soknadDokument, behandlingID, erNySoknad} });
+      })
+      .catch(error => this.setState({soknad: { soknadDokument: '', behandlingID: '', error } }));
+  }
+
+  updateSoknadJSON = data => {
+    this.setState({soknad: {...this.state.soknad, soknadDokument: data}});
+    return true;
+  }
+
   render() {
     const { nyfagsak, oppgave } = this.props;
+    const soknadDokument = this.state.soknad.soknadDokument;
+    const { erNySoknad } = this.state.soknad;
+
+    const { error = {} } = this.state.soknad;
+    const { message: feilmelding = ''} = error;
+
     return (
       <div className="spark">
         <div className="spark__gruppe">
@@ -101,15 +156,36 @@ class Spark extends Component {
         </div>
 
         <div className="spark__gruppe">
-          <h1>Populere søknad manuelt</h1>
-          <p className="spark__gruppe__forklaring"><span>!</span>Legg inn hele JSON-objektet for søknaden og tast inn behandlingID for å teste lagring av søknaden og knytte den til en faktisk sak.</p>
-          <p>soknad:<br/><code>{JSON.stringify(Mock.soknadDokument)}</code></p>
+          <h1>Populere eller oppdatere søknad</h1>
+          <p className="spark__gruppe__forklaring"><span>!</span>Tast inn fødselsnummer først. Dersom behandlingen finnes, men har en ikke-registrert papirsøknad vil en ny søknadstemplate bli brukt.</p>
+          <h2>1. Hent eksisterende søknad via fnr</h2>
+          <form onSubmit={this.hentSisteSoknad}>
+            <label>fnr:</label>
+            <input type="text" name="fnr" /><br />
+            <div>{feilmelding}</div>
+            <input type="submit" value="Hent søknad" />
+          </form>
+          <h2>2. Rediger direkte i JSON-treet nedenfor</h2>
+          {erNySoknad && <p>Fant ingen eksisterende søknader på dette fødselsnummeret. Søknaden nedenfor er generert utifra en template.</p>}
+          {!feilmelding && <JsonTree
+            data={this.state.soknad.soknadDokument}
+            rootName="soknadDokument"
+            onFullyUpdate={this.updateSoknadJSON}
+            editButtonElement={<button className="knapp__lagre">Lagre</button>}
+            cancelButtonElement={<button className="knapp__avbryt">Avbryt</button>}
+          />}
+          <h2>3. Lagre søknaden</h2>
           <form onSubmit={this.soknadSubmit}>
             <label>behandlingID:</label>
-            <input type="text" name="behandlingID" />
+            <input type="text" name="behandlingID" value={this.state.soknad.behandlingID} />
             <label>json:</label>
-            <textarea name="soknadBody" className="spark__soknad__body" />
-            <input type="submit" value="Send" />
+            <textarea
+              name="soknadBody"
+              className="spark__soknad__body"
+              value={JSON.stringify({soknadDokument})}
+              onChange={() => {}}
+            />
+            <input type="submit" value="Lagre søknad" />
           </form>
         </div>
       </div>
