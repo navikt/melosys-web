@@ -30,7 +30,7 @@ const TipsBostedsvurderingIkkeYrkesaktiv = () => (
 
 const VurderingBostedsland = props => {
   const { bekreftOgFortsett, tilstand } = props;
-  const { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv } = tilstand;
+  const { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv, visBostedslandVelger } = tilstand;
 
   return (
     <div>
@@ -46,7 +46,7 @@ const VurderingBostedsland = props => {
       <Nav.Fieldset legend="Bostedsland er:">
         <Skjema.Radio feltNavn="faktaavklaringBostedINorge" value={VurderingBostedslandTyper.NORGE} label="Norge" />
         <Skjema.Radio feltNavn="faktaavklaringBostedINorge" value={VurderingBostedslandTyper.ANNET} label="Annet" />
-        <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} />
+        {visBostedslandVelger && <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} />}
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
