@@ -52,14 +52,14 @@ export const FaktaavklaringVirksomhetSelector = createSelector(
   virksomhet => virksomhet || {}
 );
 
-export const FaktaavklaringBostedslandSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bostedsland : []),
-  bostedsland => bostedsland
+export const FaktaavklaringBostedSelector = createSelector(
+  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bosted : {}),
+  bosted => bosted
 );
 
-export const FaktaavklaringBostedslandSnarveiSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bostedsland : []),
-  bostedsland => (bostedsland.includes('NO') ? 'NORGE' : 'ANNET')
+export const FaktaavklaringBostedSnarveiSelector = createSelector(
+  state => FaktaavklaringBostedSelector(state).land || [],
+  land => ((land.includes('NO') ? 'NORGE' : 'ANNET'))
 );
 
 export const FaktaavklaringTjenestemannSelector = createSelector(

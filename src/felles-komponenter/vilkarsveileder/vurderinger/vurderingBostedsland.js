@@ -29,7 +29,7 @@ const TipsBostedsvurderingIkkeYrkesaktiv = () => (
 
 
 const VurderingBostedsland = props => {
-  const { bekreftOgFortsett, tilstand } = props;
+  const { bekreftOgFortsett, vurderBosted, tilstand } = props;
   const { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv, visBostedslandVelger } = tilstand;
 
   return (
@@ -39,6 +39,7 @@ const VurderingBostedsland = props => {
         <p>
           Vennligst fyll ut panelet &quot;opplysninger om bosted&quot; med informasjon fra søknaden.
         </p>
+        <Nav.Hovedknapp onClick={vurderBosted}>Vurder bosted</Nav.Hovedknapp>
         <Nav.Element>Tips for manuell bostedsvurdering:</Nav.Element>
         {visTipsForYrkesaktiv && <TipsBostedsvurderingYrkesaktiv />}
         {visTipsForIkkeYrkesaktiv && <TipsBostedsvurderingIkkeYrkesaktiv />}
@@ -57,6 +58,7 @@ const VurderingBostedsland = props => {
 
 VurderingBostedsland.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  vurderBosted: PT.func.isRequired,
   tilstand: PT.object,
 };
 

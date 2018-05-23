@@ -31,6 +31,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { vurderingOperations } from '../../ducks/vurdering/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { faktaavklaringSelectors, faktaavklaringOperations } from '../../ducks/faktaavklaring/';
+import { soknadOperations } from '../../ducks/soknad/';
 import { formSelectors } from '../../ducks/form/';
 
 import './vilkarsveileder.css';
@@ -122,6 +123,7 @@ class Vilkarsveileder extends Component {
           komponent: VurderingBostedsland,
           dataHenter: () => ({}),
           handlers: {
+            vurderBosted: this.vurderBosted,
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
           status: FANE_STATUS.OK,
@@ -184,6 +186,24 @@ class Vilkarsveileder extends Component {
   beOmVurdering = () => {
     this.props.beOmVurderingHandler();
     this.tilSteg(this.beregnNesteSteg());
+  }
+
+  vurderBosted = () => {
+    // 1. Send inn søknaden
+    // 2. Be om bosted når vi vet at søknaden er lagret.
+
+    const { sendSoknad, hentBosted, skjema } = this.props;
+    const {behandlingID = '' } = this.props.oppsummering;
+
+    sendSoknad(behandlingID, skjema)
+      .then(response => {
+        // Sjekk evt feil
+        return hentBosted(behandlingID);
+      })
+      .then(response => {
+        console.log(response);
+      })
+
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
@@ -288,6 +308,9 @@ const mapDispatchToProps = dispatch => ({
   oppdaterFaktaavklaringState: skjema => dispatch(faktaavklaringOperations.oppdaterFaktaavklaringState(skjema)),
   hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
+  hentBosted: behandlingID => dispatch(faktaavklaringOperations.hentBosted(behandlingID)),
+  sendSoknad: (behandlingID, soknad) => dispatch(soknadOperations.send(behandlingID, soknad)),
+
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));
