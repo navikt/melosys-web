@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 
 import { soknadOperations } from '../ducks/soknad/';
 import { fagsakOperations } from '../ducks/fagsaker/';
@@ -22,6 +22,8 @@ import * as Mock from '../debug/mock';
 
 import './spark.css';
 
+const uuid = require('uuid/v4');
+
 class Spark extends Component {
   static defaultProps = {
     nyfagsak: undefined,
@@ -31,15 +33,9 @@ class Spark extends Component {
     soknad: {
       soknadDokument: '',
       behandlingID: 0,
-    }
+    },
+    fagsaker: []
   }
-
-  soknadSubmit = event => {
-    event.preventDefault();
-    const bid = event.target.behandlingID.value;
-    const soknad = JSON.parse(event.target.soknadBody.value);
-    this.props.sendSoknad(bid, soknad);
-  };
 
   opprettNyFagsakSubmit = event => {
     event.preventDefault();
@@ -56,10 +52,8 @@ class Spark extends Component {
   hentFagsakBasertPaFnr = event => {
     event.preventDefault();
     const { fnr : { value : fnr } } = event.target;
-    Api.Journalforing.hent(fnr).then(response => {
-      const firstHit = response[0] || {};
-      const { saksnummer } = firstHit;
-      saksnummer && this.props.history.push(`/saksbehandling/${saksnummer}`);
+    Api.Fagsaker.sok(fnr).then(response => {
+      this.setState({fagsaker: response});
     });
   }
 
@@ -69,24 +63,11 @@ class Spark extends Component {
     });
   }
 
-  hentSisteSoknad = event => {
-    event.preventDefault();
-    const fnr = event.target.fnr.value;
-
-    if (!fnr) return;
-
-    Api.Fagsaker.sok(fnr)
+  hentFagsakOgSoknad = saksnummer => {
+    Api.Fagsaker.hent(saksnummer)
       .then(response => {
-        if(response.length === 0) {
-          throw Error('Fant ingen treff på fødselsnummer. Har du husket å opprette fagsaken først?');
-        }
-        const firstHit = response[0] || {};
-        const { saksnummer } = firstHit;
-        return Api.Fagsaker.hent(saksnummer)
-      })
-      .then(response => {
-        const firstHit = response.behandlinger[0] || {};
-        const { oppsummering: { behandlingID }} = firstHit;
+        const forsteBehandling = response.behandlinger[0] || {};
+        const {behandlingID} = forsteBehandling.oppsummering;
         return Api.Soknader.hent(behandlingID);
       })
       .then(response => {
@@ -96,6 +77,18 @@ class Spark extends Component {
       })
       .catch(error => this.setState({soknad: { soknadDokument: '', behandlingID: '', error } }));
   }
+
+  soknadSubmit = event => {
+    event.preventDefault();
+    const bid = event.target.behandlingID.value;
+    const soknad = JSON.parse(event.target.soknadBody.value);
+    Api.Soknader.send(bid, soknad)
+      .then(response => {
+        if(response.behandlingID){
+          this.setState({soknad: {...this.state.soknad, bleLagret: true}});
+        }
+      })
+  };
 
   updateSoknadJSON = data => {
     this.setState({soknad: {...this.state.soknad, soknadDokument: data}});
@@ -123,6 +116,8 @@ class Spark extends Component {
           <button onClick={this.resetOppgaver}>reset</button>
         </div>
 
+        { // Plukk en journalføringsoppgave eller en behandlingsoppgave.
+        }
         <div className="spark__gruppe">
           <h1>Plukk Oppgave (Behandling ELLER Journalføring)</h1>
           <p>Behandle sak:<br/><code>{JSON.stringify(Mock.behandlingsOppgave)}</code></p>
@@ -135,13 +130,21 @@ class Spark extends Component {
           <p>{oppgave.oppgaveID && JSON.stringify(oppgave)}</p>
         </div>
 
+        { // Hent fagsak basert på brukers fødselsnummer. Dette trenger vi for å kunne omgå
+          // søket på forsiden hvor vi egentlig kun søker etter behandlingsoppgaver - ikke fagsaker.
+        }
         <div className="spark__gruppe">
           <h1>Vise fagsak basert på fnr</h1>
           <form onSubmit={this.hentFagsakBasertPaFnr}>
             <p>Merk: Denne funksjonen bypasser hele verdikjeden journalføringsoppgave -> behandlingsoppgave -> behandling. Den er derfor kun ment til bruk for å teste visningen av en fagsak.</p>
             <label>Tast inn fnr på testpersonen du vil vise:</label>
             <input type="text" name="fnr" /><br />
-            <input type="submit" value="Gå til fagsak" />
+            <div className="spark__resultatliste">
+              {this.state.fagsaker.map(fagsak =>
+                (<Link key={uuid()} to={`/saksbehandling/${fagsak.saksnummer}`} >Saksnummer {fagsak.saksnummer}</Link>)
+              )}
+            </div>
+            <input type="submit" value="Finn fagsak(er)" />
           </form>
         </div>
 
@@ -155,17 +158,27 @@ class Spark extends Component {
           <p>{nyfagsak.saksnummer && JSON.stringify(nyfagsak)}</p>
         </div>
 
+        { // Hent søknaden til en bruker basert på fødselsnummer. Brukeren kan ha flere fagsaker, så
+          // list ut fagsakene slik at riktig kan velges.
+        }
         <div className="spark__gruppe">
           <h1>Populere eller oppdatere søknad</h1>
           <p className="spark__gruppe__forklaring"><span>!</span>Tast inn fødselsnummer først. Dersom behandlingen finnes, men har en ikke-registrert papirsøknad vil en ny søknadstemplate bli brukt.</p>
-          <h2>1. Hent eksisterende søknad via fnr</h2>
-          <form onSubmit={this.hentSisteSoknad}>
+          <h2>1. Hent eksisterende fagsak(er) via fnr</h2>
+          <form onSubmit={this.hentFagsakBasertPaFnr}>
             <label>fnr:</label>
             <input type="text" name="fnr" /><br />
             <div>{feilmelding}</div>
-            <input type="submit" value="Hent søknad" />
+            <input type="submit" value="Hent fagsak" />
           </form>
-          <h2>2. Rediger direkte i JSON-treet nedenfor</h2>
+          {this.state.fagsaker.length > 0 && <div><h2>2. Velg fagsaken som du vil plukke søknad fra eller lage ny søknad til</h2>
+          Merk: Kun søknad fra siste behandling på fagsaken du velger blir hentet pr i dag.
+          <div className="spark__resultatliste">
+            {this.state.fagsaker.map(fagsak =>
+              (<button key={uuid()} onClick={() => console.log(this.hentFagsakOgSoknad(fagsak.saksnummer))}>Saksnummer {fagsak.saksnummer}</button>)
+            )}
+          </div>
+          <h2>3. Rediger direkte i JSON-treet nedenfor</h2>
           {erNySoknad && <p>Fant ingen eksisterende søknader på dette fødselsnummeret. Søknaden nedenfor er generert utifra en template.</p>}
           {!feilmelding && <JsonTree
             data={this.state.soknad.soknadDokument}
@@ -174,7 +187,7 @@ class Spark extends Component {
             editButtonElement={<button className="knapp__lagre">Lagre</button>}
             cancelButtonElement={<button className="knapp__avbryt">Avbryt</button>}
           />}
-          <h2>3. Lagre søknaden</h2>
+          <h2>4. Lagre søknaden</h2>
           <form onSubmit={this.soknadSubmit}>
             <label>behandlingID:</label>
             <input type="text" name="behandlingID" value={this.state.soknad.behandlingID} />
@@ -186,7 +199,9 @@ class Spark extends Component {
               onChange={() => {}}
             />
             <input type="submit" value="Lagre søknad" />
+            {this.state.soknad.bleLagret && <div className="spark__bekreftelse">✔ Søknaden er lagret!</div>}
           </form>
+          </div>}
         </div>
       </div>
     );
