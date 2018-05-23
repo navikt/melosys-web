@@ -296,7 +296,7 @@ Vilkarsveileder.defaultProps = {
 
 const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state).faktaavklaring,
+  faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
   valgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   arbeidsforholdene: fagsakSelectors.ArbeidsforholdeneSelector(state),

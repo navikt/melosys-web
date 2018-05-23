@@ -13,12 +13,12 @@ import { fagsakSelectors } from '../fagsaker/';
 
 // selector(s)
 export const FaktaavklaringSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data : {}),
+  state => (state.faktaavklaring.data.avklaring ? state.faktaavklaring.data.avklaring : {}),
   faktaavklaring => faktaavklaring || {}
 );
 
 export const FaktaavklaringOppholdSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.opphold : {}),
+  state => FaktaavklaringSelector(state).opphold,
   opphold => opphold || {}
 );
 
@@ -28,33 +28,33 @@ export const FaktaavklaringOppholdPeriodeSelector = createSelector(
 );
 
 export const FaktaavklaringSysselsettingSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.sysselsetting : {}),
+  state => FaktaavklaringSelector(state).sysselsetting,
   sysselsetting => sysselsetting || {}
 );
 
 export const FaktaavklaringUtsendingSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.utsending : {}),
+  state => FaktaavklaringSelector(state).utsending,
   utsending => utsending || {}
 );
 
 export const FaktaavklaringSektorSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.sektor : {}),
+  state => FaktaavklaringSelector(state).sektor,
   sektor => sektor || {}
 );
 
 export const FaktaavklaringYrkesaktivitetFordelingSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.yrkesaktivitetFordeling : {}),
+  state => FaktaavklaringSelector(state).yrkesaktivitetFordeling,
   yrkesaktivitetFordeling => yrkesaktivitetFordeling || {}
 );
 
 export const FaktaavklaringVirksomhetSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.virksomhet : {}),
+  state => FaktaavklaringSelector(state).virksomhet,
   virksomhet => virksomhet || {}
 );
 
 export const FaktaavklaringBostedSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.bosted : {}),
-  bosted => bosted
+  state => FaktaavklaringSelector(state).bosted,
+  bosted => bosted || {}
 );
 
 export const FaktaavklaringBostedSnarveiSelector = createSelector(
@@ -63,17 +63,17 @@ export const FaktaavklaringBostedSnarveiSelector = createSelector(
 );
 
 export const FaktaavklaringTjenestemannSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.tjenestemann : {}),
+  state => FaktaavklaringSelector(state).tjenestemann,
   tjenestemann => tjenestemann || {}
 );
 
 export const FaktaavklaringAktivitetSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.aktivitet : {}),
+  state => FaktaavklaringSelector(state).aktivitet,
   aktivitet => aktivitet || {}
 );
 
 export const FaktaavklaringValgteArbeidsforholdSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.valgteArbeidsforhold : []),
+  state => FaktaavklaringSelector(state).valgteArbeidsforhold,
   valgteArbeidsforhold => valgteArbeidsforhold || []
 );
 
@@ -116,7 +116,7 @@ export const RelevanteArbeidsforholdeneSelector = createSelector(
 );
 
 export const FaktaavklaringForretningsstedSelector = createSelector(
-  state => (state.faktaavklaring.data.faktaavklaring ? state.faktaavklaring.data.faktaavklaring.forretningssted : {}),
+  state => FaktaavklaringSelector(state).forretningssted,
   forretningssted => forretningssted || {}
 );
 
