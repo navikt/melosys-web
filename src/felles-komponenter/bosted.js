@@ -1,0 +1,58 @@
+import React from 'react';
+
+import * as Nav from '../utils/navFrontend';
+import * as MPT from '../proptypes/';
+import * as Ikoner from '../resources/images';
+import * as Skjema from './skjema';
+
+import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import Landvelger from './skjema/landvelger';
+
+import './arbeidsgiverUtland.css';
+
+const uuid = require('uuid/v4');
+
+function Bosted () {
+  const panelIkon = Ikoner.Ferdig;
+
+  return (
+    <div className="bosted panelSeksjon">
+      <Nav.EkspanderbartpanelBase
+        heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om bosted, fra søknaden" undertittel="" />}
+        ariaTittel="Panel for opplysninger om bosted, fra søknaden">
+        <Nav.Container fluid>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Nav.Fieldset legend="Har intensjon om å returnere til Norge">
+                <Skjema.Radio feltNavn="intensjonSchemsjon" value="JA" label="Ja" />
+                <Skjema.Radio feltNavn="intensjonSchemsjon" value="NEI" label="Nei" />
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Har bostedsland utenfor Norge">
+                <Skjema.Radio feltNavn="intensjonSchemsjon" value="JA" label="Ja" />
+                <Skjema.Radio feltNavn="intensjonSchemsjon" value="NEI" label="Nei" />
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Nærmeste families bosted">
+                <Landvelger feltNavn="familiebosted" />
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
+                <Skjema.Select feltNavn="oppholdINorge" >
+                  {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
+                </Skjema.Select>
+              </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Container>
+      </Nav.EkspanderbartpanelBase>
+    </div>
+  );
+}
+
+Bosted.propTypes = {
+  soknadForm: MPT.SoknadForm,
+};
+
+Bosted.defaultProps = {
+  soknadForm: {},
+};
+
+export default Bosted;
