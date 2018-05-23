@@ -2,13 +2,14 @@
 import { fn, isJSON } from './utils';
 
 describe('Tester utils.js:', () => {
+  /*
   describe('Tester at fn', () => {
     test('parser et funksjonsargument som funksjon.', () => {
       function foo () {}
       expect(fn(foo)).toBe(foo);
     });
   });
-
+*/
   describe('Tester at isJSON', () => {
     test('validerer stringified json som true', () => {
       const testString = '{}';
