@@ -34,8 +34,6 @@ export default function reducer(state = initialState, action) {
     case Types.OK_BOSTED:
       return {
         ...state,
-        status: STATUS.OK,
-        data: action.data,
       };
     case Types.OPPDATER_FAKTAAVKLARING: {
       const { dokument } = action;
@@ -67,7 +65,9 @@ export default function reducer(state = initialState, action) {
         sektor: {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
-        bostedsland: dokument.faktaavklaringBostedsland,
+        bosted: {
+          land: dokument.faktaavklaringBostedsland,
+        },
         yrkesaktivitetFordeling: {
           antallLand: dokument.faktaavklaringAntallLand,
         },
