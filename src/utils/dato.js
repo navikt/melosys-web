@@ -17,8 +17,13 @@ const MAX_AR_FREM_I_TID = 10;
  * @returns {String | Bool } Datoen
  */
 const vaskInputDato = dato => {
+  if (dato === null || dato === undefined) return false;
+
+  // Godta type number, men gjør den om til string først.
+  const stringDato = Number.isInteger(dato) ? String.toString(dato) : dato;
+
   // Fjern alle skille-tegn med mål om en ren tallrekke i datoen.
-  const newDate = dato.replace(/[-./]/g, '');
+  const newDate = stringDato.replace(/[-./]/g, '');
 
   // Hvis datoen er mindre enn 6 tegn - dvs at dag, måned eller år er tastet med
   // kun 1 siffer ("51217" istedet for "051217"), returner ''.
@@ -77,7 +82,7 @@ function formatterDatoTilNorsk(dato, visTidspunkt) {
  * formatet "YYYY-MM-DDTHH:mm:ss"
  *
  */
-function formatterDatoTilISO(dato, tid = false) {
+function formatterDatoTilISO(dato, tid) {
   const inputFormat = ['DD.MM.YYYY HH:mm', 'DD.MM.YYYY'];
   const momentFormat = tid ? 'YYYY-MM-DDTHH:mm:ss' : 'YYYY-MM-DD';
   return moment(dato, inputFormat).format(momentFormat);
