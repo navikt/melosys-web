@@ -31,14 +31,12 @@ export default function reducer(state = initialState, action) {
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET_BOSTED:
       return { ...state, status: STATUS.ERROR, data: action.data };
-    case Types.OK_BOSTED: {
-
+    case Types.OK_BOSTED:
       return {
         ...state,
         status: STATUS.OK,
         data: { ...state.data, avklaring: { ...state.data.avklaring, bosted: { ...state.data.avklaring.bosted, vurdering: action.data } } },
       };
-    }
     case Types.OPPDATER_FAKTAAVKLARING: {
       const { dokument } = action;
       const avklaring = {
