@@ -63,7 +63,7 @@ class Spark extends Component {
     });
   }
 
-  hentSoknad = saksnummer => {
+  hentFagsakOgSoknad = saksnummer => {
     Api.Fagsaker.hent(saksnummer)
       .then(response => {
         const forsteBehandling = response.behandlinger[0] || {};
@@ -164,18 +164,18 @@ class Spark extends Component {
         <div className="spark__gruppe">
           <h1>Populere eller oppdatere søknad</h1>
           <p className="spark__gruppe__forklaring"><span>!</span>Tast inn fødselsnummer først. Dersom behandlingen finnes, men har en ikke-registrert papirsøknad vil en ny søknadstemplate bli brukt.</p>
-          <h2>1. Hent eksisterende søknad via fnr</h2>
+          <h2>1. Hent eksisterende fagsak(er) via fnr</h2>
           <form onSubmit={this.hentFagsakBasertPaFnr}>
             <label>fnr:</label>
             <input type="text" name="fnr" /><br />
             <div>{feilmelding}</div>
-            <input type="submit" value="Hent søknad" />
+            <input type="submit" value="Hent fagsak" />
           </form>
           {this.state.fagsaker.length > 0 && <div><h2>2. Velg fagsaken som du vil plukke søknad fra eller lage ny søknad til</h2>
           Merk: Kun søknad fra siste behandling på fagsaken du velger blir hentet pr i dag.
           <div className="spark__resultatliste">
             {this.state.fagsaker.map(fagsak =>
-              (<button key={uuid()} onClick={() => console.log(this.hentSoknad(fagsak.saksnummer))}>Saksnummer {fagsak.saksnummer}</button>)
+              (<button key={uuid()} onClick={() => console.log(this.hentFagsakOgSoknad(fagsak.saksnummer))}>Saksnummer {fagsak.saksnummer}</button>)
             )}
           </div>
           <h2>3. Rediger direkte i JSON-treet nedenfor</h2>
