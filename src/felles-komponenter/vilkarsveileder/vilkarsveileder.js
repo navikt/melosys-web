@@ -189,21 +189,20 @@ class Vilkarsveileder extends Component {
   }
 
   vurderBosted = () => {
-    // 1. Send inn søknaden
-    // 2. Be om bosted når vi vet at søknaden er lagret.
-
     const { sendSoknad, hentBosted, skjema } = this.props;
-    const {behandlingID = '' } = this.props.oppsummering;
+    const { behandlingID } = this.props.oppsummering;
 
     sendSoknad(behandlingID, skjema)
       .then(response => {
-        // Sjekk evt feil
+        if (response.data.behandlingID !== behandlingID) {
+          throw (new Error('Feil i behandlingID'));
+        }
         return hentBosted(behandlingID);
       })
       .then(response => {
         console.log(response);
       })
-
+      .catch(error => console.log(error));
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
@@ -275,6 +274,8 @@ Vilkarsveileder.propTypes = {
   relevanteArbeidsforholdene: MPT.Arbeidsforholdene,
   fattVedtakHandler: PT.func.isRequired,
   beOmVurderingHandler: PT.func.isRequired,
+  sendSoknad: PT.func.isRequired,
+  hentBosted: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   faktaavklaring: PT.object,
   inngang: PT.object,
