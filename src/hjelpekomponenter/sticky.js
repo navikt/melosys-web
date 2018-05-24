@@ -28,7 +28,7 @@ class Sticky extends Component {
    * @param element
    */
   settInnledendeHoyde = element => {
-    this.stickyStartY = element.getBoundingClientRect().top;
+    this.stickyStartY = element.getBoundingClientRect().top + window.pageYOffset;
   };
 
   /** For å unngå at journalføringsskjemaet havner under folden (gjør scrolling vanskeligere), må vi sette
