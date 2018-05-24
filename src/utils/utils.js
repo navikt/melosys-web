@@ -2,6 +2,10 @@ import moment from 'moment';
 
 moment.locale('nb');
 
+export function fn(value) {
+  return typeof value === 'function' ? value : () => value;
+}
+
 export function isJSON(str) {
   try {
     return (JSON.parse(str) && !!str);
@@ -9,54 +13,7 @@ export function isJSON(str) {
     return false;
   }
 }
-/* eslint-disable */
-export function throttle(fn, threshold = 250) {
-  let last;
-  let deferTimer;
-
-  return function closure() {
-    const context = this;
-
-    const now = +new Date();
-    const args = arguments;
-    if (last && now < last + threshold) {
-      clearTimeout(deferTimer);
-      deferTimer = setTimeout(function() {
-        last = now;
-        fn.apply(context, args);
-      }, threshold);
-    } else {
-      last = now;
-      fn.apply(context, args);
-    }
-  };
-}
-
-export function erDev() {
-  const url = window.location.href;
-  return (
-    url.includes('debug=true') ||
-    url.includes('devillo.no:8282') ||
-    url.includes('localhost')
-  );
-}
-
-export function getDisplayName(WrappedComponent) {
-  return WrappedComponent.displayName || WrappedComponent.name || 'Component';
-}
-
-export function erInternlenke(href) {
-  return !href.startsWith('http://') && !href.startsWith('https://');
-}
-
-export function proxy(func, { before, after } = {}) {
-  return (...args) => {
-    before && before(...args);
-    func && func(...args);
-    after && after(...args);
-  };
-}
-
+/* eslint-disable prefer-rest-params */
 export function storeForbokstaver() {
   const tekst = Array.prototype.filter.call(arguments, s => s).join(' ');
   return (
@@ -67,7 +24,7 @@ export function storeForbokstaver() {
     )
   );
 }
-
+/*
 export const erGyldigISODato = isoDato => {
   return !!(isoDato && moment(isoDato, moment.ISO_8601).isValid());
 };
@@ -220,7 +177,8 @@ export function HiddenIf({ hidden, children }) {
   }
   return children;
 }
-
+*/
+/*
 export function queryParam(sporreStreng){
   return sporreStreng
     .replace('?','')
@@ -230,33 +188,10 @@ export function queryParam(sporreStreng){
       return key ? { ...samling, [key]:value } : { ...samling }
     },{});
 }
-
-export function boolTilNorsk (value) {
-  return value ? 'JA' : 'NEI';
-}
-
-export function norskTilBool (value) {
-  return value ? (value.toLowerCase() === 'ja') : false;
-}
-
-export function boolTilStreng (value) {
-  if(value === undefined) { return undefined };
-  return value ? 'true' : 'false';
-}
-
-export function strengTilBool (value) {
-  return value === 'true' ? true : false;
-}
-
-export function strengTilInt (value) {
-  return parseInt(value, 10) || 0;
-}
-
+*/
+/*
 export function datoDiff (fom, tom, enhet = "months") {
   if(!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
   return moment(tom).diff(fom, enhet);
 }
-
-export function tekstEllerDash(data) {
-  return data || '-';
-}
+*/
