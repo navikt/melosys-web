@@ -95,7 +95,9 @@ const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
     :
     Array(6).fill({}).map((verdi, index) => {
       const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
+
       const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(enkeltInntekt => enkeltInntekt.aarMaaned === aarMaaned);
+
       return eksisterendeInntektFunnetVedIndeks > -1
         ?
         filtrerteInntekterFraOpplysningspliktig[eksisterendeInntektFunnetVedIndeks]
@@ -214,7 +216,7 @@ const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter,
   {
     arbeidsforholdene: [arbeidsforholdet],
     organisasjon: organisasjoner.find(org => org.orgnr === arbeidsforholdet.opplysningspliktigID),
-    inntekter: filtrerOgSpreInntekt(startDato, arbeidsforholdet.opplysningspliktigID, inntekter),
+    inntektListe: filtrerOgSpreInntekt(startDato, arbeidsforholdet.opplysningspliktigID, inntekter),
   }
 );
 
@@ -243,7 +245,6 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       return tmpSamling;
     }, []);
 
-    console.log(arbeidsgivere)
     return arbeidsgivere;
   }
 );
