@@ -27,22 +27,58 @@ const TipsBostedsvurderingIkkeYrkesaktiv = () => (
   </ul>
 );
 
+const Avklaringer = ({ avklaringer }) => (
+  <div>
+    <Nav.Element>Vurder bosted manuelt. Systemet har avklart at søker har følgende:</Nav.Element>
+    <ul className="betingelser__liste">
+      <li className="liste__element liste__element--oppfylt">Fødselsnummer</li>
+      <li className="liste__element liste__element--oppfylt">Adresse i Norge</li>
+      <li className="liste__element liste__element--oppfylt">Familie i Norge</li>
+      <li className="liste__element liste__element--varsel">EØS barnetrygd</li>
+      <li className="liste__element liste__element--varsel">Flere enn 10 bostatt på adressen sin</li>
+    </ul>
+  </div>
+);
+
+const ManglerInformasjon = ({ vurderBosted }) => (
+  <div>
+    <p>
+      Vennligst fyll ut panelet &quot;opplysninger om bosted&quot; med informasjon fra søknaden.
+    </p>
+    <Nav.Hovedknapp onClick={vurderBosted}>Vurder bosted</Nav.Hovedknapp>
+  </div>
+);
+
+const VurderingErGjort = ({
+  tilstand: { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv },
+  vurderinger: { avklaringer },
+}) => (
+  <div>
+    {Object.keys(avklaringer).length > 0 && <Avklaringer avklaringer={avklaringer} />}
+
+    <Nav.Element>Tips for manuell bostedsvurdering:</Nav.Element>
+    {visTipsForYrkesaktiv && <TipsBostedsvurderingYrkesaktiv />}
+    {visTipsForIkkeYrkesaktiv && <TipsBostedsvurderingIkkeYrkesaktiv />}
+  </div>
+);
+
+VurderingErGjort.propTypes = {
+  tilstand: PT.object.isRequired,
+  vurderinger: PT.object.isRequired,
+};
 
 const VurderingBostedsland = props => {
-  const { bekreftOgFortsett, vurderBosted, tilstand } = props;
-  const { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv, visBostedslandVelger } = tilstand;
+  const { bekreftOgFortsett, tilstand, vurdering } = props;
+  const { visBostedslandVelger } = tilstand;
+  const { feilmeldinger = [] } = vurdering.form;
+
+  const felterMangler = feilmeldinger.length > 0;
 
   return (
     <div>
       <div>
         <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
-        <p>
-          Vennligst fyll ut panelet &quot;opplysninger om bosted&quot; med informasjon fra søknaden.
-        </p>
-        <Nav.Hovedknapp onClick={vurderBosted}>Vurder bosted</Nav.Hovedknapp>
-        <Nav.Element>Tips for manuell bostedsvurdering:</Nav.Element>
-        {visTipsForYrkesaktiv && <TipsBostedsvurderingYrkesaktiv />}
-        {visTipsForIkkeYrkesaktiv && <TipsBostedsvurderingIkkeYrkesaktiv />}
+
       </div>
       <Nav.Fieldset legend="Bostedsland er:">
         <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.NORGE} label="Norge" />
@@ -60,10 +96,12 @@ VurderingBostedsland.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   vurderBosted: PT.func.isRequired,
   tilstand: PT.object,
+  vurdering: PT.object,
 };
 
 VurderingBostedsland.defaultProps = {
   tilstand: {},
+  vurdering: {},
 };
 
 export default VurderingBostedsland;

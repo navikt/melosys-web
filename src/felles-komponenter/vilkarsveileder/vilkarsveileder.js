@@ -121,7 +121,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'BOSTEDSLAND',
           komponent: VurderingBostedsland,
-          dataHenter: () => ({}),
+          dataHenter: props => ({ vurdering: props.faktaavklaring.bosted.vurdering }),
           handlers: {
             vurderBosted: this.vurderBosted,
             bekreftOgFortsett: this.bekreftOgFortsett,
@@ -195,12 +195,12 @@ class Vilkarsveileder extends Component {
     sendSoknad(behandlingID, skjema)
       .then(response => {
         if (response.data.behandlingID !== behandlingID) {
+          // Todo: Implementere feilhåndtering i grensesnittet.
           throw (new Error('Feil i behandlingID'));
         }
         return hentBosted(behandlingID);
       })
       .then(response => {
-        console.log(response);
       })
       .catch(error => console.log(error));
   }
