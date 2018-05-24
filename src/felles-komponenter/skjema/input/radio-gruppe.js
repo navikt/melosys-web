@@ -1,3 +1,4 @@
+/* eslint jsx-a11y/label-has-for:off */
 import React from 'react';
 import PT from 'prop-types';
 import classNames from 'classnames';

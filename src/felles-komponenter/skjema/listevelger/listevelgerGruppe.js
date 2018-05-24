@@ -1,4 +1,4 @@
-/* eslint react/no-array-index-key:off */
+/* eslint react/no-array-index-key:off, jsx-a11y/label-has-for:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
