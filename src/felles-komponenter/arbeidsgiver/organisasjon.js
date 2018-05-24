@@ -15,13 +15,12 @@ import './organisasjon.css';
  *
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
-const Organisasjon = props => {
+const Organisasjon = ({ organisasjon = {} }) => {
   const {
     orgnr,
     navn,
     forretningsadresse,
-  } = props.organisasjon;
-
+  } = organisasjon;
 
   return (
     <div className="panelSeksjon organisasjon">
