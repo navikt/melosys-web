@@ -189,9 +189,3 @@ export function queryParam(sporreStreng){
     },{});
 }
 */
-/*
-export function datoDiff (fom, tom, enhet = "months") {
-  if(!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
-  return moment(tom).diff(fom, enhet);
-}
-*/
