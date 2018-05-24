@@ -2,7 +2,7 @@ import { STATUS } from '../../services/utils';
 
 import * as Types from './types';
 
-import { strengTilBool, strengTilInt } from '../../utils/utils';
+import { strengTilBool, strengTilInt } from '../../utils/streng';
 import { formatterDatoTilISO } from '../../utils/dato';
 
 /**

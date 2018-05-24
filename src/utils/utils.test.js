@@ -1,15 +1,16 @@
 /* eslint-disable */
-import { fn, isJSON } from './utils';
+import { fn, isJSON, storeForbokstaver } from './utils';
 
-describe('Tester utils.js:', () => {
-  describe('Tester at fn', () => {
+describe('utils.js:', () => {
+
+  describe('fn', () => {
     test('parser et funksjonsargument som funksjon.', () => {
       function foo () {}
       expect(fn(foo)).toBe(foo);
     });
   });
 
-  describe('Tester at isJSON', () => {
+  describe('isJSON', () => {
     test('validerer stringified json som true', () => {
       const testString = '{}';
       expect(isJSON(testString)).toEqual(true);
@@ -24,5 +25,12 @@ describe('Tester utils.js:', () => {
       const testObjekt = {};
       expect(isJSON(testObjekt)).toEqual(false);
     });
-  })
+  });
+
+  describe('storeForbokstaver', () => {
+    test('Oppdaterer forste bokstav i hvert ord i setningen med stor bokstav', () => {
+      const testString = 'en to tre fire fem';
+      expect(storeForbokstaver(testString)).toEqual('En To Tre Fire Fem');
+    });
+  });
 });
