@@ -9,9 +9,37 @@
     padding-top:2em;
   }
 
-  .panel {
-    ul {
-      margin-top: 0;
+  .betingelser__liste {
+    margin: 1em 0;
+    padding-left: 2em;
+    list-style: none;
+  }
+
+  .liste__element {
+    margin: 0 0 1em 0;
+    position: relative;
+
+    &:before {
+      content: '';
+      display: block;
+      position: absolute;
+      width: 1.5em;
+      height: 1.5em;
+      top: 0;
+      left:-2em;
+      background-size: contain;
+    }
+  }
+
+  .liste__element--oppfylt {
+    &:before {
+      background-image: url('../../resources/images/ikon-steg-ferdig.svg');
+    }
+  }
+
+  .liste__element--varsel {
+    &:before {
+      background-image: url('../../resources/images/ikon-steg-varsel.svg');
     }
   }
 }
