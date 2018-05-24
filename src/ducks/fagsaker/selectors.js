@@ -220,17 +220,29 @@ const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter,
   }
 );
 
+/** Denne funksjonen gjør følgende:
+ * 1. Itererer alle arbeidsforhold og grupperer de inn etter opplysningspliktigID (dvs juridisk arbeidsgiver)
+ * 2. Dersom en gruppe av opplysningspliktigID ikke eksisterer fra før, lages den via byggNyArbeidsforholdGruppe
+ *
+ * Etterpå returneres hele arrayen med sub-arrays som hver inneholder grupperinger av
+ *  - organisasjon (juridisk arbeidsgiver)
+ *  - arbeidsforholdene (virksomhetene)
+ *  - inntekt
+ */
 export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
   state => faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter, periode) => {
+    // Det er inntekter 6 måneder pri SØKNADSDATO som er interessant.
+    // Finn derfor startDato hvor vi senere teller 6 måneder tilbake når inntektslisten settes sammen.
     const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
 
     const arbeidsgivere = arbeidsforholdene.reduce((samling, arbeidsforholdet) => {
       const tmpSamling = [...samling];
 
+      // Sjekk om det allerede er laget en gruppe for den aktuelle opplysningspliktigID.
       const arbeidsforholdEksistererVedIndeks = samling
         .findIndex(enkelt =>
           enkelt.arbeidsforholdene.some(enkeltforhold =>
