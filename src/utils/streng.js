@@ -23,3 +23,15 @@ export function strengTilInt (value) {
 export function tekstEllerDash(data) {
   return data || '-';
 }
+
+/* eslint-disable prefer-rest-params */
+export function storeForbokstaver() {
+  const tekst = Array.prototype.filter.call(arguments, s => s).join(' ');
+  return (
+    tekst &&
+    tekst.replace(
+      /\w\S*/g,
+      ord => ord.charAt(0).toUpperCase() + ord.substr(1).toLowerCase()
+    )
+  );
+}
