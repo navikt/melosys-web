@@ -188,6 +188,9 @@ class Vilkarsveileder extends Component {
     this.tilSteg(this.beregnNesteSteg());
   }
 
+  /** For at regelmodul skal kunne gjøre en vurdering av bosted må vi sende inn
+   * informasjon fra søknaden umiddelbart i forkant.
+   */
   vurderBosted = () => {
     const { sendSoknad, hentBosted, skjema } = this.props;
     const { behandlingID } = this.props.oppsummering;
@@ -200,7 +203,7 @@ class Vilkarsveileder extends Component {
         }
         return hentBosted(behandlingID);
       })
-      .then(response => {
+      .then(() => {
       })
       .catch(error => console.log(error));
   }
