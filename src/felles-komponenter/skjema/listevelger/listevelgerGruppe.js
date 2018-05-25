@@ -1,4 +1,4 @@
-/* eslint react/no-array-index-key:off, jsx-a11y/label-has-for:off */
+/* eslint react/no-array-index-key:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
@@ -81,34 +81,35 @@ class ListevelgerGruppe extends Component {
 
     return (
       <div>
-        <label htmlFor={`listevelger-${fields.name}`}>{label}</label>
-        {
-          alleFelter.map((verdi, index) => <ListevelgerValgtElement
-            key={index}
-            label={verdi}
-            slettElement={() => this.slettElement(index)}
-            oppdaterElement={event => this.oppdaterElement(event.target.value, index)}
-          />)
-        }
-        <div className="listevelger__linje">
-          <Nav.Input
-            id={`listevelger-${fields.name}`}
-            label=""
-            feil={feil}
-            placeholder={placeholder}
-            onBlur={this.onBlur}
-            onFocus={this.onFocus}
-            onChange={this.onChange}
-            onKeyDown={this.onKeyDown}
-            value={this.state.inputVerdi}
-            list={`dataliste-${fields.name}`}
-            className="listevelger__linje__input"
-          />
-          <button
-            className="listevelger__linje__knapp listevelger__linje__knapp--leggtil"
-            onClick={this.leggTilListeHandler}>+
-          </button>
-        </div>
+        <label htmlFor={`listevelger-${fields.name}`}>{label}
+          {
+            alleFelter.map((verdi, index) => <ListevelgerValgtElement
+              key={index}
+              label={verdi}
+              slettElement={() => this.slettElement(index)}
+              oppdaterElement={event => this.oppdaterElement(event.target.value, index)}
+            />)
+          }
+          <div className="listevelger__linje">
+            <Nav.Input
+              id={`listevelger-${fields.name}`}
+              label=""
+              feil={feil}
+              placeholder={placeholder}
+              onBlur={this.onBlur}
+              onFocus={this.onFocus}
+              onChange={this.onChange}
+              onKeyDown={this.onKeyDown}
+              value={this.state.inputVerdi}
+              list={`dataliste-${fields.name}`}
+              className="listevelger__linje__input"
+            />
+            <button
+              className="listevelger__linje__knapp listevelger__linje__knapp--leggtil"
+              onClick={this.leggTilListeHandler}>+
+            </button>
+          </div>
+        </label>
         <datalist id={`dataliste-${fields.name}`}>
           {muligeValg.map(valg => <option key={uuid()} value={valg.term} />)}
         </datalist>
