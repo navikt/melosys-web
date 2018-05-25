@@ -209,14 +209,14 @@ export const ArbeidsgivereNorgeSelectorOld = createSelector(
  * @param arbeidsforholdet
  * @param organisasjoner
  * @param inntekter
- * @param startDato
+ * @param soknadStartDato
  * @returns {{arbeidsforholdene: *[], organisasjon: *, inntekter: any[]}}
  */
-const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, startDato) => (
+const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, soknadStartDato) => (
   {
     arbeidsforholdene: [arbeidsforholdet],
     organisasjon: organisasjoner.find(org => org.orgnr === arbeidsforholdet.opplysningspliktigID),
-    inntektListe: filtrerOgSpreInntekt(startDato, arbeidsforholdet.opplysningspliktigID, inntekter),
+    inntektListe: filtrerOgSpreInntekt(soknadStartDato, arbeidsforholdet.opplysningspliktigID, inntekter),
   }
 );
 
