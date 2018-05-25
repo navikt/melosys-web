@@ -1,5 +1,10 @@
-import request from '../request';
+/* eslint import/prefer-default-export:off */
+import request from '../../../__mocks__/request';
 
-export default function getUserName(userID) {
+function getUserName(userID) {
   return request(`/api/users/${userID}`).then(user => user.name);
 }
+
+export {
+  getUserName,
+};
