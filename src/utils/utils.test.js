@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { fn, isJSON, storeForbokstaver } from './utils';
+import {fn, isJSON, queryParamsTilObjekt} from './utils';
 
 describe('utils.js:', () => {
 
@@ -26,11 +26,15 @@ describe('utils.js:', () => {
       expect(isJSON(testObjekt)).toEqual(false);
     });
   });
-
-  describe('storeForbokstaver', () => {
-    test('Oppdaterer forste bokstav i hvert ord i setningen med stor bokstav', () => {
-      const testString = 'en to tre fire fem';
-      expect(storeForbokstaver(testString)).toEqual('En To Tre Fire Fem');
+  describe('queryParamsTilObjekt', () => {
+    test('Dekonstruerer querystring til object med props fra querystring', () => {
+      const url = '?id=1&bid=2&sid=3';
+      const resultat = {
+        id: '1',
+        bid: '2',
+        sid: '3'
+      }
+      expect(queryParamsTilObjekt(url)).toEqual(resultat);
     });
   });
 });

@@ -1,5 +1,7 @@
 /* eslint-disable */
-import { boolTilNorsk, norskTilBool, boolTilStreng, strengTilBool, strengTilInt, tekstEllerDash } from './streng';
+import { boolTilNorsk, norskTilBool, boolTilStreng, strengTilBool, strengTilInt,
+  tekstEllerDash, storeForbokstaver
+} from './streng';
 
 describe('streng.js', () => {
   describe('boolTilNorsk', () => {
@@ -55,6 +57,13 @@ describe('streng.js', () => {
     test('Returnerer gyldig verdi uendret', () => {
       const data = {}
       expect(tekstEllerDash(data)).toEqual(data);
+    });
+  });
+
+  describe('storeForbokstaver', () => {
+    test('Oppdaterer forste bokstav i hvert ord i setningen med stor bokstav', () => {
+      const testString = 'en to tre fire fem';
+      expect(storeForbokstaver(testString)).toEqual('En To Tre Fire Fem');
     });
   });
 });
