@@ -67,6 +67,7 @@ export default function reducer(state = initialState, action) {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
         bosted: {
+          vurdering: { ...state.data.avklaring.bosted.vurdering },
           land: dokument.faktaavklaringBostedsland,
         },
         yrkesaktivitetFordeling: {
