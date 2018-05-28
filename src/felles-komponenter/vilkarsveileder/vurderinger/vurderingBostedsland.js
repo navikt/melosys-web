@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import classnames from 'classnames';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
@@ -7,9 +8,26 @@ import LandVelger from '../../skjema/landvelger/';
 
 import './vurderingBostedsland.css';
 
+const uuid = require('uuid/v4');
+
 export const VurderingBostedslandTyper = {
   NORGE: 'NORGE',
   ANNET: 'ANNET',
+};
+
+/** Vises dersom det mangler informasjon som saksbehandler må fylle inn.
+ */
+const ManglerInformasjon = ({ vurderBosted }) => (
+  <div>
+    <p>
+      Vennligst fyll ut panelet &quot;opplysninger om bosted&quot; med informasjon fra søknaden.
+    </p>
+    <Nav.Hovedknapp onClick={vurderBosted}>Vurder bosted</Nav.Hovedknapp>
+  </div>
+);
+
+ManglerInformasjon.propTypes = {
+  vurderBosted: PT.func.isRequired,
 };
 
 const TipsBostedsvurderingYrkesaktiv = () => (
@@ -33,31 +51,31 @@ const Avklaringer = ({ avklaringer }) => (
   <div>
     <Nav.Element>Vurder bosted manuelt. Systemet har avklart at søker har følgende:</Nav.Element>
     <ul className="betingelser__liste">
-      <li className="liste__element liste__element--oppfylt">Fødselsnummer</li>
-      <li className="liste__element liste__element--oppfylt">Adresse i Norge</li>
-      <li className="liste__element liste__element--oppfylt">Familie i Norge</li>
-      <li className="liste__element liste__element--varsel">EØS barnetrygd</li>
-      <li className="liste__element liste__element--varsel">Flere enn 10 bostatt på adressen sin</li>
+      {
+        avklaringer.map(({ avklaring, erAvklart }) => {
+          const cl = classnames({ liste__element: true, 'liste__element--oppfylt': erAvklart, 'liste__element--varsel': !erAvklart });
+          return (<li key={uuid()} className={cl}>{avklaring}</li>);
+        })
+      }
     </ul>
   </div>
 );
 
-const ManglerInformasjon = ({ vurderBosted }) => (
-  <div>
-    <p>
-      Vennligst fyll ut panelet &quot;opplysninger om bosted&quot; med informasjon fra søknaden.
-    </p>
-    <Nav.Hovedknapp onClick={vurderBosted}>Vurder bosted</Nav.Hovedknapp>
-  </div>
-);
-
-ManglerInformasjon.propTypes = {
-  vurderBosted: PT.func.isRequired,
+Avklaringer.propTypes = {
+  avklaringer: PT.array,
 };
 
-const VurderingErGjort = ({
+Avklaringer.defaultProps = {
+  avklaringer: [],
+};
+
+
+/** Vises dersom API returnerte en liste over avklaringer, dvs at ingen
+ * informasjon mangler.
+ */
+const AvklaringsListe = ({
   tilstand: { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv },
-  vurderinger: { avklaringer },
+  avklaringer,
 }) => (
   <div>
     {Object.keys(avklaringer).length > 0 && <Avklaringer avklaringer={avklaringer} />}
@@ -68,11 +86,14 @@ const VurderingErGjort = ({
   </div>
 );
 
-VurderingErGjort.propTypes = {
+AvklaringsListe.propTypes = {
   tilstand: PT.object.isRequired,
-  vurderinger: PT.object.isRequired,
+  avklaringer: PT.array.isRequired,
 };
 
+/** Hovedklasse som eksponeres ut.
+ * ------------------------------
+ */
 class VurderingBostedsland extends Component {
   componentDidMount() {
     this.props.vurderBosted();
@@ -83,17 +104,17 @@ class VurderingBostedsland extends Component {
       bekreftOgFortsett, vurderBosted, tilstand, vurdering,
     } = this.props;
     const { visBostedslandVelger } = tilstand;
-    const { form: { feilmeldinger = [] } = {} } = vurdering;
+    const { form: { feilmeldinger = [] } = {}, avklaringer = {} } = vurdering;
 
     const informasjonMangler = feilmeldinger.length > 0;
-
-    console.log(this.props);
+    const vurderingErGjort = Object.keys(avklaringer).length > 0;
 
     return vurdering === {} ? null : (
       <div className="vurderingBostedsland">
         <div>
           <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
           {informasjonMangler && <ManglerInformasjon vurderBosted={vurderBosted} />}
+          {vurderingErGjort && <AvklaringsListe tilstand={tilstand} avklaringer={avklaringer} />}
           <div className="vurderingBostedsland__skjemafelt">
             <Nav.Fieldset legend="Bostedsland er:">
               <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.NORGE} label="Norge" disabled={informasjonMangler} />
