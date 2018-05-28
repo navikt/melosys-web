@@ -59,7 +59,15 @@ export const FaktaavklaringBostedSelector = createSelector(
 
 export const FaktaavklaringBostedSnarveiSelector = createSelector(
   state => FaktaavklaringBostedSelector(state).land || [],
-  land => ((land.includes('NO') ? 'NORGE' : 'ANNET'))
+  land => {
+    if (land.length === 0) { return ''; }
+
+    if (land.includes('NO')) {
+      return 'NORGE';
+    }
+
+    return 'ANNET';
+  }
 );
 
 export const FaktaavklaringTjenestemannSelector = createSelector(
