@@ -52,9 +52,9 @@ const Avklaringer = ({ avklaringer }) => (
     <Nav.Element>Vurder bosted manuelt. Systemet har avklart at søker har følgende:</Nav.Element>
     <ul className="betingelser__liste">
       {
-        avklaringer.map(({ avklaring, erAvklart }) => {
-          const cl = classnames({ liste__element: true, 'liste__element--oppfylt': erAvklart, 'liste__element--varsel': !erAvklart });
-          return (<li key={uuid()} className={cl}>{avklaring}</li>);
+        avklaringer.map(({ term, status }) => {
+          const cl = classnames({ liste__element: true, 'liste__element--oppfylt': status, 'liste__element--varsel': !status });
+          return (<li key={uuid()} className={cl}>{term}</li>);
         })
       }
     </ul>
