@@ -12,15 +12,14 @@ function InnerInputComponent({
       <div className={classNames({ skjema__feilomrade: errorMessage })}>
         <label className="skjemaelement__label" htmlFor={feltNavn}>
           {label}
+          {children}
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="skjemaelement__feilmelding">
+            {errorMessage}
+          </div>
         </label>
-        {children}
-        <div
-          role="alert"
-          aria-live="assertive"
-          className="skjemaelement__feilmelding"
-        >
-          {errorMessage}
-        </div>
       </div>
     </div>
   );
