@@ -23,10 +23,10 @@ function Bosted () {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Har intensjon om å returnere til Norge">
+              <Skjema.RadioGruppe feltNavn="intensjonOmRetur" label="Har intensjon om å returnere til Norge">
                 <Skjema.Radio feltNavn="intensjonOmRetur" value="true" label="Ja" />
                 <Skjema.Radio feltNavn="intensjonOmRetur" value="false" label="Nei" />
-              </Nav.Fieldset>
+              </Skjema.RadioGruppe>
               <Nav.Fieldset legend="Har bostedsland utenfor Norge">
                 <Skjema.Radio feltNavn="bostedUtenforNorge" value="true" label="Ja" />
                 <Skjema.Radio feltNavn="bostedUtenforNorge" value="false" label="Nei" />
@@ -35,7 +35,7 @@ function Bosted () {
                 <Landvelger feltNavn="familiesBosted" />
               </Nav.Fieldset>
               <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
-                <Skjema.Select feltNavn="antallMaanederINorge" label="Velg antall måneder">
+                <Skjema.Select feltNavn="antallMaanederINorge" label="Velg antall måneder" bredde="xs">
                   {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
                 </Skjema.Select>
               </Nav.Fieldset>

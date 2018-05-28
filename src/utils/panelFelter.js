@@ -14,6 +14,9 @@ export const feltGrupper = {
     studieLand: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
     studentFinansiering: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
   },
+  bosted: {
+    intensjonOmRetur: [(value, props) => ('mangler info')],
+  },
   arbeidNorge: {
     arbeidsforholdOpprettholdIHelePerioden: [],
     brukerErSelvstendigNaeringsdrivende: [],
