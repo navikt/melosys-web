@@ -21,6 +21,8 @@ function InnerInputComponent({
   const gjeldendeFeltVerdi = input.value;
   const radioButtonVerdi = rest.value;
 
+  console.log(inputProps)
+
   return (
     <Nav.Radio
       {...inputProps}
