@@ -24,18 +24,18 @@ function Bosted () {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Har intensjon om å returnere til Norge">
-                <Skjema.Radio feltNavn="intensjonSchemsjon" value="JA" label="Ja" />
-                <Skjema.Radio feltNavn="intensjonSchemsjon" value="NEI" label="Nei" />
+                <Skjema.Radio feltNavn="intensjonOmRetur" value="JA" label="Ja" />
+                <Skjema.Radio feltNavn="intensjonOmRetur" value="NEI" label="Nei" />
               </Nav.Fieldset>
               <Nav.Fieldset legend="Har bostedsland utenfor Norge">
-                <Skjema.Radio feltNavn="intensjonSchemsjon" value="JA" label="Ja" />
-                <Skjema.Radio feltNavn="intensjonSchemsjon" value="NEI" label="Nei" />
+                <Skjema.Radio feltNavn="bostedUtenforNorge" value="JA" label="Ja" />
+                <Skjema.Radio feltNavn="bostedUtenforNorge" value="NEI" label="Nei" />
               </Nav.Fieldset>
               <Nav.Fieldset legend="Nærmeste families bosted">
                 <Landvelger feltNavn="familiebosted" />
               </Nav.Fieldset>
               <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
-                <Skjema.Select feltNavn="oppholdINorge" >
+                <Skjema.Select feltNavn="oppholdINorge" label="Velg antall måneder">
                   {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
                 </Skjema.Select>
               </Nav.Fieldset>
