@@ -203,9 +203,11 @@ class Vilkarsveileder extends Component {
         }
         return hentBosted(behandlingID);
       })
-      .then(() => {
-      })
-      .catch(() => {});
+      .catch(() => {
+        /* eslint-disable no-console */
+        console.error('Feil i bostedsvurdering fra API.');
+        /* eslint-enable */
+      });
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
