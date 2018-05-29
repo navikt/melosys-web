@@ -205,7 +205,7 @@ class Vilkarsveileder extends Component {
       })
       .then(() => {
       })
-      .catch(error => console.log(error));
+      .catch(() => {});
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
