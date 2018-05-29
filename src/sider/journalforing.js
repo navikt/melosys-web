@@ -10,6 +10,7 @@ import * as MPT from '../proptypes';
 import * as Konstanter from '../constants';
 import Sticky from '../hjelpekomponenter/sticky';
 
+import withErrorHandling from '../hoc/withErrorHandling';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
@@ -277,12 +278,12 @@ class Journalforing extends Component {
     settFeltInnhold('journalforingPeriodeFraOgMed', '');
     settFeltInnhold('journalforingPeriodeTilOgMed', '');
     settFeltInnhold('journalforingOppholdsLand', []);
-  }
+  };
 
   resetEksisterendeSakerFelter = () => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold('saksnummer', '');
-  }
+  };
 
   render() {
     const {
@@ -372,11 +373,17 @@ const mapDispatchToProps = dispatch => ({
   tilordneSak: data => Api.Journalforing.tilordne(data),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm({
+const kontekster = [
+  { navn: 'journalforing', melding: 'Det har oppstått en feil: Kunne ikke hente journalforing.' },
+];
+
+const form = {
   form: 'journalforing',
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
   validate: journalforingValidering,
   onSubmit: () => {},
-})(Journalforing)));
+};
+
+export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Journalforing))));
