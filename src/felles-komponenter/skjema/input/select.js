@@ -1,38 +1,37 @@
 import React from 'react';
 import PT from 'prop-types';
-import { Select as NavSelect } from 'nav-frontend-skjema';
-import { CustomField } from 'react-redux-form-validation';
+import { Field } from 'redux-form';
+import * as Nav from '../../../utils/navFrontend';
 import '../skjema.css';
 
-function InnerInputComponent({
+function SelectWrappedComponent({
   input,
   label,
   children,
-  errorMessage,
-  meta, // eslint-disable-line no-unused-vars
+  meta,
   ...rest
 }) {
-  const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
+  const feil = meta.error ? { feilmelding: meta.error } : undefined;
   const inputProps = {
     ...input,
     ...rest,
   };
   return (
-    <NavSelect label={label} feil={feil} {...inputProps}>
+    <Nav.Select label={label} feil={feil} {...inputProps}>
       <option />
       {children}
-    </NavSelect>
+    </Nav.Select>
   );
 }
 
-InnerInputComponent.defaultProps = {
+SelectWrappedComponent.defaultProps = {
   children: <option disabled value="0">ingen valg tilgjengelig</option>,
   input: undefined,
   errorMessage: undefined,
   meta: undefined,
 };
 
-InnerInputComponent.propTypes = {
+SelectWrappedComponent.propTypes = {
   label: PT.string.isRequired,
   children: PT.node,
   input: PT.object, // eslint-disable-line react/forbid-prop-types
@@ -44,12 +43,12 @@ function Select({
   id, feltNavn, className, ...rest
 }) {
   return (
-    <CustomField
+    <Field
       name={feltNavn}
-      errorClass="skjemaelement--harFeil"
       className={className}
       id={id}
-      customComponent={<InnerInputComponent {...rest} />}
+      component={SelectWrappedComponent}
+      props={rest}
     />
   );
 }

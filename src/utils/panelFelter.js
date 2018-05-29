@@ -15,7 +15,10 @@ export const feltGrupper = {
     studentFinansiering: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
   },
   bosted: {
-    intensjonOmRetur: [(value, props) => ('mangler info')],
+    intensjonOmRetur: [(value, props) => ('Vær snill å oppgi informasjon fra søknaden.')],
+    bostedUtenforNorge: [(value, props) => ('Vær snill å oppgi informasjon fra søknaden.')],
+    familiesBosted: [(value, props) => ('Vær snill å oppgi informasjon fra søknaden.')],
+    antallMaanederINorge: [(value, props) => ('Vær snill å oppgi informasjon fra søknaden.')],
   },
   arbeidNorge: {
     arbeidsforholdOpprettholdIHelePerioden: [],

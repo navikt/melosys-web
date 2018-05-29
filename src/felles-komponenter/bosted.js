@@ -23,14 +23,14 @@ function Bosted () {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.RadioGruppe feltNavn="intensjonOmRetur" label="Har intensjon om å returnere til Norge">
+              <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
                 <Skjema.Radio feltNavn="intensjonOmRetur" value="true" label="Ja" />
                 <Skjema.Radio feltNavn="intensjonOmRetur" value="false" label="Nei" />
               </Skjema.RadioGruppe>
-              <Nav.Fieldset legend="Har bostedsland utenfor Norge">
+              <Skjema.RadioGruppe feltNavn="bostedUtenforNorge" legend="Har bostedsland utenfor Norge">
                 <Skjema.Radio feltNavn="bostedUtenforNorge" value="true" label="Ja" />
                 <Skjema.Radio feltNavn="bostedUtenforNorge" value="false" label="Nei" />
-              </Nav.Fieldset>
+              </Skjema.RadioGruppe>
               <Nav.Fieldset legend="Nærmeste families bosted">
                 <Landvelger feltNavn="familiesBosted" />
               </Nav.Fieldset>
