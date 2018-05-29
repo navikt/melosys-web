@@ -188,7 +188,7 @@ class Saksbehandling extends Component {
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {errorSummary}
                 {person && <Personopplysninger person={person} />}
-                <Bosted />
+                <Bosted soknadForm={soknadForm} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />

@@ -8,7 +8,7 @@ import '../skjema.css';
 const uuid = require('uuid/v4');
 
 const RadioGruppeWrappedComponent = ({
-  feltNavn, legend, label, children, meta
+  feltNavn, legend, label, children, meta,
 }) => {
   const { error = [] } = meta;
   const errorMessage = error.map(singleError => <div key={uuid()}>{singleError}</div>);

@@ -27,7 +27,6 @@ function SelectWrappedComponent({
 SelectWrappedComponent.defaultProps = {
   children: <option disabled value="0">ingen valg tilgjengelig</option>,
   input: undefined,
-  errorMessage: undefined,
   meta: undefined,
 };
 
@@ -35,7 +34,6 @@ SelectWrappedComponent.propTypes = {
   label: PT.string.isRequired,
   children: PT.node,
   input: PT.object, // eslint-disable-line react/forbid-prop-types
-  errorMessage: PT.object, // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
 };
 
