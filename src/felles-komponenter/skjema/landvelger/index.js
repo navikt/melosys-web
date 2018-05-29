@@ -8,7 +8,6 @@ import * as MPT from '../../../proptypes';
 
 import './landvelger.css';
 import { KodeverkSelectors } from '../../../ducks/kodeverk';
-import classNames from 'classnames'
 
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 
@@ -146,8 +145,6 @@ class CustomLandVelger extends Component {
     } = this.props;
 
     const feil = meta.error ? { feilmelding: meta.error } : null;
-
-    console.log(meta)
 
     const valgteLand = fields.getAll() || [];
 
