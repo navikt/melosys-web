@@ -11,7 +11,7 @@ const RadioGruppeWrappedComponent = ({
   feltNavn, legend, label, children, meta,
 }) => {
   const { error = [] } = meta;
-  const errorMessage = error.map(singleError => <div key={uuid()}>{singleError}</div>);
+  const errorMessage = error.map(singleError => <div key={uuid()}>({singleError.type}){singleError.melding}</div>);
 
   return (
     <Nav.Fieldset legend={legend || label} >

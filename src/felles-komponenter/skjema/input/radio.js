@@ -27,7 +27,6 @@ function InnerInputComponent({
       checked={gjeldendeFeltVerdi === radioButtonVerdi || forhandsvalgt}
       // Fikser fokus/markering feil i IE
       onBlur={() => {
-        // slik at dette feltet valideres
         meta.dispatch(touch(meta.form, input.name));
       }}
       onFocus={() => {}}
