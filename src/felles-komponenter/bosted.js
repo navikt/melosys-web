@@ -12,10 +12,8 @@ import './arbeidsgiverUtland.css';
 
 const uuid = require('uuid/v4');
 
-const Bosted = props => {
-  const formFields = ['intensjonOmRetur', 'bostedUtenforNorge', 'familiesBosted', 'antallMaanederINorge'];
-  const harValideringsFeil = Object.keys(props.soknadForm.syncErrors).some(error => formFields.includes(error));
-  const panelIkon = harValideringsFeil ? Ikoner.Varsel : Ikoner.Ferdig;
+const Bosted = () => {
+  const panelIkon = Ikoner.Varsel;
 
   return (
     <div className="bosted panelSeksjon">
