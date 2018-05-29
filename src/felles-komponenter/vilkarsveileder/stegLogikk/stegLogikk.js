@@ -172,7 +172,7 @@ class StegLogikk {
         'aktivitetINorge ER LIK "UNDER_25_PROSENT" OG bostedsLand INNEHOLDER "NO" OG' +
         'antallLand ER LIK "TO_ELLER_FLERE_LAND"',
         erOppfylt: ({
-          antallLand, sysselsettingType, aktivitetINorge, bostedsland,
+          antallLand, sysselsettingType, aktivitetINorge, bostedsland = [],
         }) => (
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
           aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT &&
