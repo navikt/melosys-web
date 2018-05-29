@@ -42,6 +42,11 @@ export const OppholdUtlandSelector = createSelector(
   soknad => soknad || {}
 );
 
+export const BostedSelector = createSelector(
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.bosted : {}),
+  bosted => bosted || {}
+);
+
 export const ArbeidsgiversBekreftelseSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
   soknad => soknad || {}

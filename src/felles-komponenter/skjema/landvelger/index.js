@@ -11,15 +11,20 @@ import { KodeverkSelectors } from '../../../ducks/kodeverk';
 
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 
-const ValgtLand = ({ landObjekt, slettLand }) => (
+const ValgtLand = ({ landObjekt, slettLand, disabled }) => (
   <div className="landliste__linje">
-    <div className="landliste__linje__navn">{landTekstFormat(landObjekt)}</div><button className="landliste__linje__knapp" onClick={e => slettLand(e, landObjekt.kode)}>-</button>
+    <div className="landliste__linje__navn">{landTekstFormat(landObjekt)}</div><button className="landliste__linje__knapp" disabled={disabled} onClick={e => slettLand(e, landObjekt.kode)}>-</button>
   </div>
 );
 
 ValgtLand.propTypes = {
   landObjekt: PT.object.isRequired,
   slettLand: PT.func.isRequired,
+  disabled: PT.bool,
+};
+
+ValgtLand.defaultProps = {
+  disabled: false,
 };
 
 class CustomLandVelger extends Component {
@@ -136,10 +141,10 @@ class CustomLandVelger extends Component {
 
   render () {
     const {
-      landkoder, label, fields, multiLand, meta,
+      landkoder, label, fields, multiLand, meta, disabled,
     } = this.props;
 
-    const feil = (meta.invalid && (this.state.touched || meta.submitFailed) && !this.state.active) ? { feilmelding: meta.error } : null;
+    const feil = meta.error ? { feilmelding: meta.error } : null;
 
     const valgteLand = fields.getAll() || [];
 
@@ -160,6 +165,7 @@ class CustomLandVelger extends Component {
           />
           <button
             className="landliste__linje__knapp landliste__linje__knapp--leggtil"
+            disabled={disabled}
             onClick={this.leggTilLandHandler}>+
           </button>
           <datalist id="alleLand">
@@ -176,6 +182,7 @@ class CustomLandVelger extends Component {
         {valgteLand.map(valgtLand => (
           <ValgtLand
             key={valgtLand}
+            disabled={disabled}
             landObjekt={this.props.landkoder.find(land => land.kode === valgtLand)}
             slettLand={this.slettLandHandler}
           />
@@ -196,6 +203,11 @@ CustomLandVelger.propTypes = {
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string.isRequired,
   meta: PT.object.isRequired,
+  disabled: PT.bool,
+};
+
+CustomLandVelger.defaultProps = {
+  disabled: false,
 };
 
 /** Dette er bootstrapper-komponenten som eksponeres utenfor pakken. Komponenten forventer et feltNavn for å kunne vite
@@ -216,7 +228,6 @@ LandVelger.propTypes = {
 
 LandVelger.defaultProps = {
   multiLand: false,
-  landkoder: [],
   label: 'Tast inn land',
 };
 
