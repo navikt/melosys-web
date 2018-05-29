@@ -17,7 +17,7 @@ export const feltGrupper = {
   bosted: {
     intensjonOmRetur: [(value, props) => ('Vær snill å oppgi informasjon fra søknaden.')],
     bostedUtenforNorge: [(value, props) => ('Vær snill å oppgi informasjon fra søknaden.')],
-    familiesBosted: [(value, props) => ('Vær snill å oppgi informasjon fra søknaden.')],
+    familiesBosted: [(value, props) => ({ _error: 'Vær snill å oppgi informasjon fra søknaden.' })],
     antallMaanederINorge: [(value, props) => ('Vær snill å oppgi informasjon fra søknaden.')],
   },
   arbeidNorge: {

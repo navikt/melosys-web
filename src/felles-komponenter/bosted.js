@@ -12,8 +12,10 @@ import './arbeidsgiverUtland.css';
 
 const uuid = require('uuid/v4');
 
-function Bosted () {
-  const panelIkon = Ikoner.Ferdig;
+const Bosted = props => {
+  const formFields = ['intensjonOmRetur', 'bostedUtenforNorge', 'familiesBosted', 'antallMaanederINorge'];
+  const harValideringsFeil = Object.keys(props.soknadForm.syncErrors).some(error => formFields.includes(error));
+  const panelIkon = harValideringsFeil ? Ikoner.Varsel : Ikoner.Ferdig;
 
   return (
     <div className="bosted panelSeksjon">
@@ -45,7 +47,7 @@ function Bosted () {
       </Nav.EkspanderbartpanelBase>
     </div>
   );
-}
+};
 
 Bosted.propTypes = {
   soknadForm: MPT.SoknadForm,

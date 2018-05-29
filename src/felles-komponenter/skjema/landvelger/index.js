@@ -147,7 +147,7 @@ class CustomLandVelger extends Component {
 
     const feil = meta.error ? { feilmelding: meta.error } : null;
 
-    console.log(this.props);
+    console.log(meta)
 
     const valgteLand = fields.getAll() || [];
 
