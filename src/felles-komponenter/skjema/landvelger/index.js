@@ -222,13 +222,12 @@ const LandVelger = props => (
 LandVelger.propTypes = {
   feltNavn: PT.string.isRequired,
   multiLand: PT.bool,
-  landkoder: PT.arrayOf(MPT.Kodeverk),
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string,
 };
 
 LandVelger.defaultProps = {
   multiLand: false,
-  landkoder: [],
   label: 'Tast inn land',
 };
 
