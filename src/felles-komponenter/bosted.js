@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -12,8 +13,9 @@ import './arbeidsgiverUtland.css';
 
 const uuid = require('uuid/v4');
 
-const Bosted = () => {
-  const panelIkon = Ikoner.Varsel;
+const Bosted = props => {
+  const { erValidert } = props;
+  const panelIkon = erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
 
   return (
     <div className="bosted panelSeksjon">
@@ -49,10 +51,12 @@ const Bosted = () => {
 
 Bosted.propTypes = {
   soknadForm: MPT.SoknadForm,
+  erValidert: PT.bool,
 };
 
 Bosted.defaultProps = {
   soknadForm: {},
+  erValidert: true,
 };
 
 export default Bosted;

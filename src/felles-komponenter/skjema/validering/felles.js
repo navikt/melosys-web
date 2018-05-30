@@ -70,19 +70,22 @@ const kjorAlleValideringerSomHarFunksjoner = (valideringer, values, props) => (
 );
 
 /** Fletter to objekter og kombinerer verdiene i tilfeller hvor begge
- * objekter har samme nøkkel.
+ * objekter har samme nøkkel. I tillegg fjern nøkler som viser seg å ikke utløse noen
+ * spesiell validering.
  */
-const flettValidering = (generiskValidering, forretningsValidering = {}) => {
+const flettOgFilterValidering = (generiskValidering, forretningsValidering = {}) => {
   const samletValidering = { ...generiskValidering };
-  Object.keys(forretningsValidering).forEach(feltNavn => {
-    samletValidering[feltNavn] = samletValidering[feltNavn]
+  const filtrertValidering = Object.keys(forretningsValidering).reduce((samling, feltNavn) => {
+    const valideringsTekst = samletValidering[feltNavn]
       ?
       `${samletValidering[feltNavn]} ${forretningsValidering[feltNavn]}`
       :
       forretningsValidering[feltNavn];
-  });
 
-  return samletValidering;
+    return valideringsTekst !== '' ? { ...samling, [feltNavn]: valideringsTekst } : { ...samling };
+  }, {});
+
+  return filtrertValidering;
 };
 
 /**
@@ -93,7 +96,7 @@ export const byggValidering = (values, props) => {
   const generiskValideringFunksjoner = flatUtFeltGrupper(feltGrupper);
   const generiskValidering = kjorAlleValideringerSomHarFunksjoner(generiskValideringFunksjoner, values, props);
 
-  return flettValidering(generiskValidering, forretningsValidering);
+  return flettOgFilterValidering(generiskValidering, forretningsValidering);
 };
 
 /** Traverser alle feil som finnes i skjemaet (på grunnlag av validering) og mål opp mot kjente
@@ -101,16 +104,13 @@ export const byggValidering = (values, props) => {
  * @param felterMedFeil Object med alle felter som ikke validerer
  */
 export const gyldigePaneler = felterMedFeil => {
-  // Konverter til array.
   const felterMedFeilArray = felterMedFeil ? Object.keys(felterMedFeil) : [];
 
-  // Gjør en reduksjon på hovedgruppene i feltGrupper.
-  return Object.keys(feltGrupper).reduce((collection, gruppe) => {
-    // En gruppe kan være 'bekreftelser', 'inntekt', 'person' eller liknende.
-    const felterIGruppen = feltGrupper[gruppe];
+  return Object.keys(feltGrupper).reduce((collection, gruppeNavn) => {
+    const felterIGruppen = feltGrupper[gruppeNavn];
     // Match felter i den aktuelle gruppen med listen over felter som faktisk inneholder feil. Dersom ingen treff,
     // returneres true, som må reverseres siden Saksbehandling forventer state gyldigPanel: true | false.
-    const paneletInneholderFeil = !(Object.keys(felterIGruppen).some(felt => felterMedFeilArray.includes(felt)));
-    return { ...collection, [gruppe]: paneletInneholderFeil };
+    const paneletInneholderIkkeFeil = !Object.keys(felterIGruppen).some(felt => felterMedFeilArray.includes(felt));
+    return { ...collection, [gruppeNavn]: paneletInneholderIkkeFeil };
   }, {});
 };

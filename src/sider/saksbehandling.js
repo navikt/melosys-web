@@ -181,7 +181,7 @@ class Saksbehandling extends Component {
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {person && <Personopplysninger person={person} />}
-                <Bosted soknadForm={soknadForm} />
+                <Bosted soknadForm={soknadForm} erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
