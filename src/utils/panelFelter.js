@@ -31,6 +31,11 @@ export const feltGrupper = {
     fullmektigFirma: [],
     fullmektigAdresse: [],
   },
+  bosted: {
+    intensjonOmRetur: [],
+    bostedUtenforNorge: [],
+    familiesBosted: [],
+  },
   bekreftelser: {
     arbeidsgiverBekrefterUtsendelse: [value => Skjema.Validering.erPakrevet(value)],
     arbeidstakerAnsattUnderUtsendelsen: [value => Skjema.Validering.erPakrevet(value)],
