@@ -33,7 +33,7 @@ export function print(response) {
 export function sendResultatTilDispatch(dispatch, action) {
   return (...data) => {
     const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
-    Forretning.sjekkOmFelterSkalValideres(dispatch, dataSomSkalDispatches);
+    Forretning.sjekkOmValideringDeretterForsok(dispatch, dataSomSkalDispatches);
 
     return dispatch({ type: action, data: dataSomSkalDispatches });
   };
