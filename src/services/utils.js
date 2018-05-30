@@ -1,3 +1,5 @@
+import { Forretning } from '../felles-komponenter/skjema/validering';
+
 export const STATUS = {
   NOT_STARTED: 'NOT_STARTED',
   PENDING: 'PENDING',
@@ -30,10 +32,10 @@ export function print(response) {
 
 export function sendResultatTilDispatch(dispatch, action) {
   return (...data) => {
-    if (data.length === 1) {
-      return dispatch({ type: action, data: data[0] });
-    }
-    return dispatch({ type: action, data });
+    const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
+    Forretning.sjekkOmFelterSkalValideres(dispatch, dataSomSkalDispatches);
+
+    return dispatch({ type: action, data: dataSomSkalDispatches });
   };
 }
 

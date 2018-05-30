@@ -9,7 +9,7 @@ export const feltGrupper = {
     inntektNaeringIPerioden: [],
   },
   oppholdUtland: {
-    studentIEOS: [],
+    studentIEOS: '',
     studentSemester: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
     studieLand: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
     studentFinansiering: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
@@ -74,15 +74,50 @@ export const alleFeltNavn = grupper => (Object.keys(grupper).reduce(
   , []
 ));
 
-/** Traverserer feltGrupper og returnerer kun feltnavn i form av en string-array.
- *
- * @param grupper Objekt med felter gruppert.
- */
-export const alleValideringer = grupper => (Object.keys(grupper).reduce(
+const konverterFeltGrupperTilValideringsObjekter = grupper => (Object.keys(grupper).reduce(
   (samling, gruppe) =>
     ({ ...samling, ...grupper[gruppe] })
   , {}
 ));
+
+/** Valideringer ligger som arrays av funksjoner i panelGrupper. Disse må kjøres individuelt
+ * og parses inn til string for å være gyldige Redux Form-valideringer.
+ */
+const kjorAlleGeneriskeValideringer = (valideringer, values, props) => {
+  const valideringsObjekt = Object.keys(valideringer).reduce((samling, validering) => {
+    if (Array.isArray(valideringer[validering])) {
+      const valideringskjoringer = valideringer[validering].map(v => v(values[validering], props));
+      return { ...samling, [validering]: valideringskjoringer.join(' ') };
+    }
+
+    return { ...samling };
+  }, {});
+
+  return valideringsObjekt;
+};
+
+/** Fletter to objekter og kombinerer verdiene i tilfeller hvor begge
+ * objekter har samme nøkkel.
+ */
+const flettValidering = (generiskValidering, forretningsValidering = {}) => {
+  const returnObject = { ...generiskValidering };
+  Object.keys(forretningsValidering).forEach(feltNavn => {
+    returnObject[feltNavn] = returnObject[feltNavn] ? returnObject[feltNavn] + forretningsValidering[feltNavn] : forretningsValidering[feltNavn];
+  });
+
+  return returnObject;
+};
+
+/**
+ * Kombinerer generisk og forretningsvalidering til én som kan brukes av redux form.
+ */
+export const byggValidering = (values, props) => {
+  const { forretningsValidering } = props;
+  const generiskValideringFunksjoner = konverterFeltGrupperTilValideringsObjekter(feltGrupper);
+  const generiskValidering = kjorAlleGeneriskeValideringer(generiskValideringFunksjoner, values, props);
+
+  return flettValidering(generiskValidering, forretningsValidering);
+};
 
 /** Traverser alle feil som finnes i skjemaet (på grunnlag av validering) og mål opp mot kjente
  * felter i grupper (paneler) slik at det er mulig å avgjøre om et panel i sin helhet validerer korrekt.
