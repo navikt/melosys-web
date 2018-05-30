@@ -4,16 +4,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
 
-import {
-  alleFeltNavn,
-  feltGrupper,
-} from '../utils/panelFelter';
-
-import {
-  byggValidering,
-  gyldigePaneler,
-} from '../felles-komponenter/skjema/validering/forretning';
-
+import * as PanelFelter from '../utils/panelFelter';
+import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
@@ -129,7 +121,7 @@ class Saksbehandling extends Component {
 
     // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
     // i panelet lenger er ugyldig (ikke validerer).
-    this.setState({ gyldigePaneler: gyldigePaneler(syncErrors) });
+    this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
   }
 
   fattVedtakHandler = () => {
@@ -297,8 +289,8 @@ const SaksbehandlingForm = reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: false,
   updateUnregisteredFields: true,
-  fields: alleFeltNavn(feltGrupper),
-  validate: (values, props) => byggValidering(values, props),
+  fields: PanelFelter.alleFeltNavn(PanelFelter.feltGrupper),
+  validate: (values, props) => Validering.Felles.byggValidering(values, props),
 })(Saksbehandling);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksbehandlingForm));
