@@ -1,4 +1,4 @@
-import { Forretning } from '../felles-komponenter/skjema/validering';
+import * as Validering from '../felles-komponenter/skjema/validering';
 
 export const STATUS = {
   NOT_STARTED: 'NOT_STARTED',
@@ -33,7 +33,7 @@ export function print(response) {
 export function sendResultatTilDispatch(dispatch, action) {
   return (...data) => {
     const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
-    Forretning.sjekkOmValideringDeretterForsok(dispatch, dataSomSkalDispatches);
+    Validering.Felles.sjekkOmValideringDeretterForsok(dispatch, dataSomSkalDispatches);
 
     return dispatch({ type: action, data: dataSomSkalDispatches });
   };
