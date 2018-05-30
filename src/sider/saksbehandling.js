@@ -5,11 +5,14 @@ import { withRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
 
 import {
-  gyldigePaneler,
-  feltGrupper,
   alleFeltNavn,
-  byggValidering,
+  feltGrupper,
 } from '../utils/panelFelter';
+
+import {
+  byggValidering,
+  gyldigePaneler,
+} from '../felles-komponenter/skjema/validering/forretning';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';

@@ -32,18 +32,18 @@ export const feltGrupper = {
     fullmektigAdresse: [],
   },
   bekreftelser: {
-    arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
-    arbeidstakerAnsattUnderUtsendelsen: [Skjema.Validering.erPakrevet],
-    erstatterArbeidstakerenUtsendte: [Skjema.Validering.erPakrevet],
-    arbeidstakerTidligereUtsendt24Mnd: [Skjema.Validering.erPakrevet],
-    arbeidsgiverBetalerArbeidsgiveravgift: [Skjema.Validering.erPakrevet],
-    trygdeavgiftTrukketGjennomSkatt: [Skjema.Validering.erPakrevet],
-    trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet, Skjema.Validering.erDato],
+    arbeidsgiverBekrefterUtsendelse: [value => Skjema.Validering.erPakrevet(value)],
+    arbeidstakerAnsattUnderUtsendelsen: [value => Skjema.Validering.erPakrevet(value)],
+    erstatterArbeidstakerenUtsendte: [value => Skjema.Validering.erPakrevet(value)],
+    arbeidstakerTidligereUtsendt24Mnd: [value => Skjema.Validering.erPakrevet(value)],
+    arbeidsgiverBetalerArbeidsgiveravgift: [value => Skjema.Validering.erPakrevet(value)],
+    trygdeavgiftTrukketGjennomSkatt: [value => Skjema.Validering.erPakrevet(value)],
+    trygdeavgiftTrukketGjennomSkattDato: [value => Skjema.Validering.erPakrevet(value), value => Skjema.Validering.erDato(value)],
   },
   faktaavklaring: {
     faktaavklaringOppholdsLand: [],
-    faktaavklaringPeriodeFraOgMed: [Skjema.Validering.erPakrevet],
-    faktaavklaringPeriodeTilOgMed: [Skjema.Validering.erPakrevet],
+    faktaavklaringPeriodeFraOgMed: [value => Skjema.Validering.erPakrevet(value)],
+    faktaavklaringPeriodeTilOgMed: [value => Skjema.Validering.erPakrevet(value)],
     faktaavklaringSysselsetting: [],
     faktaavklaringAnsattINorskSelskap: [],
     faktaavklaringErstatterTidligereUtsendt: [],
@@ -73,67 +73,3 @@ export const alleFeltNavn = grupper => (Object.keys(grupper).reduce(
     ([...samling, ...Object.keys(grupper[gruppe])])
   , []
 ));
-
-const konverterFeltGrupperTilValideringsObjekter = grupper => (Object.keys(grupper).reduce(
-  (samling, gruppe) =>
-    ({ ...samling, ...grupper[gruppe] })
-  , {}
-));
-
-/** Valideringer ligger som arrays av funksjoner i panelGrupper. Disse må kjøres individuelt
- * og parses inn til string for å være gyldige Redux Form-valideringer.
- */
-const kjorAlleGeneriskeValideringer = (valideringer, values, props) => {
-  const valideringsObjekt = Object.keys(valideringer).reduce((samling, validering) => {
-    if (Array.isArray(valideringer[validering])) {
-      const valideringskjoringer = valideringer[validering].map(v => v(values[validering], props));
-      return { ...samling, [validering]: valideringskjoringer.join(' ') };
-    }
-
-    return { ...samling };
-  }, {});
-
-  return valideringsObjekt;
-};
-
-/** Fletter to objekter og kombinerer verdiene i tilfeller hvor begge
- * objekter har samme nøkkel.
- */
-const flettValidering = (generiskValidering, forretningsValidering = {}) => {
-  const returnObject = { ...generiskValidering };
-  Object.keys(forretningsValidering).forEach(feltNavn => {
-    returnObject[feltNavn] = returnObject[feltNavn] ? returnObject[feltNavn] + forretningsValidering[feltNavn] : forretningsValidering[feltNavn];
-  });
-
-  return returnObject;
-};
-
-/**
- * Kombinerer generisk og forretningsvalidering til én som kan brukes av redux form.
- */
-export const byggValidering = (values, props) => {
-  const { forretningsValidering } = props;
-  const generiskValideringFunksjoner = konverterFeltGrupperTilValideringsObjekter(feltGrupper);
-  const generiskValidering = kjorAlleGeneriskeValideringer(generiskValideringFunksjoner, values, props);
-
-  return flettValidering(generiskValidering, forretningsValidering);
-};
-
-/** Traverser alle feil som finnes i skjemaet (på grunnlag av validering) og mål opp mot kjente
- * felter i grupper (paneler) slik at det er mulig å avgjøre om et panel i sin helhet validerer korrekt.
- * @param felterMedFeil Object med alle felter som ikke validerer
- */
-export const gyldigePaneler = felterMedFeil => {
-  // Konverter til array.
-  const felterMedFeilArray = felterMedFeil ? Object.keys(felterMedFeil) : [];
-
-  // Gjør en reduksjon på hovedgruppene i feltGrupper.
-  return Object.keys(feltGrupper).reduce((collection, gruppe) => {
-    // En gruppe kan være 'bekreftelser', 'inntekt', 'person' eller liknende.
-    const felterIGruppen = feltGrupper[gruppe];
-    // Match felter i den aktuelle gruppen med listen over felter som faktisk inneholder feil. Dersom ingen treff,
-    // returneres true, som må reverseres siden Saksbehandling forventer state gyldigPanel: true | false.
-    const paneletInneholderFeil = !(Object.keys(felterIGruppen).some(felt => felterMedFeilArray.includes(felt)));
-    return { ...collection, [gruppe]: paneletInneholderFeil };
-  }, {});
-};
