@@ -1,4 +1,15 @@
+import * as formActions from './actions';
+import * as formOperations from './operations';
+import * as formTypes from './types';
 import * as formSelectors from './selectors';
 
-/* eslint-disable import/prefer-default-export */
-export { formSelectors };
+import formReducers from './reducers';
+
+export {
+  formActions,
+  formOperations,
+  formTypes,
+  formSelectors,
+};
+
+export default formReducers;

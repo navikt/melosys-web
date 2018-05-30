@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { validForm } from 'react-redux-form-validation';
+import { reduxForm } from 'redux-form';
 
 import {
   gyldigePaneler,
   feltGrupper,
   alleFeltNavn,
-  alleValideringer,
+  byggValidering,
 } from '../utils/panelFelter';
 
 import * as Nav from '../utils/navFrontend';
@@ -169,7 +169,6 @@ class Saksbehandling extends Component {
       oppsummering,
       soknadArbeidsinntekt,
       soknadOppholdUtland,
-      errorSummary,
       soknadForm,
     } = this.props;
 
@@ -186,7 +185,6 @@ class Saksbehandling extends Component {
                 <Vilkarsveileder
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
-                {errorSummary}
                 {person && <Personopplysninger person={person} />}
                 <Bosted soknadForm={soknadForm} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
@@ -225,6 +223,7 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
+  forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
   soknadOppholdUtland: soknadSelectors.OppholdUtlandSelector(state),
@@ -290,14 +289,13 @@ const mapDispatchToProps = dispatch => ({
   oppdaterFaktaavklaring: values => { dispatch(faktaavklaringActions.oppdaterFaktaavklaringState(values)); },
 });
 
-const SaksbehandlingForm = validForm({
+const SaksbehandlingForm = reduxForm({
   form: 'soknad',
   enableReinitialize: true,
   destroyOnUnmount: false,
   updateUnregisteredFields: true,
-  errorSummaryTitle: 'Følgende må vurderes eller oppgis:',
   fields: alleFeltNavn(feltGrupper),
-  validate: alleValideringer(feltGrupper),
+  validate: (values, props) => byggValidering(values, props),
 })(Saksbehandling);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksbehandlingForm));

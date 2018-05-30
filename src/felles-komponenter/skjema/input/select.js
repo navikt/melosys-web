@@ -11,7 +11,7 @@ function SelectWrappedComponent({
   meta,
   ...rest
 }) {
-  const feil = meta.error ? { feilmelding: meta.error } : undefined;
+  const feil = meta.error ? { feilmelding: JSON.stringify(meta.error) } : undefined;
   const inputProps = {
     ...input,
     ...rest,
