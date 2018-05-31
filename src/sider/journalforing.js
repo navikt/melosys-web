@@ -136,8 +136,7 @@ class Journalforing extends Component {
   hentAvsender = value => {
     const { sokOrgnr, sokFnrDnr } = this.props;
     const { preAutofyll } = this;
-
-    if (value.length === Konstanter.ANTALL_TALL_I_DNR) {
+    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
       sokOrgnr(value).then(({ navn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', navn));
     }
 
