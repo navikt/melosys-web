@@ -1,3 +1,4 @@
+/* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { reduxForm, autofill, setSubmitFailed, change } from 'redux-form';
@@ -136,8 +137,7 @@ class Journalforing extends Component {
   hentAvsender = value => {
     const { sokOrgnr, sokFnrDnr } = this.props;
     const { preAutofyll } = this;
-
-    if (value.length === Konstanter.ANTALL_TALL_I_DNR) {
+    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
       sokOrgnr(value).then(({ navn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', navn));
     }
 
@@ -201,6 +201,10 @@ class Journalforing extends Component {
    * @returns {boolean}
    */
   knyttTilEksisterendeSak = () => {
+    alert('Denne funksjonen er ikke implementert ennå.');
+    return;
+
+    /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
@@ -224,8 +228,6 @@ class Journalforing extends Component {
         history.push('/');
       }
     });
-
-    return true;
   };
 
   /** Når saksbehandler klikker "opprett sak" skal det åpnes for validering av
@@ -233,6 +235,10 @@ class Journalforing extends Component {
    * @returns {boolean}
    */
   opprettFagsak = () => {
+    alert('Denne funksjonen er ikke implementert ennå.');
+    return;
+
+    /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
@@ -269,8 +275,6 @@ class Journalforing extends Component {
         history.push('/');
       }
     });
-
-    return true;
   };
 
   resetOpprettFagsakFelter = () => {
