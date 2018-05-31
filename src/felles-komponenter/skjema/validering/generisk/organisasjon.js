@@ -1,4 +1,4 @@
-const erOrgnr = verdi => RegExp(/^\d{11,11}$/).test(verdi);
+const erOrgnr = verdi => RegExp(/^\d{9,9}$/).test(verdi);
 
 /* eslint import/prefer-default-export:off */
 export { erOrgnr };
