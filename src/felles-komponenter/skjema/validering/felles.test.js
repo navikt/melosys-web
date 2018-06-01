@@ -2,7 +2,19 @@
 
 import {__private__} from './felles';
 
-import { feilmeldingMock } from '../../../../__mocks__/stubs/feilmelding';
+const feilmeldingMock = {
+  form: {
+    feilmeldinger: [{
+      kategori: {
+        alvorlighetsgrad: 'FEIL', beskrivelse: 'Kort beskrivelse.',
+      },
+      alvorlighetsgrad: 'FEIL',
+      beskrivelse: 'Mangler informasjon',
+      melding: 'Mangler informasjon.',
+      skjemaFeltID: 'antallMaanederINorge',
+    }],
+  },
+};
 
 describe('Tester felles.js:', () => {
   describe('inneholderFeilmeldinger', () => {
@@ -23,7 +35,7 @@ describe('Tester felles.js:', () => {
     test('returnerer korrekt valideringsobjekt', () => {
       const mockData = feilmeldingMock;
       const forventetData = {
-        antallMaanederINorge: 'Mangler informasjon fra søknaden om antallMaanederINorge.',
+        antallMaanederINorge: 'Mangler informasjon.',
       }
 
       expect(__private__.byggValideringsObjekt(mockData)).toEqual(forventetData);
