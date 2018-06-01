@@ -9,7 +9,7 @@ export const feltGrupper = {
     inntektNaeringIPerioden: [],
   },
   oppholdUtland: {
-    studentIEOS: [],
+    studentIEOS: '',
     studentSemester: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
     studieLand: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
     studentFinansiering: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
@@ -31,19 +31,24 @@ export const feltGrupper = {
     fullmektigFirma: [],
     fullmektigAdresse: [],
   },
+  bosted: {
+    intensjonOmRetur: [],
+    bostedUtenforNorge: [],
+    familiesBosted: [],
+  },
   bekreftelser: {
-    arbeidsgiverBekrefterUtsendelse: [Skjema.Validering.erPakrevet],
-    arbeidstakerAnsattUnderUtsendelsen: [Skjema.Validering.erPakrevet],
-    erstatterArbeidstakerenUtsendte: [Skjema.Validering.erPakrevet],
-    arbeidstakerTidligereUtsendt24Mnd: [Skjema.Validering.erPakrevet],
-    arbeidsgiverBetalerArbeidsgiveravgift: [Skjema.Validering.erPakrevet],
-    trygdeavgiftTrukketGjennomSkatt: [Skjema.Validering.erPakrevet],
-    trygdeavgiftTrukketGjennomSkattDato: [Skjema.Validering.erPakrevet, Skjema.Validering.erDato],
+    arbeidsgiverBekrefterUtsendelse: [value => Skjema.Validering.erPakrevet(value)],
+    arbeidstakerAnsattUnderUtsendelsen: [value => Skjema.Validering.erPakrevet(value)],
+    erstatterArbeidstakerenUtsendte: [value => Skjema.Validering.erPakrevet(value)],
+    arbeidstakerTidligereUtsendt24Mnd: [value => Skjema.Validering.erPakrevet(value)],
+    arbeidsgiverBetalerArbeidsgiveravgift: [value => Skjema.Validering.erPakrevet(value)],
+    trygdeavgiftTrukketGjennomSkatt: [value => Skjema.Validering.erPakrevet(value)],
+    trygdeavgiftTrukketGjennomSkattDato: [value => Skjema.Validering.erPakrevet(value), value => Skjema.Validering.erDato(value)],
   },
   faktaavklaring: {
     faktaavklaringOppholdsLand: [],
-    faktaavklaringPeriodeFraOgMed: [Skjema.Validering.erPakrevet],
-    faktaavklaringPeriodeTilOgMed: [Skjema.Validering.erPakrevet],
+    faktaavklaringPeriodeFraOgMed: [value => Skjema.Validering.erPakrevet(value)],
+    faktaavklaringPeriodeTilOgMed: [value => Skjema.Validering.erPakrevet(value)],
     faktaavklaringSysselsetting: [],
     faktaavklaringAnsattINorskSelskap: [],
     faktaavklaringErstatterTidligereUtsendt: [],
@@ -73,32 +78,3 @@ export const alleFeltNavn = grupper => (Object.keys(grupper).reduce(
     ([...samling, ...Object.keys(grupper[gruppe])])
   , []
 ));
-
-/** Traverserer feltGrupper og returnerer kun feltnavn i form av en string-array.
- *
- * @param grupper Objekt med felter gruppert.
- */
-export const alleValideringer = grupper => (Object.keys(grupper).reduce(
-  (samling, gruppe) =>
-    ({ ...samling, ...grupper[gruppe] })
-  , {}
-));
-
-/** Traverser alle feil som finnes i skjemaet (på grunnlag av validering) og mål opp mot kjente
- * felter i grupper (paneler) slik at det er mulig å avgjøre om et panel i sin helhet validerer korrekt.
- * @param felterMedFeil Object med alle felter som ikke validerer
- */
-export const gyldigePaneler = felterMedFeil => {
-  // Konverter til array.
-  const felterMedFeilArray = felterMedFeil ? Object.keys(felterMedFeil) : [];
-
-  // Gjør en reduksjon på hovedgruppene i feltGrupper.
-  return Object.keys(feltGrupper).reduce((collection, gruppe) => {
-    // En gruppe kan være 'bekreftelser', 'inntekt', 'person' eller liknende.
-    const felterIGruppen = feltGrupper[gruppe];
-    // Match felter i den aktuelle gruppen med listen over felter som faktisk inneholder feil. Dersom ingen treff,
-    // returneres true, som må reverseres siden Saksbehandling forventer state gyldigPanel: true | false.
-    const paneletInneholderFeil = !(Object.keys(felterIGruppen).some(felt => felterMedFeilArray.includes(felt)));
-    return { ...collection, [gruppe]: paneletInneholderFeil };
-  }, {});
-};

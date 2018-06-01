@@ -5,17 +5,15 @@ import { Field } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
 import '../skjema.css';
 
-const uuid = require('uuid/v4');
-
 const RadioGruppeWrappedComponent = ({
   feltNavn, legend, label, children, meta,
 }) => {
-  const { error = [] } = meta;
-  const errorMessage = error.map(singleError => <div key={uuid()}>({singleError.type}){singleError.melding}</div>);
+  const { error } = meta;
+  const errorMessage = <div>{error}</div>;
 
   return (
     <Nav.Fieldset legend={legend || label} >
-      <div className={classNames({ 'skjema__feilomrade--harFeil': error.length > 0 })}>
+      <div className={classNames({ 'skjema__feilomrade--harFeil': error !== undefined })}>
         <label className="skjemaelement__label" htmlFor={feltNavn}>
           {children}
           <div

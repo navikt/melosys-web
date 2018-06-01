@@ -2,15 +2,10 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { validForm } from 'react-redux-form-validation';
+import { reduxForm } from 'redux-form';
 
-import {
-  gyldigePaneler,
-  feltGrupper,
-  alleFeltNavn,
-  alleValideringer,
-} from '../utils/panelFelter';
-
+import * as PanelFelter from '../utils/panelFelter';
+import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
@@ -126,7 +121,7 @@ class Saksbehandling extends Component {
 
     // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
     // i panelet lenger er ugyldig (ikke validerer).
-    this.setState({ gyldigePaneler: gyldigePaneler(syncErrors) });
+    this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
   }
 
   fattVedtakHandler = () => {
@@ -169,7 +164,6 @@ class Saksbehandling extends Component {
       oppsummering,
       soknadArbeidsinntekt,
       soknadOppholdUtland,
-      errorSummary,
       soknadForm,
     } = this.props;
 
@@ -186,9 +180,8 @@ class Saksbehandling extends Component {
                 <Vilkarsveileder
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
-                {errorSummary}
                 {person && <Personopplysninger person={person} />}
-                <Bosted soknadForm={soknadForm} />
+                <Bosted soknadForm={soknadForm} erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
@@ -225,6 +218,7 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
+  forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
   soknadOppholdUtland: soknadSelectors.OppholdUtlandSelector(state),
@@ -290,14 +284,13 @@ const mapDispatchToProps = dispatch => ({
   oppdaterFaktaavklaring: values => { dispatch(faktaavklaringActions.oppdaterFaktaavklaringState(values)); },
 });
 
-const SaksbehandlingForm = validForm({
+const SaksbehandlingForm = reduxForm({
   form: 'soknad',
   enableReinitialize: true,
   destroyOnUnmount: false,
   updateUnregisteredFields: true,
-  errorSummaryTitle: 'Følgende må vurderes eller oppgis:',
-  fields: alleFeltNavn(feltGrupper),
-  validate: alleValideringer(feltGrupper),
+  fields: PanelFelter.alleFeltNavn(PanelFelter.feltGrupper),
+  validate: (values, props) => Validering.Felles.byggValidering(values, props),
 })(Saksbehandling);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksbehandlingForm));
