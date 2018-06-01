@@ -69,10 +69,20 @@ describe('Tester felles.js:', () => {
   describe('gyldigePaneler', () => {
     test('returnerer et objekt med gyldige panelstatuser', () => {
       const mockData = {
-        familiesBosted: '',
-        ansattPaSokkelEllerSkip: '',
+        familiesBosted: '(Feilmeldingen her er ikke viktig)',
+        ansattPaSokkelEllerSkip: '(Feilmeldingen her er ikke viktig)',
       }
+
+      const forventetData = {
+        arbeidNorge: false,
+        bosted: false,
+        inntekt: true,
+        oppholdUtland: true,
+        bekreftelser: true,
+        faktaavklaring: true,
+      }
+
+      expect(__private__.gyldigePaneler(mockData)).toEqual(forventetData);
     })
   })
-
 })
