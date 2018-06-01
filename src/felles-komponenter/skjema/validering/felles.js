@@ -7,8 +7,9 @@ import { feltGrupper } from '../../../utils/panelFelter';
  * --------------------------------------------------------------
  */
 const inneholderFeilmeldinger = data => {
-  const { form = {} } = data;
-  return form.feilmeldinger !== undefined;
+  const { form = { } } = data;
+  const { feilmeldinger = [] } = form;
+  return feilmeldinger.length > 0;
 };
 
 const byggValideringsObjekt = data => {
@@ -114,3 +115,14 @@ export const gyldigePaneler = felterMedFeil => {
     return { ...collection, [gruppeNavn]: paneletInneholderIkkeFeil };
   }, {});
 };
+
+// eslint-disable-next-line
+export let __private__ = {};
+
+if (process.env.NODE_ENV === 'test') {
+  __private__ = {
+    inneholderFeilmeldinger,
+    byggValideringsObjekt,
+    flatUtFeltGrupper,
+  };
+}
