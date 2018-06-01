@@ -12,6 +12,6 @@ import * as formActions from './actions';
 
 export const oppdaterAlleSkjemaValideringer = dispatch => validering => {
   dispatch(formActions.oppdaterAlleSkjemaValideringer(validering));
-  // Todo: Dette er en hack for å tvinge redux form (og dermed validate) til å oppdatere. Ikke spes. elegant.
+  // Fixme: Dette er en hack for å tvinge redux form (og dermed validate) til å oppdatere. Ikke spes. elegant.
   dispatch(change('soknad', 'foo', 'bar'));
 };
