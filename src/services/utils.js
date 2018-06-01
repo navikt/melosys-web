@@ -33,7 +33,7 @@ export function print(response) {
 export function sendResultatTilDispatch(dispatch, action) {
   return (...data) => {
     const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
-    Validering.Felles.sjekkOmValideringDeretterForsok(dispatch, dataSomSkalDispatches);
+    Validering.Felles.forsokValidering(dispatch, dataSomSkalDispatches);
 
     return dispatch({ type: action, data: dataSomSkalDispatches });
   };

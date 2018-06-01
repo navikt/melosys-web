@@ -6,7 +6,7 @@ import { feltGrupper } from '../../../utils/panelFelter';
  * valideringer som vi må forholde oss til.
  * --------------------------------------------------------------
  */
-const harFelterFeil = data => {
+const inneholderFeilmeldinger = data => {
   const { form = {} } = data;
   return form.feilmeldinger !== undefined;
 };
@@ -19,8 +19,8 @@ const byggValideringsObjekt = data => {
   return feltIDListe;
 };
 
-export const sjekkOmValideringDeretterForsok = (dispatch, data) => {
-  if (harFelterFeil(data)) {
+export const forsokValidering = (dispatch, data) => {
+  if (inneholderFeilmeldinger(data)) {
     const valideringsObjekt = byggValideringsObjekt(data);
     formOperations.oppdaterAlleSkjemaValideringer(dispatch)(valideringsObjekt);
   }
