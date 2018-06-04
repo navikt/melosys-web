@@ -1,6 +1,7 @@
 /* eslint-disable */
 
-import {__private__} from './felles';
+import {__private__, forsokValidering} from './felles';
+import * as Felles from './felles';
 
 const feilmeldingMock = {
   form: {
@@ -39,6 +40,17 @@ describe('Tester felles.js:', () => {
       }
 
       expect(__private__.byggValideringsObjekt(mockData)).toEqual(forventetData);
+    })
+  })
+
+  describe('forsokValidering', () => {
+    test('gjør ingenting dersom data ikke inneholder feil', () => {
+      const mockFunction = jest.spyOn(Felles, 'inneholderFeilmeldinger')
+      const mockData = { ...feilmeldingMock, form: { ...feilmeldingMock.form, feilmeldinger: [] } };
+
+      Felles.forsokValidering(mockData);
+
+      //expect(Felles.inneholderFeilmeldinger).toBeCalled();
     })
   })
 
