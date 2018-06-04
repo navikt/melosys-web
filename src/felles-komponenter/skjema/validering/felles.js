@@ -6,13 +6,14 @@ import { feltGrupper } from '../../../utils/panelFelter';
  * valideringer som vi må forholde oss til.
  * --------------------------------------------------------------
  */
-const inneholderFeilmeldinger = data => {
+export const inneholderFeilmeldinger = (data = {}) => {
+  console.log('inneholderFeilmeldinger()')
   const { form = { } } = data;
   const { feilmeldinger = [] } = form;
   return feilmeldinger.length > 0;
 };
 
-const byggValideringsObjekt = data => {
+export const byggValideringsObjekt = data => {
   const { form: { feilmeldinger } = {} } = data;
   const feltIDListe = feilmeldinger.reduce((samling, feilmelding) => (
     { ...samling, [feilmelding.skjemaFeltID]: feilmelding.melding }
