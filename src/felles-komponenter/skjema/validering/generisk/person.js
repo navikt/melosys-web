@@ -13,6 +13,11 @@ const erDnrLengde = verdi => {
   return regex.test(verdi);
 };
 
+/** Beregner gyldighet av fødselsnr med utgangspunkt i mod11.
+ * @link https://no.wikipedia.org/wiki/F%C3%B8dselsnummer
+ * @param verdi
+ * @returns {boolean}
+ */
 const erGyldigFnr = verdi => {
   const fodselsnr = verdi.toString();
   if (!fodselsnr || fodselsnr.length !== 11) return false;
