@@ -103,7 +103,6 @@ describe('Tester person.js:', () => {
       expect(Person.erGyldigDnr(mockData3)).toEqual(forventetFeil);
       expect(Person.erGyldigDnr(mockData4)).toEqual(forventetFeil);
       expect(Person.erGyldigDnr(mockData5)).toEqual(forventetFeil);
-      //expect(Person.erGyldigDnr(mockData6)).toEqual(forventetFeil);
     });
   })
 });
