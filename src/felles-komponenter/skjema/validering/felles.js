@@ -7,7 +7,6 @@ import { feltGrupper } from '../../../utils/panelFelter';
  * --------------------------------------------------------------
  */
 export const inneholderFeilmeldinger = (data = {}) => {
-  console.log('inneholderFeilmeldinger()')
   const { form = { } } = data;
   const { feilmeldinger = [] } = form;
   return feilmeldinger.length > 0;
