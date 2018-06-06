@@ -1,64 +1,63 @@
 import React from 'react';
 import PT from 'prop-types';
 import classNames from 'classnames';
-import { CustomField } from 'react-redux-form-validation';
+import { Field } from 'redux-form';
+import * as Nav from '../../../utils/navFrontend';
 import '../skjema.css';
 
-function InnerInputComponent({
-  label, feltNavn, children, errorMessage,
-}) {
+const RadioGruppeWrappedComponent = ({
+  feltNavn, legend, label, children, meta,
+}) => {
+  const { error } = meta;
+  const errorMessage = <div>{error}</div>;
+
   return (
-    <div className={classNames({ 'skjema--harFeil': errorMessage })}>
-      <div className={classNames({ skjema__feilomrade: errorMessage })}>
+    <Nav.Fieldset legend={legend || label} >
+      <div className={classNames({ 'skjema__feilomrade--harFeil': error !== undefined })}>
         <label className="skjemaelement__label" htmlFor={feltNavn}>
-          {label}
-        </label>
-        {children}
-        <div
-          role="alert"
-          aria-live="assertive"
-          className="skjemaelement__feilmelding"
-        >
-          {errorMessage}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-InnerInputComponent.propTypes = {
-  label: PT.string.isRequired,
-  feltNavn: PT.string.isRequired,
-  children: PT.node,
-  errorMessage: PT.arrayOf(PT.node),
-};
-
-InnerInputComponent.defaultProps = {
-  children: undefined,
-  errorMessage: null,
-};
-
-function RadioGruppe({ feltNavn, label, children }) {
-  return (
-    <CustomField
-      name={feltNavn}
-      customComponent={
-        <InnerInputComponent label={label} feltNavn={feltNavn}>
           {children}
-        </InnerInputComponent>
-      }
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="skjemaelement__feilmelding">
+            {errorMessage}
+          </div>
+        </label>
+      </div>
+    </Nav.Fieldset>
+  );
+};
+
+RadioGruppeWrappedComponent.propTypes = {
+  feltNavn: PT.string.isRequired,
+  children: PT.node.isRequired,
+  meta: PT.object.isRequired,
+  legend: PT.string.isRequired,
+  label: PT.string.isRequired,
+};
+
+
+function RadioGruppe({ feltNavn, ...rest }) {
+  return (
+    <Field
+      name={feltNavn}
+      component={RadioGruppeWrappedComponent}
+      props={{ feltNavn, ...rest }}
     />
   );
 }
 
 RadioGruppe.propTypes = {
   feltNavn: PT.string.isRequired,
-  label: PT.string.isRequired,
+  legend: PT.string,
+  label: PT.string,
   children: PT.node,
 };
 
 RadioGruppe.defaultProps = {
   children: undefined,
+  legend: '',
+  label: '',
 };
 
 export default RadioGruppe;

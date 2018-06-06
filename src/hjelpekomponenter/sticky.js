@@ -15,12 +15,12 @@ class Sticky extends Component {
   componentDidMount() {
     const { stickyDOM } = this;
     this.settInnledendeHoyde(stickyDOM);
-
-    window.addEventListener('scroll', this.scrollHandler);
+    this.oppdaterVedScroll();
+    window.addEventListener('scroll', this.oppdaterVedScroll);
   }
 
   componentWillUnmount() {
-    window.removeEventListener('scroll', this.scrollHandler);
+    window.removeEventListener('scroll', this.oppdaterVedScroll);
   }
 
   /** Setter høydeplassering til elementet ved oppstart. Dette trenger vi for
@@ -28,13 +28,13 @@ class Sticky extends Component {
    * @param element
    */
   settInnledendeHoyde = element => {
-    this.stickyStartY = element.getBoundingClientRect().top;
+    this.stickyStartY = element.getBoundingClientRect().top + window.pageYOffset;
   };
 
   /** For å unngå at journalføringsskjemaet havner under folden (gjør scrolling vanskeligere), må vi sette
    * høyden innenfor viewport. Gjøres ved å kalkulere 100vh minus topp-plassering av skjemaet.
    */
-  scrollHandler = () => {
+  oppdaterVedScroll = () => {
     const { stickyDOM, stickyStartY } = this;
     const scrollTopp = document.documentElement.scrollTop || document.body.scrollTop;
     if (scrollTopp >= stickyStartY) {
