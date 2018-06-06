@@ -50,6 +50,8 @@ describe('Tester felles.js:', () => {
 
       Felles.forsokValidering(mockData);
 
+      //Fixme: Får ikke spyOn til å fungere.
+
       //expect(Felles.inneholderFeilmeldinger).toBeCalled();
     })
   })
@@ -75,6 +77,51 @@ describe('Tester felles.js:', () => {
       }
 
       expect(__private__.flatUtFeltGrupper(mockData)).toEqual(forventetData)
+    })
+  })
+
+  describe('kjorAlleValideringerSomHarFunksjoner', () => {
+    test('returnerer forventet valideringsobjekt', () => {
+      const mockVerdier = {
+        foo: 'foo',
+        bar: 'bar'
+      }
+
+      const mockObjekt = {
+        foo: verdier => `Validerer ${verdier}.`,
+        bar: [verdier => `Validerer ${verdier}.`, verdier => `Husk å oppgi ${verdier}.`],
+        baz: 'Baz mangler.',
+        faz: 23,
+      }
+
+      const forventetObjekt = {
+        foo: 'Validerer foo.',
+        bar: 'Validerer bar. Husk å oppgi bar.',
+        baz: 'Baz mangler.'
+      }
+
+      expect(__private__.kjorAlleValideringerSomHarFunksjoner(mockObjekt, mockVerdier, {})).toEqual(forventetObjekt)
+    })
+  })
+
+  describe('flettOgFilterValidering', () => {
+    test('returnerer forventet flettet valideringsobjekt', () => {
+      const mockObjekt1 = {
+        foo: ['Vennligst oppgi foo.'],
+        bar: ['Vennligst oppgi bar.'],
+      }
+
+      const mockObjekt2 = {
+        foo: ['Foo er ikke gyldig.'],
+        baz: ['Vennligst oppgi baz.']
+      }
+
+      const forventetObjekt = {
+        foo: 'Vennligst oppgi foo. Foo er ikke gyldig.',
+        baz: 'Vennligst oppgi baz.'
+      }
+
+      expect(__private__.flettOgFilterValidering(mockObjekt1, mockObjekt2)).toEqual(forventetObjekt);
     })
   })
 
