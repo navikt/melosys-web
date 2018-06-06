@@ -112,7 +112,6 @@
     "eslint-plugin-react": "^7.7.0",
     "express": "^4.16.3",
     "git-branch": "^2.0.1",
-    "jest-cli": "^22.4.3",
     "jest-junit": "^3.7.0",
     "lesshint": "^5.1.0",
     "lint-staged": "^7.1.0",
