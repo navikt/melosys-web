@@ -1,10 +1,8 @@
 /* eslint import/prefer-default-export:off */
-import request from '../../../__mocks__/request';
+import { getAsJson } from '../utils';
 
 function getUserName(userID) {
-  return request(`/api/users/${userID}`).then(user => user.name);
+  return getAsJson(`/api/users/${userID}`);
 }
 
-export {
-  getUserName,
-};
+export { getUserName };
