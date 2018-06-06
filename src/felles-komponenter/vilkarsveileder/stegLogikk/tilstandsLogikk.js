@@ -1,5 +1,6 @@
 import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
 import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetting';
+import { VurderingBostedslandTyper } from '../vurderinger/vurderingBostedsland';
 import { STEG } from './typer';
 
 class TilstandsLogikk {
@@ -60,8 +61,27 @@ class TilstandsLogikk {
         return {};
       }
       case STEG.BOSTEDSLAND: {
-        return {};
+        const { faktaavklaringSysselsettingType, faktaavklaringBostedslandSnarvei } = skjema;
+
+        const tilstandsObjekt = { visBostedslandVelger: faktaavklaringBostedslandSnarvei === VurderingBostedslandTyper.ANNET };
+
+        if (
+          faktaavklaringSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG ||
+          faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER ||
+          faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG
+        ) {
+          return {
+            ...tilstandsObjekt,
+            visTipsForYrkesaktiv: true,
+          };
+        }
+
+        return {
+          ...tilstandsObjekt,
+          visTipsForIkkeYrkesaktiv: true,
+        };
       }
+
       case STEG.FORRETNINGSSTED: {
         return {};
       }
