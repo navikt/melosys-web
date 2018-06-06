@@ -81,7 +81,7 @@ const flettOgFilterValidering = (generiskValidering, forretningsValidering = {})
       ?
       `${samletValidering[feltNavn]} ${forretningsValidering[feltNavn]}`
       :
-      forretningsValidering[feltNavn];
+      `${forretningsValidering[feltNavn]}`;
 
     return valideringsTekst !== '' ? { ...samling, [feltNavn]: valideringsTekst } : { ...samling };
   }, {});
@@ -91,6 +91,8 @@ const flettOgFilterValidering = (generiskValidering, forretningsValidering = {})
 
 /**
  * Kombinerer generisk og forretningsvalidering til én som kan brukes av redux form.
+ * Merk at kun generisk validering kan ha funksjoner. Forretningsvalidering som kommer
+ * fra server er kun string eller array.
  */
 export const byggValidering = (values, props) => {
   const { forretningsValidering } = props;
@@ -125,5 +127,7 @@ if (process.env.NODE_ENV === 'test') {
     byggValideringsObjekt,
     flatUtFeltGrupper,
     gyldigePaneler,
+    flettOgFilterValidering,
+    kjorAlleValideringerSomHarFunksjoner,
   };
 }
