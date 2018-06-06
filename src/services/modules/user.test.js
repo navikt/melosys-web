@@ -1,7 +1,6 @@
 /* eslint-disable no-undef */
 import * as user from './user';
-
-jest.mock('../request');
+jest.mock('../../../__mocks__/request');
 
 
 it('works with promises', () => {
