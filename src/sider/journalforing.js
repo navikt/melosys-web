@@ -1,3 +1,4 @@
+/* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { reduxForm, autofill, setSubmitFailed, change } from 'redux-form';
@@ -10,6 +11,7 @@ import * as MPT from '../proptypes';
 import * as Konstanter from '../constants';
 import Sticky from '../hjelpekomponenter/sticky';
 
+import withErrorHandling from '../hoc/withErrorHandling';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
@@ -135,8 +137,7 @@ class Journalforing extends Component {
   hentAvsender = value => {
     const { sokOrgnr, sokFnrDnr } = this.props;
     const { preAutofyll } = this;
-
-    if (value.length === Konstanter.ANTALL_TALL_I_DNR) {
+    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
       sokOrgnr(value).then(({ navn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', navn));
     }
 
@@ -200,6 +201,7 @@ class Journalforing extends Component {
    * @returns {boolean}
    */
   knyttTilEksisterendeSak = () => {
+    /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
@@ -218,13 +220,14 @@ class Journalforing extends Component {
       return false;
     }
 
+    alert('Denne funksjonen er ikke implementert ennå.');
+    return;
+
     tilordneSak(vasketJournalforing).then(response => {
       if (response.length === 0) {
         history.push('/');
       }
     });
-
-    return true;
   };
 
   /** Når saksbehandler klikker "opprett sak" skal det åpnes for validering av
@@ -232,6 +235,7 @@ class Journalforing extends Component {
    * @returns {boolean}
    */
   opprettFagsak = () => {
+    /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
@@ -252,7 +256,6 @@ class Journalforing extends Component {
       return false;
     }
 
-
     const fagsak = {
       soknadsperiode: {
         fom: journalforingPeriodeFraOgMed,
@@ -263,13 +266,14 @@ class Journalforing extends Component {
 
     const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
 
+    alert('Denne funksjonen er ikke implementert ennå.');
+    return;
+
     opprettNySak(journalforingData).then(response => {
       if (response.length === 0) {
         history.push('/');
       }
     });
-
-    return true;
   };
 
   resetOpprettFagsakFelter = () => {
@@ -277,12 +281,12 @@ class Journalforing extends Component {
     settFeltInnhold('journalforingPeriodeFraOgMed', '');
     settFeltInnhold('journalforingPeriodeTilOgMed', '');
     settFeltInnhold('journalforingOppholdsLand', []);
-  }
+  };
 
   resetEksisterendeSakerFelter = () => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold('saksnummer', '');
-  }
+  };
 
   render() {
     const {
@@ -372,11 +376,17 @@ const mapDispatchToProps = dispatch => ({
   tilordneSak: data => Api.Journalforing.tilordne(data),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm({
+const kontekster = [
+  { navn: 'journalforing', melding: 'Det har oppstått en feil: Kunne ikke hente journalforing.' },
+];
+
+const form = {
   form: 'journalforing',
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
   validate: journalforingValidering,
   onSubmit: () => {},
-})(Journalforing)));
+};
+
+export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Journalforing))));

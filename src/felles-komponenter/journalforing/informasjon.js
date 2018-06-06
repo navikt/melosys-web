@@ -20,9 +20,9 @@ import { OrganisasjonSelectors } from '../../ducks/organisasjon';
 class Informasjon extends Component {
   state = { spinner: {} };
 
-  erGyldigBrukerID = (id, value) => id === 'brukersID' && (value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR);
+  erGyldigBrukerID = (id, value) => id === 'brukerID' && (value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR);
 
-  erGyldigAvsenderID = (id, value) => id === 'avsendersID' && (
+  erGyldigAvsenderID = (id, value) => id === 'avsenderID' && (
     value.length === Konstanter.ANTALL_TALL_I_ORGNR ||
     value.length === Konstanter.ANTALL_TALL_I_DNR || value.length === Konstanter.ANTALL_TALL_I_FNR
   );
@@ -33,7 +33,7 @@ class Informasjon extends Component {
 
     if (this.erGyldigBrukerID(id, value)) {
       hentBruker(value, id);
-      this.toggleSpinner('brukersNavn');
+      this.toggleSpinner('brukerNavn');
     } else if (this.erGyldigAvsenderID(id, value)) {
       hentAvsender(value, id);
       this.toggleSpinner('avsenderNavn');

@@ -90,15 +90,20 @@ const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
 const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
   const filtrerteInntekterFraOpplysningspliktig = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
 
-  return Array(6).fill({}).map((verdi, index) => {
-    const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
-    const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(enkeltInntekt => enkeltInntekt.aarMaaned === aarMaaned);
-    return eksisterendeInntektFunnetVedIndeks > -1
-      ?
-      filtrerteInntekterFraOpplysningspliktig[eksisterendeInntektFunnetVedIndeks]
-      :
-      { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
-  });
+  return filtrerteInntekterFraOpplysningspliktig.length === 0 ?
+    filtrerteInntekterFraOpplysningspliktig
+    :
+    Array(6).fill({}).map((verdi, index) => {
+      const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
+
+      const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(enkeltInntekt => enkeltInntekt.aarMaaned === aarMaaned);
+
+      return eksisterendeInntektFunnetVedIndeks > -1
+        ?
+        filtrerteInntekterFraOpplysningspliktig[eksisterendeInntektFunnetVedIndeks]
+        :
+        { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
+    });
 };
 
 export const InntektSelector = createSelector(
@@ -182,7 +187,7 @@ export const OrganisasjonSelector = createSelector(
   }
 );
 
-export const ArbeidsgivereNorgeSelector = createSelector(
+export const ArbeidsgivereNorgeSelectorOld = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
@@ -195,6 +200,63 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       return ([...samling, { organisasjon, arbeidsforholdene: filtrerteArbeidsforholdene, inntektListe: filtrerteInntekter }]);
     }, [])
       .filter(arbeidsgiver => arbeidsgiver.arbeidsforholdene.length > 0 || arbeidsgiver.inntektListe.length > 0);
+    return arbeidsgivere;
+  }
+);
+
+/** Hjelpefunksjon for ArbeidsgivereNorgeSelector. Funksjonen bygger en ny gruppe av et arbeidsforhold
+ * med arbeidsforholdene (array), inntekter (array) og organisasjonen (objekt)
+ * @param arbeidsforholdet
+ * @param organisasjoner
+ * @param inntekter
+ * @param soknadStartDato
+ * @returns {{arbeidsforholdene: *[], organisasjon: *, inntekter: any[]}}
+ */
+const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, soknadStartDato) => (
+  {
+    arbeidsforholdene: [arbeidsforholdet],
+    organisasjon: organisasjoner.find(org => org.orgnr === arbeidsforholdet.opplysningspliktigID),
+    inntektListe: filtrerOgSpreInntekt(soknadStartDato, arbeidsforholdet.opplysningspliktigID, inntekter),
+  }
+);
+
+/** Denne funksjonen gjør følgende:
+ * 1. Itererer alle arbeidsforhold og grupperer de inn etter opplysningspliktigID (dvs juridisk arbeidsgiver)
+ * 2. Dersom en gruppe av opplysningspliktigID ikke eksisterer fra før, lages den via byggNyArbeidsforholdGruppe
+ *
+ * Etterpå returneres hele arrayen med sub-arrays som hver inneholder grupperinger av
+ *  - organisasjon (juridisk arbeidsgiver)
+ *  - arbeidsforholdene (virksomhetene)
+ *  - inntekt
+ */
+export const ArbeidsgivereNorgeSelector = createSelector(
+  state => OrganisasjonerSelector(state),
+  state => ArbeidsforholdeneSelector(state),
+  state => InntektSelector(state),
+  state => faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state),
+  (organisasjoner, arbeidsforholdene, inntekter, periode) => {
+    // Det er inntekter 6 måneder pri SØKNADSDATO som er interessant.
+    // Finn derfor startDato hvor vi senere teller 6 måneder tilbake når inntektslisten settes sammen.
+    const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
+
+    const arbeidsgivere = arbeidsforholdene.reduce((samling, arbeidsforholdet) => {
+      const tmpSamling = [...samling];
+
+      // Sjekk om det allerede er laget en gruppe for den aktuelle opplysningspliktigID.
+      const arbeidsforholdEksistererVedIndeks = samling
+        .findIndex(enkelt =>
+          enkelt.arbeidsforholdene.some(enkeltforhold =>
+            enkeltforhold.opplysningspliktigID === arbeidsforholdet.opplysningspliktigID));
+
+      if (arbeidsforholdEksistererVedIndeks > -1) {
+        tmpSamling[arbeidsforholdEksistererVedIndeks].arbeidsforholdene.push(arbeidsforholdet);
+      } else {
+        tmpSamling.push(byggNyArbeidsforholdGruppe(arbeidsforholdet, organisasjoner, inntekter, startDato));
+      }
+
+      return tmpSamling;
+    }, []);
+
     return arbeidsgivere;
   }
 );
