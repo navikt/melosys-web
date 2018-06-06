@@ -59,7 +59,7 @@ class MineOppgaver extends Component {
     return (
       <div className="minesaker">
         <h1>Mine Oppgaver ({minesaker.length})</h1>
-        {minesaker && minesaker.length && minesaker.map(sak => <OppgaveKomponentSwitch key={uuid()} oppgave={sak} />)}
+        {minesaker.map(sak => <OppgaveKomponentSwitch key={uuid()} oppgave={sak} />)}
         {minesaker.length === 0 && ingenSakerMelding}
       </div>
     );

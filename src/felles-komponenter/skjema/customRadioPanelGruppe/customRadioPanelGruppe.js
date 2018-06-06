@@ -86,9 +86,9 @@ const CustomRadioPanelGruppe = props => {
           <CustomRadioPanel
             feltNavn={feltNavn}
             key={`${feltNavn}-${radio.value}`}
-            onChange={event => onChange(parseInt(event.target.value, 10))}
+            onChange={event => onChange(event.target.value)}
             value={radio.value}
-            checked={currentCheckedValue === parseInt(radio.value, 10)}
+            checked={currentCheckedValue === radio.value}
             {...radio}
           />
         ))}

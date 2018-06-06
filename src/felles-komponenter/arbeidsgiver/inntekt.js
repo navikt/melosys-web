@@ -96,7 +96,7 @@ class Inntekt extends Component {
 
     const harMinstEnInntekt = inntektListe.some(inntekt => inntekt.beloep > 0);
 
-    const inntektInnhold = harMinstEnInntekt ? (
+    const inntektInnhold = harMinstEnInntekt && (
       <div className="inntekt">
         <div className="inntekt__graf">
           <ReactHighcharts config={grafConfig} />
@@ -105,14 +105,15 @@ class Inntekt extends Component {
           </Nav.Knapp>
         </div>
         {uuTabell}
-      </div>)
-      :
-      <div>Finner ingen inntekt registrert i arbeidsforholdet 6 måneder forut for søknadsperioden.</div>;
+      </div>
+    );
+
+    const manglerInntektTekst = !harMinstEnInntekt && 'Ingen inntekt i arbeidsforholdet 6 måneder forut for søknadsperioden.';
 
     return (
       <div className="inntekt panelSeksjon">
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader tittel="Inntekt" undertittel="" ikon={Ikoner.Inntekt} />}
+          heading={<PanelHeader tittel="Inntekt" undertittel={manglerInntektTekst} ikon={Ikoner.Inntekt} />}
           ariaTittel="Panel for inntekt">
           { inntektInnhold }
         </Nav.EkspanderbartpanelBase>
