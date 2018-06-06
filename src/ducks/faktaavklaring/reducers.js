@@ -35,12 +35,11 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         status: STATUS.OK,
-        data: action.data,
+        data: { ...state.data, avklaring: { ...state.data.avklaring, bosted: { ...state.data.avklaring.bosted, vurdering: action.data } } },
       };
     case Types.OPPDATER_FAKTAAVKLARING: {
       const { dokument } = action;
-      const faktaavklaring = {
-        ...state.data.faktaavklaring,
+      const avklaring = {
         opphold: {
           land: dokument.faktaavklaringOppholdsLand,
           periode: {
@@ -67,10 +66,9 @@ export default function reducer(state = initialState, action) {
         sektor: {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
-        bostedsland: {
-          bekrefterFamiliebosted: dokument.faktaavklaringBekrefterFamiliebosted,
-          bekrefterDisponering: dokument.faktaavklaringBekrefterDisponering,
-          bostedsland: dokument.faktaavklaringBostedsland,
+        bosted: {
+          vurdering: { ...state.data.avklaring.bosted.vurdering },
+          land: dokument.faktaavklaringBostedsland,
         },
         yrkesaktivitetFordeling: {
           antallLand: dokument.faktaavklaringAntallLand,
@@ -90,7 +88,7 @@ export default function reducer(state = initialState, action) {
         },
       };
 
-      return { ...state, data: { ...state.data, faktaavklaring } };
+      return { ...state, data: { ...state.data, avklaring: { ...avklaring } } };
     }
     default:
       return state;
