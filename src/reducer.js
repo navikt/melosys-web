@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux';
-import { reducer as formReducer } from 'react-redux-form-validation';
+import { reducer as formReducer } from 'redux-form';
 
 import fagsakerReducer from './ducks/fagsaker/';
 import faktaavklaringReducer from './ducks/faktaavklaring/';
@@ -13,8 +13,10 @@ import personReducer from './ducks/person';
 import soknadReducer from './ducks/soknad/';
 import vurderingReducer from './ducks/vurdering/';
 
+import customFormReducer from './ducks/form';
+
 export default combineReducers({
-  form: formReducer,
+  form: formReducer.plugin({ forretningsValidering: customFormReducer }),
   fagsaker: fagsakerReducer,
   faktaavklaring: faktaavklaringReducer,
   inngang: inngangReducer,
