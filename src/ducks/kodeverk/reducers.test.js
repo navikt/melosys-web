@@ -18,11 +18,18 @@ describe('Testing selectors.js', () => {
       data: {},
     };
 
+    const innledendeState = {
+      anyOtherKey: {
+        bar: 'bar',
+      },
+    };
+
     const forventetData = {
+      ...innledendeState,
       status: STATUS.PENDING,
     };
 
-    expect(Reducer({}, mockData)).toEqual(forventetData);
+    expect(Reducer(innledendeState, mockData)).toEqual(forventetData);
   });
 
   test('behandler FEILET', () => {
@@ -31,12 +38,19 @@ describe('Testing selectors.js', () => {
       data: {},
     };
 
+    const innledendeState = {
+      anyOtherKey: {
+        bar: 'bar',
+      },
+    };
+
     const forventetData = {
+      ...innledendeState,
       status: STATUS.ERROR,
       data: {},
     };
 
-    expect(Reducer({}, mockData)).toEqual(forventetData);
+    expect(Reducer(innledendeState, mockData)).toEqual(forventetData);
   });
 
   test('behandler OK', () => {
@@ -47,22 +61,20 @@ describe('Testing selectors.js', () => {
       },
     };
 
-    const initalState = {
+    const innledendeState = {
       anyOtherKey: {
         bar: 'bar',
       },
     };
 
     const forventetData = {
+      ...innledendeState,
       status: STATUS.OK,
-      anyOtherKey: {
-        bar: 'bar',
-      },
       data: {
         foo: 'foo',
       },
     };
 
-    expect(Reducer(initalState, mockData)).toEqual(forventetData);
+    expect(Reducer(innledendeState, mockData)).toEqual(forventetData);
   });
 });
