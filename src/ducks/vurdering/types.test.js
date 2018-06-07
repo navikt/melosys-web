@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as Types from './types';
 
-describe('test vurdering ducks', () => {
+describe('test vurdering/types.js', () => {
   describe('types.js', () => {
     test('OK', () => {
       expect(Types.OK).toEqual('vurdering/OK');
