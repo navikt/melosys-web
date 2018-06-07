@@ -47,13 +47,22 @@ describe('Testing selectors.js', () => {
       },
     };
 
+    const initalState = {
+      anyOtherKey: {
+        bar: 'bar',
+      },
+    };
+
     const forventetData = {
       status: STATUS.OK,
+      anyOtherKey: {
+        bar: 'bar',
+      },
       data: {
         foo: 'foo',
       },
     };
 
-    expect(Reducer({}, mockData)).toEqual(forventetData);
+    expect(Reducer(initalState, mockData)).toEqual(forventetData);
   });
 });
