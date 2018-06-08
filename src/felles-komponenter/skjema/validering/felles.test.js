@@ -1,7 +1,6 @@
 /* eslint-disable */
 
-import {__private__, forsokValidering} from './felles';
-import * as Felles from './felles';
+import Felles from './felles';
 
 const feilmeldingMock = {
   form: {
@@ -21,14 +20,14 @@ describe('Tester felles.js:', () => {
   describe('inneholderFeilmeldinger', () => {
     test('returnerer true ved feilmeldinger', () => {
       const mockData = feilmeldingMock;
-      expect(__private__.inneholderFeilmeldinger(mockData)).toBe(true);
+      expect(Felles.inneholderFeilmeldinger(mockData)).toBe(true);
     })
 
     test('returnerer false hvis ingen feilmeldinger', () => {
       const mockData1 = {};
       const mockData2 = { form: {feilmeldinger: [] }}
-      expect(__private__.inneholderFeilmeldinger(mockData1)).toBe(false);
-      expect(__private__.inneholderFeilmeldinger(mockData2)).toBe(false);
+      expect(Felles.inneholderFeilmeldinger(mockData1)).toBe(false);
+      expect(Felles.inneholderFeilmeldinger(mockData2)).toBe(false);
     })
   })
 
@@ -39,7 +38,7 @@ describe('Tester felles.js:', () => {
         antallMaanederINorge: 'Mangler informasjon.',
       }
 
-      expect(__private__.byggValideringsObjekt(mockData)).toEqual(forventetData);
+      expect(Felles.byggValideringsObjekt(mockData)).toEqual(forventetData);
     })
   })
 
@@ -52,7 +51,7 @@ describe('Tester felles.js:', () => {
 
       //Fixme: Får ikke spyOn til å fungere.
 
-      //expect(Felles.inneholderFeilmeldinger).toBeCalled();
+      expect(Felles.inneholderFeilmeldinger).toBeCalled();
     })
   })
 
@@ -76,7 +75,7 @@ describe('Tester felles.js:', () => {
         fazFeltnavn: 'faz'
       }
 
-      expect(__private__.flatUtFeltGrupper(mockData)).toEqual(forventetData)
+      expect(Felles.flatUtFeltGrupper(mockData)).toEqual(forventetData)
     })
   })
 
@@ -100,7 +99,7 @@ describe('Tester felles.js:', () => {
         baz: 'Baz mangler.'
       }
 
-      expect(__private__.kjorAlleValideringerSomHarFunksjoner(mockObjekt, mockVerdier, {})).toEqual(forventetObjekt)
+      expect(Felles.kjorAlleValideringerSomHarFunksjoner(mockObjekt, mockVerdier, {})).toEqual(forventetObjekt)
     })
   })
 
@@ -121,7 +120,7 @@ describe('Tester felles.js:', () => {
         baz: 'Vennligst oppgi baz.'
       }
 
-      expect(__private__.flettOgFilterValidering(mockObjekt1, mockObjekt2)).toEqual(forventetObjekt);
+      expect(Felles.flettOgFilterValidering(mockObjekt1, mockObjekt2)).toEqual(forventetObjekt);
     })
   })
 
@@ -141,7 +140,7 @@ describe('Tester felles.js:', () => {
         faktaavklaring: true,
       }
 
-      expect(__private__.gyldigePaneler(mockData)).toEqual(forventetData);
+      expect(Felles.gyldigePaneler(mockData)).toEqual(forventetData);
     })
   })
 })
