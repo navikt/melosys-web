@@ -201,9 +201,6 @@ class Journalforing extends Component {
    * @returns {boolean}
    */
   knyttTilEksisterendeSak = () => {
-    alert('Denne funksjonen er ikke implementert ennå.');
-    return;
-
     /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
@@ -223,6 +220,9 @@ class Journalforing extends Component {
       return false;
     }
 
+    alert('Denne funksjonen er ikke implementert ennå.');
+    return;
+
     tilordneSak(vasketJournalforing).then(response => {
       if (response.length === 0) {
         history.push('/');
@@ -235,9 +235,6 @@ class Journalforing extends Component {
    * @returns {boolean}
    */
   opprettFagsak = () => {
-    alert('Denne funksjonen er ikke implementert ennå.');
-    return;
-
     /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
@@ -259,7 +256,6 @@ class Journalforing extends Component {
       return false;
     }
 
-
     const fagsak = {
       soknadsperiode: {
         fom: journalforingPeriodeFraOgMed,
@@ -269,6 +265,9 @@ class Journalforing extends Component {
     };
 
     const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
+
+    alert('Denne funksjonen er ikke implementert ennå.');
+    return;
 
     opprettNySak(journalforingData).then(response => {
       if (response.length === 0) {
