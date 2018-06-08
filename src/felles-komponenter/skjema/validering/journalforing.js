@@ -21,7 +21,6 @@ const idFinnesIkke = (navn, id) => {
 };
 
 const dokumentTittelErBlank = dokumentTittel => (dokumentTittel.length === 0 ? 'Velg dokumenttittel fra listen eller skriv din egen.' : false);
-const vedleggTittelErBlank = vedleggsTitler => (vedleggsTitler.length === 0 ? 'Velg minst én vedleggstittel eller skriv inn din egen' : false);
 const eksisterendeSakIkkeValgt = saksnummer => (!saksnummer ? 'Velg hvilken sak du ønsker å knytte journalføringen mot.' : false);
 const datoErIkkeGyldig = dato => (!Dato.datoErGyldig(dato) ? 'Skriv inn en gyldig dato' : false);
 const datoErBlank = dato => ((!dato || dato === '') ? 'Tast inn dato' : false);
@@ -50,13 +49,10 @@ const journalforingGenerellValidering = verdier => {
 
   const dokumentTittel = dokumentTittelErBlank(verdier.dokumentTittel) || false;
 
-  const vedleggsTitler = vedleggTittelErBlank(verdier.vedleggsTitler) ? { _error: vedleggTittelErBlank(verdier.vedleggsTitler) } : false;
-
   const valideringsObjekt = {
     brukerID,
     avsenderID,
     dokumentTittel,
-    vedleggsTitler,
   };
 
   return valideringsObjekt;
