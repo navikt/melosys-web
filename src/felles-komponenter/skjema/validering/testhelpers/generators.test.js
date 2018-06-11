@@ -1,5 +1,12 @@
 import Generator from './generators';
 
+/**
+ * BAKGRUNN:
+ * Denne testen eksisterer for å gjøre en best mulig test av fødselsnummergeneratoren.
+ * Siden generatoren lager tilfeldige fødselsnummer er det umulig å lage en test med full
+ * coverage. Generatoren eksisterer kun for å generere mattematisk korrekte fødselsnummere
+ * slik at DISSE igjen kan benyttes i unit-tester av faktisk produksjonskode.
+ */
 describe('Testing the fodselsnummergenerator', () => {
   let generator;
 

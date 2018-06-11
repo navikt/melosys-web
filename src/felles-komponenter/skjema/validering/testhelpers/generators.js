@@ -64,10 +64,10 @@ class Generator {
     const individNumber = this.generateRandomIndividNumber(birthDate, gender);
 
     const monthDayYear = this.getMonthDayYear(birthDate);
-    const monthDayYearArray = monthDayYear.split();
+    const monthDayYearArray = monthDayYear.split('');
     monthDayYearArray[0] = `${parseInt(monthDayYearArray[0], 10) + 4}`;
 
-    return `${monthDayYearArray.join()}${individNumber}`;
+    return `${monthDayYearArray.join('')}${individNumber}`;
   }
 
   generateControlNumbers = partialBirthNumber => {
