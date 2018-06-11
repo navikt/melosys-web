@@ -124,6 +124,7 @@ class TilstandsLogikk {
         return {
           visBostedslandVelger: (faktaavklaringBostedslandSnarvei === VurderingBostedslandTyper.ANNET),
           visTipsForYrkesaktiv: erYrkesaktiv,
+          visTipsForIkkeYrkesaktiv: !erYrkesaktiv,
           avklaringer,
         };
       }
