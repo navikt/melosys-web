@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import classnames from 'classnames';
 import * as Nav from '../../../utils/navFrontend';
@@ -13,21 +13,6 @@ const uuid = require('uuid/v4');
 export const VurderingBostedslandTyper = {
   NORGE: 'NORGE',
   ANNET: 'ANNET',
-};
-
-/** Vises dersom det mangler informasjon som saksbehandler må fylle inn.
- */
-const ManglerInformasjon = ({ vurderBosted }) => (
-  <div>
-    <p>
-      Vennligst fyll ut panelet &quot;opplysninger om bosted&quot; med informasjon fra søknaden.
-    </p>
-    <Nav.Hovedknapp onClick={vurderBosted}>Vurder bosted</Nav.Hovedknapp>
-  </div>
-);
-
-ManglerInformasjon.propTypes = {
-  vurderBosted: PT.func.isRequired,
 };
 
 const TipsBostedsvurderingYrkesaktiv = () => (
@@ -53,7 +38,15 @@ const Avklaringer = ({ avklaringer }) => (
     <ul className="betingelser__liste">
       {
         avklaringer.map(({ term, status }) => {
-          const cl = classnames({ liste__element: true, 'liste__element--oppfylt': status, 'liste__element--varsel': !status });
+          let iconClassName;
+          if (status === true) {
+            iconClassName = 'liste__element--oppfylt';
+          } else if (status === false) {
+            iconClassName = 'liste__element--ikkeoppfylt';
+          } else {
+            iconClassName = 'liste__element--varsel';
+          }
+          const cl = classnames({ liste__element: true, [iconClassName]: true });
           return (<li key={uuid()} className={cl}>{term}</li>);
         })
       }
@@ -74,11 +67,10 @@ Avklaringer.defaultProps = {
  * informasjon mangler.
  */
 const AvklaringsListe = ({
-  tilstand: { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv },
-  avklaringer,
+  tilstand: { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv, avklaringer },
 }) => (
   <div>
-    {Object.keys(avklaringer).length > 0 && <Avklaringer avklaringer={avklaringer} />}
+    <Avklaringer avklaringer={avklaringer} />
 
     <Nav.Element>Tips for manuell bostedsvurdering:</Nav.Element>
     {visTipsForYrkesaktiv && <TipsBostedsvurderingYrkesaktiv />}
@@ -88,48 +80,36 @@ const AvklaringsListe = ({
 
 AvklaringsListe.propTypes = {
   tilstand: PT.object.isRequired,
-  avklaringer: PT.array.isRequired,
 };
 
 /** Hovedklasse som eksponeres ut.
  * ------------------------------
  */
-class VurderingBostedsland extends Component {
-  componentDidMount() {
-    this.props.vurderBosted();
-  }
+const VurderingBostedsland = props => {
+  const {
+    bekreftOgFortsett, tilstand, vurdering,
+  } = props;
+  const { visBostedslandVelger } = tilstand;
 
-  render () {
-    const {
-      bekreftOgFortsett, vurderBosted, tilstand, vurdering,
-    } = this.props;
-    const { visBostedslandVelger } = tilstand;
-    const { form: { feilmeldinger = [] } = {}, avklaringer = {} } = vurdering;
-
-    const informasjonMangler = feilmeldinger.length > 0;
-    const vurderingErGjort = Object.keys(avklaringer).length > 0;
-
-    return vurdering === {} ? null : (
-      <div className="vurderingBostedsland">
-        <div>
-          <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
-          {informasjonMangler && <ManglerInformasjon vurderBosted={vurderBosted} />}
-          {vurderingErGjort && <AvklaringsListe tilstand={tilstand} avklaringer={avklaringer} />}
-          <div className="vurderingBostedsland__skjemafelt">
-            <Nav.Fieldset legend="Bostedsland er:">
-              <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.NORGE} label="Norge" disabled={informasjonMangler} />
-              <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.ANNET} label="Annet" disabled={informasjonMangler} />
-              {visBostedslandVelger && <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} disabled={informasjonMangler} />}
-            </Nav.Fieldset>
-          </div>
-        </div>
-        <div className="fane__knapplinje">
-          <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+  return vurdering === {} ? null : (
+    <div className="vurderingBostedsland">
+      <div>
+        <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
+        <AvklaringsListe tilstand={tilstand} />
+        <div className="vurderingBostedsland__skjemafelt">
+          <Nav.Fieldset legend="Bostedsland er:">
+            <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.NORGE} label="Norge" />
+            <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.ANNET} label="Annet" />
+            {visBostedslandVelger && <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} />}
+          </Nav.Fieldset>
         </div>
       </div>
-    );
-  }
-}
+      <div className="fane__knapplinje">
+        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+      </div>
+    </div>
+  );
+};
 
 VurderingBostedsland.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
