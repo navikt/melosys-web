@@ -97,8 +97,6 @@ describe('Tester person.js:', () => {
       const mockData3 = generator.generateDNumber();
       const mockData4 = generator.generateDNumber();
 
-      console.log(mockData1, mockData2, mockData3, mockData4)
-
       const forventet = true;
       expect(Person.erGyldigDnr(mockData1)).toEqual(forventet);
       expect(Person.erGyldigDnr(mockData2)).toEqual(forventet);
