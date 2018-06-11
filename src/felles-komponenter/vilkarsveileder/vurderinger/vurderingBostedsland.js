@@ -34,7 +34,7 @@ const TipsBostedsvurderingIkkeYrkesaktiv = () => (
 
 const Avklaringer = ({ avklaringer }) => (
   <div>
-    <Nav.Element>Vurder bosted manuelt. Systemet har avklart at søker har følgende:</Nav.Element>
+    <Nav.Element>Vurder bosted manuelt:</Nav.Element>
     <ul className="betingelser__liste">
       {
         avklaringer.map(({ term, status }) => {
