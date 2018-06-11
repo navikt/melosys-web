@@ -8,13 +8,13 @@ import * as Konstanter from '../../../constants';
  */
 const idErBlank = verdi => ((verdi === '') && 'Tast inn fnr eller dnr.');
 const idErIkkeNummer = verdi => (!(new RegExp(/^\d+$/).test(verdi)) && 'Tast inn kun nummer.');
-const idErIkkeFnrEllerDnr = verdi => ((!Person.erFnr(verdi) && !Person.erDnr(verdi)) && 'Tast inn gyldig fnr eller dnr.');
-const idErIkkeFnrEllerDnrEllerOrgnr = verdi => ((!(Person.erFnr(verdi) || Person.erDnr(verdi) || Organisasjon.erOrgnr(verdi))) && 'Tast inn gyldig fnr, dnr eller orgnr.');
+const idErIkkeFnrEllerDnr = verdi => ((!Person.erFnrLengde(verdi) && !Person.erDnrLengde(verdi)) && 'Tast inn gyldig fnr eller dnr.');
+const idErIkkeFnrEllerDnrEllerOrgnr = verdi => ((!(Person.erFnrLengde(verdi) || Person.erDnrLengde(verdi) || Organisasjon.erOrgnrLengde(verdi))) && 'Tast inn gyldig fnr, dnr eller orgnr.');
 const idFinnesIkke = (navn, id) => {
-  if (navn === '' && Organisasjon.erOrgnr(id)) {
+  if (navn === '' && Organisasjon.erOrgnrLengde(id)) {
     return 'Fant ingen navn på dette organisasjonsnummeret.';
   }
-  if (navn === '' && (Person.erFnr(id) || Person.erDnr(id))) {
+  if (navn === '' && (Person.erFnrLengde(id) || Person.erDnrLengde(id))) {
     return 'Fant ingen navn på dette fnr eller dnr.';
   }
   return null;
