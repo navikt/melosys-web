@@ -31,6 +31,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { vurderingOperations } from '../../ducks/vurdering/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { faktaavklaringSelectors, faktaavklaringOperations } from '../../ducks/faktaavklaring/';
+import { soknadOperations } from '../../ducks/soknad/';
 import { formSelectors } from '../../ducks/form/';
 
 import './vilkarsveileder.css';
@@ -120,8 +121,9 @@ class Vilkarsveileder extends Component {
         {
           id: 'BOSTEDSLAND',
           komponent: VurderingBostedsland,
-          dataHenter: () => ({}),
+          dataHenter: props => ({ vurdering: props.faktaavklaring.bosted.vurdering }),
           handlers: {
+            vurderBosted: this.vurderBosted,
             bekreftOgFortsett: this.bekreftOgFortsett,
           },
           status: FANE_STATUS.OK,
@@ -184,6 +186,28 @@ class Vilkarsveileder extends Component {
   beOmVurdering = () => {
     this.props.beOmVurderingHandler();
     this.tilSteg(this.beregnNesteSteg());
+  }
+
+  /** For at regelmodul skal kunne gjøre en vurdering av bosted må vi sende inn
+   * informasjon fra søknaden umiddelbart i forkant.
+   */
+  vurderBosted = () => {
+    const { sendSoknad, hentBosted, skjema } = this.props;
+    const { behandlingID } = this.props.oppsummering;
+
+    sendSoknad(behandlingID, skjema)
+      .then(response => {
+        if (response.data.behandlingID !== behandlingID) {
+          // Todo: Implementere feilhåndtering i grensesnittet.
+          throw (new Error('Feil i behandlingID'));
+        }
+        return hentBosted(behandlingID);
+      })
+      .catch(() => {
+        /* eslint-disable no-console */
+        console.error('Feil i bostedsvurdering fra API.');
+        /* eslint-enable */
+      });
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
@@ -255,6 +279,8 @@ Vilkarsveileder.propTypes = {
   relevanteArbeidsforholdene: MPT.Arbeidsforholdene,
   fattVedtakHandler: PT.func.isRequired,
   beOmVurderingHandler: PT.func.isRequired,
+  sendSoknad: PT.func.isRequired,
+  hentBosted: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   faktaavklaring: PT.object,
   inngang: PT.object,
@@ -276,7 +302,7 @@ Vilkarsveileder.defaultProps = {
 
 const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state).faktaavklaring,
+  faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
   valgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
   arbeidsforholdene: fagsakSelectors.ArbeidsforholdeneSelector(state),
@@ -288,6 +314,9 @@ const mapDispatchToProps = dispatch => ({
   oppdaterFaktaavklaringState: skjema => dispatch(faktaavklaringOperations.oppdaterFaktaavklaringState(skjema)),
   hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
+  hentBosted: behandlingID => dispatch(faktaavklaringOperations.hentBosted(behandlingID)),
+  sendSoknad: (behandlingID, soknad) => dispatch(soknadOperations.send(behandlingID, soknad)),
+
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));
