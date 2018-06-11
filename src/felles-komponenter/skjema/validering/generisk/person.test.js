@@ -84,10 +84,10 @@ describe('Tester person.js:', () => {
       const mockData1 = '22222222222';
       const mockData2 = '31025043514';
       const mockData3 = '01010533445';
-      const forventetFeil = false;
-      expect(Person.erGyldigDnr(mockData1)).toEqual(forventetFeil);
-      expect(Person.erGyldigDnr(mockData2)).toEqual(forventetFeil);
-      expect(Person.erGyldigDnr(mockData3)).toEqual(forventetFeil);
+      const forventet = false;
+      expect(Person.erGyldigDnr(mockData1)).toEqual(forventet);
+      expect(Person.erGyldigDnr(mockData2)).toEqual(forventet);
+      expect(Person.erGyldigDnr(mockData3)).toEqual(forventet);
     });
 
     test('returnerer true ved riktig dnr', () => {
@@ -99,11 +99,11 @@ describe('Tester person.js:', () => {
 
       console.log(mockData1, mockData2, mockData3, mockData4)
 
-      const forventetFeil = true;
-      expect(Person.erGyldigDnr(mockData1)).toEqual(forventetFeil);
-      expect(Person.erGyldigDnr(mockData2)).toEqual(forventetFeil);
-      expect(Person.erGyldigDnr(mockData3)).toEqual(forventetFeil);
-      expect(Person.erGyldigDnr(mockData4)).toEqual(forventetFeil);
+      const forventet = true;
+      expect(Person.erGyldigDnr(mockData1)).toEqual(forventet);
+      expect(Person.erGyldigDnr(mockData2)).toEqual(forventet);
+      expect(Person.erGyldigDnr(mockData3)).toEqual(forventet);
+      expect(Person.erGyldigDnr(mockData4)).toEqual(forventet);
     });
   })
 });
