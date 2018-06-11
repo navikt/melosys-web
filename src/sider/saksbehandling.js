@@ -2,15 +2,10 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { validForm } from 'react-redux-form-validation';
+import { reduxForm } from 'redux-form';
 
-import {
-  gyldigePaneler,
-  feltGrupper,
-  alleFeltNavn,
-  alleValideringer,
-} from '../utils/panelFelter';
-
+import * as PanelFelter from '../utils/panelFelter';
+import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
@@ -23,6 +18,7 @@ import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
 import OppholdUtland from '../felles-komponenter/oppholdUtland';
 import Inntekt from '../felles-komponenter/inntektUtland';
+import Bosted from '../felles-komponenter/bosted';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
@@ -125,16 +121,17 @@ class Saksbehandling extends Component {
 
     // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
     // i panelet lenger er ugyldig (ikke validerer).
-    this.setState({ gyldigePaneler: gyldigePaneler(syncErrors) });
+    this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
   }
 
   fattVedtakHandler = () => {
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
+    const avklaring = { avklaring: { ...this.props.faktaavklaring } };
 
     if (this.props.valid) {
       this.props.sendSoknad(bid, soknad);
-      this.props.sendFaktaavklaring(bid, this.props.faktaavklaring);
+      this.props.sendFaktaavklaring(bid, avklaring);
     }
   }
 
@@ -167,7 +164,6 @@ class Saksbehandling extends Component {
       oppsummering,
       soknadArbeidsinntekt,
       soknadOppholdUtland,
-      errorSummary,
       soknadForm,
     } = this.props;
 
@@ -184,8 +180,8 @@ class Saksbehandling extends Component {
                 <Vilkarsveileder
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
-                {errorSummary}
                 {person && <Personopplysninger person={person} />}
+                <Bosted soknadForm={soknadForm} erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
@@ -222,6 +218,7 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
+  forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
   soknadOppholdUtland: soknadSelectors.OppholdUtlandSelector(state),
@@ -241,6 +238,10 @@ const mapStateToProps = state => ({
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
     studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,
+    intensjonOmRetur: boolTilStreng(soknadSelectors.BostedSelector(state).intensjonOmRetur),
+    bostedUtenforNorge: boolTilStreng(soknadSelectors.BostedSelector(state).bostedUtenforNorge),
+    familiesBosted: soknadSelectors.BostedSelector(state).familiesBosted,
+    antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: soknadSelectors.ArbeidNorgeSelector(state).fullmektigFirma,
@@ -262,9 +263,8 @@ const mapStateToProps = state => ({
     faktaavklaringMarginaltArbeid: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).marginaltArbeid,
     faktaavklaringVekslingMellomLand: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).vekslingMellomLand,
     faktaavklaringAktivitetLand: faktaavklaringSelectors.FaktaavklaringAktivitetSelector(state).aktivitetLand,
-    faktaavklaringBekrefterFamiliebosted: faktaavklaringSelectors.FaktaavklaringBostedslandSelector(state).bekrefterFamiliebosted,
-    faktaavklaringBekrefterDisponering: faktaavklaringSelectors.FaktaavklaringBostedslandSelector(state).bekrefterFamiliebosted,
-    faktaavklaringBostedsland: faktaavklaringSelectors.FaktaavklaringBostedslandSelector(state).bostedsland,
+    faktaavklaringBostedslandSnarvei: faktaavklaringSelectors.FaktaavklaringBostedSnarveiSelector(state),
+    faktaavklaringBostedsland: faktaavklaringSelectors.FaktaavklaringBostedSelector(state).land,
     faktaavklaringTjenestemann: faktaavklaringSelectors.FaktaavklaringTjenestemannSelector(state).tjenestemann,
     faktaavklaringValgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdSelector(state),
     faktaavklaringForretningsstedLand: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).land,
@@ -284,14 +284,13 @@ const mapDispatchToProps = dispatch => ({
   oppdaterFaktaavklaring: values => { dispatch(faktaavklaringActions.oppdaterFaktaavklaringState(values)); },
 });
 
-const SaksbehandlingForm = validForm({
+const SaksbehandlingForm = reduxForm({
   form: 'soknad',
   enableReinitialize: true,
   destroyOnUnmount: false,
   updateUnregisteredFields: true,
-  errorSummaryTitle: 'Følgende må vurderes eller oppgis:',
-  fields: alleFeltNavn(feltGrupper),
-  validate: alleValideringer(feltGrupper),
+  fields: PanelFelter.alleFeltNavn(PanelFelter.feltGrupper),
+  validate: (values, props) => Validering.Felles.byggValidering(values, props),
 })(Saksbehandling);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksbehandlingForm));
