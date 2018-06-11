@@ -41,10 +41,12 @@ class Generator {
     const birthYear = birthDate.getFullYear();
     const individNumberRange = this.getIndividNumberRange(birthYear);
     const randomIndividNumber = Math.round((Math.random() * (individNumberRange[1] - individNumberRange[0])) + individNumberRange[0]);
-    const individNumberAdjustedForGender = (Math.round(randomIndividNumber / 2) * 2) + gender;
+    const individNumberAdjustedForGender = this.genderOddEven(randomIndividNumber, gender);
     const stringifiedIndividNumber = String(individNumberAdjustedForGender).padStart(3, '0');
     return stringifiedIndividNumber;
   }
+
+  genderOddEven = (randomIndividNumber, gender) => ((Math.round(randomIndividNumber / 2) * 2) + gender);
 
   getMonthDayYear = date => (
     `${String(date.getDate()).padStart(2, '0')}${String(date.getMonth()).padStart(2, '0')}${String(date.getFullYear()).substr(2, 2)}`
