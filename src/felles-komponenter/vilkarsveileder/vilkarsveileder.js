@@ -19,6 +19,7 @@ import VurderingYrkesaktivitetFordeling from './vurderinger/vurderingYrkesaktivi
 import VurderingAktivitet from './vurderinger/vurderingAktivitet';
 import VurderingUtsending from './vurderinger/vurderingUtsending';
 import VurderingSysselsetting from './vurderinger/vurderingSysselsetting';
+import VurderingIkkeYrkesaktiv from './vurderinger/vurderingIkkeYrkesaktiv';
 import VurderingSektor from './vurderinger/vurderingSektor';
 import VurderingVirksomhet from './vurderinger/vurderingVirksomhet';
 import VurderingBostedsland from './vurderinger/vurderingBostedsland';
@@ -74,6 +75,15 @@ class Vilkarsveileder extends Component {
           status: FANE_STATUS.OK,
         },
         {
+          id: 'IKKE_YRKESAKTIV',
+          komponent: VurderingIkkeYrkesaktiv,
+          dataHenter: () => ({}),
+          handlers: {
+            bekreftOgFortsett: this.bekreftOgFortsett,
+          },
+          status: FANE_STATUS.OK,
+        },
+        {
           id: 'ARBEIDSFORHOLD',
           komponent: VurderingArbeidsforhold,
           dataHenter: props => ({ relevanteArbeidsforholdene: props.relevanteArbeidsforholdene }),
@@ -121,7 +131,7 @@ class Vilkarsveileder extends Component {
         {
           id: 'BOSTEDSLAND',
           komponent: VurderingBostedsland,
-          dataHenter: props => ({ vurdering: props.faktaavklaring.bosted.vurdering }),
+          dataHenter: () => ({}),
           handlers: {
             vurderBosted: this.vurderBosted,
             bekreftOgFortsett: this.bekreftOgFortsett,
