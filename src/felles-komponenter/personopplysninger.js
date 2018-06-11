@@ -54,6 +54,7 @@ function Personopplysninger(props) {
   return (
     <div className="personopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader ikon={ikonFraKjonn(kjoenn)} tittel={`${sammensattNavn} (${aar})`} undertittel={`Fødselsnummer: ${fnr}`} />}
         ariaTittel="Panel for personinformasjon" >
         <Nav.Container fluid>

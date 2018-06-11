@@ -25,6 +25,7 @@ const Organisasjon = ({ organisasjon = {} }) => {
   return (
     <div className="panelSeksjon organisasjon">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader
           ikon={Ikoner.Arbeidsgiver}
           tittel={`Arbeidsgiver i Norge: ${navn}`}

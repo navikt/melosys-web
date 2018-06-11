@@ -59,6 +59,7 @@ const UtsendendeArbeidsgiver = props => {
   return Object.keys(soknadArbeidNorge).length > 0 ? (
     <div className="utsendendeArbeidsgiver panelSeksjon">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader ikon={panelIkon} tittel="Utsendende arbeidsgiver" undertittel="" />}
         ariaTittel="Panel for utsendende arbeidsgiver i Norge">
         <Nav.Container fluid>

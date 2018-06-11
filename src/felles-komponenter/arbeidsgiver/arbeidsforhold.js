@@ -46,6 +46,7 @@ const Arbeidsforholdet = props => {
   return (
     <div className="panelSeksjon arbeidsforholdet">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader
           ikon={Ikoner.Arbeidsforhold}
           tittel={`Arbeidsforhold: ${arbeidsgiverNavn}`}

@@ -17,6 +17,7 @@ function Personopplysninger() {
   return (
     <div className="tilleggsopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader ikon={Ikoner.Ferdig} tittel="Tilleggsinformasjon" undertittel="" />}
         ariaTittel="Panel for tilleggsinformasjon" >
         <Nav.Container fluid>

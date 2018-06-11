@@ -15,6 +15,7 @@ function Inntekt () {
   return (
     <div className="inntektUtland panelSeksjon">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader ikon={panelIkon} tittel="Inntekt under oppholdet" undertittel="" />}
         ariaTittel="Panel for inntekt under oppholdet">
         <Nav.Row className="iinntektUtland__seksjon">
