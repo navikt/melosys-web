@@ -1,5 +1,6 @@
 /* eslint-disable */
 import * as Person from './person';
+import Generator from '../testhelpers/generators';
 
 describe('Tester person.js:', () => {
   describe('fulltNavn', () => {
@@ -30,18 +31,17 @@ describe('Tester person.js:', () => {
     });
 
     test('returnerer true ved riktig fødselsnummer', () => {
-      const mockData1 = '19117220349'; //Glitrende Hatt
-      const mockData2 = '21027500134'; //Blå Konsoll
-      const mockData3 = '22127501762'; //Rask Kaffi
-      const mockData4 = '02025618273'; //Artig Saks
-      const mockData5 = '31057406782'; //Naturlig Maskin
+      const generator = new Generator();
+      const mockData1 = generator.generateBirthNumber();
+      const mockData2 = generator.generateBirthNumber();
+      const mockData3 = generator.generateBirthNumber();
+      const mockData4 = generator.generateBirthNumber();
 
       const forventetFeil = true;
       expect(Person.erGyldigFnr(mockData1)).toEqual(forventetFeil);
       expect(Person.erGyldigFnr(mockData2)).toEqual(forventetFeil);
       expect(Person.erGyldigFnr(mockData3)).toEqual(forventetFeil);
       expect(Person.erGyldigFnr(mockData4)).toEqual(forventetFeil);
-      expect(Person.erGyldigFnr(mockData5)).toEqual(forventetFeil);
     });
   })
 
@@ -91,18 +91,19 @@ describe('Tester person.js:', () => {
     });
 
     test('returnerer true ved riktig dnr', () => {
-      const mockData1 = '59117220332'; //Glitrende Hatt + 4
-      const mockData2 = '61027500128'; //Blå Konsoll + 4
-      const mockData3 = '62127501756'; //Rask Kaffi + 4
-      const mockData4 = '42025618267'; //Artig Saks + 4
-      const mockData5 = '71057406776'; //Naturlig Maskin + 4
+      const generator = new Generator();
+      const mockData1 = generator.generateDNumber();
+      const mockData2 = generator.generateDNumber();
+      const mockData3 = generator.generateDNumber();
+      const mockData4 = generator.generateDNumber();
+
+      console.log(mockData1, mockData2, mockData3, mockData4)
 
       const forventetFeil = true;
       expect(Person.erGyldigDnr(mockData1)).toEqual(forventetFeil);
       expect(Person.erGyldigDnr(mockData2)).toEqual(forventetFeil);
       expect(Person.erGyldigDnr(mockData3)).toEqual(forventetFeil);
       expect(Person.erGyldigDnr(mockData4)).toEqual(forventetFeil);
-      expect(Person.erGyldigDnr(mockData5)).toEqual(forventetFeil);
     });
   })
 });
