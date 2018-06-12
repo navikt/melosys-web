@@ -22,8 +22,8 @@ moment.updateLocale('nb', {
   ],
 });
 
-describe('Tester dato.js:', () => {
-  describe('Test at vaskInputDato', () => {
+describe('dato.js:', () => {
+  describe('vaskInputDato', () => {
     test('godtar alle tillatte kortdatoformater', () => {
       const tillatteDatoer = [
         {test: '010113', 'forvent': '01.01.2013'},
@@ -79,7 +79,7 @@ describe('Tester dato.js:', () => {
     });
   })
 
-  describe('Tester at nodmaliserInputDato', () => {
+  describe('nodmaliserInputDato', () => {
     test('ikke forsøker å vaske datoen så lenge verdiene er forskjellige', () => {
       const verdi = '123456';
       const forrigeVerdi = '12345';
@@ -95,7 +95,7 @@ describe('Tester dato.js:', () => {
     });
   })
 
-  describe('Tester at formatterDatoTilNorsk', () => {
+  describe('formatterDatoTilNorsk', () => {
     test('formatterer datoen riktig til norsk format DD.MM.YYYY uten klokkeslett', () => {
       const tillatteDatoer = [
         {test: '2016-01-12', 'forvent': '12.01.2016'},
@@ -131,7 +131,7 @@ describe('Tester dato.js:', () => {
   });
 
 
-  describe('Tester at formatterDatoTilISO', () => {
+  describe('formatterDatoTilISO', () => {
     test('formatterer dato uten klokkeslett til ISO-format.', () => {
       const tillatteDatoer = [
         {test: '01.01.2018', forvent: '2018-01-01'},
@@ -157,7 +157,7 @@ describe('Tester dato.js:', () => {
     })
   })
 
-  describe('Tester at formatterKortDatoTilNorsk', () => {
+  describe('formatterKortDatoTilNorsk', () => {
     test('formatterer år-dato til korrekt til lesbarhet', () => {
       const tillatteDatoer = [
         {test: '2007-01', forvent: 'jan - 2007'},
@@ -170,6 +170,6 @@ describe('Tester dato.js:', () => {
         expect(formattertDato).toEqual(datoTest.forvent);
       });
     });
-  })
+  });
 
 });

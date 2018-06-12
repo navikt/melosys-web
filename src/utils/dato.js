@@ -96,11 +96,17 @@ function formatterKortDatoTilNorsk(kortDato) {
   return `${dato.format('MMM')} - ${dato.format('YYYY')}`;
 }
 
+function datoDiff (fom, tom, enhet = 'months') {
+  if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
+  return moment(tom).diff(fom, enhet);
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
   formatterDatoTilNorsk,
   formatterDatoTilISO,
   formatterKortDatoTilNorsk,
+  datoDiff,
   MAX_AR_FREM_I_TID,
 };
