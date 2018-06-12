@@ -1,21 +1,33 @@
 /* eslint-disable */
 
-import {__private__} from './felles';
+import Felles from './felles';
 
-import { feilmeldingMock } from '../../../../__mocks__/stubs/feilmelding';
+const feilmeldingMock = {
+  form: {
+    feilmeldinger: [{
+      kategori: {
+        alvorlighetsgrad: 'FEIL', beskrivelse: 'Kort beskrivelse.',
+      },
+      alvorlighetsgrad: 'FEIL',
+      beskrivelse: 'Mangler informasjon',
+      melding: 'Mangler informasjon.',
+      skjemaFeltID: 'antallMaanederINorge',
+    }],
+  },
+};
 
 describe('Tester felles.js:', () => {
   describe('inneholderFeilmeldinger', () => {
     test('returnerer true ved feilmeldinger', () => {
       const mockData = feilmeldingMock;
-      expect(__private__.inneholderFeilmeldinger(mockData)).toBe(true);
+      expect(Felles.inneholderFeilmeldinger(mockData)).toBe(true);
     })
 
     test('returnerer false hvis ingen feilmeldinger', () => {
       const mockData1 = {};
       const mockData2 = { form: {feilmeldinger: [] }}
-      expect(__private__.inneholderFeilmeldinger(mockData1)).toBe(false);
-      expect(__private__.inneholderFeilmeldinger(mockData2)).toBe(false);
+      expect(Felles.inneholderFeilmeldinger(mockData1)).toBe(false);
+      expect(Felles.inneholderFeilmeldinger(mockData2)).toBe(false);
     })
   })
 
@@ -23,10 +35,23 @@ describe('Tester felles.js:', () => {
     test('returnerer korrekt valideringsobjekt', () => {
       const mockData = feilmeldingMock;
       const forventetData = {
-        antallMaanederINorge: 'Mangler informasjon fra søknaden om antallMaanederINorge.',
+        antallMaanederINorge: 'Mangler informasjon.',
       }
 
-      expect(__private__.byggValideringsObjekt(mockData)).toEqual(forventetData);
+      expect(Felles.byggValideringsObjekt(mockData)).toEqual(forventetData);
+    })
+  })
+
+  describe('forsokValidering', () => {
+    test('gjør ingenting dersom data ikke inneholder feil', () => {
+      const mockFunction = jest.spyOn(Felles, 'inneholderFeilmeldinger')
+      const mockData = { ...feilmeldingMock, form: { ...feilmeldingMock.form, feilmeldinger: [] } };
+
+      Felles.forsokValidering(mockData);
+
+      //Fixme: Får ikke spyOn til å fungere.
+
+      expect(Felles.inneholderFeilmeldinger).toBeCalled();
     })
   })
 
@@ -50,17 +75,72 @@ describe('Tester felles.js:', () => {
         fazFeltnavn: 'faz'
       }
 
-      expect(__private__.flatUtFeltGrupper(mockData)).toEqual(forventetData)
+      expect(Felles.flatUtFeltGrupper(mockData)).toEqual(forventetData)
+    })
+  })
+
+  describe('kjorAlleValideringerSomHarFunksjoner', () => {
+    test('returnerer forventet valideringsobjekt', () => {
+      const mockVerdier = {
+        foo: 'foo',
+        bar: 'bar'
+      }
+
+      const mockObjekt = {
+        foo: verdier => `Validerer ${verdier}.`,
+        bar: [verdier => `Validerer ${verdier}.`, verdier => `Husk å oppgi ${verdier}.`],
+        baz: 'Baz mangler.',
+        faz: 23,
+      }
+
+      const forventetObjekt = {
+        foo: 'Validerer foo.',
+        bar: 'Validerer bar. Husk å oppgi bar.',
+        baz: 'Baz mangler.'
+      }
+
+      expect(Felles.kjorAlleValideringerSomHarFunksjoner(mockObjekt, mockVerdier, {})).toEqual(forventetObjekt)
+    })
+  })
+
+  describe('flettOgFilterValidering', () => {
+    test('returnerer forventet flettet valideringsobjekt', () => {
+      const mockObjekt1 = {
+        foo: ['Vennligst oppgi foo.'],
+        bar: ['Vennligst oppgi bar.'],
+      }
+
+      const mockObjekt2 = {
+        foo: ['Foo er ikke gyldig.'],
+        baz: ['Vennligst oppgi baz.']
+      }
+
+      const forventetObjekt = {
+        foo: 'Vennligst oppgi foo. Foo er ikke gyldig.',
+        baz: 'Vennligst oppgi baz.'
+      }
+
+      expect(Felles.flettOgFilterValidering(mockObjekt1, mockObjekt2)).toEqual(forventetObjekt);
     })
   })
 
   describe('gyldigePaneler', () => {
     test('returnerer et objekt med gyldige panelstatuser', () => {
       const mockData = {
-        familiesBosted: '',
-        ansattPaSokkelEllerSkip: '',
+        familiesBosted: '(Feilmeldingen her er ikke viktig)',
+        ansattPaSokkelEllerSkip: '(Feilmeldingen her er ikke viktig)',
       }
+
+      const forventetData = {
+        arbeidNorge: false,
+        bosted: false,
+        inntekt: true,
+        oppholdUtland: true,
+        bekreftelser: true,
+        faktaavklaring: true,
+      }
+
+      expect(Felles.gyldigePaneler(mockData)).toEqual(forventetData);
     })
   })
-
 })

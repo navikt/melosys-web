@@ -5,7 +5,7 @@ import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { datoDiff } from '../../../utils/utils';
+import { datoDiff } from '../../../utils/dato';
 
 import './vurderingVedtak.css';
 
