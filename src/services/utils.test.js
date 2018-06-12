@@ -66,7 +66,6 @@ describe('services/utils', () => {
         return {
           type: 'saksbehandler/OK',
           data: saksbehandler,
-        };
       }
       store
         .dispatch(doThenDispatch(() => hentSaksbehandler(), duckSaksbehandlerTypes))
