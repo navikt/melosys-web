@@ -46,7 +46,7 @@ import {
   vurderingSelectors,
 } from '../ducks/vurdering/';
 
-import { boolTilStreng } from '../utils/utils';
+import { boolTilStreng } from '../utils/streng';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import { formSelectors } from '../ducks/form/';
