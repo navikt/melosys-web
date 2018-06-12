@@ -233,6 +233,8 @@ class Vilkarsveileder extends Component {
     const { erDetteSisteSteg } = this;
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
+    console.log(beregnedeSteg)
+
     const aktuelleSteg = beregnedeSteg
       .map(aktueltSteg => this.state.alleSteg.find(steg => steg.id === aktueltSteg))
       .map((steg, index) => ({
