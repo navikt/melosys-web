@@ -1,27 +1,11 @@
-import moment from 'moment';
 import { VurderingVirksomhetTyper } from '../vurderinger/vurderingVirksomhet';
 import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetting';
 import { VurderingBostedslandTyper } from '../vurderinger/vurderingBostedsland';
 import { STEG } from './typer';
 import { VurderingIkkeYrkesaktivTyper } from '../vurderinger/vurderingIkkeYrkesaktiv';
 import Regler from '../../../services/regler';
-import {strengTilBool} from '../../../utils/utils';
 
 class TilstandsLogikk {
-  static boolTilstand = tilstand => {
-    if (tilstand && tilstand.toUpperCase() === 'TRUE') { return true; }
-    if (tilstand && tilstand.toUpperCase() === 'FALSE') { return false; }
-    return undefined;
-  }
-
-  static oppholdErInntilTolvManeder = skjema => {
-    const datoFom = moment(skjema.oppholdUtlandFom, 'DD.MM.YYYY');
-    const datoTom = moment(skjema.oppholdUtlandTom, 'DD.MM.YYYY');
-    const oppholdsDiff = datoTom.diff(datoFom, 'months');
-    if (Number.isNaN(oppholdsDiff)) { return undefined; }
-    return oppholdsDiff < 12;
-  }
-
   static familieBorINorge = skjema => {
     const { familiesBosted } = skjema;
     if (skjema.familiesBosted === undefined) { return undefined; }
@@ -114,7 +98,7 @@ class TilstandsLogikk {
           if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
             avklaringer = [
               { term: 'Forutgående bosted i Norge.', status: undefined },
-              { term: 'Oppholdet er inntil 12 mnd.', status: TilstandsLogikk.oppholdErInntilTolvManeder(skjema) },
+              { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
               { term: 'Oppholder seg i utlandet.', status: undefined },
               { term: 'Har studiested i utlandet.', status: undefined },
               { term: 'Finansiering av studier fra Norge.', status: undefined },
@@ -124,9 +108,9 @@ class TilstandsLogikk {
           if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.MEDFOLGENDE) {
             avklaringer = [
               { term: 'Forutgående bosted i Norge.', status: undefined },
-              { term: 'Oppholdet er inntil 12 mnd.', status: TilstandsLogikk.oppholdErInntilTolvManeder(skjema) },
+              { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
               { term: 'Medfølgende familie til utsendt arbeidstaker.', status: undefined },
-              { term: 'Er intensjonen å returnere til Norge?', status: TilstandsLogikk.boolTilstand(skjema.intensjonOmRetur) },
+              { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
             ];
           }
           if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
@@ -134,7 +118,7 @@ class TilstandsLogikk {
               { term: 'Forutgående bosted i Norge.', status: undefined },
               { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: undefined },
               { term: 'Medfølgende familie til utsendt arbeidstaker', status: undefined },
-              { term: 'Er intensjonen å returnere til Norge?', status: TilstandsLogikk.boolTilstand(skjema.intensjonOmRetur) },
+              { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
             ];
           }
           if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
