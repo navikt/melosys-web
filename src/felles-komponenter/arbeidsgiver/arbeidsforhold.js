@@ -12,8 +12,8 @@ import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
 import Arbeidsavtaler from './arbeidsavtaler';
 
-
-import { boolTilNorsk, datoDiff } from '../../utils/utils';
+import { boolTilNorsk } from '../../utils/streng';
+import { datoDiff } from '../../utils/dato';
 
 import './arbeidsforhold.css';
 
