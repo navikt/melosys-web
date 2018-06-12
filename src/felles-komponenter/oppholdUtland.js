@@ -21,6 +21,14 @@ function OppholdUtland ({ soknadForm }) {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
+              <Nav.Fieldset legend="Oppholdsperiode">
+                <Nav.Column xs="6">
+                  <Skjema.Input datoFelt label="Fra og med" feltNavn="oppholdUtlandFom" />
+                </Nav.Column>
+                <Nav.Column xs="6">
+                  <Skjema.Input datoFelt label="Til og med" feltNavn="oppholdUtlandTom" />
+                </Nav.Column>
+              </Nav.Fieldset>
               <Nav.Fieldset legend="Student i EØS-land">
                 <Nav.Column xs="12">
                   <Skjema.Checkbox label="Søkeren er student i EØS-land" feltNavn="studentIEOS" />
