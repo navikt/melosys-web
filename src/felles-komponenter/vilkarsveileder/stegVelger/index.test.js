@@ -1,6 +1,6 @@
 import StegVelger from './index';
 
-describe('Tester stegVelger', () => {
+describe.only('Tester stegVelger', () => {
   test('stegvelger', () => {
     const faktaavklaring = {
       behandlingID: 4,
