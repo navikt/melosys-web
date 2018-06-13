@@ -233,8 +233,6 @@ class Vilkarsveileder extends Component {
     const { erDetteSisteSteg } = this;
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
 
-    console.log(beregnedeSteg)
-
     const aktuelleSteg = beregnedeSteg
       .map(aktueltSteg => this.state.alleSteg.find(steg => steg.id === aktueltSteg))
       .map((steg, index) => ({
@@ -243,6 +241,8 @@ class Vilkarsveileder extends Component {
         aktivtSteg: false,
         data: { ...steg.dataHenter(props), tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
       }));
+
+    console.log(aktuelleSteg);
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
 
