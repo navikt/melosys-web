@@ -1,0 +1,57 @@
+import StegVelger from './index';
+
+describe('Tester stegVelger', () => {
+  test('stegvelger', () => {
+    const faktaavklaring = {
+      behandlingID: 4,
+      avklaring: {
+        opphold: {
+          land: ['GB'],
+          periode: {
+            fom: '2018-01-01',
+            tom: '2019-01-01',
+          },
+        },
+        aktivitet: {
+          aktivitetLand: ['GB'],
+        },
+        sysselsetting: {
+          sysselsettingType: 'ARBEIDSTAKER',
+        },
+        utsending: {
+          ansattINorskSelskap: true,
+          erstatterTidligereUtsendt: true,
+          utsendingMindreEnn24Mnd: null,
+          foretakDriverINorge: true,
+          harForutgaendeMedlemskap: true,
+          arbeidKnyttetTilVirksomhetUtlandet: null,
+          sammeTypeVirksomhet: null,
+        },
+        bosted: {
+          vurdering: {},
+          land: [],
+        },
+        sektor: {
+          ansattISektor: 'INGEN_AV_DISSE',
+        },
+        tjenestemann: {
+          tjenestemann: 'ETT_LAND_YRKESAKTIVITET_ANDRE_LAND',
+        },
+        valgteArbeidsforhold: [],
+        yrkesaktivitetFordeling: {
+          antallLand: 'ETT_LAND_IKKE_NORGE',
+        },
+        virksomhet: {
+          aktivitetINorge: 'OVER_25_PROSENT',
+          marginaltArbeid: 'MARGINALT_JA',
+          vekslingMellomLand: 'EN_ELLER_BEGGE',
+        },
+      },
+    };
+
+    const stegVelger = new StegVelger(faktaavklaring);
+    stegVelger.beregnAlleSteg();
+
+    expect(true).toBe(false);
+  });
+});

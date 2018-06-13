@@ -3,6 +3,7 @@
   "rules": {
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "space-before-function-paren": "off",
+    "no-underscore-dangle": "off",
     "react/jsx-indent-props": "off",
     "react/forbid-prop-types": "off",
     "react/no-unused-prop-types": "off",

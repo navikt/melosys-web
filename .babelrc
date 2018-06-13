@@ -3,5 +3,8 @@
     "react",
     "env",
     "airbnb"
+  ],
+  "plugins": [
+    "syntax-async-generators"
   ]
 }
