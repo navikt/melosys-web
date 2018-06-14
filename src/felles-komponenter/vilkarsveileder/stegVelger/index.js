@@ -12,19 +12,16 @@ class StegVelger {
 
     let steg;
     const stegSamling = [];
-    steg = this.hentSteg(forsteStegID);
-    stegSamling.push(steg.byggSteg());
-    steg = this.hentSteg(steg.nesteSteg());
-    stegSamling.push(steg.byggSteg());
-    steg = this.hentSteg(steg.nesteSteg());
-    stegSamling.push(steg.byggSteg());
-    steg = this.hentSteg(steg.nesteSteg());
-    stegSamling.push(steg.byggSteg());
+    do while (!steg.id === 'VEDTAK'){
+      steg = this.hentSteg(forsteStegID);
+      stegSamling.push(steg.byggSteg());
+    }
 
     console.log(stegSamling);
   }
 
   hentSteg = stegID => {
+    console.log('hentSteg()', stegID)
     const StegKlasse = this.kontrollerOppslag(stegID);
     const steget = new StegKlasse(this._faktaavklaring);
     return steget;
