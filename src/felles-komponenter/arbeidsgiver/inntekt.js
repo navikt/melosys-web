@@ -113,6 +113,7 @@ class Inntekt extends Component {
     return (
       <div className="inntekt panelSeksjon">
         <Nav.EkspanderbartpanelBase
+          onClick={() => {}}
           heading={<PanelHeader tittel="Inntekt" undertittel={manglerInntektTekst} ikon={Ikoner.Inntekt} />}
           ariaTittel="Panel for inntekt">
           { inntektInnhold }

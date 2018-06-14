@@ -20,6 +20,7 @@ const Bosted = props => {
   return (
     <div className="bosted panelSeksjon">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om bosted, fra søknaden" undertittel="" />}
         ariaTittel="Panel for opplysninger om bosted, fra søknaden">
         <Nav.Container fluid>

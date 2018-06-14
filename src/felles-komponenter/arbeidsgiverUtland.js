@@ -15,6 +15,7 @@ function ArbeidsgiverUtland () {
   return (
     <div className="arbeidsgiverUtland panelSeksjon">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader ikon={panelIkon} tittel="Arbeidssted i utlandet" undertittel="" />}
         ariaTittel="Panel for arbeidssted i utlandet">
         <Nav.Container fluid>

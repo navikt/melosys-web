@@ -16,6 +16,7 @@ function Bekreftelser (props) {
   return (
     <div className="bekreftelser panelSeksjon">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader ikon={panelIkon} tittel="Arbeidsgivers bekreftelse" undertittel="" />}
         ariaTittel="Panel for bekreftelser" >
         <Nav.Row className="bekreftelser__seksjon">

@@ -16,6 +16,7 @@ function OppholdUtland ({ soknadForm }) {
   return (
     <div className="arbeidsgiverUtland panelSeksjon">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader ikon={panelIkon} tittel="Opphold i utlandet" undertittel="" />}
         ariaTittel="Panel for arbeidssted i utlandet">
         <Nav.Container fluid>

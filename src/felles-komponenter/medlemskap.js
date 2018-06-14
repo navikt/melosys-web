@@ -110,6 +110,7 @@ const Medlemskap = props => {
   return (
     <div className="medlemskap panelSeksjon">
       <Nav.EkspanderbartpanelBase
+        onClick={() => {}}
         heading={<PanelHeader ikon={Ikoner.Medlemskap} tittel="Medlemskap" undertittel="" />}
         ariaTittel="Panel for medlemskap">
         <section aria-label="Panel for medlemskap">
