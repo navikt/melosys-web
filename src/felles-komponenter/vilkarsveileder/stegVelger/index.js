@@ -1,16 +1,11 @@
-import Inngang from './inngang';
-import Periode from './periode';
+import * as Kontrollere from './kontrollere';
+
 
 class StegVelger {
-  constructor(faktaavklaring){
+  constructor(faktaavklaring) {
     this._faktaavklaring = faktaavklaring;
-    this._stegLeksikon = {
-      INNGANG: Inngang,
-      PERIODE: Periode,
-    };
   }
 
-  stegKlasse = stegID => this._stegLeksikon[stegID] || false;
 
   beregnAlleSteg = () => {
     const forsteStegID = 'INNGANG';
@@ -21,14 +16,27 @@ class StegVelger {
     stegSamling.push(steg.byggSteg());
     steg = this.hentSteg(steg.nesteSteg());
     stegSamling.push(steg.byggSteg());
+    steg = this.hentSteg(steg.nesteSteg());
+    stegSamling.push(steg.byggSteg());
+    steg = this.hentSteg(steg.nesteSteg());
+    stegSamling.push(steg.byggSteg());
 
     console.log(stegSamling);
   }
 
   hentSteg = stegID => {
-    const StegKlasse = this.stegKlasse(stegID);
+    const StegKlasse = this.kontrollerOppslag(stegID);
     const steget = new StegKlasse(this._faktaavklaring);
     return steget;
+  }
+
+  kontrollerOppslag = ID => {
+    const kontrollerNavn = ID
+      .toLowerCase()
+      .split('_')
+      .map(part => `${part.charAt(0).toUpperCase()}${part.substr(1)}`)
+      .join('');
+    return Kontrollere[kontrollerNavn];
   }
 }
 
