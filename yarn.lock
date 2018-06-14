@@ -5892,9 +5892,9 @@ nav-frontend-ekspanderbartpanel-style@^0.3.8:
   version "0.3.8"
   resolved "https://registry.yarnpkg.com/nav-frontend-ekspanderbartpanel-style/-/nav-frontend-ekspanderbartpanel-style-0.3.8.tgz#3aa1000f445b5c184433eb8848b5521daeb6c69c"
 
-nav-frontend-ekspanderbartpanel@^1.0.3:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/nav-frontend-ekspanderbartpanel/-/nav-frontend-ekspanderbartpanel-1.0.5.tgz#917b0fabd41ef2ebd40a169868895071e61ab0dd"
+nav-frontend-ekspanderbartpanel@^1.0.9:
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/nav-frontend-ekspanderbartpanel/-/nav-frontend-ekspanderbartpanel-1.0.9.tgz#fcab3455b253f58b4baffae4cb0e78173a7d4d65"
 
 nav-frontend-grid-style@^0.2.15:
   version "0.2.16"
