@@ -4,30 +4,37 @@ import * as Kontrollere from './kontrollere';
 class StegVelger {
   constructor(faktaavklaring) {
     this._faktaavklaring = faktaavklaring;
+    this._forsteStegID = 'INNGANG';
   }
 
-
   beregnAlleSteg = () => {
-    const forsteStegID = 'INNGANG';
-
-    let steg;
+    let steg = null;
     const stegSamling = [];
-    do while (!steg.id === 'VEDTAK'){
-      steg = this.hentSteg(forsteStegID);
+
+    while(steg.id !== undefined) {
+      this.beregnNesteSteg(steg);
       stegSamling.push(steg.byggSteg());
     }
 
     console.log(stegSamling);
   }
 
-  hentSteg = stegID => {
-    console.log('hentSteg()', stegID)
-    const StegKlasse = this.kontrollerOppslag(stegID);
+  beregnNesteSteg = forrigeSteg => {
+    let nesteSteg;
+    if (forrigeSteg === null) {
+      nesteSteg = this.lagKlasseBasertPaID(this._forsteStegID);
+    }
+
+
+  }
+
+  lagKlasseBasertPaID = stegID => {
+    const StegKlasse = this.beregnStegKlasseFraID(stegID);
     const steget = new StegKlasse(this._faktaavklaring);
     return steget;
   }
 
-  kontrollerOppslag = ID => {
+  beregnStegKlasseFraID = ID => {
     const kontrollerNavn = ID
       .toLowerCase()
       .split('_')
