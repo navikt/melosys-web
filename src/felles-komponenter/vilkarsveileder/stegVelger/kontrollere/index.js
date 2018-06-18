@@ -11,6 +11,7 @@ import Tjenestemann from './tjenestemann';
 import Utsending from './utsending';
 import Virksomhet from './virksomhet';
 import YrkesaktivitetFordeling from './yrkesaktivitet_fordeling';
+import Vedtak from './vedtak';
 
 
 export {
@@ -27,4 +28,5 @@ export {
   Utsending,
   Virksomhet,
   YrkesaktivitetFordeling,
+  Vedtak,
 };

@@ -8,24 +8,20 @@ class StegVelger {
   }
 
   beregnAlleSteg = () => {
-    let steg = null;
+    let gjeldendeSteg = null;
     const stegSamling = [];
 
-    while(steg.id !== undefined) {
-      this.beregnNesteSteg(steg);
-      stegSamling.push(steg.byggSteg());
-    }
-
-    console.log(stegSamling);
+    do {
+      gjeldendeSteg = this.beregnNesteSteg(gjeldendeSteg);
+      stegSamling.push(gjeldendeSteg.byggSteg());
+    } while (gjeldendeSteg.id !== 'VEDTAK');
   }
 
-  beregnNesteSteg = forrigeSteg => {
-    let nesteSteg;
-    if (forrigeSteg === null) {
-      nesteSteg = this.lagKlasseBasertPaID(this._forsteStegID);
+  beregnNesteSteg = gjeldendeSteg => {
+    if (gjeldendeSteg === null) {
+      return this.lagKlasseBasertPaID(this._forsteStegID);
     }
-
-
+    return this.lagKlasseBasertPaID(gjeldendeSteg.nesteSteg());
   }
 
   lagKlasseBasertPaID = stegID => {
