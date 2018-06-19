@@ -180,7 +180,8 @@ class Vilkarsveileder extends Component {
   erDetteSisteSteg = totaltAntallSteg => (this.state.aktivtStegNummer === totaltAntallSteg - 1);
 
   fattVedtak = () => {
-    this.props.fattVedtakHandler();
+    alert('Denne funksjonen er ikke ferdig implementert.');
+    // this.props.fattVedtakHandler();
   }
 
   beOmVurdering = () => {
