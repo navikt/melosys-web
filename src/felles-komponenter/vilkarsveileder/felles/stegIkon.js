@@ -5,7 +5,6 @@ import classnames from 'classnames';
 import { FANE_STATUS } from '../stegLogikk/typer';
 
 import * as Ikon from '../../../resources/images';
-import * as Nav from '../../../utils/navFrontend';
 
 import './stegIkon.css';
 
@@ -46,7 +45,7 @@ const StegIkon = props => {
         style={{ backgroundImage: `url(${ikon})` }}
         aria-disabled={!tilgjengelig}
       />
-      <Nav.Normaltekst className="stegIkon__tittel">{tittel}</Nav.Normaltekst>
+      <div className="stegIkon__tittel">{tittel}</div>
     </li>
   );
 };
