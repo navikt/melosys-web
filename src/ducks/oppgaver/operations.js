@@ -54,6 +54,7 @@ export function send(oppgavetype, checkboxliste) {
 
   return Api.Oppgaver.send(oppgave).then(response => {
     const { saksnummer, oppgaveID, journalpostID } = response;
+    if (!saksnummer && (!oppgaveID || !journalpostID)) { return false; }
     const saksbehandling = `/saksbehandling/${saksnummer}`;
     const journalforing = `/journalforing/${oppgaveID}/${journalpostID}`;
     return oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
