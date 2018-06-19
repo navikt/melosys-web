@@ -68,7 +68,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'SYSSELSETTING',
-          tittel: 'Yrkes-aktivitet',
+          tittel: 'Yrkes\u00ADaktivitet',
           komponent: VurderingSysselsetting,
           dataHenter: () => ({}),
           handlers: {
@@ -78,7 +78,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'ARBEIDSFORHOLD',
-          tittel: 'Arbeid',
+          tittel: 'Arbeids\u00ADgiver',
           komponent: VurderingArbeidsforhold,
           dataHenter: props => ({ relevanteArbeidsforholdene: props.relevanteArbeidsforholdene }),
           handlers: {
@@ -88,7 +88,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'YRKESAKTIVITET_FORDELING',
-          tittel: 'Arbeid i land',
+          tittel: 'Arbeids\u00ADland',
           komponent: VurderingYrkesaktivitetFordeling,
           dataHenter: () => ({}),
           handlers: {
@@ -139,7 +139,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'FORRETNINGSSTED',
-          tittel: 'Forretnings-sted',
+          tittel: 'Forretnings\u00ADsted',
           komponent: VurderingForretningssted,
           dataHenter: props => ({ valgteArbeidsforhold: props.valgteArbeidsforhold }),
           handlers: {
@@ -149,7 +149,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'TJENESTEMANN',
-          tittel: 'Tjeneste-mann',
+          tittel: 'Tjeneste\u00ADmann',
           komponent: VurderingTjenestemann,
           dataHenter: () => ({}),
           handlers: {

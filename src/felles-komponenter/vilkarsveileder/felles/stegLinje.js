@@ -1,6 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
+import classnames from 'classnames';
 
 import StegIkon from './stegIkon';
 import './stegLinje.css';
@@ -24,9 +25,16 @@ const StegLinje = props => {
     />);
   });
 
+  const cl = classnames({
+    stegLinje: true,
+    'stegLinje--short': stegKnapper.length < 6,
+    'stegLinje--medium': stegKnapper.length < 8 && stegKnapper.length >= 6,
+    'stegLinje--large': stegKnapper.length >= 8,
+  });
+
   return (
     <div>
-      <ul className="stegLinje">
+      <ul className={cl}>
         {stegKnapper}
       </ul>
     </div>
