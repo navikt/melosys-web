@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { STEG } from '../../stegLogikk/typer';
+import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
 import VurderingVirksomhet, { VurderingVirksomhetTyper } from '../../vurderinger/vurderingVirksomhet';
 import { VurderingYrkesaktivitetFordelingTyper } from '../../vurderinger/vurderingYrkesaktivitetFordeling';
 import { VurderingSektorTyper } from '../../vurderinger/vurderingSektor';
@@ -37,6 +37,12 @@ class Virksomhet extends Steg {
     ];
     this._id = STEG.VIRKSOMHET;
     this._komponent = VurderingVirksomhet;
+    this._dataHenter = () => ({ });
+    this._tilstand = () => {};
+    this._handlers = {
+      bekreftOgFortsett: this.bekreftOgFortsett,
+    };
+    this._status = FANE_STATUS.OK;
   }
 }
 

@@ -13,8 +13,13 @@ class StegVelger {
 
     do {
       gjeldendeSteg = this.beregnNesteSteg(gjeldendeSteg);
-      stegSamling.push(gjeldendeSteg.byggSteg());
+      stegSamling.push(gjeldendeSteg.byggSteg({
+        stegPosisjon: stegSamling.length,
+        faktaavklaring: this._faktaavklaring,
+      }));
     } while (gjeldendeSteg.id !== 'VEDTAK');
+
+    return stegSamling;
   }
 
   beregnNesteSteg = gjeldendeSteg => {

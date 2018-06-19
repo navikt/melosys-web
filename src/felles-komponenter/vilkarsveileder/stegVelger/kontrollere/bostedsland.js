@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { STEG } from '../../stegLogikk/typer';
+import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
 import VurderingBostedsland from '../../vurderinger/vurderingBostedsland';
 import { VurderingYrkesaktivitetFordelingTyper } from '../../vurderinger/vurderingYrkesaktivitetFordeling';
 import { VurderingVirksomhetTyper } from '../../vurderinger/vurderingVirksomhet';
@@ -31,6 +31,12 @@ class Bostedsland extends Steg {
     ];
     this._id = STEG.BOSTEDSLAND;
     this._komponent = VurderingBostedsland;
+    this._dataHenter = () => ({ });
+    this._tilstand = () => {};
+    this._handlers = {
+      bekreftOgFortsett: this.bekreftOgFortsett,
+    };
+    this._status = FANE_STATUS.OK;
   }
 }
 

@@ -3,8 +3,8 @@ import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
 import VurderingInngang from '../../vurderinger/vurderingInngang';
 
 class Inngang extends Steg {
-  constructor(faktaavklaring) {
-    super(faktaavklaring);
+  constructor(faktaavklaring, skjema) {
+    super(faktaavklaring, skjema);
     this._kriterier = [
       {
         beskrivelse: 'alle andre valg',
@@ -14,8 +14,11 @@ class Inngang extends Steg {
     ];
     this._id = STEG.INNGANG;
     this._komponent = VurderingInngang;
-    this._dataHenter = props => ({ inngangsvilkar: props.inngang });
-    this._tilstand = skjema => {};
+    this._dataHenter = props => {
+      console.log('inngang datahenter props:', props)
+      return ({ inngangsvilkar: props.inngang });
+    };
+    this._tilstand = () => {};
     this._handlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
     };
