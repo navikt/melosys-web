@@ -28,6 +28,8 @@ import VurderingForretningssted from './vurderinger/vurderingForretningssted';
 import VurderingVedtak from './vurderinger/vurderingVedtak';
 import VurderingInngang from './vurderinger/vurderingInngang';
 
+import StegVelger from './stegVelger';
+
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { vurderingOperations } from '../../ducks/vurdering/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
@@ -198,28 +200,6 @@ class Vilkarsveileder extends Component {
     this.tilSteg(this.beregnNesteSteg());
   }
 
-  /** For at regelmodul skal kunne gjøre en vurdering av bosted må vi sende inn
-   * informasjon fra søknaden umiddelbart i forkant.
-   */
-  vurderBosted = () => {
-    const { sendSoknad, hentBosted, skjema } = this.props;
-    const { behandlingID } = this.props.oppsummering;
-
-    sendSoknad(behandlingID, skjema)
-      .then(response => {
-        if (response.data.behandlingID !== behandlingID) {
-          // Todo: Implementere feilhåndtering i grensesnittet.
-          throw (new Error('Feil i behandlingID'));
-        }
-        return hentBosted(behandlingID);
-      })
-      .catch(() => {
-        /* eslint-disable no-console */
-        console.error('Feil i bostedsvurdering fra API.');
-        /* eslint-enable */
-      });
-  }
-
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
    * har bekreftet valgene.
@@ -229,6 +209,21 @@ class Vilkarsveileder extends Component {
   }
 
   oppdaterAktuelleSteg = props => {
+    const { erDetteSisteSteg } = this;
+    const stegVelger = new StegVelger(props.faktaavklaring);
+    const aktuelleSteg = stegVelger.beregnAlleSteg();
+
+    aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
+
+    if (erDetteSisteSteg()) {
+      this.props.hentVurdering(this.props.oppsummering.behandlingID);
+    }
+
+    this.setState({ aktuelleSteg });
+    return aktuelleSteg;
+  }
+
+  oppdaterAktuelleSteg_Gammel = props => {
     const { faktaavklaring, skjema } = props;
     const { erDetteSisteSteg } = this;
     const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);

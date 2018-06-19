@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { STEG } from '../../stegLogikk/typer';
+import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
 import VurderingAktivitet from '../../vurderinger/vurderingAktivitet';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
@@ -30,6 +30,12 @@ class Aktivitet extends Steg {
     ];
     this._id = STEG.SYSSELSETTING;
     this._komponent = VurderingAktivitet;
+    this._dataHenter = () => ({ });
+    this._tilstand = () => {};
+    this._handlers = {
+      bekreftOgFortsett: this.bekreftOgFortsett,
+    };
+    this._status = FANE_STATUS.OK;
   }
 }
 

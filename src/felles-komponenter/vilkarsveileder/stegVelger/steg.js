@@ -1,6 +1,7 @@
 class Steg {
-  constructor (faktaavklaring) {
+  constructor (faktaavklaring, skjema) {
     this._faktaavklaring = faktaavklaring;
+    this._skjema = skjema;
     this._kriterier = null;
     this._id = null;
     this._komponent = null;
@@ -16,14 +17,17 @@ class Steg {
     return this._dataHenter;
   }
 
-  byggSteg = () => ({
-    id: this._id,
-    komponent: this._komponent,
-    status: this._status,
-    handlers: this._handlers,
-    dataHenter: this._dataHenter,
-    tilstandHenter: this._tilstand,
-  })
+  byggSteg = config => {
+    const { stegPosisjon } = config;
+    return ({
+      id: this._id,
+      komponent: this._komponent,
+      status: this._status,
+      handlers: this._handlers,
+      data: { ...this._dataHenter(this._faktaavklaring), tilstand: this._tilstand(this._skjema) },
+      stegPosisjon,
+    });
+  };
 
   nesteSteg = () => {
     const kriterieMatch = this._kriterier.find(kriterie => {

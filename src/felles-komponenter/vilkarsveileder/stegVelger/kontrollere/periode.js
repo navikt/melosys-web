@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { STEG } from '../../stegLogikk/typer';
+import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
 import VurderingPeriode from '../../vurderinger/vurderingPeriode';
 
 class Periode extends Steg {
@@ -14,6 +14,12 @@ class Periode extends Steg {
     ];
     this._id = STEG.PERIODE;
     this._komponent = VurderingPeriode;
+    this._dataHenter = props => ({ });
+    this._tilstand = skjema => {};
+    this._handlers = {
+      bekreftOgFortsett: this.bekreftOgFortsett,
+    };
+    this._status = FANE_STATUS.OK;
   }
 }
 

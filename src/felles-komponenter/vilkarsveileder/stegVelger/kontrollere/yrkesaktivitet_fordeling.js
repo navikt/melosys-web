@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { STEG } from '../../stegLogikk/typer';
+import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
 import VurderingYrkesaktivitetFordeling, { VurderingYrkesaktivitetFordelingTyper } from '../../vurderinger/vurderingYrkesaktivitetFordeling';
 import { VurderingSektorTyper } from '../../vurderinger/vurderingSektor';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
@@ -58,6 +58,12 @@ class YrkesaktivitetFordeling extends Steg {
     ];
     this._id = STEG.YRKESAKTIVITET_FORDELING;
     this._komponent = VurderingYrkesaktivitetFordeling;
+    this._dataHenter = () => ({ });
+    this._tilstand = () => {};
+    this._handlers = {
+      bekreftOgFortsett: this.bekreftOgFortsett,
+    };
+    this._status = FANE_STATUS.OK;
   }
 }
 
