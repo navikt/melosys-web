@@ -47,6 +47,7 @@ class Vilkarsveileder extends Component {
       alleSteg: [
         {
           id: 'INNGANG',
+          tittel: 'Inngang',
           komponent: VurderingInngang,
           dataHenter: props => ({ inngangsvilkar: props.inngang }),
           handlers: {
@@ -57,6 +58,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'PERIODE',
+          tittel: 'Periode',
           komponent: VurderingPeriode,
           dataHenter: () => ({}),
           handlers: {
@@ -66,6 +68,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'SYSSELSETTING',
+          tittel: 'Yrkes-aktivitet',
           komponent: VurderingSysselsetting,
           dataHenter: () => ({}),
           handlers: {
@@ -75,6 +78,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'ARBEIDSFORHOLD',
+          tittel: 'Arbeid',
           komponent: VurderingArbeidsforhold,
           dataHenter: props => ({ relevanteArbeidsforholdene: props.relevanteArbeidsforholdene }),
           handlers: {
@@ -84,6 +88,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'YRKESAKTIVITET_FORDELING',
+          tittel: 'Arbeid i land',
           komponent: VurderingYrkesaktivitetFordeling,
           dataHenter: () => ({}),
           handlers: {
@@ -93,6 +98,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'AKTIVITET',
+          tittel: 'Aktivitet',
           komponent: VurderingAktivitet,
           dataHenter: () => ({}),
           handlers: {
@@ -102,6 +108,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'UTSENDING',
+          tittel: 'Utsending',
           komponent: VurderingUtsending,
           dataHenter: () => ({}),
           handlers: {
@@ -111,6 +118,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'SEKTOR',
+          tittel: 'Sektor',
           komponent: VurderingSektor,
           dataHenter: () => ({}),
           handlers: {
@@ -120,6 +128,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'BOSTEDSLAND',
+          tittel: 'Bosted',
           komponent: VurderingBostedsland,
           dataHenter: props => ({ vurdering: props.faktaavklaring.bosted.vurdering }),
           handlers: {
@@ -130,6 +139,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'FORRETNINGSSTED',
+          tittel: 'Forretnings-sted',
           komponent: VurderingForretningssted,
           dataHenter: props => ({ valgteArbeidsforhold: props.valgteArbeidsforhold }),
           handlers: {
@@ -139,6 +149,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'TJENESTEMANN',
+          tittel: 'Tjeneste-mann',
           komponent: VurderingTjenestemann,
           dataHenter: () => ({}),
           handlers: {
@@ -148,6 +159,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'VIRKSOMHET',
+          tittel: 'Virksomhet',
           komponent: VurderingVirksomhet,
           dataHenter: () => ({}),
           handlers: {
@@ -157,6 +169,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'VEDTAK',
+          tittel: 'Vedtak',
           komponent: VurderingVedtak,
           dataHenter: () => ({}),
           handlers: {
