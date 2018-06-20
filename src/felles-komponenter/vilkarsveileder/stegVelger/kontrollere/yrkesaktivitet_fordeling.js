@@ -48,7 +48,7 @@ class YrkesaktivitetFordeling extends Steg {
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
         ),
-        nesteSteg: STEG.AKTIVITET,
+        nesteSteg: STEG.VIRKSOMHET,
       },
       {
         beskrivelse: 'alle andre valg',
