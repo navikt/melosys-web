@@ -3,9 +3,9 @@ import { FANE_STATUS, STEG } from '../../stegLogikk/typer';
 import VurderingSysselsetting, { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
 class Sysselsetting extends Steg {
-  constructor(propsLight) {
-    console.log('sysselsetting', propsLight)
-    super(propsLight);
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
+    console.log('sysselsetting', stegPosisjon)
     this._kriterier = [
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" eller sysselsettingType ER LIK "ARBEIDSTAKER__OG__SELVSTENDIG"',
@@ -31,7 +31,9 @@ class Sysselsetting extends Steg {
     this._id = STEG.SYSSELSETTING;
     this._komponent = VurderingSysselsetting;
     this._dataHenter = () => ({ });
-    this._tilstand = () => {};
+    this._tilstand = () => ({
+      visSysselsettingType: true,
+    });
     this._handlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
     };

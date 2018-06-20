@@ -4,8 +4,8 @@ import VurderingAktivitet from '../../vurderinger/vurderingAktivitet';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
 class Aktivitet extends Steg {
-  constructor(faktaavklaring) {
-    super(faktaavklaring);
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" eller sysselsettingType ER LIK "ARBEIDSTAKER__OG__SELVSTENDIG"',

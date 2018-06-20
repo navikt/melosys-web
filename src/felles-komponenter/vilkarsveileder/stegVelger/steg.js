@@ -25,6 +25,7 @@ class Steg {
       handlers: this._handlers,
       data: { ...this._dataHenter(this._propsLight), tilstand: this._tilstand(this._propsLight) },
       stegPosisjon: this._stegPosisjon,
+      aktivtSteg: false,
     });
   };
 

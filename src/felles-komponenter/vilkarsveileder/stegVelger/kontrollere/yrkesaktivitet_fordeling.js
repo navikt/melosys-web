@@ -5,8 +5,8 @@ import { VurderingSektorTyper } from '../../vurderinger/vurderingSektor';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
 class YrkesaktivitetFordeling extends Steg {
-  constructor(faktaavklaring) {
-    super(faktaavklaring);
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE"  OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
@@ -59,7 +59,9 @@ class YrkesaktivitetFordeling extends Steg {
     this._id = STEG.YRKESAKTIVITET_FORDELING;
     this._komponent = VurderingYrkesaktivitetFordeling;
     this._dataHenter = () => ({ });
-    this._tilstand = () => {};
+    this._tilstand = () => ({
+      visAntallLand: true,
+    });
     this._handlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
     };

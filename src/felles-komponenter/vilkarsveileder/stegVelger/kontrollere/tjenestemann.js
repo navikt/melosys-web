@@ -3,8 +3,8 @@ import { STEG } from '../../stegLogikk/typer';
 import VurderingTjenestemannn, { VurderingTjenestemannTyper } from '../../vurderinger/vurderingTjenestemann';
 
 class Tjenestemann extends Steg {
-  constructor(faktaavklaring) {
-    super(faktaavklaring);
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'vurderingTjenestemann ER LIK "ETT_LAND" eller vurderingTjenestemann ER LIK "ETT_LAND_YRKESAKTIVITET_ANDRE_LAND" ' +

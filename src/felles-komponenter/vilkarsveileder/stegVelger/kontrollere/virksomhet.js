@@ -6,8 +6,8 @@ import { VurderingSektorTyper } from '../../vurderinger/vurderingSektor';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
 class Virksomhet extends Steg {
-  constructor(faktaavklaring) {
-    super(faktaavklaring);
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG sektorINorge ER LIK "INGEN_AV_DISSE" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
@@ -38,7 +38,11 @@ class Virksomhet extends Steg {
     this._id = STEG.VIRKSOMHET;
     this._komponent = VurderingVirksomhet;
     this._dataHenter = () => ({ });
-    this._tilstand = () => {};
+    this._tilstand = () => ({
+      visVekslingMellomLand: true,
+      visMarginaltArbeid: true,
+      visAktivitetINorge: true,
+    });
     this._handlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
     };
