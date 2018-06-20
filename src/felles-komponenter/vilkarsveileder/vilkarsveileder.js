@@ -180,7 +180,9 @@ class Vilkarsveileder extends Component {
   erDetteSisteSteg = totaltAntallSteg => (this.state.aktivtStegNummer === totaltAntallSteg - 1);
 
   fattVedtak = () => {
+    /* eslint-disable no-alert */
     alert('Denne funksjonen er ikke ferdig implementert.');
+    /* eslint-enable */
     // this.props.fattVedtakHandler();
   }
 
