@@ -210,7 +210,7 @@ class Vilkarsveileder extends Component {
 
   oppdaterAktuelleSteg = props => {
     const { erDetteSisteSteg } = this;
-    const stegVelger = new StegVelger(props.faktaavklaring);
+    const stegVelger = new StegVelger(props);
     const aktuelleSteg = stegVelger.beregnAlleSteg();
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
