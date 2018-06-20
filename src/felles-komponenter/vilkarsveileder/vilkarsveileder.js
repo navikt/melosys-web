@@ -68,7 +68,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'SYSSELSETTING',
-          tittel: 'Yrkes\u00ADaktivitet',
+          tittel: 'Aktivitet',
           komponent: VurderingSysselsetting,
           dataHenter: () => ({}),
           handlers: {
@@ -118,7 +118,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'SEKTOR',
-          tittel: 'Sektor',
+          tittel: 'Type aktivitet',
           komponent: VurderingSektor,
           dataHenter: () => ({}),
           handlers: {
@@ -159,7 +159,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'VIRKSOMHET',
-          tittel: 'Virksomhet',
+          tittel: 'Arbeids\u00ADmønster',
           komponent: VurderingVirksomhet,
           dataHenter: () => ({}),
           handlers: {
