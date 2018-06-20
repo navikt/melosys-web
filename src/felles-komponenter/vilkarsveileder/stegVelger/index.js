@@ -15,11 +15,14 @@ class StegVelger {
     let gjeldendeSteg = null;
     const stegSamling = [];
 
+    let iterations = 0;
+
     do {
       const nesteStegPosisjon = stegSamling.length;
       gjeldendeSteg = this.beregnNesteSteg(gjeldendeSteg, nesteStegPosisjon);
       stegSamling.push(gjeldendeSteg.byggSteg());
-    } while (gjeldendeSteg.id !== 'VEDTAK');
+      iterations += 1;
+    } while (gjeldendeSteg.id !== 'VEDTAK' && iterations < 20);
 
     return stegSamling;
   }
