@@ -1,13 +1,16 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
-import VurderingBostedsland from '../../vurderinger/vurderingBostedsland';
+import VurderingBostedsland, { VurderingBostedslandTyper } from '../../vurderinger/vurderingBostedsland'
 import { VurderingYrkesaktivitetFordelingTyper } from '../../vurderinger/vurderingYrkesaktivitetFordeling';
 import { VurderingVirksomhetTyper } from '../../vurderinger/vurderingVirksomhet';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
+import TilstandsLogikk from '../../stegLogikk/tilstandsLogikk';
+import { VurderingIkkeYrkesaktivTyper } from '../../vurderinger/vurderingIkkeYrkesaktiv';
+import Regler from '../../../../services/regler';
 
 class Bostedsland extends Steg {
-  constructor(faktaavklaring) {
-    super(faktaavklaring);
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG' +
@@ -32,7 +35,76 @@ class Bostedsland extends Steg {
     this._id = STEG.BOSTEDSLAND;
     this._komponent = VurderingBostedsland;
     this._dataHenter = () => ({ });
-    this._tilstand = () => {};
+    this._tilstand = _propsLight => {
+      const { skjema = {} } = _propsLight;
+      const {
+        faktaavklaringSysselsettingType,
+        faktaavklaringBostedslandSnarvei,
+        faktaavklaringIkkeYrkesaktivType,
+      } = skjema;
+
+      const regler = new Regler(skjema);
+
+      const erYrkesaktiv = (
+        faktaavklaringSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG ||
+        faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER ||
+        faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG
+      );
+
+      let avklaringer;
+
+      if (erYrkesaktiv) {
+        avklaringer = [
+          { term: 'Har dnr.', status: undefined },
+          { term: 'Bostedsadresse i Norge.', status: undefined },
+          { term: 'Adresse i utlandet.', status: undefined },
+          { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: undefined },
+          { term: 'EU/EØS barnetrygd fra NAV.', status: undefined },
+          { term: 'Familie bor i Norge.', status: undefined },
+          { term: 'Det bor færre enn 10 personer på adressen.', status: undefined },
+        ];
+      } else {
+        if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
+          avklaringer = [
+            { term: 'Forutgående bosted i Norge.', status: undefined },
+            { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
+            { term: 'Oppholder seg i utlandet.', status: undefined },
+            { term: 'Har studiested i utlandet.', status: undefined },
+            { term: 'Finansiering av studier fra Norge.', status: undefined },
+            { term: 'Familie bor i Norge.', status: TilstandsLogikk.familieBorINorge(skjema) },
+          ];
+        }
+        if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.MEDFOLGENDE) {
+          avklaringer = [
+            { term: 'Forutgående bosted i Norge.', status: undefined },
+            { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
+            { term: 'Medfølgende familie til utsendt arbeidstaker.', status: undefined },
+            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
+          ];
+        }
+        if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
+          avklaringer = [
+            { term: 'Forutgående bosted i Norge.', status: undefined },
+            { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: undefined },
+            { term: 'Medfølgende familie til utsendt arbeidstaker', status: undefined },
+            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
+          ];
+        }
+        if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
+          avklaringer = [
+            { term: 'Bosatt i Norge før utreise.', status: undefined },
+            { term: 'Oppholdet i utlandet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
+          ];
+        }
+      }
+
+      return {
+        visBostedslandVelger: (faktaavklaringBostedslandSnarvei === VurderingBostedslandTyper.ANNET),
+        visTipsForYrkesaktiv: erYrkesaktiv,
+        visTipsForIkkeYrkesaktiv: !erYrkesaktiv,
+        avklaringer,
+      };
+    };
     this._handlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
     };

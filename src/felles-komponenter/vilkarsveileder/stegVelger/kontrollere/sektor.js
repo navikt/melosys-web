@@ -4,8 +4,8 @@ import VurderingSektor, { VurderingSektorTyper } from '../../vurderinger/vurderi
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
 class Sektor extends Steg {
-  constructor(faktaavklaring) {
-    super(faktaavklaring);
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'ansattISektor ER LIK "OFFENTLIG"',
@@ -29,7 +29,9 @@ class Sektor extends Steg {
     this._id = STEG.SEKTOR;
     this._komponent = VurderingSektor;
     this._dataHenter = () => ({ });
-    this._tilstand = () => {};
+    this._tilstand = () => ({
+      visAnsattISektor: true,
+    });
     this._handlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
     };

@@ -3,8 +3,8 @@ import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
 import VurderingVedtak from '../../vurderinger/vurderingVedtak';
 
 class Virksomhet extends Steg {
-  constructor(faktaavklaring) {
-    super(faktaavklaring);
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'alle valg',

@@ -237,8 +237,6 @@ class Vilkarsveileder extends Component {
         data: { ...steg.dataHenter(props), tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
       }));
 
-    console.log(aktuelleSteg);
-
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
 
     if (erDetteSisteSteg()) {

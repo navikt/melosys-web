@@ -3,8 +3,8 @@ import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
 import VurderingIkkeYrkesaktiv from '../../vurderinger/vurderingIkkeYrkesaktiv';
 
 class IkkeYrkesaktiv extends Steg {
-  constructor(faktaavklaring) {
-    super(faktaavklaring);
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         kriterier: 'alle andre valg',

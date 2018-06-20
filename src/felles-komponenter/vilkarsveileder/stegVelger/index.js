@@ -6,7 +6,7 @@ class StegVelger {
     this._propsLight = {
       faktaavklaring: props.faktaavklaring,
       inngang: props.inngang,
-      skjema: props.skjema
+      skjema: props.skjema,
     };
     this._forsteStegID = 'INNGANG';
   }
