@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../../stegLogikk/typer';
+import { FANE_STATUS, STEG } from '../typer';
 import VurderingArbeidsforhold from '../../vurderinger/vurderingArbeidsforhold';
 
 class Sysselsetting extends Steg {
@@ -14,10 +14,10 @@ class Sysselsetting extends Steg {
     ];
     this._id = STEG.ARBEIDSFORHOLD;
     this._komponent = VurderingArbeidsforhold;
-    this._dataHenter = props => ({ relevanteArbeidsforholdene: props.relevanteArbeidsforholdene });
-    this._tilstand = () => {};
+    this._dataHenter = _propsLight => ({ relevanteArbeidsforholdene: _propsLight.relevanteArbeidsforholdene });
+    this._tilstand = _propsLight => {};
     this._handlers = {
-      bekreftOgFortsett: this.bekreftOgFortsett,
+      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
   }

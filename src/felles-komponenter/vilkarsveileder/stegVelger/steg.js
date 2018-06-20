@@ -17,17 +17,15 @@ class Steg {
     return this._dataHenter;
   }
 
-  byggSteg = () => {
-    return ({
-      id: this._id,
-      komponent: this._komponent,
-      status: this._status,
-      handlers: this._handlers,
-      data: { ...this._dataHenter(this._propsLight), tilstand: this._tilstand(this._propsLight) },
-      stegPosisjon: this._stegPosisjon,
-      aktivtSteg: false,
-    });
-  };
+  byggSteg = () => ({
+    id: this._id,
+    komponent: this._komponent,
+    status: this._status,
+    handlers: this._handlers,
+    data: { ...this._dataHenter(this._propsLight), tilstand: this._tilstand(this._propsLight) },
+    stegPosisjon: this._stegPosisjon,
+    aktivtSteg: false,
+  });
 
   nesteSteg = () => {
     const { faktaavklaring = {} } = this._propsLight;

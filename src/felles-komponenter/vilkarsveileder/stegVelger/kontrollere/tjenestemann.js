@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { STEG } from '../../stegLogikk/typer';
+import { FANE_STATUS, STEG } from '../typer';
 import VurderingTjenestemannn, { VurderingTjenestemannTyper } from '../../vurderinger/vurderingTjenestemann';
 
 class Tjenestemann extends Steg {
@@ -23,8 +23,16 @@ class Tjenestemann extends Steg {
         nesteSteg: STEG.VEDTAK,
       },
     ];
-    this._id = STEG.SYSSELSETTING;
+    this._id = STEG.TJENESTEMANN;
     this._komponent = VurderingTjenestemannn;
+    this._dataHenter = () => ({ });
+    this._tilstand = () => ({
+      visSysselsettingType: true,
+    });
+    this._handlers = {
+      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+    };
+    this._status = FANE_STATUS.OK;
   }
 }
 

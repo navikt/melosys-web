@@ -1,7 +1,7 @@
 import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../../stegLogikk/typer';
+import { FANE_STATUS, STEG } from '../typer';
 import VurderingUtsending from '../../vurderinger/vurderingUtsending';
-import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting'
+import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
 class Utsending extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -13,11 +13,11 @@ class Utsending extends Steg {
         nesteSteg: STEG.VEDTAK,
       },
     ];
-    this._id = STEG.PERIODE;
+    this._id = STEG.UTSENDING;
     this._komponent = VurderingUtsending;
-    this._dataHenter = props => ({ });
-    this._tilstand = propsLight => {
-      const { faktaavklaring = {} } = propsLight;
+    this._dataHenter = () => ({ });
+    this._tilstand = _propsLight => {
+      const { faktaavklaring = {} } = _propsLight;
       const { faktaavklaringSysselsettingType } = faktaavklaring;
 
       if (faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER) {
@@ -47,7 +47,7 @@ class Utsending extends Steg {
       return {};
     };
     this._handlers = {
-      bekreftOgFortsett: this.bekreftOgFortsett,
+      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
   }

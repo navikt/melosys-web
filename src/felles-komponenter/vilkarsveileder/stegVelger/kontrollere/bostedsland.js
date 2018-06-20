@@ -1,10 +1,9 @@
 import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
-import VurderingBostedsland, { VurderingBostedslandTyper } from '../../vurderinger/vurderingBostedsland'
+import { FANE_STATUS, STEG } from '../typer';
+import VurderingBostedsland, { VurderingBostedslandTyper } from '../../vurderinger/vurderingBostedsland';
 import { VurderingYrkesaktivitetFordelingTyper } from '../../vurderinger/vurderingYrkesaktivitetFordeling';
 import { VurderingVirksomhetTyper } from '../../vurderinger/vurderingVirksomhet';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
-import TilstandsLogikk from '../../stegLogikk/tilstandsLogikk';
 import { VurderingIkkeYrkesaktivTyper } from '../../vurderinger/vurderingIkkeYrkesaktiv';
 import Regler from '../../../../services/regler';
 
@@ -71,7 +70,7 @@ class Bostedsland extends Steg {
             { term: 'Oppholder seg i utlandet.', status: undefined },
             { term: 'Har studiested i utlandet.', status: undefined },
             { term: 'Finansiering av studier fra Norge.', status: undefined },
-            { term: 'Familie bor i Norge.', status: TilstandsLogikk.familieBorINorge(skjema) },
+            { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge(skjema) },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.MEDFOLGENDE) {
@@ -106,7 +105,7 @@ class Bostedsland extends Steg {
       };
     };
     this._handlers = {
-      bekreftOgFortsett: this.bekreftOgFortsett,
+      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
   }

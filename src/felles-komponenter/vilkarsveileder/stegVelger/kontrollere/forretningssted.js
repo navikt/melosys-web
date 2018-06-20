@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
+import { FANE_STATUS, STEG } from '../typer';
 import VurderingForretningssted from '../../vurderinger/vurderingForretningssted';
 
 class Forretningssted extends Steg {
@@ -17,7 +17,7 @@ class Forretningssted extends Steg {
     this._dataHenter = props => ({ valgteArbeidsforhold: props.valgteArbeidsforhold });
     this._tilstand = () => {};
     this._handlers = {
-      bekreftOgFortsett: this.bekreftOgFortsett,
+      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
   }
