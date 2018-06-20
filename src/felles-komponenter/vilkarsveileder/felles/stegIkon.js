@@ -25,26 +25,27 @@ const StegIkon = props => {
   };
 
   const {
-    id, aktivtSteg, status, onClick, tilgjengelig,
+    id, aktivtSteg, status, tittel, onClick, tilgjengelig,
   } = props;
 
   const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
   const ikon = id === 'VEDTAK' ? IKONER.VEDTAK[status] : IKONER.STEG[status];
 
   const className = classnames(
-    'stegIkon',
-    (!erTilgjengelig ? 'stegIkon--utilgjengelig' : ''),
-    (aktivtSteg && 'stegIkon--aktiv')
+    'stegIkon__knapp',
+    (!erTilgjengelig ? 'stegIkon__knapp--utilgjengelig' : ''),
+    (aktivtSteg && 'stegIkon__knapp--aktiv')
   );
 
   return (
-    <li>
+    <li className="stegIkon">
       <button
         className={className}
         onClick={onClick}
         style={{ backgroundImage: `url(${ikon})` }}
         aria-disabled={!tilgjengelig}
       />
+      <div className="stegIkon__tittel">{tittel}</div>
     </li>
   );
 };
@@ -52,6 +53,7 @@ const StegIkon = props => {
 StegIkon.propTypes = {
   id: PT.string.isRequired,
   status: PT.string.isRequired,
+  tittel: PT.string.isRequired,
   tilgjengelig: PT.bool,
   onClick: PT.func.isRequired,
   aktivtSteg: PT.bool,
