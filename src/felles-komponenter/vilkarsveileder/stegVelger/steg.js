@@ -1,7 +1,7 @@
 class Steg {
-  constructor (faktaavklaring, skjema) {
-    this._faktaavklaring = faktaavklaring;
-    this._skjema = skjema;
+  constructor (propsLight, posisjon) {
+    this._propsLight = propsLight;
+    this._stegPosisjon = posisjon;
     this._kriterier = null;
     this._id = null;
     this._komponent = null;
@@ -17,22 +17,21 @@ class Steg {
     return this._dataHenter;
   }
 
-  byggSteg = config => {
-    const { stegPosisjon } = config;
+  byggSteg = () => {
     return ({
       id: this._id,
       komponent: this._komponent,
       status: this._status,
       handlers: this._handlers,
-      data: { ...this._dataHenter(this._faktaavklaring), tilstand: this._tilstand(this._skjema) },
-      stegPosisjon,
+      data: { ...this._dataHenter(this._propsLight), tilstand: this._tilstand(this._propsLight) },
+      stegPosisjon: this._stegPosisjon,
     });
   };
 
   nesteSteg = () => {
     const kriterieMatch = this._kriterier.find(kriterie => {
       const { exec } = kriterie;
-      return this.assertRegel(exec, this._faktaavklaring);
+      return this.assertRegel(exec, this._propsLight.faktaavklaring);
     });
 
     return kriterieMatch.nesteSteg;
