@@ -18,6 +18,7 @@ const StegLinje = props => {
       key={uuid()}
       onClick={() => props.stegKlikk(index)}
       id={item.id}
+      tittel={item.tittel}
       status={item.status}
       aktivtSteg={visAtStegetErAktivt}
     />);

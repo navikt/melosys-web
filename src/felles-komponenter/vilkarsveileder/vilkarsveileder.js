@@ -48,6 +48,7 @@ class Vilkarsveileder extends Component {
       alleSteg: [
         {
           id: 'INNGANG',
+          tittel: 'Inngang',
           komponent: VurderingInngang,
           dataHenter: props => ({ inngangsvilkar: props.inngang }),
           handlers: {
@@ -58,6 +59,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'PERIODE',
+          tittel: 'Periode',
           komponent: VurderingPeriode,
           dataHenter: () => ({}),
           handlers: {
@@ -67,6 +69,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'SYSSELSETTING',
+          tittel: 'Aktivitet',
           komponent: VurderingSysselsetting,
           dataHenter: () => ({}),
           handlers: {
@@ -85,6 +88,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'ARBEIDSFORHOLD',
+          tittel: 'Arbeids\u00ADgiver',
           komponent: VurderingArbeidsforhold,
           dataHenter: props => ({ relevanteArbeidsforholdene: props.relevanteArbeidsforholdene }),
           handlers: {
@@ -94,6 +98,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'YRKESAKTIVITET_FORDELING',
+          tittel: 'Arbeids\u00ADland',
           komponent: VurderingYrkesaktivitetFordeling,
           dataHenter: () => ({}),
           handlers: {
@@ -103,6 +108,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'AKTIVITET',
+          tittel: 'Aktivitet',
           komponent: VurderingAktivitet,
           dataHenter: () => ({}),
           handlers: {
@@ -112,6 +118,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'UTSENDING',
+          tittel: 'Utsending',
           komponent: VurderingUtsending,
           dataHenter: () => ({}),
           handlers: {
@@ -121,6 +128,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'SEKTOR',
+          tittel: 'Type aktivitet',
           komponent: VurderingSektor,
           dataHenter: () => ({}),
           handlers: {
@@ -130,6 +138,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'BOSTEDSLAND',
+          tittel: 'Bosted',
           komponent: VurderingBostedsland,
           dataHenter: () => ({}),
           handlers: {
@@ -140,6 +149,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'FORRETNINGSSTED',
+          tittel: 'Forretnings\u00ADsted',
           komponent: VurderingForretningssted,
           dataHenter: props => ({ valgteArbeidsforhold: props.valgteArbeidsforhold }),
           handlers: {
@@ -149,6 +159,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'TJENESTEMANN',
+          tittel: 'Tjeneste\u00ADmann',
           komponent: VurderingTjenestemann,
           dataHenter: () => ({}),
           handlers: {
@@ -158,6 +169,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'VIRKSOMHET',
+          tittel: 'Arbeids\u00ADmønster',
           komponent: VurderingVirksomhet,
           dataHenter: () => ({}),
           handlers: {
@@ -167,6 +179,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'VEDTAK',
+          tittel: 'Vedtak',
           komponent: VurderingVedtak,
           dataHenter: () => ({}),
           handlers: {
@@ -190,7 +203,10 @@ class Vilkarsveileder extends Component {
   erDetteSisteSteg = totaltAntallSteg => (this.state.aktivtStegNummer === totaltAntallSteg - 1);
 
   fattVedtak = () => {
-    this.props.fattVedtakHandler();
+    /* eslint-disable no-alert */
+    alert('Denne funksjonen er ikke ferdig implementert.');
+    /* eslint-enable */
+    // this.props.fattVedtakHandler();
   }
 
   beOmVurdering = () => {

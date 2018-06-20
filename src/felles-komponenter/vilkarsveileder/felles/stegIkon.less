@@ -2,44 +2,58 @@
 
 .stegIkon {
   display: flex;
-  position: relative;
-  background-repeat:no-repeat;
-  background-size:contain;
-  background-color:transparent;
-  width:30px;
-  height:30px;
-  margin:0.5em;
-  border:0;
-  cursor:pointer;
-  transition:all 0.1s;
-  outline:none;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 0.2em;
+  width: 70px;
 
-  &:active,
-  &:focus,
-  &:hover {
-    transform:scale(1.1);
+  .stegIkon__knapp {
+    display: flex;
+    position: relative;
+    background-repeat:no-repeat;
+    background-size:contain;
+    background-color:transparent;
+    width:30px;
+    height:30px;
+    margin:0.5em;
+    border:0;
+    cursor:pointer;
+    transition:all 0.1s;
+    outline:none;
+
+    &:active,
+    &:focus,
+    &:hover {
+      transform:scale(1.1);
+    }
+
+    &:focus,
+    &:active {
+      box-shadow: 0 0 3px 0.1875em #ffbd66;
+    }
   }
 
-  &:focus,
-  &:active {
-    box-shadow: 0 0 3px 0.1875em #ffbd66;
+  .stegIkon__knapp--aktiv {
+     &:after {
+       content: '';
+       position: absolute;
+       border: 3px solid @green;
+       width: 30px;
+       height: 30px;
+       top: 0;
+       left: 0;
+       border-radius: 15px;
+     }
   }
-}
 
-.stegIkon--aktiv {
-   &:after {
-     content: '';
-     position: absolute;
-     border: 3px solid @green;
-     width: 30px;
-     height: 30px;
-     top: 0;
-     left: 0;
-     border-radius: 15px;
-   }
-}
+  .stegIkon__knapp-utilgjengelig {
+    cursor: default;
+    pointer-events:none;
+  }
 
-.stegIkon--utilgjengelig {
-  cursor: default;
-  pointer-events:none;
+  .stegIkon__tittel {
+    display: flex;
+    font-size: .9em;
+    text-align: center;
+  }
 }
