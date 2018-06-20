@@ -159,6 +159,7 @@ class Spark extends Component {
         <div className="spark__gruppe">
           <h1>Opprett ny Oppgave</h1>
           <form onSubmit={this.opprettOppgaveSubmit}>
+            <p>Oppgave:<br/><code>{JSON.stringify(Mock.opprettoppgave)}</code></p>
             <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til opprett endepunktet.</p>
             <textarea name="opprettOppgaveBody" className="spark__oppgave__body" /><br />
             <input type="submit" value="Send" />
