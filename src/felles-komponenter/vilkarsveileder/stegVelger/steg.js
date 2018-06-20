@@ -30,15 +30,15 @@ class Steg {
   };
 
   nesteSteg = () => {
-    const { faktaAvklaring = {} } = this._propsLight;
+    const { faktaavklaring = {} } = this._propsLight;
 
-    const flatFaktaAvklaring = Object
-      .keys(this._propsLight.faktaAvklaring)
-      .reduce((collection, key) => ({ ...collection, ...this._propsLight.faktaAvklaring[key] }), {});
+    const flatFaktaavklaring = Object
+      .keys(faktaavklaring)
+      .reduce((collection, key) => ({ ...collection, ...faktaavklaring[key] }), {});
 
     const kriterieMatch = this._kriterier.find(kriterie => {
       const { exec } = kriterie;
-      return this.assertRegel(exec, flatFaktaAvklaring);
+      return this.assertRegel(exec, flatFaktaavklaring);
     });
 
     return kriterieMatch.nesteSteg;
