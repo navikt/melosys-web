@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
+import { FANE_STATUS, STEG } from '../typer';
 import VurderingVedtak from '../../vurderinger/vurderingVedtak';
 
 class Virksomhet extends Steg {
@@ -17,7 +17,7 @@ class Virksomhet extends Steg {
     this._dataHenter = () => ({ });
     this._tilstand = () => {};
     this._handlers = {
-      bekreftOgFortsett: this.bekreftOgFortsett,
+      fattVedtak: this._propsLight.tilgjengeligeHandlers.fattVedtak,
     };
     this._status = FANE_STATUS.OK;
   }

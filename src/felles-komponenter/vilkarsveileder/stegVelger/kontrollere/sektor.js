@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
+import { FANE_STATUS, STEG } from '../typer';
 import VurderingSektor, { VurderingSektorTyper } from '../../vurderinger/vurderingSektor';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
@@ -33,7 +33,7 @@ class Sektor extends Steg {
       visAnsattISektor: true,
     });
     this._handlers = {
-      bekreftOgFortsett: this.bekreftOgFortsett,
+      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
   }

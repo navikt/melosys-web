@@ -3,11 +3,7 @@ import * as Kontrollere from './kontrollere';
 
 class StegVelger {
   constructor(props) {
-    this._propsLight = {
-      faktaavklaring: props.faktaavklaring,
-      inngang: props.inngang,
-      skjema: props.skjema,
-    };
+    this._propsLight = props;
     this._forsteStegID = 'INNGANG';
   }
 

@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../../stegLogikk/typer'
+import { FANE_STATUS, STEG } from '../typer';
 import VurderingAktivitet from '../../vurderinger/vurderingAktivitet';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
@@ -33,7 +33,7 @@ class Aktivitet extends Steg {
     this._dataHenter = () => ({ });
     this._tilstand = () => {};
     this._handlers = {
-      bekreftOgFortsett: this.bekreftOgFortsett,
+      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
   }

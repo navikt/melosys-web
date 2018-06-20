@@ -1,5 +1,5 @@
 import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../../stegLogikk/typer';
+import { FANE_STATUS, STEG } from '../typer';
 import VurderingPeriode from '../../vurderinger/vurderingPeriode';
 
 class Periode extends Steg {
@@ -17,7 +17,7 @@ class Periode extends Steg {
     this._dataHenter = () => ({ });
     this._tilstand = () => {};
     this._handlers = {
-      bekreftOgFortsett: () => {},
+      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
   }

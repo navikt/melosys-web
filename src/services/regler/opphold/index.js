@@ -16,6 +16,13 @@ class Opphold extends DomeneRegel {
     if (this.skjema.intensjonOmRetur === undefined) { return undefined; }
     return strengTilBool(this.skjema.intensjonOmRetur);
   }
+
+  familieBorINorge = () => {
+    const { skjema } = this;
+    const { familiesBosted } = skjema;
+    if (skjema.familiesBosted === undefined) { return undefined; }
+    return familiesBosted.includes('NO');
+  }
 }
 
 export default Opphold;
