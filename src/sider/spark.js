@@ -48,6 +48,11 @@ class Spark extends Component {
     const oppgaveBody = JSON.parse(event.target.oppgaveBody.value);
     this.props.plukkOppgave(oppgaveBody);
   };
+  opprettOppgaveSubmit = event => {
+    event.preventDefault();
+    const opprettOppgaveBody = JSON.parse(event.target.opprettOppgaveBody.value);
+    Api.Oppgaver.opprett(opprettOppgaveBody);
+  };
 
   hentFagsakBasertPaFnr = event => {
     event.preventDefault();
@@ -148,6 +153,22 @@ class Spark extends Component {
           </form>
         </div>
 
+        {
+          // Opprette ny Oppgave
+        }
+        <div className="spark__gruppe">
+          <h1>Opprett ny Oppgave</h1>
+          <form onSubmit={this.opprettOppgaveSubmit}>
+            <p>Oppgave:<br/><code>{JSON.stringify(Mock.opprettoppgave)}</code></p>
+            <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til opprett endepunktet.</p>
+            <textarea name="opprettOppgaveBody" className="spark__oppgave__body" /><br />
+            <input type="submit" value="Send" />
+          </form>
+        </div>
+
+        { // Opprette ny sak på person gitt fnr
+          //
+        }
         <div className="spark__gruppe">
           <h1>Opprett sak</h1>
           <p className="spark__gruppe__forklaring"><span>!</span>Tast inn fødselsnummer nedenfor for å opprette en ny sak på denne personen. Fødselsnummer må eksistere i testdata på det miljøet du befinner deg i (T5 / T8)</p>
@@ -217,6 +238,7 @@ const mapDispatchToProps = dispatch => ({
   sendSoknad: (bid, soknad) => dispatch(soknadOperations.send(bid, soknad)),
   opprettNyFagsak: fnr => dispatch(fagsakOperations.opprett(fnr)),
   plukkOppgave: (oppgave) => dispatch(oppgaverOperations.send(oppgave)),
+  opprettOppgave: (oppgave) => dispatch(oppgaverOperations.opprett(oppgave)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Spark));
