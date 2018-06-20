@@ -1,6 +1,5 @@
 import * as Kontrollere from './kontrollere';
 
-
 class StegVelger {
   constructor(props) {
     this._propsLight = props;
@@ -18,7 +17,7 @@ class StegVelger {
       gjeldendeSteg = this.beregnNesteSteg(gjeldendeSteg, nesteStegPosisjon);
       stegSamling.push(gjeldendeSteg.byggSteg());
       iterations += 1;
-    } while (gjeldendeSteg.id !== 'VEDTAK' && iterations < 20);
+    } while (gjeldendeSteg.id !== 'VEDTAK' && iterations < 30);
 
     return stegSamling;
   }

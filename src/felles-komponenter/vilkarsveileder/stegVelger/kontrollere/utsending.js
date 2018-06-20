@@ -18,9 +18,9 @@ class Utsending extends Steg {
     this._dataHenter = () => ({ });
     this._tilstand = _propsLight => {
       const { faktaavklaring = {} } = _propsLight;
-      const { faktaavklaringSysselsettingType } = faktaavklaring;
+      const { sysselsetting: { sysselsettingType } = {} } = faktaavklaring;
 
-      if (faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER) {
+      if (sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER) {
         return {
           visUtsendingMindreEnn24Mnd: true,
           visAnsattINorskSelskap: true,
@@ -32,7 +32,7 @@ class Utsending extends Steg {
         };
       }
 
-      if (faktaavklaringSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG) {
+      if (sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG) {
         return {
           visUtsendingMindreEnn24Mnd: true,
           visAnsattINorskSelskap: false,
