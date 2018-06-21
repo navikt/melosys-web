@@ -42,6 +42,9 @@ const Bosted = props => {
                   {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
                 </Skjema.Select>
               </Nav.Fieldset>
+              <Nav.Fieldset legend="Pensjonist">
+                Informasjon om pensjonist:
+              </Nav.Fieldset>
               <Nav.Fieldset legend="Student i EØS-land">
                 <Nav.Row>
                   <Nav.Column xs="12">

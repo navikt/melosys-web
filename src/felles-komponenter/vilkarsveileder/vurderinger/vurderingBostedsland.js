@@ -15,23 +15,6 @@ export const VurderingBostedslandTyper = {
   ANNET: 'ANNET',
 };
 
-const TipsBostedsvurderingYrkesaktiv = () => (
-  <ul>
-    <li>Sjekk om søker har aktivitet i Norge</li>
-    <li>Sjekk bostedsadressen er troverdig</li>
-    <li>Sjekk om ektefelle har ekte fødselsnummer eller d-nummer</li>
-    <li>Sjekk opplysninger om EØS-barnetrygd i Gosys</li>
-  </ul>
-);
-
-const TipsBostedsvurderingIkkeYrkesaktiv = () => (
-  <ul>
-    <li>Sjekk bostedsadressen er troverdig</li>
-    <li>Sjekk om ektefelle har ekte fødselsnummer eller d-nummer</li>
-    <li>Sjekk opplysninger om EØS-barnetrygd i Gosys</li>
-  </ul>
-);
-
 const Avklaringer = ({ avklaringer }) => (
   <div>
     <Nav.Element>Vurder bosted manuelt:</Nav.Element>
@@ -67,14 +50,10 @@ Avklaringer.defaultProps = {
  * informasjon mangler.
  */
 const AvklaringsListe = ({
-  tilstand: { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv, avklaringer },
+  tilstand: { avklaringer },
 }) => (
   <div>
     <Avklaringer avklaringer={avklaringer} />
-
-    <Nav.Element>Tips for manuell bostedsvurdering:</Nav.Element>
-    {visTipsForYrkesaktiv && <TipsBostedsvurderingYrkesaktiv />}
-    {visTipsForIkkeYrkesaktiv && <TipsBostedsvurderingIkkeYrkesaktiv />}
   </div>
 );
 

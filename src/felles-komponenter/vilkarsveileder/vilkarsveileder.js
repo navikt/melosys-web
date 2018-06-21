@@ -79,6 +79,7 @@ class Vilkarsveileder extends Component {
         },
         {
           id: 'IKKE_YRKESAKTIV',
+          tittel: 'Annen aktivitet',
           komponent: VurderingIkkeYrkesaktiv,
           dataHenter: () => ({}),
           handlers: {
