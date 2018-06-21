@@ -94,12 +94,12 @@ AvklaringsListe.propTypes = {
 /** Hovedklasse som eksponeres ut.
  * ------------------------------
  */
-const VurderingBostedsland = () => {
+const VurderingBostedsland = props => {
   const {
     bekreftOgFortsett, tilstand, vurdering,
-  } = this.props;
+  } = props;
   const { visBostedslandVelger } = tilstand;
-  const { form: { feilmeldinger = [] } = {}, avklaringer = {} } = vurdering;
+  const { form: { feilmeldinger = [] } = {}, avklaringer = [] } = vurdering;
 
   const informasjonMangler = feilmeldinger.length > 0;
 
