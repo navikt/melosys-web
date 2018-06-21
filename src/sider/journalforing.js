@@ -12,8 +12,7 @@ import * as Konstanter from '../constants';
 import Sticky from '../hjelpekomponenter/sticky';
 
 import withErrorHandling from '../hoc/withErrorHandling';
-import { formatterDatoTilNorsk } from '../utils/dato';
-
+import { formatterDatoTilNorsk, formatterDatoTilISO } from '../utils/dato';
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
@@ -264,8 +263,8 @@ class Journalforing extends Component {
 
     const fagsak = {
       soknadsperiode: {
-        fom: journalforingPeriodeFraOgMed,
-        tom: journalforingPeriodeTilOgMed,
+        fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
+        tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
       },
       land: journalforingOppholdsLand,
     };
