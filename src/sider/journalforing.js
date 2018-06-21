@@ -181,16 +181,22 @@ class Journalforing extends Component {
    */
   vaskDokumentInformasjon = () => {
     const { oppgaveID, journalpostID } = this.props.match.params;
-    const { journalforingSkjemaVerdier } = this.props;
+    const {
+      journalforingSkjemaVerdier,
+      journalforing: { dokument = {} },
+    } = this.props;
     const {
       brukerID, avsenderID, dokumentTittel, vedleggsTitler = [],
     } = journalforingSkjemaVerdier;
+
+    const { ID: dokumentID } = dokument;
 
     return {
       journalpostID,
       oppgaveID,
       brukerID,
       avsenderID,
+      dokumentID,
       dokumenttittel: dokumentTittel,
       vedleggstitler: vedleggsTitler,
     };
