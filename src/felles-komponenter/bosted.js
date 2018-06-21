@@ -14,13 +14,14 @@ import './arbeidsgiverUtland.css';
 const uuid = require('uuid/v4');
 
 const Bosted = props => {
-  const { erValidert } = props;
+  const { erValidert, soknadForm } = props;
   const panelIkon = erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
+  const { studentIEOS } = soknadForm.values ? soknadForm.values : false;
 
   return (
     <div className="bosted panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om bosted, fra søknaden" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger for vurdering av bosted" undertittel="" />}
         ariaTittel="Panel for opplysninger om bosted, fra søknaden">
         <Nav.Container fluid>
           <Nav.Row>
@@ -40,6 +41,25 @@ const Bosted = props => {
                 <Skjema.Select feltNavn="antallMaanederINorge" label="Velg antall måneder" bredde="xs">
                   {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
                 </Skjema.Select>
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Student i EØS-land">
+                <Nav.Row>
+                  <Nav.Column xs="12">
+                    <Skjema.Checkbox label="Søkeren er student i EØS-land" feltNavn="studentIEOS" />
+                  </Nav.Column>
+                  <Nav.Column xs="6">
+                    <Skjema.Input label="Semester" feltNavn="studentSemester" disabled={!studentIEOS} />
+                  </Nav.Column>
+                  <Nav.Column xs="6">
+                    <Skjema.Input label="Studieland" feltNavn="studieLand" disabled={!studentIEOS} />
+                    <Skjema.Textarea
+                      maxLength={1000}
+                      label="Beskrivelse av finansiering"
+                      feltNavn="studentFinansiering"
+                      disabled={!studentIEOS}
+                    />
+                  </Nav.Column>
+                </Nav.Row>
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
