@@ -220,8 +220,8 @@ class Journalforing extends Component {
       return false;
     }
 
-    alert('Denne funksjonen er ikke implementert ennå.');
-    return;
+    // alert('Denne funksjonen er ikke implementert ennå.');
+    // return;
 
     tilordneSak(vasketJournalforing).then(response => {
       if (response.length === 0) {
@@ -266,8 +266,8 @@ class Journalforing extends Component {
 
     const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
 
-    alert('Denne funksjonen er ikke implementert ennå.');
-    return;
+    // alert('Denne funksjonen er ikke implementert ennå.');
+    // return;
 
     opprettNySak(journalforingData).then(response => {
       if (response.length === 0) {
