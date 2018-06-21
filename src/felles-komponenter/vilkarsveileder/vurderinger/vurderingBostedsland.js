@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import classnames from 'classnames';
 import * as Nav from '../../../utils/navFrontend';
@@ -94,42 +94,34 @@ AvklaringsListe.propTypes = {
 /** Hovedklasse som eksponeres ut.
  * ------------------------------
  */
-class VurderingBostedsland extends Component {
-  componentDidMount() {
-    this.props.vurderBosted();
-  }
+const VurderingBostedsland = () => {
+  const {
+    bekreftOgFortsett, tilstand, vurdering,
+  } = this.props;
+  const { visBostedslandVelger } = tilstand;
+  const { form: { feilmeldinger = [] } = {}, avklaringer = {} } = vurdering;
 
-  render () {
-    const {
-      bekreftOgFortsett, vurderBosted, tilstand, vurdering,
-    } = this.props;
-    const { visBostedslandVelger } = tilstand;
-    const { form: { feilmeldinger = [] } = {}, avklaringer = {} } = vurdering;
+  const informasjonMangler = feilmeldinger.length > 0;
 
-    const informasjonMangler = feilmeldinger.length > 0;
-    const vurderingErGjort = Object.keys(avklaringer).length > 0;
-
-    return vurdering === {} ? null : (
-      <div className="vurderingBostedsland">
-        <div>
-          <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
-          {informasjonMangler && <ManglerInformasjon vurderBosted={vurderBosted} />}
-          {vurderingErGjort && <AvklaringsListe tilstand={tilstand} avklaringer={avklaringer} />}
-          <div className="vurderingBostedsland__skjemafelt">
-            <Nav.Fieldset legend="Bostedsland er:">
-              <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.NORGE} label="Norge" disabled={informasjonMangler} />
-              <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.ANNET} label="Annet" disabled={informasjonMangler} />
-              {visBostedslandVelger && <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} disabled={informasjonMangler} />}
-            </Nav.Fieldset>
-          </div>
-        </div>
-        <div className="fane__knapplinje">
-          <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+  return vurdering === {} ? null : (
+    <div className="vurderingBostedsland">
+      <div>
+        <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
+        <AvklaringsListe tilstand={tilstand} avklaringer={avklaringer} />
+        <div className="vurderingBostedsland__skjemafelt">
+          <Nav.Fieldset legend="Bostedsland er:">
+            <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.NORGE} label="Norge" disabled={informasjonMangler} />
+            <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.ANNET} label="Annet" disabled={informasjonMangler} />
+            {visBostedslandVelger && <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} disabled={informasjonMangler} />}
+          </Nav.Fieldset>
         </div>
       </div>
-    );
-  }
-}
+      <div className="fane__knapplinje">
+        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+      </div>
+    </div>
+  );
+};
 
 VurderingBostedsland.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
