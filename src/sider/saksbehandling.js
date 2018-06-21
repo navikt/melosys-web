@@ -241,7 +241,6 @@ const mapStateToProps = state => ({
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
     studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,
     intensjonOmRetur: boolTilStreng(soknadSelectors.BostedSelector(state).intensjonOmRetur),
-    bostedUtenforNorge: boolTilStreng(soknadSelectors.BostedSelector(state).bostedUtenforNorge),
     familiesBosted: soknadSelectors.BostedSelector(state).familiesBosted,
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
