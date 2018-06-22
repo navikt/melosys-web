@@ -35,9 +35,10 @@ const soknadTemplate =
     oppholdUtland: {
       oppholdsland: undefined,
       oppholdsPeriode: { fom: undefined, tom: undefined },
-      studentIEOS: undefined,
-      studentFinansiering: undefined,
+      sammeAdresseSomArbeidsgiver: undefined,
+      ektefelleEllerBarn: undefined,
       studentSemester: undefined,
+      studentFinansiering: undefined,
       studieLand: undefined,
     },
     arbeidNorge: {
@@ -140,7 +141,8 @@ export default function reducer(state = initialState, action) {
             fom: formatterDatoTilISO(dokument.faktaavklaringPeriodeFraOgMed),
             tom: formatterDatoTilISO(dokument.faktaavklaringPeriodeTilOgMed),
           },
-          studentIEOS: dokument.studentIEOS,
+          sammeAdresseSomArbeidsgiver: strengTilBool(dokument.sammeAdresseSomArbeidsgiver),
+          ektefelleEllerBarn: strengTilBool(dokument.ektefelleEllerBarn),
           studentSemester: dokument.studentSemester,
           studieLand: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,

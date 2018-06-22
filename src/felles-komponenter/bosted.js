@@ -14,9 +14,8 @@ import './arbeidsgiverUtland.css';
 const uuid = require('uuid/v4');
 
 const Bosted = props => {
-  const { erValidert, soknadForm } = props;
+  const { erValidert, finansiering } = props;
   const panelIkon = erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
-  const { studentIEOS } = soknadForm.values ? soknadForm.values : false;
 
   return (
     <div className="bosted panelSeksjon">
@@ -33,33 +32,33 @@ const Bosted = props => {
               <Nav.Fieldset legend="Nærmeste families bosted">
                 <Landvelger feltNavn="familiesBosted" />
               </Nav.Fieldset>
-              <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
-                <Skjema.Select feltNavn="antallMaanederINorge" label="Velg antall måneder" bredde="xs">
-                  {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
+              <Nav.SkjemaGruppe title="Yrkesaktiv">
+                <Skjema.RadioGruppe feltNavn="sammeAdresseSomArbeidsgiver" legend="Er norsk adresse samme som arbeidsgivers?">
+                  <Skjema.Radio feltNavn="sammeAdresseSomArbeidsgiver" value="true" label="Ja" />
+                  <Skjema.Radio feltNavn="sammeAdresseSomArbeidsgiver" value="false" label="Nei" />
+                </Skjema.RadioGruppe>
+              </Nav.SkjemaGruppe>
+              <Nav.SkjemaGruppe title="Pensjonsist">
+                <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
+                  <Skjema.Select feltNavn="antallMaanederINorge" label="Velg antall måneder:" bredde="xs">
+                    {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
+                  </Skjema.Select>
+                </Nav.Fieldset>
+                <Skjema.RadioGruppe feltNavn="ektefelleEllerBarn" legend="Har ektefelle / mindreårige barn i Norge">
+                  <Skjema.Radio feltNavn="ektefelleEllerBarn" value="true" label="Ja" />
+                  <Skjema.Radio feltNavn="ektefelleEllerBarn" value="false" label="Nei" />
+                </Skjema.RadioGruppe>
+              </Nav.SkjemaGruppe>
+              <Nav.SkjemaGruppe title="Student i EØS-land">
+                <Landvelger label="Velg studieland:" feltNavn="studieLand" />
+                <Skjema.Select
+                  label="Finansiering"
+                  feltNavn="studentFinansiering"
+                  bredde="xl"
+                >
+                  {finansiering.map(valg => <option key={uuid()} value={valg.kode}>{valg.term}</option>)}
                 </Skjema.Select>
-              </Nav.Fieldset>
-              <Nav.Fieldset legend="Pensjonist">
-                Informasjon om pensjonist:
-              </Nav.Fieldset>
-              <Nav.Fieldset legend="Student i EØS-land">
-                <Nav.Row>
-                  <Nav.Column xs="12">
-                    <Skjema.Checkbox label="Søkeren er student i EØS-land" feltNavn="studentIEOS" />
-                  </Nav.Column>
-                  <Nav.Column xs="6">
-                    <Skjema.Input label="Semester" feltNavn="studentSemester" disabled={!studentIEOS} />
-                  </Nav.Column>
-                  <Nav.Column xs="6">
-                    <Skjema.Input label="Studieland" feltNavn="studieLand" disabled={!studentIEOS} />
-                    <Skjema.Textarea
-                      maxLength={1000}
-                      label="Beskrivelse av finansiering"
-                      feltNavn="studentFinansiering"
-                      disabled={!studentIEOS}
-                    />
-                  </Nav.Column>
-                </Nav.Row>
-              </Nav.Fieldset>
+              </Nav.SkjemaGruppe>
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
@@ -71,11 +70,13 @@ const Bosted = props => {
 Bosted.propTypes = {
   soknadForm: MPT.SoknadForm,
   erValidert: PT.bool,
+  finansiering: PT.arrayOf(MPT.Kodeverk),
 };
 
 Bosted.defaultProps = {
   soknadForm: {},
   erValidert: true,
+  finansiering: [],
 };
 
 export default Bosted;
