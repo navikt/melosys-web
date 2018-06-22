@@ -41,6 +41,8 @@ import {
   faktaavklaringSelectors,
 } from '../ducks/faktaavklaring/';
 
+import { KodeverkSelectors } from '../ducks/kodeverk/';
+
 import {
   vurderingOperations,
   vurderingSelectors,
@@ -71,6 +73,7 @@ class Saksbehandling extends Component {
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
     soknad: PT.object,
+    finansiering: PT.arrayOf(MPT.Kodeverk),
     faktaavklaring: PT.object,
     soknadArbeidsinntekt: PT.object,
     soknadOppholdUtland: MPT.OppholdUtland,
@@ -93,6 +96,7 @@ class Saksbehandling extends Component {
     bekreftelser: [],
     oppsummering: {},
     soknad: {},
+    finansiering: [],
     faktaavklaring: {},
     soknadArbeidsinntekt: {},
     soknadOppholdUtland: {},
@@ -165,6 +169,7 @@ class Saksbehandling extends Component {
       soknadArbeidsinntekt,
       soknadOppholdUtland,
       soknadForm,
+      finansiering,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -181,7 +186,7 @@ class Saksbehandling extends Component {
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {person && <Personopplysninger person={person} />}
-                <Bosted soknadForm={soknadForm} erValidert={this.state.gyldigePaneler.bosted} />
+                <Bosted soknadForm={soknadForm} erValidert={this.state.gyldigePaneler.bosted} finansiering={finansiering} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
@@ -215,6 +220,7 @@ const mapStateToProps = state => ({
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   vurdering: vurderingSelectors.VurderingSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
+  finansiering: KodeverkSelectors.finansieringSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
@@ -236,7 +242,8 @@ const mapStateToProps = state => ({
     trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
-    studentIEOS: soknadSelectors.OppholdUtlandSelector(state).studentIEOS,
+    sammeAdresseSomArbeidsgiver: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver),
+    ektefelleEllerBarn: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).ektefelleEllerBarn),
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
     studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,

@@ -11,7 +11,7 @@ import { KodeverkSelectors } from '../../../ducks/kodeverk';
 
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 
-const ValgtLand = ({ landObjekt, slettLand, disabled }) => (
+const ValgtLand = ({ landObjekt = {}, slettLand, disabled }) => (
   <div className="landliste__linje">
     <div className="landliste__linje__navn">{landTekstFormat(landObjekt)}</div><button className="landliste__linje__knapp" disabled={disabled} onClick={e => slettLand(e, landObjekt.kode)}>-</button>
   </div>
