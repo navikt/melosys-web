@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
@@ -10,11 +11,13 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import Landvelger from './skjema/landvelger';
 
 import './arbeidsgiverUtland.css';
+import { KodeverkSelectors } from '../ducks/kodeverk';
+import { formSelectors } from '../ducks/form';
 
 const uuid = require('uuid/v4');
 
 const Bosted = props => {
-  const { erValidert, finansiering } = props;
+  const { erValidert, studieFinansiering } = props;
   const panelIkon = erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
 
   return (
@@ -56,7 +59,7 @@ const Bosted = props => {
                   feltNavn="studentFinansiering"
                   bredde="xl"
                 >
-                  {finansiering.map(valg => <option key={uuid()} value={valg.kode}>{valg.term}</option>)}
+                  {studieFinansiering.map(valg => <option key={uuid()} value={valg.kode}>{valg.term}</option>)}
                 </Skjema.Select>
               </Nav.SkjemaGruppe>
             </Nav.Column>
@@ -70,13 +73,18 @@ const Bosted = props => {
 Bosted.propTypes = {
   soknadForm: MPT.SoknadForm,
   erValidert: PT.bool,
-  finansiering: PT.arrayOf(MPT.Kodeverk),
+  studieFinansiering: PT.arrayOf(MPT.Kodeverk),
 };
 
 Bosted.defaultProps = {
   soknadForm: {},
   erValidert: true,
-  finansiering: [],
+  studieFinansiering: [],
 };
 
-export default Bosted;
+const mapStateToProps = state => ({
+  studieFinansiering: KodeverkSelectors.studieFinansieringSelector(state),
+  soknadForm: formSelectors.SoknadenFormSelector(state),
+});
+
+export default connect(mapStateToProps)(Bosted);

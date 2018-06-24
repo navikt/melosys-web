@@ -41,8 +41,6 @@ import {
   faktaavklaringSelectors,
 } from '../ducks/faktaavklaring/';
 
-import { KodeverkSelectors } from '../ducks/kodeverk/';
-
 import {
   vurderingOperations,
   vurderingSelectors,
@@ -169,7 +167,6 @@ class Saksbehandling extends Component {
       soknadArbeidsinntekt,
       soknadOppholdUtland,
       soknadForm,
-      finansiering,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -186,7 +183,7 @@ class Saksbehandling extends Component {
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {person && <Personopplysninger person={person} />}
-                <Bosted soknadForm={soknadForm} erValidert={this.state.gyldigePaneler.bosted} finansiering={finansiering} />
+                <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
@@ -220,7 +217,6 @@ const mapStateToProps = state => ({
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   vurdering: vurderingSelectors.VurderingSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
-  finansiering: KodeverkSelectors.studieFinansieringSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
