@@ -24,10 +24,6 @@ export default function reducer(state = initialState, action) {
       const oppgaverData = action.data;
       return { ...state, status: STATUS.OK, data: oppgaverData };
     }
-    case Types.PLUKK_OPPGAVE: {
-      const oppgaveData = action.data;
-      return { ...state, status: STATUS.OK, data: oppgaveData };
-    }
     case Types.SOK_PENDING:
       return { ...state, status: STATUS.PENDING };
     case Types.SOK_FEILET:

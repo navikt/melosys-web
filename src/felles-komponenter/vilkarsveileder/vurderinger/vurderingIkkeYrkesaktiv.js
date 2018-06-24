@@ -4,7 +4,6 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
 export const VurderingIkkeYrkesaktivTyper = {
-  MEDFOLGENDE: 'MEDFOLGENDE',
   STUDENT: 'STUDENT',
   PENSJONIST: 'PENSJONIST',
   INGEN_AV_DISSE: 'INGEN_AV_DISSE',
@@ -12,7 +11,6 @@ export const VurderingIkkeYrkesaktivTyper = {
 
 const IkkeYrkesaktiv = () => (
   <Nav.Fieldset legend="Vurder om søkeren er:">
-    <Skjema.Radio feltNavn="faktaavklaringIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.MEDFOLGENDE} label="Medfølgende" />
     <Skjema.Radio feltNavn="faktaavklaringIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.STUDENT} label="Student" />
     <Skjema.Radio feltNavn="faktaavklaringIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.PENSJONIST} label="Pensjonist" />
     <Skjema.Radio feltNavn="faktaavklaringIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE} label="Ingen av disse" />
