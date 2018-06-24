@@ -18,8 +18,8 @@ class Aktivitet extends Steg {
         nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
       },
       {
-        beskrivelse: 'sysselsettingType ER LIK "IKKE_ARBEIDENDE" eller sysselsettingType ER LIK "ARBEIDSTAKER_OG_SELVSTENDIG"',
-        exec: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.IKKE_ARBEIDENDE,
+        beskrivelse: 'sysselsettingType ER LIK "IKKE_YRKESAKTIV" eller sysselsettingType ER LIK "ARBEIDSTAKER_OG_SELVSTENDIG"',
+        exec: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.IKKE_YRKESAKTIV,
         nesteSteg: STEG.IKKE_YRKESAKTIV,
       },
       {
