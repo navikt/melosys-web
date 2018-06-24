@@ -56,7 +56,7 @@ class Bostedsland extends Steg {
       if (erYrkesaktiv) {
         avklaringer = [
           { term: 'Har dnr.', status: undefined },
-          { term: 'Bostedsadresse i Norge.', status: undefined },
+          { term: 'Bostedsadresse i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
           { term: 'Adresse i utlandet.', status: undefined },
           { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: undefined },
           { term: 'EU/EØS barnetrygd fra NAV.', status: undefined },
@@ -66,7 +66,7 @@ class Bostedsland extends Steg {
       } else {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: undefined },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
             { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
             { term: 'Oppholder seg i utlandet.', status: undefined },
             { term: 'Har studiested i utlandet.', status: undefined },
@@ -76,7 +76,7 @@ class Bostedsland extends Steg {
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.MEDFOLGENDE) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: undefined },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
             { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
             { term: 'Medfølgende familie til utsendt arbeidstaker.', status: undefined },
             { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
@@ -84,7 +84,7 @@ class Bostedsland extends Steg {
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: undefined },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
             { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: undefined },
             { term: 'Medfølgende familie til utsendt arbeidstaker', status: undefined },
             { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
