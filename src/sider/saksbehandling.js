@@ -220,7 +220,7 @@ const mapStateToProps = state => ({
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   vurdering: vurderingSelectors.VurderingSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
-  finansiering: KodeverkSelectors.finansieringSelector(state),
+  finansiering: KodeverkSelectors.studieFinansieringSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),

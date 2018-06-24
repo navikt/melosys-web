@@ -38,7 +38,7 @@ export const vedleggstitlerSelector = createSelector(
   vedleggstitler => vedleggstitler || []
 );
 
-export const finansieringSelector = createSelector(
+export const studieFinansieringSelector = createSelector(
   state => state.kodeverk.data.finansiering,
-  finansiering => finansiering || []
+  studieFinansiering => studieFinansiering || []
 );

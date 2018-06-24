@@ -1,4 +1,4 @@
-import Opphold from './opphold';
+import Opphold from './opphold/index';
 
 class Regler {
   constructor(skjema) {

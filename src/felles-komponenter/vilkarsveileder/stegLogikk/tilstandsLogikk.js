@@ -3,7 +3,7 @@ import { VurderingSysselsettingTyper } from '../vurderinger/vurderingSysselsetti
 import { VurderingBostedslandTyper } from '../vurderinger/vurderingBostedsland';
 import { STEG } from './typer';
 import { VurderingIkkeYrkesaktivTyper } from '../vurderinger/vurderingIkkeYrkesaktiv';
-import Regler from '../../../services/regler';
+import Regler from '../../../regler';
 
 class TilstandsLogikk {
   static familieBorINorge = skjema => {
