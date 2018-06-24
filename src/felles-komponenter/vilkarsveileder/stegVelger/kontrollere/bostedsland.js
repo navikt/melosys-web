@@ -74,25 +74,17 @@ class Bostedsland extends Steg {
             { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge(skjema) },
           ];
         }
-        if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.MEDFOLGENDE) {
-          avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
-            { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
-            { term: 'Medfølgende familie til utsendt arbeidstaker.', status: undefined },
-            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
-          ];
-        }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
             { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
-            { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: undefined },
+            { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr() },
             { term: 'Medfølgende familie til utsendt arbeidstaker', status: undefined },
             { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
-            { term: 'Bosatt i Norge før utreise.', status: undefined },
+            { term: 'Bosatt i Norge før utreise.', status: regler.opphold().forutgaendeBostedINorge() },
             { term: 'Oppholdet i utlandet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
           ];
         }

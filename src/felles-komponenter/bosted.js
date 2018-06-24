@@ -32,10 +32,6 @@ const Bosted = props => {
                 <Skjema.Radio feltNavn="forutgaendeBostedINorge" value="true" label="Ja" />
                 <Skjema.Radio feltNavn="forutgaendeBostedINorge" value="false" label="Nei" />
               </Skjema.RadioGruppe>
-              <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
-                <Skjema.Radio feltNavn="intensjonOmRetur" value="true" label="Ja" />
-                <Skjema.Radio feltNavn="intensjonOmRetur" value="false" label="Nei" />
-              </Skjema.RadioGruppe>
               <Nav.Fieldset legend="Nærmeste families bosted">
                 <Landvelger feltNavn="familiesBosted" />
               </Nav.Fieldset>
@@ -65,6 +61,10 @@ const Bosted = props => {
                 >
                   {studieFinansiering.map(valg => <option key={uuid()} value={valg.kode}>{valg.term}</option>)}
                 </Skjema.Select>
+                <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
+                  <Skjema.Radio feltNavn="intensjonOmRetur" value="true" label="Ja" />
+                  <Skjema.Radio feltNavn="intensjonOmRetur" value="false" label="Nei" />
+                </Skjema.RadioGruppe>
               </Nav.SkjemaGruppe>
             </Nav.Column>
           </Nav.Row>

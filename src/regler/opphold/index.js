@@ -13,6 +13,12 @@ class Opphold extends DomeneRegel {
     return datoDiff(isoFom, isoTom, 'months') < 12;
   }
 
+  erINorgeSeksManederEllerMerPerKalenderAr = () => {
+    const { skjema } = this;
+    const antallMaanederINorge = parseInt(skjema.antallMaanederINorge, 10);
+    return antallMaanederINorge >= 6;
+  }
+
   forutgaendeBostedINorge = () => {
     const { skjema } = this;
     const { forutgaendeBostedINorge } = skjema;
