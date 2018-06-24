@@ -34,6 +34,18 @@ class StegLogikk {
         nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
       },
       {
+        kriterier: 'sysselsettingType ER LIK "IKKE_ARBEIDENDE" eller sysselsettingType ER LIK "ARBEIDSTAKER_OG_SELVSTENDIG"',
+        erOppfylt: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.IKKE_ARBEIDENDE,
+        nesteSteg: STEG.IKKE_YRKESAKTIV,
+      },
+      {
+        kriterier: 'alle andre valg',
+        erOppfylt: () => true,
+        nesteSteg: STEG.BOSTEDSLAND,
+      },
+    ],
+    IKKE_YRKESAKTIV: [
+      {
         kriterier: 'alle andre valg',
         erOppfylt: () => true,
         nesteSteg: STEG.BOSTEDSLAND,
