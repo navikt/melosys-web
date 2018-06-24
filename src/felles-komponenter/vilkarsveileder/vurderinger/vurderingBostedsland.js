@@ -15,45 +15,21 @@ export const VurderingBostedslandTyper = {
   ANNET: 'ANNET',
 };
 
-/** Vises dersom det mangler informasjon som saksbehandler må fylle inn.
- */
-const ManglerInformasjon = ({ vurderBosted }) => (
-  <div>
-    <p>
-      Vennligst fyll ut panelet &quot;opplysninger om bosted&quot; med informasjon fra søknaden.
-    </p>
-    <Nav.Hovedknapp onClick={vurderBosted}>Vurder bosted</Nav.Hovedknapp>
-  </div>
-);
-
-ManglerInformasjon.propTypes = {
-  vurderBosted: PT.func.isRequired,
-};
-
-const TipsBostedsvurderingYrkesaktiv = () => (
-  <ul>
-    <li>Sjekk om søker har aktivitet i Norge</li>
-    <li>Sjekk bostedsadressen er troverdig</li>
-    <li>Sjekk om ektefelle har ekte fødselsnummer eller d-nummer</li>
-    <li>Sjekk opplysninger om EØS-barnetrygd i Gosys</li>
-  </ul>
-);
-
-const TipsBostedsvurderingIkkeYrkesaktiv = () => (
-  <ul>
-    <li>Sjekk bostedsadressen er troverdig</li>
-    <li>Sjekk om ektefelle har ekte fødselsnummer eller d-nummer</li>
-    <li>Sjekk opplysninger om EØS-barnetrygd i Gosys</li>
-  </ul>
-);
-
 const Avklaringer = ({ avklaringer }) => (
   <div>
-    <Nav.Element>Vurder bosted manuelt. Systemet har avklart at søker har følgende:</Nav.Element>
+    <Nav.Element>Vurder bosted manuelt:</Nav.Element>
     <ul className="betingelser__liste">
       {
         avklaringer.map(({ term, status }) => {
-          const cl = classnames({ liste__element: true, 'liste__element--oppfylt': status, 'liste__element--varsel': !status });
+          let iconClassName;
+          if (status === true) {
+            iconClassName = 'liste__element--oppfylt';
+          } else if (status === false) {
+            iconClassName = 'liste__element--ikkeoppfylt';
+          } else {
+            iconClassName = 'liste__element--varsel';
+          }
+          const cl = classnames({ liste__element: true, [iconClassName]: true });
           return (<li key={uuid()} className={cl}>{term}</li>);
         })
       }
@@ -74,21 +50,15 @@ Avklaringer.defaultProps = {
  * informasjon mangler.
  */
 const AvklaringsListe = ({
-  tilstand: { visTipsForYrkesaktiv, visTipsForIkkeYrkesaktiv },
-  avklaringer,
+  tilstand: { avklaringer },
 }) => (
   <div>
-    {Object.keys(avklaringer).length > 0 && <Avklaringer avklaringer={avklaringer} />}
-
-    <Nav.Element>Tips for manuell bostedsvurdering:</Nav.Element>
-    {visTipsForYrkesaktiv && <TipsBostedsvurderingYrkesaktiv />}
-    {visTipsForIkkeYrkesaktiv && <TipsBostedsvurderingIkkeYrkesaktiv />}
+    <Avklaringer avklaringer={avklaringer} />
   </div>
 );
 
 AvklaringsListe.propTypes = {
   tilstand: PT.object.isRequired,
-  avklaringer: PT.array.isRequired,
 };
 
 /** Hovedklasse som eksponeres ut.
@@ -99,20 +69,17 @@ const VurderingBostedsland = props => {
     bekreftOgFortsett, tilstand, vurdering,
   } = props;
   const { visBostedslandVelger } = tilstand;
-  const { form: { feilmeldinger = [] } = {}, avklaringer = [] } = vurdering;
-
-  const informasjonMangler = feilmeldinger.length > 0;
 
   return vurdering === {} ? null : (
     <div className="vurderingBostedsland">
       <div>
         <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
-        <AvklaringsListe tilstand={tilstand} avklaringer={avklaringer} />
+        <AvklaringsListe tilstand={tilstand} />
         <div className="vurderingBostedsland__skjemafelt">
           <Nav.Fieldset legend="Bostedsland er:">
-            <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.NORGE} label="Norge" disabled={informasjonMangler} />
-            <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.ANNET} label="Annet" disabled={informasjonMangler} />
-            {visBostedslandVelger && <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} disabled={informasjonMangler} />}
+            <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.NORGE} label="Norge" />
+            <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.ANNET} label="Annet" />
+            {visBostedslandVelger && <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} />}
           </Nav.Fieldset>
         </div>
       </div>
