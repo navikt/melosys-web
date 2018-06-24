@@ -32,6 +32,10 @@ const Bosted = props => {
                 <Skjema.Radio feltNavn="intensjonOmRetur" value="true" label="Ja" />
                 <Skjema.Radio feltNavn="intensjonOmRetur" value="false" label="Nei" />
               </Skjema.RadioGruppe>
+              <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
+                <Skjema.Radio feltNavn="intensjonOmRetur" value="true" label="Ja" />
+                <Skjema.Radio feltNavn="intensjonOmRetur" value="false" label="Nei" />
+              </Skjema.RadioGruppe>
               <Nav.Fieldset legend="Nærmeste families bosted">
                 <Landvelger feltNavn="familiesBosted" />
               </Nav.Fieldset>
