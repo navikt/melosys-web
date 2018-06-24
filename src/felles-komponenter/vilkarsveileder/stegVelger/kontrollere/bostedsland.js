@@ -5,7 +5,7 @@ import { VurderingYrkesaktivitetFordelingTyper } from '../../vurderinger/vurderi
 import { VurderingVirksomhetTyper } from '../../vurderinger/vurderingVirksomhet';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 import { VurderingIkkeYrkesaktivTyper } from '../../vurderinger/vurderingIkkeYrkesaktiv';
-import Regler from '../../../../services/regler';
+import Regler from '../../../../regler';
 
 class Bostedsland extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -32,6 +32,7 @@ class Bostedsland extends Steg {
       },
     ];
     this._id = STEG.BOSTEDSLAND;
+    this._tittel = 'Bosted';
     this._komponent = VurderingBostedsland;
     this._dataHenter = () => ({ });
     this._tilstand = _propsLight => {

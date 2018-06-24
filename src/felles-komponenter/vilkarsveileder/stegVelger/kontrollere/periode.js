@@ -13,6 +13,7 @@ class Periode extends Steg {
       },
     ];
     this._id = STEG.PERIODE;
+    this._tittel = 'Periode';
     this._komponent = VurderingPeriode;
     this._dataHenter = () => ({ });
     this._tilstand = () => {};

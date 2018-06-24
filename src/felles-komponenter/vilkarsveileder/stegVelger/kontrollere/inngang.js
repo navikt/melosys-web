@@ -13,6 +13,7 @@ class Inngang extends Steg {
       },
     ];
     this._id = STEG.INNGANG;
+    this._tittel = 'Inngang';
     this._komponent = VurderingInngang;
     this._dataHenter = props => ({ inngangsvilkar: props.inngang });
     this._tilstand = () => {};

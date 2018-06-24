@@ -13,6 +13,7 @@ class Sysselsetting extends Steg {
       },
     ];
     this._id = STEG.ARBEIDSFORHOLD;
+    this._tittel = 'Arbeids\u00ADgiver';
     this._komponent = VurderingArbeidsforhold;
     this._dataHenter = _propsLight => ({ relevanteArbeidsforholdene: _propsLight.relevanteArbeidsforholdene });
     this._tilstand = _propsLight => {};

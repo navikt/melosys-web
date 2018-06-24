@@ -4,6 +4,7 @@ class Steg {
     this._stegPosisjon = posisjon;
     this._kriterier = null;
     this._id = null;
+    this._tittel = null;
     this._komponent = null;
     this._dataHenter = null;
     this._tilstand = null;
@@ -21,6 +22,7 @@ class Steg {
     id: this._id,
     komponent: this._komponent,
     status: this._status,
+    tittel: this._tittel,
     handlers: this._handlers,
     data: { ...this._dataHenter(this._propsLight), tilstand: this._tilstand(this._propsLight) },
     stegPosisjon: this._stegPosisjon,
