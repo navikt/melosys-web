@@ -28,9 +28,9 @@ const Bosted = props => {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
-                <Skjema.Radio feltNavn="intensjonOmRetur" value="true" label="Ja" />
-                <Skjema.Radio feltNavn="intensjonOmRetur" value="false" label="Nei" />
+              <Skjema.RadioGruppe feltNavn="forutgaendeBostedINorge" legend="Har forutgående bosted i Norge.">
+                <Skjema.Radio feltNavn="forutgaendeBostedINorge" value="true" label="Ja" />
+                <Skjema.Radio feltNavn="forutgaendeBostedINorge" value="false" label="Nei" />
               </Skjema.RadioGruppe>
               <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
                 <Skjema.Radio feltNavn="intensjonOmRetur" value="true" label="Ja" />

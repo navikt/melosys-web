@@ -238,6 +238,7 @@ const mapStateToProps = state => ({
     trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
+    forutgaendeBostedINorge: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).forutgaendeBostedINorge),
     sammeAdresseSomArbeidsgiver: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver),
     ektefelleEllerBarn: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).ektefelleEllerBarn),
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
