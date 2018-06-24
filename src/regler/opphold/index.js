@@ -1,6 +1,6 @@
 import moment from 'moment';
 import DomeneRegel from '../domeneRegel';
-import { strengTilBool } from '../../../utils/streng';
+import { strengTilBool } from '../../utils/streng';
 
 class Opphold extends DomeneRegel {
   inntilTolvManeder = () => {
