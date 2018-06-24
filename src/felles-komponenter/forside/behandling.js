@@ -12,7 +12,13 @@ import './behandling.css';
 
 class Behandling extends Component {
   submitOgVideresend = form => {
-    this.props.handleSubmit(form).then(redirectURL => this.props.history.push(redirectURL));
+    this.props.handleSubmit(form).then(redirectURL => {
+      /* eslint-disable no-alert */
+      if (!redirectURL) { return alert('Ingen oppgaver finnes. Videre funksjonalitet ikke implementert.'); }
+      /* eslint-enable */
+      this.props.history.push(redirectURL);
+      return true;
+    });
   }
 
   render() {
