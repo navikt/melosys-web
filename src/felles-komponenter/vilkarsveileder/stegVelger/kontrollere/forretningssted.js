@@ -13,6 +13,7 @@ class Forretningssted extends Steg {
       },
     ];
     this._id = STEG.SYSSELSETTING;
+    this._tittel = 'Forretnings\u00ADsted';
     this._komponent = VurderingForretningssted;
     this._dataHenter = props => ({ valgteArbeidsforhold: props.valgteArbeidsforhold });
     this._tilstand = () => {};

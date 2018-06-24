@@ -1,14 +1,16 @@
 import DomeneRegel from '../domeneRegel';
 import { strengTilBool } from '../../utils/streng';
 
-import { datoDiff } from '../../utils/dato';
+import { datoDiff, formatterDatoTilISO } from '../../utils/dato';
 
 class Opphold extends DomeneRegel {
   inntilTolvManeder = () => {
     const { skjema } = this;
     const { oppholdUtlandFom, oppholdUtlandTom } = skjema;
+    const isoFom = formatterDatoTilISO(oppholdUtlandFom);
+    const isoTom = formatterDatoTilISO(oppholdUtlandTom);
 
-    return datoDiff(oppholdUtlandFom, oppholdUtlandTom, 'months') < 12;
+    return datoDiff(isoFom, isoTom, 'months') < 12;
   }
 
   intensjonOmReturTilNorge = () => {

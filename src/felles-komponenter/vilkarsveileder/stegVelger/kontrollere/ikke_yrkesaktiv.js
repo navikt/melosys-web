@@ -13,6 +13,7 @@ class IkkeYrkesaktiv extends Steg {
       },
     ];
     this._id = STEG.IKKE_YRKESAKTIV;
+    this._tittel = 'Annen aktivitet';
     this._komponent = VurderingIkkeYrkesaktiv;
     this._dataHenter = () => ({ });
     this._tilstand = () => {};

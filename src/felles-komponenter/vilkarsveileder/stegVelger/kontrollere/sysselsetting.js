@@ -29,6 +29,7 @@ class Sysselsetting extends Steg {
       },
     ];
     this._id = STEG.SYSSELSETTING;
+    this._tittel = 'Aktivitet';
     this._komponent = VurderingSysselsetting;
     this._dataHenter = () => ({ });
     this._tilstand = () => ({

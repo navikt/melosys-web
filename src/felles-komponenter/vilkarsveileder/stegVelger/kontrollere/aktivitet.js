@@ -29,6 +29,7 @@ class Aktivitet extends Steg {
       },
     ];
     this._id = STEG.SYSSELSETTING;
+    this._tittel = 'Aktivitet';
     this._komponent = VurderingAktivitet;
     this._dataHenter = () => ({ });
     this._tilstand = () => {};
