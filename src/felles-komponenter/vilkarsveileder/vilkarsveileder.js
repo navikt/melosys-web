@@ -7,26 +7,7 @@ import * as MPT from '../../proptypes/';
 
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
-import StegLogikk from './stegLogikk/stegLogikk';
-import TilstandsLogikk from './stegLogikk/tilstandsLogikk';
-
-import { FANE_STATUS } from './stegLogikk/typer';
-
-// Importer alle fanene
-import VurderingPeriode from './vurderinger/vurderingPeriode';
-import VurderingArbeidsforhold from './vurderinger/vurderingArbeidsforhold';
-import VurderingYrkesaktivitetFordeling from './vurderinger/vurderingYrkesaktivitetFordeling';
-import VurderingAktivitet from './vurderinger/vurderingAktivitet';
-import VurderingUtsending from './vurderinger/vurderingUtsending';
-import VurderingSysselsetting from './vurderinger/vurderingSysselsetting';
-import VurderingIkkeYrkesaktiv from './vurderinger/vurderingIkkeYrkesaktiv';
-import VurderingSektor from './vurderinger/vurderingSektor';
-import VurderingVirksomhet from './vurderinger/vurderingVirksomhet';
-import VurderingBostedsland from './vurderinger/vurderingBostedsland';
-import VurderingTjenestemann from './vurderinger/vurderingTjenestemann';
-import VurderingForretningssted from './vurderinger/vurderingForretningssted';
-import VurderingVedtak from './vurderinger/vurderingVedtak';
-import VurderingInngang from './vurderinger/vurderingInngang';
+import StegVelger from './stegVelger';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { vurderingOperations } from '../../ducks/vurdering/';
@@ -38,158 +19,11 @@ import { formSelectors } from '../../ducks/form/';
 import './vilkarsveileder.css';
 
 class Vilkarsveileder extends Component {
+  state = { aktivtStegNummer: 0, aktuelleSteg: [] }
+
   componentWillMount() {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
-
-    this.setState({
-      aktivtStegNummer: 0,
-      aktuelleSteg: [],
-      alleSteg: [
-        {
-          id: 'INNGANG',
-          tittel: 'Inngang',
-          komponent: VurderingInngang,
-          dataHenter: props => ({ inngangsvilkar: props.inngang }),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-          aktivtSteg: true,
-        },
-        {
-          id: 'PERIODE',
-          tittel: 'Periode',
-          komponent: VurderingPeriode,
-          dataHenter: () => ({}),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'SYSSELSETTING',
-          tittel: 'Aktivitet',
-          komponent: VurderingSysselsetting,
-          dataHenter: () => ({}),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'IKKE_YRKESAKTIV',
-          tittel: 'Annen aktivitet',
-          komponent: VurderingIkkeYrkesaktiv,
-          dataHenter: () => ({}),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'ARBEIDSFORHOLD',
-          tittel: 'Arbeids\u00ADgiver',
-          komponent: VurderingArbeidsforhold,
-          dataHenter: props => ({ relevanteArbeidsforholdene: props.relevanteArbeidsforholdene }),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'YRKESAKTIVITET_FORDELING',
-          tittel: 'Arbeids\u00ADland',
-          komponent: VurderingYrkesaktivitetFordeling,
-          dataHenter: () => ({}),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'AKTIVITET',
-          tittel: 'Aktivitet',
-          komponent: VurderingAktivitet,
-          dataHenter: () => ({}),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'UTSENDING',
-          tittel: 'Utsending',
-          komponent: VurderingUtsending,
-          dataHenter: () => ({}),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'SEKTOR',
-          tittel: 'Type aktivitet',
-          komponent: VurderingSektor,
-          dataHenter: () => ({}),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'BOSTEDSLAND',
-          tittel: 'Bosted',
-          komponent: VurderingBostedsland,
-          dataHenter: () => ({}),
-          handlers: {
-            vurderBosted: this.vurderBosted,
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'FORRETNINGSSTED',
-          tittel: 'Forretnings\u00ADsted',
-          komponent: VurderingForretningssted,
-          dataHenter: props => ({ valgteArbeidsforhold: props.valgteArbeidsforhold }),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'TJENESTEMANN',
-          tittel: 'Tjeneste\u00ADmann',
-          komponent: VurderingTjenestemann,
-          dataHenter: () => ({}),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'VIRKSOMHET',
-          tittel: 'Arbeids\u00ADmønster',
-          komponent: VurderingVirksomhet,
-          dataHenter: () => ({}),
-          handlers: {
-            bekreftOgFortsett: this.bekreftOgFortsett,
-          },
-          status: FANE_STATUS.OK,
-        },
-        {
-          id: 'VEDTAK',
-          tittel: 'Vedtak',
-          komponent: VurderingVedtak,
-          dataHenter: () => ({}),
-          handlers: {
-            fattVedtakHandler: () => { this.fattVedtak(); this.beOmVurdering(); },
-          },
-          status: FANE_STATUS.OK,
-        },
-      ],
-    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -215,28 +49,6 @@ class Vilkarsveileder extends Component {
     this.tilSteg(this.beregnNesteSteg());
   }
 
-  /** For at regelmodul skal kunne gjøre en vurdering av bosted må vi sende inn
-   * informasjon fra søknaden umiddelbart i forkant.
-   */
-  vurderBosted = () => {
-    const { sendSoknad, hentBosted, skjema } = this.props;
-    const { behandlingID } = this.props.oppsummering;
-
-    sendSoknad(behandlingID, skjema)
-      .then(response => {
-        if (response.data.behandlingID !== behandlingID) {
-          // Todo: Implementere feilhåndtering i grensesnittet.
-          throw (new Error('Feil i behandlingID'));
-        }
-        return hentBosted(behandlingID);
-      })
-      .catch(() => {
-        /* eslint-disable no-console */
-        console.error('Feil i bostedsvurdering fra API.');
-        /* eslint-enable */
-      });
-  }
-
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
    * har bekreftet valgene.
@@ -246,18 +58,22 @@ class Vilkarsveileder extends Component {
   }
 
   oppdaterAktuelleSteg = props => {
-    const { faktaavklaring, skjema } = props;
     const { erDetteSisteSteg } = this;
-    const beregnedeSteg = StegLogikk.beregnAlleSteg(faktaavklaring);
+    const tilgjengeligeHandlers = {
+      bekreftOgFortsett: this.bekreftOgFortsett,
+      fattVedtak: this.fattVedtak,
+      beOmVurdering: this.beOmVurdering,
+    };
+    const propsLight = {
+      faktaavklaring: props.faktaavklaring,
+      inngang: props.inngang,
+      skjema: props.skjema,
+      relevanteArbeidsforholdene: props.relevanteArbeidsforholdene,
+      tilgjengeligeHandlers,
+    };
 
-    const aktuelleSteg = beregnedeSteg
-      .map(aktueltSteg => this.state.alleSteg.find(steg => steg.id === aktueltSteg))
-      .map((steg, index) => ({
-        ...steg,
-        stegPosisjon: index,
-        aktivtSteg: false,
-        data: { ...steg.dataHenter(props), tilstand: TilstandsLogikk.beregnTilstand(steg.id, skjema) },
-      }));
+    const stegVelger = new StegVelger(propsLight);
+    const aktuelleSteg = stegVelger.beregnAlleSteg();
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
 

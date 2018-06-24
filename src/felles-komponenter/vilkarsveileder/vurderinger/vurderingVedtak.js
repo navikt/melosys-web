@@ -127,7 +127,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp type="hoved" onClick={() => props.fattVedtakHandler()}>Fatt vedtak</Nav.Knapp>
+            <Nav.Knapp type="hoved" onClick={() => props.fattVedtak()}>Fatt vedtak</Nav.Knapp>
           </Nav.Column>
           <Nav.Column xs="6" className="fane__fot">
             <a href="http://localhost">Forhåndsvis vedtaksbrev</a>
@@ -139,7 +139,7 @@ const VurderingVedtak = props => {
 };
 
 VurderingVedtak.propTypes = {
-  fattVedtakHandler: PT.func.isRequired,
+  fattVedtak: PT.func.isRequired,
   lovvalgbestemmelser: MPT.Lovvalgsbestemmelser.isRequired,
   vurderingStatus: PT.string.isRequired,
   feilmeldinger: MPT.Feilmeldinger.isRequired,

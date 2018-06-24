@@ -4,7 +4,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
 export const VurderingSysselsettingTyper = {
-  IKKE_ARBEIDENDE: 'IKKE_ARBEIDENDE',
+  IKKE_YRKESAKTIV: 'IKKE_YRKESAKTIV',
   ARBEIDSTAKER: 'ARBEIDSTAKER',
   SELVSTENDIG: 'SELVSTENDIG',
   STONADSMOTTAKER: 'STONADSMOTTAKER',
@@ -14,7 +14,7 @@ export const VurderingSysselsettingTyper = {
 
 const Sysselsetting = () => (
   <Nav.Fieldset legend="Vurder om søkeren er:">
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.IKKE_ARBEIDENDE} label="Ikke yrkesaktiv" />
+    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.IKKE_YRKESAKTIV} label="Ikke yrkesaktiv" />
     <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.ARBEIDSTAKER} label="Arbeidstaker / frilanser" />
     <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.SELVSTENDIG} label="Selvstendig næringsdrivende" />
     <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.STONADSMOTTAKER} label="Stønadsmottaker" />

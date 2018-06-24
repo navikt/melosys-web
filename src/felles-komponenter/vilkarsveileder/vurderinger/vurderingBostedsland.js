@@ -92,7 +92,6 @@ const VurderingBostedsland = props => {
 
 VurderingBostedsland.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  vurderBosted: PT.func.isRequired,
   tilstand: PT.object,
   vurdering: PT.object,
 };
