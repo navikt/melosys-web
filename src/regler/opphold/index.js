@@ -10,9 +10,10 @@ class Opphold extends DomeneRegel {
     const isoFom = formatterDatoTilISO(oppholdUtlandFom);
     const isoTom = formatterDatoTilISO(oppholdUtlandTom);
 
-    console.log(datoDiff(isoFom, isoTom, 'months'));
+    const diff = datoDiff(isoFom, isoTom, 'months');
+    if (diff === false) return undefined;
 
-    return datoDiff(isoFom, isoTom, 'months') < 12;
+    return diff < 12;
   }
 
   erINorgeSeksManederEllerMerPerKalenderAr = () => {
