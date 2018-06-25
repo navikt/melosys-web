@@ -55,10 +55,9 @@ class Bostedsland extends Steg {
 
       if (erYrkesaktiv) {
         avklaringer = [
-          { term: 'Har dnr.', status: undefined },
           { term: 'Bostedsadresse i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
-          { term: 'Adresse i utlandet.', status: undefined },
-          { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: undefined },
+          { term: 'Adresse i utlandet.', status: regler.opphold().harAdresseIUtlandet() },
+          { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: regler.opphold().harSammeAdresseSomArbeidsgiver() },
           { term: 'EU/EØS barnetrygd fra NAV.', status: regler.stonad().mottarEOSBarnetrygdFraNav() },
           { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge() },
         ];

@@ -36,6 +36,10 @@ const Bosted = props => {
                 <Landvelger feltNavn="familiesBosted" />
               </Nav.Fieldset>
               <Nav.SkjemaGruppe title="Yrkesaktiv">
+                <Skjema.RadioGruppe feltNavn="adresseIUtlandet" legend="Har søker utenlandsadresse?">
+                  <Skjema.Radio feltNavn="adresseIUtlandet" value="true" label="Ja" />
+                  <Skjema.Radio feltNavn="adresseIUtlandet" value="false" label="Nei" />
+                </Skjema.RadioGruppe>
                 <Skjema.RadioGruppe feltNavn="sammeAdresseSomArbeidsgiver" legend="Er norsk adresse samme som arbeidsgivers?">
                   <Skjema.Radio feltNavn="sammeAdresseSomArbeidsgiver" value="true" label="Ja" />
                   <Skjema.Radio feltNavn="sammeAdresseSomArbeidsgiver" value="false" label="Nei" />
