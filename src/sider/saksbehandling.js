@@ -247,6 +247,7 @@ const mapStateToProps = state => ({
     intensjonOmRetur: boolTilStreng(soknadSelectors.BostedSelector(state).intensjonOmRetur),
     familiesBosted: soknadSelectors.BostedSelector(state).familiesBosted,
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
+    EOSBarnetrygdFraNAV: boolTilStreng(soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV),
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: soknadSelectors.ArbeidNorgeSelector(state).fullmektigFirma,

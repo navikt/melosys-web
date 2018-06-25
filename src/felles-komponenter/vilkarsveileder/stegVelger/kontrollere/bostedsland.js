@@ -59,9 +59,8 @@ class Bostedsland extends Steg {
           { term: 'Bostedsadresse i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
           { term: 'Adresse i utlandet.', status: undefined },
           { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: undefined },
-          { term: 'EU/EØS barnetrygd fra NAV.', status: undefined },
-          { term: 'Familie bor i Norge.', status: undefined },
-          { term: 'Det bor færre enn 10 personer på adressen.', status: undefined },
+          { term: 'EU/EØS barnetrygd fra NAV.', status: regler.stonad().mottarEOSBarnetrygdFraNav() },
+          { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge() },
         ];
       } else {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
