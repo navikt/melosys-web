@@ -10,6 +10,8 @@ class Opphold extends DomeneRegel {
     const isoFom = formatterDatoTilISO(oppholdUtlandFom);
     const isoTom = formatterDatoTilISO(oppholdUtlandTom);
 
+    console.log(datoDiff(isoFom, isoTom, 'months'));
+
     return datoDiff(isoFom, isoTom, 'months') < 12;
   }
 
