@@ -28,6 +28,13 @@ class Opphold extends DomeneRegel {
     return !faktaavklaringOppholdsLand.includes('NO');
   }
 
+  harSammeAdresseSomArbeidsgiver = () => {
+    const { skjema } = this;
+    const { sammeAdresseSomArbeidsgiver = [] } = skjema;
+
+    return strengTilBool(sammeAdresseSomArbeidsgiver);
+  }
+
   ektefelleEllerBarn = () => {
     const { skjema } = this;
     const { ektefelleEllerBarnINorge } = skjema;
@@ -47,6 +54,13 @@ class Opphold extends DomeneRegel {
     const { familiesBosted } = skjema;
 
     return familiesBosted.includes('NO');
+  }
+
+  harAdresseIUtlandet = () => {
+    const { skjema } = this;
+    const { adresseIUtlandet } = skjema;
+
+    return strengTilBool(adresseIUtlandet);
   }
 
   intensjonOmReturTilNorge = () => {
