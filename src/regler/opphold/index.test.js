@@ -35,4 +35,26 @@ describe('Tester at regler for opphold', () => {
       expect(regel.opphold().inntilTolvManeder()).toBe(undefined);
     });
   });
+
+  describe('erINorgeSeksManederEllerMerPerKalenderAr', () => {
+    test('returnerer true ved 6 måneder.', () => {
+      const mockSkjema = {
+        antallMaanederINorge: 6,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().erINorgeSeksManederEllerMerPerKalenderAr()).toBe(true);
+    });
+
+    test('returnerer false ved 5 måneder.', () => {
+      const mockSkjema = {
+        antallMaanederINorge: 5,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().erINorgeSeksManederEllerMerPerKalenderAr()).toBe(false);
+    });
+  });
 });
