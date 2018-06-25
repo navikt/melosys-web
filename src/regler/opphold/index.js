@@ -1,6 +1,6 @@
 import DomeneRegel from '../domeneRegel';
-import { strengTilBool } from '../../utils/streng';
 
+import { strengTilBool } from '../../utils/streng';
 import { datoDiff, formatterDatoTilISO } from '../../utils/dato';
 
 class Opphold extends DomeneRegel {
@@ -19,11 +19,34 @@ class Opphold extends DomeneRegel {
     return antallMaanederINorge >= 6;
   }
 
+  oppholderSegIUtlandet = () => {
+    const { skjema } = this;
+    const { faktaavklaringOppholdsLand = [] } = skjema;
+
+    if (faktaavklaringOppholdsLand.length === 0) return undefined;
+
+    return !faktaavklaringOppholdsLand.includes('NO');
+  }
+
+  ektefelleEllerBarn = () => {
+    const { skjema } = this;
+    const { ektefelleEllerBarnINorge } = skjema;
+
+    return strengTilBool(ektefelleEllerBarnINorge);
+  }
+
   forutgaendeBostedINorge = () => {
     const { skjema } = this;
     const { forutgaendeBostedINorge } = skjema;
 
-    return strengTilBool(forutgaendeBostedINorge) === true;
+    return strengTilBool(forutgaendeBostedINorge);
+  }
+
+  familieBorINorge = () => {
+    const { skjema } = this;
+    const { familiesBosted } = skjema;
+
+    return familiesBosted.includes('NO');
   }
 
   intensjonOmReturTilNorge = () => {

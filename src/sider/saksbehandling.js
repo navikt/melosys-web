@@ -240,7 +240,7 @@ const mapStateToProps = state => ({
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
     forutgaendeBostedINorge: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).forutgaendeBostedINorge),
     sammeAdresseSomArbeidsgiver: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver),
-    ektefelleEllerBarn: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).ektefelleEllerBarn),
+    ektefelleEllerBarnINorge: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge),
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
     studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,

@@ -143,7 +143,7 @@ export default function reducer(state = initialState, action) {
             tom: formatterDatoTilISO(dokument.faktaavklaringPeriodeTilOgMed),
           },
           sammeAdresseSomArbeidsgiver: strengTilBool(dokument.sammeAdresseSomArbeidsgiver),
-          ektefelleEllerBarn: strengTilBool(dokument.ektefelleEllerBarn),
+          ektefelleEllerBarnINorge: strengTilBool(dokument.ektefelleEllerBarnINorge),
           forutgaendeBostedINorge: strengTilBool(dokument.forutgaendeBostedINorge),
           studentSemester: dokument.studentSemester,
           studieLand: dokument.studieLand,
