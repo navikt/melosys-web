@@ -225,8 +225,10 @@ class Journalforing extends Component {
       return false;
     }
 
-    // alert('Denne funksjonen er ikke implementert ennå.');
-    // return;
+    /* eslint-disable */
+    alert('Denne funksjonen er ikke implementert ennå.');
+    return;
+    /* eslint-enable */
 
     tilordneSak(vasketJournalforing).then(response => {
       if (response.length === 0) {
@@ -271,8 +273,10 @@ class Journalforing extends Component {
 
     const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
 
-    // alert('Denne funksjonen er ikke implementert ennå.');
-    // return;
+    /* eslint-disable */
+    alert('Denne funksjonen er ikke implementert ennå.');
+    return;
+    /* eslint-enable */
 
     opprettNySak(journalforingData).then(response => {
       if (response.length === 0) {
