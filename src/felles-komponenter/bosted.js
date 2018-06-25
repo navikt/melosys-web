@@ -47,9 +47,9 @@ const Bosted = props => {
                     {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
                   </Skjema.Select>
                 </Nav.Fieldset>
-                <Skjema.RadioGruppe feltNavn="ektefelleEllerBarn" legend="Har ektefelle / mindreårige barn i Norge">
-                  <Skjema.Radio feltNavn="ektefelleEllerBarn" value="true" label="Ja" />
-                  <Skjema.Radio feltNavn="ektefelleEllerBarn" value="false" label="Nei" />
+                <Skjema.RadioGruppe feltNavn="ektefelleEllerBarnINorge" legend="Har ektefelle / mindreårige barn i Norge">
+                  <Skjema.Radio feltNavn="ektefelleEllerBarnINorge" value="true" label="Ja" />
+                  <Skjema.Radio feltNavn="ektefelleEllerBarnINorge" value="false" label="Nei" />
                 </Skjema.RadioGruppe>
               </Nav.SkjemaGruppe>
               <Nav.SkjemaGruppe title="Student i EØS-land">

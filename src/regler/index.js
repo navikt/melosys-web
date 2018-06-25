@@ -1,4 +1,5 @@
 import Opphold from './opphold/index';
+import Studier from './studier/index';
 
 class Regler {
   constructor(skjema) {
@@ -6,6 +7,7 @@ class Regler {
   }
 
   opphold = () => new Opphold(this.skjema);
+  studier = () => new Studier(this.skjema);
 }
 
 export default Regler;

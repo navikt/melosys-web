@@ -68,18 +68,17 @@ class Bostedsland extends Steg {
           avklaringer = [
             { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
             { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
-            { term: 'Oppholder seg i utlandet.', status: undefined },
-            { term: 'Har studiested i utlandet.', status: undefined },
-            { term: 'Finansiering av studier fra Norge.', status: undefined },
-            { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge(skjema) },
+            { term: 'Oppholder seg i utlandet.', status: regler.opphold().oppholderSegIUtlandet() },
+            { term: 'Har studiested i utlandet.', status: regler.studier().studererIUtlandet() },
+            { term: 'Finansiering av studier fra Norge.', status: regler.studier().studierFinansieresFraNorge() },
+            { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge() },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
             { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
             { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr() },
-            { term: 'Medfølgende familie til utsendt arbeidstaker', status: undefined },
-            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
+            { term: 'Ektefelle og / eller mindreårige barn i Norge?', status: regler.opphold().ektefelleEllerBarn() },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
