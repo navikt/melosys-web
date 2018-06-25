@@ -27,10 +27,6 @@ const HarForutgaendeMedlemskap = () => (
   <Skjema.Checkbox feltNavn="faktaavklaringHarForutgaendeMedlemskap" value={VurderingUtsendingTyper.TRUE} label="Har forutgående medlemskap." />
 );
 
-const ArbeidKnyttetTilVirksomhetUtlandet = () => (
-  <Skjema.Checkbox feltNavn="faktaavklaringArbeidKnyttetTilVirksomhetUtlandet" value={VurderingUtsendingTyper.TRUE} label="Søkers arbeid er knyttet til virksomhet i utlandet." />
-);
-
 const SammeTypeVirksomhet = () => (
   <Skjema.Checkbox feltNavn="faktaavklaringSammeTypeVirksomhet" value={VurderingUtsendingTyper.TRUE} label="Innen samme type virksomhet?" />
 );
@@ -46,7 +42,6 @@ const VurderingUtsending = props => {
         {tilstand.visAnsattINorskSelskap && <AnsattINorskSelskap />}
         {tilstand.visForetakDriverINorge && <ForetakDriverINorge />}
         {tilstand.visHarForutgaendeMedlemskap && <HarForutgaendeMedlemskap />}
-        {tilstand.visArbeidKnyttetTilVirksomhetUtlandet && <ArbeidKnyttetTilVirksomhetUtlandet />}
         {tilstand.visSammeTypeVirksomhet && <SammeTypeVirksomhet />}
       </Nav.Fieldset>
       <div className="fane__knapplinje">

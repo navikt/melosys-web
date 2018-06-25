@@ -28,7 +28,6 @@ class Utsending extends Steg {
           visErstatterTidligereUtsendt: true,
           visForetakDriverINorge: true,
           visHarForutgaendeMedlemskap: true,
-          visArbeidKnyttetTilVirksomhetUtlandet: true,
           visSammeTypeVirksomhet: false,
         };
       }
@@ -40,7 +39,6 @@ class Utsending extends Steg {
           visErstatterTidligereUtsendt: false,
           visForetakDriverINorge: true,
           visHarForutgaendeMedlemskap: false,
-          visArbeidKnyttetTilVirksomhetUtlandet: false,
           visSammeTypeVirksomhet: true,
         };
       }

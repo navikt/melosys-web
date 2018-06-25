@@ -81,7 +81,7 @@ class Bostedsland extends Steg {
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
-            { term: 'Bosatt i Norge før utreise.', status: regler.opphold().forutgaendeBostedINorge() },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
             { term: 'Oppholdet i utlandet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
           ];
         }
