@@ -145,6 +145,7 @@ export default function reducer(state = initialState, action) {
           sammeAdresseSomArbeidsgiver: strengTilBool(dokument.sammeAdresseSomArbeidsgiver),
           ektefelleEllerBarnINorge: strengTilBool(dokument.ektefelleEllerBarnINorge),
           forutgaendeBostedINorge: strengTilBool(dokument.forutgaendeBostedINorge),
+          EOSBarnetrygdFraNAV: strengTilBool(dokument.EOSBarnetrygdFraNAV),
           studentSemester: dokument.studentSemester,
           studieLand: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,
