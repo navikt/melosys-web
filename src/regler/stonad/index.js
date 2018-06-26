@@ -7,6 +7,8 @@ class Stonad extends DomeneRegel {
     const { skjema } = this;
     const { EOSBarnetrygdFraNAV } = skjema;
 
+    if (!EOSBarnetrygdFraNAV) return undefined;
+
     return strengTilBool(EOSBarnetrygdFraNAV);
   }
 }
