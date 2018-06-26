@@ -40,16 +40,20 @@ class Opphold extends DomeneRegel {
     return strengTilBool(sammeAdresseSomArbeidsgiver);
   }
 
-  ektefelleEllerBarn = () => {
+  harEktefelleEllerBarnINorge = () => {
     const { skjema } = this;
     const { ektefelleEllerBarnINorge } = skjema;
+
+    if (!ektefelleEllerBarnINorge) return undefined;
 
     return strengTilBool(ektefelleEllerBarnINorge);
   }
 
-  forutgaendeBostedINorge = () => {
+  harForutgaendeBostedINorge = () => {
     const { skjema } = this;
     const { forutgaendeBostedINorge } = skjema;
+
+    if (!forutgaendeBostedINorge) return undefined;
 
     return strengTilBool(forutgaendeBostedINorge);
   }
