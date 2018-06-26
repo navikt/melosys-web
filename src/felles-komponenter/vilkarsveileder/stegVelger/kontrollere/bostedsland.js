@@ -55,7 +55,7 @@ class Bostedsland extends Steg {
 
       if (erYrkesaktiv) {
         avklaringer = [
-          { term: 'Bostedsadresse i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
+          { term: 'Bostedsadresse i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
           { term: 'Adresse i utlandet.', status: regler.opphold().harAdresseIUtlandet() },
           { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: regler.opphold().harSammeAdresseSomArbeidsgiver() },
           { term: 'EU/EØS barnetrygd fra NAV.', status: regler.stonad().mottarEOSBarnetrygdFraNav() },
@@ -64,7 +64,7 @@ class Bostedsland extends Steg {
       } else {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
             { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
             { term: 'Oppholder seg i utlandet.', status: regler.opphold().oppholderSegIUtlandet() },
             { term: 'Har studiested i utlandet.', status: regler.studier().studererIUtlandet() },
@@ -74,14 +74,14 @@ class Bostedsland extends Steg {
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
             { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr() },
-            { term: 'Ektefelle og / eller mindreårige barn i Norge?', status: regler.opphold().ektefelleEllerBarn() },
+            { term: 'Ektefelle og / eller mindreårige barn i Norge?', status: regler.opphold().harEktefelleEllerBarnINorge() },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().forutgaendeBostedINorge() },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
             { term: 'Oppholdet i utlandet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
           ];
         }

@@ -151,4 +151,88 @@ describe('Tester at regler for opphold', () => {
       expect(regel.opphold().harSammeAdresseSomArbeidsgiver()).toBe(undefined);
     });
   });
+
+  describe('harEktefelleEllerBarnINorge', () => {
+    test('returnerer true ved harEktefelleEllerBarnINorge === "true"', () => {
+      const mockSkjema = {
+        ektefelleEllerBarnINorge: 'true',
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harEktefelleEllerBarnINorge()).toBe(true);
+    });
+
+    test('returnerer true ved harEktefelleEllerBarnINorge === "false', () => {
+      const mockSkjema = {
+        ektefelleEllerBarnINorge: 'false',
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harEktefelleEllerBarnINorge()).toBe(false);
+    });
+
+    test('returnerer undefined ved harEktefelleEllerBarnINorge === undefined', () => {
+      const mockSkjema = {
+        ektefelleEllerBarnINorge: undefined,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harEktefelleEllerBarnINorge()).toBe(undefined);
+    });
+
+    test('returnerer undefined ved harEktefelleEllerBarnINorge === null', () => {
+      const mockSkjema = {
+        ektefelleEllerBarnINorge: null,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harEktefelleEllerBarnINorge()).toBe(undefined);
+    });
+  });
+
+  describe('harForutgaendeBostedINorge', () => {
+    test('returnerer true ved forutgaendeBostedINorge === "true"', () => {
+      const mockSkjema = {
+        forutgaendeBostedINorge: 'true',
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harForutgaendeBostedINorge()).toBe(true);
+    });
+
+    test('returnerer true ved forutgaendeBostedINorge === "false', () => {
+      const mockSkjema = {
+        forutgaendeBostedINorge: 'false',
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harForutgaendeBostedINorge()).toBe(false);
+    });
+
+    test('returnerer undefined ved forutgaendeBostedINorge === undefined', () => {
+      const mockSkjema = {
+        forutgaendeBostedINorge: undefined,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harForutgaendeBostedINorge()).toBe(undefined);
+    });
+
+    test('returnerer undefined ved forutgaendeBostedINorge === null', () => {
+      const mockSkjema = {
+        forutgaendeBostedINorge: null,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harForutgaendeBostedINorge()).toBe(undefined);
+    });
+  });
 });
