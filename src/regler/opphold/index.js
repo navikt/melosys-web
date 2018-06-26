@@ -62,6 +62,8 @@ class Opphold extends DomeneRegel {
     const { skjema } = this;
     const { familiesBosted } = skjema;
 
+    if (!familiesBosted || familiesBosted.length === 0) return undefined;
+
     return familiesBosted.includes('NO');
   }
 
@@ -69,12 +71,16 @@ class Opphold extends DomeneRegel {
     const { skjema } = this;
     const { adresseIUtlandet } = skjema;
 
+    if (!adresseIUtlandet) return undefined;
+
     return strengTilBool(adresseIUtlandet);
   }
 
-  intensjonOmReturTilNorge = () => {
-    if (this.skjema.intensjonOmRetur === undefined) { return undefined; }
-    return strengTilBool(this.skjema.intensjonOmRetur);
+  harIntensjonOmReturTilNorge = () => {
+    const { skjema } = this;
+    const { intensjonOmReturTilNorge } = skjema;
+    if (!intensjonOmReturTilNorge) { return undefined; }
+    return strengTilBool(intensjonOmReturTilNorge);
   }
 }
 
