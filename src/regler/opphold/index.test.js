@@ -235,4 +235,130 @@ describe('Tester at regler for opphold', () => {
       expect(regel.opphold().harForutgaendeBostedINorge()).toBe(undefined);
     });
   });
+
+  describe('familieBorINorge', () => {
+    test('returnerer true ved familiesBosted === ["NO"]', () => {
+      const mockSkjema = {
+        familiesBosted: ['NO'],
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().familieBorINorge()).toBe(true);
+    });
+
+    test('returnerer true ved familiesBosted !== ["NO"]', () => {
+      const mockSkjema = {
+        familiesBosted: ['GB'],
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().familieBorINorge()).toBe(false);
+    });
+
+    test('returnerer undefined ved familiesBosted === []', () => {
+      const mockSkjema = {
+        familiesBosted: [],
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().familieBorINorge()).toBe(undefined);
+    });
+
+    test('returnerer undefined ved familiesBosted === null', () => {
+      const mockSkjema = {
+        familiesBosted: null,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().familieBorINorge()).toBe(undefined);
+    });
+  });
+
+  describe('harAdresseIUtlandet', () => {
+    test('returnerer true ved adresseIUtlandet === "true"', () => {
+      const mockSkjema = {
+        adresseIUtlandet: 'true',
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harAdresseIUtlandet()).toBe(true);
+    });
+
+    test('returnerer true ved adresseIUtlandet === "false', () => {
+      const mockSkjema = {
+        adresseIUtlandet: 'false',
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harAdresseIUtlandet()).toBe(false);
+    });
+
+    test('returnerer undefined ved adresseIUtlandet === undefined', () => {
+      const mockSkjema = {
+        adresseIUtlandet: undefined,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harAdresseIUtlandet()).toBe(undefined);
+    });
+
+    test('returnerer undefined ved adresseIUtlandet === null', () => {
+      const mockSkjema = {
+        adresseIUtlandet: null,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harAdresseIUtlandet()).toBe(undefined);
+    });
+  });
+
+  describe('harIntensjonOmReturTilNorge', () => {
+    test('returnerer true ved harIntensjonOmReturTilNorge === "true"', () => {
+      const mockSkjema = {
+        intensjonOmReturTilNorge: 'true',
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harIntensjonOmReturTilNorge()).toBe(true);
+    });
+
+    test('returnerer true ved harIntensjonOmReturTilNorge === "false', () => {
+      const mockSkjema = {
+        intensjonOmReturTilNorge: 'false',
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harIntensjonOmReturTilNorge()).toBe(false);
+    });
+
+    test('returnerer undefined ved harIntensjonOmReturTilNorge === undefined', () => {
+      const mockSkjema = {
+        intensjonOmReturTilNorge: undefined,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harIntensjonOmReturTilNorge()).toBe(undefined);
+    });
+
+    test('returnerer undefined ved harIntensjonOmReturTilNorge === null', () => {
+      const mockSkjema = {
+        intensjonOmReturTilNorge: null,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harIntensjonOmReturTilNorge()).toBe(undefined);
+    });
+  });
 });
