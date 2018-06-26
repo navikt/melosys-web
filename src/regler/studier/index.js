@@ -5,7 +5,7 @@ class Studier extends DomeneRegel {
     const { skjema } = this;
     const { studieLand = [] } = skjema;
 
-    if (studieLand.length === 0) { return undefined; }
+    if (!studieLand || studieLand.length === 0) { return undefined; }
 
     return !studieLand.includes('NO');
   }
@@ -13,6 +13,9 @@ class Studier extends DomeneRegel {
   studierFinansieresFraNorge = () => {
     const { skjema } = this;
     const { studentFinansiering } = skjema;
+
+    if (!studentFinansiering) return undefined;
+
     return studentFinansiering === 'LAANEKASSEN';
   }
 }
