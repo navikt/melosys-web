@@ -7,6 +7,10 @@ class Regler {
     this.skjema = skjema;
   }
 
+  oppdaterSkjema = skjema => {
+    this.skjema = skjema;
+  }
+
   opphold = () => new Opphold(this.skjema);
   studier = () => new Studier(this.skjema);
   stonad = () => new Stonad(this.skjema);

@@ -57,4 +57,98 @@ describe('Tester at regler for opphold', () => {
       expect(regel.opphold().erINorgeSeksManederEllerMerPerKalenderAr()).toBe(false);
     });
   });
+
+  describe('oppholderSegIUtlandet', () => {
+    test('returnerer true ved faktaavklaringOppholdsLand != NO', () => {
+      const mockSkjema = {
+        faktaavklaringOppholdsLand: ['GB'],
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().oppholderSegIUtlandet()).toBe(true);
+    });
+
+    test('returnerer true ved faktaavklaringOppholdsLand === NO', () => {
+      const mockSkjema = {
+        faktaavklaringOppholdsLand: ['NO'],
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().oppholderSegIUtlandet()).toBe(false);
+    });
+
+    test('returnerer undefined ved faktaavklaringOppholdsLand === []', () => {
+      const mockSkjema = {
+        faktaavklaringOppholdsLand: [],
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().oppholderSegIUtlandet()).toBe(undefined);
+    });
+
+    test('returnerer undefined ved faktaavklaringOppholdsLand === null', () => {
+      const mockSkjema = {
+        faktaavklaringOppholdsLand: null,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().oppholderSegIUtlandet()).toBe(undefined);
+    });
+
+    test('returnerer undefined ved faktaavklaringOppholdsLand === undefined', () => {
+      const mockSkjema = {
+        faktaavklaringOppholdsLand: undefined,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().oppholderSegIUtlandet()).toBe(undefined);
+    });
+  });
+
+  describe('harSammeAdresseSomArbeidsgiver', () => {
+    test('returnerer true ved sammeAdresseSomArbeidsgiver === "true"', () => {
+      const mockSkjema = {
+        sammeAdresseSomArbeidsgiver: 'true',
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harSammeAdresseSomArbeidsgiver()).toBe(true);
+    });
+
+    test('returnerer true ved sammeAdresseSomArbeidsgiver === "false', () => {
+      const mockSkjema = {
+        sammeAdresseSomArbeidsgiver: 'false',
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harSammeAdresseSomArbeidsgiver()).toBe(false);
+    });
+
+    test('returnerer undefined ved sammeAdresseSomArbeidsgiver === undefined', () => {
+      const mockSkjema = {
+        sammeAdresseSomArbeidsgiver: undefined,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harSammeAdresseSomArbeidsgiver()).toBe(undefined);
+    });
+
+    test('returnerer undefined ved sammeAdresseSomArbeidsgiver === null', () => {
+      const mockSkjema = {
+        sammeAdresseSomArbeidsgiver: null,
+      };
+
+      const regel = new Regel(mockSkjema);
+
+      expect(regel.opphold().harSammeAdresseSomArbeidsgiver()).toBe(undefined);
+    });
+  });
 });

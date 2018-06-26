@@ -26,14 +26,16 @@ class Opphold extends DomeneRegel {
     const { skjema } = this;
     const { faktaavklaringOppholdsLand = [] } = skjema;
 
-    if (faktaavklaringOppholdsLand.length === 0) return undefined;
+    if (!faktaavklaringOppholdsLand || faktaavklaringOppholdsLand.length === 0) return undefined;
 
     return !faktaavklaringOppholdsLand.includes('NO');
   }
 
   harSammeAdresseSomArbeidsgiver = () => {
     const { skjema } = this;
-    const { sammeAdresseSomArbeidsgiver = [] } = skjema;
+    const { sammeAdresseSomArbeidsgiver } = skjema;
+
+    if (!sammeAdresseSomArbeidsgiver) return undefined;
 
     return strengTilBool(sammeAdresseSomArbeidsgiver);
   }
