@@ -11,18 +11,14 @@ const StegLinje = props => {
   const { steg } = props;
 
   // Klargjør betingede elementer.
-  const stegKnapper = steg.map((item, index) => {
-    const visAtStegetErAktivt = (item.id !== 'VEDTAK') ? item.aktivtSteg : false;
-
-    return (<StegIkon
-      key={uuid()}
-      onClick={() => props.stegKlikk(index)}
-      id={item.id}
-      tittel={item.tittel}
-      status={item.status}
-      aktivtSteg={visAtStegetErAktivt}
-    />);
-  });
+  const stegKnapper = steg.map((item, index) => (<StegIkon
+    key={uuid()}
+    onClick={() => props.stegKlikk(index)}
+    id={item.id}
+    tittel={item.tittel}
+    status={item.status}
+    aktivtSteg={item.aktivtSteg}
+  />));
 
   return (
     <div>
