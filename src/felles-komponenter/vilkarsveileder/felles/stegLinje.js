@@ -10,7 +10,6 @@ const uuid = require('uuid/v4');
 const StegLinje = props => {
   const { steg } = props;
 
-  // Klargjør betingede elementer.
   const stegKnapper = steg.map((item, index) => (<StegIkon
     key={uuid()}
     onClick={() => props.stegKlikk(index)}
