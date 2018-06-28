@@ -1,13 +1,8 @@
 # Lisensiering av NAV sine kodebaser
-
-Alle kodebaser skal ha en lisensfil i rotkatalogen til repositoriet. Denne filen skal hete LICENSE.md.
-
-NAV lisensierer kode under MIT-lisensen: (Kopier/lim inn teksten, men endre til riktig `<YEAR>`)
-
 ```
 # The MIT License
 
-Copyright <YEAR> NAV (Arbeids- og velferdsdirektoratet) - The Norwegian Labour and Welfare Administration
+Copyright 2018 NAV (Arbeids- og velferdsdirektoratet) - The Norwegian Labour and Welfare Administration
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the "Software"),
@@ -28,7 +23,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
 
-### Hva om man finner en lisensfil der <YEAR> er et tidligere år?
+### Hva om man finner en lisensfil der 2018 er et tidligere år?
 
 Siden dette er MIT-lisensen, en fri lisens, så er det ikke så viktig
 om året er oppdatert.
