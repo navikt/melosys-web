@@ -26,8 +26,8 @@ class Tjenestemann extends Steg {
     this._id = STEG.TJENESTEMANN;
     this._tittel = 'Tjeneste\u00ADmann';
     this._komponent = VurderingTjenestemannn;
-    this._dataHenter = () => ({ });
-    this._tilstand = () => ({
+    this._samleRelevanteData = () => ({ });
+    this._beregnRelevantUI = () => ({
       visSysselsettingType: true,
     });
     this._handlers = {

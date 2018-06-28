@@ -15,8 +15,8 @@ class Inngang extends Steg {
     this._id = STEG.INNGANG;
     this._tittel = 'Inngang';
     this._komponent = VurderingInngang;
-    this._dataHenter = props => ({ inngangsvilkar: props.inngang });
-    this._tilstand = () => {};
+    this._samleRelevanteData = props => ({ inngangsvilkar: props.inngang });
+    this._beregnRelevantUI = () => {};
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
