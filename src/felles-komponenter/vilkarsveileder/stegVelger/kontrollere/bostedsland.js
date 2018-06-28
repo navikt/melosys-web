@@ -34,8 +34,8 @@ class Bostedsland extends Steg {
     this._id = STEG.BOSTEDSLAND;
     this._tittel = 'Bosted';
     this._komponent = VurderingBostedsland;
-    this._dataHenter = () => ({ });
-    this._tilstand = _propsLight => {
+    this._samleRelevanteData = () => ({ });
+    this._beregnRelevantUI = _propsLight => {
       const { skjema = {} } = _propsLight;
       const {
         faktaavklaringSysselsettingType,

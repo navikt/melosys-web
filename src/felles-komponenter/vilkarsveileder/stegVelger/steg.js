@@ -6,8 +6,8 @@ class Steg {
     this._id = null;
     this._tittel = null;
     this._komponent = null;
-    this._dataHenter = null;
-    this._tilstand = null;
+    this._samleRelevanteData = null;
+    this._beregnRelevantUI = null;
   }
 
   get id() {
@@ -24,7 +24,7 @@ class Steg {
     status: this._status,
     tittel: this._tittel,
     handlers: this._handlers,
-    data: { ...this._dataHenter(this._propsLight), tilstand: this._tilstand(this._propsLight) },
+    data: { ...this._samleRelevanteData(this._propsLight), tilstand: this._beregnRelevantUI(this._propsLight) },
     stegPosisjon: this._stegPosisjon,
     aktivtSteg: false,
   });
