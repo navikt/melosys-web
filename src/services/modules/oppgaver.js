@@ -13,7 +13,10 @@ function sok(fnr) {
   const URI_BEHANDLINGS_OPPGAVER = `${API_BASE_URL}oppgaver/sok/?fnr=${fnr}`;
   return getAsJson(URI_BEHANDLINGS_OPPGAVER);
 }
-
+function opprett(oppgave) {
+  const URI_OPPGAVER_OPPRETT = `${API_BASE_URL}oppgaver/opprett`;
+  return postAsJson(URI_OPPGAVER_OPPRETT, oppgave);
+}
 function sparkReset() {
   const URI_RESET = `${API_BASE_URL}oppgaver/reset`;
   return getAsJson(URI_RESET);
@@ -22,5 +25,6 @@ export {
   oversikt,
   send,
   sok,
+  opprett,
   sparkReset,
 };
