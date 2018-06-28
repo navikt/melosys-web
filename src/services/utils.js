@@ -20,7 +20,7 @@ export function sjekkStatuskode(response) {
 export function toJson(response) {
   if (response.status !== 204) {
     // No content
-    return response.json();
+    return response.json().catch(() => ({}));
   }
   return response;
 }

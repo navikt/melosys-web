@@ -12,8 +12,7 @@ import * as Konstanter from '../constants';
 import Sticky from '../hjelpekomponenter/sticky';
 
 import withErrorHandling from '../hoc/withErrorHandling';
-import { formatterDatoTilNorsk } from '../utils/dato';
-
+import { formatterDatoTilNorsk, formatterDatoTilISO } from '../utils/dato';
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
@@ -181,16 +180,23 @@ class Journalforing extends Component {
    */
   vaskDokumentInformasjon = () => {
     const { oppgaveID, journalpostID } = this.props.match.params;
-    const { journalforingSkjemaVerdier } = this.props;
     const {
-      brukerID, avsenderID, dokumentTittel, vedleggsTitler = [],
+      journalforingSkjemaVerdier,
+      journalforing: { dokument = {} },
+    } = this.props;
+    const {
+      brukerID, avsenderID, avsenderNavn, dokumentTittel, vedleggsTitler = [],
     } = journalforingSkjemaVerdier;
+
+    const { ID: dokumentID } = dokument;
 
     return {
       journalpostID,
       oppgaveID,
       brukerID,
       avsenderID,
+      avsenderNavn,
+      dokumentID,
       dokumenttittel: dokumentTittel,
       vedleggstitler: vedleggsTitler,
     };
@@ -220,8 +226,10 @@ class Journalforing extends Component {
       return false;
     }
 
+    /* eslint-disable */
     alert('Denne funksjonen er ikke implementert ennå.');
     return;
+    /* eslint-enable */
 
     tilordneSak(vasketJournalforing).then(response => {
       if (response.length === 0) {
@@ -258,16 +266,18 @@ class Journalforing extends Component {
 
     const fagsak = {
       soknadsperiode: {
-        fom: journalforingPeriodeFraOgMed,
-        tom: journalforingPeriodeTilOgMed,
+        fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
+        tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
       },
       land: journalforingOppholdsLand,
     };
 
     const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
 
+    /* eslint-disable */
     alert('Denne funksjonen er ikke implementert ennå.');
     return;
+    /* eslint-enable */
 
     opprettNySak(journalforingData).then(response => {
       if (response.length === 0) {
