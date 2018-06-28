@@ -48,7 +48,7 @@ const Bosted = props => {
                 <Skjema.Radio feltNavn="EOSBarnetrygdFraNAV" value="true" label="Ja" />
                 <Skjema.Radio feltNavn="EOSBarnetrygdFraNAV" value="false" label="Nei" />
               </Skjema.RadioGruppe>
-              <Nav.Undertittel>Pensjonsist</Nav.Undertittel>
+              <Nav.Undertittel>Pensjonist</Nav.Undertittel>
               <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
                 <Skjema.Select feltNavn="antallMaanederINorge" label="Velg antall måneder:" bredde="xs">
                   {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
