@@ -83,6 +83,8 @@ class Bostedsland extends Steg {
           avklaringer = [
             { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
             { term: 'Oppholdet i utlandet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
+            { term: 'Er medfølgende familie til utsendt arbeidstaker', status: undefined },
+            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().harIntensjonOmReturTilNorge() },
           ];
         }
       }
