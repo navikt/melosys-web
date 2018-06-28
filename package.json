@@ -9,7 +9,6 @@
   ],
   "private": true,
   "dependencies": {
-    "babel-plugin-syntax-async-generators": "^6.13.0",
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.5",
     "highcharts": "^6.1.0",
