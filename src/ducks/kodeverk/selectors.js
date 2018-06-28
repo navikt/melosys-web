@@ -15,17 +15,17 @@ export const landkoderSelector = createSelector(
 
 export const behandlingsStatusSelector = createSelector(
   state => state.kodeverk.data.behandlingsstatus,
-  behandlingsstatus => behandlingsstatus
+  behandlingsstatus => behandlingsstatus || []
 );
 
 export const behandlingsTyperSelector = createSelector(
   state => state.kodeverk.data.behandlingstyper,
-  behandlingstyper => behandlingstyper
+  behandlingstyper => behandlingstyper || []
 );
 
 export const sakstyperSelector = createSelector(
   state => state.kodeverk.data.sakstyper,
-  sakstyper => sakstyper
+  sakstyper => sakstyper || []
 );
 
 export const dokumenttitlerSelector = createSelector(
