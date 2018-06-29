@@ -38,8 +38,8 @@ class Virksomhet extends Steg {
     this._id = STEG.VIRKSOMHET;
     this._tittel = 'Arbeids\u00ADmønster';
     this._komponent = VurderingVirksomhet;
-    this._dataHenter = () => ({ });
-    this._tilstand = () => ({
+    this._samleRelevanteData = () => ({ });
+    this._beregnRelevantUI = () => ({
       visVekslingMellomLand: true,
       visMarginaltArbeid: true,
       visAktivitetINorge: true,

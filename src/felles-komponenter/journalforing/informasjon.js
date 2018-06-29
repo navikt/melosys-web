@@ -90,7 +90,7 @@ class Informasjon extends Component {
           <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsenderID')} onKeyUp={this.IDFeltTastOppHandler} />
           <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsenderNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-          <Skjema.Input feltNavn="mottattDato" label="Dokument mottatt:" disabled />
+          <Skjema.Input feltNavn="registertDato" label="Registrert dato:" disabled />
           <Link to={dokumentURI} target="_blank">Åpne dokument i nytt vindu</Link>
           <Skjema.ListeVelger
             feltNavn="dokumentTittel"

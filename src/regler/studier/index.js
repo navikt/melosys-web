@@ -3,11 +3,11 @@ import DomeneRegel from '../domeneRegel';
 class Studier extends DomeneRegel {
   studererIUtlandet = () => {
     const { skjema } = this;
-    const { studieLand = [] } = skjema;
+    const { oppholdsland = [] } = skjema;
 
-    if (!studieLand || studieLand.length === 0) { return undefined; }
+    if (!oppholdsland || oppholdsland.length === 0) { return undefined; }
 
-    return !studieLand.includes('NO');
+    return !oppholdsland.includes('NO');
   }
 
   studierFinansieresFraNorge = () => {
