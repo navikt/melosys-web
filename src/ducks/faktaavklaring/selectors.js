@@ -90,6 +90,11 @@ export const FaktaavklaringValgteArbeidsforholdSelector = createSelector(
   valgteArbeidsforhold => valgteArbeidsforhold || []
 );
 
+export const FaktaavklaringVesentligVirksomhetSelector = createSelector(
+  state => FaktaavklaringSelector(state).vesentligVirksomhet || {},
+  vesentligVirksomhet => vesentligVirksomhet || {}
+);
+
 export const FaktaavklaringValgteArbeidsforholdDetaljerSelector = createSelector(
   state => FaktaavklaringValgteArbeidsforholdSelector(state) || [],
   state => fagsakSelectors.ArbeidsforholdeneSelector(state) || [],
