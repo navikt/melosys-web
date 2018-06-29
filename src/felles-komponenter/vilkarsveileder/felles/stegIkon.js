@@ -31,21 +31,27 @@ const StegIkon = props => {
   const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
   const ikon = id === 'VEDTAK' ? IKONER.VEDTAK[status] : IKONER.STEG[status];
 
-  const className = classnames(
-    'stegIkon__knapp',
-    (!erTilgjengelig ? 'stegIkon__knapp--utilgjengelig' : ''),
-    (aktivtSteg && 'stegIkon__knapp--aktiv')
+  const cl = classnames(
+    'stegIkon',
+    (!erTilgjengelig ? 'stegIkon-utilgjengelig' : ''),
+    (aktivtSteg && 'stegIkon--aktiv')
   );
 
+  const knappKlasser = classnames({
+    stegIkon__enkeltSteg: id !== 'VEDTAK',
+    stegIkon__vedtak: id === 'VEDTAK',
+  });
+
   return (
-    <li className="stegIkon">
-      <button
-        className={className}
-        onClick={onClick}
-        style={{ backgroundImage: `url(${ikon})` }}
-        aria-disabled={!tilgjengelig}
-      />
-      <div className="stegIkon__tittel">{tittel}</div>
+    <li className={cl}>
+      <button onClick={onClick} className="stegIkon__knapp">
+        <div
+          className={knappKlasser}
+          style={{ backgroundImage: `url(${ikon})` }}
+          aria-disabled={!tilgjengelig}
+        />
+        <div className="stegIkon__tittel">{tittel}</div>
+      </button>
     </li>
   );
 };
