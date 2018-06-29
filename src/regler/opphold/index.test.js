@@ -323,7 +323,7 @@ describe('Tester at regler for opphold', () => {
   describe('harIntensjonOmReturTilNorge', () => {
     test('returnerer true ved harIntensjonOmReturTilNorge === "true"', () => {
       const mockSkjema = {
-        intensjonOmReturTilNorge: 'true',
+        intensjonOmRetur: 'true',
       };
 
       const regel = new Regel(mockSkjema);
@@ -331,9 +331,9 @@ describe('Tester at regler for opphold', () => {
       expect(regel.opphold().harIntensjonOmReturTilNorge()).toBe(true);
     });
 
-    test('returnerer true ved harIntensjonOmReturTilNorge === "false', () => {
+    test('returnerer true ved harIntensjonOmReturTilNorge === "false"', () => {
       const mockSkjema = {
-        intensjonOmReturTilNorge: 'false',
+        intensjonOmRetur: 'false',
       };
 
       const regel = new Regel(mockSkjema);
@@ -343,7 +343,7 @@ describe('Tester at regler for opphold', () => {
 
     test('returnerer undefined ved harIntensjonOmReturTilNorge === undefined', () => {
       const mockSkjema = {
-        intensjonOmReturTilNorge: undefined,
+        intensjonOmRetur: undefined,
       };
 
       const regel = new Regel(mockSkjema);
@@ -353,7 +353,7 @@ describe('Tester at regler for opphold', () => {
 
     test('returnerer undefined ved harIntensjonOmReturTilNorge === null', () => {
       const mockSkjema = {
-        intensjonOmReturTilNorge: null,
+        intensjonOmRetur: null,
       };
 
       const regel = new Regel(mockSkjema);

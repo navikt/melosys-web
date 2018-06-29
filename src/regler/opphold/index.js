@@ -78,9 +78,9 @@ class Opphold extends DomeneRegel {
 
   harIntensjonOmReturTilNorge = () => {
     const { skjema } = this;
-    const { intensjonOmReturTilNorge } = skjema;
-    if (!intensjonOmReturTilNorge) { return undefined; }
-    return strengTilBool(intensjonOmReturTilNorge);
+    const { intensjonOmRetur } = skjema;
+    if (!intensjonOmRetur) { return undefined; }
+    return strengTilBool(intensjonOmRetur);
   }
 }
 

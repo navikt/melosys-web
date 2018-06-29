@@ -34,8 +34,8 @@ class Bostedsland extends Steg {
     this._id = STEG.BOSTEDSLAND;
     this._tittel = 'Bosted';
     this._komponent = VurderingBostedsland;
-    this._dataHenter = () => ({ });
-    this._tilstand = _propsLight => {
+    this._samleRelevanteData = () => ({ });
+    this._beregnRelevantUI = _propsLight => {
       const { skjema = {} } = _propsLight;
       const {
         faktaavklaringSysselsettingType,
@@ -55,7 +55,7 @@ class Bostedsland extends Steg {
 
       if (erYrkesaktiv) {
         avklaringer = [
-          { term: 'Bostedsadresse i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
+          { term: 'Har søker bostedsadresse i Norge?', status: regler.opphold().harForutgaendeBostedINorge() },
           { term: 'Adresse i utlandet.', status: regler.opphold().harAdresseIUtlandet() },
           { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: regler.opphold().harSammeAdresseSomArbeidsgiver() },
           { term: 'EU/EØS barnetrygd fra NAV.', status: regler.stonad().mottarEOSBarnetrygdFraNav() },
@@ -64,9 +64,8 @@ class Bostedsland extends Steg {
       } else {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
             { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
-            { term: 'Oppholder seg i utlandet.', status: regler.opphold().oppholderSegIUtlandet() },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
             { term: 'Har studiested i utlandet.', status: regler.studier().studererIUtlandet() },
             { term: 'Finansiering av studier fra Norge.', status: regler.studier().studierFinansieresFraNorge() },
             { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge() },
@@ -81,8 +80,10 @@ class Bostedsland extends Steg {
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
             { term: 'Oppholdet i utlandet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
+            { term: 'Er medfølgende familie til utsendt arbeidstaker', status: undefined },
+            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().harIntensjonOmReturTilNorge() },
           ];
         }
       }

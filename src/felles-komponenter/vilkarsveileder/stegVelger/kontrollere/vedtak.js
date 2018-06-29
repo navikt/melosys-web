@@ -15,8 +15,8 @@ class Virksomhet extends Steg {
     this._id = STEG.VEDTAK;
     this._tittel = 'Vedtak';
     this._komponent = VurderingVedtak;
-    this._dataHenter = () => ({ });
-    this._tilstand = () => {};
+    this._samleRelevanteData = () => ({ });
+    this._beregnRelevantUI = () => {};
     this._handlers = {
       fattVedtak: this._propsLight.tilgjengeligeHandlers.fattVedtak,
     };
