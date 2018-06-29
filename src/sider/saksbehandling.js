@@ -71,6 +71,7 @@ class Saksbehandling extends Component {
     bekreftelser: MPT.Bekreftelser,
     oppsummering: MPT.Oppsummering,
     soknad: PT.object,
+    finansiering: PT.arrayOf(MPT.Kodeverk),
     faktaavklaring: PT.object,
     soknadArbeidsinntekt: PT.object,
     soknadOppholdUtland: MPT.OppholdUtland,
@@ -93,6 +94,7 @@ class Saksbehandling extends Component {
     bekreftelser: [],
     oppsummering: {},
     soknad: {},
+    finansiering: [],
     faktaavklaring: {},
     soknadArbeidsinntekt: {},
     soknadOppholdUtland: {},
@@ -181,7 +183,7 @@ class Saksbehandling extends Component {
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {person && <Personopplysninger person={person} />}
-                <Bosted soknadForm={soknadForm} erValidert={this.state.gyldigePaneler.bosted} />
+                <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
                 <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
@@ -234,14 +236,20 @@ const mapStateToProps = state => ({
     arbeidsgiverBetalerArbeidsgiveravgift: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift),
     trygdeavgiftTrukketGjennomSkatt: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
     trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
-    studentIEOS: soknadSelectors.OppholdUtlandSelector(state).studentIEOS,
+    oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
+    oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
+    oppholdsland: soknadSelectors.OppholdUtlandSelector(state).oppholdsland,
+    forutgaendeBostedINorge: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge),
+    sammeAdresseSomArbeidsgiver: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver),
+    ektefelleEllerBarnINorge: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).harEktefelleEllerBarnINorge),
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
     studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,
     intensjonOmRetur: boolTilStreng(soknadSelectors.BostedSelector(state).intensjonOmRetur),
-    bostedUtenforNorge: boolTilStreng(soknadSelectors.BostedSelector(state).bostedUtenforNorge),
     familiesBosted: soknadSelectors.BostedSelector(state).familiesBosted,
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
+    EOSBarnetrygdFraNAV: boolTilStreng(soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV),
+    adresseIUtlandet: boolTilStreng(soknadSelectors.BostedSelector(state).adresseIUtlandet),
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: soknadSelectors.ArbeidNorgeSelector(state).fullmektigFirma,
@@ -250,6 +258,7 @@ const mapStateToProps = state => ({
     faktaavklaringPeriodeFraOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).fom),
     faktaavklaringPeriodeTilOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).tom),
     faktaavklaringSysselsettingType: faktaavklaringSelectors.FaktaavklaringSysselsettingSelector(state).sysselsettingType,
+    faktaavklaringIkkeYrkesaktivType: faktaavklaringSelectors.FaktaavklaringIkkeYrkesaktivSelector(state).ikkeYrkesaktivType,
     faktaavklaringAnsattINorskSelskap: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).ansattINorskSelskap,
     faktaavklaringErstatterTidligereUtsendt: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).erstatterTidligereUtsendt,
     faktaavklaringUtsendingMindreEnn24Mnd: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).utsendingMindreEnn24Mnd,
