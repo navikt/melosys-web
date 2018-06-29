@@ -42,6 +42,11 @@ export const OppholdUtlandSelector = createSelector(
   soknad => soknad || {}
 );
 
+export const OppholdUtlandPeriodeSelector = createSelector(
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
+  (soknad = {}) => soknad.oppholdsPeriode || {}
+);
+
 export const BostedSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.bosted : {}),
   bosted => bosted || {}

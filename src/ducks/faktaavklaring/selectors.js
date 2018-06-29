@@ -32,6 +32,11 @@ export const FaktaavklaringSysselsettingSelector = createSelector(
   sysselsetting => sysselsetting || {}
 );
 
+export const FaktaavklaringIkkeYrkesaktivSelector = createSelector(
+  state => FaktaavklaringSelector(state).ikkeYrkesaktiv,
+  ikkeYrkesaktiv => ikkeYrkesaktiv || {}
+);
+
 export const FaktaavklaringUtsendingSelector = createSelector(
   state => FaktaavklaringSelector(state).utsending,
   utsending => utsending || {}
