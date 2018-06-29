@@ -2,9 +2,9 @@ import Regel from '../index';
 
 describe('Tester regler for studier', () => {
   describe('studererIUtlandet', () => {
-    test('returnerer true ved studieLand !== NO', () => {
+    test('returnerer true ved oppholdsland !== NO', () => {
       const mockSkjema = {
-        studieLand: ['GB'],
+        oppholdsland: ['GB'],
       };
 
       const regel = new Regel(mockSkjema);
@@ -12,9 +12,9 @@ describe('Tester regler for studier', () => {
       expect(regel.studier().studererIUtlandet()).toBe(true);
     });
 
-    test('returnerer false ved studieLand === NO', () => {
+    test('returnerer false ved oppholdsland === NO', () => {
       const mockSkjema = {
-        studieLand: ['NO'],
+        oppholdsland: ['NO'],
       };
 
       const regel = new Regel(mockSkjema);
@@ -22,9 +22,9 @@ describe('Tester regler for studier', () => {
       expect(regel.studier().studererIUtlandet()).toBe(false);
     });
 
-    test('returnerer undefined ved studieLand === null', () => {
+    test('returnerer undefined ved oppholdsland === null', () => {
       const mockSkjema = {
-        studieLand: null,
+        oppholdsland: null,
       };
 
       const regel = new Regel(mockSkjema);
