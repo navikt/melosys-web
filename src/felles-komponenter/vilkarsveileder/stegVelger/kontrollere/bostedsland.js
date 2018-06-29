@@ -55,45 +55,35 @@ class Bostedsland extends Steg {
 
       if (erYrkesaktiv) {
         avklaringer = [
-          { term: 'Har dnr.', status: undefined },
-          { term: 'Bostedsadresse i Norge.', status: undefined },
-          { term: 'Adresse i utlandet.', status: undefined },
-          { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: undefined },
-          { term: 'EU/EØS barnetrygd fra NAV.', status: undefined },
-          { term: 'Familie bor i Norge.', status: undefined },
-          { term: 'Det bor færre enn 10 personer på adressen.', status: undefined },
+          { term: 'Har søker bostedsadresse i Norge?', status: regler.opphold().harForutgaendeBostedINorge() },
+          { term: 'Adresse i utlandet.', status: regler.opphold().harAdresseIUtlandet() },
+          { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: regler.opphold().harSammeAdresseSomArbeidsgiver() },
+          { term: 'EU/EØS barnetrygd fra NAV.', status: regler.stonad().mottarEOSBarnetrygdFraNav() },
+          { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge() },
         ];
       } else {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: undefined },
             { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
-            { term: 'Oppholder seg i utlandet.', status: undefined },
-            { term: 'Har studiested i utlandet.', status: undefined },
-            { term: 'Finansiering av studier fra Norge.', status: undefined },
-            { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge(skjema) },
-          ];
-        }
-        if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.MEDFOLGENDE) {
-          avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: undefined },
-            { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
-            { term: 'Medfølgende familie til utsendt arbeidstaker.', status: undefined },
-            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
+            { term: 'Har studiested i utlandet.', status: regler.studier().studererIUtlandet() },
+            { term: 'Finansiering av studier fra Norge.', status: regler.studier().studierFinansieresFraNorge() },
+            { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge() },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: undefined },
-            { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: undefined },
-            { term: 'Medfølgende familie til utsendt arbeidstaker', status: undefined },
-            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().intensjonOmReturTilNorge() },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
+            { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr() },
+            { term: 'Ektefelle og / eller mindreårige barn i Norge?', status: regler.opphold().harEktefelleEllerBarnINorge() },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
-            { term: 'Bosatt i Norge før utreise.', status: undefined },
             { term: 'Oppholdet i utlandet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
+            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
+            { term: 'Er medfølgende familie til utsendt arbeidstaker', status: undefined },
+            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().harIntensjonOmReturTilNorge() },
           ];
         }
       }

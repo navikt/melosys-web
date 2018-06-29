@@ -28,40 +28,49 @@ const Bosted = props => {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
-                <Skjema.Radio feltNavn="intensjonOmRetur" value="true" label="Ja" />
-                <Skjema.Radio feltNavn="intensjonOmRetur" value="false" label="Nei" />
+              <Skjema.RadioGruppe feltNavn="forutgaendeBostedINorge" legend="Har forutgående bosted i Norge.">
+                <Skjema.Radio feltNavn="forutgaendeBostedINorge" value="true" label="Ja" />
+                <Skjema.Radio feltNavn="forutgaendeBostedINorge" value="false" label="Nei" />
               </Skjema.RadioGruppe>
               <Nav.Fieldset legend="Nærmeste families bosted">
                 <Landvelger feltNavn="familiesBosted" />
               </Nav.Fieldset>
-              <Nav.SkjemaGruppe title="Yrkesaktiv">
-                <Skjema.RadioGruppe feltNavn="sammeAdresseSomArbeidsgiver" legend="Er norsk adresse samme som arbeidsgivers?">
-                  <Skjema.Radio feltNavn="sammeAdresseSomArbeidsgiver" value="true" label="Ja" />
-                  <Skjema.Radio feltNavn="sammeAdresseSomArbeidsgiver" value="false" label="Nei" />
-                </Skjema.RadioGruppe>
-              </Nav.SkjemaGruppe>
-              <Nav.SkjemaGruppe title="Pensjonsist">
-                <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
-                  <Skjema.Select feltNavn="antallMaanederINorge" label="Velg antall måneder:" bredde="xs">
-                    {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
-                  </Skjema.Select>
-                </Nav.Fieldset>
-                <Skjema.RadioGruppe feltNavn="ektefelleEllerBarn" legend="Har ektefelle / mindreårige barn i Norge">
-                  <Skjema.Radio feltNavn="ektefelleEllerBarn" value="true" label="Ja" />
-                  <Skjema.Radio feltNavn="ektefelleEllerBarn" value="false" label="Nei" />
-                </Skjema.RadioGruppe>
-              </Nav.SkjemaGruppe>
-              <Nav.SkjemaGruppe title="Student i EØS-land">
-                <Landvelger label="Velg studieland:" feltNavn="studieLand" />
-                <Skjema.Select
-                  label="Finansiering"
-                  feltNavn="studentFinansiering"
-                  bredde="xl"
-                >
-                  {studieFinansiering.map(valg => <option key={uuid()} value={valg.kode}>{valg.term}</option>)}
+              <Nav.Undertittel>Yrkesaktiv</Nav.Undertittel>
+              <Skjema.RadioGruppe feltNavn="adresseIUtlandet" legend="Har søker utenlandsadresse?">
+                <Skjema.Radio feltNavn="adresseIUtlandet" value="true" label="Ja" />
+                <Skjema.Radio feltNavn="adresseIUtlandet" value="false" label="Nei" />
+              </Skjema.RadioGruppe>
+              <Skjema.RadioGruppe feltNavn="sammeAdresseSomArbeidsgiver" legend="Er norsk adresse samme som arbeidsgivers?">
+                <Skjema.Radio feltNavn="sammeAdresseSomArbeidsgiver" value="true" label="Ja" />
+                <Skjema.Radio feltNavn="sammeAdresseSomArbeidsgiver" value="false" label="Nei" />
+              </Skjema.RadioGruppe>
+              <Skjema.RadioGruppe feltNavn="EOSBarnetrygdFraNAV" legend="Mottar EU/EØS barnetrygd fra NAV?">
+                <Skjema.Radio feltNavn="EOSBarnetrygdFraNAV" value="true" label="Ja" />
+                <Skjema.Radio feltNavn="EOSBarnetrygdFraNAV" value="false" label="Nei" />
+              </Skjema.RadioGruppe>
+              <Nav.Undertittel>Pensjonist</Nav.Undertittel>
+              <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
+                <Skjema.Select feltNavn="antallMaanederINorge" label="Velg antall måneder:" bredde="xs">
+                  {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
                 </Skjema.Select>
-              </Nav.SkjemaGruppe>
+              </Nav.Fieldset>
+              <Skjema.RadioGruppe feltNavn="ektefelleEllerBarnINorge" legend="Har ektefelle / mindreårige barn i Norge">
+                <Skjema.Radio feltNavn="ektefelleEllerBarnINorge" value="true" label="Ja" />
+                <Skjema.Radio feltNavn="ektefelleEllerBarnINorge" value="false" label="Nei" />
+              </Skjema.RadioGruppe>
+              <Nav.Undertittel>Student i EØS-land</Nav.Undertittel>
+              <Landvelger label="Velg studieland:" feltNavn="studieLand" />
+              <Skjema.Select
+                label="Finansiering"
+                feltNavn="studentFinansiering"
+                bredde="xl"
+              >
+                {studieFinansiering.map(valg => <option key={uuid()} value={valg.kode}>{valg.term}</option>)}
+              </Skjema.Select>
+              <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
+                <Skjema.Radio feltNavn="intensjonOmRetur" value="true" label="Ja" />
+                <Skjema.Radio feltNavn="intensjonOmRetur" value="false" label="Nei" />
+              </Skjema.RadioGruppe>
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>

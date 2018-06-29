@@ -7,13 +7,13 @@ class IkkeYrkesaktiv extends Steg {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        kriterier: 'alle andre valg',
-        erOppfylt: () => true,
+        beskrivelse: 'alle andre valg',
+        exec: () => true,
         nesteSteg: STEG.BOSTEDSLAND,
       },
     ];
     this._id = STEG.IKKE_YRKESAKTIV;
-    this._tittel = 'Annen aktivitet';
+    this._tittel = 'Ikke yrkesaktiv';
     this._komponent = VurderingIkkeYrkesaktiv;
     this._samleRelevanteData = () => ({ });
     this._beregnRelevantUI = () => {};
