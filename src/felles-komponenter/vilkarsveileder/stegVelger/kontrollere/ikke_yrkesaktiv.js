@@ -15,8 +15,8 @@ class IkkeYrkesaktiv extends Steg {
     this._id = STEG.IKKE_YRKESAKTIV;
     this._tittel = 'Ikke yrkesaktiv';
     this._komponent = VurderingIkkeYrkesaktiv;
-    this._dataHenter = () => ({ });
-    this._tilstand = () => {};
+    this._samleRelevanteData = () => ({ });
+    this._beregnRelevantUI = () => {};
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
