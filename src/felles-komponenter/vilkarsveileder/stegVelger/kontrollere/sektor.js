@@ -29,7 +29,7 @@ class Sektor extends Steg {
     this._id = STEG.SEKTOR;
     this._tittel = 'Type aktivitet';
     this._komponent = VurderingSektor;
-    this._samleRelevanteData = () => ({ });
+    this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = () => ({
       visAnsattISektor: true,
     });

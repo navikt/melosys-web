@@ -87,6 +87,10 @@ export default function reducer(state = initialState, action) {
           antallArbeidsgivere: dokument.faktaavklaringForretningsstedAntallArbeidsgivere,
           fordelingArbeidsgivere: dokument.faktaavklaringForretningsstedFordelingArbeidsgivere,
         },
+        vesentligVirksomhet: {
+          vesentligVirksomhetINorge: dokument.faktaavklaringVesentligVirksomhetINorge,
+          vesentligVirksomhetBegrunnelser: dokument.faktaavklaringVesentligVirksomhetBegrunnelser,
+        },
       };
 
       return { ...state, data: { ...state.data, avklaring: { ...avklaring } } };
