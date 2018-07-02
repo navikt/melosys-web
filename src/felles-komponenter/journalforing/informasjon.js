@@ -102,6 +102,7 @@ class Informasjon extends Component {
             feltNavn="vedleggsTitler"
             label="Titler på vedlegg:"
             gruppe
+            tillatFritekst
             muligeValg={valgbareVedleggsTitler}
             placeholder="(Velg eller skriv inn egen tittel)"
           />

@@ -68,20 +68,34 @@ class ListevelgerFlervalg extends Component {
     return valgtKodeverkObjekt && valgtKodeverkObjekt.term;
   }
 
+  erAlleredeLagtTil = verdi => {
+    const { fields } = this.props;
+    const alleValg = fields.getAll();
+    return alleValg.some(valg => valg === verdi);
+  }
+
   leggTilListeHandler = e => {
     e.preventDefault();
     const { inputVerdi } = this.state;
-    const { hentKodeFraVerdi } = this;
+    const { hentKodeFraVerdi, erAlleredeLagtTil } = this;
     const { fields, tillatFritekst } = this.props;
 
-    const valgtKode = tillatFritekst ? inputVerdi : hentKodeFraVerdi(inputVerdi);
+    const valg = tillatFritekst ? inputVerdi : hentKodeFraVerdi(inputVerdi);
 
-    if (valgtKode) {
-      fields.push(valgtKode);
+    if (erAlleredeLagtTil(valg)) {
+      this.setState({ feilmelding: 'Dette valget finnes allerede i listen.' });
+      return false;
+    }
+
+
+    if (valg) {
+      fields.push(valg);
       this.setState({ inputVerdi: '', feilmelding: null });
     } else {
       this.setState({ feilmelding: 'I dette feltet må du velge fra alternativene i nedtrekkslisten.' });
     }
+
+    return true;
   }
 
   slettElement = index => {
