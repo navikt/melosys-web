@@ -17,7 +17,7 @@ const ArbeidsgiverLinje = props => {
   const { arbeidsgiveren, erValgt, arbeidsgiverKlikkHandler } = props;
 
   return (
-    <div className="arbeidsforhold__enkeltlinje">
+    <div className="arbeidsgiver__enkeltlinje">
       <Nav.Checkbox checked={erValgt} onChange={() => arbeidsgiverKlikkHandler(arbeidsgiveren.orgnr)} label={`${arbeidsgiveren.navn}`} />
     </div>
   );
@@ -35,10 +35,10 @@ ArbeidsgiverLinje.defaultProps = {
 };
 
 /**
- * FieldArray trenger en egen komponent-container for å rendre ut hvert enkelt felt som er lagret i store (dvs avkryssede arbeidsforhold).
- * Rendre ut ALLE arbeidsforhold og kryss av de som samsvarer med arbeidsforholdID.
+ * FieldArray trenger en egen komponent-container for å rendre ut hvert enkelt felt som er lagret i store (dvs avkryssede arbeidsgivere).
+ * Rendre ut ALLE arbeidsgiver. og kryss av de som samsvarer med orgnr.
  *
- * Komponenten har er stateful fordi vi trenger å lese fields-objektet (som er et ArrayField i redux form, "valgteArbeidsforhold").
+ * Komponenten har er stateful fordi vi trenger å lese fields-objektet (som er et ArrayField i redux form, "faktaavklaringValgteArbeidsgivere").
  * Det gir mest mening å la denne listekomponenten håndtere klikk-events selv.
  *
  * @param props Objekt Diverse props Se prop types
