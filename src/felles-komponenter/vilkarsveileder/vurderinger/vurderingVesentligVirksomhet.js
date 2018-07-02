@@ -30,7 +30,7 @@ const VurderingVesentligVirksomhet = props => {
               <Skjema.ListeVelger
                 feltNavn="faktaavklaringVesentligVirksomhetBegrunnelser"
                 muligeValg={begrunnelser}
-                label="Legg til begrunnelse"
+                label="Legg til begrunnelse:"
                 gruppe
                 tillatFritekst={false}
               />
