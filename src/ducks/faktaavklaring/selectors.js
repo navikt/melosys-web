@@ -93,12 +93,10 @@ export const FaktaavklaringValgteArbeidsgivereSelector = createSelector(
 
 export const FaktaavklaringValgteArbeidsgivereDetaljerSelector = createSelector(
   state => FaktaavklaringValgteArbeidsgivereSelector(state) || [],
-  state => fagsakSelectors.ArbeidsgivereNorgeSelector(state) || [],
-  (valgteArbeidsforholdIDnav, alleArbeidsforhold) => {
-    if (!valgteArbeidsforholdIDnav) return [];
-    const valgteArbeidsforhold = alleArbeidsforhold.filter(arbeidsforholdet => valgteArbeidsforholdIDnav.includes(arbeidsforholdet.arbeidsforholdIDnav));
-    return (valgteArbeidsforhold || []);
-  }
+  state => fagsakSelectors.OrganisasjonerSelector(state) || [],
+  (valgteArbeidsgivere, alleOrganisasjoner) => (
+    alleOrganisasjoner.filter(organisasjonen => valgteArbeidsgivere.includes(organisasjonen.orgnr))
+  )
 );
 
 /**
@@ -120,13 +118,11 @@ export const ArbeidsgivereIPeriodenSelector = createSelector(
         return erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt;
       });
 
-    const arbeidsgivereIPerioden = organisasjoner.reduce((samling, organisasjonen) => {
+    // Reduser organisasjoner som har arbeidsforhold i perioden.
+    return organisasjoner.reduce((samling, organisasjonen) => {
       const organisasjonenHarArbeidsforholdIPerioden = arbeidsforholdIPerioden.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
       return organisasjonenHarArbeidsforholdIPerioden ? [...samling, organisasjonen] : [...samling];
     }, []);
-
-
-    return arbeidsgivereIPerioden;
   }
 );
 

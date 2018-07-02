@@ -153,7 +153,7 @@ const mapStateToProps = state => ({
   feilmeldinger: vurderingSelectors.VurderingFeilmeldingSelector(state),
   vurderingStatus: vurderingSelectors.VurderingStatusSelector(state),
   opphold: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state),
-  valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
+  valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereDetaljerSelector(state),
   sysselsetting: faktaavklaringSelectors.FaktaavklaringSysselsettingSelector(state),
 });
 
