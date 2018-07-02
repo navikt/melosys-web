@@ -5,6 +5,7 @@ import { Container, Row, Column } from 'nav-frontend-grid';
 import { Checkbox, Radio, SkjemaGruppe, Fieldset, Select, Input, Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 import { Knapp, Hovedknapp } from 'nav-frontend-knapper';
+import Icons from 'nav-frontend-ikoner-assets';
 import Stegindikator from 'nav-frontend-stegindikator';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 
@@ -17,4 +18,5 @@ export {
   Knapp, Hovedknapp,
   Stegindikator,
   NavFrontendSpinner,
+  Icons as Ikoner,
 };
