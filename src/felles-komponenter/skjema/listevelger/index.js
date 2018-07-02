@@ -2,6 +2,8 @@ import React from 'react';
 import PT from 'prop-types';
 import { Field, FieldArray } from 'redux-form';
 
+import * as MPT from '../../../proptypes';
+
 import ListevelgerEnkelt from './listevelgerEnkelt';
 import ListevelgerGruppe from './listevelgerGruppe';
 
@@ -31,7 +33,7 @@ const Listevelger = ({
           name={feltNavn}
           className={className}
           component={ListevelgerEnkelt}
-          props={rest}
+          {...rest}
         />
     }
   </div>
@@ -41,11 +43,15 @@ Listevelger.propTypes = {
   feltNavn: PT.string.isRequired,
   className: PT.string,
   gruppe: PT.bool,
+  muligeValg: PT.arrayOf(MPT.Kodeverk),
+  tillatFritekst: PT.bool,
 };
 
 Listevelger.defaultProps = {
   className: '',
   gruppe: false,
+  muligeValg: [],
+  tillatFritekst: true,
 };
 
 export default Listevelger;

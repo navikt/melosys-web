@@ -10,10 +10,28 @@ const uuid = require('uuid/v4');
 /** Dette er komponent for ett enkeltvalg. Inneholder et ikon, navnet på valget
  * og en sletteknapp.
  */
-const ListevelgerValgtElement = ({ label, slettElement, oppdaterElement }) => (
+const ListevelgerValgtRedigerbartElement = ({ label, slettElement, oppdaterElement }) => (
   <div className="listevelger__linje">
     <div className="listevelger__innhold">
       <Nav.Input value={label} label="" className="listevelger__linje__input" onChange={oppdaterElement} onKeyDown={event => (event.key === 'Enter') && event.preventDefault()} />
+    </div>
+    <button className="listevelger__linje__knapp" onClick={slettElement}>-</button>
+  </div>
+);
+
+ListevelgerValgtRedigerbartElement.propTypes = {
+  label: PT.string.isRequired,
+  slettElement: PT.func.isRequired,
+  oppdaterElement: PT.func.isRequired,
+};
+
+/** Dette er komponent for ett enkeltvalg. Inneholder et ikon, navnet på valget
+ * og en sletteknapp.
+ */
+const ListevelgerValgtElement = ({ label, slettElement }) => (
+  <div className="listevelger__linje">
+    <div className="listevelger__innhold">
+      <div className="listevelger__linje__input" >{label}</div>
     </div>
     <button className="listevelger__linje__knapp" onClick={slettElement}>-</button>
   </div>
@@ -29,7 +47,7 @@ ListevelgerValgtElement.propTypes = {
  * For hvert nye valg legges dette til som en FieldArray i Redux Form.
  */
 class ListevelgerGruppe extends Component {
-  state = { inputVerdi: '', touched: false, active: false }
+  state = { inputVerdi: '', feilmelding: '' }
 
   onChange = event => {
     this.setState({ inputVerdi: event.target.value });
@@ -39,21 +57,23 @@ class ListevelgerGruppe extends Component {
     if (event.key === 'Enter') { this.leggTilListeHandler(event); }
   }
 
-  onFocus = () => {
-    this.setState({ touched: true, active: true });
-  }
-
-  onBlur = () => {
-    this.setState({ touched: true, active: false });
+  finnesVerdienBlantMuligeValg = verdi => {
+    const { muligeValg = [] } = this.props;
+    return muligeValg.some(item => item.term === verdi);
   }
 
   leggTilListeHandler = e => {
     e.preventDefault();
     const { inputVerdi } = this.state;
+    const { finnesVerdienBlantMuligeValg } = this;
     const { fields } = this.props;
 
-    fields.push(inputVerdi);
-    this.setState({ inputVerdi: '' });
+    if (finnesVerdienBlantMuligeValg(inputVerdi)) {
+      fields.push(inputVerdi);
+      this.setState({ inputVerdi: '', feilmelding: null });
+    } else {
+      this.setState({ feilmelding: 'I dette feltet må du velge fra alternativene i nedtrekkslisten.' });
+    }
   }
 
   slettElement = index => {
@@ -67,29 +87,58 @@ class ListevelgerGruppe extends Component {
     fields.insert(index, verdi);
   }
 
+  byggValgtRedigerbartElement = (verdi, index) => (
+    <ListevelgerValgtRedigerbartElement
+      key={index}
+      label={verdi}
+      slettElement={() => this.slettElement(index)}
+      oppdaterElement={event => this.oppdaterElement(event.target.value, index)}
+    />);
+
+  byggValgtElement = (verdi, index) => (
+    <ListevelgerValgtElement
+      key={index}
+      label={verdi}
+      slettElement={() => this.slettElement(index)}
+    />);
+
+  byggFeilmelding = () => {
+    const { error } = this.props.meta;
+    const { feilmelding } = this.state;
+    let feilmeldingTekst;
+
+    if (error) {
+      feilmeldingTekst = error;
+    } else {
+      feilmeldingTekst = feilmelding;
+    }
+
+    return feilmeldingTekst ? { feilmelding: feilmeldingTekst } : null;
+  }
+
   render() {
     const {
       fields,
       placeholder,
       label,
-      meta,
       muligeValg,
+      tillatFritekst,
     } = this.props;
 
+    const {
+      byggValgtElement,
+      byggValgtRedigerbartElement,
+    } = this;
+
     const alleFelter = fields.getAll() || [];
-    const feil = (meta.invalid && (this.state.touched || meta.submitFailed) && !this.state.active) ? { feilmelding: meta.error } : null;
+    const feil = this.byggFeilmelding();
 
     return (
       <div>
+        {
+          alleFelter.map((verdi, index) => (tillatFritekst ? byggValgtRedigerbartElement(verdi, index) : byggValgtElement(verdi, index)))
+        }
         <label htmlFor={`listevelger-${fields.name}`}>{label}
-          {
-            alleFelter.map((verdi, index) => <ListevelgerValgtElement
-              key={index}
-              label={verdi}
-              slettElement={() => this.slettElement(index)}
-              oppdaterElement={event => this.oppdaterElement(event.target.value, index)}
-            />)
-          }
           <div className="listevelger__linje">
             <Nav.Input
               id={`listevelger-${fields.name}`}
@@ -123,6 +172,7 @@ ListevelgerGruppe.propTypes = {
   label: PT.string.isRequired,
   meta: PT.object.isRequired,
   muligeValg: PT.array.isRequired,
+  tillatFritekst: PT.bool.isRequired,
   placeholder: PT.string,
 };
 
