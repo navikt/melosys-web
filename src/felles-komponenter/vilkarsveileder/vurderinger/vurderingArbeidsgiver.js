@@ -1,0 +1,115 @@
+import React, { Component } from 'react';
+import PT from 'prop-types';
+import { Field, FieldArray } from 'redux-form';
+
+import * as Nav from '../../../utils/navFrontend';
+
+import './vurderingArbeidsgiver.css';
+
+const uuid = require('uuid/v4');
+
+/**
+ * Enkeltsjekkboks for ett arbeidsgiver.
+ *
+ * @param props Objekt Diverse props (se propTypes)
+ */
+const ArbeidsgiverLinje = props => {
+  const { arbeidsgiveren, erValgt, arbeidsgiverKlikkHandler } = props;
+
+  return (
+    <div className="arbeidsforhold__enkeltlinje">
+      <Nav.Checkbox checked={erValgt} onChange={() => arbeidsgiverKlikkHandler(arbeidsgiveren.orgnr)} label={`${arbeidsgiveren.navn}`} />
+    </div>
+  );
+};
+
+ArbeidsgiverLinje.propTypes = {
+  input: PT.object.isRequired,
+  arbeidsgiverKlikkHandler: PT.func.isRequired,
+  arbeidsgiveren: PT.object.isRequired,
+  erValgt: PT.bool,
+};
+
+ArbeidsgiverLinje.defaultProps = {
+  erValgt: false,
+};
+
+/**
+ * FieldArray trenger en egen komponent-container for å rendre ut hvert enkelt felt som er lagret i store (dvs avkryssede arbeidsforhold).
+ * Rendre ut ALLE arbeidsforhold og kryss av de som samsvarer med arbeidsforholdID.
+ *
+ * Komponenten har er stateful fordi vi trenger å lese fields-objektet (som er et ArrayField i redux form, "valgteArbeidsforhold").
+ * Det gir mest mening å la denne listekomponenten håndtere klikk-events selv.
+ *
+ * @param props Objekt Diverse props Se prop types
+ */
+class ArbeidsgivereListe extends Component {
+  arbeidsgiverKlikkHandler = orgnr => {
+    const { fields } = this.props;
+    const alleOpprinneligValgte = fields.getAll() || [];
+
+    const indexPosition = alleOpprinneligValgte.findIndex(valgt => valgt === orgnr);
+    return indexPosition >= 0 ? fields.remove(indexPosition) : fields.push(orgnr);
+  }
+
+  render() {
+    const { fields, arbeidsgivereIPerioden } = this.props;
+    const valgteArbeidsgivere = fields.getAll();
+
+    return (
+      <div>
+        {arbeidsgivereIPerioden.map(arbeidsgiveren => (
+          <Field
+            key={uuid()}
+            name="faktaavklaringValgteArbeidsgiver"
+            type="text"
+            component={linjeProps => <ArbeidsgiverLinje
+              {...linjeProps}
+              arbeidsgiveren={arbeidsgiveren}
+              erValgt={valgteArbeidsgivere ? valgteArbeidsgivere.includes(arbeidsgiveren.orgnr) : false}
+              arbeidsgiverKlikkHandler={this.arbeidsgiverKlikkHandler}
+            />}
+          />
+        ))}
+      </div>
+    );
+  }
+}
+
+ArbeidsgivereListe.propTypes = {
+  fields: PT.object.isRequired,
+  arbeidsgivereIPerioden: PT.array,
+};
+
+ArbeidsgivereListe.defaultProps = {
+  arbeidsgivereIPerioden: [],
+};
+
+/**
+ * Dette er hovedkomponenten for fanen "Velg Arbeidsgiver". Denne trekker inn ArbeidsgiverListe som er den egentlige utlistingen av sjekkbokser og håndtereren
+ * av event handlers hvor bruker velger en arbeidsgiver.
+ *
+ * @param props
+ */
+const VurderingArbeidsgiver = props => {
+  const { bekreftOgFortsett, arbeidsgivereIPerioden } = props;
+
+  return (
+    <div className="vurderingArbeidsgiver">
+      <Nav.Undertittel>Velg arbeidsgiver:</Nav.Undertittel>
+      <div className="arbeidsgiver">
+        <FieldArray name="faktaavklaringValgteArbeidsgivere" component={arrayProps => <ArbeidsgivereListe {...arrayProps} arbeidsgivereIPerioden={arbeidsgivereIPerioden} />} />
+        <div className="fane__knapplinje">
+          <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+VurderingArbeidsgiver.propTypes = {
+  bekreftOgFortsett: PT.func.isRequired,
+  arbeidsgivereIPerioden: PT.array.isRequired,
+};
+
+export default VurderingArbeidsgiver;

@@ -62,7 +62,7 @@ export const feltGrupper = {
     faktaavklaringBekrefterFamiliebosted: [],
     faktaavklaringBekrefterDisponering: [],
     faktaavklaringBostedsland: [],
-    faktaavklaringValgteArbeidsforhold: [],
+    faktaavklaringValgteArbeidsgivere: [],
     faktaavklaringForretningsstedLand: [],
     faktaavklaringForretningsstedAntallArbeidsgivere: [],
     faktaavklaringForretningsstedFordelingArbeidsgivere: [],

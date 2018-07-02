@@ -68,7 +68,7 @@ class Vilkarsveileder extends Component {
       faktaavklaring: props.faktaavklaring,
       inngang: props.inngang,
       skjema: props.skjema,
-      relevanteArbeidsforholdene: props.relevanteArbeidsforholdene,
+      arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
       tilgjengeligeHandlers,
     };
 
@@ -118,8 +118,7 @@ class Vilkarsveileder extends Component {
 Vilkarsveileder.propTypes = {
   history: PT.object.isRequired,
   match: PT.object.isRequired,
-  arbeidsforholdene: MPT.Arbeidsforholdene,
-  relevanteArbeidsforholdene: MPT.Arbeidsforholdene,
+  arbeidsgivereIPerioden: PT.array,
   fattVedtakHandler: PT.func.isRequired,
   beOmVurderingHandler: PT.func.isRequired,
   sendSoknad: PT.func.isRequired,
@@ -128,7 +127,7 @@ Vilkarsveileder.propTypes = {
   faktaavklaring: PT.object,
   inngang: PT.object,
   skjema: PT.object.isRequired,
-  valgteArbeidsforhold: PT.array,
+  valgteArbeidsgivere: PT.array,
   oppdaterFaktaavklaringState: PT.func.isRequired,
   hentVurdering: PT.func.isRequired,
   hentInngang: PT.func.isRequired,
@@ -138,18 +137,16 @@ Vilkarsveileder.defaultProps = {
   oppsummering: [],
   faktaavklaring: {},
   inngang: {},
-  arbeidsforholdene: [],
-  relevanteArbeidsforholdene: [],
-  valgteArbeidsforhold: {},
+  arbeidsgivereIPerioden: [],
+  valgteArbeidsgivere: [],
 };
 
 const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
-  valgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
-  arbeidsforholdene: fagsakSelectors.ArbeidsforholdeneSelector(state),
-  relevanteArbeidsforholdene: faktaavklaringSelectors.RelevanteArbeidsforholdeneSelector(state),
+  valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
+  arbeidsgivereIPerioden: faktaavklaringSelectors.ArbeidsgivereIPeriodenSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
 });
 
@@ -159,7 +156,6 @@ const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentBosted: behandlingID => dispatch(faktaavklaringOperations.hentBosted(behandlingID)),
   sendSoknad: (behandlingID, soknad) => dispatch(soknadOperations.send(behandlingID, soknad)),
-
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));
