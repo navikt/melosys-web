@@ -47,7 +47,7 @@ class ListevelgerFlervalg extends Component {
   state = { inputVerdi: '', feilmelding: '' }
 
   vedEndring = event => {
-    this.setState({ inputVerdi: event.target.value });
+    this.setState({ inputVerdi: event.target.value, feilmelding: '' });
   }
 
   vedTastNed = event => {
