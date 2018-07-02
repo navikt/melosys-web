@@ -25,7 +25,7 @@ const VurderingVesentligVirksomhet = props => {
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="12" md="10" lg="7">
+          <Nav.Column xs="12" md="10" lg="8">
             <Nav.Fieldset legend="Begrunnelse:">
               <Skjema.ListeVelger
                 feltNavn="faktaavklaringVesentligVirksomhetBegrunnelser"

@@ -23,7 +23,10 @@ const ListevelgerValgtElement = ({
       <div className="listevelger__innhold">
         { element }
       </div>
-      <button className="listevelger__linje__knapp" onClick={slettElement}>-</button>
+      <Nav.Knapp mini className="listevelger__linje__knapp" onClick={slettElement}>
+        <Nav.Ikoner kind="minus" className="knapp__ikon" wrapperStyle={{ width: 20, height: 20 }} size="20" />
+        <div className="knapp__tittel">Fjern</div>
+      </Nav.Knapp>
     </div>
   );
 };
@@ -51,19 +54,19 @@ class ListevelgerFlervalg extends Component {
   }
 
   vedTastNed = event => {
-    if (event.key === 'Enter') { this.leggTilValg(event); }
+    if (event.key === 'Enter') { this.leggValgTilListe(event); }
   }
 
-  kodeTilVerdi = verdi => {
-    const { muligeValg = [] } = this.props;
-    const valgtKodeverkObjekt = muligeValg.find(item => item.term === verdi);
-    return valgtKodeverkObjekt && valgtKodeverkObjekt.kode;
-  }
-
-  verdiTilKode = kode => {
+  kodeTilVerdi = kode => {
     const { muligeValg = [] } = this.props;
     const valgtKodeverkObjekt = muligeValg.find(item => item.kode === kode);
     return valgtKodeverkObjekt && valgtKodeverkObjekt.term;
+  }
+
+  verdiTilKode = verdi => {
+    const { muligeValg = [] } = this.props;
+    const valgtKodeverkObjekt = muligeValg.find(item => item.term === verdi);
+    return valgtKodeverkObjekt && valgtKodeverkObjekt.kode;
   }
 
   erAlleredeLagtTil = verdi => {
@@ -72,13 +75,13 @@ class ListevelgerFlervalg extends Component {
     return alleValg.some(valg => valg === verdi);
   }
 
-  leggTilValg = e => {
+  leggValgTilListe = e => {
     e.preventDefault();
     const { inputVerdi } = this.state;
-    const { kodeTilVerdi, erAlleredeLagtTil } = this;
+    const { verdiTilKode, erAlleredeLagtTil } = this;
     const { fields, tillatFritekst } = this.props;
 
-    const valg = tillatFritekst ? inputVerdi : kodeTilVerdi(inputVerdi);
+    const valg = tillatFritekst ? inputVerdi : verdiTilKode(inputVerdi);
 
     if (erAlleredeLagtTil(valg)) {
       this.setState({ feilmelding: 'Dette valget finnes allerede i listen.' });
@@ -95,12 +98,12 @@ class ListevelgerFlervalg extends Component {
     return true;
   }
 
-  slettElement = index => {
+  slettValgFraListe = index => {
     const { fields } = this.props;
     fields.remove(index);
   }
 
-  oppdaterElement = (verdi, index) => {
+  oppdaterEksisterendeValg = (verdi, index) => {
     const { fields } = this.props;
     fields.remove(index);
     fields.insert(index, verdi);
@@ -110,8 +113,8 @@ class ListevelgerFlervalg extends Component {
     <ListevelgerValgtElement
       key={index}
       label={verdi}
-      slettElement={() => this.slettElement(index)}
-      oppdaterElement={event => this.oppdaterElement(event.target.value, index)}
+      slettElement={() => this.slettValgFraListe(index)}
+      oppdaterElement={event => this.oppdaterEksisterendeValg(event.target.value, index)}
       tillatFritekst
     />);
 
@@ -119,10 +122,10 @@ class ListevelgerFlervalg extends Component {
     <ListevelgerValgtElement
       key={index}
       label={verdi}
-      slettElement={() => this.slettElement(index)}
+      slettElement={() => this.slettValgFraListe(index)}
     />);
 
-  byggValgtListe = alleFelter => {
+  byggValgtListe = eksisterendeValg => {
     const {
       byggValgtElement,
       byggValgtRedigerbartElement,
@@ -130,22 +133,16 @@ class ListevelgerFlervalg extends Component {
 
     const { tillatFritekst } = this.props;
 
-    return alleFelter.map((verdi, index) => {
-      const verdiTilKode = tillatFritekst ? verdi : this.verdiTilKode(verdi);
-      return tillatFritekst ? byggValgtRedigerbartElement(verdi, index) : byggValgtElement(verdiTilKode, index);
+    return eksisterendeValg.map((verdi, index) => {
+      const lesbarVerdi = tillatFritekst ? verdi : this.kodeTilVerdi(verdi);
+      return tillatFritekst ? byggValgtRedigerbartElement(verdi, index) : byggValgtElement(lesbarVerdi, index);
     });
   }
 
   byggFeilmelding = () => {
     const { error } = this.props.meta;
     const { feilmelding } = this.state;
-    let feilmeldingTekst;
-
-    if (error) {
-      feilmeldingTekst = error;
-    } else {
-      feilmeldingTekst = feilmelding;
-    }
+    const feilmeldingTekst = error || feilmelding;
 
     return feilmeldingTekst ? { feilmelding: feilmeldingTekst } : null;
   }
@@ -166,25 +163,26 @@ class ListevelgerFlervalg extends Component {
     return (
       <div>
         {byggValgtListe(alleFelter)}
-        <label htmlFor={`listevelger-${fields.name}`}>{label}
-          <div className="listevelger__linje">
-            <Nav.Input
-              id={`listevelger-${fields.name}`}
-              label=""
-              feil={feil}
-              placeholder={placeholder}
-              onChange={this.vedEndring}
-              onKeyDown={this.vedTastNed}
-              value={this.state.inputVerdi}
-              list={`dataliste-${fields.name}`}
-              className="listevelger__linje__input"
-            />
-            <button
-              className="listevelger__linje__knapp listevelger__linje__knapp--leggtil"
-              onClick={this.leggTilValg}>+
-            </button>
-          </div>
-        </label>
+        <div className="listevelger__linje">
+          <Nav.Input
+            id={`listevelger-${fields.name}`}
+            label={label}
+            feil={feil}
+            placeholder={placeholder}
+            onChange={this.vedEndring}
+            onKeyDown={this.vedTastNed}
+            value={this.state.inputVerdi}
+            list={`dataliste-${fields.name}`}
+            className="listevelger__linje__input"
+          />
+          <Nav.Knapp
+            mini
+            className="listevelger__linje__knapp listevelger__linje__knapp--leggtil"
+            onClick={this.leggValgTilListe}>
+            <Nav.Ikoner kind="tilsette" className="knapp__ikon" wrapperStyle={{ width: 20, height: 20 }} size="20" />
+            <div className="knapp__tittel">Legg til</div>
+          </Nav.Knapp>
+        </div>
         <datalist id={`dataliste-${fields.name}`}>
           {muligeValg.map(valg => <option key={uuid()} value={valg.term} />)}
         </datalist>
