@@ -8,6 +8,7 @@ export const VurderingVesentligVirksomhetTyper = {
   TRUE: 'true',
   FALSE: 'false',
 };
+
 const VurderingVesentligVirksomhet = props => {
   const { bekreftOgFortsett, begrunnelser } = props;
 
@@ -15,18 +16,27 @@ const VurderingVesentligVirksomhet = props => {
     <div>
       <Nav.Undertittel>Vurdering av vesentlig virksomhet</Nav.Undertittel>
       <div className="vurderingBostedsland__skjemafelt">
-        <Nav.Fieldset legend="Virksomheten har:">
-          <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={VurderingVesentligVirksomhetTyper.TRUE} label="Vesentlig virksomhet" />
-          <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={VurderingVesentligVirksomhetTyper.FALSE} label="Ikke vesentlig virksomhet" />
-        </Nav.Fieldset>
-        <Nav.Fieldset legend="Begrunnelse:">
-          <Skjema.ListeVelger
-            feltNavn="faktaavklaringVesentligVirksomhetBegrunnelser"
-            muligeValg={begrunnelser}
-            label="Legg til begrunnelse"
-            gruppe
-          />
-        </Nav.Fieldset>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.Fieldset legend="Virksomheten har:">
+              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={VurderingVesentligVirksomhetTyper.TRUE} label="Vesentlig virksomhet" />
+              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={VurderingVesentligVirksomhetTyper.FALSE} label="Ikke vesentlig virksomhet" />
+            </Nav.Fieldset>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12" md="10" lg="7">
+            <Nav.Fieldset legend="Begrunnelse:">
+              <Skjema.ListeVelger
+                feltNavn="faktaavklaringVesentligVirksomhetBegrunnelser"
+                muligeValg={begrunnelser}
+                label="Legg til begrunnelse"
+                gruppe
+                tillatFritekst={false}
+              />
+            </Nav.Fieldset>
+          </Nav.Column>
+        </Nav.Row>
       </div>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -36,7 +46,6 @@ const VurderingVesentligVirksomhet = props => {
 };
 
 VurderingVesentligVirksomhet.ID = 'VESENTLIG_VIRKSOMHET';
-
 
 VurderingVesentligVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
