@@ -24,7 +24,7 @@ const ListevelgerValgtElement = ({
         { element }
       </div>
       <Nav.Knapp mini className="listevelger__linje__knapp" onClick={slettElement}>
-        <Nav.Ikoner kind="minus" className="knapp__ikon" wrapperStyle={{ width: 20, height: 20 }} size="20" />
+        <div className="knapp__ikon"><Nav.Ikoner kind="minus" size="20" /></div>
         <div className="knapp__tittel">Fjern</div>
       </Nav.Knapp>
     </div>
@@ -179,7 +179,7 @@ class ListevelgerFlervalg extends Component {
             mini
             className="listevelger__linje__knapp listevelger__linje__knapp--leggtil"
             onClick={this.leggValgTilListe}>
-            <Nav.Ikoner kind="tilsette" className="knapp__ikon" wrapperStyle={{ width: 20, height: 20 }} size="20" />
+            <div className="knapp__ikon"><Nav.Ikoner kind="tilsette" size="20" /></div>
             <div className="knapp__tittel">Legg til</div>
           </Nav.Knapp>
         </div>
