@@ -5,7 +5,7 @@ import { Field, FieldArray } from 'redux-form';
 import * as MPT from '../../../proptypes';
 
 import ListevelgerEnkelt from './listevelgerEnkelt';
-import ListevelgerGruppe from './listevelgerGruppe';
+import ListevelgerFlervalg from './listevelgerFlervalg';
 
 import './listevelger.css';
 
@@ -25,7 +25,7 @@ const Listevelger = ({
         <FieldArray
           name={feltNavn}
           multiListe={gruppe}
-          component={ListevelgerGruppe}
+          component={ListevelgerFlervalg}
           {...rest}
         />
         :
@@ -51,7 +51,7 @@ Listevelger.defaultProps = {
   className: '',
   gruppe: false,
   muligeValg: [],
-  tillatFritekst: true,
+  tillatFritekst: false,
 };
 
 export default Listevelger;

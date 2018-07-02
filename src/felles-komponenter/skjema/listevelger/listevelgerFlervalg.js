@@ -40,13 +40,12 @@ const ListevelgerValgtElement = ({ label, slettElement }) => (
 ListevelgerValgtElement.propTypes = {
   label: PT.string.isRequired,
   slettElement: PT.func.isRequired,
-  oppdaterElement: PT.func.isRequired,
 };
 
 /** Komponenten lar brukeren legge til flere valg, men da kun ett valg pr liste.
  * For hvert nye valg legges dette til som en FieldArray i Redux Form.
  */
-class ListevelgerGruppe extends Component {
+class ListevelgerFlervalg extends Component {
   state = { inputVerdi: '', feilmelding: '' }
 
   onChange = event => {
@@ -57,19 +56,28 @@ class ListevelgerGruppe extends Component {
     if (event.key === 'Enter') { this.leggTilListeHandler(event); }
   }
 
-  finnesVerdienBlantMuligeValg = verdi => {
+  hentKodeFraVerdi = verdi => {
     const { muligeValg = [] } = this.props;
-    return muligeValg.some(item => item.term === verdi);
+    const valgtKodeverkObjekt = muligeValg.find(item => item.term === verdi);
+    return valgtKodeverkObjekt && valgtKodeverkObjekt.kode;
+  }
+
+  hentVerdiFraKode = kode => {
+    const { muligeValg = [] } = this.props;
+    const valgtKodeverkObjekt = muligeValg.find(item => item.kode === kode);
+    return valgtKodeverkObjekt && valgtKodeverkObjekt.term;
   }
 
   leggTilListeHandler = e => {
     e.preventDefault();
     const { inputVerdi } = this.state;
-    const { finnesVerdienBlantMuligeValg } = this;
-    const { fields } = this.props;
+    const { hentKodeFraVerdi } = this;
+    const { fields, tillatFritekst } = this.props;
 
-    if (finnesVerdienBlantMuligeValg(inputVerdi)) {
-      fields.push(inputVerdi);
+    const valgtKode = tillatFritekst ? inputVerdi : hentKodeFraVerdi(inputVerdi);
+
+    if (valgtKode) {
+      fields.push(valgtKode);
       this.setState({ inputVerdi: '', feilmelding: null });
     } else {
       this.setState({ feilmelding: 'I dette feltet må du velge fra alternativene i nedtrekkslisten.' });
@@ -102,6 +110,20 @@ class ListevelgerGruppe extends Component {
       slettElement={() => this.slettElement(index)}
     />);
 
+  byggValgtListe = alleFelter => {
+    const {
+      byggValgtElement,
+      byggValgtRedigerbartElement,
+    } = this;
+
+    const { tillatFritekst } = this.props;
+
+    return alleFelter.map((verdi, index) => {
+      const verdiTilKode = tillatFritekst ? verdi : this.hentVerdiFraKode(verdi);
+      return tillatFritekst ? byggValgtRedigerbartElement(verdi, index) : byggValgtElement(verdiTilKode, index);
+    });
+  }
+
   byggFeilmelding = () => {
     const { error } = this.props.meta;
     const { feilmelding } = this.state;
@@ -122,22 +144,16 @@ class ListevelgerGruppe extends Component {
       placeholder,
       label,
       muligeValg,
-      tillatFritekst,
     } = this.props;
 
-    const {
-      byggValgtElement,
-      byggValgtRedigerbartElement,
-    } = this;
+    const { byggValgtListe } = this;
 
     const alleFelter = fields.getAll() || [];
     const feil = this.byggFeilmelding();
 
     return (
       <div>
-        {
-          alleFelter.map((verdi, index) => (tillatFritekst ? byggValgtRedigerbartElement(verdi, index) : byggValgtElement(verdi, index)))
-        }
+        {byggValgtListe(alleFelter)}
         <label htmlFor={`listevelger-${fields.name}`}>{label}
           <div className="listevelger__linje">
             <Nav.Input
@@ -167,7 +183,7 @@ class ListevelgerGruppe extends Component {
   }
 }
 
-ListevelgerGruppe.propTypes = {
+ListevelgerFlervalg.propTypes = {
   fields: PT.object.isRequired,
   label: PT.string.isRequired,
   meta: PT.object.isRequired,
@@ -176,8 +192,8 @@ ListevelgerGruppe.propTypes = {
   placeholder: PT.string,
 };
 
-ListevelgerGruppe.defaultProps = {
+ListevelgerFlervalg.defaultProps = {
   placeholder: '',
 };
 
-export default ListevelgerGruppe;
+export default ListevelgerFlervalg;
