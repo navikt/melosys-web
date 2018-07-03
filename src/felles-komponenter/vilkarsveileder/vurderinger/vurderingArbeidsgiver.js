@@ -57,6 +57,10 @@ class ArbeidsgivereListe extends Component {
     const { fields, arbeidsgivereIPerioden } = this.props;
     const valgteArbeidsgivere = fields.getAll();
 
+    const ingenArbeidsgivereVarsel = valgteArbeidsgivere.length === 0 && (
+      <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere hvor søker har arbeidsforhold innenfor den angitte søknadsperioden.</Nav.AlertStripe>
+    );
+
     return (
       <div>
         {arbeidsgivereIPerioden.map(arbeidsgiveren => (
@@ -72,6 +76,7 @@ class ArbeidsgivereListe extends Component {
             />}
           />
         ))}
+        {ingenArbeidsgivereVarsel}
       </div>
     );
   }

@@ -16,7 +16,7 @@
     "lodash.throttle": "^4.1.1",
     "moment": "^2.22.1",
     "moment-duration-format": "^2.2.2",
-    "nav-frontend-alertstriper": "^1.0.2",
+    "nav-frontend-alertstriper": "^1.0.14",
     "nav-frontend-alertstriper-style": "^0.2.33",
     "nav-frontend-chevron": "^1.0.2",
     "nav-frontend-chevron-style": "^0.3.4",
