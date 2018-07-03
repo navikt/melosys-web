@@ -144,7 +144,7 @@ VurderingVedtak.propTypes = {
   vurderingStatus: PT.string.isRequired,
   feilmeldinger: MPT.Feilmeldinger.isRequired,
   opphold: MPT.Opphold.isRequired,
-  valgteArbeidsgivere: PT.array.isRequired,
+  valgteArbeidsgivere: MPT.Organisasjoner.isRequired,
   sysselsetting: MPT.Sysselsetting.isRequired,
 };
 

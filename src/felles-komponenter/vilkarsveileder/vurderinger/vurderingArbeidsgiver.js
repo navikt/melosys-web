@@ -3,6 +3,7 @@ import PT from 'prop-types';
 import { Field, FieldArray } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes';
 
 import './vurderingArbeidsgiver.css';
 
@@ -26,7 +27,7 @@ const ArbeidsgiverLinje = props => {
 ArbeidsgiverLinje.propTypes = {
   input: PT.object.isRequired,
   arbeidsgiverKlikkHandler: PT.func.isRequired,
-  arbeidsgiveren: PT.object.isRequired,
+  arbeidsgiveren: MPT.Organisasjon.isRequired,
   erValgt: PT.bool,
 };
 
@@ -109,7 +110,7 @@ const VurderingArbeidsgiver = props => {
 
 VurderingArbeidsgiver.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  arbeidsgivereIPerioden: PT.array.isRequired,
+  arbeidsgivereIPerioden: MPT.Organisasjoner.isRequired,
 };
 
 export default VurderingArbeidsgiver;
