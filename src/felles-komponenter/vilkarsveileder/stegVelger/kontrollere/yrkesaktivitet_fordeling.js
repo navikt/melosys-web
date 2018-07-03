@@ -59,7 +59,7 @@ class YrkesaktivitetFordeling extends Steg {
     this._id = STEG.YRKESAKTIVITET_FORDELING;
     this._tittel = 'Arbeids\u00ADland';
     this._komponent = VurderingYrkesaktivitetFordeling;
-    this._samleRelevanteData = () => ({ });
+    this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = () => ({
       visAntallLand: true,
     });

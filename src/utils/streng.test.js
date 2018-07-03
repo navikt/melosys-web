@@ -30,6 +30,9 @@ describe('streng.js', () => {
     test('Oversetter ikke undefined', () => {
       expect(boolTilStreng(undefined)).toEqual(undefined);
     });
+    test('Oversetter ikke null', () => {
+      expect(boolTilStreng(null)).toEqual(undefined);
+    });
   });
   describe('strengTilBool', () => {
     test('Transformerer "true" => true', () => {

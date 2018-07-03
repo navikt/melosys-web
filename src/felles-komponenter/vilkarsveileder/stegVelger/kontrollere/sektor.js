@@ -23,13 +23,13 @@ class Sektor extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
+        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
     ];
     this._id = STEG.SEKTOR;
     this._tittel = 'Type aktivitet';
     this._komponent = VurderingSektor;
-    this._samleRelevanteData = () => ({ });
+    this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = () => ({
       visAnsattISektor: true,
     });

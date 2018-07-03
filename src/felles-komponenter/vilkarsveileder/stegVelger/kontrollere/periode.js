@@ -16,7 +16,7 @@ class Periode extends Steg {
     this._tittel = 'Periode';
     this._komponent = VurderingPeriode;
     this._samleRelevanteData = () => ({ });
-    this._beregnRelevantUI = () => {};
+    this._beregnRelevantUI = () => ({});
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };

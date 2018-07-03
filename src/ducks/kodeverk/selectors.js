@@ -42,3 +42,8 @@ export const studieFinansieringSelector = createSelector(
   state => state.kodeverk.data.finansiering,
   studieFinansiering => studieFinansiering || []
 );
+
+export const begrunnelserSelector = createSelector(
+  state => state.kodeverk.data.begrunnelser,
+  begrunnelser => begrunnelser || {}
+);
