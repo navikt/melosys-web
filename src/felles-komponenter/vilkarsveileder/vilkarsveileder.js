@@ -10,6 +10,7 @@ import StegFane from './felles/stegFane';
 import StegVelger from './stegVelger';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
+import { KodeverkSelectors } from '../../ducks/kodeverk/';
 import { vurderingOperations } from '../../ducks/vurdering/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { faktaavklaringSelectors, faktaavklaringOperations } from '../../ducks/faktaavklaring/';
@@ -69,6 +70,7 @@ class Vilkarsveileder extends Component {
       inngang: props.inngang,
       skjema: props.skjema,
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
+      begrunnelser: props.begrunnelser,
       tilgjengeligeHandlers,
     };
 
@@ -125,6 +127,7 @@ Vilkarsveileder.propTypes = {
   hentBosted: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   faktaavklaring: PT.object,
+  begrunnelser: PT.object,
   inngang: PT.object,
   skjema: PT.object.isRequired,
   valgteArbeidsgivere: PT.array,
@@ -139,6 +142,7 @@ Vilkarsveileder.defaultProps = {
   inngang: {},
   arbeidsgivereIPerioden: [],
   valgteArbeidsgivere: [],
+  begrunnelser: {},
 };
 
 const mapStateToProps = state => ({
@@ -147,6 +151,7 @@ const mapStateToProps = state => ({
   inngang: inngangSelectors.InngangSelector(state),
   valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
   arbeidsgivereIPerioden: faktaavklaringSelectors.ArbeidsgivereIPeriodenSelector(state),
+  begrunnelser: KodeverkSelectors.begrunnelserSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
 });
 

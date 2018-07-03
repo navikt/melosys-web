@@ -16,7 +16,7 @@ class Utsending extends Steg {
     this._id = STEG.UTSENDING;
     this._tittel = 'Utsending';
     this._komponent = VurderingUtsending;
-    this._samleRelevanteData = () => ({ });
+    this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = _propsLight => {
       const { faktaavklaring = {} } = _propsLight;
       const { sysselsetting: { sysselsettingType } = {} } = faktaavklaring;

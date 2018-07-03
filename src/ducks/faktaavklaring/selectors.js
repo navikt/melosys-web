@@ -91,6 +91,11 @@ export const FaktaavklaringValgteArbeidsgivereSelector = createSelector(
   valgteArbeidsgivere => valgteArbeidsgivere || []
 );
 
+export const FaktaavklaringVesentligVirksomhetSelector = createSelector(
+  state => FaktaavklaringSelector(state).vesentligVirksomhet || {},
+  vesentligVirksomhet => vesentligVirksomhet || {}
+);
+
 export const FaktaavklaringValgteArbeidsgivereDetaljerSelector = createSelector(
   state => FaktaavklaringValgteArbeidsgivereSelector(state) || [],
   state => fagsakSelectors.OrganisasjonerSelector(state) || [],

@@ -10,6 +10,7 @@ import Sysselsetting from './sysselsetting';
 import Tjenestemann from './tjenestemann';
 import Utsending from './utsending';
 import Virksomhet from './virksomhet';
+import VesentligVirksomhet from './vesentlig_virksomhet';
 import YrkesaktivitetFordeling from './yrkesaktivitet_fordeling';
 import Vedtak from './vedtak';
 
@@ -27,6 +28,7 @@ export {
   Tjenestemann,
   Utsending,
   Virksomhet,
+  VesentligVirksomhet,
   YrkesaktivitetFordeling,
   Vedtak,
 };
