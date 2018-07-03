@@ -6,9 +6,9 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import moment from 'moment';
-
 import { createSelector } from 'reselect';
+
+import Regler from '../../regler';
 import { fagsakSelectors } from '../fagsaker/';
 import { datoDiff } from '../../utils/dato';
 
@@ -107,16 +107,11 @@ export const ArbeidsgivereIPeriodenSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => fagsakSelectors.OrganisasjonerSelector(state),
   state => FaktaavklaringOppholdPeriodeSelector(state),
-  (arbeidsforholdene, organisasjoner, periode) => {
+  (arbeidsforholdene, organisasjoner, soknadsPeriode) => {
     const arbeidsforholdIPerioden = arbeidsforholdene
-      .filter(arbeidsforholdet => {
-        const { fom: ansattStartDato = moment(), tom: ansattSluttDato = moment() } = arbeidsforholdet.ansettelsesPeriode;
-        const { fom: oppholdStartDato, tom: oppholdSluttDato } = periode;
-        const erAnsattVedPeriodeStart = datoDiff(oppholdStartDato, ansattSluttDato, 'days') >= 0;
-        const erAnsattVedPeriodeSlutt = datoDiff(oppholdSluttDato, ansattStartDato, 'days') <= 0;
-
-        return erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt;
-      });
+      .filter(arbeidsforholdet => (
+        erArbeidsforholdetRelevantForSoknadsperioden(arbeidsforholdet.ansettelsesPeriode, soknadsPeriode)
+      ));
 
     // Reduser organisasjoner som har arbeidsforhold i perioden.
     return organisasjoner.reduce((samling, organisasjonen) => {
@@ -131,3 +126,17 @@ export const FaktaavklaringForretningsstedSelector = createSelector(
   forretningssted => forretningssted || {}
 );
 
+
+const erArbeidsforholdetRelevantForSoknadsperioden = (ansettelsesPeriode, soknadsPeriode) => {
+  const { fom: ansattStartDato, tom: ansattSluttDato } = ansettelsesPeriode;
+  const { fom: oppholdStartDato, tom: oppholdSluttDato } = soknadsPeriode;
+
+  if (!ansattStartDato) { return false; } // Dersom vi ikke vet startdatoen for arbeidsforholdet er det noe muffins.
+
+  const erAnsattVedPeriodeStart = datoDiff(ansattStartDato, oppholdStartDato, 'days') >= 0;
+  const erAnsattVedPeriodeSlutt = datoDiff(ansattSluttDato, oppholdSluttDato, 'days') <= 0;
+
+  console.log(erAnsattVedPeriodeStart, erAnsattVedPeriodeSlutt);
+
+  return erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt;
+};
