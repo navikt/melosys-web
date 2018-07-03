@@ -7,10 +7,10 @@
  */
 
 import { createSelector } from 'reselect';
+import { getFormValues } from 'redux-form';
 
 import Regler from '../../regler';
 import { fagsakSelectors } from '../fagsaker/';
-import { datoDiff } from '../../utils/dato';
 
 // selector(s)
 export const FaktaavklaringSelector = createSelector(
@@ -106,14 +106,14 @@ export const FaktaavklaringValgteArbeidsgivereDetaljerSelector = createSelector(
 export const ArbeidsgivereIPeriodenSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => fagsakSelectors.OrganisasjonerSelector(state),
-  state => FaktaavklaringOppholdPeriodeSelector(state),
-  (arbeidsforholdene, organisasjoner, soknadsPeriode) => {
+  state => getFormValues('soknad')(state),
+  (arbeidsforholdene, organisasjoner, skjema) => {
+    const regler = new Regler(skjema);
     const arbeidsforholdIPerioden = arbeidsforholdene
       .filter(arbeidsforholdet => (
-        erArbeidsforholdetRelevantForSoknadsperioden(arbeidsforholdet.ansettelsesPeriode, soknadsPeriode)
+        regler.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(arbeidsforholdet.ansettelsesPeriode)
       ));
 
-    // Reduser organisasjoner som har arbeidsforhold i perioden.
     return organisasjoner.reduce((samling, organisasjonen) => {
       const organisasjonenHarArbeidsforholdIPerioden = arbeidsforholdIPerioden.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
       return organisasjonenHarArbeidsforholdIPerioden ? [...samling, organisasjonen] : [...samling];
@@ -125,18 +125,3 @@ export const FaktaavklaringForretningsstedSelector = createSelector(
   state => FaktaavklaringSelector(state).forretningssted,
   forretningssted => forretningssted || {}
 );
-
-
-const erArbeidsforholdetRelevantForSoknadsperioden = (ansettelsesPeriode, soknadsPeriode) => {
-  const { fom: ansattStartDato, tom: ansattSluttDato } = ansettelsesPeriode;
-  const { fom: oppholdStartDato, tom: oppholdSluttDato } = soknadsPeriode;
-
-  if (!ansattStartDato) { return false; } // Dersom vi ikke vet startdatoen for arbeidsforholdet er det noe muffins.
-
-  const erAnsattVedPeriodeStart = datoDiff(ansattStartDato, oppholdStartDato, 'days') >= 0;
-  const erAnsattVedPeriodeSlutt = datoDiff(ansattSluttDato, oppholdSluttDato, 'days') <= 0;
-
-  console.log(erAnsattVedPeriodeStart, erAnsattVedPeriodeSlutt);
-
-  return erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt;
-};
