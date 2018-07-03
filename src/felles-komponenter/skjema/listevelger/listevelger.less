@@ -1,7 +1,7 @@
 @import '../../../constants';
 
 .listevelger {
-  margin: 1em 0;
+  margin: 0 0 1em 0;
 
   .listevelger__linje {
     display: flex;
@@ -34,24 +34,32 @@
   }
 
   .listevelger__linje__knapp {
-    background-color: transparent;
-    border-radius: 20px;
-    width: 40px;
-    height: 40px;
-    border: 2px solid @blue-nav;
-    color: @blue-nav;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 0 0 0 1em;
+    margin: 0.4em 0 0 0.5em;
+    height: 2.5em;
+    display: flex;
+    align-items: center;
+    width: 8em;
+    font-size: 1em;
+    padding-top: 0;
+    padding-bottom: 0;
 
-    &:focus {
-      box-shadow: 0 0 0 3px #ffbd66;
-      outline: none;
+    &:hover {
+      .knapp__ikon path {
+        stroke: @white !important;
+      }
     }
+  }
+
+  .knapp__ikon {
+    display: flex;
+  }
+
+  .knapp__tittel {
+    margin-left: 0.5em;
   }
 
   .listevelger__linje__knapp--leggtil {
     align-self: flex-start;
-    margin-top: .3em;
+    margin-top: 1.8em;
   }
 }

@@ -31,8 +31,8 @@ class Aktivitet extends Steg {
     this._id = STEG.SYSSELSETTING;
     this._tittel = 'Aktivitet';
     this._komponent = VurderingAktivitet;
-    this._samleRelevanteData = () => ({ });
-    this._beregnRelevantUI = () => {};
+    this._samleRelevanteData = () => ({});
+    this._beregnRelevantUI = () => ({});
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };

@@ -8,7 +8,7 @@ export function norskTilBool (value) {
 }
 
 export function boolTilStreng (value) {
-  if (value === undefined) { return undefined; }
+  if (value === undefined || value === null) { return undefined; }
   return value ? 'true' : 'false';
 }
 
