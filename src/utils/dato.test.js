@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilISO, formatterKortDatoTilNorsk } from './dato';
+import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilISO, formatterKortDatoTilNorsk, datoDiff } from './dato';
 
 import MockDate from 'mockdate';
 import moment from 'moment/moment'
@@ -170,6 +170,32 @@ describe('dato.js:', () => {
         expect(formattertDato).toEqual(datoTest.forvent);
       });
     });
+  });
+
+  describe('datodiff', () => {
+    test('tidligere dato diffet på kommende dato gir positivt tall', () => {
+      const dato1 = '2018-01-01';
+      const dato2 = '2018-05-05';
+      expect(datoDiff(dato1, dato2, 'days')).toBeGreaterThan(0);
+    })
+
+    test('kommende dato diffet på eldre dato gir negativt tall', () => {
+      const dato1 = '2018-01-01';
+      const dato2 = '2010-05-05';
+      expect(datoDiff(dato1, dato2, 'days')).toBeLessThan(0);
+    })
+
+    test('en dato diffet på datoen for neste dag gir 1', () => {
+      const dato1 = '2018-01-01';
+      const dato2 = '2018-01-02';
+      expect(datoDiff(dato1, dato2, 'days')).toBe(1);
+    })
+
+    test('dato i moment-format fungerer', () => {
+      const dato1 = '2018-08-01';
+      const dato2 = moment('2018-08-04', 'YYYY-MM-DD');
+      expect(datoDiff(dato1, dato2, 'days')).toBe(3);
+    })
   });
 
 });
