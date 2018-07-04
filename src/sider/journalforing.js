@@ -28,6 +28,8 @@ import {
 } from '../ducks/fagsaker';
 import { formSelectors } from '../ducks/form/';
 import './journalforing.css';
+import { OrganisasjonOperations } from '../ducks/organisasjon';
+import { PersonOperations } from '../ducks/person';
 
 class Journalforing extends Component {
   static propTypes = {
@@ -44,6 +46,8 @@ class Journalforing extends Component {
     journalforingSkjemaVerdier: PT.object,
     fagsakListe: PT.array,
     valid: PT.bool.isRequired,
+    sokFnrDnr: PT.func.isRequired,
+    sokOrgnr: PT.func.isRequired,
   };
 
   static defaultProps = {
@@ -55,10 +59,6 @@ class Journalforing extends Component {
   componentDidMount() {
     const { journalpostID } = this.props.match.params;
     this.props.hentJournalOppgave(journalpostID);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { brukerID } = nextProps.journalforingSkjemaVerdier;
   }
 
   /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
@@ -143,10 +143,39 @@ class Journalforing extends Component {
     });
   };
 
-  brukerBleFunnetCallback = fnr => {
-    console.log('brukerBleFunnetCallback', fnr)
-    this.props.hentFagsakListe(fnr);
-  }
+  /** Vi ønsker kun å gjøre et søk på brukerID dersom antall tegn matcher 11 (fnr og dnr).
+   * derfor, sjekk dette før vi evt kaller sokFnrDnr.
+   * @param brukerID {string} Verdien vi ønsker å sjekke på.
+   */
+  hentOgVisBruker = brukerID => {
+    if (brukerID.length !== Konstanter.ANTALL_TALL_I_FNR && brukerID.length !== Konstanter.ANTALL_TALL_I_DNR) { return; }
+
+    const { sokFnrDnr, settFeltInnhold } = this.props;
+
+    return sokFnrDnr(brukerID)
+      .then(({ sammensattNavn = '' }) => {
+        if (!sammensattNavn) { return false; }
+        settFeltInnhold('brukerNavn', sammensattNavn);
+        return { brukerID, sammensattNavn };
+      });
+  };
+
+  /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller 11 (fnr og dnr).
+   * Avsender kan nemlig være både person og organisasjon.
+   * Derfor, sjekk dette før vi evt kaller sokOrgnr eller sokFnrDnr.
+   * @param value {string} Verdien vi ønsker å sjekke på.
+   */
+  hentOgVisAvsender = value => {
+    const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
+
+    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+      return sokOrgnr(value).then(({ navn = '' }) => settFeltInnhold('avsenderNavn', navn));
+    }
+
+    if (value.length === Konstanter.ANTALL_TALL_I_FNR || value.length === Konstanter.ANTALL_TALL_I_DNR) {
+      return sokFnrDnr(value).then(({ sammensattNavn = '' }) => settFeltInnhold('avsenderNavn', sammensattNavn));
+    }
+  };
 
   /** Når saksbehandler klikker "opprett sak" skal det åpnes for validering av
    * relevante felter før ny sak opprettes (sendes til API) og saksbehandler returneres til forsiden.
@@ -215,7 +244,7 @@ class Journalforing extends Component {
     } = this.props;
 
     const {
-      knyttTilEksisterendeSak, opprettFagsak, brukerBleFunnetCallback,
+      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker,
     } = this;
 
     const { journalpostID } = this.props.match.params;
@@ -235,7 +264,12 @@ class Journalforing extends Component {
                 <Sticky>
                   <Nav.Panel className="journalforing__skjema">
                     <div className="journalforing__skjema__scroll">
-                      <Informasjon journalpostID={journalpostID} dokumentID={dokumentID} brukerBleFunnetCallback={brukerBleFunnetCallback} />
+                      <Informasjon
+                        journalpostID={journalpostID}
+                        dokumentID={dokumentID}
+                        hentOgVisAvsender={hentOgVisAvsender}
+                        hentOgVisBruker={hentOgVisBruker}
+                      />
                       <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                       <OpprettNyFagSak opprettFagsak={opprettFagsak} />
                       <div className="journalforing__fotknapper">
@@ -278,6 +312,8 @@ const mapDispatchToProps = dispatch => ({
   settJournalforingHensikt: journalforingHensikt => dispatch(change('journalforing', 'journalforingHensikt', journalforingHensikt)),
   opprettNySak: data => Api.Journalforing.opprett(data),
   tilordneSak: data => Api.Journalforing.tilordne(data),
+  sokFnrDnr: fnr => PersonOperations.hent(fnr),
+  sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
 });
 
 const kontekster = [
