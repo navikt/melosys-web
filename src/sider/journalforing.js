@@ -150,12 +150,13 @@ class Journalforing extends Component {
   hentOgVisBruker = brukerID => {
     if (brukerID.length !== Konstanter.ANTALL_TALL_I_FNR && brukerID.length !== Konstanter.ANTALL_TALL_I_DNR) { return; }
 
-    const { sokFnrDnr, settFeltInnhold } = this.props;
+    const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
 
     return sokFnrDnr(brukerID)
       .then(({ sammensattNavn = '' }) => {
         if (!sammensattNavn) { return false; }
         settFeltInnhold('brukerNavn', sammensattNavn);
+        hentFagsakListe(brukerID);
         return { brukerID, sammensattNavn };
       });
   };
