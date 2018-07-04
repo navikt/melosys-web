@@ -102,6 +102,11 @@ class Journalforing extends Component {
     // Ved å kalle funksjonen 'settBrukerSomAvsender' oppdaterer vi Redux Form som deretter vil oppdatere
     // store ved post.
     const { erBrukerAvsender } = nextProps.journalforingSkjemaVerdier;
+    const skalAvsenderResettes = this.props.journalforingSkjemaVerdier.erBrukerAvsender !== erBrukerAvsender;
+
+    if (skalAvsenderResettes) {
+      this.props.settBrukerSomAvsender('', '');
+    }
 
     if (erBrukerAvsender) {
       this.props.settBrukerSomAvsender(nyBrukerIDFraSkjema, nextProps.journalforingSkjemaVerdier.brukerNavn);
