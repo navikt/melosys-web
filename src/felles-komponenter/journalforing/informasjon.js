@@ -24,23 +24,31 @@ import './informasjon.css';
 class Informasjon extends Component {
   state = { spinner: {} };
 
-  componentWillReceiveProps(nextProps) {
-    const { brukerID: gammelBrukerID, avsenderID: gammelAvsenderID, erBrukerAvsender: gammelErBrukerAvsender } = this.props.journalforingSkjemaVerdier;
+  componentDidMount() {
+    this.oppdaterFelter(this.props, true);
+  }
+
+  componentDidUpdate(prevProps) {
+    this.oppdaterFelter(prevProps);
+  }
+
+  oppdaterFelter = (props, tvingOppdatering) => {
+    const { brukerID: gammelBrukerID, avsenderID: gammelAvsenderID, erBrukerAvsender: gammelErBrukerAvsender } = props.journalforingSkjemaVerdier;
     const {
       brukerID = '', avsenderID = '', erBrukerAvsender, brukerNavn,
-    } = nextProps.journalforingSkjemaVerdier;
+    } = this.props.journalforingSkjemaVerdier;
     const { hentOgVisBruker, hentOgVisAvsender } = this.props;
     const { kopierBrukerTilAvsender, tomAvsender } = this;
 
-    if ((gammelBrukerID !== brukerID)) {
+    if ((gammelBrukerID !== brukerID) || tvingOppdatering) {
       hentOgVisBruker(brukerID);
     }
 
-    if (gammelAvsenderID !== avsenderID) {
+    if ((gammelAvsenderID !== avsenderID) || tvingOppdatering) {
       hentOgVisAvsender(avsenderID);
     }
 
-    if ((gammelErBrukerAvsender !== erBrukerAvsender)) {
+    if ((gammelErBrukerAvsender !== erBrukerAvsender) || tvingOppdatering) {
       if (erBrukerAvsender) {
         kopierBrukerTilAvsender(brukerID, brukerNavn);
       } else {
