@@ -3,11 +3,10 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { reduxForm, autofill, setSubmitFailed, change } from 'redux-form';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
-import * as MPT from '../proptypes';
 import * as Konstanter from '../constants';
 import Sticky from '../hjelpekomponenter/sticky';
 
@@ -19,7 +18,6 @@ import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
 import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
-
 import {
   journalforingOperations,
   journalforingSelectors,
@@ -28,14 +26,7 @@ import {
   fagsakOperations,
   fagsakSelectors,
 } from '../ducks/fagsaker';
-
-import { KodeverkSelectors } from '../ducks/kodeverk/';
-
 import { formSelectors } from '../ducks/form/';
-
-import { PersonOperations } from '../ducks/person';
-import { OrganisasjonOperations } from '../ducks/organisasjon';
-
 import './journalforing.css';
 
 class Journalforing extends Component {
@@ -46,18 +37,12 @@ class Journalforing extends Component {
     hentFagsakListe: PT.func.isRequired,
     tilordneSak: PT.func.isRequired,
     opprettNySak: PT.func.isRequired,
-    sokFnrDnr: PT.func.isRequired,
-    sokOrgnr: PT.func.isRequired,
-    settAutofyllFelt: PT.func.isRequired,
     settFeltInnhold: PT.func.isRequired,
     settFeilFelt: PT.func.isRequired,
-    settBrukerSomAvsender: PT.func.isRequired,
     settJournalforingHensikt: PT.func.isRequired,
     journalforing: PT.object,
     journalforingSkjemaVerdier: PT.object,
     fagsakListe: PT.array,
-    valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
-    valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk).isRequired,
     valid: PT.bool.isRequired,
   };
 
@@ -72,94 +57,9 @@ class Journalforing extends Component {
     this.props.hentJournalOppgave(journalpostID);
   }
 
-  /** Logikken nedenfor trigges av 2 situasjoner. Enten fordi sok
-   * returnerte en ny ID (orgnr, fnr eller dnr) som det må gjøres oppslag på. Eller
-   * fordi saksbehandler tastet inn en ID (orgnr, fnr eller dnr).
-   * @param nextProps
-   */
   componentWillReceiveProps(nextProps) {
-    // For lesbarhet, gi alias til verdier som vil påvirke hvorvidt vi gjør nye kall til backend
-    // for å hente via  /api/personer/ eller /api/organisasjoner
-    const { brukerID: gammelBrukerIDFraStore, avsenderID: gammelAvsenderIDFraStore } = this.props.journalforing;
-    const { brukerID: gammelBrukerIDFraSkjema, avsenderID: gammelAvsenderIDFraSkjema } = this.props.journalforingSkjemaVerdier;
-    const { brukerID: nyBrukerIDFraStore, avsenderID: nyAvsenderIDFraStore } = nextProps.journalforing;
-    const { brukerID: nyBrukerIDFraSkjema, avsenderID: nyAvsenderIDFraSkjema } = nextProps.journalforingSkjemaVerdier;
-
-    // Sjekk om brukerID har endret seg enten i Store eller direkte i Redux Form.
-    if (gammelBrukerIDFraStore !== nyBrukerIDFraStore) {
-      this.hentBruker(nyBrukerIDFraStore);
-    } else if (gammelBrukerIDFraSkjema !== nyBrukerIDFraSkjema) {
-      this.hentBruker(nyBrukerIDFraSkjema);
-    }
-
-    // Sjekk om avsenderID har endret seg enten i Store eller direkte i Redux Form.
-    if (gammelAvsenderIDFraStore !== nyAvsenderIDFraStore) {
-      this.hentAvsender(nyAvsenderIDFraStore);
-    } else if (gammelAvsenderIDFraSkjema !== nyAvsenderIDFraSkjema) {
-      this.hentAvsender(nyAvsenderIDFraSkjema);
-    }
-
-    // Ved å kalle funksjonen 'settBrukerSomAvsender' oppdaterer vi Redux Form som deretter vil oppdatere
-    // store ved post.
-    const { erBrukerAvsender } = nextProps.journalforingSkjemaVerdier;
-    const skalAvsenderResettes = this.props.journalforingSkjemaVerdier.erBrukerAvsender !== erBrukerAvsender;
-
-    if (skalAvsenderResettes) {
-      this.props.settBrukerSomAvsender('', '');
-    }
-
-    if (erBrukerAvsender) {
-      this.props.settBrukerSomAvsender(nyBrukerIDFraSkjema, nextProps.journalforingSkjemaVerdier.brukerNavn);
-    }
-
-    if (gammelBrukerIDFraSkjema === nyBrukerIDFraSkjema) { return; }
-
-    // Hent fagsaker som er knyttet til brukeren, men bare dersom lengden matcher fnr eller dnr.
-    if (nyBrukerIDFraSkjema.length === Konstanter.ANTALL_TALL_I_DNR || nyBrukerIDFraSkjema.length === Konstanter.ANTALL_TALL_I_FNR) {
-      this.props.hentFagsakListe(nyBrukerIDFraSkjema);
-    }
+    const { brukerID } = nextProps.journalforingSkjemaVerdier;
   }
-
-  /** Vi ønsker kun å gjøre et søk på brukerID dersom antall tegn matcher 11 (fnr og dnr).
-   * derfor, sjekk dette før vi evt kaller sokFnrDnr.
-   * @param value {string} Verdien vi ønsker å sjekke på.
-   */
-  hentBruker = value => {
-    const { sokFnrDnr } = this.props;
-    const { preAutofyll } = this;
-
-    if (value.length !== Konstanter.ANTALL_TALL_I_FNR && value.length !== Konstanter.ANTALL_TALL_I_DNR) { return; }
-
-    sokFnrDnr(value).then(({ sammensattNavn = '' }) => preAutofyll('brukerID', 'brukerNavn', sammensattNavn));
-  };
-
-  /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller 11 (fnr og dnr).
-   * Avsender kan nemlig være både person og organisasjon.
-   * Derfor, sjekk dette før vi evt kaller sokOrgnr eller sokFnrDnr.
-   * @param value {string} Verdien vi ønsker å sjekke på.
-   */
-  hentAvsender = value => {
-    const { sokOrgnr, sokFnrDnr } = this.props;
-    const { preAutofyll } = this;
-    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
-      sokOrgnr(value).then(({ navn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', navn));
-    }
-
-    if (value.length === Konstanter.ANTALL_TALL_I_FNR || value.length === Konstanter.ANTALL_TALL_I_DNR) {
-      sokFnrDnr(value).then(({ sammensattNavn = '' }) => preAutofyll('avsenderID', 'avsenderNavn', sammensattNavn));
-    }
-  };
-
-  /** Mellomfunksjon som fyller ut treffet i brukerNavn eller avsenderNavn,
-   * uavhengig om faktisk verdi eller bare ''.
-   * @param opprinnelsesFelt {string} Det feltet som brukeren tastet inn (stort sett er dette ID-feltet)
-   * @param verdiFelt {string} Feltet som den funnene verdien skal settes inn i.
-   * @param verdi {string} Selve verdien som ble funnet.
-   */
-  preAutofyll = (opprinnelsesFelt, verdiFelt, verdi) => {
-    const { settAutofyllFelt } = this.props;
-    settAutofyllFelt(verdiFelt, verdi);
-  };
 
   /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
    * funksjoner. Allikevel trenger vi en default handler som Redux Form hekter på gjennom <form onsubmit="" .../>
@@ -243,6 +143,11 @@ class Journalforing extends Component {
     });
   };
 
+  brukerBleFunnetCallback = fnr => {
+    console.log('brukerBleFunnetCallback', fnr)
+    this.props.hentFagsakListe(fnr);
+  }
+
   /** Når saksbehandler klikker "opprett sak" skal det åpnes for validering av
    * relevante felter før ny sak opprettes (sendes til API) og saksbehandler returneres til forsiden.
    * @returns {boolean}
@@ -306,14 +211,11 @@ class Journalforing extends Component {
   render() {
     const {
       journalforing: { dokument = {} },
-      valgbareDokumentTitler,
-      valgbareVedleggsTitler,
-      journalforingSkjemaVerdier,
       fagsakListe,
     } = this.props;
 
     const {
-      knyttTilEksisterendeSak, opprettFagsak, hentAvsender, hentBruker,
+      knyttTilEksisterendeSak, opprettFagsak, brukerBleFunnetCallback,
     } = this;
 
     const { journalpostID } = this.props.match.params;
@@ -321,23 +223,19 @@ class Journalforing extends Component {
 
     return (
       <div className="journalforing">
-        <h1>Journalføring</h1>
         <Nav.Container fluid>
+          <Nav.Row>
+            <Nav.Column xs="4">
+              <h1>Journalføring</h1>
+            </Nav.Column>
+          </Nav.Row>
           <form onSubmit={this.overstyrSubmit}>
             <Nav.Row>
               <Nav.Column xs="4">
                 <Sticky>
                   <Nav.Panel className="journalforing__skjema">
                     <div className="journalforing__skjema__scroll">
-                      <Informasjon
-                        journalpostID={journalpostID}
-                        dokumentID={dokumentID}
-                        journalforingSkjemaVerdier={journalforingSkjemaVerdier}
-                        hentAvsender={hentAvsender}
-                        hentBruker={hentBruker}
-                        valgbareDokumentTitler={valgbareDokumentTitler}
-                        valgbareVedleggsTitler={valgbareVedleggsTitler}
-                      />
+                      <Informasjon journalpostID={journalpostID} dokumentID={dokumentID} brukerBleFunnetCallback={brukerBleFunnetCallback} />
                       <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                       <OpprettNyFagSak opprettFagsak={opprettFagsak} />
                       <div className="journalforing__fotknapper">
@@ -360,8 +258,6 @@ class Journalforing extends Component {
 
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
-  valgbareDokumentTitler: KodeverkSelectors.dokumenttitlerSelector(state),
-  valgbareVedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: fagsakSelectors.FagsakSokSelector(state),
   initialValues: {
@@ -377,16 +273,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
   hentFagsakListe: fnr => dispatch(fagsakOperations.sok(fnr)),
-  settAutofyllFelt: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
-  settFeltInnhold: (feltNavn, verdi) => dispatch(change('journalforing', feltNavn, verdi)),
-  settBrukerSomAvsender: (ID, navn) => {
-    dispatch(autofill('journalforing', 'avsenderID', ID));
-    dispatch(autofill('journalforing', 'avsenderNavn', navn));
-  },
   settJournalforingHensikt: journalforingHensikt => dispatch(change('journalforing', 'journalforingHensikt', journalforingHensikt)),
-  sokFnrDnr: fnr => PersonOperations.hent(fnr),
-  sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
   opprettNySak: data => Api.Journalforing.opprett(data),
   tilordneSak: data => Api.Journalforing.tilordne(data),
 });
