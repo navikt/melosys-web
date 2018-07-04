@@ -1,5 +1,5 @@
 import Aktivitet from './aktivitet';
-import Arbeidsforhold from './arbeidsforhold';
+import Arbeidsgivere from './arbeidsgivere';
 import Bostedsland from './bostedsland';
 import Forretningssted from './forretningssted';
 import IkkeYrkesaktiv from './ikke_yrkesaktiv';
@@ -17,7 +17,7 @@ import Vedtak from './vedtak';
 
 export {
   Aktivitet,
-  Arbeidsforhold,
+  Arbeidsgivere,
   Bostedsland,
   Forretningssted,
   IkkeYrkesaktiv,
