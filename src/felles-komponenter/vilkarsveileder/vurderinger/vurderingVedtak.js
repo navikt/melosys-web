@@ -69,7 +69,7 @@ const VurderingVedtak = props => {
     lovvalgbestemmelser,
     feilmeldinger,
     opphold,
-    valgteArbeidsforhold,
+    valgteArbeidsgivere,
     sysselsetting,
   } = props;
 
@@ -78,8 +78,8 @@ const VurderingVedtak = props => {
   const { sysselsettingType = '' } = sysselsetting;
 
   const antallManeder = datoDiff(periode.fom, periode.tom, 'months');
-  const arbeidsgivereForVedtaket = valgteArbeidsforhold
-    .reduce((collection, arbeidsforholdet) => [...collection, arbeidsforholdet.arbeidsgiver.navn], [])
+  const arbeidsgivereForVedtaket = valgteArbeidsgivere
+    .reduce((collection, arbeidsgiveren) => [...collection, arbeidsgiveren.navn], [])
     .join(', ');
 
   const venteskjermKlasser = classnames({ vedtak__venteskjerm: true, 'vedtak__venteskjerm--skjult': props.vurderingStatus !== 'PENDING' });
@@ -144,7 +144,7 @@ VurderingVedtak.propTypes = {
   vurderingStatus: PT.string.isRequired,
   feilmeldinger: MPT.Feilmeldinger.isRequired,
   opphold: MPT.Opphold.isRequired,
-  valgteArbeidsforhold: MPT.Arbeidsforholdene.isRequired,
+  valgteArbeidsgivere: MPT.Organisasjoner.isRequired,
   sysselsetting: MPT.Sysselsetting.isRequired,
 };
 
@@ -153,7 +153,7 @@ const mapStateToProps = state => ({
   feilmeldinger: vurderingSelectors.VurderingFeilmeldingSelector(state),
   vurderingStatus: vurderingSelectors.VurderingStatusSelector(state),
   opphold: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state),
-  valgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
+  valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereDetaljerSelector(state),
   sysselsetting: faktaavklaringSelectors.FaktaavklaringSysselsettingSelector(state),
 });
 

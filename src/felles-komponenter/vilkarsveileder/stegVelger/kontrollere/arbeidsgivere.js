@@ -1,6 +1,6 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingArbeidsforhold from '../../vurderinger/vurderingArbeidsforhold';
+import VurderingArbeidsgiver from '../../vurderinger/vurderingArbeidsgiver';
 
 class Sysselsetting extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -12,10 +12,10 @@ class Sysselsetting extends Steg {
         nesteSteg: STEG.SEKTOR,
       },
     ];
-    this._id = STEG.ARBEIDSFORHOLD;
+    this._id = STEG.ARBEIDSGIVERE;
     this._tittel = 'Arbeids\u00ADgiver';
-    this._komponent = VurderingArbeidsforhold;
-    this._samleRelevanteData = _propsLight => ({ relevanteArbeidsforholdene: _propsLight.relevanteArbeidsforholdene });
+    this._komponent = VurderingArbeidsgiver;
+    this._samleRelevanteData = _propsLight => ({ arbeidsgivereIPerioden: _propsLight.arbeidsgivereIPerioden });
     this._beregnRelevantUI = _propsLight => ({});
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
