@@ -11,12 +11,12 @@ import * as Konstanter from '../../constants';
 
 import * as Api from '../../services/api';
 
-import { PersonOperations, PersonSelectors } from '../../ducks/person';
-import { OrganisasjonOperations, OrganisasjonSelectors } from '../../ducks/organisasjon';
+import { PersonSelectors } from '../../ducks/person';
+import { OrganisasjonSelectors } from '../../ducks/organisasjon';
 import { formSelectors } from '../../ducks/form';
+import { KodeverkSelectors } from '../../ducks/kodeverk';
 
 import './informasjon.css';
-import { KodeverkSelectors } from '../../ducks/kodeverk'
 
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
  * slik som informasjon om bruker, informasjon om dokument etc.
@@ -26,21 +26,25 @@ class Informasjon extends Component {
 
   componentWillReceiveProps(nextProps) {
     const { brukerID: gammelBrukerID, avsenderID: gammelAvsenderID, erBrukerAvsender: gammelErBrukerAvsender } = this.props.journalforingSkjemaVerdier;
-    const { brukerID = '', avsenderID = '', erBrukerAvsender, brukerNavn } = nextProps.journalforingSkjemaVerdier;
+    const {
+      brukerID = '', avsenderID = '', erBrukerAvsender, brukerNavn,
+    } = nextProps.journalforingSkjemaVerdier;
+    const { hentOgVisBruker, hentOgVisAvsender } = this.props;
+    const { kopierBrukerTilAvsender, tomAvsender } = this;
 
     if ((gammelBrukerID !== brukerID)) {
-      this.hentOgVisBruker(brukerID);
+      hentOgVisBruker(brukerID);
     }
 
     if (gammelAvsenderID !== avsenderID) {
-      this.hentOgVisAvsender(avsenderID);
+      hentOgVisAvsender(avsenderID);
     }
 
     if ((gammelErBrukerAvsender !== erBrukerAvsender)) {
       if (erBrukerAvsender) {
-        this.kopierBrukerTilAvsender(brukerID, brukerNavn);
+        kopierBrukerTilAvsender(brukerID, brukerNavn);
       } else {
-        this.tomAvsender();
+        tomAvsender();
       }
     }
   }
@@ -51,29 +55,6 @@ class Informasjon extends Component {
     verdi.length === Konstanter.ANTALL_TALL_I_ORGNR ||
     verdi.length === Konstanter.ANTALL_TALL_I_DNR || verdi.length === Konstanter.ANTALL_TALL_I_FNR
   );
-
-  /** Vi ønsker kun å gjøre et søk på brukerID dersom antall tegn matcher 11 (fnr og dnr).
-   * derfor, sjekk dette før vi evt kaller sokFnrDnr.
-   * @param brukerID {string} Verdien vi ønsker å sjekke på.
-   */
-  hentOgVisBruker = brukerID => {
-    if (brukerID.length !== Konstanter.ANTALL_TALL_I_FNR && brukerID.length !== Konstanter.ANTALL_TALL_I_DNR) { return; }
-
-    const { sokFnrDnr, settFeltInnhold, brukerBleFunnetCallback } = this.props;
-    const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
-    const { kopierBrukerTilAvsender } = this;
-
-    this.toggleSpinner('brukerNavn');
-    sokFnrDnr(brukerID)
-      .then(({ sammensattNavn = '' }) => {
-        if (!sammensattNavn) { return; }
-        brukerBleFunnetCallback(brukerID);
-        settFeltInnhold('brukerNavn', sammensattNavn);
-        if (erBrukerAvsender) {
-          kopierBrukerTilAvsender(brukerID, sammensattNavn);
-        }
-      });
-  };
 
   kopierBrukerTilAvsender = (
     brukerID = this.props.journalforingSkjemaVerdier.brukerID,
@@ -90,32 +71,18 @@ class Informasjon extends Component {
     settFeltInnhold('avsenderNavn', '');
   }
 
-  /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller 11 (fnr og dnr).
-   * Avsender kan nemlig være både person og organisasjon.
-   * Derfor, sjekk dette før vi evt kaller sokOrgnr eller sokFnrDnr.
-   * @param value {string} Verdien vi ønsker å sjekke på.
-   */
-  hentOgVisAvsender = value => {
-    const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
-
-    this.toggleSpinner('avsenderNavn');
-
-    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
-      sokOrgnr(value).then(({ navn = '' }) => settFeltInnhold('avsenderNavn', navn));
-    }
-
-    if (value.length === Konstanter.ANTALL_TALL_I_FNR || value.length === Konstanter.ANTALL_TALL_I_DNR) {
-      sokFnrDnr(value).then(({ sammensattNavn = '' }) => settFeltInnhold('avsenderNavn', sammensattNavn));
-    }
-  };
-
   sjekkBruker = verdi => {
-    const { erGyldigBrukerID, hentOgVisBruker, tomAvsender } = this;
-    const { settFeltInnhold } = this.props;
+    const { erGyldigBrukerID, tomAvsender, kopierBrukerTilAvsender } = this;
+    const { settFeltInnhold, hentOgVisBruker } = this.props;
     const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
 
     if (erGyldigBrukerID(verdi)) {
-      hentOgVisBruker(verdi);
+      this.toggleSpinner('avsenderNavn');
+      hentOgVisBruker(verdi).then(response => {
+        if (!response) return;
+        const { brukerID, sammensattNavn } = response;
+        if (erBrukerAvsender) { kopierBrukerTilAvsender(brukerID, sammensattNavn); }
+      });
     } else {
       settFeltInnhold('brukerNavn', '');
       if (erBrukerAvsender) { tomAvsender(); }
@@ -123,10 +90,11 @@ class Informasjon extends Component {
   }
 
   sjekkAvsender = verdi => {
-    const { erGyldigAvsenderID, hentOgVisAvsender } = this;
-    const { settFeltInnhold } = this.props;
+    const { erGyldigAvsenderID } = this;
+    const { settFeltInnhold, hentOgVisAvsender } = this.props;
 
     if (erGyldigAvsenderID(verdi)) {
+      this.toggleSpinner('avsenderNavn');
       hentOgVisAvsender(verdi);
     } else {
       settFeltInnhold('avsenderNavn', '');
@@ -139,11 +107,6 @@ class Informasjon extends Component {
     if (opprinneligFeltID === 'brukerID') { this.sjekkBruker(value); }
     if (opprinneligFeltID === 'avsenderID') { this.sjekkAvsender(value); }
   };
-
-  erBrukerAvsenderHandler = event => {
-    console.log(event.target.value);
-  }
-
 
   /** Toggle spinneren av og på. Når spinner skjules, sett en timeout på 500ms.
    * Dette sikrer at spinneren ikke bare flasher dersom kallet til API går raskt. Dataene vises.
@@ -179,7 +142,7 @@ class Informasjon extends Component {
       valgbareDokumentTitler, valgbareVedleggsTitler, journalpostID, dokumentID,
     } = this.props;
     const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
-    const { skalFeltetDisables, erBrukerAvsenderHandler } = this;
+    const { skalFeltetDisables } = this;
 
     const dokumentURI = Api.Dokumenter.pdfURI(journalpostID, dokumentID);
 
@@ -191,7 +154,7 @@ class Informasjon extends Component {
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
-          <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" onClick={erBrukerAvsenderHandler} />
+          <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
           <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsenderID')} onKeyUp={this.IDFeltTastOppHandler} />
           <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsenderNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
@@ -221,11 +184,10 @@ Informasjon.propTypes = {
   valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk),
   valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk),
   journalforingSkjemaVerdier: PT.object, // TODO: Vurdere MPT.
-  brukerBleFunnetCallback: PT.func.isRequired,
+  hentOgVisBruker: PT.func.isRequired,
+  hentOgVisAvsender: PT.func.isRequired,
   journalpostID: PT.string,
   dokumentID: PT.string,
-  sokFnrDnr: PT.func.isRequired,
-  sokOrgnr: PT.func.isRequired,
   settFeltInnhold: PT.func.isRequired,
 };
 
@@ -246,8 +208,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sokFnrDnr: fnr => PersonOperations.hent(fnr),
-  sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
   settFeltInnhold: (feltNavn, verdi) => dispatch(change('journalforing', feltNavn, verdi)),
 });
 
