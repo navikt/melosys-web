@@ -245,7 +245,7 @@ const mapStateToProps = state => ({
     ektefelleEllerBarnINorge: (soknadSelectors.OppholdUtlandSelector(state).harEktefelleEllerBarnINorge),
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
-    erSelvstendig: (soknadSelectors.SelvstendigArbeidSelector(state).erSelvstendig),
+    erSelvstendig: soknadSelectors.SelvstendigArbeidSelector(state).erSelvstendig,
     selvstendigForetak: soknadSelectors.SelvstendigArbeidSelector(state).selvstendigForetak,
     studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,
     intensjonOmRetur: (soknadSelectors.BostedSelector(state).intensjonOmRetur),
@@ -307,8 +307,9 @@ const SaksbehandlingForm = reduxForm({
   form: 'soknad',
   enableReinitialize: true,
   destroyOnUnmount: false,
+  keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  fields: PanelFelter.alleFeltNavn(PanelFelter.feltGrupper),
+  fieldList: PanelFelter.alleFeltNavn(PanelFelter.feltGrupper),
   validate: (values, props) => Validering.Felles.byggValidering(values, props),
 })(Saksbehandling);
 

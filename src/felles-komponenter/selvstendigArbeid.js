@@ -13,7 +13,7 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import './selvstendigArbeid.css';
 
 const EnkeltForetak = props => {
-  const { nummer, foretaket } = props;
+  const { nummer, foretaket, slettForetak } = props;
 
   return (
     <div className="enkeltForetak">
@@ -32,7 +32,7 @@ const EnkeltForetak = props => {
             </label>
           </Nav.Column>
           <Nav.Column xs="3">
-            <Nav.Knapp mini>Fjern</Nav.Knapp>
+            <Nav.Knapp mini onClick={slettForetak}>Fjern</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </Nav.Fieldset>
@@ -43,6 +43,7 @@ const EnkeltForetak = props => {
 EnkeltForetak.propTypes = {
   nummer: PT.number.isRequired,
   foretaket: PT.string.isRequired,
+  slettForetak: PT.func.isRequired,
 };
 
 const SelvstendigeForetak = props => {
@@ -50,11 +51,11 @@ const SelvstendigeForetak = props => {
 
   return (
     <div>
-      {fields.map((foretaket, index) => <EnkeltForetak key={foretaket} foretaket={foretaket} nummer={index + 1} />)}
+      {fields.map((foretaket, index) => <EnkeltForetak key={foretaket} foretaket={foretaket} nummer={index + 1} slettForetak={() => fields.remove(index)} />)}
       <div className="leggTilForetak">
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Knapp mini>Legg til nytt foretak</Nav.Knapp>
+            <Nav.Knapp mini onClick={() => fields.push({})}>Legg til nytt foretak</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </div>
