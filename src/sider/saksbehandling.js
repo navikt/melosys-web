@@ -18,6 +18,7 @@ import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
 import OppholdUtland from '../felles-komponenter/oppholdUtland';
 import Inntekt from '../felles-komponenter/inntektUtland';
 import Bosted from '../felles-komponenter/bosted';
+import MaritimtArbeid from '../felles-komponenter/maritimtArbeid';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
@@ -166,6 +167,8 @@ class Saksbehandling extends Component {
       soknadArbeidsinntekt,
     } = this.props;
 
+    const { values: soknadVerdier = {} } = soknadForm;
+
     if (!person || !person.fnr) {
       return null;
     }
@@ -184,6 +187,7 @@ class Saksbehandling extends Component {
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
                 <ArbeidsgiverUtland />
+                <MaritimtArbeid soknadVerdier={soknadVerdier} />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
                 {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
@@ -245,6 +249,11 @@ const mapStateToProps = state => ({
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: boolTilStreng(soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV),
     adresseIUtlandet: boolTilStreng(soknadSelectors.BostedSelector(state).adresseIUtlandet),
+    maritimType: soknadSelectors.MaritimtArbeidSelector(state).maritimType,
+    skipsNavn: soknadSelectors.MaritimtArbeidSelector(state).skipsNavn,
+    fartsomrade: soknadSelectors.MaritimtArbeidSelector(state).fartsomrade,
+    flaggLand: soknadSelectors.MaritimtArbeidSelector(state).flaggLand,
+    installasjonsLand: soknadSelectors.MaritimtArbeidSelector(state).installasjonsLand,
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: soknadSelectors.ArbeidNorgeSelector(state).fullmektigFirma,
