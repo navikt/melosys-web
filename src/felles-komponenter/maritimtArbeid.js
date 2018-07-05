@@ -17,18 +17,21 @@ const MaritimtArbeidTyper = {
 };
 
 const MaritimtArbeid = props => {
-  const panelIkon = Ikoner.Ferdig;
   const { maritimType } = props.soknadVerdier;
+  const panelErRelevant = maritimType !== MaritimtArbeidTyper.INGEN;
+
+  const panelIkon = panelErRelevant ? Ikoner.Ferdig : Ikoner.Ubehandlet;
+
   const detaljer = maritimType !== MaritimtArbeidTyper.INGEN ?
     <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input feltNavn="skipsNavn" label="Skipsnavn" />
-          <Skjema.Input feltNavn="fartsomrade" label="Fartsomrade" />
+          <Skjema.Input feltNavn="skipsNavn" label="Navn på fartøyet:" />
+          <Skjema.Input feltNavn="fartsomrade" label="Fartsomrade:" />
         </Nav.Column>
         <Nav.Column xs="6">
-          <LandVelger feltNavn="flaggLand" label="Flaggland" />
-          <LandVelger feltNavn="installasjonsLand" label="Installasjonsnavn" />
+          <LandVelger feltNavn="flaggLand" label="Flaggland:" />
+          <LandVelger feltNavn="installasjonsLand" label="Installasjonsland:" />
         </Nav.Column>
       </Nav.Row>
     </Nav.Fieldset> : null;

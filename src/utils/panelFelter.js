@@ -9,7 +9,6 @@ export const feltGrupper = {
     inntektNaeringIPerioden: [],
   },
   oppholdUtland: {
-    studentIEOS: '',
     studentSemester: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
     studieLand: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
     studentFinansiering: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
@@ -21,11 +20,6 @@ export const feltGrupper = {
     arbeidsforholdVikarNavn: [],
     vikarOrgnr: [],
     flyendePersonellHjemmebase: [],
-    ansattPaSokkelEllerSkip: [],
-    navnSkipEllerSokkel: [],
-    sokkelLand: [],
-    skipFartsomrade: [],
-    skipFlaggLand: [],
     kontaktNavn: [],
     kontaktEpost: [],
     fullmektigFirma: [],
@@ -44,6 +38,13 @@ export const feltGrupper = {
     arbeidsgiverBetalerArbeidsgiveravgift: [value => Skjema.Validering.erPakrevet(value)],
     trygdeavgiftTrukketGjennomSkatt: [value => Skjema.Validering.erPakrevet(value)],
     trygdeavgiftTrukketGjennomSkattDato: [value => Skjema.Validering.erPakrevet(value), value => Skjema.Validering.erDato(value)],
+  },
+  maritimtArbeid: {
+    maritimType: [],
+    skipsNavn: [],
+    fartsomrade: [],
+    flaggLand: [],
+    installasjonsLand: [],
   },
   faktaavklaring: {
     faktaavklaringOppholdsLand: [],
