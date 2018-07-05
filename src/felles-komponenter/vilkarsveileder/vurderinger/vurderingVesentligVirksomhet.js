@@ -4,10 +4,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../skjema';
 
-export const VurderingVesentligVirksomhetTyper = {
-  TRUE: 'true',
-  FALSE: 'false',
-};
+import { BOOLSK } from '../../../constants';
 
 const VurderingVesentligVirksomhet = props => {
   const { bekreftOgFortsett, begrunnelser } = props;
@@ -19,8 +16,8 @@ const VurderingVesentligVirksomhet = props => {
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend="Virksomheten har:">
-              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={VurderingVesentligVirksomhetTyper.TRUE} label="Vesentlig virksomhet" />
-              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={VurderingVesentligVirksomhetTyper.FALSE} label="Ikke vesentlig virksomhet" />
+              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
+              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>

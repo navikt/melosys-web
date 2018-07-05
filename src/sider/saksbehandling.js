@@ -9,20 +9,21 @@ import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
-import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
-import Personopplysninger from '../felles-komponenter/personopplysninger';
-import Medlemskap from '../felles-komponenter/medlemskap';
 import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
-import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
-import OppholdUtland from '../felles-komponenter/oppholdUtland';
-import Inntekt from '../felles-komponenter/inntektUtland';
-import Bosted from '../felles-komponenter/bosted';
-import MaritimtArbeid from '../felles-komponenter/maritimtArbeid';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
-import SideOppsummering from '../felles-komponenter/sideOppsummering';
+import Bosted from '../felles-komponenter/bosted';
+import Inntekt from '../felles-komponenter/inntektUtland';
+import Medlemskap from '../felles-komponenter/medlemskap';
+import OppholdUtland from '../felles-komponenter/oppholdUtland';
+import Personopplysninger from '../felles-komponenter/personopplysninger';
+import MaritimtArbeid from '../felles-komponenter/maritimtArbeid';
+import SelvstendigArbeid from '../felles-komponenter/selvstendigArbeid';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
+import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
+import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
+import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
 
 import {
   fagsakOperations,
@@ -46,7 +47,6 @@ import {
   vurderingSelectors,
 } from '../ducks/vurdering/';
 
-import { boolTilStreng } from '../utils/streng';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import { formSelectors } from '../ducks/form/';
@@ -183,6 +183,7 @@ class Saksbehandling extends Component {
                 <Vilkarsveileder
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
+                <SelvstendigArbeid soknadVerdier={soknadVerdier} />
                 {person && <Personopplysninger person={person} />}
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
@@ -229,27 +230,29 @@ const mapStateToProps = state => ({
     inntektNorskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
     inntektNaeringIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNaeringIPerioden,
-    arbeidsgiverBekrefterUtsendelse: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBekrefterUtsendelse),
-    arbeidstakerAnsattUnderUtsendelsen: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerAnsattUnderUtsendelsen),
-    erstatterArbeidstakerenUtsendte: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).erstatterArbeidstakerenUtsendte),
-    arbeidstakerTidligereUtsendt24Mnd: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd),
-    arbeidsgiverBetalerArbeidsgiveravgift: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift),
-    trygdeavgiftTrukketGjennomSkatt: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
+    arbeidsgiverBekrefterUtsendelse: (soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBekrefterUtsendelse),
+    arbeidstakerAnsattUnderUtsendelsen: (soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerAnsattUnderUtsendelsen),
+    erstatterArbeidstakerenUtsendte: (soknadSelectors.ArbeidsgiversBekreftelseSelector(state).erstatterArbeidstakerenUtsendte),
+    arbeidstakerTidligereUtsendt24Mnd: (soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd),
+    arbeidsgiverBetalerArbeidsgiveravgift: (soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift),
+    trygdeavgiftTrukketGjennomSkatt: (soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
     trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: soknadSelectors.OppholdUtlandSelector(state).oppholdsland,
-    forutgaendeBostedINorge: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge),
-    sammeAdresseSomArbeidsgiver: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver),
-    ektefelleEllerBarnINorge: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).harEktefelleEllerBarnINorge),
+    forutgaendeBostedINorge: (soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge),
+    sammeAdresseSomArbeidsgiver: (soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver),
+    ektefelleEllerBarnINorge: (soknadSelectors.OppholdUtlandSelector(state).harEktefelleEllerBarnINorge),
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
+    erSelvstendig: (soknadSelectors.SelvstendigArbeidSelector(state).erSelvstendig),
+    selvstendigForetak: soknadSelectors.SelvstendigArbeidSelector(state).selvstendigForetak,
     studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,
-    intensjonOmRetur: boolTilStreng(soknadSelectors.BostedSelector(state).intensjonOmRetur),
+    intensjonOmRetur: (soknadSelectors.BostedSelector(state).intensjonOmRetur),
     familiesBosted: soknadSelectors.BostedSelector(state).familiesBosted,
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
-    EOSBarnetrygdFraNAV: boolTilStreng(soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV),
-    adresseIUtlandet: boolTilStreng(soknadSelectors.BostedSelector(state).adresseIUtlandet),
+    EOSBarnetrygdFraNAV: (soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV),
+    adresseIUtlandet: (soknadSelectors.BostedSelector(state).adresseIUtlandet),
     maritimType: soknadSelectors.MaritimtArbeidSelector(state).maritimType,
     skipsNavn: soknadSelectors.MaritimtArbeidSelector(state).skipsNavn,
     fartsomrade: soknadSelectors.MaritimtArbeidSelector(state).fartsomrade,
@@ -281,7 +284,7 @@ const mapStateToProps = state => ({
     faktaavklaringBostedsland: faktaavklaringSelectors.FaktaavklaringBostedSelector(state).land,
     faktaavklaringTjenestemann: faktaavklaringSelectors.FaktaavklaringTjenestemannSelector(state).tjenestemann,
     faktaavklaringValgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
-    faktaavklaringVesentligVirksomhetINorge: boolTilStreng(faktaavklaringSelectors.FaktaavklaringVesentligVirksomhetSelector(state).vesentligVirksomhetINorge),
+    faktaavklaringVesentligVirksomhetINorge: (faktaavklaringSelectors.FaktaavklaringVesentligVirksomhetSelector(state).vesentligVirksomhetINorge),
     faktaavklaringVesentligVirksomhetBegrunnelser: faktaavklaringSelectors.FaktaavklaringVesentligVirksomhetSelector(state).vesentligVirksomhetBegrunnelser,
     faktaavklaringForretningsstedLand: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).land,
     faktaavklaringForretningsstedAntallArbeidsgivere: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).antallArbeidsgivere,

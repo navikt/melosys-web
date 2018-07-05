@@ -2,7 +2,7 @@ import { STATUS } from '../../services/utils';
 
 import * as Types from './types';
 
-import { strengTilBool, strengTilInt } from '../../utils/streng';
+import { strengTilInt } from '../../utils/streng';
 import { formatterDatoTilISO } from '../../utils/dato';
 
 /**
@@ -126,12 +126,12 @@ export default function reducer(state = initialState, action) {
         },
         arbeidsgiversBekreftelse: {
           ...state.data.soknadDokument.arbeidsgiversBekreftelse,
-          arbeidsgiverBekrefterUtsendelse: strengTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
-          arbeidstakerAnsattUnderUtsendelsen: strengTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
-          erstatterArbeidstakerenUtsendte: strengTilBool(dokument.erstatterArbeidstakerenUtsendte),
-          arbeidstakerTidligereUtsendt24Mnd: strengTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
-          arbeidsgiverBetalerArbeidsgiveravgift: strengTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
-          trygdeavgiftTrukketGjennomSkatt: strengTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
+          arbeidsgiverBekrefterUtsendelse: (dokument.arbeidsgiverBekrefterUtsendelse),
+          arbeidstakerAnsattUnderUtsendelsen: (dokument.arbeidstakerAnsattUnderUtsendelsen),
+          erstatterArbeidstakerenUtsendte: (dokument.erstatterArbeidstakerenUtsendte),
+          arbeidstakerTidligereUtsendt24Mnd: (dokument.arbeidstakerTidligereUtsendt24Mnd),
+          arbeidsgiverBetalerArbeidsgiveravgift: (dokument.arbeidsgiverBetalerArbeidsgiveravgift),
+          trygdeavgiftTrukketGjennomSkatt: (dokument.trygdeavgiftTrukketGjennomSkatt),
           trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato),
         },
         oppholdUtland: {
@@ -142,11 +142,11 @@ export default function reducer(state = initialState, action) {
             fom: formatterDatoTilISO(dokument.faktaavklaringPeriodeFraOgMed),
             tom: formatterDatoTilISO(dokument.faktaavklaringPeriodeTilOgMed),
           },
-          sammeAdresseSomArbeidsgiver: strengTilBool(dokument.sammeAdresseSomArbeidsgiver),
-          ektefelleEllerBarnINorge: strengTilBool(dokument.harEktefelleEllerBarnINorge),
-          forutgaendeBostedINorge: strengTilBool(dokument.harForutgaendeBostedINorge),
-          EOSBarnetrygdFraNAV: strengTilBool(dokument.EOSBarnetrygdFraNAV),
-          adresseIUtlandet: strengTilBool(dokument.adresseIUtlandet),
+          sammeAdresseSomArbeidsgiver: (dokument.sammeAdresseSomArbeidsgiver),
+          ektefelleEllerBarnINorge: (dokument.harEktefelleEllerBarnINorge),
+          forutgaendeBostedINorge: (dokument.harForutgaendeBostedINorge),
+          EOSBarnetrygdFraNAV: (dokument.EOSBarnetrygdFraNAV),
+          adresseIUtlandet: (dokument.adresseIUtlandet),
           studentSemester: dokument.studentSemester,
           studieLand: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,

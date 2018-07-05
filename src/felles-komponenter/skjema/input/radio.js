@@ -49,6 +49,12 @@ InnerInputComponent.propTypes = {
   forhandsvalgt: PT.bool,
 };
 
+const normaliserValg = valg => {
+  if (valg === 'true') { return true; }
+  if (valg === 'false') { return false; }
+  return valg;
+};
+
 function Radio({
   id, feltNavn, className, ...rest
 }) {
@@ -59,6 +65,7 @@ function Radio({
       className={className}
       id={id}
       customComponent={<InnerInputComponent {...rest} />}
+      normalize={normaliserValg}
     />
   );
 }
