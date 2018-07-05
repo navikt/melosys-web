@@ -165,6 +165,7 @@ class Saksbehandling extends Component {
       bekreftelser,
       oppsummering,
       soknadArbeidsinntekt,
+      soknadForm,
     } = this.props;
 
     const { values: soknadVerdier = {} } = soknadForm;
