@@ -77,15 +77,13 @@ class Felles {
    * spesiell validering.
    */
   static flettOgFilterValidering = (generiskValidering, forretningsValidering = {}) => {
-    const samletValidering = { ...generiskValidering };
-    const filtrertValidering = Object.keys(forretningsValidering).reduce((samling, feltNavn) => {
-      const valideringsTekst = samletValidering[feltNavn]
-        ?
-        `${samletValidering[feltNavn]} ${forretningsValidering[feltNavn]}`
-        :
-        `${forretningsValidering[feltNavn]}`;
+    const dummyFletting = { ...generiskValidering, ...forretningsValidering };
+    const filtrertValidering = Object.keys(dummyFletting).reduce((samling, feltNavn) => {
+      const generiskTekst = generiskValidering[feltNavn] || '';
+      const forretningsTekst = forretningsValidering[feltNavn] || '';
+      const samletValideringstekst = `${generiskTekst} ${forretningsTekst}`.trim();
 
-      return valideringsTekst !== '' ? { ...samling, [feltNavn]: valideringsTekst } : { ...samling };
+      return samletValideringstekst !== '' ? { ...samling, [feltNavn]: samletValideringstekst } : { ...samling };
     }, {});
 
     return filtrertValidering;
@@ -100,8 +98,8 @@ class Felles {
     const { forretningsValidering } = props;
     const generiskValideringFunksjoner = Felles.flatUtFeltGrupper(feltGrupper);
     const generiskValidering = Felles.kjorAlleValideringerSomHarFunksjoner(generiskValideringFunksjoner, values, props);
-
-    return Felles.flettOgFilterValidering(generiskValidering, forretningsValidering);
+    const validering = Felles.flettOgFilterValidering(generiskValidering, forretningsValidering);
+    return validering;
   };
 
   /** Traverser alle feil som finnes i skjemaet (på grunnlag av validering) og mål opp mot kjente

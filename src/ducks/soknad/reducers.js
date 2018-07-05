@@ -151,6 +151,14 @@ export default function reducer(state = initialState, action) {
           studieLand: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,
         },
+        maritimtArbeid: {
+          ...state.data.soknadDokument.maritimtArbeid,
+          maritimType: dokument.maritimType,
+          skipsNavn: dokument.skipsNavn,
+          fartsomrade: dokument.fartsomrade,
+          flaggLand: dokument.flaggLand,
+          installasjonsLand: dokument.installasjonsLand,
+        },
       };
 
       return { ...state, data: { ...state.data, soknadDokument: soknad } };
