@@ -11,7 +11,6 @@ import * as MPT from '../proptypes/';
 
 import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
-import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
 import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
@@ -191,7 +190,6 @@ class Saksbehandling extends Component {
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
                 {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
-                <Tilleggsopplysninger />
               </form>
             </Nav.Column>
             <Nav.Column xs="5">
