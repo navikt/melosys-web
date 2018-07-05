@@ -87,7 +87,6 @@ const soknadTemplate =
       trygdeavgiftTrukketGjennomSkatt: undefined,
       trygdeavgiftTrukketGjennomSkattDato: undefined,
     },
-    tilleggsopplysninger: undefined,
   };
 
 
