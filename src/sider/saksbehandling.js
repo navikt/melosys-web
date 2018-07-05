@@ -11,7 +11,6 @@ import * as MPT from '../proptypes/';
 
 import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
-import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
 import Medlemskap from '../felles-komponenter/medlemskap';
 import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
@@ -166,7 +165,6 @@ class Saksbehandling extends Component {
       bekreftelser,
       oppsummering,
       soknadArbeidsinntekt,
-      soknadOppholdUtland,
       soknadForm,
     } = this.props;
 
@@ -189,13 +187,12 @@ class Saksbehandling extends Component {
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
-                <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
                 <MaritimtArbeid soknadVerdier={soknadVerdier} />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
                 {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
-                <Tilleggsopplysninger />
+                <OppholdUtland />
               </form>
             </Nav.Column>
             <Nav.Column xs="5">
@@ -227,7 +224,6 @@ const mapStateToProps = state => ({
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
-  soknadOppholdUtland: soknadSelectors.OppholdUtlandSelector(state),
   soknadArbeidNorge: soknadSelectors.ArbeidNorgeSelector(state),
   initialValues: {
     inntektNorskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
