@@ -164,8 +164,6 @@ class Saksbehandling extends Component {
       bekreftelser,
       oppsummering,
       soknadArbeidsinntekt,
-      soknadOppholdUtland,
-      soknadForm,
     } = this.props;
 
     if (!person || !person.fnr) {
@@ -185,11 +183,11 @@ class Saksbehandling extends Component {
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <UtsendendeArbeidsgiver />
-                <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
                 <ArbeidsgiverUtland />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
                 {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
+                <OppholdUtland />
               </form>
             </Nav.Column>
             <Nav.Column xs="5">
@@ -221,7 +219,6 @@ const mapStateToProps = state => ({
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
-  soknadOppholdUtland: soknadSelectors.OppholdUtlandSelector(state),
   soknadArbeidNorge: soknadSelectors.ArbeidNorgeSelector(state),
   initialValues: {
     inntektNorskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
