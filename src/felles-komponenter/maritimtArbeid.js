@@ -1,7 +1,7 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 import LandVelger from './skjema/landvelger';
@@ -10,8 +10,28 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './maritimtArbeid.css';
 
-function MaritimtArbeid () {
+const MaritimtArbeidTyper = {
+  SKIP: 'SKIP',
+  SOKKEL: 'SOKKEL',
+  INGEN: 'INGEN',
+};
+
+const MaritimtArbeid = props => {
   const panelIkon = Ikoner.Ferdig;
+  const { maritimType } = props.soknadVerdier;
+  const detaljer = maritimType !== MaritimtArbeidTyper.INGEN ?
+    <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Skjema.Input feltNavn="skipsNavn" label="Skipsnavn" />
+          <Skjema.Input feltNavn="fartsomrade" label="Fartsomrade" />
+        </Nav.Column>
+        <Nav.Column xs="6">
+          <LandVelger feltNavn="flaggLand" label="Flaggland" />
+          <LandVelger feltNavn="installasjonsLand" label="Installasjonsnavn" />
+        </Nav.Column>
+      </Nav.Row>
+    </Nav.Fieldset> : null;
 
   return (
     <div className="maritimtArbeid panelSeksjon">
@@ -21,37 +41,26 @@ function MaritimtArbeid () {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.RadioGruppe label="Oppgir søker at han eller hun jobber på:">
-                <Skjema.Radio feltNavn="maritimType" value="SKIP" label="Skip" />
-                <Skjema.Radio feltNavn="maritimType" value="SOKKEL" label="Sokkel" />
-                <Skjema.Radio feltNavn="maritimType" value="INGEN" label="Ikke relevant" />
+              <Skjema.RadioGruppe feltNavn="maritimType" label="Oppgir søker at han eller hun jobber på:">
+                <Skjema.Radio feltNavn="maritimType" value={MaritimtArbeidTyper.SKIP} label="Skip" />
+                <Skjema.Radio feltNavn="maritimType" value={MaritimtArbeidTyper.SOKKEL} label="Sokkel" />
+                <Skjema.Radio feltNavn="maritimType" value={MaritimtArbeidTyper.INGEN} label="Ikke relevant" />
               </Skjema.RadioGruppe>
             </Nav.Column>
           </Nav.Row>
-          <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
-            <Nav.Row>
-              <Nav.Column xs="6">
-                <Skjema.Input feltNavn="skipsNavn" label="Skipsnavn" />
-                <Skjema.Input feltNavn="fartsomrade" label="Fartsomrade" />
-              </Nav.Column>
-              <Nav.Column xs="6">
-                <LandVelger feltNavn="flaggLand" label="Flaggland" />
-                <LandVelger feltNavn="installasjonsLand" label="Installasjonsnavn" />
-              </Nav.Column>
-            </Nav.Row>
-          </Nav.Fieldset>
+          { detaljer }
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>
   );
-}
+};
 
 MaritimtArbeid.propTypes = {
-  soknadForm: MPT.SoknadForm,
+  soknadVerdier: PT.object,
 };
 
 MaritimtArbeid.defaultProps = {
-  soknadForm: {},
+  soknadVerdier: {},
 };
 
 export default MaritimtArbeid;
