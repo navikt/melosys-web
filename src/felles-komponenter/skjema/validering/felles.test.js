@@ -140,6 +140,7 @@ describe('Tester felles.js:', () => {
         bekreftelser: true,
         faktaavklaring: true,
         maritimtArbeid: true,
+        selvstendigArbeid: true,
       }
 
       expect(Felles.gyldigePaneler(mockData)).toEqual(forventetData);
