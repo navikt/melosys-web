@@ -20,7 +20,7 @@ const uuid = require('uuid/v4');
 
 const Arbeidsgiver = ({ arbeidsgiver }) => {
   const {
-    orgnr, navn, forretningsadresse, postadresse,
+    orgnr, navn, opprettet = '', organisasjonsform = '', forretningsadresse, postadresse,
   } = arbeidsgiver;
   const postAdresseKomp = postadresse ? <div><dt>Postdresse</dt><dd><Postadresse postadresse={postadresse} /></dd></div> : null;
   const forretningsadresseKomp = forretningsadresse ? <div><dt>Forretningsadresse</dt><dd><Forretningsadresse forretningsadresse={forretningsadresse} /></dd></div> : null;
@@ -32,9 +32,9 @@ const Arbeidsgiver = ({ arbeidsgiver }) => {
       <dt>Orgnr / IDnr</dt>
       <dd>{ orgnr } </dd>
       <dt>Opprettet dato</dt>
-      <dd>-</dd>
+      <dd>{opprettet}</dd>
       <dt>Organisasjonsform</dt>
-      <dd>-</dd>
+      <dd>{organisasjonsform}</dd>
       {postAdresseKomp}
       {forretningsadresseKomp}
     </dl>
