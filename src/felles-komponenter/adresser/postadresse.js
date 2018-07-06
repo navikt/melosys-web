@@ -12,11 +12,11 @@ const Postadresse = ({ postadresse }) => {
   const gatenavn = gateadresse ? gateadresse.gatenavn : '';
 
   return postadresse ? (
-    <div>
+    <address className="postadresse">
       {gatenavn || '-'}<br />
       {postnr || '-'} {poststed || '-'}<br />
       {land || '-'}
-    </div>
+    </address>
   ) : null;
 };
 
