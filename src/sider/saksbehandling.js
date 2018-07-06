@@ -182,10 +182,10 @@ class Saksbehandling extends Component {
                 <Vilkarsveileder
                   beOmVurderingHandler={this.beOmVurdering}
                   fattVedtakHandler={this.fattVedtakHandler} />
-                <SelvstendigArbeid soknadVerdier={soknadVerdier} />
                 {person && <Personopplysninger person={person} />}
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
+                <SelvstendigArbeid soknadVerdier={soknadVerdier} />
                 <UtsendendeArbeidsgiver />
                 <ArbeidsgiverUtland />
                 <MaritimtArbeid soknadVerdier={soknadVerdier} />
