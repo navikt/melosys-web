@@ -12,6 +12,7 @@ import { fagsakSelectors } from '../ducks/fagsaker/';
 import PanelHeader from './panelHeader/panelHeader';
 import Forretningsadresse from './adresser/forretningsadresse';
 import Postadresse from './adresser/postadresse';
+import LandVelger from './skjema/landvelger';
 
 import './utsendendeArbeidsgiver.css';
 
@@ -71,13 +72,17 @@ const UtsendendeArbeidsgiver = props => {
               {valgteOrganisasjon.map(item => <Arbeidsgiver key={uuid()} arbeidsgiver={item} />) }
             </Nav.Column>
             <Nav.Column xs="6">
-              <dl className="arbeidsgiver__detaljer">
+              <div className="arbeidsgiver__detaljer">
                 <Skjema.Input label="Kontaktperson" feltNavn="kontaktNavn" />
                 <Skjema.Input label="E-post" feltNavn="kontaktEpost" />
                 <Nav.Element>Dersom fullmektig har sendt søknaden på vegne av arbeidsgiver:</Nav.Element>
                 <Skjema.Input label="Fullmektig firma" feltNavn="fullmektigFirma" />
-                <Skjema.Textarea label="Fullmektig adresse" maxLength={200} feltNavn="fullmektigAdresse" />
-              </dl>
+                <Skjema.Input label="Gateadresse" feltNavn="fullmektigGateadresse" />
+                <Skjema.Input label="Postnummer" bredde="XS" feltNavn="fullmektigPostnr" />
+                <Skjema.Input label="Poststed" feltNavn="fullmektigPoststed" />
+                <Skjema.Input label="Region" feltNavn="fullmektigRegion" />
+                <LandVelger label="Land" feltNavn="fullmektigLand" />
+              </div>
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
