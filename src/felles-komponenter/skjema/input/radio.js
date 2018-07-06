@@ -49,7 +49,12 @@ InnerInputComponent.propTypes = {
   forhandsvalgt: PT.bool,
 };
 
-const normaliserValg = valg => {
+/** Redux støtter i utgangspunktet ikke boolske valg i
+ * radioknapper. Det betyr at alle true/false settes som string
+ * 'true'/'false'. Normaliser disse scenarioene, men returner alle andre
+ * radioknapp-valg som urørt.
+ */
+const normaliserReduxBoolean = valg => {
   if (valg === 'true') { return true; }
   if (valg === 'false') { return false; }
   return valg;
@@ -65,7 +70,7 @@ function Radio({
       className={className}
       id={id}
       customComponent={<InnerInputComponent {...rest} />}
-      normalize={normaliserValg}
+      normalize={normaliserReduxBoolean}
     />
   );
 }
