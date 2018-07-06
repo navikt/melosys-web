@@ -39,6 +39,10 @@ export const feltGrupper = {
     trygdeavgiftTrukketGjennomSkatt: [value => Skjema.Validering.erPakrevet(value)],
     trygdeavgiftTrukketGjennomSkattDato: [value => Skjema.Validering.erPakrevet(value), value => Skjema.Validering.erDato(value)],
   },
+  selvstendigArbeid: {
+    erSelvstendig: [],
+    selvstendigForetak: [],
+  },
   maritimtArbeid: {
     maritimType: [],
     skipsNavn: [],
