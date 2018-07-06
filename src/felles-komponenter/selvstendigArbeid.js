@@ -19,18 +19,14 @@ class EnkeltForetak extends Component {
 
   componentDidMount() {
     const { orgnr } = this.props;
-
     this.hentOrganisasjon(orgnr);
   }
 
   hentOrganisasjon = orgnr => {
-    if (erOrgnrGyldig(orgnr)) {
+    if (orgnr && erOrgnrGyldig(orgnr)) {
       API.Organisasjoner.hentOrganisasjon(orgnr).then(response => {
-        if (Object.keys(response).length === 0) {
-          this.setState({ organisasjon: false });
-        } else {
-          this.setState({ organisasjon: response });
-        }
+        const organisasjon = Object.keys(response).length >= 0 ? response : false;
+        this.setState({ organisasjon });
       });
     }
   }
@@ -38,13 +34,13 @@ class EnkeltForetak extends Component {
   inputKeyHandler = event => this.hentOrganisasjon(event.target.value);
 
   render () {
-    const { nummer, foretaket, slettForetak } = this.props;
+    const { posisjon, foretaket, slettForetak } = this.props;
     const { inputKeyHandler } = this;
-    const feilmelding = !this.state.organisasjon ? { feilmelding: 'Fant ikke virksomheten' } : null;
+    const feilmelding = !this.state.organisasjon ? { feilmelding: 'Fant ikke virksomheten.' } : null;
 
     return (
       <div className="enkeltForetak">
-        <Nav.Fieldset legend={`Foretak #${nummer}`}>
+        <Nav.Fieldset legend={`Foretak #${posisjon}`}>
           <Nav.Row>
             <Nav.Column xs="4">
               <Skjema.Input feltNavn={`${foretaket}.orgnr`} feil={feilmelding} bredde="S" label="Organisasjonsnummer" onKeyUp={inputKeyHandler} />
@@ -69,15 +65,19 @@ class EnkeltForetak extends Component {
 }
 
 EnkeltForetak.propTypes = {
-  nummer: PT.number.isRequired,
+  posisjon: PT.number.isRequired,
   foretaket: PT.string.isRequired,
   slettForetak: PT.func.isRequired,
-  orgnr: PT.string.isRequired,
+  orgnr: PT.string,
+};
+
+EnkeltForetak.defaultProps = {
+  orgnr: null,
 };
 
 const SelvstendigeForetak = ({ fields }) => (
   <div>
-    {fields.map((foretaket, index) => <EnkeltForetak key={foretaket} orgnr={fields.get(index).orgnr} foretaket={foretaket} nummer={index + 1} slettForetak={() => fields.remove(index)} />)}
+    {fields.map((foretaket, index) => <EnkeltForetak key={foretaket} orgnr={fields.get(index).orgnr} foretaket={foretaket} posisjon={index + 1} slettForetak={() => fields.remove(index)} />)}
     <div className="leggTilForetak">
       <Nav.Row>
         <Nav.Column xs="12">
@@ -98,10 +98,12 @@ const SelvstendigArbeid = props => {
 
   const panelIkon = panelErRelevant ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
-  const selvstendigArbeidListe = erSelvstendig === BOOLSK.SANN ? <FieldArray
-    name="selvstendigForetak"
-    component={SelvstendigeForetak}
-  /> : null;
+  const foretakListe = erSelvstendig === BOOLSK.SANN ?
+    <FieldArray
+      name="selvstendigForetak"
+      component={SelvstendigeForetak}
+    />
+    : null;
 
   return (
     <div className="selvstendigArbeid panelSeksjon">
@@ -117,7 +119,7 @@ const SelvstendigArbeid = props => {
               </Skjema.RadioGruppe>
             </Nav.Column>
           </Nav.Row>
-          { selvstendigArbeidListe }
+          { foretakListe }
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>

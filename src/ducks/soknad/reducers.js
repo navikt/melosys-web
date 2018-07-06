@@ -158,6 +158,10 @@ export default function reducer(state = initialState, action) {
           flaggLand: dokument.flaggLand,
           installasjonsLand: dokument.installasjonsLand,
         },
+        selvstendigArbeid: {
+          erSelvstendig: dokument.erSelvstendig,
+          selvstendigForetak: dokument.selvstendigForetak,
+        },
       };
 
       return { ...state, data: { ...state.data, soknadDokument: soknad } };
