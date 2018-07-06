@@ -186,7 +186,7 @@ class Saksbehandling extends Component {
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-                <UtsendendeArbeidsgiver />
+                <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
                 <ArbeidsgiverUtland />
                 <MaritimtArbeid soknadVerdier={soknadVerdier} />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
