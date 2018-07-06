@@ -59,7 +59,7 @@ const UtsendendeArbeidsgiver = props => {
 
   const dobbelVarsel = valgteOrganisasjon.length > 1 && <Nav.AlertStripe type="advarsel">Det er mer enn 1 utsendende arbeidsgiver</Nav.AlertStripe>;
 
-  return (
+  return valgteOrganisasjon.length > 0 ? (
     <div className="utsendendeArbeidsgiver panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={panelIkon} tittel="Utsendende arbeidsgiver" undertittel="" />}
@@ -83,7 +83,7 @@ const UtsendendeArbeidsgiver = props => {
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>
-  );
+  ) : null;
 };
 
 UtsendendeArbeidsgiver.propTypes = {
