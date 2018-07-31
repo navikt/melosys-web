@@ -186,7 +186,7 @@ class Saksbehandling extends Component {
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-                <UtsendendeArbeidsgiver />
+                <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
                 <ArbeidsgiverUtland />
                 <MaritimtArbeid soknadVerdier={soknadVerdier} />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
@@ -260,7 +260,11 @@ const mapStateToProps = state => ({
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: soknadSelectors.ArbeidNorgeSelector(state).fullmektigFirma,
-    fullmektigAdresse: soknadSelectors.ArbeidNorgeSelector(state).fullmektigAdresse,
+    fullmektigGateadresse: soknadSelectors.ArbeidNorgeSelector(state).fullmektigGateadresse,
+    fullmektigPostnr: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPostnr,
+    fullmektigPoststed: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
+    fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
+    fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLand,
     faktaavklaringOppholdsLand: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state).land,
     faktaavklaringPeriodeFraOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).fom),
     faktaavklaringPeriodeTilOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).tom),
