@@ -9,6 +9,8 @@ import * as Ikoner from '../resources/images';
 
 import { fagsakSelectors } from '../ducks/fagsaker/';
 
+import { formatterDatoTilNorsk } from '../utils/dato';
+
 import PanelHeader from './panelHeader/panelHeader';
 import Forretningsadresse from './adresser/forretningsadresse';
 import Postadresse from './adresser/postadresse';
@@ -20,7 +22,7 @@ const uuid = require('uuid/v4');
 
 const Arbeidsgiver = ({ arbeidsgiver }) => {
   const {
-    orgnr, navn, opprettet = '', organisasjonsform = '', forretningsadresse, postadresse,
+    orgnr, navn, registrert, organisasjonsform, forretningsadresse, postadresse,
   } = arbeidsgiver;
   const postAdresseKomp = postadresse ? <div><dt>Postdresse</dt><dd><Postadresse postadresse={postadresse} /></dd></div> : null;
   const forretningsadresseKomp = forretningsadresse ? <div><dt>Forretningsadresse</dt><dd><Forretningsadresse forretningsadresse={forretningsadresse} /></dd></div> : null;
@@ -31,10 +33,10 @@ const Arbeidsgiver = ({ arbeidsgiver }) => {
       <dd>{ navn } </dd>
       <dt>Orgnr / IDnr</dt>
       <dd>{ orgnr } </dd>
-      <dt>Opprettet dato</dt>
-      <dd>{opprettet}</dd>
+      <dt>Registrert dato</dt>
+      <dd>{formatterDatoTilNorsk(registrert) || '(ukjent)'}</dd>
       <dt>Organisasjonsform</dt>
-      <dd>{organisasjonsform}</dd>
+      <dd>{organisasjonsform || '(ukjent)'}</dd>
       {postAdresseKomp}
       {forretningsadresseKomp}
     </dl>
