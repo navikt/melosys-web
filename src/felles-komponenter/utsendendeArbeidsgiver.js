@@ -58,7 +58,7 @@ const UtsendendeArbeidsgiver = props => {
 
   const panelIkon = valgteOrganisasjon.length === 1 ? Ikoner.Ferdig : Ikoner.Varsel;
 
-  const dobbelVarsel = valgteOrganisasjon.length > 1 && <Nav.AlertStripe type="advarsel">Det er mer enn 1 utsendende arbeidsgiver</Nav.AlertStripe>;
+  const dobbelVarsel = valgteOrganisasjon.length > 1 && <Nav.AlertStripe type="advarsel">Du har valgt mer enn 1 utsendende arbeidsgiver.</Nav.AlertStripe>;
 
   return valgteOrganisasjon.length > 0 ? (
     <div className="utsendendeArbeidsgiver panelSeksjon">
