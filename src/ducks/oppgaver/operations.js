@@ -60,3 +60,34 @@ export function send(oppgavetype, checkboxliste) {
     return oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
   });
 }
+/*
+export function sendBehandlingsOppgave(checkboxliste) {
+  const keys = Object.keys(checkboxliste);
+  const behandlingstyper = ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'].filter(key => keys.includes(key));
+  const sakstyper = ['EU_EOS', 'TRG_AVT', 'FLK_TRG'].filter(key => keys.includes(key));
+  const oppgave = {
+    oppgavetype: 'BEH_SAK',
+    sakstyper,
+    behandlingstyper,
+  };
+
+  return Api.Oppgaver.send(oppgave).then(response => {
+    const { saksnummer, oppgaveID, journalpostID } = response;
+    if (!saksnummer && (!oppgaveID || !journalpostID)) { return false; }
+    return `/saksbehandling/${saksnummer}`;
+  });
+}
+*/
+export function sendJournalOppgave(fagomrade) {
+  const oppgave = {
+    oppgavetype: 'JFR',
+    sakstyper: [],
+    behandlingstyper: [],
+    fagomrade, // 'UFM' || 'MDL'
+  };
+  return Api.Oppgaver.send(oppgave).then(response => {
+    const { saksnummer, oppgaveID, journalpostID } = response;
+    if (!saksnummer && (!oppgaveID || !journalpostID)) { return false; }
+    return `/journalforing/${oppgaveID}/${journalpostID}`;
+  });
+}
