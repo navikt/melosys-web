@@ -39,13 +39,12 @@ function Personopplysninger(props) {
 
   const kjoennKode = kjoenn.kode || kjoenn;
 
-
-  const aar = moment().diff(foedselsdato, 'years');
+  const alder = moment().diff(foedselsdato, 'years');
 
   return (
     <div className="personopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${aar})`} undertittel={`Fødselsnummer: ${fnr}`} />}
+        heading={<PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${alder})`} undertittel={`Fødselsnummer: ${fnr}`} />}
         ariaTittel="Panel for personinformasjon"
         apen >
         <Nav.Container fluid>
