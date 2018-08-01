@@ -20,8 +20,8 @@ class Journalforing extends Component {
 
           <Skjema.RadioGruppe feltNavn="Behandlingstype" label="Velg journalføringstype">
             <div className="skjema__horisontalefelter">
-              <Skjema.Radio feltNavn="journalforingstype" label="Medlemsskap" value="MDL" forhandsvalgt />
-              <Skjema.Radio feltNavn="journalforingstype" label="Unntak" value="UFM" />
+              <Skjema.Radio feltNavn="fagomrade" label="Medlemsskap" value="MDL" forhandsvalgt />
+              <Skjema.Radio feltNavn="fagomrade" label="Unntak" value="UFM" />
             </div>
           </Skjema.RadioGruppe>
           <Nav.Knapp>Journalfør sak</Nav.Knapp>
@@ -35,7 +35,7 @@ Journalforing.propTypes = {
   handleSubmit: PT.func.isRequired,
   history: PT.object.isRequired,
 };
-const jfrTypePicker = ({ journalforingstype }) => {
+const jfrTypePicker = ({ fagomrade }) => {
   const jfrTyperMedlemsskap = {
     SKND: '',
     KLG: '',
@@ -46,11 +46,11 @@ const jfrTypePicker = ({ journalforingstype }) => {
   const jfrTyperUnntak = {
     UFM: '',
   };
-  const jfrtyper = (journalforingstype === 'UFM') ? jfrTyperUnntak : jfrTyperMedlemsskap;
+  const jfrtyper = (fagomrade === 'UFM') ? jfrTyperUnntak : jfrTyperMedlemsskap;
   return oppgaverOperations.send('JFR', jfrtyper);
 };
 
 export default reduxForm({
   form: 'journalforingsform',
-  onSubmit: journalforingstype => jfrTypePicker(journalforingstype),
+  onSubmit: fagomrade => jfrTypePicker(fagomrade),
 })(withRouter((Journalforing)));
