@@ -48,13 +48,15 @@ function Personopplysninger(props) {
     bostedsadresse,
   } = props.person;
 
+  const kjoennKode = kjoenn.kode || kjoenn;
+
 
   const aar = moment().diff(foedselsdato, 'years');
 
   return (
     <div className="personopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={ikonFraKjonn(kjoenn)} tittel={`${sammensattNavn} (${aar})`} undertittel={`Fødselsnummer: ${fnr}`} />}
+        heading={<PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${aar})`} undertittel={`Fødselsnummer: ${fnr}`} />}
         ariaTittel="Panel for personinformasjon" >
         <Nav.Container fluid>
           {/* START PERSONINFO */}
@@ -62,8 +64,7 @@ function Personopplysninger(props) {
             <Nav.Column xs="6">
               <dl className="person__detaljer">
                 <dt>Fødselsnummer:</dt><dd>{fnr}</dd>
-                <dt>Kjønn:</dt><dd>{kjoenn}</dd>
-
+                <dt>Kjønn:</dt><dd>{kjoenn.term || kjoenn}</dd>
                 <dt>Bostedsadresse</dt>
                 {visBostedsAdresse(bostedsadresse)}
               </dl>
@@ -71,7 +72,7 @@ function Personopplysninger(props) {
             <Nav.Column xs="6">
               <dl className="person__detaljer">
                 <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
-                <dt>Statsborgerskap:</dt><dd>{statsborgerskap}</dd>
+                <dt>Statsborgerskap:</dt><dd>{statsborgerskap.term || statsborgerskap}</dd>
                 <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
               </dl>
             </Nav.Column>
