@@ -44,9 +44,17 @@ function Personopplysninger(props) {
   return (
     <div className="personopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${alder})`} undertittel={`Fødselsnummer: ${fnr}`} />}
+        heading={
+          <div className="personopplysninger__panelheader">
+            <PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${alder})`} undertittel={`Fødselsnummer: ${fnr}`} />
+            <div className="personopplysninger__personstatus">
+              <Nav.EtikettBase type="advarsel">DØD</Nav.EtikettBase>
+              <Nav.EtikettBase type="advarsel">Egen ansatt</Nav.EtikettBase>
+            </div>
+          </div>}
         ariaTittel="Panel for personinformasjon"
-        apen >
+        apen
+      >
         <Nav.Container fluid>
           {/* START PERSONINFO */}
           <Nav.Row className="person__seksjon">
@@ -86,7 +94,7 @@ function Personopplysninger(props) {
           <Nav.Row className="person__seksjon">
             <Nav.Column xs="6">
               <dl className="person__detaljer">
-                <Skjema.Textarea feltNavn="oppgittAdresse" label="Adresse oppgitt av søker:" />
+                <Skjema.Textarea feltNavn="oppgittAdresse" label="Adresse oppgitt av søker:" maxLength={200} />
               </dl>
             </Nav.Column>
           </Nav.Row>
