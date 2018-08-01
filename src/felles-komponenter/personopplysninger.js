@@ -87,7 +87,7 @@ function Personopplysninger(props) {
           <Nav.Row className="person__seksjon">
             <Nav.Column xs="6">
               <dl className="person__detaljer">
-                <Skjema.Textarea feltNavn="personAresse" label="Adresse oppgitt av søker:" />
+                <Skjema.Textarea feltNavn="oppgittAdresse" label="Adresse oppgitt av søker:" />
               </dl>
             </Nav.Column>
           </Nav.Row>

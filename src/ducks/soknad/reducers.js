@@ -42,6 +42,9 @@ const soknadTemplate =
       studentFinansiering: undefined,
       studieLand: undefined,
     },
+    bosted: {
+      oppgittAdresse: undefined,
+    },
     arbeidNorge: {
       valgteArbeidsforhold: [],
       arbeidsforholdOpprettholdIHelePerioden: undefined,
@@ -149,6 +152,9 @@ export default function reducer(state = initialState, action) {
           studentSemester: dokument.studentSemester,
           studieLand: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,
+        },
+        bosted: {
+          oppgittAdresse: dokument.oppgittAdresse,
         },
         maritimtArbeid: {
           ...state.data.soknadDokument.maritimtArbeid,
