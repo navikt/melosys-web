@@ -226,6 +226,7 @@ const mapStateToProps = state => ({
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
   soknadArbeidNorge: soknadSelectors.ArbeidNorgeSelector(state),
   initialValues: {
+    utenlandskID: soknadSelectors.PersonOpplysningerSelector(state).utenlandskID,
     inntektNorskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
     inntektNaeringIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNaeringIPerioden,

@@ -90,6 +90,9 @@ const soknadTemplate =
       trygdeavgiftTrukketGjennomSkatt: undefined,
       trygdeavgiftTrukketGjennomSkattDato: undefined,
     },
+    personOpplysninger: {
+      utenlandskID: undefined,
+    },
   };
 
 
@@ -167,6 +170,9 @@ export default function reducer(state = initialState, action) {
         selvstendigArbeid: {
           erSelvstendig: dokument.erSelvstendig,
           selvstendigForetak: dokument.selvstendigForetak,
+        },
+        personOpplysninger: {
+          utenlandskID: dokument.utenlandskID,
         },
       };
 
