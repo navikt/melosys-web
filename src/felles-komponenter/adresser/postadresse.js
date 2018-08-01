@@ -11,13 +11,13 @@ const Postadresse = ({ postadresse }) => {
   } = postadresse;
   const gatenavn = gateadresse ? gateadresse.gatenavn : '';
 
-  return postadresse ? (
+  return Object.keys(postadresse).length > 0 ? (
     <address className="postadresse">
       {gatenavn || '-'}<br />
       {postnr || '-'} {poststed || ''}<br />
       {land || '-'}
     </address>
-  ) : null;
+  ) : '(ingen tilgjengelig)';
 };
 
 Postadresse.propTypes = {
