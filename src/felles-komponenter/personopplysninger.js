@@ -1,5 +1,6 @@
 import React from 'react';
 import moment from 'moment';
+import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
@@ -22,6 +23,27 @@ const ikonFraKjonn = kjoenn => {
   }
 };
 
+const PersonMerkelapper = ({ personStatus, erEgenAnsatt }) => {
+  const erPersonDod = (personStatus.kode === 'DØD' || personStatus.kode === 'DØDD');
+
+  return (
+    <div className="personopplysninger__personstatus">
+      { erPersonDod && <Nav.EtikettBase type="advarsel">DØD</Nav.EtikettBase> }
+      { erEgenAnsatt && <Nav.EtikettBase type="advarsel">Egen ansatt</Nav.EtikettBase> }
+    </div>
+  );
+};
+
+PersonMerkelapper.propTypes = {
+  personStatus: MPT.Kodeverk,
+  erEgenAnsatt: PT.bool,
+};
+
+PersonMerkelapper.defaultProps = {
+  personStatus: {},
+  erEgenAnsatt: false,
+};
+
 function Personopplysninger(props) {
   if (Object.keys(props.person).length === 0) return (<div />);
 
@@ -35,6 +57,8 @@ function Personopplysninger(props) {
     bostedsadresse,
     postadresse,
     postadresseMidlertidig,
+    personStatus,
+    erEgenAnsatt,
   } = props.person;
 
   const kjoennKode = kjoenn.kode || kjoenn;
@@ -47,10 +71,7 @@ function Personopplysninger(props) {
         heading={
           <div className="personopplysninger__panelheader">
             <PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${alder})`} undertittel={`Fødselsnummer: ${fnr}`} />
-            <div className="personopplysninger__personstatus">
-              <Nav.EtikettBase type="advarsel">DØD</Nav.EtikettBase>
-              <Nav.EtikettBase type="advarsel">Egen ansatt</Nav.EtikettBase>
-            </div>
+            <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
           </div>}
         ariaTittel="Panel for personinformasjon"
         apen
