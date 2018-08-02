@@ -8,6 +8,8 @@ import { withRouter } from 'react-router-dom';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import * as Konstanter from '../constants';
+import * as Person from '../felles-komponenter/skjema/validering/generisk/person';
+
 import Sticky from '../hjelpekomponenter/sticky';
 
 import withErrorHandling from '../hoc/withErrorHandling';
@@ -16,6 +18,7 @@ import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
+
 
 import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
 import {
@@ -78,7 +81,7 @@ class Journalforing extends Component {
   };
 
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
-   * settes inn i skjemaet kun til info - ikke til endring.
+   * settes inn i skjemaet kun til info - ikke til endring - slik som feks navn på bruker.
    * Derfor må vi bygge opp og evt vaske et nytt objekt som kan sendes til backend.
    *
    * @returns {object} Objektet som skal sendes videre som payload.
@@ -117,11 +120,11 @@ class Journalforing extends Component {
       journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
-    const { resetOpprettFagsakFelter } = this;
+    const { resetSkjemaFelterForOpprettFagsak } = this;
 
     const vasketJournalforing = { ...this.vaskDokumentInformasjon(), saksnummer };
 
-    resetOpprettFagsakFelter();
+    resetSkjemaFelterForOpprettFagsak();
 
     settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
 
@@ -143,12 +146,12 @@ class Journalforing extends Component {
     });
   };
 
-  /** Vi ønsker kun å gjøre et søk på brukerID dersom antall tegn matcher 11 (fnr og dnr).
-   * derfor, sjekk dette før vi evt kaller sokFnrDnr.
+  /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
+   * Derfor, sjekk dette før vi evt kaller sokFnrDnr.
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
    */
   hentOgVisBruker = brukerID => {
-    if (brukerID.length !== Konstanter.ANTALL_TALL_I_FNR && brukerID.length !== Konstanter.ANTALL_TALL_I_DNR) { return; }
+    if (!Person.erGyldigFnr(brukerID) && !Person.erGyldigDnr(brukerID)) { return; }
 
     const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
 
@@ -161,9 +164,8 @@ class Journalforing extends Component {
       });
   };
 
-  /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller 11 (fnr og dnr).
-   * Avsender kan nemlig være både person og organisasjon.
-   * Derfor, sjekk dette før vi evt kaller sokOrgnr eller sokFnrDnr.
+  /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller er et gyldig FNR || DNR.
+   * Avsender kan være både person og organisasjon.
    * @param value {string} Verdien vi ønsker å sjekke på.
    */
   hentOgVisAvsender = value => {
@@ -173,7 +175,7 @@ class Journalforing extends Component {
       return sokOrgnr(value).then(({ navn = '' }) => settFeltInnhold('avsenderNavn', navn));
     }
 
-    if (value.length === Konstanter.ANTALL_TALL_I_FNR || value.length === Konstanter.ANTALL_TALL_I_DNR) {
+    if (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) {
       return sokFnrDnr(value).then(({ sammensattNavn = '' }) => settFeltInnhold('avsenderNavn', sammensattNavn));
     }
   };
@@ -188,13 +190,10 @@ class Journalforing extends Component {
       journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
-    const { resetEksisterendeSakerFelter } = this;
+    const { resetSkjemaFelterForEksisterendeSaker } = this;
+    const { journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed } = journalforingSkjemaVerdier;
 
-    const {
-      journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
-    } = journalforingSkjemaVerdier;
-
-    resetEksisterendeSakerFelter();
+    resetSkjemaFelterForEksisterendeSaker();
 
     settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
 
@@ -226,14 +225,14 @@ class Journalforing extends Component {
     });
   };
 
-  resetOpprettFagsakFelter = () => {
+  resetSkjemaFelterForOpprettFagsak = () => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold('journalforingPeriodeFraOgMed', '');
     settFeltInnhold('journalforingPeriodeTilOgMed', '');
     settFeltInnhold('journalforingOppholdsLand', []);
   };
 
-  resetEksisterendeSakerFelter = () => {
+  resetSkjemaFelterForEksisterendeSaker = () => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold('saksnummer', '');
   };

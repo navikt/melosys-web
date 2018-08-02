@@ -11,7 +11,7 @@ import * as Konstanter from '../../constants';
 
 import * as Api from '../../services/api';
 
-import { erGyldigFnr } from '../../felles-komponenter/skjema/validering/generisk/person';
+import * as Person from '../../felles-komponenter/skjema/validering/generisk/person';
 
 import { PersonSelectors } from '../../ducks/person';
 import { OrganisasjonSelectors } from '../../ducks/organisasjon';
@@ -84,7 +84,7 @@ class Informasjon extends Component {
     const { settFeltInnhold, hentOgVisBruker } = this.props;
     const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
 
-    if (erGyldigFnr(verdi)) {
+    if (Person.erGyldigFnr(verdi)) {
       this.toggleSpinner('avsenderNavn');
       hentOgVisBruker(verdi).then(response => {
         if (!response) return;
