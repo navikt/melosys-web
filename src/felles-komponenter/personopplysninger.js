@@ -14,6 +14,7 @@ import Bostedsadresse from './adresser/bostedsadresse';
 import Postadresse from './adresser/postadresse';
 
 import UtenlandskID from './personopplysninger/utenlandskID';
+import Barn from './personopplysninger/barn';
 
 import './personopplysninger.css';
 
@@ -119,6 +120,11 @@ function Personopplysninger(props) {
               <dl className="person__detaljer">
                 <Skjema.Textarea feltNavn="oppgittAdresse" label="Adresse oppgitt av søker:" maxLength={200} />
               </dl>
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row className="person__seksjon">
+            <Nav.Column xs="12">
+              <Barn />
             </Nav.Column>
           </Nav.Row>
           {/* SLUTT PERSONINFO */}
