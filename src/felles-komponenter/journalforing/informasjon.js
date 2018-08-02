@@ -11,6 +11,8 @@ import * as Konstanter from '../../constants';
 
 import * as Api from '../../services/api';
 
+import { erGyldigFnr } from '../../felles-komponenter/skjema/validering/generisk/person';
+
 import { PersonSelectors } from '../../ducks/person';
 import { OrganisasjonSelectors } from '../../ducks/organisasjon';
 import { formSelectors } from '../../ducks/form';
@@ -57,8 +59,6 @@ class Informasjon extends Component {
     }
   }
 
-  erGyldigBrukerID = verdi => (verdi.length === Konstanter.ANTALL_TALL_I_DNR || verdi.length === Konstanter.ANTALL_TALL_I_FNR);
-
   erGyldigAvsenderID = verdi => (
     verdi.length === Konstanter.ANTALL_TALL_I_ORGNR ||
     verdi.length === Konstanter.ANTALL_TALL_I_DNR || verdi.length === Konstanter.ANTALL_TALL_I_FNR
@@ -80,11 +80,11 @@ class Informasjon extends Component {
   }
 
   sjekkBruker = verdi => {
-    const { erGyldigBrukerID, tomAvsender, kopierBrukerTilAvsender } = this;
+    const { tomAvsender, kopierBrukerTilAvsender } = this;
     const { settFeltInnhold, hentOgVisBruker } = this.props;
     const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
 
-    if (erGyldigBrukerID(verdi)) {
+    if (erGyldigFnr(verdi)) {
       this.toggleSpinner('avsenderNavn');
       hentOgVisBruker(verdi).then(response => {
         if (!response) return;
