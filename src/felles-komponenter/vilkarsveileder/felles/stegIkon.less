@@ -7,6 +7,7 @@
   align-items: center;
   padding: 0 0.2em;
   width: 70px;
+  min-height: 70px;
 
   .stegIkon__knapp {
     background-color: transparent;
@@ -17,6 +18,7 @@
     align-items: center;
     margin-bottom: 1.8em;
     border-radius: 1px;
+    min-height: 70px;
 
     &:active,
     &:focus,
@@ -39,8 +41,10 @@
     background-repeat:no-repeat;
     background-size:contain;
     background-color:transparent;
-    width:30px;
-    height:30px;
+    width: 30px;
+    height: 30px;
+    min-height: 30px;
+    min-width: 30px;
     margin:0.5em;
     border:0;
     cursor:pointer;
@@ -90,8 +94,10 @@
   }
 
   .stegIkon__tittel {
-    display: flex;
+    position: relative;
     font-size: .9em;
     text-align: center;
+    white-space: normal;
+    width: 70px;
   }
 }
