@@ -25,7 +25,7 @@ class Journalforing extends Component {
         <form onSubmit={this.overrideDefaultSubmit}>
           <Skjema.RadioGruppe feltNavn="Behandlingstype" label="Velg journalføringstype">
             <div className="skjema__horisontalefelter">
-              <Skjema.Radio feltNavn="fagomrade" label="Medlemsskap" value="MED" forhandsvalgt />
+              <Skjema.Radio feltNavn="fagomrade" label="Medlemsskap" value="MED" />
               <Skjema.Radio feltNavn="fagomrade" label="Unntak" value="UFM" />
             </div>
           </Skjema.RadioGruppe>
