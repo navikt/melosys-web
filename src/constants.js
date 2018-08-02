@@ -6,3 +6,8 @@ export const JOURNALFORING_HENSIKT = {
   KNYTT: 'KNYTT',
   OPPRETT: 'OPPRETT',
 };
+
+export const BOOLSK = {
+  SANN: true,
+  USANN: false,
+};

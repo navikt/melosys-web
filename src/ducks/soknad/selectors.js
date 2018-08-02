@@ -56,3 +56,13 @@ export const ArbeidsgiversBekreftelseSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
   soknad => soknad || {}
 );
+
+export const MaritimtArbeidSelector = createSelector(
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.maritimtArbeid : {}),
+  maritimtArbeid => maritimtArbeid || {}
+);
+
+export const SelvstendigArbeidSelector = createSelector(
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.selvstendigArbeid : {}),
+  selvstendigArbeid => selvstendigArbeid || {}
+);
