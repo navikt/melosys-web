@@ -5,6 +5,8 @@ import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 
+import LandVelger from './skjema/landvelger';
+
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './arbeidsgiverUtland.css';
@@ -20,14 +22,19 @@ function OppholdUtland () {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Oppholdsperiode">
-                <Nav.Column xs="6">
-                  <Skjema.Input datoFelt label="Fra og med" feltNavn="oppholdUtlandFom" />
-                </Nav.Column>
-                <Nav.Column xs="6">
-                  <Skjema.Input datoFelt label="Til og med" feltNavn="oppholdUtlandTom" />
-                </Nav.Column>
+              <Nav.Fieldset legend="Detailer om oppholdet, hentet fra søknaden:">
+                <Nav.Row>
+                  <Nav.Column xs="6">
+                    <Skjema.Input datoFelt label="Fra og med:" feltNavn="oppholdUtlandFom" />
+                  </Nav.Column>
+                  <Nav.Column xs="6">
+                    <Skjema.Input datoFelt label="Til og med:" feltNavn="oppholdUtlandTom" />
+                  </Nav.Column>
+                </Nav.Row>
               </Nav.Fieldset>
+            </Nav.Column>
+            <Nav.Column xs="12">
+              <LandVelger feltNavn="oppholdsland" />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>

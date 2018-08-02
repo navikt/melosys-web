@@ -117,6 +117,7 @@ describe('Tester felles.js:', () => {
 
       const forventetObjekt = {
         foo: 'Vennligst oppgi foo. Foo er ikke gyldig.',
+        bar: 'Vennligst oppgi bar.',
         baz: 'Vennligst oppgi baz.'
       }
 
@@ -132,12 +133,14 @@ describe('Tester felles.js:', () => {
       }
 
       const forventetData = {
-        arbeidNorge: false,
+        arbeidNorge: true,
         bosted: false,
         inntekt: true,
         oppholdUtland: true,
         bekreftelser: true,
         faktaavklaring: true,
+        maritimtArbeid: true,
+        selvstendigArbeid: true,
       }
 
       expect(Felles.gyldigePaneler(mockData)).toEqual(forventetData);

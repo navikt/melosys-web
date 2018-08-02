@@ -4,25 +4,25 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
 
-import * as PanelFelter from '../utils/panelFelter';
 import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
-import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
-import Personopplysninger from '../felles-komponenter/personopplysninger';
-import Tilleggsopplysninger from '../felles-komponenter/tilleggsopplysninger';
-import Medlemskap from '../felles-komponenter/medlemskap';
 import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
-import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
-import OppholdUtland from '../felles-komponenter/oppholdUtland';
-import Inntekt from '../felles-komponenter/inntektUtland';
-import Bosted from '../felles-komponenter/bosted';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
-import SideOppsummering from '../felles-komponenter/sideOppsummering';
+import Bosted from '../felles-komponenter/bosted';
+import Inntekt from '../felles-komponenter/inntektUtland';
+import Medlemskap from '../felles-komponenter/medlemskap';
+import OppholdUtland from '../felles-komponenter/oppholdUtland';
+import Personopplysninger from '../felles-komponenter/personopplysninger';
+import MaritimtArbeid from '../felles-komponenter/maritimtArbeid';
+import SelvstendigArbeid from '../felles-komponenter/selvstendigArbeid';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
+import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
+import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
+import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
 
 import {
   fagsakOperations,
@@ -46,7 +46,6 @@ import {
   vurderingSelectors,
 } from '../ducks/vurdering/';
 
-import { boolTilStreng } from '../utils/streng';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import { formSelectors } from '../ducks/form/';
@@ -165,9 +164,10 @@ class Saksbehandling extends Component {
       bekreftelser,
       oppsummering,
       soknadArbeidsinntekt,
-      soknadOppholdUtland,
       soknadForm,
     } = this.props;
+
+    const { values: soknadVerdier = {} } = soknadForm;
 
     if (!person || !person.fnr) {
       return null;
@@ -185,13 +185,14 @@ class Saksbehandling extends Component {
                 {person && <Personopplysninger person={person} />}
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
-                <UtsendendeArbeidsgiver />
-                <OppholdUtland oppholdUtland={soknadOppholdUtland} soknadForm={soknadForm} />
+                <SelvstendigArbeid soknadVerdier={soknadVerdier} />
+                <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
                 <ArbeidsgiverUtland />
+                <MaritimtArbeid soknadVerdier={soknadVerdier} />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
                 {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
-                <Tilleggsopplysninger />
+                <OppholdUtland />
               </form>
             </Nav.Column>
             <Nav.Column xs="5">
@@ -223,37 +224,47 @@ const mapStateToProps = state => ({
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
-  soknadOppholdUtland: soknadSelectors.OppholdUtlandSelector(state),
   soknadArbeidNorge: soknadSelectors.ArbeidNorgeSelector(state),
   initialValues: {
     inntektNorskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
     inntektNaeringIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNaeringIPerioden,
-    arbeidsgiverBekrefterUtsendelse: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBekrefterUtsendelse),
-    arbeidstakerAnsattUnderUtsendelsen: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerAnsattUnderUtsendelsen),
-    erstatterArbeidstakerenUtsendte: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).erstatterArbeidstakerenUtsendte),
-    arbeidstakerTidligereUtsendt24Mnd: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd),
-    arbeidsgiverBetalerArbeidsgiveravgift: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift),
-    trygdeavgiftTrukketGjennomSkatt: boolTilStreng(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt),
+    arbeidsgiverBekrefterUtsendelse: soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBekrefterUtsendelse,
+    arbeidstakerAnsattUnderUtsendelsen: soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerAnsattUnderUtsendelsen,
+    erstatterArbeidstakerenUtsendte: soknadSelectors.ArbeidsgiversBekreftelseSelector(state).erstatterArbeidstakerenUtsendte,
+    arbeidstakerTidligereUtsendt24Mnd: soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidstakerTidligereUtsendt24Mnd,
+    arbeidsgiverBetalerArbeidsgiveravgift: soknadSelectors.ArbeidsgiversBekreftelseSelector(state).arbeidsgiverBetalerArbeidsgiveravgift,
+    trygdeavgiftTrukketGjennomSkatt: soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkatt,
     trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: soknadSelectors.OppholdUtlandSelector(state).oppholdsland,
-    forutgaendeBostedINorge: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge),
-    sammeAdresseSomArbeidsgiver: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver),
-    ektefelleEllerBarnINorge: boolTilStreng(soknadSelectors.OppholdUtlandSelector(state).harEktefelleEllerBarnINorge),
+    forutgaendeBostedINorge: soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge,
+    sammeAdresseSomArbeidsgiver: soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver,
+    ektefelleEllerBarnINorge: soknadSelectors.OppholdUtlandSelector(state).harEktefelleEllerBarnINorge,
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLand,
+    erSelvstendig: soknadSelectors.SelvstendigArbeidSelector(state).erSelvstendig,
+    selvstendigForetak: soknadSelectors.SelvstendigArbeidSelector(state).selvstendigForetak,
     studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,
-    intensjonOmRetur: boolTilStreng(soknadSelectors.BostedSelector(state).intensjonOmRetur),
+    intensjonOmRetur: soknadSelectors.BostedSelector(state).intensjonOmRetur,
     familiesBosted: soknadSelectors.BostedSelector(state).familiesBosted,
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
-    EOSBarnetrygdFraNAV: boolTilStreng(soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV),
-    adresseIUtlandet: boolTilStreng(soknadSelectors.BostedSelector(state).adresseIUtlandet),
+    EOSBarnetrygdFraNAV: soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
+    adresseIUtlandet: soknadSelectors.BostedSelector(state).adresseIUtlandet,
+    maritimType: soknadSelectors.MaritimtArbeidSelector(state).maritimType,
+    skipsNavn: soknadSelectors.MaritimtArbeidSelector(state).skipsNavn,
+    fartsomrade: soknadSelectors.MaritimtArbeidSelector(state).fartsomrade,
+    flaggLand: soknadSelectors.MaritimtArbeidSelector(state).flaggLand,
+    installasjonsLand: soknadSelectors.MaritimtArbeidSelector(state).installasjonsLand,
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: soknadSelectors.ArbeidNorgeSelector(state).fullmektigFirma,
-    fullmektigAdresse: soknadSelectors.ArbeidNorgeSelector(state).fullmektigAdresse,
+    fullmektigGateadresse: soknadSelectors.ArbeidNorgeSelector(state).fullmektigGateadresse,
+    fullmektigPostnr: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPostnr,
+    fullmektigPoststed: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
+    fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
+    fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLand,
     faktaavklaringOppholdsLand: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state).land,
     faktaavklaringPeriodeFraOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).fom),
     faktaavklaringPeriodeTilOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).tom),
@@ -276,7 +287,7 @@ const mapStateToProps = state => ({
     faktaavklaringBostedsland: faktaavklaringSelectors.FaktaavklaringBostedSelector(state).land,
     faktaavklaringTjenestemann: faktaavklaringSelectors.FaktaavklaringTjenestemannSelector(state).tjenestemann,
     faktaavklaringValgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
-    faktaavklaringVesentligVirksomhetINorge: boolTilStreng(faktaavklaringSelectors.FaktaavklaringVesentligVirksomhetSelector(state).vesentligVirksomhetINorge),
+    faktaavklaringVesentligVirksomhetINorge: (faktaavklaringSelectors.FaktaavklaringVesentligVirksomhetSelector(state).vesentligVirksomhetINorge),
     faktaavklaringVesentligVirksomhetBegrunnelser: faktaavklaringSelectors.FaktaavklaringVesentligVirksomhetSelector(state).vesentligVirksomhetBegrunnelser,
     faktaavklaringForretningsstedLand: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).land,
     faktaavklaringForretningsstedAntallArbeidsgivere: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).antallArbeidsgivere,
@@ -299,8 +310,8 @@ const SaksbehandlingForm = reduxForm({
   form: 'soknad',
   enableReinitialize: true,
   destroyOnUnmount: false,
+  keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  fields: PanelFelter.alleFeltNavn(PanelFelter.feltGrupper),
   validate: (values, props) => Validering.Felles.byggValidering(values, props),
 })(Saksbehandling);
 
