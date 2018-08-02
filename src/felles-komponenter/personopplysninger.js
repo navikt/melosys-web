@@ -1,7 +1,6 @@
 import React from 'react';
 import moment from 'moment';
 import PT from 'prop-types';
-import { FieldArray } from 'redux-form';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
@@ -13,7 +12,8 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import Bostedsadresse from './adresser/bostedsadresse';
 import Postadresse from './adresser/postadresse';
-import Landvelger from './skjema/landvelger';
+
+import UtenlandskID from './personopplysninger/utenlandskID';
 
 import './personopplysninger.css';
 
@@ -24,39 +24,6 @@ const ikonFraKjonn = kjoenn => {
     default: { return Ikoner.Ukjentkjoenn; }
   }
 };
-
-const UtenlandskIDLinje = ({ indeks }) => (
-  <div className="utenlandskID__linje">
-    <Skjema.Input bredde="S" feltNavn={`utenlandskID[${indeks}].ID`} label="Utenlandsk ID" />
-    <Landvelger feltNavn={`utenlandskID[${indeks}].land`} label="Land" />
-  </div>
-);
-
-UtenlandskIDLinje.propTypes = {
-  indeks: PT.number.isRequired,
-};
-
-const UtenlandskIDWrapper = props => {
-  const linjer = props.fields.getAll() || [];
-
-  /* eslint react/no-array-index-key:off */
-  return (
-    <div className="utenlandskID__wrapper">
-      { linjer.map((linje, indeks) => <UtenlandskIDLinje key={indeks} indeks={indeks} />) }
-      <Nav.Knapp className="utenlandskID__leggtil" onClick={() => props.fields.push({ ID: '', land: [] })}>Legg til flere ID</Nav.Knapp>
-    </div>
-  );
-};
-
-UtenlandskIDWrapper.propTypes = {
-  fields: PT.object.isRequired,
-};
-
-const UtenlandskID = props => (
-  <div className="utenlandskID">
-    <FieldArray name="utenlandskID" component={UtenlandskIDWrapper} props={props} />
-  </div>
-);
 
 const PersonMerkelapper = ({ personStatus, erEgenAnsatt }) => {
   const erPersonDod = (personStatus.kode === 'DØD' || personStatus.kode === 'DØDD');
