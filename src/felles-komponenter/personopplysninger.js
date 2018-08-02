@@ -43,7 +43,7 @@ const UtenlandskIDWrapper = props => {
   return (
     <div className="utenlandskID__wrapper">
       { linjer.map((linje, indeks) => <UtenlandskIDLinje key={indeks} indeks={indeks} />) }
-      <Nav.Knapp className="utenlandskID__leggtil" onClick={() => props.fields.push({ ID: '', land: [] })}>Legg flere ID</Nav.Knapp>
+      <Nav.Knapp className="utenlandskID__leggtil" onClick={() => props.fields.push({ ID: '', land: [] })}>Legg til flere ID</Nav.Knapp>
     </div>
   );
 };
