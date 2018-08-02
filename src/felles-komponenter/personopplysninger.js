@@ -62,6 +62,7 @@ function Personopplysninger(props) {
     postadresseMidlertidig,
     personStatus,
     erEgenAnsatt,
+    barn,
   } = props.person;
 
   const kjoennKode = kjoenn.kode || kjoenn;
@@ -124,7 +125,7 @@ function Personopplysninger(props) {
           </Nav.Row>
           <Nav.Row className="person__seksjon">
             <Nav.Column xs="12">
-              <Barn />
+              <Barn barn={barn}/>
             </Nav.Column>
           </Nav.Row>
           {/* SLUTT PERSONINFO */}
