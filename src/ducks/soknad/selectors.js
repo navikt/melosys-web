@@ -69,5 +69,5 @@ export const SelvstendigArbeidSelector = createSelector(
 
 export const PersonOpplysningerSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.personOpplysninger : {}),
-  bosted => bosted || {}
+  person => person || {}
 );

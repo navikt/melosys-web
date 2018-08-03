@@ -8,7 +8,7 @@ import * as Skjema from '../skjema';
 import * as API from '../../services/api';
 
 import { erGyldigDnr, erGyldigFnr } from '../skjema/validering/generisk/person';
-import { alder } from '../../utils/dato';
+import { beregnAlder } from '../../utils/dato';
 
 import './medfolgendeAndre.css';
 
@@ -39,7 +39,7 @@ class MedfolgendeAndre extends Component {
 
     const funnetPerson = sammensattNavn ? (
       <div className="medfolgendeAndre__person">
-        {sammensattNavn} ({alder(foedselsdato)})
+        {sammensattNavn} ({beregnAlder(foedselsdato)})
       </div>
     ) : null;
     const spinner = this.state.visSpinner ? <Nav.NavFrontendSpinner type="S" /> : null;

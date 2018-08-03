@@ -101,7 +101,7 @@ function datoDiff (fom, tom, enhet = 'months') {
   return moment(tom).diff(fom, enhet);
 }
 
-function alder (foedselsdato) {
+function beregnAlder (foedselsdato) {
   return moment().diff(foedselsdato, 'years');
 }
 
@@ -112,6 +112,6 @@ export {
   formatterDatoTilISO,
   formatterKortDatoTilNorsk,
   datoDiff,
-  alder,
+  beregnAlder,
   MAX_AR_FREM_I_TID,
 };
