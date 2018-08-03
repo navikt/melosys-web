@@ -1,11 +1,12 @@
 import React from 'react';
-import moment from 'moment';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 import * as Skjema from '../felles-komponenter/skjema';
 import * as Ikoner from '../resources/images';
+
+import { alder } from '../utils/dato';
 
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
@@ -15,6 +16,7 @@ import Postadresse from './adresser/postadresse';
 
 import UtenlandskID from './personopplysninger/utenlandskID';
 import MedfolgendeBarn from './personopplysninger/medfolgendeBarn';
+import MedfolgendeAndre from './personopplysninger/medfolgendeAndre';
 
 import './personopplysninger.css';
 
@@ -67,14 +69,12 @@ function Personopplysninger(props) {
 
   const kjoennKode = kjoenn.kode || kjoenn;
 
-  const alder = moment().diff(foedselsdato, 'years');
-
   return (
     <div className="personopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={
           <div className="personopplysninger__panelheader">
-            <PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${alder})`} undertittel={`Fødselsnummer: ${fnr}`} />
+            <PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${alder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
             <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
           </div>}
         ariaTittel="Panel for personinformasjon"
@@ -126,6 +126,11 @@ function Personopplysninger(props) {
           <Nav.Row className="person__seksjon">
             <Nav.Column xs="12">
               <MedfolgendeBarn barnAlle={barn} />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row className="person__seksjon">
+            <Nav.Column xs="12">
+              <MedfolgendeAndre />
             </Nav.Column>
           </Nav.Row>
           {/* SLUTT PERSONINFO */}

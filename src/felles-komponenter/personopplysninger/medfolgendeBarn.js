@@ -74,7 +74,7 @@ BarnListe.defaultProps = {
 };
 
 const MedfolgendeBarn = props => (
-  <Nav.Fieldset legend="Barn" className="barn">
+  <Nav.Fieldset legend="Barn:" className="barn">
     <FieldArray
       name="medfolgendeBarn"
       component={BarnListe}
