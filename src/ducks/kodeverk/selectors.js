@@ -13,6 +13,11 @@ export const landkoderSelector = createSelector(
   landkoder => landkoder || []
 );
 
+export const oppgaveTyperSelector = createSelector(
+  state => state.kodeverk.data.oppgavetyper,
+  oppgavetyper => oppgavetyper || []
+);
+
 export const behandlingsStatusSelector = createSelector(
   state => state.kodeverk.data.behandlingsstatus,
   behandlingsstatus => behandlingsstatus || []

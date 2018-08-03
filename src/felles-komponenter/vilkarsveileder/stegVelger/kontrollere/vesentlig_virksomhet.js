@@ -13,7 +13,7 @@ class VesentligVirksomhet extends Steg {
       },
     ];
     this._id = STEG.VESENTLIG_VIRKSOMHET;
-    this._tittel = 'Vesentlig\u00ADvirksomhet';
+    this._tittel = 'Vesentlig virksomhet';
     this._komponent = VurderingVesentligVirksomhet;
     this._samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.vesentligVirksomhet || [],
