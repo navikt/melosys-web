@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 import * as Nav from '../../utils/navFrontend';
 
-import './barn.css';
+import './medfolgendeBarn.css';
 
 const uuid = require('uuid/v4');
 
@@ -73,7 +73,7 @@ BarnListe.defaultProps = {
   barn: [],
 };
 
-const Barn = props => (
+const MedfolgendeBarn = props => (
   <Nav.Fieldset legend="Barn" className="barn">
     <FieldArray
       name="medfolgendeBarn"
@@ -83,4 +83,4 @@ const Barn = props => (
   </Nav.Fieldset>
 );
 
-export default Barn;
+export default MedfolgendeBarn;
