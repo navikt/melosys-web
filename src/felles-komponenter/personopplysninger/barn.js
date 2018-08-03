@@ -1,34 +1,86 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
-
-import * as Skjema from '../skjema';
-import Landvelger from '../skjema/landvelger';
 import * as Nav from '../../utils/navFrontend';
 
 import './barn.css';
 
 const uuid = require('uuid/v4');
 
-const BarnEnkelt = ({ barnEnkelt }) => {
-  return (
-    <dl className="barnEnkelt">
-      <dd>{barnEnkelt.sammensattNavn}</dd>
-      <dd><Skjema.Checkbox feltNavn="skalværramed" label="Barnet skal være med søker." /></dd>
-    </dl>
-  );
+const BarnEnkelt = ({
+  barnEnkelt, indeks, onChange, checked,
+}) => (
+  <dl className="barnEnkelt">
+    <dd>{barnEnkelt.sammensattNavn}</dd>
+    <dd>
+      <Nav.Checkbox
+        navn={`medfolgendeBarn${indeks}`}
+        label="Skal være med søker"
+        onChange={onChange}
+        checked={checked}
+        checkboxRef={null}
+      />
+    </dd>
+  </dl>
+);
+
+BarnEnkelt.propTypes = {
+  barnEnkelt: PT.object.isRequired,
+  indeks: PT.number.isRequired,
+  onChange: PT.func.isRequired,
+  checked: PT.bool.isRequired,
 };
 
-const Barn = ({ barn }) => {
-  return (
-    <div className="barn">
-      <Nav.Fieldset legend="Barn">
-        <div className="barnListe">
-          {barn.map(barnEnkelt => <BarnEnkelt key={uuid()} barnEnkelt={barnEnkelt} />)}
-        </div>
-      </Nav.Fieldset>
-    </div>
-  );
+class BarnListe extends Component {
+  onBarnChange = (event, fnr) => {
+    const { checked } = event.target;
+    const { fields } = this.props;
+    const allFields = fields.getAll() || [];
+
+    if (checked) {
+      fields.push(fnr);
+    } else {
+      fields.remove(allFields.findIndex(element => element === fnr));
+    }
+  }
+
+  render() {
+    const { barn, fields } = this.props;
+    const { onBarnChange } = this;
+    const allFields = fields.getAll() || [];
+
+    return (
+      <div className="barnListe">
+        {barn.map((barnEnkelt, indeks) => (
+          <BarnEnkelt
+            key={uuid()}
+            barnEnkelt={barnEnkelt}
+            indeks={indeks}
+            onChange={event => onBarnChange(event, barnEnkelt.fnr)}
+            checked={allFields.includes(barnEnkelt.fnr)}
+          />))
+        }
+      </div>);
+  }
+}
+
+BarnListe.propTypes = {
+  fields: PT.object.isRequired,
+  barn: PT.array,
 };
+
+BarnListe.defaultProps = {
+  barn: [],
+};
+
+const Barn = props => (
+  <Nav.Fieldset legend="Barn" className="barn">
+    <FieldArray
+      name="medfolgendeBarn"
+      component={BarnListe}
+      props={props}
+    />
+  </Nav.Fieldset>
+);
 
 export default Barn;
