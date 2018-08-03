@@ -37,7 +37,11 @@ class MedfolgendeAndre extends Component {
   render () {
     const { sammensattNavn, foedselsdato } = this.state.person;
 
-    const funnetPerson = sammensattNavn ? <div>{sammensattNavn} ({alder(foedselsdato)})</div> : null;
+    const funnetPerson = sammensattNavn ? (
+      <div className="medfolgendeAndre__person">
+        {sammensattNavn} ({alder(foedselsdato)})
+      </div>
+    ) : null;
     const spinner = this.state.visSpinner ? <Nav.NavFrontendSpinner type="S" /> : null;
 
     return (
