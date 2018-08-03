@@ -45,13 +45,13 @@ class BarnListe extends Component {
   }
 
   render() {
-    const { barn, fields } = this.props;
+    const { barnAlle, fields } = this.props;
     const { onBarnChange } = this;
     const allFields = fields.getAll() || [];
 
     return (
       <div className="barnListe">
-        {barn.map((barnEnkelt, indeks) => (
+        {barnAlle.map((barnEnkelt, indeks) => (
           <BarnEnkelt
             key={uuid()}
             barnEnkelt={barnEnkelt}
@@ -66,11 +66,11 @@ class BarnListe extends Component {
 
 BarnListe.propTypes = {
   fields: PT.object.isRequired,
-  barn: PT.array,
+  barnAlle: PT.array,
 };
 
 BarnListe.defaultProps = {
-  barn: [],
+  barnAlle: [],
 };
 
 const MedfolgendeBarn = props => (

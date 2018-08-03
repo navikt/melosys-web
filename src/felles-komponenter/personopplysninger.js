@@ -125,7 +125,7 @@ function Personopplysninger(props) {
           </Nav.Row>
           <Nav.Row className="person__seksjon">
             <Nav.Column xs="12">
-              <MedfolgendeBarn barn={barn} />
+              <MedfolgendeBarn barnAlle={barn} />
             </Nav.Column>
           </Nav.Row>
           {/* SLUTT PERSONINFO */}
