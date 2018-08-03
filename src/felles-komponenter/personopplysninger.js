@@ -14,7 +14,7 @@ import Bostedsadresse from './adresser/bostedsadresse';
 import Postadresse from './adresser/postadresse';
 
 import UtenlandskID from './personopplysninger/utenlandskID';
-import Barn from './personopplysninger/barn';
+import MedfolgendeBarn from './personopplysninger/medfolgendeBarn';
 
 import './personopplysninger.css';
 
@@ -125,7 +125,7 @@ function Personopplysninger(props) {
           </Nav.Row>
           <Nav.Row className="person__seksjon">
             <Nav.Column xs="12">
-              <Barn barn={barn} />
+              <MedfolgendeBarn barn={barn} />
             </Nav.Column>
           </Nav.Row>
           {/* SLUTT PERSONINFO */}
