@@ -6,7 +6,7 @@ import * as MPT from '../proptypes';
 import * as Skjema from '../felles-komponenter/skjema';
 import * as Ikoner from '../resources/images';
 
-import { alder } from '../utils/dato';
+import { beregnAlder } from '../utils/dato';
 
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
@@ -74,7 +74,7 @@ function Personopplysninger(props) {
       <Nav.EkspanderbartpanelBase
         heading={
           <div className="personopplysninger__panelheader">
-            <PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${alder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
+            <PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${beregnAlder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
             <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
           </div>}
         ariaTittel="Panel for personinformasjon"
