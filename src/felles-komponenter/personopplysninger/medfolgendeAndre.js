@@ -10,34 +10,48 @@ import * as API from '../../services/api';
 import { erGyldigDnr, erGyldigFnr } from '../skjema/validering/generisk/person';
 import { alder } from '../../utils/dato';
 
+import './medfolgendeAndre.css';
+
 class MedfolgendeAndre extends Component {
-  state = { person: {} }
+  state = { person: {}, visSpinner: false }
 
   componentDidUpdate(prevProps) {
     if (prevProps.medfolgendeAndre === this.props.medfolgendeAndre) { return; }
     const { medfolgendeAndre } = this.props;
 
+    this.resetLocalState();
+
     if (erGyldigFnr(medfolgendeAndre) || erGyldigDnr(medfolgendeAndre)) {
+      this.visSpinner();
       API.Personer.hentPerson(medfolgendeAndre).then((response = {}) => {
         this.setState({ person: response });
+        this.skjulSpinner();
       });
     }
   }
+
+  resetLocalState = () => this.setState({ person: {} })
+  visSpinner = () => this.setState({ visSpinner: true });
+  skjulSpinner = () => setTimeout(() => this.setState({ visSpinner: false }), 1000);
 
   render () {
     const { sammensattNavn, foedselsdato } = this.state.person;
 
     const funnetPerson = sammensattNavn ? <div>{sammensattNavn} ({alder(foedselsdato)})</div> : null;
+    const spinner = this.state.visSpinner ? <Nav.NavFrontendSpinner type="S" /> : null;
 
     return (
-      <div>
+      <div className="medfolgendeAndre">
         <Nav.Fieldset legend="Medfølgende:">
           <div>Søker følger med et familiemedlem som utfører arbeid i landet.</div>
-          <Skjema.Input
-            bredde="M"
-            feltNavn="medfolgendeAndre"
-            label="Fødselsnummer eller D-nummer"
-          />
+          <div className="medfolgendeAndre__wrapper">
+            <Skjema.Input
+              bredde="M"
+              feltNavn="medfolgendeAndre"
+              label="Fødselsnummer eller D-nummer"
+            />
+            { spinner }
+          </div>
           { funnetPerson }
         </Nav.Fieldset>
       </div>
