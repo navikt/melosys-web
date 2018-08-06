@@ -6,6 +6,7 @@ import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 
 import Landvelger from './skjema/landvelger';
+import { BOOLSK } from '../constants';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
@@ -27,18 +28,17 @@ function ArbeidUtland () {
                 <Skjema.Input label="Gateadresse" feltNavn="arbeidUtlandGateadresse" />
                 <Skjema.Input label="Postnummer" feltNavn="arbeidUtlandPostnummer" />
                 <Skjema.Input label="Poststed" feltNavn="arbeidUtlandPoststed" />
-                <Skjema.Input label="Region" feltNavn="arbeidUtlandRegion" />
-                <Landvelger feltNavn="arbeidUtlandLand" />
+                <Landvelger label="Land" feltNavn="arbeidUtlandLand" />
               </Nav.Fieldset>
             </Nav.Column>
             <Nav.Column xs="6">
               <Skjema.RadioGruppe label="Oppgir søker hjemmekontor?" feltNavn="arbeidUtlandHjemmekontor">
-                <Skjema.Radio feltNavn="arbeidUtlandHjemmekontor" value="true" label="Ja" />
-                <Skjema.Radio feltNavn="arbeidUtlandHjemmekontor" value="false" label="Nei" />
+                <Skjema.Radio feltNavn="arbeidUtlandHjemmekontor" value={BOOLSK.SANN} label="Ja" />
+                <Skjema.Radio feltNavn="arbeidUtlandHjemmekontor" value={BOOLSK.USANN} label="Nei" />
               </Skjema.RadioGruppe>
               <Skjema.RadioGruppe label="Erstatter vedkommende en tidligere utsendt?" feltNavn="arbeidUtlandErstatning">
-                <Skjema.Radio feltNavn="arbeidUtlandErstatning" value="true" label="Ja" />
-                <Skjema.Radio feltNavn="arbeidUtlandErstatning" value="false" label="Nei" />
+                <Skjema.Radio feltNavn="arbeidUtlandErstatning" value={BOOLSK.SANN} label="Ja" />
+                <Skjema.Radio feltNavn="arbeidUtlandErstatning" value={BOOLSK.USANN} label="Nei" />
               </Skjema.RadioGruppe>
             </Nav.Column>
           </Nav.Row>
