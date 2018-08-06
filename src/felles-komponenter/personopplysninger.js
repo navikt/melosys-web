@@ -1,12 +1,22 @@
 import React from 'react';
-import moment from 'moment';
+import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
+import * as MPT from '../proptypes';
+import * as Skjema from '../felles-komponenter/skjema';
 import * as Ikoner from '../resources/images';
+
+import { beregnAlder } from '../utils/dato';
 
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+
+import Bostedsadresse from './adresser/bostedsadresse';
+import Postadresse from './adresser/postadresse';
+
+import UtenlandskID from './personopplysninger/utenlandskID';
+import MedfolgendeBarn from './personopplysninger/medfolgendeBarn';
+import MedfolgendeAndre from './personopplysninger/medfolgendeAndre';
 
 import './personopplysninger.css';
 
@@ -17,22 +27,26 @@ const ikonFraKjonn = kjoenn => {
     default: { return Ikoner.Ukjentkjoenn; }
   }
 };
-const visBostedsAdresse = bostedsadresse => {
-  if (bostedsadresse) {
-    const {
-      poststed, postnr, land, gateadresse: { gatenavn, husnummer, husbokstav = '' },
-    } = bostedsadresse;
 
-    return (
-      <div>
-        <dd>{`${gatenavn} ${husnummer} ${husbokstav}`}</dd>
-        <dd>{`${postnr} ${poststed}`}</dd>
-        <dd>{`${land}`}</dd>
-      </div>
-    );
-  }
+const PersonMerkelapper = ({ personStatus, erEgenAnsatt }) => {
+  const erPersonDod = (personStatus.kode === 'DOD' || personStatus.kode === 'DØD' || personStatus.kode === 'DØDD');
 
-  return null;
+  return (
+    <div className="personopplysninger__personstatus">
+      { erPersonDod && <Nav.EtikettBase type="advarsel">DØD</Nav.EtikettBase> }
+      { erEgenAnsatt && <Nav.EtikettBase type="advarsel">Egen ansatt</Nav.EtikettBase> }
+    </div>
+  );
+};
+
+PersonMerkelapper.propTypes = {
+  personStatus: MPT.Kodeverk,
+  erEgenAnsatt: PT.bool,
+};
+
+PersonMerkelapper.defaultProps = {
+  personStatus: {},
+  erEgenAnsatt: false,
 };
 
 function Personopplysninger(props) {
@@ -46,34 +60,76 @@ function Personopplysninger(props) {
     sammensattNavn,
     foedselsdato,
     bostedsadresse,
+    postadresse,
+    postadresseMidlertidig,
+    personStatus,
+    erEgenAnsatt,
+    barn = [],
   } = props.person;
 
-
-  const aar = moment().diff(foedselsdato, 'years');
+  const kjoennKode = kjoenn.kode || kjoenn;
 
   return (
     <div className="personopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={ikonFraKjonn(kjoenn)} tittel={`${sammensattNavn} (${aar})`} undertittel={`Fødselsnummer: ${fnr}`} />}
-        ariaTittel="Panel for personinformasjon" >
+        heading={
+          <div className="personopplysninger__panelheader">
+            <PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${beregnAlder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
+            <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
+          </div>}
+        ariaTittel="Panel for personinformasjon"
+      >
         <Nav.Container fluid>
           {/* START PERSONINFO */}
           <Nav.Row className="person__seksjon">
             <Nav.Column xs="6">
               <dl className="person__detaljer">
                 <dt>Fødselsnummer:</dt><dd>{fnr}</dd>
-                <dt>Kjønn:</dt><dd>{kjoenn}</dd>
-
-                <dt>Bostedsadresse</dt>
-                {visBostedsAdresse(bostedsadresse)}
+                <dt>Statsborgerskap:</dt><dd>{statsborgerskap.term || statsborgerskap}</dd>
+                <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
+                <dt>Kjønn:</dt><dd>{kjoenn.term || kjoenn}</dd>
+                <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
               </dl>
             </Nav.Column>
             <Nav.Column xs="6">
+              <UtenlandskID />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row className="person__seksjon">
+            <Nav.Column xs="4">
               <dl className="person__detaljer">
-                <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
-                <dt>Statsborgerskap:</dt><dd>{statsborgerskap}</dd>
-                <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
+                <dt>Bostedsadresse (TPS):</dt>
+                <Bostedsadresse bostedsadresse={bostedsadresse} />
               </dl>
+            </Nav.Column>
+            <Nav.Column xs="4">
+              <dl className="person__detaljer">
+                <dt>Postadresse (TPS):</dt>
+                <Postadresse postadresse={postadresse} />
+              </dl>
+            </Nav.Column>
+            <Nav.Column xs="4">
+              <dl className="person__detaljer">
+                <dt>Midl. postadresse (TPS):</dt>
+                <Postadresse postadresse={postadresseMidlertidig} />
+              </dl>
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row className="person__seksjon">
+            <Nav.Column xs="6">
+              <dl className="person__detaljer">
+                <Skjema.Textarea feltNavn="oppgittAdresse" label="Adresse oppgitt av søker:" maxLength={200} />
+              </dl>
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row className="person__seksjon">
+            <Nav.Column xs="12">
+              {barn.length > 0 && <MedfolgendeBarn barnAlle={barn} /> }
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row className="person__seksjon">
+            <Nav.Column xs="12">
+              <MedfolgendeAndre />
             </Nav.Column>
           </Nav.Row>
           {/* SLUTT PERSONINFO */}
