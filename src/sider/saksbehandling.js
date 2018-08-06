@@ -9,7 +9,7 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
-import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
+import ArbeidUtland from '../felles-komponenter/arbeidUtland';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
 import Bosted from '../felles-komponenter/bosted';
 import Inntekt from '../felles-komponenter/inntektUtland';
@@ -187,7 +187,7 @@ class Saksbehandling extends Component {
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <SelvstendigArbeid soknadVerdier={soknadVerdier} />
                 <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
-                <ArbeidsgiverUtland />
+                <ArbeidUtland />
                 <MaritimtArbeid soknadVerdier={soknadVerdier} />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}

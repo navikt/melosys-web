@@ -7,15 +7,15 @@ import * as Skjema from './skjema';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
-import './arbeidsgiverUtland.css';
+import './arbeidUtland.css';
 
-function ArbeidsgiverUtland () {
+function ArbeidUtland () {
   const panelIkon = Ikoner.Ferdig;
 
   return (
     <div className="arbeidsgiverUtland panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Arbeidssted i utlandet" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om arbeid i utlandet" undertittel="" />}
         ariaTittel="Panel for arbeidssted i utlandet">
         <Nav.Container fluid>
           <Nav.Column xs="6">
@@ -31,12 +31,12 @@ function ArbeidsgiverUtland () {
   );
 }
 
-ArbeidsgiverUtland.propTypes = {
+ArbeidUtland.propTypes = {
   organisasjoner: MPT.Organisasjoner,
 };
 
-ArbeidsgiverUtland.defaultProps = {
+ArbeidUtland.defaultProps = {
   organisasjoner: [],
 };
 
-export default ArbeidsgiverUtland;
+export default ArbeidUtland;

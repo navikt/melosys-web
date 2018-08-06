@@ -9,7 +9,7 @@ import LandVelger from './skjema/landvelger';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
-import './arbeidsgiverUtland.css';
+import './oppholdUtland.css';
 
 function OppholdUtland () {
   const panelIkon = Ikoner.Ferdig;
