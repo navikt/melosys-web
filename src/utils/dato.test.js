@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilISO, formatterKortDatoTilNorsk, datoDiff } from './dato';
+import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilISO, formatterKortDatoTilNorsk, datoDiff, beregnAlder } from './dato';
 
 import MockDate from 'mockdate';
 import moment from 'moment/moment'
@@ -197,5 +197,22 @@ describe('dato.js:', () => {
       expect(datoDiff(dato1, dato2, 'days')).toBe(3);
     })
   });
+
+  describe('beregnAlder', () => {
+    test('alder er 39 31. desember', () => {
+      MockDate.set('12/31/2017');
+      const foedselsdato = '1978-01-01';
+      const forventetAlder = 39;
+      expect(beregnAlder(foedselsdato)).toBe(forventetAlder);
+    })
+
+    test('alder er 40 1. januar', () => {
+      MockDate.set('1/1/2018');
+      const foedselsdato = '1978-01-01';
+      const forventetAlder = 40;
+      expect(beregnAlder(foedselsdato)).toBe(forventetAlder);
+    })
+
+  })
 
 });
