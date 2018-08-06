@@ -78,7 +78,6 @@ function Personopplysninger(props) {
             <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
           </div>}
         ariaTittel="Panel for personinformasjon"
-        apen
       >
         <Nav.Container fluid>
           {/* START PERSONINFO */}
