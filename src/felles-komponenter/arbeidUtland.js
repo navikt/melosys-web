@@ -6,9 +6,9 @@ import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 
 import Landvelger from './skjema/landvelger';
-import { BOOLSK } from '../constants';
-
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+
+import { BOOLSK } from '../constants';
 
 import './arbeidUtland.css';
 
@@ -45,8 +45,8 @@ function ArbeidUtland () {
           <Nav.Row>
             <Nav.Column xs="6">
               <Nav.Fieldset legend="Arbeidsandel i prosent">
-                <Skjema.Input bredde="XS" inputClassName="skjema__input--prosent" type="number" feltNavn="arbeidsandelUtland" label="Arbeidsandel utland, oppgitt i søknad" />
-                <Skjema.Input bredde="XS" inputClassName="skjema__input--prosent" type="number" feltNavn="arbeidsandelNorge" label="Arbeidsandel Norge, oppgitt i søknad" />
+                <Skjema.Input bredde="XS" type="number" feltNavn="arbeidsandelUtland" label="Arbeidsandel utland, oppgitt i søknad" />
+                <Skjema.Input bredde="XS" type="number" feltNavn="arbeidsandelNorge" label="Arbeidsandel Norge, oppgitt i søknad" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
