@@ -4,6 +4,7 @@ import * as Types from './types';
 
 import { strengTilInt } from '../../utils/streng';
 import { formatterDatoTilISO } from '../../utils/dato';
+import * as soknadSelectors from './selectors'
 
 /**
  * Reducers
@@ -122,6 +123,15 @@ export default function reducer(state = initialState, action) {
         },
         arbeidNorge: {
           ...state.data.soknadDokument.arbeidNorge,
+        },
+        arbeidUtland: {
+          arbeidUtlandGateadresse: dokument.arbeidUtlandGateadresse,
+          arbeidUtlandPostnummer: dokument.arbeidUtlandPostnummer,
+          arbeidUtlandPoststed: dokument.arbeidUtlandPoststed,
+          arbeidUtlandRegion: dokument.arbeidUtlandRegion,
+          arbeidUtlandLand: dokument.arbeidUtlandLand,
+          arbeidsandelUtland: dokument.arbeidsandelUtland,
+          arbeidsandelNorge: dokument.arbeidsandelNorge,
         },
         arbeidsgiversBekreftelse: {
           ...state.data.soknadDokument.arbeidsgiversBekreftelse,
