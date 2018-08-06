@@ -159,7 +159,12 @@ export default function reducer(state = initialState, action) {
           studentFinansiering: dokument.studentFinansiering,
         },
         bosted: {
-          oppgittAdresse: dokument.oppgittAdresse,
+          oppgittAdresse: {
+            gatenavn: dokument.oppgittAdresseGatenavn,
+            postnummer: dokument.oppgittAdressePostnummer,
+            poststed: dokument.oppgittAdressePoststed,
+            land: dokument.oppgittAdresseLand,
+          },
         },
         maritimtArbeid: {
           ...state.data.soknadDokument.maritimtArbeid,
