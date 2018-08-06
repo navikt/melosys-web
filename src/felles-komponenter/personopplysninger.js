@@ -13,6 +13,7 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import Bostedsadresse from './adresser/bostedsadresse';
 import Postadresse from './adresser/postadresse';
+import LandVelger from './skjema/landvelger';
 
 import UtenlandskID from './personopplysninger/utenlandskID';
 import MedfolgendeBarn from './personopplysninger/medfolgendeBarn';
@@ -117,9 +118,20 @@ function Personopplysninger(props) {
           </Nav.Row>
           <Nav.Row className="person__seksjon">
             <Nav.Column xs="6">
-              <dl className="person__detaljer">
-                <Skjema.Textarea feltNavn="oppgittAdresse" label="Adresse oppgitt av søker:" maxLength={200} />
-              </dl>
+              <Nav.Fieldset legend="Adresse oppgitt i søknad:">
+                <dl className="person__detaljer">
+                  <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" />
+                  <Nav.Row>
+                    <Nav.Column xs="4">
+                      <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnummer:" />
+                    </Nav.Column>
+                    <Nav.Column xs="8">
+                      <Skjema.Input feltNavn="oppgittAdressePoststed" label="Poststed:" />
+                    </Nav.Column>
+                  </Nav.Row>
+                  <LandVelger feltNavn="oppgittAdresseLand" label="Land:" />
+                </dl>
+              </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="person__seksjon">

@@ -52,6 +52,14 @@ export const BostedSelector = createSelector(
   bosted => bosted || {}
 );
 
+export const BostedAdresseSelector = createSelector(
+  state => BostedSelector(state),
+  bosted => {
+    const { oppgittAdresse = {} } = bosted;
+    return oppgittAdresse;
+  }
+);
+
 export const ArbeidsgiversBekreftelseSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
   soknad => soknad || {}
