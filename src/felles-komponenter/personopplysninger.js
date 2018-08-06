@@ -29,7 +29,7 @@ const ikonFraKjonn = kjoenn => {
 };
 
 const PersonMerkelapper = ({ personStatus, erEgenAnsatt }) => {
-  const erPersonDod = (personStatus.kode === 'DØD' || personStatus.kode === 'DØDD');
+  const erPersonDod = (personStatus.kode === 'DOD' || personStatus.kode === 'DØD' || personStatus.kode === 'DØDD');
 
   return (
     <div className="personopplysninger__personstatus">
