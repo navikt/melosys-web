@@ -15,7 +15,15 @@ import './medfolgendeAndre.css';
 class MedfolgendeAndre extends Component {
   state = { person: {}, visSpinner: false }
 
+  componentDidMount() {
+    this.sjekkMedfolgende({});
+  }
+
   componentDidUpdate(prevProps) {
+    this.sjekkMedfolgende(prevProps);
+  }
+
+  sjekkMedfolgende = prevProps => {
     if (prevProps.medfolgendeAndre === this.props.medfolgendeAndre) { return; }
     const { medfolgendeAndre } = this.props;
 
