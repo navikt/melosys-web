@@ -9,7 +9,7 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
-import ArbeidsgiverUtland from '../felles-komponenter/arbeidsgiverUtland';
+import ArbeidUtland from '../felles-komponenter/arbeidUtland';
 import Bekreftelser from '../felles-komponenter/bekreftelser';
 import Bosted from '../felles-komponenter/bosted';
 import Inntekt from '../felles-komponenter/inntektUtland';
@@ -187,7 +187,7 @@ class Saksbehandling extends Component {
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <SelvstendigArbeid soknadVerdier={soknadVerdier} />
                 <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
-                <ArbeidsgiverUtland />
+                <ArbeidUtland />
                 <MaritimtArbeid soknadVerdier={soknadVerdier} />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
@@ -247,6 +247,14 @@ const mapStateToProps = state => ({
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: soknadSelectors.OppholdUtlandSelector(state).oppholdsland,
     forutgaendeBostedINorge: soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge,
+    arbeidUtlandGatenavn: soknadSelectors.ArbeidUtlandAdresseSelector(state).gatenavn,
+    arbeidUtlandPostnummer: soknadSelectors.ArbeidUtlandAdresseSelector(state).postnummer,
+    arbeidUtlandPoststed: soknadSelectors.ArbeidUtlandAdresseSelector(state).poststed,
+    arbeidUtlandLand: soknadSelectors.ArbeidUtlandAdresseSelector(state).land,
+    arbeidsandelUtland: soknadSelectors.ArbeidUtlandSelector(state).arbeidsandelUtland,
+    arbeidsandelNorge: soknadSelectors.ArbeidUtlandSelector(state).arbeidsandelNorge,
+    arbeidUtlandHjemmekontor: soknadSelectors.ArbeidUtlandSelector(state).arbeidUtlandHjemmekontor,
+    arbeidUtlandErstatning: soknadSelectors.ArbeidUtlandSelector(state).arbeidUtlandErstatning,
     sammeAdresseSomArbeidsgiver: soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver,
     ektefelleEllerBarnINorge: soknadSelectors.OppholdUtlandSelector(state).harEktefelleEllerBarnINorge,
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
