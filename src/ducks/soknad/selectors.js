@@ -28,8 +28,8 @@ export const ArbeidsinntektSelector = createSelector(
 );
 
 export const ForetakUtlandSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.foretakUtland,
-  soknad => soknad || {}
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.foretakUtland : []),
+  foretakUtland => foretakUtland || []
 );
 
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(

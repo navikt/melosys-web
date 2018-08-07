@@ -16,6 +16,7 @@ import Inntekt from '../felles-komponenter/inntektUtland';
 import Medlemskap from '../felles-komponenter/medlemskap';
 import OppholdUtland from '../felles-komponenter/oppholdUtland';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
+import ForetakUtland from '../felles-komponenter/foretakUtland';
 import MaritimtArbeid from '../felles-komponenter/maritimtArbeid';
 import SelvstendigArbeid from '../felles-komponenter/selvstendigArbeid';
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
@@ -188,6 +189,7 @@ class Saksbehandling extends Component {
                 <SelvstendigArbeid soknadVerdier={soknadVerdier} />
                 <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
                 <ArbeidsgiverUtland />
+                <ForetakUtland />
                 <MaritimtArbeid soknadVerdier={soknadVerdier} />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
@@ -261,6 +263,7 @@ const mapStateToProps = state => ({
     fartsomrade: soknadSelectors.MaritimtArbeidSelector(state).fartsomrade,
     flaggLand: soknadSelectors.MaritimtArbeidSelector(state).flaggLand,
     installasjonsLand: soknadSelectors.MaritimtArbeidSelector(state).installasjonsLand,
+    foretakUtland: soknadSelectors.ForetakUtlandSelector(state),
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
     fullmektigFirma: soknadSelectors.ArbeidNorgeSelector(state).fullmektigFirma,
