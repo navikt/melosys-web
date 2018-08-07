@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, getFormValues } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+
+import localforage from 'localforage';
 
 import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
@@ -16,6 +18,12 @@ import './behandling.css';
 const uuid = require('uuid/v4');
 
 class Behandling extends Component {
+  componentDidUpdate() {
+    const { formValues } = this.props;
+
+    localforage.setItem('melosys', JSON.stringify(formValues));
+  }
+
   submitOgVideresend = form => {
     this.props.handleSubmit(form).then(redirectURL => {
       /* eslint-disable no-alert */
@@ -63,11 +71,20 @@ Behandling.propTypes = {
   history: PT.object.isRequired,
   behandlingsTyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   saksTyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  formValues: PT.object,
+};
+
+Behandling.defaultProps = {
+  formValues: {},
 };
 
 const mapStateToProps = state => ({
   behandlingsTyper: Kodeverk.KodeverkSelectors.behandlingsTyperSelector(state),
   saksTyper: Kodeverk.KodeverkSelectors.sakstyperSelector(state),
+  formValues: getFormValues('behandlingsform')(state),
+  initialValues: {
+    EU_EOS: true,
+  },
 });
 
 const BehandlngForm = reduxForm({
