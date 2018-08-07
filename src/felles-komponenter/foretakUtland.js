@@ -10,51 +10,58 @@ import LandVelger from './skjema/landvelger';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
-import './arbeidsgiverUtland.css';
+import './foretakUtland.css';
 
-const uuid = require('uuid/v4');
-
-const EnkeltForetak = props => {
-  const panelIkon = Ikoner.Ferdig;
-  const { indeks } = props;
-
-  return (
-    <div className="foretakUtland panelSeksjon">
-      <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Foretak i utlandet" undertittel="" />}
-        ariaTittel="Panel for foretak i utlandet">
-        <Nav.Container fluid>
-          <Nav.Column xs="6">
-            <Nav.Fieldset legend="Om foretaket">
-              <Skjema.Input label="Firmanavn" feltNavn={`foretakUtland[${indeks}].navn`} />
-              <Skjema.Input label="Orgnr / ID nr" feltNavn={`foretakUtland[${indeks}].orgnr`} />
-            </Nav.Fieldset>
-          </Nav.Column>
-          <Nav.Column xs="6">
-            <Nav.Fieldset legend="Foretakets adresse">
-              <Skjema.Input label="Gatenavn" feltNavn={`foretakUtland[${indeks}].postadresse.gatenavn`} />
-              <Skjema.Input label="Postnummer" feltNavn={`foretakUtland[${indeks}].postadresse.postnummer`} />
-              <Skjema.Input label="Poststed" feltNavn={`foretakUtland[${indeks}].postadresse.poststed`} />
-              <LandVelger label="Land" feltNavn={`foretakUtland[${indeks}].postadresse.land`} />
-            </Nav.Fieldset>
-          </Nav.Column>
-        </Nav.Container>
-      </Nav.EkspanderbartpanelBase>
-    </div>
-  );
-};
+const EnkeltForetak = ({ indeks, slettForetakHandler }) => (
+  <Nav.Row className="foretakUtland__enkelt">
+    <Nav.Column xs="6">
+      <Nav.Fieldset legend="Om foretaket">
+        <Skjema.Input label="Firmanavn" feltNavn={`foretakUtland[${indeks}].navn`} />
+        <Skjema.Input label="Orgnr / ID nr" feltNavn={`foretakUtland[${indeks}].orgnr`} />
+      </Nav.Fieldset>
+    </Nav.Column>
+    <Nav.Column xs="6">
+      <Nav.Fieldset legend="Foretakets adresse">
+        <Skjema.Input label="Gatenavn" feltNavn={`foretakUtland[${indeks}].postadresse.gatenavn`} />
+        <Skjema.Input label="Postnummer" feltNavn={`foretakUtland[${indeks}].postadresse.postnummer`} />
+        <Skjema.Input label="Poststed" feltNavn={`foretakUtland[${indeks}].postadresse.poststed`} />
+        <LandVelger label="Land" feltNavn={`foretakUtland[${indeks}].postadresse.land`} />
+      </Nav.Fieldset>
+    </Nav.Column>
+    <Nav.Knapp onClick={() => slettForetakHandler(indeks)}>Fjern dette foretaket</Nav.Knapp>
+  </Nav.Row>
+);
 
 EnkeltForetak.propTypes = {
   indeks: PT.number.isRequired,
+  slettForetakHandler: PT.func.isRequired,
 };
 
 class ForetakUtlandWrapper extends Component {
+  leggTilForetakHandler = () => {
+    this.props.fields.push({});
+  }
+
+  slettForetakHandler = indeks => {
+    this.props.fields.remove(indeks);
+  }
+
   render() {
+    const panelIkon = Ikoner.Ferdig;
     const { fields } = this.props;
+    const { slettForetakHandler } = this;
 
     return (
-      <div>
-        { fields.map((field, indeks) => <EnkeltForetak key={uuid()} indeks={indeks} />)}
+      <div className="foretakUtland panelSeksjon">
+        <Nav.EkspanderbartpanelBase
+          heading={<PanelHeader ikon={panelIkon} tittel="Foretak i utlandet" undertittel="" />}
+          ariaTittel="Panel for foretak i utlandet"
+          apen>
+          <Nav.Container fluid>
+            { fields.map((field, indeks) => (<EnkeltForetak key={field} indeks={indeks} slettForetakHandler={slettForetakHandler} />))}
+            <Nav.Knapp className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>Legg til flere foretak i utlandet</Nav.Knapp>
+          </Nav.Container>
+        </Nav.EkspanderbartpanelBase>
       </div>
     );
   }
