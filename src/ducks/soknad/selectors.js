@@ -22,6 +22,14 @@ export const ArbeidUtlandSelector = createSelector(
   arbeidUtland => arbeidUtland || {}
 );
 
+export const ArbeidUtlandAdresseSelector = createSelector(
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidUtland : {}),
+  arbeidUtland => {
+    const { adresse = {} } = arbeidUtland;
+    return adresse;
+  }
+);
+
 export const ArbeidsinntektSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsinntekt : {}),
   soknad => soknad || {}
