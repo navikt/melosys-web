@@ -19,8 +19,7 @@ function ArbeidUtland () {
     <div className="arbeidsgiverUtland panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om arbeid i utlandet" undertittel="" />}
-        ariaTittel="Panel for arbeidssted i utlandet"
-        apen>
+        ariaTittel="Panel for arbeidssted i utlandet">
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="6">
