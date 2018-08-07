@@ -66,3 +66,8 @@ export const SelvstendigArbeidSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.selvstendigArbeid : {}),
   selvstendigArbeid => selvstendigArbeid || {}
 );
+
+export const PersonOpplysningerSelector = createSelector(
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.personOpplysninger : {}),
+  person => person || {}
+);

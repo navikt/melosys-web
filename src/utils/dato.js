@@ -14,7 +14,7 @@ const MAX_AR_FREM_I_TID = 10;
 /** Gjør et beste forsøk på å vaske inputdato. Dersom vask ikke er mulig (feks ved helt feil datoformat eller
  * ugyldig dato, returner false.
  * @param dato
- * @returns {String | Bool } Datoen
+ * @returns {String | Boolean } Datoen
  */
 const vaskInputDato = dato => {
   if (dato === null || dato === undefined) return false;
@@ -101,6 +101,10 @@ function datoDiff (fom, tom, enhet = 'months') {
   return moment(tom).diff(fom, enhet);
 }
 
+function beregnAlder (foedselsdato) {
+  return moment().diff(foedselsdato, 'years');
+}
+
 export {
   vaskInputDato,
   normaliserInputDato,
@@ -108,5 +112,6 @@ export {
   formatterDatoTilISO,
   formatterKortDatoTilNorsk,
   datoDiff,
+  beregnAlder,
   MAX_AR_FREM_I_TID,
 };

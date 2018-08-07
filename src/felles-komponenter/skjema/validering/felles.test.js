@@ -140,6 +140,7 @@ describe('Tester felles.js:', () => {
         bekreftelser: true,
         faktaavklaring: true,
         maritimtArbeid: true,
+        personOpplysninger: true,
         selvstendigArbeid: true,
       }
 
