@@ -27,11 +27,7 @@ const soknadTemplate =
       bostedsland: undefined,
       erstatterTidligereUtsendt: undefined,
     },
-    foretakUtland: {
-      foretakUtlandNavn: undefined,
-      foretakUtlandOrgnr: undefined,
-      foretakUtlandAdresse: undefined,
-    },
+    foretakUtland: [],
     oppholdUtland: {
       oppholdsland: undefined,
       oppholdsPeriode: { fom: undefined, tom: undefined },
@@ -158,6 +154,7 @@ export default function reducer(state = initialState, action) {
           studieLand: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,
         },
+        foretakUtland: dokument.foretakUtland,
         bosted: {
           oppgittAdresse: dokument.oppgittAdresse,
         },
