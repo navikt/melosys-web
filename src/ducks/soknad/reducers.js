@@ -20,10 +20,12 @@ const initialState = {
 const soknadTemplate =
   {
     arbeidUtland: {
-      arbeidUtlandGatenavn: undefined,
-      arbeidUtlandPostnummer: undefined,
-      arbeidUtlandPoststed: undefined,
-      arbeidUtlandLand: undefined,
+      adresse: {
+        gatenavn: undefined,
+        postnummer: undefined,
+        poststed: undefined,
+        land: undefined,
+      },
       arbeidsandelUtland: undefined,
       arbeidsandelNorge: undefined,
       arbeidUtlandHjemmekontor: undefined,
