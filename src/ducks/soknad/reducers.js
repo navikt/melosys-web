@@ -20,12 +20,16 @@ const initialState = {
 const soknadTemplate =
   {
     arbeidUtland: {
-      arbeidsland: [],
-      arbeidsperiode: { fom: undefined, tom: undefined },
-      arbeidsandelNorge: undefined,
+      adresse: {
+        gatenavn: undefined,
+        postnummer: undefined,
+        poststed: undefined,
+        land: undefined,
+      },
       arbeidsandelUtland: undefined,
-      bostedsland: undefined,
-      erstatterTidligereUtsendt: undefined,
+      arbeidsandelNorge: undefined,
+      arbeidUtlandHjemmekontor: undefined,
+      arbeidUtlandErstatning: undefined,
     },
     foretakUtland: [],
     oppholdUtland: {
@@ -127,6 +131,18 @@ export default function reducer(state = initialState, action) {
         arbeidNorge: {
           ...state.data.soknadDokument.arbeidNorge,
         },
+        arbeidUtland: {
+          adresse: {
+            gatenavn: dokument.arbeidUtlandGatenavn,
+            postnummer: dokument.arbeidUtlandPostnummer,
+            poststed: dokument.arbeidUtlandPoststed,
+            land: dokument.arbeidUtlandLand,
+          },
+          arbeidsandelUtland: dokument.arbeidsandelUtland,
+          arbeidsandelNorge: dokument.arbeidsandelNorge,
+          arbeidUtlandHjemmekontor: dokument.arbeidUtlandHjemmekontor,
+          arbeidUtlandErstatning: dokument.arbeidUtlandErstatning,
+        },
         arbeidsgiversBekreftelse: {
           ...state.data.soknadDokument.arbeidsgiversBekreftelse,
           arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
@@ -156,7 +172,12 @@ export default function reducer(state = initialState, action) {
         },
         foretakUtland: dokument.foretakUtland,
         bosted: {
-          oppgittAdresse: dokument.oppgittAdresse,
+          oppgittAdresse: {
+            gatenavn: dokument.oppgittAdresseGatenavn,
+            postnummer: dokument.oppgittAdressePostnummer,
+            poststed: dokument.oppgittAdressePoststed,
+            land: dokument.oppgittAdresseLand,
+          },
         },
         maritimtArbeid: {
           ...state.data.soknadDokument.maritimtArbeid,
