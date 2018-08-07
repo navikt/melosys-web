@@ -25,7 +25,7 @@ function ArbeidUtland () {
           <Nav.Row>
             <Nav.Column xs="6">
               <Nav.Fieldset legend="Fysisk arbeidssted">
-                <Skjema.Input label="Gateadresse" feltNavn="arbeidUtlandGateadresse" />
+                <Skjema.Input label="Gateadresse" feltNavn="arbeidUtlandGatenavn" />
                 <Skjema.Input label="Postnummer" feltNavn="arbeidUtlandPostnummer" />
                 <Skjema.Input label="Poststed" feltNavn="arbeidUtlandPoststed" />
                 <Landvelger label="Land" feltNavn="arbeidUtlandLand" />

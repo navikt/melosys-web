@@ -20,7 +20,7 @@ const initialState = {
 const soknadTemplate =
   {
     arbeidUtland: {
-      arbeidUtlandGateadresse: undefined,
+      arbeidUtlandGatenavn: undefined,
       arbeidUtlandPostnummer: undefined,
       arbeidUtlandPoststed: undefined,
       arbeidUtlandLand: undefined,
@@ -134,10 +134,12 @@ export default function reducer(state = initialState, action) {
           ...state.data.soknadDokument.arbeidNorge,
         },
         arbeidUtland: {
-          arbeidUtlandGateadresse: dokument.arbeidUtlandGateadresse,
-          arbeidUtlandPostnummer: dokument.arbeidUtlandPostnummer,
-          arbeidUtlandPoststed: dokument.arbeidUtlandPoststed,
-          arbeidUtlandLand: dokument.arbeidUtlandLand,
+          adresse: {
+            gatenavn: dokument.arbeidUtlandGatenavn,
+            postnummer: dokument.arbeidUtlandPostnummer,
+            poststed: dokument.arbeidUtlandPoststed,
+            land: dokument.arbeidUtlandLand,
+          },
           arbeidsandelUtland: dokument.arbeidsandelUtland,
           arbeidsandelNorge: dokument.arbeidsandelNorge,
           arbeidUtlandHjemmekontor: dokument.arbeidUtlandHjemmekontor,
