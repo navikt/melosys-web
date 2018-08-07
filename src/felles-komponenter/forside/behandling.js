@@ -4,8 +4,6 @@ import { reduxForm, getFormValues } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
-import localforage from 'localforage';
-
 import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
@@ -17,11 +15,12 @@ import './behandling.css';
 
 const uuid = require('uuid/v4');
 
+const BEHANDLINGSFORM = 'behandlingsform';
+
 class Behandling extends Component {
   componentDidUpdate() {
     const { formValues } = this.props;
-
-    localforage.setItem('melosys', JSON.stringify(formValues));
+    localStorage.setItem(BEHANDLINGSFORM, JSON.stringify(formValues));
   }
 
   submitOgVideresend = form => {
@@ -81,14 +80,11 @@ Behandling.defaultProps = {
 const mapStateToProps = state => ({
   behandlingsTyper: Kodeverk.KodeverkSelectors.behandlingsTyperSelector(state),
   saksTyper: Kodeverk.KodeverkSelectors.sakstyperSelector(state),
-  formValues: getFormValues('behandlingsform')(state),
-  initialValues: {
-    EU_EOS: true,
-  },
+  formValues: getFormValues(BEHANDLINGSFORM)(state),
+  initialValues: JSON.parse(localStorage.getItem(BEHANDLINGSFORM)),
 });
-
 const BehandlngForm = reduxForm({
-  form: 'behandlingsform',
+  form: BEHANDLINGSFORM,
   onSubmit: checkboxliste => oppgaverOperations.send('BEH_SAK', checkboxliste),
 })(Behandling);
 
