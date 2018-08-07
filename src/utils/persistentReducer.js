@@ -19,7 +19,7 @@ function erFiltreringEndret(scope, initialState) {
   const keysFromInitialState = Object.keys(initialState);
 
   return !(keysFromStorage.length === keysFromInitialState.length &&
-    keysFromStorage.every((key) => keysFromInitialState.includes(key)));
+    keysFromStorage.every(key => keysFromInitialState.includes(key)));
 }
 
 export default (scope, location, reducer, onClean = () => {}, initialFilterstate) => (state, action) => {
