@@ -72,7 +72,7 @@ const mapStateToProps = state => ({
 
 const BehandlngForm = reduxForm({
   form: 'behandlingsform',
-  onSubmit: checkboxliste => oppgaverOperations.send('BEH_SAK', checkboxliste),
+  onSubmit: checkboxliste => oppgaverOperations.sendBehandlingsOppgave(checkboxliste),
 })(Behandling);
 
 export default withRouter(connect(mapStateToProps, null)(BehandlngForm));
