@@ -85,7 +85,7 @@ class Informasjon extends Component {
     const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
 
     if (Person.erGyldigFnr(verdi)) {
-      this.toggleSpinner('avsenderNavn');
+      this.toggleSpinner('brukerNavn');
       hentOgVisBruker(verdi).then(response => {
         if (!response) return;
         const { brukerID, sammensattNavn } = response;
@@ -149,7 +149,7 @@ class Informasjon extends Component {
     const {
       valgbareDokumentTitler, valgbareVedleggsTitler, journalpostID, dokumentID,
     } = this.props;
-    const { spinner: { brukersNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
+    const { spinner: { brukerNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
     const { skalFeltetDisables } = this;
 
     const dokumentURI = Api.Dokumenter.pdfURI(journalpostID, dokumentID);
