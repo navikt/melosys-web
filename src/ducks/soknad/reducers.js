@@ -42,6 +42,9 @@ const soknadTemplate =
       studentFinansiering: undefined,
       studieLand: undefined,
     },
+    bosted: {
+      oppgittAdresse: undefined,
+    },
     arbeidNorge: {
       valgteArbeidsforhold: [],
       arbeidsforholdOpprettholdIHelePerioden: undefined,
@@ -86,6 +89,11 @@ const soknadTemplate =
       arbeidsgiverBetalerArbeidsgiveravgift: undefined,
       trygdeavgiftTrukketGjennomSkatt: undefined,
       trygdeavgiftTrukketGjennomSkattDato: undefined,
+    },
+    personOpplysninger: {
+      utenlandskID: undefined,
+      medfolgendeBarn: undefined,
+      medfolgendeAndre: undefined,
     },
   };
 
@@ -150,6 +158,9 @@ export default function reducer(state = initialState, action) {
           studieLand: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,
         },
+        bosted: {
+          oppgittAdresse: dokument.oppgittAdresse,
+        },
         maritimtArbeid: {
           ...state.data.soknadDokument.maritimtArbeid,
           maritimType: dokument.maritimType,
@@ -161,6 +172,11 @@ export default function reducer(state = initialState, action) {
         selvstendigArbeid: {
           erSelvstendig: dokument.erSelvstendig,
           selvstendigForetak: dokument.selvstendigForetak,
+        },
+        personOpplysninger: {
+          utenlandskID: dokument.utenlandskID,
+          medfolgendeBarn: dokument.medfolgendeBarn,
+          medfolgendeAndre: dokument.medfolgendeAndre,
         },
       };
 
