@@ -13,6 +13,7 @@
     "classnames": "^2.2.5",
     "highcharts": "^6.1.0",
     "history": "^4.7.2",
+    "localforage": "^1.7.2",
     "lodash.throttle": "^4.1.1",
     "moment": "^2.22.1",
     "moment-duration-format": "^2.2.2",
