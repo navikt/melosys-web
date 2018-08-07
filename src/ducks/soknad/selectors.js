@@ -18,8 +18,16 @@ export const ArbeidNorgeSelector = createSelector(
 );
 
 export const ArbeidUtlandSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
-  soknad => soknad || {}
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidUtland : {}),
+  arbeidUtland => arbeidUtland || {}
+);
+
+export const ArbeidUtlandAdresseSelector = createSelector(
+  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidUtland : {}),
+  arbeidUtland => {
+    const { adresse = {} } = arbeidUtland;
+    return adresse;
+  }
 );
 
 export const ArbeidsinntektSelector = createSelector(
@@ -50,6 +58,14 @@ export const OppholdUtlandPeriodeSelector = createSelector(
 export const BostedSelector = createSelector(
   state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.bosted : {}),
   bosted => bosted || {}
+);
+
+export const BostedAdresseSelector = createSelector(
+  state => BostedSelector(state),
+  bosted => {
+    const { oppgittAdresse = {} } = bosted;
+    return oppgittAdresse;
+  }
 );
 
 export const ArbeidsgiversBekreftelseSelector = createSelector(
