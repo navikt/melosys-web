@@ -11,6 +11,7 @@ function InnerCheckboxComponent({
   label,
   errorMessage,
   submitOnChange,
+  onClick,
 }) {
   const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
 
@@ -26,6 +27,7 @@ function InnerCheckboxComponent({
       label={label}
       feil={feil}
       checked={input.value}
+      onClick={onClick}
       {...input}
       onChange={onChange}
     />
@@ -36,15 +38,15 @@ InnerCheckboxComponent.propTypes = {
   label: PT.string.isRequired,
   errorMessage: PT.arrayOf([PT.string]),
   submitOnChange: PT.bool,
-
   input: PT.object, // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
+  onClick: PT.func,
 };
 
 InnerCheckboxComponent.defaultProps = {
   errorMessage: undefined,
   submitOnChange: false,
-
+  onClick: () => {},
   // Vil alltid bli overskrevet av CustomField
   input: {},
   meta: {},
