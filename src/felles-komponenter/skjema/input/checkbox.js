@@ -1,19 +1,17 @@
 import React from 'react';
 import PT from 'prop-types';
-import { submit } from 'redux-form';
+import { submit, Field } from 'redux-form';
 import { Checkbox as NavCheckbox } from 'nav-frontend-skjema';
-import { CustomField } from 'react-redux-form-validation';
 import '../skjema.css';
 
 function InnerCheckboxComponent({
   input,
   meta,
   label,
-  errorMessage,
   submitOnChange,
   onClick,
 }) {
-  const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
+  const feil = (meta.error && meta.touched && !meta.active) ? { feilmelding: meta.error } : undefined;
 
   function onChange(...args) {
     if (submitOnChange) {
@@ -54,11 +52,12 @@ InnerCheckboxComponent.defaultProps = {
 
 function Checkbox({ feltNavn, className, ...rest }) {
   return (
-    <CustomField
+    <Field
       name={feltNavn}
       className={className}
       errorClass="skjemaelement--harFeil"
-      customComponent={<InnerCheckboxComponent {...rest} />}
+      component={InnerCheckboxComponent}
+      props={rest}
     />
   );
 }
