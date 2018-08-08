@@ -1,17 +1,16 @@
 /* eslint-disable */
-export const behandlingsOppgave = {
-  oppgavetype: 'BEH_SAK',
-  sakstyper: [
-    'EU_EOS',
-    'TRG_AVT',
-    'FLK_TRG',
-  ],
-  behandlingstyper: [
-    'SKND',
-    'UFM',
-    'KLG',
-    'REV',
-    'ML_U',
-    'PS_U',
-  ],
+const sakstyper = {
+  EU_EOS: true,
+  TRG_AVT: true,
+  FLK_TRG: true,
 };
+const behandlingstyper = {
+  SKND: true,
+  UFM: false,
+  KLG: true,
+  REV: false,
+  ML_U: true,
+  PS_U: false,
+};
+
+export const behandlingsOppgave = {...sakstyper, ...behandlingstyper};
