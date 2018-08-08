@@ -36,31 +36,6 @@ export function hent() {
   });
 }
 
-/**
- * Send soknad
- * @param oppgavetype
- * @param checkboxliste
- * @returns {Promise|*|Function|PromiseLike<string>|Promise<string>}
- */
-export function send(oppgavetype, checkboxliste) {
-  const keys = Object.keys(checkboxliste);
-  const behandlingstyper = ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'].filter(key => keys.includes(key));
-  const sakstyper = ['EU_EOS', 'TRG_AVT', 'FLK_TRG'].filter(key => keys.includes(key));
-  const oppgave = {
-    oppgavetype,
-    sakstyper,
-    behandlingstyper,
-  };
-
-  return Api.Oppgaver.send(oppgave).then(response => {
-    const { saksnummer, oppgaveID, journalpostID } = response;
-    if (!saksnummer && (!oppgaveID || !journalpostID)) { return false; }
-    const saksbehandling = `/saksbehandling/${saksnummer}`;
-    const journalforing = `/journalforing/${oppgaveID}/${journalpostID}`;
-    return oppgavetype === 'BEH_SAK' ? saksbehandling : journalforing;
-  });
-}
-/*
 export function sendBehandlingsOppgave(checkboxliste) {
   const keys = Object.keys(checkboxliste);
   const behandlingstyper = ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'].filter(key => keys.includes(key));
@@ -72,12 +47,12 @@ export function sendBehandlingsOppgave(checkboxliste) {
   };
 
   return Api.Oppgaver.send(oppgave).then(response => {
-    const { saksnummer, oppgaveID, journalpostID } = response;
-    if (!saksnummer && (!oppgaveID || !journalpostID)) { return false; }
+    const { saksnummer } = response;
+    if (!saksnummer) { return false; }
     return `/saksbehandling/${saksnummer}`;
   });
 }
-*/
+
 export function sendJournalOppgave(fagomrade) {
   const oppgave = {
     oppgavetype: 'JFR',
@@ -86,8 +61,8 @@ export function sendJournalOppgave(fagomrade) {
     fagomrade, // 'UFM' || 'MDL'
   };
   return Api.Oppgaver.send(oppgave).then(response => {
-    const { saksnummer, oppgaveID, journalpostID } = response;
-    if (!saksnummer && (!oppgaveID || !journalpostID)) { return false; }
+    const { oppgaveID, journalpostID } = response;
+    if (!(oppgaveID || journalpostID)) { return false; }
     return `/journalforing/${oppgaveID}/${journalpostID}`;
   });
 }
