@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, getFormValues } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
@@ -15,7 +15,14 @@ import './behandling.css';
 
 const uuid = require('uuid/v4');
 
+const BEHANDLINGSFORM = 'behandlingsform';
+
 class Behandling extends Component {
+  componentDidUpdate() {
+    const { formValues } = this.props;
+    localStorage.setItem(BEHANDLINGSFORM, JSON.stringify(formValues));
+  }
+
   submitOgVideresend = form => {
     this.props.handleSubmit(form).then(redirectURL => {
       /* eslint-disable no-alert */
@@ -63,15 +70,21 @@ Behandling.propTypes = {
   history: PT.object.isRequired,
   behandlingsTyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   saksTyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  formValues: PT.object,
+};
+
+Behandling.defaultProps = {
+  formValues: {},
 };
 
 const mapStateToProps = state => ({
   behandlingsTyper: Kodeverk.KodeverkSelectors.behandlingsTyperSelector(state),
   saksTyper: Kodeverk.KodeverkSelectors.sakstyperSelector(state),
+  formValues: getFormValues(BEHANDLINGSFORM)(state),
+  initialValues: JSON.parse(localStorage.getItem(BEHANDLINGSFORM)),
 });
-
 const BehandlngForm = reduxForm({
-  form: 'behandlingsform',
+  form: BEHANDLINGSFORM,
   onSubmit: checkboxliste => oppgaverOperations.sendBehandlingsOppgave(checkboxliste),
 })(Behandling);
 
