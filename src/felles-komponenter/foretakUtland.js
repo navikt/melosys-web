@@ -55,8 +55,7 @@ class ForetakUtlandWrapper extends Component {
       <div className="foretakUtland panelSeksjon">
         <Nav.EkspanderbartpanelBase
           heading={<PanelHeader ikon={panelIkon} tittel="Foretak i utlandet" undertittel="" />}
-          ariaTittel="Panel for foretak i utlandet"
-          apen>
+          ariaTittel="Panel for foretak i utlandet">
           <Nav.Container fluid>
             { fields.map((field, indeks) => (<EnkeltForetak key={field} indeks={indeks} slettForetakHandler={slettForetakHandler} />))}
             <Nav.Knapp className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>Legg til flere foretak i utlandet</Nav.Knapp>
