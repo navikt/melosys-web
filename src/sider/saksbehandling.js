@@ -24,6 +24,7 @@ import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
+import VirksomhetNorge from '../felles-komponenter/virksomhetNorge';
 
 import {
   fagsakOperations,
@@ -190,6 +191,7 @@ class Saksbehandling extends Component {
                 <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
                 <ArbeidUtland />
                 <ForetakUtland />
+                <VirksomhetNorge />
                 <MaritimtArbeid soknadVerdier={soknadVerdier} />
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
@@ -245,6 +247,15 @@ const mapStateToProps = state => ({
     oppgittAdressePostnummer: soknadSelectors.BostedAdresseSelector(state).postnummer,
     oppgittAdressePoststed: soknadSelectors.BostedAdresseSelector(state).poststed,
     oppgittAdresseLand: soknadSelectors.BostedAdresseSelector(state).land,
+    erBemanningsbyra: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).erBemanningsbyra,
+    utsendteNeste12Mnd: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendteNeste12Mnd,
+    antallAdmAnsatte: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte,
+    antallAdminAnsatteEOS: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdminAnsatteEOS,
+    andelOmsetningINorge: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge,
+    andelKontrakterINorge: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge,
+    utsendtFortsetterArbeidsforholdIUtlandet: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtFortsetterArbeidsforholdIUtlandet,
+    utsendtArbeiderMedKlienter: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtArbeiderMedKlienter,
+    utsendtArbeiderMedKontrakter: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtArbeiderMedKontrakter,
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: soknadSelectors.OppholdUtlandSelector(state).oppholdsland,
