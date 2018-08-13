@@ -74,23 +74,21 @@ node {
     sh "cd build/; zip -r ../$zipFile *; cd .."
     sh "cp ${zipFile} $webMockDir"
   }
-  stage('Deploy to Nexus') {
-    /*
-    if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
-    }
-    else {
-      echo("branches is ignored.")
-    }
-    */
 
-    configFileProvider(
-      [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
-      sh """
+  stage('Deploy to Nexus') {
+    if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+      configFileProvider(
+        [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
+        sh """
      	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${zipFile} -DartifactId=${application} \
 	            -DgroupId=no.nav.melosys -Dversion=${buildVersion} \
 	 	        -Ddescription='Melosys-web web applicatioin' \
 		        -DrepositoryId=m2internal -Durl=http://maven.adeo.no/nexus/content/repositories/m2internal
         """
+      }
+    }
+    else {
+      echo("branch artifacts are ignored.")
     }
   }
 }
