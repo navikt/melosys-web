@@ -65,7 +65,6 @@ function Radio({
   return (
     <Field
       name={feltNavn}
-      errorClass="skjemaelement--harFeil"
       className={className}
       id={id}
       component={InnerInputComponent}
