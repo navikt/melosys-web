@@ -68,21 +68,21 @@ node {
 
   stage('Create Zip artifact') {
     sh "rm -rf $webMockDir/*" // Clean the content, don't remove top folder
-    //sh "cp -r build/*  /var/lib/jenkins/melosys-web/"
-    zipFile = "${application}-${scmVars.GIT_BRANCH}-${buildVersion}"+".zip"
+    sh "cp -r build/*  /var/lib/jenkins/melosys-web/"
+    zipFile = "${application}-${buildVersion}"+".zip"
     echo("zipFile:${zipFile}")
-    sh "zip -r $zipFile ./build/*"
+    sh "cd build/; zip -r ../$zipFile *; cd .."
     sh "cp ${zipFile} $webMockDir"
   }
-  stage('Copy Zip artifact to pickup directory') {
+  stage('Deploy to Nexus') {
     /*
     if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
-
     }
     else {
       echo("branches is ignored.")
     }
     */
+
     configFileProvider(
       [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
       sh """
@@ -92,8 +92,5 @@ node {
 		        -DrepositoryId=m2internal -Durl=http://maven.adeo.no/nexus/content/repositories/m2internal
         """
     }
-  }
-  stage('Deploy to Nexus') {
-
   }
 }
