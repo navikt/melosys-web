@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import { CustomField } from 'react-redux-form-validation';
+import { Field } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
 
 /** Returnerer en tekst som gir brukeren en indikasjon på hvor mange tegn
@@ -32,11 +32,10 @@ function InnerTextAreaComponent({
   label,
   placeholder,
   maxLength,
-  errorMessage,
   visTellerFra,
   ...rest
 }) {
-  const feil = errorMessage ? { feilmelding: errorMessage[0] } : undefined;
+  const feil = (rest.meta.error && rest.meta.touched && !rest.meta.active) ? { feilmelding: rest.meta.error } : undefined;
   return (
     <Nav.Textarea
       textareaClass="skjemaelement__input input--fullbredde"
@@ -73,9 +72,10 @@ InnerTextAreaComponent.defaultProps = {
 
 function Textarea({ feltNavn, ...rest }) {
   return (
-    <CustomField
+    <Field
       name={feltNavn}
-      customComponent={<InnerTextAreaComponent {...rest} />}
+      component={InnerTextAreaComponent}
+      props={rest}
     />
   );
 }
