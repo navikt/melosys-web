@@ -28,7 +28,7 @@ const EnkeltForetak = ({ indeks, slettForetakHandler }) => (
         <LandVelger label="Land" feltNavn={`foretakUtland[${indeks}].adresse.land`} />
       </Nav.Fieldset>
     </Nav.Column>
-    <Nav.Knapp mini onClick={() => slettForetakHandler(indeks)}>Fjern dette foretaket</Nav.Knapp>
+    <Nav.Knapp mini onClick={() => slettForetakHandler(indeks)}>- Fjern dette foretaket</Nav.Knapp>
   </Nav.Row>
 );
 
@@ -58,7 +58,7 @@ class ForetakUtlandWrapper extends Component {
           ariaTittel="Panel for foretak i utlandet">
           <Nav.Container fluid>
             { fields.map((field, indeks) => (<EnkeltForetak key={field} indeks={indeks} slettForetakHandler={slettForetakHandler} />))}
-            <Nav.Knapp className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>Legg til flere foretak i utlandet</Nav.Knapp>
+            <Nav.Knapp className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>+ Legg til flere foretak i utlandet</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
