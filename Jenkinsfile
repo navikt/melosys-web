@@ -67,8 +67,8 @@ node {
   }
 
   stage('Create Zip artifact') {
-    sh "rm -rf $webMockDir/*" // Clean the content, don't remove top folder
-    sh "cp -r build/*  /var/lib/jenkins/melosys-web/"
+    sh "rm -rf $webMockDir*" // Clean the content, don't remove top folder
+    sh "cp -r build/* $webMockDir"
     zipFile = "${application}-${buildVersion}"+".zip"
     echo("zipFile:${zipFile}")
     sh "cd build/; zip -r ../$zipFile *; cd .."
