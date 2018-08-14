@@ -95,11 +95,10 @@ node {
       echo("snaphotVersionZipfile:${snapshotVersionZipfile}")
       sh "mv ${zipFile} ${snapshotVersionZipfile}"
 
-      def artifactId = "${application}-snapshot"
       configFileProvider(
         [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
         sh """
-     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${snapshotVersionZipfile} -DartifactId=${artifactId} \
+     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${snapshotVersionZipfile} -DartifactId=${application} \
 	            -DgroupId=no.nav.melosys -Dversion=${snapshotVersion} \
 	 	        -Ddescription='Melosys-web application' \
 		        -DrepositoryId=m2snapshot -Durl=http://maven.adeo.no/nexus/content/repositories/m2snapshot
