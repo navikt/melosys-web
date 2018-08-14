@@ -94,7 +94,7 @@ node {
       def snapshotVersionZipfile = "${application}-${snapshotVersion}.zip"
       echo("snaphotVersionZipfile:${snapshotVersionZipfile}")
       sh "mv ${zipFile} ${snapshotVersionZipfile}"
-echo("MAVEN_SETTINGS:${MAVEN_SETTINGS}")
+
       configFileProvider(
         [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
         sh """
