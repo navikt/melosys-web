@@ -91,16 +91,16 @@ node {
       def majorMinor = semver.split("\\.").take(2).join('.')
       def snapshotVersion = "${majorMinor}-"+scmVars.GIT_BRANCH
       echo("snapshotVersion:${snapshotVersion}")
-      def snaphotVersionZipfile = "${application}-${snapshotVersion}.zip"
-      echo("snaphotVersionZipfile:${snaphotVersionZipfile}")
-      sh "mv ${zipFile} ${snaphotVersionZipfile}"
+      def snapshotVersionZipfile = "${application}-${snapshotVersion}.zip"
+      echo("snaphotVersionZipfile:${snapshotVersionZipfile}")
+      sh "mv ${zipFile} ${snapshotVersionZipfile}"
 
       def artifactId = "${application}-snapshot"
       configFileProvider(
         [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
         sh """
-     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${snaphotVersionZipfile} -DartifactId=${artifactId} \
-	            -DgroupId=no.nav.melosys -Dversion=${snaphotVersion} \
+     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${snapshotVersionZipfile} -DartifactId=${artifactId} \
+	            -DgroupId=no.nav.melosys -Dversion=${snapshotVersion} \
 	 	        -Ddescription='Melosys-web application' \
 		        -DrepositoryId=m2snapshot -Durl=http://maven.adeo.no/nexus/content/repositories/m2snapshot
         """
