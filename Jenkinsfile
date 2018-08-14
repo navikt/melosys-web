@@ -58,8 +58,7 @@ node {
 
     semver = sh(returnStdout: true, script: "node -pe \"require('./package.json').version\"")
     echo("semver=${semver}")
-    def majorMinor = semver.split("\\.").take(2).join('.')
-    buildVersion ="${majorMinor}.${BUILD_NUMBER}"
+    buildVersion = "${semver}-${BUILD_NUMBER}"
     echo("buildVersion=${buildVersion}")
 
     sh "${npm} run build"
@@ -91,7 +90,29 @@ node {
       // http://www.mojohaus.org/versions-maven-plugin/version-rules.html
       // <MajorVersion [> . <MinorVersion [> . <IncrementalVersion ] ] [> - <BuildNumber | Qualifier ]>
       def majorMinor = semver.split("\\.").take(2).join('.')
-      def snapshotVersion = "${majorMinor}-SNAPSHOT"
+      def qualifier = "SNAPSHOT"
+      def branch = scmVars.GIT_BRANCH.toUpperCase()
+      if (branch.startsWith("PR")) {
+        qualifier = branch
+      }
+      else if (branch.startsWith("MELOSYS-")) {
+        qualifier = branch.split("_").take(1)
+      }
+      else if (branch.startsWith("FEATURE")) {
+        qualifier = "FEATURE-${BUILD_NUMBER}"
+      }
+      else if (branch.startsWith("HOTFIX")) {
+        qualifier = "HOTFIX-${BUILD_NUMBER}"
+      }
+      else if (branch.startsWith("PATCH")) {
+        qualifier = "PATCH-${BUILD_NUMBER}"
+      }
+
+      def test_branch = "MELOSYS-1444_jenkins_add_snapshot_support"
+      def test = test_branch.split("_").take(1)
+      echo("MELOSYS-::${test}")
+
+      def snapshotVersion = "${majorMinor}-${qualifier}"
       echo("snapshotVersion:${snapshotVersion}")
       def snapshotVersionZipfile = "${application}-${snapshotVersion}.zip"
       echo("snaphotVersionZipfile:${snapshotVersionZipfile}")
