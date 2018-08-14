@@ -5,12 +5,13 @@ import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import EnkeltDato from '../../datoOmrade/enkeltDato';
-
-import { vurderingSelectors } from '../../../ducks/vurdering/';
-import { faktaavklaringSelectors } from '../../../ducks/faktaavklaring/';
+import { datoDiffMenneskelig } from '../../../utils/dato';
 
 import './vurderingVedtak.css';
+
+import { vurderingSelectors } from '../../../ducks/vurdering/';
+
+import { faktaavklaringSelectors } from '../../../ducks/faktaavklaring/';
 
 const uuid = require('uuid/v4');
 
@@ -75,6 +76,8 @@ const VurderingVedtak = props => {
   const { land = [], periode = {} } = opphold;
 
   const { sysselsettingType = '' } = sysselsetting;
+
+  const antallManeder = datoDiffMenneskelig(periode.fom, periode.tom);
   const arbeidsgivereForVedtaket = valgteArbeidsgivere
     .reduce((collection, arbeidsgiveren) => [...collection, arbeidsgiveren.navn], [])
     .join(', ');
@@ -106,8 +109,8 @@ const VurderingVedtak = props => {
         }
         <Nav.Row className="vedtak__oppsummering">
           <Nav.Column xs="6" md="3">
-            <Nav.Element type="element">Periode</Nav.Element>
-            <Nav.Normaltekst><EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} /></Nav.Normaltekst>
+            <Nav.Element type="element">Antall måneder i utlandet</Nav.Element>
+            <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Land</Nav.Element>
