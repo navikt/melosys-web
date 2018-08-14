@@ -91,13 +91,15 @@ node {
       // http://www.mojohaus.org/versions-maven-plugin/version-rules.html
       // <MajorVersion [> . <MinorVersion [> . <IncrementalVersion ] ] [> - <BuildNumber | Qualifier ]>
       def majorMinor = semver.split("\\.").take(2).join('.')
+      // Valid qualifiers is one of "ALPHA","A","BETA","B","MILESTONE","B","RC","CR","SNAPSHOT","GA","FINAL", "SP"
       def qualifier = "SNAPSHOT"
+      /* So unfortunately, custom qualifiers does not work :-(
       def branch = scmVars.GIT_BRANCH.toUpperCase()
       if (branch.startsWith("PR")) {
         qualifier = branch
       }
       else if (branch.startsWith("MELOSYS-")) {
-        qualifier = branch.split("_").take(1)
+        qualifier = branch.split("_").take(1)[0]
       }
       else if (branch.startsWith("FEATURE")) {
         qualifier = "FEATURE-${BUILD_NUMBER}"
@@ -108,10 +110,7 @@ node {
       else if (branch.startsWith("PATCH")) {
         qualifier = "PATCH-${BUILD_NUMBER}"
       }
-
-      def test_branch = "MELOSYS-1444_jenkins_add_snapshot_support"
-      def test = test_branch.split("_").take(1)
-      echo("MELOSYS-::${test}")
+      */
 
       def snapshotVersion = "${majorMinor}-${qualifier}"
       echo("snapshotVersion:${snapshotVersion}")
