@@ -188,13 +188,25 @@ describe('dato.js:', () => {
     test('en dato diffet på datoen for neste dag gir 1', () => {
       const dato1 = '2018-01-01';
       const dato2 = '2018-01-02';
-      expect(datoDiff(dato1, dato2, 'days')).toBe(1);
+      expect(datoDiff(dato1, dato2, 'days')).toBe(2);
     })
 
     test('dato i moment-format fungerer', () => {
       const dato1 = '2018-08-01';
       const dato2 = moment('2018-08-04', 'YYYY-MM-DD');
-      expect(datoDiff(dato1, dato2, 'days')).toBe(3);
+      expect(datoDiff(dato1, dato2, 'days')).toBe(4);
+    })
+
+    test('mindre enn én måned gir desimaltall', () => {
+      const dato1 = '2018-01-01';
+      const dato2 = '2018-01-31';
+      expect(datoDiff(dato1, dato2, 'months')).toBe(1);
+    })
+
+    test('Nøyaktig 6 måneder', () => {
+      const dato1 = '2016-02-26';
+      const dato2 = '2016-08-25';
+      expect(datoDiff(dato1, dato2, 'months')).toBe(6);
     })
   });
 
@@ -212,7 +224,5 @@ describe('dato.js:', () => {
       const forventetAlder = 40;
       expect(beregnAlder(foedselsdato)).toBe(forventetAlder);
     })
-
   })
-
 });
