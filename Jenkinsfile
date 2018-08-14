@@ -46,6 +46,9 @@ node {
     sh "${npm} -v"
     sh "${npm} config ls"
     sh "${npm} install"
+
+    semver = sh(returnStdout: true, script: "node -pe \"require('./package.json').version\"").trim()
+    echo("semver=*${semver}*")
   }
 
   stage('Test') {
@@ -56,8 +59,6 @@ node {
   stage('Build') {
     echo('Build Web App')
 
-    semver = sh(returnStdout: true, script: "node -pe \"require('./package.json').version\"")
-    echo("semver=${semver}")
     buildVersion = "${semver}-${BUILD_NUMBER}"
     echo("buildVersion=${buildVersion}")
 
