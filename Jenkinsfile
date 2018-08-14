@@ -46,6 +46,9 @@ node {
     sh "${npm} -v"
     sh "${npm} config ls"
     sh "${npm} install"
+
+    semver = sh(returnStdout: true, script: "node -pe \"require('./package.json').version\"").trim()
+    echo("semver=*${semver}*")
   }
 
   stage('Test') {
@@ -56,10 +59,7 @@ node {
   stage('Build') {
     echo('Build Web App')
 
-    semver = sh(returnStdout: true, script: "node -pe \"require('./package.json').version\"")
-    echo("semver=${semver}")
-    def majorMinor = semver.split("\\.").take(2).join('.')
-    buildVersion ="${majorMinor}.${BUILD_NUMBER}"
+    buildVersion = "${semver}-${BUILD_NUMBER}"
     echo("buildVersion=${buildVersion}")
 
     sh "${npm} run build"
@@ -69,7 +69,7 @@ node {
   stage('Create Zip artifact') {
     sh "rm -rf $webMockDir*" // Clean the content, don't remove top folder
     sh "cp -r build/* $webMockDir"
-    zipFile = "${application}-${buildVersion}"+".zip"
+    zipFile = "${application}-${buildVersion}.zip"
     echo("zipFile:${zipFile}")
     sh "cd build/; zip -r ../$zipFile *; cd .."
     sh "cp ${zipFile} $webMockDir"
@@ -82,13 +82,51 @@ node {
         sh """
      	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${zipFile} -DartifactId=${application} \
 	            -DgroupId=no.nav.melosys -Dversion=${buildVersion} \
-	 	        -Ddescription='Melosys-web web applicatioin' \
+	 	        -Ddescription='Melosys-web web application' \
 		        -DrepositoryId=m2internal -Durl=http://maven.adeo.no/nexus/content/repositories/m2internal
         """
       }
     }
     else {
-      echo("branch artifacts are ignored.")
+      // http://www.mojohaus.org/versions-maven-plugin/version-rules.html
+      // <MajorVersion [> . <MinorVersion [> . <IncrementalVersion ] ] [> - <BuildNumber | Qualifier ]>
+      def majorMinor = semver.split("\\.").take(2).join('.')
+      // Valid qualifiers is one of "ALPHA","A","BETA","B","MILESTONE","B","RC","CR","SNAPSHOT","GA","FINAL", "SP"
+      def qualifier = "SNAPSHOT"
+      /* So unfortunately, custom qualifiers does not work :-(
+      def branch = scmVars.GIT_BRANCH.toUpperCase()
+      if (branch.startsWith("PR")) {
+        qualifier = branch
+      }
+      else if (branch.startsWith("MELOSYS-")) {
+        qualifier = branch.split("_").take(1)[0]
+      }
+      else if (branch.startsWith("FEATURE")) {
+        qualifier = "FEATURE-${BUILD_NUMBER}"
+      }
+      else if (branch.startsWith("HOTFIX")) {
+        qualifier = "HOTFIX-${BUILD_NUMBER}"
+      }
+      else if (branch.startsWith("PATCH")) {
+        qualifier = "PATCH-${BUILD_NUMBER}"
+      }
+      */
+
+      def snapshotVersion = "${majorMinor}-${qualifier}"
+      echo("snapshotVersion:${snapshotVersion}")
+      def snapshotVersionZipfile = "${application}-${snapshotVersion}.zip"
+      echo("snaphotVersionZipfile:${snapshotVersionZipfile}")
+      sh "mv ${zipFile} ${snapshotVersionZipfile}"
+
+      configFileProvider(
+        [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
+        sh """
+     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${snapshotVersionZipfile} -DartifactId=${application} \
+	            -DgroupId=no.nav.melosys -Dversion=${snapshotVersion} \
+	 	        -Ddescription='Melosys-web application' \
+		        -DrepositoryId=m2snapshot -Durl=http://maven.adeo.no/nexus/content/repositories/m2snapshot
+        """
+      }
     }
   }
 }
