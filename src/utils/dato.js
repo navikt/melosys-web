@@ -99,7 +99,7 @@ function formatterKortDatoTilNorsk(kortDato) {
 function datoDiff (fom, tom, enhet = 'months') {
   if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
   const momentTom = moment(tom).add(1, 'day');
-  return moment(momentTom).diff(fom, enhet);
+  return moment(momentTom).diff(fom, enhet, true);
 }
 
 function beregnAlder (foedselsdato) {
