@@ -11,7 +11,7 @@ class Arbeid extends DomeneRegel {
     const oppholdStartDato = formatterDatoTilISO(faktaavklaringPeriodeFraOgMed);
     const oppholdSluttDato = formatterDatoTilISO(faktaavklaringPeriodeTilOgMed);
 
-    const erAnsattVedPeriodeStart = datoDiff(ansattStartDato, oppholdStartDato, 'days') >= 0;
+    const erAnsattVedPeriodeStart = datoDiff(ansattStartDato, oppholdStartDato, 'days') >= 1;
     const erAnsattVedPeriodeSlutt = datoDiff(ansattSluttDato, oppholdSluttDato, 'days') <= 0;
 
     return erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt;
