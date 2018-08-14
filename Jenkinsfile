@@ -82,13 +82,28 @@ node {
         sh """
      	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${zipFile} -DartifactId=${application} \
 	            -DgroupId=no.nav.melosys -Dversion=${buildVersion} \
-	 	        -Ddescription='Melosys-web web applicatioin' \
+	 	        -Ddescription='Melosys-web web application' \
 		        -DrepositoryId=m2internal -Durl=http://maven.adeo.no/nexus/content/repositories/m2internal
         """
       }
     }
     else {
-      echo("branch artifacts are ignored.")
+      def majorMinor = semver.split("\\.").take(2).join('.')
+      def snapshotVersion = "${majorMinor}-"+scmVars.GIT_BRANCH
+      echo("snapshotVersion:${snapshotVersion}")
+      def snaphotVersionZipfile = "${application}-${snapshotVersion}.zip"
+      echo("snaphotVersionZipfile:${snaphotVersionZipfile}")
+      sh "mv ${zipFile} ${snaphotVersionZipfile}"
+
+      configFileProvider(
+        [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
+        sh """
+     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${snaphotVersionZipfile} -DartifactId=${application} \
+	            -DgroupId=no.nav.melosys -Dversion=${snaphotVersion} \
+	 	        -Ddescription='Melosys-web application' \
+		        -DrepositoryId=m2snapshot -Durl=http://maven.adeo.no/nexus/content/repositories/m2snapshot
+        """
+      }
     }
   }
 }
