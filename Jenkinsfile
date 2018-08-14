@@ -20,7 +20,6 @@ node {
   def npm = "${NODEJS_HOME}/bin/npm"
   //env.PATH = "${env.NODEJS_HOME}/bin:${env.PATH}"
   //echo("${env.PATH}")
-  env.each { print it }
 
   // delete whole workspace before starting the build,
   // so that the 'git clone' command below doesn't fail due to
