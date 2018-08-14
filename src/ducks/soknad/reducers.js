@@ -31,11 +31,7 @@ const soknadTemplate =
       arbeidUtlandHjemmekontor: undefined,
       arbeidUtlandErstatning: undefined,
     },
-    foretakUtland: {
-      foretakUtlandNavn: undefined,
-      foretakUtlandOrgnr: undefined,
-      foretakUtlandAdresse: undefined,
-    },
+    foretakUtland: [],
     oppholdUtland: {
       oppholdsland: undefined,
       oppholdsPeriode: { fom: undefined, tom: undefined },
@@ -68,14 +64,15 @@ const soknadTemplate =
       fullmektigAdresse: undefined,
     },
     juridiskArbeidsgiverNorge: {
-      antallAnsatte: undefined,
-      antallAdminAnsatte: undefined,
+      erBemanningsbyra: undefined,
+      utsendteNeste12Mnd: undefined,
+      antallAdmAnsatte: undefined,
       antallAdminAnsatteEOS: undefined,
       andelOmsetningINorge: undefined,
       andelKontrakterINorge: undefined,
-      erBemanningsbyra: undefined,
-      hattDriftSiste12Mnd: undefined,
-      antallUtsendte: undefined,
+      utsendtFortsetterArbeidsforholdIUtlandet: undefined,
+      utsendtArbeiderMedKlienter: undefined,
+      utsendtArbeiderMedKontrakter: undefined,
     },
     arbeidsinntekt: {
       inntektNorskIPerioden: undefined,
@@ -147,6 +144,17 @@ export default function reducer(state = initialState, action) {
           arbeidUtlandHjemmekontor: dokument.arbeidUtlandHjemmekontor,
           arbeidUtlandErstatning: dokument.arbeidUtlandErstatning,
         },
+        juridiskArbeidsgiverNorge: {
+          erBemanningsbyra: dokument.erBemanningsbyra,
+          utsendteNeste12Mnd: dokument.utsendteNeste12Mnd,
+          antallAdmAnsatte: dokument.antallAdmAnsatte,
+          antallAdminAnsatteEOS: dokument.antallAdminAnsatteEOS,
+          andelOmsetningINorge: dokument.andelOmsetningINorge,
+          andelKontrakterINorge: dokument.andelKontrakterINorge,
+          utsendtFortsetterArbeidsforholdIUtlandet: dokument.utsendtFortsetterArbeidsforholdIUtlandet,
+          utsendtArbeiderMedKlienter: dokument.utsendtArbeiderMedKlienter,
+          utsendtArbeiderMedKontrakter: dokument.utsendtArbeiderMedKontrakter,
+        },
         arbeidsgiversBekreftelse: {
           ...state.data.soknadDokument.arbeidsgiversBekreftelse,
           arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
@@ -174,6 +182,7 @@ export default function reducer(state = initialState, action) {
           studieLand: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,
         },
+        foretakUtland: dokument.foretakUtland,
         bosted: {
           oppgittAdresse: {
             gatenavn: dokument.oppgittAdresseGatenavn,
