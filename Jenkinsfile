@@ -69,7 +69,7 @@ node {
   stage('Create Zip artifact') {
     sh "rm -rf $webMockDir*" // Clean the content, don't remove top folder
     sh "cp -r build/* $webMockDir"
-    zipFile = "${application}-${buildVersion}"+".zip"
+    zipFile = "${application}-${buildVersion}.zip"
     echo("zipFile:${zipFile}")
     sh "cd build/; zip -r ../$zipFile *; cd .."
     sh "cp ${zipFile} $webMockDir"
@@ -95,10 +95,11 @@ node {
       echo("snaphotVersionZipfile:${snaphotVersionZipfile}")
       sh "mv ${zipFile} ${snaphotVersionZipfile}"
 
+      def artifactId = "${application}-snapshot"
       configFileProvider(
         [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
         sh """
-     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${snaphotVersionZipfile} -DartifactId=${application} \
+     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${snaphotVersionZipfile} -DartifactId=${artifactId} \
 	            -DgroupId=no.nav.melosys -Dversion=${snaphotVersion} \
 	 	        -Ddescription='Melosys-web application' \
 		        -DrepositoryId=m2snapshot -Durl=http://maven.adeo.no/nexus/content/repositories/m2snapshot
