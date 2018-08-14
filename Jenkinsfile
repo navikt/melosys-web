@@ -88,8 +88,10 @@ node {
       }
     }
     else {
+      // http://www.mojohaus.org/versions-maven-plugin/version-rules.html
+      // <MajorVersion [> . <MinorVersion [> . <IncrementalVersion ] ] [> - <BuildNumber | Qualifier ]>
       def majorMinor = semver.split("\\.").take(2).join('.')
-      def snapshotVersion = "${majorMinor}-"+scmVars.GIT_BRANCH
+      def snapshotVersion = "${majorMinor}-SNAPSHOT"
       echo("snapshotVersion:${snapshotVersion}")
       def snapshotVersionZipfile = "${application}-${snapshotVersion}.zip"
       echo("snaphotVersionZipfile:${snapshotVersionZipfile}")
