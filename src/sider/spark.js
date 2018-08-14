@@ -43,15 +43,16 @@ class Spark extends Component {
     this.props.opprettNyFagsak(fnr);
   };
 
-  plukkOppgaveSubmit = event => {
+  behandlingsOppgaveSubmit = event => {
     event.preventDefault();
     const oppgaveBody = JSON.parse(event.target.oppgaveBody.value);
-    this.props.plukkOppgave(oppgaveBody);
+    this.props.behandlingsOppgave(oppgaveBody);
   };
-  opprettOppgaveSubmit = event => {
+
+  jornalforingOppgaveSubmit = event => {
     event.preventDefault();
-    const opprettOppgaveBody = JSON.parse(event.target.opprettOppgaveBody.value);
-    Api.Oppgaver.opprett(opprettOppgaveBody);
+    const oppgaveBody = JSON.parse(event.target.oppgaveBody.value);
+    this.props.journalOppgave(oppgaveBody);
   };
 
   hentFagsakBasertPaFnr = event => {
@@ -60,13 +61,13 @@ class Spark extends Component {
     Api.Fagsaker.sok(fnr).then(response => {
       this.setState({fagsaker: response});
     });
-  }
+  };
 
   resetOppgaver = () => {
     Api.Oppgaver.sparkReset().then(() => {
       document.location.href = '/';
     });
-  }
+  };
 
   hentFagsakOgSoknad = saksnummer => {
     Api.Fagsaker.hent(saksnummer)
@@ -121,13 +122,25 @@ class Spark extends Component {
           <button onClick={this.resetOppgaver}>reset</button>
         </div>
 
-        { // Plukk en journalføringsoppgave eller en behandlingsoppgave.
+        { // Send behandlingsoppgave.
         }
         <div className="spark__gruppe">
-          <h1>Plukk Oppgave (Behandling ELLER Journalføring)</h1>
+          <h1>Velg behandlingsoppgave</h1>
           <p>Behandle sak:<br/><code>{JSON.stringify(Mock.behandlingsOppgave)}</code></p>
-          <p>Journalføring:<br/><code>{JSON.stringify(Mock.journalforingOppgave)}</code></p>
-          <form onSubmit={this.plukkOppgaveSubmit}>
+          <form onSubmit={this.behandlingsOppgaveSubmit}>
+            <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til plukk-endpoint.</p>
+            <textarea name="oppgaveBody" className="spark__oppgave__body" /><br />
+            <input type="submit" value="Send" />
+          </form>
+          <p>{oppgave.oppgaveID && JSON.stringify(oppgave)}</p>
+        </div>
+
+        { // Send journalføringsoppgave.
+        }
+        <div className="spark__gruppe">
+          <h1>Velg Journalførings oppgave</h1>
+          <p>Journalføring:<br/><code>{JSON.stringify(Mock.journalforingOppgave.fagomrade)}</code></p>
+          <form onSubmit={this.jornalforingOppgaveSubmit}>
             <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til plukk-endpoint.</p>
             <textarea name="oppgaveBody" className="spark__oppgave__body" /><br />
             <input type="submit" value="Send" />
@@ -150,19 +163,6 @@ class Spark extends Component {
               )}
             </div>
             <input type="submit" value="Finn fagsak(er)" />
-          </form>
-        </div>
-
-        {
-          // Opprette ny Oppgave
-        }
-        <div className="spark__gruppe">
-          <h1>Opprett ny Oppgave</h1>
-          <form onSubmit={this.opprettOppgaveSubmit}>
-            <p>Oppgave:<br/><code>{JSON.stringify(Mock.opprettoppgave)}</code></p>
-            <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til opprett endepunktet.</p>
-            <textarea name="opprettOppgaveBody" className="spark__oppgave__body" /><br />
-            <input type="submit" value="Send" />
           </form>
         </div>
 
@@ -237,8 +237,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = dispatch => ({
   sendSoknad: (bid, soknad) => dispatch(soknadOperations.send(bid, soknad)),
   opprettNyFagsak: fnr => dispatch(fagsakOperations.opprett(fnr)),
-  plukkOppgave: (oppgave) => dispatch(oppgaverOperations.send(oppgave)),
-  opprettOppgave: (oppgave) => dispatch(oppgaverOperations.opprett(oppgave)),
+  behandlingsOppgave: (oppgave) => oppgaverOperations.sendBehandlingsOppgave(oppgave),
+  journalOppgave: (oppgave) => oppgaverOperations.sendJournalOppgave(oppgave),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Spark));
