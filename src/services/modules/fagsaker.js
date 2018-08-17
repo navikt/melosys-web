@@ -1,4 +1,4 @@
-import { getAsJson, postAsJson } from '../utils';
+import { getAsJson } from '../utils';
 import { API_BASE_URL } from '../api-constants';
 
 function hent(snr) {
@@ -15,14 +15,8 @@ function opprett(fnr) {
   return getAsJson(URI_OPPRETTSAK);
 }
 
-function send(data) {
-  const URI_SEND_NY_FAGSAK_TIL_JOURNALFORING = `${API_BASE_URL}fagsaker/journalforing`;
-  return postAsJson(URI_SEND_NY_FAGSAK_TIL_JOURNALFORING, data);
-}
-
 export {
   hent,
   sok,
   opprett,
-  send,
 };
