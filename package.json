@@ -137,10 +137,10 @@
         "^/api/": "/api/"
       }
     },
-    "/melosys": {
-      "target": "http://localhost:8888",
+    "/frontendlogger": {
+      "target": "http://localhost:3002",
       "pathRewrite": {
-        "^/melosys/": "/melosys/"
+        "^/frontendlogger/": "frontendlogger/"
       }
     }
   }
