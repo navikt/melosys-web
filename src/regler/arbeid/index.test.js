@@ -42,7 +42,7 @@ describe('Tester at regler for arbeid', () => {
 
       const mockArbeidsforholdPeriode = {
         fom: '2018-05-01',
-        tom: '2018-30-12',
+        tom: '2018-12-30',
       };
 
       const regel = new Regel(mockSkjema);
