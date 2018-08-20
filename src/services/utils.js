@@ -45,6 +45,7 @@ export function handterFeil(dispatch, action) {
       error.response.text().then(data => {
         console.error(error, error.stack, data); // eslint-disable-line no-console
         window.frontendlogger.error({
+          error,
           stack: error.stack,
           data,
         });
@@ -56,6 +57,7 @@ export function handterFeil(dispatch, action) {
     } else {
       console.error(error, error.stack); // eslint-disable-line no-console
       window.frontendlogger.error({
+        error,
         stack: error.stack,
         data: error.toString(),
       });
