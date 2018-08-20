@@ -16,7 +16,7 @@ describe('Tester at regler for opphold', () => {
     test('returnerer false ved mer enn 12 mnd', () => {
       const mockSkjema = {
         oppholdUtlandFom: '01.01.2018',
-        oppholdUtlandTom: '01.01.2019',
+        oppholdUtlandTom: '04.01.2019',
       };
 
       const regel = new Regel(mockSkjema);

@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilISO, formatterKortDatoTilNorsk, datoDiff, beregnAlder } from './dato';
+import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilISO, formatterKortDatoTilNorsk, datoDiff, datoDiffMenneskelig, beregnAlder } from './dato';
 
 import MockDate from 'mockdate';
 import moment from 'moment/moment'
@@ -188,15 +188,64 @@ describe('dato.js:', () => {
     test('en dato diffet på datoen for neste dag gir 1', () => {
       const dato1 = '2018-01-01';
       const dato2 = '2018-01-02';
-      expect(datoDiff(dato1, dato2, 'days')).toBe(1);
+      expect(datoDiff(dato1, dato2, 'days')).toBe(2);
     })
 
     test('dato i moment-format fungerer', () => {
       const dato1 = '2018-08-01';
       const dato2 = moment('2018-08-04', 'YYYY-MM-DD');
-      expect(datoDiff(dato1, dato2, 'days')).toBe(3);
+      expect(datoDiff(dato1, dato2, 'days')).toBe(4);
+    })
+
+    test('mindre enn én måned gir desimaltall', () => {
+      const dato1 = '2018-01-01';
+      const dato2 = '2018-01-31';
+      expect(datoDiff(dato1, dato2, 'months')).toBe(1);
+    })
+
+    test('Nøyaktig 6 måneder', () => {
+      const dato1 = '2016-02-26';
+      const dato2 = '2016-08-25';
+      expect(datoDiff(dato1, dato2, 'months')).toBe(6);
     })
   });
+
+  describe('beregn forskjell i måneder og dager', () => {
+    test('forskjell er 12 måned og 1 dag', () => {
+      const dato1 = '2018-01-01';
+      const dato2 = '2019-01-01';
+
+      expect(datoDiffMenneskelig(dato1, dato2)).toBe('12 måneder og 1 dag');
+    })
+
+    test('forskjell er 12 måned', () => {
+      const dato1 = '2018-01-01';
+      const dato2 = '2018-12-31';
+
+      expect(datoDiffMenneskelig(dato1, dato2)).toBe('12 måneder');
+    })
+
+    test('forskjell er 6 måneder', () => {
+      const dato1 = '2018-04-20';
+      const dato2 = '2018-10-19';
+
+      expect(datoDiffMenneskelig(dato1, dato2)).toBe('6 måneder');
+    })
+
+    test('forskjell er 1 måned og 5 dager', () => {
+      const dato1 = '2016-02-16';
+      const dato2 = '2016-03-20';
+
+      expect(datoDiffMenneskelig(dato1, dato2)).toBe('1 måned og 5 dager');
+    })
+
+    test('forskjell er 12 måneder', () => {
+      const dato1 = '2016-01-01';
+      const dato2 = '2016-12-31';
+
+      expect(datoDiffMenneskelig(dato1, dato2)).toBe('12 måneder');
+    })
+  })
 
   describe('beregnAlder', () => {
     test('alder er 39 31. desember', () => {
@@ -212,7 +261,5 @@ describe('dato.js:', () => {
       const forventetAlder = 40;
       expect(beregnAlder(foedselsdato)).toBe(forventetAlder);
     })
-
   })
-
 });
