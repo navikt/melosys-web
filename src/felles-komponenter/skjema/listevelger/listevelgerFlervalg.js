@@ -70,9 +70,9 @@ class ListevelgerFlervalg extends Component {
   }
 
   erAlleredeLagtTil = verdi => {
-    const { fields } = this.props;
+    const { fields, tillatFritekst } = this.props;
     const alleValg = fields.getAll();
-    return alleValg.some(valg => valg === verdi);
+    return !tillatFritekst && alleValg.some(valg => valg === verdi);
   }
 
   leggValgTilListe = e => {
