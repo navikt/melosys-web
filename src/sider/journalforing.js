@@ -1,7 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { reduxForm, autofill, setSubmitFailed, change } from 'redux-form';
+import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
@@ -51,6 +51,7 @@ class Journalforing extends Component {
     valid: PT.bool.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
+    errors: PT.object.isRequired,
   };
 
   static defaultProps = {
@@ -193,6 +194,8 @@ class Journalforing extends Component {
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const { journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed } = journalforingSkjemaVerdier;
 
+    this.touchAll(this.props.errors);
+
     resetSkjemaFelterForEksisterendeSaker();
 
     settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
@@ -224,6 +227,11 @@ class Journalforing extends Component {
       }
     });
   };
+
+  touchAll = (alleValideringer = {}) => {
+    console.log(Object.keys(alleValideringer))
+    this.props.touch('brukerID');
+  }
 
   resetSkjemaFelterForOpprettFagsak = () => {
     const { settFeltInnhold } = this.props;
@@ -294,6 +302,7 @@ const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: fagsakSelectors.FagsakSokSelector(state),
+  errors: getFormSyncErrors('journalforing')(state),
   initialValues: {
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
