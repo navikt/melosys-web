@@ -168,20 +168,25 @@ class Informasjon extends Component {
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           <Skjema.Input feltNavn="mottattDato" label="Registrert dato:" disabled />
           <Link to={dokumentURI} target="_blank" className="informasjon__dokumentlenke">Åpne dokument i nytt vindu</Link>
-          <Skjema.ListeVelger
-            feltNavn="dokumentTittel"
-            label="Tittel på hoveddokument:"
-            placeholder="(velg eller skriv inn egen tittel)"
-            muligeValg={valgbareDokumentTitler}
-          />
-          <Skjema.ListeVelger
-            feltNavn="vedleggsTitler"
-            label="Titler på vedlegg:"
-            gruppe
-            tillatFritekst
-            muligeValg={valgbareVedleggsTitler}
-            placeholder="(Velg eller skriv inn egen tittel)"
-          />
+
+          <Nav.Fieldset legend="Hoveddokument:">
+            <Skjema.ListeVelger
+              feltNavn="dokumentTittel"
+              label="Tittel på hoveddokument:"
+              placeholder="(velg eller skriv inn egen tittel)"
+              muligeValg={valgbareDokumentTitler}
+            />
+          </Nav.Fieldset>
+          <Nav.Fieldset legend="Vedlegg:">
+            <Skjema.ListeVelger
+              feltNavn="vedleggsTitler"
+              label="Velg ny tittel:"
+              gruppe
+              tillatFritekst
+              muligeValg={valgbareVedleggsTitler}
+              placeholder="(Velg eller skriv inn egen tittel)"
+            />
+          </Nav.Fieldset>
         </Nav.Fieldset>
       </div>
     );
