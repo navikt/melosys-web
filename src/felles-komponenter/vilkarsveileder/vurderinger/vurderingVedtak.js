@@ -5,7 +5,7 @@ import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { datoDiff } from '../../../utils/dato';
+import { datoDiffMenneskelig } from '../../../utils/dato';
 
 import './vurderingVedtak.css';
 
@@ -77,7 +77,7 @@ const VurderingVedtak = props => {
 
   const { sysselsettingType = '' } = sysselsetting;
 
-  const antallManeder = datoDiff(periode.fom, periode.tom, 'months');
+  const antallManeder = datoDiffMenneskelig(periode.fom, periode.tom);
   const arbeidsgivereForVedtaket = valgteArbeidsgivere
     .reduce((collection, arbeidsgiveren) => [...collection, arbeidsgiveren.navn], [])
     .join(', ');

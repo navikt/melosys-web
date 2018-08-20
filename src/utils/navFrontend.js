@@ -9,6 +9,7 @@ import { Knapp, Hovedknapp } from 'nav-frontend-knapper';
 import Icons from 'nav-frontend-ikoner-assets';
 import Stegindikator from 'nav-frontend-stegindikator';
 import NavFrontendSpinner from 'nav-frontend-spinner';
+import Lenker from 'nav-frontend-lenker';
 
 export {
   AlertStripeAdvarsel, AlertStripe,
@@ -21,4 +22,5 @@ export {
   Stegindikator,
   NavFrontendSpinner,
   Icons as Ikoner,
+  Lenker,
 };
