@@ -52,6 +52,7 @@ class Journalforing extends Component {
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
     errors: PT.object.isRequired,
+    touch: PT.func.isRequired,
   };
 
   static defaultProps = {
@@ -228,9 +229,8 @@ class Journalforing extends Component {
     });
   };
 
-  touchAll = (alleValideringer = {}) => {
-    console.log(Object.keys(alleValideringer))
-    this.props.touch('brukerID');
+  touchAll = (alleFeil = {}) => {
+    this.props.touch(...Object.keys(alleFeil));
   }
 
   resetSkjemaFelterForOpprettFagsak = () => {
