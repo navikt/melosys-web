@@ -9,18 +9,28 @@ import EnkeltDato from '../datoOmrade/enkeltDato';
 import './arbeidsavtaler.css';
 
 class Arbeidsavtaler extends Component {
-  state = { visHistoriskeArbeidsavtaler: false }
+  state = { visHistoriskeArbeidsavtaler: false };
 
   toggleInntektTabellHandler = e => {
     e.preventDefault();
     this.setState({ visHistoriskeArbeidsavtaler: !this.state.visHistoriskeArbeidsavtaler });
-  }
+  };
 
   render() {
+    const chooseOwnProperty = (obj, propertyKey) => (obj && obj[propertyKey] ? obj[propertyKey] : obj);
     const { arbeidsavtaler = [] } = this.props;
     const { visHistoriskeArbeidsavtaler } = this.state;
 
     const nyesteArbeidsavtale = arbeidsavtaler.length > 0 ? arbeidsavtaler[0] : {};
+    const nyaa = {
+      antallTimerFraGammeltRegister: nyesteArbeidsavtale.antallTimerFraGammeltRegister,
+      endringsdatoStillingsprosent: nyesteArbeidsavtale.endringsdatoStillingsprosent,
+      arbeidstidsordning: chooseOwnProperty(nyesteArbeidsavtale.arbeidstidsordning, 'term'),
+      yrke: chooseOwnProperty(nyesteArbeidsavtale.yrke, 'term'),
+      skipsregister: chooseOwnProperty(nyesteArbeidsavtale.skipsregister, 'term'),
+      skipstype: chooseOwnProperty(nyesteArbeidsavtale.skipstype, 'term'),
+      fartsomraade: chooseOwnProperty(nyesteArbeidsavtale.fartsomraade, 'term'),
+    };
     const historiskeArbeidsavtaler = arbeidsavtaler.filter((arbeidsavtalen, index) => index > 0);
 
     // Tabell-komponenten er agnostisk med tanke på colonner og trenger disse som en array. Gjør derfor
@@ -56,20 +66,23 @@ class Arbeidsavtaler extends Component {
           <Nav.Column xs="6">
             <dl className="arbeidsavtaler__detaljer">
               <dt>Yrke</dt>
-              <dd>{nyesteArbeidsavtale.yrke || '-'}</dd>
+              <dd>{nyaa.yrke || '-'}</dd>
               <dt>Arbeidstidsordning</dt>
-              <dd>{nyesteArbeidsavtale.arbeidstidsordning}</dd>
+              <dd>{nyaa.arbeidstidsordning || '-'}</dd>
+              {nyaa.skipsregister && <div><dt>Skipsregister</dt><dd>{nyaa.skipsregister}</dd></div>}
+              {nyaa.skipstype && <div><dt>Skipstype</dt><dd>{nyaa.skipstype}</dd></div>}
+              {nyaa.fartsomraade && <div><dt>Fartsområde</dt><dd>{nyaa.fartsomraade}</dd></div>}
             </dl>
           </Nav.Column>
           <Nav.Column xs="6">
             <dl className="arbeidsavtaler__detaljer">
               <dt>Stillingsprosent</dt>
-              <dd>{nyesteArbeidsavtale.stillingsprosent || '-'}</dd>
+              <dd>{nyaa.stillingsprosent || '-'}</dd>
               <dt>Antall timer pr uke</dt>
-              <dd>{nyesteArbeidsavtale.beregnetAntallTimerPrUke || '-'}</dd>
-              {nyesteArbeidsavtale.antallTimerFraGammeltRegister && <div><dt>Antall timer fra gammelt register</dt><dd>nyesteArbeidsavtale.antallTimerFraGammeltRegister</dd></div> }
+              <dd>{nyaa.beregnetAntallTimerPrUke || '-'}</dd>
+              {nyaa.antallTimerFraGammeltRegister && <div><dt>Antall timer fra gammelt register</dt><dd>nyaa.antallTimerFraGammeltRegister</dd></div> }
               <dt>Stillingsprosent endret</dt>
-              <dd><EnkeltDato dato={nyesteArbeidsavtale.endringsdatoStillingsprosent} /></dd>
+              <dd><EnkeltDato dato={nyaa.endringsdatoStillingsprosent} /></dd>
             </dl>
           </Nav.Column>
         </div>
