@@ -25,7 +25,7 @@ const Bosted = props => {
     <div className="bosted panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger for vurdering av bosted" undertittel="" />}
-        ariaTittel="Panel for opplysninger om bosted, fra søknaden">
+        ariaTittel="Panel for opplysninger om bosted, fra søknaden" apen>
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
