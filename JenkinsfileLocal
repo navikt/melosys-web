@@ -4,7 +4,7 @@ import jenkins.model.*
 node {
   def project = "navikt"
   def application = "melosys-web-local"
-  def webMockLocalDir = "/var/lib/jenkins/melosys-web-/"
+  def webMockLocalDir = "/var/lib/jenkins/${application}/"
   def zipFile
 
   /* metadata */
@@ -57,8 +57,7 @@ node {
     buildVersion = "${semver}-${BUILD_NUMBER}"
     echo("buildVersion=${buildVersion}")
 
-    sh "${npm} run localjavaweb"
-    sh "${npm} run build"
+    sh "${npm} run build:javaweb"
   }
 
   stage('Create Zip artifact') {
