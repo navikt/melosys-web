@@ -9,6 +9,10 @@ import * as MPT from '../../../proptypes';
 import './landvelger.css';
 import { KodeverkSelectors } from '../../../ducks/kodeverk';
 
+import EnkeltLand from './enkeltLand';
+import MultiLand from './multiLand';
+import EnkeltDato from '../../datoOmrade/enkeltDato'
+
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 
 const ValgtLand = ({ landObjekt = {}, slettLand, disabled }) => (
@@ -139,14 +143,29 @@ class CustomLandVelger extends Component {
     this.finnLandOgLeggTil(landkoder, inputVerdi);
   }
 
+  oppslagLandkoderTilKodeverk = (koder = []) => {
+    const { landkoder: kodeverkLandkoder } = this.props;
+
+    const oppslattKoder = koder.reduce((samling, landkode) => {
+      const funnetLandkode = kodeverkLandkoder.find(land => (land.kode === landkode));
+      return funnetLandkode ? [...samling, funnetLandkode] : [...samling];
+    }, []);
+
+    console.log(oppslattKoder);
+
+    return oppslattKoder;
+  }
+
   render () {
     const {
       landkoder, label, fields, multiLand, meta, disabled,
     } = this.props;
 
+    const { fokusUtHandler, inputEndringHandler, inputTastNedHandler } = this;
+
     const feil = meta.error ? { feilmelding: meta.error } : null;
 
-    const valgteLand = fields.getAll() || [];
+    const valgteLand = this.oppslagLandkoderTilKodeverk(fields.getAll());
 
     const tilgjengeligeLandListe = (multiLand || valgteLand.length === 0)
       ?
@@ -169,7 +188,7 @@ class CustomLandVelger extends Component {
             onClick={this.leggTilLandHandler}>+
           </button>
           <datalist id="alleLand">
-            {landkoder.map(item => (!valgteLand.includes(item) ? <option key={item.kode} value={landTekstFormat(item)} /> : ''))}
+            {landkoder.map(item => <option key={item.kode} value={landTekstFormat(item)} />)}
           </datalist>
         </div>
       )
@@ -178,15 +197,21 @@ class CustomLandVelger extends Component {
 
     return (
       <div className="landliste">
-        {!multiLand && valgteLand.length > 0 && label}
-        {valgteLand.map(valgtLand => (
-          <ValgtLand
-            key={valgtLand}
-            disabled={disabled}
-            landObjekt={this.props.landkoder.find(land => land.kode === valgtLand)}
+        { multiLand ?
+          <MultiLand
             slettLand={this.slettLandHandler}
+            valgteLand={valgteLand}
+            {...this.props}
           />
-        ))
+          :
+          <EnkeltLand
+            alleLand={landkoder}
+            valgtLand={valgteLand[0]}
+            fokusUtHandler={fokusUtHandler}
+            inputEndringHandler={inputEndringHandler}
+            inputTastNedHandler={inputTastNedHandler}
+            {...this.props}
+          />
         }
         {tilgjengeligeLandListe}
       </div>
