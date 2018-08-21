@@ -16,7 +16,7 @@ import Postadresse from './adresser/postadresse';
 import LandVelger from './skjema/landvelger';
 
 import UtenlandskID from './personopplysninger/utenlandskID';
-import MedfolgendeBarn from './personopplysninger/medfolgendeBarn';
+import MedfolgendeFamilie from './personopplysninger/medfolgendeFamilie';
 import MedfolgendeAndre from './personopplysninger/medfolgendeAndre';
 
 import './personopplysninger.css';
@@ -65,7 +65,7 @@ function Personopplysninger(props) {
     postadresseMidlertidig,
     personStatus,
     erEgenAnsatt,
-    barn = [],
+    familiemedlemmer = [],
   } = props.person;
 
   const kjoennKode = kjoenn.kode || kjoenn;
@@ -136,7 +136,7 @@ function Personopplysninger(props) {
           </Nav.Row>
           <Nav.Row className="person__seksjon">
             <Nav.Column xs="12">
-              {barn.length > 0 && <MedfolgendeBarn barnAlle={barn} /> }
+              {familiemedlemmer.length > 0 && <MedfolgendeFamilie familiemedlemmerAlle={familiemedlemmer} /> }
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="person__seksjon">
