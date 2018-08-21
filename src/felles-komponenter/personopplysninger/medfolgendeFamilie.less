@@ -1,0 +1,35 @@
+.familiemedlemmer {
+  .familiemedlemmerListe {
+  }
+
+  .familiemedlemmerEnkelt {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    border-bottom: 1px solid #000000;
+
+    .enkelt__navn, .enkelt__fnr, .enkelt__relasjonstype, .enkelt__ermed {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      margin: 0 1em 0 0;
+      padding: 0.5em 0;
+
+      .skjemaelement--horisontal {
+        margin-bottom: 0;
+      }
+    }
+
+    .enkelt__navn, .enkelt__ermed {
+      flex: 3;
+    }
+
+    .enkelt__fnr {
+      flex: 2;
+    }
+
+    .enkelt__relasjonstype {
+      flex: 1;
+    }
+  }
+}
