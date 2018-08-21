@@ -47,13 +47,13 @@ class FamiliemedlemmerListe extends Component {
   }
 
   render() {
-    const { familiemedlemmer, fields } = this.props;
+    const { familiemedlemmerAlle, fields } = this.props;
     const { onBarnChange } = this;
     const allFields = fields.getAll() || [];
 
     return (
       <div className="familiemedlemmerListe">
-        {familiemedlemmer.map((familiemedlemmerEnkelt, indeks) => (
+        {familiemedlemmerAlle.map((familiemedlemmerEnkelt, indeks) => (
           <FamiliemedlemmerEnkelt
             key={uuid()}
             familiemedlemmerEnkelt={familiemedlemmerEnkelt}
@@ -68,11 +68,11 @@ class FamiliemedlemmerListe extends Component {
 
 FamiliemedlemmerListe.propTypes = {
   fields: PT.object.isRequired,
-  familiemedlemmer: PT.array,
+  familiemedlemmerAlle: PT.array,
 };
 
 FamiliemedlemmerListe.defaultProps = {
-  familiemedlemmer: [],
+  familiemedlemmerAlle: [],
 };
 
 const Familiemedlemmer = props => (
