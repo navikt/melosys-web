@@ -61,12 +61,12 @@ node {
   }
 
   stage('Create Zip artifact') {
-    sh "rm -rf $webMockDir*" // Clean the content, don't remove top folder
-    sh "cp -r build/* $webMockDir"
+    sh "rm -rf $webMockLocalDir*" // Clean the content, don't remove top folder
+    sh "cp -r build/* $webMockLocalDir"
     zipFile = "${application}-${buildVersion}.zip"
     echo("zipFile:${zipFile}")
     sh "cd build/; zip -r ../$zipFile *; cd .."
-    sh "cp ${zipFile} $webMockDir"
+    sh "cp ${zipFile} $webMockLocalDir"
   }
 
   stage('Deploy to Nexus') {
