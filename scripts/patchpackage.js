@@ -14,4 +14,4 @@ delete pkg['disabled-homepage'];
 writePkg.sync(pkg);
 
 // update .env with custom version
-dotenv.set('REACT_APP_BUILD_VERSION', 'allix');
+dotenv.set('REACT_APP_BUILD_VERSION', 'java_local');

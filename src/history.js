@@ -3,9 +3,9 @@ import { createBrowserHistory } from 'history';
 const CONTEXT_PATH = '/melosys';
 const NO_CONTEXT_PATH = '/';
 
-const isLocalAllixENv = () => `${process.env.REACT_APP_BUILD_VERSION}` === 'allix';
+const isLocalJavaDevEnv = () => `${process.env.REACT_APP_BUILD_VERSION}` === 'java_local';
 
-const contextPath = isLocalAllixENv() ? CONTEXT_PATH : NO_CONTEXT_PATH;
+const contextPath = isLocalJavaDevEnv() ? CONTEXT_PATH : NO_CONTEXT_PATH;
 
 /* eslint-enable no-console */
 const routerHistory = createBrowserHistory({
