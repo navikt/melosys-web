@@ -57,6 +57,7 @@ node {
     buildVersion = "${semver}-${BUILD_NUMBER}"
     echo("buildVersion=${buildVersion}")
 
+    sh "${npm} run localjavaweb"
     sh "${npm} run build"
   }
 

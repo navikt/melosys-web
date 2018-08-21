@@ -79,6 +79,7 @@
   "disabled-homepage": "http://eesi2.no/melosys",
   "scripts": {
     "patchenv": "node ./scripts/patchenv.js",
+    "localjavaweb": "node ./scripts/patchpackage.js",
     "analyze": "source-map-explorer build/static/js/main.*",
     "start:js": "react-scripts start",
     "build:js": "react-scripts build",
