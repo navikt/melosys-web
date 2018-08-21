@@ -11,7 +11,6 @@ import { KodeverkSelectors } from '../../../ducks/kodeverk';
 
 import EnkeltLand from './enkeltLand';
 import MultiLand from './multiLand';
-import EnkeltDato from '../../datoOmrade/enkeltDato'
 
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 
@@ -66,7 +65,7 @@ class CustomLandVelger extends Component {
 
     if (landSomInneholderInntastetVerdi.length === 1) {
       this.leggTilLand(landSomInneholderInntastetVerdi[0].kode);
-      this.setState({ inputVerdi: '' });
+      this.setState({ inputVerdi: landTekstFormat(landSomInneholderInntastetVerdi[0]) });
     }
   }
 
@@ -106,6 +105,9 @@ class CustomLandVelger extends Component {
       e.preventDefault();
       const { inputVerdi } = this.state;
       const { landkoder } = this.props;
+
+      e.target.blur(); // Blur og refocus for å fjerne dropdown.
+      e.target.focus();
 
       this.finnLandOgLeggTil(landkoder, inputVerdi);
     }
@@ -151,8 +153,6 @@ class CustomLandVelger extends Component {
       return funnetLandkode ? [...samling, funnetLandkode] : [...samling];
     }, []);
 
-    console.log(oppslattKoder);
-
     return oppslattKoder;
   }
 
@@ -163,37 +163,11 @@ class CustomLandVelger extends Component {
 
     const { fokusUtHandler, inputEndringHandler, inputTastNedHandler } = this;
 
+    const { inputVerdi } = this.state;
+
     const feil = meta.error ? { feilmelding: meta.error } : null;
 
-    const valgteLand = this.oppslagLandkoderTilKodeverk(fields.getAll());
-
-    const tilgjengeligeLandListe = (multiLand || valgteLand.length === 0)
-      ?
-      (
-        <div className="landliste__linje">
-          <Nav.Input
-            list="alleLand"
-            label={label}
-            bredde="XXL"
-            feil={feil}
-            className="landliste__linje__input"
-            value={this.state.inputVerdi}
-            onBlur={this.fokusUtHandler}
-            onChange={this.inputEndringHandler}
-            onKeyDown={this.inputTastNedHandler}
-          />
-          <button
-            className="landliste__linje__knapp landliste__linje__knapp--leggtil"
-            disabled={disabled}
-            onClick={this.leggTilLandHandler}>+
-          </button>
-          <datalist id="alleLand">
-            {landkoder.map(item => <option key={item.kode} value={landTekstFormat(item)} />)}
-          </datalist>
-        </div>
-      )
-      :
-      null;
+    const valgteLand = fields.getAll() || [];
 
     return (
       <div className="landliste">
@@ -206,18 +180,28 @@ class CustomLandVelger extends Component {
           :
           <EnkeltLand
             alleLand={landkoder}
-            valgtLand={valgteLand[0]}
+            inputVerdi={inputVerdi}
             fokusUtHandler={fokusUtHandler}
             inputEndringHandler={inputEndringHandler}
             inputTastNedHandler={inputTastNedHandler}
             {...this.props}
           />
         }
-        {tilgjengeligeLandListe}
+        <div className="landliste__linje">
+          <datalist id="alleLand">
+            {landkoder.map(item => {
+              const valg = valgteLand.some(valgt => valgt === item.kode) ? '' : <option key={item.kode} value={landTekstFormat(item)} />;
+
+              return valg;
+            }
+            ) }
+          </datalist>
+        </div>
       </div>
     );
   }
 }
+
 const mapStateToProps = state => ({
   landkoder: KodeverkSelectors.landkoderSelector(state),
 });
