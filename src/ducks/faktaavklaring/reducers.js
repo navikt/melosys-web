@@ -49,6 +49,7 @@ export default function reducer(state = initialState, action) {
         },
         sysselsetting: {
           sysselsettingType: dokument.faktaavklaringSysselsettingType,
+          ikkeYrkesaktivType: dokument.faktaavklaringIkkeYrkesaktivType,
         },
         aktivitet: {
           aktivitetLand: dokument.faktaavklaringAktivitetLand,
@@ -62,7 +63,7 @@ export default function reducer(state = initialState, action) {
           arbeidKnyttetTilVirksomhetUtlandet: dokument.faktaavklaringArbeidKnyttetTilVirksomhetUtlandet,
           sammeTypeVirksomhet: dokument.faktaavklaringSammeTypeVirksomhet,
         },
-        valgteArbeidsforhold: [...dokument.faktaavklaringValgteArbeidsforhold],
+        valgteArbeidsgivere: [...dokument.faktaavklaringValgteArbeidsgivere],
         sektor: {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
@@ -85,6 +86,10 @@ export default function reducer(state = initialState, action) {
           land: dokument.faktaavklaringForretningsstedLand,
           antallArbeidsgivere: dokument.faktaavklaringForretningsstedAntallArbeidsgivere,
           fordelingArbeidsgivere: dokument.faktaavklaringForretningsstedFordelingArbeidsgivere,
+        },
+        vesentligVirksomhet: {
+          vesentligVirksomhetINorge: dokument.faktaavklaringVesentligVirksomhetINorge,
+          vesentligVirksomhetBegrunnelser: dokument.faktaavklaringVesentligVirksomhetBegrunnelser,
         },
       };
 

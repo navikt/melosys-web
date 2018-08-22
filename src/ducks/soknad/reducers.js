@@ -2,7 +2,7 @@ import { STATUS } from '../../services/utils';
 
 import * as Types from './types';
 
-import { strengTilBool, strengTilInt } from '../../utils/streng';
+import { strengTilInt } from '../../utils/streng';
 import { formatterDatoTilISO } from '../../utils/dato';
 
 /**
@@ -20,25 +20,30 @@ const initialState = {
 const soknadTemplate =
   {
     arbeidUtland: {
-      arbeidsland: [],
-      arbeidsperiode: { fom: undefined, tom: undefined },
-      arbeidsandelNorge: undefined,
+      adresse: {
+        gatenavn: undefined,
+        postnummer: undefined,
+        poststed: undefined,
+        land: undefined,
+      },
       arbeidsandelUtland: undefined,
-      bostedsland: undefined,
-      erstatterTidligereUtsendt: undefined,
+      arbeidsandelNorge: undefined,
+      arbeidUtlandHjemmekontor: undefined,
+      arbeidUtlandErstatning: undefined,
     },
-    foretakUtland: {
-      foretakUtlandNavn: undefined,
-      foretakUtlandOrgnr: undefined,
-      foretakUtlandAdresse: undefined,
-    },
+    foretakUtland: [],
     oppholdUtland: {
       oppholdsland: undefined,
       oppholdsPeriode: { fom: undefined, tom: undefined },
-      studentIEOS: undefined,
-      studentFinansiering: undefined,
+      sammeAdresseSomArbeidsgiver: undefined,
+      ektefelleEllerBarn: undefined,
+      forutgaendeBostedINorge: undefined,
       studentSemester: undefined,
+      studentFinansiering: undefined,
       studieLand: undefined,
+    },
+    bosted: {
+      oppgittAdresse: undefined,
     },
     arbeidNorge: {
       valgteArbeidsforhold: [],
@@ -59,14 +64,15 @@ const soknadTemplate =
       fullmektigAdresse: undefined,
     },
     juridiskArbeidsgiverNorge: {
-      antallAnsatte: undefined,
-      antallAdminAnsatte: undefined,
+      erBemanningsbyra: undefined,
+      utsendteNeste12Mnd: undefined,
+      antallAdmAnsatte: undefined,
       antallAdminAnsatteEOS: undefined,
       andelOmsetningINorge: undefined,
       andelKontrakterINorge: undefined,
-      erBemanningsbyra: undefined,
-      hattDriftSiste12Mnd: undefined,
-      antallUtsendte: undefined,
+      utsendtFortsetterArbeidsforholdIUtlandet: undefined,
+      utsendtArbeiderMedKlienter: undefined,
+      utsendtArbeiderMedKontrakter: undefined,
     },
     arbeidsinntekt: {
       inntektNorskIPerioden: undefined,
@@ -85,7 +91,11 @@ const soknadTemplate =
       trygdeavgiftTrukketGjennomSkatt: undefined,
       trygdeavgiftTrukketGjennomSkattDato: undefined,
     },
-    tilleggsopplysninger: undefined,
+    personOpplysninger: {
+      utenlandskID: undefined,
+      medfolgendeFamilie: undefined,
+      medfolgendeAndre: undefined,
+    },
   };
 
 
@@ -99,8 +109,8 @@ export default function reducer(state = initialState, action) {
     case Types.OK: {
       const soknadData = action.data;
 
-      if (!soknadData.soknadDokument) {
-        soknadData.soknadDokument = { ...soknadTemplate };
+      if (!soknadData.soeknadDokument) {
+        soknadData.soeknadDokument = { ...soknadTemplate };
       }
 
       return {
@@ -112,42 +122,95 @@ export default function reducer(state = initialState, action) {
     case Types.OPPDATER_SOKNAD: {
       const { dokument } = action;
       const soknad = {
-        ...state.data.soknadDokument,
+        ...state.data.soeknadDokument,
         arbeidsinntekt: {
-          ...state.data.soknadDokument.arbeidsinntekt,
+          ...state.data.soeknadDokument.arbeidsinntekt,
           inntektNorskIPerioden: strengTilInt(dokument.inntektNorskIPerioden),
           inntektUtenlandskIPerioden: strengTilInt(dokument.inntektUtenlandskIPerioden),
           inntektNaeringIPerioden: strengTilInt(dokument.inntektNaeringIPerioden),
         },
         arbeidNorge: {
-          ...state.data.soknadDokument.arbeidNorge,
+          ...state.data.soeknadDokument.arbeidNorge,
+        },
+        arbeidUtland: {
+          adresse: {
+            gatenavn: dokument.arbeidUtlandGatenavn,
+            postnummer: dokument.arbeidUtlandPostnummer,
+            poststed: dokument.arbeidUtlandPoststed,
+            land: dokument.arbeidUtlandLand,
+          },
+          arbeidsandelUtland: dokument.arbeidsandelUtland,
+          arbeidsandelNorge: dokument.arbeidsandelNorge,
+          arbeidUtlandHjemmekontor: dokument.arbeidUtlandHjemmekontor,
+          arbeidUtlandErstatning: dokument.arbeidUtlandErstatning,
+        },
+        juridiskArbeidsgiverNorge: {
+          erBemanningsbyra: dokument.erBemanningsbyra,
+          utsendteNeste12Mnd: dokument.utsendteNeste12Mnd,
+          antallAdmAnsatte: dokument.antallAdmAnsatte,
+          antallAdminAnsatteEOS: dokument.antallAdminAnsatteEOS,
+          andelOmsetningINorge: dokument.andelOmsetningINorge,
+          andelKontrakterINorge: dokument.andelKontrakterINorge,
+          utsendtFortsetterArbeidsforholdIUtlandet: dokument.utsendtFortsetterArbeidsforholdIUtlandet,
+          utsendtArbeiderMedKlienter: dokument.utsendtArbeiderMedKlienter,
+          utsendtArbeiderMedKontrakter: dokument.utsendtArbeiderMedKontrakter,
         },
         arbeidsgiversBekreftelse: {
-          ...state.data.soknadDokument.arbeidsgiversBekreftelse,
-          arbeidsgiverBekrefterUtsendelse: strengTilBool(dokument.arbeidsgiverBekrefterUtsendelse),
-          arbeidstakerAnsattUnderUtsendelsen: strengTilBool(dokument.arbeidstakerAnsattUnderUtsendelsen),
-          erstatterArbeidstakerenUtsendte: strengTilBool(dokument.erstatterArbeidstakerenUtsendte),
-          arbeidstakerTidligereUtsendt24Mnd: strengTilBool(dokument.arbeidstakerTidligereUtsendt24Mnd),
-          arbeidsgiverBetalerArbeidsgiveravgift: strengTilBool(dokument.arbeidsgiverBetalerArbeidsgiveravgift),
-          trygdeavgiftTrukketGjennomSkatt: strengTilBool(dokument.trygdeavgiftTrukketGjennomSkatt),
+          ...state.data.soeknadDokument.arbeidsgiversBekreftelse,
+          arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
+          arbeidstakerAnsattUnderUtsendelsen: dokument.arbeidstakerAnsattUnderUtsendelsen,
+          erstatterArbeidstakerenUtsendte: dokument.erstatterArbeidstakerenUtsendte,
+          arbeidstakerTidligereUtsendt24Mnd: dokument.arbeidstakerTidligereUtsendt24Mnd,
+          arbeidsgiverBetalerArbeidsgiveravgift: dokument.arbeidsgiverBetalerArbeidsgiveravgift,
+          trygdeavgiftTrukketGjennomSkatt: dokument.trygdeavgiftTrukketGjennomSkatt,
           trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato),
         },
         oppholdUtland: {
-          ...state.data.soknadDokument.oppholdUtland,
+          ...state.data.soeknadDokument.oppholdUtland,
           oppholdsland: dokument.faktaavklaringOppholdsLand,
           oppholdsPeriode: {
-            ...state.data.soknadDokument.oppholdUtland.oppholdsPeriode,
+            ...state.data.soeknadDokument.oppholdUtland.oppholdsPeriode,
             fom: formatterDatoTilISO(dokument.faktaavklaringPeriodeFraOgMed),
             tom: formatterDatoTilISO(dokument.faktaavklaringPeriodeTilOgMed),
           },
-          studentIEOS: dokument.studentIEOS,
+          sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
+          ektefelleEllerBarnINorge: dokument.harEktefelleEllerBarnINorge,
+          forutgaendeBostedINorge: dokument.harForutgaendeBostedINorge,
+          EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
+          adresseIUtlandet: dokument.adresseIUtlandet,
           studentSemester: dokument.studentSemester,
           studieLand: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,
         },
+        foretakUtland: dokument.foretakUtland,
+        bosted: {
+          oppgittAdresse: {
+            gatenavn: dokument.oppgittAdresseGatenavn,
+            postnummer: dokument.oppgittAdressePostnummer,
+            poststed: dokument.oppgittAdressePoststed,
+            land: dokument.oppgittAdresseLand,
+          },
+        },
+        maritimtArbeid: {
+          ...state.data.soeknadDokument.maritimtArbeid,
+          maritimType: dokument.maritimType,
+          skipsNavn: dokument.skipsNavn,
+          fartsomrade: dokument.fartsomrade,
+          flaggLand: dokument.flaggLand,
+          installasjonsLand: dokument.installasjonsLand,
+        },
+        selvstendigArbeid: {
+          erSelvstendig: dokument.erSelvstendig,
+          selvstendigForetak: dokument.selvstendigForetak,
+        },
+        personOpplysninger: {
+          utenlandskID: dokument.utenlandskID,
+          medfolgendeFamilie: dokument.medfolgendeFamilie,
+          medfolgendeAndre: dokument.medfolgendeAndre,
+        },
       };
 
-      return { ...state, data: { ...state.data, soknadDokument: soknad } };
+      return { ...state, data: { ...state.data, soeknadDokument: soknad } };
     }
     default:
       return state;

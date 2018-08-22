@@ -31,7 +31,7 @@ class Spark extends Component {
 
   state = {
     soknad: {
-      soknadDokument: '',
+      soeknadDokument: '',
       behandlingID: 0,
     },
     fagsaker: []
@@ -43,15 +43,16 @@ class Spark extends Component {
     this.props.opprettNyFagsak(fnr);
   };
 
-  plukkOppgaveSubmit = event => {
+  behandlingsOppgaveSubmit = event => {
     event.preventDefault();
     const oppgaveBody = JSON.parse(event.target.oppgaveBody.value);
-    this.props.plukkOppgave(oppgaveBody);
+    this.props.behandlingsOppgave(oppgaveBody);
   };
-  opprettOppgaveSubmit = event => {
+
+  jornalforingOppgaveSubmit = event => {
     event.preventDefault();
-    const opprettOppgaveBody = JSON.parse(event.target.opprettOppgaveBody.value);
-    Api.Oppgaver.opprett(opprettOppgaveBody);
+    const oppgaveBody = JSON.parse(event.target.oppgaveBody.value);
+    this.props.journalOppgave(oppgaveBody);
   };
 
   hentFagsakBasertPaFnr = event => {
@@ -60,13 +61,13 @@ class Spark extends Component {
     Api.Fagsaker.sok(fnr).then(response => {
       this.setState({fagsaker: response});
     });
-  }
+  };
 
   resetOppgaver = () => {
     Api.Oppgaver.sparkReset().then(() => {
       document.location.href = '/';
     });
-  }
+  };
 
   hentFagsakOgSoknad = saksnummer => {
     Api.Fagsaker.hent(saksnummer)
@@ -76,11 +77,11 @@ class Spark extends Component {
         return Api.Soknader.hent(behandlingID);
       })
       .then(response => {
-        const {soknadDokument = Mock.soknadDokument, behandlingID} = response;
-        const erNySoknad = response.soknadDokument === undefined;
-        this.setState({soknad: {soknadDokument, behandlingID, erNySoknad} });
+        const {soeknadDokument = Mock.soeknadDokument, behandlingID} = response;
+        const erNySoknad = response.soeknadDokument === undefined;
+        this.setState({soknad: {soeknadDokument, behandlingID, erNySoknad} });
       })
-      .catch(error => this.setState({soknad: { soknadDokument: '', behandlingID: '', error } }));
+      .catch(error => this.setState({soknad: { soeknadDokument: '', behandlingID: '', error } }));
   }
 
   soknadSubmit = event => {
@@ -96,13 +97,13 @@ class Spark extends Component {
   };
 
   updateSoknadJSON = data => {
-    this.setState({soknad: {...this.state.soknad, soknadDokument: data}});
+    this.setState({soknad: {...this.state.soknad, soeknadDokument: data}});
     return true;
   }
 
   render() {
     const { nyfagsak, oppgave } = this.props;
-    const soknadDokument = this.state.soknad.soknadDokument;
+    const soeknadDokument = this.state.soknad.soeknadDokument;
     const { erNySoknad } = this.state.soknad;
 
     const { error = {} } = this.state.soknad;
@@ -121,13 +122,25 @@ class Spark extends Component {
           <button onClick={this.resetOppgaver}>reset</button>
         </div>
 
-        { // Plukk en journalføringsoppgave eller en behandlingsoppgave.
+        { // Send behandlingsoppgave.
         }
         <div className="spark__gruppe">
-          <h1>Plukk Oppgave (Behandling ELLER Journalføring)</h1>
+          <h1>Velg behandlingsoppgave</h1>
           <p>Behandle sak:<br/><code>{JSON.stringify(Mock.behandlingsOppgave)}</code></p>
-          <p>Journalføring:<br/><code>{JSON.stringify(Mock.journalforingOppgave)}</code></p>
-          <form onSubmit={this.plukkOppgaveSubmit}>
+          <form onSubmit={this.behandlingsOppgaveSubmit}>
+            <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til plukk-endpoint.</p>
+            <textarea name="oppgaveBody" className="spark__oppgave__body" /><br />
+            <input type="submit" value="Send" />
+          </form>
+          <p>{oppgave.oppgaveID && JSON.stringify(oppgave)}</p>
+        </div>
+
+        { // Send journalføringsoppgave.
+        }
+        <div className="spark__gruppe">
+          <h1>Velg Journalførings oppgave</h1>
+          <p>Journalføring:<br/><code>{JSON.stringify(Mock.journalforingOppgave.fagomrade)}</code></p>
+          <form onSubmit={this.jornalforingOppgaveSubmit}>
             <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til plukk-endpoint.</p>
             <textarea name="oppgaveBody" className="spark__oppgave__body" /><br />
             <input type="submit" value="Send" />
@@ -150,19 +163,6 @@ class Spark extends Component {
               )}
             </div>
             <input type="submit" value="Finn fagsak(er)" />
-          </form>
-        </div>
-
-        {
-          // Opprette ny Oppgave
-        }
-        <div className="spark__gruppe">
-          <h1>Opprett ny Oppgave</h1>
-          <form onSubmit={this.opprettOppgaveSubmit}>
-            <p>Oppgave:<br/><code>{JSON.stringify(Mock.opprettoppgave)}</code></p>
-            <p className="spark__gruppe__forklaring"><span>!</span>Sett inn hele JSON-body i feltet nedenfor for å sende denne til opprett endepunktet.</p>
-            <textarea name="opprettOppgaveBody" className="spark__oppgave__body" /><br />
-            <input type="submit" value="Send" />
           </form>
         </div>
 
@@ -202,8 +202,8 @@ class Spark extends Component {
           <h2>3. Rediger direkte i JSON-treet nedenfor</h2>
           {erNySoknad && <p>Fant ingen eksisterende søknader på dette fødselsnummeret. Søknaden nedenfor er generert utifra en template.</p>}
           {!feilmelding && <JsonTree
-            data={this.state.soknad.soknadDokument}
-            rootName="soknadDokument"
+            data={this.state.soknad.soeknadDokument}
+            rootName="soeknadDokument"
             onFullyUpdate={this.updateSoknadJSON}
             editButtonElement={<button className="knapp__lagre">Lagre</button>}
             cancelButtonElement={<button className="knapp__avbryt">Avbryt</button>}
@@ -216,7 +216,7 @@ class Spark extends Component {
             <textarea
               name="soknadBody"
               className="spark__soknad__body"
-              value={JSON.stringify({soknadDokument})}
+              value={JSON.stringify({soeknadDokument})}
               onChange={() => {}}
             />
             <input type="submit" value="Lagre søknad" />
@@ -237,8 +237,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = dispatch => ({
   sendSoknad: (bid, soknad) => dispatch(soknadOperations.send(bid, soknad)),
   opprettNyFagsak: fnr => dispatch(fagsakOperations.opprett(fnr)),
-  plukkOppgave: (oppgave) => dispatch(oppgaverOperations.send(oppgave)),
-  opprettOppgave: (oppgave) => dispatch(oppgaverOperations.opprett(oppgave)),
+  behandlingsOppgave: (oppgave) => oppgaverOperations.sendBehandlingsOppgave(oppgave),
+  journalOppgave: (oppgave) => oppgaverOperations.sendJournalOppgave(oppgave),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Spark));

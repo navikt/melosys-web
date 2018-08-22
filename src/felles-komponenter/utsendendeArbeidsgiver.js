@@ -1,19 +1,20 @@
 import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
 
-import { soknadSelectors } from '../ducks/soknad/';
 import { fagsakSelectors } from '../ducks/fagsaker/';
+
+import { formatterDatoTilNorsk } from '../utils/dato';
 
 import PanelHeader from './panelHeader/panelHeader';
 import Forretningsadresse from './adresser/forretningsadresse';
 import Postadresse from './adresser/postadresse';
+import LandVelger from './skjema/landvelger';
 
 import './utsendendeArbeidsgiver.css';
 
@@ -21,7 +22,7 @@ const uuid = require('uuid/v4');
 
 const Arbeidsgiver = ({ arbeidsgiver }) => {
   const {
-    orgnr, navn, forretningsadresse, postadresse,
+    orgnr, navn, oppstartdato, organisasjonsform, forretningsadresse, postadresse,
   } = arbeidsgiver;
   const postAdresseKomp = postadresse ? <div><dt>Postdresse</dt><dd><Postadresse postadresse={postadresse} /></dd></div> : null;
   const forretningsadresseKomp = forretningsadresse ? <div><dt>Forretningsadresse</dt><dd><Forretningsadresse forretningsadresse={forretningsadresse} /></dd></div> : null;
@@ -32,10 +33,10 @@ const Arbeidsgiver = ({ arbeidsgiver }) => {
       <dd>{ navn } </dd>
       <dt>Orgnr / IDnr</dt>
       <dd>{ orgnr } </dd>
-      <dt>Opprettet dato</dt>
-      <dd>(mangler fra backend)</dd>
+      <dt>Oppstartdato</dt>
+      <dd>{formatterDatoTilNorsk(oppstartdato) || '(ukjent)'}</dd>
       <dt>Organisasjonsform</dt>
-      <dd>(mangler fra backend)</dd>
+      <dd>{organisasjonsform || '(ukjent)'}</dd>
       {postAdresseKomp}
       {forretningsadresseKomp}
     </dl>
@@ -51,29 +52,39 @@ Arbeidsgiver.defaultProps = {
 };
 
 const UtsendendeArbeidsgiver = props => {
-  const { arbeidsforholdene, valgteArbeidsforhold, soknadArbeidNorge } = props;
-  const valgteOrganisasjon = arbeidsforholdene && arbeidsforholdene.reduce((samling, arbeidsforholdet) =>
-    (valgteArbeidsforhold.includes(arbeidsforholdet.arbeidsforholdIDnav) ? [...samling, arbeidsforholdet.arbeidsgiver] : [...samling]), []);
+  const { organisasjoner, soknadVerdier } = props;
+  const { faktaavklaringValgteArbeidsgivere } = soknadVerdier;
+
+  const valgteOrganisasjon = organisasjoner && organisasjoner.reduce((samling, organisasjonen) =>
+    (faktaavklaringValgteArbeidsgivere.includes(organisasjonen.orgnr) ? [...samling, organisasjonen] : [...samling]), []);
+
   const panelIkon = valgteOrganisasjon.length === 1 ? Ikoner.Ferdig : Ikoner.Varsel;
 
-  return Object.keys(soknadArbeidNorge).length > 0 ? (
+  const dobbelVarsel = valgteOrganisasjon.length > 1 && <Nav.AlertStripe type="advarsel">Du har valgt mer enn 1 utsendende arbeidsgiver.</Nav.AlertStripe>;
+
+  return valgteOrganisasjon.length > 0 ? (
     <div className="utsendendeArbeidsgiver panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={panelIkon} tittel="Utsendende arbeidsgiver" undertittel="" />}
         ariaTittel="Panel for utsendende arbeidsgiver i Norge">
         <Nav.Container fluid>
+          {dobbelVarsel}
           <Nav.Row className="arbeidsgiver__seksjon">
             <Nav.Column xs="6">
               {valgteOrganisasjon.map(item => <Arbeidsgiver key={uuid()} arbeidsgiver={item} />) }
             </Nav.Column>
             <Nav.Column xs="6">
-              <dl className="arbeidsgiver__detaljer">
+              <div className="arbeidsgiver__detaljer">
                 <Skjema.Input label="Kontaktperson" feltNavn="kontaktNavn" />
                 <Skjema.Input label="E-post" feltNavn="kontaktEpost" />
                 <Nav.Element>Dersom fullmektig har sendt søknaden på vegne av arbeidsgiver:</Nav.Element>
                 <Skjema.Input label="Fullmektig firma" feltNavn="fullmektigFirma" />
-                <Skjema.Textarea label="Fullmektig adresse" maxLength={200} feltNavn="fullmektigAdresse" />
-              </dl>
+                <Skjema.Input label="Gateadresse" feltNavn="fullmektigGateadresse" />
+                <Skjema.Input label="Postnummer" bredde="XS" feltNavn="fullmektigPostnr" />
+                <Skjema.Input label="Poststed" feltNavn="fullmektigPoststed" />
+                <Skjema.Input label="Region" feltNavn="fullmektigRegion" />
+                <LandVelger label="Land" feltNavn="fullmektigLand" />
+              </div>
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
@@ -83,21 +94,17 @@ const UtsendendeArbeidsgiver = props => {
 };
 
 UtsendendeArbeidsgiver.propTypes = {
-  arbeidsforholdene: MPT.Arbeidsforholdene,
-  soknadArbeidNorge: MPT.ArbeidNorge,
-  valgteArbeidsforhold: PT.array,
+  organisasjoner: MPT.Organisasjoner,
+  soknadVerdier: PT.object,
 };
 
 UtsendendeArbeidsgiver.defaultProps = {
-  arbeidsforholdene: [],
-  soknadArbeidNorge: {},
-  valgteArbeidsforhold: [],
+  organisasjoner: [],
+  soknadVerdier: {},
 };
 
 const mapStateToProps = state => ({
-  arbeidsforholdene: fagsakSelectors.ArbeidsforholdeneSelector(state),
-  soknadArbeidNorge: soknadSelectors.ArbeidNorgeSelector(state),
-  valgteArbeidsforhold: soknadSelectors.ArbeidNorgeSelector(state).valgteArbeidsforhold,
+  organisasjoner: fagsakSelectors.OrganisasjonerSelector(state),
 });
 
-export default reduxForm({ form: 'soknad' })(connect(mapStateToProps)(UtsendendeArbeidsgiver));
+export default (connect(mapStateToProps)(UtsendendeArbeidsgiver));

@@ -5,12 +5,13 @@ import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 
+import LandVelger from './skjema/landvelger';
+
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
-import './arbeidsgiverUtland.css';
+import './oppholdUtland.css';
 
-function OppholdUtland ({ soknadForm }) {
-  const { studentIEOS } = soknadForm.values ? soknadForm.values : false;
+function OppholdUtland () {
   const panelIkon = Ikoner.Ferdig;
 
   return (
@@ -21,23 +22,19 @@ function OppholdUtland ({ soknadForm }) {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Student i EØS-land">
-                <Nav.Column xs="12">
-                  <Skjema.Checkbox label="Søkeren er student i EØS-land" feltNavn="studentIEOS" />
-                </Nav.Column>
-                <Nav.Column xs="6">
-                  <Skjema.Input label="Semester" feltNavn="studentSemester" disabled={!studentIEOS} />
-                </Nav.Column>
-                <Nav.Column xs="6">
-                  <Skjema.Input label="Studieland" feltNavn="studieLand" disabled={!studentIEOS} />
-                  <Skjema.Textarea
-                    maxLength={1000}
-                    label="Beskrivelse av finansiering"
-                    feltNavn="studentFinansiering"
-                    disabled={!studentIEOS}
-                  />
-                </Nav.Column>
+              <Nav.Fieldset legend="Detailer om oppholdet, hentet fra søknaden:">
+                <Nav.Row>
+                  <Nav.Column xs="6">
+                    <Skjema.Input datoFelt label="Fra og med:" feltNavn="oppholdUtlandFom" />
+                  </Nav.Column>
+                  <Nav.Column xs="6">
+                    <Skjema.Input datoFelt label="Til og med:" feltNavn="oppholdUtlandTom" />
+                  </Nav.Column>
+                </Nav.Row>
               </Nav.Fieldset>
+            </Nav.Column>
+            <Nav.Column xs="12">
+              <LandVelger feltNavn="oppholdsland" />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>

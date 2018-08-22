@@ -1,0 +1,31 @@
+/* eslint-disable */
+/** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
+ * feil eller varsler som saksbehandleren må håndtere.
+ *
+ * @type {{UBEHANDLET: string, AKTIV: string, BEHANDLET: string, ADVARSEL: string, FEIL: string}}
+ */
+export const FANE_STATUS = {
+  UBEHANDLET: 'UBEHANDLET',
+  AKTIV: 'AKTIV',
+  OK: 'OK',
+  ADVARSEL: 'ADVARSEL',
+  FEIL: 'FEIL',
+};
+
+export const STEG = {
+  INNGANG: 'INNGANG',
+  PERIODE: 'PERIODE',
+  SYSSELSETTING: 'SYSSELSETTING',
+  IKKE_YRKESAKTIV: 'IKKE_YRKESAKTIV',
+  SEKTOR: 'SEKTOR',
+  UTSENDING: 'UTSENDING',
+  YRKESAKTIVITET_FORDELING: 'YRKESAKTIVITET_FORDELING',
+  VIRKSOMHET: 'VIRKSOMHET',
+  VESENTLIG_VIRKSOMHET: 'VESENTLIG_VIRKSOMHET',
+  AKTIVITET: 'AKTIVITET',
+  BOSTEDSLAND: 'BOSTEDSLAND',
+  TJENESTEMANN: 'TJENESTEMANN',
+  FORRETNINGSSTED: 'FORRETNINGSSTED',
+  ARBEIDSGIVERE: 'ARBEIDSGIVERE',
+  VEDTAK: 'VEDTAK',
+}

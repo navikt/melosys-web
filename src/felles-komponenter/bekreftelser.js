@@ -8,6 +8,8 @@ import * as Skjema from './skjema';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
+import { BOOLSK } from '../constants';
+
 import './bekreftelser.css';
 
 function Bekreftelser (props) {
@@ -22,38 +24,38 @@ function Bekreftelser (props) {
           <Nav.Column xs="12">
             <Skjema.RadioGruppe feltNavn="arbeidsgiverBekrefterUtsendelse" label="Arbeidsgiver bekrefter at arbeidstaker er utsendt?">
               <div className="skjema__horisontalefelter">
-                <Skjema.Radio feltNavn="arbeidsgiverBekrefterUtsendelse" label="ja" value="true" />
-                <Skjema.Radio feltNavn="arbeidsgiverBekrefterUtsendelse" label="nei" value="false" />
+                <Skjema.Radio feltNavn="arbeidsgiverBekrefterUtsendelse" label="ja" value={BOOLSK.SANN} />
+                <Skjema.Radio feltNavn="arbeidsgiverBekrefterUtsendelse" label="nei" value={BOOLSK.USANN} />
               </div>
             </Skjema.RadioGruppe>
             <Skjema.RadioGruppe feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="Er arbeidstaker ansatt under utsendelsen?">
               <div className="skjema__horisontalefelter">
-                <Skjema.Radio feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="ja" value="true" />
-                <Skjema.Radio feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="nei" value="false" />
+                <Skjema.Radio feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="ja" value={BOOLSK.SANN} />
+                <Skjema.Radio feltNavn="arbeidstakerAnsattUnderUtsendelsen" label="nei" value={BOOLSK.USANN} />
               </div>
             </Skjema.RadioGruppe>
             <Skjema.RadioGruppe feltNavn="erstatterArbeidstakerenUtsendte" label="Erstatter arbeidstakeren en eller flere utsendte?">
               <div className="skjema__horisontalefelter">
-                <Skjema.Radio feltNavn="erstatterArbeidstakerenUtsendte" label="ja" value="true" />
-                <Skjema.Radio feltNavn="erstatterArbeidstakerenUtsendte" label="nei" value="false" />
+                <Skjema.Radio feltNavn="erstatterArbeidstakerenUtsendte" label="ja" value={BOOLSK.SANN} />
+                <Skjema.Radio feltNavn="erstatterArbeidstakerenUtsendte" label="nei" value={BOOLSK.USANN} />
               </div>
             </Skjema.RadioGruppe>
             <Skjema.RadioGruppe feltNavn="arbeidstakerTidligereUtsendt24Mnd" label="Er arbeidstaker tidligere utsendt i en periode over 24 mnd?">
               <div className="skjema__horisontalefelter">
-                <Skjema.Radio feltNavn="arbeidstakerTidligereUtsendt24Mnd" label="ja" value="true" />
-                <Skjema.Radio feltNavn="arbeidstakerTidligereUtsendt24Mnd" label="nei" value="false" />
+                <Skjema.Radio feltNavn="arbeidstakerTidligereUtsendt24Mnd" label="ja" value={BOOLSK.SANN} />
+                <Skjema.Radio feltNavn="arbeidstakerTidligereUtsendt24Mnd" label="nei" value={BOOLSK.USANN} />
               </div>
             </Skjema.RadioGruppe>
             <Skjema.RadioGruppe feltNavn="arbeidsgiverBetalerArbeidsgiveravgift" label="Plikter arbeidsgiver å betale arbeidsgiveravgift?">
               <div className="skjema__horisontalefelter">
-                <Skjema.Radio feltNavn="arbeidsgiverBetalerArbeidsgiveravgift" label="ja" value="true" />
-                <Skjema.Radio feltNavn="arbeidsgiverBetalerArbeidsgiveravgift" label="nei" value="false" />
+                <Skjema.Radio feltNavn="arbeidsgiverBetalerArbeidsgiveravgift" label="ja" value={BOOLSK.SANN} />
+                <Skjema.Radio feltNavn="arbeidsgiverBetalerArbeidsgiveravgift" label="nei" value={BOOLSK.USANN} />
               </div>
             </Skjema.RadioGruppe>
             <Skjema.RadioGruppe feltNavn="trygdeavgiftTrukketGjennomSkatt" label="Blir trygdeavgift trukket gjennom skatten under utenlandsoppholdet?">
               <div className="skjema__horisontalefelter">
-                <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="ja" value="true" />
-                <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="nei" value="false" />
+                <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="ja" value={BOOLSK.SANN} />
+                <Skjema.Radio feltNavn="trygdeavgiftTrukketGjennomSkatt" label="nei" value={BOOLSK.USANN} />
               </div>
             </Skjema.RadioGruppe>
             <Skjema.Input bredde="S" feltNavn="trygdeavgiftTrukketGjennomSkattDato" datoFelt label="Til dato:" />

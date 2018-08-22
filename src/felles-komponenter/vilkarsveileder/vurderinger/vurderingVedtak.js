@@ -5,7 +5,7 @@ import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { datoDiff } from '../../../utils/dato';
+import { datoDiffMenneskelig } from '../../../utils/dato';
 
 import './vurderingVedtak.css';
 
@@ -69,7 +69,7 @@ const VurderingVedtak = props => {
     lovvalgbestemmelser,
     feilmeldinger,
     opphold,
-    valgteArbeidsforhold,
+    valgteArbeidsgivere,
     sysselsetting,
   } = props;
 
@@ -77,9 +77,9 @@ const VurderingVedtak = props => {
 
   const { sysselsettingType = '' } = sysselsetting;
 
-  const antallManeder = datoDiff(periode.fom, periode.tom, 'months');
-  const arbeidsgivereForVedtaket = valgteArbeidsforhold
-    .reduce((collection, arbeidsforholdet) => [...collection, arbeidsforholdet.arbeidsgiver.navn], [])
+  const antallManeder = datoDiffMenneskelig(periode.fom, periode.tom);
+  const arbeidsgivereForVedtaket = valgteArbeidsgivere
+    .reduce((collection, arbeidsgiveren) => [...collection, arbeidsgiveren.navn], [])
     .join(', ');
 
   const venteskjermKlasser = classnames({ vedtak__venteskjerm: true, 'vedtak__venteskjerm--skjult': props.vurderingStatus !== 'PENDING' });
@@ -127,7 +127,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp type="hoved" onClick={() => props.fattVedtakHandler()}>Fatt vedtak</Nav.Knapp>
+            <Nav.Knapp type="hoved" onClick={() => props.fattVedtak()}>Fatt vedtak</Nav.Knapp>
           </Nav.Column>
           <Nav.Column xs="6" className="fane__fot">
             <a href="http://localhost">Forhåndsvis vedtaksbrev</a>
@@ -139,12 +139,12 @@ const VurderingVedtak = props => {
 };
 
 VurderingVedtak.propTypes = {
-  fattVedtakHandler: PT.func.isRequired,
+  fattVedtak: PT.func.isRequired,
   lovvalgbestemmelser: MPT.Lovvalgsbestemmelser.isRequired,
   vurderingStatus: PT.string.isRequired,
   feilmeldinger: MPT.Feilmeldinger.isRequired,
   opphold: MPT.Opphold.isRequired,
-  valgteArbeidsforhold: MPT.Arbeidsforholdene.isRequired,
+  valgteArbeidsgivere: MPT.Organisasjoner.isRequired,
   sysselsetting: MPT.Sysselsetting.isRequired,
 };
 
@@ -153,7 +153,7 @@ const mapStateToProps = state => ({
   feilmeldinger: vurderingSelectors.VurderingFeilmeldingSelector(state),
   vurderingStatus: vurderingSelectors.VurderingStatusSelector(state),
   opphold: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state),
-  valgteArbeidsforhold: faktaavklaringSelectors.FaktaavklaringValgteArbeidsforholdDetaljerSelector(state),
+  valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereDetaljerSelector(state),
   sysselsetting: faktaavklaringSelectors.FaktaavklaringSysselsettingSelector(state),
 });
 
