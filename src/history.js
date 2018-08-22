@@ -6,7 +6,7 @@ const NO_CONTEXT_PATH = '/';
 const isLocalJavaDevEnv = () => `${process.env.REACT_APP_BUILD_VERSION}` === 'java_local';
 
 const contextPath = isLocalJavaDevEnv() ? CONTEXT_PATH : NO_CONTEXT_PATH;
-
+console.log('history', contextPath);
 /* eslint-enable no-console */
 const routerHistory = createBrowserHistory({
   basename: contextPath,
