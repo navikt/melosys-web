@@ -1,3 +1,16 @@
+const versjon = (process.env.REACT_APP_VERSION ? `v${process.env.REACT_APP_VERSION}` : '(ukjent)');
+const byggTidspunkt = process.env.REACT_APP_BUILD_DATETIME || '(ukjent)';
+const byggVersjon = process.env.REACT_APP_BUILD_VERSION || '(ukjent)';
+const branchVersjon = process.env.REACT_APP_BRANCH_NAME || '(lokal)';
+
+export function buildinfo() {
+  return {
+    versjon,
+    byggTidspunkt,
+    byggVersjon,
+    branchVersjon,
+  };
+}
 /**
  * parser et funksjonsargument som funksjon.
  * @param value
