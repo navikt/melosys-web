@@ -11,7 +11,9 @@ import { KodeverkSelectors } from '../../../ducks/kodeverk';
 import EnkeltLand from './enkeltLand';
 import MultiLand from './multiLand';
 
+/** Hjelpere som deles av hovedkomponent og subkomponentene EnkeltLand og MultiLand */
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
+const kodeTilObjekt = (kode, alleLandkoder) => alleLandkoder.find(enkeltKode => enkeltKode.kode === kode);
 
 const ValgtLand = ({ landObjekt = {}, slettLand, disabled }) => (
   <div className="landliste__linje">
@@ -32,60 +34,51 @@ ValgtLand.defaultProps = {
 class CustomLandVelger extends Component {
   state = {
     inputVerdi: '',
+    error: null,
   }
 
-  /** Legg til land i redux-arrayen.
-   *
-   * @param landKode Landkoden som skal legges til
-   */
-  leggTilLand = (landKode, multiLand) => {
+  reduxLeggTilLand = landKode => {
     const { fields } = this.props;
     const valgteLand = fields.getAll() || [];
 
     if (!landKode) throw new Error('landKode må inneholde verdi.');
 
-    if (multiLand) {
-      if (!valgteLand.includes(landKode)) {
-        fields.push(landKode);
-      }
-    } else {
-      fields.removeAll();
+    if (!valgteLand.includes(landKode)) {
       fields.push(landKode);
     }
   };
 
-  /** Sletter et land fra listen.
+  reduxErstattLand = landKode => {
+    const { fields } = this.props;
+
+    if (!landKode) throw new Error('landKode må inneholde verdi.');
+
+    fields.removeAll();
+    fields.push(landKode);
+  };
+
+  /** Sletter et land fra Redux og dermed fra listen.
    *
    * @param landKode Koden på landet som skal slettes.
    */
-  slettLand = landKode => {
+  reduxSlettEnkeltLand = landKode => {
     const index = this.props.fields.getAll().findIndex(item => item === landKode);
     return (index > -1 && this.props.fields.remove(index));
   };
 
-  /** Sletter et land fra listen.
-   *
-   * @param landKode Koden på landet som skal slettes.
-   */
-  slettAlleLand = () => {
-    this.props.fields.removeAll();
-  };
-
-  /**
-   * * For å kunne søke på både landkode og land-navnslik det står i listen, feks "Storbrittannia (GB)",
-   * brukes 'landTekstFormat' for å sette sammen dette til en string før det søkes i denne stringen.
-   *
-   * @param landkoder Array Liste over alle tilgjengelige land, bestående av landobjekt.
-   * @param inputVerdi String Verdien det skal søkes etter.
-   * @return Array med landObjekter som matcher.
-   */
-  finnLand = (landkoder, inputVerdi) => (
-    landkoder.filter(land => (
+  finnLand = inputVerdi => {
+    const { landkoder } = this.props;
+    return landkoder.filter(land => (
       landTekstFormat(land)
         .toLowerCase()
         .includes(inputVerdi.toLowerCase())
-    ))
-  );
+    ));
+  }
+
+  finnEttLand = inputVerdi => {
+    const landListe = this.finnLand(inputVerdi);
+    return landListe.length === 1 ? landListe[0] : false;
+  }
 
   /** ----------------------------------------------------------------------
    *                           EVENT HANDLERS
@@ -99,74 +92,57 @@ class CustomLandVelger extends Component {
    */
   slettLandHandler = (e, landKode) => {
     e.preventDefault();
-    this.slettLand(landKode);
+    this.reduxSlettEnkeltLand(landKode);
   }
 
-  /** Hvis brukeren har skrevet inn deler av et land og trykket ENTER ønsker vi å
-   * sjekke om kun ETT land vises i listen. I såfall skal dette landet legges til på samme måte
-   * som om brukeren klikket på landet var listen og deretter klikket "+"-knappen.
-   *
-   * @param e SyntetiskEvent React syntetisk event ved KeyDown.
-   */
   inputTastNedHandler = e => {
     if (e.keyCode === 13) {
       e.preventDefault();
-      const { inputVerdi } = this.state;
-      const { landkoder } = this.props;
-
-      this.finnLandOgLeggTil(landkoder, inputVerdi);
+      const { multiLand } = this.props;
+      if (multiLand) {
+        this.multiLandFokusUtHandler();
+      } else {
+        this.enkeltLandFokusUtHandler();
+      }
     }
   }
 
-  /** Håndterer klikk på pluss-knappen ved land dersom brukeren har valgt et land manuelt.
-   *
-   * @param e
-   */
-  leggTilLandHandler = e => {
-    e.preventDefault();
+  multiLandFokusUtHandler = () => {
     const { inputVerdi } = this.state;
-    const { landkoder } = this.props;
 
-    const landSomInneholderInntastetVerdi = this.finnLand(landkoder, inputVerdi);
-    if (landSomInneholderInntastetVerdi.length === 1) {
-      this.leggTilLand(landSomInneholderInntastetVerdi[0].kode);
-      this.setState({ inputVerdi: landTekstFormat(landSomInneholderInntastetVerdi[0]) });
-    }
-  }
-
-  finnLandOgLeggTil = (landkoder, inputVerdi) => {
-    if (inputVerdi === '') {
-      this.setState({ error: null });
+    if (!inputVerdi) {
+      this.tomFeilmelding();
       return;
     }
 
-    const landSomInneholderInntastetVerdi = this.finnLand(landkoder, inputVerdi);
-
-    if (landSomInneholderInntastetVerdi.length === 1) {
-      const landObjekt = landSomInneholderInntastetVerdi[0];
-      this.leggTilLand(landObjekt.kode);
-      this.setState({ inputVerdi: landTekstFormat(landObjekt), error: null });
-    } else if (landSomInneholderInntastetVerdi.length === 0) {
-      // Inntastet finnes ikke
-      this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
+    const landKodeObjekt = this.finnEttLand(inputVerdi);
+    if (landKodeObjekt) {
+      this.reduxLeggTilLand(landKodeObjekt.kode);
+      this.setState({ inputVerdi: '', error: null });
     } else {
-      this.setState({ error: `Fant ${landSomInneholderInntastetVerdi.length} treff på landet du skrev inn. Velg ett av de!` });
+      this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
     }
   }
 
-  fokusUtHandler = e => {
-    const { landkoder, multiLand } = this.props;
-    const inputVerdi = e.target.value;
+  enkeltLandFokusUtHandler = () => {
+    const { inputVerdi } = this.state;
 
-    if (!inputVerdi && !multiLand) {
-      this.slettAlleLand();
+    if (!inputVerdi) {
+      this.tomFeilmelding();
+      return;
     }
 
-    this.finnLandOgLeggTil(landkoder, inputVerdi);
-  }
+    const landKodeObjekt = this.finnEttLand(inputVerdi);
+    if (landKodeObjekt) {
+      this.reduxErstattLand(landKodeObjekt.kode);
+      this.setState({ inputVerdi: landTekstFormat(landKodeObjekt), error: null });
+    } else {
+      this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
+    }
+  };
 
-  fokusInnHandler = e => {
-    e.target.select();
+  tomFeilmelding = () => {
+    this.setState({ error: null });
   }
 
   /** Håndter endringer slik at inntasting oppdateres til lokal state. Denne staten er knyttet til
@@ -178,24 +154,13 @@ class CustomLandVelger extends Component {
     this.setState({ inputVerdi });
   }
 
-  oppslagLandkoderTilKodeverk = (koder = []) => {
-    const { landkoder: kodeverkLandkoder } = this.props;
-
-    const oppslattKoder = koder.reduce((samling, landkode) => {
-      const funnetLandkode = kodeverkLandkoder.find(land => (land.kode === landkode));
-      return funnetLandkode ? [...samling, funnetLandkode] : [...samling];
-    }, []);
-
-    return oppslattKoder;
-  }
-
   render () {
     const {
       landkoder, fields, multiLand, meta,
     } = this.props;
 
     const {
-      fokusUtHandler, fokusInnHandler, inputEndringHandler, inputTastNedHandler,
+      multiLandFokusUtHandler, enkeltLandFokusUtHandler, inputEndringHandler, inputTastNedHandler, slettLandHandler,
     } = this;
 
     const { inputVerdi } = this.state;
@@ -211,14 +176,20 @@ class CustomLandVelger extends Component {
           <MultiLand
             slettLand={this.slettLandHandler}
             valgteLand={valgteLand}
+            alleLand={landkoder}
+            inputVerdi={inputVerdi}
+            fokusUtHandler={multiLandFokusUtHandler}
+            inputEndringHandler={inputEndringHandler}
+            inputTastNedHandler={inputTastNedHandler}
+            slettLandHandler={slettLandHandler}
+            feil={feilObjekt}
             {...this.props}
           />
           :
           <EnkeltLand
             alleLand={landkoder}
             inputVerdi={inputVerdi}
-            fokusUtHandler={fokusUtHandler}
-            fokusInnHandler={fokusInnHandler}
+            fokusUtHandler={enkeltLandFokusUtHandler}
             inputEndringHandler={inputEndringHandler}
             inputTastNedHandler={inputTastNedHandler}
             feil={feilObjekt}
@@ -270,7 +241,9 @@ LandVelger.propTypes = {
 
 LandVelger.defaultProps = {
   multiLand: false,
-  label: 'Skriv inn land',
+  label: 'Skriv inn land:',
 };
+
+export { kodeTilObjekt, landTekstFormat };
 
 export default connect(mapStateToProps)(LandVelger);
