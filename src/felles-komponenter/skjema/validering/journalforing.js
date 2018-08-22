@@ -7,9 +7,10 @@ import * as Konstanter from '../../../constants';
  * og validere på tvers av verdier.
  */
 const idErBlank = verdi => ((verdi === '') && 'Tast inn fnr eller dnr.');
+const idAvsenderErBlank = verdi => ((verdi === '') && 'Tast inn fnr, dnr eller orgnr.');
 const idErIkkeNummer = verdi => (!(new RegExp(/^\d+$/).test(verdi)) && 'Tast inn kun nummer.');
-const idErIkkeFnrEllerDnr = verdi => ((!Person.erFnrLengde(verdi) && !Person.erDnrLengde(verdi)) && 'Tast inn gyldig fnr eller dnr.');
-const idErIkkeFnrEllerDnrEllerOrgnr = verdi => ((!(Person.erFnrLengde(verdi) || Person.erDnrLengde(verdi) || Organisasjon.erOrgnrLengde(verdi))) && 'Tast inn gyldig fnr, dnr eller orgnr.');
+const idErIkkeFnrEllerDnr = verdi => ((!Person.erGyldigFnr(verdi) && !Person.erGyldigDnr(verdi)) && 'Tast inn gyldig fnr eller dnr.');
+const idErIkkeFnrEllerDnrEllerOrgnr = verdi => ((!(Person.erGyldigFnr(verdi) || Person.erGyldigDnr(verdi) || Organisasjon.erOrgnrLengde(verdi))) && 'Tast inn gyldig fnr, dnr eller orgnr.');
 const idFinnesIkke = (navn, id) => {
   if (navn === '' && Organisasjon.erOrgnrLengde(id)) {
     return 'Fant ingen navn på dette organisasjonsnummeret.';
@@ -40,22 +41,21 @@ const journalforingGenerellValidering = verdier => {
   );
 
   const avsenderID = (
-    idErBlank(verdier.avsenderID) ||
+    (idErBlank(verdier.avsenderID) && !verdier.erBrukerAvsender) &&
+    (idAvsenderErBlank(verdier.avsenderID) ||
     idErIkkeNummer(verdier.avsenderID) ||
     idErIkkeFnrEllerDnrEllerOrgnr(verdier.avsenderID) ||
     idFinnesIkke(verdier.avsenderNavn, verdier.avsenderID) ||
-    false
+    false)
   );
 
   const dokumentTittel = dokumentTittelErBlank(verdier.dokumentTittel) || false;
 
-  const valideringsObjekt = {
+  return {
     brukerID,
     avsenderID,
     dokumentTittel,
   };
-
-  return valideringsObjekt;
 };
 
 /** Dersom saksbehandler forsøker å knytte en sak til journalføringen, skal de relaterte
@@ -130,7 +130,6 @@ const journalforingValidering = verdier => ({
  * er oppdatert i Redux. Denne påvirker i seg selv ikke UI, men returnerer kun en
  * true | false.
  * @param verdier
- * @param hensikt
  * @returns {boolean}
  */
 const erSkjemaGyldig = (verdier, journalforingHensikt) => {

@@ -13,19 +13,24 @@ export const landkoderSelector = createSelector(
   landkoder => landkoder || []
 );
 
+export const oppgaveTyperSelector = createSelector(
+  state => state.kodeverk.data.oppgavetyper,
+  oppgavetyper => oppgavetyper || []
+);
+
 export const behandlingsStatusSelector = createSelector(
   state => state.kodeverk.data.behandlingsstatus,
-  behandlingsstatus => behandlingsstatus
+  behandlingsstatus => behandlingsstatus || []
 );
 
 export const behandlingsTyperSelector = createSelector(
   state => state.kodeverk.data.behandlingstyper,
-  behandlingstyper => behandlingstyper
+  behandlingstyper => behandlingstyper || []
 );
 
 export const sakstyperSelector = createSelector(
   state => state.kodeverk.data.sakstyper,
-  sakstyper => sakstyper
+  sakstyper => sakstyper || []
 );
 
 export const dokumenttitlerSelector = createSelector(
@@ -36,4 +41,14 @@ export const dokumenttitlerSelector = createSelector(
 export const vedleggstitlerSelector = createSelector(
   state => state.kodeverk.data.vedleggstitler,
   vedleggstitler => vedleggstitler || []
+);
+
+export const studieFinansieringSelector = createSelector(
+  state => state.kodeverk.data.finansiering,
+  studieFinansiering => studieFinansiering || []
+);
+
+export const begrunnelserSelector = createSelector(
+  state => state.kodeverk.data.begrunnelser,
+  begrunnelser => begrunnelser || {}
 );

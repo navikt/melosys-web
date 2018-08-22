@@ -3,13 +3,15 @@ import * as Skjema from '../felles-komponenter/skjema';
 /** Definer alle felter med validering. Dette objektet brukes også i validForm decorator.
  */
 export const feltGrupper = {
+  personOpplysninger: {
+    medfolgendeAndre: [value => (value !== undefined && (Skjema.Validering.erGyldigFnr(value) || Skjema.Validering.erGyldigDnr(value)) ? null : 'Ugyldig fnr eller dnr')],
+  },
   inntekt: {
     inntektNorskIPerioden: [],
     inntektUtenlandskIPerioden: [],
     inntektNaeringIPerioden: [],
   },
   oppholdUtland: {
-    studentIEOS: '',
     studentSemester: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
     studieLand: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
     studentFinansiering: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],
@@ -21,11 +23,6 @@ export const feltGrupper = {
     arbeidsforholdVikarNavn: [],
     vikarOrgnr: [],
     flyendePersonellHjemmebase: [],
-    ansattPaSokkelEllerSkip: [],
-    navnSkipEllerSokkel: [],
-    sokkelLand: [],
-    skipFartsomrade: [],
-    skipFlaggLand: [],
     kontaktNavn: [],
     kontaktEpost: [],
     fullmektigFirma: [],
@@ -45,6 +42,17 @@ export const feltGrupper = {
     trygdeavgiftTrukketGjennomSkatt: [value => Skjema.Validering.erPakrevet(value)],
     trygdeavgiftTrukketGjennomSkattDato: [value => Skjema.Validering.erPakrevet(value), value => Skjema.Validering.erDato(value)],
   },
+  selvstendigArbeid: {
+    erSelvstendig: [],
+    selvstendigForetak: [],
+  },
+  maritimtArbeid: {
+    maritimType: [],
+    skipsNavn: [],
+    fartsomrade: [],
+    flaggLand: [],
+    installasjonsLand: [],
+  },
   faktaavklaring: {
     faktaavklaringOppholdsLand: [],
     faktaavklaringPeriodeFraOgMed: [value => Skjema.Validering.erPakrevet(value)],
@@ -62,7 +70,7 @@ export const feltGrupper = {
     faktaavklaringBekrefterFamiliebosted: [],
     faktaavklaringBekrefterDisponering: [],
     faktaavklaringBostedsland: [],
-    faktaavklaringValgteArbeidsforhold: [],
+    faktaavklaringValgteArbeidsgivere: [],
     faktaavklaringForretningsstedLand: [],
     faktaavklaringForretningsstedAntallArbeidsgivere: [],
     faktaavklaringForretningsstedFordelingArbeidsgivere: [],

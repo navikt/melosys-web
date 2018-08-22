@@ -14,7 +14,7 @@ const MAX_AR_FREM_I_TID = 10;
 /** Gjør et beste forsøk på å vaske inputdato. Dersom vask ikke er mulig (feks ved helt feil datoformat eller
  * ugyldig dato, returner false.
  * @param dato
- * @returns {String | Bool } Datoen
+ * @returns {String | Boolean } Datoen
  */
 const vaskInputDato = dato => {
   if (dato === null || dato === undefined) return false;
@@ -98,7 +98,30 @@ function formatterKortDatoTilNorsk(kortDato) {
 
 function datoDiff (fom, tom, enhet = 'months') {
   if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
-  return moment(tom).diff(fom, enhet);
+  const momentTom = moment(tom).add(1, 'day');
+  return moment(momentTom).diff(fom, enhet, true);
+}
+
+function datoDiffMenneskelig (fom, tom) {
+  if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
+
+  const forskjellManeder = Math.floor(datoDiff(fom, tom, 'months'));
+
+  const resterendeFOM = moment(fom).add(forskjellManeder, 'months');
+
+  const forskjellDager = datoDiff(resterendeFOM, tom, 'days');
+
+  const manedBenevnelse = forskjellManeder === 1 ? 'måned' : 'måneder';
+  const dagBenevnelse = forskjellDager === 1 ? 'dag' : 'dager';
+
+  return forskjellDager > 0 ?
+    (`${forskjellManeder} ${manedBenevnelse} og ${forskjellDager} ${dagBenevnelse}`)
+    :
+    (`${forskjellManeder} ${manedBenevnelse}`);
+}
+
+function beregnAlder (foedselsdato) {
+  return moment().diff(foedselsdato, 'years');
 }
 
 export {
@@ -108,5 +131,7 @@ export {
   formatterDatoTilISO,
   formatterKortDatoTilNorsk,
   datoDiff,
+  datoDiffMenneskelig,
+  beregnAlder,
   MAX_AR_FREM_I_TID,
 };

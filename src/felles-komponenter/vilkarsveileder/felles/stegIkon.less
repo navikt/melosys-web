@@ -2,48 +2,90 @@
 
 .stegIkon {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   padding: 0 0.2em;
   width: 70px;
+  min-height: 70px;
 
   .stegIkon__knapp {
+    background-color: transparent;
+    border: 0;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 1.8em;
+    border-radius: 1px;
+    min-height: 70px;
+
+    &:active,
+    &:focus,
+    &:hover {
+      .stegIkon__enkeltSteg, .stegIkon__vedtak {
+        transform:scale(1.1);
+      }
+    }
+
+    &:active,
+    &:focus {
+      outline: 0;
+      box-shadow: 0 0 0 3px #ffbd66;
+    }
+  }
+
+  .stegIkon__enkeltSteg, .stegIkon__vedtak {
     display: flex;
     position: relative;
     background-repeat:no-repeat;
     background-size:contain;
     background-color:transparent;
-    width:30px;
-    height:30px;
+    width: 30px;
+    height: 30px;
+    min-height: 30px;
+    min-width: 30px;
     margin:0.5em;
     border:0;
     cursor:pointer;
     transition:all 0.1s;
     outline:none;
-
-    &:active,
-    &:focus,
-    &:hover {
-      transform:scale(1.1);
-    }
-
-    &:focus,
-    &:active {
-      box-shadow: 0 0 3px 0.1875em #ffbd66;
-    }
   }
 
-  .stegIkon__knapp--aktiv {
-     &:after {
-       content: '';
-       position: absolute;
-       border: 3px solid @green;
-       width: 30px;
-       height: 30px;
-       top: 0;
-       left: 0;
-       border-radius: 15px;
-     }
+  .stegIkon__enkeltSteg {
+    border-radius: 15px;
+  }
+
+  &.stegIkon--aktiv {
+    &:after {
+      position:absolute;
+      content: '';
+      width: 30px;
+      height: 30px;
+      bottom: 0;
+      border-right:15px solid transparent;
+      border-left:15px solid transparent;
+      border-bottom:15px solid #ffffff;
+    }
+
+    .stegIkon__enkeltSteg, .stegIkon__vedtak {
+      &:before {
+        content: '';
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        top: 0;
+        left: 0;
+      }
+    }
+
+    .stegIkon__enkeltSteg {
+      border: 3px solid @green;
+    }
+
+    .stegIkon__vedtak {
+
+    }
   }
 
   .stegIkon__knapp-utilgjengelig {
@@ -52,8 +94,10 @@
   }
 
   .stegIkon__tittel {
-    display: flex;
+    position: relative;
     font-size: .9em;
     text-align: center;
+    white-space: normal;
+    width: 70px;
   }
 }

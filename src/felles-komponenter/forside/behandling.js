@@ -1,16 +1,28 @@
 import React, { Component } from 'react';
-import { reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import { reduxForm, getFormValues } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
+import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
 
 import { oppgaverOperations } from '../../ducks/oppgaver/';
+import * as Kodeverk from '../../ducks/kodeverk';
 
 import './behandling.css';
 
+const uuid = require('uuid/v4');
+
+const BEHANDLINGSFORM = 'behandlingsform';
+
 class Behandling extends Component {
+  componentDidUpdate() {
+    const { formValues } = this.props;
+    localStorage.setItem(BEHANDLINGSFORM, JSON.stringify(formValues));
+  }
+
   submitOgVideresend = form => {
     this.props.handleSubmit(form).then(redirectURL => {
       /* eslint-disable no-alert */
@@ -22,6 +34,7 @@ class Behandling extends Component {
   }
 
   render() {
+    const { saksTyper, behandlingsTyper } = this.props;
     return (
       <Nav.Panel className="forside__sidepanel sidepanel__behandling">
         <Nav.Systemtittel>Behandle sak</Nav.Systemtittel>
@@ -30,23 +43,20 @@ class Behandling extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Fieldset legend="Sakstype">
-                <Skjema.Checkbox label="EU/EØS" feltNavn="EU_EOS" />
-                <Skjema.Checkbox label="Trygdeavtale" feltNavn="TRG_AVT" />
-                <Skjema.Checkbox label="Folketrygd" feltNavn="FLK_TRG" />
+                {saksTyper.map(type =>
+                  (<Skjema.Checkbox key={uuid()} label={type.term} feltNavn={type.kode} />))
+                }
               </Nav.Fieldset>
             </Nav.Column>
+
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
-                <Skjema.Checkbox label="Søknad" feltNavn="SKND" />
-                <Skjema.Checkbox label="Unntak medlemskap" feltNavn="UFM" />
-                <Skjema.Checkbox label="Klage" feltNavn="KLG" />
-                <Skjema.Checkbox label="Revurdering" feltNavn="REV" />
-                <Skjema.Checkbox label="Melding fra utenlandsk myndighet" feltNavn="ML_U" />
-                <Skjema.Checkbox label="Påstand fra utenlandsk myndighet" feltNavn="PS_U" />
+                {behandlingsTyper.map(type =>
+                  (<Skjema.Checkbox key={uuid()} label={type.term} feltNavn={type.kode} />))
+                }
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
-
 
           <Nav.Knapp className="behandling__knapp">Behandle sak</Nav.Knapp>
         </form>
@@ -58,9 +68,24 @@ class Behandling extends Component {
 Behandling.propTypes = {
   handleSubmit: PT.func.isRequired,
   history: PT.object.isRequired,
+  behandlingsTyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  saksTyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  formValues: PT.object,
 };
 
-export default reduxForm({
-  form: 'behandlingsform',
-  onSubmit: checkboxliste => oppgaverOperations.send('BEH_SAK', checkboxliste),
-})(withRouter((Behandling)));
+Behandling.defaultProps = {
+  formValues: {},
+};
+
+const mapStateToProps = state => ({
+  behandlingsTyper: Kodeverk.KodeverkSelectors.behandlingsTyperSelector(state),
+  saksTyper: Kodeverk.KodeverkSelectors.sakstyperSelector(state),
+  formValues: getFormValues(BEHANDLINGSFORM)(state),
+  initialValues: JSON.parse(localStorage.getItem(BEHANDLINGSFORM)),
+});
+const BehandlngForm = reduxForm({
+  form: BEHANDLINGSFORM,
+  onSubmit: checkboxliste => oppgaverOperations.sendBehandlingsOppgave(checkboxliste),
+})(Behandling);
+
+export default withRouter(connect(mapStateToProps, null)(BehandlngForm));
