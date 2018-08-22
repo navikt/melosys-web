@@ -62,7 +62,7 @@ function Personopplysninger(props) {
     foedselsdato,
     bostedsadresse,
     postadresse,
-    postadresseMidlertidig,
+    midlertidigPostadresse,
     personStatus,
     erEgenAnsatt,
     familiemedlemmer = [],
@@ -112,7 +112,7 @@ function Personopplysninger(props) {
             <Nav.Column xs="4">
               <dl className="person__detaljer">
                 <dt>Midl. postadresse (TPS):</dt>
-                <Postadresse postadresse={postadresseMidlertidig} />
+                <Postadresse postadresse={midlertidigPostadresse} />
               </dl>
             </Nav.Column>
           </Nav.Row>
