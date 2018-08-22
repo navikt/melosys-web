@@ -9,7 +9,9 @@ import * as MPT from '../../../proptypes';
 import './landvelger.css';
 
 
-const MultiLand = ({ valgteLand }) => {
+const MultiLand = ({
+  label, feil, fokusUtHandler, fokusInnHandler, inputEndringHandler, inputTastNedHandler, inputVerdi,
+}) => {
 
   return (
     <div>
