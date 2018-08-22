@@ -8,22 +8,22 @@ import { createSelector } from 'reselect';
  */
 
 export const SoknadSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data,
+  state => state.soknad.data.soeknadDokument && state.soknad.data,
   soknad => soknad
 );
 
 export const ArbeidNorgeSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidNorge : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidNorge : {}),
   arbeidNorge => arbeidNorge || {}
 );
 
 export const ArbeidUtlandSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidUtland : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidUtland : {}),
   arbeidUtland => arbeidUtland || {}
 );
 
 export const ArbeidUtlandAdresseSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidUtland : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidUtland : {}),
   arbeidUtland => {
     const { adresse = {} } = arbeidUtland;
     return adresse;
@@ -31,32 +31,32 @@ export const ArbeidUtlandAdresseSelector = createSelector(
 );
 
 export const ArbeidsinntektSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsinntekt : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidsinntekt : {}),
   soknad => soknad || {}
 );
 
 export const ForetakUtlandSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.foretakUtland : []),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.foretakUtland : []),
   foretakUtland => foretakUtland || []
 );
 
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(
-  state => state.soknad.data.soknadDokument && state.soknad.data.soknadDokument.juridiskArbeidsgiverNorge,
+  state => state.soknad.data.soeknadDokument && state.soknad.data.soeknadDokument.juridiskArbeidsgiverNorge,
   soknad => soknad || {}
 );
 
 export const OppholdUtlandSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.oppholdUtland : {}),
   soknad => soknad || {}
 );
 
 export const OppholdUtlandPeriodeSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.oppholdUtland : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.oppholdUtland : {}),
   (soknad = {}) => soknad.oppholdsPeriode || {}
 );
 
 export const BostedSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.bosted : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.bosted : {}),
   bosted => bosted || {}
 );
 
@@ -69,21 +69,21 @@ export const BostedAdresseSelector = createSelector(
 );
 
 export const ArbeidsgiversBekreftelseSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.arbeidsgiversBekreftelse : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidsgiversBekreftelse : {}),
   soknad => soknad || {}
 );
 
 export const MaritimtArbeidSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.maritimtArbeid : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.maritimtArbeid : {}),
   maritimtArbeid => maritimtArbeid || {}
 );
 
 export const SelvstendigArbeidSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.selvstendigArbeid : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.selvstendigArbeid : {}),
   selvstendigArbeid => selvstendigArbeid || {}
 );
 
 export const PersonOpplysningerSelector = createSelector(
-  state => (state.soknad.data.soknadDokument ? state.soknad.data.soknadDokument.personOpplysninger : {}),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.personOpplysninger : {}),
   person => person || {}
 );
