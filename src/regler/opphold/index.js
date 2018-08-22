@@ -15,13 +15,13 @@ class Opphold extends DomeneRegel {
     if (diff === false) return undefined;
 
     return diff <= 12;
-  }
+  };
 
   erINorgeSeksManederEllerMerPerKalenderAr = () => {
     const { skjema } = this;
     const antallMaanederINorge = parseInt(skjema.antallMaanederINorge, 10);
     return antallMaanederINorge >= 6;
-  }
+  };
 
   oppholderSegIUtlandet = () => {
     const { skjema } = this;
@@ -30,7 +30,7 @@ class Opphold extends DomeneRegel {
     if (!faktaavklaringOppholdsLand || faktaavklaringOppholdsLand.length === 0) return undefined;
 
     return !faktaavklaringOppholdsLand.includes('NO');
-  }
+  };
 
   harSammeAdresseSomArbeidsgiver = () => {
     const { skjema } = this;
@@ -39,7 +39,7 @@ class Opphold extends DomeneRegel {
     if (!sammeAdresseSomArbeidsgiver) return undefined;
 
     return strengTilBool(sammeAdresseSomArbeidsgiver);
-  }
+  };
 
   harEktefelleEllerBarnINorge = () => {
     const { skjema } = this;
@@ -48,7 +48,7 @@ class Opphold extends DomeneRegel {
     if (!ektefelleEllerBarnINorge) return undefined;
 
     return strengTilBool(ektefelleEllerBarnINorge);
-  }
+  };
 
   harForutgaendeBostedINorge = () => {
     const { skjema } = this;
@@ -57,7 +57,7 @@ class Opphold extends DomeneRegel {
     if (!forutgaendeBostedINorge) return undefined;
 
     return strengTilBool(forutgaendeBostedINorge);
-  }
+  };
 
   familieBorINorge = () => {
     const { skjema } = this;
@@ -66,7 +66,7 @@ class Opphold extends DomeneRegel {
     if (!familiesBosted || familiesBosted.length === 0) return undefined;
 
     return familiesBosted.includes('NO');
-  }
+  };
 
   harAdresseIUtlandet = () => {
     const { skjema } = this;
@@ -75,7 +75,7 @@ class Opphold extends DomeneRegel {
     if (!adresseIUtlandet) return undefined;
 
     return strengTilBool(adresseIUtlandet);
-  }
+  };
 
   harIntensjonOmReturTilNorge = () => {
     const { skjema } = this;

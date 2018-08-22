@@ -1,13 +1,16 @@
 {
   "name": "melosys-web",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "description": "Medlemsskap og lovvalgssystem",
-  "author": "are.bjolseth@nav.no",
+  "author": {
+    "name": "are.bjolseth@nav.no"
+  },
   "keywords": [
     "medlemsskap",
     "lovvalg"
   ],
   "private": true,
+  "readme": "README.md",
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
@@ -74,18 +77,20 @@
     "sanitize-html": "^1.18.4",
     "uuid": "^3.3.2"
   },
-  "disabled-homepage": "http://eesi2.no/melosys-web",
+  "disabled-homepage": "http://eesi2.no/melosys",
   "scripts": {
-    "patchenv": "node ./scripts/patchenv.js",
+    "patch:env": "node ./scripts/patchenv.js",
+    "patch:javalocal": "node ./scripts/patchjavalocal.js",
     "analyze": "source-map-explorer build/static/js/main.*",
     "start:js": "react-scripts start",
     "build:js": "react-scripts build",
     "start:css": "less-watch-compiler --config less.json",
     "build:css": "less-watch-compiler --run-once --config less.json",
-    "start": "npm run patchenv && npm-run-all -p start:*",
-    "build": "npm run patchenv && npm run build:css && npm run build:js",
-    "test": "npm run build:css && react-scripts test --env=jsdom",
-    "test:ci": "npm run build:css && react-scripts test --env=jsdom --testResultsProcessor ./node_modules/jest-junit --coverage --coverageDirectory=test/coverage",
+    "start": "npm-run-all patch:env -p start:*",
+    "build": "npm-run-all patch:env build:css build:js",
+    "build:javalocal": "npm-run-all patch:env patch:javalocal build:css build:js",
+    "test": "npm-run-all build:css react-scripts test --env=jsdom",
+    "test:ci": "npm-run-all build:css react-scripts test --env=jsdom --testResultsProcessor ./node_modules/jest-junit --coverage --coverageDirectory=test/coverage",
     "eject": "react-scripts eject",
     "eslint": "eslint src --ext .js",
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
@@ -125,11 +130,13 @@
     "mockdate": "^2.0.2",
     "npm-run-all": "^4.1.3",
     "react-test-renderer": "^16.3.2",
+    "read-pkg": "^4.0.1",
     "redux-mock-store": "^1.5.1",
     "semver": "^5.5.0",
     "source-map-explorer": "^1.5.0",
     "underscore": "^1.9.0",
-    "webpack": "^3.11.0"
+    "webpack": "^3.11.0",
+    "write-pkg": "^3.2.0"
   },
   "proxy": {
     "/api": {
@@ -138,10 +145,10 @@
         "^/api/": "/api/"
       }
     },
-    "/melosys": {
-      "target": "http://localhost:8888",
+    "/frontendlogger": {
+      "target": "http://localhost:3002",
       "pathRewrite": {
-        "^/melosys/": "/melosys/"
+        "^/frontendlogger/": "frontendlogger/"
       }
     }
   }

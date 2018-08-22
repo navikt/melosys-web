@@ -3,8 +3,8 @@ import jenkins.model.*
 
 node {
   def project = "navikt"
-  def application = "melosys-web"
-  def webMockDir = "/var/lib/jenkins/melosys-web/"
+  def application = "melosys-web-local"
+  def webMockLocalDir = "/var/lib/jenkins/${application}/"
   def zipFile
 
   /* metadata */
@@ -51,28 +51,22 @@ node {
     echo("semver=*${semver}*")
   }
 
-  stage('Test') {
-    echo('CI=true && npm run-script test:ci')
-    sh "CI=true && ${npm} run-script test:ci"
-  }
-
-  stage('Build') {
-    echo('Build Web App')
+  stage('Build Web Local') {
+    echo('Build Web-Local App')
 
     buildVersion = "${semver}-${BUILD_NUMBER}"
     echo("buildVersion=${buildVersion}")
 
-    sh "${npm} run build"
-    sh "${npm} prune"
+    sh "${npm} run build:javalocal"
   }
 
   stage('Create Zip artifact') {
-    sh "rm -rf $webMockDir*" // Clean the content, don't remove top folder
-    sh "cp -r build/* $webMockDir"
+    sh "rm -rf $webMockLocalDir*" // Clean the content, don't remove top folder
+    sh "cp -r build/* $webMockLocalDir"
     zipFile = "${application}-${buildVersion}.zip"
     echo("zipFile:${zipFile}")
     sh "cd build/; zip -r ../$zipFile *; cd .."
-    sh "cp ${zipFile} $webMockDir"
+    sh "cp ${zipFile} $webMockLocalDir"
   }
 
   stage('Deploy to Nexus') {
@@ -93,24 +87,6 @@ node {
       def majorMinor = semver.split("\\.").take(2).join('.')
       // Valid qualifiers is one of "ALPHA","A","BETA","B","MILESTONE","B","RC","CR","SNAPSHOT","GA","FINAL", "SP"
       def qualifier = "SNAPSHOT"
-      /* So unfortunately, custom qualifiers does not work :-(
-      def branch = scmVars.GIT_BRANCH.toUpperCase()
-      if (branch.startsWith("PR")) {
-        qualifier = branch
-      }
-      else if (branch.startsWith("MELOSYS-")) {
-        qualifier = branch.split("_").take(1)[0]
-      }
-      else if (branch.startsWith("FEATURE")) {
-        qualifier = "FEATURE-${BUILD_NUMBER}"
-      }
-      else if (branch.startsWith("HOTFIX")) {
-        qualifier = "HOTFIX-${BUILD_NUMBER}"
-      }
-      else if (branch.startsWith("PATCH")) {
-        qualifier = "PATCH-${BUILD_NUMBER}"
-      }
-      */
 
       def snapshotVersion = "${majorMinor}-${qualifier}"
       echo("snapshotVersion:${snapshotVersion}")
