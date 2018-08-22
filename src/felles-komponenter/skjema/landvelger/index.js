@@ -270,7 +270,7 @@ LandVelger.propTypes = {
 
 LandVelger.defaultProps = {
   multiLand: false,
-  label: 'Tast inn land',
+  label: 'Skriv inn land',
 };
 
 export default connect(mapStateToProps)(LandVelger);
