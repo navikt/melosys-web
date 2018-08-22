@@ -18,8 +18,8 @@ if (!isLocalJavaDevEnv()) {
 } else {
   app.use('/melosys', express.static(STATIC_BUILD_DIR));
 }
-
-const serverProxy = proxy({ target: 'http://localhost:3002', changeOrigin: true });
+const apiServer = 'http://localhost:3002';
+const serverProxy = proxy({ target: apiServer, changeOrigin: true });
 const apiContext = `${context}/api`;
 app.use(apiContext, serverProxy);
 if (!apiContext.startsWith('/api')) {
@@ -30,5 +30,9 @@ app.use('/frontendlogger', serverProxy);
 app.get(`${context}/*`, (req, res) => {
   res.sendFile(STATIC_BUILD_DIR, 'index.html');
 });
+const serverPort = 9000;
+app.listen(serverPort);
+const staticServer = `http://localhost:${serverPort}${context}`;
 
-app.listen(9000);
+const message = `\nRunning simplfied static web server "${staticServer}" \n\twith data from "${STATIC_BUILD_DIR}" \n\tand proxy api calls to "${apiServer}${apiContext}"`;
+console.log(message); // eslint-disable-line no-console
