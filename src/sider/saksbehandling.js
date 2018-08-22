@@ -129,7 +129,7 @@ class Saksbehandling extends Component {
 
   fattVedtakHandler = () => {
     const bid = this.props.oppsummering.behandlingID;
-    const soknad = { soknadDokument: { ...this.props.soknad.soknadDokument } };
+    const soknad = { soeknadDokument: { ...this.props.soknad.soeknadDokument } };
     const avklaring = { avklaring: { ...this.props.faktaavklaring } };
 
     if (this.props.valid) {
@@ -231,7 +231,7 @@ const mapStateToProps = state => ({
   soknadArbeidNorge: soknadSelectors.ArbeidNorgeSelector(state),
   initialValues: {
     utenlandskID: soknadSelectors.PersonOpplysningerSelector(state).utenlandskID,
-    medfolgendeBarn: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeBarn,
+    medfolgendeFamilie: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
     medfolgendeAndre: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeAndre,
     inntektNorskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
