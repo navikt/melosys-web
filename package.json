@@ -10,6 +10,7 @@
     "lovvalg"
   ],
   "private": true,
+  "readme": "README.md",
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
