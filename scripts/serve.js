@@ -11,15 +11,23 @@ const envfile = `${PROJECT_ROOT}/.env`;
 require('dotenv').config({ path: envfile });
 
 const isLocalJavaDevEnv = () => `${process.env.REACT_APP_BUILD_VERSION}` === 'java_local';
-const context = isLocalJavaDevEnv() ? '/melosys' : '/';
-app.use(context, express.static(STATIC_BUILD_DIR));
+const context = isLocalJavaDevEnv() ? '/melosys' : '';
+
+if (!isLocalJavaDevEnv()) {
+  app.use(express.static(STATIC_BUILD_DIR));
+} else {
+  app.use('/melosys', express.static(STATIC_BUILD_DIR));
+}
 
 const serverProxy = proxy({ target: 'http://localhost:3002', changeOrigin: true });
-const apiContext = '/api'; // `${context}api`;
+const apiContext = `${context}/api`;
 app.use(apiContext, serverProxy);
+if (!apiContext.startsWith('/api')) {
+  app.use('/api', serverProxy);
+}
 app.use('/frontendlogger', serverProxy);
 
-app.get('/*', (req, res) => {
+app.get(`${context}/*`, (req, res) => {
   res.sendFile(STATIC_BUILD_DIR, 'index.html');
 });
 
