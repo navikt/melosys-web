@@ -5,7 +5,7 @@ import * as Nav from '../../../utils/navFrontend';
 import './landvelger.css';
 
 
-const EnkeltLand = ({ label, feil, fokusUtHandler, inputEndringHandler, inputTastNedHandler, valgteLand = {}, inputVerdi }) => {
+const EnkeltLand = ({ label, feil, fokusUtHandler, fokusInnHandler, inputEndringHandler, inputTastNedHandler, valgteLand = {}, inputVerdi }) => {
   return (
     <div>
       <Nav.Input
@@ -16,6 +16,7 @@ const EnkeltLand = ({ label, feil, fokusUtHandler, inputEndringHandler, inputTas
         className="landliste__linje__input"
         value={inputVerdi}
         onBlur={fokusUtHandler}
+        onFocus={fokusInnHandler}
         onChange={inputEndringHandler}
         onKeyDown={inputTastNedHandler}
       />

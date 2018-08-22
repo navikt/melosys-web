@@ -3,7 +3,6 @@ import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 import { connect } from 'react-redux';
 
-import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
 import './landvelger.css';
@@ -53,7 +52,7 @@ class CustomLandVelger extends Component {
       fields.removeAll();
       fields.push(landKode);
     }
-  }
+  };
 
   /** Sletter et land fra listen.
    *
@@ -62,7 +61,7 @@ class CustomLandVelger extends Component {
   slettLand = landKode => {
     const index = this.props.fields.getAll().findIndex(item => item === landKode);
     return (index > -1 && this.props.fields.remove(index));
-  }
+  };
 
   /** Sletter et land fra listen.
    *
@@ -70,7 +69,7 @@ class CustomLandVelger extends Component {
    */
   slettAlleLand = () => {
     this.props.fields.removeAll();
-  }
+  };
 
   /**
    * * For å kunne søke på både landkode og land-navnslik det står i listen, feks "Storbrittannia (GB)",
@@ -115,10 +114,7 @@ class CustomLandVelger extends Component {
       const { inputVerdi } = this.state;
       const { landkoder } = this.props;
 
-      e.target.blur(); // Blur og refocus for å fjerne dropdown.
-      e.target.focus();
-
-      //this.finnLandOgLeggTil(landkoder, inputVerdi);
+      this.finnLandOgLeggTil(landkoder, inputVerdi);
     }
   }
 
@@ -139,14 +135,22 @@ class CustomLandVelger extends Component {
   }
 
   finnLandOgLeggTil = (landkoder, inputVerdi) => {
+    if (inputVerdi === '') {
+      this.setState({ error: null });
+      return;
+    }
+
     const landSomInneholderInntastetVerdi = this.finnLand(landkoder, inputVerdi);
 
     if (landSomInneholderInntastetVerdi.length === 1) {
-      this.leggTilLand(landSomInneholderInntastetVerdi[0].kode);
+      const landObjekt = landSomInneholderInntastetVerdi[0];
+      this.leggTilLand(landObjekt.kode);
+      this.setState({ inputVerdi: landTekstFormat(landObjekt), error: null });
     } else if (landSomInneholderInntastetVerdi.length === 0) {
       // Inntastet finnes ikke
+      this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
     } else {
-      // For mange land
+      this.setState({ error: `Fant ${landSomInneholderInntastetVerdi.length} treff på landet du skrev inn. Velg ett av de!` });
     }
   }
 
@@ -161,12 +165,17 @@ class CustomLandVelger extends Component {
     this.finnLandOgLeggTil(landkoder, inputVerdi);
   }
 
+  fokusInnHandler = e => {
+    e.target.select();
+  }
+
   /** Håndter endringer slik at inntasting oppdateres til lokal state. Denne staten er knyttet til
    * det faktiske input-feltet gjennom "value"-attributt.
    * @param e SyntetiskEvent React syntetisk event ved onChange.
    */
   inputEndringHandler = e => {
-    this.setState({ inputVerdi: e.target.value });
+    const inputVerdi = e.target.value;
+    this.setState({ inputVerdi });
   }
 
   oppslagLandkoderTilKodeverk = (koder = []) => {
@@ -182,15 +191,18 @@ class CustomLandVelger extends Component {
 
   render () {
     const {
-      landkoder, label, fields, multiLand, meta, disabled,
+      landkoder, fields, multiLand, meta,
     } = this.props;
 
-    const { fokusUtHandler, inputEndringHandler, inputTastNedHandler } = this;
+    const {
+      fokusUtHandler, fokusInnHandler, inputEndringHandler, inputTastNedHandler,
+    } = this;
 
     const { inputVerdi } = this.state;
+    const { error: skjemaError = '' } = meta;
+    const { error: landError = '' } = this.state;
 
-    const feil = meta.error ? { feilmelding: meta.error } : null;
-
+    const feilObjekt = skjemaError || landError ? { feilmelding: `${skjemaError} ${landError}` } : null;
     const valgteLand = fields.getAll() || [];
 
     return (
@@ -206,8 +218,10 @@ class CustomLandVelger extends Component {
             alleLand={landkoder}
             inputVerdi={inputVerdi}
             fokusUtHandler={fokusUtHandler}
+            fokusInnHandler={fokusInnHandler}
             inputEndringHandler={inputEndringHandler}
             inputTastNedHandler={inputTastNedHandler}
+            feil={feilObjekt}
             {...this.props}
           />
         }
