@@ -1,9 +1,9 @@
-import { soknadDokument } from './soknadtemplate';
+import { soeknadDokument } from './soknadtemplate';
 import { behandlingsOppgave } from './behandlingsoppgave';
 import { journalforingOppgave } from './journalforingoppgave';
 
 export {
-  soknadDokument,
+  soeknadDokument,
   behandlingsOppgave,
   journalforingOppgave,
 };

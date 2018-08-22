@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-export const soknadDokument = {
+export const soeknadDokument = {
   opplysningerOmBrukeren: {
     personUtenlandskID: '123-12-123456789',
   },
