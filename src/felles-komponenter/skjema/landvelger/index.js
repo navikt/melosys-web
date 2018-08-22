@@ -39,33 +39,19 @@ class CustomLandVelger extends Component {
    *
    * @param landKode Landkoden som skal legges til
    */
-  leggTilLand = landKode => {
+  leggTilLand = (landKode, multiLand) => {
     const { fields } = this.props;
     const valgteLand = fields.getAll() || [];
 
-    if (!valgteLand.includes(landKode)) {
+    if (!landKode) throw new Error('landKode må inneholde verdi.');
+
+    if (multiLand) {
+      if (!valgteLand.includes(landKode)) {
+        fields.push(landKode);
+      }
+    } else {
+      fields.removeAll();
       fields.push(landKode);
-    }
-  }
-
-  /**
-   * * For å kunne søke på både landkode og land-navnslik det står i listen, feks "Storbrittannia (GB)",
-   * brukes 'landTekstFormat' for å sette sammen dette til en string før det søkes i denne stringen.
-   *
-   * @param landkoder Array Liste over alle tilgjengelige land, bestående av landobjekt.
-   * @param inputVerdi String Verdien det skal søkes etter.
-   * @return Array med landObjekter som matcher.
-   */
-  finnLandOgLeggTil = (landkoder, inputVerdi) => {
-    const landSomInneholderInntastetVerdi = landkoder.filter(land => (
-      landTekstFormat(land)
-        .toLowerCase()
-        .includes(inputVerdi.toLowerCase())
-    ));
-
-    if (landSomInneholderInntastetVerdi.length === 1) {
-      this.leggTilLand(landSomInneholderInntastetVerdi[0].kode);
-      this.setState({ inputVerdi: landTekstFormat(landSomInneholderInntastetVerdi[0]) });
     }
   }
 
@@ -77,6 +63,30 @@ class CustomLandVelger extends Component {
     const index = this.props.fields.getAll().findIndex(item => item === landKode);
     return (index > -1 && this.props.fields.remove(index));
   }
+
+  /** Sletter et land fra listen.
+   *
+   * @param landKode Koden på landet som skal slettes.
+   */
+  slettAlleLand = () => {
+    this.props.fields.removeAll();
+  }
+
+  /**
+   * * For å kunne søke på både landkode og land-navnslik det står i listen, feks "Storbrittannia (GB)",
+   * brukes 'landTekstFormat' for å sette sammen dette til en string før det søkes i denne stringen.
+   *
+   * @param landkoder Array Liste over alle tilgjengelige land, bestående av landobjekt.
+   * @param inputVerdi String Verdien det skal søkes etter.
+   * @return Array med landObjekter som matcher.
+   */
+  finnLand = (landkoder, inputVerdi) => (
+    landkoder.filter(land => (
+      landTekstFormat(land)
+        .toLowerCase()
+        .includes(inputVerdi.toLowerCase())
+    ))
+  );
 
   /** ----------------------------------------------------------------------
    *                           EVENT HANDLERS
@@ -97,7 +107,6 @@ class CustomLandVelger extends Component {
    * sjekke om kun ETT land vises i listen. I såfall skal dette landet legges til på samme måte
    * som om brukeren klikket på landet var listen og deretter klikket "+"-knappen.
    *
-   *
    * @param e SyntetiskEvent React syntetisk event ved KeyDown.
    */
   inputTastNedHandler = e => {
@@ -109,7 +118,7 @@ class CustomLandVelger extends Component {
       e.target.blur(); // Blur og refocus for å fjerne dropdown.
       e.target.focus();
 
-      this.finnLandOgLeggTil(landkoder, inputVerdi);
+      //this.finnLandOgLeggTil(landkoder, inputVerdi);
     }
   }
 
@@ -122,6 +131,33 @@ class CustomLandVelger extends Component {
     const { inputVerdi } = this.state;
     const { landkoder } = this.props;
 
+    const landSomInneholderInntastetVerdi = this.finnLand(landkoder, inputVerdi);
+    if (landSomInneholderInntastetVerdi.length === 1) {
+      this.leggTilLand(landSomInneholderInntastetVerdi[0].kode);
+      this.setState({ inputVerdi: landTekstFormat(landSomInneholderInntastetVerdi[0]) });
+    }
+  }
+
+  finnLandOgLeggTil = (landkoder, inputVerdi) => {
+    const landSomInneholderInntastetVerdi = this.finnLand(landkoder, inputVerdi);
+
+    if (landSomInneholderInntastetVerdi.length === 1) {
+      this.leggTilLand(landSomInneholderInntastetVerdi[0].kode);
+    } else if (landSomInneholderInntastetVerdi.length === 0) {
+      // Inntastet finnes ikke
+    } else {
+      // For mange land
+    }
+  }
+
+  fokusUtHandler = e => {
+    const { landkoder, multiLand } = this.props;
+    const inputVerdi = e.target.value;
+
+    if (!inputVerdi && !multiLand) {
+      this.slettAlleLand();
+    }
+
     this.finnLandOgLeggTil(landkoder, inputVerdi);
   }
 
@@ -131,18 +167,6 @@ class CustomLandVelger extends Component {
    */
   inputEndringHandler = e => {
     this.setState({ inputVerdi: e.target.value });
-  }
-
-  /** Enkelte brukertester har vist at saksbehandlere velger land fra listen uten å faktisk
-   * legge de til (enten via ENTER eller pluss-knapp). Derfor legg til det som evt ligger i
-   * input-feltet ved blur.
-   * @param e
-   */
-  fokusUtHandler = e => {
-    const { landkoder } = this.props;
-    const inputVerdi = e.target.value;
-
-    this.finnLandOgLeggTil(landkoder, inputVerdi);
   }
 
   oppslagLandkoderTilKodeverk = (koder = []) => {
@@ -189,12 +213,7 @@ class CustomLandVelger extends Component {
         }
         <div className="landliste__linje">
           <datalist id="alleLand">
-            {landkoder.map(item => {
-              const valg = valgteLand.some(valgt => valgt === item.kode) ? '' : <option key={item.kode} value={landTekstFormat(item)} />;
-
-              return valg;
-            }
-            ) }
+            {landkoder.map(item => (<option key={item.kode} value={landTekstFormat(item)} />))}
           </datalist>
         </div>
       </div>
