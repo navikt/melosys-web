@@ -31,7 +31,7 @@ class Spark extends Component {
 
   state = {
     soknad: {
-      soknadDokument: '',
+      soeknadDokument: '',
       behandlingID: 0,
     },
     fagsaker: []
@@ -77,11 +77,11 @@ class Spark extends Component {
         return Api.Soknader.hent(behandlingID);
       })
       .then(response => {
-        const {soknadDokument = Mock.soknadDokument, behandlingID} = response;
-        const erNySoknad = response.soknadDokument === undefined;
-        this.setState({soknad: {soknadDokument, behandlingID, erNySoknad} });
+        const {soeknadDokument = Mock.soeknadDokument, behandlingID} = response;
+        const erNySoknad = response.soeknadDokument === undefined;
+        this.setState({soknad: {soeknadDokument, behandlingID, erNySoknad} });
       })
-      .catch(error => this.setState({soknad: { soknadDokument: '', behandlingID: '', error } }));
+      .catch(error => this.setState({soknad: { soeknadDokument: '', behandlingID: '', error } }));
   }
 
   soknadSubmit = event => {
@@ -97,13 +97,13 @@ class Spark extends Component {
   };
 
   updateSoknadJSON = data => {
-    this.setState({soknad: {...this.state.soknad, soknadDokument: data}});
+    this.setState({soknad: {...this.state.soknad, soeknadDokument: data}});
     return true;
   }
 
   render() {
     const { nyfagsak, oppgave } = this.props;
-    const soknadDokument = this.state.soknad.soknadDokument;
+    const soeknadDokument = this.state.soknad.soeknadDokument;
     const { erNySoknad } = this.state.soknad;
 
     const { error = {} } = this.state.soknad;
@@ -202,8 +202,8 @@ class Spark extends Component {
           <h2>3. Rediger direkte i JSON-treet nedenfor</h2>
           {erNySoknad && <p>Fant ingen eksisterende søknader på dette fødselsnummeret. Søknaden nedenfor er generert utifra en template.</p>}
           {!feilmelding && <JsonTree
-            data={this.state.soknad.soknadDokument}
-            rootName="soknadDokument"
+            data={this.state.soknad.soeknadDokument}
+            rootName="soeknadDokument"
             onFullyUpdate={this.updateSoknadJSON}
             editButtonElement={<button className="knapp__lagre">Lagre</button>}
             cancelButtonElement={<button className="knapp__avbryt">Avbryt</button>}
@@ -216,7 +216,7 @@ class Spark extends Component {
             <textarea
               name="soknadBody"
               className="spark__soknad__body"
-              value={JSON.stringify({soknadDokument})}
+              value={JSON.stringify({soeknadDokument})}
               onChange={() => {}}
             />
             <input type="submit" value="Lagre søknad" />

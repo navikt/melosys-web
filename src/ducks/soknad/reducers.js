@@ -109,8 +109,8 @@ export default function reducer(state = initialState, action) {
     case Types.OK: {
       const soknadData = action.data;
 
-      if (!soknadData.soknadDokument) {
-        soknadData.soknadDokument = { ...soknadTemplate };
+      if (!soknadData.soeknadDokument) {
+        soknadData.soeknadDokument = { ...soknadTemplate };
       }
 
       return {
@@ -122,15 +122,15 @@ export default function reducer(state = initialState, action) {
     case Types.OPPDATER_SOKNAD: {
       const { dokument } = action;
       const soknad = {
-        ...state.data.soknadDokument,
+        ...state.data.soeknadDokument,
         arbeidsinntekt: {
-          ...state.data.soknadDokument.arbeidsinntekt,
+          ...state.data.soeknadDokument.arbeidsinntekt,
           inntektNorskIPerioden: strengTilInt(dokument.inntektNorskIPerioden),
           inntektUtenlandskIPerioden: strengTilInt(dokument.inntektUtenlandskIPerioden),
           inntektNaeringIPerioden: strengTilInt(dokument.inntektNaeringIPerioden),
         },
         arbeidNorge: {
-          ...state.data.soknadDokument.arbeidNorge,
+          ...state.data.soeknadDokument.arbeidNorge,
         },
         arbeidUtland: {
           adresse: {
@@ -156,7 +156,7 @@ export default function reducer(state = initialState, action) {
           utsendtArbeiderMedKontrakter: dokument.utsendtArbeiderMedKontrakter,
         },
         arbeidsgiversBekreftelse: {
-          ...state.data.soknadDokument.arbeidsgiversBekreftelse,
+          ...state.data.soeknadDokument.arbeidsgiversBekreftelse,
           arbeidsgiverBekrefterUtsendelse: dokument.arbeidsgiverBekrefterUtsendelse,
           arbeidstakerAnsattUnderUtsendelsen: dokument.arbeidstakerAnsattUnderUtsendelsen,
           erstatterArbeidstakerenUtsendte: dokument.erstatterArbeidstakerenUtsendte,
@@ -166,10 +166,10 @@ export default function reducer(state = initialState, action) {
           trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato),
         },
         oppholdUtland: {
-          ...state.data.soknadDokument.oppholdUtland,
+          ...state.data.soeknadDokument.oppholdUtland,
           oppholdsland: dokument.faktaavklaringOppholdsLand,
           oppholdsPeriode: {
-            ...state.data.soknadDokument.oppholdUtland.oppholdsPeriode,
+            ...state.data.soeknadDokument.oppholdUtland.oppholdsPeriode,
             fom: formatterDatoTilISO(dokument.faktaavklaringPeriodeFraOgMed),
             tom: formatterDatoTilISO(dokument.faktaavklaringPeriodeTilOgMed),
           },
@@ -192,7 +192,7 @@ export default function reducer(state = initialState, action) {
           },
         },
         maritimtArbeid: {
-          ...state.data.soknadDokument.maritimtArbeid,
+          ...state.data.soeknadDokument.maritimtArbeid,
           maritimType: dokument.maritimType,
           skipsNavn: dokument.skipsNavn,
           fartsomrade: dokument.fartsomrade,
@@ -210,7 +210,7 @@ export default function reducer(state = initialState, action) {
         },
       };
 
-      return { ...state, data: { ...state.data, soknadDokument: soknad } };
+      return { ...state, data: { ...state.data, soeknadDokument: soknad } };
     }
     default:
       return state;
