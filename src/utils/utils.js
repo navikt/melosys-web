@@ -10,7 +10,7 @@ export function buildinfo() {
     byggVersjon,
     branchVersjon,
   };
-};
+}
 /**
  * parser et funksjonsargument som funksjon.
  * @param value
