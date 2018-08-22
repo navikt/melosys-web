@@ -93,7 +93,7 @@ const soknadTemplate =
     },
     personOpplysninger: {
       utenlandskID: undefined,
-      medfolgendeBarn: undefined,
+      medfolgendeFamilie: undefined,
       medfolgendeAndre: undefined,
     },
   };
@@ -205,7 +205,7 @@ export default function reducer(state = initialState, action) {
         },
         personOpplysninger: {
           utenlandskID: dokument.utenlandskID,
-          medfolgendeBarn: dokument.medfolgendeBarn,
+          medfolgendeFamilie: dokument.medfolgendeFamilie,
           medfolgendeAndre: dokument.medfolgendeAndre,
         },
       };
