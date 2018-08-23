@@ -48,8 +48,8 @@ OppgaveKomponentSwitch.defaultProps = {
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
-const MineOppgaver = () => {
-  const { minesaker } = this.props;
+const MineOppgaver = props => {
+  const { minesaker } = props;
   const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre.';
 
   return (
