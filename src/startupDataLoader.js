@@ -1,5 +1,6 @@
 import { saksbehandlerOperations, saksbehandlerTypes } from './ducks/saksbehandler/';
 import { KodeverkOperations } from './ducks/kodeverk/';
+import { oppgaverOperations } from './ducks/oppgaver/';
 // import { buildinfo } from './utils/utils';
 
 export default function loadInitialData(store) {
@@ -27,6 +28,18 @@ export default function loadInitialData(store) {
           } else {
             /* window.frontendlogger.error({
               message: 'Kodeverk FAILED loading',
+            }); */
+          }
+        });
+
+        store.dispatch(oppgaverOperations.hent()).then(oresponse => {
+          if (oresponse) {
+            /* window.frontendlogger.info({
+              message: 'Oppgaver loaded',
+            }); */
+          } else {
+            /* window.frontendlogger.error({
+              message: 'Oppgaver FAILED loading',
             }); */
           }
         });
