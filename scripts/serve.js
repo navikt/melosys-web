@@ -4,8 +4,7 @@ const path = require('path');
 
 const app = express();
 
-const SCRIPTS_DIR = `${process.cwd()}`;
-const PROJECT_ROOT = path.resolve(`${SCRIPTS_DIR}/..`);
+const PROJECT_ROOT = `${process.cwd()}`;
 const STATIC_BUILD_DIR = path.join(PROJECT_ROOT, 'build');
 const envfile = `${PROJECT_ROOT}/.env`;
 require('dotenv').config({ path: envfile });
