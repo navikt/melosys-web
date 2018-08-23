@@ -37,6 +37,20 @@ class CustomLandVelger extends Component {
     error: null,
   }
 
+  componentDidMount = () => {
+    const { multiLand } = this.props;
+    if (!multiLand) {
+      this.setState({ inputVerdi: this.reduxHentInitiellLandTekst() });
+    }
+  }
+
+  reduxHentInitiellLandTekst = () => {
+    const { fields, landkoder } = this.props;
+    const ettLand = fields.getAll() && fields.getAll()[0];
+    const landKodeObjekt = ettLand && kodeTilObjekt(ettLand, landkoder);
+    return ettLand ? landTekstFormat(landKodeObjekt) : '';
+  }
+
   reduxLeggTilLand = landKode => {
     const { fields } = this.props;
     const valgteLand = fields.getAll() || [];
@@ -196,7 +210,7 @@ class CustomLandVelger extends Component {
             {...this.props}
           />
         }
-        <div className="landliste__linje">
+        <div className="landliste__dataliste">
           <datalist id="alleLand">
             {landkoder.map(item => (<option key={item.kode} value={landTekstFormat(item)} />))}
           </datalist>
@@ -214,13 +228,14 @@ CustomLandVelger.propTypes = {
   fields: PT.object.isRequired,
   multiLand: PT.bool.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  label: PT.string.isRequired,
+  label: PT.string,
   meta: PT.object.isRequired,
   disabled: PT.bool,
 };
 
 CustomLandVelger.defaultProps = {
   disabled: false,
+  label: undefined,
 };
 
 /** Dette er bootstrapper-komponenten som eksponeres utenfor pakken. Komponenten forventer et feltNavn for å kunne vite
@@ -241,7 +256,7 @@ LandVelger.propTypes = {
 
 LandVelger.defaultProps = {
   multiLand: false,
-  label: 'Skriv inn land:',
+  label: undefined,
 };
 
 export { kodeTilObjekt, landTekstFormat };
