@@ -82,6 +82,8 @@
     "patch:env": "node ./scripts/patchenv.js",
     "patch:javalocal": "node ./scripts/patchjavalocal.js",
     "unpatch": "node ./scripts/unpatch.js",
+    "serve": "node ./scripts/serve.js",
+    "serve:dbg": "node $NODE_DEBUG_OPTION ./scripts/serve.js",
     "analyze": "source-map-explorer build/static/js/main.*",
     "start:js": "react-scripts start",
     "build:js": "react-scripts build",
