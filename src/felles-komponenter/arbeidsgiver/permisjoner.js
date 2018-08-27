@@ -11,6 +11,8 @@ import Tabell from '../tabell/tabell';
  * @param permisjoner Array med permisjoner.
  */
 const Permisjoner = ({ permisjoner }) => {
+  if (!permisjoner) return null;
+
   const permisjonerArrayed = permisjoner.map(linje => (
     // Tabell-komponenten er generisk og trenger at hver linje
     // kommer inn som en ren array og som rendres gjennomsiktig ut i GUI.

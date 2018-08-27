@@ -24,6 +24,8 @@ class Inntekt extends Component {
   render() {
     const { inntektListe } = this.props;
 
+    if (!inntektListe) return null;
+
     const omvendtInntektListe = [...inntektListe].sort((a, b) => a.aarMaaned > b.aarMaaned);
 
     const grafConfig = {

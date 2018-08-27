@@ -21,6 +21,8 @@ import './utsendendeArbeidsgiver.css';
 const uuid = require('uuid/v4');
 
 const Arbeidsgiver = ({ arbeidsgiver }) => {
+  if (!arbeidsgiver) return null;
+
   const {
     orgnr, navn, oppstartdato, organisasjonsform, forretningsadresse, postadresse,
   } = arbeidsgiver;

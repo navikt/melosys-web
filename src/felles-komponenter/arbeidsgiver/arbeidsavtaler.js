@@ -18,8 +18,10 @@ class Arbeidsavtaler extends Component {
   };
 
   render() {
-    const { arbeidsavtaler = [] } = this.props;
+    const { arbeidsavtaler } = this.props;
     const { visHistoriskeArbeidsavtaler } = this.state;
+
+    if (!arbeidsavtaler) return null;
 
     const nyesteArbeidsavtale = arbeidsavtaler.length > 0 ? arbeidsavtaler[0] : {};
     const nyaa = {
