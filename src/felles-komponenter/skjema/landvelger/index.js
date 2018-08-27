@@ -6,14 +6,17 @@ import { connect } from 'react-redux';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../../utils/kodeverk';
+
 import './landvelger.css';
 import { KodeverkSelectors } from '../../../ducks/kodeverk';
 
-const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
+const landTekstFormat = landObjekt => (`${kodeverkObjektTilTerm(landObjekt)} (${kodeverkObjektTilKode(landObjekt)})`);
 
-const ValgtLand = ({ landObjekt = {}, slettLand, disabled }) => (
+const ValgtLand = ({ landObjekt, slettLand, disabled }) => (
   <div className="landliste__linje">
-    <div className="landliste__linje__navn">{landTekstFormat(landObjekt)}</div><button className="landliste__linje__knapp" disabled={disabled} onClick={e => slettLand(e, landObjekt.kode)}>-</button>
+    <div className="landliste__linje__navn">{landTekstFormat(landObjekt)}</div>
+    <button className="landliste__linje__knapp" disabled={disabled} onClick={e => slettLand(e, kodeverkObjektTilKode(landObjekt))}>-</button>
   </div>
 );
 
@@ -169,7 +172,7 @@ class CustomLandVelger extends Component {
             onClick={this.leggTilLandHandler}>+
           </button>
           <datalist id="alleLand">
-            {landkoder.map(item => (!valgteLand.includes(item) ? <option key={item.kode} value={landTekstFormat(item)} /> : ''))}
+            {landkoder.map(item => (!valgteLand.includes(item) ? <option key={kodeverkObjektTilKode(item)} value={landTekstFormat(item)} /> : ''))}
           </datalist>
         </div>
       )
@@ -183,7 +186,7 @@ class CustomLandVelger extends Component {
           <ValgtLand
             key={valgtLand}
             disabled={disabled}
-            landObjekt={this.props.landkoder.find(land => land.kode === valgtLand)}
+            landObjekt={this.props.landkoder.find(land => kodeverkObjektTilKode(land) === valgtLand)}
             slettLand={this.slettLandHandler}
           />
         ))

@@ -1,7 +1,7 @@
 /* eslint import/prefer-default-export:"off" */
 import PT from 'prop-types';
 
-import { BostedsAdresse } from './bosted';
+import { BostedsAdresse } from './adresser';
 import { Kodeverk } from './kodeverk';
 
 const BarnPropType = PT.shape({

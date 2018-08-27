@@ -27,7 +27,7 @@ describe('Tester at regler for opphold', () => {
     test('returnerer undefined ved ingen eller ukurant dato', () => {
       const mockSkjema = {
         oppholdUtlandFom: '',
-        oppholdUtlandTom: undefined,
+        oppholdUtlandTom: null,
       };
 
       const regel = new Regel(mockSkjema);
@@ -86,7 +86,7 @@ describe('Tester at regler for opphold', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.opphold().oppholderSegIUtlandet()).toBe(undefined);
+      expect(regel.opphold().oppholderSegIUtlandet()).toBe(null);
     });
 
     test('returnerer undefined ved faktaavklaringOppholdsLand === null', () => {
@@ -96,7 +96,7 @@ describe('Tester at regler for opphold', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.opphold().oppholderSegIUtlandet()).toBe(undefined);
+      expect(regel.opphold().oppholderSegIUtlandet()).toBe(null);
     });
 
     test('returnerer undefined ved faktaavklaringOppholdsLand === undefined', () => {
@@ -106,7 +106,7 @@ describe('Tester at regler for opphold', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.opphold().oppholderSegIUtlandet()).toBe(undefined);
+      expect(regel.opphold().oppholderSegIUtlandet()).toBe(null);
     });
   });
 

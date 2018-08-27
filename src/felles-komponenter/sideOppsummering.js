@@ -5,16 +5,19 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import EnkeltDato from './datoOmrade/enkeltDato';
-
+import { kodeverkObjektTilTerm } from '../utils/kodeverk';
 import './sideOppsummering.css';
 
 function SideOppsummering(props) {
+  const { oppsummering } = props;
+  if (!oppsummering) return null;
+
   const {
     saksnummer,
-    type = {},
-    status = {},
+    type,
+    status,
     registrertDato,
-  } = props.oppsummering;
+  } = oppsummering;
 
   const {
     lagreOgLukkHandle,
@@ -40,7 +43,7 @@ function SideOppsummering(props) {
         {/* END BEHANDLINGSMENY */}
         <Nav.Row>
           <Nav.Column xs="12" md="6">
-            <Nav.Undertittel className="soknadSammendrag__header">Søknad om {type.term || '-'}</Nav.Undertittel>
+            <Nav.Undertittel className="soknadSammendrag__header">Søknad om {kodeverkObjektTilTerm(type)}</Nav.Undertittel>
           </Nav.Column>
         </Nav.Row>
         {/* START BEHANDLINGSSTATUS */}
@@ -50,7 +53,7 @@ function SideOppsummering(props) {
               <dt>Saksnummer:</dt>
               <dd>{saksnummer || '-'}</dd>
               <dt>Behandlingsstatus:</dt>
-              <dd>{status.term || '-'}</dd>
+              <dd>{kodeverkObjektTilTerm(status)}</dd>
               <dt>Oppholdsland:</dt>
               <dd>-</dd>
               <dt>Registrert dato:</dt>

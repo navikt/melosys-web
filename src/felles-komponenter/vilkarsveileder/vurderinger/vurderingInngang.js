@@ -3,18 +3,20 @@ import PT from 'prop-types';
 import * as MPT from '../../../proptypes/';
 import * as Nav from '../../../utils/navFrontend';
 
+import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+
 import './vurderingVedtak.css';
 
 const VurderingInngang = props => {
   const { bekreftOgFortsett, inngangsvilkar } = props;
-  const { vurdering: { term = '' } } = inngangsvilkar;
+  const { vurdering } = inngangsvilkar;
 
   return (
     <div className="inngang vedtak">
       <Nav.Fieldset legend="Inngangsvilkår">
         <ul className="betingelser__liste">
           <li className="liste__element liste__element--oppfylt">
-            { term }
+            { kodeverkObjektTilTerm(vurdering) }
           </li>
         </ul>
       </Nav.Fieldset>
