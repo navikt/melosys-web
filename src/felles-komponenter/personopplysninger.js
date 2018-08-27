@@ -53,7 +53,8 @@ PersonMerkelapper.defaultProps = {
 };
 
 function Personopplysninger(props) {
-  if (Object.keys(props.person).length === 0) return (<div />);
+  const { person } = props;
+  if (!person) return null;
 
   const {
     fnr,
@@ -67,8 +68,8 @@ function Personopplysninger(props) {
     midlertidigPostadresse,
     personStatus,
     erEgenAnsatt,
-    familiemedlemmer = [],
-  } = props.person;
+    familiemedlemmer,
+  } = person;
 
   return (
     <div className="personopplysninger panelSeksjon">

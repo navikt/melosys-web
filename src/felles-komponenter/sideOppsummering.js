@@ -9,12 +9,15 @@ import { kodeverkObjektTilTerm } from '../utils/kodeverk';
 import './sideOppsummering.css';
 
 function SideOppsummering(props) {
+  const { oppsummering } = props;
+  if (!oppsummering) return null;
+
   const {
     saksnummer,
     type = {},
     status = {},
     registrertDato,
-  } = props.oppsummering;
+  } = oppsummering;
 
   const {
     lagreOgLukkHandle,

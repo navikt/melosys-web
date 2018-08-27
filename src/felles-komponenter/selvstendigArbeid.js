@@ -19,7 +19,7 @@ class EnkeltForetak extends Component {
 
   componentDidMount() {
     const { orgnr } = this.props;
-    this.hentOrganisasjon(orgnr);
+    if (orgnr) this.hentOrganisasjon(orgnr);
   }
 
   hentOrganisasjon = orgnr => {

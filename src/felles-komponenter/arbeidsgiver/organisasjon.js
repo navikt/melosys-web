@@ -15,7 +15,9 @@ import './organisasjon.css';
  *
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
-const Organisasjon = ({ organisasjon = {} }) => {
+const Organisasjon = ({ organisasjon }) => {
+  if (!organisasjon) { return null; }
+
   const {
     orgnr,
     navn,
