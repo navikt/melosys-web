@@ -6,20 +6,24 @@ import * as MPT from '../../proptypes';
  *
  */
 const GeneriskAdresse = ({ adresse }) => {
-  if (!adresse) { return '(ingen tilgjengelig)'; }
+  const INGEN_TILGJENGELIG_TEKST = '(ingen tilgjengelig)';
+  if (!adresse) { return INGEN_TILGJENGELIG_TEKST; }
 
   const {
     gateadresse, land, postnr, poststed,
   } = adresse;
-  const gatenavn = gateadresse ? gateadresse.gatenavn : '';
 
-  return (gatenavn || land || postnr || poststed) ? (
+  const {
+    gatenavn, gatenummer, husnummer, husbokstav,
+  } = gateadresse;
+
+  return (gatenavn || gatenummer || husnummer || husbokstav || land || postnr || poststed) ? (
     <address className="bostedsadresse">
-      {gatenavn}<br />
+      {gatenavn} {gatenummer} {husnummer} {husbokstav}<br />
       {postnr} {poststed}<br />
       {land}
     </address>
-  ) : '(ingen tilgjengelig)';
+  ) : INGEN_TILGJENGELIG_TEKST;
 };
 
 GeneriskAdresse.propTypes = {

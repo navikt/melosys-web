@@ -1,33 +1,22 @@
 import React from 'react';
 import * as MPT from '../../proptypes';
+import GeneriskAdresse from './generiskAdresse';
+
 
 /** Forretningsadresse formatterer adressen korrekt med sjekk på
  * varierende keys i objektet.
  *
  */
-const Postadresse = ({ postadresse }) => {
-  if (!postadresse) { return '(ingen tilgjengelig)'; }
+const PostAdresse = ({ postadresse }) => (
+  <GeneriskAdresse adresse={postadresse} />
+);
 
-  const {
-    gateadresse, land, postnr, poststed,
-  } = postadresse;
-  const gatenavn = gateadresse ? gateadresse.gatenavn : '';
-
-  return (gatenavn || land || postnr || poststed) ? (
-    <address className="postadresse">
-      {gatenavn}<br />
-      {postnr} {poststed}<br />
-      {land}
-    </address>
-  ) : '(ingen tilgjengelig)';
-};
-
-Postadresse.propTypes = {
+PostAdresse.propTypes = {
   postadresse: MPT.PostAdresse,
 };
 
-Postadresse.defaultProps = {
+PostAdresse.defaultProps = {
   postadresse: {},
 };
 
-export default Postadresse;
+export default PostAdresse;
