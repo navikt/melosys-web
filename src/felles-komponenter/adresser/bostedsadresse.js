@@ -6,16 +6,18 @@ import * as MPT from '../../proptypes';
  *
  */
 const Bostedsadresse = ({ bostedsadresse }) => {
+  if (!bostedsadresse) { return '(ingen tilgjengelig)'; }
+
   const {
     gateadresse, land, postnr, poststed,
   } = bostedsadresse;
   const gatenavn = gateadresse ? gateadresse.gatenavn : '';
 
-  return Object.keys(bostedsadresse).length > 0 ? (
+  return (gatenavn || land || postnr || poststed) ? (
     <address className="bostedsadresse">
-      {gatenavn || '-'}<br />
-      {postnr || '-'} {poststed || ''}<br />
-      {land || '-'}
+      {gatenavn}<br />
+      {postnr} {poststed}<br />
+      {land}
     </address>
   ) : '(ingen tilgjengelig)';
 };

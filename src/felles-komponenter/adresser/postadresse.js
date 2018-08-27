@@ -6,22 +6,24 @@ import * as MPT from '../../proptypes';
  *
  */
 const Postadresse = ({ postadresse }) => {
+  if (!postadresse) { return '(ingen tilgjengelig)'; }
+
   const {
     gateadresse, land, postnr, poststed,
   } = postadresse;
   const gatenavn = gateadresse ? gateadresse.gatenavn : '';
 
-  return Object.keys(postadresse).length > 0 ? (
+  return (gatenavn || land || postnr || poststed) ? (
     <address className="postadresse">
-      {gatenavn || '-'}<br />
-      {postnr || '-'} {poststed || ''}<br />
-      {land || '-'}
+      {gatenavn}<br />
+      {postnr} {poststed}<br />
+      {land}
     </address>
   ) : '(ingen tilgjengelig)';
 };
 
 Postadresse.propTypes = {
-  postadresse: MPT.BostedsAdresse,
+  postadresse: MPT.PostAdresse,
 };
 
 Postadresse.defaultProps = {

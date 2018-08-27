@@ -8,22 +8,24 @@ import './adresse.css';
  *
  */
 const Forretningsadresse = ({ forretningsadresse }) => {
+  if (!forretningsadresse) { return '(ingen tilgjengelig)'; }
+
   const {
     gateadresse, land, postnr, poststed,
   } = forretningsadresse;
   const gatenavn = gateadresse ? gateadresse.gatenavn : '';
 
-  return forretningsadresse ? (
+  return (gatenavn || land || postnr || poststed) ? (
     <address className="forretningsadresse">
-      {gatenavn || '-'}<br />
-      {postnr || '-'} {poststed || '-'}<br />
-      {land || '-'}
+      {gatenavn}<br />
+      {postnr} {poststed}<br />
+      {land}
     </address>
   ) : null;
 };
 
 Forretningsadresse.propTypes = {
-  forretningsadresse: MPT.BostedsAdresse,
+  forretningsadresse: MPT.ForretningsAdresse,
 };
 
 Forretningsadresse.defaultProps = {
