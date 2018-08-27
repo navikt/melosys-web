@@ -42,7 +42,9 @@ export const FagsakSokSelector = createSelector(
 const lagFlatInntektListe = arbeidsInntektMaanedListe => (
   arbeidsInntektMaanedListe.reduce((samling, enkeltMaaned) => {
     const { arbeidsInntektInformasjon = {}, aarMaaned } = enkeltMaaned;
-    const { inntektListe = [] } = arbeidsInntektInformasjon;
+    const { inntektListe } = arbeidsInntektInformasjon;
+
+    if (!inntektListe) return [];
 
     const inntekterForEnkeltMaaned = inntektListe.reduce((samlingAvInntekterDenneMaaneden, enkelInntekt) => {
       const { opplysningspliktigID, beloep } = enkelInntekt;
@@ -111,8 +113,8 @@ export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
   inntekt => {
     if (!inntekt) return [];
-
-    const { arbeidsInntektMaanedListe = [] } = inntekt;
+    const { arbeidsInntektMaanedListe } = inntekt;
+    if (!arbeidsInntektMaanedListe) return [];
 
     const flatInntektsListe = lagFlatInntektListe(arbeidsInntektMaanedListe);
     return summerInntektsTyperFraSammeOpplysningspliktig(flatInntektsListe);
@@ -152,7 +154,6 @@ export const MedlemskapSelector = createSelector(
     };
   }
 );
-
 
 /**
  * Arbeidsforhold refererer til organisasjon med arbeidsforholdID. For at komponenten skal kunne vise
