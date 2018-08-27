@@ -41,9 +41,9 @@ export const FagsakSokSelector = createSelector(
  */
 const lagFlatInntektListe = arbeidsInntektMaanedListe => (
   arbeidsInntektMaanedListe.reduce((samling, enkeltMaaned) => {
-    const { arbeidsInntektInformasjon = {}, aarMaaned } = enkeltMaaned;
+    const { arbeidsInntektInformasjon, aarMaaned } = enkeltMaaned;
+    if (!arbeidsInntektInformasjon) return [];
     const { inntektListe } = arbeidsInntektInformasjon;
-
     if (!inntektListe) return [];
 
     const inntekterForEnkeltMaaned = inntektListe.reduce((samlingAvInntekterDenneMaaneden, enkelInntekt) => {
@@ -146,7 +146,9 @@ export const MedlemskapSelector = createSelector(
     const UAVKLART_MEDLEMSKAP = 'UAVK';
     const AVVIST_MEDLEMSKAP = 'AVST';
 
-    const { medlemsperiode = [] } = medlemskap;
+    const { medlemsperiode } = medlemskap;
+    if (!medlemsperiode) return null;
+
     return {
       perioderMed: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.type) === PERIODE_MED_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) === GYLDIG_MEDLEMSKAP),
       perioderUten: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.type) === PERIODE_UTEN_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) !== AVVIST_MEDLEMSKAP),
@@ -165,7 +167,8 @@ export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => OrganisasjonerSelector(state),
   state => InntektSelector(state),
-  (arbeidsforhold = [], organisasjoner = [], inntekt = []) => (arbeidsforhold.map(item => {
+  (arbeidsforhold, organisasjoner, inntekt) => (arbeidsforhold.map(item => {
+    if (!arbeidsforhold || !organisasjoner || !inntekt) return [];
     const arbeid = { ...item };
     arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
     arbeid.inntekt = inntekt.filter(linje => linje.opplysningspliktigID === arbeid.arbeidsgiverID) || [];

@@ -18,7 +18,7 @@ const uuid = require('uuid/v4');
  * @param oppgave {object} Objektet for den aktuelle oppgaven.
  */
 const OppgaveKomponentSwitch = ({ oppgave }) => {
-  const { oppgavetype = {} } = oppgave;
+  const { oppgavetype } = oppgave;
   const kode = kodeverkObjektTilKode(oppgavetype);
 
   switch (kode) {

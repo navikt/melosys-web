@@ -14,8 +14,8 @@ function SideOppsummering(props) {
 
   const {
     saksnummer,
-    type = {},
-    status = {},
+    type,
+    status,
     registrertDato,
   } = oppsummering;
 
