@@ -7,7 +7,7 @@ import { MedlemskapEnkeltPeriode, MedlemskapPerioder, Medlemskap } from './medle
 import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
 import { Kodeverk } from './kodeverk';
 import { Person } from './person';
-import { BostedsAdresse } from './bosted';
+import { BostedsAdresse, PostAdresse, ForretningsAdresse } from './adresser';
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { Saksbehandler } from './saksbehandler';
 import { Oppsummering } from './oppsummering';
@@ -34,6 +34,7 @@ export {
   BostedsAdresse,
   Feilmelding,
   Feilmeldinger,
+  ForretningsAdresse,
   Inntekt,
   InntektEnkeltLinje,
   InntektListe,
@@ -56,6 +57,7 @@ export {
   Permisjoner,
   PermisjonOgPermittering,
   Person,
+  PostAdresse,
   SakEnkeltLinje,
   Saksbehandler,
   OppgaveSok,
