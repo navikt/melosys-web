@@ -111,11 +111,13 @@ class Saksbehandling extends Component {
   componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentFagsaker(snr).then(response => {
-      const { behandlinger = [] } = response.data;
+      const { behandlinger } = response.data;
+      if (!behandlinger) return false;
       const { oppsummering: { behandlingID } } = behandlinger[0];
       this.props.hentSoknad(behandlingID);
       this.props.hentFaktaavklaring(behandlingID);
       this.props.hentVurdering(behandlingID);
+      return true;
     });
   }
 
@@ -169,7 +171,9 @@ class Saksbehandling extends Component {
       soknadForm,
     } = this.props;
 
-    const { values: soknadVerdier = {} } = soknadForm;
+    const { values: soknadVerdier } = soknadForm;
+
+    if (!soknadVerdier) return null;
 
     if (!person || !person.fnr) {
       return null;

@@ -43,7 +43,9 @@ ArbeidsgiverIDField.propTypes = {
  */
 const Forretningsstedet = props => {
   const { index } = props;
-  const { arbeidsgiver = {}, arbeidsgiverID } = props.forretningsstedet;
+  const { arbeidsgiver, arbeidsgiverID } = props.forretningsstedet;
+  if (!arbeidsgiver) return null;
+
   const { navn = '' } = arbeidsgiver;
 
   return (

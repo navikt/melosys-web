@@ -19,11 +19,11 @@ import './sakEnkeltLinje.css';
  */
 const SakEnkeltLinje = ({ sak }) => {
   const {
-    sammensattNavn, sakstype = {}, saksnummer, behandling = {}, aktivTil, soknadsperiode = {},
+    sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode = {},
   } = sak;
 
-  const { status = {} } = behandling;
-  const { fom = null, tom = null } = soknadsperiode;
+  const { status } = behandling;
+  const { fom, tom } = soknadsperiode;
   const tittel = `${kodeverkObjektTilTerm(sakstype)} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
 

@@ -12,9 +12,10 @@ import './eksisterendeSaker.css';
  */
 const EnkeltSak = props => {
   const {
-    opprettetDato, behandlingstype = {}, soknadsperiode = {}, behandlingsstatus = {}, land = [], sakstype = {},
+    opprettetDato, behandlingstype, soknadsperiode, behandlingsstatus, land, sakstype,
   } = props.sak;
-  const { fom = null, tom = null } = soknadsperiode;
+
+  const { fom, tom } = soknadsperiode;
 
   return (
     <div className="enkeltSak__meta">

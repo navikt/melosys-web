@@ -20,15 +20,15 @@ const uuid = require('uuid/v4');
  */
 function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
   const {
-    periode = {},
-    type = {},
-    status = {},
-    grunnlagstype = {},
-    land = {},
-    lovvalg = {},
-    trygdedekning = {},
-    kildedokumenttype = {},
-    kilde = {},
+    periode,
+    type,
+    status,
+    grunnlagstype,
+    land,
+    lovvalg,
+    trygdedekning,
+    kildedokumenttype,
+    kilde,
   } = enkeltPeriode;
 
   return (

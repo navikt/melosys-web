@@ -73,7 +73,7 @@ const VurderingVedtak = props => {
     sysselsetting,
   } = props;
 
-  const { land = [], periode = {} } = opphold;
+  const { land, periode } = opphold;
 
   const { sysselsettingType = '' } = sysselsetting;
 

@@ -31,7 +31,7 @@ class MedfolgendeAndre extends Component {
 
     if (erGyldigFnr(medfolgendeAndre) || erGyldigDnr(medfolgendeAndre)) {
       this.visSpinner();
-      API.Personer.hentPerson(medfolgendeAndre).then((response = {}) => {
+      API.Personer.hentPerson(medfolgendeAndre).then(response => {
         this.setState({ person: response });
         this.skjulSpinner();
       });

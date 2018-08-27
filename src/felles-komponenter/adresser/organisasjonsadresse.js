@@ -8,7 +8,12 @@ import './adresse.css';
  *
  */
 const Organisasjonsadresse = ({ organisasjon }) => {
-  const { forretningsadresse = {}, navn = '' } = organisasjon;
+  if (!organisasjon) return '(ingen tilgjengelig)';
+
+  const { forretningsadresse, navn = '' } = organisasjon;
+
+  if (!forretningsadresse) return null;
+
   const {
     gateadresse, land, postnr, poststed,
   } = forretningsadresse;
