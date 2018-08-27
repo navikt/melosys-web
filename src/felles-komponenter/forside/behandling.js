@@ -11,6 +11,8 @@ import * as Skjema from '../skjema';
 import { oppgaverOperations } from '../../ducks/oppgaver/';
 import * as Kodeverk from '../../ducks/kodeverk';
 
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../utils/kodeverk';
+
 import './behandling.css';
 
 const uuid = require('uuid/v4');
@@ -44,7 +46,7 @@ class Behandling extends Component {
             <Nav.Column xs="4">
               <Nav.Fieldset legend="Sakstype">
                 {saksTyper.map(type =>
-                  (<Skjema.Checkbox key={uuid()} label={type.term} feltNavn={type.kode} />))
+                  (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} feltNavn={kodeverkObjektTilKode(type)} />))
                 }
               </Nav.Fieldset>
             </Nav.Column>
@@ -52,7 +54,7 @@ class Behandling extends Component {
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
                 {behandlingsTyper.map(type =>
-                  (<Skjema.Checkbox key={uuid()} label={type.term} feltNavn={type.kode} />))
+                  (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} feltNavn={kodeverkObjektTilKode(type)} />))
                 }
               </Nav.Fieldset>
             </Nav.Column>

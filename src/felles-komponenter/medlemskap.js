@@ -7,8 +7,7 @@ import * as Ikoner from '../resources/images';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import DatoOmrade from '../felles-komponenter/datoOmrade/datoOmrade';
-
-import * as Streng from '../utils/streng';
+import { kodeverkObjektTilTerm } from '../utils/kodeverk';
 
 import './medlemskap.css';
 
@@ -42,21 +41,21 @@ function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
         <Nav.Column xs="8">
           <dl className="medlemskap__detaljer">
             <dt>Periodetype:</dt>
-            <dd>{Streng.tekstEllerDash(type.term)}</dd>
+            <dd>{kodeverkObjektTilTerm(type)}</dd>
             <dt>Status:</dt>
-            <dd>{Streng.tekstEllerDash(status.term)}</dd>
+            <dd>{kodeverkObjektTilTerm(status)}</dd>
             <dt>Grunnlagstype:</dt>
-            <dd>{Streng.tekstEllerDash(grunnlagstype.term)}</dd>
+            <dd>{kodeverkObjektTilTerm(grunnlagstype)}</dd>
             <dt>Land:</dt>
-            <dd>{Streng.tekstEllerDash(land.term)}</dd>
+            <dd>{kodeverkObjektTilTerm(land)}</dd>
             <dt>Lovvalg:</dt>
-            <dd>{Streng.tekstEllerDash(lovvalg.term)}</dd>
+            <dd>{kodeverkObjektTilTerm(lovvalg)}</dd>
             <dt>Trygdedekning:</dt>
-            <dd>{Streng.tekstEllerDash(trygdedekning.term)}</dd>
+            <dd>{kodeverkObjektTilTerm(trygdedekning)}</dd>
             <dt>Kildedokumenttype:</dt>
-            <dd>{Streng.tekstEllerDash(kildedokumenttype.term)}</dd>
+            <dd>{kodeverkObjektTilTerm(kildedokumenttype)}</dd>
             <dt>Kilde:</dt>
-            <dd>{Streng.tekstEllerDash(kilde.term)}</dd>
+            <dd>{kodeverkObjektTilTerm(kilde)}</dd>
           </dl>
         </Nav.Column>
         {/* SLUTT DETALJER */}

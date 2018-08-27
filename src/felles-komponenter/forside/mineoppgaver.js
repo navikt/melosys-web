@@ -6,6 +6,7 @@ import * as Oppgaver from '../../ducks/oppgaver';
 
 import SakEnkeltLinje from './oppgaveliste/sakEnkeltLinje';
 import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
+import { kodeverkObjektTilKode } from '../../utils/kodeverk';
 
 import './mineoppgaver.css';
 
@@ -18,8 +19,9 @@ const uuid = require('uuid/v4');
  */
 const OppgaveKomponentSwitch = ({ oppgave }) => {
   const { oppgavetype = {} } = oppgave;
+  const kode = kodeverkObjektTilKode(oppgavetype);
 
-  switch (oppgavetype.kode) {
+  switch (kode) {
     case 'BEH_SAK': {
       return (
         <SakEnkeltLinje sak={oppgave} />

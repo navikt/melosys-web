@@ -3,6 +3,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import moment from 'moment/moment';
 
 import { faktaavklaringSelectors } from '../faktaavklaring/';
+import { kodeverkObjektTilKode } from '../../utils/kodeverk';
 
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
@@ -145,9 +146,9 @@ export const MedlemskapSelector = createSelector(
 
     const { medlemsperiode = [] } = medlemskap;
     return {
-      perioderMed: medlemsperiode.filter(periode => periode.type.kode === PERIODE_MED_MEDLEMSKAP && periode.status.kode === GYLDIG_MEDLEMSKAP),
-      perioderUten: medlemsperiode.filter(periode => periode.type.kode === PERIODE_UTEN_MEDLEMSKAP && periode.status.kode !== AVVIST_MEDLEMSKAP),
-      perioderUavklart: medlemsperiode.filter(periode => periode.status.kode === UAVKLART_MEDLEMSKAP),
+      perioderMed: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.type) === PERIODE_MED_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) === GYLDIG_MEDLEMSKAP),
+      perioderUten: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.type) === PERIODE_UTEN_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) !== AVVIST_MEDLEMSKAP),
+      perioderUavklart: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.status) === UAVKLART_MEDLEMSKAP),
     };
   }
 );
