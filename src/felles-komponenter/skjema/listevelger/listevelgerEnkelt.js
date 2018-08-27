@@ -2,6 +2,8 @@ import React from 'react';
 import PT from 'prop-types';
 import { Input as NavInput } from 'nav-frontend-skjema';
 
+import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+
 import './listevelger.css';
 
 const uuid = require('uuid/v4');
@@ -34,7 +36,7 @@ const ListevelgerEnkelt = ({
         {...input}
       />
       <datalist id={`dataliste-${inputProps.name}`}>
-        {muligeValg.map(valg => <option key={uuid()} value={valg.term} />)}
+        {muligeValg.map(valg => <option key={uuid()} value={kodeverkObjektTilTerm(valg)} />)}
       </datalist>
     </div>
   );

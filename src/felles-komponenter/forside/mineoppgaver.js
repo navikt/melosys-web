@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -6,8 +6,10 @@ import * as Oppgaver from '../../ducks/oppgaver';
 
 import SakEnkeltLinje from './oppgaveliste/sakEnkeltLinje';
 import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
+import { kodeverkObjektTilKode } from '../../utils/kodeverk';
 
 import './mineoppgaver.css';
+import withErrorHandling from '../../hoc/withErrorHandling';
 
 const uuid = require('uuid/v4');
 
@@ -17,9 +19,10 @@ const uuid = require('uuid/v4');
  * @param oppgave {object} Objektet for den aktuelle oppgaven.
  */
 const OppgaveKomponentSwitch = ({ oppgave }) => {
-  const { oppgavetype = {} } = oppgave;
+  const { oppgavetype } = oppgave;
+  const kode = kodeverkObjektTilKode(oppgavetype);
 
-  switch (oppgavetype.kode) {
+  switch (kode) {
     case 'BEH_SAK': {
       return (
         <SakEnkeltLinje sak={oppgave} />
@@ -47,24 +50,18 @@ OppgaveKomponentSwitch.defaultProps = {
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
-class MineOppgaver extends Component {
-  componentDidMount() {
-    this.props.hentMineSaker();
-  }
+const MineOppgaver = props => {
+  const { minesaker } = props;
+  const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre.';
 
-  render() {
-    const { minesaker } = this.props;
-    const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre.';
-
-    return (
-      <div className="minesaker">
-        <h1>Mine Oppgaver ({minesaker.length})</h1>
-        {minesaker.map(sak => <OppgaveKomponentSwitch key={uuid()} oppgave={sak} />)}
-        {minesaker.length === 0 && ingenSakerMelding}
-      </div>
-    );
-  }
-}
+  return (
+    <div className="minesaker">
+      <h1>Mine Oppgaver ({minesaker.length})</h1>
+      {minesaker.map(sak => <OppgaveKomponentSwitch key={uuid()} oppgave={sak} />)}
+      {minesaker.length === 0 && ingenSakerMelding}
+    </div>
+  );
+};
 
 MineOppgaver.propTypes = {
   hentMineSaker: PT.func.isRequired,
@@ -82,5 +79,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentMineSaker: () => dispatch(Oppgaver.oppgaverOperations.hent()),
 });
-
-export default connect(mapStateToProps, mapDispatchToProps)(MineOppgaver);
+const kontekster = [
+  { navn: 'oppgaver', melding: 'Det har oppstått en feil: Kunne ikke søke etter oppgaver' },
+];
+export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(MineOppgaver));

@@ -5,6 +5,8 @@ import { connect } from 'react-redux';
 
 import * as MPT from '../../../proptypes';
 
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../../utils/kodeverk';
+
 import './landvelger.css';
 import { KodeverkSelectors } from '../../../ducks/kodeverk';
 
@@ -12,12 +14,13 @@ import EnkeltLand from './enkeltLand';
 import MultiLand from './multiLand';
 
 /** Hjelpere som deles av hovedkomponent og subkomponentene EnkeltLand og MultiLand */
-const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
+const landTekstFormat = landObjekt => (`${kodeverkObjektTilTerm(landObjekt)} (${kodeverkObjektTilKode(landObjekt)})`);
 const kodeTilObjekt = (kode, alleLandkoder) => alleLandkoder.find(enkeltKode => enkeltKode.kode === kode);
 
-const ValgtLand = ({ landObjekt = {}, slettLand, disabled }) => (
+const ValgtLand = ({ landObjekt, slettLand, disabled }) => (
   <div className="landliste__linje">
-    <div className="landliste__linje__navn">{landTekstFormat(landObjekt)}</div><button className="landliste__linje__knapp" disabled={disabled} onClick={e => slettLand(e, landObjekt.kode)}>-</button>
+    <div className="landliste__linje__navn">{landTekstFormat(landObjekt)}</div>
+    <button className="landliste__linje__knapp" disabled={disabled} onClick={e => slettLand(e, kodeverkObjektTilKode(landObjekt))}>-</button>
   </div>
 );
 
@@ -212,7 +215,7 @@ class CustomLandVelger extends Component {
         }
         <div className="landliste__dataliste">
           <datalist id="alleLand">
-            {landkoder.map(item => (<option key={item.kode} value={landTekstFormat(item)} />))}
+            {landkoder.map(item => (<option key={kodeverkObjektTilKode(item)} value={landTekstFormat(item)} />))}
           </datalist>
         </div>
       </div>

@@ -7,12 +7,13 @@ import * as Skjema from '../felles-komponenter/skjema';
 import * as Ikoner from '../resources/images';
 
 import { beregnAlder } from '../utils/dato';
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk';
 
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
-import Bostedsadresse from './adresser/bostedsadresse';
-import Postadresse from './adresser/postadresse';
+import BostedsAdresse from './adresser/bostedsAdresse';
+import PostAdresse from './adresser/postAdresse';
 import LandVelger from './skjema/landvelger';
 
 import UtenlandskID from './personopplysninger/utenlandskID';
@@ -30,7 +31,8 @@ const ikonFraKjonn = kjoenn => {
 };
 
 const PersonMerkelapper = ({ personStatus, erEgenAnsatt }) => {
-  const erPersonDod = (personStatus.kode === 'DOD' || personStatus.kode === 'DØD' || personStatus.kode === 'DØDD');
+  const personStatusKode = kodeverkObjektTilKode(personStatus);
+  const erPersonDod = (personStatusKode === 'DOD' || personStatusKode === 'DØD' || personStatusKode === 'DØDD');
 
   return (
     <div className="personopplysninger__personstatus">
@@ -51,7 +53,8 @@ PersonMerkelapper.defaultProps = {
 };
 
 function Personopplysninger(props) {
-  if (Object.keys(props.person).length === 0) return (<div />);
+  const { person } = props;
+  if (!person) return null;
 
   const {
     fnr,
@@ -65,17 +68,15 @@ function Personopplysninger(props) {
     midlertidigPostadresse,
     personStatus,
     erEgenAnsatt,
-    familiemedlemmer = [],
-  } = props.person;
-
-  const kjoennKode = kjoenn.kode || kjoenn;
+    familiemedlemmer,
+  } = person;
 
   return (
     <div className="personopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={
           <div className="personopplysninger__panelheader">
-            <PanelHeader ikon={ikonFraKjonn(kjoennKode)} tittel={`${sammensattNavn} (${beregnAlder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
+            <PanelHeader ikon={ikonFraKjonn(kodeverkObjektTilKode(kjoenn))} tittel={`${sammensattNavn} (${beregnAlder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
             <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
           </div>}
         ariaTittel="Panel for personinformasjon"
@@ -86,9 +87,9 @@ function Personopplysninger(props) {
             <Nav.Column xs="6">
               <dl className="person__detaljer">
                 <dt>Fnr / dnr:</dt><dd>{fnr}</dd>
-                <dt>Statsborgerskap:</dt><dd>{statsborgerskap.term || statsborgerskap}</dd>
+                <dt>Statsborgerskap:</dt><dd>{kodeverkObjektTilTerm(statsborgerskap)}</dd>
                 <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
-                <dt>Kjønn:</dt><dd>{kjoenn.term || kjoenn}</dd>
+                <dt>Kjønn:</dt><dd>{kodeverkObjektTilTerm(kjoenn)}</dd>
                 <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
               </dl>
             </Nav.Column>
@@ -100,19 +101,19 @@ function Personopplysninger(props) {
             <Nav.Column xs="4">
               <dl className="person__detaljer">
                 <dt>Bostedsadresse (TPS):</dt>
-                <Bostedsadresse bostedsadresse={bostedsadresse} />
+                <BostedsAdresse bostedsadresse={bostedsadresse} />
               </dl>
             </Nav.Column>
             <Nav.Column xs="4">
               <dl className="person__detaljer">
                 <dt>Postadresse (TPS):</dt>
-                <Postadresse postadresse={postadresse} />
+                <PostAdresse postadresse={postadresse} />
               </dl>
             </Nav.Column>
             <Nav.Column xs="4">
               <dl className="person__detaljer">
                 <dt>Midl. postadresse (TPS):</dt>
-                <Postadresse postadresse={midlertidigPostadresse} />
+                <PostAdresse postadresse={midlertidigPostadresse} />
               </dl>
             </Nav.Column>
           </Nav.Row>

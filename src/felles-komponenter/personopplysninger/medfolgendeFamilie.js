@@ -48,6 +48,7 @@ class FamiliemedlemmerListe extends Component {
 
   render() {
     const { familiemedlemmerAlle, fields } = this.props;
+    if (!familiemedlemmerAlle) return null;
     const { onBarnChange } = this;
     const allFields = fields.getAll() || [];
 
