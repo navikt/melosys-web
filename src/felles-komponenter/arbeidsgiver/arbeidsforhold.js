@@ -11,7 +11,7 @@ import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
 import Arbeidsavtaler from './arbeidsavtaler';
-import Forretningsadresse from '../adresser/forretningsadresse';
+import ForretningsAdresse from '../adresser/forretningsAdresse';
 
 import { boolTilNorsk } from '../../utils/streng';
 import { datoDiff } from '../../utils/dato';
@@ -72,7 +72,7 @@ const Arbeidsforholdet = props => {
                     <dt>Org. nr</dt>
                     <dd>{arbeidsgiver.orgnr}</dd>
                     <dt>Forretningsadresse:</dt>
-                    <Forretningsadresse forretningsadresse={forretningsadresse} />
+                    <ForretningsAdresse forretningsadresse={forretningsadresse} />
                     <dt>A-ordning:</dt>
                     <dd>{boolTilNorsk(Aordning)}</dd>
                   </dl>

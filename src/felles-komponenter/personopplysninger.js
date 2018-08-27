@@ -12,8 +12,8 @@ import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk'
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
-import Bostedsadresse from './adresser/bostedsadresse';
-import Postadresse from './adresser/postadresse';
+import BostedsAdresse from './adresser/bostedsAdresse';
+import PostAdresse from './adresser/postAdresse';
 import LandVelger from './skjema/landvelger';
 
 import UtenlandskID from './personopplysninger/utenlandskID';
@@ -101,19 +101,19 @@ function Personopplysninger(props) {
             <Nav.Column xs="4">
               <dl className="person__detaljer">
                 <dt>Bostedsadresse (TPS):</dt>
-                <Bostedsadresse bostedsadresse={bostedsadresse} />
+                <BostedsAdresse bostedsadresse={bostedsadresse} />
               </dl>
             </Nav.Column>
             <Nav.Column xs="4">
               <dl className="person__detaljer">
                 <dt>Postadresse (TPS):</dt>
-                <Postadresse postadresse={postadresse} />
+                <PostAdresse postadresse={postadresse} />
               </dl>
             </Nav.Column>
             <Nav.Column xs="4">
               <dl className="person__detaljer">
                 <dt>Midl. postadresse (TPS):</dt>
-                <Postadresse postadresse={midlertidigPostadresse} />
+                <PostAdresse postadresse={midlertidigPostadresse} />
               </dl>
             </Nav.Column>
           </Nav.Row>

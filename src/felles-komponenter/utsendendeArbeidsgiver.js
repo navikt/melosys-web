@@ -12,8 +12,8 @@ import { fagsakSelectors } from '../ducks/fagsaker/';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import PanelHeader from './panelHeader/panelHeader';
-import Forretningsadresse from './adresser/forretningsadresse';
-import Postadresse from './adresser/postadresse';
+import ForretningsAdresse from './adresser/forretningsAdresse';
+import PostAdresse from './adresser/postAdresse';
 import LandVelger from './skjema/landvelger';
 
 import './utsendendeArbeidsgiver.css';
@@ -26,8 +26,8 @@ const Arbeidsgiver = ({ arbeidsgiver }) => {
   const {
     orgnr, navn, oppstartdato, organisasjonsform, forretningsadresse, postadresse,
   } = arbeidsgiver;
-  const postAdresseKomp = postadresse ? <div><dt>Postdresse</dt><dd><Postadresse postadresse={postadresse} /></dd></div> : null;
-  const forretningsadresseKomp = forretningsadresse ? <div><dt>Forretningsadresse</dt><dd><Forretningsadresse forretningsadresse={forretningsadresse} /></dd></div> : null;
+  const postAdresseKomp = postadresse ? <div><dt>Postdresse</dt><dd><PostAdresse postadresse={postadresse} /></dd></div> : null;
+  const forretningsadresseKomp = forretningsadresse ? <div><dt>Forretningsadresse</dt><dd><ForretningsAdresse forretningsadresse={forretningsadresse} /></dd></div> : null;
 
   return arbeidsgiver ? (
     <dl className="arbeidsgiver__detaljer">

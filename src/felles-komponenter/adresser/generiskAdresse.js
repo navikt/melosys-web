@@ -5,12 +5,12 @@ import * as MPT from '../../proptypes';
  * varierende keys i objektet.
  *
  */
-const Bostedsadresse = ({ bostedsadresse }) => {
-  if (!bostedsadresse) { return '(ingen tilgjengelig)'; }
+const GeneriskAdresse = ({ adresse }) => {
+  if (!adresse) { return '(ingen tilgjengelig)'; }
 
   const {
     gateadresse, land, postnr, poststed,
-  } = bostedsadresse;
+  } = adresse;
   const gatenavn = gateadresse ? gateadresse.gatenavn : '';
 
   return (gatenavn || land || postnr || poststed) ? (
@@ -22,12 +22,12 @@ const Bostedsadresse = ({ bostedsadresse }) => {
   ) : '(ingen tilgjengelig)';
 };
 
-Bostedsadresse.propTypes = {
-  bostedsadresse: MPT.BostedsAdresse,
+GeneriskAdresse.propTypes = {
+  adresse: MPT.GeneriskAdresse,
 };
 
-Bostedsadresse.defaultProps = {
-  bostedsadresse: {},
+GeneriskAdresse.defaultProps = {
+  adresse: {},
 };
 
-export default Bostedsadresse;
+export default GeneriskAdresse;
