@@ -1,5 +1,6 @@
 import React from 'react';
 import * as MPT from '../../proptypes';
+import GeneriskAdresse from './generiskAdresse';
 
 import './adresse.css';
 
@@ -7,29 +8,16 @@ import './adresse.css';
  * varierende keys i objektet.
  *
  */
-const Forretningsadresse = ({ forretningsadresse }) => {
-  if (!forretningsadresse) { return '(ingen tilgjengelig)'; }
+const ForretningsAdresse = ({ forretningsadresse }) => (
+  <GeneriskAdresse adresse={forretningsadresse} />
+);
 
-  const {
-    gateadresse, land, postnr, poststed,
-  } = forretningsadresse;
-  const gatenavn = gateadresse ? gateadresse.gatenavn : '';
-
-  return (gatenavn || land || postnr || poststed) ? (
-    <address className="forretningsadresse">
-      {gatenavn}<br />
-      {postnr} {poststed}<br />
-      {land}
-    </address>
-  ) : null;
-};
-
-Forretningsadresse.propTypes = {
+ForretningsAdresse.propTypes = {
   forretningsadresse: MPT.ForretningsAdresse,
 };
 
-Forretningsadresse.defaultProps = {
+ForretningsAdresse.defaultProps = {
   forretningsadresse: {},
 };
 
-export default Forretningsadresse;
+export default ForretningsAdresse;
