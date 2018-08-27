@@ -5,6 +5,7 @@ import * as Nav from '../../utils/navFrontend';
 import Tabell from '../tabell/tabell';
 
 import EnkeltDato from '../datoOmrade/enkeltDato';
+import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
 
 import './arbeidsavtaler.css';
 
@@ -17,7 +18,6 @@ class Arbeidsavtaler extends Component {
   };
 
   render() {
-    const chooseOwnProperty = (obj, propertyKey) => (obj && obj[propertyKey] ? obj[propertyKey] : obj);
     const { arbeidsavtaler = [] } = this.props;
     const { visHistoriskeArbeidsavtaler } = this.state;
 
@@ -25,12 +25,13 @@ class Arbeidsavtaler extends Component {
     const nyaa = {
       antallTimerFraGammeltRegister: nyesteArbeidsavtale.antallTimerFraGammeltRegister,
       endringsdatoStillingsprosent: nyesteArbeidsavtale.endringsdatoStillingsprosent,
-      arbeidstidsordning: chooseOwnProperty(nyesteArbeidsavtale.arbeidstidsordning, 'term'),
-      yrke: chooseOwnProperty(nyesteArbeidsavtale.yrke, 'term'),
-      skipsregister: chooseOwnProperty(nyesteArbeidsavtale.skipsregister, 'term'),
-      skipstype: chooseOwnProperty(nyesteArbeidsavtale.skipstype, 'term'),
-      fartsomraade: chooseOwnProperty(nyesteArbeidsavtale.fartsomraade, 'term'),
+      arbeidstidsordning: kodeverkObjektTilTerm(nyesteArbeidsavtale.arbeidstidsordning),
+      yrke: kodeverkObjektTilTerm(nyesteArbeidsavtale.yrke),
+      skipsregister: kodeverkObjektTilTerm(nyesteArbeidsavtale.skipsregister),
+      skipstype: kodeverkObjektTilTerm(nyesteArbeidsavtale.skipstype),
+      fartsomraade: kodeverkObjektTilTerm(nyesteArbeidsavtale.fartsomraade),
     };
+
     const historiskeArbeidsavtaler = arbeidsavtaler.filter((arbeidsavtalen, index) => index > 0);
 
     // Tabell-komponenten er agnostisk med tanke på colonner og trenger disse som en array. Gjør derfor
