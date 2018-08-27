@@ -6,7 +6,7 @@ import * as Ikoner from '../../resources/images/index';
 
 import PanelHeader from '../panelHeader/panelHeader';
 
-import Forretningsadresse from '../adresser/forretningsadresse';
+import ForretningsAdresse from '../adresser/forretningsAdresse';
 
 import './organisasjon.css';
 
@@ -38,7 +38,7 @@ const Organisasjon = ({ organisasjon }) => {
             <Nav.Column xs="6">
               <dl className="organisasjon__detaljer">
                 <dt>Forretningsadresse</dt>
-                <dd>{<Forretningsadresse forretningsadresse={forretningsadresse} />}</dd>
+                <dd>{<ForretningsAdresse forretningsadresse={forretningsadresse} />}</dd>
               </dl>
             </Nav.Column>
           </Nav.Row>

@@ -21,4 +21,5 @@ export {
   BostedsAdressePropType as BostedsAdresse,
   ForretningsAdressePropType as ForretningsAdresse,
   PostAdressePropType as PostAdresse,
+  GeneriskAdressePropType as GeneriskAdresse,
 };

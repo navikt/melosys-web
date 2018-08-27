@@ -10,7 +10,7 @@ import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../constants';
 
 import PanelHeader from './panelHeader/panelHeader';
-import OrganisasjonsAdresse from './adresser/organisasjonsadresse';
+import OrganisasjonsAdresse from './adresser/organisasjonsAdresse';
 
 import './selvstendigArbeid.css';
 
