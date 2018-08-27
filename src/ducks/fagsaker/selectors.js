@@ -3,6 +3,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import moment from 'moment/moment';
 
 import { faktaavklaringSelectors } from '../faktaavklaring/';
+import { kodeverkObjektTilKode } from '../../utils/kodeverk';
 
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
@@ -40,8 +41,10 @@ export const FagsakSokSelector = createSelector(
  */
 const lagFlatInntektListe = arbeidsInntektMaanedListe => (
   arbeidsInntektMaanedListe.reduce((samling, enkeltMaaned) => {
-    const { arbeidsInntektInformasjon = {}, aarMaaned } = enkeltMaaned;
-    const { inntektListe = [] } = arbeidsInntektInformasjon;
+    const { arbeidsInntektInformasjon, aarMaaned } = enkeltMaaned;
+    if (!arbeidsInntektInformasjon) return [];
+    const { inntektListe } = arbeidsInntektInformasjon;
+    if (!inntektListe) return [];
 
     const inntekterForEnkeltMaaned = inntektListe.reduce((samlingAvInntekterDenneMaaneden, enkelInntekt) => {
       const { opplysningspliktigID, beloep } = enkelInntekt;
@@ -110,8 +113,8 @@ export const InntektSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
   inntekt => {
     if (!inntekt) return [];
-
-    const { arbeidsInntektMaanedListe = [] } = inntekt;
+    const { arbeidsInntektMaanedListe } = inntekt;
+    if (!arbeidsInntektMaanedListe) return [];
 
     const flatInntektsListe = lagFlatInntektListe(arbeidsInntektMaanedListe);
     return summerInntektsTyperFraSammeOpplysningspliktig(flatInntektsListe);
@@ -143,15 +146,16 @@ export const MedlemskapSelector = createSelector(
     const UAVKLART_MEDLEMSKAP = 'UAVK';
     const AVVIST_MEDLEMSKAP = 'AVST';
 
-    const { medlemsperiode = [] } = medlemskap;
+    const { medlemsperiode } = medlemskap;
+    if (!medlemsperiode) return null;
+
     return {
-      perioderMed: medlemsperiode.filter(periode => periode.type.kode === PERIODE_MED_MEDLEMSKAP && periode.status.kode === GYLDIG_MEDLEMSKAP),
-      perioderUten: medlemsperiode.filter(periode => periode.type.kode === PERIODE_UTEN_MEDLEMSKAP && periode.status.kode !== AVVIST_MEDLEMSKAP),
-      perioderUavklart: medlemsperiode.filter(periode => periode.status.kode === UAVKLART_MEDLEMSKAP),
+      perioderMed: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.type) === PERIODE_MED_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) === GYLDIG_MEDLEMSKAP),
+      perioderUten: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.type) === PERIODE_UTEN_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) !== AVVIST_MEDLEMSKAP),
+      perioderUavklart: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.status) === UAVKLART_MEDLEMSKAP),
     };
   }
 );
-
 
 /**
  * Arbeidsforhold refererer til organisasjon med arbeidsforholdID. For at komponenten skal kunne vise
@@ -163,7 +167,8 @@ export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => OrganisasjonerSelector(state),
   state => InntektSelector(state),
-  (arbeidsforhold = [], organisasjoner = [], inntekt = []) => (arbeidsforhold.map(item => {
+  (arbeidsforhold, organisasjoner, inntekt) => (arbeidsforhold.map(item => {
+    if (!arbeidsforhold || !organisasjoner || !inntekt) return [];
     const arbeid = { ...item };
     arbeid.arbeidsgiver = organisasjoner.find(org => org.orgnr === arbeid.arbeidsgiverID) || {};
     arbeid.inntekt = inntekt.filter(linje => linje.opplysningspliktigID === arbeid.arbeidsgiverID) || [];

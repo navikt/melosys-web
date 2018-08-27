@@ -25,8 +25,8 @@ export const ArbeidUtlandSelector = createSelector(
 export const ArbeidUtlandAdresseSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidUtland : {}),
   arbeidUtland => {
-    const { adresse = {} } = arbeidUtland;
-    return adresse;
+    const { adresse } = arbeidUtland;
+    return adresse || {};
   }
 );
 
@@ -52,7 +52,10 @@ export const OppholdUtlandSelector = createSelector(
 
 export const OppholdUtlandPeriodeSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.oppholdUtland : {}),
-  (soknad = {}) => soknad.oppholdsPeriode || {}
+  oppholdUtland => {
+    const { oppholdsPeriode } = oppholdUtland;
+    return oppholdsPeriode || {};
+  }
 );
 
 export const BostedSelector = createSelector(
@@ -63,8 +66,8 @@ export const BostedSelector = createSelector(
 export const BostedAdresseSelector = createSelector(
   state => BostedSelector(state),
   bosted => {
-    const { oppgittAdresse = {} } = bosted;
-    return oppgittAdresse;
+    const { oppgittAdresse } = bosted;
+    return oppgittAdresse || {};
   }
 );
 

@@ -27,10 +27,10 @@ class Sok extends Component {
   }
 
   render() {
-    const { behandlingsoppgaver = [], children } = this.props;
+    const { behandlingsoppgaver, children } = this.props;
     const { fnr } = this.props.match.params;
 
-    if (!Array.isArray(behandlingsoppgaver)) { return null; }
+    if (!behandlingsoppgaver) return null;
 
     return (
       <div className="sok">
