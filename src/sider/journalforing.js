@@ -95,7 +95,7 @@ class Journalforing extends Component {
       journalforing: { dokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, avsenderNavn, dokumentTittel, vedleggsTitler = [],
+      brukerID, avsenderID, avsenderNavn, dokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
     const { ID: dokumentID } = dokument;

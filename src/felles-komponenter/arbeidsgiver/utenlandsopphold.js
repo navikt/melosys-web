@@ -11,6 +11,8 @@ import Tabell from '../tabell/tabell';
  * @param permisjoner Array med timelonnet.
  */
 const Utenlandsopphold = ({ utenlandsopphold }) => {
+  if (!utenlandsopphold) return null;
+
   const utenlandsoppholdArrayed = utenlandsopphold.map(linje => (
     // Tabell-komponenten er generisk og trenger at hver linje
     // kommer inn som en ren array og som rendres gjennomsiktig ut i GUI.
