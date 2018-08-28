@@ -4,7 +4,7 @@ import { Field } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { landTekstFormat } from './index';
+import { kodeTilObjekt, landTekstFormat } from './index';
 
 import './landvelger.css';
 
@@ -16,8 +16,8 @@ class EnkeltLand extends Component {
 
   componentDidMount = () => {
     const { value } = this.props.input;
-    const { finnEttLand } = this;
-    const landKodeObjekt = value && finnEttLand(value);
+    const { landkoder } = this.props;
+    const landKodeObjekt = value && kodeTilObjekt(value, landkoder);
     const inputVerdi = landKodeObjekt ? landTekstFormat(landKodeObjekt) : '';
     this.setState({ inputVerdi });
   }
