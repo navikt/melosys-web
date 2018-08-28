@@ -171,7 +171,6 @@ class Saksbehandling extends Component {
       return null;
     }
 
-
     return (
       <div className="saksbehandling">
         <Nav.Container fluid>
