@@ -1,5 +1,6 @@
 /* eslint import/prefer-default-export:"off" */
 import PT from 'prop-types';
+import { Kodeverk } from './kodeverk';
 
 const GeneriskAdressePropType = PT.shape({
   gateadresse: PT.shape({
@@ -10,7 +11,7 @@ const GeneriskAdressePropType = PT.shape({
   }),
   postnr: PT.string,
   poststed: PT.string,
-  land: PT.string,
+  land: PT.oneOfType([Kodeverk, PT.string]),
 });
 
 const BostedsAdressePropType = GeneriskAdressePropType;
