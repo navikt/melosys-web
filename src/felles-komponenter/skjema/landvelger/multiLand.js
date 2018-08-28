@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import { FieldArray } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 
 import { kodeTilObjekt, landTekstFormat } from './';
+import { kodeverkObjektTilKode } from '../../../utils/kodeverk';
+
+import * as MPT from '../../../proptypes';
 
 import './landvelger.css';
 
@@ -15,7 +19,7 @@ const MultiLandEnkelt = ({ landObjekt, slettLandHandler }) => (
     <Nav.Knapp
       mini
       className="landliste__linje__knapp"
-      onClick={e => slettLandHandler(e, landObjekt.kode)}
+      onClick={e => slettLandHandler(e, kodeverkObjektTilKode(landObjekt))}
     >Fjern
     </Nav.Knapp>
   </div>
@@ -27,34 +31,124 @@ MultiLandEnkelt.propTypes = {
 };
 
 class MultiLand extends Component {
-  dynamiskTittel = () => (this.props.valgteLand.length > 0 ? 'Legg til evt flere land:' : 'Legg til første land:');
+  state = {
+    inputVerdi: '',
+    error: null,
+  }
+
+  reduxLeggTilLand = landKode => {
+    const { fields } = this.props;
+    const valgteLand = fields.getAll() || [];
+
+    if (!landKode) throw new Error('landKode må inneholde verdi.');
+
+    if (!valgteLand.includes(landKode)) {
+      fields.push(landKode);
+    }
+  };
+
+  reduxSlettEttLand = landKode => {
+    const index = this.props.fields.getAll().findIndex(item => item === landKode);
+    return (index > -1 && this.props.fields.remove(index));
+  };
+
+  finnLand = inputVerdi => {
+    const { landkoder } = this.props;
+    return landkoder.filter(land => (
+      landTekstFormat(land)
+        .toLowerCase()
+        .includes(inputVerdi.toLowerCase())
+    ));
+  }
+
+  finnEttLand = inputVerdi => {
+    const landListe = this.finnLand(inputVerdi);
+    return landListe.length === 1 ? landListe[0] : false;
+  }
+
+  tomFeilmelding = () => {
+    this.setState({ error: null });
+  }
+
+  dynamiskTittel = () => {
+    const { fields } = this.props;
+    const count = fields ? fields.length : 0;
+    return (count > 0 ? 'Legg til evt flere land:' : 'Legg til første land:');
+  }
+
+  /** ----------------------------------------------------------------------
+   *                           EVENT HANDLERS
+   * -----------------------------------------------------------------------
+   */
+
+  slettLandHandler = (e, landKode) => {
+    e.preventDefault();
+    this.reduxSlettEttLand(landKode);
+  }
+
+  inputTastNedHandler = e => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      this.fokusUtHandler();
+    }
+  }
+
+  fokusUtHandler = () => {
+    const { inputVerdi } = this.state;
+
+    if (!inputVerdi) {
+      this.tomFeilmelding();
+      return;
+    }
+
+    const landKodeObjekt = this.finnEttLand(inputVerdi);
+    if (landKodeObjekt) {
+      this.reduxLeggTilLand(landKodeObjekt.kode);
+      this.setState({ inputVerdi: '', error: null });
+    } else {
+      this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
+    }
+  }
+
+  inputEndringHandler = e => {
+    const inputVerdi = e.target.value;
+    this.setState({ inputVerdi });
+  }
 
   render() {
     const {
-      alleLand,
-      feil,
       fokusUtHandler,
-      inputVerdi,
       inputEndringHandler,
       inputTastNedHandler,
       label,
-      valgteLand,
       slettLandHandler,
+    } = this;
+
+    const {
+      fields,
+      meta,
+      landkoder,
     } = this.props;
 
-    const dynamiskLabel = label || this.dynamiskTittel();
+    const { inputVerdi } = this.state;
+    const { error: skjemaError = '' } = meta;
+    const { error: internLandError = '' } = this.state;
+
+    const feilObjekt = skjemaError || internLandError ? { feilmelding: `${skjemaError} ${internLandError}` } : null;
+    const valgteLand = fields.getAll() || [];
+    const dynamiskFeltTittel = label || this.dynamiskTittel();
 
     return (
       <div className="landliste">
         {
-          valgteLand.map(land => <MultiLandEnkelt key={land} slettLandHandler={slettLandHandler} landObjekt={kodeTilObjekt(land, alleLand)} />)
+          valgteLand.map(land => <MultiLandEnkelt key={land} slettLandHandler={slettLandHandler} landObjekt={kodeTilObjekt(land, landkoder)} />)
         }
         <div className="landliste__leggtil">
           <Nav.Input
             list="alleLand"
-            label={dynamiskLabel}
+            label={dynamiskFeltTittel}
             bredde="XL"
-            feil={feil}
+            feil={feilObjekt}
             className="landliste__linje__input"
             value={inputVerdi}
             onBlur={fokusUtHandler}
@@ -69,22 +163,24 @@ class MultiLand extends Component {
 }
 
 MultiLand.propTypes = {
-  fokusUtHandler: PT.func.isRequired,
-  inputEndringHandler: PT.func.isRequired,
-  inputTastNedHandler: PT.func.isRequired,
-  slettLandHandler: PT.func.isRequired,
-  alleLand: PT.array.isRequired,
-  inputVerdi: PT.string.isRequired,
-  valgteLand: PT.array,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string,
   feil: PT.object,
+  fields: PT.object.isRequired,
+  meta: PT.object.isRequired,
+  disabled: PT.bool,
 };
 
 MultiLand.defaultProps = {
   label: '',
   feil: {},
-  valgteLand: [],
-  inputVerdi: '',
+  disabled: false,
 };
 
-export default MultiLand;
+const MultiLandWrapper = props => (<FieldArray name={props.feltNavn} component={MultiLand} props={props} />);
+
+MultiLandWrapper.propTypes = {
+  feltNavn: PT.string.isRequired,
+};
+
+export default MultiLandWrapper;
