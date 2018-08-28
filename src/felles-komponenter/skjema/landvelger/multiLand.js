@@ -52,7 +52,7 @@ class MultiLand extends Component {
     return (index > -1 && this.props.fields.remove(index));
   };
 
-  finnLand = inputVerdi => {
+  finnFlereLand = inputVerdi => {
     const { landkoder } = this.props;
     return landkoder.filter(land => (
       landTekstFormat(land)
@@ -62,7 +62,7 @@ class MultiLand extends Component {
   }
 
   finnEttLand = inputVerdi => {
-    const landListe = this.finnLand(inputVerdi);
+    const landListe = this.finnFlereLand(inputVerdi);
     return landListe.length === 1 ? landListe[0] : false;
   }
 

@@ -18,7 +18,8 @@ class EnkeltLand extends Component {
     const { value } = this.props.input;
     const { finnEttLand } = this;
     const landKodeObjekt = value && finnEttLand(value);
-    this.setState({ inputVerdi: landTekstFormat(landKodeObjekt) });
+    const inputVerdi = landKodeObjekt ? landTekstFormat(landKodeObjekt) : '';
+    this.setState({ inputVerdi });
   }
 
   reduxOppdaterLand = landKode => {
@@ -34,7 +35,7 @@ class EnkeltLand extends Component {
   inputTastNedHandler = e => {
     if (e.keyCode === 13) {
       e.preventDefault();
-      this.enkeltLandFokusUtHandler();
+      this.fokusUtHandler();
     }
   }
 
