@@ -44,8 +44,9 @@ class EnkeltLand extends Component {
    * @param inputVerdi
    * @returns {*}
    */
-  finnLand = inputVerdi => {
+  finnFlereLand = inputVerdi => {
     const { landkoder } = this.props;
+    if (!inputVerdi) return [];
     return landkoder.filter(land => (
       landTekstFormat(land)
         .toLowerCase()
@@ -54,7 +55,7 @@ class EnkeltLand extends Component {
   }
 
   finnEttLand = inputVerdi => {
-    const landListe = this.finnLand(inputVerdi);
+    const landListe = this.finnFlereLand(inputVerdi);
     return landListe.length === 1 ? landListe[0] : false;
   }
 
