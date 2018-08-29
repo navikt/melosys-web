@@ -1,11 +1,14 @@
 import React from 'react';
 import PT from 'prop-types';
+import { Portal } from 'react-portal';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import EnkeltDato from './datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm } from '../utils/kodeverk';
+import Dialogboks from './dialogboks';
+
 import './sideOppsummering.css';
 
 function SideOppsummering(props) {
@@ -63,6 +66,12 @@ function SideOppsummering(props) {
         </Nav.Row>
         {/* SLUTT BEHANDLINGSSTATUS */}
       </Nav.Panel>
+      <Portal>
+        <Dialogboks
+          tittel="Oppfriske saksopplysninger"
+          tekst="Dette kan ta noen minutter og saken blir låst i mellomtiden. Du vil bli sendt tilbake til benken hvor du kan behandle en annen sak i mellomtiden."
+        />
+      </Portal>
     </section>
   );
 }
