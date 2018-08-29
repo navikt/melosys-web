@@ -1,13 +1,11 @@
 import React from 'react';
 import PT from 'prop-types';
-import { Portal } from 'react-portal';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import EnkeltDato from './datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm } from '../utils/kodeverk';
-import Dialogboks from './dialogboks';
 
 import './sideOppsummering.css';
 
@@ -24,7 +22,7 @@ function SideOppsummering(props) {
 
   const {
     lagreOgLukkHandle,
-    avslaSoknadHandle,
+    oppfriskSaksopplysningerHandle,
   } = props;
 
   return (
@@ -37,7 +35,7 @@ function SideOppsummering(props) {
               <Nav.EkspanderbartpanelBase ariaTittel="Behandlingsmeny" className="oppsummering__meny" heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}>
                 <div className="meny__innhold">
                   <Nav.Knapp type="hoved" mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp>
-                  <Nav.Knapp type="hoved" mini className="innhold__element" onClick={avslaSoknadHandle}>Avslå søknad</Nav.Knapp>
+                  <Nav.Knapp type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppfrisk saksopplysninger</Nav.Knapp>
                 </div>
               </Nav.EkspanderbartpanelBase>
             </div>
@@ -66,19 +64,13 @@ function SideOppsummering(props) {
         </Nav.Row>
         {/* SLUTT BEHANDLINGSSTATUS */}
       </Nav.Panel>
-      <Portal>
-        <Dialogboks
-          tittel="Oppfriske saksopplysninger"
-          tekst="Dette kan ta noen minutter og saken blir låst i mellomtiden. Du vil bli sendt tilbake til benken hvor du kan behandle en annen sak i mellomtiden."
-        />
-      </Portal>
     </section>
   );
 }
 
 SideOppsummering.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
-  avslaSoknadHandle: PT.func.isRequired,
+  oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
 };
 

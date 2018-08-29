@@ -51,6 +51,7 @@ import {
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import { formSelectors } from '../ducks/form/';
+import Dialogboks from '../felles-komponenter/dialogboks';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
@@ -106,6 +107,7 @@ class Saksbehandling extends Component {
 
   state = {
     gyldigePaneler: {},
+    visOppfriskDialog: false,
   };
 
   componentDidMount() {
@@ -144,6 +146,18 @@ class Saksbehandling extends Component {
 
     this.props.oppdaterSoknad(this.props.soknadForm.values);
     this.props.oppdaterFaktaavklaring(this.props.soknadForm.values);
+  }
+
+  oppfriskSaksopplysninger = () => {
+    this.visOppfriskBekreftelse();
+  }
+
+  visOppfriskBekreftelse = () => {
+    this.setState({ visOppfriskDialog: true });
+  }
+
+  skjulOppfriskBekreftelse = () => {
+    this.setState({ visOppfriskDialog: false });
   }
 
   /* eslint-disable */
@@ -199,12 +213,23 @@ class Saksbehandling extends Component {
               </form>
             </Nav.Column>
             <Nav.Column xs="5">
-              {oppsummering && <SideOppsummering oppsummering={oppsummering} avslaSoknadHandle={this.avslaSoknad} lagreOgLukkHandle={this.lagreOgLukk} />}
+              <SideOppsummering
+                oppsummering={oppsummering}
+                oppfriskSaksopplysningerHandle={this.oppfriskSaksopplysninger}
+                lagreOgLukkHandle={this.lagreOgLukk}
+              />
               <SideDialog />
               <SideKommentarer />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
+        <Dialogboks
+          tittel="Oppfriske saksopplysninger"
+          tekst="Dette kan ta noen minutter og saken blir låst i mellomtiden. Du vil bli sendt tilbake til benken hvor du kan behandle en annen sak i mellomtiden."
+          bekreft={() => {}}
+          avbryt={this.skjulOppfriskBekreftelse}
+          synlig={this.state.visOppfriskDialog}
+        />
       </div>
     );
   }

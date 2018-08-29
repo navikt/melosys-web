@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import { Portal } from 'react-portal';
 
 import * as Nav from '../../utils/navFrontend';
 
@@ -8,28 +9,32 @@ import './dialogboks.css';
 /* eslint react/prefer-stateless-function:off */
 class Dialogboks extends Component {
   render () {
-    const { tittel, tekst } = this.props;
+    const { tittel, tekst, synlig } = this.props;
 
-    return (
-      <div className="dialogboks">
-        <div className="dialogboks__bakgrunn">
-          <Nav.Panel className="dialogboks__container">
-            <Nav.Systemtittel>{tittel}</Nav.Systemtittel>
-            <Nav.Normaltekst>{tekst}</Nav.Normaltekst>
-            <div className="dialogboks__container__knapperad">
-              <Nav.Hovedknapp>OK</Nav.Hovedknapp>
-              <Nav.Knapp>Avbryt</Nav.Knapp>
-            </div>
-          </Nav.Panel>
+    return synlig ? (
+      <Portal>
+        <div className="dialogboks">
+          <div className="dialogboks__bakgrunn">
+            <Nav.Panel className="dialogboks__container">
+              <Nav.Systemtittel>{tittel}</Nav.Systemtittel>
+              <Nav.Normaltekst>{tekst}</Nav.Normaltekst>
+              <div className="dialogboks__container__knapperad">
+                <Nav.Hovedknapp>OK</Nav.Hovedknapp>
+                <Nav.Knapp onClick={this.props.avbryt}>Avbryt</Nav.Knapp>
+              </div>
+            </Nav.Panel>
+          </div>
         </div>
-      </div>
-    );
+      </Portal>
+    ) : null;
   }
 }
 
 Dialogboks.propTypes = {
   tittel: PT.string.isRequired,
   tekst: PT.string.isRequired,
+  synlig: PT.bool.isRequired,
+  avbryt: PT.func.isRequired,
 };
 
 Dialogboks.defaultProps = {

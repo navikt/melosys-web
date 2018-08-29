@@ -54,7 +54,7 @@ class Behandling extends Component {
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
                 {behandlingsTyper.map(type =>
-                  (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} feltNavn={kodeverkObjektTilKode(type)} />))
+                  (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} disabled feltNavn={kodeverkObjektTilKode(type)} />))
                 }
               </Nav.Fieldset>
             </Nav.Column>
