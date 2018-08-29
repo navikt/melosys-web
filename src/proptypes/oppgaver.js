@@ -8,8 +8,10 @@ const SakEnkeltLinjePropType = PT.shape({
   saksnummer: PT.string,
   sakstype: MPT.Kodeverk,
   behandling: PT.shape({
-    status: MPT.Kodeverk,
-    type: MPT.Kodeverk,
+    behandlingID: PT.string,
+    behandlingType: MPT.Kodeverk,
+    behandlingStatus: MPT.Kodeverk,
+    endretDato: PT.string,
   }),
   aktivTil: PT.string,
   soknadsperiode: MPT.Periode,
