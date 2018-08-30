@@ -5,6 +5,21 @@
   flex: 1;
 }
 
+.sakEnkeltLinje__stengt {
+  background-color: #e9e7e7;
+  .panelheader__ikon {
+    animation: loading 3s linear infinite;
+    @keyframes loading {
+      0% {
+        transform: rotate(0);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  }
+}
+
 .sakEnkeltLinje__link:link,
 .sakEnkeltLinje__link:visited,
 .sakEnkeltLinje__link:hover {
