@@ -7,7 +7,6 @@ import * as MPT from '../../proptypes/';
 
 import SakEnkeltLinje from './oppgaveliste/sakEnkeltLinje';
 import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
-import { kodeverkObjektTilKode } from '../../utils/kodeverk';
 
 import './mineoppgaver.css';
 import withErrorHandling from '../../hoc/withErrorHandling';
@@ -20,10 +19,9 @@ const uuid = require('uuid/v4');
  * @param oppgave {object} Objektet for den aktuelle oppgaven.
  */
 const OppgaveKomponentSwitch = ({ oppgave }) => {
-  const { oppgavetype } = oppgave;
-  const kode = kodeverkObjektTilKode(oppgavetype);
+  const { oppgavetypeKode } = oppgave;
 
-  switch (kode) {
+  switch (oppgavetypeKode) {
     case 'BEH_SAK': {
       return (
         <SakEnkeltLinje sak={oppgave} />
