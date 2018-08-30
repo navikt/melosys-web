@@ -27,6 +27,8 @@ const SakEnkeltLinje = ({ sak }) => {
   const tittel = `${kodeverkObjektTilTerm(sakstype)} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
 
+  const landString = land ? land.join(', ') : '(ukjent)';
+
   return (
     <Link to={link} className="sakEnkeltLinje__link">
       <Nav.Panel className="sakEnkeltLinje">
@@ -48,7 +50,7 @@ const SakEnkeltLinje = ({ sak }) => {
                   <dt className="sakEnkeltLinje__meta__term">Søknadsperiode: </dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Land:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{kodeverkObjektTilTerm(land) || '(ukjent)'}</dd>
+                  <dd className="sakEnkeltLinje__meta__detalj">{landString}</dd>
                 </dl>
               </Nav.Column>
             </Nav.Row>
