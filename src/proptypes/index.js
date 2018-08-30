@@ -20,7 +20,7 @@ import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger }
 import { Opphold } from './opphold';
 import { Sysselsetting } from './sysselsetting';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
-import { SakEnkeltLinje, JournalForingEnkeltLinje, MineOppgaver, OppgaveSok, OppgaverSok } from './oppgaver';
+import { SakEnkeltLinje, MineOppgaver, OppgaveSok, OppgaverSok } from './oppgaver';
 import { Journalforing } from './journalforing';
 
 export {
@@ -39,7 +39,6 @@ export {
   Inntekt,
   InntektEnkeltLinje,
   InntektListe,
-  JournalForingEnkeltLinje,
   Kodeverk,
   Lovvalgsbestemmelse,
   Lovvalgsbestemmelser,
