@@ -16,8 +16,3 @@ export const JournalforingDokument = createSelector(
   state => state.journalforing.data || {},
   journalforing => journalforing.dokument || { tittel: '', vedleggstitler: [] }
 );
-
-export const JournalforingAvsenderID = createSelector(
-  state => state.journalforing.data || {},
-  journalforing => journalforing.avsenderID || ''
-);
