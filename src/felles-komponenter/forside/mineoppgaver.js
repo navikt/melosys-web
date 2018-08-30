@@ -66,7 +66,7 @@ const MineOppgaver = props => {
 
 MineOppgaver.propTypes = {
   hentMineSaker: PT.func.isRequired,
-  minesaker: PT.arrayOf(MPT.MineOppgaver),
+  minesaker: MPT.MineOppgaver,
 };
 
 MineOppgaver.defaultProps = {
