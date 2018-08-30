@@ -3,13 +3,13 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import * as Oppgaver from '../../ducks/oppgaver';
-
+import * as MPT from '../../proptypes/';
 import SakEnkeltLinje from './oppgaveliste/sakEnkeltLinje';
 import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
-import { kodeverkObjektTilKode } from '../../utils/kodeverk';
 
 import './mineoppgaver.css';
 import withErrorHandling from '../../hoc/withErrorHandling';
+import { KodeverkSelectors } from '../../ducks/kodeverk';
 
 const uuid = require('uuid/v4');
 
@@ -19,10 +19,9 @@ const uuid = require('uuid/v4');
  * @param oppgave {object} Objektet for den aktuelle oppgaven.
  */
 const OppgaveKomponentSwitch = ({ oppgave }) => {
-  const { oppgavetype } = oppgave;
-  const kode = kodeverkObjektTilKode(oppgavetype);
+  const { oppgavetypeKode } = oppgave;
 
-  switch (kode) {
+  switch (oppgavetypeKode) {
     case 'BEH_SAK': {
       return (
         <SakEnkeltLinje sak={oppgave} />
@@ -40,7 +39,7 @@ const OppgaveKomponentSwitch = ({ oppgave }) => {
 };
 
 OppgaveKomponentSwitch.propTypes = {
-  oppgave: PT.object,
+  oppgave: MPT.SakEnkeltLinje,
 };
 
 OppgaveKomponentSwitch.defaultProps = {
@@ -51,13 +50,19 @@ OppgaveKomponentSwitch.defaultProps = {
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
 const MineOppgaver = props => {
-  const { minesaker } = props;
+  const { minesaker, sakstypeKoder } = props;
   const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre.';
-
   return (
     <div className="minesaker">
       <h1>Mine Oppgaver ({minesaker.length})</h1>
-      {minesaker.map(sak => <OppgaveKomponentSwitch key={uuid()} oppgave={sak} />)}
+      {minesaker.map(sak => {
+        const sakstype = sakstypeKoder.find(item => item.kode === sak.sakstypeKode);
+        const oppgave = {
+          sakstype,
+          ...sak,
+        };
+        return (<OppgaveKomponentSwitch key={uuid()} oppgave={oppgave} />);
+      })}
       {minesaker.length === 0 && ingenSakerMelding}
     </div>
   );
@@ -65,7 +70,8 @@ const MineOppgaver = props => {
 
 MineOppgaver.propTypes = {
   hentMineSaker: PT.func.isRequired,
-  minesaker: PT.array,
+  minesaker: MPT.MineOppgaver,
+  sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 MineOppgaver.defaultProps = {
@@ -74,6 +80,7 @@ MineOppgaver.defaultProps = {
 
 const mapStateToProps = state => ({
   minesaker: Oppgaver.oppgaverSelectors.MineSakerSelector(state),
+  sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

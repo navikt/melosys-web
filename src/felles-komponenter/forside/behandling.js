@@ -33,7 +33,7 @@ class Behandling extends Component {
       this.props.history.push(redirectURL);
       return true;
     });
-  }
+  };
 
   render() {
     const { saksTyper, behandlingsTyper } = this.props;
@@ -45,17 +45,19 @@ class Behandling extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Fieldset legend="Sakstype">
-                {saksTyper.map(type =>
-                  (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} feltNavn={kodeverkObjektTilKode(type)} />))
-                }
+                {saksTyper.map(type => {
+                  const isDisabled = kodeverkObjektTilKode(type) !== 'EU_EOS';
+                  return (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} disabled={isDisabled} feltNavn={kodeverkObjektTilKode(type)} />);
+                })}
               </Nav.Fieldset>
             </Nav.Column>
 
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
-                {behandlingsTyper.map(type =>
-                  (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} disabled feltNavn={kodeverkObjektTilKode(type)} />))
-                }
+                {behandlingsTyper.map(type => {
+                  const isDisabled = kodeverkObjektTilKode(type) !== 'SKND';
+                  return (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} disabled={isDisabled} feltNavn={kodeverkObjektTilKode(type)} />);
+                })}
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
