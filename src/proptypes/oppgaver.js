@@ -16,33 +16,15 @@ const SakEnkeltLinjePropType = PT.shape({
   aktivTil: PT.string,
   soknadsperiode: MPT.Periode,
   land: PT.array,
-});
-
-const JournalForingEnkeltLinjePropType = PT.shape({
-  oppgaveID: PT.string,
-  oppgavetype: MPT.Kodeverk,
   journalpostID: PT.string,
-  aktivTil: PT.string,
+  prioritet: PT.string,
+  versjon: PT.number,
+  ansvarligID: PT.string,
 });
 
-const MineOppgaverPropType = PT.arrayOf(PT.oneOf([JournalForingEnkeltLinjePropType, SakEnkeltLinjePropType]));
-
-const OppgaveSokPropType = PT.shape({
-  fnr: PT.string,
-  kjoenn: PT.string,
-  registrertDato: PT.string,
-  saksnummer: PT.string,
-  sammensattNavn: PT.string,
-  status: PT.string,
-  type: PT.string,
-});
-
-const OppgaverSokPropType = PT.arrayOf(OppgaveSokPropType);
+const MineOppgaverPropType = PT.arrayOf(SakEnkeltLinjePropType);
 
 export {
   SakEnkeltLinjePropType as SakEnkeltLinje,
-  JournalForingEnkeltLinjePropType as JournalForingEnkeltLinje,
   MineOppgaverPropType as MineOppgaver,
-  OppgaveSokPropType as OppgaveSok,
-  OppgaverSokPropType as OppgaverSok,
 };
