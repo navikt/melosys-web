@@ -3,6 +3,7 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import * as Oppgaver from '../../ducks/oppgaver';
+import * as MPT from '../../proptypes/';
 
 import SakEnkeltLinje from './oppgaveliste/sakEnkeltLinje';
 import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
@@ -40,7 +41,7 @@ const OppgaveKomponentSwitch = ({ oppgave }) => {
 };
 
 OppgaveKomponentSwitch.propTypes = {
-  oppgave: PT.object,
+  oppgave: MPT.SakEnkeltLinje,
 };
 
 OppgaveKomponentSwitch.defaultProps = {
@@ -65,7 +66,7 @@ const MineOppgaver = props => {
 
 MineOppgaver.propTypes = {
   hentMineSaker: PT.func.isRequired,
-  minesaker: PT.array,
+  minesaker: PT.arrayOf(MPT.MineOppgaver),
 };
 
 MineOppgaver.defaultProps = {
