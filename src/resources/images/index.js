@@ -13,6 +13,7 @@ import Arbeidsgiver from './ikon-arbeidsgiver.svg';
 import Arbeidsforhold from './ikon-arbeidsforhold.svg';
 import Medlemskap from './ikon-medlemsskap.svg';
 import Inntekt from './ikon-inntekt.svg';
+import Spinner from './ikon-spinner.svg';
 
 export { Ubehandlet };
 export { Ferdig };
@@ -29,3 +30,4 @@ export { Arbeidsforhold };
 export { Medlemskap };
 export { Inntekt };
 export { IkonSak };
+export { Spinner };
