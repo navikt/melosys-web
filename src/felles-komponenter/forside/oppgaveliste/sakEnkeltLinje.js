@@ -19,7 +19,7 @@ import './sakEnkeltLinje.css';
  */
 const SakEnkeltLinje = ({ sak }) => {
   const {
-    sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode = {},
+    sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode = {}, land,
   } = sak;
 
   const { behandlingStatus } = behandling;
@@ -48,7 +48,7 @@ const SakEnkeltLinje = ({ sak }) => {
                   <dt className="sakEnkeltLinje__meta__term">Søknadsperiode: </dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Land:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj" />
+                  <dd className="sakEnkeltLinje__meta__detalj">{kodeverkObjektTilTerm(land) || '(ukjent)'}</dd>
                 </dl>
               </Nav.Column>
             </Nav.Row>
