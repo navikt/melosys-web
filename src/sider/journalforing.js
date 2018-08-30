@@ -173,6 +173,8 @@ class Journalforing extends Component {
   hentOgVisAvsender = value => {
     const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
 
+    if (!value) { return; }
+
     if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
       return sokOrgnr(value).then(({ navn = '' }) => settFeltInnhold('avsenderNavn', navn));
     }
