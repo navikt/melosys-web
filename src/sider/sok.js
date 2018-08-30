@@ -14,7 +14,7 @@ import {
   oppgaverOperations,
   oppgaverSelectors,
 } from '../ducks/oppgaver';
-
+import { KodeverkSelectors } from '../ducks/kodeverk';
 import './sok.css';
 
 const uuid = require('uuid/v4');
@@ -27,7 +27,7 @@ class Sok extends Component {
   }
 
   render() {
-    const { behandlingsoppgaver, children } = this.props;
+    const { sakstypeKoder, behandlingsoppgaver, children } = this.props;
     const { fnr } = this.props.match.params;
 
     if (!behandlingsoppgaver) return null;
@@ -40,7 +40,17 @@ class Sok extends Component {
             <Nav.Column xs="7">
               <section className="sokresultat">
                 <h1>Fant {behandlingsoppgaver.length} treff etter søk på &quot;{fnr}&quot;</h1>
-                { behandlingsoppgaver.map(oppgave => <SakEnkeltLinje key={uuid()} sak={oppgave} />)}
+                { behandlingsoppgaver.map(oppgave => {
+                  if (oppgave.oppgavetypeKode === 'BEH_SAK') {
+                    const sakstype = sakstypeKoder.find(item => item.kode === oppgave.sakstypeKode);
+                    const sak = {
+                      sakstype,
+                      ...oppgave,
+                    };
+                    return (<SakEnkeltLinje key={uuid()} sak={sak} />);
+                  }
+                  return null;
+                })}
               </section>
             </Nav.Column>
             <Nav.Column xs="5">
@@ -57,7 +67,8 @@ class Sok extends Component {
 }
 
 Sok.propTypes = {
-  behandlingsoppgaver: MPT.OppgaverSok,
+  sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  behandlingsoppgaver: PT.array, // TODO MPT.OppgaverSok, @Terje FIXME
   hentBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
@@ -71,6 +82,7 @@ Sok.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
   behandlingsoppgaver: oppgaverSelectors.SokOppgaveSelector(state),
 });
 
