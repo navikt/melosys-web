@@ -137,7 +137,7 @@ class Journalforing extends Component {
     }
 
     tilordneSak(vasketJournalforing).then(response => {
-      if (response.length === 0) {
+      if (response.ok) {
         history.push('/');
       }
     });
@@ -215,7 +215,7 @@ class Journalforing extends Component {
     const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
 
     opprettNySak(journalforingData).then(response => {
-      if (response.length === 0) {
+      if (response.ok) {
         history.push('/');
       }
     });
