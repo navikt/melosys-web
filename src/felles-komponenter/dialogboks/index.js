@@ -45,4 +45,6 @@ Dialogboks.defaultProps = {
 
 };
 
+Nav.Modal.setAppElement('#root');
+
 export default Dialogboks;
