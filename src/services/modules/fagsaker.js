@@ -15,8 +15,14 @@ function opprett(fnr) {
   return getAsJson(URI_OPPRETTSAK);
 }
 
+function oppfrisk(snr) {
+  const URI_OPPFRISKSAK = `${API_BASE_URL}fagsaker/oppfrisk/${snr}`;
+  return getAsJson(URI_OPPFRISKSAK);
+}
+
 export {
   hent,
   sok,
   opprett,
+  oppfrisk,
 };

@@ -9,7 +9,7 @@ import './dialogboks.css';
 class Dialogboks extends Component {
   render () {
     const {
-      tittel, tekst, synlig, avbryt,
+      tittel, tekst, synlig, avbryt, bekreft,
     } = this.props;
 
     return (
@@ -24,7 +24,7 @@ class Dialogboks extends Component {
           <Nav.Systemtittel>{tittel}</Nav.Systemtittel>
           <Nav.Normaltekst>{tekst}</Nav.Normaltekst>
           <div className="dialogboks__container__knapperad">
-            <Nav.Hovedknapp>OK</Nav.Hovedknapp>
+            <Nav.Hovedknapp onClick={bekreft}>OK</Nav.Hovedknapp>
             <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
           </div>
         </div>
@@ -37,6 +37,7 @@ Dialogboks.propTypes = {
   tittel: PT.string.isRequired,
   tekst: PT.string.isRequired,
   synlig: PT.bool.isRequired,
+  bekreft: PT.func.isRequired,
   avbryt: PT.func.isRequired,
 };
 

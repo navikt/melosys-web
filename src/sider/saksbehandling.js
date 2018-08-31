@@ -59,12 +59,14 @@ import '../felles-komponenter/skjema/skjema.css';
 class Saksbehandling extends Component {
   static propTypes = {
     hentFagsaker: PT.func.isRequired,
+    oppfriskFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     sendSoknad: PT.func.isRequired,
     hentFaktaavklaring: PT.func.isRequired,
     sendFaktaavklaring: PT.func.isRequired,
     hentVurdering: PT.func.isRequired,
     match: PT.object.isRequired,
+    history: PT.object.isRequired,
     person: MPT.Person,
     medlemskap: MPT.Medlemskap,
     arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
@@ -149,7 +151,14 @@ class Saksbehandling extends Component {
   }
 
   oppfriskSaksopplysninger = () => {
-    this.visOppfriskBekreftelse();
+    const { saksnummer } = this.props.oppsummering;
+
+    this.props.oppfriskFagsaker(saksnummer).then(response => {
+      if (response.ok) {
+        this.skjulOppfriskBekreftelse();
+        this.props.history.push('/');
+      }
+    });
   }
 
   visOppfriskBekreftelse = () => {
@@ -215,7 +224,7 @@ class Saksbehandling extends Component {
             <Nav.Column xs="5">
               <SideOppsummering
                 oppsummering={oppsummering}
-                oppfriskSaksopplysningerHandle={this.oppfriskSaksopplysninger}
+                oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
               />
               <SideDialog />
@@ -226,7 +235,7 @@ class Saksbehandling extends Component {
         <Dialogboks
           tittel="Oppfriske saksopplysninger"
           tekst="Dette kan ta noen minutter og saken blir låst i mellomtiden. Du vil bli sendt tilbake til benken hvor du kan behandle en annen sak i mellomtiden."
-          bekreft={() => {}}
+          bekreft={this.oppfriskSaksopplysninger}
           avbryt={this.skjulOppfriskBekreftelse}
           synlig={this.state.visOppfriskDialog}
         />
@@ -350,6 +359,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
+  oppfriskFagsaker: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   hentFaktaavklaring: saksnummer => dispatch(faktaavklaringOperations.hent(saksnummer)),

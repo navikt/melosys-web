@@ -56,7 +56,7 @@ const SakEnkeltLinje = ({ sak }) => {
   const link = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
-  const panelIkon = erUnderOppdatering ? Ikoner.Spinner : Ikoner.IkonSak;
+  const panelIkon = !erUnderOppdatering ? Ikoner.IkonSak : Ikoner.Ubehandlet;
   const oppdateringStatus = !erUnderOppdatering ? formatterDatoTilNorsk(sistOppdatert, true) : '(oppdateres nå)';
 
   const cl = classNames({
