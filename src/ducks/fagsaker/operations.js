@@ -56,8 +56,8 @@ function sok(fnr) {
 }
 
 /**
- * Søker på en liste av fagsaker knyttet til et fnr.
- * @param fnr
+ * Kaller backend for å be om oppfrisking av en sak.
+ * @param snr
  * @returns {*}
  */
 function oppfrisk(snr) {
