@@ -79,8 +79,7 @@ function Personopplysninger(props) {
             <PanelHeader ikon={ikonFraKjonn(kodeverkObjektTilKode(kjoenn))} tittel={`${sammensattNavn} (${beregnAlder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
             <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
           </div>}
-        ariaTittel="Panel for personinformasjon"
-      >
+        ariaTittel="Panel for personinformasjon">
         <Nav.Container fluid>
           {/* START PERSONINFO */}
           <Nav.Row className="person__seksjon">
@@ -88,12 +87,8 @@ function Personopplysninger(props) {
               <dl className="person__detaljer">
                 <dt>Fødselsnummer:</dt><dd>{fnr}</dd>
                 <dt>Statsborgerskap:</dt>
-                <dd>
-                  Gjeldende: {kodeverkObjektTilTerm(statsborgerskap)}
-                </dd>
-                <dd>
-                  Ved start av søknadsperioden: {kodeverkObjektTilTerm(historiskStatsborgerskap)}
-                </dd>
+                <dd>Gjeldende: {kodeverkObjektTilTerm(statsborgerskap)}</dd>
+                <dd>Ved start av søknadsperioden: {kodeverkObjektTilTerm(historiskStatsborgerskap)}</dd>
                 <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
                 <dt>Kjønn:</dt><dd>{kodeverkObjektTilTerm(kjoenn)}</dd>
                 <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
