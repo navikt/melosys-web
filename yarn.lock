@@ -3064,6 +3064,10 @@ execa@^0.9.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
+exenv@^1.2.0:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/exenv/-/exenv-1.2.2.tgz#2ae78e85d9894158670b03d47bec1f03bd91bb9d"
+
 exit-hook@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/exit-hook/-/exit-hook-1.1.1.tgz#f05ca233b48c05d54fff07765df8507e95c02ff8"
@@ -5908,6 +5912,22 @@ nav-frontend-lenker@^1.0.18:
   version "1.0.18"
   resolved "https://registry.yarnpkg.com/nav-frontend-lenker/-/nav-frontend-lenker-1.0.18.tgz#ff9cb78b160f7f6ce8fb46dfce370c908640423c"
 
+nav-frontend-lukknapp-style@^0.2.16:
+  version "0.2.16"
+  resolved "https://registry.yarnpkg.com/nav-frontend-lukknapp-style/-/nav-frontend-lukknapp-style-0.2.16.tgz#d7057337f085f100a1781351185dcd8c77507fea"
+
+nav-frontend-lukknapp@^1.0.16:
+  version "1.0.16"
+  resolved "https://registry.yarnpkg.com/nav-frontend-lukknapp/-/nav-frontend-lukknapp-1.0.16.tgz#0c7668254d972a48cc4d98deee6e781b719d4a72"
+
+nav-frontend-modal-style@^0.3.21:
+  version "0.3.21"
+  resolved "https://registry.yarnpkg.com/nav-frontend-modal-style/-/nav-frontend-modal-style-0.3.21.tgz#3007903f887f81fef08ede81bc7f72f969671e4a"
+
+nav-frontend-modal@^1.0.17:
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/nav-frontend-modal/-/nav-frontend-modal-1.0.17.tgz#209c48057f7ec9dc468365d5591d717e18123082"
+
 nav-frontend-paneler-style@^0.3.10:
   version "0.3.10"
   resolved "https://registry.yarnpkg.com/nav-frontend-paneler-style/-/nav-frontend-paneler-style-0.3.10.tgz#102344858b8a0a66f524386bd0172b09c65d8f06"
@@ -7266,7 +7286,7 @@ react-is@^16.4.2:
   version "16.4.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.4.2.tgz#84891b56c2b6d9efdee577cc83501dfc5ecead88"
 
-react-lifecycles-compat@^3.0.4:
+react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
@@ -7276,6 +7296,15 @@ react-maskedinput@^4.0.1:
   dependencies:
     inputmask-core "^2.1.1"
     prop-types "^15.5.7"
+
+react-modal@^3.5.1:
+  version "3.5.1"
+  resolved "https://registry.yarnpkg.com/react-modal/-/react-modal-3.5.1.tgz#33d38527def90ea324848f7d63e53acc4468a451"
+  dependencies:
+    exenv "^1.2.0"
+    prop-types "^15.5.10"
+    react-lifecycles-compat "^3.0.0"
+    warning "^3.0.0"
 
 react-motion@^0.5.2:
   version "0.5.2"
