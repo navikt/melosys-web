@@ -1,26 +1,32 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { Portal } from 'react-portal';
 
 import * as Nav from '../../utils/navFrontend';
 
-// import './dialogboks.css';
+import './dialogboks.css';
 
 /* eslint react/prefer-stateless-function:off */
 class Dialogboks extends Component {
   render () {
-    const { tittel, tekst, synlig } = this.props;
+    const {
+      tittel, tekst, synlig, avbryt,
+    } = this.props;
+
     return (
-      <Nav.Modal className="dialogboks" isOpen={synlig} contentLabel="Bekrefte oppfrisking" shouldCloseOnOverlayClick>
+      <Nav.Modal
+        className="dialogboks"
+        isOpen={synlig}
+        contentLabel="Bekrefte oppfrisking"
+        onRequestClose={avbryt}
+        closeButton={false}
+        shouldCloseOnOverlayClick>
         <div>
-          <Nav.Panel className="dialogboks__container">
-            <Nav.Systemtittel>{tittel}</Nav.Systemtittel>
-            <Nav.Normaltekst>{tekst}</Nav.Normaltekst>
-            <div className="dialogboks__container__knapperad">
-              <Nav.Hovedknapp>OK</Nav.Hovedknapp>
-              <Nav.Knapp onClick={this.props.avbryt}>Avbryt</Nav.Knapp>
-            </div>
-          </Nav.Panel>
+          <Nav.Systemtittel>{tittel}</Nav.Systemtittel>
+          <Nav.Normaltekst>{tekst}</Nav.Normaltekst>
+          <div className="dialogboks__container__knapperad">
+            <Nav.Hovedknapp>OK</Nav.Hovedknapp>
+            <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
+          </div>
         </div>
       </Nav.Modal>
     );
