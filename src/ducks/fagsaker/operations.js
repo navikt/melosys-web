@@ -55,8 +55,18 @@ function sok(fnr) {
   });
 }
 
+/**
+ * Søker på en liste av fagsaker knyttet til et fnr.
+ * @param fnr
+ * @returns {*}
+ */
+function oppfrisk(snr) {
+  return Api.Fagsaker.oppfrisk(snr);
+}
+
 export {
   hent,
   opprett,
   sok,
+  oppfrisk,
 };
