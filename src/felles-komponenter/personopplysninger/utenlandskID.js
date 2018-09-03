@@ -9,7 +9,7 @@ import * as Nav from '../../utils/navFrontend';
 const UtenlandskIDLinje = ({ indeks }) => (
   <div className="utenlandskID__linje">
     <Skjema.Input bredde="S" feltNavn={`utenlandskID[${indeks}].ID`} label="Utenlandsk ID" />
-    <Landvelger feltNavn={`utenlandskID[${indeks}].land`} label="Land" />
+    <Landvelger feltNavn={`utenlandskID[${indeks}].landKode`} label="Land" />
   </div>
 );
 
@@ -24,7 +24,7 @@ const UtenlandskIDWrapper = props => {
   return (
     <div className="utenlandskID__wrapper">
       { linjer.map((linje, indeks) => <UtenlandskIDLinje key={indeks} indeks={indeks} />) }
-      <Nav.Knapp className="utenlandskID__leggtil" onClick={() => props.fields.push({ ID: '', land: [] })}>Legg til flere ID</Nav.Knapp>
+      <Nav.Knapp className="utenlandskID__leggtil" onClick={() => props.fields.push({ ID: '', landKode: '' })}>Legg til flere ID</Nav.Knapp>
     </div>
   );
 };
