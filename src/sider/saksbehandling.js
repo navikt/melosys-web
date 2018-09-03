@@ -116,7 +116,6 @@ class Saksbehandling extends Component {
       const { oppsummering: { behandlingID } } = behandlinger[0];
       this.props.hentSoknad(behandlingID);
       this.props.hentFaktaavklaring(behandlingID);
-      this.props.hentVurdering(behandlingID);
       return true;
     });
   }
@@ -137,13 +136,6 @@ class Saksbehandling extends Component {
     if (this.props.valid) {
       this.props.sendSoknad(bid, soknad);
       this.props.sendFaktaavklaring(bid, avklaring);
-    }
-  }
-
-  beOmVurdering = () => {
-    const { behandlingID } = this.props.oppsummering;
-    if (this.props.valid) {
-      this.props.hentVurdering(behandlingID);
     }
   }
 
@@ -186,7 +178,10 @@ class Saksbehandling extends Component {
             <Nav.Column xs="7">
               <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
                 <Vilkarsveileder
-                  beOmVurderingHandler={this.beOmVurdering}
+                  beOmVurderingHandler={() => {
+                    /* eslint no-alert:off */
+                    alert('Ikke implementert');
+                  }}
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {person && <Personopplysninger person={person} />}
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
