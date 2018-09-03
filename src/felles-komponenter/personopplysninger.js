@@ -13,7 +13,6 @@ import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import BostedsAdresse from './adresser/bostedsAdresse';
-import PostAdresse from './adresser/postAdresse';
 import LandVelger from './skjema/landvelger';
 
 import UtenlandskID from './personopplysninger/utenlandskID';
@@ -64,8 +63,6 @@ function Personopplysninger(props) {
     sammensattNavn,
     foedselsdato,
     bostedsadresse,
-    postadresse,
-    midlertidigPostadresse,
     personStatus,
     erEgenAnsatt,
     familiemedlemmer,
@@ -102,18 +99,6 @@ function Personopplysninger(props) {
               <dl className="person__detaljer">
                 <dt>Bostedsadresse (TPS):</dt>
                 <BostedsAdresse bostedsadresse={bostedsadresse} />
-              </dl>
-            </Nav.Column>
-            <Nav.Column xs="4">
-              <dl className="person__detaljer">
-                <dt>Postadresse (TPS):</dt>
-                <PostAdresse postadresse={postadresse} />
-              </dl>
-            </Nav.Column>
-            <Nav.Column xs="4">
-              <dl className="person__detaljer">
-                <dt>Midl. postadresse (TPS):</dt>
-                <PostAdresse postadresse={midlertidigPostadresse} />
               </dl>
             </Nav.Column>
           </Nav.Row>
