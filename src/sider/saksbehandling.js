@@ -233,8 +233,8 @@ class Saksbehandling extends Component {
           </Nav.Row>
         </Nav.Container>
         <Dialogboks
-          tittel="Oppfriske saksopplysninger"
-          tekst="Dette kan ta noen minutter og saken blir låst i mellomtiden. Du vil bli sendt tilbake til benken hvor du kan behandle en annen sak i mellomtiden."
+          tittel="Vil du oppdatere registeropplysninger?"
+          tekst="Oppdatering av registeropplysning kan ta noe tid. Du vil derfor bli sendt tilbake til oppgavelisten hvor du kan journalføre eller behandle en annen sak i mellomtiden."
           bekreft={this.oppfriskSaksopplysninger}
           avbryt={this.skjulOppfriskBekreftelse}
           synlig={this.state.visOppfriskDialog}

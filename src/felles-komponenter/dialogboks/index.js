@@ -24,8 +24,8 @@ class Dialogboks extends Component {
           <Nav.Systemtittel>{tittel}</Nav.Systemtittel>
           <Nav.Normaltekst>{tekst}</Nav.Normaltekst>
           <div className="dialogboks__container__knapperad">
-            <Nav.Hovedknapp onClick={bekreft}>OK</Nav.Hovedknapp>
-            <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
+            <Nav.Hovedknapp onClick={bekreft}>Fortsett oppdatering</Nav.Hovedknapp>
+            <Nav.Knapp onClick={avbryt}>Avbryt oppdatering</Nav.Knapp>
           </div>
         </div>
       </Nav.Modal>

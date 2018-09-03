@@ -56,7 +56,6 @@ const SakEnkeltLinje = ({ sak }) => {
   const link = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
-  const panelIkon = !erUnderOppdatering ? Ikoner.IkonSak : Ikoner.Ubehandlet;
   const oppdateringStatus = !erUnderOppdatering ? formatterDatoTilNorsk(sistOppdatert, true) : '(oppdateres nå)';
 
   const cl = classNames({
@@ -68,7 +67,7 @@ const SakEnkeltLinje = ({ sak }) => {
     <SaksLinjeWrapper link={link} stengt={erUnderOppdatering}>
       <Nav.Panel className={cl}>
         <PanelHeader
-          ikon={panelIkon}
+          ikon={Ikoner.IkonSak}
           tittel={tittel}
           undertittel={
             <Nav.Row>
