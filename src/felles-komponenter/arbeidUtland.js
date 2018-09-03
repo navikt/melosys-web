@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
 
@@ -14,72 +14,85 @@ import { BOOLSK } from '../constants';
 
 import './arbeidUtland.css';
 
-const uuid = require('uuid/v4');
-
-const ArbeidUtlandEnkelt = ({ index }) => (
-  <Nav.Container fluid>
+const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler }) => (
+  <div className="arbeidUtland__enkelt">
     <Nav.Row>
       <Nav.Column xs="6">
         <Nav.Fieldset legend="Fysisk arbeidssted">
-          <Skjema.Input label="Gateadresse" feltNavn={`arbeidUtland[${index}].adresse.gatenavn`} />
-          <Skjema.Input label="Postnummer" feltNavn={`arbeidUtland[${index}].adresse.postnummer`} />
-          <Skjema.Input label="Poststed" feltNavn={`arbeidUtland[${index}].adresse.poststed`} />
-          <Landvelger label="Land" feltNavn={`arbeidUtland[${index}].adresse.landKode`} />
+          <Skjema.Input label="Gateadresse" feltNavn={`arbeidUtland[${indeks}].adresse.gatenavn`} />
+          <Skjema.Input label="Postnummer" feltNavn={`arbeidUtland[${indeks}].adresse.postnummer`} />
+          <Skjema.Input label="Poststed" feltNavn={`arbeidUtland[${indeks}].adresse.poststed`} />
+          <Landvelger label="Land" feltNavn={`arbeidUtland[${indeks}].adresse.landKode`} />
         </Nav.Fieldset>
       </Nav.Column>
       <Nav.Column xs="6">
-        <Skjema.RadioGruppe label="Oppgir søker hjemmekontor?" feltNavn={`arbeidUtland[${index}].arbeidUtlandHjemmekontor`}>
-          <Skjema.Radio feltNavn={`arbeidUtland[${index}].hjemmekontor`} value={BOOLSK.SANN} label="Ja" />
-          <Skjema.Radio feltNavn={`arbeidUtland[${index}].hjemmekontor`} value={BOOLSK.USANN} label="Nei" />
+        <Skjema.RadioGruppe label="Oppgir søker hjemmekontor?" feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`}>
+          <Skjema.Radio feltNavn={`arbeidUtland[${indeks}].hjemmekontor`} value={BOOLSK.SANN} label="Ja" />
+          <Skjema.Radio feltNavn={`arbeidUtland[${indeks}].hjemmekontor`} value={BOOLSK.USANN} label="Nei" />
         </Skjema.RadioGruppe>
-        <Skjema.RadioGruppe label="Erstatter vedkommende en tidligere utsendt?" feltNavn={`arbeidUtland[${index}].arbeidUtlandErstatning`}>
-          <Skjema.Radio feltNavn={`arbeidUtland[${index}].arbeidUtlandErstatning`} value={BOOLSK.SANN} label="Ja" />
-          <Skjema.Radio feltNavn={`arbeidUtland[${index}].arbeidUtlandErstatning`} value={BOOLSK.USANN} label="Nei" />
+        <Skjema.RadioGruppe label="Erstatter vedkommende en tidligere utsendt?" feltNavn={`arbeidUtland[${indeks}].arbeidUtlandErstatning`}>
+          <Skjema.Radio feltNavn={`arbeidUtland[${indeks}].arbeidUtlandErstatning`} value={BOOLSK.SANN} label="Ja" />
+          <Skjema.Radio feltNavn={`arbeidUtland[${indeks}].arbeidUtlandErstatning`} value={BOOLSK.USANN} label="Nei" />
         </Skjema.RadioGruppe>
       </Nav.Column>
     </Nav.Row>
     <Nav.Row>
       <Nav.Column xs="6">
         <Nav.Fieldset legend="Arbeidsandel i prosent">
-          <Skjema.Input bredde="XS" type="number" feltNavn={`arbeidUtland[${index}].arbeidsandelUtland`} label="Arbeidsandel utland, oppgitt i søknad" />
-          <Skjema.Input bredde="XS" type="number" feltNavn={`arbeidUtland[${index}].arbeidsandelNorge`} label="Arbeidsandel Norge, oppgitt i søknad" />
+          <Skjema.Input bredde="XS" type="number" feltNavn={`arbeidUtland[${indeks}].arbeidsandelUtland`} label="Arbeidsandel utland, oppgitt i søknad" />
+          <Skjema.Input bredde="XS" type="number" feltNavn={`arbeidUtland[${indeks}].arbeidsandelNorge`} label="Arbeidsandel Norge, oppgitt i søknad" />
         </Nav.Fieldset>
       </Nav.Column>
     </Nav.Row>
-  </Nav.Container>
+    <Nav.Knapp mini onClick={() => slettArbeidHandler(indeks)}>- Fjern dette arbeidet</Nav.Knapp>
+  </div>
 );
 
 ArbeidUtlandEnkelt.propTypes = {
-  index: PT.number.isRequired,
+  indeks: PT.number.isRequired,
+  slettArbeidHandler: PT.func.isRequired,
 };
 
-const ArbeidUtland = ({ fields }) => {
-  const panelIkon = Ikoner.Ferdig;
-  const alleArbeid = fields.getAll() || [];
+class ArbeidUtlandWrapper extends Component {
+  leggTilArbeidHandler = () => {
+    this.props.fields.push({});
+  }
 
-  return (
-    <div className="arbeidsgiverUtland panelSeksjon">
-      <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om arbeid i utlandet" undertittel="" />}
-        ariaTittel="Panel for arbeidssted i utlandet">
-        {alleArbeid.map((enket, index) => <ArbeidUtlandEnkelt key={uuid()} index={index} />)}
-      </Nav.EkspanderbartpanelBase>
-    </div>
-  );
-};
+  slettArbeidHandler = indeks => {
+    this.props.fields.remove(indeks);
+  }
 
-ArbeidUtland.propTypes = {
+  render() {
+    const { slettArbeidHandler, leggTilArbeidHandler } = this;
+    const panelIkon = Ikoner.Ferdig;
+
+    return (
+      <div className="arbeidUtland panelSeksjon">
+        <Nav.EkspanderbartpanelBase
+          heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om arbeid i utlandet" undertittel="" />}
+          ariaTittel="Panel for arbeidssted i utlandet">
+          <Nav.Container fluid>
+            {this.props.fields.map((fieldName, indeks) => <ArbeidUtlandEnkelt key={fieldName} indeks={indeks} slettArbeidHandler={slettArbeidHandler} />)}
+            <Nav.Knapp className="arbeidUtland__leggtil" onClick={leggTilArbeidHandler}>+ Legg til flere arbeidsgiver i utlandet</Nav.Knapp>
+          </Nav.Container>
+        </Nav.EkspanderbartpanelBase>
+      </div>
+    );
+  }
+}
+
+ArbeidUtlandWrapper.propTypes = {
   fields: PT.object.isRequired,
 };
 
-const ArbeidUtlandWrapper = props => (<FieldArray name="arbeidUtland" component={ArbeidUtland} props={props} />);
+const ArbeidUtland = props => (<FieldArray name="arbeidUtland" component={ArbeidUtlandWrapper} props={props} />);
 
-ArbeidUtlandWrapper.propTypes = {
+ArbeidUtland.propTypes = {
   organisasjoner: MPT.Organisasjoner,
 };
 
-ArbeidUtlandWrapper.defaultProps = {
+ArbeidUtland.defaultProps = {
   organisasjoner: [],
 };
 
-export default ArbeidUtlandWrapper;
+export default ArbeidUtland;
