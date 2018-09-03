@@ -13,9 +13,12 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function hent() {
-  return doThenDispatch(() => Api.Saksbehandler.hent(), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Saksbehandler.hent(), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    (dispatch, data) => `Validering: saksbehandler:hent(${JSON.stringify(data)})`
+  );
 }
