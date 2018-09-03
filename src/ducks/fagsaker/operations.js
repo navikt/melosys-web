@@ -6,7 +6,7 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
-import * as Validering from '../../felles-komponenter/skjema/validering';
+
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
@@ -20,14 +20,11 @@ import * as Types from './types';
  * @returns {*}
  */
 function hent(snr) {
-  return doThenDispatch(
-    () => Api.Fagsaker.hent(snr), {
-      OK: Types.OK,
-      FEILET: Types.FEILET,
-      PENDING: Types.PENDING,
-    },
-    (dispatch, data) => Validering.Felles.forsokValidering(dispatch, data)
-  );
+  return doThenDispatch(() => Api.Fagsaker.hent(snr), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
 }
 
 /**
@@ -38,14 +35,11 @@ function hent(snr) {
  */
 
 function opprett(fnr) {
-  return doThenDispatch(
-    () => Api.Fagsaker.opprett(fnr), {
-      OK: Types.OK,
-      FEILET: Types.FEILET,
-      PENDING: Types.PENDING,
-    },
-    (dispatch, data) => `Validering: fagsaker:opprett(${JSON.stringify(data)})`
-  );
+  return doThenDispatch(() => Api.Fagsaker.opprett(fnr), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
 }
 
 /**
@@ -54,14 +48,11 @@ function opprett(fnr) {
  * @returns {*}
  */
 function sok(fnr) {
-  return doThenDispatch(
-    () => Api.Fagsaker.sok(fnr), {
-      OK: Types.SAKSLISTE_OK,
-      FEILET: Types.SAKSLISTE_FEILET,
-      PENDING: Types.SAKSLISTE_PENDING,
-    },
-    (dispatch, data) => `Validering: fagsaker:sok(${JSON.stringify(data)})`
-  );
+  return doThenDispatch(() => Api.Fagsaker.sok(fnr), {
+    OK: Types.SAKSLISTE_OK,
+    FEILET: Types.SAKSLISTE_FEILET,
+    PENDING: Types.SAKSLISTE_PENDING,
+  });
 }
 
 export {

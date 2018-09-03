@@ -13,12 +13,9 @@ import * as Types from './types';
 
 // eslint-disable-next-line import/prefer-default-export
 export function hent(journalpostID) {
-  return doThenDispatch(
-    () => Api.Journalforing.hent(journalpostID), {
-      OK: Types.OK,
-      FEILET: Types.FEILET,
-      PENDING: Types.PENDING,
-    },
-    (dispatch, data) => `Validering: journalforing:hent(${JSON.stringify(data)})`
-  );
+  return doThenDispatch(() => Api.Journalforing.hent(journalpostID), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
 }

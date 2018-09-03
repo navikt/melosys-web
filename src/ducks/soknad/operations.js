@@ -15,14 +15,11 @@ import * as Types from './types';
 
 // Action Creators
 export function hent(behandlingID) {
-  return doThenDispatch(
-    () => Api.Soknader.hent(behandlingID), {
-      OK: Types.OK,
-      FEILET: Types.FEILET,
-      PENDING: Types.PENDING,
-    },
-    (dispatch, data) => `Validering: soknad:hent(${JSON.stringify(data)})`
-  );
+  return doThenDispatch(() => Api.Soknader.hent(behandlingID), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
 }
 
 export function send(bid, soknad) {

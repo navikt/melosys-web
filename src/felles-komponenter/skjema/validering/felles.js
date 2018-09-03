@@ -23,6 +23,7 @@ class Felles {
   };
 
   static forsokValidering = (dispatch, data) => {
+    console.dir(data);
     if (Felles.inneholderFeilmeldinger(data)) {
       const valideringsObjekt = Felles.byggValideringsObjekt(data);
       formOperations.oppdaterAlleSkjemaValideringer(dispatch)(valideringsObjekt);
