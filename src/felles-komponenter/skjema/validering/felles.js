@@ -16,14 +16,12 @@ class Felles {
 
   static byggValideringsObjekt = data => {
     const { form: { feilmeldinger } = {} } = data;
-    const feltIDListe = feilmeldinger.reduce((samling, feilmelding) => (
+    return feilmeldinger.reduce((samling, feilmelding) => (
       { ...samling, [feilmelding.skjemaFeltID]: feilmelding.melding }
     ), {});
-    return feltIDListe;
   };
 
   static forsokValidering = (dispatch, data) => {
-    console.dir(data);
     if (Felles.inneholderFeilmeldinger(data)) {
       const valideringsObjekt = Felles.byggValideringsObjekt(data);
       formOperations.oppdaterAlleSkjemaValideringer(dispatch)(valideringsObjekt);
@@ -79,15 +77,13 @@ class Felles {
    */
   static flettOgFilterValidering = (generiskValidering, forretningsValidering = {}) => {
     const dummyFletting = { ...generiskValidering, ...forretningsValidering };
-    const filtrertValidering = Object.keys(dummyFletting).reduce((samling, feltNavn) => {
+    return Object.keys(dummyFletting).reduce((samling, feltNavn) => {
       const generiskTekst = generiskValidering[feltNavn] || '';
       const forretningsTekst = forretningsValidering[feltNavn] || '';
       const samletValideringstekst = `${generiskTekst} ${forretningsTekst}`.trim();
 
       return samletValideringstekst !== '' ? { ...samling, [feltNavn]: samletValideringstekst } : { ...samling };
     }, {});
-
-    return filtrertValidering;
   };
 
   /**
@@ -99,8 +95,7 @@ class Felles {
     const { forretningsValidering } = props;
     const generiskValideringFunksjoner = Felles.flatUtFeltGrupper(feltGrupper);
     const generiskValidering = Felles.kjorAlleValideringerSomHarFunksjoner(generiskValideringFunksjoner, values, props);
-    const validering = Felles.flettOgFilterValidering(generiskValidering, forretningsValidering);
-    return validering;
+    return Felles.flettOgFilterValidering(generiskValidering, forretningsValidering);
   };
 
   /** Traverser alle feil som finnes i skjemaet (på grunnlag av validering) og mål opp mot kjente
