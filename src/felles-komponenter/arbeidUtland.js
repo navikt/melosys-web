@@ -24,7 +24,7 @@ const ArbeidUtlandEnkelt = ({ index }) => (
           <Skjema.Input label="Gateadresse" feltNavn={`arbeidUtland[${index}].adresse.gatenavn`} />
           <Skjema.Input label="Postnummer" feltNavn={`arbeidUtland[${index}].adresse.postnummer`} />
           <Skjema.Input label="Poststed" feltNavn={`arbeidUtland[${index}].adresse.poststed`} />
-          <Landvelger label="Land" feltNavn={`arbeidUtland[${index}].adresse.landKoden`} />
+          <Landvelger label="Land" feltNavn={`arbeidUtland[${index}].adresse.landKode`} />
         </Nav.Fieldset>
       </Nav.Column>
       <Nav.Column xs="6">
