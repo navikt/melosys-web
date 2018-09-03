@@ -68,9 +68,6 @@ function Personopplysninger(props) {
     familiemedlemmer,
   } = person;
 
-  const { historikk } = person;
-  const { statsborgerskap: historiskStatsborgerskap } = historikk;
-
   return (
     <div className="personopplysninger panelSeksjon">
       <Nav.EkspanderbartpanelBase
@@ -86,9 +83,8 @@ function Personopplysninger(props) {
             <Nav.Column xs="6">
               <dl className="person__detaljer">
                 <dt>Fødselsnummer:</dt><dd>{fnr}</dd>
-                <dt>Statsborgerskap:</dt>
-                <dd>Gjeldende: {kodeverkObjektTilTerm(statsborgerskap)}</dd>
-                <dd>Ved start av søknadsperioden: {kodeverkObjektTilTerm(historiskStatsborgerskap)}</dd>
+                <dt>Statsborgerskap pr søknadsstart:</dt>
+                <dd>{kodeverkObjektTilTerm(statsborgerskap)}</dd>
                 <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
                 <dt>Kjønn:</dt><dd>{kodeverkObjektTilTerm(kjoenn)}</dd>
                 <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
