@@ -23,6 +23,7 @@ class EnkeltLand extends Component {
   }
 
   reduxOppdaterLand = landKode => {
+    // Todo: Implementere logging på neste linje.
     if (!landKode) throw new Error('landKode må inneholde verdi.');
     const { onChange } = this.props.input;
     onChange(landKode);
