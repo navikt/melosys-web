@@ -40,6 +40,7 @@ class MultiLand extends Component {
     const { fields } = this.props;
     const valgteLand = fields.getAll() || [];
 
+    // Todo: Legg til logging.
     if (!landKode) throw new Error('landKode må inneholde verdi.');
 
     if (!valgteLand.includes(landKode)) {
