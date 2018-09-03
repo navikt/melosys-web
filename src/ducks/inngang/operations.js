@@ -14,9 +14,12 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function hent(snr) {
-  return doThenDispatch(() => Api.Inngang.hent(snr), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Inngang.hent(snr), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    (dispatch, data) => `Validering: inngang:hent(${JSON.stringify(data)})`
+  );
 }

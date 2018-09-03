@@ -13,10 +13,13 @@ import * as Types from './types';
 
 // eslint-disable-next-line import/prefer-default-export
 export function hent() {
-  return doThenDispatch(() => Api.Kodeverk.hent(), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Kodeverk.hent(), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    (dispatch, data) => `Validering: kodever:hent(${JSON.stringify(data)})`
+  );
 }
 

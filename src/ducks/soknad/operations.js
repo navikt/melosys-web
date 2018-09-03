@@ -1,3 +1,4 @@
+import * as Validering from '../../felles-komponenter/skjema/validering';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 
@@ -14,17 +15,23 @@ import * as Types from './types';
 
 // Action Creators
 export function hent(behandlingID) {
-  return doThenDispatch(() => Api.Soknader.hent(behandlingID), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Soknader.hent(behandlingID), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    (dispatch, data) => `Validering: soknad:hent(${JSON.stringify(data)})`
+  );
 }
 
 export function send(bid, soknad) {
-  return doThenDispatch(() => Api.Soknader.send(bid, soknad), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Soknader.send(bid, soknad), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    (dispatch, data) => Validering.Felles.forsokValidering(dispatch, data)
+  );
 }

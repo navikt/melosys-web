@@ -17,11 +17,14 @@ import * as Types from './types';
  * @returns {*}
  */
 export function sok(fnr) {
-  return doThenDispatch(() => Api.Oppgaver.sok(fnr), {
-    OK: Types.SOK_OK,
-    FEILET: Types.SOK_FEILET,
-    PENDING: Types.SOK_PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Oppgaver.sok(fnr), {
+      OK: Types.SOK_OK,
+      FEILET: Types.SOK_FEILET,
+      PENDING: Types.SOK_PENDING,
+    },
+    (dispatch, data) => `Validering: oppgaver:sok(${JSON.stringify(data)})`
+  );
 }
 
 /**
@@ -29,11 +32,14 @@ export function sok(fnr) {
  * @returns {*}
  */
 export function hent() {
-  return doThenDispatch(() => Api.Oppgaver.oversikt(), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Oppgaver.oversikt(), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    (dispatch, data) => `Validering: oppgaver:hent(${JSON.stringify(data)})`
+  );
 }
 
 export function sendBehandlingsOppgave(checkboxliste) {

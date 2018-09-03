@@ -14,9 +14,12 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function hent(behandlingID) {
-  return doThenDispatch(() => Api.Vurdering.hent(behandlingID), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Vurdering.hent(behandlingID), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    (dispatch, data) => `Validering: vurdering:hent(${JSON.stringify(data)})`
+  );
 }
