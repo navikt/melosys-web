@@ -60,8 +60,8 @@ function sok(fnr) {
  * @param snr
  * @returns {*}
  */
-function oppfrisk(snr) {
-  return Api.Fagsaker.oppfrisk(snr);
+function oppfrisk(behandlingID) {
+  return Api.Fagsaker.oppfrisk(behandlingID);
 }
 
 export {

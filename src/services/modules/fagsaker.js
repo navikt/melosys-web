@@ -15,8 +15,8 @@ function opprett(fnr) {
   return getAsJson(URI_OPPRETTSAK);
 }
 
-function oppfrisk(snr) {
-  const URI_OPPFRISKSAK = `${API_BASE_URL}fagsaker/oppfrisk/${snr}`;
+function oppfrisk(behandlingID) {
+  const URI_OPPFRISKSAK = `${API_BASE_URL}fagsaker/oppfrisk/${behandlingID}`;
   return getAsJson(URI_OPPFRISKSAK);
 }
 

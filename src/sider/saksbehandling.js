@@ -151,9 +151,9 @@ class Saksbehandling extends Component {
   }
 
   oppfriskSaksopplysninger = () => {
-    const { saksnummer } = this.props.oppsummering;
+    const { behandlingID } = this.props.oppsummering;
 
-    this.props.oppfriskFagsaker(saksnummer).then(response => {
+    this.props.oppfriskFagsaker(behandlingID).then(response => {
       if (response.ok) {
         this.skjulOppfriskBekreftelse();
         this.props.history.push('/');
