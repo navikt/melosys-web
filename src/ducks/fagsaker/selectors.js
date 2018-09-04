@@ -20,6 +20,11 @@ export const SakOgBehandlingSelector = createSelector(
   sakOgBehandling => sakOgBehandling || {}
 );
 
+export const SaksopplysningerSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger : {}),
+  saksopplysninger => saksopplysninger || {}
+);
+
 export const FagsakSokSelector = createSelector(
   state => (state.fagsaker.data.fagsakListe ? state.fagsaker.data.fagsakListe : []),
   fagsakListe => fagsakListe || []
