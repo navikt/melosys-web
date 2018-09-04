@@ -1,5 +1,22 @@
 import DomeneRegel from '../domeneRegel';
 
+/** Klassen inneholder funksjoner som hver evaluerer konkrete situasjoner basert på
+ * opplysninger fra søknaden, faktaavklaring og fagsak. Utfallet av hver funksjon
+ * kan ende i "sann", "usann" eller mangelfull opplysninger. Tekstene som også
+ * returneres som en del av objektet reflekterer også dette.
+ *
+ * Det er klassen DomeneRegel som extendes, som håndterer selve utformingen av
+ * objektene i manglerOpplysninger eller byggRegelSvar.
+ *
+ * Dersom en regel mangler opplysninger (som typisk er tilfelle i en papirsøknad,
+ * vil følgende objekt returneres:
+ * {status: undefined, tekst: 'Sjekk at xyz er tilstede'}
+ *
+ * Dersom regel har har nok informasjon til å evaluere vil  objekt
+ * returneres med positiv eller negativ tekst. Nedenfor er eksempel på begge:
+ * {status: true, tekst: 'Har forutgående bosted i Norge'}
+ * {status: false, tekst: 'Har IKKE forutgående bosted i Norge'}
+ */
 class Studier extends DomeneRegel {
   studererIUtlandet = () => {
     const { skjema } = this;
@@ -13,7 +30,6 @@ class Studier extends DomeneRegel {
     if (harMangelfulleOpplysninger) { return this.manglerOpplysninger(manglerInfoTekst); }
 
     const harStudierIUtlandet = !oppholdsland.includes('NO');
-
     return this.byggRegelSvar(harStudierIUtlandet, positivTekst, negativTekst);
   }
 
@@ -29,7 +45,6 @@ class Studier extends DomeneRegel {
     if (harMangelfulleOpplysninger) { return this.manglerOpplysninger(manglerInfoTekst); }
 
     const erStudierFinansiertFraNorge = (studentFinansiering === 'LAANEKASSEN');
-
     return this.byggRegelSvar(erStudierFinansiertFraNorge, positivTekst, negativTekst);
   }
 }
