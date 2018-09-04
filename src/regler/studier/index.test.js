@@ -2,24 +2,24 @@ import Regel from '../index';
 
 describe('Tester regler for studier', () => {
   describe('studererIUtlandet', () => {
-    test('returnerer true ved oppholdsland !== NO', () => {
+    test('returnerer true ved oppholdsland inneholder ikke "NO"', () => {
       const mockSkjema = {
         oppholdsland: ['GB'],
       };
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.studier().studererIUtlandet()).toBe(true);
+      expect(regel.studier().studererIUtlandet().status).toBe(true);
     });
 
-    test('returnerer false ved oppholdsland === NO', () => {
+    test('returnerer false ved oppholdsland inneholder "NO"', () => {
       const mockSkjema = {
         oppholdsland: ['NO'],
       };
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.studier().studererIUtlandet()).toBe(false);
+      expect(regel.studier().studererIUtlandet().status).toBe(false);
     });
 
     test('returnerer undefined ved oppholdsland === null', () => {
@@ -29,7 +29,7 @@ describe('Tester regler for studier', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.studier().studererIUtlandet()).toBe(undefined);
+      expect(regel.studier().studererIUtlandet().status).toBe(undefined);
     });
   });
 
@@ -41,7 +41,7 @@ describe('Tester regler for studier', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.studier().studierFinansieresFraNorge()).toBe(true);
+      expect(regel.studier().studierFinansieresFraNorge().status).toBe(true);
     });
 
     test('returnerer false ved studentFinansiering !== "LAANEKASSEN"', () => {
@@ -51,7 +51,7 @@ describe('Tester regler for studier', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.studier().studierFinansieresFraNorge()).toBe(false);
+      expect(regel.studier().studierFinansieresFraNorge().status).toBe(false);
     });
 
     test('returnerer undefined ved studentFinansiering === null', () => {
@@ -61,7 +61,7 @@ describe('Tester regler for studier', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.studier().studierFinansieresFraNorge()).toBe(undefined);
+      expect(regel.studier().studierFinansieresFraNorge().status).toBe(undefined);
     });
   });
 });

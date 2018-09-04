@@ -116,7 +116,7 @@ export const ArbeidsgivereIPeriodenSelector = createSelector(
     const regler = new Regler(skjema);
     const arbeidsforholdIPerioden = arbeidsforholdene
       .filter(arbeidsforholdet => (
-        regler.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(arbeidsforholdet.ansettelsesPeriode)
+        regler.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(arbeidsforholdet.ansettelsesPeriode).status
       ));
 
     return organisasjoner.reduce((samling, organisasjonen) => {
