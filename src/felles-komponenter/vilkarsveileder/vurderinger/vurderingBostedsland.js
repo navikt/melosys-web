@@ -20,13 +20,13 @@ const Avklaringer = ({ avklaringer }) => (
     <Nav.Element>Vurder bosted manuelt:</Nav.Element>
     <ul className="betingelser__liste">
       {
-        avklaringer.map(({ term, status }) => {
+        avklaringer.map(({ tekst, status }) => {
           let iconClassName;
           if (status === undefined) {
             iconClassName = 'liste__element--varsel';
           }
           const cl = classnames({ liste__element: true, [iconClassName]: true });
-          return (<li key={uuid()} className={cl}>{term}</li>);
+          return (<li key={uuid()} className={cl}>{tekst}</li>);
         })
       }
     </ul>
