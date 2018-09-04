@@ -56,80 +56,39 @@ class Bostedsland extends Steg {
 
       let avklaringer;
 
+      /** Regelklassene returnerer alltid et objekt i formatet {status: true, tekst: 'foo}
+       * Dermed kan vi destructe dette svaret rett inn i en array av regler som sendes videre
+       * ut til selve visningskomponenten VurderingBostedsland.
+       */
       if (erYrkesaktiv) {
         avklaringer = [
-          {
-            tekst: regler.opphold().harForutgaendeBostedINorge().tekst,
-            status: regler.opphold().harForutgaendeBostedINorge().status,
-          },
-          {
-            tekst: regler.opphold().harAdresseIUtlandet().tekst,
-            status: regler.opphold().harAdresseIUtlandet().status,
-          },
-          {
-            tekst: regler.opphold().harSammeAdresseSomArbeidsgiver().tekst,
-            status: regler.opphold().harSammeAdresseSomArbeidsgiver().status,
-          },
-          {
-            tekst: regler.opphold().familieBorINorge().tekst,
-            status: regler.opphold().familieBorINorge().status,
-          },
+          { ...regler.opphold().harForutgaendeBostedINorge() },
+          { ...regler.opphold().harAdresseIUtlandet() },
+          { ...regler.opphold().harSammeAdresseSomArbeidsgiver() },
+          { ...regler.opphold().familieBorINorge() },
         ];
       } else {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
           avklaringer = [
-            {
-              tekst: regler.opphold().inntilTolvMaaneder().tekst,
-              status: regler.opphold().inntilTolvMaaneder().status,
-            },
-            {
-              tekst: regler.opphold().harForutgaendeBostedINorge().tekst,
-              status: regler.opphold().harForutgaendeBostedINorge().status,
-            },
-            {
-              tekst: regler.studier().studererIUtlandet().tekst,
-              status: regler.studier().studererIUtlandet().status,
-            },
-            {
-              tekst: regler.studier().studierFinansieresFraNorge().tekst,
-              status: regler.studier().studierFinansieresFraNorge().status,
-            },
-            {
-              tekst: regler.opphold().familieBorINorge().tekst,
-              status: regler.opphold().familieBorINorge().status,
-            },
+            { ...regler.opphold().inntilTolvMaaneder() },
+            { ...regler.opphold().harForutgaendeBostedINorge() },
+            { ...regler.studier().studererIUtlandet() },
+            { ...regler.studier().studierFinansieresFraNorge() },
+            { ...regler.opphold().familieBorINorge() },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
-            {
-              tekst: regler.opphold().harForutgaendeBostedINorge().tekst,
-              status: regler.opphold().harForutgaendeBostedINorge().status,
-            },
-            {
-              tekst: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr().tekst,
-              status: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr().status,
-            },
-            {
-              tekst: regler.opphold().harEktefelleEllerBarnINorge().tekst,
-              status: regler.opphold().harEktefelleEllerBarnINorge().status,
-            },
+            { ...regler.opphold().harForutgaendeBostedINorge() },
+            { ...regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr() },
+            { ...regler.opphold().harEktefelleEllerBarnINorge() },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
-            {
-              tekst: regler.opphold().inntilTolvMaaneder().tekst,
-              status: regler.opphold().inntilTolvMaaneder().status,
-            },
-            {
-              tekst: regler.opphold().harForutgaendeBostedINorge().tekst,
-              status: regler.opphold().harForutgaendeBostedINorge().status,
-            },
-            {
-              tekst: regler.opphold().harIntensjonOmReturTilNorge().tekst,
-              status: regler.opphold().harIntensjonOmReturTilNorge().status,
-            },
+            { ...regler.opphold().inntilTolvMaaneder() },
+            { ...regler.opphold().harForutgaendeBostedINorge() },
+            { ...regler.opphold().harIntensjonOmReturTilNorge() },
           ];
         }
       }
