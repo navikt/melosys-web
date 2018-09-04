@@ -14,7 +14,7 @@ class Arbeid extends DomeneRegel {
     const erAnsattVedPeriodeStart = datoDiff(ansattStartDato, oppholdStartDato, 'days') >= 1;
     const erAnsattVedPeriodeSlutt = datoDiff(ansattSluttDato, oppholdSluttDato, 'days') <= 0;
 
-    return erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt;
+    return { status: erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt, tekst: '' };
   }
 }
 

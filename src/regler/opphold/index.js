@@ -124,6 +124,8 @@ class Opphold extends DomeneRegel {
     const { skjema } = this;
     const { familiesBosted } = skjema;
 
+    const erFamilieBorINorge = familiesBosted === 'NO';
+
     const manglerInfoTekst = 'Sjekk nærmeste families bosted!';
     const positivTekst = 'Nærmeste familie bor i Norge.';
     const negativTekst = 'Nærmeste familie bor IKKE i Norge';
@@ -132,8 +134,8 @@ class Opphold extends DomeneRegel {
 
     return (
       {
-        tekst: familiesBosted.includes('NO') ? positivTekst : negativTekst,
-        status: familiesBosted.includes('NO'),
+        tekst: erFamilieBorINorge ? positivTekst : negativTekst,
+        status: erFamilieBorINorge,
       }
     );
   };
