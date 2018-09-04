@@ -83,7 +83,7 @@ function Personopplysninger(props) {
           <Nav.Row className="person__seksjon">
             <Nav.Column xs="6">
               <dl className="person__detaljer">
-                <dt>Fødselsnummer:</dt><dd>{fnr}</dd>
+                <dt>Fnr / dnr:</dt><dd>{fnr}</dd>
                 <dt>Statsborgerskap pr {formatterDatoTilNorsk(statsborgerskapDato)}:</dt>
                 <dd>{kodeverkObjektTilTerm(statsborgerskap)}</dd>
                 <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
