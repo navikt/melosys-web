@@ -14,7 +14,10 @@ class Arbeid extends DomeneRegel {
     const erAnsattVedPeriodeStart = datoDiff(ansattStartDato, oppholdStartDato, 'days') >= 1;
     const erAnsattVedPeriodeSlutt = datoDiff(ansattSluttDato, oppholdSluttDato, 'days') <= 0;
 
-    return { status: erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt, tekst: '' };
+    const positivTekst = 'Arbeidsforholdet er relevant innenfor søknadsperioden.';
+    const negativTekst = 'Arbeidsforholdet er IKKE relevant innenfor søknadsperioden.';
+
+    return this.byggRegelSvar((erAnsattVedPeriodeStart && erAnsattVedPeriodeSlutt), positivTekst, negativTekst);
   }
 }
 
