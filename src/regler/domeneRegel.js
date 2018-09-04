@@ -1,6 +1,7 @@
 class DomeneRegel {
-  constructor(skjema) {
+  constructor(skjema = {}, saksopplysninger = {}) {
     this.skjema = skjema;
+    this.saksopplysninger = saksopplysninger;
   }
 }
 

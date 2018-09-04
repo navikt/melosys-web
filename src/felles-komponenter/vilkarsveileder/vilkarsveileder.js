@@ -65,8 +65,10 @@ class Vilkarsveileder extends Component {
       fattVedtak: this.fattVedtak,
       beOmVurdering: this.beOmVurdering,
     };
+
     const propsLight = {
       faktaavklaring: props.faktaavklaring,
+      saksopplysninger: props.saksopplysninger,
       inngang: props.inngang,
       skjema: props.skjema,
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,

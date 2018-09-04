@@ -53,10 +53,6 @@ const Bosted = props => {
               <Skjema.RadioGruppe feltNavn="sammeAdresseSomArbeidsgiver" legend="Mottar EU / EØS barnetrygd fra NAV?">
                 {boolTilNorsk(eosBarnetrygd)}
               </Skjema.RadioGruppe>
-              <Skjema.RadioGruppe feltNavn="EOSBarnetrygdFraNAV" legend="Mottar EU/EØS barnetrygd fra NAV?">
-                <Skjema.Radio feltNavn="EOSBarnetrygdFraNAV" value={BOOLSK.SANN} label="Ja" />
-                <Skjema.Radio feltNavn="EOSBarnetrygdFraNAV" value={BOOLSK.USANN} label="Nei" />
-              </Skjema.RadioGruppe>
               <Nav.Undertittel>Pensjonist</Nav.Undertittel>
               <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
                 <Skjema.Select feltNavn="antallMaanederINorge" label="Velg antall måneder:" bredde="xs">

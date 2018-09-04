@@ -36,14 +36,17 @@ class Bostedsland extends Steg {
     this._komponent = VurderingBostedsland;
     this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = _propsLight => {
-      const { skjema = {} } = _propsLight;
+      const { skjema = {}, saksopplysninger = {} } = _propsLight;
+      const { sakOgBehandling } = saksopplysninger;
+      const { eosBarnetrygd = {} } = sakOgBehandling;
+
       const {
         faktaavklaringSysselsettingType,
         faktaavklaringBostedslandSnarvei,
         faktaavklaringIkkeYrkesaktivType,
       } = skjema;
 
-      const regler = new Regler(skjema);
+      const regler = new Regler(skjema, saksopplysninger);
 
       const erYrkesaktiv = (
         faktaavklaringSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG ||
@@ -55,35 +58,78 @@ class Bostedsland extends Steg {
 
       if (erYrkesaktiv) {
         avklaringer = [
-          { term: 'Har søker bostedsadresse i Norge?', status: regler.opphold().harForutgaendeBostedINorge() },
-          { term: 'Adresse i utlandet.', status: regler.opphold().harAdresseIUtlandet() },
-          { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: regler.opphold().harSammeAdresseSomArbeidsgiver() },
-          { term: 'EU/EØS barnetrygd fra NAV.', status: regler.stonad().mottarEOSBarnetrygdFraNav() },
-          { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge() },
+          {
+            term: regler.opphold().harForutgaendeBostedINorge().tekst,
+            status: regler.opphold().harForutgaendeBostedINorge().status,
+          },
+          {
+            term: regler.opphold().harAdresseIUtlandet().tekst,
+            status: regler.opphold().harAdresseIUtlandet().status,
+          },
+          {
+            term: regler.opphold().harSammeAdresseSomArbeidsgiver().tekst,
+            status: regler.opphold().harSammeAdresseSomArbeidsgiver().status,
+          },
+          {
+            term: regler.opphold().familieBorINorge().tekst,
+            status: regler.opphold().familieBorINorge().status,
+          },
         ];
       } else {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
           avklaringer = [
-            { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
-            { term: 'Har studiested i utlandet.', status: regler.studier().studererIUtlandet() },
-            { term: 'Finansiering av studier fra Norge.', status: regler.studier().studierFinansieresFraNorge() },
-            { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge() },
+            {
+              term: regler.opphold().inntilTolvMaaneder().tekst,
+              status: regler.opphold().inntilTolvMaaneder().status,
+            },
+            {
+              term: regler.opphold().harForutgaendeBostedINorge().tekst,
+              status: regler.opphold().harForutgaendeBostedINorge().status,
+            },
+            {
+              term: regler.studier().studererIUtlandet().tekst,
+              status: regler.studier().studererIUtlandet().status,
+            },
+            {
+              term: regler.studier().studierFinansieresFraNorge().tekst,
+              status: regler.studier().studierFinansieresFraNorge().status,
+            },
+            {
+              term: regler.opphold().familieBorINorge().tekst,
+              status: regler.opphold().familieBorINorge().status,
+            },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
-            { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr() },
-            { term: 'Ektefelle og / eller mindreårige barn i Norge?', status: regler.opphold().harEktefelleEllerBarnINorge() },
+            {
+              term: regler.opphold().harForutgaendeBostedINorge().tekst,
+              status: regler.opphold().harForutgaendeBostedINorge().status,
+            },
+            {
+              term: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr().tekst,
+              status: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr().status,
+            },
+            {
+              term: regler.opphold().harEktefelleEllerBarnINorge().tekst,
+              status: regler.opphold().harEktefelleEllerBarnINorge().status,
+            },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
-            { term: 'Oppholdet i utlandet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
-            { term: 'Er medfølgende familie til utsendt arbeidstaker', status: undefined },
-            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().harIntensjonOmReturTilNorge() },
+            {
+              term: regler.opphold().inntilTolvMaaneder().tekst,
+              status: regler.opphold().inntilTolvMaaneder().status,
+            },
+            {
+              term: regler.opphold().harForutgaendeBostedINorge().tekst,
+              status: regler.opphold().harForutgaendeBostedINorge().status,
+            },
+            {
+              term: regler.opphold().harIntensjonOmReturTilNorge().tekst,
+              status: regler.opphold().harIntensjonOmReturTilNorge().status,
+            },
           ];
         }
       }
@@ -92,6 +138,7 @@ class Bostedsland extends Steg {
         visBostedslandVelger: (faktaavklaringBostedslandSnarvei === VurderingBostedslandTyper.ANNET),
         visTipsForYrkesaktiv: erYrkesaktiv,
         visTipsForIkkeYrkesaktiv: !erYrkesaktiv,
+        harEOSBarnetrygdSak: eosBarnetrygd,
         avklaringer,
       };
     };
