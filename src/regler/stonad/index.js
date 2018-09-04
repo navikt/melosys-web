@@ -5,9 +5,18 @@ class Stonad extends DomeneRegel {
     const { saksopplysninger } = this;
     const { eosBarnetrygd } = saksopplysninger.sakOgBehandling;
 
-    if (eosBarnetrygd === null) return undefined;
+    const manglerInfoTekst = 'Sjekk om søker har en EØS barnetrygd-sak!';
+    const positivTekst = 'Har sak på EU/EØS barnetrygd fra Nav.';
+    const negativTekst = 'Har sak på EU/EØS barnetrygd fra Nav.';
 
-    return eosBarnetrygd;
+    if (eosBarnetrygd === null || eosBarnetrygd === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: eosBarnetrygd ? positivTekst : negativTekst,
+        status: eosBarnetrygd,
+      }
+    );
   }
 }
 
