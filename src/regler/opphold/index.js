@@ -87,7 +87,7 @@ class Opphold extends DomeneRegel {
     const negativTekst = 'Har IKKE forutgående bosted i Norge.';
 
     const harMangelfulleOpplysninger = (forutgaendeBostedINorge === null || forutgaendeBostedINorge === undefined);
-    if (harMangelfulleOpplysninger) { return ({ tekst: manglerInfoTekst, status: undefined }); }
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger({ tekst: manglerInfoTekst, status: undefined }); }
 
     return this.byggRegelSvar(forutgaendeBostedINorge, positivTekst, negativTekst);
   };
@@ -103,7 +103,7 @@ class Opphold extends DomeneRegel {
     const negativTekst = 'Nærmeste familie bor IKKE i Norge';
 
     const harMangelfulleOpplysninger = (!familiesBosted || familiesBosted === null);
-    if (harMangelfulleOpplysninger) { return ({ tekst: manglerInfoTekst, status: undefined }); }
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger({ tekst: manglerInfoTekst, status: undefined }); }
 
     return this.byggRegelSvar(erFamilieBorINorge, positivTekst, negativTekst);
   };
@@ -117,7 +117,7 @@ class Opphold extends DomeneRegel {
     const negativTekst = 'Har IKKE adresse i utlandet';
 
     const harMangelfulleOpplysninger = (adresseIUtlandet === null || adresseIUtlandet === undefined);
-    if (harMangelfulleOpplysninger) { return ({ tekst: manglerInfoTekst, status: undefined }); }
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger({ tekst: manglerInfoTekst, status: undefined }); }
 
     return this.byggRegelSvar(adresseIUtlandet, positivTekst, negativTekst);
   };
@@ -131,7 +131,7 @@ class Opphold extends DomeneRegel {
     const negativTekst = 'Har IKKE intensjon om å returnere.';
 
     const harMangelfulleOpplysninger = (intensjonOmRetur === null || intensjonOmRetur === undefined);
-    if (harMangelfulleOpplysninger) { return ({ tekst: manglerInfoTekst, status: undefined }); }
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger({ tekst: manglerInfoTekst, status: undefined }); }
 
     return this.byggRegelSvar(intensjonOmRetur, positivTekst, negativTekst);
   }
