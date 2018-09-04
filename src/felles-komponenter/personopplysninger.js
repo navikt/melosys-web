@@ -6,7 +6,7 @@ import * as MPT from '../proptypes';
 import * as Skjema from '../felles-komponenter/skjema';
 import * as Ikoner from '../resources/images';
 
-import { beregnAlder } from '../utils/dato';
+import { beregnAlder, formatterDatoTilNorsk } from '../utils/dato';
 import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk';
 
 import EnkeltDato from '../felles-komponenter/datoOmrade/enkeltDato';
@@ -59,6 +59,7 @@ function Personopplysninger(props) {
     fnr,
     sivilstand,
     statsborgerskap,
+    statsborgerskapDato,
     kjoenn,
     sammensattNavn,
     foedselsdato,
@@ -83,7 +84,7 @@ function Personopplysninger(props) {
             <Nav.Column xs="6">
               <dl className="person__detaljer">
                 <dt>Fødselsnummer:</dt><dd>{fnr}</dd>
-                <dt>Statsborgerskap pr søknadsstart:</dt>
+                <dt>Statsborgerskap pr {formatterDatoTilNorsk(statsborgerskapDato)}:</dt>
                 <dd>{kodeverkObjektTilTerm(statsborgerskap)}</dd>
                 <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
                 <dt>Kjønn:</dt><dd>{kodeverkObjektTilTerm(kjoenn)}</dd>
