@@ -1,15 +1,13 @@
 import DomeneRegel from '../domeneRegel';
 
-import { strengTilBool } from '../../utils/streng';
-
 class Stonad extends DomeneRegel {
   mottarEOSBarnetrygdFraNav = () => {
-    const { skjema } = this;
-    const { EOSBarnetrygdFraNAV } = skjema;
+    const { saksopplysninger } = this;
+    const { eosBarnetrygd } = saksopplysninger.sakOgBehandling;
 
-    if (!EOSBarnetrygdFraNAV) return undefined;
+    if (eosBarnetrygd === null) return undefined;
 
-    return strengTilBool(EOSBarnetrygdFraNAV);
+    return eosBarnetrygd;
   }
 }
 

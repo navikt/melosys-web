@@ -5,18 +5,38 @@ class Studier extends DomeneRegel {
     const { skjema } = this;
     const { oppholdsland } = skjema;
 
-    if (!oppholdsland || oppholdsland.length === 0) { return undefined; }
+    const manglerInfoTekst = 'Sjekk om søker studerer i utlandet!';
+    const positivTekst = 'Studerer i utlandet.';
+    const negativTekst = 'Studerer IKKE i utlandet.';
 
-    return !oppholdsland.includes('NO');
+    if (!oppholdsland || oppholdsland.length === 0) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: !oppholdsland.includes('NO') ? positivTekst : negativTekst,
+        status: !oppholdsland.includes('NO'),
+      }
+    );
   }
 
   studierFinansieresFraNorge = () => {
     const { skjema } = this;
     const { studentFinansiering } = skjema;
 
-    if (!studentFinansiering) return undefined;
+    const erStudierFinansiertFraNorge = (studentFinansiering === 'LAANEKASSEN');
 
-    return studentFinansiering === 'LAANEKASSEN';
+    const manglerInfoTekst = 'Sjekk om studiet er finansiert fra Norge!';
+    const positivTekst = 'Studiet er finansiert fra Norge.';
+    const negativTekst = 'Studiet er IKKE finansiert fra Norge.';
+
+    if (studentFinansiering === null || studentFinansiering === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: erStudierFinansiertFraNorge ? positivTekst : negativTekst,
+        status: erStudierFinansiertFraNorge,
+      }
+    );
   }
 }
 

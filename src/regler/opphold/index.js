@@ -1,10 +1,9 @@
 import DomeneRegel from '../domeneRegel';
 
-import { strengTilBool } from '../../utils/streng';
 import { datoDiff, formatterDatoTilISO } from '../../utils/dato';
 
 class Opphold extends DomeneRegel {
-  inntilTolvManeder = () => {
+  inntilTolvMaaneder = () => {
     const { skjema } = this;
     const { oppholdUtlandFom, oppholdUtlandTom } = skjema;
     const isoFom = formatterDatoTilISO(oppholdUtlandFom);
@@ -12,76 +11,167 @@ class Opphold extends DomeneRegel {
 
     const diff = datoDiff(isoFom, isoTom, 'months');
 
-    if (diff === false) return undefined;
+    const oppholdErIntilTolvMaaneder = diff <= 12;
 
-    return diff <= 12;
+    const manglerInfoTekst = 'Sjekk om oppholdet er inntil tolv måneder!';
+    const positivTekst = 'Oppholdet er inntil tolv måneder.';
+    const negativTekst = 'Oppholdet er mer enn 12 måneder.';
+
+    if (diff === false) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: oppholdErIntilTolvMaaneder ? positivTekst : negativTekst,
+        status: oppholdErIntilTolvMaaneder,
+      }
+    );
   };
 
   erINorgeSeksManederEllerMerPerKalenderAr = () => {
     const { skjema } = this;
     const antallMaanederINorge = parseInt(skjema.antallMaanederINorge, 10);
-    return antallMaanederINorge >= 6;
+    const erINorgeSeksMaanederEllerMer = antallMaanederINorge >= 6;
+
+    const manglerInfoTekst = 'Sjekk om søker er i Norge seks måneder eller mer pr kalenderår!';
+    const positivTekst = 'Bruker er i Norge i seks måneder eller mer pr kalenderår.';
+    const negativTekst = 'Bruker er IKKE i Norge i seks måneder eller mer pr kalenderår.';
+
+    if (skjema.antallMaanederINorge === null || skjema.antallMaanederINorge === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: erINorgeSeksMaanederEllerMer ? positivTekst : negativTekst,
+        status: erINorgeSeksMaanederEllerMer,
+      }
+    );
   };
 
   oppholderSegIUtlandet = () => {
     const { skjema } = this;
     const { faktaavklaringOppholdsLand } = skjema;
 
-    if (!faktaavklaringOppholdsLand || faktaavklaringOppholdsLand.length === 0) return null;
+    const manglerInfoTekst = 'Sjekk om søker oppholder seg i utlandet!';
+    const positivTekst = 'Oppholder seg i utlandet.';
+    const negativTekst = 'Oppholder seg IKKE i utlandet.';
 
-    return !faktaavklaringOppholdsLand.includes('NO');
+    if (!faktaavklaringOppholdsLand || faktaavklaringOppholdsLand.length === 0) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: !faktaavklaringOppholdsLand.includes('NO') ? positivTekst : negativTekst,
+        status: !faktaavklaringOppholdsLand.includes('NO'),
+      }
+    );
   };
 
   harSammeAdresseSomArbeidsgiver = () => {
     const { skjema } = this;
     const { sammeAdresseSomArbeidsgiver } = skjema;
 
-    if (!sammeAdresseSomArbeidsgiver) return undefined;
+    const manglerInfoTekst = 'Sjekk om søker har samme adresse som arbeidsgiver!';
+    const positivTekst = 'Har samme adresse som arbeidsgiver.';
+    const negativTekst = 'Har IKKE samme adresse som arbeidsgiver.';
 
-    return strengTilBool(sammeAdresseSomArbeidsgiver);
+    if (sammeAdresseSomArbeidsgiver === null || sammeAdresseSomArbeidsgiver === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: sammeAdresseSomArbeidsgiver ? positivTekst : negativTekst,
+        status: sammeAdresseSomArbeidsgiver,
+      }
+    );
   };
 
   harEktefelleEllerBarnINorge = () => {
     const { skjema } = this;
     const { ektefelleEllerBarnINorge } = skjema;
 
-    if (!ektefelleEllerBarnINorge) return undefined;
+    const manglerInfoTekst = 'Sjekk om søker har ektefelle eller barn i Norge!';
+    const positivTekst = 'Har ektefelle eller barn i Norge.';
+    const negativTekst = 'Har IKKE ektefelle eller barn i Norge.';
 
-    return strengTilBool(ektefelleEllerBarnINorge);
+    if (ektefelleEllerBarnINorge === null || ektefelleEllerBarnINorge === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: ektefelleEllerBarnINorge ? positivTekst : negativTekst,
+        status: ektefelleEllerBarnINorge,
+      }
+    );
   };
 
   harForutgaendeBostedINorge = () => {
     const { skjema } = this;
     const { forutgaendeBostedINorge } = skjema;
 
-    if (!forutgaendeBostedINorge) return undefined;
+    const manglerInfoTekst = 'Sjekk søkers forutgående bosted i Norge!';
+    const positivTekst = 'Har forutgående bosted i Norge.';
+    const negativTekst = 'Har IKKE forutgående bosted i Norge.';
 
-    return strengTilBool(forutgaendeBostedINorge);
+    if (forutgaendeBostedINorge === null || forutgaendeBostedINorge === undefined) {
+      return ({ tekst: manglerInfoTekst, status: undefined });
+    }
+
+    return (
+      {
+        tekst: forutgaendeBostedINorge ? positivTekst : negativTekst,
+        status: forutgaendeBostedINorge,
+      }
+    );
   };
 
   familieBorINorge = () => {
     const { skjema } = this;
     const { familiesBosted } = skjema;
 
-    if (!familiesBosted || familiesBosted.length === 0) return undefined;
+    const manglerInfoTekst = 'Sjekk nærmeste families bosted!';
+    const positivTekst = 'Nærmeste familie bor i Norge.';
+    const negativTekst = 'Nærmeste familie bor IKKE i Norge';
 
-    return familiesBosted.includes('NO');
+    if (!familiesBosted || familiesBosted === null) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: familiesBosted.includes('NO') ? positivTekst : negativTekst,
+        status: familiesBosted.includes('NO'),
+      }
+    );
   };
 
   harAdresseIUtlandet = () => {
     const { skjema } = this;
     const { adresseIUtlandet } = skjema;
 
-    if (!adresseIUtlandet) return undefined;
+    const manglerInfoTekst = 'Sjekk om søker har adresse i utlandet!';
+    const positivTekst = 'Har adresse i utlandet.';
+    const negativTekst = 'Har IKKE adresse i utlandet';
 
-    return strengTilBool(adresseIUtlandet);
+    if (adresseIUtlandet === null || adresseIUtlandet === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: adresseIUtlandet ? positivTekst : negativTekst,
+        status: adresseIUtlandet,
+      }
+    );
   };
 
   harIntensjonOmReturTilNorge = () => {
     const { skjema } = this;
     const { intensjonOmRetur } = skjema;
-    if (!intensjonOmRetur) { return undefined; }
-    return strengTilBool(intensjonOmRetur);
+
+    const manglerInfoTekst = 'Sjekk om søker har intensjon om retur!';
+    const positivTekst = 'Har intensjon om å returnere.';
+    const negativTekst = 'Har IKKE intensjon om å returnere.';
+
+    if (intensjonOmRetur === null || intensjonOmRetur === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+
+    return (
+      {
+        tekst: intensjonOmRetur ? positivTekst : negativTekst,
+        status: intensjonOmRetur,
+      }
+    );
   }
 }
 

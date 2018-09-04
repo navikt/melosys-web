@@ -22,11 +22,7 @@ const Avklaringer = ({ avklaringer }) => (
       {
         avklaringer.map(({ term, status }) => {
           let iconClassName;
-          if (status === true) {
-            iconClassName = 'liste__element--oppfylt';
-          } else if (status === false) {
-            iconClassName = 'liste__element--ikkeoppfylt';
-          } else {
+          if (status === undefined) {
             iconClassName = 'liste__element--varsel';
           }
           const cl = classnames({ liste__element: true, [iconClassName]: true });
@@ -68,13 +64,16 @@ const VurderingBostedsland = props => {
   const {
     bekreftOgFortsett, tilstand, vurdering,
   } = props;
-  const { visBostedslandVelger } = tilstand;
+  const { visBostedslandVelger, harEOSBarnetrygdSak } = tilstand;
+
+  const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
 
   return vurdering === {} ? null : (
     <div className="vurderingBostedsland">
       <div>
         <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
         <AvklaringsListe tilstand={tilstand} />
+        <div className="vurderingBostedsland__barnetrygd">{barnetrygdTekst}</div>
         <div className="vurderingBostedsland__skjemafelt">
           <Nav.Fieldset legend="Bostedsland er:">
             <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.NORGE} label="Norge" />
