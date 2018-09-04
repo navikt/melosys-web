@@ -59,19 +59,19 @@ class Bostedsland extends Steg {
       if (erYrkesaktiv) {
         avklaringer = [
           {
-            term: regler.opphold().harForutgaendeBostedINorge().tekst,
+            tekst: regler.opphold().harForutgaendeBostedINorge().tekst,
             status: regler.opphold().harForutgaendeBostedINorge().status,
           },
           {
-            term: regler.opphold().harAdresseIUtlandet().tekst,
+            tekst: regler.opphold().harAdresseIUtlandet().tekst,
             status: regler.opphold().harAdresseIUtlandet().status,
           },
           {
-            term: regler.opphold().harSammeAdresseSomArbeidsgiver().tekst,
+            tekst: regler.opphold().harSammeAdresseSomArbeidsgiver().tekst,
             status: regler.opphold().harSammeAdresseSomArbeidsgiver().status,
           },
           {
-            term: regler.opphold().familieBorINorge().tekst,
+            tekst: regler.opphold().familieBorINorge().tekst,
             status: regler.opphold().familieBorINorge().status,
           },
         ];
@@ -79,23 +79,23 @@ class Bostedsland extends Steg {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
           avklaringer = [
             {
-              term: regler.opphold().inntilTolvMaaneder().tekst,
+              tekst: regler.opphold().inntilTolvMaaneder().tekst,
               status: regler.opphold().inntilTolvMaaneder().status,
             },
             {
-              term: regler.opphold().harForutgaendeBostedINorge().tekst,
+              tekst: regler.opphold().harForutgaendeBostedINorge().tekst,
               status: regler.opphold().harForutgaendeBostedINorge().status,
             },
             {
-              term: regler.studier().studererIUtlandet().tekst,
+              tekst: regler.studier().studererIUtlandet().tekst,
               status: regler.studier().studererIUtlandet().status,
             },
             {
-              term: regler.studier().studierFinansieresFraNorge().tekst,
+              tekst: regler.studier().studierFinansieresFraNorge().tekst,
               status: regler.studier().studierFinansieresFraNorge().status,
             },
             {
-              term: regler.opphold().familieBorINorge().tekst,
+              tekst: regler.opphold().familieBorINorge().tekst,
               status: regler.opphold().familieBorINorge().status,
             },
           ];
@@ -103,15 +103,15 @@ class Bostedsland extends Steg {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
             {
-              term: regler.opphold().harForutgaendeBostedINorge().tekst,
+              tekst: regler.opphold().harForutgaendeBostedINorge().tekst,
               status: regler.opphold().harForutgaendeBostedINorge().status,
             },
             {
-              term: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr().tekst,
+              tekst: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr().tekst,
               status: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr().status,
             },
             {
-              term: regler.opphold().harEktefelleEllerBarnINorge().tekst,
+              tekst: regler.opphold().harEktefelleEllerBarnINorge().tekst,
               status: regler.opphold().harEktefelleEllerBarnINorge().status,
             },
           ];
@@ -119,15 +119,15 @@ class Bostedsland extends Steg {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
             {
-              term: regler.opphold().inntilTolvMaaneder().tekst,
+              tekst: regler.opphold().inntilTolvMaaneder().tekst,
               status: regler.opphold().inntilTolvMaaneder().status,
             },
             {
-              term: regler.opphold().harForutgaendeBostedINorge().tekst,
+              tekst: regler.opphold().harForutgaendeBostedINorge().tekst,
               status: regler.opphold().harForutgaendeBostedINorge().status,
             },
             {
-              term: regler.opphold().harIntensjonOmReturTilNorge().tekst,
+              tekst: regler.opphold().harIntensjonOmReturTilNorge().tekst,
               status: regler.opphold().harIntensjonOmReturTilNorge().status,
             },
           ];

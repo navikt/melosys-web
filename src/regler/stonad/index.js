@@ -27,7 +27,7 @@ class Stonad extends DomeneRegel {
     const negativTekst = 'Har IKKE sak på EU/EØS barnetrygd fra Nav.';
 
     const harMangelfulleOpplysninger = (eosBarnetrygd === null || eosBarnetrygd === undefined);
-    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger({ tekst: manglerInfoTekst, status: undefined }); }
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger(manglerInfoTekst); }
 
     return this.byggRegelSvar(eosBarnetrygd, positivTekst, negativTekst);
   }
