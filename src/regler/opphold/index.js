@@ -11,20 +11,14 @@ class Opphold extends DomeneRegel {
 
     const diff = datoDiff(isoFom, isoTom, 'months');
 
-    const oppholdErIntilTolvMaaneder = diff <= 12;
+    const erOppholdTolvMaaneder = diff <= 12;
 
     const manglerInfoTekst = 'Sjekk om oppholdet er inntil tolv måneder!';
     const positivTekst = 'Oppholdet er inntil tolv måneder.';
     const negativTekst = 'Oppholdet er mer enn 12 måneder.';
 
-    if (diff === false) return ({ tekst: manglerInfoTekst, status: undefined });
-
-    return (
-      {
-        tekst: oppholdErIntilTolvMaaneder ? positivTekst : negativTekst,
-        status: oppholdErIntilTolvMaaneder,
-      }
-    );
+    if (diff === false) return this.manglerOpplysninger(manglerInfoTekst);
+    return this.byggRegelSvar(erOppholdTolvMaaneder, positivTekst, negativTekst);
   };
 
   erINorgeSeksManederEllerMerPerKalenderAr = () => {
@@ -36,14 +30,10 @@ class Opphold extends DomeneRegel {
     const positivTekst = 'Bruker er i Norge i seks måneder eller mer pr kalenderår.';
     const negativTekst = 'Bruker er IKKE i Norge i seks måneder eller mer pr kalenderår.';
 
-    if (skjema.antallMaanederINorge === null || skjema.antallMaanederINorge === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+    const harMangelfulleOpplysninger = (skjema.antallMaanederINorge === null || skjema.antallMaanederINorge === undefined);
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger(manglerInfoTekst); }
 
-    return (
-      {
-        tekst: erINorgeSeksMaanederEllerMer ? positivTekst : negativTekst,
-        status: erINorgeSeksMaanederEllerMer,
-      }
-    );
+    return this.byggRegelSvar(erINorgeSeksMaanederEllerMer, positivTekst, negativTekst);
   };
 
   oppholderSegIUtlandet = () => {
@@ -54,14 +44,10 @@ class Opphold extends DomeneRegel {
     const positivTekst = 'Oppholder seg i utlandet.';
     const negativTekst = 'Oppholder seg IKKE i utlandet.';
 
-    if (!faktaavklaringOppholdsLand || faktaavklaringOppholdsLand.length === 0) return ({ tekst: manglerInfoTekst, status: undefined });
+    const harMangelfulleOpplysninger = (!faktaavklaringOppholdsLand || faktaavklaringOppholdsLand.length === 0);
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger(manglerInfoTekst); }
 
-    return (
-      {
-        tekst: !faktaavklaringOppholdsLand.includes('NO') ? positivTekst : negativTekst,
-        status: !faktaavklaringOppholdsLand.includes('NO'),
-      }
-    );
+    return this.byggRegelSvar(!faktaavklaringOppholdsLand.includes('NO'), positivTekst, negativTekst);
   };
 
   harSammeAdresseSomArbeidsgiver = () => {
@@ -72,14 +58,10 @@ class Opphold extends DomeneRegel {
     const positivTekst = 'Har samme adresse som arbeidsgiver.';
     const negativTekst = 'Har IKKE samme adresse som arbeidsgiver.';
 
-    if (sammeAdresseSomArbeidsgiver === null || sammeAdresseSomArbeidsgiver === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+    const harMangelfulleOpplysninger = (sammeAdresseSomArbeidsgiver === null || sammeAdresseSomArbeidsgiver === undefined);
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger({ tekst: manglerInfoTekst, status: undefined }); }
 
-    return (
-      {
-        tekst: sammeAdresseSomArbeidsgiver ? positivTekst : negativTekst,
-        status: sammeAdresseSomArbeidsgiver,
-      }
-    );
+    return this.byggRegelSvar(sammeAdresseSomArbeidsgiver, positivTekst, negativTekst);
   };
 
   harEktefelleEllerBarnINorge = () => {
@@ -90,14 +72,10 @@ class Opphold extends DomeneRegel {
     const positivTekst = 'Har ektefelle eller barn i Norge.';
     const negativTekst = 'Har IKKE ektefelle eller barn i Norge.';
 
-    if (ektefelleEllerBarnINorge === null || ektefelleEllerBarnINorge === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+    const harMangelfulleOpplysninger = (ektefelleEllerBarnINorge === null || ektefelleEllerBarnINorge === undefined);
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger({ tekst: manglerInfoTekst, status: undefined }); }
 
-    return (
-      {
-        tekst: ektefelleEllerBarnINorge ? positivTekst : negativTekst,
-        status: ektefelleEllerBarnINorge,
-      }
-    );
+    return this.byggRegelSvar(ektefelleEllerBarnINorge, positivTekst, negativTekst);
   };
 
   harForutgaendeBostedINorge = () => {
@@ -108,16 +86,10 @@ class Opphold extends DomeneRegel {
     const positivTekst = 'Har forutgående bosted i Norge.';
     const negativTekst = 'Har IKKE forutgående bosted i Norge.';
 
-    if (forutgaendeBostedINorge === null || forutgaendeBostedINorge === undefined) {
-      return ({ tekst: manglerInfoTekst, status: undefined });
-    }
+    const harMangelfulleOpplysninger = (forutgaendeBostedINorge === null || forutgaendeBostedINorge === undefined);
+    if (harMangelfulleOpplysninger) { return ({ tekst: manglerInfoTekst, status: undefined }); }
 
-    return (
-      {
-        tekst: forutgaendeBostedINorge ? positivTekst : negativTekst,
-        status: forutgaendeBostedINorge,
-      }
-    );
+    return this.byggRegelSvar(forutgaendeBostedINorge, positivTekst, negativTekst);
   };
 
   familieBorINorge = () => {
@@ -130,14 +102,10 @@ class Opphold extends DomeneRegel {
     const positivTekst = 'Nærmeste familie bor i Norge.';
     const negativTekst = 'Nærmeste familie bor IKKE i Norge';
 
-    if (!familiesBosted || familiesBosted === null) return ({ tekst: manglerInfoTekst, status: undefined });
+    const harMangelfulleOpplysninger = (!familiesBosted || familiesBosted === null);
+    if (harMangelfulleOpplysninger) { return ({ tekst: manglerInfoTekst, status: undefined }); }
 
-    return (
-      {
-        tekst: erFamilieBorINorge ? positivTekst : negativTekst,
-        status: erFamilieBorINorge,
-      }
-    );
+    return this.byggRegelSvar(erFamilieBorINorge, positivTekst, negativTekst);
   };
 
   harAdresseIUtlandet = () => {
@@ -148,14 +116,10 @@ class Opphold extends DomeneRegel {
     const positivTekst = 'Har adresse i utlandet.';
     const negativTekst = 'Har IKKE adresse i utlandet';
 
-    if (adresseIUtlandet === null || adresseIUtlandet === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+    const harMangelfulleOpplysninger = (adresseIUtlandet === null || adresseIUtlandet === undefined);
+    if (harMangelfulleOpplysninger) { return ({ tekst: manglerInfoTekst, status: undefined }); }
 
-    return (
-      {
-        tekst: adresseIUtlandet ? positivTekst : negativTekst,
-        status: adresseIUtlandet,
-      }
-    );
+    return this.byggRegelSvar(adresseIUtlandet, positivTekst, negativTekst);
   };
 
   harIntensjonOmReturTilNorge = () => {
@@ -166,14 +130,10 @@ class Opphold extends DomeneRegel {
     const positivTekst = 'Har intensjon om å returnere.';
     const negativTekst = 'Har IKKE intensjon om å returnere.';
 
-    if (intensjonOmRetur === null || intensjonOmRetur === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+    const harMangelfulleOpplysninger = (intensjonOmRetur === null || intensjonOmRetur === undefined);
+    if (harMangelfulleOpplysninger) { return ({ tekst: manglerInfoTekst, status: undefined }); }
 
-    return (
-      {
-        tekst: intensjonOmRetur ? positivTekst : negativTekst,
-        status: intensjonOmRetur,
-      }
-    );
+    return this.byggRegelSvar(intensjonOmRetur, positivTekst, negativTekst);
   }
 }
 

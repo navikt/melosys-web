@@ -9,34 +9,28 @@ class Studier extends DomeneRegel {
     const positivTekst = 'Studerer i utlandet.';
     const negativTekst = 'Studerer IKKE i utlandet.';
 
-    if (!oppholdsland || oppholdsland.length === 0) return ({ tekst: manglerInfoTekst, status: undefined });
+    const harMangelfulleOpplysninger = (!oppholdsland || oppholdsland.length === 0);
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger(manglerInfoTekst); }
 
-    return (
-      {
-        tekst: !oppholdsland.includes('NO') ? positivTekst : negativTekst,
-        status: !oppholdsland.includes('NO'),
-      }
-    );
+    const harStudierIUtlandet = !oppholdsland.includes('NO');
+
+    return this.byggRegelSvar(harStudierIUtlandet, positivTekst, negativTekst);
   }
 
   studierFinansieresFraNorge = () => {
     const { skjema } = this;
     const { studentFinansiering } = skjema;
 
-    const erStudierFinansiertFraNorge = (studentFinansiering === 'LAANEKASSEN');
-
     const manglerInfoTekst = 'Sjekk om studiet er finansiert fra Norge!';
     const positivTekst = 'Studiet er finansiert fra Norge.';
     const negativTekst = 'Studiet er IKKE finansiert fra Norge.';
 
-    if (studentFinansiering === null || studentFinansiering === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+    const harMangelfulleOpplysninger = (studentFinansiering === null || studentFinansiering === undefined);
+    if (harMangelfulleOpplysninger) { return this.manglerOpplysninger(manglerInfoTekst); }
 
-    return (
-      {
-        tekst: erStudierFinansiertFraNorge ? positivTekst : negativTekst,
-        status: erStudierFinansiertFraNorge,
-      }
-    );
+    const erStudierFinansiertFraNorge = (studentFinansiering === 'LAANEKASSEN');
+
+    return this.byggRegelSvar(erStudierFinansiertFraNorge, positivTekst, negativTekst);
   }
 }
 

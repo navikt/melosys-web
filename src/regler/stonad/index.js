@@ -9,14 +9,10 @@ class Stonad extends DomeneRegel {
     const positivTekst = 'Har sak på EU/EØS barnetrygd fra Nav.';
     const negativTekst = 'Har sak på EU/EØS barnetrygd fra Nav.';
 
-    if (eosBarnetrygd === null || eosBarnetrygd === undefined) return ({ tekst: manglerInfoTekst, status: undefined });
+    const harMangelfulleOpplysninger = (eosBarnetrygd === null || eosBarnetrygd === undefined);
+    if (harMangelfulleOpplysninger) { return ({ tekst: manglerInfoTekst, status: undefined }); }
 
-    return (
-      {
-        tekst: eosBarnetrygd ? positivTekst : negativTekst,
-        status: eosBarnetrygd,
-      }
-    );
+    return this.byggRegelSvar(eosBarnetrygd, positivTekst, negativTekst);
   }
 }
 
