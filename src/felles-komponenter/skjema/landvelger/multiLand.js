@@ -142,7 +142,7 @@ class MultiLand extends Component {
     return (
       <div className="landliste">
         {
-          valgteLand.map(land => <MultiLandEnkelt key={land} slettLandHandler={slettLandHandler} landObjekt={kodeTilObjekt(land, landkoder)} />)
+          landkoder.length > 0 && valgteLand.map(land => <MultiLandEnkelt key={land} slettLandHandler={slettLandHandler} landObjekt={kodeTilObjekt(land, landkoder)} />)
         }
         <div className="landliste__leggtil">
           <Nav.Input
