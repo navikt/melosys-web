@@ -1,9 +1,16 @@
 import PT from 'prop-types';
 import * as MPT from './index';
 
-const SakEnkeltLinjePropType = PT.shape({
+const JournalforingOppgavePropType = PT.shape({
   oppgaveID: PT.string,
-  oppgavetype: MPT.Kodeverk,
+  journalpostID: PT.string,
+  aktivTil: PT.string,
+  prioritet: PT.string,
+  versjon: PT.number,
+  ansvarligID: PT.string,
+});
+const SaksbehandlingOppgavePropType = PT.shape({
+  oppgaveID: PT.string,
   sammensattNavn: PT.string,
   saksnummer: PT.string,
   sakstype: MPT.Kodeverk,
@@ -15,16 +22,20 @@ const SakEnkeltLinjePropType = PT.shape({
   }),
   aktivTil: PT.string,
   soknadsperiode: MPT.Periode,
-  land: PT.array,
-  journalpostID: PT.string,
+  land: PT.arrayOf(PT.string),
   prioritet: PT.string,
   versjon: PT.number,
   ansvarligID: PT.string,
+  sistOppdatert: PT.string,
+  erUnderOppdatering: PT.bool,
+});
+const MineOppgaverPropType = PT.shape({
+  journalforing: PT.arrayOf(JournalforingOppgavePropType),
+  saksbehandling: PT.arrayOf(SaksbehandlingOppgavePropType),
 });
 
-const MineOppgaverPropType = PT.arrayOf(SakEnkeltLinjePropType);
-
 export {
-  SakEnkeltLinjePropType as SakEnkeltLinje,
+  JournalforingOppgavePropType as JournalforingOppgave,
+  SaksbehandlingOppgavePropType as SaksbehandlingOppgave,
   MineOppgaverPropType as MineOppgaver,
 };
