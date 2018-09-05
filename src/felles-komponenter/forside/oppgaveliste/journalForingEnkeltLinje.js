@@ -38,7 +38,7 @@ const JournalForingEnkeltLinje = ({ sak }) => {
 };
 
 JournalForingEnkeltLinje.propTypes = {
-  sak: MPT.SakEnkeltLinje,
+  sak: MPT.JournalforingOppgave,
 };
 
 JournalForingEnkeltLinje.defaultProps = {
