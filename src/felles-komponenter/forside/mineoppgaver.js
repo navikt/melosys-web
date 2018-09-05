@@ -9,13 +9,12 @@ import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
 
 import './mineoppgaver.css';
 import withErrorHandling from '../../hoc/withErrorHandling';
-import { KodeverkSelectors } from '../../ducks/kodeverk';
 
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
 const MineOppgaver = props => {
-  const { minesaker, sakstypeKoder } = props;
+  const { minesaker } = props;
   const { journalforing, saksbehandling } = minesaker;
   const sum = () => {
     const j = journalforing ? journalforing.length : 0;
@@ -37,16 +36,14 @@ const MineOppgaver = props => {
 MineOppgaver.propTypes = {
   hentMineSaker: PT.func.isRequired,
   minesaker: MPT.MineOppgaver,
-  sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 MineOppgaver.defaultProps = {
-  minesaker: [],
+  minesaker: {},
 };
 
 const mapStateToProps = state => ({
   minesaker: Oppgaver.oppgaverSelectors.MineSakerSelector(state),
-  sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
