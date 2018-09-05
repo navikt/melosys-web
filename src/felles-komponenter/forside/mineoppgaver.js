@@ -10,25 +10,26 @@ import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
 import './mineoppgaver.css';
 import withErrorHandling from '../../hoc/withErrorHandling';
 
+const uuid = require('uuid/v4');
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
 const MineOppgaver = props => {
   const { minesaker } = props;
   const { journalforing, saksbehandling } = minesaker;
-  const sum = () => {
-    const j = journalforing ? journalforing.length : 0;
-    const s = saksbehandling ? saksbehandling.length : 0;
-    return j + s;
+  const antall = () => {
+    const jf = journalforing ? journalforing.length : 0;
+    const sb = saksbehandling ? saksbehandling.length : 0;
+    return jf + sb;
   };
   const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre.';
   return (
     <div className="minesaker">
-      <h1>Mine Oppgaver ({sum()})</h1>
-      {journalforing && journalforing.map(oppgave => <JournalForingEnkeltLinje sak={oppgave} />)}
+      <h1>Mine Oppgaver ({antall()})</h1>
+      {journalforing && journalforing.map(oppgave => <JournalForingEnkeltLinje key={uuid()} sak={oppgave} />)}
 
-      {saksbehandling && saksbehandling.map(oppgave => <SakEnkeltLinje sak={oppgave} />)}
-      {sum() === 0 && ingenSakerMelding}
+      {saksbehandling && saksbehandling.map(oppgave => <SakEnkeltLinje key={uuid()} sak={oppgave} />)}
+      {antall() === 0 && ingenSakerMelding}
     </div>
   );
 };

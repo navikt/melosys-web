@@ -3,7 +3,6 @@ import * as MPT from './index';
 
 const JournalforingOppgavePropType = PT.shape({
   oppgaveID: PT.string,
-  oppgavetypeKode: PT.string,
   journalpostID: PT.string,
   aktivTil: PT.string,
   prioritet: PT.string,
@@ -12,7 +11,6 @@ const JournalforingOppgavePropType = PT.shape({
 });
 const SaksbehandlingOppgavePropType = PT.shape({
   oppgaveID: PT.string,
-  oppgavetype: MPT.Kodeverk,
   sammensattNavn: PT.string,
   saksnummer: PT.string,
   sakstype: MPT.Kodeverk,
