@@ -27,8 +27,8 @@ const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler }) => (
       </Nav.Column>
       <Nav.Column xs="6">
         <Skjema.RadioGruppe label="Oppgir søker hjemmekontor?" feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`}>
-          <Skjema.Radio feltNavn={`arbeidUtland[${indeks}].hjemmekontor`} value={BOOLSK.SANN} label="Ja" />
-          <Skjema.Radio feltNavn={`arbeidUtland[${indeks}].hjemmekontor`} value={BOOLSK.USANN} label="Nei" />
+          <Skjema.Radio feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`} value={BOOLSK.SANN} label="Ja" />
+          <Skjema.Radio feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`} value={BOOLSK.USANN} label="Nei" />
         </Skjema.RadioGruppe>
         <Skjema.RadioGruppe label="Erstatter vedkommende en tidligere utsendt?" feltNavn={`arbeidUtland[${indeks}].arbeidUtlandErstatning`}>
           <Skjema.Radio feltNavn={`arbeidUtland[${indeks}].arbeidUtlandErstatning`} value={BOOLSK.SANN} label="Ja" />
