@@ -69,6 +69,7 @@ class Vilkarsveileder extends Component {
       faktaavklaring: props.faktaavklaring,
       inngang: props.inngang,
       skjema: props.skjema,
+      landkoder: props.landkoder,
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
       begrunnelser: props.begrunnelser,
       tilgjengeligeHandlers,
@@ -128,6 +129,7 @@ Vilkarsveileder.propTypes = {
   oppsummering: MPT.Oppsummering,
   faktaavklaring: PT.object,
   begrunnelser: PT.object,
+  landkoder: PT.arrayOf(MPT.Kodeverk),
   inngang: PT.object,
   skjema: PT.object.isRequired,
   valgteArbeidsgivere: PT.array,
@@ -143,6 +145,7 @@ Vilkarsveileder.defaultProps = {
   arbeidsgivereIPerioden: [],
   valgteArbeidsgivere: [],
   begrunnelser: {},
+  landkoder: [],
 };
 
 const mapStateToProps = state => ({
@@ -152,6 +155,7 @@ const mapStateToProps = state => ({
   valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
   arbeidsgivereIPerioden: faktaavklaringSelectors.ArbeidsgivereIPeriodenSelector(state),
   begrunnelser: KodeverkSelectors.begrunnelserSelector(state),
+  landkoder: KodeverkSelectors.landkoderSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
 });
 
