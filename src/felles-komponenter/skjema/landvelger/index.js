@@ -40,11 +40,15 @@ LandVelger.propTypes = {
   multiLand: PT.bool,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string,
+  leggTilCallback: PT.func,
+  slettCallback: PT.func,
 };
 
 LandVelger.defaultProps = {
   multiLand: false,
   label: undefined,
+  leggTilCallback: () => {},
+  slettCallback: () => {},
 };
 
 const mapStateToProps = state => ({
