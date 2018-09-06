@@ -6,25 +6,40 @@ import * as Nav from '../../../utils/navFrontend';
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
 import './vurderingVedtak.css';
+import LandVelger from '../../skjema/landvelger';
 
 const VurderingInngang = props => {
   const { bekreftOgFortsett, inngangsvilkar, faktaavklaring } = props;
   const { vurdering } = inngangsvilkar;
   const { opphold } = faktaavklaring;
 
-  console.log(opphold);
-
   return (
     <div className="inngang vedtak">
       <Nav.Undertittel>Kontroller inngangsvilkår</Nav.Undertittel>
-        <ul className="betingelser__liste">
-          <li className="liste__element liste__element--oppfylt">
-            { kodeverkObjektTilTerm(vurdering) }
-          </li>
-          <li className="liste__element liste__element--varsel">
-            Sjekk at land er innenfor et territorium / område som dekkes av forordningen.
-          </li>
-        </ul>
+      <ul className="betingelser__liste">
+        <li className="liste__element liste__element--oppfylt">
+          { kodeverkObjektTilTerm(vurdering) }
+        </li>
+        <li className="liste__element liste__element--varsel">
+          Sjekk at land er innenfor et territorium / område som dekkes av forordningen.
+        </li>
+      </ul>
+      <div>
+        <Nav.Fieldset legend="Land">
+          <LandVelger
+            feltNavn="faktaavklaringOppholdsLand"
+            multiLand
+            label="Legg til manglende land:"
+            leggTilCallback={landKode => console.log('leggtil', landKode)}
+            slettCallback={landKode => console.log('slett', landKode)}
+          />
+        </Nav.Fieldset>
+      </div>
+      <div>
+        <Nav.Fieldset legend="Ugyldige land:">
+
+        </Nav.Fieldset>
+      </div>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Start behandling</Nav.Knapp>
       </div>
