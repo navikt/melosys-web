@@ -7,7 +7,6 @@
 
 import { createSelector } from 'reselect';
 
-
 export const landkoderSelector = createSelector(
   state => state.kodeverk.data.landkoder,
   landkoder => landkoder || []
