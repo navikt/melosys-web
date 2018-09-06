@@ -18,8 +18,8 @@ export const ArbeidNorgeSelector = createSelector(
 );
 
 export const ArbeidUtlandSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidUtland : {}),
-  arbeidUtland => arbeidUtland || {}
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.arbeidUtland : []),
+  arbeidUtland => arbeidUtland || []
 );
 
 export const ArbeidUtlandAdresseSelector = createSelector(
