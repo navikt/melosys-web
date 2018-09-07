@@ -1,7 +1,5 @@
 import { createSelector } from 'reselect';
 
-import { kodeverkObjektTilKode } from '../../utils/kodeverk';
-
 /**
  * Selectors
  * -----------------------------------------------------------------------------------------
@@ -12,14 +10,4 @@ import { kodeverkObjektTilKode } from '../../utils/kodeverk';
 export const MineSakerSelector = createSelector(
   state => state.oppgaver.data || {},
   minesaker => minesaker
-);
-/*
-export const MineSakerAntallSelector = createSelector(
-  state => state.oppgaver.data || [],
-  minesaker => minesaker.length
-);
-*/
-export const SokOppgaveSelector = createSelector(
-  state => state.oppgaver.data || [],
-  oppgaver => oppgaver.filter(oppgave => kodeverkObjektTilKode(oppgave.oppgavetype) !== 'JFR')
 );
