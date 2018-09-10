@@ -29,9 +29,12 @@ const VurderingInngang = props => {
           Sjekk at land er innenfor et territorium / område som dekkes av forordningen.
         </li>
       </ul>
-      <div>
-        <FieldArray name="faktaavklaringOppholdsLand" component={OppholdsLandListe} oppholdBegrunnelser={oppholdBegrunnelser} landkoder={landkoder} />
-      </div>
+      <FieldArray
+        name="faktaavklaringOppholdsLand"
+        component={OppholdsLandListe}
+        oppholdBegrunnelser={oppholdBegrunnelser}
+        landkoder={landkoder}
+      />
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Start behandling</Nav.Knapp>
       </div>

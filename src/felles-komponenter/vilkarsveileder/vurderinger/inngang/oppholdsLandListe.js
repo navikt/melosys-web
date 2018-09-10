@@ -69,20 +69,19 @@ class OppholdsLandListe extends Component {
               oppholdBegrunnelser={oppholdBegrunnelser} />))
           }
         </Nav.Fieldset>
+
+        {alleIkkeGyldigeOppholdsland.length > 0 &&
         <Nav.Fieldset legend="Land som er fjernet fra søknaden:">
-          { alleIkkeGyldigeOppholdsland.length > 0 ?
-            alleIkkeGyldigeOppholdsland.map(opphold => (
-              <FjernetLandEnkelt
-                key={opphold.landKode}
-                landKodeObjekt={this.finnLand(opphold.landKode)}
-                begrunnelseTerm={finnBegrunnelse(opphold.begrunnelseKode)}
-                angreFjern={angreFjern}
-                erGyldig={opphold.erGyldig} />))
-            :
-            '- Ingen land er fjernet -'
+          {alleIkkeGyldigeOppholdsland.map(opphold => (
+            <FjernetLandEnkelt
+              key={opphold.landKode}
+              landKodeObjekt={this.finnLand(opphold.landKode)}
+              begrunnelseTerm={finnBegrunnelse(opphold.begrunnelseKode)}
+              angreFjern={angreFjern}
+              erGyldig={opphold.erGyldig} />))
           }
         </Nav.Fieldset>
-
+        }
       </div>
     );
   }
