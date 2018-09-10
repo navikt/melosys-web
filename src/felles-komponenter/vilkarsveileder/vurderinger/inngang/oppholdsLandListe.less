@@ -1,0 +1,34 @@
+.oppholdsland__liste {
+  .oppholdsland__linje, .fjernetland__linje {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 1em;
+  }
+
+  .oppholdsland__landNavn, .fjernetland__landNavn {
+    width: 25%;
+  }
+
+  .fjernetland__begrunnelse {
+    width: 50%;
+    padding-right: 20px;
+  }
+
+  .oppholdsland__fjerning {
+    display: flex;
+    flex-direction: row;
+    margin-top: -1em;
+    align-items: center;
+    flex: 1;
+  }
+
+  .oppholdsland__fjerning__knapper {
+    margin-top: 0.8em;
+
+    .fjern__bekreft, .fjern__avbryt {
+      margin-left: 0.5em;
+    }
+  }
+}

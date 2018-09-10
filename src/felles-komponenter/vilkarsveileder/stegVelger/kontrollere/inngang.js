@@ -9,7 +9,7 @@ class Inngang extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.PERIODE,
+        nesteSteg: STEG.SYSSELSETTING,
       },
     ];
     this._id = STEG.INNGANG;
