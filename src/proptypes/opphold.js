@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import { Periode } from './periode';
 
 const OppholdPropType = PT.shape({
-  land: PT.arrayOf(PT.string),
+  land: PT.arrayOf(PT.object),
   periode: Periode,
 });
 
