@@ -6,6 +6,7 @@ import * as MPT from '../../../../proptypes';
 
 import OppholdsLandEnkelt from './oppholdsLandEnkelt';
 import FjernetLandEnkelt from './fjernetLandEnkelt';
+import OppholdsLandLeggTil from './oppholdsLandLeggTil';
 
 import './oppholdsLandListe.css';
 
@@ -25,6 +26,16 @@ class OppholdsLandListe extends Component {
 
 
     this.props.fields.remove(posisjon);
+    this.props.fields.push(opphold);
+  };
+
+  bekreftLeggTil = landKode => {
+    const opphold = {
+      landKode,
+      erGyldig: true,
+      begrunnelsesKode: undefined,
+    };
+
     this.props.fields.push(opphold);
   };
 
@@ -48,8 +59,12 @@ class OppholdsLandListe extends Component {
   };
 
   render () {
-    const { fields, oppholdBegrunnelser } = this.props;
-    const { bekreftFjern, angreFjern, finnBegrunnelse } = this;
+    const { fields, oppholdBegrunnelser, landkoder } = this.props;
+    const {
+      bekreftFjern, angreFjern, finnBegrunnelse, bekreftLeggTil,
+    } = this;
+
+    console.log(this.props);
 
     const alleGyldigeOppholdsland = fields.getAll().filter(opphold => opphold.erGyldig);
     const alleIkkeGyldigeOppholdsland = fields
@@ -68,6 +83,7 @@ class OppholdsLandListe extends Component {
               erGyldig={opphold.erGyldig}
               oppholdBegrunnelser={oppholdBegrunnelser} />))
           }
+          <OppholdsLandLeggTil bekreftLeggTil={bekreftLeggTil} landkoder={landkoder} />
         </Nav.Fieldset>
 
         {alleIkkeGyldigeOppholdsland.length > 0 &&
@@ -92,5 +108,14 @@ OppholdsLandListe.propTypes = {
   oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
+
+const mapStateToProps = state => ({
+
+});
+
+const mapDispatchToProps = dispatch => ({
+  slettLandFraSoknad: land => dispatch()
+})
+
 
 export default OppholdsLandListe;
