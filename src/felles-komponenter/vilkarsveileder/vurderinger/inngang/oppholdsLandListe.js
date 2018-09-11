@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { formValueSelector, change } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
@@ -27,6 +29,10 @@ class OppholdsLandListe extends Component {
 
     this.props.fields.remove(posisjon);
     this.props.fields.push(opphold);
+
+    if (begrunnelseKode === 'FEIL_LAND_JOURNALFORING') {
+      this.fjernLandFraSoknad(landKode);
+    }
   };
 
   bekreftLeggTil = landKode => {
@@ -37,6 +43,17 @@ class OppholdsLandListe extends Component {
     };
 
     this.props.fields.push(opphold);
+    this.leggLandTilSoknad(landKode);
+  };
+
+  fjernLandFraSoknad = valgtLand => {
+    const oppdaterteOppholdsLand = this.props.oppholdsLandFraSoknad.filter(land => land !== valgtLand);
+    this.props.erstattOppholdsLand(oppdaterteOppholdsLand);
+  };
+
+  leggLandTilSoknad = valgtLand => {
+    const oppdaterteOppholdsLand = [...this.props.oppholdsLandFraSoknad, valgtLand];
+    this.props.erstattOppholdsLand(oppdaterteOppholdsLand);
   };
 
   angreFjern = landKode => {
@@ -64,7 +81,7 @@ class OppholdsLandListe extends Component {
       bekreftFjern, angreFjern, finnBegrunnelse, bekreftLeggTil,
     } = this;
 
-    console.log(this.props);
+    console.log(this.props.oppholdsLandFraSoknad);
 
     const alleGyldigeOppholdsland = fields.getAll().filter(opphold => opphold.erGyldig);
     const alleIkkeGyldigeOppholdsland = fields
@@ -103,19 +120,22 @@ class OppholdsLandListe extends Component {
   }
 }
 
+const formValues = formValueSelector('soknad');
+
 OppholdsLandListe.propTypes = {
   fields: PT.object.isRequired,
   oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
+  oppholdsLandFraSoknad: PT.arrayOf(PT.string).isRequired,
+  erstattOppholdsLand: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 const mapStateToProps = state => ({
-
+  oppholdsLandFraSoknad: formValues(state, 'oppholdsland'),
 });
 
 const mapDispatchToProps = dispatch => ({
-  slettLandFraSoknad: land => dispatch()
-})
+  erstattOppholdsLand: nyeOppholdsLand => dispatch(change('soknad', 'oppholdsland', nyeOppholdsLand)),
+});
 
-
-export default OppholdsLandListe;
+export default connect(mapStateToProps, mapDispatchToProps)(OppholdsLandListe);
