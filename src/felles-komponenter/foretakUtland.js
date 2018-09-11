@@ -25,7 +25,7 @@ const EnkeltForetak = ({ indeks, slettForetakHandler }) => (
         <Skjema.Input label="Gatenavn" feltNavn={`foretakUtland[${indeks}].adresse.gatenavn`} />
         <Skjema.Input label="Postnummer" feltNavn={`foretakUtland[${indeks}].adresse.postnummer`} />
         <Skjema.Input label="Poststed" feltNavn={`foretakUtland[${indeks}].adresse.poststed`} />
-        <LandVelger label="Land" feltNavn={`foretakUtland[${indeks}].adresse.land`} />
+        <LandVelger label="Land" feltNavn={`foretakUtland[${indeks}].adresse.landKode`} />
       </Nav.Fieldset>
     </Nav.Column>
     <Nav.Knapp mini onClick={() => slettForetakHandler(indeks)}>- Fjern dette foretaket</Nav.Knapp>
