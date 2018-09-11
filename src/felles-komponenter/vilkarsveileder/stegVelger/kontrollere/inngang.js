@@ -5,6 +5,7 @@ import VurderingInngang from '../../vurderinger/vurderingInngang';
 class Inngang extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
+
     this._kriterier = [
       {
         beskrivelse: 'alle andre valg',

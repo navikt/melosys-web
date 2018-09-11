@@ -3,18 +3,22 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
-import LandVelger from '../../../skjema/landvelger';
+import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
 
 import { kodeverkObjektTilKode } from '../../../../utils/kodeverk';
 import { landTekstFormat } from '../../../skjema/landvelger';
 
-const LeggTilWrapper = ({ bekreftLeggTil, feltNavn, avbryt }) => (
+const LeggTilWrapper = ({
+  valgtLand, landkoder, oppdaterLand, bekreftLeggTil, avbryt,
+}) => (
   <div className="leggtilland__linje">
-    <LandVelger
-      feltNavn={feltNavn}
+    <EnkeltLandPure
       bredde="M"
       label="Legg til land"
-      leggTilCallback={bekreftLeggTil}
+      meta={{ error: undefined }}
+      onChange={oppdaterLand}
+      value={valgtLand}
+      landkoder={landkoder}
     />
     <div className="leggtilland__linje__knapper">
       <Nav.Knapp mini onClick={bekreftLeggTil}>Legg til</Nav.Knapp>
@@ -23,26 +27,48 @@ const LeggTilWrapper = ({ bekreftLeggTil, feltNavn, avbryt }) => (
   </div>
 );
 
+LeggTilWrapper.propTypes = {
+  valgtLand: PT.string.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  oppdaterLand: PT.func.isRequired,
+  bekreftLeggTil: PT.func.isRequired,
+  avbryt: PT.func.isRequired,
+};
+
 class OppholdsLandLeggTil extends Component {
-  state = { erLeggTilIntensjon: false };
+  state = { erLeggTilIntensjon: false, valgtLand: '' };
 
   settLeggTilIntensjon = () => this.setState({ erLeggTilIntensjon: true });
-  bekreftLeggTil = event => console.log(event.currentTarget)
+  bekreftLeggTil = () => {
+    this.props.bekreftLeggTil(this.state.valgtLand);
+    this.resettAlt();
+  };
+
+  resettAlt = () => this.setState({ erLeggTilIntensjon: false, valgtLand: '' });
 
   avbryt = () => this.setState({ erLeggTilIntensjon: false });
 
+  oppdaterLand = valgtLand => this.setState({ valgtLand });
+
   render () {
-    const {
-      landKodeObjekt, bekreftFjern, landkoder, oppholdBegrunnelser,
-    } = this.props;
+    const { landkoder } = this.props;
     const { erLeggTilIntensjon } = this.state;
-    const { settLeggTilIntensjon, avbryt, bekreftLeggTil } = this;
+    const {
+      settLeggTilIntensjon, avbryt, bekreftLeggTil, oppdaterLand,
+    } = this;
 
     return (
       <div>
         <div>
           <div>{!erLeggTilIntensjon && <Nav.Knapp mini onClick={settLeggTilIntensjon}>+ Legg til land</Nav.Knapp> }</div>
-          {erLeggTilIntensjon && <LeggTilWrapper bekreftLeggTil={bekreftLeggTil} avbryt={avbryt} />}
+          {erLeggTilIntensjon && (
+            <LeggTilWrapper
+              valgtLand={this.state.valgtLand}
+              landkoder={landkoder}
+              bekreftLeggTil={bekreftLeggTil}
+              oppdaterLand={oppdaterLand}
+              avbryt={avbryt} />
+          )}
         </div>
         <div className="oppholdsland__dataliste">
           <datalist id="alleLand">
@@ -56,6 +82,7 @@ class OppholdsLandLeggTil extends Component {
 
 OppholdsLandLeggTil.propTypes = {
   bekreftLeggTil: PT.func.isRequired,
+  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 export default OppholdsLandLeggTil;
