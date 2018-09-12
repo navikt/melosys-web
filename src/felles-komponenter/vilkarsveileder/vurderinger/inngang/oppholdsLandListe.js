@@ -84,7 +84,7 @@ class OppholdsLandListe extends Component {
     const alleUbrukteLandkoder = landkoder.filter(land => !alleOppholdsland.map(ol => ol.landKode).includes(land.kode));
 
     return (
-      <Nav.Container fluid className="oppholdsland__liste">
+      <div className="oppholdsland__liste">
         <Nav.Fieldset legend="Land:" >
           { alleGyldigeOppholdsland.map(opphold => (
             <OppholdsLandEnkelt
@@ -114,7 +114,7 @@ class OppholdsLandListe extends Component {
           }
         </Nav.Fieldset>
         }
-      </Nav.Container>
+      </div>
     );
   }
 }

@@ -1,17 +1,33 @@
 .oppholdsland__liste {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+
   .oppholdsland__linje, .fjernetland__linje, .leggtilland__linje {
+    display: flex;
+    align-items: center;
+    flex: 1;
     margin-bottom: 1em;
   }
 
-  .leggtilland__linje__begrunnelse {
+  .linje__land {
+    width: 20%;
+  }
+
+  .linje__begrunnelse {
+    width: 30%;
     margin-left: 1em;
+  }
+
+  .linje__knapper {
+    width: 30%;
   }
 
   .leggtilland__linje__knapper {
     margin-top: 0.9em;
 
     .knapp {
-      margin-left: 1em;
+      margin-right: 1em;
     }
   }
 
@@ -26,7 +42,7 @@
   }
 
   .oppholdsland__fjerning__knapper {
-    margin-top: 0.8em;
+    margin-top: 0.6em;
 
     .fjern__bekreft, .fjern__avbryt {
       margin-right: 0.5em;
