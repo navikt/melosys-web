@@ -14,18 +14,12 @@ import './oppholdsLandListe.css';
 
 class OppholdsLandListe extends Component {
   bekreftFjern = (landKode, begrunnelseKode) => {
-    // OK 1. Sjekk grunn til fjerning
-    // OK 2. sett riktig flagg i faktaavklaring med begrunnelse.
-    // OK 3. Ikke vis de som er fjernet for feil i søknaden.
-    // 4. Hvis feil i journalføring, fjern også i soknad.
-    // 5. Opprette ny
     const posisjon = this.props.fields.getAll().findIndex(opphold => opphold.landKode === landKode);
     const opphold = {
       ...this.props.fields.get(posisjon),
       erGyldig: false,
       begrunnelseKode,
     };
-
 
     this.props.fields.remove(posisjon);
     this.props.fields.push(opphold);
@@ -35,11 +29,11 @@ class OppholdsLandListe extends Component {
     }
   };
 
-  bekreftLeggTil = landKode => {
+  bekreftLeggTil = (landKode, begrunnelseKode) => {
     const opphold = {
       landKode,
       erGyldig: true,
-      begrunnelsesKode: undefined,
+      begrunnelseKode,
     };
 
     this.props.fields.push(opphold);
@@ -81,15 +75,16 @@ class OppholdsLandListe extends Component {
       bekreftFjern, angreFjern, finnBegrunnelse, bekreftLeggTil,
     } = this;
 
-    console.log(this.props.oppholdsLandFraSoknad);
-
-    const alleGyldigeOppholdsland = fields.getAll().filter(opphold => opphold.erGyldig);
+    const alleOppholdsland = fields.getAll();
+    const alleGyldigeOppholdsland = alleOppholdsland.filter(opphold => opphold.erGyldig);
     const alleIkkeGyldigeOppholdsland = fields
       .getAll()
       .filter(opphold => !opphold.erGyldig && opphold.begrunnelseKode !== 'FEIL_LAND_JOURNALFORING');
 
+    const alleUbrukteLandkoder = landkoder.filter(land => !alleOppholdsland.map(ol => ol.landKode).includes(land.kode));
+
     return (
-      <div className="oppholdsland__liste">
+      <Nav.Container fluid className="oppholdsland__liste">
         <Nav.Fieldset legend="Land:" >
           { alleGyldigeOppholdsland.map(opphold => (
             <OppholdsLandEnkelt
@@ -100,7 +95,11 @@ class OppholdsLandListe extends Component {
               erGyldig={opphold.erGyldig}
               oppholdBegrunnelser={oppholdBegrunnelser} />))
           }
-          <OppholdsLandLeggTil bekreftLeggTil={bekreftLeggTil} landkoder={landkoder} />
+          <OppholdsLandLeggTil
+            bekreftLeggTil={bekreftLeggTil}
+            landkoder={alleUbrukteLandkoder}
+            oppholdBegrunnelser={oppholdBegrunnelser}
+          />
         </Nav.Fieldset>
 
         {alleIkkeGyldigeOppholdsland.length > 0 &&
@@ -115,7 +114,7 @@ class OppholdsLandListe extends Component {
           }
         </Nav.Fieldset>
         }
-      </div>
+      </Nav.Container>
     );
   }
 }

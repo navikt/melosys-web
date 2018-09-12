@@ -1,10 +1,10 @@
 .oppholdsland__liste {
   .oppholdsland__linje, .fjernetland__linje, .leggtilland__linje {
-    display: flex;
-    flex: 1;
-    flex-direction: row;
-    align-items: center;
     margin-bottom: 1em;
+  }
+
+  .leggtilland__linje__begrunnelse {
+    margin-left: 1em;
   }
 
   .leggtilland__linje__knapper {
@@ -15,18 +15,11 @@
     }
   }
 
-  .oppholdsland__landNavn, .fjernetland__landNavn {
-    width: 25%;
-  }
-
-  .fjernetland__begrunnelse {
-    width: 50%;
+  .oppholdsland__begrunnelse, .fjernetland__begrunnelse {
     padding-right: 20px;
   }
 
   .oppholdsland__fjerning {
-    display: flex;
-    flex-direction: row;
     margin-top: -1em;
     align-items: center;
     flex: 1;
@@ -36,7 +29,7 @@
     margin-top: 0.8em;
 
     .fjern__bekreft, .fjern__avbryt {
-      margin-left: 0.5em;
+      margin-right: 0.5em;
     }
   }
 }
