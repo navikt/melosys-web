@@ -19,18 +19,7 @@ const initialState = {
 
 const soknadTemplate =
   {
-    arbeidUtland: {
-      adresse: {
-        gatenavn: undefined,
-        postnummer: undefined,
-        poststed: undefined,
-        land: undefined,
-      },
-      arbeidsandelUtland: undefined,
-      arbeidsandelNorge: undefined,
-      arbeidUtlandHjemmekontor: undefined,
-      arbeidUtlandErstatning: undefined,
-    },
+    arbeidUtland: [],
     foretakUtland: [],
     oppholdUtland: {
       oppholdsland: undefined,
@@ -152,18 +141,7 @@ export default function reducer(state = initialState, action) {
           fullmektigRegion: dokument.fullmektigRegion,
           fullmektigLandKode: dokument.fullmektigLand,
         },
-        arbeidUtland: {
-          adresse: {
-            gatenavn: dokument.arbeidUtlandGatenavn,
-            postnummer: dokument.arbeidUtlandPostnummer,
-            poststed: dokument.arbeidUtlandPoststed,
-            landKode: dokument.arbeidUtlandLand,
-          },
-          arbeidsandelUtland: dokument.arbeidsandelUtland,
-          arbeidsandelNorge: dokument.arbeidsandelNorge,
-          arbeidUtlandHjemmekontor: dokument.arbeidUtlandHjemmekontor,
-          arbeidUtlandErstatning: dokument.arbeidUtlandErstatning,
-        },
+        arbeidUtland: dokument.arbeidUtland,
         juridiskArbeidsgiverNorge: {
           erBemanningsbyra: dokument.erBemanningsbyra,
           utsendteNeste12Mnd: dokument.utsendteNeste12Mnd,
