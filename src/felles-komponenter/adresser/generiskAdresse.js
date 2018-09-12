@@ -19,11 +19,13 @@ const GeneriskAdresse = ({ adresse }) => {
     gatenavn, gatenummer, husnummer, husbokstav,
   } = gateadresse;
 
+  const landNavn = (typeof land === 'string' ? land : kodeverkObjektTilTerm(land));
+
   return (gatenavn || gatenummer || husnummer || husbokstav || land || postnr || poststed) ? (
     <address className="bostedsadresse">
       {gatenavn} {gatenummer} {husnummer} {husbokstav}<br />
       {postnr} {poststed}<br />
-      {kodeverkObjektTilTerm(land)}
+      {landNavn}
     </address>
   ) : INGEN_TILGJENGELIG_TEKST;
 };
