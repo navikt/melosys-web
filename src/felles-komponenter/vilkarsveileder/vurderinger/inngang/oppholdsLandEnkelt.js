@@ -27,7 +27,7 @@ class OppholdsLandEnkelt extends Component {
       <div className="oppholdsland__linje">
         <div className="linje__land">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
         {!erSlettingIntensjon && (<div className="linje__begrunnelse">{begrunnelseTerm}</div>) }
-        {!erSlettingIntensjon && (<div className="linje__knapp">{!erSlettingIntensjon && <Nav.Knapp mini onClick={settSlettIntensjon} >Fjern</Nav.Knapp> }</div>) }
+        {!erSlettingIntensjon && (<div className="linje__knapper">{!erSlettingIntensjon && <Nav.Knapp mini onClick={settSlettIntensjon} >Fjern</Nav.Knapp> }</div>) }
         {erSlettingIntensjon && (
           <OppholdsLandFjerningBekreft oppholdBegrunnelser={oppholdBegrunnelser} land={landKodeObjekt} bekreft={bekreftFjern} avbryt={avbryt} />
         )

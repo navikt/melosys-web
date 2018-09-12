@@ -20,7 +20,7 @@ class OppholdsLandFjerningBekreft extends Component {
     const landKode = kodeverkObjektTilKode(land);
 
     return (
-      <div className="oppholdsland__linje">
+      <div>
         <div className="linje__begrunnelse">
           <Nav.Select bredde="m" value={this.state.begrunnelse} onChange={this.onChange} label="Velg begrunnelse:">
             <option disabled value="0" />
