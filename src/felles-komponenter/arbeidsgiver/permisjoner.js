@@ -13,17 +13,21 @@ import Tabell from '../tabell/tabell';
 const Permisjoner = ({ permisjoner }) => {
   if (!permisjoner) return null;
 
-  const permisjonerArrayed = permisjoner.map(linje => (
+  const permisjonerArrayed = permisjoner.map(linje => {
+    const { permisjonsprosent, permisjonOgPermittering, permisjonsPeriode } = linje;
     // Tabell-komponenten er generisk og trenger at hver linje
     // kommer inn som en ren array og som rendres gjennomsiktig ut i GUI.
     // All formattering eller komponent-innsett må derfor gjøres her og returnere
     // en ny ferdigtygget array.
-    [
-      <EnkeltDato dato={linje.permisjonsPeriode.fom} />,
-      <EnkeltDato dato={linje.permisjonsPeriode.tom} />,
-      linje.permisjonOgPermittering,
-      linje.permisjonsprosent,
-    ]));
+    const fixedPermisjonsprosent = permisjonsprosent ? permisjonsprosent.toFixed(1) : 0;
+
+    return [
+      <EnkeltDato dato={permisjonsPeriode.fom} />,
+      <EnkeltDato dato={permisjonsPeriode.tom} />,
+      permisjonOgPermittering,
+      fixedPermisjonsprosent,
+    ];
+  });
 
   return permisjoner.length > 0 ? (
     <div className="permisjoner">
