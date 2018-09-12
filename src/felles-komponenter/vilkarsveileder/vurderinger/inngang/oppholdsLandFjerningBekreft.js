@@ -20,19 +20,17 @@ class OppholdsLandFjerningBekreft extends Component {
     const landKode = kodeverkObjektTilKode(land);
 
     return (
-      <div>
-        <Nav.Column xs={5}>
+      <div className="oppholdsland__linje">
+        <div className="linje__begrunnelse">
           <Nav.Select bredde="m" value={this.state.begrunnelse} onChange={this.onChange} label="Velg begrunnelse:">
-            <option disabled value="0">-velg begrunnelse-</option>
+            <option disabled value="0" />
             {oppholdBegrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
           </Nav.Select>
-        </Nav.Column>
-        <Nav.Column xs={4}>
-          <div className="oppholdsland__fjerning__knapper">
-            <Nav.Knapp className="fjern__bekreft" disabled={this.state.begrunnelse === '0'} mini onClick={() => bekreft(landKode, this.state.begrunnelse)}>Bekreft</Nav.Knapp>
-            <Nav.Knapp className="fjern__avbryt" mini onClick={avbryt}>Avbryt</Nav.Knapp>
-          </div>
-        </Nav.Column>
+        </div>
+        <div className="linje__knapper">
+          <Nav.Knapp className="fjern__bekreft" disabled={this.state.begrunnelse === '0'} mini onClick={() => bekreft(landKode, this.state.begrunnelse)}>Bekreft fjerning</Nav.Knapp>
+          <Nav.Knapp className="fjern__avbryt" mini onClick={avbryt}>Avbryt</Nav.Knapp>
+        </div>
       </div>
     );
   }

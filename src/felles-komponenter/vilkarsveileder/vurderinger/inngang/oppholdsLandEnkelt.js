@@ -24,25 +24,15 @@ class OppholdsLandEnkelt extends Component {
     const begrunnelseTerm = begrunnelseKode && kodeverkObjektTilTerm(oppholdBegrunnelser.find(begrunnelse => begrunnelse.kode === begrunnelseKode));
 
     return (
-      <Nav.Row className="oppholdsland__linje">
-        <Nav.Column xs={3}>
-          <div className="oppholdsland__landNavn">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
-        </Nav.Column>
-        {!erSlettingIntensjon && (
-          <div>
-            <Nav.Column xs={5}>
-              <div className="oppholdsland__begrunnelse">{begrunnelseTerm}dd</div>
-            </Nav.Column>
-            <Nav.Column xs={4}>
-              {!erSlettingIntensjon && <Nav.Knapp mini onClick={settSlettIntensjon} >Fjern</Nav.Knapp> }
-            </Nav.Column>
-          </div>)
-        }
+      <div className="oppholdsland__linje">
+        <div className="linje__land">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
+        {!erSlettingIntensjon && (<div className="linje__begrunnelse">{begrunnelseTerm}</div>) }
+        {!erSlettingIntensjon && (<div className="linje__knapp">{!erSlettingIntensjon && <Nav.Knapp mini onClick={settSlettIntensjon} >Fjern</Nav.Knapp> }</div>) }
         {erSlettingIntensjon && (
           <OppholdsLandFjerningBekreft oppholdBegrunnelser={oppholdBegrunnelser} land={landKodeObjekt} bekreft={bekreftFjern} avbryt={avbryt} />
         )
         }
-      </Nav.Row>
+      </div>
     );
   }
 }

@@ -30,8 +30,8 @@ class LeggTilWrapper extends Component {
     } = this.props;
 
     return (
-      <div>
-        <Nav.Column xs={3}>
+      <div className="oppholdsland__linje">
+        <div className="linje__land">
           <EnkeltLandPure
             bredde="M"
             label="Velg land:"
@@ -40,19 +40,19 @@ class LeggTilWrapper extends Component {
             value={landKode}
             landkoder={landkoder}
           />
-        </Nav.Column>
-        <Nav.Column xs={5}>
-          <Nav.Select className="leggtilland__linje__begrunnelse" bredde="m" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:">
+        </div>
+        <div className="linje__begrunnelse">
+          <Nav.Select bredde="m" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:">
             <option disabled value="0" />
             {oppholdBegrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
           </Nav.Select>
-        </Nav.Column>
-        <Nav.Column xs={3}>
+        </div>
+        <div className="linje__knapper">
           <div className="leggtilland__linje__knapper">
             <Nav.Knapp mini onClick={avbryt}>Avbryt</Nav.Knapp>
             <Nav.Knapp mini onClick={() => bekreft(landKode, begrunnelseKode)}>Legg til</Nav.Knapp>
           </div>
-        </Nav.Column>
+        </div>
       </div>
     );
   }
@@ -85,10 +85,10 @@ class OppholdsLandLeggTil extends Component {
     } = this;
 
     return (
-      <Nav.Row>
+      <div>
         <div>
           {!erLeggTilIntensjon && (
-            <Nav.Column xs={5}><Nav.Knapp mini onClick={settLeggTilIntensjon}>+ Legg til land</Nav.Knapp></Nav.Column>
+            <Nav.Knapp mini onClick={settLeggTilIntensjon}>+ Legg til land</Nav.Knapp>
           )}
 
           {erLeggTilIntensjon && (
@@ -105,7 +105,7 @@ class OppholdsLandLeggTil extends Component {
             {landkoder.map(item => (<option key={kodeverkObjektTilKode(item)} value={landTekstFormat(item)} />))}
           </datalist>
         </div>
-      </Nav.Row>
+      </div>
     );
   }
 }
