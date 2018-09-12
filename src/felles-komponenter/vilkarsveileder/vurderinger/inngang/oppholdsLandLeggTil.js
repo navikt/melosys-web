@@ -48,10 +48,8 @@ class LeggTilWrapper extends Component {
           </Nav.Select>
         </div>
         <div className="linje__knapper">
-          <div className="leggtilland__linje__knapper">
-            <Nav.Knapp mini onClick={avbryt}>Avbryt</Nav.Knapp>
-            <Nav.Knapp mini onClick={() => bekreft(landKode, begrunnelseKode)}>Legg til</Nav.Knapp>
-          </div>
+          <Nav.Knapp mini onClick={avbryt}>Avbryt</Nav.Knapp>
+          <Nav.Knapp mini onClick={() => bekreft(landKode, begrunnelseKode)}>Legg til</Nav.Knapp>
         </div>
       </div>
     );
