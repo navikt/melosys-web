@@ -62,8 +62,8 @@ class Journalforing extends Component {
   };
 
   componentDidMount() {
-    const { journalpostID } = this.props.match.params;
-    this.props.hentJournalOppgave(journalpostID);
+    const { journalpostID, oppgaveID = '1' } = this.props.match.params;
+    this.props.hentJournalOppgave(journalpostID, oppgaveID);
   }
 
   /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
@@ -306,7 +306,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
+  hentJournalOppgave: (journalpostID, oppgaveID) => dispatch(journalforingOperations.hent(journalpostID, oppgaveID)),
   hentFagsakListe: fnr => dispatch(fagsakOperations.sok(fnr)),
   settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
