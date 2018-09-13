@@ -5,16 +5,17 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
 import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../utils/kodeverk';
+
 import OppholdslandHandlingSlett from './oppholdslandHandlingSlett';
 
-const EnkeltLinje = ({ landKodeObjekt, settSlettIntensjon }) => (
+const EnkeltLand = ({ landKodeObjekt, settSlettIntensjon }) => (
   <div className="oppholdsland__linje">
     <div className="linje__land">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
-    <div className="linje__knapper"><Nav.Knapp mini className="knappMedIkon" onClick={settSlettIntensjon} ><Nav.Ikoner kind="minus" />Fjern</Nav.Knapp></div>
+    <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" onClick={settSlettIntensjon} ><Nav.Ikoner kind="minus" />Fjern</Nav.Knapp></div>
   </div>
 );
 
-EnkeltLinje.propTypes = {
+EnkeltLand.propTypes = {
   landKodeObjekt: MPT.Kodeverk.isRequired,
   settSlettIntensjon: PT.func.isRequired,
 };
@@ -22,9 +23,9 @@ EnkeltLinje.propTypes = {
 class OppholdsLandEnkelt extends Component {
   state = { erSlettingIntensjon: false }
 
-  settSlettIntensjon = () => this.setState({ erSlettingIntensjon: true });
+  settSlettIntensjon = intensjon => this.setState({ erSlettingIntensjon: intensjon });
 
-  avbryt = () => this.setState({ erSlettingIntensjon: false });
+  avbryt = () => this.settSlettIntensjon(false);
 
   render () {
     const {
@@ -35,18 +36,17 @@ class OppholdsLandEnkelt extends Component {
 
     return (
       <div>
-        {!erSlettingIntensjon ?
-          <EnkeltLinje
-            landKodeObjekt={landKodeObjekt}
-            settSlettIntensjon={settSlettIntensjon} />
-          :
+        {erSlettingIntensjon ?
           <OppholdslandHandlingSlett
             oppholdBegrunnelser={oppholdBegrunnelser}
             landKodeObjekt={landKodeObjekt}
             bekreft={bekreftFjern}
             avbryt={avbryt}
-            settSlettIntensjon={settSlettIntensjon}
           />
+          :
+          <EnkeltLand
+            landKodeObjekt={landKodeObjekt}
+            settSlettIntensjon={() => settSlettIntensjon(true)} />
         }
       </div>
     );
@@ -57,10 +57,6 @@ OppholdsLandEnkelt.propTypes = {
   bekreftFjern: PT.func.isRequired,
   landKodeObjekt: MPT.Kodeverk.isRequired,
   oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
-};
-
-OppholdsLandEnkelt.defaultProps = {
-  begrunnelseKode: '',
 };
 
 export default OppholdsLandEnkelt;

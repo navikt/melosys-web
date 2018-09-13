@@ -6,9 +6,9 @@ import PT from 'prop-types';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
-import OppholdsLandEnkelt from './oppholdsLandEnkelt';
 import FjernetLandEnkelt from './fjernetLandEnkelt';
-import OppholdslandHandlingLeggTil from './oppholdslandHandlingLeggTil';
+import OppholdsLandEnkelt from './oppholdsLandEnkelt';
+import OppholdsLandHandlingLeggTil from './oppholdsLandHandlingLeggTil';
 
 import './oppholdsLandListe.css';
 
@@ -62,17 +62,17 @@ class OppholdsLandListe extends Component {
     this.props.fields.push(opphold);
   };
 
-  finnLand = kode => (this.props.landkoder.find(land => land.kode === kode));
+  finnLandVedKode = kode => (this.props.alleLandKoder.find(land => land.kode === kode));
 
-  finnBegrunnelse = kode => {
+  finnBegrunnelseVedKode = kode => {
     const begrunnelseObjekt = this.props.oppholdBegrunnelser.find(begrunnelse => begrunnelse.kode === kode);
     return begrunnelseObjekt ? begrunnelseObjekt.term : '';
   };
 
   render () {
-    const { fields, oppholdBegrunnelser, landkoder } = this.props;
+    const { fields, oppholdBegrunnelser, alleLandKoder } = this.props;
     const {
-      bekreftFjern, angreFjern, finnBegrunnelse, bekreftLeggTil,
+      bekreftFjern, angreFjern, finnBegrunnelseVedKode, bekreftLeggTil, finnLandVedKode,
     } = this;
 
     const alleOppholdsland = fields.getAll();
@@ -81,7 +81,7 @@ class OppholdsLandListe extends Component {
       .getAll()
       .filter(opphold => !opphold.erGyldig && opphold.begrunnelseKode !== 'FEIL_LAND_JOURNALFORING');
 
-    const alleUbrukteLandkoder = landkoder.filter(land => !alleOppholdsland.map(ol => ol.landKode).includes(land.kode));
+    const alleUbrukteLandkoder = alleLandKoder.filter(land => !alleOppholdsland.map(ol => ol.landKode).includes(land.kode));
 
     return (
       <div>
@@ -90,14 +90,14 @@ class OppholdsLandListe extends Component {
             { alleGyldigeOppholdsland.map(opphold => (
               <OppholdsLandEnkelt
                 key={opphold.landKode}
-                landKodeObjekt={this.finnLand(opphold.landKode)}
+                landKodeObjekt={finnLandVedKode(opphold.landKode)}
                 bekreftFjern={bekreftFjern}
                 erGyldig={opphold.erGyldig}
                 oppholdBegrunnelser={oppholdBegrunnelser} />))
             }
-            <OppholdslandHandlingLeggTil
+            <OppholdsLandHandlingLeggTil
               bekreftLeggTil={bekreftLeggTil}
-              landkoder={alleUbrukteLandkoder}
+              alleLandKoder={alleUbrukteLandkoder}
               oppholdBegrunnelser={oppholdBegrunnelser}
             />
           </Nav.Fieldset>
@@ -108,8 +108,8 @@ class OppholdsLandListe extends Component {
             {alleIkkeGyldigeOppholdsland.map(opphold => (
               <FjernetLandEnkelt
                 key={opphold.landKode}
-                landKodeObjekt={this.finnLand(opphold.landKode)}
-                begrunnelseTerm={finnBegrunnelse(opphold.begrunnelseKode)}
+                landKodeObjekt={this.finnLandVedKode(opphold.landKode)}
+                begrunnelseTerm={finnBegrunnelseVedKode(opphold.begrunnelseKode)}
                 angreFjern={angreFjern}
                 erGyldig={opphold.erGyldig} />))
             }
@@ -128,7 +128,7 @@ OppholdsLandListe.propTypes = {
   oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppholdsLandFraSoknad: PT.arrayOf(PT.string).isRequired,
   erstattOppholdsLand: PT.func.isRequired,
-  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 const mapStateToProps = state => ({

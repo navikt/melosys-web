@@ -21,7 +21,7 @@ class OppholdslandHandlingSlett extends Component {
     const landTerm = kodeverkObjektTilTerm(landKodeObjekt);
 
     return (
-      <Nav.Panel border className="fjernland__linje">
+      <div className="fjernland__linje">
         <div className="linje__land">{landTerm} ({landKode})</div>
         <div className="linje__begrunnelse">
           <Nav.Select className="linje__nedtrekksvelger" bredde="fullbredde" value={this.state.begrunnelse} onChange={this.onChange} label="Velg begrunnelse:">
@@ -30,19 +30,19 @@ class OppholdslandHandlingSlett extends Component {
           </Nav.Select>
         </div>
         <div className="linje__knapper">
-          <Nav.Knapp className="fjern__avbryt" mini onClick={avbryt}>Avbryt</Nav.Knapp>
-          <Nav.Knapp className="fjern__bekreft" disabled={this.state.begrunnelse === '0'} mini onClick={() => bekreft(landKode, this.state.begrunnelse)}>Bekreft fjerning</Nav.Knapp>
+          <Nav.Knapp className="fjern__avbryt" onClick={avbryt}>Avbryt</Nav.Knapp>
+          <Nav.Knapp className="fjern__bekreft" onClick={() => bekreft(landKode, this.state.begrunnelse)} disabled={this.state.begrunnelse === '0'}>Bekreft</Nav.Knapp>
         </div>
-      </Nav.Panel>
+      </div>
     );
   }
 }
 
 OppholdslandHandlingSlett.propTypes = {
-  oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
-  bekreft: PT.func.isRequired,
   avbryt: PT.func.isRequired,
+  bekreft: PT.func.isRequired,
   landKodeObjekt: MPT.Kodeverk.isRequired,
+  oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 export default OppholdslandHandlingSlett;
