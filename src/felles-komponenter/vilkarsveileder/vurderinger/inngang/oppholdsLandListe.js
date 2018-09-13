@@ -8,7 +8,7 @@ import * as MPT from '../../../../proptypes';
 
 import OppholdsLandEnkelt from './oppholdsLandEnkelt';
 import FjernetLandEnkelt from './fjernetLandEnkelt';
-import OppholdsLandLeggTil from './oppholdsLandLeggTil';
+import OppholdslandHandlingLeggTil from './oppholdslandHandlingLeggTil';
 
 import './oppholdsLandListe.css';
 
@@ -91,12 +91,11 @@ class OppholdsLandListe extends Component {
               <OppholdsLandEnkelt
                 key={opphold.landKode}
                 landKodeObjekt={this.finnLand(opphold.landKode)}
-                begrunnelseKode={opphold.begrunnelseKode}
                 bekreftFjern={bekreftFjern}
                 erGyldig={opphold.erGyldig}
                 oppholdBegrunnelser={oppholdBegrunnelser} />))
             }
-            <OppholdsLandLeggTil
+            <OppholdslandHandlingLeggTil
               bekreftLeggTil={bekreftLeggTil}
               landkoder={alleUbrukteLandkoder}
               oppholdBegrunnelser={oppholdBegrunnelser}

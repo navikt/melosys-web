@@ -4,7 +4,7 @@ import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../utils/
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
-class OppholdsLandFjerningBekreft extends Component {
+class OppholdslandHandlingSlett extends Component {
   state = { begrunnelse: '0' };
 
   onChange = event => {
@@ -22,7 +22,7 @@ class OppholdsLandFjerningBekreft extends Component {
 
     return (
       <Nav.Panel border className="fjernland__linje">
-        <div className="linje__land">{landKode} ({landTerm})</div>
+        <div className="linje__land">{landTerm} ({landKode})</div>
         <div className="linje__begrunnelse">
           <Nav.Select className="linje__nedtrekksvelger" bredde="fullbredde" value={this.state.begrunnelse} onChange={this.onChange} label="Velg begrunnelse:">
             <option disabled value="0" />
@@ -30,15 +30,15 @@ class OppholdsLandFjerningBekreft extends Component {
           </Nav.Select>
         </div>
         <div className="linje__knapper">
-          <Nav.Knapp className="fjern__bekreft" disabled={this.state.begrunnelse === '0'} mini onClick={() => bekreft(landKode, this.state.begrunnelse)}>Bekreft fjerning</Nav.Knapp>
           <Nav.Knapp className="fjern__avbryt" mini onClick={avbryt}>Avbryt</Nav.Knapp>
+          <Nav.Knapp className="fjern__bekreft" disabled={this.state.begrunnelse === '0'} mini onClick={() => bekreft(landKode, this.state.begrunnelse)}>Bekreft fjerning</Nav.Knapp>
         </div>
       </Nav.Panel>
     );
   }
 }
 
-OppholdsLandFjerningBekreft.propTypes = {
+OppholdslandHandlingSlett.propTypes = {
   oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreft: PT.func.isRequired,
   avbryt: PT.func.isRequired,
@@ -46,4 +46,4 @@ OppholdsLandFjerningBekreft.propTypes = {
 
 };
 
-export default OppholdsLandFjerningBekreft;
+export default OppholdslandHandlingSlett;
