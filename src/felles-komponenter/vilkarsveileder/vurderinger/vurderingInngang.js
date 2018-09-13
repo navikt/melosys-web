@@ -9,8 +9,6 @@ import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
 import OppholdsLandListe from './inngang/oppholdsLandListe';
 
-import './vurderingInngang.css';
-
 const VurderingInngang = props => {
   const {
     bekreftOgFortsett, inngangsvilkar, landkoder, begrunnelser,
