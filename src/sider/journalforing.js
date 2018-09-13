@@ -1,6 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import queryString from 'query-string';
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -37,6 +38,7 @@ import { PersonOperations } from '../ducks/person';
 class Journalforing extends Component {
   static propTypes = {
     match: PT.object.isRequired,
+    location: PT.object.isRequired,
     history: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
     hentFagsakListe: PT.func.isRequired,
@@ -62,7 +64,9 @@ class Journalforing extends Component {
   };
 
   componentDidMount() {
-    const { journalpostID, oppgaveID = '1' } = this.props.match.params;
+    const { journalpostID, oppgaveID } = this.props.match.params;
+    const qparams = queryString.parse(this.props.location.search);
+    console.log(qparams); // TODO Fjern når vi har avklart hva vi skal gjøre med ?kilde=GOSYS
     this.props.hentJournalOppgave(journalpostID, oppgaveID);
   }
 
