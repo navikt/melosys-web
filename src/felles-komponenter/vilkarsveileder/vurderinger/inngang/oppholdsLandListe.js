@@ -84,36 +84,39 @@ class OppholdsLandListe extends Component {
     const alleUbrukteLandkoder = landkoder.filter(land => !alleOppholdsland.map(ol => ol.landKode).includes(land.kode));
 
     return (
-      <div className="oppholdsland__liste">
-        <Nav.Fieldset legend="Land:" >
-          { alleGyldigeOppholdsland.map(opphold => (
-            <OppholdsLandEnkelt
-              key={opphold.landKode}
-              landKodeObjekt={this.finnLand(opphold.landKode)}
-              begrunnelseKode={opphold.begrunnelseKode}
-              bekreftFjern={bekreftFjern}
-              erGyldig={opphold.erGyldig}
-              oppholdBegrunnelser={oppholdBegrunnelser} />))
+      <div>
+        <div className="oppholdsland__liste">
+          <Nav.Fieldset legend="Land:" >
+            { alleGyldigeOppholdsland.map(opphold => (
+              <OppholdsLandEnkelt
+                key={opphold.landKode}
+                landKodeObjekt={this.finnLand(opphold.landKode)}
+                begrunnelseKode={opphold.begrunnelseKode}
+                bekreftFjern={bekreftFjern}
+                erGyldig={opphold.erGyldig}
+                oppholdBegrunnelser={oppholdBegrunnelser} />))
+            }
+            <OppholdsLandLeggTil
+              bekreftLeggTil={bekreftLeggTil}
+              landkoder={alleUbrukteLandkoder}
+              oppholdBegrunnelser={oppholdBegrunnelser}
+            />
+          </Nav.Fieldset>
+        </div>
+        <div className="avvistland__liste">
+          {alleIkkeGyldigeOppholdsland.length > 0 &&
+          <Nav.Fieldset legend="Land som er fjernet fra søknaden:">
+            {alleIkkeGyldigeOppholdsland.map(opphold => (
+              <FjernetLandEnkelt
+                key={opphold.landKode}
+                landKodeObjekt={this.finnLand(opphold.landKode)}
+                begrunnelseTerm={finnBegrunnelse(opphold.begrunnelseKode)}
+                angreFjern={angreFjern}
+                erGyldig={opphold.erGyldig} />))
+            }
+          </Nav.Fieldset>
           }
-          <OppholdsLandLeggTil
-            bekreftLeggTil={bekreftLeggTil}
-            landkoder={alleUbrukteLandkoder}
-            oppholdBegrunnelser={oppholdBegrunnelser}
-          />
-        </Nav.Fieldset>
-
-        {alleIkkeGyldigeOppholdsland.length > 0 &&
-        <Nav.Fieldset legend="Land som er fjernet fra søknaden:">
-          {alleIkkeGyldigeOppholdsland.map(opphold => (
-            <FjernetLandEnkelt
-              key={opphold.landKode}
-              landKodeObjekt={this.finnLand(opphold.landKode)}
-              begrunnelseTerm={finnBegrunnelse(opphold.begrunnelseKode)}
-              angreFjern={angreFjern}
-              erGyldig={opphold.erGyldig} />))
-          }
-        </Nav.Fieldset>
-        }
+        </div>
       </div>
     );
   }

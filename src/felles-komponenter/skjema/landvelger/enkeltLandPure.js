@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
@@ -90,20 +91,22 @@ class EnkeltLandPure extends Component {
       fokusInnHandler, fokusUtHandler, inputTastNedHandler, inputEndringHandler,
     } = this;
 
-    const { label } = this.props;
+    const { label, bredde, className } = this.props;
 
     const { inputVerdi } = this.state;
     const { error: landError = '' } = this.state;
     const feilObjekt = landError ? { feilmelding: `${landError}` } : null;
+
+    const cl = classnames({ landliste__linje__input: true, [className]: true });
 
     return (
       <div>
         <Nav.Input
           list="alleLand"
           label={label}
-          bredde="XL"
+          bredde={bredde}
           feil={feilObjekt}
-          className="landliste__linje__input"
+          className={cl}
           value={inputVerdi}
           onBlur={fokusUtHandler}
           onFocus={fokusInnHandler}
@@ -116,17 +119,21 @@ class EnkeltLandPure extends Component {
 }
 
 EnkeltLandPure.propTypes = {
+  className: PT.string,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   value: PT.string.isRequired,
   onChange: PT.func.isRequired,
+  bredde: PT.string,
   label: PT.string,
   feil: PT.string,
   disabled: PT.bool,
 };
 
 EnkeltLandPure.defaultProps = {
+  className: '',
   label: '',
   feil: '',
+  bredde: 'fullbredde',
   disabled: false,
 };
 

@@ -7,6 +7,20 @@ import * as MPT from '../../../../proptypes';
 import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../utils/kodeverk';
 import OppholdsLandFjerningBekreft from './oppholdsLandFjerningBekreft';
 
+const EnkeltLinje = ({ landKodeObjekt, begrunnelseTerm, settSlettIntensjon }) => (
+  <div className="oppholdsland__linje">
+    <div className="linje__land">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
+    <div className="linje__begrunnelse">{begrunnelseTerm}</div>
+    <div className="linje__knapper"><Nav.Knapp mini className="knappMedIkon" onClick={settSlettIntensjon} ><Nav.Ikoner kind="minus" />Fjern</Nav.Knapp></div>
+  </div>
+);
+
+EnkeltLinje.propTypes = {
+  landKodeObjekt: MPT.Kodeverk.isRequired,
+  begrunnelseTerm: PT.string.isRequired,
+  settSlettIntensjon: PT.func.isRequired,
+};
+
 class OppholdsLandEnkelt extends Component {
   state = { erSlettingIntensjon: false }
 
@@ -24,13 +38,17 @@ class OppholdsLandEnkelt extends Component {
     const begrunnelseTerm = begrunnelseKode && kodeverkObjektTilTerm(oppholdBegrunnelser.find(begrunnelse => begrunnelse.kode === begrunnelseKode));
 
     return (
-      <div className="oppholdsland__linje">
-        <div className="linje__land">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
-        {!erSlettingIntensjon && (<div className="linje__begrunnelse">{begrunnelseTerm}</div>) }
-        {!erSlettingIntensjon && (<div className="linje__knapper">{!erSlettingIntensjon && <Nav.Knapp mini onClick={settSlettIntensjon} >Fjern</Nav.Knapp> }</div>) }
-        {erSlettingIntensjon && (
-          <OppholdsLandFjerningBekreft oppholdBegrunnelser={oppholdBegrunnelser} land={landKodeObjekt} bekreft={bekreftFjern} avbryt={avbryt} />
-        )
+      <div>
+        {!erSlettingIntensjon ?
+          <EnkeltLinje landKodeObjekt={landKodeObjekt} begrunnlseTerm={begrunnelseTerm} settSlettIntensjon={settSlettIntensjon} />
+          :
+          <OppholdsLandFjerningBekreft
+            oppholdBegrunnelser={oppholdBegrunnelser}
+            landKodeObjekt={landKodeObjekt}
+            bekreft={bekreftFjern}
+            avbryt={avbryt}
+            settSlettIntensjon={settSlettIntensjon}
+          />
         }
       </div>
     );
