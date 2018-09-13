@@ -43,7 +43,6 @@ OppholdslandHandlingSlett.propTypes = {
   bekreft: PT.func.isRequired,
   avbryt: PT.func.isRequired,
   landKodeObjekt: MPT.Kodeverk.isRequired,
-
 };
 
 export default OppholdslandHandlingSlett;
