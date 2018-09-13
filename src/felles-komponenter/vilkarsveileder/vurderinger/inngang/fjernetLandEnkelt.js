@@ -1,30 +1,34 @@
 import PT from 'prop-types';
 import React from 'react';
 
-import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../utils/kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
+
+import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../utils/kodeverk';
 
 const FjernetLandEnkelt = props => {
   const {
     landKodeObjekt, angreFjern, begrunnelseTerm,
   } = props;
 
+  const landTerm = kodeverkObjektTilTerm(landKodeObjekt);
+  const landKode = kodeverkObjektTilKode(landKodeObjekt);
+
   return (
     <div>
       <div className="fjernetland__linje">
-        <div className="linje__land">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
+        <div className="linje__land">{landTerm} ({landKode})</div>
         <div className="linje__begrunnelse">{begrunnelseTerm}</div>
-        <div className="linje__knapper"><Nav.Knapp mini onClick={() => angreFjern(kodeverkObjektTilKode(landKodeObjekt))}>Angre fjern</Nav.Knapp></div>
+        <div className="linje__knapper"><Nav.Knapp mini onClick={() => angreFjern(landKode)}>Angre fjern</Nav.Knapp></div>
       </div>
     </div>
   );
 };
 
 FjernetLandEnkelt.propTypes = {
-  landKodeObjekt: MPT.Kodeverk.isRequired,
   angreFjern: PT.func.isRequired,
   begrunnelseTerm: PT.string.isRequired,
+  landKodeObjekt: MPT.Kodeverk.isRequired,
 };
 
 export default FjernetLandEnkelt;

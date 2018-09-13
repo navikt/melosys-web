@@ -11,7 +11,7 @@ import OppholdsLandListe from './inngang/oppholdsLandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, landkoder, begrunnelser,
+    bekreftOgFortsett, inngangsvilkar, alleLandKoder, begrunnelser,
   } = props;
   const { vurdering } = inngangsvilkar;
   const { opphold: oppholdBegrunnelser } = begrunnelser;
@@ -31,7 +31,7 @@ const VurderingInngang = props => {
         name="faktaavklaringOppholdsLand"
         component={OppholdsLandListe}
         oppholdBegrunnelser={oppholdBegrunnelser}
-        landkoder={landkoder}
+        alleLandKoder={alleLandKoder}
       />
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Start behandling</Nav.Knapp>
@@ -43,7 +43,7 @@ const VurderingInngang = props => {
 VurderingInngang.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   faktaavklaring: PT.object.isRequired,
-  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
   inngangsvilkar: PT.shape({
     vurdering: MPT.Kodeverk,

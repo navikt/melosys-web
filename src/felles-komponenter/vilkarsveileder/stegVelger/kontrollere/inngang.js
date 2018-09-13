@@ -20,7 +20,7 @@ class Inngang extends Steg {
       inngangsvilkar: props.inngang,
       faktaavklaring: props.faktaavklaring,
       begrunnelser: props.begrunnelser,
-      landkoder: props.landkoder,
+      alleLandKoder: props.landkoder,
     });
     this._beregnRelevantUI = () => ({});
     this._handlers = {
