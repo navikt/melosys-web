@@ -5,19 +5,17 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
 import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../utils/kodeverk';
-import OppholdsLandFjerningBekreft from './oppholdsLandFjerningBekreft';
+import OppholdslandHandlingSlett from './oppholdslandHandlingSlett';
 
-const EnkeltLinje = ({ landKodeObjekt, begrunnelseTerm, settSlettIntensjon }) => (
+const EnkeltLinje = ({ landKodeObjekt, settSlettIntensjon }) => (
   <div className="oppholdsland__linje">
     <div className="linje__land">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
-    <div className="linje__begrunnelse">{begrunnelseTerm}</div>
     <div className="linje__knapper"><Nav.Knapp mini className="knappMedIkon" onClick={settSlettIntensjon} ><Nav.Ikoner kind="minus" />Fjern</Nav.Knapp></div>
   </div>
 );
 
 EnkeltLinje.propTypes = {
   landKodeObjekt: MPT.Kodeverk.isRequired,
-  begrunnelseTerm: PT.string.isRequired,
   settSlettIntensjon: PT.func.isRequired,
 };
 
@@ -30,19 +28,19 @@ class OppholdsLandEnkelt extends Component {
 
   render () {
     const {
-      landKodeObjekt, begrunnelseKode, bekreftFjern, oppholdBegrunnelser,
+      landKodeObjekt, bekreftFjern, oppholdBegrunnelser,
     } = this.props;
     const { erSlettingIntensjon } = this.state;
     const { settSlettIntensjon, avbryt } = this;
 
-    const begrunnelseTerm = begrunnelseKode && kodeverkObjektTilTerm(oppholdBegrunnelser.find(begrunnelse => begrunnelse.kode === begrunnelseKode));
-
     return (
       <div>
         {!erSlettingIntensjon ?
-          <EnkeltLinje landKodeObjekt={landKodeObjekt} begrunnlseTerm={begrunnelseTerm} settSlettIntensjon={settSlettIntensjon} />
+          <EnkeltLinje
+            landKodeObjekt={landKodeObjekt}
+            settSlettIntensjon={settSlettIntensjon} />
           :
-          <OppholdsLandFjerningBekreft
+          <OppholdslandHandlingSlett
             oppholdBegrunnelser={oppholdBegrunnelser}
             landKodeObjekt={landKodeObjekt}
             bekreft={bekreftFjern}
@@ -58,7 +56,6 @@ class OppholdsLandEnkelt extends Component {
 OppholdsLandEnkelt.propTypes = {
   bekreftFjern: PT.func.isRequired,
   landKodeObjekt: MPT.Kodeverk.isRequired,
-  begrunnelseKode: PT.string,
   oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
