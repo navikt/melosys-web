@@ -13,9 +13,9 @@ const FjernetLandEnkelt = props => {
   return (
     <div>
       <div className="fjernetland__linje">
-        <div className="fjernetland__landNavn">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
-        <div className="fjernetland__begrunnelse">{begrunnelseTerm}</div>
-        <div><Nav.Knapp mini onClick={() => angreFjern(kodeverkObjektTilKode(landKodeObjekt))}>Angre fjern</Nav.Knapp></div>
+        <div className="linje__land">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
+        <div className="linje__begrunnelse">{begrunnelseTerm}</div>
+        <div className="linje__knapper"><Nav.Knapp mini onClick={() => angreFjern(kodeverkObjektTilKode(landKodeObjekt))}>Angre fjern</Nav.Knapp></div>
       </div>
     </div>
   );

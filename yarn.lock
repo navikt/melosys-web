@@ -5876,9 +5876,9 @@ nav-frontend-hjelpetekst@^1.0.25:
   version "1.0.25"
   resolved "https://registry.yarnpkg.com/nav-frontend-hjelpetekst/-/nav-frontend-hjelpetekst-1.0.25.tgz#6900af7ec6e45419706e68fa62f7d775c2ffd3c8"
 
-nav-frontend-ikoner-assets@^0.2.28:
-  version "0.2.28"
-  resolved "https://registry.yarnpkg.com/nav-frontend-ikoner-assets/-/nav-frontend-ikoner-assets-0.2.28.tgz#3d554359a408380626a9714c750f3636cf949434"
+nav-frontend-ikoner-assets@^0.2.29:
+  version "0.2.29"
+  resolved "https://registry.yarnpkg.com/nav-frontend-ikoner-assets/-/nav-frontend-ikoner-assets-0.2.29.tgz#32435457f8a51086de7d426212c60d0e7ba36934"
 
 nav-frontend-js-utils@^1.0.6:
   version "1.0.6"

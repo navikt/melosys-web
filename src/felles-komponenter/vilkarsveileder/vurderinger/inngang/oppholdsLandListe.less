@@ -1,46 +1,66 @@
-.oppholdsland__liste {
+@import '../../../../constants';
+
+.oppholdsland__liste, .avvistland__liste {
   display: flex;
+  margin-top: 2em;
   flex: 1;
   flex-direction: column;
 
-  .oppholdsland__linje, .fjernetland__linje, .leggtilland__linje {
+  .oppholdsland__linje, .fjernland__linje, .fjernetland__linje, .leggtilland__linje {
     display: flex;
     align-items: center;
     flex: 1;
     margin-bottom: 1em;
   }
 
+  .leggtilland__linje {
+    margin-top: 3em;
+  }
+
+  .fjernland__linje, .leggtilland__linje {
+    padding: 1.5em 0.5em 0.5em 0.5em;
+    margin: 1em -0.5em 1em -0.5em;
+    border-radius: 5px;
+  }
+
   .linje__land {
-    width: 30%;
-    background-color: blue;
+    width: 25%;
   }
 
   .linje__begrunnelse {
-    width: 40%;
+    width: 35%;
     margin-left: 1em;
-    background-color: red;
   }
 
   .linje__knapper {
-    width: 30%;
-    background-color: green;
-  }
+    width: 40%;
+    margin-left: 1em;
 
-  .oppholdsland__begrunnelse, .fjernetland__begrunnelse {
-    padding-right: 20px;
-  }
-
-  .oppholdsland__fjerning {
-    margin-top: -1em;
-    align-items: center;
-    flex: 1;
-  }
-
-  .oppholdsland__fjerning__knapper {
-    margin-top: 0.6em;
-
-    .fjern__bekreft, .fjern__avbryt {
+    .knapp {
       margin-right: 0.5em;
+    }
+  }
+
+  .linje__nedtrekksvelger {
+    margin-top: -0.8em;
+  }
+
+  .knappMedIkon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    svg {
+      width: 20px;
+      margin: -0.4em 1em -0.6em -0.5em
+    }
+  }
+
+  .knappMedIkon:hover {
+    svg {
+      path {
+        stroke: white;
+      }
     }
   }
 }

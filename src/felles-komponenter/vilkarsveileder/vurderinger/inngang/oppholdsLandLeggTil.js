@@ -29,29 +29,32 @@ class LeggTilWrapper extends Component {
       bekreft, avbryt, landkoder, oppholdBegrunnelser,
     } = this.props;
 
+    const erInputGyldig = (landKode && begrunnelseKode);
+
     return (
-      <div className="oppholdsland__linje">
+      <Nav.Panel border className="leggtilland__linje">
         <div className="linje__land">
           <EnkeltLandPure
-            bredde="M"
+            bredde="fullbredde"
             label="Velg land:"
             meta={{ error: undefined }}
             onChange={oppdaterLand}
             value={landKode}
             landkoder={landkoder}
+            className="linje__nedtrekksvelger"
           />
         </div>
         <div className="linje__begrunnelse">
-          <Nav.Select bredde="m" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:">
+          <Nav.Select bredde="fullbredde" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:" className="linje__nedtrekksvelger">
             <option disabled value="0" />
             {oppholdBegrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
           </Nav.Select>
         </div>
         <div className="linje__knapper">
+          <Nav.Knapp mini onClick={() => bekreft(landKode, begrunnelseKode)} disabled={!erInputGyldig}>Legg til</Nav.Knapp>
           <Nav.Knapp mini onClick={avbryt}>Avbryt</Nav.Knapp>
-          <Nav.Knapp mini onClick={() => bekreft(landKode, begrunnelseKode)}>Legg til</Nav.Knapp>
         </div>
-      </div>
+      </Nav.Panel>
     );
   }
 }
@@ -86,7 +89,9 @@ class OppholdsLandLeggTil extends Component {
       <div>
         <div>
           {!erLeggTilIntensjon && (
-            <Nav.Knapp mini onClick={settLeggTilIntensjon}>+ Legg til land</Nav.Knapp>
+            <Nav.Knapp mini onClick={settLeggTilIntensjon} className="knappMedIkon">
+              <Nav.Ikoner kind="tilsette" /><div>Legg til nytt land</div>
+            </Nav.Knapp>
           )}
 
           {erLeggTilIntensjon && (
