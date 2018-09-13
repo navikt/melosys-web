@@ -17,7 +17,7 @@ const Routing = ({ location }) => (
     <Route exact path="/sok/:fnr" component={Sok} />
     <Route exact path="/spark" component={Spark} />
     <Route path="/saksbehandling/:snr" component={Saksbehandling} />
-    <Route path="/journalforing/:oppgaveID/:journalpostID" component={Journalforing} />
+    <Route path="/journalforing/:journalpostID/:oppgaveID" component={Journalforing} />
     <Route component={UkjentSide} />
   </Switch>
 );
