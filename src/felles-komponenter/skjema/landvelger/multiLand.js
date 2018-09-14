@@ -45,16 +45,12 @@ class MultiLand extends Component {
 
     if (!valgteLand.includes(landKode)) {
       fields.push(landKode);
-      this.props.leggTilCallback(landKode);
     }
   };
 
   reduxSlettEttLand = landKode => {
     const index = this.props.fields.getAll().findIndex(item => item === landKode);
-    if (index > -1) {
-      this.props.fields.remove(index);
-      this.props.slettCallback(landKode);
-    }
+    return (index > -1 && this.props.fields.remove(index));
   };
 
   finnFlereLand = inputVerdi => {
@@ -174,8 +170,6 @@ MultiLand.propTypes = {
   fields: PT.object.isRequired,
   meta: PT.object.isRequired,
   disabled: PT.bool,
-  leggTilCallback: PT.func.isRequired,
-  slettCallback: PT.func.isRequired,
 };
 
 MultiLand.defaultProps = {
