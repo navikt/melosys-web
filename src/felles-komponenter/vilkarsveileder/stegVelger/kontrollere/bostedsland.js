@@ -91,7 +91,7 @@ class Bostedsland extends Steg {
       }
 
       return {
-        visLandListe: (faktaavklaringBostedTerritorie === VurderingBostedslandTyper.ANNET),
+        visLandVelger: (faktaavklaringBostedTerritorie === VurderingBostedslandTyper.ANNET),
         avklaringer,
       };
     };
