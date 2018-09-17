@@ -12,12 +12,12 @@ const VurderingForutgaendeMedlemskap = props => {
   return (
     <div>
       <Nav.Undertittel>Vurdering av forutgående medlemskap</Nav.Undertittel>
-      <div className="vurderingBostedsland__skjemafelt">
+      <div>
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend="Virksomheten har:">
-              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
-              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
+              <Skjema.Radio feltNavn="faktaavklaringForutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
+              <Skjema.Radio feltNavn="faktaavklaringForutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -25,7 +25,7 @@ const VurderingForutgaendeMedlemskap = props => {
           <Nav.Column xs="12" md="10" lg="8">
             <Nav.Fieldset legend="Begrunnelse:">
               <Skjema.ListeVelger
-                feltNavn="faktaavklaringVesentligVirksomhetBegrunnelser"
+                feltNavn="faktaavklaringForutgaendeMedlemskapBegrunnelser"
                 muligeValg={begrunnelser}
                 label="Legg til begrunnelse:"
                 gruppe
