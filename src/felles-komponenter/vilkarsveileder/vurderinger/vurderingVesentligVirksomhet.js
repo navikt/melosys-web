@@ -11,11 +11,11 @@ import { BOOLSK } from '../../../constants';
 const VurderingVesentligVirksomhet = props => {
   const { bekreftOgFortsett, begrunnelser } = props;
 
-  const arbeidsgivere = arrayTilKonjunksjon(props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn));
+  const arbeidsgivereTekst = props.valgteArbeidsgivere.length > 0 ? `til ${arrayTilKonjunksjon(props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering av vesentlig virksomhet til {arbeidsgivere}</Nav.Undertittel>
+      <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
       <div className="vurderingBostedsland__skjemafelt">
         <Nav.Row>
           <Nav.Column xs="12">
