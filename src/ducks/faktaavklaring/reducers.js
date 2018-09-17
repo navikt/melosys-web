@@ -59,13 +59,16 @@ export default function reducer(state = initialState, action) {
           erstatterTidligereUtsendt: dokument.faktaavklaringErstatterTidligereUtsendt,
           utsendingMindreEnn24Mnd: dokument.faktaavklaringUtsendingMindreEnn24Mnd,
           foretakDriverINorge: dokument.faktaavklaringForetakDriverINorge,
-          harForutgaendeMedlemskap: dokument.faktaavklaringHarForutgaendeMedlemskap,
           arbeidKnyttetTilVirksomhetUtlandet: dokument.faktaavklaringArbeidKnyttetTilVirksomhetUtlandet,
           sammeTypeVirksomhet: dokument.faktaavklaringSammeTypeVirksomhet,
         },
         valgteArbeidsgivere: [...dokument.faktaavklaringValgteArbeidsgivere],
         sektor: {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
+        },
+        forutgaendeMedlemskap: {
+          harForutgaendeMedlemskap: dokument.faktaavklaringHarForutgaendeMedlemskap,
+          forutgaendeMedlemskapBegrunnelser: dokument.faktaavklaringForutgaendeMedlemskapBegrunnelser,
         },
         bosted: {
           vurdering: { ...state.data.avklaring.bosted.vurdering },
