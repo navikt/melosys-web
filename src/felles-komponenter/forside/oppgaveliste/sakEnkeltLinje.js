@@ -62,7 +62,7 @@ const SakEnkeltLinje = ({ sak }) => {
 };
 
 SakEnkeltLinje.propTypes = {
-  sak: MPT.SakEnkeltLinje,
+  sak: MPT.SaksbehandlingOppgave,
 };
 
 SakEnkeltLinje.defaultProps = {
