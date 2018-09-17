@@ -15,7 +15,7 @@ import OrganisasjonsAdresse from './adresser/organisasjonsAdresse';
 import './selvstendigArbeid.css';
 
 class EnkeltForetak extends Component {
-  state = { organisasjon: {}, feilmelding: undefined };
+  state = { organisasjon: {}, feilmelding: null };
 
   componentDidMount() {
     const { orgnr } = this.props;
@@ -27,14 +27,14 @@ class EnkeltForetak extends Component {
     const nyttOrgnr = this.props.orgnr;
 
     if (gammeltOrgnr !== nyttOrgnr) {
-      this.settFeilmelding(undefined);
-      this.resettOrganisasjon();
+      this.settFeilmelding(null);
+      this.settOrganisasjon(null);
       this.hentOrganisasjon(nyttOrgnr);
     }
   }
 
   settFeilmelding = feilmelding => this.setState({ feilmelding });
-  resettOrganisasjon = () => this.setState({ organisasjon: null });
+  settOrganisasjon = organisasjon => this.setState({ organisasjon });
 
   presjekkOrganisasjon = () => {
     const { orgnr } = this.props;
@@ -47,7 +47,7 @@ class EnkeltForetak extends Component {
         const organisasjon = (Object.keys(response).length > 0) ? response : null;
         const feilmelding = !organisasjon ? 'Fant ikke organisasjonen' : null;
 
-        this.setState({ organisasjon });
+        this.settOrganisasjon(organisasjon);
         this.settFeilmelding(feilmelding);
       });
     }
