@@ -3,7 +3,7 @@ import { API_BASE_URL } from '../api-constants';
 
 // eslint-disable-next-line import/prefer-default-export
 export function hent(journalpostID, oppgaveID) {
-  const URI_JOURNALFORING_OPPGAVE = `${API_BASE_URL}journalforing/${journalpostID}//${oppgaveID}`;
+  const URI_JOURNALFORING_OPPGAVE = `${API_BASE_URL}journalforing/${journalpostID}/${oppgaveID}`;
   return getAsJson(URI_JOURNALFORING_OPPGAVE);
 }
 
