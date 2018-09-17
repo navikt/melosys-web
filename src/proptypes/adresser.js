@@ -5,7 +5,7 @@ import { Kodeverk } from './kodeverk';
 const GeneriskAdressePropType = PT.shape({
   gateadresse: PT.shape({
     gatenavn: PT.string,
-    gatenummer: PT.string,
+    gatenummer: PT.number,
     husnummer: PT.string,
     husbokstav: PT.string,
   }),
