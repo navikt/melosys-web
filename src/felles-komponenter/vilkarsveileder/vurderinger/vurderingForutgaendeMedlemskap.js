@@ -1,0 +1,58 @@
+import React from 'react';
+import PT from 'prop-types';
+import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes';
+import * as Skjema from '../../skjema';
+
+import { BOOLSK } from '../../../constants';
+
+const VurderingForutgaendeMedlemskap = props => {
+  const { bekreftOgFortsett, begrunnelser } = props;
+
+  return (
+    <div>
+      <Nav.Undertittel>Vurdering av forutgående medlemskap</Nav.Undertittel>
+      <div className="vurderingBostedsland__skjemafelt">
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.Fieldset legend="Virksomheten har:">
+              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
+              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
+            </Nav.Fieldset>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12" md="10" lg="8">
+            <Nav.Fieldset legend="Begrunnelse:">
+              <Skjema.ListeVelger
+                feltNavn="faktaavklaringVesentligVirksomhetBegrunnelser"
+                muligeValg={begrunnelser}
+                label="Legg til begrunnelse:"
+                gruppe
+                tillatFritekst={false}
+              />
+            </Nav.Fieldset>
+          </Nav.Column>
+        </Nav.Row>
+      </div>
+      <div className="fane__knapplinje">
+        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+      </div>
+    </div>
+  );
+};
+
+VurderingForutgaendeMedlemskap.ID = 'VESENTLIG_VIRKSOMHET';
+
+VurderingForutgaendeMedlemskap.propTypes = {
+  bekreftOgFortsett: PT.func.isRequired,
+  tilstand: PT.object,
+  begrunnelser: PT.arrayOf(MPT.Kodeverk),
+};
+
+VurderingForutgaendeMedlemskap.defaultProps = {
+  tilstand: {},
+  begrunnelser: [],
+};
+
+export default VurderingForutgaendeMedlemskap;
