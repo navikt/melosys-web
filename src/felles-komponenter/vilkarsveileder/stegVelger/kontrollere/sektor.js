@@ -23,7 +23,7 @@ class Sektor extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
+        nesteSteg: STEG.ARBEIDSGIVERE,
       },
     ];
     this._id = STEG.SEKTOR;
