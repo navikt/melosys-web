@@ -5892,7 +5892,7 @@ nav-frontend-knapper-style@^0.3.18:
   version "0.3.18"
   resolved "https://registry.yarnpkg.com/nav-frontend-knapper-style/-/nav-frontend-knapper-style-0.3.18.tgz#b572f119ebab2eb86a3a31cd9aa70d4a2a6d6d70"
 
-nav-frontend-knapper@^1.0.21:
+nav-frontend-knapper@^1.0.20:
   version "1.0.21"
   resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-1.0.21.tgz#71fe041ec27b758cf91e7c6b10a0c6f93346d518"
 
