@@ -4,24 +4,20 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../skjema';
 
-import { arrayTilKonjunksjon } from '../../../utils/streng';
-
 import { BOOLSK } from '../../../constants';
 
-const VurderingVesentligVirksomhet = props => {
+const VurderingForutgaendeMedlemskap = props => {
   const { bekreftOgFortsett, begrunnelser } = props;
-
-  const arbeidsgivereTekst = props.valgteArbeidsgivere.length > 0 ? `til ${arrayTilKonjunksjon(props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
-      <div className="vurderingBostedsland__skjemafelt">
+      <Nav.Undertittel>Vurdering av forutgående medlemskap</Nav.Undertittel>
+      <div>
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend="Virksomheten har:">
-              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
-              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
+              <Skjema.Radio feltNavn="faktaavklaringHarForutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
+              <Skjema.Radio feltNavn="faktaavklaringHarForutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -29,7 +25,7 @@ const VurderingVesentligVirksomhet = props => {
           <Nav.Column xs="12" md="10" lg="8">
             <Nav.Fieldset legend="Begrunnelse:">
               <Skjema.ListeVelger
-                feltNavn="faktaavklaringVesentligVirksomhetBegrunnelser"
+                feltNavn="faktaavklaringForutgaendeMedlemskapBegrunnelser"
                 muligeValg={begrunnelser}
                 label="Legg til begrunnelse:"
                 gruppe
@@ -46,19 +42,17 @@ const VurderingVesentligVirksomhet = props => {
   );
 };
 
-VurderingVesentligVirksomhet.ID = 'VESENTLIG_VIRKSOMHET';
+VurderingForutgaendeMedlemskap.ID = 'FORUTGAENDE_MEDLEMSKAP';
 
-VurderingVesentligVirksomhet.propTypes = {
+VurderingForutgaendeMedlemskap.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
-  valgteArbeidsgivere: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
 };
 
-VurderingVesentligVirksomhet.defaultProps = {
+VurderingForutgaendeMedlemskap.defaultProps = {
   tilstand: {},
-  valgteArbeidsgivere: [],
   begrunnelser: [],
 };
 
-export default VurderingVesentligVirksomhet;
+export default VurderingForutgaendeMedlemskap;
