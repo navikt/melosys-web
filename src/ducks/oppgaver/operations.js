@@ -37,9 +37,12 @@ export function hent() {
 }
 
 export function sendBehandlingsOppgave(checkboxliste) {
-  const keys = Object.keys(checkboxliste);
-  const behandlingstyper = ['SKND', 'UFM', 'KLG', 'REV', 'ML_U', 'PS_U'].filter(key => keys.includes(key));
-  const sakstyper = ['EU_EOS', 'TRG_AVT', 'FLK_TRG'].filter(key => keys.includes(key));
+  const { sakstyper: sakstyperListe = [], behandlingstyper: behandlingstyperListe = [] } = checkboxliste;
+  if (sakstyperListe.length === 0 || behandlingstyperListe.length === 0) { return false; }
+
+  const sakstyper = Object.keys(sakstyperListe);
+  const behandlingstyper = Object.keys(behandlingstyperListe);
+
   const oppgave = {
     oppgavetype: 'BEH_SAK',
     sakstyper,
