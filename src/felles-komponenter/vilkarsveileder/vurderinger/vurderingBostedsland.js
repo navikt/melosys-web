@@ -84,8 +84,8 @@ const VurderingBostedsland = props => {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Bostedsland er:">
-                <Skjema.Radio feltNavn="faktaavklaringBostedTerritorie" value={VurderingBostedslandTyper.NORGE} label="Norge" />
-                <Skjema.Radio feltNavn="faktaavklaringBostedTerritorie" value={VurderingBostedslandTyper.ANNET} label="Annet" />
+                <Skjema.Radio feltNavn="faktaavklaringBostedNorgeUtland" value={VurderingBostedslandTyper.NORGE} label="Norge" />
+                <Skjema.Radio feltNavn="faktaavklaringBostedNorgeUtland" value={VurderingBostedslandTyper.ANNET} label="Annet" />
                 {visLandVelger && <LandVelger label="Velg land:" feltNavn="faktaavklaringBostedLand" multiland={false} />}
               </Nav.Fieldset>
             </Nav.Column>

@@ -63,7 +63,7 @@ export const FaktaavklaringBostedSelector = createSelector(
   bosted => bosted || {}
 );
 
-export const FaktaavklaringBostedTerritorieSelector = createSelector(
+export const FaktaavklaringBostedNorgeUtlandSelector = createSelector(
   state => FaktaavklaringBostedSelector(state).bostedLand || [],
   land => {
     if (land.length === 0) { return ''; }

@@ -41,7 +41,7 @@ class Bostedsland extends Steg {
       const { skjema = {} } = _propsLight;
       const {
         faktaavklaringSysselsettingType,
-        faktaavklaringBostedTerritorie,
+        faktaavklaringBostedNorgeUtland,
         faktaavklaringIkkeYrkesaktivType,
       } = skjema;
 
@@ -91,7 +91,7 @@ class Bostedsland extends Steg {
       }
 
       return {
-        visLandVelger: (faktaavklaringBostedTerritorie === VurderingBostedslandTyper.ANNET),
+        visLandVelger: (faktaavklaringBostedNorgeUtland === VurderingBostedslandTyper.ANNET),
         avklaringer,
       };
     };
