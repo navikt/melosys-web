@@ -79,7 +79,7 @@ class OppholdsLandListe extends Component {
     const alleGyldigeOppholdsland = alleOppholdsland.filter(opphold => opphold.erGyldig);
     const alleIkkeGyldigeOppholdsland = fields
       .getAll()
-      .filter(opphold => !opphold.erGyldig && opphold.begrunnelseKode !== 'FEIL_LAND_JOURNALFORING');
+      .filter(opphold => !opphold.erGyldig && opphold.begrunnelseKode !== 'FEIL_LAND_JOURNALFOERING');
 
     const alleUbrukteLandkoder = alleLandKoder.filter(land => !alleOppholdsland.map(ol => ol.landKode).includes(land.kode));
 
@@ -104,7 +104,7 @@ class OppholdsLandListe extends Component {
         </div>
         <div className="avvistland__liste">
           {alleIkkeGyldigeOppholdsland.length > 0 &&
-          <Nav.Fieldset legend="Land som er fjernet fra søknaden:">
+          <Nav.Fieldset legend="Land som er fjernet fra behandlingen:">
             {alleIkkeGyldigeOppholdsland.map(opphold => (
               <FjernetLandEnkelt
                 key={opphold.landKode}
