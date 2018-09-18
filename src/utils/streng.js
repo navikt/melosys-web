@@ -35,3 +35,13 @@ export function storeForbokstaver() {
     )
   );
 }
+
+export function arrayTilKonjunksjon(liste) {
+  if (!liste) { return ''; }
+  if (typeof liste === 'string') { return liste; }
+  return liste.reduce((samling, element, index) => {
+    const konjunksjon = index < liste.length - 2 ? ', ' : ' og ';
+    const erVedSisteElement = index === (liste.length - 1);
+    return `${samling}${element}${!erVedSisteElement ? konjunksjon : ''}`;
+  }, '');
+}
