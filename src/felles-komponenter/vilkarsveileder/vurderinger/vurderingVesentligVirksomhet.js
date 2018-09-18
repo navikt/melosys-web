@@ -4,14 +4,18 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../skjema';
 
+import { arrayTilKonjunksjon } from '../../../utils/streng';
+
 import { BOOLSK } from '../../../constants';
 
 const VurderingVesentligVirksomhet = props => {
   const { bekreftOgFortsett, begrunnelser } = props;
 
+  const arbeidsgivereTekst = props.valgteArbeidsgivere.length > 0 ? `til ${arrayTilKonjunksjon(props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
+
   return (
     <div>
-      <Nav.Undertittel>Vurdering av vesentlig virksomhet</Nav.Undertittel>
+      <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
       <div className="vurderingBostedsland__skjemafelt">
         <Nav.Row>
           <Nav.Column xs="12">
@@ -47,11 +51,13 @@ VurderingVesentligVirksomhet.ID = 'VESENTLIG_VIRKSOMHET';
 VurderingVesentligVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
+  valgteArbeidsgivere: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
 };
 
 VurderingVesentligVirksomhet.defaultProps = {
   tilstand: {},
+  valgteArbeidsgivere: [],
   begrunnelser: [],
 };
 
