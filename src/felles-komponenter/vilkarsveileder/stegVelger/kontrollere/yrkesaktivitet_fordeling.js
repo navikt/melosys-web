@@ -15,7 +15,7 @@ class YrkesaktivitetFordeling extends Steg {
           ansattISektor === VurderingSektorTyper.INGEN_AV_DISSE &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
         ),
-        nesteSteg: STEG.UTSENDING,
+        nesteSteg: STEG.SEKTOR,
       },
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE" OG yrkesaktivitetFordeling ER LIK "KUN_NORGE"',
@@ -32,7 +32,7 @@ class YrkesaktivitetFordeling extends Steg {
           sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
         ),
-        nesteSteg: STEG.UTSENDING,
+        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
       {
         beskrivelse: 'sysselsettingType ER LIK "SELVSTENDIG" OG yrkesaktivitetFordeling ER LIK "KUN_NORGE"',
@@ -48,12 +48,12 @@ class YrkesaktivitetFordeling extends Steg {
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
         ),
-        nesteSteg: STEG.VIRKSOMHET,
+        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VIRKSOMHET,
+        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
     ];
     this._id = STEG.YRKESAKTIVITET_FORDELING;
