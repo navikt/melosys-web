@@ -4,22 +4,20 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
 export const VurderingSysselsettingTyper = {
+  YRKESAKTIV: 'YRKESAKTIV',
+  YRKESAKTIV_SKIP: 'YRKESAKTIV_SKIP',
+  YRKESAKTIV_FLYVENDE: 'YRKESAKTIV_FLYVENDE',
   IKKE_YRKESAKTIV: 'IKKE_YRKESAKTIV',
-  ARBEIDSTAKER: 'ARBEIDSTAKER',
-  SELVSTENDIG: 'SELVSTENDIG',
-  STONADSMOTTAKER: 'STONADSMOTTAKER',
-  ARBEIDSTAKER_OG_SELVSTENDIG: 'ARBEIDSTAKER_OG_SELVSTENDIG',
-  VERNEPLIKTIG: 'VERNEPLIKTIG',
+  KONTANTYTELSESMOTTAKER: 'KONTANTYTELSESMOTTAKER',
 };
 
 const Sysselsetting = () => (
   <Nav.Fieldset legend="Vurder om søkeren er:">
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.ARBEIDSTAKER} label="Arbeidstaker / frilanser" />
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.SELVSTENDIG} label="Selvstendig næringsdrivende" />
+    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV} label="Yrkesaktiv" />
+    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV_SKIP} label="Yrkesaktiv på skip" />
+    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV_FLYVENDE} label="Yrkesaktiv som flyvende personell" />
     <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.IKKE_YRKESAKTIV} label="Ikke yrkesaktiv" />
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.STONADSMOTTAKER} label="Stønadsmottaker" />
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG} label="Både arbeidstakende og selvstendig" />
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.VERNEPLIKTIG} label="Vernepliktig" />
+    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.KONTANTYTELSESMOTTAKER} label="Kontantytelsesmottaker" />
   </Nav.Fieldset>
 );
 

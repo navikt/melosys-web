@@ -9,18 +9,8 @@ class Sysselsetting extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" eller sysselsettingType ER LIK "ARBEIDSTAKER__OG__SELVSTENDIG"',
-        exec: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER,
-        nesteSteg: STEG.ARBEIDSGIVERE,
-      },
-      {
-        beskrivelse: 'sysselsettingType ER LIK "SELVSTENDIG" eller sysselsettingType ER LIK "ARBEIDSTAKER_OG_SELVSTENDIG"',
-        exec: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG || sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG,
+        exec: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV,
         nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
-      },
-      {
-        beskrivelse: 'sysselsettingType ER LIK "IKKE_YRKESAKTIV"',
-        exec: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.IKKE_YRKESAKTIV,
-        nesteSteg: STEG.IKKE_YRKESAKTIV,
       },
       {
         beskrivelse: 'alle andre valg',

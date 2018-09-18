@@ -10,7 +10,7 @@ class Aktivitet extends Steg {
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" eller sysselsettingType ER LIK "ARBEIDSTAKER__OG__SELVSTENDIG"',
         exec: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER,
-        nesteSteg: STEG.ARBEIDSFORHOLD,
+        nesteSteg: STEG.ARBEIDSGIVERE,
       },
       {
         beskrivelse: 'sysselsettingType ER LIK "SELVSTENDIG" eller sysselsettingType ER LIK "ARBEIDSTAKER_OG_SELVSTENDIG"',

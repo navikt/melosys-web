@@ -1,7 +1,6 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitetFordeling, { VurderingYrkesaktivitetFordelingTyper } from '../../vurderinger/vurderingYrkesaktivitetFordeling';
-import { VurderingSektorTyper } from '../../vurderinger/vurderingSektor';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
 class YrkesaktivitetFordeling extends Steg {
@@ -10,18 +9,16 @@ class YrkesaktivitetFordeling extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE"  OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
-        exec: ({ sysselsettingType, ansattISektor, antallLand }) => (
-          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
-          ansattISektor === VurderingSektorTyper.INGEN_AV_DISSE &&
+        exec: ({ sysselsettingType, antallLand }) => (
+          sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
         ),
-        nesteSteg: STEG.UTSENDING,
+        nesteSteg: STEG.ARBEIDSGIVERE,
       },
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE" OG yrkesaktivitetFordeling ER LIK "KUN_NORGE"',
-        exec: ({ sysselsettingType, ansattISektor, antallLand }) => (
-          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
-          ansattISektor === VurderingSektorTyper.INGEN_AV_DISSE &&
+        exec: ({ sysselsettingType, antallLand }) => (
+          sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.KUN_NORGE
         ),
         nesteSteg: STEG.VEDTAK,
@@ -29,10 +26,10 @@ class YrkesaktivitetFordeling extends Steg {
       {
         beskrivelse: 'sysselsettingType ER LIK "SELVSTENDIG" OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
         exec: ({ sysselsettingType, antallLand }) => (
-          sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
+          sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
         ),
-        nesteSteg: STEG.UTSENDING,
+        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
       {
         beskrivelse: 'sysselsettingType ER LIK "SELVSTENDIG" OG yrkesaktivitetFordeling ER LIK "KUN_NORGE"',
@@ -48,12 +45,12 @@ class YrkesaktivitetFordeling extends Steg {
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
         ),
-        nesteSteg: STEG.VIRKSOMHET,
+        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VIRKSOMHET,
+        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
     ];
     this._id = STEG.YRKESAKTIVITET_FORDELING;
