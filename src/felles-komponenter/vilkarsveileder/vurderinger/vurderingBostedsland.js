@@ -7,6 +7,7 @@ import * as Skjema from '../../skjema';
 import LandVelger from '../../skjema/landvelger/';
 
 import './vurderingBostedsland.css';
+import * as MPT from '../../../proptypes';
 
 const uuid = require('uuid/v4');
 
@@ -62,24 +63,48 @@ AvklaringsListe.propTypes = {
  */
 const VurderingBostedsland = props => {
   const {
-    bekreftOgFortsett, tilstand, vurdering,
+    bekreftOgFortsett, tilstand, begrunnelser,
   } = props;
   const { visBostedslandVelger, harEOSBarnetrygdSak } = tilstand;
 
   const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
+  const { visLandVelger } = tilstand;
 
-  return vurdering === {} ? null : (
+  return (
     <div className="vurderingBostedsland">
+      <Nav.Undertittel>Vurdering av bosted</Nav.Undertittel>
       <div>
         <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
         <AvklaringsListe tilstand={tilstand} />
         <div className="vurderingBostedsland__barnetrygd">{barnetrygdTekst}</div>
         <div className="vurderingBostedsland__skjemafelt">
-          <Nav.Fieldset legend="Bostedsland er:">
-            <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.NORGE} label="Norge" />
-            <Skjema.Radio feltNavn="faktaavklaringBostedslandSnarvei" value={VurderingBostedslandTyper.ANNET} label="Annet" />
-            {visBostedslandVelger && <LandVelger feltNavn="faktaavklaringBostedsland" multiland={false} />}
-          </Nav.Fieldset>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <AvklaringsListe tilstand={tilstand} />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Nav.Fieldset legend="Bostedsland er:">
+                <Skjema.Radio feltNavn="faktaavklaringBostedNorgeUtland" value={VurderingBostedslandTyper.NORGE} label="Norge" />
+                <Skjema.Radio feltNavn="faktaavklaringBostedNorgeUtland" value={VurderingBostedslandTyper.ANNET} label="Annet" />
+                {visLandVelger && <LandVelger label="Velg land:" feltNavn="faktaavklaringBostedLand" multiland={false} />}
+              </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Nav.Fieldset legend="Begrunnelse:">
+                <Skjema.ListeVelger
+                  feltNavn="faktaavklaringBostedBegrunnelser"
+                  muligeValg={begrunnelser}
+                  label="Legg til begrunnelse:"
+                  gruppe
+                  tillatFritekst={false}
+                />
+              </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>
         </div>
       </div>
       <div className="fane__knapplinje">
@@ -93,11 +118,13 @@ VurderingBostedsland.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   vurdering: PT.object,
+  begrunnelser: PT.arrayOf(MPT.Kodeverk),
 };
 
 VurderingBostedsland.defaultProps = {
   tilstand: {},
   vurdering: {},
+  begrunnelser: [],
 };
 
 export default VurderingBostedsland;

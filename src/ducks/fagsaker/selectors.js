@@ -4,6 +4,7 @@ import moment from 'moment/moment';
 
 import { faktaavklaringSelectors } from '../faktaavklaring/';
 import { kodeverkObjektTilKode } from '../../utils/kodeverk';
+import { datoDiff } from '../../utils/dato';
 
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
@@ -40,8 +41,8 @@ export const FagsakSokSelector = createSelector(
  */
 
 /**
- * Inntekt er nøstet inn i måned og deretter en blanding av flere typer fra samme
- * opplysningspliktigID og forskjellige opplysningspliktigID. I tillegg er det mye data
+ * Inntekt er nøstet inn i måned og deretter en blanding av flere inntektstyper fra enten samme
+ * opplysningspliktigID eller forskjellige opplysningspliktigID. I tillegg er det mye data
  * som vi ikke har behov for. For å kunne gjøre fremtidige filtreringer ønsker vi å omforme
  * den opprinnelige modellen til en flatere modell:
  *
@@ -91,32 +92,33 @@ const summerInntektsTyperFraSammeOpplysningspliktig = flatInntektListe => (
   }, [])
 );
 
-/** Denne funksjonen filtrerer inntekten på siste 6 måneder fra startdato og
- * sprer den over tilsvarende måneder slik at evt manglende inntektsdata vises som beloep:0 for den
- * aktuelle måneden.
+/** Denne funksjonen filtrerer inntekten som finnes innenfor den relevante perioden (søknadsdato minus 6 måneder)
+ * Dersom det ikke finnes inntekt, vil den sette inntekten til 0 slik at denne måneden fortsatt kommer med
+ * i den grafiske fremstillingen.
  *
- * @param startDato Startdatoen for når vi teller bakover.
+ * @param relevantPeriode Den relevante perioden som det skal vises inntekt på.
  * @param orgnr Organisasjonsnummmeret som det filtreres på.
  * @param inntekter Listen over ufiltrerte inntekter.
  * @returns {any[]}
  */
-const filtrerOgSpreInntekt = (startDato, orgnr, inntekter) => {
+const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
   const filtrerteInntekterFraOpplysningspliktig = inntekter.filter(inntekt => inntekt.opplysningspliktigID === orgnr);
+  if (filtrerteInntekterFraOpplysningspliktig.length === 0) { return []; }
 
-  return filtrerteInntekterFraOpplysningspliktig.length === 0 ?
-    filtrerteInntekterFraOpplysningspliktig
-    :
-    Array(6).fill({}).map((verdi, index) => {
-      const aarMaaned = moment(startDato).subtract(index, 'months').format('YYYY-MM');
+  const startDato = relevantPeriode.fom;
+  const antallMaaneder = parseInt(datoDiff(relevantPeriode.fom, relevantPeriode.tom, 'months'), 10) + 1;
 
-      const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(enkeltInntekt => enkeltInntekt.aarMaaned === aarMaaned);
+  return Array(antallMaaneder).fill({}).map((verdi, index) => {
+    const aarMaaned = moment(startDato).add(index, 'months').format('YYYY-MM');
 
-      return eksisterendeInntektFunnetVedIndeks > -1
-        ?
-        filtrerteInntekterFraOpplysningspliktig[eksisterendeInntektFunnetVedIndeks]
-        :
-        { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
-    });
+    const eksisterendeInntektFunnetVedIndeks = filtrerteInntekterFraOpplysningspliktig.findIndex(enkeltInntekt => enkeltInntekt.aarMaaned === aarMaaned);
+
+    return eksisterendeInntektFunnetVedIndeks > -1
+      ?
+      filtrerteInntekterFraOpplysningspliktig[eksisterendeInntektFunnetVedIndeks]
+      :
+      { aarMaaned, beloep: 0, opplysningspliktigID: orgnr };
+  });
 };
 
 export const InntektSelector = createSelector(
@@ -202,23 +204,6 @@ export const OrganisasjonSelector = createSelector(
   }
 );
 
-export const ArbeidsgivereNorgeSelectorOld = createSelector(
-  state => OrganisasjonerSelector(state),
-  state => ArbeidsforholdeneSelector(state),
-  state => InntektSelector(state),
-  state => faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state),
-  (organisasjoner, arbeidsforholdene, inntekter, periode) => {
-    const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
-    const arbeidsgivere = organisasjoner.reduce((samling, organisasjon) => {
-      const filtrerteArbeidsforholdene = arbeidsforholdene.filter(arbeidsforholdet => arbeidsforholdet.opplysningspliktigID === organisasjon.orgnr);
-      const filtrerteInntekter = filtrerOgSpreInntekt(startDato, organisasjon.orgnr, inntekter);
-      return ([...samling, { organisasjon, arbeidsforholdene: filtrerteArbeidsforholdene, inntektListe: filtrerteInntekter }]);
-    }, [])
-      .filter(arbeidsgiver => arbeidsgiver.arbeidsforholdene.length > 0 || arbeidsgiver.inntektListe.length > 0);
-    return arbeidsgivere;
-  }
-);
-
 /** Hjelpefunksjon for ArbeidsgivereNorgeSelector. Funksjonen bygger en ny gruppe av et arbeidsforhold
  * med arbeidsforholdene (array), inntekter (array) og organisasjonen (objekt)
  * @param arbeidsforholdet
@@ -227,11 +212,11 @@ export const ArbeidsgivereNorgeSelectorOld = createSelector(
  * @param soknadStartDato
  * @returns {{arbeidsforholdene: *[], organisasjon: *, inntekter: any[]}}
  */
-const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, soknadStartDato) => (
+const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, relevantPeriode) => (
   {
     arbeidsforholdene: [arbeidsforholdet],
     organisasjon: organisasjoner.find(org => org.orgnr === arbeidsforholdet.opplysningspliktigID),
-    inntektListe: filtrerOgSpreInntekt(soknadStartDato, arbeidsforholdet.opplysningspliktigID, inntekter),
+    inntektListe: filtrerOgSpreInntekt(relevantPeriode, arbeidsforholdet.opplysningspliktigID, inntekter),
   }
 );
 
@@ -250,9 +235,22 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   state => InntektSelector(state),
   state => faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter, periode) => {
-    // Det er inntekter 6 måneder pri SØKNADSDATO som er interessant.
-    // Finn derfor startDato hvor vi senere teller 6 måneder tilbake når inntektslisten settes sammen.
-    const { fom: startDato = moment().format('YYYY-MM-DD') } = periode;
+    // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
+    // tilbake i tid, skal også inntekt i selve perioden vises.
+
+    const { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = periode;
+    if (!soknadPeriodeStart && !soknadPeriodeSlutt) { return []; }
+
+    const relevantPeriodeStart = moment(soknadPeriodeStart, 'YYYY-MM-DD')
+      .subtract(6, 'months')
+      .format('YYYY-MM-DD');
+
+    const relevantPeriodeSlutt = moment(soknadPeriodeSlutt, 'YYYY-MM-DD') < moment() ? soknadPeriodeSlutt : moment().format('YYYY-MM-DD');
+
+    const relevantPeriode = {
+      fom: relevantPeriodeStart,
+      tom: relevantPeriodeSlutt,
+    };
 
     const arbeidsgivere = arbeidsforholdene.reduce((samling, arbeidsforholdet) => {
       const tmpSamling = [...samling];
@@ -266,7 +264,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       if (arbeidsforholdEksistererVedIndeks > -1) {
         tmpSamling[arbeidsforholdEksistererVedIndeks].arbeidsforholdene.push(arbeidsforholdet);
       } else {
-        tmpSamling.push(byggNyArbeidsforholdGruppe(arbeidsforholdet, organisasjoner, inntekter, startDato));
+        tmpSamling.push(byggNyArbeidsforholdGruppe(arbeidsforholdet, organisasjoner, inntekter, relevantPeriode));
       }
 
       return tmpSamling;

@@ -9,13 +9,14 @@ class VesentligVirksomhet extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
+        nesteSteg: STEG.UTSENDING,
       },
     ];
     this._id = STEG.VESENTLIG_VIRKSOMHET;
     this._tittel = 'Vesentlig virksomhet';
     this._komponent = VurderingVesentligVirksomhet;
     this._samleRelevanteData = _propsLight => ({
+      valgteArbeidsgivere: this.samleArbeidsgivereSomListe(_propsLight),
       begrunnelser: _propsLight.begrunnelser.vesentligVirksomhet || [],
     });
     this._beregnRelevantUI = () => ({});
@@ -23,6 +24,12 @@ class VesentligVirksomhet extends Steg {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
+  }
+
+  samleArbeidsgivereSomListe = () => {
+    const valgteArbeidsgivereOrgnr = this._propsLight.skjema.faktaavklaringValgteArbeidsgivere || [];
+    return this._propsLight.arbeidsgivereIPerioden
+      .filter(arbeidsgiver => valgteArbeidsgivereOrgnr.includes(arbeidsgiver.orgnr));
   }
 }
 
