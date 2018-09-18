@@ -43,6 +43,11 @@ export const FaktaavklaringUtsendingSelector = createSelector(
   utsending => utsending || {}
 );
 
+export const FaktaavklaringForutgaendeMedlemskapSelector = createSelector(
+  state => FaktaavklaringSelector(state).forutgaendeMedlemskap,
+  forutgaendeMedlemskap => forutgaendeMedlemskap || {}
+);
+
 export const FaktaavklaringSektorSelector = createSelector(
   state => FaktaavklaringSelector(state).sektor,
   sektor => sektor || {}
