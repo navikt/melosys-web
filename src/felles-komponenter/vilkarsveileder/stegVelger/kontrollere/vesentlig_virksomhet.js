@@ -9,7 +9,7 @@ class VesentligVirksomhet extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
+        nesteSteg: STEG.UTSENDING,
       },
     ];
     this._id = STEG.VESENTLIG_VIRKSOMHET;

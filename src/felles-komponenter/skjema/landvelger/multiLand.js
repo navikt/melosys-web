@@ -121,7 +121,6 @@ class MultiLand extends Component {
       fokusUtHandler,
       inputEndringHandler,
       inputTastNedHandler,
-      label,
       slettLandHandler,
     } = this;
 
@@ -129,6 +128,7 @@ class MultiLand extends Component {
       fields,
       meta,
       landkoder,
+      label,
     } = this.props;
 
     const { inputVerdi } = this.state;
