@@ -34,12 +34,14 @@ class Bostedsland extends Steg {
     this._id = STEG.BOSTEDSLAND;
     this._tittel = 'Bosted';
     this._komponent = VurderingBostedsland;
-    this._samleRelevanteData = () => ({});
+    this._samleRelevanteData = _propsLight => ({
+      begrunnelser: _propsLight.begrunnelser.bosted || [],
+    });
     this._beregnRelevantUI = _propsLight => {
       const { skjema = {} } = _propsLight;
       const {
         faktaavklaringSysselsettingType,
-        faktaavklaringBostedslandSnarvei,
+        faktaavklaringBostedNorgeUtland,
         faktaavklaringIkkeYrkesaktivType,
       } = skjema;
 
@@ -89,9 +91,7 @@ class Bostedsland extends Steg {
       }
 
       return {
-        visBostedslandVelger: (faktaavklaringBostedslandSnarvei === VurderingBostedslandTyper.ANNET),
-        visTipsForYrkesaktiv: erYrkesaktiv,
-        visTipsForIkkeYrkesaktiv: !erYrkesaktiv,
+        visLandVelger: (faktaavklaringBostedNorgeUtland === VurderingBostedslandTyper.ANNET),
         avklaringer,
       };
     };

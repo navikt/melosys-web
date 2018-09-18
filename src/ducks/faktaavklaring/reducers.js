@@ -9,6 +9,8 @@ import { formatterDatoTilISO } from '../../utils/dato';
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
 
+import { VurderingBostedslandTyper } from '../../felles-komponenter/vilkarsveileder/vurderinger/vurderingBostedsland';
+
 const initialState = {
   data: {},
   status: STATUS.NOT_STARTED,
@@ -71,8 +73,8 @@ export default function reducer(state = initialState, action) {
           forutgaendeMedlemskapBegrunnelser: dokument.faktaavklaringForutgaendeMedlemskapBegrunnelser,
         },
         bosted: {
-          vurdering: { ...state.data.avklaring.bosted.vurdering },
-          land: dokument.faktaavklaringBostedsland,
+          bostedLand: (dokument.faktaavklaringBostedNorgeUtland === VurderingBostedslandTyper.NORGE ? 'NO' : dokument.faktaavklaringBostedLand),
+          bostedBegrunnelser: dokument.faktaavklaringBostedBegrunnelser,
         },
         yrkesaktivitetFordeling: {
           antallLand: dokument.faktaavklaringAntallLand,
