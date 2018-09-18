@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { boolTilNorsk, norskTilBool, boolTilStreng, strengTilBool, strengTilInt,
-  tekstEllerDash, storeForbokstaver
+  tekstEllerDash, storeForbokstaver, arrayTilKonjunksjon,
 } from './streng';
 
 describe('streng.js', () => {
@@ -69,4 +69,41 @@ describe('streng.js', () => {
       expect(storeForbokstaver(testString)).toEqual('En To Tre Fire Fem');
     });
   });
+
+  describe('arrayTilKonjunksjon', () => {
+    test('konjunksjon gir kun ett ord ved ett element i liste', () => {
+      const liste = ['Foo'];
+      const forventetResultat = 'Foo';
+
+      expect(arrayTilKonjunksjon(liste)).toEqual(forventetResultat);
+    });
+
+    test('konjunksjon gir komma ved liste på 2 elementer', () => {
+      const liste = ['Foo', 'Bar'];
+      const forventetResultat = 'Foo og Bar';
+
+      expect(arrayTilKonjunksjon(liste)).toEqual(forventetResultat);
+    });
+
+    test('konjunksjon gir komma og "og" ved liste på 5 elementer', () => {
+      const liste = ['Foo', 'Boo', 'Bar', 'Baz', 'Maz'];
+      const forventetResultat = 'Foo, Boo, Bar, Baz og Maz';
+
+      expect(arrayTilKonjunksjon(liste)).toEqual(forventetResultat);
+    });
+
+    test('håndterer argumenter som er falsy', () => {
+      const liste = undefined;
+      const forventetResultat = '';
+
+      expect(arrayTilKonjunksjon(liste)).toEqual(forventetResultat);
+    });
+
+    test('håndterer argumenter som er string', () => {
+      const liste = 'Foo, Bar';
+      const forventetResultat = 'Foo, Bar';
+
+      expect(arrayTilKonjunksjon(liste)).toEqual(forventetResultat);
+    })
+  })
 });
