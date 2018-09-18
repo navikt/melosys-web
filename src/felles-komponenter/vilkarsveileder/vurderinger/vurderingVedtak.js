@@ -75,7 +75,7 @@ const VurderingVedtak = props => {
 
   const { land, periode } = opphold;
 
-  const { sysselsettingType = '' } = sysselsetting;
+  const sysselsettingType = sysselsetting.sysselsettingType || '';
 
   const antallManeder = datoDiffMenneskelig(periode.fom, periode.tom);
   const arbeidsgivereForVedtaket = valgteArbeidsgivere
@@ -83,6 +83,8 @@ const VurderingVedtak = props => {
     .join(', ');
 
   const venteskjermKlasser = classnames({ vedtak__venteskjerm: true, 'vedtak__venteskjerm--skjult': props.vurderingStatus !== 'PENDING' });
+
+  const landSomTekstListe = land.map(enkeltLand => enkeltLand.landKode).join(', ');
 
   return (
     <div className="vedtak">
@@ -114,7 +116,7 @@ const VurderingVedtak = props => {
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Land</Nav.Element>
-            <Nav.Normaltekst>{ land.join(', ') }</Nav.Normaltekst>
+            <Nav.Normaltekst>{ landSomTekstListe }</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6" md="3">
             <Nav.Element type="element">Søker er</Nav.Element>

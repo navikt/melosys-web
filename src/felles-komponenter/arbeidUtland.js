@@ -39,8 +39,8 @@ const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler }) => (
     <Nav.Row>
       <Nav.Column xs="6">
         <Nav.Fieldset legend="Arbeidsandel i prosent">
-          <Skjema.Input bredde="XS" type="number" feltNavn={`arbeidUtland[${indeks}].arbeidsandelUtland`} label="Arbeidsandel utland, oppgitt i søknad" />
-          <Skjema.Input bredde="XS" type="number" feltNavn={`arbeidUtland[${indeks}].arbeidsandelNorge`} label="Arbeidsandel Norge, oppgitt i søknad" />
+          <Skjema.Input bredde="XS" type="number" min={0} max={100} feltNavn={`arbeidUtland[${indeks}].arbeidsandelUtland`} label="Arbeidsandel utland, oppgitt i søknad" />
+          <Skjema.Input bredde="XS" type="number" min={0} max={100} feltNavn={`arbeidUtland[${indeks}].arbeidsandelNorge`} label="Arbeidsandel Norge, oppgitt i søknad" />
         </Nav.Fieldset>
       </Nav.Column>
     </Nav.Row>
@@ -73,7 +73,7 @@ class ArbeidUtlandWrapper extends Component {
           ariaTittel="Panel for arbeidssted i utlandet">
           <Nav.Container fluid>
             {this.props.fields.map((fieldName, indeks) => <ArbeidUtlandEnkelt key={fieldName} indeks={indeks} slettArbeidHandler={slettArbeidHandler} />)}
-            <Nav.Knapp className="arbeidUtland__leggtil" onClick={leggTilArbeidHandler}>+ Legg til flere arbeidsgiver i utlandet</Nav.Knapp>
+            <Nav.Knapp className="arbeidUtland__leggtil" onClick={leggTilArbeidHandler}>+ Legg til flere arbeidssteder i utlandet</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
