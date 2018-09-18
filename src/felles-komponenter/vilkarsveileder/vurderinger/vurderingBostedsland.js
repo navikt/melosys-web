@@ -65,10 +65,9 @@ const VurderingBostedsland = props => {
   const {
     bekreftOgFortsett, tilstand, begrunnelser,
   } = props;
-  const { visBostedslandVelger, harEOSBarnetrygdSak } = tilstand;
+  const { visLandVelger, harEOSBarnetrygdSak } = tilstand;
 
   const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
-  const { visLandVelger } = tilstand;
 
   return (
     <div className="vurderingBostedsland">
