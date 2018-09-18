@@ -2,9 +2,9 @@ import Aktivitet from './aktivitet';
 import Arbeidsgivere from './arbeidsgivere';
 import Bostedsland from './bostedsland';
 import Forretningssted from './forretningssted';
+import ForutgaendeMedlemskap from './forutgaende_medlemskap';
 import IkkeYrkesaktiv from './ikke_yrkesaktiv';
 import Inngang from './inngang';
-import Periode from './periode';
 import Sektor from './sektor';
 import Sysselsetting from './sysselsetting';
 import Tjenestemann from './tjenestemann';
@@ -20,9 +20,9 @@ export {
   Arbeidsgivere,
   Bostedsland,
   Forretningssted,
+  ForutgaendeMedlemskap,
   IkkeYrkesaktiv,
   Inngang,
-  Periode,
   Sektor,
   Sysselsetting,
   Tjenestemann,

@@ -9,6 +9,8 @@ import { formatterDatoTilISO } from '../../utils/dato';
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
 
+import { VurderingBostedslandTyper } from '../../felles-komponenter/vilkarsveileder/vurderinger/vurderingBostedsland';
+
 const initialState = {
   data: {},
   status: STATUS.NOT_STARTED,
@@ -59,7 +61,6 @@ export default function reducer(state = initialState, action) {
           erstatterTidligereUtsendt: dokument.faktaavklaringErstatterTidligereUtsendt,
           utsendingMindreEnn24Mnd: dokument.faktaavklaringUtsendingMindreEnn24Mnd,
           foretakDriverINorge: dokument.faktaavklaringForetakDriverINorge,
-          harForutgaendeMedlemskap: dokument.faktaavklaringHarForutgaendeMedlemskap,
           arbeidKnyttetTilVirksomhetUtlandet: dokument.faktaavklaringArbeidKnyttetTilVirksomhetUtlandet,
           sammeTypeVirksomhet: dokument.faktaavklaringSammeTypeVirksomhet,
         },
@@ -67,9 +68,13 @@ export default function reducer(state = initialState, action) {
         sektor: {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
+        forutgaendeMedlemskap: {
+          harForutgaendeMedlemskap: dokument.faktaavklaringHarForutgaendeMedlemskap,
+          forutgaendeMedlemskapBegrunnelser: dokument.faktaavklaringForutgaendeMedlemskapBegrunnelser,
+        },
         bosted: {
-          vurdering: { ...state.data.avklaring.bosted.vurdering },
-          land: dokument.faktaavklaringBostedsland,
+          bostedLand: (dokument.faktaavklaringBostedNorgeUtland === VurderingBostedslandTyper.NORGE ? 'NO' : dokument.faktaavklaringBostedLand),
+          bostedBegrunnelser: dokument.faktaavklaringBostedBegrunnelser,
         },
         yrkesaktivitetFordeling: {
           antallLand: dokument.faktaavklaringAntallLand,

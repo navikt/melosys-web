@@ -5881,8 +5881,8 @@ nav-frontend-hjelpetekst@^1.0.25:
   resolved "https://registry.yarnpkg.com/nav-frontend-hjelpetekst/-/nav-frontend-hjelpetekst-1.0.25.tgz#6900af7ec6e45419706e68fa62f7d775c2ffd3c8"
 
 nav-frontend-ikoner-assets@^0.2.28:
-  version "0.2.28"
-  resolved "https://registry.yarnpkg.com/nav-frontend-ikoner-assets/-/nav-frontend-ikoner-assets-0.2.28.tgz#3d554359a408380626a9714c750f3636cf949434"
+  version "0.2.29"
+  resolved "https://registry.yarnpkg.com/nav-frontend-ikoner-assets/-/nav-frontend-ikoner-assets-0.2.29.tgz#32435457f8a51086de7d426212c60d0e7ba36934"
 
 nav-frontend-js-utils@^1.0.6:
   version "1.0.6"
@@ -5892,9 +5892,9 @@ nav-frontend-knapper-style@^0.3.18:
   version "0.3.18"
   resolved "https://registry.yarnpkg.com/nav-frontend-knapper-style/-/nav-frontend-knapper-style-0.3.18.tgz#b572f119ebab2eb86a3a31cd9aa70d4a2a6d6d70"
 
-nav-frontend-knapper@^1.0.20:
-  version "1.0.20"
-  resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-1.0.20.tgz#91e19c976109f719ae830696872d6cdb8509f157"
+nav-frontend-knapper@^1.0.21:
+  version "1.0.21"
+  resolved "https://registry.yarnpkg.com/nav-frontend-knapper/-/nav-frontend-knapper-1.0.21.tgz#71fe041ec27b758cf91e7c6b10a0c6f93346d518"
 
 nav-frontend-lenkepanel-style@^0.3.17:
   version "0.3.17"
