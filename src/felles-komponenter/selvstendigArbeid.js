@@ -15,35 +15,60 @@ import OrganisasjonsAdresse from './adresser/organisasjonsAdresse';
 import './selvstendigArbeid.css';
 
 class EnkeltForetak extends Component {
-  state = { organisasjon: {} }
+  state = { organisasjon: {}, feilmelding: null };
 
   componentDidMount() {
     const { orgnr } = this.props;
-    if (orgnr) this.hentOrganisasjon(orgnr);
+    if (orgnr) { this.hentOrganisasjon(orgnr); }
   }
 
-  hentOrganisasjon = orgnr => {
-    if (orgnr && erOrgnrGyldig(orgnr)) {
-      API.Organisasjoner.hentOrganisasjon(orgnr).then(response => {
-        const organisasjon = Object.keys(response).length >= 0 ? response : false;
-        this.setState({ organisasjon });
-      });
+  componentDidUpdate(prevProps) {
+    const gammeltOrgnr = prevProps.orgnr;
+    const nyttOrgnr = this.props.orgnr;
+
+    if (gammeltOrgnr !== nyttOrgnr) {
+      this.settFeilmelding(null);
+      this.settOrganisasjon(null);
+      this.hentOrganisasjon(nyttOrgnr);
     }
   }
 
-  inputKeyHandler = event => this.hentOrganisasjon(event.target.value);
+  settFeilmelding = feilmelding => this.setState({ feilmelding });
+  settOrganisasjon = organisasjon => this.setState({ organisasjon });
+
+  presjekkOrganisasjon = () => {
+    const { orgnr } = this.props;
+    if (!erOrgnrGyldig(orgnr)) { this.settFeilmelding('Organisasjonsnummer er ikke gyldig.'); }
+  };
+
+  hentOrganisasjon = orgnr => {
+    if (erOrgnrGyldig(orgnr)) {
+      API.Organisasjoner.hentOrganisasjon(orgnr).then(response => {
+        const organisasjon = (Object.keys(response).length > 0) ? response : null;
+        const feilmelding = !organisasjon ? 'Fant ikke organisasjonen' : null;
+
+        this.settOrganisasjon(organisasjon);
+        this.settFeilmelding(feilmelding);
+      });
+    }
+  };
 
   render () {
     const { posisjon, foretaket, slettForetak } = this.props;
-    const { inputKeyHandler } = this;
-    const feilmelding = !this.state.organisasjon ? { feilmelding: 'Fant ikke virksomheten.' } : null;
+    const feilmelding = this.state.feilmelding ? { feilmelding: this.state.feilmelding } : null;
 
     return (
       <div className="enkeltForetak">
         <Nav.Fieldset legend={`Foretak #${posisjon}`}>
           <Nav.Row>
             <Nav.Column xs="4">
-              <Skjema.Input feltNavn={`${foretaket}.orgnr`} feil={feilmelding} bredde="S" label="Organisasjonsnummer" onKeyUp={inputKeyHandler} />
+              <Skjema.Input
+                feltNavn={`${foretaket}.orgnr`}
+                feil={feilmelding}
+                bredde="S"
+                label="Organisasjonsnummer"
+                onBlur={() => this.presjekkOrganisasjon()}
+              />
               { this.state.organisasjon && <OrganisasjonsAdresse className="enkeltforetak__adresse" organisasjon={this.state.organisasjon} /> }
             </Nav.Column>
             <Nav.Column xs="5">
