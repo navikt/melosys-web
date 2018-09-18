@@ -70,7 +70,7 @@ export default function reducer(state = initialState, action) {
           ansattISektor: dokument.faktaavklaringAnsattISektor,
         },
         bosted: {
-          bostedLand: (dokument.faktaavklaringBostedTerritorie === VurderingBostedslandTyper.NORGE ? 'NO' : dokument.faktaavklaringBostedLand),
+          bostedLand: (dokument.faktaavklaringBostedNorgeUtland === VurderingBostedslandTyper.NORGE ? 'NO' : dokument.faktaavklaringBostedLand),
           bostedBegrunnelser: dokument.faktaavklaringBostedBegrunnelser,
         },
         yrkesaktivitetFordeling: {
