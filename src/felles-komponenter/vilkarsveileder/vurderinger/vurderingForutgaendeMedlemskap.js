@@ -42,7 +42,7 @@ const VurderingForutgaendeMedlemskap = props => {
   );
 };
 
-VurderingForutgaendeMedlemskap.ID = 'VESENTLIG_VIRKSOMHET';
+VurderingForutgaendeMedlemskap.ID = 'FORUTGAENDE_MEDLEMSKAP';
 
 VurderingForutgaendeMedlemskap.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
