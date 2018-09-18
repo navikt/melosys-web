@@ -16,8 +16,8 @@ const VurderingForutgaendeMedlemskap = props => {
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend="Virksomheten har:">
-              <Skjema.Radio feltNavn="faktaavklaringForutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
-              <Skjema.Radio feltNavn="faktaavklaringForutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
+              <Skjema.Radio feltNavn="faktaavklaringHarForutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
+              <Skjema.Radio feltNavn="faktaavklaringHarForutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
