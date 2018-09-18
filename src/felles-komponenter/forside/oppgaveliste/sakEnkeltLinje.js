@@ -56,7 +56,7 @@ const SakEnkeltLinje = ({ sak }) => {
   const link = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
-  const oppdateringStatus = !erUnderOppdatering ? formatterDatoTilNorsk(sistOppdatert, true) : '(oppdateres nå)';
+  const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
 
   const cl = classNames({
     sakEnkeltLinje: true,
@@ -78,6 +78,7 @@ const SakEnkeltLinje = ({ sak }) => {
                   <dt className="sakEnkeltLinje__meta__term">Frist:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{aktivTil || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Sist oppdatert:</dt>
+                  <dd className="sakEnkeltLinje__meta__detalj">{formatterDatoTilNorsk(sistOppdatert, true)}</dd>
                   <dd className="sakEnkeltLinje__meta__detalj">{oppdateringStatus}</dd>
                 </dl>
               </Nav.Column>
