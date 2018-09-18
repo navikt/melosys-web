@@ -10,15 +10,15 @@ class YrkesaktivitetFordeling extends Steg {
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE"  OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
         exec: ({ sysselsettingType, antallLand }) => (
-          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
+          sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
         ),
-        nesteSteg: STEG.SEKTOR,
+        nesteSteg: STEG.ARBEIDSGIVERE,
       },
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "INGEN_AV_DISSE" OG yrkesaktivitetFordeling ER LIK "KUN_NORGE"',
         exec: ({ sysselsettingType, antallLand }) => (
-          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
+          sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.KUN_NORGE
         ),
         nesteSteg: STEG.VEDTAK,
@@ -26,7 +26,7 @@ class YrkesaktivitetFordeling extends Steg {
       {
         beskrivelse: 'sysselsettingType ER LIK "SELVSTENDIG" OG yrkesaktivitetFordeling ER LIK "ETT_LAND_IKKE_NORGE"',
         exec: ({ sysselsettingType, antallLand }) => (
-          sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
+          sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.ETT_LAND_IKKE_NORGE
         ),
         nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
