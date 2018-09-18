@@ -1,7 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import queryString from 'query-string';
+import qs from 'qs';
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -65,8 +65,8 @@ class Journalforing extends Component {
 
   componentDidMount() {
     const { journalpostID, oppgaveID } = this.props.match.params;
-    const qparams = queryString.parse(this.props.location.search);
-    console.log(qparams); // TODO Fjern når vi har avklart hva vi skal gjøre med ?kilde=GOSYS
+    const qsParsed = qs.parse(this.props.location.search.slice(1));
+    console.log(qsParsed); // TODO Fjern når vi har avklart hva vi skal gjøre med ?kilde=GOSYS
     this.props.hentJournalOppgave(journalpostID, oppgaveID);
   }
 
