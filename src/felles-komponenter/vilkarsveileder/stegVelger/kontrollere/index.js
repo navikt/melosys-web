@@ -4,7 +4,6 @@ import Bostedsland from './bostedsland';
 import Forretningssted from './forretningssted';
 import IkkeYrkesaktiv from './ikke_yrkesaktiv';
 import Inngang from './inngang';
-import Periode from './periode';
 import Sektor from './sektor';
 import Sysselsetting from './sysselsetting';
 import Tjenestemann from './tjenestemann';
@@ -22,7 +21,6 @@ export {
   Forretningssted,
   IkkeYrkesaktiv,
   Inngang,
-  Periode,
   Sektor,
   Sysselsetting,
   Tjenestemann,
