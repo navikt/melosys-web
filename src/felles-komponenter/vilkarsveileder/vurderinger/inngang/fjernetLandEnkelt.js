@@ -19,7 +19,7 @@ const FjernetLandEnkelt = props => {
       <div className="fjernetland__linje">
         <div className="linje__land">{landTerm} ({landKode})</div>
         <div className="linje__begrunnelse">{begrunnelseTerm}</div>
-        <div className="linje__knapper"><Nav.Knapp mini onClick={() => angreFjern(landKode)}>Angre fjern</Nav.Knapp></div>
+        <div className="linje__knapper"><Nav.Knapp onClick={() => angreFjern(landKode)}>Angre fjern</Nav.Knapp></div>
       </div>
     </div>
   );
