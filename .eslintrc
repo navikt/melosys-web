@@ -57,7 +57,7 @@
     "linebreak-style": "off",
     "no-bitwise": [ "error", {"allow" : ["^"]} ]
   },
-  "extends": "airbnb",
+  "extends": ["react-app","airbnb"],
   "plugins": [
     "jsx-a11y",
     "jest"
