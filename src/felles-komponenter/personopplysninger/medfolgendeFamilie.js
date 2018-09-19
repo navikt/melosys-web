@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 import * as Nav from '../../utils/navFrontend';
+import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
 
 import './medfolgendeFamilie.css';
 
@@ -13,7 +14,7 @@ const FamiliemedlemmerEnkelt = ({
   <dl className="familiemedlemmerEnkelt">
     <dd className="enkelt__navn">{familiemedlemmerEnkelt.sammensattNavn}</dd>
     <dd className="enkelt__fnr">{familiemedlemmerEnkelt.fnr}</dd>
-    <dd className="enkelt__relasjonstype">{familiemedlemmerEnkelt.relasjonstype}</dd>
+    <dd className="enkelt__relasjonstype">{kodeverkObjektTilTerm(familiemedlemmerEnkelt.relasjonstype)}</dd>
     <dd className="enkelt__ermed">
       <Nav.Checkbox
         navn={`medfolgendeFamilie${indeks}`}
@@ -48,6 +49,7 @@ class FamiliemedlemmerListe extends Component {
 
   render() {
     const { familiemedlemmerAlle, fields } = this.props;
+    if (!familiemedlemmerAlle) return null;
     const { onBarnChange } = this;
     const allFields = fields.getAll() || [];
 

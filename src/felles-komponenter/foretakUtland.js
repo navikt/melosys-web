@@ -25,7 +25,7 @@ const EnkeltForetak = ({ indeks, slettForetakHandler }) => (
         <Skjema.Input label="Gatenavn" feltNavn={`foretakUtland[${indeks}].adresse.gatenavn`} />
         <Skjema.Input label="Postnummer" feltNavn={`foretakUtland[${indeks}].adresse.postnummer`} />
         <Skjema.Input label="Poststed" feltNavn={`foretakUtland[${indeks}].adresse.poststed`} />
-        <LandVelger label="Land" feltNavn={`foretakUtland[${indeks}].adresse.land`} />
+        <LandVelger label="Land" feltNavn={`foretakUtland[${indeks}].adresse.landKode`} />
       </Nav.Fieldset>
     </Nav.Column>
     <Nav.Knapp mini onClick={() => slettForetakHandler(indeks)}>- Fjern dette foretaket</Nav.Knapp>
@@ -57,7 +57,7 @@ class ForetakUtlandWrapper extends Component {
           heading={<PanelHeader ikon={panelIkon} tittel="Foretak i utlandet" undertittel="" />}
           ariaTittel="Panel for foretak i utlandet">
           <Nav.Container fluid>
-            { fields.map((field, indeks) => (<EnkeltForetak key={field} indeks={indeks} slettForetakHandler={slettForetakHandler} />))}
+            { fields.map((fieldName, indeks) => (<EnkeltForetak key={fieldName} indeks={indeks} slettForetakHandler={slettForetakHandler} />))}
             <Nav.Knapp className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>+ Legg til flere foretak i utlandet</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>

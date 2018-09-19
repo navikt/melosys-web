@@ -14,7 +14,7 @@ class Utsending extends Steg {
       },
     ];
     this._id = STEG.UTSENDING;
-    this._tittel = 'Utsending';
+    this._tittel = 'Øvrige vilkår 12.1';
     this._komponent = VurderingUtsending;
     this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = _propsLight => {

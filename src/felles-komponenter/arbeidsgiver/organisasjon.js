@@ -6,7 +6,7 @@ import * as Ikoner from '../../resources/images/index';
 
 import PanelHeader from '../panelHeader/panelHeader';
 
-import Forretningsadresse from '../adresser/forretningsadresse';
+import ForretningsAdresse from '../adresser/forretningsAdresse';
 
 import './organisasjon.css';
 
@@ -15,7 +15,9 @@ import './organisasjon.css';
  *
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
-const Organisasjon = ({ organisasjon = {} }) => {
+const Organisasjon = ({ organisasjon }) => {
+  if (!organisasjon) { return null; }
+
   const {
     orgnr,
     navn,
@@ -36,7 +38,7 @@ const Organisasjon = ({ organisasjon = {} }) => {
             <Nav.Column xs="6">
               <dl className="organisasjon__detaljer">
                 <dt>Forretningsadresse</dt>
-                <dd>{<Forretningsadresse forretningsadresse={forretningsadresse} />}</dd>
+                <dd>{<ForretningsAdresse forretningsadresse={forretningsadresse} />}</dd>
               </dl>
             </Nav.Column>
           </Nav.Row>

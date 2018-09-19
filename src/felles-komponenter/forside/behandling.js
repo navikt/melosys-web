@@ -11,6 +11,8 @@ import * as Skjema from '../skjema';
 import { oppgaverOperations } from '../../ducks/oppgaver/';
 import * as Kodeverk from '../../ducks/kodeverk';
 
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../utils/kodeverk';
+
 import './behandling.css';
 
 const uuid = require('uuid/v4');
@@ -31,7 +33,7 @@ class Behandling extends Component {
       this.props.history.push(redirectURL);
       return true;
     });
-  }
+  };
 
   render() {
     const { saksTyper, behandlingsTyper } = this.props;
@@ -43,17 +45,19 @@ class Behandling extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Fieldset legend="Sakstype">
-                {saksTyper.map(type =>
-                  (<Skjema.Checkbox key={uuid()} label={type.term} feltNavn={type.kode} />))
-                }
+                {saksTyper.map(type => {
+                  const isDisabled = kodeverkObjektTilKode(type) !== 'EU_EOS';
+                  return (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} disabled={isDisabled} feltNavn={`sakstyper.${kodeverkObjektTilKode(type)}`} />);
+                })}
               </Nav.Fieldset>
             </Nav.Column>
 
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
-                {behandlingsTyper.map(type =>
-                  (<Skjema.Checkbox key={uuid()} label={type.term} feltNavn={type.kode} />))
-                }
+                {behandlingsTyper.map(type => {
+                  const isDisabled = kodeverkObjektTilKode(type) !== 'SOEKNAD';
+                  return (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} disabled={isDisabled} feltNavn={`behandlingstyper.${kodeverkObjektTilKode(type)}`} />);
+                })}
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>

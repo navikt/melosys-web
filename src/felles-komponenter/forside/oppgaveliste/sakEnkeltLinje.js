@@ -5,6 +5,8 @@ import * as MPT from '../../../proptypes/index';
 import * as Ikoner from '../../../resources/images/index';
 import * as Nav from '../../../utils/navFrontend';
 
+import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+
 import PanelHeader from '../../panelHeader/panelHeader';
 import EnkeltDato from '../../datoOmrade/enkeltDato';
 
@@ -17,13 +19,15 @@ import './sakEnkeltLinje.css';
  */
 const SakEnkeltLinje = ({ sak }) => {
   const {
-    sammensattNavn, sakstype = {}, saksnummer, behandling = {}, aktivTil, soknadsperiode = {},
+    sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode = {}, land,
   } = sak;
 
-  const { status = {} } = behandling;
-  const { fom = null, tom = null } = soknadsperiode;
-  const tittel = `${sakstype.term || '(ukjent sakstype)'} - ${sammensattNavn}`;
+  const { behandlingStatus } = behandling;
+  const { fom, tom } = soknadsperiode;
+  const tittel = `${kodeverkObjektTilTerm(sakstype)} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
+
+  const landString = land ? land.join(', ') : '(ukjent)';
 
   return (
     <Link to={link} className="sakEnkeltLinje__link">
@@ -36,7 +40,7 @@ const SakEnkeltLinje = ({ sak }) => {
               <Nav.Column xs="12" md="6">
                 <dl className="sakEnkeltLinje__meta">
                   <dt className="sakEnkeltLinje__meta__term">Status:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{status.term || '(ukjent)'}</dd>
+                  <dd className="sakEnkeltLinje__meta__detalj">{kodeverkObjektTilTerm(behandlingStatus) || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Frist:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{aktivTil || '(ukjent)'}</dd>
                 </dl>
@@ -46,7 +50,7 @@ const SakEnkeltLinje = ({ sak }) => {
                   <dt className="sakEnkeltLinje__meta__term">Søknadsperiode: </dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Land:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">TODO fra søknaden</dd>
+                  <dd className="sakEnkeltLinje__meta__detalj">{landString}</dd>
                 </dl>
               </Nav.Column>
             </Nav.Row>
@@ -58,7 +62,7 @@ const SakEnkeltLinje = ({ sak }) => {
 };
 
 SakEnkeltLinje.propTypes = {
-  sak: MPT.SakEnkeltLinje,
+  sak: MPT.SaksbehandlingOppgave,
 };
 
 SakEnkeltLinje.defaultProps = {

@@ -3,7 +3,7 @@ import DomeneRegel from '../domeneRegel';
 class Studier extends DomeneRegel {
   studererIUtlandet = () => {
     const { skjema } = this;
-    const { oppholdsland = [] } = skjema;
+    const { oppholdsland } = skjema;
 
     if (!oppholdsland || oppholdsland.length === 0) { return undefined; }
 
