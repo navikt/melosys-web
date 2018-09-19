@@ -1,22 +1,22 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingSektor, { VurderingSektorTyper } from '../../vurderinger/vurderingSektor';
+import VurderingYrkesaktivitet, { VurderingYrkesaktivitetTyper } from '../../vurderinger/vurderingYrkesaktivitet';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
-class Sektor extends Steg {
+class Yrkesaktivitet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'ansattISektor ER LIK "OFFENTLIG"',
-        exec: ({ ansattISektor }) => ansattISektor === VurderingSektorTyper.OFFENTLIG,
+        exec: ({ ansattISektor }) => ansattISektor === VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER,
         nesteSteg: STEG.TJENESTEMANN,
       },
       {
         beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "SOKKEL"',
         exec: ({ sysselsettingType, ansattISektor }) => (
-          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
-          ansattISektor === VurderingSektorTyper.SOKKEL
+          sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
+          ansattISektor === VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG
         ),
         nesteSteg: STEG.AKTIVITET,
       },
@@ -26,9 +26,9 @@ class Sektor extends Steg {
         nesteSteg: STEG.FORUTGAENDE_MEDLEMSKAP,
       },
     ];
-    this._id = STEG.SEKTOR;
-    this._tittel = 'Type aktivitet';
-    this._komponent = VurderingSektor;
+    this._id = STEG.YRKESAKTIVITET;
+    this._tittel = 'Yrkesaktivitet';
+    this._komponent = VurderingYrkesaktivitet;
     this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = () => ({
       visAnsattISektor: true,
@@ -40,4 +40,4 @@ class Sektor extends Steg {
   }
 }
 
-export default Sektor;
+export default Yrkesaktivitet;

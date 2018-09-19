@@ -2,7 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingVirksomhet, { VurderingVirksomhetTyper } from '../../vurderinger/vurderingVirksomhet';
 import { VurderingYrkesaktivitetFordelingTyper } from '../../vurderinger/vurderingYrkesaktivitetFordeling';
-import { VurderingSektorTyper } from '../../vurderinger/vurderingSektor';
+import { VurderingYrkesaktivitetTyper } from '../../vurderinger/vurderingYrkesaktivitet';
 import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
 
 class Virksomhet extends Steg {
@@ -10,12 +10,12 @@ class Virksomhet extends Steg {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG sektorINorge ER LIK "INGEN_AV_DISSE" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
+        beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG yrkesaktivitetType ER LIK "INGEN_AV_DISSE" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
         exec: ({
           sysselsettingType, ansattISektor, antallLand, aktivitetINorge,
         }) => (
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
-          ansattISektor === VurderingSektorTyper.INGEN_AV_DISSE &&
+          ansattISektor === VurderingYrkesaktivitetTyper.INGEN_AV_DISSE &&
           antallLand === VurderingYrkesaktivitetFordelingTyper.TO_ELLER_FLERE_LAND &&
           aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
         ),
