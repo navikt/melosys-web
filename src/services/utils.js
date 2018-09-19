@@ -44,11 +44,11 @@ export function handterFeil(dispatch, action) {
     if (error.response) {
       error.response.text().then(data => {
         console.error(error, error.stack, data); // eslint-disable-line no-console
-        /* window.frontendlogger.error({
+        window.frontendlogger.error({
           error,
           stack: error.stack,
           data,
-        }); */
+        });
         dispatch({
           type: action,
           data: { response: error.response, data },
@@ -56,11 +56,11 @@ export function handterFeil(dispatch, action) {
       });
     } else {
       console.error(error, error.stack); // eslint-disable-line no-console
-      /* window.frontendlogger.error({
+      window.frontendlogger.error({
         error,
         stack: error.stack,
         data: error.toString(),
-      }); */
+      });
       dispatch({ type: action, data: error.toString() });
     }
   };
