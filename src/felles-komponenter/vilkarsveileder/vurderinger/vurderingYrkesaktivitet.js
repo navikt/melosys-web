@@ -16,6 +16,7 @@ const VurderingYrkesaktivitet = props => {
 
   return (
     <div>
+      <Nav.Undertittel>Vurdering av yrkesaktivitet</Nav.Undertittel>
       <Nav.Fieldset legend="Hva gjelder for søkeren?">
         <Skjema.Radio feltNavn="faktaavklaringYrkesaktivitetType" value={VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER} label="Ordinær arbeidstaker" />
         <Skjema.Radio feltNavn="faktaavklaringYrkesaktivitetType" value={VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE} label="Selvstendig næringsdrivende" />

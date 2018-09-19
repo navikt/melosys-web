@@ -27,7 +27,7 @@ class Yrkesaktivitet extends Steg {
       },
     ];
     this._id = STEG.YRKESAKTIVITET;
-    this._tittel = 'Yrkesaktivitet';
+    this._tittel = 'Yrkes-aktivitet';
     this._komponent = VurderingYrkesaktivitet;
     this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = () => ({
