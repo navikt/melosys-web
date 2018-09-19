@@ -1,12 +1,13 @@
 /* eslint import/prefer-default-export:"off" */
 import PT from 'prop-types';
 
-import { BostedsAdresse } from './bosted';
+import { BostedsAdresse } from './adresser';
 import { Kodeverk } from './kodeverk';
 
-const BarnPropType = PT.shape({
+const FamiliemedlemmerPropType = PT.shape({
   sammensattNavn: PT.string,
   fnr: PT.string,
+  relasjonstype: Kodeverk,
 });
 
 const PersonPropType = PT.shape({
@@ -19,7 +20,7 @@ const PersonPropType = PT.shape({
   foedselsdato: PT.string,
   personStatus: Kodeverk,
   erEgenAnsatt: PT.bool,
-  barn: PT.arrayOf(BarnPropType),
+  familiemedlemmer: PT.arrayOf(FamiliemedlemmerPropType),
 });
 
 export { PersonPropType as Person };

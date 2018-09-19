@@ -7,7 +7,7 @@ import { MedlemskapEnkeltPeriode, MedlemskapPerioder, Medlemskap } from './medle
 import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
 import { Kodeverk } from './kodeverk';
 import { Person } from './person';
-import { BostedsAdresse } from './bosted';
+import { BostedsAdresse, PostAdresse, ForretningsAdresse, GeneriskAdresse } from './adresser';
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { Saksbehandler } from './saksbehandler';
 import { Oppsummering } from './oppsummering';
@@ -20,7 +20,7 @@ import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger }
 import { Opphold } from './opphold';
 import { Sysselsetting } from './sysselsetting';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
-import { SakEnkeltLinje, JournalForingEnkeltLinje, MineOppgaver, OppgaveSok, OppgaverSok } from './oppgaver';
+import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
 import { Journalforing } from './journalforing';
 
 export {
@@ -34,10 +34,12 @@ export {
   BostedsAdresse,
   Feilmelding,
   Feilmeldinger,
+  ForretningsAdresse,
+  GeneriskAdresse,
   Inntekt,
   InntektEnkeltLinje,
   InntektListe,
-  JournalForingEnkeltLinje,
+  JournalforingOppgave,
   Kodeverk,
   Lovvalgsbestemmelse,
   Lovvalgsbestemmelser,
@@ -56,10 +58,9 @@ export {
   Permisjoner,
   PermisjonOgPermittering,
   Person,
-  SakEnkeltLinje,
+  PostAdresse,
+  SaksbehandlingOppgave,
   Saksbehandler,
-  OppgaveSok,
-  OppgaverSok,
   SoknadForm,
   Sysselsetting,
   TimerTimelonnet,

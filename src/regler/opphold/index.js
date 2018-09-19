@@ -25,9 +25,9 @@ class Opphold extends DomeneRegel {
 
   oppholderSegIUtlandet = () => {
     const { skjema } = this;
-    const { faktaavklaringOppholdsLand = [] } = skjema;
+    const { faktaavklaringOppholdsLand } = skjema;
 
-    if (!faktaavklaringOppholdsLand || faktaavklaringOppholdsLand.length === 0) return undefined;
+    if (!faktaavklaringOppholdsLand || faktaavklaringOppholdsLand.length === 0) return null;
 
     return !faktaavklaringOppholdsLand.includes('NO');
   };

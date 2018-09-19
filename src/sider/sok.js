@@ -10,11 +10,8 @@ import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
-import {
-  oppgaverOperations,
-  oppgaverSelectors,
-} from '../ducks/oppgaver';
-
+import { oppgaverSelectors, oppgaverOperations } from '../ducks/oppgaver';
+import { KodeverkSelectors } from '../ducks/kodeverk';
 import './sok.css';
 
 const uuid = require('uuid/v4');
@@ -27,20 +24,27 @@ class Sok extends Component {
   }
 
   render() {
-    const { behandlingsoppgaver = [], children } = this.props;
+    const { minesaker, sakstypeKoder, children } = this.props;
     const { fnr } = this.props.match.params;
-
-    if (!Array.isArray(behandlingsoppgaver)) { return null; }
-
+    if (!minesaker) return null;
+    const { saksbehandling } = minesaker;
+    if (!(saksbehandling && saksbehandling.length > 0)) return null;
     return (
       <div className="sok">
         { children }
         <Nav.Container>
-          <Nav.Row>
+          <Nav.Row className="">
             <Nav.Column xs="7">
               <section className="sokresultat">
-                <h1>Fant {behandlingsoppgaver.length} treff etter søk på &quot;{fnr}&quot;</h1>
-                { behandlingsoppgaver.map(oppgave => <SakEnkeltLinje key={uuid()} sak={oppgave} />)}
+                <h1>Fant {saksbehandling.length} treff etter søk på &quot;{fnr}&quot;</h1>
+                { saksbehandling.map(oppgave => {
+                  const sakstype = sakstypeKoder.find(item => item.kode === oppgave.sakstypeKode);
+                  const sak = {
+                    sakstype,
+                    ...oppgave,
+                  };
+                  return (<SakEnkeltLinje key={uuid()} sak={sak} />);
+                })}
               </section>
             </Nav.Column>
             <Nav.Column xs="5">
@@ -57,7 +61,8 @@ class Sok extends Component {
 }
 
 Sok.propTypes = {
-  behandlingsoppgaver: MPT.OppgaverSok,
+  sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  minesaker: MPT.MineOppgaver,
   hentBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
@@ -67,11 +72,12 @@ Sok.propTypes = {
 Sok.defaultProps = {
   children: null,
   sokStreng: '',
-  behandlingsoppgaver: [],
+  minesaker: {},
 };
 
 const mapStateToProps = state => ({
-  behandlingsoppgaver: oppgaverSelectors.SokOppgaveSelector(state),
+  sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
+  minesaker: oppgaverSelectors.MineSakerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

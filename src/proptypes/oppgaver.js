@@ -1,46 +1,41 @@
 import PT from 'prop-types';
 import * as MPT from './index';
 
-const SakEnkeltLinjePropType = PT.shape({
+const JournalforingOppgavePropType = PT.shape({
   oppgaveID: PT.string,
-  oppgavetype: MPT.Kodeverk,
+  journalpostID: PT.string,
+  aktivTil: PT.string,
+  prioritet: PT.string,
+  versjon: PT.number,
+  ansvarligID: PT.string,
+});
+const SaksbehandlingOppgavePropType = PT.shape({
+  oppgaveID: PT.string,
   sammensattNavn: PT.string,
   saksnummer: PT.string,
   sakstype: MPT.Kodeverk,
   behandling: PT.shape({
-    status: MPT.Kodeverk,
-    type: MPT.Kodeverk,
+    behandlingID: PT.string,
+    behandlingType: MPT.Kodeverk,
+    behandlingStatus: MPT.Kodeverk,
+    endretDato: PT.string,
   }),
   aktivTil: PT.string,
   soknadsperiode: MPT.Periode,
-  land: PT.array,
+  land: PT.arrayOf(PT.string),
+  prioritet: PT.string,
+  versjon: PT.number,
+  ansvarligID: PT.string,
+  sistOppdatert: PT.string,
+  erUnderOppdatering: PT.bool,
 });
-
-const JournalForingEnkeltLinjePropType = PT.shape({
-  oppgaveID: PT.string,
-  oppgavetype: MPT.Kodeverk,
-  journalpostID: PT.string,
-  aktivTil: PT.string,
+const MineOppgaverPropType = PT.shape({
+  journalforing: PT.arrayOf(JournalforingOppgavePropType),
+  saksbehandling: PT.arrayOf(SaksbehandlingOppgavePropType),
 });
-
-const MineOppgaverPropType = PT.arrayOf(PT.oneOf([JournalForingEnkeltLinjePropType, SakEnkeltLinjePropType]));
-
-const OppgaveSokPropType = PT.shape({
-  fnr: PT.string,
-  kjoenn: PT.string,
-  registrertDato: PT.string,
-  saksnummer: PT.string,
-  sammensattNavn: PT.string,
-  status: PT.string,
-  type: PT.string,
-});
-
-const OppgaverSokPropType = PT.arrayOf(OppgaveSokPropType);
 
 export {
-  SakEnkeltLinjePropType as SakEnkeltLinje,
-  JournalForingEnkeltLinjePropType as JournalForingEnkeltLinje,
+  JournalforingOppgavePropType as JournalforingOppgave,
+  SaksbehandlingOppgavePropType as SaksbehandlingOppgave,
   MineOppgaverPropType as MineOppgaver,
-  OppgaveSokPropType as OppgaveSok,
-  OppgaverSokPropType as OppgaverSok,
 };

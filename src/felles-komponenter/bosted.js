@@ -9,6 +9,7 @@ import * as Skjema from './skjema';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import Landvelger from './skjema/landvelger';
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk';
 
 import './bosted.css';
 import { KodeverkSelectors } from '../ducks/kodeverk';
@@ -66,7 +67,7 @@ const Bosted = props => {
                 feltNavn="studentFinansiering"
                 bredde="xl"
               >
-                {studieFinansiering.map(valg => <option key={uuid()} value={valg.kode}>{valg.term}</option>)}
+                {studieFinansiering.map(valg => <option key={uuid()} value={kodeverkObjektTilKode(valg)}>{kodeverkObjektTilTerm(valg)}</option>)}
               </Skjema.Select>
               <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
                 <Skjema.Radio feltNavn="intensjonOmRetur" value={BOOLSK.SANN} label="Ja" />

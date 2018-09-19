@@ -5,6 +5,7 @@ import * as Nav from '../../utils/navFrontend';
 import Tabell from '../tabell/tabell';
 
 import EnkeltDato from '../datoOmrade/enkeltDato';
+import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
 
 import './arbeidsavtaler.css';
 
@@ -17,29 +18,32 @@ class Arbeidsavtaler extends Component {
   };
 
   render() {
-    const chooseOwnProperty = (obj, propertyKey) => (obj && obj[propertyKey] ? obj[propertyKey] : obj);
-    const { arbeidsavtaler = [] } = this.props;
+    const { arbeidsavtaler } = this.props;
     const { visHistoriskeArbeidsavtaler } = this.state;
+
+    if (!arbeidsavtaler) return null;
 
     const nyesteArbeidsavtale = arbeidsavtaler.length > 0 ? arbeidsavtaler[0] : {};
     const nyaa = {
-      antallTimerFraGammeltRegister: nyesteArbeidsavtale.antallTimerFraGammeltRegister,
+      antallTimerGammeltAa: Math.trunc(nyesteArbeidsavtale.antallTimerGammeltAa),
       endringsdatoStillingsprosent: nyesteArbeidsavtale.endringsdatoStillingsprosent,
-      arbeidstidsordning: chooseOwnProperty(nyesteArbeidsavtale.arbeidstidsordning, 'term'),
-      yrke: chooseOwnProperty(nyesteArbeidsavtale.yrke, 'term'),
-      skipsregister: chooseOwnProperty(nyesteArbeidsavtale.skipsregister, 'term'),
-      skipstype: chooseOwnProperty(nyesteArbeidsavtale.skipstype, 'term'),
-      fartsomraade: chooseOwnProperty(nyesteArbeidsavtale.fartsomraade, 'term'),
+      arbeidstidsordning: kodeverkObjektTilTerm(nyesteArbeidsavtale.arbeidstidsordning),
+      yrke: kodeverkObjektTilTerm(nyesteArbeidsavtale.yrke),
+      skipsregister: kodeverkObjektTilTerm(nyesteArbeidsavtale.skipsregister),
+      skipstype: kodeverkObjektTilTerm(nyesteArbeidsavtale.skipstype),
+      fartsomraade: kodeverkObjektTilTerm(nyesteArbeidsavtale.fartsomraade),
+      beregnetAntallTimerPrUke: nyesteArbeidsavtale.beregnetAntallTimerPrUke,
     };
+
     const historiskeArbeidsavtaler = arbeidsavtaler.filter((arbeidsavtalen, index) => index > 0);
 
     // Tabell-komponenten er agnostisk med tanke på colonner og trenger disse som en array. Gjør derfor
     // en reducer slik at hvert felt kommer inn i rekkefølge som en array istedet for et key/value-objekt.
     const tabellTilpassetArbeidsavtaler = historiskeArbeidsavtaler.reduce((samling, arbeidsavtale) => {
       const {
-        gyldigTil = '-', yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, stillingsprosent, antallTimerFraGammeltRegister = '-', endringsdatoStillingsprosent,
+        gyldigTil = '-', yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, stillingsprosent, antallTimerGammeltAa = '-', endringsdatoStillingsprosent,
       } = arbeidsavtale;
-      return [...samling, [gyldigTil, yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, antallTimerFraGammeltRegister, stillingsprosent, <EnkeltDato dato={endringsdatoStillingsprosent} />]];
+      return [...samling, [gyldigTil, yrke, arbeidstidsordning, avtaltArbeidstimerPerUke, antallTimerGammeltAa, stillingsprosent, <EnkeltDato dato={endringsdatoStillingsprosent} />]];
     }, []);
 
     // Lag eventuelle elementer som skal rendres ut senere, slik at vi slipper mye logikk i selve return-blokken.
@@ -60,6 +64,8 @@ class Arbeidsavtaler extends Component {
       :
       null;
 
+    const antallTimerFraGammeltRegister = Math.trunc(nyaa.antallTimerGammeltAa);
+
     return (
       <div className="arbeidsavtaler">
         <div className="arbeidsavtale__nyeste">
@@ -77,10 +83,10 @@ class Arbeidsavtaler extends Component {
           <Nav.Column xs="6">
             <dl className="arbeidsavtaler__detaljer">
               <dt>Stillingsprosent</dt>
-              <dd>{nyaa.stillingsprosent || '-'}</dd>
+              <dd>{Math.round(nyaa.stillingsprosent) || '-'}</dd>
               <dt>Antall timer pr uke</dt>
-              <dd>{nyaa.beregnetAntallTimerPrUke || '-'}</dd>
-              {nyaa.antallTimerFraGammeltRegister && <div><dt>Antall timer fra gammelt register</dt><dd>nyaa.antallTimerFraGammeltRegister</dd></div> }
+              <dd>{nyaa.beregnetAntallTimerPrUke ? nyaa.beregnetAntallTimerPrUke.toFixed(1) : '-'}</dd>
+              <div><dt>Antall timer fra gammelt register</dt><dd>{ antallTimerFraGammeltRegister} </dd></div>
               <dt>Stillingsprosent endret</dt>
               <dd><EnkeltDato dato={nyaa.endringsdatoStillingsprosent} /></dd>
             </dl>

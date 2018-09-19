@@ -19,6 +19,7 @@ const erDnrLengde = verdi => {
  * @returns {boolean}
  */
 const erGyldigFnr = verdi => {
+  if (!verdi) return false;
   const fodselsnr = verdi.toString();
   if (!fodselsnr || fodselsnr.length !== 11) return false;
 

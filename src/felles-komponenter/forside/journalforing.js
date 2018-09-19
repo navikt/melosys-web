@@ -26,7 +26,7 @@ class Journalforing extends Component {
           <Skjema.RadioGruppe feltNavn="Behandlingstype" label="Velg journalføringstype">
             <div className="skjema__horisontalefelter">
               <Skjema.Radio feltNavn="fagomrade" label="Medlemsskap" value="MED" />
-              <Skjema.Radio feltNavn="fagomrade" label="Unntak" value="UFM" />
+              <Skjema.Radio feltNavn="fagomrade" label="Unntak" value="UFM" disabled />
             </div>
           </Skjema.RadioGruppe>
           <Nav.Knapp onClick={this.props.handleSubmit(this.submitOgVideresend)}>Journalfør sak</Nav.Knapp>
@@ -42,12 +42,12 @@ Journalforing.propTypes = {
   history: PT.object.isRequired,
 };
 
-const mapStateToProps = _state => ({
+const mapStateToProps = () => ({
   initialValues: {
     fagomrade: 'MED',
   },
 });
-const mapDispatchToProps = _dispatch => ({
+const mapDispatchToProps = () => ({
   sendSkjema: fagomrade => oppgaverOperations.sendJournalOppgave(fagomrade),
 });
 

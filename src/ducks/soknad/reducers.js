@@ -19,18 +19,7 @@ const initialState = {
 
 const soknadTemplate =
   {
-    arbeidUtland: {
-      adresse: {
-        gatenavn: undefined,
-        postnummer: undefined,
-        poststed: undefined,
-        land: undefined,
-      },
-      arbeidsandelUtland: undefined,
-      arbeidsandelNorge: undefined,
-      arbeidUtlandHjemmekontor: undefined,
-      arbeidUtlandErstatning: undefined,
-    },
+    arbeidUtland: [],
     foretakUtland: [],
     oppholdUtland: {
       oppholdsland: undefined,
@@ -44,6 +33,9 @@ const soknadTemplate =
     },
     bosted: {
       oppgittAdresse: undefined,
+      intensjonOmRetur: undefined,
+      antallMaanederINorge: undefined,
+      EOSBarnetrygdFraNAV: undefined,
     },
     arbeidNorge: {
       valgteArbeidsforhold: [],
@@ -61,7 +53,11 @@ const soknadTemplate =
       kontaktNavn: undefined,
       kontaktEpost: undefined,
       fullmektigFirma: undefined,
-      fullmektigAdresse: undefined,
+      fullmektigGateadresse: undefined,
+      fullmektigPostnr: undefined,
+      fullmektigPoststed: undefined,
+      fullmektigRegion: undefined,
+      fullmektigLandKode: undefined,
     },
     juridiskArbeidsgiverNorge: {
       erBemanningsbyra: undefined,
@@ -95,6 +91,13 @@ const soknadTemplate =
       utenlandskID: undefined,
       medfolgendeFamilie: undefined,
       medfolgendeAndre: undefined,
+    },
+    maritimtArbeid: {
+      maritimType: undefined,
+      skipsNavn: undefined,
+      fartsomrade: undefined,
+      flaggLand: undefined,
+      installasjonsLand: undefined,
     },
   };
 
@@ -131,19 +134,14 @@ export default function reducer(state = initialState, action) {
         },
         arbeidNorge: {
           ...state.data.soeknadDokument.arbeidNorge,
+          fullmektigFirma: dokument.fullmektigFirma,
+          fullmektigGateadresse: dokument.fullmektigGateadresse,
+          fullmektigPostnr: dokument.fullmektigPostnr,
+          fullmektigPoststed: dokument.fullmektigPoststed,
+          fullmektigRegion: dokument.fullmektigRegion,
+          fullmektigLandKode: dokument.fullmektigLand,
         },
-        arbeidUtland: {
-          adresse: {
-            gatenavn: dokument.arbeidUtlandGatenavn,
-            postnummer: dokument.arbeidUtlandPostnummer,
-            poststed: dokument.arbeidUtlandPoststed,
-            land: dokument.arbeidUtlandLand,
-          },
-          arbeidsandelUtland: dokument.arbeidsandelUtland,
-          arbeidsandelNorge: dokument.arbeidsandelNorge,
-          arbeidUtlandHjemmekontor: dokument.arbeidUtlandHjemmekontor,
-          arbeidUtlandErstatning: dokument.arbeidUtlandErstatning,
-        },
+        arbeidUtland: dokument.arbeidUtland,
         juridiskArbeidsgiverNorge: {
           erBemanningsbyra: dokument.erBemanningsbyra,
           utsendteNeste12Mnd: dokument.utsendteNeste12Mnd,
@@ -167,28 +165,26 @@ export default function reducer(state = initialState, action) {
         },
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
-          oppholdsland: dokument.faktaavklaringOppholdsLand,
-          oppholdsPeriode: {
-            ...state.data.soeknadDokument.oppholdUtland.oppholdsPeriode,
-            fom: formatterDatoTilISO(dokument.faktaavklaringPeriodeFraOgMed),
-            tom: formatterDatoTilISO(dokument.faktaavklaringPeriodeTilOgMed),
-          },
+          oppholdslandKoder: dokument.oppholdsland,
           sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
           ektefelleEllerBarnINorge: dokument.harEktefelleEllerBarnINorge,
           forutgaendeBostedINorge: dokument.harForutgaendeBostedINorge,
-          EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
-          adresseIUtlandet: dokument.adresseIUtlandet,
           studentSemester: dokument.studentSemester,
-          studieLand: dokument.studieLand,
+          studieLandKode: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,
         },
         foretakUtland: dokument.foretakUtland,
         bosted: {
+          intensjonOmRetur: dokument.intensjonOmRetur,
+          familiesBostedLandKode: dokument.familiesBosted,
+          antallMaanederINorge: dokument.antallMaanederINorge,
+          EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
+          adresseIUtlandet: dokument.adresseIUtlandet,
           oppgittAdresse: {
             gatenavn: dokument.oppgittAdresseGatenavn,
             postnummer: dokument.oppgittAdressePostnummer,
             poststed: dokument.oppgittAdressePoststed,
-            land: dokument.oppgittAdresseLand,
+            landKode: dokument.oppgittAdresseLand,
           },
         },
         maritimtArbeid: {

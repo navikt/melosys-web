@@ -7,8 +7,13 @@ import './adresse.css';
  * varierende keys i objektet.
  *
  */
-const Organisasjonsadresse = ({ organisasjon }) => {
-  const { forretningsadresse = {}, navn = '' } = organisasjon;
+const OrganisasjonsAdresse = ({ organisasjon }) => {
+  if (!organisasjon) return '(ingen tilgjengelig)';
+
+  const { forretningsadresse, navn = '' } = organisasjon;
+
+  if (!forretningsadresse) return null;
+
   const {
     gateadresse, land, postnr, poststed,
   } = forretningsadresse;
@@ -24,12 +29,12 @@ const Organisasjonsadresse = ({ organisasjon }) => {
   ) : null;
 };
 
-Organisasjonsadresse.propTypes = {
+OrganisasjonsAdresse.propTypes = {
   organisasjon: MPT.Organisasjon,
 };
 
-Organisasjonsadresse.defaultProps = {
+OrganisasjonsAdresse.defaultProps = {
   organisasjon: {},
 };
 
-export default Organisasjonsadresse;
+export default OrganisasjonsAdresse;

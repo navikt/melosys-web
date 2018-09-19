@@ -4,25 +4,28 @@ import EnkeltDato from '../datoOmrade/enkeltDato';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 
+import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
+
 import './eksisterendeSaker.css';
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = props => {
   const {
-    opprettetDato, behandlingstype = {}, soknadsperiode = {}, behandlingsstatus = {}, land = [], sakstype = {},
+    opprettetDato, behandlingstype, soknadsperiode, behandlingsstatus, land, sakstype,
   } = props.sak;
-  const { fom = null, tom = null } = soknadsperiode;
+
+  const { fom, tom } = soknadsperiode;
 
   return (
     <div className="enkeltSak__meta">
       <dl className="enkeltSak__meta">
         <dt className="enkeltSak__meta__term">Sakstype: </dt>
-        <dd className="enkeltSak__meta__detalj">{sakstype.term || '(ukjent sakstype)'}</dd>
+        <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(sakstype)}</dd>
         <dt className="enkeltSak__meta__term">Behandlingstype: </dt>
-        <dd className="enkeltSak__meta__detalj">{behandlingstype.term || '(ukjent behandlingstype)'}</dd>
+        <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(behandlingstype)}</dd>
         <dt className="enkeltSak__meta__term">Behandlingsstatus: </dt>
-        <dd className="enkeltSak__meta__detalj">{behandlingsstatus.term || '(ukjent)'}</dd>
+        <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus)}</dd>
         <dt className="enkeltSak__meta__term">Registrert:</dt>
         <dd className="enkeltSak__meta__detalj">{<EnkeltDato dato={opprettetDato} />}</dd>
         <dt className="enkeltSak__meta__term">Søknadsperiode: </dt>
