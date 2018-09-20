@@ -16,6 +16,7 @@ class Vurdering12 extends Steg {
     this._tittel = 'Vurdering av 12.1';
     this._komponent = VurderingArtikkel12;
     this._samleRelevanteData = _propsLight => ({
+      artikkel: { kode: 'ART12_1', term: '12.1' },
       begrunnelser: _propsLight.begrunnelser.artikkel12_1 || [],
     });
     this._beregnRelevantUI = () => ({});

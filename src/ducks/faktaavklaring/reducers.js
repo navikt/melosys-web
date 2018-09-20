@@ -96,6 +96,10 @@ export default function reducer(state = initialState, action) {
           vesentligVirksomhetINorge: dokument.faktaavklaringVesentligVirksomhetINorge,
           vesentligVirksomhetBegrunnelser: dokument.faktaavklaringVesentligVirksomhetBegrunnelser,
         },
+        vurdering: {
+          artikkel: dokument.vurderingArtikkel,
+          begrunnelser: dokument.vurderingBegrunnelser,
+        },
       };
 
       return { ...state, data: { ...state.data, avklaring: { ...avklaring } } };
