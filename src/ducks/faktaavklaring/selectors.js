@@ -101,8 +101,8 @@ export const FaktaavklaringVesentligVirksomhetSelector = createSelector(
   vesentligVirksomhet => vesentligVirksomhet || {}
 );
 
-export const VurderingSelector = createSelector(
-  state => (state.faktaavklaring.data.vurdering ? state.faktaavklaring.data.vurdering : {}),
+export const FaktaavklaringVurderingSelector = createSelector(
+  state => FaktaavklaringSelector(state).vurdering,
   vurdering => vurdering || {}
 );
 

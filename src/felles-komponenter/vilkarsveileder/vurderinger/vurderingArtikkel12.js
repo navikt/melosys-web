@@ -4,19 +4,21 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
 
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../../utils/kodeverk';
+
 const VurderingArtikkel12 = props => {
-  const { bekreftOgFortsett, begrunnelser } = props;
+  const { bekreftOgFortsett, begrunnelser, artikkel } = props;
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering av artikkel 12.1</Nav.Undertittel>
+      <Nav.Undertittel>Vurdering av artikkel {kodeverkObjektTilTerm(artikkel)}</Nav.Undertittel>
       <div>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Fieldset legend="Virksomheten har:">
-              <Skjema.Radio feltNavn="vurderingArtikkel" value="ART12_1" label="Ja" />
+            <Nav.Fieldset legend={`Fyller søker kriteriene for artikkel ${kodeverkObjektTilTerm(artikkel)}?`}>
+              <Skjema.Radio feltNavn="vurderingArtikkel" value={kodeverkObjektTilKode(artikkel)} label="Ja" />
               <Skjema.Radio feltNavn="vurderingArtikkel" value="ART16_1" label="Nei, jeg vil vurdere artikkel 16.1" />
-              <Skjema.Radio feltNavn="vurderingArtikkel" value="AVVIST" label="Nei, jeg vil avslå søknaden etter artikkel 12.1 og 16.1" />
+              <Skjema.Radio feltNavn="vurderingArtikkel" value="AVVIST" label={`Nei, jeg vil avslå søknaden etter artikkel ${kodeverkObjektTilTerm(artikkel)} og 16.1`} />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -45,6 +47,7 @@ VurderingArtikkel12.propTypes = {
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
+  artikkel: PT.string.isRequired,
 };
 
 VurderingArtikkel12.defaultProps = {
