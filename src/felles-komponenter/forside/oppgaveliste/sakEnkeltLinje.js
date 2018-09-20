@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import classNames from 'classnames';
+import PT from 'prop-types';
 
 import * as MPT from '../../../proptypes/index';
 import * as Ikoner from '../../../resources/images/index';
@@ -9,8 +11,26 @@ import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
 import PanelHeader from '../../panelHeader/panelHeader';
 import EnkeltDato from '../../datoOmrade/enkeltDato';
+import { formatterDatoTilNorsk } from '../../../utils/dato';
 
 import './sakEnkeltLinje.css';
+
+const SaksLinjeWrapper = ({ link, stengt, children }) => (
+  stengt ?
+    <div>
+      {children}
+    </div>
+    :
+    <Link to={link} className="sakEnkeltLinje__link">
+      {children}
+    </Link>
+);
+
+SaksLinjeWrapper.propTypes = {
+  link: PT.string.isRequired,
+  stengt: PT.bool.isRequired,
+  children: PT.node.isRequired,
+};
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -19,7 +39,15 @@ import './sakEnkeltLinje.css';
  */
 const SakEnkeltLinje = ({ sak }) => {
   const {
-    sammensattNavn, sakstype, saksnummer, behandling, aktivTil, soknadsperiode = {}, land,
+    sammensattNavn,
+    sakstype,
+    saksnummer,
+    behandling,
+    aktivTil,
+    soknadsperiode = {},
+    land,
+    sistOppdatert,
+    erUnderOppdatering,
   } = sak;
 
   const { behandlingStatus } = behandling;
@@ -27,11 +55,17 @@ const SakEnkeltLinje = ({ sak }) => {
   const tittel = `${kodeverkObjektTilTerm(sakstype)} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
 
-  const landString = land ? land.join(', ') : '(ukjent)';
+  const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
+  const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
+
+  const cl = classNames({
+    sakEnkeltLinje: true,
+    sakEnkeltLinje__stengt: erUnderOppdatering,
+  });
 
   return (
-    <Link to={link} className="sakEnkeltLinje__link">
-      <Nav.Panel className="sakEnkeltLinje">
+    <SaksLinjeWrapper link={link} stengt={erUnderOppdatering}>
+      <Nav.Panel className={cl}>
         <PanelHeader
           ikon={Ikoner.IkonSak}
           tittel={tittel}
@@ -43,6 +77,9 @@ const SakEnkeltLinje = ({ sak }) => {
                   <dd className="sakEnkeltLinje__meta__detalj">{kodeverkObjektTilTerm(behandlingStatus) || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Frist:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{aktivTil || '(ukjent)'}</dd>
+                  <dt className="sakEnkeltLinje__meta__term">Sist oppdatert:</dt>
+                  <dd className="sakEnkeltLinje__meta__detalj">{formatterDatoTilNorsk(sistOppdatert, true)}</dd>
+                  <dd className="sakEnkeltLinje__meta__detalj">{oppdateringStatus}</dd>
                 </dl>
               </Nav.Column>
               <Nav.Column xs="12" md="6">
@@ -50,14 +87,14 @@ const SakEnkeltLinje = ({ sak }) => {
                   <dt className="sakEnkeltLinje__meta__term">Søknadsperiode: </dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Land:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{landString}</dd>
+                  <dd className="sakEnkeltLinje__meta__detalj">{landListeSomStreng}</dd>
                 </dl>
               </Nav.Column>
             </Nav.Row>
           }
         />
       </Nav.Panel>
-    </Link>
+    </SaksLinjeWrapper>
   );
 };
 
