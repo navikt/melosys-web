@@ -8,7 +8,7 @@ import Inngang from './inngang';
 import Sektor from './sektor';
 import Sysselsetting from './sysselsetting';
 import Tjenestemann from './tjenestemann';
-import Utsending from './utsending';
+import Vurdering12 from './vurdering12';
 import Virksomhet from './virksomhet';
 import VesentligVirksomhet from './vesentlig_virksomhet';
 import YrkesaktivitetFordeling from './yrkesaktivitet_fordeling';
@@ -26,7 +26,7 @@ export {
   Sektor,
   Sysselsetting,
   Tjenestemann,
-  Utsending,
+  Vurdering12,
   Virksomhet,
   VesentligVirksomhet,
   YrkesaktivitetFordeling,
