@@ -75,7 +75,6 @@ class Saksbehandling extends Component {
     finansiering: PT.arrayOf(MPT.Kodeverk),
     faktaavklaring: PT.object,
     soknadArbeidsinntekt: PT.object,
-    soknadOppholdUtland: MPT.OppholdUtland,
     soknadArbeidNorge: MPT.ArbeidNorge,
     handleSubmit: PT.func.isRequired,
     errorSummary: PT.object,
@@ -98,7 +97,6 @@ class Saksbehandling extends Component {
     finansiering: [],
     faktaavklaring: {},
     soknadArbeidsinntekt: {},
-    soknadOppholdUtland: {},
     soknadArbeidNorge: {},
     errorSummary: {},
     errorSummaryTitle: '',
@@ -137,18 +135,18 @@ class Saksbehandling extends Component {
       this.props.sendSoknad(bid, soknad);
       this.props.sendFaktaavklaring(bid, avklaring);
     }
-  }
+  };
 
   overstyrSubmit = event => {
     event.preventDefault();
 
     this.props.oppdaterSoknad(this.props.soknadForm.values);
     this.props.oppdaterFaktaavklaring(this.props.soknadForm.values);
-  }
+  };
 
   /* eslint-disable */
-  lagreOgLukk = () => { alert('Ikke implementert'); }
-  avslaSoknad = () => { alert('Ikke implementert'); }
+  lagreOgLukk = () => { alert('Ikke implementert'); };
+  avslaSoknad = () => { alert('Ikke implementert'); };
   /* eslint-enable */
 
   render() {
