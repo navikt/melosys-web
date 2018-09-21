@@ -31,8 +31,8 @@ describe('Tester stegVelger', () => {
           vurdering: {},
           land: [],
         },
-        sektor: {
-          ansattISektor: 'INGEN_AV_DISSE',
+        yrkesaktivitet: {
+          yrkesaktivitetType: 'INGEN_AV_DISSE',
         },
         tjenestemann: {
           tjenestemann: 'ETT_LAND_YRKESAKTIVITET_ANDRE_LAND',

@@ -65,8 +65,8 @@ export default function reducer(state = initialState, action) {
           sammeTypeVirksomhet: dokument.faktaavklaringSammeTypeVirksomhet,
         },
         valgteArbeidsgivere: [...dokument.faktaavklaringValgteArbeidsgivere],
-        sektor: {
-          ansattISektor: dokument.faktaavklaringAnsattISektor,
+        yrkesaktivitet: {
+          yrkesaktivitetType: dokument.faktaavklaringYrkesaktivitetType,
         },
         forutgaendeMedlemskap: {
           harForutgaendeMedlemskap: dokument.faktaavklaringHarForutgaendeMedlemskap,
