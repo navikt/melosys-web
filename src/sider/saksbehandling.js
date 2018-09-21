@@ -159,19 +159,18 @@ class Saksbehandling extends Component {
         this.props.history.push('/');
       }
     });
-  }
+  };
 
   visOppfriskBekreftelse = () => {
     this.setState({ visOppfriskDialog: true });
-  }
+  };
 
   skjulOppfriskBekreftelse = () => {
     this.setState({ visOppfriskDialog: false });
-  }
+  };
 
   /* eslint-disable */
   lagreOgLukk = () => { alert('Ikke implementert'); };
-  avslaSoknad = () => { alert('Ikke implementert'); };
   /* eslint-enable */
 
   render() {
