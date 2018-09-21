@@ -5,16 +5,15 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 
-import './vurderingVedtak.css';
-
-import { vurderingSelectors } from '../../../ducks/vurdering/';
 
 import { faktaavklaringSelectors } from '../../../ducks/faktaavklaring/';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
-import { kodeverkObjektTilTerm, finnEnkeltKodeFraListe } from '../../../utils/kodeverk';
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode, finnEnkeltKodeFraListe } from '../../../utils/kodeverk';
+
+import './vurderingVedtak.css';
 
 const VurderingVedtak = props => {
   // 1. Motta vedtakskode (kodeverk og faktaavklaring)
@@ -25,6 +24,7 @@ const VurderingVedtak = props => {
     gyldigeOppholdLand,
     oppholdPeriode,
     alleLandkoder,
+    lovvalg,
   } = props;
 
   const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
@@ -36,7 +36,7 @@ const VurderingVedtak = props => {
 
   return (
     <div className="vedtak">
-      <Nav.Undertittel>Medlemskap i norsk folketrygd innvilges etter artikkel 12.1:</Nav.Undertittel>
+      <Nav.Undertittel>Medlemskap i norsk folketrygd innvilges etter artikkel {kodeverkObjektTilKode(lovvalg)}:</Nav.Undertittel>
       <div>
         <Nav.Row className="vedtak__oppsummering">
           <Nav.Column xs="6">
@@ -50,10 +50,13 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp type="hoved" onClick={() => props.fattVedtak()}>Fatt vedtak</Nav.Knapp>
+            <a href="http://melosys" target="_blank" rel="noopener noreferrer" className="vedtak__brevlenke">Forhåndsvis vedtaksbrev</a>
+            <a href="http://melosys" target="_blank" rel="noopener noreferrer" className="vedtak__brevlenke">Forhåndsvis A1</a>
           </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <a href="http://localhost">Forhåndsvis vedtaksbrev</a>
+            <Nav.Knapp type="hoved" onClick={() => props.fattVedtak()}>Fatt vedtak</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -62,19 +65,15 @@ const VurderingVedtak = props => {
 };
 
 VurderingVedtak.propTypes = {
+  lovvalg: MPT.Kodeverk.isRequired,
   fattVedtak: PT.func.isRequired,
-  lovvalgbestemmelser: MPT.Lovvalgsbestemmelser.isRequired,
-  vurderingStatus: PT.string.isRequired,
-  feilmeldinger: MPT.Feilmeldinger.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 const mapStateToProps = state => ({
-  lovvalgbestemmelser: vurderingSelectors.VurderingLovvalgbestemmelserSelector(state),
-  feilmeldinger: vurderingSelectors.VurderingFeilmeldingSelector(state),
-  vurderingStatus: vurderingSelectors.VurderingStatusSelector(state),
+  lovvalg: faktaavklaringSelectors.FaktaavklaringLovvalgSelector(state),
   gyldigeOppholdLand: faktaavklaringSelectors.FaktaavklaringGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandSelector(state).oppholdsPeriode,
   alleLandkoder: KodeverkSelectors.landkoderSelector(state),
