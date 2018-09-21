@@ -48,9 +48,9 @@ export const FaktaavklaringForutgaendeMedlemskapSelector = createSelector(
   forutgaendeMedlemskap => forutgaendeMedlemskap || {}
 );
 
-export const FaktaavklaringSektorSelector = createSelector(
-  state => FaktaavklaringSelector(state).sektor,
-  sektor => sektor || {}
+export const FaktaavklaringYrkesaktivitetSelector = createSelector(
+  state => FaktaavklaringSelector(state).yrkesaktivitet,
+  yrkesaktivitet => yrkesaktivitet || {}
 );
 
 export const FaktaavklaringYrkesaktivitetFordelingSelector = createSelector(
