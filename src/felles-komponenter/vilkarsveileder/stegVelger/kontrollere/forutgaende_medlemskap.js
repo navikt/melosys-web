@@ -13,7 +13,7 @@ class ForutgaendeMedlemskap extends Steg {
       },
     ];
     this._id = STEG.FORUTGAENDE_MEDLEMSKAP;
-    this._tittel = 'Forutgående Medlemskap';
+    this._tittel = 'Forutg. medl';
     this._komponent = VurderingForutgaendeMedlemskap;
     this._samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.forutgaendeMedlemskap || [],

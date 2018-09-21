@@ -5,7 +5,7 @@ import Forretningssted from './forretningssted';
 import ForutgaendeMedlemskap from './forutgaende_medlemskap';
 import IkkeYrkesaktiv from './ikke_yrkesaktiv';
 import Inngang from './inngang';
-import Sektor from './sektor';
+import Yrkesaktivitet from './yrkesaktivitet';
 import Sysselsetting from './sysselsetting';
 import Tjenestemann from './tjenestemann';
 import Utsending from './utsending';
@@ -23,7 +23,7 @@ export {
   ForutgaendeMedlemskap,
   IkkeYrkesaktiv,
   Inngang,
-  Sektor,
+  Yrkesaktivitet,
   Sysselsetting,
   Tjenestemann,
   Utsending,
