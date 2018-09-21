@@ -9,14 +9,14 @@ class Sysselsetting extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.SEKTOR,
+        nesteSteg: STEG.YRKESAKTIVITET,
       },
     ];
     this._id = STEG.ARBEIDSGIVERE;
     this._tittel = 'Arbeids\u00ADgiver';
     this._komponent = VurderingArbeidsgiver;
     this._samleRelevanteData = _propsLight => ({ arbeidsgivereIPerioden: _propsLight.arbeidsgivereIPerioden });
-    this._beregnRelevantUI = _propsLight => ({});
+    this._beregnRelevantUI = () => ({});
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
