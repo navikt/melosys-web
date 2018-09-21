@@ -1,6 +1,6 @@
 {
   "name": "melosys-web",
-  "version": "0.12.5",
+  "version": "0.12.6",
   "description": "Medlemsskap og lovvalgssystem",
   "author": {
     "name": "are.bjolseth@nav.no"
@@ -42,6 +42,8 @@
     "nav-frontend-lenker-style": "^0.2.16",
     "nav-frontend-lukknapp": "^1.0.16",
     "nav-frontend-lukknapp-style": "^0.2.16",
+    "nav-frontend-modal": "^1.0.17",
+    "nav-frontend-modal-style": "^0.3.21",
     "nav-frontend-paneler": "^1.0.10",
     "nav-frontend-paneler-style": "^0.3.11",
     "nav-frontend-skjema": "^1.0.36",
@@ -63,6 +65,7 @@
     "react-editable-json-tree": "^2.2.1",
     "react-highcharts": "^16.0.2",
     "react-maskedinput": "^4.0.1",
+    "react-modal": "^3.5.1",
     "react-motion": "^0.5.2",
     "react-pdf": "^3.0.5",
     "react-redux": "^5.0.7",
@@ -120,6 +123,8 @@
     "enzyme-adapter-react-16": "^1.5.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-flowtype": "^2.50.1",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^21.22.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
