@@ -17,8 +17,8 @@ const VurderingArtikkel12 = props => {
           <Nav.Column xs="12">
             <Nav.Fieldset legend={`Fyller søker kriteriene for artikkel ${kodeverkObjektTilTerm(artikkel)}?`}>
               <Skjema.Radio feltNavn="vurderingArtikkel" value={kodeverkObjektTilKode(artikkel)} label="Ja" />
-              <Skjema.Radio feltNavn="vurderingArtikkel" value="ART16_1" label="Nei, jeg vil vurdere artikkel 16.1" />
-              <Skjema.Radio feltNavn="vurderingArtikkel" value="AVVIST" label={`Nei, jeg vil avslå søknaden etter artikkel ${kodeverkObjektTilTerm(artikkel)} og 16.1`} />
+              <Skjema.Radio feltNavn="vurderingArtikkel" disabled value="ART16_1" label="Nei, jeg vil vurdere artikkel 16.1" />
+              <Skjema.Radio feltNavn="vurderingArtikkel" disabled value="AVVIST" label={`Nei, jeg vil avslå søknaden etter artikkel ${kodeverkObjektTilTerm(artikkel)} og 16.1`} />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
