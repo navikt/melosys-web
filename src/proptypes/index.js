@@ -2,7 +2,6 @@ import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
 import { Inntekt, InntektListe, InntektEnkeltLinje } from './inntekt';
 import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
 import { TimerTimelonnet, TimerTimelonnetLinje } from './timerTimelonnet';
-import { OppholdUtland } from './oppholdUtland';
 import { MedlemskapEnkeltPeriode, MedlemskapPerioder, Medlemskap } from './medlemskap';
 import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
 import { Kodeverk } from './kodeverk';
@@ -17,7 +16,7 @@ import { SoknadForm } from './soknadForm';
 import { Utenlandsopphold } from './utenlandsopphold';
 import { ArbeidNorge } from './arbeidNorge';
 import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger } from './vurdering';
-import { Opphold } from './opphold';
+import { OppholdLand, OppholdPeriode } from './opphold';
 import { Sysselsetting } from './sysselsetting';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
@@ -47,8 +46,8 @@ export {
   MedlemskapEnkeltPeriode,
   MedlemskapPerioder,
   MineOppgaver,
-  Opphold,
-  OppholdUtland,
+  OppholdLand,
+  OppholdPeriode,
   Oppsummering,
   Organisasjon,
   Organisasjoner,

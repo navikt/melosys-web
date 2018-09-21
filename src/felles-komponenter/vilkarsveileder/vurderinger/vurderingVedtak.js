@@ -1,130 +1,51 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
-import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { datoDiffMenneskelig } from '../../../utils/dato';
 
 import './vurderingVedtak.css';
 
 import { vurderingSelectors } from '../../../ducks/vurdering/';
 
 import { faktaavklaringSelectors } from '../../../ducks/faktaavklaring/';
+import { soknadSelectors } from '../../../ducks/soknad/';
+import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 
-const uuid = require('uuid/v4');
-
-const LovvalgBestemmelse = props => {
-  const { bestemmelse } = props;
-  const { betingelser } = bestemmelse;
-
-  return (
-    <div>
-      <Nav.Row>
-        <Nav.Column xs="12">
-          <Nav.Normaltekst key={uuid()}>Medlemsskap i norsk folketrygd er innvilget, etter artikkel {bestemmelse.artikkel}</Nav.Normaltekst>
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row className="vedtak__betingelser">
-        <Nav.Column xs="12">
-          <ul className="betingelser__liste">
-            {
-              betingelser.map(betingelse => (
-                <li key={uuid()} className="liste__element liste__element--oppfylt">{betingelse.argument}</li>
-              ))
-            }
-          </ul>
-        </Nav.Column>
-      </Nav.Row>
-    </div>
-  );
-};
-
-LovvalgBestemmelse.propTypes = {
-  bestemmelse: MPT.Lovvalgsbestemmelse.isRequired,
-};
-
-const VurderingFeilmeldinger = props => {
-  const { feilmelding } = props;
-  const { kategori, melding } = feilmelding;
-  const { alvorlighetsgrad, beskrivelse } = kategori;
-  return (
-    <div>
-      <Nav.Row>
-        <Nav.Column xs="12">
-          <Nav.Normaltekst key={uuid()}>{beskrivelse}: {alvorlighetsgrad}: {melding}</Nav.Normaltekst>
-        </Nav.Column>
-      </Nav.Row>
-    </div>
-  );
-};
-VurderingFeilmeldinger.propTypes = {
-  feilmelding: MPT.Feilmelding.isRequired,
-};
-
+import { datoDiffMenneskelig } from '../../../utils/dato';
+import { kodeverkObjektTilTerm, finnEnkeltKodeFraListe } from '../../../utils/kodeverk';
 
 const VurderingVedtak = props => {
+  // 1. Motta vedtakskode (kodeverk og faktaavklaring)
+  // 2. Motta begrunnelsene fra forrige steg (kodeverk og faktaavklaring)
+  // 3. Vise oppsummmeringen av kriteriene for artikkelen (kodeverk og faktaavklaring)
+
   const {
-    lovvalgbestemmelser,
-    feilmeldinger,
-    opphold,
-    valgteArbeidsgivere,
-    sysselsetting,
+    gyldigeOppholdLand,
+    oppholdPeriode,
+    alleLandkoder,
   } = props;
 
-  const { land, periode } = opphold;
+  const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
 
-  const sysselsettingType = sysselsetting.sysselsettingType || '';
-
-  const antallManeder = datoDiffMenneskelig(periode.fom, periode.tom);
-  const arbeidsgivereForVedtaket = valgteArbeidsgivere
-    .reduce((collection, arbeidsgiveren) => [...collection, arbeidsgiveren.navn], [])
+  const landSomTekstListe = gyldigeOppholdLand
+    .map(enkeltLand => finnEnkeltKodeFraListe(enkeltLand.landKode, alleLandkoder))
+    .map(enkeltLandKode => kodeverkObjektTilTerm(enkeltLandKode))
     .join(', ');
-
-  const venteskjermKlasser = classnames({ vedtak__venteskjerm: true, 'vedtak__venteskjerm--skjult': props.vurderingStatus !== 'PENDING' });
-
-  const landSomTekstListe = land.map(enkeltLand => enkeltLand.landKode).join(', ');
 
   return (
     <div className="vedtak">
-      <div className={venteskjermKlasser}>
-        <Nav.NavFrontendSpinner type="XL" />
-        <Nav.Element>Lagrer faktaavklaring og ber om vedtaksforslag</Nav.Element>
-      </div>
-      <Nav.Container fluid>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <Nav.Undertittel>Vilkårsresultat:</Nav.Undertittel>
-          </Nav.Column>
-        </Nav.Row>
-        {
-          lovvalgbestemmelser.map(bestemmelse => (
-            <LovvalgBestemmelse key={uuid()} bestemmelse={bestemmelse} />
-          ))
-        }
-        { feilmeldinger && feilmeldinger.length > 0 && <p>Feilmeldinger</p>}
-        {
-          feilmeldinger && feilmeldinger.map(feilmelding => (
-            <VurderingFeilmeldinger key={uuid()} feilmelding={feilmelding} />
-          ))
-        }
+      <Nav.Undertittel>Medlemskap i norsk folketrygd innvilges etter artikkel 12.1:</Nav.Undertittel>
+      <div>
         <Nav.Row className="vedtak__oppsummering">
-          <Nav.Column xs="6" md="3">
+          <Nav.Column xs="6">
             <Nav.Element type="element">Antall måneder i utlandet</Nav.Element>
             <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
           </Nav.Column>
-          <Nav.Column xs="6" md="3">
+          <Nav.Column xs="6">
             <Nav.Element type="element">Land</Nav.Element>
             <Nav.Normaltekst>{ landSomTekstListe }</Nav.Normaltekst>
-          </Nav.Column>
-          <Nav.Column xs="6" md="3">
-            <Nav.Element type="element">Søker er</Nav.Element>
-            <Nav.Normaltekst>{sysselsettingType}</Nav.Normaltekst>
-          </Nav.Column>
-          <Nav.Column xs="6" md="3">
-            <Nav.Element type="element">Navn på arbeidsgiver</Nav.Element>
-            <Nav.Normaltekst>{arbeidsgivereForVedtaket}</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -135,7 +56,7 @@ const VurderingVedtak = props => {
             <a href="http://localhost">Forhåndsvis vedtaksbrev</a>
           </Nav.Column>
         </Nav.Row>
-      </Nav.Container>
+      </div>
     </div>
   );
 };
@@ -145,18 +66,18 @@ VurderingVedtak.propTypes = {
   lovvalgbestemmelser: MPT.Lovvalgsbestemmelser.isRequired,
   vurderingStatus: PT.string.isRequired,
   feilmeldinger: MPT.Feilmeldinger.isRequired,
-  opphold: MPT.Opphold.isRequired,
-  valgteArbeidsgivere: MPT.Organisasjoner.isRequired,
-  sysselsetting: MPT.Sysselsetting.isRequired,
+  gyldigeOppholdLand: MPT.OppholdLand.isRequired,
+  oppholdPeriode: MPT.OppholdPeriode.isRequired,
+  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 const mapStateToProps = state => ({
   lovvalgbestemmelser: vurderingSelectors.VurderingLovvalgbestemmelserSelector(state),
   feilmeldinger: vurderingSelectors.VurderingFeilmeldingSelector(state),
   vurderingStatus: vurderingSelectors.VurderingStatusSelector(state),
-  opphold: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state),
-  valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereDetaljerSelector(state),
-  sysselsetting: faktaavklaringSelectors.FaktaavklaringSysselsettingSelector(state),
+  gyldigeOppholdLand: faktaavklaringSelectors.FaktaavklaringGyldigeOppholdLandSelector(state),
+  oppholdPeriode: soknadSelectors.OppholdUtlandSelector(state).oppholdsPeriode,
+  alleLandkoder: KodeverkSelectors.landkoderSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVedtak);

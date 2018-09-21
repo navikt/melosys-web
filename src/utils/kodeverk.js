@@ -8,7 +8,12 @@ const kodeverkObjektTilKode = kodeverkObjekt => {
   return Object.keys(kodeverkObjekt).includes('kode') ? kodeverkObjekt.kode : null;
 };
 
+const finnEnkeltKodeFraListe = (kodeSomSkalFinnes, kodeverkListe) => (
+  kodeverkListe.find(enkelt => enkelt.kode === kodeSomSkalFinnes) || {}
+);
+
 export {
+  finnEnkeltKodeFraListe,
   kodeverkObjektTilTerm,
   kodeverkObjektTilKode,
 };

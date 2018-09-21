@@ -20,7 +20,12 @@ export const FaktaavklaringSelector = createSelector(
 
 export const FaktaavklaringOppholdSelector = createSelector(
   state => FaktaavklaringSelector(state).opphold,
-  opphold => opphold || {}
+  opphold => opphold || []
+);
+
+export const FaktaavklaringGyldigeOppholdLandSelector = createSelector(
+  state => FaktaavklaringOppholdSelector(state).land || [],
+  opphold => opphold.filter(enkeltOpphold => enkeltOpphold.erGyldig) || []
 );
 
 export const FaktaavklaringOppholdPeriodeSelector = createSelector(
