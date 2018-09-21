@@ -20,7 +20,7 @@ import { formSelectors } from '../../ducks/form/';
 import './vilkarsveileder.css';
 
 class Vilkarsveileder extends Component {
-  state = { aktivtStegNummer: 0, aktuelleSteg: [] }
+  state = { aktivtStegNummer: 0, aktuelleSteg: [] };
 
   componentWillMount() {
     const { snr } = this.props.match.params;
@@ -43,12 +43,12 @@ class Vilkarsveileder extends Component {
     alert('Denne funksjonen er ikke ferdig implementert.');
     /* eslint-enable */
     // this.props.fattVedtakHandler();
-  }
+  };
 
   beOmVurdering = () => {
     this.props.beOmVurderingHandler();
     this.tilSteg(this.beregnNesteSteg());
-  }
+  };
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
@@ -56,7 +56,7 @@ class Vilkarsveileder extends Component {
    */
   bekreftOgFortsett = () => {
     this.tilSteg(this.beregnNesteSteg());
-  }
+  };
 
   oppdaterAktuelleSteg = props => {
     const { erDetteSisteSteg } = this;
@@ -87,7 +87,7 @@ class Vilkarsveileder extends Component {
 
     this.setState({ aktuelleSteg });
     return aktuelleSteg;
-  }
+  };
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
@@ -95,7 +95,7 @@ class Vilkarsveileder extends Component {
    */
   tilSteg = nyttStegNummer => {
     this.setState({ aktivtStegNummer: nyttStegNummer });
-  }
+  };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
    * maks antall steg (til og med vedtak). Ved forsøk på å gå ytterligere steg
@@ -105,7 +105,7 @@ class Vilkarsveileder extends Component {
     const maksSteg = this.state.aktuelleSteg.length;
     const { aktivtStegNummer } = this.state;
     return (aktivtStegNummer + 1 < maksSteg) ? aktivtStegNummer + 1 : aktivtStegNummer;
-  }
+  };
 
   render() {
     return (

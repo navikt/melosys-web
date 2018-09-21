@@ -28,6 +28,11 @@ export const FaktaavklaringGyldigeOppholdLandSelector = createSelector(
   opphold => opphold.filter(enkeltOpphold => enkeltOpphold.erGyldig) || []
 );
 
+export const FaktaavklaringLovvalgSelector = createSelector(
+  state => FaktaavklaringOppholdSelector(state).vurdering || {},
+  () => ({ kode: 'art12_1', term: 'Utsendt arbeidstaker, ett land' })
+);
+
 export const FaktaavklaringOppholdPeriodeSelector = createSelector(
   state => FaktaavklaringOppholdSelector(state),
   oppholdet => (oppholdet.periode ? oppholdet.periode : {})
