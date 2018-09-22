@@ -57,7 +57,7 @@ function sok(fnr) {
 
 /**
  * Kaller backend for å be om oppfrisking av en sak.
- * @param snr
+ * @param behandlingID
  * @returns {*}
  */
 function oppfrisk(behandlingID) {

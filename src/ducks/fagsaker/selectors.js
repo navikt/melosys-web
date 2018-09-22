@@ -209,7 +209,7 @@ export const OrganisasjonSelector = createSelector(
  * @param arbeidsforholdet
  * @param organisasjoner
  * @param inntekter
- * @param soknadStartDato
+ * @param relevantPeriode
  * @returns {{arbeidsforholdene: *[], organisasjon: *, inntekter: any[]}}
  */
 const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, relevantPeriode) => (
