@@ -29,6 +29,11 @@ class EnkeltLand extends Component {
     onChange(landKode);
   };
 
+  reduxFjernLand = () => {
+    const { onChange } = this.props.input;
+    onChange('');
+  }
+
   fokusInnHandler = e => {
     e.target.select();
   };
@@ -64,6 +69,7 @@ class EnkeltLand extends Component {
     const { inputVerdi } = this.state;
 
     if (!inputVerdi) {
+      this.reduxFjernLand();
       this.tomFeilmelding();
       return;
     }
