@@ -31,7 +31,7 @@ class Studier extends DomeneRegel {
 
     const harStudierIUtlandet = !oppholdsland.includes('NO');
     return this.byggRegelSvar(harStudierIUtlandet, positivTekst, negativTekst);
-  }
+  };
 
   studierFinansieresFraNorge = () => {
     const { skjema } = this;

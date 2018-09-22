@@ -8,9 +8,13 @@ const OppholdEnkeltPropType = PT.shape({
   begrunnelseKode: PT.string,
 });
 
-const OppholdPropType = PT.shape({
-  land: PT.arrayOf(OppholdEnkeltPropType),
+const OppholdLandPropType = PT.arrayOf(OppholdEnkeltPropType);
+
+const OppholdPeriodePropType = PT.shape({
   periode: Periode,
 });
 
-export { OppholdPropType as Opphold };
+export {
+  OppholdLandPropType as OppholdLand,
+  OppholdPeriodePropType as OppholdPeriode,
+};
