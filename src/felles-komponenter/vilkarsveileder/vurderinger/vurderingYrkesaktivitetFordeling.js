@@ -22,6 +22,7 @@ const VurderingYrkesaktivitetFordeling = props => {
 
   return (
     <div>
+      <Nav.Undertittel>Vurdering av antall land</Nav.Undertittel>
       { tilstand.visAntallLand && <AntallLand /> }
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

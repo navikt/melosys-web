@@ -1,22 +1,23 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingForutgaendeMedlemskap from '../../vurderinger/vurderingForutgaendeMedlemskap';
+import VurderingArtikkel12 from '../../vurderinger/vurderingArtikkel12';
 
-class ForutgaendeMedlemskap extends Steg {
+class Artikkel12 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
+        nesteSteg: STEG.VEDTAK,
       },
     ];
-    this._id = STEG.FORUTGAENDE_MEDLEMSKAP;
-    this._tittel = 'Forutg. medl';
-    this._komponent = VurderingForutgaendeMedlemskap;
+    this._id = STEG.ARTIKKEL_12;
+    this._tittel = 'Vurdering av 12.1';
+    this._komponent = VurderingArtikkel12;
     this._samleRelevanteData = _propsLight => ({
-      begrunnelser: _propsLight.begrunnelser.forutgaendeMedlemskap || [],
+      artikkel: { kode: 'ART12_1', term: '12.1' },
+      begrunnelser: _propsLight.begrunnelser.artikkel12_1 || [],
     });
     this._beregnRelevantUI = () => ({});
     this._handlers = {
@@ -26,4 +27,4 @@ class ForutgaendeMedlemskap extends Steg {
   }
 }
 
-export default ForutgaendeMedlemskap;
+export default Artikkel12;
