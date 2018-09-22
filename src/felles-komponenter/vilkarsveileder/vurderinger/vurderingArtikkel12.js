@@ -47,11 +47,12 @@ VurderingArtikkel12.propTypes = {
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
-  artikkel: PT.string.isRequired,
+  artikkel: MPT.Kodeverk,
 };
 
 VurderingArtikkel12.defaultProps = {
   tilstand: {},
+  artikkel: {},
 };
 
 export default VurderingArtikkel12;
