@@ -9,7 +9,7 @@ class DomeneRegel {
       tekst: erOppfylt ? positivTekst : negativTekst,
       status: erOppfylt,
     }
-  )
+  );
 
   manglerOpplysninger = manglerTekst => (
     {
