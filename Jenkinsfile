@@ -13,8 +13,8 @@ node {
   def commitHash, commitHashShort, commitUrl, committer
   def scmVars
 
-  /* tools */
-  def NODEJS_HOME = tool "node-9.11.2" // => "installation directory" = "/opt/node"
+  /* tools: http://a34apvl00025.devillo.no:8080/configureTools/ */
+  def NODEJS_HOME = tool "node-10.10.0" // => "installation directory" = "/opt/node"
   echo "${NODEJS_HOME}"
   def node = "${NODEJS_HOME}/bin/node"
   def npm = "${NODEJS_HOME}/bin/npm"
