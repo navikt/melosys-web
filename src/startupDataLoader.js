@@ -45,5 +45,4 @@ export default function loadInitialData(store) {
         });
       }
     });
-  store.dispatch(KodeverkOperations.hent());
 }
