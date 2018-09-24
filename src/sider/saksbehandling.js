@@ -51,6 +51,7 @@ import {
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import { formSelectors } from '../ducks/form/';
+import Dialogboks from '../felles-komponenter/dialogboks';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
@@ -58,12 +59,14 @@ import '../felles-komponenter/skjema/skjema.css';
 class Saksbehandling extends Component {
   static propTypes = {
     hentFagsaker: PT.func.isRequired,
+    oppfriskFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     sendSoknad: PT.func.isRequired,
     hentFaktaavklaring: PT.func.isRequired,
     sendFaktaavklaring: PT.func.isRequired,
     hentVurdering: PT.func.isRequired,
     match: PT.object.isRequired,
+    history: PT.object.isRequired,
     person: MPT.Person,
     medlemskap: MPT.Medlemskap,
     arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
@@ -106,6 +109,7 @@ class Saksbehandling extends Component {
 
   state = {
     gyldigePaneler: {},
+    visOppfriskDialog: false,
   };
 
   componentDidMount() {
@@ -144,6 +148,25 @@ class Saksbehandling extends Component {
 
     this.props.oppdaterSoknad(this.props.soknadForm.values);
     this.props.oppdaterFaktaavklaring(this.props.soknadForm.values);
+  }
+
+  oppfriskSaksopplysninger = () => {
+    const { behandlingID } = this.props.oppsummering;
+
+    this.props.oppfriskFagsaker(behandlingID).then(response => {
+      if (response.ok) {
+        this.skjulOppfriskBekreftelse();
+        this.props.history.push('/');
+      }
+    });
+  }
+
+  visOppfriskBekreftelse = () => {
+    this.setState({ visOppfriskDialog: true });
+  }
+
+  skjulOppfriskBekreftelse = () => {
+    this.setState({ visOppfriskDialog: false });
   }
 
   /* eslint-disable */
@@ -199,12 +222,23 @@ class Saksbehandling extends Component {
               </form>
             </Nav.Column>
             <Nav.Column xs="5">
-              {oppsummering && <SideOppsummering oppsummering={oppsummering} avslaSoknadHandle={this.avslaSoknad} lagreOgLukkHandle={this.lagreOgLukk} />}
+              <SideOppsummering
+                oppsummering={oppsummering}
+                oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
+                lagreOgLukkHandle={this.lagreOgLukk}
+              />
               <SideDialog />
               <SideKommentarer />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
+        <Dialogboks
+          tittel="Vil du oppdatere registeropplysninger?"
+          tekst="Oppdatering av registeropplysning kan ta noe tid. Du vil derfor bli sendt tilbake til oppgavelisten hvor du kan journalføre eller behandle en annen sak i mellomtiden."
+          bekreft={this.oppfriskSaksopplysninger}
+          avbryt={this.skjulOppfriskBekreftelse}
+          synlig={this.state.visOppfriskDialog}
+        />
       </div>
     );
   }
@@ -286,6 +320,9 @@ const mapStateToProps = state => ({
     fullmektigPoststed: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
     fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandKode,
+    faktaavklaringBostedLand: faktaavklaringSelectors.FaktaavklaringBostedSelector(state).bostedLand,
+    faktaavklaringBostedBegrunnelser: faktaavklaringSelectors.FaktaavklaringBostedSelector(state).bostedBegrunnelser,
+    faktaavklaringBostedNorgeUtland: faktaavklaringSelectors.FaktaavklaringBostedNorgeUtlandSelector(state),
     faktaavklaringOppholdsLand: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state).land,
     faktaavklaringPeriodeFraOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).fom),
     faktaavklaringPeriodeTilOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).tom),
@@ -295,7 +332,8 @@ const mapStateToProps = state => ({
     faktaavklaringErstatterTidligereUtsendt: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).erstatterTidligereUtsendt,
     faktaavklaringUtsendingMindreEnn24Mnd: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).utsendingMindreEnn24Mnd,
     faktaavklaringForetakDriverINorge: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).foretakDriverINorge,
-    faktaavklaringHarForutgaendeMedlemskap: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).harForutgaendeMedlemskap,
+    faktaavklaringHarForutgaendeMedlemskap: faktaavklaringSelectors.FaktaavklaringForutgaendeMedlemskapSelector(state).harForutgaendeMedlemskap,
+    faktaavklaringForutgaendeMedlemskapBegrunnelser: faktaavklaringSelectors.FaktaavklaringForutgaendeMedlemskapSelector(state).forutgaendeMedlemskapBegrunnelser,
     faktaavklaringArbeidKnyttetTilVirksomhetUtlandet: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).arbeidKnyttetTilVirksomhetUtlandet,
     faktaavklaringSammeTypeVirksomhet: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).sammeTypeVirksomhet,
     faktaavklaringAnsattISektor: faktaavklaringSelectors.FaktaavklaringSektorSelector(state).ansattISektor,
@@ -304,8 +342,6 @@ const mapStateToProps = state => ({
     faktaavklaringMarginaltArbeid: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).marginaltArbeid,
     faktaavklaringVekslingMellomLand: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).vekslingMellomLand,
     faktaavklaringAktivitetLand: faktaavklaringSelectors.FaktaavklaringAktivitetSelector(state).aktivitetLand,
-    faktaavklaringBostedslandSnarvei: faktaavklaringSelectors.FaktaavklaringBostedSnarveiSelector(state),
-    faktaavklaringBostedsland: faktaavklaringSelectors.FaktaavklaringBostedSelector(state).land,
     faktaavklaringTjenestemann: faktaavklaringSelectors.FaktaavklaringTjenestemannSelector(state).tjenestemann,
     faktaavklaringValgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
     faktaavklaringVesentligVirksomhetINorge: (faktaavklaringSelectors.FaktaavklaringVesentligVirksomhetSelector(state).vesentligVirksomhetINorge),
@@ -318,6 +354,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
+  oppfriskFagsaker: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   hentFaktaavklaring: saksnummer => dispatch(faktaavklaringOperations.hent(saksnummer)),

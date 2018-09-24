@@ -102,7 +102,7 @@ const VurderingArbeidsgiver = props => {
 
   return (
     <div className="vurderingArbeidsgiver">
-      <Nav.Undertittel>Velg arbeidsgiver:</Nav.Undertittel>
+      <Nav.Undertittel>Velg arbeidsgiver, oppdragsgiver eller selvstendig næringsvirksomhet:</Nav.Undertittel>
       <div className="arbeidsgiver">
         <FieldArray name="faktaavklaringValgteArbeidsgivere" component={arrayProps => <ArbeidsgivereListe {...arrayProps} arbeidsgivereIPerioden={arbeidsgivereIPerioden} />} />
         <div className="fane__knapplinje">
