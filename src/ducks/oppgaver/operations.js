@@ -66,6 +66,6 @@ export function sendJournalOppgave(fagomrade) {
   return Api.Oppgaver.send(oppgave).then(response => {
     const { oppgaveID, journalpostID } = response;
     if (!(oppgaveID || journalpostID)) { return false; }
-    return `/journalforing/${oppgaveID}/${journalpostID}`;
+    return `/journalforing/${journalpostID}/${oppgaveID}`;
   });
 }
