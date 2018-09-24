@@ -12,7 +12,7 @@ import './journalForingEnkeltLinje.css';
 const JournalForingEnkeltLinje = ({ sak }) => {
   const { journalpostID, oppgaveID, aktivTil } = sak;
   const tittel = 'Journalføring';
-  const link = `/journalforing/${oppgaveID}/${journalpostID}`;
+  const link = `/journalforing/${journalpostID}/${oppgaveID}`;
 
   const undertittel = () => (
     <Nav.Row>

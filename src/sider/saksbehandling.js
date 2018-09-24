@@ -141,14 +141,14 @@ class Saksbehandling extends Component {
       this.props.sendSoknad(bid, soknad);
       this.props.sendFaktaavklaring(bid, avklaring);
     }
-  }
+  };
 
   overstyrSubmit = event => {
     event.preventDefault();
 
     this.props.oppdaterSoknad(this.props.soknadForm.values);
     this.props.oppdaterFaktaavklaring(this.props.soknadForm.values);
-  }
+  };
 
   oppfriskSaksopplysninger = () => {
     const { behandlingID } = this.props.oppsummering;
@@ -159,19 +159,19 @@ class Saksbehandling extends Component {
         this.props.history.push('/');
       }
     });
-  }
+  };
 
   visOppfriskBekreftelse = () => {
     this.setState({ visOppfriskDialog: true });
-  }
+  };
 
   skjulOppfriskBekreftelse = () => {
     this.setState({ visOppfriskDialog: false });
-  }
+  };
 
   /* eslint-disable */
-  lagreOgLukk = () => { alert('Ikke implementert'); }
-  avslaSoknad = () => { alert('Ikke implementert'); }
+  lagreOgLukk = () => { alert('Ikke implementert'); };
+  avslaSoknad = () => { alert('Ikke implementert'); };
   /* eslint-enable */
 
   render() {
