@@ -1,3 +1,4 @@
+import * as Validering from '../../felles-komponenter/skjema/validering';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 
@@ -22,9 +23,12 @@ export function hent(behandlingID) {
 }
 
 export function send(bid, soknad) {
-  return doThenDispatch(() => Api.Soknader.send(bid, soknad), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Soknader.send(bid, soknad), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    (dispatch, data) => Validering.Felles.forsokValidering(dispatch, data)
+  );
 }
