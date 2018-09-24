@@ -51,7 +51,7 @@ class ArbeidsgivereListe extends Component {
 
     const indexPosition = alleOpprinneligValgte.findIndex(valgt => valgt === orgnr);
     return indexPosition >= 0 ? fields.remove(indexPosition) : fields.push(orgnr);
-  }
+  };
 
   render() {
     const { fields, arbeidsgivereIPerioden } = this.props;
