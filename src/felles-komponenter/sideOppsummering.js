@@ -6,6 +6,7 @@ import * as MPT from '../proptypes/';
 
 import EnkeltDato from './datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm } from '../utils/kodeverk';
+
 import './sideOppsummering.css';
 
 function SideOppsummering(props) {
@@ -21,7 +22,7 @@ function SideOppsummering(props) {
 
   const {
     lagreOgLukkHandle,
-    avslaSoknadHandle,
+    oppfriskSaksopplysningerHandle,
   } = props;
 
   return (
@@ -34,7 +35,7 @@ function SideOppsummering(props) {
               <Nav.EkspanderbartpanelBase ariaTittel="Behandlingsmeny" className="oppsummering__meny" heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}>
                 <div className="meny__innhold">
                   <Nav.Knapp type="hoved" mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp>
-                  <Nav.Knapp type="hoved" mini className="innhold__element" onClick={avslaSoknadHandle}>Avslå søknad</Nav.Knapp>
+                  <Nav.Knapp type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppfrisk saksopplysninger</Nav.Knapp>
                 </div>
               </Nav.EkspanderbartpanelBase>
             </div>
@@ -69,7 +70,7 @@ function SideOppsummering(props) {
 
 SideOppsummering.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
-  avslaSoknadHandle: PT.func.isRequired,
+  oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
 };
 

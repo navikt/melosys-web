@@ -75,7 +75,7 @@ const VurderingVedtak = props => {
 
   const { land, periode } = opphold;
 
-  const { sysselsettingType = '' } = sysselsetting;
+  const sysselsettingType = sysselsetting.sysselsettingType || '';
 
   const antallManeder = datoDiffMenneskelig(periode.fom, periode.tom);
   const arbeidsgivereForVedtaket = valgteArbeidsgivere

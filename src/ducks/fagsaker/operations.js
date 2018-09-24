@@ -55,8 +55,18 @@ function sok(fnr) {
   });
 }
 
+/**
+ * Kaller backend for å be om oppfrisking av en sak.
+ * @param snr
+ * @returns {*}
+ */
+function oppfrisk(behandlingID) {
+  return Api.Fagsaker.oppfrisk(behandlingID);
+}
+
 export {
   hent,
   opprett,
   sok,
+  oppfrisk,
 };

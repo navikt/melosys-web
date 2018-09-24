@@ -9,7 +9,7 @@ class Sysselsetting extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
+        nesteSteg: STEG.SEKTOR,
       },
     ];
     this._id = STEG.ARBEIDSGIVERE;
