@@ -69,7 +69,6 @@ class Saksbehandling extends Component {
     history: PT.object.isRequired,
     person: MPT.Person,
     medlemskap: MPT.Medlemskap,
-    arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
     inntekt: MPT.Inntekt,
     vurdering: PT.object,
     bekreftelser: MPT.Bekreftelser,
@@ -91,7 +90,6 @@ class Saksbehandling extends Component {
   static defaultProps = {
     person: {},
     medlemskap: {},
-    arbeidsgivereNorge: [],
     inntekt: {},
     vurdering: {},
     bekreftelser: [],
@@ -175,7 +173,6 @@ class Saksbehandling extends Component {
     const {
       person,
       medlemskap,
-      arbeidsgivereNorge,
       inntekt,
       bekreftelser,
       oppsummering,
@@ -205,7 +202,7 @@ class Saksbehandling extends Component {
                   fattVedtakHandler={this.fattVedtakHandler} />
                 {person && <Personopplysninger person={person} />}
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
-                {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
+                <ArbeidsgivereNorge />
                 <SelvstendigArbeid soknadVerdier={soknadVerdier} />
                 <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
                 <ArbeidUtland />
@@ -248,7 +245,6 @@ class Saksbehandling extends Component {
 const mapStateToProps = state => ({
   person: fagsakSelectors.PersonSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
-  arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   vurdering: vurderingSelectors.VurderingSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
@@ -303,6 +299,7 @@ const mapStateToProps = state => ({
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
     adresseIUtlandet: soknadSelectors.BostedSelector(state).adresseIUtlandet,
+    ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
     maritimType: soknadSelectors.MaritimtArbeidSelector(state).maritimType,
     skipsNavn: soknadSelectors.MaritimtArbeidSelector(state).skipsNavn,
     fartsomrade: soknadSelectors.MaritimtArbeidSelector(state).fartsomrade,

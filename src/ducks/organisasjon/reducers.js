@@ -10,7 +10,7 @@ import * as Types from './types';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
-  data: {},
+  data: [],
 };
 
 export default function reducer(state = initalState, action) {
@@ -19,8 +19,10 @@ export default function reducer(state = initalState, action) {
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
-    case Types.OK:
-      return { ...state, status: STATUS.OK, data: action.data };
+    case Types.OK: {
+      const nyData = Array.isArray(action.data) ? [...state.data, ...action.data] : [...state.data, action.data];
+      return { ...state, status: STATUS.OK, data: nyData };
+    }
     default:
       return state;
   }

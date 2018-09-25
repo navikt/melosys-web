@@ -69,6 +69,7 @@ const soknadTemplate =
       utsendtFortsetterArbeidsforholdIUtlandet: undefined,
       utsendtArbeiderMedKlienter: undefined,
       utsendtArbeiderMedKontrakter: undefined,
+      ekstraArbeidsgivere: undefined,
     },
     arbeidsinntekt: {
       inntektNorskIPerioden: undefined,
@@ -152,6 +153,7 @@ export default function reducer(state = initialState, action) {
           utsendtFortsetterArbeidsforholdIUtlandet: dokument.utsendtFortsetterArbeidsforholdIUtlandet,
           utsendtArbeiderMedKlienter: dokument.utsendtArbeiderMedKlienter,
           utsendtArbeiderMedKontrakter: dokument.utsendtArbeiderMedKontrakter,
+          ekstraArbeidsgivere: dokument.ekstraArbeidsgivere,
         },
         arbeidsgiversBekreftelse: {
           ...state.data.soeknadDokument.arbeidsgiversBekreftelse,
