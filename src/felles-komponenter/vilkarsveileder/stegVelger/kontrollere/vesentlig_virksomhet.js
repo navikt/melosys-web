@@ -1,15 +1,23 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingVesentligVirksomhet from '../../vurderinger/vurderingVesentligVirksomhet';
+import { BOOLSK } from '../../../../constants';
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
+        beskrivelse: 'vesentligVirksomhetINorge ER LIK TRUE',
+        exec: ({ vesentligVirksomhetINorge }) => (
+          vesentligVirksomhetINorge === BOOLSK.SANN
+        ),
+        nesteSteg: STEG.ARTIKKEL_12,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.ARTIKKEL_12,
+        nesteSteg: STEG.VEDTAK,
       },
     ];
     this._id = STEG.VESENTLIG_VIRKSOMHET;
