@@ -56,11 +56,11 @@ ArbeidUtlandEnkelt.propTypes = {
 class ArbeidUtlandWrapper extends Component {
   leggTilArbeidHandler = () => {
     this.props.fields.push({});
-  }
+  };
 
   slettArbeidHandler = indeks => {
     this.props.fields.remove(indeks);
-  }
+  };
 
   render() {
     const { slettArbeidHandler, leggTilArbeidHandler } = this;

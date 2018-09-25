@@ -1,6 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
+// import qs from 'qs';
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -37,6 +38,7 @@ import { PersonOperations } from '../ducks/person';
 class Journalforing extends Component {
   static propTypes = {
     match: PT.object.isRequired,
+    location: PT.object.isRequired,
     history: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
     hentFagsakListe: PT.func.isRequired,
@@ -62,8 +64,10 @@ class Journalforing extends Component {
   };
 
   componentDidMount() {
-    const { journalpostID } = this.props.match.params;
-    this.props.hentJournalOppgave(journalpostID);
+    const { journalpostID, oppgaveID } = this.props.match.params;
+    // const qsParsed = qs.parse(this.props.location.search.slice(1));
+    // console.log(qsParsed); // TODO Fjern når vi har avklart hva vi skal gjøre med ?kilde=GOSYS
+    this.props.hentJournalOppgave(journalpostID, oppgaveID);
   }
 
   /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
@@ -223,7 +227,7 @@ class Journalforing extends Component {
 
   touchAll = (alleFeil = {}) => {
     this.props.touch(...Object.keys(alleFeil));
-  }
+  };
 
   resetSkjemaFelterForOpprettFagsak = () => {
     const { settFeltInnhold } = this.props;
@@ -306,7 +310,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
+  hentJournalOppgave: (journalpostID, oppgaveID) => dispatch(journalforingOperations.hent(journalpostID, oppgaveID)),
   hentFagsakListe: fnr => dispatch(fagsakOperations.sok(fnr)),
   settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
