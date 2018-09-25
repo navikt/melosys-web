@@ -50,7 +50,7 @@ class YrkesaktivitetFordeling extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
+        nesteSteg: STEG.VEDTAK,
       },
     ];
     this._id = STEG.YRKESAKTIVITET_FORDELING;
