@@ -58,7 +58,7 @@ describe('streng.js', () => {
       expect(tekstEllerDash(undefined)).toEqual('-');
     });
     test('Returnerer gyldig verdi uendret', () => {
-      const data = {}
+      const data = {};
       expect(tekstEllerDash(data)).toEqual(data);
     });
   });

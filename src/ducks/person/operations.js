@@ -6,10 +6,7 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
-
-// import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
-// import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function hent(fnr) {
