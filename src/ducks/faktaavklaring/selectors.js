@@ -20,7 +20,17 @@ export const FaktaavklaringSelector = createSelector(
 
 export const FaktaavklaringOppholdSelector = createSelector(
   state => FaktaavklaringSelector(state).opphold,
-  opphold => opphold || {}
+  opphold => opphold || []
+);
+
+export const FaktaavklaringGyldigeOppholdLandSelector = createSelector(
+  state => FaktaavklaringOppholdSelector(state).land || [],
+  opphold => opphold.filter(enkeltOpphold => enkeltOpphold.erGyldig) || []
+);
+
+export const FaktaavklaringLovvalgKodeSelector = createSelector(
+  state => FaktaavklaringSelector(state).vurdering || {},
+  vurdering => (vurdering ? vurdering.lovvalgKode : '')
 );
 
 export const FaktaavklaringOppholdPeriodeSelector = createSelector(
@@ -48,9 +58,9 @@ export const FaktaavklaringForutgaendeMedlemskapSelector = createSelector(
   forutgaendeMedlemskap => forutgaendeMedlemskap || {}
 );
 
-export const FaktaavklaringSektorSelector = createSelector(
-  state => FaktaavklaringSelector(state).sektor,
-  sektor => sektor || {}
+export const FaktaavklaringYrkesaktivitetSelector = createSelector(
+  state => FaktaavklaringSelector(state).yrkesaktivitet,
+  yrkesaktivitet => yrkesaktivitet || {}
 );
 
 export const FaktaavklaringYrkesaktivitetFordelingSelector = createSelector(
@@ -101,6 +111,11 @@ export const FaktaavklaringVesentligVirksomhetSelector = createSelector(
   vesentligVirksomhet => vesentligVirksomhet || {}
 );
 
+export const FaktaavklaringVurderingSelector = createSelector(
+  state => FaktaavklaringSelector(state).vurdering,
+  vurdering => vurdering || {}
+);
+
 export const FaktaavklaringValgteArbeidsgivereDetaljerSelector = createSelector(
   state => FaktaavklaringValgteArbeidsgivereSelector(state) || [],
   state => fagsakSelectors.OrganisasjonerSelector(state) || [],
@@ -121,7 +136,7 @@ export const ArbeidsgivereIPeriodenSelector = createSelector(
     const regler = new Regler(skjema);
     const arbeidsforholdIPerioden = arbeidsforholdene
       .filter(arbeidsforholdet => (
-        regler.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(arbeidsforholdet.ansettelsesPeriode)
+        regler.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(arbeidsforholdet.ansettelsesPeriode).status
       ));
 
     return organisasjoner.reduce((samling, organisasjonen) => {

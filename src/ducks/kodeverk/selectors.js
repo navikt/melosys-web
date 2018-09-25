@@ -13,6 +13,15 @@ export const landkoderSelector = createSelector(
   landkoder => landkoder || []
 );
 
+/* eslint-disable camelcase */
+export const alleLovvalgSelector = createSelector(
+  state => state.kodeverk.data.lovvalgsbestemmelser,
+  lovvalgsbestemmelser => {
+    const { forordning_883_2004 = [], forordning_987_2009 = [], tillegg = [] } = lovvalgsbestemmelser;
+    return [...forordning_883_2004, ...forordning_987_2009, ...tillegg];
+  }
+);
+
 export const oppgaveTyperSelector = createSelector(
   state => state.kodeverk.data.oppgavetyper,
   oppgavetyper => oppgavetyper || []

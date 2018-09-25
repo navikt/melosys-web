@@ -38,14 +38,17 @@ class Bostedsland extends Steg {
       begrunnelser: _propsLight.begrunnelser.bosted || [],
     });
     this._beregnRelevantUI = _propsLight => {
-      const { skjema = {} } = _propsLight;
+      const { skjema = {}, saksopplysninger = {} } = _propsLight;
+      const { sakOgBehandling } = saksopplysninger;
+      const { eosBarnetrygd = {} } = sakOgBehandling;
+
       const {
         faktaavklaringSysselsettingType,
         faktaavklaringBostedNorgeUtland,
         faktaavklaringIkkeYrkesaktivType,
       } = skjema;
 
-      const regler = new Regler(skjema);
+      const regler = new Regler(skjema, saksopplysninger);
 
       const erYrkesaktiv = (
         faktaavklaringSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG ||
@@ -55,43 +58,48 @@ class Bostedsland extends Steg {
 
       let avklaringer;
 
+      /** Regelklassene returnerer alltid et objekt i formatet {status: true, tekst: 'foo}
+       * Dermed kan vi destructe dette svaret rett inn i en array av regler som sendes videre
+       * ut til selve visningskomponenten VurderingBostedsland.
+       */
       if (erYrkesaktiv) {
         avklaringer = [
-          { term: 'Har søker bostedsadresse i Norge?', status: regler.opphold().harForutgaendeBostedINorge() },
-          { term: 'Adresse i utlandet.', status: regler.opphold().harAdresseIUtlandet() },
-          { term: 'Norsk adresse samme som norsk arbeidsgiver.', status: regler.opphold().harSammeAdresseSomArbeidsgiver() },
-          { term: 'EU/EØS barnetrygd fra NAV.', status: regler.stonad().mottarEOSBarnetrygdFraNav() },
-          { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge() },
+          { ...regler.opphold().harForutgaendeBostedINorge() },
+          { ...regler.opphold().harAdresseIUtlandet() },
+          { ...regler.opphold().harSammeAdresseSomArbeidsgiver() },
+          { ...regler.opphold().familieBorINorge() },
         ];
       } else {
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
           avklaringer = [
-            { term: 'Oppholdet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
-            { term: 'Har studiested i utlandet.', status: regler.studier().studererIUtlandet() },
-            { term: 'Finansiering av studier fra Norge.', status: regler.studier().studierFinansieresFraNorge() },
-            { term: 'Familie bor i Norge.', status: regler.opphold().familieBorINorge() },
+            { ...regler.opphold().inntilTolvMaaneder() },
+            { ...regler.opphold().harForutgaendeBostedINorge() },
+            { ...regler.studier().studererIUtlandet() },
+            { ...regler.studier().studierFinansieresFraNorge() },
+            { ...regler.opphold().familieBorINorge() },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
-            { term: 'Er i Norge 6 mnd eller mer pr kalenderår.', status: regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr() },
-            { term: 'Ektefelle og / eller mindreårige barn i Norge?', status: regler.opphold().harEktefelleEllerBarnINorge() },
+            { ...regler.opphold().harForutgaendeBostedINorge() },
+            { ...regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr() },
+            { ...regler.opphold().harEktefelleEllerBarnINorge() },
           ];
         }
         if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
-            { term: 'Oppholdet i utlandet er inntil 12 mnd.', status: regler.opphold().inntilTolvManeder() },
-            { term: 'Forutgående bosted i Norge.', status: regler.opphold().harForutgaendeBostedINorge() },
-            { term: 'Er medfølgende familie til utsendt arbeidstaker', status: undefined },
-            { term: 'Er intensjonen å returnere til Norge?', status: regler.opphold().harIntensjonOmReturTilNorge() },
+            { ...regler.opphold().inntilTolvMaaneder() },
+            { ...regler.opphold().harForutgaendeBostedINorge() },
+            { ...regler.opphold().harIntensjonOmReturTilNorge() },
           ];
         }
       }
 
       return {
-        visLandVelger: (faktaavklaringBostedNorgeUtland === VurderingBostedslandTyper.ANNET),
+        visBostedslandVelger: (faktaavklaringBostedNorgeUtland === VurderingBostedslandTyper.ANNET),
+        visTipsForYrkesaktiv: erYrkesaktiv,
+        visTipsForIkkeYrkesaktiv: !erYrkesaktiv,
+        harEOSBarnetrygdSak: eosBarnetrygd,
         avklaringer,
       };
     };

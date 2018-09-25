@@ -5,10 +5,10 @@ import Forretningssted from './forretningssted';
 import ForutgaendeMedlemskap from './forutgaende_medlemskap';
 import IkkeYrkesaktiv from './ikke_yrkesaktiv';
 import Inngang from './inngang';
-import Sektor from './sektor';
+import Yrkesaktivitet from './yrkesaktivitet';
 import Sysselsetting from './sysselsetting';
 import Tjenestemann from './tjenestemann';
-import Utsending from './utsending';
+import Artikkel12 from './artikkel12';
 import Virksomhet from './virksomhet';
 import VesentligVirksomhet from './vesentlig_virksomhet';
 import YrkesaktivitetFordeling from './yrkesaktivitet_fordeling';
@@ -23,10 +23,10 @@ export {
   ForutgaendeMedlemskap,
   IkkeYrkesaktiv,
   Inngang,
-  Sektor,
+  Yrkesaktivitet,
   Sysselsetting,
   Tjenestemann,
-  Utsending,
+  Artikkel12,
   Virksomhet,
   VesentligVirksomhet,
   YrkesaktivitetFordeling,
