@@ -16,6 +16,16 @@ export const OrganisasjonerSelector = createSelector(
   organisasjoner => organisasjoner || []
 );
 
+export const SakOgBehandlingSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.sakOgBehandling : {}),
+  sakOgBehandling => sakOgBehandling || {}
+);
+
+export const SaksopplysningerSelector = createSelector(
+  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger : {}),
+  saksopplysninger => saksopplysninger || {}
+);
+
 export const FagsakSokSelector = createSelector(
   state => (state.fagsaker.data.fagsakListe ? state.fagsaker.data.fagsakListe : []),
   fagsakListe => fagsakListe || []
@@ -199,7 +209,7 @@ export const OrganisasjonSelector = createSelector(
  * @param arbeidsforholdet
  * @param organisasjoner
  * @param inntekter
- * @param soknadStartDato
+ * @param relevantPeriode
  * @returns {{arbeidsforholdene: *[], organisasjon: *, inntekter: any[]}}
  */
 const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, relevantPeriode) => (

@@ -78,7 +78,6 @@ class Saksbehandling extends Component {
     finansiering: PT.arrayOf(MPT.Kodeverk),
     faktaavklaring: PT.object,
     soknadArbeidsinntekt: PT.object,
-    soknadOppholdUtland: MPT.OppholdUtland,
     soknadArbeidNorge: MPT.ArbeidNorge,
     handleSubmit: PT.func.isRequired,
     errorSummary: PT.object,
@@ -101,7 +100,6 @@ class Saksbehandling extends Component {
     finansiering: [],
     faktaavklaring: {},
     soknadArbeidsinntekt: {},
-    soknadOppholdUtland: {},
     soknadArbeidNorge: {},
     errorSummary: {},
     errorSummaryTitle: '',
@@ -171,7 +169,6 @@ class Saksbehandling extends Component {
 
   /* eslint-disable */
   lagreOgLukk = () => { alert('Ikke implementert'); };
-  avslaSoknad = () => { alert('Ikke implementert'); };
   /* eslint-enable */
 
   render() {
@@ -336,7 +333,7 @@ const mapStateToProps = state => ({
     faktaavklaringForutgaendeMedlemskapBegrunnelser: faktaavklaringSelectors.FaktaavklaringForutgaendeMedlemskapSelector(state).forutgaendeMedlemskapBegrunnelser,
     faktaavklaringArbeidKnyttetTilVirksomhetUtlandet: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).arbeidKnyttetTilVirksomhetUtlandet,
     faktaavklaringSammeTypeVirksomhet: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).sammeTypeVirksomhet,
-    faktaavklaringAnsattISektor: faktaavklaringSelectors.FaktaavklaringSektorSelector(state).ansattISektor,
+    faktaavklaringYrkesaktivitetType: faktaavklaringSelectors.FaktaavklaringYrkesaktivitetSelector(state).yrkesaktivitetType,
     faktaavklaringAntallLand: faktaavklaringSelectors.FaktaavklaringYrkesaktivitetFordelingSelector(state).antallLand,
     faktaavklaringAktivitetINorge: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).aktivitetINorge,
     faktaavklaringMarginaltArbeid: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).marginaltArbeid,
@@ -349,6 +346,8 @@ const mapStateToProps = state => ({
     faktaavklaringForretningsstedLand: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).land,
     faktaavklaringForretningsstedAntallArbeidsgivere: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).antallArbeidsgivere,
     faktaavklaringForretningsstedFordelingArbeidsgivere: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).fordelingArbeidsgivere,
+    vurderingLovvalg: faktaavklaringSelectors.FaktaavklaringLovvalgKodeSelector(state),
+    vurderingBegrunnelser: faktaavklaringSelectors.FaktaavklaringVurderingSelector(state).begrunnelser,
   },
 });
 

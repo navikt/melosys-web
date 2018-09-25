@@ -20,7 +20,7 @@ import { formSelectors } from '../../ducks/form/';
 import './vilkarsveileder.css';
 
 class Vilkarsveileder extends Component {
-  state = { aktivtStegNummer: 0, aktuelleSteg: [] }
+  state = { aktivtStegNummer: 0, aktuelleSteg: [] };
 
   componentWillMount() {
     const { snr } = this.props.match.params;
@@ -43,12 +43,12 @@ class Vilkarsveileder extends Component {
     alert('Denne funksjonen er ikke ferdig implementert.');
     /* eslint-enable */
     // this.props.fattVedtakHandler();
-  }
+  };
 
   beOmVurdering = () => {
     this.props.beOmVurderingHandler();
     this.tilSteg(this.beregnNesteSteg());
-  }
+  };
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
@@ -56,7 +56,7 @@ class Vilkarsveileder extends Component {
    */
   bekreftOgFortsett = () => {
     this.tilSteg(this.beregnNesteSteg());
-  }
+  };
 
   oppdaterAktuelleSteg = props => {
     const { erDetteSisteSteg } = this;
@@ -68,6 +68,7 @@ class Vilkarsveileder extends Component {
 
     const propsLight = {
       faktaavklaring: props.faktaavklaring,
+      saksopplysninger: props.saksopplysninger,
       inngang: props.inngang,
       skjema: props.skjema,
       landkoder: props.landkoder,
@@ -87,7 +88,7 @@ class Vilkarsveileder extends Component {
 
     this.setState({ aktuelleSteg });
     return aktuelleSteg;
-  }
+  };
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
@@ -95,7 +96,7 @@ class Vilkarsveileder extends Component {
    */
   tilSteg = nyttStegNummer => {
     this.setState({ aktivtStegNummer: nyttStegNummer });
-  }
+  };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
    * maks antall steg (til og med vedtak). Ved forsøk på å gå ytterligere steg
@@ -105,7 +106,7 @@ class Vilkarsveileder extends Component {
     const maksSteg = this.state.aktuelleSteg.length;
     const { aktivtStegNummer } = this.state;
     return (aktivtStegNummer + 1 < maksSteg) ? aktivtStegNummer + 1 : aktivtStegNummer;
-  }
+  };
 
   render() {
     return (
@@ -120,51 +121,53 @@ class Vilkarsveileder extends Component {
 }
 
 Vilkarsveileder.propTypes = {
+  arbeidsgivereIPerioden: PT.array,
+  beOmVurderingHandler: PT.func.isRequired,
+  faktaavklaring: PT.object,
+  fattVedtakHandler: PT.func.isRequired,
+  hentBosted: PT.func.isRequired,
+  hentInngang: PT.func.isRequired,
+  hentVurdering: PT.func.isRequired,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
-  arbeidsgivereIPerioden: PT.array,
-  fattVedtakHandler: PT.func.isRequired,
-  beOmVurderingHandler: PT.func.isRequired,
-  sendSoknad: PT.func.isRequired,
-  hentBosted: PT.func.isRequired,
+  oppdaterFaktaavklaringState: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
-  faktaavklaring: PT.object,
   begrunnelser: PT.object,
   landkoder: PT.arrayOf(MPT.Kodeverk),
   inngang: PT.object,
+  saksopplysninger: PT.object.isRequired,
+  sendSoknad: PT.func.isRequired,
   skjema: PT.object.isRequired,
   valgteArbeidsgivere: PT.array,
-  oppdaterFaktaavklaringState: PT.func.isRequired,
-  hentVurdering: PT.func.isRequired,
-  hentInngang: PT.func.isRequired,
 };
 
 Vilkarsveileder.defaultProps = {
-  oppsummering: [],
+  arbeidsgivereIPerioden: [],
+  begrunnelser: {},
   faktaavklaring: {},
   inngang: {},
-  arbeidsgivereIPerioden: [],
+  oppsummering: [],
   valgteArbeidsgivere: [],
-  begrunnelser: {},
   landkoder: [],
 };
 
 const mapStateToProps = state => ({
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
-  inngang: inngangSelectors.InngangSelector(state),
-  valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
   arbeidsgivereIPerioden: faktaavklaringSelectors.ArbeidsgivereIPeriodenSelector(state),
   begrunnelser: KodeverkSelectors.begrunnelserSelector(state),
+  faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
+  inngang: inngangSelectors.InngangSelector(state),
+  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  saksopplysninger: fagsakSelectors.SaksopplysningerSelector(state),
   landkoder: KodeverkSelectors.landkoderSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
+  valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterFaktaavklaringState: skjema => dispatch(faktaavklaringOperations.oppdaterFaktaavklaringState(skjema)),
-  hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
-  hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentBosted: behandlingID => dispatch(faktaavklaringOperations.hentBosted(behandlingID)),
+  hentInngang: snr => dispatch(inngangOperations.hent(snr)),
+  hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
+  oppdaterFaktaavklaringState: skjema => dispatch(faktaavklaringOperations.oppdaterFaktaavklaringState(skjema)),
   sendSoknad: (behandlingID, soknad) => dispatch(soknadOperations.send(behandlingID, soknad)),
 });
 

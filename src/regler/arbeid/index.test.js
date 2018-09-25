@@ -15,7 +15,7 @@ describe('Tester at regler for arbeid', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(mockArbeidsforholdPeriode)).toBe(true);
+      expect(regel.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(mockArbeidsforholdPeriode).status).toBe(true);
     });
 
     test('returnerer false dersom starten av søknadsperioden er før starten for arbeidsforholdet', () => {
@@ -31,7 +31,7 @@ describe('Tester at regler for arbeid', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(mockArbeidsforholdPeriode)).toBe(false);
+      expect(regel.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(mockArbeidsforholdPeriode).status).toBe(false);
     });
 
     test('returnerer false dersom slutten av søknadsperioden er etter slutten for arbeidsforholdet', () => {
@@ -47,7 +47,7 @@ describe('Tester at regler for arbeid', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(mockArbeidsforholdPeriode)).toBe(false);
+      expect(regel.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(mockArbeidsforholdPeriode).status).toBe(false);
     });
 
     test('returnerer false dersom hele søknadsperioden er utenfor hele perioden for arbeidsforholdet', () => {
@@ -63,7 +63,7 @@ describe('Tester at regler for arbeid', () => {
 
       const regel = new Regel(mockSkjema);
 
-      expect(regel.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(mockArbeidsforholdPeriode)).toBe(false);
+      expect(regel.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(mockArbeidsforholdPeriode).status).toBe(false);
     });
   });
 });
