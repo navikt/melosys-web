@@ -97,7 +97,7 @@ export default function reducer(state = initialState, action) {
           vesentligVirksomhetBegrunnelser: dokument.faktaavklaringVesentligVirksomhetBegrunnelser,
         },
         vurdering: {
-          lovvalg: dokument.vurderingLovvalg,
+          lovvalgKode: dokument.vurderingLovvalg,
           begrunnelser: dokument.vurderingBegrunnelser,
         },
       };

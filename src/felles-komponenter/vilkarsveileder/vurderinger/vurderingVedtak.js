@@ -78,7 +78,7 @@ VurderingVedtak.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  lovvalgKode: faktaavklaringSelectors.FaktaavklaringLovvalgSelector(state),
+  lovvalgKode: faktaavklaringSelectors.FaktaavklaringLovvalgKodeSelector(state),
   gyldigeOppholdLand: faktaavklaringSelectors.FaktaavklaringGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandSelector(state).oppholdsPeriode,
   alleLandkoder: KodeverkSelectors.landkoderSelector(state),

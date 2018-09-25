@@ -17,8 +17,8 @@ export const landkoderSelector = createSelector(
 export const alleLovvalgSelector = createSelector(
   state => state.kodeverk.data.lovvalgsbestemmelser,
   lovvalgsbestemmelser => {
-    const { forordning_883_2004 = [], forordning_987_2009 = [], tilleggsbestemmelser = [] } = lovvalgsbestemmelser;
-    return [...forordning_883_2004, ...forordning_987_2009, ...tilleggsbestemmelser];
+    const { forordning_883_2004 = [], forordning_987_2009 = [], tillegg = [] } = lovvalgsbestemmelser;
+    return [...forordning_883_2004, ...forordning_987_2009, ...tillegg];
   }
 );
 
