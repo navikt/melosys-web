@@ -9,6 +9,6 @@ import { createSelector } from 'reselect';
 
 /* eslint import/prefer-default-export:"off" */
 export const organisasjonSelector = createSelector(
-  state => state.organisasjon.data,
+  state => state.organisasjon.data || [],
   organisasjon => organisasjon
 );

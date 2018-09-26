@@ -1,45 +1,32 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
+import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as API from '../../services/api';
-import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
+import * as MPT from '../../proptypes';
+
 import Organisasjon from './organisasjon';
+import EkstraArbeidsgiverLeggTil from './ekstraArbeidsgivereLeggTil';
 
 import './ekstraArbeidsgivere.css';
-import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
 
-const FunnetOrganisasjon = ({ leggTil, organisasjon }) => {
-  return (
-    <Fragment>
-      <OrganisasjonsAdresse organisasjon={organisasjon} />
-      <Nav.Knapp onClick={() => leggTil(organisasjon.orgnr)}>Legg til</Nav.Knapp>
-    </Fragment>
-  );
-};
+const uuid = require('uuid/v4');
 
 class ArbeidsgiverEnkelt extends Component {
-  state = { organisasjon: null }
-
-  componentDidMount() {
-    this.hentOrganisasjon(this.props.orgnr);
-  }
-
-  hentOrganisasjon = orgnr => {
-    API.Organisasjoner.hentOrganisasjon(orgnr).then(response => {
-      this.setState({ organisasjon: response });
-    });
-  };
-
   slettHandle = () => {
 
   };
 
   render() {
-    const { organisasjon } = this.state;
+    const { organisasjon } = this.props;
     const { slettHandle } = this;
 
-    return (organisasjon && <Organisasjon organisasjon={organisasjon} erManuell slettHandle={slettHandle} />);
+    return (organisasjon && <Organisasjon organisasjon={organisasjon} slettHandle={slettHandle} />);
   }
+}
+
+ArbeidsgiverEnkelt.propTypes = {
+  organisasjon: MPT.Organisasjon.isRequired,
 }
 
 /** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
@@ -48,27 +35,6 @@ class ArbeidsgiverEnkelt extends Component {
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
 class EkstraArbeidsgivere extends Component {
-  state = {
-    visLeggTil: false, organisasjon: null, orgnr: '', feilmelding: null,
-  };
-
-  settFeilmelding = feilmelding => this.setState({ feilmelding });
-  settOrganisasjon = organisasjon => this.setState({ organisasjon });
-
-  forsokHentOrganisasjon = () => {
-    // 943049467
-    const { orgnr } = this.state;
-
-    if (erOrgnrGyldig(orgnr)) {
-      this.props.hentOrganisasjon(orgnr).then(response => {
-        const { data: organisasjon } = response;
-        const feilmelding = !organisasjon ? 'Fant ikke organisasjonen' : null;
-        this.settOrganisasjon(organisasjon);
-        this.settFeilmelding(feilmelding);
-      });
-    }
-  };
-
   leggTil = orgnr => {
     const { fields } = this.props;
     fields.push(orgnr);
@@ -78,57 +44,27 @@ class EkstraArbeidsgivere extends Component {
 
   };
 
-  toggleVisLeggTil = () => {
-    this.setState({ visLeggTil: !this.state.visLeggTil });
-  };
-
-  oppdaterOrgnrHandle = event => {
-    const { value } = event.target;
-    this.setState({ orgnr: value });
-    this.settFeilmelding(null);
-    this.settOrganisasjon(null);
-  };
-
   render () {
-    const {
-      toggleVisLeggTil, oppdaterOrgnrHandle, leggTil, forsokHentOrganisasjon,
-    } = this;
-    const { orgnr } = this.state;
-    const { fields } = this.props;
+    const { leggTil } = this;
+    const { fields, hentOrganisasjon, organisasjoner } = this.props;
+
+    console.log(organisasjoner)
 
     const alleEkstraArbeidsgivere = fields.getAll() || [];
 
     return (
-      <div className="panelSeksjon manuellArbeidsgiver">
-        {alleEkstraArbeidsgivere.map(arbeidsgiverOrg => <ArbeidsgiverEnkelt key={arbeidsgiverOrg} orgnr={arbeidsgiverOrg} />)}
-        <Nav.Container fluid>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              {!this.state.visLeggTil && <Nav.Knapp onClick={toggleVisLeggTil}>+ Legg til arbeidsgiver fra Aa-reg</Nav.Knapp> }
-              {this.state.visLeggTil && (
-                <Nav.Panel>
-                  <div className="leggTilArbeidsgiver__knapper">
-                    <Nav.Input
-                      value={orgnr}
-                      onChange={oppdaterOrgnrHandle}
-                      label="Søk etter orgnr / fnr"
-                      feil={this.state.feilmelding}
-                    />
-                    <Nav.Knapp onClick={forsokHentOrganisasjon}>Søk</Nav.Knapp>
-                  </div>
-                  <div>
-                    {this.state.organisasjon && <FunnetOrganisasjon organisasjon={this.state.organisasjon} leggTil={leggTil} />}
-                  </div>
-                </Nav.Panel>)
-              }
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Container>
+      <div className="panelSeksjon ekstraArbeidsgiver">
+        {alleEkstraArbeidsgivere.map(arbeidsgiverOrg => <ArbeidsgiverEnkelt key={uuid()} organisasjon={organisasjoner.find(organisasjon => organisasjon.orgnr === arbeidsgiverOrg)} />)}
+        <EkstraArbeidsgiverLeggTil leggTil={leggTil} hentOrganisasjon={hentOrganisasjon} />
       </div>
     );
   }
 }
 
-EkstraArbeidsgivere.propTypes = {};
+EkstraArbeidsgivere.propTypes = {
+  fields: PT.object.isRequired,
+  organisasjoner: MPT.Organisasjoner.isRequired,
+  hentOrganisasjon: PT.func.isRequired,
+};
 
 export default EkstraArbeidsgivere;
