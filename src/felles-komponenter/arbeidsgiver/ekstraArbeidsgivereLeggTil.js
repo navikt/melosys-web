@@ -1,0 +1,154 @@
+import React, { Component, Fragment } from 'react';
+import PT from 'prop-types';
+
+import * as Nav from '../../utils/navFrontend';
+import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
+
+import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
+
+/** Komponent for å vise organisasjonen som ble funnet ved søk.
+ *
+ * @param leggTil
+ * @param organisasjon
+ * @returns {*}
+ * @constructor
+ */
+const FunnetOrganisasjon = ({ leggTil, organisasjon }) => (
+  <Fragment>
+    <OrganisasjonsAdresse organisasjon={organisasjon} />
+    <Nav.Knapp onClick={() => leggTil(organisasjon.orgnr)}>Legg til</Nav.Knapp>
+  </Fragment>
+);
+
+FunnetOrganisasjon.propTypes = {
+  leggTil: PT.func.isRequired,
+  organisasjon: PT.object.isRequired,
+};
+
+/** Skjemavisning for å søke opp og legge til en arbeidsgiver.
+ *
+ * @param orgnrVerdi
+ * @param organisasjon
+ * @param leggTil
+ * @param feilmelding
+ * @param forsokHentOrganisasjon
+ * @param oppdaterOrgnrVerdi
+ * @returns {*}
+ * @constructor
+ */
+const SkjemaSokOgLeggTil = ({
+  orgnrVerdi,
+  organisasjon,
+  leggTil,
+  feilmelding,
+  forsokHentOrganisasjon,
+  oppdaterOrgnrVerdi,
+}) => {
+  const feilObjekt = feilmelding ? { feilmelding } : null;
+  return (
+    <Nav.Panel>
+      <div className="leggTilArbeidsgiver__knapper">
+        <Nav.Input
+          value={orgnrVerdi}
+          onChange={oppdaterOrgnrVerdi}
+          label="Søk etter orgnr / fnr"
+          feil={feilObjekt}
+        />
+        <Nav.Knapp onClick={forsokHentOrganisasjon}>Søk</Nav.Knapp>
+      </div>
+      <div>
+        {Object.keys(organisasjon).length > 0 && <FunnetOrganisasjon organisasjon={organisasjon} leggTil={leggTil} />}
+      </div>
+    </Nav.Panel>
+  );
+};
+
+SkjemaSokOgLeggTil.propTypes = {
+  feilmelding: PT.string.isRequired,
+  forsokHentOrganisasjon: PT.func.isRequired,
+  leggTil: PT.func.isRequired,
+  oppdaterOrgnrVerdi: PT.func.isRequired,
+  orgnrVerdi: PT.string.isRequired,
+  organisasjon: PT.object.isRequired,
+};
+
+/**
+ * Hovedkomponenten for å legge til arbeidsgiver som ikke ligger i Aa-reg.
+ * Dette gjelder spesielt for søknader frem i tid hvor arbeidsforhold kanskje
+ * ikke er registrert ennå
+ *
+ * @returns {*}
+ * @constructor
+ */
+class EkstraArbeidsgivereLeggTil extends Component {
+  state = {
+    erLeggTilSynlig: false, orgnrVerdi: '', organisasjon: {}, feilmelding: '',
+  };
+
+  settFeilmelding = feilmelding => this.setState({ feilmelding });
+  settOrganisasjon = organisasjon => this.setState({ organisasjon });
+
+  forsokHentOrganisasjon = () => {
+    // 943049467
+    const { orgnrVerdi } = this.state;
+
+    if (orgnrVerdi && erOrgnrGyldig(orgnrVerdi)) {
+      this.props.hentOrganisasjon(orgnrVerdi).then(response => {
+        const { data: organisasjon } = response;
+        const feilmelding = Object.keys(organisasjon).length === 0 ? 'Fant ikke organisasjonen' : '';
+        this.settOrganisasjon(organisasjon);
+        this.settFeilmelding(feilmelding);
+      });
+    } else {
+      this.settFeilmelding('Orgnr er ikke gyldig.');
+    }
+  };
+
+  leggTil = orgnr => {
+    this.props.leggTil(orgnr);
+    this.oppdaterOrgnrVerdi('');
+    this.settOrganisasjon({});
+    this.settFeilmelding('');
+    this.skjulLeggTil();
+  }
+
+  oppdaterOrgnrVerdi = verdi => {
+    this.setState({ orgnrVerdi: verdi });
+    this.settFeilmelding('');
+    this.settOrganisasjon({});
+  };
+
+  visLeggTil = () => this.setState({ erLeggTilSynlig: true });
+  skjulLeggTil = () => this.setState({ erLeggTilSynlig: false });
+
+  render() {
+    const {
+      oppdaterOrgnrVerdi, visLeggTil, forsokHentOrganisasjon, leggTil,
+    } = this;
+
+    const {
+      erLeggTilSynlig, orgnrVerdi, organisasjon, feilmelding,
+    } = this.state;
+
+    return (
+      <div>
+        {!erLeggTilSynlig && <Nav.Knapp onClick={visLeggTil}>+ Legg til arbeidsgiver fra Aa-reg</Nav.Knapp> }
+        {erLeggTilSynlig && <SkjemaSokOgLeggTil
+          orgnrVerdi={orgnrVerdi}
+          organisasjon={organisasjon}
+          feilmelding={feilmelding}
+          forsokHentOrganisasjon={forsokHentOrganisasjon}
+          oppdaterOrgnrVerdi={event => oppdaterOrgnrVerdi(event.target.value)}
+          leggTil={leggTil}
+        />}
+      </div>
+    );
+  }
+}
+
+EkstraArbeidsgivereLeggTil.propTypes = {
+  hentOrganisasjon: PT.func.isRequired,
+  leggTil: PT.func.isRequired,
+};
+
+export default EkstraArbeidsgivereLeggTil;
