@@ -1,7 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
-// import qs from 'qs';
+import qs from 'qs';
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -35,6 +35,24 @@ import './journalforing.css';
 import { OrganisasjonOperations } from '../ducks/organisasjon';
 import { PersonOperations } from '../ducks/person';
 
+const queryParamLogger = (journalpostID, oppgaveID, location) => {
+  const qsParsed = qs.parse(location.search.slice(1));
+  const url = `/journalforing/${journalpostID}/${oppgaveID}`;
+  // TODO Bytt console.log med logger.info()
+  /* eslint-disable */
+  if (qsParsed) {
+    if (qsParsed.kilde === 'GOSYS') {
+      const urlQuery = `${url}/?kilde=${qsParsed.kilde}`;
+      console.log('Deeplinked from GOSYS:', urlQuery);
+    } else {
+      console.log('Unknown external src:', qsParsed);
+    }
+  } else {
+    console.log('internal route:', url);
+  }
+  /* eslint-enable */
+};
+
 class Journalforing extends Component {
   static propTypes = {
     match: PT.object.isRequired,
@@ -65,9 +83,8 @@ class Journalforing extends Component {
 
   componentDidMount() {
     const { journalpostID, oppgaveID } = this.props.match.params;
-    // const qsParsed = qs.parse(this.props.location.search.slice(1));
-    // console.log(qsParsed); // TODO Fjern når vi har avklart hva vi skal gjøre med ?kilde=GOSYS
-    this.props.hentJournalOppgave(journalpostID, oppgaveID);
+    queryParamLogger(journalpostID, oppgaveID, this.props.location);
+    this.props.hentJournalOppgave(journalpostID);
   }
 
   /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
@@ -310,7 +327,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentJournalOppgave: (journalpostID, oppgaveID) => dispatch(journalforingOperations.hent(journalpostID, oppgaveID)),
+  hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
   hentFagsakListe: fnr => dispatch(fagsakOperations.sok(fnr)),
   settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
