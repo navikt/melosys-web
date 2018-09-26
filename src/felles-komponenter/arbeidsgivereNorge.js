@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
@@ -49,7 +49,7 @@ const ArbeidsgivereNorge = props => {
         hentOrganisasjon={hentOrganisasjon} />
     </div>
   );
-}
+};
 
 ArbeidsgivereNorge.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge.isRequired,

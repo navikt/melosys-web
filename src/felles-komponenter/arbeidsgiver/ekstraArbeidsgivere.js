@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 
-import * as Nav from '../../utils/navFrontend';
-import * as API from '../../services/api';
 import * as MPT from '../../proptypes';
 
 import Organisasjon from './organisasjon';
@@ -12,27 +10,24 @@ import './ekstraArbeidsgivere.css';
 
 const uuid = require('uuid/v4');
 
-class ArbeidsgiverEnkelt extends Component {
-  slettHandle = () => {
-
-  };
-
-  render() {
-    const { organisasjon } = this.props;
-    const { slettHandle } = this;
-
-    return (organisasjon && <Organisasjon organisasjon={organisasjon} slettHandle={slettHandle} />);
-  }
-}
+/** Enkeltlinje for juridisk arbeidsgiver. Vises som ekspanderbart panel på samme måte som de andre,
+ * men da uten inntekt og arbeidsforhold.
+ * @param organisasjon
+ * @param slettHandle
+ * @returns {*}
+ * @constructor
+ */
+const ArbeidsgiverEnkelt = ({ organisasjon, slettHandle }) => (
+  <Organisasjon organisasjon={organisasjon} slettHandle={slettHandle} />
+);
 
 ArbeidsgiverEnkelt.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
-}
+  slettHandle: PT.func.isRequired,
+};
 
-/** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
- * kun av komponenten Arbeidsforholdene.
- *
- * @param props Et objekt med det aktuelle arbeidsforholdet.
+/** Hovedkomponent for å liste ut og legge til ekstra arbeidsgivere. Denne connecter
+ * til Redux Form for å få tilgang til tilhørende FieldArray props.
  */
 class EkstraArbeidsgivere extends Component {
   leggTil = orgnr => {
@@ -41,20 +36,23 @@ class EkstraArbeidsgivere extends Component {
   };
 
   slett = indeks => {
-
+    const { fields } = this.props;
+    fields.remove(indeks);
   };
 
   render () {
-    const { leggTil } = this;
+    const { leggTil, slett } = this;
     const { fields, hentOrganisasjon, organisasjoner } = this.props;
-
-    console.log(organisasjoner)
 
     const alleEkstraArbeidsgivere = fields.getAll() || [];
 
     return (
-      <div className="panelSeksjon ekstraArbeidsgiver">
-        {alleEkstraArbeidsgivere.map(arbeidsgiverOrg => <ArbeidsgiverEnkelt key={uuid()} organisasjon={organisasjoner.find(organisasjon => organisasjon.orgnr === arbeidsgiverOrg)} />)}
+      <div className="panelSeksjon ekstraArbeidsgivere">
+        {alleEkstraArbeidsgivere.map((arbeidsgiverOrg, indeks) => <ArbeidsgiverEnkelt
+          key={uuid()}
+          slettHandle={() => slett(indeks)}
+          organisasjon={organisasjoner.find(organisasjon => organisasjon.orgnr === arbeidsgiverOrg)}
+        />)}
         <EkstraArbeidsgiverLeggTil leggTil={leggTil} hentOrganisasjon={hentOrganisasjon} />
       </div>
     );
