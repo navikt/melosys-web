@@ -3,46 +3,15 @@ import { KodeverkOperations } from './ducks/kodeverk/';
 import { oppgaverOperations } from './ducks/oppgaver/';
 // import { buildinfo } from './utils/utils';
 
-export default function loadInitialData(store) {
-  /* const logdata = {
-    message: 'loadInitalData',
-    buildinfo: buildinfo(),
-  }; */
-  /* window.frontendlogger.info(logdata); */
-  store.dispatch(saksbehandlerOperations.hent())
-    .then(response => {
-      if (!response) {
-        /* window.frontendlogger.error({
-          message: 'Failed to load saksbehandler',
-        }); */
-      }
-      if (response.type === saksbehandlerTypes.OK) {
-        /* window.frontendlogger.info({
-          saksbehandler: response.data,
-        }); */
-        store.dispatch(KodeverkOperations.hent()).then(kresponse => {
-          if (kresponse) {
-            /* window.frontendlogger.info({
-              message: 'Kodeverk loaded',
-            }); */
-          } else {
-            /* window.frontendlogger.error({
-              message: 'Kodeverk FAILED loading',
-            }); */
-          }
-        });
-
-        store.dispatch(oppgaverOperations.hent()).then(oresponse => {
-          if (oresponse) {
-            /* window.frontendlogger.info({
-              message: 'Oppgaver loaded',
-            }); */
-          } else {
-            /* window.frontendlogger.error({
-              message: 'Oppgaver FAILED loading',
-            }); */
-          }
-        });
-      }
-    });
+export default async function loadInitialData(store) {
+  let res;
+  try {
+    res = await store.dispatch(saksbehandlerOperations.hent());
+    if (res && res.type === saksbehandlerTypes.OK) {
+      await store.dispatch(KodeverkOperations.hent());
+      await store.dispatch(oppgaverOperations.hent());
+    }
+  } catch (e) {
+    console.log(e);
+  }
 }
