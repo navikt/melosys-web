@@ -29,7 +29,7 @@ export function print(response) {
 }
 
 export function sendResultatTilDispatch(dispatch, action, validering) {
-  return (...data) => {
+  return async (...data) => {
     const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
     if (validering && typeof validering === 'function') {
       validering(dispatch, dataSomSkalDispatches);
@@ -258,9 +258,9 @@ export function postAsJson(url, data = {}) {
 }
 
 export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     if (PENDING) {
-      dispatch({ type: PENDING });
+      await dispatch({ type: PENDING });
     }
     return api(dispatch, getState)
       .then(sendResultatTilDispatch(dispatch, OK, validering))
