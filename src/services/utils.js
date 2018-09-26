@@ -201,7 +201,7 @@ const cachedFetch = (url, cacheDurationSec) => {
   }).then(toJson);
 };
 
-export function fetchToJson(url, config = {}) {
+export async function fetchToJson(url, config = {}) {
   /*
 if (config.headers) {
   for (let entry of config.headers) {
@@ -210,9 +210,11 @@ if (config.headers) {
 }
 */
 
-  return fetch(url, config) // eslint-disable-line no-undef
-    .then(sjekkStatuskode)
-    .then(toJson);
+  let response;
+  response = await fetch(url, config); // eslint-disable-line no-undef
+  response = await sjekkStatuskode(response);
+  response = await toJson(response);
+  return response;
 }
 
 function methodToJson(method, url, data) {

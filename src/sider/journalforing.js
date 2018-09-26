@@ -81,10 +81,10 @@ class Journalforing extends Component {
     journalforingSkjemaVerdier: {},
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { journalpostID, oppgaveID } = this.props.match.params;
     queryParamLogger(journalpostID, oppgaveID, this.props.location);
-    this.props.hentJournalOppgave(journalpostID);
+    await this.props.hentJournalOppgave(journalpostID);
   }
 
   /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne

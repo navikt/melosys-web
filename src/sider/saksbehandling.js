@@ -110,16 +110,15 @@ class Saksbehandling extends Component {
     visOppfriskDialog: false,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { snr } = this.props.match.params;
-    this.props.hentFagsaker(snr).then(response => {
-      const { behandlinger } = response.data;
-      if (!behandlinger) return false;
-      const { oppsummering: { behandlingID } } = behandlinger[0];
-      this.props.hentSoknad(behandlingID);
-      this.props.hentFaktaavklaring(behandlingID);
-      return true;
-    });
+    const response = await this.props.hentFagsaker(snr);
+    const { behandlinger } = response.data;
+    if (!behandlinger) return false;
+    const { oppsummering: { behandlingID } } = behandlinger[0];
+    await this.props.hentSoknad(behandlingID);
+    await this.props.hentFaktaavklaring(behandlingID);
+    return true;
   }
 
   componentWillReceiveProps(nextProps) {
