@@ -120,13 +120,14 @@ class Journalforing extends Component {
     } = journalforingSkjemaVerdier;
 
     const { ID: dokumentID } = dokument;
-
     return {
       journalpostID,
       oppgaveID,
       brukerID,
       avsenderID,
       avsenderNavn,
+      arbeidsgiverID: '910253158',
+      representantID: '910253158',
       dokumentID,
       dokumenttittel: dokumentTittel,
       vedleggstitler: vedleggsTitler,
@@ -226,6 +227,7 @@ class Journalforing extends Component {
     }
 
     const fagsak = {
+      type: 'EU_EOS', // FIXME, fjern hardkoding, og endre fra type => saksetype
       soknadsperiode: {
         fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
         tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
