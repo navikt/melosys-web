@@ -24,7 +24,8 @@ const VurderingVedtak = props => {
     gyldigeOppholdLand,
     oppholdPeriode,
     alleLandkoder,
-    lovvalg,
+    alleLovvalg,
+    lovvalgKode,
   } = props;
 
   const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
@@ -34,9 +35,12 @@ const VurderingVedtak = props => {
     .map(enkeltLandKode => kodeverkObjektTilTerm(enkeltLandKode))
     .join(', ');
 
+  const lovvalgObjekt = finnEnkeltKodeFraListe(lovvalgKode, alleLovvalg);
+  const lovvalgTerm = lovvalgObjekt && kodeverkObjektTilKode(lovvalgObjekt);
+
   return (
     <div className="vedtak">
-      <Nav.Undertittel>Medlemskap i norsk folketrygd innvilges etter artikkel {kodeverkObjektTilKode(lovvalg)}:</Nav.Undertittel>
+      <Nav.Undertittel>Medlemskap i norsk folketrygd innvilges etter artikkel {lovvalgTerm}:</Nav.Undertittel>
       <div>
         <Nav.Row className="vedtak__oppsummering">
           <Nav.Column xs="6">
@@ -65,18 +69,20 @@ const VurderingVedtak = props => {
 };
 
 VurderingVedtak.propTypes = {
-  lovvalg: MPT.Kodeverk.isRequired,
+  lovvalgKode: PT.string.isRequired,
   fattVedtak: PT.func.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 const mapStateToProps = state => ({
-  lovvalg: faktaavklaringSelectors.FaktaavklaringLovvalgSelector(state),
+  lovvalgKode: faktaavklaringSelectors.FaktaavklaringLovvalgKodeSelector(state),
   gyldigeOppholdLand: faktaavklaringSelectors.FaktaavklaringGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandSelector(state).oppholdsPeriode,
   alleLandkoder: KodeverkSelectors.landkoderSelector(state),
+  alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVedtak);

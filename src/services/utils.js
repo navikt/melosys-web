@@ -1,5 +1,3 @@
-import * as Validering from '../felles-komponenter/skjema/validering';
-
 export const STATUS = {
   NOT_STARTED: 'NOT_STARTED',
   PENDING: 'PENDING',
@@ -30,10 +28,12 @@ export function print(response) {
   return response;
 }
 
-export function sendResultatTilDispatch(dispatch, action) {
+export function sendResultatTilDispatch(dispatch, action, validering) {
   return (...data) => {
     const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
-    Validering.Felles.forsokValidering(dispatch, dataSomSkalDispatches);
+    if (validering && typeof validering === 'function') {
+      validering(dispatch, dataSomSkalDispatches);
+    }
 
     return dispatch({ type: action, data: dataSomSkalDispatches });
   };
@@ -255,13 +255,13 @@ export function postAsJson(url, data = {}) {
   return methodToJson('POST', url, data);
 }
 
-export function doThenDispatch(fn, { OK, FEILET, PENDING }) {
+export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
   return (dispatch, getState) => {
     if (PENDING) {
       dispatch({ type: PENDING });
     }
-    return fn(dispatch, getState)
-      .then(sendResultatTilDispatch(dispatch, OK))
+    return api(dispatch, getState)
+      .then(sendResultatTilDispatch(dispatch, OK, validering))
       .catch(handterFeil(dispatch, FEILET));
   };
 }

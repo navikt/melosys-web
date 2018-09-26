@@ -9,7 +9,7 @@ const kodeverkObjektTilKode = kodeverkObjekt => {
 };
 
 const finnEnkeltKodeFraListe = (kodeSomSkalFinnes, kodeverkListe) => (
-  kodeverkListe.find(enkelt => enkelt.kode === kodeSomSkalFinnes) || {}
+  kodeverkListe.find(enkelt => enkelt.kode === kodeSomSkalFinnes) || undefined
 );
 
 export {
