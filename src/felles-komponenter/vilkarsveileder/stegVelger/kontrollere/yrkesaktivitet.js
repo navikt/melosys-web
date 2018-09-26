@@ -13,7 +13,7 @@ class Yrkesaktivitet extends Steg {
         nesteSteg: STEG.TJENESTEMANN,
       },
       {
-        beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG ansattISektor ER LIK "SOKKEL"',
+        beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV" OG ansattISektor ER LIK "SOKKEL"',
         exec: ({ sysselsettingType, ansattISektor }) => (
           sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
           ansattISektor === VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG
@@ -21,9 +21,17 @@ class Yrkesaktivitet extends Steg {
         nesteSteg: STEG.AKTIVITET,
       },
       {
+        beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV"',
+        exec: ({ sysselsettingType, yrkesaktivitetType }) => (
+          sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
+          yrkesaktivitetType === VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER
+        ),
+        nesteSteg: STEG.FORUTGAENDE_MEDLEMSKAP,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.FORUTGAENDE_MEDLEMSKAP,
+        nesteSteg: STEG.VEDTAK,
       },
     ];
     this._id = STEG.YRKESAKTIVITET;

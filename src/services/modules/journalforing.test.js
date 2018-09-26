@@ -4,11 +4,10 @@ describe('Journalforing endepunkt', () => {
   beforeEach(() => {
     fetch.resetMocks();
   });
-
-  test('GET /api/journalforing', () => {
+  test('GET /api/journalforing/:journalpostID/:oppgaveID', () => {
     const oppgave = {
       brukerID: '30098000492',
-      avsenderID: '30098000492',
+      avsenderID: null,
       erBrukerAvsender: true,
       dokument: {
         ID: 'Dok_ID',
@@ -18,14 +17,16 @@ describe('Journalforing endepunkt', () => {
     };
     fetch.mockResponseOnce(JSON.stringify(oppgave));
 
+    const journalpostID = 'DOK_3789';
+    const oppgaveID = '30098000492';
     // assert on the response
-    Journalforing.hent(4).then(res => {
+    Journalforing.hent(journalpostID, oppgaveID).then(res => {
       expect(res).toEqual(oppgave);
     });
 
     // assert on the times called and arguments given to fetch
     expect(fetch.mock.calls.length).toEqual(1);
-    expect(fetch.mock.calls[0][0]).toEqual('/api/journalforing/4');
+    expect(fetch.mock.calls[0][0]).toEqual(`/api/journalforing/${journalpostID}/${oppgaveID}`);
   });
 
   test('POST /api/journalforing/opprett', () => {
