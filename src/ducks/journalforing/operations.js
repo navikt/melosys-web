@@ -12,8 +12,8 @@ import * as Api from '../../services/api';
 import * as Types from './types';
 
 // eslint-disable-next-line import/prefer-default-export
-export function hent(journalpostID, oppgaveID) {
-  return doThenDispatch(() => Api.Journalforing.hent(journalpostID, oppgaveID), {
+export function hent(journalpostID) {
+  return doThenDispatch(() => Api.Journalforing.hent(journalpostID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
