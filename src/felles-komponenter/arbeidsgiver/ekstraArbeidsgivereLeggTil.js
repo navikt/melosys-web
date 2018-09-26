@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
@@ -14,10 +14,11 @@ import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
  * @constructor
  */
 const FunnetOrganisasjon = ({ leggTil, organisasjon }) => (
-  <Fragment>
+  <Nav.Panel border>
+    <Nav.Undertittel>Fant følgende organisasjon:</Nav.Undertittel>
     <OrganisasjonsAdresse organisasjon={organisasjon} />
-    <Nav.Knapp onClick={() => leggTil(organisasjon.orgnr)}>Legg til</Nav.Knapp>
-  </Fragment>
+    <Nav.Knapp onClick={() => leggTil(organisasjon.orgnr)} className="knapp">Legg til</Nav.Knapp>
+  </Nav.Panel>
 );
 
 FunnetOrganisasjon.propTypes = {
@@ -47,16 +48,16 @@ const SkjemaSokOgLeggTil = ({
   const feilObjekt = feilmelding ? { feilmelding } : null;
   return (
     <Nav.Panel>
-      <div className="leggTilArbeidsgiver__knapper">
+      <div className="sokArbeidsgiver">
         <Nav.Input
           value={orgnrVerdi}
           onChange={oppdaterOrgnrVerdi}
-          label="Søk etter orgnr / fnr"
+          label="Søk etter orgnr:"
           feil={feilObjekt}
         />
         <Nav.Knapp onClick={forsokHentOrganisasjon}>Søk</Nav.Knapp>
       </div>
-      <div>
+      <div className="leggTilArbeidsgiver">
         {Object.keys(organisasjon).length > 0 && <FunnetOrganisasjon organisasjon={organisasjon} leggTil={leggTil} />}
       </div>
     </Nav.Panel>
@@ -90,6 +91,7 @@ class EkstraArbeidsgivereLeggTil extends Component {
 
   forsokHentOrganisasjon = () => {
     // 943049467
+    // 982683955
     const { orgnrVerdi } = this.state;
 
     if (orgnrVerdi && erOrgnrGyldig(orgnrVerdi)) {

@@ -43,7 +43,7 @@ const Organisasjon = ({ organisasjon, slettHandle }) => {
               </dl>
             </Nav.Column>
             <Nav.Column xs="6" className="organisasjon__slettwrapper">
-              <div className="organisasjon__slett">
+              <div className="organisasjon__slettknapp">
                 <Nav.Knapp onClick={slettHandle}>Slett</Nav.Knapp>
               </div>
             </Nav.Column>
