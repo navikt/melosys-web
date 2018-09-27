@@ -9,9 +9,10 @@ import { oppgaverOperations } from '../../ducks/oppgaver';
 import * as Skjema from '../skjema';
 
 class Journalforing extends Component {
-  submitOgVideresend = values => {
-    const { sendSkjema } = this.props;
-    sendSkjema(values.fagomrade).then(redirectURL => this.props.history.push(redirectURL));
+  submitOgVideresend = async values => {
+    const { sendSkjema, history } = this.props;
+    const redirectURL = await sendSkjema(values.fagomrade);
+    history.push(redirectURL);
   };
   overrideDefaultSubmit = event => {
     event.preventDefault();
