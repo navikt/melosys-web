@@ -94,8 +94,6 @@ class EkstraArbeidsgivereLeggTil extends Component {
   settOrganisasjon = organisasjon => this.setState({ organisasjon });
 
   forsokHentOrganisasjon = () => {
-    // 943049467
-    // 982683955
     const { orgnrVerdi } = this.state;
 
     if (orgnrVerdi && erOrgnrGyldig(orgnrVerdi)) {
