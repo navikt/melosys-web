@@ -217,7 +217,7 @@ if (config.headers) {
   return response;
 }
 
-function methodToJson(method, url, data) {
+async function methodToJson(method, url, data) {
   const headers = {
     Accept: 'application/json',
     'Accept-Charset': 'UTF-8',
@@ -250,10 +250,10 @@ function methodToJson(method, url, data) {
 export function cachedGetAsJson(url, cacheDurationSec = 60) {
   return cachedFetch(url, cacheDurationSec);
 }
-export function getAsJson(url) {
+export async function getAsJson(url) {
   return methodToJson('GET', url);
 }
-export function postAsJson(url, data = {}) {
+export async function postAsJson(url, data = {}) {
   return methodToJson('POST', url, data);
 }
 

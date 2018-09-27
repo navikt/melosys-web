@@ -138,7 +138,7 @@ class Journalforing extends Component {
    * relevante felter før saken tilordnes (sendes til API) og saksbehandler returneres til forsiden.
    * @returns {boolean}
    */
-  knyttTilEksisterendeSak = () => {
+  knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
@@ -157,47 +157,48 @@ class Journalforing extends Component {
       settFeilFelt('vedleggsTitler', 'saksnummer');
       return false;
     }
-
-    tilordneSak(vasketJournalforing).then(response => {
-      if (response.ok) {
-        history.push('/');
-      }
-    });
+    const response = await tilordneSak(vasketJournalforing);
+    if (response.ok) {
+      history.push('/');
+    }
   };
 
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
    * Derfor, sjekk dette før vi evt kaller sokFnrDnr.
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
    */
-  hentOgVisBruker = brukerID => {
+  hentOgVisBruker = async brukerID => {
     if (!Person.erGyldigFnr(brukerID) && !Person.erGyldigDnr(brukerID)) { return; }
 
     const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
-
-    return sokFnrDnr(brukerID)
-      .then(({ sammensattNavn = '' }) => {
-        if (!sammensattNavn) { return false; }
-        settFeltInnhold('brukerNavn', sammensattNavn);
-        hentFagsakListe(brukerID);
-        return { brukerID, sammensattNavn };
-      });
+    const response = await sokFnrDnr(brukerID);
+    const { sammensattNavn = '' } = response;
+    if (!sammensattNavn) { return false; }
+    settFeltInnhold('brukerNavn', sammensattNavn);
+    await hentFagsakListe(brukerID);
+    return { brukerID, sammensattNavn };
   };
 
   /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller er et gyldig FNR || DNR.
    * Avsender kan være både person og organisasjon.
    * @param value {string} Verdien vi ønsker å sjekke på.
    */
-  hentOgVisAvsender = value => {
+  hentOgVisAvsender = async value => {
     const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
 
     if (!value) { return; }
 
     if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
-      return sokOrgnr(value).then(({ navn = '' }) => settFeltInnhold('avsenderNavn', navn));
+      const response = await sokOrgnr(value);
+      const { navn = '' } = response;
+      settFeltInnhold('avsenderNavn', navn);
+      return;
     }
 
     if (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) {
-      return sokFnrDnr(value).then(({ sammensattNavn = '' }) => settFeltInnhold('avsenderNavn', sammensattNavn));
+      const response = await sokFnrDnr(value);
+      const { sammensattNavn = '' } = response;
+      settFeltInnhold('avsenderNavn', sammensattNavn);
     }
   };
 
@@ -205,7 +206,7 @@ class Journalforing extends Component {
    * relevante felter før ny sak opprettes (sendes til API) og saksbehandler returneres til forsiden.
    * @returns {boolean}
    */
-  opprettFagsak = () => {
+  opprettFagsak = async () => {
     /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
@@ -236,12 +237,10 @@ class Journalforing extends Component {
     };
 
     const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
-
-    opprettNySak(journalforingData).then(response => {
-      if (response.ok) {
-        history.push('/');
-      }
-    });
+    const response = opprettNySak(journalforingData);
+    if (response.ok) {
+      history.push('/');
+    }
   };
 
   touchAll = (alleFeil = {}) => {
