@@ -55,6 +55,7 @@ import Dialogboks from '../felles-komponenter/dialogboks';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
+import DialogboksVenter from "../felles-komponenter/dialogboksVenter";
 
 class Saksbehandling extends Component {
   static propTypes = {
@@ -108,6 +109,7 @@ class Saksbehandling extends Component {
   state = {
     gyldigePaneler: {},
     visOppfriskDialog: false,
+    visOppfriskDialogPagar: false,
   };
 
   componentDidMount() {
@@ -151,12 +153,17 @@ class Saksbehandling extends Component {
   oppfriskSaksopplysninger = () => {
     const { behandlingID } = this.props.oppsummering;
 
+    this.visOppfriskningPagar();
     this.props.oppfriskFagsaker(behandlingID).then(response => {
       if (response.ok) {
-        this.skjulOppfriskBekreftelse();
-        this.props.history.push('/');
+        this.navigerTilOversiktSide();
       }
     });
+  };
+
+  navigerTilOversiktSide = () => {
+    this.skjulOppfriskBekreftelse();
+    this.props.history.push('/');
   };
 
   visOppfriskBekreftelse = () => {
@@ -165,6 +172,11 @@ class Saksbehandling extends Component {
 
   skjulOppfriskBekreftelse = () => {
     this.setState({ visOppfriskDialog: false });
+  };
+
+  visOppfriskningPagar = () => {
+    this.setState({ visOppfriskDialog: false });
+    this.setState({ visOppfriskDialogPagar: true });
   };
 
   /* eslint-disable */
@@ -235,6 +247,12 @@ class Saksbehandling extends Component {
           bekreft={this.oppfriskSaksopplysninger}
           avbryt={this.skjulOppfriskBekreftelse}
           synlig={this.state.visOppfriskDialog}
+        />
+        <DialogboksVenter
+          tittel="Oppdaterer registeropplysninger"
+          tekst="Oppdatering av registeropplysning kan ta noen minutter, venligst vent."
+          synlig={this.state.visOppfriskDialogPagar}
+          skjul={this.navigerTilOversiktSide}
         />
       </div>
     );
