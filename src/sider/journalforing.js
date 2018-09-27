@@ -237,7 +237,7 @@ class Journalforing extends Component {
     };
 
     const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
-    const response = opprettNySak(journalforingData);
+    const response = await opprettNySak(journalforingData);
     if (response.ok) {
       history.push('/');
     }
@@ -331,7 +331,7 @@ const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
   hentFagsakListe: fnr => dispatch(fagsakOperations.sok(fnr)),
   settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
-  settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
+  settFeilFelt: (...feltNavn) => (setSubmitFailed('journalforing', ...feltNavn)),
   settJournalforingHensikt: journalforingHensikt => dispatch(change('journalforing', 'journalforingHensikt', journalforingHensikt)),
   opprettNySak: data => Api.Journalforing.opprett(data),
   tilordneSak: data => Api.Journalforing.tilordne(data),
