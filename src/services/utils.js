@@ -40,19 +40,18 @@ export function sendResultatTilDispatch(dispatch, action, validering) {
 }
 
 export function handterFeil(dispatch, action) {
-  return error => {
+  return async error => {
     if (error.response) {
-      error.response.text().then(data => {
-        console.error(error, error.stack, data); // eslint-disable-line no-console
-        /* window.frontendlogger.error({
-          error,
-          stack: error.stack,
-          data,
-        }); */
-        dispatch({
-          type: action,
-          data: { response: error.response, data },
-        });
+      const data = await error.response.text();
+      console.error(error, error.stack, data); // eslint-disable-line no-console
+      /* window.frontendlogger.error({
+        error,
+        stack: error.stack,
+        data,
+      }); */
+      await dispatch({
+        type: action,
+        data: { response: error.response, data },
       });
     } else {
       console.error(error, error.stack); // eslint-disable-line no-console
@@ -61,7 +60,7 @@ export function handterFeil(dispatch, action) {
         stack: error.stack,
         data: error.toString(),
       }); */
-      dispatch({ type: action, data: error.toString() });
+      await dispatch({ type: action, data: error.toString() });
     }
   };
 }
