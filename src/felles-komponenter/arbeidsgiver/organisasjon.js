@@ -44,7 +44,7 @@ const Organisasjon = ({ organisasjon, slettHandle }) => {
             </Nav.Column>
             <Nav.Column xs="6" className="organisasjon__slettwrapper">
               <div className="organisasjon__slettknapp">
-                <Nav.Knapp onClick={slettHandle}>Slett</Nav.Knapp>
+                { slettHandle && <Nav.Knapp onClick={slettHandle}>Slett</Nav.Knapp> }
               </div>
             </Nav.Column>
           </Nav.Row>

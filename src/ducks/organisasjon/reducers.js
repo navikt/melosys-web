@@ -20,8 +20,10 @@ export default function reducer(state = initalState, action) {
     case Types.FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.OK: {
-      const nyData = Array.isArray(action.data) ? [...state.data, ...action.data] : [...state.data, action.data];
-      return { ...state, status: STATUS.OK, data: nyData };
+      const eksiterendeOrganisasjoner = [...state.data];
+      const normalisertOrganisasjonsArray = Array.isArray(action.data) ? [...action.data] : [action.data];
+      const nyeOrganisasjoner = normalisertOrganisasjonsArray.filter(organisasjon => !eksiterendeOrganisasjoner.find(eksisterende => eksisterende.orgnr === organisasjon.orgnr));
+      return { ...state, status: STATUS.OK, data: [...eksiterendeOrganisasjoner, ...nyeOrganisasjoner] };
     }
     default:
       return state;

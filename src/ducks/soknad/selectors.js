@@ -1,5 +1,7 @@
 import { createSelector } from 'reselect';
 
+import { OrganisasjonSelectors } from '../organisasjon';
+
 /**
  * Selectors
  * -----------------------------------------------------------------------------------------
@@ -43,6 +45,15 @@ export const ForetakUtlandSelector = createSelector(
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(
   state => state.soknad.data.soeknadDokument && state.soknad.data.soeknadDokument.juridiskArbeidsgiverNorge,
   soknad => soknad || {}
+);
+
+export const EkstraArbeidsgivereSelector = createSelector(
+  state => JuridiskArbeidsgiverNorgeSelector(state),
+  state => OrganisasjonSelectors.organisasjonSelector(state),
+  (juridiskArbeidsgiver, organisasjoner) => {
+    const { ekstraArbeidsgivere } = juridiskArbeidsgiver;
+    return organisasjoner.filter(organisasjon => ekstraArbeidsgivere.includes(organisasjon.orgnr));
+  }
 );
 
 export const OppholdUtlandSelector = createSelector(

@@ -34,6 +34,7 @@ FunnetOrganisasjon.propTypes = {
  * @param feilmelding
  * @param forsokHentOrganisasjon
  * @param oppdaterOrgnrVerdi
+ * @param avbryt
  * @returns {*}
  * @constructor
  */
@@ -44,6 +45,7 @@ const SkjemaSokOgLeggTil = ({
   feilmelding,
   forsokHentOrganisasjon,
   oppdaterOrgnrVerdi,
+  avbryt,
 }) => {
   const feilObjekt = feilmelding ? { feilmelding } : null;
   return (
@@ -55,7 +57,8 @@ const SkjemaSokOgLeggTil = ({
           label="Søk etter orgnr:"
           feil={feilObjekt}
         />
-        <Nav.Knapp onClick={forsokHentOrganisasjon}>Søk</Nav.Knapp>
+        <Nav.Hovedknapp onClick={forsokHentOrganisasjon}>Søk</Nav.Hovedknapp>
+        <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
       </div>
       <div className="leggTilArbeidsgiver">
         {Object.keys(organisasjon).length > 0 && <FunnetOrganisasjon organisasjon={organisasjon} leggTil={leggTil} />}
@@ -65,6 +68,7 @@ const SkjemaSokOgLeggTil = ({
 };
 
 SkjemaSokOgLeggTil.propTypes = {
+  avbryt: PT.func.isRequired,
   feilmelding: PT.string.isRequired,
   forsokHentOrganisasjon: PT.func.isRequired,
   leggTil: PT.func.isRequired,
@@ -112,7 +116,7 @@ class EkstraArbeidsgivereLeggTil extends Component {
     this.settOrganisasjon({});
     this.settFeilmelding('');
     this.skjulLeggTil();
-  }
+  };
 
   oppdaterOrgnrVerdi = verdi => {
     this.setState({ orgnrVerdi: verdi });
@@ -125,7 +129,7 @@ class EkstraArbeidsgivereLeggTil extends Component {
 
   render() {
     const {
-      oppdaterOrgnrVerdi, visLeggTil, forsokHentOrganisasjon, leggTil,
+      oppdaterOrgnrVerdi, visLeggTil, skjulLeggTil, forsokHentOrganisasjon, leggTil,
     } = this;
 
     const {
@@ -134,14 +138,15 @@ class EkstraArbeidsgivereLeggTil extends Component {
 
     return (
       <div>
-        {!erLeggTilSynlig && <Nav.Knapp onClick={visLeggTil}>+ Legg til arbeidsgiver fra Aa-reg</Nav.Knapp> }
+        {!erLeggTilSynlig && <Nav.Knapp onClick={visLeggTil}>+ Legg til arbeidsgiver</Nav.Knapp> }
         {erLeggTilSynlig && <SkjemaSokOgLeggTil
-          orgnrVerdi={orgnrVerdi}
-          organisasjon={organisasjon}
+          avbryt={skjulLeggTil}
           feilmelding={feilmelding}
           forsokHentOrganisasjon={forsokHentOrganisasjon}
-          oppdaterOrgnrVerdi={event => oppdaterOrgnrVerdi(event.target.value)}
           leggTil={leggTil}
+          oppdaterOrgnrVerdi={event => oppdaterOrgnrVerdi(event.target.value)}
+          orgnrVerdi={orgnrVerdi}
+          organisasjon={organisasjon}
         />}
       </div>
     );
