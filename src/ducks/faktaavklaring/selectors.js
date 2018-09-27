@@ -7,10 +7,8 @@
  */
 
 import { createSelector } from 'reselect';
-import { getFormValues } from 'redux-form';
-
-import Regler from '../../regler';
 import { fagsakSelectors } from '../fagsaker/';
+import { soknadSelectors } from '../soknad';
 
 // selector(s)
 export const FaktaavklaringSelector = createSelector(
@@ -131,18 +129,14 @@ export const FaktaavklaringValgteArbeidsgivereDetaljerSelector = createSelector(
 export const ArbeidsgivereIPeriodenSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => fagsakSelectors.OrganisasjonerSelector(state),
-  state => getFormValues('soknad')(state),
-  (arbeidsforholdene, organisasjoner, skjema) => {
-    const regler = new Regler(skjema);
-    const arbeidsforholdIPerioden = arbeidsforholdene
-      .filter(arbeidsforholdet => (
-        regler.arbeid().erArbeidsforholdetRelevantForSoknadsperioden(arbeidsforholdet.ansettelsesPeriode).status
-      ));
-
-    return organisasjoner.reduce((samling, organisasjonen) => {
-      const organisasjonenHarArbeidsforholdIPerioden = arbeidsforholdIPerioden.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
-      return organisasjonenHarArbeidsforholdIPerioden ? [...samling, organisasjonen] : [...samling];
+  state => soknadSelectors.EkstraArbeidsgivereSelector(state),
+  (arbeidsforholdene, organisasjoner, ekstraArbeidsgivere) => {
+    const relevanteOrganisasjoner = organisasjoner.reduce((samling, organisasjonen) => {
+      const organisasjonenHarArbeidsforhold = arbeidsforholdene.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
+      return organisasjonenHarArbeidsforhold ? [...samling, organisasjonen] : [...samling];
     }, []);
+
+    return [...relevanteOrganisasjoner, ...ekstraArbeidsgivere];
   }
 );
 

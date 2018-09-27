@@ -30,6 +30,15 @@ ArbeidsgiverEnkelt.propTypes = {
  * til Redux Form for å få tilgang til tilhørende FieldArray props.
  */
 class EkstraArbeidsgivere extends Component {
+  componentDidUpdate(prevProps) {
+    const gammelListe = prevProps.fields.getAll() || [];
+    const nyListe = this.props.fields.getAll() || [];
+
+    if (gammelListe.join('') !== nyListe.join('')) {
+      this.props.oppdaterSoknadState();
+    }
+  }
+
   leggTil = orgnr => {
     const { fields } = this.props;
     fields.push(orgnr);
@@ -63,6 +72,7 @@ EkstraArbeidsgivere.propTypes = {
   fields: PT.object.isRequired,
   organisasjoner: MPT.Organisasjoner.isRequired,
   hentOrganisasjon: PT.func.isRequired,
+  oppdaterSoknadState: PT.func.isRequired,
 };
 
 export default EkstraArbeidsgivere;

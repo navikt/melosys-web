@@ -6,8 +6,9 @@ import PT from 'prop-types';
 import * as MPT from '../proptypes/';
 
 import { fagsakSelectors } from '../ducks/fagsaker';
-import { soknadSelectors } from '../ducks/soknad';
+import { soknadSelectors, soknadActions } from '../ducks/soknad';
 import { OrganisasjonOperations, OrganisasjonSelectors } from '../ducks/organisasjon';
+import { formSelectors } from '../ducks/form/';
 
 import Organisasjon from './arbeidsgiver/organisasjon';
 import Arbeidsforholdene from './arbeidsgiver/arbeidsforhold';
@@ -46,7 +47,8 @@ const ArbeidsgivereNorge = props => {
         name="ekstraArbeidsgivere"
         component={EkstraArbeidsgivere}
         organisasjoner={organisasjoner}
-        hentOrganisasjon={hentOrganisasjon} />
+        hentOrganisasjon={hentOrganisasjon}
+        oppdaterSoknadState={() => props.oppdaterSoknadState(props.skjema)} />
     </div>
   );
 };
@@ -55,16 +57,20 @@ ArbeidsgivereNorge.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge.isRequired,
   organisasjoner: MPT.Organisasjoner.isRequired,
   hentOrganisasjon: PT.func.isRequired,
+  skjema: PT.object.isRequired,
+  oppdaterSoknadState: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
   organisasjoner: OrganisasjonSelectors.organisasjonSelector(state),
+  skjema: formSelectors.SoknadenFormSelector(state).values,
 });
 
 const mapDispatchToProps = dispatch => ({
   hentOrganisasjon: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
+  oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArbeidsgivereNorge);
