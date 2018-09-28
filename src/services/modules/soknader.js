@@ -3,12 +3,12 @@ import { API_BASE_URL } from '../api-constants';
 import { getAsJson, postAsJson } from '../utils';
 
 
-function hent(bid) {
+async function hent(bid) {
   const URI_SOKNADER = `${API_BASE_URL}soknader/${bid}`;
   return getAsJson(URI_SOKNADER);
 }
 
-function send(bid, soknad) {
+async function send(bid, soknad) {
   const URI_SOKNAD = `${API_BASE_URL}soknader/${bid}`;
   return postAsJson(URI_SOKNAD, soknad);
 }
