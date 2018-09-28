@@ -27,7 +27,8 @@ class Behandling extends Component {
 
   submitOgVideresend = async form => {
     const { handleSubmit, history } = this.props;
-    const redirectURL = handleSubmit(form);
+    const redirectURL = await handleSubmit(form);
+
     /* eslint-disable no-alert */
     if (!redirectURL) { return alert('Ingen oppgaver finnes. Videre funksjonalitet ikke implementert.'); }
     /* eslint-enable */

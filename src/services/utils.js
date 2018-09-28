@@ -210,11 +210,9 @@ if (config.headers) {
 }
 */
 
-  let response;
-  response = await fetch(url, config); // eslint-disable-line no-undef
-  response = await sjekkStatuskode(response);
-  response = await toJson(response);
-  return response;
+  const fetchResponse = await fetch(url, config); // eslint-disable-line no-undef
+  const sjekketResponse = await sjekkStatuskode(fetchResponse);
+  return toJson(sjekketResponse);
 }
 
 async function methodToJson(method, url, data) {
