@@ -211,7 +211,7 @@ if (config.headers) {
 */
 
   const fetchResponse = await fetch(url, config); // eslint-disable-line no-undef
-  const sjekketResponse = await sjekkStatuskode(fetchResponse);
+  const sjekketResponse = sjekkStatuskode(fetchResponse);
   return toJson(sjekketResponse);
 }
 
