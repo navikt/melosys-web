@@ -17,10 +17,10 @@ import './sok.css';
 const uuid = require('uuid/v4');
 
 class Sok extends Component {
-  componentWillMount() {
+  async componentWillMount() {
     const { match, hentBehandlingsOppgaver } = this.props;
     const { fnr } = match.params;
-    if (fnr) hentBehandlingsOppgaver(fnr);
+    if (fnr) await hentBehandlingsOppgaver(fnr);
   }
 
   render() {

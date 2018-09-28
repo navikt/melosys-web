@@ -57,7 +57,7 @@ class Informasjon extends Component {
         tomAvsender();
       }
     }
-  }
+  };
 
   erGyldigAvsenderID = verdi => (
     verdi.length === Konstanter.ANTALL_TALL_I_ORGNR ||
@@ -71,31 +71,30 @@ class Informasjon extends Component {
     const { settFeltInnhold } = this.props;
     settFeltInnhold('avsenderID', brukerID);
     settFeltInnhold('avsenderNavn', sammensattNavn);
-  }
+  };
 
   tomAvsender = () => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold('avsenderID', '');
     settFeltInnhold('avsenderNavn', '');
-  }
+  };
 
-  sjekkBruker = verdi => {
+  sjekkBruker = async verdi => {
     const { tomAvsender, kopierBrukerTilAvsender } = this;
     const { settFeltInnhold, hentOgVisBruker } = this.props;
     const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
 
     if (Person.erGyldigFnr(verdi)) {
       this.toggleSpinner('brukerNavn');
-      hentOgVisBruker(verdi).then(response => {
-        if (!response) return;
-        const { brukerID, sammensattNavn } = response;
-        if (erBrukerAvsender) { kopierBrukerTilAvsender(brukerID, sammensattNavn); }
-      });
+      const response = await hentOgVisBruker(verdi);
+      if (!response) return;
+      const { brukerID, sammensattNavn } = response;
+      if (erBrukerAvsender) { kopierBrukerTilAvsender(brukerID, sammensattNavn); }
     } else {
       settFeltInnhold('brukerNavn', '');
       if (erBrukerAvsender) { tomAvsender(); }
     }
-  }
+  };
 
   sjekkAvsender = verdi => {
     const { erGyldigAvsenderID } = this;
@@ -107,7 +106,7 @@ class Informasjon extends Component {
     } else {
       settFeltInnhold('avsenderNavn', '');
     }
-  }
+  };
 
   IDFeltTastOppHandler = event => {
     const { id: opprinneligFeltID, value } = event.target;
