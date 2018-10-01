@@ -35,6 +35,7 @@ const ListevelgerEnkelt = ({
         list={`dataliste-${inputProps.name}`}
         value={inputProps.value}
         onChange={inputProps.onChange}
+        onBlur={inputProps.onBlur}
       />
       <datalist id={`dataliste-${inputProps.name}`}>
         {muligeValg.map(valg => <option key={uuid()} value={kodeverkObjektTilTerm(valg)} />)}

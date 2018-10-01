@@ -13,6 +13,7 @@ import { KodeverkSelectors } from '../ducks/kodeverk';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import { formatterDatoTilNorsk, vaskInputDato } from '../utils/dato';
+import { verdiTilKode } from '../utils/kodeverk';
 
 import './oppholdPeriode.css';
 import ListevelgerEnkelt from './skjema/listevelger/listevelgerEnkelt';
@@ -60,7 +61,7 @@ const OppholdEndring = props => {
                 meta={{}}
                 tillatFritekst={false}
                 onChange={event => vedFeltEndring('oppholdsPeriodeEndringsBegrunnelse', event.target.value)}
-                onBlur={() => vedFeltFokutUt('oppholdUtlandNyFom')}
+                onBlur={() => vedFeltFokutUt('oppholdsPeriodeEndringsBegrunnelse')}
               />
             </Nav.Column>
             <Nav.Column xs="12">
@@ -125,7 +126,9 @@ class OppholdPeriode extends Component {
 
   oppdaterPeriode = event => {
     event.preventDefault();
-    const { oppholdUtlandNyFom, oppholdUtlandNyTom, oppholdsPeriodeEndringsBegrunnelse } = this.state;
+    const { alleBegrunnelser } = this.props;
+    const { oppholdUtlandNyFom, oppholdUtlandNyTom } = this.state;
+    const oppholdsPeriodeEndringsBegrunnelse = verdiTilKode(this.state.oppholdsPeriodeEndringsBegrunnelse, alleBegrunnelser);
     const periode = { fom: oppholdUtlandNyFom, tom: oppholdUtlandNyTom };
     this.props.oppdaterPeriode(periode, oppholdsPeriodeEndringsBegrunnelse);
   };
