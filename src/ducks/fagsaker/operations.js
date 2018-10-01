@@ -10,6 +10,7 @@
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import * as Validering from '../../felles-komponenter/skjema/validering';
 
 /**
  * Henter registerinformasjon som allerede er importert backend i forbindelse
@@ -35,11 +36,14 @@ function hent(snr) {
  */
 
 function opprett(fnr) {
-  return doThenDispatch(() => Api.Fagsaker.opprett(fnr), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+  return doThenDispatch(
+    () => Api.Fagsaker.opprett(fnr), {
+      OK: Types.OK,
+      FEILET: Types.FEILET,
+      PENDING: Types.PENDING,
+    },
+    (dispatch, data) => Validering.Felles.forsokValidering(dispatch, data)
+  );
 }
 
 /**
@@ -57,7 +61,7 @@ function sok(fnr) {
 
 /**
  * Kaller backend for å be om oppfrisking av en sak.
- * @param snr
+ * @param behandlingID
  * @returns {*}
  */
 function oppfrisk(behandlingID) {

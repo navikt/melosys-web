@@ -12,7 +12,7 @@ class EnkeltLand extends Component {
   state = {
     inputVerdi: '',
     error: null,
-  }
+  };
 
   componentDidMount = () => {
     const { value } = this.props.input;
@@ -20,13 +20,18 @@ class EnkeltLand extends Component {
     const landKodeObjekt = value && kodeTilObjekt(value, landkoder);
     const inputVerdi = landKodeObjekt ? landTekstFormat(landKodeObjekt) : '';
     this.setState({ inputVerdi });
-  }
+  };
 
   reduxOppdaterLand = landKode => {
     // Todo: Implementere logging på neste linje.
     if (!landKode) throw new Error('landKode må inneholde verdi.');
     const { onChange } = this.props.input;
     onChange(landKode);
+  };
+
+  reduxFjernLand = () => {
+    const { onChange } = this.props.input;
+    onChange('');
   };
 
   fokusInnHandler = e => {
@@ -38,7 +43,7 @@ class EnkeltLand extends Component {
       e.preventDefault();
       this.fokusUtHandler();
     }
-  }
+  };
 
   /** Søk etter land inkluderer landkode, dvs dersom saksbehandler skriver inn hele teksten "Sverige (SE)".
    * så vil søket fortsatt returnere riktig treff, selv om den EGENTLIGE termen kun er "Sverige".
@@ -53,17 +58,18 @@ class EnkeltLand extends Component {
         .toLowerCase()
         .includes(inputVerdi.toLowerCase())
     ));
-  }
+  };
 
   finnEttLand = inputVerdi => {
     const landListe = this.finnFlereLand(inputVerdi);
     return landListe.length === 1 ? landListe[0] : false;
-  }
+  };
 
   fokusUtHandler = () => {
     const { inputVerdi } = this.state;
 
     if (!inputVerdi) {
+      this.reduxFjernLand();
       this.tomFeilmelding();
       return;
     }
@@ -81,11 +87,11 @@ class EnkeltLand extends Component {
   inputEndringHandler = e => {
     const inputVerdi = e.target.value;
     this.setState({ inputVerdi });
-  }
+  };
 
   tomFeilmelding = () => {
     this.setState({ error: null });
-  }
+  };
 
   render () {
     const {

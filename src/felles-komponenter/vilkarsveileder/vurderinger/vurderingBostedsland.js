@@ -21,17 +21,13 @@ const Avklaringer = ({ avklaringer }) => (
     <Nav.Element>Vurder bosted manuelt:</Nav.Element>
     <ul className="betingelser__liste">
       {
-        avklaringer.map(({ term, status }) => {
+        avklaringer.map(({ tekst, status }) => {
           let iconClassName;
-          if (status === true) {
-            iconClassName = 'liste__element--oppfylt';
-          } else if (status === false) {
-            iconClassName = 'liste__element--ikkeoppfylt';
-          } else {
+          if (status === undefined) {
             iconClassName = 'liste__element--varsel';
           }
           const cl = classnames({ liste__element: true, [iconClassName]: true });
-          return (<li key={uuid()} className={cl}>{term}</li>);
+          return (<li key={uuid()} className={cl}>{tekst}</li>);
         })
       }
     </ul>
@@ -69,12 +65,17 @@ const VurderingBostedsland = props => {
   const {
     bekreftOgFortsett, tilstand, begrunnelser,
   } = props;
-  const { visLandVelger } = tilstand;
+  const { visLandVelger, harEOSBarnetrygdSak } = tilstand;
+
+  const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
 
   return (
     <div className="vurderingBostedsland">
       <Nav.Undertittel>Vurdering av bosted</Nav.Undertittel>
       <div>
+        <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
+        <AvklaringsListe tilstand={tilstand} />
+        <div className="vurderingBostedsland__barnetrygd">{barnetrygdTekst}</div>
         <div className="vurderingBostedsland__skjemafelt">
           <Nav.Row>
             <Nav.Column xs="12">
