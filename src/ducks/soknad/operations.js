@@ -35,6 +35,6 @@ export function send(bid, soknad) {
 
 export function oppdaterPeriode(periode, begrunnelse) {
   return dispatch => {
-    return dispatch(Actions.oppdaterPeriode(periode, begrunnelse));
+    dispatch(Actions.oppdaterPeriode(periode, begrunnelse));
   };
 }
