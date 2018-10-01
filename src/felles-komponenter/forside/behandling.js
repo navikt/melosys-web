@@ -25,14 +25,15 @@ class Behandling extends Component {
     localStorage.setItem(BEHANDLINGSFORM, JSON.stringify(formValues));
   }
 
-  submitOgVideresend = form => {
-    this.props.handleSubmit(form).then(redirectURL => {
-      /* eslint-disable no-alert */
-      if (!redirectURL) { return alert('Ingen oppgaver finnes. Videre funksjonalitet ikke implementert.'); }
-      /* eslint-enable */
-      this.props.history.push(redirectURL);
-      return true;
-    });
+  submitOgVideresend = async form => {
+    const { handleSubmit, history } = this.props;
+    const redirectURL = await handleSubmit(form);
+
+    /* eslint-disable no-alert */
+    if (!redirectURL) { return alert('Ingen oppgaver finnes. Videre funksjonalitet ikke implementert.'); }
+    /* eslint-enable */
+    history.push(redirectURL);
+    return true;
   };
 
   render() {

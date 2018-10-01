@@ -108,6 +108,8 @@ const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
   const startDato = relevantPeriode.fom;
   const antallMaaneder = parseInt(datoDiff(relevantPeriode.fom, relevantPeriode.tom, 'months'), 10) + 1;
 
+  if (relevantPeriode.fom === 'Invalid date' || relevantPeriode.tom === 'Invalid date') { return ([]); }
+
   return Array(antallMaaneder).fill({}).map((verdi, index) => {
     const aarMaaned = moment(startDato).add(index, 'months').format('YYYY-MM');
 
