@@ -20,8 +20,8 @@ const VurderingVesentligVirksomhet = props => {
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend="Virksomheten har:">
-              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
-              <Skjema.Radio feltNavn="faktaavklaringVesentligVirksomhetINorge" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
+              <Skjema.Radio feltNavn="avklartefaktaVesentligVirksomhetINorge" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
+              <Skjema.Radio feltNavn="avklartefaktaVesentligVirksomhetINorge" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -29,7 +29,7 @@ const VurderingVesentligVirksomhet = props => {
           <Nav.Column xs="12" md="10" lg="8">
             <Nav.Fieldset legend="Begrunnelse:">
               <Skjema.ListeVelger
-                feltNavn="faktaavklaringVesentligVirksomhetBegrunnelser"
+                feltNavn="avklartefaktaVesentligVirksomhetBegrunnelser"
                 muligeValg={begrunnelser}
                 label="Legg til begrunnelse:"
                 gruppe

@@ -38,10 +38,10 @@ import {
 } from '../ducks/soknad/';
 
 import {
-  faktaavklaringOperations,
-  faktaavklaringActions,
-  faktaavklaringSelectors,
-} from '../ducks/faktaavklaring/';
+  avklartefaktaOperations,
+  avklartefaktaActions,
+  avklartefaktaSelectors,
+} from '../ducks/avklartefakta/';
 
 import {
   vurderingOperations,
@@ -62,8 +62,8 @@ class Saksbehandling extends Component {
     oppfriskFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     sendSoknad: PT.func.isRequired,
-    hentFaktaavklaring: PT.func.isRequired,
-    sendFaktaavklaring: PT.func.isRequired,
+    hentAvklartefakta: PT.func.isRequired,
+    sendAvklartefakta: PT.func.isRequired,
     hentVurdering: PT.func.isRequired,
     match: PT.object.isRequired,
     history: PT.object.isRequired,
@@ -76,7 +76,7 @@ class Saksbehandling extends Component {
     oppsummering: MPT.Oppsummering,
     soknad: PT.object,
     finansiering: PT.arrayOf(MPT.Kodeverk),
-    faktaavklaring: PT.object,
+    avklartefakta: PT.object,
     soknadArbeidsinntekt: PT.object,
     soknadArbeidNorge: MPT.ArbeidNorge,
     handleSubmit: PT.func.isRequired,
@@ -84,7 +84,7 @@ class Saksbehandling extends Component {
     errorSummaryTitle: PT.string,
     soknadForm: PT.object.isRequired,
     oppdaterSoknad: PT.func.isRequired,
-    oppdaterFaktaavklaring: PT.func.isRequired,
+    oppdaterAvklartefakta: PT.func.isRequired,
     valid: PT.bool.isRequired,
   };
 
@@ -98,7 +98,7 @@ class Saksbehandling extends Component {
     oppsummering: {},
     soknad: {},
     finansiering: [],
-    faktaavklaring: {},
+    avklartefakta: {},
     soknadArbeidsinntekt: {},
     soknadArbeidNorge: {},
     errorSummary: {},
@@ -111,14 +111,14 @@ class Saksbehandling extends Component {
   };
 
   async componentDidMount() {
-    const { hentFagsaker, hentSoknad, hentFaktaavklaring } = this.props;
+    const { hentFagsaker, hentSoknad, hentAvklartefakta } = this.props;
     const { snr } = this.props.match.params;
     const response = await hentFagsaker(snr);
     const { behandlinger } = response.data;
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
     await hentSoknad(behandlingID);
-    await hentFaktaavklaring(behandlingID);
+    await hentAvklartefakta(behandlingID);
     return true;
   }
 
@@ -133,20 +133,20 @@ class Saksbehandling extends Component {
   fattVedtakHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soeknadDokument: { ...this.props.soknad.soeknadDokument } };
-    const avklaring = { avklaring: { ...this.props.faktaavklaring } };
-    const { valid, sendSoknad, sendFaktaavklaring } = this.props;
+    const avklaring = { avklaring: { ...this.props.avklartefakta } };
+    const { valid, sendSoknad, sendAvklartefakta } = this.props;
     if (valid) {
       await sendSoknad(bid, soknad);
-      await sendFaktaavklaring(bid, avklaring);
+      await sendAvklartefakta(bid, avklaring);
     }
   };
 
   overstyrSubmit = async event => {
     event.preventDefault();
 
-    const { oppdaterSoknad, oppdaterFaktaavklaring, soknadForm } = this.props;
+    const { oppdaterSoknad, oppdaterAvklartefakta, soknadForm } = this.props;
     await oppdaterSoknad(soknadForm.values);
-    await oppdaterFaktaavklaring(soknadForm.values);
+    await oppdaterAvklartefakta(soknadForm.values);
   };
 
   oppfriskSaksopplysninger = async () => {
@@ -254,7 +254,7 @@ const mapStateToProps = state => ({
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
-  faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
+  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
@@ -317,37 +317,37 @@ const mapStateToProps = state => ({
     fullmektigPoststed: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
     fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandKode,
-    faktaavklaringBostedLand: faktaavklaringSelectors.FaktaavklaringBostedSelector(state).bostedLand,
-    faktaavklaringBostedBegrunnelser: faktaavklaringSelectors.FaktaavklaringBostedSelector(state).bostedBegrunnelser,
-    faktaavklaringBostedNorgeUtland: faktaavklaringSelectors.FaktaavklaringBostedNorgeUtlandSelector(state),
-    faktaavklaringOppholdsLand: faktaavklaringSelectors.FaktaavklaringOppholdSelector(state).land,
-    faktaavklaringPeriodeFraOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).fom),
-    faktaavklaringPeriodeTilOgMed: formatterDatoTilNorsk(faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state).tom),
-    faktaavklaringSysselsettingType: faktaavklaringSelectors.FaktaavklaringSysselsettingSelector(state).sysselsettingType,
-    faktaavklaringIkkeYrkesaktivType: faktaavklaringSelectors.FaktaavklaringIkkeYrkesaktivSelector(state).ikkeYrkesaktivType,
-    faktaavklaringAnsattINorskSelskap: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).ansattINorskSelskap,
-    faktaavklaringErstatterTidligereUtsendt: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).erstatterTidligereUtsendt,
-    faktaavklaringUtsendingMindreEnn24Mnd: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).utsendingMindreEnn24Mnd,
-    faktaavklaringForetakDriverINorge: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).foretakDriverINorge,
-    faktaavklaringHarForutgaendeMedlemskap: faktaavklaringSelectors.FaktaavklaringForutgaendeMedlemskapSelector(state).harForutgaendeMedlemskap,
-    faktaavklaringForutgaendeMedlemskapBegrunnelser: faktaavklaringSelectors.FaktaavklaringForutgaendeMedlemskapSelector(state).forutgaendeMedlemskapBegrunnelser,
-    faktaavklaringArbeidKnyttetTilVirksomhetUtlandet: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).arbeidKnyttetTilVirksomhetUtlandet,
-    faktaavklaringSammeTypeVirksomhet: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).sammeTypeVirksomhet,
-    faktaavklaringYrkesaktivitetType: faktaavklaringSelectors.FaktaavklaringYrkesaktivitetSelector(state).yrkesaktivitetType,
-    faktaavklaringAntallLand: faktaavklaringSelectors.FaktaavklaringYrkesaktivitetFordelingSelector(state).antallLand,
-    faktaavklaringAktivitetINorge: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).aktivitetINorge,
-    faktaavklaringMarginaltArbeid: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).marginaltArbeid,
-    faktaavklaringVekslingMellomLand: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).vekslingMellomLand,
-    faktaavklaringAktivitetLand: faktaavklaringSelectors.FaktaavklaringAktivitetSelector(state).aktivitetLand,
-    faktaavklaringTjenestemann: faktaavklaringSelectors.FaktaavklaringTjenestemannSelector(state).tjenestemann,
-    faktaavklaringValgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
-    faktaavklaringVesentligVirksomhetINorge: (faktaavklaringSelectors.FaktaavklaringVesentligVirksomhetSelector(state).vesentligVirksomhetINorge),
-    faktaavklaringVesentligVirksomhetBegrunnelser: faktaavklaringSelectors.FaktaavklaringVesentligVirksomhetSelector(state).vesentligVirksomhetBegrunnelser,
-    faktaavklaringForretningsstedLand: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).land,
-    faktaavklaringForretningsstedAntallArbeidsgivere: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).antallArbeidsgivere,
-    faktaavklaringForretningsstedFordelingArbeidsgivere: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).fordelingArbeidsgivere,
-    vurderingLovvalg: faktaavklaringSelectors.FaktaavklaringLovvalgKodeSelector(state),
-    vurderingBegrunnelser: faktaavklaringSelectors.FaktaavklaringVurderingSelector(state).begrunnelser,
+    avklartefaktaBostedLand: avklartefaktaSelectors.AvklartefaktaBostedSelector(state).bostedLand,
+    avklartefaktaBostedBegrunnelser: avklartefaktaSelectors.AvklartefaktaBostedSelector(state).bostedBegrunnelser,
+    avklartefaktaBostedNorgeUtland: avklartefaktaSelectors.AvklartefaktaBostedNorgeUtlandSelector(state),
+    avklartefaktaOppholdsLand: avklartefaktaSelectors.AvklartefaktaOppholdSelector(state).land,
+    avklartefaktaPeriodeFraOgMed: formatterDatoTilNorsk(avklartefaktaSelectors.AvklartefaktaOppholdPeriodeSelector(state).fom),
+    avklartefaktaPeriodeTilOgMed: formatterDatoTilNorsk(avklartefaktaSelectors.AvklartefaktaOppholdPeriodeSelector(state).tom),
+    avklartefaktaSysselsettingType: avklartefaktaSelectors.AvklartefaktaSysselsettingSelector(state).sysselsettingType,
+    avklartefaktaIkkeYrkesaktivType: avklartefaktaSelectors.AvklartefaktaIkkeYrkesaktivSelector(state).ikkeYrkesaktivType,
+    avklartefaktaAnsattINorskSelskap: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).ansattINorskSelskap,
+    avklartefaktaErstatterTidligereUtsendt: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).erstatterTidligereUtsendt,
+    avklartefaktaUtsendingMindreEnn24Mnd: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).utsendingMindreEnn24Mnd,
+    avklartefaktaForetakDriverINorge: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).foretakDriverINorge,
+    avklartefaktaHarForutgaendeMedlemskap: avklartefaktaSelectors.AvklartefaktaForutgaendeMedlemskapSelector(state).harForutgaendeMedlemskap,
+    avklartefaktaForutgaendeMedlemskapBegrunnelser: avklartefaktaSelectors.AvklartefaktaForutgaendeMedlemskapSelector(state).forutgaendeMedlemskapBegrunnelser,
+    avklartefaktaArbeidKnyttetTilVirksomhetUtlandet: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).arbeidKnyttetTilVirksomhetUtlandet,
+    avklartefaktaSammeTypeVirksomhet: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).sammeTypeVirksomhet,
+    avklartefaktaYrkesaktivitetType: avklartefaktaSelectors.AvklartefaktaYrkesaktivitetSelector(state).yrkesaktivitetType,
+    avklartefaktaAntallLand: avklartefaktaSelectors.AvklartefaktaYrkesaktivitetFordelingSelector(state).antallLand,
+    avklartefaktaAktivitetINorge: avklartefaktaSelectors.AvklartefaktaVirksomhetSelector(state).aktivitetINorge,
+    avklartefaktaMarginaltArbeid: avklartefaktaSelectors.AvklartefaktaVirksomhetSelector(state).marginaltArbeid,
+    avklartefaktaVekslingMellomLand: avklartefaktaSelectors.AvklartefaktaVirksomhetSelector(state).vekslingMellomLand,
+    avklartefaktaAktivitetLand: avklartefaktaSelectors.AvklartefaktaAktivitetSelector(state).aktivitetLand,
+    avklartefaktaTjenestemann: avklartefaktaSelectors.AvklartefaktaTjenestemannSelector(state).tjenestemann,
+    avklartefaktaValgteArbeidsgivere: avklartefaktaSelectors.AvklartefaktaValgteArbeidsgivereSelector(state),
+    avklartefaktaVesentligVirksomhetINorge: (avklartefaktaSelectors.AvklartefaktaVesentligVirksomhetSelector(state).vesentligVirksomhetINorge),
+    avklartefaktaVesentligVirksomhetBegrunnelser: avklartefaktaSelectors.AvklartefaktaVesentligVirksomhetSelector(state).vesentligVirksomhetBegrunnelser,
+    avklartefaktaForretningsstedLand: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).land,
+    avklartefaktaForretningsstedAntallArbeidsgivere: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).antallArbeidsgivere,
+    avklartefaktaForretningsstedFordelingArbeidsgivere: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).fordelingArbeidsgivere,
+    vurderingLovvalg: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
+    vurderingBegrunnelser: avklartefaktaSelectors.AvklartefaktaVurderingSelector(state).begrunnelser,
   },
 });
 
@@ -356,11 +356,11 @@ const mapDispatchToProps = dispatch => ({
   oppfriskFagsaker: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
-  hentFaktaavklaring: saksnummer => dispatch(faktaavklaringOperations.hent(saksnummer)),
-  sendFaktaavklaring: (bid, dokument) => dispatch(faktaavklaringOperations.send(bid, dokument)),
+  hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
+  sendAvklartefakta: (bid, dokument) => dispatch(avklartefaktaOperations.send(bid, dokument)),
   hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
   oppdaterSoknad: values => { dispatch(soknadActions.oppdaterSoknadState(values)); },
-  oppdaterFaktaavklaring: values => { dispatch(faktaavklaringActions.oppdaterFaktaavklaringState(values)); },
+  oppdaterAvklartefakta: values => { dispatch(avklartefaktaActions.oppdaterAvklartefaktaState(values)); },
 });
 
 const SaksbehandlingForm = reduxForm({

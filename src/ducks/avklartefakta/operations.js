@@ -12,7 +12,7 @@ import { doThenDispatch } from '../../services/utils';
 import * as Types from './types';
 
 export function hent(behandlingID) {
-  return doThenDispatch(() => Api.Faktaavklaring.hent(behandlingID), {
+  return doThenDispatch(() => Api.Avklartefakta.hent(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -20,7 +20,7 @@ export function hent(behandlingID) {
 }
 
 export function send(bid, dokument) {
-  return doThenDispatch(() => Api.Faktaavklaring.send(bid, dokument), {
+  return doThenDispatch(() => Api.Avklartefakta.send(bid, dokument), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

@@ -18,7 +18,7 @@ class Inngang extends Steg {
     this._komponent = VurderingInngang;
     this._samleRelevanteData = props => ({
       inngangsvilkar: props.inngang,
-      faktaavklaring: props.faktaavklaring,
+      avklartefakta: props.avklartefakta,
       begrunnelser: props.begrunnelser,
       alleLandKoder: props.landkoder,
     });

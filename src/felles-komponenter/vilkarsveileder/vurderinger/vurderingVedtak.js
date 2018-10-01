@@ -6,7 +6,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 
 
-import { faktaavklaringSelectors } from '../../../ducks/faktaavklaring/';
+import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 
@@ -16,9 +16,9 @@ import { kodeverkObjektTilTerm, kodeverkObjektTilKode, finnEnkeltKodeFraListe } 
 import './vurderingVedtak.css';
 
 const VurderingVedtak = props => {
-  // 1. Motta vedtakskode (kodeverk og faktaavklaring)
-  // 2. Motta begrunnelsene fra forrige steg (kodeverk og faktaavklaring)
-  // 3. Vise oppsummmeringen av kriteriene for artikkelen (kodeverk og faktaavklaring)
+  // 1. Motta vedtakskode (kodeverk og avklartefakta)
+  // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
+  // 3. Vise oppsummmeringen av kriteriene for artikkelen (kodeverk og avklartefakta)
 
   const {
     gyldigeOppholdLand,
@@ -78,8 +78,8 @@ VurderingVedtak.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  lovvalgKode: faktaavklaringSelectors.FaktaavklaringLovvalgKodeSelector(state),
-  gyldigeOppholdLand: faktaavklaringSelectors.FaktaavklaringGyldigeOppholdLandSelector(state),
+  lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
+  gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
   alleLandkoder: KodeverkSelectors.landkoderSelector(state),
   alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),

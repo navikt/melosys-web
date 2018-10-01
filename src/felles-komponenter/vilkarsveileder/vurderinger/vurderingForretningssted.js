@@ -50,9 +50,9 @@ const Forretningsstedet = props => {
 
   return (
     <Nav.Fieldset legend={navn}>
-      <Field name={`faktaavklaringForretningsstedLand[${index}].arbeidsgiverID`} value={arbeidsgiverID} component={ArbeidsgiverIDField} arbeidsgiverID={arbeidsgiverID} />
-      <LandVelger feltNavn={`faktaavklaringForretningsstedLand[${index}].beslutninger`} label="Tar viktige beslutninger i:" multiland={false} />
-      <LandVelger feltNavn={`faktaavklaringForretningsstedLand[${index}].virksomhet`} label="Har vesentlig virksomhet i:" multiland={false} />
+      <Field name={`avklartefaktaForretningsstedLand[${index}].arbeidsgiverID`} value={arbeidsgiverID} component={ArbeidsgiverIDField} arbeidsgiverID={arbeidsgiverID} />
+      <LandVelger feltNavn={`avklartefaktaForretningsstedLand[${index}].beslutninger`} label="Tar viktige beslutninger i:" multiland={false} />
+      <LandVelger feltNavn={`avklartefaktaForretningsstedLand[${index}].virksomhet`} label="Har vesentlig virksomhet i:" multiland={false} />
     </Nav.Fieldset>
   );
 };
@@ -96,14 +96,14 @@ const VurderingForretningssted = props => {
   return (
     <div>
       <Nav.Undertittel>Vurder arbeidsgivers forretningssted</Nav.Undertittel>
-      <FieldArray name="faktaavklaringForretningsstedLand" component={Forretningssteder} valgteArbeidsforhold={valgteArbeidsforhold} />
+      <FieldArray name="avklartefaktaForretningsstedLand" component={Forretningssteder} valgteArbeidsforhold={valgteArbeidsforhold} />
       <Nav.Fieldset legend="Hvor mange arbeidsgivere har søker?">
-        <Skjema.Radio feltNavn="faktaavklaringForretningsstedAntallArbeidsgivere" value={VurderingForretningsstedTyper.EN_ARBEIDSGIVER} label="Én" />
-        <Skjema.Radio feltNavn="faktaavklaringForretningsstedAntallArbeidsgivere" value={VurderingForretningsstedTyper.TO_ELLER_FLERE_ARBEIDSGIVERE} label="To eller flere" />
+        <Skjema.Radio feltNavn="avklartefaktaForretningsstedAntallArbeidsgivere" value={VurderingForretningsstedTyper.EN_ARBEIDSGIVER} label="Én" />
+        <Skjema.Radio feltNavn="avklartefaktaForretningsstedAntallArbeidsgivere" value={VurderingForretningsstedTyper.TO_ELLER_FLERE_ARBEIDSGIVERE} label="To eller flere" />
       </Nav.Fieldset>
       <Nav.Fieldset legend="Er arbeidsgivere i samme land eller ulike land?">
-        <Skjema.Radio feltNavn="faktaavklaringForretningsstedFordelingArbeidsgivere" value={VurderingForretningsstedTyper.SAMME_LAND} label="I samme land" />
-        <Skjema.Radio feltNavn="faktaavklaringForretningsstedFordelingArbeidsgivere" value={VurderingForretningsstedTyper.ULIKE_LAND} label="I ulike land" />
+        <Skjema.Radio feltNavn="avklartefaktaForretningsstedFordelingArbeidsgivere" value={VurderingForretningsstedTyper.SAMME_LAND} label="I samme land" />
+        <Skjema.Radio feltNavn="avklartefaktaForretningsstedFordelingArbeidsgivere" value={VurderingForretningsstedTyper.ULIKE_LAND} label="I ulike land" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

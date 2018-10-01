@@ -3,8 +3,8 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingForretningssted from '../../vurderinger/vurderingForretningssted';
 
 class Forretningssted extends Steg {
-  constructor(faktaavklaring) {
-    super(faktaavklaring);
+  constructor(avklartefakta) {
+    super(avklartefakta);
     this._kriterier = [
       {
         beskrivelse: 'alle andre valg',
