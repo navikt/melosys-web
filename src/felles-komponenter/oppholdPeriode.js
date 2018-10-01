@@ -12,7 +12,7 @@ import { KodeverkSelectors } from '../ducks/kodeverk';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
-import { formatterDatoTilNorsk, vaskInputDato } from '../utils/dato';
+import { formatterDatoTilNorsk, vaskInputDato, formatterDatoTilISO } from '../utils/dato';
 import { verdiTilKode } from '../utils/kodeverk';
 
 import './oppholdPeriode.css';
@@ -53,12 +53,13 @@ const OppholdEndring = props => {
                 onBlur={() => vedFeltFokutUt('oppholdUtlandNyFom')}
               />
             </Nav.Column>
-            <Nav.Column xs="3">
+            <Nav.Column xs="6">
               <ListevelgerEnkelt
                 label="Begrunnelse:"
                 value={oppholdsPeriodeEndringsBegrunnelse}
                 muligeValg={alleBegrunnelser}
                 meta={{}}
+                bredde="XL"
                 tillatFritekst={false}
                 onChange={event => vedFeltEndring('oppholdsPeriodeEndringsBegrunnelse', event.target.value)}
                 onBlur={() => vedFeltFokutUt('oppholdsPeriodeEndringsBegrunnelse')}
@@ -129,7 +130,7 @@ class OppholdPeriode extends Component {
     const { alleBegrunnelser } = this.props;
     const { oppholdUtlandNyFom, oppholdUtlandNyTom } = this.state;
     const oppholdsPeriodeEndringsBegrunnelse = verdiTilKode(this.state.oppholdsPeriodeEndringsBegrunnelse, alleBegrunnelser);
-    const periode = { fom: oppholdUtlandNyFom, tom: oppholdUtlandNyTom };
+    const periode = { fom: formatterDatoTilISO(oppholdUtlandNyFom), tom: formatterDatoTilISO(oppholdUtlandNyTom) };
     this.props.oppdaterPeriode(periode, oppholdsPeriodeEndringsBegrunnelse);
   };
 
