@@ -87,7 +87,7 @@ class Informasjon extends Component {
     const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
 
     if (Person.erGyldigFnr(verdi)) {
-      await this.toggleSpinner('brukerNavn');
+      await this.spinner('brukerNavn');
       const response = await hentOgVisBruker(verdi);
       if (!response) return;
       const { brukerID, sammensattNavn } = response;
@@ -103,7 +103,7 @@ class Informasjon extends Component {
     const { settFeltInnhold, hentOgVisAvsender } = this.props;
 
     if (erGyldigAvsenderID(verdi)) {
-      await this.toggleSpinner('avsenderNavn');
+      await this.spinner('avsenderNavn');
       await hentOgVisAvsender(verdi);
     } else {
       await settFeltInnhold('avsenderNavn', '');
@@ -114,7 +114,7 @@ class Informasjon extends Component {
     const { erGyldigOrgnummer } = this;
     const { settFeltInnhold, hentOgVisArbeidsgiver } = this.props;
     if (erGyldigOrgnummer(verdi)) {
-      await this.toggleSpinner('arbeidsgiverNavn');
+      await this.spinner('arbeidsgiverNavn');
       await hentOgVisArbeidsgiver(verdi);
     } else {
       await settFeltInnhold('arbeidsgiverNavn');
@@ -128,16 +128,18 @@ class Informasjon extends Component {
     if (opprinneligFeltID === 'arbeidsgiverID') { await this.sjekkArbeidsgiver(value); }
   };
 
+  toggleSpinn = (navn, spin) => ({ spinner: { ...this.state.spinner, [navn]: spin } });
   /** Toggle spinneren av og på. Når spinner skjules, sett en timeout på 500ms.
    * Dette sikrer at spinneren ikke bare flasher dersom kallet til API går raskt. Dataene vises.
    * umiddelbart fra payload, men spinneren har en levetid på minimum 500 ms som gir brukeren
    * tid til å tolke grensesnittet, dvs spinneren.
    * @param navn {String} Navnet på spinneren
+   * @param ms {Number} antall millisekunder
    */
-  toggleSpinner = async navn => {
-    this.setState({ spinner: { ...this.state.spinner, [navn]: true } });
-    await Utils.delay(1000);
-    this.setState({ spinner: { ...this.state.spinner, [navn]: false } });
+  spinner = async (navn, ms = 1000) => {
+    this.setState(this.toggleSpinn(navn, true));
+    await Utils.delay(ms);
+    this.setState(this.toggleSpinn(navn, false));
   };
 
   /** Noen felter skal disables dersom andre felter er fylt inn eller andre
