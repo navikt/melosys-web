@@ -116,7 +116,7 @@ class Journalforing extends Component {
       journalforing: { dokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, avsenderNavn, dokumentTittel, vedleggsTitler,
+      brukerID, avsenderID, avsenderNavn, arbeidsgiverID, representantID, dokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
     const { ID: dokumentID } = dokument;
@@ -126,8 +126,8 @@ class Journalforing extends Component {
       brukerID,
       avsenderID,
       avsenderNavn,
-      arbeidsgiverID: '910253158',
-      representantID: '910253158',
+      arbeidsgiverID,
+      representantID,
       dokumentID,
       dokumenttittel: dokumentTittel,
       vedleggstitler: vedleggsTitler,
@@ -202,6 +202,17 @@ class Journalforing extends Component {
     }
   };
 
+  hentOgVisArbeidsgiver = async value => {
+    const { sokOrgnr, settFeltInnhold } = this.props;
+
+    if (!value) { return; }
+
+    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+      const response = await sokOrgnr(value);
+      const { navn = '' } = response;
+      settFeltInnhold('arbeidsgiverNavn', navn);
+    }
+  };
   /** Når saksbehandler klikker "opprett sak" skal det åpnes for validering av
    * relevante felter før ny sak opprettes (sendes til API) og saksbehandler returneres til forsiden.
    * @returns {boolean}
@@ -266,7 +277,7 @@ class Journalforing extends Component {
     } = this.props;
 
     const {
-      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker,
+      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisArbeidsgiver,
     } = this;
 
     const { journalpostID } = this.props.match.params;
@@ -291,6 +302,7 @@ class Journalforing extends Component {
                         dokumentID={dokumentID}
                         hentOgVisAvsender={hentOgVisAvsender}
                         hentOgVisBruker={hentOgVisBruker}
+                        hentOgVisArbeidsgiver={hentOgVisArbeidsgiver}
                       />
                       <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                       <OpprettNyFagSak opprettFagsak={opprettFagsak} />
@@ -321,6 +333,8 @@ const mapStateToProps = state => ({
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
+    arbeidsgiverID: '',
+    representantID: '910253158',
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
     vedleggsTitler: [],
