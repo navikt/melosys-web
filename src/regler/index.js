@@ -4,18 +4,15 @@ import Studier from './studier/index';
 import Stonad from './stonad/index';
 
 class Regler {
-  constructor(skjema) {
+  constructor(skjema = {}, saksopplysninger = {}) {
     this.skjema = skjema;
-  }
-
-  oppdaterSkjema = skjema => {
-    this.skjema = skjema;
+    this.saksopplysninger = saksopplysninger;
   }
 
   opphold = () => new Opphold(this.skjema);
   arbeid = () => new Arbeid(this.skjema);
   studier = () => new Studier(this.skjema);
-  stonad = () => new Stonad(this.skjema);
+  stonad = () => new Stonad(this.skjema, this.saksopplysninger);
 }
 
 export default Regler;

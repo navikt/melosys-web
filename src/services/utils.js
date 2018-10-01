@@ -1,5 +1,3 @@
-import * as Validering from '../felles-komponenter/skjema/validering';
-
 export const STATUS = {
   NOT_STARTED: 'NOT_STARTED',
   PENDING: 'PENDING',
@@ -30,11 +28,12 @@ export function print(response) {
   return response;
 }
 
-export function sendResultatTilDispatch(dispatch, action) {
-  return (...data) => {
+export function sendResultatTilDispatch(dispatch, action, validering) {
+  return async (...data) => {
     const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
-    Validering.Felles.forsokValidering(dispatch, dataSomSkalDispatches);
-
+    if (validering && typeof validering === 'function') {
+      validering(dispatch, dataSomSkalDispatches);
+    }
     return dispatch({ type: action, data: dataSomSkalDispatches });
   };
 }
@@ -201,7 +200,7 @@ const cachedFetch = (url, cacheDurationSec) => {
   }).then(toJson);
 };
 
-export function fetchToJson(url, config = {}) {
+export async function fetchToJson(url, config = {}) {
   /*
 if (config.headers) {
   for (let entry of config.headers) {
@@ -210,12 +209,12 @@ if (config.headers) {
 }
 */
 
-  return fetch(url, config) // eslint-disable-line no-undef
-    .then(sjekkStatuskode)
-    .then(toJson);
+  const fetchResponse = await fetch(url, config); // eslint-disable-line no-undef
+  const sjekketResponse = sjekkStatuskode(fetchResponse);
+  return toJson(sjekketResponse);
 }
 
-function methodToJson(method, url, data) {
+async function methodToJson(method, url, data) {
   const headers = {
     Accept: 'application/json',
     'Accept-Charset': 'UTF-8',
@@ -248,20 +247,20 @@ function methodToJson(method, url, data) {
 export function cachedGetAsJson(url, cacheDurationSec = 60) {
   return cachedFetch(url, cacheDurationSec);
 }
-export function getAsJson(url) {
+export async function getAsJson(url) {
   return methodToJson('GET', url);
 }
-export function postAsJson(url, data = {}) {
+export async function postAsJson(url, data = {}) {
   return methodToJson('POST', url, data);
 }
 
-export function doThenDispatch(fn, { OK, FEILET, PENDING }) {
-  return (dispatch, getState) => {
+export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
+  return async (dispatch, getState) => {
     if (PENDING) {
-      dispatch({ type: PENDING });
+      await dispatch({ type: PENDING });
     }
-    return fn(dispatch, getState)
-      .then(sendResultatTilDispatch(dispatch, OK))
+    return api(dispatch, getState)
+      .then(sendResultatTilDispatch(dispatch, OK, validering))
       .catch(handterFeil(dispatch, FEILET));
   };
 }

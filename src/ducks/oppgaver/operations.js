@@ -36,7 +36,7 @@ export function hent() {
   });
 }
 
-export function sendBehandlingsOppgave(checkboxliste) {
+export async function sendBehandlingsOppgave(checkboxliste) {
   const { sakstyper: sakstyperListe = [], behandlingstyper: behandlingstyperListe = [] } = checkboxliste;
   if (sakstyperListe.length === 0 || behandlingstyperListe.length === 0) { return false; }
 
@@ -48,24 +48,21 @@ export function sendBehandlingsOppgave(checkboxliste) {
     sakstyper,
     behandlingstyper,
   };
-
-  return Api.Oppgaver.send(oppgave).then(response => {
-    const { saksnummer } = response;
-    if (!saksnummer) { return false; }
-    return `/saksbehandling/${saksnummer}`;
-  });
+  const response = await Api.Oppgaver.send(oppgave);
+  const { saksnummer } = response;
+  if (!saksnummer) { return false; }
+  return `/saksbehandling/${saksnummer}`;
 }
 
-export function sendJournalOppgave(fagomrade) {
+export async function sendJournalOppgave(fagomrade) {
   const oppgave = {
     oppgavetype: 'JFR',
     sakstyper: [],
     behandlingstyper: [],
     fagomrade, // 'UFM' || 'MDL'
   };
-  return Api.Oppgaver.send(oppgave).then(response => {
-    const { oppgaveID, journalpostID } = response;
-    if (!(oppgaveID || journalpostID)) { return false; }
-    return `/journalforing/${oppgaveID}/${journalpostID}`;
-  });
+  const response = await Api.Oppgaver.send(oppgave);
+  const { oppgaveID, journalpostID } = response;
+  if (!(oppgaveID || journalpostID)) { return false; }
+  return `/journalforing/${journalpostID}/${oppgaveID}`;
 }

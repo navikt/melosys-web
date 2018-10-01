@@ -34,7 +34,7 @@ class MultiLand extends Component {
   state = {
     inputVerdi: '',
     error: null,
-  }
+  };
 
   reduxLeggTilLand = landKode => {
     const { fields } = this.props;
@@ -60,22 +60,22 @@ class MultiLand extends Component {
         .toLowerCase()
         .includes(inputVerdi.toLowerCase())
     ));
-  }
+  };
 
   finnEttLand = inputVerdi => {
     const landListe = this.finnFlereLand(inputVerdi);
     return landListe.length === 1 ? landListe[0] : false;
-  }
+  };
 
   tomFeilmelding = () => {
     this.setState({ error: null });
-  }
+  };
 
   dynamiskTittel = () => {
     const { fields } = this.props;
     const count = fields ? fields.length : 0;
     return (count > 0 ? 'Legg til evt flere land:' : 'Legg til første land:');
-  }
+  };
 
   /** ----------------------------------------------------------------------
    *                           EVENT HANDLERS
@@ -85,14 +85,14 @@ class MultiLand extends Component {
   slettLandHandler = (e, landKode) => {
     e.preventDefault();
     this.reduxSlettEttLand(landKode);
-  }
+  };
 
   inputTastNedHandler = e => {
     if (e.keyCode === 13) {
       e.preventDefault();
       this.fokusUtHandler();
     }
-  }
+  };
 
   fokusUtHandler = () => {
     const { inputVerdi } = this.state;
@@ -109,12 +109,12 @@ class MultiLand extends Component {
     } else {
       this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
     }
-  }
+  };
 
   inputEndringHandler = e => {
     const inputVerdi = e.target.value;
     this.setState({ inputVerdi });
-  }
+  };
 
   render() {
     const {

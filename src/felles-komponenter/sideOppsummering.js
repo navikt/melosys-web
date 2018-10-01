@@ -11,7 +11,7 @@ import './sideOppsummering.css';
 
 function SideOppsummering(props) {
   const { oppsummering } = props;
-  if (!oppsummering) return null;
+  if (!oppsummering) return <div />;
 
   const {
     saksnummer,

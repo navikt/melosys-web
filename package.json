@@ -1,6 +1,6 @@
 {
   "name": "melosys-web",
-  "version": "0.12.6",
+  "version": "0.13.2",
   "description": "Medlemsskap og lovvalgssystem",
   "author": {
     "name": "are.bjolseth@nav.no"
@@ -59,6 +59,7 @@
     "nav-frontend-typografi": "^2.0.6",
     "nav-frontend-typografi-style": "^1.0.10",
     "prop-types": "^15.6.2",
+    "qs": "^6.5.2",
     "react": "^16.5.2",
     "react-collapse": "^4.0.3",
     "react-dom": "^16.5.2",

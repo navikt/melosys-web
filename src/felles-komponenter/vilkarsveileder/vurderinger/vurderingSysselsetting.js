@@ -26,6 +26,7 @@ const VurderingSysselsetting = props => {
 
   return (
     <div>
+      <Nav.Undertittel>Vurdering av aktivitet</Nav.Undertittel>
       { tilstand.visSysselsettingType && <Sysselsetting /> }
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

@@ -78,7 +78,6 @@ class Saksbehandling extends Component {
     finansiering: PT.arrayOf(MPT.Kodeverk),
     faktaavklaring: PT.object,
     soknadArbeidsinntekt: PT.object,
-    soknadOppholdUtland: MPT.OppholdUtland,
     soknadArbeidNorge: MPT.ArbeidNorge,
     handleSubmit: PT.func.isRequired,
     errorSummary: PT.object,
@@ -101,7 +100,6 @@ class Saksbehandling extends Component {
     finansiering: [],
     faktaavklaring: {},
     soknadArbeidsinntekt: {},
-    soknadOppholdUtland: {},
     soknadArbeidNorge: {},
     errorSummary: {},
     errorSummaryTitle: '',
@@ -112,16 +110,16 @@ class Saksbehandling extends Component {
     visOppfriskDialog: false,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { hentFagsaker, hentSoknad, hentFaktaavklaring } = this.props;
     const { snr } = this.props.match.params;
-    this.props.hentFagsaker(snr).then(response => {
-      const { behandlinger } = response.data;
-      if (!behandlinger) return false;
-      const { oppsummering: { behandlingID } } = behandlinger[0];
-      this.props.hentSoknad(behandlingID);
-      this.props.hentFaktaavklaring(behandlingID);
-      return true;
-    });
+    const response = await hentFagsaker(snr);
+    const { behandlinger } = response.data;
+    if (!behandlinger) return false;
+    const { oppsummering: { behandlingID } } = behandlinger[0];
+    await hentSoknad(behandlingID);
+    await hentFaktaavklaring(behandlingID);
+    return true;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -132,46 +130,45 @@ class Saksbehandling extends Component {
     this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
   }
 
-  fattVedtakHandler = () => {
+  fattVedtakHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soeknadDokument: { ...this.props.soknad.soeknadDokument } };
     const avklaring = { avklaring: { ...this.props.faktaavklaring } };
-
-    if (this.props.valid) {
-      this.props.sendSoknad(bid, soknad);
-      this.props.sendFaktaavklaring(bid, avklaring);
+    const { valid, sendSoknad, sendFaktaavklaring } = this.props;
+    if (valid) {
+      await sendSoknad(bid, soknad);
+      await sendFaktaavklaring(bid, avklaring);
     }
-  }
+  };
 
-  overstyrSubmit = event => {
+  overstyrSubmit = async event => {
     event.preventDefault();
 
-    this.props.oppdaterSoknad(this.props.soknadForm.values);
-    this.props.oppdaterFaktaavklaring(this.props.soknadForm.values);
-  }
+    const { oppdaterSoknad, oppdaterFaktaavklaring, soknadForm } = this.props;
+    await oppdaterSoknad(soknadForm.values);
+    await oppdaterFaktaavklaring(soknadForm.values);
+  };
 
-  oppfriskSaksopplysninger = () => {
+  oppfriskSaksopplysninger = async () => {
+    const { oppfriskFagsaker } = this.props;
     const { behandlingID } = this.props.oppsummering;
-
-    this.props.oppfriskFagsaker(behandlingID).then(response => {
-      if (response.ok) {
-        this.skjulOppfriskBekreftelse();
-        this.props.history.push('/');
-      }
-    });
-  }
+    const response = await oppfriskFagsaker(behandlingID);
+    if (response.ok) {
+      this.skjulOppfriskBekreftelse();
+      this.props.history.push('/');
+    }
+  };
 
   visOppfriskBekreftelse = () => {
     this.setState({ visOppfriskDialog: true });
-  }
+  };
 
   skjulOppfriskBekreftelse = () => {
     this.setState({ visOppfriskDialog: false });
-  }
+  };
 
   /* eslint-disable */
-  lagreOgLukk = () => { alert('Ikke implementert'); }
-  avslaSoknad = () => { alert('Ikke implementert'); }
+  lagreOgLukk = () => { alert('Ikke implementert'); };
   /* eslint-enable */
 
   render() {
@@ -336,7 +333,7 @@ const mapStateToProps = state => ({
     faktaavklaringForutgaendeMedlemskapBegrunnelser: faktaavklaringSelectors.FaktaavklaringForutgaendeMedlemskapSelector(state).forutgaendeMedlemskapBegrunnelser,
     faktaavklaringArbeidKnyttetTilVirksomhetUtlandet: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).arbeidKnyttetTilVirksomhetUtlandet,
     faktaavklaringSammeTypeVirksomhet: faktaavklaringSelectors.FaktaavklaringUtsendingSelector(state).sammeTypeVirksomhet,
-    faktaavklaringAnsattISektor: faktaavklaringSelectors.FaktaavklaringSektorSelector(state).ansattISektor,
+    faktaavklaringYrkesaktivitetType: faktaavklaringSelectors.FaktaavklaringYrkesaktivitetSelector(state).yrkesaktivitetType,
     faktaavklaringAntallLand: faktaavklaringSelectors.FaktaavklaringYrkesaktivitetFordelingSelector(state).antallLand,
     faktaavklaringAktivitetINorge: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).aktivitetINorge,
     faktaavklaringMarginaltArbeid: faktaavklaringSelectors.FaktaavklaringVirksomhetSelector(state).marginaltArbeid,
@@ -349,6 +346,8 @@ const mapStateToProps = state => ({
     faktaavklaringForretningsstedLand: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).land,
     faktaavklaringForretningsstedAntallArbeidsgivere: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).antallArbeidsgivere,
     faktaavklaringForretningsstedFordelingArbeidsgivere: faktaavklaringSelectors.FaktaavklaringForretningsstedSelector(state).fordelingArbeidsgivere,
+    vurderingLovvalg: faktaavklaringSelectors.FaktaavklaringLovvalgKodeSelector(state),
+    vurderingBegrunnelser: faktaavklaringSelectors.FaktaavklaringVurderingSelector(state).begrunnelser,
   },
 });
 
