@@ -35,7 +35,7 @@ class Spark extends Component {
       behandlingID: 0,
     },
     fagsaker: []
-  }
+  };
 
   opprettNyFagsakSubmit = event => {
     event.preventDefault();
@@ -55,12 +55,11 @@ class Spark extends Component {
     this.props.journalOppgave(oppgaveBody);
   };
 
-  hentFagsakBasertPaFnr = event => {
+  hentFagsakBasertPaFnr = async event => {
     event.preventDefault();
     const { fnr : { value : fnr } } = event.target;
-    Api.Fagsaker.sok(fnr).then(response => {
-      this.setState({fagsaker: response});
-    });
+    const response = await Api.Fagsaker.sok(fnr);
+    this.setState({fagsaker: response});
   };
 
   resetOppgaver = () => {
@@ -82,7 +81,7 @@ class Spark extends Component {
         this.setState({soknad: {soeknadDokument, behandlingID, erNySoknad} });
       })
       .catch(error => this.setState({soknad: { soeknadDokument: '', behandlingID: '', error } }));
-  }
+  };
 
   soknadSubmit = event => {
     event.preventDefault();
@@ -99,7 +98,7 @@ class Spark extends Component {
   updateSoknadJSON = data => {
     this.setState({soknad: {...this.state.soknad, soeknadDokument: data}});
     return true;
-  }
+  };
 
   render() {
     const { nyfagsak, oppgave } = this.props;

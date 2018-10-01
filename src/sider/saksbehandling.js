@@ -108,16 +108,16 @@ class Saksbehandling extends Component {
     visOppfriskDialog: false,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const { hentFagsaker, hentSoknad, hentFaktaavklaring } = this.props;
     const { snr } = this.props.match.params;
-    this.props.hentFagsaker(snr).then(response => {
-      const { behandlinger } = response.data;
-      if (!behandlinger) return false;
-      const { oppsummering: { behandlingID } } = behandlinger[0];
-      this.props.hentSoknad(behandlingID);
-      this.props.hentFaktaavklaring(behandlingID);
-      return true;
-    });
+    const response = await hentFagsaker(snr);
+    const { behandlinger } = response.data;
+    if (!behandlinger) return false;
+    const { oppsummering: { behandlingID } } = behandlinger[0];
+    await hentSoknad(behandlingID);
+    await hentFaktaavklaring(behandlingID);
+    return true;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -128,33 +128,33 @@ class Saksbehandling extends Component {
     this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
   }
 
-  fattVedtakHandler = () => {
+  fattVedtakHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soeknadDokument: { ...this.props.soknad.soeknadDokument } };
     const avklaring = { avklaring: { ...this.props.faktaavklaring } };
-
-    if (this.props.valid) {
-      this.props.sendSoknad(bid, soknad);
-      this.props.sendFaktaavklaring(bid, avklaring);
+    const { valid, sendSoknad, sendFaktaavklaring } = this.props;
+    if (valid) {
+      await sendSoknad(bid, soknad);
+      await sendFaktaavklaring(bid, avklaring);
     }
   };
 
-  overstyrSubmit = event => {
+  overstyrSubmit = async event => {
     event.preventDefault();
 
-    this.props.oppdaterSoknad(this.props.soknadForm.values);
-    this.props.oppdaterFaktaavklaring(this.props.soknadForm.values);
+    const { oppdaterSoknad, oppdaterFaktaavklaring, soknadForm } = this.props;
+    await oppdaterSoknad(soknadForm.values);
+    await oppdaterFaktaavklaring(soknadForm.values);
   };
 
-  oppfriskSaksopplysninger = () => {
+  oppfriskSaksopplysninger = async () => {
+    const { oppfriskFagsaker } = this.props;
     const { behandlingID } = this.props.oppsummering;
-
-    this.props.oppfriskFagsaker(behandlingID).then(response => {
-      if (response.ok) {
-        this.skjulOppfriskBekreftelse();
-        this.props.history.push('/');
-      }
-    });
+    const response = await oppfriskFagsaker(behandlingID);
+    if (response.ok) {
+      this.skjulOppfriskBekreftelse();
+      this.props.history.push('/');
+    }
   };
 
   visOppfriskBekreftelse = () => {

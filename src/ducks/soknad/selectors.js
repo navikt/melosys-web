@@ -58,11 +58,11 @@ export const EkstraArbeidsgivereSelector = createSelector(
 
 export const OppholdUtlandSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.oppholdUtland : {}),
-  soknad => soknad || {}
+  oppholdUtland => oppholdUtland || {}
 );
 
 export const OppholdUtlandPeriodeSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.oppholdUtland : {}),
+  state => OppholdUtlandSelector(state),
   oppholdUtland => {
     const { oppholdsPeriode } = oppholdUtland;
     return oppholdsPeriode || {};
