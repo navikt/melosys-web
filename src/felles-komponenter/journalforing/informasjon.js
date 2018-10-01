@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
 
+import * as Utils from '../../utils/utils';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
@@ -26,15 +27,15 @@ import './informasjon.css';
 class Informasjon extends Component {
   state = { spinner: {} };
 
-  componentDidMount() {
-    this.oppdaterFelter(this.props, true);
+  async componentDidMount() {
+    await this.oppdaterFelter(this.props, true);
   }
 
-  componentDidUpdate(prevProps) {
-    this.oppdaterFelter(prevProps);
+  async componentDidUpdate(prevProps) {
+    await this.oppdaterFelter(prevProps);
   }
 
-  oppdaterFelter = (props, tvingOppdatering) => {
+  oppdaterFelter = async (props, tvingOppdatering) => {
     const { brukerID: gammelBrukerID, avsenderID: gammelAvsenderID, erBrukerAvsender: gammelErBrukerAvsender } = props.journalforingSkjemaVerdier;
     const {
       brukerID = '', avsenderID = '', erBrukerAvsender, brukerNavn,
@@ -43,11 +44,11 @@ class Informasjon extends Component {
     const { kopierBrukerTilAvsender, tomAvsender } = this;
 
     if ((gammelBrukerID !== brukerID) || tvingOppdatering) {
-      hentOgVisBruker(brukerID);
+      await hentOgVisBruker(brukerID);
     }
 
     if ((gammelAvsenderID !== avsenderID) || tvingOppdatering) {
-      hentOgVisAvsender(avsenderID);
+      await hentOgVisAvsender(avsenderID);
     }
 
     if ((gammelErBrukerAvsender !== erBrukerAvsender) || tvingOppdatering) {
@@ -86,7 +87,7 @@ class Informasjon extends Component {
     const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
 
     if (Person.erGyldigFnr(verdi)) {
-      this.toggleSpinner('brukerNavn');
+      await this.toggleSpinner('brukerNavn');
       const response = await hentOgVisBruker(verdi);
       if (!response) return;
       const { brukerID, sammensattNavn } = response;
@@ -102,7 +103,7 @@ class Informasjon extends Component {
     const { settFeltInnhold, hentOgVisAvsender } = this.props;
 
     if (erGyldigAvsenderID(verdi)) {
-      this.toggleSpinner('avsenderNavn');
+      await this.toggleSpinner('avsenderNavn');
       await hentOgVisAvsender(verdi);
     } else {
       await settFeltInnhold('avsenderNavn', '');
@@ -113,18 +114,18 @@ class Informasjon extends Component {
     const { erGyldigOrgnummer } = this;
     const { settFeltInnhold, hentOgVisArbeidsgiver } = this.props;
     if (erGyldigOrgnummer(verdi)) {
-      this.toggleSpinner('arbeidsgiverNavn');
+      await this.toggleSpinner('arbeidsgiverNavn');
       await hentOgVisArbeidsgiver(verdi);
     } else {
       await settFeltInnhold('arbeidsgiverNavn');
     }
   };
-  IDFeltTastOppHandler = event => {
+  IDFeltTastOppHandler = async event => {
     const { id: opprinneligFeltID, value } = event.target;
 
-    if (opprinneligFeltID === 'brukerID') { this.sjekkBruker(value); }
-    if (opprinneligFeltID === 'avsenderID') { this.sjekkAvsender(value); }
-    if (opprinneligFeltID === 'arbeidsgiverID') { this.sjekkArbeidsgiver(value); }
+    if (opprinneligFeltID === 'brukerID') { await this.sjekkBruker(value); }
+    if (opprinneligFeltID === 'avsenderID') { await this.sjekkAvsender(value); }
+    if (opprinneligFeltID === 'arbeidsgiverID') { await this.sjekkArbeidsgiver(value); }
   };
 
   /** Toggle spinneren av og på. Når spinner skjules, sett en timeout på 500ms.
@@ -133,12 +134,10 @@ class Informasjon extends Component {
    * tid til å tolke grensesnittet, dvs spinneren.
    * @param navn {String} Navnet på spinneren
    */
-  toggleSpinner = navn => {
+  toggleSpinner = async navn => {
     this.setState({ spinner: { ...this.state.spinner, [navn]: true } });
-
-    setTimeout(() => {
-      this.setState({ spinner: { ...this.state.spinner, [navn]: false } });
-    }, 1000);
+    await Utils.delay(1000);
+    this.setState({ spinner: { ...this.state.spinner, [navn]: false } });
   };
 
   /** Noen felter skal disables dersom andre felter er fylt inn eller andre
@@ -183,7 +182,7 @@ class Informasjon extends Component {
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
 
           <p>Start:Ny sjekkboks</p>
-          <Skjema.RadioGruppe label="Er avssnder argbiedsgiver eller representant?" feltNavn="erAvsenderArbeidsgiver">
+          <Skjema.RadioGruppe label="Er avsender arbeidsgiver eller representant?" feltNavn="erAvsenderArbeidsgiver">
             <Skjema.Radio feltNavn="erAvsenderArbeidsgiver" value={Konstanter.BOOLSK.SANN} label="Ja" />
             <Skjema.Radio feltNavn="erAvsenderArbeidsgiver" value={Konstanter.BOOLSK.USANN} label="Nei" />
           </Skjema.RadioGruppe>
