@@ -1,7 +1,7 @@
 import * as Validering from '../../felles-komponenter/skjema/validering';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
-// import * as Actions from './actions';
+import * as Actions from './actions';
 import * as Types from './types';
 
 /**
@@ -34,8 +34,7 @@ export function send(bid, soknad) {
 }
 
 export function oppdaterPeriode(periode, begrunnelse) {
-  return () => {
-    console.log('operaitons: oppdaterPeriode', periode, begrunnelse);
-    return null; //dispatch(Actions.oppdaterPeriode(periode, begrunnelse));
+  return dispatch => {
+    return dispatch(Actions.oppdaterPeriode(periode, begrunnelse));
   };
 }
