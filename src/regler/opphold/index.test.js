@@ -59,9 +59,9 @@ describe('Tester at regler for opphold', () => {
   });
 
   describe('oppholderSegIUtlandet', () => {
-    test('returnerer true ved faktaavklaringOppholdsLand != "NO"', () => {
+    test('returnerer true ved avklartefaktaOppholdsLand != "NO"', () => {
       const mockSkjema = {
-        faktaavklaringOppholdsLand: ['GB'],
+        avklartefaktaOppholdsLand: ['GB'],
       };
 
       const regel = new Regel(mockSkjema);
@@ -69,9 +69,9 @@ describe('Tester at regler for opphold', () => {
       expect(regel.opphold().oppholderSegIUtlandet().status).toBe(true);
     });
 
-    test('returnerer true ved faktaavklaringOppholdsLand === "NO"', () => {
+    test('returnerer true ved avklartefaktaOppholdsLand === "NO"', () => {
       const mockSkjema = {
-        faktaavklaringOppholdsLand: ['NO'],
+        avklartefaktaOppholdsLand: ['NO'],
       };
 
       const regel = new Regel(mockSkjema);
@@ -79,9 +79,9 @@ describe('Tester at regler for opphold', () => {
       expect(regel.opphold().oppholderSegIUtlandet().status).toBe(false);
     });
 
-    test('returnerer undefined ved faktaavklaringOppholdsLand === []', () => {
+    test('returnerer undefined ved avklartefaktaOppholdsLand === []', () => {
       const mockSkjema = {
-        faktaavklaringOppholdsLand: [],
+        avklartefaktaOppholdsLand: [],
       };
 
       const regel = new Regel(mockSkjema);
@@ -89,9 +89,9 @@ describe('Tester at regler for opphold', () => {
       expect(regel.opphold().oppholderSegIUtlandet().status).toBe(undefined);
     });
 
-    test('returnerer undefined ved faktaavklaringOppholdsLand === null', () => {
+    test('returnerer undefined ved avklartefaktaOppholdsLand === null', () => {
       const mockSkjema = {
-        faktaavklaringOppholdsLand: null,
+        avklartefaktaOppholdsLand: null,
       };
 
       const regel = new Regel(mockSkjema);
@@ -99,9 +99,9 @@ describe('Tester at regler for opphold', () => {
       expect(regel.opphold().oppholderSegIUtlandet().status).toBe(undefined);
     });
 
-    test('returnerer undefined ved faktaavklaringOppholdsLand === undefined', () => {
+    test('returnerer undefined ved avklartefaktaOppholdsLand === undefined', () => {
       const mockSkjema = {
-        faktaavklaringOppholdsLand: undefined,
+        avklartefaktaOppholdsLand: undefined,
       };
 
       const regel = new Regel(mockSkjema);

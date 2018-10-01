@@ -13,7 +13,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { KodeverkSelectors } from '../../ducks/kodeverk/';
 import { vurderingOperations } from '../../ducks/vurdering/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
-import { faktaavklaringSelectors, faktaavklaringOperations } from '../../ducks/faktaavklaring/';
+import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
 import { soknadOperations } from '../../ducks/soknad/';
 import { formSelectors } from '../../ducks/form/';
 
@@ -28,7 +28,7 @@ class Vilkarsveileder extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (Object.keys(nextProps.faktaavklaring).length > 0) {
+    if (Object.keys(nextProps.avklartefakta).length > 0) {
       this.oppdaterAktuelleSteg(nextProps);
     }
   }
@@ -67,7 +67,7 @@ class Vilkarsveileder extends Component {
     };
 
     const propsLight = {
-      faktaavklaring: props.faktaavklaring,
+      avklartefakta: props.avklartefakta,
       saksopplysninger: props.saksopplysninger,
       inngang: props.inngang,
       skjema: props.skjema,
@@ -123,14 +123,14 @@ class Vilkarsveileder extends Component {
 Vilkarsveileder.propTypes = {
   arbeidsgivereIPerioden: PT.array,
   beOmVurderingHandler: PT.func.isRequired,
-  faktaavklaring: PT.object,
+  avklartefakta: PT.object,
   fattVedtakHandler: PT.func.isRequired,
   hentBosted: PT.func.isRequired,
   hentInngang: PT.func.isRequired,
   hentVurdering: PT.func.isRequired,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
-  oppdaterFaktaavklaringState: PT.func.isRequired,
+  oppdaterAvklartefaktaState: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   begrunnelser: PT.object,
   landkoder: PT.arrayOf(MPT.Kodeverk),
@@ -144,7 +144,7 @@ Vilkarsveileder.propTypes = {
 Vilkarsveileder.defaultProps = {
   arbeidsgivereIPerioden: [],
   begrunnelser: {},
-  faktaavklaring: {},
+  avklartefakta: {},
   inngang: {},
   oppsummering: [],
   valgteArbeidsgivere: [],
@@ -152,22 +152,22 @@ Vilkarsveileder.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  arbeidsgivereIPerioden: faktaavklaringSelectors.ArbeidsgivereIPeriodenSelector(state),
+  arbeidsgivereIPerioden: avklartefaktaSelectors.ArbeidsgivereIPeriodenSelector(state),
   begrunnelser: KodeverkSelectors.begrunnelserSelector(state),
-  faktaavklaring: faktaavklaringSelectors.FaktaavklaringSelector(state),
+  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   saksopplysninger: fagsakSelectors.SaksopplysningerSelector(state),
   landkoder: KodeverkSelectors.landkoderSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
-  valgteArbeidsgivere: faktaavklaringSelectors.FaktaavklaringValgteArbeidsgivereSelector(state),
+  valgteArbeidsgivere: avklartefaktaSelectors.AvklartefaktaValgteArbeidsgivereSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentBosted: behandlingID => dispatch(faktaavklaringOperations.hentBosted(behandlingID)),
+  hentBosted: behandlingID => dispatch(avklartefaktaOperations.hentBosted(behandlingID)),
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
-  oppdaterFaktaavklaringState: skjema => dispatch(faktaavklaringOperations.oppdaterFaktaavklaringState(skjema)),
+  oppdaterAvklartefaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklartefaktaState(skjema)),
   sendSoknad: (behandlingID, soknad) => dispatch(soknadOperations.send(behandlingID, soknad)),
 });
 

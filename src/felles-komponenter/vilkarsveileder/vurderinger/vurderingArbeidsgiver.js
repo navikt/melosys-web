@@ -39,7 +39,7 @@ ArbeidsgiverLinje.defaultProps = {
  * FieldArray trenger en egen komponent-container for å rendre ut hvert enkelt felt som er lagret i store (dvs avkryssede arbeidsgivere).
  * Rendre ut ALLE arbeidsgiver. og kryss av de som samsvarer med orgnr.
  *
- * Komponenten har er stateful fordi vi trenger å lese fields-objektet (som er et ArrayField i redux form, "faktaavklaringValgteArbeidsgivere").
+ * Komponenten har er stateful fordi vi trenger å lese fields-objektet (som er et ArrayField i redux form, "avklartefaktaValgteArbeidsgivere").
  * Det gir mest mening å la denne listekomponenten håndtere klikk-events selv.
  *
  * @param props Objekt Diverse props Se prop types
@@ -66,7 +66,7 @@ class ArbeidsgivereListe extends Component {
         {arbeidsgivereIPerioden.map(arbeidsgiveren => (
           <Field
             key={uuid()}
-            name="faktaavklaringValgteArbeidsgiver"
+            name="avklartefaktaValgteArbeidsgiver"
             type="text"
             component={linjeProps => <ArbeidsgiverLinje
               {...linjeProps}
@@ -104,7 +104,7 @@ const VurderingArbeidsgiver = props => {
     <div className="vurderingArbeidsgiver">
       <Nav.Undertittel>Velg arbeidsgiver, oppdragsgiver eller selvstendig næringsvirksomhet:</Nav.Undertittel>
       <div className="arbeidsgiver">
-        <FieldArray name="faktaavklaringValgteArbeidsgivere" component={arrayProps => <ArbeidsgivereListe {...arrayProps} arbeidsgivereIPerioden={arbeidsgivereIPerioden} />} />
+        <FieldArray name="avklartefaktaValgteArbeidsgivere" component={arrayProps => <ArbeidsgivereListe {...arrayProps} arbeidsgivereIPerioden={arbeidsgivereIPerioden} />} />
         <div className="fane__knapplinje">
           <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
