@@ -145,7 +145,7 @@ class Journalforing extends Component {
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
     const vasketJournalforing = this.vaskDokumentInformasjon();
-    const journalforingData = { saksnummer, vasketJournalforing };
+    const journalforingData = { saksnummer, ...vasketJournalforing };
 
     resetSkjemaFelterForOpprettFagsak();
 
