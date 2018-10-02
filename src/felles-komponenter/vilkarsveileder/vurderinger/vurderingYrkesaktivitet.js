@@ -18,10 +18,10 @@ const VurderingYrkesaktivitet = props => {
     <div>
       <Nav.Undertittel>Vurdering av yrkesaktivitet</Nav.Undertittel>
       <Nav.Fieldset legend="Hva gjelder for søkeren?">
-        <Skjema.Radio feltNavn="faktaavklaringYrkesaktivitetType" value={VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER} label="Ordinær arbeidstaker" />
-        <Skjema.Radio feltNavn="faktaavklaringYrkesaktivitetType" value={VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE} label="Selvstendig næringsdrivende" />
-        <Skjema.Radio feltNavn="faktaavklaringYrkesaktivitetType" value={VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG} label="Ordinær arbeidstaker og selvstendig næringsdrivende" />
-        <Skjema.Radio feltNavn="faktaavklaringYrkesaktivitetType" value={VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING} label="Tjenesteperson i norsk statsforvaltning" />
+        <Skjema.Radio feltNavn="avklartefaktaYrkesaktivitetType" value={VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER} label="Ordinær arbeidstaker" />
+        <Skjema.Radio feltNavn="avklartefaktaYrkesaktivitetType" value={VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE} label="Selvstendig næringsdrivende" />
+        <Skjema.Radio feltNavn="avklartefaktaYrkesaktivitetType" value={VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG} label="Ordinær arbeidstaker og selvstendig næringsdrivende" />
+        <Skjema.Radio feltNavn="avklartefaktaYrkesaktivitetType" value={VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING} label="Tjenesteperson i norsk statsforvaltning" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

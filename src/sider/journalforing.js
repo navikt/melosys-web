@@ -116,20 +116,18 @@ class Journalforing extends Component {
       journalforing: { dokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, avsenderNavn, arbeidsgiverID, representantID, dokumentTittel, vedleggsTitler,
+      brukerID, avsenderID, avsenderNavn, dokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
     const { ID: dokumentID } = dokument;
     return {
-      journalpostID,
-      oppgaveID,
-      brukerID,
       avsenderID,
       avsenderNavn,
-      arbeidsgiverID,
-      representantID,
+      brukerID,
       dokumentID,
       dokumenttittel: dokumentTittel,
+      journalpostID,
+      oppgaveID,
       vedleggstitler: vedleggsTitler,
     };
   };
@@ -146,23 +144,71 @@ class Journalforing extends Component {
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
-    const vasketJournalforing = { ...this.vaskDokumentInformasjon(), saksnummer };
+    const vasketJournalforing = this.vaskDokumentInformasjon();
+    const journalforingData = { saksnummer, ...vasketJournalforing };
 
     resetSkjemaFelterForOpprettFagsak();
 
-    settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
+    await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
 
-    // Manuell sjekk på validering og hensikt for å omgå race condition via props.
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.KNYTT)) {
       settFeilFelt('vedleggsTitler', 'saksnummer');
       return false;
     }
-    const response = await tilordneSak(vasketJournalforing);
+
+    const response = await tilordneSak(journalforingData);
     if (response.ok) {
       history.push('/');
     }
   };
 
+  /** Når saksbehandler klikker "opprett sak" skal det åpnes for validering av
+   * relevante felter før ny sak opprettes (sendes til API) og saksbehandler returneres til forsiden.
+   * @returns {boolean}
+   */
+  opprettFagsak = async () => {
+    /* eslint no-unreachable:off */
+    const {
+      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
+    } = this.props;
+
+    const { resetSkjemaFelterForEksisterendeSaker } = this;
+    const { journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed } = journalforingSkjemaVerdier;
+
+    this.touchAll(this.props.errors);
+
+    resetSkjemaFelterForEksisterendeSaker();
+
+    await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
+
+    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.OPPRETT)) {
+      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingOppholdsLand');
+      return false;
+    }
+
+    const fagsak = {
+      sakstype: 'EU_EOS',
+      soknadsperiode: {
+        fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
+        tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
+      },
+      land: journalforingOppholdsLand,
+    };
+
+    const vasketJournalforing = this.vaskDokumentInformasjon();
+    const arbeidsgiverID = '910253158';
+    const representantID = arbeidsgiverID ? null : '910253158';
+    const journalforingData = {
+      arbeidsgiverID,
+      representantID,
+      ...vasketJournalforing,
+      fagsak,
+    };
+    const response = await opprettNySak(journalforingData);
+    if (response.ok) {
+      history.push('/');
+    }
+  };
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
    * Derfor, sjekk dette før vi evt kaller sokFnrDnr.
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
@@ -202,6 +248,7 @@ class Journalforing extends Component {
     }
   };
 
+
   hentOgVisArbeidsgiver = async value => {
     const { sokOrgnr, settFeltInnhold } = this.props;
 
@@ -211,46 +258,6 @@ class Journalforing extends Component {
       const response = await sokOrgnr(value);
       const { navn = '' } = response;
       settFeltInnhold('arbeidsgiverNavn', navn);
-    }
-  };
-  /** Når saksbehandler klikker "opprett sak" skal det åpnes for validering av
-   * relevante felter før ny sak opprettes (sendes til API) og saksbehandler returneres til forsiden.
-   * @returns {boolean}
-   */
-  opprettFagsak = async () => {
-    /* eslint no-unreachable:off */
-    const {
-      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
-    } = this.props;
-
-    const { resetSkjemaFelterForEksisterendeSaker } = this;
-    const { journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed } = journalforingSkjemaVerdier;
-
-    this.touchAll(this.props.errors);
-
-    resetSkjemaFelterForEksisterendeSaker();
-
-    settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
-
-    // Manuell sjekk på validering og hensikt for å omgå race condition via props.
-    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.OPPRETT)) {
-      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingOppholdsLand');
-      return false;
-    }
-
-    const fagsak = {
-      type: 'EU_EOS', // FIXME, fjern hardkoding, og endre fra type => saksetype
-      soknadsperiode: {
-        fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
-        tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
-      },
-      land: journalforingOppholdsLand,
-    };
-
-    const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
-    const response = await opprettNySak(journalforingData);
-    if (response.ok) {
-      history.push('/');
     }
   };
 
@@ -334,7 +341,7 @@ const mapStateToProps = state => ({
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
     arbeidsgiverID: '',
-    representantID: '910253158',
+    representantID: null,
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
     vedleggsTitler: [],
