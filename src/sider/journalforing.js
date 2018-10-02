@@ -21,7 +21,7 @@ import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
 
-import { journalforingValidering } from '../felles-komponenter/skjema/validering/journalforing';
+import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
   journalforingSelectors,
@@ -139,7 +139,7 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt,
+      journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
@@ -150,6 +150,12 @@ class Journalforing extends Component {
     resetSkjemaFelterForOpprettFagsak();
 
     await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
+
+    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.KNYTT)) {
+      settFeilFelt('vedleggsTitler', 'saksnummer');
+      return false;
+    }
+
     const response = await tilordneSak(journalforingData);
     if (response.ok) {
       history.push('/');
@@ -163,7 +169,7 @@ class Journalforing extends Component {
   opprettFagsak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt,
+      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
@@ -174,6 +180,11 @@ class Journalforing extends Component {
     resetSkjemaFelterForEksisterendeSaker();
 
     await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
+
+    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.OPPRETT)) {
+      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingOppholdsLand');
+      return false;
+    }
 
     const fagsak = {
       sakstype: 'EU_EOS',
