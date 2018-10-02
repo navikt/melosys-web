@@ -55,10 +55,10 @@ Arbeidsgiver.defaultProps = {
 
 const UtsendendeArbeidsgiver = props => {
   const { organisasjoner, soknadVerdier } = props;
-  const { faktaavklaringValgteArbeidsgivere } = soknadVerdier;
+  const { avklartefaktaValgteArbeidsgivere } = soknadVerdier;
 
   const valgteOrganisasjon = organisasjoner && organisasjoner.reduce((samling, organisasjonen) =>
-    (faktaavklaringValgteArbeidsgivere.includes(organisasjonen.orgnr) ? [...samling, organisasjonen] : [...samling]), []);
+    (avklartefaktaValgteArbeidsgivere.includes(organisasjonen.orgnr) ? [...samling, organisasjonen] : [...samling]), []);
 
   const panelIkon = valgteOrganisasjon.length === 1 ? Ikoner.Ferdig : Ikoner.Varsel;
 
