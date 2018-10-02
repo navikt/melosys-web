@@ -7,13 +7,13 @@ import './ukjentSide.css';
 
 /* eslint arrow-body-style:off */
 const UkjentSide = ({ location }) => {
-  /* const logdata = {
+  const logdata = {
     message: 'Ukjent Side',
     data: {
       url: location.pathname,
     },
-  }; */
-  // window.frontendlogger.error(logdata);
+  };
+  window.frontendlogger.error(logdata);
   return (
     <Nav.AlertStripe type="stopp" className="ukjentSide">
       <Nav.Systemtittel>Denne siden finnes ikke: &quot;{location.pathname}&quot;.</Nav.Systemtittel>
