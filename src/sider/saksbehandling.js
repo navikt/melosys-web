@@ -133,7 +133,7 @@ class Saksbehandling extends Component {
     }
   };
 
-  lagreVurderingHandler = async () => {}
+  lagreVurderingHandler = async () => {};
 
   lagreVedtakHandler = async () => {
     /* eslint-disable */
