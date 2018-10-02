@@ -19,7 +19,7 @@ class DialogboksVenter extends Component {
         contentLabel="Jobber med å oppfriske"
         onRequestClose={skjul}
         closeButton={false}
-        shouldCloseOnOverlayClick>
+        shouldCloseOnOverlayClick={false}>
         <div>
           <Nav.NavFrontendSpinner className="spinner" />
           <Nav.Systemtittel className="tekst">{tittel}</Nav.Systemtittel>
