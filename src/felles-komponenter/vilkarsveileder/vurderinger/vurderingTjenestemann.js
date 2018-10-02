@@ -19,17 +19,17 @@ const VurderingTjenestemann = props => {
     <div>
       <Nav.Fieldset legend="Vurder om søker:">
         <Skjema.Radio
-          feltNavn="faktaavklaringTjenestemann"
+          feltNavn="avklartefaktaTjenestemann"
           value={VurderingTjenestemannTyper.ETT_LAND}
           label="Er kun lønnet som tjenesteperson, ett land."
         />
         <Skjema.Radio
-          feltNavn="faktaavklaringTjenestemann"
+          feltNavn="avklartefaktaTjenestemann"
           value={VurderingTjenestemannTyper.ETT_LAND_YRKESAKTIVITET_ANDRE_LAND}
           label="Er tjenesteperson i Norge, har yrkesaktivitet i andre land."
         />
         <Skjema.Radio
-          feltNavn="faktaavklaringTjenestemann"
+          feltNavn="avklartefaktaTjenestemann"
           value={VurderingTjenestemannTyper.IKKE_TJENESTEMANN}
           label="Er ikke tjenesteperson."
         />

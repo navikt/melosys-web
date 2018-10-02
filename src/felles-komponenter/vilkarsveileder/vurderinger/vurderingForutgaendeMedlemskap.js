@@ -16,8 +16,8 @@ const VurderingForutgaendeMedlemskap = props => {
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend="Søkeren har:">
-              <Skjema.Radio feltNavn="faktaavklaringHarForutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
-              <Skjema.Radio feltNavn="faktaavklaringHarForutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
+              <Skjema.Radio feltNavn="avklartefaktaHarForutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
+              <Skjema.Radio feltNavn="avklartefaktaHarForutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -25,7 +25,7 @@ const VurderingForutgaendeMedlemskap = props => {
           <Nav.Column xs="12" md="10" lg="8">
             <Nav.Fieldset legend="Begrunnelse:">
               <Skjema.ListeVelger
-                feltNavn="faktaavklaringForutgaendeMedlemskapBegrunnelser"
+                feltNavn="avklartefaktaForutgaendeMedlemskapBegrunnelser"
                 muligeValg={begrunnelser}
                 label="Legg til begrunnelse:"
                 gruppe

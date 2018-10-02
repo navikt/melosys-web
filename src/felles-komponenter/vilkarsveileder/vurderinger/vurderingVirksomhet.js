@@ -14,22 +14,22 @@ export const VurderingVirksomhetTyper = {
 
 const VekslingMellomLand = () => (
   <Nav.Fieldset legend="Veksler søker regelmessig mellom arbeid i flere land eller arbeider søker i flere land?">
-    <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhetTyper.EN_ELLER_BEGGE} label="Ja, en eller begge" />
-    <Skjema.Radio feltNavn="faktaavklaringVekslingMellomLand" value={VurderingVirksomhetTyper.INGEN_VEKSLING} label="Nei, ingen av delene" />
+    <Skjema.Radio feltNavn="avklartefaktaVekslingMellomLand" value={VurderingVirksomhetTyper.EN_ELLER_BEGGE} label="Ja, en eller begge" />
+    <Skjema.Radio feltNavn="avklartefaktaVekslingMellomLand" value={VurderingVirksomhetTyper.INGEN_VEKSLING} label="Nei, ingen av delene" />
   </Nav.Fieldset>
 );
 
 const MarginaltArbeid = () => (
   <Nav.Fieldset legend="Er arbeidet søker utfører som offentlig tjenesteperson for Norsk forvaltning marginalt (mindre enn 5%)?">
-    <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhetTyper.MARGINALT_JA} label="Ja" />
-    <Skjema.Radio feltNavn="faktaavklaringMarginaltArbeid" value={VurderingVirksomhetTyper.MARGINALT_NEI} label="Nei" />
+    <Skjema.Radio feltNavn="avklartefaktaMarginaltArbeid" value={VurderingVirksomhetTyper.MARGINALT_JA} label="Ja" />
+    <Skjema.Radio feltNavn="avklartefaktaMarginaltArbeid" value={VurderingVirksomhetTyper.MARGINALT_NEI} label="Nei" />
   </Nav.Fieldset>
 );
 
 const AktivitetINorge = () => (
   <Nav.Fieldset legend="Hvor mye av aktiviteten skjer i Norge?">
-    <Skjema.Radio feltNavn="faktaavklaringAktivitetINorge" value={VurderingVirksomhetTyper.UNDER_25_PROSENT} label="Mindre enn 25%" />
-    <Skjema.Radio feltNavn="faktaavklaringAktivitetINorge" value={VurderingVirksomhetTyper.OVER_25_PROSENT} label="25% eller mer" />
+    <Skjema.Radio feltNavn="avklartefaktaAktivitetINorge" value={VurderingVirksomhetTyper.UNDER_25_PROSENT} label="Mindre enn 25%" />
+    <Skjema.Radio feltNavn="avklartefaktaAktivitetINorge" value={VurderingVirksomhetTyper.OVER_25_PROSENT} label="25% eller mer" />
   </Nav.Fieldset>
 );
 
