@@ -58,51 +58,43 @@ import '../felles-komponenter/skjema/skjema.css';
 
 class Saksbehandling extends Component {
   static propTypes = {
-    hentFagsaker: PT.func.isRequired,
-    oppfriskFagsaker: PT.func.isRequired,
-    hentSoknad: PT.func.isRequired,
-    sendSoknad: PT.func.isRequired,
-    hentAvklartefakta: PT.func.isRequired,
-    sendAvklartefakta: PT.func.isRequired,
-    hentVurdering: PT.func.isRequired,
-    match: PT.object.isRequired,
-    history: PT.object.isRequired,
-    person: MPT.Person,
-    medlemskap: MPT.Medlemskap,
     arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
-    inntekt: MPT.Inntekt,
-    vurdering: PT.object,
-    bekreftelser: MPT.Bekreftelser,
-    oppsummering: MPT.Oppsummering,
-    soknad: PT.object,
-    finansiering: PT.arrayOf(MPT.Kodeverk),
     avklartefakta: PT.object,
-    soknadArbeidsinntekt: PT.object,
-    soknadArbeidNorge: MPT.ArbeidNorge,
+    bekreftelser: MPT.Bekreftelser,
     handleSubmit: PT.func.isRequired,
-    errorSummary: PT.object,
-    errorSummaryTitle: PT.string,
-    soknadForm: PT.object.isRequired,
-    oppdaterSoknad: PT.func.isRequired,
+    hentFagsaker: PT.func.isRequired,
+    hentSoknad: PT.func.isRequired,
+    hentAvklartefakta: PT.func.isRequired,
+    hentVurdering: PT.func.isRequired,
+    history: PT.object.isRequired,
+    inntekt: MPT.Inntekt,
+    match: PT.object.isRequired,
+    medlemskap: MPT.Medlemskap,
     oppdaterAvklartefakta: PT.func.isRequired,
+    oppdaterSoknad: PT.func.isRequired,
+    oppfriskFagsaker: PT.func.isRequired,
+    oppsummering: MPT.Oppsummering,
+    person: MPT.Person,
+    sendSoknad: PT.func.isRequired,
+    sendAvklartefakta: PT.func.isRequired,
+    soknad: PT.object,
+    soknadArbeidsinntekt: PT.object,
+    soknadForm: PT.object.isRequired,
     valid: PT.bool.isRequired,
+    vurdering: PT.object,
   };
 
   static defaultProps = {
-    person: {},
-    medlemskap: {},
     arbeidsgivereNorge: [],
-    inntekt: {},
-    vurdering: {},
-    bekreftelser: [],
-    oppsummering: {},
-    soknad: {},
-    finansiering: [],
     avklartefakta: {},
+    bekreftelser: [],
+    inntekt: {},
+    medlemskap: {},
+    oppsummering: {},
+    person: {},
+    soknad: {},
     soknadArbeidsinntekt: {},
-    soknadArbeidNorge: {},
-    errorSummary: {},
-    errorSummaryTitle: '',
+    vurdering: {},
   };
 
   state = {
@@ -137,6 +129,15 @@ class Saksbehandling extends Component {
     const { valid, sendSoknad, sendAvklartefakta } = this.props;
     if (valid) {
       await sendSoknad(bid, soknad);
+      await sendAvklartefakta(bid, avklaring);
+    }
+  };
+
+  lagreAvklartefaktaHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const avklaring = { avklaring: { ...this.props.avklartefakta } };
+    const { valid, sendAvklartefakta } = this.props;
+    if (valid) {
       await sendAvklartefakta(bid, avklaring);
     }
   };
@@ -202,7 +203,9 @@ class Saksbehandling extends Component {
                     /* eslint no-alert:off */
                     alert('Ikke implementert');
                   }}
-                  fattVedtakHandler={this.fattVedtakHandler} />
+                  fattVedtakHandler={this.fattVedtakHandler}
+                  lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
+                />
                 {person && <Personopplysninger person={person} />}
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
@@ -258,7 +261,6 @@ const mapStateToProps = state => ({
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
-  soknadArbeidNorge: soknadSelectors.ArbeidNorgeSelector(state),
   initialValues: {
     utenlandskID: soknadSelectors.PersonOpplysningerSelector(state).utenlandskID,
     medfolgendeFamilie: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
