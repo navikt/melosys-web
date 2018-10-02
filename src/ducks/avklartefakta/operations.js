@@ -10,6 +10,7 @@
 import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
 import * as Types from './types';
+import * as Actions from './actions';
 
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Avklartefakta.hent(behandlingID), {
@@ -26,3 +27,8 @@ export function send(bid, dokument) {
     PENDING: Types.PENDING,
   });
 }
+
+export function oppdaterAvklartefaktaState(skjema) {
+  return dispatch => (dispatch(Actions.oppdaterAvklartefaktaState(skjema)));
+}
+

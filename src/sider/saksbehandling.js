@@ -133,9 +133,17 @@ class Saksbehandling extends Component {
     }
   };
 
+  lagreVurderingHandler = async () => {}
+
+  lagreVedtakHandler = async () => {
+    /* eslint-disable */
+    alert('Ikke implementert');
+    /* eslint-enable */
+  };
+
   lagreAvklartefaktaHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
-    const avklaring = { avklaring: { ...this.props.avklartefakta } };
+    const avklaring = { behandlingID: bid, avklaring: { ...this.props.avklartefakta } };
     const { valid, sendAvklartefakta } = this.props;
     if (valid) {
       await sendAvklartefakta(bid, avklaring);
@@ -199,11 +207,8 @@ class Saksbehandling extends Component {
             <Nav.Column xs="7">
               <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
                 <Vilkarsveileder
-                  beOmVurderingHandler={() => {
-                    /* eslint no-alert:off */
-                    alert('Ikke implementert');
-                  }}
-                  fattVedtakHandler={this.fattVedtakHandler}
+                  lagreVedtakHandler={this.lagreVedtakHandler}
+                  lagreVurderingHandler={this.lagreVurderingHandler}
                   lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 />
                 {person && <Personopplysninger person={person} />}
