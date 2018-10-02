@@ -55,6 +55,7 @@ class Vilkarsveileder extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
+    this.props.lagreAvklartefaktaHandler();
     this.tilSteg(this.beregnNesteSteg());
   };
 
@@ -125,6 +126,7 @@ Vilkarsveileder.propTypes = {
   beOmVurderingHandler: PT.func.isRequired,
   avklartefakta: PT.object,
   fattVedtakHandler: PT.func.isRequired,
+  lagreAvklartefaktaHandler: PT.func.isRequired,
   hentBosted: PT.func.isRequired,
   hentInngang: PT.func.isRequired,
   hentVurdering: PT.func.isRequired,
