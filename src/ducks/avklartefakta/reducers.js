@@ -56,14 +56,6 @@ export default function reducer(state = initialState, action) {
         aktivitet: {
           aktivitetLand: dokument.avklartefaktaAktivitetLand,
         },
-        utsending: {
-          ansattINorskSelskap: dokument.avklartefaktaAnsattINorskSelskap,
-          erstatterTidligereUtsendt: dokument.avklartefaktaErstatterTidligereUtsendt,
-          utsendingMindreEnn24Mnd: dokument.avklartefaktaUtsendingMindreEnn24Mnd,
-          foretakDriverINorge: dokument.avklartefaktaForetakDriverINorge,
-          arbeidKnyttetTilVirksomhetUtlandet: dokument.avklartefaktaArbeidKnyttetTilVirksomhetUtlandet,
-          sammeTypeVirksomhet: dokument.avklartefaktaSammeTypeVirksomhet,
-        },
         valgteArbeidsgivere: [...dokument.avklartefaktaValgteArbeidsgivere],
         yrkesaktivitet: {
           yrkesaktivitetType: dokument.avklartefaktaYrkesaktivitetType,
@@ -86,11 +78,6 @@ export default function reducer(state = initialState, action) {
         },
         tjenestemann: {
           tjenestemann: dokument.avklartefaktaTjenestemann,
-        },
-        forretningssted: {
-          land: dokument.avklartefaktaForretningsstedLand,
-          antallArbeidsgivere: dokument.avklartefaktaForretningsstedAntallArbeidsgivere,
-          fordelingArbeidsgivere: dokument.avklartefaktaForretningsstedFordelingArbeidsgivere,
         },
         vesentligVirksomhet: {
           vesentligVirksomhetINorge: dokument.avklartefaktaVesentligVirksomhetINorge,
