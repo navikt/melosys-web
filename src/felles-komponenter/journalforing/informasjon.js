@@ -26,7 +26,6 @@ import './informasjon.css';
  */
 class Informasjon extends Component {
   state = { spinner: {} };
-
   async componentDidMount() {
     await this.oppdaterFelter(this.props, true);
   }
@@ -34,9 +33,12 @@ class Informasjon extends Component {
   async componentDidUpdate(prevProps) {
     await this.oppdaterFelter(prevProps);
   }
-
   oppdaterFelter = async (props, tvingOppdatering) => {
-    const { brukerID: gammelBrukerID, avsenderID: gammelAvsenderID, erBrukerAvsender: gammelErBrukerAvsender } = props.journalforingSkjemaVerdier;
+    const {
+      brukerID: gammelBrukerID,
+      avsenderID: gammelAvsenderID,
+      erBrukerAvsender: gammelErBrukerAvsender,
+    } = props.journalforingSkjemaVerdier;
     const {
       brukerID = '', avsenderID = '', erBrukerAvsender, brukerNavn,
     } = this.props.journalforingSkjemaVerdier;
@@ -227,6 +229,7 @@ Informasjon.propTypes = {
   hentOgVisBruker: PT.func.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
   hentOgVisArbeidsgiver: PT.func.isRequired,
+  erAvsenderArbeidsgiver: PT.bool,
   journalpostID: PT.string,
   dokumentID: PT.string,
   settFeltInnhold: PT.func.isRequired,
@@ -236,6 +239,7 @@ Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
   valgbareDokumentTitler: [],
   valgbareVedleggsTitler: [],
+  erAvsenderArbeidsgiver: true,
   journalpostID: '',
   dokumentID: '',
 };
