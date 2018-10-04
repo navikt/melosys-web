@@ -1,3 +1,4 @@
+import * as Behandlinger from './modules/behandlinger';
 import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker';
 import * as Faktaavklaring from './modules/faktaavklaring';
@@ -27,6 +28,7 @@ function erDev() {
 
 
 export {
+  Behandlinger,
   Dokumenter,
   Fagsaker,
   Faktaavklaring,

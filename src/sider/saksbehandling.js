@@ -54,7 +54,9 @@ import { formSelectors } from '../ducks/form/';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
-import OppfriskSakDialogboks from '../felles-komponenter/oppfriskDialogboks';
+import OppfriskSakDialogboks from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
+import * as API from '../services/api';
+
 
 class Saksbehandling extends Component {
   static propTypes = {
@@ -148,13 +150,21 @@ class Saksbehandling extends Component {
     this.props.oppdaterFaktaavklaring(this.props.soknadForm.values);
   };
 
+  hentBehandlingStatus = () => {
+    const { behandlingID } = this.props.oppsummering;
+    API.Behandlinger.status(behandlingID).then(response => {
+      console.log(response);
+      if (response === "DONE") {
+        this.skjulOppfriskBekreftelse();
+      }
+    });
+  };
+
   oppfriskSaksopplysninger = () => {
     const { behandlingID } = this.props.oppsummering;
 
     this.props.oppfriskFagsaker(behandlingID).then(response => {
-      if (response.ok) {
-       // this.skjulOppfriskBekreftelse();
-      }
+      if (response.ok) {}
     });
   };
 
@@ -239,6 +249,7 @@ class Saksbehandling extends Component {
             bekreft={this.oppfriskSaksopplysninger}
             avbryt={this.skjulOppfriskBekreftelse}
             skjulDialog={this.navigerTilOversiktSide}
+            oppdater={this.hentBehandlingStatus}
           />
         }
       </div>
