@@ -284,7 +284,7 @@ class Journalforing extends Component {
     } = this.props;
 
     const {
-      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisArbeidsgiver,
+      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisArbeidsgiver, erAvsenderArbeidsgiver,
     } = this;
 
     const { journalpostID } = this.props.match.params;
@@ -310,6 +310,7 @@ class Journalforing extends Component {
                         hentOgVisAvsender={hentOgVisAvsender}
                         hentOgVisBruker={hentOgVisBruker}
                         hentOgVisArbeidsgiver={hentOgVisArbeidsgiver}
+                        erAvsenderArbeidsgiver={erAvsenderArbeidsgiver}
                       />
                       <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
                       <OpprettNyFagSak opprettFagsak={opprettFagsak} />
@@ -342,6 +343,7 @@ const mapStateToProps = state => ({
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
     arbeidsgiverID: '',
     representantID: null,
+    erAvsenderArbeidsgiver: true,
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
     vedleggsTitler: [],
