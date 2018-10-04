@@ -85,9 +85,9 @@ const VurderingBostedsland = props => {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Bostedsland er:">
-                <Skjema.Radio feltNavn="faktaavklaringBostedNorgeUtland" value={VurderingBostedslandTyper.NORGE} label="Norge" />
-                <Skjema.Radio feltNavn="faktaavklaringBostedNorgeUtland" value={VurderingBostedslandTyper.ANNET} label="Annet" />
-                {visLandVelger && <LandVelger label="Velg land:" feltNavn="faktaavklaringBostedLand" multiland={false} />}
+                <Skjema.Radio feltNavn="avklartefaktaBostedNorgeUtland" value={VurderingBostedslandTyper.NORGE} label="Norge" />
+                <Skjema.Radio feltNavn="avklartefaktaBostedNorgeUtland" value={VurderingBostedslandTyper.ANNET} label="Annet" />
+                {visLandVelger && <LandVelger label="Velg land:" feltNavn="avklartefaktaBostedLand" multiland={false} />}
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -95,7 +95,7 @@ const VurderingBostedsland = props => {
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Begrunnelse:">
                 <Skjema.ListeVelger
-                  feltNavn="faktaavklaringBostedBegrunnelser"
+                  feltNavn="avklartefaktaBostedBegrunnelser"
                   muligeValg={begrunnelser}
                   label="Legg til begrunnelse:"
                   gruppe

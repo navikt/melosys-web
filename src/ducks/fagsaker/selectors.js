@@ -2,7 +2,7 @@
 import { createSelector, createStructuredSelector } from 'reselect';
 import moment from 'moment/moment';
 
-import { faktaavklaringSelectors } from '../faktaavklaring/';
+import { avklartefaktaSelectors } from '../avklartefakta/';
 import { kodeverkObjektTilKode } from '../../utils/kodeverk';
 import { datoDiff } from '../../utils/dato';
 
@@ -107,6 +107,8 @@ const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
 
   const startDato = relevantPeriode.fom;
   const antallMaaneder = parseInt(datoDiff(relevantPeriode.fom, relevantPeriode.tom, 'months'), 10) + 1;
+
+  if (relevantPeriode.fom === 'Invalid date' || relevantPeriode.tom === 'Invalid date') { return ([]); }
 
   return Array(antallMaaneder).fill({}).map((verdi, index) => {
     const aarMaaned = moment(startDato).add(index, 'months').format('YYYY-MM');
@@ -233,7 +235,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
-  state => faktaavklaringSelectors.FaktaavklaringOppholdPeriodeSelector(state),
+  state => avklartefaktaSelectors.AvklartefaktaOppholdPeriodeSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter, periode) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.

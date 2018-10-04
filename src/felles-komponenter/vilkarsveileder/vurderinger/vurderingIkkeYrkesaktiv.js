@@ -11,9 +11,9 @@ export const VurderingIkkeYrkesaktivTyper = {
 
 const IkkeYrkesaktiv = () => (
   <Nav.Fieldset legend="Vurder om søkeren er:">
-    <Skjema.Radio feltNavn="faktaavklaringIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.STUDENT} label="Student" />
-    <Skjema.Radio feltNavn="faktaavklaringIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.PENSJONIST} label="Pensjonist" />
-    <Skjema.Radio feltNavn="faktaavklaringIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE} label="Ingen av disse" />
+    <Skjema.Radio feltNavn="avklartefaktaIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.STUDENT} label="Student" />
+    <Skjema.Radio feltNavn="avklartefaktaIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.PENSJONIST} label="Pensjonist" />
+    <Skjema.Radio feltNavn="avklartefaktaIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE} label="Ingen av disse" />
   </Nav.Fieldset>
 );
 

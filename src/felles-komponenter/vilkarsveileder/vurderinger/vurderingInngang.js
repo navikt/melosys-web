@@ -28,7 +28,7 @@ const VurderingInngang = props => {
         </li>
       </ul>
       <FieldArray
-        name="faktaavklaringOppholdsLand"
+        name="avklartefaktaOppholdsLand"
         component={OppholdsLandListe}
         oppholdBegrunnelser={oppholdBegrunnelser}
         alleLandKoder={alleLandKoder}
@@ -42,7 +42,7 @@ const VurderingInngang = props => {
 
 VurderingInngang.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  faktaavklaring: PT.object.isRequired,
+  avklartefakta: PT.object.isRequired,
   alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
   inngangsvilkar: PT.shape({

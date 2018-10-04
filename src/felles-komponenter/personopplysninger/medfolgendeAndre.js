@@ -5,7 +5,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
-import * as API from '../../services/api';
+import * as Api from '../../services/api';
 
 import { erGyldigDnr, erGyldigFnr } from '../skjema/validering/generisk/person';
 import { beregnAlder } from '../../utils/dato';
@@ -13,7 +13,7 @@ import { beregnAlder } from '../../utils/dato';
 import './medfolgendeAndre.css';
 
 class MedfolgendeAndre extends Component {
-  state = { person: {}, visSpinner: false }
+  state = { person: {}, visSpinner: false };
 
   componentDidMount() {
     this.sjekkMedfolgende({});
@@ -23,7 +23,7 @@ class MedfolgendeAndre extends Component {
     this.sjekkMedfolgende(prevProps);
   }
 
-  sjekkMedfolgende = prevProps => {
+  sjekkMedfolgende = async prevProps => {
     if (prevProps.medfolgendeAndre === this.props.medfolgendeAndre) { return; }
     const { medfolgendeAndre } = this.props;
 
@@ -31,14 +31,13 @@ class MedfolgendeAndre extends Component {
 
     if (erGyldigFnr(medfolgendeAndre) || erGyldigDnr(medfolgendeAndre)) {
       this.visSpinner();
-      API.Personer.hentPerson(medfolgendeAndre).then(response => {
-        this.setState({ person: response });
-        this.skjulSpinner();
-      });
+      const response = await Api.Personer.hentPerson(medfolgendeAndre);
+      this.setState({ person: response });
+      this.skjulSpinner();
     }
-  }
+  };
 
-  resetLocalState = () => this.setState({ person: {} })
+  resetLocalState = () => this.setState({ person: {} });
   visSpinner = () => this.setState({ visSpinner: true });
   skjulSpinner = () => setTimeout(() => this.setState({ visSpinner: false }), 1000);
 
