@@ -2,7 +2,7 @@ import StegVelger from './index';
 
 describe('Tester stegVelger', () => {
   test('stegvelger', () => {
-    const faktaavklaring = {
+    const avklartefakta = {
       behandlingID: 4,
       avklaring: {
         opphold: {
@@ -50,7 +50,7 @@ describe('Tester stegVelger', () => {
     };
 
     /* eslint-disable */
-    const stegVelger = new StegVelger(faktaavklaring);
+    const stegVelger = new StegVelger(avklartefakta);
 
     expect(typeof StegVelger).toBe('function');
   });
