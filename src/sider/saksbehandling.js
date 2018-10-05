@@ -113,14 +113,13 @@ class Saksbehandling extends Component {
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
 
-    API.Saksflyt.status(behandlingID).then(saksflytStatus => {
-      if (saksflytStatus === 'PROGRESS') {
-        this.setState({ oppfriskningBlokkererInnhold: true });
-      } else {
-        hentSoknad(behandlingID);
-        hentAvklartefakta(behandlingID);
-      }
-    });
+    const saksflytstatus = await API.Saksflyt.status(behandlingID);
+    if (saksflytstatus === 'PROGRESS') {
+      this.setState({ oppfriskningBlokkererInnhold: true });
+    } else {
+      hentSoknad(behandlingID);
+      hentAvklartefakta(behandlingID);
+    }
     return true;
   }
 
@@ -170,9 +169,9 @@ class Saksbehandling extends Component {
 
   hentBehandlingStatus = async () => {
     const { behandlingID } = this.props.oppsummering;
-    const saksflytStatus = await API.Saksflyt.status(behandlingID);
-    console.log('Sjekker saksflytstatus: ' + saksflytStatus);
-    if (saksflytStatus === 'DONE') {
+    const saksflytstatus = await API.Saksflyt.status(behandlingID);
+    console.log('Sjekker saksflytstatus: ' + saksflytstatus);
+    if (saksflytstatus === 'DONE') {
       this.skjulOppfriskBekreftelse();
     }
   };
