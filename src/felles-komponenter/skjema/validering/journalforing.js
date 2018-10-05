@@ -41,13 +41,15 @@ const journalforingGenerellValidering = verdier => {
   );
 
   const avsenderID = (
-    (idErBlank(verdier.avsenderID) && !verdier.erBrukerAvsender) &&
+    !verdier.erBrukerAvsender &&
     (idAvsenderErBlank(verdier.avsenderID) ||
     idErIkkeNummer(verdier.avsenderID) ||
     idErIkkeFnrEllerDnrEllerOrgnr(verdier.avsenderID) ||
     idFinnesIkke(verdier.avsenderNavn, verdier.avsenderID) ||
     false)
   );
+
+  console.log(avsenderID);
 
   const dokumentTittel = dokumentTittelErBlank(verdier.dokumentTittel) || false;
 
