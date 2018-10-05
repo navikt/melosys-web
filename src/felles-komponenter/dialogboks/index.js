@@ -1,9 +1,9 @@
-import * as DialogboksVenter from './dialogboksVenter';
-import * as DialogboksBekreft from './dialogboksBekreft';
-import * as OppfriskSakDialogboks from './dialogboksOppfrisk';
+import * as Venter from './dialogboksVenter';
+import * as Bekreft from './dialogboksBekreft';
+import * as OppfriskSak from './dialogboksOppfrisk';
 
 export {
-  DialogboksVenter,
-  DialogboksBekreft,
-  OppfriskSakDialogboks
+  Venter,
+  Bekreft,
+  OppfriskSak
 };

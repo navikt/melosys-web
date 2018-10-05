@@ -7,6 +7,8 @@ import { reduxForm } from 'redux-form';
 import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as API from '../services/api';
+import * as Dialogboks from '../felles-komponenter/dialogboks';
 
 import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
 import ArbeidUtland from '../felles-komponenter/arbeidUtland';
@@ -54,10 +56,6 @@ import { formSelectors } from '../ducks/form/';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
-import OppfriskSakDialogboks from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
-import * as API from '../services/api';
-import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
-
 
 class Saksbehandling extends Component {
   static propTypes = {
@@ -103,7 +101,7 @@ class Saksbehandling extends Component {
   state = {
     gyldigePaneler: {},
     visOppfriskDialog: false,
-    oppfriskningBlokkerer: false,
+    oppfriskningBlokkererInnhold: false,
   };
 
   async componentDidMount() {
@@ -225,15 +223,15 @@ class Saksbehandling extends Component {
       return null;
     }
 
-    if (this.state.oppfriskningBlokkerer) {
+    if (this.state.oppfriskningBlokkererInnhold) {
       return (<div>
-                  <DialogboksVenter
+                  <Dialogboks.Venter
                     tittel="Oppdaterer registeropplysninger"
                     tekst="Oppdatering av registeropplysning."
                     synlig
                     skjul={this.navigerTilOversiktSide}
                     oppdater={this.hentBehandlingStatus}
-                  ></DialogboksVenter>
+                  />
               </div>);
     }
 
@@ -276,7 +274,7 @@ class Saksbehandling extends Component {
         </Nav.Container>
         {
           this.state.visOppfriskDialog &&
-          <OppfriskSakDialogboks
+          <Dialogboks.OppfriskSak
             bekreft={this.oppfriskSaksopplysninger}
             avbryt={this.skjulOppfriskBekreftelse}
             skjulDialog={this.navigerTilOversiktSide}
