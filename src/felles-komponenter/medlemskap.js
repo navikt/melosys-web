@@ -21,7 +21,7 @@ const uuid = require('uuid/v4');
 function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
   const {
     periode,
-    type,
+    medlemtype,
     status,
     grunnlagstype,
     land,
@@ -41,7 +41,7 @@ function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
         <Nav.Column xs="8">
           <dl className="medlemskap__detaljer">
             <dt>Periodetype:</dt>
-            <dd>{kodeverkObjektTilTerm(type)}</dd>
+            <dd>{kodeverkObjektTilTerm(medlemtype)}</dd>
             <dt>Status:</dt>
             <dd>{kodeverkObjektTilTerm(status)}</dd>
             <dt>Grunnlagstype:</dt>
