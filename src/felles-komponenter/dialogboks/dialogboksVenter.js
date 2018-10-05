@@ -7,6 +7,34 @@ import './dialogboksVenter.css';
 
 /* eslint react/prefer-stateless-function:off */
 class DialogboksVenter extends Component {
+
+  oppdateringintervall = 1000;
+  timeoutTid = 30000;
+
+  state = {
+    tid: 0,
+  };
+
+  componentWillUnmount() {
+    clearInterval(this.timer)
+  }
+
+  componentDidMount = () => {
+    this.timer = setInterval(this.sjekkForTimeout, this.oppdateringintervall);
+  }
+
+  sjekkForTimeout = () => {
+    console.log("Sjekk timeout: "+ this.state.tid)
+    this.setState({ tid: this.state.tid + this.oppdateringintervall });
+
+    if (this.state.tid >= this.timeoutTid) {
+      this.props.skjul();
+    }
+    else {
+      this.props.oppdater();
+    }
+  }
+
   render () {
     const {
       tittel, tekst, synlig, skjul,
@@ -38,6 +66,7 @@ DialogboksVenter.propTypes = {
   tekst: PT.string.isRequired,
   synlig: PT.bool.isRequired,
   skjul: PT.func.isRequired,
+  oppdater: PT.func,
 };
 
 Nav.Modal.setAppElement('#root');

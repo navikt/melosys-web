@@ -5,39 +5,18 @@ import DialogboksBekreft from './dialogboksBekreft';
 import DialogboksVenter from './dialogboksVenter';
 
 class OppfriskSakDialogboks extends Component {
-  oppdateringintervall = 1000;
-  timeoutTid = 30000;
-
   state = {
     venterResultat: false,
-    tid: 0,
   };
 
-  componentWillUnmount() {
-    clearInterval(this.timer)
-  }
-
   start = () => {
-    this.timer = setInterval(this.sjekkForTimeout, this.oppdateringintervall);
     this.setState({ venterResultat: true });
     this.props.bekreft();
   }
 
-  sjekkForTimeout = () => {
-    console.log("Sjekk timeout: "+ this.state.tid)
-    this.setState({ tid: this.state.tid + this.oppdateringintervall });
-
-    if (this.state.tid >= this.timeoutTid) {
-      this.props.skjulDialog();
-    }
-    else {
-      this.props.oppdater();
-    }
-  }
-
   render () {
     const {
-      avbryt, skjulDialog
+      avbryt, skjulDialog, oppdater,
     } = this.props;
 
     return (
@@ -57,6 +36,7 @@ class OppfriskSakDialogboks extends Component {
           tekst="Oppdatering av registeropplysning kan ta noen minutter, venligst vent."
           synlig
           skjul={skjulDialog}
+          oppdater={oppdater}
         />}
       </div>
     );
