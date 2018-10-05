@@ -8,7 +8,8 @@ import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as API from '../services/api';
-import * as Dialogboks from '../felles-komponenter/dialogboks';
+import OppfriskSakDialogboks from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
+import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
 
 import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
 import ArbeidUtland from '../felles-komponenter/arbeidUtland';
@@ -112,9 +113,9 @@ class Saksbehandling extends Component {
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
 
-   await API.Behandlinger.status(behandlingID).then(response => {
-      if (response === 'PROGRESS') {
-        this.setState({ oppfriskningBlokkerer: true });
+    API.Behandlinger.status(behandlingID).then(behandlingStatusresponse => {
+      if (behandlingStatusresponse === 'PROGRESS') {
+        this.setState({ oppfriskningBlokkererInnhold: true });
       } else {
         hentSoknad(behandlingID);
         hentAvklartefakta(behandlingID);
@@ -167,22 +168,20 @@ class Saksbehandling extends Component {
     await oppdaterAvklartefakta(soknadForm.values);
   };
 
-  hentBehandlingStatus = () => {
+  hentBehandlingStatus = async () => {
     const { behandlingID } = this.props.oppsummering;
-    API.Behandlinger.status(behandlingID).then(response => {
-      console.log('Sjekker behandlingsstatus: ' + response);
-      if (response === 'DONE') {
-        this.skjulOppfriskBekreftelse();
-      }
-    });
+    const response = await API.Behandlinger.status(behandlingID);
+    console.log('Sjekker behandlingsstatus: ' + response);
+    if (response === 'DONE') {
+      this.skjulOppfriskBekreftelse();
+    }
   };
 
   oppfriskSaksopplysninger = async () => {
     const { oppfriskFagsaker } = this.props;
     const { behandlingID } = this.props.oppsummering;
 
-    const response = await oppfriskFagsaker(behandlingID);
-    if (response.ok) { }
+    await oppfriskFagsaker(behandlingID);
   };
 
   navigerTilOversiktSide = () => {
@@ -196,7 +195,7 @@ class Saksbehandling extends Component {
 
   skjulOppfriskBekreftelse = () => {
     this.setState({ visOppfriskDialog: false });
-    this.setState({ oppfriskningBlokkerer: false});
+    this.setState({ oppfriskningBlokkererInnhold: false });
   };
 
   /* eslint-disable */
@@ -224,15 +223,16 @@ class Saksbehandling extends Component {
     }
 
     if (this.state.oppfriskningBlokkererInnhold) {
-      return (<div>
-                  <Dialogboks.Venter
-                    tittel="Oppdaterer registeropplysninger"
-                    tekst="Oppdatering av registeropplysning."
-                    synlig
-                    skjul={this.navigerTilOversiktSide}
-                    oppdater={this.hentBehandlingStatus}
-                  />
-              </div>);
+      return (
+        <div>
+          <DialogboksVenter
+            tittel="Oppdaterer registeropplysninger"
+            tekst="Oppdatering av registeropplysning."
+            synlig
+            skjul={this.navigerTilOversiktSide}
+            oppdater={this.hentBehandlingStatus}
+          />
+        </div>);
     }
 
     return (
@@ -274,7 +274,7 @@ class Saksbehandling extends Component {
         </Nav.Container>
         {
           this.state.visOppfriskDialog &&
-          <Dialogboks.OppfriskSak
+          <OppfriskSakDialogboks
             bekreft={this.oppfriskSaksopplysninger}
             avbryt={this.skjulOppfriskBekreftelse}
             skjulDialog={this.navigerTilOversiktSide}
