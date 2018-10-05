@@ -56,6 +56,7 @@ import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
 import OppfriskSakDialogboks from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
 import * as API from '../services/api';
+import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
 
 
 class Saksbehandling extends Component {
@@ -102,6 +103,7 @@ class Saksbehandling extends Component {
   state = {
     gyldigePaneler: {},
     visOppfriskDialog: false,
+    oppfriskningBlokkerer: false,
   };
 
   async componentDidMount() {
@@ -111,8 +113,15 @@ class Saksbehandling extends Component {
     const { behandlinger } = response.data;
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
-    await hentSoknad(behandlingID);
-    await hentAvklartefakta(behandlingID);
+
+   await API.Behandlinger.status(behandlingID).then(response => {
+      if (response === 'PROGRESS') {
+        this.setState({ oppfriskningBlokkerer: true });
+      } else {
+        hentSoknad(behandlingID);
+        hentAvklartefakta(behandlingID);
+      }
+    });
     return true;
   }
 
@@ -163,7 +172,7 @@ class Saksbehandling extends Component {
   hentBehandlingStatus = () => {
     const { behandlingID } = this.props.oppsummering;
     API.Behandlinger.status(behandlingID).then(response => {
-      console.log(response);
+      console.log('Sjekker behandlingsstatus: ' + response);
       if (response === 'DONE') {
         this.skjulOppfriskBekreftelse();
       }
@@ -175,10 +184,7 @@ class Saksbehandling extends Component {
     const { behandlingID } = this.props.oppsummering;
 
     const response = await oppfriskFagsaker(behandlingID);
-    if (response.ok) {
-      this.skjulOppfriskBekreftelse();
-      this.props.history.push('/');
-    }
+    if (response.ok) { }
   };
 
   navigerTilOversiktSide = () => {
@@ -192,6 +198,7 @@ class Saksbehandling extends Component {
 
   skjulOppfriskBekreftelse = () => {
     this.setState({ visOppfriskDialog: false });
+    this.setState({ oppfriskningBlokkerer: false});
   };
 
   /* eslint-disable */
@@ -216,6 +223,18 @@ class Saksbehandling extends Component {
 
     if (!person || !person.fnr) {
       return null;
+    }
+
+    if (this.state.oppfriskningBlokkerer) {
+      return (<div>
+                  <DialogboksVenter
+                    tittel="Oppdaterer registeropplysninger"
+                    tekst="Oppdatering av registeropplysning."
+                    synlig
+                    skjul={this.navigerTilOversiktSide}
+                    oppdater={this.hentBehandlingStatus}
+                  ></DialogboksVenter>
+              </div>);
     }
 
     return (
