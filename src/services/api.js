@@ -1,4 +1,4 @@
-import * as Behandlinger from './modules/behandlinger';
+import * as Saksflyt from './modules/saksflyt';
 import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker';
 import * as Avklartefakta from './modules/avklartefakta';
@@ -28,7 +28,7 @@ function erDev() {
 
 
 export {
-  Behandlinger,
+  Saksflyt,
   Dokumenter,
   Fagsaker,
   Avklartefakta,

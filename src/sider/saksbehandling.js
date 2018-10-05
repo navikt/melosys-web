@@ -8,7 +8,7 @@ import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as API from '../services/api';
-import OppfriskSakDialogboks from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
+import DialogboksOppfriskSak from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
 
 import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
@@ -113,8 +113,8 @@ class Saksbehandling extends Component {
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
 
-    API.Behandlinger.status(behandlingID).then(behandlingStatusresponse => {
-      if (behandlingStatusresponse === 'PROGRESS') {
+    API.Saksflyt.status(behandlingID).then(saksflytStatus => {
+      if (saksflytStatus === 'PROGRESS') {
         this.setState({ oppfriskningBlokkererInnhold: true });
       } else {
         hentSoknad(behandlingID);
@@ -170,9 +170,9 @@ class Saksbehandling extends Component {
 
   hentBehandlingStatus = async () => {
     const { behandlingID } = this.props.oppsummering;
-    const response = await API.Behandlinger.status(behandlingID);
-    console.log('Sjekker behandlingsstatus: ' + response);
-    if (response === 'DONE') {
+    const saksflytStatus = await API.Saksflyt.status(behandlingID);
+    console.log('Sjekker saksflytstatus: ' + saksflytStatus);
+    if (saksflytStatus === 'DONE') {
       this.skjulOppfriskBekreftelse();
     }
   };
@@ -274,7 +274,7 @@ class Saksbehandling extends Component {
         </Nav.Container>
         {
           this.state.visOppfriskDialog &&
-          <OppfriskSakDialogboks
+          <DialogboksOppfriskSak
             bekreft={this.oppfriskSaksopplysninger}
             avbryt={this.skjulOppfriskBekreftelse}
             skjulDialog={this.navigerTilOversiktSide}
