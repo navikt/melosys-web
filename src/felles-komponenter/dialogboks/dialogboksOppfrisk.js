@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import DialogboksBekreft from './dialogboksBekreft';
 import DialogboksVenter from './dialogboksVenter';
 
-class OppfriskSakDialogboks extends Component {
+class DialogboksOppfriskSak extends Component {
   state = {
     venterResultat: false,
   };
@@ -43,11 +43,11 @@ class OppfriskSakDialogboks extends Component {
   }
 }
 
-OppfriskSakDialogboks.propTypes = {
+DialogboksOppfriskSak.propTypes = {
   bekreft: PT.func.isRequired,
   avbryt: PT.func.isRequired,
   skjulDialog: PT.func.isRequired,
   oppdater: PT.func.isRequired,
 };
 
-export default OppfriskSakDialogboks;
+export default DialogboksOppfriskSak;
