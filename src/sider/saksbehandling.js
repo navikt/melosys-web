@@ -28,11 +28,12 @@ import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
 import VirksomhetNorge from '../felles-komponenter/virksomhetNorge';
-
 import {
   fagsakOperations,
   fagsakSelectors,
 } from '../ducks/fagsaker/';
+
+import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
 
 import {
   soknadOperations,
@@ -75,6 +76,7 @@ class Saksbehandling extends Component {
     oppdaterAvklartefakta: PT.func.isRequired,
     oppdaterSoknad: PT.func.isRequired,
     oppfriskFagsaker: PT.func.isRequired,
+    sjekkSaksflytStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
     person: MPT.Person,
     sendSoknad: PT.func.isRequired,
@@ -106,19 +108,26 @@ class Saksbehandling extends Component {
   };
 
   async componentDidMount() {
-    const { hentFagsaker, hentSoknad, hentAvklartefakta } = this.props;
+    const {
+      hentFagsaker, hentSoknad, hentAvklartefakta,
+      sjekkSaksflytStatus, saksflyt,
+    } = this.props;
     const { snr } = this.props.match.params;
     const response = await hentFagsaker(snr);
     const { behandlinger } = response.data;
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
 
-    const saksflytstatus = await API.Saksflyt.status(behandlingID);
-    if (saksflytstatus === 'PROGRESS') {
+    console.log('componentDidMount');
+    await sjekkSaksflytStatus(behandlingID);
+    console.dir(saksflyt);
+    if (saksflyt && saksflyt.response) {
+      console.error(saksflyt.data);
+    } else if (saksflyt === 'PROGRESS') {
       this.setState({ oppfriskningBlokkererInnhold: true });
     } else {
-      hentSoknad(behandlingID);
-      hentAvklartefakta(behandlingID);
+      await hentSoknad(behandlingID);
+      await hentAvklartefakta(behandlingID);
     }
     return true;
   }
@@ -168,10 +177,15 @@ class Saksbehandling extends Component {
   };
 
   hentBehandlingStatus = async () => {
+    const { sjekkSaksflytStatus, saksflyt } = this.props;
     const { behandlingID } = this.props.oppsummering;
-    const saksflytstatus = await API.Saksflyt.status(behandlingID);
-    console.log('Sjekker saksflytstatus: ' + saksflytstatus);
-    if (saksflytstatus === 'DONE') {
+    await sjekkSaksflytStatus(behandlingID);
+    console.log('hentBehandlingStatus');
+    console.dir(saksflyt);
+    if (saksflyt && saksflyt.response) {
+      console.error('500, lokker Modal dialog', saksflyt.data);
+      this.skjulOppfriskBekreftelse();
+    } else if (saksflyt === 'DONE') {
       this.skjulOppfriskBekreftelse();
     }
   };
