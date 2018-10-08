@@ -131,14 +131,6 @@ class Saksbehandling extends Component {
     return true;
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { syncErrors } = nextProps.soknadForm;
-
-    // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
-    // i panelet lenger er ugyldig (ikke validerer).
-    this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
-  }
-
   fattVedtakHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soeknadDokument: { ...this.props.soknad.soeknadDokument } };
@@ -186,6 +178,7 @@ class Saksbehandling extends Component {
       this.skjulOppfriskBekreftelse();
     } else if (saksflyt === 'DONE') {
       this.skjulOppfriskBekreftelse();
+      this.lastInnSaksopplysninger();
     }
   };
 
