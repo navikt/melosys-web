@@ -6,11 +6,11 @@ import * as Konstanter from '../../../constants';
 /** Mikrovalidering pr hendelse. Dette gjør at vi kan både kan spisse tekstlig tilbakemelding
  * og validere på tvers av verdier.
  */
-const idErBlank = verdi => ((verdi === '') && 'Tast inn fnr eller dnr.');
-const idAvsenderErBlank = verdi => ((verdi === '') && 'Tast inn fnr, dnr eller orgnr.');
-const idErIkkeNummer = verdi => (!(new RegExp(/^\d+$/).test(verdi)) && 'Tast inn kun nummer.');
-const idErIkkeFnrEllerDnr = verdi => ((!Person.erGyldigFnr(verdi) && !Person.erGyldigDnr(verdi)) && 'Tast inn gyldig fnr eller dnr.');
-const idErIkkeFnrEllerDnrEllerOrgnr = verdi => ((!(Person.erGyldigFnr(verdi) || Person.erGyldigDnr(verdi) || Organisasjon.erOrgnrLengde(verdi))) && 'Tast inn gyldig fnr, dnr eller orgnr.');
+const idErBlank = verdi => ((verdi === '') && 'Skriv inn fnr eller dnr.');
+const navnAvsenderErBlank = verdi => ((verdi === '' || verdi === undefined) && 'Skriv inn navn på avsender.');
+const idErIkkeNummer = verdi => (!(new RegExp(/^\d+$/).test(verdi)) && 'Skriv inn kun nummer.');
+const idErIkkeFnrEllerDnr = verdi => ((!Person.erGyldigFnr(verdi) && !Person.erGyldigDnr(verdi)) && 'Skriv inn gyldig fnr eller dnr.');
+const idErIkkeFnrEllerDnrEllerOrgnr = verdi => ((!(Person.erGyldigFnr(verdi) || Person.erGyldigDnr(verdi) || Organisasjon.erOrgnrLengde(verdi))) && 'Skriv inn gyldig fnr, dnr eller orgnr.');
 const idFinnesIkke = (navn, id) => {
   if (navn === '' && Organisasjon.erOrgnrLengde(id)) {
     return 'Fant ingen navn på dette organisasjonsnummeret.';
@@ -41,12 +41,15 @@ const journalforingGenerellValidering = verdier => {
   );
 
   const avsenderID = (
-    (idErBlank(verdier.avsenderID) && !verdier.erBrukerAvsender) &&
-    (idAvsenderErBlank(verdier.avsenderID) ||
-    idErIkkeNummer(verdier.avsenderID) ||
+    !verdier.erBrukerAvsender && !idErBlank(verdier.avsenderID) &&
+    (idErIkkeNummer(verdier.avsenderID) ||
     idErIkkeFnrEllerDnrEllerOrgnr(verdier.avsenderID) ||
     idFinnesIkke(verdier.avsenderNavn, verdier.avsenderID) ||
     false)
+  );
+
+  const avsenderNavn = (
+    navnAvsenderErBlank(verdier.avsenderNavn) || false
   );
 
   const dokumentTittel = dokumentTittelErBlank(verdier.dokumentTittel) || false;
@@ -54,6 +57,7 @@ const journalforingGenerellValidering = verdier => {
   return {
     brukerID,
     avsenderID,
+    avsenderNavn,
     dokumentTittel,
   };
 };
@@ -130,6 +134,7 @@ const journalforingValidering = verdier => ({
  * er oppdatert i Redux. Denne påvirker i seg selv ikke UI, men returnerer kun en
  * true | false.
  * @param verdier
+ * @param journalforingHensikt
  * @returns {boolean}
  */
 const erSkjemaGyldig = (verdier, journalforingHensikt) => {
