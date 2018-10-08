@@ -12,6 +12,7 @@ import organisasjonReducer from './ducks/organisasjon';
 import personReducer from './ducks/person';
 import soknadReducer from './ducks/soknad/';
 import vurderingReducer from './ducks/vurdering/';
+import saksflytReducer from './ducks/saksflyt';
 
 import customFormReducer from './ducks/form';
 
@@ -28,4 +29,5 @@ export default combineReducers({
   organisasjon: organisasjonReducer,
   person: personReducer,
   vurdering: vurderingReducer,
+  saksflyt: saksflytReducer,
 });

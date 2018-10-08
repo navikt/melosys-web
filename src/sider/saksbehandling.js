@@ -7,7 +7,6 @@ import { reduxForm } from 'redux-form';
 import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
-import * as API from '../services/api';
 import DialogboksOppfriskSak from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
 
@@ -304,6 +303,7 @@ class Saksbehandling extends Component {
  * @param state
  */
 const mapStateToProps = state => ({
+  saksflyt: saksflytSelectors.SaksflytSelector(state),
   person: fagsakSelectors.PersonSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
@@ -409,6 +409,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   oppfriskFagsaker: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
