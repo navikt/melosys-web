@@ -35,7 +35,7 @@ class VesentligVirksomhet extends Steg {
   }
 
   samleArbeidsgivereSomListe = () => {
-    const valgteArbeidsgivereOrgnr = this._propsLight.skjema.faktaavklaringValgteArbeidsgivere || [];
+    const valgteArbeidsgivereOrgnr = this._propsLight.skjema.avklartefaktaValgteArbeidsgivere || [];
     return this._propsLight.arbeidsgivereIPerioden
       .filter(arbeidsgiver => valgteArbeidsgivereOrgnr.includes(arbeidsgiver.orgnr));
   }

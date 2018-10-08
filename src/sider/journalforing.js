@@ -81,10 +81,10 @@ class Journalforing extends Component {
     journalforingSkjemaVerdier: {},
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { journalpostID, oppgaveID } = this.props.match.params;
     queryParamLogger(journalpostID, oppgaveID, this.props.location);
-    this.props.hentJournalOppgave(journalpostID);
+    await this.props.hentJournalOppgave(journalpostID);
   }
 
   /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
@@ -121,15 +121,13 @@ class Journalforing extends Component {
 
     const { ID: dokumentID } = dokument;
     return {
-      journalpostID,
-      oppgaveID,
-      brukerID,
       avsenderID,
       avsenderNavn,
-      arbeidsgiverID: '910253158',
-      representantID: '910253158',
+      brukerID,
       dokumentID,
       dokumenttittel: dokumentTittel,
+      journalpostID,
+      oppgaveID,
       vedleggstitler: vedleggsTitler,
     };
   };
@@ -138,7 +136,7 @@ class Journalforing extends Component {
    * relevante felter før saken tilordnes (sendes til API) og saksbehandler returneres til forsiden.
    * @returns {boolean}
    */
-  knyttTilEksisterendeSak = () => {
+  knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
@@ -146,58 +144,24 @@ class Journalforing extends Component {
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
-    const vasketJournalforing = { ...this.vaskDokumentInformasjon(), saksnummer };
+    const vasketJournalforing = this.vaskDokumentInformasjon();
+    const journalforingData = { saksnummer, ...vasketJournalforing };
 
+    await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
+
+    this.touchAll(this.props.errors);
+
+    // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForOpprettFagsak();
 
-    settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
-
-    // Manuell sjekk på validering og hensikt for å omgå race condition via props.
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.KNYTT)) {
-      settFeilFelt('vedleggsTitler', 'saksnummer');
+      settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer');
       return false;
     }
 
-    tilordneSak(vasketJournalforing).then(response => {
-      if (response.ok) {
-        history.push('/');
-      }
-    });
-  };
-
-  /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
-   * Derfor, sjekk dette før vi evt kaller sokFnrDnr.
-   * @param brukerID {string} Verdien vi ønsker å sjekke på.
-   */
-  hentOgVisBruker = brukerID => {
-    if (!Person.erGyldigFnr(brukerID) && !Person.erGyldigDnr(brukerID)) { return; }
-
-    const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
-
-    return sokFnrDnr(brukerID)
-      .then(({ sammensattNavn = '' }) => {
-        if (!sammensattNavn) { return false; }
-        settFeltInnhold('brukerNavn', sammensattNavn);
-        hentFagsakListe(brukerID);
-        return { brukerID, sammensattNavn };
-      });
-  };
-
-  /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller er et gyldig FNR || DNR.
-   * Avsender kan være både person og organisasjon.
-   * @param value {string} Verdien vi ønsker å sjekke på.
-   */
-  hentOgVisAvsender = value => {
-    const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
-
-    if (!value) { return; }
-
-    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
-      return sokOrgnr(value).then(({ navn = '' }) => settFeltInnhold('avsenderNavn', navn));
-    }
-
-    if (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) {
-      return sokFnrDnr(value).then(({ sammensattNavn = '' }) => settFeltInnhold('avsenderNavn', sammensattNavn));
+    const response = await tilordneSak(journalforingData);
+    if (response.ok) {
+      history.push('/');
     }
   };
 
@@ -205,7 +169,7 @@ class Journalforing extends Component {
    * relevante felter før ny sak opprettes (sendes til API) og saksbehandler returneres til forsiden.
    * @returns {boolean}
    */
-  opprettFagsak = () => {
+  opprettFagsak = async () => {
     /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
@@ -214,20 +178,20 @@ class Journalforing extends Component {
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const { journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed } = journalforingSkjemaVerdier;
 
+    await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
+
     this.touchAll(this.props.errors);
 
+    // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForEksisterendeSaker();
 
-    settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
-
-    // Manuell sjekk på validering og hensikt for å omgå race condition via props.
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.OPPRETT)) {
       settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingOppholdsLand');
       return false;
     }
 
     const fagsak = {
-      type: 'EU_EOS', // FIXME, fjern hardkoding, og endre fra type => saksetype
+      sakstype: 'EU_EOS',
       soknadsperiode: {
         fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
         tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
@@ -235,13 +199,57 @@ class Journalforing extends Component {
       land: journalforingOppholdsLand,
     };
 
-    const journalforingData = { ...this.vaskDokumentInformasjon(), fagsak };
+    const vasketJournalforing = this.vaskDokumentInformasjon();
+    const arbeidsgiverID = '910253158';
+    const representantID = arbeidsgiverID ? null : '910253158';
+    const journalforingData = {
+      arbeidsgiverID,
+      representantID,
+      ...vasketJournalforing,
+      fagsak,
+    };
+    const response = await opprettNySak(journalforingData);
+    if (response.ok) {
+      history.push('/');
+    }
+  };
+  /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
+   * Derfor, sjekk dette før vi evt kaller sokFnrDnr.
+   * @param brukerID {string} Verdien vi ønsker å sjekke på.
+   */
+  hentOgVisBruker = async brukerID => {
+    if (!Person.erGyldigFnr(brukerID) && !Person.erGyldigDnr(brukerID)) { return; }
 
-    opprettNySak(journalforingData).then(response => {
-      if (response.ok) {
-        history.push('/');
-      }
-    });
+    const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
+    const response = await sokFnrDnr(brukerID);
+    const { sammensattNavn = '' } = response;
+    if (!sammensattNavn) { return false; }
+    settFeltInnhold('brukerNavn', sammensattNavn);
+    await hentFagsakListe(brukerID);
+    return { brukerID, sammensattNavn };
+  };
+
+  /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller er et gyldig FNR || DNR.
+   * Avsender kan være både person og organisasjon.
+   * @param value {string} Verdien vi ønsker å sjekke på.
+   */
+  hentOgVisAvsender = async value => {
+    const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
+
+    if (!value) { return; }
+
+    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+      const response = await sokOrgnr(value);
+      const { navn = '' } = response;
+      settFeltInnhold('avsenderNavn', navn);
+      return;
+    }
+
+    if (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) {
+      const response = await sokFnrDnr(value);
+      const { sammensattNavn = '' } = response;
+      settFeltInnhold('avsenderNavn', sammensattNavn);
+    }
   };
 
   touchAll = (alleFeil = {}) => {
@@ -332,7 +340,7 @@ const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
   hentFagsakListe: fnr => dispatch(fagsakOperations.sok(fnr)),
   settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
-  settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('journalforing', ...feltNavn)),
+  settFeilFelt: (...feltNavn) => (setSubmitFailed('journalforing', ...feltNavn)),
   settJournalforingHensikt: journalforingHensikt => dispatch(change('journalforing', 'journalforingHensikt', journalforingHensikt)),
   opprettNySak: data => Api.Journalforing.opprett(data),
   tilordneSak: data => Api.Journalforing.tilordne(data),

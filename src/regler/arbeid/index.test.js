@@ -4,8 +4,8 @@ describe('Tester at regler for arbeid', () => {
   describe('erArbeidsforholdetRelevantForSoknadsperioden', () => {
     test('returnerer true dersom hele søknadsperioden ligger innenfor perioden for arbeidsforholdet', () => {
       const mockSkjema = {
-        faktaavklaringPeriodeFraOgMed: '01.05.2018',
-        faktaavklaringPeriodeTilOgMed: '30.09.2018',
+        avklartefaktaPeriodeFraOgMed: '01.05.2018',
+        avklartefaktaPeriodeTilOgMed: '30.09.2018',
       };
 
       const mockArbeidsforholdPeriode = {
@@ -20,8 +20,8 @@ describe('Tester at regler for arbeid', () => {
 
     test('returnerer false dersom starten av søknadsperioden er før starten for arbeidsforholdet', () => {
       const mockSkjema = {
-        faktaavklaringPeriodeFraOgMed: '30.04.2018',
-        faktaavklaringPeriodeTilOgMed: '31.12.2018',
+        avklartefaktaPeriodeFraOgMed: '30.04.2018',
+        avklartefaktaPeriodeTilOgMed: '31.12.2018',
       };
 
       const mockArbeidsforholdPeriode = {
@@ -36,8 +36,8 @@ describe('Tester at regler for arbeid', () => {
 
     test('returnerer false dersom slutten av søknadsperioden er etter slutten for arbeidsforholdet', () => {
       const mockSkjema = {
-        faktaavklaringPeriodeFraOgMed: '30.04.2018',
-        faktaavklaringPeriodeTilOgMed: '31.12.2018',
+        avklartefaktaPeriodeFraOgMed: '30.04.2018',
+        avklartefaktaPeriodeTilOgMed: '31.12.2018',
       };
 
       const mockArbeidsforholdPeriode = {
@@ -52,8 +52,8 @@ describe('Tester at regler for arbeid', () => {
 
     test('returnerer false dersom hele søknadsperioden er utenfor hele perioden for arbeidsforholdet', () => {
       const mockSkjema = {
-        faktaavklaringPeriodeFraOgMed: '01.04.2016',
-        faktaavklaringPeriodeTilOgMed: '01.03.2017',
+        avklartefaktaPeriodeFraOgMed: '01.04.2016',
+        avklartefaktaPeriodeTilOgMed: '01.03.2017',
       };
 
       const mockArbeidsforholdPeriode = {
