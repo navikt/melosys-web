@@ -107,9 +107,25 @@ class Saksbehandling extends Component {
   };
 
   async componentDidMount() {
+    this.lastInnSaksopplysninger();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { syncErrors } = this.props.soknadForm;
+
+    // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
+    // i panelet lenger er ugyldig (ikke validerer).
+    if (JSON.toString(syncErrors) !== JSON.toString(prevProps.syncErrors)) {
+      this.onUpdate(function callback() {
+        this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
+      });
+    }
+  }
+
+  lastInnSaksopplysninger = async () => {
     const {
       hentFagsaker, hentSoknad, hentAvklartefakta,
-      sjekkSaksflytStatus, saksflyt,
+      sjekkSaksflytStatus,
     } = this.props;
     const { snr } = this.props.match.params;
     const response = await hentFagsaker(snr);
@@ -117,27 +133,18 @@ class Saksbehandling extends Component {
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
 
-    console.log('componentDidMount');
-    await sjekkSaksflytStatus(behandlingID);
-    console.dir(saksflyt);
-    if (saksflyt && saksflyt.response) {
-      console.error(saksflyt.data);
-    } else if (saksflyt === 'PROGRESS') {
+    const saksflyt = await sjekkSaksflytStatus(behandlingID);
+    const { data: saksFlytData } = saksflyt;
+    if (saksFlytData && saksFlytData.response) {
+      console.log('Handle errorr');
+    } else if (saksFlytData === 'PROGRESS') {
       this.blokkerInnholdMedOppfriskSpinner();
     } else {
       await hentSoknad(behandlingID);
       await hentAvklartefakta(behandlingID);
     }
     return true;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { syncErrors } = nextProps.soknadForm;
-
-    // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
-    // i panelet lenger er ugyldig (ikke validerer).
-    this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
-  }
+  };
 
   blokkerInnholdMedOppfriskSpinner = () => {
     this.setState({ oppfriskningBlokkererInnhold: true });
@@ -199,6 +206,7 @@ class Saksbehandling extends Component {
     const { behandlingID } = this.props.oppsummering;
 
     await oppfriskFagsaker(behandlingID);
+    this.blokkerInnholdMedOppfriskSpinner();
   };
 
   navigerTilOversiktSide = () => {
@@ -264,7 +272,7 @@ class Saksbehandling extends Component {
                   lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 />
                 {person && <Personopplysninger person={person} />}
-                <OppholdPeriode />
+                <OppholdPeriode oppfriskSaksopplysninger={this.oppfriskSaksopplysninger} />
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <SelvstendigArbeid soknadVerdier={soknadVerdier} />
