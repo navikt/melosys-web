@@ -16,7 +16,7 @@ import Bekreftelser from '../felles-komponenter/bekreftelser';
 import Bosted from '../felles-komponenter/bosted';
 import Inntekt from '../felles-komponenter/inntektUtland';
 import Medlemskap from '../felles-komponenter/medlemskap';
-import OppholdUtland from '../felles-komponenter/oppholdUtland';
+import OppholdPeriode from '../felles-komponenter/oppholdPeriode';
 import Personopplysninger from '../felles-komponenter/personopplysninger';
 import ForetakUtland from '../felles-komponenter/foretakUtland';
 import MaritimtArbeid from '../felles-komponenter/maritimtArbeid';
@@ -123,13 +123,25 @@ class Saksbehandling extends Component {
     if (saksflyt && saksflyt.response) {
       console.error(saksflyt.data);
     } else if (saksflyt === 'PROGRESS') {
-      this.setState({ oppfriskningBlokkererInnhold: true });
+      this.blokkerInnholdMedOppfriskSpinner();
     } else {
       await hentSoknad(behandlingID);
       await hentAvklartefakta(behandlingID);
     }
     return true;
   }
+
+  componentWillReceiveProps(nextProps) {
+    const { syncErrors } = nextProps.soknadForm;
+
+    // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
+    // i panelet lenger er ugyldig (ikke validerer).
+    this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
+  }
+
+  blokkerInnholdMedOppfriskSpinner = () => {
+    this.setState({ oppfriskningBlokkererInnhold: true });
+  };
 
   fattVedtakHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
@@ -252,6 +264,7 @@ class Saksbehandling extends Component {
                   lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 />
                 {person && <Personopplysninger person={person} />}
+                <OppholdPeriode />
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <SelvstendigArbeid soknadVerdier={soknadVerdier} />
@@ -263,7 +276,6 @@ class Saksbehandling extends Component {
                 {medlemskap && <Medlemskap medlemskap={medlemskap} />}
                 {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
                 {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
-                <OppholdUtland />
               </form>
             </Nav.Column>
             <Nav.Column xs="5">
@@ -338,6 +350,7 @@ const mapStateToProps = state => ({
     utsendtArbeiderMedKontrakter: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtArbeiderMedKontrakter,
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
+    oppholdsPeriodeEndringsBegrunnelse: soknadSelectors.OppholdUtlandSelector(state).oppholdsPeriodeEndringsBegrunnelse,
     oppholdsland: soknadSelectors.OppholdUtlandSelector(state).oppholdslandKoder,
     forutgaendeBostedINorge: soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge,
     arbeidUtland: soknadSelectors.ArbeidUtlandSelector(state),
