@@ -7,6 +7,9 @@ import { reduxForm } from 'redux-form';
 import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as API from '../services/api';
+import DialogboksOppfriskSak from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
+import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
 
 import ArbeidsgivereNorge from '../felles-komponenter/arbeidsgivereNorge';
 import ArbeidUtland from '../felles-komponenter/arbeidUtland';
@@ -51,7 +54,6 @@ import {
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import { formSelectors } from '../ducks/form/';
-import Dialogboks from '../felles-komponenter/dialogboks';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
@@ -100,6 +102,7 @@ class Saksbehandling extends Component {
   state = {
     gyldigePaneler: {},
     visOppfriskDialog: false,
+    oppfriskningBlokkererInnhold: false,
   };
 
   async componentDidMount() {
@@ -109,8 +112,14 @@ class Saksbehandling extends Component {
     const { behandlinger } = response.data;
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
-    await hentSoknad(behandlingID);
-    await hentAvklartefakta(behandlingID);
+
+    const saksflytstatus = await API.Saksflyt.status(behandlingID);
+    if (saksflytstatus === 'PROGRESS') {
+      this.blokkerInnholdMedOppfriskSpinner();
+    } else {
+      hentSoknad(behandlingID);
+      hentAvklartefakta(behandlingID);
+    }
     return true;
   }
 
@@ -121,6 +130,10 @@ class Saksbehandling extends Component {
     // i panelet lenger er ugyldig (ikke validerer).
     this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
   }
+
+  blokkerInnholdMedOppfriskSpinner = () => {
+    this.setState({ oppfriskningBlokkererInnhold: true });
+  };
 
   fattVedtakHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
@@ -158,14 +171,24 @@ class Saksbehandling extends Component {
     await oppdaterAvklartefakta(soknadForm.values);
   };
 
+  hentBehandlingStatus = async () => {
+    const { behandlingID } = this.props.oppsummering;
+    const saksflytstatus = await API.Saksflyt.status(behandlingID);
+    if (saksflytstatus === 'DONE') {
+      this.skjulOppfriskBekreftelse();
+    }
+  };
+
   oppfriskSaksopplysninger = async () => {
     const { oppfriskFagsaker } = this.props;
     const { behandlingID } = this.props.oppsummering;
-    const response = await oppfriskFagsaker(behandlingID);
-    if (response.ok) {
-      this.skjulOppfriskBekreftelse();
-      this.props.history.push('/');
-    }
+
+    await oppfriskFagsaker(behandlingID);
+  };
+
+  navigerTilOversiktSide = () => {
+    this.skjulOppfriskBekreftelse();
+    this.props.history.push('/');
   };
 
   visOppfriskBekreftelse = () => {
@@ -174,6 +197,7 @@ class Saksbehandling extends Component {
 
   skjulOppfriskBekreftelse = () => {
     this.setState({ visOppfriskDialog: false });
+    this.setState({ oppfriskningBlokkererInnhold: false });
   };
 
   /* eslint-disable */
@@ -198,6 +222,19 @@ class Saksbehandling extends Component {
 
     if (!person || !person.fnr) {
       return null;
+    }
+
+    if (this.state.oppfriskningBlokkererInnhold) {
+      return (
+        <div>
+          <DialogboksVenter
+            tittel="Oppdaterer registeropplysninger"
+            tekst="Oppdatering av registeropplysning."
+            synlig
+            skjul={this.navigerTilOversiktSide}
+            oppdater={this.hentBehandlingStatus}
+          />
+        </div>);
     }
 
     return (
@@ -237,13 +274,15 @@ class Saksbehandling extends Component {
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
-        <Dialogboks
-          tittel="Vil du oppdatere registeropplysninger?"
-          tekst="Oppdatering av registeropplysning kan ta noe tid. Du vil derfor bli sendt tilbake til oppgavelisten hvor du kan journalføre eller behandle en annen sak i mellomtiden."
-          bekreft={this.oppfriskSaksopplysninger}
-          avbryt={this.skjulOppfriskBekreftelse}
-          synlig={this.state.visOppfriskDialog}
-        />
+        {
+          this.state.visOppfriskDialog &&
+          <DialogboksOppfriskSak
+            bekreft={this.oppfriskSaksopplysninger}
+            avbryt={this.skjulOppfriskBekreftelse}
+            skjulDialog={this.navigerTilOversiktSide}
+            oppdater={this.hentBehandlingStatus}
+          />
+        }
       </div>
     );
   }
