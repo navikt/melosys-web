@@ -9,6 +9,7 @@ import * as Ikoner from '../resources/images';
 
 import { soknadSelectors, soknadOperations } from '../ducks/soknad';
 import { KodeverkSelectors } from '../ducks/kodeverk';
+import { fagsakOperations } from '../ducks/fagsaker';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
@@ -132,6 +133,7 @@ class OppholdPeriode extends Component {
     const oppholdsPeriodeEndringsBegrunnelse = verdiTilKode(this.state.oppholdsPeriodeEndringsBegrunnelse, alleBegrunnelser);
     const periode = { fom: formatterDatoTilISO(oppholdUtlandNyFom), tom: formatterDatoTilISO(oppholdUtlandNyTom) };
     this.props.oppdaterPeriode(periode, oppholdsPeriodeEndringsBegrunnelse);
+    this.props.oppfriskSaksopplysninger();
   };
 
   avbryt = event => {
@@ -197,6 +199,7 @@ class OppholdPeriode extends Component {
 
 OppholdPeriode.propTypes = {
   oppdaterPeriode: PT.func.isRequired,
+  oppfriskSaksopplysninger: PT.func.isRequired,
   oppholdUtlandFom: PT.string.isRequired,
   oppholdUtlandTom: PT.string.isRequired,
   oppholdsPeriodeEndringsBegrunnelse: PT.string.isRequired,
@@ -220,6 +223,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   oppdaterPeriode: (periode, begrunnelse) => dispatch(soknadOperations.oppdaterPeriode(periode, begrunnelse)),
+  oppfriskFagsaker: saksnummer => fagsakOperations.oppfrisk(saksnummer),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OppholdPeriode);
