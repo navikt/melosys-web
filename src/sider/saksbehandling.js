@@ -115,7 +115,7 @@ class Saksbehandling extends Component {
 
     const saksflytstatus = await API.Saksflyt.status(behandlingID);
     if (saksflytstatus === 'PROGRESS') {
-      this.setState({ oppfriskningBlokkererInnhold: true });
+      this.blokkerInnholdMedOppfriskSpinner();
     } else {
       hentSoknad(behandlingID);
       hentAvklartefakta(behandlingID);
@@ -130,6 +130,10 @@ class Saksbehandling extends Component {
     // i panelet lenger er ugyldig (ikke validerer).
     this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
   }
+
+  blokkerInnholdMedOppfriskSpinner = () => {
+    this.setState({ oppfriskningBlokkererInnhold: true });
+  };
 
   fattVedtakHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
@@ -170,7 +174,6 @@ class Saksbehandling extends Component {
   hentBehandlingStatus = async () => {
     const { behandlingID } = this.props.oppsummering;
     const saksflytstatus = await API.Saksflyt.status(behandlingID);
-    console.log('Sjekker saksflytstatus: ' + saksflytstatus);
     if (saksflytstatus === 'DONE') {
       this.skjulOppfriskBekreftelse();
     }
