@@ -1,6 +1,6 @@
 import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker';
-import * as Faktaavklaring from './modules/faktaavklaring';
+import * as Avklartefakta from './modules/avklartefakta';
 import * as Health from './modules/health';
 import * as Inngang from './modules/inngang';
 import * as Journalforing from './modules/journalforing';
@@ -29,7 +29,7 @@ function erDev() {
 export {
   Dokumenter,
   Fagsaker,
-  Faktaavklaring,
+  Avklartefakta,
   Health,
   Inngang,
   Journalforing,

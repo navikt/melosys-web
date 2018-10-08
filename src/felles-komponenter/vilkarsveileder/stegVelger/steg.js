@@ -30,24 +30,24 @@ class Steg {
   });
 
   nesteSteg = () => {
-    const { faktaavklaring = {} } = this._propsLight;
+    const { avklartefakta = {} } = this._propsLight;
 
-    const flatFaktaavklaring = Object
-      .keys(faktaavklaring)
-      .reduce((collection, key) => ({ ...collection, ...faktaavklaring[key] }), {});
+    const flatAvklartefakta = Object
+      .keys(avklartefakta)
+      .reduce((collection, key) => ({ ...collection, ...avklartefakta[key] }), {});
 
     const kriterieMatch = this._kriterier.find(kriterie => {
       const { exec } = kriterie;
-      return this.assertRegel(exec, flatFaktaavklaring);
+      return this.assertRegel(exec, flatAvklartefakta);
     });
 
     return kriterieMatch.nesteSteg;
-  }
+  };
 
-  assertRegel = (regel, faktaavklaring) => {
+  assertRegel = (regel, avklartefakta) => {
     if (typeof regel !== 'function') { return false; }
 
-    return regel(faktaavklaring);
+    return regel(avklartefakta);
   }
 }
 

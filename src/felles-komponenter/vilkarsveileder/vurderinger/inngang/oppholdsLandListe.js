@@ -79,7 +79,7 @@ class OppholdsLandListe extends Component {
     const alleGyldigeOppholdsland = alleOppholdsland.filter(opphold => opphold.erGyldig);
     const alleIkkeGyldigeOppholdsland = fields
       .getAll()
-      .filter(opphold => !opphold.erGyldig && opphold.begrunnelseKode !== 'FEIL_LAND_JOURNALFOERING');
+      .filter(opphold => !opphold.erGyldig);
 
     const alleUbrukteLandkoder = alleLandKoder.filter(land => !alleOppholdsland.map(ol => ol.landKode).includes(land.kode));
 
