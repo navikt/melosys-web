@@ -34,7 +34,5 @@ export function send(bid, soknad) {
 }
 
 export function oppdaterPeriode(periode, begrunnelse) {
-  return dispatch => {
-    dispatch(Actions.oppdaterPeriode(periode, begrunnelse));
-  };
+  return async dispatch => dispatch(Actions.oppdaterPeriode(periode, begrunnelse));
 }
