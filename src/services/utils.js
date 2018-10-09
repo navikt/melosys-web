@@ -29,12 +29,11 @@ export function print(response) {
 }
 
 export function sendResultatTilDispatch(dispatch, action, validering) {
-  return (...data) => {
+  return async (...data) => {
     const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
     if (validering && typeof validering === 'function') {
       validering(dispatch, dataSomSkalDispatches);
     }
-
     return dispatch({ type: action, data: dataSomSkalDispatches });
   };
 }
@@ -44,11 +43,11 @@ export function handterFeil(dispatch, action) {
     if (error.response) {
       error.response.text().then(data => {
         console.error(error, error.stack, data); // eslint-disable-line no-console
-        /* window.frontendlogger.error({
+        window.frontendlogger.error({
           error,
           stack: error.stack,
           data,
-        }); */
+        });
         dispatch({
           type: action,
           data: { response: error.response, data },
@@ -56,11 +55,11 @@ export function handterFeil(dispatch, action) {
       });
     } else {
       console.error(error, error.stack); // eslint-disable-line no-console
-      /* window.frontendlogger.error({
+      window.frontendlogger.error({
         error,
         stack: error.stack,
         data: error.toString(),
-      }); */
+      });
       dispatch({ type: action, data: error.toString() });
     }
   };
@@ -201,7 +200,7 @@ const cachedFetch = (url, cacheDurationSec) => {
   }).then(toJson);
 };
 
-export function fetchToJson(url, config = {}) {
+export async function fetchToJson(url, config = {}) {
   /*
 if (config.headers) {
   for (let entry of config.headers) {
@@ -210,12 +209,12 @@ if (config.headers) {
 }
 */
 
-  return fetch(url, config) // eslint-disable-line no-undef
-    .then(sjekkStatuskode)
-    .then(toJson);
+  const fetchResponse = await fetch(url, config); // eslint-disable-line no-undef
+  const sjekketResponse = sjekkStatuskode(fetchResponse);
+  return toJson(sjekketResponse);
 }
 
-function methodToJson(method, url, data) {
+async function methodToJson(method, url, data) {
   const headers = {
     Accept: 'application/json',
     'Accept-Charset': 'UTF-8',
@@ -248,17 +247,17 @@ function methodToJson(method, url, data) {
 export function cachedGetAsJson(url, cacheDurationSec = 60) {
   return cachedFetch(url, cacheDurationSec);
 }
-export function getAsJson(url) {
+export async function getAsJson(url) {
   return methodToJson('GET', url);
 }
-export function postAsJson(url, data = {}) {
+export async function postAsJson(url, data = {}) {
   return methodToJson('POST', url, data);
 }
 
 export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
-  return (dispatch, getState) => {
+  return async (dispatch, getState) => {
     if (PENDING) {
-      dispatch({ type: PENDING });
+      await dispatch({ type: PENDING });
     }
     return api(dispatch, getState)
       .then(sendResultatTilDispatch(dispatch, OK, validering))
