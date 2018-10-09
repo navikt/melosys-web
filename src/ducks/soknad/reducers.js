@@ -139,6 +139,7 @@ export default function reducer(state = initialState, action) {
     }
     case Types.OPPDATER_SOKNAD: {
       const { dokument } = action;
+
       const soknad = {
         ...state.data.soeknadDokument,
         arbeidsinntekt: {
@@ -180,7 +181,10 @@ export default function reducer(state = initialState, action) {
         },
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
-          oppholdsPeriode: dokument.oppholdsPeriode,
+          oppholdsPeriode: {
+            fom: formatterDatoTilISO(dokument.oppholdUtlandFom),
+            tom: formatterDatoTilISO(dokument.oppholdUtlandTom),
+          },
           oppholdsPeriodeEndringsBegrunnelse: dokument.oppholdsPeriodeEndringsBegrunnelse,
           oppholdslandKoder: dokument.oppholdsland,
           sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
