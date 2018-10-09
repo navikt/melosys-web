@@ -226,22 +226,25 @@ if (config.headers) {
       contentType,
     };
     if (!fetchResponse.ok) {
-      return fetchResponse.json().then(err => ({
+      const err = await fetchResponse.json();
+      return {
         data: {
           ...err,
         },
         response,
-      }));
+      };
     } else if (contentType && contentType.startsWith('text')) {
-      return fetchResponse.text().then(txt => ({
+      const txt = await fetchResponse.text();
+      return {
         text: txt,
         response,
-      }));
+      };
     } else if (contentType && contentType.startsWith('application/json')) {
-      return fetchResponse.json().then(res => ({
+      const res = await fetchResponse.json();
+      return {
         ...res,
         response,
-      }));
+      };
     }
   }
 
