@@ -185,7 +185,6 @@ export default function reducer(state = initialState, action) {
             fom: formatterDatoTilISO(dokument.oppholdUtlandFom),
             tom: formatterDatoTilISO(dokument.oppholdUtlandTom),
           },
-          oppholdsPeriodeEndringsBegrunnelse: dokument.oppholdsPeriodeEndringsBegrunnelse,
           oppholdslandKoder: dokument.oppholdsland,
           sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
           ektefelleEllerBarnINorge: dokument.harEktefelleEllerBarnINorge,
