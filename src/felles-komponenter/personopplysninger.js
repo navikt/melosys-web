@@ -15,7 +15,7 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import BostedsAdresse from './adresser/bostedsAdresse';
 import LandVelger from './skjema/landvelger';
 
-import UtenlandskID from './personopplysninger/utenlandskID';
+import UtenlandskIdent from './personopplysninger/utenlandskIdent';
 import MedfolgendeFamilie from './personopplysninger/medfolgendeFamilie';
 import MedfolgendeAndre from './personopplysninger/medfolgendeAndre';
 
@@ -92,7 +92,7 @@ function Personopplysninger(props) {
               </dl>
             </Nav.Column>
             <Nav.Column xs="6">
-              <UtenlandskID />
+              <UtenlandskIdent />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="person__seksjon">
