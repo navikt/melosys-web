@@ -356,7 +356,6 @@ const mapStateToProps = state => ({
     utsendtArbeiderMedKontrakter: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtArbeiderMedKontrakter,
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
-    oppholdsPeriodeEndringsBegrunnelse: soknadSelectors.OppholdUtlandSelector(state).oppholdsPeriodeEndringsBegrunnelse,
     oppholdsland: soknadSelectors.OppholdUtlandSelector(state).oppholdslandKoder,
     forutgaendeBostedINorge: soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge,
     arbeidUtland: soknadSelectors.ArbeidUtlandSelector(state),
