@@ -215,7 +215,7 @@ if (config.headers) {
   if (addResponse) {
     const contentType = fetchResponse.headers.get('content-type');
     const {
-      ok, status, statusText, bodyUsed, redirected,
+      ok, status, statusText, redirected,
     } = fetchResponse;
 
     const response = {
@@ -235,26 +235,12 @@ if (config.headers) {
     } else if (contentType && contentType.startsWith('text')) {
       return fetchResponse.text().then(txt => ({
         text: txt,
-        response: {
-          ok,
-          status,
-          statusText,
-          bodyUsed,
-          redirected,
-          contentType,
-        },
+        response,
       }));
     } else if (contentType && contentType.startsWith('application/json')) {
       return fetchResponse.json().then(res => ({
         ...res,
-        response: {
-          ok,
-          status,
-          statusText,
-          bodyUsed,
-          redirected,
-          contentType,
-        },
+        response,
       }));
     }
   }
