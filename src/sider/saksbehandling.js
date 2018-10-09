@@ -136,7 +136,7 @@ class Saksbehandling extends Component {
     const saksflyt = await sjekkSaksflytStatus(behandlingID);
     const { data: saksFlytData } = saksflyt;
     if (saksFlytData && saksFlytData.response) {
-      console.log('Handle errorr');
+      this.skjulOppfriskBekreftelse();
     } else if (saksFlytData === 'PROGRESS') {
       this.blokkerInnholdMedOppfriskSpinner();
     } else {
@@ -190,10 +190,7 @@ class Saksbehandling extends Component {
     const { sjekkSaksflytStatus, saksflyt } = this.props;
     const { behandlingID } = this.props.oppsummering;
     await sjekkSaksflytStatus(behandlingID);
-    console.log('hentBehandlingStatus');
-    console.dir(saksflyt);
     if (saksflyt && saksflyt.response) {
-      console.error('500, lokker Modal dialog', saksflyt.data);
       this.skjulOppfriskBekreftelse();
     } else if (saksflyt === 'DONE') {
       this.skjulOppfriskBekreftelse();
@@ -202,9 +199,10 @@ class Saksbehandling extends Component {
   };
 
   oppfriskSaksopplysninger = async () => {
-    const { oppfriskFagsaker } = this.props;
+    const { oppfriskFagsaker, sendSoknad } = this.props;
     const { behandlingID } = this.props.oppsummering;
-
+    const { soknad } = this.props;
+    await sendSoknad(behandlingID, soknad);
     await oppfriskFagsaker(behandlingID);
     this.blokkerInnholdMedOppfriskSpinner();
   };
@@ -254,7 +252,7 @@ class Saksbehandling extends Component {
             tittel="Oppdaterer registeropplysninger"
             tekst="Oppdatering av registeropplysning."
             synlig
-            skjul={this.navigerTilOversiktSide}
+            tilForsiden={this.navigerTilOversiktSide}
             oppdater={this.hentBehandlingStatus}
           />
         </div>);
