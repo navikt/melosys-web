@@ -3,7 +3,7 @@ import DomeneRegel from '../domeneRegel';
 import { datoDiff, formatterDatoTilISO } from '../../utils/dato';
 
 /** Klassen inneholder funksjoner som hver evaluerer konkrete situasjoner basert på
- * opplysninger fra søknaden, faktaavklaring og fagsak. Utfallet av hver funksjon
+ * opplysninger fra søknaden, avklartefakta og fagsak. Utfallet av hver funksjon
  * kan ende i "sann", "usann" eller mangelfull opplysninger. Tekstene som også
  * returneres som en del av objektet reflekterer også dette.
  *
@@ -55,16 +55,16 @@ class Opphold extends DomeneRegel {
 
   oppholderSegIUtlandet = () => {
     const { skjema } = this;
-    const { faktaavklaringOppholdsLand } = skjema;
+    const { avklartefaktaOppholdsLand } = skjema;
 
     const manglerInfoTekst = 'Sjekk om søker oppholder seg i utlandet!';
     const positivTekst = 'Oppholder seg i utlandet.';
     const negativTekst = 'Oppholder seg IKKE i utlandet.';
 
-    const harMangelfulleOpplysninger = (!faktaavklaringOppholdsLand || faktaavklaringOppholdsLand.length === 0);
+    const harMangelfulleOpplysninger = (!avklartefaktaOppholdsLand || avklartefaktaOppholdsLand.length === 0);
     if (harMangelfulleOpplysninger) { return this.manglerOpplysninger(manglerInfoTekst); }
 
-    return this.byggRegelSvar(!faktaavklaringOppholdsLand.includes('NO'), positivTekst, negativTekst);
+    return this.byggRegelSvar(!avklartefaktaOppholdsLand.includes('NO'), positivTekst, negativTekst);
   };
 
   harSammeAdresseSomArbeidsgiver = () => {

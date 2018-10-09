@@ -18,7 +18,7 @@ class Virksomhet extends Steg {
     this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = () => ({});
     this._handlers = {
-      fattVedtak: this._propsLight.tilgjengeligeHandlers.fattVedtak,
+      lagreVedtakHandler: this._propsLight.tilgjengeligeHandlers.lagreVedtakHandler,
     };
     this._status = FANE_STATUS.OK;
   }

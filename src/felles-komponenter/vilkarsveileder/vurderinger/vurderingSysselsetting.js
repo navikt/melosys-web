@@ -13,11 +13,11 @@ export const VurderingSysselsettingTyper = {
 
 const Sysselsetting = () => (
   <Nav.Fieldset legend="Vurder om søkeren er:">
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV} label="Yrkesaktiv" />
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV_SKIP} label="Yrkesaktiv på skip" />
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV_FLYVENDE} label="Yrkesaktiv som flyvende personell" />
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.IKKE_YRKESAKTIV} label="Ikke yrkesaktiv" />
-    <Skjema.Radio feltNavn="faktaavklaringSysselsettingType" value={VurderingSysselsettingTyper.KONTANTYTELSESMOTTAKER} label="Kontantytelsesmottaker" />
+    <Skjema.Radio feltNavn="avklartefaktaSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV} label="Yrkesaktiv" />
+    <Skjema.Radio feltNavn="avklartefaktaSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV_SKIP} label="Yrkesaktiv på skip" />
+    <Skjema.Radio feltNavn="avklartefaktaSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV_FLYVENDE} label="Yrkesaktiv som flyvende personell" />
+    <Skjema.Radio feltNavn="avklartefaktaSysselsettingType" value={VurderingSysselsettingTyper.IKKE_YRKESAKTIV} label="Ikke yrkesaktiv" />
+    <Skjema.Radio feltNavn="avklartefaktaSysselsettingType" value={VurderingSysselsettingTyper.KONTANTYTELSESMOTTAKER} label="Kontantytelsesmottaker" />
   </Nav.Fieldset>
 );
 

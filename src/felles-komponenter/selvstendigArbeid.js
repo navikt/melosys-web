@@ -5,7 +5,7 @@ import { FieldArray } from 'redux-form';
 import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
-import * as API from '../services/api';
+import * as Api from '../services/api';
 import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../constants';
 
@@ -17,9 +17,9 @@ import './selvstendigArbeid.css';
 class EnkeltForetak extends Component {
   state = { organisasjon: {}, feilmelding: null };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { orgnr } = this.props;
-    if (orgnr) { this.hentOrganisasjon(orgnr); }
+    if (orgnr) { await this.hentOrganisasjon(orgnr); }
   }
 
   componentDidUpdate(prevProps) {
@@ -41,15 +41,15 @@ class EnkeltForetak extends Component {
     if (!erOrgnrGyldig(orgnr)) { this.settFeilmelding('Organisasjonsnummer er ikke gyldig.'); }
   };
 
-  hentOrganisasjon = orgnr => {
+  hentOrganisasjon = async orgnr => {
     if (erOrgnrGyldig(orgnr)) {
-      API.Organisasjoner.hentOrganisasjon(orgnr).then(response => {
-        const organisasjon = (Object.keys(response).length > 0) ? response : null;
-        const feilmelding = !organisasjon ? 'Fant ikke organisasjonen' : null;
+      const response = await Api.Organisasjoner.hentOrganisasjon(orgnr);
 
-        this.settOrganisasjon(organisasjon);
-        this.settFeilmelding(feilmelding);
-      });
+      const organisasjon = (Object.keys(response).length > 0) ? response : null;
+      const feilmelding = !organisasjon ? 'Fant ikke organisasjonen' : null;
+
+      this.settOrganisasjon(organisasjon);
+      this.settFeilmelding(feilmelding);
     }
   };
 

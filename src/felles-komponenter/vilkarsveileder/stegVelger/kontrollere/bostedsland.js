@@ -43,17 +43,17 @@ class Bostedsland extends Steg {
       const { eosBarnetrygd = {} } = sakOgBehandling;
 
       const {
-        faktaavklaringSysselsettingType,
-        faktaavklaringBostedNorgeUtland,
-        faktaavklaringIkkeYrkesaktivType,
+        avklartefaktaSysselsettingType,
+        avklartefaktaBostedNorgeUtland,
+        avklartefaktaIkkeYrkesaktivType,
       } = skjema;
 
       const regler = new Regler(skjema, saksopplysninger);
 
       const erYrkesaktiv = (
-        faktaavklaringSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG ||
-        faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER ||
-        faktaavklaringSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG
+        avklartefaktaSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG ||
+        avklartefaktaSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER ||
+        avklartefaktaSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG
       );
 
       let avklaringer;
@@ -70,7 +70,7 @@ class Bostedsland extends Steg {
           { ...regler.opphold().familieBorINorge() },
         ];
       } else {
-        if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
+        if (avklartefaktaIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.STUDENT) {
           avklaringer = [
             { ...regler.opphold().inntilTolvMaaneder() },
             { ...regler.opphold().harForutgaendeBostedINorge() },
@@ -79,14 +79,14 @@ class Bostedsland extends Steg {
             { ...regler.opphold().familieBorINorge() },
           ];
         }
-        if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
+        if (avklartefaktaIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
             { ...regler.opphold().harForutgaendeBostedINorge() },
             { ...regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr() },
             { ...regler.opphold().harEktefelleEllerBarnINorge() },
           ];
         }
-        if (faktaavklaringIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
+        if (avklartefaktaIkkeYrkesaktivType === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
             { ...regler.opphold().inntilTolvMaaneder() },
             { ...regler.opphold().harForutgaendeBostedINorge() },
@@ -96,7 +96,7 @@ class Bostedsland extends Steg {
       }
 
       return {
-        visBostedslandVelger: (faktaavklaringBostedNorgeUtland === VurderingBostedslandTyper.ANNET),
+        visBostedslandVelger: (avklartefaktaBostedNorgeUtland === VurderingBostedslandTyper.ANNET),
         visTipsForYrkesaktiv: erYrkesaktiv,
         visTipsForIkkeYrkesaktiv: !erYrkesaktiv,
         harEOSBarnetrygdSak: eosBarnetrygd,
