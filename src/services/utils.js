@@ -64,6 +64,7 @@ export function handterFeil(dispatch, action) {
     }
   };
 }
+
 /*
 function parseError(errorData) {
   try {
@@ -200,7 +201,7 @@ const cachedFetch = (url, cacheDurationSec) => {
   }).then(toJson);
 };
 
-export async function fetchToJson(url, config = {}) {
+export async function fetchToJson(url, config = {}, addResponse = false) {
   /*
 if (config.headers) {
   for (let entry of config.headers) {
@@ -210,11 +211,59 @@ if (config.headers) {
 */
 
   const fetchResponse = await fetch(url, config); // eslint-disable-line no-undef
+
+  if (addResponse) {
+    const contentType = fetchResponse.headers.get('content-type');
+    const {
+      ok, status, statusText, bodyUsed, redirected,
+    } = fetchResponse;
+
+    const response = {
+      ok,
+      status,
+      statusText,
+      redirected,
+      contentType,
+    };
+    if (!fetchResponse.ok) {
+      return fetchResponse.json().then(err => ({
+        data: {
+          ...err,
+        },
+        response,
+      }));
+    } else if (contentType && contentType.startsWith('text')) {
+      return fetchResponse.text().then(txt => ({
+        text: txt,
+        response: {
+          ok,
+          status,
+          statusText,
+          bodyUsed,
+          redirected,
+          contentType,
+        },
+      }));
+    } else if (contentType && contentType.startsWith('application/json')) {
+      return fetchResponse.json().then(res => ({
+        ...res,
+        response: {
+          ok,
+          status,
+          statusText,
+          bodyUsed,
+          redirected,
+          contentType,
+        },
+      }));
+    }
+  }
+
   const sjekketResponse = sjekkStatuskode(fetchResponse);
   return toJson(sjekketResponse);
 }
 
-async function methodToJson(method, url, data) {
+async function methodToJson(method, url, data, addResponse = false) {
   const headers = {
     Accept: 'application/json',
     'Accept-Charset': 'UTF-8',
@@ -242,16 +291,19 @@ async function methodToJson(method, url, data) {
     fetchConfig.headers.append('Content-Type', 'application/json');
   }
 
-  return fetchToJson(url, fetchConfig);
+  return fetchToJson(url, fetchConfig, addResponse);
 }
+
 export function cachedGetAsJson(url, cacheDurationSec = 60) {
   return cachedFetch(url, cacheDurationSec);
 }
-export async function getAsJson(url) {
-  return methodToJson('GET', url);
+
+export async function getAsJson(url, addResponse = false) {
+  return methodToJson('GET', url, addResponse);
 }
-export async function postAsJson(url, data = {}) {
-  return methodToJson('POST', url, data);
+
+export async function postAsJson(url, data = {}, addResponse = false) {
+  return methodToJson('POST', url, data, addResponse);
 }
 
 export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
