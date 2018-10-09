@@ -8,25 +8,21 @@ import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 
 import { soknadSelectors, soknadOperations } from '../ducks/soknad';
-import { KodeverkSelectors } from '../ducks/kodeverk';
+import { fagsakOperations } from '../ducks/fagsaker';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import { formatterDatoTilNorsk, vaskInputDato, formatterDatoTilISO } from '../utils/dato';
-import { verdiTilKode } from '../utils/kodeverk';
 
 import './oppholdPeriode.css';
-import ListevelgerEnkelt from './skjema/listevelger/listevelgerEnkelt';
 
 const OppholdEndring = props => {
   const {
     oppholdUtlandNyFom,
     oppholdUtlandNyTom,
-    oppholdsPeriodeEndringsBegrunnelse,
     vedFeltEndring,
     avbryt,
     oppdaterPeriode,
-    alleBegrunnelser,
     vedFeltFokutUt,
   } = props;
 
@@ -53,18 +49,6 @@ const OppholdEndring = props => {
                 onBlur={() => vedFeltFokutUt('oppholdUtlandNyFom')}
               />
             </Nav.Column>
-            <Nav.Column xs="6">
-              <ListevelgerEnkelt
-                label="Begrunnelse:"
-                value={oppholdsPeriodeEndringsBegrunnelse}
-                muligeValg={alleBegrunnelser}
-                meta={{}}
-                bredde="XL"
-                tillatFritekst={false}
-                onChange={event => vedFeltEndring('oppholdsPeriodeEndringsBegrunnelse', event.target.value)}
-                onBlur={() => vedFeltFokutUt('oppholdsPeriodeEndringsBegrunnelse')}
-              />
-            </Nav.Column>
             <Nav.Column xs="12">
               <Nav.Hovedknapp onClick={oppdaterPeriode}>Oppdater saksopplysningene</Nav.Hovedknapp>
               <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
@@ -77,10 +61,8 @@ const OppholdEndring = props => {
 };
 
 OppholdEndring.propTypes = {
-  alleBegrunnelser: PT.array.isRequired,
   avbryt: PT.func.isRequired,
   oppdaterPeriode: PT.func.isRequired,
-  oppholdsPeriodeEndringsBegrunnelse: PT.string.isRequired,
   oppholdUtlandNyFom: PT.string.isRequired,
   oppholdUtlandNyTom: PT.string.isRequired,
   vedFeltEndring: PT.func.isRequired,
@@ -92,7 +74,6 @@ class OppholdPeriode extends Component {
     erEndrePeriodeSynlig: false,
     oppholdUtlandNyFom: '',
     oppholdUtlandNyTom: '',
-    oppholdsPeriodeEndringsBegrunnelse: '',
   };
 
   componentDidUpdate(prevProps) {
@@ -112,7 +93,13 @@ class OppholdPeriode extends Component {
     }));
   };
 
-  visEndrePeriode = () => this.setState({ erEndrePeriodeSynlig: true });
+  visEndrePeriode = () => {
+    const { oppholdUtlandFom, oppholdUtlandTom } = this.props;
+
+    this.kopierPeriodeTilLokalState(oppholdUtlandFom, oppholdUtlandTom);
+    this.setState({ erEndrePeriodeSynlig: true });
+  };
+
   skjulEndrePeriode = () => this.setState({ erEndrePeriodeSynlig: false });
 
   vedFeltEndring = (feltNavn, verdi) => {
@@ -125,13 +112,12 @@ class OppholdPeriode extends Component {
     this.setState({ [feltNavn]: vasketVerdi });
   };
 
-  oppdaterPeriode = event => {
+  oppdaterPeriode = async event => {
     event.preventDefault();
-    const { alleBegrunnelser } = this.props;
     const { oppholdUtlandNyFom, oppholdUtlandNyTom } = this.state;
-    const oppholdsPeriodeEndringsBegrunnelse = verdiTilKode(this.state.oppholdsPeriodeEndringsBegrunnelse, alleBegrunnelser);
     const periode = { fom: formatterDatoTilISO(oppholdUtlandNyFom), tom: formatterDatoTilISO(oppholdUtlandNyTom) };
-    this.props.oppdaterPeriode(periode, oppholdsPeriodeEndringsBegrunnelse);
+    await this.props.oppdaterPeriode(periode);
+    this.props.oppfriskSaksopplysninger();
   };
 
   avbryt = event => {
@@ -141,20 +127,19 @@ class OppholdPeriode extends Component {
       ...state,
       oppholdUtlandNyFom: oppholdUtlandFom,
       oppholdUtlandNyTom: oppholdUtlandTom,
-      oppholdsPeriodeEndringsBegrunnelse: '',
     }));
     this.skjulEndrePeriode();
   };
 
   render () {
     const panelIkon = Ikoner.Ferdig;
-    const { alleBegrunnelser, oppholdUtlandFom, oppholdUtlandTom } = this.props;
+    const { oppholdUtlandFom, oppholdUtlandTom } = this.props;
     const {
       visEndrePeriode, skjulEndrePeriode, vedFeltFokutUt, oppdaterPeriode, vedFeltEndring, avbryt,
     } = this;
 
     const {
-      erEndrePeriodeSynlig, oppholdUtlandNyFom, oppholdUtlandNyTom, oppholdsPeriodeEndringsBegrunnelse,
+      erEndrePeriodeSynlig, oppholdUtlandNyFom, oppholdUtlandNyTom,
     } = this.state;
 
     return (
@@ -179,9 +164,7 @@ class OppholdPeriode extends Component {
               erEndrePeriodeSynlig && <OppholdEndring
                 oppholdUtlandNyFom={oppholdUtlandNyFom}
                 oppholdUtlandNyTom={oppholdUtlandNyTom}
-                oppholdsPeriodeEndringsBegrunnelse={oppholdsPeriodeEndringsBegrunnelse}
                 skjulEndrePeriode={skjulEndrePeriode}
-                alleBegrunnelser={alleBegrunnelser}
                 oppdaterPeriode={oppdaterPeriode}
                 vedFeltEndring={vedFeltEndring}
                 vedFeltFokutUt={vedFeltFokutUt}
@@ -197,10 +180,9 @@ class OppholdPeriode extends Component {
 
 OppholdPeriode.propTypes = {
   oppdaterPeriode: PT.func.isRequired,
+  oppfriskSaksopplysninger: PT.func.isRequired,
   oppholdUtlandFom: PT.string.isRequired,
   oppholdUtlandTom: PT.string.isRequired,
-  oppholdsPeriodeEndringsBegrunnelse: PT.string.isRequired,
-  alleBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 OppholdPeriode.propTypes = {
@@ -214,12 +196,11 @@ OppholdPeriode.defaultProps = {
 const mapStateToProps = state => ({
   oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
   oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
-  oppholdsPeriodeEndringsBegrunnelse: soknadSelectors.OppholdUtlandSelector(state).oppholdsPeriodeEndringsBegrunnelse,
-  alleBegrunnelser: KodeverkSelectors.begrunnelserSelector(state).opphold,
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterPeriode: (periode, begrunnelse) => dispatch(soknadOperations.oppdaterPeriode(periode, begrunnelse)),
+  oppdaterPeriode: periode => dispatch(soknadOperations.oppdaterPeriode(periode)),
+  oppfriskFagsaker: saksnummer => fagsakOperations.oppfrisk(saksnummer),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(OppholdPeriode);

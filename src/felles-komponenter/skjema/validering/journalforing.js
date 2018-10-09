@@ -134,6 +134,7 @@ const journalforingValidering = verdier => ({
  * er oppdatert i Redux. Denne påvirker i seg selv ikke UI, men returnerer kun en
  * true | false.
  * @param verdier
+ * @param journalforingHensikt
  * @returns {boolean}
  */
 const erSkjemaGyldig = (verdier, journalforingHensikt) => {

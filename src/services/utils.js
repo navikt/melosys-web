@@ -17,9 +17,12 @@ export function sjekkStatuskode(response) {
 
 export function toJson(response) {
   if (response.status !== 204) {
-    // No content
-    return response.json().catch(() => ({}));
+    return response.json().catch(res => {
+      console.error(res); // eslint-disable-line no-console
+      return {};
+    });
   }
+  // No content
   return response;
 }
 
