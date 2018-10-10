@@ -143,6 +143,7 @@ class Saksbehandling extends Component {
       await hentSoknad(behandlingID);
       await hentAvklartefakta(behandlingID);
     }
+
     return true;
   };
 
@@ -240,24 +241,24 @@ class Saksbehandling extends Component {
 
     const { values: soknadVerdier } = soknadForm;
 
+
     if (!soknadVerdier) return null;
 
     if (!person || !person.fnr) {
       return null;
     }
 
-    if (this.state.oppfriskningBlokkererInnhold) {
-      return (
-        <div>
-          <DialogboksVenter
-            tittel="Oppdaterer registeropplysninger"
-            tekst="Oppdatering av registeropplysning."
-            synlig
-            tilForsiden={this.navigerTilOversiktSide}
-            oppdater={this.hentBehandlingStatus}
-          />
-        </div>);
-    }
+    const oppfriskVenterDialog = this.state.oppfriskningBlokkererInnhold && (
+      <div>
+        <DialogboksVenter
+          tittel="Oppdaterer registeropplysninger"
+          tekst="Oppdatering av registeropplysning."
+          synlig
+          tilForsiden={this.navigerTilOversiktSide}
+          oppdater={this.hentBehandlingStatus}
+        />
+      </div>
+    );
 
     return (
       <div className="saksbehandling">
@@ -296,6 +297,7 @@ class Saksbehandling extends Component {
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
+        { oppfriskVenterDialog }
         {
           this.state.visOppfriskDialog &&
           <DialogboksOppfriskSak
