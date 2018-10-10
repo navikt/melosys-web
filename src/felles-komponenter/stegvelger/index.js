@@ -94,7 +94,7 @@ class Vilkarsveileder extends Component {
 
   render() {
     return (
-      <div className="vilkarsveileder panelSeksjon">
+      <div className="stegvelger panelSeksjon">
         <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.tilSteg} />
         {
           this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
