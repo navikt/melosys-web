@@ -43,11 +43,6 @@ import {
   avklartefaktaSelectors,
 } from '../ducks/avklartefakta/';
 
-import {
-  vurderingOperations,
-  vurderingSelectors,
-} from '../ducks/vurdering/';
-
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import { formSelectors } from '../ducks/form/';
@@ -65,7 +60,6 @@ class Saksbehandling extends Component {
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     hentAvklartefakta: PT.func.isRequired,
-    hentVurdering: PT.func.isRequired,
     history: PT.object.isRequired,
     inntekt: MPT.Inntekt,
     match: PT.object.isRequired,
@@ -81,7 +75,6 @@ class Saksbehandling extends Component {
     soknadArbeidsinntekt: PT.object,
     soknadForm: PT.object.isRequired,
     valid: PT.bool.isRequired,
-    vurdering: PT.object,
   };
 
   static defaultProps = {
@@ -94,7 +87,6 @@ class Saksbehandling extends Component {
     person: {},
     soknad: {},
     soknadArbeidsinntekt: {},
-    vurdering: {},
   };
 
   state = {
@@ -131,14 +123,6 @@ class Saksbehandling extends Component {
       await sendSoknad(bid, soknad);
       await sendAvklartefakta(bid, avklaring);
     }
-  };
-
-  lagreVurderingHandler = async () => {};
-
-  lagreVedtakHandler = async () => {
-    /* eslint-disable */
-    alert('Ikke implementert');
-    /* eslint-enable */
   };
 
   lagreAvklartefaktaHandler = async () => {
@@ -208,7 +192,6 @@ class Saksbehandling extends Component {
               <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
                 <Vilkarsveileder
                   lagreVedtakHandler={this.lagreVedtakHandler}
-                  lagreVurderingHandler={this.lagreVurderingHandler}
                   lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 />
                 {person && <Personopplysninger person={person} />}
@@ -258,7 +241,6 @@ const mapStateToProps = state => ({
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
-  vurdering: vurderingSelectors.VurderingSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
@@ -365,7 +347,6 @@ const mapDispatchToProps = dispatch => ({
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
   sendAvklartefakta: (bid, dokument) => dispatch(avklartefaktaOperations.send(bid, dokument)),
-  hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
   oppdaterSoknad: values => { dispatch(soknadActions.oppdaterSoknadState(values)); },
   oppdaterAvklartefakta: values => { dispatch(avklartefaktaActions.oppdaterAvklartefaktaState(values)); },
 });

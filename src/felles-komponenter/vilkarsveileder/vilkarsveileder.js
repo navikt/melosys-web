@@ -11,7 +11,6 @@ import StegVelger from './stegVelger';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { KodeverkSelectors } from '../../ducks/kodeverk/';
-import { vurderingOperations } from '../../ducks/vurdering/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
 import { formSelectors } from '../../ducks/form/';
@@ -32,11 +31,6 @@ class Vilkarsveileder extends Component {
     }
   }
 
-  /** Sjekker om det aktive steget som saksbehandler har klikket seg inn på
-   * er det siste steget, altså Vedtak.
-   */
-  erDetteSisteSteg = totaltAntallSteg => (this.state.aktivtStegNummer === totaltAntallSteg - 1);
-
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
    * har bekreftet valgene.
@@ -52,12 +46,9 @@ class Vilkarsveileder extends Component {
    * @returns {Array}
    */
   oppdaterAktuelleSteg = props => {
-    const { erDetteSisteSteg } = this;
-
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreVedtakHandler: this.props.lagreVedtakHandler,
-      lagreVurderingHandler: this.props.lagreVurderingHandler,
     };
 
     const propsLight = {
@@ -75,10 +66,6 @@ class Vilkarsveileder extends Component {
     const aktuelleSteg = stegVelger.beregnAlleSteg();
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
-
-    if (erDetteSisteSteg()) {
-      this.props.hentVurdering(this.props.oppsummering.behandlingID);
-    }
 
     this.setState({ aktuelleSteg });
     return aktuelleSteg;
@@ -122,11 +109,9 @@ Vilkarsveileder.propTypes = {
   avklartefakta: PT.object,
   begrunnelser: PT.object,
   hentInngang: PT.func.isRequired,
-  hentVurdering: PT.func.isRequired,
   history: PT.object.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreVedtakHandler: PT.func.isRequired,
-  lagreVurderingHandler: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk),
   inngang: PT.object,
   match: PT.object.isRequired,
@@ -161,7 +146,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
-  hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
   oppdaterAvklartefaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklartefaktaState(skjema)),
 });
 
