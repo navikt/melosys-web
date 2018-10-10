@@ -67,6 +67,7 @@ export function handterFeil(dispatch, action) {
     }
   };
 }
+
 /*
 function parseError(errorData) {
   try {
@@ -203,7 +204,43 @@ const cachedFetch = (url, cacheDurationSec) => {
   }).then(toJson);
 };
 
-export async function fetchToJson(url, config = {}) {
+const toJsonExtended = async fetchResponse => {
+  const contentType = fetchResponse.headers.get('content-type');
+  const {
+    ok, status, statusText, redirected,
+  } = fetchResponse;
+
+  const response = {
+    ok,
+    status,
+    statusText,
+    redirected,
+    contentType,
+  };
+  if (!fetchResponse.ok) {
+    const err = await fetchResponse.json();
+    return {
+      data: {
+        ...err,
+      },
+      response,
+    };
+  } else if (contentType && contentType.startsWith('text')) {
+    const txt = await fetchResponse.text();
+    return {
+      text: txt,
+      response,
+    };
+  } else if (contentType && contentType.startsWith('application/json')) {
+    const res = await fetchResponse.json();
+    return {
+      ...res,
+      response,
+    };
+  }
+  return fetchResponse;
+};
+export async function fetchToJson(url, config = {}, extendResponse = false) {
   /*
 if (config.headers) {
   for (let entry of config.headers) {
@@ -213,11 +250,16 @@ if (config.headers) {
 */
 
   const fetchResponse = await fetch(url, config); // eslint-disable-line no-undef
+
+  if (extendResponse) {
+    return toJsonExtended(fetchResponse);
+  }
+
   const sjekketResponse = sjekkStatuskode(fetchResponse);
   return toJson(sjekketResponse);
 }
 
-async function methodToJson(method, url, data) {
+async function methodToJson(method, url, data, extendResponse = false) {
   const headers = {
     Accept: 'application/json',
     'Accept-Charset': 'UTF-8',
@@ -245,16 +287,19 @@ async function methodToJson(method, url, data) {
     fetchConfig.headers.append('Content-Type', 'application/json');
   }
 
-  return fetchToJson(url, fetchConfig);
+  return fetchToJson(url, fetchConfig, extendResponse);
 }
+
 export function cachedGetAsJson(url, cacheDurationSec = 60) {
   return cachedFetch(url, cacheDurationSec);
 }
-export async function getAsJson(url) {
-  return methodToJson('GET', url);
+
+export async function getAsJson(url, extendResponse = false) {
+  return methodToJson('GET', url, extendResponse);
 }
-export async function postAsJson(url, data = {}) {
-  return methodToJson('POST', url, data);
+
+export async function postAsJson(url, data = {}, extendResponse = false) {
+  return methodToJson('POST', url, data, extendResponse);
 }
 
 export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
