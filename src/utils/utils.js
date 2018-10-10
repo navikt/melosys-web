@@ -11,7 +11,7 @@ export function buildinfo() {
       versjon,
       byggTidspunkt: moment(),
       byggVersjon,
-      branchVersjon: 'ukjent',
+      branchVersjon,
     };
   }
   return {

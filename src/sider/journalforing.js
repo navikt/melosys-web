@@ -147,12 +147,15 @@ class Journalforing extends Component {
     const vasketJournalforing = this.vaskDokumentInformasjon();
     const journalforingData = { saksnummer, ...vasketJournalforing };
 
-    resetSkjemaFelterForOpprettFagsak();
-
     await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
 
+    this.touchAll(this.props.errors);
+
+    // Tøm den delen av skjema som ikke skal brukes.
+    resetSkjemaFelterForOpprettFagsak();
+
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.KNYTT)) {
-      settFeilFelt('vedleggsTitler', 'saksnummer');
+      settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer');
       return false;
     }
 
@@ -175,11 +178,12 @@ class Journalforing extends Component {
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const { journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed } = journalforingSkjemaVerdier;
 
+    await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
+
     this.touchAll(this.props.errors);
 
+    // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForEksisterendeSaker();
-
-    await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
 
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.OPPRETT)) {
       settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingOppholdsLand');
