@@ -116,6 +116,7 @@ class OppholdPeriode extends Component {
     const { oppholdUtlandNyFom, oppholdUtlandNyTom } = this.state;
     const periode = { fom: formatterDatoTilISO(oppholdUtlandNyFom), tom: formatterDatoTilISO(oppholdUtlandNyTom) };
     this.props.oppdaterPeriode(periode);
+    this.props.lagreSoknadOgOppfriskSaksopplysninger();
   };
 
   avbryt = event => {
@@ -178,7 +179,7 @@ class OppholdPeriode extends Component {
 
 OppholdPeriode.propTypes = {
   oppdaterPeriode: PT.func.isRequired,
-  oppfriskSaksopplysninger: PT.func.isRequired,
+  lagreSoknadOgOppfriskSaksopplysninger: PT.func.isRequired,
   oppholdUtlandFom: PT.string.isRequired,
   oppholdUtlandTom: PT.string.isRequired,
 };
