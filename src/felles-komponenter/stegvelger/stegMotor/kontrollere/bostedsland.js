@@ -1,10 +1,10 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingBostedsland, { VurderingBostedslandTyper } from '../../vurderinger/vurderingBostedsland';
-import { VurderingYrkesaktivitetFordelingTyper } from '../../vurderinger/vurderingYrkesaktivitetFordeling';
-import { VurderingVirksomhetTyper } from '../../vurderinger/vurderingVirksomhet';
-import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
-import { VurderingIkkeYrkesaktivTyper } from '../../vurderinger/vurderingIkkeYrkesaktiv';
+import VurderingBostedsland, { VurderingBostedslandTyper } from '../../stegKomponenter/vurderingBostedsland';
+import { VurderingYrkesaktivitetFordelingTyper } from '../../stegKomponenter/vurderingYrkesaktivitetFordeling';
+import { VurderingVirksomhetTyper } from '../../stegKomponenter/vurderingVirksomhet';
+import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
+import { VurderingIkkeYrkesaktivTyper } from '../../stegKomponenter/vurderingIkkeYrkesaktiv';
 import Regler from '../../../../regler';
 
 class Bostedsland extends Steg {

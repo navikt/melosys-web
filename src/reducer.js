@@ -11,7 +11,7 @@ import oppgaverReducer from './ducks/oppgaver';
 import organisasjonReducer from './ducks/organisasjon';
 import personReducer from './ducks/person';
 import soknadReducer from './ducks/soknad/';
-import vurderingReducer from './ducks/vurdering/';
+import vilkarReducer from './ducks/vilkar/';
 
 import customFormReducer from './ducks/form';
 
@@ -27,5 +27,5 @@ export default combineReducers({
   oppgaver: oppgaverReducer,
   organisasjon: organisasjonReducer,
   person: personReducer,
-  vurdering: vurderingReducer,
+  vilkar: vilkarReducer,
 });

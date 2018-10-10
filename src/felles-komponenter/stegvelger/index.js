@@ -7,7 +7,7 @@ import * as MPT from '../../proptypes/';
 
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
-import StegVelger from './stegVelger';
+import StegVelger from './stegMotor';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { KodeverkSelectors } from '../../ducks/kodeverk/';
@@ -15,7 +15,7 @@ import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
 import { formSelectors } from '../../ducks/form/';
 
-import './vilkarsveileder.css';
+import './stegvelger.css';
 
 class Vilkarsveileder extends Component {
   state = { aktivtStegNummer: 0, aktuelleSteg: [] };

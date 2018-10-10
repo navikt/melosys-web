@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingYrkesaktivitet, { VurderingYrkesaktivitetTyper } from '../../vurderinger/vurderingYrkesaktivitet';
-import { VurderingSysselsettingTyper } from '../../vurderinger/vurderingSysselsetting';
+import VurderingYrkesaktivitet, { VurderingYrkesaktivitetTyper } from '../../stegKomponenter/vurderingYrkesaktivitet';
+import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
 
 class Yrkesaktivitet extends Steg {
   constructor(propsLight, stegPosisjon) {

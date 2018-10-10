@@ -21,7 +21,7 @@ EnkeltLand.propTypes = {
 };
 
 class OppholdsLandEnkelt extends Component {
-  state = { erSlettingIntensjon: false }
+  state = { erSlettingIntensjon: false };
 
   settSlettIntensjon = intensjon => this.setState({ erSlettingIntensjon: intensjon });
 
