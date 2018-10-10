@@ -1,5 +1,3 @@
-# Lisensiering av NAV sine kodebaser
-```
 # The MIT License
 
 Copyright 2018 NAV (Arbeids- og velferdsdirektoratet) - The Norwegian Labour and Welfare Administration
@@ -21,12 +19,3 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
 DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
 USE OR OTHER DEALINGS IN THE SOFTWARE.
-```
-
-### Hva om man finner en lisensfil der 2018 er et tidligere år?
-
-Siden dette er MIT-lisensen, en fri lisens, så er det ikke så viktig
-om året er oppdatert.
-
-Det er ikke behov for å endre årstall uten en spesifikk grunn.
-Ved behov for å endre årstall, er det viktig at dette gjøres sammen med endring av kode.

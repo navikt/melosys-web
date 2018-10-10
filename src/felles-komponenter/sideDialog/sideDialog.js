@@ -8,10 +8,17 @@ import SideDialogHistorikk from './sideDialogHistorikk';
 import SideDialogMelding from './sideDialogMelding';
 import SideDialogDokumenter from './sideDialogDokumenter';
 
+// import * as Api from '../../services/api';
+
 import './sideDialog.css';
 
 const uuid = require('uuid/v4');
-
+/*
+const body = {
+  mottaker: 'ARBEIDSGIVER', // "ARBEIDSGIVER|MOTTAKER",
+  fritekst: 'blahbalh',
+};
+*/
 class SideDialog extends Component {
   static propTypes = {
     faner: PT.array,
@@ -28,8 +35,13 @@ class SideDialog extends Component {
   // Forvent at minst én fane finnes og sett denne som standard aktiv.
   state = {
     aktivFane: this.props.faner[0].navn,
+  };
+  /*
+  async componentDidMount() {
+    const abc = await Api.Dokumenter.opprettDokument(4, '000074', body);
+    console.dir(abc);
   }
-
+  */
   /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
    * slik at riktig komponent under menyen vises. Data fra komponenten slik som navn ligger under
    * props.faner-objektet.
@@ -38,7 +50,7 @@ class SideDialog extends Component {
    */
   tilFane = navn => {
     this.setState({ aktivFane: navn });
-  }
+  };
 
   render() {
     return (
