@@ -92,7 +92,13 @@ class OppholdPeriode extends Component {
     }));
   };
 
-  visEndrePeriode = () => this.setState({ erEndrePeriodeSynlig: true });
+  visEndrePeriode = () => {
+    const { oppholdUtlandFom, oppholdUtlandTom } = this.props;
+
+    this.kopierPeriodeTilLokalState(oppholdUtlandFom, oppholdUtlandTom);
+    this.setState({ erEndrePeriodeSynlig: true });
+  };
+
   skjulEndrePeriode = () => this.setState({ erEndrePeriodeSynlig: false });
 
   vedFeltEndring = (feltNavn, verdi) => {
@@ -105,7 +111,7 @@ class OppholdPeriode extends Component {
     this.setState({ [feltNavn]: vasketVerdi });
   };
 
-  oppdaterPeriode = event => {
+  oppdaterPeriode = async event => {
     event.preventDefault();
     const { oppholdUtlandNyFom, oppholdUtlandNyTom } = this.state;
     const periode = { fom: formatterDatoTilISO(oppholdUtlandNyFom), tom: formatterDatoTilISO(oppholdUtlandNyTom) };
@@ -172,6 +178,7 @@ class OppholdPeriode extends Component {
 
 OppholdPeriode.propTypes = {
   oppdaterPeriode: PT.func.isRequired,
+  oppfriskSaksopplysninger: PT.func.isRequired,
   oppholdUtlandFom: PT.string.isRequired,
   oppholdUtlandTom: PT.string.isRequired,
 };

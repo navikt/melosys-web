@@ -7,7 +7,6 @@ import { reduxForm } from 'redux-form';
 import * as Validering from '../felles-komponenter/skjema/validering';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
-import * as API from '../services/api';
 import DialogboksOppfriskSak from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
 
@@ -28,11 +27,12 @@ import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
 import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
 import VirksomhetNorge from '../felles-komponenter/virksomhetNorge';
-
 import {
   fagsakOperations,
   fagsakSelectors,
 } from '../ducks/fagsaker/';
+
+import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
 
 import {
   soknadOperations,
@@ -75,6 +75,7 @@ class Saksbehandling extends Component {
     oppdaterAvklartefakta: PT.func.isRequired,
     oppdaterSoknad: PT.func.isRequired,
     oppfriskFagsaker: PT.func.isRequired,
+    sjekkSaksflytStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
     person: MPT.Person,
     sendSoknad: PT.func.isRequired,
@@ -106,30 +107,44 @@ class Saksbehandling extends Component {
   };
 
   async componentDidMount() {
-    const { hentFagsaker, hentSoknad, hentAvklartefakta } = this.props;
+    this.lastInnSaksopplysninger();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { syncErrors } = this.props.soknadForm;
+
+    // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
+    // i panelet lenger er ugyldig (ikke validerer).
+    if (JSON.toString(syncErrors) !== JSON.toString(prevProps.syncErrors)) {
+      this.onUpdate(function callback() {
+        this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
+      });
+    }
+  }
+
+  lastInnSaksopplysninger = async () => {
+    const {
+      hentFagsaker, hentSoknad, hentAvklartefakta,
+      sjekkSaksflytStatus,
+    } = this.props;
     const { snr } = this.props.match.params;
     const response = await hentFagsaker(snr);
     const { behandlinger } = response.data;
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
 
-    const saksflytstatus = await API.Saksflyt.status(behandlingID);
-    if (saksflytstatus === 'PROGRESS') {
+    const saksflyt = await sjekkSaksflytStatus(behandlingID);
+    const { data: saksFlytData } = saksflyt;
+    if (saksFlytData && saksFlytData.response) {
+      this.skjulOppfriskBekreftelse();
+    } else if (saksFlytData === 'PROGRESS') {
       this.blokkerInnholdMedOppfriskSpinner();
     } else {
-      hentSoknad(behandlingID);
-      hentAvklartefakta(behandlingID);
+      await hentSoknad(behandlingID);
+      await hentAvklartefakta(behandlingID);
     }
     return true;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    const { syncErrors } = nextProps.soknadForm;
-
-    // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
-    // i panelet lenger er ugyldig (ikke validerer).
-    this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
-  }
+  };
 
   blokkerInnholdMedOppfriskSpinner = () => {
     this.setState({ oppfriskningBlokkererInnhold: true });
@@ -172,18 +187,24 @@ class Saksbehandling extends Component {
   };
 
   hentBehandlingStatus = async () => {
+    const { sjekkSaksflytStatus, saksflyt } = this.props;
     const { behandlingID } = this.props.oppsummering;
-    const saksflytstatus = await API.Saksflyt.status(behandlingID);
-    if (saksflytstatus === 'DONE') {
+    await sjekkSaksflytStatus(behandlingID);
+    if (saksflyt && saksflyt.response) {
       this.skjulOppfriskBekreftelse();
+    } else if (saksflyt === 'DONE') {
+      this.skjulOppfriskBekreftelse();
+      this.lastInnSaksopplysninger();
     }
   };
 
   oppfriskSaksopplysninger = async () => {
-    const { oppfriskFagsaker } = this.props;
+    const { oppfriskFagsaker, sendSoknad } = this.props;
     const { behandlingID } = this.props.oppsummering;
-
+    const { soknad } = this.props;
+    await sendSoknad(behandlingID, soknad);
     await oppfriskFagsaker(behandlingID);
+    this.blokkerInnholdMedOppfriskSpinner();
   };
 
   navigerTilOversiktSide = () => {
@@ -231,7 +252,7 @@ class Saksbehandling extends Component {
             tittel="Oppdaterer registeropplysninger"
             tekst="Oppdatering av registeropplysning."
             synlig
-            skjul={this.navigerTilOversiktSide}
+            tilForsiden={this.navigerTilOversiktSide}
             oppdater={this.hentBehandlingStatus}
           />
         </div>);
@@ -249,7 +270,7 @@ class Saksbehandling extends Component {
                   lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 />
                 {person && <Personopplysninger person={person} />}
-                <OppholdPeriode />
+                <OppholdPeriode oppfriskSaksopplysninger={this.oppfriskSaksopplysninger} />
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <SelvstendigArbeid soknadVerdier={soknadVerdier} />
@@ -293,6 +314,7 @@ class Saksbehandling extends Component {
  * @param state
  */
 const mapStateToProps = state => ({
+  saksflyt: saksflytSelectors.SaksflytSelector(state),
   person: fagsakSelectors.PersonSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
@@ -398,6 +420,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   oppfriskFagsaker: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),

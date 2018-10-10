@@ -7,37 +7,34 @@ import './dialogboksVenter.css';
 
 /* eslint react/prefer-stateless-function:off */
 class DialogboksVenter extends Component {
-
-  oppdateringintervall = 1000;
-  timeoutTid = 30000;
-
   state = {
     tid: 0,
   };
 
-  componentWillUnmount() {
-    clearInterval(this.timer)
-  }
-
   componentDidMount = () => {
     this.timer = setInterval(this.sjekkForTimeout, this.oppdateringintervall);
+  };
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
+  oppdateringintervall = 1000;
+  timeoutTid = 30000;
+
   sjekkForTimeout = () => {
-    console.log("Sjekk timeout: "+ this.state.tid)
     this.setState({ tid: this.state.tid + this.oppdateringintervall });
 
     if (this.state.tid >= this.timeoutTid) {
-      this.props.skjul();
-    }
-    else {
+      this.props.tilForsiden();
+    } else {
       this.props.oppdater();
     }
-  }
+  };
 
   render () {
     const {
-      tittel, tekst, synlig, skjul,
+      tittel, tekst, synlig, tilForsiden,
     } = this.props;
 
     return (
@@ -45,7 +42,7 @@ class DialogboksVenter extends Component {
         className="dialogboksVenter"
         isOpen={synlig}
         contentLabel="Jobber med å oppfriske"
-        onRequestClose={skjul}
+        onRequestClose={tilForsiden}
         closeButton={false}
         shouldCloseOnOverlayClick={false}>
         <div>
@@ -53,7 +50,7 @@ class DialogboksVenter extends Component {
           <Nav.Systemtittel className="tekst">{tittel}</Nav.Systemtittel>
           <Nav.Normaltekst className="tekst">{tekst}</Nav.Normaltekst>
           <div className="dialogboksVenter__container__knapperad">
-            <Nav.Hovedknapp onClick={skjul}>Skjul</Nav.Hovedknapp>
+            <Nav.Knapp onClick={tilForsiden}>Til forsiden</Nav.Knapp>
           </div>
         </div>
       </Nav.Modal>
@@ -65,8 +62,8 @@ DialogboksVenter.propTypes = {
   tittel: PT.string.isRequired,
   tekst: PT.string.isRequired,
   synlig: PT.bool.isRequired,
-  skjul: PT.func.isRequired,
-  oppdater: PT.func,
+  tilForsiden: PT.func.isRequired,
+  oppdater: PT.func.isRequired,
 };
 
 Nav.Modal.setAppElement('#root');
