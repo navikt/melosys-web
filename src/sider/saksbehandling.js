@@ -74,7 +74,7 @@ class Saksbehandling extends Component {
     medlemskap: MPT.Medlemskap,
     oppdaterAvklartefakta: PT.func.isRequired,
     oppdaterSoknad: PT.func.isRequired,
-    oppfriskFagsaker: PT.func.isRequired,
+    oppfriskSaksopplysninger: PT.func.isRequired,
     sjekkSaksflytStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
     person: MPT.Person,
@@ -187,23 +187,24 @@ class Saksbehandling extends Component {
   };
 
   hentBehandlingStatus = async () => {
-    const { sjekkSaksflytStatus, saksflyt } = this.props;
+    const { sjekkSaksflytStatus } = this.props;
     const { behandlingID } = this.props.oppsummering;
-    await sjekkSaksflytStatus(behandlingID);
+    const saksflyt = await sjekkSaksflytStatus(behandlingID);
+
     if (saksflyt && saksflyt.response) {
       this.skjulOppfriskBekreftelse();
-    } else if (saksflyt === 'DONE') {
+    } else if (saksflyt.data === 'DONE') {
       this.skjulOppfriskBekreftelse();
       this.lastInnSaksopplysninger();
     }
   };
 
-  oppfriskSaksopplysninger = async () => {
-    const { oppfriskFagsaker, sendSoknad } = this.props;
+  lagreSoknadOgOppfriskSaksopplysninger = async () => {
+    const { oppfriskSaksopplysninger, sendSoknad } = this.props;
     const { behandlingID } = this.props.oppsummering;
     const { soknad } = this.props;
     await sendSoknad(behandlingID, soknad);
-    await oppfriskFagsaker(behandlingID);
+    await oppfriskSaksopplysninger(behandlingID);
     this.blokkerInnholdMedOppfriskSpinner();
   };
 
@@ -270,7 +271,7 @@ class Saksbehandling extends Component {
                   lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 />
                 {person && <Personopplysninger person={person} />}
-                <OppholdPeriode oppfriskSaksopplysninger={this.oppfriskSaksopplysninger} />
+                <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
                 {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
                 <SelvstendigArbeid soknadVerdier={soknadVerdier} />
@@ -298,7 +299,7 @@ class Saksbehandling extends Component {
         {
           this.state.visOppfriskDialog &&
           <DialogboksOppfriskSak
-            bekreft={this.oppfriskSaksopplysninger}
+            bekreft={this.lagreSoknadOgOppfriskSaksopplysninger}
             avbryt={this.skjulOppfriskBekreftelse}
             skjulDialog={this.navigerTilOversiktSide}
             oppdater={this.hentBehandlingStatus}
@@ -422,7 +423,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
-  oppfriskFagsaker: saksnummer => fagsakOperations.oppfrisk(saksnummer),
+  oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
