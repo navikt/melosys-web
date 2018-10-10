@@ -1,6 +1,6 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingForretningssted from '../../vurderinger/vurderingForretningssted';
+import VurderingForretningssted from '../../stegKomponenter/vurderingForretningssted';
 
 class Forretningssted extends Steg {
   constructor(avklartefakta) {

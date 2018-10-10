@@ -49,8 +49,7 @@ describe('Tester stegVelger', () => {
       },
     };
 
-    /* eslint-disable */
-    const stegVelger = new StegVelger(avklartefakta);
+    const _stegvelger = new StegVelger(avklartefakta);
 
     expect(typeof StegVelger).toBe('function');
   });

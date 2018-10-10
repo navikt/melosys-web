@@ -1,6 +1,6 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingVesentligVirksomhet from '../../vurderinger/vurderingVesentligVirksomhet';
+import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentligVirksomhet';
 import { BOOLSK } from '../../../../constants';
 
 class VesentligVirksomhet extends Steg {

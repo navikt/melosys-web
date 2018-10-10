@@ -1,21 +1,21 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingIkkeYrkesaktiv from '../../vurderinger/vurderingIkkeYrkesaktiv';
+import VurderingArbeidsgiver from '../../stegKomponenter/vurderingArbeidsgiver';
 
-class IkkeYrkesaktiv extends Steg {
+class Sysselsetting extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.BOSTEDSLAND,
+        nesteSteg: STEG.YRKESAKTIVITET,
       },
     ];
-    this._id = STEG.IKKE_YRKESAKTIV;
-    this._tittel = 'Ikke yrkesaktiv';
-    this._komponent = VurderingIkkeYrkesaktiv;
-    this._samleRelevanteData = () => ({});
+    this._id = STEG.ARBEIDSGIVERE;
+    this._tittel = 'Arbeids\u00ADgiver';
+    this._komponent = VurderingArbeidsgiver;
+    this._samleRelevanteData = _propsLight => ({ arbeidsgivereIPerioden: _propsLight.arbeidsgivereIPerioden });
     this._beregnRelevantUI = () => ({});
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
@@ -24,4 +24,4 @@ class IkkeYrkesaktiv extends Steg {
   }
 }
 
-export default IkkeYrkesaktiv;
+export default Sysselsetting;

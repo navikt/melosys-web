@@ -1,6 +1,6 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingTjenestemannn, { VurderingTjenestemannTyper } from '../../vurderinger/vurderingTjenestemann';
+import VurderingTjenestemannn, { VurderingTjenestemannTyper } from '../../stegKomponenter/vurderingTjenestemann';
 
 class Tjenestemann extends Steg {
   constructor(propsLight, stegPosisjon) {

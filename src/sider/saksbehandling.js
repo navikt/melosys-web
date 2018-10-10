@@ -23,7 +23,7 @@ import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
-import Vilkarsveileder from '../felles-komponenter/vilkarsveileder/vilkarsveileder';
+import Vilkarsveileder from '../felles-komponenter/stegvelger/index';
 import VirksomhetNorge from '../felles-komponenter/virksomhetNorge';
 
 import {

@@ -20,20 +20,20 @@ class StegVelger {
     } while (gjeldendeSteg.id !== 'VEDTAK' && iterations < 30);
 
     return stegSamling;
-  }
+  };
 
   beregnNesteSteg = (gjeldendeSteg, nesteStegPosisjon) => {
     if (gjeldendeSteg === null) {
       return this.lagKlasseBasertPaID(this._forsteStegID, 0);
     }
     return this.lagKlasseBasertPaID(gjeldendeSteg.nesteSteg(), nesteStegPosisjon);
-  }
+  };
 
   lagKlasseBasertPaID = (stegID, stegPosisjon) => {
     const StegKlasse = this.beregnStegKlasseFraID(stegID);
     const steget = new StegKlasse(this._propsLight, stegPosisjon);
     return steget;
-  }
+  };
 
   beregnStegKlasseFraID = ID => {
     const kontrollerNavn = ID

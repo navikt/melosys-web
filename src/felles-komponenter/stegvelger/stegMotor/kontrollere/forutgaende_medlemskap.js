@@ -1,6 +1,6 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingForutgaendeMedlemskap from '../../vurderinger/vurderingForutgaendeMedlemskap';
+import VurderingForutgaendeMedlemskap from '../../stegKomponenter/vurderingForutgaendeMedlemskap';
 import { BOOLSK } from '../../../../constants';
 
 class ForutgaendeMedlemskap extends Steg {

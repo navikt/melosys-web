@@ -2,7 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import classnames from 'classnames';
 
-import { FANE_STATUS } from '../stegVelger/typer';
+import { FANE_STATUS } from '../stegMotor/typer';
 
 import * as Ikon from '../../../resources/images';
 

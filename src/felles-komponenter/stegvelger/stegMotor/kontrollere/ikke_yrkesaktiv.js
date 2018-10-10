@@ -1,24 +1,21 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingArtikkel12 from '../../vurderinger/vurderingArtikkel12';
+import VurderingIkkeYrkesaktiv from '../../stegKomponenter/vurderingIkkeYrkesaktiv';
 
-class Artikkel12 extends Steg {
+class IkkeYrkesaktiv extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: STEG.BOSTEDSLAND,
       },
     ];
-    this._id = STEG.ARTIKKEL_12;
-    this._tittel = 'Vurdering av 12.1';
-    this._komponent = VurderingArtikkel12;
-    this._samleRelevanteData = _propsLight => ({
-      artikkel: { kode: 'ART12_1', term: '12.1' },
-      begrunnelser: _propsLight.begrunnelser.artikkel12_1 || [],
-    });
+    this._id = STEG.IKKE_YRKESAKTIV;
+    this._tittel = 'Ikke yrkesaktiv';
+    this._komponent = VurderingIkkeYrkesaktiv;
+    this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = () => ({});
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
@@ -27,4 +24,4 @@ class Artikkel12 extends Steg {
   }
 }
 
-export default Artikkel12;
+export default IkkeYrkesaktiv;

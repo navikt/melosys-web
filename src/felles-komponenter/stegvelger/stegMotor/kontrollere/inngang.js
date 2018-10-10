@@ -1,6 +1,6 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingInngang from '../../vurderinger/vurderingInngang';
+import VurderingInngang from '../../stegKomponenter/vurderingInngang';
 
 class Inngang extends Steg {
   constructor(propsLight, stegPosisjon) {
