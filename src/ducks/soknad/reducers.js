@@ -24,7 +24,6 @@ const soknadTemplate =
     oppholdUtland: {
       oppholdsland: undefined,
       oppholdsPeriode: { fom: undefined, tom: undefined },
-      oppholdPeriodeEndringsbegrunnelse: undefined,
       sammeAdresseSomArbeidsgiver: undefined,
       ektefelleEllerBarn: undefined,
       forutgaendeBostedINorge: undefined,
@@ -124,14 +123,13 @@ export default function reducer(state = initialState, action) {
       };
     }
     case Types.OPPDATER_PERIODE: {
-      const { oppholdsPeriode, oppholdsPeriodeEndringsBegrunnelse } = action.data;
+      const { oppholdsPeriode } = action.data;
 
       const soknad = {
         ...state.data.soeknadDokument,
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
           oppholdsPeriode,
-          oppholdsPeriodeEndringsBegrunnelse,
         },
       };
 
@@ -181,7 +179,6 @@ export default function reducer(state = initialState, action) {
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
           oppholdsPeriode: dokument.oppholdsPeriode,
-          oppholdsPeriodeEndringsBegrunnelse: dokument.oppholdsPeriodeEndringsBegrunnelse,
           oppholdslandKoder: dokument.oppholdsland,
           sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
           ektefelleEllerBarnINorge: dokument.harEktefelleEllerBarnINorge,
