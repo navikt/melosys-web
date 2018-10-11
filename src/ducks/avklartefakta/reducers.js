@@ -79,10 +79,6 @@ export default function reducer(state = initialState, action) {
         tjenestemann: {
           tjenestemann: dokument.avklartefaktaTjenestemann,
         },
-        vesentligVirksomhet: {
-          vesentligVirksomhetINorge: dokument.avklartefaktaVesentligVirksomhetINorge,
-          vesentligVirksomhetBegrunnelser: dokument.avklartefaktaVesentligVirksomhetBegrunnelser,
-        },
         vurdering: {
           lovvalgKode: dokument.vurderingLovvalg,
           begrunnelser: dokument.vurderingBegrunnelser,

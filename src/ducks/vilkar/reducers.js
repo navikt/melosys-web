@@ -10,7 +10,7 @@ import { STATUS } from '../../services/utils';
 import * as Types from './types';
 
 const initialState = {
-  data: {},
+  data: [],
   status: STATUS.NOT_STARTED,
 };
 
@@ -27,6 +27,15 @@ export default function reducer(state = initialState, action) {
         status: STATUS.OK,
         data: action.data,
       };
+    case Types.OPPDATER_VILKAR: {
+      return {
+        ...state,
+        vesentligVirksomhet: {
+          oppfylt: action.data.vilkar.vesentligVirksomhet,
+          begrunnelseKoder: action.data.vilkar.vesentligVirksomhetBegrunnelser,
+        },
+      };
+    }
     default:
       return state;
   }

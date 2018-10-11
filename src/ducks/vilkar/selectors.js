@@ -9,6 +9,14 @@ import { createSelector } from 'reselect';
 
 // selector(s)
 export const VilkarSelector = createSelector(
-  state => (state.vilkar.data ? state.vilkar.data : {}),
+  state => (state.vilkar.data ? state.vilkar.data : []),
   vurdering => vurdering
+);
+
+export const vesentligVirksomhetSelector = createSelector(
+  state => VilkarSelector(state),
+  alleVilkar => {
+    const found = alleVilkar.find(enkelt => enkelt.vilkaar === 'VESENTLIG_VIRKSOMHET') || {};
+    return found;
+  }
 );

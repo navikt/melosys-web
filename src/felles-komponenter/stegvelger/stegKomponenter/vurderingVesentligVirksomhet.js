@@ -9,7 +9,8 @@ import { arrayTilKonjunksjon } from '../../../utils/streng';
 import { BOOLSK } from '../../../constants';
 
 const VurderingVesentligVirksomhet = props => {
-  const { bekreftOgFortsett, begrunnelser } = props;
+  const { bekreftOgFortsett, begrunnelser, tilstand } = props;
+  const { visBegrunnelser } = tilstand;
 
   const arbeidsgivereTekst = props.valgteArbeidsgivere.length > 0 ? `til ${arrayTilKonjunksjon(props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
 
@@ -20,24 +21,26 @@ const VurderingVesentligVirksomhet = props => {
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend="Virksomheten har:">
-              <Skjema.Radio feltNavn="avklartefaktaVesentligVirksomhetINorge" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
-              <Skjema.Radio feltNavn="avklartefaktaVesentligVirksomhetINorge" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
+              <Skjema.Radio feltNavn="vilkar.vesentligVirksomhet" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
+              <Skjema.Radio feltNavn="vilkar.vesentligVirksomhet" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12" md="10" lg="8">
-            <Nav.Fieldset legend="Begrunnelse:">
-              <Skjema.ListeVelger
-                feltNavn="avklartefaktaVesentligVirksomhetBegrunnelser"
-                muligeValg={begrunnelser}
-                label="Legg til begrunnelse:"
-                gruppe
-                tillatFritekst={false}
-              />
-            </Nav.Fieldset>
-          </Nav.Column>
-        </Nav.Row>
+        {visBegrunnelser && (
+          <Nav.Row>
+            <Nav.Column xs="12" md="10" lg="8">
+              <Nav.Fieldset legend="Begrunnelse:">
+                <Skjema.ListeVelger
+                  feltNavn="vilkar.vesentligVirksomhetBegrunnelser"
+                  muligeValg={begrunnelser}
+                  label="Legg til begrunnelse:"
+                  gruppe
+                  tillatFritekst={false}
+                />
+              </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>)
+        }
       </div>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

@@ -27,7 +27,9 @@ class VesentligVirksomhet extends Steg {
       valgteArbeidsgivere: this.samleArbeidsgivereSomListe(_propsLight),
       begrunnelser: _propsLight.begrunnelser.vesentligVirksomhet || [],
     });
-    this._beregnRelevantUI = () => ({});
+    this._beregnRelevantUI = _propsLight => ({
+      visBegrunnelser: !_propsLight.skjema.vilkar.vesentligVirksomhet,
+    });
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
