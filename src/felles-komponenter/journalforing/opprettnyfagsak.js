@@ -21,7 +21,7 @@ class OpprettNyFagSak extends Component {
     await this.oppdaterFelter(prevProps);
   }
   oppdaterFelter = async (props, tvingOppdatering) => {
-    const { arbeidsgiverID, representantID } = props.journalforingSkjemaVerdier;
+    const { representantID, representantID } = props.journalforingSkjemaVerdier;
   };
   */
   toggleSpinn = (navn, spin) => ({ spinner: { ...this.state.spinner, [navn]: spin } });
@@ -34,22 +34,22 @@ class OpprettNyFagSak extends Component {
   erGyldigOrgnummer = verdi => verdi.length === Konstanter.ANTALL_TALL_I_ORGNR;
   sjekkArbeidsgiver = async verdi => {
     const { erGyldigOrgnummer } = this;
-    const { settFeltInnhold, hentOgVisArbeidsgiver } = this.props;
+    const { settFeltInnhold, hentOgVisRepresentant } = this.props;
     if (erGyldigOrgnummer(verdi)) {
-      await this.spinner('arbeidsgiverNavn');
-      await hentOgVisArbeidsgiver(verdi);
+      await this.spinner('representantNavn');
+      await hentOgVisRepresentant(verdi);
     } else {
-      await settFeltInnhold('arbeidsgiverNavn');
+      await settFeltInnhold('representantNavn');
     }
   };
 
   IDFeltTastOppHandler = async event => {
     const { id: opprinneligFeltID, value } = event.target;
-    if (opprinneligFeltID === 'arbeidsgiverID') { await this.sjekkArbeidsgiver(value); }
+    if (opprinneligFeltID === 'representantID') { await this.sjekkArbeidsgiver(value); }
   };
 
   render() {
-    const { spinner: { arbeidsgiverNavn: visArbeidsgiverSpinner } } = this.state;
+    const { spinner: { representantNavn: visArbeidsgiverSpinner } } = this.state;
 
     const { opprettFagsak } = this.props;
     return (
@@ -57,8 +57,8 @@ class OpprettNyFagSak extends Component {
         <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
         <Nav.Row>
           <Nav.Column xs="6">
-            <Skjema.Input feltNavn="arbeidsgiverID" label="Representantens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
-            <Skjema.Input feltNavn="arbeidsgiverNavn" label="Representantens navn" />
+            <Skjema.Input feltNavn="representantID" label="Representantens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
+            <Skjema.Input feltNavn="representantNavn" label="Representantens navn" />
             { visArbeidsgiverSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           </Nav.Column>
         </Nav.Row>
