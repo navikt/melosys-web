@@ -116,15 +116,16 @@ class Journalforing extends Component {
       journalforing: { dokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, avsenderNavn, dokumentTittel, vedleggsTitler,
+      brukerID, avsenderID, arbeidsgiverID, avsenderNavn, dokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = dokument;
     return {
+      arbeidsgiverID,
       avsenderID,
       avsenderNavn,
-      brukerID,
       dokumentID,
+      brukerID,
       dokumenttittel: dokumentTittel,
       journalpostID,
       oppgaveID,
@@ -200,10 +201,8 @@ class Journalforing extends Component {
     };
 
     const vasketJournalforing = this.vaskDokumentInformasjon();
-    const arbeidsgiverID = '910253158';
-    const representantID = arbeidsgiverID ? null : '910253158';
+    const representantID = null;
     const journalforingData = {
-      arbeidsgiverID,
       representantID,
       ...vasketJournalforing,
       fagsak,
