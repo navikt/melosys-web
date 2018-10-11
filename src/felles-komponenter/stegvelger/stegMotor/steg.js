@@ -30,7 +30,9 @@ class Steg {
   });
 
   nesteSteg = () => {
-    const { avklartefakta = {} } = this._propsLight;
+    const { avklartefakta = {}, vilkar = [] } = this._propsLight;
+
+    console.log(vilkar)
 
     const flatAvklartefakta = Object
       .keys(avklartefakta)

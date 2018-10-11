@@ -60,10 +60,6 @@ export default function reducer(state = initialState, action) {
         yrkesaktivitet: {
           yrkesaktivitetType: dokument.avklartefaktaYrkesaktivitetType,
         },
-        forutgaendeMedlemskap: {
-          harForutgaendeMedlemskap: dokument.avklartefaktaHarForutgaendeMedlemskap,
-          forutgaendeMedlemskapBegrunnelser: dokument.avklartefaktaForutgaendeMedlemskapBegrunnelser,
-        },
         bosted: {
           bostedLand: (dokument.avklartefaktaBostedNorgeUtland === VurderingBostedslandTyper.NORGE ? 'NO' : dokument.avklartefaktaBostedLand),
           bostedBegrunnelser: dokument.avklartefaktaBostedBegrunnelser,

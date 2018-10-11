@@ -333,7 +333,6 @@ const mapStateToProps = state => ({
     avklartefaktaErstatterTidligereUtsendt: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).erstatterTidligereUtsendt,
     avklartefaktaUtsendingMindreEnn24Mnd: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).utsendingMindreEnn24Mnd,
     avklartefaktaForetakDriverINorge: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).foretakDriverINorge,
-    avklartefaktaHarForutgaendeMedlemskap: avklartefaktaSelectors.AvklartefaktaForutgaendeMedlemskapSelector(state).harForutgaendeMedlemskap,
     avklartefaktaForutgaendeMedlemskapBegrunnelser: avklartefaktaSelectors.AvklartefaktaForutgaendeMedlemskapSelector(state).forutgaendeMedlemskapBegrunnelser,
     avklartefaktaArbeidKnyttetTilVirksomhetUtlandet: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).arbeidKnyttetTilVirksomhetUtlandet,
     avklartefaktaSammeTypeVirksomhet: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).sammeTypeVirksomhet,
@@ -348,6 +347,8 @@ const mapStateToProps = state => ({
     vilkar: {
       vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),
       vesentligVirksomhetBegrunnelser: (vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder),
+      forutgaendeMedlemskap: (vilkarSelectors.forutgaendeMedlemskap(state).oppfylt),
+      forutgaendeMedlemskapBegrunnelser: (vilkarSelectors.forutgaendeMedlemskap(state).begrunnelseKoder),
     },
     avklartefaktaForretningsstedLand: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).land,
     avklartefaktaForretningsstedAntallArbeidsgivere: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).antallArbeidsgivere,
