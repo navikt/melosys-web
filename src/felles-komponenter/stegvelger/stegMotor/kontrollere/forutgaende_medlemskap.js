@@ -26,7 +26,9 @@ class ForutgaendeMedlemskap extends Steg {
     this._samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.forutgaendeMedlemskap || [],
     });
-    this._beregnRelevantUI = () => ({});
+    this._beregnRelevantUI = _propsLight => ({
+      visBegrunnelser: !_propsLight.skjema.vilkar.forutgaendeMedlemskap,
+    });
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };

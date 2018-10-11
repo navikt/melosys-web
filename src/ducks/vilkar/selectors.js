@@ -15,8 +15,10 @@ export const VilkarSelector = createSelector(
 
 export const vesentligVirksomhetSelector = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => {
-    const found = alleVilkar.find(enkelt => enkelt.vilkaar === 'VESENTLIG_VIRKSOMHET') || {};
-    return found;
-  }
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'VESENTLIG_VIRKSOMHET') || {})
+);
+
+export const forutgaendeMedlemskap = createSelector(
+  state => VilkarSelector(state),
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'FORUTGAAENDE_MEDLEMSKAP') || {})
 );

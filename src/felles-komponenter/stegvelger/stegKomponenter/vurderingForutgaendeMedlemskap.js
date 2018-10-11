@@ -7,7 +7,8 @@ import * as Skjema from '../../skjema';
 import { BOOLSK } from '../../../constants';
 
 const VurderingForutgaendeMedlemskap = props => {
-  const { bekreftOgFortsett, begrunnelser } = props;
+  const { bekreftOgFortsett, begrunnelser, tilstand } = props;
+  const { visBegrunnelse } = tilstand;
 
   return (
     <div>
@@ -16,24 +17,26 @@ const VurderingForutgaendeMedlemskap = props => {
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend="Søkeren har:">
-              <Skjema.Radio feltNavn="avklartefaktaHarForutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
-              <Skjema.Radio feltNavn="avklartefaktaHarForutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
+              <Skjema.Radio feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
+              <Skjema.Radio feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12" md="10" lg="8">
-            <Nav.Fieldset legend="Begrunnelse:">
-              <Skjema.ListeVelger
-                feltNavn="avklartefaktaForutgaendeMedlemskapBegrunnelser"
-                muligeValg={begrunnelser}
-                label="Legg til begrunnelse:"
-                gruppe
-                tillatFritekst={false}
-              />
-            </Nav.Fieldset>
-          </Nav.Column>
-        </Nav.Row>
+        { visBegrunnelse && (
+          <Nav.Row>
+            <Nav.Column xs="12" md="10" lg="8">
+              <Nav.Fieldset legend="Begrunnelse:">
+                <Skjema.ListeVelger
+                  feltNavn="vilkar.forutgaendeMedlemskap"
+                  muligeValg={begrunnelser}
+                  label="Legg til begrunnelse:"
+                  gruppe
+                  tillatFritekst={false}
+                />
+              </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>
+        ) }
       </div>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

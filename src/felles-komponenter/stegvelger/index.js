@@ -55,6 +55,7 @@ class Stegvelger extends Component {
 
     const propsLight = {
       avklartefakta: props.avklartefakta,
+      vilkar: props.vilkar,
       saksopplysninger: props.saksopplysninger,
       inngang: props.inngang,
       skjema: props.skjema,

@@ -28,11 +28,16 @@ export default function reducer(state = initialState, action) {
         data: action.data,
       };
     case Types.OPPDATER_VILKAR: {
+      // Kommer inn som objekt. Må inn i storen som array.
       return {
         ...state,
         vesentligVirksomhet: {
           oppfylt: action.data.vilkar.vesentligVirksomhet,
           begrunnelseKoder: action.data.vilkar.vesentligVirksomhetBegrunnelser,
+        },
+        forutgaendeMedlemskap: {
+          oppfylt: action.data.vilkar.forutgaendeMedlemskap,
+          begrunnelseKoder: action.data.vilkar.forutgaendeMedlemskapBegrunnelser,
         },
       };
     }
