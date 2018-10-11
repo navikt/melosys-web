@@ -288,7 +288,7 @@ class Journalforing extends Component {
     } = this.props;
 
     const {
-      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisArbeidsgiver, erAvsenderArbeidsgiver,
+      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisArbeidsgiver,
     } = this;
 
     const { journalpostID } = this.props.match.params;
@@ -313,11 +313,12 @@ class Journalforing extends Component {
                         dokumentID={dokumentID}
                         hentOgVisAvsender={hentOgVisAvsender}
                         hentOgVisBruker={hentOgVisBruker}
-                        hentOgVisArbeidsgiver={hentOgVisArbeidsgiver}
-                        erAvsenderArbeidsgiver={erAvsenderArbeidsgiver}
                       />
                       <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
-                      <OpprettNyFagSak opprettFagsak={opprettFagsak} />
+                      <OpprettNyFagSak
+                        opprettFagsak={opprettFagsak}
+                        hentOgVisArbeidsgiver={hentOgVisArbeidsgiver}
+                      />
                       <div className="journalforing__fotknapper">
                         <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
                       </div>
@@ -347,7 +348,7 @@ const mapStateToProps = state => ({
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
     arbeidsgiverID: '',
     representantID: null,
-    erAvsenderArbeidsgiver: true,
+    erAvsenderArbeidsgiverEllerRepresentantEllerRepresentant: true,
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
     vedleggsTitler: [],

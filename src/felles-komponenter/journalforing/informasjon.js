@@ -66,7 +66,6 @@ class Informasjon extends Component {
     verdi.length === Konstanter.ANTALL_TALL_I_ORGNR ||
     verdi.length === Konstanter.ANTALL_TALL_I_DNR || verdi.length === Konstanter.ANTALL_TALL_I_FNR
   );
-  erGyldigOrgnummer = verdi => verdi.length === Konstanter.ANTALL_TALL_I_ORGNR;
 
   kopierBrukerTilAvsender = (
     brukerID = this.props.journalforingSkjemaVerdier.brukerID,
@@ -111,23 +110,11 @@ class Informasjon extends Component {
       await settFeltInnhold('avsenderNavn', '');
     }
   };
-
-  sjekkArbeidsgiver = async verdi => {
-    const { erGyldigOrgnummer } = this;
-    const { settFeltInnhold, hentOgVisArbeidsgiver } = this.props;
-    if (erGyldigOrgnummer(verdi)) {
-      await this.spinner('arbeidsgiverNavn');
-      await hentOgVisArbeidsgiver(verdi);
-    } else {
-      await settFeltInnhold('arbeidsgiverNavn');
-    }
-  };
   IDFeltTastOppHandler = async event => {
     const { id: opprinneligFeltID, value } = event.target;
 
     if (opprinneligFeltID === 'brukerID') { await this.sjekkBruker(value); }
     if (opprinneligFeltID === 'avsenderID') { await this.sjekkAvsender(value); }
-    if (opprinneligFeltID === 'arbeidsgiverID') { await this.sjekkArbeidsgiver(value); }
   };
 
   toggleSpinn = (navn, spin) => ({ spinner: { ...this.state.spinner, [navn]: spin } });
@@ -166,7 +153,6 @@ class Informasjon extends Component {
     const {
       spinner: { brukerNavn: visBrukerSpinner },
       spinner: { avsenderNavn: visAvsenderSpinner },
-      spinner: { arbeidsgiverNavn: visArbeidsgiverSpinner },
     } = this.state;
     const { skalFeltetDisables } = this;
 
@@ -181,20 +167,9 @@ class Informasjon extends Component {
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
           <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsenderID" label="Avsender personnummer / organisasjonsnummer" disabled={skalFeltetDisables('avsenderID')} onKeyUp={this.IDFeltTastOppHandler} />
-          <Skjema.Input feltNavn="avsenderNavn" label="Avsender Navn" disabled={skalFeltetDisables('avsenderNavn')} />
+          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsenderID')} onKeyUp={this.IDFeltTastOppHandler} />
+          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsenderNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-
-          <p>Start:Ny sjekkboks</p>
-          <Skjema.RadioGruppe label="Er avsender arbeidsgiver eller representant?" feltNavn="erAvsenderArbeidsgiver">
-            <Skjema.Radio feltNavn="erAvsenderArbeidsgiver" value={Konstanter.BOOLSK.SANN} label="Ja" />
-            <Skjema.Radio feltNavn="erAvsenderArbeidsgiver" value={Konstanter.BOOLSK.USANN} label="Nei" />
-          </Skjema.RadioGruppe>
-          <Skjema.Input feltNavn="arbeidsgiverID" label="Arbeidsgivers eller representant organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
-          <Skjema.Input feltNavn="arbeidsgiverNavn" label="Arbeidsgivers navn" />
-          { visArbeidsgiverSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-          <p>Slutt:Ny sjekkboks</p>
-
           <Skjema.Input feltNavn="mottattDato" label="Registrert dato:" disabled />
           <Link to={dokumentURI} target="_blank" className="informasjon__dokumentlenke">Åpne dokument i nytt vindu</Link>
 
@@ -228,8 +203,6 @@ Informasjon.propTypes = {
   journalforingSkjemaVerdier: PT.object, // TODO: Vurdere MPT.
   hentOgVisBruker: PT.func.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
-  hentOgVisArbeidsgiver: PT.func.isRequired,
-  erAvsenderArbeidsgiver: PT.bool,
   journalpostID: PT.string,
   dokumentID: PT.string,
   settFeltInnhold: PT.func.isRequired,
@@ -239,7 +212,6 @@ Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
   valgbareDokumentTitler: [],
   valgbareVedleggsTitler: [],
-  erAvsenderArbeidsgiver: true,
   journalpostID: '',
   dokumentID: '',
 };
