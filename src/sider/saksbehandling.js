@@ -43,6 +43,8 @@ import {
   avklartefaktaSelectors,
 } from '../ducks/avklartefakta/';
 
+import { vilkarSelectors } from '../ducks/vilkar';
+
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import { formSelectors } from '../ducks/form/';
@@ -75,6 +77,7 @@ class Saksbehandling extends Component {
     soknadArbeidsinntekt: PT.object,
     soknadForm: PT.object.isRequired,
     valid: PT.bool.isRequired,
+    vilkar: PT.array,
   };
 
   static defaultProps = {
@@ -87,6 +90,7 @@ class Saksbehandling extends Component {
     person: {},
     soknad: {},
     soknadArbeidsinntekt: {},
+    vilkar: [],
   };
 
   state = {
@@ -131,6 +135,15 @@ class Saksbehandling extends Component {
     const { valid, sendAvklartefakta } = this.props;
     if (valid) {
       await sendAvklartefakta(bid, avklaring);
+    }
+  };
+
+  lagreVilkarHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const { vilkar } = this.props;
+    const { valid, sendVilkar } = this.props;
+    if (valid) {
+      await sendVilkar(bid, vilkar);
     }
   };
 
@@ -193,6 +206,7 @@ class Saksbehandling extends Component {
                 <Vilkarsveileder
                   lagreVedtakHandler={this.lagreVedtakHandler}
                   lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
+                  lagreVilkarHandler={this.lagreVilkarHandler}
                 />
                 {person && <Personopplysninger person={person} />}
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
@@ -245,6 +259,7 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
+  vilkar: vilkarSelectors.VilkarSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
@@ -330,8 +345,10 @@ const mapStateToProps = state => ({
     avklartefaktaAktivitetLand: avklartefaktaSelectors.AvklartefaktaAktivitetSelector(state).aktivitetLand,
     avklartefaktaTjenestemann: avklartefaktaSelectors.AvklartefaktaTjenestemannSelector(state).tjenestemann,
     avklartefaktaValgteArbeidsgivere: avklartefaktaSelectors.AvklartefaktaValgteArbeidsgivereSelector(state),
-    avklartefaktaVesentligVirksomhetINorge: (avklartefaktaSelectors.AvklartefaktaVesentligVirksomhetSelector(state).vesentligVirksomhetINorge),
-    avklartefaktaVesentligVirksomhetBegrunnelser: avklartefaktaSelectors.AvklartefaktaVesentligVirksomhetSelector(state).vesentligVirksomhetBegrunnelser,
+    vilkar: {
+      vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),
+      vesentligVirksomhetBegrunnelser: (vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder),
+    },
     avklartefaktaForretningsstedLand: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).land,
     avklartefaktaForretningsstedAntallArbeidsgivere: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).antallArbeidsgivere,
     avklartefaktaForretningsstedFordelingArbeidsgivere: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).fordelingArbeidsgivere,

@@ -13,16 +13,18 @@ import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { KodeverkSelectors } from '../../ducks/kodeverk/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
+import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { formSelectors } from '../../ducks/form/';
 
 import './stegvelger.css';
 
-class Vilkarsveileder extends Component {
+class Stegvelger extends Component {
   state = { aktivtStegNummer: 0, aktuelleSteg: [] };
 
   componentWillMount() {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
+    this.props.hentVilkar(4);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -76,10 +78,22 @@ class Vilkarsveileder extends Component {
    * @param nyttStegNummer Number Steget som det skal byttes til.
    */
   tilSteg = async nyttStegNummer => {
-    const { skjema, oppdaterAvklartefaktaState, lagreAvklartefaktaHandler } = this.props;
+    const {
+      skjema,
+      oppdaterAvklarteFaktaState,
+      oppdaterVilkarState,
+      lagreAvklartefaktaHandler,
+      sendVilkar,
+      vilkar,
+    } = this.props;
+
+    const { behandlingID } = this.props.oppsummering;
+
     this.setState({ aktivtStegNummer: nyttStegNummer });
-    await oppdaterAvklartefaktaState(skjema);
+    await oppdaterAvklarteFaktaState(skjema);
+    await oppdaterVilkarState(skjema);
     await lagreAvklartefaktaHandler();
+    await sendVilkar(behandlingID, vilkar);
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
@@ -104,25 +118,28 @@ class Vilkarsveileder extends Component {
   }
 }
 
-Vilkarsveileder.propTypes = {
+Stegvelger.propTypes = {
   arbeidsgivereIPerioden: PT.array,
   avklartefakta: PT.object,
   begrunnelser: PT.object,
   hentInngang: PT.func.isRequired,
+  hentVilkar: PT.func.isRequired,
+  sendVilkar: PT.func.isRequired,
   history: PT.object.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreVedtakHandler: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk),
   inngang: PT.object,
   match: PT.object.isRequired,
-  oppdaterAvklartefaktaState: PT.func.isRequired,
+  oppdaterAvklarteFaktaState: PT.func.isRequired,
+  oppdaterVilkarState: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   skjema: PT.object.isRequired,
   valgteArbeidsgivere: PT.array,
 };
 
-Vilkarsveileder.defaultProps = {
+Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: {},
   begrunnelser: {},
@@ -135,6 +152,7 @@ Vilkarsveileder.defaultProps = {
 const mapStateToProps = state => ({
   arbeidsgivereIPerioden: avklartefaktaSelectors.ArbeidsgivereIPeriodenSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
+  vilkar: vilkarSelectors.VilkarSelector(state),
   begrunnelser: KodeverkSelectors.begrunnelserSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
   landkoder: KodeverkSelectors.landkoderSelector(state),
@@ -146,7 +164,11 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
-  oppdaterAvklartefaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklartefaktaState(skjema)),
+  hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
+  sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
+  lagreVedtakHandler: () => alert('lagrer vedtak, ikke implementert'),
+  oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
+  oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Vilkarsveileder));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

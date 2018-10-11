@@ -11,12 +11,24 @@ import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
 
 import * as Types from './types';
+import * as Actions from '../vilkar/actions';
 
-/* eslint-disable import/prefer-default-export */
 export function hent(behandlingID) {
-  return doThenDispatch(() => Api.Vurdering.hent(behandlingID), {
+  return doThenDispatch(() => Api.Vilkar.hent(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function send(behandlingID, body) {
+  return doThenDispatch(() => Api.Vilkar.send(behandlingID, body), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function oppdaterVilkarState(skjema) {
+  return dispatch => (dispatch(Actions.oppdaterVilkarState(skjema)));
 }

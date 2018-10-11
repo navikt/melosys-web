@@ -106,11 +106,6 @@ export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
   valgteArbeidsgivere => valgteArbeidsgivere || []
 );
 
-export const AvklartefaktaVesentligVirksomhetSelector = createSelector(
-  state => AvklartefaktaSelector(state).vesentligVirksomhet || {},
-  vesentligVirksomhet => vesentligVirksomhet || {}
-);
-
 export const AvklartefaktaVurderingSelector = createSelector(
   state => AvklartefaktaSelector(state).vurdering,
   vurdering => vurdering || {}
