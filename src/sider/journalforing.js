@@ -119,7 +119,7 @@ class Journalforing extends Component {
       brukerID, avsenderID, avsenderNavn, dokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
-    const { ID: dokumentID } = dokument;
+    const { dokumentID } = dokument;
     return {
       avsenderID,
       avsenderNavn,
