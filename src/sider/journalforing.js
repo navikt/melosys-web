@@ -292,7 +292,7 @@ class Journalforing extends Component {
     } = this;
 
     const { journalpostID } = this.props.match.params;
-    const { ID: dokumentID } = dokument;
+    const { dokumentID } = dokument;
 
     return (
       <div className="journalforing">
