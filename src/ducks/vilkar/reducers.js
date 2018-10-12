@@ -14,12 +14,14 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
-const vilkarTilObjekt = (vilkaar, oppfylt, begrunnelseKoder, begrunnelseFritekst) => ({
-  vilkaar,
-  oppfylt,
-  begrunnelseKoder,
-  begrunnelseFritekst: begrunnelseFritekst || null,
-});
+const vilkarTilObjekt = (vilkaar, oppfylt, begrunnelseKoder, begrunnelseFritekst) => (
+  oppfylt === undefined ? null : {
+    vilkaar,
+    oppfylt,
+    begrunnelseKoder: begrunnelseKoder || [],
+    begrunnelseFritekst: begrunnelseFritekst || null,
+  }
+);
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -35,13 +37,18 @@ export default function reducer(state = initialState, action) {
         data: action.data,
       };
     case Types.OPPDATER_VILKAR: {
-      // Kommer inn som objekt. Må inn i storen som array.
+      // Gjennomgå alle vilkår som kan være satt. Dersom de er 'undefined', vil det si at
+      // saksbehandler ikke har vært innom denne vurderingen og kanskje aldri kommer tid. Siden
+      // det da ikke er et vilkår som er vurdert, skal det heller ikke inn i modellen eller sendes backend.
+      const vilkarArray = [
+        vilkarTilObjekt('ART12_1_FORUTGAAENDE_MEDLEMSKAP', action.data.vilkar.forutgaendeMedlemskap, action.data.vilkar.forutgaendeMedlemskapBegrunnelser),
+        vilkarTilObjekt('VESENTLIG_VIRKSOMHET', action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhetBegrunnelser),
+        vilkarTilObjekt('BOSATT_I_NORGE', action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorgeBegrunnelser),
+        vilkarTilObjekt('ART12_1', action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
+      ].filter(vilkar => vilkar !== null);
+
       return {
-        data: [
-          vilkarTilObjekt('ART12_1_FORUTGAAENDE_MEDLEMSKAP', action.data.vilkar.forutgaendeMedlemskap, action.data.vilkar.forutgaendeMedlemskapBegrunnelser),
-          vilkarTilObjekt('VESENTLIG_VIRKSOMHET', action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhetBegrunnelser),
-          vilkarTilObjekt('BOSATT_I_NORGE', action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorgeBegrunnelser),
-        ],
+        data: vilkarArray,
       };
     }
     default:

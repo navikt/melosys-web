@@ -27,3 +27,8 @@ export const bosattINorge = createSelector(
   state => VilkarSelector(state),
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'BOSATT_I_NORGE') || {})
 );
+
+export const art12_1 = createSelector(
+  state => VilkarSelector(state),
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'ART12_1') || {})
+);

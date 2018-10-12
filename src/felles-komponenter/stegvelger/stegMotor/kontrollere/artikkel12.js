@@ -19,7 +19,9 @@ class Artikkel12 extends Steg {
       artikkel: { kode: 'ART12_1', term: '12.1' },
       begrunnelser: _propsLight.begrunnelser.artikkel12_1 || [],
     });
-    this._beregnRelevantUI = () => ({});
+    this._beregnRelevantUI = _propsLight => ({
+      visBegrunnelser: _propsLight.skjema.vilkar.art12_1 === false,
+    });
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
