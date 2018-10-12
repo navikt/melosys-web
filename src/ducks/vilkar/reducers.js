@@ -38,7 +38,7 @@ export default function reducer(state = initialState, action) {
       // Kommer inn som objekt. Må inn i storen som array.
       return {
         data: [
-          vilkarTilObjekt('FORUTGAAENDE_MEDLEMSKAP', action.data.vilkar.forutgaendeMedlemskap, action.data.vilkar.forutgaendeMedlemskapBegrunnelser),
+          vilkarTilObjekt('ART12_1_FORUTGAAENDE_MEDLEMSKAP', action.data.vilkar.forutgaendeMedlemskap, action.data.vilkar.forutgaendeMedlemskapBegrunnelser),
           vilkarTilObjekt('VESENTLIG_VIRKSOMHET', action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhetBegrunnelser),
           vilkarTilObjekt('BOSATT_I_NORGE', action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorgeBegrunnelser),
         ],

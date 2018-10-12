@@ -312,7 +312,6 @@ const mapStateToProps = state => ({
     fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandKode,
     avklartefaktaBostedLand: avklartefaktaSelectors.AvklartefaktaBostedSelector(state).bostedLand,
-    avklartefaktaBostedBegrunnelser: avklartefaktaSelectors.AvklartefaktaBostedSelector(state).bostedBegrunnelser,
     avklartefaktaBostedNorgeUtland: avklartefaktaSelectors.AvklartefaktaBostedNorgeUtlandSelector(state),
     avklartefaktaOppholdsLand: avklartefaktaSelectors.AvklartefaktaOppholdSelector(state).land,
     avklartefaktaPeriodeFraOgMed: formatterDatoTilNorsk(avklartefaktaSelectors.AvklartefaktaOppholdPeriodeSelector(state).fom),

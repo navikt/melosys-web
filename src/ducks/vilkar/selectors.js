@@ -20,7 +20,7 @@ export const vesentligVirksomhetSelector = createSelector(
 
 export const forutgaendeMedlemskap = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'FORUTGAAENDE_MEDLEMSKAP') || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'ART12_1_FORUTGAAENDE_MEDLEMSKAP') || {})
 );
 
 export const bosattINorge = createSelector(
