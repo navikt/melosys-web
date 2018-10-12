@@ -17,7 +17,7 @@ const SaksbehandlingOppgavePropType = PT.shape({
   behandling: PT.shape({
     behandlingID: PT.string,
     behandlingType: MPT.Kodeverk,
-    behandlingStatus: MPT.Kodeverk,
+    behandlingsstatus: MPT.Kodeverk,
     endretDato: PT.string,
   }),
   aktivTil: PT.string,
