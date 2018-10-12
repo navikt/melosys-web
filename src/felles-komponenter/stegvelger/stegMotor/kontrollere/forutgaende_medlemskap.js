@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingForutgaendeMedlemskap from '../../stegKomponenter/vurderingForutgaendeMedlemskap';
-import { BOOLSK } from '../../../../constants';
+import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 class ForutgaendeMedlemskap extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -9,9 +9,7 @@ class ForutgaendeMedlemskap extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'harForutgaendeMedlemskap ER LIK TRUE',
-        exec: ({ harForutgaendeMedlemskap }) => (
-          harForutgaendeMedlemskap === BOOLSK.SANN
-        ),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('FORUTGAAENDE_MEDLEMSKAP', alleVilkar),
         nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
       {

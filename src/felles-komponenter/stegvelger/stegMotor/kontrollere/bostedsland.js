@@ -1,28 +1,18 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingBostedsland, { VurderingBostedslandTyper } from '../../stegKomponenter/vurderingBostedsland';
-import { VurderingYrkesaktivitetFordelingTyper } from '../../stegKomponenter/vurderingYrkesaktivitetFordeling';
-import { VurderingVirksomhetTyper } from '../../stegKomponenter/vurderingVirksomhet';
+import VurderingBostedsland from '../../stegKomponenter/vurderingBostedsland';
 import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
 import { VurderingIkkeYrkesaktivTyper } from '../../stegKomponenter/vurderingIkkeYrkesaktiv';
 import Regler from '../../../../regler';
+import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 class Bostedsland extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG' +
-        'aktivitetINorge ER LIK "UNDER_25_PROSENT" OG bostedsLand INNEHOLDER "NO" OG' +
-        'antallLand ER LIK "TO_ELLER_FLERE_LAND"',
-        exec: ({
-          antallLand, sysselsettingType, aktivitetINorge, bostedsland = [],
-        }) => (
-          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
-          aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT &&
-          bostedsland.includes('NO') &&
-          antallLand === VurderingYrkesaktivitetFordelingTyper.TO_ELLER_FLERE_LAND
-        ),
+        beskrivelse: 'vilkåret BOSATT_I_NORGE er oppfylt."',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('BOSATT_I_NORGE', alleVilkar),
         nesteSteg: STEG.FORRETNINGSSTED,
       },
       {
@@ -44,9 +34,11 @@ class Bostedsland extends Steg {
 
       const {
         avklartefaktaSysselsettingType,
-        avklartefaktaBostedNorgeUtland,
         avklartefaktaIkkeYrkesaktivType,
+        vilkar,
       } = skjema;
+
+      const { bosattINorge } = vilkar;
 
       const regler = new Regler(skjema, saksopplysninger);
 
@@ -96,9 +88,7 @@ class Bostedsland extends Steg {
       }
 
       return {
-        visBostedslandVelger: (avklartefaktaBostedNorgeUtland === VurderingBostedslandTyper.ANNET),
-        visTipsForYrkesaktiv: erYrkesaktiv,
-        visTipsForIkkeYrkesaktiv: !erYrkesaktiv,
+        erBosattINorge: bosattINorge,
         harEOSBarnetrygdSak: eosBarnetrygd,
         avklaringer,
       };

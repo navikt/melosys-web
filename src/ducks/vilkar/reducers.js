@@ -14,6 +14,13 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
+const vilkarTilObjekt = (vilkaar, oppfylt, begrunnelseKoder, begrunnelseFritekst) => ({
+  vilkaar,
+  oppfylt,
+  begrunnelseKoder,
+  begrunnelseFritekst: begrunnelseFritekst || null,
+});
+
 // Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -30,15 +37,11 @@ export default function reducer(state = initialState, action) {
     case Types.OPPDATER_VILKAR: {
       // Kommer inn som objekt. Må inn i storen som array.
       return {
-        ...state,
-        vesentligVirksomhet: {
-          oppfylt: action.data.vilkar.vesentligVirksomhet,
-          begrunnelseKoder: action.data.vilkar.vesentligVirksomhetBegrunnelser,
-        },
-        forutgaendeMedlemskap: {
-          oppfylt: action.data.vilkar.forutgaendeMedlemskap,
-          begrunnelseKoder: action.data.vilkar.forutgaendeMedlemskapBegrunnelser,
-        },
+        data: [
+          vilkarTilObjekt('FORUTGAAENDE_MEDLEMSKAP', action.data.vilkar.forutgaendeMedlemskap, action.data.vilkar.forutgaendeMedlemskapBegrunnelser),
+          vilkarTilObjekt('VESENTLIG_VIRKSOMHET', action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhetBegrunnelser),
+          vilkarTilObjekt('BOSATT_I_NORGE', action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorgeBegrunnelser),
+        ],
       };
     }
     default:

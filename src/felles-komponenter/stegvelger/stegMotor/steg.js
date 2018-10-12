@@ -32,24 +32,22 @@ class Steg {
   nesteSteg = () => {
     const { avklartefakta = {}, vilkar = [] } = this._propsLight;
 
-    console.log(vilkar)
-
     const flatAvklartefakta = Object
       .keys(avklartefakta)
       .reduce((collection, key) => ({ ...collection, ...avklartefakta[key] }), {});
 
     const kriterieMatch = this._kriterier.find(kriterie => {
       const { exec } = kriterie;
-      return this.assertRegel(exec, flatAvklartefakta);
+      return this.assertRegel(exec, flatAvklartefakta, vilkar);
     });
 
     return kriterieMatch.nesteSteg;
   };
 
-  assertRegel = (regel, avklartefakta) => {
+  assertRegel = (regel, avklartefakta, vilkar) => {
     if (typeof regel !== 'function') { return false; }
 
-    return regel(avklartefakta);
+    return regel(avklartefakta, vilkar);
   }
 }
 
