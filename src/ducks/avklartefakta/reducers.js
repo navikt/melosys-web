@@ -62,7 +62,6 @@ export default function reducer(state = initialState, action) {
         },
         bosted: {
           bostedLand: (dokument.avklartefaktaBostedNorgeUtland === VurderingBostedslandTyper.NORGE ? 'NO' : dokument.avklartefaktaBostedLand),
-          bostedBegrunnelser: dokument.avklartefaktaBostedBegrunnelser,
         },
         yrkesaktivitetFordeling: {
           antallLand: dokument.avklartefaktaAntallLand,
