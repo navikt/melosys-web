@@ -8,7 +8,7 @@ import { BOOLSK } from '../../../constants';
 
 const VurderingForutgaendeMedlemskap = props => {
   const { bekreftOgFortsett, begrunnelser, tilstand } = props;
-  const { visBegrunnelse } = tilstand;
+  const { visBegrunnelser } = tilstand;
 
   return (
     <div>
@@ -22,12 +22,12 @@ const VurderingForutgaendeMedlemskap = props => {
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
-        { visBegrunnelse && (
+        { visBegrunnelser && (
           <Nav.Row>
             <Nav.Column xs="12" md="10" lg="8">
               <Nav.Fieldset legend="Begrunnelse:">
                 <Skjema.ListeVelger
-                  feltNavn="vilkar.forutgaendeMedlemskap"
+                  feltNavn="vilkar.forutgaendeMedlemskapBegrunnelser"
                   muligeValg={begrunnelser}
                   label="Legg til begrunnelse:"
                   gruppe

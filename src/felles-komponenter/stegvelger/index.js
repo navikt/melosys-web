@@ -41,6 +41,13 @@ class Stegvelger extends Component {
     this.tilSteg(this.beregnNesteSteg());
   };
 
+  lagreVilkarHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const { vilkar } = this.props;
+    const { sendVilkar } = this.props;
+    await sendVilkar(bid, vilkar);
+  };
+
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
    *
@@ -84,9 +91,10 @@ class Stegvelger extends Component {
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
       lagreAvklartefaktaHandler,
-      sendVilkar,
       vilkar,
     } = this.props;
+
+    const { lagreVilkarHandler } = this;
 
     const { behandlingID } = this.props.oppsummering;
 
@@ -94,7 +102,7 @@ class Stegvelger extends Component {
     await oppdaterAvklarteFaktaState(skjema);
     await oppdaterVilkarState(skjema);
     await lagreAvklartefaktaHandler();
-    await sendVilkar(behandlingID, vilkar);
+    await lagreVilkarHandler(behandlingID, vilkar);
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
@@ -163,6 +171,7 @@ const mapStateToProps = state => ({
   valgteArbeidsgivere: avklartefaktaSelectors.AvklartefaktaValgteArbeidsgivereSelector(state),
 });
 
+/* eslint no-alert:off */
 const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),

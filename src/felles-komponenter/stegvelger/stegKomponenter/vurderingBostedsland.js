@@ -5,6 +5,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
 import LandVelger from '../../skjema/landvelger/';
+import { BOOLSK } from '../../../constants';
 
 import './vurderingBostedsland.css';
 import * as MPT from '../../../proptypes';
@@ -65,7 +66,7 @@ const VurderingBostedsland = props => {
   const {
     bekreftOgFortsett, tilstand, begrunnelser,
   } = props;
-  const { visLandVelger, harEOSBarnetrygdSak } = tilstand;
+  const { erBosattINorge, harEOSBarnetrygdSak } = tilstand;
 
   const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
 
@@ -85,25 +86,27 @@ const VurderingBostedsland = props => {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Bostedsland er:">
-                <Skjema.Radio feltNavn="avklartefaktaBostedNorgeUtland" value={VurderingBostedslandTyper.NORGE} label="Norge" />
-                <Skjema.Radio feltNavn="avklartefaktaBostedNorgeUtland" value={VurderingBostedslandTyper.ANNET} label="Annet" />
-                {visLandVelger && <LandVelger label="Velg land:" feltNavn="avklartefaktaBostedLand" multiland={false} />}
+                <Skjema.Radio feltNavn="vilkar.bosattINorge" value={BOOLSK.SANN} label="Norge" />
+                <Skjema.Radio feltNavn="vilkar.bosattINorge" value={BOOLSK.USANN} label="Annet" />
+                {!erBosattINorge && <LandVelger label="Velg land:" feltNavn="avklartefaktaBostedLand" multiland={false} />}
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Nav.Fieldset legend="Begrunnelse:">
-                <Skjema.ListeVelger
-                  feltNavn="avklartefaktaBostedBegrunnelser"
-                  muligeValg={begrunnelser}
-                  label="Legg til begrunnelse:"
-                  gruppe
-                  tillatFritekst={false}
-                />
-              </Nav.Fieldset>
-            </Nav.Column>
-          </Nav.Row>
+          {!erBosattINorge && (
+            <Nav.Row>
+              <Nav.Column xs="12">
+                <Nav.Fieldset legend="Begrunnelse:">
+                  <Skjema.ListeVelger
+                    feltNavn="vilkar.bosattINorgeBegrunnelser"
+                    muligeValg={begrunnelser}
+                    label="Legg til begrunnelse:"
+                    gruppe
+                    tillatFritekst={false}
+                  />
+                </Nav.Fieldset>
+              </Nav.Column>
+            </Nav.Row>
+          )}
         </div>
       </div>
       <div className="fane__knapplinje">

@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentligVirksomhet';
-import { BOOLSK } from '../../../../constants';
+import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -9,9 +9,7 @@ class VesentligVirksomhet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'vesentligVirksomhetINorge ER LIK TRUE',
-        exec: ({ vesentligVirksomhetINorge }) => (
-          vesentligVirksomhetINorge === BOOLSK.SANN
-        ),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('VESENTLIG_VIRKSOMHET', alleVilkar),
         nesteSteg: STEG.ARTIKKEL_12,
       },
       {
@@ -20,6 +18,7 @@ class VesentligVirksomhet extends Steg {
         nesteSteg: STEG.VEDTAK,
       },
     ];
+
     this._id = STEG.VESENTLIG_VIRKSOMHET;
     this._tittel = 'Vesentlig virksomhet';
     this._komponent = VurderingVesentligVirksomhet;

@@ -23,7 +23,7 @@ import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import UtsendendeArbeidsgiver from '../felles-komponenter/utsendendeArbeidsgiver';
-import Vilkarsveileder from '../felles-komponenter/stegvelger/index';
+import Stegvelger from '../felles-komponenter/stegvelger/index';
 import VirksomhetNorge from '../felles-komponenter/virksomhetNorge';
 
 import {
@@ -138,15 +138,6 @@ class Saksbehandling extends Component {
     }
   };
 
-  lagreVilkarHandler = async () => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { vilkar } = this.props;
-    const { valid, sendVilkar } = this.props;
-    if (valid) {
-      await sendVilkar(bid, vilkar);
-    }
-  };
-
   overstyrSubmit = async event => {
     event.preventDefault();
 
@@ -203,10 +194,9 @@ class Saksbehandling extends Component {
           <Nav.Row>
             <Nav.Column xs="7">
               <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
-                <Vilkarsveileder
+                <Stegvelger
                   lagreVedtakHandler={this.lagreVedtakHandler}
                   lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
-                  lagreVilkarHandler={this.lagreVilkarHandler}
                 />
                 {person && <Personopplysninger person={person} />}
                 <Bosted erValidert={this.state.gyldigePaneler.bosted} />
@@ -349,6 +339,8 @@ const mapStateToProps = state => ({
       vesentligVirksomhetBegrunnelser: (vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder),
       forutgaendeMedlemskap: (vilkarSelectors.forutgaendeMedlemskap(state).oppfylt),
       forutgaendeMedlemskapBegrunnelser: (vilkarSelectors.forutgaendeMedlemskap(state).begrunnelseKoder),
+      bosattINorge: (vilkarSelectors.bosattINorge(state).oppfylt),
+      bosattINorgeBegrunnelser: (vilkarSelectors.bosattINorge(state).begrunnelseKoder),
     },
     avklartefaktaForretningsstedLand: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).land,
     avklartefaktaForretningsstedAntallArbeidsgivere: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).antallArbeidsgivere,
