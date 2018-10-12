@@ -74,10 +74,6 @@ export default function reducer(state = initialState, action) {
         tjenestemann: {
           tjenestemann: dokument.avklartefaktaTjenestemann,
         },
-        vurdering: {
-          lovvalgKode: dokument.vurderingLovvalg,
-          begrunnelser: dokument.vurderingBegrunnelser,
-        },
       };
 
       return { ...state, data: { ...state.data, avklaring: { ...avklaring } } };

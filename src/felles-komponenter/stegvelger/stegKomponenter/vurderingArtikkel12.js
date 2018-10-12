@@ -4,10 +4,15 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
 
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+import { BOOLSK } from '../../../constants';
 
 const VurderingArtikkel12 = props => {
-  const { bekreftOgFortsett, begrunnelser, artikkel } = props;
+  const {
+    bekreftOgFortsett, begrunnelser, artikkel, tilstand,
+  } = props;
+
+  const { visBegrunnelser } = tilstand;
 
   return (
     <div>
@@ -16,25 +21,27 @@ const VurderingArtikkel12 = props => {
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend={`Fyller søker kriteriene for artikkel ${kodeverkObjektTilTerm(artikkel)}?`}>
-              <Skjema.Radio feltNavn="vurderingLovvalg" value={kodeverkObjektTilKode(artikkel)} label="Ja" />
-              <Skjema.Radio feltNavn="vurderingLovvalg" disabled value="ART16_1" label="Nei, jeg vil vurdere artikkel 16.1" />
-              <Skjema.Radio feltNavn="vurderingLovvalg" disabled value="AVVIST" label={`Nei, jeg vil avslå søknaden etter artikkel ${kodeverkObjektTilTerm(artikkel)} og 16.1`} />
+              <Skjema.Radio feltNavn="vilkar.art12_1" value={BOOLSK.SANN} label="Ja" />
+              <Skjema.Radio feltNavn="vilkar.art12_1" value={BOOLSK.USANN} label="Nei, jeg vil vurdere artikkel 16.1" />
+              <Skjema.Radio feltNavn="vilkar.art12_1" value={BOOLSK.USANN} label={`Nei, jeg vil avslå søknaden etter artikkel ${kodeverkObjektTilTerm(artikkel)} og 16.1`} />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12" md="10" lg="8">
-            <Nav.Fieldset legend="Begrunnelse:">
-              <Skjema.ListeVelger
-                feltNavn="vurderingBegrunnelser"
-                muligeValg={begrunnelser}
-                label="Legg til begrunnelse:"
-                gruppe
-                tillatFritekst={false}
-              />
-            </Nav.Fieldset>
-          </Nav.Column>
-        </Nav.Row>
+        { visBegrunnelser && (
+          <Nav.Row>
+            <Nav.Column xs="12" md="10" lg="8">
+              <Nav.Fieldset legend="Begrunnelse:">
+                <Skjema.ListeVelger
+                  feltNavn="vilkar.art12_1_begrunnelser"
+                  muligeValg={begrunnelser}
+                  label="Legg til begrunnelse:"
+                  gruppe
+                  tillatFritekst={false}
+                />
+              </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>
+        )}
       </div>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
