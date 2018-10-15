@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { change } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
@@ -58,6 +59,7 @@ class Stegvelger extends Component {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreVedtakHandler: this.props.lagreVedtakHandler,
+      settSkjemaVerdi: this.props.settSkjemaVerdi,
     };
 
     const propsLight = {
@@ -144,6 +146,7 @@ Stegvelger.propTypes = {
   oppdaterVilkarState: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
+  settSkjemaVerdi: PT.func.isRequired,
   skjema: PT.object.isRequired,
   valgteArbeidsgivere: PT.array,
 };
@@ -179,6 +182,7 @@ const mapDispatchToProps = dispatch => ({
   lagreVedtakHandler: () => alert('lagrer vedtak, ikke implementert'),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
+  settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

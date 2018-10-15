@@ -32,3 +32,8 @@ export const art12_1 = createSelector(
   state => VilkarSelector(state),
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'ART12_1') || {})
 );
+
+export const art16_1 = createSelector(
+  state => VilkarSelector(state),
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'ART16_1') || {})
+);

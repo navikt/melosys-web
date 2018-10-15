@@ -21,9 +21,12 @@ class Artikkel12 extends Steg {
     });
     this._beregnRelevantUI = _propsLight => ({
       visBegrunnelser: _propsLight.skjema.vilkar.art12_1 === false,
+      art12_1: _propsLight.skjema.vilkar.art12_1,
+      art16_1: _propsLight.skjema.vilkar.art16_1,
     });
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
     this._status = FANE_STATUS.OK;
   }
