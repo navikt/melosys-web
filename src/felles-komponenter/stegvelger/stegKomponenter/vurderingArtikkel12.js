@@ -17,25 +17,25 @@ class VurderingArtikkel12 extends Component {
   state = { valgtVilkar: '' };
 
   componentDidMount() {
-    this.settValgtVilkarTilState({});
+    this.lagreValgtVilkarState({});
   }
 
   componentDidUpdate(prevProps) {
-    this.settValgtVilkarTilState(prevProps);
+    this.lagreValgtVilkarState(prevProps);
   }
 
-  settValgtVilkarTilState = ({ tilstand = {} }) => {
+  settStateForVilkar = vilkar => this.setState({ valgtVilkar: vilkar });
+
+  lagreValgtVilkarState = ({ tilstand = {} }) => {
     const { art12_1: old_art12_1, art16_1: old_art16_1 } = tilstand;
     const { art12_1, art16_1 } = this.props.tilstand;
 
     if ((art12_1 === old_art12_1) && (art16_1 === old_art16_1)) { return; }
 
-    if (art12_1) (this.settValgtVilkarLokalt(this.ART12_1));
-    if (art16_1 && !art12_1) (this.settValgtVilkarLokalt(this.ART16_1));
-    if (!art16_1 && !art12_1) (this.settValgtVilkarLokalt(this.AVSLAG));
+    if (art12_1) (this.settStateForVilkar(this.ART12_1));
+    if (art16_1 && !art12_1) (this.settStateForVilkar(this.ART16_1));
+    if (!art16_1 && !art12_1) (this.settStateForVilkar(this.AVSLAG));
   };
-
-  settValgtVilkarLokalt = vilkar => this.setState({ valgtVilkar: vilkar });
 
   /** Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false. Problemet
    * med de 3 radiovalgene i grensesnittet er at disse ville representert en tri-state ("ja", "nei, men..." og "nei").
