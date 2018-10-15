@@ -44,11 +44,14 @@ const SakEnkeltLinje = ({ sak }) => {
     saksnummer,
     behandling,
     aktivTil,
-    soknadsperiode = {},
+    soknadsperiode,
     land,
-    sistOppdatert,
-    erUnderOppdatering,
   } = sak;
+
+  const {
+    sisteOpplysningerHentetDato,
+    erUnderOppdatering,
+  } = behandling;
 
   const { behandlingsstatus } = behandling;
   const { fom, tom } = soknadsperiode;
@@ -78,8 +81,7 @@ const SakEnkeltLinje = ({ sak }) => {
                   <dt className="sakEnkeltLinje__meta__term">Frist:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{aktivTil || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Sist oppdatert:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{formatterDatoTilNorsk(sistOppdatert, true)}</dd>
-                  <dd className="sakEnkeltLinje__meta__detalj">{oppdateringStatus}</dd>
+                  <dd className="sakEnkeltLinje__meta__detalj">{oppdateringStatus || formatterDatoTilNorsk(sisteOpplysningerHentetDato, true)}</dd>
                 </dl>
               </Nav.Column>
               <Nav.Column xs="12" md="6">
