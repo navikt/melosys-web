@@ -16,11 +16,11 @@ const VurderingArtikkel12 = props => {
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering av artikkel {kodeverkObjektTilTerm(artikkel)}</Nav.Undertittel>
+      <Nav.Undertittel>Vurdering av artikkel 12. 1</Nav.Undertittel>
       <div>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Fieldset legend={`Fyller søker kriteriene for artikkel ${kodeverkObjektTilTerm(artikkel)}?`}>
+            <Nav.Fieldset legend="Fyller søker kriteriene for artikkel 12.1?">
               <Skjema.Radio feltNavn="vilkar.art12_1" value={BOOLSK.SANN} label="Ja" />
               <Skjema.Radio feltNavn="vilkar.art12_1" value={BOOLSK.USANN} label="Nei, jeg vil vurdere artikkel 16.1" />
               <Skjema.Radio feltNavn="vilkar.art12_1" value={BOOLSK.USANN} label={`Nei, jeg vil avslå søknaden etter artikkel ${kodeverkObjektTilTerm(artikkel)} og 16.1`} />
