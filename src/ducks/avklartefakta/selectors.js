@@ -30,7 +30,7 @@ export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
 
 export const AvklartefaktaLovvalgKodeSelector = createSelector(
   state => AvklartefaktaSelector(state).vurdering || {},
-  vurdering => (vurdering ? vurdering.lovvalgKode : '')
+  vurdering => (vurdering.lovvalgKode ? vurdering.lovvalgKode : '')
 );
 
 export const AvklartefaktaOppholdPeriodeSelector = createSelector(
