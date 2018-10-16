@@ -20,7 +20,6 @@ import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeS
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
-
 import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
@@ -37,18 +36,18 @@ import { PersonOperations } from '../ducks/person';
 
 const queryParamLogger = (journalpostID, oppgaveID, location) => {
   const qsParsed = qs.parse(location.search.slice(1));
-  const url = `/journalforing/${journalpostID}/${oppgaveID}`;
-  // TODO Bytt console.log med logger.info()
+  const urlQuery = `${location.pathname}${location.search}`;
   /* eslint-disable */
   if (qsParsed) {
     if (qsParsed.kilde === 'GOSYS') {
-      const urlQuery = `${url}/?kilde=${qsParsed.kilde}`;
-      console.log('Deeplinked from GOSYS:', urlQuery);
+      const message = `Deeplinked from GOSYS: ${urlQuery}`;
+      window.frontendlogger.info(message);
     } else {
-      console.log('Unknown external src:', qsParsed);
+      const message = `Ukjent ekstern kilde: ${urlQuery}`;
+      window.frontendlogger.error(message);
     }
   } else {
-    console.log('internal route:', url);
+    console.log('internal route:', urlQuery);
   }
   /* eslint-enable */
 };
