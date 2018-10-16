@@ -50,7 +50,7 @@ const SakEnkeltLinje = ({ sak }) => {
     erUnderOppdatering,
   } = sak;
 
-  const { behandlingStatus } = behandling;
+  const { behandlingsstatus } = behandling;
   const { fom, tom } = soknadsperiode;
   const tittel = `${kodeverkObjektTilTerm(sakstype)} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
@@ -74,7 +74,7 @@ const SakEnkeltLinje = ({ sak }) => {
               <Nav.Column xs="12" md="6">
                 <dl className="sakEnkeltLinje__meta">
                   <dt className="sakEnkeltLinje__meta__term">Status:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{kodeverkObjektTilTerm(behandlingStatus) || '(ukjent)'}</dd>
+                  <dd className="sakEnkeltLinje__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Frist:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{aktivTil || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Sist oppdatert:</dt>

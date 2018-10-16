@@ -164,8 +164,8 @@ export const MedlemskapSelector = createSelector(
     if (!medlemsperiode) return null;
 
     return {
-      perioderMed: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.medlemtype) === PERIODE_MED_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) === GYLDIG_MEDLEMSKAP),
-      perioderUten: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.medlemtype) === PERIODE_UTEN_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) !== AVVIST_MEDLEMSKAP),
+      perioderMed: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.periodetype) === PERIODE_MED_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) === GYLDIG_MEDLEMSKAP),
+      perioderUten: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.periodetype) === PERIODE_UTEN_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) !== AVVIST_MEDLEMSKAP),
       perioderUavklart: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.status) === UAVKLART_MEDLEMSKAP),
     };
   }
