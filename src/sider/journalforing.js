@@ -108,7 +108,7 @@ class Journalforing extends Component {
    *
    * @returns {object} Objektet som skal sendes videre som payload.
    */
-  vaskDokumentInformasjon = () => {
+  vaskDokumentInformasjon = intensjon => {
     const { oppgaveID, journalpostID } = this.props.match.params;
     const {
       journalforingSkjemaVerdier,
@@ -119,18 +119,30 @@ class Journalforing extends Component {
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = dokument;
-    return {
-      arbeidsgiverID,
-      representantID,
-      avsenderID,
-      avsenderNavn,
-      dokumentID,
-      brukerID,
-      dokumenttittel: dokumentTittel,
-      journalpostID,
-      oppgaveID,
-      vedleggstitler: vedleggsTitler,
-    };
+    return intensjon === Konstanter.JOURNALFORING_HENSIKT.KNYTT ?
+      {
+        avsenderID,
+        avsenderNavn,
+        dokumentID,
+        brukerID,
+        dokumenttittel: dokumentTittel,
+        journalpostID,
+        oppgaveID,
+        vedleggstitler: vedleggsTitler,
+      }
+      :
+      {
+        arbeidsgiverID,
+        representantID,
+        avsenderID,
+        avsenderNavn,
+        dokumentID,
+        brukerID,
+        dokumenttittel: dokumentTittel,
+        journalpostID,
+        oppgaveID,
+        vedleggstitler: vedleggsTitler,
+      };
   };
 
   /** Når saksbehandler klikker "knytt til eksisterende sak" skal det åpnes for validering av
@@ -145,7 +157,7 @@ class Journalforing extends Component {
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
-    const vasketJournalforing = this.vaskDokumentInformasjon();
+    const vasketJournalforing = this.vaskDokumentInformasjon(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = { saksnummer, ...vasketJournalforing };
 
     await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
@@ -154,6 +166,8 @@ class Journalforing extends Component {
 
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForOpprettFagsak();
+
+    console.log(vasketJournalforing);
 
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.KNYTT)) {
       settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer');
