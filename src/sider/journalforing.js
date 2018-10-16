@@ -116,15 +116,17 @@ class Journalforing extends Component {
       journalforing: { dokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, avsenderNavn, dokumentTittel, vedleggsTitler,
+      brukerID, avsenderID, arbeidsgiverID, representantID, avsenderNavn, dokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = dokument;
     return {
+      arbeidsgiverID,
+      representantID,
       avsenderID,
       avsenderNavn,
-      brukerID,
       dokumentID,
+      brukerID,
       dokumenttittel: dokumentTittel,
       journalpostID,
       oppgaveID,
@@ -200,11 +202,7 @@ class Journalforing extends Component {
     };
 
     const vasketJournalforing = this.vaskDokumentInformasjon();
-    const arbeidsgiverID = '910253158';
-    const representantID = arbeidsgiverID ? null : '910253158';
     const journalforingData = {
-      arbeidsgiverID,
-      representantID,
       ...vasketJournalforing,
       fagsak,
     };
@@ -252,6 +250,19 @@ class Journalforing extends Component {
     }
   };
 
+
+  hentOgVisRepresentant = async value => {
+    const { sokOrgnr, settFeltInnhold } = this.props;
+
+    if (!value) { return; }
+
+    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+      const response = await sokOrgnr(value);
+      const { navn = '' } = response;
+      settFeltInnhold('representantNavn', navn);
+    }
+  };
+
   touchAll = (alleFeil = {}) => {
     this.props.touch(...Object.keys(alleFeil));
   };
@@ -275,7 +286,7 @@ class Journalforing extends Component {
     } = this.props;
 
     const {
-      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker,
+      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
     } = this;
 
     const { journalpostID } = this.props.match.params;
@@ -302,7 +313,10 @@ class Journalforing extends Component {
                         hentOgVisBruker={hentOgVisBruker}
                       />
                       <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
-                      <OpprettNyFagSak opprettFagsak={opprettFagsak} />
+                      <OpprettNyFagSak
+                        opprettFagsak={opprettFagsak}
+                        hentOgVisRepresentant={hentOgVisRepresentant}
+                      />
                       <div className="journalforing__fotknapper">
                         <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
                       </div>
@@ -330,6 +344,8 @@ const mapStateToProps = state => ({
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
+    arbeidsgiverID: null,
+    representantID: '',
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
     vedleggsTitler: [],
