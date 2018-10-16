@@ -6,20 +6,20 @@ import { reduxForm } from 'redux-form';
 
 import * as Validering from '../../felles-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
-import Vilkarsveileder from '../../felles-komponenter/vilkarsveileder/vilkarsveileder';
-import Personopplysninger from '../../felles-komponenter/personopplysninger';
-import OppholdPeriode from '../../felles-komponenter/oppholdPeriode';
-import Bosted from '../../felles-komponenter/bosted';
+
 import ArbeidsgivereNorge from '../../felles-komponenter/arbeidsgivereNorge';
-import SelvstendigArbeid from '../../felles-komponenter/selvstendigArbeid';
-import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgiver';
 import ArbeidUtland from '../../felles-komponenter/arbeidUtland';
+import Bosted from '../../felles-komponenter/bosted';
 import ForetakUtland from '../../felles-komponenter/foretakUtland';
-import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
+import Inntekt from '../../felles-komponenter/inntektUtland';
 import MaritimtArbeid from '../../felles-komponenter/maritimtArbeid';
 import Medlemskap from '../../felles-komponenter/medlemskap';
-import Inntekt from '../../felles-komponenter/inntektUtland';
-import Bekreftelser from '../../felles-komponenter/bekreftelser';
+import OppholdPeriode from '../../felles-komponenter/oppholdPeriode';
+import Personopplysninger from '../../felles-komponenter/personopplysninger';
+import SelvstendigArbeid from '../../felles-komponenter/selvstendigArbeid';
+import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgiver';
+import Vilkarsveileder from '../../felles-komponenter/vilkarsveileder/vilkarsveileder';
+import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
 
 import {
   fagsakOperations,
@@ -40,15 +40,11 @@ import {
   avklartefaktaSelectors,
 } from '../../ducks/avklartefakta/';
 
-import {
-  vurderingOperations,
-  vurderingSelectors,
-} from '../../ducks/vurdering/';
-
-import { formatterDatoTilNorsk } from '../../utils/dato';
+import { vurderingSelectors } from '../../ducks/vurdering/';
 
 import { formSelectors } from '../../ducks/form/';
 
+import { formatterDatoTilNorsk } from '../../utils/dato';
 
 class Saksopplysninger extends Component {
   state = {
@@ -122,7 +118,6 @@ class Saksopplysninger extends Component {
       medlemskap,
       arbeidsgivereNorge,
       inntekt,
-      bekreftelser,
       soknadArbeidsinntekt,
       soknadForm,
     } = this.props;
@@ -150,7 +145,6 @@ class Saksopplysninger extends Component {
         <MaritimtArbeid soknadVerdier={soknadVerdier} />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
         {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
-        {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
       </form>
     );
   }
@@ -159,13 +153,8 @@ class Saksopplysninger extends Component {
 Saksopplysninger.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
   avklartefakta: PT.object,
-  bekreftelser: MPT.Bekreftelser,
   handleSubmit: PT.func.isRequired,
-  hentFagsaker: PT.func.isRequired,
-  hentSoknad: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
-  hentVurdering: PT.func.isRequired,
-  history: PT.object.isRequired,
   inntekt: MPT.Inntekt,
   match: PT.object.isRequired,
   medlemskap: MPT.Medlemskap,
@@ -187,7 +176,6 @@ Saksopplysninger.propTypes = {
 Saksopplysninger.defaultProps = {
   arbeidsgivereNorge: [],
   avklartefakta: {},
-  bekreftelser: [],
   inntekt: {},
   medlemskap: {},
   oppsummering: {},
@@ -303,16 +291,12 @@ const mapStateToProps = state => ({
   },
 });
 
-
 const mapDispatchToProps = dispatch => ({
   sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
-  hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
-  hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
   sendAvklartefakta: (bid, dokument) => dispatch(avklartefaktaOperations.send(bid, dokument)),
-  hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
   oppdaterSoknad: values => { dispatch(soknadActions.oppdaterSoknadState(values)); },
   oppdaterAvklartefakta: values => { dispatch(avklartefaktaActions.oppdaterAvklartefaktaState(values)); },
 });
@@ -325,6 +309,5 @@ const SaksopplysningerForm = reduxForm({
   updateUnregisteredFields: true,
   validate: (values, props) => Validering.Felles.byggValidering(values, props),
 })(Saksopplysninger);
-
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksopplysningerForm));
