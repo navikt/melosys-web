@@ -179,7 +179,10 @@ export default function reducer(state = initialState, action) {
         },
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
-          oppholdsPeriode: dokument.oppholdsPeriode,
+          oppholdsPeriode: {
+            fom: dokument.oppholdUtlandFom,
+            tom: dokument.oppholdUtlandTom,
+          },
           oppholdslandKoder: dokument.oppholdsland,
           sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
           ektefelleEllerBarnINorge: dokument.harEktefelleEllerBarnINorge,

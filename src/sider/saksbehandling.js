@@ -38,6 +38,8 @@ import {
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
 
+/* eslint no-unused-vars:off */
+
 class Saksbehandling extends Component {
   static propTypes = {
     avklartefakta: PT.object,
@@ -51,7 +53,6 @@ class Saksbehandling extends Component {
     sjekkSaksflytStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
     sendSoknad: PT.func.isRequired,
-    sendAvklartefakta: PT.func.isRequired,
     soknad: PT.object,
     vurdering: PT.object,
   };
@@ -92,7 +93,7 @@ class Saksbehandling extends Component {
       this.blokkerInnholdMedOppfriskSpinner();
     } else {
       await hentSoknad(behandlingID);
-      await hentAvklartefakta(behandlingID);
+      // await hentAvklartefakta(behandlingID);
     }
 
     return true;
@@ -196,7 +197,6 @@ const mapDispatchToProps = dispatch => ({
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
-  sendAvklartefakta: (bid, dokument) => dispatch(avklartefaktaOperations.send(bid, dokument)),
   hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
 });
 
