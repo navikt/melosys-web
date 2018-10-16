@@ -2,205 +2,201 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
+import { reduxForm } from 'redux-form';
 
-import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
-import DialogboksOppfriskSak from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
-import { Saksopplysninger } from './saksopplysninger';
-
-import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
-import SideOppsummering from '../felles-komponenter/sideOppsummering';
-import SideKommentarer from '../felles-komponenter/sideKommentarer';
+import * as Validering from '../../felles-komponenter/skjema/validering';
+import * as MPT from '../../proptypes/';
+import Vilkarsveileder from '../../felles-komponenter/vilkarsveileder/vilkarsveileder';
+import Personopplysninger from '../../felles-komponenter/personopplysninger';
+import OppholdPeriode from '../../felles-komponenter/oppholdPeriode';
+import Bosted from '../../felles-komponenter/bosted';
+import ArbeidsgivereNorge from '../../felles-komponenter/arbeidsgivereNorge';
+import SelvstendigArbeid from '../../felles-komponenter/selvstendigArbeid';
+import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgiver';
+import ArbeidUtland from '../../felles-komponenter/arbeidUtland';
+import ForetakUtland from '../../felles-komponenter/foretakUtland';
+import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
+import MaritimtArbeid from '../../felles-komponenter/maritimtArbeid';
+import Medlemskap from '../../felles-komponenter/medlemskap';
+import Inntekt from '../../felles-komponenter/inntektUtland';
+import Bekreftelser from '../../felles-komponenter/bekreftelser';
 
 import {
   fagsakOperations,
   fagsakSelectors,
-} from '../ducks/fagsaker/';
+} from '../../ducks/fagsaker/';
 
-import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
+import { saksflytOperations, saksflytSelectors } from '../../ducks/saksflyt';
 
 import {
   soknadOperations,
   soknadActions,
   soknadSelectors,
-} from '../ducks/soknad/';
+} from '../../ducks/soknad/';
 
 import {
   avklartefaktaOperations,
   avklartefaktaActions,
   avklartefaktaSelectors,
-} from '../ducks/avklartefakta/';
+} from '../../ducks/avklartefakta/';
 
 import {
   vurderingOperations,
   vurderingSelectors,
-} from '../ducks/vurdering/';
+} from '../../ducks/vurdering/';
 
-import { formatterDatoTilNorsk } from '../utils/dato';
+import { formatterDatoTilNorsk } from '../../utils/dato';
 
-import { formSelectors } from '../ducks/form/';
+import { formSelectors } from '../../ducks/form/';
 
-import './saksbehandling.css';
-import '../felles-komponenter/skjema/skjema.css';
 
-class Saksbehandling extends Component {
-  static propTypes = {
-    arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
-    avklartefakta: PT.object,
-    bekreftelser: MPT.Bekreftelser,
-    hentFagsaker: PT.func.isRequired,
-    hentSoknad: PT.func.isRequired,
-    hentAvklartefakta: PT.func.isRequired,
-    hentVurdering: PT.func.isRequired,
-    history: PT.object.isRequired,
-    inntekt: MPT.Inntekt,
-    match: PT.object.isRequired,
-    medlemskap: MPT.Medlemskap,
-    oppdaterAvklartefakta: PT.func.isRequired,
-    oppdaterSoknad: PT.func.isRequired,
-    oppfriskSaksopplysninger: PT.func.isRequired,
-    sjekkSaksflytStatus: PT.func.isRequired,
-    oppsummering: MPT.Oppsummering,
-    person: MPT.Person,
-    sendSoknad: PT.func.isRequired,
-    sendAvklartefakta: PT.func.isRequired,
-    soknad: PT.object,
-    soknadArbeidsinntekt: PT.object,
-    vurdering: PT.object,
-  };
-
-  static defaultProps = {
-    arbeidsgivereNorge: [],
-    avklartefakta: {},
-    bekreftelser: [],
-    inntekt: {},
-    medlemskap: {},
-    oppsummering: {},
-    person: {},
-    soknad: {},
-    soknadArbeidsinntekt: {},
-    vurdering: {},
-  };
-
+class Saksopplysninger extends Component {
   state = {
-    visOppfriskDialog: false,
-    oppfriskningBlokkererInnhold: false,
+    gyldigePaneler: {},
   };
 
-  async componentDidMount() {
-    await this.lastInnSaksopplysninger();
+  componentDidUpdate(prevProps) {
+    const { syncErrors } = this.props.soknadForm;
+
+    // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
+    // i panelet lenger er ugyldig (ikke validerer).
+    if (JSON.toString(syncErrors) !== JSON.toString(prevProps.syncErrors)) {
+      this.onUpdate(function callback() {
+        this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
+      });
+    }
   }
 
-  lastInnSaksopplysninger = async () => {
-    const {
-      hentFagsaker, hentSoknad, hentAvklartefakta,
-      sjekkSaksflytStatus,
-    } = this.props;
-    const { snr } = this.props.match.params;
-    const response = await hentFagsaker(snr);
-    const { behandlinger } = response.data;
-
-    if (!behandlinger) return false;
-    const { oppsummering: { behandlingID } } = behandlinger[0];
-
-    const saksflyt = await sjekkSaksflytStatus(behandlingID);
-    const { data: saksFlytData } = saksflyt;
-    if (saksFlytData && saksFlytData.response) {
-      this.skjulOppfriskBekreftelse();
-    } else if (saksFlytData === 'PROGRESS') {
-      this.blokkerInnholdMedOppfriskSpinner();
-    } else {
-      await hentSoknad(behandlingID);
-      await hentAvklartefakta(behandlingID);
+  fattVedtakHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const soknad = { soeknadDokument: { ...this.props.soknad.soeknadDokument } };
+    const avklaring = { avklaring: { ...this.props.avklartefakta } };
+    const { valid, sendSoknad, sendAvklartefakta } = this.props;
+    if (valid) {
+      await sendSoknad(bid, soknad);
+      await sendAvklartefakta(bid, avklaring);
     }
-
-    return true;
   };
 
-  blokkerInnholdMedOppfriskSpinner = () => {
-    this.setState({ oppfriskningBlokkererInnhold: true });
+  lagreVurderingHandler = async () => {};
+
+  lagreVedtakHandler = async () => {
+    /* eslint-disable */
+    alert('Ikke implementert');
+    /* eslint-enable */
   };
 
-  lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    const { oppfriskSaksopplysninger, sendSoknad } = this.props;
+  lagreAvklartefaktaHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const avklaring = { behandlingID: bid, avklaring: { ...this.props.avklartefakta } };
+    const { valid, sendAvklartefakta } = this.props;
+    if (valid) {
+      await sendAvklartefakta(bid, avklaring);
+    }
+  };
+
+  overstyrSubmit = async event => {
+    event.preventDefault();
+
+    const { oppdaterSoknad, oppdaterAvklartefakta, soknadForm } = this.props;
+    await oppdaterSoknad(soknadForm.values);
+    await oppdaterAvklartefakta(soknadForm.values);
+  };
+
+  hentBehandlingStatus = async () => {
+    const { sjekkSaksflytStatus } = this.props;
     const { behandlingID } = this.props.oppsummering;
-    const { soknad } = this.props;
-    await sendSoknad(behandlingID, soknad);
-    await oppfriskSaksopplysninger(behandlingID);
-    this.blokkerInnholdMedOppfriskSpinner();
+    const saksflyt = await sjekkSaksflytStatus(behandlingID);
+
+    if (saksflyt && saksflyt.response) {
+      this.skjulOppfriskBekreftelse();
+    } else if (saksflyt.data === 'DONE') {
+      this.skjulOppfriskBekreftelse();
+      this.lastInnSaksopplysninger();
+    }
   };
 
-  navigerTilOversiktSide = () => {
-    this.skjulOppfriskBekreftelse();
-    this.props.history.push('/');
-  };
+  render () {
+    const {
+      person,
+      medlemskap,
+      arbeidsgivereNorge,
+      inntekt,
+      bekreftelser,
+      soknadArbeidsinntekt,
+      soknadForm,
+    } = this.props;
 
-  visOppfriskBekreftelse = () => {
-    this.setState({ visOppfriskDialog: true });
-  };
+    const { values: soknadVerdier } = soknadForm;
 
-  skjulOppfriskBekreftelse = () => {
-    this.setState({ visOppfriskDialog: false });
-    this.setState({ oppfriskningBlokkererInnhold: false });
-  };
-
-  /* eslint-disable */
-  lagreOgLukk = () => { alert('Ikke implementert'); };
-  /* eslint-enable */
-
-  render() {
-    const { oppsummering } = this.props;
-
-    const oppfriskVenterDialog = this.state.oppfriskningBlokkererInnhold && (
-      <div>
-        <DialogboksVenter
-          tittel="Oppdaterer registeropplysninger"
-          tekst="Oppdatering av registeropplysning."
-          synlig
-          tilForsiden={this.navigerTilOversiktSide}
-          oppdater={this.hentBehandlingStatus}
-        />
-      </div>
-    );
+    if (Object.keys(soknadForm).length === 0) { return null; }
 
     return (
-      <div className="saksbehandling">
-        <Nav.Container fluid>
-          <Nav.Row>
-            <Nav.Column xs="7">
-              <Saksopplysninger />
-            </Nav.Column>
-            <Nav.Column xs="5">
-              <SideOppsummering
-                oppsummering={oppsummering}
-                oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
-                lagreOgLukkHandle={this.lagreOgLukk}
-              />
-              <SideDialog />
-              <SideKommentarer />
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Container>
-        { oppfriskVenterDialog }
-        {
-          this.state.visOppfriskDialog &&
-          <DialogboksOppfriskSak
-            bekreft={this.lagreSoknadOgOppfriskSaksopplysninger}
-            avbryt={this.skjulOppfriskBekreftelse}
-            skjulDialog={this.navigerTilOversiktSide}
-            oppdater={this.hentBehandlingStatus}
-          />
-        }
-      </div>
+      <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
+        <Vilkarsveileder
+          lagreVedtakHandler={this.lagreVedtakHandler}
+          lagreVurderingHandler={this.lagreVurderingHandler}
+          lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
+        />
+        {person && <Personopplysninger person={person} />}
+        <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
+        <Bosted erValidert={this.state.gyldigePaneler.bosted} />
+        {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
+        <SelvstendigArbeid soknadVerdier={soknadVerdier} />
+        <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
+        <ArbeidUtland />
+        <ForetakUtland />
+        <VirksomhetNorge />
+        <MaritimtArbeid soknadVerdier={soknadVerdier} />
+        {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+        {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
+        {bekreftelser && <Bekreftelser bekreftelser={bekreftelser} erValidert={this.state.gyldigePaneler.bekreftelser} />}
+      </form>
     );
   }
 }
 
-/** Mapper både fast tekst inn til de forskjellige panelene i tillegg til å
- * mappe verdier fra søknaden (soknad) ut til Redux Form via initialValue.
- * @param state
- */
+Saksopplysninger.propTypes = {
+  arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
+  avklartefakta: PT.object,
+  bekreftelser: MPT.Bekreftelser,
+  handleSubmit: PT.func.isRequired,
+  hentFagsaker: PT.func.isRequired,
+  hentSoknad: PT.func.isRequired,
+  hentAvklartefakta: PT.func.isRequired,
+  hentVurdering: PT.func.isRequired,
+  history: PT.object.isRequired,
+  inntekt: MPT.Inntekt,
+  match: PT.object.isRequired,
+  medlemskap: MPT.Medlemskap,
+  oppdaterAvklartefakta: PT.func.isRequired,
+  oppdaterSoknad: PT.func.isRequired,
+  oppfriskSaksopplysninger: PT.func.isRequired,
+  sjekkSaksflytStatus: PT.func.isRequired,
+  oppsummering: MPT.Oppsummering,
+  person: MPT.Person,
+  sendSoknad: PT.func.isRequired,
+  sendAvklartefakta: PT.func.isRequired,
+  soknad: PT.object,
+  soknadArbeidsinntekt: PT.object,
+  soknadForm: PT.object.isRequired,
+  valid: PT.bool.isRequired,
+  vurdering: PT.object,
+};
+
+Saksopplysninger.defaultProps = {
+  arbeidsgivereNorge: [],
+  avklartefakta: {},
+  bekreftelser: [],
+  inntekt: {},
+  medlemskap: {},
+  oppsummering: {},
+  person: {},
+  soknad: {},
+  soknadArbeidsinntekt: {},
+  vurdering: {},
+};
+
 const mapStateToProps = state => ({
   saksflyt: saksflytSelectors.SaksflytSelector(state),
   person: fagsakSelectors.PersonSelector(state),
@@ -307,6 +303,7 @@ const mapStateToProps = state => ({
   },
 });
 
+
 const mapDispatchToProps = dispatch => ({
   sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
@@ -320,4 +317,14 @@ const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: values => { dispatch(avklartefaktaActions.oppdaterAvklartefaktaState(values)); },
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
+const SaksopplysningerForm = reduxForm({
+  form: 'soknad',
+  enableReinitialize: true,
+  destroyOnUnmount: false,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+  validate: (values, props) => Validering.Felles.byggValidering(values, props),
+})(Saksopplysninger);
+
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksopplysningerForm));
