@@ -11,6 +11,7 @@ import Stegindikator from 'nav-frontend-stegindikator';
 import NavFrontendSpinner from 'nav-frontend-spinner';
 import Lenker from 'nav-frontend-lenker';
 import Modal from 'nav-frontend-modal';
+import Tekstomrade from 'nav-frontend-tekstomrade';
 
 export {
   AlertStripeAdvarsel, AlertStripe,
@@ -25,4 +26,5 @@ export {
   Icons as Ikoner,
   Lenker,
   Modal,
+  Tekstomrade,
 };

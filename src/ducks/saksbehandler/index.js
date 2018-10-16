@@ -3,7 +3,7 @@ import * as saksbehandlerSelectors from './selectors';
 import * as saksbehandlerActions from './actions';
 import * as saksbehandlerTypes from './types';
 
-import vurderingReducers from './reducers';
+import saksbehandlerReducers from './reducers';
 
 export {
   saksbehandlerOperations,
@@ -12,4 +12,4 @@ export {
   saksbehandlerActions,
 };
 
-export default vurderingReducers;
+export default saksbehandlerReducers;
