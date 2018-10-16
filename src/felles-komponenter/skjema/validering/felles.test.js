@@ -41,19 +41,6 @@ describe('Tester felles.js:', () => {
     })
   });
 
-  describe('forsokValidering', () => {
-    test('gjør ingenting dersom data ikke inneholder feil', () => {
-      // const mockFunction = jest.spyOn(Felles, 'inneholderFeilmeldinger')
-      const mockData = { ...feilmeldingMock, form: { ...feilmeldingMock.form, feilmeldinger: [] } };
-
-      Felles.forsokValidering(mockData);
-
-      //Fixme: Får ikke spyOn til å fungere.
-
-      expect(Felles.inneholderFeilmeldinger).toBeCalled();
-    })
-  });
-
   describe('flatUtFeltGrupper', () => {
     test('returnerer en falt array fra gruppefelter', () => {
       const mockData = {
