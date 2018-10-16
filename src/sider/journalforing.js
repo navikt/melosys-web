@@ -167,8 +167,6 @@ class Journalforing extends Component {
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForOpprettFagsak();
 
-    console.log(vasketJournalforing);
-
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.KNYTT)) {
       settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer');
       return false;
