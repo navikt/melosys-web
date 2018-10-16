@@ -50,13 +50,6 @@ const journalforingGenerellValidering = verdier => {
     false)
   );
 
-  const representantID = (
-    idErBlank(verdier.representantID) ||
-    idErIkkeOrgnr(verdier.representantID) ||
-    idFinnesIkke(verdier.representantNavn, verdier.representantID) ||
-    false
-  );
-
   const avsenderNavn = (
     navnAvsenderErBlank(verdier.avsenderNavn) || false
   );
@@ -68,7 +61,6 @@ const journalforingGenerellValidering = verdier => {
     avsenderID,
     avsenderNavn,
     dokumentTittel,
-    representantID,
   };
 };
 
@@ -103,12 +95,21 @@ const journalforingOpprettSakValidering = verdier => {
     false
   );
 
+  const representantID = (
+    !idErBlank(verdier.representantID) && (
+      idErIkkeOrgnr(verdier.representantID) ||
+      idFinnesIkke(verdier.representantNavn, verdier.representantID)
+    ) ||
+    false
+  );
+
   const journalforingOppholdsLand = (landErIkkeValgt(verdier.journalforingOppholdsLand) ? { _error: landErIkkeValgt(verdier.journalforingOppholdsLand) } : false);
 
   return {
     journalforingPeriodeFraOgMed,
     journalforingPeriodeTilOgMed,
     journalforingOppholdsLand,
+    representantID,
   };
 };
 
