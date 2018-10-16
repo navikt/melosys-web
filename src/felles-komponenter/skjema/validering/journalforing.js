@@ -11,6 +11,8 @@ const navnAvsenderErBlank = verdi => ((verdi === '' || verdi === undefined) && '
 const idErIkkeNummer = verdi => (!(new RegExp(/^\d+$/).test(verdi)) && 'Skriv inn kun nummer.');
 const idErIkkeFnrEllerDnr = verdi => ((!Person.erGyldigFnr(verdi) && !Person.erGyldigDnr(verdi)) && 'Skriv inn gyldig fnr eller dnr.');
 const idErIkkeFnrEllerDnrEllerOrgnr = verdi => ((!(Person.erGyldigFnr(verdi) || Person.erGyldigDnr(verdi) || Organisasjon.erOrgnrLengde(verdi))) && 'Skriv inn gyldig fnr, dnr eller orgnr.');
+const idErIkkeOrgnr = verdi => (!Organisasjon.erOrgnrGyldig(verdi) && 'Skriv inn gyldig orgnr.');
+
 const idFinnesIkke = (navn, id) => {
   if (navn === '' && Organisasjon.erOrgnrLengde(id)) {
     return 'Fant ingen navn på dette organisasjonsnummeret.';
@@ -48,6 +50,13 @@ const journalforingGenerellValidering = verdier => {
     false)
   );
 
+  const representantID = (
+    idErBlank(verdier.representantID) ||
+    idErIkkeOrgnr(verdier.representantID) ||
+    idFinnesIkke(verdier.representantNavn, verdier.representantID) ||
+    false
+  );
+
   const avsenderNavn = (
     navnAvsenderErBlank(verdier.avsenderNavn) || false
   );
@@ -59,6 +68,7 @@ const journalforingGenerellValidering = verdier => {
     avsenderID,
     avsenderNavn,
     dokumentTittel,
+    representantID,
   };
 };
 

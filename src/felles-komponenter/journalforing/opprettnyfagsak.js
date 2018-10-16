@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import { connect } from 'react-redux';
+import { change } from 'redux-form';
+
 import PT from 'prop-types';
 
 import * as Skjema from '../skjema/';
@@ -12,18 +15,6 @@ import * as Konstanter from '../../constants';
 
 class OpprettNyFagSak extends Component {
   state = { spinner: {} };
-  /*
-  async componentDidMount() {
-    await this.oppdaterFelter(this.props, true);
-  }
-
-  async componentDidUpdate(prevProps) {
-    await this.oppdaterFelter(prevProps);
-  }
-  oppdaterFelter = async (props, tvingOppdatering) => {
-    const { representantID, representantID } = props.journalforingSkjemaVerdier;
-  };
-  */
   toggleSpinn = (navn, spin) => ({ spinner: { ...this.state.spinner, [navn]: spin } });
   spinner = async (navn, ms = 1000) => {
     this.setState(this.toggleSpinn(navn, true));
@@ -32,6 +23,7 @@ class OpprettNyFagSak extends Component {
   };
 
   erGyldigOrgnummer = verdi => verdi.length === Konstanter.ANTALL_TALL_I_ORGNR;
+
   sjekkArbeidsgiver = async verdi => {
     const { erGyldigOrgnummer } = this;
     const { settFeltInnhold, hentOgVisRepresentant } = this.props;
@@ -39,7 +31,7 @@ class OpprettNyFagSak extends Component {
       await this.spinner('representantNavn');
       await hentOgVisRepresentant(verdi);
     } else {
-      await settFeltInnhold('representantNavn');
+      await settFeltInnhold('representantNavn', '');
     }
   };
 
@@ -58,8 +50,8 @@ class OpprettNyFagSak extends Component {
         <Nav.Row>
           <Nav.Column xs="6">
             <Skjema.Input feltNavn="representantID" label="Representantens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
-            <Skjema.Input feltNavn="representantNavn" label="Representantens navn" />
-            { visArbeidsgiverSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
+            <Skjema.Input feltNavn="representantNavn" label="Representantens navn" disabled />
+            { visArbeidsgiverSpinner && <Nav.NavFrontendSpinner className="sok__spinner" /> }
           </Nav.Column>
         </Nav.Row>
         <Nav.Fieldset legend="Soknadperiode:" className="opprettnysak__soknadsperiode">
@@ -91,4 +83,9 @@ OpprettNyFagSak.propTypes = {
   opprettFagsak: PT.func.isRequired,
 };
 
-export default OpprettNyFagSak;
+
+const mapDispatchToProps = dispatch => ({
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change('journalforing', feltNavn, verdi)),
+});
+
+export default connect(null, mapDispatchToProps)(OpprettNyFagSak);
