@@ -20,7 +20,6 @@ import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeS
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
-
 import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
@@ -37,18 +36,18 @@ import { PersonOperations } from '../ducks/person';
 
 const queryParamLogger = (journalpostID, oppgaveID, location) => {
   const qsParsed = qs.parse(location.search.slice(1));
-  const url = `/journalforing/${journalpostID}/${oppgaveID}`;
-  // TODO Bytt console.log med logger.info()
+  const urlQuery = `${location.pathname}${location.search}`;
   /* eslint-disable */
   if (qsParsed) {
     if (qsParsed.kilde === 'GOSYS') {
-      const urlQuery = `${url}/?kilde=${qsParsed.kilde}`;
-      console.log('Deeplinked from GOSYS:', urlQuery);
+      const message = `Deeplinked from GOSYS: ${urlQuery}`;
+      window.frontendlogger.info(message);
     } else {
-      console.log('Unknown external src:', qsParsed);
+      const message = `Ukjent ekstern kilde: ${urlQuery}`;
+      window.frontendlogger.error(message);
     }
   } else {
-    console.log('internal route:', url);
+    console.log('internal route:', urlQuery);
   }
   /* eslint-enable */
 };
@@ -109,7 +108,7 @@ class Journalforing extends Component {
    *
    * @returns {object} Objektet som skal sendes videre som payload.
    */
-  vaskDokumentInformasjon = () => {
+  vaskDokumentInformasjon = intensjon => {
     const { oppgaveID, journalpostID } = this.props.match.params;
     const {
       journalforingSkjemaVerdier,
@@ -120,18 +119,30 @@ class Journalforing extends Component {
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = dokument;
-    return {
-      arbeidsgiverID,
-      representantID,
-      avsenderID,
-      avsenderNavn,
-      dokumentID,
-      brukerID,
-      dokumenttittel: dokumentTittel,
-      journalpostID,
-      oppgaveID,
-      vedleggstitler: vedleggsTitler,
-    };
+    return intensjon === Konstanter.JOURNALFORING_HENSIKT.KNYTT ?
+      {
+        avsenderID,
+        avsenderNavn,
+        dokumentID,
+        brukerID,
+        dokumenttittel: dokumentTittel,
+        journalpostID,
+        oppgaveID,
+        vedleggstitler: vedleggsTitler,
+      }
+      :
+      {
+        arbeidsgiverID,
+        representantID,
+        avsenderID,
+        avsenderNavn,
+        dokumentID,
+        brukerID,
+        dokumenttittel: dokumentTittel,
+        journalpostID,
+        oppgaveID,
+        vedleggstitler: vedleggsTitler,
+      };
   };
 
   /** Når saksbehandler klikker "knytt til eksisterende sak" skal det åpnes for validering av
@@ -146,7 +157,7 @@ class Journalforing extends Component {
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
-    const vasketJournalforing = this.vaskDokumentInformasjon();
+    const vasketJournalforing = this.vaskDokumentInformasjon(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = { saksnummer, ...vasketJournalforing };
 
     await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
@@ -155,6 +166,8 @@ class Journalforing extends Component {
 
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForOpprettFagsak();
+
+    console.log(vasketJournalforing);
 
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.KNYTT)) {
       settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer');
