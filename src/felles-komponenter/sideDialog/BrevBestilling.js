@@ -35,7 +35,7 @@ const InfoPanel = () => {
   );
 };
 
-class BrevUtsendelse extends Component {
+class BrevBestilling extends Component {
   erMangelBrevMedFritekst = () => {
     const { mangelBrevSkjemaVerdier } = this.props;
     if (!mangelBrevSkjemaVerdier) return false;
@@ -91,7 +91,7 @@ class BrevUtsendelse extends Component {
     );
   }
 }
-BrevUtsendelse.propTypes = {
+BrevBestilling.propTypes = {
   resetMangelBrevForm: PT.func.isRequired,
   opprettDokument: PT.func.isRequired,
   resetDokument: PT.func.isRequired,
@@ -101,7 +101,7 @@ BrevUtsendelse.propTypes = {
   dokumenter: PT.object,
   oppsummering: MPT.Oppsummering,
 };
-BrevUtsendelse.defaultProps = {
+BrevBestilling.defaultProps = {
   mangelBrevSkjemaVerdier: {},
   dokumenter: {},
   representerer: [],
@@ -109,14 +109,14 @@ BrevUtsendelse.defaultProps = {
   oppsummering: {},
 };
 
-const BrevUtsendelseForm = reduxForm({
+const BrevBestillingForm = reduxForm({
   form: 'mangelbrev',
   enableReinitialize: true,
   destroyOnUnmount: false,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) => Validering.Felles.byggValidering(values, props),
-})(BrevUtsendelse);
+})(BrevBestilling);
 
 const mapStateToProps = state => ({
   mangelBrevSkjemaVerdier: formSelectors.MangelBrevFormSelector(state).values,
@@ -132,4 +132,4 @@ const mapDispatchToProps = dispatch => ({
   opprettDokument: (behandlingID, dokumenttypeKode, dokument) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, dokument)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BrevUtsendelseForm);
+export default connect(mapStateToProps, mapDispatchToProps)(BrevBestillingForm);
