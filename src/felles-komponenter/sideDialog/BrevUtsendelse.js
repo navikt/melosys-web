@@ -14,6 +14,7 @@ import PanelHeader from '../../felles-komponenter/panelHeader/panelHeader';
 import * as Ikoner from '../../resources/images';
 import * as Validering from '../skjema/validering';
 import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
+import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
 
 const InfoPanel = () => {
   const panelIkon = Ikoner.Varsel;
@@ -42,23 +43,22 @@ class BrevUtsendelse extends Component {
   };
 
   sendBrev = () => {
-    const { mangelBrevSkjemaVerdier, opprettDokument } = this.props;
+    const { mangelBrevSkjemaVerdier, opprettDokument, oppsummering } = this.props;
+    const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = mangelBrevSkjemaVerdier;
-    if (this.erMangelBrevMedFritekst()) {
-      const dokument = { fritekst, mottaker };
-      opprettDokument(4, dokumenttypeKode, dokument);
-    } else {
-      opprettDokument(4, dokumenttypeKode, {});
-    }
+    const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
+    opprettDokument(behandlingID, dokumenttypeKode, dokument);
   };
+
   forkastBrev = () => {
     const { resetMangelBrevForm, resetDokument } = this.props;
     resetMangelBrevForm();
     resetDokument();
   };
+
   render () {
     const { dokumenttyper, representerer, dokumenter } = this.props;
-    const placeholder = 'Feks: "Opplysning om antall utsendet i pperioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
+    const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
     // const feilmelding = {feilmelding: 'Her er det noe feil.'};
     return (
       <Nav.Panel>
@@ -99,12 +99,14 @@ BrevUtsendelse.propTypes = {
   dokumenttyper: PT.arrayOf(MPT.Kodeverk),
   mangelBrevSkjemaVerdier: PT.object,
   dokumenter: PT.object,
+  oppsummering: MPT.Oppsummering,
 };
 BrevUtsendelse.defaultProps = {
   mangelBrevSkjemaVerdier: {},
   dokumenter: {},
   representerer: [],
   dokumenttyper: [],
+  oppsummering: {},
 };
 
 const BrevUtsendelseForm = reduxForm({
@@ -119,6 +121,7 @@ const BrevUtsendelseForm = reduxForm({
 const mapStateToProps = state => ({
   mangelBrevSkjemaVerdier: formSelectors.MangelBrevFormSelector(state).values,
   dokumenter: dokumenterSelectors.dokumenterSelector(state),
+  oppsummering: fagsakSelectors.OppsummeringSelector(state),
   dokumenttyper: state.kodeverk.data.dokumenttyper,
   representerer: state.kodeverk.data.representerer,
 });
