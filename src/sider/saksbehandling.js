@@ -75,7 +75,7 @@ class Saksbehandling extends Component {
 
   lastInnSaksopplysninger = async () => {
     const {
-      hentFagsaker, hentSoknad, hentAvklartefakta,
+      hentFagsaker, hentSoknad,
       sjekkSaksflytStatus,
     } = this.props;
     const { snr } = this.props.match.params;
@@ -145,6 +145,7 @@ class Saksbehandling extends Component {
 
   render() {
     const { oppsummering } = this.props;
+    const { blokkerInnholdMedOppfriskSpinner } = this;
 
     const oppfriskVenterDialog = this.state.oppfriskningBlokkererInnhold && (
       <div>
@@ -163,7 +164,9 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Saksopplysninger />
+              <Saksopplysninger
+                blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+              />
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering
