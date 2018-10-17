@@ -126,6 +126,19 @@ class Saksbehandling extends Component {
     this.setState({ oppfriskningBlokkererInnhold: false });
   };
 
+  hentBehandlingStatus = async () => {
+    const { sjekkSaksflytStatus } = this.props;
+    const { behandlingID } = this.props.oppsummering;
+    const saksflyt = await sjekkSaksflytStatus(behandlingID);
+
+    if (saksflyt && saksflyt.response) {
+      this.skjulOppfriskBekreftelse();
+    } else if (saksflyt.data === 'DONE') {
+      this.skjulOppfriskBekreftelse();
+      this.lastInnSaksopplysninger();
+    }
+  };
+
   /* eslint-disable */
   lagreOgLukk = () => { alert('Ikke implementert'); };
   /* eslint-enable */
