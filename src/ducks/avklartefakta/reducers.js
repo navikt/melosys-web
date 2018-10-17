@@ -12,7 +12,56 @@ import * as Types from './types';
 import { VurderingBostedslandTyper } from '../../felles-komponenter/vilkarsveileder/vurderinger/vurderingBostedsland';
 
 const initialState = {
-  data: {},
+  data: {
+    behandlingID: 4,
+    avklaring: {
+      opphold: {
+        land: [
+        ],
+        periode: {
+          fom: null,
+          tom: null,
+        },
+      },
+      aktivitet: {
+        aktivitetLand: [],
+      },
+      sysselsetting: {
+        sysselsettingType: null,
+      },
+      bosted: {
+        bostedLand: null,
+        bostedBegrunnelser: [],
+      },
+      forutgaendeMedlemskap: {
+        harForutgaendeMedlemskap: null,
+        forutgaendeMedlemskapBegrunnelser: [],
+      },
+      yrkesaktivitet: {
+        yrkesaktivitetType: null,
+      },
+      tjenestemann: {
+        tjenestemann: null,
+      },
+      valgteArbeidsgivere: [],
+      yrkesaktivitetFordeling: {
+        antallLand: null,
+      },
+      virksomhet: {
+        aktivitetINorge: null,
+        marginaltArbeid: null,
+        vekslingMellomLand: null,
+      },
+      vesentligVirksomhet: {
+        vesentligVirksomhetINorge: null,
+        vesentligVirksomhetBegrunnelser: [],
+      },
+      vurdering: {
+        lovvalgKode: '',
+        begrunnelser: [],
+      },
+    },
+  },
   status: STATUS.NOT_STARTED,
 };
 

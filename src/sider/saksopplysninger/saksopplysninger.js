@@ -46,6 +46,8 @@ import { formSelectors } from '../../ducks/form/';
 
 import { formatterDatoTilNorsk } from '../../utils/dato';
 
+/* eslint no-unused-vars: off */
+
 class Saksopplysninger extends Component {
   state = {
     gyldigePaneler: {},
@@ -70,7 +72,7 @@ class Saksopplysninger extends Component {
     const { valid, sendSoknad, sendAvklartefakta } = this.props;
     if (valid) {
       await sendSoknad(bid, soknad);
-      await sendAvklartefakta(bid, avklaring);
+      // await sendAvklartefakta(bid, avklaring);
     }
   };
 
@@ -87,7 +89,7 @@ class Saksopplysninger extends Component {
     const avklaring = { behandlingID: bid, avklaring: { ...this.props.avklartefakta } };
     const { valid, sendAvklartefakta } = this.props;
     if (valid) {
-      await sendAvklartefakta(bid, avklaring);
+      // await sendAvklartefakta(bid, avklaring);
     }
   };
 
@@ -120,11 +122,12 @@ class Saksopplysninger extends Component {
       inntekt,
       soknadArbeidsinntekt,
       soknadForm,
+      soknad,
     } = this.props;
 
     const { values: soknadVerdier } = soknadForm;
 
-    if (Object.keys(soknadForm).length === 0) { return null; }
+    if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
 
     return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>

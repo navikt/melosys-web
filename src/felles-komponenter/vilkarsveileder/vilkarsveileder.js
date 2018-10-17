@@ -90,9 +90,10 @@ class Vilkarsveileder extends Component {
    */
   tilSteg = async nyttStegNummer => {
     const { skjema, oppdaterAvklartefaktaState, lagreAvklartefaktaHandler } = this.props;
-    this.setState({ aktivtStegNummer: nyttStegNummer });
-    await oppdaterAvklartefaktaState(skjema);
-    await lagreAvklartefaktaHandler();
+    this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
+      await oppdaterAvklartefaktaState(skjema);
+      await lagreAvklartefaktaHandler();
+    });
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
