@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import { Input as NavInput } from 'nav-frontend-skjema';
+import * as Nav from '../../../utils/navFrontend';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
@@ -27,13 +27,16 @@ const ListevelgerEnkelt = ({
 
   return (
     <div>
-      <NavInput
+      <Nav.Input
         label={label}
         feil={feil}
         placeholder={placeholder}
         className="listevelger__linje__input"
         list={`dataliste-${inputProps.name}`}
-        {...input}
+        value={inputProps.value}
+        onChange={inputProps.onChange}
+        onBlur={inputProps.onBlur}
+        bredde={inputProps.bredde}
       />
       <datalist id={`dataliste-${inputProps.name}`}>
         {muligeValg.map(valg => <option key={uuid()} value={kodeverkObjektTilTerm(valg)} />)}

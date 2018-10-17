@@ -14,7 +14,6 @@ export default async function loadInitialData(store) {
       await store.dispatch(oppgaverOperations.hent());
     }
   } catch (e) {
-    // TODO add logger.error()
     console.log(e); // eslint-disable-line no-console
     window.frontendlogger.error({
       e,

@@ -122,8 +122,22 @@ export default function reducer(state = initialState, action) {
         data: soknadData,
       };
     }
+    case Types.OPPDATER_PERIODE: {
+      const { oppholdsPeriode } = action.data;
+
+      const soknad = {
+        ...state.data.soeknadDokument,
+        oppholdUtland: {
+          ...state.data.soeknadDokument.oppholdUtland,
+          oppholdsPeriode,
+        },
+      };
+
+      return { ...state, data: { ...state.data, soeknadDokument: soknad } };
+    }
     case Types.OPPDATER_SOKNAD: {
       const { dokument } = action;
+
       const soknad = {
         ...state.data.soeknadDokument,
         arbeidsinntekt: {
@@ -165,6 +179,10 @@ export default function reducer(state = initialState, action) {
         },
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
+          oppholdsPeriode: {
+            fom: formatterDatoTilISO(dokument.oppholdUtlandFom),
+            tom: formatterDatoTilISO(dokument.oppholdUtlandTom),
+          },
           oppholdslandKoder: dokument.oppholdsland,
           sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
           ektefelleEllerBarnINorge: dokument.harEktefelleEllerBarnINorge,
