@@ -1,0 +1,73 @@
+import React from 'react';
+import PT from 'prop-types';
+import classnames from 'classnames';
+
+import { FANE_STATUS } from '../stegMotor/typer';
+
+import * as Ikon from '../../../resources/images';
+
+import './stegIkon.css';
+
+const StegIkon = props => {
+  const IKONER = {
+    STEG: {
+      UBEHANDLET: Ikon.Ubehandlet,
+      OK: Ikon.Ferdig,
+      ADVARSEL: Ikon.Varsel,
+      FEIL: Ikon.Feil,
+    },
+    VEDTAK: {
+      UBEHANDLET: Ikon.VedakUbehandlet,
+      OK: Ikon.VedtakGodkjent,
+      ADVARSEL: Ikon.VedtakAvslatt,
+      FEIL: Ikon.VedtakAvslatt,
+    },
+  };
+
+  const {
+    id, aktivtSteg, status, tittel, onClick, tilgjengelig,
+  } = props;
+
+  const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
+  const ikon = id === 'VEDTAK' ? IKONER.VEDTAK[status] : IKONER.STEG[status];
+
+  const cl = classnames(
+    'stegIkon',
+    (!erTilgjengelig ? 'stegIkon-utilgjengelig' : ''),
+    (aktivtSteg && 'stegIkon--aktiv')
+  );
+
+  const knappKlasser = classnames({
+    stegIkon__enkeltSteg: id !== 'VEDTAK',
+    stegIkon__vedtak: id === 'VEDTAK',
+  });
+
+  return (
+    <li className={cl}>
+      <button onClick={onClick} className="stegIkon__knapp">
+        <div
+          className={knappKlasser}
+          style={{ backgroundImage: `url(${ikon})` }}
+          aria-disabled={!tilgjengelig}
+        />
+        <div className="stegIkon__tittel">{tittel}</div>
+      </button>
+    </li>
+  );
+};
+
+StegIkon.propTypes = {
+  id: PT.string.isRequired,
+  status: PT.string.isRequired,
+  tittel: PT.string.isRequired,
+  tilgjengelig: PT.bool,
+  onClick: PT.func.isRequired,
+  aktivtSteg: PT.bool,
+};
+
+StegIkon.defaultProps = {
+  tilgjengelig: false,
+  aktivtSteg: false,
+};
+
+export default StegIkon;

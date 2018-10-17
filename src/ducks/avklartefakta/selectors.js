@@ -30,7 +30,7 @@ export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
 
 export const AvklartefaktaLovvalgKodeSelector = createSelector(
   state => AvklartefaktaSelector(state).vurdering || {},
-  vurdering => (vurdering ? vurdering.lovvalgKode : '')
+  vurdering => (vurdering.lovvalgKode ? vurdering.lovvalgKode : '')
 );
 
 export const AvklartefaktaOppholdPeriodeSelector = createSelector(
@@ -104,11 +104,6 @@ export const AvklartefaktaAktivitetSelector = createSelector(
 export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
   state => AvklartefaktaSelector(state).valgteArbeidsgivere,
   valgteArbeidsgivere => valgteArbeidsgivere || []
-);
-
-export const AvklartefaktaVesentligVirksomhetSelector = createSelector(
-  state => AvklartefaktaSelector(state).vesentligVirksomhet || {},
-  vesentligVirksomhet => vesentligVirksomhet || {}
 );
 
 export const AvklartefaktaVurderingSelector = createSelector(
