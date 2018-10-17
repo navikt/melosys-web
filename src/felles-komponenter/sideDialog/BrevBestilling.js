@@ -51,8 +51,8 @@ class BrevBestilling extends Component {
   };
 
   forkastBrev = () => {
-    const { resetMangelBrevForm, resetDokument } = this.props;
-    resetMangelBrevForm();
+    const { resetBrevBestillingForm, resetDokument } = this.props;
+    resetBrevBestillingForm();
     resetDokument();
   };
 
@@ -92,7 +92,7 @@ class BrevBestilling extends Component {
   }
 }
 BrevBestilling.propTypes = {
-  resetMangelBrevForm: PT.func.isRequired,
+  resetBrevBestillingForm: PT.func.isRequired,
   opprettDokument: PT.func.isRequired,
   resetDokument: PT.func.isRequired,
   representerer: PT.arrayOf(MPT.Kodeverk),
@@ -110,7 +110,7 @@ BrevBestilling.defaultProps = {
 };
 
 const BrevBestillingForm = reduxForm({
-  form: 'mangelbrev',
+  form: 'brevbestilling',
   enableReinitialize: true,
   destroyOnUnmount: false,
   keepDirtyOnReinitialize: true,
@@ -127,7 +127,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  resetMangelBrevForm: () => dispatch(reset('mangelbrev')),
+  resetBrevBestillingForm: () => dispatch(reset('brevbestilling')),
   resetDokument: () => dispatch(dokumenterOperations.resetDokument()),
   opprettDokument: (behandlingID, dokumenttypeKode, dokument) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, dokument)),
 });
