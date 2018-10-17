@@ -9,22 +9,31 @@ import * as MPT from '../../proptypes/';
 import * as Skjema from '../../felles-komponenter/skjema';
 
 import { formSelectors } from '../../ducks/form/';
-/*
-import * as Ikoner from '../resources/images';
-import { TextareaControlled, SkjemaGruppe } from 'nav-frontend-skjema';
-import { Knapp } from 'nav-frontend-knapper';
-*/
 
+import PanelHeader from '../../felles-komponenter/panelHeader/panelHeader';
+import * as Ikoner from '../../resources/images';
 import * as Validering from '../skjema/validering';
 import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
-/*
-  <Nav.Tekstomrade ingenFormattering={true}>
-    <h3>Dette skal stå i mangelbrevet</h3>
-    <p>En beskrivelse av hvilken informasjon eller dokumentasjon som mangler for å gjøre søknaden komplett. Din tekst starter etter teksten "Dette må du sende oss:".</p>
-    <p>Brevet inneholder allerede en innleding, beskrivelse av hvordan informasjon sendes inn og en avsluttende tekst. Trykk på "forhåndsvis brev" for å se brevet når du er fgerdig med å skrive.<br/>
-    OBS! Det er ikke automatisk stavekontroll, så sjekk teksten to har skrevet.</p>
-  </Nav.Tekstomrade>
-*/
+
+const InfoPanel = () => {
+  const panelIkon = Ikoner.Varsel;
+  return (
+    <Nav.EkspanderbartpanelBase
+      heading={<PanelHeader ikon={panelIkon} tittel="Dette skal stå i mangelbrevet" undertittel="" />}
+      ariaTittel="Dette skal stå i mangelbrevet">
+      <p>
+        En beskrivelse av hvilken informasjon eller dokumentasjon som mangler for å gjøre søknaden komplett.
+        Din tekst starter etter teksten &laquo;Dette må du sende oss:&raquo;.
+      </p>
+      <p>
+        Brevet inneholder allerede en innleding, beskrivelse av hvordan informasjon sendes inn og en avsluttende tekst.
+        Trykk på &laquo;forhåndsvis brev&raquo; for å se brevet når du er fgerdig med å skrive.<br />
+        OBS! Det er ikke automatisk stavekontroll, så sjekk teksten to har skrevet.
+      </p>
+    </Nav.EkspanderbartpanelBase>
+  );
+};
+
 class MangelBrev extends Component {
   harFritext = () => {
     const { mangelBrevSkjemaVerdier } = this.props;
@@ -52,20 +61,33 @@ class MangelBrev extends Component {
     const placeholder = 'Feks: "Opplysning om antall utsendet i pperioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
     // const feilmelding = {feilmelding: 'Her er det noe feil.'};
     return (
-      <div>
+      <Nav.Panel>
         <Nav.Fieldset legend="Nytt brev">
-          <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker">
-            {representerer && representerer.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
-          </Skjema.Select>
-          <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" >
-            {dokumenttyper && dokumenttyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
-          </Skjema.Select>
-          {this.harFritext() && <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
-          {dokumenter.location && <Link to={dokumenter.location} target="_blank" className="informasjon__dokumentlenke">Forhåndsvis brev</Link>}
-          <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>
-          <Nav.Knapp htmlType="submit" type="hoved" onClick={this.sendBrev}>Send Brev</Nav.Knapp>
+          <Nav.Row>
+            <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker">
+              {representerer && representerer.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+            </Skjema.Select>
+            <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" >
+              {dokumenttyper && dokumenttyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+            </Skjema.Select>
+          </Nav.Row>
+          <Nav.Row>
+            <InfoPanel />
+          </Nav.Row>
+          <Nav.Row>
+            {this.harFritext() && <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
+            {dokumenter.location && <Link to={dokumenter.location} target="_blank" className="informasjon__dokumentlenke">Forhåndsvis brev</Link>}
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="12" md="6">
+              <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>
+            </Nav.Column>
+            <Nav.Column xs="12" md="6">
+              <Nav.Knapp htmlType="submit" type="hoved" onClick={this.sendBrev}>Send Brev</Nav.Knapp>
+            </Nav.Column>
+          </Nav.Row>
         </Nav.Fieldset>
-      </div>
+      </Nav.Panel>
     );
   }
 }
