@@ -10,6 +10,7 @@
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import * as Actions from './actions';
 
 /* eslint-disable import/prefer-default-export */
 export function hentDokument(journalforingID, dokumentID) {
@@ -25,4 +26,7 @@ export function opprettDokument(behandlingID, dokumenttypeKode, dokument) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+export function resetDokument() {
+  return dispatch => (dispatch(Actions.resetDokment()));
 }

@@ -27,8 +27,7 @@ const lagPdfUtkast = (behandlingID, dokumenttypeKode, data) => {
  */
 const opprettDokument = (behandlingID, dokumenttypeKode, dokument) => {
   const URI_DOKUMENT_OPPRETT = `${API_BASE_URL}dokumenter/opprett/${behandlingID}/${dokumenttypeKode}`;
-  const extendedResponse = true;
-  return postAsJson(URI_DOKUMENT_OPPRETT, dokument, extendedResponse);
+  return postAsJson(URI_DOKUMENT_OPPRETT, dokument);
 };
 export {
   pdfURI,

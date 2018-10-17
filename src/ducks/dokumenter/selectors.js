@@ -11,8 +11,9 @@ export const dokumenterSelector = createSelector(
   state => state.dokumenter.data,
   dokumenter => dokumenter
 );
-
-export const dokumenterStatusSelector = createSelector(
-  state => state.dokumenter.status,
-  dokumenter => dokumenter
+/*
+export const dokumenterResponseStatusSelector = createSelector(
+  state => state.dokumenter.response,
+  response => response
 );
+*/

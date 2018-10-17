@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { reduxForm } from 'redux-form';
+import { reduxForm, reset } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
@@ -13,8 +14,9 @@ import * as Ikoner from '../resources/images';
 import { TextareaControlled, SkjemaGruppe } from 'nav-frontend-skjema';
 import { Knapp } from 'nav-frontend-knapper';
 */
+
 import * as Validering from '../skjema/validering';
-import { dokumenterOperations } from '../../ducks/dokumenter';
+import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
 /*
   <Nav.Tekstomrade ingenFormattering={true}>
     <h3>Dette skal stå i mangelbrevet</h3>
@@ -35,13 +37,18 @@ class MangelBrev extends Component {
     const { fritekst, mottaker, dokumenttypeKode } = mangelBrevSkjemaVerdier;
     if (this.harFritext()) {
       const dokument = { fritekst, mottaker };
-      opprettDokument(4, dokumenttypeKode, dokument).then(response => console.dir(response));
+      opprettDokument(4, dokumenttypeKode, dokument);
     } else {
-      opprettDokument(4, dokumenttypeKode, {}).then(response => console.dir(response));
+      opprettDokument(4, dokumenttypeKode, {});
     }
   };
+  forkastBrev = () => {
+    const { resetMangelBrevForm, resetDokument } = this.props;
+    resetMangelBrevForm();
+    resetDokument();
+  };
   render () {
-    const { dokumenttyper, representerer } = this.props;
+    const { dokumenttyper, representerer, dokumenter } = this.props;
     const placeholder = 'Feks: "Opplysning om antall utsendet i pperioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
     // const feilmelding = {feilmelding: 'Her er det noe feil.'};
     return (
@@ -54,20 +61,26 @@ class MangelBrev extends Component {
             {dokumenttyper && dokumenttyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
           </Skjema.Select>
           {this.harFritext() && <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
-          <Nav.Knapp type="hoved" onClick={this.sendBrev}>Send Brev</Nav.Knapp>
+          {dokumenter.location && <Link to={dokumenter.location} target="_blank" className="informasjon__dokumentlenke">Forhåndsvis brev</Link>}
+          <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>
+          <Nav.Knapp htmlType="submit" type="hoved" onClick={this.sendBrev}>Send Brev</Nav.Knapp>
         </Nav.Fieldset>
       </div>
     );
   }
 }
 MangelBrev.propTypes = {
+  resetMangelBrevForm: PT.func.isRequired,
   opprettDokument: PT.func.isRequired,
+  resetDokument: PT.func.isRequired,
   representerer: PT.arrayOf(MPT.Kodeverk),
   dokumenttyper: PT.arrayOf(MPT.Kodeverk),
   mangelBrevSkjemaVerdier: PT.object,
+  dokumenter: PT.object,
 };
 MangelBrev.defaultProps = {
   mangelBrevSkjemaVerdier: {},
+  dokumenter: {},
   representerer: [],
   dokumenttyper: [],
 };
@@ -83,11 +96,14 @@ const MangelBrevForm = reduxForm({
 
 const mapStateToProps = state => ({
   mangelBrevSkjemaVerdier: formSelectors.MangelBrevFormSelector(state).values,
+  dokumenter: dokumenterSelectors.dokumenterSelector(state),
   dokumenttyper: state.kodeverk.data.dokumenttyper,
   representerer: state.kodeverk.data.representerer,
 });
 
 const mapDispatchToProps = dispatch => ({
+  resetMangelBrevForm: () => dispatch(reset('mangelbrev')),
+  resetDokument: () => dispatch(dokumenterOperations.resetDokument()),
   opprettDokument: (behandlingID, dokumenttypeKode, dokument) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, dokument)),
 });
 
