@@ -30,10 +30,6 @@ import {
   avklartefaktaSelectors,
 } from '../ducks/avklartefakta/';
 
-import {
-  vurderingOperations,
-  vurderingSelectors,
-} from '../ducks/vurdering/';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
@@ -46,7 +42,6 @@ class Saksbehandling extends Component {
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     hentAvklartefakta: PT.func.isRequired,
-    hentVurdering: PT.func.isRequired,
     history: PT.object.isRequired,
     match: PT.object.isRequired,
     oppfriskSaksopplysninger: PT.func.isRequired,
@@ -54,14 +49,12 @@ class Saksbehandling extends Component {
     oppsummering: MPT.Oppsummering,
     sendSoknad: PT.func.isRequired,
     soknad: PT.object,
-    vurdering: PT.object,
   };
 
   static defaultProps = {
     avklartefakta: {},
     oppsummering: {},
     soknad: {},
-    vurdering: {},
   };
 
   state = {
@@ -75,7 +68,7 @@ class Saksbehandling extends Component {
 
   lastInnSaksopplysninger = async () => {
     const {
-      hentFagsaker, hentSoknad, hentAvklartefakta,
+      hentFagsaker, hentSoknad,
       sjekkSaksflytStatus,
     } = this.props;
     const { snr } = this.props.match.params;
@@ -184,7 +177,6 @@ class Saksbehandling extends Component {
  */
 const mapStateToProps = state => ({
   saksflyt: saksflytSelectors.SaksflytSelector(state),
-  vurdering: vurderingSelectors.VurderingSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
@@ -197,7 +189,6 @@ const mapDispatchToProps = dispatch => ({
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
-  hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

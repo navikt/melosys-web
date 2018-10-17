@@ -9,7 +9,7 @@ import { formatterDatoTilISO } from '../../utils/dato';
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
 
-import { VurderingBostedslandTyper } from '../../felles-komponenter/vilkarsveileder/vurderinger/vurderingBostedsland';
+import { VurderingBostedslandTyper } from '../../felles-komponenter/stegvelger/stegKomponenter/vurderingBostedsland';
 
 const initialState = {
   data: {
@@ -109,13 +109,8 @@ export default function reducer(state = initialState, action) {
         yrkesaktivitet: {
           yrkesaktivitetType: dokument.avklartefaktaYrkesaktivitetType,
         },
-        forutgaendeMedlemskap: {
-          harForutgaendeMedlemskap: dokument.avklartefaktaHarForutgaendeMedlemskap,
-          forutgaendeMedlemskapBegrunnelser: dokument.avklartefaktaForutgaendeMedlemskapBegrunnelser,
-        },
         bosted: {
           bostedLand: (dokument.avklartefaktaBostedNorgeUtland === VurderingBostedslandTyper.NORGE ? 'NO' : dokument.avklartefaktaBostedLand),
-          bostedBegrunnelser: dokument.avklartefaktaBostedBegrunnelser,
         },
         yrkesaktivitetFordeling: {
           antallLand: dokument.avklartefaktaAntallLand,
@@ -127,14 +122,6 @@ export default function reducer(state = initialState, action) {
         },
         tjenestemann: {
           tjenestemann: dokument.avklartefaktaTjenestemann,
-        },
-        vesentligVirksomhet: {
-          vesentligVirksomhetINorge: dokument.avklartefaktaVesentligVirksomhetINorge,
-          vesentligVirksomhetBegrunnelser: dokument.avklartefaktaVesentligVirksomhetBegrunnelser,
-        },
-        vurdering: {
-          lovvalgKode: dokument.vurderingLovvalg,
-          begrunnelser: dokument.vurderingBegrunnelser,
         },
       };
 

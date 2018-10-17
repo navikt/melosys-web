@@ -11,7 +11,7 @@ import * as Organisasjoner from './modules/organisasjoner';
 import * as Oppgaver from './modules/oppgaver';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Soknader from './modules/soknader';
-import * as Vurdering from './modules/vurdering';
+import * as Vilkar from './modules/vilkar';
 
 /*
 function erDev() {
@@ -41,5 +41,5 @@ export {
   Personer,
   Saksbehandler,
   Soknader,
-  Vurdering,
+  Vilkar,
 };
