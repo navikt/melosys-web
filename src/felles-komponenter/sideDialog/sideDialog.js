@@ -5,7 +5,7 @@ import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 
 import SideDialogDokumenter from './sideDialogDokumenter';
-import SideDialogMangelBrev from './MangelBrev';
+import SideDialogBrevUtsendelse from './BrevUtsendelse';
 
 import './sideDialog.css';
 
@@ -18,7 +18,7 @@ class SideDialog extends Component {
 
   static defaultProps = {
     faner: [
-      { navn: 'mangelbrev', tittel: 'Send brev', komponent: <SideDialogMangelBrev key={uuid()} /> },
+      { navn: 'brevutsendelse', tittel: 'Send brev', komponent: <SideDialogBrevUtsendelse key={uuid()} /> },
       { navn: 'dokumenter', tittel: 'Dokumenter', komponent: <SideDialogDokumenter key={uuid()} /> },
     ],
   };
