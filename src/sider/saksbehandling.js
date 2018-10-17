@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+
 import DialogboksOppfriskSak from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
 import { Saksopplysninger } from './saksopplysninger';
@@ -25,23 +26,15 @@ import {
   soknadSelectors,
 } from '../ducks/soknad/';
 
-import {
-  avklartefaktaOperations,
-  avklartefaktaSelectors,
-} from '../ducks/avklartefakta/';
-
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
-
-/* eslint no-unused-vars:off */
 
 class Saksbehandling extends Component {
   static propTypes = {
     avklartefakta: PT.object,
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
-    hentAvklartefakta: PT.func.isRequired,
     history: PT.object.isRequired,
     match: PT.object.isRequired,
     oppfriskSaksopplysninger: PT.func.isRequired,
@@ -86,7 +79,6 @@ class Saksbehandling extends Component {
       this.blokkerInnholdMedOppfriskSpinner();
     } else {
       await hentSoknad(behandlingID);
-      // await hentAvklartefakta(behandlingID);
     }
 
     return true;
@@ -179,7 +171,6 @@ const mapStateToProps = state => ({
   saksflyt: saksflytSelectors.SaksflytSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
-  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -188,7 +179,6 @@ const mapDispatchToProps = dispatch => ({
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
-  hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

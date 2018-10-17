@@ -46,8 +46,6 @@ import { formSelectors } from '../../ducks/form/';
 
 import { formatterDatoTilNorsk } from '../../utils/dato';
 
-/* eslint no-unused-vars: off */
-
 class Saksopplysninger extends Component {
   state = {
     gyldigePaneler: {},
@@ -72,7 +70,7 @@ class Saksopplysninger extends Component {
     const { valid, sendSoknad, sendAvklartefakta } = this.props;
     if (valid) {
       await sendSoknad(bid, soknad);
-      // await sendAvklartefakta(bid, avklaring);
+      await sendAvklartefakta(bid, avklaring);
     }
   };
 
@@ -89,16 +87,15 @@ class Saksopplysninger extends Component {
     const avklaring = { behandlingID: bid, avklaring: { ...this.props.avklartefakta } };
     const { valid, sendAvklartefakta } = this.props;
     if (valid) {
-      // await sendAvklartefakta(bid, avklaring);
+      await sendAvklartefakta(bid, avklaring);
     }
   };
 
   overstyrSubmit = async event => {
     event.preventDefault();
 
-    const { oppdaterSoknad, oppdaterAvklartefakta, soknadForm } = this.props;
+    const { oppdaterSoknad, soknadForm } = this.props;
     await oppdaterSoknad(soknadForm.values);
-    await oppdaterAvklartefakta(soknadForm.values);
   };
 
   hentBehandlingStatus = async () => {
@@ -133,7 +130,6 @@ class Saksopplysninger extends Component {
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
         <Stegvelger
           lagreVedtakHandler={this.lagreVedtakHandler}
-          lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
         />
         {person && <Personopplysninger person={person} />}
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
@@ -188,6 +184,7 @@ Saksopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   saksflyt: saksflytSelectors.SaksflytSelector(state),
   person: fagsakSelectors.PersonSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
@@ -196,7 +193,6 @@ const mapStateToProps = state => ({
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
-  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),

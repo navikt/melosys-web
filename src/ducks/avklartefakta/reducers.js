@@ -12,58 +12,27 @@ import * as Types from './types';
 import { VurderingBostedslandTyper } from '../../felles-komponenter/stegvelger/stegKomponenter/vurderingBostedsland';
 
 const initialState = {
-  data: {
-    behandlingID: 4,
-    avklaring: {
-      opphold: {
-        land: [
-        ],
-        periode: {
-          fom: null,
-          tom: null,
-        },
-      },
-      aktivitet: {
-        aktivitetLand: [],
-      },
-      sysselsetting: {
-        sysselsettingType: null,
-      },
-      bosted: {
-        bostedLand: null,
-        bostedBegrunnelser: [],
-      },
-      forutgaendeMedlemskap: {
-        harForutgaendeMedlemskap: null,
-        forutgaendeMedlemskapBegrunnelser: [],
-      },
-      yrkesaktivitet: {
-        yrkesaktivitetType: null,
-      },
-      tjenestemann: {
-        tjenestemann: null,
-      },
-      valgteArbeidsgivere: [],
-      yrkesaktivitetFordeling: {
-        antallLand: null,
-      },
-      virksomhet: {
-        aktivitetINorge: null,
-        marginaltArbeid: null,
-        vekslingMellomLand: null,
-      },
-      vesentligVirksomhet: {
-        vesentligVirksomhetINorge: null,
-        vesentligVirksomhetBegrunnelser: [],
-      },
-      vurdering: {
-        lovvalgKode: '',
-        begrunnelser: [],
-      },
-    },
-  },
+  data: [],
   status: STATUS.NOT_STARTED,
 };
+
+//{
+//  "referanse": "OFFENTLIGTJENESTEMANN",
+//  "avklartefaktaKode": "OFFENTLIGTJENESTEMANN",
+//  "fakta": ["TRUE"],
+//  "subjektID": null,
+//  "begrunnelseKoder": [],
+//  "begrunnelseFritekst": null
+//},
+
+const avklartefaktaTilObjekt = (avklartfakta, oppfylt, begrunnelseKoder, begrunnelseFritekst) => (
+  oppfylt === undefined ? null : {
+    avklartfakta,
+    oppfylt,
+    begrunnelseKoder: begrunnelseKoder || [],
+    begrunnelseFritekst: begrunnelseFritekst || null,
+  }
+);
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -90,6 +59,7 @@ export default function reducer(state = initialState, action) {
       };
     case Types.OPPDATER_AVKLARTEFAKTA: {
       const { dokument } = action;
+      console.log(dokument);
       const avklaring = {
         opphold: {
           land: dokument.avklartefaktaOppholdsLand,
