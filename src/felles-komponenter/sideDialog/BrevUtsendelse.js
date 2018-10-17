@@ -34,8 +34,8 @@ const InfoPanel = () => {
   );
 };
 
-class MangelBrev extends Component {
-  harFritext = () => {
+class BrevUtsendelse extends Component {
+  erMangelBrevMedFritekst = () => {
     const { mangelBrevSkjemaVerdier } = this.props;
     if (!mangelBrevSkjemaVerdier) return false;
     return mangelBrevSkjemaVerdier.dokumenttypeKode === '000074';
@@ -44,7 +44,7 @@ class MangelBrev extends Component {
   sendBrev = () => {
     const { mangelBrevSkjemaVerdier, opprettDokument } = this.props;
     const { fritekst, mottaker, dokumenttypeKode } = mangelBrevSkjemaVerdier;
-    if (this.harFritext()) {
+    if (this.erMangelBrevMedFritekst()) {
       const dokument = { fritekst, mottaker };
       opprettDokument(4, dokumenttypeKode, dokument);
     } else {
@@ -72,10 +72,10 @@ class MangelBrev extends Component {
             </Skjema.Select>
           </Nav.Row>
           <Nav.Row>
-            <InfoPanel />
+            {this.erMangelBrevMedFritekst() && <InfoPanel /> }
           </Nav.Row>
           <Nav.Row>
-            {this.harFritext() && <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
+            {this.erMangelBrevMedFritekst() && <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
             {dokumenter.location && <Link to={dokumenter.location} target="_blank" className="informasjon__dokumentlenke">Forhåndsvis brev</Link>}
           </Nav.Row>
           <Nav.Row>
@@ -91,7 +91,7 @@ class MangelBrev extends Component {
     );
   }
 }
-MangelBrev.propTypes = {
+BrevUtsendelse.propTypes = {
   resetMangelBrevForm: PT.func.isRequired,
   opprettDokument: PT.func.isRequired,
   resetDokument: PT.func.isRequired,
@@ -100,21 +100,21 @@ MangelBrev.propTypes = {
   mangelBrevSkjemaVerdier: PT.object,
   dokumenter: PT.object,
 };
-MangelBrev.defaultProps = {
+BrevUtsendelse.defaultProps = {
   mangelBrevSkjemaVerdier: {},
   dokumenter: {},
   representerer: [],
   dokumenttyper: [],
 };
 
-const MangelBrevForm = reduxForm({
+const BrevUtsendelseForm = reduxForm({
   form: 'mangelbrev',
   enableReinitialize: true,
   destroyOnUnmount: false,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) => Validering.Felles.byggValidering(values, props),
-})(MangelBrev);
+})(BrevUtsendelse);
 
 const mapStateToProps = state => ({
   mangelBrevSkjemaVerdier: formSelectors.MangelBrevFormSelector(state).values,
@@ -129,4 +129,4 @@ const mapDispatchToProps = dispatch => ({
   opprettDokument: (behandlingID, dokumenttypeKode, dokument) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, dokument)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(MangelBrevForm);
+export default connect(mapStateToProps, mapDispatchToProps)(BrevUtsendelseForm);
