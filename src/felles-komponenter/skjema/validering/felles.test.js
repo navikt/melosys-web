@@ -24,7 +24,7 @@ describe('Tester felles.js:', () => {
 
     test('returnerer false hvis ingen feilmeldinger', () => {
       const mockData1 = {};
-      const mockData2 = { form: {feilmeldinger: [] }}
+      const mockData2 = { form: {feilmeldinger: [] }};
       expect(Felles.inneholderFeilmeldinger(mockData1)).toBe(false);
       expect(Felles.inneholderFeilmeldinger(mockData2)).toBe(false);
     })
@@ -38,19 +38,6 @@ describe('Tester felles.js:', () => {
       };
 
       expect(Felles.byggValideringsObjekt(mockData)).toEqual(forventetData);
-    })
-  });
-
-  describe('forsokValidering', () => {
-    test('gjør ingenting dersom data ikke inneholder feil', () => {
-      const mockFunction = jest.spyOn(Felles, 'inneholderFeilmeldinger')
-      const mockData = { ...feilmeldingMock, form: { ...feilmeldingMock.form, feilmeldinger: [] } };
-
-      Felles.forsokValidering(mockData);
-
-      //Fixme: Får ikke spyOn til å fungere.
-
-      expect(Felles.inneholderFeilmeldinger).toBeCalled();
     })
   });
 

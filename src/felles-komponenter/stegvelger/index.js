@@ -100,11 +100,12 @@ class Stegvelger extends Component {
 
     const { behandlingID } = this.props.oppsummering;
 
-    this.setState({ aktivtStegNummer: nyttStegNummer });
-    await oppdaterAvklarteFaktaState(skjema);
-    await oppdaterVilkarState(skjema);
-    await lagreAvklartefaktaHandler();
-    await lagreVilkarHandler(behandlingID, vilkar);
+    this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
+      await oppdaterAvklarteFaktaState(skjema);
+      await oppdaterVilkarState(skjema);
+      await lagreAvklartefaktaHandler();
+      await lagreVilkarHandler(behandlingID, vilkar);
+    });
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
