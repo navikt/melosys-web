@@ -63,15 +63,15 @@ class Stegvelger extends Component {
     };
 
     const propsLight = {
+      arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
-      vilkar: props.vilkar,
+      begrunnelser: props.begrunnelser,
       saksopplysninger: props.saksopplysninger,
       inngang: props.inngang,
-      skjema: props.skjema,
       landkoder: props.landkoder,
-      arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
-      begrunnelser: props.begrunnelser,
       tilgjengeligeHandlers,
+      skjema: props.skjema,
+      vilkar: props.vilkar,
     };
 
     const stegVelger = new StegVelger(propsLight);
@@ -89,10 +89,10 @@ class Stegvelger extends Component {
    */
   tilSteg = async nyttStegNummer => {
     const {
+      avklartefakta,
       skjema,
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
-      lagreAvklartefaktaHandler,
       vilkar,
     } = this.props;
 
@@ -103,7 +103,7 @@ class Stegvelger extends Component {
     this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
       await oppdaterAvklarteFaktaState(skjema);
       await oppdaterVilkarState(skjema);
-      await lagreAvklartefaktaHandler();
+      await lagreVilkarHandler(behandlingID, avklartefakta);
       await lagreVilkarHandler(behandlingID, vilkar);
     });
   };
@@ -138,7 +138,6 @@ Stegvelger.propTypes = {
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   history: PT.object.isRequired,
-  lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreVedtakHandler: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk),
   inngang: PT.object,
