@@ -119,12 +119,26 @@ class Saksbehandling extends Component {
     this.setState({ oppfriskningBlokkererInnhold: false });
   };
 
+  hentBehandlingStatus = async () => {
+    const { sjekkSaksflytStatus } = this.props;
+    const { behandlingID } = this.props.oppsummering;
+    const saksflyt = await sjekkSaksflytStatus(behandlingID);
+
+    if (saksflyt && saksflyt.response) {
+      this.skjulOppfriskBekreftelse();
+    } else if (saksflyt.data === 'DONE') {
+      this.skjulOppfriskBekreftelse();
+      this.lastInnSaksopplysninger();
+    }
+  };
+
   /* eslint-disable */
   lagreOgLukk = () => { alert('Ikke implementert'); };
   /* eslint-enable */
 
   render() {
     const { oppsummering } = this.props;
+    const { blokkerInnholdMedOppfriskSpinner } = this;
 
     const oppfriskVenterDialog = this.state.oppfriskningBlokkererInnhold && (
       <div>
@@ -143,7 +157,9 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Saksopplysninger />
+              <Saksopplysninger
+                blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+              />
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering
@@ -162,7 +178,7 @@ class Saksbehandling extends Component {
           <DialogboksOppfriskSak
             bekreft={this.lagreSoknadOgOppfriskSaksopplysninger}
             avbryt={this.skjulOppfriskBekreftelse}
-            skjulDialog={this.navigerTilOversiktSide}
+            tilForsiden={this.navigerTilOversiktSide}
             oppdater={this.hentBehandlingStatus}
           />
         }
