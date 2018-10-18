@@ -78,7 +78,7 @@ class Spark extends Component {
       .then(response => {
         const {soeknadDokument = Mock.soeknadDokument, behandlingID} = response;
         const erNySoknad = response.soeknadDokument === undefined;
-        this.setState({soknad: {soeknadDokument, behandlingID, erNySoknad} });
+        this.setState({soknad: {soeknadDokument, behandlingID}, erNySoknad });
       })
       .catch(error => this.setState({soknad: { soeknadDokument: '', behandlingID: '', error } }));
   };
@@ -90,7 +90,7 @@ class Spark extends Component {
     Api.Soknader.send(bid, soknad)
       .then(response => {
         if(response.behandlingID){
-          this.setState({soknad: {...this.state.soknad, bleLagret: true}});
+          this.setState({soknad: {...this.state.soknad}, bleLagret: true});
         }
       })
   };
@@ -102,8 +102,8 @@ class Spark extends Component {
 
   render() {
     const { nyfagsak, oppgave } = this.props;
-    const soeknadDokument = this.state.soknad.soeknadDokument;
-    const { erNySoknad } = this.state.soknad;
+    const { soknad } = this.state;
+    const { erNySoknad } = this.state;
 
     const { error = {} } = this.state.soknad;
     const { message: feilmelding = ''} = error;
@@ -195,14 +195,14 @@ class Spark extends Component {
           Merk: Kun søknad fra siste behandling på fagsaken du velger blir hentet pr i dag.
           <div className="spark__resultatliste">
             {this.state.fagsaker.map(fagsak =>
-              (<button key={uuid()} onClick={() => console.log(this.hentFagsakOgSoknad(fagsak.saksnummer))}>Saksnummer {fagsak.saksnummer}</button>)
+              (<button key={uuid()} onClick={() => this.hentFagsakOgSoknad(fagsak.saksnummer)}>Saksnummer {fagsak.saksnummer}</button>)
             )}
           </div>
           <h2>3. Rediger direkte i JSON-treet nedenfor</h2>
           {erNySoknad && <p>Fant ingen eksisterende søknader på dette fødselsnummeret. Søknaden nedenfor er generert utifra en template.</p>}
           {!feilmelding && <JsonTree
-            data={this.state.soknad.soeknadDokument}
-            rootName="soeknadDokument"
+            data={this.state.soknad}
+            rootName="soknad"
             onFullyUpdate={this.updateSoknadJSON}
             editButtonElement={<button className="knapp__lagre">Lagre</button>}
             cancelButtonElement={<button className="knapp__avbryt">Avbryt</button>}
@@ -210,16 +210,16 @@ class Spark extends Component {
           <h2>4. Lagre søknaden</h2>
           <form onSubmit={this.soknadSubmit}>
             <label>behandlingID:</label>
-            <input type="text" name="behandlingID" value={this.state.soknad.behandlingID} />
+            <input type="text" name="behandlingID" value={this.state.soknad.behandlingID} disabled />
             <label>json:</label>
             <textarea
               name="soknadBody"
               className="spark__soknad__body"
-              value={JSON.stringify({soeknadDokument})}
+              value={JSON.stringify({...soknad})}
               onChange={() => {}}
             />
             <input type="submit" value="Lagre søknad" />
-            {this.state.soknad.bleLagret && <div className="spark__bekreftelse">✔ Søknaden er lagret!</div>}
+            {this.state.bleLagret && <div className="spark__bekreftelse">✔ Søknaden er lagret!</div>}
           </form>
           </div>}
         </div>
