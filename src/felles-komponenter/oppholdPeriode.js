@@ -45,7 +45,7 @@ const OppholdEndring = props => {
                 label="Til og med:"
                 value={oppholdUtlandNyTom}
                 onChange={event => vedFeltEndring('oppholdUtlandNyTom', event.target.value)}
-                onBlur={() => vedFeltFokutUt('oppholdUtlandNyFom')}
+                onBlur={() => vedFeltFokutUt('oppholdUtlandNyTom')}
               />
             </Nav.Column>
             <Nav.Column xs="12">
@@ -107,7 +107,7 @@ class OppholdPeriode extends Component {
 
   vedFeltFokutUt = feltNavn => {
     const verdi = this.state[feltNavn];
-    const vasketVerdi = feltNavn === 'oppholdtUtlandNyTom' || feltNavn === 'oppholdUtlandNyFom' ? vaskInputDato(verdi) : verdi;
+    const vasketVerdi = (feltNavn === 'oppholdUtlandNyFom' || feltNavn === 'oppholdUtlandNyTom') ? vaskInputDato(verdi) : verdi;
     this.setState({ [feltNavn]: vasketVerdi });
   };
 
