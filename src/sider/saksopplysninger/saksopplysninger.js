@@ -150,7 +150,7 @@ class Saksopplysninger extends Component {
 
 Saksopplysninger.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
-  avklartefakta: PT.object,
+  avklartefakta: PT.array.isRequired,
   handleSubmit: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
   inntekt: MPT.Inntekt,
@@ -173,7 +173,6 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   arbeidsgivereNorge: [],
-  avklartefakta: {},
   inntekt: {},
   medlemskap: {},
   oppsummering: {},
@@ -280,6 +279,9 @@ const mapStateToProps = state => ({
     avklartefaktaForretningsstedLand: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).land,
     avklartefaktaForretningsstedAntallArbeidsgivere: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).antallArbeidsgivere,
     avklartefaktaForretningsstedFordelingArbeidsgivere: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).fordelingArbeidsgivere,
+    avklarteFakta: {
+      oppholdsland: avklartefaktaSelectors.Oppholdsland(state),
+    },
     vilkar: {
       vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),
       vesentligVirksomhetBegrunnelser: (vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder),
