@@ -67,7 +67,7 @@ class Saksopplysninger extends Component {
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soeknadDokument: { ...this.props.soknad.soeknadDokument } };
     const avklaring = { avklaring: { ...this.props.avklartefakta } };
-    const { valid, sendSoknad, sendAvklartefakta } = this.props;
+    const { valid, sendSoknad } = this.props;
     if (valid) {
       await sendSoknad(bid, soknad);
       await sendAvklartefakta(bid, avklaring);
@@ -85,7 +85,7 @@ class Saksopplysninger extends Component {
   lagreAvklartefaktaHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const avklaring = { behandlingID: bid, avklaring: { ...this.props.avklartefakta } };
-    const { valid, sendAvklartefakta } = this.props;
+    const { valid } = this.props;
     if (valid) {
       await sendAvklartefakta(bid, avklaring);
     }
@@ -98,17 +98,13 @@ class Saksopplysninger extends Component {
     await oppdaterSoknad(soknadForm.values);
   };
 
-  hentBehandlingStatus = async () => {
-    const { sjekkSaksflytStatus } = this.props;
+  lagreSoknadOgOppfriskSaksopplysninger = async () => {
+    const { oppfriskSaksopplysninger, sendSoknad } = this.props;
     const { behandlingID } = this.props.oppsummering;
-    const saksflyt = await sjekkSaksflytStatus(behandlingID);
-
-    if (saksflyt && saksflyt.response) {
-      this.skjulOppfriskBekreftelse();
-    } else if (saksflyt.data === 'DONE') {
-      this.skjulOppfriskBekreftelse();
-      this.lastInnSaksopplysninger();
-    }
+    const { soknad } = this.props;
+    await sendSoknad(behandlingID, soknad);
+    await oppfriskSaksopplysninger(behandlingID);
+    this.props.blokkerInnholdMedOppfriskSpinner();
   };
 
   render () {
@@ -151,6 +147,7 @@ class Saksopplysninger extends Component {
 Saksopplysninger.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
   avklartefakta: PT.array.isRequired,
+  blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
   inntekt: MPT.Inntekt,

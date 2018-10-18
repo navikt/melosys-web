@@ -15,12 +15,11 @@ export function oppdaterSoknadState(dokument) {
   });
 }
 
-export function oppdaterPeriode(periode, begrunnelse) {
+export function oppdaterPeriode(periode) {
   return ({
     type: Types.OPPDATER_PERIODE,
     data: {
       oppholdsPeriode: periode,
-      oppholdsPeriodeEndringsBegrunnelse: begrunnelse,
     },
   });
 }

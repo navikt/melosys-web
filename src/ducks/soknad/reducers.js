@@ -129,7 +129,10 @@ export default function reducer(state = initialState, action) {
         ...state.data.soeknadDokument,
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
-          oppholdsPeriode,
+          oppholdsPeriode: {
+            fom: oppholdsPeriode.fom,
+            tom: oppholdsPeriode.tom,
+          },
         },
       };
 
