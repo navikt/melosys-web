@@ -31,8 +31,8 @@ export const AvklartefaktaSelector = createSelector(
 export const Oppholdsland = createSelector(
   state => AvklartefaktaSelector(state),
   state => soknadSelectors.OppholdsLandSelector(state),
-  (alleAvklartefakta, alleLandISoknaden) => {
-    const flettetAvklartefakta = alleLandISoknaden.map(enkeltLand => (
+  (alleAvklartefakta, alleLandISoknaden) => (
+    alleLandISoknaden.map(enkeltLand => (
       alleAvklartefakta.find(avklaring => avklaring.subjektID === enkeltLand) ||
         {
           ...avklartFaktaTemplate,
@@ -40,9 +40,16 @@ export const Oppholdsland = createSelector(
           subjektID: enkeltLand,
           fakta: ['TRUE'],
         }
-    ));
+    ))
+  )
+);
 
-    return flettetAvklartefakta;
+export const Sysselsetting = createSelector(
+  state => AvklartefaktaSelector(state),
+  alleAvklarteFakta => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === 'SYSSELSETTING');
+    if (!avklartFakta) return null;
+    return avklartFakta.fakta[0];
   }
 );
 
