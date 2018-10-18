@@ -185,7 +185,7 @@ class Saksbehandling extends Component {
           <DialogboksOppfriskSak
             bekreft={this.lagreSoknadOgOppfriskSaksopplysninger}
             avbryt={this.skjulOppfriskBekreftelse}
-            skjulDialog={this.navigerTilOversiktSide}
+            tilForsiden={this.navigerTilOversiktSide}
             oppdater={this.hentBehandlingStatus}
           />
         }
