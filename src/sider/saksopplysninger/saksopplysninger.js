@@ -67,7 +67,7 @@ class Saksopplysninger extends Component {
     const bid = this.props.oppsummering.behandlingID;
     const soknad = { soeknadDokument: { ...this.props.soknad.soeknadDokument } };
     const avklaring = { avklaring: { ...this.props.avklartefakta } };
-    const { valid, sendSoknad } = this.props;
+    const { valid, sendSoknad, sendAvklartefakta } = this.props;
     if (valid) {
       await sendSoknad(bid, soknad);
       await sendAvklartefakta(bid, avklaring);
@@ -85,7 +85,7 @@ class Saksopplysninger extends Component {
   lagreAvklartefaktaHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const avklaring = { behandlingID: bid, avklaring: { ...this.props.avklartefakta } };
-    const { valid } = this.props;
+    const { valid, sendAvklartefakta } = this.props;
     if (valid) {
       await sendAvklartefakta(bid, avklaring);
     }
