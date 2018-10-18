@@ -50,6 +50,13 @@ class Stegvelger extends Component {
     await sendVilkar(bid, vilkar);
   };
 
+  lagreAvklartefaktaHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const { avklartefakta } = this.props;
+    const { sendAvklartefakta } = this.props;
+    await sendAvklartefakta(bid, avklartefakta);
+  };
+
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
    *
@@ -97,15 +104,15 @@ class Stegvelger extends Component {
       vilkar,
     } = this.props;
 
-    const { lagreVilkarHandler } = this;
+    const { lagreVilkarHandler, lagreAvklartefaktaHandler } = this;
 
     const { behandlingID } = this.props.oppsummering;
 
     this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
       await oppdaterAvklarteFaktaState(skjema);
       await oppdaterVilkarState(skjema);
-      await lagreVilkarHandler(behandlingID, avklartefakta);
       await lagreVilkarHandler(behandlingID, vilkar);
+      await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
     });
   };
 
@@ -139,6 +146,7 @@ Stegvelger.propTypes = {
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
+  sendAvklarteFakta: PT.func.isRequired,
   history: PT.object.isRequired,
   lagreVedtakHandler: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk),

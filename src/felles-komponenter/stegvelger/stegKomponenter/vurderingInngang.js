@@ -28,7 +28,7 @@ const VurderingInngang = props => {
         </li>
       </ul>
       <FieldArray
-        name="oppholdsland"
+        name="avklartefakta.oppholdsland"
         component={OppholdsLandListe}
         avklartefakta={avklartefakta}
         oppholdBegrunnelser={oppholdBegrunnelser}
