@@ -11,7 +11,16 @@ import { getFormValues } from 'redux-form';
 
 import Regler from '../../regler';
 import { fagsakSelectors } from '../fagsaker/';
-import { VilkarSelector } from '../vilkar/selectors';
+import { soknadSelectors } from '../soknad';
+
+const avklartFaktaTemplate = {
+  referanse: '',
+  avklartefaktaKode: null,
+  fakta: [],
+  subjektID: '',
+  begrunnelseKoder: [],
+  begrunnelseFritekst: null,
+};
 
 // selector(s)
 export const AvklartefaktaSelector = createSelector(
@@ -20,10 +29,22 @@ export const AvklartefaktaSelector = createSelector(
 );
 
 export const Oppholdsland = createSelector(
-  state => VilkarSelector(state),
-  alleAvklartefakta => (alleAvklartefakta.filter(enkelt => enkelt.referanse === 'OPPHOLDSLAND') || [])
-);
+  state => AvklartefaktaSelector(state),
+  state => soknadSelectors.OppholdsLandSelector(state),
+  (alleAvklartefakta, alleLandISoknaden) => {
+    const flettetAvklartefakta = alleLandISoknaden.map(enkeltLand => (
+      alleAvklartefakta.find(avklaring => avklaring.subjektID === enkeltLand) ||
+        {
+          ...avklartFaktaTemplate,
+          referanse: 'OPPHOLDSLAND',
+          subjektID: enkeltLand,
+          fakta: ['TRUE'],
+        }
+    ));
 
+    return flettetAvklartefakta;
+  }
+);
 
 export const AvklartefaktaOppholdSelector = createSelector(
   state => AvklartefaktaSelector(state).opphold,

@@ -5,36 +5,25 @@
  * action types som sendes inn sammen med dataene.
  */
 
-import { formatterDatoTilISO } from '../../utils/dato';
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
-
-import { VurderingBostedslandTyper } from '../../felles-komponenter/stegvelger/stegKomponenter/vurderingBostedsland';
 
 const initialState = {
   data: [],
   status: STATUS.NOT_STARTED,
 };
 
-// {
-//  "referanse": "OFFENTLIGTJENESTEMANN",
-//  "avklartefaktaKode": "OFFENTLIGTJENESTEMANN",
-//  "fakta": ["TRUE"],
-//  "subjektID": null,
-//  "begrunnelseKoder": [],
-//  "begrunnelseFritekst": null
-// },
-
-const avklartefaktaTilObjekt = (avklartfakta, oppfylt, begrunnelseKoder, begrunnelseFritekst) => (
-  oppfylt === undefined ? null : {
-    referanse: avklartfakta,
-//  avklartefaktaKode: "OFFENTLIGTJENESTEMANN",
-//  fakta": ["TRUE"],
-//  subjektID": null,
-//  begrunnelseKoder": [],
-//  begrunnelseFritekst": null
+/* const avklartefaktaTilObjekt = (referanse, avklartefaktaKode, fakta, subjektID, begrunnelseKode, begrgunnelseFritekst) => (
+  fakta === undefined ? null : {
+    referanse,
+    avklartefaktaKode,
+    fakta: [fakta],
+    subjektID,
+    begrunnelseKoder: [begrunnelseKode],
+    begrunnelseFritekst: begrgunnelseFritekst,
   }
 );
+*/
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -51,12 +40,11 @@ export default function reducer(state = initialState, action) {
       };
     case Types.OPPDATER_AVKLARTEFAKTA: {
       const { dokument } = action;
-      console.log(dokument);
-      const avklarteFakta = [
-        avklartefaktaTilObjekt('OPPHOLDSLAND'),
+      const avklartefakta = [
+        ...dokument.avklartefakta.oppholdsland,
       ];
 
-      return { ...state, data: { ...state.data, avklaring: { ...avklarteFakta } } };
+      return { ...state, data: [...avklartefakta] };
     }
     default:
       return state;
