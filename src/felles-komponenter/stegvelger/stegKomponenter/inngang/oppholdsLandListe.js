@@ -75,7 +75,7 @@ class OppholdsLandListe extends Component {
       bekreftFjern, angreFjern, finnBegrunnelseVedKode, bekreftLeggTil, finnLandVedKode,
     } = this;
 
-    const alleOppholdsland = fields.getAll();
+    const alleOppholdsland = fields.getAll() || [];
     const alleGyldigeOppholdsland = alleOppholdsland.filter(opphold => opphold.erGyldig);
     const alleIkkeGyldigeOppholdsland = fields
       .getAll()

@@ -26,6 +26,7 @@ class Stegvelger extends Component {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
     this.props.hentVilkar(4);
+    this.props.hentAvklartefakta(4);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -132,11 +133,12 @@ class Stegvelger extends Component {
 
 Stegvelger.propTypes = {
   arbeidsgivereIPerioden: PT.array,
-  avklartefakta: PT.object,
+  avklartefakta: PT.array,
   begrunnelser: PT.object,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
+  hentAvklartefakta: PT.func.isRequired,
   history: PT.object.isRequired,
   lagreVedtakHandler: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk),
@@ -153,7 +155,7 @@ Stegvelger.propTypes = {
 
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
-  avklartefakta: {},
+  avklartefakta: [],
   begrunnelser: {},
   inngang: {},
   landkoder: [],
@@ -179,6 +181,8 @@ const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
+  hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
+  sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   lagreVedtakHandler: () => alert('lagrer vedtak, ikke implementert'),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),

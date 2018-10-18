@@ -11,12 +11,19 @@ import { getFormValues } from 'redux-form';
 
 import Regler from '../../regler';
 import { fagsakSelectors } from '../fagsaker/';
+import { VilkarSelector } from '../vilkar/selectors';
 
 // selector(s)
 export const AvklartefaktaSelector = createSelector(
-  state => (state.avklartefakta.data.avklaring ? state.avklartefakta.data.avklaring : {}),
-  avklartefakta => avklartefakta || {}
+  state => (state.avklartefakta.data ? state.avklartefakta.data : []),
+  avklartefakta => avklartefakta || []
 );
+
+export const Oppholdsland = createSelector(
+  state => VilkarSelector(state),
+  alleAvklartefakta => (alleAvklartefakta.filter(enkelt => enkelt.referanse === 'OPPHOLDSLAND') || [])
+);
+
 
 export const AvklartefaktaOppholdSelector = createSelector(
   state => AvklartefaktaSelector(state).opphold,
@@ -109,14 +116,6 @@ export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
 export const AvklartefaktaVurderingSelector = createSelector(
   state => AvklartefaktaSelector(state).vurdering,
   vurdering => vurdering || {}
-);
-
-export const AvklartefaktaValgteArbeidsgivereDetaljerSelector = createSelector(
-  state => AvklartefaktaValgteArbeidsgivereSelector(state) || [],
-  state => fagsakSelectors.OrganisasjonerSelector(state) || [],
-  (valgteArbeidsgivere, alleOrganisasjoner) => (
-    alleOrganisasjoner.filter(organisasjonen => valgteArbeidsgivere.includes(organisasjonen.orgnr))
-  )
 );
 
 /**
