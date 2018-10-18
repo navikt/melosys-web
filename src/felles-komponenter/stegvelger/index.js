@@ -146,7 +146,7 @@ Stegvelger.propTypes = {
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
-  sendAvklarteFakta: PT.func.isRequired,
+  sendAvklartefakta: PT.func.isRequired,
   history: PT.object.isRequired,
   lagreVedtakHandler: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk),

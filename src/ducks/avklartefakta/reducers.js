@@ -13,17 +13,22 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
-/* const avklartefaktaTilObjekt = (referanse, avklartefaktaKode, fakta, subjektID, begrunnelseKode, begrgunnelseFritekst) => (
-  fakta === undefined ? null : {
-    referanse,
-    avklartefaktaKode,
-    fakta: [fakta],
-    subjektID,
-    begrunnelseKoder: [begrunnelseKode],
-    begrunnelseFritekst: begrgunnelseFritekst,
+const avklartfaktaMal = {
+  referanse: null,
+  avklartefaktaKode: null,
+  fakta: [],
+  subjektID: null,
+  begrunnelseKoder: [],
+  begrunnelseFritekst: null,
+};
+
+const avklartSysselsetting = sysselsettingType => (
+  {
+    ...avklartfaktaMal,
+    referanse: 'SYSSELSETTING',
+    fakta: [sysselsettingType],
   }
 );
-*/
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -42,6 +47,7 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
       const avklartefakta = [
         ...dokument.avklartefakta.oppholdsland,
+        avklartSysselsetting(dokument.avklartefakta.sysselsetting),
       ];
 
       return { ...state, data: [...avklartefakta] };
