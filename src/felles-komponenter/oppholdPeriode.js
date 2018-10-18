@@ -111,12 +111,14 @@ class OppholdPeriode extends Component {
     this.setState({ [feltNavn]: vasketVerdi });
   };
 
-  oppdaterPeriode = async event => {
+  oppdaterPeriode = event => {
     event.preventDefault();
     const { oppholdUtlandNyFom, oppholdUtlandNyTom } = this.state;
     const periode = { fom: formatterDatoTilISO(oppholdUtlandNyFom), tom: formatterDatoTilISO(oppholdUtlandNyTom) };
     this.props.oppdaterPeriode(periode);
-    this.props.lagreSoknadOgOppfriskSaksopplysninger();
+    // Todo: Denne er hacky. Bakgrunn: oppdatert soknad rekker ikke å re-propagate til parent før
+    // funksjonen nedenfor kalles. Vurder å skrive om til en async await-aktig løsning.
+    setTimeout(() => this.props.lagreSoknadOgOppfriskSaksopplysninger(), 0);
   };
 
   avbryt = event => {
