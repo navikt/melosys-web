@@ -62,6 +62,15 @@ export const YrkesaktivitetAntallLand = createSelector(
   }
 );
 
+export const Yrkesaktivitet = createSelector(
+  state => AvklartefaktaSelector(state),
+  alleAvklarteFakta => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === 'YRKESAKTIVITET');
+    if (!avklartFakta) return null;
+    return avklartFakta.fakta[0];
+  }
+);
+
 export const AvklartefaktaOppholdSelector = createSelector(
   state => AvklartefaktaSelector(state).opphold,
   opphold => opphold || []

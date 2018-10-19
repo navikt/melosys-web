@@ -22,9 +22,7 @@ class Sysselsetting extends Steg {
     this._tittel = 'Aktivitet';
     this._komponent = VurderingSysselsetting;
     this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = () => ({
-      visSysselsettingType: true,
-    });
+    this._beregnRelevantUI = () => ({});
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
