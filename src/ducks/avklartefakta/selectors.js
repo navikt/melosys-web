@@ -71,6 +71,11 @@ export const Yrkesaktivitet = createSelector(
   }
 );
 
+export const ArbeidsgivereSelector = createSelector(
+  state => AvklartefaktaSelector(state),
+  alleAvklarteFakta => alleAvklarteFakta.filter(avklaring => avklaring.referanse === 'ARBEIDSGIVERE').map(enkeltFakta => (enkeltFakta.fakta[0])),
+);
+
 export const AvklartefaktaOppholdSelector = createSelector(
   state => AvklartefaktaSelector(state).opphold,
   opphold => opphold || []
