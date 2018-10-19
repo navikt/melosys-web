@@ -49,6 +49,7 @@ export default function reducer(state = initialState, action) {
         ...dokument.avklartefakta.oppholdsland,
         genererAvklaringsObjekt(dokument.avklartefakta.sysselsetting, 'SYSSELSETTING'),
         genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
+        genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
       ].filter(fakta => fakta !== null);
 
       return { ...state, data: [...avklartefakta] };
