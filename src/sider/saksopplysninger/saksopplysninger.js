@@ -279,6 +279,7 @@ const mapStateToProps = state => ({
     avklartefakta: {
       oppholdsland: avklartefaktaSelectors.Oppholdsland(state),
       sysselsetting: avklartefaktaSelectors.Sysselsetting(state),
+      yrkesaktivitetAntallLand: avklartefaktaSelectors.Sysselsetting(state),
     },
     vilkar: {
       vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),

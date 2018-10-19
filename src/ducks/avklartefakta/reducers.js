@@ -22,12 +22,12 @@ const avklartfaktaMal = {
   begrunnelseFritekst: null,
 };
 
-const avklartSysselsetting = sysselsettingType => (
-  {
+const genererAvklaringsObjekt = (avklartFakta, avklaringType) => (
+  avklartFakta ? {
     ...avklartfaktaMal,
-    referanse: 'SYSSELSETTING',
-    fakta: [sysselsettingType],
-  }
+    referanse: avklaringType,
+    fakta: [avklartFakta],
+  } : null
 );
 
 // Reducer
@@ -47,8 +47,9 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
       const avklartefakta = [
         ...dokument.avklartefakta.oppholdsland,
-        avklartSysselsetting(dokument.avklartefakta.sysselsetting),
-      ];
+        genererAvklaringsObjekt(dokument.avklartefakta.sysselsetting, 'SYSSELSETTING'),
+        genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
+      ].filter(fakta => fakta !== null);
 
       return { ...state, data: [...avklartefakta] };
     }
