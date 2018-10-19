@@ -97,8 +97,8 @@ export const ArbeidsgivereSelector = createSelector(
   state => AvklartefaktaSelector(state),
   state => ArbeidsgivereIPeriodenSelector(state),
   (alleAvklarteFakta, alleArbeidsgivere) => {
-    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === 'ARBEIDSGIVERE');
-    const returnObjekt = alleArbeidsgivere.map(arbeidsgiver => {
+    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === 'ARBEIDSGIVER');
+    return alleArbeidsgivere.map(arbeidsgiver => {
       const eksisterendeAvklaring = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.orgnr);
 
       return eksisterendeAvklaring || {
@@ -109,8 +109,6 @@ export const ArbeidsgivereSelector = createSelector(
         avklartFaktaKode: 'ARBEIDSGIVER', // TODO: Kode ikke avklart av arkitektur.
       };
     });
-
-    return returnObjekt;
   }
 );
 
