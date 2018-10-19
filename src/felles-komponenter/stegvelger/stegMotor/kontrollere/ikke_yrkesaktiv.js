@@ -9,7 +9,7 @@ class IkkeYrkesaktiv extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.BOSTEDSLAND,
+        nesteSteg: STEG.VEDTAK,
       },
     ];
     this._id = STEG.IKKE_YRKESAKTIV;
