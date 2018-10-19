@@ -22,7 +22,7 @@ export const ForretningsValideringSelector = createSelector(
   skjemaValidering => skjemaValidering.regler
 );
 
-export const MangelBrevFormSelector = createSelector(
+export const BrevBestillingFormSelector = createSelector(
   state => (state.form.brevbestilling ? state.form.brevbestilling : {}),
   brevbestilling => brevbestilling
 );

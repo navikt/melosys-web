@@ -37,15 +37,15 @@ const InfoPanel = () => {
 
 class BrevBestilling extends Component {
   erMangelBrevMedFritekst = () => {
-    const { mangelBrevSkjemaVerdier } = this.props;
-    if (!mangelBrevSkjemaVerdier) return false;
-    return mangelBrevSkjemaVerdier.dokumenttypeKode === '000074';
+    const { brevbestillingSkjemaVerdier } = this.props;
+    if (!brevbestillingSkjemaVerdier) return false;
+    return brevbestillingSkjemaVerdier.dokumenttypeKode === '000074';
   };
 
   sendBrev = () => {
-    const { mangelBrevSkjemaVerdier, opprettDokument, oppsummering } = this.props;
+    const { brevbestillingSkjemaVerdier, opprettDokument, oppsummering } = this.props;
     const { behandlingID } = oppsummering;
-    const { fritekst, mottaker, dokumenttypeKode } = mangelBrevSkjemaVerdier;
+    const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
     const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
     opprettDokument(behandlingID, dokumenttypeKode, dokument);
   };
@@ -97,12 +97,12 @@ BrevBestilling.propTypes = {
   resetDokument: PT.func.isRequired,
   representerer: PT.arrayOf(MPT.Kodeverk),
   dokumenttyper: PT.arrayOf(MPT.Kodeverk),
-  mangelBrevSkjemaVerdier: PT.object,
+  brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
   oppsummering: MPT.Oppsummering,
 };
 BrevBestilling.defaultProps = {
-  mangelBrevSkjemaVerdier: {},
+  brevbestillingSkjemaVerdier: {},
   dokumenter: {},
   representerer: [],
   dokumenttyper: [],
@@ -119,7 +119,7 @@ const BrevBestillingForm = reduxForm({
 })(BrevBestilling);
 
 const mapStateToProps = state => ({
-  mangelBrevSkjemaVerdier: formSelectors.MangelBrevFormSelector(state).values,
+  brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
   dokumenter: dokumenterSelectors.dokumenterSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   dokumenttyper: state.kodeverk.data.dokumenttyper,
