@@ -30,17 +30,6 @@ const genererAvklaringsObjekt = (avklartFakta, avklaringType) => (
   } : null
 );
 
-const genererAvlaringsObjekterForArbeidsgivere = avklartefakta => {
-  const returObjekt = avklartefakta.map(fakta => (
-    {
-      ...avklartfaktaMal,
-      fakta: [fakta],
-      referanse: 'ARBEIDSGIVERE',
-    }
-  ));
-  return returObjekt;
-}
-
 // Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -58,10 +47,10 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
       const avklartefakta = [
         ...dokument.avklartefakta.oppholdsland,
+        ...dokument.avklartefakta.arbeidsgivere,
         genererAvklaringsObjekt(dokument.avklartefakta.sysselsetting, 'SYSSELSETTING'),
         genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
         genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
-        ...genererAvlaringsObjekterForArbeidsgivere(dokument.avklartefakta.arbeidsgivere),
       ].filter(fakta => fakta !== null);
 
       return { ...state, data: [...avklartefakta] };
