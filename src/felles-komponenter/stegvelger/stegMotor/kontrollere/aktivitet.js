@@ -15,7 +15,7 @@ class Aktivitet extends Steg {
       {
         beskrivelse: 'sysselsettingType ER LIK "SELVSTENDIG" eller sysselsettingType ER LIK "ARBEIDSTAKER_OG_SELVSTENDIG"',
         exec: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG || sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG,
-        nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
+        nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
       {
         beskrivelse: 'sysselsettingType ER LIK "IKKE_YRKESAKTIV" eller sysselsettingType ER LIK "ARBEIDSTAKER_OG_SELVSTENDIG"',

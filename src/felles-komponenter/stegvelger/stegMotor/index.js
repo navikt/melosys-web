@@ -35,6 +35,11 @@ class StegVelger {
     return steget;
   };
 
+  /** Transformer uppercase ID til camelback. Feks YRKESAKTIVITET_ANTALL_LAND => YrkesaktivitetAntallLand.
+   *
+   * @param ID
+   * @returns {*}
+   */
   beregnStegKlasseFraID = ID => {
     const kontrollerNavn = ID
       .toLowerCase()

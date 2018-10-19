@@ -11,7 +11,7 @@ import Tjenestemann from './tjenestemann';
 import Artikkel12 from './artikkel12';
 import Virksomhet from './virksomhet';
 import VesentligVirksomhet from './vesentlig_virksomhet';
-import YrkesaktivitetFordeling from './yrkesaktivitet_fordeling';
+import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
 import Vedtak from './vedtak';
 
 
@@ -29,6 +29,6 @@ export {
   Artikkel12,
   Virksomhet,
   VesentligVirksomhet,
-  YrkesaktivitetFordeling,
+  YrkesaktivitetAntallLand,
   Vedtak,
 };
