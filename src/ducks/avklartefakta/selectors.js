@@ -1,5 +1,5 @@
 
-/**
+/*
  * Selectors
  * -----------------------------------------------------------------------------------------
  * Målet med selectorer er å samle funksjonalitet som behandler, itererer og omformer
@@ -13,6 +13,9 @@ import Regler from '../../regler';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 
+/* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
+ * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
+ */
 const avklartefaktaKoder = {
   OPPHOLDSLAND: 'OPPHOLDSLAND',
   SYSSELSETTING: 'SYSSELSETTING',
@@ -21,6 +24,9 @@ const avklartefaktaKoder = {
   ARBEIDSGIVER: 'ARBEIDSGIVER',
 };
 
+/* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
+ * hele enkeltvise avklartfakta og som sendes til backend.
+ */
 const avklartFaktaTemplate = {
   referanse: '',
   avklartefaktaKode: null,
@@ -30,12 +36,16 @@ const avklartFaktaTemplate = {
   begrunnelseFritekst: null,
 };
 
-// selector(s)
+/* Hovedselector for alle avklarte fakta. */
 export const AvklartefaktaSelector = createSelector(
   state => (state.avklartefakta.data ? state.avklartefakta.data : []),
   avklartefakta => avklartefakta || []
 );
 
+/* Oppholdsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
+ * territoriet som søkeren skal til faktisk er med i forordningen gjøres i avklartefakta.
+ * Derfor må både avklartefakta og soknad settes inn slik at disse kan flettes til avklart fakta.
+ */
 export const Oppholdsland = createSelector(
   state => AvklartefaktaSelector(state),
   state => soknadSelectors.OppholdsLandSelector(state),
@@ -52,6 +62,7 @@ export const Oppholdsland = createSelector(
   )
 );
 
+/* Avklart fakta om søker er yrkesaktiv, ytelsesmottaker etc. */
 export const Sysselsetting = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
@@ -61,6 +72,7 @@ export const Sysselsetting = createSelector(
   }
 );
 
+/* Avklart fakta om søkers yrkesaktivitet og antall land. */
 export const YrkesaktivitetAntallLand = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
@@ -70,6 +82,7 @@ export const YrkesaktivitetAntallLand = createSelector(
   }
 );
 
+/* Avklart fakta om søker er ordinær arbeidstaker, selvstendig næringsdrivende, begge deler eller tjenesteperson. */
 export const Yrkesaktivitet = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
@@ -79,9 +92,8 @@ export const Yrkesaktivitet = createSelector(
   }
 );
 
-/**
- * Kun arbeidsgivere med arbeidsforhold som tangerer innenfor perioden som er lagt inn i avklartefaktaen skal
- * vises i listen over valgbare arbeidsgivere i stegvelgeren (VurderingArbeidsgivere).
+/* Det er den juridiske arbeidsgiveren som skal vises i stegvelgeren. Derfor må vi traversere listen over arbeidsforhold
+ * og merge inn organisasjoner slik at det er der den juridiske organisasjonens navn som vises i panelet.
  */
 export const ArbeidsgivereIPeriodenSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
@@ -101,6 +113,10 @@ export const ArbeidsgivereIPeriodenSelector = createSelector(
   }
 );
 
+/* Det er kun arbeidsgivere som saksbehandler har krysset av som skal være med videre som grunnlag
+ * for vurderingen. Alle arbeidsgivere som ikke er krysset av skal automatisk markeres som om de ikke er med videre
+ * dvs "FALSE" som fakta.
+ */
 export const ArbeidsgivereSelector = createSelector(
   state => AvklartefaktaSelector(state),
   state => ArbeidsgivereIPeriodenSelector(state),
