@@ -15,6 +15,7 @@ import { KodeverkSelectors } from '../../ducks/kodeverk/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
+import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
 
 import './stegvelger.css';
@@ -49,6 +50,12 @@ class Stegvelger extends Component {
     await sendVilkar(bid, vilkar);
   };
 
+  lagreVedtakHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const { lagreVedtak } = this.props;
+    await lagreVedtak(bid);
+  };
+
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
    *
@@ -58,7 +65,7 @@ class Stegvelger extends Component {
   oppdaterAktuelleSteg = props => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
-      lagreVedtakHandler: this.props.lagreVedtakHandler,
+      lagreVedtakHandler: this.lagreVedtakHandler,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
     };
 
@@ -93,6 +100,7 @@ class Stegvelger extends Component {
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
       lagreAvklartefaktaHandler,
+      lagreSoknadHandler,
       vilkar,
     } = this.props;
 
@@ -100,11 +108,16 @@ class Stegvelger extends Component {
 
     const { behandlingID } = this.props.oppsummering;
 
+
     this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
       await oppdaterAvklarteFaktaState(skjema);
       await oppdaterVilkarState(skjema);
       await lagreAvklartefaktaHandler();
       await lagreVilkarHandler(behandlingID, vilkar);
+
+      if (this.erSisteSteg(nyttStegNummer)) {
+        await lagreSoknadHandler();
+      }
     });
   };
 
@@ -113,10 +126,14 @@ class Stegvelger extends Component {
    * enn hva som er mulig skal funksjonen defaulte til det aktive stegnummeret.
    */
   beregnNesteSteg = () => {
-    const maksSteg = this.state.aktuelleSteg.length;
     const { aktivtStegNummer } = this.state;
-    return (aktivtStegNummer + 1 < maksSteg) ? aktivtStegNummer + 1 : aktivtStegNummer;
+    return this.erSisteSteg(aktivtStegNummer) ? aktivtStegNummer : aktivtStegNummer + 1;
   };
+
+  erSisteSteg(stegNummer) {
+    const maksSteg = this.state.aktuelleSteg.length - 1;
+    return stegNummer >= maksSteg;
+  }
 
   render() {
     return (
@@ -139,7 +156,8 @@ Stegvelger.propTypes = {
   sendVilkar: PT.func.isRequired,
   history: PT.object.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
-  lagreVedtakHandler: PT.func.isRequired,
+  lagreVedtak: PT.func.isRequired,
+  lagreSoknadHandler: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk),
   inngang: PT.object,
   match: PT.object.isRequired,
@@ -180,7 +198,7 @@ const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  lagreVedtakHandler: () => alert('lagrer vedtak, ikke implementert'),
+  lagreVedtak: behandlingID => dispatch(vedtakOperations.lagre(behandlingID, '{}')),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),

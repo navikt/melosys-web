@@ -65,23 +65,15 @@ class Saksopplysninger extends Component {
     }
   }
 
-  fattVedtakHandler = async () => {
+  lagreSoknadHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
-    const soknad = { soeknadDokument: { ...this.props.soknad.soeknadDokument } };
-    const avklaring = { avklaring: { ...this.props.avklartefakta } };
-    const { valid, sendSoknad } = this.props;
+    const { valid, sendSoknad, soknad } = this.props;
     if (valid) {
       await sendSoknad(bid, soknad);
     }
   };
 
   lagreVurderingHandler = async () => {};
-
-  lagreVedtakHandler = async () => {
-    /* eslint-disable */
-    alert('Ikke implementert');
-    /* eslint-enable */
-  };
 
   lagreAvklartefaktaHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
@@ -127,8 +119,8 @@ class Saksopplysninger extends Component {
     return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
         <Stegvelger
-          lagreVedtakHandler={this.lagreVedtakHandler}
           lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
+          lagreSoknadHandler={this.lagreSoknadHandler}
         />
         {person && <Personopplysninger person={person} />}
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
