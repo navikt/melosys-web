@@ -33,6 +33,7 @@ import { formSelectors } from '../ducks/form/';
 import './journalforing.css';
 import { OrganisasjonOperations } from '../ducks/organisasjon';
 import { PersonOperations } from '../ducks/person';
+import * as oppgaverOperations from '../ducks/oppgaver/operations';
 
 const queryParamLogger = (journalpostID, oppgaveID, location) => {
   const qsParsed = qs.parse(location.search.slice(1));
@@ -59,6 +60,7 @@ class Journalforing extends Component {
     history: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
     hentFagsakListe: PT.func.isRequired,
+    hentOppgaver: PT.func.isRequired,
     tilordneSak: PT.func.isRequired,
     opprettNySak: PT.func.isRequired,
     settFeltInnhold: PT.func.isRequired,
@@ -174,6 +176,7 @@ class Journalforing extends Component {
 
     const response = await tilordneSak(journalforingData);
     if (response.ok) {
+      this.props.hentOppgaver();
       history.push('/');
     }
   };
@@ -183,7 +186,6 @@ class Journalforing extends Component {
    * @returns {boolean}
    */
   opprettFagsak = async () => {
-    /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
@@ -219,6 +221,7 @@ class Journalforing extends Component {
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
+      this.props.hentOppgaver();
       history.push('/');
     }
   };
@@ -370,6 +373,7 @@ const mapDispatchToProps = dispatch => ({
   settFeilFelt: (...feltNavn) => (setSubmitFailed('journalforing', ...feltNavn)),
   settJournalforingHensikt: journalforingHensikt => dispatch(change('journalforing', 'journalforingHensikt', journalforingHensikt)),
   opprettNySak: data => Api.Journalforing.opprett(data),
+  hentOppgaver: () => dispatch(oppgaverOperations.hent()),
   tilordneSak: data => Api.Journalforing.tilordne(data),
   sokFnrDnr: fnr => PersonOperations.hent(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
