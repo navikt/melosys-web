@@ -1,4 +1,4 @@
-import StegVelger from './index';
+import StegMotor from './index';
 
 describe('Tester stegVelger', () => {
   test('stegvelger', () => {
@@ -49,8 +49,8 @@ describe('Tester stegVelger', () => {
       },
     };
 
-    const _stegvelger = new StegVelger(avklartefakta);
+    const _stegvelger = new StegMotor(avklartefakta);
 
-    expect(typeof StegVelger).toBe('function');
+    expect(typeof StegMotor).toBe('function');
   });
 });

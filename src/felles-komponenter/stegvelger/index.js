@@ -8,7 +8,7 @@ import * as MPT from '../../proptypes/';
 
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
-import StegVelger from './stegMotor';
+import StegMotor from './stegMotor';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { KodeverkSelectors } from '../../ducks/kodeverk/';
@@ -30,9 +30,7 @@ class Stegvelger extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (Object.keys(nextProps.avklartefakta).length > 0) {
-      this.oppdaterAktuelleSteg(nextProps);
-    }
+    this.oppdaterAktuelleSteg(nextProps);
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
@@ -82,8 +80,8 @@ class Stegvelger extends Component {
       vilkar: props.vilkar,
     };
 
-    const stegVelger = new StegVelger(propsLight);
-    const aktuelleSteg = stegVelger.beregnAlleSteg();
+    const stegMotor = new StegMotor(propsLight);
+    const aktuelleSteg = stegMotor.beregnAlleSteg();
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
 

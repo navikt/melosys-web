@@ -1,6 +1,6 @@
 import * as Kontrollere from './kontrollere';
 
-class StegVelger {
+class StegMotor {
   constructor(props) {
     this._propsLight = props;
     this._forsteStegID = 'INNGANG';
@@ -31,8 +31,7 @@ class StegVelger {
 
   lagKlasseBasertPaID = (stegID, stegPosisjon) => {
     const StegKlasse = this.beregnStegKlasseFraID(stegID);
-    const steget = new StegKlasse(this._propsLight, stegPosisjon);
-    return steget;
+    return new StegKlasse(this._propsLight, stegPosisjon);
   };
 
   /** Transformer uppercase ID til camelback. Feks YRKESAKTIVITET_ANTALL_LAND => YrkesaktivitetAntallLand.
@@ -50,4 +49,4 @@ class StegVelger {
   }
 }
 
-export default StegVelger;
+export default StegMotor;

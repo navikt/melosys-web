@@ -13,6 +13,14 @@ import Regler from '../../regler';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 
+const avklartefaktaKoder = {
+  OPPHOLDSLAND: 'OPPHOLDSLAND',
+  SYSSELSETTING: 'SYSSELSETTING',
+  YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
+  YRKESAKTIVITET: 'YRKESAKTIVITET',
+  ARBEIDSGIVER: 'ARBEIDSGIVER',
+};
+
 const avklartFaktaTemplate = {
   referanse: '',
   avklartefaktaKode: null,
@@ -36,7 +44,7 @@ export const Oppholdsland = createSelector(
       alleAvklartefakta.find(avklaring => avklaring.subjektID === enkeltLand) ||
         {
           ...avklartFaktaTemplate,
-          referanse: 'OPPHOLDSLAND',
+          referanse: avklartefaktaKoder.OPPHOLDSLAND,
           subjektID: enkeltLand,
           fakta: ['TRUE'],
         }
@@ -47,7 +55,7 @@ export const Oppholdsland = createSelector(
 export const Sysselsetting = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === 'SYSSELSETTING');
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.SYSSELSETTING);
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
@@ -56,7 +64,7 @@ export const Sysselsetting = createSelector(
 export const YrkesaktivitetAntallLand = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === 'YRKESAKTIVITET_ANTALL_LAND');
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND);
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
@@ -65,7 +73,7 @@ export const YrkesaktivitetAntallLand = createSelector(
 export const Yrkesaktivitet = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === 'YRKESAKTIVITET');
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.YRKESAKTIVITET);
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
@@ -97,16 +105,16 @@ export const ArbeidsgivereSelector = createSelector(
   state => AvklartefaktaSelector(state),
   state => ArbeidsgivereIPeriodenSelector(state),
   (alleAvklarteFakta, alleArbeidsgivere) => {
-    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === 'ARBEIDSGIVER');
+    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === avklartefaktaKoder.ARBEIDSGIVER);
     return alleArbeidsgivere.map(arbeidsgiver => {
       const eksisterendeAvklaring = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.orgnr);
 
       return eksisterendeAvklaring || {
         ...avklartFaktaTemplate,
-        referanse: 'ARBEIDSGIVER',
+        referanse: avklartefaktaKoder.ARBEIDSGIVER,
         fakta: ['FALSE'],
         subjektID: arbeidsgiver.orgnr,
-        avklartFaktaKode: 'ARBEIDSGIVER', // TODO: Kode ikke avklart av arkitektur.
+        avklartFaktaKode: avklartefaktaKoder.ARBEIDSGIVER, // TODO: Kode ikke avklart av arkitektur.
       };
     });
   }
@@ -125,11 +133,6 @@ export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
 export const AvklartefaktaLovvalgKodeSelector = createSelector(
   state => AvklartefaktaSelector(state).vurdering || {},
   vurdering => (vurdering.lovvalgKode ? vurdering.lovvalgKode : '')
-);
-
-export const AvklartefaktaOppholdPeriodeSelector = createSelector(
-  state => AvklartefaktaOppholdSelector(state),
-  oppholdet => (oppholdet.periode ? oppholdet.periode : {})
 );
 
 export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
