@@ -2,7 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingVedtak from '../../stegKomponenter/vurderingVedtak';
 
-class Virksomhet extends Steg {
+class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
@@ -24,4 +24,4 @@ class Virksomhet extends Steg {
   }
 }
 
-export default Virksomhet;
+export default Vedtak;
