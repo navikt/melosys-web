@@ -1,0 +1,27 @@
+import Steg from '../steg';
+import { FANE_STATUS, STEG } from '../typer';
+import VurderingVedtak from '../../stegKomponenter/vurderingVedtak';
+
+class Vedtak extends Steg {
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
+    this._kriterier = [
+      {
+        beskrivelse: 'alle valg',
+        exec: () => true,
+        nesteSteg: false,
+      },
+    ];
+    this._id = STEG.VEDTAK;
+    this._tittel = 'Vedtak';
+    this._komponent = VurderingVedtak;
+    this._samleRelevanteData = () => ({});
+    this._beregnRelevantUI = () => ({});
+    this._handlers = {
+      lagreVedtakHandler: this._propsLight.tilgjengeligeHandlers.lagreVedtakHandler,
+    };
+    this._status = FANE_STATUS.OK;
+  }
+}
+
+export default Vedtak;
