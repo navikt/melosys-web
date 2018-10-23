@@ -14,7 +14,7 @@ const hentDokument = (journalforingID, dokumentID) => getAsJson(pdfURI(journalfo
  */
 const lagPdfUtkast = (behandlingID, dokumenttypeKode, data) => {
   const URI_DOKUMENT_UTKAST = `${API_BASE_URL}dokumenter/utkast/pdf/${behandlingID}/${dokumenttypeKode}`;
-  return postAsJson(URI_DOKUMENT_UTKAST, data);
+  return postAsJson(URI_DOKUMENT_UTKAST, data, true);
 };
 
 /**

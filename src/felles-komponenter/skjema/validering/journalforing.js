@@ -1,11 +1,10 @@
-import * as Person from './generisk/person';
-import * as Organisasjon from './generisk/organisasjon';
 import * as Dato from './generisk/dato';
 import * as Konstanter from '../../../constants';
-
+import * as Mikrovalidering from './mikrovalidering';
 /** Mikrovalidering pr hendelse. Dette gjør at vi kan både kan spisse tekstlig tilbakemelding
  * og validere på tvers av verdier.
  */
+/*
 const idErBlank = verdi => ((verdi === '') && 'Skriv inn fnr eller dnr.');
 const navnAvsenderErBlank = verdi => ((verdi === '' || verdi === undefined) && 'Skriv inn navn på avsender.');
 const idErIkkeNummer = verdi => (!(new RegExp(/^\d+$/).test(verdi)) && 'Skriv inn kun nummer.');
@@ -22,7 +21,7 @@ const idFinnesIkke = (navn, id) => {
   }
   return null;
 };
-
+*/
 const dokumentTittelErBlank = dokumentTittel => (dokumentTittel.length === 0 ? 'Velg dokumenttittel fra listen eller skriv din egen.' : false);
 const eksisterendeSakIkkeValgt = saksnummer => (!saksnummer ? 'Velg hvilken sak du ønsker å knytte journalføringen mot.' : false);
 const datoErIkkeGyldig = dato => (!Dato.datoErGyldig(dato) ? 'Skriv inn en gyldig dato' : false);
@@ -35,23 +34,23 @@ const landErIkkeValgt = (landListe = []) => (landListe.length === 0 ? 'Velg mins
  */
 const journalforingGenerellValidering = verdier => {
   const brukerID = (
-    idErBlank(verdier.brukerID) ||
-    idErIkkeNummer(verdier.brukerID) ||
-    idErIkkeFnrEllerDnr(verdier.brukerID) ||
-    idFinnesIkke(verdier.brukerNavn, verdier.brukerID) ||
+    Mikrovalidering.idErBlank(verdier.brukerID) ||
+    Mikrovalidering.idErIkkeNummer(verdier.brukerID) ||
+    Mikrovalidering.idErIkkeFnrEllerDnr(verdier.brukerID) ||
+    Mikrovalidering.idFinnesIkke(verdier.brukerNavn, verdier.brukerID) ||
     false
   );
 
   const avsenderID = (
-    !verdier.erBrukerAvsender && !idErBlank(verdier.avsenderID) &&
-    (idErIkkeNummer(verdier.avsenderID) ||
-    idErIkkeFnrEllerDnrEllerOrgnr(verdier.avsenderID) ||
-    idFinnesIkke(verdier.avsenderNavn, verdier.avsenderID) ||
+    !verdier.erBrukerAvsender && !Mikrovalidering.idErBlank(verdier.avsenderID) &&
+    (Mikrovalidering.idErIkkeNummer(verdier.avsenderID) ||
+      Mikrovalidering.idErIkkeFnrEllerDnrEllerOrgnr(verdier.avsenderID) ||
+      Mikrovalidering.idFinnesIkke(verdier.avsenderNavn, verdier.avsenderID) ||
     false)
   );
 
   const avsenderNavn = (
-    navnAvsenderErBlank(verdier.avsenderNavn) || false
+    Mikrovalidering.navnAvsenderErBlank(verdier.avsenderNavn) || false
   );
 
   const dokumentTittel = dokumentTittelErBlank(verdier.dokumentTittel) || false;
@@ -96,9 +95,9 @@ const journalforingOpprettSakValidering = verdier => {
   );
 
   const representantID = (
-    !idErBlank(verdier.representantID) && (
-      idErIkkeOrgnr(verdier.representantID) ||
-      idFinnesIkke(verdier.representantNavn, verdier.representantID)
+    !Mikrovalidering.idErBlank(verdier.representantID) && (
+      Mikrovalidering.idErIkkeOrgnr(verdier.representantID) ||
+      Mikrovalidering.idFinnesIkke(verdier.representantNavn, verdier.representantID)
      || false)
   );
 
