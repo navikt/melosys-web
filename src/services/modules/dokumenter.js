@@ -1,8 +1,38 @@
+import { getAsJson, postAsJson } from '../utils';
 import { API_BASE_URL } from '../api-constants';
 
 // eslint-disable-next-line import/prefer-default-export
-export function pdfURI(journalforingID, dokumentID) {
-  const URI_DOKUMENT_PDF = `${API_BASE_URL}dokumenter/pdf/${journalforingID}/${dokumentID}`;
-  return URI_DOKUMENT_PDF;
-}
+const pdfURI = (journalforingID, dokumentID) => (`${API_BASE_URL}dokumenter/pdf/${journalforingID}/${dokumentID}`);
 
+const hentDokument = (journalforingID, dokumentID) => getAsJson(pdfURI(journalforingID, dokumentID));
+/**
+ * Lag pdfUtkast henter pdf dokument basert på :behandligID og :dokumentytpekode
+ * @param behandlingID
+ * @param dokumenttypeKode
+ * @param data
+ * @returns {Promise<*>} PDF dokument
+ */
+const lagPdfUtkast = (behandlingID, dokumenttypeKode, data) => {
+  const URI_DOKUMENT_UTKAST = `${API_BASE_URL}dokumenter/utkast/pdf/${behandlingID}/${dokumenttypeKode}`;
+  return postAsJson(URI_DOKUMENT_UTKAST, data);
+};
+
+/**
+ * opprettDokument gjør oppslag DocProd med :behandlingID og :dokumenttypeKode
+ * @param behandlingID
+ * @param dokumenttypeKode see kodeverk#dokumenttyper
+ * @param data
+ * @returns {Promise<*>} med {location: `/dokumenter/pdf/${journalforingID}/${dokumentID}`}
+ * Retur objektet benyttes til å kalle
+ */
+const opprettDokument = (behandlingID, dokumenttypeKode, data) => {
+  const URI_DOKUMENT_OPPRETT = `${API_BASE_URL}dokumenter/opprett/${behandlingID}/${dokumenttypeKode}`;
+  const extendedResponse = true;
+  return postAsJson(URI_DOKUMENT_OPPRETT, data, extendedResponse);
+};
+export {
+  pdfURI,
+  hentDokument,
+  lagPdfUtkast,
+  opprettDokument,
+};

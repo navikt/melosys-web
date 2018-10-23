@@ -15,7 +15,7 @@ import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import BostedsAdresse from './adresser/bostedsAdresse';
 import LandVelger from './skjema/landvelger';
 
-import UtenlandskID from './personopplysninger/utenlandskID';
+import UtenlandskIdent from './personopplysninger/utenlandskIdent';
 import MedfolgendeFamilie from './personopplysninger/medfolgendeFamilie';
 import MedfolgendeAndre from './personopplysninger/medfolgendeAndre';
 
@@ -53,7 +53,6 @@ PersonMerkelapper.defaultProps = {
 
 function Personopplysninger(props) {
   const { person } = props;
-  if (!person) return null;
 
   const {
     fnr,
@@ -68,6 +67,8 @@ function Personopplysninger(props) {
     erEgenAnsatt,
     familiemedlemmer,
   } = person;
+
+  if (Object.keys(person).length === 0) { return null; }
 
   return (
     <div className="personopplysninger panelSeksjon">
@@ -92,7 +93,7 @@ function Personopplysninger(props) {
               </dl>
             </Nav.Column>
             <Nav.Column xs="6">
-              <UtenlandskID />
+              <UtenlandskIdent />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="person__seksjon">

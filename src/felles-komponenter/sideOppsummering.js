@@ -15,7 +15,7 @@ function SideOppsummering(props) {
 
   const {
     saksnummer,
-    type,
+    sakstype,
     status,
     registrertDato,
   } = oppsummering;
@@ -44,7 +44,7 @@ function SideOppsummering(props) {
         {/* END BEHANDLINGSMENY */}
         <Nav.Row>
           <Nav.Column xs="12" md="6">
-            <Nav.Undertittel className="soknadSammendrag__header">Søknad om {kodeverkObjektTilTerm(type)}</Nav.Undertittel>
+            <Nav.Undertittel className="soknadSammendrag__header">Søknad om {kodeverkObjektTilTerm(sakstype)}</Nav.Undertittel>
           </Nav.Column>
         </Nav.Row>
         {/* START BEHANDLINGSSTATUS */}

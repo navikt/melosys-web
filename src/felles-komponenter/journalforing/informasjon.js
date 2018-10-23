@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
 
+import * as Utils from '../../utils/utils';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
@@ -25,17 +26,19 @@ import './informasjon.css';
  */
 class Informasjon extends Component {
   state = { spinner: {} };
-
-  componentDidMount() {
-    this.oppdaterFelter(this.props, true);
+  async componentDidMount() {
+    await this.oppdaterFelter(this.props, true);
   }
 
-  componentDidUpdate(prevProps) {
-    this.oppdaterFelter(prevProps);
+  async componentDidUpdate(prevProps) {
+    await this.oppdaterFelter(prevProps);
   }
-
-  oppdaterFelter = (props, tvingOppdatering) => {
-    const { brukerID: gammelBrukerID, avsenderID: gammelAvsenderID, erBrukerAvsender: gammelErBrukerAvsender } = props.journalforingSkjemaVerdier;
+  oppdaterFelter = async (props, tvingOppdatering) => {
+    const {
+      brukerID: gammelBrukerID,
+      avsenderID: gammelAvsenderID,
+      erBrukerAvsender: gammelErBrukerAvsender,
+    } = props.journalforingSkjemaVerdier;
     const {
       brukerID = '', avsenderID = '', erBrukerAvsender, brukerNavn,
     } = this.props.journalforingSkjemaVerdier;
@@ -43,11 +46,11 @@ class Informasjon extends Component {
     const { kopierBrukerTilAvsender, tomAvsender } = this;
 
     if ((gammelBrukerID !== brukerID) || tvingOppdatering) {
-      hentOgVisBruker(brukerID);
+      await hentOgVisBruker(brukerID);
     }
 
     if ((gammelAvsenderID !== avsenderID) || tvingOppdatering) {
-      hentOgVisAvsender(avsenderID);
+      await hentOgVisAvsender(avsenderID);
     }
 
     if ((gammelErBrukerAvsender !== erBrukerAvsender) || tvingOppdatering) {
@@ -85,7 +88,7 @@ class Informasjon extends Component {
     const { erBrukerAvsender } = this.props.journalforingSkjemaVerdier;
 
     if (Person.erGyldigFnr(verdi)) {
-      this.toggleSpinner('brukerNavn');
+      await this.spinner('brukerNavn');
       const response = await hentOgVisBruker(verdi);
       if (!response) return;
       const { brukerID, sammensattNavn } = response;
@@ -96,37 +99,36 @@ class Informasjon extends Component {
     }
   };
 
-  sjekkAvsender = verdi => {
+  sjekkAvsender = async verdi => {
     const { erGyldigAvsenderID } = this;
     const { settFeltInnhold, hentOgVisAvsender } = this.props;
 
     if (erGyldigAvsenderID(verdi)) {
-      this.toggleSpinner('avsenderNavn');
-      hentOgVisAvsender(verdi);
+      await this.spinner('avsenderNavn');
+      await hentOgVisAvsender(verdi);
     } else {
-      settFeltInnhold('avsenderNavn', '');
+      await settFeltInnhold('avsenderNavn', '');
     }
   };
-
-  IDFeltTastOppHandler = event => {
+  IDFeltTastOppHandler = async event => {
     const { id: opprinneligFeltID, value } = event.target;
 
-    if (opprinneligFeltID === 'brukerID') { this.sjekkBruker(value); }
-    if (opprinneligFeltID === 'avsenderID') { this.sjekkAvsender(value); }
+    if (opprinneligFeltID === 'brukerID') { await this.sjekkBruker(value); }
+    if (opprinneligFeltID === 'avsenderID') { await this.sjekkAvsender(value); }
   };
 
+  toggleSpinn = (navn, spin) => ({ spinner: { ...this.state.spinner, [navn]: spin } });
   /** Toggle spinneren av og på. Når spinner skjules, sett en timeout på 500ms.
    * Dette sikrer at spinneren ikke bare flasher dersom kallet til API går raskt. Dataene vises.
    * umiddelbart fra payload, men spinneren har en levetid på minimum 500 ms som gir brukeren
    * tid til å tolke grensesnittet, dvs spinneren.
    * @param navn {String} Navnet på spinneren
+   * @param ms {Number} antall millisekunder
    */
-  toggleSpinner = navn => {
-    this.setState({ spinner: { ...this.state.spinner, [navn]: true } });
-
-    setTimeout(() => {
-      this.setState({ spinner: { ...this.state.spinner, [navn]: false } });
-    }, 1000);
+  spinner = async (navn, ms = 1000) => {
+    this.setState(this.toggleSpinn(navn, true));
+    await Utils.delay(ms);
+    this.setState(this.toggleSpinn(navn, false));
   };
 
   /** Noen felter skal disables dersom andre felter er fylt inn eller andre
@@ -148,7 +150,10 @@ class Informasjon extends Component {
     const {
       valgbareDokumentTitler, valgbareVedleggsTitler, journalpostID, dokumentID,
     } = this.props;
-    const { spinner: { brukerNavn: visBrukerSpinner }, spinner: { avsenderNavn: visAvsenderSpinner } } = this.state;
+    const {
+      spinner: { brukerNavn: visBrukerSpinner },
+      spinner: { avsenderNavn: visAvsenderSpinner },
+    } = this.state;
     const { skalFeltetDisables } = this;
 
     const dokumentURI = Api.Dokumenter.pdfURI(journalpostID, dokumentID);

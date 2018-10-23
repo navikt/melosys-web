@@ -14,3 +14,12 @@ export function oppdaterSoknadState(dokument) {
     dokument,
   });
 }
+
+export function oppdaterPeriode(periode) {
+  return ({
+    type: Types.OPPDATER_PERIODE,
+    data: {
+      oppholdsPeriode: periode,
+    },
+  });
+}
