@@ -11,7 +11,7 @@ import OppholdsLandListe from './inngang/oppholdsLandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, alleLandKoder, begrunnelser,
+    bekreftOgFortsett, inngangsvilkar, alleLandKoder, begrunnelser, avklartefakta,
   } = props;
   const { vurdering } = inngangsvilkar;
   const { opphold: oppholdBegrunnelser } = begrunnelser;
@@ -28,8 +28,9 @@ const VurderingInngang = props => {
         </li>
       </ul>
       <FieldArray
-        name="avklartefaktaOppholdsLand"
+        name="avklartefakta.oppholdsland"
         component={OppholdsLandListe}
+        avklartefakta={avklartefakta}
         oppholdBegrunnelser={oppholdBegrunnelser}
         alleLandKoder={alleLandKoder}
       />
@@ -42,7 +43,7 @@ const VurderingInngang = props => {
 
 VurderingInngang.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  avklartefakta: PT.object.isRequired,
+  avklartefakta: PT.array.isRequired,
   alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
   inngangsvilkar: PT.shape({

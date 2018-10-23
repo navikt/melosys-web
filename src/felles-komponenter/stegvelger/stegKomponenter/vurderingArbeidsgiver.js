@@ -48,34 +48,42 @@ class ArbeidsgivereListe extends Component {
   arbeidsgiverKlikkHandler = orgnr => {
     const { fields } = this.props;
     const alleOpprinneligValgte = fields.getAll() || [];
+    const indexPosition = alleOpprinneligValgte.findIndex(enkeltFakta => enkeltFakta.subjektID === orgnr);
+    const avklartfakta = { ...alleOpprinneligValgte[indexPosition] };
 
-    const indexPosition = alleOpprinneligValgte.findIndex(valgt => valgt === orgnr);
+    const arbeidsgiverErValgt = avklartfakta.fakta.includes('TRUE') ? 'FALSE' : 'TRUE';
+    fields.push({ ...avklartfakta, fakta: [arbeidsgiverErValgt] });
+
     return indexPosition >= 0 ? fields.remove(indexPosition) : fields.push(orgnr);
   };
 
   render() {
     const { fields, arbeidsgivereIPerioden } = this.props;
-    const valgteArbeidsgivere = fields.getAll();
+    const alleAvklartefakta = fields.getAll();
 
-    const ingenArbeidsgivereVarsel = arbeidsgivereIPerioden.length === 0 && (
+    const ingenArbeidsgivereVarsel = alleAvklartefakta.length === 0 && (
       <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere hvor søker har arbeidsforhold innenfor den angitte søknadsperioden.</Nav.AlertStripe>
     );
 
     return (
       <div>
-        {arbeidsgivereIPerioden.map(arbeidsgiveren => (
-          <Field
+        {arbeidsgivereIPerioden.map(arbeidsgiveren => {
+          const avklartfaktaForArbeidsgiver = alleAvklartefakta.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidsgiveren.orgnr);
+          const arbeidsGiverErValgt = avklartfaktaForArbeidsgiver.fakta.includes('TRUE');
+
+          return <Field
             key={uuid()}
             name="avklartefaktaValgteArbeidsgiver"
             type="text"
             component={linjeProps => <ArbeidsgiverLinje
               {...linjeProps}
               arbeidsgiveren={arbeidsgiveren}
-              erValgt={valgteArbeidsgivere ? valgteArbeidsgivere.includes(arbeidsgiveren.orgnr) : false}
+              erValgt={arbeidsGiverErValgt}
               arbeidsgiverKlikkHandler={this.arbeidsgiverKlikkHandler}
             />}
-          />
-        ))}
+          />;
+        })
+        }
         {ingenArbeidsgivereVarsel}
       </div>
     );
@@ -104,7 +112,7 @@ const VurderingArbeidsgiver = props => {
     <div className="vurderingArbeidsgiver">
       <Nav.Undertittel>Velg arbeidsgiver, oppdragsgiver eller selvstendig næringsvirksomhet:</Nav.Undertittel>
       <div className="arbeidsgiver">
-        <FieldArray name="avklartefaktaValgteArbeidsgivere" component={arrayProps => <ArbeidsgivereListe {...arrayProps} arbeidsgivereIPerioden={arbeidsgivereIPerioden} />} />
+        <FieldArray name="avklartefakta.arbeidsgivere" component={arrayProps => <ArbeidsgivereListe {...arrayProps} arbeidsgivereIPerioden={arbeidsgivereIPerioden} />} />
         <div className="fane__knapplinje">
           <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>

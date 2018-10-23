@@ -1,31 +1,14 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitet, { VurderingYrkesaktivitetTyper } from '../../stegKomponenter/vurderingYrkesaktivitet';
-import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
 
 class Yrkesaktivitet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'ansattISektor ER LIK "OFFENTLIG"',
-        exec: ({ ansattISektor }) => ansattISektor === VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER,
-        nesteSteg: STEG.TJENESTEMANN,
-      },
-      {
-        beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV" OG ansattISektor ER LIK "SOKKEL"',
-        exec: ({ sysselsettingType, ansattISektor }) => (
-          sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
-          ansattISektor === VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG
-        ),
-        nesteSteg: STEG.AKTIVITET,
-      },
-      {
-        beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV"',
-        exec: ({ sysselsettingType, yrkesaktivitetType }) => (
-          sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV &&
-          yrkesaktivitetType === VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER
-        ),
+        beskrivelse: 'yrkesaktivitet ER LIK "ORDINAER_ARBEIDSTAKER"',
+        exec: avklartefakta => Yrkesaktivitet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER),
         nesteSteg: STEG.FORUTGAENDE_MEDLEMSKAP,
       },
       {
@@ -38,13 +21,17 @@ class Yrkesaktivitet extends Steg {
     this._tittel = 'Yrkes-aktivitet';
     this._komponent = VurderingYrkesaktivitet;
     this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = () => ({
-      visAnsattISektor: true,
-    });
+    this._beregnRelevantUI = () => ({});
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
+  }
+
+  static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESAKTIVITET);
+    if (!enkeltFakta) { return false; }
+    return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   }
 }
 

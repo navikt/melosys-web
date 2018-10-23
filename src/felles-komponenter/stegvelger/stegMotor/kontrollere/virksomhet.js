@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingVirksomhet, { VurderingVirksomhetTyper } from '../../stegKomponenter/vurderingVirksomhet';
-import { VurderingYrkesaktivitetFordelingTyper } from '../../stegKomponenter/vurderingYrkesaktivitetFordeling';
+import { VurderingYrkesaktivitetAntallLandTyper } from '../../stegKomponenter/vurderingYrkesaktivitetAntallLand';
 import { VurderingYrkesaktivitetTyper } from '../../stegKomponenter/vurderingYrkesaktivitet';
 import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
 
@@ -16,7 +16,7 @@ class Virksomhet extends Steg {
         }) => (
           sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
           ansattISektor === VurderingYrkesaktivitetTyper.INGEN_AV_DISSE &&
-          antallLand === VurderingYrkesaktivitetFordelingTyper.TO_ELLER_FLERE_LAND &&
+          antallLand === VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND &&
           aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
         ),
         nesteSteg: STEG.BOSTEDSLAND,
@@ -25,7 +25,7 @@ class Virksomhet extends Steg {
         beskrivelse: 'sysselsettingType ER LIK "SELVSTENDIG" OG ENTEN antallLand ER LIK "TO_ELLER_FLERE_LAND"',
         exec: ({ sysselsettingType, antallLand }) => (
           sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
-          antallLand === VurderingYrkesaktivitetFordelingTyper.TO_ELLER_FLERE_LAND
+          antallLand === VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND
         ),
         nesteSteg: STEG.BOSTEDSLAND,
       },

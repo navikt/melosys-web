@@ -18,9 +18,9 @@ class Inngang extends Steg {
     this._komponent = VurderingInngang;
     this._samleRelevanteData = props => ({
       inngangsvilkar: props.inngang,
-      avklartefakta: props.avklartefakta,
       begrunnelser: props.begrunnelser,
       alleLandKoder: props.landkoder,
+      avklartefakta: props.avklartefakta,
     });
     this._beregnRelevantUI = () => ({});
     this._handlers = {
