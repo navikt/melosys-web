@@ -28,7 +28,7 @@ export function send(bid, dokument) {
   });
 }
 
-export function oppdaterAvklartefaktaState(skjema) {
+export function oppdaterAvklarteFaktaState(skjema) {
   return dispatch => (dispatch(Actions.oppdaterAvklartefaktaState(skjema)));
 }
 

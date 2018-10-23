@@ -50,6 +50,11 @@ export const OppholdUtlandSelector = createSelector(
   oppholdUtland => oppholdUtland || {}
 );
 
+export const OppholdsLandSelector = createSelector(
+  state => OppholdUtlandSelector(state),
+  oppholdUtland => oppholdUtland.oppholdslandKoder || []
+);
+
 export const OppholdUtlandPeriodeSelector = createSelector(
   state => OppholdUtlandSelector(state),
   oppholdUtland => {

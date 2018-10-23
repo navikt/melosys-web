@@ -49,33 +49,33 @@ ListevelgerValgtElement.defaultProps = {
  * For hvert nye valg legges dette til som en FieldArray i Redux Form.
  */
 class ListevelgerFlervalg extends Component {
-  state = { inputVerdi: '', feilmelding: '' }
+  state = { inputVerdi: '', feilmelding: '' };
 
   vedEndring = event => {
     this.setState({ inputVerdi: event.target.value, feilmelding: '' });
-  }
+  };
 
   vedTastNed = event => {
     if (event.key === 'Enter') { this.leggValgTilListe(event); }
-  }
+  };
 
   kodeTilVerdi = kode => {
     const { muligeValg = [] } = this.props;
     const valgtKodeverkObjekt = muligeValg.find(item => kodeverkObjektTilKode(item) === kode);
     return valgtKodeverkObjekt && kodeverkObjektTilTerm(valgtKodeverkObjekt);
-  }
+  };
 
   verdiTilKode = verdi => {
     const { muligeValg = [] } = this.props;
     const valgtKodeverkObjekt = muligeValg.find(item => kodeverkObjektTilTerm(item) === verdi);
     return valgtKodeverkObjekt && kodeverkObjektTilKode(valgtKodeverkObjekt);
-  }
+  };
 
   erAlleredeLagtTil = verdi => {
     const { fields, tillatFritekst } = this.props;
-    const alleValg = fields.getAll();
+    const alleValg = fields.getAll() || [];
     return !tillatFritekst && alleValg.some(valg => valg === verdi);
-  }
+  };
 
   leggValgTilListe = e => {
     e.preventDefault();
@@ -98,18 +98,18 @@ class ListevelgerFlervalg extends Component {
     }
 
     return true;
-  }
+  };
 
   slettValgFraListe = index => {
     const { fields } = this.props;
     fields.remove(index);
-  }
+  };
 
   oppdaterEksisterendeValg = (verdi, index) => {
     const { fields } = this.props;
     fields.remove(index);
     fields.insert(index, verdi);
-  }
+  };
 
   byggValgtRedigerbartElement = (verdi, index) => (
     <ListevelgerValgtElement
@@ -139,7 +139,7 @@ class ListevelgerFlervalg extends Component {
       const lesbarVerdi = tillatFritekst ? verdi : this.kodeTilVerdi(verdi);
       return tillatFritekst ? byggValgtRedigerbartElement(verdi, index) : byggValgtElement(lesbarVerdi, index);
     });
-  }
+  };
 
   byggFeilmelding = () => {
     const { error } = this.props.meta;
@@ -147,7 +147,7 @@ class ListevelgerFlervalg extends Component {
     const feilmeldingTekst = error || feilmelding;
 
     return feilmeldingTekst ? { feilmelding: feilmeldingTekst } : null;
-  }
+  };
 
   render() {
     const {

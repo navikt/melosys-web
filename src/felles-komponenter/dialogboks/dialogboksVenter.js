@@ -19,14 +19,14 @@ class DialogboksVenter extends Component {
     clearInterval(this.timer);
   }
 
-  oppdateringintervall = 1000;
+  oppdateringintervall = 10000;
   timeoutTid = 30000;
 
   sjekkForTimeout = () => {
     this.setState({ tid: this.state.tid + this.oppdateringintervall });
 
     if (this.state.tid >= this.timeoutTid) {
-      this.props.tilForsiden();
+      if (this.props.tilForsiden) { this.props.tilForsiden(); }
     } else {
       this.props.oppdater();
     }
