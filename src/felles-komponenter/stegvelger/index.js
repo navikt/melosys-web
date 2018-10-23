@@ -106,7 +106,6 @@ class Stegvelger extends Component {
       skjema,
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
-      lagreAvklartefaktaHandler,
       lagreSoknadHandler,
       vilkar,
     } = this.props;
