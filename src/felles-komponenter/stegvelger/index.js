@@ -26,8 +26,10 @@ class Stegvelger extends Component {
   componentWillMount() {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
-    this.props.hentVilkar(4);
-    this.props.hentAvklartefakta(4);
+
+    const bid = this.props.oppsummering.behandlingID;
+    this.props.hentVilkar(bid);
+    this.props.hentAvklartefakta(bid);
   }
 
   componentWillReceiveProps(nextProps) {
