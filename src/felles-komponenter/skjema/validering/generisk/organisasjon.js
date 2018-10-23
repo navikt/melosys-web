@@ -15,7 +15,7 @@ const erOrgnrGyldig = verdi => {
       return samling + (enkeltSiffer * vektSiffer);
     }, 0);
 
-  let Q1 = (11 - sumForMod % 11);
+  let Q1 = (11 - (sumForMod % 11));
   if (Q1 === 11) { Q1 = 0; }
 
   return (parseInt(verdi.charAt(8), 10) === Q1);

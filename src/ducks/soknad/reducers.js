@@ -17,91 +17,6 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
-const soknadTemplate =
-  {
-    arbeidUtland: [],
-    foretakUtland: [],
-    oppholdUtland: {
-      oppholdsland: undefined,
-      oppholdsPeriode: { fom: undefined, tom: undefined },
-      sammeAdresseSomArbeidsgiver: undefined,
-      ektefelleEllerBarn: undefined,
-      forutgaendeBostedINorge: undefined,
-      studentSemester: undefined,
-      studentFinansiering: undefined,
-      studieLand: undefined,
-    },
-    bosted: {
-      oppgittAdresse: undefined,
-      intensjonOmRetur: undefined,
-      antallMaanederINorge: undefined,
-      EOSBarnetrygdFraNAV: undefined,
-    },
-    arbeidNorge: {
-      valgteArbeidsforhold: [],
-      arbeidsforholdOpprettholdIHelePerioden: undefined,
-      selvstendigFortsetterEtterArbeidIUtlandet: undefined,
-      brukerErSelvstendigNaeringsdrivende: undefined,
-      arbeidsforholdVikarNavn: undefined,
-      vikarOrgnr: undefined,
-      flyendePersonellHjemmebase: undefined,
-      ansattPaSokkelEllerSkip: undefined,
-      navnSkipEllerSokkel: undefined,
-      sokkelLand: undefined,
-      skipFartsomrade: undefined,
-      skipFlaggLand: undefined,
-      kontaktNavn: undefined,
-      kontaktEpost: undefined,
-      fullmektigFirma: undefined,
-      fullmektigGateadresse: undefined,
-      fullmektigPostnr: undefined,
-      fullmektigPoststed: undefined,
-      fullmektigRegion: undefined,
-      fullmektigLandKode: undefined,
-    },
-    juridiskArbeidsgiverNorge: {
-      erBemanningsbyra: undefined,
-      utsendteNeste12Mnd: undefined,
-      antallAdmAnsatte: undefined,
-      antallAdminAnsatteEOS: undefined,
-      andelOmsetningINorge: undefined,
-      andelKontrakterINorge: undefined,
-      utsendtFortsetterArbeidsforholdIUtlandet: undefined,
-      utsendtArbeiderMedKlienter: undefined,
-      utsendtArbeiderMedKontrakter: undefined,
-    },
-    arbeidsinntekt: {
-      inntektNorskIPerioden: undefined,
-      inntektUtenlandskIPerioden: undefined,
-      inntektNaeringIPerioden: undefined,
-      inntektNaturalYtelser: [],
-      inntektErInnrapporteringspliktig: undefined,
-      inntektTrygdeavgiftBlirTrukket: undefined,
-    },
-    arbeidsgiversBekreftelse: {
-      arbeidsgiverBekrefterUtsendelse: undefined,
-      arbeidstakerAnsattUnderUtsendelsen: undefined,
-      erstatterArbeidstakerenUtsendte: undefined,
-      arbeidstakerTidligereUtsendt24Mnd: undefined,
-      arbeidsgiverBetalerArbeidsgiveravgift: undefined,
-      trygdeavgiftTrukketGjennomSkatt: undefined,
-      trygdeavgiftTrukketGjennomSkattDato: undefined,
-    },
-    personOpplysninger: {
-      utenlandskIdent: undefined,
-      medfolgendeFamilie: undefined,
-      medfolgendeAndre: undefined,
-    },
-    maritimtArbeid: {
-      maritimType: undefined,
-      skipsNavn: undefined,
-      fartsomrade: undefined,
-      flaggLand: undefined,
-      installasjonsLand: undefined,
-    },
-  };
-
-
 // Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -111,10 +26,6 @@ export default function reducer(state = initialState, action) {
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.OK: {
       const soknadData = action.data;
-
-      if (!soknadData.soeknadDokument) {
-        soknadData.soeknadDokument = { ...soknadTemplate };
-      }
 
       return {
         ...state,
@@ -129,7 +40,10 @@ export default function reducer(state = initialState, action) {
         ...state.data.soeknadDokument,
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
-          oppholdsPeriode,
+          oppholdsPeriode: {
+            fom: oppholdsPeriode.fom,
+            tom: oppholdsPeriode.tom,
+          },
         },
       };
 
@@ -185,8 +99,8 @@ export default function reducer(state = initialState, action) {
           },
           oppholdslandKoder: dokument.oppholdsland,
           sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
-          ektefelleEllerBarnINorge: dokument.harEktefelleEllerBarnINorge,
-          forutgaendeBostedINorge: dokument.harForutgaendeBostedINorge,
+          ektefelleEllerBarnINorge: dokument.ektefelleEllerBarnINorge,
+          forutgaendeBostedINorge: dokument.forutgaendeBostedINorge,
           studentSemester: dokument.studentSemester,
           studieLandKode: dokument.studieLand,
           studentFinansiering: dokument.studentFinansiering,

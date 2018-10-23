@@ -30,7 +30,6 @@ export const feltGrupper = {
   },
   bosted: {
     intensjonOmRetur: [],
-    bostedUtenforNorge: [],
     familiesBosted: [],
   },
   bekreftelser: {

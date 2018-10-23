@@ -99,8 +99,7 @@ const journalforingOpprettSakValidering = verdier => {
     !idErBlank(verdier.representantID) && (
       idErIkkeOrgnr(verdier.representantID) ||
       idFinnesIkke(verdier.representantNavn, verdier.representantID)
-    ) ||
-    false
+     || false)
   );
 
   const journalforingOppholdsLand = (landErIkkeValgt(verdier.journalforingOppholdsLand) ? { _error: landErIkkeValgt(verdier.journalforingOppholdsLand) } : false);

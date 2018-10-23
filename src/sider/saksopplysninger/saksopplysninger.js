@@ -18,7 +18,7 @@ import OppholdPeriode from '../../felles-komponenter/oppholdPeriode';
 import Personopplysninger from '../../felles-komponenter/personopplysninger';
 import SelvstendigArbeid from '../../felles-komponenter/selvstendigArbeid';
 import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgiver';
-import Vilkarsveileder from '../../felles-komponenter/vilkarsveileder/vilkarsveileder';
+import Stegvelger from '../../felles-komponenter/stegvelger';
 import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
 
 import {
@@ -40,13 +40,11 @@ import {
   avklartefaktaSelectors,
 } from '../../ducks/avklartefakta/';
 
-import { vurderingSelectors } from '../../ducks/vurdering/';
+import { vilkarSelectors } from '../../ducks/vilkar/';
 
 import { formSelectors } from '../../ducks/form/';
 
 import { formatterDatoTilNorsk } from '../../utils/dato';
-
-/* eslint no-unused-vars: off */
 
 class Saksopplysninger extends Component {
   state = {
@@ -65,53 +63,30 @@ class Saksopplysninger extends Component {
     }
   }
 
-  fattVedtakHandler = async () => {
+  lagreSoknadHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
-    const soknad = { soeknadDokument: { ...this.props.soknad.soeknadDokument } };
-    const avklaring = { avklaring: { ...this.props.avklartefakta } };
-    const { valid, sendSoknad, sendAvklartefakta } = this.props;
+    const {
+      valid, sendSoknad, soknad,
+    } = this.props;
     if (valid) {
       await sendSoknad(bid, soknad);
-      // await sendAvklartefakta(bid, avklaring);
-    }
-  };
-
-  lagreVurderingHandler = async () => {};
-
-  lagreVedtakHandler = async () => {
-    /* eslint-disable */
-    alert('Ikke implementert');
-    /* eslint-enable */
-  };
-
-  lagreAvklartefaktaHandler = async () => {
-    const bid = this.props.oppsummering.behandlingID;
-    const avklaring = { behandlingID: bid, avklaring: { ...this.props.avklartefakta } };
-    const { valid, sendAvklartefakta } = this.props;
-    if (valid) {
-      // await sendAvklartefakta(bid, avklaring);
     }
   };
 
   overstyrSubmit = async event => {
     event.preventDefault();
 
-    const { oppdaterSoknad, oppdaterAvklartefakta, soknadForm } = this.props;
+    const { oppdaterSoknad, soknadForm } = this.props;
     await oppdaterSoknad(soknadForm.values);
-    await oppdaterAvklartefakta(soknadForm.values);
   };
 
-  hentBehandlingStatus = async () => {
-    const { sjekkSaksflytStatus } = this.props;
+  lagreSoknadOgOppfriskSaksopplysninger = async () => {
+    const { oppfriskSaksopplysninger, sendSoknad } = this.props;
     const { behandlingID } = this.props.oppsummering;
-    const saksflyt = await sjekkSaksflytStatus(behandlingID);
-
-    if (saksflyt && saksflyt.response) {
-      this.skjulOppfriskBekreftelse();
-    } else if (saksflyt.data === 'DONE') {
-      this.skjulOppfriskBekreftelse();
-      this.lastInnSaksopplysninger();
-    }
+    const { soknad } = this.props;
+    await sendSoknad(behandlingID, soknad);
+    await oppfriskSaksopplysninger(behandlingID);
+    this.props.blokkerInnholdMedOppfriskSpinner();
   };
 
   render () {
@@ -131,10 +106,9 @@ class Saksopplysninger extends Component {
 
     return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
-        <Vilkarsveileder
+        <Stegvelger
           lagreVedtakHandler={this.lagreVedtakHandler}
-          lagreVurderingHandler={this.lagreVurderingHandler}
-          lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
+          lagreSoknadHandler={this.lagreSoknadHandler}
         />
         {person && <Personopplysninger person={person} />}
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
@@ -155,7 +129,8 @@ class Saksopplysninger extends Component {
 
 Saksopplysninger.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
-  avklartefakta: PT.object,
+  avklartefakta: PT.array.isRequired,
+  blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
   inntekt: MPT.Inntekt,
@@ -178,7 +153,6 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   arbeidsgivereNorge: [],
-  avklartefakta: {},
   inntekt: {},
   medlemskap: {},
   oppsummering: {},
@@ -189,16 +163,16 @@ Saksopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   saksflyt: saksflytSelectors.SaksflytSelector(state),
   person: fagsakSelectors.PersonSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
-  vurdering: vurderingSelectors.VurderingSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
-  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
+  vilkar: vilkarSelectors.VilkarSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
@@ -235,7 +209,7 @@ const mapStateToProps = state => ({
     forutgaendeBostedINorge: soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge,
     arbeidUtland: soknadSelectors.ArbeidUtlandSelector(state),
     sammeAdresseSomArbeidsgiver: soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver,
-    ektefelleEllerBarnINorge: soknadSelectors.OppholdUtlandSelector(state).harEktefelleEllerBarnINorge,
+    ektefelleEllerBarnINorge: soknadSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
     studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLandKode,
     erSelvstendig: soknadSelectors.SelvstendigArbeidSelector(state).erSelvstendig,
@@ -260,35 +234,26 @@ const mapStateToProps = state => ({
     fullmektigPoststed: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
     fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandKode,
-    avklartefaktaBostedLand: avklartefaktaSelectors.AvklartefaktaBostedSelector(state).bostedLand,
-    avklartefaktaBostedBegrunnelser: avklartefaktaSelectors.AvklartefaktaBostedSelector(state).bostedBegrunnelser,
-    avklartefaktaBostedNorgeUtland: avklartefaktaSelectors.AvklartefaktaBostedNorgeUtlandSelector(state),
-    avklartefaktaOppholdsLand: avklartefaktaSelectors.AvklartefaktaOppholdSelector(state).land,
-    avklartefaktaPeriodeFraOgMed: formatterDatoTilNorsk(avklartefaktaSelectors.AvklartefaktaOppholdPeriodeSelector(state).fom),
-    avklartefaktaPeriodeTilOgMed: formatterDatoTilNorsk(avklartefaktaSelectors.AvklartefaktaOppholdPeriodeSelector(state).tom),
-    avklartefaktaSysselsettingType: avklartefaktaSelectors.AvklartefaktaSysselsettingSelector(state).sysselsettingType,
-    avklartefaktaIkkeYrkesaktivType: avklartefaktaSelectors.AvklartefaktaIkkeYrkesaktivSelector(state).ikkeYrkesaktivType,
-    avklartefaktaAnsattINorskSelskap: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).ansattINorskSelskap,
-    avklartefaktaErstatterTidligereUtsendt: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).erstatterTidligereUtsendt,
-    avklartefaktaUtsendingMindreEnn24Mnd: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).utsendingMindreEnn24Mnd,
-    avklartefaktaForetakDriverINorge: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).foretakDriverINorge,
-    avklartefaktaHarForutgaendeMedlemskap: avklartefaktaSelectors.AvklartefaktaForutgaendeMedlemskapSelector(state).harForutgaendeMedlemskap,
-    avklartefaktaForutgaendeMedlemskapBegrunnelser: avklartefaktaSelectors.AvklartefaktaForutgaendeMedlemskapSelector(state).forutgaendeMedlemskapBegrunnelser,
-    avklartefaktaArbeidKnyttetTilVirksomhetUtlandet: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).arbeidKnyttetTilVirksomhetUtlandet,
-    avklartefaktaSammeTypeVirksomhet: avklartefaktaSelectors.AvklartefaktaUtsendingSelector(state).sammeTypeVirksomhet,
-    avklartefaktaYrkesaktivitetType: avklartefaktaSelectors.AvklartefaktaYrkesaktivitetSelector(state).yrkesaktivitetType,
-    avklartefaktaAntallLand: avklartefaktaSelectors.AvklartefaktaYrkesaktivitetFordelingSelector(state).antallLand,
-    avklartefaktaAktivitetINorge: avklartefaktaSelectors.AvklartefaktaVirksomhetSelector(state).aktivitetINorge,
-    avklartefaktaMarginaltArbeid: avklartefaktaSelectors.AvklartefaktaVirksomhetSelector(state).marginaltArbeid,
-    avklartefaktaVekslingMellomLand: avklartefaktaSelectors.AvklartefaktaVirksomhetSelector(state).vekslingMellomLand,
-    avklartefaktaAktivitetLand: avklartefaktaSelectors.AvklartefaktaAktivitetSelector(state).aktivitetLand,
-    avklartefaktaTjenestemann: avklartefaktaSelectors.AvklartefaktaTjenestemannSelector(state).tjenestemann,
     avklartefaktaValgteArbeidsgivere: avklartefaktaSelectors.AvklartefaktaValgteArbeidsgivereSelector(state),
-    avklartefaktaVesentligVirksomhetINorge: (avklartefaktaSelectors.AvklartefaktaVesentligVirksomhetSelector(state).vesentligVirksomhetINorge),
-    avklartefaktaVesentligVirksomhetBegrunnelser: avklartefaktaSelectors.AvklartefaktaVesentligVirksomhetSelector(state).vesentligVirksomhetBegrunnelser,
-    avklartefaktaForretningsstedLand: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).land,
-    avklartefaktaForretningsstedAntallArbeidsgivere: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).antallArbeidsgivere,
-    avklartefaktaForretningsstedFordelingArbeidsgivere: avklartefaktaSelectors.AvklartefaktaForretningsstedSelector(state).fordelingArbeidsgivere,
+    avklartefakta: {
+      oppholdsland: avklartefaktaSelectors.Oppholdsland(state),
+      sysselsetting: avklartefaktaSelectors.Sysselsetting(state),
+      yrkesaktivitetAntallLand: avklartefaktaSelectors.YrkesaktivitetAntallLand(state),
+      yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
+      arbeidsgivere: avklartefaktaSelectors.ArbeidsgivereSelector(state),
+    },
+    vilkar: {
+      vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),
+      vesentligVirksomhetBegrunnelser: (vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder),
+      forutgaendeMedlemskap: (vilkarSelectors.forutgaendeMedlemskap(state).oppfylt),
+      forutgaendeMedlemskapBegrunnelser: (vilkarSelectors.forutgaendeMedlemskap(state).begrunnelseKoder),
+      bosattINorge: (vilkarSelectors.bosattINorge(state).oppfylt),
+      bosattINorgeBegrunnelser: (vilkarSelectors.bosattINorge(state).begrunnelseKoder),
+      art12_1: vilkarSelectors.art12_1(state).oppfylt,
+      art12_1_begrunnelser: vilkarSelectors.art12_1(state).begrunnelseKoder,
+      art16_1: vilkarSelectors.art16_1(state).oppfylt,
+      art16_1_begrunnelser: vilkarSelectors.art16_1(state).begrunnelseKoder,
+    },
     vurderingLovvalg: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
     vurderingBegrunnelser: avklartefaktaSelectors.AvklartefaktaVurderingSelector(state).begrunnelser,
   },

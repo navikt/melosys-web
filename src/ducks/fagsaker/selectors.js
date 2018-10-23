@@ -2,7 +2,7 @@
 import { createSelector, createStructuredSelector } from 'reselect';
 import moment from 'moment/moment';
 
-import { avklartefaktaSelectors } from '../avklartefakta/';
+import { soknadSelectors } from '../soknad/';
 import { kodeverkObjektTilKode } from '../../utils/kodeverk';
 import { datoDiff } from '../../utils/dato';
 
@@ -201,8 +201,7 @@ export const OrganisasjonSelector = createSelector(
     // Lag en array med orgnummer (arbeidsgiverID)
     const alleRelevanteOrgnummer = arbeidsforholdene.reduce((samling, element) => [...samling, element.arbeidsgiverID], []);
     // Filter organisasjoner hvis orgnr er inkludert i arrayen alleRelevanteOrgnummer.
-    const alleRelevanteOrganisasjoner = organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnr));
-    return alleRelevanteOrganisasjoner;
+    return organisasjoner.filter(item => alleRelevanteOrgnummer.includes(item.orgnr));
   }
 );
 
@@ -235,12 +234,12 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
-  state => avklartefaktaSelectors.AvklartefaktaOppholdPeriodeSelector(state),
-  (organisasjoner, arbeidsforholdene, inntekter, periode) => {
+  state => soknadSelectors.OppholdUtlandPeriodeSelector(state),
+  (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.
 
-    const { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = periode;
+    const { fom: soknadPeriodeStart, tom: soknadPeriodeSlutt } = oppholdsPeriode;
     if (!soknadPeriodeStart && !soknadPeriodeSlutt) { return []; }
 
     const relevantPeriodeStart = moment(soknadPeriodeStart, 'YYYY-MM-DD')
@@ -254,7 +253,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       tom: relevantPeriodeSlutt,
     };
 
-    const arbeidsgivere = arbeidsforholdene.reduce((samling, arbeidsforholdet) => {
+    return arbeidsforholdene.reduce((samling, arbeidsforholdet) => {
       const tmpSamling = [...samling];
 
       // Sjekk om det allerede er laget en gruppe for den aktuelle opplysningspliktigID.
@@ -271,8 +270,6 @@ export const ArbeidsgivereNorgeSelector = createSelector(
 
       return tmpSamling;
     }, []);
-
-    return arbeidsgivere;
   }
 );
 

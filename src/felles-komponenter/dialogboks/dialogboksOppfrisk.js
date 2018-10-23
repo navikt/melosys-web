@@ -12,11 +12,11 @@ class DialogboksOppfriskSak extends Component {
   start = () => {
     this.setState({ venterResultat: true });
     this.props.bekreft();
-  }
+  };
 
   render () {
     const {
-      avbryt, skjulDialog, oppdater,
+      avbryt, tilForsiden, oppdater,
     } = this.props;
 
     return (
@@ -35,7 +35,7 @@ class DialogboksOppfriskSak extends Component {
           tittel="Oppdaterer registeropplysninger"
           tekst="Oppdatering av registeropplysning kan ta noen minutter, venligst vent."
           synlig
-          skjul={skjulDialog}
+          tilForsiden={tilForsiden}
           oppdater={oppdater}
         />}
       </div>
@@ -46,7 +46,7 @@ class DialogboksOppfriskSak extends Component {
 DialogboksOppfriskSak.propTypes = {
   bekreft: PT.func.isRequired,
   avbryt: PT.func.isRequired,
-  skjulDialog: PT.func.isRequired,
+  tilForsiden: PT.func.isRequired,
   oppdater: PT.func.isRequired,
 };
 

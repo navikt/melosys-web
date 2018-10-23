@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+
 import DialogboksOppfriskSak from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
 import { Saksopplysninger } from './saksopplysninger';
@@ -25,28 +26,15 @@ import {
   soknadSelectors,
 } from '../ducks/soknad/';
 
-import {
-  avklartefaktaOperations,
-  avklartefaktaSelectors,
-} from '../ducks/avklartefakta/';
-
-import {
-  vurderingOperations,
-  vurderingSelectors,
-} from '../ducks/vurdering/';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
-
-/* eslint no-unused-vars:off */
 
 class Saksbehandling extends Component {
   static propTypes = {
     avklartefakta: PT.object,
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
-    hentAvklartefakta: PT.func.isRequired,
-    hentVurdering: PT.func.isRequired,
     history: PT.object.isRequired,
     match: PT.object.isRequired,
     oppfriskSaksopplysninger: PT.func.isRequired,
@@ -54,14 +42,12 @@ class Saksbehandling extends Component {
     oppsummering: MPT.Oppsummering,
     sendSoknad: PT.func.isRequired,
     soknad: PT.object,
-    vurdering: PT.object,
   };
 
   static defaultProps = {
     avklartefakta: {},
     oppsummering: {},
     soknad: {},
-    vurdering: {},
   };
 
   state = {
@@ -75,7 +61,7 @@ class Saksbehandling extends Component {
 
   lastInnSaksopplysninger = async () => {
     const {
-      hentFagsaker, hentSoknad, hentAvklartefakta,
+      hentFagsaker, hentSoknad,
       sjekkSaksflytStatus,
     } = this.props;
     const { snr } = this.props.match.params;
@@ -93,7 +79,6 @@ class Saksbehandling extends Component {
       this.blokkerInnholdMedOppfriskSpinner();
     } else {
       await hentSoknad(behandlingID);
-      // await hentAvklartefakta(behandlingID);
     }
 
     return true;
@@ -126,12 +111,26 @@ class Saksbehandling extends Component {
     this.setState({ oppfriskningBlokkererInnhold: false });
   };
 
+  hentBehandlingStatus = async () => {
+    const { sjekkSaksflytStatus } = this.props;
+    const { behandlingID } = this.props.oppsummering;
+    const saksflyt = await sjekkSaksflytStatus(behandlingID);
+
+    if (saksflyt && saksflyt.response) {
+      this.skjulOppfriskBekreftelse();
+    } else if (saksflyt.data === 'DONE') {
+      this.skjulOppfriskBekreftelse();
+      this.lastInnSaksopplysninger();
+    }
+  };
+
   /* eslint-disable */
   lagreOgLukk = () => { alert('Ikke implementert'); };
   /* eslint-enable */
 
   render() {
     const { oppsummering } = this.props;
+    const { blokkerInnholdMedOppfriskSpinner } = this;
 
     const oppfriskVenterDialog = this.state.oppfriskningBlokkererInnhold && (
       <div>
@@ -150,7 +149,9 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Saksopplysninger />
+              <Saksopplysninger
+                blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+              />
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering
@@ -169,7 +170,7 @@ class Saksbehandling extends Component {
           <DialogboksOppfriskSak
             bekreft={this.lagreSoknadOgOppfriskSaksopplysninger}
             avbryt={this.skjulOppfriskBekreftelse}
-            skjulDialog={this.navigerTilOversiktSide}
+            tilForsiden={this.navigerTilOversiktSide}
             oppdater={this.hentBehandlingStatus}
           />
         }
@@ -184,10 +185,8 @@ class Saksbehandling extends Component {
  */
 const mapStateToProps = state => ({
   saksflyt: saksflytSelectors.SaksflytSelector(state),
-  vurdering: vurderingSelectors.VurderingSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
-  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -196,8 +195,6 @@ const mapDispatchToProps = dispatch => ({
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
-  hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
-  hentVurdering: behandlingID => dispatch(vurderingOperations.hent(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
