@@ -4,17 +4,11 @@ import VurderingBostedsland from '../../stegKomponenter/vurderingBostedsland';
 import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
 import { VurderingIkkeYrkesaktivTyper } from '../../stegKomponenter/vurderingIkkeYrkesaktiv';
 import Regler from '../../../../regler';
-import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 class Bostedsland extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
-      {
-        beskrivelse: 'vilkåret BOSATT_I_NORGE er oppfylt."',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('BOSATT_I_NORGE', alleVilkar),
-        nesteSteg: STEG.FORRETNINGSSTED,
-      },
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,

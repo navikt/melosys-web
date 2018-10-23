@@ -8,7 +8,7 @@ import * as MPT from '../../proptypes/';
 
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
-import StegVelger from './stegMotor';
+import StegMotor from './stegMotor';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { KodeverkSelectors } from '../../ducks/kodeverk/';
@@ -27,12 +27,11 @@ class Stegvelger extends Component {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
     this.props.hentVilkar(4);
+    this.props.hentAvklartefakta(4);
   }
 
   componentWillReceiveProps(nextProps) {
-    if (Object.keys(nextProps.avklartefakta).length > 0) {
-      this.oppdaterAktuelleSteg(nextProps);
-    }
+    this.oppdaterAktuelleSteg(nextProps);
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
@@ -48,6 +47,13 @@ class Stegvelger extends Component {
     const { vilkar } = this.props;
     const { sendVilkar } = this.props;
     await sendVilkar(bid, vilkar);
+  };
+
+  lagreAvklartefaktaHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const { avklartefakta } = this.props;
+    const { sendAvklartefakta } = this.props;
+    await sendAvklartefakta(bid, avklartefakta);
   };
 
   lagreVedtakHandler = async () => {
@@ -70,19 +76,19 @@ class Stegvelger extends Component {
     };
 
     const propsLight = {
+      arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
-      vilkar: props.vilkar,
+      begrunnelser: props.begrunnelser,
       saksopplysninger: props.saksopplysninger,
       inngang: props.inngang,
-      skjema: props.skjema,
       landkoder: props.landkoder,
-      arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
-      begrunnelser: props.begrunnelser,
       tilgjengeligeHandlers,
+      skjema: props.skjema,
+      vilkar: props.vilkar,
     };
 
-    const stegVelger = new StegVelger(propsLight);
-    const aktuelleSteg = stegVelger.beregnAlleSteg();
+    const stegMotor = new StegMotor(propsLight);
+    const aktuelleSteg = stegMotor.beregnAlleSteg();
 
     aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
 
@@ -96,15 +102,15 @@ class Stegvelger extends Component {
    */
   tilSteg = async nyttStegNummer => {
     const {
+      avklartefakta,
       skjema,
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
-      lagreAvklartefaktaHandler,
       lagreSoknadHandler,
       vilkar,
     } = this.props;
 
-    const { lagreVilkarHandler } = this;
+    const { lagreVilkarHandler, lagreAvklartefaktaHandler } = this;
 
     const { behandlingID } = this.props.oppsummering;
 
@@ -112,8 +118,8 @@ class Stegvelger extends Component {
     this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
       await oppdaterAvklarteFaktaState(skjema);
       await oppdaterVilkarState(skjema);
-      await lagreAvklartefaktaHandler();
       await lagreVilkarHandler(behandlingID, vilkar);
+      await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
 
       if (this.erSisteSteg(nyttStegNummer)) {
         await lagreSoknadHandler();
@@ -149,11 +155,13 @@ class Stegvelger extends Component {
 
 Stegvelger.propTypes = {
   arbeidsgivereIPerioden: PT.array,
-  avklartefakta: PT.object,
+  avklartefakta: PT.array,
   begrunnelser: PT.object,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
+  hentAvklartefakta: PT.func.isRequired,
+  sendAvklartefakta: PT.func.isRequired,
   history: PT.object.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreVedtak: PT.func.isRequired,
@@ -172,7 +180,7 @@ Stegvelger.propTypes = {
 
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
-  avklartefakta: {},
+  avklartefakta: [],
   begrunnelser: {},
   inngang: {},
   landkoder: [],
@@ -198,6 +206,8 @@ const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
+  hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
+  sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   lagreVedtak: behandlingID => dispatch(vedtakOperations.lagre(behandlingID, '{}')),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),

@@ -14,29 +14,33 @@ import './oppholdsLandListe.css';
 
 class OppholdsLandListe extends Component {
   bekreftFjern = (landKode, begrunnelseKode) => {
-    const posisjon = this.props.fields.getAll().findIndex(opphold => opphold.landKode === landKode);
-    const opphold = {
-      ...this.props.fields.get(posisjon),
-      erGyldig: false,
-      begrunnelseKode,
+    const avklartefakta = this.props.fields.getAll();
+    const enkeltFakta = avklartefakta.find(enkelt => enkelt.subjektID === landKode);
+    const oppdatertEnkeltFakta = {
+      ...enkeltFakta,
+      fakta: ['FALSE'],
+      begrunnelseKoder: [begrunnelseKode],
     };
-
+    const posisjon = avklartefakta.findIndex(avklart => avklart.subjektID === landKode);
     this.props.fields.remove(posisjon);
-    this.props.fields.push(opphold);
+    this.props.fields.push(oppdatertEnkeltFakta);
 
-    if (begrunnelseKode === 'FEIL_LAND_JOURNALFORING') {
+    if (begrunnelseKode === 'FEIL_LAND_JOURNALFOERING') {
       this.fjernLandFraSoknad(landKode);
     }
   };
 
   bekreftLeggTil = (landKode, begrunnelseKode) => {
-    const opphold = {
-      landKode,
-      erGyldig: true,
-      begrunnelseKode,
+    const avklartFakta = {
+      referanse: 'OPPHOLDSLAND',
+      avklartefaktaKode: null,
+      fakta: ['TRUE'],
+      subjektID: landKode,
+      begrunnelseKoder: [begrunnelseKode],
+      begrunnelseFritekst: null,
     };
 
-    this.props.fields.push(opphold);
+    this.props.fields.push(avklartFakta);
     this.leggLandTilSoknad(landKode);
   };
 
@@ -51,37 +55,45 @@ class OppholdsLandListe extends Component {
   };
 
   angreFjern = landKode => {
-    const posisjon = this.props.fields.getAll().findIndex(opphold => opphold.landKode === landKode);
-    const opphold = {
-      ...this.props.fields.get(posisjon),
-      erGyldig: true,
-      begrunnelseKode: undefined,
+    const avklartefakta = this.props.fields.getAll();
+    const enkeltFakta = avklartefakta.find(enkelt => enkelt.subjektID === landKode);
+    const oppdatertEnkeltFakta = {
+      ...enkeltFakta,
+      fakta: ['TRUE'],
+      begrunnelseKoder: [],
     };
-
+    const posisjon = avklartefakta.findIndex(avklart => avklart.subjektID === landKode);
     this.props.fields.remove(posisjon);
-    this.props.fields.push(opphold);
+    this.props.fields.push(oppdatertEnkeltFakta);
+
+    if (enkeltFakta.begrunnelseKoder.includes('FEIL_LAND_JOURNALFOERING')) {
+      this.leggLandTilSoknad(landKode);
+    }
   };
 
   finnLandVedKode = kode => (this.props.alleLandKoder.find(land => land.kode === kode));
 
-  finnBegrunnelseVedKode = kode => {
-    const begrunnelseObjekt = this.props.oppholdBegrunnelser.find(begrunnelse => begrunnelse.kode === kode);
+  finnBegrunnelse = koder => {
+    const enkeltKode = koder[0];
+    const begrunnelseObjekt = this.props.oppholdBegrunnelser.find(begrunnelse => begrunnelse.kode === enkeltKode);
     return begrunnelseObjekt ? begrunnelseObjekt.term : '';
   };
 
   render () {
-    const { fields, oppholdBegrunnelser, alleLandKoder } = this.props;
     const {
-      bekreftFjern, angreFjern, finnBegrunnelseVedKode, bekreftLeggTil, finnLandVedKode,
+      fields, oppholdBegrunnelser, alleLandKoder, oppholdsLandFraSoknad,
+    } = this.props;
+
+    const {
+      bekreftFjern, angreFjern, finnBegrunnelse, bekreftLeggTil, finnLandVedKode,
     } = this;
 
-    const alleOppholdsland = fields.getAll();
-    const alleGyldigeOppholdsland = alleOppholdsland.filter(opphold => opphold.erGyldig);
-    const alleIkkeGyldigeOppholdsland = fields
-      .getAll()
-      .filter(opphold => !opphold.erGyldig);
+    const alleAvklarteFakta = fields.getAll() || [];
 
-    const alleUbrukteLandkoder = alleLandKoder.filter(land => !alleOppholdsland.map(ol => ol.landKode).includes(land.kode));
+    const alleGyldigeOppholdsland = alleAvklarteFakta.filter(avklartFakta => avklartFakta.fakta.includes('TRUE'));
+    const alleIkkeGyldigeOppholdsland = alleAvklarteFakta.filter(avklartFakta => avklartFakta.fakta.includes('FALSE'));
+
+    const alleUbrukteLandkoder = alleLandKoder.filter(landKode => !oppholdsLandFraSoknad.includes(landKode.kode));
 
     return (
       <div>
@@ -89,8 +101,8 @@ class OppholdsLandListe extends Component {
           <Nav.Fieldset legend="Land:" >
             { alleGyldigeOppholdsland.map(opphold => (
               <OppholdsLandEnkelt
-                key={opphold.landKode}
-                landKodeObjekt={finnLandVedKode(opphold.landKode)}
+                key={opphold.subjektID}
+                landKodeObjekt={finnLandVedKode(opphold.subjektID)}
                 bekreftFjern={bekreftFjern}
                 erGyldig={opphold.erGyldig}
                 oppholdBegrunnelser={oppholdBegrunnelser} />))
@@ -107,9 +119,9 @@ class OppholdsLandListe extends Component {
           <Nav.Fieldset legend="Land som er fjernet fra behandlingen:">
             {alleIkkeGyldigeOppholdsland.map(opphold => (
               <FjernetLandEnkelt
-                key={opphold.landKode}
-                landKodeObjekt={this.finnLandVedKode(opphold.landKode)}
-                begrunnelseTerm={finnBegrunnelseVedKode(opphold.begrunnelseKode)}
+                key={opphold.subjektID}
+                landKodeObjekt={this.finnLandVedKode(opphold.subjektID)}
+                begrunnelseTerm={finnBegrunnelse(opphold.begrunnelseKoder)}
                 angreFjern={angreFjern}
                 erGyldig={opphold.erGyldig} />))
             }
@@ -129,6 +141,7 @@ OppholdsLandListe.propTypes = {
   oppholdsLandFraSoknad: PT.arrayOf(PT.string).isRequired,
   erstattOppholdsLand: PT.func.isRequired,
   alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  avklartefakta: PT.array.isRequired,
 };
 
 const mapStateToProps = state => ({

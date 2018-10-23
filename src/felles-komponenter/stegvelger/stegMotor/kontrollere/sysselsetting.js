@@ -8,27 +8,31 @@ class Sysselsetting extends Steg {
 
     this._kriterier = [
       {
-        beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" eller sysselsettingType ER LIK "ARBEIDSTAKER__OG__SELVSTENDIG"',
-        exec: ({ sysselsettingType }) => sysselsettingType === VurderingSysselsettingTyper.YRKESAKTIV,
-        nesteSteg: STEG.YRKESAKTIVITET_FORDELING,
+        beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER"',
+        exec: avklartefakta => Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV),
+        nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.BOSTEDSLAND,
+        nesteSteg: STEG.VEDTAK,
       },
     ];
     this._id = STEG.SYSSELSETTING;
     this._tittel = 'Aktivitet';
     this._komponent = VurderingSysselsetting;
     this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = () => ({
-      visSysselsettingType: true,
-    });
+    this._beregnRelevantUI = () => ({});
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
+  }
+
+  static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.SYSSELSETTING);
+    if (!enkeltFakta) { return false; }
+    return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   }
 }
 

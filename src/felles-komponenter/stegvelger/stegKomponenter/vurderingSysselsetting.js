@@ -11,23 +11,19 @@ export const VurderingSysselsettingTyper = {
   KONTANTYTELSESMOTTAKER: 'KONTANTYTELSESMOTTAKER',
 };
 
-const Sysselsetting = () => (
-  <Nav.Fieldset legend="Vurder om søkeren er:">
-    <Skjema.Radio feltNavn="avklartefaktaSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV} label="Yrkesaktiv" />
-    <Skjema.Radio feltNavn="avklartefaktaSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV_SKIP} label="Yrkesaktiv på skip" />
-    <Skjema.Radio feltNavn="avklartefaktaSysselsettingType" value={VurderingSysselsettingTyper.YRKESAKTIV_FLYVENDE} label="Yrkesaktiv som flyvende personell" />
-    <Skjema.Radio feltNavn="avklartefaktaSysselsettingType" value={VurderingSysselsettingTyper.IKKE_YRKESAKTIV} label="Ikke yrkesaktiv" />
-    <Skjema.Radio feltNavn="avklartefaktaSysselsettingType" value={VurderingSysselsettingTyper.KONTANTYTELSESMOTTAKER} label="Kontantytelsesmottaker" />
-  </Nav.Fieldset>
-);
-
 const VurderingSysselsetting = props => {
-  const { bekreftOgFortsett, tilstand } = props;
+  const { bekreftOgFortsett } = props;
 
   return (
     <div>
       <Nav.Undertittel>Vurdering av aktivitet</Nav.Undertittel>
-      { tilstand.visSysselsettingType && <Sysselsetting /> }
+      <Nav.Fieldset legend="Vurder om søkeren er:">
+        <Skjema.Radio feltNavn="avklartefakta.sysselsetting" value={VurderingSysselsettingTyper.YRKESAKTIV} label="Yrkesaktiv" />
+        <Skjema.Radio feltNavn="avklartefakta.sysselsetting" value={VurderingSysselsettingTyper.YRKESAKTIV_SKIP} label="Yrkesaktiv på skip" />
+        <Skjema.Radio feltNavn="avklartefakta.sysselsetting" value={VurderingSysselsettingTyper.YRKESAKTIV_FLYVENDE} label="Yrkesaktiv som flyvende personell" />
+        <Skjema.Radio feltNavn="avklartefakta.sysselsetting" value={VurderingSysselsettingTyper.IKKE_YRKESAKTIV} label="Ikke yrkesaktiv" />
+        <Skjema.Radio feltNavn="avklartefakta.sysselsetting" value={VurderingSysselsettingTyper.KONTANTYTELSESMOTTAKER} label="Kontantytelsesmottaker" />
+      </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
