@@ -11,6 +11,8 @@ const navnAvsenderErBlank = verdi => ((verdi === '' || verdi === undefined) && '
 const idErIkkeNummer = verdi => (!(new RegExp(/^\d+$/).test(verdi)) && 'Skriv inn kun nummer.');
 const idErIkkeFnrEllerDnr = verdi => ((!Person.erGyldigFnr(verdi) && !Person.erGyldigDnr(verdi)) && 'Skriv inn gyldig fnr eller dnr.');
 const idErIkkeFnrEllerDnrEllerOrgnr = verdi => ((!(Person.erGyldigFnr(verdi) || Person.erGyldigDnr(verdi) || Organisasjon.erOrgnrLengde(verdi))) && 'Skriv inn gyldig fnr, dnr eller orgnr.');
+const idErIkkeOrgnr = verdi => (!Organisasjon.erOrgnrGyldig(verdi) && 'Skriv inn gyldig orgnr.');
+
 const idFinnesIkke = (navn, id) => {
   if (navn === '' && Organisasjon.erOrgnrLengde(id)) {
     return 'Fant ingen navn på dette organisasjonsnummeret.';
@@ -93,12 +95,20 @@ const journalforingOpprettSakValidering = verdier => {
     false
   );
 
+  const representantID = (
+    !idErBlank(verdier.representantID) && (
+      idErIkkeOrgnr(verdier.representantID) ||
+      idFinnesIkke(verdier.representantNavn, verdier.representantID)
+     || false)
+  );
+
   const journalforingOppholdsLand = (landErIkkeValgt(verdier.journalforingOppholdsLand) ? { _error: landErIkkeValgt(verdier.journalforingOppholdsLand) } : false);
 
   return {
     journalforingPeriodeFraOgMed,
     journalforingPeriodeTilOgMed,
     journalforingOppholdsLand,
+    representantID,
   };
 };
 
@@ -134,6 +144,7 @@ const journalforingValidering = verdier => ({
  * er oppdatert i Redux. Denne påvirker i seg selv ikke UI, men returnerer kun en
  * true | false.
  * @param verdier
+ * @param journalforingHensikt
  * @returns {boolean}
  */
 const erSkjemaGyldig = (verdier, journalforingHensikt) => {

@@ -22,11 +22,11 @@ import { datoDiff, formatterDatoTilISO } from '../../utils/dato';
 class Arbeid extends DomeneRegel {
   erArbeidsforholdetRelevantForSoknadsperioden = ansettelsesPeriode => {
     const { skjema } = this;
-    const { avklartefaktaPeriodeFraOgMed, avklartefaktaPeriodeTilOgMed } = skjema;
+    const { oppholdUtlandFom, oppholdUtlandTom } = skjema;
     const { fom: ansattStartDato, tom: ansattSluttDato } = ansettelsesPeriode;
 
-    const oppholdStartDato = formatterDatoTilISO(avklartefaktaPeriodeFraOgMed);
-    const oppholdSluttDato = formatterDatoTilISO(avklartefaktaPeriodeTilOgMed);
+    const oppholdStartDato = formatterDatoTilISO(oppholdUtlandFom);
+    const oppholdSluttDato = formatterDatoTilISO(oppholdUtlandTom);
 
     const erAnsattVedPeriodeStart = datoDiff(ansattStartDato, oppholdStartDato, 'days') >= 1;
     const erAnsattVedPeriodeSlutt = datoDiff(ansattSluttDato, oppholdSluttDato, 'days') <= 0;

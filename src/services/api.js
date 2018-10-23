@@ -1,3 +1,4 @@
+import * as Saksflyt from './modules/saksflyt';
 import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker';
 import * as Avklartefakta from './modules/avklartefakta';
@@ -10,7 +11,8 @@ import * as Organisasjoner from './modules/organisasjoner';
 import * as Oppgaver from './modules/oppgaver';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Soknader from './modules/soknader';
-import * as Vurdering from './modules/vurdering';
+import * as Vilkar from './modules/vilkar';
+import * as Vedtak from './modules/vedtak';
 
 /*
 function erDev() {
@@ -27,6 +29,7 @@ function erDev() {
 
 
 export {
+  Saksflyt,
   Dokumenter,
   Fagsaker,
   Avklartefakta,
@@ -39,5 +42,6 @@ export {
   Personer,
   Saksbehandler,
   Soknader,
-  Vurdering,
+  Vilkar,
+  Vedtak,
 };

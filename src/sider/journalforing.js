@@ -20,7 +20,6 @@ import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeS
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
 
-
 import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
@@ -34,21 +33,22 @@ import { formSelectors } from '../ducks/form/';
 import './journalforing.css';
 import { OrganisasjonOperations } from '../ducks/organisasjon';
 import { PersonOperations } from '../ducks/person';
+import * as oppgaverOperations from '../ducks/oppgaver/operations';
 
 const queryParamLogger = (journalpostID, oppgaveID, location) => {
   const qsParsed = qs.parse(location.search.slice(1));
-  const url = `/journalforing/${journalpostID}/${oppgaveID}`;
-  // TODO Bytt console.log med logger.info()
+  const urlQuery = `${location.pathname}${location.search}`;
   /* eslint-disable */
   if (qsParsed) {
     if (qsParsed.kilde === 'GOSYS') {
-      const urlQuery = `${url}/?kilde=${qsParsed.kilde}`;
-      console.log('Deeplinked from GOSYS:', urlQuery);
+      const message = `Deeplinked from GOSYS: ${urlQuery}`;
+      window.frontendlogger.info(message);
     } else {
-      console.log('Unknown external src:', qsParsed);
+      const message = `Ukjent ekstern kilde: ${urlQuery}`;
+      window.frontendlogger.error(message);
     }
   } else {
-    console.log('internal route:', url);
+    console.log('internal route:', urlQuery);
   }
   /* eslint-enable */
 };
@@ -60,6 +60,7 @@ class Journalforing extends Component {
     history: PT.object.isRequired,
     hentJournalOppgave: PT.func.isRequired,
     hentFagsakListe: PT.func.isRequired,
+    hentOppgaver: PT.func.isRequired,
     tilordneSak: PT.func.isRequired,
     opprettNySak: PT.func.isRequired,
     settFeltInnhold: PT.func.isRequired,
@@ -109,27 +110,41 @@ class Journalforing extends Component {
    *
    * @returns {object} Objektet som skal sendes videre som payload.
    */
-  vaskDokumentInformasjon = () => {
+  vaskDokumentInformasjon = intensjon => {
     const { oppgaveID, journalpostID } = this.props.match.params;
     const {
       journalforingSkjemaVerdier,
       journalforing: { dokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, avsenderNavn, dokumentTittel, vedleggsTitler,
+      brukerID, avsenderID, arbeidsgiverID, representantID, avsenderNavn, dokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
-    const { ID: dokumentID } = dokument;
-    return {
-      avsenderID,
-      avsenderNavn,
-      brukerID,
-      dokumentID,
-      dokumenttittel: dokumentTittel,
-      journalpostID,
-      oppgaveID,
-      vedleggstitler: vedleggsTitler,
-    };
+    const { dokumentID } = dokument;
+    return intensjon === Konstanter.JOURNALFORING_HENSIKT.KNYTT ?
+      {
+        avsenderID,
+        avsenderNavn,
+        dokumentID,
+        brukerID,
+        dokumenttittel: dokumentTittel,
+        journalpostID,
+        oppgaveID,
+        vedleggstitler: vedleggsTitler,
+      }
+      :
+      {
+        arbeidsgiverID,
+        representantID,
+        avsenderID,
+        avsenderNavn,
+        dokumentID,
+        brukerID,
+        dokumenttittel: dokumentTittel,
+        journalpostID,
+        oppgaveID,
+        vedleggstitler: vedleggsTitler,
+      };
   };
 
   /** Når saksbehandler klikker "knytt til eksisterende sak" skal det åpnes for validering av
@@ -144,7 +159,7 @@ class Journalforing extends Component {
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
-    const vasketJournalforing = this.vaskDokumentInformasjon();
+    const vasketJournalforing = this.vaskDokumentInformasjon(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = { saksnummer, ...vasketJournalforing };
 
     await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
@@ -161,6 +176,7 @@ class Journalforing extends Component {
 
     const response = await tilordneSak(journalforingData);
     if (response.ok) {
+      this.props.hentOppgaver();
       history.push('/');
     }
   };
@@ -170,7 +186,6 @@ class Journalforing extends Component {
    * @returns {boolean}
    */
   opprettFagsak = async () => {
-    /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
@@ -200,16 +215,13 @@ class Journalforing extends Component {
     };
 
     const vasketJournalforing = this.vaskDokumentInformasjon();
-    const arbeidsgiverID = '910253158';
-    const representantID = arbeidsgiverID ? null : '910253158';
     const journalforingData = {
-      arbeidsgiverID,
-      representantID,
       ...vasketJournalforing,
       fagsak,
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
+      this.props.hentOppgaver();
       history.push('/');
     }
   };
@@ -252,6 +264,19 @@ class Journalforing extends Component {
     }
   };
 
+
+  hentOgVisRepresentant = async value => {
+    const { sokOrgnr, settFeltInnhold } = this.props;
+
+    if (!value) { return; }
+
+    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+      const response = await sokOrgnr(value);
+      const { navn = '' } = response;
+      settFeltInnhold('representantNavn', navn);
+    }
+  };
+
   touchAll = (alleFeil = {}) => {
     this.props.touch(...Object.keys(alleFeil));
   };
@@ -275,11 +300,11 @@ class Journalforing extends Component {
     } = this.props;
 
     const {
-      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker,
+      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
     } = this;
 
     const { journalpostID } = this.props.match.params;
-    const { ID: dokumentID } = dokument;
+    const { dokumentID } = dokument;
 
     return (
       <div className="journalforing">
@@ -302,7 +327,10 @@ class Journalforing extends Component {
                         hentOgVisBruker={hentOgVisBruker}
                       />
                       <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
-                      <OpprettNyFagSak opprettFagsak={opprettFagsak} />
+                      <OpprettNyFagSak
+                        opprettFagsak={opprettFagsak}
+                        hentOgVisRepresentant={hentOgVisRepresentant}
+                      />
                       <div className="journalforing__fotknapper">
                         <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
                       </div>
@@ -330,6 +358,8 @@ const mapStateToProps = state => ({
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
+    arbeidsgiverID: null,
+    representantID: '',
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
     dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
     vedleggsTitler: [],
@@ -343,6 +373,7 @@ const mapDispatchToProps = dispatch => ({
   settFeilFelt: (...feltNavn) => (setSubmitFailed('journalforing', ...feltNavn)),
   settJournalforingHensikt: journalforingHensikt => dispatch(change('journalforing', 'journalforingHensikt', journalforingHensikt)),
   opprettNySak: data => Api.Journalforing.opprett(data),
+  hentOppgaver: () => dispatch(oppgaverOperations.hent()),
   tilordneSak: data => Api.Journalforing.tilordne(data),
   sokFnrDnr: fnr => PersonOperations.hent(fnr),
   sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),

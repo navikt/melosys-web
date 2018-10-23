@@ -21,6 +21,7 @@ export function buildinfo() {
     branchVersjon,
   };
 }
+export const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 /**
  * parser et funksjonsargument som funksjon.
  * @param value

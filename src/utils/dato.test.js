@@ -31,6 +31,7 @@ describe('dato.js:', () => {
         {test: '010479', 'forvent': '01.04.1979'},
         {test: '260479', 'forvent': '26.04.1979'},
         {test: '26041979', 'forvent': '26.04.1979'},
+        {test: '22.07.09', 'forvent': '22.07.2009'},
         {test: '26-04-79', 'forvent': '26.04.1979'},
         {test: '01-01-79', 'forvent': '01.01.1979'},
         {test: '26-04-1979', 'forvent': '26.04.1979'},
@@ -77,7 +78,7 @@ describe('dato.js:', () => {
         expect(vasketDato).toEqual(datoTest.forvent);
       });
     });
-  })
+  });
 
   describe('nodmaliserInputDato', () => {
     test('ikke forsøker å vaske datoen så lenge verdiene er forskjellige', () => {
@@ -93,7 +94,7 @@ describe('dato.js:', () => {
 
       expect(normaliserInputDato(verdi, forrigeVerdi)).not.toEqual(false);
     });
-  })
+  });
 
   describe('formatterDatoTilNorsk', () => {
     test('formatterer datoen riktig til norsk format DD.MM.YYYY uten klokkeslett', () => {
@@ -108,13 +109,13 @@ describe('dato.js:', () => {
         const formattertDato = formatterDatoTilNorsk(datoTest.test);
         expect(formattertDato).toEqual(datoTest.forvent);
       });
-    })
+    });
 
     test('returnerer tom streng dersom datoen er ugyldig.', () => {
       const feilDato = '2018-april-31';
       const formattertDato = formatterDatoTilNorsk(feilDato);
       expect(formattertDato).toEqual('');
-    })
+    });
 
     test('formatterer datoen riktig til norsk format DD.MM.YYYY HH:mm:ss med klokkeslett', () => {
       const tillatteDatoer = [
@@ -136,26 +137,26 @@ describe('dato.js:', () => {
       const tillatteDatoer = [
         {test: '01.01.2018', forvent: '2018-01-01'},
         {test: '10.12.2018', forvent: '2018-12-10'}
-      ]
+      ];
 
       tillatteDatoer.forEach(datoTest => {
         const formattertDato = formatterDatoTilISO(datoTest.test, false);
         expect(formattertDato).toEqual(datoTest.forvent);
       });
-    })
+    });
 
     test('formatterer dato med klokkeslett til ISO-format.', () => {
       const tillatteDatoer = [
         {test: '01.01.2018 10:34', forvent: '2018-01-01T10:34:00'},
         {test: '10.12.2018 10:34', forvent: '2018-12-10T10:34:00'},
-      ]
+      ];
 
       tillatteDatoer.forEach(datoTest => {
         const formattertDato = formatterDatoTilISO(datoTest.test, true);
         expect(formattertDato).toEqual(datoTest.forvent);
       });
     })
-  })
+  });
 
   describe('formatterKortDatoTilNorsk', () => {
     test('formatterer år-dato til korrekt til lesbarhet', () => {
@@ -163,7 +164,7 @@ describe('dato.js:', () => {
         {test: '2007-01', forvent: 'jan - 2007'},
         {test: '2014-05', forvent: 'mai - 2014'},
         {test: '2016-10-31', forvent: 'okt - 2016'},
-      ]
+      ];
 
       tillatteDatoer.forEach(datoTest => {
         const formattertDato = formatterKortDatoTilNorsk(datoTest.test);
@@ -177,31 +178,31 @@ describe('dato.js:', () => {
       const dato1 = '2018-01-01';
       const dato2 = '2018-05-05';
       expect(datoDiff(dato1, dato2, 'days')).toBeGreaterThan(0);
-    })
+    });
 
     test('kommende dato diffet på eldre dato gir negativt tall', () => {
       const dato1 = '2018-01-01';
       const dato2 = '2010-05-05';
       expect(datoDiff(dato1, dato2, 'days')).toBeLessThan(0);
-    })
+    });
 
     test('en dato diffet på datoen for neste dag gir 1', () => {
       const dato1 = '2018-01-01';
       const dato2 = '2018-01-02';
       expect(datoDiff(dato1, dato2, 'days')).toBe(2);
-    })
+    });
 
     test('dato i moment-format fungerer', () => {
       const dato1 = '2018-08-01';
       const dato2 = moment('2018-08-04', 'YYYY-MM-DD');
       expect(datoDiff(dato1, dato2, 'days')).toBe(4);
-    })
+    });
 
     test('mindre enn én måned gir desimaltall', () => {
       const dato1 = '2018-01-01';
       const dato2 = '2018-01-31';
       expect(datoDiff(dato1, dato2, 'months')).toBe(1);
-    })
+    });
 
     test('Nøyaktig 6 måneder', () => {
       const dato1 = '2016-02-26';
@@ -216,28 +217,28 @@ describe('dato.js:', () => {
       const dato2 = '2019-01-01';
 
       expect(datoDiffMenneskelig(dato1, dato2)).toBe('12 måneder og 1 dag');
-    })
+    });
 
     test('forskjell er 12 måned', () => {
       const dato1 = '2018-01-01';
       const dato2 = '2018-12-31';
 
       expect(datoDiffMenneskelig(dato1, dato2)).toBe('12 måneder');
-    })
+    });
 
     test('forskjell er 6 måneder', () => {
       const dato1 = '2018-04-20';
       const dato2 = '2018-10-19';
 
       expect(datoDiffMenneskelig(dato1, dato2)).toBe('6 måneder');
-    })
+    });
 
     test('forskjell er 1 måned og 5 dager', () => {
       const dato1 = '2016-02-16';
       const dato2 = '2016-03-20';
 
       expect(datoDiffMenneskelig(dato1, dato2)).toBe('1 måned og 5 dager');
-    })
+    });
 
     test('forskjell er 12 måneder', () => {
       const dato1 = '2016-01-01';
@@ -245,7 +246,7 @@ describe('dato.js:', () => {
 
       expect(datoDiffMenneskelig(dato1, dato2)).toBe('12 måneder');
     })
-  })
+  });
 
   describe('beregnAlder', () => {
     test('alder er 39 31. desember', () => {
@@ -253,7 +254,7 @@ describe('dato.js:', () => {
       const foedselsdato = '1978-01-01';
       const forventetAlder = 39;
       expect(beregnAlder(foedselsdato)).toBe(forventetAlder);
-    })
+    });
 
     test('alder er 40 1. januar', () => {
       MockDate.set('1/1/2018');

@@ -46,9 +46,9 @@ class Behandling extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Fieldset legend="Sakstype">
-                {saksTyper.map(type => {
-                  const isDisabled = kodeverkObjektTilKode(type) !== 'EU_EOS';
-                  return (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} disabled={isDisabled} feltNavn={`sakstyper.${kodeverkObjektTilKode(type)}`} />);
+                {saksTyper.map(enkeltType => {
+                  const isDisabled = kodeverkObjektTilKode(enkeltType) !== 'EU_EOS';
+                  return (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(enkeltType)} disabled={isDisabled} feltNavn={`sakstyper.${kodeverkObjektTilKode(enkeltType)}`} />);
                 })}
               </Nav.Fieldset>
             </Nav.Column>

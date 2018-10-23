@@ -1,5 +1,5 @@
 
-/**
+/*
  * Selectors
  * -----------------------------------------------------------------------------------------
  * Målet med selectorer er å samle funksjonalitet som behandler, itererer og omformer
@@ -10,121 +10,87 @@ import { createSelector } from 'reselect';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 
-// selector(s)
+/* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
+ * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
+ */
+const avklartefaktaKoder = {
+  OPPHOLDSLAND: 'OPPHOLDSLAND',
+  SYSSELSETTING: 'SYSSELSETTING',
+  YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
+  YRKESAKTIVITET: 'YRKESAKTIVITET',
+  ARBEIDSGIVER: 'ARBEIDSGIVER',
+};
+
+/* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
+ * hele enkeltvise avklartfakta og som sendes til backend.
+ */
+const avklartFaktaTemplate = {
+  referanse: '',
+  avklartefaktaKode: null,
+  fakta: [],
+  subjektID: '',
+  begrunnelseKoder: [],
+  begrunnelseFritekst: null,
+};
+
+/* Hovedselector for alle avklarte fakta. */
 export const AvklartefaktaSelector = createSelector(
-  state => (state.avklartefakta.data.avklaring ? state.avklartefakta.data.avklaring : {}),
-  avklartefakta => avklartefakta || {}
+  state => (state.avklartefakta.data ? state.avklartefakta.data : []),
+  avklartefakta => avklartefakta || []
 );
 
-export const AvklartefaktaOppholdSelector = createSelector(
-  state => AvklartefaktaSelector(state).opphold,
-  opphold => opphold || []
-);
-
-export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
-  state => AvklartefaktaOppholdSelector(state).land || [],
-  opphold => opphold.filter(enkeltOpphold => enkeltOpphold.erGyldig) || []
-);
-
-export const AvklartefaktaLovvalgKodeSelector = createSelector(
-  state => AvklartefaktaSelector(state).vurdering || {},
-  vurdering => (vurdering ? vurdering.lovvalgKode : '')
-);
-
-export const AvklartefaktaOppholdPeriodeSelector = createSelector(
-  state => AvklartefaktaOppholdSelector(state),
-  oppholdet => (oppholdet.periode ? oppholdet.periode : {})
-);
-
-export const AvklartefaktaSysselsettingSelector = createSelector(
-  state => AvklartefaktaSelector(state).sysselsetting,
-  sysselsetting => sysselsetting || {}
-);
-
-export const AvklartefaktaIkkeYrkesaktivSelector = createSelector(
-  state => AvklartefaktaSelector(state).ikkeYrkesaktiv,
-  ikkeYrkesaktiv => ikkeYrkesaktiv || {}
-);
-
-export const AvklartefaktaUtsendingSelector = createSelector(
-  state => AvklartefaktaSelector(state).utsending,
-  utsending => utsending || {}
-);
-
-export const AvklartefaktaForutgaendeMedlemskapSelector = createSelector(
-  state => AvklartefaktaSelector(state).forutgaendeMedlemskap,
-  forutgaendeMedlemskap => forutgaendeMedlemskap || {}
-);
-
-export const AvklartefaktaYrkesaktivitetSelector = createSelector(
-  state => AvklartefaktaSelector(state).yrkesaktivitet,
-  yrkesaktivitet => yrkesaktivitet || {}
-);
-
-export const AvklartefaktaYrkesaktivitetFordelingSelector = createSelector(
-  state => AvklartefaktaSelector(state).yrkesaktivitetFordeling,
-  yrkesaktivitetFordeling => yrkesaktivitetFordeling || {}
-);
-
-export const AvklartefaktaVirksomhetSelector = createSelector(
-  state => AvklartefaktaSelector(state).virksomhet,
-  virksomhet => virksomhet || {}
-);
-
-export const AvklartefaktaBostedSelector = createSelector(
-  state => AvklartefaktaSelector(state).bosted,
-  bosted => bosted || {}
-);
-
-export const AvklartefaktaBostedNorgeUtlandSelector = createSelector(
-  state => AvklartefaktaBostedSelector(state).bostedLand || [],
-  land => {
-    if (land.length === 0) { return ''; }
-
-    if (land.includes('NO')) {
-      return 'NORGE';
-    }
-
-    return 'ANNET';
-  }
-);
-
-export const AvklartefaktaTjenestemannSelector = createSelector(
-  state => AvklartefaktaSelector(state).tjenestemann,
-  tjenestemann => tjenestemann || {}
-);
-
-export const AvklartefaktaAktivitetSelector = createSelector(
-  state => AvklartefaktaSelector(state).aktivitet,
-  aktivitet => aktivitet || {}
-);
-
-export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
-  state => AvklartefaktaSelector(state).valgteArbeidsgivere,
-  valgteArbeidsgivere => valgteArbeidsgivere || []
-);
-
-export const AvklartefaktaVesentligVirksomhetSelector = createSelector(
-  state => AvklartefaktaSelector(state).vesentligVirksomhet || {},
-  vesentligVirksomhet => vesentligVirksomhet || {}
-);
-
-export const AvklartefaktaVurderingSelector = createSelector(
-  state => AvklartefaktaSelector(state).vurdering,
-  vurdering => vurdering || {}
-);
-
-export const AvklartefaktaValgteArbeidsgivereDetaljerSelector = createSelector(
-  state => AvklartefaktaValgteArbeidsgivereSelector(state) || [],
-  state => fagsakSelectors.OrganisasjonerSelector(state) || [],
-  (valgteArbeidsgivere, alleOrganisasjoner) => (
-    alleOrganisasjoner.filter(organisasjonen => valgteArbeidsgivere.includes(organisasjonen.orgnr))
+/* Oppholdsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
+ * territoriet som søkeren skal til faktisk er med i forordningen gjøres i avklartefakta.
+ * Derfor må både avklartefakta og soknad settes inn slik at disse kan flettes til avklart fakta.
+ */
+export const Oppholdsland = createSelector(
+  state => AvklartefaktaSelector(state),
+  state => soknadSelectors.OppholdsLandSelector(state),
+  (alleAvklartefakta, alleLandISoknaden) => (
+    alleLandISoknaden.map(enkeltLand => (
+      alleAvklartefakta.find(avklaring => avklaring.subjektID === enkeltLand) ||
+        {
+          ...avklartFaktaTemplate,
+          referanse: avklartefaktaKoder.OPPHOLDSLAND,
+          subjektID: enkeltLand,
+          fakta: ['TRUE'],
+        }
+    ))
   )
 );
 
-/**
- * Kun arbeidsgivere med arbeidsforhold som tangerer innenfor perioden som er lagt inn i avklartefaktaen skal
- * vises i listen over valgbare arbeidsgivere i stegvelgeren (VurderingArbeidsgivere).
+/* Avklart fakta om søker er yrkesaktiv, ytelsesmottaker etc. */
+export const Sysselsetting = createSelector(
+  state => AvklartefaktaSelector(state),
+  alleAvklarteFakta => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.SYSSELSETTING);
+    if (!avklartFakta) return null;
+    return avklartFakta.fakta[0];
+  }
+);
+
+/* Avklart fakta om søkers yrkesaktivitet og antall land. */
+export const YrkesaktivitetAntallLand = createSelector(
+  state => AvklartefaktaSelector(state),
+  alleAvklarteFakta => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND);
+    if (!avklartFakta) return null;
+    return avklartFakta.fakta[0];
+  }
+);
+
+/* Avklart fakta om søker er ordinær arbeidstaker, selvstendig næringsdrivende, begge deler eller tjenesteperson. */
+export const Yrkesaktivitet = createSelector(
+  state => AvklartefaktaSelector(state),
+  alleAvklarteFakta => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.YRKESAKTIVITET);
+    if (!avklartFakta) return null;
+    return avklartFakta.fakta[0];
+  }
+);
+
+/* Det er den juridiske arbeidsgiveren som skal vises i stegvelgeren. Derfor må vi traversere listen over arbeidsforhold
+ * og merge inn organisasjoner slik at det er der den juridiske organisasjonens navn som vises i panelet.
  */
 export const ArbeidsgivereIPeriodenSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
@@ -140,7 +106,51 @@ export const ArbeidsgivereIPeriodenSelector = createSelector(
   }
 );
 
-export const AvklartefaktaForretningsstedSelector = createSelector(
-  state => AvklartefaktaSelector(state).forretningssted,
-  forretningssted => forretningssted || {}
+/* Det er kun arbeidsgivere som saksbehandler har krysset av som skal være med videre som grunnlag
+ * for vurderingen. Alle arbeidsgivere som ikke er krysset av skal automatisk markeres som om de ikke er med videre
+ * dvs "FALSE" som fakta.
+ */
+export const ArbeidsgivereSelector = createSelector(
+  state => AvklartefaktaSelector(state),
+  state => ArbeidsgivereIPeriodenSelector(state),
+  (alleAvklarteFakta, alleArbeidsgivere) => {
+    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === avklartefaktaKoder.ARBEIDSGIVER);
+    return alleArbeidsgivere.map(arbeidsgiver => {
+      const eksisterendeAvklaring = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.orgnr);
+
+      return eksisterendeAvklaring || {
+        ...avklartFaktaTemplate,
+        referanse: avklartefaktaKoder.ARBEIDSGIVER,
+        fakta: ['FALSE'],
+        subjektID: arbeidsgiver.orgnr,
+        avklartFaktaKode: avklartefaktaKoder.ARBEIDSGIVER, // TODO: Kode ikke avklart av arkitektur.
+      };
+    });
+  }
 );
+
+export const AvklartefaktaOppholdSelector = createSelector(
+  state => AvklartefaktaSelector(state).opphold,
+  opphold => opphold || []
+);
+
+export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
+  state => AvklartefaktaOppholdSelector(state).land || [],
+  opphold => opphold.filter(enkeltOpphold => enkeltOpphold.erGyldig) || []
+);
+
+export const AvklartefaktaLovvalgKodeSelector = createSelector(
+  state => AvklartefaktaSelector(state).vurdering || {},
+  vurdering => (vurdering.lovvalgKode ? vurdering.lovvalgKode : '')
+);
+
+export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
+  state => AvklartefaktaSelector(state).valgteArbeidsgivere,
+  valgteArbeidsgivere => valgteArbeidsgivere || []
+);
+
+export const AvklartefaktaVurderingSelector = createSelector(
+  state => AvklartefaktaSelector(state).vurdering,
+  vurdering => vurdering || {}
+);
+
