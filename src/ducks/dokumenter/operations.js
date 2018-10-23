@@ -27,6 +27,13 @@ export function opprettDokument(behandlingID, dokumenttypeKode, dokument) {
     PENDING: Types.PENDING,
   });
 }
+export function lagPdfUtkast(behandlingID, dokumenttypeKode, dokument) {
+  return doThenDispatch(() => Api.Dokumenter.lagPdfUtkast(behandlingID, dokumenttypeKode, dokument), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
 export function resetDokument() {
   return dispatch => (dispatch(Actions.resetDokment()));
 }
