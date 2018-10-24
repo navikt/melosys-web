@@ -56,11 +56,18 @@ class BrevBestilling extends Component {
     const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
 
     const extededResponse = await lagPdfUtkast(behandlingID, dokumenttypeKode, dokument);
-    const { data: response } = extededResponse;
-    const arrayBuffer = await response.arrayBuffer();
-    const file = new Blob([arrayBuffer], { type: 'application/pdf' });
-    const fileURL = URL.createObjectURL(file);
-    window.open(fileURL);
+    if (extededResponse.data.ok) {
+      const { data: response } = extededResponse;
+      const arrayBuffer = await response.arrayBuffer();
+      const file = new Blob([arrayBuffer], { type: 'application/pdf' });
+      const fileURL = URL.createObjectURL(file);
+      window.open(fileURL);
+    } else if (extededResponse.data.error) {
+      /*
+      const { error, message, path, timestamp } = extededResponse.data;
+      this.setState({ feil: { error, message, path, timestamp } });
+      */
+    }
   };
 
   forkastBrev = () => {
@@ -90,6 +97,7 @@ class BrevBestilling extends Component {
           <Nav.Row>
             {this.erMangelBrevMedFritekst() && <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
           </Nav.Row>
+          {/* {this.state.feil && <Nav.Row><p>{this.state.feil.message}</p></Nav.Row>} */}
           <Nav.Row>
             <Nav.Column xs="12" md="6">
               <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>
@@ -139,6 +147,7 @@ const mapStateToProps = state => ({
   aktoerroller: state.kodeverk.data.aktoerroller,
   initialValues: {
     dokumenttypeKode: 'MELDING_MANGLENDE_OPPLYSNINGER',
+    mottaker: 'BRUKER',
   },
 });
 
