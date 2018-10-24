@@ -38,6 +38,7 @@ class Saksbehandling extends Component {
     history: PT.object.isRequired,
     match: PT.object.isRequired,
     oppfriskSaksopplysninger: PT.func.isRequired,
+    resetFagsak: PT.func.isRequired,
     sjekkSaksflytStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
     sendSoknad: PT.func.isRequired,
@@ -57,6 +58,10 @@ class Saksbehandling extends Component {
 
   async componentDidMount() {
     await this.lastInnSaksopplysninger();
+  }
+
+  async componentWillUnmount() {
+    await this.props.resetFagsak();
   }
 
   lastInnSaksopplysninger = async () => {
@@ -193,6 +198,7 @@ const mapDispatchToProps = dispatch => ({
   sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
+  resetFagsak: () => dispatch(fagsakOperations.reset()),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
 });
