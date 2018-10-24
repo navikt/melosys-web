@@ -68,9 +68,15 @@ function oppfrisk(behandlingID) {
   return Api.Fagsaker.oppfrisk(behandlingID);
 }
 
+function reset() {
+  return { type: Types.RESET };
+}
+
+
 export {
   hent,
   opprett,
   sok,
   oppfrisk,
+  reset,
 };
