@@ -1,11 +1,22 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel12 from '../../stegKomponenter/vurderingArtikkel12';
+import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 class Artikkel12 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
+      {
+        beskrivelse: 'vilkar for artikkel 12.1 er oppfylt',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('ART12_1', alleVilkar),
+        nesteSteg: STEG.VEDTAK,
+      },
+      {
+        beskrivelse: 'ønsker å vurdere 16.1',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('ART16_1', alleVilkar),
+        nesteSteg: STEG.ARTIKKEL_16,
+      },
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
