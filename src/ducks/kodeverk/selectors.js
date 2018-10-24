@@ -22,6 +22,11 @@ export const alleLovvalgSelector = createSelector(
   }
 );
 
+export const lovvalgsunntakSelector = createSelector(
+  state => state.kodeverk.data.lovvalgsunntak,
+  lovvalgsunntak => lovvalgsunntak || []
+);
+
 export const oppgaveTyperSelector = createSelector(
   state => state.kodeverk.data.oppgavetyper,
   oppgavetyper => oppgavetyper || []
