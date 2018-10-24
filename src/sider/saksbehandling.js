@@ -43,6 +43,7 @@ class Saksbehandling extends Component {
     oppsummering: MPT.Oppsummering,
     sendSoknad: PT.func.isRequired,
     soknad: PT.object,
+    fagsakFerdigLastet: PT.bool.isRequired,
   };
 
   static defaultProps = {
@@ -134,7 +135,7 @@ class Saksbehandling extends Component {
   /* eslint-enable */
 
   render() {
-    const { oppsummering } = this.props;
+    const { oppsummering, fagsakFerdigLastet } = this.props;
     const { blokkerInnholdMedOppfriskSpinner } = this;
 
     const oppfriskVenterDialog = this.state.oppfriskningBlokkererInnhold && (
@@ -154,9 +155,11 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Saksopplysninger
-                blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
-              />
+              { fagsakFerdigLastet &&
+                <Saksopplysninger
+                  blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+                />
+              }
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering
@@ -192,6 +195,7 @@ const mapStateToProps = state => ({
   saksflyt: saksflytSelectors.SaksflytSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
+  fagsakFerdigLastet: state.fagsaker.status === 'OK',
 });
 
 const mapDispatchToProps = dispatch => ({

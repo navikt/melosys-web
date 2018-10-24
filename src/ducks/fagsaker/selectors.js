@@ -5,6 +5,7 @@ import moment from 'moment/moment';
 import { soknadSelectors } from '../soknad/';
 import { kodeverkObjektTilKode } from '../../utils/kodeverk';
 import { datoDiff } from '../../utils/dato';
+import * as FagsakTypes from './types';
 
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
@@ -133,6 +134,12 @@ export const InntektSelector = createSelector(
     const flatInntektsListe = lagFlatInntektListe(arbeidsInntektMaanedListe);
     return summerInntektsTyperFraSammeOpplysningspliktig(flatInntektsListe);
   }
+);
+
+const statusSelector = state => state.fagsaker.status;
+export const StatusSelector = createSelector(
+  statusSelector,
+  status => (status === FagsakTypes.OK)
 );
 
 export const SoknadenSelector = createSelector(
