@@ -6,7 +6,6 @@ import PT from 'prop-types';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 import * as Skjema from '../../felles-komponenter/skjema';
-
 import { formSelectors } from '../../ducks/form/';
 
 import PanelHeader from '../../felles-komponenter/panelHeader/panelHeader';
@@ -41,21 +40,29 @@ class BrevBestilling extends Component {
     if (!brevbestillingSkjemaVerdier) return false;
     return brevbestillingSkjemaVerdier.dokumenttypeKode === 'MELDING_MANGLENDE_OPPLYSNINGER';
   };
-
-  sendBrev = () => {
+  /*
+  sendBrev = async () => {
     const { brevbestillingSkjemaVerdier, opprettDokument, oppsummering } = this.props;
     const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
     const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
-    opprettDokument(behandlingID, dokumenttypeKode, dokument);
+    const extededResponse = await opprettDokument(behandlingID, dokumenttypeKode, dokument);
   };
-  utkastBreev = () => {
+*/
+  utkastBrev = async () => {
     const { brevbestillingSkjemaVerdier, lagPdfUtkast, oppsummering } = this.props;
     const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
     const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
-    lagPdfUtkast(behandlingID, dokumenttypeKode, dokument);
+
+    const extededResponse = await lagPdfUtkast(behandlingID, dokumenttypeKode, dokument);
+    const { data: response } = extededResponse;
+    const arrayBuffer = await response.arrayBuffer();
+    const file = new Blob([arrayBuffer], { type: 'application/pdf' });
+    const fileURL = URL.createObjectURL(file);
+    window.open(fileURL);
   };
+
   forkastBrev = () => {
     const { resetBrevBestillingForm, resetDokument } = this.props;
     resetBrevBestillingForm();
@@ -73,7 +80,7 @@ class BrevBestilling extends Component {
             <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker">
               {aktoerroller && aktoerroller.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
-            <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled="disabled">
+            <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
               {dokumenttyper && dokumenttyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
           </Nav.Row>
@@ -88,7 +95,7 @@ class BrevBestilling extends Component {
               <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>
             </Nav.Column>
             <Nav.Column xs="12" md="6">
-              <Nav.Knapp htmlType="submit" type="hoved" onClick={this.utkastBreev}>Send Utkast</Nav.Knapp>
+              <Nav.Knapp htmlType="submit" type="hoved" onClick={this.utkastBrev}>Send Utkast</Nav.Knapp>
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
