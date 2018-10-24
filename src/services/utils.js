@@ -220,9 +220,7 @@ const toJsonExtended = async fetchResponse => {
   if (!fetchResponse.ok) {
     const err = await fetchResponse.json();
     return {
-      data: {
-        ...err,
-      },
+      ...err,
       response,
     };
   } else if (contentType && contentType.startsWith('text')) {
