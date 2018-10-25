@@ -11,64 +11,60 @@ import { soknadSelectors } from '../../../ducks/soknad/';
 import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
-import { kodeverkObjektTilTerm, finnEnkeltKodeFraListe } from '../../../utils/kodeverk';
 import Listevelger from '../../skjema/listevelger';
+import DatoOmrade from '../../datoOmrade/datoOmrade';
+
+import './vurderingArtikkel16.css';
 
 const VurderingArtikkel16 = props => {
   const {
     gyldigeOppholdLand,
     oppholdPeriode,
-    alleLandkoder,
-    alleLovvalg,
     lovvalgsunntak,
+    anmodningsBegrunnelser,
   } = props;
 
   const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
 
-  const landSomTekstListe = gyldigeOppholdLand
-    .map(enkeltLand => finnEnkeltKodeFraListe(enkeltLand.landKode, alleLandkoder))
-    .map(enkeltLandKode => kodeverkObjektTilTerm(enkeltLandKode))
-    .join(', ');
+  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
   return (
     <div className="vedtak">
       <Nav.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Undertittel>
-      <div>
-        <Nav.Row>
+      <div className="artikkel16">
+        <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="6">
             <Nav.Element type="element">Lands lovgivning det søkes unntak fra:</Nav.Element>
             <Nav.Normaltekst>{landSomTekstListe}</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6">
-            <Nav.Element type="element">Søknadsperiode</Nav.Element>
-            <Nav.Normaltekst>{ oppholdPeriode.fom} {oppholdPeriode.tom } - {antallManeder}mnd</Nav.Normaltekst>
+            <Nav.Element type="element">Antall måneder:</Nav.Element>
+            <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
+            <DatoOmrade periode={oppholdPeriode} />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="6">
-            <Nav.Element type="element">Artikkelen det søkes unntak fra:</Nav.Element>
-            <Listevelger feltNavn="unntak.16" muligeValg={lovvalgsunntak}>nedtrekk</Listevelger>
-          </Nav.Column>
-          <Nav.Column xs="6">
-            <Nav.Element type="element">Begrunnelse</Nav.Element>
-            <Skjema.Input feltNavn="unntak.16" />
+          <Nav.Column xs="10">
+            <Listevelger feltNavn="lovvalgsperiode.unntak" muligeValg={lovvalgsunntak} label="Artikkelen det søkes unntak fra:" bredde="M" />
+            <Listevelger gruppe muligeValg={anmodningsBegrunnelser} feltNavn="lovvalgsperiode.begrunnelseKoder" label="Legg til begrunnelse:" />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Nav.Element type="element">Begrunnelse til utenlandsk myndighet (engelsk)</Nav.Element>
-            <Skjema.Textarea feltNavn="unntak.16" bredde="fullbredde" />
+            <Skjema.Textarea feltNavn="lovvalgsperiode.begrunnelseFritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={200} bredde="fullbredde" />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="12">
-            <a href="http://melosys" target="_blank" rel="noopener noreferrer" className="vedtak__brevlenke">Forhåndsvis anmodning til utenlandsk myndighet</a>
-            <a href="http://melosys" target="_blank" rel="noopener noreferrer" className="vedtak__brevlenke">Forhåndsvis brev til søker</a>
+          <Nav.Column xs={12}>
+            <Nav.Lenker href="http://www.nav.no">Forhåndsvis anmodning til utenlandsk myndighet</Nav.Lenker>
+          </Nav.Column>
+          <Nav.Column xs={12}>
+            <Nav.Lenker href="http://www.nav.no">Forhåndsvis brev til søker</Nav.Lenker>
           </Nav.Column>
         </Nav.Row>
-        <Nav.Row>
+        <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="6">
-            <Nav.Knapp type="hoved" onClick={() => {}}>Fatt vedtak</Nav.Knapp>
+            <Nav.Knapp type="hoved" onClick={() => {}}>Send anmodning til utenlandsk myndighet</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -78,21 +74,18 @@ const VurderingArtikkel16 = props => {
 
 VurderingArtikkel16.propTypes = {
   lovvalgKode: PT.string.isRequired,
-  lagreVedtakHandler: PT.func.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
-  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
   lovvalgsunntak: PT.arrayOf(MPT.Kodeverk).isRequired,
+  anmodningsBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 const mapStateToProps = state => ({
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
-  alleLandkoder: KodeverkSelectors.landkoderSelector(state),
-  alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
   lovvalgsunntak: KodeverkSelectors.lovvalgsunntakSelector(state),
+  anmodningsBegrunnelser: KodeverkSelectors.anmodningsBegrunnelserSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingArtikkel16);

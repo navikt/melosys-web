@@ -11,7 +11,7 @@ import { soknadSelectors } from '../../../ducks/soknad/';
 import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode, finnEnkeltKodeFraListe } from '../../../utils/kodeverk';
+import { kodeverkObjektTilKode, finnEnkeltKodeFraListe } from '../../../utils/kodeverk';
 
 import './vurderingVedtak.css';
 
@@ -23,17 +23,13 @@ const VurderingVedtak = props => {
   const {
     gyldigeOppholdLand,
     oppholdPeriode,
-    alleLandkoder,
     alleLovvalg,
     lovvalgKode,
   } = props;
 
   const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
 
-  const landSomTekstListe = gyldigeOppholdLand
-    .map(enkeltLand => finnEnkeltKodeFraListe(enkeltLand.landKode, alleLandkoder))
-    .map(enkeltLandKode => kodeverkObjektTilTerm(enkeltLandKode))
-    .join(', ');
+  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
   const lovvalgObjekt = finnEnkeltKodeFraListe(lovvalgKode, alleLovvalg);
   const lovvalgTerm = lovvalgObjekt && kodeverkObjektTilKode(lovvalgObjekt);
@@ -73,7 +69,6 @@ VurderingVedtak.propTypes = {
   lagreVedtakHandler: PT.func.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
-  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
@@ -81,7 +76,6 @@ const mapStateToProps = state => ({
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
-  alleLandkoder: KodeverkSelectors.landkoderSelector(state),
   alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
 });
 

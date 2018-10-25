@@ -66,3 +66,8 @@ export const begrunnelserSelector = createSelector(
   state => state.kodeverk.data.begrunnelser,
   begrunnelser => begrunnelser || {}
 );
+
+export const anmodningsBegrunnelserSelector = createSelector(
+  state => begrunnelserSelector(state),
+  begrunnelser => begrunnelser.artikkel16_1_anmodning || []
+);
