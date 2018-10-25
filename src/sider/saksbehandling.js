@@ -19,6 +19,9 @@ import {
   fagsakSelectors,
 } from '../ducks/fagsaker/';
 
+import { vilkarOperations } from '../ducks/vilkar/';
+import { avklartefaktaOperations } from '../ducks/avklartefakta/';
+
 import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
 
 import {
@@ -38,12 +41,14 @@ class Saksbehandling extends Component {
     history: PT.object.isRequired,
     match: PT.object.isRequired,
     oppfriskSaksopplysninger: PT.func.isRequired,
-    resetFagsak: PT.func.isRequired,
+    resetFagsakState: PT.func.isRequired,
+    resetVilkarState: PT.func.isRequired,
+    resetAvklartefaktaState: PT.func.isRequired,
+    resetSoknadState: PT.func.isRequired,
     sjekkSaksflytStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
     sendSoknad: PT.func.isRequired,
     soknad: PT.object,
-    fagsakFerdigLastet: PT.bool.isRequired,
   };
 
   static defaultProps = {
@@ -62,7 +67,10 @@ class Saksbehandling extends Component {
   }
 
   async componentWillUnmount() {
-    await this.props.resetFagsak();
+    await this.props.resetFagsakState();
+    await this.props.resetAvklartefaktaState();
+    await this.props.resetVilkarState();
+    await this.props.resetSoknadState();
   }
 
   lastInnSaksopplysninger = async () => {
@@ -135,7 +143,7 @@ class Saksbehandling extends Component {
   /* eslint-enable */
 
   render() {
-    const { oppsummering, fagsakFerdigLastet } = this.props;
+    const { oppsummering } = this.props;
     const { blokkerInnholdMedOppfriskSpinner } = this;
 
     const oppfriskVenterDialog = this.state.oppfriskningBlokkererInnhold && (
@@ -155,11 +163,9 @@ class Saksbehandling extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="7">
-              { fagsakFerdigLastet &&
-                <Saksopplysninger
-                  blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
-                />
-              }
+              <Saksopplysninger
+                blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+              />
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering
@@ -195,14 +201,16 @@ const mapStateToProps = state => ({
   saksflyt: saksflytSelectors.SaksflytSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
-  fagsakFerdigLastet: state.fagsaker.status === 'OK',
 });
 
 const mapDispatchToProps = dispatch => ({
   sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
-  resetFagsak: () => dispatch(fagsakOperations.reset()),
+  resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
+  resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
+  resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
+  resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
 });

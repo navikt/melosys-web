@@ -8,6 +8,7 @@
  */
 
 import { doThenDispatch } from '../../services/utils';
+import * as Actions from './actions';
 import * as Api from '../../services/api';
 import * as Types from './types';
 import * as Validering from '../../felles-komponenter/skjema/validering';
@@ -68,15 +69,14 @@ function oppfrisk(behandlingID) {
   return Api.Fagsaker.oppfrisk(behandlingID);
 }
 
-function reset() {
-  return { type: Types.RESET };
+function resetFagsakState() {
+  return Actions.resetFagsakState();
 }
-
 
 export {
   hent,
   opprett,
   sok,
   oppfrisk,
-  reset,
+  resetFagsakState,
 };
