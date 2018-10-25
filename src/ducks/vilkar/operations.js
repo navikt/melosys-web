@@ -32,3 +32,8 @@ export function send(behandlingID, body) {
 export function oppdaterVilkarState(skjema) {
   return dispatch => (dispatch(Actions.oppdaterVilkarState(skjema)));
 }
+
+export function resetVilkarState() {
+  return Actions.resetVilkarState();
+}
+

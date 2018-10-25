@@ -33,6 +33,8 @@ export default function reducer(state = initialState, action) {
         data: soknadData,
       };
     }
+    case Types.RESET:
+      return { ...initialState };
     case Types.OPPDATER_PERIODE: {
       const { oppholdsPeriode } = action.data;
 

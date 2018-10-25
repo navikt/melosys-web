@@ -36,6 +36,8 @@ export default function reducer(state = initialState, action) {
         status: STATUS.OK,
         data: action.data,
       };
+    case Types.RESET:
+      return { ...initialState };
     case Types.OPPDATER_VILKAR: {
       // Gjennomgå alle vilkår som kan være satt. Dersom de er 'undefined', vil det si at
       // saksbehandler ikke har vært innom denne vurderingen og kanskje aldri kommer tid. Siden

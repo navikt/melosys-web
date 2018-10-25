@@ -39,6 +39,8 @@ export default function reducer(state = initialState, action) {
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.SAKSLISTE_OK:
       return { ...state, status: STATUS.OK, data: { ...state.data, fagsakListe: action.data } };
+    case Types.RESET:
+      return initialState;
     default:
       return state;
   }

@@ -23,3 +23,11 @@ export function oppdaterPeriode(periode) {
     },
   });
 }
+
+/** Tømmer avklartefakta-state når komponenten unmounter
+ *
+ * @returns {{type: *}}
+ */
+export function resetSoknadState() {
+  return { type: Types.RESET };
+}

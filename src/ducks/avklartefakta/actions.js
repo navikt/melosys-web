@@ -14,3 +14,11 @@ export function oppdaterAvklartefaktaState(dokument) {
     dokument,
   });
 }
+
+/** Tømmer avklartefakta-state når komponenten unmounter
+ *
+ * @returns {{type: *}}
+ */
+export function resetAvklartefaktaState() {
+  return { type: Types.RESET };
+}

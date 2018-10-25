@@ -43,6 +43,8 @@ export default function reducer(state = initialState, action) {
         status: STATUS.OK,
         data: action.data,
       };
+    case Types.RESET:
+      return { ...initialState };
     case Types.OPPDATER_AVKLARTEFAKTA: {
       const { dokument } = action;
       const avklartefakta = [
