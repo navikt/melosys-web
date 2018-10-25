@@ -12,6 +12,7 @@ import { getFormValues } from 'redux-form';
 import Regler from '../../regler';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
+import { KodeverkSelectors } from '../kodeverk';
 
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
@@ -136,14 +137,16 @@ export const ArbeidsgivereSelector = createSelector(
   }
 );
 
-export const AvklartefaktaOppholdSelector = createSelector(
-  state => AvklartefaktaSelector(state).opphold,
-  opphold => opphold || []
-);
-
 export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
-  state => AvklartefaktaOppholdSelector(state).land || [],
-  opphold => opphold.filter(enkeltOpphold => enkeltOpphold.erGyldig) || []
+  state => Oppholdsland(state) || [],
+  state => KodeverkSelectors.landkoderSelector(state) || [],
+  (avklartefaktaLand, landKoder) => {
+    const gyldigeLand = avklartefaktaLand
+      .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
+      .map(avklartfakta => avklartfakta.subjektID);
+
+    return landKoder.filter(enkeltObjekt => gyldigeLand.includes(enkeltObjekt.kode));
+  }
 );
 
 export const AvklartefaktaLovvalgKodeSelector = createSelector(

@@ -55,14 +55,12 @@ InnerTextAreaComponent.propTypes = {
   label: PT.string,
   placeholder: PT.string,
   maxLength: PT.number.isRequired,
-  errorMessage: PT.arrayOf(PT.oneOfType([PT.string, PT.node])),
   visTellerFra: PT.number,
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   input: PT.object, // eslint-disable-line react/forbid-prop-types
 };
 
 InnerTextAreaComponent.defaultProps = {
-  errorMessage: undefined,
   meta: undefined,
   input: undefined,
   visTellerFra: undefined,

@@ -11,8 +11,8 @@ import EnkeltDato from './enkeltDato';
  */
 const DatoOmrade = ({ periode }) => (
   <Nav.Row>
-    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Fra</Nav.Element><EnkeltDato dato={periode.fom} /></Nav.Column>
-    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Til</Nav.Element><EnkeltDato dato={periode.tom} /></Nav.Column>
+    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>F.o.m.</Nav.Element><EnkeltDato dato={periode.fom} /></Nav.Column>
+    <Nav.Column xs="6" className="blokk-xs"><Nav.Element>T.o.m.</Nav.Element><EnkeltDato dato={periode.tom} /></Nav.Column>
   </Nav.Row>
 );
 
