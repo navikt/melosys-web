@@ -5,7 +5,7 @@ import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 
 import SideDialogDokumenter from './sideDialogDokumenter';
-import SideDialogBrevBestilling from './BrevBestilling';
+import SideDialogBrevBestilling from './brevBestilling';
 
 import './sideDialog.css';
 
