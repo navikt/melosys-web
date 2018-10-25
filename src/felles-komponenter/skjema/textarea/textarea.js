@@ -36,6 +36,7 @@ function InnerTextAreaComponent({
   ...rest
 }) {
   const feil = (rest.meta.error && rest.meta.touched && !rest.meta.active) ? { feilmelding: rest.meta.error } : undefined;
+  console.log(feil); // FIXME
   return (
     <Nav.Textarea
       textareaClass="skjemaelement__input input--fullbredde"
