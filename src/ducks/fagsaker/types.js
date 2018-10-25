@@ -8,6 +8,7 @@
 export const OK = 'fagsaker/OK';
 export const FEILET = 'fagsaker/FEILET';
 export const PENDING = 'fagsaker/PENDING';
+
 export const RESET = 'fagsaker/RESET';
 
 export const SAKSLISTE_OK = 'fagsaker/SAKSLISTE_OK';

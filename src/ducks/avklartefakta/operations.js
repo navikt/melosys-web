@@ -32,3 +32,6 @@ export function oppdaterAvklarteFaktaState(skjema) {
   return dispatch => (dispatch(Actions.oppdaterAvklartefaktaState(skjema)));
 }
 
+export function resetAvklartefaktaState() {
+  return Actions.resetAvklartefaktaState();
+}

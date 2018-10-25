@@ -28,6 +28,7 @@ class Stegvelger extends Component {
     this.props.hentInngang(snr);
 
     const bid = this.props.oppsummering.behandlingID;
+
     this.props.hentVilkar(bid);
     this.props.hentAvklartefakta(bid);
   }
