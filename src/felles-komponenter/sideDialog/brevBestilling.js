@@ -8,31 +8,28 @@ import * as MPT from '../../proptypes/';
 import * as Skjema from '../../felles-komponenter/skjema';
 import { formSelectors } from '../../ducks/form/';
 
-import PanelHeader from '../../felles-komponenter/panelHeader/panelHeader';
-import * as Ikoner from '../../resources/images';
 // import * as Validering from '../skjema/validering';
 import { brevbestillingValidering, erSkjemaGyldig } from '../skjema/validering/brevbestilling';
 import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
 import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
 
-const InfoPanel = () => {
-  const panelIkon = Ikoner.Varsel;
-  return (
-    <Nav.EkspanderbartpanelBase
-      heading={<PanelHeader ikon={panelIkon} tittel="Dette skal stå i mangelbrevet" undertittel="" />}
-      ariaTittel="Dette skal stå i mangelbrevet">
-      <p>
-        En beskrivelse av hvilken informasjon eller dokumentasjon som mangler for å gjøre søknaden komplett.
-        Din tekst starter etter teksten &laquo;Dette må du sende oss:&raquo;.
-      </p>
-      <p>
-        Brevet inneholder allerede en innleding, beskrivelse av hvordan informasjon sendes inn og en avsluttende tekst.
-        Trykk på &laquo;forhåndsvis brev&raquo; for å se brevet når du er fgerdig med å skrive.<br />
-        OBS! Det er ikke automatisk stavekontroll, så sjekk teksten to har skrevet.
-      </p>
-    </Nav.EkspanderbartpanelBase>
-  );
-};
+import './brevBestilling.css';
+
+const InfoPanel = () => (
+  <Nav.Lesmerpanel
+    apneTekst="Les tips om hva du bør skrive."
+    lukkTekst="Lukk">
+    <p>
+      En beskrivelse av hvilken informasjon eller dokumentasjon som mangler for å gjøre søknaden komplett.
+      Din tekst starter etter teksten &laquo;Dette må du sende oss:&raquo;.
+    </p>
+    <p>
+      Brevet inneholder allerede en innleding, beskrivelse av hvordan informasjon sendes inn og en avsluttende tekst.
+      Trykk på &laquo;forhåndsvis brev&raquo; for å se brevet når du er fgerdig med å skrive.<br />
+      OBS! Det er ikke automatisk stavekontroll, så sjekk teksten to har skrevet.
+    </p>
+  </Nav.Lesmerpanel>
+);
 
 class BrevBestilling extends Component {
   overstyrSubmit = event => {
@@ -91,36 +88,23 @@ class BrevBestilling extends Component {
     const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
     // const feilmelding = {feilmelding: 'Her er det noe feil.'};
     return (
-      <form onSubmit={this.overstyrSubmit}>
-        <Nav.Panel>
+      <div className="brevBestilling">
+        <form onSubmit={this.overstyrSubmit}>
           <Nav.Fieldset legend="Nytt brev">
-            <Nav.Row>
-              <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker">
-                {aktoerroller && aktoerroller.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
-              </Skjema.Select>
-              <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
-                {dokumenttyper && dokumenttyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
-              </Skjema.Select>
-            </Nav.Row>
-            <Nav.Row>
-              {this.erMangelBrevMedFritekst() && <InfoPanel />}
-            </Nav.Row>
-            <Nav.Row>
-              {this.erMangelBrevMedFritekst() &&
-              <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
-            </Nav.Row>
-            {/* {this.state.feil && <Nav.Row><p>{this.state.feil.message}</p></Nav.Row>} */}
-            <Nav.Row>
-              <Nav.Column xs="12" md="6">
-                <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>
-              </Nav.Column>
-              <Nav.Column xs="12" md="6">
-                <Nav.Knapp htmlType="submit" type="hoved" onClick={this.utkastBrev}>Send Utkast</Nav.Knapp>
-              </Nav.Column>
-            </Nav.Row>
+            <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker">
+              {aktoerroller && aktoerroller.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+            </Skjema.Select>
+            <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
+              {dokumenttyper && dokumenttyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+            </Skjema.Select>
+            {this.erMangelBrevMedFritekst() &&
+            <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
+            {this.erMangelBrevMedFritekst() && <InfoPanel />}
+            <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;
+            <Nav.Knapp htmlType="submit" type="hoved" onClick={this.utkastBrev}>Send Utkast</Nav.Knapp>
           </Nav.Fieldset>
-        </Nav.Panel>
-      </form>
+        </form>
+      </div>
     );
   }
 }
