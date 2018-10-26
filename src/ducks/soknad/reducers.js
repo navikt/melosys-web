@@ -33,6 +33,8 @@ export default function reducer(state = initialState, action) {
         data: soknadData,
       };
     }
+    case Types.RESET:
+      return { ...initialState };
     case Types.OPPDATER_PERIODE: {
       const { oppholdsPeriode } = action.data;
 
@@ -89,7 +91,7 @@ export default function reducer(state = initialState, action) {
           arbeidstakerTidligereUtsendt24Mnd: dokument.arbeidstakerTidligereUtsendt24Mnd,
           arbeidsgiverBetalerArbeidsgiveravgift: dokument.arbeidsgiverBetalerArbeidsgiveravgift,
           trygdeavgiftTrukketGjennomSkatt: dokument.trygdeavgiftTrukketGjennomSkatt,
-          trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato),
+          trygdeavgiftTrukketGjennomSkattDato: dokument.trygdeavgiftTrukketGjennomSkattDato ? formatterDatoTilISO(dokument.trygdeavgiftTrukketGjennomSkattDato) : null,
         },
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
