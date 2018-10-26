@@ -55,10 +55,10 @@ const VurderingArtikkel16 = props => {
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs={12}>
+          <Nav.Column xs="12">
             <Nav.Lenker href="http://www.nav.no">Forhåndsvis anmodning til utenlandsk myndighet</Nav.Lenker>
           </Nav.Column>
-          <Nav.Column xs={12}>
+          <Nav.Column xs="12">
             <Nav.Lenker href="http://www.nav.no">Forhåndsvis brev til søker</Nav.Lenker>
           </Nav.Column>
         </Nav.Row>
