@@ -9,7 +9,7 @@ class Artikkel16 extends Steg {
       {
         beskrivelse: 'alle valg',
         exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: false,
       },
     ];
     this._id = STEG.ARTIKKEL_16;

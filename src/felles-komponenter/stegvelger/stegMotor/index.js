@@ -15,9 +15,9 @@ class StegMotor {
     do {
       const nesteStegPosisjon = stegSamling.length;
       gjeldendeSteg = this.beregnNesteSteg(gjeldendeSteg, nesteStegPosisjon);
-      stegSamling.push(gjeldendeSteg.byggSteg());
+      if (gjeldendeSteg) { stegSamling.push(gjeldendeSteg.byggSteg()); }
       iterations += 1;
-    } while (gjeldendeSteg.id !== 'VEDTAK' && iterations < 30);
+    } while (gjeldendeSteg && iterations < 30);
 
     return stegSamling;
   };
@@ -26,7 +26,8 @@ class StegMotor {
     if (gjeldendeSteg === null) {
       return this.lagKlasseBasertPaID(this._forsteStegID, 0);
     }
-    return this.lagKlasseBasertPaID(gjeldendeSteg.nesteSteg(), nesteStegPosisjon);
+    const nesteSteg = gjeldendeSteg.nesteSteg();
+    return nesteSteg ? this.lagKlasseBasertPaID(gjeldendeSteg.nesteSteg(), nesteStegPosisjon) : false;
   };
 
   lagKlasseBasertPaID = (stegID, stegPosisjon) => {
