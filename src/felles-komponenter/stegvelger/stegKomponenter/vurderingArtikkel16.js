@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
@@ -16,12 +17,40 @@ import DatoOmrade from '../../datoOmrade/datoOmrade';
 
 import './vurderingArtikkel16.css';
 
+const EnkeltPeriode = ({ linjeID, alleLovvalg }) => (
+  <Nav.Row>
+    <Nav.Column xs="4"><Skjema.Input feltNavn={`${linjeID}.fom`} datoFelt label="F.o.m." /></Nav.Column>
+    <Nav.Column xs="4"><Skjema.Input feltNavn={`${linjeID}.tom`} datoFelt label="T.o.m." /></Nav.Column>
+    <Nav.Column xs="4"><Listevelger feltNavn={`${linjeID}.lovvalg`} label="Lovvalg for perioden" muligeValg={alleLovvalg} /></Nav.Column>
+  </Nav.Row>
+);
+
+EnkeltPeriode.propTypes = {
+  linjeID: PT.string.isRequired,
+  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
+};
+
+const TidligerePerioder = ({ fields, alleLovvalg }) => (
+  <div>
+    {fields.map(linjeID => (<EnkeltPeriode key={linjeID} linjeID={linjeID} alleLovvalg={alleLovvalg} />))}
+    <Nav.Row>
+      <Nav.Column xs="12"><Nav.Knapp onClick={() => fields.push({})}>+ Legg til periode</Nav.Knapp></Nav.Column>
+    </Nav.Row>
+  </div>
+);
+
+TidligerePerioder.propTypes = {
+  fields: PT.object.isRequired,
+  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
+};
+
 const VurderingArtikkel16 = props => {
   const {
+    alleLovvalg,
+    anmodningsBegrunnelser,
     gyldigeOppholdLand,
     oppholdPeriode,
     lovvalgsunntak,
-    anmodningsBegrunnelser,
   } = props;
 
   const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
@@ -54,6 +83,13 @@ const VurderingArtikkel16 = props => {
             <Skjema.Textarea feltNavn="lovvalgsperiode.begrunnelseFritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={200} bredde="fullbredde" />
           </Nav.Column>
         </Nav.Row>
+        <Nav.Row className="artikkel16__ekstratopp">
+          <Nav.Column xs="12">
+            <Nav.Fieldset legend={`Tidligere perioder i ${landSomTekstListe}`}>
+              <FieldArray name="lovvalgsperiode.tidligere" component={TidligerePerioder} alleLovvalg={alleLovvalg} />
+            </Nav.Fieldset>
+          </Nav.Column>
+        </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Lenker href="http://www.nav.no">Forhåndsvis anmodning til utenlandsk myndighet</Nav.Lenker>
@@ -64,7 +100,7 @@ const VurderingArtikkel16 = props => {
         </Nav.Row>
         <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="6">
-            <Nav.Knapp type="hoved" onClick={() => {}}>Send anmodning til utenlandsk myndighet</Nav.Knapp>
+            <Nav.Hovedknapp type="hoved" onClick={() => {}}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -73,6 +109,7 @@ const VurderingArtikkel16 = props => {
 };
 
 VurderingArtikkel16.propTypes = {
+  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
   lovvalgKode: PT.string.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
@@ -81,6 +118,7 @@ VurderingArtikkel16.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
