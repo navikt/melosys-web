@@ -100,11 +100,13 @@ class Saksopplysninger extends Component {
       soknad,
     } = this.props;
 
+    const { behandlingID } = this.props.oppsummering;
+
     const { values: soknadVerdier } = soknadForm;
 
     if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
 
-    return (
+    return behandlingID ? (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
         <Stegvelger
           lagreVedtakHandler={this.lagreVedtakHandler}
@@ -123,7 +125,7 @@ class Saksopplysninger extends Component {
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
         {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
       </form>
-    );
+    ) : null;
   }
 }
 
@@ -172,7 +174,6 @@ const mapStateToProps = state => ({
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
-  vilkar: vilkarSelectors.VilkarSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),

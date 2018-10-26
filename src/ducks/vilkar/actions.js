@@ -14,3 +14,11 @@ export function oppdaterVilkarState(dokument) {
     data: dokument,
   });
 }
+
+/** Tømmer avklartefakta-state når komponenten unmounter
+ *
+ * @returns {{type: *}}
+ */
+export function resetVilkarState() {
+  return { type: Types.RESET };
+}

@@ -19,6 +19,9 @@ import {
   fagsakSelectors,
 } from '../ducks/fagsaker/';
 
+import { vilkarOperations } from '../ducks/vilkar/';
+import { avklartefaktaOperations } from '../ducks/avklartefakta/';
+
 import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
 
 import {
@@ -38,6 +41,10 @@ class Saksbehandling extends Component {
     history: PT.object.isRequired,
     match: PT.object.isRequired,
     oppfriskSaksopplysninger: PT.func.isRequired,
+    resetFagsakState: PT.func.isRequired,
+    resetVilkarState: PT.func.isRequired,
+    resetAvklartefaktaState: PT.func.isRequired,
+    resetSoknadState: PT.func.isRequired,
     sjekkSaksflytStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
     sendSoknad: PT.func.isRequired,
@@ -57,6 +64,13 @@ class Saksbehandling extends Component {
 
   async componentDidMount() {
     await this.lastInnSaksopplysninger();
+  }
+
+  async componentWillUnmount() {
+    await this.props.resetFagsakState();
+    await this.props.resetAvklartefaktaState();
+    await this.props.resetVilkarState();
+    await this.props.resetSoknadState();
   }
 
   lastInnSaksopplysninger = async () => {
@@ -193,6 +207,10 @@ const mapDispatchToProps = dispatch => ({
   sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
+  resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
+  resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
+  resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
+  resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
 });
