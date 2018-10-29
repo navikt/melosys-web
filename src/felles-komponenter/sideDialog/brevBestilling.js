@@ -14,10 +14,12 @@ import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumente
 import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
 
 import './brevBestilling.css';
+import * as Utils from '../../utils/utils';
 
 const InfoPanel = () => (
   <Nav.Lesmerpanel
-    apneTekst="Les tips om hva du bør skrive."
+    intro="Se tips om hva du bør skrive:"
+    apneTekst="Klikk her for tips"
     lukkTekst="Lukk">
     <p>
       En beskrivelse av hvilken informasjon eller dokumentasjon som mangler for å gjøre søknaden komplett.
@@ -35,20 +37,27 @@ class BrevBestilling extends Component {
   overstyrSubmit = event => {
     event.preventDefault();
   };
+
   erMangelBrevMedFritekst = () => {
     const { brevbestillingSkjemaVerdier } = this.props;
     if (!brevbestillingSkjemaVerdier) return false;
     return brevbestillingSkjemaVerdier.dokumenttypeKode === 'MELDING_MANGLENDE_OPPLYSNINGER';
   };
-  /*
+
   sendBrev = async () => {
     const { brevbestillingSkjemaVerdier, opprettDokument, oppsummering } = this.props;
     const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
     const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
-    const extededResponse = await opprettDokument(behandlingID, dokumenttypeKode, dokument);
+    const dokumentResponse = await opprettDokument(behandlingID, dokumenttypeKode, dokument);
+
+    if (dokumentResponse) {
+      this.props.resetBrevBestillingForm();
+      await Utils.delay(4000);
+      this.props.resetDokument();
+    }
   };
-*/
+
   utkastBrev = async () => {
     const {
       brevbestillingSkjemaVerdier, lagPdfUtkast, oppsummering, settFeilFelt,
@@ -84,9 +93,10 @@ class BrevBestilling extends Component {
   };
 
   render () {
-    const { dokumenttyper, aktoerroller } = this.props;
+    const { dokumenttyper, aktoerroller, dokumenter } = this.props;
+    const { response = {} } = dokumenter;
+
     const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
-    // const feilmelding = {feilmelding: 'Her er det noe feil.'};
     return (
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
@@ -97,11 +107,14 @@ class BrevBestilling extends Component {
             <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
               {dokumenttyper && dokumenttyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
+            {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
             <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
-            {this.erMangelBrevMedFritekst() && <InfoPanel />}
+            <div><button onClick={this.utkastBrev} className="brevBestilling__utkastknapp">Vis utkast</button></div>
             <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;
-            <Nav.Knapp htmlType="submit" type="hoved" onClick={this.utkastBrev}>Send Utkast</Nav.Knapp>
+            <Nav.Hovedknapp htmlType="submit" onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>
+            { dokumenter.ok === true && <Nav.AlertStripe type="suksess" className="varsel">Sendt</Nav.AlertStripe> }
+            { response.ok === false && <Nav.AlertStripe type="advarsel" className="varsel">Kunne ikke sende brev.</Nav.AlertStripe> }
           </Nav.Fieldset>
         </form>
       </div>
