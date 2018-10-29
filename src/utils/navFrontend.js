@@ -5,7 +5,7 @@ import EtikettBase from 'nav-frontend-etiketter';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Checkbox, Radio, SkjemaGruppe, Fieldset, Select, Input, Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
-import { Knapp, Hovedknapp } from 'nav-frontend-knapper';
+import { Knapp, Hovedknapp, Flatknapp } from 'nav-frontend-knapper';
 import Lesmerpanel from 'nav-frontend-lesmerpanel';
 import Icons from 'nav-frontend-ikoner-assets';
 import Stegindikator from 'nav-frontend-stegindikator';
@@ -21,7 +21,7 @@ export {
   EkspanderbartpanelBase, Panel,
   EtikettBase,
   Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold,
-  Knapp, Hovedknapp,
+  Knapp, Hovedknapp, Flatknapp,
   Lesmerpanel,
   Stegindikator,
   NavFrontendSpinner,
