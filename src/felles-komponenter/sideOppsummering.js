@@ -23,6 +23,7 @@ function SideOppsummering(props) {
   const {
     lagreOgLukkHandle,
     oppfriskSaksopplysningerHandle,
+    tilbakeleggeHandle,
   } = props;
 
   return (
@@ -35,6 +36,7 @@ function SideOppsummering(props) {
               <Nav.EkspanderbartpanelBase ariaTittel="Behandlingsmeny" className="oppsummering__meny" heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}>
                 <div className="meny__innhold">
                   <Nav.Knapp type="hoved" mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp>
+                  <Nav.Knapp type="hoved" mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
                   <Nav.Knapp type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppfrisk saksopplysninger</Nav.Knapp>
                 </div>
               </Nav.EkspanderbartpanelBase>
@@ -72,6 +74,7 @@ SideOppsummering.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
+  tilbakeleggeHandle: PT.func.isRequired,
 };
 
 export default SideOppsummering;

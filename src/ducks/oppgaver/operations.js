@@ -36,6 +36,16 @@ export function hent() {
   });
 }
 
+export async function tilbakelegge(behandlingID) {
+  const oppgaveObjekt = {
+    behandlingID,
+    begrunnelse: null, // Ingen begrunnelse i Melosys 1.0
+    venterPaaDokumentasjon: true,
+  };
+
+  return Api.Oppgaver.tilbakelegge(oppgaveObjekt).catch(error => error);
+}
+
 export async function sendBehandlingsOppgave(checkboxliste) {
   const { sakstyper: sakstyperListe = [], behandlingstyper: behandlingstyperListe = [] } = checkboxliste;
   if (sakstyperListe.length === 0 || behandlingstyperListe.length === 0) { return false; }
@@ -48,6 +58,7 @@ export async function sendBehandlingsOppgave(checkboxliste) {
     sakstyper,
     behandlingstyper,
   };
+
   const response = await Api.Oppgaver.send(oppgave);
   const { saksnummer } = response;
   if (!saksnummer) { return false; }

@@ -22,6 +22,10 @@ import {
 import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
 
 import {
+  oppgaverOperations,
+} from '../ducks/oppgaver/';
+
+import {
   soknadOperations,
   soknadSelectors,
 } from '../ducks/soknad/';
@@ -125,7 +129,20 @@ class Saksbehandling extends Component {
   };
 
   /* eslint-disable */
-  lagreOgLukk = () => { alert('Ikke implementert'); };
+  lagreOgLukk = () => {
+    const { history } = this.props;
+    history.push('/');
+  };
+  /* eslint-enable */
+
+  /* eslint-disable */
+  tilbakeleggeHandle = async () => {
+    const { tilbakeleggeOppgave, oppsummering } = this.props;
+    const { behandlingID } = oppsummering;
+
+    const tilbakeleggResult = await tilbakeleggeOppgave(behandlingID);
+    this.lagreOgLukk();
+  };
   /* eslint-enable */
 
   render() {
@@ -158,6 +175,7 @@ class Saksbehandling extends Component {
                 oppsummering={oppsummering}
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
+                tilbakeleggeHandle={this.tilbakeleggeHandle}
               />
               <SideDialog />
               <SideKommentarer />
@@ -195,6 +213,7 @@ const mapDispatchToProps = dispatch => ({
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
+  tilbakeleggeOppgave: oppgaveID => oppgaverOperations.tilbakelegge(oppgaveID),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
