@@ -85,7 +85,7 @@ const VurderingArtikkel16 = props => {
         </Nav.Row>
         <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="12">
-            <Nav.Fieldset legend={`Tidligere perioder i ${landSomTekstListe}`}>
+            <Nav.Fieldset legend={`Tidligere perioder i ${landSomTekstListe}:`}>
               <FieldArray name="lovvalgsperiode.tidligere" component={TidligerePerioder} alleLovvalg={alleLovvalg} />
             </Nav.Fieldset>
           </Nav.Column>
