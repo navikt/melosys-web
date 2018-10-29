@@ -45,17 +45,25 @@ class BrevBestilling extends Component {
   };
 
   sendBrev = async () => {
-    const { brevbestillingSkjemaVerdier, opprettDokument, oppsummering } = this.props;
+    const { brevbestillingSkjemaVerdier, opprettDokument, oppsummering, settFeilFelt } = this.props;
     const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
     const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
+
+    if (!erSkjemaGyldig(brevbestillingSkjemaVerdier)) {
+      settFeilFelt('mottaker', 'dokumenttypeKode', 'fritekst');
+      return false;
+    }
+
     const dokumentResponse = await opprettDokument(behandlingID, dokumenttypeKode, dokument);
 
     if (dokumentResponse) {
       this.props.resetBrevBestillingForm();
-      await Utils.delay(4000);
+      await Utils.delay(6000);
       this.props.resetDokument();
     }
+
+    return true;
   };
 
   utkastBrev = async () => {
@@ -113,7 +121,7 @@ class BrevBestilling extends Component {
             <div><button onClick={this.utkastBrev} className="brevBestilling__utkastknapp">Vis utkast</button></div>
             <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;
             <Nav.Hovedknapp htmlType="submit" onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>
-            { dokumenter.ok === true && <Nav.AlertStripe type="suksess" className="varsel">Sendt</Nav.AlertStripe> }
+            { dokumenter.ok === true && <Nav.AlertStripe type="suksess" className="varsel">Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.</Nav.AlertStripe> }
             { response.ok === false && <Nav.AlertStripe type="advarsel" className="varsel">Kunne ikke sende brev.</Nav.AlertStripe> }
           </Nav.Fieldset>
         </form>
@@ -164,7 +172,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  settFeilFelt: (...feltNavn) => (setSubmitFailed('brevbestilling', ...feltNavn)),
+  settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('brevbestilling', ...feltNavn)),
   resetBrevBestillingForm: () => dispatch(reset('brevbestilling')),
   resetDokument: () => dispatch(dokumenterOperations.resetDokument()),
   opprettDokument: (behandlingID, dokumenttypeKode, dokument) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, dokument)),
