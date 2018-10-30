@@ -147,8 +147,6 @@ class Saksbehandling extends Component {
     } = this.props;
     const { behandlingID } = oppsummering;
 
-    // Todo: Få inn sendAvklartefakta og sendVilkar
-
     await sendSoknad(behandlingID, soknad);
     await sendAvklartefakta(behandlingID, avklartefakta);
     await sendVilkar(behandlingID, vilkar);
