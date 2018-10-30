@@ -21,9 +21,7 @@ import {
 
 import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
 
-import {
-  oppgaverOperations,
-} from '../ducks/oppgaver/';
+import { oppgaverOperations } from '../ducks/oppgaver/';
 
 import {
   soknadOperations,
@@ -137,10 +135,12 @@ class Saksbehandling extends Component {
 
   /* eslint-disable */
   tilbakeleggeHandle = async () => {
-    const { tilbakeleggeOppgave, oppsummering } = this.props;
+    const { tilbakeleggeOppgave, sendSoknad, hentOppgaver, oppsummering, soknad } = this.props;
     const { behandlingID } = oppsummering;
 
-    const tilbakeleggResult = await tilbakeleggeOppgave(behandlingID);
+    await tilbakeleggeOppgave(behandlingID);
+    await sendSoknad(behandlingID, soknad);
+    await hentOppgaver();
     this.lagreOgLukk();
   };
   /* eslint-enable */
@@ -214,6 +214,7 @@ const mapDispatchToProps = dispatch => ({
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   tilbakeleggeOppgave: oppgaveID => oppgaverOperations.tilbakelegge(oppgaveID),
+  hentOppgaver: () => dispatch(oppgaverOperations.hent()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
