@@ -18,9 +18,10 @@ import * as Utils from '../../utils/utils';
 
 const InfoPanel = () => (
   <Nav.Lesmerpanel
-    intro="Se tips om hva du bør skrive:"
+    intro="Se hva som skal stå i mangelbrevet:"
     apneTekst="Klikk her for tips"
-    lukkTekst="Lukk">
+    lukkTekst="Lukk"
+  >
     <p>
       En beskrivelse av hvilken informasjon eller dokumentasjon som mangler for å gjøre søknaden komplett.
       Din tekst starter etter teksten &laquo;Dette må du sende oss:&raquo;.
@@ -45,7 +46,9 @@ class BrevBestilling extends Component {
   };
 
   sendBrev = async () => {
-    const { brevbestillingSkjemaVerdier, opprettDokument, oppsummering, settFeilFelt } = this.props;
+    const {
+      brevbestillingSkjemaVerdier, opprettDokument, oppsummering, settFeilFelt,
+    } = this.props;
     const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
     const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
@@ -78,7 +81,9 @@ class BrevBestilling extends Component {
       settFeilFelt('mottaker', 'dokumenttypeKode', 'fritekst');
       return false;
     }
+
     const extededResponse = await lagPdfUtkast(behandlingID, dokumenttypeKode, dokument);
+
     if (extededResponse.data.ok) {
       const { data: response } = extededResponse;
       const arrayBuffer = await response.arrayBuffer();
@@ -152,7 +157,7 @@ BrevBestilling.defaultProps = {
 const form = {
   form: 'brevbestilling',
   enableReinitialize: true,
-  destroyOnUnmount: true,
+  destroyOnUnmount: false,
   updateUnregisteredFields: true,
   validate: brevbestillingValidering,
   onSubmit: () => {},

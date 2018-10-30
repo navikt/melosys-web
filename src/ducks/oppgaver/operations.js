@@ -36,11 +36,11 @@ export function hent() {
   });
 }
 
-export async function tilbakelegge(behandlingID) {
+export async function tilbakelegge(behandlingID, venterPaaDokumentasjon) {
   const oppgaveObjekt = {
     behandlingID,
     begrunnelse: null, // Ingen begrunnelse i Melosys 1.0
-    venterPaaDokumentasjon: true,
+    venterPaaDokumentasjon,
   };
 
   return Api.Oppgaver.tilbakelegge(oppgaveObjekt).catch(error => error);
