@@ -35,6 +35,8 @@ const InfoPanel = () => (
 );
 
 class BrevBestilling extends Component {
+  state = { erBrevSendt: false };
+
   overstyrSubmit = event => {
     event.preventDefault();
   };
@@ -61,9 +63,11 @@ class BrevBestilling extends Component {
     const dokumentResponse = await opprettDokument(behandlingID, dokumenttypeKode, dokument);
 
     if (dokumentResponse) {
+      this.setState({ erBrevSendt: true });
       this.props.resetBrevBestillingForm();
       await Utils.delay(6000);
       this.props.resetDokument();
+      this.setState({ erBrevSendt: false });
     }
 
     return true;
@@ -126,7 +130,7 @@ class BrevBestilling extends Component {
             <div><button onClick={this.utkastBrev} className="brevBestilling__utkastknapp">Vis utkast</button></div>
             <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;
             <Nav.Hovedknapp htmlType="submit" onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>
-            { dokumenter.ok === true && <Nav.AlertStripe type="suksess" className="varsel">Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.</Nav.AlertStripe> }
+            { this.state.erBrevSendt && <Nav.AlertStripe type="suksess" className="varsel">Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.</Nav.AlertStripe> }
             { response.ok === false && <Nav.AlertStripe type="advarsel" className="varsel">Kunne ikke sende brev.</Nav.AlertStripe> }
           </Nav.Fieldset>
         </form>
