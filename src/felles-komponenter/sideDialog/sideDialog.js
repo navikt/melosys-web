@@ -4,21 +4,13 @@ import classnames from 'classnames';
 import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 
-import SideDialogHistorikk from './sideDialogHistorikk';
-import SideDialogMelding from './sideDialogMelding';
 import SideDialogDokumenter from './sideDialogDokumenter';
-
-// import * as Api from '../../services/api';
+import SideDialogBrevBestilling from './brevBestilling';
 
 import './sideDialog.css';
 
 const uuid = require('uuid/v4');
-/*
-const body = {
-  mottaker: 'ARBEIDSGIVER', // "ARBEIDSGIVER|MOTTAKER",
-  fritekst: 'blahbalh',
-};
-*/
+
 class SideDialog extends Component {
   static propTypes = {
     faner: PT.array,
@@ -26,8 +18,7 @@ class SideDialog extends Component {
 
   static defaultProps = {
     faner: [
-      { navn: 'historikk', tittel: 'Historikk', komponent: <SideDialogHistorikk key={uuid()} /> },
-      { navn: 'melding', tittel: 'Melding', komponent: <SideDialogMelding key={uuid()} /> },
+      { navn: 'brevbestilling', tittel: 'Send brev', komponent: <SideDialogBrevBestilling key={uuid()} /> },
       { navn: 'dokumenter', tittel: 'Dokumenter', komponent: <SideDialogDokumenter key={uuid()} /> },
     ],
   };
@@ -36,12 +27,7 @@ class SideDialog extends Component {
   state = {
     aktivFane: this.props.faner[0].navn,
   };
-  /*
-  async componentDidMount() {
-    const abc = await Api.Dokumenter.opprettDokument(4, '000074', body);
-    console.dir(abc);
-  }
-  */
+
   /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
    * slik at riktig komponent under menyen vises. Data fra komponenten slik som navn ligger under
    * props.faner-objektet.
