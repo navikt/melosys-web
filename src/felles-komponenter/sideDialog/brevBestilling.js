@@ -55,6 +55,8 @@ class BrevBestilling extends Component {
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
     const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
 
+    this.setState({ feilmelding: undefined });
+
     if (!erSkjemaGyldig(brevbestillingSkjemaVerdier)) {
       settFeilFelt('mottaker', 'dokumenttypeKode', 'fritekst');
       return false;
@@ -75,10 +77,13 @@ class BrevBestilling extends Component {
 
   utkastBrev = async () => {
     const {
-      brevbestillingSkjemaVerdier, lagPdfUtkast, oppsummering, settFeilFelt,
+      brevbestillingSkjemaVerdier, forhandsvisPDF, oppsummering, settFeilFelt,
     } = this.props;
     const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
+
+    this.setState({ feilmelding: undefined });
+
     const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
 
     if (!erSkjemaGyldig(brevbestillingSkjemaVerdier)) {
@@ -86,15 +91,12 @@ class BrevBestilling extends Component {
       return false;
     }
 
-    const extededResponse = await lagPdfUtkast(behandlingID, dokumenttypeKode, dokument);
+    const fileURL = await forhandsvisPDF(behandlingID, dokumenttypeKode, dokument);
 
-    if (extededResponse.data.ok) {
-      const { data: response } = extededResponse;
-      const arrayBuffer = await response.arrayBuffer();
-      const file = new Blob([arrayBuffer], { type: 'application/pdf' });
-      const fileURL = URL.createObjectURL(file);
+    if (fileURL) {
       window.open(fileURL);
-    } else if (extededResponse.data.error) {
+    } else {
+      this.setState({ feilmelding: 'Det oppstod en feil da brevet skulle forhåndsvises!' });
       /*
       const { error, message, path, timestamp } = extededResponse.data;
       this.setState({ feil: { error, message, path, timestamp } });
@@ -110,8 +112,7 @@ class BrevBestilling extends Component {
   };
 
   render () {
-    const { dokumenttyper, aktoerroller, dokumenter } = this.props;
-    const { response = {} } = dokumenter;
+    const { dokumenttyper, aktoerroller } = this.props;
 
     const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
     return (
@@ -131,7 +132,7 @@ class BrevBestilling extends Component {
             <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;
             <Nav.Hovedknapp htmlType="submit" onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>
             { this.state.erBrevSendt && <Nav.AlertStripe type="suksess" className="varsel">Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.</Nav.AlertStripe> }
-            { response.ok === false && <Nav.AlertStripe type="advarsel" className="varsel">Kunne ikke sende brev.</Nav.AlertStripe> }
+            { this.state.feilmelding && <Nav.AlertStripe type="advarsel" className="varsel">{this.state.feilmelding}</Nav.AlertStripe> }
           </Nav.Fieldset>
         </form>
       </div>
@@ -142,7 +143,7 @@ class BrevBestilling extends Component {
 BrevBestilling.propTypes = {
   resetBrevBestillingForm: PT.func.isRequired,
   opprettDokument: PT.func.isRequired,
-  lagPdfUtkast: PT.func.isRequired,
+  forhandsvisPDF: PT.func.isRequired,
   resetDokument: PT.func.isRequired,
   aktoerroller: PT.arrayOf(MPT.Kodeverk),
   dokumenttyper: PT.arrayOf(MPT.Kodeverk),
@@ -184,8 +185,8 @@ const mapDispatchToProps = dispatch => ({
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('brevbestilling', ...feltNavn)),
   resetBrevBestillingForm: () => dispatch(reset('brevbestilling')),
   resetDokument: () => dispatch(dokumenterOperations.resetDokument()),
-  opprettDokument: (behandlingID, dokumenttypeKode, dokument) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, dokument)),
-  lagPdfUtkast: (behandlingID, dokumenttypeKode, dokument) => dispatch(dokumenterOperations.lagPdfUtkast(behandlingID, dokumenttypeKode, dokument)),
+  opprettDokument: (behandlingID, dokumenttypeKode, data) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, data)),
+  forhandsvisPDF: (behandlingID, dokumenttypeKode, data) => dokumenterOperations.forhandsvisPDF(behandlingID, dokumenttypeKode, data),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(BrevBestilling));
