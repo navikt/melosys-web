@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
+import dokumenterReducer from './ducks/dokumenter/';
 import fagsakerReducer from './ducks/fagsaker/';
 import avklartefaktaReducer from './ducks/avklartefakta/';
 import inngangReducer from './ducks/inngang';
@@ -18,6 +19,7 @@ import customFormReducer from './ducks/form';
 
 export default combineReducers({
   form: formReducer.plugin({ forretningsValidering: customFormReducer }),
+  dokumenter: dokumenterReducer,
   fagsaker: fagsakerReducer,
   avklartefakta: avklartefaktaReducer,
   inngang: inngangReducer,

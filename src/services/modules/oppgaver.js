@@ -21,10 +21,15 @@ async function sparkReset() {
   const URI_RESET = `${API_BASE_URL}oppgaver/reset`;
   return getAsJson(URI_RESET);
 }
+async function tilbakelegge(oppgave) {
+  const URI_TILBAKELEGGE = `${API_BASE_URL}oppgaver/tilbakelegge`;
+  return postAsJson(URI_TILBAKELEGGE, oppgave);
+}
 export {
   oversikt,
   send,
   sok,
   opprett,
   sparkReset,
+  tilbakelegge,
 };
