@@ -12,7 +12,7 @@ const hentDokument = (journalforingID, dokumentID) => getAsJson(pdfURI(journalfo
  * @param data
  * @returns {Promise<*>} PDF dokument
  */
-const lagPdfUtkast = (behandlingID, dokumenttypeKode, data) => {
+const forhandsvisPDF = (behandlingID, dokumenttypeKode, data) => {
   const URI_DOKUMENT_UTKAST = `${API_BASE_URL}dokumenter/utkast/pdf/${behandlingID}/${dokumenttypeKode}`;
   return postAsJson(URI_DOKUMENT_UTKAST, data, true);
 };
@@ -32,6 +32,6 @@ const opprettDokument = (behandlingID, dokumenttypeKode, dokument) => {
 export {
   pdfURI,
   hentDokument,
-  lagPdfUtkast,
+  forhandsvisPDF,
   opprettDokument,
 };
