@@ -27,13 +27,18 @@ export function opprettDokument(behandlingID, dokumenttypeKode, dokument) {
     PENDING: Types.PENDING,
   });
 }
-export function lagPdfUtkast(behandlingID, dokumenttypeKode, dokument) {
-  return doThenDispatch(() => Api.Dokumenter.lagPdfUtkast(behandlingID, dokumenttypeKode, dokument), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
+
+export async function forhandsvisPDF(behandlingID, dokumenttypeKode, data) {
+  const response = await Api.Dokumenter.forhandsvisPDF(behandlingID, dokumenttypeKode, data);
+
+  if (response.ok) {
+    const arrayBuffer = await response.arrayBuffer();
+    const file = new Blob([arrayBuffer], { type: 'application/pdf' });
+    return URL.createObjectURL(file);
+  }
+  return false;
 }
+
 export function resetDokument() {
   return dispatch => (dispatch(Actions.resetDokment()));
 }
