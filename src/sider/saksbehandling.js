@@ -36,8 +36,6 @@ import * as vilkarSelectors from '../ducks/vilkar/selectors';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
-import * as vilkarOperations from '../ducks/vilkar/operations';
-import * as avklartefaktaOperations from '../ducks/avklartefakta/operations';
 
 class Saksbehandling extends Component {
   static propTypes = {
@@ -256,7 +254,7 @@ const mapDispatchToProps = dispatch => ({
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  tilbakeleggeOppgave: oppgaveID => oppgaverOperations.tilbakelegge(oppgaveID),
+  tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegge(oppgaveID, venterPaaDokumentasjon),
   hentOppgaver: () => dispatch(oppgaverOperations.hent()),
 });
 
