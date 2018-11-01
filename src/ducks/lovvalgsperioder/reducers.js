@@ -43,7 +43,7 @@ export default function reducer(state = initialState, action) {
     case Types.RESET:
       return { ...initialState };
     case Types.OPPDATER_LOVVALGSPERIODER: {
-      // Gjennomgå alle vilkår som kan være satt. Dersom de er 'undefined', vil det si at
+      // Gjennomgå alle lovvalgsperioder som kan være satt. Dersom de er 'undefined', vil det si at
       // saksbehandler ikke har vært innom denne vurderingen og kanskje aldri kommer tid. Siden
       // det da ikke er et vilkår som er vurdert, skal det heller ikke inn i modellen eller sendes backend.
       const lovvalgsperioderArray = [
