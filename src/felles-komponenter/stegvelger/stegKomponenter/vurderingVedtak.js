@@ -11,7 +11,7 @@ import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 import { fagsakSelectors } from '../../../ducks/fagsaker/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode, finnEnkeltKodeFraListe } from '../../../utils/kodeverk';
+import { kodeverkObjektTilKode, finnEnkeltKodeFraListe } from '../../../utils/kodeverk';
 import PdfLenkeListe from '../../../felles-komponenter/pdfLenkeListe';
 
 import './vurderingVedtak.css';
@@ -24,7 +24,6 @@ const VurderingVedtak = props => {
   const {
     gyldigeOppholdLand,
     oppholdPeriode,
-    alleLandkoder,
     alleLovvalg,
     lovvalgKode,
   } = props;
@@ -33,17 +32,13 @@ const VurderingVedtak = props => {
 
   const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
 
-  const landSomTekstListe = gyldigeOppholdLand
-    .map(enkeltLand => finnEnkeltKodeFraListe(enkeltLand.landKode, alleLandkoder))
-    .map(enkeltLandKode => kodeverkObjektTilTerm(enkeltLandKode))
-    .join(', ');
+  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.kode).join(', ');
 
   const lovvalgObjekt = finnEnkeltKodeFraListe(lovvalgKode, alleLovvalg);
   const lovvalgTerm = lovvalgObjekt && kodeverkObjektTilKode(lovvalgObjekt);
 
   const dokumenter = [
-    { navn: 'Forhåndsvis vedtaksbrev', type: '000074', data: {} },
-    { navn: 'Forhåndsvis A1', type: '000082', data: {} },
+    { navn: 'Forhåndsvis A1', type: 'ATTEST_A1', data: {} },
   ];
 
   return (
@@ -80,7 +75,6 @@ VurderingVedtak.propTypes = {
   lagreVedtakHandler: PT.func.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
-  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
 };
@@ -89,7 +83,6 @@ const mapStateToProps = state => ({
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
-  alleLandkoder: KodeverkSelectors.landkoderSelector(state),
   alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
 });
