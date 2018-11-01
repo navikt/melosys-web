@@ -5,7 +5,6 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 
-
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { KodeverkSelectors } from '../../../ducks/kodeverk/';
@@ -13,7 +12,7 @@ import { fagsakSelectors } from '../../../ducks/fagsaker/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
 import { kodeverkObjektTilTerm, kodeverkObjektTilKode, finnEnkeltKodeFraListe } from '../../../utils/kodeverk';
-import PdfLinkListe from '../../../felles-komponenter/pdfLinkListe';
+import PdfLenkeListe from '../../../felles-komponenter/pdfLenkeListe';
 
 import './vurderingVedtak.css';
 
@@ -63,7 +62,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <PdfLinkListe behandlingID={behandlingID} dokumenter={dokumenter} />
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
