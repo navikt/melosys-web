@@ -50,7 +50,7 @@ class BrevBestilling extends Component {
 
   sendBrev = async () => {
     const {
-      brevbestillingSkjemaVerdier, opprettDokument, oppsummering, settFeilFelt,
+      brevbestillingSkjemaVerdier, opprettDokument, oppsummering,
     } = this.props;
     const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
@@ -58,8 +58,7 @@ class BrevBestilling extends Component {
 
     this.setState({ feilmelding: undefined });
 
-    if (!erSkjemaGyldig(brevbestillingSkjemaVerdier)) {
-      settFeilFelt('mottaker', 'dokumenttypeKode', 'fritekst');
+    if (!this.validerBrev()) {
       return false;
     }
 
