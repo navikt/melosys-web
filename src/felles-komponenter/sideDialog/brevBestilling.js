@@ -124,7 +124,9 @@ class BrevBestilling extends Component {
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
             <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={ForhandsvistePdfDokumenter} vedKlikk={this.validerBrev} />
+            { behandlingID &&
+              <PdfLenkeListe behandlingID={behandlingID} dokumenter={ForhandsvistePdfDokumenter} vedKlikk={this.validerBrev} />
+            }
             <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;
             <Nav.Hovedknapp htmlType="submit" onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>
             { this.state.erBrevSendt && <Nav.AlertStripe type="suksess" className="varsel">Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.</Nav.AlertStripe> }
