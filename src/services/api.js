@@ -6,6 +6,7 @@ import * as Health from './modules/health';
 import * as Inngang from './modules/inngang';
 import * as Journalforing from './modules/journalforing';
 import * as Kodeverk from './modules/kodeverk';
+import * as Lovvalgsperioder from './modules/lovvalgsperioder';
 import * as Personer from './modules/personer';
 import * as Organisasjoner from './modules/organisasjoner';
 import * as Oppgaver from './modules/oppgaver';
@@ -37,6 +38,7 @@ export {
   Inngang,
   Journalforing,
   Kodeverk,
+  Lovvalgsperioder,
   Oppgaver,
   Organisasjoner,
   Personer,
