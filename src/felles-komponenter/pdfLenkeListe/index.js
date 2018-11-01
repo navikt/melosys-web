@@ -14,7 +14,8 @@ class PdfLenkeListe extends Component {
     klikk = async dokument => {
       const { behandlingID, vedKlikk } = this.props;
       if (vedKlikk) {
-        if (!vedKlikk()) {
+        const validert = await vedKlikk();
+        if (!validert) {
           return;
         }
       }
