@@ -4,15 +4,21 @@ import * as MPT from '../../proptypes/';
 import { dokumenterOperations } from '../../ducks/dokumenter';
 import * as Nav from '../../utils/navFrontend';
 
-import './pdfLinkListe.css';
+import './pdfLenkeListe.css';
 
 const uuid = require('uuid/v4');
 
-class Index extends Component {
+class PdfLenkeListe extends Component {
   state = { feilmelding: false };
 
     klikk = async dokument => {
-      const { behandlingID } = this.props;
+      const { behandlingID, vedKlikk } = this.props;
+      if (vedKlikk) {
+        if (!vedKlikk()) {
+          return;
+        }
+      }
+
       const fileURL = await dokumenterOperations.forhandsvisPDF(behandlingID, dokument.type, dokument.data);
       if (fileURL) {
         window.open(fileURL);
@@ -22,15 +28,15 @@ class Index extends Component {
       }
     };
 
-    lagDokumentLink(dokument) {
+    lagDokumentLenke(dokument) {
       return (<button onClick={() => this.klikk(dokument)} key={uuid()}>{dokument.navn}</button>);
     }
 
     render() {
       const { dokumenter } = this.props;
       return (
-        <div className="pdfLinkListe">
-          { dokumenter.map(dokument => this.lagDokumentLink(dokument)) }
+        <div className="pdfLenkeListe">
+          { dokumenter.map(dokument => this.lagDokumentLenke(dokument)) }
           { this.state.feilmelding &&
             <Nav.AlertStripe type="advarsel" className="varsel">{this.state.feilmelding}</Nav.AlertStripe>
           }
@@ -39,9 +45,14 @@ class Index extends Component {
     }
 }
 
-Index.propTypes = {
+PdfLenkeListe.propTypes = {
   behandlingID: PT.number.isRequired,
   dokumenter: MPT.DokumentMetadataListe.isRequired,
+  vedKlikk: PT.func,
 };
 
-export default Index;
+PdfLenkeListe.defaultProps = {
+  vedKlikk: null,
+};
+
+export default PdfLenkeListe;
