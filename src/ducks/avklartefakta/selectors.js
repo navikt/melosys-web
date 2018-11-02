@@ -131,7 +131,7 @@ export const ArbeidsgivereSelector = createSelector(
         referanse: avklartefaktaKoder.ARBEIDSGIVER,
         fakta: ['FALSE'],
         subjektID: arbeidsgiver.orgnr,
-        avklartFaktaKode: avklartefaktaKoder.ARBEIDSGIVER, // TODO: Kode ikke avklart av arkitektur.
+        avklartefaktaKode: avklartefaktaKoder.ARBEIDSGIVER, // TODO: Kode ikke avklart av arkitektur.
       };
     });
   }
