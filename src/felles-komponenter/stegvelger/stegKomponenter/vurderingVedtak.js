@@ -32,7 +32,7 @@ const VurderingVedtak = props => {
 
   const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
 
-  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.kode).join(', ');
+  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.term).join(', ');
 
   const lovvalgObjekt = finnEnkeltKodeFraListe(lovvalgKode, alleLovvalg);
   const lovvalgTerm = lovvalgObjekt && kodeverkObjektTilKode(lovvalgObjekt);
