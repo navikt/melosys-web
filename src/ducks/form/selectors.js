@@ -26,3 +26,8 @@ export const BrevBestillingFormSelector = createSelector(
   state => (state.form.brevbestilling ? state.form.brevbestilling : {}),
   brevbestilling => brevbestilling
 );
+
+export const Lovvalgsperiode = createSelector(
+  state => SoknadenFormSelector(state).values,
+  skjemaverdier => skjemaverdier.lovvalgsperiode || {}
+);
