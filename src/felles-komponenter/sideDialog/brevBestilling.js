@@ -12,6 +12,7 @@ import { formSelectors } from '../../ducks/form/';
 import { brevbestillingValidering, erSkjemaGyldig } from '../skjema/validering/brevbestilling';
 import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
 import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
+import PdfLenkeListe from '../pdfLenkeListe';
 
 import './brevBestilling.css';
 import * as Utils from '../../utils/utils';
@@ -49,7 +50,7 @@ class BrevBestilling extends Component {
 
   sendBrev = async () => {
     const {
-      brevbestillingSkjemaVerdier, opprettDokument, oppsummering, settFeilFelt,
+      brevbestillingSkjemaVerdier, opprettDokument, oppsummering,
     } = this.props;
     const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
@@ -57,8 +58,7 @@ class BrevBestilling extends Component {
 
     this.setState({ feilmelding: undefined });
 
-    if (!erSkjemaGyldig(brevbestillingSkjemaVerdier)) {
-      settFeilFelt('mottaker', 'dokumenttypeKode', 'fritekst');
+    if (!this.validerBrev()) {
       return false;
     }
 
@@ -75,33 +75,16 @@ class BrevBestilling extends Component {
     return true;
   };
 
-  utkastBrev = async () => {
+  validerBrev = async () => {
     const {
-      brevbestillingSkjemaVerdier, forhandsvisPDF, oppsummering, settFeilFelt,
+      brevbestillingSkjemaVerdier, settFeilFelt,
     } = this.props;
-    const { behandlingID } = oppsummering;
-    const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
-
-    this.setState({ feilmelding: undefined });
-
-    const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
 
     if (!erSkjemaGyldig(brevbestillingSkjemaVerdier)) {
       settFeilFelt('mottaker', 'dokumenttypeKode', 'fritekst');
       return false;
     }
 
-    const fileURL = await forhandsvisPDF(behandlingID, dokumenttypeKode, dokument);
-
-    if (fileURL) {
-      window.open(fileURL);
-    } else {
-      this.setState({ feilmelding: 'Det oppstod en feil da brevet skulle forhåndsvises!' });
-      /*
-      const { error, message, path, timestamp } = extededResponse.data;
-      this.setState({ feil: { error, message, path, timestamp } });
-      */
-    }
     return true;
   };
 
@@ -112,7 +95,20 @@ class BrevBestilling extends Component {
   };
 
   render () {
-    const { dokumenttyper, aktoerroller } = this.props;
+    const {
+      dokumenttyper,
+      aktoerroller,
+      brevbestillingSkjemaVerdier,
+      oppsummering,
+    } = this.props;
+    const { behandlingID } = oppsummering;
+    const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
+
+    const data = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
+    const ForhandsvistePdfDokumenter = [
+      { navn: 'Vis utkast', type: dokumenttypeKode, data },
+    ];
+
 
     const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
     return (
@@ -128,7 +124,9 @@ class BrevBestilling extends Component {
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
             <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
-            <div><button onClick={this.utkastBrev} className="brevBestilling__utkastknapp">Vis utkast</button></div>
+            { behandlingID &&
+              <PdfLenkeListe behandlingID={behandlingID} dokumenter={ForhandsvistePdfDokumenter} vedKlikk={this.validerBrev} />
+            }
             <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;
             <Nav.Hovedknapp htmlType="submit" onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>
             { this.state.erBrevSendt && <Nav.AlertStripe type="suksess" className="varsel">Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.</Nav.AlertStripe> }
