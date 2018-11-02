@@ -5,13 +5,14 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 
-
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { KodeverkSelectors } from '../../../ducks/kodeverk/';
+import { fagsakSelectors } from '../../../ducks/fagsaker/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
 import { kodeverkObjektTilKode, finnEnkeltKodeFraListe } from '../../../utils/kodeverk';
+import PdfLenkeListe from '../../../felles-komponenter/pdfLenkeListe';
 
 import './vurderingVedtak.css';
 
@@ -27,12 +28,18 @@ const VurderingVedtak = props => {
     lovvalgKode,
   } = props;
 
+  const { behandlingID } = props.oppsummering;
+
   const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
 
-  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
+  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.kode).join(', ');
 
   const lovvalgObjekt = finnEnkeltKodeFraListe(lovvalgKode, alleLovvalg);
   const lovvalgTerm = lovvalgObjekt && kodeverkObjektTilKode(lovvalgObjekt);
+
+  const dokumenter = [
+    { navn: 'Forhåndsvis A1', type: 'ATTEST_A1', data: {} },
+  ];
 
   return (
     <div className="vedtak">
@@ -50,8 +57,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <a href="http://melosys" target="_blank" rel="noopener noreferrer" className="vedtak__brevlenke">Forhåndsvis vedtaksbrev</a>
-            <a href="http://melosys" target="_blank" rel="noopener noreferrer" className="vedtak__brevlenke">Forhåndsvis A1</a>
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -70,6 +76,7 @@ VurderingVedtak.propTypes = {
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
   alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
+  oppsummering: MPT.Oppsummering.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -77,6 +84,7 @@ const mapStateToProps = state => ({
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
   alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
+  oppsummering: fagsakSelectors.OppsummeringSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVedtak);

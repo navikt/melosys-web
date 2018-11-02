@@ -72,6 +72,7 @@ class Stegvelger extends Component {
     const bid = this.props.oppsummering.behandlingID;
     const { lagreVedtak } = this.props;
     await lagreVedtak(bid);
+    this.props.history.push('/');
   };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
@@ -224,11 +225,11 @@ const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
+  lagreVedtak: behandlingID => dispatch(vedtakOperations.lagre(behandlingID)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
-  lagreVedtak: behandlingID => dispatch(vedtakOperations.lagre(behandlingID, '{}')),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
