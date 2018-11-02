@@ -7,6 +7,8 @@
 
 import { createSelector } from 'reselect';
 
+import { KodeverkSelectors } from '../kodeverk';
+
 // selector(s)
 export const VilkarSelector = createSelector(
   state => (state.vilkar.data ? state.vilkar.data : []),
@@ -36,4 +38,12 @@ export const art12_1 = createSelector(
 export const art16_1 = createSelector(
   state => VilkarSelector(state),
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'ART16_1') || {})
+);
+
+export const valgteLovvalgsVilkar = createSelector(
+  state => VilkarSelector(state),
+  state => KodeverkSelectors.alleLovvalgSelector(state),
+  (vilkar, alleLovvalg) => (
+    vilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar))
+  )
 );

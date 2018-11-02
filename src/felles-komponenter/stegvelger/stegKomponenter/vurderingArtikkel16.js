@@ -88,13 +88,15 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="10">
-              <Listevelger feltNavn="lovvalgsperiode.unntak" muligeValg={lovvalgsunntak} label="Artikkelen det søkes unntak fra:" bredde="M" />
-              <Listevelger gruppe muligeValg={anmodningsBegrunnelser} feltNavn="lovvalgsperiode.begrunnelseKoder" label="Legg til begrunnelse:" />
+              <Skjema.Select feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
+                { lovvalgsunntak.map(kodeObjekt => <option key={kodeObjekt.kode} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+              </Skjema.Select>
+              <Listevelger gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.Textarea feltNavn="lovvalgsperiode.begrunnelseFritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={200} bredde="fullbredde" />
+              <Skjema.Textarea feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={200} bredde="fullbredde" />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">

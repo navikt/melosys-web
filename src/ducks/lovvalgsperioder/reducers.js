@@ -14,19 +14,6 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
-/* eslint no-unused-vars: off */
-const lovvalgsperiodeTilObjekt = (lovvalgBestemmelse, unntakFraBestemmelse, innvilgelsesResultat, lovvalgsland, unntakFraLovvalgsland, trygdeDekning, medlemskapstype) => (
-  lovvalgBestemmelse === undefined ? null : {
-    lovvalgBestemmelse,
-    unntakFraBestemmelse,
-    innvilgelsesResultat,
-    lovvalgsland,
-    unntakFraLovvalgsland,
-    trygdeDekning,
-    medlemskapstype,
-  }
-);
-
 // Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -43,14 +30,8 @@ export default function reducer(state = initialState, action) {
     case Types.RESET:
       return { ...initialState };
     case Types.OPPDATER_LOVVALGSPERIODER: {
-      // Gjennomgå alle lovvalgsperioder som kan være satt. Dersom de er 'undefined', vil det si at
-      // saksbehandler ikke har vært innom denne vurderingen og kanskje aldri kommer tid. Siden
-      // det da ikke er et vilkår som er vurdert, skal det heller ikke inn i modellen eller sendes backend.
-      const lovvalgsperioderArray = [
-      ].filter(lovvalgsperiode => lovvalgsperiode !== null);
-
       return {
-        data: lovvalgsperioderArray,
+        data: [...action.data],
       };
     }
     default:
