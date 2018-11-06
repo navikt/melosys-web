@@ -17,8 +17,8 @@ class VurderingArtikkel12 extends Component {
    */
   constructor() {
     super();
-    this.ART12_1 = 'ART12_1';
-    this.ART16_1 = 'ART16_1';
+    this.ART12_1 = 'FO_883_2004_ART12_1';
+    this.ART16_1 = 'FO_883_2004_ART16_1';
     this.AVSLAG = 'AVSLAG';
   }
 
