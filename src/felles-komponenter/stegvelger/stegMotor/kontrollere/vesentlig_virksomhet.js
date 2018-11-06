@@ -9,7 +9,7 @@ class VesentligVirksomhet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'vesentligVirksomhetINorge ER LIK TRUE',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('VESENTLIG_VIRKSOMHET', alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('ART12_1_VESENTLIG_VIRKSOMHET', alleVilkar),
         nesteSteg: STEG.ARTIKKEL_12,
       },
       {
