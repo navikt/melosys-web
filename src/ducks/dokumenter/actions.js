@@ -1,4 +1,3 @@
-
 /**
  * Actions
  * -----------------------------------------------------------------------
@@ -8,10 +7,9 @@
 
 import * as Types from './types';
 
-/** Tømmer fagsak-state når komponenten unmounter
- *
- * @returns {{type: *}}
- */
-export function resetFagsakState() {
-  return { type: Types.RESET };
+export function resetDokment() {
+  return ({
+    type: Types.RESET,
+    data: {},
+  });
 }

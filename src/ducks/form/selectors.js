@@ -21,3 +21,8 @@ export const ForretningsValideringSelector = createSelector(
   state => (state.form.forretningsValidering ? state.form.forretningsValidering : {}),
   skjemaValidering => skjemaValidering.regler
 );
+
+export const BrevBestillingFormSelector = createSelector(
+  state => (state.form.brevbestilling ? state.form.brevbestilling : {}),
+  brevbestilling => brevbestilling
+);

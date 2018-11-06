@@ -9,6 +9,7 @@
 import { createSelector } from 'reselect';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
+import { KodeverkSelectors } from '../kodeverk';
 
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
@@ -18,7 +19,7 @@ const avklartefaktaKoder = {
   SYSSELSETTING: 'SYSSELSETTING',
   YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
   YRKESAKTIVITET: 'YRKESAKTIVITET',
-  ARBEIDSGIVER: 'ARBEIDSGIVER',
+  AVKLARTE_ARBEIDSGIVER: 'AVKLARTE_ARBEIDSGIVER',
 };
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
@@ -114,29 +115,31 @@ export const ArbeidsgivereSelector = createSelector(
   state => AvklartefaktaSelector(state),
   state => ArbeidsgivereIPeriodenSelector(state),
   (alleAvklarteFakta, alleArbeidsgivere) => {
-    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === avklartefaktaKoder.ARBEIDSGIVER);
+    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER);
     return alleArbeidsgivere.map(arbeidsgiver => {
       const eksisterendeAvklaring = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.orgnr);
 
       return eksisterendeAvklaring || {
         ...avklartFaktaTemplate,
-        referanse: avklartefaktaKoder.ARBEIDSGIVER,
+        referanse: avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER,
         fakta: ['FALSE'],
         subjektID: arbeidsgiver.orgnr,
-        avklartFaktaKode: avklartefaktaKoder.ARBEIDSGIVER, // TODO: Kode ikke avklart av arkitektur.
+        avklartefaktaKode: avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER,
       };
     });
   }
 );
 
-export const AvklartefaktaOppholdSelector = createSelector(
-  state => AvklartefaktaSelector(state).opphold,
-  opphold => opphold || []
-);
-
 export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
-  state => AvklartefaktaOppholdSelector(state).land || [],
-  opphold => opphold.filter(enkeltOpphold => enkeltOpphold.erGyldig) || []
+  state => Oppholdsland(state) || [],
+  state => KodeverkSelectors.landkoderSelector(state) || [],
+  (avklartefaktaLand, landKoder) => {
+    const gyldigeLand = avklartefaktaLand
+      .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
+      .map(avklartfakta => avklartfakta.subjektID);
+
+    return landKoder.filter(enkeltObjekt => gyldigeLand.includes(enkeltObjekt.kode));
+  }
 );
 
 export const AvklartefaktaLovvalgKodeSelector = createSelector(

@@ -21,6 +21,7 @@ import { Sysselsetting } from './sysselsetting';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
 import { Journalforing } from './journalforing';
+import { DokumentMetadataListe } from './dokumentMetadata';
 
 export {
   ArbeidNorge,
@@ -31,6 +32,7 @@ export {
   ArbeidsgivereNorge,
   Bekreftelser,
   BostedsAdresse,
+  DokumentMetadataListe,
   Feilmelding,
   Feilmeldinger,
   ForretningsAdresse,

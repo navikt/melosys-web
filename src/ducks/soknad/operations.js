@@ -36,3 +36,7 @@ export function send(bid, soknad) {
 export function oppdaterPeriode(periode) {
   return dispatch => dispatch(Actions.oppdaterPeriode(periode));
 }
+
+export function resetSoknadState() {
+  return Actions.resetSoknadState();
+}
