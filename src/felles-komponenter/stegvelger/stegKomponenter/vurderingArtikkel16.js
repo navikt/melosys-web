@@ -96,7 +96,7 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.Textarea feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={200} bredde="fullbredde" />
+              <Skjema.Textarea feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
