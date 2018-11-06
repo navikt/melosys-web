@@ -26,8 +26,11 @@ class Stegvelger extends Component {
   componentWillMount() {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
-    this.props.hentVilkar(4);
-    this.props.hentAvklartefakta(4);
+
+    const bid = this.props.oppsummering.behandlingID;
+
+    this.props.hentVilkar(bid);
+    this.props.hentAvklartefakta(bid);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -60,6 +63,7 @@ class Stegvelger extends Component {
     const bid = this.props.oppsummering.behandlingID;
     const { lagreVedtak } = this.props;
     await lagreVedtak(bid);
+    this.props.history.push('/');
   };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
@@ -205,9 +209,9 @@ const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
+  lagreVedtak: behandlingID => dispatch(vedtakOperations.lagre(behandlingID)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
-  lagreVedtak: behandlingID => dispatch(vedtakOperations.lagre(behandlingID, '{}')),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),

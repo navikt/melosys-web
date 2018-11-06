@@ -79,7 +79,7 @@ const SakEnkeltLinje = ({ sak }) => {
                   <dt className="sakEnkeltLinje__meta__term">Status:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Frist:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{aktivTil || '(ukjent)'}</dd>
+                  <dd className="sakEnkeltLinje__meta__detalj">{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Sist oppdatert:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{oppdateringStatus || formatterDatoTilNorsk(sisteOpplysningerHentetDato, true)}</dd>
                 </dl>

@@ -19,35 +19,48 @@ import {
   fagsakSelectors,
 } from '../ducks/fagsaker/';
 
+import { vilkarOperations } from '../ducks/vilkar/';
+import { avklartefaktaOperations } from '../ducks/avklartefakta/';
+
 import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
+
+import { oppgaverOperations } from '../ducks/oppgaver/';
 
 import {
   soknadOperations,
   soknadSelectors,
 } from '../ducks/soknad/';
 
+import * as avklartefaktaSelectors from '../ducks/avklartefakta/selectors';
+import * as vilkarSelectors from '../ducks/vilkar/selectors';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
 
 class Saksbehandling extends Component {
   static propTypes = {
-    avklartefakta: PT.object,
+    avklartefakta: PT.array,
     hentFagsaker: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     history: PT.object.isRequired,
     match: PT.object.isRequired,
     oppfriskSaksopplysninger: PT.func.isRequired,
+    resetFagsakState: PT.func.isRequired,
+    resetVilkarState: PT.func.isRequired,
+    resetAvklartefaktaState: PT.func.isRequired,
+    resetSoknadState: PT.func.isRequired,
     sjekkSaksflytStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
     sendSoknad: PT.func.isRequired,
     soknad: PT.object,
+    vilkar: PT.array,
   };
 
   static defaultProps = {
-    avklartefakta: {},
+    avklartefakta: [],
     oppsummering: {},
     soknad: {},
+    vilkar: [],
   };
 
   state = {
@@ -57,6 +70,13 @@ class Saksbehandling extends Component {
 
   async componentDidMount() {
     await this.lastInnSaksopplysninger();
+  }
+
+  async componentWillUnmount() {
+    await this.props.resetFagsakState();
+    await this.props.resetAvklartefaktaState();
+    await this.props.resetVilkarState();
+    await this.props.resetSoknadState();
   }
 
   lastInnSaksopplysninger = async () => {
@@ -125,7 +145,37 @@ class Saksbehandling extends Component {
   };
 
   /* eslint-disable */
-  lagreOgLukk = () => { alert('Ikke implementert'); };
+  lagreOgLukk = async () => {
+    const {
+      avklartefakta,
+      history,
+      hentOppgaver,
+      oppsummering,
+      soknad,
+      sendSoknad,
+      sendAvklartefakta,
+      sendVilkar,
+      vilkar,
+    } = this.props;
+    const { behandlingID } = oppsummering;
+
+    await sendSoknad(behandlingID, soknad);
+    await sendAvklartefakta(behandlingID, avklartefakta);
+    await sendVilkar(behandlingID, vilkar);
+    await hentOppgaver();
+    history.push('/');
+  };
+  /* eslint-enable */
+
+  /* eslint-disable */
+  tilbakeleggeHandle = async () => {
+    const { tilbakeleggeOppgave, oppsummering } = this.props;
+    const { behandlingID } = oppsummering;
+    const venterPaaDokumentasjon = true;
+
+    await tilbakeleggeOppgave(behandlingID, venterPaaDokumentasjon);
+    this.lagreOgLukk();
+  };
   /* eslint-enable */
 
   render() {
@@ -158,6 +208,7 @@ class Saksbehandling extends Component {
                 oppsummering={oppsummering}
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
+                tilbakeleggeHandle={this.tilbakeleggeHandle}
               />
               <SideDialog />
               <SideKommentarer />
@@ -184,17 +235,27 @@ class Saksbehandling extends Component {
  * @param state
  */
 const mapStateToProps = state => ({
-  saksflyt: saksflytSelectors.SaksflytSelector(state),
+  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  saksflyt: saksflytSelectors.SaksflytSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
+  vilkar: vilkarSelectors.VilkarSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
+  resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
+  resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
+  resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
+  resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
+  sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
+  sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
+  tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegge(oppgaveID, venterPaaDokumentasjon),
+  hentOppgaver: () => dispatch(oppgaverOperations.hent()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
