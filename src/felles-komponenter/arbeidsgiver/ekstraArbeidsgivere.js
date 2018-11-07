@@ -31,12 +31,21 @@ ArbeidsgiverEnkelt.propTypes = {
  */
 class EkstraArbeidsgivere extends Component {
   componentDidUpdate(prevProps) {
+    const { fields, hentOrganisasjon, organisasjoner } = this.props;
     const gammelListe = prevProps.fields.getAll() || [];
-    const nyListe = this.props.fields.getAll() || [];
+    const nyListe = fields.getAll() || [];
 
-    if (gammelListe.join('') !== nyListe.join('')) {
-      this.props.oppdaterSoknadState();
-    }
+    if (gammelListe.join('') === nyListe.join('')) { return; }
+
+    this.props.oppdaterSoknadState();
+
+    // Sjekk at orgnr som kommer fra feltet faktisk også er levert som en
+    // organisasjon via soknad.tilleggsData.organisasjoner[].
+    // Hvis ikke, trigg en ny henting av organisasjonen som en backup-løsning.
+
+    const ikkeFunnetArbeidsgivere = nyListe.filter(orgnr => !organisasjoner.find(org => org.orgnr === orgnr));
+
+    ikkeFunnetArbeidsgivere.forEach(orgnr => hentOrganisasjon(orgnr));
   }
 
   leggTil = orgnr => {
@@ -55,12 +64,20 @@ class EkstraArbeidsgivere extends Component {
 
     const alleEkstraArbeidsgivere = fields.getAll() || [];
 
+    // Sjekk at orgnr som kommer fra feltet faktisk også er levert som en
+    // organisasjon via soknad.tilleggsData.organisasjoner[].
+    // Hvis ikke, trigg en ny henting av organisasjonen som en backup-løsning.
+
+    const ikkeFunnetArbeidsgivere = alleEkstraArbeidsgivere.filter(orgnr => !organisasjoner.find(org => org.orgnr === orgnr));
+
+    ikkeFunnetArbeidsgivere.forEach(orgnr => this.props.hentOrganisasjon(orgnr));
+
     return (
       <div className="panelSeksjon ekstraArbeidsgivere">
-        {alleEkstraArbeidsgivere.map((arbeidsgiverOrg, indeks) => <ArbeidsgiverEnkelt
+        {alleEkstraArbeidsgivere.map((orgnr, indeks) => <ArbeidsgiverEnkelt
           key={uuid()}
           slettHandle={() => slett(indeks)}
-          organisasjon={organisasjoner.find(organisasjon => organisasjon.orgnr === arbeidsgiverOrg)}
+          organisasjon={organisasjoner.find(organisasjon => organisasjon.orgnr === orgnr) || {}}
         />)}
         <EkstraArbeidsgiverLeggTil leggTil={leggTil} hentOrganisasjon={hentOrganisasjon} />
       </div>
