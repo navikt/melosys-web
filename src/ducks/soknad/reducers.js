@@ -145,8 +145,6 @@ export default function reducer(state = initialState, action) {
         },
       };
 
-      console.log(soknad);
-
       return { ...state, data: { ...state.data, soeknadDokument: soknad } };
     }
     default:
