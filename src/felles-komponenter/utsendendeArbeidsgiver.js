@@ -8,6 +8,7 @@ import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
 
 import { fagsakSelectors } from '../ducks/fagsaker/';
+import { avklartefaktaSelectors } from '../ducks/avklartefakta/';
 
 import { formatterDatoTilNorsk } from '../utils/dato';
 
@@ -54,17 +55,13 @@ Arbeidsgiver.defaultProps = {
 };
 
 const UtsendendeArbeidsgiver = props => {
-  const { organisasjoner, soknadVerdier } = props;
-  const { avklartefaktaValgteArbeidsgivere } = soknadVerdier;
+  const { valgteArbeidsgivere } = props;
 
-  const valgteOrganisasjon = organisasjoner && organisasjoner.reduce((samling, organisasjonen) =>
-    (avklartefaktaValgteArbeidsgivere.includes(organisasjonen.orgnr) ? [...samling, organisasjonen] : [...samling]), []);
+  const panelIkon = valgteArbeidsgivere.length === 1 ? Ikoner.Ferdig : Ikoner.Varsel;
 
-  const panelIkon = valgteOrganisasjon.length === 1 ? Ikoner.Ferdig : Ikoner.Varsel;
+  const dobbelVarsel = valgteArbeidsgivere.length > 1 && <Nav.AlertStripe type="advarsel">Du har valgt mer enn 1 utsendende arbeidsgiver.</Nav.AlertStripe>;
 
-  const dobbelVarsel = valgteOrganisasjon.length > 1 && <Nav.AlertStripe type="advarsel">Du har valgt mer enn 1 utsendende arbeidsgiver.</Nav.AlertStripe>;
-
-  return valgteOrganisasjon.length > 0 ? (
+  return valgteArbeidsgivere.length > 0 ? (
     <div className="utsendendeArbeidsgiver panelSeksjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader ikon={panelIkon} tittel="Utsendende arbeidsgiver" undertittel="" />}
@@ -73,7 +70,7 @@ const UtsendendeArbeidsgiver = props => {
           {dobbelVarsel}
           <Nav.Row className="arbeidsgiver__seksjon">
             <Nav.Column xs="6">
-              {valgteOrganisasjon.map(item => <Arbeidsgiver key={uuid()} arbeidsgiver={item} />) }
+              {valgteArbeidsgivere.map(item => <Arbeidsgiver key={uuid()} arbeidsgiver={item} />) }
             </Nav.Column>
             <Nav.Column xs="6">
               <div className="arbeidsgiver__detaljer">
@@ -98,6 +95,7 @@ const UtsendendeArbeidsgiver = props => {
 UtsendendeArbeidsgiver.propTypes = {
   organisasjoner: MPT.Organisasjoner,
   soknadVerdier: PT.object,
+  valgteArbeidsgivere: PT.array.isRequired,
 };
 
 UtsendendeArbeidsgiver.defaultProps = {
@@ -107,6 +105,7 @@ UtsendendeArbeidsgiver.defaultProps = {
 
 const mapStateToProps = state => ({
   organisasjoner: fagsakSelectors.OrganisasjonerSelector(state),
+  valgteArbeidsgivere: avklartefaktaSelectors.AvklartefaktaValgteArbeidsgivereSelector(state),
 });
 
 export default (connect(mapStateToProps)(UtsendendeArbeidsgiver));
