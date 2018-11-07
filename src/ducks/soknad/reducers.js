@@ -86,7 +86,7 @@ export default function reducer(state = initialState, action) {
           utsendtFortsetterArbeidsforholdIUtlandet: dokument.utsendtFortsetterArbeidsforholdIUtlandet,
           utsendtArbeiderMedKlienter: dokument.utsendtArbeiderMedKlienter,
           utsendtArbeiderMedKontrakter: dokument.utsendtArbeiderMedKontrakter,
-          ekstraArbeidsgivere: dokument.ekstraArbeidsgivere,
+          ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
         },
         arbeidsgiversBekreftelse: {
           ...state.data.soeknadDokument.arbeidsgiversBekreftelse,
@@ -144,6 +144,8 @@ export default function reducer(state = initialState, action) {
           medfolgendeAndre: dokument.medfolgendeAndre,
         },
       };
+
+      console.log(soknad);
 
       return { ...state, data: { ...state.data, soeknadDokument: soknad } };
     }
