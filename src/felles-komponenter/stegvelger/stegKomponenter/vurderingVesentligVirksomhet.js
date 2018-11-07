@@ -13,7 +13,6 @@ const VurderingVesentligVirksomhet = props => {
   const { visBegrunnelser } = tilstand;
 
   const arbeidsgivereTekst = props.valgteArbeidsgivere.length > 0 ? `til ${arrayTilKonjunksjon(props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
-
   return (
     <div>
       <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
