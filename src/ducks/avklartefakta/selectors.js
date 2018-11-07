@@ -148,8 +148,12 @@ export const AvklartefaktaLovvalgKodeSelector = createSelector(
 );
 
 export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
-  state => AvklartefaktaSelector(state).valgteArbeidsgivere,
-  valgteArbeidsgivere => valgteArbeidsgivere || []
+  state => ArbeidsgivereSelector(state),
+  state => fagsakSelectors.OrganisasjonerSelector(state),
+  (alleArbeidsgivere, organisasjoner) => {
+    const avklarte = alleArbeidsgivere.filter(avklart => avklart.fakta.includes('TRUE'));
+    return avklarte.map(avklart => organisasjoner.find(org => org.orgnr === avklart.subjektID));
+  }
 );
 
 export const AvklartefaktaVurderingSelector = createSelector(
