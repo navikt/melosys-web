@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { Field, FieldArray } from 'redux-form';
+import { FieldArray } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
@@ -25,7 +25,6 @@ const ArbeidsgiverLinje = props => {
 };
 
 ArbeidsgiverLinje.propTypes = {
-  input: PT.object.isRequired,
   arbeidsgiverKlikkHandler: PT.func.isRequired,
   arbeidsgiveren: MPT.Organisasjon.isRequired,
   erValgt: PT.bool,
@@ -39,8 +38,6 @@ ArbeidsgiverLinje.defaultProps = {
  * FieldArray trenger en egen komponent-container for å rendre ut hvert enkelt felt som er lagret i store (dvs avkryssede arbeidsgivere).
  * Rendre ut ALLE arbeidsgiver. og kryss av de som samsvarer med orgnr.
  *
- * Komponenten har er stateful fordi vi trenger å lese fields-objektet (som er et ArrayField i redux form, "avklartefaktaValgteArbeidsgivere").
- * Det gir mest mening å la denne listekomponenten håndtere klikk-events selv.
  *
  * @param props Objekt Diverse props Se prop types
  */
@@ -71,16 +68,11 @@ class ArbeidsgivereListe extends Component {
           const avklartfaktaForArbeidsgiver = alleAvklartefakta.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidsgiveren.orgnr);
           const arbeidsGiverErValgt = avklartfaktaForArbeidsgiver.fakta.includes('TRUE');
 
-          return <Field
+          return <ArbeidsgiverLinje
+            arbeidsgiveren={arbeidsgiveren}
+            erValgt={arbeidsGiverErValgt}
             key={uuid()}
-            name="avklartefaktaValgteArbeidsgiver"
-            type="text"
-            component={linjeProps => <ArbeidsgiverLinje
-              {...linjeProps}
-              arbeidsgiveren={arbeidsgiveren}
-              erValgt={arbeidsGiverErValgt}
-              arbeidsgiverKlikkHandler={this.arbeidsgiverKlikkHandler}
-            />}
+            arbeidsgiverKlikkHandler={this.arbeidsgiverKlikkHandler}
           />;
         })
         }
