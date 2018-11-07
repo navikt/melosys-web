@@ -7,7 +7,7 @@ import * as MPT from '../proptypes/';
 
 import { fagsakSelectors } from '../ducks/fagsaker';
 import { soknadSelectors, soknadActions } from '../ducks/soknad';
-import { OrganisasjonOperations, OrganisasjonSelectors } from '../ducks/organisasjon';
+import { OrganisasjonOperations, OrganisasjonSelectors } from '../ducks/organisasjoner';
 import { formSelectors } from '../ducks/form/';
 
 import Organisasjon from './arbeidsgiver/organisasjon';
@@ -64,7 +64,7 @@ ArbeidsgivereNorge.propTypes = {
 const mapStateToProps = state => ({
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
-  organisasjoner: OrganisasjonSelectors.organisasjonSelector(state),
+  organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
 });
 

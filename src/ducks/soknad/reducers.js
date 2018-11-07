@@ -26,11 +26,15 @@ export default function reducer(state = initialState, action) {
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.OK: {
       const soknadData = action.data;
+      const { behandlingID, soeknadDokument } = soknadData;
 
       return {
         ...state,
         status: STATUS.OK,
-        data: soknadData,
+        data: {
+          behandlingID,
+          soeknadDokument,
+        },
       };
     }
     case Types.RESET:

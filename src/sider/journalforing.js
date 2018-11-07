@@ -31,8 +31,8 @@ import {
 } from '../ducks/fagsaker';
 import { formSelectors } from '../ducks/form/';
 import './journalforing.css';
-import { OrganisasjonOperations } from '../ducks/organisasjon';
-import { PersonOperations } from '../ducks/person';
+import { OrganisasjonOperations } from '../ducks/organisasjoner';
+import { PersonOperations } from '../ducks/personer';
 import * as oppgaverOperations from '../ducks/oppgaver/operations';
 
 const queryParamLogger = (journalpostID, oppgaveID, location) => {

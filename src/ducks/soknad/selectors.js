@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 
-import { OrganisasjonSelectors } from '../organisasjon';
+import { OrganisasjonSelectors } from '../organisasjoner';
 
 /**
  * Selectors
@@ -49,7 +49,7 @@ export const JuridiskArbeidsgiverNorgeSelector = createSelector(
 
 export const EkstraArbeidsgivereSelector = createSelector(
   state => JuridiskArbeidsgiverNorgeSelector(state),
-  state => OrganisasjonSelectors.organisasjonSelector(state),
+  state => OrganisasjonSelectors.organisasjonerSelector(state),
   (juridiskArbeidsgiver, organisasjoner) => {
     const { ekstraArbeidsgivere } = juridiskArbeidsgiver;
     return organisasjoner.filter(organisasjon => ekstraArbeidsgivere.includes(organisasjon.orgnr));
