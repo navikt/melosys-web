@@ -12,8 +12,7 @@ const FamiliemedlemmerEnkelt = ({
   familiemedlemmerEnkelt, indeks, onChange, checked,
 }) => (
   <dl className="familiemedlemmerEnkelt">
-    <dd className="enkelt__navn">{familiemedlemmerEnkelt.sammensattNavn}</dd>
-    <dd className="enkelt__fnr">{familiemedlemmerEnkelt.fnr}</dd>
+    <dd className="enkelt__navn">{familiemedlemmerEnkelt.sammensattNavn} ({familiemedlemmerEnkelt.fnr})</dd>
     <dd className="enkelt__relasjonstype">{kodeverkObjektTilTerm(familiemedlemmerEnkelt.relasjonstype)}</dd>
     <dd className="enkelt__ermed">
       <Nav.Checkbox
@@ -45,17 +44,17 @@ class FamiliemedlemmerListe extends Component {
     } else {
       fields.remove(allFields.findIndex(element => element === fnr));
     }
-  }
+  };
 
   render() {
-    const { familiemedlemmerAlle, fields } = this.props;
-    if (!familiemedlemmerAlle) return null;
+    const { medfolgendeFamilie, fields } = this.props;
+    if (!medfolgendeFamilie) return null;
     const { onBarnChange } = this;
     const allFields = fields.getAll() || [];
 
     return (
       <div className="familiemedlemmerListe">
-        {familiemedlemmerAlle.map((familiemedlemmerEnkelt, indeks) => (
+        {medfolgendeFamilie.map((familiemedlemmerEnkelt, indeks) => (
           <FamiliemedlemmerEnkelt
             key={uuid()}
             familiemedlemmerEnkelt={familiemedlemmerEnkelt}
@@ -70,11 +69,11 @@ class FamiliemedlemmerListe extends Component {
 
 FamiliemedlemmerListe.propTypes = {
   fields: PT.object.isRequired,
-  familiemedlemmerAlle: PT.array,
+  medfolgendeFamilie: PT.array,
 };
 
 FamiliemedlemmerListe.defaultProps = {
-  familiemedlemmerAlle: [],
+  medfolgendeFamilie: [],
 };
 
 const Familiemedlemmer = props => (

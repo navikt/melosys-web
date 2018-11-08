@@ -2,6 +2,8 @@ import { createSelector } from 'reselect';
 
 import { OrganisasjonSelectors } from '../organisasjoner';
 
+import { PersonSelectors } from '../personer';
+
 /**
  * Selectors
  * -----------------------------------------------------------------------------------------
@@ -105,4 +107,14 @@ export const SelvstendigArbeidSelector = createSelector(
 export const PersonOpplysningerSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.personOpplysninger : {}),
   person => person || {}
+);
+
+export const MedfolgendeAndreSelector = createSelector(
+  state => PersonOpplysningerSelector(state),
+  state => PersonSelectors.personerSelector(state),
+  (personopplysninger, allePersoner) => {
+    const { medfolgendeAndre } = personopplysninger;
+    console.log(medfolgendeAndre);
+    return allePersoner.find(person => person.fnr === medfolgendeAndre);
+  }
 );

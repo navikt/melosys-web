@@ -26,6 +26,8 @@ import {
   fagsakSelectors,
 } from '../../ducks/fagsaker/';
 
+import { PersonSelectors } from '../../ducks/personer/';
+
 import { saksflytOperations, saksflytSelectors } from '../../ducks/saksflyt';
 
 import {
@@ -91,6 +93,7 @@ class Saksopplysninger extends Component {
 
   render () {
     const {
+      alleRelevantePersoner,
       person,
       medlemskap,
       arbeidsgivereNorge,
@@ -112,7 +115,7 @@ class Saksopplysninger extends Component {
           lagreVedtakHandler={this.lagreVedtakHandler}
           lagreSoknadHandler={this.lagreSoknadHandler}
         />
-        {person && <Personopplysninger person={person} />}
+        <Personopplysninger />
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
         <Bosted erValidert={this.state.gyldigePaneler.bosted} />
         {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
@@ -130,6 +133,7 @@ class Saksopplysninger extends Component {
 }
 
 Saksopplysninger.propTypes = {
+  alleRelevantePersoner: PT.arrayOf(MPT.Person),
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
   avklartefakta: PT.array.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
@@ -154,6 +158,7 @@ Saksopplysninger.propTypes = {
 };
 
 Saksopplysninger.defaultProps = {
+  alleRelevantePersoner: [],
   arbeidsgivereNorge: [],
   inntekt: {},
   medlemskap: {},
@@ -167,7 +172,6 @@ Saksopplysninger.defaultProps = {
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   saksflyt: saksflytSelectors.SaksflytSelector(state),
-  person: fagsakSelectors.PersonSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
