@@ -44,10 +44,10 @@ export default function reducer(state = initialState, action) {
       // det da ikke er et vilkår som er vurdert, skal det heller ikke inn i modellen eller sendes backend.
       const vilkarArray = [
         vilkarTilObjekt('ART12_1_FORUTGAAENDE_MEDLEMSKAP', action.data.vilkar.forutgaendeMedlemskap, action.data.vilkar.forutgaendeMedlemskapBegrunnelser),
-        vilkarTilObjekt('VESENTLIG_VIRKSOMHET', action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhetBegrunnelser),
+        vilkarTilObjekt('ART12_1_VESENTLIG_VIRKSOMHET', action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhetBegrunnelser),
         vilkarTilObjekt('BOSATT_I_NORGE', action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorgeBegrunnelser),
-        vilkarTilObjekt('ART12_1', action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
-        vilkarTilObjekt('ART16_1', action.data.vilkar.art16_1, action.data.vilkar.art16_1_begrunnelser, action.data.vilkar.art16_1_begrunnelser_fritekst),
+        vilkarTilObjekt('FO_883_2004_ART12_1', action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
+        vilkarTilObjekt('FO_883_2004_ART16_1', action.data.vilkar.art16_1, action.data.vilkar.art16_1_begrunnelser, action.data.vilkar.art16_1_begrunnelser_fritekst),
       ].filter(vilkar => vilkar !== null);
 
       return {
