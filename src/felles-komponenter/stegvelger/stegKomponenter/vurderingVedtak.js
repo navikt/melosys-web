@@ -32,12 +32,13 @@ const VurderingVedtak = props => {
 
   const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
 
-  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.kode).join(', ');
+  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.term).join(', ');
 
   const lovvalgObjekt = finnEnkeltKodeFraListe(lovvalgKode, alleLovvalg);
   const lovvalgTerm = lovvalgObjekt && kodeverkObjektTilKode(lovvalgObjekt);
 
   const dokumenter = [
+    { navn: 'Forhåndsvis vedtaksbrev', type: 'INNVILGELSE_YRKESAKTIV', data: {} },
     { navn: 'Forhåndsvis A1', type: 'ATTEST_A1', data: {} },
   ];
 
