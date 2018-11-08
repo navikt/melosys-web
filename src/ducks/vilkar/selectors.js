@@ -7,6 +7,10 @@
 
 import { createSelector } from 'reselect';
 
+import { KodeverkSelectors } from '../kodeverk';
+
+import * as Koder from '../../koder';
+
 // selector(s)
 export const VilkarSelector = createSelector(
   state => (state.vilkar.data ? state.vilkar.data : []),
@@ -30,10 +34,18 @@ export const bosattINorge = createSelector(
 
 export const art12_1 = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'FO_883_2004_ART12_1') || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.FO_883_2004_ART12_1) || {})
 );
 
 export const art16_1 = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'FO_883_2004_ART16_1') || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.FO_883_2004_ART16_1) || {})
+);
+
+export const valgteLovvalgsVilkar = createSelector(
+  state => VilkarSelector(state),
+  state => KodeverkSelectors.alleLovvalgSelector(state),
+  (vilkar, alleLovvalg) => (
+    vilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar))
+  )
 );

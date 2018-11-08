@@ -25,6 +25,7 @@ import { avklartefaktaOperations } from '../ducks/avklartefakta/';
 import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
 
 import { oppgaverOperations } from '../ducks/oppgaver/';
+import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder/';
 
 import {
   soknadOperations,
@@ -49,6 +50,7 @@ class Saksbehandling extends Component {
     resetVilkarState: PT.func.isRequired,
     resetAvklartefaktaState: PT.func.isRequired,
     resetSoknadState: PT.func.isRequired,
+    resetLovvalgsperiode: PT.func.isRequired,
     sjekkSaksflytStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
     sendSoknad: PT.func.isRequired,
@@ -75,6 +77,7 @@ class Saksbehandling extends Component {
   async componentWillUnmount() {
     await this.props.resetFagsakState();
     await this.props.resetAvklartefaktaState();
+    await this.props.resetLovvalgsperiode();
     await this.props.resetVilkarState();
     await this.props.resetSoknadState();
   }
@@ -250,6 +253,7 @@ const mapDispatchToProps = dispatch => ({
   resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
   resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
+  resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
