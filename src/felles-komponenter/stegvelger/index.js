@@ -90,6 +90,7 @@ class Stegvelger extends Component {
 
     const propsLight = {
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
+      valgteArbeidsgivere: props.valgteArbeidsgivere,
       avklartefakta: props.avklartefakta,
       begrunnelser: props.begrunnelser,
       saksopplysninger: props.saksopplysninger,

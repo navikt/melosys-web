@@ -69,7 +69,6 @@ export const feltGrupper = {
     avklartefaktaBekrefterFamiliebosted: [],
     avklartefaktaBekrefterDisponering: [],
     avklartefaktaBostedsland: [],
-    avklartefaktaValgteArbeidsgivere: [],
     avklartefaktaForretningsstedLand: [],
     avklartefaktaForretningsstedAntallArbeidsgivere: [],
     avklartefaktaForretningsstedFordelingArbeidsgivere: [],

@@ -17,7 +17,7 @@ export const VilkarSelector = createSelector(
 
 export const vesentligVirksomhetSelector = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'VESENTLIG_VIRKSOMHET') || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'ART12_1_VESENTLIG_VIRKSOMHET') || {})
 );
 
 export const forutgaendeMedlemskap = createSelector(
@@ -32,12 +32,12 @@ export const bosattINorge = createSelector(
 
 export const art12_1 = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'ART12_1') || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'FO_883_2004_ART12_1') || {})
 );
 
 export const art16_1 = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'ART16_1') || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'FO_883_2004_ART16_1') || {})
 );
 
 export const valgteLovvalgsVilkar = createSelector(
