@@ -12,6 +12,7 @@ import { doThenDispatch } from '../../services/utils';
 
 import * as Types from './types';
 import * as Actions from './actions';
+import * as Koder from '../../koder';
 
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
@@ -47,7 +48,7 @@ const byggLovvalgsPeriodeArtikkel12_1 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: 'ART12_1',
+    lovvalgBestemmelse: Koder.FO_883_2004_ART12_1,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: 'INNVILGET',
@@ -70,7 +71,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: '16_1',
+    lovvalgBestemmelse: Koder.FO_883_2004_ART16_1,
     unntakFraBestemmelse,
     unntakFraLovvalgsland,
     innvilgelsesResultat: 'INNVILGET',
@@ -82,8 +83,8 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
 
 const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
   switch (valgtLovvalg) {
-    case 'ART12_1': return byggLovvalgsPeriodeArtikkel12_1(getState);
-    case 'ART16_1': return byggLovvalgsPeriodeArtikkel16_1(getState);
+    case Koder.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
+    case Koder.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
     default: return [];
   }
 };

@@ -38,6 +38,7 @@ const VurderingVedtak = props => {
   const lovvalgTerm = lovvalgObjekt && kodeverkObjektTilKode(lovvalgObjekt);
 
   const dokumenter = [
+    { navn: 'Forhåndsvis vedtaksbrev', type: 'INNVILGELSE_YRKESAKTIV', data: {} },
     { navn: 'Forhåndsvis A1', type: 'ATTEST_A1', data: {} },
   ];
 
