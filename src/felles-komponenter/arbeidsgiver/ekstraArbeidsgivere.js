@@ -30,20 +30,30 @@ ArbeidsgiverEnkelt.propTypes = {
  * til Redux Form for å få tilgang til tilhørende FieldArray props.
  */
 class EkstraArbeidsgivere extends Component {
+  componentDidMount() {
+    this.sjekkAtArbeidsgivereEksistererLokalt();
+  }
+
   componentDidUpdate(prevProps) {
-    const { fields, hentOrganisasjon, organisasjoner } = this.props;
+    const { fields } = this.props;
     const gammelListe = prevProps.fields.getAll() || [];
     const nyListe = fields.getAll() || [];
 
     if (gammelListe.join('') === nyListe.join('')) { return; }
 
     this.props.oppdaterSoknadState();
+    this.sjekkAtArbeidsgivereEksistererLokalt();
+  }
 
+  sjekkAtArbeidsgivereEksistererLokalt = () => {
+    const { fields, hentOrganisasjon, organisasjoner } = this.props;
     // Sjekk at orgnr som kommer fra feltet faktisk også er levert som en
     // organisasjon via soknad.tilleggsData.organisasjoner[].
     // Hvis ikke, trigg en ny henting av organisasjonen som en backup-løsning.
 
-    const ikkeFunnetArbeidsgivere = nyListe.filter(orgnr => !organisasjoner.find(org => org.orgnr === orgnr));
+    const ekstraArbeidsgivere = fields.getAll() || [];
+
+    const ikkeFunnetArbeidsgivere = ekstraArbeidsgivere.filter(orgnr => !organisasjoner.find(org => org.orgnr === orgnr));
 
     ikkeFunnetArbeidsgivere.forEach(orgnr => hentOrganisasjon(orgnr));
   }
@@ -63,14 +73,6 @@ class EkstraArbeidsgivere extends Component {
     const { fields, hentOrganisasjon, organisasjoner } = this.props;
 
     const alleEkstraArbeidsgivere = fields.getAll() || [];
-
-    // Sjekk at orgnr som kommer fra feltet faktisk også er levert som en
-    // organisasjon via soknad.tilleggsData.organisasjoner[].
-    // Hvis ikke, trigg en ny henting av organisasjonen som en backup-løsning.
-
-    const ikkeFunnetArbeidsgivere = alleEkstraArbeidsgivere.filter(orgnr => !organisasjoner.find(org => org.orgnr === orgnr));
-
-    ikkeFunnetArbeidsgivere.forEach(orgnr => this.props.hentOrganisasjon(orgnr));
 
     return (
       <div className="panelSeksjon ekstraArbeidsgivere">
