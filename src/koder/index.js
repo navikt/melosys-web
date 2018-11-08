@@ -1,0 +1,2 @@
+export const FO_883_2004_ART12_1 = 'FO_883_2004_ART12_1';
+export const FO_883_2004_ART16_1 = 'FO_883_2004_ART16_1';
