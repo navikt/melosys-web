@@ -7,6 +7,7 @@ import avklartefaktaReducer from './ducks/avklartefakta/';
 import inngangReducer from './ducks/inngang';
 import journalforingReducer from './ducks/journalforing';
 import kodeverkReducer from './ducks/kodeverk';
+import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
 import saksbehandlerReducer from './ducks/saksbehandler/';
 import oppgaverReducer from './ducks/oppgaver';
 import organisasjonerReducer from './ducks/organisasjoner';
@@ -25,6 +26,7 @@ export default combineReducers({
   inngang: inngangReducer,
   journalforing: journalforingReducer,
   kodeverk: kodeverkReducer,
+  lovvalgsperioder: lovvalgsperioderReducer,
   saksbehandler: saksbehandlerReducer,
   soknad: soknadReducer,
   oppgaver: oppgaverReducer,

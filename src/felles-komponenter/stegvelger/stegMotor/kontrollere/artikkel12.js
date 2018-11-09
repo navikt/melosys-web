@@ -1,11 +1,25 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel12 from '../../stegKomponenter/vurderingArtikkel12';
+import { erVilkarOppfylt } from '../../../../regler/vilkar';
+
+import * as Koder from '../../../../koder';
+
 
 class Artikkel12 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
+      {
+        beskrivelse: 'vilkar for artikkel 12.1 er oppfylt',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART12_1, alleVilkar),
+        nesteSteg: STEG.VEDTAK,
+      },
+      {
+        beskrivelse: 'ønsker å vurdere 16.1',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART16_1, alleVilkar),
+        nesteSteg: STEG.ARTIKKEL_16,
+      },
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
@@ -16,7 +30,7 @@ class Artikkel12 extends Steg {
     this._tittel = 'Vurdering av 12.1';
     this._komponent = VurderingArtikkel12;
     this._samleRelevanteData = _propsLight => ({
-      artikkel: { kode: 'FO_883_2004_ART12_1', term: '12.1' },
+      artikkel: { kode: Koder.FO_883_2004_ART12_1, term: '12.1' },
       begrunnelser: _propsLight.begrunnelser.artikkel12_1 || [],
     });
     this._beregnRelevantUI = _propsLight => ({

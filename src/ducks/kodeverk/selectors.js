@@ -22,6 +22,11 @@ export const alleLovvalgSelector = createSelector(
   }
 );
 
+export const lovvalgsunntakSelector = createSelector(
+  state => state.kodeverk.data.lovvalgsunntak,
+  lovvalgsunntak => lovvalgsunntak || []
+);
+
 export const oppgaveTyperSelector = createSelector(
   state => state.kodeverk.data.oppgavetyper,
   oppgavetyper => oppgavetyper || []
@@ -60,4 +65,9 @@ export const studieFinansieringSelector = createSelector(
 export const begrunnelserSelector = createSelector(
   state => state.kodeverk.data.begrunnelser,
   begrunnelser => begrunnelser || {}
+);
+
+export const anmodningsBegrunnelserSelector = createSelector(
+  state => begrunnelserSelector(state),
+  begrunnelser => begrunnelser.artikkel16_1_anmodning || []
 );
