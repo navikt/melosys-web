@@ -12,19 +12,6 @@ import * as Api from '../../services/api';
 import * as Types from './types';
 
 /**
- * Soknads sok
- * @param fnr
- * @returns {*}
- */
-export function sok(fnr) {
-  return doThenDispatch(() => Api.Oppgaver.sok(fnr), {
-    OK: Types.SOK_OK,
-    FEILET: Types.SOK_FEILET,
-    PENDING: Types.SOK_PENDING,
-  });
-}
-
-/**
  * Hent Soknad
  * @returns {*}
  */

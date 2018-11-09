@@ -11,7 +11,7 @@ import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
-import { oppgaverSelectors, oppgaverOperations } from '../ducks/oppgaver';
+import { sokSelectors, sokOperations } from '../ducks/sok';
 import { KodeverkSelectors } from '../ducks/kodeverk';
 import './sok.css';
 
@@ -36,12 +36,12 @@ const queryParamLogger = (fnr, location) => {
 };
 
 class Sok extends Component {
-  async componentWillMount() {
+  componentWillMount() {
     const { match, location, hentBehandlingsOppgaver } = this.props;
     const { fnr } = match.params;
     if (fnr) {
       queryParamLogger(fnr, location);
-      await hentBehandlingsOppgaver(fnr);
+      hentBehandlingsOppgaver(fnr);
     }
   }
 
@@ -100,11 +100,11 @@ Sok.defaultProps = {
 
 const mapStateToProps = state => ({
   sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
-  minesaker: oppgaverSelectors.MineSakerSelector(state),
+  minesaker: sokSelectors.SokResultatSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentBehandlingsOppgaver: fnr => dispatch(oppgaverOperations.sok(fnr)),
+  hentBehandlingsOppgaver: fnr => dispatch(sokOperations.sok(fnr)),
 });
 
 const kontekster = [
