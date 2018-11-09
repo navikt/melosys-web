@@ -46,11 +46,13 @@ class Sok extends Component {
   }
 
   render() {
-    const { minesaker, sakstypeKoder, children } = this.props;
+    const { sokResultat, sakstypeKoder, children } = this.props;
     const { fnr } = this.props.match.params;
-    if (!minesaker) return null;
-    const { saksbehandling } = minesaker;
-    if (!(saksbehandling && saksbehandling.length > 0)) return null;
+    if (!sokResultat) return null;
+
+    const { saksbehandling = [] } = sokResultat;
+    const plural = saksbehandling.length > 1 ? 'r' : '';
+
     return (
       <div className="sok">
         { children }
@@ -58,7 +60,7 @@ class Sok extends Component {
           <Nav.Row className="">
             <Nav.Column xs="7">
               <section className="sokresultat">
-                <h1>Fant {saksbehandling.length} treff etter søk på &quot;{fnr}&quot;</h1>
+                <h1>{saksbehandling.length} oppgave{plural} knyttet til fnr / dnr &quot;{fnr}&quot;</h1>
                 { saksbehandling.map(oppgave => {
                   const sakstype = sakstypeKoder.find(item => item.kode === oppgave.sakstypeKode);
                   const sak = {
@@ -85,7 +87,7 @@ class Sok extends Component {
 Sok.propTypes = {
   location: PT.object.isRequired,
   sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  minesaker: MPT.MineOppgaver,
+  sokResultat: MPT.MineOppgaver,
   hentBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
@@ -95,12 +97,12 @@ Sok.propTypes = {
 Sok.defaultProps = {
   children: null,
   sokStreng: '',
-  minesaker: {},
+  sokResultat: {},
 };
 
 const mapStateToProps = state => ({
   sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
-  minesaker: sokSelectors.SokResultatSelector(state),
+  sokResultat: sokSelectors.SokResultatSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
