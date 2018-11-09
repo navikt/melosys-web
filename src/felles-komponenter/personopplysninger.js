@@ -56,14 +56,13 @@ PersonMerkelapper.defaultProps = {
 };
 
 class Personopplysninger extends Component {
-
   sjekkPerson = fnr => {
-    const { medfolgendeAndre } = this.props;
+    const { alleRelevantePersoner } = this.props;
     const { hentPerson } = this.props;
 
-    console.log(medfolgendeAndre)
+    const eksistererPersonenLokalt = alleRelevantePersoner.some(person => person.fnr === fnr);
 
-    if (Object.keys(medfolgendeAndre).length === 0) {
+    if (!eksistererPersonenLokalt) {
       hentPerson(fnr);
     }
   };
@@ -87,8 +86,6 @@ class Personopplysninger extends Component {
     } = person;
 
     if (Object.keys(person).length === 0) { return null; }
-
-    //const alleMedfolgendeFamilie = alleRelevantePersoner.filter(relevantPerson => medfolgendeFamilie.find(familie => familie === relevantPerson.fnr));
 
     return (
       <div className="personopplysninger panelSeksjon">
@@ -161,10 +158,11 @@ class Personopplysninger extends Component {
 }
 
 Personopplysninger.propTypes = {
-  person: MPT.Person.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Person).isRequired,
-  personOpplysninger: PT.object.isRequired,
+  hentPerson: PT.func.isRequired,
   medfolgendeAndre: MPT.Person,
+  person: MPT.Person.isRequired,
+  personOpplysninger: PT.object.isRequired,
 };
 
 Personopplysninger.defaultProps = {
@@ -181,6 +179,5 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentPerson: fnr => dispatch(PersonOperations.hent(fnr)),
 });
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(Personopplysninger);

@@ -114,7 +114,6 @@ export const MedfolgendeAndreSelector = createSelector(
   state => PersonSelectors.personerSelector(state),
   (personopplysninger, allePersoner) => {
     const { medfolgendeAndre } = personopplysninger;
-    console.log(medfolgendeAndre);
     return allePersoner.find(person => person.fnr === medfolgendeAndre);
   }
 );
