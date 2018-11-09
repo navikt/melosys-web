@@ -14,6 +14,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { KodeverkSelectors } from '../../ducks/kodeverk/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder/';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
@@ -31,6 +32,7 @@ class Stegvelger extends Component {
 
     this.props.hentVilkar(bid);
     this.props.hentAvklartefakta(bid);
+    this.props.hentLovvalgsperioder(bid);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -57,6 +59,13 @@ class Stegvelger extends Component {
     const { avklartefakta } = this.props;
     const { sendAvklartefakta } = this.props;
     await sendAvklartefakta(bid, avklartefakta);
+  };
+
+  lagreLovvalgsperioderHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const { lovvalgsperioder } = this.props;
+    const { sendLovvalgsperioder } = this.props;
+    await sendLovvalgsperioder(bid, lovvalgsperioder);
   };
 
   lagreVedtakHandler = async () => {
@@ -90,6 +99,7 @@ class Stegvelger extends Component {
       tilgjengeligeHandlers,
       skjema: props.skjema,
       vilkar: props.vilkar,
+      lovvalgsperioder: props.lovvalgsperioder,
     };
 
     const stegMotor = new StegMotor(propsLight);
@@ -111,11 +121,13 @@ class Stegvelger extends Component {
       skjema,
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
+      oppdaterLovvalgperioderState,
       lagreSoknadHandler,
+      lovvalgsperioder,
       vilkar,
     } = this.props;
 
-    const { lagreVilkarHandler, lagreAvklartefaktaHandler } = this;
+    const { lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler } = this;
 
     const { behandlingID } = this.props.oppsummering;
 
@@ -123,8 +135,10 @@ class Stegvelger extends Component {
     this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
       await oppdaterAvklarteFaktaState(skjema);
       await oppdaterVilkarState(skjema);
+      await oppdaterLovvalgperioderState(skjema);
       await lagreVilkarHandler(behandlingID, vilkar);
       await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
+      await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
 
       if (this.erSisteSteg(nyttStegNummer)) {
         await lagreSoknadHandler();
@@ -167,6 +181,7 @@ Stegvelger.propTypes = {
   sendVilkar: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
+  hentLovvalgsperioder: PT.func.isRequired,
   history: PT.object.isRequired,
   lagreVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
@@ -196,6 +211,7 @@ const mapStateToProps = state => ({
   arbeidsgivereIPerioden: avklartefaktaSelectors.ArbeidsgivereIPeriodenSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
+  lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   begrunnelser: KodeverkSelectors.begrunnelserSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
   landkoder: KodeverkSelectors.landkoderSelector(state),
@@ -213,8 +229,11 @@ const mapDispatchToProps = dispatch => ({
   lagreVedtak: behandlingID => dispatch(vedtakOperations.lagre(behandlingID)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
+  hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+  sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
+  oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
 });
 
