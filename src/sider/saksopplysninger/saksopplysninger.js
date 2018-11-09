@@ -26,8 +26,6 @@ import {
   fagsakSelectors,
 } from '../../ducks/fagsaker/';
 
-import { PersonSelectors } from '../../ducks/personer/';
-
 import { saksflytOperations, saksflytSelectors } from '../../ducks/saksflyt';
 
 import {
@@ -93,8 +91,6 @@ class Saksopplysninger extends Component {
 
   render () {
     const {
-      alleRelevantePersoner,
-      person,
       medlemskap,
       arbeidsgivereNorge,
       inntekt,

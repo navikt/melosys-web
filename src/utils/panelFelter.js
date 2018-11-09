@@ -4,7 +4,10 @@ import * as Skjema from '../felles-komponenter/skjema';
  */
 export const feltGrupper = {
   personOpplysninger: {
-    medfolgendeAndre: [value => (value !== undefined && (Skjema.Validering.erGyldigFnr(value) || Skjema.Validering.erGyldigDnr(value)) ? null : 'Ugyldig fnr eller dnr')],
+    medfolgendeAndre: [value => {
+      if (!value) { return null; }
+      return (Skjema.Validering.erGyldigFnr(value) || Skjema.Validering.erGyldigDnr(value)) ? null : 'Ugyldig fnr eller dnr';
+    }],
   },
   inntekt: {
     inntektNorskIPerioden: [],
