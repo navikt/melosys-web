@@ -10,12 +10,12 @@ import kodeverkReducer from './ducks/kodeverk';
 import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
 import saksbehandlerReducer from './ducks/saksbehandler/';
 import oppgaverReducer from './ducks/oppgaver';
-import sokReducer from './ducks/sok';
 import organisasjonReducer from './ducks/organisasjon';
 import personReducer from './ducks/person';
 import soknadReducer from './ducks/soknad/';
 import vilkarReducer from './ducks/vilkar/';
 import saksflytReducer from './ducks/saksflyt';
+import sokReducer from './ducks/sok';
 
 import customFormReducer from './ducks/form';
 

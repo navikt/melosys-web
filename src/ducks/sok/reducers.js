@@ -21,8 +21,7 @@ export default function reducer(state = initialState, action) {
     case Types.FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.OK: {
-      const sokData = action.data;
-      return { ...state, status: STATUS.OK, data: sokData };
+      return { ...state, status: STATUS.OK, data: action.data };
     }
     default:
       return state;
