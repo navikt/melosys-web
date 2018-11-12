@@ -37,11 +37,11 @@ const queryParamLogger = (fnr, location) => {
 
 class Sok extends Component {
   componentWillMount() {
-    const { match, location, hentBehandlingsOppgaver } = this.props;
+    const { match, location, sokBehandlingsOppgaver } = this.props;
     const { fnr } = match.params;
     if (fnr) {
       queryParamLogger(fnr, location);
-      hentBehandlingsOppgaver(fnr);
+      sokBehandlingsOppgaver(fnr);
     }
   }
 
@@ -88,7 +88,7 @@ Sok.propTypes = {
   location: PT.object.isRequired,
   sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   sokResultat: MPT.MineOppgaver,
-  hentBehandlingsOppgaver: PT.func.isRequired,
+  sokBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
   match: PT.object.isRequired,
@@ -106,7 +106,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentBehandlingsOppgaver: fnr => dispatch(sokOperations.sok(fnr)),
+  sokBehandlingsOppgaver: fnr => dispatch(sokOperations.sok(fnr)),
 });
 
 const kontekster = [
