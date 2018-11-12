@@ -1,4 +1,4 @@
-import { getAsJson, postAsJson } from '../utils';
+import { getAsJson, postAsJson, postAsJsonReceiveAsPDF } from '../utils';
 import { API_BASE_URL } from '../api-constants';
 
 // eslint-disable-next-line import/prefer-default-export
@@ -14,7 +14,7 @@ const hentDokument = (journalforingID, dokumentID) => getAsJson(pdfURI(journalfo
  */
 const forhandsvisPDF = (behandlingID, dokumenttypeKode, data) => {
   const URI_DOKUMENT_UTKAST = `${API_BASE_URL}dokumenter/utkast/pdf/${behandlingID}/${dokumenttypeKode}`;
-  return postAsJson(URI_DOKUMENT_UTKAST, data, true);
+  return postAsJsonReceiveAsPDF(URI_DOKUMENT_UTKAST, data, true);
 };
 
 /**
@@ -29,6 +29,7 @@ const opprettDokument = (behandlingID, dokumenttypeKode, dokument) => {
   const URI_DOKUMENT_OPPRETT = `${API_BASE_URL}dokumenter/opprett/${behandlingID}/${dokumenttypeKode}`;
   return postAsJson(URI_DOKUMENT_OPPRETT, dokument);
 };
+
 export {
   pdfURI,
   hentDokument,
