@@ -106,7 +106,7 @@ class Personopplysninger extends Component {
                   <dd>{kodeverkObjektTilTerm(statsborgerskap)}</dd>
                   <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
                   <dt>Kjønn:</dt><dd>{kodeverkObjektTilTerm(kjoenn)}</dd>
-                  <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
+                  <dt>Sivilstand:</dt><dd>{kodeverkObjektTilTerm(sivilstand)}</dd>
                 </dl>
               </Nav.Column>
               <Nav.Column xs="6">
