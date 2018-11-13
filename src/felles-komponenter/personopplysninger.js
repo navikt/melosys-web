@@ -109,6 +109,8 @@ function Personopplysninger(props) {
               <Nav.Fieldset legend="Adresse oppgitt i søknad:">
                 <dl className="person__detaljer">
                   <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" />
+                  <Skjema.Input feltNavn="oppgittAdresseHusnummer" label="Husnummer:" />
+                  <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" />
                   <Nav.Row>
                     <Nav.Column xs="4">
                       <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnummer:" />
