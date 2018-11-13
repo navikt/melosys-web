@@ -15,6 +15,7 @@ import personerReducer from './ducks/personer';
 import soknadReducer from './ducks/soknad/';
 import vilkarReducer from './ducks/vilkar/';
 import saksflytReducer from './ducks/saksflyt';
+import sokReducer from './ducks/sok';
 
 import customFormReducer from './ducks/form';
 
@@ -34,4 +35,5 @@ export default combineReducers({
   personer: personerReducer,
   vilkar: vilkarReducer,
   saksflyt: saksflytReducer,
+  sok: sokReducer,
 });

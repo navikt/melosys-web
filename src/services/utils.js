@@ -257,9 +257,9 @@ if (config.headers) {
   return toJson(sjekketResponse);
 }
 
-async function methodToJson(method, url, data, extendResponse = false) {
+async function methodToJson(method, url, data, extendResponse = false, accept = 'application/json') {
   const headers = {
-    Accept: 'application/json',
+    Accept: accept,
     'Accept-Charset': 'UTF-8',
     // 'Cache-control': 'no-store, must-revalidate, no-cache, max-age=0',
     // Expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
@@ -298,6 +298,10 @@ export async function getAsJson(url, extendResponse = false) {
 
 export async function postAsJson(url, data = {}, extendResponse = false) {
   return methodToJson('POST', url, data, extendResponse);
+}
+
+export async function postAsJsonReceiveAsPDF(url, data = {}, extendResponse = false) {
+  return methodToJson('POST', url, data, extendResponse, 'application/pdf');
 }
 
 export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
