@@ -3,7 +3,6 @@ import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 import LandVelger from './skjema/landvelger';
@@ -23,7 +22,9 @@ const EnkeltForetak = ({ indeks, slettForetakHandler }) => (
     <Nav.Column xs="6">
       <Nav.Fieldset legend="Foretakets adresse">
         <Skjema.Input label="Gatenavn" feltNavn={`foretakUtland[${indeks}].adresse.gatenavn`} />
+        <Skjema.Input label="Husnummer" feltNavn={`foretakUtland[${indeks}].adresse.husnummer`} />
         <Skjema.Input label="Postnummer" feltNavn={`foretakUtland[${indeks}].adresse.postnummer`} />
+        <Skjema.Input label="Region" feltNavn={`foretakUtland[${indeks}].adresse.region`} />
         <Skjema.Input label="Poststed" feltNavn={`foretakUtland[${indeks}].adresse.poststed`} />
         <LandVelger label="Land" feltNavn={`foretakUtland[${indeks}].adresse.landKode`} />
       </Nav.Fieldset>
@@ -77,13 +78,5 @@ const ForetakUtland = props => (
     props={props}
   />
 );
-
-ForetakUtland.propTypes = {
-  organisasjoner: MPT.Organisasjoner,
-};
-
-ForetakUtland.defaultProps = {
-  organisasjoner: [],
-};
 
 export default ForetakUtland;
