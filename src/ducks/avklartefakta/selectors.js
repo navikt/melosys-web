@@ -10,6 +10,7 @@ import { createSelector } from 'reselect';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 import { KodeverkSelectors } from '../kodeverk';
+import { OrganisasjonSelectors } from '../organisasjoner';
 
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
@@ -97,13 +98,14 @@ export const ArbeidsgivereIPeriodenSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => fagsakSelectors.OrganisasjonerSelector(state),
   state => soknadSelectors.EkstraArbeidsgivereSelector(state),
-  (arbeidsforholdene, organisasjoner, ekstraArbeidsgivere) => {
+  state => soknadSelectors.SelvstendigNaringsvirksomhetSelector(state),
+  (arbeidsforholdene, organisasjoner, ekstraArbeidsgivere, selvstendigeNaringer) => {
     const relevanteOrganisasjoner = organisasjoner.reduce((samling, organisasjonen) => {
       const organisasjonenHarArbeidsforhold = arbeidsforholdene.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
       return organisasjonenHarArbeidsforhold ? [...samling, organisasjonen] : [...samling];
     }, []);
 
-    return [...relevanteOrganisasjoner, ...ekstraArbeidsgivere];
+    return [...relevanteOrganisasjoner, ...ekstraArbeidsgivere, ...selvstendigeNaringer];
   }
 );
 
@@ -150,9 +152,11 @@ export const AvklartefaktaLovvalgKodeSelector = createSelector(
 export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
   state => ArbeidsgivereSelector(state),
   state => fagsakSelectors.OrganisasjonerSelector(state),
-  (alleArbeidsgivere, organisasjoner) => {
+  state => OrganisasjonSelectors.organisasjonerSelector(state),
+  (alleArbeidsgivere, fagsakOrganisasjoner, soknadOrganisasjoner) => {
+    const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
     const avklarte = alleArbeidsgivere.filter(avklart => avklart.fakta.includes('TRUE'));
-    return avklarte.map(avklart => organisasjoner.find(org => org.orgnr === avklart.subjektID));
+    return avklarte.map(avklart => alleOrganisasjoner.find(org => org.orgnr === avklart.subjektID));
   }
 );
 
