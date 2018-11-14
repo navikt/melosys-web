@@ -121,6 +121,8 @@ export default function reducer(state = initialState, action) {
           adresseIUtlandet: dokument.adresseIUtlandet,
           oppgittAdresse: {
             gatenavn: dokument.oppgittAdresseGatenavn,
+            husnummer: dokument.oppgittAdresseHusnummer,
+            region: dokument.oppgittAdresseRegion,
             postnummer: dokument.oppgittAdressePostnummer,
             poststed: dokument.oppgittAdressePoststed,
             husnummer: dokument.oppgittAdresseHusnummer,
