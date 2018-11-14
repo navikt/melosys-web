@@ -91,7 +91,6 @@ class Saksopplysninger extends Component {
 
   render () {
     const {
-      person,
       medlemskap,
       arbeidsgivereNorge,
       inntekt,
@@ -112,7 +111,7 @@ class Saksopplysninger extends Component {
           lagreVedtakHandler={this.lagreVedtakHandler}
           lagreSoknadHandler={this.lagreSoknadHandler}
         />
-        {person && <Personopplysninger person={person} />}
+        <Personopplysninger />
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
         <Bosted erValidert={this.state.gyldigePaneler.bosted} />
         {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
@@ -130,6 +129,7 @@ class Saksopplysninger extends Component {
 }
 
 Saksopplysninger.propTypes = {
+  alleRelevantePersoner: PT.arrayOf(MPT.Person),
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
   avklartefakta: PT.array.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
@@ -154,6 +154,7 @@ Saksopplysninger.propTypes = {
 };
 
 Saksopplysninger.defaultProps = {
+  alleRelevantePersoner: [],
   arbeidsgivereNorge: [],
   inntekt: {},
   medlemskap: {},
@@ -167,7 +168,6 @@ Saksopplysninger.defaultProps = {
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   saksflyt: saksflytSelectors.SaksflytSelector(state),
-  person: fagsakSelectors.PersonSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
@@ -206,6 +206,7 @@ const mapStateToProps = state => ({
     utsendtFortsetterArbeidsforholdIUtlandet: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtFortsetterArbeidsforholdIUtlandet,
     utsendtArbeiderMedKlienter: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtArbeiderMedKlienter,
     utsendtArbeiderMedKontrakter: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtArbeiderMedKontrakter,
+    ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: soknadSelectors.OppholdUtlandSelector(state).oppholdslandKoder,

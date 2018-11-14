@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
@@ -20,6 +21,9 @@ import MedfolgendeFamilie from './personopplysninger/medfolgendeFamilie';
 import MedfolgendeAndre from './personopplysninger/medfolgendeAndre';
 
 import './personopplysninger.css';
+import { fagsakSelectors } from '../ducks/fagsaker';
+import { PersonSelectors, PersonOperations } from '../ducks/personer';
+import { soknadSelectors } from '../ducks/soknad';
 
 const ikonFraKjonn = kjoenn => {
   switch (kjoenn) {
@@ -51,98 +55,131 @@ PersonMerkelapper.defaultProps = {
   erEgenAnsatt: false,
 };
 
-function Personopplysninger(props) {
-  const { person } = props;
+class Personopplysninger extends Component {
+  sjekkPerson = fnr => {
+    const { alleRelevantePersoner } = this.props;
+    const { hentPerson } = this.props;
 
-  const {
-    fnr,
-    sivilstand,
-    statsborgerskap,
-    statsborgerskapDato,
-    kjoenn,
-    sammensattNavn,
-    foedselsdato,
-    bostedsadresse,
-    personStatus,
-    erEgenAnsatt,
-    familiemedlemmer,
-  } = person;
+    const eksistererPersonenLokalt = alleRelevantePersoner.some(person => person.fnr === fnr);
 
-  if (Object.keys(person).length === 0) { return null; }
+    if (!eksistererPersonenLokalt) {
+      hentPerson(fnr);
+    }
+  };
 
-  return (
-    <div className="personopplysninger panelSeksjon">
-      <Nav.EkspanderbartpanelBase
-        heading={
-          <div className="personopplysninger__panelheader">
-            <PanelHeader ikon={ikonFraKjonn(kodeverkObjektTilKode(kjoenn))} tittel={`${sammensattNavn} (${beregnAlder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
-            <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
-          </div>}
-        ariaTittel="Panel for personinformasjon">
-        <Nav.Container fluid>
-          {/* START PERSONINFO */}
-          <Nav.Row className="person__seksjon">
-            <Nav.Column xs="6">
-              <dl className="person__detaljer">
-                <dt>Fnr / dnr:</dt><dd>{fnr}</dd>
-                <dt>Statsborgerskap pr {formatterDatoTilNorsk(statsborgerskapDato)}:</dt>
-                <dd>{kodeverkObjektTilTerm(statsborgerskap)}</dd>
-                <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
-                <dt>Kjønn:</dt><dd>{kodeverkObjektTilTerm(kjoenn)}</dd>
-                <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
-              </dl>
-            </Nav.Column>
-            <Nav.Column xs="6">
-              <UtenlandskIdent />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row className="person__seksjon">
-            <Nav.Column xs="4">
-              <dl className="person__detaljer">
-                <dt>Bostedsadresse (TPS):</dt>
-                <BostedsAdresse bostedsadresse={bostedsadresse} />
-              </dl>
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row className="person__seksjon">
-            <Nav.Column xs="6">
-              <Nav.Fieldset legend="Adresse oppgitt i søknad:">
+  render() {
+    const { person, medfolgendeAndre } = this.props;
+    const { sjekkPerson } = this;
+
+    const {
+      fnr,
+      sivilstand,
+      statsborgerskap,
+      statsborgerskapDato,
+      kjoenn,
+      sammensattNavn,
+      foedselsdato,
+      bostedsadresse,
+      personStatus,
+      erEgenAnsatt,
+      familiemedlemmer,
+    } = person;
+
+    if (Object.keys(person).length === 0) { return null; }
+
+    return (
+      <div className="personopplysninger panelSeksjon">
+        <Nav.EkspanderbartpanelBase
+          heading={
+            <div className="personopplysninger__panelheader">
+              <PanelHeader ikon={ikonFraKjonn(kodeverkObjektTilKode(kjoenn))} tittel={`${sammensattNavn} (${beregnAlder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
+              <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
+            </div>}
+          ariaTittel="Panel for personinformasjon">
+          <Nav.Container fluid>
+            {/* START PERSONINFO */}
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="6">
                 <dl className="person__detaljer">
-                  <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" />
-                  <Skjema.Input feltNavn="oppgittAdresseHusnummer" label="Husnummer:" />
-                  <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" />
-                  <Nav.Row>
-                    <Nav.Column xs="4">
-                      <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnummer:" />
-                    </Nav.Column>
-                    <Nav.Column xs="8">
-                      <Skjema.Input feltNavn="oppgittAdressePoststed" label="Poststed:" />
-                    </Nav.Column>
-                  </Nav.Row>
-                  <LandVelger feltNavn="oppgittAdresseLand" label="Land:" />
+                  <dt>Fnr / dnr:</dt><dd>{fnr}</dd>
+                  <dt>Statsborgerskap pr {formatterDatoTilNorsk(statsborgerskapDato)}:</dt>
+                  <dd>{kodeverkObjektTilTerm(statsborgerskap)}</dd>
+                  <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
+                  <dt>Kjønn:</dt><dd>{kodeverkObjektTilTerm(kjoenn)}</dd>
+                  <dt>Sivilstand:</dt><dd>{kodeverkObjektTilTerm(sivilstand)}</dd>
                 </dl>
-              </Nav.Fieldset>
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row className="person__seksjon">
-            <Nav.Column xs="12">
-              {familiemedlemmer.length > 0 && <MedfolgendeFamilie familiemedlemmerAlle={familiemedlemmer} /> }
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row className="person__seksjon">
-            <Nav.Column xs="12">
-              <MedfolgendeAndre />
-            </Nav.Column>
-          </Nav.Row>
-          {/* SLUTT PERSONINFO */}
-        </Nav.Container>
-      </Nav.EkspanderbartpanelBase>
-    </div>
-  );
+              </Nav.Column>
+              <Nav.Column xs="6">
+                <UtenlandskIdent />
+              </Nav.Column>
+            </Nav.Row>
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="4">
+                <dl className="person__detaljer">
+                  <dt>Bostedsadresse (TPS):</dt>
+                  <BostedsAdresse bostedsadresse={bostedsadresse} />
+                </dl>
+              </Nav.Column>
+            </Nav.Row>
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="6">
+                <Nav.Fieldset legend="Adresse oppgitt i søknad:">
+                  <dl className="person__detaljer">
+                    <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" />
+                    <Skjema.Input feltNavn="oppgittAdresseHusnummer" bredde="XS" label="Husnummer:" />
+                    <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" />
+                    <Nav.Row>
+                      <Nav.Column xs="4">
+                        <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnr:" />
+                      </Nav.Column>
+                      <Nav.Column xs="8">
+                        <Skjema.Input feltNavn="oppgittAdressePoststed" label="Poststed:" />
+                      </Nav.Column>
+                    </Nav.Row>
+                    <LandVelger feltNavn="oppgittAdresseLand" label="Land:" />
+                  </dl>
+                </Nav.Fieldset>
+              </Nav.Column>
+            </Nav.Row>
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="12">
+                {familiemedlemmer.length > 0 && <MedfolgendeFamilie medfolgendeFamilie={familiemedlemmer} /> }
+              </Nav.Column>
+            </Nav.Row>
+            <Nav.Row className="person__seksjon">
+              <Nav.Column xs="12">
+                <MedfolgendeAndre medfolgendeAndre={medfolgendeAndre} sjekkPerson={sjekkPerson} />
+              </Nav.Column>
+            </Nav.Row>
+            {/* SLUTT PERSONINFO */}
+          </Nav.Container>
+        </Nav.EkspanderbartpanelBase>
+      </div>
+    );
+  }
 }
 
 Personopplysninger.propTypes = {
+  alleRelevantePersoner: PT.arrayOf(MPT.Person).isRequired,
+  hentPerson: PT.func.isRequired,
+  medfolgendeAndre: MPT.Person,
   person: MPT.Person.isRequired,
+  personOpplysninger: PT.object.isRequired,
 };
 
-export default Personopplysninger;
+Personopplysninger.defaultProps = {
+  medfolgendeAndre: {},
+};
+
+const mapStateToProps = state => ({
+  alleRelevantePersoner: PersonSelectors.personerSelector(state),
+  personOpplysninger: soknadSelectors.PersonOpplysningerSelector(state),
+  person: fagsakSelectors.PersonSelector(state),
+  medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  hentPerson: fnr => dispatch(PersonOperations.hent(fnr)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Personopplysninger);

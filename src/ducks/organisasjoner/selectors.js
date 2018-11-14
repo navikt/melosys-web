@@ -8,8 +8,7 @@
 import { createSelector } from 'reselect';
 
 /* eslint import/prefer-default-export:"off" */
-export const personSelector = createSelector(
-  state => state.person.data,
-  person => person
+export const organisasjonerSelector = createSelector(
+  state => state.organisasjoner.data || [],
+  organisasjoner => organisasjoner
 );
-

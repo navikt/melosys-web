@@ -6,12 +6,15 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
-
-// import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
-// import * as Types from './types';
+import { doThenDispatch } from '../../services/utils';
+import * as Types from '../personer/types';
 
 /* eslint-disable import/prefer-default-export */
-export function hent(orgnr) {
-  return Api.Organisasjoner.hentOrganisasjon(orgnr);
+export function hent(fnr) {
+  return doThenDispatch(() => Api.Personer.hentPerson(fnr), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
 }

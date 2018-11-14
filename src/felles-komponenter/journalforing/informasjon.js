@@ -14,8 +14,8 @@ import * as Api from '../../services/api';
 
 import * as Person from '../../felles-komponenter/skjema/validering/generisk/person';
 
-import { PersonSelectors } from '../../ducks/person';
-import { OrganisasjonSelectors } from '../../ducks/organisasjon';
+import { PersonSelectors } from '../../ducks/personer';
+import { OrganisasjonSelectors } from '../../ducks/organisasjoner';
 import { formSelectors } from '../../ducks/form';
 import { KodeverkSelectors } from '../../ducks/kodeverk';
 
@@ -217,8 +217,8 @@ Informasjon.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  person: PersonSelectors.personSelector(state),
-  organisasjon: OrganisasjonSelectors.organisasjonSelector(state),
+  person: PersonSelectors.personerSelector(state),
+  organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   valgbareDokumentTitler: KodeverkSelectors.dokumenttitlerSelector(state),
   valgbareVedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
