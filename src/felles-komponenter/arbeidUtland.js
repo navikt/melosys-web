@@ -3,7 +3,6 @@ import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 
@@ -20,7 +19,9 @@ const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler }) => (
       <Nav.Column xs="6">
         <Nav.Fieldset legend="Fysisk arbeidssted">
           <Skjema.Input label="Gateadresse" feltNavn={`arbeidUtland[${indeks}].adresse.gatenavn`} />
+          <Skjema.Input label="Husnummer" feltNavn={`arbeidUtland[${indeks}].adresse.husnummer`} />
           <Skjema.Input label="Postnummer" feltNavn={`arbeidUtland[${indeks}].adresse.postnummer`} />
+          <Skjema.Input label="Region" feltNavn={`arbeidUtland[${indeks}].adresse.region`} />
           <Skjema.Input label="Poststed" feltNavn={`arbeidUtland[${indeks}].adresse.poststed`} />
           <Landvelger label="Land" feltNavn={`arbeidUtland[${indeks}].adresse.landKode`} />
         </Nav.Fieldset>
@@ -87,12 +88,5 @@ ArbeidUtlandWrapper.propTypes = {
 
 const ArbeidUtland = props => (<FieldArray name="arbeidUtland" component={ArbeidUtlandWrapper} props={props} />);
 
-ArbeidUtland.propTypes = {
-  organisasjoner: MPT.Organisasjoner,
-};
-
-ArbeidUtland.defaultProps = {
-  organisasjoner: [],
-};
 
 export default ArbeidUtland;
