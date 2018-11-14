@@ -73,11 +73,13 @@ class Saksopplysninger extends Component {
     }
   };
 
-  overstyrSubmit = async event => {
+  overstyrSubmit = event => {
     event.preventDefault();
+  };
 
+  oppdaterLokalSoknadHandler = () => {
     const { oppdaterSoknad, soknadForm } = this.props;
-    await oppdaterSoknad(soknadForm.values);
+    oppdaterSoknad(soknadForm.values);
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
@@ -110,6 +112,7 @@ class Saksopplysninger extends Component {
         <Stegvelger
           lagreVedtakHandler={this.lagreVedtakHandler}
           lagreSoknadHandler={this.lagreSoknadHandler}
+          oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
         />
         <Personopplysninger />
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />

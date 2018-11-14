@@ -122,15 +122,16 @@ class Stegvelger extends Component {
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
       oppdaterLovvalgperioderState,
+      oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
       lovvalgsperioder,
       vilkar,
     } = this.props;
 
     const { lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler } = this;
-
     const { behandlingID } = this.props.oppsummering;
 
+    oppdaterLokalSoknadHandler();
 
     this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
       await oppdaterAvklarteFaktaState(skjema);
@@ -190,6 +191,7 @@ Stegvelger.propTypes = {
   match: PT.object.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterVilkarState: PT.func.isRequired,
+  oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   settSkjemaVerdi: PT.func.isRequired,
