@@ -26,11 +26,15 @@ export default function reducer(state = initialState, action) {
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.OK: {
       const soknadData = action.data;
+      const { behandlingID, soeknadDokument } = soknadData;
 
       return {
         ...state,
         status: STATUS.OK,
-        data: soknadData,
+        data: {
+          behandlingID,
+          soeknadDokument,
+        },
       };
     }
     case Types.RESET:
@@ -82,6 +86,7 @@ export default function reducer(state = initialState, action) {
           utsendtFortsetterArbeidsforholdIUtlandet: dokument.utsendtFortsetterArbeidsforholdIUtlandet,
           utsendtArbeiderMedKlienter: dokument.utsendtArbeiderMedKlienter,
           utsendtArbeiderMedKontrakter: dokument.utsendtArbeiderMedKontrakter,
+          ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
         },
         arbeidsgiversBekreftelse: {
           ...state.data.soeknadDokument.arbeidsgiversBekreftelse,

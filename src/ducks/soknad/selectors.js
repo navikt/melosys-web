@@ -1,5 +1,9 @@
 import { createSelector } from 'reselect';
 
+import { OrganisasjonSelectors } from '../organisasjoner';
+
+import { PersonSelectors } from '../personer';
+
 /**
  * Selectors
  * -----------------------------------------------------------------------------------------
@@ -43,6 +47,15 @@ export const ForetakUtlandSelector = createSelector(
 export const JuridiskArbeidsgiverNorgeSelector = createSelector(
   state => state.soknad.data.soeknadDokument && state.soknad.data.soeknadDokument.juridiskArbeidsgiverNorge,
   soknad => soknad || {}
+);
+
+export const EkstraArbeidsgivereSelector = createSelector(
+  state => JuridiskArbeidsgiverNorgeSelector(state),
+  state => OrganisasjonSelectors.organisasjonerSelector(state),
+  (juridiskArbeidsgiver, organisasjoner) => {
+    const { ekstraArbeidsgivere } = juridiskArbeidsgiver;
+    return organisasjoner.filter(organisasjon => ekstraArbeidsgivere.includes(organisasjon.orgnr));
+  }
 );
 
 export const OppholdUtlandSelector = createSelector(
@@ -94,4 +107,13 @@ export const SelvstendigArbeidSelector = createSelector(
 export const PersonOpplysningerSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.personOpplysninger : {}),
   person => person || {}
+);
+
+export const MedfolgendeAndreSelector = createSelector(
+  state => PersonOpplysningerSelector(state),
+  state => PersonSelectors.personerSelector(state),
+  (personopplysninger, allePersoner) => {
+    const { medfolgendeAndre } = personopplysninger;
+    return allePersoner.find(person => person.fnr === medfolgendeAndre);
+  }
 );

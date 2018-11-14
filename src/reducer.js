@@ -10,8 +10,8 @@ import kodeverkReducer from './ducks/kodeverk';
 import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
 import saksbehandlerReducer from './ducks/saksbehandler/';
 import oppgaverReducer from './ducks/oppgaver';
-import organisasjonReducer from './ducks/organisasjon';
-import personReducer from './ducks/person';
+import organisasjonerReducer from './ducks/organisasjoner';
+import personerReducer from './ducks/personer';
 import soknadReducer from './ducks/soknad/';
 import vilkarReducer from './ducks/vilkar/';
 import saksflytReducer from './ducks/saksflyt';
@@ -31,8 +31,8 @@ export default combineReducers({
   saksbehandler: saksbehandlerReducer,
   soknad: soknadReducer,
   oppgaver: oppgaverReducer,
-  organisasjon: organisasjonReducer,
-  person: personReducer,
+  organisasjoner: organisasjonerReducer,
+  personer: personerReducer,
   vilkar: vilkarReducer,
   saksflyt: saksflytReducer,
   sok: sokReducer,

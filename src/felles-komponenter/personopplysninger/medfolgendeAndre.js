@@ -1,67 +1,58 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { getFormValues } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
-import * as Api from '../../services/api';
+import * as MPT from '../../proptypes';
 
 import { erGyldigDnr, erGyldigFnr } from '../skjema/validering/generisk/person';
 import { beregnAlder } from '../../utils/dato';
 
 import './medfolgendeAndre.css';
+import BostedsAdresse from '../adresser/bostedsAdresse';
 
 class MedfolgendeAndre extends Component {
-  state = { person: {}, visSpinner: false };
+  state = { fnr: '', erDirty: false };
 
-  componentDidMount() {
-    this.sjekkMedfolgende({});
-  }
+  sokHandle = () => {
+    const { sjekkPerson } = this.props;
+    const { fnr } = this.state;
 
-  componentDidUpdate(prevProps) {
-    this.sjekkMedfolgende(prevProps);
-  }
-
-  sjekkMedfolgende = async prevProps => {
-    if (prevProps.medfolgendeAndre === this.props.medfolgendeAndre) { return; }
-    const { medfolgendeAndre } = this.props;
-
-    this.resetLocalState();
-
-    if (erGyldigFnr(medfolgendeAndre) || erGyldigDnr(medfolgendeAndre)) {
-      this.visSpinner();
-      const response = await Api.Personer.hentPerson(medfolgendeAndre);
-      this.setState({ person: response });
-      this.skjulSpinner();
+    if (erGyldigFnr(fnr) || erGyldigDnr(fnr)) {
+      this.setState({ erDirty: false });
+      sjekkPerson(fnr);
     }
   };
 
-  resetLocalState = () => this.setState({ person: {} });
-  visSpinner = () => this.setState({ visSpinner: true });
-  skjulSpinner = () => setTimeout(() => this.setState({ visSpinner: false }), 1000);
+  vedTastOppHandle = event => {
+    const { value } = event.target;
+    this.setState({ fnr: value, erDirty: true });
+  };
 
   render () {
-    const { sammensattNavn, foedselsdato } = this.state.person;
+    const { medfolgendeAndre } = this.props;
+    const { sammensattNavn, foedselsdato, bostedsadresse } = medfolgendeAndre;
+    const { sokHandle, vedTastOppHandle } = this;
+    const { erDirty } = this.state;
 
-    const funnetPerson = sammensattNavn ? (
+    const funnetPerson = (!erDirty) && Object.keys(medfolgendeAndre).length > 0 ? (
       <div className="medfolgendeAndre__person">
         {sammensattNavn} ({beregnAlder(foedselsdato)})
+        <BostedsAdresse bostedsadresse={bostedsadresse} />
       </div>
     ) : null;
-    const spinner = this.state.visSpinner ? <Nav.NavFrontendSpinner type="S" /> : null;
 
     return (
       <div className="medfolgendeAndre">
-        <Nav.Fieldset legend="Medfølgende:">
-          <div>Søker følger med et familiemedlem som utfører arbeid i landet.</div>
+        <Nav.Fieldset legend="Søker følger med et familiemedlem som utfører arbeid i landet:">
           <div className="medfolgendeAndre__wrapper">
             <Skjema.Input
               bredde="M"
               feltNavn="medfolgendeAndre"
-              label="Fødselsnummer eller D-nummer"
+              label="Oppgi fnr / dnr:"
+              onKeyUp={vedTastOppHandle}
             />
-            { spinner }
+            <Nav.Hovedknapp onClick={sokHandle}>Søk</Nav.Hovedknapp>
           </div>
           { funnetPerson }
         </Nav.Fieldset>
@@ -71,15 +62,12 @@ class MedfolgendeAndre extends Component {
 }
 
 MedfolgendeAndre.propTypes = {
-  medfolgendeAndre: PT.string,
+  medfolgendeAndre: MPT.Person,
+  sjekkPerson: PT.func.isRequired,
 };
 
 MedfolgendeAndre.defaultProps = {
-  medfolgendeAndre: '',
+  medfolgendeAndre: {},
 };
 
-const mapStateToProps = state => ({
-  medfolgendeAndre: getFormValues('soknad')(state).medfolgendeAndre,
-});
-
-export default connect(mapStateToProps)(MedfolgendeAndre);
+export default MedfolgendeAndre;
