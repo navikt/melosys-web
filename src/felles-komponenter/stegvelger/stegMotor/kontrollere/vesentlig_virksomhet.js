@@ -3,13 +3,15 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentligVirksomhet';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
+import * as Koder from '../../../../koder';
+
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'vesentligVirksomhetINorge ER LIK TRUE',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('ART12_1_VESENTLIG_VIRKSOMHET', alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.VESENTLIG_VIRKSOMHET, alleVilkar),
         nesteSteg: STEG.ARTIKKEL_12,
       },
       {
