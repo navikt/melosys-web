@@ -193,6 +193,8 @@ const mapStateToProps = state => ({
     trygdeavgiftTrukketGjennomSkattDato: formatterDatoTilNorsk(soknadSelectors.ArbeidsgiversBekreftelseSelector(state).trygdeavgiftTrukketGjennomSkattDato),
     oppgittAdresseGatenavn: soknadSelectors.BostedAdresseSelector(state).gatenavn,
     oppgittAdressePostnummer: soknadSelectors.BostedAdresseSelector(state).postnummer,
+    oppgittAdresseHusnummer: soknadSelectors.BostedAdresseSelector(state).husnummer,
+    oppgittAdresseRegion: soknadSelectors.BostedAdresseSelector(state).region,
     oppgittAdressePoststed: soknadSelectors.BostedAdresseSelector(state).poststed,
     oppgittAdresseLand: soknadSelectors.BostedAdresseSelector(state).landKode,
     erBemanningsbyra: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).erBemanningsbyra,
