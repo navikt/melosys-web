@@ -6,7 +6,6 @@ import { FieldArray } from 'redux-form';
 import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
-import * as Api from '../services/api';
 import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../constants';
 
@@ -16,6 +15,7 @@ import OrganisasjonsAdresse from './adresser/organisasjonsAdresse';
 import './selvstendigArbeid.css';
 import * as formSelectors from '../ducks/form/selectors';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../ducks/organisasjoner';
+import * as soknadActions from '../ducks/soknad/actions';
 
 class EnkeltForetak extends Component {
   state = { feilmelding: null };
@@ -25,9 +25,9 @@ class EnkeltForetak extends Component {
     if (!organisasjon && orgnr) { await hentOrganisasjon(orgnr); }
   }
 
-  componentDidUpdate(prevProps) {
+  async componentDidUpdate(prevProps) {
     const { settFeilmelding } = this;
-    const { hentOrganisasjon } = this.props;
+    const { hentOrganisasjon, skjema } = this.props;
     const gammeltOrgnr = prevProps.orgnr;
     const nyttOrgnr = this.props.orgnr;
 
@@ -35,7 +35,8 @@ class EnkeltForetak extends Component {
     settFeilmelding('');
 
     if (erOrgnrGyldig(nyttOrgnr)) {
-      hentOrganisasjon(nyttOrgnr);
+      await hentOrganisasjon(nyttOrgnr);
+      this.props.oppdaterSoknadState(skjema);
     }
   }
 
@@ -44,18 +45,6 @@ class EnkeltForetak extends Component {
   presjekkOrganisasjon = () => {
     const { orgnr } = this.props;
     if (!erOrgnrGyldig(orgnr)) { this.settFeilmelding('Organisasjonsnummer er ikke gyldig.'); }
-  };
-
-  hentOrganisasjon = async orgnr => {
-    if (erOrgnrGyldig(orgnr)) {
-      const response = await Api.Organisasjoner.hentOrganisasjon(orgnr);
-
-      const organisasjon = (Object.keys(response).length > 0) ? response : null;
-      const feilmelding = !organisasjon ? 'Fant ikke organisasjonen' : null;
-
-      this.settOrganisasjon(organisasjon);
-      this.settFeilmelding(feilmelding);
-    }
   };
 
   render () {
@@ -101,8 +90,10 @@ EnkeltForetak.propTypes = {
   hentOrganisasjon: PT.func.isRequired,
   organisasjon: PT.object,
   orgnr: PT.string,
+  oppdaterSoknadState: PT.func.isRequired,
   posisjon: PT.number.isRequired,
   slettForetak: PT.func.isRequired,
+  skjema: PT.object.isRequired,
 };
 
 EnkeltForetak.defaultProps = {
@@ -110,7 +101,9 @@ EnkeltForetak.defaultProps = {
   organisasjon: null,
 };
 
-const SelvstendigeForetak = ({ fields, organisasjoner, hentOrganisasjon }) => (
+const SelvstendigeForetak = ({
+  fields, organisasjoner, hentOrganisasjon, oppdaterSoknadState, skjema,
+}) => (
   <div>
     {fields.map((foretaket, index) => (
       <EnkeltForetak
@@ -121,6 +114,8 @@ const SelvstendigeForetak = ({ fields, organisasjoner, hentOrganisasjon }) => (
         posisjon={index + 1}
         hentOrganisasjon={hentOrganisasjon}
         slettForetak={() => fields.remove(index)}
+        oppdaterSoknadState={oppdaterSoknadState}
+        skjema={skjema}
       />))
     }
     <div className="leggTilForetak">
@@ -136,12 +131,14 @@ const SelvstendigeForetak = ({ fields, organisasjoner, hentOrganisasjon }) => (
 SelvstendigeForetak.propTypes = {
   fields: PT.object.isRequired,
   organisasjoner: PT.array.isRequired,
+  oppdaterSoknadState: PT.func.isRequired,
   hentOrganisasjon: PT.func.isRequired,
+  skjema: PT.object.isRequired,
 };
 
 const SelvstendigArbeid = props => {
   const { values: soknadVerdier } = props.soknadForm;
-  const { organisasjoner, hentOrganisasjon } = props;
+  const { organisasjoner, hentOrganisasjon, oppdaterSoknadState } = props;
   const { erSelvstendig } = soknadVerdier;
   const panelErRelevant = erSelvstendig === BOOLSK.SANN;
 
@@ -153,6 +150,8 @@ const SelvstendigArbeid = props => {
       component={SelvstendigeForetak}
       organisasjoner={organisasjoner}
       hentOrganisasjon={hentOrganisasjon}
+      oppdaterSoknadState={oppdaterSoknadState}
+      skjema={soknadVerdier}
     />
     : null;
 
@@ -179,8 +178,9 @@ const SelvstendigArbeid = props => {
 
 SelvstendigArbeid.propTypes = {
   soknadForm: PT.object,
-  organisasjoner: PT.array.isRequired,
   hentOrganisasjon: PT.func.isRequired,
+  organisasjoner: PT.array.isRequired,
+  oppdaterSoknadState: PT.func.isRequired,
 };
 
 SelvstendigArbeid.defaultProps = {
@@ -194,6 +194,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentOrganisasjon: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
+  oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelvstendigArbeid);
