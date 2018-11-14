@@ -127,6 +127,7 @@ class Personopplysninger extends Component {
                   <dl className="person__detaljer">
                     <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" />
                     <Skjema.Input feltNavn="oppgittAdresseHusnummer" bredde="XS" label="Husnummer:" />
+                    <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" />
                     <Nav.Row>
                       <Nav.Column xs="4">
                         <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnr:" />
@@ -135,7 +136,6 @@ class Personopplysninger extends Component {
                         <Skjema.Input feltNavn="oppgittAdressePoststed" label="Poststed:" />
                       </Nav.Column>
                     </Nav.Row>
-                    <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" />
                     <LandVelger feltNavn="oppgittAdresseLand" label="Land:" />
                   </dl>
                 </Nav.Fieldset>

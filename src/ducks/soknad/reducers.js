@@ -125,8 +125,6 @@ export default function reducer(state = initialState, action) {
             region: dokument.oppgittAdresseRegion,
             postnummer: dokument.oppgittAdressePostnummer,
             poststed: dokument.oppgittAdressePoststed,
-            husnummer: dokument.oppgittAdresseHusnummer,
-            region: dokument.oppgittAdresseRegion,
             landKode: dokument.oppgittAdresseLand,
           },
         },
