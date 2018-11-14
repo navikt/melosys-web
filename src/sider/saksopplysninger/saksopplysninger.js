@@ -195,8 +195,6 @@ const mapStateToProps = state => ({
     oppgittAdresseHusnummer: soknadSelectors.BostedAdresseSelector(state).husnummer,
     oppgittAdresseRegion: soknadSelectors.BostedAdresseSelector(state).region,
     oppgittAdressePostnummer: soknadSelectors.BostedAdresseSelector(state).postnummer,
-    oppgittAdresseHusnummer: soknadSelectors.BostedAdresseSelector(state).husnummer,
-    oppgittAdresseRegion: soknadSelectors.BostedAdresseSelector(state).region,
     oppgittAdressePoststed: soknadSelectors.BostedAdresseSelector(state).poststed,
     oppgittAdresseLand: soknadSelectors.BostedAdresseSelector(state).landKode,
     erBemanningsbyra: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).erBemanningsbyra,
