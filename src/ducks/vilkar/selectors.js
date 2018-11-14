@@ -19,17 +19,17 @@ export const VilkarSelector = createSelector(
 
 export const vesentligVirksomhetSelector = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'ART12_1_VESENTLIG_VIRKSOMHET') || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.VESENTLIG_VIRKSOMHET) || {})
 );
 
 export const forutgaendeMedlemskap = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'ART12_1_FORUTGAAENDE_MEDLEMSKAP') || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.ART12_1_FORUTGAAENDE_MEDLEMSKAP) || {})
 );
 
 export const bosattINorge = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === 'BOSATT_I_NORGE') || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.BOSATT_I_NORGE) || {})
 );
 
 export const art12_1 = createSelector(
