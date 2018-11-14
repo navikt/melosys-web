@@ -106,7 +106,7 @@ class Personopplysninger extends Component {
                   <dd>{kodeverkObjektTilTerm(statsborgerskap)}</dd>
                   <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
                   <dt>Kjønn:</dt><dd>{kodeverkObjektTilTerm(kjoenn)}</dd>
-                  <dt>Sivilstand:</dt><dd>{sivilstand}</dd>
+                  <dt>Sivilstand:</dt><dd>{kodeverkObjektTilTerm(sivilstand)}</dd>
                 </dl>
               </Nav.Column>
               <Nav.Column xs="6">
@@ -126,9 +126,11 @@ class Personopplysninger extends Component {
                 <Nav.Fieldset legend="Adresse oppgitt i søknad:">
                   <dl className="person__detaljer">
                     <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" />
+                    <Skjema.Input feltNavn="oppgittAdresseHusnummer" bredde="XS" label="Husnummer:" />
+                    <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" />
                     <Nav.Row>
                       <Nav.Column xs="4">
-                        <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnummer:" />
+                        <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnr:" />
                       </Nav.Column>
                       <Nav.Column xs="8">
                         <Skjema.Input feltNavn="oppgittAdressePoststed" label="Poststed:" />

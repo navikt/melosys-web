@@ -11,7 +11,7 @@ import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
-import { oppgaverSelectors, oppgaverOperations } from '../ducks/oppgaver';
+import { sokSelectors, sokOperations } from '../ducks/sok';
 import { KodeverkSelectors } from '../ducks/kodeverk';
 import './sok.css';
 
@@ -36,21 +36,23 @@ const queryParamLogger = (fnr, location) => {
 };
 
 class Sok extends Component {
-  async componentWillMount() {
-    const { match, location, hentBehandlingsOppgaver } = this.props;
+  componentWillMount() {
+    const { match, location, sokBehandlingsOppgaver } = this.props;
     const { fnr } = match.params;
     if (fnr) {
       queryParamLogger(fnr, location);
-      await hentBehandlingsOppgaver(fnr);
+      sokBehandlingsOppgaver(fnr);
     }
   }
 
   render() {
-    const { minesaker, sakstypeKoder, children } = this.props;
+    const { sokResultat, sakstypeKoder, children } = this.props;
     const { fnr } = this.props.match.params;
-    if (!minesaker) return null;
-    const { saksbehandling } = minesaker;
-    if (!(saksbehandling && saksbehandling.length > 0)) return null;
+    if (!sokResultat) return null;
+
+    const { saksbehandling = [] } = sokResultat;
+    const plural = saksbehandling.length > 1 ? 'r' : '';
+
     return (
       <div className="sok">
         { children }
@@ -58,7 +60,7 @@ class Sok extends Component {
           <Nav.Row className="">
             <Nav.Column xs="7">
               <section className="sokresultat">
-                <h1>Fant {saksbehandling.length} treff etter søk på &quot;{fnr}&quot;</h1>
+                <h1>{saksbehandling.length} oppgave{plural} knyttet til fnr / dnr &quot;{fnr}&quot;</h1>
                 { saksbehandling.map(oppgave => {
                   const sakstype = sakstypeKoder.find(item => item.kode === oppgave.sakstypeKode);
                   const sak = {
@@ -85,8 +87,8 @@ class Sok extends Component {
 Sok.propTypes = {
   location: PT.object.isRequired,
   sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  minesaker: MPT.MineOppgaver,
-  hentBehandlingsOppgaver: PT.func.isRequired,
+  sokResultat: MPT.MineOppgaver,
+  sokBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
   match: PT.object.isRequired,
@@ -95,16 +97,16 @@ Sok.propTypes = {
 Sok.defaultProps = {
   children: null,
   sokStreng: '',
-  minesaker: {},
+  sokResultat: {},
 };
 
 const mapStateToProps = state => ({
   sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
-  minesaker: oppgaverSelectors.MineSakerSelector(state),
+  sokResultat: sokSelectors.SokResultatSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentBehandlingsOppgaver: fnr => dispatch(oppgaverOperations.sok(fnr)),
+  sokBehandlingsOppgaver: fnr => dispatch(sokOperations.sok(fnr)),
 });
 
 const kontekster = [
