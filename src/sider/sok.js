@@ -86,7 +86,7 @@ class Sok extends Component {
 Sok.propTypes = {
   location: PT.object.isRequired,
   sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  sokResultat: MPT.MineOppgaver,
+  sokResultat: PT.array.isRequired,
   sokBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
@@ -96,7 +96,6 @@ Sok.propTypes = {
 Sok.defaultProps = {
   children: null,
   sokStreng: '',
-  sokResultat: {},
 };
 
 const mapStateToProps = state => ({

@@ -8,6 +8,6 @@ import { createSelector } from 'reselect';
  */
 /* eslint-disable import/prefer-default-export */
 export const SokResultatSelector = createSelector(
-  state => state.sok.data || {},
-  minesaker => minesaker
+  state => state.sok.data || [],
+  sokResultat => sokResultat || []
 );
