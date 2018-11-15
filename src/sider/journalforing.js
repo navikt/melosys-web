@@ -238,8 +238,9 @@ class Journalforing extends Component {
     if (!Person.erGyldigFnr(brukerID) && !Person.erGyldigDnr(brukerID)) { return; }
 
     const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
+    settFeltInnhold('brukerNavn', '');
     const response = await sokFnrDnr(brukerID);
-
+    if (!response.data) { return false; }
     const { sammensattNavn = '' } = response.data;
     if (!sammensattNavn) { return false; }
     settFeltInnhold('brukerNavn', sammensattNavn);
@@ -257,14 +258,18 @@ class Journalforing extends Component {
     if (!value) { return; }
 
     if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+      settFeltInnhold('avsenderNavn', '');
       const response = await sokOrgnr(value);
+      if (!response.data) { return false; }
       const { navn = '' } = response.data;
       settFeltInnhold('avsenderNavn', navn);
       return;
     }
 
     if (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) {
+      settFeltInnhold('avsenderNavn', '');
       const response = await sokFnrDnr(value);
+      if (!response.data) { return false; }
       const { sammensattNavn = '' } = response.data;
       settFeltInnhold('avsenderNavn', sammensattNavn);
     }
