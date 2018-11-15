@@ -10,6 +10,7 @@
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import * as Actions from '../journalforing/actions';
 
 // eslint-disable-next-line import/prefer-default-export
 export function hent(journalpostID) {
@@ -18,4 +19,8 @@ export function hent(journalpostID) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function resetJournalforing() {
+  return dispatch => (dispatch(Actions.resetJournalforing()));
 }
