@@ -69,9 +69,9 @@ RenderVedleggLink.defaultProps = {
 };
 const RenderOversiktRad = ({ oversikt }) => {
   const {
-    mottaksretning, addressat, journalpostID, dokument, vedlegg,
+    mottaksretning, addressat, journalpostID, hoveddokument, vedlegg,
   } = oversikt;
-  const { dokumentID, tittel } = dokument;
+  const { dokumentID, tittel, mottattDato } = hoveddokument;
   return (
     <tr>
       <td><RenderInnUtImage mottaksretning={mottaksretning} /></td>
@@ -82,7 +82,7 @@ const RenderOversiktRad = ({ oversikt }) => {
         </span>
       </td>
       <td>{addressat}</td>
-      <td>{formatterDatoTilNorsk(dokument.mottattDato, false)}</td>
+      <td>{formatterDatoTilNorsk(mottattDato, false)}</td>
     </tr>
   );
 };
@@ -90,7 +90,7 @@ RenderOversiktRad.propTypes = {
   oversikt: PT.shape({
     mottaksretning: MPT.Kodeverk.isRequired,
     addressat: PT.string.isRequired,
-    dokument: PT.shape({
+    hoveddokument: PT.shape({
       dokumentID: PT.string.isRequired,
       tittel: PT.string.isRequired,
       mottattDato: PT.string.isRequired,
