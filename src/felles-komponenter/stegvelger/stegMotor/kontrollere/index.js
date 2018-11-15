@@ -8,7 +8,8 @@ import Inngang from './inngang';
 import Yrkesaktivitet from './yrkesaktivitet';
 import Sysselsetting from './sysselsetting';
 import Tjenestemann from './tjenestemann';
-import Artikkel12 from './artikkel12';
+import Artikkel12_1 from './artikkel12_1';
+import Artikkel12_2 from './artikkel12_2';
 import Artikkel16 from './artikkel16';
 import Virksomhet from './virksomhet';
 import VesentligVirksomhet from './vesentlig_virksomhet';
@@ -27,7 +28,8 @@ export {
   Yrkesaktivitet,
   Sysselsetting,
   Tjenestemann,
-  Artikkel12,
+  Artikkel12_1,
+  Artikkel12_2,
   Artikkel16,
   Virksomhet,
   VesentligVirksomhet,

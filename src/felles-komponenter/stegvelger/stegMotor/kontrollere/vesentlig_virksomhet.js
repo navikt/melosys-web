@@ -12,7 +12,7 @@ class VesentligVirksomhet extends Steg {
       {
         beskrivelse: 'vesentligVirksomhetINorge ER LIK TRUE',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.VESENTLIG_VIRKSOMHET, alleVilkar),
-        nesteSteg: STEG.ARTIKKEL_12,
+        nesteSteg: STEG.ARTIKKEL_12_1,
       },
       {
         beskrivelse: 'alle andre valg',

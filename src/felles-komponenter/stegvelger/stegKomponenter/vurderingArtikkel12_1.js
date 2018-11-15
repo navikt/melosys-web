@@ -8,7 +8,7 @@ import * as Koder from '../../../koder';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
-class VurderingArtikkel12 extends Component {
+class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
    * med de 3 radiovalgene i grensesnittet er at disse ville representert en tri-state ("ja", "nei, men..." og "nei").
    * Siden Redux Form ikke støtter at man setter flere verdier til forskjellige felter må vi bruke
@@ -126,7 +126,7 @@ class VurderingArtikkel12 extends Component {
   }
 }
 
-VurderingArtikkel12.propTypes = {
+VurderingArtikkel12_1.propTypes = {
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
@@ -134,9 +134,9 @@ VurderingArtikkel12.propTypes = {
   settSkjemaVerdi: PT.func.isRequired,
 };
 
-VurderingArtikkel12.defaultProps = {
+VurderingArtikkel12_1.defaultProps = {
   tilstand: {},
   artikkel: {},
 };
 
-export default VurderingArtikkel12;
+export default VurderingArtikkel12_1;
