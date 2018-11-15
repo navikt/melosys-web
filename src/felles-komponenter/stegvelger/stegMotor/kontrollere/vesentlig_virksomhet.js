@@ -4,6 +4,7 @@ import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentl
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 import * as Koder from '../../../../koder';
+import { VurderingYrkesaktivitetTyper } from '../../stegKomponenter/vurderingYrkesaktivitet';
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -11,7 +12,10 @@ class VesentligVirksomhet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'vesentligVirksomhetINorge ER LIK TRUE',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.VESENTLIG_VIRKSOMHET, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => {
+          console.log(VesentligVirksomhet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER))
+          return (erVilkarOppfylt(Koder.VESENTLIG_VIRKSOMHET, alleVilkar));
+        },
         nesteSteg: STEG.ARTIKKEL_12_1,
       },
       {
@@ -35,6 +39,12 @@ class VesentligVirksomhet extends Steg {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;
+  }
+
+  static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESAKTIVITET);
+    if (!enkeltFakta) { return false; }
+    return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   }
 }
 
