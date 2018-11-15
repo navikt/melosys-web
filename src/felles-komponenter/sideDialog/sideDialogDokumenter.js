@@ -10,6 +10,18 @@ import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
 
 const uuid = require('uuid/v4');
 
+const PdfLink = ({ journalpostID, dokumentID, tittel }) => {
+  const link = `/api/dokumenter/pdf/${journalpostID}/${dokumentID}`;
+  return (
+    <a href={link} rel="noopener noreferrer" target="_blank">{tittel}</a>
+  );
+};
+PdfLink.propTypes = {
+  journalpostID: PT.string.isRequired,
+  dokumentID: PT.string.isRequired,
+  tittel: PT.string.isRequired,
+};
+
 const RenderInnUtImage = ({ mottaksretning }) => {
   const { kode, term } = mottaksretning;
   let icon;
@@ -31,15 +43,18 @@ const RenderInnUtImage = ({ mottaksretning }) => {
 RenderInnUtImage.propTypes = {
   mottaksretning: MPT.Kodeverk.isRequired,
 };
-const RenderVedleggLink = ({ dokument }) => {
-  const { tittel } = dokument;
+const RenderVedleggLink = ({ journalpostID, dokument }) => {
+  const { tittel, dokumentID } = dokument;
   return (
     <div>
-      <img src={Ikoner.Binders} alt="Vedlegg" /><a href="#">{tittel}</a>
+      <img src={Ikoner.Binders} alt="Vedlegg" />
+      { dokumentID && <PdfLink journalpostID={journalpostID} dokumentID={dokumentID} tittel={tittel} /> }
+      { !dokumentID && <span>{tittel}</span> }
     </div>
   );
 };
 RenderVedleggLink.propTypes = {
+  journalpostID: PT.string.isRequired,
   dokument: PT.shape({
     dokumentID: PT.string,
     tittel: PT.string.isRequired,
@@ -53,17 +68,17 @@ RenderVedleggLink.defaultProps = {
   },
 };
 const RenderOversiktRad = ({ oversikt }) => {
-  console.log(oversikt);
   const {
-    mottaksretning, addressat, dokument, vedlegg,
+    mottaksretning, addressat, journalpostID, dokument, vedlegg,
   } = oversikt;
+  const { dokumentID, tittel } = dokument;
   return (
     <tr>
       <td><RenderInnUtImage mottaksretning={mottaksretning} /></td>
       <td>
         <span>
-          <a href="#">Vedtaksbrev</a>
-          { vedlegg.map(vedleggDokument => <RenderVedleggLink key={uuid()} dokument={vedleggDokument} />) }
+          <PdfLink journalpostID={journalpostID} dokumentID={dokumentID} tittel={tittel} />
+          { vedlegg.map(vedleggDokument => <RenderVedleggLink key={uuid()} journalpostID={journalpostID} dokument={vedleggDokument} />) }
         </span>
       </td>
       <td>{addressat}</td>
@@ -106,7 +121,6 @@ class SideDialogDokumenter extends Component {
   hentDokumentOversikt = async snr => {
     const oversiktDokumenter = await API.Dokumenter.hentOversiktDokumenter(snr);
     this.settOversikt(oversiktDokumenter);
-    console.log('oversiktDokumenter', oversiktDokumenter);
   };
   render() {
     return (
