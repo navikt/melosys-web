@@ -8,7 +8,7 @@ class Sysselsetting extends Steg {
 
     this._kriterier = [
       {
-        beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER"',
+        beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV"',
         exec: avklartefakta => Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV),
         nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
