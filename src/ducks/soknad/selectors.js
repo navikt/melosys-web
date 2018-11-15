@@ -53,7 +53,7 @@ export const EkstraArbeidsgivereSelector = createSelector(
   state => JuridiskArbeidsgiverNorgeSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
   (juridiskArbeidsgiver, organisasjoner) => {
-    const { ekstraArbeidsgivere } = juridiskArbeidsgiver;
+    const { ekstraArbeidsgivere = [] } = juridiskArbeidsgiver;
     return organisasjoner.filter(organisasjon => ekstraArbeidsgivere.includes(organisasjon.orgnr));
   }
 );
