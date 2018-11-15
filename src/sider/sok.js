@@ -50,8 +50,7 @@ class Sok extends Component {
     const { fnr } = this.props.match.params;
     if (!sokResultat) return null;
 
-    const { saksbehandling = [] } = sokResultat;
-    const plural = saksbehandling.length > 1 ? 'r' : '';
+    const plural = sokResultat.length > 1 ? 'r' : '';
 
     return (
       <div className="sok">
@@ -60,8 +59,8 @@ class Sok extends Component {
           <Nav.Row className="">
             <Nav.Column xs="7">
               <section className="sokresultat">
-                <h1>{saksbehandling.length} oppgave{plural} knyttet til fnr / dnr &quot;{fnr}&quot;</h1>
-                { saksbehandling.map(oppgave => {
+                <h1>{sokResultat.length} oppgave{plural} knyttet til fnr / dnr &quot;{fnr}&quot;</h1>
+                { sokResultat.map(oppgave => {
                   const sakstype = sakstypeKoder.find(item => item.kode === oppgave.sakstypeKode);
                   const sak = {
                     sakstype,
