@@ -47,7 +47,7 @@ const RenderVedleggLink = ({ journalpostID, dokument }) => {
   const { tittel, dokumentID } = dokument;
   return (
     <div>
-      <img src={Ikoner.Binders} alt="Vedlegg" />
+      <img src={Ikoner.Binders} alt="Vedlegg" />&nbsp;
       { dokumentID && <PdfLink journalpostID={journalpostID} dokumentID={dokumentID} tittel={tittel} /> }
       { !dokumentID && <span>{tittel}</span> }
     </div>
