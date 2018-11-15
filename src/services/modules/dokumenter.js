@@ -29,10 +29,14 @@ const opprettDokument = (behandlingID, dokumenttypeKode, dokument) => {
   const URI_DOKUMENT_OPPRETT = `${API_BASE_URL}dokumenter/opprett/${behandlingID}/${dokumenttypeKode}`;
   return postAsJson(URI_DOKUMENT_OPPRETT, dokument);
 };
-
+const hentOversikt = snr => {
+  const URI_DOKUMENT_OVERSIKT = `${API_BASE_URL}dokumenter/oversikt/${snr}`;
+  return getAsJson(URI_DOKUMENT_OVERSIKT);
+};
 export {
   pdfURI,
   hentDokument,
   forhandsvisPDF,
   opprettDokument,
+  hentOversikt,
 };

@@ -1,9 +1,26 @@
 import React, { Component } from 'react';
-import PT from 'prop-types';
+import { connect } from 'react-redux';
+// import PT from 'prop-types';
+import * as API from '../../services/api';
 import * as Ikoner from '../../resources/images/index';
 import './sideDialogDokumenter.css';
+import * as fagsakSelectors from "../../ducks/fagsaker/selectors";
 
 class SideDialogDokumenter extends Component {
+
+  state = { oversikt: [] };
+
+  async componentDidMount() {
+    const { oppsummering: { saksnummer } } = this.props;
+    await this.hentDokumentOversikt(saksnummer);
+  }
+  settOversikt = oversikt => this.setState({ oversikt });
+
+  hentDokumentOversikt = async snr => {
+    const oversikt = await API.Dokumenter.hentOversikt(snr);
+    this.settOversikt(oversikt);
+    console.log('oversikt', oversikt);
+  }
   render() {
     return (
       <div className="sideDialogDokumenter">
@@ -81,4 +98,9 @@ class SideDialogDokumenter extends Component {
   }
 };
 
-export default SideDialogDokumenter;
+const mapStateToProps = state => ({
+  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+});
+
+const mapDispatchToProps = () => ({});
+export default connect(mapStateToProps, mapDispatchToProps)(SideDialogDokumenter);
