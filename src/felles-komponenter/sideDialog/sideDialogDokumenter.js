@@ -6,6 +6,21 @@ import * as Ikoner from '../../resources/images/index';
 import './sideDialogDokumenter.css';
 import * as fagsakSelectors from "../../ducks/fagsaker/selectors";
 
+const RenderRad = () => {
+  return (
+    <tr>
+      <td><img src={Ikoner.Svar} alt="SVAR" /></td>
+      <td>
+        <span>
+          <a href="#">Vedtaksbrev</a><br />
+          <img src={Ikoner.Binders} alt="Vedlegg" /><a href="#">A1</a>
+        </span>
+      </td>
+      <td>Peder Christen Asbjørnsen</td>
+      <td>03.06.2017</td>
+    </tr>
+  );
+};
 class SideDialogDokumenter extends Component {
 
   state = { oversikt: [] };
@@ -14,13 +29,14 @@ class SideDialogDokumenter extends Component {
     const { oppsummering: { saksnummer } } = this.props;
     await this.hentDokumentOversikt(saksnummer);
   }
+
   settOversikt = oversikt => this.setState({ oversikt });
 
   hentDokumentOversikt = async snr => {
     const oversikt = await API.Dokumenter.hentOversikt(snr);
     this.settOversikt(oversikt);
     console.log('oversikt', oversikt);
-  }
+  };
   render() {
     return (
       <div className="sideDialogDokumenter">
@@ -34,17 +50,7 @@ class SideDialogDokumenter extends Component {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td><img src={Ikoner.Svar} alt="SVAR" /></td>
-              <td>
-                <span>
-                  <a href="#">Vedtaksbrev</a><br />
-                  <img src={Ikoner.Binders} alt="Vedlegg" /><a href="#">A1</a>
-                </span>
-              </td>
-              <td>Peder Christen Asbjørnsen</td>
-              <td>03.06.2017</td>
-            </tr>
+            <RenderRad />
             <tr>
               <td><img src={Ikoner.InnBrev} alt="INN" /></td>
               <td>
@@ -91,6 +97,7 @@ class SideDialogDokumenter extends Component {
               <td>Peder Christen Asbjørnsen</td>
               <td>22.04.2017</td>
             </tr>
+
           </tbody>
         </table>
       </div>
