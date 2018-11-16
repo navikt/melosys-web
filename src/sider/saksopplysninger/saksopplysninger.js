@@ -94,7 +94,6 @@ class Saksopplysninger extends Component {
   render () {
     const {
       medlemskap,
-      arbeidsgivereNorge,
       inntekt,
       soknadArbeidsinntekt,
       soknadForm,
@@ -117,7 +116,7 @@ class Saksopplysninger extends Component {
         <Personopplysninger />
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
         <Bosted erValidert={this.state.gyldigePaneler.bosted} />
-        {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
+        <ArbeidsgivereNorge />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />
         <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
         <ArbeidUtland />
@@ -133,7 +132,6 @@ class Saksopplysninger extends Component {
 
 Saksopplysninger.propTypes = {
   alleRelevantePersoner: PT.arrayOf(MPT.Person),
-  arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
   avklartefakta: PT.array.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
@@ -158,7 +156,6 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   alleRelevantePersoner: [],
-  arbeidsgivereNorge: [],
   inntekt: {},
   medlemskap: {},
   oppsummering: {},
@@ -172,7 +169,6 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   saksflyt: saksflytSelectors.SaksflytSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
-  arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
