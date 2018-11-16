@@ -68,10 +68,12 @@ RenderVedleggLink.defaultProps = {
   },
 };
 const RenderOversiktRad = ({ oversikt }) => {
+  if (!oversikt) return null;
   const {
     mottaksretning, addressat, journalpostID, hoveddokument, vedlegg,
   } = oversikt;
   const { dokumentID, tittel, mottattDato } = hoveddokument;
+  if (!dokumentID) return null;
   return (
     <tr>
       <td><RenderInnUtImage mottaksretning={mottaksretning} /></td>
