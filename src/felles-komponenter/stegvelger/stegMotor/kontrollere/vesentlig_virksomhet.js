@@ -33,10 +33,25 @@ class VesentligVirksomhet extends Steg {
     this._id = STEG.VESENTLIG_VIRKSOMHET;
     this._tittel = 'Vesentlig virksomhet';
     this._komponent = VurderingVesentligVirksomhet;
-    this._samleRelevanteData = _propsLight => ({
-      valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
-      begrunnelser: _propsLight.begrunnelser.vesentligVirksomhet || [],
-    });
+    this._samleRelevanteData = _propsLight => {
+      const { avklartefakta } = _propsLight;
+      const erOrdinaerArbeidstaker = VesentligVirksomhet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER);
+      const erSelvstendigNaeringsdrivende = VesentligVirksomhet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE);
+
+      let begrunnelser;
+      if (erOrdinaerArbeidstaker) {
+        begrunnelser = _propsLight.begrunnelser.vesentligVirksomhet12_1;
+      }
+
+      if (erSelvstendigNaeringsdrivende) {
+        begrunnelser = _propsLight.begrunnelser.vesentligVirksomhet12_2;
+      }
+
+      return {
+        valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
+        begrunnelser: begrunnelser || [],
+      };
+    };
     this._beregnRelevantUI = _propsLight => ({
       visBegrunnelser: !_propsLight.skjema.vilkar.vesentligVirksomhet,
     });
@@ -45,6 +60,10 @@ class VesentligVirksomhet extends Steg {
     };
     this._status = FANE_STATUS.OK;
   }
+
+  static erOrdinaerArbeidstaker = (avklartefakta, typeSomSkalSjekkes) => {
+    VesentligVirksomhet.finnAvklaring(avklartefakta, typeSomSkalSjekkes);
+  };
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
     const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESAKTIVITET);
