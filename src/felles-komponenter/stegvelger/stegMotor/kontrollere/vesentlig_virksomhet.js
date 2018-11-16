@@ -11,17 +11,22 @@ class VesentligVirksomhet extends Steg {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'vesentligVirksomhetINorge ER LIK TRUE',
+        beskrivelse: 'ORDINAER_ARBEIDSTAKER og VESENTLIG_VIRKSOMHET',
         exec: (avklartefakta, alleVilkar) => {
-          console.log(VesentligVirksomhet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER))
-          return (erVilkarOppfylt(Koder.VESENTLIG_VIRKSOMHET, alleVilkar));
+          const erOrdinaerArbeidstaker = VesentligVirksomhet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER);
+          const erVesentligVirksomhet = erVilkarOppfylt(Koder.VESENTLIG_VIRKSOMHET, alleVilkar);
+          return erOrdinaerArbeidstaker && erVesentligVirksomhet;
         },
         nesteSteg: STEG.ARTIKKEL_12_1,
       },
       {
-        beskrivelse: 'alle andre valg',
-        exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        beskrivelse: 'SELVSTENDIG_NAERINGSDRIVENDE og VESENTLIG_VIRKSOMHET',
+        exec: (avklartefakta, alleVilkar) => {
+          const erSelvstendigNaeringsdrivende = VesentligVirksomhet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE);
+          const erVesentligVirksomhet = erVilkarOppfylt(Koder.VESENTLIG_VIRKSOMHET, alleVilkar);
+          return erSelvstendigNaeringsdrivende && erVesentligVirksomhet;
+        },
+        nesteSteg: STEG.ARTIKKEL_12_2,
       },
     ];
 
