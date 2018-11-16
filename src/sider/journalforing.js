@@ -282,8 +282,10 @@ class Journalforing extends Component {
     if (!value) { return; }
 
     if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+      settFeltInnhold('representantNavn', '');
       const response = await sokOrgnr(value);
-      const { navn = '' } = response;
+      if (!response.data) { return false; }
+      const { navn = '' } = response.data;
       settFeltInnhold('representantNavn', navn);
     }
   };
