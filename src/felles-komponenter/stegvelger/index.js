@@ -104,8 +104,12 @@ class Stegvelger extends Component {
 
     const stegMotor = new StegMotor(propsLight);
     const aktuelleSteg = stegMotor.beregnAlleSteg();
+    // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg
+    // må vi normalisere siden aktivtStegNummer vil ligge 1 steg foran det som er mulig. Sjekk derfor
+    // på faktisk antall mulige steg.
+    const normalisertAktivtSteg = Math.min(this.state.aktivtStegNummer, aktuelleSteg.length - 1);
 
-    aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
+    aktuelleSteg[normalisertAktivtSteg].aktivtSteg = true;
 
     this.setState({ aktuelleSteg });
     return aktuelleSteg;

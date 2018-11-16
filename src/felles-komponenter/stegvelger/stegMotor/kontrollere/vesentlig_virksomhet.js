@@ -28,6 +28,11 @@ class VesentligVirksomhet extends Steg {
         },
         nesteSteg: STEG.ARTIKKEL_12_2,
       },
+      {
+        beskrivelse: '',
+        exec: () => true,
+        nesteSteg: null,
+      },
     ];
 
     this._id = STEG.VESENTLIG_VIRKSOMHET;
