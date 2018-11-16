@@ -61,10 +61,6 @@ class VesentligVirksomhet extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  static erOrdinaerArbeidstaker = (avklartefakta, typeSomSkalSjekkes) => {
-    VesentligVirksomhet.finnAvklaring(avklartefakta, typeSomSkalSjekkes);
-  };
-
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
     const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESAKTIVITET);
     if (!enkeltFakta) { return false; }
