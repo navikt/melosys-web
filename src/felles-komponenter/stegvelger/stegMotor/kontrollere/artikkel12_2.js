@@ -1,17 +1,17 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingArtikkel12 from '../../stegKomponenter/vurderingArtikkel12';
+import VurderingArtikkel12_2 from '../../stegKomponenter/vurderingArtikkel12_2';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 import * as Koder from '../../../../koder';
 
 
-class Artikkel12 extends Steg {
+class Artikkel12_2 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'vilkar for artikkel 12.1 er oppfylt',
+        beskrivelse: 'vilkar for artikkel 12.2 er oppfylt',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART12_1, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
@@ -26,16 +26,16 @@ class Artikkel12 extends Steg {
         nesteSteg: STEG.VEDTAK,
       },
     ];
-    this._id = STEG.ARTIKKEL_12;
-    this._tittel = 'Vurdering av 12.1';
-    this._komponent = VurderingArtikkel12;
+    this._id = STEG.ARTIKKEL_12_2;
+    this._tittel = 'Vurdering av 12.2';
+    this._komponent = VurderingArtikkel12_2;
     this._samleRelevanteData = _propsLight => ({
-      artikkel: { kode: Koder.FO_883_2004_ART12_1, term: '12.1' },
-      begrunnelser: _propsLight.begrunnelser.artikkel12_1 || [],
+      artikkel: { kode: Koder.FO_883_2004_ART12_2, term: '12.2' },
+      begrunnelser: _propsLight.begrunnelser.artikkel12_2 || [],
     });
     this._beregnRelevantUI = _propsLight => ({
-      visBegrunnelser: _propsLight.skjema.vilkar.art12_1 === false,
-      art12_1: _propsLight.skjema.vilkar.art12_1,
+      visBegrunnelser: _propsLight.skjema.vilkar.art12_2 === false,
+      art12_2: _propsLight.skjema.vilkar.art12_2,
       art16_1: _propsLight.skjema.vilkar.art16_1,
     });
     this._handlers = {
@@ -46,4 +46,4 @@ class Artikkel12 extends Steg {
   }
 }
 
-export default Artikkel12;
+export default Artikkel12_2;
