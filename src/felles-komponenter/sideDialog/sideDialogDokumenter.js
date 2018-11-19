@@ -5,8 +5,9 @@ import * as MPT from '../../proptypes/';
 import * as API from '../../services/api';
 import { formatterDatoTilNorsk } from '../../utils/dato';
 import * as Ikoner from '../../resources/images/index';
-import './sideDialogDokumenter.css';
 import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
+
+import './sideDialogDokumenter.css';
 
 const uuid = require('uuid/v4');
 
