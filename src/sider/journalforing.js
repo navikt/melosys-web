@@ -74,6 +74,7 @@ class Journalforing extends Component {
     sokOrgnr: PT.func.isRequired,
     errors: PT.object.isRequired,
     touch: PT.func.isRequired,
+    resetJournalforingState: PT.func.isRequired,
   };
 
   static defaultProps = {
@@ -86,6 +87,10 @@ class Journalforing extends Component {
     const { journalpostID, oppgaveID } = this.props.match.params;
     queryParamLogger(journalpostID, oppgaveID, this.props.location);
     await this.props.hentJournalOppgave(journalpostID);
+  }
+
+  async componentWillUnmount() {
+    await this.props.resetJournalforingState();
   }
 
   /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
@@ -233,8 +238,10 @@ class Journalforing extends Component {
     if (!Person.erGyldigFnr(brukerID) && !Person.erGyldigDnr(brukerID)) { return; }
 
     const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
+    settFeltInnhold('brukerNavn', '');
     const response = await sokFnrDnr(brukerID);
-    const { sammensattNavn = '' } = response;
+    if (!response.data) { return false; }
+    const { sammensattNavn = '' } = response.data;
     if (!sammensattNavn) { return false; }
     settFeltInnhold('brukerNavn', sammensattNavn);
     await hentFagsakListe(brukerID);
@@ -251,15 +258,19 @@ class Journalforing extends Component {
     if (!value) { return; }
 
     if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+      settFeltInnhold('avsenderNavn', '');
       const response = await sokOrgnr(value);
-      const { navn = '' } = response;
+      if (!response.data) { return false; }
+      const { navn = '' } = response.data;
       settFeltInnhold('avsenderNavn', navn);
       return;
     }
 
     if (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) {
+      settFeltInnhold('avsenderNavn', '');
       const response = await sokFnrDnr(value);
-      const { sammensattNavn = '' } = response;
+      if (!response.data) { return false; }
+      const { sammensattNavn = '' } = response.data;
       settFeltInnhold('avsenderNavn', sammensattNavn);
     }
   };
@@ -271,8 +282,10 @@ class Journalforing extends Component {
     if (!value) { return; }
 
     if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+      settFeltInnhold('representantNavn', '');
       const response = await sokOrgnr(value);
-      const { navn = '' } = response;
+      if (!response.data) { return false; }
+      const { navn = '' } = response.data;
       settFeltInnhold('representantNavn', navn);
     }
   };
@@ -375,8 +388,9 @@ const mapDispatchToProps = dispatch => ({
   opprettNySak: data => Api.Journalforing.opprett(data),
   hentOppgaver: () => dispatch(oppgaverOperations.hent()),
   tilordneSak: data => Api.Journalforing.tilordne(data),
-  sokFnrDnr: fnr => PersonOperations.hent(fnr),
-  sokOrgnr: orgnr => OrganisasjonOperations.hent(orgnr),
+  resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
+  sokFnrDnr: fnr => dispatch(PersonOperations.hent(fnr)),
+  sokOrgnr: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
 });
 
 const kontekster = [

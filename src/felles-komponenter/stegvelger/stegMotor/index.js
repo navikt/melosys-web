@@ -1,4 +1,5 @@
 import * as Kontrollere from './kontrollere';
+import { StegTilKontroller } from './typer';
 
 class StegMotor {
   constructor(props) {
@@ -27,11 +28,13 @@ class StegMotor {
       return this.lagKlasseBasertPaID(this._forsteStegID, 0);
     }
     const nesteSteg = gjeldendeSteg.nesteSteg();
-    return nesteSteg ? this.lagKlasseBasertPaID(gjeldendeSteg.nesteSteg(), nesteStegPosisjon) : false;
+    const nesteStegKlasse = nesteSteg && this.lagKlasseBasertPaID(gjeldendeSteg.nesteSteg(), nesteStegPosisjon);
+    return nesteStegKlasse;
   };
 
   lagKlasseBasertPaID = (stegID, stegPosisjon) => {
     const StegKlasse = this.beregnStegKlasseFraID(stegID);
+    if (!StegKlasse) { return false; }
     return new StegKlasse(this._propsLight, stegPosisjon);
   };
 
@@ -41,11 +44,7 @@ class StegMotor {
    * @returns {*}
    */
   beregnStegKlasseFraID = ID => {
-    const kontrollerNavn = ID
-      .toLowerCase()
-      .split('_')
-      .map(part => `${part.charAt(0).toUpperCase()}${part.substr(1)}`)
-      .join('');
+    const kontrollerNavn = StegTilKontroller[ID];
     return Kontrollere[kontrollerNavn];
   }
 }
