@@ -17,7 +17,7 @@ const initialState = {
 };
 
 const vilkarTilObjekt = (vilkaar, oppfylt, begrunnelseKoder, begrunnelseFritekst) => (
-  oppfylt === undefined ? null : {
+  (oppfylt === undefined || oppfylt === null) ? null : {
     vilkaar,
     oppfylt,
     begrunnelseKoder: begrunnelseKoder || [],
