@@ -7,8 +7,10 @@
 
 import { createSelector } from 'reselect';
 
+// import * as Koder from '../../koder';
+
 // selector(s)
 export const LovvalgsperioderSelector = createSelector(
   state => (state.lovvalgsperioder.data ? state.lovvalgsperioder.data : []),
-  vurdering => vurdering
+  lovvalgsperioder => lovvalgsperioder
 );
