@@ -49,8 +49,8 @@ class VurderingArtikkel12_1 extends Component {
     if ((art12_1 === old_art12_1) && (art16_1 === old_art16_1)) { return; }
 
     if (art12_1) (this.settStateForVilkar(this.ART12_1));
-    if (art16_1 && !art12_1) (this.settStateForVilkar(this.ART16_1));
-    if (!art16_1 && !art12_1) (this.settStateForVilkar(this.AVSLAG));
+    if (art16_1 && art12_1 === false) (this.settStateForVilkar(this.ART16_1));
+    if (art16_1 === false && art12_1 === false) (this.settStateForVilkar(this.AVSLAG));
   };
 
   radioEndringHandler = event => {
