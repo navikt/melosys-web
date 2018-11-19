@@ -22,6 +22,7 @@ import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
 import { Journalforing } from './journalforing';
 import { DokumentMetadataListe } from './dokumentMetadata';
+import { Dokument, DokumentNullable, Vedlegg } from './dokument';
 
 export {
   ArbeidNorge,
@@ -32,7 +33,9 @@ export {
   ArbeidsgivereNorge,
   Bekreftelser,
   BostedsAdresse,
+  Dokument,
   DokumentMetadataListe,
+  DokumentNullable,
   Feilmelding,
   Feilmeldinger,
   ForretningsAdresse,
@@ -68,4 +71,5 @@ export {
   TimerTimelonnetLinje,
   Utenlandsopphold,
   Journalforing,
+  Vedlegg,
 };
