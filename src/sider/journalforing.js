@@ -119,20 +119,20 @@ class Journalforing extends Component {
     const { oppgaveID, journalpostID } = this.props.match.params;
     const {
       journalforingSkjemaVerdier,
-      journalforing: { dokument = {} },
+      journalforing: { hoveddokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, arbeidsgiverID, representantID, avsenderNavn, dokumentTittel, vedleggsTitler,
+      brukerID, avsenderID, arbeidsgiverID, representantID, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
-    const { dokumentID } = dokument;
+    const { dokumentID } = hoveddokument;
     return intensjon === Konstanter.JOURNALFORING_HENSIKT.KNYTT ?
       {
         avsenderID,
         avsenderNavn,
         dokumentID,
         brukerID,
-        dokumenttittel: dokumentTittel,
+        hoveddokumentTittel,
         journalpostID,
         oppgaveID,
         vedleggstitler: vedleggsTitler,
@@ -145,7 +145,7 @@ class Journalforing extends Component {
         avsenderNavn,
         dokumentID,
         brukerID,
-        dokumenttittel: dokumentTittel,
+        hoveddokumentTittel,
         journalpostID,
         oppgaveID,
         vedleggstitler: vedleggsTitler,
@@ -178,7 +178,6 @@ class Journalforing extends Component {
       settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer');
       return false;
     }
-
     const response = await tilordneSak(journalforingData);
     if (response.ok) {
       this.props.hentOppgaver();
@@ -308,7 +307,7 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing: { dokument = {} },
+      journalforing: { hoveddokument = {} },
       fagsakListe,
     } = this.props;
 
@@ -317,7 +316,7 @@ class Journalforing extends Component {
     } = this;
 
     const { journalpostID } = this.props.match.params;
-    const { dokumentID } = dokument;
+    const { dokumentID } = hoveddokument;
 
     return (
       <div className="journalforing">
@@ -373,8 +372,8 @@ const mapStateToProps = state => ({
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
     arbeidsgiverID: null,
     representantID: '',
-    mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
-    dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
+    mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
+    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
     vedleggsTitler: [],
   },
 });
