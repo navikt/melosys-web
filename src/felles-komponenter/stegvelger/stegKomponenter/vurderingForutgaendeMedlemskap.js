@@ -7,18 +7,17 @@ import * as Skjema from '../../skjema';
 import { BOOLSK } from '../../../constants';
 
 class VurderingForutgaendeMedlemskap extends Component {
-
   componentWillUnmount() {
     const { settSkjemaVerdi } = this.props;
-    //settSkjemaVerdi('vilkar.art12_2', null);
-    //settSkjemaVerdi('vilkar.art16_2', null);
+    settSkjemaVerdi('vilkar.forutgaendeMedlemskap', null);
+    settSkjemaVerdi('vilkar.forutgaendeMedlemskapBegrunnelser', []);
   }
 
   render() {
-    const { bekreftOgFortsett, begrunnelser, tilstand, settSkjemaVerdi } = this.props;
+    const {
+      bekreftOgFortsett, begrunnelser, tilstand,
+    } = this.props;
     const { visBegrunnelser } = tilstand;
-
-    console.log(settSkjemaVerdi)
 
     return (
       <div>
@@ -54,7 +53,7 @@ class VurderingForutgaendeMedlemskap extends Component {
       </div>
     );
   }
-};
+}
 
 VurderingForutgaendeMedlemskap.ID = 'FORUTGAENDE_MEDLEMSKAP';
 
@@ -62,6 +61,7 @@ VurderingForutgaendeMedlemskap.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
+  settSkjemaVerdi: PT.func.isRequired,
 };
 
 VurderingForutgaendeMedlemskap.defaultProps = {
