@@ -56,24 +56,19 @@ const RenderVedleggLink = ({ journalpostID, dokument }) => {
 };
 RenderVedleggLink.propTypes = {
   journalpostID: PT.string.isRequired,
-  dokument: PT.shape({
-    dokumentID: PT.string,
-    tittel: PT.string.isRequired,
-    mottattDato: PT.string,
-  }),
+  dokument: MPT.DokumentNullable,
 };
 RenderVedleggLink.defaultProps = {
   dokument: {
     dokumentID: null,
-    mottattDato: null,
   },
 };
 const RenderOversiktRad = ({ oversikt }) => {
   if (!oversikt) return null;
   const {
-    mottaksretning, addressat, journalpostID, hoveddokument, vedlegg,
+    mottaksretning, addressat, journalpostID, mottattDato, hoveddokument, vedlegg,
   } = oversikt;
-  const { dokumentID, tittel, mottattDato } = hoveddokument;
+  const { dokumentID, tittel } = hoveddokument;
   if (!dokumentID) return null;
   return (
     <tr>
@@ -93,16 +88,9 @@ RenderOversiktRad.propTypes = {
   oversikt: PT.shape({
     mottaksretning: MPT.Kodeverk.isRequired,
     addressat: PT.string.isRequired,
-    hoveddokument: PT.shape({
-      dokumentID: PT.string.isRequired,
-      tittel: PT.string.isRequired,
-      mottattDato: PT.string.isRequired,
-    }),
-    vedlegg: PT.arrayOf(PT.shape({
-      dokumentID: PT.string,
-      tittel: PT.string.isRequired,
-      mottattDato: PT.string,
-    })),
+    mottattDato: PT.string.isRequired,
+    hoveddokument: MPT.Dokument,
+    vedlegg: MPT.Vedlegg,
   }),
 };
 RenderOversiktRad.defaultProps = {
