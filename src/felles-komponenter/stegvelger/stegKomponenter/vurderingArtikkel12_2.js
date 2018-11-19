@@ -32,6 +32,12 @@ class VurderingArtikkel12_2 extends Component {
     this.lagreValgtVilkarState(prevProps);
   }
 
+  componentWillUnmount() {
+    const { settSkjemaVerdi } = this.props;
+    settSkjemaVerdi('vilkar.art12_2', null);
+    settSkjemaVerdi('vilkar.art16_2', null);
+  }
+
   settStateForVilkar = vilkar => {
     this.setState({ valgtVilkar: vilkar });
   };
