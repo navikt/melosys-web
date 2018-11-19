@@ -175,7 +175,7 @@ class Informasjon extends Component {
 
           <Nav.Fieldset legend="Hoveddokument:">
             <Skjema.ListeVelger
-              feltNavn="dokumentTittel"
+              feltNavn="hoveddokumentTittel"
               label="Tittel på hoveddokument:"
               placeholder="(velg eller skriv inn egen tittel)"
               muligeValg={valgbareDokumentTitler}
