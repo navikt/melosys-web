@@ -59,7 +59,7 @@ class VurderingArtikkel12_2 extends Component {
 
     if (value === Koder.FO_883_2004_ART12_2) {
       settSkjemaVerdi('vilkar.art12_2', true);
-      settSkjemaVerdi('vilkar.art16_1', false);
+      settSkjemaVerdi('vilkar.art16_1', null);
     } else if (value === Koder.FO_883_2004_ART16_1) {
       settSkjemaVerdi('vilkar.art12_2', false);
       settSkjemaVerdi('vilkar.art16_1', true);
