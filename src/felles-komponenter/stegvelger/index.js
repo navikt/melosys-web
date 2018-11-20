@@ -49,7 +49,6 @@ class Stegvelger extends Component {
 
     if (!shouldUpdate) { return; }
 
-    // console.log('should update', this.props.skjema);
     this.setState({ didUpdateAfterLastStep: true });
   }
 
