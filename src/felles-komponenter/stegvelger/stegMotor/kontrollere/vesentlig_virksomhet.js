@@ -33,6 +33,7 @@ class VesentligVirksomhet extends Steg {
     });
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
     this._status = FANE_STATUS.OK;
   }

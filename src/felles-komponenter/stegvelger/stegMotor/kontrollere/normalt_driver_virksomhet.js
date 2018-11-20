@@ -22,7 +22,7 @@ class NormaltDriverVirksomhet extends Steg {
     ];
 
     this._id = STEG.NORMALT_DRIVER_VIRKSOMHET;
-    this._tittel = 'Vesentlig virksomhet';
+    this._tittel = 'Normalt driver virksomhet';
     this._komponent = VurderingNormaltDriverVirksomhet;
     this._samleRelevanteData = _propsLight => ({
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
@@ -33,6 +33,7 @@ class NormaltDriverVirksomhet extends Steg {
     });
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
     this._status = FANE_STATUS.OK;
   }

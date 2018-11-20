@@ -15,7 +15,7 @@ class Tjenestemann extends Steg {
           vurderingTjenestemann === VurderingTjenestemannTyper.FLERE_LAND ||
           vurderingTjenestemann === VurderingTjenestemannTyper.FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND
         ),
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: null,
       },
       {
         beskrivelse: 'alle andre valg',
