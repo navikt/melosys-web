@@ -20,7 +20,7 @@ import { OppholdLand, OppholdPeriode } from './opphold';
 import { Sysselsetting } from './sysselsetting';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
-import { Journalforing } from './journalforing';
+import { Journalforing, JournalforingSkjemaVerdier } from './journalforing';
 import { DokumentMetadataListe } from './dokumentMetadata';
 import { Dokument, DokumentNullable, Vedlegg } from './dokument';
 
@@ -43,7 +43,9 @@ export {
   Inntekt,
   InntektEnkeltLinje,
   InntektListe,
+  Journalforing,
   JournalforingOppgave,
+  JournalforingSkjemaVerdier,
   Kodeverk,
   Lovvalgsbestemmelse,
   Lovvalgsbestemmelser,
@@ -70,6 +72,5 @@ export {
   TimerTimelonnet,
   TimerTimelonnetLinje,
   Utenlandsopphold,
-  Journalforing,
   Vedlegg,
 };
