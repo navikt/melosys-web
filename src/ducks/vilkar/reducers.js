@@ -47,6 +47,7 @@ export default function reducer(state = initialState, action) {
       const vilkarArray = [
         vilkarTilObjekt(Koder.ART12_1_FORUTGAAENDE_MEDLEMSKAP, action.data.vilkar.forutgaendeMedlemskap, action.data.vilkar.forutgaendeMedlemskapBegrunnelser),
         vilkarTilObjekt(Koder.VESENTLIG_VIRKSOMHET, action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhetBegrunnelser),
+        vilkarTilObjekt(Koder.NORMALT_DRIVER_VIRKSOMHET, action.data.vilkar.normaltDriverVirksomhet, action.data.vilkar.normaltDriverVirksomhetBegrunnelser),
         vilkarTilObjekt(Koder.BOSATT_I_NORGE, action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorgeBegrunnelser),
         vilkarTilObjekt(Koder.FO_883_2004_ART12_1, action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
         vilkarTilObjekt(Koder.FO_883_2004_ART12_2, action.data.vilkar.art12_2, action.data.vilkar.art12_2_begrunnelser),

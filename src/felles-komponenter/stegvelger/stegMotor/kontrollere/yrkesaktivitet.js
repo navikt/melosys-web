@@ -14,7 +14,7 @@ class Yrkesaktivitet extends Steg {
       {
         beskrivelse: 'yrkesaktivitet ER LIK "SELVSTENDIG_NAERINGSDRIVENDE"',
         exec: avklartefakta => Yrkesaktivitet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE),
-        nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
+        nesteSteg: STEG.NORMALT_DRIVER_VIRKSOMHET,
       },
       {
         beskrivelse: 'alle andre valg',

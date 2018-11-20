@@ -129,7 +129,6 @@ export function send(behandlingID, body) {
 export function oppdaterLovvalgsperioderState() {
   return (dispatch, getState) => {
     const valgtLovvalg = finnValgteVilkar(vilkarSelectors.valgteLovvalgsVilkar(getState()));
-    console.log('valgtLovvalg', valgtLovvalg)
     const lovvalgsPerioder = byggLovvalgsPerioder(valgtLovvalg, getState);
     (dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder)));
   };

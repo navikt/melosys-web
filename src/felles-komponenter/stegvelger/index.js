@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-update-set-state */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
@@ -22,7 +23,7 @@ import { formSelectors } from '../../ducks/form/';
 import './stegvelger.css';
 
 class Stegvelger extends Component {
-  state = { aktivtStegNummer: 0, aktuelleSteg: [] };
+  state = { aktivtStegNummer: 0, aktuelleSteg: [], didUpdateAfterLastStep: false };
 
   componentWillMount() {
     const { snr } = this.props.match.params;
@@ -37,6 +38,19 @@ class Stegvelger extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.oppdaterAktuelleSteg(nextProps);
+  }
+
+  async componentDidUpdate(prevProps) {
+    const formHasSetteled = JSON.stringify(prevProps.skjema) === JSON.stringify(this.props.skjema);
+    const { didUpdateAfterLastStep } = this.state;
+    const shouldUpdate = (formHasSetteled && !didUpdateAfterLastStep);
+
+    // console.log(formHasSetteled, didUpdateAfterLastStep);
+
+    if (!shouldUpdate) { return; }
+
+    // console.log('should update', this.props.skjema);
+    this.setState({ didUpdateAfterLastStep: true });
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
@@ -125,19 +139,21 @@ class Stegvelger extends Component {
       skjema,
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
-      oppdaterLovvalgperioderState,
       oppdaterLokalSoknadHandler,
+      oppdaterLovvalgperioderState,
       lagreSoknadHandler,
       lovvalgsperioder,
       vilkar,
     } = this.props;
 
-    const { lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler } = this;
-    const { behandlingID } = this.props.oppsummering;
+    this.setState({ didUpdateAfterLastStep: false });
 
     oppdaterLokalSoknadHandler();
 
     this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
+      const { lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler } = this;
+      const { behandlingID } = this.props.oppsummering;
+
       await oppdaterAvklarteFaktaState(skjema);
       await oppdaterVilkarState(skjema);
       await oppdaterLovvalgperioderState(skjema);

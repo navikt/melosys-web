@@ -22,6 +22,11 @@ export const vesentligVirksomhetSelector = createSelector(
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.VESENTLIG_VIRKSOMHET) || {})
 );
 
+export const normaltDriverVirksomhetSelector = createSelector(
+  state => VilkarSelector(state),
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.NORMALT_DRIVER_VIRKSOMHET) || {})
+);
+
 export const forutgaendeMedlemskap = createSelector(
   state => VilkarSelector(state),
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.ART12_1_FORUTGAAENDE_MEDLEMSKAP) || {})
