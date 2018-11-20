@@ -146,25 +146,22 @@ class Stegvelger extends Component {
       vilkar,
     } = this.props;
 
-    this.setState({ didUpdateAfterLastStep: false });
+    await oppdaterLokalSoknadHandler();
 
-    oppdaterLokalSoknadHandler();
+    this.setState({ aktivtStegNummer: nyttStegNummer });
+    const { lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler } = this;
+    const { behandlingID } = this.props.oppsummering;
 
-    this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
-      const { lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler } = this;
-      const { behandlingID } = this.props.oppsummering;
+    await oppdaterAvklarteFaktaState(skjema);
+    await oppdaterVilkarState(skjema);
+    await oppdaterLovvalgperioderState(skjema);
+    await lagreVilkarHandler(behandlingID, vilkar);
+    await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
+    await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
 
-      await oppdaterAvklarteFaktaState(skjema);
-      await oppdaterVilkarState(skjema);
-      await oppdaterLovvalgperioderState(skjema);
-      await lagreVilkarHandler(behandlingID, vilkar);
-      await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
-      await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
-
-      if (this.erSisteSteg(nyttStegNummer)) {
-        await lagreSoknadHandler();
-      }
-    });
+    if (this.erSisteSteg(nyttStegNummer)) {
+      await lagreSoknadHandler();
+    }
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
@@ -173,7 +170,7 @@ class Stegvelger extends Component {
    */
   beregnNesteSteg = () => {
     const { aktivtStegNummer } = this.state;
-    return this.erSisteSteg(aktivtStegNummer) ? aktivtStegNummer : aktivtStegNummer + 1;
+    return aktivtStegNummer + 1;
   };
 
   erSisteSteg(stegNummer) {
