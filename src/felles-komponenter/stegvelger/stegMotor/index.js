@@ -28,8 +28,7 @@ class StegMotor {
       return this.lagKlasseBasertPaID(this._forsteStegID, 0);
     }
     const nesteSteg = gjeldendeSteg.nesteSteg();
-    const nesteStegKlasse = nesteSteg && this.lagKlasseBasertPaID(gjeldendeSteg.nesteSteg(), nesteStegPosisjon);
-    return nesteStegKlasse;
+    return nesteSteg && this.lagKlasseBasertPaID(gjeldendeSteg.nesteSteg(), nesteStegPosisjon);
   };
 
   lagKlasseBasertPaID = (stegID, stegPosisjon) => {

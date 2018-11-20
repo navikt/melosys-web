@@ -5,14 +5,13 @@ import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 import * as Koder from '../../../../koder';
 
-
 class Artikkel12_2 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'vilkar for artikkel 12.2 er oppfylt',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART12_1, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART12_2, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
@@ -23,7 +22,7 @@ class Artikkel12_2 extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: null,
       },
     ];
     this._id = STEG.ARTIKKEL_12_2;

@@ -13,6 +13,7 @@ import Artikkel12_2 from './artikkel12_2';
 import Artikkel16 from './artikkel16';
 import Virksomhet from './virksomhet';
 import VesentligVirksomhet from './vesentlig_virksomhet';
+import NormaltDriverVirksomhet from './normalt_driver_virksomhet';
 import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
 import Vedtak from './vedtak';
 
@@ -33,6 +34,7 @@ export {
   Artikkel16,
   Virksomhet,
   VesentligVirksomhet,
+  NormaltDriverVirksomhet,
   YrkesaktivitetAntallLand,
   Vedtak,
 };

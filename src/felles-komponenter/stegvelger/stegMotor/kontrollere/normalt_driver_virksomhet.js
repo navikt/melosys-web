@@ -1,18 +1,18 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentligVirksomhet';
+import VurderingNormaltDriverVirksomhet from '../../stegKomponenter/vurderingNormaltDriverVirksomhet';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 import * as Koder from '../../../../koder';
 
-class VesentligVirksomhet extends Steg {
+class NormaltDriverVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'ORDINAER_ARBEIDSTAKER og VESENTLIG_VIRKSOMHET',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.VESENTLIG_VIRKSOMHET, alleVilkar),
-        nesteSteg: STEG.ARTIKKEL_12_1,
+        beskrivelse: 'SELVSTENDIG_NAERINGSDRIVENDE og VESENTLIG_VIRKSOMHET',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.NORMALT_DRIVER_VIRKSOMHET, alleVilkar),
+        nesteSteg: STEG.ARTIKKEL_12_2,
       },
       {
         beskrivelse: '',
@@ -21,15 +21,15 @@ class VesentligVirksomhet extends Steg {
       },
     ];
 
-    this._id = STEG.VESENTLIG_VIRKSOMHET;
+    this._id = STEG.NORMALT_DRIVER_VIRKSOMHET;
     this._tittel = 'Vesentlig virksomhet';
-    this._komponent = VurderingVesentligVirksomhet;
+    this._komponent = VurderingNormaltDriverVirksomhet;
     this._samleRelevanteData = _propsLight => ({
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
-      begrunnelser: _propsLight.begrunnelser.vesentligVirksomhet,
+      begrunnelser: _propsLight.begrunnelser.normaltDriverVirksomhet,
     });
     this._beregnRelevantUI = _propsLight => ({
-      visBegrunnelser: !_propsLight.skjema.vilkar.vesentligVirksomhet,
+      visBegrunnelser: !_propsLight.skjema.vilkar.normaltDriverVirksomhet,
     });
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
@@ -44,4 +44,4 @@ class VesentligVirksomhet extends Steg {
   }
 }
 
-export default VesentligVirksomhet;
+export default NormaltDriverVirksomhet;
