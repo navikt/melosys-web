@@ -133,7 +133,7 @@ class Journalforing extends Component {
     const { dokumentID } = hoveddokument;
     const vedlegg = this.mapVedleggsTittlerTilVedlegg(vedleggsTitler);
     // Data for /tilordne i.e KNYTT
-    let jourrnalPostData = {
+    let journalPostData = {
       avsenderID,
       avsenderNavn,
       dokumentID,
@@ -145,9 +145,9 @@ class Journalforing extends Component {
     };
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
-      jourrnalPostData = Object.assign(jourrnalPostData, { arbeidsgiverID, representantID });
+      journalPostData = Object.assign(journalPostData, { arbeidsgiverID, representantID });
     }
-    return jourrnalPostData;
+    return journalPostData;
   };
 
   /** Når saksbehandler klikker "knytt til eksisterende sak" skal det åpnes for validering av
