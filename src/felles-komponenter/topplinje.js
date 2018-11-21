@@ -22,7 +22,7 @@ const Topplinje = props => {
           />
         </Link>
         <div className="brand__skillelinje" />
-        <div className="brand__tittel"><span>Medlemsskap og lovvalgssystem</span></div>
+        <div className="brand__tittel"><span>Melosys</span></div>
       </div>
       <div className="topplinje__saksbehandler">
         <div className="saksbehandler__navn">{navn}</div>
