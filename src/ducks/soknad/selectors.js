@@ -60,6 +60,20 @@ export const EkstraArbeidsgivereSelector = createSelector(
   }
 );
 
+export const SelvstendigArbeidSelector = createSelector(
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.selvstendigArbeid : {}),
+  selvstendigArbeid => selvstendigArbeid || {}
+);
+
+export const SelvstendigNaringsvirksomhetSelector = createSelector(
+  state => SelvstendigArbeidSelector(state),
+  state => OrganisasjonSelectors.organisasjonerSelector(state),
+  (selvstendigArbeid, organisasjoner) => {
+    const { selvstendigForetak = [] } = selvstendigArbeid;
+    return organisasjoner.filter(organisasjon => selvstendigForetak.find(foretak => foretak.orgnr === organisasjon.orgnr));
+  }
+);
+
 export const OppholdUtlandSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.oppholdUtland : {}),
   oppholdUtland => oppholdUtland || {}
@@ -99,11 +113,6 @@ export const ArbeidsgiversBekreftelseSelector = createSelector(
 export const MaritimtArbeidSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.maritimtArbeid : {}),
   maritimtArbeid => maritimtArbeid || {}
-);
-
-export const SelvstendigArbeidSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.selvstendigArbeid : {}),
-  selvstendigArbeid => selvstendigArbeid || {}
 );
 
 export const PersonOpplysningerSelector = createSelector(

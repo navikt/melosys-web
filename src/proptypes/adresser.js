@@ -6,7 +6,7 @@ const GeneriskAdressePropType = PT.shape({
   gateadresse: PT.shape({
     gatenavn: PT.string,
     gatenummer: PT.number,
-    husnummer: PT.string,
+    husnummer: PT.number,
     husbokstav: PT.string,
   }),
   postnr: PT.string,

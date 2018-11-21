@@ -8,27 +8,27 @@ import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import { BOOLSK } from '../../../constants';
 
-class VurderingVesentligVirksomhet extends Component {
+class NormaltDriverVirksomhet extends Component {
   componentWillUnmount() {
     const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.vesentligVirksomhet', null);
-    settSkjemaVerdi('vilkar.vesentligVirksomhetBegrunnelser', []);
+    settSkjemaVerdi('vilkar.normaltDriverVirksomhet', null);
+    settSkjemaVerdi('vilkar.normaltDriverVirksomhetBegrunnelser', []);
   }
 
   render () {
     const { bekreftOgFortsett, begrunnelser, tilstand } = this.props;
     const { visBegrunnelser } = tilstand;
-
     const arbeidsgivereTekst = this.props.valgteArbeidsgivere.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
+
     return (
       <div>
-        <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
+        <Nav.Undertittel>Vurdering av selvstendig virksomhet til {arbeidsgivereTekst}</Nav.Undertittel>
         <div className="vurderingBostedsland__skjemafelt">
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Virksomheten har:">
-                <Skjema.Radio feltNavn="vilkar.vesentligVirksomhet" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
-                <Skjema.Radio feltNavn="vilkar.vesentligVirksomhet" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
+                <Skjema.Radio feltNavn="vilkar.normaltDriverVirksomhet" value={BOOLSK.SANN} label="Driver normalt virksomhet i Norge" />
+                <Skjema.Radio feltNavn="vilkar.normaltDriverVirksomhet" value={BOOLSK.USANN} label="Driver normalt IKKE virksomhet i Norge" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -37,7 +37,7 @@ class VurderingVesentligVirksomhet extends Component {
               <Nav.Column xs="12" md="10" lg="8">
                 <Nav.Fieldset legend="Begrunnelse:">
                   <Skjema.ListeVelger
-                    feltNavn="vilkar.vesentligVirksomhetBegrunnelser"
+                    feltNavn="vilkar.normaltDriverVirksomhetBegrunnelser"
                     muligeValg={begrunnelser}
                     label="Legg til begrunnelse:"
                     gruppe
@@ -56,9 +56,9 @@ class VurderingVesentligVirksomhet extends Component {
   }
 }
 
-VurderingVesentligVirksomhet.ID = 'VESENTLIG_VIRKSOMHET';
+NormaltDriverVirksomhet.ID = 'NORMALT_DRIVER_VIRKSOMHET';
 
-VurderingVesentligVirksomhet.propTypes = {
+NormaltDriverVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   valgteArbeidsgivere: PT.array,
@@ -66,10 +66,10 @@ VurderingVesentligVirksomhet.propTypes = {
   settSkjemaVerdi: PT.func.isRequired,
 };
 
-VurderingVesentligVirksomhet.defaultProps = {
+NormaltDriverVirksomhet.defaultProps = {
   tilstand: {},
   valgteArbeidsgivere: [],
   begrunnelser: [],
 };
 
-export default VurderingVesentligVirksomhet;
+export default NormaltDriverVirksomhet;
