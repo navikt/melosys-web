@@ -15,7 +15,7 @@ class ForutgaendeMedlemskap extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: null,
       },
     ];
     this._id = STEG.FORUTGAENDE_MEDLEMSKAP;
@@ -29,6 +29,7 @@ class ForutgaendeMedlemskap extends Steg {
     });
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
     this._status = FANE_STATUS.OK;
   }
