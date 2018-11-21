@@ -28,25 +28,25 @@ function getTellerTekst(antallTegn, maxLength, visTellerFra) {
 }
 
 function InnerTextAreaComponent({
-  input,
   label,
   placeholder,
   maxLength,
   visTellerFra,
+  input,
   ...rest
 }) {
   const feil = (rest.meta.error && rest.meta.touched && !rest.meta.active) ? { feilmelding: rest.meta.error } : undefined;
+  const inputProps = { ...input, ...rest, feil };
+
   return (
     <Nav.Textarea
       textareaClass="skjemaelement__input input--fullbredde"
       label={label}
-      maxLength={maxLength}
-      feil={feil}
+      maxLength={20}
       placeholder={placeholder}
       tellerTekst={antallTegn =>
         getTellerTekst(antallTegn, maxLength, visTellerFra)}
-      {...input}
-      {...rest}
+      {...inputProps}
     />
   );
 }
@@ -55,14 +55,12 @@ InnerTextAreaComponent.propTypes = {
   label: PT.string,
   placeholder: PT.string,
   maxLength: PT.number.isRequired,
-  errorMessage: PT.arrayOf(PT.oneOfType([PT.string, PT.node])),
   visTellerFra: PT.number,
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   input: PT.object, // eslint-disable-line react/forbid-prop-types
 };
 
 InnerTextAreaComponent.defaultProps = {
-  errorMessage: undefined,
   meta: undefined,
   input: undefined,
   visTellerFra: undefined,

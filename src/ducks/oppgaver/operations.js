@@ -12,19 +12,6 @@ import * as Api from '../../services/api';
 import * as Types from './types';
 
 /**
- * Soknads sok
- * @param fnr
- * @returns {*}
- */
-export function sok(fnr) {
-  return doThenDispatch(() => Api.Oppgaver.sok(fnr), {
-    OK: Types.SOK_OK,
-    FEILET: Types.SOK_FEILET,
-    PENDING: Types.SOK_PENDING,
-  });
-}
-
-/**
  * Hent Soknad
  * @returns {*}
  */
@@ -36,7 +23,17 @@ export function hent() {
   });
 }
 
-export function sendBehandlingsOppgave(checkboxliste) {
+export async function tilbakelegge(behandlingID, venterPaaDokumentasjon) {
+  const oppgaveObjekt = {
+    behandlingID,
+    begrunnelse: null, // Ingen begrunnelse i Melosys 1.0
+    venterPaaDokumentasjon,
+  };
+
+  return Api.Oppgaver.tilbakelegge(oppgaveObjekt).catch(error => error);
+}
+
+export async function sendBehandlingsOppgave(checkboxliste) {
   const { sakstyper: sakstyperListe = [], behandlingstyper: behandlingstyperListe = [] } = checkboxliste;
   if (sakstyperListe.length === 0 || behandlingstyperListe.length === 0) { return false; }
 
@@ -49,23 +46,21 @@ export function sendBehandlingsOppgave(checkboxliste) {
     behandlingstyper,
   };
 
-  return Api.Oppgaver.send(oppgave).then(response => {
-    const { saksnummer } = response;
-    if (!saksnummer) { return false; }
-    return `/saksbehandling/${saksnummer}`;
-  });
+  const response = await Api.Oppgaver.send(oppgave);
+  const { saksnummer } = response;
+  if (!saksnummer) { return false; }
+  return `/saksbehandling/${saksnummer}`;
 }
 
-export function sendJournalOppgave(fagomrade) {
+export async function sendJournalOppgave(fagomrade) {
   const oppgave = {
     oppgavetype: 'JFR',
     sakstyper: [],
     behandlingstyper: [],
     fagomrade, // 'UFM' || 'MDL'
   };
-  return Api.Oppgaver.send(oppgave).then(response => {
-    const { oppgaveID, journalpostID } = response;
-    if (!(oppgaveID || journalpostID)) { return false; }
-    return `/journalforing/${journalpostID}/${oppgaveID}`;
-  });
+  const response = await Api.Oppgaver.send(oppgave);
+  const { oppgaveID, journalpostID } = response;
+  if (!(oppgaveID || journalpostID)) { return false; }
+  return `/journalforing/${journalpostID}/${oppgaveID}`;
 }

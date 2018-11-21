@@ -12,7 +12,7 @@ const FamiliemedlemmerPropType = PT.shape({
 
 const PersonPropType = PT.shape({
   fnr: PT.string,
-  sivilstand: PT.string,
+  sivilstand: Kodeverk,
   statsborgerskap: Kodeverk,
   sammensattNavn: PT.string,
   bostedsadresse: BostedsAdresse,

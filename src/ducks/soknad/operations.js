@@ -1,7 +1,7 @@
 import * as Validering from '../../felles-komponenter/skjema/validering';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
-
+import * as Actions from './actions';
 import * as Types from './types';
 
 /**
@@ -31,4 +31,12 @@ export function send(bid, soknad) {
     },
     (dispatch, data) => Validering.Felles.forsokValidering(dispatch, data)
   );
+}
+
+export function oppdaterPeriode(periode) {
+  return dispatch => dispatch(Actions.oppdaterPeriode(periode));
+}
+
+export function resetSoknadState() {
+  return Actions.resetSoknadState();
 }

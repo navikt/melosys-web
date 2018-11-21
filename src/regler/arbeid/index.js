@@ -3,7 +3,7 @@ import DomeneRegel from '../domeneRegel';
 import { datoDiff, formatterDatoTilISO } from '../../utils/dato';
 
 /** Klassen inneholder funksjoner som hver evaluerer konkrete situasjoner basert på
- * opplysninger fra søknaden, faktaavklaring og fagsak. Utfallet av hver funksjon
+ * opplysninger fra søknaden, avklartefakta og fagsak. Utfallet av hver funksjon
  * kan ende i "sann", "usann" eller mangelfull opplysninger. Tekstene som også
  * returneres som en del av objektet reflekterer også dette.
  *
@@ -22,11 +22,11 @@ import { datoDiff, formatterDatoTilISO } from '../../utils/dato';
 class Arbeid extends DomeneRegel {
   erArbeidsforholdetRelevantForSoknadsperioden = ansettelsesPeriode => {
     const { skjema } = this;
-    const { faktaavklaringPeriodeFraOgMed, faktaavklaringPeriodeTilOgMed } = skjema;
+    const { oppholdUtlandFom, oppholdUtlandTom } = skjema;
     const { fom: ansattStartDato, tom: ansattSluttDato } = ansettelsesPeriode;
 
-    const oppholdStartDato = formatterDatoTilISO(faktaavklaringPeriodeFraOgMed);
-    const oppholdSluttDato = formatterDatoTilISO(faktaavklaringPeriodeTilOgMed);
+    const oppholdStartDato = formatterDatoTilISO(oppholdUtlandFom);
+    const oppholdSluttDato = formatterDatoTilISO(oppholdUtlandTom);
 
     const erAnsattVedPeriodeStart = datoDiff(ansattStartDato, oppholdStartDato, 'days') >= 1;
     const erAnsattVedPeriodeSlutt = datoDiff(ansattSluttDato, oppholdSluttDato, 'days') <= 0;

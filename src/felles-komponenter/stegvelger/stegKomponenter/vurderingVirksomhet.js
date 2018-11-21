@@ -1,0 +1,63 @@
+import React from 'react';
+import PT from 'prop-types';
+import * as Nav from '../../../utils/navFrontend';
+import * as Skjema from '../../skjema';
+
+export const VurderingVirksomhetTyper = {
+  EN_ELLER_BEGGE: 'EN_ELLER_BEGGE',
+  INGEN_VEKSLING: 'INGEN_VEKSLING',
+  MARGINALT_JA: 'MARGINALT_JA',
+  MARGINALT_NEI: 'MARGINALT_NEI',
+  UNDER_25_PROSENT: 'UNDER_25_PROSENT',
+  OVER_25_PROSENT: 'OVER_25_PROSENT',
+};
+
+const VekslingMellomLand = () => (
+  <Nav.Fieldset legend="Veksler søker regelmessig mellom arbeid i flere land eller arbeider søker i flere land?">
+    <Skjema.Radio feltNavn="avklartefaktaVekslingMellomLand" value={VurderingVirksomhetTyper.EN_ELLER_BEGGE} label="Ja, en eller begge" />
+    <Skjema.Radio feltNavn="avklartefaktaVekslingMellomLand" value={VurderingVirksomhetTyper.INGEN_VEKSLING} label="Nei, ingen av delene" />
+  </Nav.Fieldset>
+);
+
+const MarginaltArbeid = () => (
+  <Nav.Fieldset legend="Er arbeidet søker utfører som offentlig tjenesteperson for Norsk forvaltning marginalt (mindre enn 5%)?">
+    <Skjema.Radio feltNavn="avklartefaktaMarginaltArbeid" value={VurderingVirksomhetTyper.MARGINALT_JA} label="Ja" />
+    <Skjema.Radio feltNavn="avklartefaktaMarginaltArbeid" value={VurderingVirksomhetTyper.MARGINALT_NEI} label="Nei" />
+  </Nav.Fieldset>
+);
+
+const AktivitetINorge = () => (
+  <Nav.Fieldset legend="Hvor mye av aktiviteten skjer i Norge?">
+    <Skjema.Radio feltNavn="avklartefaktaAktivitetINorge" value={VurderingVirksomhetTyper.UNDER_25_PROSENT} label="Mindre enn 25%" />
+    <Skjema.Radio feltNavn="avklartefaktaAktivitetINorge" value={VurderingVirksomhetTyper.OVER_25_PROSENT} label="25% eller mer" />
+  </Nav.Fieldset>
+);
+
+const VurderingVirksomhet = props => {
+  const { bekreftOgFortsett, tilstand } = props;
+
+  return (
+    <div>
+      { tilstand.visVekslingMellomLand && <VekslingMellomLand /> }
+      { tilstand.visMarginaltArbeid && <MarginaltArbeid /> }
+      { tilstand.visAktivitetINorge && <AktivitetINorge /> }
+      <div className="fane__knapplinje">
+        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+      </div>
+    </div>
+  );
+};
+
+VurderingVirksomhet.ID = 'VIRKSOMHET';
+
+
+VurderingVirksomhet.propTypes = {
+  bekreftOgFortsett: PT.func.isRequired,
+  tilstand: PT.object,
+};
+
+VurderingVirksomhet.defaultProps = {
+  tilstand: {},
+};
+
+export default VurderingVirksomhet;

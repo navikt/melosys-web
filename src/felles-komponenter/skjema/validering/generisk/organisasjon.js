@@ -6,6 +6,7 @@ const erOrgnrLengde = verdi => RegExp(/^\d{9,9}$/).test(verdi);
  * @returns {boolean}
  */
 const erOrgnrGyldig = verdi => {
+  if (!verdi) { return false; }
   const vekt = [2, 3, 4, 5, 6, 7, 2, 3];
   const bakersteOffset = 1; // Siste tall i orgnr er kontrollnr, så begynn på nest siste og regn mot venstre.
 
@@ -15,7 +16,7 @@ const erOrgnrGyldig = verdi => {
       return samling + (enkeltSiffer * vektSiffer);
     }, 0);
 
-  let Q1 = (11 - sumForMod % 11);
+  let Q1 = (11 - (sumForMod % 11));
   if (Q1 === 11) { Q1 = 0; }
 
   return (parseInt(verdi.charAt(8), 10) === Q1);

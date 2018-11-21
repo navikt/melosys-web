@@ -1,0 +1,45 @@
+import Steg from '../steg';
+import { FANE_STATUS, STEG } from '../typer';
+import VurderingYrkesaktivitetAntallLand, { VurderingYrkesaktivitetAntallLandTyper } from '../../stegKomponenter/vurderingYrkesaktivitetAntallLand';
+import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
+import Sysselsetting from '../../stegMotor/kontrollere/sysselsetting';
+
+class YrkesaktivitetFordeling extends Steg {
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
+    this._kriterier = [
+      {
+        beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
+        exec: avklartefakta => (
+          Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV) &&
+          YrkesaktivitetFordeling.finnAvklaring(avklartefakta, VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
+        ),
+        nesteSteg: STEG.ARBEIDSGIVERE,
+      },
+      {
+        beskrivelse: 'alle andre valg',
+        exec: () => true,
+        nesteSteg: null,
+      },
+    ];
+    this._id = STEG.YRKESAKTIVITET_ANTALL_LAND;
+    this._tittel = 'Arbeids\u00ADland';
+    this._komponent = VurderingYrkesaktivitetAntallLand;
+    this._samleRelevanteData = () => ({});
+    this._beregnRelevantUI = () => ({
+      visAntallLand: true,
+    });
+    this._handlers = {
+      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+    };
+    this._status = FANE_STATUS.OK;
+  }
+
+  static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESAKTIVITET_ANTALL_LAND);
+    if (!enkeltFakta) { return false; }
+    return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
+  }
+}
+
+export default YrkesaktivitetFordeling;

@@ -19,41 +19,27 @@ const feilmeldingMock = {
 describe('Tester felles.js:', () => {
   describe('inneholderFeilmeldinger', () => {
     test('returnerer true ved feilmeldinger', () => {
-      const mockData = feilmeldingMock;
-      expect(Felles.inneholderFeilmeldinger(mockData)).toBe(true);
-    })
+      expect(Felles.inneholderFeilmeldinger(feilmeldingMock)).toBe(true);
+    });
 
     test('returnerer false hvis ingen feilmeldinger', () => {
       const mockData1 = {};
-      const mockData2 = { form: {feilmeldinger: [] }}
+      const mockData2 = { form: {feilmeldinger: [] }};
       expect(Felles.inneholderFeilmeldinger(mockData1)).toBe(false);
       expect(Felles.inneholderFeilmeldinger(mockData2)).toBe(false);
     })
-  })
+  });
 
   describe('byggValideringsObjekt', () => {
     test('returnerer korrekt valideringsobjekt', () => {
       const mockData = feilmeldingMock;
       const forventetData = {
         antallMaanederINorge: 'Mangler informasjon.',
-      }
+      };
 
       expect(Felles.byggValideringsObjekt(mockData)).toEqual(forventetData);
     })
-  })
-
-  describe('forsokValidering', () => {
-    test('gjør ingenting dersom data ikke inneholder feil', () => {
-      const mockFunction = jest.spyOn(Felles, 'inneholderFeilmeldinger')
-      const mockData = { ...feilmeldingMock, form: { ...feilmeldingMock.form, feilmeldinger: [] } };
-
-      Felles.forsokValidering(mockData);
-
-      //Fixme: Får ikke spyOn til å fungere.
-
-      expect(Felles.inneholderFeilmeldinger).toBeCalled();
-    })
-  })
+  });
 
   describe('flatUtFeltGrupper', () => {
     test('returnerer en falt array fra gruppefelter', () => {
@@ -66,71 +52,71 @@ describe('Tester felles.js:', () => {
           bazFeltnavn: 'baz',
           fazFeltnavn: 'faz',
         }
-      }
+      };
 
       const forventetData = {
         fooFeltnavn: 'foo',
         barFeltnavn: 'bar',
         bazFeltnavn: 'baz',
         fazFeltnavn: 'faz'
-      }
+      };
 
       expect(Felles.flatUtFeltGrupper(mockData)).toEqual(forventetData)
     })
-  })
+  });
 
   describe('kjorAlleValideringerSomHarFunksjoner', () => {
     test('returnerer forventet valideringsobjekt', () => {
       const mockVerdier = {
         foo: 'foo',
         bar: 'bar'
-      }
+      };
 
       const mockObjekt = {
         foo: verdier => `Validerer ${verdier}.`,
         bar: [verdier => `Validerer ${verdier}.`, verdier => `Husk å oppgi ${verdier}.`],
         baz: 'Baz mangler.',
         faz: 23,
-      }
+      };
 
       const forventetObjekt = {
         foo: 'Validerer foo.',
         bar: 'Validerer bar. Husk å oppgi bar.',
         baz: 'Baz mangler.'
-      }
+      };
 
       expect(Felles.kjorAlleValideringerSomHarFunksjoner(mockObjekt, mockVerdier, {})).toEqual(forventetObjekt)
     })
-  })
+  });
 
   describe('flettOgFilterValidering', () => {
     test('returnerer forventet flettet valideringsobjekt', () => {
       const mockObjekt1 = {
         foo: ['Vennligst oppgi foo.'],
         bar: ['Vennligst oppgi bar.'],
-      }
+      };
 
       const mockObjekt2 = {
         foo: ['Foo er ikke gyldig.'],
         baz: ['Vennligst oppgi baz.']
-      }
+      };
 
       const forventetObjekt = {
         foo: 'Vennligst oppgi foo. Foo er ikke gyldig.',
         bar: 'Vennligst oppgi bar.',
         baz: 'Vennligst oppgi baz.'
-      }
+      };
 
       expect(Felles.flettOgFilterValidering(mockObjekt1, mockObjekt2)).toEqual(forventetObjekt);
     })
-  })
+  });
 
   describe('gyldigePaneler', () => {
     test('returnerer et objekt med gyldige panelstatuser', () => {
       const mockData = {
         familiesBosted: '(Feilmeldingen her er ikke viktig)',
         ansattPaSokkelEllerSkip: '(Feilmeldingen her er ikke viktig)',
-      }
+      };
 
       const forventetData = {
         arbeidNorge: true,
@@ -138,13 +124,13 @@ describe('Tester felles.js:', () => {
         inntekt: true,
         oppholdUtland: true,
         bekreftelser: true,
-        faktaavklaring: true,
+        avklartefakta: true,
         maritimtArbeid: true,
         personOpplysninger: true,
         selvstendigArbeid: true,
-      }
+      };
 
       expect(Felles.gyldigePaneler(mockData)).toEqual(forventetData);
     })
   })
-})
+});

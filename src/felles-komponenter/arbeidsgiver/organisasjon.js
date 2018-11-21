@@ -1,4 +1,5 @@
 import React from 'react';
+import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/index';
@@ -15,7 +16,7 @@ import './organisasjon.css';
  *
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
-const Organisasjon = ({ organisasjon }) => {
+const Organisasjon = ({ organisasjon, slettHandle }) => {
   if (!organisasjon) { return null; }
 
   const {
@@ -41,6 +42,11 @@ const Organisasjon = ({ organisasjon }) => {
                 <dd>{<ForretningsAdresse forretningsadresse={forretningsadresse} />}</dd>
               </dl>
             </Nav.Column>
+            <Nav.Column xs="6" className="organisasjon__slettwrapper">
+              <div className="organisasjon__slettknapp">
+                { slettHandle && <Nav.Knapp onClick={slettHandle}>Slett</Nav.Knapp> }
+              </div>
+            </Nav.Column>
           </Nav.Row>
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
@@ -50,6 +56,11 @@ const Organisasjon = ({ organisasjon }) => {
 
 Organisasjon.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
+  slettHandle: PT.func,
+};
+
+Organisasjon.defaultProps = {
+  slettHandle: undefined,
 };
 
 export default Organisasjon;

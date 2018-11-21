@@ -1,7 +1,7 @@
 import DomeneRegel from '../domeneRegel';
 
 /** Klassen inneholder funksjoner som hver evaluerer konkrete situasjoner basert på
- * opplysninger fra søknaden, faktaavklaring og fagsak. Utfallet av hver funksjon
+ * opplysninger fra søknaden, avklartefakta og fagsak. Utfallet av hver funksjon
  * kan ende i "sann", "usann" eller mangelfull opplysninger. Tekstene som også
  * returneres som en del av objektet reflekterer også dette.
  *

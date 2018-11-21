@@ -18,15 +18,14 @@ describe('Journalforing endepunkt', () => {
     fetch.mockResponseOnce(JSON.stringify(oppgave));
 
     const journalpostID = 'DOK_3789';
-    const oppgaveID = '30098000492';
     // assert on the response
-    Journalforing.hent(journalpostID, oppgaveID).then(res => {
+    Journalforing.hent(journalpostID).then(res => {
       expect(res).toEqual(oppgave);
     });
 
     // assert on the times called and arguments given to fetch
     expect(fetch.mock.calls.length).toEqual(1);
-    expect(fetch.mock.calls[0][0]).toEqual(`/api/journalforing/${journalpostID}/${oppgaveID}`);
+    expect(fetch.mock.calls[0][0]).toEqual(`/api/journalforing/${journalpostID}`);
   });
 
   test('POST /api/journalforing/opprett', () => {
