@@ -12,9 +12,14 @@ class Yrkesaktivitet extends Steg {
         nesteSteg: STEG.FORUTGAENDE_MEDLEMSKAP,
       },
       {
+        beskrivelse: 'yrkesaktivitet ER LIK "SELVSTENDIG_NAERINGSDRIVENDE"',
+        exec: avklartefakta => Yrkesaktivitet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE),
+        nesteSteg: STEG.NORMALT_DRIVER_VIRKSOMHET,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: null,
       },
     ];
     this._id = STEG.YRKESAKTIVITET;

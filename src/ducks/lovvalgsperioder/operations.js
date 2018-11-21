@@ -58,6 +58,21 @@ const byggLovvalgsPeriodeArtikkel12_1 = getState => {
   }];
 };
 
+const byggLovvalgsPeriodeArtikkel12_2 = getState => {
+  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(getState());
+  return [{
+    fomDato: soknadPeriode.fom,
+    tomDato: soknadPeriode.tom,
+    lovvalgBestemmelse: Koder.FO_883_2004_ART12_2,
+    unntakFraBestemmelse: null,
+    unntakFraLovvalgsland: null,
+    innvilgelsesResultat: 'INNVILGET',
+    lovvalgsland: 'NO',
+    trygdeDekning: 'FULL',
+    medlemskapstype: 'PLIKTIG',
+  }];
+};
+
 const byggLovvalgsPeriodeArtikkel16_1 = getState => {
   const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(getState());
   const soknadOppholdsland = soknadSelectors.OppholdsLandSelector(getState());
@@ -84,6 +99,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
 const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
   switch (valgtLovvalg) {
     case Koder.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
+    case Koder.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(getState);
     case Koder.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
     default: return [];
   }

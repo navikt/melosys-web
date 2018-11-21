@@ -78,7 +78,7 @@ const VelgDato = (mottaksretning, mottattDato, journalforingDato) => {
 const RenderOversiktRad = ({ oversikt }) => {
   if (!oversikt) return null;
   const {
-    mottaksretning, avsenderEllerMottaker, journalpostID, mottattDato, journalforingDato, hoveddokument, vedlegg,
+    mottaksretning, avsenderEllerMottaker, journalpostID, mottattDato, journalforingDato, hoveddokument, vedlegg, mottattDato,
   } = oversikt;
   const { dokumentID, tittel } = hoveddokument;
   if (!dokumentID) return null;
@@ -99,11 +99,16 @@ const RenderOversiktRad = ({ oversikt }) => {
 RenderOversiktRad.propTypes = {
   oversikt: PT.shape({
     mottaksretning: MPT.Kodeverk.isRequired,
-    avsenderEllerMottaker: PT.string.isRequired,
-    mottattDato: PT.string,
-    journalforingDato: PT.string,
-    hoveddokument: MPT.Dokument,
-    vedlegg: MPT.Vedlegg,
+    addressat: PT.string.isRequired,
+    mottattDato: PT.string.isRequired,
+    hoveddokument: PT.shape({
+      dokumentID: PT.string.isRequired,
+      tittel: PT.string.isRequired,
+    }),
+    vedlegg: PT.arrayOf(PT.shape({
+      dokumentID: PT.string,
+      tittel: PT.string.isRequired,
+    })),
   }),
 };
 RenderOversiktRad.defaultProps = {
@@ -131,10 +136,10 @@ class SideDialogDokumenter extends Component {
   render() {
     return (
       <div className="sideDialogDokumenter">
-        <table width="100%">
+        <table width="100%" className="dokumentTabell" aria-label="Liste over dokumenter knyttet til saken">
           <thead>
             <tr>
-              <th>inn/ut</th>
+              <th />
               <th>Dokument</th>
               <th>Avsender/mottaker</th>
               <th>Dato</th>

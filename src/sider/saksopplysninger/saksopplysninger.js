@@ -73,11 +73,13 @@ class Saksopplysninger extends Component {
     }
   };
 
-  overstyrSubmit = async event => {
+  overstyrSubmit = event => {
     event.preventDefault();
+  };
 
+  oppdaterLokalSoknadHandler = () => {
     const { oppdaterSoknad, soknadForm } = this.props;
-    await oppdaterSoknad(soknadForm.values);
+    oppdaterSoknad(soknadForm.values);
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
@@ -92,7 +94,6 @@ class Saksopplysninger extends Component {
   render () {
     const {
       medlemskap,
-      arbeidsgivereNorge,
       inntekt,
       soknadArbeidsinntekt,
       soknadForm,
@@ -110,11 +111,12 @@ class Saksopplysninger extends Component {
         <Stegvelger
           lagreVedtakHandler={this.lagreVedtakHandler}
           lagreSoknadHandler={this.lagreSoknadHandler}
+          oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
         />
         <Personopplysninger />
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
         <Bosted erValidert={this.state.gyldigePaneler.bosted} />
-        {arbeidsgivereNorge && <ArbeidsgivereNorge arbeidsgivereNorge={arbeidsgivereNorge} />}
+        <ArbeidsgivereNorge />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />
         <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
         <ArbeidUtland />
@@ -130,7 +132,6 @@ class Saksopplysninger extends Component {
 
 Saksopplysninger.propTypes = {
   alleRelevantePersoner: PT.arrayOf(MPT.Person),
-  arbeidsgivereNorge: MPT.ArbeidsgivereNorge,
   avklartefakta: PT.array.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
@@ -155,7 +156,6 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   alleRelevantePersoner: [],
-  arbeidsgivereNorge: [],
   inntekt: {},
   medlemskap: {},
   oppsummering: {},
@@ -169,7 +169,6 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   saksflyt: saksflytSelectors.SaksflytSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
-  arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
@@ -248,12 +247,16 @@ const mapStateToProps = state => ({
     vilkar: {
       vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),
       vesentligVirksomhetBegrunnelser: (vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder),
+      normaltDriverVirksomhet: (vilkarSelectors.normaltDriverVirksomhetSelector(state).oppfylt),
+      normaltDriverVirksomhetBegrunnelser: (vilkarSelectors.normaltDriverVirksomhetSelector(state).begrunnelseKoder),
       forutgaendeMedlemskap: (vilkarSelectors.forutgaendeMedlemskap(state).oppfylt),
       forutgaendeMedlemskapBegrunnelser: (vilkarSelectors.forutgaendeMedlemskap(state).begrunnelseKoder),
       bosattINorge: (vilkarSelectors.bosattINorge(state).oppfylt),
       bosattINorgeBegrunnelser: (vilkarSelectors.bosattINorge(state).begrunnelseKoder),
       art12_1: vilkarSelectors.art12_1(state).oppfylt,
       art12_1_begrunnelser: vilkarSelectors.art12_1(state).begrunnelseKoder,
+      art12_2: vilkarSelectors.art12_2(state).oppfylt,
+      art12_2_begrunnelser: vilkarSelectors.art12_2(state).begrunnelseKoder,
       art16_1: vilkarSelectors.art16_1(state).oppfylt,
       art16_1_begrunnelser: vilkarSelectors.art16_1(state).begrunnelseKoder,
     },
