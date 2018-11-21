@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
-import * as Konstanter from '../constants';
+import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
 import * as Person from '../felles-komponenter/skjema/validering/generisk/person';
 
 import Sticky from '../hjelpekomponenter/sticky';
@@ -34,6 +34,7 @@ import './journalforing.css';
 import { OrganisasjonOperations } from '../ducks/organisasjoner';
 import { PersonOperations } from '../ducks/personer';
 import * as oppgaverOperations from '../ducks/oppgaver/operations';
+import * as MPT from '../proptypes';
 
 const queryParamLogger = (journalpostID, oppgaveID, location) => {
   const qsParsed = qs.parse(location.search.slice(1));
@@ -66,8 +67,8 @@ class Journalforing extends Component {
     settFeltInnhold: PT.func.isRequired,
     settFeilFelt: PT.func.isRequired,
     settJournalforingHensikt: PT.func.isRequired,
-    journalforing: PT.object,
-    journalforingSkjemaVerdier: PT.object,
+    journalforing: MPT.Journalforing,
+    journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
     fagsakListe: PT.array,
     valid: PT.bool.isRequired,
     sokFnrDnr: PT.func.isRequired,
@@ -109,6 +110,7 @@ class Journalforing extends Component {
     this.props.history.push('/');
   };
 
+  mapVedleggsTittlerTilVedlegg = titler => titler.map(tittel => ({ dokumentID: null, tittel }));
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
    * settes inn i skjemaet kun til info - ikke til endring - slik som feks navn på bruker.
    * Derfor må vi bygge opp og evt vaske et nytt objekt som kan sendes til backend.
@@ -116,40 +118,36 @@ class Journalforing extends Component {
    * @returns {object} Objektet som skal sendes videre som payload.
    */
   vaskDokumentInformasjon = intensjon => {
+    /* eslint-disable no-console */
+    console.assert(intensjon, { message: 'intensjon må ha verdi' });
+    /* eslint-enable no-console */
     const { oppgaveID, journalpostID } = this.props.match.params;
     const {
       journalforingSkjemaVerdier,
-      journalforing: { dokument = {} },
+      journalforing: { hoveddokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, arbeidsgiverID, representantID, avsenderNavn, dokumentTittel, vedleggsTitler,
+      brukerID, avsenderID, arbeidsgiverID, representantID, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
-    const { dokumentID } = dokument;
-    return intensjon === Konstanter.JOURNALFORING_HENSIKT.KNYTT ?
-      {
-        avsenderID,
-        avsenderNavn,
-        dokumentID,
-        brukerID,
-        dokumenttittel: dokumentTittel,
-        journalpostID,
-        oppgaveID,
-        vedleggstitler: vedleggsTitler,
-      }
-      :
-      {
-        arbeidsgiverID,
-        representantID,
-        avsenderID,
-        avsenderNavn,
-        dokumentID,
-        brukerID,
-        dokumenttittel: dokumentTittel,
-        journalpostID,
-        oppgaveID,
-        vedleggstitler: vedleggsTitler,
-      };
+    const { dokumentID } = hoveddokument;
+    const vedlegg = this.mapVedleggsTittlerTilVedlegg(vedleggsTitler);
+    // Data for /tilordne i.e KNYTT
+    let journalPostData = {
+      avsenderID,
+      avsenderNavn,
+      dokumentID,
+      brukerID,
+      hoveddokumentTittel,
+      journalpostID,
+      oppgaveID,
+      vedlegg,
+    };
+    // /opprett har i tillegg arbeidsgiverID og representantID
+    if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
+      journalPostData = Object.assign(journalPostData, { arbeidsgiverID, representantID });
+    }
+    return journalPostData;
   };
 
   /** Når saksbehandler klikker "knytt til eksisterende sak" skal det åpnes for validering av
@@ -164,21 +162,20 @@ class Journalforing extends Component {
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
-    const vasketJournalforing = this.vaskDokumentInformasjon(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
+    const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = { saksnummer, ...vasketJournalforing };
 
-    await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.KNYTT);
+    await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
 
     this.touchAll(this.props.errors);
 
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForOpprettFagsak();
 
-    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.KNYTT)) {
+    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, JOURNALFORING_HENSIKT.KNYTT)) {
       settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer');
       return false;
     }
-
     const response = await tilordneSak(journalforingData);
     if (response.ok) {
       this.props.hentOppgaver();
@@ -198,14 +195,14 @@ class Journalforing extends Component {
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const { journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed } = journalforingSkjemaVerdier;
 
-    await settJournalforingHensikt(Konstanter.JOURNALFORING_HENSIKT.OPPRETT);
+    await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
 
     this.touchAll(this.props.errors);
 
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForEksisterendeSaker();
 
-    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, Konstanter.JOURNALFORING_HENSIKT.OPPRETT)) {
+    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, JOURNALFORING_HENSIKT.OPPRETT)) {
       settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingOppholdsLand');
       return false;
     }
@@ -219,7 +216,7 @@ class Journalforing extends Component {
       land: journalforingOppholdsLand,
     };
 
-    const vasketJournalforing = this.vaskDokumentInformasjon();
+    const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.OPPRETT);
     const journalforingData = {
       ...vasketJournalforing,
       fagsak,
@@ -257,7 +254,7 @@ class Journalforing extends Component {
 
     if (!value) { return; }
 
-    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+    if (value.length === ANTALL_TALL_I_ORGNR) {
       settFeltInnhold('avsenderNavn', '');
       const response = await sokOrgnr(value);
       if (!response.data) { return false; }
@@ -281,7 +278,7 @@ class Journalforing extends Component {
 
     if (!value) { return; }
 
-    if (value.length === Konstanter.ANTALL_TALL_I_ORGNR) {
+    if (value.length === ANTALL_TALL_I_ORGNR) {
       settFeltInnhold('representantNavn', '');
       const response = await sokOrgnr(value);
       if (!response.data) { return false; }
@@ -308,7 +305,7 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing: { dokument = {} },
+      journalforing: { hoveddokument = {} },
       fagsakListe,
     } = this.props;
 
@@ -317,7 +314,7 @@ class Journalforing extends Component {
     } = this;
 
     const { journalpostID } = this.props.match.params;
-    const { dokumentID } = dokument;
+    const { dokumentID } = hoveddokument;
 
     return (
       <div className="journalforing">
@@ -373,8 +370,8 @@ const mapStateToProps = state => ({
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
     arbeidsgiverID: null,
     representantID: '',
-    mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingDokument(state).mottattDato),
-    dokumentTittel: journalforingSelectors.JournalforingDokument(state).tittel,
+    mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
+    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
     vedleggsTitler: [],
   },
 });

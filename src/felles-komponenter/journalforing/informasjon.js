@@ -175,7 +175,7 @@ class Informasjon extends Component {
 
           <Nav.Fieldset legend="Hoveddokument:">
             <Skjema.ListeVelger
-              feltNavn="dokumentTittel"
+              feltNavn="hoveddokumentTittel"
               label="Tittel på hoveddokument:"
               placeholder="(velg eller skriv inn egen tittel)"
               muligeValg={valgbareDokumentTitler}
@@ -200,7 +200,7 @@ class Informasjon extends Component {
 Informasjon.propTypes = {
   valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk),
   valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk),
-  journalforingSkjemaVerdier: PT.object, // TODO: Vurdere MPT.
+  journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   hentOgVisBruker: PT.func.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
   journalpostID: PT.string,
