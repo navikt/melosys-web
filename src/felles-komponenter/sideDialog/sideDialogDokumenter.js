@@ -71,9 +71,9 @@ RenderVedleggLink.defaultProps = {
 const RenderOversiktRad = ({ oversikt }) => {
   if (!oversikt) return null;
   const {
-    mottaksretning, addressat, journalpostID, hoveddokument, vedlegg,
+    mottaksretning, addressat, journalpostID, hoveddokument, vedlegg, mottattDato,
   } = oversikt;
-  const { dokumentID, tittel, mottattDato } = hoveddokument;
+  const { dokumentID, tittel } = hoveddokument;
   if (!dokumentID) return null;
   return (
     <tr>
@@ -93,15 +93,14 @@ RenderOversiktRad.propTypes = {
   oversikt: PT.shape({
     mottaksretning: MPT.Kodeverk.isRequired,
     addressat: PT.string.isRequired,
+    mottattDato: PT.string.isRequired,
     hoveddokument: PT.shape({
       dokumentID: PT.string.isRequired,
       tittel: PT.string.isRequired,
-      mottattDato: PT.string.isRequired,
     }),
     vedlegg: PT.arrayOf(PT.shape({
       dokumentID: PT.string,
       tittel: PT.string.isRequired,
-      mottattDato: PT.string,
     })),
   }),
 };
@@ -128,10 +127,10 @@ class SideDialogDokumenter extends Component {
   render() {
     return (
       <div className="sideDialogDokumenter">
-        <table width="100%">
+        <table width="100%" className="dokumentTabell" aria-label="Liste over dokumenter knyttet til saken">
           <thead>
             <tr>
-              <th>inn/ut</th>
+              <th />
               <th>Dokument</th>
               <th>Avsender/mottaker</th>
               <th>Dato</th>
