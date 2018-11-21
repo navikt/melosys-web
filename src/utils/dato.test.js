@@ -100,7 +100,7 @@ describe('dato.js:', () => {
     test('formatterer datoen riktig til norsk format DD.MM.YYYY uten klokkeslett', () => {
       const tillatteDatoer = [
         {test: '2016-01-12', 'forvent': '12.01.2016'},
-        {test: '2017-12-01T20:58:01', 'forvent': '01.12.2017'},
+        {test: '2017-12-01T20:58:01Z', 'forvent': '01.12.2017'},
         {test: '01.02.1979', 'forvent': '01.02.1979'},
         {test: '01.02.1979', 'forvent': '01.02.1979'},
       ];
@@ -119,9 +119,9 @@ describe('dato.js:', () => {
 
     test('formatterer datoen riktig til norsk format DD.MM.YYYY HH:mm:ss med klokkeslett', () => {
       const tillatteDatoer = [
-        {test: '2017-12-01T20:58:01', 'forvent': '01.12.2017 20:58'},
-        {test: '2017-12-01T01:08:01', 'forvent': '01.12.2017 01:08'},
-        {test: '12.02.2000 20:00:1', 'forvent': '12.02.2000 20:00'},
+        {test: '2017-12-01T20:58:01Z', 'forvent': '01.12.2017 21:58'},
+        {test: '2017-12-01T01:08:01Z', 'forvent': '01.12.2017 02:08'},
+        {test: '12.02.2000 20:00:1Z', 'forvent': '12.02.2000 21:00'},
       ];
 
       tillatteDatoer.forEach(datoTest => {
