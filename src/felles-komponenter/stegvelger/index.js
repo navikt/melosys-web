@@ -1,3 +1,4 @@
+/* eslint-disable react/no-did-update-set-state */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
@@ -22,7 +23,7 @@ import { formSelectors } from '../../ducks/form/';
 import './stegvelger.css';
 
 class Stegvelger extends Component {
-  state = { aktivtStegNummer: 0, aktuelleSteg: [] };
+  state = { aktivtStegNummer: 0, aktuelleSteg: [], didUpdateAfterLastStep: false };
 
   componentWillMount() {
     const { snr } = this.props.match.params;
@@ -37,6 +38,18 @@ class Stegvelger extends Component {
 
   componentWillReceiveProps(nextProps) {
     this.oppdaterAktuelleSteg(nextProps);
+  }
+
+  async componentDidUpdate(prevProps) {
+    const formHasSetteled = JSON.stringify(prevProps.skjema) === JSON.stringify(this.props.skjema);
+    const { didUpdateAfterLastStep } = this.state;
+    const shouldUpdate = (formHasSetteled && !didUpdateAfterLastStep);
+
+    // console.log(formHasSetteled, didUpdateAfterLastStep);
+
+    if (!shouldUpdate) { return; }
+
+    this.setState({ didUpdateAfterLastStep: true });
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
@@ -104,8 +117,12 @@ class Stegvelger extends Component {
 
     const stegMotor = new StegMotor(propsLight);
     const aktuelleSteg = stegMotor.beregnAlleSteg();
+    // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg
+    // må vi normalisere siden aktivtStegNummer vil ligge 1 steg foran det som er mulig. Sjekk derfor
+    // på faktisk antall mulige steg.
+    const normalisertAktivtSteg = Math.min(this.state.aktivtStegNummer, aktuelleSteg.length - 1);
 
-    aktuelleSteg[this.state.aktivtStegNummer].aktivtSteg = true;
+    aktuelleSteg[normalisertAktivtSteg].aktivtSteg = true;
 
     this.setState({ aktuelleSteg });
     return aktuelleSteg;
@@ -121,29 +138,29 @@ class Stegvelger extends Component {
       skjema,
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
+      oppdaterLokalSoknadHandler,
       oppdaterLovvalgperioderState,
       lagreSoknadHandler,
       lovvalgsperioder,
       vilkar,
     } = this.props;
 
-    const { lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler } = this;
+    await oppdaterLokalSoknadHandler();
 
+    this.setState({ aktivtStegNummer: nyttStegNummer });
+    const { lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler } = this;
     const { behandlingID } = this.props.oppsummering;
 
+    await oppdaterAvklarteFaktaState(skjema);
+    await oppdaterVilkarState(skjema);
+    await oppdaterLovvalgperioderState(skjema);
+    await lagreVilkarHandler(behandlingID, vilkar);
+    await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
+    await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
 
-    this.setState({ aktivtStegNummer: nyttStegNummer }, async () => {
-      await oppdaterAvklarteFaktaState(skjema);
-      await oppdaterVilkarState(skjema);
-      await oppdaterLovvalgperioderState(skjema);
-      await lagreVilkarHandler(behandlingID, vilkar);
-      await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
-      await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
-
-      if (this.erSisteSteg(nyttStegNummer)) {
-        await lagreSoknadHandler();
-      }
-    });
+    if (this.erSisteSteg(nyttStegNummer)) {
+      await lagreSoknadHandler();
+    }
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
@@ -152,7 +169,7 @@ class Stegvelger extends Component {
    */
   beregnNesteSteg = () => {
     const { aktivtStegNummer } = this.state;
-    return this.erSisteSteg(aktivtStegNummer) ? aktivtStegNummer : aktivtStegNummer + 1;
+    return aktivtStegNummer + 1;
   };
 
   erSisteSteg(stegNummer) {
@@ -190,6 +207,7 @@ Stegvelger.propTypes = {
   match: PT.object.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterVilkarState: PT.func.isRequired,
+  oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   settSkjemaVerdi: PT.func.isRequired,
