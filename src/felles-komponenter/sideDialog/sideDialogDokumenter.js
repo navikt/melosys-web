@@ -78,7 +78,7 @@ const VelgDato = (mottaksretning, mottattDato, journalforingDato) => {
 const RenderOversiktRad = ({ oversikt }) => {
   if (!oversikt) return null;
   const {
-    mottaksretning, avsenderEllerMottaker, journalpostID, mottattDato, journalforingDato, hoveddokument, vedlegg, mottattDato,
+    mottaksretning, avsenderEllerMottaker, journalpostID, mottattDato, journalforingDato, hoveddokument, vedlegg,
   } = oversikt;
   const { dokumentID, tittel } = hoveddokument;
   if (!dokumentID) return null;
