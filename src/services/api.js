@@ -1,16 +1,19 @@
+import * as Saksflyt from './modules/saksflyt';
 import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker';
-import * as Faktaavklaring from './modules/faktaavklaring';
+import * as Avklartefakta from './modules/avklartefakta';
 import * as Health from './modules/health';
 import * as Inngang from './modules/inngang';
 import * as Journalforing from './modules/journalforing';
 import * as Kodeverk from './modules/kodeverk';
+import * as Lovvalgsperioder from './modules/lovvalgsperioder';
 import * as Personer from './modules/personer';
 import * as Organisasjoner from './modules/organisasjoner';
 import * as Oppgaver from './modules/oppgaver';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Soknader from './modules/soknader';
-import * as Vurdering from './modules/vurdering';
+import * as Vilkar from './modules/vilkar';
+import * as Vedtak from './modules/vedtak';
 
 /*
 function erDev() {
@@ -27,17 +30,20 @@ function erDev() {
 
 
 export {
+  Saksflyt,
   Dokumenter,
   Fagsaker,
-  Faktaavklaring,
+  Avklartefakta,
   Health,
   Inngang,
   Journalforing,
   Kodeverk,
+  Lovvalgsperioder,
   Oppgaver,
   Organisasjoner,
   Personer,
   Saksbehandler,
   Soknader,
-  Vurdering,
+  Vilkar,
+  Vedtak,
 };

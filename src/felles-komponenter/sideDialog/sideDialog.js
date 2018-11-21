@@ -4,9 +4,8 @@ import classnames from 'classnames';
 import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 
-import SideDialogHistorikk from './sideDialogHistorikk';
-import SideDialogMelding from './sideDialogMelding';
 import SideDialogDokumenter from './sideDialogDokumenter';
+import SideDialogBrevBestilling from './brevBestilling';
 
 import './sideDialog.css';
 
@@ -19,8 +18,7 @@ class SideDialog extends Component {
 
   static defaultProps = {
     faner: [
-      { navn: 'historikk', tittel: 'Historikk', komponent: <SideDialogHistorikk key={uuid()} /> },
-      { navn: 'melding', tittel: 'Melding', komponent: <SideDialogMelding key={uuid()} /> },
+      { navn: 'brevbestilling', tittel: 'Send brev', komponent: <SideDialogBrevBestilling key={uuid()} /> },
       { navn: 'dokumenter', tittel: 'Dokumenter', komponent: <SideDialogDokumenter key={uuid()} /> },
     ],
   };
@@ -28,7 +26,7 @@ class SideDialog extends Component {
   // Forvent at minst én fane finnes og sett denne som standard aktiv.
   state = {
     aktivFane: this.props.faner[0].navn,
-  }
+  };
 
   /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
    * slik at riktig komponent under menyen vises. Data fra komponenten slik som navn ligger under
@@ -38,7 +36,7 @@ class SideDialog extends Component {
    */
   tilFane = navn => {
     this.setState({ aktivFane: navn });
-  }
+  };
 
   render() {
     return (

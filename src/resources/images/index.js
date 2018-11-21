@@ -13,6 +13,9 @@ import Arbeidsgiver from './ikon-arbeidsgiver.svg';
 import Arbeidsforhold from './ikon-arbeidsforhold.svg';
 import Medlemskap from './ikon-medlemsskap.svg';
 import Inntekt from './ikon-inntekt.svg';
+import Binders from './paperclip.svg';
+import Svar from './reply.svg';
+import BrevSendt from './emailsend.svg';
 
 export { Ubehandlet };
 export { Ferdig };
@@ -29,3 +32,7 @@ export { Arbeidsforhold };
 export { Medlemskap };
 export { Inntekt };
 export { IkonSak };
+export { Binders };
+export { Svar };
+export { BrevSendt as InnBrev };
+

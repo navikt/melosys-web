@@ -17,9 +17,14 @@ export const landkoderSelector = createSelector(
 export const alleLovvalgSelector = createSelector(
   state => state.kodeverk.data.lovvalgsbestemmelser,
   lovvalgsbestemmelser => {
-    const { forordning_883_2004 = [], forordning_987_2009 = [], tilleggsbestemmelser = [] } = lovvalgsbestemmelser;
-    return [...forordning_883_2004, ...forordning_987_2009, ...tilleggsbestemmelser];
+    const { forordning_883_2004 = [], forordning_987_2009 = [], tillegg = [] } = lovvalgsbestemmelser;
+    return [...forordning_883_2004, ...forordning_987_2009, ...tillegg];
   }
+);
+
+export const lovvalgsunntakSelector = createSelector(
+  state => state.kodeverk.data.lovvalgsunntak,
+  lovvalgsunntak => lovvalgsunntak || []
 );
 
 export const oppgaveTyperSelector = createSelector(
@@ -60,4 +65,9 @@ export const studieFinansieringSelector = createSelector(
 export const begrunnelserSelector = createSelector(
   state => state.kodeverk.data.begrunnelser,
   begrunnelser => begrunnelser || {}
+);
+
+export const anmodningsBegrunnelserSelector = createSelector(
+  state => begrunnelserSelector(state),
+  begrunnelser => begrunnelser.artikkel16_1_anmodning || []
 );

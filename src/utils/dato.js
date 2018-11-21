@@ -27,7 +27,7 @@ const vaskInputDato = dato => {
 
   // Hvis datoen er mindre enn 6 tegn - dvs at dag, måned eller år er tastet med
   // kun 1 siffer ("51217" istedet for "051217"), returner ''.
-  if (newDate.length < 6) {
+  if (newDate.length < 6 || newDate.length > 8) {
     return false;
   }
 
@@ -40,8 +40,9 @@ const vaskInputDato = dato => {
   if (dateArray[2] < 100) {
     const dagensAr = (new Date()).getFullYear();
     const testAr = parseInt(`${dagensAr.toString().substr(0, 2)}${dateArray[2]}`, 10);
-    const guessCentury = (testAr - dagensAr > MAX_AR_FREM_I_TID) ? '19' : '20';
-    dateArray[2] = parseInt(`${guessCentury}${dateArray[2]}`, 10);
+    const gjettAarhundre = (testAr - dagensAr > MAX_AR_FREM_I_TID) ? '19' : '20';
+    const toTallsAar = dateArray[2] < 10 ? `0${dateArray[2]}` : dateArray[2];
+    dateArray[2] = parseInt(`${gjettAarhundre}${toTallsAar}`, 10);
   }
 
   const returnDate = moment(dateArray.join(), 'DDMMYYYY').format('DD.MM.YYYY');

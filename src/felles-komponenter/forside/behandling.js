@@ -25,14 +25,15 @@ class Behandling extends Component {
     localStorage.setItem(BEHANDLINGSFORM, JSON.stringify(formValues));
   }
 
-  submitOgVideresend = form => {
-    this.props.handleSubmit(form).then(redirectURL => {
-      /* eslint-disable no-alert */
-      if (!redirectURL) { return alert('Ingen oppgaver finnes. Videre funksjonalitet ikke implementert.'); }
-      /* eslint-enable */
-      this.props.history.push(redirectURL);
-      return true;
-    });
+  submitOgVideresend = async form => {
+    const { handleSubmit, history } = this.props;
+    const redirectURL = await handleSubmit(form);
+
+    /* eslint-disable no-alert */
+    if (!redirectURL) { return alert('Ingen oppgaver finnes. Videre funksjonalitet ikke implementert.'); }
+    /* eslint-enable */
+    history.push(redirectURL);
+    return true;
   };
 
   render() {
@@ -45,9 +46,9 @@ class Behandling extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Fieldset legend="Sakstype">
-                {saksTyper.map(type => {
-                  const isDisabled = kodeverkObjektTilKode(type) !== 'EU_EOS';
-                  return (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} disabled={isDisabled} feltNavn={`sakstyper.${kodeverkObjektTilKode(type)}`} />);
+                {saksTyper.map(enkeltType => {
+                  const isDisabled = kodeverkObjektTilKode(enkeltType) !== 'EU_EOS';
+                  return (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(enkeltType)} disabled={isDisabled} feltNavn={`sakstyper.${kodeverkObjektTilKode(enkeltType)}`} />);
                 })}
               </Nav.Fieldset>
             </Nav.Column>

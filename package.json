@@ -1,6 +1,6 @@
 {
   "name": "melosys-web",
-  "version": "0.12.6",
+  "version": "0.15.0",
   "description": "Medlemsskap og lovvalgssystem",
   "author": {
     "name": "are.bjolseth@nav.no"
@@ -40,6 +40,8 @@
     "nav-frontend-lenkepanel-style": "^0.3.19",
     "nav-frontend-lenker": "^1.0.18",
     "nav-frontend-lenker-style": "^0.2.16",
+    "nav-frontend-lesmerpanel": "^0.0.8",
+    "nav-frontend-lesmerpanel-style": "^0.0.8",
     "nav-frontend-lukknapp": "^1.0.16",
     "nav-frontend-lukknapp-style": "^0.2.16",
     "nav-frontend-modal": "^1.0.17",
@@ -94,7 +96,7 @@
     "build:js": "react-scripts build",
     "start:css": "less-watch-compiler --config less.json",
     "build:css": "less-watch-compiler --run-once --config less.json",
-    "start": "npm-run-all -p start:*",
+    "start": "npm-run-all -s unpatch patch:env -p start:*",
     "build": "npm-run-all unpatch patch:env build:css build:js",
     "build:javalocal": "npm-run-all patch:env patch:javalocal build:css build:js",
     "test": "npm run build:css && react-scripts test --env=jsdom",

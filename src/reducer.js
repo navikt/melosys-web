@@ -1,31 +1,39 @@
 import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
+import dokumenterReducer from './ducks/dokumenter/';
 import fagsakerReducer from './ducks/fagsaker/';
-import faktaavklaringReducer from './ducks/faktaavklaring/';
+import avklartefaktaReducer from './ducks/avklartefakta/';
 import inngangReducer from './ducks/inngang';
 import journalforingReducer from './ducks/journalforing';
 import kodeverkReducer from './ducks/kodeverk';
+import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
 import saksbehandlerReducer from './ducks/saksbehandler/';
 import oppgaverReducer from './ducks/oppgaver';
-import organisasjonReducer from './ducks/organisasjon';
-import personReducer from './ducks/person';
+import organisasjonerReducer from './ducks/organisasjoner';
+import personerReducer from './ducks/personer';
 import soknadReducer from './ducks/soknad/';
-import vurderingReducer from './ducks/vurdering/';
+import vilkarReducer from './ducks/vilkar/';
+import saksflytReducer from './ducks/saksflyt';
+import sokReducer from './ducks/sok';
 
 import customFormReducer from './ducks/form';
 
 export default combineReducers({
   form: formReducer.plugin({ forretningsValidering: customFormReducer }),
+  dokumenter: dokumenterReducer,
   fagsaker: fagsakerReducer,
-  faktaavklaring: faktaavklaringReducer,
+  avklartefakta: avklartefaktaReducer,
   inngang: inngangReducer,
   journalforing: journalforingReducer,
   kodeverk: kodeverkReducer,
+  lovvalgsperioder: lovvalgsperioderReducer,
   saksbehandler: saksbehandlerReducer,
   soknad: soknadReducer,
   oppgaver: oppgaverReducer,
-  organisasjon: organisasjonReducer,
-  person: personReducer,
-  vurdering: vurderingReducer,
+  organisasjoner: organisasjonerReducer,
+  personer: personerReducer,
+  vilkar: vilkarReducer,
+  saksflyt: saksflytReducer,
+  sok: sokReducer,
 });

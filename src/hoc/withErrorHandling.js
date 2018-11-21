@@ -67,7 +67,7 @@ const withErrorHandling = (kontekster, WrappedComponent) => props => {
 
     // Dersom 404 så skal både alertstripe og kompoonent vises.
     if (feilSamling[0].status === 404) {
-      return (<div {...props} className="errorContainer"><WrappedComponent {...props} /><FeilKomponent feilobjekt={feilSamling[0]} /></div>);
+      return (<div {...props} className="errorContainer"><FeilKomponent feilobjekt={feilSamling[0]} /></div>);
     }
     // alle andre feilkoder gir full stopp uten å vise komponenten.
     return (<div className="errorContainer"><FeilKomponent feilobjekt={feilSamling[0]} /></div>);

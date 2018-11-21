@@ -14,3 +14,20 @@ export function oppdaterSoknadState(dokument) {
     dokument,
   });
 }
+
+export function oppdaterPeriode(periode) {
+  return ({
+    type: Types.OPPDATER_PERIODE,
+    data: {
+      oppholdsPeriode: periode,
+    },
+  });
+}
+
+/** Tømmer avklartefakta-state når komponenten unmounter
+ *
+ * @returns {{type: *}}
+ */
+export function resetSoknadState() {
+  return { type: Types.RESET };
+}

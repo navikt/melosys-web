@@ -17,4 +17,7 @@ if (homepage) {
 
 // update .env with custom version
 dotenv.set('REACT_APP_BUILD_VERSION', 'java_local');
+dotenv.set('REACT_APP_LOCAL_CONTEXT', '/melosys');
 dotenv.set('REACT_APP_API_BASE_URL', '/melosys/api/');
+dotenv.set('REACT_APP_JAVA_LOCAL_HOST', 'http://localhost:8080');
+

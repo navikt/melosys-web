@@ -4,7 +4,10 @@ import * as Skjema from '../felles-komponenter/skjema';
  */
 export const feltGrupper = {
   personOpplysninger: {
-    medfolgendeAndre: [value => (value !== undefined && (Skjema.Validering.erGyldigFnr(value) || Skjema.Validering.erGyldigDnr(value)) ? null : 'Ugyldig fnr eller dnr')],
+    medfolgendeAndre: [value => {
+      if (!value) { return null; }
+      return (Skjema.Validering.erGyldigFnr(value) || Skjema.Validering.erGyldigDnr(value)) ? null : 'Ugyldig fnr eller dnr';
+    }],
   },
   inntekt: {
     inntektNorskIPerioden: [],
@@ -30,7 +33,6 @@ export const feltGrupper = {
   },
   bosted: {
     intensjonOmRetur: [],
-    bostedUtenforNorge: [],
     familiesBosted: [],
   },
   bekreftelser: {
@@ -53,27 +55,26 @@ export const feltGrupper = {
     flaggLand: [],
     installasjonsLand: [],
   },
-  faktaavklaring: {
-    faktaavklaringOppholdsLand: [],
-    faktaavklaringPeriodeFraOgMed: [value => Skjema.Validering.erPakrevet(value)],
-    faktaavklaringPeriodeTilOgMed: [value => Skjema.Validering.erPakrevet(value)],
-    faktaavklaringSysselsetting: [],
-    faktaavklaringAnsattINorskSelskap: [],
-    faktaavklaringErstatterTidligereUtsendt: [],
-    faktaavklaringUtsendingMindreEnn24Mnd: [],
-    faktaavklaringSektor: [],
-    faktaavklaringAntallLand: [],
-    faktaavklaringAktivitetINorge: [],
-    faktaavklaringMarginaltArbeid: [],
-    faktaavklaringVekslingMellomLand: [],
-    faktaavklaringAktivitetLand: [],
-    faktaavklaringBekrefterFamiliebosted: [],
-    faktaavklaringBekrefterDisponering: [],
-    faktaavklaringBostedsland: [],
-    faktaavklaringValgteArbeidsgivere: [],
-    faktaavklaringForretningsstedLand: [],
-    faktaavklaringForretningsstedAntallArbeidsgivere: [],
-    faktaavklaringForretningsstedFordelingArbeidsgivere: [],
+  avklartefakta: {
+    avklartefaktaOppholdsLand: [],
+    avklartefaktaPeriodeFraOgMed: [value => Skjema.Validering.erPakrevet(value)],
+    avklartefaktaPeriodeTilOgMed: [value => Skjema.Validering.erPakrevet(value)],
+    avklartefaktaSysselsetting: [],
+    avklartefaktaAnsattINorskSelskap: [],
+    avklartefaktaErstatterTidligereUtsendt: [],
+    avklartefaktaUtsendingMindreEnn24Mnd: [],
+    avklartefaktaSektor: [],
+    avklartefaktaAntallLand: [],
+    avklartefaktaAktivitetINorge: [],
+    avklartefaktaMarginaltArbeid: [],
+    avklartefaktaVekslingMellomLand: [],
+    avklartefaktaAktivitetLand: [],
+    avklartefaktaBekrefterFamiliebosted: [],
+    avklartefaktaBekrefterDisponering: [],
+    avklartefaktaBostedsland: [],
+    avklartefaktaForretningsstedLand: [],
+    avklartefaktaForretningsstedAntallArbeidsgivere: [],
+    avklartefaktaForretningsstedFordelingArbeidsgivere: [],
   },
 };
 

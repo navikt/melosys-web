@@ -9,3 +9,7 @@ export const OK = 'soknad/OK';
 export const FEILET = 'soknad/FEILET';
 export const PENDING = 'soknad/PENDING';
 export const OPPDATER_SOKNAD = 'soknad/OPPDATER_SOKNAD';
+export const OPPDATER_PERIODE = 'soknad/OPPDATER_PERIODE';
+
+export const RESET = 'soknad/RESET';
+
