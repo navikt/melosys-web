@@ -17,7 +17,7 @@ class NormaltDriverVirksomhet extends Component {
 
   render () {
     const { bekreftOgFortsett, begrunnelser, tilstand } = this.props;
-    const { visBegrunnelser } = tilstand;
+    const { visBegrunnelser, harAvklaring } = tilstand;
     const arbeidsgivereTekst = this.props.valgteArbeidsgivere.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
 
     return (
@@ -49,7 +49,7 @@ class NormaltDriverVirksomhet extends Component {
           }
         </div>
         <div className="fane__knapplinje">
-          <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     );
