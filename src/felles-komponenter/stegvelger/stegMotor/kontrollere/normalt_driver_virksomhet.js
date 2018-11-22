@@ -11,7 +11,7 @@ class NormaltDriverVirksomhet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'SELVSTENDIG_NAERINGSDRIVENDE og VESENTLIG_VIRKSOMHET',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.NORMALT_DRIVER_VIRKSOMHET, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.ART12_2_NORMALT_DRIVER_VIRKSOMHET, alleVilkar),
         nesteSteg: STEG.ARTIKKEL_12_2,
       },
       {
