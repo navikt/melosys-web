@@ -55,11 +55,11 @@ class ForetakUtlandWrapper extends Component {
     return (
       <div className="foretakUtland panelSeksjon">
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel="Foretak i utlandet" undertittel="" />}
-          ariaTittel="Panel for foretak i utlandet">
+          heading={<PanelHeader ikon={panelIkon} tittel="Arbeidsforholdene i utlandet" undertittel="" />}
+          ariaTittel="Panel for arbeidsforholdene i utlandet">
           <Nav.Container fluid>
             { fields.map((fieldName, indeks) => (<EnkeltForetak key={fieldName} indeks={indeks} slettForetakHandler={slettForetakHandler} />))}
-            <Nav.Knapp className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>+ Legg til flere foretak i utlandet</Nav.Knapp>
+            <Nav.Knapp className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>+ Legg til flere arbeidsforhold i utlandet</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>

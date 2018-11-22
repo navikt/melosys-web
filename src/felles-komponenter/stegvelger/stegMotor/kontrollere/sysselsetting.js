@@ -8,21 +8,26 @@ class Sysselsetting extends Steg {
 
     this._kriterier = [
       {
-        beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER"',
+        beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV"',
         exec: avklartefakta => Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV),
         nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: null,
       },
     ];
     this._id = STEG.SYSSELSETTING;
     this._tittel = 'Aktivitet';
     this._komponent = VurderingSysselsetting;
     this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = () => ({});
+    this._beregnRelevantUI = _propsLight => {
+      const { sysselsetting } = _propsLight.skjema.avklartefakta;
+      return ({
+        harAvklaring: sysselsetting !== null && sysselsetting !== undefined,
+      });
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };

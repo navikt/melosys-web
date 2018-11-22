@@ -1,18 +1,18 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentligVirksomhet';
+import VurderingNormaltDriverVirksomhet from '../../stegKomponenter/vurderingNormaltDriverVirksomhet';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 import * as Koder from '../../../../koder';
 
-class VesentligVirksomhet extends Steg {
+class NormaltDriverVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'ORDINAER_ARBEIDSTAKER og VESENTLIG_VIRKSOMHET',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.ART12_1_VESENTLIG_VIRKSOMHET, alleVilkar),
-        nesteSteg: STEG.ARTIKKEL_12_1,
+        beskrivelse: 'SELVSTENDIG_NAERINGSDRIVENDE og VESENTLIG_VIRKSOMHET',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.ART12_2_NORMALT_DRIVER_VIRKSOMHET, alleVilkar),
+        nesteSteg: STEG.ARTIKKEL_12_2,
       },
       {
         beskrivelse: '',
@@ -21,19 +21,19 @@ class VesentligVirksomhet extends Steg {
       },
     ];
 
-    this._id = STEG.VESENTLIG_VIRKSOMHET;
-    this._tittel = 'Vesentlig virksomhet';
-    this._komponent = VurderingVesentligVirksomhet;
+    this._id = STEG.NORMALT_DRIVER_VIRKSOMHET;
+    this._tittel = 'Normalt driver virksomhet';
+    this._komponent = VurderingNormaltDriverVirksomhet;
     this._samleRelevanteData = _propsLight => ({
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
-      begrunnelser: _propsLight.begrunnelser.vesentligVirksomhet,
+      begrunnelser: _propsLight.begrunnelser.normaltDriverVirksomhet,
     });
     this._beregnRelevantUI = _propsLight => {
-      const { vesentligVirksomhet, vesentligVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;
-      const harAvklaring = vesentligVirksomhet === true || (vesentligVirksomhet === false && vesentligVirksomhetBegrunnelser.length > 0);
+      const { normaltDriverVirksomhet, normaltDriverVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;
+      const harAvklaring = normaltDriverVirksomhet === true || (normaltDriverVirksomhet === false && normaltDriverVirksomhetBegrunnelser.length > 0);
 
       return {
-        visBegrunnelser: !vesentligVirksomhet,
+        visBegrunnelser: !_propsLight.skjema.vilkar.normaltDriverVirksomhet,
         harAvklaring,
       };
     };
@@ -51,4 +51,4 @@ class VesentligVirksomhet extends Steg {
   }
 }
 
-export default VesentligVirksomhet;
+export default NormaltDriverVirksomhet;

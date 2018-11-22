@@ -12,16 +12,27 @@ class Yrkesaktivitet extends Steg {
         nesteSteg: STEG.FORUTGAENDE_MEDLEMSKAP,
       },
       {
+        beskrivelse: 'yrkesaktivitet ER LIK "SELVSTENDIG_NAERINGSDRIVENDE"',
+        exec: avklartefakta => Yrkesaktivitet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE),
+        nesteSteg: STEG.NORMALT_DRIVER_VIRKSOMHET,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: null,
       },
     ];
     this._id = STEG.YRKESAKTIVITET;
     this._tittel = 'Yrkes-aktivitet';
     this._komponent = VurderingYrkesaktivitet;
     this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = () => ({});
+    this._beregnRelevantUI = _propsLight => {
+      const { yrkesaktivitet } = _propsLight.skjema.avklartefakta;
+
+      return ({
+        harAvklaring: yrkesaktivitet !== null && yrkesaktivitet !== undefined,
+      });
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };

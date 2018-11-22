@@ -15,7 +15,7 @@ class ForutgaendeMedlemskap extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: null,
       },
     ];
     this._id = STEG.FORUTGAENDE_MEDLEMSKAP;
@@ -24,11 +24,18 @@ class ForutgaendeMedlemskap extends Steg {
     this._samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.forutgaendeMedlemskap || [],
     });
-    this._beregnRelevantUI = _propsLight => ({
-      visBegrunnelser: !_propsLight.skjema.vilkar.forutgaendeMedlemskap,
-    });
+    this._beregnRelevantUI = _propsLight => {
+      const { forutgaendeMedlemskap, forutgaendeMedlemskapBegrunnelser = [] } = _propsLight.skjema.vilkar;
+      const harAvklaring = forutgaendeMedlemskap === true || (forutgaendeMedlemskap === false && forutgaendeMedlemskapBegrunnelser.length > 0);
+
+      return {
+        visBegrunnelser: !forutgaendeMedlemskap,
+        harAvklaring,
+      };
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
     this._status = FANE_STATUS.OK;
   }

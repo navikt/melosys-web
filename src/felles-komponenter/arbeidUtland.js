@@ -45,7 +45,7 @@ const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler }) => (
         </Nav.Fieldset>
       </Nav.Column>
     </Nav.Row>
-    <Nav.Knapp mini onClick={() => slettArbeidHandler(indeks)}>- Fjern dette arbeidet</Nav.Knapp>
+    <Nav.Knapp mini onClick={() => slettArbeidHandler(indeks)}>- Fjern dette arbeidsstedet</Nav.Knapp>
   </div>
 );
 
@@ -70,7 +70,7 @@ class ArbeidUtlandWrapper extends Component {
     return (
       <div className="arbeidUtland panelSeksjon">
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om arbeid i utlandet" undertittel="" />}
+          heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om fysisk arbeidssted i utlandet" undertittel="" />}
           ariaTittel="Panel for arbeidssted i utlandet">
           <Nav.Container fluid>
             {this.props.fields.map((fieldName, indeks) => <ArbeidUtlandEnkelt key={fieldName} indeks={indeks} slettArbeidHandler={slettArbeidHandler} />)}
