@@ -7,12 +7,21 @@ import * as MPT from '../proptypes/';
 
 import EnkeltDato from './datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm } from '../utils/kodeverk';
+import { formatterDatoTilNorsk } from '../utils/dato';
 import { fagsakSelectors } from '../ducks/fagsaker';
+import { soknadSelectors } from '../ducks/soknad';
 
 import './sideOppsummering.css';
 
 function SideOppsummering(props) {
-  const { oppsummering, person } = props;
+  const {
+    oppsummering,
+    person,
+    oppholdUtlandFom,
+    oppholdUtlandTom,
+    oppholdsland,
+  } = props;
+
   if (!oppsummering) return <div />;
   const {
     saksnummer,
@@ -51,7 +60,7 @@ function SideOppsummering(props) {
         {/* END BEHANDLINGSMENY */}
         <Nav.Row>
           <Nav.Column xs="12" md="6">
-            <Nav.Undertittel className="soknadSammendrag__header">Søknad om {kodeverkObjektTilTerm(sakstype)}</Nav.Undertittel>
+            <Nav.Undertittel className="soknadSammendrag__header">Søknad</Nav.Undertittel>
           </Nav.Column>
         </Nav.Row>
         {/* START BEHANDLINGSSTATUS */}
@@ -59,17 +68,19 @@ function SideOppsummering(props) {
           <Nav.Column xs="12">
             <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
               <dt>Søknadstype</dt>
-              <dd>{sakstype ? sakstype.term : '-'}</dd>
+              <dd>{kodeverkObjektTilTerm(sakstype)}</dd>
               <dt>Fullt navn</dt>
               <dd>{sammensattNavn}</dd>
-              <dt>Fnr /dnr</dt>
+              <dt>Fnr / dnr</dt>
               <dd>{fnr}</dd>
               <dt>Saksnummer:</dt>
               <dd>{saksnummer || '-'}</dd>
               <dt>Behandlingsstatus:</dt>
               <dd>{kodeverkObjektTilTerm(status)}</dd>
               <dt>Oppholdsland:</dt>
-              <dd>-</dd>
+              <dd>{oppholdsland ? oppholdsland[0] : '-'}</dd>
+              <dt>Periode</dt>
+              <dd>{oppholdUtlandFom} - {oppholdUtlandTom}</dd>
               <dt>Sist oppdatert:</dt>
               <dd><EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt /></dd>
               <dt>Registrert dato:</dt>
@@ -86,6 +97,9 @@ function SideOppsummering(props) {
 SideOppsummering.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
   person: MPT.Person.isRequired,
+  oppholdUtlandFom: PT.string.isRequired,
+  oppholdUtlandTom: PT.string.isRequired,
+  oppholdsland: PT.arrayOf(PT.string).isRequired,
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
@@ -94,6 +108,9 @@ SideOppsummering.propTypes = {
 const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   person: fagsakSelectors.PersonSelector(state),
+  oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
+  oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
+  oppholdsland: soknadSelectors.OppholdsLandSelector(state),
 });
 const mapDispatchToProps = () => ({});
 export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
