@@ -8,6 +8,7 @@ const OppsummeringPropType = PT.shape({
   type: Kodeverk,
   status: Kodeverk,
   registrertDato: PT.string,
+  sisteOpplysningerHentetDato: PT.string,
 });
 
 export { OppsummeringPropType as Oppsummering };
