@@ -4,7 +4,7 @@ import VurderingYrkesaktivitetAntallLand, { VurderingYrkesaktivitetAntallLandTyp
 import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
 import Sysselsetting from '../../stegMotor/kontrollere/sysselsetting';
 
-class YrkesaktivitetFordeling extends Steg {
+class YrkesaktivitetAntallLand extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
@@ -12,7 +12,7 @@ class YrkesaktivitetFordeling extends Steg {
         beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
         exec: avklartefakta => (
           Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV) &&
-          YrkesaktivitetFordeling.finnAvklaring(avklartefakta, VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
+          YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
         ),
         nesteSteg: STEG.ARBEIDSGIVERE,
       },
@@ -26,9 +26,12 @@ class YrkesaktivitetFordeling extends Steg {
     this._tittel = 'Arbeids\u00ADland';
     this._komponent = VurderingYrkesaktivitetAntallLand;
     this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = () => ({
-      visAntallLand: true,
-    });
+    this._beregnRelevantUI = _propsLight => {
+      const { yrkesaktivitetAntallLand } = _propsLight.skjema.avklartefakta;
+      return ({
+        harAvklaring: yrkesaktivitetAntallLand !== null && yrkesaktivitetAntallLand !== undefined,
+      });
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
@@ -39,7 +42,7 @@ class YrkesaktivitetFordeling extends Steg {
     const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESAKTIVITET_ANTALL_LAND);
     if (!enkeltFakta) { return false; }
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
-  }
+  };
 }
 
-export default YrkesaktivitetFordeling;
+export default YrkesaktivitetAntallLand;
