@@ -11,7 +11,7 @@ class VesentligVirksomhet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'ORDINAER_ARBEIDSTAKER og VESENTLIG_VIRKSOMHET',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.VESENTLIG_VIRKSOMHET, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.ART12_1_VESENTLIG_VIRKSOMHET, alleVilkar),
         nesteSteg: STEG.ARTIKKEL_12_1,
       },
       {
