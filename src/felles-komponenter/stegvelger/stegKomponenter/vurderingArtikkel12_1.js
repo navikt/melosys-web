@@ -8,7 +8,7 @@ import * as Koder from '../../../koder';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
-class VurderingArtikkel12 extends Component {
+class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
    * med de 3 radiovalgene i grensesnittet er at disse ville representert en tri-state ("ja", "nei, men..." og "nei").
    * Siden Redux Form ikke støtter at man setter flere verdier til forskjellige felter må vi bruke
@@ -34,6 +34,12 @@ class VurderingArtikkel12 extends Component {
     this.lagreValgtVilkarState(prevProps);
   }
 
+  componentWillUnmount() {
+    const { settSkjemaVerdi } = this.props;
+    settSkjemaVerdi('vilkar.art12_1', null);
+    settSkjemaVerdi('vilkar.art16_1', null);
+  }
+
   settStateForVilkar = vilkar => this.setState({ valgtVilkar: vilkar });
 
   lagreValgtVilkarState = ({ tilstand = {} }) => {
@@ -43,8 +49,8 @@ class VurderingArtikkel12 extends Component {
     if ((art12_1 === old_art12_1) && (art16_1 === old_art16_1)) { return; }
 
     if (art12_1) (this.settStateForVilkar(this.ART12_1));
-    if (art16_1 && !art12_1) (this.settStateForVilkar(this.ART16_1));
-    if (!art16_1 && !art12_1) (this.settStateForVilkar(this.AVSLAG));
+    if (art16_1 && art12_1 === false) (this.settStateForVilkar(this.ART16_1));
+    if (art16_1 === false && art12_1 === false) (this.settStateForVilkar(this.AVSLAG));
   };
 
   radioEndringHandler = event => {
@@ -53,7 +59,7 @@ class VurderingArtikkel12 extends Component {
 
     if (value === this.ART12_1) {
       settSkjemaVerdi('vilkar.art12_1', true);
-      settSkjemaVerdi('vilkar.art16_1', undefined);
+      settSkjemaVerdi('vilkar.art16_1', null);
     } else if (value === this.ART16_1) {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', true);
@@ -69,7 +75,7 @@ class VurderingArtikkel12 extends Component {
     } = this.props;
 
     const { valgtVilkar } = this.state;
-    const { visBegrunnelser } = tilstand;
+    const { visBegrunnelser, harAvklaring } = tilstand;
 
     return (
       <div>
@@ -119,14 +125,14 @@ class VurderingArtikkel12 extends Component {
           )}
         </div>
         <div className="fane__knapplinje">
-          <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     );
   }
 }
 
-VurderingArtikkel12.propTypes = {
+VurderingArtikkel12_1.propTypes = {
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
@@ -134,9 +140,9 @@ VurderingArtikkel12.propTypes = {
   settSkjemaVerdi: PT.func.isRequired,
 };
 
-VurderingArtikkel12.defaultProps = {
+VurderingArtikkel12_1.defaultProps = {
   tilstand: {},
   artikkel: {},
 };
 
-export default VurderingArtikkel12;
+export default VurderingArtikkel12_1;

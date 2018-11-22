@@ -56,24 +56,31 @@ const RenderVedleggLink = ({ journalpostID, dokument }) => {
 };
 RenderVedleggLink.propTypes = {
   journalpostID: PT.string.isRequired,
-  dokument: PT.shape({
-    dokumentID: PT.string,
-    tittel: PT.string.isRequired,
-    mottattDato: PT.string,
-  }),
+  dokument: MPT.DokumentNullable,
 };
 RenderVedleggLink.defaultProps = {
   dokument: {
     dokumentID: null,
-    mottattDato: null,
   },
 };
+
+const VelgDato = (mottaksretning, mottattDato, journalforingDato) => {
+  let valgtDato = null;
+  if (mottaksretning.kode === 'INN' && mottattDato) {
+    valgtDato = formatterDatoTilNorsk(mottattDato, false);
+  }
+  if (mottaksretning.kode === 'UT' && journalforingDato) {
+    valgtDato = formatterDatoTilNorsk(journalforingDato, false);
+  }
+  return valgtDato;
+};
+
 const RenderOversiktRad = ({ oversikt }) => {
   if (!oversikt) return null;
   const {
-    mottaksretning, addressat, journalpostID, hoveddokument, vedlegg,
+    mottaksretning, avsenderEllerMottaker, journalpostID, mottattDato, journalforingDato, hoveddokument, vedlegg,
   } = oversikt;
-  const { dokumentID, tittel, mottattDato } = hoveddokument;
+  const { dokumentID, tittel } = hoveddokument;
   if (!dokumentID) return null;
   return (
     <tr>
@@ -84,8 +91,8 @@ const RenderOversiktRad = ({ oversikt }) => {
           { vedlegg.map(vedleggDokument => <RenderVedleggLink key={uuid()} journalpostID={journalpostID} dokument={vedleggDokument} />) }
         </span>
       </td>
-      <td>{addressat}</td>
-      <td>{formatterDatoTilNorsk(mottattDato, false)}</td>
+      <td>{avsenderEllerMottaker}</td>
+      <td>{VelgDato(mottaksretning, mottattDato, journalforingDato)}</td>
     </tr>
   );
 };
@@ -93,20 +100,21 @@ RenderOversiktRad.propTypes = {
   oversikt: PT.shape({
     mottaksretning: MPT.Kodeverk.isRequired,
     addressat: PT.string.isRequired,
+    mottattDato: PT.string.isRequired,
     hoveddokument: PT.shape({
       dokumentID: PT.string.isRequired,
       tittel: PT.string.isRequired,
-      mottattDato: PT.string.isRequired,
     }),
     vedlegg: PT.arrayOf(PT.shape({
       dokumentID: PT.string,
       tittel: PT.string.isRequired,
-      mottattDato: PT.string,
     })),
   }),
 };
 RenderOversiktRad.defaultProps = {
   oversikt: {
+    mottattDato: null,
+    journalforingDato: null,
     vedlegg: [],
   },
 };
@@ -128,10 +136,10 @@ class SideDialogDokumenter extends Component {
   render() {
     return (
       <div className="sideDialogDokumenter">
-        <table width="100%">
+        <table width="100%" className="dokumentTabell" aria-label="Liste over dokumenter knyttet til saken">
           <thead>
             <tr>
-              <th>inn/ut</th>
+              <th />
               <th>Dokument</th>
               <th>Avsender/mottaker</th>
               <th>Dato</th>

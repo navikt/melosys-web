@@ -14,26 +14,14 @@ import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 import SideKommentarer from '../felles-komponenter/sideKommentarer';
 
-import {
-  fagsakOperations,
-  fagsakSelectors,
-} from '../ducks/fagsaker/';
-
-import { vilkarOperations } from '../ducks/vilkar/';
-import { avklartefaktaOperations } from '../ducks/avklartefakta/';
-
+import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
+import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
+import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
 import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
-
 import { oppgaverOperations } from '../ducks/oppgaver/';
 import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder/';
+import { soknadOperations, soknadSelectors } from '../ducks/soknad/';
 
-import {
-  soknadOperations,
-  soknadSelectors,
-} from '../ducks/soknad/';
-
-import * as avklartefaktaSelectors from '../ducks/avklartefakta/selectors';
-import * as vilkarSelectors from '../ducks/vilkar/selectors';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';

@@ -1,12 +1,12 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingArtikkel12 from '../../stegKomponenter/vurderingArtikkel12';
+import VurderingArtikkel12_1 from '../../stegKomponenter/vurderingArtikkel12_1';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
 import * as Koder from '../../../../koder';
 
 
-class Artikkel12 extends Steg {
+class Artikkel12_1 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
@@ -23,21 +23,28 @@ class Artikkel12 extends Steg {
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: null,
       },
     ];
-    this._id = STEG.ARTIKKEL_12;
+    this._id = STEG.ARTIKKEL_12_1;
     this._tittel = 'Vurdering av 12.1';
-    this._komponent = VurderingArtikkel12;
+    this._komponent = VurderingArtikkel12_1;
     this._samleRelevanteData = _propsLight => ({
       artikkel: { kode: Koder.FO_883_2004_ART12_1, term: '12.1' },
       begrunnelser: _propsLight.begrunnelser.artikkel12_1 || [],
     });
-    this._beregnRelevantUI = _propsLight => ({
-      visBegrunnelser: _propsLight.skjema.vilkar.art12_1 === false,
-      art12_1: _propsLight.skjema.vilkar.art12_1,
-      art16_1: _propsLight.skjema.vilkar.art16_1,
-    });
+    this._beregnRelevantUI = _propsLight => {
+      const { art12_1, art16_1, art12_1_begrunnelser = [] } = _propsLight.skjema.vilkar;
+      const manglerBegrunnelse = art12_1 === false && art12_1_begrunnelser.length === 0;
+      const harAvklaring = (art12_1 !== null && art12_1 !== undefined) || (art16_1 !== null && art16_1 !== undefined);
+
+      return {
+        harAvklaring: harAvklaring && !manglerBegrunnelse,
+        visBegrunnelser: art12_1 === false,
+        art12_1,
+        art16_1,
+      };
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
@@ -46,4 +53,4 @@ class Artikkel12 extends Steg {
   }
 }
 
-export default Artikkel12;
+export default Artikkel12_1;

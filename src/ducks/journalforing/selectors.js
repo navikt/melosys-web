@@ -12,7 +12,13 @@ export const JournalforingAlle = createSelector(
   journalforing => journalforing || {}
 );
 
-export const JournalforingDokument = createSelector(
+export const JournalforingHovedDokument = createSelector(
   state => state.journalforing.data || {},
-  journalforing => journalforing.dokument || { tittel: '', vedleggstitler: [] }
+  journalforing => journalforing.hoveddokument || { tittel: '', dokumentID: null }
+);
+
+
+export const JournalforingVedleggsDokumenter = createSelector(
+  state => state.journalforing.data || {},
+  journalforing => journalforing.vedlegg
 );

@@ -53,13 +53,13 @@ const journalforingGenerellValidering = verdier => {
     Mikrovalidering.navnAvsenderErBlank(verdier.avsenderNavn) || false
   );
 
-  const dokumentTittel = dokumentTittelErBlank(verdier.dokumentTittel) || false;
+  const hoveddokumentTittel = dokumentTittelErBlank(verdier.hoveddokumentTittel) || false;
 
   return {
     brukerID,
     avsenderID,
     avsenderNavn,
-    dokumentTittel,
+    hoveddokumentTittel,
   };
 };
 

@@ -216,7 +216,7 @@ export const OrganisasjonSelector = createSelector(
 const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter, relevantPeriode) => (
   {
     arbeidsforholdene: [arbeidsforholdet],
-    organisasjon: organisasjoner.find(org => org.orgnr === arbeidsforholdet.opplysningspliktigID),
+    organisasjon: organisasjoner.find(org => org.orgnr === arbeidsforholdet.opplysningspliktigID) || {},
     inntektListe: filtrerOgSpreInntekt(relevantPeriode, arbeidsforholdet.opplysningspliktigID, inntekter),
   }
 );
@@ -267,7 +267,6 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       } else {
         tmpSamling.push(byggNyArbeidsforholdGruppe(arbeidsforholdet, organisasjoner, inntekter, relevantPeriode));
       }
-
       return tmpSamling;
     }, []);
   }

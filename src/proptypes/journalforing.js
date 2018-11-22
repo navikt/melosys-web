@@ -1,17 +1,31 @@
 /* eslint import/prefer-default-export:off */
 import PT from 'prop-types';
-import { Kodeverk } from './kodeverk';
+
+import { Dokument, Vedlegg } from './dokument';
 
 const JournalforingPropType = PT.shape({
+  avsenderID: PT.string,
   brukerID: PT.string,
   erBrukerAvsender: PT.bool,
-  avsenderID: PT.string,
-  dokument: PT.shape({
-    ID: PT.string.isRequired,
-    mottattDato: PT.string,
-    tittel: PT.string,
-    vedleggstitler: PT.arrayOf(Kodeverk),
-  }),
+  hoveddokument: Dokument,
+  mottattDato: PT.string,
+  vedlegg: Vedlegg,
 });
-
-export { JournalforingPropType as Journalforing };
+const JournalforingSkjemaVerdierPropType = PT.shape({
+  arbeidsgiverID: PT.string,
+  avsenderID: PT.string,
+  avsenderNavn: PT.string,
+  brukerID: PT.string,
+  brukerNavn: PT.string,
+  dokumentID: PT.string,
+  erBrukerAvsender: PT.bool,
+  hoveddokumentTittel: PT.string,
+  mottattDato: PT.string,
+  journalpostID: PT.string,
+  respresentantID: PT.string,
+  vedleggsTittler: PT.arrayOf(PT.string),
+});
+export {
+  JournalforingPropType as Journalforing,
+  JournalforingSkjemaVerdierPropType as JournalforingSkjemaVerdier,
+};

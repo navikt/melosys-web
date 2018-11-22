@@ -4,39 +4,40 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../skjema';
 
+import { arrayTilKonjunksjon } from '../../../utils/streng';
+
 import { BOOLSK } from '../../../constants';
 
-class VurderingForutgaendeMedlemskap extends Component {
+class NormaltDriverVirksomhet extends Component {
   componentWillUnmount() {
     const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.forutgaendeMedlemskap', null);
-    settSkjemaVerdi('vilkar.forutgaendeMedlemskapBegrunnelser', []);
+    settSkjemaVerdi('vilkar.normaltDriverVirksomhet', null);
+    settSkjemaVerdi('vilkar.normaltDriverVirksomhetBegrunnelser', []);
   }
 
-  render() {
-    const {
-      bekreftOgFortsett, begrunnelser, tilstand,
-    } = this.props;
+  render () {
+    const { bekreftOgFortsett, begrunnelser, tilstand } = this.props;
     const { visBegrunnelser, harAvklaring } = tilstand;
+    const arbeidsgivereTekst = this.props.valgteArbeidsgivere.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
 
     return (
       <div>
-        <Nav.Undertittel>Vurdering av forutgående medlemskap</Nav.Undertittel>
-        <div>
+        <Nav.Undertittel>Vurdering av selvstendig virksomhet til {arbeidsgivereTekst}</Nav.Undertittel>
+        <div className="vurderingBostedsland__skjemafelt">
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Søkeren har:">
-                <Skjema.Radio feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
-                <Skjema.Radio feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
+              <Nav.Fieldset legend="Virksomheten har:">
+                <Skjema.Radio feltNavn="vilkar.normaltDriverVirksomhet" value={BOOLSK.SANN} label="Driver normalt virksomhet i Norge" />
+                <Skjema.Radio feltNavn="vilkar.normaltDriverVirksomhet" value={BOOLSK.USANN} label="Driver normalt IKKE virksomhet i Norge" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
-          { visBegrunnelser && (
+          {visBegrunnelser && (
             <Nav.Row>
               <Nav.Column xs="12" md="10" lg="8">
                 <Nav.Fieldset legend="Begrunnelse:">
                   <Skjema.ListeVelger
-                    feltNavn="vilkar.forutgaendeMedlemskapBegrunnelser"
+                    feltNavn="vilkar.normaltDriverVirksomhetBegrunnelser"
                     muligeValg={begrunnelser}
                     label="Legg til begrunnelse:"
                     gruppe
@@ -44,8 +45,8 @@ class VurderingForutgaendeMedlemskap extends Component {
                   />
                 </Nav.Fieldset>
               </Nav.Column>
-            </Nav.Row>
-          ) }
+            </Nav.Row>)
+          }
         </div>
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -55,18 +56,20 @@ class VurderingForutgaendeMedlemskap extends Component {
   }
 }
 
-VurderingForutgaendeMedlemskap.ID = 'FORUTGAENDE_MEDLEMSKAP';
+NormaltDriverVirksomhet.ID = 'NORMALT_DRIVER_VIRKSOMHET';
 
-VurderingForutgaendeMedlemskap.propTypes = {
+NormaltDriverVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
+  valgteArbeidsgivere: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   settSkjemaVerdi: PT.func.isRequired,
 };
 
-VurderingForutgaendeMedlemskap.defaultProps = {
+NormaltDriverVirksomhet.defaultProps = {
   tilstand: {},
+  valgteArbeidsgivere: [],
   begrunnelser: [],
 };
 
-export default VurderingForutgaendeMedlemskap;
+export default NormaltDriverVirksomhet;
