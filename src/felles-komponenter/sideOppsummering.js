@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
@@ -6,11 +7,12 @@ import * as MPT from '../proptypes/';
 
 import EnkeltDato from './datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm } from '../utils/kodeverk';
+import { fagsakSelectors } from '../ducks/fagsaker';
 
 import './sideOppsummering.css';
 
 function SideOppsummering(props) {
-  const { oppsummering } = props;
+  const { oppsummering, person } = props;
   if (!oppsummering) return <div />;
   const {
     saksnummer,
@@ -19,7 +21,10 @@ function SideOppsummering(props) {
     registrertDato,
     sisteOpplysningerHentetDato,
   } = oppsummering;
-
+  const {
+    fnr,
+    sammensattNavn,
+  } = person;
   const {
     lagreOgLukkHandle,
     oppfriskSaksopplysningerHandle,
@@ -53,6 +58,10 @@ function SideOppsummering(props) {
         <Nav.Row>
           <Nav.Column xs="12">
             <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
+              <dt>Fullt navn</dt>
+              <dd>{sammensattNavn}</dd>
+              <dt>Fnr /dnr</dt>
+              <dd>{fnr}</dd>
               <dt>Saksnummer:</dt>
               <dd>{saksnummer || '-'}</dd>
               <dt>Behandlingsstatus:</dt>
@@ -74,9 +83,15 @@ function SideOppsummering(props) {
 
 SideOppsummering.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
+  person: MPT.Person.isRequired,
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
 };
 
-export default SideOppsummering;
+const mapStateToProps = state => ({
+  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  person: fagsakSelectors.PersonSelector(state),
+});
+const mapDispatchToProps = () => ({});
+export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
