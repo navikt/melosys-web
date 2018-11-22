@@ -58,6 +58,8 @@ function SideOppsummering(props) {
         <Nav.Row>
           <Nav.Column xs="12">
             <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
+              <dt>Søknadstype</dt>
+              <dd>{sakstype ? sakstype.term : '-'}</dd>
               <dt>Fullt navn</dt>
               <dd>{sammensattNavn}</dd>
               <dt>Fnr /dnr</dt>
