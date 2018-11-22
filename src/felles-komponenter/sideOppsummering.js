@@ -12,12 +12,12 @@ import './sideOppsummering.css';
 function SideOppsummering(props) {
   const { oppsummering } = props;
   if (!oppsummering) return <div />;
-
   const {
     saksnummer,
     sakstype,
     status,
     registrertDato,
+    sisteOpplysningerHentetDato,
   } = oppsummering;
 
   const {
@@ -59,6 +59,8 @@ function SideOppsummering(props) {
               <dd>{kodeverkObjektTilTerm(status)}</dd>
               <dt>Oppholdsland:</dt>
               <dd>-</dd>
+              <dt>Sist oppdatert:</dt>
+              <dd><EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt /></dd>
               <dt>Registrert dato:</dt>
               <dd><EnkeltDato dato={registrertDato} /></dd>
             </dl>
