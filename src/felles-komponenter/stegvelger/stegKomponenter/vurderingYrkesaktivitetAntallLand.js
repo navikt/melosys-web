@@ -10,7 +10,8 @@ export const VurderingYrkesaktivitetAntallLandTyper = {
 };
 
 const VurderingYrkesaktivitetAntallLand = props => {
-  const { bekreftOgFortsett } = props;
+  const { bekreftOgFortsett, tilstand } = props;
+  const { harAvklaring } = tilstand;
 
   return (
     <div>
@@ -21,7 +22,7 @@ const VurderingYrkesaktivitetAntallLand = props => {
         <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitetAntallLand" value={VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND} label="To eller flere land" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );

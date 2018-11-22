@@ -11,7 +11,7 @@ class VesentligVirksomhet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'ORDINAER_ARBEIDSTAKER og VESENTLIG_VIRKSOMHET',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.VESENTLIG_VIRKSOMHET, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.ART12_1_VESENTLIG_VIRKSOMHET, alleVilkar),
         nesteSteg: STEG.ARTIKKEL_12_1,
       },
       {
@@ -28,9 +28,15 @@ class VesentligVirksomhet extends Steg {
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
       begrunnelser: _propsLight.begrunnelser.vesentligVirksomhet,
     });
-    this._beregnRelevantUI = _propsLight => ({
-      visBegrunnelser: !_propsLight.skjema.vilkar.vesentligVirksomhet,
-    });
+    this._beregnRelevantUI = _propsLight => {
+      const { vesentligVirksomhet, vesentligVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;
+      const harAvklaring = vesentligVirksomhet === true || (vesentligVirksomhet === false && vesentligVirksomhetBegrunnelser.length > 0);
+
+      return {
+        visBegrunnelser: !vesentligVirksomhet,
+        harAvklaring,
+      };
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,

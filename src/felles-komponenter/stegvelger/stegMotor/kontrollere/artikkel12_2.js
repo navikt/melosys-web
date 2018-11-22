@@ -32,11 +32,18 @@ class Artikkel12_2 extends Steg {
       artikkel: { kode: Koder.FO_883_2004_ART12_2, term: '12.2' },
       begrunnelser: _propsLight.begrunnelser.artikkel12_2 || [],
     });
-    this._beregnRelevantUI = _propsLight => ({
-      visBegrunnelser: _propsLight.skjema.vilkar.art12_2 === false,
-      art12_2: _propsLight.skjema.vilkar.art12_2,
-      art16_1: _propsLight.skjema.vilkar.art16_1,
-    });
+    this._beregnRelevantUI = _propsLight => {
+      const { art12_2, art16_1, art12_2_begrunnelser = [] } = _propsLight.skjema.vilkar;
+      const manglerBegrunnelse = art12_2 === false && art12_2_begrunnelser.length === 0;
+      const harAvklaring = (art12_2 !== null && art12_2 !== undefined) || (art16_1 !== null && art16_1 !== undefined);
+
+      return {
+        harAvklaring: harAvklaring && !manglerBegrunnelse,
+        visBegrunnelser: _propsLight.skjema.vilkar.art12_2 === false,
+        art12_2: _propsLight.skjema.vilkar.art12_2,
+        art16_1: _propsLight.skjema.vilkar.art16_1,
+      };
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,

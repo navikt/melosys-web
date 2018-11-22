@@ -38,7 +38,7 @@ describe('Tester stegVelger', () => {
           tjenestemann: 'ETT_LAND_YRKESAKTIVITET_ANDRE_LAND',
         },
         valgteArbeidsforhold: [],
-        yrkesaktivitetFordeling: {
+        yrkesaktivitetAntallLand: {
           antallLand: 'ETT_LAND_IKKE_NORGE',
         },
         virksomhet: {
