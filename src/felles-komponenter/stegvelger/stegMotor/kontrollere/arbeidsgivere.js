@@ -16,7 +16,14 @@ class Sysselsetting extends Steg {
     this._tittel = 'Arbeids\u00ADgiver';
     this._komponent = VurderingArbeidsgiver;
     this._samleRelevanteData = _propsLight => ({ arbeidsgivereIPerioden: _propsLight.arbeidsgivereIPerioden });
-    this._beregnRelevantUI = () => ({});
+    this._beregnRelevantUI = _propsLight => {
+      const { arbeidsgivere } = _propsLight.skjema.avklartefakta;
+      const harAvklaring = arbeidsgivere.some(arbeidsgiver => arbeidsgiver.fakta.includes('TRUE'));
+
+      return ({
+        harAvklaring,
+      });
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };

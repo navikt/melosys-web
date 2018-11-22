@@ -28,9 +28,15 @@ class NormaltDriverVirksomhet extends Steg {
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
       begrunnelser: _propsLight.begrunnelser.normaltDriverVirksomhet,
     });
-    this._beregnRelevantUI = _propsLight => ({
-      visBegrunnelser: !_propsLight.skjema.vilkar.normaltDriverVirksomhet,
-    });
+    this._beregnRelevantUI = _propsLight => {
+      const { normaltDriverVirksomhet, normaltDriverVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;
+      const harAvklaring = normaltDriverVirksomhet === true || (normaltDriverVirksomhet === false && normaltDriverVirksomhetBegrunnelser.length > 0);
+
+      return {
+        visBegrunnelser: !_propsLight.skjema.vilkar.normaltDriverVirksomhet,
+        harAvklaring,
+      };
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,

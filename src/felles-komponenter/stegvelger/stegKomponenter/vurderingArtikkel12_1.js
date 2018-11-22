@@ -75,7 +75,7 @@ class VurderingArtikkel12_1 extends Component {
     } = this.props;
 
     const { valgtVilkar } = this.state;
-    const { visBegrunnelser } = tilstand;
+    const { visBegrunnelser, harAvklaring } = tilstand;
 
     return (
       <div>
@@ -125,7 +125,7 @@ class VurderingArtikkel12_1 extends Component {
           )}
         </div>
         <div className="fane__knapplinje">
-          <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     );

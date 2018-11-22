@@ -26,7 +26,13 @@ class Yrkesaktivitet extends Steg {
     this._tittel = 'Yrkes-aktivitet';
     this._komponent = VurderingYrkesaktivitet;
     this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = () => ({});
+    this._beregnRelevantUI = _propsLight => {
+      const { yrkesaktivitet } = _propsLight.skjema.avklartefakta;
+
+      return ({
+        harAvklaring: yrkesaktivitet !== null && yrkesaktivitet !== undefined,
+      });
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };

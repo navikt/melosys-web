@@ -98,7 +98,8 @@ ArbeidsgivereListe.defaultProps = {
  * @param props
  */
 const VurderingArbeidsgiver = props => {
-  const { bekreftOgFortsett, arbeidsgivereIPerioden } = props;
+  const { bekreftOgFortsett, arbeidsgivereIPerioden, tilstand } = props;
+  const { harAvklaring } = tilstand;
 
   return (
     <div className="vurderingArbeidsgiver">
@@ -106,7 +107,7 @@ const VurderingArbeidsgiver = props => {
       <div className="arbeidsgiver">
         <FieldArray name="avklartefakta.arbeidsgivere" component={arrayProps => <ArbeidsgivereListe {...arrayProps} arbeidsgivereIPerioden={arbeidsgivereIPerioden} />} />
         <div className="fane__knapplinje">
-          <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     </div>

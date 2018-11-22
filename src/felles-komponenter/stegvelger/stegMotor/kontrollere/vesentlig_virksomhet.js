@@ -28,9 +28,15 @@ class VesentligVirksomhet extends Steg {
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
       begrunnelser: _propsLight.begrunnelser.vesentligVirksomhet,
     });
-    this._beregnRelevantUI = _propsLight => ({
-      visBegrunnelser: !_propsLight.skjema.vilkar.vesentligVirksomhet,
-    });
+    this._beregnRelevantUI = _propsLight => {
+      const { vesentligVirksomhet, vesentligVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;
+      const harAvklaring = vesentligVirksomhet === true || (vesentligVirksomhet === false && vesentligVirksomhetBegrunnelser.length > 0);
+
+      return {
+        visBegrunnelser: !vesentligVirksomhet,
+        harAvklaring,
+      };
+    };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
