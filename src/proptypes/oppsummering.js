@@ -5,7 +5,7 @@ import { Kodeverk } from './kodeverk';
 
 const OppsummeringPropType = PT.shape({
   saksnummer: PT.string,
-  type: Kodeverk,
+  sakstype: Kodeverk,
   status: Kodeverk,
   registrertDato: PT.string,
   sisteOpplysningerHentetDato: PT.string,
