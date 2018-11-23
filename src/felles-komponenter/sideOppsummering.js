@@ -24,6 +24,7 @@ class SideOppsummering extends Component {
     event.preventDefault();
   };
   sendOppdatering = () => {
+    console.log(this.state.status);
     return true;
   };
 
@@ -107,8 +108,8 @@ class SideOppsummering extends Component {
               <div>
                 <form onSubmit={this.overstyrSubmit}>
                   <Nav.Fieldset legend="Endre status på behandling til">
-                    <Nav.Select value={this.state.status}>
-                      <option selected key="VELG" value="VELG">Velg...</option>
+                    <Nav.Select value={this.state.status} onChange={this.onChange} label="Velg begrunnelse:">
+                      <option key="VELG" value="VELG">Velg...</option>
                       <option key="AVVENT_DOK_UTL" value="AVVENT_DOK_UTL">AVVENT_DOK_UTL</option>
                       <option key="AVVENT_DOK_PART" value="AVVENT_DOK_PART">AVVENT_DOK_PART</option>
                     </Nav.Select>
