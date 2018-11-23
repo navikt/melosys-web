@@ -177,7 +177,7 @@ class Saksbehandling extends Component {
       <div>
         <DialogboksVenter
           tittel="Oppdaterer registeropplysninger"
-          tekst="Oppdatering av registeropplysning."
+          tekst="Vent mens registeropplysningene hentes på nytt fra TPS, Aa-register, Medl etc."
           synlig
           tilForsiden={this.navigerTilOversiktSide}
           oppdater={this.hentBehandlingStatus}
