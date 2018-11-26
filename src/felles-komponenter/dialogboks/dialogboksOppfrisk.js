@@ -33,7 +33,7 @@ class DialogboksOppfriskSak extends Component {
         {this.state.venterResultat &&
         <DialogboksVenter
           tittel="Oppdaterer registeropplysninger"
-          tekst="Oppdatering av registeropplysning kan ta noen minutter, venligst vent."
+          tekst="Vent mens registeropplysningene hentes på nytt fra TPS, Aa-register, Medl etc."
           synlig
           tilForsiden={tilForsiden}
           oppdater={oppdater}
