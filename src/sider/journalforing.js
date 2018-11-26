@@ -260,7 +260,6 @@ class Journalforing extends Component {
       if (!response.data) { return false; }
       const { navn = '' } = response.data;
       settFeltInnhold('avsenderNavn', navn);
-      return;
     }
 
     if (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) {
@@ -295,6 +294,7 @@ class Journalforing extends Component {
     const { settFeltInnhold } = this.props;
     settFeltInnhold('journalforingPeriodeFraOgMed', '');
     settFeltInnhold('journalforingPeriodeTilOgMed', '');
+    settFeltInnhold('representantID', '');
     settFeltInnhold('journalforingOppholdsLand', []);
   };
 
