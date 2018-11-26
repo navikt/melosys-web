@@ -39,7 +39,7 @@ class DialogboksVenter extends Component {
       <Nav.Normaltekst className="tekst">{tekst}</Nav.Normaltekst>
       :
       <Nav.AlertStripe className="alertStripe" type="advarsel">
-        Dette tar lenger tid enn normalt. Du kan velge å gå tilbake til forsiden for å behandle en annen sak eller forsøke å vente litt til.
+        Dette tar lengre tid enn normalt. Du kan velge å gå tilbake til forsiden for å behandle en annen sak i mellomtiden.
       </Nav.AlertStripe>;
 
     return (
