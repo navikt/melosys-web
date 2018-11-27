@@ -1,30 +1,48 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import moment from 'moment/moment';
 
+import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import EnkeltDato from './datoOmrade/enkeltDato';
-import { kodeverkObjektTilTerm } from '../utils/kodeverk';
+import { kodeverkObjektTilTerm, kodeTilVerdi } from '../utils/kodeverk';
 import { formatterDatoTilNorsk } from '../utils/dato';
-import { fagsakSelectors } from '../ducks/fagsaker';
 import { soknadSelectors } from '../ducks/soknad';
-
+import { KodeverkSelectors } from '../ducks/kodeverk';
+import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import './sideOppsummering.css';
 
 class SideOppsummering extends Component {
-  state = { status: 'VELG' };
+  state = { behandlingsstatus: 'VELG', statusmelding: null };
   onChange = event => {
     const { value } = event.currentTarget;
-    this.setState({ status: value });
+    this.setState({ behandlingsstatus: value, statusmelding: null });
   };
 
   overstyrSubmit = event => {
     event.preventDefault();
   };
+
+  oppdaterStatusMelding = () => {
+    const { behandlingsstatus } = this.state;
+    const hhmm = moment().format('HH:mm');
+    this.setState({ behandlingsstatus, statusmelding: `Behandlingstatus ble oppdatert ${hhmm}` });
+  };
   sendOppdatering = () => {
-    console.log(this.state.status);
+    const { behandlingsstatus: kode } = this.state;
+    if (kode === 'VELG') {
+      return false;
+    }
+    const { behandlingsstatusKodeVerk, oppdaterBehandlingsStatus, oppsummering: { behandlingID } } = this.props;
+    const term = kodeTilVerdi(kode, behandlingsstatusKodeVerk);
+    const nystatus = { kode, term };
+    Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {
+      oppdaterBehandlingsStatus(nystatus);
+      this.oppdaterStatusMelding();
+    });
     return true;
   };
 
@@ -35,6 +53,7 @@ class SideOppsummering extends Component {
       oppholdUtlandFom,
       oppholdUtlandTom,
       oppholdsland,
+      behandlingsstatusKodeVerk,
     } = this.props;
 
     if (!oppsummering) return <div />;
@@ -108,13 +127,14 @@ class SideOppsummering extends Component {
               <div>
                 <form onSubmit={this.overstyrSubmit}>
                   <Nav.Fieldset legend="Endre status på behandling til">
-                    <Nav.Select value={this.state.status} onChange={this.onChange} label="Velg begrunnelse:">
+                    <Nav.Select value={this.state.behandlingsstatus} onChange={this.onChange} label="Velg begrunnelse:">
                       <option key="VELG" value="VELG">Velg...</option>
-                      <option key="AVVENT_DOK_UTL" value="AVVENT_DOK_UTL">AVVENT_DOK_UTL</option>
-                      <option key="AVVENT_DOK_PART" value="AVVENT_DOK_PART">AVVENT_DOK_PART</option>
+                      <option key="AVVENT_DOK_UTL" value="AVVENT_DOK_UTL">{kodeTilVerdi('AVVENT_DOK_UTL', behandlingsstatusKodeVerk)}</option>
+                      <option key="AVVENT_DOK_PART" value="AVVENT_DOK_PART">{kodeTilVerdi('AVVENT_DOK_PART', behandlingsstatusKodeVerk)}</option>
                     </Nav.Select>
                   </Nav.Fieldset>
                   <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
+                  {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
                 </form>
               </div>
             </Nav.Column>
@@ -129,12 +149,14 @@ class SideOppsummering extends Component {
 SideOppsummering.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
   person: MPT.Person.isRequired,
+  behandlingsstatusKodeVerk: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppholdUtlandFom: PT.string.isRequired,
   oppholdUtlandTom: PT.string.isRequired,
   oppholdsland: PT.arrayOf(PT.string).isRequired,
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
+  oppdaterBehandlingsStatus: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -143,6 +165,10 @@ const mapStateToProps = state => ({
   oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
   oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
   oppholdsland: soknadSelectors.OppholdsLandSelector(state),
+  behandlingsstatusKodeVerk: KodeverkSelectors.behandlingsStatusSelector(state),
 });
-const mapDispatchToProps = () => ({});
+
+const mapDispatchToProps = dispatch => ({
+  oppdaterBehandlingsStatus: status => dispatch(fagsakOperations.oppdaterBehandlingsStatus(status)),
+});
 export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
