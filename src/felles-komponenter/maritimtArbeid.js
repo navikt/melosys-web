@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 import { connect } from 'react-redux';
@@ -17,7 +17,9 @@ import { KodeverkSelectors } from '../ducks/kodeverk';
 import './maritimtArbeid.css';
 
 const MaritimtEnkelt = props => {
-  const { navn, fartsomrader } = props;
+  const {
+    navn, fartsomrader, index, remove,
+  } = props;
 
   return (
     <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
@@ -31,6 +33,11 @@ const MaritimtEnkelt = props => {
           <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Installasjonsland:" />
         </Nav.Column>
       </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Nav.Knapp mini onClick={() => remove(index)}>- Fjern denne oppføringen</Nav.Knapp>
+        </Nav.Column>
+      </Nav.Row>
     </Nav.Fieldset>
   );
 };
@@ -38,15 +45,21 @@ const MaritimtEnkelt = props => {
 MaritimtEnkelt.propTypes = {
   navn: PT.string.isRequired,
   fartsomrader: PT.arrayOf(MPT.Kodeverk).isRequired,
+  index: PT.number.isRequired,
+  remove: PT.func.isRequired,
 };
 
 const MaritimtAlle = props => {
   const { fields, fartsomrader } = props;
+  const { remove, push } = fields;
 
   return (
-    <div>
-      { fields.map(navn => <MaritimtEnkelt key={navn} navn={navn} fartsomrader={fartsomrader} />) }
-    </div>
+    <Fragment>
+      <div>
+        { fields.map((navn, index) => <MaritimtEnkelt key={navn} remove={remove} navn={navn} fartsomrader={fartsomrader} index={index} />) }
+      </div>
+      <Nav.Knapp onClick={() => push({})} className="leggtil">+ Legg til nytt skip eller sokkel</Nav.Knapp>
+    </Fragment>
   );
 };
 
