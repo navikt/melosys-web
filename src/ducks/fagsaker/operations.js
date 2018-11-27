@@ -72,11 +72,14 @@ function oppfrisk(behandlingID) {
 function resetFagsakState() {
   return Actions.resetFagsakState();
 }
-
+function oppdaterBehandlingsStatus(status) {
+  return Actions.oppdaterBehandlingsStatus(status);
+}
 export {
   hent,
   opprett,
   sok,
   oppfrisk,
   resetFagsakState,
+  oppdaterBehandlingsStatus,
 };
