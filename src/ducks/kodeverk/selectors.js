@@ -71,3 +71,8 @@ export const anmodningsBegrunnelserSelector = createSelector(
   state => begrunnelserSelector(state),
   begrunnelser => begrunnelser.artikkel16_1_anmodning || []
 );
+
+export const fartsomraderSelector = createSelector(
+  state => state.kodeverk.data.fartsomrader,
+  fartsomrader => fartsomrader || []
+);

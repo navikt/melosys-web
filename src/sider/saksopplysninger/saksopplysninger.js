@@ -122,7 +122,7 @@ class Saksopplysninger extends Component {
         <ArbeidUtland />
         <ForetakUtland />
         <VirksomhetNorge />
-        <MaritimtArbeid soknadVerdier={soknadVerdier} />
+        <MaritimtArbeid />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
         {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
       </form>
@@ -223,11 +223,7 @@ const mapStateToProps = state => ({
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
     adresseIUtlandet: soknadSelectors.BostedSelector(state).adresseIUtlandet,
-    maritimType: soknadSelectors.MaritimtArbeidSelector(state).maritimType,
-    skipsNavn: soknadSelectors.MaritimtArbeidSelector(state).skipsNavn,
-    fartsomrade: soknadSelectors.MaritimtArbeidSelector(state).fartsomrade,
-    flaggLand: soknadSelectors.MaritimtArbeidSelector(state).flaggLand,
-    installasjonsLand: soknadSelectors.MaritimtArbeidSelector(state).installasjonsLand,
+    maritimtArbeid: soknadSelectors.MaritimtArbeidSelector(state),
     foretakUtland: soknadSelectors.ForetakUtlandSelector(state),
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
