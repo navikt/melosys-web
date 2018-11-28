@@ -111,8 +111,8 @@ export const ArbeidsgiversBekreftelseSelector = createSelector(
 );
 
 export const MaritimtArbeidSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.maritimtArbeid : {}),
-  maritimtArbeid => maritimtArbeid || {}
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.maritimtArbeid : []),
+  maritimtArbeid => maritimtArbeid || []
 );
 
 export const PersonOpplysningerSelector = createSelector(

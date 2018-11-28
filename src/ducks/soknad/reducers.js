@@ -128,14 +128,7 @@ export default function reducer(state = initialState, action) {
             landKode: dokument.oppgittAdresseLand,
           },
         },
-        maritimtArbeid: {
-          ...state.data.soeknadDokument.maritimtArbeid,
-          maritimType: dokument.maritimType,
-          skipsNavn: dokument.skipsNavn,
-          fartsomrade: dokument.fartsomrade,
-          flaggLand: dokument.flaggLand,
-          installasjonsLand: dokument.installasjonsLand,
-        },
+        maritimtArbeid: dokument.maritimtArbeid,
         selvstendigArbeid: {
           erSelvstendig: dokument.erSelvstendig,
           selvstendigForetak: dokument.selvstendigForetak,

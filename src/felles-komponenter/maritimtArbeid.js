@@ -1,40 +1,82 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PT from 'prop-types';
+import { FieldArray } from 'redux-form';
+import { connect } from 'react-redux';
 
 import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
+import * as MPT from '../proptypes';
 import LandVelger from './skjema/landvelger';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
+import { formSelectors } from '../ducks/form/';
+import { KodeverkSelectors } from '../ducks/kodeverk';
+
 
 import './maritimtArbeid.css';
 
-const MaritimtArbeidTyper = {
-  SKIP: 'SKIP',
-  SOKKEL: 'SOKKEL',
-  INGEN: 'INGEN',
-};
+const MaritimtEnkelt = props => {
+  const {
+    navn, fartsomrader, index, remove,
+  } = props;
 
-const MaritimtArbeid = props => {
-  const { maritimType } = props.soknadVerdier;
-  const panelErRelevant = maritimType !== MaritimtArbeidTyper.INGEN;
-
-  const panelIkon = panelErRelevant ? Ikoner.Ferdig : Ikoner.Ubehandlet;
-
-  const detaljer = maritimType !== MaritimtArbeidTyper.INGEN ?
+  return (
     <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input feltNavn="skipsNavn" label="Navn på fartøyet:" />
-          <Skjema.Input feltNavn="fartsomrade" label="Fartsomrade:" />
+          <Skjema.Input feltNavn={`${navn}skipsNavn`} label="Navn på fartøyet:" />
+          <Skjema.ListeVelger feltNavn={`${navn}fartsomradeKode`} muligeValg={fartsomrader} label="Fartsomrade:" />
         </Nav.Column>
         <Nav.Column xs="6">
-          <LandVelger feltNavn="flaggLand" label="Flaggland:" />
-          <LandVelger feltNavn="installasjonsLand" label="Installasjonsland:" />
+          <LandVelger feltNavn={`${navn}flaggLandKode`} label="Flaggland:" />
+          <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Installasjonsland:" />
         </Nav.Column>
       </Nav.Row>
-    </Nav.Fieldset> : null;
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Nav.Knapp mini onClick={() => remove(index)}>- Fjern denne oppføringen</Nav.Knapp>
+        </Nav.Column>
+      </Nav.Row>
+    </Nav.Fieldset>
+  );
+};
+
+MaritimtEnkelt.propTypes = {
+  navn: PT.string.isRequired,
+  fartsomrader: PT.arrayOf(MPT.Kodeverk).isRequired,
+  index: PT.number.isRequired,
+  remove: PT.func.isRequired,
+};
+
+const MaritimtAlle = props => {
+  const { fields, fartsomrader } = props;
+  const { remove, push } = fields;
+
+  return (
+    <Fragment>
+      <div>
+        { fields.map((navn, index) => <MaritimtEnkelt key={navn} remove={remove} navn={navn} fartsomrader={fartsomrader} index={index} />) }
+      </div>
+      <Nav.Knapp onClick={() => push({})} className="leggtil">+ Legg til nytt skip eller sokkel</Nav.Knapp>
+    </Fragment>
+  );
+};
+
+MaritimtAlle.propTypes = {
+  fields: PT.object.isRequired,
+  fartsomrader: PT.arrayOf(MPT.Kodeverk).isRequired,
+};
+
+
+const MaritimtArbeid = props => {
+  const { soknadForm, fartsomrader } = props;
+  const { values: soknadVerdier } = soknadForm;
+  const { maritimtArbeid = [] } = soknadVerdier;
+
+  const panelErRelevant = maritimtArbeid.length > 0;
+
+  const panelIkon = panelErRelevant ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
   return (
     <div className="maritimtArbeid panelSeksjon">
@@ -42,16 +84,7 @@ const MaritimtArbeid = props => {
         heading={<PanelHeader ikon={panelIkon} tittel="Maritimt Arbeid" undertittel="" />}
         ariaTittel="Maritimt Arbeid">
         <Nav.Container fluid>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Skjema.RadioGruppe feltNavn="maritimType" label="Oppgir søker at han eller hun jobber på:">
-                <Skjema.Radio feltNavn="maritimType" value={MaritimtArbeidTyper.SKIP} label="Skip" />
-                <Skjema.Radio feltNavn="maritimType" value={MaritimtArbeidTyper.SOKKEL} label="Sokkel" />
-                <Skjema.Radio feltNavn="maritimType" value={MaritimtArbeidTyper.INGEN} label="Ikke relevant" />
-              </Skjema.RadioGruppe>
-            </Nav.Column>
-          </Nav.Row>
-          { detaljer }
+          <FieldArray name="maritimtArbeid" component={MaritimtAlle} fartsomrader={fartsomrader} />
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>
@@ -59,11 +92,17 @@ const MaritimtArbeid = props => {
 };
 
 MaritimtArbeid.propTypes = {
-  soknadVerdier: PT.object,
+  soknadForm: PT.object,
+  fartsomrader: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 MaritimtArbeid.defaultProps = {
-  soknadVerdier: {},
+  soknadForm: {},
 };
 
-export default MaritimtArbeid;
+const mapStateToProps = state => ({
+  soknadForm: formSelectors.SoknadenFormSelector(state),
+  fartsomrader: KodeverkSelectors.fartsomraderSelector(state),
+});
+
+export default connect(mapStateToProps)(MaritimtArbeid);
