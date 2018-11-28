@@ -99,16 +99,12 @@ const RenderOversiktRad = ({ oversikt }) => {
 RenderOversiktRad.propTypes = {
   oversikt: PT.shape({
     mottaksretning: MPT.Kodeverk.isRequired,
-    addressat: PT.string.isRequired,
-    mottattDato: PT.string.isRequired,
-    hoveddokument: PT.shape({
-      dokumentID: PT.string.isRequired,
-      tittel: PT.string.isRequired,
-    }),
-    vedlegg: PT.arrayOf(PT.shape({
-      dokumentID: PT.string,
-      tittel: PT.string.isRequired,
-    })),
+    avsenderEllerMottaker: PT.string.isRequired,
+    mottattDato: PT.string,
+    journalforingDato: PT.string,
+    journalpostID: PT.string,
+    hoveddokument: MPT.Dokument,
+    vedlegg: MPT.Vedlegg,
   }),
 };
 RenderOversiktRad.defaultProps = {
@@ -122,9 +118,13 @@ RenderOversiktRad.defaultProps = {
 class SideDialogDokumenter extends Component {
   state = { oversiktDokumenter: [] };
 
-  async componentDidMount() {
+  async componentDidUpdate(prevProps) {
+    const { oppsummering: { saksnummer: prevSaksnummer } } = prevProps;
     const { oppsummering: { saksnummer } } = this.props;
-    await this.hentDokumentOversikt(saksnummer);
+
+    if (prevSaksnummer !== saksnummer) {
+      await this.hentDokumentOversikt(saksnummer);
+    }
   }
 
   settOversikt = oversiktDokumenter => this.setState({ oversiktDokumenter });
