@@ -2,6 +2,10 @@ import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
+import LandVelger from '../../skjema/landvelger';
+import Listevelger from '../../skjema/listevelger';
+
+import './vurderingSokkelSkip.css';
 
 export const VurderingSokkelSkipTyper = {
   SKIP_INNENRIKS: 'SKIP_INNENRIKS',
@@ -11,19 +15,61 @@ export const VurderingSokkelSkipTyper = {
   SOKKEL_ELLER_SKIP_FLERE_LAND: 'SOKKEL_ELLER_SKIP_FLERE_LAND',
 };
 
+const SokkelSkipListe = props => {
+  const { alleSokkelSkip } = props;
+  const sokkelSkipBegrunnelser = [
+    { kode: 'something', term: 'Another thing' },
+  ];
+
+  console.log(alleSokkelSkip);
+
+  return (
+    <div className="sokkelSkip__liste">
+      <Nav.Row className="sokkelSkip__liste__rad">
+        <Nav.Column xs={3} className="rad__navn">Navn på sokkel</Nav.Column>
+        <Nav.Column xs={3} className="rad__sokkel">
+          <Skjema.Radio feltNavn="felt1" label="Sokkel" />
+          <Skjema.Radio feltNavn="felt2" label="Skip" />
+        </Nav.Column>
+        <Nav.Column xs={3} className="rad__begrunnelse"><Listevelger feltNavn="begrunnelse" label="Begrunnelse" muligeValg={sokkelSkipBegrunnelser} /></Nav.Column>
+        <Nav.Column xs={3} className="rad__land"><LandVelger multiLand={false} label="Arbeidsland" /></Nav.Column>
+      </Nav.Row>
+      <Nav.Row className="sokkelSkip__liste__rad">
+        <Nav.Column xs={3} className="rad__navn">Navn på sokkel</Nav.Column>
+        <Nav.Column xs={3} className="rad__sokkel">
+          <Skjema.Radio feltNavn="felt1" label="Sokkel" />
+          <Skjema.Radio feltNavn="felt2" label="Skip" />
+        </Nav.Column>
+        <Nav.Column xs={3} className="rad__begrunnelse"><Listevelger feltNavn="begrunnelse" label="Begrunnelse" muligeValg={sokkelSkipBegrunnelser} /></Nav.Column>
+        <Nav.Column xs={3} className="rad__land"><LandVelger multiLand={false} label="Arbeidsland" /></Nav.Column>
+      </Nav.Row>
+    </div>
+  );
+};
+
+SokkelSkipListe.propTypes = {
+  alleSokkelSkip: PT.array,
+};
+
+SokkelSkipListe.defaultProps = {
+  alleSokkelSkip: [],
+};
+
 const VurderingSokkelSkip = props => {
-  const { bekreftOgFortsett, tilstand } = props;
+  const { bekreftOgFortsett, tilstand, skjema } = props;
+  const { maritimtArbeid } = skjema;
   const { harAvklaring } = tilstand;
 
   return (
-    <div>
+    <div className="vurderingSokkelSkip">
       <Nav.Undertittel>Vurdering av sokkel eller skip</Nav.Undertittel>
+      <SokkelSkipListe alleSokkelSkip={maritimtArbeid} />
       <Nav.Fieldset legend="Hvordan arbeider søkeren:">
-        <Skjema.Radio feltNavn="vilkar.sokkel_skip" value={VurderingSokkelSkipTyper.YRKESAKTIV} label="På norsk sokkel" />
-        <Skjema.Radio feltNavn="vilkar.sokkel_skip" value={VurderingSokkelSkipTyper.YRKESAKTIV_SKIP} label="På skip i innenrikstrafikk" />
-        <Skjema.Radio feltNavn="vilkar.sokkel_skip" value={VurderingSokkelSkipTyper.YRKESAKTIV_FLYVENDE} label="På skip registrert i ett land" />
-        <Skjema.Radio feltNavn="vilkar.sokkel_skip" value={VurderingSokkelSkipTyper.IKKE_YRKESAKTIV} label="Utsendt til et annet lands sokkel" />
-        <Skjema.Radio feltNavn="vilkar.sokkel_skip" value={VurderingSokkelSkipTyper.KONTANTYTELSESMOTTAKER} label="To sokler / skip i flere land" />
+        <Skjema.Radio feltNavn="vilkar.sokkel_skip" value={VurderingSokkelSkipTyper.SKIP_INNENRIKS} label="På norsk sokkel" />
+        <Skjema.Radio feltNavn="vilkar.sokkel_skip" value={VurderingSokkelSkipTyper.SKIP_ETT_LAND} label="På skip i innenrikstrafikk" />
+        <Skjema.Radio feltNavn="vilkar.sokkel_skip" value={VurderingSokkelSkipTyper.SOKKEL_NORSK} label="På skip registrert i ett land" />
+        <Skjema.Radio feltNavn="vilkar.sokkel_skip" value={VurderingSokkelSkipTyper.SOKKEL_UTLAND} label="Utsendt til et annet lands sokkel" />
+        <Skjema.Radio feltNavn="vilkar.sokkel_skip" value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND} label="To sokler / skip i flere land" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -35,6 +81,7 @@ const VurderingSokkelSkip = props => {
 VurderingSokkelSkip.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
+  skjema: PT.object.isRequired,
 };
 
 VurderingSokkelSkip.defaultProps = {
