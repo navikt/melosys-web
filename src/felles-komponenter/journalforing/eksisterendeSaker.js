@@ -26,7 +26,7 @@ const EnkeltSak = props => {
         <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(behandlingstype)}</dd>
         <dt className="enkeltSak__meta__term">Behandlingsstatus: </dt>
         <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus)}</dd>
-        <dt className="enkeltSak__meta__term">Registrert:</dt>
+        <dt className="enkeltSak__meta__term">Opprettet:</dt>
         <dd className="enkeltSak__meta__detalj">{<EnkeltDato dato={opprettetDato} />}</dd>
         <dt className="enkeltSak__meta__term">Søknadsperiode: </dt>
         <dd className="enkeltSak__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
