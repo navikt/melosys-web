@@ -26,7 +26,7 @@ import {
   fagsakSelectors,
 } from '../../ducks/fagsaker/';
 
-import { saksflytOperations, saksflytSelectors } from '../../ducks/saksflyt';
+import { oppfriskningOperations, oppfriskningSelectors } from '../../ducks/oppfriskning';
 
 import {
   soknadOperations,
@@ -142,7 +142,7 @@ Saksopplysninger.propTypes = {
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
-  sjekkSaksflytStatus: PT.func.isRequired,
+  sjekkOppfriskningStatus: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   person: MPT.Person,
   sendSoknad: PT.func.isRequired,
@@ -167,7 +167,7 @@ Saksopplysninger.defaultProps = {
 
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  saksflyt: saksflytSelectors.SaksflytSelector(state),
+  oppfriskning: oppfriskningSelectors.OppfriskningSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
@@ -266,7 +266,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
+  sjekkOppfriskningStatus: behandlingID => dispatch(oppfriskningOperations.sjekkStatus(behandlingID)),
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
