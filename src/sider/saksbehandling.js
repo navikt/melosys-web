@@ -17,7 +17,7 @@ import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
-import { oppfriskningOperations, oppfriskningSelectors } from '../ducks/oppfriskning';
+import { saksopplysningerOperations, saksopplysningerSelectors } from '../ducks/saksopplysninger';
 import { oppgaverOperations } from '../ducks/oppgaver/';
 import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder/';
 import { soknadOperations, soknadSelectors } from '../ducks/soknad/';
@@ -228,13 +228,13 @@ class Saksbehandling extends Component {
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  oppfriskning: oppfriskningSelectors.OppfriskningSelector(state),
+  oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  sjekkOppfriskningStatus: behandlingID => dispatch(oppfriskningOperations.sjekkStatus(behandlingID)),
+  sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),

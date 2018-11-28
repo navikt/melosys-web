@@ -7,7 +7,7 @@
 
 import { createSelector } from 'reselect';
 
-export const OppfriskningSelector = createSelector(
-  state => state.oppfriskning.data,
-  oppfriskning => oppfriskning
+export const SaksopplysningerSelector = createSelector(
+  state => state.saksopplysninger.data,
+  saksopplysninger => saksopplysninger
 );

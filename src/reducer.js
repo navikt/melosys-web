@@ -9,7 +9,7 @@ import journalforingReducer from './ducks/journalforing';
 import kodeverkReducer from './ducks/kodeverk';
 import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
 import oppgaverReducer from './ducks/oppgaver';
-import oppfriskningReducer from './ducks/oppfriskning';
+import saksopplysningerReducer from './ducks/saksopplysninger';
 import organisasjonerReducer from './ducks/organisasjoner';
 import personerReducer from './ducks/personer';
 import saksbehandlerReducer from './ducks/saksbehandler/';
@@ -34,6 +34,6 @@ export default combineReducers({
   organisasjoner: organisasjonerReducer,
   personer: personerReducer,
   vilkar: vilkarReducer,
-  oppfriskning: oppfriskningReducer,
+  saksopplysninger: saksopplysningerReducer,
   sok: sokReducer,
 });

@@ -8,7 +8,7 @@ import * as Kodeverk from './modules/kodeverk';
 import * as Lovvalgsperioder from './modules/lovvalgsperioder';
 import * as Personer from './modules/personer';
 import * as Organisasjoner from './modules/organisasjoner';
-import * as Oppfriskning from './modules/oppfriskning';
+import * as Saksopplysninger from './modules/saksopplysninger';
 import * as Oppgaver from './modules/oppgaver';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Soknader from './modules/soknader';
@@ -39,7 +39,7 @@ export {
   Kodeverk,
   Lovvalgsperioder,
   Oppgaver,
-  Oppfriskning,
+  Saksopplysninger,
   Organisasjoner,
   Personer,
   Saksbehandler,
