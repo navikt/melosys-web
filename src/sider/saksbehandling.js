@@ -17,7 +17,7 @@ import SideKommentarer from '../felles-komponenter/sideKommentarer';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
-import { saksflytOperations, saksflytSelectors } from '../ducks/saksflyt';
+import { oppfriskningOperations, oppfriskningSelectors } from '../ducks/oppfriskning';
 import { oppgaverOperations } from '../ducks/oppgaver/';
 import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder/';
 import { soknadOperations, soknadSelectors } from '../ducks/soknad/';
@@ -39,7 +39,7 @@ class Saksbehandling extends Component {
     resetAvklartefaktaState: PT.func.isRequired,
     resetSoknadState: PT.func.isRequired,
     resetLovvalgsperiode: PT.func.isRequired,
-    sjekkSaksflytStatus: PT.func.isRequired,
+    sjekkOppfriskningStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
     sendSoknad: PT.func.isRequired,
     soknad: PT.object,
@@ -73,7 +73,7 @@ class Saksbehandling extends Component {
   lastInnSaksopplysninger = async () => {
     const {
       hentFagsaker, hentSoknad,
-      sjekkSaksflytStatus,
+      sjekkOppfriskningStatus,
     } = this.props;
     const { snr } = this.props.match.params;
     const response = await hentFagsaker(snr);
@@ -82,11 +82,11 @@ class Saksbehandling extends Component {
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
 
-    const saksflyt = await sjekkSaksflytStatus(behandlingID);
-    const { data: saksFlytData } = saksflyt;
-    if (saksFlytData && saksFlytData.response) {
+    const oppfriskningStatus = await sjekkOppfriskningStatus(behandlingID);
+    const { data: status } = oppfriskningStatus;
+    if (status && status.response) {
       this.skjulOppfriskBekreftelse();
-    } else if (saksFlytData === 'PROGRESS') {
+    } else if (status === 'PROGRESS') {
       this.blokkerInnholdMedOppfriskSpinner();
     } else {
       await hentSoknad(behandlingID);
@@ -123,13 +123,13 @@ class Saksbehandling extends Component {
   };
 
   hentBehandlingStatus = async () => {
-    const { sjekkSaksflytStatus } = this.props;
+    const { sjekkOppfriskningStatus } = this.props;
     const { behandlingID } = this.props.oppsummering;
-    const saksflyt = await sjekkSaksflytStatus(behandlingID);
+    const oppfriskning = await sjekkOppfriskningStatus(behandlingID);
 
-    if (saksflyt && saksflyt.response) {
+    if (oppfriskning && oppfriskning.response) {
       this.skjulOppfriskBekreftelse();
-    } else if (saksflyt.data === 'DONE') {
+    } else if (oppfriskning.data === 'DONE') {
       this.skjulOppfriskBekreftelse();
       this.lastInnSaksopplysninger();
     }
@@ -228,13 +228,13 @@ class Saksbehandling extends Component {
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  saksflyt: saksflytSelectors.SaksflytSelector(state),
+  oppfriskning: oppfriskningSelectors.OppfriskningSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
+  sjekkOppfriskningStatus: behandlingID => dispatch(oppfriskningOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),

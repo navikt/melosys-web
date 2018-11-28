@@ -13,7 +13,7 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function sjekkStatus(behandlingID) {
-  return doThenDispatch(() => Api.Saksflyt.sjekkStatus(behandlingID), {
+  return doThenDispatch(() => Api.Oppfriskning.sjekkStatus(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
