@@ -40,7 +40,7 @@ class Artikkel12_1 extends Steg {
 
       return {
         harAvklaring: harAvklaring && !manglerBegrunnelse,
-        visBegrunnelser: art12_1 === false,
+        visBegrunnelser: art12_1 === false || (art12_1 === undefined && art16_1 === undefined),
         art12_1,
         art16_1,
       };
