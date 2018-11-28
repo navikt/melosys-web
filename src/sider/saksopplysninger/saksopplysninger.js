@@ -21,12 +21,9 @@ import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgi
 import Stegvelger from '../../felles-komponenter/stegvelger';
 import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
 
-import {
-  fagsakOperations,
-  fagsakSelectors,
-} from '../../ducks/fagsaker/';
+import { fagsakSelectors } from '../../ducks/fagsaker/';
 
-import { oppfriskningOperations, oppfriskningSelectors } from '../../ducks/oppfriskning';
+import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
 
 import {
   soknadOperations,
@@ -167,7 +164,7 @@ Saksopplysninger.defaultProps = {
 
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  oppfriskning: oppfriskningSelectors.OppfriskningSelector(state),
+  oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
@@ -266,8 +263,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sjekkOppfriskningStatus: behandlingID => dispatch(oppfriskningOperations.sjekkStatus(behandlingID)),
-  oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
+  sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
+  oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
   sendAvklartefakta: (bid, dokument) => dispatch(avklartefaktaOperations.send(bid, dokument)),
