@@ -15,6 +15,7 @@ import Virksomhet from './virksomhet';
 import VesentligVirksomhet from './vesentlig_virksomhet';
 import NormaltDriverVirksomhet from './normalt_driver_virksomhet';
 import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
+import SokkelSkip from './sokkel_skip';
 import Vedtak from './vedtak';
 
 
@@ -37,4 +38,5 @@ export {
   NormaltDriverVirksomhet,
   YrkesaktivitetAntallLand,
   Vedtak,
+  SokkelSkip,
 };
