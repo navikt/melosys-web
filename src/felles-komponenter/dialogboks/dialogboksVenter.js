@@ -7,35 +7,40 @@ import './dialogboksVenter.css';
 
 /* eslint react/prefer-stateless-function:off */
 class DialogboksVenter extends Component {
-  state = {
-    tid: 0,
-  };
+  constructor() {
+    super();
+    this.state = { venteTid: 0 };
+
+    this.MAKS_VENTETID = 15000;
+    this.OPPDATERING_INTERVALL = 5000;
+  }
 
   componentDidMount = () => {
-    this.timer = setInterval(this.sjekkForTimeout, this.oppdateringintervall);
+    this.timer = setInterval(this.sjekkStatus, this.OPPDATERING_INTERVALL);
   };
 
   componentWillUnmount() {
     clearInterval(this.timer);
   }
 
-  oppdateringintervall = 10000;
-  timeoutTid = 30000;
-
-  sjekkForTimeout = () => {
-    this.setState({ tid: this.state.tid + this.oppdateringintervall });
-
-    if (this.state.tid >= this.timeoutTid) {
-      if (this.props.tilForsiden) { this.props.tilForsiden(); }
-    } else {
+  sjekkStatus = () => {
+    const venteTid = this.state.venteTid + this.OPPDATERING_INTERVALL;
+    this.setState({ venteTid }, () => {
       this.props.oppdater();
-    }
+    });
   };
 
   render () {
     const {
       tittel, tekst, synlig, tilForsiden,
     } = this.props;
+
+    const venteTekst = this.state.venteTid < this.MAKS_VENTETID ?
+      <Nav.Normaltekst className="tekst">{tekst}</Nav.Normaltekst>
+      :
+      <Nav.AlertStripe className="alertStripe" type="advarsel">
+        Dette tar lengre tid enn normalt. Du kan velge å gå tilbake til forsiden for å behandle en annen sak i mellomtiden.
+      </Nav.AlertStripe>;
 
     return (
       <Nav.Modal
@@ -47,8 +52,8 @@ class DialogboksVenter extends Component {
         shouldCloseOnOverlayClick={false}>
         <div>
           <Nav.NavFrontendSpinner className="spinner" />
-          <Nav.Systemtittel className="tekst">{tittel}</Nav.Systemtittel>
-          <Nav.Normaltekst className="tekst">{tekst}</Nav.Normaltekst>
+          <Nav.Systemtittel className="overskrift">{tittel}</Nav.Systemtittel>
+          {venteTekst}
           <div className="dialogboksVenter__container__knapperad">
             <Nav.Knapp onClick={tilForsiden}>Til forsiden</Nav.Knapp>
           </div>
