@@ -82,16 +82,16 @@ class Saksbehandling extends Component {
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
 
+    // Sjekk om saken er iferd under oppdatering
     const oppfriskningStatus = await sjekkOppfriskningStatus(behandlingID);
     const { data: status } = oppfriskningStatus;
-    if (status && status.response) {
-      this.skjulOppfriskBekreftelse();
-    } else if (status === 'PROGRESS') {
+
+    if (status === 'PROGRESS') {
       this.blokkerInnholdMedOppfriskSpinner();
-    } else {
-      await hentSoknad(behandlingID);
+      return false;
     }
 
+    await hentSoknad(behandlingID);
     return true;
   };
 
