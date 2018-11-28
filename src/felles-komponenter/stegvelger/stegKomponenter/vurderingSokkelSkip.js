@@ -5,6 +5,8 @@ import * as Skjema from '../../skjema';
 import LandVelger from '../../skjema/landvelger';
 import Listevelger from '../../skjema/listevelger';
 
+import * as Koder from '../../../koder';
+
 import './vurderingSokkelSkip.css';
 
 export const VurderingSokkelSkipTyper = {
@@ -15,34 +17,37 @@ export const VurderingSokkelSkipTyper = {
   SOKKEL_ELLER_SKIP_FLERE_LAND: 'SOKKEL_ELLER_SKIP_FLERE_LAND',
 };
 
+const SokkelSkipEnkelt = props => {
+  const { sokkelSkipInfo, begrunnelser } = props;
+  const { navn } = sokkelSkipInfo;
+
+  return (
+    <Nav.Row className="sokkelSkip__liste__rad">
+      <Nav.Column xs={3} className="rad__navn">{navn}</Nav.Column>
+      <Nav.Column xs={3} className="rad__sokkel">
+        <Skjema.Radio feltNavn="felt1" value={Koder.SOKKEL} label="Sokkel" />
+        <Skjema.Radio feltNavn="felt2" value={Koder.SKIP} label="Skip" />
+      </Nav.Column>
+      <Nav.Column xs={3} className="rad__begrunnelse"><Listevelger feltNavn="begrunnelse" label="Begrunnelse" muligeValg={begrunnelser} /></Nav.Column>
+      <Nav.Column xs={3} className="rad__land"><LandVelger multiLand={false} label="Arbeidsland" /></Nav.Column>
+    </Nav.Row>
+  );
+};
+
+SokkelSkipEnkelt.propTypes = {
+  sokkelSkipInfo: PT.object.isRequired,
+  begrunnelser: PT.object.isRequired,
+};
+
 const SokkelSkipListe = props => {
   const { alleSokkelSkip } = props;
-  const sokkelSkipBegrunnelser = [
+  const begrunnelser = [
     { kode: 'something', term: 'Another thing' },
   ];
 
-  console.log(alleSokkelSkip);
-
   return (
     <div className="sokkelSkip__liste">
-      <Nav.Row className="sokkelSkip__liste__rad">
-        <Nav.Column xs={3} className="rad__navn">Navn på sokkel</Nav.Column>
-        <Nav.Column xs={3} className="rad__sokkel">
-          <Skjema.Radio feltNavn="felt1" label="Sokkel" />
-          <Skjema.Radio feltNavn="felt2" label="Skip" />
-        </Nav.Column>
-        <Nav.Column xs={3} className="rad__begrunnelse"><Listevelger feltNavn="begrunnelse" label="Begrunnelse" muligeValg={sokkelSkipBegrunnelser} /></Nav.Column>
-        <Nav.Column xs={3} className="rad__land"><LandVelger multiLand={false} label="Arbeidsland" /></Nav.Column>
-      </Nav.Row>
-      <Nav.Row className="sokkelSkip__liste__rad">
-        <Nav.Column xs={3} className="rad__navn">Navn på sokkel</Nav.Column>
-        <Nav.Column xs={3} className="rad__sokkel">
-          <Skjema.Radio feltNavn="felt1" label="Sokkel" />
-          <Skjema.Radio feltNavn="felt2" label="Skip" />
-        </Nav.Column>
-        <Nav.Column xs={3} className="rad__begrunnelse"><Listevelger feltNavn="begrunnelse" label="Begrunnelse" muligeValg={sokkelSkipBegrunnelser} /></Nav.Column>
-        <Nav.Column xs={3} className="rad__land"><LandVelger multiLand={false} label="Arbeidsland" /></Nav.Column>
-      </Nav.Row>
+      { alleSokkelSkip.map((enkelt, index) => <SokkelSkipEnkelt sokkelSkipInfo={enkelt} index={index} begrunnelser={begrunnelser} />)}
     </div>
   );
 };
