@@ -39,7 +39,7 @@ class Artikkel12_2 extends Steg {
 
       return {
         harAvklaring: harAvklaring && !manglerBegrunnelse,
-        visBegrunnelser: _propsLight.skjema.vilkar.art12_2 === false,
+        visBegrunnelser: _propsLight.skjema.vilkar.art12_2 === false || (art12_2 === undefined && art16_1 === undefined),
         art12_2: _propsLight.skjema.vilkar.art12_2,
         art16_1: _propsLight.skjema.vilkar.art16_1,
       };

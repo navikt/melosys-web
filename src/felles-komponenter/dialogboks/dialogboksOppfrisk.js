@@ -24,7 +24,7 @@ class DialogboksOppfriskSak extends Component {
         {!this.state.venterResultat &&
         <DialogboksBekreft
           tittel="Vil du oppdatere registeropplysninger?"
-          tekst="Oppdatering av registeropplysning kan ta noe tid. Du vil derfor bli sendt tilbake til oppgavelisten hvor du kan journalføre eller behandle en annen sak i mellomtiden."
+          tekst="Oppdatering av registeropplysning kan ta noe tid. Du kan velge om du vil gå tilbake til forsiden for å behandle en annen oppgave imens."
           bekreft={this.start}
           avbryt={avbryt}
           synlig
@@ -33,7 +33,7 @@ class DialogboksOppfriskSak extends Component {
         {this.state.venterResultat &&
         <DialogboksVenter
           tittel="Oppdaterer registeropplysninger"
-          tekst="Oppdatering av registeropplysning kan ta noen minutter, venligst vent."
+          tekst="Vent mens registeropplysningene hentes på nytt fra TPS, Aa-register, Medl etc."
           synlig
           tilForsiden={tilForsiden}
           oppdater={oppdater}
