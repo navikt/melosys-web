@@ -84,6 +84,7 @@ class Saksbehandling extends Component {
 
     const saksflyt = await sjekkSaksflytStatus(behandlingID);
     const { data: saksFlytData } = saksflyt;
+
     if (saksFlytData && saksFlytData.response) {
       this.skjulOppfriskBekreftelse();
     } else if (saksFlytData === 'PROGRESS') {
