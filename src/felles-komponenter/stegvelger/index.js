@@ -84,7 +84,7 @@ class Stegvelger extends Component {
   fatteVedtakHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const { fatteVedtak } = this.props;
-    const vedtakBody = { behandlingsresultat: 'FASTSATT_LOVVALGSLAND' };
+    const vedtakBody = { behandlingsresultattype: 'FASTSATT_LOVVALGSLAND' };
     await fatteVedtak(bid, vedtakBody);
     this.props.history.push('/');
   };
