@@ -67,7 +67,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp type="hoved" onClick={() => props.lagreVedtakHandler()}>Fatt vedtak</Nav.Knapp>
+            <Nav.Knapp type="hoved" onClick={() => props.fatteVedtakHandler()}>Fatt vedtak</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -76,7 +76,7 @@ const VurderingVedtak = props => {
 };
 
 VurderingVedtak.propTypes = {
-  lagreVedtakHandler: PT.func.isRequired,
+  fatteVedtakHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
