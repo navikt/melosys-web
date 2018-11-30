@@ -277,10 +277,14 @@ export const OppsummeringSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].oppsummering : []),
   (saksdata, behandlingsdata) => ({
     saksnummer: saksdata.saksnummer,
-    behandlingID: behandlingsdata.behandlingID,
     sakstype: saksdata.sakstype,
+    behandlingID: behandlingsdata.behandlingID,
     status: behandlingsdata.status,
     registrertDato: behandlingsdata.registrertDato,
+    endretDato: behandlingsdata.endretDato,
+    opprettetDato: behandlingsdata.opprettetDato,
+    aktivTil: behandlingsdata.aktivTil,
     sisteOpplysningerHentetDato: behandlingsdata.sisteOpplysningerHentetDato,
+    behandlingstype: behandlingsdata.behandlingstype,
   })
 );
