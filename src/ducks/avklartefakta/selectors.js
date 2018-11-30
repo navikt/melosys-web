@@ -21,6 +21,13 @@ const avklartefaktaKoder = {
   YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
   YRKESAKTIVITET: 'YRKESAKTIVITET',
   AVKLARTE_ARBEIDSGIVER: 'AVKLARTE_ARBEIDSGIVER',
+  SOKKEL_ELLER_SKIP: 'SOKKEL_ELLER_SKIP',
+  ARBEIDSLAND: 'ARBEIDSLAND',
+  ARBEID_SOKKEL_SKIP: 'ARBEID_SOKKEL_SKIP',
+};
+
+const referanseKoder = {
+  INSTALLASJON_ARBEIDSLAND: 'INSTALLASJON_ARBEIDSLAND',
 };
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
@@ -165,3 +172,34 @@ export const AvklartefaktaVurderingSelector = createSelector(
   vurdering => vurdering || {}
 );
 
+/* Avklartfakta for hvorvidt en installasjon er SOKKEL eller SKIP.
+ * Selectoren henter avklaringer fra redux state og omformer de til array<object> som
+ * Redux Form kan lese.
+ */
+export const SokkelEllerSkipSelector = createSelector(
+  state => AvklartefaktaSelector(state),
+  alleAvklarteFakta => {
+    const arbeidsland = alleAvklarteFakta
+      .filter(avklaring => avklaring.referanse === referanseKoder.INSTALLASJON_ARBEIDSLAND)
+      .map(avklaring => avklaring.fakta[0]);
+
+    const sokkelEllerSkip = alleAvklarteFakta
+      .filter(avklaring => avklaring.referanse === avklartefaktaKoder.SOKKEL_ELLER_SKIP)
+      .map((avklaring, index) => ({
+        installasjonsType: avklaring.fakta[0],
+        arbeidsland: arbeidsland[index],
+        installasjonsTypeBegrunnelse: avklaring.begrunnelseKoder && avklaring.begrunnelseKoder[0],
+      }));
+
+    return sokkelEllerSkip;
+  }
+);
+
+export const ArbeidSokkelSkipSelector = createSelector(
+  state => AvklartefaktaSelector(state),
+  alleAvklarteFakta => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.ARBEID_SOKKEL_SKIP);
+    if (!avklartFakta) return null;
+    return avklartFakta.fakta[0];
+  }
+);
