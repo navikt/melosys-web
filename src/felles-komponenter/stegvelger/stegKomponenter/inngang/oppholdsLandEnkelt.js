@@ -31,6 +31,7 @@ class OppholdsLandEnkelt extends Component {
     const {
       landKodeObjekt, bekreftFjern, oppholdBegrunnelser,
     } = this.props;
+
     const { erSlettingIntensjon } = this.state;
     const { settSlettIntensjon, avbryt } = this;
 
