@@ -109,7 +109,7 @@ class Saksopplysninger extends Component {
     return behandlingID ? (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
         <Stegvelger
-          lagreVedtakHandler={this.lagreVedtakHandler}
+          fatteVedtakHandler={this.fatteVedtakHandler}
           lagreSoknadHandler={this.lagreSoknadHandler}
           oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
         />
