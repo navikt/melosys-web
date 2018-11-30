@@ -107,6 +107,13 @@ class OppholdsLandListe extends Component {
                 erGyldig={opphold.erGyldig}
                 oppholdBegrunnelser={oppholdBegrunnelser} />))
             }
+            {
+              alleGyldigeOppholdsland.length === 0 && (
+                <div className="oppholdsland__liste__varsel">
+                  <Nav.AlertStripe type="advarsel">Det er ikke lagt til noen gyldige oppholdsland!</Nav.AlertStripe>
+                </div>
+              )
+            }
             <OppholdsLandHandlingLeggTil
               bekreftLeggTil={bekreftLeggTil}
               alleLandKoder={alleUbrukteLandkoder}
