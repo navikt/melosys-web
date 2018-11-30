@@ -6,17 +6,20 @@ import { FieldArray } from 'redux-form';
 import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
+import * as formSelectors from '../ducks/form/selectors';
+import * as soknadActions from '../ducks/soknad/actions';
+
 import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../constants';
 
 import PanelHeader from './panelHeader/panelHeader';
 import OrganisasjonsAdresse from './adresser/organisasjonsAdresse';
 
-import './selvstendigArbeid.css';
-import * as formSelectors from '../ducks/form/selectors';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../ducks/organisasjoner';
-import * as soknadActions from '../ducks/soknad/actions';
 
+import './selvstendigArbeid.css';
+
+/* eslint react/no-multi-comp:off */
 class EnkeltForetak extends Component {
   state = { feilmelding: null };
 
@@ -101,38 +104,55 @@ EnkeltForetak.defaultProps = {
   organisasjon: null,
 };
 
-const SelvstendigeForetak = ({
-  fields, organisasjoner, hentOrganisasjon, oppdaterSoknadState, skjema,
-}) => (
-  <div>
-    {fields.map((foretaket, index) => (
-      <EnkeltForetak
-        key={foretaket}
-        orgnr={fields.get(index).orgnr}
-        organisasjon={organisasjoner.find(organisasjon => organisasjon.orgnr === fields.get(index).orgnr) || null}
-        foretaket={foretaket}
-        posisjon={index + 1}
-        hentOrganisasjon={hentOrganisasjon}
-        slettForetak={() => fields.remove(index)}
-        oppdaterSoknadState={oppdaterSoknadState}
-        skjema={skjema}
-      />))
+class SelvstendigeForetak extends Component {
+  componentDidUpdate(prevProps) {
+    const { fields: oldFields } = prevProps;
+    const { oppdaterSoknadState, skjema, fields } = this.props;
+
+    // Sjekk om listen over selvstendig næringsdrivende
+    // har oppdatert seg siden sist. I såfall, oppdaterSoknadState.
+    if (fields.length !== oldFields.length) {
+      oppdaterSoknadState(skjema);
     }
-    <div className="leggTilForetak">
-      <Nav.Row>
-        <Nav.Column xs="12">
-          <Nav.Knapp mini onClick={() => fields.push({})}>Legg til nytt foretak</Nav.Knapp>
-        </Nav.Column>
-      </Nav.Row>
-    </div>
-  </div>
-);
+  }
+
+  render() {
+    const {
+      fields, organisasjoner, hentOrganisasjon, oppdaterSoknadState, skjema,
+    } = this.props;
+
+    return (
+      <div>
+        {fields.map((foretaket, index) => (
+          <EnkeltForetak
+            key={foretaket}
+            orgnr={fields.get(index).orgnr}
+            organisasjon={organisasjoner.find(organisasjon => organisasjon.orgnr === fields.get(index).orgnr) || null}
+            foretaket={foretaket}
+            posisjon={index + 1}
+            hentOrganisasjon={hentOrganisasjon}
+            slettForetak={() => fields.remove(index)}
+            oppdaterSoknadState={oppdaterSoknadState}
+            skjema={skjema}
+          />))
+        }
+        <div className="leggTilForetak">
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Nav.Knapp mini onClick={() => fields.push({})}>Legg til nytt foretak</Nav.Knapp>
+            </Nav.Column>
+          </Nav.Row>
+        </div>
+      </div>
+    );
+  }
+}
 
 SelvstendigeForetak.propTypes = {
   fields: PT.object.isRequired,
+  hentOrganisasjon: PT.func.isRequired,
   organisasjoner: PT.array.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
-  hentOrganisasjon: PT.func.isRequired,
   skjema: PT.object.isRequired,
 };
 
