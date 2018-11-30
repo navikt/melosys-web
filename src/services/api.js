@@ -1,7 +1,6 @@
-import * as Saksflyt from './modules/saksflyt';
+import * as Avklartefakta from './modules/avklartefakta';
 import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker';
-import * as Avklartefakta from './modules/avklartefakta';
 import * as Health from './modules/health';
 import * as Inngang from './modules/inngang';
 import * as Journalforing from './modules/journalforing';
@@ -9,6 +8,7 @@ import * as Kodeverk from './modules/kodeverk';
 import * as Lovvalgsperioder from './modules/lovvalgsperioder';
 import * as Personer from './modules/personer';
 import * as Organisasjoner from './modules/organisasjoner';
+import * as Saksopplysninger from './modules/saksopplysninger';
 import * as Oppgaver from './modules/oppgaver';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Soknader from './modules/soknader';
@@ -30,16 +30,16 @@ function erDev() {
 
 
 export {
-  Saksflyt,
+  Avklartefakta,
   Dokumenter,
   Fagsaker,
-  Avklartefakta,
   Health,
   Inngang,
   Journalforing,
   Kodeverk,
   Lovvalgsperioder,
   Oppgaver,
+  Saksopplysninger,
   Organisasjoner,
   Personer,
   Saksbehandler,

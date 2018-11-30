@@ -60,15 +60,6 @@ function sok(fnr) {
   });
 }
 
-/**
- * Kaller backend for å be om oppfrisking av en sak.
- * @param behandlingID
- * @returns {*}
- */
-function oppfrisk(behandlingID) {
-  return Api.Fagsaker.oppfrisk(behandlingID);
-}
-
 function resetFagsakState() {
   return Actions.resetFagsakState();
 }
@@ -77,6 +68,5 @@ export {
   hent,
   opprett,
   sok,
-  oppfrisk,
   resetFagsakState,
 };
