@@ -1,4 +1,5 @@
 import * as Avklartefakta from './modules/avklartefakta';
+import * as Behandlinger from './modules/behandlinger';
 import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker';
 import * as Health from './modules/health';
@@ -12,8 +13,8 @@ import * as Saksopplysninger from './modules/saksopplysninger';
 import * as Oppgaver from './modules/oppgaver';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Soknader from './modules/soknader';
-import * as Vilkar from './modules/vilkar';
 import * as Vedtak from './modules/vedtak';
+import * as Vilkar from './modules/vilkar';
 
 /*
 function erDev() {
@@ -31,6 +32,7 @@ function erDev() {
 
 export {
   Avklartefakta,
+  Behandlinger,
   Dokumenter,
   Fagsaker,
   Health,
@@ -44,6 +46,6 @@ export {
   Personer,
   Saksbehandler,
   Soknader,
-  Vilkar,
   Vedtak,
+  Vilkar,
 };
