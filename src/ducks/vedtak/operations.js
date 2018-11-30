@@ -12,8 +12,8 @@ import * as Api from '../../services/api';
 import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
-export function lagre(behandlingID, body) {
-  return doThenDispatch(() => Api.Vedtak.lagre(behandlingID, body), {
+export function fatte(behandlingID, body) {
+  return doThenDispatch(() => Api.Vedtak.fatte(behandlingID, body), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

@@ -81,11 +81,19 @@ class Stegvelger extends Component {
     await sendLovvalgsperioder(bid, lovvalgsperioder);
   };
 
-  lagreVedtakHandler = async () => {
+  fatteVedtakHandler = async behandlingsresultattype => {
     const bid = this.props.oppsummering.behandlingID;
-    const { lagreVedtak } = this.props;
-    await lagreVedtak(bid);
+    const { fatteVedtak } = this.props;
+    const vedtakBody = { behandlingsresultattype };
+    await fatteVedtak(bid, vedtakBody);
     this.props.history.push('/');
+  };
+
+  lagreOgFatteVedtak = async behandlingsresultattype => {
+    await this.lagreVilkarHandler();
+    await this.lagreAvklartefaktaHandler();
+    await this.lagreLovvalgsperioderHandler();
+    await this.fatteVedtakHandler(behandlingsresultattype);
   };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
@@ -97,22 +105,22 @@ class Stegvelger extends Component {
   oppdaterAktuelleSteg = props => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
-      lagreVedtakHandler: this.lagreVedtakHandler,
+      lagreOgFatteVedtak: this.lagreOgFatteVedtak,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
     };
 
     const propsLight = {
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
-      valgteArbeidsgivere: props.valgteArbeidsgivere,
       avklartefakta: props.avklartefakta,
       begrunnelser: props.begrunnelser,
-      saksopplysninger: props.saksopplysninger,
-      inngang: props.inngang,
       landkoder: props.landkoder,
-      tilgjengeligeHandlers,
-      skjema: props.skjema,
-      vilkar: props.vilkar,
       lovvalgsperioder: props.lovvalgsperioder,
+      inngang: props.inngang,
+      tilgjengeligeHandlers,
+      saksopplysninger: props.saksopplysninger,
+      skjema: props.skjema,
+      valgteArbeidsgivere: props.valgteArbeidsgivere,
+      vilkar: props.vilkar,
     };
 
     const stegMotor = new StegMotor(propsLight);
@@ -200,7 +208,7 @@ Stegvelger.propTypes = {
   sendAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
   history: PT.object.isRequired,
-  lagreVedtak: PT.func.isRequired,
+  fatteVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk),
   inngang: PT.object,
@@ -244,7 +252,7 @@ const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  lagreVedtak: behandlingID => dispatch(vedtakOperations.lagre(behandlingID)),
+  fatteVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
