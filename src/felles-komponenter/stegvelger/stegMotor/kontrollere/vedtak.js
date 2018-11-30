@@ -18,7 +18,7 @@ class Vedtak extends Steg {
     this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = () => ({});
     this._handlers = {
-      fatteVedtakHandler: this._propsLight.tilgjengeligeHandlers.fatteVedtakHandler,
+      lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
     };
     this._status = FANE_STATUS.OK;
   }

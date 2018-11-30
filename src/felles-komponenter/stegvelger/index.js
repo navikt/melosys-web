@@ -81,12 +81,19 @@ class Stegvelger extends Component {
     await sendLovvalgsperioder(bid, lovvalgsperioder);
   };
 
-  fatteVedtakHandler = async () => {
+  fatteVedtakHandler = async behandlingsresultattype => {
     const bid = this.props.oppsummering.behandlingID;
     const { fatteVedtak } = this.props;
-    const vedtakBody = { behandlingsresultattype: 'FASTSATT_LOVVALGSLAND' };
+    const vedtakBody = { behandlingsresultattype };
     await fatteVedtak(bid, vedtakBody);
     this.props.history.push('/');
+  };
+
+  lagreOgFatteVedtak = async behandlingsresultattype => {
+    await this.lagreVilkarHandler();
+    await this.lagreAvklartefaktaHandler();
+    await this.lagreLovvalgsperioderHandler();
+    await this.fatteVedtakHandler(behandlingsresultattype);
   };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
@@ -98,22 +105,22 @@ class Stegvelger extends Component {
   oppdaterAktuelleSteg = props => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
-      fatteVedtakHandler: this.fatteVedtakHandler,
+      lagreOgFatteVedtak: this.lagreOgFatteVedtak,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
     };
 
     const propsLight = {
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
-      valgteArbeidsgivere: props.valgteArbeidsgivere,
       avklartefakta: props.avklartefakta,
       begrunnelser: props.begrunnelser,
-      saksopplysninger: props.saksopplysninger,
-      inngang: props.inngang,
       landkoder: props.landkoder,
-      tilgjengeligeHandlers,
-      skjema: props.skjema,
-      vilkar: props.vilkar,
       lovvalgsperioder: props.lovvalgsperioder,
+      inngang: props.inngang,
+      tilgjengeligeHandlers,
+      saksopplysninger: props.saksopplysninger,
+      skjema: props.skjema,
+      valgteArbeidsgivere: props.valgteArbeidsgivere,
+      vilkar: props.vilkar,
     };
 
     const stegMotor = new StegMotor(propsLight);
