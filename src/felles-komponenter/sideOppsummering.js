@@ -124,15 +124,13 @@ class SideOppsummering extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12">
-              <div>
+              <div className="oppsummering__behandlingsstatus">
                 <form onSubmit={this.overstyrSubmit}>
-                  <Nav.Fieldset legend="Endre status på behandling til">
-                    <Nav.Select value={this.state.behandlingsstatus} onChange={this.onChange} label="Velg begrunnelse:">
-                      <option key="VELG" value="VELG">Velg...</option>
-                      <option key="AVVENT_DOK_UTL" value="AVVENT_DOK_UTL">{kodeTilVerdi('AVVENT_DOK_UTL', behandlingsstatusKodeVerk)}</option>
-                      <option key="AVVENT_DOK_PART" value="AVVENT_DOK_PART">{kodeTilVerdi('AVVENT_DOK_PART', behandlingsstatusKodeVerk)}</option>
-                    </Nav.Select>
-                  </Nav.Fieldset>
+                  <Nav.Select value={this.state.behandlingsstatus} onChange={this.onChange} label="Endre status på behandlingen:">
+                    <option key="VELG" value="VELG">Velg...</option>
+                    <option key="AVVENT_DOK_UTL" value="AVVENT_DOK_UTL">{kodeTilVerdi('AVVENT_DOK_UTL', behandlingsstatusKodeVerk)}</option>
+                    <option key="AVVENT_DOK_PART" value="AVVENT_DOK_PART">{kodeTilVerdi('AVVENT_DOK_PART', behandlingsstatusKodeVerk)}</option>
+                  </Nav.Select>
                   <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
                   {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
                 </form>
