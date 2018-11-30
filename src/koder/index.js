@@ -10,6 +10,11 @@ export const BOSATT_I_NORGE = 'BOSATT_I_NORGE';
 export const INNVILGET = 'INNVILGET';
 export const INNGANGSVILKAAR_EOSFO = 'INNGANGSVILKAAR_EOSFO';
 
+// Vedtakskoder
+export const FASTSATT_LOVVALGSLAND = 'FASTSATT_LOVVALGSLAND';
+export const ANMODNING_OM_UNNTAK = 'ANMODNING_OM_UNNTAK';
+
+
 // Interne frontend-spesifikke koder. Disse har ikke fag, brev eller arkitektur noe
 // forhold til, og benyttes kun frontend for å avgjøre riktige steg pr ID.
 export const OPPHOLDSLAND = 'OPPHOLDSLAND';

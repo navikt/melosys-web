@@ -21,12 +21,9 @@ import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgi
 import Stegvelger from '../../felles-komponenter/stegvelger';
 import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
 
-import {
-  fagsakOperations,
-  fagsakSelectors,
-} from '../../ducks/fagsaker/';
+import { fagsakSelectors } from '../../ducks/fagsaker/';
 
-import { saksflytOperations, saksflytSelectors } from '../../ducks/saksflyt';
+import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
 
 import {
   soknadOperations,
@@ -109,7 +106,7 @@ class Saksopplysninger extends Component {
     return behandlingID ? (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
         <Stegvelger
-          lagreVedtakHandler={this.lagreVedtakHandler}
+          fatteVedtakHandler={this.fatteVedtakHandler}
           lagreSoknadHandler={this.lagreSoknadHandler}
           oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
         />
@@ -142,7 +139,7 @@ Saksopplysninger.propTypes = {
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
-  sjekkSaksflytStatus: PT.func.isRequired,
+  sjekkOppfriskningStatus: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   person: MPT.Person,
   sendSoknad: PT.func.isRequired,
@@ -167,7 +164,7 @@ Saksopplysninger.defaultProps = {
 
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  saksflyt: saksflytSelectors.SaksflytSelector(state),
+  oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
@@ -266,8 +263,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sjekkSaksflytStatus: behandlingID => dispatch(saksflytOperations.sjekkStatus(behandlingID)),
-  oppfriskSaksopplysninger: saksnummer => fagsakOperations.oppfrisk(saksnummer),
+  sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
+  oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
   sendAvklartefakta: (bid, dokument) => dispatch(avklartefaktaOperations.send(bid, dokument)),

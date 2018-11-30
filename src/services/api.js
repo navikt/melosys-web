@@ -7,11 +7,11 @@ import * as Inngang from './modules/inngang';
 import * as Journalforing from './modules/journalforing';
 import * as Kodeverk from './modules/kodeverk';
 import * as Lovvalgsperioder from './modules/lovvalgsperioder';
-import * as Organisasjoner from './modules/organisasjoner';
-import * as Oppgaver from './modules/oppgaver';
 import * as Personer from './modules/personer';
+import * as Organisasjoner from './modules/organisasjoner';
+import * as Saksopplysninger from './modules/saksopplysninger';
+import * as Oppgaver from './modules/oppgaver';
 import * as Saksbehandler from './modules/saksbehandler';
-import * as Saksflyt from './modules/saksflyt';
 import * as Soknader from './modules/soknader';
 import * as Vedtak from './modules/vedtak';
 import * as Vilkar from './modules/vilkar';
@@ -41,11 +41,11 @@ export {
   Kodeverk,
   Lovvalgsperioder,
   Oppgaver,
+  Saksopplysninger,
   Organisasjoner,
   Personer,
   Saksbehandler,
   Soknader,
-  Saksflyt,
   Vedtak,
   Vilkar,
 };
