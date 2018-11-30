@@ -53,6 +53,13 @@ const journalforingGenerellValidering = verdier => {
     Mikrovalidering.navnAvsenderErBlank(verdier.avsenderNavn) || false
   );
 
+  const representantID = (
+    !Mikrovalidering.idErBlank(verdier.representantID) && (
+      Mikrovalidering.idErIkkeOrgnr(verdier.representantID) ||
+      Mikrovalidering.idFinnesIkke(verdier.representantNavn, verdier.representantID)
+      || false)
+  );
+
   const hoveddokumentTittel = dokumentTittelErBlank(verdier.hoveddokumentTittel) || false;
 
   return {
@@ -60,6 +67,7 @@ const journalforingGenerellValidering = verdier => {
     avsenderID,
     avsenderNavn,
     hoveddokumentTittel,
+    representantID,
   };
 };
 
@@ -94,20 +102,12 @@ const journalforingOpprettSakValidering = verdier => {
     false
   );
 
-  const representantID = (
-    !Mikrovalidering.idErBlank(verdier.representantID) && (
-      Mikrovalidering.idErIkkeOrgnr(verdier.representantID) ||
-      Mikrovalidering.idFinnesIkke(verdier.representantNavn, verdier.representantID)
-     || false)
-  );
-
   const journalforingOppholdsLand = (landErIkkeValgt(verdier.journalforingOppholdsLand) ? { _error: landErIkkeValgt(verdier.journalforingOppholdsLand) } : false);
 
   return {
     journalforingPeriodeFraOgMed,
     journalforingPeriodeTilOgMed,
     journalforingOppholdsLand,
-    representantID,
   };
 };
 

@@ -83,7 +83,7 @@ class VurderingArtikkel12_2 extends Component {
         <div>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Fyller søker kriteriene for artikkel 12.2?">
+              <Nav.Fieldset legend="Fyller søker resterende kriterier for artikkel 12.2?">
                 <Nav.Radio
                   name="artikkel"
                   onChange={this.radioEndringHandler}
