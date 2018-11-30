@@ -63,10 +63,13 @@ function sok(fnr) {
 function resetFagsakState() {
   return Actions.resetFagsakState();
 }
-
+function oppdaterBehandlingsStatus(status) {
+  return Actions.oppdaterBehandlingsStatus(status);
+}
 export {
   hent,
   opprett,
   sok,
   resetFagsakState,
+  oppdaterBehandlingsStatus,
 };
