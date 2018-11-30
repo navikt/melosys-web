@@ -6,6 +6,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from '../../../proptypes/';
+import * as Koder from '../../../koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
@@ -60,6 +61,7 @@ class VurderingArtikkel16 extends Component {
     const {
       alleLovvalg,
       anmodningsBegrunnelser,
+      lagreOgFatteVedtak,
       gyldigeOppholdLand,
       oppholdPeriode,
       lovvalgsunntak,
@@ -116,7 +118,7 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Hovedknapp type="hoved" onClick={() => {}}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
+              <Nav.Hovedknapp type="hoved" onClick={() => lagreOgFatteVedtak(Koder.ANMODNING_OM_UNNTAK)}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
             </Nav.Column>
           </Nav.Row>
         </div>
@@ -128,6 +130,7 @@ class VurderingArtikkel16 extends Component {
 VurderingArtikkel16.propTypes = {
   anmodningsBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
+  lagreOgFatteVedtak: PT.func.isRequired,
   forhandsvisPDF: PT.func.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
