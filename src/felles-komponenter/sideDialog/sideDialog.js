@@ -18,8 +18,8 @@ class SideDialog extends Component {
 
   static defaultProps = {
     faner: [
-      { navn: 'brevbestilling', tittel: 'Send brev', komponent: <SideDialogBrevBestilling key={uuid()} /> },
       { navn: 'dokumenter', tittel: 'Dokumenter', komponent: <SideDialogDokumenter key={uuid()} /> },
+      { navn: 'brevbestilling', tittel: 'Send brev', komponent: <SideDialogBrevBestilling key={uuid()} /> },
     ],
   };
 
