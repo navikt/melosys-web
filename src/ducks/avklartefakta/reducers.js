@@ -69,6 +69,16 @@ const lagArbeidslandObjekt = (avklarteFakta, referanse, avklartefaktaKode, marit
   }, []);
 };
 
+const lagArbeidsKonklusjon = (avklarteFakta, referanse, avklartefaktaKode) => (
+  {
+    ...avklartfaktaMal,
+    avklartefaktaKode,
+    referanse,
+    subjektID: null,
+    fakta: [avklarteFakta],
+  }
+);
+
 // Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -94,6 +104,7 @@ export default function reducer(state = initialState, action) {
         lagStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
         ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
         ...lagArbeidslandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),
+        ...lagArbeidsKonklusjon(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP', null, dokument.maritimtArbeid),
       ].filter(fakta => fakta !== null);
 
       return { ...state, data: [...avklartefakta] };

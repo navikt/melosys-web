@@ -15,7 +15,7 @@ class Sysselsetting extends Steg {
       {
         beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV"',
         exec: avklartefakta => Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV_SOKKEL_SKIP),
-        nesteSteg: STEG.SOKKEL_SKIP,
+        nesteSteg: STEG.ARBEIDSGIVERE,
       },
       {
         beskrivelse: 'alle andre valg',
