@@ -3,15 +3,29 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingArbeidsgiver from '../../stegKomponenter/vurderingArbeidsgiver';
 
 import * as Koder from '../../../../koder';
+import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
 
-class Sysselsetting extends Steg {
+class Arbeidsgivere extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'Hvis det finnes minst én avklart arbeidsgiver i avklartefakta',
-        exec: avklartefakta => (Sysselsetting.harValgtArbeidsgiver(avklartefakta)),
+        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === YRKESAKTIV',
+        exec: avklartefakta => {
+          const harValgtArbeidsgiver = Arbeidsgivere.harValgtArbeidsgiver(avklartefakta);
+          const erVanligYrkesaktiv = Arbeidsgivere.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV);
+          return harValgtArbeidsgiver && erVanligYrkesaktiv;
+        },
         nesteSteg: STEG.YRKESAKTIVITET,
+      },
+      {
+        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === YRKESAKTIV_SOKKEL_SKIP',
+        exec: avklartefakta => {
+          const harValgtArbeidsgiver = Arbeidsgivere.harValgtArbeidsgiver(avklartefakta);
+          const arbeiderPaSokkelEllerSkip = Arbeidsgivere.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV_SOKKEL_SKIP);
+          return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip;
+        },
+        nesteSteg: STEG.SOKKEL_SKIP,
       },
       {
         beskrivelse: 'Stopp steg',
@@ -41,6 +55,12 @@ class Sysselsetting extends Steg {
     const harAvklartArbeidsgiver = avklartefakta.some(enkeltFakta => ((enkeltFakta.referanse === Koder.AVKLARTE_ARBEIDSGIVER) && enkeltFakta.fakta.includes('TRUE')));
     return harAvklartArbeidsgiver;
   };
+
+  static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.SYSSELSETTING);
+    if (!enkeltFakta) { return false; }
+    return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
+  };
 }
 
-export default Sysselsetting;
+export default Arbeidsgivere;

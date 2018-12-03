@@ -8,7 +8,7 @@ class SokkelSkip extends Steg {
 
     this._kriterier = [
       {
-        beskrivelse: 'sokkelSkipType ER LIK "YRKESAKTIV"',
+        beskrivelse: 'arbeidSokkelSkip ER LIK "SOKKEL_UTLAND" (videre til 12.1 eller 12.2)',
         exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.YRKESAKTIV),
         nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
@@ -22,12 +22,14 @@ class SokkelSkip extends Steg {
     this._tittel = 'Sokkel / skip';
     this._komponent = VurderingSokkelSkip;
     this._samleRelevanteData = _propsLight => ({
+      begrunnelser: _propsLight.begrunnelser.sokkelEllerSkip,
       skjema: _propsLight.skjema,
     });
     this._beregnRelevantUI = _propsLight => {
-      const { sokkelSkip } = _propsLight.skjema.avklartefakta;
+      const { sokkelEllerSkip = [], sokkelSkipKonklusjon } = _propsLight.skjema.avklartefakta;
+
       return ({
-        harAvklaring: sokkelSkip !== null && sokkelSkip !== undefined,
+        harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon),
       });
     };
     this._handlers = {
@@ -37,10 +39,19 @@ class SokkelSkip extends Steg {
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
-    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.SokkelSkip);
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.SOKKEL_SKIP);
     if (!enkeltFakta) { return false; }
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
-  }
+  };
+
+  static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon) => {
+    const avklartSokkelEllerSkip = sokkelEllerSkip
+      .map(enkelt => enkelt.installasjonsType !== '' && enkelt.installasjonsTypeBegrunnelse !== '' && enkelt.arbeidsland !== '')
+      .every(enkelt => enkelt === true);
+    const avklartArbeidSokkelSkip = sokkelSkipKonklusjon && sokkelSkipKonklusjon !== '';
+
+    return (avklartSokkelEllerSkip && avklartArbeidSokkelSkip);
+  };
 }
 
 export default SokkelSkip;
