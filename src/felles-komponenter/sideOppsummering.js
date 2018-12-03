@@ -61,7 +61,7 @@ class SideOppsummering extends Component {
       saksnummer,
       sakstype,
       status,
-      opprettetDato,
+      registrertDato,
       sisteOpplysningerHentetDato,
     } = oppsummering;
     const {
@@ -117,8 +117,8 @@ class SideOppsummering extends Component {
                 <dd>{oppholdUtlandFom} - {oppholdUtlandTom}</dd>
                 <dt>Sist oppdatert:</dt>
                 <dd><EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt /></dd>
-                <dt>Opprettet dato:</dt>
-                <dd><EnkeltDato dato={opprettetDato} /></dd>
+                <dt>Registrert dato:</dt>
+                <dd><EnkeltDato dato={registrertDato} /></dd>
               </dl>
             </Nav.Column>
           </Nav.Row>

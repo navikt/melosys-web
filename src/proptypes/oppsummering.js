@@ -10,7 +10,6 @@ const OppsummeringPropType = PT.shape({
   status: Kodeverk,
   registrertDato: PT.string,
   endretDato: PT.string,
-  opprettetDato: PT.string,
   sisteOpplysningerHentetDato: PT.string,
   behandlingstype: Kodeverk,
 });
