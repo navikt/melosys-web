@@ -148,7 +148,7 @@ class Informasjon extends Component {
 
   render() {
     const {
-      valgbareDokumentTitler, valgbareVedleggsTitler, journalpostID, dokumentID,
+      valgbareDokumentTitler, journalpostID, dokumentID,
     } = this.props;
     const {
       spinner: { brukerNavn: visBrukerSpinner },
@@ -187,7 +187,7 @@ class Informasjon extends Component {
               label="Velg ny tittel:"
               gruppe
               tillatFritekst
-              muligeValg={valgbareVedleggsTitler}
+              muligeValg={valgbareDokumentTitler}
               placeholder="(Velg eller skriv inn egen tittel)"
             />
           </Nav.Fieldset>
@@ -199,7 +199,6 @@ class Informasjon extends Component {
 
 Informasjon.propTypes = {
   valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk),
-  valgbareVedleggsTitler: PT.arrayOf(MPT.Kodeverk),
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   hentOgVisBruker: PT.func.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
@@ -211,7 +210,6 @@ Informasjon.propTypes = {
 Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
   valgbareDokumentTitler: [],
-  valgbareVedleggsTitler: [],
   journalpostID: '',
   dokumentID: '',
 };
@@ -221,7 +219,6 @@ const mapStateToProps = state => ({
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   valgbareDokumentTitler: KodeverkSelectors.dokumenttitlerSelector(state),
-  valgbareVedleggsTitler: KodeverkSelectors.vedleggstitlerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

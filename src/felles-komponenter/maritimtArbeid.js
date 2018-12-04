@@ -25,8 +25,10 @@ const MaritimtEnkelt = props => {
     <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input feltNavn={`${navn}skipsNavn`} label="Navn på fartøyet:" />
-          <Skjema.ListeVelger feltNavn={`${navn}fartsomradeKode`} muligeValg={fartsomrader} label="Fartsomrade:" />
+          <Skjema.Input feltNavn={`${navn}navn`} label="Navn på fartøyet:" />
+          <Skjema.Select feltNavn={`${navn}fartsomradeKode`} label="Fartsomrade:">
+            {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
+          </Skjema.Select>
         </Nav.Column>
         <Nav.Column xs="6">
           <LandVelger feltNavn={`${navn}flaggLandKode`} label="Flaggland:" />

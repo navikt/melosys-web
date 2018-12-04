@@ -18,7 +18,7 @@ class Artikkel16 extends Steg {
     this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = () => ({});
     this._handlers = {
-      sendAnmodningHandler: this._propsLight.tilgjengeligeHandlers.sendAnmodningHandler,
+      lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
     };
     this._status = FANE_STATUS.OK;
   }

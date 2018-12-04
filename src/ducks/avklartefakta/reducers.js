@@ -22,12 +22,61 @@ const avklartfaktaMal = {
   begrunnelseFritekst: null,
 };
 
-const genererAvklaringsObjekt = (avklartFakta, avklaringType) => (
+// Et stateObjekt brukes kun for at stegvelger skal kunne gjenskapes basert på
+// valg som saksbehandler har gjort. Disse valgene må lagres backend og kunne returneres
+// frontend senere, men de er egentlig ikke avklarte fakta.
+const lagStateObjekt = (avklartFakta, referanse) => (
   avklartFakta ? {
     ...avklartfaktaMal,
-    referanse: avklaringType,
+    referanse,
     fakta: [avklartFakta],
   } : null
+);
+
+const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
+  if (!avklarteFakta) { return []; }
+
+  return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
+    const installasjon = maritimtArbeid[index] || {};
+    const installasjonsNavn = installasjon.navn || null;
+    const begrunnelseKoder = enkeltAvklaring.installasjonsTypeBegrunnelse ? [enkeltAvklaring.installasjonsTypeBegrunnelse] : null;
+
+    return enkeltAvklaring.installasjonsType ? [...samling, {
+      ...avklartfaktaMal,
+      avklartefaktaKode,
+      referanse,
+      subjektID: installasjonsNavn,
+      begrunnelseKoder,
+      fakta: [enkeltAvklaring.installasjonsType],
+    }] : [...samling];
+  }, []);
+};
+
+const lagArbeidslandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
+  if (!avklarteFakta) { return []; }
+
+  return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
+    const installasjon = maritimtArbeid[index] || {};
+    const installasjonsNavn = installasjon.navn || null;
+
+    return enkeltAvklaring.installasjonsType ? [...samling, {
+      ...avklartfaktaMal,
+      avklartefaktaKode,
+      referanse,
+      subjektID: installasjonsNavn,
+      fakta: [enkeltAvklaring.arbeidsland],
+    }] : [...samling];
+  }, []);
+};
+
+const lagArbeidsKonklusjon = (avklarteFakta, referanse, avklartefaktaKode) => (
+  {
+    ...avklartfaktaMal,
+    avklartefaktaKode,
+    referanse,
+    subjektID: null,
+    fakta: [avklarteFakta],
+  }
 );
 
 // Reducer
@@ -50,9 +99,12 @@ export default function reducer(state = initialState, action) {
       const avklartefakta = [
         ...dokument.avklartefakta.oppholdsland,
         ...dokument.avklartefakta.arbeidsgivere,
-        genererAvklaringsObjekt(dokument.avklartefakta.sysselsetting, 'SYSSELSETTING'),
-        genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
-        genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
+        lagStateObjekt(dokument.avklartefakta.sysselsetting, 'SYSSELSETTING'),
+        lagStateObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
+        lagStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
+        ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
+        ...lagArbeidslandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),
+        lagArbeidsKonklusjon(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP', null, dokument.maritimtArbeid),
       ].filter(fakta => fakta !== null);
 
       return { ...state, data: [...avklartefakta] };
