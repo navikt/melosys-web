@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { FieldArray } from 'redux-form';
+import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
@@ -24,31 +24,35 @@ import './vurderingArtikkel16.css';
 
 const uuid = require('uuid/v4');
 
-const EnkeltPeriode = ({ linjeID, alleLovvalg }) => (
-  <Nav.Row>
-    <Nav.Column xs="4"><Skjema.Input feltNavn={`${linjeID}.fom`} datoFelt label="F.o.m." /></Nav.Column>
-    <Nav.Column xs="4"><Skjema.Input feltNavn={`${linjeID}.tom`} datoFelt label="T.o.m." /></Nav.Column>
-    <Nav.Column xs="4"><Listevelger feltNavn={`${linjeID}.lovvalg`} label="Lovvalg for perioden" muligeValg={alleLovvalg} /></Nav.Column>
-  </Nav.Row>
-);
-
-EnkeltPeriode.propTypes = {
-  linjeID: PT.string.isRequired,
-  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
-};
-
-const TidligereMedlemPeriodeLinje = ({ perm }) => {
+const TidligereMedlemPeriodeLinje = ({ perm, index }) => {
   const { periodeID, periode } = perm;
+  const feltNavn = `tidligeremedlemskap[${index}].id-${periodeID}`;
+  const label = `Startdato: ${periode.fom} - Sluttdato: ${periode.tom}`;
+
   return (
     <div>
       <p>Periode for medlemsskap</p>
-      <span>{periodeID} Startdato: {periode.fom} - Sluttdato: {periode.tom}</span>
+      <Skjema.Checkbox feltNavn={feltNavn} label={label} />
     </div>
   );
 };
 TidligereMedlemPeriodeLinje.propTypes = {
   perm: MPT.MedlemskapEnkeltPeriode.isRequired,
+  index: PT.number.isRequired,
 };
+const TidligereMedlemskapPerioder = props => {
+  const { medlemskap } = props;
+  const { perioderMed } = medlemskap;
+  return (
+    <div>
+      {perioderMed && perioderMed.map((perm, index) => <TidligereMedlemPeriodeLinje key={uuid()} perm={perm} index={index} />)}
+    </div>
+  );
+};
+TidligereMedlemskapPerioder.propTypes = {
+  medlemskap: MPT.Medlemskap.isRequired,
+};
+const TidligereMedlemskap = props => (<div><FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapPerioder} props={props} /></div>);
 
 class VurderingArtikkel16 extends Component {
   forhandsvisPDF = async kode => {
@@ -68,7 +72,6 @@ class VurderingArtikkel16 extends Component {
       lovvalgsunntak,
       medlemskap,
     } = this.props;
-    const { perioderMed } = medlemskap;
 
     const { forhandsvisPDF } = this;
 
@@ -107,10 +110,7 @@ class VurderingArtikkel16 extends Component {
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="12">
               <Nav.Fieldset legend={`Direkte forutgående perioder i ${landSomTekstListe}:`}>
-                {/*
-                <FieldArray name="lovvalgsperiode.tidligere" component={TidligerePerioder} alleLovvalg={alleLovvalg} />
-                */}
-                {perioderMed && perioderMed.map(perm => <TidligereMedlemPeriodeLinje key={uuid()} perm={perm} />)}
+                <TidligereMedlemskap medlemskap={medlemskap} />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
