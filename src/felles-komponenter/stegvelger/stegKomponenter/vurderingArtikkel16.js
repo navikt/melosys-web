@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { FieldArray } from 'redux-form';
+// import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
@@ -9,6 +9,7 @@ import * as MPT from '../../../proptypes/';
 import * as Koder from '../../../koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
+import { behandlingerOperations } from '../../../ducks/behandlinger/';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
@@ -20,6 +21,8 @@ import Listevelger from '../../skjema/listevelger';
 import DatoOmrade from '../../datoOmrade/datoOmrade';
 
 import './vurderingArtikkel16.css';
+
+const uuid = require('uuid/v4');
 
 const EnkeltPeriode = ({ linjeID, alleLovvalg }) => (
   <Nav.Row>
@@ -34,18 +37,17 @@ EnkeltPeriode.propTypes = {
   alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
-const TidligerePerioder = ({ fields, alleLovvalg }) => (
-  <div>
-    {fields.map(linjeID => (<EnkeltPeriode key={linjeID} linjeID={linjeID} alleLovvalg={alleLovvalg} />))}
-    <Nav.Row>
-      <Nav.Column xs="12"><Nav.Knapp onClick={() => fields.push({})}>+ Legg til periode</Nav.Knapp></Nav.Column>
-    </Nav.Row>
-  </div>
-);
-
-TidligerePerioder.propTypes = {
-  fields: PT.object.isRequired,
-  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
+const TidligereMedlemPeriodeLinje = ({ perm }) => {
+  const { periodeID, periode } = perm;
+  return (
+    <div>
+      <p>Periode for medlemsskap</p>
+      <span>{periodeID} Startdato: {periode.fom} - Sluttdato: {periode.tom}</span>
+    </div>
+  );
+};
+TidligereMedlemPeriodeLinje.propTypes = {
+  perm: MPT.MedlemskapEnkeltPeriode.isRequired,
 };
 
 class VurderingArtikkel16 extends Component {
@@ -59,13 +61,14 @@ class VurderingArtikkel16 extends Component {
 
   render () {
     const {
-      alleLovvalg,
       anmodningsBegrunnelser,
       lagreOgFatteVedtak,
       gyldigeOppholdLand,
       oppholdPeriode,
       lovvalgsunntak,
+      medlemskap,
     } = this.props;
+    const { perioderMed } = medlemskap;
 
     const { forhandsvisPDF } = this;
 
@@ -104,7 +107,10 @@ class VurderingArtikkel16 extends Component {
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="12">
               <Nav.Fieldset legend={`Direkte forutgående perioder i ${landSomTekstListe}:`}>
+                {/*
                 <FieldArray name="lovvalgsperiode.tidligere" component={TidligerePerioder} alleLovvalg={alleLovvalg} />
+                */}
+                {perioderMed && perioderMed.map(perm => <TidligereMedlemPeriodeLinje key={uuid()} perm={perm} />)}
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -128,8 +134,8 @@ class VurderingArtikkel16 extends Component {
 }
 
 VurderingArtikkel16.propTypes = {
+  medlemskap: MPT.Medlemskap.isRequired,
   anmodningsBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
-  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   forhandsvisPDF: PT.func.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
@@ -140,17 +146,18 @@ VurderingArtikkel16.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
   anmodningsBegrunnelser: KodeverkSelectors.anmodningsBegrunnelserSelector(state),
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   lovvalgsunntak: KodeverkSelectors.lovvalgsunntakSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  medlemskap: fagsakSelectors.MedlemskapSelector(state),
 });
 
-const mapDispatchToProps = () => ({
+const mapDispatchToProps = dispatch => ({
   forhandsvisPDF: (behandlingID, dokumenttypeKode, data) => dokumenterOperations.forhandsvisPDF(behandlingID, dokumenttypeKode, data),
+  sendPerioder: (behandlingID, perioder) => dispatch(behandlingerOperations.sendPerioder(behandlingID, perioder)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16);

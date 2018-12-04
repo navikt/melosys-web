@@ -3,6 +3,7 @@ import { Periode } from './periode';
 import { Kodeverk } from './kodeverk';
 
 const MedlemskapEnkeltPeriodePropType = PT.shape({
+  periodeID: PT.number.isRequired,
   periode: Periode,
   type: Kodeverk,
   status: Kodeverk,
