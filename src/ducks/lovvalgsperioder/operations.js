@@ -51,9 +51,9 @@ const byggLovvalgsPeriodeArtikkel12_1 = getState => {
     lovvalgBestemmelse: Koder.FO_883_2004_ART12_1,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: 'INNVILGET',
+    innvilgelsesResultat: Koder.INNVILGET,
     lovvalgsland: 'NO',
-    trygdeDekning: 'FULL',
+    trygdeDekning: Koder.FULL_DEKNING_EOSFO,
     medlemskapstype: 'PLIKTIG',
   }];
 };
@@ -66,9 +66,9 @@ const byggLovvalgsPeriodeArtikkel12_2 = getState => {
     lovvalgBestemmelse: Koder.FO_883_2004_ART12_2,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: 'INNVILGET',
+    innvilgelsesResultat: Koder.INNVILGET,
     lovvalgsland: 'NO',
-    trygdeDekning: 'FULL',
+    trygdeDekning: Koder.FULL_DEKNING_EOSFO,
     medlemskapstype: 'PLIKTIG',
   }];
 };
@@ -89,9 +89,9 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
     lovvalgBestemmelse: Koder.FO_883_2004_ART16_1,
     unntakFraBestemmelse,
     unntakFraLovvalgsland,
-    innvilgelsesResultat: 'INNVILGET',
+    innvilgelsesResultat: Koder.INNVILGET,
     lovvalgsland: 'NO',
-    trygdeDekning: 'FULL',
+    trygdeDekning: Koder.FULL_DEKNING_EOSFO,
     medlemskapstype: 'PLIKTIG',
   }];
 };
