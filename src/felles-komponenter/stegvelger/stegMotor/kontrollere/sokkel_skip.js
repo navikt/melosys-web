@@ -13,6 +13,11 @@ class SokkelSkip extends Steg {
         nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
       {
+        beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_UTLAND" (videre til 12.1 eller 12.2)',
+        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SKIP_ETT_LAND),
+        nesteSteg: STEG.BOSTEDSLAND,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: null,
