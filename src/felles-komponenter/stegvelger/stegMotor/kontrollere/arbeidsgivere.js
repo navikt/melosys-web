@@ -25,7 +25,7 @@ class Arbeidsgivere extends Steg {
           const arbeiderPaSokkelEllerSkip = Arbeidsgivere.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV_SOKKEL_SKIP);
           return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip;
         },
-        nesteSteg: STEG.SOKKEL_SKIP,
+        nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
         beskrivelse: 'Stopp steg',
