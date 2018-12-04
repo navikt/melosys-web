@@ -8,8 +8,8 @@ class SokkelSkip extends Steg {
 
     this._kriterier = [
       {
-        beskrivelse: 'arbeidSokkelSkip ER LIK "SOKKEL_UTLAND" (videre til 12.1 eller 12.2)',
-        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.YRKESAKTIV),
+        beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_UTLAND" (videre til 12.1 eller 12.2)',
+        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SOKKEL_UTLAND),
         nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
       {
@@ -39,14 +39,15 @@ class SokkelSkip extends Steg {
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
-    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.SOKKEL_SKIP);
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === 'ARBEID_SOKKEL_SKIP');
+
     if (!enkeltFakta) { return false; }
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   };
 
   static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon) => {
     const avklartSokkelEllerSkip = sokkelEllerSkip
-      .map(enkelt => enkelt.installasjonsType !== '' && enkelt.installasjonsTypeBegrunnelse !== '' && enkelt.arbeidsland !== '')
+      .map(enkelt => enkelt.installasjonsType && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland && true)
       .every(enkelt => enkelt === true);
     const avklartArbeidSokkelSkip = sokkelSkipKonklusjon && sokkelSkipKonklusjon !== '';
 

@@ -178,7 +178,11 @@ export const AvklartefaktaVurderingSelector = createSelector(
  */
 export const SokkelEllerSkipSelector = createSelector(
   state => AvklartefaktaSelector(state),
-  alleAvklarteFakta => {
+  state => soknadSelectors.MaritimtArbeidSelector(state),
+  (alleAvklarteFakta, alleMaritimeArbeid) => {
+    // Selectoren lager 2 lister - en for avklart fakta for arbeidsland for hvert sokkel / skip
+    // og én for avklartfakta om installasjonen er sokkel eller skip.
+
     const arbeidsland = alleAvklarteFakta
       .filter(avklaring => avklaring.referanse === referanseKoder.INSTALLASJON_ARBEIDSLAND)
       .map(avklaring => avklaring.fakta[0]);
@@ -191,7 +195,13 @@ export const SokkelEllerSkipSelector = createSelector(
         installasjonsTypeBegrunnelse: avklaring.begrunnelseKoder && avklaring.begrunnelseKoder[0],
       }));
 
-    return sokkelEllerSkip;
+    // Dersom søknaden inneholder x antall maritime arbeid, men som ikke er avklart i
+    // stegvelgeren vil avklartfakta fortsatt være tom. Derfor trenger vi å
+    // fylle inn arrayen slik at valideringen kan iterere på alle maritime arbeid som
+    // det forventes at saksbehandler skal gjøre en avklaring på.
+    const antallSomMangler = alleMaritimeArbeid.length - sokkelEllerSkip.length;
+    const arrayFyll = new Array(antallSomMangler).fill({});
+    return [...sokkelEllerSkip, ...arrayFyll];
   }
 );
 
