@@ -8,6 +8,7 @@ import * as navLogo from '../resources/images/nav.svg';
 import './topplinje.css';
 import * as MPT from '../proptypes/';
 
+import * as Utils from '../utils/utils';
 import { saksbehandlerSelectors } from '../ducks/saksbehandler/';
 import { fagsakOperations } from '../ducks/fagsaker/';
 import { vilkarOperations } from '../ducks/vilkar/';
@@ -23,7 +24,12 @@ const Topplinje = props => {
     event.preventDefault();
     const { hentOppgaver, history } = props;
     const { push } = history;
-
+    const { byggVersjon } = Utils.buildinfo();
+    if (byggVersjon === 'local') {
+      hentOppgaver();
+      push('/');
+      return;
+    }
     /* eslint no-alert: off */
     if (window.confirm('Noen endringer vil kanskje ikke bli lagret. Vil du fortsette?')) {
       hentOppgaver();
