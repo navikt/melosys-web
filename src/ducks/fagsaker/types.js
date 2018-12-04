@@ -14,3 +14,5 @@ export const RESET = 'fagsaker/RESET';
 export const SAKSLISTE_OK = 'fagsaker/SAKSLISTE_OK';
 export const SAKSLISTE_FEILET = 'fagsaker/SAKSLISTE_FEILET';
 export const SAKSLISTE_PENDING = 'fagsaker/SAKSLISTE_PENDING';
+
+export const BEHANDLINGSSTATUS_UPDATE = 'fagsaker/BEHANDLINGSSTATUS_UPDATE';
