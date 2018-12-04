@@ -13,6 +13,11 @@ class Sysselsetting extends Steg {
         nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
       {
+        beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV_SOKKEL_SKIP"',
+        exec: avklartefakta => Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV_SOKKEL_SKIP),
+        nesteSteg: STEG.SOKKEL_SKIP,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: null,

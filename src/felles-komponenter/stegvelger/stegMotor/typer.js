@@ -31,6 +31,7 @@ export const STEG = {
   TJENESTEMANN: 'TJENESTEMANN',
   FORRETNINGSSTED: 'FORRETNINGSSTED',
   ARBEIDSGIVERE: 'ARBEIDSGIVERE',
+  SOKKEL_SKIP: 'SOKKEL_SKIP',
   VEDTAK: 'VEDTAK',
 };
 
@@ -53,5 +54,6 @@ export const StegTilKontroller = {
   TJENESTEMANN: 'Tjenestemann',
   FORRETNINGSSTED: 'Forretningssted',
   ARBEIDSGIVERE: 'Arbeidsgivere',
+  SOKKEL_SKIP: 'SokkelSkip',
   VEDTAK: 'Vedtak',
 };
