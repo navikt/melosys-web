@@ -9,7 +9,11 @@ import { createSelector } from 'reselect';
 
 /* eslint import/prefer-default-export:"off" */
 export const behandlingerSelector = createSelector(
-  state => state.behandlinger.data,
+  state => (state.behandlinger.data ? state.behandlinger.data : []),
   behandlinger => behandlinger
 );
 
+export const tidligereMedlemskap = createSelector(
+  state => behandlingerSelector(state),
+  _behandlinger => []
+);
