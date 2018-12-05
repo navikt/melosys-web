@@ -5,6 +5,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
+import * as Koder from '../../../../koder';
 
 import FjernetLandEnkelt from './fjernetLandEnkelt';
 import OppholdsLandEnkelt from './oppholdsLandEnkelt';
@@ -25,14 +26,14 @@ class OppholdsLandListe extends Component {
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
-    if (begrunnelseKode === 'FEIL_LAND_JOURNALFOERING') {
+    if (begrunnelseKode === Koder.FEIL_LAND_JOURNALFOERING) {
       this.fjernLandFraSoknad(landKode);
     }
   };
 
   bekreftLeggTil = (landKode, begrunnelseKode) => {
     const avklartFakta = {
-      referanse: 'OPPHOLDSLAND',
+      referanse: Koder.OPPHOLDSLAND,
       avklartefaktaKode: null,
       fakta: ['TRUE'],
       subjektID: landKode,
@@ -106,6 +107,13 @@ class OppholdsLandListe extends Component {
                 bekreftFjern={bekreftFjern}
                 erGyldig={opphold.erGyldig}
                 oppholdBegrunnelser={oppholdBegrunnelser} />))
+            }
+            {
+              alleGyldigeOppholdsland.length === 0 && (
+                <div className="oppholdsland__liste__varsel">
+                  <Nav.AlertStripe type="advarsel">Det er ikke lagt til noen gyldige oppholdsland!</Nav.AlertStripe>
+                </div>
+              )
             }
             <OppholdsLandHandlingLeggTil
               bekreftLeggTil={bekreftLeggTil}
