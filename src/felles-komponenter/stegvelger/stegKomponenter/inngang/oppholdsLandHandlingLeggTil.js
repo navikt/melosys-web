@@ -30,7 +30,7 @@ class LeggTilWrapper extends Component {
       bekreft, avbryt, alleLandKoder, oppholdBegrunnelser,
     } = this.props;
 
-    const erInputGyldig = (landKode && begrunnelseKode);
+    const erInputGyldig = (landKode && begrunnelseKode && begrunnelseKode !== '0');
 
     return (
       <div className="leggtilland__linje">
