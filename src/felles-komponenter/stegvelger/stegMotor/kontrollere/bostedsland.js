@@ -12,8 +12,10 @@ class Bostedsland extends Steg {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'sokkelSkipKonklusjon ER LIK "SKIP_ETT_LAND" (videre til 12.1 eller 12.2)',
-        exec: avklartefakta => Bostedsland.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SKIP_ETT_LAND),
+        beskrivelse: 'konklusjon for sokkel/skip-steget ER LIK "SKIP_ETT_LAND" og det er gjort en vurdering av bosted, enten utfallet er TRUE eller FALSE',
+        exec: (avklartefakta, vilkar) => (
+          Bostedsland.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SKIP_ETT_LAND) && vilkar.find(enkelt => enkelt.vilkaar === 'BOSATT_I_NORGE') && true
+        ),
         nesteSteg: STEG.ARTIKKEL_11_4,
       },
       {
