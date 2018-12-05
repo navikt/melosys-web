@@ -13,6 +13,8 @@ import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
 import { KodeverkSelectors } from '../ducks/kodeverk';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
+import { avklartefaktaSelectors } from '../ducks/avklartefakta';
+import { arrayTilKonjunksjon } from '../utils/streng';
 import './sideOppsummering.css';
 
 class SideOppsummering extends Component {
@@ -52,11 +54,11 @@ class SideOppsummering extends Component {
       person,
       oppholdUtlandFom,
       oppholdUtlandTom,
-      oppholdsland,
       behandlingsstatusKodeVerk,
     } = this.props;
 
     if (!oppsummering) return <div />;
+
     const {
       saksnummer,
       sakstype,
@@ -64,15 +66,20 @@ class SideOppsummering extends Component {
       registrertDato,
       sisteOpplysningerHentetDato,
     } = oppsummering;
+
     const {
       fnr,
       sammensattNavn,
     } = person;
+
     const {
       lagreOgLukkHandle,
       oppfriskSaksopplysningerHandle,
       tilbakeleggeHandle,
+      gyldigeOppholdsLand,
     } = this.props;
+
+    const gyldigeOppholdsLandSetning = arrayTilKonjunksjon(gyldigeOppholdsLand.map(land => land.term));
 
     return (
       <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -112,7 +119,7 @@ class SideOppsummering extends Component {
                 <dt>Behandlingsstatus:</dt>
                 <dd>{kodeverkObjektTilTerm(status)}</dd>
                 <dt>Oppholdsland:</dt>
-                <dd>{oppholdsland ? oppholdsland[0] : '-'}</dd>
+                <dd>{gyldigeOppholdsLandSetning}</dd>
                 <dt>Periode</dt>
                 <dd>{oppholdUtlandFom} - {oppholdUtlandTom}</dd>
                 <dt>Sist oppdatert:</dt>
@@ -150,7 +157,7 @@ SideOppsummering.propTypes = {
   behandlingsstatusKodeVerk: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppholdUtlandFom: PT.string.isRequired,
   oppholdUtlandTom: PT.string.isRequired,
-  oppholdsland: PT.arrayOf(PT.string).isRequired,
+  gyldigeOppholdsLand: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
@@ -162,11 +169,12 @@ const mapStateToProps = state => ({
   person: fagsakSelectors.PersonSelector(state),
   oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
   oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
-  oppholdsland: soknadSelectors.OppholdsLandSelector(state),
+  gyldigeOppholdsLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   behandlingsstatusKodeVerk: KodeverkSelectors.behandlingsStatusSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   oppdaterBehandlingsStatus: status => dispatch(fagsakOperations.oppdaterBehandlingsStatus(status)),
 });
+
 export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
