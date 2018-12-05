@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
@@ -24,35 +25,66 @@ import './vurderingArtikkel16.css';
 
 const uuid = require('uuid/v4');
 
-const TidligereMedlemPeriodeLinje = ({ perm, index }) => {
+const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked }) => {
   const { periodeID, periode } = perm;
-  const feltNavn = `tidligeremedlemskap[${index}].id-${periodeID}`;
   const label = `Startdato: ${periode.fom} - Sluttdato: ${periode.tom}`;
 
   return (
     <div>
       <p>Periode for medlemsskap</p>
-      <Skjema.Checkbox feltNavn={feltNavn} label={label} />
+      <Nav.Checkbox onChange={() => onChange(periodeID)} label={label} value="something" checked={checked} />
     </div>
   );
 };
+
 TidligereMedlemPeriodeLinje.propTypes = {
-  perm: MPT.MedlemskapEnkeltPeriode.isRequired,
+  checked: PT.bool.isRequired,
   index: PT.number.isRequired,
+  onChange: PT.func.isRequired,
+  perm: MPT.MedlemskapEnkeltPeriode.isRequired,
 };
-const TidligereMedlemskapPerioder = props => {
-  const { medlemskap } = props;
-  const { perioderMed } = medlemskap;
-  return (
-    <div>
-      {perioderMed && perioderMed.map((perm, index) => <TidligereMedlemPeriodeLinje key={uuid()} perm={perm} index={index} />)}
-    </div>
-  );
-};
+
+class TidligereMedlemskapPerioder extends Component {
+  onChange = periodeID => {
+    const { fields } = this.props;
+    const { push, remove } = fields;
+    const alleValgtePeriodeID = fields.getAll() || [];
+    const eksistererVedPosisjon = alleValgtePeriodeID.findIndex(valgt => valgt === periodeID);
+
+    // Alternativt kan vi da pushe et objekt dersom artikkel senere må med, feks
+    // { periodeID: '3738273', artikkelKode: 'FO_883_2004_ART13_1_B4' }
+    if (eksistererVedPosisjon === -1) {
+      push(periodeID);
+    } else {
+      remove(eksistererVedPosisjon);
+    }
+  };
+
+  render() {
+    const { medlemskap, fields } = this.props;
+    const alleValgtePeriodeID = fields.getAll() || [];
+    const { onChange } = this;
+
+    const { perioderMed } = medlemskap;
+    return (
+      <div>
+        {
+          perioderMed && perioderMed.map((perm, index) => {
+            const isChecked = alleValgtePeriodeID.includes(perm.periodeID);
+            return <TidligereMedlemPeriodeLinje onChange={onChange} checked={isChecked} key={uuid()} perm={perm} index={index} />;
+          })
+        }
+      </div>
+    );
+  }
+}
+
 TidligereMedlemskapPerioder.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
+  fields: PT.object.isRequired,
 };
-const TidligereMedlemskap = props => (<div><FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapPerioder} props={props} /></div>);
+
+const TidligereMedlemskap = props => (<div><FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapPerioder} {...props} /></div>);
 
 class VurderingArtikkel16 extends Component {
   forhandsvisPDF = async kode => {

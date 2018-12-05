@@ -31,11 +31,9 @@ import {
   soknadSelectors,
 } from '../../ducks/soknad/';
 
-import {
-  avklartefaktaOperations,
-  avklartefaktaActions,
-  avklartefaktaSelectors,
-} from '../../ducks/avklartefakta/';
+import { avklartefaktaSelectors } from '../../ducks/avklartefakta/';
+
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 
 import { vilkarSelectors } from '../../ducks/vilkar/';
 
@@ -132,18 +130,15 @@ Saksopplysninger.propTypes = {
   avklartefakta: PT.array.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   handleSubmit: PT.func.isRequired,
-  hentAvklartefakta: PT.func.isRequired,
   inntekt: MPT.Inntekt,
   match: PT.object.isRequired,
   medlemskap: MPT.Medlemskap,
-  oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   sjekkOppfriskningStatus: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   person: MPT.Person,
   sendSoknad: PT.func.isRequired,
-  sendAvklartefakta: PT.func.isRequired,
   soknad: PT.object,
   soknadArbeidsinntekt: PT.object,
   soknadForm: PT.object.isRequired,
@@ -234,6 +229,7 @@ const mapStateToProps = state => ({
     fullmektigPoststed: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
     fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandKode,
+    tidligeremedlemskap: behandlingerSelectors.tidligereMedlemskap(state),
     avklartefakta: {
       oppholdsland: avklartefaktaSelectors.Oppholdsland(state),
       sysselsetting: avklartefaktaSelectors.Sysselsetting(state),
@@ -266,10 +262,7 @@ const mapDispatchToProps = dispatch => ({
   sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
-  hentAvklartefakta: saksnummer => dispatch(avklartefaktaOperations.hent(saksnummer)),
-  sendAvklartefakta: (bid, dokument) => dispatch(avklartefaktaOperations.send(bid, dokument)),
   oppdaterSoknad: values => { dispatch(soknadActions.oppdaterSoknadState(values)); },
-  oppdaterAvklartefakta: values => { dispatch(avklartefaktaActions.oppdaterAvklartefaktaState(values)); },
 });
 
 const SaksopplysningerForm = reduxForm({
