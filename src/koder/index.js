@@ -29,3 +29,6 @@ export const YRKESAKTIVITET = 'YRKESAKTIVITET';
 export const AVKLARTE_ARBEIDSGIVER = 'AVKLARTE_ARBEIDSGIVER';
 export const SOKKEL = 'SOKKEL';
 export const SKIP = 'SKIP';
+
+// Begrunnelsekoder
+export const FEIL_LAND_JOURNALFOERING = 'FEIL_LAND_JOURNALFOERING';
