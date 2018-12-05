@@ -15,6 +15,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { KodeverkSelectors } from '../../ducks/kodeverk/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
+import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder/';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
@@ -60,6 +61,10 @@ class Stegvelger extends Component {
     this.tilSteg(this.beregnNesteSteg());
   };
 
+  lagreBehandlingerHandler = async () => {
+    const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
+    await sendPerioder(behandlingID, behandlinger);
+  };
   lagreVilkarHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const { vilkar } = this.props;
@@ -90,10 +95,14 @@ class Stegvelger extends Component {
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
-    await this.lagreVilkarHandler();
-    await this.lagreAvklartefaktaHandler();
-    await this.lagreLovvalgsperioderHandler();
-    await this.fatteVedtakHandler(behandlingsresultattype);
+    const {
+      lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler, fatteVedtakHandler, lagreBehandlingerHandler,
+    } = this;
+    await lagreVilkarHandler();
+    await lagreAvklartefaktaHandler();
+    await lagreLovvalgsperioderHandler();
+    await fatteVedtakHandler(behandlingsresultattype);
+    await lagreBehandlingerHandler();
   };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
@@ -145,26 +154,33 @@ class Stegvelger extends Component {
       avklartefakta,
       skjema,
       oppdaterAvklarteFaktaState,
+      oppdaterBehandlingerState,
       oppdaterVilkarState,
       oppdaterLokalSoknadHandler,
       oppdaterLovvalgperioderState,
       lagreSoknadHandler,
       lovvalgsperioder,
+      behandlinger,
       vilkar,
     } = this.props;
 
     await oppdaterLokalSoknadHandler();
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
-    const { lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler } = this;
+    const {
+      lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler, lagreBehandlingerHandler,
+    } = this;
     const { behandlingID } = this.props.oppsummering;
 
     await oppdaterAvklarteFaktaState(skjema);
     await oppdaterVilkarState(skjema);
     await oppdaterLovvalgperioderState(skjema);
+    await oppdaterBehandlingerState(skjema);
+
     await lagreVilkarHandler(behandlingID, vilkar);
     await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
     await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
+    await lagreBehandlingerHandler(behandlingID, behandlinger);
 
     if (this.erSisteSteg(nyttStegNummer)) {
       await lagreSoknadHandler();
@@ -204,6 +220,7 @@ Stegvelger.propTypes = {
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
+  sendPerioder: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
@@ -214,6 +231,7 @@ Stegvelger.propTypes = {
   inngang: PT.object,
   match: PT.object.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
+  oppdaterBehandlingerState: PT.func.isRequired,
   oppdaterVilkarState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
@@ -238,6 +256,7 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
+  behandlinger: behandlingerSelectors.behandlingerSelector(state),
   begrunnelser: KodeverkSelectors.begrunnelserSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
   landkoder: KodeverkSelectors.landkoderSelector(state),
@@ -252,6 +271,7 @@ const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
+  sendPerioder: (behandlingID, body) => dispatch(behandlingerOperations.sendPerioder(behandlingID, body)),
   fatteVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
@@ -260,6 +280,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
+  oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
 });
 

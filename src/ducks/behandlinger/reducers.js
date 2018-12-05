@@ -10,7 +10,7 @@ import * as Types from './types';
 
 const initalState = {
   status: STATUS.NOT_STARTED,
-  data: [],
+  data: {},
 };
 
 export default function reducer(state = initalState, action) {
@@ -21,6 +21,10 @@ export default function reducer(state = initalState, action) {
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.OK: {
       return { ...state, status: STATUS.OK, data: action.data };
+    }
+    case Types.OPPDATER_BEHANDLINGER: {
+      const { tidligeremedlemskap: tidligere_medlemsperiode_ids } = action.data;
+      return { ...state, data: { tidligere_medlemsperiode_ids } };
     }
     default:
       return state;
