@@ -7,6 +7,7 @@
  *
  */
 import { doThenDispatch } from '../../services/utils';
+import * as Actions from './actions';
 import * as Api from '../../services/api';
 import * as Types from './types';
 
@@ -17,4 +18,8 @@ export function sendPerioder(behandlingID, perioder) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function oppdaterPerioderState(state) {
+  return dispatch => (dispatch(Actions.oppdaterPerioderState(state)));
 }

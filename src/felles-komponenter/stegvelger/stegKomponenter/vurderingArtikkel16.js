@@ -10,7 +10,6 @@ import * as MPT from '../../../proptypes/';
 import * as Koder from '../../../koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
-import { behandlingerOperations } from '../../../ducks/behandlinger/';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
@@ -51,8 +50,6 @@ class TidligereMedlemskapPerioder extends Component {
     const alleValgtePeriodeID = fields.getAll() || [];
     const eksistererVedPosisjon = alleValgtePeriodeID.findIndex(valgt => valgt === periodeID);
 
-    // Alternativt kan vi da pushe et objekt dersom artikkel senere må med, feks
-    // { periodeID: '3738273', artikkelKode: 'FO_883_2004_ART13_1_B4' }
     if (eksistererVedPosisjon === -1) {
       push(periodeID);
     } else {
@@ -187,9 +184,8 @@ const mapStateToProps = state => ({
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = () => ({
   forhandsvisPDF: (behandlingID, dokumenttypeKode, data) => dokumenterOperations.forhandsvisPDF(behandlingID, dokumenttypeKode, data),
-  sendPerioder: (behandlingID, perioder) => dispatch(behandlingerOperations.sendPerioder(behandlingID, perioder)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16);
