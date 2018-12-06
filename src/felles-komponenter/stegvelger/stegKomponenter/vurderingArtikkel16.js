@@ -89,6 +89,9 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="10">
+              <Skjema.Select feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
+                { alleLovvalg.map(kodeObjekt => <option key={kodeObjekt.kode} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+              </Skjema.Select>
               <Listevelger gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
             </Nav.Column>
           </Nav.Row>
