@@ -45,8 +45,6 @@ class Bostedsland extends Steg {
         sysselsetting === VurderingSysselsettingTyper.YRKESAKTIV_FLYVENDE
       );
 
-      console.log('erYrkesaktiv', erYrkesaktiv);
-
       let avklaringer;
 
       /** Regelklassene returnerer alltid et objekt i formatet {status: true, tekst: 'foo}

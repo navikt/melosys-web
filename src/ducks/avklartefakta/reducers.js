@@ -102,6 +102,7 @@ export default function reducer(state = initialState, action) {
         lagStateObjekt(dokument.avklartefakta.sysselsetting, 'SYSSELSETTING'),
         lagStateObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
         lagStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
+        lagStateObjekt(dokument.avklartefakta.bostedsland, 'BOSTEDSLAND'),
         ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
         ...lagArbeidslandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),
         lagArbeidsKonklusjon(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP', null, dokument.maritimtArbeid),

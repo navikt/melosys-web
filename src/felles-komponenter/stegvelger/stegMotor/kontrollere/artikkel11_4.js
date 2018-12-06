@@ -11,7 +11,7 @@ class Artikkel11_4 extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'vilkar for artikkel 12.2 er oppfylt',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART12_2, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART11_4_2, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
@@ -29,18 +29,21 @@ class Artikkel11_4 extends Steg {
     this._tittel = 'Vurdering av 11.4';
     this._komponent = VurderingArtikkel11_4;
     this._samleRelevanteData = _propsLight => ({
-      artikkel: { kode: Koder.FO_883_2004_ART12_2, term: '11.4' },
+      artikkel: { kode: Koder.FO_883_2004_ART11_4_2, term: '11.4' },
+      bostedsland: _propsLight.bostedsland,
+      oppholdsland: _propsLight.oppholdsland,
+      virksomhetsland: _propsLight.valgteArbeidsgivere,
       begrunnelser: _propsLight.begrunnelser.artikkel11_4 || [],
     });
     this._beregnRelevantUI = _propsLight => {
-      const { art12_2, art16_1, art12_2_begrunnelser = [] } = _propsLight.skjema.vilkar;
-      const manglerBegrunnelse = art12_2 === false && art12_2_begrunnelser.length === 0;
-      const harAvklaring = (art12_2 !== null && art12_2 !== undefined) || (art16_1 !== null && art16_1 !== undefined);
+      const { art11_4, art16_1, art11_4_begrunnelser = [] } = _propsLight.skjema.vilkar;
+      const manglerBegrunnelse = art11_4 === false && art11_4_begrunnelser.length === 0;
+      const harAvklaring = (art11_4 !== null && art11_4 !== undefined) || (art16_1 !== null && art16_1 !== undefined);
 
       return {
         harAvklaring: harAvklaring && !manglerBegrunnelse,
-        visBegrunnelser: _propsLight.skjema.vilkar.art12_2 === false || (art12_2 === undefined && art16_1 === undefined),
-        art12_2: _propsLight.skjema.vilkar.art12_2,
+        visBegrunnelser: _propsLight.skjema.vilkar.art11_4 === false || (art11_4 === undefined && art16_1 === undefined),
+        art11_4: _propsLight.skjema.vilkar.art11_4,
         art16_1: _propsLight.skjema.vilkar.art16_1,
       };
     };
