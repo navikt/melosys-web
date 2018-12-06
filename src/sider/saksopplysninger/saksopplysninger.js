@@ -237,7 +237,7 @@ const mapStateToProps = state => ({
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
       arbeidsgivere: avklartefaktaSelectors.ArbeidsgivereSelector(state),
       sokkelEllerSkip: avklartefaktaSelectors.SokkelEllerSkipSelector(state),
-      arbeidSokkelSkip: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
+      sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },
     vilkar: {
       vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),

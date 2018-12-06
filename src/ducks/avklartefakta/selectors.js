@@ -23,6 +23,7 @@ const avklartefaktaKoder = {
   AVKLARTE_ARBEIDSGIVER: 'AVKLARTE_ARBEIDSGIVER',
   SOKKEL_ELLER_SKIP: 'SOKKEL_ELLER_SKIP',
   ARBEIDSLAND: 'ARBEIDSLAND',
+  BOSTEDSLAND: 'BOSTEDSLAND',
   ARBEID_SOKKEL_SKIP: 'ARBEID_SOKKEL_SKIP',
 };
 
@@ -211,5 +212,16 @@ export const ArbeidSokkelSkipSelector = createSelector(
     const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.ARBEID_SOKKEL_SKIP);
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
+  }
+);
+
+export const BostedslandSelector = createSelector(
+  state => AvklartefaktaSelector(state),
+  state => KodeverkSelectors.landkoderSelector(state),
+  (alleAvklarteFakta, alleLandkoder) => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.BOSTEDSLAND);
+    if (!avklartFakta) return null;
+    const bostedslandKode = avklartFakta.fakta[0];
+    return alleLandkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
   }
 );

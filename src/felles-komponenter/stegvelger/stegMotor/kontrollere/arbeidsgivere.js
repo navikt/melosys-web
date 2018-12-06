@@ -4,6 +4,9 @@ import VurderingArbeidsgiver from '../../stegKomponenter/vurderingArbeidsgiver';
 
 import * as Koder from '../../../../koder';
 import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
+import { VurderingSokkelSkipTyper } from '../../stegKomponenter/vurderingSokkelSkip';
+
+import SokkelSkip from './sokkel_skip';
 
 class Arbeidsgivere extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -19,13 +22,24 @@ class Arbeidsgivere extends Steg {
         nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
-        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === YRKESAKTIV_SOKKEL_SKIP',
+        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === YRKESAKTIV_SOKKEL_SKIP && sokkelSkipKonklusjon === SOKKEL_UTLAND',
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Arbeidsgivere.harValgtArbeidsgiver(avklartefakta);
           const arbeiderPaSokkelEllerSkip = Arbeidsgivere.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV_SOKKEL_SKIP);
-          return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip;
+          const erSokkelUtland = SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SOKKEL_UTLAND);
+          return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSokkelUtland;
         },
         nesteSteg: STEG.YRKESAKTIVITET,
+      },
+      {
+        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === YRKESAKTIV_SOKKEL_SKIP && sokkelSkipKonklusjon === SKIP_ETT_LAND',
+        exec: avklartefakta => {
+          const harValgtArbeidsgiver = Arbeidsgivere.harValgtArbeidsgiver(avklartefakta);
+          const arbeiderPaSokkelEllerSkip = Arbeidsgivere.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV_SOKKEL_SKIP);
+          const erSkipEttLand = SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SKIP_ETT_LAND);
+          return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSkipEttLand;
+        },
+        nesteSteg: STEG.BOSTEDSLAND,
       },
       {
         beskrivelse: 'Stopp steg',

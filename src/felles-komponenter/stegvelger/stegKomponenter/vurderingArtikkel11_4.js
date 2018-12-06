@@ -6,7 +6,10 @@ import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
 import * as Koder from '../../../koder';
 
+import { BOOLSK } from '../../../constants';
+
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 class VurderingArtikkel11_4 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -71,11 +74,13 @@ class VurderingArtikkel11_4 extends Component {
 
   render () {
     const {
-      bekreftOgFortsett, begrunnelser, artikkel, tilstand,
+      bekreftOgFortsett, begrunnelser, artikkel, tilstand, bostedsland, oppholdsland, virksomhetsland,
     } = this.props;
 
     const { valgtVilkar } = this.state;
     const { visBegrunnelser, harAvklaring } = tilstand;
+
+    const oppholdsLandSetning = arrayTilKonjunksjon(oppholdsland.map(land => kodeverkObjektTilTerm(land)));
 
     return (
       <div>
@@ -83,7 +88,35 @@ class VurderingArtikkel11_4 extends Component {
         <div>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Fyller søker resterende kriterier for artikkel 12.1?">
+              <dl>
+                <dt>Arbeidsland er:</dt>
+                <dd>{oppholdsLandSetning}</dd>
+                <dt>Arbeidsgiver driver virksomhet i:</dt>
+                <dd>{kodeverkObjektTilTerm(virksomhetsland)}</dd>
+                <dt>Søker er bosatt i:</dt>
+                <dd>{kodeverkObjektTilTerm(bostedsland)}</dd>
+              </dl>
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Nav.Fieldset legend="Jobber søker på hotel og restaurantnæring på NIS-registrert skip?">
+                <Skjema.Radio
+                  fieldName="hotellOgRestaurantPaNISSkip"
+                  value={BOOLSK.SANN}
+                  label="Ja"
+                />
+                <Skjema.Radio
+                  fieldName="hotellOgRestaurantPaNISSkip"
+                  value={BOOLSK.SANN}
+                  label="Nei"
+                />
+              </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Nav.Fieldset legend="Fyller søker resterende kriterier for artikkel 11.4?">
                 <Nav.Radio
                   name="artikkel"
                   onChange={this.radioEndringHandler}
@@ -133,6 +166,9 @@ class VurderingArtikkel11_4 extends Component {
 }
 
 VurderingArtikkel11_4.propTypes = {
+  bostedsland: MPT.Kodeverk.isRequired,
+  oppholdsland: PT.arrayOf(MPT.Kodeverk).isRequired,
+  virksomhetsland: MPT.Kodeverk.isRequired,
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,

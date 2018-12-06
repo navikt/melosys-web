@@ -15,7 +15,7 @@ class SokkelSkip extends Steg {
       {
         beskrivelse: 'sokkelSkipKonklusjon ER LIK "SKIP_ETT_LAND" (videre til 12.1 eller 12.2)',
         exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SKIP_ETT_LAND),
-        nesteSteg: STEG.BOSTEDSLAND,
+        nesteSteg: STEG.ARBEIDSGIVERE,
       },
       {
         beskrivelse: 'alle andre valg',
