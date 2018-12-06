@@ -90,6 +90,16 @@ class Stegvelger extends Component {
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
+    const {
+      skjema,
+      oppdaterAvklarteFaktaState,
+      oppdaterVilkarState,
+      oppdaterLovvalgperioderState,
+    } = this.props;
+    await oppdaterAvklarteFaktaState(skjema);
+    await oppdaterVilkarState(skjema);
+    await oppdaterLovvalgperioderState(skjema);
+
     await this.lagreVilkarHandler();
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
