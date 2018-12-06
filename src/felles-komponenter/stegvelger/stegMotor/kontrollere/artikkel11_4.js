@@ -10,14 +10,14 @@ class Artikkel11_4 extends Steg {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'vilkar for artikkel 12.2 er oppfylt',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART11_4_2, alleVilkar),
+        beskrivelse: 'vilkar for artikkel 11.4.2 eller 11.4.1 er oppfylt',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART11_4_1, alleVilkar) || erVilkarOppfylt(Koder.FO_883_2004_ART11_4_2, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
-        beskrivelse: 'ønsker å vurdere 16.1',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART16_1, alleVilkar),
-        nesteSteg: STEG.ARTIKKEL_16,
+        beskrivelse: 'ønsker å vurdere 12.1',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART12_1, alleVilkar),
+        nesteSteg: STEG.ARTIKKEL_12_1,
       },
       {
         beskrivelse: 'alle andre valg',
@@ -32,19 +32,22 @@ class Artikkel11_4 extends Steg {
       artikkel: { kode: Koder.FO_883_2004_ART11_4_2, term: '11.4' },
       bostedsland: _propsLight.bostedsland,
       oppholdsland: _propsLight.oppholdsland,
-      virksomhetsland: _propsLight.valgteArbeidsgivere,
+      valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
       begrunnelser: _propsLight.begrunnelser.artikkel11_4 || [],
     });
     this._beregnRelevantUI = _propsLight => {
-      const { art11_4, art16_1, art11_4_begrunnelser = [] } = _propsLight.skjema.vilkar;
-      const manglerBegrunnelse = art11_4 === false && art11_4_begrunnelser.length === 0;
-      const harAvklaring = (art11_4 !== null && art11_4 !== undefined) || (art16_1 !== null && art16_1 !== undefined);
+      const {
+        art11_4_1, art11_4_2, art12_1, art11_4_begrunnelser = [],
+      } = _propsLight.skjema.vilkar;
+
+      const manglerBegrunnelse = (art11_4_1 === false || art11_4_2 === false) && art11_4_begrunnelser.length === 0;
+      const harAvklaring = true;
 
       return {
         harAvklaring: harAvklaring && !manglerBegrunnelse,
-        visBegrunnelser: _propsLight.skjema.vilkar.art11_4 === false || (art11_4 === undefined && art16_1 === undefined),
-        art11_4: _propsLight.skjema.vilkar.art11_4,
-        art16_1: _propsLight.skjema.vilkar.art16_1,
+        art11_4_1,
+        art11_4_2,
+        art12_1,
       };
     };
     this._handlers = {

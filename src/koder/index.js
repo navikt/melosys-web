@@ -2,6 +2,7 @@
 // Se Confluence koder for oversikt
 export const FO_883_2004_ART12_1 = 'FO_883_2004_ART12_1';
 export const FO_883_2004_ART12_2 = 'FO_883_2004_ART12_2';
+export const FO_883_2004_ART11_4_1 = 'FO_883_2004_ART11_4_1';
 export const FO_883_2004_ART11_4_2 = 'FO_883_2004_ART11_4_2';
 export const FO_883_2004_ART16_1 = 'FO_883_2004_ART16_1';
 export const ART12_1_VESENTLIG_VIRKSOMHET = 'ART12_1_VESENTLIG_VIRKSOMHET';
