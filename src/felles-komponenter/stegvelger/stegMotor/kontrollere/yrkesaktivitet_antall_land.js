@@ -11,7 +11,7 @@ class YrkesaktivitetAntallLand extends Steg {
       {
         beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
         exec: avklartefakta => (
-          Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV) &&
+          Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.ORDINAER) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
         ),
         nesteSteg: STEG.ARBEIDSGIVERE,
