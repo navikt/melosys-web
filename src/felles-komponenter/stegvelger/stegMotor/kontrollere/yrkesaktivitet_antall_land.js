@@ -1,17 +1,17 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitetAntallLand, { VurderingYrkesaktivitetAntallLandTyper } from '../../stegKomponenter/vurderingYrkesaktivitetAntallLand';
-import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
-import Sysselsetting from '../../stegMotor/kontrollere/sysselsetting';
+import { VurderingYrkesgruppeTyper } from '../../stegKomponenter/vurderingYrkesgruppe';
+import Yrkesgruppe from '../../stegMotor/kontrollere/yrkesgruppe';
 
 class YrkesaktivitetAntallLand extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'sysselsettingType ER LIK "YRKESAKTIV" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
+        beskrivelse: 'yrkesgruppeType ER LIK "YRKESAKTIV" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
         exec: avklartefakta => (
-          Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV) &&
+          Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.YRKESAKTIV) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
         ),
         nesteSteg: STEG.ARBEIDSGIVERE,
