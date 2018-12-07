@@ -15,8 +15,8 @@ describe('Tester stegVelger', () => {
         aktivitet: {
           aktivitetLand: ['GB'],
         },
-        sysselsetting: {
-          sysselsettingType: 'ARBEIDSTAKER',
+        yrkesgruppe: {
+          yrkesgruppeType: 'ARBEIDSTAKER',
         },
         utsending: {
           ansattINorskSelskap: true,

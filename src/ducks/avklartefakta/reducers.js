@@ -50,7 +50,7 @@ export default function reducer(state = initialState, action) {
       const avklartefakta = [
         ...dokument.avklartefakta.oppholdsland,
         ...dokument.avklartefakta.arbeidsgivere,
-        genererAvklaringsObjekt(dokument.avklartefakta.sysselsetting, 'SYSSELSETTING'),
+        genererAvklaringsObjekt(dokument.avklartefakta.yrkesgruppe, 'YRKESGRUPPE'),
         genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
         genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
       ].filter(fakta => fakta !== null);

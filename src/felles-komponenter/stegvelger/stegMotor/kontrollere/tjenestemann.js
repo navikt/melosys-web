@@ -28,7 +28,7 @@ class Tjenestemann extends Steg {
     this._komponent = VurderingTjenestemannn;
     this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = () => ({
-      visSysselsettingType: true,
+      visYrkesgruppeType: true,
     });
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
