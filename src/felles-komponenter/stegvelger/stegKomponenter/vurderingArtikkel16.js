@@ -99,6 +99,7 @@ class VurderingArtikkel16 extends Component {
       gyldigeOppholdLand,
       oppholdPeriode,
       medlemskap,
+      alleLovvalg,
     } = this.props;
 
     const { forhandsvisPDF } = this;
@@ -125,7 +126,7 @@ class VurderingArtikkel16 extends Component {
           <Nav.Row>
             <Nav.Column xs="10">
               <Skjema.Select feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
-                { alleLovvalg.map(kodeObjekt => <option key={kodeObjekt.kode} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+                { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
               </Skjema.Select>
               <Listevelger gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
             </Nav.Column>
@@ -162,6 +163,7 @@ class VurderingArtikkel16 extends Component {
 }
 
 VurderingArtikkel16.propTypes = {
+  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
   medlemskap: MPT.Medlemskap.isRequired,
   anmodningsBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
@@ -173,6 +175,7 @@ VurderingArtikkel16.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
   anmodningsBegrunnelser: KodeverkSelectors.anmodningsBegrunnelserSelector(state),
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
