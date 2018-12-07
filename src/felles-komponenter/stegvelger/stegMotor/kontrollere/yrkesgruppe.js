@@ -1,15 +1,15 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingSysselsetting, { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
+import VurderingYrkesgruppe, { VurderingYrkesgruppeTyper } from '../../stegKomponenter/vurderingYrkesgruppe';
 
-class Sysselsetting extends Steg {
+class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
     this._kriterier = [
       {
-        beskrivelse: 'sysselsettingType ER LIK "ORDINAER"',
-        exec: avklartefakta => Sysselsetting.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.ORDINAER),
+        beskrivelse: 'yrkesgruppeType ER LIK "ORDINAER"',
+        exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.ORDINAER),
         nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
       {
@@ -18,14 +18,14 @@ class Sysselsetting extends Steg {
         nesteSteg: null,
       },
     ];
-    this._id = STEG.SYSSELSETTING;
-    this._tittel = 'Aktivitet';
-    this._komponent = VurderingSysselsetting;
+    this._id = STEG.YRKESGRUPPE;
+    this._tittel = 'Yrkes\u00ADgruppe';
+    this._komponent = VurderingYrkesgruppe;
     this._samleRelevanteData = () => ({});
     this._beregnRelevantUI = _propsLight => {
-      const { sysselsetting } = _propsLight.skjema.avklartefakta;
+      const { yrkesgruppe } = _propsLight.skjema.avklartefakta;
       return ({
-        harAvklaring: sysselsetting !== null && sysselsetting !== undefined,
+        harAvklaring: yrkesgruppe !== null && yrkesgruppe !== undefined,
       });
     };
     this._handlers = {
@@ -35,10 +35,10 @@ class Sysselsetting extends Steg {
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
-    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.SYSSELSETTING);
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESGRUPPE);
     if (!enkeltFakta) { return false; }
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   }
 }
 
-export default Sysselsetting;
+export default Yrkesgruppe;
