@@ -4,13 +4,13 @@ import VurderingArbeidsgiver from '../../stegKomponenter/vurderingArbeidsgiver';
 
 import * as Koder from '../../../../koder';
 
-class Sysselsetting extends Steg {
+class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'Hvis det finnes minst én avklart arbeidsgiver i avklartefakta',
-        exec: avklartefakta => (Sysselsetting.harValgtArbeidsgiver(avklartefakta)),
+        exec: avklartefakta => (Yrkesgruppe.harValgtArbeidsgiver(avklartefakta)),
         nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
@@ -43,4 +43,4 @@ class Sysselsetting extends Steg {
   };
 }
 
-export default Sysselsetting;
+export default Yrkesgruppe;

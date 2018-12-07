@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingBostedsland from '../../stegKomponenter/vurderingBostedsland';
-import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
+import { VurderingYrkesgruppeTyper } from '../../stegKomponenter/vurderingYrkesgruppe';
 import { VurderingIkkeYrkesaktivTyper } from '../../stegKomponenter/vurderingIkkeYrkesaktiv';
 import Regler from '../../../../regler';
 
@@ -27,7 +27,7 @@ class Bostedsland extends Steg {
       const { eosBarnetrygd = {} } = sakOgBehandling;
 
       const {
-        avklartefaktaSysselsettingType,
+        avklartefaktaYrkesgruppeType,
         avklartefaktaIkkeYrkesaktivType,
         vilkar,
       } = skjema;
@@ -37,9 +37,9 @@ class Bostedsland extends Steg {
       const regler = new Regler(skjema, saksopplysninger);
 
       const erYrkesaktiv = (
-        avklartefaktaSysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG ||
-        avklartefaktaSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER ||
-        avklartefaktaSysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER_OG_SELVSTENDIG
+        avklartefaktaYrkesgruppeType === VurderingYrkesgruppeTyper.SELVSTENDIG ||
+        avklartefaktaYrkesgruppeType === VurderingYrkesgruppeTyper.ARBEIDSTAKER ||
+        avklartefaktaYrkesgruppeType === VurderingYrkesgruppeTyper.ARBEIDSTAKER_OG_SELVSTENDIG
       );
 
       let avklaringer;
