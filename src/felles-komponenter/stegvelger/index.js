@@ -100,8 +100,8 @@ class Stegvelger extends Component {
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
       oppdaterLovvalgperioderState,
-      lagreBehandlingerHandler,
     } = this.props;
+
     await oppdaterAvklarteFaktaState(skjema);
     await oppdaterVilkarState(skjema);
     await oppdaterLovvalgperioderState(skjema);
@@ -110,7 +110,7 @@ class Stegvelger extends Component {
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
     await this.fatteVedtakHandler(behandlingsresultattype);
-    await lagreBehandlingerHandler();
+    await this.lagreBehandlingerHandler();
   };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
