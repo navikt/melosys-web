@@ -107,6 +107,7 @@ class BrevBestilling extends Component {
       aktoerroller,
       brevbestillingSkjemaVerdier,
       oppsummering,
+      redigerbart,
     } = this.props;
     const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
@@ -121,7 +122,7 @@ class BrevBestilling extends Component {
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
           <Nav.Fieldset legend="Nytt brev">
-            <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker">
+            <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker" disabled={!redigerbart}>
               {aktoerroller && aktoerroller.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
@@ -129,12 +130,12 @@ class BrevBestilling extends Component {
             </Skjema.Select>
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
-            <Skjema.Textarea feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
+            <Skjema.Textarea disabled={!redigerbart} feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
             { behandlingID &&
               <PdfLenkeListe behandlingID={behandlingID} dokumenter={ForhandsvistePdfDokumenter} vedKlikk={this.validerBrev} />
             }
-            <Nav.Knapp htmlType="reset" type="standard" onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;
-            <Nav.Hovedknapp htmlType="submit" onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>
+            <Nav.Knapp htmlType="reset" type="standard" disabled={!redigerbart} onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;
+            <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>
             { this.state.erBrevSendt && <Nav.AlertStripe type="suksess" className="varsel">Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.</Nav.AlertStripe> }
             { this.state.feilmelding && <Nav.AlertStripe type="advarsel" className="varsel">{this.state.feilmelding}</Nav.AlertStripe> }
           </Nav.Fieldset>
@@ -153,6 +154,7 @@ BrevBestilling.propTypes = {
   brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
   oppsummering: MPT.Oppsummering,
+  redigerbart: PT.bool.isRequired,
 };
 BrevBestilling.defaultProps = {
   brevbestillingSkjemaVerdier: {},

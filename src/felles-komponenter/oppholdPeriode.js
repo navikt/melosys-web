@@ -7,6 +7,7 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 
+import { fagsakSelectors } from '../ducks/fagsaker/';
 import { soknadSelectors, soknadOperations } from '../ducks/soknad';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
@@ -134,7 +135,7 @@ class OppholdPeriode extends Component {
 
   render () {
     const panelIkon = Ikoner.Ferdig;
-    const { oppholdUtlandFom, oppholdUtlandTom } = this.props;
+    const { redigerbart, oppholdUtlandFom, oppholdUtlandTom } = this.props;
     const {
       visEndrePeriode, skjulEndrePeriode, vedFeltFokutUt, oppdaterPeriode, vedFeltEndring, avbryt,
     } = this;
@@ -155,7 +156,7 @@ class OppholdPeriode extends Component {
                   <Nav.Column xs="12">
                     <p>Dersom søker har meldt inn en endring i søknadsperioden, kan du gjøre dette her og deretter oppdatere saksopplysningene:</p>
                     <div className="knapper">
-                      <Nav.Hovedknapp onClick={visEndrePeriode}>Endre søknadsperioden</Nav.Hovedknapp>
+                      <Nav.Hovedknapp disabled={!redigerbart} onClick={visEndrePeriode}>Endre søknadsperioden</Nav.Hovedknapp>
                     </div>
                   </Nav.Column>
                 </Nav.Row>
@@ -180,6 +181,7 @@ class OppholdPeriode extends Component {
 }
 
 OppholdPeriode.propTypes = {
+  redigerbart: PT.bool.isRequired,
   oppdaterPeriode: PT.func.isRequired,
   lagreSoknadOgOppfriskSaksopplysninger: PT.func.isRequired,
   oppholdUtlandFom: PT.string.isRequired,
@@ -197,6 +199,7 @@ OppholdPeriode.defaultProps = {
 const mapStateToProps = state => ({
   oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
   oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
