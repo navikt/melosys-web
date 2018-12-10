@@ -273,7 +273,7 @@ const mapDispatchToProps = dispatch => ({
 const SaksopplysningerForm = reduxForm({
   form: 'soknad',
   enableReinitialize: true,
-  destroyOnUnmount: false,
+  destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) => Validering.Felles.byggValidering(values, props),

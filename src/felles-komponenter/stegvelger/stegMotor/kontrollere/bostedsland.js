@@ -38,11 +38,10 @@ class Bostedsland extends Steg {
 
       const {
         avklartefaktaYrkesgruppeType,
-        bosattINorgeBegrunnelser,
         vilkar,
       } = skjema;
 
-      const { bosattINorge } = vilkar;
+      const { bosattINorge, bosattINorgeBegrunnelser } = vilkar;
 
       const regler = new Regler(skjema, saksopplysninger);
 
