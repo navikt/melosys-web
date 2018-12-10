@@ -51,7 +51,14 @@ const SokkelSkipListe = props => {
 
   return (
     <div className="sokkelSkip__liste">
-      { alleSokkelSkip.map((enkelt, index) => <SokkelSkipEnkelt key={JSON.stringify(enkelt)} sokkelSkipInfo={enkelt} index={index} begrunnelser={begrunnelser} />)}
+      { alleSokkelSkip.map((enkelt, index) => (
+        <SokkelSkipEnkelt
+          key={JSON.stringify(enkelt)}
+          sokkelSkipInfo={enkelt}
+          index={index}
+          begrunnelser={begrunnelser}
+        />))
+      }
     </div>
   );
 };

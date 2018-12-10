@@ -129,6 +129,7 @@ class MultiLand extends Component {
       meta,
       landkoder,
       label,
+      dataListID,
     } = this.props;
 
     const { inputVerdi } = this.state;
@@ -146,7 +147,7 @@ class MultiLand extends Component {
         }
         <div className="landliste__leggtil">
           <Nav.Input
-            list="alleLand"
+            list={dataListID}
             label={dynamiskFeltTittel}
             bredde="XL"
             feil={feilObjekt}
@@ -164,6 +165,7 @@ class MultiLand extends Component {
 }
 
 MultiLand.propTypes = {
+  dataListID: PT.string.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string,
   feil: PT.object,

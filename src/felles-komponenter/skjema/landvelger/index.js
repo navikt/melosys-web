@@ -16,6 +16,7 @@ import './landvelger.css';
 const landTekstFormat = landObjekt => (`${kodeverkObjektTilTerm(landObjekt)} (${kodeverkObjektTilKode(landObjekt)})`);
 const kodeTilObjekt = (kode, alleLandkoder) => alleLandkoder.find(enkeltKode => kodeverkObjektTilKode(enkeltKode) === kode);
 
+const uuid = require('uuid/v4');
 
 /** Dette er inngangskomponent for MultiLand eller EnkeltLand. Disse avgjøres via
  * prop-type multiLand som er subkomponenter i landvelgeren.
@@ -23,11 +24,13 @@ const kodeTilObjekt = (kode, alleLandkoder) => alleLandkoder.find(enkeltKode => 
  */
 const LandVelger = props => {
   const { landkoder, multiLand } = props;
+  const dataListID = `datalist-${uuid()}`;
+
   return (
     <div>
-      {multiLand ? (<MultiLand {...props} />) : (<EnkeltLand {...props} />)}
+      {multiLand ? (<MultiLand {...props} dataListID={dataListID} />) : (<EnkeltLand {...props} dataListID={dataListID} />)}
       <div className="landliste__dataliste">
-        <datalist id="alleLand">
+        <datalist id={dataListID}>
           {landkoder.map(item => (<option key={kodeverkObjektTilKode(item)} value={landTekstFormat(item)} />))}
         </datalist>
       </div>
