@@ -22,12 +22,24 @@ const avklartfaktaMal = {
   begrunnelseFritekst: null,
 };
 
-const genererAvklaringsObjekt = (avklartFakta, avklaringType) => (
+// Kun for å holde state i stegvelgeren.
+const lagAvklartStateObjekt = (avklartFakta, avklaringType) => (
   avklartFakta ? {
     ...avklartfaktaMal,
     referanse: avklaringType,
     fakta: [avklartFakta],
   } : null
+);
+
+// En faktisk avklart fakta
+const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => (
+  {
+    ...avklartfaktaMal,
+    avklartefaktaKode,
+    referanse: avklartefaktaKode,
+    subjektID: null,
+    fakta: [avklarteFakta],
+  }
 );
 
 // Reducer
@@ -50,9 +62,9 @@ export default function reducer(state = initialState, action) {
       const avklartefakta = [
         ...dokument.avklartefakta.oppholdsland,
         ...dokument.avklartefakta.arbeidsgivere,
-        genererAvklaringsObjekt(dokument.avklartefakta.sysselsetting, 'SYSSELSETTING'),
-        genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
-        genererAvklaringsObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
+        lagAvklartfaktaObjekt(dokument.avklartefakta.yrkesgruppe, 'YRKESGRUPPE'),
+        lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
+        lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
       ].filter(fakta => fakta !== null);
 
       return { ...state, data: [...avklartefakta] };

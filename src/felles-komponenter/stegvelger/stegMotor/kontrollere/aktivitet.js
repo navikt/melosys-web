@@ -12,7 +12,7 @@ class Aktivitet extends Steg {
         nesteSteg: STEG.VEDTAK,
       },
     ];
-    this._id = STEG.SYSSELSETTING;
+    this._id = STEG.YRKESGRUPPE;
     this._tittel = 'Aktivitet';
     this._komponent = VurderingAktivitet;
     this._samleRelevanteData = () => ({});
