@@ -206,7 +206,7 @@ const mapStateToProps = state => ({
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: soknadSelectors.OppholdUtlandSelector(state).oppholdslandKoder,
-    forutgaendeBostedINorge: soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge,
+    forutgaendeBostedINorge: soknadSelectors.OppholdUtlandSelector(state).forutgaendeBostedINorge,
     arbeidUtland: soknadSelectors.ArbeidUtlandSelector(state),
     sammeAdresseSomArbeidsgiver: soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver,
     ektefelleEllerBarnINorge: soknadSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
@@ -237,7 +237,7 @@ const mapStateToProps = state => ({
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
       arbeidsgivere: avklartefaktaSelectors.ArbeidsgivereSelector(state),
       sokkelEllerSkip: avklartefaktaSelectors.SokkelEllerSkipSelector(state),
-      arbeidSokkelSkip: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
+      sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },
     vilkar: {
       vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),
