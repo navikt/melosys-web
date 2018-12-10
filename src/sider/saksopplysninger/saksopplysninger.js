@@ -8,7 +8,7 @@ import * as Validering from '../../felles-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
 
 import ArbeidsgivereNorge from '../../felles-komponenter/arbeidsgivereNorge';
-import ArbeidUtland from '../../felles-komponenter/arbeidUtland';
+import ArbeidUtland from '../../felles-komponenter/arbeidutland';
 import Bosted from '../../felles-komponenter/bosted';
 import ForetakUtland from '../../felles-komponenter/foretakutland';
 import Inntekt from '../../felles-komponenter/inntektUtland';
