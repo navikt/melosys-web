@@ -55,7 +55,7 @@ Arbeidsgiver.defaultProps = {
 };
 
 const UtsendendeArbeidsgiver = props => {
-  const { valgteArbeidsgivere } = props;
+  const { redigerbart, valgteArbeidsgivere } = props;
 
   const panelIkon = valgteArbeidsgivere.length === 1 ? Ikoner.Ferdig : Ikoner.Varsel;
 
@@ -74,15 +74,15 @@ const UtsendendeArbeidsgiver = props => {
             </Nav.Column>
             <Nav.Column xs="6">
               <div className="arbeidsgiver__detaljer">
-                <Skjema.Input label="Kontaktperson" feltNavn="kontaktNavn" />
-                <Skjema.Input label="E-post" feltNavn="kontaktEpost" />
+                <Skjema.Input disabled={!redigerbart} label="Kontaktperson" feltNavn="kontaktNavn" />
+                <Skjema.Input disabled={!redigerbart} label="E-post" feltNavn="kontaktEpost" />
                 <Nav.Element>Dersom fullmektig har sendt søknaden på vegne av arbeidsgiver:</Nav.Element>
-                <Skjema.Input label="Fullmektig firma" feltNavn="fullmektigFirma" />
-                <Skjema.Input label="Gateadresse" feltNavn="fullmektigGateadresse" />
-                <Skjema.Input label="Postnummer" bredde="XS" feltNavn="fullmektigPostnr" />
-                <Skjema.Input label="Poststed" feltNavn="fullmektigPoststed" />
-                <Skjema.Input label="Region" feltNavn="fullmektigRegion" />
-                <LandVelger label="Land" feltNavn="fullmektigLand" />
+                <Skjema.Input disabled={!redigerbart} label="Fullmektig firma" feltNavn="fullmektigFirma" />
+                <Skjema.Input disabled={!redigerbart} label="Gateadresse" feltNavn="fullmektigGateadresse" />
+                <Skjema.Input disabled={!redigerbart} label="Postnummer" bredde="XS" feltNavn="fullmektigPostnr" />
+                <Skjema.Input disabled={!redigerbart} label="Poststed" feltNavn="fullmektigPoststed" />
+                <Skjema.Input disabled={!redigerbart} label="Region" feltNavn="fullmektigRegion" />
+                <LandVelger disabled={!redigerbart} label="Land" feltNavn="fullmektigLand" />
               </div>
             </Nav.Column>
           </Nav.Row>
@@ -93,6 +93,7 @@ const UtsendendeArbeidsgiver = props => {
 };
 
 UtsendendeArbeidsgiver.propTypes = {
+  redigerbart: PT.bool.isRequired,
   organisasjoner: MPT.Organisasjoner,
   soknadVerdier: PT.object,
   valgteArbeidsgivere: PT.array.isRequired,
@@ -104,6 +105,7 @@ UtsendendeArbeidsgiver.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
   organisasjoner: fagsakSelectors.OrganisasjonerSelector(state),
   valgteArbeidsgivere: avklartefaktaSelectors.AvklartefaktaValgteArbeidsgivereSelector(state),
 });
