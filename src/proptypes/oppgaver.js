@@ -11,7 +11,6 @@ const JournalforingOppgavePropType = PT.shape({
 });
 const SaksbehandlingOppgavePropType = PT.shape({
   oppgaveID: PT.string,
-  redigerbart: PT.bool.isRequired,
   sammensattNavn: PT.string,
   saksnummer: PT.string,
   sakstype: MPT.Kodeverk,
