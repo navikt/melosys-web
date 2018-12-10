@@ -32,14 +32,13 @@ class Bostedsland extends Steg {
     });
     this._beregnRelevantUI = _propsLight => {
       const { skjema = {}, saksopplysninger = {} } = _propsLight;
-      const { bostedsland, sysselsetting, yrkesaktivitet } = skjema.avklartefakta;
-      const { bosattINorge, bosattINorgeBegrunnelser } = skjema.vilkar;
+      const { bostedsland, yrkesaktivitet } = skjema.avklartefakta;
       const { sakOgBehandling } = saksopplysninger;
       const { eosBarnetrygd = {} } = sakOgBehandling;
 
       const {
         avklartefaktaYrkesgruppeType,
-        avklartefaktaIkkeYrkesaktivType,
+        bosattINorgeBegrunnelser,
         vilkar,
       } = skjema;
 

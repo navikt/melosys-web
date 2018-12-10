@@ -19,22 +19,23 @@ class Yrkesgruppe extends Steg {
           const erVanligYrkesaktiv = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.ORDINAER);
           return harValgtArbeidsgiver && erVanligYrkesaktiv;
         },
+        nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
-        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === YRKESAKTIV_SOKKEL_SKIP && sokkelSkipKonklusjon === SOKKEL_UTLAND',
+        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === SOKKEL_ELLER_SKIP && sokkelSkipKonklusjon === SOKKEL_UTLAND',
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Yrkesgruppe.harValgtArbeidsgiver(avklartefakta);
-          const arbeiderPaSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV_SOKKEL_SKIP);
+          const arbeiderPaSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
           const erSokkelUtland = SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SOKKEL_UTLAND);
           return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSokkelUtland;
         },
         nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
-        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === YRKESAKTIV_SOKKEL_SKIP && sokkelSkipKonklusjon === SKIP_ETT_LAND',
+        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === SOKKEL_ELLER_SKIP && sokkelSkipKonklusjon === SKIP_ETT_LAND',
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Yrkesgruppe.harValgtArbeidsgiver(avklartefakta);
-          const arbeiderPaSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingSysselsettingTyper.YRKESAKTIV_SOKKEL_SKIP);
+          const arbeiderPaSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
           const erSkipEttLand = SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SKIP_ETT_LAND);
           return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSkipEttLand;
         },
