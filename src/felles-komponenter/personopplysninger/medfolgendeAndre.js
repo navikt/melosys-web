@@ -30,7 +30,7 @@ class MedfolgendeAndre extends Component {
   };
 
   render () {
-    const { medfolgendeAndre } = this.props;
+    const { disabled, medfolgendeAndre } = this.props;
     const { sammensattNavn, foedselsdato, bostedsadresse } = medfolgendeAndre;
     const { sokHandle, vedTastOppHandle } = this;
     const { erDirty } = this.state;
@@ -51,8 +51,9 @@ class MedfolgendeAndre extends Component {
               feltNavn="medfolgendeAndre"
               label="Oppgi fnr / dnr:"
               onKeyUp={vedTastOppHandle}
+              disabled={disabled}
             />
-            <Nav.Hovedknapp onClick={sokHandle}>Søk</Nav.Hovedknapp>
+            <Nav.Hovedknapp disabled={disabled} onClick={sokHandle}>Søk</Nav.Hovedknapp>
           </div>
           { funnetPerson }
         </Nav.Fieldset>
@@ -62,6 +63,7 @@ class MedfolgendeAndre extends Component {
 }
 
 MedfolgendeAndre.propTypes = {
+  disabled: PT.bool.isRequired,
   medfolgendeAndre: MPT.Person,
   sjekkPerson: PT.func.isRequired,
 };

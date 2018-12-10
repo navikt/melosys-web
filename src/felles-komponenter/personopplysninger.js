@@ -110,7 +110,7 @@ class Personopplysninger extends Component {
                 </dl>
               </Nav.Column>
               <Nav.Column xs="6">
-                <UtenlandskIdent />
+                <UtenlandskIdent disabled={!redigerbart} />
               </Nav.Column>
             </Nav.Row>
             <Nav.Row className="person__seksjon">
@@ -136,19 +136,19 @@ class Personopplysninger extends Component {
                         <Skjema.Input feltNavn="oppgittAdressePoststed" label="Poststed:" disabled={!redigerbart} />
                       </Nav.Column>
                     </Nav.Row>
-                    <LandVelger feltNavn="oppgittAdresseLand" label="Land:" />
+                    <LandVelger disabled={!redigerbart} feltNavn="oppgittAdresseLand" label="Land:" />
                   </dl>
                 </Nav.Fieldset>
               </Nav.Column>
             </Nav.Row>
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="12">
-                {familiemedlemmer.length > 0 && <MedfolgendeFamilie medfolgendeFamilie={familiemedlemmer} /> }
+                {familiemedlemmer.length > 0 && <MedfolgendeFamilie medfolgendeFamilie={familiemedlemmer} disabled={!redigerbart} /> }
               </Nav.Column>
             </Nav.Row>
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="12">
-                <MedfolgendeAndre medfolgendeAndre={medfolgendeAndre} sjekkPerson={sjekkPerson} />
+                <MedfolgendeAndre medfolgendeAndre={medfolgendeAndre} sjekkPerson={sjekkPerson} disabled={!redigerbart} />
               </Nav.Column>
             </Nav.Row>
             {/* SLUTT PERSONINFO */}
