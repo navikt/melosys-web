@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PT from 'prop-types';
 
+import { fagsakSelectors } from '../../ducks/fagsaker';
 import * as Nav from '../../utils/navFrontend';
 import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
 
@@ -126,6 +128,7 @@ class EkstraArbeidsgivereLeggTil extends Component {
   skjulLeggTil = () => this.setState({ erLeggTilSynlig: false });
 
   render() {
+    const { redigerbart } = this.props;
     const {
       oppdaterOrgnrVerdi, visLeggTil, skjulLeggTil, forsokHentOrganisasjon, leggTil,
     } = this;
@@ -136,7 +139,7 @@ class EkstraArbeidsgivereLeggTil extends Component {
 
     return (
       <div>
-        {!erLeggTilSynlig && <Nav.Knapp onClick={visLeggTil}>+ Legg til arbeidsgiver</Nav.Knapp> }
+        {!erLeggTilSynlig && <Nav.Knapp disabled={!redigerbart} onClick={visLeggTil}>+ Legg til arbeidsgiver</Nav.Knapp> }
         {erLeggTilSynlig && <SkjemaSokOgLeggTil
           avbryt={skjulLeggTil}
           feilmelding={feilmelding}
@@ -152,8 +155,16 @@ class EkstraArbeidsgivereLeggTil extends Component {
 }
 
 EkstraArbeidsgivereLeggTil.propTypes = {
+  redigerbart: PT.bool.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   leggTil: PT.func.isRequired,
 };
 
-export default EkstraArbeidsgivereLeggTil;
+
+const mapStateToProps = state => ({
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+});
+
+const mapDispatchToProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EkstraArbeidsgivereLeggTil);
