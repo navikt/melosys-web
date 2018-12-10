@@ -23,7 +23,7 @@ const avklartfaktaMal = {
 };
 
 // Kun for å holde state i stegvelgeren.
-const lagAvklartStateObjekt = (avklartFakta, avklaringType) => (
+const lagAvklartStateObjekt = (avklartFakta, referanse) => (
   avklartFakta ? {
     ...avklartfaktaMal,
     referanse,
