@@ -16,7 +16,7 @@ import MaritimtArbeid from '../../felles-komponenter/maritimtArbeid';
 import Medlemskap from '../../felles-komponenter/medlemskap';
 import OppholdPeriode from '../../felles-komponenter/oppholdPeriode';
 import Personopplysninger from '../../felles-komponenter/personopplysninger';
-import SelvstendigArbeid from '../../felles-komponenter/selvstendigArbeid';
+import SelvstendigArbeid from '../../felles-komponenter/selvstendigarbeid';
 import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgiver';
 import Stegvelger from '../../felles-komponenter/stegvelger';
 import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
