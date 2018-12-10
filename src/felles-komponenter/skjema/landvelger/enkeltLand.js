@@ -99,7 +99,7 @@ class EnkeltLand extends Component {
     } = this;
 
     const {
-      label, meta,
+      label, meta, dataListID,
     } = this.props;
 
     const { inputVerdi } = this.state;
@@ -110,7 +110,7 @@ class EnkeltLand extends Component {
     return (
       <div>
         <Nav.Input
-          list="alleLand"
+          list={dataListID}
           label={label}
           bredde="XL"
           feil={feilObjekt}
@@ -127,6 +127,7 @@ class EnkeltLand extends Component {
 }
 
 EnkeltLand.propTypes = {
+  dataListID: PT.string.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   meta: PT.object.isRequired,
   label: PT.string,

@@ -1,6 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingSokkelSkip, { VurderingSokkelSkipTyper } from '../../stegKomponenter/vurderingSokkelSkip';
+import * as Koder from '../../../../koder';
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -50,10 +51,16 @@ class SokkelSkip extends Steg {
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   };
 
+  // Hvis SKIP er valgt som vurdering, så skal det ikke legges inn
+  // en begrunnelse.
   static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon) => {
     const avklartSokkelEllerSkip = sokkelEllerSkip
-      .map(enkelt => enkelt.installasjonsType && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland && true)
+      .map(enkelt => {
+        if (enkelt.installasjonsType === Koder.SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
+        return (enkelt.installasjonsType === Koder.SKIP && enkelt.arbeidsland && true);
+      })
       .every(enkelt => enkelt === true);
+
     const avklartArbeidSokkelSkip = sokkelSkipKonklusjon && sokkelSkipKonklusjon !== '';
 
     return (avklartSokkelEllerSkip && avklartArbeidSokkelSkip);
