@@ -3,18 +3,18 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingVirksomhet, { VurderingVirksomhetTyper } from '../../stegKomponenter/vurderingVirksomhet';
 import { VurderingYrkesaktivitetAntallLandTyper } from '../../stegKomponenter/vurderingYrkesaktivitetAntallLand';
 import { VurderingYrkesaktivitetTyper } from '../../stegKomponenter/vurderingYrkesaktivitet';
-import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
+import { VurderingYrkesgruppeTyper } from '../../stegKomponenter/vurderingYrkesgruppe';
 
 class Virksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'sysselsettingType ER LIK "ARBEIDSTAKER" OG yrkesaktivitetType ER LIK "INGEN_AV_DISSE" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
+        beskrivelse: 'yrkesgruppeType ER LIK "ARBEIDSTAKER" OG yrkesaktivitetType ER LIK "INGEN_AV_DISSE" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
         exec: ({
-          sysselsettingType, ansattISektor, antallLand, aktivitetINorge,
+          yrkesgruppeType, ansattISektor, antallLand, aktivitetINorge,
         }) => (
-          sysselsettingType === VurderingSysselsettingTyper.ARBEIDSTAKER &&
+          yrkesgruppeType === VurderingYrkesgruppeTyper.ARBEIDSTAKER &&
           ansattISektor === VurderingYrkesaktivitetTyper.INGEN_AV_DISSE &&
           antallLand === VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND &&
           aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
@@ -22,9 +22,9 @@ class Virksomhet extends Steg {
         nesteSteg: STEG.BOSTEDSLAND,
       },
       {
-        beskrivelse: 'sysselsettingType ER LIK "SELVSTENDIG" OG ENTEN antallLand ER LIK "TO_ELLER_FLERE_LAND"',
-        exec: ({ sysselsettingType, antallLand }) => (
-          sysselsettingType === VurderingSysselsettingTyper.SELVSTENDIG &&
+        beskrivelse: 'yrkesgruppeType ER LIK "SELVSTENDIG" OG ENTEN antallLand ER LIK "TO_ELLER_FLERE_LAND"',
+        exec: ({ yrkesgruppeType, antallLand }) => (
+          yrkesgruppeType === VurderingYrkesgruppeTyper.SELVSTENDIG &&
           antallLand === VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND
         ),
         nesteSteg: STEG.BOSTEDSLAND,

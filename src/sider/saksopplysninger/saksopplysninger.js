@@ -232,7 +232,7 @@ const mapStateToProps = state => ({
     tidligeremedlemskap: behandlingerSelectors.tidligereMedlemskap(state),
     avklartefakta: {
       oppholdsland: avklartefaktaSelectors.Oppholdsland(state),
-      sysselsetting: avklartefaktaSelectors.Sysselsetting(state),
+      yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
       yrkesaktivitetAntallLand: avklartefaktaSelectors.YrkesaktivitetAntallLand(state),
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
       arbeidsgivere: avklartefaktaSelectors.ArbeidsgivereSelector(state),

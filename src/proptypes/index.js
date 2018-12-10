@@ -17,7 +17,7 @@ import { Utenlandsopphold } from './utenlandsopphold';
 import { ArbeidNorge } from './arbeidNorge';
 import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger } from './vurdering';
 import { OppholdLand, OppholdPeriode } from './opphold';
-import { Sysselsetting } from './sysselsetting';
+import { Yrkesgruppe } from './yrkesgruppe';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
 import { Journalforing, JournalforingSkjemaVerdier } from './journalforing';
@@ -68,7 +68,7 @@ export {
   SaksbehandlingOppgave,
   Saksbehandler,
   SoknadForm,
-  Sysselsetting,
+  Yrkesgruppe,
   TimerTimelonnet,
   TimerTimelonnetLinje,
   Utenlandsopphold,
