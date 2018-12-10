@@ -80,7 +80,7 @@ const VurderingSokkelSkip = props => {
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_NORSK} label="På norsk sokkel" />
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_NORSK_TERRITORIAL} label="Skip / installasjon innenfor norsk territorialfarvann" />
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_ETT_LAND} label="På skip registrert i ett land" />
-        <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_UTLAND} label="Utsendt til et annet lands sokkel" />
+        <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_UTLAND} label="Utsendt til sokkel i ett annet land" />
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND} label="To sokler / skip i flere land" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
