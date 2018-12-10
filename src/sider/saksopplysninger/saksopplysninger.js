@@ -10,7 +10,7 @@ import * as MPT from '../../proptypes/';
 import ArbeidsgivereNorge from '../../felles-komponenter/arbeidsgivereNorge';
 import ArbeidUtland from '../../felles-komponenter/arbeidUtland';
 import Bosted from '../../felles-komponenter/bosted';
-import ForetakUtland from '../../felles-komponenter/foretakUtland';
+import ForetakUtland from '../../felles-komponenter/foretakutland';
 import Inntekt from '../../felles-komponenter/inntektUtland';
 import MaritimtArbeid from '../../felles-komponenter/maritimtArbeid';
 import Medlemskap from '../../felles-komponenter/medlemskap';
