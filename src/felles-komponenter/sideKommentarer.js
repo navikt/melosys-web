@@ -1,26 +1,36 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 import { TextareaControlled } from 'nav-frontend-skjema';
 import { Knapp } from 'nav-frontend-knapper';
 import { Undertittel } from 'nav-frontend-typografi';
 
+import { fagsakSelectors } from '../ducks/fagsaker/';
 import './sideKommentarer.css';
 
-const SideKommentarer = () => (
-  <div className="sideKommentar panelSeksjon">
-    <Panel>
-      <form onSubmit={event => event.preventDefault()}>
-        <Undertittel>Kommentarer:</Undertittel>
-        <TextareaControlled textareaClass="kommentar__tekst" label="" />
-        <p className="kommentar__advarsel">Merk: Fremtidige innsynskrav vil også medføre utlevering av kommentarer. Ta hensyn til dette når du skriver.</p>
-        <Knapp type="hoved">Lagre kommentar</Knapp>
-      </form>
-    </Panel>
-  </div>
-);
+const SideKommentarer = props => {
+  const { redigerbart } = props;
+  return (
+    <div className="sideKommentar panelSeksjon">
+      <Panel>
+        <form onSubmit={event => event.preventDefault()}>
+          <Undertittel>Kommentarer:</Undertittel>
+          <TextareaControlled disabled={!redigerbart} textareaClass="kommentar__tekst" label="" />
+          <p className="kommentar__advarsel">Merk: Fremtidige innsynskrav vil også medføre utlevering av kommentarer. Ta hensyn til dette når du skriver.</p>
+          <Knapp type="hoved" disabled={!redigerbart}>Lagre kommentar</Knapp>
+        </form>
+      </Panel>
+    </div>
+  );
+};
+SideKommentarer.propTypes = {
+  redigerbart: PT.bool.isRequired,
+};
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+});
 
 const mapDispatchToProps = () => ({});
 

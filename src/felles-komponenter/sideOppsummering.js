@@ -99,6 +99,7 @@ class SideOppsummering extends Component {
 
   render() {
     const {
+      redigerbart,
       oppsummering,
       person,
       oppholdUtlandFom,
@@ -129,7 +130,6 @@ class SideOppsummering extends Component {
     } = this.props;
 
     const gyldigeOppholdsLandSetning = arrayTilKonjunksjon(gyldigeOppholdsLand.map(land => land.term));
-
     let endreBehandlingsStatusValg = [];
     if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = this.hentBehandlingsStatusValg(oppsummering.behandlingsstatus.kode);
 
@@ -194,7 +194,7 @@ class SideOppsummering extends Component {
                       onChange={this.onChange}
                       label="Endre status på behandlingen:"
                     />
-                    <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
+                    <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
                     {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
                   </form>
                 }
@@ -209,6 +209,7 @@ class SideOppsummering extends Component {
 }
 
 SideOppsummering.propTypes = {
+  redigerbart: PT.bool.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   person: MPT.Person.isRequired,
   behandlingsstatusKodeVerk: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -228,6 +229,7 @@ const mapStateToProps = state => ({
   oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
   gyldigeOppholdsLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   behandlingsstatusKodeVerk: KodeverkSelectors.behandlingsStatusSelector(state),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

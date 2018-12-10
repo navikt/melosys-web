@@ -14,7 +14,7 @@ import { BOOLSK } from '../constants';
 
 import PanelHeader from './panelHeader/panelHeader';
 import OrganisasjonsAdresse from './adresser/organisasjonsAdresse';
-
+import { fagsakSelectors } from '../ducks/fagsaker/';
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../ducks/organisasjoner';
 
 import './selvstendigArbeid.css';
@@ -52,7 +52,7 @@ class EnkeltForetak extends Component {
 
   render () {
     const {
-      posisjon, foretaket, slettForetak, organisasjon,
+      redigerbart, posisjon, foretaket, slettForetak, organisasjon,
     } = this.props;
     const feilmelding = this.state.feilmelding ? { feilmelding: this.state.feilmelding } : null;
 
@@ -67,6 +67,7 @@ class EnkeltForetak extends Component {
                 bredde="S"
                 label="Organisasjonsnummer"
                 onBlur={() => this.presjekkOrganisasjon()}
+                disabled={!redigerbart}
               />
               { organisasjon && <OrganisasjonsAdresse className="enkeltforetak__adresse" organisasjon={organisasjon} /> }
             </Nav.Column>
@@ -89,6 +90,7 @@ class EnkeltForetak extends Component {
 }
 
 EnkeltForetak.propTypes = {
+  redigerbart: PT.bool.isRequired,
   foretaket: PT.string.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   organisasjon: PT.object,
@@ -197,6 +199,7 @@ const SelvstendigArbeid = props => {
 };
 
 SelvstendigArbeid.propTypes = {
+  redigerbart: PT.bool.isRequired,
   soknadForm: PT.object,
   hentOrganisasjon: PT.func.isRequired,
   organisasjoner: PT.array.isRequired,
@@ -210,6 +213,7 @@ SelvstendigArbeid.defaultProps = {
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
