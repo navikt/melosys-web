@@ -90,6 +90,16 @@ class Stegvelger extends Component {
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
+    const {
+      skjema,
+      oppdaterAvklarteFaktaState,
+      oppdaterVilkarState,
+      oppdaterLovvalgperioderState,
+    } = this.props;
+    await oppdaterAvklarteFaktaState(skjema);
+    await oppdaterVilkarState(skjema);
+    await oppdaterLovvalgperioderState(skjema);
+
     await this.lagreVilkarHandler();
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
@@ -113,12 +123,14 @@ class Stegvelger extends Component {
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
       begrunnelser: props.begrunnelser,
+      bostedsland: props.bostedsland,
       landkoder: props.landkoder,
       lovvalgsperioder: props.lovvalgsperioder,
       inngang: props.inngang,
       tilgjengeligeHandlers,
       saksopplysninger: props.saksopplysninger,
       skjema: props.skjema,
+      oppholdsland: props.oppholdsland,
       valgteArbeidsgivere: props.valgteArbeidsgivere,
       vilkar: props.vilkar,
     };
@@ -241,6 +253,8 @@ const mapStateToProps = state => ({
   begrunnelser: KodeverkSelectors.begrunnelserSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
   landkoder: KodeverkSelectors.landkoderSelector(state),
+  oppholdsland: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
+  bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   saksopplysninger: fagsakSelectors.SaksopplysningerSelector(state),

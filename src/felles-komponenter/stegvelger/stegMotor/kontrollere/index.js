@@ -10,6 +10,7 @@ import Sysselsetting from './sysselsetting';
 import Tjenestemann from './tjenestemann';
 import Artikkel12_1 from './artikkel12_1';
 import Artikkel12_2 from './artikkel12_2';
+import Artikkel11_4 from './artikkel11_4';
 import Artikkel16 from './artikkel16';
 import Virksomhet from './virksomhet';
 import VesentligVirksomhet from './vesentlig_virksomhet';
@@ -32,6 +33,7 @@ export {
   Tjenestemann,
   Artikkel12_1,
   Artikkel12_2,
+  Artikkel11_4,
   Artikkel16,
   Virksomhet,
   VesentligVirksomhet,
