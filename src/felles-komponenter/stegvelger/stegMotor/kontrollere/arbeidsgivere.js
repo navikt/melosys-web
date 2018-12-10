@@ -13,7 +13,7 @@ class Yrkesgruppe extends Steg {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === ORDINAER',
+        beskrivelse: 'Valgt minst én arbeidsgivr og yrkesgruppeType === ORDINAER',
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Yrkesgruppe.harValgtArbeidsgiver(avklartefakta);
           const erVanligYrkesaktiv = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.ORDINAER);
@@ -22,7 +22,7 @@ class Yrkesgruppe extends Steg {
         nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
-        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === SOKKEL_ELLER_SKIP && sokkelSkipKonklusjon === SOKKEL_UTLAND',
+        beskrivelse: 'Valgt minst én arbeidsgivr og yrkesgruppeType === SOKKEL_ELLER_SKIP && sokkelSkipKonklusjon === SOKKEL_UTLAND',
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Yrkesgruppe.harValgtArbeidsgiver(avklartefakta);
           const arbeiderPaSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
@@ -32,7 +32,7 @@ class Yrkesgruppe extends Steg {
         nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
-        beskrivelse: 'Valgt minst én arbeidsgivr og sysselsettingType === SOKKEL_ELLER_SKIP && sokkelSkipKonklusjon === SKIP_ETT_LAND',
+        beskrivelse: 'Valgt minst én arbeidsgivr og yrkesgruppeType === SOKKEL_ELLER_SKIP && sokkelSkipKonklusjon === SKIP_ETT_LAND',
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Yrkesgruppe.harValgtArbeidsgiver(avklartefakta);
           const arbeiderPaSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);

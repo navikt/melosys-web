@@ -24,6 +24,7 @@ const Avklaringer = ({ avklaringer }) => (
       {
         avklaringer.map(({ tekst, status }) => {
           let iconClassName;
+          console.log(status)
           if (status === undefined) {
             iconClassName = 'liste__element--varsel';
           }
