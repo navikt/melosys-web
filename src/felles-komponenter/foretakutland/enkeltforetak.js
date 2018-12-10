@@ -31,9 +31,11 @@ const EnkeltForetak = ({ indeks, slettForetakHandler, redigerbart }) => (
 );
 
 EnkeltForetak.propTypes = {
-  redigerbart: PT.bool.isRequired,
+  redigerbart: PT.bool,
   indeks: PT.number.isRequired,
   slettForetakHandler: PT.func.isRequired,
 };
-
+EnkeltForetak.defaultProps = {
+  redigerbart: true,
+};
 export default EnkeltForetak;
