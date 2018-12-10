@@ -11,7 +11,7 @@ class Inngang extends Steg {
       {
         beskrivelse: 'Hvis minst ett land finnes',
         exec: avklartefakta => (Inngang.harMinstEttGyldigOppholdsland(avklartefakta)),
-        nesteSteg: STEG.SYSSELSETTING,
+        nesteSteg: STEG.YRKESGRUPPE,
       },
       {
         beskrivelse: 'Dead end - ingen land',

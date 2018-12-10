@@ -22,15 +22,24 @@ const avklartfaktaMal = {
   begrunnelseFritekst: null,
 };
 
-// Et stateObjekt brukes kun for at stegvelger skal kunne gjenskapes basert på
-// valg som saksbehandler har gjort. Disse valgene må lagres backend og kunne returneres
-// frontend senere, men de er egentlig ikke avklarte fakta.
-const lagStateObjekt = (avklartFakta, referanse) => (
+// Kun for å holde state i stegvelgeren.
+const lagAvklartStateObjekt = (avklartFakta, avklaringType) => (
   avklartFakta ? {
     ...avklartfaktaMal,
     referanse,
     fakta: [avklartFakta],
   } : null
+);
+
+// En faktisk avklart fakta
+const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => (
+  {
+    ...avklartfaktaMal,
+    avklartefaktaKode,
+    referanse: avklartefaktaKode,
+    subjektID: null,
+    fakta: [avklarteFakta],
+  }
 );
 
 const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
@@ -117,9 +126,9 @@ export default function reducer(state = initialState, action) {
       const avklartefakta = [
         ...dokument.avklartefakta.oppholdsland,
         ...dokument.avklartefakta.arbeidsgivere,
-        lagStateObjekt(dokument.avklartefakta.sysselsetting, 'SYSSELSETTING'),
-        lagStateObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
-        lagStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
+        lagAvklartfaktaObjekt(dokument.avklartefakta.yrkesgruppe, 'YRKESGRUPPE'),
+        lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
+        lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
         avklarEllerUtledBostedsland(dokument.avklartefakta.bostedsland, dokument.vilkar.bosattINorge),
         ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
         ...lagArbeidslandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),

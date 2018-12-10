@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingBostedsland from '../../stegKomponenter/vurderingBostedsland';
-import { VurderingSysselsettingTyper } from '../../stegKomponenter/vurderingSysselsetting';
+import { VurderingYrkesgruppeTyper } from '../../stegKomponenter/vurderingYrkesgruppe';
 import { VurderingIkkeYrkesaktivTyper } from '../../stegKomponenter/vurderingIkkeYrkesaktiv';
 import { VurderingSokkelSkipTyper } from '../../stegKomponenter/vurderingSokkelSkip';
 
@@ -37,12 +37,20 @@ class Bostedsland extends Steg {
       const { sakOgBehandling } = saksopplysninger;
       const { eosBarnetrygd = {} } = sakOgBehandling;
 
+      const {
+        avklartefaktaYrkesgruppeType,
+        avklartefaktaIkkeYrkesaktivType,
+        vilkar,
+      } = skjema;
+
+      const { bosattINorge } = vilkar;
+
       const regler = new Regler(skjema, saksopplysninger);
 
       const erYrkesaktiv = (
-        sysselsetting === VurderingSysselsettingTyper.YRKESAKTIV ||
-        sysselsetting === VurderingSysselsettingTyper.YRKESAKTIV_SOKKEL_SKIP ||
-        sysselsetting === VurderingSysselsettingTyper.YRKESAKTIV_FLYVENDE
+        avklartefaktaYrkesgruppeType === VurderingYrkesgruppeTyper.ORDINAER ||
+        avklartefaktaYrkesgruppeType === VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP ||
+        avklartefaktaYrkesgruppeType === VurderingYrkesgruppeTyper.FLYENDE_PERSONELL
       );
 
       let avklaringer;
