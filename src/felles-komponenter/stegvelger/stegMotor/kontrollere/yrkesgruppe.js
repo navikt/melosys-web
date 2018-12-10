@@ -13,7 +13,7 @@ class Yrkesgruppe extends Steg {
         nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
       {
-        beskrivelse: 'sysselsettingType ER LIK "SOKKEL_ELLER_SKIP"',
+        beskrivelse: 'yrkesgruppeType ER LIK "SOKKEL_ELLER_SKIP"',
         exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP),
         nesteSteg: STEG.SOKKEL_SKIP,
       },
