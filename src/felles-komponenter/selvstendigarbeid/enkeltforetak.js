@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
 
+import { fagsakSelectors } from '../../ducks/fagsaker';
 import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../../constants';
 
@@ -44,7 +46,7 @@ class EnkeltForetak extends Component {
 
   render () {
     const {
-      posisjon, foretaket, slettForetak, organisasjon,
+      redigerbart, posisjon, foretaket, slettForetak, organisasjon,
     } = this.props;
     const feilmelding = this.state.feilmelding ? { feilmelding: this.state.feilmelding } : null;
 
@@ -59,19 +61,20 @@ class EnkeltForetak extends Component {
                 bredde="S"
                 label="Organisasjonsnummer"
                 onBlur={() => this.presjekkOrganisasjon()}
+                disabled={!redigerbart}
               />
               { organisasjon && <OrganisasjonsAdresse className="enkeltforetak__adresse" organisasjon={organisasjon} /> }
             </Nav.Column>
             <Nav.Column xs="5">
               <label>Oppgir at virksomheten fortsetter etter arbeid i utlandet:
                 <div>
-                  <Skjema.Radio feltNavn={`${foretaket}.fortsetterEtterArbeidIUtlandet`} value={BOOLSK.SANN} label="Ja" />
-                  <Skjema.Radio feltNavn={`${foretaket}.fortsetterEtterArbeidIUtlandet`} value={BOOLSK.USANN} label="Nei" />
+                  <Skjema.Radio feltNavn={`${foretaket}.fortsetterEtterArbeidIUtlandet`} value={BOOLSK.SANN} label="Ja" disabled={!redigerbart} />
+                  <Skjema.Radio feltNavn={`${foretaket}.fortsetterEtterArbeidIUtlandet`} value={BOOLSK.USANN} label="Nei" disabled={!redigerbart} />
                 </div>
               </label>
             </Nav.Column>
             <Nav.Column xs="3">
-              <Nav.Knapp mini onClick={slettForetak}>Fjern</Nav.Knapp>
+              <Nav.Knapp disabled={!redigerbart} mini onClick={slettForetak}>Fjern</Nav.Knapp>
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
@@ -81,6 +84,7 @@ class EnkeltForetak extends Component {
 }
 
 EnkeltForetak.propTypes = {
+  redigerbart: PT.bool.isRequired,
   foretaket: PT.string.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   organisasjon: PT.object,
@@ -96,4 +100,10 @@ EnkeltForetak.defaultProps = {
   organisasjon: null,
 };
 
-export default EnkeltForetak;
+const mapStateToProps = state => ({
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+});
+
+const mapDispatchToProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(EnkeltForetak);

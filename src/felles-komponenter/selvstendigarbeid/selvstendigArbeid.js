@@ -8,6 +8,7 @@ import * as Ikoner from '../../resources/images';
 import * as Skjema from '../skjema';
 import * as formSelectors from '../../ducks/form/selectors';
 import * as soknadActions from '../../ducks/soknad/actions';
+import { fagsakSelectors } from '../../ducks/fagsaker';
 
 import SelvstendigeForetak from './selvstendigeforetak';
 import { BOOLSK } from '../../constants';
@@ -20,7 +21,9 @@ import './selvstendigArbeid.css';
 
 const SelvstendigArbeid = props => {
   const { values: soknadVerdier } = props.soknadForm;
-  const { organisasjoner, hentOrganisasjon, oppdaterSoknadState } = props;
+  const {
+    redigerbart, organisasjoner, hentOrganisasjon, oppdaterSoknadState,
+  } = props;
   const { erSelvstendig } = soknadVerdier;
   const panelErRelevant = erSelvstendig === BOOLSK.SANN;
 
@@ -46,8 +49,8 @@ const SelvstendigArbeid = props => {
           <Nav.Row>
             <Nav.Column xs="12">
               <Skjema.RadioGruppe feltNavn="erSelvstendig" label="Oppgir søker at han eller hun jobber som selvstendig næringsdrivende?">
-                <Skjema.Radio feltNavn="erSelvstendig" value={BOOLSK.SANN} label="Ja" />
-                <Skjema.Radio feltNavn="erSelvstendig" value={BOOLSK.USANN} label="Nei" />
+                <Skjema.Radio feltNavn="erSelvstendig" value={BOOLSK.SANN} label="Ja" disabled={!redigerbart} />
+                <Skjema.Radio feltNavn="erSelvstendig" value={BOOLSK.USANN} label="Nei" disabled={!redigerbart} />
               </Skjema.RadioGruppe>
             </Nav.Column>
           </Nav.Row>
@@ -59,6 +62,7 @@ const SelvstendigArbeid = props => {
 };
 
 SelvstendigArbeid.propTypes = {
+  redigerbart: PT.bool.isRequired,
   soknadForm: PT.object,
   hentOrganisasjon: PT.func.isRequired,
   organisasjoner: PT.array.isRequired,
@@ -72,6 +76,7 @@ SelvstendigArbeid.defaultProps = {
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

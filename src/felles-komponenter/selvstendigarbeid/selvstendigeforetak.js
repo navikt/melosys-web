@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
+import { fagsakSelectors } from '../../ducks/fagsaker';
 import EnkeltForetak from './enkeltforetak';
 
 import './selvstendigArbeid.css';
@@ -20,7 +22,7 @@ class SelvstendigeForetak extends Component {
 
   render() {
     const {
-      fields, organisasjoner, hentOrganisasjon, oppdaterSoknadState, skjema,
+      redigerbart, fields, organisasjoner, hentOrganisasjon, oppdaterSoknadState, skjema,
     } = this.props;
 
     return (
@@ -41,7 +43,7 @@ class SelvstendigeForetak extends Component {
         <div className="leggTilForetak">
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Knapp mini onClick={() => fields.push({})}>Legg til nytt foretak</Nav.Knapp>
+              <Nav.Knapp disabled={!redigerbart} mini onClick={() => fields.push({})}>Legg til nytt foretak</Nav.Knapp>
             </Nav.Column>
           </Nav.Row>
         </div>
@@ -51,10 +53,18 @@ class SelvstendigeForetak extends Component {
 }
 
 SelvstendigeForetak.propTypes = {
+  redigerbart: PT.bool.isRequired,
   fields: PT.object.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   organisasjoner: PT.array.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
   skjema: PT.object.isRequired,
 };
-export default SelvstendigeForetak;
+
+const mapStateToProps = state => ({
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+});
+
+const mapDispatchToProps = () => ({});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SelvstendigeForetak);
