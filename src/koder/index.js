@@ -24,7 +24,7 @@ export const UTEN_DEKNING = 'UTEN_DEKNING';
 // Interne frontend-spesifikke koder. Disse har ikke fag, brev eller arkitektur noe
 // forhold til, og benyttes kun frontend for å avgjøre riktige steg pr ID.
 export const OPPHOLDSLAND = 'OPPHOLDSLAND';
-export const SYSSELSETTING = 'SYSSELSETTING';
+export const YRKESGRUPPE = 'YRKESGRUPPE';
 export const YRKESAKTIVITET_ANTALL_LAND = 'YRKESAKTIVITET_ANTALL_LAND';
 export const YRKESAKTIVITET = 'YRKESAKTIVITET';
 export const AVKLARTE_ARBEIDSGIVER = 'AVKLARTE_ARBEIDSGIVER';

@@ -17,7 +17,7 @@ import { OrganisasjonSelectors } from '../organisasjoner';
  */
 const avklartefaktaKoder = {
   OPPHOLDSLAND: 'OPPHOLDSLAND',
-  SYSSELSETTING: 'SYSSELSETTING',
+  YRKESGRUPPE: 'YRKESGRUPPE',
   YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
   YRKESAKTIVITET: 'YRKESAKTIVITET',
   AVKLARTE_ARBEIDSGIVER: 'AVKLARTE_ARBEIDSGIVER',
@@ -70,10 +70,10 @@ export const Oppholdsland = createSelector(
 );
 
 /* Avklart fakta om søker er yrkesaktiv, ytelsesmottaker etc. */
-export const Sysselsetting = createSelector(
+export const Yrkesgruppe = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.SYSSELSETTING);
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.YRKESGRUPPE);
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
