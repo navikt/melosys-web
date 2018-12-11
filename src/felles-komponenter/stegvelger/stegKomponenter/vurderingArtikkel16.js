@@ -1,5 +1,5 @@
 /* eslint-disable react/no-multi-comp */
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
@@ -16,7 +16,7 @@ import { fagsakSelectors } from '../../../ducks/fagsaker';
 
 import { dokumenterOperations } from '../../../ducks/dokumenter';
 
-import { datoDiffMenneskelig } from '../../../utils/dato';
+import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
 import Listevelger from '../../skjema/listevelger';
 import DatoOmrade from '../../datoOmrade/datoOmrade';
 
@@ -24,15 +24,15 @@ import './vurderingArtikkel16.css';
 
 const uuid = require('uuid/v4');
 
+
 const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked }) => {
   const { periodeID, periode } = perm;
-  const label = `Startdato: ${periode.fom} - Sluttdato: ${periode.tom}`;
+  const label = `Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`;
 
   return (
-    <div>
-      <p>Periode for medlemsskap</p>
+    <Fragment>
       <Nav.Checkbox onChange={() => onChange(periodeID)} label={label} value="something" checked={checked} />
-    </div>
+    </Fragment>
   );
 };
 
