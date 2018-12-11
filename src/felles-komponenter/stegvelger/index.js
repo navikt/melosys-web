@@ -100,11 +100,13 @@ class Stegvelger extends Component {
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
       oppdaterLovvalgperioderState,
+      oppdaterBehandlingerState,
     } = this.props;
 
     await oppdaterAvklarteFaktaState(skjema);
     await oppdaterVilkarState(skjema);
     await oppdaterLovvalgperioderState(skjema);
+    await oppdaterBehandlingerState(skjema);
 
     await this.lagreVilkarHandler();
     await this.lagreAvklartefaktaHandler();
