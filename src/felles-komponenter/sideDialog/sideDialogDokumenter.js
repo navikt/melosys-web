@@ -118,6 +118,13 @@ RenderOversiktRad.defaultProps = {
 class SideDialogDokumenter extends Component {
   state = { oversiktDokumenter: [] };
 
+  async componentDidMount() {
+    const { oppsummering: { saksnummer } } = this.props;
+    if (saksnummer) {
+      await this.hentDokumentOversikt(saksnummer);
+    }
+  }
+
   async componentDidUpdate(prevProps) {
     const { oppsummering: { saksnummer: prevSaksnummer } } = prevProps;
     const { oppsummering: { saksnummer } } = this.props;
