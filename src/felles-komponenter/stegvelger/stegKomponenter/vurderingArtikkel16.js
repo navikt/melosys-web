@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
@@ -21,32 +22,66 @@ import DatoOmrade from '../../datoOmrade/datoOmrade';
 
 import './vurderingArtikkel16.css';
 
-const EnkeltPeriode = ({ linjeID, alleLovvalg }) => (
-  <Nav.Row>
-    <Nav.Column xs="4"><Skjema.Input feltNavn={`${linjeID}.fom`} datoFelt label="F.o.m." /></Nav.Column>
-    <Nav.Column xs="4"><Skjema.Input feltNavn={`${linjeID}.tom`} datoFelt label="T.o.m." /></Nav.Column>
-    <Nav.Column xs="4"><Listevelger feltNavn={`${linjeID}.lovvalg`} label="Lovvalg for perioden" muligeValg={alleLovvalg} /></Nav.Column>
-  </Nav.Row>
-);
+const uuid = require('uuid/v4');
 
-EnkeltPeriode.propTypes = {
-  linjeID: PT.string.isRequired,
-  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
+const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked }) => {
+  const { periodeID, periode } = perm;
+  const label = `Startdato: ${periode.fom} - Sluttdato: ${periode.tom}`;
+
+  return (
+    <div>
+      <p>Periode for medlemsskap</p>
+      <Nav.Checkbox onChange={() => onChange(periodeID)} label={label} value="something" checked={checked} />
+    </div>
+  );
 };
 
-const TidligerePerioder = ({ fields, alleLovvalg }) => (
-  <div>
-    {fields.map(linjeID => (<EnkeltPeriode key={linjeID} linjeID={linjeID} alleLovvalg={alleLovvalg} />))}
-    <Nav.Row>
-      <Nav.Column xs="12"><Nav.Knapp onClick={() => fields.push({})}>+ Legg til periode</Nav.Knapp></Nav.Column>
-    </Nav.Row>
-  </div>
-);
+TidligereMedlemPeriodeLinje.propTypes = {
+  checked: PT.bool.isRequired,
+  index: PT.number.isRequired,
+  onChange: PT.func.isRequired,
+  perm: MPT.MedlemskapEnkeltPeriode.isRequired,
+};
 
-TidligerePerioder.propTypes = {
+class TidligereMedlemskapPerioder extends Component {
+  onChange = periodeID => {
+    const { fields } = this.props;
+    const { push, remove } = fields;
+    const alleValgtePeriodeID = fields.getAll() || [];
+    const eksistererVedPosisjon = alleValgtePeriodeID.findIndex(valgt => valgt === periodeID);
+
+    if (eksistererVedPosisjon === -1) {
+      push(periodeID);
+    } else {
+      remove(eksistererVedPosisjon);
+    }
+  };
+
+  render() {
+    const { medlemskap, fields } = this.props;
+    const alleValgtePeriodeID = fields.getAll() || [];
+    const { onChange } = this;
+
+    const { perioderMed } = medlemskap;
+    return (
+      <div>
+        {
+          perioderMed && perioderMed.map((perm, index) => {
+            const isChecked = alleValgtePeriodeID.includes(perm.periodeID);
+            return <TidligereMedlemPeriodeLinje onChange={onChange} checked={isChecked} key={uuid()} perm={perm} index={index} />;
+          })
+        }
+      </div>
+    );
+  }
+}
+
+TidligereMedlemskapPerioder.propTypes = {
+  medlemskap: MPT.Medlemskap.isRequired,
   fields: PT.object.isRequired,
-  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
+
+const TidligereMedlemskap = props => (<div><FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapPerioder} {...props} /></div>);
 
 class VurderingArtikkel16 extends Component {
   forhandsvisPDF = async kode => {
@@ -59,11 +94,12 @@ class VurderingArtikkel16 extends Component {
 
   render () {
     const {
-      alleLovvalg,
       anmodningsBegrunnelser,
       lagreOgFatteVedtak,
       gyldigeOppholdLand,
       oppholdPeriode,
+      medlemskap,
+      alleLovvalg,
     } = this.props;
 
     const { forhandsvisPDF } = this;
@@ -90,7 +126,7 @@ class VurderingArtikkel16 extends Component {
           <Nav.Row>
             <Nav.Column xs="10">
               <Skjema.Select feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
-                { alleLovvalg.map(kodeObjekt => <option key={kodeObjekt.kode} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+                { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
               </Skjema.Select>
               <Listevelger gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
             </Nav.Column>
@@ -103,7 +139,7 @@ class VurderingArtikkel16 extends Component {
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="12">
               <Nav.Fieldset legend={`Direkte forutgående perioder i ${landSomTekstListe}:`}>
-                <FieldArray name="lovvalgsperiode.tidligere" component={TidligerePerioder} alleLovvalg={alleLovvalg} />
+                <TidligereMedlemskap medlemskap={medlemskap} />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -127,8 +163,9 @@ class VurderingArtikkel16 extends Component {
 }
 
 VurderingArtikkel16.propTypes = {
-  anmodningsBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
+  medlemskap: MPT.Medlemskap.isRequired,
+  anmodningsBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   forhandsvisPDF: PT.func.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
@@ -144,6 +181,7 @@ const mapStateToProps = state => ({
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  medlemskap: fagsakSelectors.MedlemskapSelector(state),
 });
 
 const mapDispatchToProps = () => ({
