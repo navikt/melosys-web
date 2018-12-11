@@ -17,7 +17,7 @@ class Artikkel11_4 extends Steg {
       {
         beskrivelse: 'ønsker å vurdere 12.1',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART12_1, alleVilkar),
-        nesteSteg: STEG.ARTIKKEL_12_1,
+        nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
         beskrivelse: 'alle andre valg',
