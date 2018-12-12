@@ -7,7 +7,6 @@ import * as Koder from '../../../koder';
 import * as MPT from '../../../proptypes';
 
 import LandVelger from '../../skjema/landvelger';
-import { BOOLSK } from '../../../constants';
 
 import './vurderingSokkelSkip.css';
 
@@ -83,10 +82,6 @@ const VurderingSokkelSkip = props => {
     <div className="vurderingSokkelSkip">
       <Nav.Undertittel>Vurdering av sokkel eller skip</Nav.Undertittel>
       <SokkelSkipListe alleSokkelSkip={maritimtArbeid} begrunnelser={begrunnelser} />
-      <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?">
-        <Skjema.Radio feltNavn="avklartefakta.nis" value={BOOLSK.SANN} label="Ja" />
-        <Skjema.Radio feltNavn="avklartefakta.nis" value={BOOLSK.USANN} label="Nei" />
-      </Nav.Fieldset>
       <Nav.Fieldset legend="Hvordan arbeider søkeren:">
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_NORSK} label="På norsk sokkel" />
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_NORSK_TERRITORIAL} label="Skip / installasjon innenfor norsk territorialfarvann" />
