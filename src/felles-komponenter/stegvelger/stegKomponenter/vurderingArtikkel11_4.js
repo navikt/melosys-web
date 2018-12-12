@@ -104,7 +104,7 @@ class VurderingArtikkel11_4 extends Component {
               <dl className="vurdering__land">
                 <dt>Arbeidsland / flaggland er:</dt>
                 <dd>{oppholdsLandSetning}</dd>
-                <dt>Arbeidsgiver driver virksomhet i:</dt>
+                <dt>Arbeidsgiver / selvstendig næringsdrivende har virksomhet i:</dt>
                 <dd>{virksomhetsLandSetning}</dd>
                 <dt>Søker er bosatt i:</dt>
                 <dd>{kodeverkObjektTilTerm(bostedsland)}</dd>
