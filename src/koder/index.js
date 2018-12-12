@@ -20,7 +20,7 @@ export const UTEN_DEKNING = 'UTEN_DEKNING';
 export const PLIKTIG = 'PLIKTIG';
 
 // Begrunnelsekoder
-export const FEIL_LAND_JOURNALFORING = 'FEIL_LAND_JOURNALFORING';
+export const FEIL_LAND_JOURNALFOERING = 'FEIL_LAND_JOURNALFOERING';
 
 // Interne frontend-spesifikke koder. Disse har ikke fag, brev eller arkitektur noe
 // forhold til, og benyttes kun frontend for å avgjøre riktige steg pr ID.
