@@ -72,6 +72,9 @@ SokkelSkipListe.defaultProps = {
 };
 
 const VurderingSokkelSkip = props => {
+  // Merknad fra møte 12.12.18: Vi må huske å gå innom “vurdering antall land”
+  // dersom man har valgt “to sokler / skip i flere land” siden vi går inn i artikkel 13.
+
   const {
     bekreftOgFortsett, tilstand, skjema, begrunnelser,
   } = props;
