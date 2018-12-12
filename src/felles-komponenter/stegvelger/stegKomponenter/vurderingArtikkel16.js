@@ -138,7 +138,7 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="12">
-              <Nav.Fieldset legend={`Direkte forutgående perioder i ${landSomTekstListe}:`}>
+              <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}:`}>
                 <TidligereMedlemskap medlemskap={medlemskap} />
               </Nav.Fieldset>
             </Nav.Column>

@@ -84,7 +84,7 @@ class VurderingArtikkel11_4 extends Component {
     } = this.props;
 
     const { valgtVilkar } = this.state;
-    const { harAvklaring } = tilstand;
+    const { harAvklaring, visNISAvsnitt } = tilstand;
 
     const oppholdsLandSetning = arrayTilKonjunksjon(oppholdsland.map(land => kodeverkObjektTilTerm(land)));
 
@@ -138,10 +138,13 @@ class VurderingArtikkel11_4 extends Component {
                   label="11.4 i - flagglandet, men jeg vil vurdere Artikkel 12.1"
                 />
               </Nav.Fieldset>
-              <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?">
-                <Skjema.Radio feltNavn="vilkar.nis" value={BOOLSK.SANN} label="Ja" />
-                <Skjema.Radio feltNavn="vilkar.nis" value={BOOLSK.USANN} label="Nei" />
-              </Nav.Fieldset>
+              { visNISAvsnitt && (
+                <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?">
+                  <Skjema.Radio feltNavn="vilkar.nis" value={BOOLSK.SANN} label="Ja" />
+                  <Skjema.Radio feltNavn="vilkar.nis" value={BOOLSK.USANN} label="Nei" />
+                </Nav.Fieldset>
+              )
+              }
             </Nav.Column>
           </Nav.Row>
         </div>
@@ -157,7 +160,6 @@ VurderingArtikkel11_4.propTypes = {
   bostedsland: MPT.Kodeverk,
   oppholdsland: PT.arrayOf(MPT.Kodeverk),
   valgteArbeidsgivere: PT.arrayOf(MPT.Kodeverk),
-  begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
