@@ -35,19 +35,22 @@ class Artikkel11_4 extends Steg {
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
       begrunnelser: _propsLight.begrunnelser.artikkel11_4 || [],
     });
+
     this._beregnRelevantUI = _propsLight => {
       const {
-        art11_4_1, art11_4_2, art12_1, art11_4_begrunnelser = [],
+        art11_4_1, art11_4_2, art12_1, nis,
       } = _propsLight.skjema.vilkar;
 
-      const manglerBegrunnelse = (art11_4_1 === false || art11_4_2 === false) && art11_4_begrunnelser.length === 0;
-      const harAvklaring = true;
+      const visNISAvsnitt = art11_4_1;
+
+      const harAvklaring = (art11_4_2 || art12_1) || (art11_4_1 && (nis === true || nis === false));
 
       return {
-        harAvklaring: harAvklaring && !manglerBegrunnelse,
+        harAvklaring,
         art11_4_1,
         art11_4_2,
         art12_1,
+        visNISAvsnitt,
       };
     };
     this._handlers = {
