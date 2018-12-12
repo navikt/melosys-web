@@ -2,7 +2,7 @@
 const sakstyper = {
   EU_EOS: true,
   TRYGDEAVTALE: true,
-  FOLKETRYGD: true,
+  FTRL: true,
 };
 const behandlingstyper = {
   SOEKNAD: true,
