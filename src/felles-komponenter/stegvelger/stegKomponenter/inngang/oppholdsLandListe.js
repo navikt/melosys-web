@@ -67,7 +67,7 @@ class OppholdsLandListe extends Component {
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
-    if (enkeltFakta.begrunnelseKoder.includes('FEIL_LAND_JOURNALFORING')) {
+    if (enkeltFakta.begrunnelseKoder.includes(Koder.FEIL_LAND_JOURNALFORING)) {
       this.leggLandTilSoknad(landKode);
     }
   };
