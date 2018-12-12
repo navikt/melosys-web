@@ -9,6 +9,8 @@ import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import './vurderingArtikkel11_4.css';
+import * as Skjema from '../../skjema';
+import { BOOLSK } from '../../../constants';
 
 class VurderingArtikkel11_4 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -135,6 +137,10 @@ class VurderingArtikkel11_4 extends Component {
                   checked={valgtVilkar === this.ART12_1}
                   label="11.4 i - flagglandet, men jeg vil vurdere Artikkel 12.1"
                 />
+              </Nav.Fieldset>
+              <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?">
+                <Skjema.Radio feltNavn="vilkar.nis" value={BOOLSK.SANN} label="Ja" />
+                <Skjema.Radio feltNavn="vilkar.nis" value={BOOLSK.USANN} label="Nei" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
