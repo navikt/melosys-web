@@ -102,7 +102,7 @@ class VurderingArtikkel11_4 extends Component {
           <Nav.Row>
             <Nav.Column xs="12">
               <dl className="vurdering__land">
-                <dt>Arbeidsland er:</dt>
+                <dt>Arbeidsland / flaggland er:</dt>
                 <dd>{oppholdsLandSetning}</dd>
                 <dt>Arbeidsgiver driver virksomhet i:</dt>
                 <dd>{virksomhetsLandSetning}</dd>
@@ -119,7 +119,7 @@ class VurderingArtikkel11_4 extends Component {
                   onChange={this.radioEndringHandler}
                   value={this.ART11_4_1}
                   checked={valgtVilkar === this.ART11_4_1}
-                  label="11.4 i - flagglandet"
+                  label="11.4 i - Norge er flagglandet"
                 />
                 <Nav.Radio
                   name="artikkel"

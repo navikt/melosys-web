@@ -32,7 +32,7 @@ const MaritimtEnkelt = props => {
         </Nav.Column>
         <Nav.Column xs="6">
           <LandVelger feltNavn={`${navn}flaggLandKode`} label="Flaggland:" />
-          <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Installasjonsland:" />
+          <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Kontinentalsokkel:" />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

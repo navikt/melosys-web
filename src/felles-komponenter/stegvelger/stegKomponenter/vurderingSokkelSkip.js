@@ -35,7 +35,7 @@ const SokkelSkipEnkelt = props => {
           {begrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
         </Skjema.Select>
       </Nav.Column>
-      <Nav.Column xs="3" className="rad__land"><LandVelger feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`} multiLand={false} label="Arbeidsland" /></Nav.Column>
+      <Nav.Column xs="3" className="rad__land"><LandVelger feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`} multiLand={false} label="Arbeidsland / flaggland" /></Nav.Column>
     </Nav.Row>
   );
 };
@@ -92,7 +92,7 @@ const VurderingSokkelSkip = props => {
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_NORSK_TERRITORIAL} label="Skip / installasjon innenfor norsk territorialfarvann" />
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_ETT_LAND} label="På skip registrert i ett land" />
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_UTLAND} label="Utsendt til sokkel i ett annet land" />
-        <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND} label="To sokler / skip i flere land" />
+        <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND} label="To sokler / skip i flere land" disabled />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
