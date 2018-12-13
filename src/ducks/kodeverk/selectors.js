@@ -28,8 +28,11 @@ export const oppgaveTyperSelector = createSelector(
 );
 
 export const behandlingsStatusSelector = createSelector(
-  state => state.kodeverk.data.behandlingsstatus,
-  behandlingsstatus => behandlingsstatus || []
+  state => state.kodeverk.data.behandlinger || [],
+  behandlinger => {
+    const { behandlingsstatus } = behandlinger;
+    return behandlingsstatus || [];
+  }
 );
 
 export const behandlingsTyperSelector = createSelector(

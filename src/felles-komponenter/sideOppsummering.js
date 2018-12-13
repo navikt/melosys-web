@@ -62,7 +62,7 @@ class SideOppsummering extends Component {
     const {
       saksnummer,
       sakstype,
-      status,
+      behandlingsstatus,
       registrertDato,
       sisteOpplysningerHentetDato,
     } = oppsummering;
@@ -117,7 +117,7 @@ class SideOppsummering extends Component {
                 <dt>Saksnummer:</dt>
                 <dd>{saksnummer || '-'}</dd>
                 <dt>Behandlingsstatus:</dt>
-                <dd>{kodeverkObjektTilTerm(status)}</dd>
+                <dd>{kodeverkObjektTilTerm(behandlingsstatus)}</dd>
                 <dt>Oppholdsland:</dt>
                 <dd>{gyldigeOppholdsLandSetning}</dd>
                 <dt>Periode</dt>
