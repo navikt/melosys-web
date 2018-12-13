@@ -108,11 +108,11 @@ class SideOppsummering extends Component {
           <Nav.Row>
             <Nav.Column xs="12">
               <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
-                <dt>Søknadstype</dt>
+                <dt>Søknadstype:</dt>
                 <dd>{kodeverkObjektTilTerm(sakstype)}</dd>
-                <dt>Fullt navn</dt>
+                <dt>Fullt navn:</dt>
                 <dd>{sammensattNavn}</dd>
-                <dt>Fnr / dnr</dt>
+                <dt>Fnr / dnr:</dt>
                 <dd>{fnr}</dd>
                 <dt>Saksnummer:</dt>
                 <dd>{saksnummer || '-'}</dd>
@@ -120,7 +120,7 @@ class SideOppsummering extends Component {
                 <dd>{kodeverkObjektTilTerm(behandlingsstatus)}</dd>
                 <dt>Oppholdsland:</dt>
                 <dd>{gyldigeOppholdsLandSetning}</dd>
-                <dt>Periode</dt>
+                <dt>Periode:</dt>
                 <dd>{oppholdUtlandFom} - {oppholdUtlandTom}</dd>
                 <dt>Sist oppdatert:</dt>
                 <dd><EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt /></dd>

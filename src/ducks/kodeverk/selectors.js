@@ -27,17 +27,19 @@ export const oppgaveTyperSelector = createSelector(
   oppgavetyper => oppgavetyper || []
 );
 
+export const behandlingerSelector = createSelector(
+  state => state.kodeverk.data.behandlinger || {},
+  behandlinger => behandlinger
+);
+
 export const behandlingsStatusSelector = createSelector(
-  state => state.kodeverk.data.behandlinger || [],
-  behandlinger => {
-    const { behandlingsstatus } = behandlinger;
-    return behandlingsstatus || [];
-  }
+  state => behandlingerSelector(state),
+  behandlinger => behandlinger.behandlingsstatus || []
 );
 
 export const behandlingsTyperSelector = createSelector(
-  state => state.kodeverk.data.behandlingstyper,
-  behandlingstyper => behandlingstyper || []
+  state => behandlingerSelector(state),
+  behandlinger => behandlinger.behandlingstyper || []
 );
 
 export const sakstyperSelector = createSelector(
@@ -68,4 +70,24 @@ export const begrunnelserSelector = createSelector(
 export const anmodningsBegrunnelserSelector = createSelector(
   state => begrunnelserSelector(state),
   begrunnelser => begrunnelser.artikkel16_1_anmodning || []
+);
+
+export const brevSelector = createSelector(
+  state => state.kodeverk.data.brev,
+  brev => brev || {}
+);
+
+export const dokumentTypeIDSelector = createSelector(
+  state => brevSelector(state),
+  brev => brev.dokumentTypeIder || []
+);
+
+export const dokumentTypeSelector = createSelector(
+  state => brevSelector(state),
+  brev => brev.dokumenttyper || []
+);
+
+export const aktoerrollerSelector = createSelector(
+  state => state.kodeverk.data.aktoerroller,
+  aktoerroller => aktoerroller || []
 );
