@@ -11,7 +11,8 @@ import { formSelectors } from '../../ducks/form/';
 // import * as Validering from '../skjema/validering';
 import { brevbestillingValidering, erSkjemaGyldig } from '../skjema/validering/brevbestilling';
 import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
-import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
+import { fagsakSelectors } from '../../ducks/fagsaker';
+import { KodeverkSelectors } from '../../ducks/kodeverk';
 import PdfLenkeListe from '../pdfLenkeListe';
 
 import './brevBestilling.css';
@@ -96,7 +97,7 @@ class BrevBestilling extends Component {
 
   render () {
     const {
-      dokumenttyper,
+      dokumenttypeIDer,
       aktoerroller,
       brevbestillingSkjemaVerdier,
       oppsummering,
@@ -119,7 +120,7 @@ class BrevBestilling extends Component {
               {aktoerroller && aktoerroller.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
-              {dokumenttyper && dokumenttyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+              {dokumenttypeIDer && dokumenttypeIDer.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
@@ -144,7 +145,7 @@ BrevBestilling.propTypes = {
   forhandsvisPDF: PT.func.isRequired,
   resetDokument: PT.func.isRequired,
   aktoerroller: PT.arrayOf(MPT.Kodeverk),
-  dokumenttyper: PT.arrayOf(MPT.Kodeverk),
+  dokumenttypeIDer: PT.arrayOf(MPT.Kodeverk).isRequired,
   brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
   oppsummering: MPT.Oppsummering,
@@ -153,7 +154,6 @@ BrevBestilling.defaultProps = {
   brevbestillingSkjemaVerdier: {},
   dokumenter: {},
   aktoerroller: [],
-  dokumenttyper: [],
   oppsummering: {},
 };
 
@@ -170,8 +170,8 @@ const mapStateToProps = state => ({
   brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
   dokumenter: dokumenterSelectors.dokumenterSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  dokumenttyper: state.kodeverk.data.dokumenttyper,
-  aktoerroller: state.kodeverk.data.aktoerroller,
+  dokumenttypeIDer: KodeverkSelectors.dokumentTypeIDSelector(state),
+  aktoerroller: KodeverkSelectors.aktoerrollerSelector(state),
   initialValues: {
     dokumenttypeKode: 'MELDING_MANGLENDE_OPPLYSNINGER',
     mottaker: 'BRUKER',

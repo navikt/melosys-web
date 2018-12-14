@@ -12,7 +12,7 @@ import './eksisterendeSaker.css';
  */
 const EnkeltSak = props => {
   const {
-    opprettetDato, behandlingstype, soknadsperiode, behandlingsstatus, land, sakstype,
+    opprettetDato, behandlingstype, soknadsperiode, behandlingsstatus, land, sakstype, saksstatus,
   } = props.sak;
 
   const { fom, tom } = soknadsperiode;
@@ -22,6 +22,8 @@ const EnkeltSak = props => {
       <dl className="enkeltSak__meta">
         <dt className="enkeltSak__meta__term">Sakstype: </dt>
         <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(sakstype)}</dd>
+        <dt className="enkeltSak__meta__term">Saksstatus: </dt>
+        <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(saksstatus)}</dd>
         <dt className="enkeltSak__meta__term">Behandlingstype: </dt>
         <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(behandlingstype)}</dd>
         <dt className="enkeltSak__meta__term">Behandlingsstatus: </dt>
