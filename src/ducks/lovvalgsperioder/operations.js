@@ -54,7 +54,7 @@ const byggLovvalgsPeriodeArtikkel12_1 = getState => {
     innvilgelsesResultat: Koder.INNVILGET,
     lovvalgsland: 'NO',
     trygdeDekning: Koder.FULL_DEKNING_EOSFO,
-    medlemskapstype: 'PLIKTIG',
+    medlemskapstype: Koder.PLIKTIG,
   }];
 };
 
@@ -69,7 +69,7 @@ const byggLovvalgsPeriodeArtikkel12_2 = getState => {
     innvilgelsesResultat: Koder.INNVILGET,
     lovvalgsland: 'NO',
     trygdeDekning: Koder.FULL_DEKNING_EOSFO,
-    medlemskapstype: 'PLIKTIG',
+    medlemskapstype: Koder.PLIKTIG,
   }];
 };
 
@@ -92,7 +92,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
     innvilgelsesResultat: Koder.INNVILGET,
     lovvalgsland: 'NO',
     trygdeDekning: Koder.FULL_DEKNING_EOSFO,
-    medlemskapstype: 'PLIKTIG',
+    medlemskapstype: Koder.PLIKTIG,
   }];
 };
 

@@ -55,17 +55,19 @@ describe('test kodeverk/selectors.js', () => {
       const mockData = {
         kodeverk: {
           data: {
-            behandlingsstatus: [
-              { kode: 'OPPR', term: 'Opprettet' },
-              { kode: 'UBEH', term: 'Under behandling' },
-            ]
+            behandlinger: {
+              behandlingsstatus: [
+                { kode: 'OPPRETTET', term: 'Opprettet' },
+                { kode: 'UNDER_BEHANDLING', term: 'Under behandling' },
+              ]
+            }
           }
         }
       }
 
       const forventetResultat = [
-        { kode: 'OPPR', term: 'Opprettet' },
-        { kode: 'UBEH', term: 'Under behandling' },
+        { kode: 'OPPRETTET', term: 'Opprettet' },
+        { kode: 'UNDER_BEHANDLING', term: 'Under behandling' },
       ]
 
       expect(Selectors.behandlingsStatusSelector(mockData)).toEqual(forventetResultat)
@@ -90,17 +92,19 @@ describe('test kodeverk/selectors.js', () => {
       const mockData = {
         kodeverk: {
           data: {
-            behandlingstyper: [
-              { kode: 'SKND', term: 'Søknad' },
-              { kode: 'UFM', term: 'Unntak medlemskap' },
-            ]
+            behandlinger: {
+              behandlingstyper: [
+                { kode: 'SOEKNAD', term: 'Søknad' },
+                { kode: 'UNNTAK_FRA_MEDLEMSKAP', term: 'Unntak medlemskap' },
+              ]
+            }
           }
         }
       }
 
       const forventetResultat = [
-        { kode: 'SKND', term: 'Søknad' },
-        { kode: 'UFM', term: 'Unntak medlemskap' },
+        { kode: 'SOEKNAD', term: 'Søknad' },
+        { kode: 'UNNTAK_FRA_MEDLEMSKAP', term: 'Unntak medlemskap' },
       ]
 
       expect(Selectors.behandlingsTyperSelector(mockData)).toEqual(forventetResultat)
@@ -127,7 +131,7 @@ describe('test kodeverk/selectors.js', () => {
           data: {
             sakstyper: [
               { kode: 'EU_EOS', term: 'EU/EØS' },
-              { kode: 'TRG_AVT', term: 'Trygdeavtale' },
+              { kode: 'TRYGDEAVTALE', term: 'Trygdeavtale' },
             ]
           }
         }
@@ -135,7 +139,7 @@ describe('test kodeverk/selectors.js', () => {
 
       const forventetResultat = [
         { kode: 'EU_EOS', term: 'EU/EØS' },
-        { kode: 'TRG_AVT', term: 'Trygdeavtale' },
+        { kode: 'TRYGDEAVTALE', term: 'Trygdeavtale' },
       ]
 
       expect(Selectors.sakstyperSelector(mockData)).toEqual(forventetResultat)
