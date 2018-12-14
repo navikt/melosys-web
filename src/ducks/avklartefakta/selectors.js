@@ -12,6 +12,8 @@ import { soknadSelectors } from '../soknad';
 import { KodeverkSelectors } from '../kodeverk';
 import { OrganisasjonSelectors } from '../organisasjoner';
 
+import * as Koder from '../../koder';
+
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
  */
@@ -140,37 +142,13 @@ export const ArbeidsgivereSelector = createSelector(
   }
 );
 
-export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
-  state => Oppholdsland(state) || [],
-  state => KodeverkSelectors.landkoderSelector(state) || [],
-  (avklartefaktaLand, landKoder) => {
-    const gyldigeLand = avklartefaktaLand
-      .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
-      .map(avklartfakta => avklartfakta.subjektID);
-
-    return landKoder.filter(enkeltObjekt => gyldigeLand.includes(enkeltObjekt.kode));
+export const ArbeidSokkelSkipSelector = createSelector(
+  state => AvklartefaktaSelector(state),
+  alleAvklarteFakta => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.ARBEID_SOKKEL_SKIP);
+    if (!avklartFakta) return null;
+    return avklartFakta.fakta[0];
   }
-);
-
-export const AvklartefaktaLovvalgKodeSelector = createSelector(
-  state => AvklartefaktaSelector(state).vurdering || {},
-  vurdering => (vurdering.lovvalgKode ? vurdering.lovvalgKode : '')
-);
-
-export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
-  state => ArbeidsgivereSelector(state),
-  state => fagsakSelectors.OrganisasjonerSelector(state),
-  state => OrganisasjonSelectors.organisasjonerSelector(state),
-  (alleArbeidsgivere, fagsakOrganisasjoner, soknadOrganisasjoner) => {
-    const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
-    const avklarte = alleArbeidsgivere.filter(avklart => avklart.fakta.includes('TRUE'));
-    return avklarte.map(avklart => alleOrganisasjoner.find(org => org.orgnr === avklart.subjektID));
-  }
-);
-
-export const AvklartefaktaVurderingSelector = createSelector(
-  state => AvklartefaktaSelector(state).vurdering,
-  vurdering => vurdering || {}
 );
 
 /* Avklartfakta for hvorvidt en installasjon er SOKKEL eller SKIP.
@@ -206,13 +184,47 @@ export const SokkelEllerSkipSelector = createSelector(
   }
 );
 
-export const ArbeidSokkelSkipSelector = createSelector(
-  state => AvklartefaktaSelector(state),
-  alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.ARBEID_SOKKEL_SKIP);
-    if (!avklartFakta) return null;
-    return avklartFakta.fakta[0];
+/** Forretningsregel: Dersom søker arbeider på skip, så er arbeidslandet det samme som skipets flaggland.
+ * Derfor må denne selectoren ta hensyn til avklart fakta for sokkel/skip og overstyre landet som er oppgitt i søknaden.
+ *
+ */
+export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
+  state => Oppholdsland(state) || [],
+  state => KodeverkSelectors.landkoderSelector(state) || [],
+  state => SokkelEllerSkipSelector(state),
+  (avklartefaktaLand, landKoder, sokkelEllerSkip) => {
+    const landAvklartVedInngang = avklartefaktaLand
+      .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
+      .map(avklartfakta => avklartfakta.subjektID);
+
+    const landOverstyrtAvSkip = sokkelEllerSkip
+      .reduce((collection, enkelt) => (enkelt.installasjonsType === Koder.SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
+
+    const styrendeLand = landOverstyrtAvSkip.length > 0 ? landOverstyrtAvSkip : landAvklartVedInngang;
+
+    return landKoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
   }
+);
+
+export const AvklartefaktaLovvalgKodeSelector = createSelector(
+  state => AvklartefaktaSelector(state).vurdering || {},
+  vurdering => (vurdering.lovvalgKode ? vurdering.lovvalgKode : '')
+);
+
+export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
+  state => ArbeidsgivereSelector(state),
+  state => fagsakSelectors.OrganisasjonerSelector(state),
+  state => OrganisasjonSelectors.organisasjonerSelector(state),
+  (alleArbeidsgivere, fagsakOrganisasjoner, soknadOrganisasjoner) => {
+    const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
+    const avklarte = alleArbeidsgivere.filter(avklart => avklart.fakta.includes('TRUE'));
+    return avklarte.map(avklart => alleOrganisasjoner.find(org => org.orgnr === avklart.subjektID));
+  }
+);
+
+export const AvklartefaktaVurderingSelector = createSelector(
+  state => AvklartefaktaSelector(state).vurdering,
+  vurdering => vurdering || {}
 );
 
 export const BostedslandSelector = createSelector(
