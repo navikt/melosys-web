@@ -76,7 +76,7 @@ const SakEnkeltLinje = ({ sak }) => {
             <Nav.Row>
               <Nav.Column xs="12" md="6">
                 <dl className="sakEnkeltLinje__meta">
-                  <dt className="sakEnkeltLinje__meta__term">Status:</dt>
+                  <dt className="sakEnkeltLinje__meta__term">Behandlingsstatus:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Frist:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
