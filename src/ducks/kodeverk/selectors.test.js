@@ -55,10 +55,12 @@ describe('test kodeverk/selectors.js', () => {
       const mockData = {
         kodeverk: {
           data: {
-            behandlingsstatus: [
-              { kode: 'OPPRETTET', term: 'Opprettet' },
-              { kode: 'UNDER_BEHANDLING', term: 'Under behandling' },
-            ]
+            behandlinger: {
+              behandlingsstatus: [
+                { kode: 'OPPRETTET', term: 'Opprettet' },
+                { kode: 'UNDER_BEHANDLING', term: 'Under behandling' },
+              ]
+            }
           }
         }
       }
@@ -90,10 +92,12 @@ describe('test kodeverk/selectors.js', () => {
       const mockData = {
         kodeverk: {
           data: {
-            behandlingstyper: [
-              { kode: 'SOEKNAD', term: 'Søknad' },
-              { kode: 'UNNTAK_FRA_MEDLEMSKAP', term: 'Unntak medlemskap' },
-            ]
+            behandlinger: {
+              behandlingstyper: [
+                { kode: 'SOEKNAD', term: 'Søknad' },
+                { kode: 'UNNTAK_FRA_MEDLEMSKAP', term: 'Unntak medlemskap' },
+              ]
+            }
           }
         }
       }
