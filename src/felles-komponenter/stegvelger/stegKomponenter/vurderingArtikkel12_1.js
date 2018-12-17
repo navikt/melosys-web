@@ -77,8 +77,6 @@ class VurderingArtikkel12_1 extends Component {
     const { valgtVilkar } = this.state;
     const { visBegrunnelser, harAvklaring } = tilstand;
 
-    console.log(valgtVilkar === this.ART16_1);
-
     return (
       <div>
         <Nav.Undertittel>Vurdering av artikkel 12.1</Nav.Undertittel>
@@ -87,21 +85,21 @@ class VurderingArtikkel12_1 extends Component {
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Fyller søker resterende kriterier for artikkel 12.1?">
                 <Nav.Radio
-                  name="artikkel"
+                  name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.ART12_1}
                   checked={valgtVilkar === this.ART12_1}
                   label="Ja"
                 />
                 <Nav.Radio
-                  name="artikkel"
+                  name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.ART16_1}
                   checked={valgtVilkar === this.ART16_1}
                   label="Nei, jeg vil vurdere artikkel 16.1"
                 />
                 <Nav.Radio
-                  name="artikkel"
+                  name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.AVSLAG}
                   checked={valgtVilkar === this.AVSLAG}
