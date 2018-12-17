@@ -85,9 +85,13 @@ const VurderingSokkelSkip = props => {
     <div className="vurderingSokkelSkip">
       <Nav.Undertittel>Vurdering av sokkel eller skip</Nav.Undertittel>
       <SokkelSkipListe alleSokkelSkip={maritimtArbeid} begrunnelser={begrunnelser} />
+      {maritimtArbeid.length === 0 && (
+        <div className="sokkelSkip__varsel"><Nav.AlertStripe type="advarsel">Det er ikke registrert verken sokkel eller skip.</Nav.AlertStripe></div>
+      )
+      }
       <Nav.Fieldset legend="Hvordan arbeider søkeren:">
-        <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_NORSK} label="På norsk sokkel" />
-        <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_NORSK_TERRITORIAL} label="Skip / installasjon innenfor norsk territorialfarvann" />
+        <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_NORSK} label="På norsk sokkel" disabled />
+        <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_NORSK_TERRITORIAL} label="Skip / installasjon innenfor norsk territorialfarvann" disabled />
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_ETT_LAND} label="På skip registrert i ett land" />
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_UTLAND} label="Utsendt til sokkel i ett annet land" />
         <Skjema.Radio feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND} label="To sokler / skip i flere land" disabled />

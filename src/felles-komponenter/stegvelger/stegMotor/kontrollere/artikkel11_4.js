@@ -10,13 +10,18 @@ class Artikkel11_4 extends Steg {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'vilkar for artikkel 11.4.2 eller 11.4.1 er oppfylt',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART11_4_1, alleVilkar) || erVilkarOppfylt(Koder.FO_883_2004_ART11_4_2, alleVilkar),
+        beskrivelse: 'vilkar for artikkel 11.4.1 (og implissit 11.3A) er oppfylt',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART11_4_1, alleVilkar) && erVilkarOppfylt(Koder.FO_883_2004_ART11_3A, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
-        beskrivelse: 'ønsker å vurdere 12.1',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART12_1, alleVilkar),
+        beskrivelse: 'vilkar for artikkel 11.4.2 er oppfylt',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART11_4_2, alleVilkar),
+        nesteSteg: STEG.VEDTAK,
+      },
+      {
+        beskrivelse: 'kun vilkår 11.4.1 er foreløpig oppfylt, så gå videre til 12.1-vurdering',
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART11_4_1, alleVilkar),
         nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
@@ -38,18 +43,18 @@ class Artikkel11_4 extends Steg {
 
     this._beregnRelevantUI = _propsLight => {
       const {
-        art11_4_1, art11_4_2, art12_1, nis,
+        art11_3A, art11_4_1, art11_4_2, nis,
       } = _propsLight.skjema.vilkar;
 
-      const visNISAvsnitt = art11_4_1;
+      const visNISAvsnitt = art11_4_1 && art11_3A;
 
-      const harAvklaring = (art11_4_2 || art12_1) || (art11_4_1 && (nis === true || nis === false));
+      const harAvklaring = (art11_4_1 && art11_3A && (nis === true || nis === false)) || art11_4_2 || (art11_4_1 && !art11_3A);
 
       return {
         harAvklaring,
+        art11_3A,
         art11_4_1,
         art11_4_2,
-        art12_1,
         visNISAvsnitt,
       };
     };

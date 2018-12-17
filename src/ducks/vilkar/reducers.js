@@ -53,6 +53,7 @@ export default function reducer(state = initialState, action) {
         vilkarTilObjekt(Koder.FO_883_2004_ART12_1, action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
         vilkarTilObjekt(Koder.FO_883_2004_ART12_2, action.data.vilkar.art12_2, action.data.vilkar.art12_2_begrunnelser),
         vilkarTilObjekt(Koder.FO_883_2004_ART16_1, action.data.vilkar.art16_1, action.data.vilkar.art16_1_begrunnelser, action.data.vilkar.art16_1_begrunnelser_fritekst),
+        vilkarTilObjekt(Koder.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
         vilkarTilObjekt(Koder.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),
         vilkarTilObjekt(Koder.FO_883_2004_ART11_4_2, action.data.vilkar.art11_4_2),
       ].filter(vilkar => vilkar !== null);

@@ -25,7 +25,7 @@ class VurderingArtikkel11_4 extends Component {
     super();
     this.ART11_4_1 = Koder.FO_883_2004_ART11_4_1;
     this.ART11_4_2 = Koder.FO_883_2004_ART11_4_2;
-    this.ART12_1 = Koder.FO_883_2004_ART12_1;
+    this.TIL_VURDERING_12_1 = 'TIL_VURDERING_12_1';
   }
 
   state = { valgtVilkar: '' };
@@ -42,20 +42,19 @@ class VurderingArtikkel11_4 extends Component {
     const { settSkjemaVerdi } = this.props;
     settSkjemaVerdi('vilkar.art11_4_1', null);
     settSkjemaVerdi('vilkar.art11_4_2', null);
-    settSkjemaVerdi('vilkar.art12_1', null);
   }
 
   settStateForVilkar = vilkar => this.setState({ valgtVilkar: vilkar });
 
   lagreValgtVilkarState = ({ tilstand = {} }) => {
-    const { art11_4_1: old_art11_4_1, art11_4_2: old_art11_4_2, art12_1: old_art12_1 } = tilstand;
-    const { art11_4_1, art11_4_2, art12_1 } = this.props.tilstand;
+    const { art11_3A: old_art11_3A, art11_4_1: old_art11_4_1, art11_4_2: old_art11_4_2 } = tilstand;
+    const { art11_3A, art11_4_1, art11_4_2 } = this.props.tilstand;
 
-    if ((art11_4_1 === old_art11_4_1) && (art11_4_2 === old_art11_4_2) && (art12_1 === old_art12_1)) { return false; }
+    if ((art11_4_1 === old_art11_4_1) && (art11_4_2 === old_art11_4_2) && (art11_3A === old_art11_3A)) { return false; }
 
-    if (art11_4_1) (this.settStateForVilkar(this.ART11_4_1));
+    if (art11_4_1 && art11_3A) (this.settStateForVilkar(this.ART11_4_1));
     if (art11_4_2) (this.settStateForVilkar(this.ART11_4_2));
-    if (art12_1) (this.settStateForVilkar(this.ART12_1));
+    if (art11_4_1 && !art11_3A) (this.settStateForVilkar(this.TIL_VURDERING_12_1));
     return true;
   };
 
@@ -65,16 +64,16 @@ class VurderingArtikkel11_4 extends Component {
 
     if (value === this.ART11_4_1) {
       settSkjemaVerdi('vilkar.art11_4_1', true);
+      settSkjemaVerdi('vilkar.art11_3A', true);
       settSkjemaVerdi('vilkar.art11_4_2', null);
-      settSkjemaVerdi('vilkar.art12_1', null);
     } else if (value === this.ART11_4_2) {
+      settSkjemaVerdi('vilkar.art11_3A', null);
       settSkjemaVerdi('vilkar.art11_4_1', null);
       settSkjemaVerdi('vilkar.art11_4_2', true);
-      settSkjemaVerdi('vilkar.art12_1', null);
     } else {
-      settSkjemaVerdi('vilkar.art11_4_1', null);
+      settSkjemaVerdi('vilkar.art11_3A', null);
+      settSkjemaVerdi('vilkar.art11_4_1', true);
       settSkjemaVerdi('vilkar.art11_4_2', null);
-      settSkjemaVerdi('vilkar.art12_1', true);
     }
   };
 
@@ -133,8 +132,8 @@ class VurderingArtikkel11_4 extends Component {
                 <Nav.Radio
                   name="artikkel"
                   onChange={this.radioEndringHandler}
-                  value={this.ART12_1}
-                  checked={valgtVilkar === this.ART12_1}
+                  value={this.TIL_VURDERING_12_1}
+                  checked={valgtVilkar === this.TIL_VURDERING_12_1}
                   label="11.4 i - flagglandet, men jeg vil vurdere Artikkel 12.1"
                 />
               </Nav.Fieldset>

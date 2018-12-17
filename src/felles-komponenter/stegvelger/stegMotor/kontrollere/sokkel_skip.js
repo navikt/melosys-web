@@ -54,7 +54,7 @@ class SokkelSkip extends Steg {
   // Hvis SKIP er valgt som vurdering, så skal det ikke legges inn
   // en begrunnelse.
   static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon) => {
-    const avklartSokkelEllerSkip = sokkelEllerSkip
+    const avklartSokkelEllerSkip = sokkelEllerSkip.length > 0 && sokkelEllerSkip
       .map(enkelt => {
         if (enkelt.installasjonsType === Koder.SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
         return (enkelt.installasjonsType === Koder.SKIP && enkelt.arbeidsland && true);
