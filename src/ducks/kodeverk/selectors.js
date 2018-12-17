@@ -72,14 +72,9 @@ export const brevSelector = createSelector(
   brev => brev || {}
 );
 
-export const dokumentTypeIDSelector = createSelector(
+export const produserbareDokumenterSelector = createSelector(
   state => brevSelector(state),
-  brev => brev.dokumentTypeIder || []
-);
-
-export const dokumentTypeSelector = createSelector(
-  state => brevSelector(state),
-  brev => brev.dokumenttyper || []
+  brev => brev.produserbareDokumenter || []
 );
 
 export const aktoerrollerSelector = createSelector(

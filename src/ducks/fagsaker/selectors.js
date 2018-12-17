@@ -279,6 +279,7 @@ export const OppsummeringSelector = createSelector(
     saksnummer: saksdata.saksnummer,
     behandlingID: behandlingsdata.behandlingID,
     sakstype: saksdata.sakstype,
+    saksstatus: saksdata.saksstatus,
     behandlingsstatus: behandlingsdata.behandlingsstatus,
     registrertDato: behandlingsdata.registrertDato,
     sisteOpplysningerHentetDato: behandlingsdata.sisteOpplysningerHentetDato,
