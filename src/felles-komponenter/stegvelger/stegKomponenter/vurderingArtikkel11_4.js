@@ -116,21 +116,21 @@ class VurderingArtikkel11_4 extends Component {
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Fyller søker resterende kriterier for artikkel 11.4?">
                 <Nav.Radio
-                  name="artikkel"
+                  name="artikkel11"
                   onChange={this.radioEndringHandler}
                   value={this.ART11_4_1}
                   checked={valgtVilkar === this.ART11_4_1}
                   label="11.4 i - Norge er flagglandet"
                 />
                 <Nav.Radio
-                  name="artikkel"
+                  name="artikkel11"
                   onChange={this.radioEndringHandler}
                   value={this.ART11_4_2}
                   checked={valgtVilkar === this.ART11_4_2}
                   label="11.4 ii - arbeidsgiver i bostedslandet"
                 />
                 <Nav.Radio
-                  name="artikkel"
+                  name="artikkel11"
                   onChange={this.radioEndringHandler}
                   value={this.TIL_VURDERING_12_1}
                   checked={valgtVilkar === this.TIL_VURDERING_12_1}
