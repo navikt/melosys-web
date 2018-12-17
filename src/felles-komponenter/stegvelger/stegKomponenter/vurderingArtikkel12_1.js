@@ -61,8 +61,8 @@ class VurderingArtikkel12_1 extends Component {
       settSkjemaVerdi('vilkar.art12_1', true);
       settSkjemaVerdi('vilkar.art16_1', null);
     } else if (value === this.ART16_1) {
-      settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', true);
+      settSkjemaVerdi('vilkar.art12_1', false);
     } else {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', false);
@@ -77,9 +77,11 @@ class VurderingArtikkel12_1 extends Component {
     const { valgtVilkar } = this.state;
     const { visBegrunnelser, harAvklaring } = tilstand;
 
+    console.log(valgtVilkar === this.ART16_1);
+
     return (
       <div>
-        <Nav.Undertittel>Vurdering av artikkel 12. 1</Nav.Undertittel>
+        <Nav.Undertittel>Vurdering av artikkel 12.1</Nav.Undertittel>
         <div>
           <Nav.Row>
             <Nav.Column xs="12">

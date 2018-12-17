@@ -244,6 +244,7 @@ const mapStateToProps = state => ({
       forutgaendeMedlemskapBegrunnelser: (vilkarSelectors.forutgaendeMedlemskap(state).begrunnelseKoder),
       bosattINorge: (vilkarSelectors.bosattINorge(state).oppfylt),
       bosattINorgeBegrunnelser: (vilkarSelectors.bosattINorge(state).begrunnelseKoder),
+      art11_3A: vilkarSelectors.art11_3A(state).oppfylt,
       art12_1: vilkarSelectors.art12_1(state).oppfylt,
       art12_1_begrunnelser: vilkarSelectors.art12_1(state).begrunnelseKoder,
       art12_2: vilkarSelectors.art12_2(state).oppfylt,
