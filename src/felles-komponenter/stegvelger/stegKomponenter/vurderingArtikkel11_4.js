@@ -42,6 +42,8 @@ class VurderingArtikkel11_4 extends Component {
     const { settSkjemaVerdi } = this.props;
     settSkjemaVerdi('vilkar.art11_4_1', null);
     settSkjemaVerdi('vilkar.art11_4_2', null);
+    settSkjemaVerdi('vilkar.art11_3A', null);
+    settSkjemaVerdi('vilkar.nis', null);
   }
 
   settStateForVilkar = vilkar => this.setState({ valgtVilkar: vilkar });
@@ -70,10 +72,12 @@ class VurderingArtikkel11_4 extends Component {
       settSkjemaVerdi('vilkar.art11_3A', null);
       settSkjemaVerdi('vilkar.art11_4_1', null);
       settSkjemaVerdi('vilkar.art11_4_2', true);
+      settSkjemaVerdi('vilkar.nis', null);
     } else {
       settSkjemaVerdi('vilkar.art11_3A', null);
       settSkjemaVerdi('vilkar.art11_4_1', true);
       settSkjemaVerdi('vilkar.art11_4_2', null);
+      settSkjemaVerdi('vilkar.nis', null);
     }
   };
 
