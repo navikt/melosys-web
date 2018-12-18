@@ -24,8 +24,8 @@ const SokkelSkipEnkelt = props => {
 
   return (
     <Nav.Row className="sokkelSkip__liste__rad">
-      <Nav.Column xs="3" className="rad__navn">{navn}</Nav.Column>
-      <Nav.Column xs="3" className="rad__sokkel">
+      <Nav.Column xs="4" className="rad__navn">{navn}</Nav.Column>
+      <Nav.Column xs="2" className="rad__sokkel">
         <Skjema.Radio feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={Koder.SOKKEL} label="Sokkel" />
         <Skjema.Radio feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={Koder.SKIP} label="Skip" />
       </Nav.Column>
@@ -34,7 +34,7 @@ const SokkelSkipEnkelt = props => {
           {begrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
         </Skjema.Select>
       </Nav.Column>
-      <Nav.Column xs="3" className="rad__land"><LandVelger feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`} multiLand={false} label="Arbeidsland / flaggland" /></Nav.Column>
+      <Nav.Column xs="3" className="rad__land"><LandVelger feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`} multiLand={false} label="Arbeids- / flaggland" /></Nav.Column>
     </Nav.Row>
   );
 };
