@@ -64,7 +64,7 @@ AvklaringsListe.propTypes = {
  */
 const VurderingBostedsland = props => {
   const {
-    bekreftOgFortsett, tilstand, begrunnelser,
+    bekreftOgFortsett, tilstand, begrunnelser, redigerbart,
   } = props;
   const { erBosattINorge, erAvklart, harEOSBarnetrygdSak } = tilstand;
 
@@ -81,9 +81,9 @@ const VurderingBostedsland = props => {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Bostedsland er:">
-                <Skjema.Radio feltNavn="vilkar.bosattINorge" value={BOOLSK.SANN} label="Norge" />
-                <Skjema.Radio feltNavn="vilkar.bosattINorge" value={BOOLSK.USANN} label="Annet" />
-                {!erBosattINorge && <LandVelger label="Velg land:" feltNavn="avklartefakta.bostedsland" multiland={false} />}
+                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.bosattINorge" value={BOOLSK.SANN} label="Norge" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.bosattINorge" value={BOOLSK.USANN} label="Annet" />
+                {!erBosattINorge && <LandVelger disabled={!redigerbart} label="Velg land:" feltNavn="avklartefakta.bostedsland" multiland={false} />}
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -97,6 +97,7 @@ const VurderingBostedsland = props => {
                     label="Legg til begrunnelse:"
                     gruppe
                     tillatFritekst={false}
+                    disabled={!redigerbart}
                   />
                 </Nav.Fieldset>
               </Nav.Column>
@@ -105,7 +106,7 @@ const VurderingBostedsland = props => {
         </div>
       </div>
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" disabled={!erAvklart} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp type="hoved" disabled={!(redigerbart && erAvklart)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
@@ -116,6 +117,7 @@ VurderingBostedsland.propTypes = {
   tilstand: PT.object,
   vurdering: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
+  redigerbart: PT.bool.isRequired,
 };
 
 VurderingBostedsland.defaultProps = {

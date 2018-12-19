@@ -83,7 +83,7 @@ class VurderingArtikkel11_4 extends Component {
 
   render () {
     const {
-      bekreftOgFortsett, tilstand, bostedsland, oppholdsland, valgteArbeidsgivere,
+      bekreftOgFortsett, tilstand, bostedsland, oppholdsland, valgteArbeidsgivere, redigerbart,
     } = this.props;
 
     const { valgtVilkar } = this.state;
@@ -125,6 +125,7 @@ class VurderingArtikkel11_4 extends Component {
                   value={this.ART11_4_1}
                   checked={valgtVilkar === this.ART11_4_1}
                   label="11.4 i - Norge er flagglandet"
+                  disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel11"
@@ -132,6 +133,7 @@ class VurderingArtikkel11_4 extends Component {
                   value={this.ART11_4_2}
                   checked={valgtVilkar === this.ART11_4_2}
                   label="11.4 ii - arbeidsgiver i bostedslandet"
+                  disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel11"
@@ -139,12 +141,13 @@ class VurderingArtikkel11_4 extends Component {
                   value={this.TIL_VURDERING_12_1}
                   checked={valgtVilkar === this.TIL_VURDERING_12_1}
                   label="11.4 i - flagglandet, men jeg vil vurdere Artikkel 12.1"
+                  disabled={!redigerbart}
                 />
               </Nav.Fieldset>
               { visNISAvsnitt && (
                 <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?">
-                  <Skjema.Radio feltNavn="vilkar.nis" value={BOOLSK.SANN} label="Ja" />
-                  <Skjema.Radio feltNavn="vilkar.nis" value={BOOLSK.USANN} label="Nei" />
+                  <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.nis" value={BOOLSK.SANN} label="Ja" />
+                  <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.nis" value={BOOLSK.USANN} label="Nei" />
                 </Nav.Fieldset>
               )
               }
@@ -152,7 +155,7 @@ class VurderingArtikkel11_4 extends Component {
           </Nav.Row>
         </div>
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     );
@@ -167,6 +170,7 @@ VurderingArtikkel11_4.propTypes = {
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
   settSkjemaVerdi: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 VurderingArtikkel11_4.defaultProps = {
