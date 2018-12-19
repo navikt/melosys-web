@@ -15,5 +15,5 @@ export const behandlingerSelector = createSelector(
 
 export const tidligereMedlemskap = createSelector(
   state => behandlingerSelector(state),
-  _behandlinger => []
+  () => []
 );
