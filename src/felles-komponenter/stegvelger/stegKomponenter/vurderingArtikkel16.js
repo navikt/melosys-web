@@ -23,9 +23,10 @@ import './vurderingArtikkel16.css';
 
 const uuid = require('uuid/v4');
 
-
-const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked }) => {
-  const { periodeID, periode, redigerbart } = perm;
+const TidligereMedlemPeriodeLinje = ({
+  perm, onChange, checked, redigerbart,
+}) => {
+  const { periodeID, periode } = perm;
   const label = `Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`;
 
   return (
