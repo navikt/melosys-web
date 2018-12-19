@@ -8,7 +8,7 @@ import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../utils/
 
 const FjernetLandEnkelt = props => {
   const {
-    landKodeObjekt, angreFjern, begrunnelseTerm,
+    landKodeObjekt, angreFjern, begrunnelseTerm, redigerbart,
   } = props;
 
   const landTerm = kodeverkObjektTilTerm(landKodeObjekt);
@@ -19,7 +19,7 @@ const FjernetLandEnkelt = props => {
       <div className="fjernetland__linje">
         <div className="linje__land">{landTerm} ({landKode})</div>
         <div className="linje__begrunnelse">{begrunnelseTerm}</div>
-        <div className="linje__knapper"><Nav.Knapp onClick={() => angreFjern(landKode)}>Angre fjern</Nav.Knapp></div>
+        <div className="linje__knapper"><Nav.Knapp disabled={!redigerbart} onClick={() => angreFjern(landKode)}>Angre fjern</Nav.Knapp></div>
       </div>
     </div>
   );
@@ -29,6 +29,7 @@ FjernetLandEnkelt.propTypes = {
   angreFjern: PT.func.isRequired,
   begrunnelseTerm: PT.string.isRequired,
   landKodeObjekt: MPT.Kodeverk.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 export default FjernetLandEnkelt;

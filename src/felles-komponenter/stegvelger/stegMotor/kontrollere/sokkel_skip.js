@@ -30,6 +30,7 @@ class SokkelSkip extends Steg {
     this._samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.sokkelEllerSkip,
       skjema: _propsLight.skjema,
+      redigerbart: _propsLight.redigerbart,
     });
     this._beregnRelevantUI = _propsLight => {
       const { sokkelEllerSkip = [], sokkelSkipKonklusjon } = _propsLight.skjema.avklartefakta;

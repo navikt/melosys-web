@@ -14,7 +14,7 @@ class OppholdslandHandlingSlett extends Component {
 
   render () {
     const {
-      oppholdBegrunnelser, bekreft, avbryt, landKodeObjekt,
+      oppholdBegrunnelser, bekreft, avbryt, landKodeObjekt, redigerbart,
     } = this.props;
 
     const landKode = kodeverkObjektTilKode(landKodeObjekt);
@@ -24,14 +24,14 @@ class OppholdslandHandlingSlett extends Component {
       <div className="fjernland__linje">
         <div className="linje__land">{landTerm} ({landKode})</div>
         <div className="linje__begrunnelse">
-          <Nav.Select className="linje__nedtrekksvelger" bredde="fullbredde" value={this.state.begrunnelse} onChange={this.onChange} label="Velg begrunnelse:">
+          <Nav.Select disabled={!redigerbart} className="linje__nedtrekksvelger" bredde="fullbredde" value={this.state.begrunnelse} onChange={this.onChange} label="Velg begrunnelse:">
             <option disabled value="0" />
             {oppholdBegrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
           </Nav.Select>
         </div>
         <div className="linje__knapper">
-          <Nav.Knapp className="fjern__avbryt" onClick={avbryt}>Avbryt</Nav.Knapp>
-          <Nav.Knapp className="fjern__bekreft" onClick={() => bekreft(landKode, this.state.begrunnelse)} disabled={this.state.begrunnelse === '0'}>Bekreft</Nav.Knapp>
+          <Nav.Knapp className="fjern__avbryt" disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
+          <Nav.Knapp className="fjern__bekreft" disabled={!(redigerbart && this.state.begrunnelse !== '0')} onClick={() => bekreft(landKode, this.state.begrunnelse)}>Bekreft</Nav.Knapp>
         </div>
       </div>
     );
@@ -43,6 +43,7 @@ OppholdslandHandlingSlett.propTypes = {
   bekreft: PT.func.isRequired,
   landKodeObjekt: MPT.Kodeverk.isRequired,
   oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 export default OppholdslandHandlingSlett;

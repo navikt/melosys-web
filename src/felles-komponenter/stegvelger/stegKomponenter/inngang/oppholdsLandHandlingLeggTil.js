@@ -27,7 +27,7 @@ class LeggTilWrapper extends Component {
     const { landKode, begrunnelseKode } = this.state;
     const { oppdaterBegrunnelse, oppdaterLand } = this;
     const {
-      bekreft, avbryt, alleLandKoder, oppholdBegrunnelser,
+      bekreft, avbryt, alleLandKoder, oppholdBegrunnelser, redigerbart,
     } = this.props;
 
     const erInputGyldig = (landKode && begrunnelseKode && begrunnelseKode !== '0');
@@ -43,17 +43,18 @@ class LeggTilWrapper extends Component {
             value={landKode}
             landkoder={alleLandKoder}
             className="linje__nedtrekksvelger"
+            disabled={redigerbart}
           />
         </div>
         <div className="linje__begrunnelse">
-          <Nav.Select bredde="fullbredde" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:" className="linje__nedtrekksvelger">
+          <Nav.Select disabled={redigerbart} bredde="fullbredde" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:" className="linje__nedtrekksvelger">
             <option disabled value="0" />
             {oppholdBegrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
           </Nav.Select>
         </div>
         <div className="linje__knapper">
-          <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
-          <Nav.Knapp onClick={() => bekreft(landKode, begrunnelseKode)} disabled={!erInputGyldig}>Legg til</Nav.Knapp>
+          <Nav.Knapp disabled={redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
+          <Nav.Knapp onClick={() => bekreft(landKode, begrunnelseKode)} disabled={!(redigerbart && erInputGyldig)}>Legg til</Nav.Knapp>
         </div>
       </div>
     );
@@ -65,6 +66,7 @@ LeggTilWrapper.propTypes = {
   bekreft: PT.func.isRequired,
   alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 class OppholdsLandLeggTil extends Component {
@@ -80,7 +82,7 @@ class OppholdsLandLeggTil extends Component {
   lukk = () => this.setState({ erLeggTilIntensjon: false });
 
   render () {
-    const { alleLandKoder, oppholdBegrunnelser } = this.props;
+    const { alleLandKoder, oppholdBegrunnelser, redigerbart } = this.props;
     const { erLeggTilIntensjon } = this.state;
     const {
       settLeggTilIntensjon, lukk, bekreftLeggTil,
@@ -90,7 +92,7 @@ class OppholdsLandLeggTil extends Component {
       <div>
         <div>
           {!erLeggTilIntensjon && (
-            <Nav.Knapp onClick={settLeggTilIntensjon} className="knappMedIkon">
+            <Nav.Knapp onClick={settLeggTilIntensjon} className="knappMedIkon" disabled={!redigerbart}>
               <Nav.Ikoner kind="tilsette" /><div>Legg til nytt land</div>
             </Nav.Knapp>
           )}
@@ -101,6 +103,7 @@ class OppholdsLandLeggTil extends Component {
               oppholdBegrunnelser={oppholdBegrunnelser}
               bekreft={bekreftLeggTil}
               avbryt={lukk}
+              disabled={!redigerbart}
             />
           )}
         </div>
@@ -118,6 +121,7 @@ OppholdsLandLeggTil.propTypes = {
   bekreftLeggTil: PT.func.isRequired,
   alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 export default OppholdsLandLeggTil;
