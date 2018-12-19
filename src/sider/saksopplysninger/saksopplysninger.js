@@ -117,7 +117,7 @@ class Saksopplysninger extends Component {
         <ArbeidUtland />
         <ForetakUtland />
         <VirksomhetNorge />
-        <MaritimtArbeid soknadVerdier={soknadVerdier} />
+        <MaritimtArbeid />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
         {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
       </form>
@@ -201,7 +201,7 @@ const mapStateToProps = state => ({
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
     oppholdsland: soknadSelectors.OppholdUtlandSelector(state).oppholdslandKoder,
-    forutgaendeBostedINorge: soknadSelectors.OppholdUtlandSelector(state).harForutgaendeBostedINorge,
+    forutgaendeBostedINorge: soknadSelectors.OppholdUtlandSelector(state).forutgaendeBostedINorge,
     arbeidUtland: soknadSelectors.ArbeidUtlandSelector(state),
     sammeAdresseSomArbeidsgiver: soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver,
     ektefelleEllerBarnINorge: soknadSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
@@ -215,11 +215,7 @@ const mapStateToProps = state => ({
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
     adresseIUtlandet: soknadSelectors.BostedSelector(state).adresseIUtlandet,
-    maritimType: soknadSelectors.MaritimtArbeidSelector(state).maritimType,
-    skipsNavn: soknadSelectors.MaritimtArbeidSelector(state).skipsNavn,
-    fartsomrade: soknadSelectors.MaritimtArbeidSelector(state).fartsomrade,
-    flaggLand: soknadSelectors.MaritimtArbeidSelector(state).flaggLand,
-    installasjonsLand: soknadSelectors.MaritimtArbeidSelector(state).installasjonsLand,
+    maritimtArbeid: soknadSelectors.MaritimtArbeidSelector(state),
     foretakUtland: soknadSelectors.ForetakUtlandSelector(state),
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
@@ -236,6 +232,8 @@ const mapStateToProps = state => ({
       yrkesaktivitetAntallLand: avklartefaktaSelectors.YrkesaktivitetAntallLand(state),
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
       arbeidsgivere: avklartefaktaSelectors.ArbeidsgivereSelector(state),
+      sokkelEllerSkip: avklartefaktaSelectors.SokkelEllerSkipSelector(state),
+      sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },
     vilkar: {
       vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),
@@ -246,6 +244,7 @@ const mapStateToProps = state => ({
       forutgaendeMedlemskapBegrunnelser: (vilkarSelectors.forutgaendeMedlemskap(state).begrunnelseKoder),
       bosattINorge: (vilkarSelectors.bosattINorge(state).oppfylt),
       bosattINorgeBegrunnelser: (vilkarSelectors.bosattINorge(state).begrunnelseKoder),
+      art11_3A: vilkarSelectors.art11_3A(state).oppfylt,
       art12_1: vilkarSelectors.art12_1(state).oppfylt,
       art12_1_begrunnelser: vilkarSelectors.art12_1(state).begrunnelseKoder,
       art12_2: vilkarSelectors.art12_2(state).oppfylt,
@@ -268,7 +267,7 @@ const mapDispatchToProps = dispatch => ({
 const SaksopplysningerForm = reduxForm({
   form: 'soknad',
   enableReinitialize: true,
-  destroyOnUnmount: false,
+  destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
   validate: (values, props) => Validering.Felles.byggValidering(values, props),

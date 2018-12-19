@@ -61,8 +61,8 @@ class VurderingArtikkel12_1 extends Component {
       settSkjemaVerdi('vilkar.art12_1', true);
       settSkjemaVerdi('vilkar.art16_1', null);
     } else if (value === this.ART16_1) {
-      settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', true);
+      settSkjemaVerdi('vilkar.art12_1', false);
     } else {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', false);
@@ -79,27 +79,27 @@ class VurderingArtikkel12_1 extends Component {
 
     return (
       <div>
-        <Nav.Undertittel>Vurdering av artikkel 12. 1</Nav.Undertittel>
+        <Nav.Undertittel>Vurdering av artikkel 12.1</Nav.Undertittel>
         <div>
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Fyller søker resterende kriterier for artikkel 12.1?">
                 <Nav.Radio
-                  name="artikkel"
+                  name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.ART12_1}
                   checked={valgtVilkar === this.ART12_1}
                   label="Ja"
                 />
                 <Nav.Radio
-                  name="artikkel"
+                  name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.ART16_1}
                   checked={valgtVilkar === this.ART16_1}
                   label="Nei, jeg vil vurdere artikkel 16.1"
                 />
                 <Nav.Radio
-                  name="artikkel"
+                  name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.AVSLAG}
                   checked={valgtVilkar === this.AVSLAG}

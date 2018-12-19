@@ -12,6 +12,8 @@ import { soknadSelectors } from '../soknad';
 import { KodeverkSelectors } from '../kodeverk';
 import { OrganisasjonSelectors } from '../organisasjoner';
 
+import * as Koder from '../../koder';
+
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
  */
@@ -21,6 +23,14 @@ const avklartefaktaKoder = {
   YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
   YRKESAKTIVITET: 'YRKESAKTIVITET',
   AVKLARTE_ARBEIDSGIVER: 'AVKLARTE_ARBEIDSGIVER',
+  SOKKEL_ELLER_SKIP: 'SOKKEL_ELLER_SKIP',
+  ARBEIDSLAND: 'ARBEIDSLAND',
+  BOSTEDSLAND: 'BOSTEDSLAND',
+  ARBEID_SOKKEL_SKIP: 'ARBEID_SOKKEL_SKIP',
+};
+
+const referanseKoder = {
+  INSTALLASJON_ARBEIDSLAND: 'INSTALLASJON_ARBEIDSLAND',
 };
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
@@ -132,15 +142,67 @@ export const ArbeidsgivereSelector = createSelector(
   }
 );
 
+export const ArbeidSokkelSkipSelector = createSelector(
+  state => AvklartefaktaSelector(state),
+  alleAvklarteFakta => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.ARBEID_SOKKEL_SKIP);
+    if (!avklartFakta) return null;
+    return avklartFakta.fakta[0];
+  }
+);
+
+/* Avklartfakta for hvorvidt en installasjon er SOKKEL eller SKIP.
+ * Selectoren henter avklaringer fra redux state og omformer de til array<object> som
+ * Redux Form kan lese.
+ */
+export const SokkelEllerSkipSelector = createSelector(
+  state => AvklartefaktaSelector(state),
+  state => soknadSelectors.MaritimtArbeidSelector(state),
+  (alleAvklarteFakta, alleMaritimeArbeid) => {
+    // Selectoren lager 2 lister - en for avklart fakta for arbeidsland for hvert sokkel / skip
+    // og én for avklartfakta om installasjonen er sokkel eller skip.
+
+    const arbeidsland = alleAvklarteFakta
+      .filter(avklaring => avklaring.referanse === referanseKoder.INSTALLASJON_ARBEIDSLAND)
+      .map(avklaring => avklaring.fakta[0]);
+
+    const sokkelEllerSkip = alleAvklarteFakta
+      .filter(avklaring => avklaring.referanse === avklartefaktaKoder.SOKKEL_ELLER_SKIP)
+      .map((avklaring, index) => ({
+        installasjonsType: avklaring.fakta[0],
+        arbeidsland: arbeidsland[index],
+        installasjonsTypeBegrunnelse: avklaring.begrunnelseKoder && avklaring.begrunnelseKoder[0],
+      }));
+
+    // Dersom søknaden inneholder x antall maritime arbeid, men som ikke er avklart i
+    // stegvelgeren vil avklartfakta fortsatt være tom. Derfor trenger vi å
+    // fylle inn arrayen slik at valideringen kan iterere på alle maritime arbeid som
+    // det forventes at saksbehandler skal gjøre en avklaring på.
+    const antallSomMangler = alleMaritimeArbeid.length - sokkelEllerSkip.length;
+    const arrayFyll = new Array(antallSomMangler).fill({});
+    return [...sokkelEllerSkip, ...arrayFyll];
+  }
+);
+
+/** Forretningsregel: Dersom søker arbeider på skip, så er arbeidslandet det samme som skipets flaggland.
+ * Derfor må denne selectoren ta hensyn til avklart fakta for sokkel/skip og overstyre landet som er oppgitt i søknaden.
+ *
+ */
 export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
   state => Oppholdsland(state) || [],
   state => KodeverkSelectors.landkoderSelector(state) || [],
-  (avklartefaktaLand, landKoder) => {
-    const gyldigeLand = avklartefaktaLand
+  state => SokkelEllerSkipSelector(state),
+  (avklartefaktaLand, landKoder, sokkelEllerSkip) => {
+    const landAvklartVedInngang = avklartefaktaLand
       .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
       .map(avklartfakta => avklartfakta.subjektID);
 
-    return landKoder.filter(enkeltObjekt => gyldigeLand.includes(enkeltObjekt.kode));
+    const landOverstyrtAvSkip = sokkelEllerSkip
+      .reduce((collection, enkelt) => (enkelt.installasjonsType === Koder.SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
+
+    const styrendeLand = landOverstyrtAvSkip.length > 0 ? landOverstyrtAvSkip : landAvklartVedInngang;
+
+    return landKoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
   }
 );
 
@@ -165,3 +227,13 @@ export const AvklartefaktaVurderingSelector = createSelector(
   vurdering => vurdering || {}
 );
 
+export const BostedslandSelector = createSelector(
+  state => AvklartefaktaSelector(state),
+  state => KodeverkSelectors.landkoderSelector(state),
+  (alleAvklarteFakta, alleLandkoder) => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.BOSTEDSLAND);
+    if (!avklartFakta) return null;
+    const bostedslandKode = avklartFakta.fakta[0];
+    return alleLandkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
+  }
+);

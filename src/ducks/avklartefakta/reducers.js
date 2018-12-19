@@ -23,10 +23,10 @@ const avklartfaktaMal = {
 };
 
 // Kun for å holde state i stegvelgeren.
-const lagAvklartStateObjekt = (avklartFakta, avklaringType) => (
+const lagAvklartStateObjekt = (avklartFakta, referanse) => (
   avklartFakta ? {
     ...avklartfaktaMal,
-    referanse: avklaringType,
+    referanse,
     fakta: [avklartFakta],
   } : null
 );
@@ -37,6 +37,70 @@ const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => (
     ...avklartfaktaMal,
     avklartefaktaKode,
     referanse: avklartefaktaKode,
+    subjektID: null,
+    fakta: [avklarteFakta],
+  }
+);
+
+const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
+  if (!avklarteFakta) { return []; }
+
+  return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
+    const installasjon = maritimtArbeid[index] || {};
+    const installasjonsNavn = installasjon.navn || null;
+    const begrunnelseKoder = enkeltAvklaring.installasjonsTypeBegrunnelse ? [enkeltAvklaring.installasjonsTypeBegrunnelse] : null;
+
+    return enkeltAvklaring.installasjonsType ? [...samling, {
+      ...avklartfaktaMal,
+      avklartefaktaKode,
+      referanse,
+      subjektID: installasjonsNavn,
+      begrunnelseKoder,
+      fakta: [enkeltAvklaring.installasjonsType],
+    }] : [...samling];
+  }, []);
+};
+
+const lagBostedsland = (avklarteFakta, referanse, avklartefaktaKode) => (
+  {
+    ...avklartfaktaMal,
+    avklartefaktaKode,
+    referanse,
+    subjektID: null,
+    fakta: [avklarteFakta],
+  }
+);
+
+const avklarEllerUtledBostedsland = (bostedsland, bosattINorge) => {
+  if (bosattINorge) {
+    return lagBostedsland('NO', 'BOSTEDSLAND', 'BOSTEDSLAND');
+  }
+
+  return lagBostedsland(bostedsland, 'BOSTEDSLAND', 'BOSTEDSLAND');
+};
+
+const lagArbeidslandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
+  if (!avklarteFakta) { return []; }
+
+  return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
+    const installasjon = maritimtArbeid[index] || {};
+    const installasjonsNavn = installasjon.navn || null;
+
+    return enkeltAvklaring.installasjonsType ? [...samling, {
+      ...avklartfaktaMal,
+      avklartefaktaKode,
+      referanse,
+      subjektID: installasjonsNavn,
+      fakta: [enkeltAvklaring.arbeidsland],
+    }] : [...samling];
+  }, []);
+};
+
+const lagArbeidsKonklusjon = (avklarteFakta, referanse, avklartefaktaKode) => (
+  {
+    ...avklartfaktaMal,
+    avklartefaktaKode,
+    referanse,
     subjektID: null,
     fakta: [avklarteFakta],
   }
@@ -65,6 +129,10 @@ export default function reducer(state = initialState, action) {
         lagAvklartfaktaObjekt(dokument.avklartefakta.yrkesgruppe, 'YRKESGRUPPE'),
         lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
         lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
+        avklarEllerUtledBostedsland(dokument.avklartefakta.bostedsland, dokument.vilkar.bosattINorge),
+        ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
+        ...lagArbeidslandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),
+        lagArbeidsKonklusjon(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP', null, dokument.maritimtArbeid),
       ].filter(fakta => fakta !== null);
 
       return { ...state, data: [...avklartefakta] };

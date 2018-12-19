@@ -16,6 +16,7 @@ export const STEG = {
   ARTIKKEL_16: 'ARTIKKEL_16',
   ARTIKKEL_12_1: 'ARTIKKEL_12_1',
   ARTIKKEL_12_2: 'ARTIKKEL_12_2',
+  ARTIKKEL_11_4: 'ARTIKKEL_11_4',
   INNGANG: 'INNGANG',
   YRKESGRUPPE: 'YRKESGRUPPE',
   IKKE_YRKESAKTIV: 'IKKE_YRKESAKTIV',
@@ -31,6 +32,7 @@ export const STEG = {
   TJENESTEMANN: 'TJENESTEMANN',
   FORRETNINGSSTED: 'FORRETNINGSSTED',
   ARBEIDSGIVERE: 'ARBEIDSGIVERE',
+  SOKKEL_SKIP: 'SOKKEL_SKIP',
   VEDTAK: 'VEDTAK',
 };
 
@@ -38,6 +40,7 @@ export const StegTilKontroller = {
   ARTIKKEL_16: 'Artikkel16',
   ARTIKKEL_12_1: 'Artikkel12_1',
   ARTIKKEL_12_2: 'Artikkel12_2',
+  ARTIKKEL_11_4: 'Artikkel11_4',
   INNGANG: 'Inngang',
   YRKESGRUPPE: 'Yrkesgruppe',
   IKKE_YRKESAKTIV: 'IkkeYrkesaktiv',
@@ -53,5 +56,6 @@ export const StegTilKontroller = {
   TJENESTEMANN: 'Tjenestemann',
   FORRETNINGSSTED: 'Forretningssted',
   ARBEIDSGIVERE: 'Arbeidsgivere',
+  SOKKEL_SKIP: 'SokkelSkip',
   VEDTAK: 'Vedtak',
 };

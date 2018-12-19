@@ -24,6 +24,7 @@ const Avklaringer = ({ avklaringer }) => (
       {
         avklaringer.map(({ tekst, status }) => {
           let iconClassName;
+          console.log(status)
           if (status === undefined) {
             iconClassName = 'liste__element--varsel';
           }
@@ -66,7 +67,7 @@ const VurderingBostedsland = props => {
   const {
     bekreftOgFortsett, tilstand, begrunnelser,
   } = props;
-  const { erBosattINorge, harEOSBarnetrygdSak } = tilstand;
+  const { erBosattINorge, erAvklart, harEOSBarnetrygdSak } = tilstand;
 
   const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
 
@@ -80,15 +81,10 @@ const VurderingBostedsland = props => {
         <div className="vurderingBostedsland__skjemafelt">
           <Nav.Row>
             <Nav.Column xs="12">
-              <AvklaringsListe tilstand={tilstand} />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="12">
               <Nav.Fieldset legend="Bostedsland er:">
                 <Skjema.Radio feltNavn="vilkar.bosattINorge" value={BOOLSK.SANN} label="Norge" />
                 <Skjema.Radio feltNavn="vilkar.bosattINorge" value={BOOLSK.USANN} label="Annet" />
-                {!erBosattINorge && <LandVelger label="Velg land:" feltNavn="avklartefaktaBostedLand" multiland={false} />}
+                {!erBosattINorge && <LandVelger label="Velg land:" feltNavn="avklartefakta.bostedsland" multiland={false} />}
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -110,7 +106,7 @@ const VurderingBostedsland = props => {
         </div>
       </div>
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp type="hoved" disabled={!erAvklart} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );

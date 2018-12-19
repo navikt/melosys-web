@@ -52,11 +52,6 @@ export const dokumenttitlerSelector = createSelector(
   dokumenttitler => dokumenttitler || []
 );
 
-export const vedleggstitlerSelector = createSelector(
-  state => state.kodeverk.data.vedleggstitler,
-  vedleggstitler => vedleggstitler || []
-);
-
 export const studieFinansieringSelector = createSelector(
   state => state.kodeverk.data.finansiering,
   studieFinansiering => studieFinansiering || []
@@ -85,4 +80,9 @@ export const produserbareDokumenterSelector = createSelector(
 export const aktoerrollerSelector = createSelector(
   state => state.kodeverk.data.aktoerroller,
   aktoerroller => aktoerroller || []
+);
+
+export const fartsomraderSelector = createSelector(
+  state => state.kodeverk.data.fartsomrader,
+  fartsomrader => fartsomrader || []
 );
