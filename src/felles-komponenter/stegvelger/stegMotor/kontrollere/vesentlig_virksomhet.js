@@ -27,6 +27,7 @@ class VesentligVirksomhet extends Steg {
     this._samleRelevanteData = _propsLight => ({
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
       begrunnelser: _propsLight.begrunnelser.vesentligVirksomhet,
+      redigerbart: _propsLight.redigerbart,
     });
     this._beregnRelevantUI = _propsLight => {
       const { vesentligVirksomhet, vesentligVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;

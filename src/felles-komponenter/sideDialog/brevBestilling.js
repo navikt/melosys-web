@@ -131,7 +131,7 @@ class BrevBestilling extends Component {
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
             <Skjema.Textarea disabled={!redigerbart} feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
-            { behandlingID &&
+            { behandlingID && redigerbart &&
               <PdfLenkeListe behandlingID={behandlingID} dokumenter={ForhandsvistePdfDokumenter} vedKlikk={this.validerBrev} />
             }
             <Nav.Knapp htmlType="reset" type="standard" disabled={!redigerbart} onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;

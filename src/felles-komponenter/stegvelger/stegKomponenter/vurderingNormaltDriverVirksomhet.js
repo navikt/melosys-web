@@ -16,7 +16,10 @@ class NormaltDriverVirksomhet extends Component {
   }
 
   render () {
-    const { bekreftOgFortsett, begrunnelser, tilstand } = this.props;
+    const {
+      bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
+    } = this.props;
+
     const { visBegrunnelser, harAvklaring } = tilstand;
     const arbeidsgivereTekst = this.props.valgteArbeidsgivere.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
 
@@ -27,8 +30,8 @@ class NormaltDriverVirksomhet extends Component {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Virksomheten har:">
-                <Skjema.Radio feltNavn="vilkar.normaltDriverVirksomhet" value={BOOLSK.SANN} label="Driver normalt virksomhet i Norge" />
-                <Skjema.Radio feltNavn="vilkar.normaltDriverVirksomhet" value={BOOLSK.USANN} label="Driver normalt IKKE virksomhet i Norge" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.normaltDriverVirksomhet" value={BOOLSK.SANN} label="Driver normalt virksomhet i Norge" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.normaltDriverVirksomhet" value={BOOLSK.USANN} label="Driver normalt IKKE virksomhet i Norge" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -42,6 +45,7 @@ class NormaltDriverVirksomhet extends Component {
                     label="Legg til begrunnelse:"
                     gruppe
                     tillatFritekst={false}
+                    disabled={!redigerbart}
                   />
                 </Nav.Fieldset>
               </Nav.Column>
@@ -64,6 +68,7 @@ NormaltDriverVirksomhet.propTypes = {
   valgteArbeidsgivere: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   settSkjemaVerdi: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 NormaltDriverVirksomhet.defaultProps = {
