@@ -45,6 +45,7 @@ Listevelger.propTypes = {
   gruppe: PT.bool,
   muligeValg: PT.arrayOf(MPT.Kodeverk),
   tillatFritekst: PT.bool,
+  disabled: PT.bool,
 };
 
 Listevelger.defaultProps = {
@@ -52,6 +53,7 @@ Listevelger.defaultProps = {
   gruppe: false,
   muligeValg: [],
   tillatFritekst: false,
+  disabled: false,
 };
 
 export default Listevelger;
