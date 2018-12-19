@@ -52,6 +52,11 @@ export const art11_4_2 = createSelector(
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.FO_883_2004_ART11_4_2) || {})
 );
 
+export const nis = createSelector(
+  state => VilkarSelector(state),
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.FTRL_2_12_UNNTAK_TURISTSKIP) || {})
+);
+
 export const art12_1 = createSelector(
   state => VilkarSelector(state),
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.FO_883_2004_ART12_1) || {})

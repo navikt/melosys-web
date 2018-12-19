@@ -49,7 +49,7 @@ export default function reducer(state = initialState, action) {
         vilkarTilObjekt(Koder.ART12_1_VESENTLIG_VIRKSOMHET, action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhetBegrunnelser),
         vilkarTilObjekt(Koder.ART12_2_NORMALT_DRIVER_VIRKSOMHET, action.data.vilkar.normaltDriverVirksomhet, action.data.vilkar.normaltDriverVirksomhetBegrunnelser),
         vilkarTilObjekt(Koder.BOSATT_I_NORGE, action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorgeBegrunnelser),
-        vilkarTilObjekt(Koder.NIS_FOLKETRYGDLOVEN_2_12, action.data.vilkar.nis),
+        vilkarTilObjekt(Koder.FTRL_2_12_UNNTAK_TURISTSKIP, action.data.vilkar.nis),
         vilkarTilObjekt(Koder.FO_883_2004_ART12_1, action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
         vilkarTilObjekt(Koder.FO_883_2004_ART12_2, action.data.vilkar.art12_2, action.data.vilkar.art12_2_begrunnelser),
         vilkarTilObjekt(Koder.FO_883_2004_ART16_1, action.data.vilkar.art16_1, action.data.vilkar.art16_1_begrunnelser, action.data.vilkar.art16_1_begrunnelser_fritekst),
