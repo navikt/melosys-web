@@ -17,6 +17,7 @@ const ListevelgerEnkelt = ({
   meta,
   muligeValg,
   placeholder,
+  disabled,
   ...rest
 }) => {
   const feil = (meta.invalid && meta.touched) ? { feilmelding: meta.error } : null;
@@ -37,6 +38,7 @@ const ListevelgerEnkelt = ({
         onChange={inputProps.onChange}
         onBlur={inputProps.onBlur}
         bredde={inputProps.bredde}
+        disabled={disabled}
       />
       <datalist id={`dataliste-${inputProps.name}`}>
         {muligeValg.map(valg => <option key={uuid()} value={kodeverkObjektTilTerm(valg)} />)}
@@ -47,6 +49,7 @@ const ListevelgerEnkelt = ({
 
 ListevelgerEnkelt.propTypes = {
   label: PT.string.isRequired,
+  disabled: PT.string.isRequired,
   children: PT.node,
   input: PT.object,
   errorMessage: PT.object,
