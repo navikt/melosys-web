@@ -20,7 +20,7 @@ const VurderingYrkesgruppe = props => {
       <Nav.Undertittel>Vurdering av yrkesgruppe</Nav.Undertittel>
       <Nav.Fieldset legend="Vurder om søkeren er:">
         <Skjema.Radio feltNavn="avklartefakta.yrkesgruppe" value={VurderingYrkesgruppeTyper.ORDINAER} label="Yrkesaktiv" />
-        <Skjema.Radio feltNavn="avklartefakta.yrkesgruppe" value={VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP} label="Yrkesaktiv på skip" />
+        <Skjema.Radio feltNavn="avklartefakta.yrkesgruppe" value={VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP} label="Yrkesaktiv på sokkel eller skip" />
         <Skjema.Radio feltNavn="avklartefakta.yrkesgruppe" value={VurderingYrkesgruppeTyper.FLYENDE_PERSONELL} label="Yrkesaktiv som flyvende personell" />
         <Skjema.Radio feltNavn="avklartefakta.yrkesgruppe" value={VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV} label="Ikke yrkesaktiv" />
         <Skjema.Radio feltNavn="avklartefakta.yrkesgruppe" value={VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER} label="Kontantytelsesmottaker" />

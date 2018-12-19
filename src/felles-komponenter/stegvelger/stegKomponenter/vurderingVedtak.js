@@ -57,7 +57,7 @@ const VurderingVedtak = props => {
             <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6">
-            <Nav.Element type="element">Land</Nav.Element>
+            <Nav.Element type="element">Arbeids- / Oppholdsland</Nav.Element>
             <Nav.Normaltekst>{ landSomTekstListe }</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>

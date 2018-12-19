@@ -3,15 +3,43 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingArbeidsgiver from '../../stegKomponenter/vurderingArbeidsgiver';
 
 import * as Koder from '../../../../koder';
+import { VurderingYrkesgruppeTyper } from '../../stegKomponenter/vurderingYrkesgruppe';
+import { VurderingSokkelSkipTyper } from '../../stegKomponenter/vurderingSokkelSkip';
+
+import SokkelSkip from './sokkel_skip';
 
 class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
-        beskrivelse: 'Hvis det finnes minst én avklart arbeidsgiver i avklartefakta',
-        exec: avklartefakta => (Yrkesgruppe.harValgtArbeidsgiver(avklartefakta)),
+        beskrivelse: 'Valgt minst én arbeidsgivr og yrkesgruppeType === ORDINAER',
+        exec: avklartefakta => {
+          const harValgtArbeidsgiver = Yrkesgruppe.harValgtArbeidsgiver(avklartefakta);
+          const erVanligYrkesaktiv = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.ORDINAER);
+          return harValgtArbeidsgiver && erVanligYrkesaktiv;
+        },
         nesteSteg: STEG.YRKESAKTIVITET,
+      },
+      {
+        beskrivelse: 'Valgt minst én arbeidsgivr og yrkesgruppeType === SOKKEL_ELLER_SKIP && sokkelSkipKonklusjon === SOKKEL_UTLAND',
+        exec: avklartefakta => {
+          const harValgtArbeidsgiver = Yrkesgruppe.harValgtArbeidsgiver(avklartefakta);
+          const arbeiderPaSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
+          const erSokkelUtland = SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SOKKEL_UTLAND);
+          return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSokkelUtland;
+        },
+        nesteSteg: STEG.YRKESAKTIVITET,
+      },
+      {
+        beskrivelse: 'Valgt minst én arbeidsgivr og yrkesgruppeType === SOKKEL_ELLER_SKIP && sokkelSkipKonklusjon === SKIP_ETT_LAND',
+        exec: avklartefakta => {
+          const harValgtArbeidsgiver = Yrkesgruppe.harValgtArbeidsgiver(avklartefakta);
+          const arbeiderPaSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
+          const erSkipEttLand = SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SKIP_ETT_LAND);
+          return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSkipEttLand;
+        },
+        nesteSteg: STEG.BOSTEDSLAND,
       },
       {
         beskrivelse: 'Stopp steg',
@@ -40,6 +68,12 @@ class Yrkesgruppe extends Steg {
   static harValgtArbeidsgiver = avklartefakta => {
     const harAvklartArbeidsgiver = avklartefakta.some(enkeltFakta => ((enkeltFakta.referanse === Koder.AVKLARTE_ARBEIDSGIVER) && enkeltFakta.fakta.includes('TRUE')));
     return harAvklartArbeidsgiver;
+  };
+
+  static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESGRUPPE);
+    if (!enkeltFakta) { return false; }
+    return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   };
 }
 

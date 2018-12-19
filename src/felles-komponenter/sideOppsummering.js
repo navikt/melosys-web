@@ -121,7 +121,7 @@ class SideOppsummering extends Component {
                 <dd>{kodeverkObjektTilTerm(saksstatus)}</dd>
                 <dt>Behandlingsstatus:</dt>
                 <dd>{kodeverkObjektTilTerm(behandlingsstatus)}</dd>
-                <dt>Oppholdsland:</dt>
+                <dt>Arbeids- / Oppholdsland:</dt>
                 <dd>{gyldigeOppholdsLandSetning}</dd>
                 <dt>Periode:</dt>
                 <dd>{oppholdUtlandFom} - {oppholdUtlandTom}</dd>
