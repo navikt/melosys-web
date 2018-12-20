@@ -9,7 +9,7 @@ class ForutgaendeMedlemskap extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'harForutgaendeMedlemskap ER LIK TRUE',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('ART12_1_FORUTGAAENDE_MEDLEMSKAP', alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('ART12_1_FORUTGAAENDE_MEDLEMSKAP', alleVilkar) !== undefined,
         nesteSteg: STEG.VESENTLIG_VIRKSOMHET,
       },
       {
