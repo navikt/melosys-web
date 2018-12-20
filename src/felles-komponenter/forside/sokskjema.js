@@ -25,16 +25,16 @@ class SokSkjema extends Component {
 
   vedEndretSokFelt = event => {
     this.setState({ sokStreng: event.target.value });
-  }
+  };
 
   oppdaterLokalSokState = sokStreng => {
     this.setState({ sokStreng });
-  }
+  };
 
   render () {
     return (
       <Nav.Panel>
-        <Nav.Systemtittel>Søke etter oppgaver</Nav.Systemtittel>
+        <Nav.Systemtittel>Søke etter saker</Nav.Systemtittel>
         <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
           <Nav.Input
             label="Søk på fødselsnummer:"

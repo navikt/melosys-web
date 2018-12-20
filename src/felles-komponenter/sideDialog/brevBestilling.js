@@ -59,7 +59,7 @@ class BrevBestilling extends Component {
 
     this.setState({ feilmelding: undefined });
 
-    if (!this.validerBrev()) {
+    if (!(await this.validerBrev())) {
       return false;
     }
 
