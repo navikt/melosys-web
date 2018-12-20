@@ -43,17 +43,17 @@ class LeggTilWrapper extends Component {
             value={landKode}
             landkoder={alleLandKoder}
             className="linje__nedtrekksvelger"
-            disabled={redigerbart}
+            disabled={!redigerbart}
           />
         </div>
         <div className="linje__begrunnelse">
-          <Nav.Select disabled={redigerbart} bredde="fullbredde" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:" className="linje__nedtrekksvelger">
+          <Nav.Select disabled={!redigerbart} bredde="fullbredde" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:" className="linje__nedtrekksvelger">
             <option disabled value="0" />
             {oppholdBegrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
           </Nav.Select>
         </div>
         <div className="linje__knapper">
-          <Nav.Knapp disabled={redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
+          <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
           <Nav.Knapp onClick={() => bekreft(landKode, begrunnelseKode)} disabled={!(redigerbart && erInputGyldig)}>Legg til</Nav.Knapp>
         </div>
       </div>
@@ -103,7 +103,7 @@ class OppholdsLandLeggTil extends Component {
               oppholdBegrunnelser={oppholdBegrunnelser}
               bekreft={bekreftLeggTil}
               avbryt={lukk}
-              disabled={!redigerbart}
+              redigerbart={redigerbart}
             />
           )}
         </div>
