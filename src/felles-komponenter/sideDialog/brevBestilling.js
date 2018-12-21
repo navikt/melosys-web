@@ -91,9 +91,9 @@ class BrevBestilling extends Component {
   };
 
   forkastBrev = async () => {
-    const { resetDokument } = this.props;
+    const { resetBrevBestillingForm, resetDokument } = this.props;
     resetDokument();
-    this.props.resetBrevBestillingForm();
+    resetBrevBestillingForm();
     // Quirk: Reset av form oppdaterer tilbake til initValues i form state, men
     // av en eller annen grunn så rendres ikke select til DOM.
     // Quick-fix er å tvinge en update til vi finner ut hva som blocker dette.
