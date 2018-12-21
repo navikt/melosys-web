@@ -18,6 +18,7 @@ import PdfLenkeListe from '../pdfLenkeListe';
 import './brevBestilling.css';
 import * as Utils from '../../utils/utils';
 
+
 const InfoPanel = () => (
   <Nav.Lesmerpanel
     intro="Se hva som skal stå i mangelbrevet:"
@@ -89,10 +90,15 @@ class BrevBestilling extends Component {
     return true;
   };
 
-  forkastBrev = () => {
-    const { resetBrevBestillingForm, resetDokument } = this.props;
-    resetBrevBestillingForm();
+  forkastBrev = async () => {
+    const { resetDokument } = this.props;
     resetDokument();
+    this.props.resetBrevBestillingForm();
+    // Quirk: Reset av form oppdaterer tilbake til initValues i form state, men
+    // av en eller annen grunn så rendres ikke select til DOM.
+    // Quick-fix er å tvinge en update til vi finner ut hva som blocker dette.
+    await Utils.delay(0);
+    this.forceUpdate();
   };
 
   render () {
@@ -109,7 +115,6 @@ class BrevBestilling extends Component {
     const ForhandsvistePdfDokumenter = [
       { navn: 'Vis utkast', type: dokumenttypeKode, data },
     ];
-
 
     const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
     return (
@@ -175,7 +180,7 @@ const mapStateToProps = state => ({
   initialValues: {
     dokumenttypeKode: 'MELDING_MANGLENDE_OPPLYSNINGER',
     mottaker: 'BRUKER',
-    fritekst: undefined,
+    fritekst: '',
   },
 });
 
