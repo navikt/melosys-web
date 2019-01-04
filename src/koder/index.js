@@ -1,16 +1,21 @@
-import * as Kodeverk from 'melosys-kodeverk';
-const { kodeset } = Kodeverk;
-console.dir(kodeset);
-// Melosys-koder
-// Se Confluence koder for oversikt
+import { kodeset } from 'melosys-kodeverk';
 
-export const FO_883_2004_ART12_1 = kodeset.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1;
-//export const FO_883_2004_ART12_1 = 'FO_883_2004_ART12_1'
-export const FO_883_2004_ART12_2 = 'FO_883_2004_ART12_2';
-export const FO_883_2004_ART11_3A = 'FO_883_2004_ART11_3A';
-export const FO_883_2004_ART11_4_1 = 'FO_883_2004_ART11_4_1';
-export const FO_883_2004_ART11_4_2 = 'FO_883_2004_ART11_4_2';
-export const FO_883_2004_ART16_1 = 'FO_883_2004_ART16_1';
+// Melosys-kodeverk
+// Se Confluence koder for oversikt
+export const {
+  lovvalgsbestemmelser: {
+    forordning_883_2004: {
+      FO_883_2004_ART12_1,
+      FO_883_2004_ART12_2,
+      FO_883_2004_ART11_3A,
+      FO_883_2004_ART11_4_1,
+      FO_883_2004_ART11_4_2,
+      FO_883_2004_ART16_1,
+    },
+  },
+} = kodeset;
+
+// Vilkår
 export const ART12_1_VESENTLIG_VIRKSOMHET = 'ART12_1_VESENTLIG_VIRKSOMHET';
 export const ART12_2_NORMALT_DRIVER_VIRKSOMHET = 'ART12_2_NORMALT_DRIVER_VIRKSOMHET';
 export const ART12_1_FORUTGAAENDE_MEDLEMSKAP = 'ART12_1_FORUTGAAENDE_MEDLEMSKAP';
