@@ -1,6 +1,11 @@
+import * as Kodeverk from 'melosys-kodeverk';
+const { kodeset } = Kodeverk;
+console.dir(kodeset);
 // Melosys-koder
 // Se Confluence koder for oversikt
-export const FO_883_2004_ART12_1 = 'FO_883_2004_ART12_1';
+
+export const FO_883_2004_ART12_1 = kodeset.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1;
+//export const FO_883_2004_ART12_1 = 'FO_883_2004_ART12_1'
 export const FO_883_2004_ART12_2 = 'FO_883_2004_ART12_2';
 export const FO_883_2004_ART11_3A = 'FO_883_2004_ART11_3A';
 export const FO_883_2004_ART11_4_1 = 'FO_883_2004_ART11_4_1';
