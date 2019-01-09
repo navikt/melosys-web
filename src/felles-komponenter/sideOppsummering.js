@@ -77,6 +77,7 @@ class SideOppsummering extends Component {
       lagreOgLukkHandle,
       oppfriskSaksopplysningerHandle,
       tilbakeleggeHandle,
+      henleggHandle,
       gyldigeOppholdsLand,
     } = this.props;
 
@@ -94,6 +95,7 @@ class SideOppsummering extends Component {
                     <Nav.Knapp type="hoved" mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp>
                     <Nav.Knapp type="hoved" mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
                     <Nav.Knapp type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppfrisk saksopplysninger</Nav.Knapp>
+                    <Nav.Knapp type="hoved" mini className="innhold__element" onClick={henleggHandle}>Henlegg sak</Nav.Knapp>
                   </div>
                 </Nav.EkspanderbartpanelBase>
               </div>
@@ -164,6 +166,7 @@ SideOppsummering.propTypes = {
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
+  henleggHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
 
