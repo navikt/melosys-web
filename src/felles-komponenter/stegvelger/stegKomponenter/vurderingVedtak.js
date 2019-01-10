@@ -43,8 +43,8 @@ const VurderingVedtak = props => {
   const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.term).join(', ');
 
   const dokumenter = [
-    { navn: 'Forhåndsvis vedtaksbrev', type: 'INNVILGELSE_YRKESAKTIV', data: {} },
-    { navn: 'Forhåndsvis A1', type: 'ATTEST_A1', data: {} },
+    { navn: 'Forhåndsvis vedtaksbrev', type: 'INNVILGELSE_YRKESAKTIV', data: { mottaker: 'BRUKER' } },
+    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: 'ATTEST_A1', data: { mottaker: 'MYNDIGHET' } },
   ];
 
   return (
