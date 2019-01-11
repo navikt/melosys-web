@@ -82,6 +82,22 @@ class SideOppsummering extends Component {
 
     const gyldigeOppholdsLandSetning = arrayTilKonjunksjon(gyldigeOppholdsLand.map(land => land.term));
 
+
+    let visEndreBehandlingsStatusForm = true;
+    let behandlingsKode = null;
+    if (behandlingsstatus) {
+      behandlingsKode = behandlingsstatus.kode;
+      visEndreBehandlingsStatusForm = behandlingsKode !== 'UNDER_BEHANDLING';
+    }
+
+    const endreStatusValg = [{ kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' }];
+    if (behandlingsKode === 'VURDER_DOKUMENT') {
+      endreStatusValg.push({ kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' });
+      endreStatusValg.push({ kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' });
+    }
+    else if (behandlingsKode === 'AVVENT_DOK_UTL') endreStatusValg.push({ kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' });
+    else if (behandlingsKode === 'AVVENT_DOK_PART') endreStatusValg.push({ kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' })
+
     return (
       <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
         <Nav.Panel className="saksbehandling__soknadSammendrag">
@@ -135,15 +151,20 @@ class SideOppsummering extends Component {
           <Nav.Row>
             <Nav.Column xs="12">
               <div className="oppsummering__behandlingsstatus">
-                <form onSubmit={this.overstyrSubmit}>
-                  <Nav.Select value={this.state.behandlingsstatus} onChange={this.onChange} label="Endre status på behandlingen:">
-                    <option key="VELG" value="VELG">Velg...</option>
-                    <option key="AVVENT_DOK_UTL" value="AVVENT_DOK_UTL">{kodeTilVerdi('AVVENT_DOK_UTL', behandlingsstatusKodeVerk)}</option>
-                    <option key="AVVENT_DOK_PART" value="AVVENT_DOK_PART">{kodeTilVerdi('AVVENT_DOK_PART', behandlingsstatusKodeVerk)}</option>
-                  </Nav.Select>
-                  <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
-                  {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
-                </form>
+                { visEndreBehandlingsStatusForm &&
+                  <form onSubmit={this.overstyrSubmit}>
+                    <Nav.Select value={this.state.behandlingsstatus} onChange={this.onChange} label="Endre status på behandlingen:">
+                      <option key="VELG" value="VELG">Velg...</option>
+                      {endreStatusValg.map(status => (
+                        <option key={status.kode} value={status.kode}>
+                          {kodeTilVerdi(status.kode, behandlingsstatusKodeVerk)}
+                        </option>
+                      ))}
+                    </Nav.Select>
+                    <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
+                    {this.state.statusmelding && <div><br/><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
+                  </form>
+                }
               </div>
             </Nav.Column>
           </Nav.Row>
