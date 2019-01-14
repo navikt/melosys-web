@@ -15,6 +15,7 @@ import { KodeverkSelectors } from '../ducks/kodeverk';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { arrayTilKonjunksjon } from '../utils/streng';
+import { KodeTermSelect } from './kodeTermSelect';
 import './sideOppsummering.css';
 
 class SideOppsummering extends Component {
@@ -195,14 +196,12 @@ class SideOppsummering extends Component {
               <div className="oppsummering__behandlingsstatus">
                 { endreBehandlingsStatusValg.length !== 0 &&
                   <form onSubmit={this.overstyrSubmit}>
-                    <Nav.Select value={this.state.behandlingsstatus} onChange={this.onChange} label="Endre status på behandlingen:">
-                      <option key="VELG" value="VELG">Velg...</option>
-                      {endreBehandlingsStatusValg.map(status => (
-                        <option key={status.kode} value={status.kode}>
-                          {kodeTilVerdi(status.kode, behandlingsstatusKodeVerk)}
-                        </option>
-                      ))}
-                    </Nav.Select>
+                    <KodeTermSelect
+                      koder={endreBehandlingsStatusValg}
+                      value={this.state.behandlingsstatus}
+                      onChange={this.onChange}
+                      label="Endre status på behandlingen:"
+                    />
                     <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
                     {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
                   </form>
