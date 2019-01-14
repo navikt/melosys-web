@@ -109,7 +109,6 @@ class SideOppsummering extends Component {
       person,
       oppholdUtlandFom,
       oppholdUtlandTom,
-      behandlingsstatusKodeVerk,
     } = this.props;
 
     if (!oppsummering) return <div />;
