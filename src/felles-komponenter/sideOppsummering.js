@@ -18,7 +18,24 @@ import { arrayTilKonjunksjon } from '../utils/streng';
 import './sideOppsummering.css';
 
 class SideOppsummering extends Component {
-  state = { behandlingsstatus: 'VELG', statusmelding: null };
+  state = {
+    behandlingsstatus: 'VELG',
+    statusmelding: null,
+    endreBehandlingsStatusValg: [
+      { kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' },
+      { kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' },
+      { kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' },
+    ],
+  };
+
+  componentDidMount() {
+    /* Sjekker for undefined da this.props.oppsummering.behandlingsstatus er undefined
+     de første gangene komponenten rendres. */
+    if (this.props.oppsummering.behandlingsstatus) {
+      this.oppdaterValg(this.props.oppsummering.behandlingsstatus.kode);
+    }
+  }
+
   onChange = event => {
     const { value } = event.currentTarget;
     this.setState({ behandlingsstatus: value, statusmelding: null });
@@ -44,8 +61,45 @@ class SideOppsummering extends Component {
     Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nystatus);
       this.oppdaterStatusMelding();
+      this.oppdaterValg(kode);
     });
     return true;
+  };
+
+  oppdaterValg = kode => {
+    this.setState({
+      endreBehandlingsStatusValg: this.hentBehandlingsStatusValg(kode),
+    });
+  }
+
+  hentBehandlingsStatusValg = kode => {
+    let endreStatusValg = [];
+
+    switch (kode) {
+      case 'VURDER_DOKUMENT':
+        endreStatusValg = [
+          { kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' },
+          { kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' },
+          { kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' },
+        ];
+        break;
+      case 'AVVENT_DOK_UTL':
+        endreStatusValg = [
+          { kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' },
+          { kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' },
+        ];
+        break;
+      case 'AVVENT_DOK_PART':
+        endreStatusValg = [
+          { kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' },
+          { kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' },
+        ];
+        break;
+      default:
+        break;
+    }
+
+    return endreStatusValg;
   };
 
   render() {
@@ -80,23 +134,11 @@ class SideOppsummering extends Component {
       gyldigeOppholdsLand,
     } = this.props;
 
+    const {
+      endreBehandlingsStatusValg,
+    } = this.state;
+
     const gyldigeOppholdsLandSetning = arrayTilKonjunksjon(gyldigeOppholdsLand.map(land => land.term));
-
-
-    let visEndreBehandlingsStatusForm = true;
-    let behandlingsKode = null;
-    if (behandlingsstatus) {
-      behandlingsKode = behandlingsstatus.kode;
-      visEndreBehandlingsStatusForm = behandlingsKode !== 'UNDER_BEHANDLING';
-    }
-
-    const endreStatusValg = [{ kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' }];
-    if (behandlingsKode === 'VURDER_DOKUMENT') {
-      endreStatusValg.push({ kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' });
-      endreStatusValg.push({ kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' });
-    }
-    else if (behandlingsKode === 'AVVENT_DOK_UTL') endreStatusValg.push({ kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' });
-    else if (behandlingsKode === 'AVVENT_DOK_PART') endreStatusValg.push({ kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' })
 
     return (
       <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -151,18 +193,18 @@ class SideOppsummering extends Component {
           <Nav.Row>
             <Nav.Column xs="12">
               <div className="oppsummering__behandlingsstatus">
-                { visEndreBehandlingsStatusForm &&
+                { endreBehandlingsStatusValg.length !== 0 &&
                   <form onSubmit={this.overstyrSubmit}>
                     <Nav.Select value={this.state.behandlingsstatus} onChange={this.onChange} label="Endre status på behandlingen:">
                       <option key="VELG" value="VELG">Velg...</option>
-                      {endreStatusValg.map(status => (
+                      {endreBehandlingsStatusValg.map(status => (
                         <option key={status.kode} value={status.kode}>
                           {kodeTilVerdi(status.kode, behandlingsstatusKodeVerk)}
                         </option>
                       ))}
                     </Nav.Select>
                     <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
-                    {this.state.statusmelding && <div><br/><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
+                    {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
                   </form>
                 }
               </div>
