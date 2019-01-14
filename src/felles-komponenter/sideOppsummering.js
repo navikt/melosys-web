@@ -81,24 +81,25 @@ class SideOppsummering extends Component {
         endreStatusValg = [
           { kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' },
           { kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' },
-          { kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' },
         ];
         break;
       case 'AVVENT_DOK_UTL':
         endreStatusValg = [
           { kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' },
-          { kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' },
         ];
         break;
       case 'AVVENT_DOK_PART':
         endreStatusValg = [
           { kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' },
-          { kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' },
         ];
         break;
+      case 'UNDER_BEHANDLING':
+        return [];
       default:
-        break;
+        return [];
     }
+
+    endreStatusValg = [...endreStatusValg, { kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' }];
 
     return endreStatusValg;
   };
