@@ -6,30 +6,14 @@ import { connect } from 'react-redux';
 import * as MPT from '../../proptypes';
 
 import PdfLenkeListe from '../../felles-komponenter/pdfLenkeListe';
+import { fagsakSelectors } from '../../ducks/fagsaker';
 
 import * as Nav from '../../utils/navFrontend';
 
 import './dialogboksHenlegg.css';
-import { fagsakSelectors } from '../../ducks/fagsaker';
 
-const { kodeset } = Kodeverk;
-
-/* Placeholder til npm pakken melosys-kodeverk er oppdatert med henleggelsesgrunner. */
-const henleggelsesgrunner = [
-  {
-    kode: 'SOEKNADEN_TRUKKET',
-    term: 'Søknaden er trukket',
-  },
-  {
-    kode: 'OPPHOLD_UTL_AVLYST',
-    term: 'Utenlandsoppholdet er avlyst',
-  },
-  {
-    kode: 'ANNET',
-    term: 'Begrunnelse oppgis i fritekst',
-  },
-];
-
+const { kodeset, kodeverk } = Kodeverk;
+const { henleggelsesgrunner } = kodeverk;
 const MELDING_HENLAGT_SAK = Object.keys(kodeset.brev.produserbareDokumenter)[4];
 const HENLEGGELSE = Object.keys(kodeset.behandlinger.behandlingsresultattyper)[2];
 
