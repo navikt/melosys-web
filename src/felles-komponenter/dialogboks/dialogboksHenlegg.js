@@ -14,8 +14,8 @@ import './dialogboksHenlegg.css';
 
 const { kodeset, kodeverk } = Kodeverk;
 const { henleggelsesgrunner } = kodeverk;
-const MELDING_HENLAGT_SAK = Object.keys(kodeset.brev.produserbareDokumenter)[4];
-const HENLEGGELSE = Object.keys(kodeset.behandlinger.behandlingsresultattyper)[2];
+const { MELDING_HENLAGT_SAK } = kodeset.brev.produserbareDokumenter;
+const { HENLEGGELSE } = kodeset.behandlinger.behandlingsresultattyper;
 
 class DialogboksHenleggSak extends Component {
   state = {
@@ -28,8 +28,7 @@ class DialogboksHenleggSak extends Component {
   velgBegrunnelseHandle = event => {
     if (!this.state.erBegrunnelseValgt) this.setState({ erBegrunnelseValgt: true });
 
-    const begrunnelseTerm = event.target.value;
-    const begrunnelseKode = henleggelsesgrunner.find(grunn => grunn.term === begrunnelseTerm).kode;
+    const begrunnelseKode = event.target.value;
     this.setState({ begrunnelseKode, feilmelding: undefined });
   };
 
@@ -70,7 +69,7 @@ class DialogboksHenleggSak extends Component {
       });
     }
 
-    const visTekstFelt = begrunnelseKode === henleggelsesgrunner[2].kode;
+    const visTekstFelt = begrunnelseKode === kodeset.henleggelsesgrunner.ANNET;
 
     return (
       <Nav.Modal
@@ -88,7 +87,7 @@ class DialogboksHenleggSak extends Component {
             label="Begrunnelse">
             <option key="VELG" value="VELG" disabled={erBegrunnelseValgt}>Velg begrunnelse</option>
             {henleggelsesgrunner.map(henleggelsesGrunn => (
-              <option key={henleggelsesGrunn.kode}>{henleggelsesGrunn.term}</option>
+              <option key={henleggelsesGrunn.kode} value={henleggelsesGrunn.kode}>{henleggelsesGrunn.term}</option>
             ))}
           </Nav.Select>
           {
