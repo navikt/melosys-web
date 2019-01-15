@@ -101,7 +101,12 @@ class DialogboksHenleggSak extends Component {
             <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
             <Nav.Hovedknapp
               disabled={!erBegrunnelseValgt}
-              onClick={() => henleggHandle({ behandlingsresultattype: HENLEGGELSE, tekst })}>
+              onClick={() => henleggHandle({
+                behandlingsresultattype: HENLEGGELSE,
+                begrunnelse: begrunnelseKode,
+                tekst
+              })}
+            >
               Henlegg saken
             </Nav.Hovedknapp>
           </div>
