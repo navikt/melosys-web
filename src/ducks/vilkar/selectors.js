@@ -69,7 +69,7 @@ export const art12_2 = createSelector(
 
 export const art16_1 = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.FO_883_2004_ART16_1) || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === Koder.FO_883_2004_ART12_2) || {})
 );
 
 export const valgteLovvalgsVilkar = createSelector(
