@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import moment from 'moment/moment';
+import { kodemap, kodeset } from 'melosys-kodeverk';
 
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
@@ -18,14 +19,17 @@ import { arrayTilKonjunksjon } from '../utils/streng';
 import { KodeTermSelect } from './kodeTermSelect';
 import './sideOppsummering.css';
 
+const termer = kodemap.behandlinger.behandlingsstatus;
+const koder = kodeset.behandlinger.behandlingsstatus;
+
 class SideOppsummering extends Component {
   state = {
     behandlingsstatus: 'VELG',
     statusmelding: null,
     endreBehandlingsStatusValg: [
-      { kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' },
-      { kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' },
-      { kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' },
+      { kode: koder.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
+      { kode: koder.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
+      { kode: koder.UNDER_BEHANDLING, term: termer.UNDER_BEHANDLING },
     ],
   };
 
@@ -77,29 +81,29 @@ class SideOppsummering extends Component {
     let endreStatusValg = [];
 
     switch (kode) {
-      case 'VURDER_DOKUMENT':
+      case koder.VURDER_DOKUMENT:
         endreStatusValg = [
-          { kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' },
-          { kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' },
+          { kode: koder.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
+          { kode: koder.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
         ];
         break;
-      case 'AVVENT_DOK_UTL':
+      case koder.AVVENT_DOK_UTL:
         endreStatusValg = [
-          { kode: 'AVVENT_DOK_PART', term: 'Avventer svar fra part i saken' },
+          { kode: koder.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
         ];
         break;
-      case 'AVVENT_DOK_PART':
+      case koder.AVVENT_DOK_PART:
         endreStatusValg = [
-          { kode: 'AVVENT_DOK_UTL', term: 'Avventer svar fra utenlandsk trygdemyndighet' },
+          { kode: koder.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
         ];
         break;
-      case 'UNDER_BEHANDLING':
+      case koder.UNDER_BEHANDLING:
         return [];
       default:
         return [];
     }
 
-    endreStatusValg = [...endreStatusValg, { kode: 'UNDER_BEHANDLING', term: 'Behandlingen pågår' }];
+    endreStatusValg = [...endreStatusValg, { kode: koder.UNDER_BEHANDLING, term: termer.UNDER_BEHANDLING }];
 
     return endreStatusValg;
   };
