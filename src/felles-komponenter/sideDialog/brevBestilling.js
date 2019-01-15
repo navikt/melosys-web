@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, reset, setSubmitFailed } from 'redux-form';
 import PT from 'prop-types';
+import { kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
@@ -12,12 +13,13 @@ import { formSelectors } from '../../ducks/form/';
 import { brevbestillingValidering, erSkjemaGyldig } from '../skjema/validering/brevbestilling';
 import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
 import { fagsakSelectors } from '../../ducks/fagsaker';
-import { KodeverkSelectors } from '../../ducks/kodeverk';
 import PdfLenkeListe from '../pdfLenkeListe';
 
 import './brevBestilling.css';
 import * as Utils from '../../utils/utils';
 
+const { aktoerroller } = kodeverk;
+const { produserbareDokumenter } = kodeverk.brev;
 
 const InfoPanel = () => (
   <Nav.Lesmerpanel
@@ -103,8 +105,6 @@ class BrevBestilling extends Component {
 
   render () {
     const {
-      produserbareDokumenter,
-      aktoerroller,
       brevbestillingSkjemaVerdier,
       oppsummering,
     } = this.props;
@@ -149,8 +149,6 @@ BrevBestilling.propTypes = {
   opprettDokument: PT.func.isRequired,
   forhandsvisPDF: PT.func.isRequired,
   resetDokument: PT.func.isRequired,
-  aktoerroller: PT.arrayOf(MPT.Kodeverk),
-  produserbareDokumenter: PT.arrayOf(MPT.Kodeverk).isRequired,
   brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
   oppsummering: MPT.Oppsummering,
@@ -158,7 +156,6 @@ BrevBestilling.propTypes = {
 BrevBestilling.defaultProps = {
   brevbestillingSkjemaVerdier: {},
   dokumenter: {},
-  aktoerroller: [],
   oppsummering: {},
 };
 
@@ -175,8 +172,6 @@ const mapStateToProps = state => ({
   brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
   dokumenter: dokumenterSelectors.dokumenterSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  produserbareDokumenter: KodeverkSelectors.produserbareDokumenterSelector(state),
-  aktoerroller: KodeverkSelectors.aktoerrollerSelector(state),
   initialValues: {
     dokumenttypeKode: 'MELDING_MANGLENDE_OPPLYSNINGER',
     mottaker: 'BRUKER',

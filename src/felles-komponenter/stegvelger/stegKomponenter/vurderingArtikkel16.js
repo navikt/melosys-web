@@ -3,6 +3,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
+import { kodeverk, kodeset } from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
@@ -11,7 +12,6 @@ import * as Koder from '../../../koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
-import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 
 import { dokumenterOperations } from '../../../ducks/dokumenter';
@@ -24,6 +24,9 @@ import './vurderingArtikkel16.css';
 
 const uuid = require('uuid/v4');
 
+const anmodningsBegrunnelser = kodeverk.begrunnelser.artikkel16_1_anmodning;
+const alleLovvalg = kodeverk.lovvalgsbestemmelser;
+const produserbareDokumenter = kodeset.brev.produserbareDokumenter;
 
 const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked }) => {
   const { periodeID, periode } = perm;
@@ -94,12 +97,10 @@ class VurderingArtikkel16 extends Component {
 
   render () {
     const {
-      anmodningsBegrunnelser,
       lagreOgFatteVedtak,
       gyldigeOppholdLand,
       oppholdPeriode,
       medlemskap,
-      alleLovvalg,
     } = this.props;
 
     const { forhandsvisPDF } = this;
@@ -145,10 +146,10 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12">
-              <button className="forhandsvisPDF" onClick={() => forhandsvisPDF('INNVILGELSE_YRKESAKTIV')}>Forhåndsvis anmodning til utenlandsk myndighet</button>
+              <button className="forhandsvisPDF" onClick={() => forhandsvisPDF(produserbareDokumenter.INNVILGELSE_YRKESAKTIV)}>Forhåndsvis anmodning til utenlandsk myndighet</button>
             </Nav.Column>
             <Nav.Column xs="12">
-              <button className="forhandsvisPDF" onClick={() => forhandsvisPDF('INNVILGELSE_YRKESAKTIV')}>Forhåndsvis brev til søker</button>
+              <button className="forhandsvisPDF" onClick={() => forhandsvisPDF(produserbareDokumenter.INNVILGELSE_YRKESAKTIV)}>Forhåndsvis brev til søker</button>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
@@ -163,9 +164,7 @@ class VurderingArtikkel16 extends Component {
 }
 
 VurderingArtikkel16.propTypes = {
-  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
   medlemskap: MPT.Medlemskap.isRequired,
-  anmodningsBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   forhandsvisPDF: PT.func.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
@@ -175,8 +174,6 @@ VurderingArtikkel16.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
-  anmodningsBegrunnelser: KodeverkSelectors.anmodningsBegrunnelserSelector(state),
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),

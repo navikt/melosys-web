@@ -75,8 +75,6 @@ class Behandling extends Component {
 Behandling.propTypes = {
   handleSubmit: PT.func.isRequired,
   history: PT.object.isRequired,
-  behandlingsTyper: PT.arrayOf(MPT.Kodeverk).isRequired,
-  saksTyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   formValues: PT.object,
 };
 
