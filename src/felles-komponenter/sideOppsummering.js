@@ -26,11 +26,6 @@ class SideOppsummering extends Component {
   state = {
     behandlingsstatus: 'VELG',
     statusmelding: null,
-    endreBehandlingsStatusValg: [
-      { kode: koder.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
-      { kode: koder.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
-      { kode: koder.UNDER_BEHANDLING, term: termer.UNDER_BEHANDLING },
-    ],
   };
 
   componentDidMount() {
@@ -66,16 +61,9 @@ class SideOppsummering extends Component {
     Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nystatus);
       this.oppdaterStatusMelding();
-      this.oppdaterValg(kode);
     });
     return true;
   };
-
-  oppdaterValg = kode => {
-    this.setState({
-      endreBehandlingsStatusValg: this.hentBehandlingsStatusValg(kode),
-    });
-  }
 
   hentBehandlingsStatusValg = kode => {
     let endreStatusValg = [];
@@ -139,11 +127,10 @@ class SideOppsummering extends Component {
       gyldigeOppholdsLand,
     } = this.props;
 
-    const {
-      endreBehandlingsStatusValg,
-    } = this.state;
-
     const gyldigeOppholdsLandSetning = arrayTilKonjunksjon(gyldigeOppholdsLand.map(land => land.term));
+
+    let endreBehandlingsStatusValg = [];
+    if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = this.hentBehandlingsStatusValg(oppsummering.behandlingsstatus.kode);
 
     return (
       <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
