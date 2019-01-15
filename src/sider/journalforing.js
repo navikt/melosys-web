@@ -135,14 +135,11 @@ class Journalforing extends Component {
 
     const { dokumentID } = hoveddokument;
     const vedlegg = this.mapVedleggsTittlerTilVedlegg(vedleggsTitler);
-    // TODO from drop-down list
-    const behandlingstype = null;
 
     // Data for /tilordne i.e KNYTT
     let journalPostData = {
       avsenderID,
       avsenderNavn,
-      behandlingstype,
       brukerID,
       dokumentID,
       hoveddokumentTittel,
@@ -164,13 +161,13 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier: { saksnummer, behandlingstype }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
-    const journalforingData = { saksnummer, ...vasketJournalforing };
+    const journalforingData = { saksnummer, behandlingstype, ...vasketJournalforing };
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
 
@@ -180,7 +177,7 @@ class Journalforing extends Component {
     resetSkjemaFelterForOpprettFagsak();
 
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, JOURNALFORING_HENSIKT.KNYTT)) {
-      settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer');
+      settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer', 'behandlingstype');
       return false;
     }
     const response = await tilordneSak(journalforingData);
@@ -308,6 +305,7 @@ class Journalforing extends Component {
   resetSkjemaFelterForEksisterendeSaker = () => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold('saksnummer', '');
+    settFeltInnhold('behandlingstype', '');
   };
 
   render() {
@@ -344,7 +342,11 @@ class Journalforing extends Component {
                         hentOgVisAvsender={hentOgVisAvsender}
                         hentOgVisBruker={hentOgVisBruker}
                       />
-                      <EksisterendeSaker behandlingstyper={behandlingstyper} fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
+                      <EksisterendeSaker
+                        behandlingstyper={behandlingstyper}
+                        fagsakListe={fagsakListe}
+                        knyttTilEksisterendeSak={knyttTilEksisterendeSak}
+                      />
                       <OpprettNyFagSak
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
@@ -374,6 +376,7 @@ const mapStateToProps = state => ({
   behandlingstyper: KodeverkSelectors.behandlingsTyperSelector(state),
   errors: getFormSyncErrors('journalforing')(state),
   initialValues: {
+    behandlingstype: null,
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
