@@ -6,14 +6,14 @@ class DomeneRegel {
 
   byggRegelSvar = (erOppfylt, positivTekst, negativTekst) => (
     {
-      tekst: erOppfylt ? positivTekst : negativTekst,
+      fritekst: erOppfylt ? positivTekst : negativTekst,
       status: erOppfylt,
     }
   );
 
   manglerOpplysninger = manglerTekst => (
     {
-      tekst: manglerTekst,
+      fritekst: manglerTekst,
       status: undefined,
     }
   )

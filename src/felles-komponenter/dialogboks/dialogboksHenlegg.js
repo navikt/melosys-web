@@ -22,7 +22,7 @@ class DialogboksHenleggSak extends Component {
     erBegrunnelseValgt: false,
     begrunnelseKode: '',
     feilmelding: undefined,
-    tekst: '',
+    fritekst: '',
   };
 
   velgBegrunnelseHandle = event => {
@@ -33,15 +33,24 @@ class DialogboksHenleggSak extends Component {
   };
 
   validerBegrunnelse = async () => {
-    if (!this.state.erBegrunnelseValgt) {
+    const { erBegrunnelseValgt, fritekst } = this.state;
+    const { fritekstValgt } = this;
+
+    if (!erBegrunnelseValgt) {
       this.setState({ feilmelding: { feilmelding: 'Ingen begrunnelse valgt' } });
     }
-    return this.state.erBegrunnelseValgt;
+    if (fritekstValgt && fritekst === 'undefined') {
+      this.setState({ feilmelding: { feilmelding: 'Mangler fritekst' } });
+    }
+
+    return erBegrunnelseValgt;
   };
 
+  fritekstValgt = () => this.state.begrunnelseKode === 'ANNET';
+
   oppdaterTekst = event => {
-    const tekst = event.target.value;
-    this.setState({ tekst });
+    const fritekst = event.target.value;
+    this.setState({ fritekst });
   };
 
   render() {
@@ -53,21 +62,19 @@ class DialogboksHenleggSak extends Component {
       begrunnelseKode,
       erBegrunnelseValgt,
       feilmelding,
-      tekst,
+      fritekst,
     } = this.state;
 
+
+    const data = erBegrunnelseValgt ? {
+      begrunnelse: begrunnelseKode,
+      fritekst: fritekst === '' ? null : fritekst,
+    } : {};
     const dokumenter = [{
       navn: 'Forhåndsvis brev',
       type: MELDING_HENLAGT_SAK,
+      data,
     }];
-    if (erBegrunnelseValgt) {
-      Object.assign(dokumenter[0], {
-        data: {
-          begrunnelse: begrunnelseKode,
-          tekst,
-        },
-      });
-    }
 
     const visTekstFelt = begrunnelseKode === kodeset.henleggelsesgrunner.ANNET;
 
@@ -91,7 +98,7 @@ class DialogboksHenleggSak extends Component {
             ))}
           </Nav.Select>
           {
-            visTekstFelt && <Nav.Textarea label="Fritekst" onChange={this.oppdaterTekst} value={tekst} />
+            visTekstFelt && <Nav.Textarea label="Fritekst" onChange={this.oppdaterTekst} value={fritekst} />
           }
           <PdfLenkeListe
             behandlingID={oppsummering.behandlingID}
@@ -104,7 +111,7 @@ class DialogboksHenleggSak extends Component {
               onClick={() => henleggHandle({
                 behandlingsresultattype: HENLEGGELSE,
                 begrunnelse: begrunnelseKode,
-                tekst
+                fritekst,
               })}
             >
               Henlegg saken
