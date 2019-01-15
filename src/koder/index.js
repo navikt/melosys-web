@@ -1,26 +1,5 @@
-import { kodeset } from 'melosys-kodeverk';
-
 // Melosys-kodeverk
 // Se Confluence koder for oversikt
-export const {
-  lovvalgsbestemmelser: {
-    forordning_883_2004: {
-      FO_883_2004_ART12_1,
-      FO_883_2004_ART12_2,
-      FO_883_2004_ART11_3A,
-      FO_883_2004_ART11_4_1,
-      FO_883_2004_ART11_4_2,
-      FO_883_2004_ART16_1,
-    },
-  },
-  vilkaar: {
-    ART12_1_VESENTLIG_VIRKSOMHET,
-    ART12_2_NORMALT_DRIVER_VIRKSOMHET,
-    ART12_1_FORUTGAAENDE_MEDLEMSKAP,
-    FTRL_2_12_UNNTAK_TURISTSKIP,
-    BOSATT_I_NORGE,
-  },
-} = kodeset;
 
 export const INNVILGET = 'INNVILGET';
 export const INNGANGSVILKAAR_EOSFO = 'INNGANGSVILKAAR_EOSFO';
