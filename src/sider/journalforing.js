@@ -132,12 +132,16 @@ class Journalforing extends Component {
 
     const { dokumentID } = hoveddokument;
     const vedlegg = this.mapVedleggsTittlerTilVedlegg(vedleggsTitler);
+    // TODO from drop-down list
+    const behandlingstype = null;
+
     // Data for /tilordne i.e KNYTT
     let journalPostData = {
       avsenderID,
       avsenderNavn,
-      dokumentID,
+      behandlingstype,
       brukerID,
+      dokumentID,
       hoveddokumentTittel,
       journalpostID,
       oppgaveID,
