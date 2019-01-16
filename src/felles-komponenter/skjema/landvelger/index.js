@@ -26,7 +26,9 @@ const LandVelger = props => {
 
   return (
     <div>
-      {multiLand ? (<MultiLand {...props} dataListID={dataListID} />) : (<EnkeltLand {...props} dataListID={dataListID} />)}
+      {multiLand
+        ? (<MultiLand {...props} landkoder={landkoder} dataListID={dataListID} />)
+        : (<EnkeltLand {...props} landkoder={landkoder} dataListID={dataListID} />)}
       <div className="landliste__dataliste">
         <datalist id={dataListID}>
           {landkoder.map(item => (<option key={item.kode} value={landTekstFormat(item)} />))}

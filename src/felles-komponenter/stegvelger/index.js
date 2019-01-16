@@ -15,7 +15,7 @@ import StegMotor from './stegMotor';
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
-import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
+import { behandlingerOperations } from '../../ducks/behandlinger';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder/';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
@@ -23,7 +23,7 @@ import { formSelectors } from '../../ducks/form/';
 
 import './stegvelger.css';
 
-const { behandlinger, landkoder } = kodeverk;
+const { behandlinger } = kodeverk;
 
 class Stegvelger extends Component {
   state = { aktivtStegNummer: 0, aktuelleSteg: [], didUpdateAfterLastStep: false };

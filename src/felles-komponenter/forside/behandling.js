@@ -5,7 +5,6 @@ import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import { kodeset, kodeverk } from 'melosys-kodeverk';
 
-import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
 
