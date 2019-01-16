@@ -145,7 +145,6 @@ class Stegvelger extends Component {
       valgteArbeidsgivere: props.valgteArbeidsgivere,
       vilkar: props.vilkar,
     };
-
     const stegMotor = new StegMotor(propsLight);
     const aktuelleSteg = stegMotor.beregnAlleSteg();
     // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg

@@ -3,6 +3,7 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
+import { kodeverk } from 'melosys-kodeverk';
 
 import * as Validering from '../../felles-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
@@ -107,6 +108,8 @@ class Saksopplysninger extends Component {
           fatteVedtakHandler={this.fatteVedtakHandler}
           lagreSoknadHandler={this.lagreSoknadHandler}
           oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
+          begrunnelser={kodeverk.begrunnelser}
+          landkoder={kodeverk.landkoder}
         />
         <Personopplysninger />
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />

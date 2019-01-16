@@ -155,7 +155,7 @@ export const {
     FRIVILLIG,
     UNNTATT,
   },
-  mottaksRetning: {
+  mottaksretning: {
     INN,
     UT,
     NOTAT,

@@ -203,7 +203,7 @@ export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
 
     const styrendeLand = landOverstyrtAvSkip.length > 0 ? landOverstyrtAvSkip : landAvklartVedInngang;
 
-    return kodeverk.landKoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
+    return kodeverk.landkoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
   }
 );
 
