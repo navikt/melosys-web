@@ -18,8 +18,12 @@ import PdfLenkeListe from '../../../felles-komponenter/pdfLenkeListe';
 
 import './vurderingVedtak.css';
 
-const { forordning_883_2004, forordning_987_2009, tillegg } = kodeverk.lovvalgsbestemmelser;
-const alleLovvalg = { ...forordning_883_2004, ...forordning_987_2009, ...tillegg };
+const { lovvalgsbestemmelser } = kodeverk;
+const alleLovvalg = [
+  lovvalgsbestemmelser.forordning_883_2004,
+  lovvalgsbestemmelser.forordning_987_2009,
+  lovvalgsbestemmelser.tillegg,
+];
 
 const VurderingVedtak = props => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
