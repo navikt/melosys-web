@@ -14,11 +14,10 @@ import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 
-import { dokumenterOperations } from '../../../ducks/dokumenter';
-
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
 import Listevelger from '../../skjema/listevelger';
 import DatoOmrade from '../../datoOmrade/datoOmrade';
+import PdfLenkeListe from '../../../felles-komponenter/pdfLenkeListe';
 
 import './vurderingArtikkel16.css';
 
@@ -86,14 +85,16 @@ TidligereMedlemskapPerioder.propTypes = {
 
 const TidligereMedlemskap = props => (<div><FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapPerioder} {...props} /></div>);
 
-class VurderingArtikkel16 extends Component {
-  forhandsvisPDF = async kode => {
-    const { oppsummering, forhandsvisPDF } = this.props;
-    const { behandlingID } = oppsummering;
-
-    const fileURL = await forhandsvisPDF(behandlingID, kode, {});
-    window.open(fileURL);
-  };
+const VurderingArtikkel16 = props => {
+  const {
+    anmodningsBegrunnelser,
+    lagreOgFatteVedtak,
+    gyldigeOppholdLand,
+    oppholdPeriode,
+    medlemskap,
+    oppsummering,
+    alleLovvalg,
+  } = props;
 
   render () {
     const {
@@ -102,71 +103,70 @@ class VurderingArtikkel16 extends Component {
       oppholdPeriode,
       medlemskap,
     } = this.props;
+  const { behandlingID } = oppsummering;
 
-    const { forhandsvisPDF } = this;
+  const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
 
-    const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
+  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
-    const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
+  const dokumenter = [
+    { navn: 'Forhåndsvis anmodning til bruker', type: 'ORIENTERING_ANMODNING_UNNTAK', data: { mottaker: 'BRUKER' } },
+    { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: 'MYNDIGHET' } },
+  ];
 
-    return (
-      <div>
-        <Nav.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Undertittel>
-        <div className="artikkel16">
-          <Nav.Row className="artikkel16__ekstratopp">
-            <Nav.Column xs="6">
-              <Nav.Element type="element">Lands lovgivning det søkes unntak fra:</Nav.Element>
-              <Nav.Normaltekst>{landSomTekstListe}</Nav.Normaltekst>
-            </Nav.Column>
-            <Nav.Column xs="6">
-              <Nav.Element type="element">Antall måneder:</Nav.Element>
-              <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
-              <DatoOmrade periode={oppholdPeriode} />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="10">
-              <Skjema.Select feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
-                { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
-              </Skjema.Select>
-              <Listevelger gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Skjema.Textarea feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row className="artikkel16__ekstratopp">
-            <Nav.Column xs="12">
-              <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}:`}>
-                <TidligereMedlemskap medlemskap={medlemskap} />
-              </Nav.Fieldset>
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <button className="forhandsvisPDF" onClick={() => forhandsvisPDF(produserbareDokumenter.INNVILGELSE_YRKESAKTIV)}>Forhåndsvis anmodning til utenlandsk myndighet</button>
-            </Nav.Column>
-            <Nav.Column xs="12">
-              <button className="forhandsvisPDF" onClick={() => forhandsvisPDF(produserbareDokumenter.INNVILGELSE_YRKESAKTIV)}>Forhåndsvis brev til søker</button>
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row className="artikkel16__ekstratopp">
-            <Nav.Column xs="6">
-              <Nav.Hovedknapp type="hoved" onClick={() => lagreOgFatteVedtak(Koder.ANMODNING_OM_UNNTAK)}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
-            </Nav.Column>
-          </Nav.Row>
-        </div>
+  return (
+    <div>
+      <Nav.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Undertittel>
+      <div className="artikkel16">
+        <Nav.Row className="artikkel16__ekstratopp">
+          <Nav.Column xs="6">
+            <Nav.Element type="element">Lands lovgivning det søkes unntak fra:</Nav.Element>
+            <Nav.Normaltekst>{landSomTekstListe}</Nav.Normaltekst>
+          </Nav.Column>
+          <Nav.Column xs="6">
+            <Nav.Element type="element">Antall måneder:</Nav.Element>
+            <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
+            <DatoOmrade periode={oppholdPeriode} />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="10">
+            <Skjema.Select feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
+              { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
+            </Skjema.Select>
+            <Listevelger gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Skjema.Textarea feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row className="artikkel16__ekstratopp">
+          <Nav.Column xs="12">
+            <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}:`}>
+              <TidligereMedlemskap medlemskap={medlemskap} />
+            </Nav.Fieldset>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row className="artikkel16__ekstratopp">
+          <Nav.Column xs="6">
+            <Nav.Hovedknapp type="hoved" onClick={() => lagreOgFatteVedtak(Koder.ANMODNING_OM_UNNTAK)}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
+          </Nav.Column>
+        </Nav.Row>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 VurderingArtikkel16.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
-  forhandsvisPDF: PT.func.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
   oppsummering: PT.object.isRequired,
@@ -181,8 +181,4 @@ const mapStateToProps = state => ({
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
 });
 
-const mapDispatchToProps = () => ({
-  forhandsvisPDF: (behandlingID, dokumenttypeKode, data) => dokumenterOperations.forhandsvisPDF(behandlingID, dokumenttypeKode, data),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel16);
+export default connect(mapStateToProps)(VurderingArtikkel16);

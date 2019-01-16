@@ -147,7 +147,6 @@ class BrevBestilling extends Component {
 BrevBestilling.propTypes = {
   resetBrevBestillingForm: PT.func.isRequired,
   opprettDokument: PT.func.isRequired,
-  forhandsvisPDF: PT.func.isRequired,
   resetDokument: PT.func.isRequired,
   brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
@@ -184,7 +183,6 @@ const mapDispatchToProps = dispatch => ({
   resetBrevBestillingForm: () => dispatch(reset('brevbestilling')),
   resetDokument: () => dispatch(dokumenterOperations.resetDokument()),
   opprettDokument: (behandlingID, dokumenttypeKode, data) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, data)),
-  forhandsvisPDF: (behandlingID, dokumenttypeKode, data) => dokumenterOperations.forhandsvisPDF(behandlingID, dokumenttypeKode, data),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(BrevBestilling));
