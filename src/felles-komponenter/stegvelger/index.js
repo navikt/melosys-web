@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import { kodeverk } from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes/';
 
@@ -15,15 +14,13 @@ import StegMotor from './stegMotor';
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
-import { behandlingerOperations } from '../../ducks/behandlinger';
+import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder/';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
 
 import './stegvelger.css';
-
-const { behandlinger } = kodeverk;
 
 class Stegvelger extends Component {
   state = { aktivtStegNummer: 0, aktuelleSteg: [], didUpdateAfterLastStep: false };
@@ -64,9 +61,10 @@ class Stegvelger extends Component {
   };
 
   lagreBehandlingerHandler = async () => {
-    const { sendPerioder, oppsummering: { behandlingID } } = this.props;
+    const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
     await sendPerioder(behandlingID, behandlinger);
   };
+
   lagreVilkarHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const { vilkar } = this.props;
@@ -165,6 +163,7 @@ class Stegvelger extends Component {
   tilSteg = async nyttStegNummer => {
     const {
       avklartefakta,
+      behandlinger,
       skjema,
       oppdaterAvklarteFaktaState,
       oppdaterBehandlingerState,
@@ -228,6 +227,7 @@ class Stegvelger extends Component {
 Stegvelger.propTypes = {
   arbeidsgivereIPerioden: PT.array,
   avklartefakta: PT.array,
+  behandlinger: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
@@ -264,6 +264,7 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
+  behandlinger: behandlingerSelectors.behandlingerSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
   oppholdsland: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
