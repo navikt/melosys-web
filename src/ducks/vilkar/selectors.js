@@ -6,8 +6,7 @@
  */
 
 import { createSelector } from 'reselect';
-
-import { KodeverkSelectors } from '../kodeverk';
+import { kodeverk } from 'melosys-kodeverk';
 
 import * as Koder from '../../koder';
 
@@ -74,8 +73,9 @@ export const art16_1 = createSelector(
 
 export const valgteLovvalgsVilkar = createSelector(
   state => VilkarSelector(state),
-  state => KodeverkSelectors.alleLovvalgSelector(state),
-  (vilkar, alleLovvalg) => (
-    vilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar))
-  )
+  vilkar => {
+    const { forordning_883_2004, forordning_987_2009, tillegg } = kodeverk.lovvalgsbestemmelser;
+    const alleLovvalg = { ...forordning_883_2004, ...forordning_987_2009, ...tillegg };
+    return vilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar))
+  }
 );

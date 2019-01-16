@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
+import { kodeverk } from 'melosys-kodeverk';
 
 import * as Utils from '../../utils/utils';
 import * as Skjema from '../skjema/';
@@ -17,9 +18,10 @@ import * as Person from '../../felles-komponenter/skjema/validering/generisk/per
 import { PersonSelectors } from '../../ducks/personer';
 import { OrganisasjonSelectors } from '../../ducks/organisasjoner';
 import { formSelectors } from '../../ducks/form';
-import { KodeverkSelectors } from '../../ducks/kodeverk';
 
 import './informasjon.css';
+
+const valgbareDokumentTitler = kodeverk.dokumenttitler;
 
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
  * slik som informasjon om bruker, informasjon om dokument etc.
@@ -148,7 +150,7 @@ class Informasjon extends Component {
 
   render() {
     const {
-      valgbareDokumentTitler, journalpostID, dokumentID,
+      journalpostID, dokumentID,
     } = this.props;
     const {
       spinner: { brukerNavn: visBrukerSpinner },
@@ -198,7 +200,6 @@ class Informasjon extends Component {
 }
 
 Informasjon.propTypes = {
-  valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk),
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   hentOgVisBruker: PT.func.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
@@ -209,7 +210,6 @@ Informasjon.propTypes = {
 
 Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
-  valgbareDokumentTitler: [],
   journalpostID: '',
   dokumentID: '',
 };
@@ -218,7 +218,6 @@ const mapStateToProps = state => ({
   person: PersonSelectors.personerSelector(state),
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
-  valgbareDokumentTitler: KodeverkSelectors.dokumenttitlerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

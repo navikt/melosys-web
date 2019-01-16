@@ -26,7 +26,7 @@ const uuid = require('uuid/v4');
 
 const anmodningsBegrunnelser = kodeverk.begrunnelser.artikkel16_1_anmodning;
 const alleLovvalg = kodeverk.lovvalgsbestemmelser;
-const produserbareDokumenter = kodeset.brev.produserbareDokumenter;
+const { produserbareDokumenter } = kodeset.brev;
 
 const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked }) => {
   const { periodeID, periode } = perm;

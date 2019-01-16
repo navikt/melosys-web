@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+import { kodeverk } from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes/';
 
@@ -12,7 +13,6 @@ import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
-import { KodeverkSelectors } from '../../ducks/kodeverk/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
 import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
@@ -22,6 +22,8 @@ import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
 
 import './stegvelger.css';
+
+const { behandlinger, landkoder } = kodeverk;
 
 class Stegvelger extends Component {
   state = { aktivtStegNummer: 0, aktuelleSteg: [], didUpdateAfterLastStep: false };
@@ -62,7 +64,7 @@ class Stegvelger extends Component {
   };
 
   lagreBehandlingerHandler = async () => {
-    const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
+    const { sendPerioder, oppsummering: { behandlingID } } = this.props;
     await sendPerioder(behandlingID, behandlinger);
   };
   lagreVilkarHandler = async () => {
@@ -172,7 +174,6 @@ class Stegvelger extends Component {
       oppdaterLovvalgperioderState,
       lagreSoknadHandler,
       lovvalgsperioder,
-      behandlinger,
       vilkar,
     } = this.props;
 
@@ -228,7 +229,6 @@ class Stegvelger extends Component {
 Stegvelger.propTypes = {
   arbeidsgivereIPerioden: PT.array,
   avklartefakta: PT.array,
-  begrunnelser: PT.object,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
@@ -239,7 +239,6 @@ Stegvelger.propTypes = {
   history: PT.object.isRequired,
   fatteVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
-  landkoder: PT.arrayOf(MPT.Kodeverk),
   inngang: PT.object,
   match: PT.object.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
@@ -256,9 +255,7 @@ Stegvelger.propTypes = {
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
-  begrunnelser: {},
   inngang: {},
-  landkoder: [],
   oppsummering: [],
   valgteArbeidsgivere: [],
 };
@@ -268,10 +265,7 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  behandlinger: behandlingerSelectors.behandlingerSelector(state),
-  begrunnelser: KodeverkSelectors.begrunnelserSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
-  landkoder: KodeverkSelectors.landkoderSelector(state),
   oppholdsland: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),

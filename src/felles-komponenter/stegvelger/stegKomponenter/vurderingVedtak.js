@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import { kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
@@ -8,7 +9,6 @@ import * as Koder from '../../../koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
-import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 import { fagsakSelectors } from '../../../ducks/fagsaker/';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
 
@@ -18,6 +18,9 @@ import PdfLenkeListe from '../../../felles-komponenter/pdfLenkeListe';
 
 import './vurderingVedtak.css';
 
+const { forordning_883_2004, forordning_987_2009, tillegg } = kodeverk.lovvalgsbestemmelser;
+const alleLovvalg = { ...forordning_883_2004, ...forordning_987_2009, ...tillegg };
+
 const VurderingVedtak = props => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
@@ -25,7 +28,6 @@ const VurderingVedtak = props => {
 
   const {
     gyldigeOppholdLand,
-    alleLovvalg,
     lovvalgsperioder,
   } = props;
 
@@ -81,7 +83,6 @@ VurderingVedtak.propTypes = {
   lovvalgsperioder: PT.array.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
-  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
 };
 
@@ -89,7 +90,6 @@ const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
-  alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
 });
 

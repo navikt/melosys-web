@@ -7,18 +7,17 @@ import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 import * as MPT from '../proptypes';
-import LandVelger from './skjema/landvelger';
 
+import LandVelger from './skjema/landvelger';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import { formSelectors } from '../ducks/form/';
-import { KodeverkSelectors } from '../ducks/kodeverk';
-
+import { fartsomrader } from '../koder';
 
 import './maritimtArbeid.css';
 
 const MaritimtEnkelt = props => {
   const {
-    navn, fartsomrader, index, remove,
+    navn, index, remove,
   } = props;
 
   return (
@@ -52,7 +51,7 @@ MaritimtEnkelt.propTypes = {
 };
 
 const MaritimtAlle = props => {
-  const { fields, fartsomrader } = props;
+  const { fields } = props;
   const { remove, push } = fields;
 
   return (
@@ -72,7 +71,7 @@ MaritimtAlle.propTypes = {
 
 
 const MaritimtArbeid = props => {
-  const { soknadForm, fartsomrader } = props;
+  const { soknadForm } = props;
   const { values: soknadVerdier } = soknadForm;
   const { maritimtArbeid = [] } = soknadVerdier;
 
@@ -95,7 +94,6 @@ const MaritimtArbeid = props => {
 
 MaritimtArbeid.propTypes = {
   soknadForm: PT.object,
-  fartsomrader: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 MaritimtArbeid.defaultProps = {
@@ -104,7 +102,6 @@ MaritimtArbeid.defaultProps = {
 
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  fartsomrader: KodeverkSelectors.fartsomraderSelector(state),
 });
 
 export default connect(mapStateToProps)(MaritimtArbeid);

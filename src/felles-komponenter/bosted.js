@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import { kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -12,7 +13,6 @@ import Landvelger from './skjema/landvelger';
 import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk';
 
 import './bosted.css';
-import { KodeverkSelectors } from '../ducks/kodeverk';
 import { fagsakSelectors } from '../ducks/fagsaker';
 import { formSelectors } from '../ducks/form';
 import { BOOLSK } from '../constants';
@@ -20,8 +20,10 @@ import { boolTilNorsk } from '../utils/streng';
 
 const uuid = require('uuid/v4');
 
+const studieFinansiering = kodeverk.finansiering;
+
 const Bosted = props => {
-  const { erValidert, studieFinansiering } = props;
+  const { erValidert } = props;
   const panelIkon = erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
 
   const { eosBarnetrygd } = props.sakOgBehandling;
@@ -87,19 +89,16 @@ const Bosted = props => {
 Bosted.propTypes = {
   soknadForm: MPT.SoknadForm,
   erValidert: PT.bool,
-  studieFinansiering: PT.arrayOf(MPT.Kodeverk),
   sakOgBehandling: PT.object.isRequired,
 };
 
 Bosted.defaultProps = {
   soknadForm: {},
   erValidert: true,
-  studieFinansiering: [],
 };
 
 
 const mapStateToProps = state => ({
-  studieFinansiering: KodeverkSelectors.studieFinansieringSelector(state),
   sakOgBehandling: fagsakSelectors.SakOgBehandlingSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });

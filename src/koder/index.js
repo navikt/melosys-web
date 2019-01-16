@@ -168,3 +168,11 @@ export const {
     BEGGE,
   },
 } = kodeset;
+
+/* Fartsomrader er spesifikk til front-end */
+const fartsomrader = [
+  { kode: 'innenriks', term: 'Innenriks' },
+  { kode: 'utenriks', term: 'Utenriks' },
+];
+
+export { fartsomrader };

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import moment from 'moment/moment';
+import { kodeverk } from 'melosys-kodeverk';
 
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
@@ -11,11 +12,12 @@ import EnkeltDato from './datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm, kodeTilVerdi } from '../utils/kodeverk';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
-import { KodeverkSelectors } from '../ducks/kodeverk';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { arrayTilKonjunksjon } from '../utils/streng';
 import './sideOppsummering.css';
+
+const behandlingsstatusKodeverk = kodeverk.behandlinger.behandlingsstatus;
 
 class SideOppsummering extends Component {
   state = { behandlingsstatus: 'VELG', statusmelding: null };
@@ -38,8 +40,8 @@ class SideOppsummering extends Component {
     if (kode === 'VELG') {
       return false;
     }
-    const { behandlingsstatusKodeVerk, oppdaterBehandlingsStatus, oppsummering: { behandlingID } } = this.props;
-    const term = kodeTilVerdi(kode, behandlingsstatusKodeVerk);
+    const { oppdaterBehandlingsStatus, oppsummering: { behandlingID } } = this.props;
+    const term = kodeTilVerdi(kode, behandlingsstatusKodeverk);
     const nystatus = { kode, term };
     Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nystatus);
@@ -54,7 +56,6 @@ class SideOppsummering extends Component {
       person,
       oppholdUtlandFom,
       oppholdUtlandTom,
-      behandlingsstatusKodeVerk,
     } = this.props;
 
     if (!oppsummering) return <div />;
@@ -138,8 +139,8 @@ class SideOppsummering extends Component {
                 <form onSubmit={this.overstyrSubmit}>
                   <Nav.Select value={this.state.behandlingsstatus} onChange={this.onChange} label="Endre status på behandlingen:">
                     <option key="VELG" value="VELG">Velg...</option>
-                    <option key="AVVENT_DOK_UTL" value="AVVENT_DOK_UTL">{kodeTilVerdi('AVVENT_DOK_UTL', behandlingsstatusKodeVerk)}</option>
-                    <option key="AVVENT_DOK_PART" value="AVVENT_DOK_PART">{kodeTilVerdi('AVVENT_DOK_PART', behandlingsstatusKodeVerk)}</option>
+                    <option key="AVVENT_DOK_UTL" value="AVVENT_DOK_UTL">{kodeTilVerdi('AVVENT_DOK_UTL', behandlingsstatusKodeverk)}</option>
+                    <option key="AVVENT_DOK_PART" value="AVVENT_DOK_PART">{kodeTilVerdi('AVVENT_DOK_PART', behandlingsstatusKodeverk)}</option>
                   </Nav.Select>
                   <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
                   {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
@@ -157,7 +158,6 @@ class SideOppsummering extends Component {
 SideOppsummering.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
   person: MPT.Person.isRequired,
-  behandlingsstatusKodeVerk: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppholdUtlandFom: PT.string.isRequired,
   oppholdUtlandTom: PT.string.isRequired,
   gyldigeOppholdsLand: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -173,7 +173,6 @@ const mapStateToProps = state => ({
   oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
   oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
   gyldigeOppholdsLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
-  behandlingsstatusKodeVerk: KodeverkSelectors.behandlingsStatusSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

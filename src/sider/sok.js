@@ -2,20 +2,21 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import qs from 'qs';
+import { kodeverk } from 'melosys-kodeverk';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
 import SakEnkeltLinje from '../felles-komponenter/forside/oppgaveliste/sakEnkeltLinje';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
 import { sokSelectors, sokOperations } from '../ducks/sok';
-import { KodeverkSelectors } from '../ducks/kodeverk';
 import './sok.css';
 
 const uuid = require('uuid/v4');
+
+const { sakstypeKoder } = kodeverk;
 
 const queryParamLogger = (fnr, location) => {
   const qsParsed = qs.parse(location.search.slice(1));
@@ -46,7 +47,7 @@ class Sok extends Component {
   }
 
   render() {
-    const { sokResultat, sakstypeKoder, children } = this.props;
+    const { sokResultat, children } = this.props;
     const { fnr } = this.props.match.params;
     if (!sokResultat) return null;
 
@@ -86,7 +87,6 @@ class Sok extends Component {
 
 Sok.propTypes = {
   location: PT.object.isRequired,
-  sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   sokResultat: PT.array.isRequired,
   sokBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
@@ -100,7 +100,6 @@ Sok.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
   sokResultat: sokSelectors.SokResultatSelector(state),
 });
 

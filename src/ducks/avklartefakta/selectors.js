@@ -6,10 +6,11 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
+import { kodeverk } from 'melosys-kodeverk';
+
 import { createSelector } from 'reselect';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
-import { KodeverkSelectors } from '../kodeverk';
 import { OrganisasjonSelectors } from '../organisasjoner';
 
 import * as Koder from '../../koder';
@@ -188,11 +189,11 @@ export const SokkelEllerSkipSelector = createSelector(
  * Derfor må denne selectoren ta hensyn til avklart fakta for sokkel/skip og overstyre landet som er oppgitt i søknaden.
  *
  */
+
 export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
   state => Oppholdsland(state) || [],
-  state => KodeverkSelectors.landkoderSelector(state) || [],
   state => SokkelEllerSkipSelector(state),
-  (avklartefaktaLand, landKoder, sokkelEllerSkip) => {
+  (avklartefaktaLand, sokkelEllerSkip) => {
     const landAvklartVedInngang = avklartefaktaLand
       .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
       .map(avklartfakta => avklartfakta.subjektID);
@@ -202,7 +203,7 @@ export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
 
     const styrendeLand = landOverstyrtAvSkip.length > 0 ? landOverstyrtAvSkip : landAvklartVedInngang;
 
-    return landKoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
+    return kodeverk.landKoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
   }
 );
 
@@ -229,11 +230,10 @@ export const AvklartefaktaVurderingSelector = createSelector(
 
 export const BostedslandSelector = createSelector(
   state => AvklartefaktaSelector(state),
-  state => KodeverkSelectors.landkoderSelector(state),
-  (alleAvklarteFakta, alleLandkoder) => {
+  alleAvklarteFakta => {
     const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.BOSTEDSLAND);
     if (!avklartFakta) return null;
     const bostedslandKode = avklartFakta.fakta[0];
-    return alleLandkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
+    return kodeverk.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
   }
 );
