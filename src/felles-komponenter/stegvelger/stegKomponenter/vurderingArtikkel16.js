@@ -3,7 +3,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
-import { kodeverk, kodeset } from 'melosys-kodeverk';
+import { kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
@@ -25,7 +25,6 @@ const uuid = require('uuid/v4');
 
 const anmodningsBegrunnelser = kodeverk.begrunnelser.artikkel16_1_anmodning;
 const alleLovvalg = kodeverk.lovvalgsbestemmelser;
-const { produserbareDokumenter } = kodeset.brev;
 
 const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked }) => {
   const { periodeID, periode } = perm;
@@ -87,22 +86,13 @@ const TidligereMedlemskap = props => (<div><FieldArray name="tidligeremedlemskap
 
 const VurderingArtikkel16 = props => {
   const {
-    anmodningsBegrunnelser,
     lagreOgFatteVedtak,
     gyldigeOppholdLand,
     oppholdPeriode,
     medlemskap,
     oppsummering,
-    alleLovvalg,
   } = props;
 
-  render () {
-    const {
-      lagreOgFatteVedtak,
-      gyldigeOppholdLand,
-      oppholdPeriode,
-      medlemskap,
-    } = this.props;
   const { behandlingID } = oppsummering;
 
   const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
