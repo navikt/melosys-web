@@ -38,22 +38,9 @@ function VirksomhetNorge () {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="I hvilken sammenheng sendes den ansatte til utlandet (velg én eller flere)?">
-                <Skjema.Checkbox
-                  bredde="XS"
-                  type="number"
-                  feltNavn="utsendtFortsetterArbeidsforholdIUtlandet"
-                  label="For å fortsette sitt norske arbeidsforhold i selskapet" />
-                <Skjema.Checkbox
-                  bredde="XS"
-                  type="number"
-                  feltNavn="utsendtArbeiderMedKlienter"
-                  label="For å arbeide med klienter / kundefirma" />
-                <Skjema.Checkbox
-                  bredde="XS"
-                  type="number"
-                  feltNavn="utsendtArbeiderMedKontrakter"
-                  label="For å arbeide med kontrakter tildelt selskapet" />
+              <Nav.Fieldset legend="Skal den ansatte fortsette sitt norske arbeidsforhold i selskapet?">
+                <Skjema.Radio feltNavn="utsendtFortsetterArbeidsforholdIUtlandet" value={BOOLSK.SANN} label="Ja" />
+                <Skjema.Radio feltNavn="utsendtFortsetterArbeidsforholdIUtlandet" value={BOOLSK.USANN} label="Nei" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
