@@ -3,9 +3,11 @@ import PT from 'prop-types';
 import Kodeverk from 'melosys-kodeverk';
 import { connect } from 'react-redux';
 
+
 import * as MPT from '../../proptypes';
 
 import PdfLenkeListe from '../../felles-komponenter/pdfLenkeListe';
+import { KodeTermSelect } from '../kodeTermSelect';
 import { fagsakSelectors } from '../../ducks/fagsaker';
 
 import * as Nav from '../../utils/navFrontend';
@@ -123,15 +125,13 @@ class DialogboksHenleggSak extends Component {
         shouldCloseOnOverlayClick>
         <div>
           <Nav.Systemtittel className="overskrift">Henlegg saken</Nav.Systemtittel>
-          <Nav.Select
+          <KodeTermSelect
             feil={feilmeldingSelect}
             onChange={this.velgBegrunnelseHandle}
-            label="Begrunnelse">
-            <option key="VELG" value="VELG" disabled={erBegrunnelseValgt}>Velg begrunnelse</option>
-            {henleggelsesgrunner.map(henleggelsesGrunn => (
-              <option key={henleggelsesGrunn.kode} value={henleggelsesGrunn.kode}>{henleggelsesGrunn.term}</option>
-            ))}
-          </Nav.Select>
+            label="Begrunnelse"
+            value={begrunnelseKode}
+            koder={henleggelsesgrunner}
+          />
           {
             visTekstFelt && <Nav.Textarea feil={feilmeldingFritekst} label="Fritekst" onChange={this.fritekstOnchange} value={fritekst} />
           }

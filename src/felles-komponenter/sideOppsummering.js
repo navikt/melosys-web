@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import moment from 'moment/moment';
+import { kodemap, kodeset } from 'melosys-kodeverk';
 
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
@@ -15,10 +16,26 @@ import { KodeverkSelectors } from '../ducks/kodeverk';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { arrayTilKonjunksjon } from '../utils/streng';
+import { KodeTermSelect } from './kodeTermSelect';
 import './sideOppsummering.css';
 
+const termer = kodemap.behandlinger.behandlingsstatus;
+const koder = kodeset.behandlinger.behandlingsstatus;
+
 class SideOppsummering extends Component {
-  state = { behandlingsstatus: 'VELG', statusmelding: null };
+  state = {
+    behandlingsstatus: 'VELG',
+    statusmelding: null,
+  };
+
+  componentDidMount() {
+    /* Sjekker for undefined da this.props.oppsummering.behandlingsstatus er undefined
+     de første gangene komponenten rendres. */
+    if (this.props.oppsummering.behandlingsstatus) {
+      this.oppdaterValg(this.props.oppsummering.behandlingsstatus.kode);
+    }
+  }
+
   onChange = event => {
     const { value } = event.currentTarget;
     this.setState({ behandlingsstatus: value, statusmelding: null });
@@ -33,6 +50,7 @@ class SideOppsummering extends Component {
     const hhmm = moment().format('HH:mm');
     this.setState({ behandlingsstatus, statusmelding: `Behandlingstatus ble oppdatert ${hhmm}` });
   };
+  
   sendOppdatering = () => {
     const { behandlingsstatus: kode } = this.state;
     if (kode === 'VELG') {
@@ -48,13 +66,43 @@ class SideOppsummering extends Component {
     return true;
   };
 
+  hentBehandlingsStatusValg = kode => {
+    let endreStatusValg = [];
+
+    switch (kode) {
+      case koder.VURDER_DOKUMENT:
+        endreStatusValg = [
+          { kode: koder.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
+          { kode: koder.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
+        ];
+        break;
+      case koder.AVVENT_DOK_UTL:
+        endreStatusValg = [
+          { kode: koder.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
+        ];
+        break;
+      case koder.AVVENT_DOK_PART:
+        endreStatusValg = [
+          { kode: koder.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
+        ];
+        break;
+      case koder.UNDER_BEHANDLING:
+        return [];
+      default:
+        return [];
+    }
+
+    endreStatusValg = [...endreStatusValg, { kode: koder.UNDER_BEHANDLING, term: termer.UNDER_BEHANDLING }];
+
+    return endreStatusValg;
+  };
+
   render() {
     const {
       oppsummering,
       person,
       oppholdUtlandFom,
       oppholdUtlandTom,
-      behandlingsstatusKodeVerk,
     } = this.props;
 
     if (!oppsummering) return <div />;
@@ -82,6 +130,9 @@ class SideOppsummering extends Component {
     } = this.props;
 
     const gyldigeOppholdsLandSetning = arrayTilKonjunksjon(gyldigeOppholdsLand.map(land => land.term));
+
+    let endreBehandlingsStatusValg = [];
+    if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = this.hentBehandlingsStatusValg(oppsummering.behandlingsstatus.kode);
 
     return (
       <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -137,15 +188,18 @@ class SideOppsummering extends Component {
           <Nav.Row>
             <Nav.Column xs="12">
               <div className="oppsummering__behandlingsstatus">
-                <form onSubmit={this.overstyrSubmit}>
-                  <Nav.Select value={this.state.behandlingsstatus} onChange={this.onChange} label="Endre status på behandlingen:">
-                    <option key="VELG" value="VELG">Velg...</option>
-                    <option key="AVVENT_DOK_UTL" value="AVVENT_DOK_UTL">{kodeTilVerdi('AVVENT_DOK_UTL', behandlingsstatusKodeVerk)}</option>
-                    <option key="AVVENT_DOK_PART" value="AVVENT_DOK_PART">{kodeTilVerdi('AVVENT_DOK_PART', behandlingsstatusKodeVerk)}</option>
-                  </Nav.Select>
-                  <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
-                  {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
-                </form>
+                { endreBehandlingsStatusValg.length !== 0 &&
+                  <form onSubmit={this.overstyrSubmit}>
+                    <KodeTermSelect
+                      koder={endreBehandlingsStatusValg}
+                      value={this.state.behandlingsstatus}
+                      onChange={this.onChange}
+                      label="Endre status på behandlingen:"
+                    />
+                    <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
+                    {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
+                  </form>
+                }
               </div>
             </Nav.Column>
           </Nav.Row>
