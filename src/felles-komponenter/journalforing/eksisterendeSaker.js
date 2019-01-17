@@ -3,6 +3,7 @@ import PT from 'prop-types';
 import EnkeltDato from '../datoOmrade/enkeltDato';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../proptypes/';
 
 import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
 
@@ -48,7 +49,9 @@ EnkeltSak.propTypes = {
  * sentralisere ansvarsområder i større grad.
  */
 const EksisterendeSaker = props => {
-  const { fagsakListe, knyttTilEksisterendeSak, feil } = props;
+  const {
+    behandlingstyper, fagsakListe, knyttTilEksisterendeSak, feil,
+  } = props;
 
   const radioValg = fagsakListe.reduce((samling, sak) => ([...samling, { value: sak.saksnummer, innhold: <EnkeltSak sak={sak} /> }]), []);
 
@@ -62,12 +65,18 @@ const EksisterendeSaker = props => {
         feil={feil}
       />}
       { fagsakListe.length === 0 && 'Ingen eksisterende saker funnet.'}
+
+      <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
+        {behandlingstyper && behandlingstyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+      </Skjema.Select>
+
       { fagsakListe.length > 0 && <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp> }
     </div>
   );
 };
 
 EksisterendeSaker.propTypes = {
+  behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   fagsakListe: PT.array.isRequired,
   knyttTilEksisterendeSak: PT.func.isRequired,
   feil: PT.object,
