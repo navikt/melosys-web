@@ -29,6 +29,7 @@ import {
   fagsakOperations,
   fagsakSelectors,
 } from '../ducks/fagsaker';
+import { KodeverkSelectors } from '../ducks/kodeverk';
 import { formSelectors } from '../ducks/form/';
 import './journalforing.css';
 import { OrganisasjonOperations } from '../ducks/organisasjoner';
@@ -70,6 +71,7 @@ class Journalforing extends Component {
     journalforing: MPT.Journalforing,
     journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
     fagsakListe: PT.array,
+    behandlingstyper: PT.arrayOf(MPT.Kodeverk),
     valid: PT.bool.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
@@ -81,6 +83,7 @@ class Journalforing extends Component {
   static defaultProps = {
     journalforing: {},
     fagsakListe: [],
+    behandlingstyper: [],
     journalforingSkjemaVerdier: {},
   };
 
@@ -132,12 +135,13 @@ class Journalforing extends Component {
 
     const { dokumentID } = hoveddokument;
     const vedlegg = this.mapVedleggsTittlerTilVedlegg(vedleggsTitler);
+
     // Data for /tilordne i.e KNYTT
     let journalPostData = {
       avsenderID,
       avsenderNavn,
-      dokumentID,
       brukerID,
+      dokumentID,
       hoveddokumentTittel,
       journalpostID,
       oppgaveID,
@@ -157,13 +161,13 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier: { saksnummer, behandlingstype }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
-    const journalforingData = { saksnummer, ...vasketJournalforing };
+    const journalforingData = { saksnummer, behandlingstype, ...vasketJournalforing };
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
 
@@ -173,7 +177,7 @@ class Journalforing extends Component {
     resetSkjemaFelterForOpprettFagsak();
 
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, JOURNALFORING_HENSIKT.KNYTT)) {
-      settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer');
+      settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer', 'behandlingstype');
       return false;
     }
     const response = await tilordneSak(journalforingData);
@@ -301,12 +305,14 @@ class Journalforing extends Component {
   resetSkjemaFelterForEksisterendeSaker = () => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold('saksnummer', '');
+    settFeltInnhold('behandlingstype', '');
   };
 
   render() {
     const {
       journalforing: { hoveddokument = {} },
       fagsakListe,
+      behandlingstyper,
     } = this.props;
 
     const {
@@ -336,7 +342,11 @@ class Journalforing extends Component {
                         hentOgVisAvsender={hentOgVisAvsender}
                         hentOgVisBruker={hentOgVisBruker}
                       />
-                      <EksisterendeSaker fagsakListe={fagsakListe} knyttTilEksisterendeSak={knyttTilEksisterendeSak} />
+                      <EksisterendeSaker
+                        behandlingstyper={behandlingstyper}
+                        fagsakListe={fagsakListe}
+                        knyttTilEksisterendeSak={knyttTilEksisterendeSak}
+                      />
                       <OpprettNyFagSak
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
@@ -363,8 +373,10 @@ const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: fagsakSelectors.FagsakSokSelector(state),
+  behandlingstyper: KodeverkSelectors.behandlingsTyperSelector(state),
   errors: getFormSyncErrors('journalforing')(state),
   initialValues: {
+    behandlingstype: null,
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
