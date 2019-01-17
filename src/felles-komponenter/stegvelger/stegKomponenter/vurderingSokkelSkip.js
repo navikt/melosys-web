@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-import * as Koder from '../../../koder';
+import { SOKKEL, SKIP } from '../../../koder';
 import * as MPT from '../../../proptypes';
 
 import LandVelger from '../../skjema/landvelger';
@@ -26,8 +26,8 @@ const SokkelSkipEnkelt = props => {
     <Nav.Row className="sokkelSkip__liste__rad">
       <Nav.Column xs="4" className="rad__navn">{navn}</Nav.Column>
       <Nav.Column xs="2" className="rad__sokkel">
-        <Skjema.Radio feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={Koder.SOKKEL} label="Sokkel" />
-        <Skjema.Radio feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={Koder.SKIP} label="Skip" />
+        <Skjema.Radio feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={SOKKEL} label="Sokkel" />
+        <Skjema.Radio feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={SKIP} label="Skip" />
       </Nav.Column>
       <Nav.Column xs="3" className="rad__begrunnelse">
         <Skjema.Select feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsTypeBegrunnelse`} label="Begrunnelse">

@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel12_2 from '../../stegKomponenter/vurderingArtikkel12_2';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
-import * as Koder from '../../../../koder';
+import { lovvalgsbestemmelser } from '../../../../koder';
 
 class Artikkel12_2 extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -11,12 +11,12 @@ class Artikkel12_2 extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'vilkar for artikkel 12.2 er oppfylt',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART12_2, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(lovvalgsbestemmelser.FO_883_2004_ART12_2, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
         beskrivelse: 'ønsker å vurdere 16.1',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.FO_883_2004_ART16_1, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(lovvalgsbestemmelser.FO_883_2004_ART16_1, alleVilkar),
         nesteSteg: STEG.ARTIKKEL_16,
       },
       {
@@ -29,7 +29,7 @@ class Artikkel12_2 extends Steg {
     this._tittel = 'Vurdering av 12.2';
     this._komponent = VurderingArtikkel12_2;
     this._samleRelevanteData = _propsLight => ({
-      artikkel: { kode: Koder.FO_883_2004_ART12_2, term: '12.2' },
+      artikkel: { kode: lovvalgsbestemmelser.FO_883_2004_ART12_2, term: '12.2' },
       begrunnelser: _propsLight.begrunnelser.artikkel12_2 || [],
     });
     this._beregnRelevantUI = _propsLight => {

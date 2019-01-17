@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import moment from 'moment/moment';
-import { kodemap, kodeset } from 'melosys-kodeverk';
+import { kodeverk, kodemap, kodeset } from 'melosys-kodeverk';
 
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';

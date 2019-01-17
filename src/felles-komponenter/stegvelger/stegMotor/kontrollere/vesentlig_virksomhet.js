@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentligVirksomhet';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
-import * as Koder from '../../../../koder';
+import { lovvalgsbestemmelser } from '../../../../koder';
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -11,7 +11,7 @@ class VesentligVirksomhet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'ORDINAER_ARBEIDSTAKER og VESENTLIG_VIRKSOMHET',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(Koder.ART12_1_VESENTLIG_VIRKSOMHET, alleVilkar) !== undefined,
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(lovvalgsbestemmelser.ART12_1_VESENTLIG_VIRKSOMHET, alleVilkar) !== undefined,
         nesteSteg: STEG.ARTIKKEL_12_1,
       },
       {

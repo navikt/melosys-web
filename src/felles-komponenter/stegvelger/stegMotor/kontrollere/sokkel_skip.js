@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingSokkelSkip, { VurderingSokkelSkipTyper } from '../../stegKomponenter/vurderingSokkelSkip';
-import * as Koder from '../../../../koder';
+import { SOKKEL, SKIP } from '../../../../koder';
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -57,8 +57,8 @@ class SokkelSkip extends Steg {
     console.log(sokkelEllerSkip);
     const avklartSokkelEllerSkip = sokkelEllerSkip.length > 0 && sokkelEllerSkip
       .map(enkelt => {
-        if (enkelt.installasjonsType === Koder.SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
-        return (enkelt.installasjonsType === Koder.SKIP && enkelt.arbeidsland && true);
+        if (enkelt.installasjonsType === SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
+        return (enkelt.installasjonsType === SKIP && enkelt.arbeidsland && true);
       })
       .every(enkelt => enkelt === true);
 

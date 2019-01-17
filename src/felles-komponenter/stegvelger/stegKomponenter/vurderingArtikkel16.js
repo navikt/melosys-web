@@ -8,7 +8,7 @@ import { kodeverk } from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from '../../../proptypes/';
-import * as Koder from '../../../koder';
+import { ANMODNING_OM_UNNTAK } from '../../../koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
@@ -146,7 +146,7 @@ const VurderingArtikkel16 = props => {
         </Nav.Row>
         <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="6">
-            <Nav.Hovedknapp type="hoved" onClick={() => lagreOgFatteVedtak(Koder.ANMODNING_OM_UNNTAK)}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
+            <Nav.Hovedknapp type="hoved" onClick={() => lagreOgFatteVedtak(ANMODNING_OM_UNNTAK)}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>

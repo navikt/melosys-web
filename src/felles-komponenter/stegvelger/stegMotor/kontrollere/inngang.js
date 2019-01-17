@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingInngang from '../../stegKomponenter/vurderingInngang';
-import * as Koder from '../../../../koder';
+import { OPPHOLDSLAND } from '../../../../koder';
 
 class Inngang extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -42,7 +42,7 @@ class Inngang extends Steg {
   }
 
   static harMinstEttGyldigOppholdsland = avklartefakta => avklartefakta
-    .some(enkeltFakta => ((enkeltFakta.referanse === Koder.OPPHOLDSLAND) && enkeltFakta.fakta.includes('TRUE')));
+    .some(enkeltFakta => ((enkeltFakta.referanse === OPPHOLDSLAND) && enkeltFakta.fakta.includes('TRUE')));
 }
 
 export default Inngang;

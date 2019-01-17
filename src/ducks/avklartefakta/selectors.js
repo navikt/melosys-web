@@ -6,14 +6,12 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { kodeverk } from 'melosys-kodeverk';
 
 import { createSelector } from 'reselect';
+import { kodeverk, SKIP } from '../../koder';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
-
-import * as Koder from '../../koder';
 
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
@@ -199,7 +197,7 @@ export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
       .map(avklartfakta => avklartfakta.subjektID);
 
     const landOverstyrtAvSkip = sokkelEllerSkip
-      .reduce((collection, enkelt) => (enkelt.installasjonsType === Koder.SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
+      .reduce((collection, enkelt) => (enkelt.installasjonsType === SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
 
     const styrendeLand = landOverstyrtAvSkip.length > 0 ? landOverstyrtAvSkip : landAvklartVedInngang;
 

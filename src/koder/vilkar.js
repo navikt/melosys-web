@@ -1,0 +1,16 @@
+import { kodeset } from 'melosys-kodeverk';
+
+export const {
+  vilkar: {
+    FO_883_2004_INNGANGSVILKAAR,
+    FO_883_2004_ART12_1,
+    FO_883_2004_ART12_2,
+    FO_883_2004_ART16_1,
+    ART12_1_VESENTLIG_VIRKSOMHET,
+    ART12_1_FORUTGAAENDE_MEDLEMSKAP,
+    ART12_2_NORMALT_DRIVER_VIRKSOMHET,
+    FO_883_2004_ART87A,
+    BOSATT_I_NORGE,
+    FTRL_2_12_UNNTAK_TURISTSKIP,
+  },
+} = kodeset;

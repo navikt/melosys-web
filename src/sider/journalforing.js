@@ -5,6 +5,7 @@ import qs from 'qs';
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
@@ -29,7 +30,6 @@ import {
   fagsakOperations,
   fagsakSelectors,
 } from '../ducks/fagsaker';
-import { KodeverkSelectors } from '../ducks/kodeverk';
 import { formSelectors } from '../ducks/form/';
 import './journalforing.css';
 import { OrganisasjonOperations } from '../ducks/organisasjoner';
@@ -55,6 +55,8 @@ const queryParamLogger = (journalpostID, oppgaveID, location) => {
   /* eslint-enable */
 };
 
+const { behandlingstyper } = kodeverk.behandlinger;
+
 class Journalforing extends Component {
   static propTypes = {
     match: PT.object.isRequired,
@@ -71,7 +73,6 @@ class Journalforing extends Component {
     journalforing: MPT.Journalforing,
     journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
     fagsakListe: PT.array,
-    behandlingstyper: PT.arrayOf(MPT.Kodeverk),
     valid: PT.bool.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
@@ -83,7 +84,6 @@ class Journalforing extends Component {
   static defaultProps = {
     journalforing: {},
     fagsakListe: [],
-    behandlingstyper: [],
     journalforingSkjemaVerdier: {},
   };
 
@@ -312,7 +312,6 @@ class Journalforing extends Component {
     const {
       journalforing: { hoveddokument = {} },
       fagsakListe,
-      behandlingstyper,
     } = this.props;
 
     const {
@@ -373,7 +372,6 @@ const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: fagsakSelectors.FagsakSokSelector(state),
-  behandlingstyper: KodeverkSelectors.behandlingsTyperSelector(state),
   errors: getFormSyncErrors('journalforing')(state),
   initialValues: {
     behandlingstype: null,
