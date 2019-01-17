@@ -56,38 +56,6 @@
     border-radius: 15px;
   }
 
-  &.stegIkon--aktiv {
-    &:after {
-      position:absolute;
-      content: '';
-      width: 30px;
-      height: 30px;
-      bottom: 0;
-      border-right:15px solid transparent;
-      border-left:15px solid transparent;
-      border-bottom:15px solid #ffffff;
-    }
-
-    .stegIkon__enkeltSteg, .stegIkon__vedtak {
-      &:before {
-        content: '';
-        position: absolute;
-        width: 30px;
-        height: 30px;
-        top: 0;
-        left: 0;
-      }
-    }
-
-    .stegIkon__enkeltSteg {
-      border: 3px solid @green;
-    }
-
-    .stegIkon__vedtak {
-
-    }
-  }
-
   .stegIkon__knapp-utilgjengelig {
     cursor: default;
     pointer-events:none;
