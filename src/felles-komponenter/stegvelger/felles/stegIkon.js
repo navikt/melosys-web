@@ -24,12 +24,12 @@ const ikonVelger = (id, status, aktivtSteg) => {
     },
   };
 
-  if (aktivtSteg) {
-    return Ikon.Ubehandlet;
-  }
-
   if (id === 'VEDTAK') {
     return IKONER.VEDTAK[status];
+  }
+
+  if (aktivtSteg) {
+    return Ikon.Ubehandlet;
   }
 
   return IKONER.STEG[status];
