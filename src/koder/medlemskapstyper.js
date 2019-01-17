@@ -1,9 +1,9 @@
 import { kodeset } from 'melosys-kodeverk';
 
-export const {
-  medlemskapstyper: {
-    PLIKTIG,
-    FRIVILLIG,
-    UNNTATT,
-  },
-} = kodeset;
+const { medlemskapstyper } = kodeset;
+
+export default {
+  PLIKTIG: medlemskapstyper.PLIKTIG,
+  FRIVILLIG: medlemskapstyper.FRIVILLIG,
+  UNNTATT: medlemskapstyper.UNNTATT,
+};

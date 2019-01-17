@@ -5,7 +5,7 @@ import { kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { FASTSATT_LOVVALGSLAND } from '../../../koder';
+import { behandlinger, brev, aktoerroller } from '../../../koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
@@ -49,8 +49,8 @@ const VurderingVedtak = props => {
   const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.term).join(', ');
 
   const dokumenter = [
-    { navn: 'Forhåndsvis vedtaksbrev', type: 'INNVILGELSE_YRKESAKTIV', data: { mottaker: 'BRUKER' } },
-    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: 'ATTEST_A1', data: { mottaker: 'MYNDIGHET' } },
+    { navn: 'Forhåndsvis vedtaksbrev', type: brev.INNVILGELSE_YRKESAKTIV, data: { mottaker: aktoerroller.BRUKER } },
+    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: brev.ATTEST_A1, data: { mottaker: aktoerroller.MYNDIGHET } },
   ];
 
   return (
@@ -74,7 +74,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp type="hoved" onClick={() => props.lagreOgFatteVedtak(FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
+            <Nav.Knapp type="hoved" onClick={() => props.lagreOgFatteVedtak(behandlinger.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </div>

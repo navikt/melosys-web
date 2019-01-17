@@ -5,7 +5,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
-import { FEIL_LAND_JOURNALFOERING, OPPHOLDSLAND } from '../../../../koder';
+import { begrunnelser, OPPHOLDSLAND } from '../../../../koder';
 
 import FjernetLandEnkelt from './fjernetLandEnkelt';
 import OppholdsLandEnkelt from './oppholdsLandEnkelt';
@@ -26,7 +26,7 @@ class OppholdsLandListe extends Component {
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
-    if (begrunnelseKode === FEIL_LAND_JOURNALFOERING) {
+    if (begrunnelseKode === begrunnelser.FEIL_LAND_JOURNALFOERING) {
       this.fjernLandFraSoknad(landKode);
     }
   };
@@ -67,7 +67,7 @@ class OppholdsLandListe extends Component {
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
-    if (enkeltFakta.begrunnelseKoder.includes(FEIL_LAND_JOURNALFOERING)) {
+    if (enkeltFakta.begrunnelseKoder.includes(begrunnelser.FEIL_LAND_JOURNALFOERING)) {
       this.leggLandTilSoknad(landKode);
     }
   };

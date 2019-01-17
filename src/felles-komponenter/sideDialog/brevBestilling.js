@@ -4,6 +4,7 @@ import { reduxForm, reset, setSubmitFailed } from 'redux-form';
 import PT from 'prop-types';
 import { kodeverk } from 'melosys-kodeverk';
 
+import { representerer, brev } from '../../koder';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 import * as Skjema from '../../felles-komponenter/skjema';
@@ -49,7 +50,7 @@ class BrevBestilling extends Component {
   erMangelBrevMedFritekst = () => {
     const { brevbestillingSkjemaVerdier } = this.props;
     if (!brevbestillingSkjemaVerdier) return false;
-    return brevbestillingSkjemaVerdier.dokumenttypeKode === 'MELDING_MANGLENDE_OPPLYSNINGER';
+    return brevbestillingSkjemaVerdier.dokumenttypeKode === brev.MELDING_MANGLENDE_OPPLYSNINGER;
   };
 
   sendBrev = async () => {
@@ -172,8 +173,8 @@ const mapStateToProps = state => ({
   dokumenter: dokumenterSelectors.dokumenterSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   initialValues: {
-    dokumenttypeKode: 'MELDING_MANGLENDE_OPPLYSNINGER',
-    mottaker: 'BRUKER',
+    dokumenttypeKode: brev.MELDING_MANGLENDE_OPPLYSNINGER,
+    mottaker: representerer.BRUKER,
     fritekst: '',
   },
 });

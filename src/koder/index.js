@@ -8,6 +8,15 @@ import trygdedekninger from './trygdedekninger';
 import medlemskapstyper from './medlemskapstyper';
 import landkoder from './landkoder';
 import vilkar from './vilkar';
+import begrunnelser from './begrunnelser';
+import behandlinger from './behandlinger';
+import brev from './brev';
+import aktoerroller from './aktoerroller';
+import mottaksretning from './mottaksretning';
+import oppgavetyper from './oppgavetyper';
+import representerer from './representerer';
+import sakstyper from './sakstyper';
+
 
 export {
   kodeverk,
@@ -17,19 +26,6 @@ export {
 
 export const INNVILGET = 'INNVILGET';
 export const INNGANGSVILKAAR_EOSFO = 'INNGANGSVILKAAR_EOSFO';
-
-
-// Vedtakskoder
-export const FASTSATT_LOVVALGSLAND = 'FASTSATT_LOVVALGSLAND';
-export const ANMODNING_OM_UNNTAK = 'ANMODNING_OM_UNNTAK';
-
-// Type trygdedekning, brukt i lovvalgsperiode
-export const FULL_DEKNING_EOSFO = 'FULL_DEKNING_EOSFO';
-export const UTEN_DEKNING = 'UTEN_DEKNING';
-export const PLIKTIG = 'PLIKTIG';
-
-// Begrunnelsekoder
-export const FEIL_LAND_JOURNALFOERING = 'FEIL_LAND_JOURNALFOERING';
 
 // Interne frontend-spesifikke koder. Disse har ikke fag, brev eller arkitektur noe
 // forhold til, og benyttes kun frontend for å avgjøre riktige steg pr ID.
@@ -41,7 +37,7 @@ export const AVKLARTE_ARBEIDSGIVER = 'AVKLARTE_ARBEIDSGIVER';
 export const SOKKEL = 'SOKKEL';
 export const SKIP = 'SKIP';
 
-/* Fartsomrader er spesifikk til front-end */
+/* Fartsomrader skal ikke/er ikke i kodeverk, se arbeidslandbegrunnelser på confluence */
 const fartsomrader = [
   { kode: 'innenriks', term: 'Innenriks' },
   { kode: 'utenriks', term: 'Utenriks' },
@@ -55,4 +51,12 @@ export {
   medlemskapstyper,
   landkoder,
   vilkar,
+  begrunnelser,
+  behandlinger,
+  brev,
+  aktoerroller,
+  mottaksretning,
+  oppgavetyper,
+  representerer,
+  sakstyper,
 };

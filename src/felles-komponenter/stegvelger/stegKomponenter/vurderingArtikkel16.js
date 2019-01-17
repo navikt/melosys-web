@@ -8,7 +8,7 @@ import { kodeverk } from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from '../../../proptypes/';
-import { ANMODNING_OM_UNNTAK } from '../../../koder';
+import { behandlinger, brev, aktoerroller } from '../../../koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
@@ -100,8 +100,8 @@ const VurderingArtikkel16 = props => {
   const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
   const dokumenter = [
-    { navn: 'Forhåndsvis anmodning til bruker', type: 'ORIENTERING_ANMODNING_UNNTAK', data: { mottaker: 'BRUKER' } },
-    { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: 'MYNDIGHET' } },
+    { navn: 'Forhåndsvis anmodning til bruker', type: brev.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: aktoerroller.BRUKER } },
+    { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: aktoerroller.MYNDIGHET } },
   ];
 
   return (
@@ -146,7 +146,7 @@ const VurderingArtikkel16 = props => {
         </Nav.Row>
         <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="6">
-            <Nav.Hovedknapp type="hoved" onClick={() => lagreOgFatteVedtak(ANMODNING_OM_UNNTAK)}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
+            <Nav.Hovedknapp type="hoved" onClick={() => lagreOgFatteVedtak(behandlinger.ANMODNING_OM_UNNTAK)}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>

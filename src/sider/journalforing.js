@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { kodeverk } from 'melosys-kodeverk';
 
+import { sakstyper } from '../koder';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
@@ -212,7 +213,7 @@ class Journalforing extends Component {
     }
 
     const fagsak = {
-      sakstype: 'EU_EOS',
+      sakstype: sakstyper.EU_EOS,
       soknadsperiode: {
         fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
         tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),

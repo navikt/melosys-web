@@ -1,8 +1,8 @@
 import { kodeset } from 'melosys-kodeverk';
 
-export const {
-  trygdedekninger: {
-    UTEN_DEKNING,
-    FULL_DEKNING_EOSFO,
-  },
-} = kodeset;
+const { trygdedekninger } = kodeset;
+
+export default {
+  UTEN_DEKNING: trygdedekninger.UTEN_DEKNING,
+  FULL_DEKNING_EOSFO: trygdedekninger.FULL_DEKNING_EOSFO,
+};

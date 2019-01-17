@@ -10,6 +10,7 @@
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import { oppgavetyper } from '../../koder';
 
 /**
  * Hent Soknad
@@ -41,7 +42,7 @@ export async function sendBehandlingsOppgave(checkboxliste) {
   const behandlingstyper = Object.keys(behandlingstyperListe);
 
   const oppgave = {
-    oppgavetype: 'BEH_SAK',
+    oppgavetype: oppgavetyper.BEH_SAK,
     sakstyper,
     behandlingstyper,
   };
@@ -54,7 +55,7 @@ export async function sendBehandlingsOppgave(checkboxliste) {
 
 export async function sendJournalOppgave(fagomrade) {
   const oppgave = {
-    oppgavetype: 'JFR',
+    oppgavetype: oppgavetyper.JFR,
     sakstyper: [],
     behandlingstyper: [],
     fagomrade, // 'UFM' || 'MDL'

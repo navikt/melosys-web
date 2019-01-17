@@ -1,7 +1,7 @@
 import { kodeset } from 'melosys-kodeverk';
 
-export const {
-  landkoder: {
-    NO,
-  },
-} = kodeset;
+const { landkoder } = kodeset;
+
+export default {
+  NO: landkoder.NO,
+}
