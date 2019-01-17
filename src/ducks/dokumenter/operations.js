@@ -29,7 +29,13 @@ export function opprettDokument(behandlingID, dokumenttypeKode, dokument) {
 }
 
 export async function forhandsvisPDF(behandlingID, dokumenttypeKode, data) {
-  const response = await Api.Dokumenter.forhandsvisPDF(behandlingID, dokumenttypeKode, data);
+  const utfyltdata = {
+    mottaker: data.mottaker ? data.mottaker : null,
+    fritekst: data.fritekst ? data.fritekst : null,
+    begrunnelse: data.begrunnelse ? data.begrunnelse : null,
+  };
+
+  const response = await Api.Dokumenter.forhandsvisPDF(behandlingID, dokumenttypeKode, utfyltdata);
 
   if (response.ok) {
     const arrayBuffer = await response.arrayBuffer();

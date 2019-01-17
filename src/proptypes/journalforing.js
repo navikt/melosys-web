@@ -15,6 +15,7 @@ const JournalforingSkjemaVerdierPropType = PT.shape({
   arbeidsgiverID: PT.string,
   avsenderID: PT.string,
   avsenderNavn: PT.string,
+  behandlingstype: PT.string,
   brukerID: PT.string,
   brukerNavn: PT.string,
   dokumentID: PT.string,
