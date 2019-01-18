@@ -23,10 +23,8 @@ import { oppgaverOperations } from '../ducks/oppgaver/';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder/';
 import { soknadOperations, soknadSelectors } from '../ducks/soknad/';
 
-
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
-import { vedtakOperations } from '../ducks/vedtak';
 import { formSelectors } from '../ducks/form';
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger';
 
@@ -211,7 +209,7 @@ class Saksbehandling extends Component {
     const bid = this.props.oppsummering.behandlingID;
     const { henleggsak } = this.props;
     const dataUtenTomString = data;
-    if ( dataUtenTomString.tekst === '') dataUtenTomString.tekst = null;
+    if (dataUtenTomString.tekst === '') dataUtenTomString.tekst = null;
     await henleggsak(bid, dataUtenTomString);
   };
 

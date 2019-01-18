@@ -17,11 +17,9 @@ import './dialogboksHenlegg.css';
 const { kodeset, kodeverk } = Kodeverk;
 const { henleggelsesgrunner } = kodeverk;
 const { MELDING_HENLAGT_SAK } = kodeset.brev.produserbareDokumenter;
-const { HENLEGGELSE } = kodeset.behandlinger.behandlingsresultattyper;
 
 class DialogboksHenleggSak extends Component {
   state = {
-    erBegrunnelseValgt: false,
     begrunnelseKode: '',
     feilmeldingSelect: undefined,
     feilmeldingFritekst: undefined,
@@ -29,11 +27,11 @@ class DialogboksHenleggSak extends Component {
   };
 
   velgBegrunnelseHandle = event => {
-    if (!this.state.erBegrunnelseValgt) this.setState({ erBegrunnelseValgt: true });
-
     const begrunnelseKode = event.target.value;
     this.setState({ begrunnelseKode, feilmeldingSelect: undefined });
   };
+
+  erBegrunnelseValgt = () => this.state.begrunnelseKode !== '';
 
   vedKlikkLenke = async () => {
     const begrunnelsePassertValidering = this.validerBegrunnelse();
@@ -43,11 +41,11 @@ class DialogboksHenleggSak extends Component {
   };
 
   validerBegrunnelse = () => {
-    const { erBegrunnelseValgt } = this.state;
-    if (!erBegrunnelseValgt) {
+    const { erBegrunnelseValgt } = this;
+    if (!erBegrunnelseValgt()) {
       this.setState({ feilmeldingSelect: { feilmelding: 'Ingen begrunnelse valgt' } });
     }
-    return erBegrunnelseValgt;
+    return erBegrunnelseValgt();
   }
 
   validerFritekst = () => {
@@ -91,7 +89,6 @@ class DialogboksHenleggSak extends Component {
 
     const {
       begrunnelseKode,
-      erBegrunnelseValgt,
       feilmeldingSelect,
       fritekst,
       feilmeldingFritekst,
@@ -99,9 +96,10 @@ class DialogboksHenleggSak extends Component {
 
     const {
       vedKlikkHenlegg,
+      erBegrunnelseValgt,
     } = this;
 
-    const data = erBegrunnelseValgt ? {
+    const data = erBegrunnelseValgt() ? {
       begrunnelse: begrunnelseKode,
       fritekst: fritekst === '' ? null : fritekst,
       mottaker: kodeset.aktoerroller.BRUKER,
@@ -130,6 +128,7 @@ class DialogboksHenleggSak extends Component {
             label="Begrunnelse"
             value={begrunnelseKode}
             koder={henleggelsesgrunner}
+            disableFørsteValg={erBegrunnelseValgt()}
           />
           {
             visTekstFelt && <Nav.Textarea feil={feilmeldingFritekst} label="Fritekst" onChange={this.fritekstOnchange} value={fritekst} />
@@ -141,7 +140,7 @@ class DialogboksHenleggSak extends Component {
           <div className="dialogboksHenlegg__container__knapperad">
             <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
             <Nav.Hovedknapp
-              disabled={!erBegrunnelseValgt}
+              disabled={!erBegrunnelseValgt()}
               onClick={vedKlikkHenlegg}
             >
               Henlegg saken
