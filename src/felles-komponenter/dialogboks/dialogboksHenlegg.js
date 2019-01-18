@@ -78,7 +78,6 @@ class DialogboksHenleggSak extends Component {
 
     const { fritekst, begrunnelseKode } = this.state;
     this.props.henleggHandle({
-      behandlingsresultattype: HENLEGGELSE,
       begrunnelse: begrunnelseKode,
       fritekst,
     });
