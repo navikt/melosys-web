@@ -50,7 +50,7 @@ class SideOppsummering extends Component {
     const hhmm = moment().format('HH:mm');
     this.setState({ behandlingsstatus, statusmelding: `Behandlingstatus ble oppdatert ${hhmm}` });
   };
-  
+
   sendOppdatering = () => {
     const { behandlingsstatus: kode } = this.state;
     if (kode === 'VELG') {
@@ -195,6 +195,7 @@ class SideOppsummering extends Component {
                       value={this.state.behandlingsstatus}
                       onChange={this.onChange}
                       label="Endre status på behandlingen:"
+                      redigerbar={redigerbart}
                     />
                     <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
                     {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
