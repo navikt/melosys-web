@@ -1,7 +1,7 @@
 // Melosys-kodeverk
 // Se Confluence koder for oversikt
 
-import { kodeverk, kodeset, kodemap } from 'melosys-kodeverk';
+import { kodeverk, kodeset } from 'melosys-kodeverk';
 
 import lovvalgsbestemmelser from './lovvalgsbestemmelser';
 import trygdedekninger from './trygdedekninger';
@@ -21,7 +21,6 @@ import sakstyper from './sakstyper';
 export {
   kodeverk,
   kodeset,
-  kodemap,
 };
 
 export const INNVILGET = 'INNVILGET';
