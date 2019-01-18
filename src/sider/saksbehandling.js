@@ -209,10 +209,10 @@ class Saksbehandling extends Component {
 
   fatteVedtakHandler = async data => {
     const bid = this.props.oppsummering.behandlingID;
-    const { fatteVedtak } = this.props;
+    const { henleggsak } = this.props;
     const dataUtenTomString = data;
     if ( dataUtenTomString.tekst === '') dataUtenTomString.tekst = null;
-    await fatteVedtak(bid, dataUtenTomString);
+    await henleggsak(bid, dataUtenTomString);
   };
 
   /* eslint-disable */
@@ -304,7 +304,7 @@ Saksbehandling.propTypes = {
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   sendPerioder: PT.func.isRequired,
-  fatteVedtak: PT.func.isRequired,
+  henleggsak: PT.func.isRequired,
   behandlinger: PT.object.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
@@ -340,7 +340,7 @@ const mapDispatchToProps = dispatch => ({
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegge(oppgaveID, venterPaaDokumentasjon),
   hentOppgaver: () => dispatch(oppgaverOperations.hent()),
-  fatteVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
+  henleggsak: (behandlingID, body) => dispatch(fagsakOperations.henlegg(behandlingID, body)),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
