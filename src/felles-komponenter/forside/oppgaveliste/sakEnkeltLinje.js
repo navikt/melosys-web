@@ -39,6 +39,7 @@ SaksLinjeWrapper.propTypes = {
  */
 const SakEnkeltLinje = ({ sak }) => {
   const {
+    redigerbart,
     sammensattNavn,
     sakstype,
     saksnummer,
@@ -78,6 +79,10 @@ const SakEnkeltLinje = ({ sak }) => {
                 <dl className="sakEnkeltLinje__meta">
                   <dt className="sakEnkeltLinje__meta__term">Behandlingsstatus:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
+
+                  <dt className="sakEnkeltLinje__meta__term">Redigerbar:</dt>
+                  <dd className="sakEnkeltLinje__meta__detalj">{redigerbart ? 'JA' : 'NEI'}</dd>
+
                   <dt className="sakEnkeltLinje__meta__term">Frist:</dt>
                   <dd className="sakEnkeltLinje__meta__detalj">{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
                   <dt className="sakEnkeltLinje__meta__term">Sist oppdatert:</dt>

@@ -155,6 +155,7 @@ class ListevelgerFlervalg extends Component {
       placeholder,
       label,
       muligeValg,
+      disabled,
     } = this.props;
 
     const { byggValgtListe } = this;
@@ -176,11 +177,14 @@ class ListevelgerFlervalg extends Component {
             value={this.state.inputVerdi}
             list={`dataliste-${fields.name}`}
             className="listevelger__linje__input"
+            disabled={disabled}
           />
           <Nav.Knapp
             mini
             className="listevelger__linje__knapp listevelger__linje__knapp--leggtil"
-            onClick={this.leggValgTilListe}>
+            onClick={this.leggValgTilListe}
+            disabled={disabled}
+          >
             <div className="knapp__ikon"><Nav.Ikoner kind="tilsette" size="20" /></div>
             <div className="knapp__tittel">Legg til</div>
           </Nav.Knapp>
@@ -200,6 +204,7 @@ ListevelgerFlervalg.propTypes = {
   muligeValg: PT.array.isRequired,
   tillatFritekst: PT.bool.isRequired,
   placeholder: PT.string,
+  disabled: PT.bool.isRequired,
 };
 
 ListevelgerFlervalg.defaultProps = {

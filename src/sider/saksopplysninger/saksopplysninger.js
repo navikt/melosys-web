@@ -8,15 +8,15 @@ import * as Validering from '../../felles-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
 
 import ArbeidsgivereNorge from '../../felles-komponenter/arbeidsgivereNorge';
-import ArbeidUtland from '../../felles-komponenter/arbeidUtland';
+import ArbeidUtland from '../../felles-komponenter/arbeidutland';
 import Bosted from '../../felles-komponenter/bosted';
-import ForetakUtland from '../../felles-komponenter/foretakUtland';
+import ForetakUtland from '../../felles-komponenter/foretakutland';
 import Inntekt from '../../felles-komponenter/inntektUtland';
 import MaritimtArbeid from '../../felles-komponenter/maritimtArbeid';
 import Medlemskap from '../../felles-komponenter/medlemskap';
 import OppholdPeriode from '../../felles-komponenter/oppholdPeriode';
 import Personopplysninger from '../../felles-komponenter/personopplysninger';
-import SelvstendigArbeid from '../../felles-komponenter/selvstendigArbeid';
+import SelvstendigArbeid from '../../felles-komponenter/selvstendigarbeid';
 import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgiver';
 import Stegvelger from '../../felles-komponenter/stegvelger';
 import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';

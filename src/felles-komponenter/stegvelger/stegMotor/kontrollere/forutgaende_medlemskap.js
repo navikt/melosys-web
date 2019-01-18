@@ -23,6 +23,7 @@ class ForutgaendeMedlemskap extends Steg {
     this._komponent = VurderingForutgaendeMedlemskap;
     this._samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.forutgaendeMedlemskap || [],
+      redigerbart: _propsLight.redigerbart,
     });
     this._beregnRelevantUI = _propsLight => {
       const { forutgaendeMedlemskap, forutgaendeMedlemskapBegrunnelser = [] } = _propsLight.skjema.vilkar;

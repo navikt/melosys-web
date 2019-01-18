@@ -125,6 +125,7 @@ class MultiLand extends Component {
     } = this;
 
     const {
+      disabled,
       fields,
       meta,
       landkoder,
@@ -148,6 +149,7 @@ class MultiLand extends Component {
         <div className="landliste__leggtil">
           <Nav.Input
             list={dataListID}
+            disabled={disabled}
             label={dynamiskFeltTittel}
             bredde="XL"
             feil={feilObjekt}
