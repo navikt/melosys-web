@@ -182,6 +182,7 @@ class Saksbehandling extends Component {
 
   lagreBehandlingerHandler = async () => {
     const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
+    console.log(this.props.oppsummering.behandlingID);
     await sendPerioder(behandlingID, behandlinger);
   };
   lagreVilkarHandler = async () => {
@@ -232,8 +233,8 @@ class Saksbehandling extends Component {
     await this.lagreVilkarHandler();
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
-    await this.fatteVedtakHandler(data);
     await this.lagreBehandlingerHandler();
+    await this.fatteVedtakHandler(data);
     history.push('/');
   };
   /* eslint-enable */
