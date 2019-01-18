@@ -12,20 +12,40 @@ export const VurderingYrkesaktivitetTyper = {
 };
 
 const VurderingYrkesaktivitet = props => {
-  const { bekreftOgFortsett, tilstand } = props;
+  const { bekreftOgFortsett, tilstand, redigerbart } = props;
   const { harAvklaring } = tilstand;
 
   return (
     <div>
       <Nav.Undertittel>Vurdering av yrkesaktivitet</Nav.Undertittel>
       <Nav.Fieldset legend="Hva gjelder for søkeren?">
-        <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitet" value={VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER} label="Ordinær arbeidstaker" />
-        <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitet" value={VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE} label="Selvstendig næringsdrivende" />
-        <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitet" value={VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG} label="Ordinær arbeidstaker og selvstendig næringsdrivende" />
-        <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitet" value={VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING} label="Tjenesteperson i norsk statsforvaltning" />
+        <Skjema.Radio
+          disabled={!redigerbart}
+          feltNavn="avklartefakta.yrkesaktivitet"
+          value={VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}
+          label="Ordinær arbeidstaker"
+        />
+        <Skjema.Radio
+          disabled={!redigerbart}
+          feltNavn="avklartefakta.yrkesaktivitet"
+          value={VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}
+          label="Selvstendig næringsdrivende"
+        />
+        <Skjema.Radio
+          disabled={!redigerbart}
+          feltNavn="avklartefakta.yrkesaktivitet"
+          value={VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
+          label="Ordinær arbeidstaker og selvstendig næringsdrivende"
+        />
+        <Skjema.Radio
+          disabled={!redigerbart}
+          feltNavn="avklartefakta.yrkesaktivitet"
+          value={VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
+          label="Tjenesteperson i norsk statsforvaltning"
+        />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
@@ -34,6 +54,7 @@ const VurderingYrkesaktivitet = props => {
 VurderingYrkesaktivitet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
+  redigerbart: PT.bool.isRequired,
 };
 
 VurderingYrkesaktivitet.defaultProps = {

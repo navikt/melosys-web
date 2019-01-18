@@ -30,6 +30,7 @@ class SokkelSkip extends Steg {
     this._samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.sokkelEllerSkip,
       skjema: _propsLight.skjema,
+      redigerbart: _propsLight.redigerbart,
     });
     this._beregnRelevantUI = _propsLight => {
       const { sokkelEllerSkip = [], sokkelSkipKonklusjon } = _propsLight.skjema.avklartefakta;
@@ -54,7 +55,6 @@ class SokkelSkip extends Steg {
   // Hvis SKIP er valgt som vurdering, så skal det ikke legges inn
   // en begrunnelse.
   static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon) => {
-    console.log(sokkelEllerSkip);
     const avklartSokkelEllerSkip = sokkelEllerSkip.length > 0 && sokkelEllerSkip
       .map(enkelt => {
         if (enkelt.installasjonsType === Koder.SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }

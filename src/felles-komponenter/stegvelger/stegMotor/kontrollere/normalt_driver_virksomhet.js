@@ -27,6 +27,7 @@ class NormaltDriverVirksomhet extends Steg {
     this._samleRelevanteData = _propsLight => ({
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
       begrunnelser: _propsLight.begrunnelser.normaltDriverVirksomhet,
+      redigerbart: _propsLight.redigerbart,
     });
     this._beregnRelevantUI = _propsLight => {
       const { normaltDriverVirksomhet, normaltDriverVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;

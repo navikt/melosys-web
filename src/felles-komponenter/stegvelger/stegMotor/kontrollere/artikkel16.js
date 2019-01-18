@@ -15,7 +15,9 @@ class Artikkel16 extends Steg {
     this._id = STEG.ARTIKKEL_16;
     this._tittel = 'Artikkel 16.1';
     this._komponent = VurderingArtikkel16;
-    this._samleRelevanteData = () => ({});
+    this._samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.redigerbart,
+    });
     this._beregnRelevantUI = () => ({});
     this._handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
