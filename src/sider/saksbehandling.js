@@ -270,6 +270,7 @@ class Saksbehandling extends Component {
                 lagreOgLukkHandle={this.lagreOgLukk}
                 tilbakeleggeHandle={this.tilbakeleggeHandle}
                 henleggHandle={this.visHenleggDialog}
+                tilForsidenHandle={this.navigerTilOversiktSide}
               />
               <SideDialog />
               <SideKommentarer />

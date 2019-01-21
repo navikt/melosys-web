@@ -142,6 +142,7 @@ class Stegvelger extends Component {
       oppholdsland: props.oppholdsland,
       valgteArbeidsgivere: props.valgteArbeidsgivere,
       vilkar: props.vilkar,
+      redigerbart: props.redigerbart,
     };
 
     const stegMotor = new StegMotor(propsLight);
@@ -278,6 +279,7 @@ const mapStateToProps = state => ({
   skjema: formSelectors.SoknadenFormSelector(state).values,
   saksopplysninger: fagsakSelectors.SaksopplysningerSelector(state),
   valgteArbeidsgivere: avklartefaktaSelectors.AvklartefaktaValgteArbeidsgivereSelector(state),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
 /* eslint no-alert:off */

@@ -15,7 +15,7 @@ class VurderingForutgaendeMedlemskap extends Component {
 
   render() {
     const {
-      bekreftOgFortsett, begrunnelser, tilstand,
+      bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
     } = this.props;
     const { visBegrunnelser, harAvklaring } = tilstand;
 
@@ -26,8 +26,8 @@ class VurderingForutgaendeMedlemskap extends Component {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Søkeren har:">
-                <Skjema.Radio feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
-                <Skjema.Radio feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -41,6 +41,7 @@ class VurderingForutgaendeMedlemskap extends Component {
                     label="Legg til begrunnelse:"
                     gruppe
                     tillatFritekst={false}
+                    disabled={!redigerbart}
                   />
                 </Nav.Fieldset>
               </Nav.Column>
@@ -48,7 +49,7 @@ class VurderingForutgaendeMedlemskap extends Component {
           ) }
         </div>
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     );
@@ -62,6 +63,7 @@ VurderingForutgaendeMedlemskap.propTypes = {
   tilstand: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   settSkjemaVerdi: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 VurderingForutgaendeMedlemskap.defaultProps = {

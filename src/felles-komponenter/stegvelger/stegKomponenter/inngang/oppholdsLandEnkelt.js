@@ -8,16 +8,17 @@ import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../utils/
 
 import OppholdslandHandlingSlett from './oppholdslandHandlingSlett';
 
-const EnkeltLand = ({ landKodeObjekt, settSlettIntensjon }) => (
+const EnkeltLand = ({ landKodeObjekt, settSlettIntensjon, redigerbart }) => (
   <div className="oppholdsland__linje">
     <div className="linje__land">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
-    <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" onClick={settSlettIntensjon} ><Nav.Ikoner kind="minus" />Fjern</Nav.Knapp></div>
+    <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settSlettIntensjon} ><Nav.Ikoner kind="minus" />Fjern</Nav.Knapp></div>
   </div>
 );
 
 EnkeltLand.propTypes = {
   landKodeObjekt: MPT.Kodeverk.isRequired,
   settSlettIntensjon: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 class OppholdsLandEnkelt extends Component {
@@ -29,7 +30,7 @@ class OppholdsLandEnkelt extends Component {
 
   render () {
     const {
-      landKodeObjekt, bekreftFjern, oppholdBegrunnelser,
+      landKodeObjekt, bekreftFjern, oppholdBegrunnelser, redigerbart,
     } = this.props;
 
     const { erSlettingIntensjon } = this.state;
@@ -43,11 +44,14 @@ class OppholdsLandEnkelt extends Component {
             landKodeObjekt={landKodeObjekt}
             bekreft={bekreftFjern}
             avbryt={avbryt}
+            redigerbart={redigerbart}
           />
           :
           <EnkeltLand
             landKodeObjekt={landKodeObjekt}
-            settSlettIntensjon={() => settSlettIntensjon(true)} />
+            settSlettIntensjon={() => settSlettIntensjon(true)}
+            redigerbart={redigerbart}
+          />
         }
       </div>
     );
@@ -58,6 +62,7 @@ OppholdsLandEnkelt.propTypes = {
   bekreftFjern: PT.func.isRequired,
   landKodeObjekt: MPT.Kodeverk.isRequired,
   oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 export default OppholdsLandEnkelt;

@@ -9,7 +9,7 @@ import './medfolgendeFamilie.css';
 const uuid = require('uuid/v4');
 
 const FamiliemedlemmerEnkelt = ({
-  familiemedlemmerEnkelt, indeks, onChange, checked,
+  familiemedlemmerEnkelt, indeks, onChange, checked, disabled,
 }) => (
   <dl className="familiemedlemmerEnkelt">
     <dd className="enkelt__navn">{familiemedlemmerEnkelt.sammensattNavn} ({familiemedlemmerEnkelt.fnr})</dd>
@@ -20,6 +20,7 @@ const FamiliemedlemmerEnkelt = ({
         label="Skal være med søker"
         onChange={onChange}
         checked={checked}
+        disabled={disabled}
         checkboxRef={null}
       />
     </dd>
@@ -31,6 +32,7 @@ FamiliemedlemmerEnkelt.propTypes = {
   indeks: PT.number.isRequired,
   onChange: PT.func.isRequired,
   checked: PT.bool.isRequired,
+  disabled: PT.bool.isRequired,
 };
 
 class FamiliemedlemmerListe extends Component {
@@ -47,7 +49,7 @@ class FamiliemedlemmerListe extends Component {
   };
 
   render() {
-    const { medfolgendeFamilie, fields } = this.props;
+    const { disabled, medfolgendeFamilie, fields } = this.props;
     if (!medfolgendeFamilie) return null;
     const { onBarnChange } = this;
     const allFields = fields.getAll() || [];
@@ -61,6 +63,7 @@ class FamiliemedlemmerListe extends Component {
             indeks={indeks}
             onChange={event => onBarnChange(event, familiemedlemmerEnkelt.fnr)}
             checked={allFields.includes(familiemedlemmerEnkelt.fnr)}
+            disabled={disabled}
           />))
         }
       </div>);
@@ -68,6 +71,7 @@ class FamiliemedlemmerListe extends Component {
 }
 
 FamiliemedlemmerListe.propTypes = {
+  disabled: PT.bool.isRequired,
   fields: PT.object.isRequired,
   medfolgendeFamilie: PT.array,
 };

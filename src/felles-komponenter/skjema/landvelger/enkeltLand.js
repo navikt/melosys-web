@@ -99,7 +99,7 @@ class EnkeltLand extends Component {
     } = this;
 
     const {
-      label, meta, dataListID,
+      label, meta, dataListID, disabled,
     } = this.props;
 
     const { inputVerdi } = this.state;
@@ -110,6 +110,7 @@ class EnkeltLand extends Component {
     return (
       <div>
         <Nav.Input
+          disabled={disabled}
           list={dataListID}
           label={label}
           bredde="XL"

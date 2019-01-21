@@ -39,6 +39,7 @@ const LandVelger = props => {
 };
 
 LandVelger.propTypes = {
+  disabled: PT.bool,
   feltNavn: PT.string.isRequired,
   multiLand: PT.bool,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -46,6 +47,7 @@ LandVelger.propTypes = {
 };
 
 LandVelger.defaultProps = {
+  disabled: false,
   multiLand: false,
   label: undefined,
 };

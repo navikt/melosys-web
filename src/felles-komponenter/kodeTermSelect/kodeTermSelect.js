@@ -9,8 +9,9 @@ const kodeTermSelect = ({
   label,
   feil,
   disableFørsteValg,
+  redigerbar,
 }) => (
-  <Nav.Select value={value} onChange={onChange} label={label} feil={feil}>
+  <Nav.Select value={value} onChange={onChange} label={label} feil={feil} disabled={!redigerbar}>
     <option key="VELG" value="" disabled={disableFørsteValg}>Velg...</option>
     {koder.map(k => (
       <option key={k.kode} value={k.kode}>
@@ -27,6 +28,7 @@ kodeTermSelect.propTypes = {
   label: PT.string.isRequired,
   feil: PT.object,
   disableFørsteValg: PT.bool,
+  redigerbar: PT.bool.isRequired,
 };
 
 kodeTermSelect.defaultProps = {
