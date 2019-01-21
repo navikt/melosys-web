@@ -60,14 +60,6 @@ function sok(fnr) {
   });
 }
 
-function henlegg(bid, body) {
-  return doThenDispatch(() => Api.Fagsaker.henlegg(bid, body), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
 function resetFagsakState() {
   return Actions.resetFagsakState();
 }
@@ -78,7 +70,6 @@ export {
   hent,
   opprett,
   sok,
-  henlegg,
   resetFagsakState,
   oppdaterBehandlingsStatus,
 };

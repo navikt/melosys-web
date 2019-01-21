@@ -22,6 +22,7 @@ import { saksopplysningerOperations, saksopplysningerSelectors } from '../ducks/
 import { oppgaverOperations } from '../ducks/oppgaver/';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder/';
 import { soknadOperations, soknadSelectors } from '../ducks/soknad/';
+import * as Api from '../services/api';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
@@ -182,9 +183,9 @@ class Saksbehandling extends Component {
 
   lagreBehandlingerHandler = async () => {
     const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
-    console.log(this.props.oppsummering.behandlingID);
     await sendPerioder(behandlingID, behandlinger);
   };
+
   lagreVilkarHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const { vilkar } = this.props;
@@ -206,12 +207,10 @@ class Saksbehandling extends Component {
     await sendLovvalgsperioder(bid, lovvalgsperioder);
   };
 
-  fatteVedtakHandler = async data => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { henleggsak } = this.props;
-    const dataUtenTomString = data;
-    if (dataUtenTomString.tekst === '') dataUtenTomString.tekst = null;
-    await henleggsak(bid, dataUtenTomString);
+  henleggSak = async data => {
+    const { oppsummering } = this.props;
+    const { saksnummer } = oppsummering;
+    await Api.Fagsaker.henlegg(saksnummer, data);
   };
 
   /* eslint-disable */
@@ -234,7 +233,7 @@ class Saksbehandling extends Component {
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
     await this.lagreBehandlingerHandler();
-    await this.fatteVedtakHandler(data);
+    await this.henleggSak(data);
     history.push('/');
   };
   /* eslint-enable */
@@ -303,7 +302,6 @@ Saksbehandling.propTypes = {
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   sendPerioder: PT.func.isRequired,
-  henleggsak: PT.func.isRequired,
   behandlinger: PT.object.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
@@ -339,7 +337,6 @@ const mapDispatchToProps = dispatch => ({
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegge(oppgaveID, venterPaaDokumentasjon),
   hentOppgaver: () => dispatch(oppgaverOperations.hent()),
-  henleggsak: (behandlingID, body) => dispatch(fagsakOperations.henlegg(behandlingID, body)),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),

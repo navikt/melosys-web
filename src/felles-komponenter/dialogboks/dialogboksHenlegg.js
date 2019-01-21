@@ -74,7 +74,9 @@ class DialogboksHenleggSak extends Component {
   vedKlikkHenlegg = () => {
     if (!(this.validerBegrunnelse() && this.validerFritekst())) return;
 
-    const { fritekst, begrunnelseKode } = this.state;
+    const { begrunnelseKode } = this.state;
+    let { fritekst } = this.state;
+    if (fritekst === '') fritekst = null;
     this.props.henleggHandle({
       begrunnelse: begrunnelseKode,
       fritekst,
@@ -136,7 +138,8 @@ class DialogboksHenleggSak extends Component {
           <PdfLenkeListe
             behandlingID={oppsummering.behandlingID}
             dokumenter={dokumenter}
-            vedKlikk={this.vedKlikkLenke} />
+            vedKlikk={this.vedKlikkLenke}
+          />
           <div className="dialogboksHenlegg__container__knapperad">
             <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
             <Nav.Hovedknapp

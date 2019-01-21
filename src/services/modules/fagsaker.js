@@ -15,8 +15,8 @@ async function opprett(fnr) {
   return getAsJson(URI_OPPRETTSAK);
 }
 
-async function henlegg(bid, body) {
-  const URI_HENLEGGSAK = `${API_BASE_URL}fagsaker/${bid}/henlegg`;
+async function henlegg(snr, body) {
+  const URI_HENLEGGSAK = `${API_BASE_URL}fagsaker/${snr}/henlegg`;
   return postAsJson(URI_HENLEGGSAK, body);
 }
 
