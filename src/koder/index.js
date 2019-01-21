@@ -17,7 +17,6 @@ import oppgavetyper from './oppgavetyper';
 import representerer from './representerer';
 import sakstyper from './sakstyper';
 
-
 export {
   kodeverk,
   kodeset,
