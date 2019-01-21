@@ -32,7 +32,7 @@ class Behandling extends Component {
     const redirectURL = await handleSubmit(form);
 
     /* eslint-disable no-alert */
-    if (!redirectURL) { return alert('Ingen oppgaver finnes. Videre funksjonalitet ikke implementert.'); }
+    if (!redirectURL) { return alert('Ingen oppgaver finnes'); }
     /* eslint-enable */
     history.push(redirectURL);
     return true;

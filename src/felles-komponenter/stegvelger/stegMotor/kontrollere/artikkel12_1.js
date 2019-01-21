@@ -32,6 +32,7 @@ class Artikkel12_1 extends Steg {
     this._samleRelevanteData = _propsLight => ({
       artikkel: { kode: lovvalgsbestemmelser.FO_883_2004_ART12_1, term: '12.1' },
       begrunnelser: _propsLight.begrunnelser.artikkel12_1 || [],
+      redigerbart: _propsLight.redigerbart,
     });
     this._beregnRelevantUI = _propsLight => {
       const { art12_1, art16_1, art12_1_begrunnelser = [] } = _propsLight.skjema.vilkar;

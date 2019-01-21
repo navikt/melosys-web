@@ -26,7 +26,9 @@ class Yrkesgruppe extends Steg {
     this._id = STEG.YRKESGRUPPE;
     this._tittel = 'Yrkes\u00ADgruppe';
     this._komponent = VurderingYrkesgruppe;
-    this._samleRelevanteData = () => ({});
+    this._samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.redigerbart,
+    });
     this._beregnRelevantUI = _propsLight => {
       const { yrkesgruppe } = _propsLight.skjema.avklartefakta;
       return ({

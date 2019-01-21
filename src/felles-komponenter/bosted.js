@@ -23,7 +23,8 @@ const uuid = require('uuid/v4');
 const studieFinansiering = kodeverk.finansiering;
 
 const Bosted = props => {
-  const { erValidert } = props;
+  const { redigerbart, erValidert } = props;
+
   const panelIkon = erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
 
   const { eosBarnetrygd } = props.sakOgBehandling;
@@ -37,46 +38,47 @@ const Bosted = props => {
           <Nav.Row>
             <Nav.Column xs="12">
               <Skjema.RadioGruppe feltNavn="forutgaendeBostedINorge" legend="Har forutgående bosted i Norge.">
-                <Skjema.Radio feltNavn="forutgaendeBostedINorge" value={BOOLSK.SANN} label="Ja" />
-                <Skjema.Radio feltNavn="forutgaendeBostedINorge" value={BOOLSK.USANN} label="Nei" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="forutgaendeBostedINorge" value={BOOLSK.SANN} label="Ja" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="forutgaendeBostedINorge" value={BOOLSK.USANN} label="Nei" />
               </Skjema.RadioGruppe>
               <Nav.Fieldset legend="Nærmeste families bosted">
-                <Landvelger feltNavn="familiesBosted" />
+                <Landvelger disabled={!redigerbart} feltNavn="familiesBosted" />
               </Nav.Fieldset>
               <Nav.Undertittel>Yrkesaktiv</Nav.Undertittel>
               <Skjema.RadioGruppe feltNavn="adresseIUtlandet" legend="Har søker utenlandsadresse?">
-                <Skjema.Radio feltNavn="adresseIUtlandet" value={BOOLSK.SANN} label="Ja" />
-                <Skjema.Radio feltNavn="adresseIUtlandet" value={BOOLSK.USANN} label="Nei" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="adresseIUtlandet" value={BOOLSK.SANN} label="Ja" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="adresseIUtlandet" value={BOOLSK.USANN} label="Nei" />
               </Skjema.RadioGruppe>
               <Skjema.RadioGruppe feltNavn="sammeAdresseSomArbeidsgiver" legend="Er norsk adresse samme som arbeidsgivers?">
-                <Skjema.Radio feltNavn="sammeAdresseSomArbeidsgiver" value={BOOLSK.SANN} label="Ja" />
-                <Skjema.Radio feltNavn="sammeAdresseSomArbeidsgiver" value={BOOLSK.USANN} label="Nei" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="sammeAdresseSomArbeidsgiver" value={BOOLSK.SANN} label="Ja" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="sammeAdresseSomArbeidsgiver" value={BOOLSK.USANN} label="Nei" />
               </Skjema.RadioGruppe>
               <Skjema.RadioGruppe feltNavn="sammeAdresseSomArbeidsgiver" legend="Mottar EU / EØS barnetrygd fra NAV?">
                 {boolTilNorsk(eosBarnetrygd)}
               </Skjema.RadioGruppe>
               <Nav.Undertittel>Pensjonist</Nav.Undertittel>
               <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
-                <Skjema.Select feltNavn="antallMaanederINorge" label="Velg antall måneder:" bredde="xs">
+                <Skjema.Select disabled={!redigerbart} feltNavn="antallMaanederINorge" label="Velg antall måneder:" bredde="xs">
                   {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
                 </Skjema.Select>
               </Nav.Fieldset>
               <Skjema.RadioGruppe feltNavn="ektefelleEllerBarnINorge" legend="Har ektefelle / mindreårige barn i Norge">
-                <Skjema.Radio feltNavn="ektefelleEllerBarnINorge" value={BOOLSK.SANN} label="Ja" />
-                <Skjema.Radio feltNavn="ektefelleEllerBarnINorge" value={BOOLSK.USANN} label="Nei" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="ektefelleEllerBarnINorge" value={BOOLSK.SANN} label="Ja" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="ektefelleEllerBarnINorge" value={BOOLSK.USANN} label="Nei" />
               </Skjema.RadioGruppe>
               <Nav.Undertittel>Student i EØS-land</Nav.Undertittel>
-              <Landvelger label="Velg studieland:" feltNavn="studieLand" />
+              <Landvelger disabled={!redigerbart} label="Velg studieland:" feltNavn="studieLand" />
               <Skjema.Select
                 label="Finansiering"
                 feltNavn="studentFinansiering"
                 bredde="xl"
+                disabled={!redigerbart}
               >
                 {studieFinansiering.map(valg => <option key={uuid()} value={kodeverkObjektTilKode(valg)}>{kodeverkObjektTilTerm(valg)}</option>)}
               </Skjema.Select>
               <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
-                <Skjema.Radio feltNavn="intensjonOmRetur" value={BOOLSK.SANN} label="Ja" />
-                <Skjema.Radio feltNavn="intensjonOmRetur" value={BOOLSK.USANN} label="Nei" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="intensjonOmRetur" value={BOOLSK.SANN} label="Ja" />
+                <Skjema.Radio disabled={!redigerbart} feltNavn="intensjonOmRetur" value={BOOLSK.USANN} label="Nei" />
               </Skjema.RadioGruppe>
             </Nav.Column>
           </Nav.Row>
@@ -89,6 +91,7 @@ const Bosted = props => {
 Bosted.propTypes = {
   soknadForm: MPT.SoknadForm,
   erValidert: PT.bool,
+  redigerbart: PT.bool.isRequired,
   sakOgBehandling: PT.object.isRequired,
 };
 
@@ -99,6 +102,7 @@ Bosted.defaultProps = {
 
 
 const mapStateToProps = state => ({
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
   sakOgBehandling: fagsakSelectors.SakOgBehandlingSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });

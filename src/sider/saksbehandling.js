@@ -200,6 +200,7 @@ class Saksbehandling extends Component {
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
                 tilbakeleggeHandle={this.tilbakeleggeHandle}
+                tilForsidenHandle={this.navigerTilOversiktSide}
               />
               <SideDialog />
               <SideKommentarer />

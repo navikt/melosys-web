@@ -71,7 +71,7 @@ class VurderingArtikkel12_1 extends Component {
 
   render () {
     const {
-      bekreftOgFortsett, begrunnelser, artikkel, tilstand,
+      bekreftOgFortsett, begrunnelser, artikkel, tilstand, redigerbart,
     } = this.props;
 
     const { valgtVilkar } = this.state;
@@ -90,6 +90,7 @@ class VurderingArtikkel12_1 extends Component {
                   value={this.ART12_1}
                   checked={valgtVilkar === this.ART12_1}
                   label="Ja"
+                  disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel12"
@@ -97,6 +98,7 @@ class VurderingArtikkel12_1 extends Component {
                   value={this.ART16_1}
                   checked={valgtVilkar === this.ART16_1}
                   label="Nei, jeg vil vurdere artikkel 16.1"
+                  disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel12"
@@ -104,6 +106,7 @@ class VurderingArtikkel12_1 extends Component {
                   value={this.AVSLAG}
                   checked={valgtVilkar === this.AVSLAG}
                   label={`Nei, jeg vil avslå søknaden etter artikkel ${kodeverkObjektTilTerm(artikkel)} og 16.1`}
+                  disabled={!redigerbart}
                 />
               </Nav.Fieldset>
             </Nav.Column>
@@ -118,6 +121,7 @@ class VurderingArtikkel12_1 extends Component {
                     label="Legg til begrunnelse:"
                     gruppe
                     tillatFritekst={false}
+                    disabled={!redigerbart}
                   />
                 </Nav.Fieldset>
               </Nav.Column>
@@ -125,7 +129,7 @@ class VurderingArtikkel12_1 extends Component {
           )}
         </div>
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     );
@@ -138,6 +142,7 @@ VurderingArtikkel12_1.propTypes = {
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
   settSkjemaVerdi: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 VurderingArtikkel12_1.defaultProps = {

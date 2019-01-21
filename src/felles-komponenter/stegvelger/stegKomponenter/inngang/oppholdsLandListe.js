@@ -82,7 +82,7 @@ class OppholdsLandListe extends Component {
 
   render () {
     const {
-      fields, oppholdBegrunnelser, alleLandKoder, oppholdsLandFraSoknad,
+      fields, oppholdBegrunnelser, alleLandKoder, oppholdsLandFraSoknad, redigerbart,
     } = this.props;
 
     const {
@@ -106,7 +106,8 @@ class OppholdsLandListe extends Component {
                 landKodeObjekt={finnLandVedKode(opphold.subjektID)}
                 bekreftFjern={bekreftFjern}
                 erGyldig={opphold.erGyldig}
-                oppholdBegrunnelser={oppholdBegrunnelser} />))
+                oppholdBegrunnelser={oppholdBegrunnelser}
+                redigerbart={redigerbart} />))
             }
             {
               alleGyldigeOppholdsland.length === 0 && (
@@ -119,6 +120,7 @@ class OppholdsLandListe extends Component {
               bekreftLeggTil={bekreftLeggTil}
               alleLandKoder={alleUbrukteLandkoder}
               oppholdBegrunnelser={oppholdBegrunnelser}
+              redigerbart={redigerbart}
             />
           </Nav.Fieldset>
         </div>
@@ -131,7 +133,8 @@ class OppholdsLandListe extends Component {
                 landKodeObjekt={this.finnLandVedKode(opphold.subjektID)}
                 begrunnelseTerm={finnBegrunnelse(opphold.begrunnelseKoder)}
                 angreFjern={angreFjern}
-                erGyldig={opphold.erGyldig} />))
+                erGyldig={opphold.erGyldig}
+                redigerbart={redigerbart} />))
             }
           </Nav.Fieldset>
           }
@@ -150,6 +153,7 @@ OppholdsLandListe.propTypes = {
   erstattOppholdsLand: PT.func.isRequired,
   alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   avklartefakta: PT.array.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({

@@ -15,11 +15,13 @@ const uuid = require('uuid/v4');
  * @param props Objekt Diverse props (se propTypes)
  */
 const ArbeidsgiverLinje = props => {
-  const { arbeidsgiveren, erValgt, arbeidsgiverKlikkHandler } = props;
+  const {
+    arbeidsgiveren, erValgt, arbeidsgiverKlikkHandler, redigerbart,
+  } = props;
 
   return (
     <div className="arbeidsgiver__enkeltlinje">
-      <Nav.Checkbox checked={erValgt} onChange={() => arbeidsgiverKlikkHandler(arbeidsgiveren.orgnr)} label={`${arbeidsgiveren.navn}`} />
+      <Nav.Checkbox disabled={!redigerbart} checked={erValgt} onChange={() => arbeidsgiverKlikkHandler(arbeidsgiveren.orgnr)} label={`${arbeidsgiveren.navn}`} />
     </div>
   );
 };
@@ -28,6 +30,7 @@ ArbeidsgiverLinje.propTypes = {
   arbeidsgiverKlikkHandler: PT.func.isRequired,
   arbeidsgiveren: MPT.Organisasjon.isRequired,
   erValgt: PT.bool,
+  redigerbart: PT.bool.isRequired,
 };
 
 ArbeidsgiverLinje.defaultProps = {
@@ -55,7 +58,7 @@ class ArbeidsgivereListe extends Component {
   };
 
   render() {
-    const { fields, arbeidsgivereIPerioden } = this.props;
+    const { fields, arbeidsgivereIPerioden, redigerbart } = this.props;
     const alleAvklartefakta = fields.getAll();
 
     const ingenArbeidsgivereVarsel = alleAvklartefakta.length === 0 && (
@@ -73,6 +76,7 @@ class ArbeidsgivereListe extends Component {
             erValgt={arbeidsGiverErValgt}
             key={uuid()}
             arbeidsgiverKlikkHandler={this.arbeidsgiverKlikkHandler}
+            redigerbart={redigerbart}
           />;
         })
         }
@@ -85,6 +89,8 @@ class ArbeidsgivereListe extends Component {
 ArbeidsgivereListe.propTypes = {
   fields: PT.object.isRequired,
   arbeidsgivereIPerioden: PT.array,
+  redigerbart: PT.bool.isRequired,
+
 };
 
 ArbeidsgivereListe.defaultProps = {
@@ -98,16 +104,18 @@ ArbeidsgivereListe.defaultProps = {
  * @param props
  */
 const VurderingArbeidsgiver = props => {
-  const { bekreftOgFortsett, arbeidsgivereIPerioden, tilstand } = props;
+  const {
+    bekreftOgFortsett, arbeidsgivereIPerioden, tilstand, redigerbart,
+  } = props;
   const { harAvklaring } = tilstand;
 
   return (
     <div className="vurderingArbeidsgiver">
       <Nav.Undertittel>Velg arbeidsgiver, oppdragsgiver eller selvstendig næringsvirksomhet:</Nav.Undertittel>
       <div className="arbeidsgiver">
-        <FieldArray name="avklartefakta.arbeidsgivere" component={arrayProps => <ArbeidsgivereListe {...arrayProps} arbeidsgivereIPerioden={arbeidsgivereIPerioden} />} />
+        <FieldArray name="avklartefakta.arbeidsgivere" component={arrayProps => <ArbeidsgivereListe {...arrayProps} redigerbart={redigerbart} arbeidsgivereIPerioden={arbeidsgivereIPerioden} />} />
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     </div>
@@ -117,6 +125,7 @@ const VurderingArbeidsgiver = props => {
 VurderingArbeidsgiver.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   arbeidsgivereIPerioden: MPT.Organisasjoner.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 export default VurderingArbeidsgiver;

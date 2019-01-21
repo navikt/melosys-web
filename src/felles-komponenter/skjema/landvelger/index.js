@@ -39,12 +39,14 @@ const LandVelger = props => {
 };
 
 LandVelger.propTypes = {
+  disabled: PT.bool,
   feltNavn: PT.string.isRequired,
   multiLand: PT.bool,
   label: PT.string,
 };
 
 LandVelger.defaultProps = {
+  disabled: false,
   multiLand: false,
   label: undefined,
 };

@@ -26,13 +26,15 @@ const uuid = require('uuid/v4');
 const anmodningsBegrunnelser = kodeverk.begrunnelser.artikkel16_1_anmodning;
 const alleLovvalg = kodeverk.lovvalgsbestemmelser;
 
-const TidligereMedlemPeriodeLinje = ({ perm, onChange, checked }) => {
+const TidligereMedlemPeriodeLinje = ({
+  perm, onChange, checked, redigerbart,
+}) => {
   const { periodeID, periode } = perm;
   const label = `Periode: ${formatterDatoTilNorsk(periode.fom)} - ${formatterDatoTilNorsk(periode.tom)}`;
 
   return (
     <Fragment>
-      <Nav.Checkbox onChange={() => onChange(periodeID)} label={label} value="something" checked={checked} />
+      <Nav.Checkbox disabled={!redigerbart} onChange={() => onChange(periodeID)} label={label} value="something" checked={checked} />
     </Fragment>
   );
 };
@@ -42,6 +44,7 @@ TidligereMedlemPeriodeLinje.propTypes = {
   index: PT.number.isRequired,
   onChange: PT.func.isRequired,
   perm: MPT.MedlemskapEnkeltPeriode.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 class TidligereMedlemskapPerioder extends Component {
@@ -59,7 +62,7 @@ class TidligereMedlemskapPerioder extends Component {
   };
 
   render() {
-    const { medlemskap, fields } = this.props;
+    const { medlemskap, fields, redigerbart } = this.props;
     const alleValgtePeriodeID = fields.getAll() || [];
     const { onChange } = this;
 
@@ -69,7 +72,7 @@ class TidligereMedlemskapPerioder extends Component {
         {
           perioderMed && perioderMed.map((perm, index) => {
             const isChecked = alleValgtePeriodeID.includes(perm.periodeID);
-            return <TidligereMedlemPeriodeLinje onChange={onChange} checked={isChecked} key={uuid()} perm={perm} index={index} />;
+            return <TidligereMedlemPeriodeLinje redigerbart={redigerbart} onChange={onChange} checked={isChecked} key={uuid()} perm={perm} index={index} />;
           })
         }
       </div>
@@ -80,6 +83,7 @@ class TidligereMedlemskapPerioder extends Component {
 TidligereMedlemskapPerioder.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
   fields: PT.object.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 const TidligereMedlemskap = props => (<div><FieldArray name="tidligeremedlemskap" component={TidligereMedlemskapPerioder} {...props} /></div>);
@@ -91,6 +95,7 @@ const VurderingArtikkel16 = props => {
     oppholdPeriode,
     medlemskap,
     oppsummering,
+    redigerbart,
   } = props;
 
   const { behandlingID } = oppsummering;
@@ -121,21 +126,21 @@ const VurderingArtikkel16 = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="10">
-            <Skjema.Select feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
+            <Skjema.Select disabled={!redigerbart} feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
               { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
             </Skjema.Select>
-            <Listevelger gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
+            <Listevelger disabled={!redigerbart} gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Skjema.Textarea feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
+            <Skjema.Textarea disabled={!redigerbart} feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="12">
             <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}:`}>
-              <TidligereMedlemskap medlemskap={medlemskap} />
+              <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -146,7 +151,7 @@ const VurderingArtikkel16 = props => {
         </Nav.Row>
         <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="6">
-            <Nav.Hovedknapp type="hoved" onClick={() => lagreOgFatteVedtak(behandlinger.ANMODNING_OM_UNNTAK)}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
+            <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={() => lagreOgFatteVedtak(behandlinger.ANMODNING_OM_UNNTAK)}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -161,6 +166,7 @@ VurderingArtikkel16.propTypes = {
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
   oppsummering: PT.object.isRequired,
   lovvalgKode: PT.string.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({

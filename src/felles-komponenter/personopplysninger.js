@@ -68,7 +68,7 @@ class Personopplysninger extends Component {
   };
 
   render() {
-    const { person, medfolgendeAndre } = this.props;
+    const { redigerbart, person, medfolgendeAndre } = this.props;
     const { sjekkPerson } = this;
 
     const {
@@ -110,7 +110,7 @@ class Personopplysninger extends Component {
                 </dl>
               </Nav.Column>
               <Nav.Column xs="6">
-                <UtenlandskIdent />
+                <UtenlandskIdent disabled={!redigerbart} />
               </Nav.Column>
             </Nav.Row>
             <Nav.Row className="person__seksjon">
@@ -125,30 +125,30 @@ class Personopplysninger extends Component {
               <Nav.Column xs="6">
                 <Nav.Fieldset legend="Adresse oppgitt i søknad:">
                   <dl className="person__detaljer">
-                    <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" />
-                    <Skjema.Input feltNavn="oppgittAdresseHusnummer" bredde="XS" label="Husnummer:" />
-                    <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" />
+                    <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" disabled={!redigerbart} />
+                    <Skjema.Input feltNavn="oppgittAdresseHusnummer" bredde="XS" label="Husnummer:" disabled={!redigerbart} />
+                    <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" disabled={!redigerbart} />
                     <Nav.Row>
                       <Nav.Column xs="4">
-                        <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnr:" />
+                        <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnr:" disabled={!redigerbart} />
                       </Nav.Column>
                       <Nav.Column xs="8">
-                        <Skjema.Input feltNavn="oppgittAdressePoststed" label="Poststed:" />
+                        <Skjema.Input feltNavn="oppgittAdressePoststed" label="Poststed:" disabled={!redigerbart} />
                       </Nav.Column>
                     </Nav.Row>
-                    <LandVelger feltNavn="oppgittAdresseLand" label="Land:" />
+                    <LandVelger disabled={!redigerbart} feltNavn="oppgittAdresseLand" label="Land:" />
                   </dl>
                 </Nav.Fieldset>
               </Nav.Column>
             </Nav.Row>
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="12">
-                {familiemedlemmer.length > 0 && <MedfolgendeFamilie medfolgendeFamilie={familiemedlemmer} /> }
+                {familiemedlemmer.length > 0 && <MedfolgendeFamilie medfolgendeFamilie={familiemedlemmer} disabled={!redigerbart} /> }
               </Nav.Column>
             </Nav.Row>
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="12">
-                <MedfolgendeAndre medfolgendeAndre={medfolgendeAndre} sjekkPerson={sjekkPerson} />
+                <MedfolgendeAndre medfolgendeAndre={medfolgendeAndre} sjekkPerson={sjekkPerson} disabled={!redigerbart} />
               </Nav.Column>
             </Nav.Row>
             {/* SLUTT PERSONINFO */}
@@ -160,6 +160,7 @@ class Personopplysninger extends Component {
 }
 
 Personopplysninger.propTypes = {
+  redigerbart: PT.bool.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Person).isRequired,
   hentPerson: PT.func.isRequired,
   medfolgendeAndre: MPT.Person,
@@ -175,6 +176,7 @@ const mapStateToProps = state => ({
   alleRelevantePersoner: PersonSelectors.personerSelector(state),
   personOpplysninger: soknadSelectors.PersonOpplysningerSelector(state),
   person: fagsakSelectors.PersonSelector(state),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
   medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
 });
 

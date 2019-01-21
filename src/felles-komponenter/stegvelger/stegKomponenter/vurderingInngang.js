@@ -11,7 +11,7 @@ import OppholdsLandListe from './inngang/oppholdsLandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, alleLandKoder, begrunnelser, avklartefakta, tilstand,
+    bekreftOgFortsett, inngangsvilkar, alleLandKoder, begrunnelser, avklartefakta, tilstand, redigerbart,
   } = props;
   const { vurdering } = inngangsvilkar;
   const { opphold: oppholdBegrunnelser } = begrunnelser;
@@ -34,9 +34,10 @@ const VurderingInngang = props => {
         avklartefakta={avklartefakta}
         oppholdBegrunnelser={oppholdBegrunnelser}
         alleLandKoder={alleLandKoder}
+        redigerbart={redigerbart}
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Start behandling</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Start behandling</Nav.Knapp>
       </div>
     </div>
   );
@@ -51,6 +52,7 @@ VurderingInngang.propTypes = {
   inngangsvilkar: PT.shape({
     vurdering: MPT.Kodeverk,
   }).isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 export default VurderingInngang;

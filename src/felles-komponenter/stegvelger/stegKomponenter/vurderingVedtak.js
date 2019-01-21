@@ -33,6 +33,7 @@ const VurderingVedtak = props => {
   const {
     gyldigeOppholdLand,
     lovvalgsperioder,
+    redigerbart,
   } = props;
 
   const { behandlingID } = props.oppsummering;
@@ -74,7 +75,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp type="hoved" onClick={() => props.lagreOgFatteVedtak(behandlinger.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
+            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => props.lagreOgFatteVedtak(behandlinger.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -88,6 +89,7 @@ VurderingVedtak.propTypes = {
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({

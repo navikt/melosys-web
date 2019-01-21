@@ -27,6 +27,7 @@ class Inngang extends Steg {
       begrunnelser: props.begrunnelser,
       alleLandKoder: props.landkoder,
       avklartefakta: props.avklartefakta,
+      redigerbart: props.redigerbart,
     });
     this._beregnRelevantUI = _propsLight => {
       const { oppholdsland } = _propsLight.skjema.avklartefakta;

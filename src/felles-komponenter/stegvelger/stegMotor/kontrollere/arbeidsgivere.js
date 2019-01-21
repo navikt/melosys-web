@@ -50,7 +50,10 @@ class Yrkesgruppe extends Steg {
     this._id = STEG.ARBEIDSGIVERE;
     this._tittel = 'Arbeids\u00ADgiver';
     this._komponent = VurderingArbeidsgiver;
-    this._samleRelevanteData = _propsLight => ({ arbeidsgivereIPerioden: _propsLight.arbeidsgivereIPerioden });
+    this._samleRelevanteData = _propsLight => ({
+      arbeidsgivereIPerioden: _propsLight.arbeidsgivereIPerioden,
+      redigerbart: _propsLight.redigerbart,
+    });
     this._beregnRelevantUI = _propsLight => {
       const { arbeidsgivere } = _propsLight.skjema.avklartefakta;
       const harAvklaring = arbeidsgivere.some(arbeidsgiver => arbeidsgiver.fakta.includes('TRUE'));

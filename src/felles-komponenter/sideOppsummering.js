@@ -99,6 +99,7 @@ class SideOppsummering extends Component {
 
   render() {
     const {
+      redigerbart,
       oppsummering,
       person,
       oppholdUtlandFom,
@@ -126,10 +127,10 @@ class SideOppsummering extends Component {
       oppfriskSaksopplysningerHandle,
       tilbakeleggeHandle,
       gyldigeOppholdsLand,
+      tilForsidenHandle,
     } = this.props;
 
     const gyldigeOppholdsLandSetning = arrayTilKonjunksjon(gyldigeOppholdsLand.map(land => land.term));
-
     let endreBehandlingsStatusValg = [];
     if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = this.hentBehandlingsStatusValg(oppsummering.behandlingsstatus.kode);
 
@@ -142,9 +143,10 @@ class SideOppsummering extends Component {
               <div className="oppsummering__menylinje">
                 <Nav.EkspanderbartpanelBase ariaTittel="Behandlingsmeny" className="oppsummering__meny" heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}>
                   <div className="meny__innhold">
-                    <Nav.Knapp type="hoved" mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp>
-                    <Nav.Knapp type="hoved" mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
-                    <Nav.Knapp type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppfrisk saksopplysninger</Nav.Knapp>
+                    { redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp> }
+                    { !redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={tilForsidenHandle}>Lukk</Nav.Knapp> }
+                    <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
+                    <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppfrisk saksopplysninger</Nav.Knapp>
                   </div>
                 </Nav.EkspanderbartpanelBase>
               </div>
@@ -193,8 +195,9 @@ class SideOppsummering extends Component {
                       value={this.state.behandlingsstatus}
                       onChange={this.onChange}
                       label="Endre status på behandlingen:"
+                      redigerbar={redigerbart}
                     />
-                    <Nav.Hovedknapp htmlType="submit" onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
+                    <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
                     {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
                   </form>
                 }
@@ -209,6 +212,7 @@ class SideOppsummering extends Component {
 }
 
 SideOppsummering.propTypes = {
+  redigerbart: PT.bool.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   person: MPT.Person.isRequired,
   oppholdUtlandFom: PT.string.isRequired,
@@ -217,6 +221,7 @@ SideOppsummering.propTypes = {
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
+  tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
 
@@ -226,6 +231,7 @@ const mapStateToProps = state => ({
   oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
   oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
   gyldigeOppholdsLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
