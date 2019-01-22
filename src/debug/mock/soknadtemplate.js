@@ -13,11 +13,8 @@ export const soeknadDokument = {
       fom: '2018-01-01',
       tom: '2018-06-01',
     },
-    arbeidsandelNorge: 33.3,
-    arbeidsandelUtland: 66.6,
     arbeidsstedUtland: null,
     bostedsland: 'SE',
-    erstatterTidligereUtsendt: false,
   },
   foretakUtland: {
     foretakUtlandNavn: 'Volkswagen AG',
