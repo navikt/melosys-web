@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import { lovvalgsbestemmelser } from '../../../koder';
+import { vilkar as vilkarKoder } from '../../../koder';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
@@ -19,8 +19,8 @@ class VurderingArtikkel12_1 extends Component {
    */
   constructor() {
     super();
-    this.ART12_1 = lovvalgsbestemmelser.FO_883_2004_ART12_1;
-    this.ART16_1 = lovvalgsbestemmelser.FO_883_2004_ART16_1;
+    this.ART12_1 = vilkarKoder.FO_883_2004_ART12_1;
+    this.ART16_1 = vilkarKoder.FO_883_2004_ART16_1;
     this.AVSLAG = 'AVSLAG';
   }
 
