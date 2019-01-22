@@ -117,7 +117,7 @@ class BrevBestilling extends Component {
       { navn: 'Vis utkast', type: dokumenttypeKode, data },
     ];
 
-    const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
+    const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den utsendte fortsetter sitt norske arbeidsforhold""';
     return (
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
