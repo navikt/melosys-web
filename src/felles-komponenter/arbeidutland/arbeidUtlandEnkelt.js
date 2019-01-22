@@ -24,24 +24,17 @@ const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler, redigerbart }) => (
         </Nav.Fieldset>
       </Nav.Column>
       <Nav.Column xs="6">
-        <Skjema.RadioGruppe label="Oppgir søker hjemmekontor?" feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`}>
-          <Skjema.Radio disabled={!redigerbart} feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`} value={BOOLSK.SANN} label="Ja" />
-          <Skjema.Radio disabled={!redigerbart} feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`} value={BOOLSK.USANN} label="Nei" />
-        </Skjema.RadioGruppe>
-        <Skjema.RadioGruppe label="Erstatter vedkommende en tidligere utsendt?" feltNavn={`arbeidUtland[${indeks}].arbeidUtlandErstatning`}>
-          <Skjema.Radio disabled={!redigerbart} feltNavn={`arbeidUtland[${indeks}].arbeidUtlandErstatning`} value={BOOLSK.SANN} label="Ja" />
-          <Skjema.Radio disabled={!redigerbart} feltNavn={`arbeidUtland[${indeks}].arbeidUtlandErstatning`} value={BOOLSK.USANN} label="Nei" />
-        </Skjema.RadioGruppe>
-      </Nav.Column>
-    </Nav.Row>
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <Nav.Fieldset legend="Arbeidsandel i prosent">
-          <Skjema.Input disabled={!redigerbart} bredde="XS" type="number" min={0} max={100} feltNavn={`arbeidUtland[${indeks}].arbeidsandelUtland`} label="Arbeidsandel utland, oppgitt i søknad" />
-          <Skjema.Input disabled={!redigerbart} bredde="XS" type="number" min={0} max={100} feltNavn={`arbeidUtland[${indeks}].arbeidsandelNorge`} label="Arbeidsandel Norge, oppgitt i søknad" />
+        <Nav.Fieldset legend="Detaljer om foretak / hjemmekontor">
+          <Skjema.Input disabled={!redigerbart} label="Navn" feltNavn={`arbeidUtland[${indeks}].foretakNavn`} />
+          <Skjema.Input disabled={!redigerbart} label="Organisasjonsnummer / ID-nummer" feltNavn={`arbeidUtland[${indeks}].foretakOrgnr`} />
+          <Skjema.RadioGruppe label="Er dette kun hjemmekontor?" feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`}>
+            <Skjema.Radio disabled={!redigerbart} feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`} value={BOOLSK.SANN} label="Ja" />
+            <Skjema.Radio disabled={!redigerbart} feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`} value={BOOLSK.USANN} label="Nei" />
+          </Skjema.RadioGruppe>
         </Nav.Fieldset>
       </Nav.Column>
     </Nav.Row>
+
     <Nav.Knapp disabled={!redigerbart} mini onClick={() => slettArbeidHandler(indeks)}>- Fjern dette arbeidsstedet</Nav.Knapp>
   </div>
 );
