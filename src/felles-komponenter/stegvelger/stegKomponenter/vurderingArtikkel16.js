@@ -104,7 +104,7 @@ const VurderingArtikkel16 = props => {
   const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
   const dokumenter = [
-    { navn: 'Forhåndsvis anmodning til bruker', type: 'ORIENTERING_ANMODNING_UNNTAK', data: { mottaker: 'BRUKER' } },
+    { navn: 'Forhåndsvis orienteringsbrev til bruker', type: 'ORIENTERING_ANMODNING_UNNTAK', data: { mottaker: 'BRUKER' } },
     { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: 'MYNDIGHET' } },
   ];
 
@@ -125,21 +125,21 @@ const VurderingArtikkel16 = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="10">
-              <Skjema.Select disabled={!redigerbart} feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
+            <Skjema.Select disabled={!redigerbart} feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
               { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
             </Skjema.Select>
-              <Listevelger disabled={!redigerbart} gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
+            <Listevelger disabled={!redigerbart} gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-              <Skjema.Textarea disabled={!redigerbart} feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
+            <Skjema.Textarea disabled={!redigerbart} feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="12">
             <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}:`}>
-                <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} />
+              <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} />
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -150,7 +150,7 @@ const VurderingArtikkel16 = props => {
         </Nav.Row>
         <Nav.Row className="artikkel16__ekstratopp">
           <Nav.Column xs="6">
-              <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={() => lagreOgFatteVedtak(Koder.ANMODNING_OM_UNNTAK)}>Send anmodning til utenlandsk myndighet</Nav.Hovedknapp>
+            <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={() => lagreOgFatteVedtak(Koder.ANMODNING_OM_UNNTAK)}>Send brevene</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>
