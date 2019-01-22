@@ -22,9 +22,11 @@ class ForetakUtlandWrapper extends Component {
   };
 
   render() {
-    const panelIkon = Ikoner.Ferdig;
     const { redigerbart, fields } = this.props;
     const { slettForetakHandler } = this;
+
+    const panelErUtfylt = fields.length > 0;
+    const panelIkon = panelErUtfylt ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
     return (
       <div className="foretakUtland panelSeksjon">

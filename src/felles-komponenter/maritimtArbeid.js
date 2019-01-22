@@ -78,8 +78,8 @@ const MaritimtArbeid = props => {
   const { values: soknadVerdier } = soknadForm;
   const { maritimtArbeid = [] } = soknadVerdier;
 
-  const panelErRelevant = maritimtArbeid.length > 0;
-  const panelIkon = panelErRelevant ? Ikoner.Ferdig : Ikoner.Ubehandlet;
+  const panelErUtfylt = maritimtArbeid.length > 0;
+  const panelIkon = panelErUtfylt ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
   return (
     <div className="maritimtArbeid panelSeksjon">
