@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import { lovvalgsbestemmelser } from '../../../koder';
+import { vilkar as vilkarKoder } from '../../../koder';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
@@ -48,8 +48,8 @@ class VurderingArtikkel12_2 extends Component {
 
     if ((art12_2 === old_art12_2) && (art16_1 === old_art16_1)) { return; }
 
-    if (art12_2) (this.settStateForVilkar(lovvalgsbestemmelser.FO_883_2004_ART12_2));
-    if (art16_1 && art12_2 === false) (this.settStateForVilkar(lovvalgsbestemmelser.FO_883_2004_ART16_1));
+    if (art12_2) (this.settStateForVilkar(vilkarKoder.FO_883_2004_ART12_2));
+    if (art16_1 && art12_2 === false) (this.settStateForVilkar(vilkarKoder.FO_883_2004_ART16_1));
     if (art16_1 === false && art12_2 === false) (this.settStateForVilkar(this.AVSLAG));
   };
 
@@ -57,10 +57,10 @@ class VurderingArtikkel12_2 extends Component {
     const { value } = event.target;
     const { settSkjemaVerdi } = this.props;
 
-    if (value === lovvalgsbestemmelser.FO_883_2004_ART12_2) {
+    if (value === vilkarKoder.FO_883_2004_ART12_2) {
       settSkjemaVerdi('vilkar.art12_2', true);
       settSkjemaVerdi('vilkar.art16_1', null);
-    } else if (value === lovvalgsbestemmelser.FO_883_2004_ART16_1) {
+    } else if (value === vilkarKoder.FO_883_2004_ART16_1) {
       settSkjemaVerdi('vilkar.art12_2', false);
       settSkjemaVerdi('vilkar.art16_1', true);
     } else {
@@ -87,15 +87,15 @@ class VurderingArtikkel12_2 extends Component {
                 <Nav.Radio
                   name="artikkel"
                   onChange={this.radioEndringHandler}
-                  value={lovvalgsbestemmelser.FO_883_2004_ART12_2}
-                  checked={valgtVilkar === lovvalgsbestemmelser.FO_883_2004_ART12_2}
+                  value={vilkarKoder.FO_883_2004_ART12_2}
+                  checked={valgtVilkar === vilkarKoder.FO_883_2004_ART12_2}
                   label="Ja"
                 />
                 <Nav.Radio
                   name="artikkel"
                   onChange={this.radioEndringHandler}
-                  value={lovvalgsbestemmelser.FO_883_2004_ART16_1}
-                  checked={valgtVilkar === lovvalgsbestemmelser.FO_883_2004_ART16_1}
+                  value={vilkarKoder.FO_883_2004_ART16_1}
+                  checked={valgtVilkar === vilkarKoder.FO_883_2004_ART16_1}
                   label="Nei, jeg vil vurdere artikkel 16.1"
                 />
                 <Nav.Radio
