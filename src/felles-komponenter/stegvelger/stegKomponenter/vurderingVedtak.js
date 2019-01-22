@@ -20,9 +20,9 @@ import './vurderingVedtak.css';
 
 const { lovvalgsbestemmelser } = kodeverk;
 const alleLovvalg = [
-  lovvalgsbestemmelser.forordning_883_2004,
-  lovvalgsbestemmelser.forordning_987_2009,
-  lovvalgsbestemmelser.tillegg,
+  ...lovvalgsbestemmelser.forordning_883_2004,
+  ...lovvalgsbestemmelser.forordning_987_2009,
+  ...lovvalgsbestemmelser.tillegg,
 ];
 
 const VurderingVedtak = props => {
