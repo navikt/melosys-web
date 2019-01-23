@@ -18,7 +18,7 @@ const { kodeset, kodeverk } = Kodeverk;
 const { henleggelsesgrunner } = kodeverk;
 const { MELDING_HENLAGT_SAK } = kodeset.brev.produserbareDokumenter;
 
-class DialogboksHenleggSak extends Component {
+export class DialogboksHenleggSak extends Component {
   state = {
     begrunnelseKode: '',
     feilmeldingSelect: undefined,
