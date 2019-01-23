@@ -15,7 +15,9 @@ class Vedtak extends Steg {
     this._id = STEG.VEDTAK;
     this._tittel = 'Vedtak';
     this._komponent = VurderingVedtak;
-    this._samleRelevanteData = () => ({});
+    this._samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.redigerbart,
+    });
     this._beregnRelevantUI = () => ({});
     this._handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,

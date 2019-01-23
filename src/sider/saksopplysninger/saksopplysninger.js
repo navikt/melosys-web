@@ -8,15 +8,15 @@ import * as Validering from '../../felles-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
 
 import ArbeidsgivereNorge from '../../felles-komponenter/arbeidsgivereNorge';
-import ArbeidUtland from '../../felles-komponenter/arbeidUtland';
+import ArbeidUtland from '../../felles-komponenter/arbeidutland';
 import Bosted from '../../felles-komponenter/bosted';
-import ForetakUtland from '../../felles-komponenter/foretakUtland';
+import ForetakUtland from '../../felles-komponenter/foretakutland';
 import Inntekt from '../../felles-komponenter/inntektUtland';
 import MaritimtArbeid from '../../felles-komponenter/maritimtArbeid';
 import Medlemskap from '../../felles-komponenter/medlemskap';
 import OppholdPeriode from '../../felles-komponenter/oppholdPeriode';
 import Personopplysninger from '../../felles-komponenter/personopplysninger';
-import SelvstendigArbeid from '../../felles-komponenter/selvstendigArbeid';
+import SelvstendigArbeid from '../../felles-komponenter/selvstendigarbeid';
 import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgiver';
 import Stegvelger from '../../felles-komponenter/stegvelger';
 import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
@@ -112,10 +112,10 @@ class Saksopplysninger extends Component {
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
         <Bosted erValidert={this.state.gyldigePaneler.bosted} />
         <ArbeidsgivereNorge />
+        <ForetakUtland />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />
         <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
         <ArbeidUtland />
-        <ForetakUtland />
         <VirksomhetNorge />
         <MaritimtArbeid />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
@@ -195,8 +195,6 @@ const mapStateToProps = state => ({
     andelOmsetningINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge),
     andelKontrakterINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge),
     utsendtFortsetterArbeidsforholdIUtlandet: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtFortsetterArbeidsforholdIUtlandet,
-    utsendtArbeiderMedKlienter: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtArbeiderMedKlienter,
-    utsendtArbeiderMedKontrakter: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtArbeiderMedKontrakter,
     ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),

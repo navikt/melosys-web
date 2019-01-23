@@ -8,6 +8,7 @@ import * as MPT from '../proptypes/';
 
 import DialogboksOppfriskSak from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
+import DialogboksHenleggSak from '../felles-komponenter/dialogboks/dialogboksHenlegg';
 import { Saksopplysninger } from './saksopplysninger';
 
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
@@ -19,12 +20,14 @@ import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../ducks/saksopplysninger';
 import { oppgaverOperations } from '../ducks/oppgaver/';
-import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder/';
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder/';
 import { soknadOperations, soknadSelectors } from '../ducks/soknad/';
-
+import * as Api from '../services/api';
 
 import './saksbehandling.css';
 import '../felles-komponenter/skjema/skjema.css';
+import { formSelectors } from '../ducks/form';
+import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger';
 
 class Saksbehandling extends Component {
   static propTypes = {
@@ -56,6 +59,7 @@ class Saksbehandling extends Component {
   state = {
     visOppfriskDialog: false,
     oppfriskningBlokkererInnhold: false,
+    visHenleggDialog: false,
   };
 
   async componentDidMount() {
@@ -122,6 +126,14 @@ class Saksbehandling extends Component {
     this.setState({ oppfriskningBlokkererInnhold: false });
   };
 
+  visHenleggDialog = () => {
+    this.setState({ visHenleggDialog: true });
+  };
+
+  skjulHenleggDialog = () => {
+    this.setState({ visHenleggDialog: false });
+  };
+
   hentBehandlingStatus = async () => {
     const { sjekkOppfriskningStatus } = this.props;
     const { behandlingID } = this.props.oppsummering;
@@ -169,6 +181,63 @@ class Saksbehandling extends Component {
   };
   /* eslint-enable */
 
+  lagreBehandlingerHandler = async () => {
+    const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
+    await sendPerioder(behandlingID, behandlinger);
+  };
+
+  lagreVilkarHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const { vilkar } = this.props;
+    const { sendVilkar } = this.props;
+    await sendVilkar(bid, vilkar);
+  };
+
+  lagreAvklartefaktaHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const { avklartefakta } = this.props;
+    const { sendAvklartefakta } = this.props;
+    await sendAvklartefakta(bid, avklartefakta);
+  };
+
+  lagreLovvalgsperioderHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const { lovvalgsperioder } = this.props;
+    const { sendLovvalgsperioder } = this.props;
+    await sendLovvalgsperioder(bid, lovvalgsperioder);
+  };
+
+  henleggSak = async data => {
+    const { oppsummering } = this.props;
+    const { saksnummer } = oppsummering;
+    await Api.Fagsaker.henlegg(saksnummer, data);
+  };
+
+  /* eslint-disable */
+  henleggHandle = async data => {
+    const {
+      skjema,
+      oppdaterAvklarteFaktaState,
+      oppdaterVilkarState,
+      oppdaterLovvalgperioderState,
+      oppdaterBehandlingerState,
+      history,
+    } = this.props;
+
+    await oppdaterAvklarteFaktaState(skjema);
+    await oppdaterVilkarState(skjema);
+    await oppdaterLovvalgperioderState(skjema);
+    await oppdaterBehandlingerState(skjema);
+
+    await this.lagreVilkarHandler();
+    await this.lagreAvklartefaktaHandler();
+    await this.lagreLovvalgsperioderHandler();
+    await this.lagreBehandlingerHandler();
+    await this.henleggSak(data);
+    history.push('/');
+  };
+  /* eslint-enable */
+
   render() {
     const { oppsummering } = this.props;
     const { blokkerInnholdMedOppfriskSpinner } = this;
@@ -200,6 +269,8 @@ class Saksbehandling extends Component {
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
                 tilbakeleggeHandle={this.tilbakeleggeHandle}
+                henleggHandle={this.visHenleggDialog}
+                tilForsidenHandle={this.navigerTilOversiktSide}
               />
               <SideDialog />
               <SideKommentarer />
@@ -216,10 +287,26 @@ class Saksbehandling extends Component {
             oppdater={this.hentBehandlingStatus}
           />
         }
+        {
+          this.state.visHenleggDialog &&
+          <DialogboksHenleggSak
+            avbryt={this.skjulHenleggDialog}
+            henleggHandle={this.henleggHandle}
+          />
+        }
       </div>
     );
   }
 }
+
+Saksbehandling.propTypes = {
+  sendVilkar: PT.func.isRequired,
+  sendAvklartefakta: PT.func.isRequired,
+  sendPerioder: PT.func.isRequired,
+  behandlinger: PT.object.isRequired,
+  lovvalgsperioder: PT.array.isRequired,
+  sendLovvalgsperioder: PT.func.isRequired,
+};
 
 /** Mapper både fast tekst inn til de forskjellige panelene i tillegg til å
  * mappe verdier fra søknaden (soknad) ut til Redux Form via initialValue.
@@ -231,6 +318,9 @@ const mapStateToProps = state => ({
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
+  skjema: formSelectors.SoknadenFormSelector(state).values,
+  lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
+  behandlinger: behandlingerSelectors.behandlingerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -248,6 +338,12 @@ const mapDispatchToProps = dispatch => ({
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegge(oppgaveID, venterPaaDokumentasjon),
   hentOppgaver: () => dispatch(oppgaverOperations.hent()),
+  oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
+  oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
+  oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
+  oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
+  sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
+  sendPerioder: (behandlingID, body) => dispatch(behandlingerOperations.sendPerioder(behandlingID, body)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
