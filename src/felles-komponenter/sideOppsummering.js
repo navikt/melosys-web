@@ -126,8 +126,8 @@ class SideOppsummering extends Component {
       lagreOgLukkHandle,
       oppfriskSaksopplysningerHandle,
       tilbakeleggeHandle,
+      henleggHandle,
       gyldigeOppholdsLand,
-      tilForsidenHandle,
     } = this.props;
 
     const gyldigeOppholdsLandSetning = arrayTilKonjunksjon(gyldigeOppholdsLand.map(land => land.term));
@@ -144,9 +144,9 @@ class SideOppsummering extends Component {
                 <Nav.EkspanderbartpanelBase ariaTittel="Behandlingsmeny" className="oppsummering__meny" heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}>
                   <div className="meny__innhold">
                     { redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp> }
-                    { !redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={tilForsidenHandle}>Lukk</Nav.Knapp> }
                     <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
                     <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppfrisk saksopplysninger</Nav.Knapp>
+                    { redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={henleggHandle}>Henlegg sak</Nav.Knapp> }
                   </div>
                 </Nav.EkspanderbartpanelBase>
               </div>
@@ -222,6 +222,7 @@ SideOppsummering.propTypes = {
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
+  henleggHandle: PT.func.isRequired,
   tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
