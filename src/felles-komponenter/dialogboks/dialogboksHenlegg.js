@@ -46,7 +46,7 @@ class DialogboksHenleggSak extends Component {
       this.setState({ feilmeldingSelect: { feilmelding: 'Ingen begrunnelse valgt' } });
     }
     return erBegrunnelseValgt();
-  }
+  };
 
   validerFritekst = () => {
     const { fritekstValgt, fritekstTom } = this;
@@ -87,6 +87,7 @@ class DialogboksHenleggSak extends Component {
     const {
       avbryt,
       oppsummering,
+      redigerbart,
     } = this.props;
 
     const {
@@ -131,6 +132,7 @@ class DialogboksHenleggSak extends Component {
             value={begrunnelseKode}
             koder={henleggelsesgrunner}
             disableFørsteValg={erBegrunnelseValgt()}
+            redigerbar={redigerbart}
           />
           {
             visTekstFelt && <Nav.Textarea feil={feilmeldingFritekst} label="Fritekst" onChange={this.fritekstOnchange} value={fritekst} />
@@ -159,6 +161,7 @@ DialogboksHenleggSak.propTypes = {
   henleggHandle: PT.func.isRequired,
   avbryt: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
+  redigerbart: PT.bool.isRequired,
 };
 
 DialogboksHenleggSak.defaultProps = {
@@ -167,6 +170,7 @@ DialogboksHenleggSak.defaultProps = {
 
 const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
 export default connect(mapStateToProps, null)(DialogboksHenleggSak);
