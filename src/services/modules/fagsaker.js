@@ -1,4 +1,4 @@
-import { getAsJson } from '../utils';
+import { getAsJson, postAsJson } from '../utils';
 import { API_BASE_URL } from '../api-constants';
 
 async function hent(snr) {
@@ -15,8 +15,14 @@ async function opprett(fnr) {
   return getAsJson(URI_OPPRETTSAK);
 }
 
+async function henlegg(snr, body) {
+  const URI_HENLEGGSAK = `${API_BASE_URL}fagsaker/${snr}/henlegg`;
+  return postAsJson(URI_HENLEGGSAK, body);
+}
+
 export {
   hent,
   sok,
   opprett,
+  henlegg,
 };
