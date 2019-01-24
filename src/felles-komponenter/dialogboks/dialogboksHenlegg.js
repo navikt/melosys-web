@@ -88,6 +88,7 @@ export class DialogboksHenleggSak extends Component {
       avbryt,
       oppsummering,
       redigerbart,
+      ariaHideApp,
     } = this.props;
 
     const {
@@ -122,7 +123,8 @@ export class DialogboksHenleggSak extends Component {
         contentLabel="Henlegg sak"
         onRequestClose={avbryt}
         closeButton={false}
-        shouldCloseOnOverlayClick>
+        shouldCloseOnOverlayClick
+        ariaHideApp={ariaHideApp}>
         <div>
           <Nav.Systemtittel className="overskrift">Henlegg saken</Nav.Systemtittel>
           <KodeTermSelect
