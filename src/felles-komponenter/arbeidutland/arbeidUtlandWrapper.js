@@ -22,9 +22,11 @@ class ArbeidUtlandWrapper extends Component {
   };
 
   render() {
-    const { redigerbart } = this.props;
+    const { redigerbart, fields } = this.props;
     const { slettArbeidHandler, leggTilArbeidHandler } = this;
-    const panelIkon = Ikoner.Ferdig;
+
+    const panelErUtfylt = fields.length > 0;
+    const panelIkon = panelErUtfylt ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
     return (
       <div className="arbeidUtland panelSeksjon">
