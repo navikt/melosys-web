@@ -164,10 +164,12 @@ DialogboksHenleggSak.propTypes = {
   avbryt: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   redigerbart: PT.bool.isRequired,
+  ariaHideApp: PT.bool,
 };
 
 DialogboksHenleggSak.defaultProps = {
   oppsummering: {},
+  ariaHideApp: true,
 };
 
 const mapStateToProps = state => ({
