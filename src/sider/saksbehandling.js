@@ -13,7 +13,6 @@ import { Saksopplysninger } from './saksopplysninger';
 
 import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
-import SideKommentarer from '../felles-komponenter/sideKommentarer';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
@@ -273,7 +272,6 @@ class Saksbehandling extends Component {
                 tilForsidenHandle={this.navigerTilOversiktSide}
               />
               <SideDialog />
-              <SideKommentarer />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>

@@ -176,6 +176,7 @@ const mapStateToProps = state => ({
   brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
   dokumenter: dokumenterSelectors.dokumenterSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
   produserbareDokumenter: KodeverkSelectors.produserbareDokumenterSelector(state),
   aktoerroller: KodeverkSelectors.aktoerrollerSelector(state),
   initialValues: {
