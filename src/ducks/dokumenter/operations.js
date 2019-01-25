@@ -32,7 +32,7 @@ export async function forhandsvisPDF(behandlingID, dokumenttypeKode, data) {
   const utfyltdata = {
     mottaker: data.mottaker ? data.mottaker : null,
     fritekst: data.fritekst ? data.fritekst : null,
-    begrunnelse: data.begrunnelse ? data.begrunnelse : null,
+    begrunnelseKode: data.begrunnelseKode ? data.begrunnelseKode : null,
   };
 
   const response = await Api.Dokumenter.forhandsvisPDF(behandlingID, dokumenttypeKode, utfyltdata);
