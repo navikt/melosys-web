@@ -12,7 +12,7 @@ import { soknadSelectors, soknadOperations } from '../ducks/soknad';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
-import { formatterDatoTilNorsk, vaskInputDato, formatterDatoTilISO } from '../utils/dato';
+import { formatterDatoTilNorsk, vaskInputDato, formatterDatoTilISO, erGyldigPeriode } from '../utils/dato';
 
 import './oppholdPeriode.css';
 
@@ -23,7 +23,8 @@ const OppholdEndring = props => {
     vedFeltEndring,
     avbryt,
     oppdaterPeriode,
-    vedFeltFokutUt,
+    vedFeltFokusUt,
+    erDatoerGyldig,
   } = props;
 
   return (
@@ -37,7 +38,7 @@ const OppholdEndring = props => {
                 label="Fra og med:"
                 value={oppholdUtlandNyFom}
                 onChange={event => vedFeltEndring('oppholdUtlandNyFom', event.target.value)}
-                onBlur={() => vedFeltFokutUt('oppholdUtlandNyFom')}
+                onBlur={() => vedFeltFokusUt('oppholdUtlandNyFom')}
               />
             </Nav.Column>
             <Nav.Column xs="3">
@@ -46,11 +47,11 @@ const OppholdEndring = props => {
                 label="Til og med:"
                 value={oppholdUtlandNyTom}
                 onChange={event => vedFeltEndring('oppholdUtlandNyTom', event.target.value)}
-                onBlur={() => vedFeltFokutUt('oppholdUtlandNyTom')}
+                onBlur={() => vedFeltFokusUt('oppholdUtlandNyTom')}
               />
             </Nav.Column>
             <Nav.Column xs="12">
-              <Nav.Hovedknapp onClick={oppdaterPeriode}>Oppdater saksopplysningene</Nav.Hovedknapp>
+              <Nav.Hovedknapp disabled={!erDatoerGyldig} onClick={oppdaterPeriode}>Oppdater saksopplysningene</Nav.Hovedknapp>
               <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
             </Nav.Column>
           </Nav.Row>
@@ -66,12 +67,14 @@ OppholdEndring.propTypes = {
   oppholdUtlandNyFom: PT.string.isRequired,
   oppholdUtlandNyTom: PT.string.isRequired,
   vedFeltEndring: PT.func.isRequired,
-  vedFeltFokutUt: PT.func.isRequired,
+  vedFeltFokusUt: PT.func.isRequired,
+  erDatoerGyldig: PT.bool.isRequired,
 };
 
 class OppholdPeriode extends Component {
   state = {
     erEndrePeriodeSynlig: false,
+    erPeriodeOppdatertOgGyldig: false,
     oppholdUtlandNyFom: '',
     oppholdUtlandNyTom: '',
   };
@@ -102,15 +105,40 @@ class OppholdPeriode extends Component {
 
   skjulEndrePeriode = () => this.setState({ erEndrePeriodeSynlig: false });
 
-  vedFeltEndring = (feltNavn, verdi) => {
+  oppdaterFelt = (feltNavn, verdi) => {
     this.setState({ [feltNavn]: verdi });
+
+    const erPeriodeOppdatertOgGyldig = this.validerDato('oppholdUtlandNyFom') && this.validerDato('oppholdUtlandNyTom');
+    this.setState({ erPeriodeOppdatertOgGyldig });
   };
 
-  vedFeltFokutUt = feltNavn => {
-    const verdi = this.state[feltNavn];
-    const vasketVerdi = (feltNavn === 'oppholdUtlandNyFom' || feltNavn === 'oppholdUtlandNyTom') ? vaskInputDato(verdi) : verdi;
-    this.setState({ [feltNavn]: vasketVerdi });
+  validerDato = verdi => {
+    const vasketVerdi = vaskInputDato(verdi);
+    if (vasketVerdi === false) {
+      return false;
+    }
+    return true;
+  }
+
+  validerFelter = () => {
+    const erPeriodeOppdatertOgGyldig = this.vaskOgValiderDato('oppholdUtlandNyFom') &&
+                                       this.vaskOgValiderDato('oppholdUtlandNyTom') &&
+                                       erGyldigPeriode(this.state.oppholdUtlandNyFom, this.state.oppholdUtlandNyTom);
+
+    this.setState({ erPeriodeOppdatertOgGyldig });
   };
+
+  vaskOgValiderDato = feltNavn => {
+    const verdi = this.state[feltNavn];
+    const gyldigDato = this.validerDato(verdi);
+    if (gyldigDato) {
+      const vasketVerdi = vaskInputDato(verdi);
+      this.setState({ [feltNavn]: vasketVerdi });
+    } else {
+      this.setState({ [feltNavn]: 'Ugyldig' });
+    }
+    return gyldigDato;
+  }
 
   oppdaterPeriode = event => {
     event.preventDefault();
@@ -137,7 +165,7 @@ class OppholdPeriode extends Component {
     const panelIkon = Ikoner.Ferdig;
     const { redigerbart, oppholdUtlandFom, oppholdUtlandTom } = this.props;
     const {
-      visEndrePeriode, skjulEndrePeriode, vedFeltFokutUt, oppdaterPeriode, vedFeltEndring, avbryt,
+      visEndrePeriode, skjulEndrePeriode, validerFelter, oppdaterPeriode, oppdaterFelt, avbryt,
     } = this;
 
     const {
@@ -163,13 +191,15 @@ class OppholdPeriode extends Component {
               )
             }
             {
-              erEndrePeriodeSynlig && <OppholdEndring
+              erEndrePeriodeSynlig &&
+              <OppholdEndring
                 oppholdUtlandNyFom={oppholdUtlandNyFom}
                 oppholdUtlandNyTom={oppholdUtlandNyTom}
                 skjulEndrePeriode={skjulEndrePeriode}
                 oppdaterPeriode={oppdaterPeriode}
-                vedFeltEndring={vedFeltEndring}
-                vedFeltFokutUt={vedFeltFokutUt}
+                vedFeltEndring={oppdaterFelt}
+                vedFeltFokusUt={validerFelter}
+                erDatoerGyldig={this.state.erPeriodeOppdatertOgGyldig}
                 avbryt={avbryt}
               />
             }
