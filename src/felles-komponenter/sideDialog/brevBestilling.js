@@ -118,7 +118,7 @@ class BrevBestilling extends Component {
       { navn: 'Vis utkast', type: dokumenttypeKode, data },
     ];
 
-    const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den ansatt erstatter en annen utsendt ansatt""';
+    const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den utsendte fortsetter sitt norske arbeidsforhold""';
     return (
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
@@ -174,6 +174,7 @@ const mapStateToProps = state => ({
   brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
   dokumenter: dokumenterSelectors.dokumenterSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
   initialValues: {
     dokumenttypeKode: brev.MELDING_MANGLENDE_OPPLYSNINGER,
     mottaker: representerer.BRUKER,

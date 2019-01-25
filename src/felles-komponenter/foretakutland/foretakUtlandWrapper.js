@@ -22,14 +22,16 @@ class ForetakUtlandWrapper extends Component {
   };
 
   render() {
-    const panelIkon = Ikoner.Ferdig;
     const { redigerbart, fields } = this.props;
     const { slettForetakHandler } = this;
+
+    const panelErUtfylt = fields.length > 0;
+    const panelIkon = panelErUtfylt ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
     return (
       <div className="foretakUtland panelSeksjon">
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel="Arbeidsforholdene i utlandet" undertittel="" />}
+          heading={<PanelHeader ikon={panelIkon} tittel="Arbeidsgiver i utlandet" undertittel="" />}
           ariaTittel="Panel for arbeidsforholdene i utlandet">
           <Nav.Container fluid>
             { fields.map((fieldName, indeks) => (<EnkeltForetak key={fieldName} indeks={indeks} slettForetakHandler={slettForetakHandler} redigerbart={redigerbart} />))}

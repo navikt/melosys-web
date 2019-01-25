@@ -115,10 +115,10 @@ class Saksopplysninger extends Component {
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
         <Bosted erValidert={this.state.gyldigePaneler.bosted} />
         <ArbeidsgivereNorge />
+        <ForetakUtland />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />
         <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
         <ArbeidUtland />
-        <ForetakUtland />
         <VirksomhetNorge />
         <MaritimtArbeid />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}

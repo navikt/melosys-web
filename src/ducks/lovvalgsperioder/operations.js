@@ -18,7 +18,6 @@ import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
 import { formSelectors } from '../form';
 
-
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
  * søknader vil resultere i flere lovvalg, feks arbeid i flere land. Derfor leveres
@@ -50,6 +49,7 @@ const byggLovvalgsPeriodeArtikkel12_1 = getState => {
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART12_1,
+    tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: INNVILGET,
@@ -65,6 +65,7 @@ const byggLovvalgsPeriodeArtikkel12_2 = getState => {
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART12_2,
+    tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: INNVILGET,
@@ -80,6 +81,7 @@ const byggLovvalgsPeriodeArtikkel11_3A = getState => {
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART11_3A,
+    tilleggBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART11_4_1,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: INNVILGET,
@@ -95,6 +97,7 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = getState => {
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART11_4_2,
+    tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: INNVILGET,
@@ -118,6 +121,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART16_1,
+    tilleggBestemmelse: null,
     unntakFraBestemmelse,
     unntakFraLovvalgsland,
     innvilgelsesResultat: INNVILGET,
