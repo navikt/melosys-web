@@ -78,7 +78,7 @@ class DialogboksHenleggSak extends Component {
     let { fritekst } = this.state;
     if (fritekst === '') fritekst = null;
     this.props.henleggHandle({
-      begrunnelse: begrunnelseKode,
+      begrunnelseKode,
       fritekst,
     });
   };
@@ -103,7 +103,7 @@ class DialogboksHenleggSak extends Component {
     } = this;
 
     const data = erBegrunnelseValgt() ? {
-      begrunnelse: begrunnelseKode,
+      begrunnelseKode,
       fritekst: fritekst === '' ? null : fritekst,
       mottaker: kodeset.aktoerroller.BRUKER,
     } : {};
