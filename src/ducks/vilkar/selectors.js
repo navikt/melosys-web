@@ -75,9 +75,9 @@ export const valgteLovvalgsVilkar = createSelector(
   alleVilkar => {
     const lovvalgsbestemmelserListe = kodeverk.lovvalgsbestemmelser;
     const alleLovvalg = [
-      lovvalgsbestemmelserListe.forordning_883_2004,
-      lovvalgsbestemmelserListe.forordning_987_2009,
-      lovvalgsbestemmelserListe.tillegg,
+      ...lovvalgsbestemmelserListe.forordning_883_2004,
+      ...lovvalgsbestemmelserListe.forordning_987_2009,
+      ...lovvalgsbestemmelserListe.tillegg,
     ];
     return alleVilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar));
   }
