@@ -97,6 +97,10 @@ function formatterKortDatoTilNorsk(kortDato) {
   return `${dato.format('MMM')} - ${dato.format('YYYY')}`;
 }
 
+function erGyldigPeriode(fom, tom) {
+  return moment(fom).isBefore(tom);
+}
+
 function datoDiff (fom, tom, enhet = 'months') {
   if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
   const momentTom = moment(tom).add(1, 'day');
@@ -134,5 +138,6 @@ export {
   datoDiff,
   datoDiffMenneskelig,
   beregnAlder,
+  erGyldigPeriode,
   MAX_AR_FREM_I_TID,
 };
