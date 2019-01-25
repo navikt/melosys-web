@@ -268,7 +268,7 @@ class Saksbehandling extends Component {
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
                 tilbakeleggeHandle={this.tilbakeleggeHandle}
-                henleggHandle={this.visHenleggDialog}
+                visHenleggDialogHandle={this.visHenleggDialog}
                 tilForsidenHandle={this.navigerTilOversiktSide}
               />
               <SideDialog />
