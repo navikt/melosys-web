@@ -6,10 +6,10 @@ import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
 import Fagsak from '../felles-komponenter/forside/oppgaveliste/fagsak';
 
-import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 
 import { queryParamLogger } from '../utils/queryParamLogger';
 import './sok.css';
+import { sokSelectors, sokOperations } from '../ducks/sok';
 
 const uuid = require('uuid/v4');
 

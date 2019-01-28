@@ -17,7 +17,7 @@ import * as Types from './types';
  * @returns {*}
  */
 export function sok(fnr) {
-  return doThenDispatch(() => Api.Oppgaver.sok(fnr), {
+  return doThenDispatch(() => Api.Fagsaker.sok(fnr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
