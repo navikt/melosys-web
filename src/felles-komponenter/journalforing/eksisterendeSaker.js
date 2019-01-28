@@ -1,5 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
+import { kodeset } from 'melosys-kodeverk';
+
 import EnkeltDato from '../datoOmrade/enkeltDato';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
@@ -9,32 +11,39 @@ import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
 
 import './eksisterendeSaker.css';
 
+const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== kodeset.behandlinger.behandlingsstatus.AVSLUTTET);
+
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
 const EnkeltSak = props => {
   const {
-    opprettetDato, behandlingstype, soknadsperiode, behandlingsstatus, land, sakstype, saksstatus,
+    opprettetDato, behandlingoppsummeringer, sakstype, saksstatus,
   } = props.sak;
+
+  const aktivBehandling = hentAktivBehandling(behandlingoppsummeringer);
+  const {
+    land, behandlingstype, soknadsperiode, behandlingsstatus,
+  } = aktivBehandling;
 
   const { fom, tom } = soknadsperiode;
 
   return (
     <div className="enkeltSak__meta">
-      <dl className="enkeltSak__meta">
-        <dt className="enkeltSak__meta__term">Sakstype: </dt>
-        <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(sakstype)}</dd>
-        <dt className="enkeltSak__meta__term">Saksstatus: </dt>
-        <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(saksstatus)}</dd>
-        <dt className="enkeltSak__meta__term">Behandlingstype: </dt>
-        <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(behandlingstype)}</dd>
-        <dt className="enkeltSak__meta__term">Behandlingsstatus: </dt>
-        <dd className="enkeltSak__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus)}</dd>
-        <dt className="enkeltSak__meta__term">Opprettet:</dt>
-        <dd className="enkeltSak__meta__detalj">{<EnkeltDato dato={opprettetDato} />}</dd>
-        <dt className="enkeltSak__meta__term">Søknadsperiode: </dt>
-        <dd className="enkeltSak__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
-        <dt className="enkeltSak__meta__term">Land:</dt>
-        <dd className="enkeltSak__meta__detalj">{land.join(', ')}</dd>
+      <dl>
+        <dt>Sakstype: </dt>
+        <dd>{kodeverkObjektTilTerm(sakstype)}</dd>
+        <dt>Saksstatus: </dt>
+        <dd>{kodeverkObjektTilTerm(saksstatus)}</dd>
+        <dt>Behandlingstype: </dt>
+        <dd>{kodeverkObjektTilTerm(behandlingstype)}</dd>
+        <dt>Behandlingsstatus: </dt>
+        <dd>{kodeverkObjektTilTerm(behandlingsstatus)}</dd>
+        <dt>Opprettet:</dt>
+        <dd>{<EnkeltDato dato={opprettetDato} />}</dd>
+        <dt>Søknadsperiode: </dt>
+        <dd>{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
+        <dt>Land:</dt>
+        <dd>{land.join(', ')}</dd>
       </dl>
     </div>
   );
