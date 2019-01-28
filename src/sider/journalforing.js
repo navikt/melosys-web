@@ -45,9 +45,6 @@ const queryParamLogger = (journalpostID, oppgaveID, location) => {
     if (qsParsed.kilde === 'GOSYS') {
       const message = `Deeplinked from GOSYS: ${urlQuery}`;
       window.frontendlogger.info(message);
-    } else {
-      const message = `Ukjent ekstern kilde: ${urlQuery}`;
-      window.frontendlogger.error(message);
     }
   } else {
     console.log('internal route:', urlQuery);
