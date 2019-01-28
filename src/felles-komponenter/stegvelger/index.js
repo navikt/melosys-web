@@ -182,7 +182,6 @@ class Stegvelger extends Component {
       oppdaterLovvalgperioderState,
       lagreSoknadHandler,
       lovvalgsperioder,
-      behandlinger,
       vilkar,
     } = this.props;
 
@@ -242,6 +241,7 @@ Stegvelger.propTypes = {
   arbeidsgivereIPerioden: PT.array,
   avklartefakta: PT.array,
   begrunnelser: PT.object,
+  behandlinger: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
@@ -253,17 +253,21 @@ Stegvelger.propTypes = {
   fatteVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk),
+  lovvalgsperioder: PT.array.isRequired,
   inngang: PT.object,
   match: PT.object.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
   oppdaterVilkarState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
+  oppdaterLovvalgperioderState: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   settSkjemaVerdi: PT.func.isRequired,
+  sendLovvalgsperioder: PT.func.isRequired,
   skjema: PT.object.isRequired,
   valgteArbeidsgivere: PT.array,
+  vilkar: PT.array.isRequired,
 };
 
 Stegvelger.defaultProps = {
