@@ -4,8 +4,8 @@ import { connect } from 'react-redux';
 
 import * as Oppgaver from '../../ducks/oppgaver';
 import * as MPT from '../../proptypes/';
-import SakEnkeltLinje from './oppgaveliste/sakEnkeltLinje';
-import JournalForingEnkeltLinje from './oppgaveliste/journalForingEnkeltLinje';
+import BehandlingOppgave from './oppgaveliste/behandlingOppgave';
+import JournalforingOppgave from './oppgaveliste/journalforingOppgave';
 
 import './mineoppgaver.css';
 import withErrorHandling from '../../hoc/withErrorHandling';
@@ -26,9 +26,9 @@ const MineOppgaver = props => {
   return (
     <div className="minesaker">
       <h1>Mine Oppgaver ({antall()})</h1>
-      {journalforing && journalforing.map(oppgave => <JournalForingEnkeltLinje key={uuid()} sak={oppgave} />)}
+      {journalforing && journalforing.map(oppgave => <JournalforingOppgave key={uuid()} sak={oppgave} />)}
 
-      {saksbehandling && saksbehandling.map(oppgave => <SakEnkeltLinje key={uuid()} sak={oppgave} />)}
+      {saksbehandling && saksbehandling.map(oppgave => <BehandlingOppgave key={uuid()} sak={oppgave} />)}
       {antall() === 0 && ingenSakerMelding}
     </div>
   );
