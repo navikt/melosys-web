@@ -4,10 +4,7 @@ import PT from 'prop-types';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
-import BehandlingOppgave from '../felles-komponenter/forside/oppgaveliste/behandlingOppgave';
-import Journalforing from '../felles-komponenter/forside/journalforing';
-import Behandling from '../felles-komponenter/forside/behandling';
-import SokSkjema from '../felles-komponenter/forside/sokskjema';
+import Fagsak from '../felles-komponenter/forside/oppgaveliste/fagsak';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 
@@ -31,33 +28,26 @@ class Sok extends Component {
     const { fnr } = this.props.match.params;
     if (!sokResultat) return null;
 
-    const ingenTreff = <Nav.Panel>Fant ingen oppgaver knyttet til fnr eller dnr {fnr}.</Nav.Panel>;
+    const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til fnr eller dnr {fnr}.</Nav.Panel>;
 
     return (
       <div className="sok">
         { children }
         <Nav.Container>
           <Nav.Row className="">
-            <Nav.Column xs="7">
-              <section className="sokresultat">
-                <h1>Søk etter &quot;{fnr}&quot;</h1>
-                { sokResultat.map(oppgave => {
-                  const sakstype = sakstypeKoder.find(item => item.kode === oppgave.sakstypeKode);
-                  const sak = {
-                    sakstype,
-                    ...oppgave,
-                  };
-                  return (<SakEnkeltLinje key={uuid()} sak={sak} />);
-                })}
-                { sokResultat.length === 0 && ingenTreff }
-              </section>
-            </Nav.Column>
-            <Nav.Column xs="5">
-              <h1>Behandle sak</h1>
-              <SokSkjema />
-              <Journalforing />
-              <Behandling />
-            </Nav.Column>
+            <section className="sokresultat">
+              <h1>Innsyn i sak</h1>
+              <h2>Resulater for fnr &quot;{fnr}&quot;</h2>
+              { sokResultat.map(fagsak => {
+                const sakstype = sakstypeKoder.find(item => item.kode === fagsak.sakstypeKode);
+                const sak = {
+                  sakstype,
+                  ...fagsak,
+                };
+                return (<Fagsak key={uuid()} sak={sak} />);
+              })}
+              { sokResultat.length === 0 && ingenTreff }
+            </section>
           </Nav.Row>
         </Nav.Container>
       </div>
