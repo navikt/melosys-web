@@ -189,9 +189,13 @@ class Stegvelger extends Component {
     await oppdaterLokalSoknadHandler();
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
+
     const {
-      lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler, lagreBehandlingerHandler,
+      lagreVilkarHandler,
+      lagreAvklartefaktaHandler,
+      lagreLovvalgsperioderHandler,
     } = this;
+
     const { behandlingID } = this.props.oppsummering;
 
     await oppdaterAvklarteFaktaState(skjema);
@@ -202,7 +206,6 @@ class Stegvelger extends Component {
     await lagreVilkarHandler(behandlingID, vilkar);
     await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
     await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
-    await lagreBehandlingerHandler(behandlingID, behandlinger);
 
     if (this.erSisteSteg(nyttStegNummer)) {
       await lagreSoknadHandler();
