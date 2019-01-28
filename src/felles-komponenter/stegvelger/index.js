@@ -61,10 +61,21 @@ class Stegvelger extends Component {
     this.tilSteg(this.beregnNesteSteg());
   };
 
+  oppdaterBehandlinger = async () => {
+    const { skjema, oppdaterBehandlingerState } = this.props;
+    await oppdaterBehandlingerState(skjema);
+  };
+
   lagreBehandlingerHandler = async () => {
     const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
     await sendPerioder(behandlingID, behandlinger);
   };
+
+  oppdaterOgLagreBehandlinger = async () => {
+    await this.oppdaterBehandlinger();
+    await this.lagreBehandlingerHandler();
+  };
+
   lagreVilkarHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const { vilkar } = this.props;
@@ -100,19 +111,16 @@ class Stegvelger extends Component {
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
       oppdaterLovvalgperioderState,
-      oppdaterBehandlingerState,
     } = this.props;
 
     await oppdaterAvklarteFaktaState(skjema);
     await oppdaterVilkarState(skjema);
     await oppdaterLovvalgperioderState(skjema);
-    await oppdaterBehandlingerState(skjema);
 
     await this.lagreVilkarHandler();
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
     await this.fatteVedtakHandler(behandlingsresultattype);
-    await this.lagreBehandlingerHandler();
   };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
@@ -125,6 +133,7 @@ class Stegvelger extends Component {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
+      oppdaterOgLagreBehandlinger: this.oppdaterOgLagreBehandlinger,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
     };
 
@@ -173,16 +182,19 @@ class Stegvelger extends Component {
       oppdaterLovvalgperioderState,
       lagreSoknadHandler,
       lovvalgsperioder,
-      behandlinger,
       vilkar,
     } = this.props;
 
     await oppdaterLokalSoknadHandler();
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
+
     const {
-      lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler, lagreBehandlingerHandler,
+      lagreVilkarHandler,
+      lagreAvklartefaktaHandler,
+      lagreLovvalgsperioderHandler,
     } = this;
+
     const { behandlingID } = this.props.oppsummering;
 
     await oppdaterAvklarteFaktaState(skjema);
@@ -193,7 +205,6 @@ class Stegvelger extends Component {
     await lagreVilkarHandler(behandlingID, vilkar);
     await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
     await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
-    await lagreBehandlingerHandler(behandlingID, behandlinger);
 
     if (this.erSisteSteg(nyttStegNummer)) {
       await lagreSoknadHandler();
@@ -230,6 +241,7 @@ Stegvelger.propTypes = {
   arbeidsgivereIPerioden: PT.array,
   avklartefakta: PT.array,
   begrunnelser: PT.object,
+  behandlinger: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
@@ -241,17 +253,21 @@ Stegvelger.propTypes = {
   fatteVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
   landkoder: PT.arrayOf(MPT.Kodeverk),
+  lovvalgsperioder: PT.array.isRequired,
   inngang: PT.object,
   match: PT.object.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
   oppdaterVilkarState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
+  oppdaterLovvalgperioderState: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   settSkjemaVerdi: PT.func.isRequired,
+  sendLovvalgsperioder: PT.func.isRequired,
   skjema: PT.object.isRequired,
   valgteArbeidsgivere: PT.array,
+  vilkar: PT.array.isRequired,
 };
 
 Stegvelger.defaultProps = {
