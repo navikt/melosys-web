@@ -4,15 +4,14 @@ import PT from 'prop-types';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
-import SakEnkeltLinje from '../felles-komponenter/forside/oppgaveliste/sakEnkeltLinje';
+import BehandlingOppgave from '../felles-komponenter/forside/oppgaveliste/behandlingOppgave';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
-import { sakstyper } from '../kodeverk/kodelister';
+import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 
 import { queryParamLogger } from '../utils/queryParamLogger';
-import { sokSelectors, sokOperations } from '../ducks/sok';
 import './sok.css';
 
 const uuid = require('uuid/v4');
@@ -28,7 +27,7 @@ class Sok extends Component {
   }
 
   render() {
-    const { sokResultat, children } = this.props;
+    const { sokResultat, sakstypeKoder, children } = this.props;
     const { fnr } = this.props.match.params;
     if (!sokResultat) return null;
 
@@ -43,7 +42,7 @@ class Sok extends Component {
               <section className="sokresultat">
                 <h1>Søk etter &quot;{fnr}&quot;</h1>
                 { sokResultat.map(oppgave => {
-                  const sakstype = sakstyper.find(item => item.kode === oppgave.sakstypeKode);
+                  const sakstype = sakstypeKoder.find(item => item.kode === oppgave.sakstypeKode);
                   const sak = {
                     sakstype,
                     ...oppgave,
@@ -68,6 +67,7 @@ class Sok extends Component {
 
 Sok.propTypes = {
   location: PT.object.isRequired,
+  sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   sokResultat: PT.array.isRequired,
   sokBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
@@ -81,6 +81,7 @@ Sok.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
   sokResultat: sokSelectors.SokResultatSelector(state),
 });
 
