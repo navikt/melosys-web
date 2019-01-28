@@ -19,6 +19,7 @@ import Personopplysninger from '../../felles-komponenter/personopplysninger';
 import SelvstendigArbeid from '../../felles-komponenter/selvstendigarbeid';
 import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgiver';
 import Stegvelger from '../../felles-komponenter/stegvelger';
+import HenlagtInformasjon from '../../felles-komponenter/stegErstatter/henlagtInformasjon';
 import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
 
 import { landkoder, begrunnelser } from '../../kodeverk/kodelister';
@@ -97,21 +98,28 @@ class Saksopplysninger extends Component {
       soknad,
     } = this.props;
 
-    const { behandlingID } = this.props.oppsummering;
+    const { behandlingID, behandlingsstatus } = this.props.oppsummering;
 
     const { values: soknadVerdier } = soknadForm;
 
     if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
 
+    const visHenlagtSak = behandlingsstatus.kode === 'HENLAGT';
+    const visStegVelger = !visHenlagtSak;
     return behandlingID ? (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
-        <Stegvelger
-          fatteVedtakHandler={this.fatteVedtakHandler}
-          lagreSoknadHandler={this.lagreSoknadHandler}
-          oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
+        { visHenlagtSak &&
+          <HenlagtInformasjon begrunnelse="Begrunnelse" fritekst="Fritekst" />
+        }
+        { visStegVelger &&
+          <Stegvelger
+            fatteVedtakHandler={this.fatteVedtakHandler}
+            lagreSoknadHandler={this.lagreSoknadHandler}
+            oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
           begrunnelser={begrunnelser}
           landkoder={landkoder}
-        />
+          />
+        }
         <Personopplysninger />
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
         <Bosted erValidert={this.state.gyldigePaneler.bosted} />
