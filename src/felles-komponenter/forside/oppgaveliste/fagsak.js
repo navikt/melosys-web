@@ -25,8 +25,7 @@ const Fagsak = ({ sak }) => {
     sakstype,
     saksstatus,
     saksnummer,
-    behandlinger,
-    aktivTil,
+    behandlingoppsummeringer,
   } = sak;
 
   const {
@@ -34,7 +33,7 @@ const Fagsak = ({ sak }) => {
     erUnderOppdatering,
     soknadsperiode,
     land,
-  } = behandlinger[0];
+  } = behandlingoppsummeringer[0];
 
   const { fom, tom } = soknadsperiode;
   const tittel = `${kodeverkObjektTilTerm(sakstype)} - ${sammensattNavn}`;
@@ -65,8 +64,6 @@ const Fagsak = ({ sak }) => {
             <dl className="fagsak__meta">
               <dt>Søknadsperiode: </dt>
               <dd>{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
-              <dt>Aktiv til:</dt>
-              <dd>{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
               <dt>Land:</dt>
               <dd>{landListeSomStreng}</dd>
             </dl>
@@ -74,7 +71,7 @@ const Fagsak = ({ sak }) => {
         </Nav.Row>
         <Nav.Row className="fagsak__behandlinger">
           {
-            behandlinger.map(behandling => <Behandling behandling={behandling} link={link} />)
+            behandlingoppsummeringer.map(behandling => <Behandling behandling={behandling} link={link} />)
           }
         </Nav.Row>
       </Nav.Container>
