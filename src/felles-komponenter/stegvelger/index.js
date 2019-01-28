@@ -61,10 +61,21 @@ class Stegvelger extends Component {
     this.tilSteg(this.beregnNesteSteg());
   };
 
+  oppdaterBehandlinger = async () => {
+    const { skjema, oppdaterBehandlingerState } = this.props;
+    await oppdaterBehandlingerState(skjema);
+  };
+
   lagreBehandlingerHandler = async () => {
     const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
     await sendPerioder(behandlingID, behandlinger);
   };
+
+  oppdaterOgLagreBehandlinger = async () => {
+    await this.oppdaterBehandlinger();
+    await this.lagreBehandlingerHandler();
+  };
+
   lagreVilkarHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const { vilkar } = this.props;
@@ -100,19 +111,16 @@ class Stegvelger extends Component {
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
       oppdaterLovvalgperioderState,
-      oppdaterBehandlingerState,
     } = this.props;
 
     await oppdaterAvklarteFaktaState(skjema);
     await oppdaterVilkarState(skjema);
     await oppdaterLovvalgperioderState(skjema);
-    await oppdaterBehandlingerState(skjema);
 
     await this.lagreVilkarHandler();
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
     await this.fatteVedtakHandler(behandlingsresultattype);
-    await this.lagreBehandlingerHandler();
   };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
@@ -125,6 +133,7 @@ class Stegvelger extends Component {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
+      oppdaterOgLagreBehandlinger: this.oppdaterOgLagreBehandlinger,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
     };
 
