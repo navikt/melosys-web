@@ -28,16 +28,13 @@ import {
   journalforingOperations,
   journalforingSelectors,
 } from '../ducks/journalforing/';
-import {
-  fagsakOperations,
-  fagsakSelectors,
-} from '../ducks/fagsaker';
 import { formSelectors } from '../ducks/form/';
 import './journalforing.css';
 import { OrganisasjonOperations } from '../ducks/organisasjoner';
 import { PersonOperations } from '../ducks/personer';
 import * as oppgaverOperations from '../ducks/oppgaver/operations';
 import * as MPT from '../proptypes';
+import { sokOperations, sokSelectors } from '../ducks/sok';
 
 class Journalforing extends Component {
   static propTypes = {
@@ -353,7 +350,7 @@ class Journalforing extends Component {
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
-  fagsakListe: fagsakSelectors.FagsakSokSelector(state),
+  fagsakListe: sokSelectors.FagsakSokSelector(state),
   errors: getFormSyncErrors('journalforing')(state),
   initialValues: {
     behandlingstype: null,
@@ -370,7 +367,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
-  hentFagsakListe: fnr => dispatch(fagsakOperations.sok(fnr)),
+  hentFagsakListe: fnr => dispatch(sokOperations.sok(fnr)),
   settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => (setSubmitFailed('journalforing', ...feltNavn)),
   settJournalforingHensikt: journalforingHensikt => dispatch(change('journalforing', 'journalforingHensikt', journalforingHensikt)),

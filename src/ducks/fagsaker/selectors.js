@@ -31,11 +31,6 @@ export const SaksopplysningerSelector = createSelector(
   saksopplysninger => saksopplysninger || {}
 );
 
-export const FagsakSokSelector = createSelector(
-  state => (state.fagsaker.data.fagsakListe ? state.fagsaker.data.fagsakListe : []),
-  fagsakListe => fagsakListe || []
-);
-
 /**
  * INNTEKT
  * ---------------------------------------------------------------------------------------
