@@ -1,15 +1,22 @@
 @import '../../../utils/mixins';
+@import '../../../constants';
 
-.fagsak {
+.behandling {
   margin-bottom: 1em;
   flex: 1;
-
-  .panelheader {
-    margin-bottom: 0.5em;
-  }
+  background-color: #efefef;
 }
 
-.fagsak__meta {
+.behandling__link:link,
+.behandling__link:visited,
+.behandling__link:hover {
+  color: @black;
+  text-decoration: none;
+  flex-grow:1;
+  display: flex;
+}
+
+.behandling__meta {
   display: block;
   margin: 0.5em 0;
 
@@ -25,8 +32,4 @@
     clear: right;
     margin: 0;
   }
-}
-
-.fagsak__behandlinger {
-  margin-top: 2em;
 }

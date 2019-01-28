@@ -1,7 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import classNames from 'classnames';
-import PT from 'prop-types';
 
 import * as MPT from '../../../proptypes/index';
 import * as Ikoner from '../../../resources/images/index';
@@ -9,28 +6,12 @@ import * as Nav from '../../../utils/navFrontend';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
+import Behandling from './behandling';
 import PanelHeader from '../../panelHeader/panelHeader';
 import EnkeltDato from '../../datoOmrade/enkeltDato';
 import { formatterDatoTilNorsk } from '../../../utils/dato';
 
-import './behandlingOppgave.css';
-
-const FagsakWrapper = ({ link, stengt, children }) => (
-  stengt ?
-    <div>
-      {children}
-    </div>
-    :
-    <Link to={link} className="behandlingOppgave__link">
-      {children}
-    </Link>
-);
-
-FagsakWrapper.propTypes = {
-  link: PT.string.isRequired,
-  stengt: PT.bool.isRequired,
-  children: PT.node.isRequired,
-};
+import './fagsak.css';
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -40,20 +21,21 @@ FagsakWrapper.propTypes = {
 const Fagsak = ({ sak }) => {
   const {
     sammensattNavn,
+    opprettetDato,
     sakstype,
+    saksstatus,
     saksnummer,
-    behandling,
+    behandlinger,
     aktivTil,
-    soknadsperiode,
-    land,
   } = sak;
 
   const {
     sisteOpplysningerHentetDato,
     erUnderOppdatering,
-  } = behandling;
+    soknadsperiode,
+    land,
+  } = behandlinger[0];
 
-  const { behandlingsstatus } = behandling;
   const { fom, tom } = soknadsperiode;
   const tittel = `${kodeverkObjektTilTerm(sakstype)} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
@@ -61,41 +43,42 @@ const Fagsak = ({ sak }) => {
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
 
-  const cl = classNames({
-    behandlingOppgave: true,
-    behandlingOppgave__stengt: erUnderOppdatering,
-  });
-
   return (
-    <FagsakWrapper link={link} stengt={erUnderOppdatering}>
-      <Nav.Panel className={cl}>
-        <PanelHeader
-          ikon={Ikoner.IkonSak}
-          tittel={tittel}
-          undertittel={
-            <Nav.Row>
-              <Nav.Column xs="12" md="6">
-                <dl className="behandlingOppgave__meta">
-                  <dt className="behandlingOppgave__meta__term">Behandlingsstatus:</dt>
-                  <dd className="behandlingOppgave__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
-                  <dd className="behandlingOppgave__meta__detalj">{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
-                  <dt className="behandlingOppgave__meta__term">Sist oppdatert:</dt>
-                  <dd className="behandlingOppgave__meta__detalj">{oppdateringStatus || formatterDatoTilNorsk(sisteOpplysningerHentetDato, true)}</dd>
-                </dl>
-              </Nav.Column>
-              <Nav.Column xs="12" md="6">
-                <dl className="behandlingOppgave__meta">
-                  <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
-                  <dd className="behandlingOppgave__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
-                  <dt className="behandlingOppgave__meta__term">Land:</dt>
-                  <dd className="behandlingOppgave__meta__detalj">{landListeSomStreng}</dd>
-                </dl>
-              </Nav.Column>
-            </Nav.Row>
+    <Nav.Panel className="fagsak">
+      <PanelHeader
+        ikon={Ikoner.IkonSak}
+        tittel={tittel}
+        undertittel="" />
+      <Nav.Container fluid>
+        <Nav.Row>
+          <Nav.Column xs="12" md="4">
+            <dl className="fagsak__meta">
+              <dt>Saksstatus:</dt>
+              <dd>{kodeverkObjektTilTerm(saksstatus) || '(ukjent)'}</dd>
+              <dt>Registrert dato:</dt>
+              <dd>{<EnkeltDato dato={opprettetDato} /> || '(ukjent)'}</dd>
+              <dt>Sist oppdatert:</dt>
+              <dd>{oppdateringStatus || formatterDatoTilNorsk(sisteOpplysningerHentetDato, true)}</dd>
+            </dl>
+          </Nav.Column>
+          <Nav.Column xs="12" md="4">
+            <dl className="fagsak__meta">
+              <dt>Søknadsperiode: </dt>
+              <dd>{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
+              <dt>Aktiv til:</dt>
+              <dd>{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
+              <dt>Land:</dt>
+              <dd>{landListeSomStreng}</dd>
+            </dl>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row className="fagsak__behandlinger">
+          {
+            behandlinger.map(behandling => <Behandling behandling={behandling} link={link} />)
           }
-        />
-      </Nav.Panel>
-    </FagsakWrapper>
+        </Nav.Row>
+      </Nav.Container>
+    </Nav.Panel>
   );
 };
 
