@@ -179,7 +179,7 @@ VurderingArtikkel16.propTypes = {
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   lagreBehandlinger: PT.func.isRequired,
-  oppdaterBEhandlinger: PT.func.isRequired,
+  oppdaterOgLagreBehandlinger: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
