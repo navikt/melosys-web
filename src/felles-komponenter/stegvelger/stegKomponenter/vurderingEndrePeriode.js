@@ -5,11 +5,13 @@ import { FieldArray, Field } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
-import LandVelger from '../../skjema/landvelger/';
-
 const VurderingEndrePeriode = props => {
   return (
-    <div>test</div>
+    <div className="vurderingEndrePeriode">
+      <Nav.Undertittel>Endre lovvalgsperiode</Nav.Undertittel>
+      I hvilken periode fyller søkeren kriteriene for artikkel 12, nr. 1?
+      <Nav.Hovedknapp>Endre periode</Nav.Hovedknapp>
+    </div>
   );
 };
 
