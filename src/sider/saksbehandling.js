@@ -180,11 +180,6 @@ class Saksbehandling extends Component {
   };
   /* eslint-enable */
 
-  lagreBehandlingerHandler = async () => {
-    const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
-    await sendPerioder(behandlingID, behandlinger);
-  };
-
   lagreVilkarHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const { vilkar } = this.props;
@@ -231,7 +226,6 @@ class Saksbehandling extends Component {
     await this.lagreVilkarHandler();
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
-    await this.lagreBehandlingerHandler();
     await this.henleggSak(data);
     history.push('/');
   };
@@ -268,7 +262,7 @@ class Saksbehandling extends Component {
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
                 tilbakeleggeHandle={this.tilbakeleggeHandle}
-                henleggHandle={this.visHenleggDialog}
+                visHenleggDialogHandle={this.visHenleggDialog}
                 tilForsidenHandle={this.navigerTilOversiktSide}
               />
               <SideDialog />
@@ -300,7 +294,6 @@ class Saksbehandling extends Component {
 Saksbehandling.propTypes = {
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
-  sendPerioder: PT.func.isRequired,
   behandlinger: PT.object.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
@@ -341,7 +334,6 @@ const mapDispatchToProps = dispatch => ({
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
-  sendPerioder: (behandlingID, body) => dispatch(behandlingerOperations.sendPerioder(behandlingID, body)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
