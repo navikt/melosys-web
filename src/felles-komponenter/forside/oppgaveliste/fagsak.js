@@ -9,7 +9,6 @@ import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 import Behandling from './behandling';
 import PanelHeader from '../../panelHeader/panelHeader';
 import EnkeltDato from '../../datoOmrade/enkeltDato';
-import { formatterDatoTilNorsk } from '../../../utils/dato';
 
 import './fagsak.css';
 
@@ -29,8 +28,6 @@ const Fagsak = ({ sak }) => {
   } = sak;
 
   const {
-    sisteOpplysningerHentetDato,
-    erUnderOppdatering,
     soknadsperiode,
     land,
   } = behandlingoppsummeringer[0];
@@ -40,7 +37,6 @@ const Fagsak = ({ sak }) => {
   const link = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
-  const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
 
   return (
     <Nav.Panel className="fagsak">
@@ -50,20 +46,18 @@ const Fagsak = ({ sak }) => {
         undertittel="" />
       <Nav.Container fluid>
         <Nav.Row>
-          <Nav.Column xs="12" md="4">
+          <Nav.Column xs="12" md="5">
             <dl className="fagsak__meta">
               <dt>Saksstatus:</dt>
               <dd>{kodeverkObjektTilTerm(saksstatus) || '(ukjent)'}</dd>
-              <dt>Registrert dato:</dt>
-              <dd>{<EnkeltDato dato={opprettetDato} /> || '(ukjent)'}</dd>
-              <dt>Sist oppdatert:</dt>
-              <dd>{oppdateringStatus || formatterDatoTilNorsk(sisteOpplysningerHentetDato, true)}</dd>
-            </dl>
-          </Nav.Column>
-          <Nav.Column xs="12" md="4">
-            <dl className="fagsak__meta">
               <dt>Søknadsperiode: </dt>
               <dd>{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
+            </dl>
+          </Nav.Column>
+          <Nav.Column xs="12" md="5">
+            <dl className="fagsak__meta">
+              <dt>Opprettelsesdato:</dt>
+              <dd>{<EnkeltDato dato={opprettetDato} /> || '(ukjent)'}</dd>
               <dt>Land:</dt>
               <dd>{landListeSomStreng}</dd>
             </dl>
