@@ -34,6 +34,7 @@ export const STEG = {
   ARBEIDSGIVERE: 'ARBEIDSGIVERE',
   SOKKEL_SKIP: 'SOKKEL_SKIP',
   VEDTAK: 'VEDTAK',
+  ENDRET_PERIODE: 'ENDRE_PERIODE',
 };
 
 export const StegTilKontroller = {
@@ -58,4 +59,5 @@ export const StegTilKontroller = {
   ARBEIDSGIVERE: 'Arbeidsgivere',
   SOKKEL_SKIP: 'SokkelSkip',
   VEDTAK: 'Vedtak',
+  ENDRE_PERIODE: 'EndrePeriode',
 };

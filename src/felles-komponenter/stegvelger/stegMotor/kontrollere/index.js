@@ -18,7 +18,7 @@ import NormaltDriverVirksomhet from './normalt_driver_virksomhet';
 import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
 import SokkelSkip from './sokkel_skip';
 import Vedtak from './vedtak';
-
+import EndrePeriode from './endre_periode';
 
 export {
   Aktivitet,
@@ -40,5 +40,6 @@ export {
   NormaltDriverVirksomhet,
   YrkesaktivitetAntallLand,
   Vedtak,
+  EndrePeriode,
   SokkelSkip,
 };

@@ -288,5 +288,6 @@ export const OppsummeringSelector = createSelector(
     behandlingsstatus: behandlingsdata.behandlingsstatus,
     registrertDato: behandlingsdata.registrertDato,
     sisteOpplysningerHentetDato: behandlingsdata.sisteOpplysningerHentetDato,
+    behandlingstype: behandlingsdata.behandlingstype,
   })
 );

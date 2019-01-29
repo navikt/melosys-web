@@ -142,6 +142,7 @@ class Stegvelger extends Component {
       avklartefakta: props.avklartefakta,
       begrunnelser: props.begrunnelser,
       bostedsland: props.bostedsland,
+      behandlingstype: props.oppsummering.behandlingstype,
       landkoder: props.landkoder,
       lovvalgsperioder: props.lovvalgsperioder,
       inngang: props.inngang,

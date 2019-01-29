@@ -5,6 +5,7 @@ class StegMotor {
   constructor(props) {
     this._propsLight = props;
     this._forsteStegID = 'INNGANG';
+    this._endrePeriodeStegID = 'ENDRE_PERIODE';
   }
 
   beregnAlleSteg = () => {
@@ -25,6 +26,9 @@ class StegMotor {
 
   beregnNesteSteg = (gjeldendeSteg, nesteStegPosisjon) => {
     if (gjeldendeSteg === null) {
+      if (this._propsLight.behandlingstype.kode === 'ENDRET_PERIODE') {
+        return this.lagKlasseBasertPaID(this._endrePeriodeStegID, 0);
+      }
       return this.lagKlasseBasertPaID(this._forsteStegID, 0);
     }
     const nesteSteg = gjeldendeSteg.nesteSteg();
