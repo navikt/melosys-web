@@ -21,6 +21,7 @@ class Artikkel16 extends Steg {
     this._beregnRelevantUI = () => ({});
     this._handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
+      oppdaterOgLagreBehandlinger: this._propsLight.tilgjengeligeHandlers.oppdaterOgLagreBehandlinger,
     };
     this._status = FANE_STATUS.OK;
   }
