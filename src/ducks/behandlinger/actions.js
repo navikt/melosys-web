@@ -12,3 +12,9 @@ export function oppdaterPerioderState(status) {
     data: status,
   });
 }
+
+
+export function resetPerioderState() {
+  return { type: Types.RESET };
+}
+

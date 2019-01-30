@@ -40,6 +40,7 @@ class Saksbehandling extends Component {
     resetVilkarState: PT.func.isRequired,
     resetAvklartefaktaState: PT.func.isRequired,
     resetSoknadState: PT.func.isRequired,
+    resetBehandlingerState: PT.func.isRequired,
     resetLovvalgsperiode: PT.func.isRequired,
     sjekkOppfriskningStatus: PT.func.isRequired,
     oppsummering: MPT.Oppsummering,
@@ -71,6 +72,7 @@ class Saksbehandling extends Component {
     await this.props.resetLovvalgsperiode();
     await this.props.resetVilkarState();
     await this.props.resetSoknadState();
+    await this.props.resetBehandlingerState();
   }
 
   lastInnSaksopplysninger = async () => {
@@ -318,6 +320,7 @@ const mapDispatchToProps = dispatch => ({
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
   resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
   resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
+  resetBehandlingerState: () => dispatch(behandlingerOperations.resetPerioderState()),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
