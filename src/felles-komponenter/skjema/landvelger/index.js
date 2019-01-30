@@ -1,10 +1,10 @@
 import React from 'react';
 import PT from 'prop-types';
-import { kodeverk } from 'melosys-kodeverk';
 
 import EnkeltLand from './enkeltLand';
 import MultiLand from './multiLand';
 import { kodeverkObjektTilKode } from '../../../utils/kodeverk';
+import { landkoder } from '../../../kodeverk/kodelister';
 
 import './landvelger.css';
 
@@ -13,8 +13,6 @@ const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`
 const kodeTilObjekt = (kode, alleLandkoder) => alleLandkoder.find(enkeltKode => kodeverkObjektTilKode(enkeltKode) === kode);
 
 const uuid = require('uuid/v4');
-
-const { landkoder } = kodeverk;
 
 /** Dette er inngangskomponent for MultiLand eller EnkeltLand. Disse avgjøres via
  * prop-type multiLand som er subkomponenter i landvelgeren.

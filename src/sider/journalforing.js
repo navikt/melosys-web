@@ -5,9 +5,9 @@ import qs from 'qs';
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { kodeverk } from 'melosys-kodeverk';
 
 import { sakstyper } from '../kodeverk/koder';
+import { typer as behandlingstyper } from '../kodeverk/kodelister';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
@@ -55,8 +55,6 @@ const queryParamLogger = (journalpostID, oppgaveID, location) => {
   }
   /* eslint-enable */
 };
-
-const behandlingstyper = kodeverk.behandlinger.typer;
 
 class Journalforing extends Component {
   static propTypes = {

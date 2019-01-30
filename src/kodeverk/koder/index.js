@@ -1,8 +1,6 @@
 // Melosys-kodeverk
 // Se Confluence koder for oversikt
 
-import { kodeverk, kodeset } from 'melosys-kodeverk';
-
 import lovvalgsbestemmelser from './lovvalgsbestemmelser';
 import trygdedekninger from './trygdedekninger';
 import medlemskapstyper from './medlemskapstyper';
@@ -17,11 +15,6 @@ import oppgavetyper from './oppgavetyper';
 import representerer from './representerer';
 import sakstyper from './sakstyper';
 import henleggelsesgrunner from './henleggelsesgrunner';
-
-export {
-  kodeverk,
-  kodeset,
-};
 
 export {
   lovvalgsbestemmelser,

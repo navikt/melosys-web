@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
-import { kodeverk } from 'melosys-kodeverk';
 
 import * as Utils from '../../utils/utils';
 import * as Skjema from '../skjema/';
@@ -18,10 +17,9 @@ import * as Person from '../../felles-komponenter/skjema/validering/generisk/per
 import { PersonSelectors } from '../../ducks/personer';
 import { OrganisasjonSelectors } from '../../ducks/organisasjoner';
 import { formSelectors } from '../../ducks/form';
+import { dokumenttitler as valgbareDokumentTitler } from '../../kodeverk/kodelister';
 
 import './informasjon.css';
-
-const valgbareDokumentTitler = kodeverk.dokumenttitler;
 
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
  * slik som informasjon om bruker, informasjon om dokument etc.

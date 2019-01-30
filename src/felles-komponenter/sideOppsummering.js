@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import moment from 'moment/moment';
-import { kodeverk, kodemap } from 'melosys-kodeverk';
+import { kodemap } from 'melosys-kodeverk';
 
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
@@ -17,10 +17,10 @@ import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { arrayTilKonjunksjon } from '../utils/streng';
 import { KodeTermSelect } from './kodeTermSelect';
 import { behandlinger } from '../kodeverk/koder';
+import { status as behandlingstatuser } from '../kodeverk/kodelister';
 
 import './sideOppsummering.css';
 
-const behandlingsstatusKodeverk = kodeverk.behandlinger.behandlingsstatus;
 const termer = kodemap.behandlinger.behandlingsstatus;
 
 class SideOppsummering extends Component {
@@ -58,7 +58,7 @@ class SideOppsummering extends Component {
       return false;
     }
     const { oppdaterBehandlingsStatus, oppsummering: { behandlingID } } = this.props;
-    const term = kodeTilVerdi(kode, behandlingsstatusKodeverk);
+    const term = kodeTilVerdi(kode, behandlingstatuser);
     const nystatus = { kode, term };
     Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nystatus);

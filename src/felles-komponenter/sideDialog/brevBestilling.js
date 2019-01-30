@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, reset, setSubmitFailed } from 'redux-form';
 import PT from 'prop-types';
-import { kodeverk } from 'melosys-kodeverk';
 
 import { representerer, brev } from '../../kodeverk/koder';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 import * as Skjema from '../../felles-komponenter/skjema';
 import { formSelectors } from '../../ducks/form/';
+import { aktoersroller, produserbaredokumenter } from '../../kodeverk/kodelister';
 
 // import * as Validering from '../skjema/validering';
 import { brevbestillingValidering, erSkjemaGyldig } from '../skjema/validering/brevbestilling';
@@ -18,9 +18,6 @@ import PdfLenkeListe from '../pdfLenkeListe';
 
 import './brevBestilling.css';
 import * as Utils from '../../utils/utils';
-
-const { aktoerroller } = kodeverk;
-const { produserbareDokumenter } = kodeverk.brev;
 
 const InfoPanel = () => (
   <Nav.Lesmerpanel
@@ -124,10 +121,10 @@ class BrevBestilling extends Component {
         <form onSubmit={this.overstyrSubmit}>
           <Nav.Fieldset legend="Nytt brev">
             <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker" disabled={!redigerbart}>
-              {aktoerroller && aktoerroller.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+              {aktoersroller && aktoersroller.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
-              {produserbareDokumenter && produserbareDokumenter.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+              {produserbaredokumenter && produserbaredokumenter.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&

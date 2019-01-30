@@ -6,8 +6,8 @@
  */
 
 import { createSelector } from 'reselect';
-import { vilkar, lovvalgsbestemmelser, kodeverk } from '../../kodeverk/koder';
-
+import { vilkar, lovvalgsbestemmelser } from '../../kodeverk/koder';
+import { forordning_883_2004, forordning_987_2009, tillegg } from '../../kodeverk/kodelister';
 
 // selector(s)
 export const VilkarSelector = createSelector(
@@ -73,11 +73,10 @@ export const art16_1 = createSelector(
 export const valgteLovvalgsVilkar = createSelector(
   state => VilkarSelector(state),
   alleVilkar => {
-    const lovvalgsbestemmelserListe = kodeverk.lovvalgsbestemmelser;
     const alleLovvalg = [
-      ...lovvalgsbestemmelserListe.forordning_883_2004,
-      ...lovvalgsbestemmelserListe.forordning_987_2009,
-      ...lovvalgsbestemmelserListe.tillegg,
+      ...forordning_883_2004,
+      ...forordning_987_2009,
+      ...tillegg,
     ];
     return alleVilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar));
   }

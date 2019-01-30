@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import qs from 'qs';
-import { kodeverk } from 'melosys-kodeverk';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
@@ -11,12 +10,12 @@ import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
+import { sakstyper } from '../kodeverk/kodelister';
+
 import { sokSelectors, sokOperations } from '../ducks/sok';
 import './sok.css';
 
 const uuid = require('uuid/v4');
-
-const { sakstypeKoder } = kodeverk;
 
 const queryParamLogger = (fnr, location) => {
   const qsParsed = qs.parse(location.search.slice(1));
@@ -62,7 +61,7 @@ class Sok extends Component {
               <section className="sokresultat">
                 <h1>Søk etter &quot;{fnr}&quot;</h1>
                 { sokResultat.map(oppgave => {
-                  const sakstype = sakstypeKoder.find(item => item.kode === oppgave.sakstypeKode);
+                  const sakstype = sakstyper.find(item => item.kode === oppgave.sakstypeKode);
                   const sak = {
                     sakstype,
                     ...oppgave,

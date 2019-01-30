@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
-import { kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
@@ -11,6 +10,7 @@ import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { fagsakSelectors } from '../../../ducks/fagsaker/';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
+import { forordning_883_2004, forordning_987_2009, tillegg } from '../../../kodeverk/kodelister';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
 import { finnEnkeltKodeFraListe, kodeverkObjektTilTerm } from '../../../utils/kodeverk';
@@ -18,12 +18,7 @@ import PdfLenkeListe from '../../../felles-komponenter/pdfLenkeListe';
 
 import './vurderingVedtak.css';
 
-const { lovvalgsbestemmelser } = kodeverk;
-const alleLovvalg = [
-  ...lovvalgsbestemmelser.forordning_883_2004,
-  ...lovvalgsbestemmelser.forordning_987_2009,
-  ...lovvalgsbestemmelser.tillegg,
-];
+const alleLovvalg = [...forordning_883_2004, ...forordning_987_2009, ...tillegg];
 
 const VurderingVedtak = props => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)

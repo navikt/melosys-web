@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import Kodeverk from 'melosys-kodeverk';
 import { connect } from 'react-redux';
 
 import * as MPT from '../../proptypes';
@@ -9,12 +8,12 @@ import PdfLenkeListe from '../../felles-komponenter/pdfLenkeListe';
 import { KodeTermSelect } from '../kodeTermSelect';
 import { fagsakSelectors } from '../../ducks/fagsaker';
 import { brev, aktoersroller, henleggelsesgrunner as henleggelsesgrunnerKoder } from '../../kodeverk/koder';
+import { henleggelsesgrunner } from '../../kodeverk/kodelister';
 
 import * as Nav from '../../utils/navFrontend';
 
 import './dialogboksHenlegg.css';
 
-const { kodeverk: { henleggelsesgrunner } } = Kodeverk;
 
 export class DialogboksHenleggSak extends Component {
   state = {

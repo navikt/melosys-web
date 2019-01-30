@@ -3,12 +3,18 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
-import { kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from '../../../proptypes/';
+
 import { behandlinger, brev, aktoersroller } from '../../../kodeverk/koder';
+import {
+  art16_1_anmodning as anmodningsBegrunnelser,
+  forordning_883_2004,
+  forordning_987_2009,
+  tillegg,
+} from '../../../kodeverk/kodelister';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
@@ -23,8 +29,6 @@ import './vurderingArtikkel16.css';
 
 const uuid = require('uuid/v4');
 
-const anmodningsBegrunnelser = kodeverk.begrunnelser.art16_1_anmodning;
-const { forordning_883_2004, forordning_987_2009, tillegg } = kodeverk.lovvalgsbestemmelser;
 const alleLovvalg = [...forordning_883_2004, ...forordning_987_2009, ...tillegg];
 
 const TidligereMedlemPeriodeLinje = ({
