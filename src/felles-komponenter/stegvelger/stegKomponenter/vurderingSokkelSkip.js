@@ -3,20 +3,12 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-import { SOKKEL, SKIP } from '../../../koder';
+import { SOKKEL, SKIP, VurderingSokkelSkipTyper } from '../../../koder';
 import * as MPT from '../../../proptypes';
 
 import LandVelger from '../../skjema/landvelger';
 
 import './vurderingSokkelSkip.css';
-
-export const VurderingSokkelSkipTyper = {
-  SKIP_NORSK_TERRITORIAL: 'SKIP_NORSK_TERRITORIAL',
-  SKIP_ETT_LAND: 'SKIP_ETT_LAND',
-  SOKKEL_NORSK: 'SOKKEL_NORSK',
-  SOKKEL_UTLAND: 'SOKKEL_UTLAND',
-  SOKKEL_ELLER_SKIP_FLERE_LAND: 'SOKKEL_ELLER_SKIP_FLERE_LAND',
-};
 
 const SokkelSkipEnkelt = props => {
   const {

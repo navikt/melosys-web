@@ -1,9 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingBostedsland from '../../stegKomponenter/vurderingBostedsland';
-import { VurderingYrkesgruppeTyper } from '../../stegKomponenter/vurderingYrkesgruppe';
-import { VurderingIkkeYrkesaktivTyper } from '../../stegKomponenter/vurderingIkkeYrkesaktiv';
-import { VurderingSokkelSkipTyper } from '../../stegKomponenter/vurderingSokkelSkip';
+import { VurderingSokkelSkipTyper, VurderingIkkeYrkesaktivTyper, VurderingYrkesgruppeTyper } from '../../../../koder';
 
 import Regler from '../../../../regler';
 

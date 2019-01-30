@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingSokkelSkip, { VurderingSokkelSkipTyper } from '../../stegKomponenter/vurderingSokkelSkip';
-import { SOKKEL, SKIP } from '../../../../koder';
+import VurderingSokkelSkip from '../../stegKomponenter/vurderingSokkelSkip';
+import { SOKKEL, SKIP, VurderingSokkelSkipTyper } from '../../../../koder';
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {

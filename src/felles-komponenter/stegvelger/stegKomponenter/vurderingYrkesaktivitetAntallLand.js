@@ -1,13 +1,9 @@
 import React from 'react';
 import PT from 'prop-types';
+
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-
-export const VurderingYrkesaktivitetAntallLandTyper = {
-  ETT_LAND_IKKE_NORGE: 'ETT_LAND_IKKE_NORGE',
-  KUN_NORGE: 'KUN_NORGE',
-  TO_ELLER_FLERE_LAND: 'TO_ELLER_FLERE_LAND',
-};
+import { VurderingYrkesaktivitetAntallLandTyper } from '../../../koder';
 
 const VurderingYrkesaktivitetAntallLand = props => {
   const { bekreftOgFortsett, tilstand } = props;

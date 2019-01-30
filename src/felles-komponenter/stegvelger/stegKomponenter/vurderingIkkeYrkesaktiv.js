@@ -1,13 +1,10 @@
 import React from 'react';
 import PT from 'prop-types';
+
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
-export const VurderingIkkeYrkesaktivTyper = {
-  STUDENT: 'STUDENT',
-  PENSJONIST: 'PENSJONIST',
-  INGEN_AV_DISSE: 'INGEN_AV_DISSE',
-};
+import { VurderingIkkeYrkesaktivTyper } from '../../../koder';
 
 const IkkeYrkesaktiv = () => (
   <Nav.Fieldset legend="Vurder om søkeren er:">

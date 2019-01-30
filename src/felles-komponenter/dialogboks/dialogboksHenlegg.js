@@ -14,8 +14,7 @@ import * as Nav from '../../utils/navFrontend';
 
 import './dialogboksHenlegg.css';
 
-const { kodeverk } = Kodeverk;
-const { henleggelsesgrunner } = kodeverk;
+const { kodeverk: { henleggelsesgrunner } } = Kodeverk;
 
 export class DialogboksHenleggSak extends Component {
   state = {
@@ -56,7 +55,7 @@ export class DialogboksHenleggSak extends Component {
     return fritekstValideringPassert;
   };
 
-  fritekstValgt = () => this.state.begrunnelseKode === 'ANNET';
+  fritekstValgt = () => this.state.begrunnelseKode === henleggelsesgrunnerKoder.ANNET;
 
   fritekstTom = () => this.state.fritekst === '';
 

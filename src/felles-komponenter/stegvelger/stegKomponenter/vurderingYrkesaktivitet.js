@@ -1,15 +1,9 @@
 import React from 'react';
 import PT from 'prop-types';
+
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-
-export const VurderingYrkesaktivitetTyper = {
-  ID: 'YRKESAKTIVITET',
-  ORDINAER_ARBEIDSTAKER: 'ORDINAER_ARBEIDSTAKER',
-  SELVSTENDIG_NAERINGSDRIVENDE: 'SELVSTENDIG_NAERINGSDRIVENDE',
-  ORDINAER_OG_SELVSTENDIG: 'ORDINAER_OG_SELVSTENDIG',
-  TJENESTEPERSON_NORSK_STATSFORVANTLING: 'TJENESTEPERSON_NORSK_STATSFORVANTLING',
-};
+import { VurderingYrkesaktivitetTyper } from '../../../koder';
 
 const VurderingYrkesaktivitet = props => {
   const { bekreftOgFortsett, tilstand, redigerbart } = props;
