@@ -56,7 +56,7 @@ const queryParamLogger = (journalpostID, oppgaveID, location) => {
   /* eslint-enable */
 };
 
-const { behandlingstyper } = kodeverk.behandlinger;
+const behandlingstyper = kodeverk.behandlinger.typer;
 
 class Journalforing extends Component {
   static propTypes = {
