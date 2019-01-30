@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel11_4 from '../../stegKomponenter/vurderingArtikkel11_4';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
-import { lovvalgsbestemmelser } from '../../../../koder';
+import { lovvalgsbestemmelser } from '../../../../kodeverk/koder';
 
 class Artikkel11_4 extends Steg {
   constructor(propsLight, stegPosisjon) {

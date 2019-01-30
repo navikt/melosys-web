@@ -6,7 +6,7 @@ import * as API from '../../services/api';
 import { formatterDatoTilNorsk } from '../../utils/dato';
 import * as Ikoner from '../../resources/images/index';
 import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
-import * as koder from '../../koder';
+import * as koder from '../../kodeverk/koder';
 
 import './sideDialogDokumenter.css';
 

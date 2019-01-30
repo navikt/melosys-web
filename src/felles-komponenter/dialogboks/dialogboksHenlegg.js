@@ -8,7 +8,7 @@ import * as MPT from '../../proptypes';
 import PdfLenkeListe from '../../felles-komponenter/pdfLenkeListe';
 import { KodeTermSelect } from '../kodeTermSelect';
 import { fagsakSelectors } from '../../ducks/fagsaker';
-import { brev, aktoersroller, henleggelsesgrunner as henleggelsesgrunnerKoder } from '../../koder';
+import { brev, aktoersroller, henleggelsesgrunner as henleggelsesgrunnerKoder } from '../../kodeverk/koder';
 
 import * as Nav from '../../utils/navFrontend';
 

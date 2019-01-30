@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from './../../../proptypes';
-import { lovvalgsbestemmelser } from '../../../koder';
+import { lovvalgsbestemmelser } from '../../../kodeverk/koder';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 import { arrayTilKonjunksjon } from '../../../utils/streng';

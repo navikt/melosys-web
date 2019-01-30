@@ -5,7 +5,7 @@ import { kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { behandlinger, brev, aktoersroller } from '../../../koder';
+import { behandlinger, brev, aktoersroller } from '../../../kodeverk/koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';

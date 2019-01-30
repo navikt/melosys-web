@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentligVirksomhet';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
-import { vilkar } from '../../../../koder';
+import { vilkar } from '../../../../kodeverk/koder';
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {

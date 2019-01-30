@@ -9,7 +9,7 @@
 
 import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
-import { lovvalgsbestemmelser, trygdedekninger, medlemskapstyper, landkoder, INNVILGET } from '../../koder';
+import { lovvalgsbestemmelser, trygdedekninger, medlemskapstyper, landkoder, INNVILGET } from '../../kodeverk/koder';
 
 import * as Types from './types';
 import * as Actions from './actions';

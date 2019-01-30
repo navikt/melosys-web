@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { kodeverk } from 'melosys-kodeverk';
 
-import { sakstyper } from '../koder';
+import { sakstyper } from '../kodeverk/koder';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';

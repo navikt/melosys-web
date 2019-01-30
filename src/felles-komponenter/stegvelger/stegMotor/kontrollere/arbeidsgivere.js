@@ -2,7 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArbeidsgiver from '../../stegKomponenter/vurderingArbeidsgiver';
 
-import { AVKLARTE_ARBEIDSGIVER, VurderingSokkelSkipTyper, VurderingYrkesgruppeTyper } from '../../../../koder';
+import { AVKLARTE_ARBEIDSGIVER, VurderingSokkelSkipTyper, VurderingYrkesgruppeTyper } from '../../../../kodeverk/koder';
 
 import SokkelSkip from './sokkel_skip';
 

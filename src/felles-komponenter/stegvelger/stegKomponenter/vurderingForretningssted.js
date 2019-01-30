@@ -5,7 +5,7 @@ import { FieldArray, Field } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
-import { VurderingForretningsstedTyper } from '../../../koder';
+import { VurderingForretningsstedTyper } from '../../../kodeverk/koder';
 
 import LandVelger from '../../skjema/landvelger/';
 

@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-import { SOKKEL, SKIP, VurderingSokkelSkipTyper } from '../../../koder';
+import { SOKKEL, SKIP, VurderingSokkelSkipTyper } from '../../../kodeverk/koder';
 import * as MPT from '../../../proptypes';
 
 import LandVelger from '../../skjema/landvelger';

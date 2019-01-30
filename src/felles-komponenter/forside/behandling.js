@@ -8,7 +8,7 @@ import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
 
 import { oppgaverOperations } from '../../ducks/oppgaver/';
-import { behandlinger as behandlingerKoder, sakstyper as sakstyperKoder, kodeverk } from '../../koder';
+import { behandlinger as behandlingerKoder, sakstyper as sakstyperKoder, kodeverk } from '../../kodeverk/koder';
 
 import './behandling.css';
 

@@ -5,7 +5,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
-import { begrunnelser, OPPHOLDSLAND } from '../../../../koder';
+import { begrunnelser, OPPHOLDSLAND } from '../../../../kodeverk/koder';
 
 import FjernetLandEnkelt from './fjernetLandEnkelt';
 import OppholdsLandEnkelt from './oppholdsLandEnkelt';

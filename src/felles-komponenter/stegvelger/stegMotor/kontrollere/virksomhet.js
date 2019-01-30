@@ -6,7 +6,7 @@ import {
   VurderingYrkesaktivitetTyper,
   VurderingYrkesaktivitetAntallLandTyper,
   VurderingYrkesgruppeTyper
-} from '../../../../koder';
+} from '../../../../kodeverk/koder';
 
 class Virksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {

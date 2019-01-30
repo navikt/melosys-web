@@ -8,7 +8,7 @@
 
 
 import { createSelector } from 'reselect';
-import { kodeverk, SKIP } from '../../koder';
+import { kodeverk, SKIP } from '../../kodeverk/koder';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';

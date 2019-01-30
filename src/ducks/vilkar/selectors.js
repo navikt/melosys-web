@@ -6,7 +6,7 @@
  */
 
 import { createSelector } from 'reselect';
-import { vilkar, lovvalgsbestemmelser, kodeverk } from '../../koder';
+import { vilkar, lovvalgsbestemmelser, kodeverk } from '../../kodeverk/koder';
 
 
 // selector(s)

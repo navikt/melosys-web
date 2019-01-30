@@ -10,7 +10,7 @@
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
-import { oppgavetyper } from '../../koder';
+import { oppgavetyper } from '../../kodeverk/koder';
 
 /**
  * Hent Soknad

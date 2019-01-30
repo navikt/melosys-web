@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-import { VurderingVirksomhetTyper } from '../../../koder';
+import { VurderingVirksomhetTyper } from '../../../kodeverk/koder';
 
 const VekslingMellomLand = () => (
   <Nav.Fieldset legend="Veksler søker regelmessig mellom arbeid i flere land eller arbeider søker i flere land?">

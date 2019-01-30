@@ -4,7 +4,7 @@ import { reduxForm, reset, setSubmitFailed } from 'redux-form';
 import PT from 'prop-types';
 import { kodeverk } from 'melosys-kodeverk';
 
-import { representerer, brev } from '../../koder';
+import { representerer, brev } from '../../kodeverk/koder';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 import * as Skjema from '../../felles-komponenter/skjema';

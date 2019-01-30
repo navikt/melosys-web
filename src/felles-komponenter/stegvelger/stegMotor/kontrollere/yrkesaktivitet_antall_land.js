@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitetAntallLand from '../../stegKomponenter/vurderingYrkesaktivitetAntallLand';
-import { VurderingYrkesaktivitetAntallLandTyper, VurderingYrkesgruppeTyper } from '../../../../koder';
+import { VurderingYrkesaktivitetAntallLandTyper, VurderingYrkesgruppeTyper } from '../../../../kodeverk/koder';
 import Yrkesgruppe from '../../stegMotor/kontrollere/yrkesgruppe';
 
 class YrkesaktivitetAntallLand extends Steg {

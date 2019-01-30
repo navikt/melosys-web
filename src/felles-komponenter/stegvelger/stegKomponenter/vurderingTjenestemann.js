@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
-import { VurderingTjenestemannTyper } from '../../../koder';
+import { VurderingTjenestemannTyper } from '../../../kodeverk/koder';
 
 const VurderingTjenestemann = props => {
   const { bekreftOgFortsett } = props;

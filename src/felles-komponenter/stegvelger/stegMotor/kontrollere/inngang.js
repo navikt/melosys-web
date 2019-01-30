@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingInngang from '../../stegKomponenter/vurderingInngang';
-import { OPPHOLDSLAND } from '../../../../koder';
+import { OPPHOLDSLAND } from '../../../../kodeverk/koder';
 
 class Inngang extends Steg {
   constructor(propsLight, stegPosisjon) {

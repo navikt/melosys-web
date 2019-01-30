@@ -11,7 +11,7 @@ import * as MPT from '../proptypes';
 import { formSelectors } from '../ducks/form/';
 import { fagsakSelectors } from '../ducks/fagsaker/';
 
-import { fartsomrader as fartsomraader } from '../koder';
+import { fartsomrader as fartsomraader } from '../kodeverk/koder';
 
 import LandVelger from './skjema/landvelger';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';

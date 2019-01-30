@@ -16,7 +16,7 @@ import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { arrayTilKonjunksjon } from '../utils/streng';
 import { KodeTermSelect } from './kodeTermSelect';
-import { behandlinger } from '../koder';
+import { behandlinger } from '../kodeverk/koder';
 
 import './sideOppsummering.css';
 

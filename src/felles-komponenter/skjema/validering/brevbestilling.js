@@ -1,7 +1,7 @@
 // import * as Konstanter from '../../../constants';
 // import * as Mikrovalidering from './mikrovalidering';
 
-import { brev } from '../../../koder';
+import { brev } from '../../../kodeverk/koder';
 
 const harBlankMelding = (verdi, melding = 'Velg et element i nedtrekkslisten') => ((verdi === '') ? melding : false);
 const harTekstMelding = (tekst, melding = 'Tekstfeltet må fylles ut') => ((tekst && tekst.length > 0) ? false : melding);

@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-import { VurderingYrkesaktivitetTyper } from '../../../koder';
+import { VurderingYrkesaktivitetTyper } from '../../../kodeverk/koder';
 
 const VurderingYrkesaktivitet = props => {
   const { bekreftOgFortsett, tilstand, redigerbart } = props;

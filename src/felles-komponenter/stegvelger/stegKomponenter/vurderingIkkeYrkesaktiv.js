@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
-import { VurderingIkkeYrkesaktivTyper } from '../../../koder';
+import { VurderingIkkeYrkesaktivTyper } from '../../../kodeverk/koder';
 
 const IkkeYrkesaktiv = () => (
   <Nav.Fieldset legend="Vurder om søkeren er:">

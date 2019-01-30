@@ -9,7 +9,7 @@ import { STATUS } from '../../services/utils';
 
 import * as Types from './types';
 
-import { lovvalgsbestemmelser, vilkar } from '../../koder';
+import { lovvalgsbestemmelser, vilkar } from '../../kodeverk/koder';
 
 const initialState = {
   data: [],

@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel12_1 from '../../stegKomponenter/vurderingArtikkel12_1';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
-import { vilkar } from '../../../../koder';
+import { vilkar } from '../../../../kodeverk/koder';
 
 
 class Artikkel12_1 extends Steg {

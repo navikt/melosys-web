@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingNormaltDriverVirksomhet from '../../stegKomponenter/vurderingNormaltDriverVirksomhet';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
-import { lovvalgsbestemmelser } from '../../../../koder';
+import { lovvalgsbestemmelser } from '../../../../kodeverk/koder';
 
 class NormaltDriverVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {

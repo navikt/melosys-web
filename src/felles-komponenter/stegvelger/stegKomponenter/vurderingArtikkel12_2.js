@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import { vilkar as vilkarKoder } from '../../../koder';
+import { vilkar as vilkarKoder } from '../../../kodeverk/koder';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
