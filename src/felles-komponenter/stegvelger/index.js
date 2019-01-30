@@ -19,6 +19,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../duc
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
+import { begrunnelser, landkoder } from '../../koder';
 
 import './stegvelger.css';
 
@@ -60,9 +61,19 @@ class Stegvelger extends Component {
     this.tilSteg(this.beregnNesteSteg());
   };
 
+  oppdaterBehandlinger = async () => {
+    const { skjema, oppdaterBehandlingerState } = this.props;
+    await oppdaterBehandlingerState(skjema);
+  };
+
   lagreBehandlingerHandler = async () => {
     const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
     await sendPerioder(behandlingID, behandlinger);
+  };
+
+  oppdaterOgLagreBehandlinger = async () => {
+    await this.oppdaterBehandlinger();
+    await this.lagreBehandlingerHandler();
   };
 
   lagreVilkarHandler = async () => {
@@ -100,19 +111,16 @@ class Stegvelger extends Component {
       oppdaterAvklarteFaktaState,
       oppdaterVilkarState,
       oppdaterLovvalgperioderState,
-      oppdaterBehandlingerState,
     } = this.props;
 
     await oppdaterAvklarteFaktaState(skjema);
     await oppdaterVilkarState(skjema);
     await oppdaterLovvalgperioderState(skjema);
-    await oppdaterBehandlingerState(skjema);
 
     await this.lagreVilkarHandler();
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
     await this.fatteVedtakHandler(behandlingsresultattype);
-    await this.lagreBehandlingerHandler();
   };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
@@ -125,15 +133,16 @@ class Stegvelger extends Component {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
+      oppdaterOgLagreBehandlinger: this.oppdaterOgLagreBehandlinger,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
     };
 
     const propsLight = {
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
-      begrunnelser: props.begrunnelser,
+      begrunnelser,
       bostedsland: props.bostedsland,
-      landkoder: props.landkoder,
+      landkoder,
       lovvalgsperioder: props.lovvalgsperioder,
       inngang: props.inngang,
       tilgjengeligeHandlers,
@@ -144,6 +153,7 @@ class Stegvelger extends Component {
       vilkar: props.vilkar,
       redigerbart: props.redigerbart,
     };
+
     const stegMotor = new StegMotor(propsLight);
     const aktuelleSteg = stegMotor.beregnAlleSteg();
     // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg
@@ -164,7 +174,6 @@ class Stegvelger extends Component {
   tilSteg = async nyttStegNummer => {
     const {
       avklartefakta,
-      behandlinger,
       skjema,
       oppdaterAvklarteFaktaState,
       oppdaterBehandlingerState,
@@ -179,9 +188,13 @@ class Stegvelger extends Component {
     await oppdaterLokalSoknadHandler();
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
+
     const {
-      lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler, lagreBehandlingerHandler,
+      lagreVilkarHandler,
+      lagreAvklartefaktaHandler,
+      lagreLovvalgsperioderHandler,
     } = this;
+
     const { behandlingID } = this.props.oppsummering;
 
     await oppdaterAvklarteFaktaState(skjema);
@@ -192,7 +205,6 @@ class Stegvelger extends Component {
     await lagreVilkarHandler(behandlingID, vilkar);
     await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
     await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
-    await lagreBehandlingerHandler(behandlingID, behandlinger);
 
     if (this.erSisteSteg(nyttStegNummer)) {
       await lagreSoknadHandler();
@@ -239,17 +251,21 @@ Stegvelger.propTypes = {
   history: PT.object.isRequired,
   fatteVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
+  lovvalgsperioder: PT.array.isRequired,
   inngang: PT.object,
   match: PT.object.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
   oppdaterVilkarState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
+  oppdaterLovvalgperioderState: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   settSkjemaVerdi: PT.func.isRequired,
+  sendLovvalgsperioder: PT.func.isRequired,
   skjema: PT.object.isRequired,
   valgteArbeidsgivere: PT.array,
+  vilkar: PT.array.isRequired,
 };
 
 Stegvelger.defaultProps = {

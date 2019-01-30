@@ -18,7 +18,7 @@ const { kodeset, kodeverk } = Kodeverk;
 const { henleggelsesgrunner } = kodeverk;
 const { MELDING_HENLAGT_SAK } = kodeset.brev.produserbareDokumenter;
 
-class DialogboksHenleggSak extends Component {
+export class DialogboksHenleggSak extends Component {
   state = {
     begrunnelseKode: '',
     feilmeldingSelect: undefined,
@@ -78,7 +78,7 @@ class DialogboksHenleggSak extends Component {
     let { fritekst } = this.state;
     if (fritekst === '') fritekst = null;
     this.props.henleggHandle({
-      begrunnelse: begrunnelseKode,
+      begrunnelseKode,
       fritekst,
     });
   };
@@ -88,6 +88,7 @@ class DialogboksHenleggSak extends Component {
       avbryt,
       oppsummering,
       redigerbart,
+      ariaHideApp,
     } = this.props;
 
     const {
@@ -103,7 +104,7 @@ class DialogboksHenleggSak extends Component {
     } = this;
 
     const data = erBegrunnelseValgt() ? {
-      begrunnelse: begrunnelseKode,
+      begrunnelseKode,
       fritekst: fritekst === '' ? null : fritekst,
       mottaker: kodeset.aktoerroller.BRUKER,
     } : {};
@@ -122,7 +123,8 @@ class DialogboksHenleggSak extends Component {
         contentLabel="Henlegg sak"
         onRequestClose={avbryt}
         closeButton={false}
-        shouldCloseOnOverlayClick>
+        shouldCloseOnOverlayClick
+        ariaHideApp={ariaHideApp}>
         <div>
           <Nav.Systemtittel className="overskrift">Henlegg saken</Nav.Systemtittel>
           <KodeTermSelect
@@ -162,10 +164,12 @@ DialogboksHenleggSak.propTypes = {
   avbryt: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   redigerbart: PT.bool.isRequired,
+  ariaHideApp: PT.bool,
 };
 
 DialogboksHenleggSak.defaultProps = {
   oppsummering: {},
+  ariaHideApp: true,
 };
 
 const mapStateToProps = state => ({
