@@ -11,11 +11,12 @@ import vilkar from './vilkar';
 import begrunnelser from './begrunnelser';
 import behandlinger from './behandlinger';
 import brev from './brev';
-import aktoerroller from './aktoerroller';
+import aktoersroller from './aktoerroller';
 import mottaksretning from './mottaksretning';
 import oppgavetyper from './oppgavetyper';
 import representerer from './representerer';
 import sakstyper from './sakstyper';
+import henleggelsesgrunner from './henleggelsesgrunner';
 
 export {
   kodeverk,
@@ -52,9 +53,10 @@ export {
   begrunnelser,
   behandlinger,
   brev,
-  aktoerroller,
+  aktoersroller,
   mottaksretning,
   oppgavetyper,
   representerer,
   sakstyper,
+  henleggelsesgrunner,
 };

@@ -8,7 +8,7 @@ import { kodeverk } from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from '../../../proptypes/';
-import { behandlinger, brev, aktoerroller } from '../../../koder';
+import { behandlinger, brev, aktoersroller } from '../../../koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
@@ -23,8 +23,9 @@ import './vurderingArtikkel16.css';
 
 const uuid = require('uuid/v4');
 
-const anmodningsBegrunnelser = kodeverk.begrunnelser.artikkel16_1_anmodning;
-const alleLovvalg = kodeverk.lovvalgsbestemmelser;
+const anmodningsBegrunnelser = kodeverk.begrunnelser.art16_1_anmodning;
+const { forordning_883_2004, forordning_987_2009, tillegg } = kodeverk.lovvalgsbestemmelser;
+const alleLovvalg = [...forordning_883_2004, ...forordning_987_2009, ...tillegg];
 
 const TidligereMedlemPeriodeLinje = ({
   perm, onChange, checked, redigerbart,
@@ -114,8 +115,8 @@ class VurderingArtikkel16 extends Component {
     const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
     const dokumenter = [
-      { navn: 'Forhåndsvis anmodning til bruker', type: brev.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: aktoerroller.BRUKER } },
-      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: aktoerroller.MYNDIGHET } },
+      { navn: 'Forhåndsvis anmodning til bruker', type: brev.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: aktoersroller.BRUKER } },
+      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: aktoersroller.MYNDIGHET } },
     ];
 
     return (
@@ -177,7 +178,6 @@ VurderingArtikkel16.propTypes = {
   oppsummering: PT.object.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
-  lagreBehandlinger: PT.func.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
 };
 

@@ -38,7 +38,7 @@ class Artikkel11_4 extends Steg {
       bostedsland: _propsLight.bostedsland,
       oppholdsland: _propsLight.oppholdsland,
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
-      begrunnelser: _propsLight.begrunnelser.artikkel11_4 || [],
+      begrunnelser: _propsLight.begrunnelser.art11_4_begrunnelser || [],
       redigerbart: _propsLight.redigerbart,
     });
 

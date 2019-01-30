@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import moment from 'moment/moment';
-import { kodeverk, kodemap, kodeset } from 'melosys-kodeverk';
+import { kodeverk, kodemap } from 'melosys-kodeverk';
 
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
@@ -16,11 +16,12 @@ import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { arrayTilKonjunksjon } from '../utils/streng';
 import { KodeTermSelect } from './kodeTermSelect';
+import { behandlinger } from '../koder';
+
 import './sideOppsummering.css';
 
 const behandlingsstatusKodeverk = kodeverk.behandlinger.behandlingsstatus;
 const termer = kodemap.behandlinger.behandlingsstatus;
-const koder = kodeset.behandlinger.behandlingsstatus;
 
 class SideOppsummering extends Component {
   state = {
@@ -70,29 +71,29 @@ class SideOppsummering extends Component {
     let endreStatusValg = [];
 
     switch (kode) {
-      case koder.VURDER_DOKUMENT:
+      case behandlinger.VURDER_DOKUMENT:
         endreStatusValg = [
-          { kode: koder.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
-          { kode: koder.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
+          { kode: behandlinger.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
+          { kode: behandlinger.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
         ];
         break;
-      case koder.AVVENT_DOK_UTL:
+      case behandlinger.AVVENT_DOK_UTL:
         endreStatusValg = [
-          { kode: koder.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
+          { kode: behandlinger.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
         ];
         break;
-      case koder.AVVENT_DOK_PART:
+      case behandlinger.AVVENT_DOK_PART:
         endreStatusValg = [
-          { kode: koder.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
+          { kode: behandlinger.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
         ];
         break;
-      case koder.UNDER_BEHANDLING:
+      case behandlinger.UNDER_BEHANDLING:
         return [];
       default:
         return [];
     }
 
-    endreStatusValg = [...endreStatusValg, { kode: koder.UNDER_BEHANDLING, term: termer.UNDER_BEHANDLING }];
+    endreStatusValg = [...endreStatusValg, { kode: behandlinger.UNDER_BEHANDLING, term: termer.UNDER_BEHANDLING }];
 
     return endreStatusValg;
   };

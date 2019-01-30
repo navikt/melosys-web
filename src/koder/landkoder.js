@@ -4,4 +4,4 @@ const { landkoder } = kodeset;
 
 export default {
   NO: landkoder.NO,
-}
+};

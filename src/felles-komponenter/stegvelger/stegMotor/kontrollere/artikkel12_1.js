@@ -31,7 +31,7 @@ class Artikkel12_1 extends Steg {
     this._komponent = VurderingArtikkel12_1;
     this._samleRelevanteData = _propsLight => ({
       artikkel: { kode: vilkar.FO_883_2004_ART12_1, term: '12.1' },
-      begrunnelser: _propsLight.begrunnelser.artikkel12_1 || [],
+      begrunnelser: _propsLight.begrunnelser.art12_1_begrunnelser || [],
       redigerbart: _propsLight.redigerbart,
     });
     this._beregnRelevantUI = _propsLight => {

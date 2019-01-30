@@ -3,12 +3,12 @@ import { connect } from 'react-redux';
 import { reduxForm, getFormValues } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
-import { kodeset, kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
 
 import { oppgaverOperations } from '../../ducks/oppgaver/';
+import { behandlinger as behandlingerKoder, sakstyper as sakstyperKoder, kodeverk } from '../../koder';
 
 import './behandling.css';
 
@@ -16,10 +16,8 @@ const uuid = require('uuid/v4');
 
 const BEHANDLINGSFORM = 'behandlingsform';
 
-const sakstyperKoder = kodeset.sakstyper;
 const sakstyperListe = kodeverk.sakstyper;
-const behandlingstyperKoder = kodeset.behandlinger.behandlingstyper;
-const behandlingstyperListe = kodeverk.behandlinger.behandlingstyper;
+const behandlingstyperListe = kodeverk.behandlinger.typer;
 
 class Behandling extends Component {
   componentDidUpdate() {
@@ -57,7 +55,7 @@ class Behandling extends Component {
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
                 {behandlingstyperListe.map(type => {
-                  const isDisabled = type.kode !== behandlingstyperKoder.SOEKNAD;
+                  const isDisabled = type.kode !== behandlingerKoder.SOEKNAD;
                   return (<Skjema.Checkbox key={uuid()} label={type.term} disabled={isDisabled} feltNavn={`behandlingstyper.${type.kode}`} />);
                 })}
               </Nav.Fieldset>

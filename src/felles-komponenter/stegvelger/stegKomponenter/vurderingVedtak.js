@@ -5,7 +5,7 @@ import { kodeverk } from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { behandlinger, brev, aktoerroller } from '../../../koder';
+import { behandlinger, brev, aktoersroller } from '../../../koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
@@ -50,8 +50,8 @@ const VurderingVedtak = props => {
   const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.term).join(', ');
 
   const dokumenter = [
-    { navn: 'Forhåndsvis vedtaksbrev', type: brev.INNVILGELSE_YRKESAKTIV, data: { mottaker: aktoerroller.BRUKER } },
-    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: brev.ATTEST_A1, data: { mottaker: aktoerroller.MYNDIGHET } },
+    { navn: 'Forhåndsvis vedtaksbrev', type: brev.INNVILGELSE_YRKESAKTIV, data: { mottaker: aktoersroller.BRUKER } },
+    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: brev.ATTEST_A1, data: { mottaker: aktoersroller.MYNDIGHET } },
   ];
 
   return (
