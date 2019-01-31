@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import moment from 'moment/moment';
-import { kodemap } from 'melosys-kodeverk';
 
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
@@ -18,10 +17,9 @@ import { arrayTilKonjunksjon } from '../utils/streng';
 import { KodeTermSelect } from './kodeTermSelect';
 import { behandlinger } from '../kodeverk/koder';
 import { status as behandlingstatuser } from '../kodeverk/kodelister';
+import { status as behandlingsStatusTermer } from '../kodeverk/termer';
 
 import './sideOppsummering.css';
-
-const termer = kodemap.behandlinger.behandlingsstatus;
 
 class SideOppsummering extends Component {
   state = {
@@ -73,18 +71,18 @@ class SideOppsummering extends Component {
     switch (kode) {
       case behandlinger.VURDER_DOKUMENT:
         endreStatusValg = [
-          { kode: behandlinger.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
-          { kode: behandlinger.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
+          { kode: behandlinger.AVVENT_DOK_UTL, term: behandlingsStatusTermer.AVVENT_DOK_UTL },
+          { kode: behandlinger.AVVENT_DOK_PART, term: behandlingsStatusTermer.AVVENT_DOK_PART },
         ];
         break;
       case behandlinger.AVVENT_DOK_UTL:
         endreStatusValg = [
-          { kode: behandlinger.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
+          { kode: behandlinger.AVVENT_DOK_PART, term: behandlingsStatusTermer.AVVENT_DOK_PART },
         ];
         break;
       case behandlinger.AVVENT_DOK_PART:
         endreStatusValg = [
-          { kode: behandlinger.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
+          { kode: behandlinger.AVVENT_DOK_UTL, term: behandlingsStatusTermer.AVVENT_DOK_UTL },
         ];
         break;
       case behandlinger.UNDER_BEHANDLING:
@@ -93,7 +91,7 @@ class SideOppsummering extends Component {
         return [];
     }
 
-    endreStatusValg = [...endreStatusValg, { kode: behandlinger.UNDER_BEHANDLING, term: termer.UNDER_BEHANDLING }];
+    endreStatusValg = [...endreStatusValg, { kode: behandlinger.UNDER_BEHANDLING, term: behandlingsStatusTermer.UNDER_BEHANDLING }];
 
     return endreStatusValg;
   };
