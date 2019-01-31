@@ -26,7 +26,6 @@ import { landkoder, begrunnelser } from '../../kodeverk/kodelister';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
-
 import {
   soknadOperations,
   soknadActions,
@@ -39,6 +38,9 @@ import { vilkarSelectors } from '../../ducks/vilkar/';
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
 import { formSelectors } from '../../ducks/form/';
 import { formatterDatoTilNorsk } from '../../utils/dato';
+
+import { saksstatuser } from '../../kodeverk/koder';
+
 
 class Saksopplysninger extends Component {
   state = {
@@ -105,7 +107,7 @@ class Saksopplysninger extends Component {
     }
 
     const { henleggelsegrunn, henleggelseFritekst } = behandlingsresultat;
-    const visHenlagtSak = fagsakStatusKode === 'HENLAGT';
+    const visHenlagtSak = fagsakStatusKode === saksstatuser.HENLAGT;
     const visStegVelger = !visHenlagtSak;
     return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
@@ -119,8 +121,8 @@ class Saksopplysninger extends Component {
             fatteVedtakHandler={this.fatteVedtakHandler}
             lagreSoknadHandler={this.lagreSoknadHandler}
             oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
-          begrunnelser={begrunnelser}
-          landkoder={landkoder}
+            begrunnelser={begrunnelser}
+            landkoder={landkoder}
           />
         }
         <Personopplysninger />
