@@ -8,7 +8,8 @@
 
 
 import { createSelector } from 'reselect';
-import { kodeverk, SKIP } from '../../kodeverk/koder';
+import { SKIP } from '../../kodeverk/koder';
+import { landkoder } from '../../kodeverk/kodelister';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
@@ -201,7 +202,7 @@ export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
 
     const styrendeLand = landOverstyrtAvSkip.length > 0 ? landOverstyrtAvSkip : landAvklartVedInngang;
 
-    return kodeverk.landkoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
+    return landkoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
   }
 );
 
@@ -232,6 +233,6 @@ export const BostedslandSelector = createSelector(
     const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.BOSTEDSLAND);
     if (!avklartFakta) return null;
     const bostedslandKode = avklartFakta.fakta[0];
-    return kodeverk.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
+    return landkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
   }
 );

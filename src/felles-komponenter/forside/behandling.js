@@ -8,16 +8,14 @@ import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
 
 import { oppgaverOperations } from '../../ducks/oppgaver/';
-import { behandlinger as behandlingerKoder, sakstyper as sakstyperKoder, kodeverk } from '../../kodeverk/koder';
+import { behandlinger as behandlingerKoder, sakstyper as sakstyperKoder } from '../../kodeverk/koder';
+import { sakstyper, typer as behandlingstyper } from '../../kodeverk/kodelister';
 
 import './behandling.css';
 
 const uuid = require('uuid/v4');
 
 const BEHANDLINGSFORM = 'behandlingsform';
-
-const sakstyperListe = kodeverk.sakstyper;
-const behandlingstyperListe = kodeverk.behandlinger.typer;
 
 class Behandling extends Component {
   componentDidUpdate() {
@@ -45,7 +43,7 @@ class Behandling extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Fieldset legend="Sakstype">
-                {sakstyperListe.map(enkeltType => {
+                {sakstyper.map(enkeltType => {
                   const isDisabled = enkeltType.kode !== sakstyperKoder.EU_EOS;
                   return (<Skjema.Checkbox key={uuid()} label={enkeltType.term} disabled={isDisabled} feltNavn={`sakstyper.${enkeltType.kode}`} />);
                 })}
@@ -54,7 +52,7 @@ class Behandling extends Component {
 
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
-                {behandlingstyperListe.map(type => {
+                {behandlingstyper.map(type => {
                   const isDisabled = type.kode !== behandlingerKoder.SOEKNAD;
                   return (<Skjema.Checkbox key={uuid()} label={type.term} disabled={isDisabled} feltNavn={`behandlingstyper.${type.kode}`} />);
                 })}
