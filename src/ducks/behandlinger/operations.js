@@ -23,3 +23,7 @@ export function sendPerioder(behandlingID, perioder) {
 export function oppdaterPerioderState(state) {
   return dispatch => (dispatch(Actions.oppdaterPerioderState(state)));
 }
+
+export function resetPerioderState() {
+  return Actions.resetPerioderState();
+}
