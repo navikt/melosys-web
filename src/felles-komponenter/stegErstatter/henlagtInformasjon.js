@@ -2,12 +2,14 @@ import React from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../proptypes';
 
 import './henlagtInformasjon.css';
 
 const HenlagtInformasjon = props => {
   const { begrunnelse, fritekst } = props;
-  const henlagtTekst = (fritekst !== undefined) ? fritekst : begrunnelse;
+  const begrunnelseBeskrivelse = begrunnelse ? begrunnelse.term : 'Ukjent grunn';
+  const henlagtTekst = (fritekst && fritekst.length > 1) ? fritekst : begrunnelseBeskrivelse;
 
   return (
     <section aria-label="henlagtStatus" className="henlagtStatus panelSeksjon stegErstatter">
@@ -22,9 +24,12 @@ const HenlagtInformasjon = props => {
 };
 
 HenlagtInformasjon.propTypes = {
-  begrunnelse: PT.object.isRequired,
-  fritekst: PT.object.isRequired,
+  begrunnelse: MPT.Kodeverk.isRequired,
+  fritekst: PT.string,
 };
 
+HenlagtInformasjon.defaultProps = {
+  fritekst: '',
+};
 
 export default HenlagtInformasjon;

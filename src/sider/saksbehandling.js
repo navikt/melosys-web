@@ -15,6 +15,8 @@ import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
 import SideOppsummering from '../felles-komponenter/sideOppsummering';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
+import { behandlingsresultatOperations } from '../ducks/behandlingsresultat/';
+
 import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../ducks/saksopplysninger';
@@ -32,11 +34,13 @@ class Saksbehandling extends Component {
   static propTypes = {
     avklartefakta: PT.array,
     hentFagsaker: PT.func.isRequired,
+    hentBehandlingsresultat: PT.func.isRequired,
     hentSoknad: PT.func.isRequired,
     history: PT.object.isRequired,
     match: PT.object.isRequired,
     oppfriskSaksopplysninger: PT.func.isRequired,
     resetFagsakState: PT.func.isRequired,
+    resetBehandlingsresultatState: PT.func.isRequired,
     resetVilkarState: PT.func.isRequired,
     resetAvklartefaktaState: PT.func.isRequired,
     resetSoknadState: PT.func.isRequired,
@@ -77,8 +81,8 @@ class Saksbehandling extends Component {
 
   lastInnSaksopplysninger = async () => {
     const {
-      hentFagsaker, hentSoknad,
-      sjekkOppfriskningStatus,
+      hentFagsaker, hentBehandlingsresultat,
+      hentSoknad, sjekkOppfriskningStatus,
     } = this.props;
     const { snr } = this.props.match.params;
     const response = await hentFagsaker(snr);
@@ -86,6 +90,8 @@ class Saksbehandling extends Component {
 
     if (!behandlinger) return false;
     const { oppsummering: { behandlingID } } = behandlinger[0];
+
+    await hentBehandlingsresultat(behandlingID);
 
     // Sjekk om saken er iferd under oppdatering
     const oppfriskningStatus = await sjekkOppfriskningStatus(behandlingID);
@@ -314,8 +320,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
+  hentBehandlingsresultat: bid => dispatch(behandlingsresultatOperations.hent(bid)),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
+  resetBehandlingsresultatState: () => dispatch(behandlingsresultatOperations.resetBehandlingsresultatState()),
   resetVilkarState: () => dispatch(vilkarOperations.resetVilkarState()),
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
   resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),

@@ -25,7 +25,6 @@ import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
 import { landkoder, begrunnelser } from '../../kodeverk/kodelister';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
-
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
 
 import {
@@ -35,13 +34,10 @@ import {
 } from '../../ducks/soknad/';
 
 import { avklartefaktaSelectors } from '../../ducks/avklartefakta/';
-
 import { behandlingerSelectors } from '../../ducks/behandlinger';
-
 import { vilkarSelectors } from '../../ducks/vilkar/';
-
+import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
 import { formSelectors } from '../../ducks/form/';
-
 import { formatterDatoTilNorsk } from '../../utils/dato';
 
 class Saksopplysninger extends Component {
@@ -96,20 +92,27 @@ class Saksopplysninger extends Component {
       soknadArbeidsinntekt,
       soknadForm,
       soknad,
+      behandlingsresultat,
+      fagsakStatusKode,
     } = this.props;
 
-    const { behandlingID, behandlingsstatus } = this.props.oppsummering;
-
+    if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
     const { values: soknadVerdier } = soknadForm;
 
-    if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
+    const { behandlingID } = this.props.oppsummering;
+    if (!behandlingID) {
+      return null;
+    }
 
-    const visHenlagtSak = behandlingsstatus.kode === 'HENLAGT';
+    const { henleggelsegrunn, henleggelseFritekst } = behandlingsresultat;
+    const visHenlagtSak = fagsakStatusKode === 'HENLAGT';
     const visStegVelger = !visHenlagtSak;
-    return behandlingID ? (
+    return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
         { visHenlagtSak &&
-          <HenlagtInformasjon begrunnelse="Begrunnelse" fritekst="Fritekst" />
+          <HenlagtInformasjon
+            begrunnelse={henleggelsegrunn}
+            fritekst={henleggelseFritekst} />
         }
         { visStegVelger &&
           <Stegvelger
@@ -133,14 +136,16 @@ class Saksopplysninger extends Component {
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
         {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
       </form>
-    ) : null;
+    );
   }
 }
 
 Saksopplysninger.propTypes = {
   alleRelevantePersoner: PT.arrayOf(MPT.Person),
   avklartefakta: PT.array.isRequired,
+  behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
+  fagsakStatusKode: PT.object.isRequired,
   handleSubmit: PT.func.isRequired,
   inntekt: MPT.Inntekt,
   match: PT.object.isRequired,
@@ -173,9 +178,11 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
+  fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
