@@ -1,6 +1,8 @@
 // import * as Konstanter from '../../../constants';
 // import * as Mikrovalidering from './mikrovalidering';
 
+import { brev } from '../../../kodeverk/koder';
+
 const harBlankMelding = (verdi, melding = 'Velg et element i nedtrekkslisten') => ((verdi === '') ? melding : false);
 const harTekstMelding = (tekst, melding = 'Tekstfeltet må fylles ut') => ((tekst && tekst.length > 0) ? false : melding);
 
@@ -30,7 +32,7 @@ const mangelBrevValidering = verdier => {
 const brevbestillingSituasjonsbetingetValidering = verdier => {
   const { dokumenttypeKode } = verdier;
   switch (dokumenttypeKode) {
-    case 'MELDING_MANGLENDE_OPPLYSNINGER':
+    case brev.MELDING_MANGLENDE_OPPLYSNINGER:
       return mangelBrevValidering(verdier);
     default: return {};
   }

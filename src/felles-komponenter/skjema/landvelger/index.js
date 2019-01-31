@@ -1,19 +1,15 @@
 import React from 'react';
 import PT from 'prop-types';
-import { connect } from 'react-redux';
-
-import * as MPT from '../../../proptypes';
-
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../../utils/kodeverk';
-import { KodeverkSelectors } from '../../../ducks/kodeverk';
 
 import EnkeltLand from './enkeltLand';
 import MultiLand from './multiLand';
+import { kodeverkObjektTilKode } from '../../../utils/kodeverk';
+import { landkoder } from '../../../kodeverk/kodelister';
 
 import './landvelger.css';
 
 /** Hjelpere som deles av hovedkomponent og subkomponentene EnkeltLand og MultiLand */
-const landTekstFormat = landObjekt => (`${kodeverkObjektTilTerm(landObjekt)} (${kodeverkObjektTilKode(landObjekt)})`);
+const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 const kodeTilObjekt = (kode, alleLandkoder) => alleLandkoder.find(enkeltKode => kodeverkObjektTilKode(enkeltKode) === kode);
 
 const uuid = require('uuid/v4');
@@ -23,15 +19,17 @@ const uuid = require('uuid/v4');
  * @param props
  */
 const LandVelger = props => {
-  const { landkoder, multiLand } = props;
+  const { multiLand } = props;
   const dataListID = `datalist-${uuid()}`;
 
   return (
     <div>
-      {multiLand ? (<MultiLand {...props} dataListID={dataListID} />) : (<EnkeltLand {...props} dataListID={dataListID} />)}
+      {multiLand
+        ? (<MultiLand {...props} landkoder={landkoder} dataListID={dataListID} />)
+        : (<EnkeltLand {...props} landkoder={landkoder} dataListID={dataListID} />)}
       <div className="landliste__dataliste">
         <datalist id={dataListID}>
-          {landkoder.map(item => (<option key={kodeverkObjektTilKode(item)} value={landTekstFormat(item)} />))}
+          {landkoder.map(item => (<option key={item.kode} value={landTekstFormat(item)} />))}
         </datalist>
       </div>
     </div>
@@ -42,7 +40,6 @@ LandVelger.propTypes = {
   disabled: PT.bool,
   feltNavn: PT.string.isRequired,
   multiLand: PT.bool,
-  landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   label: PT.string,
 };
 
@@ -52,10 +49,6 @@ LandVelger.defaultProps = {
   label: undefined,
 };
 
-const mapStateToProps = state => ({
-  landkoder: KodeverkSelectors.landkoderSelector(state),
-});
-
 export { kodeTilObjekt, landTekstFormat };
 
-export default connect(mapStateToProps)(LandVelger);
+export default LandVelger;

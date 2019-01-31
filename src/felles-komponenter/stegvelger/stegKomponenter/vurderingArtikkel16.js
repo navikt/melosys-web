@@ -7,11 +7,17 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from '../../../proptypes/';
-import * as Koder from '../../../koder';
+
+import { behandlinger, brev, aktoersroller } from '../../../kodeverk/koder';
+import {
+  art16_1_anmodning as anmodningsBegrunnelser,
+  forordning_883_2004,
+  forordning_987_2009,
+  tillegg,
+} from '../../../kodeverk/kodelister';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
-import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
@@ -22,6 +28,8 @@ import PdfLenkeListe from '../../../felles-komponenter/pdfLenkeListe';
 import './vurderingArtikkel16.css';
 
 const uuid = require('uuid/v4');
+
+const alleLovvalg = [...forordning_883_2004, ...forordning_987_2009, ...tillegg];
 
 const TidligereMedlemPeriodeLinje = ({
   perm, onChange, checked, redigerbart,
@@ -95,12 +103,10 @@ class VurderingArtikkel16 extends Component {
 
   render() {
     const {
-      anmodningsBegrunnelser,
       gyldigeOppholdLand,
       oppholdPeriode,
       medlemskap,
       oppsummering,
-      alleLovvalg,
       redigerbart,
     } = this.props;
 
@@ -113,8 +119,8 @@ class VurderingArtikkel16 extends Component {
     const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
     const dokumenter = [
-      { navn: 'Forhåndsvis orienteringsbrev til bruker', type: 'ORIENTERING_ANMODNING_UNNTAK', data: { mottaker: 'BRUKER' } },
-      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: 'MYNDIGHET' } },
+      { navn: 'Forhåndsvis anmodning til bruker', type: brev.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: aktoersroller.BRUKER } },
+      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: aktoersroller.MYNDIGHET } },
     ];
 
     return (
@@ -159,7 +165,7 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={() => lagreBehandlingerOgFatteVedtak(Koder.ANMODNING_OM_UNNTAK)}>Send brevene</Nav.Hovedknapp>
+              <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={() => lagreBehandlingerOgFatteVedtak(behandlinger.ANMODNING_OM_UNNTAK)}>Send brevene</Nav.Hovedknapp>
             </Nav.Column>
           </Nav.Row>
         </div>
@@ -169,22 +175,17 @@ class VurderingArtikkel16 extends Component {
 }
 
 VurderingArtikkel16.propTypes = {
-  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
   medlemskap: MPT.Medlemskap.isRequired,
-  anmodningsBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
   oppsummering: PT.object.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
-  lagreBehandlinger: PT.func.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
-  alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
-  anmodningsBegrunnelser: KodeverkSelectors.anmodningsBegrunnelserSelector(state),
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),

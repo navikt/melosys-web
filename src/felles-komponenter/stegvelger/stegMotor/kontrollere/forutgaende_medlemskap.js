@@ -22,7 +22,7 @@ class ForutgaendeMedlemskap extends Steg {
     this._tittel = 'Forutg. medl';
     this._komponent = VurderingForutgaendeMedlemskap;
     this._samleRelevanteData = _propsLight => ({
-      begrunnelser: _propsLight.begrunnelser.forutgaendeMedlemskap || [],
+      begrunnelser: _propsLight.begrunnelser.art12_1_forutgaaende_medl || [],
       redigerbart: _propsLight.redigerbart,
     });
     this._beregnRelevantUI = _propsLight => {

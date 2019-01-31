@@ -6,6 +6,8 @@ import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { sakstyper } from '../kodeverk/koder';
+import { typer as behandlingstyper } from '../kodeverk/kodelister';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
@@ -30,7 +32,6 @@ import {
   fagsakOperations,
   fagsakSelectors,
 } from '../ducks/fagsaker';
-import { KodeverkSelectors } from '../ducks/kodeverk';
 import { formSelectors } from '../ducks/form/';
 import './journalforing.css';
 import { OrganisasjonOperations } from '../ducks/organisasjoner';
@@ -54,7 +55,6 @@ class Journalforing extends Component {
     journalforing: MPT.Journalforing,
     journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
     fagsakListe: PT.array,
-    behandlingstyper: PT.arrayOf(MPT.Kodeverk),
     valid: PT.bool.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
@@ -66,7 +66,6 @@ class Journalforing extends Component {
   static defaultProps = {
     journalforing: {},
     fagsakListe: [],
-    behandlingstyper: [],
     journalforingSkjemaVerdier: {},
   };
 
@@ -195,7 +194,7 @@ class Journalforing extends Component {
     }
 
     const fagsak = {
-      sakstype: 'EU_EOS',
+      sakstype: sakstyper.EU_EOS,
       soknadsperiode: {
         fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
         tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
@@ -295,7 +294,6 @@ class Journalforing extends Component {
     const {
       journalforing: { hoveddokument = {} },
       fagsakListe,
-      behandlingstyper,
     } = this.props;
 
     const {
@@ -356,7 +354,6 @@ const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: fagsakSelectors.FagsakSokSelector(state),
-  behandlingstyper: KodeverkSelectors.behandlingsTyperSelector(state),
   errors: getFormSyncErrors('journalforing')(state),
   initialValues: {
     behandlingstype: null,

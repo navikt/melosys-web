@@ -49,7 +49,7 @@ const ListevelgerEnkelt = ({
 
 ListevelgerEnkelt.propTypes = {
   label: PT.string.isRequired,
-  disabled: PT.string.isRequired,
+  disabled: PT.bool.isRequired,
   children: PT.node,
   input: PT.object,
   errorMessage: PT.object,

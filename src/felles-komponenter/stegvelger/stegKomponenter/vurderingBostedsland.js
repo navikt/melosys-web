@@ -12,11 +12,6 @@ import * as MPT from '../../../proptypes';
 
 const uuid = require('uuid/v4');
 
-export const VurderingBostedslandTyper = {
-  NORGE: 'NORGE',
-  ANNET: 'ANNET',
-};
-
 const Avklaringer = ({ avklaringer }) => (
   <div>
     <Nav.Element>Vurder bosted manuelt:</Nav.Element>

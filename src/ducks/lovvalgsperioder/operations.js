@@ -9,10 +9,10 @@
 
 import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
+import { lovvalgsbestemmelser, trygdedekninger, medlemskapstyper, landkoder, INNVILGET } from '../../kodeverk/koder';
 
 import * as Types from './types';
 import * as Actions from './actions';
-import * as Koder from '../../koder';
 
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
@@ -48,14 +48,14 @@ const byggLovvalgsPeriodeArtikkel12_1 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: Koder.FO_883_2004_ART12_1,
+    lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART12_1,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: Koder.INNVILGET,
-    lovvalgsland: 'NO',
-    trygdeDekning: Koder.FULL_DEKNING_EOSFO,
-    medlemskapstype: Koder.PLIKTIG,
+    innvilgelsesResultat: INNVILGET,
+    lovvalgsland: landkoder.NO,
+    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: medlemskapstyper.PLIKTIG,
   }];
 };
 
@@ -64,14 +64,14 @@ const byggLovvalgsPeriodeArtikkel12_2 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: Koder.FO_883_2004_ART12_2,
+    lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART12_2,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: Koder.INNVILGET,
-    lovvalgsland: 'NO',
-    trygdeDekning: Koder.FULL_DEKNING_EOSFO,
-    medlemskapstype: Koder.PLIKTIG,
+    innvilgelsesResultat: INNVILGET,
+    lovvalgsland: landkoder.NO,
+    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: medlemskapstyper.PLIKTIG,
   }];
 };
 
@@ -80,14 +80,14 @@ const byggLovvalgsPeriodeArtikkel11_3A = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: Koder.FO_883_2004_ART11_3A,
-    tilleggBestemmelse: Koder.FO_883_2004_ART11_4_1,
+    lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART11_3A,
+    tilleggBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART11_4_1,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: Koder.INNVILGET,
-    lovvalgsland: 'NO',
-    trygdeDekning: Koder.FULL_DEKNING_EOSFO,
-    medlemskapstype: Koder.PLIKTIG,
+    innvilgelsesResultat: INNVILGET,
+    lovvalgsland: landkoder.NO,
+    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: medlemskapstyper.PLIKTIG,
   }];
 };
 
@@ -96,14 +96,14 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: Koder.FO_883_2004_ART11_4_2,
+    lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART11_4_2,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: Koder.INNVILGET,
-    lovvalgsland: 'NO',
-    trygdeDekning: Koder.FULL_DEKNING_EOSFO,
-    medlemskapstype: 'PLIKTIG',
+    innvilgelsesResultat: INNVILGET,
+    lovvalgsland: landkoder.NO,
+    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: medlemskapstyper.PLIKTIG,
   }];
 };
 
@@ -120,24 +120,24 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: Koder.FO_883_2004_ART16_1,
+    lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART16_1,
     tilleggBestemmelse: null,
     unntakFraBestemmelse,
     unntakFraLovvalgsland,
-    innvilgelsesResultat: Koder.INNVILGET,
-    lovvalgsland: 'NO',
-    trygdeDekning: Koder.FULL_DEKNING_EOSFO,
-    medlemskapstype: Koder.PLIKTIG,
+    innvilgelsesResultat: INNVILGET,
+    lovvalgsland: landkoder.NO,
+    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: medlemskapstyper.PLIKTIG,
   }];
 };
 
 const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
   switch (valgtLovvalg) {
-    case Koder.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
-    case Koder.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(getState);
-    case Koder.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
-    case Koder.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
-    case Koder.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
+    case lovvalgsbestemmelser.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
+    case lovvalgsbestemmelser.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(getState);
+    case lovvalgsbestemmelser.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
+    case lovvalgsbestemmelser.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
+    case lovvalgsbestemmelser.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
     default: return [];
   }
 };

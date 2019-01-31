@@ -6,6 +6,7 @@ import * as API from '../../services/api';
 import { formatterDatoTilNorsk } from '../../utils/dato';
 import * as Ikoner from '../../resources/images/index';
 import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
+import * as koder from '../../kodeverk/koder';
 
 import './sideDialogDokumenter.css';
 
@@ -27,10 +28,10 @@ const RenderInnUtImage = ({ mottaksretning }) => {
   const { kode, term } = mottaksretning;
   let icon;
   switch (kode) {
-    case 'INN':
+    case koder.mottaksretning.INN:
       icon = Ikoner.InnBrev;
       break;
-    case 'UT':
+    case koder.mottaksretning.UT:
       icon = Ikoner.Svar;
       break;
     default:
