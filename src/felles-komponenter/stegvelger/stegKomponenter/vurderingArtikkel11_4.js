@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from './../../../proptypes';
-import * as Koder from '../../../koder';
+import { lovvalgsbestemmelser } from '../../../kodeverk/koder';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 import { arrayTilKonjunksjon } from '../../../utils/streng';
@@ -23,8 +23,8 @@ class VurderingArtikkel11_4 extends Component {
    */
   constructor() {
     super();
-    this.ART11_4_1 = Koder.FO_883_2004_ART11_4_1;
-    this.ART11_4_2 = Koder.FO_883_2004_ART11_4_2;
+    this.ART11_4_1 = lovvalgsbestemmelser.FO_883_2004_ART11_4_1;
+    this.ART11_4_2 = lovvalgsbestemmelser.FO_883_2004_ART11_4_2;
     this.TIL_VURDERING_12_1 = 'TIL_VURDERING_12_1';
   }
 

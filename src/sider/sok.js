@@ -1,52 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
-import qs from 'qs';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
 import SakEnkeltLinje from '../felles-komponenter/forside/oppgaveliste/sakEnkeltLinje';
 import Journalforing from '../felles-komponenter/forside/journalforing';
 import Behandling from '../felles-komponenter/forside/behandling';
 import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
+import { sakstyper } from '../kodeverk/kodelister';
+
+import { queryParamLogger } from '../utils/queryParamLogger';
 import { sokSelectors, sokOperations } from '../ducks/sok';
-import { KodeverkSelectors } from '../ducks/kodeverk';
 import './sok.css';
 
 const uuid = require('uuid/v4');
-
-const queryParamLogger = (fnr, location) => {
-  const qsParsed = qs.parse(location.search.slice(1));
-  const urlQuery = `${location.pathname}${location.search}`;
-  /* eslint-disable */
-  if (qsParsed) {
-    if (qsParsed.kilde === 'GOSYS') {
-      const message = `Deeplinked from GOSYS: ${urlQuery}`;
-      window.frontendlogger.info(message);
-    } else {
-      const message = `Ukjent ekstern kilde: ${urlQuery}`;
-      window.frontendlogger.error(message);
-    }
-  } else {
-    console.log('internal route:', urlQuery);
-  }
-  /* eslint-enable */
-};
 
 class Sok extends Component {
   componentWillMount() {
     const { match, location, sokBehandlingsOppgaver } = this.props;
     const { fnr } = match.params;
     if (fnr) {
-      queryParamLogger(fnr, location);
+      queryParamLogger(location, 'kilde', 'GOSYS');
       sokBehandlingsOppgaver(fnr);
     }
   }
 
   render() {
-    const { sokResultat, sakstypeKoder, children } = this.props;
+    const { sokResultat, children } = this.props;
     const { fnr } = this.props.match.params;
     if (!sokResultat) return null;
 
@@ -61,7 +43,7 @@ class Sok extends Component {
               <section className="sokresultat">
                 <h1>Søk etter &quot;{fnr}&quot;</h1>
                 { sokResultat.map(oppgave => {
-                  const sakstype = sakstypeKoder.find(item => item.kode === oppgave.sakstypeKode);
+                  const sakstype = sakstyper.find(item => item.kode === oppgave.sakstypeKode);
                   const sak = {
                     sakstype,
                     ...oppgave,
@@ -86,7 +68,6 @@ class Sok extends Component {
 
 Sok.propTypes = {
   location: PT.object.isRequired,
-  sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   sokResultat: PT.array.isRequired,
   sokBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
@@ -100,7 +81,6 @@ Sok.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
   sokResultat: sokSelectors.SokResultatSelector(state),
 });
 

@@ -4,14 +4,12 @@ import { reduxForm, getFormValues } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
-import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
 
 import { oppgaverOperations } from '../../ducks/oppgaver/';
-import * as Kodeverk from '../../ducks/kodeverk';
-
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../utils/kodeverk';
+import { behandlinger as behandlingerKoder, sakstyper as sakstyperKoder } from '../../kodeverk/koder';
+import { sakstyper, typer as behandlingstyper } from '../../kodeverk/kodelister';
 
 import './behandling.css';
 
@@ -37,7 +35,6 @@ class Behandling extends Component {
   };
 
   render() {
-    const { saksTyper, behandlingsTyper } = this.props;
     return (
       <Nav.Panel className="forside__sidepanel sidepanel__behandling">
         <Nav.Systemtittel>Behandle sak</Nav.Systemtittel>
@@ -46,18 +43,18 @@ class Behandling extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Fieldset legend="Sakstype">
-                {saksTyper.map(enkeltType => {
-                  const isDisabled = kodeverkObjektTilKode(enkeltType) !== 'EU_EOS';
-                  return (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(enkeltType)} disabled={isDisabled} feltNavn={`sakstyper.${kodeverkObjektTilKode(enkeltType)}`} />);
+                {sakstyper.map(enkeltType => {
+                  const isDisabled = enkeltType.kode !== sakstyperKoder.EU_EOS;
+                  return (<Skjema.Checkbox key={uuid()} label={enkeltType.term} disabled={isDisabled} feltNavn={`sakstyper.${enkeltType.kode}`} />);
                 })}
               </Nav.Fieldset>
             </Nav.Column>
 
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
-                {behandlingsTyper.map(type => {
-                  const isDisabled = kodeverkObjektTilKode(type) !== 'SOEKNAD';
-                  return (<Skjema.Checkbox key={uuid()} label={kodeverkObjektTilTerm(type)} disabled={isDisabled} feltNavn={`behandlingstyper.${kodeverkObjektTilKode(type)}`} />);
+                {behandlingstyper.map(type => {
+                  const isDisabled = type.kode !== behandlingerKoder.SOEKNAD;
+                  return (<Skjema.Checkbox key={uuid()} label={type.term} disabled={isDisabled} feltNavn={`behandlingstyper.${type.kode}`} />);
                 })}
               </Nav.Fieldset>
             </Nav.Column>
@@ -73,8 +70,6 @@ class Behandling extends Component {
 Behandling.propTypes = {
   handleSubmit: PT.func.isRequired,
   history: PT.object.isRequired,
-  behandlingsTyper: PT.arrayOf(MPT.Kodeverk).isRequired,
-  saksTyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   formValues: PT.object,
 };
 
@@ -83,8 +78,6 @@ Behandling.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  behandlingsTyper: Kodeverk.KodeverkSelectors.behandlingsTyperSelector(state),
-  saksTyper: Kodeverk.KodeverkSelectors.sakstyperSelector(state),
   formValues: getFormValues(BEHANDLINGSFORM)(state),
   initialValues: JSON.parse(localStorage.getItem(BEHANDLINGSFORM)),
 });

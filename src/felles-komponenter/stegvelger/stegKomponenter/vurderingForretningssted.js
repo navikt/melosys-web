@@ -5,17 +5,11 @@ import { FieldArray, Field } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
+import { VurderingForretningsstedTyper } from '../../../kodeverk/koder';
+
 import LandVelger from '../../skjema/landvelger/';
 
 const uuid = require('uuid/v4');
-
-export const VurderingForretningsstedTyper = {
-  ID: 'FORRETNINGSSTED',
-  EN_ARBEIDSGIVER: 'EN_ARBEIDSGIVER',
-  TO_ELLER_FLERE_ARBEIDSGIVERE: 'TO_ELLER_FLERE_ARBEIDSGIVERE',
-  SAMME_LAND: 'SAMME_LAND',
-  ULIKE_LAND: 'ULIKE_LAND',
-};
 
 /** Det gir ingen mening å legge inn input=hidden i Redux Form, men vi trenger allikevel å knytte et felt
  * med arbeidsgiverID til hver gruppe av svar slik at vi vet hvilken arbeidsgiverID som saksbehandler har gitt vilke svar til.

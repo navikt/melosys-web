@@ -17,7 +17,7 @@ import * as Person from '../../felles-komponenter/skjema/validering/generisk/per
 import { PersonSelectors } from '../../ducks/personer';
 import { OrganisasjonSelectors } from '../../ducks/organisasjoner';
 import { formSelectors } from '../../ducks/form';
-import { KodeverkSelectors } from '../../ducks/kodeverk';
+import { dokumenttitler as valgbareDokumentTitler } from '../../kodeverk/kodelister';
 
 import './informasjon.css';
 
@@ -148,7 +148,7 @@ class Informasjon extends Component {
 
   render() {
     const {
-      valgbareDokumentTitler, journalpostID, dokumentID,
+      journalpostID, dokumentID,
     } = this.props;
     const {
       spinner: { brukerNavn: visBrukerSpinner },
@@ -198,7 +198,6 @@ class Informasjon extends Component {
 }
 
 Informasjon.propTypes = {
-  valgbareDokumentTitler: PT.arrayOf(MPT.Kodeverk),
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   hentOgVisBruker: PT.func.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
@@ -209,7 +208,6 @@ Informasjon.propTypes = {
 
 Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
-  valgbareDokumentTitler: [],
   journalpostID: '',
   dokumentID: '',
 };
@@ -218,7 +216,6 @@ const mapStateToProps = state => ({
   person: PersonSelectors.personerSelector(state),
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
-  valgbareDokumentTitler: KodeverkSelectors.dokumenttitlerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

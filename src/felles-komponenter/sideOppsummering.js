@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import moment from 'moment/moment';
-import { kodemap, kodeset } from 'melosys-kodeverk';
 
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
@@ -12,15 +11,15 @@ import EnkeltDato from './datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm, kodeTilVerdi } from '../utils/kodeverk';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
-import { KodeverkSelectors } from '../ducks/kodeverk';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { arrayTilKonjunksjon } from '../utils/streng';
 import { KodeTermSelect } from './kodeTermSelect';
-import './sideOppsummering.css';
+import { behandlinger } from '../kodeverk/koder';
+import { status as behandlingstatuser } from '../kodeverk/kodelister';
+import { status as behandlingsStatusTermer } from '../kodeverk/termer';
 
-const termer = kodemap.behandlinger.behandlingsstatus;
-const koder = kodeset.behandlinger.behandlingsstatus;
+import './sideOppsummering.css';
 
 class SideOppsummering extends Component {
   state = {
@@ -56,8 +55,8 @@ class SideOppsummering extends Component {
     if (kode === 'VELG') {
       return false;
     }
-    const { behandlingsstatusKodeVerk, oppdaterBehandlingsStatus, oppsummering: { behandlingID } } = this.props;
-    const term = kodeTilVerdi(kode, behandlingsstatusKodeVerk);
+    const { oppdaterBehandlingsStatus, oppsummering: { behandlingID } } = this.props;
+    const term = kodeTilVerdi(kode, behandlingstatuser);
     const nystatus = { kode, term };
     Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nystatus);
@@ -70,29 +69,29 @@ class SideOppsummering extends Component {
     let endreStatusValg = [];
 
     switch (kode) {
-      case koder.VURDER_DOKUMENT:
+      case behandlinger.VURDER_DOKUMENT:
         endreStatusValg = [
-          { kode: koder.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
-          { kode: koder.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
+          { kode: behandlinger.AVVENT_DOK_UTL, term: behandlingsStatusTermer.AVVENT_DOK_UTL },
+          { kode: behandlinger.AVVENT_DOK_PART, term: behandlingsStatusTermer.AVVENT_DOK_PART },
         ];
         break;
-      case koder.AVVENT_DOK_UTL:
+      case behandlinger.AVVENT_DOK_UTL:
         endreStatusValg = [
-          { kode: koder.AVVENT_DOK_PART, term: termer.AVVENT_DOK_PART },
+          { kode: behandlinger.AVVENT_DOK_PART, term: behandlingsStatusTermer.AVVENT_DOK_PART },
         ];
         break;
-      case koder.AVVENT_DOK_PART:
+      case behandlinger.AVVENT_DOK_PART:
         endreStatusValg = [
-          { kode: koder.AVVENT_DOK_UTL, term: termer.AVVENT_DOK_UTL },
+          { kode: behandlinger.AVVENT_DOK_UTL, term: behandlingsStatusTermer.AVVENT_DOK_UTL },
         ];
         break;
-      case koder.UNDER_BEHANDLING:
+      case behandlinger.UNDER_BEHANDLING:
         return [];
       default:
         return [];
     }
 
-    endreStatusValg = [...endreStatusValg, { kode: koder.UNDER_BEHANDLING, term: termer.UNDER_BEHANDLING }];
+    endreStatusValg = [...endreStatusValg, { kode: behandlinger.UNDER_BEHANDLING, term: behandlingsStatusTermer.UNDER_BEHANDLING }];
 
     return endreStatusValg;
   };
@@ -215,7 +214,6 @@ SideOppsummering.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   person: MPT.Person.isRequired,
-  behandlingsstatusKodeVerk: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppholdUtlandFom: PT.string.isRequired,
   oppholdUtlandTom: PT.string.isRequired,
   gyldigeOppholdsLand: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -233,7 +231,6 @@ const mapStateToProps = state => ({
   oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
   oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
   gyldigeOppholdsLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
-  behandlingsstatusKodeVerk: KodeverkSelectors.behandlingsStatusSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 

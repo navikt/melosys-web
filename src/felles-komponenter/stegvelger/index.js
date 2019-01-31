@@ -12,7 +12,6 @@ import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
-import { KodeverkSelectors } from '../../ducks/kodeverk/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
 import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
@@ -20,6 +19,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../duc
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
+import { landkoder, begrunnelser } from '../../kodeverk/kodelister';
 
 import './stegvelger.css';
 
@@ -140,10 +140,10 @@ class Stegvelger extends Component {
     const propsLight = {
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
-      begrunnelser: props.begrunnelser,
+      begrunnelser,
       bostedsland: props.bostedsland,
+      landkoder,
       behandlingstype: props.oppsummering.behandlingstype,
-      landkoder: props.landkoder,
       lovvalgsperioder: props.lovvalgsperioder,
       inngang: props.inngang,
       tilgjengeligeHandlers,
@@ -241,7 +241,6 @@ class Stegvelger extends Component {
 Stegvelger.propTypes = {
   arbeidsgivereIPerioden: PT.array,
   avklartefakta: PT.array,
-  begrunnelser: PT.object,
   behandlinger: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
@@ -253,7 +252,6 @@ Stegvelger.propTypes = {
   history: PT.object.isRequired,
   fatteVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
-  landkoder: PT.arrayOf(MPT.Kodeverk),
   lovvalgsperioder: PT.array.isRequired,
   inngang: PT.object,
   match: PT.object.isRequired,
@@ -274,9 +272,7 @@ Stegvelger.propTypes = {
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
-  begrunnelser: {},
   inngang: {},
-  landkoder: [],
   oppsummering: [],
   valgteArbeidsgivere: [],
 };
@@ -287,9 +283,7 @@ const mapStateToProps = state => ({
   vilkar: vilkarSelectors.VilkarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlinger: behandlingerSelectors.behandlingerSelector(state),
-  begrunnelser: KodeverkSelectors.begrunnelserSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
-  landkoder: KodeverkSelectors.landkoderSelector(state),
   oppholdsland: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),

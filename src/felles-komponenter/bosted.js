@@ -12,16 +12,18 @@ import Landvelger from './skjema/landvelger';
 import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk';
 
 import './bosted.css';
-import { KodeverkSelectors } from '../ducks/kodeverk';
 import { fagsakSelectors } from '../ducks/fagsaker';
 import { formSelectors } from '../ducks/form';
 import { BOOLSK } from '../constants';
 import { boolTilNorsk } from '../utils/streng';
 
+import { finansiering } from '../kodeverk/kodelister';
+
 const uuid = require('uuid/v4');
 
 const Bosted = props => {
-  const { redigerbart, erValidert, studieFinansiering } = props;
+  const { redigerbart, erValidert } = props;
+
   const panelIkon = erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
 
   const { eosBarnetrygd } = props.sakOgBehandling;
@@ -71,7 +73,7 @@ const Bosted = props => {
                 bredde="xl"
                 disabled={!redigerbart}
               >
-                {studieFinansiering.map(valg => <option key={uuid()} value={kodeverkObjektTilKode(valg)}>{kodeverkObjektTilTerm(valg)}</option>)}
+                {finansiering.map(valg => <option key={uuid()} value={kodeverkObjektTilKode(valg)}>{kodeverkObjektTilTerm(valg)}</option>)}
               </Skjema.Select>
               <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
                 <Skjema.Radio disabled={!redigerbart} feltNavn="intensjonOmRetur" value={BOOLSK.SANN} label="Ja" />
@@ -89,19 +91,16 @@ Bosted.propTypes = {
   soknadForm: MPT.SoknadForm,
   erValidert: PT.bool,
   redigerbart: PT.bool.isRequired,
-  studieFinansiering: PT.arrayOf(MPT.Kodeverk),
   sakOgBehandling: PT.object.isRequired,
 };
 
 Bosted.defaultProps = {
   soknadForm: {},
   erValidert: true,
-  studieFinansiering: [],
 };
 
 
 const mapStateToProps = state => ({
-  studieFinansiering: KodeverkSelectors.studieFinansieringSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
   sakOgBehandling: fagsakSelectors.SakOgBehandlingSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),

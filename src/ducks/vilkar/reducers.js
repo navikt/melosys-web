@@ -9,7 +9,7 @@ import { STATUS } from '../../services/utils';
 
 import * as Types from './types';
 
-import * as Koder from '../../koder';
+import { lovvalgsbestemmelser, vilkar } from '../../kodeverk/koder';
 
 const initialState = {
   data: [],
@@ -45,17 +45,17 @@ export default function reducer(state = initialState, action) {
       // saksbehandler ikke har vært innom denne vurderingen og kanskje aldri kommer tid. Siden
       // det da ikke er et vilkår som er vurdert, skal det heller ikke inn i modellen eller sendes backend.
       const vilkarArray = [
-        vilkarTilObjekt(Koder.ART12_1_FORUTGAAENDE_MEDLEMSKAP, action.data.vilkar.forutgaendeMedlemskap, action.data.vilkar.forutgaendeMedlemskapBegrunnelser),
-        vilkarTilObjekt(Koder.ART12_1_VESENTLIG_VIRKSOMHET, action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhetBegrunnelser),
-        vilkarTilObjekt(Koder.ART12_2_NORMALT_DRIVER_VIRKSOMHET, action.data.vilkar.normaltDriverVirksomhet, action.data.vilkar.normaltDriverVirksomhetBegrunnelser),
-        vilkarTilObjekt(Koder.BOSATT_I_NORGE, action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorgeBegrunnelser),
-        vilkarTilObjekt(Koder.FTRL_2_12_UNNTAK_TURISTSKIP, action.data.vilkar.nis),
-        vilkarTilObjekt(Koder.FO_883_2004_ART12_1, action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
-        vilkarTilObjekt(Koder.FO_883_2004_ART12_2, action.data.vilkar.art12_2, action.data.vilkar.art12_2_begrunnelser),
-        vilkarTilObjekt(Koder.FO_883_2004_ART16_1, action.data.vilkar.art16_1, action.data.vilkar.art16_1_begrunnelser, action.data.vilkar.art16_1_begrunnelser_fritekst),
-        vilkarTilObjekt(Koder.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
-        vilkarTilObjekt(Koder.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),
-        vilkarTilObjekt(Koder.FO_883_2004_ART11_4_2, action.data.vilkar.art11_4_2),
+        vilkarTilObjekt(vilkar.ART12_1_FORUTGAAENDE_MEDLEMSKAP, action.data.vilkar.forutgaendeMedlemskap, action.data.vilkar.forutgaendeMedlemskapBegrunnelser),
+        vilkarTilObjekt(vilkar.ART12_1_VESENTLIG_VIRKSOMHET, action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhetBegrunnelser),
+        vilkarTilObjekt(vilkar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, action.data.vilkar.normaltDriverVirksomhet, action.data.vilkar.normaltDriverVirksomhetBegrunnelser),
+        vilkarTilObjekt(vilkar.BOSATT_I_NORGE, action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorgeBegrunnelser),
+        vilkarTilObjekt(vilkar.FTRL_2_12_UNNTAK_TURISTSKIP, action.data.vilkar.nis),
+        vilkarTilObjekt(lovvalgsbestemmelser.FO_883_2004_ART12_1, action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
+        vilkarTilObjekt(lovvalgsbestemmelser.FO_883_2004_ART12_2, action.data.vilkar.art12_2, action.data.vilkar.art12_2_begrunnelser),
+        vilkarTilObjekt(lovvalgsbestemmelser.FO_883_2004_ART16_1, action.data.vilkar.art16_1, action.data.vilkar.art16_1_begrunnelser, action.data.vilkar.art16_1_begrunnelser_fritekst),
+        vilkarTilObjekt(lovvalgsbestemmelser.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
+        vilkarTilObjekt(lovvalgsbestemmelser.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),
+        vilkarTilObjekt(lovvalgsbestemmelser.FO_883_2004_ART11_4_2, action.data.vilkar.art11_4_2),
       ].filter(vilkar => vilkar !== null);
 
       return {

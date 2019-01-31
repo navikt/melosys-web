@@ -1,11 +1,13 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import qs from 'qs';
+
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import { sakstyper } from '../kodeverk/koder';
+import { typer as behandlingstyper } from '../kodeverk/kodelister';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
@@ -19,6 +21,7 @@ import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
+import { queryParamLogger } from '../utils/queryParamLogger';
 
 import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
 import {
@@ -29,31 +32,12 @@ import {
   fagsakOperations,
   fagsakSelectors,
 } from '../ducks/fagsaker';
-import { KodeverkSelectors } from '../ducks/kodeverk';
 import { formSelectors } from '../ducks/form/';
 import './journalforing.css';
 import { OrganisasjonOperations } from '../ducks/organisasjoner';
 import { PersonOperations } from '../ducks/personer';
 import * as oppgaverOperations from '../ducks/oppgaver/operations';
 import * as MPT from '../proptypes';
-
-const queryParamLogger = (journalpostID, oppgaveID, location) => {
-  const qsParsed = qs.parse(location.search.slice(1));
-  const urlQuery = `${location.pathname}${location.search}`;
-  /* eslint-disable */
-  if (qsParsed) {
-    if (qsParsed.kilde === 'GOSYS') {
-      const message = `Deeplinked from GOSYS: ${urlQuery}`;
-      window.frontendlogger.info(message);
-    } else {
-      const message = `Ukjent ekstern kilde: ${urlQuery}`;
-      window.frontendlogger.error(message);
-    }
-  } else {
-    console.log('internal route:', urlQuery);
-  }
-  /* eslint-enable */
-};
 
 class Journalforing extends Component {
   static propTypes = {
@@ -71,7 +55,6 @@ class Journalforing extends Component {
     journalforing: MPT.Journalforing,
     journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
     fagsakListe: PT.array,
-    behandlingstyper: PT.arrayOf(MPT.Kodeverk),
     valid: PT.bool.isRequired,
     sokFnrDnr: PT.func.isRequired,
     sokOrgnr: PT.func.isRequired,
@@ -83,13 +66,12 @@ class Journalforing extends Component {
   static defaultProps = {
     journalforing: {},
     fagsakListe: [],
-    behandlingstyper: [],
     journalforingSkjemaVerdier: {},
   };
 
   async componentDidMount() {
-    const { journalpostID, oppgaveID } = this.props.match.params;
-    queryParamLogger(journalpostID, oppgaveID, this.props.location);
+    const { journalpostID } = this.props.match.params;
+    queryParamLogger(this.props.location, 'kilde', 'GOSYS');
     await this.props.hentJournalOppgave(journalpostID);
   }
 
@@ -212,7 +194,7 @@ class Journalforing extends Component {
     }
 
     const fagsak = {
-      sakstype: 'EU_EOS',
+      sakstype: sakstyper.EU_EOS,
       soknadsperiode: {
         fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
         tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
@@ -312,7 +294,6 @@ class Journalforing extends Component {
     const {
       journalforing: { hoveddokument = {} },
       fagsakListe,
-      behandlingstyper,
     } = this.props;
 
     const {
@@ -373,7 +354,6 @@ const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: fagsakSelectors.FagsakSokSelector(state),
-  behandlingstyper: KodeverkSelectors.behandlingsTyperSelector(state),
   errors: getFormSyncErrors('journalforing')(state),
   initialValues: {
     behandlingstype: null,

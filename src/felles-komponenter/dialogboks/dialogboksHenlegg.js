@@ -1,22 +1,19 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import Kodeverk from 'melosys-kodeverk';
 import { connect } from 'react-redux';
-
 
 import * as MPT from '../../proptypes';
 
 import PdfLenkeListe from '../../felles-komponenter/pdfLenkeListe';
 import { KodeTermSelect } from '../kodeTermSelect';
 import { fagsakSelectors } from '../../ducks/fagsaker';
+import { brev, aktoersroller, henleggelsesgrunner as henleggelsesgrunnerKoder } from '../../kodeverk/koder';
+import { henleggelsesgrunner } from '../../kodeverk/kodelister';
 
 import * as Nav from '../../utils/navFrontend';
 
 import './dialogboksHenlegg.css';
 
-const { kodeset, kodeverk } = Kodeverk;
-const { henleggelsesgrunner } = kodeverk;
-const { MELDING_HENLAGT_SAK } = kodeset.brev.produserbareDokumenter;
 
 export class DialogboksHenleggSak extends Component {
   state = {
@@ -57,7 +54,7 @@ export class DialogboksHenleggSak extends Component {
     return fritekstValideringPassert;
   };
 
-  fritekstValgt = () => this.state.begrunnelseKode === 'ANNET';
+  fritekstValgt = () => this.state.begrunnelseKode === henleggelsesgrunnerKoder.ANNET;
 
   fritekstTom = () => this.state.fritekst === '';
 
@@ -106,15 +103,15 @@ export class DialogboksHenleggSak extends Component {
     const data = erBegrunnelseValgt() ? {
       begrunnelseKode,
       fritekst: fritekst === '' ? null : fritekst,
-      mottaker: kodeset.aktoerroller.BRUKER,
+      mottaker: aktoersroller.BRUKER,
     } : {};
     const dokumenter = [{
       navn: 'Forhåndsvis brev',
-      type: MELDING_HENLAGT_SAK,
+      type: brev.MELDING_HENLAGT_SAK,
       data,
     }];
 
-    const visTekstFelt = begrunnelseKode === kodeset.henleggelsesgrunner.ANNET;
+    const visTekstFelt = begrunnelseKode === henleggelsesgrunnerKoder.ANNET;
 
     return (
       <Nav.Modal

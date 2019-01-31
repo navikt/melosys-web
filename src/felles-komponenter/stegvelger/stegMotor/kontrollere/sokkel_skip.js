@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingSokkelSkip, { VurderingSokkelSkipTyper } from '../../stegKomponenter/vurderingSokkelSkip';
-import * as Koder from '../../../../koder';
+import VurderingSokkelSkip from '../../stegKomponenter/vurderingSokkelSkip';
+import { SOKKEL, SKIP, VurderingSokkelSkipTyper } from '../../../../kodeverk/koder';
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -28,7 +28,7 @@ class SokkelSkip extends Steg {
     this._tittel = 'Sokkel / skip';
     this._komponent = VurderingSokkelSkip;
     this._samleRelevanteData = _propsLight => ({
-      begrunnelser: _propsLight.begrunnelser.sokkelEllerSkip,
+      begrunnelser: _propsLight.begrunnelser.sokkel,
       skjema: _propsLight.skjema,
       redigerbart: _propsLight.redigerbart,
     });
@@ -57,8 +57,8 @@ class SokkelSkip extends Steg {
   static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon) => {
     const avklartSokkelEllerSkip = sokkelEllerSkip.length > 0 && sokkelEllerSkip
       .map(enkelt => {
-        if (enkelt.installasjonsType === Koder.SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
-        return (enkelt.installasjonsType === Koder.SKIP && enkelt.arbeidsland && true);
+        if (enkelt.installasjonsType === SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
+        return (enkelt.installasjonsType === SKIP && enkelt.arbeidsland && true);
       })
       .every(enkelt => enkelt === true);
 

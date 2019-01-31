@@ -3,20 +3,12 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-import * as Koder from '../../../koder';
+import { SOKKEL, SKIP, VurderingSokkelSkipTyper } from '../../../kodeverk/koder';
 import * as MPT from '../../../proptypes';
 
 import LandVelger from '../../skjema/landvelger';
 
 import './vurderingSokkelSkip.css';
-
-export const VurderingSokkelSkipTyper = {
-  SKIP_NORSK_TERRITORIAL: 'SKIP_NORSK_TERRITORIAL',
-  SKIP_ETT_LAND: 'SKIP_ETT_LAND',
-  SOKKEL_NORSK: 'SOKKEL_NORSK',
-  SOKKEL_UTLAND: 'SOKKEL_UTLAND',
-  SOKKEL_ELLER_SKIP_FLERE_LAND: 'SOKKEL_ELLER_SKIP_FLERE_LAND',
-};
 
 const SokkelSkipEnkelt = props => {
   const {
@@ -28,8 +20,8 @@ const SokkelSkipEnkelt = props => {
     <Nav.Row className="sokkelSkip__liste__rad">
       <Nav.Column xs="4" className="rad__navn">{navn}</Nav.Column>
       <Nav.Column xs="2" className="rad__sokkel">
-        <Skjema.Radio disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={Koder.SOKKEL} label="Sokkel" />
-        <Skjema.Radio disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={Koder.SKIP} label="Skip" />
+        <Skjema.Radio disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={SOKKEL} label="Sokkel" />
+        <Skjema.Radio disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={SKIP} label="Skip" />
       </Nav.Column>
       <Nav.Column xs="3" className="rad__begrunnelse">
         <Skjema.Select disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsTypeBegrunnelse`} label="Begrunnelse">

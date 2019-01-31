@@ -4,19 +4,21 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import * as Koder from '../../../koder';
+import { behandlinger, brev, aktoersroller } from '../../../kodeverk/koder';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
-import { KodeverkSelectors } from '../../../ducks/kodeverk/';
 import { fagsakSelectors } from '../../../ducks/fagsaker/';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
+import { forordning_883_2004, forordning_987_2009, tillegg } from '../../../kodeverk/kodelister';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
 import { finnEnkeltKodeFraListe, kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 import PdfLenkeListe from '../../../felles-komponenter/pdfLenkeListe';
 
 import './vurderingVedtak.css';
+
+const alleLovvalg = [...forordning_883_2004, ...forordning_987_2009, ...tillegg];
 
 const VurderingVedtak = props => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
@@ -25,7 +27,6 @@ const VurderingVedtak = props => {
 
   const {
     gyldigeOppholdLand,
-    alleLovvalg,
     lovvalgsperioder,
     redigerbart,
   } = props;
@@ -44,8 +45,8 @@ const VurderingVedtak = props => {
   const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.term).join(', ');
 
   const dokumenter = [
-    { navn: 'Forhåndsvis vedtaksbrev', type: 'INNVILGELSE_YRKESAKTIV', data: { mottaker: 'BRUKER' } },
-    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: 'ATTEST_A1', data: { mottaker: 'MYNDIGHET' } },
+    { navn: 'Forhåndsvis vedtaksbrev', type: brev.INNVILGELSE_YRKESAKTIV, data: { mottaker: aktoersroller.BRUKER } },
+    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: brev.ATTEST_A1, data: { mottaker: aktoersroller.MYNDIGHET } },
   ];
 
   return (
@@ -69,7 +70,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => props.lagreOgFatteVedtak(Koder.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
+            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => props.lagreOgFatteVedtak(behandlinger.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -82,7 +83,6 @@ VurderingVedtak.propTypes = {
   lovvalgsperioder: PT.array.isRequired,
   gyldigeOppholdLand: MPT.OppholdLand.isRequired,
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
-  alleLovvalg: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   redigerbart: PT.bool.isRequired,
 };
@@ -91,7 +91,6 @@ const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
-  alleLovvalg: KodeverkSelectors.alleLovvalgSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
 });
 

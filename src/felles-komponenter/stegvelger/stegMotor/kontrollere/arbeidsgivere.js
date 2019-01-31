@@ -2,9 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArbeidsgiver from '../../stegKomponenter/vurderingArbeidsgiver';
 
-import * as Koder from '../../../../koder';
-import { VurderingYrkesgruppeTyper } from '../../stegKomponenter/vurderingYrkesgruppe';
-import { VurderingSokkelSkipTyper } from '../../stegKomponenter/vurderingSokkelSkip';
+import { AVKLARTE_ARBEIDSGIVER, VurderingSokkelSkipTyper, VurderingYrkesgruppeTyper } from '../../../../kodeverk/koder';
 
 import SokkelSkip from './sokkel_skip';
 
@@ -69,7 +67,7 @@ class Yrkesgruppe extends Steg {
   }
 
   static harValgtArbeidsgiver = avklartefakta => {
-    const harAvklartArbeidsgiver = avklartefakta.some(enkeltFakta => ((enkeltFakta.referanse === Koder.AVKLARTE_ARBEIDSGIVER) && enkeltFakta.fakta.includes('TRUE')));
+    const harAvklartArbeidsgiver = avklartefakta.some(enkeltFakta => ((enkeltFakta.referanse === AVKLARTE_ARBEIDSGIVER) && enkeltFakta.fakta.includes('TRUE')));
     return harAvklartArbeidsgiver;
   };
 
