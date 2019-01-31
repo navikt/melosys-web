@@ -14,7 +14,7 @@ const VurderingInngang = props => {
     bekreftOgFortsett, inngangsvilkar, alleLandKoder, begrunnelser, avklartefakta, tilstand, redigerbart,
   } = props;
   const { vurdering } = inngangsvilkar;
-  const { opphold: oppholdBegrunnelser } = begrunnelser;
+  const oppholdBegrunnelser = begrunnelser.opphold;
   const { harAvklaring } = tilstand;
 
   return (

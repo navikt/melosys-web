@@ -7,7 +7,7 @@
 
 import { createSelector } from 'reselect';
 
-// import * as Koder from '../../koder';
+// import * as Koder from '../../kodeverk';
 
 // selector(s)
 export const LovvalgsperioderSelector = createSelector(

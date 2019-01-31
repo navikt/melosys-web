@@ -21,6 +21,8 @@ import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgi
 import Stegvelger from '../../felles-komponenter/stegvelger';
 import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
 
+import { landkoder, begrunnelser } from '../../kodeverk/kodelister';
+
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
@@ -107,6 +109,8 @@ class Saksopplysninger extends Component {
           fatteVedtakHandler={this.fatteVedtakHandler}
           lagreSoknadHandler={this.lagreSoknadHandler}
           oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
+          begrunnelser={begrunnelser}
+          landkoder={landkoder}
         />
         <Personopplysninger />
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
@@ -234,7 +238,7 @@ const mapStateToProps = state => ({
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },
     vilkar: {
-      vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),
+      vesentligVirksomhet: (vilkarSelectors.VilkarSelector(state).oppfylt),
       vesentligVirksomhetBegrunnelser: (vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder),
       normaltDriverVirksomhet: (vilkarSelectors.normaltDriverVirksomhetSelector(state).oppfylt),
       normaltDriverVirksomhetBegrunnelser: (vilkarSelectors.normaltDriverVirksomhetSelector(state).begrunnelseKoder),

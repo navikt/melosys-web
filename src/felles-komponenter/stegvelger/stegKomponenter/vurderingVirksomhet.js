@@ -1,16 +1,9 @@
 import React from 'react';
 import PT from 'prop-types';
+
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-
-export const VurderingVirksomhetTyper = {
-  EN_ELLER_BEGGE: 'EN_ELLER_BEGGE',
-  INGEN_VEKSLING: 'INGEN_VEKSLING',
-  MARGINALT_JA: 'MARGINALT_JA',
-  MARGINALT_NEI: 'MARGINALT_NEI',
-  UNDER_25_PROSENT: 'UNDER_25_PROSENT',
-  OVER_25_PROSENT: 'OVER_25_PROSENT',
-};
+import { VurderingVirksomhetTyper } from '../../../kodeverk/koder';
 
 const VekslingMellomLand = () => (
   <Nav.Fieldset legend="Veksler søker regelmessig mellom arbeid i flere land eller arbeider søker i flere land?">

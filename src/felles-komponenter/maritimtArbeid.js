@@ -2,17 +2,19 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
-import * as MPT from '../proptypes';
 
 import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
-import LandVelger from './skjema/landvelger';
+import * as MPT from '../proptypes';
 
-import { fagsakSelectors } from '../ducks/fagsaker/';
-import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 import { formSelectors } from '../ducks/form/';
-import { KodeverkSelectors } from '../ducks/kodeverk';
+import { fagsakSelectors } from '../ducks/fagsaker/';
+
+import { fartsomrader as fartsomraader } from '../kodeverk/kodelister';
+
+import LandVelger from './skjema/landvelger';
+import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './maritimtArbeid.css';
 
@@ -74,7 +76,7 @@ MaritimtAlle.propTypes = {
 
 
 const MaritimtArbeid = props => {
-  const { soknadForm, fartsomrader, redigerbart } = props;
+  const { soknadForm, redigerbart } = props;
   const { values: soknadVerdier } = soknadForm;
   const { maritimtArbeid = [] } = soknadVerdier;
 
@@ -87,7 +89,7 @@ const MaritimtArbeid = props => {
         heading={<PanelHeader ikon={panelIkon} tittel="Maritimt Arbeid" undertittel="" />}
         ariaTittel="Maritimt Arbeid">
         <Nav.Container fluid>
-          <FieldArray name="maritimtArbeid" component={MaritimtAlle} fartsomrader={fartsomrader} redigerbart={redigerbart} />
+          <FieldArray name="maritimtArbeid" component={MaritimtAlle} fartsomrader={fartsomraader} redigerbart={redigerbart} />
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>
@@ -97,7 +99,6 @@ const MaritimtArbeid = props => {
 MaritimtArbeid.propTypes = {
   redigerbart: PT.bool.isRequired,
   soknadForm: PT.object,
-  fartsomrader: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 MaritimtArbeid.defaultProps = {
@@ -106,7 +107,6 @@ MaritimtArbeid.defaultProps = {
 
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  fartsomrader: KodeverkSelectors.fartsomraderSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 

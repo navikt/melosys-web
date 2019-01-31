@@ -1,15 +1,9 @@
 import React from 'react';
 import PT from 'prop-types';
+
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-
-export const VurderingYrkesgruppeTyper = {
-  ORDINAER: 'ORDINAER',
-  SOKKEL_ELLER_SKIP: 'SOKKEL_ELLER_SKIP',
-  FLYENDE_PERSONELL: 'YRKESAKTIV_FLYVENDE',
-  IKKE_YRKESAKTIV: 'IKKE_YRKESAKTIV',
-  KONTANTYTELSESMOTTAKER: 'KONTANTYTELSESMOTTAKER',
-};
+import { VurderingYrkesgruppeTyper } from '../../../kodeverk/koder';
 
 const VurderingYrkesgruppe = props => {
   const { bekreftOgFortsett, tilstand, redigerbart } = props;
