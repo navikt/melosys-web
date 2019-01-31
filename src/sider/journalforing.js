@@ -1,7 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import qs from 'qs';
+
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -21,6 +21,7 @@ import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
+import { queryParamLogger } from '../utils/queryParamLogger';
 
 import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
 import {
@@ -37,24 +38,6 @@ import { OrganisasjonOperations } from '../ducks/organisasjoner';
 import { PersonOperations } from '../ducks/personer';
 import * as oppgaverOperations from '../ducks/oppgaver/operations';
 import * as MPT from '../proptypes';
-
-const queryParamLogger = (journalpostID, oppgaveID, location) => {
-  const qsParsed = qs.parse(location.search.slice(1));
-  const urlQuery = `${location.pathname}${location.search}`;
-  /* eslint-disable */
-  if (qsParsed) {
-    if (qsParsed.kilde === 'GOSYS') {
-      const message = `Deeplinked from GOSYS: ${urlQuery}`;
-      window.frontendlogger.info(message);
-    } else {
-      const message = `Ukjent ekstern kilde: ${urlQuery}`;
-      window.frontendlogger.error(message);
-    }
-  } else {
-    console.log('internal route:', urlQuery);
-  }
-  /* eslint-enable */
-};
 
 class Journalforing extends Component {
   static propTypes = {
@@ -87,8 +70,8 @@ class Journalforing extends Component {
   };
 
   async componentDidMount() {
-    const { journalpostID, oppgaveID } = this.props.match.params;
-    queryParamLogger(journalpostID, oppgaveID, this.props.location);
+    const { journalpostID } = this.props.match.params;
+    queryParamLogger(this.props.location, 'kilde', 'GOSYS');
     await this.props.hentJournalOppgave(journalpostID);
   }
 

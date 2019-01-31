@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
-import qs from 'qs';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
@@ -12,35 +11,18 @@ import SokSkjema from '../felles-komponenter/forside/sokskjema';
 
 import { sakstyper } from '../kodeverk/kodelister';
 
+import { queryParamLogger } from '../utils/queryParamLogger';
 import { sokSelectors, sokOperations } from '../ducks/sok';
 import './sok.css';
 
 const uuid = require('uuid/v4');
-
-const queryParamLogger = (fnr, location) => {
-  const qsParsed = qs.parse(location.search.slice(1));
-  const urlQuery = `${location.pathname}${location.search}`;
-  /* eslint-disable */
-  if (qsParsed) {
-    if (qsParsed.kilde === 'GOSYS') {
-      const message = `Deeplinked from GOSYS: ${urlQuery}`;
-      window.frontendlogger.info(message);
-    } else {
-      const message = `Ukjent ekstern kilde: ${urlQuery}`;
-      window.frontendlogger.error(message);
-    }
-  } else {
-    console.log('internal route:', urlQuery);
-  }
-  /* eslint-enable */
-};
 
 class Sok extends Component {
   componentWillMount() {
     const { match, location, sokBehandlingsOppgaver } = this.props;
     const { fnr } = match.params;
     if (fnr) {
-      queryParamLogger(fnr, location);
+      queryParamLogger(location, 'kilde', 'GOSYS');
       sokBehandlingsOppgaver(fnr);
     }
   }
