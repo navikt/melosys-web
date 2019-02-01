@@ -106,14 +106,14 @@ class Saksopplysninger extends Component {
       return null;
     }
 
-    const { henleggelsegrunn, henleggelseFritekst } = behandlingsresultat;
+    const { henleggelsegrunnKode, henleggelseFritekst } = behandlingsresultat;
     const visHenlagtSak = fagsakStatusKode === saksstatuser.HENLAGT;
     const visStegVelger = !visHenlagtSak;
     return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
         { visHenlagtSak &&
           <HenlagtInformasjon
-            begrunnelse={henleggelsegrunn}
+            begrunnelse={henleggelsegrunnKode}
             fritekst={henleggelseFritekst} />
         }
         { visStegVelger &&
