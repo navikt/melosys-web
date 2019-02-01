@@ -27,7 +27,7 @@ export const RedigerbartSelector = createSelector(
 );
 
 export const FagsakStatusSelector = createSelector(
-  state => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : {}),
+  state => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : ""),
   fagsakStatus => fagsakStatus
 );
 
