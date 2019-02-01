@@ -94,7 +94,7 @@ class SideOppsummering extends Component {
     endreStatusValg = [...endreStatusValg, { kode: behandlinger.UNDER_BEHANDLING, term: behandlingsStatusTermer.UNDER_BEHANDLING }];
     return endreStatusValg;
   };
-      
+
   apneTidligereBehandlinger = () => {
     const URI_SOK = `/sok/${this.props.person.fnr}`;
     window.open(URI_SOK);
