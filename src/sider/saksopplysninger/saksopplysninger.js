@@ -147,7 +147,7 @@ Saksopplysninger.propTypes = {
   avklartefakta: PT.array.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
-  fagsakStatusKode: PT.object.isRequired,
+  fagsakStatusKode: PT.string.isRequired,
   handleSubmit: PT.func.isRequired,
   inntekt: MPT.Inntekt,
   match: PT.object.isRequired,

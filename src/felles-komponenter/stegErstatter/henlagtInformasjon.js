@@ -6,8 +6,7 @@ import * as MPT from '../../proptypes';
 
 import './henlagtInformasjon.css';
 
-const HenlagtInformasjon = props => {
-  const { begrunnelse, fritekst } = props;
+const HenlagtInformasjon = ({ begrunnelse, fritekst }) => {
   const begrunnelseBeskrivelse = begrunnelse ? begrunnelse.term : 'Ukjent grunn';
   const henlagtTekst = (fritekst && fritekst.length > 1) ? fritekst : begrunnelseBeskrivelse;
 
