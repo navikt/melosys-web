@@ -13,11 +13,11 @@ import './sok.css';
 
 class Sok extends Component {
   componentWillMount() {
-    const { match, location, sokBehandlingsOppgaver } = this.props;
+    const { match, location, sokFagsaker } = this.props;
     const { fnr } = match.params;
     if (fnr) {
       queryParamLogger(location, 'kilde', 'GOSYS');
-      sokBehandlingsOppgaver(fnr);
+      sokFagsaker(fnr);
     }
   }
 
@@ -51,7 +51,7 @@ class Sok extends Component {
 Sok.propTypes = {
   location: PT.object.isRequired,
   sokResultat: PT.array.isRequired,
-  sokBehandlingsOppgaver: PT.func.isRequired,
+  sokFagsaker: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
   match: PT.object.isRequired,
@@ -67,7 +67,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  sokBehandlingsOppgaver: fnr => dispatch(sokOperations.sok(fnr)),
+  sokFagsaker: fnr => dispatch(sokOperations.sok(fnr)),
 });
 
 const kontekster = [

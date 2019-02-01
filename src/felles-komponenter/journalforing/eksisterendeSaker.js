@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import { kodeset } from 'melosys-kodeverk';
+import { behandlinger as behandlingKoder } from '../../kodeverk/koder';
 
 import EnkeltDato from '../datoOmrade/enkeltDato';
 import * as Skjema from '../skjema/';
@@ -11,7 +11,7 @@ import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
 
 import './eksisterendeSaker.css';
 
-const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== kodeset.behandlinger.behandlingsstatus.AVSLUTTET);
+const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== behandlingKoder.AVSLUTTET);
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
