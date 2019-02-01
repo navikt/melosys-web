@@ -6,12 +6,10 @@ import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
 import Fagsak from '../felles-komponenter/forside/oppgaveliste/fagsak';
 
+import { sokSelectors, sokOperations } from '../ducks/sok';
 
 import { queryParamLogger } from '../utils/queryParamLogger';
 import './sok.css';
-import { sokSelectors, sokOperations } from '../ducks/sok';
-
-const uuid = require('uuid/v4');
 
 class Sok extends Component {
   componentWillMount() {
@@ -24,7 +22,7 @@ class Sok extends Component {
   }
 
   render() {
-    const { sokResultat, sakstypeKoder, children } = this.props;
+    const { sokResultat, children } = this.props;
     const { fnr } = this.props.match.params;
     if (!sokResultat) return null;
 
@@ -38,14 +36,9 @@ class Sok extends Component {
             <section className="sokresultat">
               <h1>Innsyn i sak</h1>
               <h2>Resulater for fnr &quot;{fnr}&quot;</h2>
-              { sokResultat.map(fagsak => {
-                const sakstype = sakstypeKoder.find(item => item.kode === fagsak.sakstypeKode);
-                const sak = {
-                  sakstype,
-                  ...fagsak,
-                };
-                return (<Fagsak key={uuid()} sak={sak} />);
-              })}
+              { sokResultat.length > 0 &&
+                sokResultat.map(fagsak => <Fagsak key={fagsak.saksnummer} sak={fagsak} />)
+              }
               { sokResultat.length === 0 && ingenTreff }
             </section>
           </Nav.Row>
@@ -57,7 +50,6 @@ class Sok extends Component {
 
 Sok.propTypes = {
   location: PT.object.isRequired,
-  sakstypeKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   sokResultat: PT.array.isRequired,
   sokBehandlingsOppgaver: PT.func.isRequired,
   sokStreng: PT.string,
@@ -71,8 +63,7 @@ Sok.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  sakstypeKoder: KodeverkSelectors.sakstyperSelector(state),
-  sokResultat: sokSelectors.SokResultatSelector(state),
+  sokResultat: sokSelectors.FagsakSokSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

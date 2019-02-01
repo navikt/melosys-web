@@ -1,6 +1,6 @@
 import React from 'react';
+import * as MPT from '../../../proptypes/';
 
-import * as MPT from '../../../proptypes/index';
 import * as Ikoner from '../../../resources/images/index';
 import * as Nav from '../../../utils/navFrontend';
 
@@ -14,7 +14,7 @@ import './fagsak.css';
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
- * for å gi saksbehandler en hent over sakens innhold før hun klikker
+ * for å gi saksbehandler oversikt over sakens innhold før hun klikker
  * seg inn på den.
  */
 const Fagsak = ({ sak }) => {
@@ -24,13 +24,13 @@ const Fagsak = ({ sak }) => {
     sakstype,
     saksstatus,
     saksnummer,
-    behandlingoppsummeringer,
+    behandlingOversikter,
   } = sak;
 
   const {
     soknadsperiode,
     land,
-  } = behandlingoppsummeringer[0];
+  } = behandlingOversikter[0];
 
   const { fom, tom } = soknadsperiode;
   const tittel = `${kodeverkObjektTilTerm(sakstype)} - ${sammensattNavn}`;
@@ -65,7 +65,7 @@ const Fagsak = ({ sak }) => {
         </Nav.Row>
         <Nav.Row className="fagsak__behandlinger">
           {
-            behandlingoppsummeringer.map(behandling => <Behandling behandling={behandling} link={link} />)
+            behandlingOversikter.map(behandling => <Behandling key={behandling.behandlingID} behandling={behandling} link={link} />)
           }
         </Nav.Row>
       </Nav.Container>
@@ -74,7 +74,7 @@ const Fagsak = ({ sak }) => {
 };
 
 Fagsak.propTypes = {
-  sak: MPT.SaksbehandlingOppgave,
+  sak: MPT.FagsakOppsummering,
 };
 
 Fagsak.defaultProps = {

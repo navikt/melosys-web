@@ -17,10 +17,10 @@ const hentAktivBehandling = behandlinger => behandlinger.find(behandling => beha
  */
 const EnkeltSak = props => {
   const {
-    opprettetDato, behandlingoppsummeringer, sakstype, saksstatus,
+    opprettetDato, behandlingOversikter, sakstype, saksstatus,
   } = props.sak;
 
-  const aktivBehandling = hentAktivBehandling(behandlingoppsummeringer);
+  const aktivBehandling = hentAktivBehandling(behandlingOversikter);
   const {
     land, behandlingstype, soknadsperiode, behandlingsstatus,
   } = aktivBehandling;
@@ -62,7 +62,8 @@ const EksisterendeSaker = props => {
     behandlingstyper, fagsakListe, knyttTilEksisterendeSak, feil,
   } = props;
 
-  const radioValg = fagsakListe.reduce((samling, sak) => ([...samling, { value: sak.saksnummer, innhold: <EnkeltSak sak={sak} /> }]), []);
+  const radioValg = fagsakListe.reduce((samling, sak) =>
+    ([...samling, { value: sak.saksnummer, innhold: <EnkeltSak sak={sak} /> }]), []);
 
   return (
     <div className="eksisterendeSaker">
@@ -76,10 +77,15 @@ const EksisterendeSaker = props => {
       { fagsakListe.length === 0 && 'Ingen eksisterende saker funnet.'}
 
       <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
-        {behandlingstyper && behandlingstyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+        {
+          behandlingstyper &&
+          behandlingstyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
+        }
       </Skjema.Select>
-
-      { fagsakListe.length > 0 && <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp> }
+      {
+        fagsakListe.length > 0 &&
+        <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp>
+      }
     </div>
   );
 };
