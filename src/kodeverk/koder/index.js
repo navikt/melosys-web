@@ -14,6 +14,7 @@ import mottaksretning from './mottaksretning';
 import oppgavetyper from './oppgavetyper';
 import representerer from './representerer';
 import sakstyper from './sakstyper';
+import saksstatuser from './saksstatuser';
 import henleggelsesgrunner from './henleggelsesgrunner';
 
 export {
@@ -30,6 +31,7 @@ export {
   oppgavetyper,
   representerer,
   sakstyper,
+  saksstatuser,
   henleggelsesgrunner,
 };
 
