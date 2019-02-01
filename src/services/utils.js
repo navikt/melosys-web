@@ -173,7 +173,7 @@ const cachedFetch = (url, cacheDurationSec) => {
     cache: 'default', // *default, no-cache, force-cache, only-if-cached
     headers: new Headers(headers),
     method: 'GET',
-    mode: 'same-origin', // *same-origin, no-cors, cors
+    mode: 'cors', // *same-origin, no-cors, cors
     redirect: 'follow', // *manual, follow, error
     // referrer: // *client, no-referrer
   };
