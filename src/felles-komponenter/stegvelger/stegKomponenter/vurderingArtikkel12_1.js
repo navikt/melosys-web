@@ -5,6 +5,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
 import { vilkar as vilkarKoder } from '../../../kodeverk/koder';
+import { art12_1_begrunnelser, art16_1_avslag } from '../../../kodeverk/kodelister';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
@@ -71,11 +72,11 @@ class VurderingArtikkel12_1 extends Component {
 
   render () {
     const {
-      bekreftOgFortsett, begrunnelser, artikkel, tilstand, redigerbart,
+      bekreftOgFortsett, artikkel, tilstand, redigerbart,
     } = this.props;
 
     const { valgtVilkar } = this.state;
-    const { visBegrunnelser, harAvklaring } = tilstand;
+    const { visBegrunnelser12, visBegrunnelser16, harAvklaring } = tilstand;
 
     return (
       <div>
@@ -111,22 +112,33 @@ class VurderingArtikkel12_1 extends Component {
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
-          { visBegrunnelser && (
-            <Nav.Row>
-              <Nav.Column xs="12" md="10" lg="8">
-                <Nav.Fieldset legend="Begrunnelse:">
+          <Nav.Row>
+            <Nav.Column xs="12" md="10" lg="8">
+              { visBegrunnelser12 && (
+                <Nav.Fieldset legend="Begrunnelse artikkel 12.1">
                   <Skjema.ListeVelger
                     feltNavn="vilkar.art12_1_begrunnelser"
-                    muligeValg={begrunnelser}
-                    label="Legg til begrunnelse:"
+                    muligeValg={art12_1_begrunnelser}
+                    label="Legg til begrunnelse for ikke oppfylt:"
+                    gruppe
+                    tillatFritekst={false}
+                  />
+                </Nav.Fieldset>
+              )}
+              { visBegrunnelser16 && (
+                <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
+                  <Skjema.ListeVelger
+                    feltNavn="vilkar.art16_1_begrunnelser"
+                    muligeValg={art16_1_avslag}
+                    label="Legg til begrunnelse for avslag:"
                     gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
                   />
                 </Nav.Fieldset>
-              </Nav.Column>
-            </Nav.Row>
-          )}
+              )}
+            </Nav.Column>
+          </Nav.Row>
         </div>
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -137,7 +149,6 @@ class VurderingArtikkel12_1 extends Component {
 }
 
 VurderingArtikkel12_1.propTypes = {
-  begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
