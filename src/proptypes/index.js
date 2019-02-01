@@ -1,3 +1,4 @@
+import { Behandlingsresultat } from './behandlingsresultat';
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
 import { Inntekt, InntektListe, InntektEnkeltLinje } from './inntekt';
 import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
@@ -32,6 +33,7 @@ export {
   Arbeidsforholdet,
   ArbeidsgivereNorge,
   Bekreftelser,
+  Behandlingsresultat,
   BostedsAdresse,
   Dokument,
   DokumentMetadataListe,

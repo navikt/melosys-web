@@ -19,14 +19,13 @@ import Personopplysninger from '../../felles-komponenter/personopplysninger';
 import SelvstendigArbeid from '../../felles-komponenter/selvstendigarbeid';
 import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgiver';
 import Stegvelger from '../../felles-komponenter/stegvelger';
+import HenlagtInformasjon from '../../felles-komponenter/stegErstatter/henlagtInformasjon';
 import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
 
 import { landkoder, begrunnelser } from '../../kodeverk/kodelister';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
-
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
-
 import {
   soknadOperations,
   soknadActions,
@@ -34,14 +33,14 @@ import {
 } from '../../ducks/soknad/';
 
 import { avklartefaktaSelectors } from '../../ducks/avklartefakta/';
-
 import { behandlingerSelectors } from '../../ducks/behandlinger';
-
 import { vilkarSelectors } from '../../ducks/vilkar/';
-
+import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
 import { formSelectors } from '../../ducks/form/';
-
 import { formatterDatoTilNorsk } from '../../utils/dato';
+
+import { saksstatuser } from '../../kodeverk/koder';
+
 
 class Saksopplysninger extends Component {
   state = {
@@ -95,23 +94,37 @@ class Saksopplysninger extends Component {
       soknadArbeidsinntekt,
       soknadForm,
       soknad,
+      behandlingsresultat,
+      fagsakStatusKode,
     } = this.props;
 
-    const { behandlingID } = this.props.oppsummering;
-
+    if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
     const { values: soknadVerdier } = soknadForm;
 
-    if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
+    const { behandlingID } = this.props.oppsummering;
+    if (!behandlingID) {
+      return null;
+    }
 
-    return behandlingID ? (
+    const { henleggelsegrunnKode, henleggelseFritekst } = behandlingsresultat;
+    const visHenlagtSak = fagsakStatusKode === saksstatuser.HENLAGT;
+    const visStegVelger = !visHenlagtSak;
+    return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
-        <Stegvelger
-          fatteVedtakHandler={this.fatteVedtakHandler}
-          lagreSoknadHandler={this.lagreSoknadHandler}
-          oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
-          begrunnelser={begrunnelser}
-          landkoder={landkoder}
-        />
+        { visHenlagtSak &&
+          <HenlagtInformasjon
+            begrunnelse={henleggelsegrunnKode}
+            fritekst={henleggelseFritekst} />
+        }
+        { visStegVelger &&
+          <Stegvelger
+            fatteVedtakHandler={this.fatteVedtakHandler}
+            lagreSoknadHandler={this.lagreSoknadHandler}
+            oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
+            begrunnelser={begrunnelser}
+            landkoder={landkoder}
+          />
+        }
         <Personopplysninger />
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
         <Bosted erValidert={this.state.gyldigePaneler.bosted} />
@@ -125,14 +138,16 @@ class Saksopplysninger extends Component {
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
         {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
       </form>
-    ) : null;
+    );
   }
 }
 
 Saksopplysninger.propTypes = {
   alleRelevantePersoner: PT.arrayOf(MPT.Person),
   avklartefakta: PT.array.isRequired,
+  behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
+  fagsakStatusKode: PT.string.isRequired,
   handleSubmit: PT.func.isRequired,
   inntekt: MPT.Inntekt,
   match: PT.object.isRequired,
@@ -165,9 +180,11 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
+  fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   bekreftelser: fagsakSelectors.BekreftelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),

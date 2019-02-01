@@ -26,6 +26,11 @@ export const RedigerbartSelector = createSelector(
   redigerbart => redigerbart
 );
 
+export const FagsakStatusSelector = createSelector(
+  state => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : ""),
+  fagsakStatus => fagsakStatus
+);
+
 export const SaksopplysningerSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger : {}),
   saksopplysninger => saksopplysninger || {}
