@@ -8,8 +8,7 @@ import EnkeltDato from '../../datoOmrade/enkeltDato';
 
 import './behandling.css';
 
-const Behandling = props => {
-  const { behandling, link } = props;
+const Behandling = ({ behandling, link }) => {
   const { behandlingstype, behandlingsstatus, registrertDato } = behandling;
 
   return (
