@@ -49,8 +49,9 @@ class OpprettNyFagSak extends Component {
         <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
         <Nav.Row>
           <Nav.Column xs="6">
-            <Skjema.Input feltNavn="representantID" label="Representantens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
-            <Skjema.Input feltNavn="representantNavn" label="Representantens navn" disabled />
+            <Skjema.Input feltNavn="representantID" label="Fullmektigens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
+            <Skjema.Input feltNavn="representantNavn" label="Organisasjonsnavn" disabled />
+            <Skjema.Input feltNavn="representantKontaktPerson" label="Kontaktperson hos fullmektig" />
             { visArbeidsgiverSpinner && <Nav.NavFrontendSpinner className="sok__spinner" /> }
           </Nav.Column>
         </Nav.Row>
@@ -81,6 +82,8 @@ class OpprettNyFagSak extends Component {
 
 OpprettNyFagSak.propTypes = {
   opprettFagsak: PT.func.isRequired,
+  settFeltInnhold: PT.func.isRequired,
+  hentOgVisRepresentant: PT.func.isRequired,
 };
 
 
