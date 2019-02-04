@@ -112,7 +112,7 @@ class Journalforing extends Component {
       journalforing: { hoveddokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, arbeidsgiverID, representantID, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
+      brukerID, avsenderID, arbeidsgiverID, representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -131,7 +131,7 @@ class Journalforing extends Component {
     };
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
-      journalPostData = Object.assign(journalPostData, { arbeidsgiverID, representantID });
+      journalPostData = Object.assign(journalPostData, { arbeidsgiverID, representantID, representantKontaktPerson });
     }
     return journalPostData;
   };
