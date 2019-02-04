@@ -98,7 +98,7 @@ class VurderingArtikkel12_1 extends Component {
                   onChange={this.radioEndringHandler}
                   value={this.ART16_1}
                   checked={valgtVilkar === this.ART16_1}
-                  label="Nei, jeg vil vurdere artikkel 16.1"
+                  label="Nei, jeg vil sende anmodning om unntak etter artikkel 16.1"
                   disabled={!redigerbart}
                 />
                 <Nav.Radio
