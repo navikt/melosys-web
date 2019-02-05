@@ -10,6 +10,7 @@ import { Person } from './person';
 import { BostedsAdresse, PostAdresse, ForretningsAdresse, GeneriskAdresse } from './adresser';
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { Saksbehandler } from './saksbehandler';
+import { FagsakOppsummering } from './fagsakOppsummering';
 import { Oppsummering } from './oppsummering';
 import { Periode } from './periode';
 import { Bekreftelser } from './bekreftelser';
@@ -38,6 +39,7 @@ export {
   Dokument,
   DokumentMetadataListe,
   DokumentNullable,
+  FagsakOppsummering,
   Feilmelding,
   Feilmeldinger,
   ForretningsAdresse,
