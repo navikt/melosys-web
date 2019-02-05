@@ -37,6 +37,9 @@ class VurderingArtikkel12_2 extends Component {
     const { settSkjemaVerdi } = this.props;
     settSkjemaVerdi('vilkar.art12_2', null);
     settSkjemaVerdi('vilkar.art16_2', null);
+    settSkjemaVerdi('vilkar.art12_2_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
   }
 
   settStateForVilkar = vilkar => {
@@ -61,9 +64,14 @@ class VurderingArtikkel12_2 extends Component {
     if (value === vilkarKoder.FO_883_2004_ART12_2) {
       settSkjemaVerdi('vilkar.art12_2', true);
       settSkjemaVerdi('vilkar.art16_1', null);
+      settSkjemaVerdi('vilkar.art12_2_begrunnelser', []);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
     } else if (value === vilkarKoder.FO_883_2004_ART16_1) {
       settSkjemaVerdi('vilkar.art12_2', false);
       settSkjemaVerdi('vilkar.art16_1', true);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
     } else {
       settSkjemaVerdi('vilkar.art12_2', false);
       settSkjemaVerdi('vilkar.art16_1', false);
@@ -133,6 +141,12 @@ class VurderingArtikkel12_2 extends Component {
                     tillatFritekst={false}
                     disabled={!redigerbart}
                   />
+                  <Skjema.Textarea
+                    disabled={!redigerbart}
+                    feltNavn="vilkar.art16_1_begrunnelser_fritekst"
+                    label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                    maxLength={255}
+                    bredde="fullbredde" />
                 </Nav.Fieldset>
               )}
             </Nav.Column>

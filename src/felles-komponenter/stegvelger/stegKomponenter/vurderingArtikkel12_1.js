@@ -20,8 +20,6 @@ class VurderingArtikkel12_1 extends Component {
    */
   constructor() {
     super();
-    this.ART12_1 = vilkarKoder.FO_883_2004_ART12_1;
-    this.ART16_1 = vilkarKoder.FO_883_2004_ART16_1;
     this.AVSLAG = 'AVSLAG';
   }
 
@@ -39,6 +37,9 @@ class VurderingArtikkel12_1 extends Component {
     const { settSkjemaVerdi } = this.props;
     settSkjemaVerdi('vilkar.art12_1', null);
     settSkjemaVerdi('vilkar.art16_1', null);
+    settSkjemaVerdi('vilkar.art12_1_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
   }
 
   settStateForVilkar = vilkar => this.setState({ valgtVilkar: vilkar });
@@ -49,8 +50,8 @@ class VurderingArtikkel12_1 extends Component {
 
     if ((art12_1 === old_art12_1) && (art16_1 === old_art16_1)) { return; }
 
-    if (art12_1) (this.settStateForVilkar(this.ART12_1));
-    if (art16_1 && art12_1 === false) (this.settStateForVilkar(this.ART16_1));
+    if (art12_1) (this.settStateForVilkar(vilkarKoder.FO_883_2004_ART12_1));
+    if (art16_1 && art12_1 === false) (this.settStateForVilkar(vilkarKoder.FO_883_2004_ART16_1));
     if (art16_1 === false && art12_1 === false) (this.settStateForVilkar(this.AVSLAG));
   };
 
@@ -58,12 +59,17 @@ class VurderingArtikkel12_1 extends Component {
     const { value } = event.target;
     const { settSkjemaVerdi } = this.props;
 
-    if (value === this.ART12_1) {
+    if (value === vilkarKoder.FO_883_2004_ART12_1) {
       settSkjemaVerdi('vilkar.art12_1', true);
       settSkjemaVerdi('vilkar.art16_1', null);
-    } else if (value === this.ART16_1) {
+      settSkjemaVerdi('vilkar.art12_1_begrunnelser', []);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
+    } else if (value === vilkarKoder.FO_883_2004_ART16_1) {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', true);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
     } else {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', false);
@@ -89,7 +95,7 @@ class VurderingArtikkel12_1 extends Component {
                   name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.ART12_1}
-                  checked={valgtVilkar === this.ART12_1}
+                  checked={valgtVilkar === vilkarKoder.FO_883_2004_ART12_1}
                   label="Ja"
                   disabled={!redigerbart}
                 />
@@ -97,7 +103,7 @@ class VurderingArtikkel12_1 extends Component {
                   name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.ART16_1}
-                  checked={valgtVilkar === this.ART16_1}
+                  checked={valgtVilkar === vilkarKoder.FO_883_2004_ART16_1}
                   label="Nei, jeg vil sende anmodning om unntak etter artikkel 16.1"
                   disabled={!redigerbart}
                 />
@@ -135,6 +141,12 @@ class VurderingArtikkel12_1 extends Component {
                     tillatFritekst={false}
                     disabled={!redigerbart}
                   />
+                  <Skjema.Textarea
+                    disabled={!redigerbart}
+                    feltNavn="vilkar.art16_1_begrunnelser_fritekst"
+                    label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                    maxLength={255}
+                    bredde="fullbredde" />
                 </Nav.Fieldset>
               )}
             </Nav.Column>
