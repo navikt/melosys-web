@@ -35,12 +35,12 @@ class Artikkel12_1 extends Steg {
     this._beregnRelevantUI = _propsLight => {
       const {
         art12_1, art12_1_begrunnelser = [],
-        art16_1, art16_1_begrunnelser = [],
+        art16_1, art16_1_begrunnelser = [], art16_1_begrunnelser_fritekst = '',
       } = _propsLight.skjema.vilkar;
 
       const harAvklaring = (art12_1 !== null && art12_1 !== undefined) || (art16_1 !== null && art16_1 !== undefined);
       const manglerBegrunnelse12 = art12_1 === false && art12_1_begrunnelser.length === 0;
-      const manglerBegrunnelse16 = art16_1 === false && art16_1_begrunnelser.length === 0;
+      const manglerBegrunnelse16 = art16_1 === false && art16_1_begrunnelser.length === 0 && art16_1_begrunnelser_fritekst.length < 1;
 
       return {
         harAvklaring: harAvklaring && !manglerBegrunnelse12 && !manglerBegrunnelse16,
