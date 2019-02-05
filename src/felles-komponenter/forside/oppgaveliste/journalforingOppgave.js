@@ -7,9 +7,9 @@ import * as Nav from '../../../utils/navFrontend';
 
 import PanelHeader from '../../../felles-komponenter/panelHeader/panelHeader';
 
-import './journalForingEnkeltLinje.css';
+import './journalforingOppgave.css';
 
-const JournalForingEnkeltLinje = ({ sak }) => {
+const JournalforingOppgave = ({ sak }) => {
   const { journalpostID, oppgaveID, aktivTil } = sak;
   const tittel = 'Journalføring';
   const link = `/journalforing/${journalpostID}/${oppgaveID}`;
@@ -17,17 +17,17 @@ const JournalForingEnkeltLinje = ({ sak }) => {
   const undertittel = () => (
     <Nav.Row>
       <Nav.Column xs="12" md="6">
-        <dl className="journalEnkeltLinje__meta">
-          <dt className="journalEnkeltLinje__meta__term">Frist:</dt>
-          <dd className="journalEnkeltLinje__meta__detalj">{aktivTil}</dd>
+        <dl className="journalOppgave__meta">
+          <dt className="journalOppgave__meta__term">Frist:</dt>
+          <dd className="journalOppgave__meta__detalj">{aktivTil}</dd>
         </dl>
       </Nav.Column>
     </Nav.Row>
   );
 
   return (
-    <Link to={link} className="journalEnkeltLinje__link">
-      <Nav.Panel className="journalEnkeltLinje">
+    <Link to={link} className="journalOppgave__link">
+      <Nav.Panel className="journalOppgave">
         <PanelHeader
           ikon={Ikoner.IkonSak}
           tittel={tittel}
@@ -37,12 +37,12 @@ const JournalForingEnkeltLinje = ({ sak }) => {
   );
 };
 
-JournalForingEnkeltLinje.propTypes = {
+JournalforingOppgave.propTypes = {
   sak: MPT.JournalforingOppgave,
 };
 
-JournalForingEnkeltLinje.defaultProps = {
+JournalforingOppgave.defaultProps = {
   sak: {},
 };
 
-export default JournalForingEnkeltLinje;
+export default JournalforingOppgave;
