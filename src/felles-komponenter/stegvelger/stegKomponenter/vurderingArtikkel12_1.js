@@ -94,7 +94,7 @@ class VurderingArtikkel12_1 extends Component {
                 <Nav.Radio
                   name="artikkel12"
                   onChange={this.radioEndringHandler}
-                  value={this.ART12_1}
+                  value={vilkarKoder.FO_883_2004_ART12_1}
                   checked={valgtVilkar === vilkarKoder.FO_883_2004_ART12_1}
                   label="Ja"
                   disabled={!redigerbart}
@@ -102,7 +102,7 @@ class VurderingArtikkel12_1 extends Component {
                 <Nav.Radio
                   name="artikkel12"
                   onChange={this.radioEndringHandler}
-                  value={this.ART16_1}
+                  value={vilkarKoder.FO_883_2004_ART16_1}
                   checked={valgtVilkar === vilkarKoder.FO_883_2004_ART16_1}
                   label="Nei, jeg vil sende anmodning om unntak etter artikkel 16.1"
                   disabled={!redigerbart}
@@ -144,7 +144,7 @@ class VurderingArtikkel12_1 extends Component {
                   <Skjema.Textarea
                     disabled={!redigerbart}
                     feltNavn="vilkar.art16_1_begrunnelser_fritekst"
-                    label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                    label="Begrunnelse for avslag (fritekst):"
                     maxLength={255}
                     bredde="fullbredde" />
                 </Nav.Fieldset>
