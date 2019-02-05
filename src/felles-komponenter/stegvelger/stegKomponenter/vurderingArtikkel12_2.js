@@ -144,7 +144,7 @@ class VurderingArtikkel12_2 extends Component {
                   <Skjema.Textarea
                     disabled={!redigerbart}
                     feltNavn="vilkar.art16_1_begrunnelser_fritekst"
-                    label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                    label="Begrunnelse for avslag (fritekst):"
                     maxLength={255}
                     bredde="fullbredde" />
                 </Nav.Fieldset>
