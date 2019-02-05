@@ -9,10 +9,6 @@ async function send(oppgave) {
   const URI_OPPGAVER_PLUKK = `${API_BASE_URL}oppgaver/plukk`;
   return postAsJson(URI_OPPGAVER_PLUKK, oppgave);
 }
-async function sok(fnr) {
-  const URI_BEHANDLINGS_OPPGAVER = `${API_BASE_URL}oppgaver/sok/?fnr=${fnr}`;
-  return getAsJson(URI_BEHANDLINGS_OPPGAVER);
-}
 async function opprett(oppgave) {
   const URI_OPPGAVER_OPPRETT = `${API_BASE_URL}oppgaver/opprett`;
   return postAsJson(URI_OPPGAVER_OPPRETT, oppgave);
@@ -28,7 +24,6 @@ async function tilbakelegge(oppgave) {
 export {
   oversikt,
   send,
-  sok,
   opprett,
   sparkReset,
   tilbakelegge,

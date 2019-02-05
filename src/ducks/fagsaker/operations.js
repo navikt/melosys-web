@@ -47,19 +47,6 @@ function opprett(fnr) {
   );
 }
 
-/**
- * Søker på en liste av fagsaker knyttet til et fnr.
- * @param fnr
- * @returns {*}
- */
-function sok(fnr) {
-  return doThenDispatch(() => Api.Fagsaker.sok(fnr), {
-    OK: Types.SAKSLISTE_OK,
-    FEILET: Types.SAKSLISTE_FEILET,
-    PENDING: Types.SAKSLISTE_PENDING,
-  });
-}
-
 function resetFagsakState() {
   return Actions.resetFagsakState();
 }
@@ -69,7 +56,6 @@ function oppdaterBehandlingsStatus(status) {
 export {
   hent,
   opprett,
-  sok,
   resetFagsakState,
   oppdaterBehandlingsStatus,
 };

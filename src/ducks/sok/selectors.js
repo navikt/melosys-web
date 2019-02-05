@@ -7,7 +7,7 @@ import { createSelector } from 'reselect';
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 /* eslint-disable import/prefer-default-export */
-export const SokResultatSelector = createSelector(
-  state => state.sok.data || [],
+export const FagsakSokSelector = createSelector(
+  state => (state.sok.data.fagsakListe ? state.sok.data.fagsakListe : []),
   sokResultat => sokResultat || []
 );

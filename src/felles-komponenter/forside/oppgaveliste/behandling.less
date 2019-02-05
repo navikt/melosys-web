@@ -1,0 +1,40 @@
+@import '../../../utils/mixins';
+@import '../../../constants';
+
+.behandling {
+  margin-bottom: 1em;
+  flex: 1;
+  background-color: #efefef;
+
+  button {
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+.behandling__link:link,
+.behandling__link:visited,
+.behandling__link:hover {
+  color: @black;
+  text-decoration: none;
+  flex-grow:1;
+  display: flex;
+}
+
+.behandling__meta {
+  display: block;
+  margin: 0.5em 0;
+
+  dt {
+    float: left;
+    clear: left;
+    font-weight: bold;
+    margin-right: 0.4em;
+  }
+
+  dd {
+    float: left;
+    clear: right;
+    margin: 0;
+  }
+}
