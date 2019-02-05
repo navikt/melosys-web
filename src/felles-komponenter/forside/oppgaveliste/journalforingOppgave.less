@@ -1,37 +1,32 @@
 @import '../../../utils/mixins';
-@import '../../../constants';
 
-.sakEnkeltLinje {
+.journalOppgave {
   margin-bottom: 1em;
   flex: 1;
 }
 
-.sakEnkeltLinje__stengt {
-  background-color: @gray-dark;
-}
-
-.sakEnkeltLinje__link:link,
-.sakEnkeltLinje__link:visited,
-.sakEnkeltLinje__link:hover {
+.journalOppgave__link:link,
+.journalOppgave__link:visited,
+.journalOppgave__link:hover {
   color: @black;
   text-decoration: none;
   flex-grow:1;
   display: flex;
 }
 
-.sakEnkeltLinje__meta {
+.journalOppgave__meta {
   display: block;
   margin: 0.5em 0;
 }
 
-.sakEnkeltLinje__meta__term {
+.journalOppgave__meta__term {
   float: left;
   clear: left;
   font-weight: bold;
   margin-right: 0.4em;
 }
 
-.sakEnkeltLinje__meta__detalj {
+.journalOppgave__meta__detalj {
   float:left;
   clear: right;
   margin: 0;
