@@ -14,3 +14,8 @@ export const LovvalgsperioderSelector = createSelector(
   state => (state.lovvalgsperioder.data ? state.lovvalgsperioder.data : []),
   lovvalgsperioder => lovvalgsperioder
 );
+
+export const LovvalgsperiodeSelector = createSelector(
+  state => LovvalgsperioderSelector(state),
+  lovvalgsPerioder => (lovvalgsPerioder[0] ? lovvalgsPerioder[0] : {})
+);

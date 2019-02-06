@@ -3,8 +3,12 @@ import React from 'react';
 import { VurderingEndrePeriode } from './vurderingEndrePeriode';
 
 describe('vurderingEndrePeriode', () => {
+  const endrePeriode = jest.fn();
+
   const props = {
     oppsummering: { behandlingID: 1 },
+    lovvalgsPeriode: {},
+    endrePeriode,
   };
 
   it('viser en pdfLenkeListe', () => {
@@ -17,8 +21,17 @@ describe('vurderingEndrePeriode', () => {
     expect(component.find('Hovedknapp')).toHaveLength(1);
   });
 
-  it('viser to datepickere', () => {
+  describe('knappen', () => {
+    it('endrer periode når den trykkes', () => {
+      const component = shallow(<VurderingEndrePeriode {...props} />);
+      const knapp = component.find('Hovedknapp');
+      knapp.simulate('click');
+      expect(endrePeriode).toHaveBeenCalled();
+    });
+  });
+
+  it('viser to inputs for fradato og tildato', () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
-    expect(component.find('Datepicker')).toHaveLength(2);
-  })
+    expect(component.find('Input')).toHaveLength(2);
+  });
 });

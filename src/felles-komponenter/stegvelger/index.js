@@ -123,6 +123,10 @@ class Stegvelger extends Component {
     await this.fatteVedtakHandler(behandlingsresultattype);
   };
 
+  endrePeriode = async () => {
+    console.log('endre periode');
+  }
+
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
    *
@@ -135,6 +139,7 @@ class Stegvelger extends Component {
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
       oppdaterOgLagreBehandlinger: this.oppdaterOgLagreBehandlinger,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
+      endrePeriode: this.endrePeriode,
     };
 
     const propsLight = {

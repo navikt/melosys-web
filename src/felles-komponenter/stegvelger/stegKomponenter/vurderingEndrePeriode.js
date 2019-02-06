@@ -3,59 +3,190 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
+import { KodeTermSelect } from '../../kodeTermSelect';
 import * as Nav from '../../../utils/navFrontend';
 
 import { fagsakSelectors } from '../../../ducks/fagsaker';
+import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
+
+import { brev, aktoersroller } from '../../../kodeverk/koder';
+
+import { formatterDatoTilNorsk, erIPeriode, vaskInputDato, formatterDatoTilISO } from '../../../utils/dato';
 
 import * as MPT from '../../../proptypes';
 
 import './vurderingEndrePeriode.css';
+import { soknadOperations } from '../../../ducks/soknad';
 
-export const VurderingEndrePeriode = ({ startDato, sluttDato, antallMnd, oppsummering }) => {
-  const dokumenter = [
-    { navn: 'Forhåndsvis vedtaksbrev', type: 'INNVILGELSE_YRKESAKTIV', data: { mottaker: 'BRUKER' } },
-    { navn: 'Forhåndsvis A1', type: 'ATTEST_A1', data: { mottaker: 'MYNDIGHET' } },
-  ];
+export class VurderingEndrePeriode extends React.Component {
+  state = {
+    nyTomDato: '',
+    nyTomDatoFeilmelding: undefined,
+    valgtBegrunnelseKode: '',
+    begrunnelseFeilmelding: undefined,
+    fritekst: null,
+  };
 
-  const { behandlingID } = oppsummering;
+  vedTomDatoEndring = ({ target: { value } }) => {
+    this.setState({ nyTomDato: value, nyTomDatoFeilmelding: undefined });
+  };
 
-  return (
-    <div className="vurderingEndrePeriode">
-      <Nav.Undertittel>Endre lovvalgsperiode</Nav.Undertittel>
-      I hvilken periode fyller søkeren kriteriene for artikkel 12, nr. 1?
-      <Nav.Element className="mindreTittel">Opprinnelig lovvalgsperiode</Nav.Element>
-      <Nav.Row>
-        <Nav.Column xs="2">
-          <Nav.Normaltekst>Fra {startDato}</Nav.Normaltekst>
-        </Nav.Column>
-        <Nav.Column xs="2">
-          <Nav.Normaltekst>Til {sluttDato}</Nav.Normaltekst>
-        </Nav.Column>
-        <Nav.Column xs="2">
-          <Nav.Normaltekst>{antallMnd} mnd.</Nav.Normaltekst>
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Element className="mindreTittel">Ny lovvalgsperiode</Nav.Element>
-      <Nav.Row>
-        <Nav.Column xs="3">
-          Startdato
-        </Nav.Column>
-        <Nav.Column xs="3">
-          Sluttdato
-        </Nav.Column>
-      </Nav.Row>
-      <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
-      <Nav.Hovedknapp>Endre periode</Nav.Hovedknapp>
-    </div>
-  );
-};
+  validerTomDato = () => {
+    const { nyTomDato } = this.state;
+    const vasketTomDato = vaskInputDato(nyTomDato);
+    if (vasketTomDato) {
+      return true;
+    }
+    this.setState({ nyTomDatoFeilmelding: { feilmelding: 'Ugyldig dato' } });
+    return false;
+  };
+
+  validerBegrunnelse = () => {
+    const begrunnelseValid = this.state.valgtBegrunnelseKode !== '';
+    if (begrunnelseValid) {
+      return true;
+    }
+    this.setState({ begrunnelseFeilmelding: { feilmelding: 'Ugyldig begrunnelse' } });
+    return false;
+  };
+
+  validerPeriode = () => {
+    const { nyTomDato } = this.state;
+    const { fomDato, tomDato } = this.props.lovvalgsPeriode;
+    const periodeValid = erIPeriode(fomDato, tomDato, formatterDatoTilISO(nyTomDato));
+    if (periodeValid) {
+      return true;
+    }
+    this.setState({ nyTomDatoFeilmelding: { feilmelding: 'Ugyldig periode' } });
+    return false;
+  };
+
+  vedBegrunnelseEndret = event => {
+    this.setState({ valgtBegrunnelseKode: event.target.value, begrunnelseFeilmelding: undefined });
+  };
+
+  vedKlikkEndrePeriode = () => {
+    if (this.validerAlt()) {
+      this.props.endrePeriode();
+    }
+  };
+
+  validerAlt = () => this.validerTomDato() && this.validerPeriode() && this.validerBegrunnelse();
+
+  vedKlikkPdf = async () => this.validerAlt();
+
+  render() {
+    const { oppsummering, lovvalgsPeriode: { fomDato, tomDato } } = this.props;
+
+    const {
+      vedTomDatoEndring,
+      vedBegrunnelseEndret,
+      vedKlikkEndrePeriode,
+      vedKlikkPdf,
+    } = this;
+
+    const {
+      nyTomDato,
+      valgtBegrunnelseKode,
+      nyTomDatoFeilmelding,
+      begrunnelseFeilmelding,
+      fritekst,
+    } = this.state;
+
+    const dokumenter = [
+      {
+        navn: 'Forhåndsvis vedtaksbrev',
+        type: brev.INNVILGELSE_YRKESAKTIV,
+        data: {
+          mottaker: aktoersroller.BRUKER,
+          fritekst,
+          begrunnelseKode: valgtBegrunnelseKode,
+        },
+      },
+      {
+        navn: 'Forhåndsvis A1',
+        type: brev.ATTEST_A1,
+        data: {
+          mottaker: aktoersroller.MYNDIGHET,
+          fritekst,
+          begrunnelseKode: valgtBegrunnelseKode,
+        },
+      },
+    ];
+
+    const { behandlingID } = oppsummering;
+
+    const formattertFomDato = formatterDatoTilNorsk(fomDato);
+    const formattertTomDato = formatterDatoTilNorsk(tomDato);
+
+    return (
+      <div className="vurderingEndrePeriode">
+        <Nav.Undertittel>Endre lovvalgsperiode</Nav.Undertittel>
+        <Nav.Element className="mindreTittel">Opprinnelig lovvalgsperiode</Nav.Element>
+        <Nav.Row>
+          <Nav.Column xs="2">
+            <Nav.Normaltekst>Fra {formattertFomDato}</Nav.Normaltekst>
+          </Nav.Column>
+          <Nav.Column xs="2">
+            <Nav.Normaltekst>Til {formattertTomDato}</Nav.Normaltekst>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Element className="mindreTittel">Ny lovvalgsperiode</Nav.Element>
+        <Nav.Row>
+          <Nav.Column xs="2">
+            <Nav.Input
+              bredde="S"
+              label="Startdato"
+              value={formattertFomDato}
+              disabled
+            />
+          </Nav.Column>
+          <Nav.Column xs="2">
+            <Nav.Input
+              bredde="S"
+              label="Sluttdato"
+              onChange={vedTomDatoEndring}
+              value={nyTomDato}
+              feil={nyTomDatoFeilmelding}
+            />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <KodeTermSelect
+              feil={begrunnelseFeilmelding}
+              koder={[{ kode: 'kode', term: 'term' }]}
+              label="Begrunnelse"
+              value={valgtBegrunnelseKode}
+              onChange={vedBegrunnelseEndret}
+            />
+          </Nav.Column>
+        </Nav.Row>
+        <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={vedKlikkPdf} />
+        <Nav.Hovedknapp onClick={vedKlikkEndrePeriode} >Endre periode</Nav.Hovedknapp>
+      </div>
+    );
+  }
+}
 
 VurderingEndrePeriode.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
+  lovvalgsPeriode: PT.object.isRequired,
+  endrePeriode: PT.func.isRequired,
+  fomDato: PT.string,
+};
+
+VurderingEndrePeriode.defaultProps = {
+  fomDato: '',
 };
 
 const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
 });
 
-export default connect(mapStateToProps, null)(VurderingEndrePeriode);
+const mapDispatchToProps = dispatch => ({
+  oppdaterPeriode: periode => dispatch(soknadOperations.oppdaterPeriode(periode)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingEndrePeriode);

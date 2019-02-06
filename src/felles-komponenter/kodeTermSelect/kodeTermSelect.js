@@ -28,12 +28,13 @@ kodeTermSelect.propTypes = {
   label: PT.string.isRequired,
   feil: PT.object,
   disableFørsteValg: PT.bool,
-  redigerbar: PT.bool.isRequired,
+  redigerbar: PT.bool,
 };
 
 kodeTermSelect.defaultProps = {
   disableFørsteValg: false,
   feil: undefined,
+  redigerbar: true,
 };
 
 export default kodeTermSelect;

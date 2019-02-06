@@ -1,5 +1,6 @@
 import * as Kontrollere from './kontrollere';
 import { StegTilKontroller } from './typer';
+import { behandlinger } from '../../../kodeverk/koder';
 
 class StegMotor {
   constructor(props) {
@@ -26,7 +27,7 @@ class StegMotor {
 
   beregnNesteSteg = (gjeldendeSteg, nesteStegPosisjon) => {
     if (gjeldendeSteg === null) {
-      if (this._propsLight.behandlingstype.kode === 'ENDRET_PERIODE') {
+      if (this._propsLight.behandlingstype.kode === behandlinger.ENDRET_PERIODE) {
         return this.lagKlasseBasertPaID(this._endrePeriodeStegID, 0);
       }
       return this.lagKlasseBasertPaID(this._forsteStegID, 0);
