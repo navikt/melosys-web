@@ -13,20 +13,20 @@ import PanelHeader from '../../panelHeader/panelHeader';
 import EnkeltDato from '../../datoOmrade/enkeltDato';
 import { formatterDatoTilNorsk } from '../../../utils/dato';
 
-import './sakEnkeltLinje.css';
+import './behandlingOppgave.css';
 
-const SaksLinjeWrapper = ({ link, stengt, children }) => (
+const BehandlingOppgavesLinjeWrapper = ({ link, stengt, children }) => (
   stengt ?
     <div>
       {children}
     </div>
     :
-    <Link to={link} className="sakEnkeltLinje__link">
+    <Link to={link} className="behandlingOppgave__link">
       {children}
     </Link>
 );
 
-SaksLinjeWrapper.propTypes = {
+BehandlingOppgavesLinjeWrapper.propTypes = {
   link: PT.string.isRequired,
   stengt: PT.bool.isRequired,
   children: PT.node.isRequired,
@@ -37,9 +37,8 @@ SaksLinjeWrapper.propTypes = {
  * for å gi saksbehandler en hent over sakens innhold før hun klikker
  * seg inn på den.
  */
-const SakEnkeltLinje = ({ sak }) => {
+const BehandlingOppgave = ({ sak }) => {
   const {
-    redigerbart,
     sammensattNavn,
     sakstype,
     saksnummer,
@@ -63,12 +62,12 @@ const SakEnkeltLinje = ({ sak }) => {
   const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
 
   const cl = classNames({
-    sakEnkeltLinje: true,
-    sakEnkeltLinje__stengt: erUnderOppdatering,
+    behandlingOppgave: true,
+    behandlingOppgave__stengt: erUnderOppdatering,
   });
 
   return (
-    <SaksLinjeWrapper link={link} stengt={erUnderOppdatering}>
+    <BehandlingOppgavesLinjeWrapper link={link} stengt={erUnderOppdatering}>
       <Nav.Panel className={cl}>
         <PanelHeader
           ikon={Ikoner.IkonSak}
@@ -76,41 +75,37 @@ const SakEnkeltLinje = ({ sak }) => {
           undertittel={
             <Nav.Row>
               <Nav.Column xs="12" md="6">
-                <dl className="sakEnkeltLinje__meta">
-                  <dt className="sakEnkeltLinje__meta__term">Behandlingsstatus:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
-
-                  <dt className="sakEnkeltLinje__meta__term">Redigerbar:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{redigerbart ? 'JA' : 'NEI'}</dd>
-
-                  <dt className="sakEnkeltLinje__meta__term">Frist:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
-                  <dt className="sakEnkeltLinje__meta__term">Sist oppdatert:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{oppdateringStatus || formatterDatoTilNorsk(sisteOpplysningerHentetDato, true)}</dd>
+                <dl className="behandlingOppgave__meta">
+                  <dt className="behandlingOppgave__meta__term">Behandlingsstatus:</dt>
+                  <dd className="behandlingOppgave__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
+                  <dt className="behandlingOppgave__meta__term">Frist:</dt>
+                  <dd className="behandlingOppgave__meta__detalj">{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
+                  <dt className="behandlingOppgave__meta__term">Sist oppdatert:</dt>
+                  <dd className="behandlingOppgave__meta__detalj">{oppdateringStatus || formatterDatoTilNorsk(sisteOpplysningerHentetDato, true)}</dd>
                 </dl>
               </Nav.Column>
               <Nav.Column xs="12" md="6">
-                <dl className="sakEnkeltLinje__meta">
-                  <dt className="sakEnkeltLinje__meta__term">Søknadsperiode: </dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
-                  <dt className="sakEnkeltLinje__meta__term">Land:</dt>
-                  <dd className="sakEnkeltLinje__meta__detalj">{landListeSomStreng}</dd>
+                <dl className="behandlingOppgave__meta">
+                  <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
+                  <dd className="behandlingOppgave__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
+                  <dt className="behandlingOppgave__meta__term">Land:</dt>
+                  <dd className="behandlingOppgave__meta__detalj">{landListeSomStreng}</dd>
                 </dl>
               </Nav.Column>
             </Nav.Row>
           }
         />
       </Nav.Panel>
-    </SaksLinjeWrapper>
+    </BehandlingOppgavesLinjeWrapper>
   );
 };
 
-SakEnkeltLinje.propTypes = {
+BehandlingOppgave.propTypes = {
   sak: MPT.SaksbehandlingOppgave,
 };
 
-SakEnkeltLinje.defaultProps = {
+BehandlingOppgave.defaultProps = {
   sak: {},
 };
 
-export default SakEnkeltLinje;
+export default BehandlingOppgave;

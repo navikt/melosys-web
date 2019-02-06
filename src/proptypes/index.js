@@ -1,3 +1,4 @@
+import { Behandlingsresultat } from './behandlingsresultat';
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
 import { Inntekt, InntektListe, InntektEnkeltLinje } from './inntekt';
 import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
@@ -9,6 +10,7 @@ import { Person } from './person';
 import { BostedsAdresse, PostAdresse, ForretningsAdresse, GeneriskAdresse } from './adresser';
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { Saksbehandler } from './saksbehandler';
+import { FagsakOppsummering } from './fagsakOppsummering';
 import { Oppsummering } from './oppsummering';
 import { Periode } from './periode';
 import { Bekreftelser } from './bekreftelser';
@@ -32,10 +34,12 @@ export {
   Arbeidsforholdet,
   ArbeidsgivereNorge,
   Bekreftelser,
+  Behandlingsresultat,
   BostedsAdresse,
   Dokument,
   DokumentMetadataListe,
   DokumentNullable,
+  FagsakOppsummering,
   Feilmelding,
   Feilmeldinger,
   ForretningsAdresse,

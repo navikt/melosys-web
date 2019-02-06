@@ -1,5 +1,6 @@
 import * as Avklartefakta from './modules/avklartefakta';
 import * as Behandlinger from './modules/behandlinger';
+import * as Behandlingsresultat from './modules/behandlingsresultat';
 import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker';
 import * as Health from './modules/health';
@@ -33,6 +34,7 @@ function erDev() {
 export {
   Avklartefakta,
   Behandlinger,
+  Behandlingsresultat,
   Dokumenter,
   Fagsaker,
   Health,

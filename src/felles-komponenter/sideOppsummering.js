@@ -92,8 +92,12 @@ class SideOppsummering extends Component {
     }
 
     endreStatusValg = [...endreStatusValg, { kode: behandlinger.UNDER_BEHANDLING, term: behandlingsStatusTermer.UNDER_BEHANDLING }];
-
     return endreStatusValg;
+  };
+
+  apneTidligereBehandlinger = () => {
+    const URI_SOK = `/sok/${this.props.person.fnr}`;
+    window.open(URI_SOK);
   };
 
   render() {
@@ -146,6 +150,7 @@ class SideOppsummering extends Component {
                     <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
                     <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppfrisk saksopplysninger</Nav.Knapp>
                     { redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={visHenleggDialogHandle}>Henlegg sak</Nav.Knapp> }
+                    { <Nav.Knapp type="hoved" mini className="innhold__element" onClick={this.apneTidligereBehandlinger}>Vis tidligere behandlinger</Nav.Knapp> }
                   </div>
                 </Nav.EkspanderbartpanelBase>
               </div>
