@@ -25,6 +25,7 @@ describe('vurderingEndrePeriode', () => {
     it('endrer periode når den trykkes', () => {
       const component = shallow(<VurderingEndrePeriode {...props} />);
       const knapp = component.find('Hovedknapp');
+      component.instance().validerAlt = jest.fn(() => true);
       knapp.simulate('click');
       expect(endrePeriode).toHaveBeenCalled();
     });
