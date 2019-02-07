@@ -60,14 +60,29 @@ export const art12_1 = createSelector(
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === vilkar.FO_883_2004_ART12_1) || {})
 );
 
+export const art12_1_begrunnelserSelector = createSelector(
+  state => art12_1(state),
+  art12_1_vilkar => art12_1_vilkar.begrunnelseKoder || []
+);
+
 export const art12_2 = createSelector(
   state => VilkarSelector(state),
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === vilkar.FO_883_2004_ART12_2) || {})
 );
 
+export const art12_2_begrunnelserSelector = createSelector(
+  state => art12_2(state),
+  art12_2_vilkar => art12_2_vilkar.begrunnelseKoder || []
+);
+
 export const art16_1 = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === vilkar.FO_883_2004_ART12_2) || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === vilkar.FO_883_2004_ART16_1) || {})
+);
+
+export const art16_1_begrunnelserSelector = createSelector(
+  state => art16_1(state),
+  art16_1_vilkar => art16_1_vilkar.begrunnelseKoder || []
 );
 
 export const valgteLovvalgsVilkar = createSelector(
@@ -78,6 +93,10 @@ export const valgteLovvalgsVilkar = createSelector(
       ...forordning_987_2009,
       ...tillegg,
     ];
-    return alleVilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar));
+    return alleVilkar.filter(enkeltVilkar => {
+      return alleLovvalg.find(enkeltLovvalg => {
+        return enkeltLovvalg.kode === enkeltVilkar.vilkaar;
+      });
+    });
   }
 );

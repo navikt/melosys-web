@@ -4,6 +4,9 @@ export const {
   begrunnelser,
   begrunnelser: {
     art16_1_anmodning,
+    art12_1_begrunnelser,
+    art12_2_begrunnelser,
+    art16_1_avslag,
   },
   behandlinger: {
     resultattyper,

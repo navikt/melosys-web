@@ -22,8 +22,11 @@ class Artikkel12_1 extends Steg {
       },
       {
         beskrivelse: 'avslår søknad',
-        exec: () => {
-          return propsLight.skjema.avslag ? propsLight.skjema.avslag : false;
+        exec: (avklartefakta, alleVilkar) => {
+          return (
+            erVilkarOppfylt(vilkar.FO_883_2004_ART12_1, alleVilkar) !== undefined
+            && erVilkarOppfylt(vilkar.FO_883_2004_ART16_1, alleVilkar) !== undefined
+          );
         },
         nesteSteg: STEG.AVSLAG_12_X_OG_16,
       },

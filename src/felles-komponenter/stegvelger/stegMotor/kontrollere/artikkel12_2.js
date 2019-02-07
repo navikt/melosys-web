@@ -20,6 +20,16 @@ class Artikkel12_2 extends Steg {
         nesteSteg: STEG.ARTIKKEL_16,
       },
       {
+        beskrivelse: 'avslår søknad',
+        exec: (avklartefakta, alleVilkar) => {
+          return (
+            erVilkarOppfylt(vilkar.FO_883_2004_ART12_2, alleVilkar) !== undefined
+            && erVilkarOppfylt(vilkar.FO_883_2004_ART16_1, alleVilkar) !== undefined
+          );
+        },
+        nesteSteg: STEG.AVSLAG_12_X_OG_16,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: null,

@@ -9,4 +9,6 @@ export default {
   MELDING_MANGLENDE_OPPLYSNINGER: brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER,
   MELDING_HENLAGT_SAK: brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
   ATTEST_A1: brev.produserbaredokumenter.ATTEST_A1,
+  AVSLAG_YRKESAKTIV: brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
+  ANMODNING_UNNTAK: brev.produserbaredokumenter.ANMODNING_UNNTAK,
 };

@@ -174,3 +174,9 @@ export function oppdaterLovvalgsperioderState() {
 export function resetLovvalgsperioderState() {
   return Actions.resetLovvalgsperioderState();
 }
+
+export function avslaLovvalg() {
+  return dispatch => {
+
+  };
+}

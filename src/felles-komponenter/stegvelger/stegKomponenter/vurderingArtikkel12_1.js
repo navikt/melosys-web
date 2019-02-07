@@ -60,15 +60,12 @@ class VurderingArtikkel12_1 extends Component {
     if (value === this.ART12_1) {
       settSkjemaVerdi('vilkar.art12_1', true);
       settSkjemaVerdi('vilkar.art16_1', null);
-      settSkjemaVerdi('avslag', false);
     } else if (value === this.ART16_1) {
       settSkjemaVerdi('vilkar.art16_1', true);
       settSkjemaVerdi('vilkar.art12_1', false);
-      settSkjemaVerdi('avslag', false);
     } else if (value === this.AVSLAG) {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', false);
-      settSkjemaVerdi('avslag', true);
     }
   };
 
