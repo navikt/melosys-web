@@ -6,7 +6,6 @@ import EnkeltDato from '../datoOmrade/enkeltDato';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
-
 import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
 
 import './eksisterendeSaker.css';
@@ -79,9 +78,10 @@ const EksisterendeSaker = props => {
       <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
         {
           behandlingstyper &&
-          behandlingstyper.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
+          behandlingstyper.filter(elem => elem.kode !== behandlingKoder.SOEKNAD).map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
         }
       </Skjema.Select>
+      <Skjema.Checkbox feltNavn="ingenVurdering" label="Dokumentet trenger ingen vurdering" />
       {
         fagsakListe.length > 0 &&
         <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp>
