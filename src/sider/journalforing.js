@@ -6,8 +6,8 @@ import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { sakstyper } from '../kodeverk/koder';
-import { typer as behandlingstyper } from '../kodeverk/kodelister';
+import { sakstyper as saksTypeKode } from '../kodeverk/koder';
+import { sakstyper, typer as behandlingstyper } from '../kodeverk/kodelister';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
@@ -109,7 +109,9 @@ class Journalforing extends Component {
       journalforing: { hoveddokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, arbeidsgiverID, representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
+      brukerID, avsenderID, arbeidsgiverID,
+      opprettnysak_behandlingstype: behandlingstype,
+      representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -128,7 +130,9 @@ class Journalforing extends Component {
     };
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
-      journalPostData = Object.assign(journalPostData, { arbeidsgiverID, representantID, representantKontaktPerson });
+      journalPostData = Object.assign(journalPostData, {
+        arbeidsgiverID, behandlingstype, representantID, representantKontaktPerson,
+      });
     }
     return journalPostData;
   };
@@ -176,7 +180,10 @@ class Journalforing extends Component {
     } = this.props;
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
-    const { journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed } = journalforingSkjemaVerdier;
+    const {
+      journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
+      sakstype,
+    } = journalforingSkjemaVerdier;
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
 
@@ -191,7 +198,8 @@ class Journalforing extends Component {
     }
 
     const fagsak = {
-      sakstype: sakstyper.EU_EOS,
+      // sakstype: saksTypeKode.EU_EOS,
+      sakstype,
       soknadsperiode: {
         fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
         tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
@@ -326,6 +334,8 @@ class Journalforing extends Component {
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                       />
                       <OpprettNyFagSak
+                        sakstyper={sakstyper}
+                        behandlingstyper={behandlingstyper}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
                       />
@@ -362,6 +372,7 @@ const mapStateToProps = state => ({
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
     hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
     vedleggsTitler: [],
+    sakstype: saksTypeKode.EU_EOS,
   },
 });
 
