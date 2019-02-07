@@ -1,5 +1,6 @@
 import Aktivitet from './aktivitet';
 import Arbeidsgivere from './arbeidsgivere';
+import Avslag_12_x_og_16 from './avslag_12_x_og_16';
 import Bostedsland from './bostedsland';
 import Forretningssted from './forretningssted';
 import ForutgaendeMedlemskap from './forutgaende_medlemskap';
@@ -23,6 +24,7 @@ import Vedtak from './vedtak';
 export {
   Aktivitet,
   Arbeidsgivere,
+  Avslag_12_x_og_16,
   Bostedsland,
   Forretningssted,
   ForutgaendeMedlemskap,

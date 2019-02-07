@@ -21,6 +21,13 @@ class Artikkel12_1 extends Steg {
         nesteSteg: STEG.ARTIKKEL_16,
       },
       {
+        beskrivelse: 'avslår søknad',
+        exec: () => {
+          return propsLight.skjema.avslag ? propsLight.skjema.avslag : false;
+        },
+        nesteSteg: STEG.AVSLAG_12_X_OG_16,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: null,
