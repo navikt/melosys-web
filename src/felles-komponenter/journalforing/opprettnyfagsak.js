@@ -7,6 +7,7 @@ import PT from 'prop-types';
 
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../proptypes/';
 
 import './opprettnyfagsak.css';
 import LandVelger from '../skjema/landvelger';
@@ -43,10 +44,22 @@ class OpprettNyFagSak extends Component {
   render() {
     const { spinner: { representantNavn: visArbeidsgiverSpinner } } = this.state;
 
-    const { opprettFagsak } = this.props;
+    const { sakstyper, behandlingstyper, opprettFagsak } = this.props;
     return (
       <div className="opprettnysak">
         <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype" disabled>
+              { sakstyper.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>)) }
+            </Skjema.Select>
+          </Nav.Column>
+          <Nav.Column xs="6">
+            <Skjema.Select feltNavn="opprettnysak_behandlingstype" bredde="fullbredde" label="Behandlingstype">
+              { behandlingstyper.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>)) }
+            </Skjema.Select>
+          </Nav.Column>
+        </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6">
             <Skjema.Input feltNavn="representantID" label="Fullmektigens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
@@ -84,6 +97,8 @@ OpprettNyFagSak.propTypes = {
   opprettFagsak: PT.func.isRequired,
   settFeltInnhold: PT.func.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
+  behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  sakstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 
