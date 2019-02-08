@@ -10,7 +10,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
-import * as Koder from '../../kodeverk/koder';
+import * as KV from '../../kodeverk';
 
 import * as Types from './types';
 import * as Actions from './actions';
@@ -53,7 +53,7 @@ const byggLovvalgsPeriodeArtikkel12_1 = getState => {
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: Koder.INNVILGET,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
     trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
     medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
@@ -69,7 +69,7 @@ const byggLovvalgsPeriodeArtikkel12_2 = getState => {
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: Koder.INNVILGET,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
     trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
     medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
@@ -85,7 +85,7 @@ const byggLovvalgsPeriodeArtikkel11_3A = getState => {
     tilleggBestemmelse: MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART11_4_1,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: Koder.INNVILGET,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
     trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
     medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
@@ -101,7 +101,7 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = getState => {
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: Koder.INNVILGET,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
     trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
     medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
@@ -125,7 +125,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
     tilleggBestemmelse: null,
     unntakFraBestemmelse,
     unntakFraLovvalgsland,
-    innvilgelsesResultat: Koder.INNVILGET,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
     trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
     medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
