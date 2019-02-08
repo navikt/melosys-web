@@ -1,7 +1,7 @@
-import { kodemap } from 'melosys-kodeverk';
+import * as MKV from 'melosys-kodeverk';
 
 export const {
   behandlinger: {
     status,
   },
-} = kodemap;
+} = MKV.KTValues;

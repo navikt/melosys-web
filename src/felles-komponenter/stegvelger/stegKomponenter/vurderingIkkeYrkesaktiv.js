@@ -3,14 +3,13 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-
-import { VurderingIkkeYrkesaktivTyper } from '../../../kodeverk/koder';
+import * as KV from '../../../kodeverk';
 
 const IkkeYrkesaktiv = () => (
   <Nav.Fieldset legend="Vurder om søkeren er:">
-    <Skjema.Radio feltNavn="avklartefaktaIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.STUDENT} label="Student" />
-    <Skjema.Radio feltNavn="avklartefaktaIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.PENSJONIST} label="Pensjonist" />
-    <Skjema.Radio feltNavn="avklartefaktaIkkeYrkesaktivType" value={VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE} label="Ingen av disse" />
+    <Skjema.Radio feltNavn="avklartefaktaIkkeYrkesaktivType" value={KV.Koder.VurderingIkkeYrkesaktivTyper.STUDENT} label="Student" />
+    <Skjema.Radio feltNavn="avklartefaktaIkkeYrkesaktivType" value={KV.Koder.VurderingIkkeYrkesaktivTyper.PENSJONIST} label="Pensjonist" />
+    <Skjema.Radio feltNavn="avklartefaktaIkkeYrkesaktivType" value={KV.Koder.VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE} label="Ingen av disse" />
   </Nav.Fieldset>
 );
 

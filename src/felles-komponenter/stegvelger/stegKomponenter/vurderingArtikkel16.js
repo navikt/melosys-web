@@ -3,18 +3,11 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from '../../../proptypes/';
-
-import { behandlinger, brev, aktoersroller } from '../../../kodeverk/koder';
-import {
-  art16_1_anmodning as anmodningsBegrunnelser,
-  forordning_883_2004,
-  forordning_987_2009,
-  tillegg,
-} from '../../../kodeverk/kodelister';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
@@ -29,7 +22,11 @@ import './vurderingArtikkel16.css';
 
 const uuid = require('uuid/v4');
 
-const alleLovvalg = [...forordning_883_2004, ...forordning_987_2009, ...tillegg];
+const alleLovvalg = [
+  ...MKV.KTObjects.lovvalgsbestemmelser.forordning_883_2004,
+  ...MKV.KTObjects.lovvalgsbestemmelser.forordning_987_2009,
+  ...MKV.KTObjects.lovvalgsbestemmelser.tillegg,
+];
 
 const TidligereMedlemPeriodeLinje = ({
   perm, onChange, checked, redigerbart,
@@ -119,8 +116,8 @@ class VurderingArtikkel16 extends Component {
     const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
     const dokumenter = [
-      { navn: 'Forhåndsvis anmodning til bruker', type: brev.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: aktoersroller.BRUKER } },
-      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: aktoersroller.MYNDIGHET } },
+      { navn: 'Forhåndsvis anmodning til bruker', type: MKV.Koder.brev.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
+      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
     ];
 
     return (
@@ -143,7 +140,7 @@ class VurderingArtikkel16 extends Component {
               <Skjema.Select disabled={!redigerbart} feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
                 { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
               </Skjema.Select>
-              <Listevelger disabled={!redigerbart} gruppe muligeValg={anmodningsBegrunnelser} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
+              <Listevelger disabled={!redigerbart} gruppe muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -165,7 +162,7 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={() => lagreBehandlingerOgFatteVedtak(behandlinger.ANMODNING_OM_UNNTAK)}>Send brevene</Nav.Hovedknapp>
+              <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={() => lagreBehandlingerOgFatteVedtak(MKV.Koder.behandlinger.ANMODNING_OM_UNNTAK)}>Send brevene</Nav.Hovedknapp>
             </Nav.Column>
           </Nav.Row>
         </div>

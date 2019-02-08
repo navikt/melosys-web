@@ -176,7 +176,7 @@ class Saksbehandling extends Component {
 
     const { soknad, sendSoknad, oppsummering: { behandlingID } } = this.props;
     await sendSoknad(behandlingID, soknad);
-  }
+  };
 
   lagreVilkarHandler = async () => {
     const { skjema, oppdaterVilkarState } = this.props;
@@ -211,7 +211,7 @@ class Saksbehandling extends Component {
 
     const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
     await sendPerioder(behandlingID, behandlinger);
-  }
+  };
 
   lagreAllData = async () => {
     await this.lagreSoknadHandler();
@@ -219,7 +219,7 @@ class Saksbehandling extends Component {
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
     await this.lagreBehandlingerHandler();
-  }
+  };
 
   henleggHandle = async data => {
     await this.lagreAllData;
@@ -294,12 +294,18 @@ class Saksbehandling extends Component {
 }
 
 Saksbehandling.propTypes = {
+  hentOppgaver: PT.func.isRequired,
+  tilbakeleggeOppgave: PT.func.isRequired,
+  oppdaterSoknadState: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   behandlinger: PT.object.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   sendPerioder: PT.func.isRequired,
+  skjema: PT.object.isRequired,
+
+
 };
 
 /** Mapper både fast tekst inn til de forskjellige panelene i tillegg til å

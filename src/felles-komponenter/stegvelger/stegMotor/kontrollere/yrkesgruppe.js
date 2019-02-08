@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesgruppe from '../../stegKomponenter/vurderingYrkesgruppe';
-import { VurderingYrkesgruppeTyper } from '../../../../kodeverk/koder';
+import * as KV from '../../../../kodeverk';
 
 class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -10,12 +10,12 @@ class Yrkesgruppe extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'yrkesgruppeType ER LIK "ORDINAER"',
-        exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.ORDINAER),
+        exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER),
         nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
       {
         beskrivelse: 'yrkesgruppeType ER LIK "SOKKEL_ELLER_SKIP"',
-        exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP),
+        exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP),
         nesteSteg: STEG.SOKKEL_SKIP,
       },
       {

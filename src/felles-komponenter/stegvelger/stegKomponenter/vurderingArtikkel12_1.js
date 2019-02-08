@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import { vilkar as vilkarKoder } from '../../../kodeverk/koder';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
@@ -19,8 +19,8 @@ class VurderingArtikkel12_1 extends Component {
    */
   constructor() {
     super();
-    this.ART12_1 = vilkarKoder.FO_883_2004_ART12_1;
-    this.ART16_1 = vilkarKoder.FO_883_2004_ART16_1;
+    this.ART12_1 = MKV.Koder.vilkaar.FO_883_2004_ART12_1;
+    this.ART16_1 = MKV.Koder.vilkaar.FO_883_2004_ART16_1;
     this.AVSLAG = 'AVSLAG';
   }
 

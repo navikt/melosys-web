@@ -7,11 +7,10 @@ import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 import * as MPT from '../proptypes';
+import * as KV from '../kodeverk';
 
 import { formSelectors } from '../ducks/form/';
 import { fagsakSelectors } from '../ducks/fagsaker/';
-
-import { fartsomrader as fartsomraader } from '../kodeverk/kodelister';
 
 import LandVelger from './skjema/landvelger';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
@@ -89,7 +88,7 @@ const MaritimtArbeid = props => {
         heading={<PanelHeader ikon={panelIkon} tittel="Maritimt Arbeid" undertittel="" />}
         ariaTittel="Maritimt Arbeid">
         <Nav.Container fluid>
-          <FieldArray name="maritimtArbeid" component={MaritimtAlle} fartsomrader={fartsomraader} redigerbart={redigerbart} />
+          <FieldArray name="maritimtArbeid" component={MaritimtAlle} fartsomrader={KV.KTObjects.fartsomraader} redigerbart={redigerbart} />
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>
