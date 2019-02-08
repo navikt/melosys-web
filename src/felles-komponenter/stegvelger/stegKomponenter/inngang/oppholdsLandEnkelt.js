@@ -11,7 +11,7 @@ import OppholdslandHandlingSlett from './oppholdslandHandlingSlett';
 const EnkeltLand = ({ landKodeObjekt, settSlettIntensjon, redigerbart }) => (
   <div className="oppholdsland__linje">
     <div className="linje__land">{kodeverkObjektTilTerm(landKodeObjekt)} ({kodeverkObjektTilKode(landKodeObjekt)})</div>
-    <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settSlettIntensjon} ><Nav.Ikoner kind="minus" />Fjern</Nav.Knapp></div>
+    <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settSlettIntensjon} ><Nav.Ikoner kind="spinner-stroke-negativ" />Fjern</Nav.Knapp></div>
   </div>
 );
 

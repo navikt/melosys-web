@@ -93,7 +93,7 @@ class OppholdsLandLeggTil extends Component {
         <div>
           {!erLeggTilIntensjon && (
             <Nav.Knapp onClick={settLeggTilIntensjon} className="knappMedIkon" disabled={!redigerbart}>
-              <Nav.Ikoner kind="tilsette" /><div>Legg til nytt land</div>
+              <Nav.Ikoner kind="info-sirkel-fyll" /><div>Legg til nytt land</div>
             </Nav.Knapp>
           )}
 

@@ -185,7 +185,7 @@ class ListevelgerFlervalg extends Component {
             onClick={this.leggValgTilListe}
             disabled={disabled}
           >
-            <div className="knapp__ikon"><Nav.Ikoner kind="tilsette" size="20" /></div>
+            <div className="knapp__ikon"><Nav.Ikoner kind="info-sirkel-fyll" size="20" /></div>
             <div className="knapp__tittel">Legg til</div>
           </Nav.Knapp>
         </div>
