@@ -1,7 +1,4 @@
-// import * as Konstanter from '../../../constants';
-// import * as Mikrovalidering from './mikrovalidering';
-
-import { brev } from '../../../kodeverk/koder';
+import * as MKV from 'melosys-kodeverk';
 
 const harBlankMelding = (verdi, melding = 'Velg et element i nedtrekkslisten') => ((verdi === '') ? melding : false);
 const harTekstMelding = (tekst, melding = 'Tekstfeltet må fylles ut') => ((tekst && tekst.length > 0) ? false : melding);
@@ -32,7 +29,7 @@ const mangelBrevValidering = verdier => {
 const brevbestillingSituasjonsbetingetValidering = verdier => {
   const { dokumenttypeKode } = verdier;
   switch (dokumenttypeKode) {
-    case brev.MELDING_MANGLENDE_OPPLYSNINGER:
+    case MKV.Koder.brev.MELDING_MANGLENDE_OPPLYSNINGER:
       return mangelBrevValidering(verdier);
     default: return {};
   }

@@ -3,6 +3,7 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Validering from '../../felles-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
@@ -22,8 +23,6 @@ import Stegvelger from '../../felles-komponenter/stegvelger';
 import HenlagtInformasjon from '../../felles-komponenter/stegErstatter/henlagtInformasjon';
 import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
 
-import { landkoder, begrunnelser } from '../../kodeverk/kodelister';
-
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
 import {
@@ -38,8 +37,6 @@ import { vilkarSelectors } from '../../ducks/vilkar/';
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
 import { formSelectors } from '../../ducks/form/';
 import { formatterDatoTilNorsk } from '../../utils/dato';
-
-import { saksstatuser } from '../../kodeverk/koder';
 
 
 class Saksopplysninger extends Component {
@@ -107,7 +104,7 @@ class Saksopplysninger extends Component {
     }
 
     const { henleggelsegrunnKode, henleggelseFritekst } = behandlingsresultat;
-    const visHenlagtSak = fagsakStatusKode === saksstatuser.HENLAGT;
+    const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
     const visStegVelger = !visHenlagtSak;
     return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
@@ -121,8 +118,8 @@ class Saksopplysninger extends Component {
             fatteVedtakHandler={this.fatteVedtakHandler}
             lagreSoknadHandler={this.lagreSoknadHandler}
             oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
-            begrunnelser={begrunnelser}
-            landkoder={landkoder}
+            begrunnelser={MKV.KTObjects.begrunnelser}
+            landkoder={MKV.KTObjects.landkoder}
           />
         }
         <Personopplysninger />

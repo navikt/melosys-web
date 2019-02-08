@@ -42,8 +42,8 @@ function VirksomhetNorge (props) {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Skal den ansatte fortsette sitt norske arbeidsforhold i selskapet?">
-                <Skjema.Radio feltNavn="utsendtFortsetterArbeidsforholdIUtlandet" value={BOOLSK.SANN} label="Ja" disabled={!redigerbart}/>
-                <Skjema.Radio feltNavn="utsendtFortsetterArbeidsforholdIUtlandet" value={BOOLSK.USANN} label="Nei" disabled={!redigerbart}/>
+                <Skjema.Radio feltNavn="utsendtFortsetterArbeidsforholdIUtlandet" value={BOOLSK.SANN} label="Ja" disabled={!redigerbart} />
+                <Skjema.Radio feltNavn="utsendtFortsetterArbeidsforholdIUtlandet" value={BOOLSK.USANN} label="Nei" disabled={!redigerbart} />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>

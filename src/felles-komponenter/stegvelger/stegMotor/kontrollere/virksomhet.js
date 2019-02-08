@@ -1,12 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingVirksomhet from '../../stegKomponenter/vurderingVirksomhet';
-import {
-  VurderingVirksomhetTyper,
-  VurderingYrkesaktivitetTyper,
-  VurderingYrkesaktivitetAntallLandTyper,
-  VurderingYrkesgruppeTyper
-} from '../../../../kodeverk/koder';
+import * as KV from '../../../../kodeverk';
 
 class Virksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -17,18 +12,18 @@ class Virksomhet extends Steg {
         exec: ({
           yrkesgruppeType, ansattISektor, antallLand, aktivitetINorge,
         }) => (
-          yrkesgruppeType === VurderingYrkesgruppeTyper.ARBEIDSTAKER &&
-          ansattISektor === VurderingYrkesaktivitetTyper.INGEN_AV_DISSE &&
-          antallLand === VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND &&
-          aktivitetINorge === VurderingVirksomhetTyper.UNDER_25_PROSENT
+          yrkesgruppeType === KV.Koder.VurderingYrkesgruppeTyper.ARBEIDSTAKER &&
+          ansattISektor === KV.Koder.VurderingYrkesaktivitetTyper.INGEN_AV_DISSE &&
+          antallLand === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND &&
+          aktivitetINorge === KV.Koder.VurderingVirksomhetTyper.UNDER_25_PROSENT
         ),
         nesteSteg: STEG.BOSTEDSLAND,
       },
       {
         beskrivelse: 'yrkesgruppeType ER LIK "SELVSTENDIG" OG ENTEN antallLand ER LIK "TO_ELLER_FLERE_LAND"',
         exec: ({ yrkesgruppeType, antallLand }) => (
-          yrkesgruppeType === VurderingYrkesgruppeTyper.SELVSTENDIG &&
-          antallLand === VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND
+          yrkesgruppeType === KV.Koder.VurderingYrkesgruppeTyper.SELVSTENDIG &&
+          antallLand === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND
         ),
         nesteSteg: STEG.BOSTEDSLAND,
       },

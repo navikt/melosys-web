@@ -6,10 +6,11 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-
 import { createSelector } from 'reselect';
-import { SKIP } from '../../kodeverk/koder';
-import { landkoder } from '../../kodeverk/kodelister';
+import * as MKV from 'melosys-kodeverk';
+
+import * as KV from '../../kodeverk';
+
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
@@ -198,11 +199,11 @@ export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
       .map(avklartfakta => avklartfakta.subjektID);
 
     const landOverstyrtAvSkip = sokkelEllerSkip
-      .reduce((collection, enkelt) => (enkelt.installasjonsType === SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
+      .reduce((collection, enkelt) => (enkelt.installasjonsType === KV.Koder.SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
 
     const styrendeLand = landOverstyrtAvSkip.length > 0 ? landOverstyrtAvSkip : landAvklartVedInngang;
 
-    return landkoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
+    return MKV.KTObjects.landkoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
   }
 );
 
@@ -233,6 +234,6 @@ export const BostedslandSelector = createSelector(
     const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.BOSTEDSLAND);
     if (!avklartFakta) return null;
     const bostedslandKode = avklartFakta.fakta[0];
-    return landkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
+    return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
   }
 );

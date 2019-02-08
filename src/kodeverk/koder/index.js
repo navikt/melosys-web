@@ -1,40 +1,6 @@
 // Melosys-kodeverk
 // Se Confluence koder for oversikt
 
-import lovvalgsbestemmelser from './lovvalgsbestemmelser';
-import trygdedekninger from './trygdedekninger';
-import medlemskapstyper from './medlemskapstyper';
-import landkoder from './landkoder';
-import vilkar from './vilkar';
-import begrunnelser from './begrunnelser';
-import behandlinger from './behandlinger';
-import brev from './brev';
-import aktoersroller from './aktoerroller';
-import mottaksretning from './mottaksretning';
-import oppgavetyper from './oppgavetyper';
-import representerer from './representerer';
-import sakstyper from './sakstyper';
-import saksstatuser from './saksstatuser';
-import henleggelsesgrunner from './henleggelsesgrunner';
-
-export {
-  lovvalgsbestemmelser,
-  trygdedekninger,
-  medlemskapstyper,
-  landkoder,
-  vilkar,
-  begrunnelser,
-  behandlinger,
-  brev,
-  aktoersroller,
-  mottaksretning,
-  oppgavetyper,
-  representerer,
-  sakstyper,
-  saksstatuser,
-  henleggelsesgrunner,
-};
-
 export const INNVILGET = 'INNVILGET';
 
 // Interne frontend-spesifikke koder. Disse har ikke fag, brev eller arkitektur noe
