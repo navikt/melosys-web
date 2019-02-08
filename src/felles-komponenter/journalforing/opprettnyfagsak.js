@@ -81,6 +81,8 @@ class OpprettNyFagSak extends Component {
 
 OpprettNyFagSak.propTypes = {
   opprettFagsak: PT.func.isRequired,
+  settFeltInnhold: PT.func.isRequired,
+  hentOgVisRepresentant: PT.func.isRequired,
 };
 
 

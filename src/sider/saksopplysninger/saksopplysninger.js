@@ -160,6 +160,7 @@ Saksopplysninger.propTypes = {
   soknadForm: PT.object.isRequired,
   valid: PT.bool.isRequired,
   vurdering: PT.object,
+  syncErrors: PT.object,
 };
 
 Saksopplysninger.defaultProps = {
@@ -171,6 +172,7 @@ Saksopplysninger.defaultProps = {
   soknad: {},
   soknadArbeidsinntekt: {},
   vurdering: {},
+  syncErrors: {},
 };
 
 const mapStateToProps = state => ({

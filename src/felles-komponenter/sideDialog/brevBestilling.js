@@ -144,6 +144,7 @@ class BrevBestilling extends Component {
 BrevBestilling.propTypes = {
   resetBrevBestillingForm: PT.func.isRequired,
   opprettDokument: PT.func.isRequired,
+  settFeilFelt: PT.func.isRequired,
   resetDokument: PT.func.isRequired,
   brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
