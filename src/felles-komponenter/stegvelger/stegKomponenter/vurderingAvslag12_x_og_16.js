@@ -39,7 +39,7 @@ class VurderingAvslag12_x_og_16 extends React.Component {
       valgte_art_12_2_begrunnelser,
       valgte_art_16_1_begrunnelser,
       oppsummering,
-      lagreLovvalgsperioder,
+      fattVedtak,
     } = this.props;
 
     const dokumenter = [
@@ -84,7 +84,7 @@ class VurderingAvslag12_x_og_16 extends React.Component {
           />
         }
         <PdfLenkeListe behandlingID={oppsummering.behandlingID} dokumenter={dokumenter} />
-        <Nav.Hovedknapp onClick={lagreLovvalgsperioder}>
+        <Nav.Hovedknapp onClick={fattVedtak}>
           Fatt vedtak
         </Nav.Hovedknapp>
       </div>
@@ -97,6 +97,7 @@ VurderingAvslag12_x_og_16.propTypes = {
   valgte_art_12_2_begrunnelser: PT.array.isRequired,
   valgte_art_16_1_begrunnelser: PT.array.isRequired,
   oppsummering: PT.object.isRequired,
+  fattVedtak: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({

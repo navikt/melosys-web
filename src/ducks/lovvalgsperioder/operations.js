@@ -9,7 +9,7 @@
 
 import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
-import { lovvalgsbestemmelser, trygdedekninger, medlemskapstyper, landkoder, INNVILGET } from '../../kodeverk/koder';
+import { lovvalgsbestemmelser, trygdedekninger, medlemskapstyper, landkoder, INNVILGET, AVSLAATT } from '../../kodeverk/koder';
 
 import * as Types from './types';
 import * as Actions from './actions';
@@ -131,6 +131,23 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
   }];
 };
 
+const byggAvslaattLovvalg = getState => {
+  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(getState());
+
+  return [{
+    fomDato: soknadPeriode.fom,
+    tomDato: soknadPeriode.tom,
+    lovvalgBestemmelse: null,
+    tilleggBestemmelse: null,
+    unntakFraBestemmelse: null,
+    unntakFraLovvalgsland: null,
+    innvilgelsesResultat: AVSLAATT,
+    lovvalgsland: landkoder.NO,
+    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: medlemskapstyper.PLIKTIG,
+  }];
+};
+
 const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
   switch (valgtLovvalg) {
     case lovvalgsbestemmelser.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
@@ -138,6 +155,7 @@ const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
     case lovvalgsbestemmelser.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
     case lovvalgsbestemmelser.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
     case lovvalgsbestemmelser.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
+    case false: return byggAvslaattLovvalg(getState);
     default: return [];
   }
 };
@@ -173,10 +191,4 @@ export function oppdaterLovvalgsperioderState() {
 
 export function resetLovvalgsperioderState() {
   return Actions.resetLovvalgsperioderState();
-}
-
-export function avslaLovvalg() {
-  return dispatch => {
-
-  };
 }
