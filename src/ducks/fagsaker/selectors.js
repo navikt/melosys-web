@@ -22,7 +22,7 @@ export const SakOgBehandlingSelector = createSelector(
 );
 
 export const RedigerbartSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger === true),
+  state => (state.fagsaker.data.behandlinger !== undefined),
   redigerbart => redigerbart
 );
 
