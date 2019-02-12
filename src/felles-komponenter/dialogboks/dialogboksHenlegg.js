@@ -101,7 +101,7 @@ export class DialogboksHenleggSak extends Component {
     } = this;
 
     const data = erBegrunnelseValgt() ? {
-      begrunnelseKoder: [begrunnelseKode],
+      begrunnelseKode,
       fritekst: fritekst === '' ? null : fritekst,
       mottaker: aktoersroller.BRUKER,
     } : {};

@@ -48,11 +48,6 @@ class VurderingAvslag12_x_og_16 extends React.Component {
         type: brev.AVSLAG_YRKESAKTIV,
         data: {
           mottaker: aktoersroller.BRUKER,
-          begrunnelseKoder: [
-            ...valgte_art_12_1_begrunnelser,
-            ...valgte_art_12_2_begrunnelser,
-            ...valgte_art_16_1_begrunnelser,
-          ],
         },
       },
     ];
