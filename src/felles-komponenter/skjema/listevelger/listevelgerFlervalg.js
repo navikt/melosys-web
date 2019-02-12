@@ -27,7 +27,7 @@ const ListevelgerValgtElement = ({
         { element }
       </div>
       <Nav.Knapp mini className="listevelger__linje__knapp" onClick={slettElement}>
-        <div className="knapp__ikon"><Melosysikon kind="minus" size="20" /></div>
+        <div className="knapp__ikon"><Melosysikon kind="minus" size="24" /></div>
         <div className="knapp__tittel">Fjern</div>
       </Nav.Knapp>
     </div>
@@ -186,7 +186,7 @@ class ListevelgerFlervalg extends Component {
             onClick={this.leggValgTilListe}
             disabled={disabled}
           >
-            <div className="knapp__ikon"><Melosysikon kind="tilsette" size="20" /></div>
+            <div className="knapp__ikon"><Melosysikon kind="tilsette" size="24" /></div>
             <div className="knapp__tittel">Legg til</div>
           </Nav.Knapp>
         </div>

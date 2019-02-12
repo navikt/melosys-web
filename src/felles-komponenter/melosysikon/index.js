@@ -1,19 +1,16 @@
 import React from 'react';
 import PT from 'prop-types';
 
-import { getSvgPath } from './resources';
+import { getSvg } from './resources';
 
 
 const MelosysIkon = ({ kind, size }) => {
-  const path = getSvgPath(kind);
+  const svg = getSvg(kind, size);
 
   return (
-    <img
-      src={path}
-      alt={kind}
-      width={size}
-      height={size}
-    />
+    <div>
+      {svg}
+    </div>
   );
 };
 
@@ -23,10 +20,12 @@ MelosysIkon.propTypes = {
     'minus',
   ]).isRequired,
   size: PT.oneOfType([PT.number, PT.string]),
+  alt: PT.string,
 };
 
 MelosysIkon.defaultProps = {
-  size: '20',
+  size: '24',
+  alt: undefined,
 };
 
 export default MelosysIkon;
