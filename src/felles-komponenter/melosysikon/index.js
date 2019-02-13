@@ -20,12 +20,10 @@ MelosysIkon.propTypes = {
     'minus',
   ]).isRequired,
   size: PT.oneOfType([PT.number, PT.string]),
-  alt: PT.string,
 };
 
 MelosysIkon.defaultProps = {
   size: '24',
-  alt: undefined,
 };
 
 export default MelosysIkon;

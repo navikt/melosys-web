@@ -1,12 +1,12 @@
 import React from 'react';
 
-/* eslint-disable max-len */
 
-/* Svg'er legges inn her(noen er kjørt gjennom https://jakearchibald.github.io/svgomg/ først).
- * Dette gjøres fordi det allerede er laget css tilpasset nav-frontend-ikoner-assets,
-  * hvor det brukes <svg /> elementer. Alternativet ville vært å bruke en image tag,
-  * men da måtte man endret css og man ville ikke fått fordelene svg filer har.
-  * */
+/*
+  * Disse svg'ene lå opprinnelig i nav-frontend-ikoner-assets, men ble fjernet derfra.
+  * Derfor ligger de her.
+* */
+
+/* eslint-disable max-len */
 
 export const getSvg = (kind, size) => {
   switch (kind) {
