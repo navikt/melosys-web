@@ -375,6 +375,7 @@ const mapStateToProps = state => ({
     hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
     vedleggsTitler: [],
     sakstype: saksTypeKode.EU_EOS,
+    opprettnysak_behandlingstype: 'SOEKNAD',
     ingenVurdering: false,
   },
 });
