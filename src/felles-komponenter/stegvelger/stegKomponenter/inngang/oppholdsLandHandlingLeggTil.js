@@ -6,6 +6,7 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
 import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
+import Melosysikon from '../../../../felles-komponenter/melosysikon';
 
 import { kodeverkObjektTilKode } from '../../../../utils/kodeverk';
 import { landTekstFormat } from '../../../skjema/landvelger';
@@ -93,7 +94,7 @@ class OppholdsLandLeggTil extends Component {
         <div>
           {!erLeggTilIntensjon && (
             <Nav.Knapp onClick={settLeggTilIntensjon} className="knappMedIkon" disabled={!redigerbart}>
-              <Nav.Ikoner kind="tilsette" /><div>Legg til nytt land</div>
+              <Melosysikon kind="tilsette" /><div>Legg til nytt land</div>
             </Nav.Knapp>
           )}
 
