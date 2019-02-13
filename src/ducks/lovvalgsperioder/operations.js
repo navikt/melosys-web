@@ -17,6 +17,7 @@ import * as Actions from './actions';
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
 import { formSelectors } from '../form';
+import { lovvalgsperioderSelectors } from './index';
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -131,13 +132,13 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
   }];
 };
 
-const byggAvslaattLovvalg = getState => {
+const byggAvslaattLovvalg = (getState, lovvalgBestemmelse) => {
   const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(getState());
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: null,
+    lovvalgBestemmelse,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -155,7 +156,11 @@ const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
     case lovvalgsbestemmelser.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
     case lovvalgsbestemmelser.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
     case lovvalgsbestemmelser.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
-    case false: return byggAvslaattLovvalg(getState);
+    case false: {
+      const lovvalgBestemmelse = lovvalgsperioderSelectors.LovvalgBestemmelseSelector(getState());
+      if (lovvalgBestemmelse) return byggAvslaattLovvalg(getState, lovvalgBestemmelse);
+      return [];
+    }
     default: return [];
   }
 };
