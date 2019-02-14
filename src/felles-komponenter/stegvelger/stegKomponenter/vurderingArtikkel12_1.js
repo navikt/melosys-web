@@ -34,15 +34,19 @@ class VurderingArtikkel12_1 extends Component {
   }
 
   componentWillUnmount() {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.art12_1', null);
-    settSkjemaVerdi('vilkar.art16_1', null);
-    settSkjemaVerdi('vilkar.art12_1_begrunnelser', []);
-    settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
-    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
+    this.clearVilkarSkjema();
   }
 
   settStateForVilkar = vilkar => this.setState({ valgtVilkar: vilkar });
+
+  clearVilkarSkjema = () => {
+    const { settSkjemaVerdi } = this.props;
+    settSkjemaVerdi('vilkar.art12_1', false);
+    settSkjemaVerdi('vilkar.art16_1', false);
+    settSkjemaVerdi('vilkar.art12_1_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
+  };
 
   lagreValgtVilkarState = ({ tilstand = {} }) => {
     const { art12_1: old_art12_1, art16_1: old_art16_1 } = tilstand;
@@ -55,6 +59,13 @@ class VurderingArtikkel12_1 extends Component {
     if (art16_1 === false && art12_1 === false) (this.settStateForVilkar(this.AVSLAG));
   };
 
+  clearBegrunnelserSkjema = () => {
+    const { settSkjemaVerdi } = this.props;
+    settSkjemaVerdi('vilkar.art12_1_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
+  };
+
   radioEndringHandler = event => {
     const { value } = event.target;
     const { settSkjemaVerdi } = this.props;
@@ -62,17 +73,15 @@ class VurderingArtikkel12_1 extends Component {
     if (value === vilkarKoder.FO_883_2004_ART12_1) {
       settSkjemaVerdi('vilkar.art12_1', true);
       settSkjemaVerdi('vilkar.art16_1', null);
-      settSkjemaVerdi('vilkar.art12_1_begrunnelser', []);
-      settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
-      settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
+      this.clearBegrunnelserSkjema();
     } else if (value === vilkarKoder.FO_883_2004_ART16_1) {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', true);
-      settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
-      settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
+      this.clearBegrunnelserSkjema();
     } else if (value === this.AVSLAG) {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', false);
+      this.clearBegrunnelserSkjema();
     }
   };
 
