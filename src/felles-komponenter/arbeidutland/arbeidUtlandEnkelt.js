@@ -23,8 +23,8 @@ const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler, redigerbart }) => (
           <Landvelger disabled={!redigerbart} label="Land" feltNavn={`arbeidUtland[${indeks}].adresse.landKode`} />
         </Nav.Fieldset>
       </Nav.Column>
-      <Nav.Column xs="6">
-        <Nav.Fieldset legend="Detaljer om foretak / hjemmekontor">
+      <Nav.Column className="høyreKolonne" xs="6">
+        <Nav.Fieldset>
           <Skjema.Input disabled={!redigerbart} label="Navn" feltNavn={`arbeidUtland[${indeks}].foretakNavn`} />
           <Skjema.Input disabled={!redigerbart} label="Organisasjonsnummer / ID-nummer" feltNavn={`arbeidUtland[${indeks}].foretakOrgnr`} />
           <Skjema.RadioGruppe label="Er dette kun hjemmekontor?" feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`}>
