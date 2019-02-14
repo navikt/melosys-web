@@ -15,6 +15,7 @@ const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler, redigerbart }) => (
     <Nav.Row>
       <Nav.Column xs="6">
         <Nav.Fieldset legend="Fysisk arbeidssted">
+          <Skjema.Input disabled={!redigerbart} label="Navn" feltNavn={`arbeidUtland[${indeks}].foretakNavn`} />
           <Skjema.Input disabled={!redigerbart} label="Gatenavn" feltNavn={`arbeidUtland[${indeks}].adresse.gatenavn`} />
           <Skjema.Input disabled={!redigerbart} label="Husnummer" feltNavn={`arbeidUtland[${indeks}].adresse.husnummer`} />
           <Skjema.Input disabled={!redigerbart} label="Postnummer" feltNavn={`arbeidUtland[${indeks}].adresse.postnummer`} />
@@ -25,7 +26,6 @@ const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler, redigerbart }) => (
       </Nav.Column>
       <Nav.Column className="høyreKolonne" xs="6">
         <Nav.Fieldset>
-          <Skjema.Input disabled={!redigerbart} label="Navn" feltNavn={`arbeidUtland[${indeks}].foretakNavn`} />
           <Skjema.Input disabled={!redigerbart} label="Organisasjonsnummer / ID-nummer" feltNavn={`arbeidUtland[${indeks}].foretakOrgnr`} />
           <Skjema.RadioGruppe label="Er dette kun hjemmekontor?" feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`}>
             <Skjema.Radio disabled={!redigerbart} feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`} value={BOOLSK.SANN} label="Ja" />
