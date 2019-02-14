@@ -6,7 +6,7 @@ import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { sakstyper as saksTypeKode } from '../kodeverk/koder';
+import { behandlinger as behandlingKoder, sakstyper as saksTypeKode } from '../kodeverk/koder';
 import { sakstyper, typer as behandlingstyper } from '../kodeverk/kodelister';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
@@ -375,7 +375,7 @@ const mapStateToProps = state => ({
     hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
     vedleggsTitler: [],
     sakstype: saksTypeKode.EU_EOS,
-    opprettnysak_behandlingstype: 'SOEKNAD',
+    opprettnysak_behandlingstype: behandlingKoder.SOEKNAD,
     ingenVurdering: false,
   },
 });

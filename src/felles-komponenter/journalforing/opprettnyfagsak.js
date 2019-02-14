@@ -43,8 +43,8 @@ class OpprettNyFagSak extends Component {
 
   render() {
     const { spinner: { representantNavn: visArbeidsgiverSpinner } } = this.state;
-
     const { sakstyper, behandlingstyper, opprettFagsak } = this.props;
+
     return (
       <div className="opprettnysak">
         <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
@@ -56,7 +56,12 @@ class OpprettNyFagSak extends Component {
           </Nav.Column>
           <Nav.Column xs="6">
             <Skjema.Select feltNavn="opprettnysak_behandlingstype" bredde="fullbredde" label="Behandlingstype">
-              { behandlingstyper.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>)) }
+              {
+                behandlingstyper &&
+                behandlingstyper
+                  .filter(elem => (elem.kode !== 'ANKE' && elem.kode !== 'KLAGE'))
+                  .map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
+              }
             </Skjema.Select>
           </Nav.Column>
         </Nav.Row>
