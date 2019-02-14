@@ -35,7 +35,9 @@ class Sok extends Component {
           <Nav.Row className="">
             <section className="sokresultat">
               <h1>Innsyn i sak</h1>
-              <h2>Resulater for fnr &quot;{fnr}&quot;</h2>
+              <h2>
+                Resultater for fnr &quot;{fnr}&quot;{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
+              </h2>
               { sokResultat.length > 0 &&
                 sokResultat.map(fagsak => <Fagsak key={fagsak.saksnummer} sak={fagsak} />)
               }
