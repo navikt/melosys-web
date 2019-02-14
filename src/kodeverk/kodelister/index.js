@@ -7,6 +7,7 @@ export const {
     art12_2_begrunnelser,
     art16_1_anmodning,
     art16_1_avslag,
+    fartsomrader,
   },
   behandlinger: {
     resultattyper,
@@ -47,8 +48,3 @@ export const {
   trygdedekninger,
   vedleggstitler,
 } = kodeverk;
-
-export const fartsomrader = [
-  { kode: 'innenriks', term: 'Innenriks' },
-  { kode: 'utenriks', term: 'Utenriks' },
-];

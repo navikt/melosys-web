@@ -12,39 +12,59 @@ import { formSelectors } from '../ducks/form/';
 import { fagsakSelectors } from '../ducks/fagsaker/';
 
 import { fartsomrader as fartsomraader } from '../kodeverk/kodelister';
+import { begrunnelser } from '../kodeverk/koder';
 
 import LandVelger from './skjema/landvelger';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
 import './maritimtArbeid.css';
 
-const MaritimtEnkelt = props => {
-  const {
-    redigerbart, navn, fartsomrader, index, remove,
-  } = props;
+class MaritimtEnkelt extends React.Component {
+  state = {
+    fartsomrade: '',
+  };
 
-  return (
-    <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
-      <Nav.Row>
-        <Nav.Column xs="6">
-          <Skjema.Input feltNavn={`${navn}navn`} label="Navn på fartøyet:" disabled={!redigerbart} />
-          <Skjema.Select feltNavn={`${navn}fartsomradeKode`} label="Fartsomrade:" disabled={!redigerbart}>
-            {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
-          </Skjema.Select>
-        </Nav.Column>
-        <Nav.Column xs="6">
-          <LandVelger feltNavn={`${navn}flaggLandKode`} label="Flaggland:" disabled={!redigerbart} />
-          <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Kontinentalsokkel:" disabled={!redigerbart} />
-        </Nav.Column>
-      </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="12">
-          <Nav.Knapp mini onClick={() => remove(index)} disabled={!redigerbart}>- Fjern denne oppføringen</Nav.Knapp>
-        </Nav.Column>
-      </Nav.Row>
-    </Nav.Fieldset>
-  );
-};
+  vedFartsomradeEndret = event => {
+    const { value } = event.target;
+    this.setState({ fartsomrade: value });
+  };
+
+  render() {
+    const {
+      redigerbart, navn, fartsomrader, index, remove,
+    } = this.props;
+
+    const { fartsomrade } = this.state;
+
+    const { vedFartsomradeEndret } = this;
+
+    return (
+      <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Skjema.Input feltNavn={`${navn}navn`} label="Navn på fartøyet:" disabled={!redigerbart} />
+            <Skjema.Select feltNavn={`${navn}fartsomradeKode`} label="Fartsomrade:" disabled={!redigerbart} onChange={vedFartsomradeEndret} value={fartsomrade}>
+              {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
+            </Skjema.Select>
+            {
+              fartsomrade === begrunnelser.INNENRIKS &&
+              <LandVelger feltNavn={`${navn}territorialfarvann`} label="Territorialfarvann" disabled={!redigerbart} />
+            }
+          </Nav.Column>
+          <Nav.Column xs="6">
+            <LandVelger feltNavn={`${navn}flaggLandKode`} label="Flaggland:" disabled={!redigerbart} />
+            <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Kontinentalsokkel:" disabled={!redigerbart} />
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.Knapp mini onClick={() => remove(index)} disabled={!redigerbart}>- Fjern denne oppføringen</Nav.Knapp>
+          </Nav.Column>
+        </Nav.Row>
+      </Nav.Fieldset>
+    );
+  }
+}
 
 MaritimtEnkelt.propTypes = {
   navn: PT.string.isRequired,
