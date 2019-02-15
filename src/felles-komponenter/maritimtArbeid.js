@@ -2,12 +2,12 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 import * as MPT from '../proptypes';
-import * as KV from '../kodeverk';
 
 import { formSelectors } from '../ducks/form/';
 import { fagsakSelectors } from '../ducks/fagsaker/';
@@ -88,7 +88,7 @@ const MaritimtArbeid = props => {
         heading={<PanelHeader ikon={panelIkon} tittel="Maritimt Arbeid" undertittel="" />}
         ariaTittel="Maritimt Arbeid">
         <Nav.Container fluid>
-          <FieldArray name="maritimtArbeid" component={MaritimtAlle} fartsomrader={KV.KTObjects.fartsomraader} redigerbart={redigerbart} />
+          <FieldArray name="maritimtArbeid" component={MaritimtAlle} fartsomrader={MKV.KTObjects.begrunnelser.fartsomrader} redigerbart={redigerbart} />
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>

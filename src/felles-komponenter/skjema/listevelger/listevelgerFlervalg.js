@@ -1,8 +1,9 @@
 /* eslint react/no-array-index-key:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import * as Nav from '../../../utils/navFrontend';
 
+import * as Nav from '../../../utils/navFrontend';
+import Melosysikon from '../../../felles-komponenter/melosysikon';
 import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../../utils/kodeverk';
 
 import './listevelger.css';
@@ -26,7 +27,7 @@ const ListevelgerValgtElement = ({
         { element }
       </div>
       <Nav.Knapp mini className="listevelger__linje__knapp" onClick={slettElement}>
-        <div className="knapp__ikon"><Nav.Ikoner kind="minus" size="20" /></div>
+        <div className="knapp__ikon"><Melosysikon kind="minus" size="24" /></div>
         <div className="knapp__tittel">Fjern</div>
       </Nav.Knapp>
     </div>
@@ -185,7 +186,7 @@ class ListevelgerFlervalg extends Component {
             onClick={this.leggValgTilListe}
             disabled={disabled}
           >
-            <div className="knapp__ikon"><Nav.Ikoner kind="info-sirkel-fyll" size="20" /></div>
+            <div className="knapp__ikon"><Melosysikon kind="tilsette" size="24" /></div>
             <div className="knapp__tittel">Legg til</div>
           </Nav.Knapp>
         </div>
