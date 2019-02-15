@@ -70,6 +70,11 @@ SokkelSkipListe.defaultProps = {
   alleSokkelSkip: [],
 };
 
+const radioEndringHandler = event => {
+  const { value } = event.target;
+
+};
+
 const VurderingSokkelSkip = props => {
   // Merknad fra møte 12.12.18: Vi må huske å gå innom “vurdering antall land”
   // dersom man har valgt “to sokler / skip i flere land” siden vi går inn i artikkel 13.
@@ -88,13 +93,12 @@ const VurderingSokkelSkip = props => {
         <div className="sokkelSkip__varsel"><Nav.AlertStripe type="advarsel">Det er ikke registrert verken sokkel eller skip.</Nav.AlertStripe></div>
       )
       }
-      <Nav.Fieldset legend="Hvordan arbeider søkeren:">
-        <Skjema.Radio disabled feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_NORSK} label="På norsk sokkel" />
-        <Skjema.Radio disabled feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_NORSK_TERRITORIAL} label="Skip / installasjon innenfor norsk territorialfarvann" />
+      <Nav.Fieldset legend="Hvordan arbeider søkeren:" onChange={radioEndringHandler}>
+        <Skjema.Radio disabled={!redigerbart} feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_NORSK} label="På norsk sokkel eller innenfor norsk territorialfarvann (art. 11.3.a)" />
         <Skjema.Radio disabled={!redigerbart} feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_ETT_LAND} label="På skip registrert i ett land" />
-        <Skjema.Radio disabled={!redigerbart} feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_UTLAND} label="Utsendt til sokkel i ett annet land" />
-        <Skjema.Radio disabled feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND} label="To sokler / skip i flere land" />
-      </Nav.Fieldset>
+        <Skjema.Radio disabled={!redigerbart} feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_UTLAND} label="Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)" />
+        <Skjema.Radio disabled feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND} label="To sokler / skip i flere land (art. 13)" />
+        </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
