@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingNormaltDriverVirksomhet from '../../stegKomponenter/vurderingNormaltDriverVirksomhet';
 import { erVilkarOppfylt } from '../../../../regler/vilkar';
 
-import { lovvalgsbestemmelser } from '../../../../kodeverk/koder';
+import { vilkar } from '../../../../kodeverk/koder';
 
 class NormaltDriverVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -11,7 +11,7 @@ class NormaltDriverVirksomhet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'SELVSTENDIG_NAERINGSDRIVENDE og VESENTLIG_VIRKSOMHET',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(lovvalgsbestemmelser.ART12_2_NORMALT_DRIVER_VIRKSOMHET, alleVilkar) !== undefined,
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(vilkar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, alleVilkar) !== undefined,
         nesteSteg: STEG.ARTIKKEL_12_2,
       },
       {
