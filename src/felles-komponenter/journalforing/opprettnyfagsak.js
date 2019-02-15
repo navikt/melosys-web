@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { change } from 'redux-form';
 
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
@@ -59,7 +60,7 @@ class OpprettNyFagSak extends Component {
               {
                 behandlingstyper &&
                 behandlingstyper
-                  .filter(elem => (elem.kode !== 'ANKE' && elem.kode !== 'KLAGE'))
+                  .filter(elem => (elem.kode !== MKV.Koder.behandlinger.typer.ANKE && elem.kode !== MKV.Koder.behandlinger.typer.KLAGE))
                   .map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
               }
             </Skjema.Select>
