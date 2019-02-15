@@ -49,7 +49,7 @@ const byggLovvalgsPeriodeArtikkel12_1 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART12_1,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -65,7 +65,7 @@ const byggLovvalgsPeriodeArtikkel12_2 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART12_2,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -81,8 +81,8 @@ const byggLovvalgsPeriodeArtikkel11_3A = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART11_3A,
-    tilleggBestemmelse: MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART11_4_1,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A,
+    tilleggBestemmelse: MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
@@ -97,7 +97,7 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART11_4_2,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -121,7 +121,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART16_1,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1,
     tilleggBestemmelse: null,
     unntakFraBestemmelse,
     unntakFraLovvalgsland,
@@ -134,11 +134,11 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
 
 const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
   switch (valgtLovvalg) {
-    case MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
-    case MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(getState);
-    case MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
-    case MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
-    case MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(getState);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
     default: return [];
   }
 };
