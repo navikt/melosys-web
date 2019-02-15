@@ -56,13 +56,14 @@ export const soeknadDokument = {
   },
   juridiskArbeidsgiverNorge: {
     antallAnsatte: 350,
-    antallAdminAnsatte: 250,
-    antallAdminAnsatteEOS: 75,
+    utsendteNeste12Mnd: 30,
+    antallAdmAnsatte: 250,
+    andelOppdragINorge: 60.5,
     andelOmsetningINorge: 78.5,
     andelKontrakterINorge: 50.5,
-    erBemanningsbyra: false,
     hattDriftSiste12Mnd: true,
-    antallUtsendte: 30,
+    arbeidstakereRekruttert: 'NO',
+    oppdragsKontrakterIHovedsakInngaattILand: 'SE',
   },
   arbeidsinntekt: {
     inntektNorskIPerioden: 5500,
