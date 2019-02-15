@@ -333,7 +333,7 @@ class Journalforing extends Component {
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                       />
                       <OpprettNyFagSak
-                        sakstyper={MKV.Koder.sakstyper}
+                        sakstyper={MKV.KTObjects.sakstyper}
                         behandlingstyper={MKV.KTObjects.behandlinger.typer}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
@@ -371,7 +371,7 @@ const mapStateToProps = state => ({
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
     hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
     vedleggsTitler: [],
-    sakstype: MKV.Koder.sakstype.EU_EOS,
+    sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
     ingenVurdering: false,
   },
