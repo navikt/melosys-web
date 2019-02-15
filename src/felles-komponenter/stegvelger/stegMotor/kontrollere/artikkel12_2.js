@@ -30,16 +30,22 @@ class Artikkel12_2 extends Steg {
     this._komponent = VurderingArtikkel12_2;
     this._samleRelevanteData = _propsLight => ({
       artikkel: { kode: vilkar.FO_883_2004_ART12_2, term: '12.2' },
-      begrunnelser: _propsLight.begrunnelser.art12_2_begrunnelser || [],
+      redigerbart: _propsLight.redigerbart,
     });
     this._beregnRelevantUI = _propsLight => {
-      const { art12_2, art16_1, art12_2_begrunnelser = [] } = _propsLight.skjema.vilkar;
-      const manglerBegrunnelse = art12_2 === false && art12_2_begrunnelser.length === 0;
+      const {
+        art12_2, art12_2_begrunnelser = [],
+        art16_1, art16_1_begrunnelser = [], art16_1_begrunnelser_fritekst = '',
+      } = _propsLight.skjema.vilkar;
+
       const harAvklaring = (art12_2 !== null && art12_2 !== undefined) || (art16_1 !== null && art16_1 !== undefined);
+      const manglerBegrunnelse12 = art12_2 === false && art12_2_begrunnelser.length === 0;
+      const manglerBegrunnelse16 = art16_1 === false && art16_1_begrunnelser.length === 0 && art16_1_begrunnelser_fritekst.length < 1;
 
       return {
-        harAvklaring: harAvklaring && !manglerBegrunnelse,
-        visBegrunnelser: _propsLight.skjema.vilkar.art12_2 === false || (art12_2 === undefined && art16_1 === undefined),
+        harAvklaring: harAvklaring && !manglerBegrunnelse12 && !manglerBegrunnelse16,
+        visBegrunnelser12: art12_2 === false,
+        visBegrunnelser16: art16_1 === false,
         art12_2: _propsLight.skjema.vilkar.art12_2,
         art16_1: _propsLight.skjema.vilkar.art16_1,
       };
