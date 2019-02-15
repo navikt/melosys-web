@@ -9,7 +9,7 @@ node {
 
   /* metadata */
   def buildVersion // major.minor.BUILD_NUMBER
-  def semver
+  def semver, token
   def commitHash, commitHashShort, commitUrl, committer
   def scmVars
 
@@ -34,6 +34,8 @@ node {
 
   stage('Initialize scm') {
     commitHash = sh(script: 'git rev-parse HEAD', returnStdout: true).trim()
+    echo("commitHash=${commitHash}")
+
     commitHashShort = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
     commitUrl = "https://github.com/${project}/${application}/commit/${commitHash}"
     // gets the person who committed last as "Surname, First name"
@@ -51,6 +53,36 @@ node {
     echo("semver=*${semver}*")
   }
 
+  def lsRemote = sh(script: "git ls-remote origin pull/*/head", returnStdout: true)
+  def lsRemoteString = lsRemote.toString()
+  def list = lsRemoteString.split('\n')
+
+  // Let etter siste commithash blant pull request refs
+  list.each {
+    if (it.startsWith(commitHash)) {
+      refList = it.split('/')
+
+      // Finn pr-nummer fra strengen: refs/pull/85/head
+      token = refList[2]
+    }
+  }
+  echo("pr nummer: ${token}")
+
+  if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+    buildVersion = "${semVer}-${BUILD_NUMBER}"
+  }
+  else if (token != null) {
+
+    // Hvis det eksisterer et token så betyr det at dette er en pull-request
+    def snapshotVersion = "PR-${token}"
+    buildVersion = "${semVer}-${snapshotVersion}-SNAPSHOT"
+  }
+  else {
+    buildVersion = "${semVer}-SNAPSHOT"
+  }
+
+  echo("buildVersion=${buildVersion}")
+
   stage('Test') {
     echo('CI=true && npm run-script test:ci')
     sh "CI=true && ${npm} run-script test:ci"
@@ -58,10 +90,6 @@ node {
 
   stage('Build') {
     echo('Build Web App')
-
-    buildVersion = "${semver}-${BUILD_NUMBER}"
-    echo("buildVersion=${buildVersion}")
-
     sh "${npm} run build"
     sh "${npm} prune"
   }
@@ -76,55 +104,23 @@ node {
   }
 
   stage('Deploy to Nexus') {
-    if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+    stage('Deploy to Nexus') {
+      if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+        repositoryId = "m2internal"
+      }
+      else {
+        repositoryId = "m2snapshot"
+      }
+
+      echo("repositoryId:${repositoryId}")
+
       configFileProvider(
         [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
         sh """
      	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${zipFile} -DartifactId=${application} \
 	            -DgroupId=no.nav.melosys -Dversion=${buildVersion} \
 	 	        -Ddescription='Melosys-web web application' \
-		        -DrepositoryId=m2internal -Durl=http://maven.adeo.no/nexus/content/repositories/m2internal
-        """
-      }
-    }
-    else {
-      // http://www.mojohaus.org/versions-maven-plugin/version-rules.html
-      // <MajorVersion [> . <MinorVersion [> . <IncrementalVersion ] ] [> - <BuildNumber | Qualifier ]>
-      def majorMinor = semver.split("\\.").take(2).join('.')
-      // Valid qualifiers is one of "ALPHA","A","BETA","B","MILESTONE","B","RC","CR","SNAPSHOT","GA","FINAL", "SP"
-      def qualifier = "SNAPSHOT"
-      /* So unfortunately, custom qualifiers does not work :-(
-      def branch = scmVars.GIT_BRANCH.toUpperCase()
-      if (branch.startsWith("PR")) {
-        qualifier = branch
-      }
-      else if (branch.startsWith("MELOSYS-")) {
-        qualifier = branch.split("_").take(1)[0]
-      }
-      else if (branch.startsWith("FEATURE")) {
-        qualifier = "FEATURE-${BUILD_NUMBER}"
-      }
-      else if (branch.startsWith("HOTFIX")) {
-        qualifier = "HOTFIX-${BUILD_NUMBER}"
-      }
-      else if (branch.startsWith("PATCH")) {
-        qualifier = "PATCH-${BUILD_NUMBER}"
-      }
-      */
-
-      def snapshotVersion = "${majorMinor}-${qualifier}"
-      echo("snapshotVersion:${snapshotVersion}")
-      def snapshotVersionZipfile = "${application}-${snapshotVersion}.zip"
-      echo("snaphotVersionZipfile:${snapshotVersionZipfile}")
-      sh "mv ${zipFile} ${snapshotVersionZipfile}"
-
-      configFileProvider(
-        [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
-        sh """
-     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${snapshotVersionZipfile} -DartifactId=${application} \
-	            -DgroupId=no.nav.melosys -Dversion=${snapshotVersion} \
-	 	        -Ddescription='Melosys-web application' \
-		        -DrepositoryId=m2snapshot -Durl=http://maven.adeo.no/nexus/content/repositories/m2snapshot
+		        -DrepositoryId=${repositoryId} -Durl=http://maven.adeo.no/nexus/content/repositories/${repositoryId}
         """
       }
     }
