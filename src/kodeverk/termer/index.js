@@ -4,4 +4,4 @@ export const {
   behandlinger: {
     status,
   },
-} = MKV.KTValues;
+} = MKV.Terms;
