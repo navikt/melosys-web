@@ -67,29 +67,29 @@ class SideOppsummering extends Component {
     let endreStatusValg = [];
 
     switch (kode) {
-      case MKV.Koder.behandlinger.VURDER_DOKUMENT:
+      case MKV.Koder.behandlinger.status.VURDER_DOKUMENT:
         endreStatusValg = [
-          { kode: MKV.Koder.behandlinger.AVVENT_DOK_UTL, term: MKV.KTObjects.behandlinger.status.AVVENT_DOK_UTL },
-          { kode: MKV.Koder.behandlinger.AVVENT_DOK_PART, term: MKV.KTObjects.behandlinger.status.AVVENT_DOK_PART },
+          { kode: MKV.Koder.behandlinger.status.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.status.AVVENT_DOK_UTL },
+          { kode: MKV.Koder.behandlinger.status.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.status.AVVENT_DOK_PART },
         ];
         break;
-      case MKV.Koder.behandlinger.AVVENT_DOK_UTL:
+      case MKV.Koder.behandlinger.status.AVVENT_DOK_UTL:
         endreStatusValg = [
-          { kode: MKV.Koder.behandlinger.AVVENT_DOK_PART, term: MKV.KTObjects.behandlinger.status.AVVENT_DOK_PART },
+          { kode: MKV.Koder.behandlinger.status.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.status.AVVENT_DOK_PART },
         ];
         break;
-      case MKV.Koder.behandlinger.AVVENT_DOK_PART:
+      case MKV.Koder.behandlinger.status.AVVENT_DOK_PART:
         endreStatusValg = [
-          { kode: MKV.Koder.behandlinger.AVVENT_DOK_UTL, term: MKV.KTObjects.behandlinger.status.AVVENT_DOK_UTL },
+          { kode: MKV.Koder.behandlinger.status.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.status.AVVENT_DOK_UTL },
         ];
         break;
-      case MKV.Koder.behandlinger.UNDER_BEHANDLING:
+      case MKV.Koder.behandlinger.status.UNDER_BEHANDLING:
         return [];
       default:
         return [];
     }
 
-    endreStatusValg = [...endreStatusValg, { kode: MKV.Koder.behandlinger.UNDER_BEHANDLING, term: MKV.KTObjects.behandlinger.status.UNDER_BEHANDLING }];
+    endreStatusValg = [...endreStatusValg, { kode: MKV.Koder.behandlinger.status.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.status.UNDER_BEHANDLING }];
     return endreStatusValg;
   };
 

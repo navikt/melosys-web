@@ -27,7 +27,7 @@ class OppholdsLandListe extends Component {
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
-    if (begrunnelseKode === MKV.Koder.begrunnelser.FEIL_LAND_JOURNALFOERING) {
+    if (begrunnelseKode === MKV.Koder.begrunnelser.opphold.FEIL_LAND_JOURNALFOERING) {
       this.fjernLandFraSoknad(landKode);
     }
   };
@@ -68,7 +68,7 @@ class OppholdsLandListe extends Component {
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
-    if (enkeltFakta.begrunnelseKoder.includes(MKV.Koder.begrunnelser.FEIL_LAND_JOURNALFOERING)) {
+    if (enkeltFakta.begrunnelseKoder.includes(MKV.Koder.begrunnelser.opphold.FEIL_LAND_JOURNALFOERING)) {
       this.leggLandTilSoknad(landKode);
     }
   };

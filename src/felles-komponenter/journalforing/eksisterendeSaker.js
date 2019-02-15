@@ -11,7 +11,7 @@ import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
 
 import './eksisterendeSaker.css';
 
-const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.AVSLUTTET);
+const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.status.AVSLUTTET);
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
