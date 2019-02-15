@@ -69,16 +69,16 @@ node {
   echo("pr nummer: ${token}")
 
   if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
-    buildVersion = "${semVer}-${BUILD_NUMBER}"
+    buildVersion = "${semver}-${BUILD_NUMBER}"
   }
   else if (token != null) {
 
     // Hvis det eksisterer et token så betyr det at dette er en pull-request
     def snapshotVersion = "PR-${token}"
-    buildVersion = "${semVer}-${snapshotVersion}-SNAPSHOT"
+    buildVersion = "${semver}-${snapshotVersion}-SNAPSHOT"
   }
   else {
-    buildVersion = "${semVer}-SNAPSHOT"
+    buildVersion = "${semver}-SNAPSHOT"
   }
 
   echo("buildVersion=${buildVersion}")
