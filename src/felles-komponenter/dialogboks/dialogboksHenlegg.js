@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
+import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes';
 
 import PdfLenkeListe from '../../felles-komponenter/pdfLenkeListe';
 import { KodeTermSelect } from '../kodeTermSelect';
 import { fagsakSelectors } from '../../ducks/fagsaker';
-import { brev, aktoersroller, henleggelsesgrunner as henleggelsesgrunnerKoder } from '../../kodeverk/koder';
-import { henleggelsesgrunner } from '../../kodeverk/kodelister';
 
 import * as Nav from '../../utils/navFrontend';
 
@@ -54,7 +53,7 @@ export class DialogboksHenleggSak extends Component {
     return fritekstValideringPassert;
   };
 
-  fritekstValgt = () => this.state.begrunnelseKode === henleggelsesgrunnerKoder.ANNET;
+  fritekstValgt = () => this.state.begrunnelseKode === MKV.Koder.henleggelsesgrunner.ANNET;
 
   fritekstTom = () => this.state.fritekst === '';
 
@@ -103,15 +102,15 @@ export class DialogboksHenleggSak extends Component {
     const data = erBegrunnelseValgt() ? {
       begrunnelseKode,
       fritekst: fritekst === '' ? null : fritekst,
-      mottaker: aktoersroller.BRUKER,
+      mottaker: MKV.Koder.aktoersroller.BRUKER,
     } : {};
     const dokumenter = [{
       navn: 'Forhåndsvis brev',
-      type: brev.MELDING_HENLAGT_SAK,
+      type: MKV.Koder.brev.MELDING_HENLAGT_SAK,
       data,
     }];
 
-    const visTekstFelt = begrunnelseKode === henleggelsesgrunnerKoder.ANNET;
+    const visTekstFelt = begrunnelseKode === MKV.Koder.henleggelsesgrunner.ANNET;
 
     return (
       <Nav.Modal
@@ -129,7 +128,7 @@ export class DialogboksHenleggSak extends Component {
             onChange={this.velgBegrunnelseHandle}
             label="Begrunnelse"
             value={begrunnelseKode}
-            koder={henleggelsesgrunner}
+            koder={MKV.KTObjects.henleggelsesgrunner}
             disableFørsteValg={erBegrunnelseValgt()}
             redigerbar={redigerbart}
           />

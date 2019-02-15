@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingSokkelSkip from '../../stegKomponenter/vurderingSokkelSkip';
-import { SOKKEL, SKIP, VurderingSokkelSkipTyper } from '../../../../kodeverk/koder';
+import * as KV from '../../../../kodeverk';
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -10,12 +10,12 @@ class SokkelSkip extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_UTLAND" (videre til 12.1 eller 12.2)',
-        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SOKKEL_UTLAND),
+        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_UTLAND),
         nesteSteg: STEG.ARBEIDSGIVERE,
       },
       {
         beskrivelse: 'sokkelSkipKonklusjon ER LIK "SKIP_ETT_LAND" (videre til 12.1 eller 12.2)',
-        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SKIP_ETT_LAND),
+        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND),
         nesteSteg: STEG.ARBEIDSGIVERE,
       },
       {
@@ -57,8 +57,8 @@ class SokkelSkip extends Steg {
   static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon) => {
     const avklartSokkelEllerSkip = sokkelEllerSkip.length > 0 && sokkelEllerSkip
       .map(enkelt => {
-        if (enkelt.installasjonsType === SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
-        return (enkelt.installasjonsType === SKIP && enkelt.arbeidsland && true);
+        if (enkelt.installasjonsType === KV.Koder.SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
+        return (enkelt.installasjonsType === KV.Koder.SKIP && enkelt.arbeidsland && true);
       })
       .every(enkelt => enkelt === true);
 

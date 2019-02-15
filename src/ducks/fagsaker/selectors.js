@@ -22,12 +22,12 @@ export const SakOgBehandlingSelector = createSelector(
 );
 
 export const RedigerbartSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? true : false),
+  state => (state.fagsaker.data.behandlinger !== undefined),
   redigerbart => redigerbart
 );
 
 export const FagsakStatusSelector = createSelector(
-  state => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : ""),
+  state => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : ''),
   fagsakStatus => fagsakStatus
 );
 

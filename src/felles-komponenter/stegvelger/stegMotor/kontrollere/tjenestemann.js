@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingTjenestemannn from '../../stegKomponenter/vurderingTjenestemann';
-import { VurderingTjenestemannTyper } from '../../../../kodeverk/koder';
+import * as KV from '../../../../kodeverk';
 
 class Tjenestemann extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -11,10 +11,10 @@ class Tjenestemann extends Steg {
         beskrivelse: 'vurderingTjenestemann ER LIK "ETT_LAND" eller vurderingTjenestemann ER LIK "ETT_LAND_YRKESAKTIVITET_ANDRE_LAND" ' +
         'eller vurderingTjenestemann ER LIK "FLERE_LAND" eller vurderingTjenestemann ER LIK "FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND"',
         exec: ({ vurderingTjenestemann }) => (
-          vurderingTjenestemann === VurderingTjenestemannTyper.ETT_LAND ||
-          vurderingTjenestemann === VurderingTjenestemannTyper.ETT_LAND_YRKESAKTIVITET_ANDRE_LAND ||
-          vurderingTjenestemann === VurderingTjenestemannTyper.FLERE_LAND ||
-          vurderingTjenestemann === VurderingTjenestemannTyper.FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND
+          vurderingTjenestemann === KV.Koder.VurderingTjenestemannTyper.ETT_LAND ||
+          vurderingTjenestemann === KV.Koder.VurderingTjenestemannTyper.ETT_LAND_YRKESAKTIVITET_ANDRE_LAND ||
+          vurderingTjenestemann === KV.Koder.VurderingTjenestemannTyper.FLERE_LAND ||
+          vurderingTjenestemann === KV.Koder.VurderingTjenestemannTyper.FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND
         ),
         nesteSteg: null,
       },
