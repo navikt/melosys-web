@@ -112,7 +112,8 @@ class OppholdPeriode extends Component {
     this.setState({ erPeriodeOppdatertOgGyldig });
   };
 
-  validerDato = verdi => {
+  validerDato = feltNavn => {
+    const verdi = this.state[feltNavn];
     const vasketVerdi = vaskInputDato(verdi);
     if (vasketVerdi === false) {
       return false;
@@ -129,9 +130,9 @@ class OppholdPeriode extends Component {
   };
 
   vaskOgValiderDato = feltNavn => {
-    const verdi = this.state[feltNavn];
-    const gyldigDato = this.validerDato(verdi);
+    const gyldigDato = this.validerDato(feltNavn);
     if (gyldigDato) {
+      const verdi = this.state[feltNavn];
       const vasketVerdi = vaskInputDato(verdi);
       this.setState({ [feltNavn]: vasketVerdi });
     } else {
