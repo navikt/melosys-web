@@ -98,7 +98,8 @@ function formatterKortDatoTilNorsk(kortDato) {
 }
 
 function erGyldigPeriode(fom, tom) {
-  return moment(fom).isBefore(tom);
+  const inputFormat = ['DD.MM.YYYY'];
+  return moment(fom, inputFormat).isBefore(moment(tom, inputFormat));
 }
 
 function datoDiff (fom, tom, enhet = 'months') {
