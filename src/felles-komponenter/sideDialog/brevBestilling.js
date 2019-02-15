@@ -45,7 +45,7 @@ class BrevBestilling extends Component {
   erMangelBrevMedFritekst = () => {
     const { brevbestillingSkjemaVerdier } = this.props;
     if (!brevbestillingSkjemaVerdier) return false;
-    return brevbestillingSkjemaVerdier.dokumenttypeKode === MKV.Koder.brev.MELDING_MANGLENDE_OPPLYSNINGER;
+    return brevbestillingSkjemaVerdier.dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER;
   };
 
   sendBrev = async () => {
@@ -172,7 +172,7 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
   initialValues: {
-    dokumenttypeKode: MKV.Koder.brev.MELDING_MANGLENDE_OPPLYSNINGER,
+    dokumenttypeKode: MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER,
     mottaker: MKV.Koder.representerer.BRUKER,
     fritekst: '',
   },
