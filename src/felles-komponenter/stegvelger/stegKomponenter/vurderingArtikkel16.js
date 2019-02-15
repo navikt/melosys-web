@@ -116,7 +116,7 @@ class VurderingArtikkel16 extends Component {
     const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
     const dokumenter = [
-      { navn: 'Forhåndsvis anmodning til bruker', type: MKV.Koder.brev.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
+      { navn: 'Forhåndsvis anmodning til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
       { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
     ];
 
@@ -162,7 +162,9 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={() => lagreBehandlingerOgFatteVedtak(MKV.Koder.behandlinger.ANMODNING_OM_UNNTAK)}>Send brevene</Nav.Hovedknapp>
+              <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={() => lagreBehandlingerOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.ANMODNING_OM_UNNTAK)}>
+                Send brevene
+              </Nav.Hovedknapp>
             </Nav.Column>
           </Nav.Row>
         </div>

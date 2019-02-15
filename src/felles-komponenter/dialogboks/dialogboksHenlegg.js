@@ -106,7 +106,7 @@ export class DialogboksHenleggSak extends Component {
     } : {};
     const dokumenter = [{
       navn: 'Forhåndsvis brev',
-      type: MKV.Koder.brev.MELDING_HENLAGT_SAK,
+      type: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
       data,
     }];
 

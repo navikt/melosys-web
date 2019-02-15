@@ -29,7 +29,7 @@ const mangelBrevValidering = verdier => {
 const brevbestillingSituasjonsbetingetValidering = verdier => {
   const { dokumenttypeKode } = verdier;
   switch (dokumenttypeKode) {
-    case MKV.Koder.brev.MELDING_MANGLENDE_OPPLYSNINGER:
+    case MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER:
       return mangelBrevValidering(verdier);
     default: return {};
   }

@@ -48,8 +48,8 @@ const VurderingVedtak = props => {
   const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.term).join(', ');
 
   const dokumenter = [
-    { navn: 'Forhåndsvis vedtaksbrev', type: MKV.Koder.brev.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
-    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: MKV.Koder.brev.ATTEST_A1, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
+    { navn: 'Forhåndsvis vedtaksbrev', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
+    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
   ];
 
   return (
@@ -73,7 +73,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => props.lagreOgFatteVedtak(MKV.Koder.behandlinger.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
+            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => props.lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </div>
