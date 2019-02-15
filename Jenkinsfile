@@ -4,14 +4,14 @@ import jenkins.model.*
 node {
   def project = "navikt"
   def application = "melosys-web"
-  def webMockDir = "/var/lib/jenkins/melosys-web/"
+  def webMockDir = "/var/lib/jenkins${application}/"
   def zipFile
 
   /* metadata */
   def buildVersion // major.minor.BUILD_NUMBER
   def semver
   def commitHash, commitHashShort, commitUrl, committer
-  def scmVars
+  def scmVars, prNummer
 
   /* tools: http://a34apvl00025.devillo.no:8080/configureTools/ */
   def NODEJS_HOME = tool "node-10.10.0" // => "installation directory" = "/opt/node"
@@ -38,6 +38,14 @@ node {
     commitUrl = "https://github.com/${project}/${application}/commit/${commitHash}"
     // gets the person who committed last as "Surname, First name"
     committer = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
+    def lsRemote = sh(script: "git ls-remote origin pull/*/head", returnStdout: true)
+    lsRemote.toString().split('\n').each {
+      if (it.startsWith(commitHash)) {
+        // Finn pr-nummer fra strengen: refs/pull/85/head
+        prNummer = it.split('/')[2]
+      }
+    }
+    echo("prNummer: ${prNummer}")
   }
 
   stage('npm install ') {
@@ -59,7 +67,16 @@ node {
   stage('Build') {
     echo('Build Web App')
 
-    buildVersion = "${semver}-${BUILD_NUMBER}"
+    if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+      buildVersion = "${semver}-${BUILD_NUMBER}"
+    }
+    else if (prNummer != null) {
+      // Hvis det eksisterer et token så betyr det at dette er en pull-request
+      buildVersion = "${semver}-PR${prNummer}-SNAPSHOT"
+    }
+    else {
+      buildVersion = "${semver}-SNAPSHOT"
+    }
     echo("buildVersion=${buildVersion}")
 
     sh "${npm} run build"
@@ -76,57 +93,23 @@ node {
   }
 
   stage('Deploy to Nexus') {
+    def repositoryId
     if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
-      configFileProvider(
-        [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
-        sh """
-     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${zipFile} -DartifactId=${application} \
-	            -DgroupId=no.nav.melosys -Dversion=${buildVersion} \
-	 	        -Ddescription='Melosys-web web application' \
-		        -DrepositoryId=m2internal -Durl=http://maven.adeo.no/nexus/content/repositories/m2internal
-        """
-      }
+      repositoryId = "m2internal"
     }
     else {
-      // http://www.mojohaus.org/versions-maven-plugin/version-rules.html
-      // <MajorVersion [> . <MinorVersion [> . <IncrementalVersion ] ] [> - <BuildNumber | Qualifier ]>
-      def majorMinor = semver.split("\\.").take(2).join('.')
-      // Valid qualifiers is one of "ALPHA","A","BETA","B","MILESTONE","B","RC","CR","SNAPSHOT","GA","FINAL", "SP"
-      def qualifier = "SNAPSHOT"
-      /* So unfortunately, custom qualifiers does not work :-(
-      def branch = scmVars.GIT_BRANCH.toUpperCase()
-      if (branch.startsWith("PR")) {
-        qualifier = branch
-      }
-      else if (branch.startsWith("MELOSYS-")) {
-        qualifier = branch.split("_").take(1)[0]
-      }
-      else if (branch.startsWith("FEATURE")) {
-        qualifier = "FEATURE-${BUILD_NUMBER}"
-      }
-      else if (branch.startsWith("HOTFIX")) {
-        qualifier = "HOTFIX-${BUILD_NUMBER}"
-      }
-      else if (branch.startsWith("PATCH")) {
-        qualifier = "PATCH-${BUILD_NUMBER}"
-      }
-      */
+      repositoryId = "m2snapshot"
+    }
+    echo("repositoryId:${repositoryId}")
 
-      def snapshotVersion = "${majorMinor}-${qualifier}"
-      echo("snapshotVersion:${snapshotVersion}")
-      def snapshotVersionZipfile = "${application}-${snapshotVersion}.zip"
-      echo("snaphotVersionZipfile:${snapshotVersionZipfile}")
-      sh "mv ${zipFile} ${snapshotVersionZipfile}"
-
-      configFileProvider(
-        [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
-        sh """
-     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${snapshotVersionZipfile} -DartifactId=${application} \
-	            -DgroupId=no.nav.melosys -Dversion=${snapshotVersion} \
+    configFileProvider(
+      [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
+      sh """
+     	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${zipFile} -DartifactId=${application} \
+	            -DgroupId=no.nav.melosys -Dversion=${buildVersion} \
 	 	        -Ddescription='Melosys-web application' \
-		        -DrepositoryId=m2snapshot -Durl=http://maven.adeo.no/nexus/content/repositories/m2snapshot
+		        -DrepositoryId=${repositoryId} -Durl=http://maven.adeo.no/nexus/content/repositories/${repositoryId}
         """
-      }
     }
   }
 }
