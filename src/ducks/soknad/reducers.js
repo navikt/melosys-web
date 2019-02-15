@@ -77,13 +77,14 @@ export default function reducer(state = initialState, action) {
         },
         arbeidUtland: dokument.arbeidUtland,
         juridiskArbeidsgiverNorge: {
-          erBemanningsbyra: dokument.erBemanningsbyra,
+          antallAnsatte: dokument.antallAnsatte,
           utsendteNeste12Mnd: dokument.utsendteNeste12Mnd,
           antallAdmAnsatte: dokument.antallAdmAnsatte,
-          antallAdminAnsatteEOS: dokument.antallAdminAnsatteEOS,
           andelOmsetningINorge: dokument.andelOmsetningINorge,
+          andelOppdragINorge: dokument.andelOppdragINorge,
           andelKontrakterINorge: dokument.andelKontrakterINorge,
-          utsendtFortsetterArbeidsforholdIUtlandet: dokument.utsendtFortsetterArbeidsforholdIUtlandet,
+          arbeidstakereRekruttert: dokument.arbeidstakereRekruttert,
+          oppdragsKontrakterIHovedsakInngaattILand: dokument.oppdragsKontrakterIHovedsakInngaattILand,
           ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
         },
         arbeidsgiversBekreftelse: {
@@ -133,8 +134,8 @@ export default function reducer(state = initialState, action) {
         },
         personOpplysninger: {
           utenlandskIdent: dokument.utenlandskIdent,
-          medfolgendeFamilie: dokument.medfolgendeFamilie,
-          medfolgendeAndre: dokument.medfolgendeAndre,
+          medfolgendeFamilie: [],
+          medfolgendeAndre: null,
         },
       };
 

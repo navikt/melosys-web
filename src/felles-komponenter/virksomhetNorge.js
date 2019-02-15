@@ -40,7 +40,7 @@ function VirksomhetNorge (props) {
                 <LandVelger disabled={!redigerbart} feltNavn="arbeidstakereRekruttert" label="Land:" />
               </Nav.Fieldset>
               <Nav.Fieldset legend="Etter hvilket lands rett blir oppdragskontraker i hovedsak inngått?">
-                <LandVelger disabled={!redigerbart} feltNavn="arbeidstakereRekruttert" label="Land:" />
+                <LandVelger disabled={!redigerbart} feltNavn="oppdragsKontrakterIHovedsakInngaattILand" label="Land:" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
