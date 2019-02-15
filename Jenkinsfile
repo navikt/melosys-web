@@ -4,14 +4,14 @@ import jenkins.model.*
 node {
   def project = "navikt"
   def application = "melosys-web"
-  def webMockDir = "/var/lib/jenkins/melosys-web/"
+  def webMockDir = "/var/lib/jenkins${application}/"
   def zipFile
 
   /* metadata */
   def buildVersion // major.minor.BUILD_NUMBER
-  def semver, token
+  def semver
   def commitHash, commitHashShort, commitUrl, committer
-  def scmVars
+  def scmVars, prNummer
 
   /* tools: http://a34apvl00025.devillo.no:8080/configureTools/ */
   def NODEJS_HOME = tool "node-10.10.0" // => "installation directory" = "/opt/node"
@@ -40,6 +40,14 @@ node {
     commitUrl = "https://github.com/${project}/${application}/commit/${commitHash}"
     // gets the person who committed last as "Surname, First name"
     committer = sh(script: 'git log -1 --pretty=format:"%an"', returnStdout: true).trim()
+    def lsRemote = sh(script: "git ls-remote origin pull/*/head", returnStdout: true)
+    lsRemote.toString().split('\n').each {
+      if (it.startsWith(commitHash)) {
+        // Finn pr-nummer fra strengen: refs/pull/85/head
+        prNummer = it.split('/')[2]
+      }
+    }
+    echo("prNummer: ${prNummer}")
   }
 
   stage('npm install ') {
@@ -53,36 +61,6 @@ node {
     echo("semver=*${semver}*")
   }
 
-  def lsRemote = sh(script: "git ls-remote origin pull/*/head", returnStdout: true)
-  def lsRemoteString = lsRemote.toString()
-  def list = lsRemoteString.split('\n')
-
-  // Let etter siste commithash blant pull request refs
-  list.each {
-    if (it.startsWith(commitHash)) {
-      refList = it.split('/')
-
-      // Finn pr-nummer fra strengen: refs/pull/85/head
-      token = refList[2]
-    }
-  }
-  echo("pr nummer: ${token}")
-
-  if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
-    buildVersion = "${semver}-${BUILD_NUMBER}"
-  }
-  else if (token != null) {
-
-    // Hvis det eksisterer et token så betyr det at dette er en pull-request
-    def snapshotVersion = "PR-${token}"
-    buildVersion = "${semver}-${snapshotVersion}-SNAPSHOT"
-  }
-  else {
-    buildVersion = "${semver}-SNAPSHOT"
-  }
-
-  echo("buildVersion=${buildVersion}")
-
   stage('Test') {
     echo('CI=true && npm run-script test:ci')
     sh "CI=true && ${npm} run-script test:ci"
@@ -90,6 +68,19 @@ node {
 
   stage('Build') {
     echo('Build Web App')
+
+    if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+      buildVersion = "${semver}-${BUILD_NUMBER}"
+    }
+    else if (prNummer != null) {
+      // Hvis det eksisterer et token så betyr det at dette er en pull-request
+      buildVersion = "${semver}-PR${prNummer}-SNAPSHOT"
+    }
+    else {
+      buildVersion = "${semver}-SNAPSHOT"
+    }
+    echo("buildVersion=${buildVersion}")
+
     sh "${npm} run build"
     sh "${npm} prune"
   }
@@ -104,25 +95,24 @@ node {
   }
 
   stage('Deploy to Nexus') {
-    stage('Deploy to Nexus') {
-      if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
-        repositoryId = "m2internal"
-      }
-      else {
-        repositoryId = "m2snapshot"
-      }
+    def repositoryId
+    if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+      repositoryId = "m2internal"
+    }
+    else {
+      repositoryId = "m2snapshot"
+    }
 
-      echo("repositoryId:${repositoryId}")
+    echo("repositoryId:${repositoryId}")
 
-      configFileProvider(
-        [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
-        sh """
+    configFileProvider(
+      [configFile(fileId: 'navMavenSettings', variable: 'MAVEN_SETTINGS')]) {
+      sh """
      	  	mvn --settings ${MAVEN_SETTINGS} deploy:deploy-file -Dfile=${zipFile} -DartifactId=${application} \
 	            -DgroupId=no.nav.melosys -Dversion=${buildVersion} \
-	 	        -Ddescription='Melosys-web web application' \
+	 	        -Ddescription='Melosys-web application' \
 		        -DrepositoryId=${repositoryId} -Durl=http://maven.adeo.no/nexus/content/repositories/${repositoryId}
         """
-      }
     }
   }
 }

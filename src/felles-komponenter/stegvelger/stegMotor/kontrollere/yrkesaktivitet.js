@@ -1,7 +1,7 @@
 import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../typer';
+import {FANE_STATUS, STEG} from '../typer';
 import VurderingYrkesaktivitet from '../../stegKomponenter/vurderingYrkesaktivitet';
-import { VurderingYrkesaktivitetTyper } from '../../../../kodeverk/koder';
+import * as KV from '../../../../kodeverk';
 
 class Yrkesaktivitet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -9,12 +9,12 @@ class Yrkesaktivitet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'yrkesaktivitet ER LIK "ORDINAER_ARBEIDSTAKER"',
-        exec: avklartefakta => Yrkesaktivitet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER),
+        exec: avklartefakta => Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER),
         nesteSteg: STEG.FORUTGAENDE_MEDLEMSKAP,
       },
       {
         beskrivelse: 'yrkesaktivitet ER LIK "SELVSTENDIG_NAERINGSDRIVENDE"',
-        exec: avklartefakta => Yrkesaktivitet.finnAvklaring(avklartefakta, VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE),
+        exec: avklartefakta => Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE),
         nesteSteg: STEG.NORMALT_DRIVER_VIRKSOMHET,
       },
       {

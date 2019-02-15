@@ -1,40 +1,36 @@
 /* eslint no-alert:off, consistent-return:off */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
-import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import {autofill, change, getFormSyncErrors, reduxForm, setSubmitFailed} from 'redux-form';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 
-import { sakstyper } from '../kodeverk/koder';
-import { typer as behandlingstyper } from '../kodeverk/kodelister';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
-import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
+import {ANTALL_TALL_I_ORGNR, JOURNALFORING_HENSIKT} from '../constants';
 import * as Person from '../felles-komponenter/skjema/validering/generisk/person';
 
 import Sticky from '../hjelpekomponenter/sticky';
 
 import withErrorHandling from '../hoc/withErrorHandling';
-import { formatterDatoTilNorsk, formatterDatoTilISO } from '../utils/dato';
+import {formatterDatoTilISO, formatterDatoTilNorsk} from '../utils/dato';
 import Informasjon from '../felles-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
 import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
-import { queryParamLogger } from '../utils/queryParamLogger';
+import {queryParamLogger} from '../utils/queryParamLogger';
 
-import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
-import {
-  journalforingOperations,
-  journalforingSelectors,
-} from '../ducks/journalforing/';
-import { formSelectors } from '../ducks/form/';
+import {erSkjemaGyldig, journalforingValidering} from '../felles-komponenter/skjema/validering/journalforing';
+import {journalforingOperations, journalforingSelectors,} from '../ducks/journalforing/';
+import {formSelectors} from '../ducks/form/';
 import './journalforing.css';
-import { OrganisasjonOperations } from '../ducks/organisasjoner';
-import { PersonOperations } from '../ducks/personer';
+import {OrganisasjonOperations} from '../ducks/organisasjoner';
+import {PersonOperations} from '../ducks/personer';
 import * as oppgaverOperations from '../ducks/oppgaver/operations';
 import * as MPT from '../proptypes';
-import { sokOperations, sokSelectors } from '../ducks/sok';
+import {sokOperations, sokSelectors} from '../ducks/sok';
 
 class Journalforing extends Component {
   static propTypes = {
@@ -191,7 +187,7 @@ class Journalforing extends Component {
     }
 
     const fagsak = {
-      sakstype: sakstyper.EU_EOS,
+      sakstype: MKV.Koder.sakstyper.EU_EOS,
       soknadsperiode: {
         fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
         tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
@@ -321,7 +317,7 @@ class Journalforing extends Component {
                         hentOgVisBruker={hentOgVisBruker}
                       />
                       <EksisterendeSaker
-                        behandlingstyper={behandlingstyper}
+                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
                         fagsakListe={fagsakListe}
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                       />

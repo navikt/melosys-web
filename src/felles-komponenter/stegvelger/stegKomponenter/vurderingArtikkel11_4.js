@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from './../../../proptypes';
-import { lovvalgsbestemmelser } from '../../../kodeverk/koder';
 
-import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
-import { arrayTilKonjunksjon } from '../../../utils/streng';
+import {kodeverkObjektTilTerm} from '../../../utils/kodeverk';
+import {arrayTilKonjunksjon} from '../../../utils/streng';
 
 import './vurderingArtikkel11_4.css';
 import * as Skjema from '../../skjema';
-import { BOOLSK } from '../../../constants';
+import {BOOLSK} from '../../../constants';
 
 class VurderingArtikkel11_4 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -23,8 +23,8 @@ class VurderingArtikkel11_4 extends Component {
    */
   constructor() {
     super();
-    this.ART11_4_1 = lovvalgsbestemmelser.FO_883_2004_ART11_4_1;
-    this.ART11_4_2 = lovvalgsbestemmelser.FO_883_2004_ART11_4_2;
+    this.ART11_4_1 = MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1;
+    this.ART11_4_2 = MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2;
     this.TIL_VURDERING_12_1 = 'TIL_VURDERING_12_1';
   }
 

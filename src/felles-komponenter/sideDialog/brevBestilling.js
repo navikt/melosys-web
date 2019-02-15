@@ -1,19 +1,17 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { reduxForm, reset, setSubmitFailed } from 'redux-form';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {reduxForm, reset, setSubmitFailed} from 'redux-form';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
-import { representerer, brev } from '../../kodeverk/koder';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 import * as Skjema from '../../felles-komponenter/skjema';
-import { formSelectors } from '../../ducks/form/';
-import { aktoersroller, produserbaredokumenter } from '../../kodeverk/kodelister';
+import {formSelectors} from '../../ducks/form/';
 
-// import * as Validering from '../skjema/validering';
-import { brevbestillingValidering, erSkjemaGyldig } from '../skjema/validering/brevbestilling';
-import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
-import { fagsakSelectors } from '../../ducks/fagsaker';
+import {brevbestillingValidering, erSkjemaGyldig} from '../skjema/validering/brevbestilling';
+import {dokumenterOperations, dokumenterSelectors} from '../../ducks/dokumenter';
+import {fagsakSelectors} from '../../ducks/fagsaker';
 import PdfLenkeListe from '../pdfLenkeListe';
 
 import './brevBestilling.css';
@@ -47,7 +45,7 @@ class BrevBestilling extends Component {
   erMangelBrevMedFritekst = () => {
     const { brevbestillingSkjemaVerdier } = this.props;
     if (!brevbestillingSkjemaVerdier) return false;
-    return brevbestillingSkjemaVerdier.dokumenttypeKode === brev.MELDING_MANGLENDE_OPPLYSNINGER;
+    return brevbestillingSkjemaVerdier.dokumenttypeKode === MKV.Koder.brev.MELDING_MANGLENDE_OPPLYSNINGER;
   };
 
   sendBrev = async () => {
@@ -121,10 +119,10 @@ class BrevBestilling extends Component {
         <form onSubmit={this.overstyrSubmit}>
           <Nav.Fieldset legend="Nytt brev">
             <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker" disabled={!redigerbart}>
-              {aktoersroller && aktoersroller.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+              {MKV.KTObjects.aktoersroller.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
-              {produserbaredokumenter && produserbaredokumenter.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+              {MKV.KTObjects.produserbaredokumenter.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
@@ -146,6 +144,7 @@ class BrevBestilling extends Component {
 BrevBestilling.propTypes = {
   resetBrevBestillingForm: PT.func.isRequired,
   opprettDokument: PT.func.isRequired,
+  settFeilFelt: PT.func.isRequired,
   resetDokument: PT.func.isRequired,
   brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
@@ -173,8 +172,8 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
   initialValues: {
-    dokumenttypeKode: brev.MELDING_MANGLENDE_OPPLYSNINGER,
-    mottaker: representerer.BRUKER,
+    dokumenttypeKode: MKV.Koder.brev.MELDING_MANGLENDE_OPPLYSNINGER,
+    mottaker: MKV.Koder.representerer.BRUKER,
     fritekst: '',
   },
 });

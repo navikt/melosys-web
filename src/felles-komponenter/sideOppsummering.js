@@ -1,23 +1,21 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PT from 'prop-types';
 import moment from 'moment/moment';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import EnkeltDato from './datoOmrade/enkeltDato';
-import { kodeverkObjektTilTerm, kodeTilVerdi } from '../utils/kodeverk';
-import { formatterDatoTilNorsk } from '../utils/dato';
-import { soknadSelectors } from '../ducks/soknad';
-import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
-import { avklartefaktaSelectors } from '../ducks/avklartefakta';
-import { arrayTilKonjunksjon } from '../utils/streng';
-import { KodeTermSelect } from './kodeTermSelect';
-import { behandlinger } from '../kodeverk/koder';
-import { status as behandlingstatuser } from '../kodeverk/kodelister';
-import { status as behandlingsStatusTermer } from '../kodeverk/termer';
+import {kodeTilVerdi, kodeverkObjektTilTerm} from '../utils/kodeverk';
+import {formatterDatoTilNorsk} from '../utils/dato';
+import {soknadSelectors} from '../ducks/soknad';
+import {fagsakOperations, fagsakSelectors} from '../ducks/fagsaker/';
+import {avklartefaktaSelectors} from '../ducks/avklartefakta';
+import {arrayTilKonjunksjon} from '../utils/streng';
+import {KodeTermSelect} from './kodeTermSelect';
 
 import './sideOppsummering.css';
 
@@ -56,7 +54,7 @@ class SideOppsummering extends Component {
       return false;
     }
     const { oppdaterBehandlingsStatus, oppsummering: { behandlingID } } = this.props;
-    const term = kodeTilVerdi(kode, behandlingstatuser);
+    const term = kodeTilVerdi(kode, MKV.KTObjects.behandlinger.status);
     const nystatus = { kode, term };
     Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nystatus);
@@ -69,29 +67,29 @@ class SideOppsummering extends Component {
     let endreStatusValg = [];
 
     switch (kode) {
-      case behandlinger.VURDER_DOKUMENT:
+      case MKV.Koder.behandlinger.VURDER_DOKUMENT:
         endreStatusValg = [
-          { kode: behandlinger.AVVENT_DOK_UTL, term: behandlingsStatusTermer.AVVENT_DOK_UTL },
-          { kode: behandlinger.AVVENT_DOK_PART, term: behandlingsStatusTermer.AVVENT_DOK_PART },
+          { kode: MKV.Koder.behandlinger.AVVENT_DOK_UTL, term: MKV.KTObjects.behandlinger.status.AVVENT_DOK_UTL },
+          { kode: MKV.Koder.behandlinger.AVVENT_DOK_PART, term: MKV.KTObjects.behandlinger.status.AVVENT_DOK_PART },
         ];
         break;
-      case behandlinger.AVVENT_DOK_UTL:
+      case MKV.Koder.behandlinger.AVVENT_DOK_UTL:
         endreStatusValg = [
-          { kode: behandlinger.AVVENT_DOK_PART, term: behandlingsStatusTermer.AVVENT_DOK_PART },
+          { kode: MKV.Koder.behandlinger.AVVENT_DOK_PART, term: MKV.KTObjects.behandlinger.status.AVVENT_DOK_PART },
         ];
         break;
-      case behandlinger.AVVENT_DOK_PART:
+      case MKV.Koder.behandlinger.AVVENT_DOK_PART:
         endreStatusValg = [
-          { kode: behandlinger.AVVENT_DOK_UTL, term: behandlingsStatusTermer.AVVENT_DOK_UTL },
+          { kode: MKV.Koder.behandlinger.AVVENT_DOK_UTL, term: MKV.KTObjects.behandlinger.status.AVVENT_DOK_UTL },
         ];
         break;
-      case behandlinger.UNDER_BEHANDLING:
+      case MKV.Koder.behandlinger.UNDER_BEHANDLING:
         return [];
       default:
         return [];
     }
 
-    endreStatusValg = [...endreStatusValg, { kode: behandlinger.UNDER_BEHANDLING, term: behandlingsStatusTermer.UNDER_BEHANDLING }];
+    endreStatusValg = [...endreStatusValg, { kode: MKV.Koder.behandlinger.UNDER_BEHANDLING, term: MKV.KTObjects.behandlinger.status.UNDER_BEHANDLING }];
     return endreStatusValg;
   };
 

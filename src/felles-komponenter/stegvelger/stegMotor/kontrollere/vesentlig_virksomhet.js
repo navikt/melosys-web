@@ -1,9 +1,9 @@
-import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../typer';
-import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentligVirksomhet';
-import { erVilkarOppfylt } from '../../../../regler/vilkar';
+import * as MKV from 'melosys-kodeverk';
 
-import { vilkar } from '../../../../kodeverk/koder';
+import Steg from '../steg';
+import {FANE_STATUS, STEG} from '../typer';
+import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentligVirksomhet';
+import {erVilkarOppfylt} from '../../../../regler/vilkar';
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -11,7 +11,7 @@ class VesentligVirksomhet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'ORDINAER_ARBEIDSTAKER og VESENTLIG_VIRKSOMHET',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(vilkar.ART12_1_VESENTLIG_VIRKSOMHET, alleVilkar) !== undefined,
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET, alleVilkar) !== undefined,
         nesteSteg: STEG.ARTIKKEL_12_1,
       },
       {

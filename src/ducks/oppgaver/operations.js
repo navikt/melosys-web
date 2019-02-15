@@ -7,10 +7,11 @@
  *
  */
 
-import { doThenDispatch } from '../../services/utils';
+import * as MKV from 'melosys-kodeverk';
+
+import {doThenDispatch} from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
-import { oppgavetyper } from '../../kodeverk/koder';
 
 /**
  * Hent Soknad
@@ -42,7 +43,7 @@ export async function sendBehandlingsOppgave(checkboxliste) {
   const behandlingstyper = Object.keys(behandlingstyperListe);
 
   const oppgave = {
-    oppgavetype: oppgavetyper.BEH_SAK,
+    oppgavetype: MKV.Koder.oppgavetyper.BEH_SAK,
     sakstyper,
     behandlingstyper,
   };
@@ -55,7 +56,7 @@ export async function sendBehandlingsOppgave(checkboxliste) {
 
 export async function sendJournalOppgave(fagomrade) {
   const oppgave = {
-    oppgavetype: oppgavetyper.JFR,
+    oppgavetype: MKV.Koder.oppgavetyper.JFR,
     sakstyper: [],
     behandlingstyper: [],
     fagomrade, // 'UFM' || 'MDL'

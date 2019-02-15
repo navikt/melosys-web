@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 
-import { connect } from 'react-redux';
-import { change } from 'redux-form';
+import {connect} from 'react-redux';
+import {change} from 'redux-form';
 
 import PT from 'prop-types';
 
@@ -81,6 +81,8 @@ class OpprettNyFagSak extends Component {
 
 OpprettNyFagSak.propTypes = {
   opprettFagsak: PT.func.isRequired,
+  settFeltInnhold: PT.func.isRequired,
+  hentOgVisRepresentant: PT.func.isRequired,
 };
 
 

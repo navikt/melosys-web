@@ -1,24 +1,27 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { behandlinger, brev, aktoersroller } from '../../../kodeverk/koder';
 
-import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
-import { soknadSelectors } from '../../../ducks/soknad/';
-import { fagsakSelectors } from '../../../ducks/fagsaker/';
-import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
-import { forordning_883_2004, forordning_987_2009, tillegg } from '../../../kodeverk/kodelister';
+import {avklartefaktaSelectors} from '../../../ducks/avklartefakta/';
+import {soknadSelectors} from '../../../ducks/soknad/';
+import {fagsakSelectors} from '../../../ducks/fagsaker/';
+import {lovvalgsperioderSelectors} from '../../../ducks/lovvalgsperioder/';
 
-import { datoDiffMenneskelig } from '../../../utils/dato';
-import { finnEnkeltKodeFraListe, kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+import {datoDiffMenneskelig} from '../../../utils/dato';
+import {finnEnkeltKodeFraListe, kodeverkObjektTilTerm} from '../../../utils/kodeverk';
 import PdfLenkeListe from '../../../felles-komponenter/pdfLenkeListe';
 
 import './vurderingVedtak.css';
 
-const alleLovvalg = [...forordning_883_2004, ...forordning_987_2009, ...tillegg];
+const alleLovvalg = [
+  ...MKV.KTObjects.lovvalgsbestemmelser.forordning_883_2004,
+  ...MKV.KTObjects.lovvalgsbestemmelser.forordning_987_2009,
+  ...MKV.KTObjects.lovvalgsbestemmelser.tillegg,
+];
 
 const VurderingVedtak = props => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
@@ -45,8 +48,8 @@ const VurderingVedtak = props => {
   const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.term).join(', ');
 
   const dokumenter = [
-    { navn: 'Forhåndsvis vedtaksbrev', type: brev.INNVILGELSE_YRKESAKTIV, data: { mottaker: aktoersroller.BRUKER } },
-    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: brev.ATTEST_A1, data: { mottaker: aktoersroller.MYNDIGHET } },
+    { navn: 'Forhåndsvis vedtaksbrev', type: MKV.Koder.brev.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
+    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: MKV.Koder.brev.ATTEST_A1, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
   ];
 
   return (
@@ -70,7 +73,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => props.lagreOgFatteVedtak(behandlinger.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
+            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => props.lagreOgFatteVedtak(MKV.Koder.behandlinger.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </div>

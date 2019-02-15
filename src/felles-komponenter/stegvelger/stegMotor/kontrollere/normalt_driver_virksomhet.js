@@ -1,9 +1,8 @@
+import * as MKV from 'melosys-kodeverk';
 import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../typer';
+import {FANE_STATUS, STEG} from '../typer';
 import VurderingNormaltDriverVirksomhet from '../../stegKomponenter/vurderingNormaltDriverVirksomhet';
-import { erVilkarOppfylt } from '../../../../regler/vilkar';
-
-import { vilkar } from '../../../../kodeverk/koder';
+import {erVilkarOppfylt} from '../../../../regler/vilkar';
 
 class NormaltDriverVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -11,7 +10,7 @@ class NormaltDriverVirksomhet extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'SELVSTENDIG_NAERINGSDRIVENDE og VESENTLIG_VIRKSOMHET',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(vilkar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, alleVilkar) !== undefined,
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, alleVilkar) !== undefined,
         nesteSteg: STEG.ARTIKKEL_12_2,
       },
       {

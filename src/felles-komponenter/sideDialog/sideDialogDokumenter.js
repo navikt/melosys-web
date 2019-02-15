@@ -1,12 +1,13 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
+
 import * as MPT from '../../proptypes/';
 import * as API from '../../services/api';
-import { formatterDatoTilNorsk } from '../../utils/dato';
+import {formatterDatoTilNorsk} from '../../utils/dato';
 import * as Ikoner from '../../resources/images/index';
 import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
-import * as koder from '../../kodeverk/koder';
 
 import './sideDialogDokumenter.css';
 
@@ -28,10 +29,10 @@ const RenderInnUtImage = ({ mottaksretning }) => {
   const { kode, term } = mottaksretning;
   let icon;
   switch (kode) {
-    case koder.mottaksretning.INN:
+    case MKV.Koder.mottaksretning.INN:
       icon = Ikoner.InnBrev;
       break;
-    case koder.mottaksretning.UT:
+    case MKV.Koder.mottaksretning.UT:
       icon = Ikoner.Svar;
       break;
     default:
@@ -161,6 +162,9 @@ class SideDialogDokumenter extends Component {
     );
   }
 }
+SideDialogDokumenter.propTypes = {
+  oppsummering: PT.object.isRequired,
+};
 
 const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),

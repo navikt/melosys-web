@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PT from 'prop-types';
-import { FieldArray } from 'redux-form';
+import {FieldArray} from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
@@ -124,6 +124,9 @@ const VurderingArbeidsgiver = props => {
 
 VurderingArbeidsgiver.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  tilstand: PT.shape({
+    harAvklaring: PT.bool,
+  }).isRequired,
   arbeidsgivereIPerioden: MPT.Organisasjoner.isRequired,
   redigerbart: PT.bool.isRequired,
 };

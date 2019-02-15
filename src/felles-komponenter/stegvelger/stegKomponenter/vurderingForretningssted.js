@@ -1,11 +1,10 @@
 import React from 'react';
 import PT from 'prop-types';
-import { FieldArray, Field } from 'redux-form';
+import {Field, FieldArray} from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-
-import { VurderingForretningsstedTyper } from '../../../kodeverk/koder';
+import * as KV from '../../../kodeverk';
 
 import LandVelger from '../../skjema/landvelger/';
 
@@ -92,12 +91,12 @@ const VurderingForretningssted = props => {
       <Nav.Undertittel>Vurder arbeidsgivers forretningssted</Nav.Undertittel>
       <FieldArray name="avklartefaktaForretningsstedLand" component={Forretningssteder} valgteArbeidsforhold={valgteArbeidsforhold} />
       <Nav.Fieldset legend="Hvor mange arbeidsgivere har søker?">
-        <Skjema.Radio feltNavn="avklartefaktaForretningsstedAntallArbeidsgivere" value={VurderingForretningsstedTyper.EN_ARBEIDSGIVER} label="Én" />
-        <Skjema.Radio feltNavn="avklartefaktaForretningsstedAntallArbeidsgivere" value={VurderingForretningsstedTyper.TO_ELLER_FLERE_ARBEIDSGIVERE} label="To eller flere" />
+        <Skjema.Radio feltNavn="avklartefaktaForretningsstedAntallArbeidsgivere" value={KV.Koder.VurderingForretningsstedTyper.EN_ARBEIDSGIVER} label="Én" />
+        <Skjema.Radio feltNavn="avklartefaktaForretningsstedAntallArbeidsgivere" value={KV.Koder.VurderingForretningsstedTyper.TO_ELLER_FLERE_ARBEIDSGIVERE} label="To eller flere" />
       </Nav.Fieldset>
       <Nav.Fieldset legend="Er arbeidsgivere i samme land eller ulike land?">
-        <Skjema.Radio feltNavn="avklartefaktaForretningsstedFordelingArbeidsgivere" value={VurderingForretningsstedTyper.SAMME_LAND} label="I samme land" />
-        <Skjema.Radio feltNavn="avklartefaktaForretningsstedFordelingArbeidsgivere" value={VurderingForretningsstedTyper.ULIKE_LAND} label="I ulike land" />
+        <Skjema.Radio feltNavn="avklartefaktaForretningsstedFordelingArbeidsgivere" value={KV.Koder.VurderingForretningsstedTyper.SAMME_LAND} label="I samme land" />
+        <Skjema.Radio feltNavn="avklartefaktaForretningsstedFordelingArbeidsgivere" value={KV.Koder.VurderingForretningsstedTyper.ULIKE_LAND} label="I ulike land" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

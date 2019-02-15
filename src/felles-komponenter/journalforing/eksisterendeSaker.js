@@ -1,17 +1,17 @@
 import React from 'react';
 import PT from 'prop-types';
-import { behandlinger as behandlingKoder } from '../../kodeverk/koder';
+import * as MKV from 'melosys-kodeverk';
 
 import EnkeltDato from '../datoOmrade/enkeltDato';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 
-import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
+import {kodeverkObjektTilTerm} from '../../utils/kodeverk';
 
 import './eksisterendeSaker.css';
 
-const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== behandlingKoder.AVSLUTTET);
+const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.AVSLUTTET);
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */

@@ -1,9 +1,10 @@
 /* eslint-disable react/no-did-update-set-state */
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { change } from 'redux-form';
-import { withRouter } from 'react-router-dom';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {change} from 'redux-form';
+import {withRouter} from 'react-router-dom';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes/';
 
@@ -11,15 +12,14 @@ import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
-import { fagsakSelectors } from '../../ducks/fagsaker/';
-import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
-import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
-import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder/';
-import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
-import { vedtakOperations } from '../../ducks/vedtak/';
-import { formSelectors } from '../../ducks/form/';
-import { landkoder, begrunnelser } from '../../kodeverk/kodelister';
+import {fagsakSelectors} from '../../ducks/fagsaker/';
+import {inngangOperations, inngangSelectors} from '../../ducks/inngang/';
+import {avklartefaktaOperations, avklartefaktaSelectors} from '../../ducks/avklartefakta/';
+import {behandlingerOperations, behandlingerSelectors} from '../../ducks/behandlinger';
+import {lovvalgsperioderOperations, lovvalgsperioderSelectors} from '../../ducks/lovvalgsperioder/';
+import {vilkarOperations, vilkarSelectors} from '../../ducks/vilkar/';
+import {vedtakOperations} from '../../ducks/vedtak/';
+import {formSelectors} from '../../ducks/form/';
 
 import './stegvelger.css';
 
@@ -140,9 +140,9 @@ class Stegvelger extends Component {
     const propsLight = {
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
-      begrunnelser,
+      begrunnelser: MKV.KTObjects.begrunnelser,
       bostedsland: props.bostedsland,
-      landkoder,
+      landkoder: MKV.KTObjects.landkoder,
       lovvalgsperioder: props.lovvalgsperioder,
       inngang: props.inngang,
       tilgjengeligeHandlers,

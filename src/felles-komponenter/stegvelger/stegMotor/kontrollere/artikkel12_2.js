@@ -1,9 +1,9 @@
-import Steg from '../steg';
-import { FANE_STATUS, STEG } from '../typer';
-import VurderingArtikkel12_2 from '../../stegKomponenter/vurderingArtikkel12_2';
-import { erVilkarOppfylt } from '../../../../regler/vilkar';
+import * as MKV from 'melosys-kodeverk';
 
-import { vilkar } from '../../../../kodeverk/koder';
+import Steg from '../steg';
+import {FANE_STATUS, STEG} from '../typer';
+import VurderingArtikkel12_2 from '../../stegKomponenter/vurderingArtikkel12_2';
+import {erVilkarOppfylt} from '../../../../regler/vilkar';
 
 class Artikkel12_2 extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -11,12 +11,12 @@ class Artikkel12_2 extends Steg {
     this._kriterier = [
       {
         beskrivelse: 'vilkar for artikkel 12.2 er oppfylt',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(vilkar.FO_883_2004_ART12_2, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
         beskrivelse: 'ønsker å vurdere 16.1',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(vilkar.FO_883_2004_ART16_1, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar),
         nesteSteg: STEG.ARTIKKEL_16,
       },
       {
@@ -29,8 +29,8 @@ class Artikkel12_2 extends Steg {
     this._tittel = 'Vurdering av 12.2';
     this._komponent = VurderingArtikkel12_2;
     this._samleRelevanteData = _propsLight => ({
-      artikkel: { kode: vilkar.FO_883_2004_ART12_2, term: '12.2' },
-      redigerbart: _propsLight.redigerbart,
+      artikkel: { kode: MKV.Koder.vilkaar.FO_883_2004_ART12_2, term: '12.2' },
+      begrunnelser: _propsLight.begrunnelser.art12_2_begrunnelser || [],
     });
     this._beregnRelevantUI = _propsLight => {
       const {

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
 
 import PT from 'prop-types';
 
@@ -7,12 +7,12 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 
-import { fagsakSelectors } from '../ducks/fagsaker/';
-import { soknadSelectors, soknadOperations } from '../ducks/soknad';
+import {fagsakSelectors} from '../ducks/fagsaker/';
+import {soknadOperations, soknadSelectors} from '../ducks/soknad';
 
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
 
-import { formatterDatoTilNorsk, vaskInputDato, formatterDatoTilISO, erGyldigPeriode } from '../utils/dato';
+import {erGyldigPeriode, formatterDatoTilISO, formatterDatoTilNorsk, vaskInputDato} from '../utils/dato';
 
 import './oppholdPeriode.css';
 
@@ -112,7 +112,8 @@ class OppholdPeriode extends Component {
     this.setState({ erPeriodeOppdatertOgGyldig });
   };
 
-  validerDato = verdi => {
+  validerDato = feltNavn => {
+    const verdi = this.state[feltNavn];
     const vasketVerdi = vaskInputDato(verdi);
     if (vasketVerdi === false) {
       return false;
@@ -129,9 +130,9 @@ class OppholdPeriode extends Component {
   };
 
   vaskOgValiderDato = feltNavn => {
-    const verdi = this.state[feltNavn];
-    const gyldigDato = this.validerDato(verdi);
+    const gyldigDato = this.validerDato(feltNavn);
     if (gyldigDato) {
+      const verdi = this.state[feltNavn];
       const vasketVerdi = vaskInputDato(verdi);
       this.setState({ [feltNavn]: vasketVerdi });
     } else {

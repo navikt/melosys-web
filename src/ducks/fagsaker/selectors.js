@@ -1,10 +1,10 @@
 // selector(s)
-import { createSelector, createStructuredSelector } from 'reselect';
+import {createSelector, createStructuredSelector} from 'reselect';
 import moment from 'moment/moment';
 
-import { soknadSelectors } from '../soknad/';
-import { kodeverkObjektTilKode } from '../../utils/kodeverk';
-import { datoDiff } from '../../utils/dato';
+import {soknadSelectors} from '../soknad/';
+import {kodeverkObjektTilKode} from '../../utils/kodeverk';
+import {datoDiff} from '../../utils/dato';
 
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
@@ -22,12 +22,12 @@ export const SakOgBehandlingSelector = createSelector(
 );
 
 export const RedigerbartSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? true : false),
+  state => (state.fagsaker.data.behandlinger !== undefined),
   redigerbart => redigerbart
 );
 
 export const FagsakStatusSelector = createSelector(
-  state => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : ""),
+  state => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : ''),
   fagsakStatus => fagsakStatus
 );
 

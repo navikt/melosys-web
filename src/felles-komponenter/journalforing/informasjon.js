@@ -1,8 +1,9 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { change } from 'redux-form';
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {change} from 'redux-form';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../../utils/utils';
 import * as Skjema from '../skjema/';
@@ -14,10 +15,9 @@ import * as Api from '../../services/api';
 
 import * as Person from '../../felles-komponenter/skjema/validering/generisk/person';
 
-import { PersonSelectors } from '../../ducks/personer';
-import { OrganisasjonSelectors } from '../../ducks/organisasjoner';
-import { formSelectors } from '../../ducks/form';
-import { dokumenttitler as valgbareDokumentTitler } from '../../kodeverk/kodelister';
+import {PersonSelectors} from '../../ducks/personer';
+import {OrganisasjonSelectors} from '../../ducks/organisasjoner';
+import {formSelectors} from '../../ducks/form';
 
 import './informasjon.css';
 
@@ -178,7 +178,7 @@ class Informasjon extends Component {
               feltNavn="hoveddokumentTittel"
               label="Tittel på hoveddokument:"
               placeholder="(velg eller skriv inn egen tittel)"
-              muligeValg={valgbareDokumentTitler}
+              muligeValg={MKV.KTObjects.dokumenttitler}
             />
           </Nav.Fieldset>
           <Nav.Fieldset legend="Vedlegg:">
@@ -187,7 +187,7 @@ class Informasjon extends Component {
               label="Velg ny tittel:"
               gruppe
               tillatFritekst
-              muligeValg={valgbareDokumentTitler}
+              muligeValg={MKV.KTObjects.dokumenttitler}
               placeholder="(Velg eller skriv inn egen tittel)"
             />
           </Nav.Fieldset>
