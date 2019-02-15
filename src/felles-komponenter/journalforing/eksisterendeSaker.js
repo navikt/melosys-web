@@ -78,7 +78,7 @@ const EksisterendeSaker = props => {
       <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
         {
           behandlingstyper &&
-          behandlingstyper.filter(elem => elem.kode !== behandlingKoder.SOEKNAD).map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
+          behandlingstyper.filter(elem => elem.kode !== MKV.Koder.behandlinger.typer.SOEKNAD).map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
         }
       </Skjema.Select>
       <Skjema.Checkbox feltNavn="ingenVurdering" label="Dokumentet trenger ingen vurdering" />
