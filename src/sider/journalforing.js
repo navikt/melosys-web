@@ -7,8 +7,6 @@ import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
-import { behandlinger as behandlingKoder, sakstyper as saksTypeKode } from '../kodeverk/koder';
-import { sakstyper, typer as behandlingstyper } from '../kodeverk/kodelister';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
@@ -185,7 +183,6 @@ class Journalforing extends Component {
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const {
       journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
-      sakstype,
     } = journalforingSkjemaVerdier;
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
@@ -336,8 +333,8 @@ class Journalforing extends Component {
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                       />
                       <OpprettNyFagSak
-                        sakstyper={sakstyper}
-                        behandlingstyper={behandlingstyper}
+                        sakstyper={MKV.Koder.sakstyper}
+                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
                       />
@@ -374,8 +371,8 @@ const mapStateToProps = state => ({
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
     hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
     vedleggsTitler: [],
-    sakstype: saksTypeKode.EU_EOS,
-    opprettnysak_behandlingstype: behandlingKoder.SOEKNAD,
+    sakstype: MKV.Koder.sakstype.EU_EOS,
+    opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
     ingenVurdering: false,
   },
 });
