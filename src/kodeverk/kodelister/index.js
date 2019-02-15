@@ -1,5 +1,49 @@
+import { KTObjects } from 'melosys-kodeverk';
 
-export const fartsomrader = [
-  { kode: 'innenriks', term: 'Innenriks' },
-  { kode: 'utenriks', term: 'Utenriks' },
-];
+export const {
+  begrunnelser,
+  begrunnelser: {
+    art12_1_begrunnelser,
+    art12_2_begrunnelser,
+    art16_1_anmodning,
+    art16_1_avslag,
+  },
+  behandlinger: {
+    resultattyper,
+    status,
+    typer,
+  },
+  brev: {
+    produserbaredokumenter,
+  },
+  lovvalgsbestemmelser,
+  lovvalgsbestemmelser: {
+    forordning_883_2004,
+    forordning_987_2009,
+    tillegg,
+  },
+  vilkaar: {
+    vilkaar,
+  },
+  yrker: {
+    yrkesaktivitetstyper,
+    yrkesgrupper,
+  },
+  aktoersroller,
+  avklartefakta,
+  dokumenttitler,
+  dokumenttyper,
+  finansiering,
+  forespoerseltyper,
+  henleggelsesgrunner,
+  kontantytelser_eu_fo,
+  landkoder,
+  medlemskapstyper,
+  mottaksretning,
+  oppgavetyper,
+  representerer,
+  saksstatuser,
+  sakstyper,
+  trygdedekninger,
+  vedleggstitler,
+} = KTObjects;
