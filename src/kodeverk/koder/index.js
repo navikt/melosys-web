@@ -66,3 +66,21 @@ export const VurderingYrkesgruppeTyper = {
   IKKE_YRKESAKTIV: 'IKKE_YRKESAKTIV',
   KONTANTYTELSESMOTTAKER: 'KONTANTYTELSESMOTTAKER',
 };
+
+/* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
+ * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
+ */
+export const avklartefaktaKoder = {
+  OPPHOLDSLAND: 'OPPHOLDSLAND',
+  YRKESGRUPPE: 'YRKESGRUPPE',
+  YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
+  YRKESAKTIVITET: 'YRKESAKTIVITET',
+  AVKLARTE_ARBEIDSGIVER: 'AVKLARTE_ARBEIDSGIVER',
+  SOKKEL_ELLER_SKIP: 'SOKKEL_ELLER_SKIP',
+  ARBEIDSLAND: 'ARBEIDSLAND',
+  BOSTEDSLAND: 'BOSTEDSLAND',
+  ARBEID_SOKKEL_SKIP: 'ARBEID_SOKKEL_SKIP',
+};
+export const referanseKoder = {
+  INSTALLASJON_ARBEIDSLAND: 'INSTALLASJON_ARBEIDSLAND',
+};
