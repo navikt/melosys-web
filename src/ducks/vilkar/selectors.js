@@ -36,17 +36,17 @@ export const bosattINorge = createSelector(
 
 export const art11_3A = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART11_3A) || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A) || {})
 );
 
 export const art11_4_1 = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART11_4_1) || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1) || {})
 );
 
 export const art11_4_2 = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.FO_883_2004_ART11_4_2) || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2) || {})
 );
 
 export const nis = createSelector(
