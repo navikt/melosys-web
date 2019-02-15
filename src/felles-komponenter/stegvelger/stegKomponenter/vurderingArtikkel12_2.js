@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import { vilkar as vilkarKoder } from '../../../kodeverk/koder';
-import { art12_2_begrunnelser, art16_1_avslag } from '../../../kodeverk/kodelister';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
@@ -52,8 +51,8 @@ class VurderingArtikkel12_2 extends Component {
 
     if ((art12_2 === old_art12_2) && (art16_1 === old_art16_1)) { return; }
 
-    if (art12_2) (this.settStateForVilkar(vilkarKoder.FO_883_2004_ART12_2));
-    if (art16_1 && art12_2 === false) (this.settStateForVilkar(vilkarKoder.FO_883_2004_ART16_1));
+    if (art12_2) (this.settStateForVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_2));
+    if (art16_1 && art12_2 === false) (this.settStateForVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1));
     if (art16_1 === false && art12_2 === false) (this.settStateForVilkar(this.AVSLAG));
   };
 
@@ -61,13 +60,13 @@ class VurderingArtikkel12_2 extends Component {
     const { value } = event.target;
     const { settSkjemaVerdi } = this.props;
 
-    if (value === vilkarKoder.FO_883_2004_ART12_2) {
+    if (value === MKV.Koder.vilkaar.FO_883_2004_ART12_2) {
       settSkjemaVerdi('vilkar.art12_2', true);
       settSkjemaVerdi('vilkar.art16_1', null);
       settSkjemaVerdi('vilkar.art12_2_begrunnelser', []);
       settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
       settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
-    } else if (value === vilkarKoder.FO_883_2004_ART16_1) {
+    } else if (value === MKV.Koder.vilkaar.FO_883_2004_ART16_1) {
       settSkjemaVerdi('vilkar.art12_2', false);
       settSkjemaVerdi('vilkar.art16_1', true);
       settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
@@ -96,15 +95,15 @@ class VurderingArtikkel12_2 extends Component {
                 <Nav.Radio
                   name="artikkel"
                   onChange={this.radioEndringHandler}
-                  value={vilkarKoder.FO_883_2004_ART12_2}
-                  checked={valgtVilkar === vilkarKoder.FO_883_2004_ART12_2}
+                  value={MKV.Koder.vilkaar.FO_883_2004_ART12_2}
+                  checked={valgtVilkar === MKV.Koder.vilkaar.FO_883_2004_ART12_2}
                   label="Ja"
                 />
                 <Nav.Radio
                   name="artikkel"
                   onChange={this.radioEndringHandler}
-                  value={vilkarKoder.FO_883_2004_ART16_1}
-                  checked={valgtVilkar === vilkarKoder.FO_883_2004_ART16_1}
+                  value={MKV.Koder.vilkaar.FO_883_2004_ART16_1}
+                  checked={valgtVilkar === MKV.Koder.vilkaar.FO_883_2004_ART16_1}
                   label="Nei, jeg vil sende anmodning om unntak etter artikkel 16.1"
                 />
                 <Nav.Radio
@@ -123,7 +122,7 @@ class VurderingArtikkel12_2 extends Component {
                 <Nav.Fieldset legend="Begrunnelse artikkel 12.2:">
                   <Skjema.ListeVelger
                     feltNavn="vilkar.art12_2_begrunnelser"
-                    muligeValg={art12_2_begrunnelser}
+                    muligeValg={MKV.KTObjects.begrunnelser.art12_2_begrunnelser}
                     label="Legg til begrunnelse for ikke oppfylt:"
                     gruppe
                     tillatFritekst={false}
@@ -135,7 +134,7 @@ class VurderingArtikkel12_2 extends Component {
                 <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
                   <Skjema.ListeVelger
                     feltNavn="vilkar.art16_1_begrunnelser"
-                    muligeValg={art16_1_avslag}
+                    muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
                     label="Legg til begrunnelse for avslag:"
                     gruppe
                     tillatFritekst={false}

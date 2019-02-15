@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -16,8 +17,6 @@ import { fagsakSelectors } from '../ducks/fagsaker';
 import { formSelectors } from '../ducks/form';
 import { BOOLSK } from '../constants';
 import { boolTilNorsk } from '../utils/streng';
-
-import { finansiering } from '../kodeverk/kodelister';
 
 const uuid = require('uuid/v4');
 
@@ -73,7 +72,7 @@ const Bosted = props => {
                 bredde="xl"
                 disabled={!redigerbart}
               >
-                {finansiering.map(valg => <option key={uuid()} value={kodeverkObjektTilKode(valg)}>{kodeverkObjektTilTerm(valg)}</option>)}
+                {MKV.KTObjects.finansiering.map(valg => <option key={uuid()} value={kodeverkObjektTilKode(valg)}>{kodeverkObjektTilTerm(valg)}</option>)}
               </Skjema.Select>
               <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
                 <Skjema.Radio disabled={!redigerbart} feltNavn="intensjonOmRetur" value={BOOLSK.SANN} label="Ja" />

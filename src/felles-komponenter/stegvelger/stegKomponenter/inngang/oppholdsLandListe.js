@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { formValueSelector, change } from 'redux-form';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
-import { begrunnelser, OPPHOLDSLAND } from '../../../../kodeverk/koder';
+import * as KV from '../../../../kodeverk';
 
 import FjernetLandEnkelt from './fjernetLandEnkelt';
 import OppholdsLandEnkelt from './oppholdsLandEnkelt';
@@ -26,14 +27,14 @@ class OppholdsLandListe extends Component {
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
-    if (begrunnelseKode === begrunnelser.FEIL_LAND_JOURNALFOERING) {
+    if (begrunnelseKode === MKV.Koder.begrunnelser.opphold.FEIL_LAND_JOURNALFOERING) {
       this.fjernLandFraSoknad(landKode);
     }
   };
 
   bekreftLeggTil = (landKode, begrunnelseKode) => {
     const avklartFakta = {
-      referanse: OPPHOLDSLAND,
+      referanse: KV.Koder.OPPHOLDSLAND,
       avklartefaktaKode: null,
       fakta: ['TRUE'],
       subjektID: landKode,
@@ -67,7 +68,7 @@ class OppholdsLandListe extends Component {
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
-    if (enkeltFakta.begrunnelseKoder.includes(begrunnelser.FEIL_LAND_JOURNALFOERING)) {
+    if (enkeltFakta.begrunnelseKoder.includes(MKV.Koder.begrunnelser.opphold.FEIL_LAND_JOURNALFOERING)) {
       this.leggLandTilSoknad(landKode);
     }
   };

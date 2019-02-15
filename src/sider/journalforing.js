@@ -1,6 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
@@ -200,8 +201,7 @@ class Journalforing extends Component {
     }
 
     const fagsak = {
-      // sakstype: saksTypeKode.EU_EOS,
-      sakstype,
+      sakstype: MKV.Koder.sakstyper.EU_EOS,
       soknadsperiode: {
         fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
         tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
@@ -331,7 +331,7 @@ class Journalforing extends Component {
                         hentOgVisBruker={hentOgVisBruker}
                       />
                       <EksisterendeSaker
-                        behandlingstyper={behandlingstyper}
+                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
                         fagsakListe={fagsakListe}
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                       />
