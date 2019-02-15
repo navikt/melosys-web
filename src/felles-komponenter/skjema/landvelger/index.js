@@ -1,10 +1,10 @@
 import React from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import EnkeltLand from './enkeltLand';
 import MultiLand from './multiLand';
 import { kodeverkObjektTilKode } from '../../../utils/kodeverk';
-import { landkoder } from '../../../kodeverk/kodelister';
 
 import './landvelger.css';
 
@@ -25,11 +25,11 @@ const LandVelger = props => {
   return (
     <div>
       {multiLand
-        ? (<MultiLand {...props} landkoder={landkoder} dataListID={dataListID} />)
-        : (<EnkeltLand {...props} landkoder={landkoder} dataListID={dataListID} />)}
+        ? (<MultiLand {...props} landkoder={MKV.KTObjects.landkoder} dataListID={dataListID} />)
+        : (<EnkeltLand {...props} landkoder={MKV.KTObjects.landkoder} dataListID={dataListID} />)}
       <div className="landliste__dataliste">
         <datalist id={dataListID}>
-          {landkoder.map(item => (<option key={item.kode} value={landTekstFormat(item)} />))}
+          {MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={landTekstFormat(item)} />))}
         </datalist>
       </div>
     </div>
