@@ -109,7 +109,7 @@ class Journalforing extends Component {
     } = this.props;
     const {
       brukerID, avsenderID, arbeidsgiverID,
-      opprettnysak_behandlingstype: behandlingstype,
+      opprettnysak_behandlingstype: behandlingstypeKode,
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
@@ -130,7 +130,7 @@ class Journalforing extends Component {
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
-        arbeidsgiverID, behandlingstype, representantID, representantKontaktPerson,
+        arbeidsgiverID, behandlingstypeKode, representantID, representantKontaktPerson,
       });
     }
     return journalPostData;
@@ -143,14 +143,14 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer, behandlingstype, ingenVurdering }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = {
-      saksnummer, behandlingstype, ingenVurdering, ...vasketJournalforing,
+      saksnummer, behandlingstypeKode, ingenVurdering, ...vasketJournalforing,
     };
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
