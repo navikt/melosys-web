@@ -156,12 +156,11 @@ const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
     case lovvalgsbestemmelser.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
     case lovvalgsbestemmelser.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
     case lovvalgsbestemmelser.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
-    case false: {
+    default: {
       const lovvalgBestemmelse = lovvalgsperioderSelectors.LovvalgBestemmelseSelector(getState());
       if (lovvalgBestemmelse) return byggAvslaattLovvalg(getState, lovvalgBestemmelse);
       return [];
     }
-    default: return [];
   }
 };
 
