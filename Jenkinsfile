@@ -4,7 +4,7 @@ import jenkins.model.*
 node {
   def project = "navikt"
   def application = "melosys-web"
-  def webMockDir = "/var/lib/jenkins${application}/"
+  def webMockDir = "/var/lib/jenkins/${application}/"
   def zipFile
 
   /* metadata */
