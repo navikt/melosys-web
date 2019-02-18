@@ -151,6 +151,11 @@ const byggAvslaattLovvalg = (getState, lovvalgBestemmelse) => {
 };
 
 const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
+  if (!valgtLovvalg) {
+    const lovvalgBestemmelse = lovvalgsperioderSelectors.LovvalgBestemmelseSelector(getState());
+    if (lovvalgBestemmelse) return byggAvslaattLovvalg(getState, lovvalgBestemmelse);
+  }
+
   switch (valgtLovvalg) {
     case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
     case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(getState);
@@ -158,8 +163,6 @@ const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
     case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
     case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
     default: {
-      const lovvalgBestemmelse = lovvalgsperioderSelectors.LovvalgBestemmelseSelector(getState());
-      if (lovvalgBestemmelse) return byggAvslaattLovvalg(getState, lovvalgBestemmelse);
       return [];
     }
   }
