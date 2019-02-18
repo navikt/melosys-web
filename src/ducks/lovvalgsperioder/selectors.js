@@ -5,8 +5,9 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
+import * as MKV from 'melosys-kodeverk';
+
 import { createSelector } from 'reselect';
-import { forordning_883_2004, forordning_987_2009 } from '../../kodeverk/kodelister';
 import { VilkarSelector } from '../vilkar/selectors';
 
 // import * as Koder from '../../kodeverk';
@@ -19,7 +20,7 @@ export const LovvalgsperioderSelector = createSelector(
 
 export const LovvalgBestemmelseSelector = createSelector(
   state => VilkarSelector(state),
-  () => [...forordning_883_2004, ...forordning_987_2009],
+  () => [...MKV.KTObjects.lovvalgsbestemmelser.forordning_883_2004, ...MKV.KTObjects.lovvalgsbestemmelser.forordning_987_2009],
   (alleVilkar, alleLovvalg) => {
     const lovvalgBestemmelse = alleVilkar.find(vilkar => alleLovvalg.find(lovvalg => lovvalg.kode === vilkar.vilkaar));
     if (lovvalgBestemmelse) return lovvalgBestemmelse.vilkaar;

@@ -1,40 +1,6 @@
 // Melosys-kodeverk
 // Se Confluence koder for oversikt
 
-import lovvalgsbestemmelser from './lovvalgsbestemmelser';
-import trygdedekninger from './trygdedekninger';
-import medlemskapstyper from './medlemskapstyper';
-import landkoder from './landkoder';
-import vilkar from './vilkar';
-import begrunnelser from './begrunnelser';
-import behandlinger from './behandlinger';
-import brev from './brev';
-import aktoersroller from './aktoerroller';
-import mottaksretning from './mottaksretning';
-import oppgavetyper from './oppgavetyper';
-import representerer from './representerer';
-import sakstyper from './sakstyper';
-import saksstatuser from './saksstatuser';
-import henleggelsesgrunner from './henleggelsesgrunner';
-
-export {
-  lovvalgsbestemmelser,
-  trygdedekninger,
-  medlemskapstyper,
-  landkoder,
-  vilkar,
-  begrunnelser,
-  behandlinger,
-  brev,
-  aktoersroller,
-  mottaksretning,
-  oppgavetyper,
-  representerer,
-  sakstyper,
-  saksstatuser,
-  henleggelsesgrunner,
-};
-
 export const INNVILGET = 'INNVILGET';
 export const AVSLAATT ='AVSLAATT';
 
@@ -100,4 +66,22 @@ export const VurderingYrkesgruppeTyper = {
   FLYENDE_PERSONELL: 'YRKESAKTIV_FLYVENDE',
   IKKE_YRKESAKTIV: 'IKKE_YRKESAKTIV',
   KONTANTYTELSESMOTTAKER: 'KONTANTYTELSESMOTTAKER',
+};
+
+/* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
+ * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
+ */
+export const avklartefaktaKoder = {
+  OPPHOLDSLAND: 'OPPHOLDSLAND',
+  YRKESGRUPPE: 'YRKESGRUPPE',
+  YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
+  YRKESAKTIVITET: 'YRKESAKTIVITET',
+  AVKLARTE_ARBEIDSGIVER: 'AVKLARTE_ARBEIDSGIVER',
+  SOKKEL_ELLER_SKIP: 'SOKKEL_ELLER_SKIP',
+  ARBEIDSLAND: 'ARBEIDSLAND',
+  BOSTEDSLAND: 'BOSTEDSLAND',
+  ARBEID_SOKKEL_SKIP: 'ARBEID_SOKKEL_SKIP',
+};
+export const referanseKoder = {
+  INSTALLASJON_ARBEIDSLAND: 'INSTALLASJON_ARBEIDSLAND',
 };

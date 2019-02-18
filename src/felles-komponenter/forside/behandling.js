@@ -3,13 +3,12 @@ import { connect } from 'react-redux';
 import { reduxForm, getFormValues } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
 
 import { oppgaverOperations } from '../../ducks/oppgaver/';
-import { behandlinger as behandlingerKoder, sakstyper as sakstyperKoder } from '../../kodeverk/koder';
-import { sakstyper, typer as behandlingstyper } from '../../kodeverk/kodelister';
 
 import './behandling.css';
 
@@ -43,8 +42,8 @@ class Behandling extends Component {
           <Nav.Row>
             <Nav.Column xs="4">
               <Nav.Fieldset legend="Sakstype">
-                {sakstyper.map(enkeltType => {
-                  const isDisabled = enkeltType.kode !== sakstyperKoder.EU_EOS;
+                {MKV.KTObjects.sakstyper.map(enkeltType => {
+                  const isDisabled = enkeltType.kode !== MKV.Koder.sakstyper.EU_EOS;
                   return (<Skjema.Checkbox key={uuid()} label={enkeltType.term} disabled={isDisabled} feltNavn={`sakstyper.${enkeltType.kode}`} />);
                 })}
               </Nav.Fieldset>
@@ -52,8 +51,8 @@ class Behandling extends Component {
 
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
-                {behandlingstyper.map(type => {
-                  const isDisabled = type.kode !== behandlingerKoder.SOEKNAD;
+                {MKV.KTObjects.behandlinger.typer.map(type => {
+                  const isDisabled = type.kode !== MKV.Koder.behandlinger.typer.SOEKNAD;
                   return (<Skjema.Checkbox key={uuid()} label={type.term} disabled={isDisabled} feltNavn={`behandlingstyper.${type.kode}`} />);
                 })}
               </Nav.Fieldset>

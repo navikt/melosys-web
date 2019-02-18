@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import PdfLenkeListe from '../../pdfLenkeListe';
@@ -9,9 +10,6 @@ import { art12_1_begrunnelserSelector, art12_2_begrunnelserSelector, art16_1_beg
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 
 import { kodeTilVerdi } from '../../../utils/kodeverk';
-
-import { art12_1_begrunnelser, art12_2_begrunnelser, art16_1_avslag } from '../../../kodeverk/kodelister';
-import { aktoersroller, brev } from '../../../kodeverk/koder';
 
 import './vurderingAvslag12_x_og_16.css';
 
@@ -45,9 +43,9 @@ class VurderingAvslag12_x_og_16 extends React.Component {
     const dokumenter = [
       {
         navn: 'Forhåndsvis vedtaksbrev',
-        type: brev.AVSLAG_YRKESAKTIV,
+        type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
         data: {
-          mottaker: aktoersroller.BRUKER,
+          mottaker: MKV.Koder.aktoersroller.BRUKER,
         },
       },
     ];
@@ -61,21 +59,21 @@ class VurderingAvslag12_x_og_16 extends React.Component {
           <Begrunnelser
             label="Søkeren fyller ikke kriteriene for artikkel 12. nr. 1:"
             valgteBegrunnelser={valgte_art_12_1_begrunnelser}
-            muligeBegrunnelser={art12_1_begrunnelser}
+            muligeBegrunnelser={MKV.KTObjects.begrunnelser.art12_1_begrunnelser}
           />
         }
         {valgte_art_12_2_begrunnelser.length > 0 &&
           <Begrunnelser
             label="Søkeren fyller ikke kriteriene for artikkel 12, nr. 2:"
             valgteBegrunnelser={valgte_art_12_2_begrunnelser}
-            muligeBegrunnelser={art12_2_begrunnelser}
+            muligeBegrunnelser={MKV.KTObjects.begrunnelser.art12_2_begrunnelser}
           />
         }
         {valgte_art_16_1_begrunnelser.length > 0 &&
           <Begrunnelser
             label="Søkeren fyller ikke kriteriene for artikkel 16, nr. 1:"
             valgteBegrunnelser={valgte_art_16_1_begrunnelser}
-            muligeBegrunnelser={art16_1_avslag}
+            muligeBegrunnelser={MKV.KTObjects.begrunnelser.art16_1_avslag}
           />
         }
         <PdfLenkeListe behandlingID={oppsummering.behandlingID} dokumenter={dokumenter} />

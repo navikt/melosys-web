@@ -6,10 +6,11 @@
  * når det asynkrone kallet, feks fra API'et er ferdigkjørt.
  *
  */
+import * as MKV from 'melosys-kodeverk';
 
 import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
-import { lovvalgsbestemmelser, trygdedekninger, medlemskapstyper, landkoder, INNVILGET, AVSLAATT } from '../../kodeverk/koder';
+import * as KV from '../../kodeverk';
 
 import * as Types from './types';
 import * as Actions from './actions';
@@ -49,14 +50,14 @@ const byggLovvalgsPeriodeArtikkel12_1 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART12_1,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: INNVILGET,
-    lovvalgsland: landkoder.NO,
-    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
-    medlemskapstype: medlemskapstyper.PLIKTIG,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
+    lovvalgsland: MKV.Koder.landkoder.NO,
+    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
   }];
 };
 
@@ -65,14 +66,14 @@ const byggLovvalgsPeriodeArtikkel12_2 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART12_2,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: INNVILGET,
-    lovvalgsland: landkoder.NO,
-    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
-    medlemskapstype: medlemskapstyper.PLIKTIG,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
+    lovvalgsland: MKV.Koder.landkoder.NO,
+    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
   }];
 };
 
@@ -81,14 +82,14 @@ const byggLovvalgsPeriodeArtikkel11_3A = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART11_3A,
-    tilleggBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART11_4_1,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A,
+    tilleggBestemmelse: MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: INNVILGET,
-    lovvalgsland: landkoder.NO,
-    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
-    medlemskapstype: medlemskapstyper.PLIKTIG,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
+    lovvalgsland: MKV.Koder.landkoder.NO,
+    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
   }];
 };
 
@@ -97,14 +98,14 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART11_4_2,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: INNVILGET,
-    lovvalgsland: landkoder.NO,
-    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
-    medlemskapstype: medlemskapstyper.PLIKTIG,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
+    lovvalgsland: MKV.Koder.landkoder.NO,
+    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
   }];
 };
 
@@ -121,14 +122,14 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: lovvalgsbestemmelser.FO_883_2004_ART16_1,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1,
     tilleggBestemmelse: null,
     unntakFraBestemmelse,
     unntakFraLovvalgsland,
-    innvilgelsesResultat: INNVILGET,
-    lovvalgsland: landkoder.NO,
-    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
-    medlemskapstype: medlemskapstyper.PLIKTIG,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
+    lovvalgsland: MKV.Koder.landkoder.NO,
+    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
   }];
 };
 
@@ -142,20 +143,20 @@ const byggAvslaattLovvalg = (getState, lovvalgBestemmelse) => {
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
-    innvilgelsesResultat: AVSLAATT,
-    lovvalgsland: landkoder.NO,
-    trygdeDekning: trygdedekninger.FULL_DEKNING_EOSFO,
-    medlemskapstype: medlemskapstyper.PLIKTIG,
+    innvilgelsesResultat: KV.Koder.AVSLAATT,
+    lovvalgsland: MKV.Koder.landkoder.NO,
+    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
   }];
 };
 
 const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
   switch (valgtLovvalg) {
-    case lovvalgsbestemmelser.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
-    case lovvalgsbestemmelser.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(getState);
-    case lovvalgsbestemmelser.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
-    case lovvalgsbestemmelser.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
-    case lovvalgsbestemmelser.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(getState);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
     default: {
       const lovvalgBestemmelse = lovvalgsperioderSelectors.LovvalgBestemmelseSelector(getState());
       if (lovvalgBestemmelse) return byggAvslaattLovvalg(getState, lovvalgBestemmelse);

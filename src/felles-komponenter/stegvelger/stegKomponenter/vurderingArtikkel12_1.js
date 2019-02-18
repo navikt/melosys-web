@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import { vilkar as vilkarKoder } from '../../../kodeverk/koder';
-import { art12_1_begrunnelser, art16_1_avslag } from '../../../kodeverk/kodelister';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
@@ -20,6 +19,8 @@ class VurderingArtikkel12_1 extends Component {
    */
   constructor() {
     super();
+    this.ART12_1 = MKV.Koder.vilkaar.FO_883_2004_ART12_1;
+    this.ART16_1 = MKV.Koder.vilkaar.FO_883_2004_ART16_1;
     this.AVSLAG = 'AVSLAG';
   }
 
@@ -54,8 +55,8 @@ class VurderingArtikkel12_1 extends Component {
 
     if ((art12_1 === old_art12_1) && (art16_1 === old_art16_1)) { return; }
 
-    if (art12_1) (this.settStateForVilkar(vilkarKoder.FO_883_2004_ART12_1));
-    if (art16_1 && art12_1 === false) (this.settStateForVilkar(vilkarKoder.FO_883_2004_ART16_1));
+    if (art12_1) (this.settStateForVilkar(this.ART12_1));
+    if (art16_1 && art12_1 === false) (this.settStateForVilkar(this.ART16_1));
     if (art16_1 === false && art12_1 === false) (this.settStateForVilkar(this.AVSLAG));
   };
 
@@ -70,19 +71,17 @@ class VurderingArtikkel12_1 extends Component {
     const { value } = event.target;
     const { settSkjemaVerdi } = this.props;
 
-    if (value === vilkarKoder.FO_883_2004_ART12_1) {
+    if (value === this.ART12_1) {
       settSkjemaVerdi('vilkar.art12_1', true);
       settSkjemaVerdi('vilkar.art16_1', null);
-      this.clearBegrunnelserSkjema();
-    } else if (value === vilkarKoder.FO_883_2004_ART16_1) {
+    } else if (value === this.ART16_1) {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', true);
-      this.clearBegrunnelserSkjema();
     } else if (value === this.AVSLAG) {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', false);
-      this.clearBegrunnelserSkjema();
     }
+    this.clearBegrunnelserSkjema();
   };
 
   render () {
@@ -103,17 +102,17 @@ class VurderingArtikkel12_1 extends Component {
                 <Nav.Radio
                   name="artikkel12"
                   onChange={this.radioEndringHandler}
-                  value={vilkarKoder.FO_883_2004_ART12_1}
-                  checked={valgtVilkar === vilkarKoder.FO_883_2004_ART12_1}
+                  value={this.ART12_1}
+                  checked={valgtVilkar === this.ART12_1}
                   label="Ja"
                   disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel12"
                   onChange={this.radioEndringHandler}
-                  value={vilkarKoder.FO_883_2004_ART16_1}
-                  checked={valgtVilkar === vilkarKoder.FO_883_2004_ART16_1}
-                  label="Nei, jeg vil sende anmodning om unntak etter artikkel 16.1"
+                  value={this.ART16_1}
+                  checked={valgtVilkar === this.ART16_1}
+                  label="Nei, jeg vil vurdere artikkel 16.1"
                   disabled={!redigerbart}
                 />
                 <Nav.Radio
@@ -133,7 +132,7 @@ class VurderingArtikkel12_1 extends Component {
                 <Nav.Fieldset legend="Begrunnelse artikkel 12.1:">
                   <Skjema.ListeVelger
                     feltNavn="vilkar.art12_1_begrunnelser"
-                    muligeValg={art12_1_begrunnelser}
+                    muligeValg={MKV.KTObjects.begrunnelser.art12_1_begrunnelser}
                     label="Legg til begrunnelse for ikke oppfylt:"
                     gruppe
                     tillatFritekst={false}
@@ -144,7 +143,7 @@ class VurderingArtikkel12_1 extends Component {
                 <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
                   <Skjema.ListeVelger
                     feltNavn="vilkar.art16_1_begrunnelser"
-                    muligeValg={art16_1_avslag}
+                    muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
                     label="Legg til begrunnelse for avslag:"
                     gruppe
                     tillatFritekst={false}

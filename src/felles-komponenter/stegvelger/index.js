@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes/';
 
@@ -19,7 +20,6 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../duc
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
-import { landkoder, begrunnelser } from '../../kodeverk/kodelister';
 
 import './stegvelger.css';
 
@@ -141,9 +141,9 @@ class Stegvelger extends Component {
     const propsLight = {
       arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
-      begrunnelser,
+      begrunnelser: MKV.KTObjects.begrunnelser,
       bostedsland: props.bostedsland,
-      landkoder,
+      landkoder: MKV.KTObjects.landkoder,
       lovvalgsperioder: props.lovvalgsperioder,
       inngang: props.inngang,
       tilgjengeligeHandlers,
