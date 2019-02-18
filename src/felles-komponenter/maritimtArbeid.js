@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
@@ -10,9 +11,6 @@ import * as MPT from '../proptypes';
 
 import { formSelectors } from '../ducks/form/';
 import { fagsakSelectors } from '../ducks/fagsaker/';
-
-import { fartsomrader as fartsomraader } from '../kodeverk/kodelister';
-import { begrunnelser } from '../kodeverk/koder';
 
 import LandVelger from './skjema/landvelger';
 import PanelHeader from '../felles-komponenter/panelHeader/panelHeader';
@@ -47,7 +45,7 @@ class MaritimtEnkelt extends React.Component {
               {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
             </Skjema.Select>
             {
-              fartsomrade === begrunnelser.INNENRIKS &&
+              fartsomrade === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
               <LandVelger feltNavn={`${navn}territorialfarvann`} label="Territorialfarvann" disabled={!redigerbart} />
             }
           </Nav.Column>
@@ -109,7 +107,7 @@ const MaritimtArbeid = props => {
         heading={<PanelHeader ikon={panelIkon} tittel="Maritimt Arbeid" undertittel="" />}
         ariaTittel="Maritimt Arbeid">
         <Nav.Container fluid>
-          <FieldArray name="maritimtArbeid" component={MaritimtAlle} fartsomrader={fartsomraader} redigerbart={redigerbart} />
+          <FieldArray name="maritimtArbeid" component={MaritimtAlle} fartsomrader={MKV.KTObjects.begrunnelser.fartsomrader} redigerbart={redigerbart} />
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>

@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
-import { SOKKEL, SKIP, VurderingSokkelSkipTyper } from '../../../kodeverk/koder';
+import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
 
 import LandVelger from '../../skjema/landvelger';
@@ -15,7 +15,7 @@ const SokkelSkipEnkelt = props => {
     sokkelSkipInfo, begrunnelser, index, redigerbart,
   } = props;
   const { navn } = sokkelSkipInfo;
-
+  const { SOKKEL, SKIP } = KV.Koder;
   return (
     <Nav.Row className="sokkelSkip__liste__rad">
       <Nav.Column xs="4" className="rad__navn">{navn}</Nav.Column>
@@ -82,6 +82,7 @@ const VurderingSokkelSkip = props => {
   const {
     bekreftOgFortsett, tilstand, skjema, begrunnelser, redigerbart,
   } = props;
+  const { VurderingSokkelSkipTyper } = KV.Koder;
   const { maritimtArbeid } = skjema;
   const { harAvklaring } = tilstand;
 
