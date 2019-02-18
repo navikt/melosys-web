@@ -145,8 +145,8 @@ const byggAvslaattLovvalg = (getState, lovvalgBestemmelse) => {
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.AVSLAATT,
     lovvalgsland: MKV.Koder.landkoder.NO,
-    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
-    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
+    trygdeDekning: null,
+    medlemskapstype: null,
   }];
 };
 
