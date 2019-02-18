@@ -84,6 +84,11 @@ export const art16_1_begrunnelserSelector = createSelector(
   art16_1_vilkar => art16_1_vilkar.begrunnelseKoder || []
 );
 
+export const art16_1_fritekstSelector = createSelector(
+  state => art16_1(state),
+  art16_1_vilkar => art16_1_vilkar.begrunnelseFritekst || null
+);
+
 export const valgteLovvalgsVilkar = createSelector(
   state => VilkarSelector(state),
   alleVilkar => {
@@ -93,4 +98,17 @@ export const valgteLovvalgsVilkar = createSelector(
     ];
     return alleVilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar));
   }
+);
+
+export const vilkarBegrunnelserSelector = createSelector(
+  state => vesentligVirksomhetSelector(state),
+  state => normaltDriverVirksomhetSelector(state),
+  state => forutgaendeMedlemskap(state),
+  state => bosattINorge(state),
+  (vesentligvirksomhet, normaltDrivervirksomhet, forutgaendemedlemskap, bosattinorge) => ([
+    ...(vesentligvirksomhet.begrunnelseKoder || []),
+    ...(normaltDrivervirksomhet.begrunnelseKoder || []),
+    ...(forutgaendemedlemskap.begrunnelseKoder || []),
+    ...(bosattinorge.begrunnelseKoder || []),
+  ] || [])
 );
