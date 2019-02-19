@@ -46,8 +46,6 @@ class Stegvelger extends Component {
     const { didUpdateAfterLastStep } = this.state;
     const shouldUpdate = (formHasSetteled && !didUpdateAfterLastStep);
 
-    // console.log(formHasSetteled, didUpdateAfterLastStep);
-
     if (!shouldUpdate) { return; }
 
     this.setState({ didUpdateAfterLastStep: true });
