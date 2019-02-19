@@ -23,7 +23,7 @@ const Forside = props => {
           <Nav.Column xs="7">
             <MineOppgaver />
           </Nav.Column>
-          <Nav.Column className="høyrekolonne" xs="5">
+          <Nav.Column className="hoyrekolonne" xs="5">
             <SokSkjema />
             <Journalforing />
             <Behandling />
