@@ -154,7 +154,7 @@ export class VurderingEndrePeriode extends React.Component {
           <Nav.Column xs="6">
             <KodeTermSelect
               feil={begrunnelseFeilmelding}
-              koder={[{ kode: 'kode', term: 'term' }]}
+              koder={MKV.KTObjects.begrunnelser.endretperiode}
               label="Begrunnelse"
               value={valgtBegrunnelseKode}
               onChange={vedBegrunnelseEndret}
