@@ -1,7 +1,7 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingBostedsland from '../../stegKomponenter/vurderingBostedsland';
-import { VurderingSokkelSkipTyper, VurderingIkkeYrkesaktivTyper, VurderingYrkesgruppeTyper } from '../../../../kodeverk/koder';
+import * as KV from '../../../../kodeverk';
 
 import Regler from '../../../../regler';
 
@@ -12,7 +12,7 @@ class Bostedsland extends Steg {
       {
         beskrivelse: 'konklusjon for sokkel/skip-steget ER LIK "SKIP_ETT_LAND" og det er gjort en vurdering av bosted, enten utfallet er TRUE eller FALSE',
         exec: (avklartefakta, vilkar) => (
-          Bostedsland.finnAvklaring(avklartefakta, VurderingSokkelSkipTyper.SKIP_ETT_LAND) && vilkar.find(enkelt => enkelt.vilkaar === 'BOSATT_I_NORGE') && true
+          Bostedsland.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND) && vilkar.find(enkelt => enkelt.vilkaar === 'BOSATT_I_NORGE') && true
         ),
         nesteSteg: STEG.ARTIKKEL_11_4,
       },
@@ -45,9 +45,9 @@ class Bostedsland extends Steg {
       const regler = new Regler(skjema, saksopplysninger);
 
       const erYrkesaktiv = (
-        avklartefaktaYrkesgruppeType === VurderingYrkesgruppeTyper.ORDINAER ||
-        avklartefaktaYrkesgruppeType === VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP ||
-        avklartefaktaYrkesgruppeType === VurderingYrkesgruppeTyper.FLYENDE_PERSONELL
+        avklartefaktaYrkesgruppeType === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER ||
+        avklartefaktaYrkesgruppeType === KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP ||
+        avklartefaktaYrkesgruppeType === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL
       );
 
       let avklaringer;
@@ -64,7 +64,7 @@ class Bostedsland extends Steg {
           { ...regler.opphold().familieBorINorge() },
         ];
       } else {
-        if (yrkesaktivitet === VurderingIkkeYrkesaktivTyper.STUDENT) {
+        if (yrkesaktivitet === KV.Koder.VurderingIkkeYrkesaktivTyper.STUDENT) {
           avklaringer = [
             { ...regler.opphold().inntilTolvMaaneder() },
             { ...regler.opphold().harForutgaendeBostedINorge() },
@@ -73,14 +73,14 @@ class Bostedsland extends Steg {
             { ...regler.opphold().familieBorINorge() },
           ];
         }
-        if (yrkesaktivitet === VurderingIkkeYrkesaktivTyper.PENSJONIST) {
+        if (yrkesaktivitet === KV.Koder.VurderingIkkeYrkesaktivTyper.PENSJONIST) {
           avklaringer = [
             { ...regler.opphold().harForutgaendeBostedINorge() },
             { ...regler.opphold().erINorgeSeksManederEllerMerPerKalenderAr() },
             { ...regler.opphold().harEktefelleEllerBarnINorge() },
           ];
         }
-        if (yrkesaktivitet === VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
+        if (yrkesaktivitet === KV.Koder.VurderingIkkeYrkesaktivTyper.INGEN_AV_DISSE) {
           avklaringer = [
             { ...regler.opphold().inntilTolvMaaneder() },
             { ...regler.opphold().harForutgaendeBostedINorge() },

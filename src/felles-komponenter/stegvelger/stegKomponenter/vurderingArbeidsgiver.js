@@ -124,6 +124,9 @@ const VurderingArbeidsgiver = props => {
 
 VurderingArbeidsgiver.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  tilstand: PT.shape({
+    harAvklaring: PT.bool,
+  }).isRequired,
   arbeidsgivereIPerioden: MPT.Organisasjoner.isRequired,
   redigerbart: PT.bool.isRequired,
 };

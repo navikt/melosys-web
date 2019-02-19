@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import { vilkar as vilkarKoder } from '../../../kodeverk/koder';
 
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
@@ -19,8 +19,8 @@ class VurderingArtikkel12_1 extends Component {
    */
   constructor() {
     super();
-    this.ART12_1 = vilkarKoder.FO_883_2004_ART12_1;
-    this.ART16_1 = vilkarKoder.FO_883_2004_ART16_1;
+    this.ART12_1 = MKV.Koder.vilkaar.FO_883_2004_ART12_1;
+    this.ART16_1 = MKV.Koder.vilkaar.FO_883_2004_ART16_1;
     this.AVSLAG = 'AVSLAG';
   }
 
@@ -38,6 +38,9 @@ class VurderingArtikkel12_1 extends Component {
     const { settSkjemaVerdi } = this.props;
     settSkjemaVerdi('vilkar.art12_1', null);
     settSkjemaVerdi('vilkar.art16_1', null);
+    settSkjemaVerdi('vilkar.art12_1_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
   }
 
   settStateForVilkar = vilkar => this.setState({ valgtVilkar: vilkar });
@@ -63,6 +66,9 @@ class VurderingArtikkel12_1 extends Component {
     } else if (value === this.ART16_1) {
       settSkjemaVerdi('vilkar.art16_1', true);
       settSkjemaVerdi('vilkar.art12_1', false);
+      settSkjemaVerdi('vilkar.art16_1', true);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
     } else {
       settSkjemaVerdi('vilkar.art12_1', false);
       settSkjemaVerdi('vilkar.art16_1', false);
@@ -71,11 +77,11 @@ class VurderingArtikkel12_1 extends Component {
 
   render () {
     const {
-      bekreftOgFortsett, begrunnelser, artikkel, tilstand, redigerbart,
+      bekreftOgFortsett, artikkel, tilstand, redigerbart,
     } = this.props;
 
     const { valgtVilkar } = this.state;
-    const { visBegrunnelser, harAvklaring } = tilstand;
+    const { visBegrunnelser12, visBegrunnelser16, harAvklaring } = tilstand;
 
     return (
       <div>
@@ -111,22 +117,39 @@ class VurderingArtikkel12_1 extends Component {
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
-          { visBegrunnelser && (
-            <Nav.Row>
-              <Nav.Column xs="12" md="10" lg="8">
-                <Nav.Fieldset legend="Begrunnelse:">
+          <Nav.Row>
+            <Nav.Column xs="12" md="10" lg="8">
+              { visBegrunnelser12 && (
+                <Nav.Fieldset legend="Begrunnelse artikkel 12.1:">
                   <Skjema.ListeVelger
                     feltNavn="vilkar.art12_1_begrunnelser"
-                    muligeValg={begrunnelser}
-                    label="Legg til begrunnelse:"
+                    muligeValg={MKV.KTObjects.begrunnelser.art12_1_begrunnelser}
+                    label="Legg til begrunnelse for ikke oppfylt:"
+                    gruppe
+                    tillatFritekst={false}
+                  />
+                </Nav.Fieldset>
+              )}
+              { visBegrunnelser16 && (
+                <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
+                  <Skjema.ListeVelger
+                    feltNavn="vilkar.art16_1_begrunnelser"
+                    muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
+                    label="Legg til begrunnelse for avslag:"
                     gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
                   />
+                  <Skjema.Textarea
+                    disabled={!redigerbart}
+                    feltNavn="vilkar.art16_1_begrunnelser_fritekst"
+                    label="Begrunnelse for avslag (fritekst):"
+                    maxLength={255}
+                    bredde="fullbredde" />
                 </Nav.Fieldset>
-              </Nav.Column>
-            </Nav.Row>
-          )}
+              )}
+            </Nav.Column>
+          </Nav.Row>
         </div>
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -137,7 +160,6 @@ class VurderingArtikkel12_1 extends Component {
 }
 
 VurderingArtikkel12_1.propTypes = {
-  begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,

@@ -6,32 +6,14 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-
 import { createSelector } from 'reselect';
-import { SKIP } from '../../kodeverk/koder';
-import { landkoder } from '../../kodeverk/kodelister';
+import * as MKV from 'melosys-kodeverk';
+
+import * as KV from '../../kodeverk';
+
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
-
-/* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
- * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
- */
-const avklartefaktaKoder = {
-  OPPHOLDSLAND: 'OPPHOLDSLAND',
-  YRKESGRUPPE: 'YRKESGRUPPE',
-  YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
-  YRKESAKTIVITET: 'YRKESAKTIVITET',
-  AVKLARTE_ARBEIDSGIVER: 'AVKLARTE_ARBEIDSGIVER',
-  SOKKEL_ELLER_SKIP: 'SOKKEL_ELLER_SKIP',
-  ARBEIDSLAND: 'ARBEIDSLAND',
-  BOSTEDSLAND: 'BOSTEDSLAND',
-  ARBEID_SOKKEL_SKIP: 'ARBEID_SOKKEL_SKIP',
-};
-
-const referanseKoder = {
-  INSTALLASJON_ARBEIDSLAND: 'INSTALLASJON_ARBEIDSLAND',
-};
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -63,7 +45,7 @@ export const Oppholdsland = createSelector(
       alleAvklartefakta.find(avklaring => avklaring.subjektID === enkeltLand) ||
         {
           ...avklartFaktaTemplate,
-          referanse: avklartefaktaKoder.OPPHOLDSLAND,
+          referanse: KV.Koder.avklartefaktaKoder.OPPHOLDSLAND,
           subjektID: enkeltLand,
           fakta: ['TRUE'],
         }
@@ -75,7 +57,7 @@ export const Oppholdsland = createSelector(
 export const Yrkesgruppe = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.YRKESGRUPPE);
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.YRKESGRUPPE);
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
@@ -85,7 +67,7 @@ export const Yrkesgruppe = createSelector(
 export const YrkesaktivitetAntallLand = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND);
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND);
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
@@ -95,7 +77,7 @@ export const YrkesaktivitetAntallLand = createSelector(
 export const Yrkesaktivitet = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.YRKESAKTIVITET);
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.YRKESAKTIVITET);
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
@@ -127,16 +109,16 @@ export const ArbeidsgivereSelector = createSelector(
   state => AvklartefaktaSelector(state),
   state => ArbeidsgivereIPeriodenSelector(state),
   (alleAvklarteFakta, alleArbeidsgivere) => {
-    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER);
+    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER);
     return alleArbeidsgivere.map(arbeidsgiver => {
       const eksisterendeAvklaring = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.orgnr);
 
       return eksisterendeAvklaring || {
         ...avklartFaktaTemplate,
-        referanse: avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER,
+        referanse: KV.Koder.avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER,
         fakta: ['FALSE'],
         subjektID: arbeidsgiver.orgnr,
-        avklartefaktaKode: avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER,
+        avklartefaktaKode: KV.Koder.avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER,
       };
     });
   }
@@ -145,7 +127,7 @@ export const ArbeidsgivereSelector = createSelector(
 export const ArbeidSokkelSkipSelector = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.ARBEID_SOKKEL_SKIP);
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP);
     if (!avklartFakta) return null;
     return avklartFakta.fakta[0];
   }
@@ -163,11 +145,11 @@ export const SokkelEllerSkipSelector = createSelector(
     // og én for avklartfakta om installasjonen er sokkel eller skip.
 
     const arbeidsland = alleAvklarteFakta
-      .filter(avklaring => avklaring.referanse === referanseKoder.INSTALLASJON_ARBEIDSLAND)
+      .filter(avklaring => avklaring.referanse === KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND)
       .map(avklaring => avklaring.fakta[0]);
 
     const sokkelEllerSkip = alleAvklarteFakta
-      .filter(avklaring => avklaring.referanse === avklartefaktaKoder.SOKKEL_ELLER_SKIP)
+      .filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP)
       .map((avklaring, index) => ({
         installasjonsType: avklaring.fakta[0],
         arbeidsland: arbeidsland[index],
@@ -198,11 +180,11 @@ export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
       .map(avklartfakta => avklartfakta.subjektID);
 
     const landOverstyrtAvSkip = sokkelEllerSkip
-      .reduce((collection, enkelt) => (enkelt.installasjonsType === SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
+      .reduce((collection, enkelt) => (enkelt.installasjonsType === KV.Koder.SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
 
     const styrendeLand = landOverstyrtAvSkip.length > 0 ? landOverstyrtAvSkip : landAvklartVedInngang;
 
-    return landkoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
+    return MKV.KTObjects.landkoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
   }
 );
 
@@ -230,9 +212,9 @@ export const AvklartefaktaVurderingSelector = createSelector(
 export const BostedslandSelector = createSelector(
   state => AvklartefaktaSelector(state),
   alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === avklartefaktaKoder.BOSTEDSLAND);
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
     if (!avklartFakta) return null;
     const bostedslandKode = avklartFakta.fakta[0];
-    return landkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
+    return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
   }
 );
