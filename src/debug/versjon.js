@@ -1,7 +1,6 @@
 /* eslint-disable */
 import React, { Component } from 'react';
 import classnames from 'classnames';
-import { Link } from 'react-router-dom';
 
 import Clipboard from './clipboard';
 
@@ -34,7 +33,6 @@ class Versjon extends Component {
           <dt>Branch:</dt><dd>{this.branchVersjon()}</dd>
         </dl>
         <button className="App__versjonering__kopierknapp" onClick={this.copyToClipBoard}>Klikk for å kopiere versjonsinfo</button>
-        <Link to="/spark" className="App__versjonering__spark">Gå til spark-siden</Link>
       </div>
       : null;
 
