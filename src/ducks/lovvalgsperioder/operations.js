@@ -18,6 +18,7 @@ import * as Actions from './actions';
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
 import { formSelectors } from '../form';
+import { lovvalgsperioderSelectors } from './index';
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -44,8 +45,8 @@ import { formSelectors } from '../form';
  * koden mer lesbar.
  */
 
-const byggLovvalgsPeriodeArtikkel12_1 = getState => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(getState());
+const byggLovvalgsPeriodeArtikkel12_1 = state => {
+  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
@@ -60,8 +61,8 @@ const byggLovvalgsPeriodeArtikkel12_1 = getState => {
   }];
 };
 
-const byggLovvalgsPeriodeArtikkel12_2 = getState => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(getState());
+const byggLovvalgsPeriodeArtikkel12_2 = state => {
+  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
@@ -76,8 +77,8 @@ const byggLovvalgsPeriodeArtikkel12_2 = getState => {
   }];
 };
 
-const byggLovvalgsPeriodeArtikkel11_3A = getState => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(getState());
+const byggLovvalgsPeriodeArtikkel11_3A = state => {
+  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
@@ -92,8 +93,8 @@ const byggLovvalgsPeriodeArtikkel11_3A = getState => {
   }];
 };
 
-const byggLovvalgsPeriodeArtikkel11_4_2 = getState => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(getState());
+const byggLovvalgsPeriodeArtikkel11_4_2 = state => {
+  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
@@ -108,12 +109,12 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = getState => {
   }];
 };
 
-const byggLovvalgsPeriodeArtikkel16_1 = getState => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(getState());
-  const soknadOppholdsland = soknadSelectors.OppholdsLandSelector(getState());
+const byggLovvalgsPeriodeArtikkel16_1 = state => {
+  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadOppholdsland = soknadSelectors.OppholdsLandSelector(state);
 
   const unntakFraLovvalgsland = soknadOppholdsland.join('');
-  const lovvalgsperiode = formSelectors.Lovvalgsperiode(getState());
+  const lovvalgsperiode = formSelectors.Lovvalgsperiode(state);
   const { unntakFraBestemmelse } = lovvalgsperiode;
 
   if (!unntakFraLovvalgsland || !lovvalgsperiode || !unntakFraBestemmelse) { return false; }
@@ -132,14 +133,38 @@ const byggLovvalgsPeriodeArtikkel16_1 = getState => {
   }];
 };
 
-const byggLovvalgsPerioder = (valgtLovvalg, getState) => {
+const byggAvslaattLovvalg = (state, lovvalgBestemmelse) => {
+  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+
+  return [{
+    fomDato: soknadPeriode.fom,
+    tomDato: soknadPeriode.tom,
+    lovvalgBestemmelse,
+    tilleggBestemmelse: null,
+    unntakFraBestemmelse: null,
+    unntakFraLovvalgsland: null,
+    innvilgelsesResultat: KV.Koder.AVSLAATT,
+    lovvalgsland: MKV.Koder.landkoder.NO,
+    trygdeDekning: MKV.Koder.trygdedekninger.UTEN_DEKNING,
+    medlemskapstype: null,
+  }];
+};
+
+const byggLovvalgsPerioder = (valgtLovvalg, state) => {
+  if (!valgtLovvalg) {
+    const lovvalgBestemmelse = lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state);
+    if (lovvalgBestemmelse) return byggAvslaattLovvalg(state, lovvalgBestemmelse);
+  }
+
   switch (valgtLovvalg) {
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(getState);
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(getState);
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(getState);
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(getState);
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(getState);
-    default: return [];
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(state);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(state);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(state);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(state);
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(state);
+    default: {
+      return [];
+    }
   }
 };
 
@@ -167,7 +192,7 @@ export function send(behandlingID, body) {
 export function oppdaterLovvalgsperioderState() {
   return (dispatch, getState) => {
     const valgtLovvalg = finnValgteVilkar(vilkarSelectors.valgteLovvalgsVilkar(getState()));
-    const lovvalgsPerioder = byggLovvalgsPerioder(valgtLovvalg, getState);
+    const lovvalgsPerioder = byggLovvalgsPerioder(valgtLovvalg, getState());
     (dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder)));
   };
 }
