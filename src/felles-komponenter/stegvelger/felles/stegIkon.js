@@ -24,7 +24,7 @@ const ikonVelger = (id, status, aktivtSteg) => {
     },
   };
 
-  if (id === 'VEDTAK') {
+  if (id === 'VEDTAK' || id === 'AVSLAG_12_X_OG_16') {
     return IKONER.VEDTAK[status];
   }
 
