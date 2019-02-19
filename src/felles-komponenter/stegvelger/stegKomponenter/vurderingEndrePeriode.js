@@ -26,8 +26,8 @@ export class VurderingEndrePeriode extends React.Component {
     fritekst: null,
   };
 
-  vedTomDatoEndring = ({ target: { value } }) => {
-    this.setState({ nyTomDato: value, nyTomDatoFeilmelding: undefined });
+  vedTomDatoEndring = event => {
+    this.setState({ nyTomDato: event.target.value, nyTomDatoFeilmelding: undefined });
   };
 
   validerTomDato = () => {
@@ -123,26 +123,26 @@ export class VurderingEndrePeriode extends React.Component {
         <Nav.Undertittel>Endre lovvalgsperiode</Nav.Undertittel>
         <Nav.Element className="mindreTittel">Opprinnelig lovvalgsperiode</Nav.Element>
         <Nav.Row>
-          <Nav.Column xs="2">
+          <Nav.Column xs="3">
             <Nav.Normaltekst>Fra {formattertFomDato}</Nav.Normaltekst>
           </Nav.Column>
-          <Nav.Column xs="2">
+          <Nav.Column xs="3">
             <Nav.Normaltekst>Til {formattertTomDato}</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <Nav.Element className="mindreTittel">Ny lovvalgsperiode</Nav.Element>
         <Nav.Row>
-          <Nav.Column xs="2">
+          <Nav.Column xs="3">
             <Nav.Input
-              bredde="S"
+              bredde="fullbredde"
               label="Startdato"
               value={formattertFomDato}
               disabled
             />
           </Nav.Column>
-          <Nav.Column xs="2">
+          <Nav.Column xs="3">
             <Nav.Input
-              bredde="S"
+              bredde="fullbredde"
               label="Sluttdato"
               onChange={vedTomDatoEndring}
               value={nyTomDato}
