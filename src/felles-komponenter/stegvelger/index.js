@@ -7,7 +7,7 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes/';
-
+import * as API from '../../services/api';
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
@@ -123,9 +123,11 @@ class Stegvelger extends Component {
     await this.fatteVedtakHandler(behandlingsresultattype);
   };
 
-  endrePeriode = async () => {
-    console.log('endre periode');
-  }
+  endrePeriode = async data => {
+    const { oppsummering } = this.props;
+    await API.Vedtak.endrePeriode(oppsummering.behandlingID, data);
+    this.props.history.push('/');
+  };
 
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.

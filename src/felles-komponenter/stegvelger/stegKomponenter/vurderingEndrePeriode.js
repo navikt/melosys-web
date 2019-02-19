@@ -21,7 +21,7 @@ export class VurderingEndrePeriode extends React.Component {
   state = {
     nyTomDato: '',
     nyTomDatoFeilmelding: undefined,
-    valgtBegrunnelseKode: '',
+    begrunnelsekode: '',
     begrunnelseFeilmelding: undefined,
     fritekst: null,
   };
@@ -41,7 +41,7 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   validerBegrunnelse = () => {
-    const begrunnelseValid = this.state.valgtBegrunnelseKode !== '';
+    const begrunnelseValid = this.state.begrunnelsekode !== '';
     if (begrunnelseValid) {
       return true;
     }
@@ -61,12 +61,18 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   vedBegrunnelseEndret = event => {
-    this.setState({ valgtBegrunnelseKode: event.target.value, begrunnelseFeilmelding: undefined });
+    this.setState({ begrunnelsekode: event.target.value, begrunnelseFeilmelding: undefined });
   };
 
   vedKlikkEndrePeriode = () => {
     if (this.validerAlt()) {
-      this.props.endrePeriode();
+      const { lovvalgsPeriode: { fomDato } } = this.props;
+      const { begrunnelsekode, nyTomDato } = this.state;
+      this.props.endrePeriode({
+        fomdato: fomDato,
+        tomdato: formatterDatoTilISO(nyTomDato),
+        begrunnelsekode,
+      });
     }
   };
 
@@ -86,7 +92,7 @@ export class VurderingEndrePeriode extends React.Component {
 
     const {
       nyTomDato,
-      valgtBegrunnelseKode,
+      begrunnelsekode,
       nyTomDatoFeilmelding,
       begrunnelseFeilmelding,
       fritekst,
@@ -99,7 +105,7 @@ export class VurderingEndrePeriode extends React.Component {
         data: {
           mottaker: MKV.Koder.aktoersroller.BRUKER,
           fritekst,
-          begrunnelseKode: valgtBegrunnelseKode,
+          begrunnelseKode: begrunnelsekode,
         },
       },
       {
@@ -108,7 +114,7 @@ export class VurderingEndrePeriode extends React.Component {
         data: {
           mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
           fritekst,
-          begrunnelseKode: valgtBegrunnelseKode,
+          begrunnelseKode: begrunnelsekode,
         },
       },
     ];
@@ -156,7 +162,7 @@ export class VurderingEndrePeriode extends React.Component {
               feil={begrunnelseFeilmelding}
               koder={MKV.KTObjects.begrunnelser.endretperiode}
               label="Begrunnelse"
-              value={valgtBegrunnelseKode}
+              value={begrunnelsekode}
               onChange={vedBegrunnelseEndret}
             />
           </Nav.Column>

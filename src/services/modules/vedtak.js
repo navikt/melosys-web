@@ -6,3 +6,8 @@ export async function fatte(bid, body) {
   const URI_FATTE_VEDTAK = `${API_BASE_URL}vedtak/${bid}`;
   return postAsJson(URI_FATTE_VEDTAK, body);
 }
+
+export async function endrePeriode(bid, body) {
+  const URI_ENDRE_PERIODE = `${API_BASE_URL}vedtak/endre/${bid}`;
+  return postAsJson(URI_ENDRE_PERIODE, body);
+}
