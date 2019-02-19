@@ -1,6 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
+import * as MKV from 'melosys-kodeverk';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import { KodeTermSelect } from '../../kodeTermSelect';
@@ -8,8 +9,6 @@ import * as Nav from '../../../utils/navFrontend';
 
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
-
-import { brev, aktoersroller } from '../../../kodeverk/koder';
 
 import { formatterDatoTilNorsk, erIPeriode, vaskInputDato, formatterDatoTilISO } from '../../../utils/dato';
 
@@ -96,18 +95,18 @@ export class VurderingEndrePeriode extends React.Component {
     const dokumenter = [
       {
         navn: 'Forhåndsvis vedtaksbrev',
-        type: brev.INNVILGELSE_YRKESAKTIV,
+        type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         data: {
-          mottaker: aktoersroller.BRUKER,
+          mottaker: MKV.Koder.aktoersroller.BRUKER,
           fritekst,
           begrunnelseKode: valgtBegrunnelseKode,
         },
       },
       {
         navn: 'Forhåndsvis A1',
-        type: brev.ATTEST_A1,
+        type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
         data: {
-          mottaker: aktoersroller.MYNDIGHET,
+          mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
           fritekst,
           begrunnelseKode: valgtBegrunnelseKode,
         },
