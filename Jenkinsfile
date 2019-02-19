@@ -4,7 +4,7 @@ import jenkins.model.*
 node {
   def project = "navikt"
   def application = "melosys-web"
-  def webMockDir = "/var/lib/jenkins${application}/"
+  def webMockDir = "/var/lib/jenkins/${application}/"
   def zipFile
 
   /* metadata */
@@ -72,7 +72,7 @@ node {
     }
     else if (prNummer != null) {
       // Hvis det eksisterer et token så betyr det at dette er en pull-request
-      buildVersion = "${semver}-PR${prNummer}-SNAPSHOT"
+      buildVersion = "${semver}-PR-${prNummer}-SNAPSHOT"
     }
     else {
       buildVersion = "${semver}-SNAPSHOT"

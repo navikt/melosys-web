@@ -4,9 +4,11 @@ import { connect } from 'react-redux';
 import { change } from 'redux-form';
 
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../proptypes/';
 
 import './opprettnyfagsak.css';
 import LandVelger from '../skjema/landvelger';
@@ -42,15 +44,33 @@ class OpprettNyFagSak extends Component {
 
   render() {
     const { spinner: { representantNavn: visArbeidsgiverSpinner } } = this.state;
+    const { sakstyper, behandlingstyper, opprettFagsak } = this.props;
 
-    const { opprettFagsak } = this.props;
     return (
       <div className="opprettnysak">
         <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
         <Nav.Row>
           <Nav.Column xs="6">
-            <Skjema.Input feltNavn="representantID" label="Representantens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
-            <Skjema.Input feltNavn="representantNavn" label="Representantens navn" disabled />
+            <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype" disabled>
+              { sakstyper.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>)) }
+            </Skjema.Select>
+          </Nav.Column>
+          <Nav.Column xs="6">
+            <Skjema.Select feltNavn="opprettnysak_behandlingstype" bredde="fullbredde" label="Behandlingstype">
+              {
+                behandlingstyper &&
+                behandlingstyper
+                  .filter(elem => (elem.kode !== MKV.Koder.behandlinger.typer.ANKE && elem.kode !== MKV.Koder.behandlinger.typer.KLAGE))
+                  .map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
+              }
+            </Skjema.Select>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Skjema.Input feltNavn="representantID" label="Fullmektigens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
+            <Skjema.Input feltNavn="representantNavn" label="Organisasjonsnavn" disabled />
+            <Skjema.Input feltNavn="representantKontaktPerson" label="Kontaktperson hos fullmektig" />
             { visArbeidsgiverSpinner && <Nav.NavFrontendSpinner className="sok__spinner" /> }
           </Nav.Column>
         </Nav.Row>
@@ -83,6 +103,8 @@ OpprettNyFagSak.propTypes = {
   opprettFagsak: PT.func.isRequired,
   settFeltInnhold: PT.func.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
+  behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
+  sakstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 
