@@ -4,7 +4,7 @@ import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
 import Tabell from '../tabell/tabell';
 
-import EnkeltDato from '../datoOmrade/enkeltDato';
+import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
 
 import './arbeidsavtaler.css';

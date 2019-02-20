@@ -15,7 +15,7 @@ import { fagsakSelectors } from '../../../ducks/fagsaker';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
 import Listevelger from '../../skjema/listevelger';
-import DatoOmrade from '../../datoOmrade/datoOmrade';
+import DatoOmrade from '../../../komponenter/datoOmrade/datoOmrade';
 import PdfLenkeListe from '../../pdfLenkeListe';
 
 import './vurderingArtikkel16.css';

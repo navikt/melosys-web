@@ -10,7 +10,7 @@ import * as Nav from '../../../utils/navFrontend';
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
 import PanelHeader from '../../panelHeader/panelHeader';
-import EnkeltDato from '../../datoOmrade/enkeltDato';
+import EnkeltDato from '../../../komponenter/datoOmrade/enkeltDato';
 import { formatterDatoTilNorsk } from '../../../utils/dato';
 
 import './behandlingOppgave.css';

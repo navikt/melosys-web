@@ -6,7 +6,7 @@ import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 
 import PanelHeader from './panelHeader/panelHeader';
-import DatoOmrade from './datoOmrade/datoOmrade';
+import DatoOmrade from '../komponenter/datoOmrade/datoOmrade';
 import { kodeverkObjektTilTerm } from '../utils/kodeverk';
 
 import './medlemskap.css';

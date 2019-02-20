@@ -2,7 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import EnkeltDato from '../datoOmrade/enkeltDato';
+import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
