@@ -68,13 +68,8 @@ export class VurderingEndrePeriode extends React.Component {
     if (this.validerAlt()) {
       const { lovvalgsPeriode: { fomDato } } = this.props;
       const { begrunnelsekode, nyTomDato } = this.state;
-      this.props.endrePeriode({
-        periode: {
-          fomdato: fomDato,
-          tomdato: formatterDatoTilISO(nyTomDato),
-        },
-        begrunnelsekode,
-      });
+
+      this.props.endreLovvalgsPeriode(fomDato, formatterDatoTilISO(nyTomDato), begrunnelsekode);
     }
   };
 
@@ -179,7 +174,7 @@ export class VurderingEndrePeriode extends React.Component {
 VurderingEndrePeriode.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
   lovvalgsPeriode: PT.object.isRequired,
-  endrePeriode: PT.func.isRequired,
+  endreLovvalgsPeriode: PT.func.isRequired,
   fomDato: PT.string,
 };
 

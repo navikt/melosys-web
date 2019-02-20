@@ -100,7 +100,7 @@ class Stegvelger extends Component {
     const { fatteVedtak } = this.props;
     const vedtakBody = { behandlingsresultattype };
     await fatteVedtak(bid, vedtakBody);
-    this.props.history.push('/');
+    this.tilForsiden();
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
@@ -121,9 +121,18 @@ class Stegvelger extends Component {
     await this.fatteVedtakHandler(behandlingsresultattype);
   };
 
-  endrePeriode = async data => {
-    const { oppsummering } = this.props;
-    await API.Vedtak.endrePeriode(oppsummering.behandlingID, data);
+  endreLovvalgsPeriode = async (fomdato, tomdato, begrunnelsekode) => {
+    const { oppsummering, endreLovvalgsPeriode } = this.props;
+    const { lagreLovvalgsperioderHandler, tilForsiden } = this;
+
+    await endreLovvalgsPeriode(fomdato, tomdato);
+    await lagreLovvalgsperioderHandler();
+    await API.Vedtak.endrePeriode(oppsummering.behandlingID, { begrunnelsekode });
+
+    tilForsiden();
+  };
+
+  tilForsiden = () => {
     this.props.history.push('/');
   };
 
@@ -140,7 +149,7 @@ class Stegvelger extends Component {
       lagreLovvalgsperioder: this.lagreLovvalgsperioderHandler,
       oppdaterOgLagreBehandlinger: this.oppdaterOgLagreBehandlinger,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
-      endrePeriode: this.endrePeriode,
+      endreLovvalgsPeriode: this.endreLovvalgsPeriode,
     };
 
     const propsLight = {
@@ -273,6 +282,7 @@ Stegvelger.propTypes = {
   skjema: PT.object.isRequired,
   valgteArbeidsgivere: PT.array,
   vilkar: PT.array.isRequired,
+  endreLovvalgsPeriode: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -315,6 +325,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
+  endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
