@@ -1,7 +1,7 @@
 import React from 'react';
 import * as MPT from '../../proptypes';
 
-import { kodeverkObjektTilTerm } from '../../kodeverk/kodeverk';
+import * as KV from '../../kodeverk';
 
 /** Forretningsadresse formatterer adressen korrekt med sjekk på
  * varierende keys i objektet.
@@ -19,7 +19,7 @@ const GeneriskAdresse = ({ adresse }) => {
     gatenavn, gatenummer, husnummer, husbokstav,
   } = gateadresse;
 
-  const landNavn = (typeof land === 'string' ? land : kodeverkObjektTilTerm(land));
+  const landNavn = (typeof land === 'string' ? land : KV.objektTilTerm(land));
 
   return (gatenavn || gatenummer || husnummer || husbokstav || land || postnr || poststed) ? (
     <address className="bostedsadresse">

@@ -3,16 +3,15 @@ import React from 'react';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
-
-import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../kodeverk/kodeverk';
+import * as KV from '../../../../kodeverk';
 
 const FjernetLandEnkelt = props => {
   const {
     landKodeObjekt, angreFjern, begrunnelseTerm, redigerbart,
   } = props;
 
-  const landTerm = kodeverkObjektTilTerm(landKodeObjekt);
-  const landKode = kodeverkObjektTilKode(landKodeObjekt);
+  const landTerm = KV.objektTilKode(landKodeObjekt);
+  const landKode = KV.objektTilKode(landKodeObjekt);
 
   return (
     <div>

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../kodeverk/kodeverk';
+import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
@@ -17,8 +17,8 @@ class OppholdslandHandlingSlett extends Component {
       oppholdBegrunnelser, bekreft, avbryt, landKodeObjekt, redigerbart,
     } = this.props;
 
-    const landKode = kodeverkObjektTilKode(landKodeObjekt);
-    const landTerm = kodeverkObjektTilTerm(landKodeObjekt);
+    const landKode = KV.objektTilKode(landKodeObjekt);
+    const landTerm = KV.objektTilTerm(landKodeObjekt);
 
     return (
       <div className="fjernland__linje">

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 import * as Nav from '../../utils/navFrontend';
-import { kodeverkObjektTilTerm } from '../../kodeverk/kodeverk';
+import * as KV from '../../kodeverk';
 
 import './medfolgendeFamilie.css';
 
@@ -13,7 +13,7 @@ const FamiliemedlemmerEnkelt = ({
 }) => (
   <dl className="familiemedlemmerEnkelt">
     <dd className="enkelt__navn">{familiemedlemmerEnkelt.sammensattNavn} ({familiemedlemmerEnkelt.fnr})</dd>
-    <dd className="enkelt__relasjonstype">{kodeverkObjektTilTerm(familiemedlemmerEnkelt.relasjonstype)}</dd>
+    <dd className="enkelt__relasjonstype">{KV.objektTilTerm(familiemedlemmerEnkelt.relasjonstype)}</dd>
     <dd className="enkelt__ermed">
       <Nav.Checkbox
         navn={`medfolgendeFamilie${indeks}`}

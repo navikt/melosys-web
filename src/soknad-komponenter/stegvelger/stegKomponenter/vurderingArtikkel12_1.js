@@ -5,8 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-
-import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
+import * as KV from '../../../kodeverk';
 
 class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -120,7 +119,7 @@ class VurderingArtikkel12_1 extends Component {
                   onChange={this.radioEndringHandler}
                   value={this.AVSLAG}
                   checked={valgtVilkar === this.AVSLAG}
-                  label={`Nei, jeg vil avslå søknaden etter artikkel ${kodeverkObjektTilTerm(artikkel)} og 16.1`}
+                  label={`Nei, jeg vil avslå søknaden etter artikkel ${KV.objektTilTerm(artikkel)} og 16.1`}
                   disabled={!redigerbart}
                 />
               </Nav.Fieldset>

@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import { Link } from 'react-router-dom';
 
 import * as Nav from '../../../utils/navFrontend';
-import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
+import * as KV from '../../../kodeverk';
 import EnkeltDato from '../../../komponenter/datoOmrade/enkeltDato';
 
 import './behandling.css';
@@ -19,7 +19,7 @@ const Behandling = ({ behandling, link }) => {
             <Nav.Column xs="12" md="5">
               <dl className="behandling__meta">
                 <dt>Behandlingstype:</dt>
-                <dd>{kodeverkObjektTilTerm(behandlingstype) || '(ukjent)'}</dd>
+                <dd>{KV.objektTilTerm(behandlingstype) || '(ukjent)'}</dd>
                 <dt>Opprettelsesdato:</dt>
                 <dd>{<EnkeltDato dato={registrertDato} /> || '(ukjent)'}</dd>
               </dl>
@@ -27,7 +27,7 @@ const Behandling = ({ behandling, link }) => {
             <Nav.Column xs="12" md="4">
               <dl className="behandling__meta">
                 <dt>Behandlingsstatus:</dt>
-                <dd>{kodeverkObjektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
+                <dd>{KV.objektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
               </dl>
             </Nav.Column>
           </Nav.Column>

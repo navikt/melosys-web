@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 
 import * as MPT from '../../proptypes';
 import * as Nav from '../../utils/navFrontend';
-import Tabell from '../tabell/tabell';
+import * as KV from '../../kodeverk';
 
+import Tabell from '../tabell/tabell';
 import EnkeltDato from '../datoOmrade/enkeltDato';
-import { kodeverkObjektTilTerm } from '../../kodeverk/kodeverk';
 
 import './arbeidsavtaler.css';
 
@@ -27,11 +27,11 @@ class Arbeidsavtaler extends Component {
     const nyaa = {
       antallTimerGammeltAa: Math.trunc(nyesteArbeidsavtale.antallTimerGammeltAa),
       endringsdatoStillingsprosent: nyesteArbeidsavtale.endringsdatoStillingsprosent,
-      arbeidstidsordning: kodeverkObjektTilTerm(nyesteArbeidsavtale.arbeidstidsordning),
-      yrke: kodeverkObjektTilTerm(nyesteArbeidsavtale.yrke),
-      skipsregister: kodeverkObjektTilTerm(nyesteArbeidsavtale.skipsregister),
-      skipstype: kodeverkObjektTilTerm(nyesteArbeidsavtale.skipstype),
-      fartsomraade: kodeverkObjektTilTerm(nyesteArbeidsavtale.fartsomraade),
+      arbeidstidsordning: KV.objektTilTerm(nyesteArbeidsavtale.arbeidstidsordning),
+      yrke: KV.objektTilTerm(nyesteArbeidsavtale.yrke),
+      skipsregister: KV.objektTilTerm(nyesteArbeidsavtale.skipsregister),
+      skipstype: KV.objektTilTerm(nyesteArbeidsavtale.skipstype),
+      fartsomraade: KV.objektTilTerm(nyesteArbeidsavtale.fartsomraade),
       beregnetAntallTimerPrUke: nyesteArbeidsavtale.beregnetAntallTimerPrUke,
     };
 
