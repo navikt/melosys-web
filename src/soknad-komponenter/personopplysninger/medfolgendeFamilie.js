@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 import * as Nav from '../../utils/navFrontend';
-import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../../kodeverk/kodeverk';
 
 import './medfolgendeFamilie.css';
 

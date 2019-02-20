@@ -10,7 +10,7 @@ import * as Skjema from './skjema';
 
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import Landvelger from './skjema/landvelger';
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk';
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../kodeverk/kodeverk';
 
 import './bosted.css';
 import { fagsakSelectors } from '../ducks/fagsaker';

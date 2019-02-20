@@ -4,7 +4,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import EnkeltLand from './enkeltLand';
 import MultiLand from './multiLand';
-import { kodeverkObjektTilKode } from '../../../utils/kodeverk';
+import { kodeverkObjektTilKode } from '../../../kodeverk/kodeverk';
 
 import './landvelger.css';
 

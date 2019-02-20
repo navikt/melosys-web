@@ -1,7 +1,7 @@
 import React from 'react';
 import * as MPT from '../../proptypes';
 
-import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../../kodeverk/kodeverk';
 
 /** Forretningsadresse formatterer adressen korrekt med sjekk på
  * varierende keys i objektet.

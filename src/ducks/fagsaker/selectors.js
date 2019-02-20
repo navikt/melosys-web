@@ -3,7 +3,7 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import moment from 'moment/moment';
 
 import { soknadSelectors } from '../soknad/';
-import { kodeverkObjektTilKode } from '../../utils/kodeverk';
+import { kodeverkObjektTilKode } from '../../kodeverk/kodeverk';
 import { datoDiff } from '../../utils/dato';
 
 export const PersonSelector = createSelector(

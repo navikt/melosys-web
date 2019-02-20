@@ -9,7 +9,7 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
-import { kodeverkObjektTilTerm, kodeTilVerdi } from '../utils/kodeverk';
+import { kodeverkObjektTilTerm, kodeTilVerdi } from '../kodeverk/kodeverk';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';

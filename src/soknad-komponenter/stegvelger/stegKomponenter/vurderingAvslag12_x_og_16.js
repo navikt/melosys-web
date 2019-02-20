@@ -9,7 +9,7 @@ import PdfLenkeListe from '../../pdfLenkeListe';
 import { vilkarBegrunnelserSelector, art12_1_begrunnelserSelector, art12_2_begrunnelserSelector, art16_1_begrunnelserSelector, art16_1_fritekstSelector } from '../../../ducks/vilkar/selectors';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 
-import { kodeTilVerdi } from '../../../utils/kodeverk';
+import { kodeTilVerdi } from '../../../kodeverk/kodeverk';
 
 import './vurderingAvslag12_x_og_16.css';
 

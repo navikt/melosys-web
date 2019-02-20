@@ -6,7 +6,7 @@ import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
-import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../../kodeverk/kodeverk';
 
 import './eksisterendeSaker.css';
 

@@ -4,7 +4,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import Melosysikon from '../../melosysikon';
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../../utils/kodeverk';
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../../kodeverk/kodeverk';
 
 import './listevelger.css';
 

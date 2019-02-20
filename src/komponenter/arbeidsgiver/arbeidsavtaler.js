@@ -5,7 +5,7 @@ import * as Nav from '../../utils/navFrontend';
 import Tabell from '../tabell/tabell';
 
 import EnkeltDato from '../datoOmrade/enkeltDato';
-import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../../kodeverk/kodeverk';
 
 import './arbeidsavtaler.css';
 
