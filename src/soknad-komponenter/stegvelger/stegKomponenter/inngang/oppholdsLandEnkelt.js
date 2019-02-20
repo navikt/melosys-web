@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
-import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../utils/kodeverk';
+import { kodeverkObjektTilKode, kodeverkObjektTilTerm } from '../../../../kodeverk/kodeverk';
 import Melosysikon from '../../../melosysikon';
 
 import OppholdslandHandlingSlett from './oppholdslandHandlingSlett';

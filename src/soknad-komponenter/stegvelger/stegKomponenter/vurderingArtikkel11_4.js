@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from './../../../proptypes';
 
-import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import './vurderingArtikkel11_4.css';

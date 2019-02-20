@@ -5,7 +5,7 @@ import PT from 'prop-types';
 import * as MPT from '../../../proptypes/';
 import * as Nav from '../../../utils/navFrontend';
 
-import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
 
 import OppholdsLandListe from './inngang/oppholdsLandListe';
 

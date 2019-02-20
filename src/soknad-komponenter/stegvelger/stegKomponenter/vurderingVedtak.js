@@ -12,7 +12,7 @@ import { fagsakSelectors } from '../../../ducks/fagsaker/';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
-import { finnEnkeltKodeFraListe, kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+import { finnEnkeltKodeFraListe, kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
 import PdfLenkeListe from '../../pdfLenkeListe';
 
 import './vurderingVedtak.css';

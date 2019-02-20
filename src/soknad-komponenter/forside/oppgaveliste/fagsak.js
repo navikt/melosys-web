@@ -4,7 +4,7 @@ import * as MPT from '../../../proptypes/';
 import * as Ikoner from '../../../resources/images/index';
 import * as Nav from '../../../utils/navFrontend';
 
-import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
 
 import Behandling from './behandling';
 import PanelHeader from '../../../komponenter/panelHeader/panelHeader';

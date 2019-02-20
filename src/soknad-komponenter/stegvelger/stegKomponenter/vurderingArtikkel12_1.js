@@ -6,7 +6,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
 
-import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
 
 class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet

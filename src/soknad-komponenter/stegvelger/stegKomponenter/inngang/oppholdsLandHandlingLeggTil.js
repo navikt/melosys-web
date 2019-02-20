@@ -8,7 +8,7 @@ import * as MPT from '../../../../proptypes';
 import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
 import Melosysikon from '../../../melosysikon';
 
-import { kodeverkObjektTilKode } from '../../../../utils/kodeverk';
+import { kodeverkObjektTilKode } from '../../../../kodeverk/kodeverk';
 import { landTekstFormat } from '../../../skjema/landvelger';
 
 class LeggTilWrapper extends Component {

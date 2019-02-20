@@ -7,7 +7,7 @@ import * as MPT from '../../../proptypes/index';
 import * as Ikoner from '../../../resources/images/index';
 import * as Nav from '../../../utils/navFrontend';
 
-import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
 
 import PanelHeader from '../../../komponenter/panelHeader/panelHeader';
 import EnkeltDato from '../../../komponenter/datoOmrade/enkeltDato';

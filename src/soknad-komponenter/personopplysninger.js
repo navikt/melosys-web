@@ -8,7 +8,7 @@ import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
 
 import { beregnAlder, formatterDatoTilNorsk } from '../utils/dato';
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk';
+import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../kodeverk/kodeverk';
 
 import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';

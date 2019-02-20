@@ -7,7 +7,7 @@ import * as Ikoner from '../resources/images';
 
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import DatoOmrade from '../komponenter/datoOmrade/datoOmrade';
-import { kodeverkObjektTilTerm } from '../utils/kodeverk';
+import { kodeverkObjektTilTerm } from '../kodeverk/kodeverk';
 
 import './medlemskap.css';
 
