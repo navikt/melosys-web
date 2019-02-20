@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 
-import * as MPT from '../../proptypes/index';
+import * as MPT from '../../proptypes';
 import * as Nav from '../../utils/navFrontend';
-import Tabell from '../../komponenter/tabell/tabell';
+import Tabell from '../tabell/tabell';
 
-import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
+import EnkeltDato from '../datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
 
 import './arbeidsavtaler.css';
