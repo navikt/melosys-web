@@ -1,10 +1,10 @@
 import React from 'react';
 
-import * as MPT from '../../proptypes/index';
+import * as MPT from '../../proptypes';
 import * as Nav from '../../utils/navFrontend';
 
-import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
-import Tabell from '../../komponenter/tabell/tabell';
+import EnkeltDato from '../datoOmrade/enkeltDato';
+import Tabell from '../tabell/tabell';
 
 /** Lister alle permisjoner i form av en table.
  *
