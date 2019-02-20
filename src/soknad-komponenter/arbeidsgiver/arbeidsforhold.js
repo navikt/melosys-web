@@ -9,7 +9,7 @@ import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import Permisjoner from '../../komponenter/arbeidsgiver/permisjoner';
 import TimerTimelonnet from '../../komponenter/arbeidsgiver/timertimelonnet';
-import Utenlandsopphold from './utenlandsopphold';
+import Utenlandsopphold from '../../komponenter/arbeidsgiver/utenlandsopphold';
 import Arbeidsavtaler from './arbeidsavtaler';
 import ForretningsAdresse from '../adresser/forretningsAdresse';
 
