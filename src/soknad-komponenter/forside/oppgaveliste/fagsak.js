@@ -3,8 +3,7 @@ import * as MPT from '../../../proptypes/';
 
 import * as Ikoner from '../../../resources/images/index';
 import * as Nav from '../../../utils/navFrontend';
-
-import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
+import * as KV from '../../../kodeverk';
 
 import Behandling from './behandling';
 import PanelHeader from '../../../komponenter/panelHeader/panelHeader';
@@ -33,7 +32,7 @@ const Fagsak = ({ sak }) => {
   } = behandlingOversikter[0];
 
   const { fom, tom } = soknadsperiode;
-  const tittel = `${kodeverkObjektTilTerm(sakstype)} - ${sammensattNavn}`;
+  const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
@@ -49,7 +48,7 @@ const Fagsak = ({ sak }) => {
           <Nav.Column xs="12" md="5">
             <dl className="fagsak__meta">
               <dt>Saksstatus:</dt>
-              <dd>{kodeverkObjektTilTerm(saksstatus) || '(ukjent)'}</dd>
+              <dd>{KV.objektTilTerm(saksstatus) || '(ukjent)'}</dd>
               <dt>Søknadsperiode: </dt>
               <dd>{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
             </dl>

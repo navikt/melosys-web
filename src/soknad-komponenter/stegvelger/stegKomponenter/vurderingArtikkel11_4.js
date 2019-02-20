@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from './../../../proptypes';
 
-import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
+import * as KV from '../../../kodeverk';
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import './vurderingArtikkel11_4.css';
@@ -89,7 +89,7 @@ class VurderingArtikkel11_4 extends Component {
     const { valgtVilkar } = this.state;
     const { harAvklaring, visNISAvsnitt } = tilstand;
 
-    const oppholdsLandSetning = arrayTilKonjunksjon(oppholdsland.map(land => kodeverkObjektTilTerm(land)));
+    const oppholdsLandSetning = arrayTilKonjunksjon(oppholdsland.map(land => KV.objektTilTerm(land)));
 
     const virksomhetLandListe = valgteArbeidsgivere
       .reduce((samling, arbeidsgiver) => {
@@ -112,7 +112,7 @@ class VurderingArtikkel11_4 extends Component {
                 <dt>Arbeidsgiver / selvstendig næringsdrivende har virksomhet i:</dt>
                 <dd>{virksomhetsLandSetning}</dd>
                 <dt>Søker er bosatt i:</dt>
-                <dd>{kodeverkObjektTilTerm(bostedsland)}</dd>
+                <dd>{KV.objektTilTerm(bostedsland)}</dd>
               </dl>
             </Nav.Column>
           </Nav.Row>

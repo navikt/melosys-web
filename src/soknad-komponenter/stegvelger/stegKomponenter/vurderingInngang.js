@@ -4,8 +4,7 @@ import PT from 'prop-types';
 
 import * as MPT from '../../../proptypes/';
 import * as Nav from '../../../utils/navFrontend';
-
-import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
+import * as KV from '../../../kodeverk';
 
 import OppholdsLandListe from './inngang/oppholdsLandListe';
 
@@ -22,7 +21,7 @@ const VurderingInngang = props => {
       <Nav.Undertittel>Kontroller inngangsvilkår</Nav.Undertittel>
       <ul className="betingelser__liste">
         <li className="liste__element liste__element--oppfylt">
-          { kodeverkObjektTilTerm(vurdering) }
+          { KV.objektTilTerm(vurdering) }
         </li>
         <li className="liste__element liste__element--varsel">
           Sjekk at land er innenfor et territorium / område som dekkes av forordningen.

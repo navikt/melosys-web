@@ -9,7 +9,7 @@ import PdfLenkeListe from '../../pdfLenkeListe';
 import { vilkarBegrunnelserSelector, art12_1_begrunnelserSelector, art12_2_begrunnelserSelector, art16_1_begrunnelserSelector, art16_1_fritekstSelector } from '../../../ducks/vilkar/selectors';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 
-import { kodeTilVerdi } from '../../../kodeverk/kodeverk';
+import * as KV from '../../../kodeverk';
 
 import './vurderingAvslag12_x_og_16.css';
 
@@ -24,7 +24,7 @@ const Begrunnelser = ({
       {label}
     </Nav.Element>
     {
-      valgteBegrunnelser.map(begrunnelse => <div className="begrunnelse" key={begrunnelse}>{kodeTilVerdi(begrunnelse, muligeBegrunnelser)}</div>)
+      valgteBegrunnelser.map(begrunnelse => <div className="begrunnelse" key={begrunnelse}>{KV.kodeTilTerm(begrunnelse, muligeBegrunnelser)}</div>)
     }
     {
       fritekst && <div className="begrunnelse">{fritekst}</div>

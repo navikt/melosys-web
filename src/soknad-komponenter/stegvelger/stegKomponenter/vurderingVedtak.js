@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
+import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 
@@ -12,7 +13,6 @@ import { fagsakSelectors } from '../../../ducks/fagsaker/';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
-import { finnEnkeltKodeFraListe, kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
 import PdfLenkeListe from '../../pdfLenkeListe';
 
 import './vurderingVedtak.css';
@@ -43,7 +43,7 @@ const VurderingVedtak = props => {
   } = lovvalget;
 
   const antallManeder = datoDiffMenneskelig(fomDato, tomDato);
-  const lovvalgSomKodeTerm = finnEnkeltKodeFraListe(lovvalgBestemmelse, alleLovvalg);
+  const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgBestemmelse, alleLovvalg);
 
   const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.term).join(', ');
 
@@ -54,7 +54,7 @@ const VurderingVedtak = props => {
 
   return (
     <div className="vedtak">
-      <Nav.Undertittel>Medlemskap i norsk folketrygd {lovvalgsResultat} etter<br />{ kodeverkObjektTilTerm(lovvalgSomKodeTerm) }:</Nav.Undertittel>
+      <Nav.Undertittel>Medlemskap i norsk folketrygd {lovvalgsResultat} etter<br />{ KV.objektTilTerm(lovvalgSomKodeTerm) }:</Nav.Undertittel>
       <div>
         <Nav.Row className="vedtak__oppsummering">
           <Nav.Column xs="6">
