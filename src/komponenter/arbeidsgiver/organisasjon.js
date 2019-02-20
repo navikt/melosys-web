@@ -2,12 +2,12 @@ import React from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes/index';
-import * as Ikoner from '../../resources/images/index';
+import * as MPT from '../../proptypes';
+import * as Ikoner from '../../resources/images';
 
-import PanelHeader from '../../komponenter/panelHeader/panelHeader';
+import PanelHeader from '../panelHeader/panelHeader';
 
-import ForretningsAdresse from '../../komponenter/adresser/forretningsAdresse';
+import ForretningsAdresse from '../adresser/forretningsAdresse';
 
 import './organisasjon.css';
 
