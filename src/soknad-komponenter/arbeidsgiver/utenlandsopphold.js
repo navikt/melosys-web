@@ -4,7 +4,7 @@ import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
 
 import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
-import Tabell from '../tabell/tabell';
+import Tabell from '../../komponenter/tabell/tabell';
 
 /** Lister alle timer utenlandsopphold i form av en table.
  *

@@ -3,7 +3,7 @@ import ReactHighcharts from 'react-highcharts';
 
 import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
-import Tabell from '../tabell/tabell';
+import Tabell from '../../komponenter/tabell/tabell';
 import * as Ikoner from '../../resources/images';
 
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';

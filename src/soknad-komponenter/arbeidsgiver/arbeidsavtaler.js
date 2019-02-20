@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
-import Tabell from '../tabell/tabell';
+import Tabell from '../../komponenter/tabell/tabell';
 
 import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm } from '../../utils/kodeverk';
