@@ -4,7 +4,7 @@ import PT from 'prop-types';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
-import Fagsak from '../felles-komponenter/forside/oppgaveliste/fagsak';
+import Fagsak from '../soknad-komponenter/forside/oppgaveliste/fagsak';
 
 import { sokSelectors, sokOperations } from '../ducks/sok';
 
