@@ -2,9 +2,9 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 
+import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import Melosysikon from '../../melosysikon';
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../../../kodeverk/kodeverk';
 
 import './listevelger.css';
 
@@ -62,14 +62,14 @@ class ListevelgerFlervalg extends Component {
 
   kodeTilVerdi = kode => {
     const { muligeValg = [] } = this.props;
-    const valgtKodeverkObjekt = muligeValg.find(item => kodeverkObjektTilKode(item) === kode);
-    return valgtKodeverkObjekt && kodeverkObjektTilTerm(valgtKodeverkObjekt);
+    const valgtKodeverkObjekt = muligeValg.find(item => KV.objektTilKode(item) === kode);
+    return valgtKodeverkObjekt && KV.objektTilTerm(valgtKodeverkObjekt);
   };
 
   verdiTilKode = verdi => {
     const { muligeValg = [] } = this.props;
-    const valgtKodeverkObjekt = muligeValg.find(item => kodeverkObjektTilTerm(item) === verdi);
-    return valgtKodeverkObjekt && kodeverkObjektTilKode(valgtKodeverkObjekt);
+    const valgtKodeverkObjekt = muligeValg.find(item => KV.objektTilTerm(item) === verdi);
+    return valgtKodeverkObjekt && KV.objektTilKode(valgtKodeverkObjekt);
   };
 
   erAlleredeLagtTil = verdi => {
@@ -191,7 +191,7 @@ class ListevelgerFlervalg extends Component {
           </Nav.Knapp>
         </div>
         <datalist id={`dataliste-${fields.name}`}>
-          {muligeValg.map(valg => <option key={uuid()} value={kodeverkObjektTilTerm(valg)} />)}
+          {muligeValg.map(valg => <option key={uuid()} value={KV.objektTilTerm(valg)} />)}
         </datalist>
       </div>
     );
