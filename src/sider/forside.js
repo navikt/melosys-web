@@ -6,10 +6,10 @@ import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
 
 // import Statistikk from '../felles-komponenter/forside/statistikk';
-import Journalforing from '../felles-komponenter/forside/journalforing';
-import Behandling from '../felles-komponenter/forside/behandling';
-import MineOppgaver from '../felles-komponenter/forside/mineoppgaver';
-import SokSkjema from '../felles-komponenter/forside/sokskjema';
+import Journalforing from '../soknad-komponenter/forside/journalforing';
+import Behandling from '../soknad-komponenter/forside/behandling';
+import MineOppgaver from '../soknad-komponenter/forside/mineoppgaver';
+import SokSkjema from '../soknad-komponenter/forside/sokskjema';
 
 import './forside.css';
 
