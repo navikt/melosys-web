@@ -3,9 +3,8 @@ import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
-
+import * as KV from '../../../kodeverk';
 import { kodeTilObjekt, landTekstFormat } from './';
-import { kodeverkObjektTilKode } from '../../../kodeverk/kodeverk';
 
 import * as MPT from '../../../proptypes';
 
@@ -19,7 +18,7 @@ const MultiLandEnkelt = ({ landObjekt, slettLandHandler }) => (
     <Nav.Knapp
       mini
       className="landliste__linje__knapp"
-      onClick={e => slettLandHandler(e, kodeverkObjektTilKode(landObjekt))}
+      onClick={e => slettLandHandler(e, KV.objektTilKode(landObjekt))}
     >Fjern
     </Nav.Knapp>
   </div>
