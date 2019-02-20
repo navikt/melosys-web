@@ -35,7 +35,7 @@ class VurderingArtikkel12_2 extends Component {
   componentWillUnmount() {
     const { settSkjemaVerdi } = this.props;
     settSkjemaVerdi('vilkar.art12_2', null);
-    settSkjemaVerdi('vilkar.art16_2', null);
+    settSkjemaVerdi('vilkar.art16_1', null);
     settSkjemaVerdi('vilkar.art12_2_begrunnelser', []);
     settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
     settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
@@ -152,7 +152,7 @@ class VurderingArtikkel12_2 extends Component {
           </Nav.Row>
         </div>
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     );
