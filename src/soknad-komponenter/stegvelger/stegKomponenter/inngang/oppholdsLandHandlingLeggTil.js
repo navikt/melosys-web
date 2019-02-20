@@ -2,13 +2,13 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 
+import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
 import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
 import Melosysikon from '../../../melosysikon';
 
-import { kodeverkObjektTilKode } from '../../../../kodeverk/kodeverk';
 import { landTekstFormat } from '../../../skjema/landvelger';
 
 class LeggTilWrapper extends Component {
@@ -110,7 +110,7 @@ class OppholdsLandLeggTil extends Component {
         </div>
         <div className="oppholdsland__dataliste">
           <datalist id="alleLand">
-            {alleLandKoder.map(item => (<option key={kodeverkObjektTilKode(item)} value={landTekstFormat(item)} />))}
+            {alleLandKoder.map(item => (<option key={KV.objektTilKode(item)} value={landTekstFormat(item)} />))}
           </datalist>
         </div>
       </div>
