@@ -10,7 +10,7 @@ import { soknadSelectors, soknadActions } from '../ducks/soknad';
 import { OrganisasjonOperations, OrganisasjonSelectors } from '../ducks/organisasjoner';
 import { formSelectors } from '../ducks/form/';
 
-import Organisasjon from './arbeidsgiver/organisasjon';
+import Organisasjon from '../komponenter/arbeidsgiver/organisasjon';
 import Arbeidsforholdene from '../komponenter/arbeidsgiver/arbeidsforhold';
 import Inntekt from './arbeidsgiver/inntekt';
 import EkstraArbeidsgivere from './arbeidsgiver/ekstraArbeidsgivere';
