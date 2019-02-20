@@ -2,15 +2,15 @@ import React from 'react';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
+import * as KV from '../../../kodeverk';
 import EnkeltLand from './enkeltLand';
 import MultiLand from './multiLand';
-import { kodeverkObjektTilKode } from '../../../kodeverk/kodeverk';
 
 import './landvelger.css';
 
 /** Hjelpere som deles av hovedkomponent og subkomponentene EnkeltLand og MultiLand */
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
-const kodeTilObjekt = (kode, alleLandkoder) => alleLandkoder.find(enkeltKode => kodeverkObjektTilKode(enkeltKode) === kode);
+const kodeTilObjekt = (kode, alleLandkoder) => alleLandkoder.find(enkeltKode => KV.objektTilKode(enkeltKode) === kode);
 
 const uuid = require('uuid/v4');
 
