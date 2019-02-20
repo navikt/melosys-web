@@ -13,6 +13,7 @@ export const FANE_STATUS = {
 };
 
 export const STEG = {
+  AVSLAG_12_X_OG_16: 'AVSLAG_12_X_OG_16',
   ARTIKKEL_16: 'ARTIKKEL_16',
   ARTIKKEL_12_1: 'ARTIKKEL_12_1',
   ARTIKKEL_12_2: 'ARTIKKEL_12_2',
@@ -38,6 +39,7 @@ export const STEG = {
 };
 
 export const StegTilKontroller = {
+  AVSLAG_12_X_OG_16: 'Avslag_12_x_og_16',
   ARTIKKEL_16: 'Artikkel16',
   ARTIKKEL_12_1: 'Artikkel12_1',
   ARTIKKEL_12_2: 'Artikkel12_2',

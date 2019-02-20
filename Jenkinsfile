@@ -72,7 +72,7 @@ node {
     }
     else if (prNummer != null) {
       // Hvis det eksisterer et token så betyr det at dette er en pull-request
-      buildVersion = "${semver}-PR${prNummer}-SNAPSHOT"
+      buildVersion = "${semver}-PR-${prNummer}-SNAPSHOT"
     }
     else {
       buildVersion = "${semver}-SNAPSHOT"

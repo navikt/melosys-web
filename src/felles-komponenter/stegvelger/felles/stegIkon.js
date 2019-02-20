@@ -24,7 +24,7 @@ const ikonVelger = (id, status, aktivtSteg) => {
     },
   };
 
-  if (id === STEG.VEDTAK || STEG.ENDRET_PERIODE) {
+  if (id === STEG.VEDTAK || id === STEG.ENDRET_PERIODE || id === STEG.AVSLAG_12_X_OG_16) {
     return IKONER.VEDTAK[status];
   }
 

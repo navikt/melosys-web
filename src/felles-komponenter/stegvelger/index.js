@@ -46,8 +46,6 @@ class Stegvelger extends Component {
     const { didUpdateAfterLastStep } = this.state;
     const shouldUpdate = (formHasSetteled && !didUpdateAfterLastStep);
 
-    // console.log(formHasSetteled, didUpdateAfterLastStep);
-
     if (!shouldUpdate) { return; }
 
     this.setState({ didUpdateAfterLastStep: true });
@@ -139,6 +137,7 @@ class Stegvelger extends Component {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
+      lagreLovvalgsperioder: this.lagreLovvalgsperioderHandler,
       oppdaterOgLagreBehandlinger: this.oppdaterOgLagreBehandlinger,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
       endrePeriode: this.endrePeriode,
