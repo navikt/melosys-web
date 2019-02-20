@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
+import * as KV from '../kodeverk';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
 
 import { beregnAlder, formatterDatoTilNorsk } from '../utils/dato';
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../kodeverk/kodeverk';
 
 import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
@@ -34,7 +34,7 @@ const ikonFraKjonn = kjoenn => {
 };
 
 const PersonMerkelapper = ({ personStatus, erEgenAnsatt }) => {
-  const personStatusKode = kodeverkObjektTilKode(personStatus);
+  const personStatusKode = KV.objektTilKode(personStatus);
   const erPersonDod = (personStatusKode === 'DOD' || personStatusKode === 'DØD' || personStatusKode === 'DØDD');
 
   return (
@@ -92,7 +92,7 @@ class Personopplysninger extends Component {
         <Nav.EkspanderbartpanelBase
           heading={
             <div className="personopplysninger__panelheader">
-              <PanelHeader ikon={ikonFraKjonn(kodeverkObjektTilKode(kjoenn))} tittel={`${sammensattNavn} (${beregnAlder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
+              <PanelHeader ikon={ikonFraKjonn(KV.objektTilKode(kjoenn))} tittel={`${sammensattNavn} (${beregnAlder(foedselsdato)})`} undertittel={`Fødselsnummer: ${fnr}`} />
               <PersonMerkelapper personStatus={personStatus} erEgenAnsatt={erEgenAnsatt} />
             </div>}
           ariaTittel="Panel for personinformasjon">
@@ -103,10 +103,10 @@ class Personopplysninger extends Component {
                 <dl className="person__detaljer">
                   <dt>Fnr / dnr:</dt><dd>{fnr}</dd>
                   <dt>Statsborgerskap pr {formatterDatoTilNorsk(statsborgerskapDato)}:</dt>
-                  <dd>{kodeverkObjektTilTerm(statsborgerskap)}</dd>
+                  <dd>{KV.objektTilTerm(statsborgerskap)}</dd>
                   <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
-                  <dt>Kjønn:</dt><dd>{kodeverkObjektTilTerm(kjoenn)}</dd>
-                  <dt>Sivilstand:</dt><dd>{kodeverkObjektTilTerm(sivilstand)}</dd>
+                  <dt>Kjønn:</dt><dd>{KV.objektTilTerm(kjoenn)}</dd>
+                  <dt>Sivilstand:</dt><dd>{KV.objektTilTerm(sivilstand)}</dd>
                 </dl>
               </Nav.Column>
               <Nav.Column xs="6">
