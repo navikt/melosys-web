@@ -2,7 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 
-import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
+import * as KV from '../../../kodeverk';
 
 import './listevelger.css';
 
@@ -41,7 +41,7 @@ const ListevelgerEnkelt = ({
         disabled={disabled}
       />
       <datalist id={`dataliste-${inputProps.name}`}>
-        {muligeValg.map(valg => <option key={uuid()} value={kodeverkObjektTilTerm(valg)} />)}
+        {muligeValg.map(valg => <option key={uuid()} value={KV.objektTilTerm(valg)} />)}
       </datalist>
     </div>
   );

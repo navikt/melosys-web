@@ -6,8 +6,7 @@ import PT from 'prop-types';
 import * as MPT from '../../../proptypes/index';
 import * as Ikoner from '../../../resources/images/index';
 import * as Nav from '../../../utils/navFrontend';
-
-import { kodeverkObjektTilTerm } from '../../../kodeverk/kodeverk';
+import * as KV from '../../../kodeverk';
 
 import PanelHeader from '../../../komponenter/panelHeader/panelHeader';
 import EnkeltDato from '../../../komponenter/datoOmrade/enkeltDato';
@@ -55,7 +54,7 @@ const BehandlingOppgave = ({ sak }) => {
 
   const { behandlingsstatus } = behandling;
   const { fom, tom } = soknadsperiode;
-  const tittel = `${kodeverkObjektTilTerm(sakstype)} - ${sammensattNavn}`;
+  const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn}`;
   const link = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
@@ -77,7 +76,7 @@ const BehandlingOppgave = ({ sak }) => {
               <Nav.Column xs="12" md="6">
                 <dl className="behandlingOppgave__meta">
                   <dt className="behandlingOppgave__meta__term">Behandlingsstatus:</dt>
-                  <dd className="behandlingOppgave__meta__detalj">{kodeverkObjektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
+                  <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
                   <dt className="behandlingOppgave__meta__term">Frist:</dt>
                   <dd className="behandlingOppgave__meta__detalj">{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
                   <dt className="behandlingOppgave__meta__term">Sist oppdatert:</dt>
