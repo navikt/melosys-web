@@ -1,9 +1,9 @@
 // selector(s)
 import { createSelector, createStructuredSelector } from 'reselect';
 import moment from 'moment/moment';
+import * as KV from '../../kodeverk';
 
 import { soknadSelectors } from '../soknad/';
-import { kodeverkObjektTilKode } from '../../kodeverk/kodeverk';
 import { datoDiff } from '../../utils/dato';
 
 export const PersonSelector = createSelector(
@@ -169,9 +169,9 @@ export const MedlemskapSelector = createSelector(
     if (!medlemsperiode) return null;
 
     return {
-      perioderMed: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.periodetype) === PERIODE_MED_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) === GYLDIG_MEDLEMSKAP),
-      perioderUten: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.periodetype) === PERIODE_UTEN_MEDLEMSKAP && kodeverkObjektTilKode(periode.status) !== AVVIST_MEDLEMSKAP),
-      perioderUavklart: medlemsperiode.filter(periode => kodeverkObjektTilKode(periode.status) === UAVKLART_MEDLEMSKAP),
+      perioderMed: medlemsperiode.filter(periode => KV.objektTilKode(periode.periodetype) === PERIODE_MED_MEDLEMSKAP && KV.objektTilKode(periode.status) === GYLDIG_MEDLEMSKAP),
+      perioderUten: medlemsperiode.filter(periode => KV.objektTilKode(periode.periodetype) === PERIODE_UTEN_MEDLEMSKAP && KV.objektTilKode(periode.status) !== AVVIST_MEDLEMSKAP),
+      perioderUavklart: medlemsperiode.filter(periode => KV.objektTilKode(periode.status) === UAVKLART_MEDLEMSKAP),
     };
   }
 );

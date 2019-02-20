@@ -2,11 +2,11 @@ import React from 'react';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
+import * as KV from '../../kodeverk';
 import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
-import { kodeverkObjektTilTerm } from '../../kodeverk/kodeverk';
 
 import './eksisterendeSaker.css';
 
@@ -30,13 +30,13 @@ const EnkeltSak = props => {
     <div className="enkeltSak__meta">
       <dl>
         <dt>Sakstype: </dt>
-        <dd>{kodeverkObjektTilTerm(sakstype)}</dd>
+        <dd>{KV.objektTilTerm(sakstype)}</dd>
         <dt>Saksstatus: </dt>
-        <dd>{kodeverkObjektTilTerm(saksstatus)}</dd>
+        <dd>{KV.objektTilTerm(saksstatus)}</dd>
         <dt>Behandlingstype: </dt>
-        <dd>{kodeverkObjektTilTerm(behandlingstype)}</dd>
+        <dd>{KV.objektTilTerm(behandlingstype)}</dd>
         <dt>Behandlingsstatus: </dt>
-        <dd>{kodeverkObjektTilTerm(behandlingsstatus)}</dd>
+        <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
         <dt>Opprettet:</dt>
         <dd>{<EnkeltDato dato={opprettetDato} />}</dd>
         <dt>Søknadsperiode: </dt>

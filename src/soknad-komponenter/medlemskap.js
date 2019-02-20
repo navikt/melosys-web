@@ -1,13 +1,13 @@
 import React from 'react';
 import PT from 'prop-types';
 
+import * as KV from '../kodeverk';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import DatoOmrade from '../komponenter/datoOmrade/datoOmrade';
-import { kodeverkObjektTilTerm } from '../kodeverk/kodeverk';
 
 import './medlemskap.css';
 
@@ -41,21 +41,21 @@ function MedlemskapEnkeltPeriode({ enkeltPeriode }) {
         <Nav.Column xs="8">
           <dl className="medlemskap__detaljer">
             <dt>Periodetype:</dt>
-            <dd>{kodeverkObjektTilTerm(periodetype)}</dd>
+            <dd>{KV.objektTilTerm(periodetype)}</dd>
             <dt>Status:</dt>
-            <dd>{kodeverkObjektTilTerm(status)}</dd>
+            <dd>{KV.objektTilTerm(status)}</dd>
             <dt>Grunnlagstype:</dt>
-            <dd>{kodeverkObjektTilTerm(grunnlagstype)}</dd>
+            <dd>{KV.objektTilTerm(grunnlagstype)}</dd>
             <dt>Land:</dt>
-            <dd>{kodeverkObjektTilTerm(land)}</dd>
+            <dd>{KV.objektTilTerm(land)}</dd>
             <dt>Lovvalg:</dt>
-            <dd>{kodeverkObjektTilTerm(lovvalg)}</dd>
+            <dd>{KV.objektTilTerm(lovvalg)}</dd>
             <dt>Trygdedekning:</dt>
-            <dd>{kodeverkObjektTilTerm(trygdedekning)}</dd>
+            <dd>{KV.objektTilTerm(trygdedekning)}</dd>
             <dt>Kildedokumenttype:</dt>
-            <dd>{kodeverkObjektTilTerm(kildedokumenttype)}</dd>
+            <dd>{KV.objektTilTerm(kildedokumenttype)}</dd>
             <dt>Kilde:</dt>
-            <dd>{kodeverkObjektTilTerm(kilde)}</dd>
+            <dd>{KV.objektTilTerm(kilde)}</dd>
           </dl>
         </Nav.Column>
         {/* SLUTT DETALJER */}
