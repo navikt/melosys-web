@@ -69,8 +69,10 @@ export class VurderingEndrePeriode extends React.Component {
       const { lovvalgsPeriode: { fomDato } } = this.props;
       const { begrunnelsekode, nyTomDato } = this.state;
       this.props.endrePeriode({
-        fomdato: fomDato,
-        tomdato: formatterDatoTilISO(nyTomDato),
+        periode: {
+          fomdato: fomDato,
+          tomdato: formatterDatoTilISO(nyTomDato),
+        },
         begrunnelsekode,
       });
     }
