@@ -7,7 +7,7 @@ import * as Ikoner from '../../resources/images/index';
 
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 
-import ForretningsAdresse from '../adresser/forretningsAdresse';
+import ForretningsAdresse from '../../komponenter/adresser/forretningsAdresse';
 
 import './organisasjon.css';
 

@@ -11,7 +11,7 @@ import Permisjoner from '../../komponenter/arbeidsgiver/permisjoner';
 import TimerTimelonnet from '../../komponenter/arbeidsgiver/timertimelonnet';
 import Utenlandsopphold from '../../komponenter/arbeidsgiver/utenlandsopphold';
 import Arbeidsavtaler from '../../komponenter/arbeidsgiver/arbeidsavtaler';
-import ForretningsAdresse from '../adresser/forretningsAdresse';
+import ForretningsAdresse from '../../komponenter/adresser/forretningsAdresse';
 
 import { boolTilNorsk } from '../../utils/streng';
 import { datoDiff } from '../../utils/dato';

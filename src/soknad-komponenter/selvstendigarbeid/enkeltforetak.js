@@ -9,7 +9,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker';
 import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../../constants';
 
-import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
+import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
 
 
 import './selvstendigArbeid.css';
