@@ -8,7 +8,7 @@ import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 
-import PanelHeader from './panelHeader/panelHeader';
+import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import Landvelger from './skjema/landvelger';
 import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk';
 

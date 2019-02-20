@@ -7,7 +7,7 @@ import * as Nav from '../../../utils/navFrontend';
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
 import Behandling from './behandling';
-import PanelHeader from '../../panelHeader/panelHeader';
+import PanelHeader from '../../../komponenter/panelHeader/panelHeader';
 import EnkeltDato from '../../../komponenter/datoOmrade/enkeltDato';
 
 import './fagsak.css';

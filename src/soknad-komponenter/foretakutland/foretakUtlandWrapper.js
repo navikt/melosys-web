@@ -7,7 +7,7 @@ import * as Ikoner from '../../resources/images';
 
 import EnkeltForetak from './enkeltforetak';
 
-import PanelHeader from '../panelHeader/panelHeader';
+import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 
 import { fagsakSelectors } from '../../ducks/fagsaker';
 import './foretakUtland.css';

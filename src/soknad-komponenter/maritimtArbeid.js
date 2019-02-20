@@ -13,7 +13,7 @@ import { formSelectors } from '../ducks/form/';
 import { fagsakSelectors } from '../ducks/fagsaker/';
 
 import LandVelger from './skjema/landvelger';
-import PanelHeader from './panelHeader/panelHeader';
+import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
 import './maritimtArbeid.css';
 

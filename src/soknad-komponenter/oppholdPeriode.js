@@ -10,7 +10,7 @@ import * as Ikoner from '../resources/images';
 import { fagsakSelectors } from '../ducks/fagsaker/';
 import { soknadSelectors, soknadOperations } from '../ducks/soknad';
 
-import PanelHeader from './panelHeader/panelHeader';
+import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
 import { formatterDatoTilNorsk, vaskInputDato, formatterDatoTilISO, erGyldigPeriode } from '../utils/dato';
 
