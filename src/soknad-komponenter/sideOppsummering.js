@@ -4,12 +4,12 @@ import PT from 'prop-types';
 import moment from 'moment/moment';
 import * as MKV from 'melosys-kodeverk';
 
+import * as KV from '../kodeverk';
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
 import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
-import { kodeverkObjektTilTerm, kodeTilVerdi } from '../kodeverk/kodeverk';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
@@ -54,7 +54,7 @@ class SideOppsummering extends Component {
       return false;
     }
     const { oppdaterBehandlingsStatus, oppsummering: { behandlingID } } = this.props;
-    const term = kodeTilVerdi(kode, MKV.KTObjects.behandlinger.status);
+    const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.status);
     const nystatus = { kode, term };
     Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nystatus);
@@ -165,7 +165,7 @@ class SideOppsummering extends Component {
             <Nav.Column xs="12">
               <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
                 <dt>Søknadstype:</dt>
-                <dd>{kodeverkObjektTilTerm(sakstype)}</dd>
+                <dd>{KV.objektTilTerm(sakstype)}</dd>
                 <dt>Fullt navn:</dt>
                 <dd>{sammensattNavn}</dd>
                 <dt>Fnr / dnr:</dt>
@@ -173,9 +173,9 @@ class SideOppsummering extends Component {
                 <dt>Saksnummer:</dt>
                 <dd>{saksnummer || '-'}</dd>
                 <dt>Saksstatus:</dt>
-                <dd>{kodeverkObjektTilTerm(saksstatus)}</dd>
+                <dd>{KV.objektTilTerm(saksstatus)}</dd>
                 <dt>Behandlingsstatus:</dt>
-                <dd>{kodeverkObjektTilTerm(behandlingsstatus)}</dd>
+                <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
                 <dt>Arbeids- / Oppholdsland:</dt>
                 <dd>{gyldigeOppholdsLandSetning}</dd>
                 <dt>Periode:</dt>

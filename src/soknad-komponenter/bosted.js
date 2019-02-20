@@ -10,7 +10,8 @@ import * as Skjema from './skjema';
 
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import Landvelger from './skjema/landvelger';
-import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../kodeverk/kodeverk';
+
+import * as KV from '../kodeverk';
 
 import './bosted.css';
 import { fagsakSelectors } from '../ducks/fagsaker';
@@ -72,7 +73,7 @@ const Bosted = props => {
                 bredde="xl"
                 disabled={!redigerbart}
               >
-                {MKV.KTObjects.finansiering.map(valg => <option key={uuid()} value={kodeverkObjektTilKode(valg)}>{kodeverkObjektTilTerm(valg)}</option>)}
+                {MKV.KTObjects.finansiering.map(valg => <option key={uuid()} value={KV.objektTilKode(valg)}>{KV.objektTilTerm(valg)}</option>)}
               </Skjema.Select>
               <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
                 <Skjema.Radio disabled={!redigerbart} feltNavn="intensjonOmRetur" value={BOOLSK.SANN} label="Ja" />
