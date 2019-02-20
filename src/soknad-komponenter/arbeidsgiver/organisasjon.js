@@ -5,7 +5,7 @@ import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/index';
 import * as Ikoner from '../../resources/images/index';
 
-import PanelHeader from '../panelHeader/panelHeader';
+import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 
 import ForretningsAdresse from '../adresser/forretningsAdresse';
 

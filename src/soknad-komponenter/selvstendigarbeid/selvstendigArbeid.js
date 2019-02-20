@@ -13,7 +13,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker';
 import SelvstendigeForetak from './selvstendigeforetak';
 import { BOOLSK } from '../../constants';
 
-import PanelHeader from '../panelHeader/panelHeader';
+import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../ducks/organisasjoner';
 

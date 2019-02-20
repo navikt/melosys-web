@@ -6,7 +6,7 @@ import * as Nav from '../../utils/navFrontend';
 import Tabell from '../tabell/tabell';
 import * as Ikoner from '../../resources/images';
 
-import PanelHeader from '../panelHeader/panelHeader';
+import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import { formatterKortDatoTilNorsk } from '../../utils/dato';
 
 import './inntekt.css';

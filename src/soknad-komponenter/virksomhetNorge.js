@@ -6,7 +6,7 @@ import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 
-import PanelHeader from './panelHeader/panelHeader';
+import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
 import { BOOLSK } from '../constants';
 import { fagsakSelectors } from '../ducks/fagsaker/';

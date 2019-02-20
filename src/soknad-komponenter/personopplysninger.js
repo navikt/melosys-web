@@ -11,7 +11,7 @@ import { beregnAlder, formatterDatoTilNorsk } from '../utils/dato';
 import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk';
 
 import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
-import PanelHeader from './panelHeader/panelHeader';
+import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
 import BostedsAdresse from './adresser/bostedsAdresse';
 import LandVelger from './skjema/landvelger';

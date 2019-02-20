@@ -6,7 +6,7 @@ import * as Ikoner from '../../resources/images';
 
 import DatoOmrade from '../../komponenter/datoOmrade/datoOmrade';
 import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
-import PanelHeader from '../panelHeader/panelHeader';
+import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';

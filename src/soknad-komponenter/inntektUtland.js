@@ -8,7 +8,7 @@ import * as MPT from '../proptypes/index';
 import * as Skjema from './skjema/index';
 
 import { fagsakSelectors } from '../ducks/fagsaker/';
-import PanelHeader from './panelHeader/panelHeader';
+import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import './inntektUtland.css';
 
 function Inntekt (props) {
