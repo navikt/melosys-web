@@ -3,7 +3,7 @@ import React from 'react';
 import * as MPT from '../../proptypes/index';
 import * as Nav from '../../utils/navFrontend';
 
-import EnkeltDato from '../datoOmrade/enkeltDato';
+import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import Tabell from '../tabell/tabell';
 
 /** Lister alle timer utenlandsopphold i form av en table.

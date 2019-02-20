@@ -4,8 +4,8 @@ import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/index';
 import * as Ikoner from '../../resources/images';
 
-import DatoOmrade from '../datoOmrade/datoOmrade';
-import EnkeltDato from '../datoOmrade/enkeltDato';
+import DatoOmrade from '../../komponenter/datoOmrade/datoOmrade';
+import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../panelHeader/panelHeader';
 import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';

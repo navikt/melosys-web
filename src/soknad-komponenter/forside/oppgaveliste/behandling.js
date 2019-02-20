@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 import * as Nav from '../../../utils/navFrontend';
 import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
-import EnkeltDato from '../../datoOmrade/enkeltDato';
+import EnkeltDato from '../../../komponenter/datoOmrade/enkeltDato';
 
 import './behandling.css';
 

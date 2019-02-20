@@ -8,7 +8,7 @@ import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
-import EnkeltDato from './datoOmrade/enkeltDato';
+import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
 import { kodeverkObjektTilTerm, kodeTilVerdi } from '../utils/kodeverk';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';

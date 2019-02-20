@@ -8,7 +8,7 @@ import { kodeverkObjektTilTerm } from '../../../utils/kodeverk';
 
 import Behandling from './behandling';
 import PanelHeader from '../../panelHeader/panelHeader';
-import EnkeltDato from '../../datoOmrade/enkeltDato';
+import EnkeltDato from '../../../komponenter/datoOmrade/enkeltDato';
 
 import './fagsak.css';
 

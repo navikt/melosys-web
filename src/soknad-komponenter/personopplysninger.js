@@ -10,7 +10,7 @@ import * as Ikoner from '../resources/images';
 import { beregnAlder, formatterDatoTilNorsk } from '../utils/dato';
 import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk';
 
-import EnkeltDato from './datoOmrade/enkeltDato';
+import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
 import PanelHeader from './panelHeader/panelHeader';
 
 import BostedsAdresse from './adresser/bostedsAdresse';
