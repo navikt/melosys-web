@@ -1,17 +1,17 @@
 import React from 'react';
 
 import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes/index';
+import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 
-import DatoOmrade from '../../komponenter/datoOmrade/datoOmrade';
-import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
-import PanelHeader from '../../komponenter/panelHeader/panelHeader';
-import Permisjoner from '../../komponenter/arbeidsgiver/permisjoner';
-import TimerTimelonnet from '../../komponenter/arbeidsgiver/timertimelonnet';
-import Utenlandsopphold from '../../komponenter/arbeidsgiver/utenlandsopphold';
-import Arbeidsavtaler from '../../komponenter/arbeidsgiver/arbeidsavtaler';
-import ForretningsAdresse from '../../komponenter/adresser/forretningsAdresse';
+import DatoOmrade from '../datoOmrade/datoOmrade';
+import EnkeltDato from '../datoOmrade/enkeltDato';
+import PanelHeader from '../panelHeader/panelHeader';
+import Permisjoner from './permisjoner';
+import TimerTimelonnet from './timertimelonnet';
+import Utenlandsopphold from './utenlandsopphold';
+import Arbeidsavtaler from './arbeidsavtaler';
+import ForretningsAdresse from '../adresser/forretningsAdresse';
 
 import { boolTilNorsk } from '../../utils/streng';
 import { datoDiff } from '../../utils/dato';

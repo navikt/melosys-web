@@ -11,7 +11,7 @@ import { OrganisasjonOperations, OrganisasjonSelectors } from '../ducks/organisa
 import { formSelectors } from '../ducks/form/';
 
 import Organisasjon from './arbeidsgiver/organisasjon';
-import Arbeidsforholdene from './arbeidsgiver/arbeidsforhold';
+import Arbeidsforholdene from '../komponenter/arbeidsgiver/arbeidsforhold';
 import Inntekt from './arbeidsgiver/inntekt';
 import EkstraArbeidsgivere from './arbeidsgiver/ekstraArbeidsgivere';
 
