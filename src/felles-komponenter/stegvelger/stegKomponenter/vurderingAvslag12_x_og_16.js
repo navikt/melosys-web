@@ -43,76 +43,72 @@ Begrunnelser.defaultProps = {
   fritekst: '',
 };
 
-class VurderingAvslag12_x_og_16 extends React.Component {
-  render() {
-    const {
-      valgte_art_12_1_begrunnelser,
-      valgte_art_12_2_begrunnelser,
-      valgte_art_16_1_begrunnelser,
-      art16_1_fritekst,
-      vilkarBegrunnelser,
-      oppsummering,
-      fattVedtak,
-    } = this.props;
-
-    const dokumenter = [
-      {
-        navn: 'Forhåndsvis vedtaksbrev',
-        type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
-        data: {
-          mottaker: MKV.Koder.aktoersroller.BRUKER,
-        },
+const VurderingAvslag12_x_og_16 = ({
+  valgte_art_12_1_begrunnelser,
+  valgte_art_12_2_begrunnelser,
+  valgte_art_16_1_begrunnelser,
+  art16_1_fritekst,
+  vilkarBegrunnelser,
+  oppsummering,
+  fattVedtak,
+}) => {
+  const dokumenter = [
+    {
+      navn: 'Forhåndsvis vedtaksbrev',
+      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
-    ];
+    },
+  ];
 
-    const muligeVirksomhetBegrunnelser = [
-      ...MKV.KTObjects.begrunnelser.art12_2_normalt_virksomhet,
-      ...MKV.KTObjects.begrunnelser.art12_1_vesentlig_virksomhet,
-      ...MKV.KTObjects.begrunnelser.art12_1_forutgaaende_medl,
-      ...MKV.KTObjects.begrunnelser.bosted,
-    ];
+  const muligeVirksomhetBegrunnelser = [
+    ...MKV.KTObjects.begrunnelser.art12_2_normalt_virksomhet,
+    ...MKV.KTObjects.begrunnelser.art12_1_vesentlig_virksomhet,
+    ...MKV.KTObjects.begrunnelser.art12_1_forutgaaende_medl,
+    ...MKV.KTObjects.begrunnelser.bosted,
+  ];
 
-    return (
-      <div>
-        <Nav.Undertittel>
-          Avslag
-        </Nav.Undertittel>
-        {valgte_art_12_1_begrunnelser.length > 0 &&
-          <Begrunnelser
-            label="Søkeren fyller ikke kriteriene for artikkel 12. nr. 1:"
-            valgteBegrunnelser={[...valgte_art_12_1_begrunnelser, ...vilkarBegrunnelser]}
-            muligeBegrunnelser={[
-              ...MKV.KTObjects.begrunnelser.art12_1_begrunnelser,
-              ...muligeVirksomhetBegrunnelser,
-            ]}
-          />
-        }
-        {valgte_art_12_2_begrunnelser.length > 0 &&
-          <Begrunnelser
-            label="Søkeren fyller ikke kriteriene for artikkel 12, nr. 2:"
-            valgteBegrunnelser={[...valgte_art_12_2_begrunnelser, ...vilkarBegrunnelser]}
-            muligeBegrunnelser={[
-              ...MKV.KTObjects.begrunnelser.art12_2_begrunnelser,
-              ...muligeVirksomhetBegrunnelser,
-            ]}
-          />
-        }
-        {valgte_art_16_1_begrunnelser.length > 0 &&
-          <Begrunnelser
-            label="Søkeren fyller ikke kriteriene for artikkel 16, nr. 1:"
-            valgteBegrunnelser={valgte_art_16_1_begrunnelser}
-            muligeBegrunnelser={MKV.KTObjects.begrunnelser.art16_1_avslag}
-            fritekst={art16_1_fritekst}
-          />
-        }
-        <PdfLenkeListe behandlingID={oppsummering.behandlingID} dokumenter={dokumenter} />
-        <Nav.Hovedknapp onClick={() => fattVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>
-          Fatt vedtak
-        </Nav.Hovedknapp>
-      </div>
-    );
-  }
-}
+  return (
+    <div>
+      <Nav.Undertittel>
+        Avslag
+      </Nav.Undertittel>
+      {valgte_art_12_1_begrunnelser.length > 0 &&
+        <Begrunnelser
+          label="Søkeren fyller ikke kriteriene for artikkel 12. nr. 1:"
+          valgteBegrunnelser={[...valgte_art_12_1_begrunnelser, ...vilkarBegrunnelser]}
+          muligeBegrunnelser={[
+            ...MKV.KTObjects.begrunnelser.art12_1_begrunnelser,
+            ...muligeVirksomhetBegrunnelser,
+          ]}
+        />
+      }
+      {valgte_art_12_2_begrunnelser.length > 0 &&
+        <Begrunnelser
+          label="Søkeren fyller ikke kriteriene for artikkel 12, nr. 2:"
+          valgteBegrunnelser={[...valgte_art_12_2_begrunnelser, ...vilkarBegrunnelser]}
+          muligeBegrunnelser={[
+            ...MKV.KTObjects.begrunnelser.art12_2_begrunnelser,
+            ...muligeVirksomhetBegrunnelser,
+          ]}
+        />
+      }
+      {valgte_art_16_1_begrunnelser.length > 0 &&
+        <Begrunnelser
+          label="Søkeren fyller ikke kriteriene for artikkel 16, nr. 1:"
+          valgteBegrunnelser={valgte_art_16_1_begrunnelser}
+          muligeBegrunnelser={MKV.KTObjects.begrunnelser.art16_1_avslag}
+          fritekst={art16_1_fritekst}
+        />
+      }
+      <PdfLenkeListe behandlingID={oppsummering.behandlingID} dokumenter={dokumenter} />
+      <Nav.Hovedknapp onClick={() => fattVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>
+        Fatt vedtak
+      </Nav.Hovedknapp>
+    </div>
+  );
+};
 
 VurderingAvslag12_x_og_16.propTypes = {
   valgte_art_12_1_begrunnelser: PT.array.isRequired,

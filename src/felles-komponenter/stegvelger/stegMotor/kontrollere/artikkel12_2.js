@@ -21,12 +21,10 @@ class Artikkel12_2 extends Steg {
       },
       {
         beskrivelse: 'avslår søknad',
-        exec: (avklartefakta, alleVilkar) => {
-          return (
-            erVilkarOppfylt(MKV.Koder.vilkar.FO_883_2004_ART12_2, alleVilkar) !== undefined
-            && erVilkarOppfylt(MKV.Koder.vilkar.FO_883_2004_ART16_1, alleVilkar) !== undefined
-          );
-        },
+        exec: (avklartefakta, alleVilkar) => (
+          erVilkarOppfylt(MKV.Koder.vilkar.FO_883_2004_ART12_2, alleVilkar) !== undefined
+          && erVilkarOppfylt(MKV.Koder.vilkar.FO_883_2004_ART16_1, alleVilkar) !== undefined
+        ),
         nesteSteg: STEG.AVSLAG_12_X_OG_16,
       },
       {
