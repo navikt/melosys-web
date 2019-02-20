@@ -13,8 +13,8 @@ import { avklartefaktaSelectors } from '../ducks/avklartefakta/';
 import { formatterDatoTilNorsk } from '../utils/dato';
 
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
-import ForretningsAdresse from './adresser/forretningsAdresse';
-import PostAdresse from './adresser/postAdresse';
+import ForretningsAdresse from '../komponenter/adresser/forretningsAdresse';
+import PostAdresse from '../komponenter/adresser/postAdresse';
 import LandVelger from './skjema/landvelger';
 
 import './utsendendeArbeidsgiver.css';

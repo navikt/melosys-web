@@ -4,7 +4,7 @@ import PT from 'prop-types';
 
 import { fagsakSelectors } from '../../ducks/fagsaker';
 import * as Nav from '../../utils/navFrontend';
-import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
+import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
 
 import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
 

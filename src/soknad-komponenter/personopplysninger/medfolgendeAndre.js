@@ -9,7 +9,7 @@ import { erGyldigDnr, erGyldigFnr } from '../skjema/validering/generisk/person';
 import { beregnAlder } from '../../utils/dato';
 
 import './medfolgendeAndre.css';
-import BostedsAdresse from '../adresser/bostedsAdresse';
+import BostedsAdresse from '../../komponenter/adresser/bostedsAdresse';
 
 class MedfolgendeAndre extends Component {
   state = { fnr: '', erDirty: false };

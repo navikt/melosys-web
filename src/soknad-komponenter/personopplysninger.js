@@ -13,7 +13,7 @@ import { kodeverkObjektTilTerm, kodeverkObjektTilKode } from '../utils/kodeverk'
 import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
-import BostedsAdresse from './adresser/bostedsAdresse';
+import BostedsAdresse from '../komponenter/adresser/bostedsAdresse';
 import LandVelger from './skjema/landvelger';
 
 import UtenlandskIdent from './personopplysninger/utenlandskIdent';
