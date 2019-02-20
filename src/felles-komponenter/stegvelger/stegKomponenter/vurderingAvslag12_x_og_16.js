@@ -41,7 +41,7 @@ Begrunnelser.propTypes = {
 
 Begrunnelser.defaultProps = {
   fritekst: '',
-}
+};
 
 class VurderingAvslag12_x_og_16 extends React.Component {
   render() {
@@ -106,7 +106,7 @@ class VurderingAvslag12_x_og_16 extends React.Component {
           />
         }
         <PdfLenkeListe behandlingID={oppsummering.behandlingID} dokumenter={dokumenter} />
-        <Nav.Hovedknapp onClick={fattVedtak}>
+        <Nav.Hovedknapp onClick={() => fattVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>
           Fatt vedtak
         </Nav.Hovedknapp>
       </div>
