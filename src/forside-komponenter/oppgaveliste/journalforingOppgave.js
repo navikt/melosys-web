@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import * as MPT from '../../../proptypes/index';
-import * as Ikoner from '../../../resources/images';
-import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../proptypes';
+import * as Ikoner from '../../resources/images';
+import * as Nav from '../../utils/navFrontend';
 
-import PanelHeader from '../../../komponenter/panelHeader/panelHeader';
+import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 
 import './journalforingOppgave.css';
 

@@ -1,13 +1,13 @@
 import React from 'react';
-import * as MPT from '../../../proptypes/';
+import * as MPT from '../../proptypes';
 
-import * as Ikoner from '../../../resources/images/index';
-import * as Nav from '../../../utils/navFrontend';
-import * as KV from '../../../kodeverk';
+import * as Ikoner from '../../resources/images';
+import * as Nav from '../../utils/navFrontend';
+import * as KV from '../../kodeverk';
 
 import Behandling from './behandling';
-import PanelHeader from '../../../komponenter/panelHeader/panelHeader';
-import EnkeltDato from '../../../komponenter/datoOmrade/enkeltDato';
+import PanelHeader from '../../komponenter/panelHeader/panelHeader';
+import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 
 import './fagsak.css';
 
