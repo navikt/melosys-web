@@ -3,14 +3,14 @@ import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import PT from 'prop-types';
 
-import * as MPT from '../../../proptypes/index';
-import * as Ikoner from '../../../resources/images/index';
-import * as Nav from '../../../utils/navFrontend';
-import * as KV from '../../../kodeverk';
+import * as MPT from '../../proptypes';
+import * as Ikoner from '../../resources/images';
+import * as Nav from '../../utils/navFrontend';
+import * as KV from '../../kodeverk';
 
-import PanelHeader from '../../../komponenter/panelHeader/panelHeader';
-import EnkeltDato from '../../../komponenter/datoOmrade/enkeltDato';
-import { formatterDatoTilNorsk } from '../../../utils/dato';
+import PanelHeader from '../../komponenter/panelHeader/panelHeader';
+import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
+import { formatterDatoTilNorsk } from '../../utils/dato';
 
 import './behandlingOppgave.css';
 
