@@ -1,0 +1,174 @@
+import React, { Component } from 'react';
+import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
+
+import * as Nav from '../../../utils/navFrontend';
+import * as Skjema from '../../skjema';
+import * as MPT from './../../../proptypes';
+import * as KV from '../../../kodeverk';
+
+class VurderingArtikkel12_2 extends Component {
+  /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
+   * med de 3 radiovalgene i grensesnittet er at disse ville representert en tri-state ("ja", "nei, men..." og "nei").
+   * Siden Redux Form ikke støtter at man setter flere verdier til forskjellige felter må vi bruke
+   * ikke-knyttede NAV-komponenter og håndtere Redux Form-oppdateringen manuelt via funksjonen 'settSkjemaVerdi'
+   * som vi får fra stegvelger-parenten.
+   *
+   * Dette er årsaken til at denne komponenten avviker fra de andre og ikke benytter NAV-Skjema-komponentene direkte.
+   */
+  constructor() {
+    super();
+    this.AVSLAG = 'AVSLAG';
+  }
+
+  state = { valgtVilkar: '' };
+
+  componentDidMount() {
+    this.lagreValgtVilkarState({});
+  }
+
+  componentDidUpdate(prevProps) {
+    this.lagreValgtVilkarState(prevProps);
+  }
+
+  componentWillUnmount() {
+    const { settSkjemaVerdi } = this.props;
+    settSkjemaVerdi('vilkar.art12_2', null);
+    settSkjemaVerdi('vilkar.art16_1', null);
+    settSkjemaVerdi('vilkar.art12_2_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
+  }
+
+  settStateForVilkar = vilkar => {
+    this.setState({ valgtVilkar: vilkar });
+  };
+
+  lagreValgtVilkarState = ({ tilstand = {} }) => {
+    const { art12_2: old_art12_2, art16_1: old_art16_1 } = tilstand;
+    const { art12_2, art16_1 } = this.props.tilstand;
+
+    if ((art12_2 === old_art12_2) && (art16_1 === old_art16_1)) { return; }
+
+    if (art12_2) (this.settStateForVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_2));
+    if (art16_1 && art12_2 === false) (this.settStateForVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1));
+    if (art16_1 === false && art12_2 === false) (this.settStateForVilkar(this.AVSLAG));
+  };
+
+  radioEndringHandler = event => {
+    const { value } = event.target;
+    const { settSkjemaVerdi } = this.props;
+
+    if (value === MKV.Koder.vilkaar.FO_883_2004_ART12_2) {
+      settSkjemaVerdi('vilkar.art12_2', true);
+      settSkjemaVerdi('vilkar.art16_1', null);
+      settSkjemaVerdi('vilkar.art12_2_begrunnelser', []);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
+    } else if (value === MKV.Koder.vilkaar.FO_883_2004_ART16_1) {
+      settSkjemaVerdi('vilkar.art12_2', false);
+      settSkjemaVerdi('vilkar.art16_1', true);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
+      settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
+    } else {
+      settSkjemaVerdi('vilkar.art12_2', false);
+      settSkjemaVerdi('vilkar.art16_1', false);
+    }
+  };
+
+  render () {
+    const {
+      bekreftOgFortsett, artikkel, tilstand, redigerbart,
+    } = this.props;
+
+    const { valgtVilkar } = this.state;
+    const { visBegrunnelser12, visBegrunnelser16, harAvklaring } = tilstand;
+
+    return (
+      <div>
+        <Nav.Undertittel>Vurdering av artikkel 12. 2</Nav.Undertittel>
+        <div>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Nav.Fieldset legend="Fyller søker resterende kriterier for artikkel 12.2?">
+                <Nav.Radio
+                  name="artikkel"
+                  onChange={this.radioEndringHandler}
+                  value={MKV.Koder.vilkaar.FO_883_2004_ART12_2}
+                  checked={valgtVilkar === MKV.Koder.vilkaar.FO_883_2004_ART12_2}
+                  label="Ja"
+                />
+                <Nav.Radio
+                  name="artikkel"
+                  onChange={this.radioEndringHandler}
+                  value={MKV.Koder.vilkaar.FO_883_2004_ART16_1}
+                  checked={valgtVilkar === MKV.Koder.vilkaar.FO_883_2004_ART16_1}
+                  label="Nei, jeg vil sende anmodning om unntak etter artikkel 16.1"
+                />
+                <Nav.Radio
+                  name="artikkel"
+                  onChange={this.radioEndringHandler}
+                  value={this.AVSLAG}
+                  checked={valgtVilkar === this.AVSLAG}
+                  label={`Nei, jeg vil avslå søknaden etter artikkel ${KV.objektTilKode(artikkel)} og 16.1`}
+                />
+              </Nav.Fieldset>
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="12" md="10" lg="8">
+              { visBegrunnelser12 && (
+                <Nav.Fieldset legend="Begrunnelse artikkel 12.2:">
+                  <Skjema.ListeVelger
+                    feltNavn="vilkar.art12_2_begrunnelser"
+                    muligeValg={MKV.KTObjects.begrunnelser.art12_2_begrunnelser}
+                    label="Legg til begrunnelse for ikke oppfylt:"
+                    gruppe
+                    tillatFritekst={false}
+                    disabled={!redigerbart}
+                  />
+                </Nav.Fieldset>
+              )}
+              { visBegrunnelser16 && (
+                <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
+                  <Skjema.ListeVelger
+                    feltNavn="vilkar.art16_1_begrunnelser"
+                    muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
+                    label="Legg til begrunnelse for avslag:"
+                    gruppe
+                    tillatFritekst={false}
+                    disabled={!redigerbart}
+                  />
+                  <Skjema.Textarea
+                    disabled={!redigerbart}
+                    feltNavn="vilkar.art16_1_begrunnelser_fritekst"
+                    label="Begrunnelse for avslag (fritekst):"
+                    maxLength={255}
+                    bredde="fullbredde" />
+                </Nav.Fieldset>
+              )}
+            </Nav.Column>
+          </Nav.Row>
+        </div>
+        <div className="fane__knapplinje">
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        </div>
+      </div>
+    );
+  }
+}
+
+VurderingArtikkel12_2.propTypes = {
+  bekreftOgFortsett: PT.func.isRequired,
+  tilstand: PT.object,
+  artikkel: MPT.Kodeverk,
+  settSkjemaVerdi: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
+};
+
+VurderingArtikkel12_2.defaultProps = {
+  tilstand: {},
+  artikkel: {},
+};
+
+export default VurderingArtikkel12_2;
