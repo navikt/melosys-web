@@ -10,19 +10,19 @@ import { withRouter } from 'react-router-dom';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
-import * as Person from '../felles-komponenter/skjema/validering/generisk/person';
+import * as Person from '../soknad-komponenter/skjema/validering/generisk/person';
 
 import Sticky from '../hjelpekomponenter/sticky';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import { formatterDatoTilNorsk, formatterDatoTilISO } from '../utils/dato';
-import Informasjon from '../felles-komponenter/journalforing/informasjon';
-import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
-import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
-import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
+import Informasjon from '../soknad-komponenter/journalforing/informasjon';
+import EksisterendeSaker from '../soknad-komponenter/journalforing/eksisterendeSaker';
+import PDFDokument from '../soknad-komponenter/journalforing/pdfdokument';
+import OpprettNyFagSak from '../soknad-komponenter/journalforing/opprettnyfagsak';
 import { queryParamLogger } from '../utils/queryParamLogger';
 
-import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
+import { journalforingValidering, erSkjemaGyldig } from '../soknad-komponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
   journalforingSelectors,
@@ -108,7 +108,9 @@ class Journalforing extends Component {
       journalforing: { hoveddokument = {} },
     } = this.props;
     const {
-      brukerID, avsenderID, arbeidsgiverID, representantID, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
+      brukerID, avsenderID, arbeidsgiverID,
+      opprettnysak_behandlingstype: behandlingstypeKode,
+      representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -127,7 +129,9 @@ class Journalforing extends Component {
     };
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
-      journalPostData = Object.assign(journalPostData, { arbeidsgiverID, representantID });
+      journalPostData = Object.assign(journalPostData, {
+        arbeidsgiverID, behandlingstypeKode, representantID, representantKontaktPerson,
+      });
     }
     return journalPostData;
   };
@@ -139,13 +143,15 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer, behandlingstype }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
-    const journalforingData = { saksnummer, behandlingstype, ...vasketJournalforing };
+    const journalforingData = {
+      saksnummer, behandlingstypeKode, ingenVurdering, ...vasketJournalforing,
+    };
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
 
@@ -175,7 +181,9 @@ class Journalforing extends Component {
     } = this.props;
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
-    const { journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed } = journalforingSkjemaVerdier;
+    const {
+      journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
+    } = journalforingSkjemaVerdier;
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
 
@@ -325,6 +333,8 @@ class Journalforing extends Component {
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                       />
                       <OpprettNyFagSak
+                        sakstyper={MKV.KTObjects.sakstyper}
+                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
                       />
@@ -361,6 +371,9 @@ const mapStateToProps = state => ({
     mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
     hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
     vedleggsTitler: [],
+    sakstype: MKV.Koder.sakstyper.EU_EOS,
+    opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
+    ingenVurdering: false,
   },
 });
 

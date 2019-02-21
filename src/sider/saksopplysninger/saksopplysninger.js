@@ -5,23 +5,23 @@ import { withRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
 
-import * as Validering from '../../felles-komponenter/skjema/validering';
+import * as Validering from '../../soknad-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
 
-import ArbeidsgivereNorge from '../../felles-komponenter/arbeidsgivereNorge';
-import ArbeidUtland from '../../felles-komponenter/arbeidutland';
-import Bosted from '../../felles-komponenter/bosted';
-import ForetakUtland from '../../felles-komponenter/foretakutland';
-import Inntekt from '../../felles-komponenter/inntektUtland';
-import MaritimtArbeid from '../../felles-komponenter/maritimtArbeid';
-import Medlemskap from '../../felles-komponenter/medlemskap';
-import OppholdPeriode from '../../felles-komponenter/oppholdPeriode';
-import Personopplysninger from '../../felles-komponenter/personopplysninger';
-import SelvstendigArbeid from '../../felles-komponenter/selvstendigarbeid';
-import UtsendendeArbeidsgiver from '../../felles-komponenter/utsendendeArbeidsgiver';
-import Stegvelger from '../../felles-komponenter/stegvelger';
-import HenlagtInformasjon from '../../felles-komponenter/stegErstatter/henlagtInformasjon';
-import VirksomhetNorge from '../../felles-komponenter/virksomhetNorge';
+import ArbeidsgivereNorge from '../../soknad-komponenter/arbeidsgivereNorge';
+import ArbeidUtland from '../../soknad-komponenter/arbeidutland';
+import Bosted from '../../soknad-komponenter/bosted';
+import ForetakUtland from '../../soknad-komponenter/foretakutland';
+import Inntekt from '../../soknad-komponenter/inntektUtland';
+import MaritimtArbeid from '../../soknad-komponenter/maritimtArbeid';
+import Medlemskap from '../../soknad-komponenter/medlemskap';
+import OppholdPeriode from '../../soknad-komponenter/oppholdPeriode';
+import Personopplysninger from '../../soknad-komponenter/personopplysninger';
+import SelvstendigArbeid from '../../soknad-komponenter/selvstendigarbeid';
+import UtsendendeArbeidsgiver from '../../soknad-komponenter/utsendendeArbeidsgiver';
+import Stegvelger from '../../soknad-komponenter/stegvelger';
+import HenlagtInformasjon from '../../soknad-komponenter/stegErstatter/henlagtInformasjon';
+import VirksomhetNorge from '../../soknad-komponenter/virksomhetNorge';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
