@@ -1,4 +1,4 @@
-import * as Skjema from '../felles-komponenter/skjema';
+import * as Skjema from '../soknad-komponenter/skjema';
 
 /** Definer alle felter med validering. Dette objektet brukes også i validForm decorator.
  */
