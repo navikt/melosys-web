@@ -1,8 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
-import PT from 'prop-types';
 import * as Nav from '../utils/navFrontend';
-import UnntaksPerioder from './registrering/unntaksperioder';
+import UnntaksPerioder from '../registrering-komponenter/unntaksperioder';
 
 import './registrering.css';
 
