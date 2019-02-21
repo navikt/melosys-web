@@ -56,7 +56,11 @@ MaritimtEnkelt.propTypes = {
   index: PT.number.isRequired,
   remove: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
-  fartsomradeKode: PT.string.isRequired,
+  fartsomradeKode: PT.string,
+};
+
+MaritimtEnkelt.defaultProps = {
+  fartsomradeKode: '',
 };
 
 const maritimtEnkeltMapStateToProps = state => ({
