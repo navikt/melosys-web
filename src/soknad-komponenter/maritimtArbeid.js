@@ -17,52 +17,38 @@ import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
 import './maritimtArbeid.css';
 
-class MaritimtEnkelt extends React.Component {
-  state = {
-    fartsomrade: '',
-  };
-
-  vedFartsomradeEndret = event => {
-    const { value } = event.target;
-    this.setState({ fartsomrade: value });
-  };
-
-  render() {
-    const {
-      redigerbart, navn, fartsomrader, index, remove,
-    } = this.props;
-
-    const { fartsomrade } = this.state;
-
-    const { vedFartsomradeEndret } = this;
-
-    return (
-      <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
-        <Nav.Row>
-          <Nav.Column xs="6">
-            <Skjema.Input feltNavn={`${navn}navn`} label="Navn på fartøyet:" disabled={!redigerbart} />
-            <Skjema.Select feltNavn={`${navn}fartsomradeKode`} label="Fartsomrade:" disabled={!redigerbart} onChange={vedFartsomradeEndret} value={fartsomrade}>
-              {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
-            </Skjema.Select>
-            {
-              fartsomrade === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
-              <LandVelger feltNavn={`${navn}territorialfarvann`} label="Territorialfarvann" disabled={!redigerbart} />
-            }
-          </Nav.Column>
-          <Nav.Column xs="6">
-            <LandVelger feltNavn={`${navn}flaggLandKode`} label="Flaggland:" disabled={!redigerbart} />
-            <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Kontinentalsokkel:" disabled={!redigerbart} />
-          </Nav.Column>
-        </Nav.Row>
-        <Nav.Row>
-          <Nav.Column xs="12">
-            <Nav.Knapp mini onClick={() => remove(index)} disabled={!redigerbart}>- Fjern denne oppføringen</Nav.Knapp>
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Fieldset>
-    );
-  }
-}
+const MaritimtEnkelt = ({
+  redigerbart,
+  navn,
+  fartsomrader,
+  index,
+  remove,
+  fartsomradeKode,
+}) => (
+  <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
+    <Nav.Row>
+      <Nav.Column xs="6">
+        <Skjema.Input feltNavn={`${navn}navn`} label="Navn på fartøyet:" disabled={!redigerbart} />
+        <Skjema.Select feltNavn={`${navn}fartsomradeKode`} label="Fartsomrade:" disabled={!redigerbart} >
+          {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
+        </Skjema.Select>
+        {
+          fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
+          <LandVelger feltNavn={`${navn}territorialfarvann`} label="Territorialfarvann" disabled={!redigerbart} />
+        }
+      </Nav.Column>
+      <Nav.Column xs="6">
+        <LandVelger feltNavn={`${navn}flaggLandKode`} label="Flaggland:" disabled={!redigerbart} />
+        <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Kontinentalsokkel:" disabled={!redigerbart} />
+      </Nav.Column>
+    </Nav.Row>
+    <Nav.Row>
+      <Nav.Column xs="12">
+        <Nav.Knapp mini onClick={() => remove(index)} disabled={!redigerbart}>- Fjern denne oppføringen</Nav.Knapp>
+      </Nav.Column>
+    </Nav.Row>
+  </Nav.Fieldset>
+);
 
 MaritimtEnkelt.propTypes = {
   navn: PT.string.isRequired,
@@ -70,7 +56,14 @@ MaritimtEnkelt.propTypes = {
   index: PT.number.isRequired,
   remove: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
+  fartsomradeKode: PT.string.isRequired,
 };
+
+const maritimtEnkeltMapStateToProps = state => ({
+  fartsomradeKode: formSelectors.FartsomradeKodeSelector(state),
+});
+
+const ConnectedMaritimtEnkelt = connect(maritimtEnkeltMapStateToProps)(MaritimtEnkelt);
 
 const MaritimtAlle = props => {
   const { fields, fartsomrader, redigerbart } = props;
@@ -79,7 +72,7 @@ const MaritimtAlle = props => {
   return (
     <Fragment>
       <div>
-        { fields.map((navn, index) => <MaritimtEnkelt key={navn} remove={remove} navn={navn} fartsomrader={fartsomrader} redigerbart={redigerbart} index={index} />) }
+        { fields.map((navn, index) => <ConnectedMaritimtEnkelt key={navn} remove={remove} navn={navn} fartsomrader={fartsomrader} redigerbart={redigerbart} index={index} />) }
       </div>
       <Nav.Knapp onClick={() => push({})} className="leggtil">+ Legg til nytt skip eller sokkel</Nav.Knapp>
     </Fragment>
