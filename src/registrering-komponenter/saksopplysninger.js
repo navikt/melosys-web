@@ -6,7 +6,7 @@ import { reduxForm } from 'redux-form';
 
 import * as MPT from '../proptypes';
 import Personopplysninger from '../soknad-komponenter/personopplysninger';
-import Medlemskap from '../soknad-komponenter/medlemskap';
+import Medlemskap from '../komponenter/medlemskap';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 
