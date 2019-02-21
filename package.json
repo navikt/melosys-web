@@ -19,7 +19,7 @@
     "lodash.assign": "^4.2.0",
     "lodash.clonedeep": "^4.5.0",
     "lodash.throttle": "^4.1.1",
-    "melosys-kodeverk": "4.0.0",
+    "melosys-kodeverk": "4.1.0",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.2",
     "nav-frontend-alertstriper": "^1.0.27",

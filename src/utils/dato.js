@@ -102,10 +102,14 @@ function erGyldigPeriode(fom, tom) {
   return moment(fom, inputFormat).isBefore(moment(tom, inputFormat));
 }
 
-function datoDiff (fom, tom, enhet = 'months') {
+function erIPeriode(fom, tom, dato) {
+  return moment(dato).isBetween(fom, tom);
+}
+
+function datoDiff (fom, tom, enhet = 'months', presis = true) {
   if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
   const momentTom = moment(tom).add(1, 'day');
-  return moment(momentTom).diff(fom, enhet, true);
+  return moment(momentTom).diff(fom, enhet, presis);
 }
 
 function datoDiffMenneskelig (fom, tom) {
@@ -140,5 +144,6 @@ export {
   datoDiffMenneskelig,
   beregnAlder,
   erGyldigPeriode,
+  erIPeriode,
   MAX_AR_FREM_I_TID,
 };

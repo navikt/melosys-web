@@ -34,6 +34,18 @@ export default function reducer(state = initialState, action) {
         data: [...action.data],
       };
     }
+    case Types.ENDRE_PERIODE: {
+      return {
+        ...state,
+        data: [
+          {
+            ...state.data[0],
+            fomDato: action.data.fomdato,
+            tomDato: action.data.tomdato,
+          },
+        ],
+      };
+    }
     default:
       return state;
   }
