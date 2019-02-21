@@ -4,7 +4,7 @@ import PT from 'prop-types';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
-import Fagsak from '../felles-komponenter/forside/oppgaveliste/fagsak';
+import Fagsak from '../forside-komponenter/oppgaveliste/fagsak';
 
 import { sokSelectors, sokOperations } from '../ducks/sok';
 
@@ -35,7 +35,9 @@ class Sok extends Component {
           <Nav.Row className="">
             <section className="sokresultat">
               <h1>Innsyn i sak</h1>
-              <h2>Resulater for fnr &quot;{fnr}&quot;</h2>
+              <h2>
+                Resultater for fnr &quot;{fnr}&quot;{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
+              </h2>
               { sokResultat.length > 0 &&
                 sokResultat.map(fagsak => <Fagsak key={fagsak.saksnummer} sak={fagsak} />)
               }
