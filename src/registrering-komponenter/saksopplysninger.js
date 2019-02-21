@@ -3,11 +3,12 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
-import * as MKV from 'melosys-kodeverk';
+
+import * as MPT from '../proptypes';
 import Personopplysninger from '../soknad-komponenter/personopplysninger';
-import {fagsakOperations, fagsakSelectors} from '../ducks/fagsaker';
-import * as MPT from "../proptypes";
-import Medlemskap from "../soknad-komponenter/medlemskap";
+import Medlemskap from '../soknad-komponenter/medlemskap';
+
+import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 
 class Saksopplysninger extends Component {
   async componentDidMount() {
@@ -19,11 +20,14 @@ class Saksopplysninger extends Component {
     const response = await hentFagsaker(4);
     console.log(response);
   };
+
   overstyrSubmit = event => {
     event.preventDefault();
   };
+
   render() {
     const { medlemskap } = this.props;
+
     return (
       <form name="registrering" id="registrering" onSubmit={this.overstyrSubmit} >
         <Personopplysninger />
@@ -35,16 +39,19 @@ class Saksopplysninger extends Component {
 
 Saksopplysninger.propTypes = {
   hentFagsaker: PT.func.isRequired,
+  inntekt: MPT.Inntekt,
   medlemskap: MPT.Medlemskap,
   skjema: PT.any,
 };
 
 Saksopplysninger.defaultProps = {
+  inntekt: {},
   medlemskap: {},
   skjema: {},
 };
 
 const mapStateToProps = state => ({
+  inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
 });
 const mapDispatchToProps = dispatch => ({
