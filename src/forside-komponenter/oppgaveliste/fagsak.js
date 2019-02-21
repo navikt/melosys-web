@@ -18,7 +18,6 @@ import './fagsak.css';
  */
 const Fagsak = ({ sak }) => {
   const {
-    sammensattNavn,
     opprettetDato,
     sakstype,
     saksstatus,
@@ -32,7 +31,7 @@ const Fagsak = ({ sak }) => {
   } = behandlingOversikter[0];
 
   const { fom, tom } = soknadsperiode;
-  const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn}`;
+  const tittel = `${KV.objektTilTerm(sakstype)}`;
   const link = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';

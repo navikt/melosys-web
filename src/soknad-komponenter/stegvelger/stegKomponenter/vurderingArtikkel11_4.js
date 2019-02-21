@@ -146,8 +146,8 @@ class VurderingArtikkel11_4 extends Component {
               </Nav.Fieldset>
               { visNISAvsnitt && (
                 <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?">
-                  <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.nis" value={BOOLSK.SANN} label="Ja" />
                   <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.nis" value={BOOLSK.USANN} label="Nei" />
+                  <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.nis" value={BOOLSK.SANN} label="Ja" />
                 </Nav.Fieldset>
               )
               }

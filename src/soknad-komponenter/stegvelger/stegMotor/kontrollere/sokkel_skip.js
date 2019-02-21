@@ -9,6 +9,11 @@ class SokkelSkip extends Steg {
 
     this._kriterier = [
       {
+        beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_NORSK" (til vedtak)',
+        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK),
+        nesteSteg: STEG.VEDTAK,
+      },
+      {
         beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_UTLAND" (videre til 12.1 eller 12.2)',
         exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_UTLAND),
         nesteSteg: STEG.ARBEIDSGIVERE,
@@ -41,6 +46,7 @@ class SokkelSkip extends Steg {
     };
     this._handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
     this._status = FANE_STATUS.OK;
   }
