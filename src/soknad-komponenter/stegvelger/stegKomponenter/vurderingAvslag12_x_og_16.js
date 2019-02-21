@@ -43,7 +43,7 @@ Begrunnelser.defaultProps = {
   fritekst: '',
 };
 
-function VurderingAvslag12_x_og_16() {
+function VurderingAvslag12_x_og_16(props) {
   const {
     valgte_art_12_1_begrunnelser,
     valgte_art_12_2_begrunnelser,
@@ -52,7 +52,7 @@ function VurderingAvslag12_x_og_16() {
     vilkarBegrunnelser,
     oppsummering,
     fattVedtak,
-  } = this.props;
+  } = props;
 
   const dokumenter = [
     {
