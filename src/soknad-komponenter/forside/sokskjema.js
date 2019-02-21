@@ -42,6 +42,7 @@ class SokSkjema extends Component {
             bredde="XL"
             onChange={this.vedEndretSokFelt}
             ref={this.state.sokStreng}
+            placeholder="fnr / dnr"
           />
           <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
         </form>
