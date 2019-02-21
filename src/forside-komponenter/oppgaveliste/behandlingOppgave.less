@@ -1,0 +1,38 @@
+@import '../../utils/mixins';
+@import '../../constants';
+
+.behandlingOppgave {
+  margin-bottom: 1em;
+  flex: 1;
+}
+
+.behandlingOppgave__stengt {
+  background-color: @gray-dark;
+}
+
+.behandlingOppgave__link:link,
+.behandlingOppgave__link:visited,
+.behandlingOppgave__link:hover {
+  color: @black;
+  text-decoration: none;
+  flex-grow:1;
+  display: flex;
+}
+
+.behandlingOppgave__meta {
+  display: block;
+  margin: 0.5em 0;
+}
+
+.behandlingOppgave__meta__term {
+  float: left;
+  clear: left;
+  font-weight: bold;
+  margin-right: 0.4em;
+}
+
+.behandlingOppgave__meta__detalj {
+  float:left;
+  clear: right;
+  margin: 0;
+}

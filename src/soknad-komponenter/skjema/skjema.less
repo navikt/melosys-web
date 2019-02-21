@@ -1,0 +1,58 @@
+@coreModulePath: '../../../node_modules/';
+@frontendModuler: '@{coreModulePath}nav-frontend-';
+@import '@{frontendModuler}core/less/core';
+
+
+.skjema__horisontalefelter {
+  display: flex;
+  flex-direction:row;
+
+  .skjemaelement--horisontal {
+    margin-right:1em;
+  }
+}
+
+.skjema__fieldset {
+  margin-bottom: 1em;
+}
+
+.skjema__legend {
+  font-size: 1em;
+}
+
+.feedbacksummary {
+  .blokk-m();
+  background-color: @redError;
+  border-radius: @border-radius-base;
+  color: @white;
+  list-style-position: inside;
+  padding: 1.5rem;
+
+  ul {
+    margin: 0;
+    padding-left: 0;
+  }
+
+  h3 {
+    margin: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  a {
+    border-bottom: 1px solid @white;
+    color: @white;
+    text-decoration: none;
+
+    &:focus {
+      background-color: @orangeFocus;
+      border-bottom: 1px solid @orangeFocus;
+      color: @navMorkGra;
+      outline: none;
+    }
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 3px @orangeFocus;
+    outline: none;
+  }
+}
