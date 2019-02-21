@@ -6,13 +6,13 @@ import { withRouter } from 'react-router-dom';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
-import DialogboksOppfriskSak from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
-import DialogboksHenlegg from '../felles-komponenter/dialogboks/dialogboksHenlegg';
+import DialogboksOppfriskSak from '../soknad-komponenter/dialogboks/dialogboksOppfrisk';
+import DialogboksVenter from '../soknad-komponenter/dialogboks/dialogboksVenter';
+import DialogboksHenlegg from '../soknad-komponenter/dialogboks/dialogboksHenlegg';
 import { Saksopplysninger } from './saksopplysninger';
 
-import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
-import SideOppsummering from '../felles-komponenter/sideOppsummering';
+import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
+import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingsresultatOperations } from '../ducks/behandlingsresultat/';
@@ -28,7 +28,7 @@ import { formSelectors } from '../ducks/form';
 import * as Api from '../services/api';
 
 import './saksbehandling.css';
-import '../felles-komponenter/skjema/skjema.css';
+import '../soknad-komponenter/skjema/skjema.css';
 
 class Saksbehandling extends Component {
   state = {
