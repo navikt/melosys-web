@@ -10,19 +10,19 @@ import { withRouter } from 'react-router-dom';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
-import * as Person from '../felles-komponenter/skjema/validering/generisk/person';
+import * as Person from '../soknad-komponenter/skjema/validering/generisk/person';
 
 import Sticky from '../hjelpekomponenter/sticky';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import { formatterDatoTilNorsk, formatterDatoTilISO } from '../utils/dato';
-import Informasjon from '../felles-komponenter/journalforing/informasjon';
-import EksisterendeSaker from '../felles-komponenter/journalforing/eksisterendeSaker';
-import PDFDokument from '../felles-komponenter/journalforing/pdfdokument';
-import OpprettNyFagSak from '../felles-komponenter/journalforing/opprettnyfagsak';
+import Informasjon from '../soknad-komponenter/journalforing/informasjon';
+import EksisterendeSaker from '../soknad-komponenter/journalforing/eksisterendeSaker';
+import PDFDokument from '../soknad-komponenter/journalforing/pdfdokument';
+import OpprettNyFagSak from '../soknad-komponenter/journalforing/opprettnyfagsak';
 import { queryParamLogger } from '../utils/queryParamLogger';
 
-import { journalforingValidering, erSkjemaGyldig } from '../felles-komponenter/skjema/validering/journalforing';
+import { journalforingValidering, erSkjemaGyldig } from '../soknad-komponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
   journalforingSelectors,
