@@ -16,7 +16,7 @@ import { formatterDatoTilNorsk, vaskInputDato, formatterDatoTilISO, erGyldigPeri
 
 import './oppholdPeriode.css';
 
-const OppholdEndring = props => {
+export const OppholdEndring = props => {
   const {
     oppholdUtlandNyFom,
     oppholdUtlandNyTom,

@@ -2,7 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 import classnames from 'classnames';
 
-import { FANE_STATUS } from '../stegMotor/typer';
+import { FANE_STATUS, STEG } from '../stegMotor/typer';
 
 import * as Ikon from '../../../resources/images';
 
@@ -24,7 +24,7 @@ const ikonVelger = (id, status, aktivtSteg) => {
     },
   };
 
-  if (id === 'VEDTAK' || id === 'AVSLAG_12_X_OG_16') {
+  if (id === STEG.VEDTAK || id === STEG.ENDRET_PERIODE || id === STEG.AVSLAG_12_X_OG_16) {
     return IKONER.VEDTAK[status];
   }
 
@@ -49,8 +49,8 @@ const StegIkon = props => {
   );
 
   const knappKlasser = classnames({
-    stegIkon__enkeltSteg: id !== 'VEDTAK',
-    stegIkon__vedtak: id === 'VEDTAK',
+    stegIkon__enkeltSteg: id !== STEG.VEDTAK,
+    stegIkon__vedtak: id === STEG.VEDTAK,
   });
 
   return (

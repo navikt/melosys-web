@@ -7,7 +7,7 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes/';
-
+import * as API from '../../services/api';
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
@@ -100,7 +100,7 @@ class Stegvelger extends Component {
     const { fatteVedtak } = this.props;
     const vedtakBody = { behandlingsresultattype };
     await fatteVedtak(bid, vedtakBody);
-    this.props.history.push('/');
+    this.tilForsiden();
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
@@ -121,6 +121,21 @@ class Stegvelger extends Component {
     await this.fatteVedtakHandler(behandlingsresultattype);
   };
 
+  sendEndretLovvalgsPeriode = async (fomdato, tomdato, begrunnelseKode) => {
+    const { oppsummering, endreLovvalgsPeriode } = this.props;
+    const { lagreLovvalgsperioderHandler, tilForsiden } = this;
+
+    await endreLovvalgsPeriode(fomdato, tomdato);
+    await lagreLovvalgsperioderHandler();
+    await API.Vedtak.endrePeriode(oppsummering.behandlingID, { begrunnelseKode });
+
+    tilForsiden();
+  };
+
+  tilForsiden = () => {
+    this.props.history.push('/');
+  };
+
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
    *
@@ -134,6 +149,7 @@ class Stegvelger extends Component {
       lagreLovvalgsperioder: this.lagreLovvalgsperioderHandler,
       oppdaterOgLagreBehandlinger: this.oppdaterOgLagreBehandlinger,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
+      sendEndretLovvalgsPeriode: this.sendEndretLovvalgsPeriode,
     };
 
     const propsLight = {
@@ -142,6 +158,7 @@ class Stegvelger extends Component {
       begrunnelser: MKV.KTObjects.begrunnelser,
       bostedsland: props.bostedsland,
       landkoder: MKV.KTObjects.landkoder,
+      behandlingstype: props.oppsummering.behandlingstype,
       lovvalgsperioder: props.lovvalgsperioder,
       inngang: props.inngang,
       tilgjengeligeHandlers,
@@ -265,6 +282,7 @@ Stegvelger.propTypes = {
   skjema: PT.object.isRequired,
   valgteArbeidsgivere: PT.array,
   vilkar: PT.array.isRequired,
+  endreLovvalgsPeriode: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -307,6 +325,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
+  endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
