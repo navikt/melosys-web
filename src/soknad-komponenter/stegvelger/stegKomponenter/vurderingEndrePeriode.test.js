@@ -3,12 +3,12 @@ import React from 'react';
 import { VurderingEndrePeriode } from './vurderingEndrePeriode';
 
 describe('vurderingEndrePeriode', () => {
-  const endrePeriode = jest.fn();
+  const sendEndretLovvalgsPeriode = jest.fn();
 
   const props = {
     oppsummering: { behandlingID: 1 },
     lovvalgsPeriode: {},
-    endrePeriode,
+    sendEndretLovvalgsPeriode,
   };
 
   it('viser en pdfLenkeListe', () => {
@@ -27,7 +27,7 @@ describe('vurderingEndrePeriode', () => {
       const knapp = component.find('Hovedknapp');
       component.instance().validerAlt = jest.fn(() => true);
       knapp.simulate('click');
-      expect(endrePeriode).toHaveBeenCalled();
+      expect(sendEndretLovvalgsPeriode).toHaveBeenCalled();
     });
   });
 
