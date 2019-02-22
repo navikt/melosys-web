@@ -160,7 +160,8 @@ export const SokkelEllerSkipSelector = createSelector(
     // stegvelgeren vil avklartfakta fortsatt være tom. Derfor trenger vi å
     // fylle inn arrayen slik at valideringen kan iterere på alle maritime arbeid som
     // det forventes at saksbehandler skal gjøre en avklaring på.
-    const antallSomMangler = alleMaritimeArbeid.length - sokkelEllerSkip.length;
+    let antallSomMangler = alleMaritimeArbeid.length - sokkelEllerSkip.length;
+    if (antallSomMangler < 0) antallSomMangler = 0;
     const arrayFyll = new Array(antallSomMangler).fill({});
     return [...sokkelEllerSkip, ...arrayFyll];
   }
