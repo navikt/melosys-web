@@ -25,7 +25,7 @@ const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler, redigerbart }) => (
         </Nav.Fieldset>
       </Nav.Column>
       <Nav.Column className="hoyreKolonne" xs="6">
-        <Nav.Fieldset>
+        <Nav.Fieldset legend="">
           <Skjema.Input disabled={!redigerbart} label="Organisasjonsnummer / ID-nummer" feltNavn={`arbeidUtland[${indeks}].foretakOrgnr`} />
           <Skjema.RadioGruppe label="Er dette kun hjemmekontor?" feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`}>
             <Skjema.Radio disabled={!redigerbart} feltNavn={`arbeidUtland[${indeks}].arbeidUtlandHjemmekontor`} value={BOOLSK.SANN} label="Ja" />
