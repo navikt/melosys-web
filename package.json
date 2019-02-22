@@ -119,6 +119,7 @@
     "usePathForSuiteName": "true"
   },
   "devDependencies": {
+    "@types/jest": "^24.0.6",
     "babel-preset-airbnb": "^2.4.0",
     "babel-preset-env": "^1.6.1",
     "body-parser": "^1.18.3",

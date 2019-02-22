@@ -143,6 +143,8 @@ EnkeltLand.defaultProps = {
   disabled: false,
 };
 
+export { EnkeltLand };
+
 const EnkeltLandWrapper = props => (<Field name={props.feltNavn} component={EnkeltLand} props={props} />);
 
 EnkeltLandWrapper.propTypes = {
