@@ -11,7 +11,7 @@ import { doThenDispatch } from '../../services/utils';
 import * as Actions from './actions';
 import * as Api from '../../services/api';
 import * as Types from './types';
-import * as Validering from '../../felles-komponenter/skjema/validering';
+import * as Validering from '../../soknad-komponenter/skjema/validering';
 
 /**
  * Henter registerinformasjon som allerede er importert backend i forbindelse

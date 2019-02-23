@@ -8,14 +8,12 @@ import Forside from './sider/forside';
 import Sok from './sider/sok';
 import Saksbehandling from './sider/saksbehandling';
 import Journalforing from './sider/journalforing';
-import Spark from './sider/spark';
 
 
 const Routing = ({ location }) => (
   <Switch location={location}>
     <Route exact path="/" component={Forside} />
     <Route exact path="/sok/:fnr" component={Sok} />
-    <Route exact path="/spark" component={Spark} />
     <Route path="/saksbehandling/:snr" component={Saksbehandling} />
     <Route path="/journalforing/:journalpostID/:oppgaveID" component={Journalforing} />
     <Route component={UkjentSide} />

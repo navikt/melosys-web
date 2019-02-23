@@ -31,3 +31,8 @@ export const Lovvalgsperiode = createSelector(
   state => SoknadenFormSelector(state).values,
   skjemaverdier => skjemaverdier.lovvalgsperiode || {}
 );
+
+export const FartsomradeKodeSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  skjemaverdier => skjemaverdier.maritimtArbeid[0].fartsomradeKode || undefined
+);

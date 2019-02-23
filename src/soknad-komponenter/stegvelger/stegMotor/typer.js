@@ -1,0 +1,65 @@
+/* eslint-disable */
+/** Hver fane kan ha en rekke forskjellige statuser som er ment å indikere
+ * feil eller varsler som saksbehandleren må håndtere.
+ *
+ * @type {{UBEHANDLET: string, AKTIV: string, BEHANDLET: string, ADVARSEL: string, FEIL: string}}
+ */
+export const FANE_STATUS = {
+  UBEHANDLET: 'UBEHANDLET',
+  AKTIV: 'AKTIV',
+  OK: 'OK',
+  ADVARSEL: 'ADVARSEL',
+  FEIL: 'FEIL',
+};
+
+export const STEG = {
+  AVSLAG_12_X_OG_16: 'AVSLAG_12_X_OG_16',
+  ARTIKKEL_16: 'ARTIKKEL_16',
+  ARTIKKEL_12_1: 'ARTIKKEL_12_1',
+  ARTIKKEL_12_2: 'ARTIKKEL_12_2',
+  ARTIKKEL_11_4: 'ARTIKKEL_11_4',
+  INNGANG: 'INNGANG',
+  YRKESGRUPPE: 'YRKESGRUPPE',
+  IKKE_YRKESAKTIV: 'IKKE_YRKESAKTIV',
+  FORUTGAENDE_MEDLEMSKAP: 'FORUTGAENDE_MEDLEMSKAP',
+  YRKESAKTIVITET: 'YRKESAKTIVITET',
+  UTSENDING: 'UTSENDING',
+  YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
+  VIRKSOMHET: 'VIRKSOMHET',
+  VESENTLIG_VIRKSOMHET: 'VESENTLIG_VIRKSOMHET',
+  NORMALT_DRIVER_VIRKSOMHET: 'NORMALT_DRIVER_VIRKSOMHET',
+  AKTIVITET: 'AKTIVITET',
+  BOSTEDSLAND: 'BOSTEDSLAND',
+  TJENESTEMANN: 'TJENESTEMANN',
+  FORRETNINGSSTED: 'FORRETNINGSSTED',
+  ARBEIDSGIVERE: 'ARBEIDSGIVERE',
+  SOKKEL_SKIP: 'SOKKEL_SKIP',
+  VEDTAK: 'VEDTAK',
+  ENDRET_PERIODE: 'ENDRE_PERIODE',
+};
+
+export const StegTilKontroller = {
+  AVSLAG_12_X_OG_16: 'Avslag_12_x_og_16',
+  ARTIKKEL_16: 'Artikkel16',
+  ARTIKKEL_12_1: 'Artikkel12_1',
+  ARTIKKEL_12_2: 'Artikkel12_2',
+  ARTIKKEL_11_4: 'Artikkel11_4',
+  INNGANG: 'Inngang',
+  YRKESGRUPPE: 'Yrkesgruppe',
+  IKKE_YRKESAKTIV: 'IkkeYrkesaktiv',
+  FORUTGAENDE_MEDLEMSKAP: 'ForutgaendeMedlemskap',
+  YRKESAKTIVITET: 'Yrkesaktivitet',
+  UTSENDING: 'UTSENDING',
+  YRKESAKTIVITET_ANTALL_LAND: 'YrkesaktivitetAntallLand',
+  VIRKSOMHET: 'Virksomhet',
+  VESENTLIG_VIRKSOMHET: 'VesentligVirksomhet',
+  NORMALT_DRIVER_VIRKSOMHET: 'NormaltDriverVirksomhet',
+  AKTIVITET: 'Aktivitet',
+  BOSTEDSLAND: 'Bostedsland',
+  TJENESTEMANN: 'Tjenestemann',
+  FORRETNINGSSTED: 'Forretningssted',
+  ARBEIDSGIVERE: 'Arbeidsgivere',
+  SOKKEL_SKIP: 'SokkelSkip',
+  VEDTAK: 'Vedtak',
+  ENDRE_PERIODE: 'EndrePeriode',
+};
