@@ -1,6 +1,7 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
+import _ from 'lodash';
 import * as MKV from 'melosys-kodeverk';
 
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
@@ -94,10 +95,10 @@ class Journalforing extends Component {
   mapVedleggsTittlerTilVedlegg = titler => titler.map(tittel => ({ dokumentID: null, tittel }));
 
   konverterTilNullable = verdi => {
-    if (verdi !== undefined) {
-      return verdi;
+    if (_.isUndefined(verdi)) {
+      return null;
     }
-    return null;
+    return verdi;
   }
 
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
