@@ -79,8 +79,11 @@ class Saksopplysninger extends Component {
     const { oppfriskSaksopplysninger, sendSoknad } = this.props;
     const { behandlingID } = this.props.oppsummering;
     const { soknad } = this.props;
-    await sendSoknad(behandlingID, soknad);
-    await oppfriskSaksopplysninger(behandlingID);
+    // await sendSoknad(behandlingID, soknad);
+    // await oppfriskSaksopplysninger(behandlingID);
+    const send = () => sendSoknad(behandlingID, soknad);
+    const oppfrisk = () => oppfriskSaksopplysninger(behandlingID);
+    await Promise.all([send, oppfrisk]);
     this.props.blokkerInnholdMedOppfriskSpinner();
   };
 

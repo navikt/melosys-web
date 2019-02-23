@@ -42,12 +42,10 @@ class Saksbehandling extends Component {
   }
 
   async componentWillUnmount() {
-    await this.props.resetFagsakState();
-    await this.props.resetAvklartefaktaState();
-    await this.props.resetLovvalgsperiode();
-    await this.props.resetVilkarState();
-    await this.props.resetSoknadState();
-    await this.props.resetBehandlingerState();
+    const {
+      resetFagsakState, resetAvklartefaktaState, resetLovvalgsperiode, resetSoknadState, resetBehandlingerState,
+    } = this.props;
+    await Promise.all([resetFagsakState, resetAvklartefaktaState, resetLovvalgsperiode, resetSoknadState, resetBehandlingerState]);
   }
 
   lastInnSaksopplysninger = async () => {
@@ -185,11 +183,10 @@ class Saksbehandling extends Component {
   };
 
   lagreAllData = async () => {
-    await this.lagreSoknadHandler();
-    await this.lagreVilkarHandler();
-    await this.lagreAvklartefaktaHandler();
-    await this.lagreLovvalgsperioderHandler();
-    await this.lagreBehandlingerHandler();
+    const {
+      lagreSoknadHandler, lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler, lagreBehandlingerHandler,
+    } = this;
+    await Promise.all([lagreSoknadHandler, lagreVilkarHandler, lagreAvklartefaktaHandler, lagreLovvalgsperioderHandler, lagreLovvalgsperioderHandler, lagreBehandlingerHandler]);
   };
 
   henleggHandle = async data => {

@@ -226,12 +226,17 @@ class Journalforing extends Component {
 
     const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
     settFeltInnhold('brukerNavn', '');
-    const response = await sokFnrDnr(brukerID);
+
+    const sok = () => sokFnrDnr(brukerID);
+    const hent = () => hentFagsakListe(brukerID);
+    const [response] = await Promise.all([sok, hent]);
+
     if (!response.data) { return false; }
+
     const { sammensattNavn = '' } = response.data;
     if (!sammensattNavn) { return false; }
+
     settFeltInnhold('brukerNavn', sammensattNavn);
-    await hentFagsakListe(brukerID);
     return { brukerID, sammensattNavn };
   };
 
