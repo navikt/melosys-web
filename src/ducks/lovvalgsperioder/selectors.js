@@ -6,6 +6,7 @@
  */
 
 import { createSelector } from 'reselect';
+import { valgteLovvalgsVilkar } from '../vilkar/selectors';
 
 // import * as Koder from '../../kodeverk';
 
@@ -13,4 +14,14 @@ import { createSelector } from 'reselect';
 export const LovvalgsperioderSelector = createSelector(
   state => (state.lovvalgsperioder.data ? state.lovvalgsperioder.data : []),
   lovvalgsperioder => lovvalgsperioder
+);
+
+export const LovvalgsperiodeSelector = createSelector(
+  state => LovvalgsperioderSelector(state),
+  lovvalgsPerioder => (lovvalgsPerioder[0] ? lovvalgsPerioder[0] : {})
+);
+
+export const LovvalgBestemmelseSelector = createSelector(
+  state => valgteLovvalgsVilkar(state),
+  lovvalgsvilkar => (lovvalgsvilkar.length > 0 ? lovvalgsvilkar[0].vilkaar : undefined)
 );

@@ -6,13 +6,13 @@ import { withRouter } from 'react-router-dom';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
-import DialogboksOppfriskSak from '../felles-komponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from '../felles-komponenter/dialogboks/dialogboksVenter';
-import DialogboksHenlegg from '../felles-komponenter/dialogboks/dialogboksHenlegg';
+import DialogboksOppfriskSak from '../soknad-komponenter/dialogboks/dialogboksOppfrisk';
+import DialogboksVenter from '../soknad-komponenter/dialogboks/dialogboksVenter';
+import DialogboksHenlegg from '../soknad-komponenter/dialogboks/dialogboksHenlegg';
 import { Saksopplysninger } from './saksopplysninger';
 
-import SideDialog from '../felles-komponenter/sideDialog/sideDialog';
-import SideOppsummering from '../felles-komponenter/sideOppsummering';
+import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
+import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingsresultatOperations } from '../ducks/behandlingsresultat/';
@@ -28,38 +28,9 @@ import { formSelectors } from '../ducks/form';
 import * as Api from '../services/api';
 
 import './saksbehandling.css';
-import '../felles-komponenter/skjema/skjema.css';
+import '../soknad-komponenter/skjema/skjema.css';
 
 class Saksbehandling extends Component {
-  static propTypes = {
-    avklartefakta: PT.array,
-    hentFagsaker: PT.func.isRequired,
-    hentBehandlingsresultat: PT.func.isRequired,
-    hentSoknad: PT.func.isRequired,
-    history: PT.object.isRequired,
-    match: PT.object.isRequired,
-    oppfriskSaksopplysninger: PT.func.isRequired,
-    resetFagsakState: PT.func.isRequired,
-    resetBehandlingsresultatState: PT.func.isRequired,
-    resetVilkarState: PT.func.isRequired,
-    resetAvklartefaktaState: PT.func.isRequired,
-    resetSoknadState: PT.func.isRequired,
-    resetBehandlingerState: PT.func.isRequired,
-    resetLovvalgsperiode: PT.func.isRequired,
-    sjekkOppfriskningStatus: PT.func.isRequired,
-    oppsummering: MPT.Oppsummering,
-    sendSoknad: PT.func.isRequired,
-    soknad: PT.object,
-    vilkar: PT.array,
-  };
-
-  static defaultProps = {
-    avklartefakta: [],
-    oppsummering: {},
-    soknad: {},
-    vilkar: [],
-  };
-
   state = {
     visOppfriskDialog: false,
     oppfriskningBlokkererInnhold: false,
@@ -176,7 +147,7 @@ class Saksbehandling extends Component {
 
     const { soknad, sendSoknad, oppsummering: { behandlingID } } = this.props;
     await sendSoknad(behandlingID, soknad);
-  }
+  };
 
   lagreVilkarHandler = async () => {
     const { skjema, oppdaterVilkarState } = this.props;
@@ -211,7 +182,7 @@ class Saksbehandling extends Component {
 
     const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
     await sendPerioder(behandlingID, behandlinger);
-  }
+  };
 
   lagreAllData = async () => {
     await this.lagreSoknadHandler();
@@ -219,7 +190,7 @@ class Saksbehandling extends Component {
     await this.lagreAvklartefaktaHandler();
     await this.lagreLovvalgsperioderHandler();
     await this.lagreBehandlingerHandler();
-  }
+  };
 
   henleggHandle = async data => {
     await this.lagreAllData;
@@ -294,14 +265,48 @@ class Saksbehandling extends Component {
 }
 
 Saksbehandling.propTypes = {
+  avklartefakta: PT.array,
+  hentFagsaker: PT.func.isRequired,
+  hentBehandlingsresultat: PT.func.isRequired,
+  hentSoknad: PT.func.isRequired,
+  history: PT.object.isRequired,
+  match: PT.object.isRequired,
+  oppfriskSaksopplysninger: PT.func.isRequired,
+  resetFagsakState: PT.func.isRequired,
+  resetBehandlingsresultatState: PT.func.isRequired,
+  resetVilkarState: PT.func.isRequired,
+  resetAvklartefaktaState: PT.func.isRequired,
+  resetSoknadState: PT.func.isRequired,
+  resetBehandlingerState: PT.func.isRequired,
+  resetLovvalgsperiode: PT.func.isRequired,
+  sjekkOppfriskningStatus: PT.func.isRequired,
+  oppsummering: MPT.Oppsummering,
+  sendSoknad: PT.func.isRequired,
+  soknad: PT.object,
+  vilkar: PT.array,
+  hentOppgaver: PT.func.isRequired,
+  tilbakeleggeOppgave: PT.func.isRequired,
+  oppdaterSoknadState: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   behandlinger: PT.object.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   sendPerioder: PT.func.isRequired,
+  oppdaterVilkarState: PT.func.isRequired,
+  oppdaterAvklarteFaktaState: PT.func.isRequired,
+  oppdaterLovvalgperioderState: PT.func.isRequired,
+  oppdaterBehandlingerState: PT.func.isRequired,
+  skjema: PT.any,
 };
 
+Saksbehandling.defaultProps = {
+  avklartefakta: [],
+  oppsummering: {},
+  soknad: {},
+  vilkar: [],
+  skjema: {},
+};
 /** Mapper både fast tekst inn til de forskjellige panelene i tillegg til å
  * mappe verdier fra søknaden (soknad) ut til Redux Form via initialValue.
  * @param state

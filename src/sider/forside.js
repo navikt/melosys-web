@@ -6,10 +6,10 @@ import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
 
 // import Statistikk from '../felles-komponenter/forside/statistikk';
-import Journalforing from '../felles-komponenter/forside/journalforing';
-import Behandling from '../felles-komponenter/forside/behandling';
-import MineOppgaver from '../felles-komponenter/forside/mineoppgaver';
-import SokSkjema from '../felles-komponenter/forside/sokskjema';
+import Journalforing from '../soknad-komponenter/forside/journalforing';
+import Behandling from '../forside-komponenter/behandling';
+import MineOppgaver from '../forside-komponenter/mineoppgaver';
+import SokSkjema from '../soknad-komponenter/forside/sokskjema';
 
 import './forside.css';
 
@@ -23,8 +23,7 @@ const Forside = props => {
           <Nav.Column xs="7">
             <MineOppgaver />
           </Nav.Column>
-          <Nav.Column xs="5">
-            <h1>Behandle sak</h1>
+          <Nav.Column className="hoyrekolonne" xs="5">
             <SokSkjema />
             <Journalforing />
             <Behandling />
