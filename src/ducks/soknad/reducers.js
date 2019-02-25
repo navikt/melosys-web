@@ -83,7 +83,7 @@ export default function reducer(state = initialState, action) {
           andelOmsetningINorge: dokument.andelOmsetningINorge,
           andelOppdragINorge: dokument.andelOppdragINorge,
           andelKontrakterINorge: dokument.andelKontrakterINorge,
-          arbeidstakereRekruttert: dokument.arbeidstakereRekruttert || null,
+          arbeidstakereRekruttertILand: dokument.arbeidstakereRekruttertILand || null,
           oppdragsKontrakterIHovedsakInngaattILand: dokument.oppdragsKontrakterIHovedsakInngaattILand || null,
           ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
         },

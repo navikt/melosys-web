@@ -37,7 +37,7 @@ function VirksomhetNorge (props) {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Hvor blir arbeidstakerne i hovedsak rekruttert?">
-                <LandVelger disabled={!redigerbart} feltNavn="arbeidstakereRekruttert" label="Land:" />
+                <LandVelger disabled={!redigerbart} feltNavn="arbeidstakereRekruttertILand" label="Land:" />
               </Nav.Fieldset>
               <Nav.Fieldset legend="Etter hvilket lands rett blir oppdragskontraker i hovedsak inngått?">
                 <LandVelger disabled={!redigerbart} feltNavn="oppdragsKontrakterIHovedsakInngaattILand" label="Land:" />
