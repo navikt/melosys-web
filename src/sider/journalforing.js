@@ -1,22 +1,21 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import _ from 'lodash';
 import * as MKV from 'melosys-kodeverk';
 
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
+
 import * as Person from '../soknad-komponenter/skjema/validering/generisk/person';
 
 import Sticky from '../hjelpekomponenter/sticky';
-
 import withErrorHandling from '../hoc/withErrorHandling';
-import { formatterDatoTilNorsk, formatterDatoTilISO } from '../utils/dato';
 import Informasjon from '../soknad-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../soknad-komponenter/journalforing/eksisterendeSaker';
 import PDFDokument from '../soknad-komponenter/journalforing/pdfdokument';
@@ -95,11 +94,11 @@ class Journalforing extends Component {
   mapVedleggsTittlerTilVedlegg = titler => titler.map(tittel => ({ dokumentID: null, tittel }));
 
   konverterTilNullable = verdi => {
-    if (_.isUndefined(verdi)) {
+    if (Utils._isUndefined(verdi)) {
       return null;
     }
     return verdi;
-  }
+  };
 
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
    * settes inn i skjemaet kun til info - ikke til endring - slik som feks navn på bruker.
@@ -209,8 +208,8 @@ class Journalforing extends Component {
     const fagsak = {
       sakstype: MKV.Koder.sakstyper.EU_EOS,
       soknadsperiode: {
-        fom: formatterDatoTilISO(journalforingPeriodeFraOgMed),
-        tom: formatterDatoTilISO(journalforingPeriodeTilOgMed),
+        fom: Utils.dato.formatterDatoTilISO(journalforingPeriodeFraOgMed),
+        tom: Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed),
       },
       land: journalforingOppholdsLand,
     };
@@ -377,7 +376,7 @@ const mapStateToProps = state => ({
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
     arbeidsgiverID: null,
     representantID: '',
-    mottattDato: formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
+    mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
     hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
     vedleggsTitler: [],
     sakstype: MKV.Koder.sakstyper.EU_EOS,
