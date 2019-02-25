@@ -93,13 +93,6 @@ class Journalforing extends Component {
 
   mapVedleggsTittlerTilVedlegg = titler => titler.map(tittel => ({ dokumentID: null, tittel }));
 
-  konverterTilNullable = verdi => {
-    if (Utils._isUndefined(verdi)) {
-      return null;
-    }
-    return verdi;
-  };
-
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
    * settes inn i skjemaet kun til info - ikke til endring - slik som feks navn på bruker.
    * Derfor må vi bygge opp og evt vaske et nytt objekt som kan sendes til backend.
@@ -138,7 +131,7 @@ class Journalforing extends Component {
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
-        arbeidsgiverID, behandlingstypeKode, representantID, representantKontaktPerson: this.konverterTilNullable(representantKontaktPerson),
+        arbeidsgiverID, behandlingstypeKode, representantID, representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
       });
     }
     return journalPostData;
