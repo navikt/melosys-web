@@ -9,6 +9,8 @@ import PanelHeader from '../panelHeader/panelHeader';
 
 import ForretningsAdresse from '../adresser/forretningsAdresse';
 
+import KontaktOpplysninger from '../../soknad-komponenter/kontaktopplysninger';
+
 import './organisasjon.css';
 
 /** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
@@ -43,6 +45,7 @@ const Organisasjon = ({ organisasjon, slettHandle }) => {
               </dl>
             </Nav.Column>
             <Nav.Column xs="6" className="organisasjon__slettwrapper">
+              <KontaktOpplysninger lagreFelter={() => console.log("test")} />
               <div className="organisasjon__slettknapp">
                 { slettHandle && <Nav.Knapp onClick={slettHandle}>Slett</Nav.Knapp> }
               </div>
