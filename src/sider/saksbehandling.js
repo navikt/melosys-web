@@ -185,22 +185,32 @@ class Saksbehandling extends Component {
   };
 
   lagreAllData = async () => {
-    await this.lagreSoknadHandler();
-    await this.lagreVilkarHandler();
-    await this.lagreAvklartefaktaHandler();
-    await this.lagreLovvalgsperioderHandler();
-    await this.lagreBehandlingerHandler();
+    const {
+      lagreSoknadHandler,
+      lagreVilkarHandler,
+      lagreAvklartefaktaHandler,
+      lagreLovvalgsperioderHandler,
+      lagreBehandlingerHandler,
+    } = this;
+
+    await Promise.all([
+      lagreSoknadHandler(),
+      lagreVilkarHandler(),
+      lagreAvklartefaktaHandler(),
+      lagreBehandlingerHandler(),
+    ]);
+
+    await lagreLovvalgsperioderHandler();
   };
 
   henleggHandle = async data => {
-    await this.lagreAllData;
+    await this.lagreAllData();
     await this.henleggSak(data);
     this.props.history.push('/');
   };
 
   henleggSak = async data => {
-    const { oppsummering } = this.props;
-    const { saksnummer } = oppsummering;
+    const { oppsummering: { saksnummer } } = this.props;
     await Api.Fagsaker.henlegg(saksnummer, data);
   };
 
@@ -227,6 +237,11 @@ class Saksbehandling extends Component {
             <Nav.Column xs="7">
               <Saksopplysninger
                 blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+                lagreVilkarHandler={this.lagreVilkarHandler}
+                lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
+                lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
+                lagreBehandlingerHandler={this.lagreBehandlingerHandler}
+                lagreAllData={this.lagreAllData}
               />
             </Nav.Column>
             <Nav.Column xs="5">

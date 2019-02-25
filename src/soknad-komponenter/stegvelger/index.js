@@ -59,42 +59,6 @@ class Stegvelger extends Component {
     this.tilSteg(this.beregnNesteSteg());
   };
 
-  oppdaterBehandlinger = async () => {
-    const { skjema, oppdaterBehandlingerState } = this.props;
-    await oppdaterBehandlingerState(skjema);
-  };
-
-  lagreBehandlingerHandler = async () => {
-    const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
-    await sendPerioder(behandlingID, behandlinger);
-  };
-
-  oppdaterOgLagreBehandlinger = async () => {
-    await this.oppdaterBehandlinger();
-    await this.lagreBehandlingerHandler();
-  };
-
-  lagreVilkarHandler = async () => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { vilkar } = this.props;
-    const { sendVilkar } = this.props;
-    await sendVilkar(bid, vilkar);
-  };
-
-  lagreAvklartefaktaHandler = async () => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { avklartefakta } = this.props;
-    const { sendAvklartefakta } = this.props;
-    await sendAvklartefakta(bid, avklartefakta);
-  };
-
-  lagreLovvalgsperioderHandler = async () => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { lovvalgsperioder } = this.props;
-    const { sendLovvalgsperioder } = this.props;
-    await sendLovvalgsperioder(bid, lovvalgsperioder);
-  };
-
   fatteVedtakHandler = async behandlingsresultattype => {
     const bid = this.props.oppsummering.behandlingID;
     const { fatteVedtak } = this.props;
@@ -104,30 +68,25 @@ class Stegvelger extends Component {
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
-    const {
-      skjema,
-      oppdaterAvklarteFaktaState,
-      oppdaterVilkarState,
-      oppdaterLovvalgperioderState,
-    } = this.props;
-
-    await oppdaterAvklarteFaktaState(skjema);
-    await oppdaterVilkarState(skjema);
-    await oppdaterLovvalgperioderState(skjema);
-
-    await this.lagreVilkarHandler();
-    await this.lagreAvklartefaktaHandler();
-    await this.lagreLovvalgsperioderHandler();
+    await this.props.lagreAllData();
     await this.fatteVedtakHandler(behandlingsresultattype);
+  };
+
+  sendLovvalgsperioderHandler = async () => {
+    const bid = this.props.oppsummering.behandlingID;
+    const { lovvalgsperioder, sendLovvalgsperioder } = this.props;
+    await sendLovvalgsperioder(bid, lovvalgsperioder);
   };
 
   sendEndretLovvalgsPeriode = async (fomdato, tomdato, begrunnelseKode) => {
     const { oppsummering, endreLovvalgsPeriode } = this.props;
-    const { lagreLovvalgsperioderHandler, tilForsiden } = this;
+    const { tilForsiden, sendLovvalgsperioderHandler } = this;
 
     await endreLovvalgsPeriode(fomdato, tomdato);
-    await lagreLovvalgsperioderHandler();
-    await API.Vedtak.endrePeriode(oppsummering.behandlingID, { begrunnelseKode });
+    await Promise.all([
+      sendLovvalgsperioderHandler(),
+      API.Vedtak.endrePeriode(oppsummering.behandlingID, { begrunnelseKode }),
+    ]);
 
     tilForsiden();
   };
@@ -146,8 +105,8 @@ class Stegvelger extends Component {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
-      lagreLovvalgsperioder: this.lagreLovvalgsperioderHandler,
-      oppdaterOgLagreBehandlinger: this.oppdaterOgLagreBehandlinger,
+      lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
+      oppdaterOgLagreBehandlinger: this.props.lagreBehandlingerHandler,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
       sendEndretLovvalgsPeriode: this.sendEndretLovvalgsPeriode,
     };
@@ -209,7 +168,7 @@ class Stegvelger extends Component {
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
-    } = this;
+    } = this.props;
 
     const { behandlingID } = this.props.oppsummering;
 
@@ -283,6 +242,11 @@ Stegvelger.propTypes = {
   valgteArbeidsgivere: PT.array,
   vilkar: PT.array.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
+  lagreVilkarHandler: PT.func.isRequired,
+  lagreAvklartefaktaHandler: PT.func.isRequired,
+  lagreLovvalgsperioderHandler: PT.func.isRequired,
+  lagreBehandlingerHandler: PT.func.isRequired,
+  lagreAllData: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
