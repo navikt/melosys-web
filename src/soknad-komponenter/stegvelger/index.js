@@ -150,11 +150,8 @@ class Stegvelger extends Component {
     const {
       avklartefakta,
       skjema,
-      oppdaterAvklarteFaktaState,
       oppdaterBehandlingerState,
-      oppdaterVilkarState,
       oppdaterLokalSoknadHandler,
-      oppdaterLovvalgperioderState,
       lagreSoknadHandler,
       lovvalgsperioder,
       vilkar,
@@ -172,9 +169,6 @@ class Stegvelger extends Component {
 
     const { behandlingID } = this.props.oppsummering;
 
-    await oppdaterAvklarteFaktaState(skjema);
-    await oppdaterVilkarState(skjema);
-    await oppdaterLovvalgperioderState(skjema);
     await oppdaterBehandlingerState(skjema);
 
     await lagreVilkarHandler(behandlingID, vilkar);
@@ -229,11 +223,8 @@ Stegvelger.propTypes = {
   lovvalgsperioder: PT.array.isRequired,
   inngang: PT.object,
   match: PT.object.isRequired,
-  oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
-  oppdaterVilkarState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
-  oppdaterLovvalgperioderState: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   settSkjemaVerdi: PT.func.isRequired,
@@ -284,9 +275,6 @@ const mapDispatchToProps = dispatch => ({
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
-  oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
-  oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
-  oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
