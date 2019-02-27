@@ -3,14 +3,14 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import * as MKV from 'melosys-kodeverk';
 
+import * as Utils from '../../../utils';
 import PdfLenkeListe from '../../pdfLenkeListe';
 import { KodeTermSelect } from '../../kodeTermSelect';
+
 import * as Nav from '../../../utils/navFrontend';
-
 import { fagsakSelectors } from '../../../ducks/fagsaker';
-import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 
-import { formatterDatoTilNorsk, erIPeriode, vaskInputDato, formatterDatoTilISO } from '../../../utils/dato';
+import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 
 import * as MPT from '../../../proptypes';
 
@@ -32,7 +32,7 @@ export class VurderingEndrePeriode extends React.Component {
 
   validerTomDato = () => {
     const { nyTomDato } = this.state;
-    const vasketTomDato = vaskInputDato(nyTomDato);
+    const vasketTomDato = Utils.dato.vaskInputDato(nyTomDato);
     if (vasketTomDato) {
       return true;
     }
@@ -52,7 +52,7 @@ export class VurderingEndrePeriode extends React.Component {
   validerPeriode = () => {
     const { nyTomDato } = this.state;
     const { fomDato, tomDato } = this.props.lovvalgsPeriode;
-    const periodeValid = erIPeriode(fomDato, tomDato, formatterDatoTilISO(nyTomDato));
+    const periodeValid = Utils.dato.erIPeriode(fomDato, tomDato, Utils.dato.formatterDatoTilISO(nyTomDato));
     if (periodeValid) {
       return true;
     }
@@ -69,7 +69,7 @@ export class VurderingEndrePeriode extends React.Component {
       const { lovvalgsPeriode: { fomDato } } = this.props;
       const { begrunnelsekode, nyTomDato } = this.state;
 
-      this.props.sendEndretLovvalgsPeriode(fomDato, formatterDatoTilISO(nyTomDato), begrunnelsekode);
+      this.props.sendEndretLovvalgsPeriode(fomDato, Utils.dato.formatterDatoTilISO(nyTomDato), begrunnelsekode);
     }
   };
 
@@ -118,8 +118,8 @@ export class VurderingEndrePeriode extends React.Component {
 
     const { behandlingID } = oppsummering;
 
-    const formattertFomDato = formatterDatoTilNorsk(fomDato);
-    const formattertTomDato = formatterDatoTilNorsk(tomDato);
+    const formattertFomDato = Utils.dato.formatterDatoTilNorsk(fomDato);
+    const formattertTomDato = Utils.dato.formatterDatoTilNorsk(tomDato);
 
     return (
       <div className="vurderingEndrePeriode">
