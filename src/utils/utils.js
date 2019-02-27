@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { isUndefined as _isUndefined } from 'lodash';
 
 const versjon = (process.env.REACT_APP_VERSION ? `v${process.env.REACT_APP_VERSION}` : '(ukjent)');
 const byggTidspunkt = process.env.REACT_APP_BUILD_DATETIME || '(ukjent)';
@@ -43,7 +44,9 @@ export function isJSON(str) {
     return false;
   }
 }
-
+export function verdiSomNullable(verdi) {
+  return _isUndefined(verdi) ? null : verdi;
+}
 /**
  * Dekonstruerer querystring til object med props fra querystring
  * @param sporreStreng
