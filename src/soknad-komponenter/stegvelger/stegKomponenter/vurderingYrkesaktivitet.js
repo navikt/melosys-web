@@ -17,7 +17,8 @@ const VurderingYrkesaktivitet = props => {
           disabled={!redigerbart}
           feltNavn="avklartefakta.yrkesaktivitet"
           value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}
-          label="Ordinær arbeidstaker"
+          label="Arbeidstaker eller frilanser"
+
         />
         <Skjema.Radio
           disabled={!redigerbart}
@@ -29,7 +30,7 @@ const VurderingYrkesaktivitet = props => {
           disabled={!redigerbart}
           feltNavn="avklartefakta.yrkesaktivitet"
           value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
-          label="Ordinær arbeidstaker og selvstendig næringsdrivende"
+          label="Arbeidstaker eller frilanser og selvstendig næringsdrivende"
         />
         <Skjema.Radio
           disabled={!redigerbart}

@@ -4,17 +4,17 @@ import PT from 'prop-types';
 import moment from 'moment/moment';
 import * as MKV from 'melosys-kodeverk';
 
+import * as Utils from '../utils/';
 import * as KV from '../kodeverk';
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
 
+import * as MPT from '../proptypes/';
 import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
-import { arrayTilKonjunksjon } from '../utils/streng';
 import { KodeTermSelect } from './kodeTermSelect';
 
 import './sideOppsummering.css';
@@ -131,7 +131,7 @@ class SideOppsummering extends Component {
       gyldigeOppholdsLand,
     } = this.props;
 
-    const gyldigeOppholdsLandSetning = arrayTilKonjunksjon(gyldigeOppholdsLand.map(land => land.term));
+    const gyldigeOppholdsLandSetning = Utils.streng.arrayTilKonjunksjon(gyldigeOppholdsLand.map(land => land.term));
     let endreBehandlingsStatusValg = [];
     if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = this.hentBehandlingsStatusValg(oppsummering.behandlingsstatus.kode);
 
