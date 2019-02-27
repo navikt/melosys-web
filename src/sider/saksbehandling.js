@@ -3,6 +3,7 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
+import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
@@ -37,17 +38,17 @@ class Saksbehandling extends Component {
     visHenleggDialog: false,
   };
 
-  async componentDidMount() {
-    await this.lastInnSaksopplysninger();
+  componentDidMount() {
+    this.lastInnSaksopplysninger();
   }
 
-  async componentWillUnmount() {
-    await this.props.resetFagsakState();
-    await this.props.resetAvklartefaktaState();
-    await this.props.resetLovvalgsperiode();
-    await this.props.resetVilkarState();
-    await this.props.resetSoknadState();
-    await this.props.resetBehandlingerState();
+  componentWillUnmount() {
+    this.props.resetFagsakState();
+    this.props.resetAvklartefaktaState();
+    this.props.resetLovvalgsperiode();
+    this.props.resetVilkarState();
+    this.props.resetSoknadState();
+    this.props.resetBehandlingerState();
   }
 
   lastInnSaksopplysninger = async () => {
@@ -56,25 +57,30 @@ class Saksbehandling extends Component {
       hentSoknad, sjekkOppfriskningStatus,
     } = this.props;
     const { snr } = this.props.match.params;
-    const response = await hentFagsaker(snr);
-    const { behandlinger } = response.data;
+    try {
+      const response = await hentFagsaker(snr);
+      const { behandlinger } = response.data;
 
-    if (!behandlinger) return false;
-    const { oppsummering: { behandlingID } } = behandlinger[0];
+      if (!behandlinger) return false;
+      const { oppsummering: { behandlingID } } = behandlinger[0];
 
-    await hentBehandlingsresultat(behandlingID);
+      await hentBehandlingsresultat(behandlingID);
 
-    // Sjekk om saken er iferd under oppdatering
-    const oppfriskningStatus = await sjekkOppfriskningStatus(behandlingID);
-    const { data: status } = oppfriskningStatus;
+      // Sjekk om saken er iferd under oppdatering
+      const oppfriskningStatus = await sjekkOppfriskningStatus(behandlingID);
+      const { data: status } = oppfriskningStatus;
 
-    if (status === 'PROGRESS') {
-      this.blokkerInnholdMedOppfriskSpinner();
-      return false;
+      if (status === 'PROGRESS') {
+        this.blokkerInnholdMedOppfriskSpinner();
+        return false;
+      }
+
+      await hentSoknad(behandlingID);
+      return true;
+    } catch (e) {
+      Utils.logger.error(e);
     }
-
-    await hentSoknad(behandlingID);
-    return true;
+    return false;
   };
 
   blokkerInnholdMedOppfriskSpinner = () => {
@@ -146,7 +152,7 @@ class Saksbehandling extends Component {
     await oppdaterSoknadState(skjema);
 
     const { soknad, sendSoknad, oppsummering: { behandlingID } } = this.props;
-    await sendSoknad(behandlingID, soknad);
+    sendSoknad(behandlingID, soknad);
   };
 
   lagreVilkarHandler = async () => {
@@ -155,7 +161,7 @@ class Saksbehandling extends Component {
 
     const { sendVilkar, vilkar } = this.props;
     const bid = this.props.oppsummering.behandlingID;
-    await sendVilkar(bid, vilkar);
+    sendVilkar(bid, vilkar);
   };
 
   lagreAvklartefaktaHandler = async () => {
@@ -164,7 +170,7 @@ class Saksbehandling extends Component {
 
     const { sendAvklartefakta, avklartefakta } = this.props;
     const bid = this.props.oppsummering.behandlingID;
-    await sendAvklartefakta(bid, avklartefakta);
+    sendAvklartefakta(bid, avklartefakta);
   };
 
   lagreLovvalgsperioderHandler = async () => {
@@ -173,7 +179,7 @@ class Saksbehandling extends Component {
 
     const { sendLovvalgsperioder, lovvalgsperioder } = this.props;
     const bid = this.props.oppsummering.behandlingID;
-    await sendLovvalgsperioder(bid, lovvalgsperioder);
+    sendLovvalgsperioder(bid, lovvalgsperioder);
   };
 
   lagreBehandlingerHandler = async () => {
@@ -181,27 +187,46 @@ class Saksbehandling extends Component {
     await oppdaterBehandlingerState(skjema);
 
     const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
-    await sendPerioder(behandlingID, behandlinger);
+    sendPerioder(behandlingID, behandlinger);
   };
 
   lagreAllData = async () => {
-    await this.lagreSoknadHandler();
-    await this.lagreVilkarHandler();
-    await this.lagreAvklartefaktaHandler();
-    await this.lagreLovvalgsperioderHandler();
-    await this.lagreBehandlingerHandler();
+    const {
+      lagreSoknadHandler,
+      lagreVilkarHandler,
+      lagreAvklartefaktaHandler,
+      lagreLovvalgsperioderHandler,
+      lagreBehandlingerHandler,
+    } = this;
+
+    try {
+      await Promise.all([
+        lagreSoknadHandler(),
+        lagreVilkarHandler(),
+        lagreAvklartefaktaHandler(),
+        lagreBehandlingerHandler(),
+      ]);
+
+      lagreLovvalgsperioderHandler();
+    } catch (e) {
+      Utils.logger.error(e);
+    }
   };
 
   henleggHandle = async data => {
-    await this.lagreAllData;
-    await this.henleggSak(data);
-    this.props.history.push('/');
+    try {
+      await this.lagreAllData();
+      await this.henleggSak(data);
+    } catch (e) {
+      Utils.logger.error(e);
+    } finally {
+      this.props.history.push('/');
+    }
   };
 
   henleggSak = async data => {
-    const { oppsummering } = this.props;
-    const { saksnummer } = oppsummering;
-    await Api.Fagsaker.henlegg(saksnummer, data);
+    const { oppsummering: { saksnummer } } = this.props;
+    Api.Fagsaker.henlegg(saksnummer, data);
   };
 
   render() {
@@ -227,6 +252,11 @@ class Saksbehandling extends Component {
             <Nav.Column xs="7">
               <Saksopplysninger
                 blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+                lagreVilkarHandler={this.lagreVilkarHandler}
+                lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
+                lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
+                lagreBehandlingerHandler={this.lagreBehandlingerHandler}
+                lagreAllData={this.lagreAllData}
               />
             </Nav.Column>
             <Nav.Column xs="5">

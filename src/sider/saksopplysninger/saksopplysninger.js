@@ -76,9 +76,8 @@ class Saksopplysninger extends Component {
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    const { oppfriskSaksopplysninger, sendSoknad } = this.props;
+    const { oppfriskSaksopplysninger, sendSoknad, soknad } = this.props;
     const { behandlingID } = this.props.oppsummering;
-    const { soknad } = this.props;
     await sendSoknad(behandlingID, soknad);
     await oppfriskSaksopplysninger(behandlingID);
     this.props.blokkerInnholdMedOppfriskSpinner();
@@ -115,6 +114,11 @@ class Saksopplysninger extends Component {
         }
         { visStegVelger &&
           <Stegvelger
+            lagreVilkarHandler={this.props.lagreVilkarHandler}
+            lagreAvklartefaktaHandler={this.props.lagreAvklartefaktaHandler}
+            lagreLovvalgsperioderHandler={this.props.lagreLovvalgsperioderHandler}
+            lagreBehandlingerHandler={this.props.lagreBehandlingerHandler}
+            lagreAllData={this.props.lagreAllData}
             fatteVedtakHandler={this.fatteVedtakHandler}
             lagreSoknadHandler={this.lagreSoknadHandler}
             oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
@@ -161,6 +165,11 @@ Saksopplysninger.propTypes = {
   valid: PT.bool.isRequired,
   vurdering: PT.object,
   syncErrors: PT.object,
+  lagreVilkarHandler: PT.func.isRequired,
+  lagreAvklartefaktaHandler: PT.func.isRequired,
+  lagreLovvalgsperioderHandler: PT.func.isRequired,
+  lagreBehandlingerHandler: PT.func.isRequired,
+  lagreAllData: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
