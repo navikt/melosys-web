@@ -12,6 +12,7 @@ import * as MPT from '../../../proptypes/';
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
+import { formSelectors } from '../../../ducks/form';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
 import Listevelger from '../../skjema/listevelger';
@@ -92,10 +93,22 @@ const TidligereMedlemskap = props => (<div><FieldArray name="tidligeremedlemskap
 
 
 class VurderingArtikkel16 extends Component {
+  componentDidUpdate(prevProps) {
+    if (prevProps.art16Begrunnelser !== this.props.art16Begrunnelser) {
+      this.lagreVilkarOgLovvalgsperioder();
+    }
+  }
+
   lagreBehandlingerOgFatteVedtak = async behandlingsresultattype => {
     const { oppdaterOgLagreBehandlinger, lagreOgFatteVedtak } = this.props;
     await oppdaterOgLagreBehandlinger();
     await lagreOgFatteVedtak(behandlingsresultattype);
+  };
+
+  lagreVilkarOgLovvalgsperioder = async () => {
+    const { lagreVilkarHandler, lagreLovvalgsperioderHandler } = this.props;
+    await lagreVilkarHandler();
+    await lagreLovvalgsperioderHandler();
   };
 
   render() {
@@ -182,6 +195,9 @@ VurderingArtikkel16.propTypes = {
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
+  art16Begrunnelser: PT.array.isRequired,
+  lagreVilkarHandler: PT.func.isRequired,
+  lagreLovvalgsperioderHandler: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -190,6 +206,7 @@ const mapStateToProps = state => ({
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
+  art16Begrunnelser: formSelectors.Art16BegrunnelserSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingArtikkel16);

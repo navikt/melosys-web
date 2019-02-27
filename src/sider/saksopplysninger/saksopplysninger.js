@@ -115,6 +115,8 @@ class Saksopplysninger extends Component {
         }
         { visStegVelger &&
           <Stegvelger
+            lagreVilkarHandler={this.props.lagreVilkarHandler}
+            lagreLovvalgsperioderHandler={this.props.lagreLovvalgsperioderHandler}
             fatteVedtakHandler={this.fatteVedtakHandler}
             lagreSoknadHandler={this.lagreSoknadHandler}
             oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
@@ -161,6 +163,8 @@ Saksopplysninger.propTypes = {
   valid: PT.bool.isRequired,
   vurdering: PT.object,
   syncErrors: PT.object,
+  lagreVilkarHandler: PT.func.isRequired,
+  lagreLovvalgsperioderHandler: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {

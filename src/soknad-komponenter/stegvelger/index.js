@@ -150,6 +150,8 @@ class Stegvelger extends Component {
       oppdaterOgLagreBehandlinger: this.oppdaterOgLagreBehandlinger,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
       sendEndretLovvalgsPeriode: this.sendEndretLovvalgsPeriode,
+      lagreVilkarHandler: this.props.lagreVilkarHandler,
+      lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
     };
 
     const propsLight = {
@@ -283,6 +285,8 @@ Stegvelger.propTypes = {
   valgteArbeidsgivere: PT.array,
   vilkar: PT.array.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
+  lagreVilkarHandler: PT.func.isRequired,
+  lagreLovvalgsperioderHandler: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {

@@ -227,6 +227,8 @@ class Saksbehandling extends Component {
             <Nav.Column xs="7">
               <Saksopplysninger
                 blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+                lagreVilkarHandler={this.lagreVilkarHandler}
+                lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
               />
             </Nav.Column>
             <Nav.Column xs="5">
