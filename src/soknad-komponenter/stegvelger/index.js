@@ -8,6 +8,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes/';
 import * as API from '../../services/api';
+import * as Utils from '../../utils';
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
@@ -63,32 +64,38 @@ class Stegvelger extends Component {
     const bid = this.props.oppsummering.behandlingID;
     const { fatteVedtak } = this.props;
     const vedtakBody = { behandlingsresultattype };
-    await fatteVedtak(bid, vedtakBody);
+    try {
+      await fatteVedtak(bid, vedtakBody);
+    } catch (e) {
+      Utils.logger.error(e);
+    }
     this.tilForsiden();
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
     await this.props.lagreAllData();
-    await this.fatteVedtakHandler(behandlingsresultattype);
+    this.fatteVedtakHandler(behandlingsresultattype);
   };
 
-  sendLovvalgsperioderHandler = async () => {
+  endreDatoOgSendLovvalgsperioderHandler = async (fomdato, tomdato) => {
+    await this.props.endreLovvalgsPeriode(fomdato, tomdato);
+
     const bid = this.props.oppsummering.behandlingID;
     const { lovvalgsperioder, sendLovvalgsperioder } = this.props;
-    await sendLovvalgsperioder(bid, lovvalgsperioder);
+    sendLovvalgsperioder(bid, lovvalgsperioder);
   };
 
   sendEndretLovvalgsPeriode = async (fomdato, tomdato, begrunnelseKode) => {
-    const { oppsummering, endreLovvalgsPeriode } = this.props;
-    const { tilForsiden, sendLovvalgsperioderHandler } = this;
+    const { oppsummering } = this.props;
+    const { tilForsiden, endreDatoOgSendLovvalgsperioderHandler } = this;
 
-    await endreLovvalgsPeriode(fomdato, tomdato);
-    await Promise.all([
-      sendLovvalgsperioderHandler(),
-      API.Vedtak.endrePeriode(oppsummering.behandlingID, { begrunnelseKode }),
-    ]);
-
-    tilForsiden();
+    try {
+      await endreDatoOgSendLovvalgsperioderHandler(fomdato, tomdato);
+      API.Vedtak.endrePeriode(oppsummering.behandlingID, { begrunnelseKode });
+      tilForsiden();
+    } catch (e) {
+      Utils.logger.error(e);
+    }
   };
 
   tilForsiden = () => {
