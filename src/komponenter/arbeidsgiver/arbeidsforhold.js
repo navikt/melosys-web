@@ -1,5 +1,6 @@
 import React from 'react';
 
+import * as Utils from '../../utils';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
@@ -12,9 +13,6 @@ import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
 import Arbeidsavtaler from './arbeidsavtaler';
 import ForretningsAdresse from '../adresser/forretningsAdresse';
-
-import { boolTilNorsk } from '../../utils/streng';
-import { datoDiff } from '../../utils/dato';
 
 import './arbeidsforhold.css';
 
@@ -41,7 +39,7 @@ const Arbeidsforholdet = props => {
   const { navn: arbeidsgiverNavn } = arbeidsgiver;
   const { forretningsadresse } = arbeidsgiver;
 
-  const varighet = datoDiff(ansettelsesPeriode.fom, ansettelsesPeriode.tom);
+  const varighet = Utils.dato.datoDiff(ansettelsesPeriode.fom, ansettelsesPeriode.tom);
   const varighetLabel = `${varighet} mnd`;
 
   return (
@@ -74,7 +72,7 @@ const Arbeidsforholdet = props => {
                     <dt>Forretningsadresse:</dt>
                     <ForretningsAdresse forretningsadresse={forretningsadresse} />
                     <dt>A-ordning:</dt>
-                    <dd>{boolTilNorsk(Aordning)}</dd>
+                    <dd>{Utils.streng.boolTilNorsk(Aordning)}</dd>
                   </dl>
                 </Nav.Column>
                 {arbeidsavtaler && <Arbeidsavtaler arbeidsavtaler={arbeidsavtaler} />}

@@ -76,9 +76,8 @@ class Saksopplysninger extends Component {
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    const { oppfriskSaksopplysninger, sendSoknad } = this.props;
+    const { oppfriskSaksopplysninger, sendSoknad, soknad } = this.props;
     const { behandlingID } = this.props.oppsummering;
-    const { soknad } = this.props;
     await sendSoknad(behandlingID, soknad);
     await oppfriskSaksopplysninger(behandlingID);
     this.props.blokkerInnholdMedOppfriskSpinner();
@@ -115,6 +114,11 @@ class Saksopplysninger extends Component {
         }
         { visStegVelger &&
           <Stegvelger
+            lagreVilkarHandler={this.props.lagreVilkarHandler}
+            lagreAvklartefaktaHandler={this.props.lagreAvklartefaktaHandler}
+            lagreLovvalgsperioderHandler={this.props.lagreLovvalgsperioderHandler}
+            lagreBehandlingerHandler={this.props.lagreBehandlingerHandler}
+            lagreAllData={this.props.lagreAllData}
             fatteVedtakHandler={this.fatteVedtakHandler}
             lagreSoknadHandler={this.lagreSoknadHandler}
             oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
@@ -161,6 +165,11 @@ Saksopplysninger.propTypes = {
   valid: PT.bool.isRequired,
   vurdering: PT.object,
   syncErrors: PT.object,
+  lagreVilkarHandler: PT.func.isRequired,
+  lagreAvklartefaktaHandler: PT.func.isRequired,
+  lagreLovvalgsperioderHandler: PT.func.isRequired,
+  lagreBehandlingerHandler: PT.func.isRequired,
+  lagreAllData: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -208,13 +217,14 @@ const mapStateToProps = state => ({
     oppgittAdressePostnummer: soknadSelectors.BostedAdresseSelector(state).postnummer,
     oppgittAdressePoststed: soknadSelectors.BostedAdresseSelector(state).poststed,
     oppgittAdresseLand: soknadSelectors.BostedAdresseSelector(state).landKode,
-    erBemanningsbyra: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).erBemanningsbyra,
     utsendteNeste12Mnd: Math.trunc(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendteNeste12Mnd),
     antallAdmAnsatte: Math.trunc(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte),
-    antallAdminAnsatteEOS: Math.trunc(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdminAnsatteEOS),
+    antallAnsatte: Math.trunc(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAnsatte),
     andelOmsetningINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge),
+    andelOppdragINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge),
     andelKontrakterINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge),
-    utsendtFortsetterArbeidsforholdIUtlandet: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendtFortsetterArbeidsforholdIUtlandet,
+    arbeidstakereRekruttertILand: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).arbeidstakereRekruttertILand,
+    oppdragsKontrakterIHovedsakInngaattILand: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).oppdragsKontrakterIHovedsakInngaattILand,
     ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
@@ -224,11 +234,8 @@ const mapStateToProps = state => ({
     sammeAdresseSomArbeidsgiver: soknadSelectors.OppholdUtlandSelector(state).sammeAdresseSomArbeidsgiver,
     ektefelleEllerBarnINorge: soknadSelectors.OppholdUtlandSelector(state).ektefelleEllerBarnINorge,
     studentSemester: soknadSelectors.OppholdUtlandSelector(state).studentSemester,
-    studieLand: soknadSelectors.OppholdUtlandSelector(state).studieLandKode,
     erSelvstendig: soknadSelectors.SelvstendigArbeidSelector(state).erSelvstendig,
     selvstendigForetak: soknadSelectors.SelvstendigArbeidSelector(state).selvstendigForetak,
-    studentFinansiering: soknadSelectors.OppholdUtlandSelector(state).studentFinansiering,
-    intensjonOmRetur: soknadSelectors.BostedSelector(state).intensjonOmRetur,
     familiesBosted: soknadSelectors.BostedSelector(state).familiesBostedLandKode,
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
@@ -254,7 +261,7 @@ const mapStateToProps = state => ({
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },
     vilkar: {
-      vesentligVirksomhet: (vilkarSelectors.VilkarSelector(state).oppfylt),
+      vesentligVirksomhet: (vilkarSelectors.vesentligVirksomhetSelector(state).oppfylt),
       vesentligVirksomhetBegrunnelser: (vilkarSelectors.vesentligVirksomhetSelector(state).begrunnelseKoder),
       normaltDriverVirksomhet: (vilkarSelectors.normaltDriverVirksomhetSelector(state).oppfylt),
       normaltDriverVirksomhetBegrunnelser: (vilkarSelectors.normaltDriverVirksomhetSelector(state).begrunnelseKoder),

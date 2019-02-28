@@ -3,20 +3,19 @@ import { connect } from 'react-redux';
 
 import PT from 'prop-types';
 
+import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+
 import * as Ikoner from '../resources/images';
-
 import { fagsakSelectors } from '../ducks/fagsaker/';
+
 import { soknadSelectors, soknadOperations } from '../ducks/soknad';
-
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
-
-import { formatterDatoTilNorsk, vaskInputDato, formatterDatoTilISO, erGyldigPeriode } from '../utils/dato';
 
 import './oppholdPeriode.css';
 
-const OppholdEndring = props => {
+export const OppholdEndring = props => {
   const {
     oppholdUtlandNyFom,
     oppholdUtlandNyTom,
@@ -114,14 +113,14 @@ class OppholdPeriode extends Component {
 
   validerDato = feltNavn => {
     const verdi = this.state[feltNavn];
-    const vasketVerdi = vaskInputDato(verdi);
+    const vasketVerdi = Utils.dato.vaskInputDato(verdi);
     return vasketVerdi !== false;
   };
 
   validerFelter = () => {
     const erPeriodeOppdatertOgGyldig = this.vaskOgValiderDato('oppholdUtlandNyFom') &&
                                        this.vaskOgValiderDato('oppholdUtlandNyTom') &&
-                                       erGyldigPeriode(this.state.oppholdUtlandNyFom, this.state.oppholdUtlandNyTom);
+      Utils.dato.erGyldigPeriode(this.state.oppholdUtlandNyFom, this.state.oppholdUtlandNyTom);
 
     this.setState({ erPeriodeOppdatertOgGyldig });
   };
@@ -130,7 +129,7 @@ class OppholdPeriode extends Component {
     const gyldigDato = this.validerDato(feltNavn);
     if (gyldigDato) {
       const verdi = this.state[feltNavn];
-      const vasketVerdi = vaskInputDato(verdi);
+      const vasketVerdi = Utils.dato.vaskInputDato(verdi);
       this.setState({ [feltNavn]: vasketVerdi });
     } else {
       this.setState({ [feltNavn]: 'Ugyldig' });
@@ -141,7 +140,7 @@ class OppholdPeriode extends Component {
   oppdaterPeriode = event => {
     event.preventDefault();
     const { oppholdUtlandNyFom, oppholdUtlandNyTom } = this.state;
-    const periode = { fom: formatterDatoTilISO(oppholdUtlandNyFom), tom: formatterDatoTilISO(oppholdUtlandNyTom) };
+    const periode = { fom: Utils.dato.formatterDatoTilISO(oppholdUtlandNyFom), tom: Utils.dato.formatterDatoTilISO(oppholdUtlandNyTom) };
     this.props.oppdaterPeriode(periode);
     // Todo: Denne er hacky. Bakgrunn: oppdatert soknad rekker ikke å re-propagate til parent før
     // funksjonen nedenfor kalles. Vurder å skrive om til en async await-aktig løsning.
@@ -225,8 +224,8 @@ OppholdPeriode.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
-  oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
+  oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
+  oppholdUtlandTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 

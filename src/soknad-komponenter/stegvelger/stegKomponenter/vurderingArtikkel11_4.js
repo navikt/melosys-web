@@ -118,7 +118,7 @@ class VurderingArtikkel11_4 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Fyller søker resterende kriterier for artikkel 11.4?">
+              <Nav.Fieldset legend="Velg riktig artikkel:">
                 <Nav.Radio
                   name="artikkel11"
                   onChange={this.radioEndringHandler}
@@ -146,8 +146,8 @@ class VurderingArtikkel11_4 extends Component {
               </Nav.Fieldset>
               { visNISAvsnitt && (
                 <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?">
-                  <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.nis" value={BOOLSK.SANN} label="Ja" />
                   <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.nis" value={BOOLSK.USANN} label="Nei" />
+                  <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.nis" value={BOOLSK.SANN} label="Ja" />
                 </Nav.Fieldset>
               )
               }

@@ -1,6 +1,6 @@
-import { vaskInputDato } from '../../../../utils/dato';
+import * as Utils from '../../../../utils';
 
-const datoErGyldig = (verdi = '') => !(vaskInputDato(verdi) === false);
+const datoErGyldig = (verdi = '') => !(Utils.dato.vaskInputDato(verdi) === false);
 
 /* eslint import/prefer-default-export:off */
 export { datoErGyldig };
