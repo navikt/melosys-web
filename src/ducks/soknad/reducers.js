@@ -77,13 +77,14 @@ export default function reducer(state = initialState, action) {
         },
         arbeidUtland: dokument.arbeidUtland,
         juridiskArbeidsgiverNorge: {
-          erBemanningsbyra: dokument.erBemanningsbyra,
+          antallAnsatte: dokument.antallAnsatte,
           utsendteNeste12Mnd: dokument.utsendteNeste12Mnd,
           antallAdmAnsatte: dokument.antallAdmAnsatte,
-          antallAdminAnsatteEOS: dokument.antallAdminAnsatteEOS,
           andelOmsetningINorge: dokument.andelOmsetningINorge,
+          andelOppdragINorge: dokument.andelOppdragINorge,
           andelKontrakterINorge: dokument.andelKontrakterINorge,
-          utsendtFortsetterArbeidsforholdIUtlandet: dokument.utsendtFortsetterArbeidsforholdIUtlandet,
+          arbeidstakereRekruttertILand: dokument.arbeidstakereRekruttertILand || null,
+          oppdragsKontrakterIHovedsakInngaattILand: dokument.oppdragsKontrakterIHovedsakInngaattILand || null,
           ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
         },
         arbeidsgiversBekreftelse: {
@@ -104,17 +105,16 @@ export default function reducer(state = initialState, action) {
           },
           oppholdslandKoder: dokument.oppholdsland,
           sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
-          ektefelleEllerBarnINorge: dokument.ektefelleEllerBarnINorge,
+          ektefelleEllerBarnINorge: null,
           forutgaendeBostedINorge: dokument.forutgaendeBostedINorge,
-          studentSemester: dokument.studentSemester,
-          studieLandKode: dokument.studieLand,
-          studentFinansiering: dokument.studentFinansiering,
+          studentSemester: null,
+          studentFinansieringKode: null,
         },
         foretakUtland: dokument.foretakUtland,
         bosted: {
-          intensjonOmRetur: dokument.intensjonOmRetur,
+          intensjonOmRetur: null,
           familiesBostedLandKode: dokument.familiesBosted,
-          antallMaanederINorge: dokument.antallMaanederINorge,
+          antallMaanederINorge: null,
           EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
           adresseIUtlandet: dokument.adresseIUtlandet,
           oppgittAdresse: {
@@ -133,8 +133,8 @@ export default function reducer(state = initialState, action) {
         },
         personOpplysninger: {
           utenlandskIdent: dokument.utenlandskIdent,
-          medfolgendeFamilie: dokument.medfolgendeFamilie,
-          medfolgendeAndre: dokument.medfolgendeAndre,
+          medfolgendeFamilie: [],
+          medfolgendeAndre: null,
         },
       };
 

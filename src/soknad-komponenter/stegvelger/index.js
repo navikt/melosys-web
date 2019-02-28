@@ -8,6 +8,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes/';
 import * as API from '../../services/api';
+import * as Utils from '../../utils';
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
@@ -59,77 +60,42 @@ class Stegvelger extends Component {
     this.tilSteg(this.beregnNesteSteg());
   };
 
-  oppdaterBehandlinger = async () => {
-    const { skjema, oppdaterBehandlingerState } = this.props;
-    await oppdaterBehandlingerState(skjema);
-  };
-
-  lagreBehandlingerHandler = async () => {
-    const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
-    await sendPerioder(behandlingID, behandlinger);
-  };
-
-  oppdaterOgLagreBehandlinger = async () => {
-    await this.oppdaterBehandlinger();
-    await this.lagreBehandlingerHandler();
-  };
-
-  lagreVilkarHandler = async () => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { vilkar } = this.props;
-    const { sendVilkar } = this.props;
-    await sendVilkar(bid, vilkar);
-  };
-
-  lagreAvklartefaktaHandler = async () => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { avklartefakta } = this.props;
-    const { sendAvklartefakta } = this.props;
-    await sendAvklartefakta(bid, avklartefakta);
-  };
-
-  lagreLovvalgsperioderHandler = async () => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { lovvalgsperioder } = this.props;
-    const { sendLovvalgsperioder } = this.props;
-    await sendLovvalgsperioder(bid, lovvalgsperioder);
-  };
-
   fatteVedtakHandler = async behandlingsresultattype => {
     const bid = this.props.oppsummering.behandlingID;
     const { fatteVedtak } = this.props;
     const vedtakBody = { behandlingsresultattype };
-    await fatteVedtak(bid, vedtakBody);
+    try {
+      await fatteVedtak(bid, vedtakBody);
+    } catch (e) {
+      Utils.logger.error(e);
+    }
     this.tilForsiden();
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
-    const {
-      skjema,
-      oppdaterAvklarteFaktaState,
-      oppdaterVilkarState,
-      oppdaterLovvalgperioderState,
-    } = this.props;
+    await this.props.lagreAllData();
+    this.fatteVedtakHandler(behandlingsresultattype);
+  };
 
-    await oppdaterAvklarteFaktaState(skjema);
-    await oppdaterVilkarState(skjema);
-    await oppdaterLovvalgperioderState(skjema);
+  endreDatoOgSendLovvalgsperioderHandler = async (fomdato, tomdato) => {
+    await this.props.endreLovvalgsPeriode(fomdato, tomdato);
 
-    await this.lagreVilkarHandler();
-    await this.lagreAvklartefaktaHandler();
-    await this.lagreLovvalgsperioderHandler();
-    await this.fatteVedtakHandler(behandlingsresultattype);
+    const bid = this.props.oppsummering.behandlingID;
+    const { lovvalgsperioder, sendLovvalgsperioder } = this.props;
+    sendLovvalgsperioder(bid, lovvalgsperioder);
   };
 
   sendEndretLovvalgsPeriode = async (fomdato, tomdato, begrunnelseKode) => {
-    const { oppsummering, endreLovvalgsPeriode } = this.props;
-    const { lagreLovvalgsperioderHandler, tilForsiden } = this;
+    const { oppsummering } = this.props;
+    const { tilForsiden, endreDatoOgSendLovvalgsperioderHandler } = this;
 
-    await endreLovvalgsPeriode(fomdato, tomdato);
-    await lagreLovvalgsperioderHandler();
-    await API.Vedtak.endrePeriode(oppsummering.behandlingID, { begrunnelseKode });
-
-    tilForsiden();
+    try {
+      await endreDatoOgSendLovvalgsperioderHandler(fomdato, tomdato);
+      API.Vedtak.endrePeriode(oppsummering.behandlingID, { begrunnelseKode });
+      tilForsiden();
+    } catch (e) {
+      Utils.logger.error(e);
+    }
   };
 
   tilForsiden = () => {
@@ -146,8 +112,8 @@ class Stegvelger extends Component {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
-      lagreLovvalgsperioder: this.lagreLovvalgsperioderHandler,
-      oppdaterOgLagreBehandlinger: this.oppdaterOgLagreBehandlinger,
+      lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
+      oppdaterOgLagreBehandlinger: this.props.lagreBehandlingerHandler,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
       sendEndretLovvalgsPeriode: this.sendEndretLovvalgsPeriode,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
@@ -193,11 +159,8 @@ class Stegvelger extends Component {
     const {
       avklartefakta,
       skjema,
-      oppdaterAvklarteFaktaState,
       oppdaterBehandlingerState,
-      oppdaterVilkarState,
       oppdaterLokalSoknadHandler,
-      oppdaterLovvalgperioderState,
       lagreSoknadHandler,
       lovvalgsperioder,
       vilkar,
@@ -211,13 +174,10 @@ class Stegvelger extends Component {
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
-    } = this;
+    } = this.props;
 
     const { behandlingID } = this.props.oppsummering;
 
-    await oppdaterAvklarteFaktaState(skjema);
-    await oppdaterVilkarState(skjema);
-    await oppdaterLovvalgperioderState(skjema);
     await oppdaterBehandlingerState(skjema);
 
     await lagreVilkarHandler(behandlingID, vilkar);
@@ -272,11 +232,8 @@ Stegvelger.propTypes = {
   lovvalgsperioder: PT.array.isRequired,
   inngang: PT.object,
   match: PT.object.isRequired,
-  oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
-  oppdaterVilkarState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
-  oppdaterLovvalgperioderState: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   settSkjemaVerdi: PT.func.isRequired,
@@ -286,7 +243,10 @@ Stegvelger.propTypes = {
   vilkar: PT.array.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
   lagreVilkarHandler: PT.func.isRequired,
+  lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
+  lagreBehandlingerHandler: PT.func.isRequired,
+  lagreAllData: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -324,9 +284,6 @@ const mapDispatchToProps = dispatch => ({
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
-  oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
-  oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
-  oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
