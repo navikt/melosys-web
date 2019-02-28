@@ -9,6 +9,7 @@ import Personopplysninger from '../soknad-komponenter/personopplysninger';
 import Medlemskap from '../komponenter/medlemskap';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
+import ArbeidsgivereNorge from "../soknad-komponenter/arbeidsgivereNorge";
 
 class Saksopplysninger extends Component {
   async componentDidMount() {

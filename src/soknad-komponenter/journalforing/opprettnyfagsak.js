@@ -12,7 +12,7 @@ import * as MPT from '../../proptypes/';
 
 import './opprettnyfagsak.css';
 import LandVelger from '../skjema/landvelger';
-import * as Utils from '../../utils/utils';
+import * as Utils from '../../utils';
 import * as Konstanter from '../../constants';
 
 class OpprettNyFagSak extends Component {

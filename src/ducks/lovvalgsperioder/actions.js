@@ -22,3 +22,13 @@ export function oppdaterLovvalgsperioderState(dokument) {
 export function resetLovvalgsperioderState() {
   return { type: Types.RESET };
 }
+
+export function endrePeriode(fomdato, tomdato) {
+  return ({
+    type: Types.ENDRE_PERIODE,
+    data: {
+      fomdato,
+      tomdato,
+    },
+  });
+}
