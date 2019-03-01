@@ -17,8 +17,6 @@ import BostedsAdresse from '../komponenter/adresser/bostedsAdresse';
 import LandVelger from './skjema/landvelger';
 
 import UtenlandskIdent from './personopplysninger/utenlandskIdent';
-import MedfolgendeFamilie from './personopplysninger/medfolgendeFamilie';
-import MedfolgendeAndre from './personopplysninger/medfolgendeAndre';
 
 import './personopplysninger.css';
 import { fagsakSelectors } from '../ducks/fagsaker';
@@ -68,8 +66,7 @@ class Personopplysninger extends Component {
   };
 
   render() {
-    const { redigerbart, person, medfolgendeAndre } = this.props;
-    const { sjekkPerson } = this;
+    const { redigerbart, person } = this.props;
 
     const {
       fnr,
@@ -82,7 +79,6 @@ class Personopplysninger extends Component {
       bostedsadresse,
       personStatus,
       erEgenAnsatt,
-      familiemedlemmer,
     } = person;
 
     if (Object.keys(person).length === 0) { return null; }
@@ -139,16 +135,6 @@ class Personopplysninger extends Component {
                     <LandVelger disabled={!redigerbart} feltNavn="oppgittAdresseLand" label="Land:" />
                   </dl>
                 </Nav.Fieldset>
-              </Nav.Column>
-            </Nav.Row>
-            <Nav.Row className="person__seksjon">
-              <Nav.Column xs="12">
-                {familiemedlemmer.length > 0 && <MedfolgendeFamilie medfolgendeFamilie={familiemedlemmer} disabled={!redigerbart} /> }
-              </Nav.Column>
-            </Nav.Row>
-            <Nav.Row className="person__seksjon">
-              <Nav.Column xs="12">
-                <MedfolgendeAndre medfolgendeAndre={medfolgendeAndre} sjekkPerson={sjekkPerson} disabled={!redigerbart} />
               </Nav.Column>
             </Nav.Row>
             {/* SLUTT PERSONINFO */}

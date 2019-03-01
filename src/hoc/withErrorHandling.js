@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
-import { isJSON } from '../utils/utils';
+import * as Utils from '../utils';
 
 import './withErrorHandling.css';
 
@@ -47,7 +47,7 @@ const withErrorHandling = (kontekster, WrappedComponent) => props => {
 
         // Deretter kan vi bruke 'data' slik vi mener å bruke den.
         const { response, data } = payload;
-        const fetchdata = isJSON(data) ? JSON.parse(data) : data;
+        const fetchdata = Utils.isJSON(data) ? JSON.parse(data) : data;
 
         const { status, statusText } = response;
         feilSamling.push({

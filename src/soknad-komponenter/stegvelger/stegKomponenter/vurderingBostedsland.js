@@ -14,7 +14,6 @@ const uuid = require('uuid/v4');
 
 const Avklaringer = ({ avklaringer }) => (
   <div>
-    <Nav.Element>Vurder bosted manuelt:</Nav.Element>
     <ul className="betingelser__liste">
       {
         avklaringer.map(({ tekst, status }) => {
@@ -61,44 +60,44 @@ const VurderingBostedsland = props => {
   const {
     bekreftOgFortsett, tilstand, begrunnelser, redigerbart,
   } = props;
-  const { erBosattINorge, erAvklart, harEOSBarnetrygdSak } = tilstand;
+
+  const {
+    erBosattINorge, erAvklart, harEOSBarnetrygdSak, begrunnelserPaaKrevd,
+  } = tilstand;
 
   const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
 
   return (
     <div className="vurderingBostedsland">
       <Nav.Undertittel>Vurdering av bosted</Nav.Undertittel>
-      <div>
-        <Nav.Undertittel>Bostedsvurdering</Nav.Undertittel>
-        <AvklaringsListe tilstand={tilstand} />
-        <div className="vurderingBostedsland__barnetrygd">{barnetrygdTekst}</div>
-        <div className="vurderingBostedsland__skjemafelt">
+      <AvklaringsListe tilstand={tilstand} />
+      <div className="vurderingBostedsland__barnetrygd">{barnetrygdTekst}</div>
+      <div className="vurderingBostedsland__skjemafelt">
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Nav.Fieldset legend="Bostedsland er:">
+              <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.bosattINorge" value={BOOLSK.SANN} label="Norge" />
+              <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.bosattINorge" value={BOOLSK.USANN} label="Annet" />
+              {!erBosattINorge && <LandVelger disabled={!redigerbart} label="Velg land:" feltNavn="avklartefakta.bostedsland" multiland={false} />}
+            </Nav.Fieldset>
+          </Nav.Column>
+        </Nav.Row>
+        {begrunnelserPaaKrevd && !erBosattINorge && (
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Bostedsland er:">
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.bosattINorge" value={BOOLSK.SANN} label="Norge" />
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.bosattINorge" value={BOOLSK.USANN} label="Annet" />
-                {!erBosattINorge && <LandVelger disabled={!redigerbart} label="Velg land:" feltNavn="avklartefakta.bostedsland" multiland={false} />}
+              <Nav.Fieldset legend="Begrunnelse:">
+                <Skjema.ListeVelger
+                  feltNavn="vilkar.bosattINorgeBegrunnelser"
+                  muligeValg={begrunnelser}
+                  label="Legg til begrunnelse:"
+                  gruppe
+                  tillatFritekst={false}
+                  disabled={!redigerbart}
+                />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
-          {!erBosattINorge && (
-            <Nav.Row>
-              <Nav.Column xs="12">
-                <Nav.Fieldset legend="Begrunnelse:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.bosattINorgeBegrunnelser"
-                    muligeValg={begrunnelser}
-                    label="Legg til begrunnelse:"
-                    gruppe
-                    tillatFritekst={false}
-                    disabled={!redigerbart}
-                  />
-                </Nav.Fieldset>
-              </Nav.Column>
-            </Nav.Row>
-          )}
-        </div>
+        )}
       </div>
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" disabled={!(redigerbart && erAvklart)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
