@@ -1,26 +1,25 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import PT from 'prop-types';
 import * as Nav from '../utils/navFrontend';
 import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
 
 import './registrering.css';
 import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 import { fagsakSelectors } from '../ducks/fagsaker';
-import { saksopplysningerSelectors } from '../ducks/saksopplysninger';
+//import { saksopplysningerSelectors } from '../ducks/saksopplysninger';
 import * as MPT from '../proptypes';
 import SideDialog from "../soknad-komponenter/sideDialog/sideDialog";
 
 class Registrering extends Component {
-  state = {
-    visOppfriskDialog: false,
-    oppfriskningBlokkererInnhold: false,
-    visHenleggDialog: false,
-  };
-  visOppfriskBekreftelse = () => {
-    this.setState({ visOppfriskDialog: true });
-  };
+
+  // TODO implement later
+  visOppfriskBekreftelse = () => {};
+  lagreOgLukk = () => {};
+  tilbakeleggeHandle = () => {};
+  visHenleggDialog = () => {};
+  navigerTilOversiktSide = () => {};
+
   render() {
     const { oppsummering } = this.props;
     return (
