@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import PT from 'prop-types';
-import { connect } from 'react-redux';
 import { withRouter } from 'react-router';
-import { reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
+import {reduxForm, formValueSelector, autofill } from 'redux-form';
+import PT from 'prop-types';
 
 import * as Utils from '../utils';
+import * as Skjema from '../soknad-komponenter/skjema';
 import * as MPT from '../proptypes';
-import * as Nav from '../utils/navFrontend';
 
+import * as Nav from '../utils/navFrontend';
 import Personopplysninger from '../soknad-komponenter/personopplysninger';
 import Medlemskap from '../komponenter/medlemskap';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
@@ -28,11 +29,14 @@ class Saksopplysninger extends Component {
   overstyrSubmit = event => {
     event.preventDefault();
   };
-
+  submitRegistrering = () => {
+    const { landKode, startdato, sluttdato, hjemmel } = this.props;
+    console.log(landKode, startdato, sluttdato, hjemmel);
+  };
   render() {
-    const { medlemskap, lovvalgsPeriode: { fomDato, tomDato } } = this.props;
-    const formattertFomDato = Utils.dato.formatterDatoTilNorsk(fomDato);
-    const formattertTomDato = Utils.dato.formatterDatoTilNorsk(tomDato);
+    const { medlemskap } = this.props;
+    // const formattertFomDato = Utils.dato.formatterDatoTilNorsk(fomDato);
+    // const formattertTomDato = Utils.dato.formatterDatoTilNorsk(tomDato);
     return (
       <div>
         <form name="registrering" id="registrering" onSubmit={this.overstyrSubmit} >
@@ -44,20 +48,10 @@ class Saksopplysninger extends Component {
                 <Nav.Undertittel>Lovvalgsperiode fra SED</Nav.Undertittel>
                 <Nav.Row>
                   <Nav.Column xs="3">
-                    <Nav.Input
-                      bredde="fullbredde"
-                      label="Startdato"
-                      value={formattertFomDato}
-                      onChange={() => {}}
-                    />
+                    <Skjema.Input label="Startdato" feltNavn="startdato" />
                   </Nav.Column>
                   <Nav.Column xs="3">
-                    <Nav.Input
-                      bredde="fullbredde"
-                      label="Sluttdato"
-                      value={formattertTomDato}
-                      onChange={() => {}}
-                    />
+                    <Skjema.Input label="Sluttdato" feltNavn="sluttdato" />
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
@@ -65,12 +59,12 @@ class Saksopplysninger extends Component {
                     <Landvelger label="Land" feltNavn="landKode" />
                   </Nav.Column>
                   <Nav.Column xs="3">
-                    <Nav.Input
-                      bredde="fullbredde"
-                      label="Hjemmel"
-                      value=""
-                      onChange={() => {}}
-                    />
+                    <Skjema.Input label="Hjemmel" feltNavn="hjemmel" />
+                  </Nav.Column>
+                </Nav.Row>
+                <Nav.Row>
+                  <Nav.Column xs="3">
+                    <Nav.Knapp onClick={() => this.submitRegistrering()}>GODKJENN</Nav.Knapp>
                   </Nav.Column>
                 </Nav.Row>
               </div>
@@ -92,21 +86,41 @@ Saksopplysninger.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
   lovvalgsPeriode: PT.object.isRequired,
   skjema: PT.any,
+  landKode: PT.string,
+  startdato: PT.string,
+  sluttdato: PT.string,
+  hjemmel: PT.string,
 };
 
 Saksopplysninger.defaultProps = {
   inntekt: {},
   medlemskap: {},
   skjema: {},
+  landKode: '',
+  startdato: '',
+  sluttdato: '',
+  hjemmel: '',
 };
 
+const skjemaSelector = formValueSelector('registrering');
 const mapStateToProps = state => ({
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+  landKode: skjemaSelector(state, 'landKode'),
+  startdato: skjemaSelector(state, 'startdato'),
+  sluttdato: skjemaSelector(state, 'sluttdato'),
+  hjemmel: skjemaSelector(state, 'hjemmel'),
+  initialValues: {
+    startdato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.LovvalgsperiodeSelector(state).fomDato),
+    sluttdato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.LovvalgsperiodeSelector(state).tomDato),
+    landKode: 'NO',
+    hjemmel: 'Hva er hjemmel?',
+  },
 });
 const mapDispatchToProps = dispatch => ({
+  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('registrering', feltNavn, verdi)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
 });
