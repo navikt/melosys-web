@@ -17,6 +17,11 @@ export const JournalforingFormSelector = createSelector(
   journalforing => journalforing
 );
 
+export const RegistreringFormSelector = createSelector(
+  state => (state.form.registrering ? state.form.registrering : {}),
+  registrering => registrering
+);
+
 export const ForretningsValideringSelector = createSelector(
   state => (state.form.forretningsValidering ? state.form.forretningsValidering : {}),
   skjemaValidering => skjemaValidering.regler
