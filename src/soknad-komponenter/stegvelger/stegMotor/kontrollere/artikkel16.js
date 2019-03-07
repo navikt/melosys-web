@@ -22,6 +22,8 @@ class Artikkel16 extends Steg {
     this._handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       oppdaterOgLagreBehandlinger: this._propsLight.tilgjengeligeHandlers.oppdaterOgLagreBehandlinger,
+      lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers.lagreVilkarHandler,
+      lagreLovvalgsperioderHandler: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioderHandler,
     };
     this._status = FANE_STATUS.OK;
   }

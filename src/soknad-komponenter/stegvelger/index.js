@@ -116,6 +116,8 @@ class Stegvelger extends Component {
       oppdaterOgLagreBehandlinger: this.props.lagreBehandlingerHandler,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
       sendEndretLovvalgsPeriode: this.sendEndretLovvalgsPeriode,
+      lagreVilkarHandler: this.props.lagreVilkarHandler,
+      lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
     };
 
     const propsLight = {
