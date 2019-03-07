@@ -23,7 +23,7 @@ const MaritimtEnkelt = ({
   fartsomrader,
   index,
   remove,
-  fartsomradeKode,
+  fartsomradeKoder,
 }) => (
   <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
     <Nav.Row>
@@ -33,7 +33,7 @@ const MaritimtEnkelt = ({
           {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
         </Skjema.Select>
         {
-          fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
+          fartsomradeKoder[index] === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
           <LandVelger feltNavn={`${navn}territorialfarvann`} label="Territorialfarvann" disabled={!redigerbart} />
         }
       </Nav.Column>
@@ -56,15 +56,15 @@ MaritimtEnkelt.propTypes = {
   index: PT.number.isRequired,
   remove: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
-  fartsomradeKode: PT.string,
+  fartsomradeKoder: PT.arrayOf(PT.string),
 };
 
 MaritimtEnkelt.defaultProps = {
-  fartsomradeKode: '',
+  fartsomradeKoder: [],
 };
 
 const maritimtEnkeltMapStateToProps = state => ({
-  fartsomradeKode: formSelectors.FartsomradeKodeSelector(state),
+  fartsomradeKoder: formSelectors.FartsomradeKodeSelector(state),
 });
 
 const ConnectedMaritimtEnkelt = connect(maritimtEnkeltMapStateToProps)(MaritimtEnkelt);
