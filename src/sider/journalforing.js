@@ -1,12 +1,12 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-
+import * as KV from '../kodeverk';
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
@@ -361,7 +361,7 @@ const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: sokSelectors.FagsakSokSelector(state),
-  errors: getFormSyncErrors('journalforing')(state),
+  errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
   initialValues: {
     behandlingstype: null,
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
@@ -381,9 +381,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
   hentFagsakListe: fnr => dispatch(sokOperations.sok(fnr)),
-  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
-  settFeilFelt: (...feltNavn) => (setSubmitFailed('journalforing', ...feltNavn)),
-  settJournalforingHensikt: journalforingHensikt => dispatch(change('journalforing', 'journalforingHensikt', journalforingHensikt)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill(KV.Form.JOURNALFORING, feltNavn, verdi)),
+  settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.JOURNALFORING, ...feltNavn)),
+  settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
   opprettNySak: data => Api.Journalforing.opprett(data),
   hentOppgaver: () => dispatch(oppgaverOperations.hent()),
   tilordneSak: data => Api.Journalforing.tilordne(data),
@@ -397,7 +397,7 @@ const kontekster = [
 ];
 
 const form = {
-  form: 'journalforing',
+  form: KV.Form.JOURNALFORING,
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,

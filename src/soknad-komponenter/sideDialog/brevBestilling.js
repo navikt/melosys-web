@@ -4,6 +4,7 @@ import { reduxForm, reset, setSubmitFailed } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
+import * as KV from '../../kodeverk';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 import * as Skjema from '../skjema';
@@ -158,7 +159,7 @@ BrevBestilling.defaultProps = {
 };
 
 const form = {
-  form: 'brevbestilling',
+  form: KV.Form.BREV_BESTILLING,
   enableReinitialize: true,
   destroyOnUnmount: false,
   updateUnregisteredFields: true,
@@ -179,8 +180,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed('brevbestilling', ...feltNavn)),
-  resetBrevBestillingForm: () => dispatch(reset('brevbestilling')),
+  settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed(KV.Form.BREV_BESTILLING, ...feltNavn)),
+  resetBrevBestillingForm: () => dispatch(reset(KV.Form.BREV_BESTILLING)),
   resetDokument: () => dispatch(dokumenterOperations.resetDokument()),
   opprettDokument: (behandlingID, dokumenttypeKode, data) => dispatch(dokumenterOperations.opprettDokument(behandlingID, dokumenttypeKode, data)),
 });
