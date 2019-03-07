@@ -36,7 +36,7 @@ class Sok extends Component {
             <section className="sokresultat">
               <h1>Innsyn i sak</h1>
               <h2>
-                Resultater for fnr &quot;{fnr}&quot;{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
+                Resultater for fnr {fnr}{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
               </h2>
               { sokResultat.length > 0 &&
                 sokResultat.map(fagsak => <Fagsak key={fagsak.saksnummer} sak={fagsak} />)

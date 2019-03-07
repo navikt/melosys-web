@@ -8,10 +8,12 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from '../../../proptypes/';
+import * as Utils from '../../../utils';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
+import { formSelectors } from '../../../ducks/form';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
 import Listevelger from '../../skjema/listevelger';
@@ -92,10 +94,35 @@ const TidligereMedlemskap = props => (<div><FieldArray name="tidligeremedlemskap
 
 
 class VurderingArtikkel16 extends Component {
+  componentDidUpdate(prevProps) {
+    if (prevProps.art16Begrunnelser !== this.props.art16Begrunnelser) {
+      this.lagreVilkar();
+    }
+    if (prevProps.tidligeremedlemskap !== this.props.tidligeremedlemskap) {
+      this.lagreBehandlinger();
+    }
+  }
+
   lagreBehandlingerOgFatteVedtak = async behandlingsresultattype => {
     const { oppdaterOgLagreBehandlinger, lagreOgFatteVedtak } = this.props;
-    await oppdaterOgLagreBehandlinger();
-    await lagreOgFatteVedtak(behandlingsresultattype);
+    try {
+      await oppdaterOgLagreBehandlinger();
+      lagreOgFatteVedtak(behandlingsresultattype);
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  };
+
+  lagreLovvalgsPerioder = () => {
+    this.props.lagreLovvalgsperioderHandler().catch(e => Utils.logger.error(e));
+  };
+
+  lagreVilkar = () => {
+    this.props.lagreVilkarHandler().catch(e => Utils.logger.error(e));
+  };
+
+  lagreBehandlinger = () => {
+    this.props.oppdaterOgLagreBehandlinger().catch(e => Utils.logger.error(e));
   };
 
   render() {
@@ -107,7 +134,11 @@ class VurderingArtikkel16 extends Component {
       redigerbart,
     } = this.props;
 
-    const { lagreBehandlingerOgFatteVedtak } = this;
+    const {
+      lagreBehandlingerOgFatteVedtak,
+      lagreLovvalgsPerioder,
+      lagreVilkar,
+    } = this;
 
     const { behandlingID } = oppsummering;
 
@@ -119,7 +150,7 @@ class VurderingArtikkel16 extends Component {
       { navn: 'Forhåndsvis anmodning til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
       { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
     ];
-
+    /* eslint-disable max-len */
     return (
       <div>
         <Nav.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Undertittel>
@@ -137,7 +168,7 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="10">
-              <Skjema.Select disabled={!redigerbart} feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
+              <Skjema.Select onBlur={lagreLovvalgsPerioder} disabled={!redigerbart} feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
                 { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
               </Skjema.Select>
               <Listevelger disabled={!redigerbart} gruppe muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
@@ -145,7 +176,7 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.Textarea disabled={!redigerbart} feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
+              <Skjema.Textarea onBlur={lagreVilkar} disabled={!redigerbart} feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
@@ -182,6 +213,10 @@ VurderingArtikkel16.propTypes = {
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
+  art16Begrunnelser: PT.array.isRequired,
+  tidligeremedlemskap: PT.array.isRequired,
+  lagreVilkarHandler: PT.func.isRequired,
+  lagreLovvalgsperioderHandler: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -190,6 +225,8 @@ const mapStateToProps = state => ({
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
+  art16Begrunnelser: formSelectors.Art16BegrunnelserSelector(state),
+  tidligeremedlemskap: formSelectors.TidligereMedlemskapSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingArtikkel16);
