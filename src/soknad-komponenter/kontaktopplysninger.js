@@ -19,6 +19,16 @@ export class KontaktOpplysninger extends Component {
     kontaktnavn: '',
   };
 
+  settKontaktOrgnrTouched = () => this.setState({ kontaktorgnrTouched: true });
+
+  visFeilmelding = feilmelding => this.setState({ orgnrFeilmelding: { feilmelding } });
+
+  vedKontaktorgnrEndring = event => this.setState({ kontaktorgnr: event.target.value, orgnrFeilmelding: undefined });
+
+  vedKontaktnavnEndring = event => this.setState({ kontaktnavn: event.target.value });
+
+  fjernResultat = () => this.setState({ sokeResultat: null });
+
   validerOgLagreKontaktOgAktoer = async () => {
     const {
       sok,
@@ -69,37 +79,46 @@ export class KontaktOpplysninger extends Component {
     }
   };
 
-  visFeilmelding = feilmelding => this.setState({ orgnrFeilmelding: { feilmelding } });
-
-  vedKontaktorgnrEndring = event => this.setState({ kontaktorgnr: event.target.value, orgnrFeilmelding: undefined });
-
-  vedKontaktnavnEndring = event => this.setState({ kontaktnavn: event.target.value });
-
-  fjernResultat = () => this.setState({ sokeResultat: null });
-
-  settKontaktOrgnrTouched = () => this.setState({ kontaktorgnrTouched: true });
-
   render() {
     const { sokeResultat, orgnrFeilmelding } = this.state;
+
     const {
       validerOgLagreKontaktOgAktoer,
       vedKontaktorgnrEndring,
       vedKontaktnavnEndring,
       settKontaktOrgnrTouched,
     } = this;
-    const { redigerbart, visLeggTilKnapp, toggleVisLeggTilKnapp } = this.props;
+
+    const {
+      redigerbart,
+      visLeggTilKnapp,
+      toggleVisLeggTilKnapp,
+      renderCheckbox,
+    } = this.props;
 
     return (
       <div>
         {
           visLeggTilKnapp &&
-          <Nav.Knapp onClick={toggleVisLeggTilKnapp}>+ Legg til kontaktopplysninger</Nav.Knapp>
+          <Nav.Knapp mini onClick={toggleVisLeggTilKnapp}>+ Legg til kontaktopplysninger</Nav.Knapp>
         }
         {
           !visLeggTilKnapp &&
             <Fragment>
-              <Nav.Input disabled={!redigerbart} onChange={vedKontaktnavnEndring} onBlur={validerOgLagreKontaktOgAktoer} label="Kontaktperson" />
-              <Nav.Input disabled={!redigerbart} onClick={settKontaktOrgnrTouched} feil={orgnrFeilmelding} onChange={vedKontaktorgnrEndring} onBlur={validerOgLagreKontaktOgAktoer} label="Organisasjonsnummer" />
+              <Nav.Input
+                disabled={!redigerbart}
+                onChange={vedKontaktnavnEndring}
+                onBlur={validerOgLagreKontaktOgAktoer}
+                label="Kontaktperson"
+              />
+              <Nav.Input
+                disabled={!redigerbart}
+                onClick={settKontaktOrgnrTouched}
+                feil={orgnrFeilmelding}
+                onChange={vedKontaktorgnrEndring}
+                onBlur={validerOgLagreKontaktOgAktoer}
+                label="Organisasjonsnummer"
+              />
             </Fragment>
         }
         {
@@ -108,6 +127,9 @@ export class KontaktOpplysninger extends Component {
               {sokeResultat.navn}
               <ForretningsAdresse forretningsadresse={sokeResultat.forretningsadresse} />
             </div>
+        }
+        {
+          !visLeggTilKnapp && renderCheckbox && renderCheckbox(validerOgLagreKontaktOgAktoer)
         }
       </div>
     );
@@ -125,10 +147,12 @@ KontaktOpplysninger.propTypes = {
   lagreAktoer: PT.func.isRequired,
   hentAktoer: PT.func.isRequired,
   juridiskOrg: PT.object.isRequired,
+  renderCheckbox: PT.func,
 };
 
 KontaktOpplysninger.defaultProps = {
   redigerbart: true,
+  renderCheckbox: () => null,
 };
 
 const mapStateToProps = state => ({

@@ -30,9 +30,9 @@ export class SokersFullmektig extends Component {
 
   settRepresentererKode = event => {
     if (event.target.checked) {
-      this.setState({ representererKode: event.target.name });
+      this.setState({ representererKode: MKV.Koder.representerer.BEGGE });
     } else {
-      this.setState({ representererKode: undefined });
+      this.setState({ representererKode: MKV.Koder.representerer.BRUKER });
     }
   };
 
@@ -88,13 +88,21 @@ export class SokersFullmektig extends Component {
                 }
               </Nav.Column>
               <Nav.Column xs="6">
-                <Kontaktopplysninger representererKode={representererKode} juridiskOrg={fullmektigOrg} visLeggTilKnapp={visLeggTilKnapp} toggleVisLeggTilKnapp={toggleVisLeggTilKnapp} />
-                {
-                  !visLeggTilKnapp &&
-                  <Nav.Fieldset legend="" >
-                    <Nav.Checkbox onChange={settRepresentererKode} name={MKV.Koder.representerer.BEGGE} label="Fullmektig for både arbeidstaker og arbeidsgiver" />
-                  </Nav.Fieldset>
-                }
+                <Kontaktopplysninger
+                  representererKode={representererKode}
+                  juridiskOrg={fullmektigOrg}
+                  visLeggTilKnapp={visLeggTilKnapp}
+                  toggleVisLeggTilKnapp={toggleVisLeggTilKnapp}
+                  renderCheckbox={validerOgLagreKontaktOgAktoer => (
+                    <Nav.Fieldset legend="" >
+                      <Nav.Checkbox
+                        onChange={settRepresentererKode}
+                        onBlur={validerOgLagreKontaktOgAktoer}
+                        label="Fullmektig for både arbeidstaker og arbeidsgiver"
+                      />
+                    </Nav.Fieldset>
+                  )}
+                />
               </Nav.Column>
             </Nav.Row>
           </Nav.Container>
