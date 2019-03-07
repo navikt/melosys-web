@@ -5,6 +5,7 @@ import { withRouter } from 'react-router';
 import { reduxForm } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
 
+import * as KV from '../../kodeverk';
 import * as Validering from '../../soknad-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
 
@@ -293,7 +294,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const SaksopplysningerForm = reduxForm({
-  form: 'soknad',
+  form: KV.Form.SOKNAD,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,

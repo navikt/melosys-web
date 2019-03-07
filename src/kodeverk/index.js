@@ -1,4 +1,5 @@
 import * as Koder from './koder';
+import * as Form from './form';
 
 const objektTilTerm = KTObjekt => {
   if (!KTObjekt || !KTObjekt.term) { return '(mangler informasjon)'; }
@@ -26,6 +27,7 @@ const termTilKode = (verdi, muligeValg) => {
 
 export {
   Koder,
+  Form,
   objektTilTerm,
   objektTilKode,
   finnEnkeltKodeFraListe,
