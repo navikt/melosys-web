@@ -13,7 +13,7 @@ import PersonInfo from '../komponenter/personInfo';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
 import BostedsAdresse from '../komponenter/adresser/bostedsAdresse';
-import OppgittAdresseSoknad  from './personopplysninger/oppgittAdresseSoknad';
+import OppgittAdresseSoknad from './personopplysninger/oppgittAdresseSoknad';
 import UtenlandskIdent from './personopplysninger/utenlandskIdent';
 
 import './personopplysninger.css';
@@ -106,7 +106,7 @@ class Personopplysninger extends Component {
               </Nav.Column>
             </Nav.Row>
             {!registrering &&
-              <OppgittAdresseSoknad redigerbart={redigerbart}/> }
+              <OppgittAdresseSoknad redigerbart={redigerbart} /> }
             {/* SLUTT PERSONINFO */}
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
@@ -116,7 +116,7 @@ class Personopplysninger extends Component {
 }
 
 Personopplysninger.propTypes = {
-  registrering: PT.bool.isRequired,
+  registrering: PT.bool,
   redigerbart: PT.bool.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Person).isRequired,
   hentPerson: PT.func.isRequired,
@@ -126,6 +126,7 @@ Personopplysninger.propTypes = {
 };
 
 Personopplysninger.defaultProps = {
+  registrering: undefined,
   medfolgendeAndre: {},
 };
 

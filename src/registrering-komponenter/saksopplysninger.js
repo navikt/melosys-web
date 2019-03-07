@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector, autofill, setSubmitFailed } from 'redux-form';
 import PT from 'prop-types';
@@ -108,7 +108,7 @@ class Saksopplysninger extends Component {
             </div>
           </div>
         </form>
-        <Personopplysninger registrering />
+        <Personopplysninger redigerbart registrering />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
       </div>
     );
