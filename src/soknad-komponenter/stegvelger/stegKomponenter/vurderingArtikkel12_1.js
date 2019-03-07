@@ -41,8 +41,8 @@ class VurderingArtikkel12_1 extends Component {
 
   clearVilkarSkjema = () => {
     const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.art12_1', false);
-    settSkjemaVerdi('vilkar.art16_1', false);
+    settSkjemaVerdi('vilkar.art12_1', null);
+    settSkjemaVerdi('vilkar.art16_1', null);
     settSkjemaVerdi('vilkar.art12_1_begrunnelser', []);
     settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
     settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');

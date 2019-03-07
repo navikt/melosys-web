@@ -110,7 +110,7 @@ class VurderingArtikkel12_2 extends Component {
                   onChange={this.radioEndringHandler}
                   value={this.AVSLAG}
                   checked={valgtVilkar === this.AVSLAG}
-                  label={`Nei, jeg vil avslå søknaden etter artikkel ${KV.objektTilKode(artikkel)} og 16.1`}
+                  label={`Nei, jeg vil avslå søknaden etter artikkel ${KV.objektTilTerm(artikkel)} og 16.1`}
                 />
               </Nav.Fieldset>
             </Nav.Column>
