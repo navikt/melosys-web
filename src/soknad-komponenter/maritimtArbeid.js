@@ -23,7 +23,7 @@ const MaritimtEnkelt = ({
   fartsomrader,
   index,
   remove,
-  fartsomradeKoder,
+  fartsomradeKode,
 }) => (
   <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
     <Nav.Row>
@@ -33,7 +33,7 @@ const MaritimtEnkelt = ({
           {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
         </Skjema.Select>
         {
-          fartsomradeKoder[index] === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
+          fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
           <LandVelger feltNavn={`${navn}territorialfarvann`} label="Territorialfarvann" disabled={!redigerbart} />
         }
       </Nav.Column>
@@ -56,27 +56,30 @@ MaritimtEnkelt.propTypes = {
   index: PT.number.isRequired,
   remove: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
-  fartsomradeKoder: PT.arrayOf(PT.string),
+  fartsomradeKode: PT.string,
 };
 
 MaritimtEnkelt.defaultProps = {
-  fartsomradeKoder: [],
+  fartsomradeKode: '',
 };
 
-const maritimtEnkeltMapStateToProps = state => ({
-  fartsomradeKoder: formSelectors.FartsomradeKodeSelector(state),
-});
-
-const ConnectedMaritimtEnkelt = connect(maritimtEnkeltMapStateToProps)(MaritimtEnkelt);
-
 const MaritimtAlle = props => {
-  const { fields, fartsomrader, redigerbart } = props;
+  const {
+    fields, fartsomrader, redigerbart, fartsomradeKoder,
+  } = props;
   const { remove, push } = fields;
 
   return (
     <Fragment>
       <div>
-        { fields.map((navn, index) => <ConnectedMaritimtEnkelt key={navn} remove={remove} navn={navn} fartsomrader={fartsomrader} redigerbart={redigerbart} index={index} />) }
+        {fields.map((navn, index) => <MaritimtEnkelt
+          key={navn}
+          remove={remove}
+          navn={navn}
+          fartsomrader={fartsomrader}
+          redigerbart={redigerbart}
+          index={index}
+          fartsomradeKode={fartsomradeKoder[index]} />)}
       </div>
       <Nav.Knapp onClick={() => push({})} className="leggtil">+ Legg til nytt skip eller sokkel</Nav.Knapp>
     </Fragment>
@@ -87,8 +90,18 @@ MaritimtAlle.propTypes = {
   fields: PT.object.isRequired,
   fartsomrader: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
+  fartsomradeKoder: PT.arrayOf(PT.string),
 };
 
+MaritimtAlle.defaultProps = {
+  fartsomradeKoder: [],
+};
+
+const maritimtAlleMapStateToProps = state => ({
+  fartsomradeKoder: formSelectors.FartsomradeKodeSelector(state),
+});
+
+const ConnectedMaritimtAlle = connect(maritimtAlleMapStateToProps)(MaritimtAlle);
 
 const MaritimtArbeid = props => {
   const { soknadForm, redigerbart } = props;
@@ -104,7 +117,7 @@ const MaritimtArbeid = props => {
         heading={<PanelHeader ikon={panelIkon} tittel="Maritimt Arbeid" undertittel="" />}
         ariaTittel="Maritimt Arbeid">
         <Nav.Container fluid>
-          <FieldArray name="maritimtArbeid" component={MaritimtAlle} fartsomrader={MKV.KTObjects.begrunnelser.fartsomrader} redigerbart={redigerbart} />
+          <FieldArray name="maritimtArbeid" component={ConnectedMaritimtAlle} fartsomrader={MKV.KTObjects.begrunnelser.fartsomrader} redigerbart={redigerbart} />
         </Nav.Container>
       </Nav.EkspanderbartpanelBase>
     </div>
