@@ -21,9 +21,11 @@ export class KontaktOpplysninger extends Component {
 
   settKontaktOrgnrTouched = () => this.setState({ kontaktorgnrTouched: true });
 
-  visFeilmelding = feilmelding => this.setState({ orgnrFeilmelding: { feilmelding } });
+  settKontaktOrgnr = orgnr => this.setState({ kontaktorgnr: orgnr, orgnrFeilmelding: undefined })
 
-  vedKontaktorgnrEndring = event => this.setState({ kontaktorgnr: event.target.value, orgnrFeilmelding: undefined });
+  vedKontaktorgnrEndring = event => this.settKontaktOrgnr(event.target.value);
+
+  visFeilmelding = feilmelding => this.setState({ orgnrFeilmelding: { feilmelding } });
 
   vedKontaktnavnEndring = event => this.setState({ kontaktnavn: event.target.value });
 
@@ -31,10 +33,9 @@ export class KontaktOpplysninger extends Component {
 
   validerOgLagreKontaktOgAktoer = async () => {
     const {
-      sok,
+      hentOrg,
       lagreKontaktopplysninger,
       lagreAktoer,
-      hentAktoer,
       oppsummering: { saksnummer },
       representererKode,
       juridiskOrg,
@@ -52,20 +53,17 @@ export class KontaktOpplysninger extends Component {
     }
 
     try {
-      const resultat = await sok(kontaktorgnr);
+      const resultat = await hentOrg(kontaktorgnr);
 
       if (resultat.navn) {
         this.setState({ sokeResultat: resultat });
         lagreKontaktopplysninger(saksnummer, juridiskOrg.orgnr, { kontaktnavn, kontaktorgnr });
 
-        const aktoerer = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
-        const { aktoerID, utenlandskPersonID, institusjonsID } = aktoerer[0];
-
         lagreAktoer(saksnummer, {
-          aktoerID,
+          aktoerID: null,
           orgnr: kontaktorgnr,
-          utenlandskPersonID,
-          institusjonsID,
+          utenlandskPersonID: null,
+          institusjonsID: null,
           rolleKode: MKV.Koder.aktoersroller.REPRESENTANT,
           representererKode,
         });
@@ -97,7 +95,7 @@ export class KontaktOpplysninger extends Component {
     } = this.props;
 
     return (
-      <div>
+      <Fragment>
         {
           visLeggTilKnapp &&
           <Nav.Knapp mini onClick={toggleVisLeggTilKnapp}>+ Legg til kontaktopplysninger</Nav.Knapp>
@@ -123,29 +121,28 @@ export class KontaktOpplysninger extends Component {
         }
         {
           sokeResultat &&
-            <div>
+            <Fragment>
               {sokeResultat.navn}
               <ForretningsAdresse forretningsadresse={sokeResultat.forretningsadresse} />
-            </div>
+            </Fragment>
         }
         {
           !visLeggTilKnapp && renderCheckbox && renderCheckbox(validerOgLagreKontaktOgAktoer)
         }
-      </div>
+      </Fragment>
     );
   }
 }
 
 KontaktOpplysninger.propTypes = {
   lagreKontaktopplysninger: PT.func.isRequired,
-  sok: PT.func.isRequired,
+  hentOrg: PT.func.isRequired,
   redigerbart: PT.bool,
   visLeggTilKnapp: PT.bool.isRequired,
   toggleVisLeggTilKnapp: PT.func.isRequired,
   oppsummering: PT.object.isRequired,
   representererKode: PT.string.isRequired,
   lagreAktoer: PT.func.isRequired,
-  hentAktoer: PT.func.isRequired,
   juridiskOrg: PT.object.isRequired,
   renderCheckbox: PT.func,
 };
@@ -160,11 +157,10 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
 });
 
-const sok = async orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
+const hentOrg = async orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
 const lagreKontaktopplysninger = async (saksnr, juridiskorgnr, data) => Api.Kontaktopplysninger.send(saksnr, juridiskorgnr, data);
 const lagreAktoer = async (saksnr, data) => Api.Aktoer.send(saksnr, data);
-const hentAktoer = async (saksnr, rolleKode, representererKode) => Api.Aktoer.hent(saksnr, rolleKode, representererKode);
 
-const KontaktOpplysningerWrapper = props => <KontaktOpplysninger {...props} sok={sok} lagreKontaktopplysninger={lagreKontaktopplysninger} lagreAktoer={lagreAktoer} hentAktoer={hentAktoer} />;
+const KontaktOpplysningerWrapper = props => <KontaktOpplysninger {...props} hentOrg={hentOrg} lagreKontaktopplysninger={lagreKontaktopplysninger} lagreAktoer={lagreAktoer} />;
 
 export default connect(mapStateToProps)(KontaktOpplysningerWrapper);
