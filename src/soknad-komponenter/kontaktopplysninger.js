@@ -152,7 +152,7 @@ KontaktOpplysninger.propTypes = {
 
 KontaktOpplysninger.defaultProps = {
   redigerbart: true,
-  renderCheckbox: () => null,
+  renderCheckbox: null,
 };
 
 const mapStateToProps = state => ({
