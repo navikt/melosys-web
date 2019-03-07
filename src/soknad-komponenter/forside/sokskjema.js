@@ -37,7 +37,7 @@ class SokSkjema extends Component {
         <Nav.Systemtittel>Søke etter saker</Nav.Systemtittel>
         <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
           <Nav.Input
-            label="Søk på fødselsnummer:"
+            label=""
             className="sokeskjema__input"
             bredde="XL"
             onChange={this.vedEndretSokFelt}
