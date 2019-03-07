@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { reduxForm, formValueSelector, autofill, setSubmitFailed } from 'redux-form';
 import PT from 'prop-types';
 
+import * as KV from '../kodeverk';
 import * as Utils from '../utils';
 import * as Api from '../services/api';
 import * as Skjema from '../soknad-komponenter/skjema';
@@ -142,7 +143,7 @@ Saksopplysninger.defaultProps = {
   registreringSkjemaVerdier: {},
 };
 
-const skjemaSelector = formValueSelector('registrering');
+const skjemaSelector = formValueSelector(KV.Form.REGISTRERING);
 const mapStateToProps = state => ({
   registreringSkjemaVerdier: formSelectors.RegistreringFormSelector(state).values,
   inntekt: fagsakSelectors.InntektSoknadenSelector(state),
@@ -161,8 +162,8 @@ const mapStateToProps = state => ({
   },
 });
 const mapDispatchToProps = dispatch => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('registrering', feltNavn, verdi)),
-  settFeilFelt: (...feltNavn) => (setSubmitFailed('registrering', ...feltNavn)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill(KV.Form.REGISTRERING, feltNavn, verdi)),
+  settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.REGISTRERING, ...feltNavn)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
 });
@@ -185,7 +186,7 @@ const validering = values => {
 };
 
 const SaksopplysningerForm = reduxForm({
-  form: 'registrering',
+  form: KV.Form.REGISTRERING,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
