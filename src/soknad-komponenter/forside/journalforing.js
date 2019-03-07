@@ -4,6 +4,7 @@ import { reduxForm } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
+import * as KV from '../../kodeverk';
 import * as Nav from '../../utils/navFrontend';
 import { oppgaverOperations } from '../../ducks/oppgaver';
 import * as Skjema from '../skjema';
@@ -53,6 +54,6 @@ const mapDispatchToProps = () => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm({
-  form: 'journalforingsform',
+  form: KV.Form.FORSIDE_JOURNALFORINGS_FORM,
   onSubmit: () => {},
 })(withRouter((Journalforing))));
