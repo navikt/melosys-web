@@ -4,6 +4,7 @@ import { reduxForm, change } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
+import * as KV from '../../kodeverk';
 import * as Nav from '../../utils/navFrontend';
 
 import './sokeskjema.css';
@@ -59,11 +60,11 @@ SokSkjema.propTypes = {
 };
 
 const mapDispatchToProps = dispatch => ({
-  lagreSokString: verdi => dispatch(change('sokEtterSak', 'sokStreng', verdi)),
+  lagreSokString: verdi => dispatch(change(KV.Form.SOK_ETTER_SAK, 'sokStreng', verdi)),
 });
 
 export default withRouter(connect(null, mapDispatchToProps)(reduxForm({
-  form: 'sokEtterSak',
+  form: KV.Form.SOK_ETTER_SAK,
   initialValues: { sokFelt: '' },
   onSubmit: () => {},
 })(SokSkjema)));

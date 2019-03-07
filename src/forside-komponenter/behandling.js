@@ -5,6 +5,7 @@ import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
+import * as KV from '../kodeverk';
 import * as Nav from '../utils/navFrontend';
 import * as Skjema from '../soknad-komponenter/skjema';
 
@@ -14,12 +15,10 @@ import './behandling.css';
 
 const uuid = require('uuid/v4');
 
-const BEHANDLINGSFORM = 'behandlingsform';
-
 class Behandling extends Component {
   componentDidUpdate() {
     const { formValues } = this.props;
-    localStorage.setItem(BEHANDLINGSFORM, JSON.stringify(formValues));
+    localStorage.setItem(KV.Form.BEHANDLINGS_FORM, JSON.stringify(formValues));
   }
 
   submitOgVideresend = async form => {
@@ -77,11 +76,11 @@ Behandling.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  formValues: getFormValues(BEHANDLINGSFORM)(state),
-  initialValues: JSON.parse(localStorage.getItem(BEHANDLINGSFORM)),
+  formValues: getFormValues(KV.Form.BEHANDLINGS_FORM)(state),
+  initialValues: JSON.parse(localStorage.getItem(KV.Form.BEHANDLINGS_FORM)),
 });
 const BehandlngForm = reduxForm({
-  form: BEHANDLINGSFORM,
+  form: KV.Form.BEHANDLINGS_FORM,
   onSubmit: checkboxliste => oppgaverOperations.sendBehandlingsOppgave(checkboxliste),
 })(Behandling);
 
