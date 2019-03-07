@@ -44,7 +44,7 @@ export const StegTilKontroller = {
   ARTIKKEL_12_1: 'Artikkel12_1',
   ARTIKKEL_12_2: 'Artikkel12_2',
   ARTIKKEL_11_4: 'Artikkel11_4',
-  INNGANG: 'Inngang',
+  INNGANG: 'InngangSteg',
   YRKESGRUPPE: 'Yrkesgruppe',
   IKKE_YRKESAKTIV: 'IkkeYrkesaktiv',
   FORUTGAENDE_MEDLEMSKAP: 'ForutgaendeMedlemskap',
@@ -59,7 +59,7 @@ export const StegTilKontroller = {
   TJENESTEMANN: 'Tjenestemann',
   FORRETNINGSSTED: 'Forretningssted',
   ARBEIDSGIVERE: 'Arbeidsgivere',
-  SOKKEL_SKIP: 'SokkelSkip',
+  SOKKEL_SKIP: 'SokkelSkipSteg',
   VEDTAK: 'Vedtak',
   ENDRE_PERIODE: 'EndrePeriode',
 };

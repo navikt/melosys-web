@@ -5,7 +5,7 @@ import Bostedsland from './bostedsland';
 import Forretningssted from './forretningssted';
 import ForutgaendeMedlemskap from './forutgaende_medlemskap';
 import IkkeYrkesaktiv from './ikke_yrkesaktiv';
-import Inngang from './inngang';
+import InngangSteg from './InngangSteg';
 import Yrkesaktivitet from './yrkesaktivitet';
 import Yrkesgruppe from './yrkesgruppe';
 import Tjenestemann from './tjenestemann';
@@ -29,7 +29,7 @@ export {
   Forretningssted,
   ForutgaendeMedlemskap,
   IkkeYrkesaktiv,
-  Inngang,
+  InngangSteg,
   Yrkesaktivitet,
   Yrkesgruppe,
   Tjenestemann,

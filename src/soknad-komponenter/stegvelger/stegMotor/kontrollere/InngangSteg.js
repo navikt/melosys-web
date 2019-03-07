@@ -3,14 +3,14 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingInngang from '../../stegKomponenter/vurderingInngang';
 import * as KV from '../../../../kodeverk';
 
-class Inngang extends Steg {
+class InngangSteg extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
     this._kriterier = [
       {
         beskrivelse: 'Hvis minst ett land finnes',
-        exec: avklartefakta => (Inngang.harMinstEttGyldigOppholdsland(avklartefakta)),
+        exec: avklartefakta => (InngangSteg.harMinstEttGyldigOppholdsland(avklartefakta)),
         nesteSteg: STEG.YRKESGRUPPE,
       },
       {
@@ -46,4 +46,4 @@ class Inngang extends Steg {
     .some(enkeltFakta => ((enkeltFakta.referanse === KV.Koder.OPPHOLDSLAND) && enkeltFakta.fakta.includes('TRUE')));
 }
 
-export default Inngang;
+export default InngangSteg;
