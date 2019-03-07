@@ -21,13 +21,15 @@ export class KontaktOpplysninger extends Component {
 
   settKontaktOrgnrTouched = () => this.setState({ kontaktorgnrTouched: true });
 
-  settKontaktOrgnr = orgnr => this.setState({ kontaktorgnr: orgnr, orgnrFeilmelding: undefined })
+  settKontaktOrgnr = orgnr => this.setState({ kontaktorgnr: orgnr, orgnrFeilmelding: undefined });
 
-  vedKontaktorgnrEndring = event => this.settKontaktOrgnr(event.target.value);
+  settKontaktNavn = navn => this.setState({ kontaktnavn: navn });
 
   visFeilmelding = feilmelding => this.setState({ orgnrFeilmelding: { feilmelding } });
 
-  vedKontaktnavnEndring = event => this.setState({ kontaktnavn: event.target.value });
+  vedKontaktnavnEndring = event => this.settKontaktNavn(event.target.value);
+
+  vedKontaktorgnrEndring = event => this.settKontaktOrgnr(event.target.value);
 
   fjernResultat = () => this.setState({ sokeResultat: null });
 
@@ -120,7 +122,7 @@ export class KontaktOpplysninger extends Component {
             </Fragment>
         }
         {
-          sokeResultat &&
+          !visLeggTilKnapp && sokeResultat &&
             <Fragment>
               {sokeResultat.navn}
               <ForretningsAdresse forretningsadresse={sokeResultat.forretningsadresse} />
