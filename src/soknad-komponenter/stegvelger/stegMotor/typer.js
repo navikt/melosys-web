@@ -45,7 +45,7 @@ export const StegTilKontroller = {
   ARTIKKEL_12_2: 'Artikkel12_2',
   ARTIKKEL_11_4: 'Artikkel11_4',
   INNGANG: 'InngangSteg',
-  YRKESGRUPPE: 'Yrkesgruppe',
+  YRKESGRUPPE: 'YrkesgruppeSteg',
   IKKE_YRKESAKTIV: 'IkkeYrkesaktiv',
   FORUTGAENDE_MEDLEMSKAP: 'ForutgaendeMedlemskap',
   YRKESAKTIVITET: 'Yrkesaktivitet',

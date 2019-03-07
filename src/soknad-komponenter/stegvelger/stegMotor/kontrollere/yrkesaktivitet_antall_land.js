@@ -2,7 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitetAntallLand from '../../stegKomponenter/vurderingYrkesaktivitetAntallLand';
 import * as KV from '../../../../kodeverk';
-import Yrkesgruppe from '../../stegMotor/kontrollere/yrkesgruppe';
+import YrkesgruppeSteg from './YrkesgruppeSteg';
 
 class YrkesaktivitetAntallLand extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -11,7 +11,7 @@ class YrkesaktivitetAntallLand extends Steg {
       {
         beskrivelse: 'yrkesgruppeType ER LIK "YRKESAKTIV" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
         exec: avklartefakta => (
-          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) &&
+          YrkesgruppeSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
         ),
         nesteSteg: STEG.ARBEIDSGIVERE,
@@ -19,7 +19,7 @@ class YrkesaktivitetAntallLand extends Steg {
       {
         beskrivelse: 'yrkesgruppeType ER LIK "YRKESAKTIV_SOKKEL_SKIP" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
         exec: avklartefakta => (
-          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP) &&
+          YrkesgruppeSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
         ),
         nesteSteg: STEG.ARBEIDSGIVERE,

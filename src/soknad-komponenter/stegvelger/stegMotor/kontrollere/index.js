@@ -7,7 +7,7 @@ import ForutgaendeMedlemskap from './forutgaende_medlemskap';
 import IkkeYrkesaktiv from './ikke_yrkesaktiv';
 import InngangSteg from './InngangSteg';
 import Yrkesaktivitet from './yrkesaktivitet';
-import Yrkesgruppe from './yrkesgruppe';
+import YrkesgruppeSteg from './YrkesgruppeSteg';
 import Tjenestemann from './tjenestemann';
 import Artikkel12_1 from './artikkel12_1';
 import Artikkel12_2 from './artikkel12_2';
@@ -31,7 +31,7 @@ export {
   IkkeYrkesaktiv,
   InngangSteg,
   Yrkesaktivitet,
-  Yrkesgruppe,
+  YrkesgruppeSteg,
   Tjenestemann,
   Artikkel12_1,
   Artikkel12_2,
