@@ -1,5 +1,5 @@
 import Aktivitet from './aktivitet';
-import Arbeidsgivere from './arbeidsgivere';
+import Arbeidsgivere from './YrkesgruppeSteg';
 import Avslag_12_x_og_16 from './avslag_12_x_og_16';
 import Bostedsland from './bostedsland';
 import Forretningssted from './forretningssted';
@@ -17,7 +17,7 @@ import Virksomhet from './virksomhet';
 import VesentligVirksomhet from './vesentlig_virksomhet';
 import NormaltDriverVirksomhet from './normalt_driver_virksomhet';
 import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
-import SokkelSkip from './sokkel_skip';
+import SokkelSkipSteg from './SokkelSkipSteg';
 import Vedtak from './vedtak';
 import EndrePeriode from './endre_periode';
 
@@ -43,5 +43,5 @@ export {
   YrkesaktivitetAntallLand,
   Vedtak,
   EndrePeriode,
-  SokkelSkip,
+  SokkelSkipSteg,
 };

@@ -3,24 +3,24 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingSokkelSkip from '../../stegKomponenter/vurderingSokkelSkip';
 import * as KV from '../../../../kodeverk';
 
-class SokkelSkip extends Steg {
+class SokkelSkipSteg extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
     this._kriterier = [
       {
         beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_NORSK" (til vedtak)',
-        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK),
+        exec: avklartefakta => SokkelSkipSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK),
         nesteSteg: STEG.VEDTAK,
       },
       {
         beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_UTLAND" (videre til 12.1 eller 12.2)',
-        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_UTLAND),
+        exec: avklartefakta => SokkelSkipSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_UTLAND),
         nesteSteg: STEG.ARBEIDSGIVERE,
       },
       {
         beskrivelse: 'sokkelSkipKonklusjon ER LIK "SKIP_ETT_LAND" (videre til 12.1 eller 12.2)',
-        exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND),
+        exec: avklartefakta => SokkelSkipSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND),
         nesteSteg: STEG.ARBEIDSGIVERE,
       },
       {
@@ -41,7 +41,7 @@ class SokkelSkip extends Steg {
       const { sokkelEllerSkip = [], sokkelSkipKonklusjon } = _propsLight.skjema.avklartefakta;
 
       return ({
-        harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon),
+        harAvklaring: SokkelSkipSteg.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon),
       });
     };
     this._handlers = {
@@ -74,4 +74,4 @@ class SokkelSkip extends Steg {
   };
 }
 
-export default SokkelSkip;
+export default SokkelSkipSteg;
