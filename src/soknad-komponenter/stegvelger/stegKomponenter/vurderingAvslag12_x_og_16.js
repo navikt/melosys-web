@@ -62,6 +62,13 @@ function VurderingAvslag12_x_og_16(props) {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
+    {
+      navn: 'Orientering til arbeidsgiver om avslag',
+      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
+      },
+    },
   ];
 
   const muligeVirksomhetBegrunnelser = [
