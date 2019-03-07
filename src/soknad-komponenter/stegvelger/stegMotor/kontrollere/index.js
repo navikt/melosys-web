@@ -1,5 +1,5 @@
 import Aktivitet from './aktivitet';
-import Arbeidsgivere from './YrkesgruppeSteg';
+import Arbeidsgivere from './ArbeidsgivereSteg';
 import Avslag_12_x_og_16 from './avslag_12_x_og_16';
 import Bostedsland from './bostedsland';
 import Forretningssted from './forretningssted';

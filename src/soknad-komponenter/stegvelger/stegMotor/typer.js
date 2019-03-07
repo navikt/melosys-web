@@ -58,7 +58,7 @@ export const StegTilKontroller = {
   BOSTEDSLAND: 'Bostedsland',
   TJENESTEMANN: 'Tjenestemann',
   FORRETNINGSSTED: 'Forretningssted',
-  ARBEIDSGIVERE: 'Arbeidsgivere',
+  ARBEIDSGIVERE: 'ArbeidsgivereSteg',
   SOKKEL_SKIP: 'SokkelSkipSteg',
   VEDTAK: 'Vedtak',
   ENDRE_PERIODE: 'EndrePeriode',

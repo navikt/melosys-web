@@ -5,15 +5,15 @@ import * as KV from '../../../../kodeverk';
 
 import SokkelSkipSteg from './SokkelSkipSteg';
 
-class YrkesgruppeSteg extends Steg {
+class ArbeidsgivereSteg extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this._kriterier = [
       {
         beskrivelse: 'Valgt minst én arbeidsgivr og yrkesgruppeType === ORDINAER',
         exec: avklartefakta => {
-          const harValgtArbeidsgiver = YrkesgruppeSteg.harValgtArbeidsgiver(avklartefakta);
-          const erVanligYrkesaktiv = YrkesgruppeSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
+          const harValgtArbeidsgiver = ArbeidsgivereSteg.harValgtArbeidsgiver(avklartefakta);
+          const erVanligYrkesaktiv = ArbeidsgivereSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
           return harValgtArbeidsgiver && erVanligYrkesaktiv;
         },
         nesteSteg: STEG.YRKESAKTIVITET,
@@ -21,8 +21,8 @@ class YrkesgruppeSteg extends Steg {
       {
         beskrivelse: 'Valgt minst én arbeidsgivr og yrkesgruppeType === SOKKEL_ELLER_SKIP && sokkelSkipKonklusjon === SOKKEL_UTLAND',
         exec: avklartefakta => {
-          const harValgtArbeidsgiver = YrkesgruppeSteg.harValgtArbeidsgiver(avklartefakta);
-          const arbeiderPaSokkelEllerSkip = YrkesgruppeSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
+          const harValgtArbeidsgiver = ArbeidsgivereSteg.harValgtArbeidsgiver(avklartefakta);
+          const arbeiderPaSokkelEllerSkip = ArbeidsgivereSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
           const erSokkelUtland = SokkelSkipSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_UTLAND);
           return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSokkelUtland;
         },
@@ -31,8 +31,8 @@ class YrkesgruppeSteg extends Steg {
       {
         beskrivelse: 'Valgt minst én arbeidsgivr og yrkesgruppeType === SOKKEL_ELLER_SKIP && sokkelSkipKonklusjon === SKIP_ETT_LAND',
         exec: avklartefakta => {
-          const harValgtArbeidsgiver = YrkesgruppeSteg.harValgtArbeidsgiver(avklartefakta);
-          const arbeiderPaSokkelEllerSkip = YrkesgruppeSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
+          const harValgtArbeidsgiver = ArbeidsgivereSteg.harValgtArbeidsgiver(avklartefakta);
+          const arbeiderPaSokkelEllerSkip = ArbeidsgivereSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
           const erSkipEttLand = SokkelSkipSteg.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND);
           return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSkipEttLand;
         },
@@ -74,4 +74,4 @@ class YrkesgruppeSteg extends Steg {
   };
 }
 
-export default YrkesgruppeSteg;
+export default ArbeidsgivereSteg;
