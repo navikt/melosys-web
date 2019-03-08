@@ -120,7 +120,6 @@ class VurderingArtikkel16 extends Component {
     lovvalgFeilmelding: undefined,
     begrunnelserFeilmelding: undefined,
     fritekstFeilmelding: undefined,
-    perioderFeilmelding: undefined,
   };
 
   componentDidUpdate(prevProps) {
@@ -154,7 +153,6 @@ class VurderingArtikkel16 extends Component {
 
   lagreBehandlinger = () => {
     this.props.oppdaterOgLagreBehandlinger().catch(e => Utils.logger.error(e));
-    this.setState({ perioderFeilmelding: undefined });
   };
 
   validerLovvalg = () => {
@@ -170,24 +168,17 @@ class VurderingArtikkel16 extends Component {
   };
 
   validerFritekst = () => {
-    const valid = !this.props.art16Begrunnelser.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN || this.props.art16begrunnelserFritekst !== '');
+    const valid = this.props.art16begrunnelserFritekst !== '';
     if (!valid) this.setState({ fritekstFeilmelding: 'Fyll inn fritekst' });
-    return valid;
-  };
-
-  validerPerioder = () => {
-    const valid = this.props.tidligeremedlemskap.length !== 0;
-    if (!valid) this.setState({ perioderFeilmelding: { feilmelding: '' } });
     return valid;
   };
 
   validerAlt = () => {
     const lovvalgValid = this.validerLovvalg();
     const begrunnelserValid = this.validerBegrunnelser();
-    const fritekstValid = this.validerFritekst();
-    const perioderValid = this.validerPerioder();
+    const fritekstValid = this.props.art16Begrunnelser.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
 
-    return lovvalgValid && begrunnelserValid && fritekstValid && perioderValid;
+    return lovvalgValid && begrunnelserValid && fritekstValid;
   };
 
   validerOgLagreBehandling = () => {
@@ -216,7 +207,6 @@ class VurderingArtikkel16 extends Component {
       begrunnelserFeilmelding,
       fritekstFeilmelding,
       lovvalgFeilmelding,
-      perioderFeilmelding,
     } = this.state;
 
     const { behandlingID } = oppsummering;
@@ -266,7 +256,7 @@ class VurderingArtikkel16 extends Component {
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="12">
               <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}:`}>
-                <TidligereMedlemskap feil={perioderFeilmelding} redigerbart={redigerbart} medlemskap={medlemskap} />
+                <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
