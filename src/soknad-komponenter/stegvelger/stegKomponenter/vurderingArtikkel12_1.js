@@ -5,7 +5,6 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import * as KV from '../../../kodeverk';
 
 class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -85,7 +84,7 @@ class VurderingArtikkel12_1 extends Component {
 
   render () {
     const {
-      bekreftOgFortsett, artikkel, tilstand, redigerbart,
+      bekreftOgFortsett, tilstand, redigerbart,
     } = this.props;
 
     const { valgtVilkar } = this.state;
@@ -119,7 +118,7 @@ class VurderingArtikkel12_1 extends Component {
                   onChange={this.radioEndringHandler}
                   value={this.AVSLAG}
                   checked={valgtVilkar === this.AVSLAG}
-                  label={`Nei, jeg vil avslå søknaden etter artikkel ${KV.objektTilTerm(artikkel)} og 16.1`}
+                  label="Nei, jeg vil avslå søknaden etter artikkel 12.1 og 16.1"
                   disabled={!redigerbart}
                 />
               </Nav.Fieldset>
@@ -135,6 +134,7 @@ class VurderingArtikkel12_1 extends Component {
                     label="Legg til begrunnelse for ikke oppfylt:"
                     gruppe
                     tillatFritekst={false}
+                    disabled={!redigerbart}
                   />
                 </Nav.Fieldset>
               )}
