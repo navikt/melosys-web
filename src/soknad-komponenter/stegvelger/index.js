@@ -180,8 +180,8 @@ class Stegvelger extends Component {
 
     await oppdaterBehandlingerState(skjema);
 
-    await lagreVilkarHandler(behandlingID, vilkar);
     await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
+    await lagreVilkarHandler(behandlingID, vilkar);
     await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
 
     if (this.erSisteSteg(nyttStegNummer)) {
