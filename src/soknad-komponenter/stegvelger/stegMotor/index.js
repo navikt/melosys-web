@@ -1,8 +1,6 @@
 import * as MKV from 'melosys-kodeverk';
 
-import * as Kontrollere from './kontrollere';
-import { StegTilKontroller } from './typer';
-
+import { stegKatalogMap } from './kontrollere';
 
 class StegMotor {
   constructor(props) {
@@ -39,20 +37,10 @@ class StegMotor {
   };
 
   lagKlasseBasertPaID = (stegID, stegPosisjon) => {
-    const StegKlasse = this.beregnStegKlasseFraID(stegID);
+    const StegKlasse = stegKatalogMap.get(stegID);
     if (!StegKlasse) { return false; }
     return new StegKlasse(this._propsLight, stegPosisjon);
   };
-
-  /** Transformer uppercase ID til camelback. Feks YRKESAKTIVITET_ANTALL_LAND => YrkesaktivitetAntallLand.
-   *
-   * @param ID
-   * @returns {*}
-   */
-  beregnStegKlasseFraID = ID => {
-    const kontrollerNavn = StegTilKontroller[ID];
-    return Kontrollere[kontrollerNavn];
-  }
 }
 
 export default StegMotor;
