@@ -24,12 +24,10 @@ describe('EnkeltLand', () => {
   it('sender value prop til NAV Input korrekt', () => {
     const Enkeltland = shallow(<EnkeltLand {...props} />);
     const event = { target: { value: 'test' } };
-    // Enkeltland.instance().inputEndringHandler(event);
 
+    Enkeltland.instance().inputEndringHandler(event);
 
-    const Input = Enkeltland.find('Input').first();
-    Input.props().onChange(event);
-
+    const Input = Enkeltland.find('Input');
     expect(Input.props().value).toBe('test');
   });
 });
