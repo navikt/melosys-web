@@ -21,27 +21,30 @@ import SokkelSkip from './sokkel_skip';
 import Vedtak from './vedtak';
 import EndrePeriode from './endre_periode';
 
-export {
-  Aktivitet,
-  Arbeidsgivere,
-  Avslag_12_x_og_16,
-  Bostedsland,
-  Forretningssted,
-  ForutgaendeMedlemskap,
-  IkkeYrkesaktiv,
-  Inngang,
-  Yrkesaktivitet,
-  Yrkesgruppe,
-  Tjenestemann,
-  Artikkel12_1,
-  Artikkel12_2,
-  Artikkel11_4,
-  Artikkel16,
-  Virksomhet,
-  VesentligVirksomhet,
-  NormaltDriverVirksomhet,
-  YrkesaktivitetAntallLand,
-  Vedtak,
-  EndrePeriode,
-  SokkelSkip,
-};
+import { STEG } from '../typer';
+
+export const stegKatalogMap = new Map([
+  [STEG.INNGANG, Inngang],
+  [STEG.AVSLAG_12_X_OG_16, Avslag_12_x_og_16],
+  [STEG.ARTIKKEL_16, Artikkel16],
+  [STEG.ARTIKKEL_12_1, Artikkel12_1],
+  [STEG.ARTIKKEL_12_2, Artikkel12_2],
+  [STEG.ARTIKKEL_11_4, Artikkel11_4],
+  [STEG.YRKESGRUPPE, Yrkesgruppe],
+  [STEG.IKKE_YRKESAKTIV, IkkeYrkesaktiv],
+  [STEG.FORUTGAENDE_MEDLEMSKAP, ForutgaendeMedlemskap],
+  [STEG.YRKESAKTIVITET, Yrkesaktivitet],
+  [STEG.YRKESAKTIVITET_ANTALL_LAND, YrkesaktivitetAntallLand],
+  [STEG.VIRKSOMHET, Virksomhet],
+  [STEG.VESENTLIG_VIRKSOMHET, VesentligVirksomhet],
+  [STEG.NORMALT_DRIVER_VIRKSOMHET, NormaltDriverVirksomhet],
+  [STEG.AKTIVITET, Aktivitet],
+  [STEG.BOSTEDSLAND, Bostedsland],
+  [STEG.TJENESTEMANN, Tjenestemann],
+  [STEG.FORRETNINGSSTED, Forretningssted],
+  [STEG.ARBEIDSGIVERE, Arbeidsgivere],
+  [STEG.SOKKEL_SKIP, SokkelSkip],
+  [STEG.VEDTAK, Vedtak],
+  [STEG.ENDRET_PERIODE, EndrePeriode],
+]);
+
