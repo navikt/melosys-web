@@ -116,6 +116,8 @@ class Stegvelger extends Component {
       oppdaterOgLagreBehandlinger: this.props.lagreBehandlingerHandler,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
       sendEndretLovvalgsPeriode: this.sendEndretLovvalgsPeriode,
+      lagreVilkarHandler: this.props.lagreVilkarHandler,
+      lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
     };
 
     const propsLight = {
@@ -178,8 +180,8 @@ class Stegvelger extends Component {
 
     await oppdaterBehandlingerState(skjema);
 
-    await lagreVilkarHandler(behandlingID, vilkar);
     await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
+    await lagreVilkarHandler(behandlingID, vilkar);
     await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
 
     if (this.erSisteSteg(nyttStegNummer)) {

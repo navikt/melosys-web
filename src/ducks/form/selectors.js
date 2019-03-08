@@ -36,3 +36,13 @@ export const FartsomradeKodeSelector = createSelector(
   state => SoknadenFormSelector(state).values,
   skjemaverdier => skjemaverdier.maritimtArbeid.map(maritimtArbeid => maritimtArbeid.fartsomradeKode) || undefined
 );
+
+export const Art16BegrunnelserSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  skjemaverdier => skjemaverdier.vilkar.art16_1_begrunnelser
+);
+
+export const TidligereMedlemskapSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  skjemaverdier => skjemaverdier.tidligeremedlemskap || []
+);
