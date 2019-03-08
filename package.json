@@ -102,6 +102,7 @@
     "build:javalocal": "npm-run-all patch:env patch:javalocal build:css build:js",
     "test": "npm run build:css && react-scripts test --env=jsdom",
     "test:ci": "npm run build:css && react-scripts test --env=jsdom --testResultsProcessor ./node_modules/jest-junit --coverage --coverageDirectory=test/coverage",
+    "coverage": "npm test -- --coverage",
     "eject": "react-scripts eject",
     "eslint:src": "eslint src --ext .js",
     "eslint:scripts": "eslint scripts --ext .js",
