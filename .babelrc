@@ -2,6 +2,7 @@
   "presets": [
     "react",
     "env",
-    "airbnb"
+    "airbnb",
+    "stage-3"
   ]
 }

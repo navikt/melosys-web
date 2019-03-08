@@ -6,10 +6,9 @@ import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
-import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
+import { EnkeltLandPure, landTekstFormat } from '../../../skjema/landvelger';
 import Melosysikon from '../../../melosysikon';
 
-import { landTekstFormat } from '../../../skjema/landvelger';
 
 class LeggTilWrapper extends Component {
   state = {
