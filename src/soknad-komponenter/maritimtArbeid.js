@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import { FieldArray } from 'redux-form';
+import { FieldArray, change } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -24,31 +24,45 @@ const MaritimtEnkelt = ({
   index,
   remove,
   fartsomradeKode,
-}) => (
-  <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
-    <Nav.Row>
-      <Nav.Column xs="6">
-        <Skjema.Input feltNavn={`${navn}navn`} label="Navn på fartøyet:" disabled={!redigerbart} />
-        <Skjema.Select feltNavn={`${navn}fartsomradeKode`} label="Fartsomrade:" disabled={!redigerbart} >
-          {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
-        </Skjema.Select>
-        {
-          fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
-          <LandVelger feltNavn={`${navn}territorialfarvann`} label="Territorialfarvann" disabled={!redigerbart} />
-        }
-      </Nav.Column>
-      <Nav.Column xs="6">
-        <LandVelger feltNavn={`${navn}flaggLandKode`} label="Flaggland:" disabled={!redigerbart} />
-        <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Kontinentalsokkel:" disabled={!redigerbart} />
-      </Nav.Column>
-    </Nav.Row>
-    <Nav.Row>
-      <Nav.Column xs="12">
-        <Nav.Knapp mini onClick={() => remove(index)} disabled={!redigerbart}>- Fjern denne oppføringen</Nav.Knapp>
-      </Nav.Column>
-    </Nav.Row>
-  </Nav.Fieldset>
-);
+  settSkjemaVerdi,
+}) => {
+  const fartsomradeChangeHandler = event => {
+    const fartsomrade = event.target.value;
+
+    settSkjemaVerdi('fartsomradeKode', fartsomrade, index);
+    if (fartsomrade === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS) {
+      return;
+    }
+
+    settSkjemaVerdi('territorialfarvann', null, index);
+  };
+
+  return (
+    <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Skjema.Input feltNavn={`${navn}navn`} label="Navn på fartøyet:" disabled={!redigerbart} />
+          <Skjema.Select feltNavn={`${navn}fartsomradeKode`} label="Fartsomrade:" disabled={!redigerbart} onChange={fartsomradeChangeHandler}>
+            {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
+          </Skjema.Select>
+          {
+            fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
+            <LandVelger feltNavn={`${navn}territorialfarvann`} label="Territorialfarvann" disabled={!redigerbart} />
+          }
+        </Nav.Column>
+        <Nav.Column xs="6">
+          <LandVelger feltNavn={`${navn}flaggLandKode`} label="Flaggland:" disabled={!redigerbart} />
+          <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Kontinentalsokkel:" disabled={!redigerbart} />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="12">
+          <Nav.Knapp mini onClick={() => remove(index)} disabled={!redigerbart}>- Fjern denne oppføringen</Nav.Knapp>
+        </Nav.Column>
+      </Nav.Row>
+    </Nav.Fieldset>
+  );
+};
 
 MaritimtEnkelt.propTypes = {
   navn: PT.string.isRequired,
@@ -57,6 +71,7 @@ MaritimtEnkelt.propTypes = {
   remove: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   fartsomradeKode: PT.string,
+  settSkjemaVerdi: PT.func.isRequired,
 };
 
 MaritimtEnkelt.defaultProps = {
@@ -65,7 +80,7 @@ MaritimtEnkelt.defaultProps = {
 
 const MaritimtAlle = props => {
   const {
-    fields, fartsomrader, redigerbart, fartsomradeKoder,
+    fields, fartsomrader, redigerbart, fartsomradeKoder, settSkjemaVerdi,
   } = props;
   const { remove, push } = fields;
 
@@ -79,7 +94,8 @@ const MaritimtAlle = props => {
           fartsomrader={fartsomrader}
           redigerbart={redigerbart}
           index={index}
-          fartsomradeKode={fartsomradeKoder[index]} />)}
+          fartsomradeKode={fartsomradeKoder[index]}
+          settSkjemaVerdi={settSkjemaVerdi} />)}
       </div>
       <Nav.Knapp onClick={() => push({})} className="leggtil">+ Legg til nytt skip eller sokkel</Nav.Knapp>
     </Fragment>
@@ -91,6 +107,7 @@ MaritimtAlle.propTypes = {
   fartsomrader: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
   fartsomradeKoder: PT.arrayOf(PT.string),
+  settSkjemaVerdi: PT.func.isRequired,
 };
 
 MaritimtAlle.defaultProps = {
@@ -101,7 +118,11 @@ const maritimtAlleMapStateToProps = state => ({
   fartsomradeKoder: formSelectors.FartsomradeKodeSelector(state),
 });
 
-const ConnectedMaritimtAlle = connect(maritimtAlleMapStateToProps)(MaritimtAlle);
+const maritimtAlleMapDispatchToProps = dispatch => ({
+  settSkjemaVerdi: (felt, verdi, index) => dispatch(change('soknad', `maritimtArbeid[${index}]${felt}`, verdi)),
+});
+
+const ConnectedMaritimtAlle = connect(maritimtAlleMapStateToProps, maritimtAlleMapDispatchToProps)(MaritimtAlle);
 
 const MaritimtArbeid = props => {
   const { soknadForm, redigerbart } = props;
