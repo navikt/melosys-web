@@ -43,6 +43,8 @@ class Stegvelger extends Component {
   }
 
   async componentDidUpdate(prevProps) {
+    // console.log(Utils.hash(prevProps.skjema), Utils.hash(this.props.skjema));
+    // const formHasSetteled = Utils.hash(prevProps.skjema) === Utils.hash(this.props.skjema);
     const formHasSetteled = JSON.stringify(prevProps.skjema) === JSON.stringify(this.props.skjema);
     const { didUpdateAfterLastStep } = this.state;
     const shouldUpdate = (formHasSetteled && !didUpdateAfterLastStep);
