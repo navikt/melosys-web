@@ -1,19 +1,34 @@
 class Steg {
+  _id = null;
+  _tittel = null;
+  _kriterier = null;
+  _komponent = null;
+  _status = null;
+  _samleRelevanteData = null;
+  _beregnRelevantUI = null;
+  _handlers = null;
+  _dataHenter = null;
   constructor (propsLight, posisjon) {
     this._propsLight = propsLight;
     this._stegPosisjon = posisjon;
-    this._kriterier = null;
-    this._id = null;
-    this._tittel = null;
-    this._komponent = null;
-    this._samleRelevanteData = null;
-    this._beregnRelevantUI = null;
   }
 
-  get id() {
-    return this._id;
-  }
-
+  get id() { return this._id; }
+  set id(id) { this._id = id; }
+  get tittel() { return this._tittel; }
+  set tittel(tittel) { this._tittel = tittel; }
+  get komponent() { return this._komponent; }
+  set komponent(komponent) { this._komponent = komponent; }
+  get kriterier() { return this._kriterier; }
+  set kriterier(kriterier) { this._kriterier = kriterier; }
+  get handlers() { return this._handlers; }
+  set handlers(handlers) { this._handlers = handlers; }
+  get status() { return this._status; }
+  set status(status) { this._status = status; }
+  get samleRelevanteData() { return this._samleRelevanteData; }
+  set samleRelevanteData(samleRelevanteData) { this._samleRelevanteData = samleRelevanteData; }
+  get beregnRelevantUI() { return this._beregnRelevantUI; }
+  set beregnRelevantUI(beregnRelevantUI) { this._beregnRelevantUI = beregnRelevantUI; }
   get dataHenter() {
     return this._dataHenter;
   }
