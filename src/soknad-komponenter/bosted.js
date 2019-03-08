@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
@@ -11,15 +10,11 @@ import * as Skjema from './skjema';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import Landvelger from './skjema/landvelger';
 
-import * as KV from '../kodeverk';
-
 import './bosted.css';
 import { fagsakSelectors } from '../ducks/fagsaker';
 import { formSelectors } from '../ducks/form';
 import { BOOLSK } from '../constants';
 import { boolTilNorsk } from '../utils/streng';
-
-const uuid = require('uuid/v4');
 
 const Bosted = props => {
   const { redigerbart, erValidert } = props;
@@ -54,30 +49,6 @@ const Bosted = props => {
               </Skjema.RadioGruppe>
               <Skjema.RadioGruppe feltNavn="sammeAdresseSomArbeidsgiver" legend="Mottar EU / EØS barnetrygd fra NAV?">
                 {boolTilNorsk(eosBarnetrygd)}
-              </Skjema.RadioGruppe>
-              <Nav.Undertittel>Pensjonist</Nav.Undertittel>
-              <Nav.Fieldset legend="Opphold i Norge (måneder pr kalenderår)">
-                <Skjema.Select disabled={!redigerbart} feltNavn="antallMaanederINorge" label="Velg antall måneder:" bredde="xs">
-                  {new Array(12).fill(undefined).map((element, index) => <option value={index + 1} key={uuid()}>{index + 1}</option>)}
-                </Skjema.Select>
-              </Nav.Fieldset>
-              <Skjema.RadioGruppe feltNavn="ektefelleEllerBarnINorge" legend="Har ektefelle / mindreårige barn i Norge">
-                <Skjema.Radio disabled={!redigerbart} feltNavn="ektefelleEllerBarnINorge" value={BOOLSK.SANN} label="Ja" />
-                <Skjema.Radio disabled={!redigerbart} feltNavn="ektefelleEllerBarnINorge" value={BOOLSK.USANN} label="Nei" />
-              </Skjema.RadioGruppe>
-              <Nav.Undertittel>Student i EØS-land</Nav.Undertittel>
-              <Landvelger disabled={!redigerbart} label="Velg studieland:" feltNavn="studieLand" />
-              <Skjema.Select
-                label="Finansiering"
-                feltNavn="studentFinansiering"
-                bredde="xl"
-                disabled={!redigerbart}
-              >
-                {MKV.KTObjects.finansiering.map(valg => <option key={uuid()} value={KV.objektTilKode(valg)}>{KV.objektTilTerm(valg)}</option>)}
-              </Skjema.Select>
-              <Skjema.RadioGruppe feltNavn="intensjonOmRetur" legend="Har intensjon om å returnere til Norge">
-                <Skjema.Radio disabled={!redigerbart} feltNavn="intensjonOmRetur" value={BOOLSK.SANN} label="Ja" />
-                <Skjema.Radio disabled={!redigerbart} feltNavn="intensjonOmRetur" value={BOOLSK.USANN} label="Nei" />
               </Skjema.RadioGruppe>
             </Nav.Column>
           </Nav.Row>

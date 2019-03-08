@@ -2,8 +2,7 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
-import throttle from 'lodash.throttle';
-
+import * as Utils from '../../utils';
 import * as Api from '../../services/api';
 
 import './pdfdokument.css';
@@ -81,7 +80,7 @@ class PDFDokument extends Component {
     this.setState({ width });
   };
 
-  setDivSizeThrottled = throttle(this.setDivSize, 500);
+  setDivSizeThrottled = Utils._throttle(this.setDivSize, 500);
 
   render() {
     const { journalpostID, dokumentID } = this.props;

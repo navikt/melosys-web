@@ -22,12 +22,15 @@ class Bostedsland extends Steg {
         nesteSteg: null,
       },
     ];
+    const begrunnelserPaaKrevd = false;
+
     this._id = STEG.BOSTEDSLAND;
     this._tittel = 'Bosted';
     this._komponent = VurderingBostedsland;
     this._samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.bosted || [],
       redigerbart: _propsLight.redigerbart,
+      begrunnelserPaaKrevd,
     });
     this._beregnRelevantUI = _propsLight => {
       const { skjema = {}, saksopplysninger = {} } = _propsLight;
@@ -90,7 +93,7 @@ class Bostedsland extends Steg {
       }
 
       return {
-        erAvklart: Bostedsland.alleErAvklart(bosattINorge, bosattINorgeBegrunnelser, bostedsland),
+        erAvklart: Bostedsland.alleErAvklart(bosattINorge, bosattINorgeBegrunnelser, bostedsland, begrunnelserPaaKrevd),
         erBosattINorge: bosattINorge,
         harEOSBarnetrygdSak: eosBarnetrygd,
         avklaringer,
@@ -109,12 +112,12 @@ class Bostedsland extends Steg {
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   };
 
-  static alleErAvklart = (bosattINorge, bosattINorgeBegrunnelser, bostedsland) => {
+  static alleErAvklart = (bosattINorge, bosattINorgeBegrunnelser, bostedsland, begrunnelserPaaKrevd) => {
     if (!(bosattINorge === true || bosattINorge === false)) { return false; }
     const begrunnelserErOppgitt = bosattINorgeBegrunnelser && bosattINorgeBegrunnelser.length > 0;
     const bostedslandErOppgitt = bostedsland && bostedsland !== '';
 
-    if (bosattINorge === false && bostedslandErOppgitt && begrunnelserErOppgitt) { return true; }
+    if (bosattINorge === false && bostedslandErOppgitt && (!begrunnelserPaaKrevd || begrunnelserErOppgitt)) { return true; }
 
     return bosattINorge;
   };

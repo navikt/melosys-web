@@ -4,9 +4,7 @@
  * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
  * action types som sendes inn sammen med dataene.
  */
-import _cloneDeep from 'lodash/cloneDeep';
-import _assign from 'lodash/assign';
-
+import * as Utils from '../../utils';
 import * as Types from './types';
 
 import { STATUS } from '../../services/utils';
@@ -17,8 +15,8 @@ const initialState = {
 };
 
 const OppdaterOppsummeringBehandlingsStatus = (state, action) => {
-  const nydata = _cloneDeep(state.data);
-  _assign(nydata.behandlinger[0].oppsummering.behandlingsstatus, action.data);
+  const nydata = Utils._cloneDeep(state.data);
+  Utils._assign(nydata.behandlinger[0].oppsummering.behandlingsstatus, action.data);
   return nydata;
 };
 /**
