@@ -5,21 +5,21 @@ import VurderingArtikkel16 from '../../stegKomponenter/vurderingArtikkel16';
 class Artikkel16 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'alle valg',
         exec: () => true,
         nesteSteg: null,
       },
     ];
-    this._id = STEG.ARTIKKEL_16;
-    this._tittel = 'Artikkel 16.1';
-    this._komponent = VurderingArtikkel16;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.ARTIKKEL_16;
+    this.tittel = 'Artikkel 16.1';
+    this.komponent = VurderingArtikkel16;
+    this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
     });
-    this._beregnRelevantUI = () => ({});
-    this._handlers = {
+    this.beregnRelevantUI = () => ({});
+    this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       oppdaterOgLagreBehandlinger: this._propsLight.tilgjengeligeHandlers.oppdaterOgLagreBehandlinger,
       lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers.lagreVilkarHandler,

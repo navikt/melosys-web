@@ -5,10 +5,12 @@ import { StegTilKontroller } from './typer';
 
 
 class StegMotor {
+  _propsLight;
+  _forsteStegID = 'INNGANG';
+  _endrePeriodeStegID = 'ENDRE_PERIODE';
+
   constructor(props) {
     this._propsLight = props;
-    this._forsteStegID = 'INNGANG';
-    this._endrePeriodeStegID = 'ENDRE_PERIODE';
   }
 
   beregnAlleSteg = () => {

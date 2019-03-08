@@ -7,7 +7,7 @@ import { erVilkarOppfylt } from '../../../../regler/vilkar';
 class NormaltDriverVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'SELVSTENDIG_NAERINGSDRIVENDE og VESENTLIG_VIRKSOMHET',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, alleVilkar) !== undefined,
@@ -20,15 +20,15 @@ class NormaltDriverVirksomhet extends Steg {
       },
     ];
 
-    this._id = STEG.NORMALT_DRIVER_VIRKSOMHET;
-    this._tittel = 'Normalt driver virksomhet';
-    this._komponent = VurderingNormaltDriverVirksomhet;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.NORMALT_DRIVER_VIRKSOMHET;
+    this.tittel = 'Normalt driver virksomhet';
+    this.komponent = VurderingNormaltDriverVirksomhet;
+    this.samleRelevanteData = _propsLight => ({
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
       begrunnelser: _propsLight.begrunnelser.art12_2_normalt_virksomhet,
       redigerbart: _propsLight.redigerbart,
     });
-    this._beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = _propsLight => {
       const { normaltDriverVirksomhet, normaltDriverVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;
       const harAvklaring = normaltDriverVirksomhet === true || (normaltDriverVirksomhet === false && normaltDriverVirksomhetBegrunnelser.length > 0);
 
@@ -37,11 +37,11 @@ class NormaltDriverVirksomhet extends Steg {
         harAvklaring,
       };
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
