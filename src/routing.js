@@ -3,27 +3,27 @@ import { Route, Switch, withRouter } from 'react-router-dom';
 import Loadable from 'react-loadable';
 import PT from 'prop-types';
 
-import MinSideLasteStatus from './komponenter/MinSideLasteStatus';
+import SideLoadingStatus from './komponenter/SideLoadingStatus';
 
 const UkjentSideLoadable = Loadable({
   loader: () => import('./sider/ukjentSide'),
-  loading: MinSideLasteStatus,
+  loading: SideLoadingStatus,
 });
 const ForsideLoadable = Loadable({
   loader: () => import('./sider/forside'),
-  loading: MinSideLasteStatus,
+  loading: SideLoadingStatus,
 });
 const SokLoadable = Loadable({
   loader: () => import('./sider/sok'),
-  loading: MinSideLasteStatus,
+  loading: SideLoadingStatus,
 });
 const SaksbehandlingLoadable = Loadable({
   loader: () => import('./sider/saksbehandling'),
-  loading: MinSideLasteStatus,
+  loading: SideLoadingStatus,
 });
 const JournalforingLoadable = Loadable({
   loader: () => import('./sider/journalforing'),
-  loading: MinSideLasteStatus,
+  loading: SideLoadingStatus,
 });
 
 const Routing = ({ location }) => (

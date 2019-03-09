@@ -1,7 +1,7 @@
 import React from 'react';
 import * as PT from 'prop-types';
 
-const MinSideLasteStatus = ({ isLoading, error }) => {
+const SideLoadingStatus = ({ isLoading, error }) => {
   // Handle the loading state
   if (!isLoading) {
     return <div>Laster komponent...</div>;
@@ -12,12 +12,12 @@ const MinSideLasteStatus = ({ isLoading, error }) => {
   return null;
 };
 
-MinSideLasteStatus.propTypes = {
+SideLoadingStatus.propTypes = {
   isLoading: PT.bool.isRequired,
   error: PT.bool,
 };
-MinSideLasteStatus.defaultProps = {
+SideLoadingStatus.defaultProps = {
   error: false,
 };
 
-export default MinSideLasteStatus;
+export default SideLoadingStatus;
