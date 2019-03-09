@@ -1,22 +1,38 @@
 import React from 'react';
-import PT from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
+import Loadable from 'react-loadable';
+import PT from 'prop-types';
 
-import UkjentSide from './sider/ukjentSide';
+import MinSideLasteStatus from './komponenter/MinSideLasteStatus';
 
-import Forside from './sider/forside';
-import Sok from './sider/sok';
-import Saksbehandling from './sider/saksbehandling';
-import Journalforing from './sider/journalforing';
-
+const UkjentSideLoadable = Loadable({
+  loader: () => import('./sider/ukjentSide'),
+  loading: MinSideLasteStatus,
+});
+const ForsideLoadable = Loadable({
+  loader: () => import('./sider/forside'),
+  loading: MinSideLasteStatus,
+});
+const SokLoadable = Loadable({
+  loader: () => import('./sider/sok'),
+  loading: MinSideLasteStatus,
+});
+const SaksbehandlingLoadable = Loadable({
+  loader: () => import('./sider/saksbehandling'),
+  loading: MinSideLasteStatus,
+});
+const JournalforingLoadable = Loadable({
+  loader: () => import('./sider/journalforing'),
+  loading: MinSideLasteStatus,
+});
 
 const Routing = ({ location }) => (
   <Switch location={location}>
-    <Route exact path="/" component={Forside} />
-    <Route exact path="/sok/:fnr" component={Sok} />
-    <Route path="/saksbehandling/:snr" component={Saksbehandling} />
-    <Route path="/journalforing/:journalpostID/:oppgaveID" component={Journalforing} />
-    <Route component={UkjentSide} />
+    <Route exact path="/" component={ForsideLoadable} />
+    <Route exact path="/sok/:fnr" component={SokLoadable} />
+    <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
+    <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
+    <Route component={UkjentSideLoadable} />
   </Switch>
 );
 
