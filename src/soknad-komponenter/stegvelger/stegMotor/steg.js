@@ -1,3 +1,5 @@
+import * as Utils from '../../../utils';
+
 class Steg {
   _id = null;
   _tittel = null;
@@ -51,11 +53,7 @@ class Steg {
     return kriterieMatch.nesteSteg;
   };
 
-  assertRegel = (regel, avklartefakta, vilkar) => {
-    if (typeof regel !== 'function') { return false; }
-
-    return regel(avklartefakta, vilkar);
-  }
+  assertRegel = (regel, avklartefakta, vilkar) => (Utils._isFunction(regel) ? regel(avklartefakta, vilkar) : false);
 }
 
 export default Steg;
