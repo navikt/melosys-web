@@ -7,7 +7,6 @@ class Steg {
   _samleRelevanteData = null;
   _beregnRelevantUI = null;
   _handlers = null;
-  _dataHenter = null;
   constructor (propsLight, posisjon) {
     this._propsLight = propsLight;
     this._stegPosisjon = posisjon;
@@ -29,9 +28,6 @@ class Steg {
   set samleRelevanteData(samleRelevanteData) { this._samleRelevanteData = samleRelevanteData; }
   get beregnRelevantUI() { return this._beregnRelevantUI; }
   set beregnRelevantUI(beregnRelevantUI) { this._beregnRelevantUI = beregnRelevantUI; }
-  get dataHenter() {
-    return this._dataHenter;
-  }
 
   byggSteg = () => ({
     id: this._id,
