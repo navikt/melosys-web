@@ -31,7 +31,7 @@ describe('EnkeltLand', () => {
     expect(Input.props().value).toBe('test');
   });
 
-  it('inputEndringHandler', () => {
+  it('fokusUtHandler', () => {
     const enkeltLandInstance = shallow(<EnkeltLand {...props} />).instance();
     enkeltLandInstance.reduxFjernLand = jest.fn();
     enkeltLandInstance.tomFeilmelding = jest.fn();
