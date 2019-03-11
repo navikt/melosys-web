@@ -5,24 +5,24 @@ import VurderingVedtak from '../../stegKomponenter/vurderingVedtak';
 class Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'alle valg',
         exec: () => true,
         nesteSteg: false,
       },
     ];
-    this._id = STEG.VEDTAK;
-    this._tittel = 'Vedtak';
-    this._komponent = VurderingVedtak;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.VEDTAK;
+    this.tittel = 'Vedtak';
+    this.komponent = VurderingVedtak;
+    this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
     });
-    this._beregnRelevantUI = () => ({});
-    this._handlers = {
+    this.beregnRelevantUI = () => ({});
+    this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 }
 

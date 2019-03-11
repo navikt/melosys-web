@@ -7,7 +7,7 @@ import Yrkesgruppe from '../../stegMotor/kontrollere/yrkesgruppe';
 class YrkesaktivitetAntallLand extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'yrkesgruppeType ER LIK "YRKESAKTIV" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
         exec: avklartefakta => (
@@ -30,20 +30,20 @@ class YrkesaktivitetAntallLand extends Steg {
         nesteSteg: null,
       },
     ];
-    this._id = STEG.YRKESAKTIVITET_ANTALL_LAND;
-    this._tittel = 'Arbeids\u00ADland';
-    this._komponent = VurderingYrkesaktivitetAntallLand;
-    this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = _propsLight => {
+    this.id = STEG.YRKESAKTIVITET_ANTALL_LAND;
+    this.tittel = 'Arbeids\u00ADland';
+    this.komponent = VurderingYrkesaktivitetAntallLand;
+    this.samleRelevanteData = () => ({});
+    this.beregnRelevantUI = _propsLight => {
       const { yrkesaktivitetAntallLand } = _propsLight.skjema.avklartefakta;
       return ({
         harAvklaring: yrkesaktivitetAntallLand !== null && yrkesaktivitetAntallLand !== undefined,
       });
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
