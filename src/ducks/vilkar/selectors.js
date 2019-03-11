@@ -86,7 +86,7 @@ export const art16_1_begrunnelserSelector = createSelector(
 
 export const art16_1_fritekstSelector = createSelector(
   state => art16_1(state),
-  art16_1_vilkar => art16_1_vilkar.begrunnelseFritekst || null
+  art16_1_vilkar => art16_1_vilkar.begrunnelseFritekst
 );
 
 export const valgteLovvalgsVilkar = createSelector(
