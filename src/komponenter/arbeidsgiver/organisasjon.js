@@ -20,18 +20,12 @@ import './organisasjon.css';
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
 const Organisasjon = props => {
-  const [state, setState] = useState({
-    visLeggTilKnapp: true,
-  });
+  const [erLeggTilKnappSynlig, setSynlighet] = useState(true);
 
   const toggleVisLeggTilKnapp = () => {
-    setState(gammelState => ({
-      visLeggTilKnapp: !gammelState.visLeggTilKnapp,
-    }));
+    setSynlighet(!erLeggTilKnappSynlig);
   };
-
   const { organisasjon, slettHandle } = props;
-  const { visLeggTilKnapp } = state;
 
   if (!organisasjon) { return null; }
   const {
@@ -61,7 +55,7 @@ const Organisasjon = props => {
               <KontaktOpplysninger
                 representererKode={MKV.Koder.representerer.ARBEIDSGIVER}
                 juridiskOrg={organisasjon}
-                visLeggTilKnapp={visLeggTilKnapp}
+                visLeggTilKnapp={erLeggTilKnappSynlig}
                 toggleVisLeggTilKnapp={toggleVisLeggTilKnapp}
               />
               <div className="organisasjon__slettknapp">
