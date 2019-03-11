@@ -49,7 +49,7 @@ export const TidligereMedlemskapSelector = createSelector(
 
 export const UnntakFraBestemmelse = createSelector(
   state => Lovvalgsperiode(state),
-  lovvalgsperiode => lovvalgsperiode.unntakFraBestemmelse || null
+  lovvalgsperiode => lovvalgsperiode.unntakFraBestemmelse
 );
 
 export const Art16BegrunnelseFritekstSelector = createSelector(

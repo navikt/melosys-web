@@ -156,7 +156,7 @@ class VurderingArtikkel16 extends Component {
   };
 
   validerLovvalg = () => {
-    const valid = this.props.unntakFraBestemmelse !== null;
+    const valid = !Utils._IsNil(this.props.unntakFraBestemmelse);
     if (!valid) this.setState({ lovvalgFeilmelding: { feilmelding: 'Velg lovvalg' } });
     return valid;
   };
