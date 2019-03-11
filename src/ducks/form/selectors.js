@@ -39,10 +39,20 @@ export const FartsomradeKodeSelector = createSelector(
 
 export const Art16BegrunnelserSelector = createSelector(
   state => SoknadenFormSelector(state).values,
-  skjemaverdier => skjemaverdier.vilkar.art16_1_begrunnelser
+  skjemaverdier => skjemaverdier.vilkar.art16_1_begrunnelser || []
 );
 
 export const TidligereMedlemskapSelector = createSelector(
   state => SoknadenFormSelector(state).values,
   skjemaverdier => skjemaverdier.tidligeremedlemskap || []
+);
+
+export const UnntakFraBestemmelse = createSelector(
+  state => Lovvalgsperiode(state),
+  lovvalgsperiode => lovvalgsperiode.unntakFraBestemmelse
+);
+
+export const Art16BegrunnelseFritekstSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  skjemaverdier => skjemaverdier.vilkar.art16_1_begrunnelser_fritekst
 );

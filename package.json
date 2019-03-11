@@ -19,6 +19,7 @@
     "lodash": "^4.17.11",
     "lodash.throttle": "^4.1.1",
     "melosys-kodeverk": "4.2.0",
+    "melosys-ikoner-assets": "^1.0.1",
     "moment": "^2.22.2",
     "moment-duration-format": "^2.2.2",
     "nav-frontend-alertstriper": "^1.0.27",
