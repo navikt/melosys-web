@@ -1,17 +1,16 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-
+import Ikon from 'melosys-ikoner-assets';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 import * as KV from '../../../../kodeverk';
-import Melosysikon from '../../../melosysikon';
 
 import OppholdslandHandlingSlett from './oppholdslandHandlingSlett';
 
 const EnkeltLand = ({ landKodeObjekt, settSlettIntensjon, redigerbart }) => (
   <div className="oppholdsland__linje">
     <div className="linje__land">{KV.objektTilTerm(landKodeObjekt)} ({KV.objektTilKode(landKodeObjekt)})</div>
-    <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settSlettIntensjon} ><Melosysikon kind="minus" />Fjern</Nav.Knapp></div>
+    <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settSlettIntensjon} ><Ikon kind="minus" />Fjern</Nav.Knapp></div>
   </div>
 );
 
