@@ -1,14 +1,14 @@
 /* eslint react/no-multi-comp:off */
 import React, { Component } from 'react';
 import PT from 'prop-types';
-
+import Ikon from 'melosys-ikoner-assets';
 import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
-import { EnkeltLandPure, landTekstFormat } from '../../../skjema/landvelger';
-import Melosysikon from '../../../melosysikon';
+import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
 
+import { landTekstFormat } from '../../../skjema/landvelger';
 
 class LeggTilWrapper extends Component {
   state = {
@@ -93,7 +93,7 @@ class OppholdsLandLeggTil extends Component {
         <div>
           {!erLeggTilIntensjon && (
             <Nav.Knapp onClick={settLeggTilIntensjon} className="knappMedIkon" disabled={!redigerbart}>
-              <Melosysikon kind="tilsette" /><div>Legg til nytt land</div>
+              <Ikon kind="tilsette" /><div>Legg til nytt land</div>
             </Nav.Knapp>
           )}
 
