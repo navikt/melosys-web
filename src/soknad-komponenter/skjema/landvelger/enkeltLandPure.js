@@ -4,7 +4,7 @@ import classnames from 'classnames';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { kodeTilObjekt, landTekstFormat } from './index';
+import { kodeTilObjekt, landTekstFormat } from './LandVelger';
 
 import './landvelger.css';
 

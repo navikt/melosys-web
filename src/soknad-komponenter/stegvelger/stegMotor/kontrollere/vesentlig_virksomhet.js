@@ -8,7 +8,7 @@ import { erVilkarOppfylt } from '../../../../regler/vilkar';
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'ORDINAER_ARBEIDSTAKER og VESENTLIG_VIRKSOMHET',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET, alleVilkar) !== undefined,
@@ -21,15 +21,15 @@ class VesentligVirksomhet extends Steg {
       },
     ];
 
-    this._id = STEG.VESENTLIG_VIRKSOMHET;
-    this._tittel = 'Vesentlig virksomhet';
-    this._komponent = VurderingVesentligVirksomhet;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.VESENTLIG_VIRKSOMHET;
+    this.tittel = 'Vesentlig virksomhet';
+    this.komponent = VurderingVesentligVirksomhet;
+    this.samleRelevanteData = _propsLight => ({
       valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
       begrunnelser: _propsLight.begrunnelser.art12_1_vesentlig_virksomhet,
       redigerbart: _propsLight.redigerbart,
     });
-    this._beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = _propsLight => {
       const { vesentligVirksomhet, vesentligVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;
       const harAvklaring = vesentligVirksomhet === true || (vesentligVirksomhet === false && vesentligVirksomhetBegrunnelser.length > 0);
 
@@ -38,11 +38,11 @@ class VesentligVirksomhet extends Steg {
         harAvklaring,
       };
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
