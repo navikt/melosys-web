@@ -1,5 +1,5 @@
 /* eslint react/no-multi-comp:off */
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import PT from 'prop-types';
 import Ikon from 'melosys-ikoner-assets';
 import * as KV from '../../../../kodeverk';
@@ -10,56 +10,51 @@ import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
 
 import { landTekstFormat } from '../../../skjema/landvelger';
 
-class LeggTilWrapper extends Component {
-  state = {
-    landKode: '',
-    begrunnelseKode: '0',
+const LeggTilWrapper = props => {
+  const [landKode, setLandKode] = useState('');
+  const [begrunnelseKode, setBegrunnelseKode] = useState('0');
+
+  const oppdaterBegrunnelse = event => {
+    const kode = event.target.value;
+    setBegrunnelseKode(kode);
   };
 
-  oppdaterBegrunnelse = event => {
-    const begrunnelseKode = event.target.value;
-    this.setState({ begrunnelseKode });
-  };
+  const oppdaterLand = kode => (setLandKode(kode));
 
-  oppdaterLand = landKode => (this.setState({ landKode }));
+  const {
+    bekreft, avbryt, alleLandKoder, oppholdBegrunnelser, redigerbart,
+  } = props;
 
-  render () {
-    const { landKode, begrunnelseKode } = this.state;
-    const { oppdaterBegrunnelse, oppdaterLand } = this;
-    const {
-      bekreft, avbryt, alleLandKoder, oppholdBegrunnelser, redigerbart,
-    } = this.props;
+  const erInputGyldig = (landKode && begrunnelseKode && begrunnelseKode !== '0');
 
-    const erInputGyldig = (landKode && begrunnelseKode && begrunnelseKode !== '0');
-
-    return (
-      <div className="leggtilland__linje">
-        <div className="linje__land">
-          <EnkeltLandPure
-            bredde="fullbredde"
-            label="Velg land:"
-            meta={{ error: undefined }}
-            onChange={oppdaterLand}
-            value={landKode}
-            landkoder={alleLandKoder}
-            className="linje__nedtrekksvelger"
-            disabled={!redigerbart}
-          />
-        </div>
-        <div className="linje__begrunnelse">
-          <Nav.Select disabled={!redigerbart} bredde="fullbredde" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:" className="linje__nedtrekksvelger">
-            <option disabled value="0" />
-            {oppholdBegrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
-          </Nav.Select>
-        </div>
-        <div className="linje__knapper">
-          <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
-          <Nav.Knapp onClick={() => bekreft(landKode, begrunnelseKode)} disabled={!(redigerbart && erInputGyldig)}>Legg til</Nav.Knapp>
-        </div>
+  const innhold = (
+    <div className="leggtilland__linje">
+      <div className="linje__land">
+        <EnkeltLandPure
+          bredde="fullbredde"
+          label="Velg land:"
+          meta={{ error: undefined }}
+          onChange={oppdaterLand}
+          value={landKode}
+          landkoder={alleLandKoder}
+          className="linje__nedtrekksvelger"
+          disabled={!redigerbart}
+        />
       </div>
-    );
-  }
-}
+      <div className="linje__begrunnelse">
+        <Nav.Select disabled={!redigerbart} bredde="fullbredde" value={begrunnelseKode} onChange={oppdaterBegrunnelse} label="Velg begrunnelse:" className="linje__nedtrekksvelger">
+          <option disabled value="0" />
+          {oppholdBegrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
+        </Nav.Select>
+      </div>
+      <div className="linje__knapper">
+        <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
+        <Nav.Knapp onClick={() => bekreft(landKode, begrunnelseKode)} disabled={!(redigerbart && erInputGyldig)}>Legg til</Nav.Knapp>
+      </div>
+    </div>
+  );
+  return innhold;
+};
 
 LeggTilWrapper.propTypes = {
   avbryt: PT.func.isRequired,
