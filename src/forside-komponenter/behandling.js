@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, getFormValues } from 'redux-form';
+import { reduxForm } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
@@ -16,11 +16,6 @@ import './behandling.css';
 const uuid = require('uuid/v4');
 
 class Behandling extends Component {
-  componentDidUpdate() {
-    const { formValues } = this.props;
-    localStorage.setItem(KV.Form.BEHANDLINGS_FORM, JSON.stringify(formValues));
-  }
-
   submitOgVideresend = async form => {
     const { handleSubmit, history } = this.props;
     const redirectURL = await handleSubmit(form);
@@ -75,10 +70,7 @@ Behandling.defaultProps = {
   formValues: {},
 };
 
-const mapStateToProps = state => ({
-  formValues: getFormValues(KV.Form.BEHANDLINGS_FORM)(state),
-  initialValues: JSON.parse(localStorage.getItem(KV.Form.BEHANDLINGS_FORM)),
-});
+const mapStateToProps = () => ({});
 const BehandlngForm = reduxForm({
   form: KV.Form.BEHANDLINGS_FORM,
   onSubmit: checkboxliste => oppgaverOperations.sendBehandlingsOppgave(checkboxliste),
