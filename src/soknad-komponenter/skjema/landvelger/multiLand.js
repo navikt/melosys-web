@@ -4,7 +4,7 @@ import { FieldArray } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
-import { kodeTilObjekt, landTekstFormat } from './';
+import { kodeTilObjekt, landTekstFormat } from './LandVelger';
 
 import * as MPT from '../../../proptypes';
 

@@ -8,7 +8,7 @@ import { erVilkarOppfylt } from '../../../../regler/vilkar';
 class Artikkel12_1 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'vilkar for artikkel 12.1 er oppfylt',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, alleVilkar),
@@ -33,15 +33,15 @@ class Artikkel12_1 extends Steg {
         nesteSteg: null,
       },
     ];
-    this._id = STEG.ARTIKKEL_12_1;
-    this._tittel = 'Vurdering av 12.1';
-    this._komponent = VurderingArtikkel12_1;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.ARTIKKEL_12_1;
+    this.tittel = 'Vurdering av 12.1';
+    this.komponent = VurderingArtikkel12_1;
+    this.samleRelevanteData = _propsLight => ({
       artikkel: { kode: MKV.Koder.vilkaar.FO_883_2004_ART12_1, term: '12.1' },
       begrunnelser: _propsLight.begrunnelser.art12_1_begrunnelser || [],
       redigerbart: _propsLight.redigerbart,
     });
-    this._beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = _propsLight => {
       const {
         art12_1, art12_1_begrunnelser = [],
         art16_1, art16_1_begrunnelser = [], art16_1_begrunnelser_fritekst = '',
@@ -59,7 +59,7 @@ class Artikkel12_1 extends Steg {
         art16_1,
       };
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
