@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
@@ -11,56 +11,54 @@ import { beregnAlder } from '../../utils/dato';
 import './medfolgendeAndre.css';
 import BostedsAdresse from '../../komponenter/adresser/bostedsAdresse';
 
-class MedfolgendeAndre extends Component {
-  state = { fnr: '', erDirty: false };
+const MedfolgendeAndre = props => {
+  const [fnr, setFnr] = useState('');
+  const [erDirty, setDirty] = useState('');
 
-  sokHandle = () => {
-    const { sjekkPerson } = this.props;
-    const { fnr } = this.state;
+  const sokHandle = () => {
+    const { sjekkPerson } = props;
 
     if (erGyldigFnr(fnr) || erGyldigDnr(fnr)) {
-      this.setState({ erDirty: false });
+      setDirty(false);
       sjekkPerson(fnr);
     }
   };
 
-  vedTastOppHandle = event => {
+  const vedTastOppHandle = event => {
     const { value } = event.target;
-    this.setState({ fnr: value, erDirty: true });
+    setFnr(value);
+    setDirty(true);
   };
 
-  render () {
-    const { disabled, medfolgendeAndre } = this.props;
-    const { sammensattNavn, foedselsdato, bostedsadresse } = medfolgendeAndre;
-    const { sokHandle, vedTastOppHandle } = this;
-    const { erDirty } = this.state;
+  const { disabled, medfolgendeAndre } = props;
+  const { sammensattNavn, foedselsdato, bostedsadresse } = medfolgendeAndre;
 
-    const funnetPerson = (!erDirty) && Object.keys(medfolgendeAndre).length > 0 ? (
-      <div className="medfolgendeAndre__person">
-        {sammensattNavn} ({beregnAlder(foedselsdato)})
-        <BostedsAdresse bostedsadresse={bostedsadresse} />
-      </div>
-    ) : null;
+  const funnetPerson = (!erDirty) && Object.keys(medfolgendeAndre).length > 0 ? (
+    <div className="medfolgendeAndre__person">
+      {sammensattNavn} ({beregnAlder(foedselsdato)})
+      <BostedsAdresse bostedsadresse={bostedsadresse} />
+    </div>
+  ) : null;
 
-    return (
-      <div className="medfolgendeAndre">
-        <Nav.Fieldset legend="Søker følger med et familiemedlem som utfører arbeid i landet:">
-          <div className="medfolgendeAndre__wrapper">
-            <Skjema.Input
-              bredde="M"
-              feltNavn="medfolgendeAndre"
-              label="Oppgi fnr / dnr:"
-              onKeyUp={vedTastOppHandle}
-              disabled={disabled}
-            />
-            <Nav.Hovedknapp disabled={disabled} onClick={sokHandle}>Søk</Nav.Hovedknapp>
-          </div>
-          { funnetPerson }
-        </Nav.Fieldset>
-      </div>
-    );
-  }
-}
+  const innhold = (
+    <div className="medfolgendeAndre">
+      <Nav.Fieldset legend="Søker følger med et familiemedlem som utfører arbeid i landet:">
+        <div className="medfolgendeAndre__wrapper">
+          <Skjema.Input
+            bredde="M"
+            feltNavn="medfolgendeAndre"
+            label="Oppgi fnr / dnr:"
+            onKeyUp={vedTastOppHandle}
+            disabled={disabled}
+          />
+          <Nav.Hovedknapp disabled={disabled} onClick={sokHandle}>Søk</Nav.Hovedknapp>
+        </div>
+        { funnetPerson }
+      </Nav.Fieldset>
+    </div>
+  );
+  return innhold;
+};
 
 MedfolgendeAndre.propTypes = {
   disabled: PT.bool.isRequired,
