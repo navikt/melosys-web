@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 
@@ -29,14 +29,12 @@ MultiLandEnkelt.propTypes = {
   slettLandHandler: PT.func.isRequired,
 };
 
-class MultiLand extends Component {
-  state = {
-    inputVerdi: '',
-    error: null,
-  };
+const MultiLand = props => {
+  const [inputVerdi, setInputVerdi] = useState('');
+  const [error, setError] = useState(null);
 
-  reduxLeggTilLand = landKode => {
-    const { fields } = this.props;
+  const reduxLeggTilLand = landKode => {
+    const { fields } = props;
     const valgteLand = fields.getAll() || [];
 
     // Todo: Legg til logging.
@@ -47,31 +45,31 @@ class MultiLand extends Component {
     }
   };
 
-  reduxSlettEttLand = landKode => {
-    const index = this.props.fields.getAll().findIndex(item => item === landKode);
-    return (index > -1 && this.props.fields.remove(index));
+  const reduxSlettEttLand = landKode => {
+    const index = props.fields.getAll().findIndex(item => item === landKode);
+    return (index > -1 && props.fields.remove(index));
   };
 
-  finnFlereLand = inputVerdi => {
-    const { landkoder } = this.props;
+  const finnFlereLand = verdi => {
+    const { landkoder } = props;
     return landkoder.filter(land => (
       landTekstFormat(land)
         .toLowerCase()
-        .includes(inputVerdi.toLowerCase())
+        .includes(verdi.toLowerCase())
     ));
   };
 
-  finnEttLand = inputVerdi => {
-    const landListe = this.finnFlereLand(inputVerdi);
+  const finnEttLand = verdi => {
+    const landListe = finnFlereLand(verdi);
     return landListe.length === 1 ? landListe[0] : false;
   };
 
-  tomFeilmelding = () => {
-    this.setState({ error: null });
+  const tomFeilmelding = () => {
+    setError(null);
   };
 
-  dynamiskTittel = () => {
-    const { fields } = this.props;
+  const dynamiskTittel = () => {
+    const { fields } = props;
     const count = fields ? fields.length : 0;
     return (count > 0 ? 'Legg til evt flere land:' : 'Legg til første land:');
   };
@@ -81,89 +79,78 @@ class MultiLand extends Component {
    * -----------------------------------------------------------------------
    */
 
-  slettLandHandler = (e, landKode) => {
+  const slettLandHandler = (e, landKode) => {
     e.preventDefault();
-    this.reduxSlettEttLand(landKode);
+    reduxSlettEttLand(landKode);
   };
-
-  inputTastNedHandler = e => {
-    if (e.keyCode === 13) {
-      e.preventDefault();
-      this.fokusUtHandler();
-    }
-  };
-
-  fokusUtHandler = () => {
-    const { inputVerdi } = this.state;
-
+  const fokusUtHandler = () => {
     if (!inputVerdi) {
-      this.tomFeilmelding();
+      tomFeilmelding();
       return;
     }
 
-    const landKodeObjekt = this.finnEttLand(inputVerdi);
+    const landKodeObjekt = finnEttLand(inputVerdi);
     if (landKodeObjekt) {
-      this.reduxLeggTilLand(landKodeObjekt.kode);
-      this.setState({ inputVerdi: '', error: null });
+      reduxLeggTilLand(landKodeObjekt.kode);
+      setInputVerdi('');
+      setError(null);
     } else {
-      this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
+      setError('Finner ikke landet du har skrevet inn.');
     }
   };
 
-  inputEndringHandler = e => {
-    const inputVerdi = e.target.value;
-    this.setState({ inputVerdi });
+  const inputTastNedHandler = e => {
+    if (e.keyCode === 13) {
+      e.preventDefault();
+      fokusUtHandler();
+    }
   };
 
-  render() {
-    const {
-      fokusUtHandler,
-      inputEndringHandler,
-      inputTastNedHandler,
-      slettLandHandler,
-    } = this;
 
-    const {
-      disabled,
-      fields,
-      meta,
-      landkoder,
-      label,
-      dataListID,
-    } = this.props;
+  const inputEndringHandler = e => {
+    const { value } = e.target;
+    setInputVerdi(value);
+  };
+  const {
+    disabled,
+    fields,
+    meta,
+    landkoder,
+    label,
+    dataListID,
+  } = props;
 
-    const { inputVerdi } = this.state;
-    const { error: skjemaError = '' } = meta;
-    const { error: internLandError = '' } = this.state;
+  const { error: skjemaError = '' } = meta;
+  const { error: internLandError = '' } = error;
+  const feilObjekt = skjemaError || internLandError ? { feilmelding: `${skjemaError} ${internLandError}` } : null;
+  const valgteLand = fields.getAll() || [];
+  const dynamiskFeltTittel = label || dynamiskTittel();
 
-    const feilObjekt = skjemaError || internLandError ? { feilmelding: `${skjemaError} ${internLandError}` } : null;
-    const valgteLand = fields.getAll() || [];
-    const dynamiskFeltTittel = label || this.dynamiskTittel();
 
-    return (
-      <div className="landliste">
-        {
-          landkoder.length > 0 && valgteLand.map(land => <MultiLandEnkelt key={land} slettLandHandler={slettLandHandler} landObjekt={kodeTilObjekt(land, landkoder)} />)
-        }
-        <div className="landliste__leggtil">
-          <Nav.Input
-            list={dataListID}
-            disabled={disabled}
-            label={dynamiskFeltTittel}
-            bredde="XL"
-            feil={feilObjekt}
-            className="landliste__linje__input"
-            value={inputVerdi}
-            onBlur={fokusUtHandler}
-            onChange={inputEndringHandler}
-            onKeyDown={inputTastNedHandler}
-          />
-          <Nav.Knapp mini className="landliste__linje__knapp">Legg til</Nav.Knapp>
-        </div>
+  const innhold = (
+    <div className="landliste">
+      {
+        landkoder.length > 0 && valgteLand.map(land => <MultiLandEnkelt key={land} slettLandHandler={slettLandHandler} landObjekt={kodeTilObjekt(land, landkoder)} />)
+      }
+      <div className="landliste__leggtil">
+        <Nav.Input
+          list={dataListID}
+          disabled={disabled}
+          label={dynamiskFeltTittel}
+          bredde="XL"
+          feil={feilObjekt}
+          className="landliste__linje__input"
+          value={inputVerdi}
+          onBlur={fokusUtHandler}
+          onChange={inputEndringHandler}
+          onKeyDown={inputTastNedHandler}
+        />
+        <Nav.Knapp mini className="landliste__linje__knapp">Legg til</Nav.Knapp>
       </div>
-    );
-  }
-}
+    </div>
+  );
+  return innhold;
+};
 
 MultiLand.propTypes = {
   dataListID: PT.string.isRequired,
