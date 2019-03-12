@@ -71,6 +71,10 @@ SokkelSkipListe.defaultProps = {
 };
 
 class VurderingSokkelSkip extends React.Component {
+  componentWillUnmount() {
+    this.clearSkjema();
+  }
+
   clearSkjema = () => {
     const { settSkjemaVerdi } = this.props;
     settSkjemaVerdi('vilkar.art11_3A', null);
