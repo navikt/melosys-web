@@ -5,22 +5,22 @@ import VurderingEndrePeriode from '../../stegKomponenter/vurderingEndrePeriode';
 class EndrePeriode extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: false,
       },
     ];
-    this._id = STEG.ENDRET_PERIODE;
-    this._tittel = 'Endre lovvalgsperiode';
-    this._komponent = VurderingEndrePeriode;
-    this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = () => ({});
-    this._handlers = {
+    this.id = STEG.ENDRET_PERIODE;
+    this.tittel = 'Endre lovvalgsperiode';
+    this.komponent = VurderingEndrePeriode;
+    this.samleRelevanteData = () => ({});
+    this.beregnRelevantUI = () => ({});
+    this.handlers = {
       sendEndretLovvalgsPeriode: this._propsLight.tilgjengeligeHandlers.sendEndretLovvalgsPeriode,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 }
 

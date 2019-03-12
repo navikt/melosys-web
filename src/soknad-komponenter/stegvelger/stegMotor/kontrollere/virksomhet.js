@@ -6,7 +6,7 @@ import * as KV from '../../../../kodeverk';
 class Virksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'yrkesgruppeType ER LIK "ARBEIDSTAKER" OG yrkesaktivitetType ER LIK "INGEN_AV_DISSE" OG antallLand ER LIK "TO_ELLER_FLERE_LAND" OG aktivitetINorge ER LIK "UNDER_25_PROSENT"',
         exec: ({
@@ -33,19 +33,19 @@ class Virksomhet extends Steg {
         nesteSteg: STEG.VEDTAK,
       },
     ];
-    this._id = STEG.VIRKSOMHET;
-    this._tittel = 'Arbeids\u00ADmønster';
-    this._komponent = VurderingVirksomhet;
-    this._samleRelevanteData = () => ({ });
-    this._beregnRelevantUI = () => ({
+    this.id = STEG.VIRKSOMHET;
+    this.tittel = 'Arbeids\u00ADmønster';
+    this.komponent = VurderingVirksomhet;
+    this.samleRelevanteData = () => ({ });
+    this.beregnRelevantUI = () => ({
       visVekslingMellomLand: true,
       visMarginaltArbeid: true,
       visAktivitetINorge: true,
     });
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 }
 

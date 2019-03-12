@@ -6,7 +6,7 @@ import * as KV from '../../../../kodeverk';
 class Tjenestemann extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'vurderingTjenestemann ER LIK "ETT_LAND" eller vurderingTjenestemann ER LIK "ETT_LAND_YRKESAKTIVITET_ANDRE_LAND" ' +
         'eller vurderingTjenestemann ER LIK "FLERE_LAND" eller vurderingTjenestemann ER LIK "FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND"',
@@ -24,17 +24,17 @@ class Tjenestemann extends Steg {
         nesteSteg: STEG.VEDTAK,
       },
     ];
-    this._id = STEG.TJENESTEMANN;
-    this._tittel = 'Tjeneste\u00ADmann';
-    this._komponent = VurderingTjenestemannn;
-    this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = () => ({
+    this.id = STEG.TJENESTEMANN;
+    this.tittel = 'Tjeneste\u00ADmann';
+    this.komponent = VurderingTjenestemannn;
+    this.samleRelevanteData = () => ({});
+    this.beregnRelevantUI = () => ({
       visYrkesgruppeType: true,
     });
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 }
 

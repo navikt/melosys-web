@@ -1,4 +1,4 @@
-import StegMotor from './index';
+import StegMotor from './StegMotor';
 
 describe('Tester stegVelger', () => {
   test('stegvelger', () => {

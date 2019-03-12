@@ -4,12 +4,11 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
-import PdfLenkeListe from '../../pdfLenkeListe';
-
-import { vilkarBegrunnelserSelector, art12_1_begrunnelserSelector, art12_2_begrunnelserSelector, art16_1_begrunnelserSelector, art16_1_fritekstSelector } from '../../../ducks/vilkar/selectors';
+import * as VilkarSelectors from '../../../ducks/vilkar/selectors';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
-
 import * as KV from '../../../kodeverk';
+
+import PdfLenkeListe from '../../pdfLenkeListe';
 
 import './vurderingAvslag12_x_og_16.css';
 
@@ -60,6 +59,13 @@ function VurderingAvslag12_x_og_16(props) {
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
+      },
+    },
+    {
+      navn: 'Orientering til arbeidsgiver om avslag',
+      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
   ];
@@ -127,11 +133,11 @@ VurderingAvslag12_x_og_16.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  valgte_art_12_1_begrunnelser: art12_1_begrunnelserSelector(state),
-  valgte_art_12_2_begrunnelser: art12_2_begrunnelserSelector(state),
-  valgte_art_16_1_begrunnelser: art16_1_begrunnelserSelector(state),
-  art16_1_fritekst: art16_1_fritekstSelector(state),
-  vilkarBegrunnelser: vilkarBegrunnelserSelector(state),
+  valgte_art_12_1_begrunnelser: VilkarSelectors.art12_1_begrunnelserSelector(state),
+  valgte_art_12_2_begrunnelser: VilkarSelectors.art12_2_begrunnelserSelector(state),
+  valgte_art_16_1_begrunnelser: VilkarSelectors.art16_1_begrunnelserSelector(state),
+  art16_1_fritekst: VilkarSelectors.art16_1_fritekstSelector(state),
+  vilkarBegrunnelser: VilkarSelectors.vilkarBegrunnelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
 });
 
