@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
@@ -9,6 +10,8 @@ import PanelHeader from '../panelHeader/panelHeader';
 
 import ForretningsAdresse from '../adresser/forretningsAdresse';
 
+import KontaktOpplysninger from '../../soknad-komponenter/kontaktopplysninger';
+
 import './organisasjon.css';
 
 /** Dette er komponenten for ett enkelt Arbeidsforhold. Denne eksporteres ikke til omverden, men brukes
@@ -16,16 +19,22 @@ import './organisasjon.css';
  *
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
-const Organisasjon = ({ organisasjon, slettHandle }) => {
-  if (!organisasjon) { return null; }
+const Organisasjon = props => {
+  const [erLeggTilKnappSynlig, setSynlighet] = useState(true);
 
+  const toggleVisLeggTilKnapp = () => {
+    setSynlighet(!erLeggTilKnappSynlig);
+  };
+  const { organisasjon, slettHandle } = props;
+
+  if (!organisasjon) { return null; }
   const {
     orgnr,
     navn,
     forretningsadresse,
   } = organisasjon;
 
-  return (
+  const content = (
     <div className="panelSeksjon organisasjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader
@@ -43,6 +52,12 @@ const Organisasjon = ({ organisasjon, slettHandle }) => {
               </dl>
             </Nav.Column>
             <Nav.Column xs="6" className="organisasjon__slettwrapper">
+              <KontaktOpplysninger
+                representererKode={MKV.Koder.representerer.ARBEIDSGIVER}
+                juridiskOrg={organisasjon}
+                visLeggTilKnapp={erLeggTilKnappSynlig}
+                toggleVisLeggTilKnapp={toggleVisLeggTilKnapp}
+              />
               <div className="organisasjon__slettknapp">
                 { slettHandle && <Nav.Knapp onClick={slettHandle}>Slett</Nav.Knapp> }
               </div>
@@ -52,6 +67,7 @@ const Organisasjon = ({ organisasjon, slettHandle }) => {
       </Nav.EkspanderbartpanelBase>
     </div>
   );
+  return content;
 };
 
 Organisasjon.propTypes = {
