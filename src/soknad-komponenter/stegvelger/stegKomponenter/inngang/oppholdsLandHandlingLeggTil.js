@@ -1,5 +1,5 @@
 /* eslint react/no-multi-comp:off */
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import PT from 'prop-types';
 import Ikon from 'melosys-ikoner-assets';
 import * as KV from '../../../../kodeverk';
@@ -64,53 +64,46 @@ LeggTilWrapper.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-class OppholdsLandLeggTil extends Component {
-  state = { erLeggTilIntensjon: false };
+const OppholdsLandLeggTil = props => {
+  const [erLeggTilIntensjon, setIntensjon] = useState(false);
 
-  settLeggTilIntensjon = () => this.setState({ erLeggTilIntensjon: true });
+  const settLeggTilIntensjon = () => setIntensjon(true);
+  const lukk = () => setIntensjon(false);
 
-  bekreftLeggTil = (landKode, begrunnelseKode) => {
-    this.props.bekreftLeggTil(landKode, begrunnelseKode);
-    this.lukk();
+  const bekreftLeggTil = (landKode, begrunnelseKode) => {
+    props.bekreftLeggTil(landKode, begrunnelseKode);
+    lukk();
   };
 
-  lukk = () => this.setState({ erLeggTilIntensjon: false });
-
-  render () {
-    const { alleLandKoder, oppholdBegrunnelser, redigerbart } = this.props;
-    const { erLeggTilIntensjon } = this.state;
-    const {
-      settLeggTilIntensjon, lukk, bekreftLeggTil,
-    } = this;
-
-    return (
+  const { alleLandKoder, oppholdBegrunnelser, redigerbart } = props;
+  const innhold = (
+    <div>
       <div>
-        <div>
-          {!erLeggTilIntensjon && (
-            <Nav.Knapp onClick={settLeggTilIntensjon} className="knappMedIkon" disabled={!redigerbart}>
-              <Ikon kind="tilsette" /><div>Legg til nytt land</div>
-            </Nav.Knapp>
-          )}
+        {!erLeggTilIntensjon && (
+          <Nav.Knapp onClick={settLeggTilIntensjon} className="knappMedIkon" disabled={!redigerbart}>
+            <Ikon kind="tilsette" /><div>Legg til nytt land</div>
+          </Nav.Knapp>
+        )}
 
-          {erLeggTilIntensjon && (
-            <LeggTilWrapper
-              alleLandKoder={alleLandKoder}
-              oppholdBegrunnelser={oppholdBegrunnelser}
-              bekreft={bekreftLeggTil}
-              avbryt={lukk}
-              redigerbart={redigerbart}
-            />
-          )}
-        </div>
-        <div className="oppholdsland__dataliste">
-          <datalist id="alleLand">
-            {alleLandKoder.map(item => (<option key={KV.objektTilKode(item)} value={landTekstFormat(item)} />))}
-          </datalist>
-        </div>
+        {erLeggTilIntensjon && (
+          <LeggTilWrapper
+            alleLandKoder={alleLandKoder}
+            oppholdBegrunnelser={oppholdBegrunnelser}
+            bekreft={bekreftLeggTil}
+            avbryt={lukk}
+            redigerbart={redigerbart}
+          />
+        )}
       </div>
-    );
-  }
-}
+      <div className="oppholdsland__dataliste">
+        <datalist id="alleLand">
+          {alleLandKoder.map(item => (<option key={KV.objektTilKode(item)} value={landTekstFormat(item)} />))}
+        </datalist>
+      </div>
+    </div>
+  );
+  return innhold;
+};
 
 OppholdsLandLeggTil.propTypes = {
   bekreftLeggTil: PT.func.isRequired,
