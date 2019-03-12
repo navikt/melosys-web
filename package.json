@@ -79,7 +79,7 @@
     "react-router-redux": "^4.0.8",
     "react-scripts": "^1.1.5",
     "redux": "^4.0.1",
-    "redux-form": "^8.1.0",
+    "redux-form": "^7.4.2",
     "redux-freeze": "^0.1.7",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
