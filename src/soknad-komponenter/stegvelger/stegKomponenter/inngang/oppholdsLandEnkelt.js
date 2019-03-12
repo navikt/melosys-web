@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PT from 'prop-types';
 import Ikon from 'melosys-ikoner-assets';
 import * as Nav from '../../../../utils/navFrontend';
@@ -20,42 +20,33 @@ EnkeltLand.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-class OppholdsLandEnkelt extends Component {
-  state = { erSlettingIntensjon: false };
+const OppholdsLandEnkelt = props => {
+  const [erSlettingIntensjon, settSlettIntensjon] = useState(false);
 
-  settSlettIntensjon = intensjon => this.setState({ erSlettingIntensjon: intensjon });
-
-  avbryt = () => this.settSlettIntensjon(false);
-
-  render () {
-    const {
-      landKodeObjekt, bekreftFjern, oppholdBegrunnelser, redigerbart,
-    } = this.props;
-
-    const { erSlettingIntensjon } = this.state;
-    const { settSlettIntensjon, avbryt } = this;
-
-    return (
-      <div>
-        {erSlettingIntensjon ?
-          <OppholdslandHandlingSlett
-            oppholdBegrunnelser={oppholdBegrunnelser}
-            landKodeObjekt={landKodeObjekt}
-            bekreft={bekreftFjern}
-            avbryt={avbryt}
-            redigerbart={redigerbart}
-          />
-          :
-          <EnkeltLand
-            landKodeObjekt={landKodeObjekt}
-            settSlettIntensjon={() => settSlettIntensjon(true)}
-            redigerbart={redigerbart}
-          />
-        }
-      </div>
-    );
-  }
-}
+  const avbryt = () => this.settSlettIntensjon(false);
+  const {
+    landKodeObjekt, bekreftFjern, oppholdBegrunnelser, redigerbart,
+  } = props;
+  const innhold =
+    <div>
+      {erSlettingIntensjon ?
+        <OppholdslandHandlingSlett
+          oppholdBegrunnelser={oppholdBegrunnelser}
+          landKodeObjekt={landKodeObjekt}
+          bekreft={bekreftFjern}
+          avbryt={avbryt}
+          redigerbart={redigerbart}
+        />
+        :
+        <EnkeltLand
+          landKodeObjekt={landKodeObjekt}
+          settSlettIntensjon={() => settSlettIntensjon(true)}
+          redigerbart={redigerbart}
+        />
+      }
+    </div>;
+  return innhold;
+};
 
 OppholdsLandEnkelt.propTypes = {
   bekreftFjern: PT.func.isRequired,

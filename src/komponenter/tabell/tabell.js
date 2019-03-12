@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PT from 'prop-types';
 import classnames from 'classnames';
 
@@ -26,67 +26,64 @@ TabellLinje.propTypes = {
  *
  * @param props. Se prop types for detaljer.
  */
-class Tabell extends Component {
-  state = {
-    aktivSide: 0,
-  };
+const Tabell = props => {
+  const [aktivSide, setState] = useState(0);
 
   /** Håndterer klikk på pagineringsknapper for å bytte visningsside
    *
    * @param nySide Siden som brukeren vil gå til (starter på 0).
    */
-  tilSideHandler = nySide => {
-    this.setState({ aktivSide: nySide });
+  const tilSideHandler = nySide => {
+    setState(nySide);
   };
 
-  render() {
-    const {
-      tabellData, kolonneNavn, linjerPerSide, className,
-    } = this.props;
+  const {
+    tabellData, kolonneNavn, linjerPerSide, className,
+  } = props;
+  // Filter ut delen av datasettet som representerer aktive siden (paginering). Dersom
+  // linjerPerSide <= 0, vis hele datasettet (dvs, tabellData.length)
+  const timeLinjeChunk = tabellData.filter((linje, index) => {
+    const startIndex = aktivSide * linjerPerSide;
+    const sluttIndex = linjerPerSide > 0 ? (startIndex + linjerPerSide) : tabellData.length;
+    // Returnerer true dersom index er innenfor range i aktivSide.
+    return (index >= startIndex && index < sluttIndex);
+  });
 
-    // Filter ut delen av datasettet som representerer aktive siden (paginering). Dersom
-    // linjerPerSide <= 0, vis hele datasettet (dvs, tabellData.length)
-    const timeLinjeChunk = tabellData.filter((linje, index) => {
-      const startIndex = this.state.aktivSide * linjerPerSide;
-      const sluttIndex = linjerPerSide > 0 ? (startIndex + linjerPerSide) : tabellData.length;
-      // Returnerer true dersom index er innenfor range i aktivSide.
-      return (index >= startIndex && index < sluttIndex);
-    });
+  // Sjekk at linjerPerSide-prop er satt til 1 eller høyere
+  // hvis ikke default til 0 for å unngå division by zero.
+  const totaltSider = linjerPerSide > 0 ? Math.ceil(tabellData.length / linjerPerSide) : 0;
 
-    // Sjekk at linjerPerSide-prop er satt til 1 eller høyere
-    // hvis ikke default til 0 for å unngå division by zero.
-    const totaltSider = linjerPerSide > 0 ? Math.ceil(tabellData.length / linjerPerSide) : 0;
+  // Bygg en array med antall sider som deretter fylles med med pagineringsknapper. Dersom totaltSider er 0 vil
+  // array length være lik 0 som gjør at ingen knapper rendres dersom hele tabellen vises som én side uten paginering.
+  const sideNav = new Array(totaltSider).fill(undefined).map((item, index) => {
+    const classname = classnames({ paginering__nav: true, 'paginering__nav--aktiv': index === aktivSide });
+    return (<button key={uuid()} className={classname} onClick={() => tilSideHandler(index)}>{index + 1}</button>);
+  });
 
-    // Bygg en array med antall sider som deretter fylles med med pagineringsknapper. Dersom totaltSider er 0 vil
-    // array length være lik 0 som gjør at ingen knapper rendres dersom hele tabellen vises som én side uten paginering.
-    const sideNav = new Array(totaltSider).fill(undefined).map((item, index) => {
-      const classname = classnames({ paginering__nav: true, 'paginering__nav--aktiv': index === this.state.aktivSide });
-      return (<button key={uuid()} className={classname} onClick={() => this.tilSideHandler(index)}>{index + 1}</button>);
-    });
+  const paginering = sideNav.length > 1
+    ?
+    <div className="paginering" aria-label="Naviger blant flere sider i dennne tabellen">
+      {sideNav.map(nav => nav)}
+    </div>
+    :
+    null;
 
-    const paginering = sideNav.length > 1
-      ?
-      <div className="paginering" aria-label="Naviger blant flere sider i dennne tabellen">
-        {sideNav.map(nav => nav)}
-      </div>
-      :
-      null;
 
-    return (
-      <div className={className}>
-        <table className="tabellutlisting">
-          <tbody>
-            <tr>
-              {kolonneNavn.map(kolonne => <th key={uuid()} scope="col">{kolonne}</th>)}
-            </tr>
-            {timeLinjeChunk.map(linjeData => <TabellLinje key={uuid()} linjeData={linjeData} />)}
-          </tbody>
-        </table>
-        { paginering }
-      </div>
-    );
-  }
-}
+  const innhold = (
+    <div className={className}>
+      <table className="tabellutlisting">
+        <tbody>
+          <tr>
+            {kolonneNavn.map(kolonne => <th key={uuid()} scope="col">{kolonne}</th>)}
+          </tr>
+          {timeLinjeChunk.map(linjeData => <TabellLinje key={uuid()} linjeData={linjeData} />)}
+        </tbody>
+      </table>
+      { paginering }
+    </div>
+  );
+  return innhold;
+};
 
 Tabell.propTypes = {
   overskrift: PT.string,
