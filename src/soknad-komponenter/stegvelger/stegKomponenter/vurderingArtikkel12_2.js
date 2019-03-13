@@ -5,7 +5,6 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import * as KV from '../../../kodeverk';
 
 class VurderingArtikkel12_2 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -78,7 +77,7 @@ class VurderingArtikkel12_2 extends Component {
 
   render () {
     const {
-      bekreftOgFortsett, artikkel, tilstand, redigerbart,
+      bekreftOgFortsett, tilstand, redigerbart,
     } = this.props;
 
     const { valgtVilkar } = this.state;
@@ -97,6 +96,7 @@ class VurderingArtikkel12_2 extends Component {
                   value={MKV.Koder.vilkaar.FO_883_2004_ART12_2}
                   checked={valgtVilkar === MKV.Koder.vilkaar.FO_883_2004_ART12_2}
                   label="Ja"
+                  disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel"
@@ -104,13 +104,15 @@ class VurderingArtikkel12_2 extends Component {
                   value={MKV.Koder.vilkaar.FO_883_2004_ART16_1}
                   checked={valgtVilkar === MKV.Koder.vilkaar.FO_883_2004_ART16_1}
                   label="Nei, jeg vil sende anmodning om unntak etter artikkel 16.1"
+                  disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel"
                   onChange={this.radioEndringHandler}
                   value={this.AVSLAG}
                   checked={valgtVilkar === this.AVSLAG}
-                  label={`Nei, jeg vil avslå søknaden etter artikkel ${KV.objektTilKode(artikkel)} og 16.1`}
+                  label="Nei, jeg vil avslå søknaden etter artikkel 12.2 og 16.1"
+                  disabled={!redigerbart}
                 />
               </Nav.Fieldset>
             </Nav.Column>
