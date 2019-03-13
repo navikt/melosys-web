@@ -3,11 +3,11 @@ import PT from 'prop-types';
 
 import * as KV from '../kodeverk';
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
+import * as MPT from '../proptypes';
 import * as Ikoner from '../resources/images';
 
-import PanelHeader from '../komponenter/panelHeader/panelHeader';
-import DatoOmrade from '../komponenter/datoOmrade/datoOmrade';
+import PanelHeader from './panelHeader/panelHeader';
+import DatoOmrade from './datoOmrade/datoOmrade';
 
 import './medlemskap.css';
 
