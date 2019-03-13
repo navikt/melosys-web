@@ -1,17 +1,16 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PT from 'prop-types';
-
+import Ikon from 'melosys-ikoner-assets';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 import * as KV from '../../../../kodeverk';
-import Melosysikon from '../../../melosysikon';
 
 import OppholdslandHandlingSlett from './oppholdslandHandlingSlett';
 
 const EnkeltLand = ({ landKodeObjekt, settSlettIntensjon, redigerbart }) => (
   <div className="oppholdsland__linje">
     <div className="linje__land">{KV.objektTilTerm(landKodeObjekt)} ({KV.objektTilKode(landKodeObjekt)})</div>
-    <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settSlettIntensjon} ><Melosysikon kind="minus" />Fjern</Nav.Knapp></div>
+    <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settSlettIntensjon} ><Ikon kind="minus" />Fjern</Nav.Knapp></div>
   </div>
 );
 
@@ -21,42 +20,33 @@ EnkeltLand.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-class OppholdsLandEnkelt extends Component {
-  state = { erSlettingIntensjon: false };
+const OppholdsLandEnkelt = props => {
+  const [erSlettingIntensjon, settSlettIntensjon] = useState(false);
 
-  settSlettIntensjon = intensjon => this.setState({ erSlettingIntensjon: intensjon });
-
-  avbryt = () => this.settSlettIntensjon(false);
-
-  render () {
-    const {
-      landKodeObjekt, bekreftFjern, oppholdBegrunnelser, redigerbart,
-    } = this.props;
-
-    const { erSlettingIntensjon } = this.state;
-    const { settSlettIntensjon, avbryt } = this;
-
-    return (
-      <div>
-        {erSlettingIntensjon ?
-          <OppholdslandHandlingSlett
-            oppholdBegrunnelser={oppholdBegrunnelser}
-            landKodeObjekt={landKodeObjekt}
-            bekreft={bekreftFjern}
-            avbryt={avbryt}
-            redigerbart={redigerbart}
-          />
-          :
-          <EnkeltLand
-            landKodeObjekt={landKodeObjekt}
-            settSlettIntensjon={() => settSlettIntensjon(true)}
-            redigerbart={redigerbart}
-          />
-        }
-      </div>
-    );
-  }
-}
+  const avbryt = () => this.settSlettIntensjon(false);
+  const {
+    landKodeObjekt, bekreftFjern, oppholdBegrunnelser, redigerbart,
+  } = props;
+  const innhold =
+    <div>
+      {erSlettingIntensjon ?
+        <OppholdslandHandlingSlett
+          oppholdBegrunnelser={oppholdBegrunnelser}
+          landKodeObjekt={landKodeObjekt}
+          bekreft={bekreftFjern}
+          avbryt={avbryt}
+          redigerbart={redigerbart}
+        />
+        :
+        <EnkeltLand
+          landKodeObjekt={landKodeObjekt}
+          settSlettIntensjon={() => settSlettIntensjon(true)}
+          redigerbart={redigerbart}
+        />
+      }
+    </div>;
+  return innhold;
+};
 
 OppholdsLandEnkelt.propTypes = {
   bekreftFjern: PT.func.isRequired,
