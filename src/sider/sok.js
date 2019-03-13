@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
@@ -11,44 +11,43 @@ import { sokSelectors, sokOperations } from '../ducks/sok';
 import { queryParamLogger } from '../utils/queryParamLogger';
 import './sok.css';
 
-class Sok extends Component {
-  componentWillMount() {
-    const { match, location, sokFagsaker } = this.props;
+const Sok = props => {
+  useEffect(() => {
+    const { match, location, sokFagsaker } = props;
     const { fnr } = match.params;
     if (fnr) {
       queryParamLogger(location, 'kilde', 'GOSYS');
       sokFagsaker(fnr);
     }
-  }
+  }, []);
 
-  render() {
-    const { sokResultat, children } = this.props;
-    const { fnr } = this.props.match.params;
-    if (!sokResultat) return null;
+  const { sokResultat, children } = props;
+  const { fnr } = props.match.params;
 
-    const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til fnr eller dnr {fnr}.</Nav.Panel>;
+  if (!sokResultat) return null;
 
-    return (
-      <div className="sok">
-        { children }
-        <Nav.Container>
-          <Nav.Row className="">
-            <section className="sokresultat">
-              <h1>Innsyn i sak</h1>
-              <h2>
-                Resultater for fnr {fnr}{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
-              </h2>
-              { sokResultat.length > 0 &&
-                sokResultat.map(fagsak => <Fagsak key={fagsak.saksnummer} sak={fagsak} />)
-              }
-              { sokResultat.length === 0 && ingenTreff }
-            </section>
-          </Nav.Row>
-        </Nav.Container>
-      </div>
-    );
-  }
-}
+  const ingenTreff = <Nav.Panel>Fant ingen saker knyttet til fnr eller dnr {fnr}.</Nav.Panel>;
+
+  return (
+    <div className="sok">
+      { children }
+      <Nav.Container>
+        <Nav.Row className="">
+          <section className="sokresultat">
+            <h1>Innsyn i sak</h1>
+            <h2>
+              Resultater for fnr {fnr}{sokResultat.length > 0 ? ` - ${sokResultat[0].sammensattNavn}` : undefined}
+            </h2>
+            { sokResultat.length > 0 &&
+            sokResultat.map(fagsak => <Fagsak key={fagsak.saksnummer} sak={fagsak} />)
+            }
+            { sokResultat.length === 0 && ingenTreff }
+          </section>
+        </Nav.Row>
+      </Nav.Container>
+    </div>
+  );
+};
 
 Sok.propTypes = {
   location: PT.object.isRequired,

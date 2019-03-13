@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { reduxForm } from 'redux-form';
 import { withRouter } from 'react-router-dom';
@@ -9,34 +9,33 @@ import * as Nav from '../../utils/navFrontend';
 import { oppgaverOperations } from '../../ducks/oppgaver';
 import * as Skjema from '../skjema';
 
-class Journalforing extends Component {
-  submitOgVideresend = async values => {
-    const { sendSkjema, history } = this.props;
+const Journalforing = props => {
+  const submitOgVideresend = async values => {
+    const { sendSkjema, history } = props;
     const redirectURL = await sendSkjema(values.fagomrade);
     history.push(redirectURL);
   };
-  overrideDefaultSubmit = event => {
+  const overrideDefaultSubmit = event => {
     event.preventDefault();
   };
-  render() {
-    return (
-      <Nav.Panel className="forside__sidepanel">
-        <Nav.Systemtittel>Journalføring</Nav.Systemtittel>
-        <p>Velg type, og klikk &quot;journalfør sak&quot; for å starte en journalføringsoppgave.</p>
 
-        <form onSubmit={this.overrideDefaultSubmit}>
-          <Skjema.RadioGruppe feltNavn="Behandlingstype" label="Velg journalføringstype">
-            <div className="skjema__horisontalefelter">
-              <Skjema.Radio feltNavn="fagomrade" label="Medlemsskap" value="MED" />
-              <Skjema.Radio feltNavn="fagomrade" label="Unntak" value="UFM" disabled />
-            </div>
-          </Skjema.RadioGruppe>
-          <Nav.Knapp onClick={this.props.handleSubmit(this.submitOgVideresend)}>Journalfør sak</Nav.Knapp>
-        </form>
-      </Nav.Panel>
-    );
-  }
-}
+  return (
+    <Nav.Panel className="forside__sidepanel">
+      <Nav.Systemtittel>Journalføring</Nav.Systemtittel>
+      <p>Velg type, og klikk &quot;journalfør sak&quot; for å starte en journalføringsoppgave.</p>
+
+      <form onSubmit={overrideDefaultSubmit}>
+        <Skjema.RadioGruppe feltNavn="Behandlingstype" label="Velg journalføringstype">
+          <div className="skjema__horisontalefelter">
+            <Skjema.Radio feltNavn="fagomrade" label="Medlemsskap" value="MED" />
+            <Skjema.Radio feltNavn="fagomrade" label="Unntak" value="UFM" disabled />
+          </div>
+        </Skjema.RadioGruppe>
+        <Nav.Knapp onClick={props.handleSubmit(submitOgVideresend)}>Journalfør sak</Nav.Knapp>
+      </form>
+    </Nav.Panel>
+  );
+};
 
 Journalforing.propTypes = {
   handleSubmit: PT.func.isRequired,
