@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { reduxForm, change } from 'redux-form';
 import { withRouter } from 'react-router-dom';
@@ -9,48 +9,47 @@ import * as Nav from '../../utils/navFrontend';
 
 import './sokeskjema.css';
 
-class SokSkjema extends Component {
-  componentWillMount() {
-    const { fnr } = this.props.match.params;
-    this.oppdaterLokalSokState(fnr);
-  }
+const SokSkjema = props => {
+  const [sokStreng, setState] = useState('');
+  const inputRef = useRef(null);
 
-  vedSokSubmit = form => {
-    const { lagreSokString, handleSubmit, history } = this.props;
-    const { sokStreng } = this.state;
+  const vedSokSubmit = form => {
+    const { lagreSokString, handleSubmit, history } = props;
 
     lagreSokString(sokStreng);
     handleSubmit(form);
     history.push(`/sok/${sokStreng}`);
   };
 
-  vedEndretSokFelt = event => {
-    this.setState({ sokStreng: event.target.value });
+  const vedEndretSokFelt = event => {
+    setState(event.target.value);
   };
 
-  oppdaterLokalSokState = sokStreng => {
-    this.setState({ sokStreng });
+  const oppdaterLokalSokState = str => {
+    setState(str);
   };
+  useEffect(() => {
+    const { fnr } = props.match.params;
+    oppdaterLokalSokState(fnr);
+  }, []);
 
-  render () {
-    return (
-      <Nav.Panel>
-        <Nav.Systemtittel>Søke etter saker</Nav.Systemtittel>
-        <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
-          <Nav.Input
-            label=""
-            className="sokeskjema__input"
-            bredde="XL"
-            onChange={this.vedEndretSokFelt}
-            ref={this.state.sokStreng}
-            placeholder="fnr / dnr"
-          />
-          <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
-        </form>
-      </Nav.Panel>
-    );
-  }
-}
+  return (
+    <Nav.Panel>
+      <Nav.Systemtittel>Søke etter saker</Nav.Systemtittel>
+      <form className="sokeskjema" onSubmit={vedSokSubmit}>
+        <Nav.Input
+          label=""
+          className="sokeskjema__input"
+          bredde="XL"
+          onChange={vedEndretSokFelt}
+          ref={inputRef}
+          placeholder="fnr / dnr"
+        />
+        <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
+      </form>
+    </Nav.Panel>
+  );
+};
 
 SokSkjema.propTypes = {
   handleSubmit: PT.func.isRequired,

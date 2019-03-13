@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector, autofill, setSubmitFailed } from 'redux-form';
@@ -40,29 +40,25 @@ const erSkjemaGyldig = verdier => {
   return Object.values(validators).every(enkeltValidering => enkeltValidering === false);
 };
 
-class Saksopplysninger extends Component {
-  async componentDidMount() {
-    await this.lastInnSaksopplysninger();
-  }
-
-  lastInnSaksopplysninger= async () => {
-    const { hentFagsaker, hentLovvalgsperioder } = this.props;
+const Saksopplysninger = props => {
+  const lastInnSaksopplysninger = async () => {
+    const { hentFagsaker, hentLovvalgsperioder } = props;
     await hentFagsaker(4);
     await hentLovvalgsperioder(4);
   };
 
-  overstyrSubmit = event => {
+  const overstyrSubmit = event => {
     event.preventDefault();
   };
-  submitRegistrering = () => {
-    const { registreringSkjemaVerdier, settFeilFelt } = this.props;
+  const submitRegistrering = () => {
+    const { registreringSkjemaVerdier, settFeilFelt } = props;
     if (!erSkjemaGyldig(registreringSkjemaVerdier)) {
       settFeilFelt('landKode', 'startdato', 'sluttdato', 'hjemmel');
       return false;
     }
     const {
       landKode, startdato, sluttdato, hjemmel,
-    } = this.props;
+    } = props;
     const unntaksperiode = {
       landKode, startdato, sluttdato, hjemmel,
     };
@@ -73,48 +69,51 @@ class Saksopplysninger extends Component {
       .catch(err => console.error(err));
     return true;
   };
-  render() {
-    const { medlemskap } = this.props;
-    return (
-      <div>
-        <form name="registrering" id="registrering" onSubmit={this.overstyrSubmit} >
-          <div className="stegvelger panelSeksjon">
-            <div className="panel stegFane steg0 stegFane--aktiv">
-              <Nav.Systemtittel>Redigering av unntaksperioder</Nav.Systemtittel>
-              <br />
-              <div className="vurderingEndrePeriode">
-                <Nav.Undertittel>Lovvalgsperiode fra SED</Nav.Undertittel>
-                <Nav.Row>
-                  <Nav.Column xs="3">
-                    <Skjema.Input datoFelt label="Startdato" feltNavn="startdato" />
-                  </Nav.Column>
-                  <Nav.Column xs="3">
-                    <Skjema.Input datoFelt label="Sluttdato" feltNavn="sluttdato" />
-                  </Nav.Column>
-                </Nav.Row>
-                <Nav.Row>
-                  <Nav.Column xs="3">
-                    <Landvelger label="Land" feltNavn="landKode" />
-                  </Nav.Column>
-                  <Nav.Column xs="3">
-                    <Skjema.Input label="Hjemmel" feltNavn="hjemmel" />
-                  </Nav.Column>
-                </Nav.Row>
-                <Nav.Row>
-                  <Nav.Column xs="3">
-                    <Nav.Knapp onClick={() => this.submitRegistrering()}>GODKJENN</Nav.Knapp>
-                  </Nav.Column>
-                </Nav.Row>
-              </div>
+  const { medlemskap } = props;
+
+  useEffect(() => {
+    lastInnSaksopplysninger();
+  }, []);
+
+  return (
+    <div>
+      <form name="registrering" id="registrering" onSubmit={overstyrSubmit} >
+        <div className="stegvelger panelSeksjon">
+          <div className="panel stegFane steg0 stegFane--aktiv">
+            <Nav.Systemtittel>Redigering av unntaksperioder</Nav.Systemtittel>
+            <br />
+            <div className="vurderingEndrePeriode">
+              <Nav.Undertittel>Lovvalgsperiode fra SED</Nav.Undertittel>
+              <Nav.Row>
+                <Nav.Column xs="3">
+                  <Skjema.Input datoFelt label="Startdato" feltNavn="startdato" />
+                </Nav.Column>
+                <Nav.Column xs="3">
+                  <Skjema.Input datoFelt label="Sluttdato" feltNavn="sluttdato" />
+                </Nav.Column>
+              </Nav.Row>
+              <Nav.Row>
+                <Nav.Column xs="3">
+                  <Landvelger label="Land" feltNavn="landKode" />
+                </Nav.Column>
+                <Nav.Column xs="3">
+                  <Skjema.Input label="Hjemmel" feltNavn="hjemmel" />
+                </Nav.Column>
+              </Nav.Row>
+              <Nav.Row>
+                <Nav.Column xs="3">
+                  <Nav.Knapp onClick={() => submitRegistrering()}>GODKJENN</Nav.Knapp>
+                </Nav.Column>
+              </Nav.Row>
             </div>
           </div>
-        </form>
-        <Personopplysninger redigerbart registrering />
-        {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-      </div>
-    );
-  }
-}
+        </div>
+      </form>
+      <Personopplysninger redigerbart registrering />
+      {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+    </div>
+  );
+};
 
 Saksopplysninger.propTypes = {
   hentFagsaker: PT.func.isRequired,
