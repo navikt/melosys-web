@@ -50,12 +50,12 @@ export default function reducer(state = initialState, action) {
         vilkarTilObjekt(MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, action.data.vilkar.normaltDriverVirksomhet, action.data.vilkar.normaltDriverVirksomhetBegrunnelser),
         vilkarTilObjekt(MKV.Koder.vilkaar.BOSATT_I_NORGE, action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorgeBegrunnelser),
         vilkarTilObjekt(MKV.Koder.vilkaar.FTRL_2_12_UNNTAK_TURISTSKIP, action.data.vilkar.nis),
-        vilkarTilObjekt(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1, action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
-        vilkarTilObjekt(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2, action.data.vilkar.art12_2, action.data.vilkar.art12_2_begrunnelser),
-        vilkarTilObjekt(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1, action.data.vilkar.art16_1, action.data.vilkar.art16_1_begrunnelser, action.data.vilkar.art16_1_begrunnelser_fritekst),
-        vilkarTilObjekt(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
-        vilkarTilObjekt(MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),
-        vilkarTilObjekt(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2, action.data.vilkar.art11_4_2),
+        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
+        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, action.data.vilkar.art12_2, action.data.vilkar.art12_2_begrunnelser),
+        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, action.data.vilkar.art16_1, action.data.vilkar.art16_1_begrunnelser, action.data.vilkar.art16_1_begrunnelser_fritekst),
+        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
+        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),
+        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, action.data.vilkar.art11_4_2),
       ].filter(vilkar => vilkar !== null);
       /* eslint-enable max-len */
       return {

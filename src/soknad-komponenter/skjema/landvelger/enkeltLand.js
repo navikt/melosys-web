@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { Field } from 'redux-form';
 
+import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
-import { kodeTilObjekt, landTekstFormat } from './index';
 
+import { kodeTilObjekt, landTekstFormat } from './LandVelger';
 import './landvelger.css';
 
 class EnkeltLand extends Component {
@@ -23,8 +24,11 @@ class EnkeltLand extends Component {
   };
 
   reduxOppdaterLand = landKode => {
-    // Todo: Implementere logging på neste linje.
-    if (!landKode) throw new Error('landKode må inneholde verdi.');
+    if (!landKode) {
+      const e = new Error('landKode må inneholde verdi.');
+      Utils.logger.error(e);
+      throw e;
+    }
     const { onChange } = this.props.input;
     onChange(landKode);
   };

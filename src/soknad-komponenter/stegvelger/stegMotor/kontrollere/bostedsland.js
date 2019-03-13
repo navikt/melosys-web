@@ -8,7 +8,7 @@ import Regler from '../../../../regler';
 class Bostedsland extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'konklusjon for sokkel/skip-steget ER LIK "SKIP_ETT_LAND" og det er gjort en vurdering av bosted, enten utfallet er TRUE eller FALSE',
         exec: (avklartefakta, vilkar) => (
@@ -24,15 +24,15 @@ class Bostedsland extends Steg {
     ];
     const begrunnelserPaaKrevd = false;
 
-    this._id = STEG.BOSTEDSLAND;
-    this._tittel = 'Bosted';
-    this._komponent = VurderingBostedsland;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.BOSTEDSLAND;
+    this.tittel = 'Bosted';
+    this.komponent = VurderingBostedsland;
+    this.samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.bosted || [],
       redigerbart: _propsLight.redigerbart,
       begrunnelserPaaKrevd,
     });
-    this._beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = _propsLight => {
       const { skjema = {}, saksopplysninger = {} } = _propsLight;
       const { bostedsland, yrkesaktivitet } = skjema.avklartefakta;
       const { sakOgBehandling } = saksopplysninger;
@@ -99,10 +99,10 @@ class Bostedsland extends Steg {
         avklaringer,
       };
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {

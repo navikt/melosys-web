@@ -8,7 +8,7 @@ import SokkelSkip from './sokkel_skip';
 class Arbeidsgivere extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'Valgt minst én arbeidsgivr og yrkesgruppeType === ORDINAER',
         exec: avklartefakta => {
@@ -44,14 +44,14 @@ class Arbeidsgivere extends Steg {
         nesteSteg: null,
       },
     ];
-    this._id = STEG.ARBEIDSGIVERE;
-    this._tittel = 'Arbeids\u00ADgiver';
-    this._komponent = VurderingArbeidsgiver;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.ARBEIDSGIVERE;
+    this.tittel = 'Arbeids\u00ADgiver';
+    this.komponent = VurderingArbeidsgiver;
+    this.samleRelevanteData = _propsLight => ({
       arbeidsgivereIPerioden: _propsLight.arbeidsgivereIPerioden,
       redigerbart: _propsLight.redigerbart,
     });
-    this._beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = _propsLight => {
       const { arbeidsgivere } = _propsLight.skjema.avklartefakta;
       const harAvklaring = arbeidsgivere.some(arbeidsgiver => arbeidsgiver.fakta.includes('TRUE'));
 
@@ -59,7 +59,7 @@ class Arbeidsgivere extends Steg {
         harAvklaring,
       });
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;

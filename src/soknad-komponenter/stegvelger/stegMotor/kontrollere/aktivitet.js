@@ -5,19 +5,19 @@ import VurderingAktivitet from '../../stegKomponenter/vurderingAktivitet';
 class Aktivitet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: STEG.VEDTAK,
       },
     ];
-    this._id = STEG.YRKESGRUPPE;
-    this._tittel = 'Aktivitet';
-    this._komponent = VurderingAktivitet;
-    this._samleRelevanteData = () => ({});
-    this._beregnRelevantUI = () => ({});
-    this._handlers = {
+    this.id = STEG.YRKESGRUPPE;
+    this.tittel = 'Aktivitet';
+    this.komponent = VurderingAktivitet;
+    this.samleRelevanteData = () => ({});
+    this.beregnRelevantUI = () => ({});
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
     this._status = FANE_STATUS.OK;

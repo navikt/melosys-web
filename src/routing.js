@@ -1,22 +1,46 @@
 import React from 'react';
-import PT from 'prop-types';
 import { Route, Switch, withRouter } from 'react-router-dom';
+import Loadable from 'react-loadable';
+import PT from 'prop-types';
 
-import UkjentSide from './sider/ukjentSide';
+import SideLoadingStatus from './komponenter/SideLoadingStatus';
 
-import Forside from './sider/forside';
-import Sok from './sider/sok';
-import Saksbehandling from './sider/saksbehandling';
-import Journalforing from './sider/journalforing';
+const UkjentSideLoadable = Loadable({
+  loader: () => import('./sider/ukjentSide'),
+  loading: SideLoadingStatus,
+});
+const ForsideLoadable = Loadable({
+  loader: () => import('./sider/forside'),
+  loading: SideLoadingStatus,
+});
+const SokLoadable = Loadable({
+  loader: () => import('./sider/sok'),
+  loading: SideLoadingStatus,
+});
+const SaksbehandlingLoadable = Loadable({
+  loader: () => import('./sider/saksbehandling'),
+  loading: SideLoadingStatus,
+});
+const JournalforingLoadable = Loadable({
+  loader: () => import('./sider/journalforing'),
+  loading: SideLoadingStatus,
+});
 
+const RegistreringLoadable = Loadable({
+  loader: () => import('./sider/registrering'),
+  loading: SideLoadingStatus,
+});
+const featureToggle = `${process.env.REACT_APP_FEATURE_TOGGLE}`;
+console.log('featureToggle', featureToggle); // eslint-disable-line no-console
 
 const Routing = ({ location }) => (
   <Switch location={location}>
-    <Route exact path="/" component={Forside} />
-    <Route exact path="/sok/:fnr" component={Sok} />
-    <Route path="/saksbehandling/:snr" component={Saksbehandling} />
-    <Route path="/journalforing/:journalpostID/:oppgaveID" component={Journalforing} />
-    <Route component={UkjentSide} />
+    <Route exact path="/" component={ForsideLoadable} />
+    <Route exact path="/sok/:fnr" component={SokLoadable} />
+    {featureToggle === 'REL1.1' && <Route exact path="/registrering" component={RegistreringLoadable} />}
+    <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
+    <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
+    <Route component={UkjentSideLoadable} />
   </Switch>
 );
 
