@@ -23,18 +23,17 @@ const alleLovvalg = [
   ...MKV.KTObjects.lovvalgsbestemmelser.tillegg,
 ];
 
-const VurderingVedtak = props => {
+const VurderingVedtak = ({
+  gyldigeOppholdLand,
+  lovvalgsperioder,
+  redigerbart,
+  oppsummering: { behandlingID },
+  lagreOgFatteVedtak,
+  lovvalgsland,
+}) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
   // 3. Vise oppsummmeringen av kriteriene for artikkelen (kodeverk og avklartefakta)
-
-  const {
-    gyldigeOppholdLand,
-    lovvalgsperioder,
-    redigerbart,
-  } = props;
-
-  const { behandlingID } = props.oppsummering;
 
   const lovvalget = lovvalgsperioder[0] || {};
 
@@ -62,8 +61,12 @@ const VurderingVedtak = props => {
             <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6">
-            <Nav.Element type="element">Arbeids- / Oppholdsland</Nav.Element>
+            <Nav.Element type="element">Arbeidsland</Nav.Element>
             <Nav.Normaltekst>{ landSomTekstListe }</Nav.Normaltekst>
+          </Nav.Column>
+          <Nav.Column xs="6">
+            <Nav.Element type="element">Lovvalgsland</Nav.Element>
+            <Nav.Normaltekst>{ KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder) }</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -73,7 +76,7 @@ const VurderingVedtak = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => props.lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
+            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
           </Nav.Column>
         </Nav.Row>
       </div>
@@ -88,6 +91,7 @@ VurderingVedtak.propTypes = {
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   redigerbart: PT.bool.isRequired,
+  lovvalgsland: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -95,6 +99,7 @@ const mapStateToProps = state => ({
   gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVedtak);
