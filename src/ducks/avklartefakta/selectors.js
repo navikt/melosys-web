@@ -14,6 +14,9 @@ import * as KV from '../../kodeverk';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
+import { vilkarSelectors } from '../vilkar';
+
+import { _isEmpty } from '../../utils';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -175,7 +178,8 @@ export const SokkelEllerSkipSelector = createSelector(
 export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
   state => Oppholdsland(state) || [],
   state => SokkelEllerSkipSelector(state),
-  (avklartefaktaLand, sokkelEllerSkip) => {
+  state => vilkarSelectors.art11_4_1(state),
+  (avklartefaktaLand, sokkelEllerSkip, art11_4_1) => {
     const landAvklartVedInngang = avklartefaktaLand
       .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
       .map(avklartfakta => avklartfakta.subjektID);
@@ -183,7 +187,7 @@ export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
     const landOverstyrtAvSkip = sokkelEllerSkip
       .reduce((collection, enkelt) => (enkelt.installasjonsType === KV.Koder.SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
 
-    const styrendeLand = landOverstyrtAvSkip.length > 0 ? landOverstyrtAvSkip : landAvklartVedInngang;
+    const styrendeLand = landOverstyrtAvSkip.length > 0 && !_isEmpty(art11_4_1) ? landOverstyrtAvSkip : landAvklartVedInngang;
 
     return MKV.KTObjects.landkoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
   }

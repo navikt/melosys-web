@@ -51,6 +51,8 @@ const VurderingVedtak = ({
     { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
   ];
 
+  const lovvalgslandTekst = KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder) || '...';
+
   return (
     <div className="vedtak">
       <Nav.Undertittel>Medlemskap i norsk folketrygd {lovvalgsResultat} etter<br />{ KV.objektTilTerm(lovvalgSomKodeTerm) }:</Nav.Undertittel>
@@ -65,8 +67,10 @@ const VurderingVedtak = ({
             <Nav.Normaltekst>{ landSomTekstListe }</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="6">
+          </Nav.Column>
+          <Nav.Column xs="6">
             <Nav.Element type="element">Lovvalgsland</Nav.Element>
-            <Nav.Normaltekst>{ KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder) }</Nav.Normaltekst>
+            <Nav.Normaltekst>{ lovvalgslandTekst }</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -91,7 +95,11 @@ VurderingVedtak.propTypes = {
   oppholdPeriode: MPT.OppholdPeriode.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   redigerbart: PT.bool.isRequired,
-  lovvalgsland: PT.bool.isRequired,
+  lovvalgsland: PT.string,
+};
+
+VurderingVedtak.defaultProps = {
+  lovvalgsland: '',
 };
 
 const mapStateToProps = state => ({
