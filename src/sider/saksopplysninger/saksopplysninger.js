@@ -15,7 +15,7 @@ import Bosted from '../../soknad-komponenter/bosted';
 import ForetakUtland from '../../soknad-komponenter/foretakutland';
 import Inntekt from '../../soknad-komponenter/inntektUtland';
 import MaritimtArbeid from '../../soknad-komponenter/maritimtArbeid';
-import Medlemskap from '../../soknad-komponenter/medlemskap';
+import Medlemskap from '../../komponenter/medlemskap';
 import OppholdPeriode from '../../soknad-komponenter/oppholdPeriode';
 import Personopplysninger from '../../soknad-komponenter/personopplysninger';
 import SelvstendigArbeid from '../../soknad-komponenter/selvstendigarbeid';
@@ -201,7 +201,6 @@ const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
   initialValues: {
-    utenlandskIdent: soknadSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
     medfolgendeAndre: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeAndre,
     inntektNorskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
