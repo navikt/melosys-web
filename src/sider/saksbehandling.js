@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import PT from 'prop-types';
 import { connect } from 'react-redux';
+import PT from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import * as Utils from '../utils';

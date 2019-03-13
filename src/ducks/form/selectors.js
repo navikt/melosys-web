@@ -6,15 +6,25 @@
  */
 
 import { createSelector } from 'reselect';
+import * as KV from '../../kodeverk';
+
+const getFormState = (state, formName, defaultValue = {}) => (
+  state.form[formName] ? state.form[formName] : defaultValue
+);
 
 export const SoknadenFormSelector = createSelector(
-  state => (state.form.soknad ? state.form.soknad : {}),
+  state => getFormState(state, KV.Form.SOKNAD, {}),
   soknaden => soknaden
 );
 
 export const JournalforingFormSelector = createSelector(
-  state => (state.form.journalforing ? state.form.journalforing : {}),
+  state => getFormState(state, KV.Form.JOURNALFORING, {}),
   journalforing => journalforing
+);
+
+export const RegistreringFormSelector = createSelector(
+  state => getFormState(state, KV.Form.REGISTRERING, {}),
+  registrering => registrering
 );
 
 export const ForretningsValideringSelector = createSelector(
@@ -23,7 +33,7 @@ export const ForretningsValideringSelector = createSelector(
 );
 
 export const BrevBestillingFormSelector = createSelector(
-  state => (state.form.brevbestilling ? state.form.brevbestilling : {}),
+  state => getFormState(state, KV.Form.BREV_BESTILLING, {}),
   brevbestilling => brevbestilling
 );
 

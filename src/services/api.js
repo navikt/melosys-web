@@ -14,6 +14,7 @@ import * as Personer from './modules/personer';
 import * as Organisasjoner from './modules/organisasjoner';
 import * as Saksopplysninger from './modules/saksopplysninger';
 import * as Oppgaver from './modules/oppgaver';
+import * as Registrering from './modules/registrering';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Soknader from './modules/soknader';
 import * as Vedtak from './modules/vedtak';
@@ -50,6 +51,7 @@ export {
   Saksopplysninger,
   Organisasjoner,
   Personer,
+  Registrering,
   Saksbehandler,
   Soknader,
   Vedtak,
