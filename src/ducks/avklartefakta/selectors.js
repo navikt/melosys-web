@@ -16,7 +16,7 @@ import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
 import { vilkarSelectors } from '../vilkar';
 
-import { _isEmpty } from '../../utils';
+import { erVilkarOppfylt } from '../../regler/vilkar';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -46,12 +46,12 @@ export const Oppholdsland = createSelector(
   (alleAvklartefakta, alleLandISoknaden) => (
     alleLandISoknaden.map(enkeltLand => (
       alleAvklartefakta.find(avklaring => avklaring.subjektID === enkeltLand) ||
-        {
-          ...avklartFaktaTemplate,
-          referanse: KV.Koder.avklartefaktaKoder.OPPHOLDSLAND,
-          subjektID: enkeltLand,
-          fakta: ['TRUE'],
-        }
+      {
+        ...avklartFaktaTemplate,
+        referanse: KV.Koder.avklartefaktaKoder.OPPHOLDSLAND,
+        subjektID: enkeltLand,
+        fakta: ['TRUE'],
+      }
     ))
   )
 );
@@ -175,19 +175,48 @@ export const SokkelEllerSkipSelector = createSelector(
  *
  */
 
+const finnSoknadsland = avklartefaktaLand => {
+  const landAvklartVedInngang = avklartefaktaLand
+    .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
+    .map(avklartfakta => avklartfakta.subjektID);
+  return landAvklartVedInngang;
+};
+
+const finnFlaggland = sokkelEllerSkip => (
+  sokkelEllerSkip.reduce((collection, enkelt) => (enkelt.installasjonsType === KV.Koder.SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), [])
+);
+
+const finnStyrendeLand = (soknadsLand, flaggLand, alleVilkar) => {
+  if (alleVilkar.length <= 0) return soknadsLand;
+
+  switch (true) {
+    case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, alleVilkar):
+      if (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, alleVilkar)) {
+        return flaggLand;
+      }
+      return MKV.Koder.landkoder.NO;
+    case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, alleVilkar):
+      return flaggLand;
+    case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, alleVilkar) || erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar):
+      return soknadsLand;
+    case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, alleVilkar):
+      if (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, alleVilkar)) {
+        return flaggLand;
+      }
+      return soknadsLand;
+    default:
+      return soknadsLand;
+  }
+};
+
 export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
   state => Oppholdsland(state) || [],
   state => SokkelEllerSkipSelector(state),
-  state => vilkarSelectors.art11_4_1(state),
-  (avklartefaktaLand, sokkelEllerSkip, art11_4_1) => {
-    const landAvklartVedInngang = avklartefaktaLand
-      .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
-      .map(avklartfakta => avklartfakta.subjektID);
-
-    const landOverstyrtAvSkip = sokkelEllerSkip
-      .reduce((collection, enkelt) => (enkelt.installasjonsType === KV.Koder.SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
-
-    const styrendeLand = landOverstyrtAvSkip.length > 0 && !_isEmpty(art11_4_1) ? landOverstyrtAvSkip : landAvklartVedInngang;
+  state => vilkarSelectors.VilkarSelector(state),
+  (avklartefaktaLand, sokkelEllerSkip, vilkar) => {
+    const soknadsland = finnSoknadsland(avklartefaktaLand);
+    const flaggland = finnFlaggland(sokkelEllerSkip);
+    const styrendeLand = finnStyrendeLand(soknadsland, flaggland, vilkar);
 
     return MKV.KTObjects.landkoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
   }
