@@ -42,17 +42,15 @@ Begrunnelser.defaultProps = {
   fritekst: '',
 };
 
-function VurderingAvslag12_x_og_16(props) {
-  const {
-    valgte_art_12_1_begrunnelser,
-    valgte_art_12_2_begrunnelser,
-    valgte_art_16_1_begrunnelser,
-    art16_1_fritekst,
-    vilkarBegrunnelser,
-    oppsummering,
-    fattVedtak,
-  } = props;
-
+const VurderingAvslag12_x_og_16 = ({
+  valgte_art_12_1_begrunnelser,
+  valgte_art_12_2_begrunnelser,
+  valgte_art_16_1_begrunnelser,
+  art16_1_fritekst,
+  vilkarBegrunnelser,
+  oppsummering,
+  fattVedtak,
+}) => {
   const dokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
@@ -102,7 +100,7 @@ function VurderingAvslag12_x_og_16(props) {
           ]}
         />
       }
-      {valgte_art_16_1_begrunnelser.length > 0 &&
+      {(valgte_art_16_1_begrunnelser.length > 0 || art16_1_fritekst) &&
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 16, nr. 1:"
           valgteBegrunnelser={valgte_art_16_1_begrunnelser}
@@ -116,7 +114,7 @@ function VurderingAvslag12_x_og_16(props) {
       </Nav.Hovedknapp>
     </div>
   );
-}
+};
 
 VurderingAvslag12_x_og_16.propTypes = {
   valgte_art_12_1_begrunnelser: PT.array.isRequired,
@@ -141,4 +139,4 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
 });
 
-export default connect(mapStateToProps, null)(VurderingAvslag12_x_og_16);
+export default connect(mapStateToProps)(VurderingAvslag12_x_og_16);
