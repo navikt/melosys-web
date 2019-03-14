@@ -133,13 +133,13 @@ const byggLovvalgsPeriodeArtikkel16_1 = state => {
   }];
 };
 
-const byggAvslaattLovvalg = (state, lovvalgBestemmelse) => {
+const byggAvslaattLovvalg = state => {
   const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse,
+    lovvalgBestemmelse: null,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -151,10 +151,7 @@ const byggAvslaattLovvalg = (state, lovvalgBestemmelse) => {
 };
 
 const byggLovvalgsPerioder = (valgtLovvalg, state) => {
-  if (!valgtLovvalg) {
-    const lovvalgBestemmelse = lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state);
-    if (lovvalgBestemmelse) return byggAvslaattLovvalg(state, lovvalgBestemmelse);
-  }
+  if (!valgtLovvalg) return byggAvslaattLovvalg(state);
 
   switch (valgtLovvalg) {
     case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(state);
