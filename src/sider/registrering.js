@@ -7,12 +7,10 @@ import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
 import './registrering.css';
 import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 import { fagsakSelectors } from '../ducks/fagsaker';
-//import { saksopplysningerSelectors } from '../ducks/saksopplysninger';
 import * as MPT from '../proptypes';
-import SideDialog from "../soknad-komponenter/sideDialog/sideDialog";
+import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 
 class Registrering extends Component {
-
   // TODO implement later
   visOppfriskBekreftelse = () => {};
   lagreOgLukk = () => {};
