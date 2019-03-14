@@ -18,7 +18,6 @@ import * as Actions from './actions';
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
 import { formSelectors } from '../form';
-import { lovvalgsperioderSelectors } from './index';
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
