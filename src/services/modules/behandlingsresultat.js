@@ -1,8 +1,8 @@
 import { getAsJson } from '../utils';
-import { API_BASE_URL } from '../api-constants';
+import { API_BASE_URL, BEHANDLINGSRESULTAT } from '../api-constants';
 
 const hent = behandlingID => {
-  const URI_BEHANDLINGSRESULTAT = `${API_BASE_URL}behandlingsresultat/${behandlingID}`;
+  const URI_BEHANDLINGSRESULTAT = `${API_BASE_URL}${BEHANDLINGSRESULTAT}/${behandlingID}`;
   return getAsJson(URI_BEHANDLINGSRESULTAT);
 };
 

@@ -160,8 +160,8 @@ const mapStateToProps = state => ({
 });
 
 const hentOrg = async orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
-const lagreKontaktopplysninger = async (saksnr, juridiskorgnr, data) => Api.Kontaktopplysninger.send(saksnr, juridiskorgnr, data);
-const lagreAktoer = async (saksnr, data) => Api.Aktoer.send(saksnr, data);
+const lagreKontaktopplysninger = async (saksnr, juridiskorgnr, data) => Api.Fagsaker.kontaktopplysninger.send(saksnr, juridiskorgnr, data);
+const lagreAktoer = async (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
 
 const KontaktOpplysningerWrapper = props => <KontaktOpplysninger {...props} hentOrg={hentOrg} lagreKontaktopplysninger={lagreKontaktopplysninger} lagreAktoer={lagreAktoer} />;
 
