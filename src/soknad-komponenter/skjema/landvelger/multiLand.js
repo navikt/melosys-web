@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 
+import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
+
 import { kodeTilObjekt, landTekstFormat } from './LandVelger';
 
 import * as MPT from '../../../proptypes';
-
 import './landvelger.css';
 
 const MultiLandEnkelt = ({ landObjekt, slettLandHandler }) => (
@@ -29,35 +30,31 @@ MultiLandEnkelt.propTypes = {
   slettLandHandler: PT.func.isRequired,
 };
 
-const MultiLand = ({
-  fields,
-  landkoder,
-  disabled,
-  meta,
-  label,
-  dataListID,
-}) => {
+const MultiLand = props => {
   const [inputVerdi, setInputVerdi] = useState('');
   const [error, setError] = useState({});
 
   const reduxLeggTilLand = landKode => {
-    const valgteLand = fields.getAll() || [];
+    const valgteLand = props.fields.getAll() || [];
 
-    // Todo: Legg til logging.
-    if (!landKode) throw new Error('landKode må inneholde verdi.');
+    if (!landKode) {
+      const e = new Error('landKode må inneholde verdi.');
+      Utils.logger.error(e);
+      throw e;
+    }
 
     if (!valgteLand.includes(landKode)) {
-      fields.push(landKode);
+      props.fields.push(landKode);
     }
   };
 
   const reduxSlettEttLand = landKode => {
-    const index = fields.getAll().findIndex(item => item === landKode);
-    return (index > -1 && fields.remove(index));
+    const index = props.fields.getAll().findIndex(item => item === landKode);
+    return (index > -1 && props.fields.remove(index));
   };
 
   const finnFlereLand = verdi => (
-    landkoder.filter(land => (
+    props.landkoder.filter(land => (
       landTekstFormat(land)
         .toLowerCase()
         .includes(verdi.toLowerCase())
@@ -74,7 +71,7 @@ const MultiLand = ({
   };
 
   const dynamiskTittel = () => {
-    const count = fields ? fields.length : 0;
+    const count = props.fields ? props.fields.length : 0;
     return (count > 0 ? 'Legg til evt flere land:' : 'Legg til første land:');
   };
 
@@ -115,17 +112,18 @@ const MultiLand = ({
     setInputVerdi(e.target.value);
   };
 
-  const { error: skjemaError = '' } = meta;
+  const { error: skjemaError = '' } = props.meta;
   const { internLandError = '' } = error;
 
   const feilObjekt = skjemaError || internLandError ? { feilmelding: `${skjemaError} ${internLandError}` } : null;
-  const valgteLand = fields.getAll() || [];
-  const dynamiskFeltTittel = label || dynamiskTittel();
+  const valgteLand = props.fields.getAll() || [];
+  const dynamiskFeltTittel = props.label || dynamiskTittel();
 
+  const { dataListID, disabled } = props;
   return (
     <div className="landliste">
       {
-        landkoder.length > 0 && valgteLand.map(land => <MultiLandEnkelt key={land} slettLandHandler={slettLandHandler} landObjekt={kodeTilObjekt(land, landkoder)} />)
+        props.landkoder.length > 0 && valgteLand.map(land => <MultiLandEnkelt key={land} slettLandHandler={slettLandHandler} landObjekt={kodeTilObjekt(land, props.landkoder)} />)
       }
       <div className="landliste__leggtil">
         <Nav.Input
