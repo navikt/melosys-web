@@ -45,9 +45,10 @@ export class SokersFullmektig extends Component {
   hentLagretForretningsAdresse = async () => {
     const { saksnummer } = this.props.oppsummering;
     const { hentAktoer, hentKontaktopplysninger, hentOrg } = this.props;
+    const { representererKode } = this.state;
 
     try {
-      const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
+      const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT, representererKode);
       const fullmektig = fullmektige[0];
 
       const org = await hentOrg(fullmektig.orgnr);
