@@ -70,7 +70,16 @@ Behandling.defaultProps = {
   formValues: {},
 };
 
-const mapStateToProps = () => ({});
+const mapStateToProps = () => ({
+  initialValues: {
+    sakstyper: {
+      EU_EOS: true,
+    },
+    behandlingstyper: {
+      SOEKNAD: true,
+    },
+  },
+});
 const BehandlngForm = reduxForm({
   form: KV.Form.BEHANDLINGS_FORM,
   onSubmit: checkboxliste => oppgaverOperations.sendBehandlingsOppgave(checkboxliste),
