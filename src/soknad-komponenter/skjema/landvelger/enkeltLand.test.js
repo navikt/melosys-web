@@ -10,102 +10,78 @@ describe('EnkeltLand', () => {
       landkoder: [{ kode: 'NO', term: 'Norge' }, { kode: 'SE', term: 'Sverige' }],
       meta: {},
       label: '',
-      feil: '',
-      input: { onChange: jest.fn() },
+      feil: undefined,
+      input: { onChange: () => null },
       disabled: false,
     };
   });
 
-  it('viser en NAV Input', () => {
+  it('viser en NAV Input med riktige props', () => {
+    props.disabled = true;
+    props.dataListID = '999';
+    props.label = 'label';
+
     const enkeltLand = shallow(<EnkeltLand {...props} />);
-    expect(enkeltLand.find('Input')).toHaveLength(1);
+    const input = enkeltLand.find('Input');
+    expect(input).toHaveLength(1);
+
+    expect(input.props().disabled).toBe(props.disabled);
+    expect(input.props().list).toBe(props.dataListID);
+    expect(input.props().label).toBe(props.label);
   });
 
-  it('sender value prop til NAV Input korrekt', () => {
+  it('sender value prop til NAV Input korrekt når tekst endres', () => {
     const enkeltLand = shallow(<EnkeltLand {...props} />);
     const event = { target: { value: 'test' } };
 
-    enkeltLand.instance().inputEndringHandler(event);
+    enkeltLand.find('Input').simulate('change', event);
 
-    const Input = enkeltLand.find('Input');
-    expect(Input.props().value).toBe('test');
+    expect(enkeltLand.find('Input').props().value).toBe('test');
   });
 
-  it('fokusUtHandler', () => {
-    const enkeltLandInstance = shallow(<EnkeltLand {...props} />).instance();
-    enkeltLandInstance.reduxFjernLand = jest.fn();
-    enkeltLandInstance.tomFeilmelding = jest.fn();
-    enkeltLandInstance.finnEttLand = jest.fn(() => ({ kode: 'test' }));
-    enkeltLandInstance.reduxOppdaterLand = jest.fn();
+  describe('ved fokus flyttet fra input', () => {
+    it('hvis tekst er skrevet inn men landkoder prop mangler, lag feilmelding', () => {
+      props.landkoder = [];
+      const enkeltLand = shallow(<EnkeltLand {...props} />);
+      const input = enkeltLand.find('Input');
 
-    enkeltLandInstance.fokusUtHandler();
+      input.simulate('change', { target: { value: 'test' } });
+      input.simulate('blur');
 
-    expect(enkeltLandInstance.reduxFjernLand).toHaveBeenCalledTimes(1);
-    expect(enkeltLandInstance.tomFeilmelding).toHaveBeenCalledTimes(1);
+      expect(enkeltLand.find('Input').props().feil).toBeTruthy();
+    });
 
-    const event = { target: { value: 'test' } };
-    enkeltLandInstance.inputEndringHandler(event);
+    it('hvis tekst er skrevet inn og landkoder prop er oppgitt, oppdater input-verdi', () => {
+      props.landkoder = [{ kode: 'NO', term: 'Norge' }, { kode: 'SE', term: 'Sverige' }];
+      const enkeltLand = shallow(<EnkeltLand {...props} />);
+      const input = enkeltLand.find('Input');
 
-    enkeltLandInstance.fokusUtHandler();
+      input.simulate('change', { target: { value: 'NO' } });
+      input.simulate('blur');
 
-    expect(enkeltLandInstance.finnEttLand).toHaveBeenCalledTimes(1);
-    expect(enkeltLandInstance.finnEttLand).toHaveBeenLastCalledWith(event.target.value);
-    expect(enkeltLandInstance.reduxOppdaterLand).toHaveBeenCalledTimes(1);
-    expect(enkeltLandInstance.reduxOppdaterLand).toHaveBeenLastCalledWith('test');
+      expect(enkeltLand.find('Input').props().feil).toBeFalsy();
+      expect(enkeltLand.find('Input').props().value).toBe('Norge (NO)');
+    });
+
+    it('hvis tekst ikke er skrevet inn, ikke vis feilmelding', () => {
+      const enkeltLand = shallow(<EnkeltLand {...props} />);
+      const input = enkeltLand.find('Input');
+
+      input.simulate('blur');
+
+      expect(enkeltLand.find('Input').props().feil).toBeFalsy();
+    });
   });
 
-  it('inputTestNedHandler', () => {
-    const enkeltLandInstance = shallow(<EnkeltLand {...props} />).instance();
-    enkeltLandInstance.fokusUtHandler = jest.fn();
-    const event = { keyCode: 0, preventDefault: jest.fn() };
+  describe('ved tastetrykk', () => {
+    it('dersom tasten er Enter, oppdaterer input verdi', () => {
+      const enkeltLand = shallow(<EnkeltLand {...props} />);
+      const input = enkeltLand.find('Input');
 
-    enkeltLandInstance.inputTastNedHandler(event);
+      const event = { keyCode: 13, preventDefault: jest.fn() };
+      input.simulate('keyDown', event);
 
-    expect(enkeltLandInstance.fokusUtHandler).toHaveBeenCalledTimes(0);
-    expect(event.preventDefault).toHaveBeenCalledTimes(0);
-
-    event.keyCode = 13;
-
-    enkeltLandInstance.inputTastNedHandler(event);
-
-    expect(enkeltLandInstance.fokusUtHandler).toHaveBeenCalledTimes(1);
-    expect(event.preventDefault).toHaveBeenCalledTimes(1);
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
   });
-
-  it('reduxOppdaterLand', () => {
-    const enkeltLandInstance = shallow(<EnkeltLand {...props} />).instance();
-
-    expect(() => enkeltLandInstance.reduxOppdaterLand(null)).toThrow();
-
-    enkeltLandInstance.reduxOppdaterLand('Norge');
-
-    expect(props.input.onChange).toHaveBeenCalledTimes(1);
-    expect(props.input.onChange).toHaveBeenCalledWith('Norge');
-  });
-
-  it('reduxFjernLand', () => {
-    const enkeltLandInstance = shallow(<EnkeltLand {...props} />).instance();
-
-    enkeltLandInstance.reduxFjernLand();
-
-    expect(props.input.onChange).toHaveBeenCalledTimes(1);
-    expect(props.input.onChange).toHaveBeenCalledWith('');
-  });
-
-  it('fokusInnHandler', () => {
-    const enkeltLandInstance = shallow(<EnkeltLand {...props} />).instance();
-    const event = { target: { select: jest.fn() } };
-
-    enkeltLandInstance.fokusInnHandler(event);
-
-    expect(event.target.select).toHaveBeenCalledTimes(1);
-  });
-
-  // it('finnFlereLand', () => {
-  //   const enkeltLandInstance = shallow(<EnkeltLand {...props} />).instance();
-  //
-  //   expect(enkeltLandInstance.finnFlereLand(null)).toEqual([]);
-  //
-  //   expect(enkeltLandInstance.finnFlereLand())
-  // });
 });
