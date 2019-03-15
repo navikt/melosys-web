@@ -1,8 +1,8 @@
 import { getAsJson, postAsJson, postAsJsonReceiveAsPDF } from '../utils';
-import { API_BASE_URL } from '../api-constants';
+import { API_BASE_URL, DOKUMENTER } from '../api-constants';
 
 // eslint-disable-next-line import/prefer-default-export
-const pdfURI = (journalforingID, dokumentID) => (`${API_BASE_URL}dokumenter/pdf/${journalforingID}/${dokumentID}`);
+const pdfURI = (journalforingID, dokumentID) => (`${API_BASE_URL}${DOKUMENTER}/pdf/${journalforingID}/${dokumentID}`);
 
 const hentDokument = (journalforingID, dokumentID) => getAsJson(pdfURI(journalforingID, dokumentID));
 /**
@@ -13,7 +13,7 @@ const hentDokument = (journalforingID, dokumentID) => getAsJson(pdfURI(journalfo
  * @returns {Promise<*>} PDF dokument
  */
 const forhandsvisPDF = (behandlingID, dokumenttypeKode, data) => {
-  const URI_DOKUMENT_UTKAST = `${API_BASE_URL}dokumenter/utkast/pdf/${behandlingID}/${dokumenttypeKode}`;
+  const URI_DOKUMENT_UTKAST = `${API_BASE_URL}${DOKUMENTER}/utkast/pdf/${behandlingID}/${dokumenttypeKode}`;
   return postAsJsonReceiveAsPDF(URI_DOKUMENT_UTKAST, data, true);
 };
 
@@ -26,11 +26,11 @@ const forhandsvisPDF = (behandlingID, dokumenttypeKode, data) => {
  * Retur objektet benyttes til å kalle
  */
 const opprettDokument = (behandlingID, dokumenttypeKode, dokument) => {
-  const URI_DOKUMENT_OPPRETT = `${API_BASE_URL}dokumenter/opprett/${behandlingID}/${dokumenttypeKode}`;
+  const URI_DOKUMENT_OPPRETT = `${API_BASE_URL}${DOKUMENTER}/opprett/${behandlingID}/${dokumenttypeKode}`;
   return postAsJson(URI_DOKUMENT_OPPRETT, dokument);
 };
 const hentOversiktDokumenter = snr => {
-  const URI_DOKUMENT_OVERSIKT = `${API_BASE_URL}dokumenter/oversikt/${snr}`;
+  const URI_DOKUMENT_OVERSIKT = `${API_BASE_URL}${DOKUMENTER}/oversikt/${snr}`;
   return getAsJson(URI_DOKUMENT_OVERSIKT);
 };
 export {
