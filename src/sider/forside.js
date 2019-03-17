@@ -1,35 +1,36 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
 
-// import Statistikk from '../felles-komponenter/forside/statistikk';
-import Journalforing from '../soknad-komponenter/forside/journalforing';
-import Behandling from '../forside-komponenter/behandling';
-import MineOppgaver from '../forside-komponenter/mineoppgaver';
-import SokSkjema from '../soknad-komponenter/forside/sokskjema';
-
 import './forside.css';
+
+const Journalforing = React.lazy(() => import('../soknad-komponenter/forside/journalforing'));
+const Behandling = React.lazy(() => import('../forside-komponenter/behandling'));
+const MineOppgaver = React.lazy(() => import('../forside-komponenter/mineoppgaver'));
+const SokSkjema = React.lazy(() => import('../soknad-komponenter/forside/sokskjema'));
 
 const Forside = props => {
   const { children } = props;
   return (
     <div className="forside">
       { children }
-      <Nav.Container>
-        <Nav.Row>
-          <Nav.Column xs="7">
-            <MineOppgaver />
-          </Nav.Column>
-          <Nav.Column className="hoyrekolonne" xs="5">
-            <SokSkjema />
-            <Journalforing />
-            <Behandling />
-          </Nav.Column>
-        </Nav.Row>
-      </Nav.Container>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Nav.Container>
+          <Nav.Row>
+            <Nav.Column xs="7">
+              <MineOppgaver />
+            </Nav.Column>
+            <Nav.Column className="hoyrekolonne" xs="5">
+              <SokSkjema />
+              <Journalforing />
+              <Behandling />
+            </Nav.Column>
+          </Nav.Row>
+        </Nav.Container>
+      </Suspense>
     </div>
   );
 };

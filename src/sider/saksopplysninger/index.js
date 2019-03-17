@@ -1,3 +1,3 @@
 import Saksopplysninger from './saksopplysninger';
 
-export { Saksopplysninger };
+export default Saksopplysninger;

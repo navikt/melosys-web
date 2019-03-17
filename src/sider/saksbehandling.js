@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Suspense } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -6,14 +6,6 @@ import { withRouter } from 'react-router-dom';
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
-
-import DialogboksOppfriskSak from '../soknad-komponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from '../soknad-komponenter/dialogboks/dialogboksVenter';
-import DialogboksHenlegg from '../soknad-komponenter/dialogboks/dialogboksHenlegg';
-import { Saksopplysninger } from './saksopplysninger';
-
-import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
-import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingsresultatOperations } from '../ducks/behandlingsresultat/';
@@ -30,6 +22,13 @@ import * as Api from '../services/api';
 
 import './saksbehandling.css';
 import '../soknad-komponenter/skjema/skjema.css';
+
+const DialogboksOppfriskSak = React.lazy(() => import('../soknad-komponenter/dialogboks/dialogboksOppfrisk'));
+const DialogboksVenter = React.lazy(() => import('../soknad-komponenter/dialogboks/dialogboksVenter'));
+const DialogboksHenlegg = React.lazy(() => import('../soknad-komponenter/dialogboks/dialogboksHenlegg'));
+const SideDialog = React.lazy(() => import('../soknad-komponenter/sideDialog'));
+const SideOppsummering = React.lazy(() => import('../soknad-komponenter/sideOppsummering'));
+const Saksopplysninger = React.lazy(() => import('./saksopplysninger'));
 
 class Saksbehandling extends Component {
   state = {
@@ -247,48 +246,50 @@ class Saksbehandling extends Component {
 
     return (
       <div className="saksbehandling">
-        <Nav.Container fluid>
-          <Nav.Row>
-            <Nav.Column xs="7">
-              <Saksopplysninger
-                blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
-                lagreVilkarHandler={this.lagreVilkarHandler}
-                lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
-                lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
-                lagreBehandlingerHandler={this.lagreBehandlingerHandler}
-                lagreAllData={this.lagreAllData}
-              />
-            </Nav.Column>
-            <Nav.Column xs="5">
-              <SideOppsummering
-                oppsummering={oppsummering}
-                oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
-                lagreOgLukkHandle={this.lagreOgLukk}
-                tilbakeleggeHandle={this.tilbakeleggeHandle}
-                visHenleggDialogHandle={this.visHenleggDialog}
-                tilForsidenHandle={this.navigerTilOversiktSide}
-              />
-              <SideDialog />
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Container>
-        { oppfriskVenterDialog }
-        {
-          this.state.visOppfriskDialog &&
-          <DialogboksOppfriskSak
-            bekreft={this.lagreSoknadOgOppfriskSaksopplysninger}
-            avbryt={this.skjulOppfriskBekreftelse}
-            tilForsiden={this.navigerTilOversiktSide}
-            oppdater={this.hentBehandlingStatus}
-          />
-        }
-        {
-          this.state.visHenleggDialog &&
-          <DialogboksHenlegg
-            avbryt={this.skjulHenleggDialog}
-            henleggHandle={this.henleggHandle}
-          />
-        }
+        <Suspense fallback={<div>Loading...</div>}>
+          <Nav.Container fluid>
+            <Nav.Row>
+              <Nav.Column xs="7">
+                <Saksopplysninger
+                  blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
+                  lagreVilkarHandler={this.lagreVilkarHandler}
+                  lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
+                  lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
+                  lagreBehandlingerHandler={this.lagreBehandlingerHandler}
+                  lagreAllData={this.lagreAllData}
+                />
+              </Nav.Column>
+              <Nav.Column xs="5">
+                <SideOppsummering
+                  oppsummering={oppsummering}
+                  oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
+                  lagreOgLukkHandle={this.lagreOgLukk}
+                  tilbakeleggeHandle={this.tilbakeleggeHandle}
+                  visHenleggDialogHandle={this.visHenleggDialog}
+                  tilForsidenHandle={this.navigerTilOversiktSide}
+                />
+                <SideDialog />
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Container>
+          { oppfriskVenterDialog }
+          {
+            this.state.visOppfriskDialog &&
+            <DialogboksOppfriskSak
+              bekreft={this.lagreSoknadOgOppfriskSaksopplysninger}
+              avbryt={this.skjulOppfriskBekreftelse}
+              tilForsiden={this.navigerTilOversiktSide}
+              oppdater={this.hentBehandlingStatus}
+            />
+          }
+          {
+            this.state.visHenleggDialog &&
+            <DialogboksHenlegg
+              avbryt={this.skjulHenleggDialog}
+              henleggHandle={this.henleggHandle}
+            />
+          }
+        </Suspense>
       </div>
     );
   }

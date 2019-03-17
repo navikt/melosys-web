@@ -1,8 +1,8 @@
 /* eslint no-alert:off, consistent-return:off */
-import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
+import React, {Component, Suspense} from 'react';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors} from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -10,30 +10,32 @@ import * as KV from '../kodeverk';
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
-import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
+import {JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR} from '../constants';
 
 import * as Person from '../soknad-komponenter/skjema/validering/generisk/person';
 
 import Sticky from '../hjelpekomponenter/sticky';
 import withErrorHandling from '../hoc/withErrorHandling';
-import Informasjon from '../soknad-komponenter/journalforing/informasjon';
-import EksisterendeSaker from '../soknad-komponenter/journalforing/eksisterendeSaker';
-import PDFDokument from '../soknad-komponenter/journalforing/pdfdokument';
-import OpprettNyFagSak from '../soknad-komponenter/journalforing/opprettnyfagsak';
-import { queryParamLogger } from '../utils/queryParamLogger';
 
-import { journalforingValidering, erSkjemaGyldig } from '../soknad-komponenter/skjema/validering/journalforing';
+import {queryParamLogger} from '../utils/queryParamLogger';
+
+import {journalforingValidering, erSkjemaGyldig} from '../soknad-komponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
   journalforingSelectors,
 } from '../ducks/journalforing/';
-import { formSelectors } from '../ducks/form/';
+import {formSelectors} from '../ducks/form/';
 import './journalforing.css';
-import { OrganisasjonOperations } from '../ducks/organisasjoner';
-import { PersonOperations } from '../ducks/personer';
+import {OrganisasjonOperations} from '../ducks/organisasjoner';
+import {PersonOperations} from '../ducks/personer';
 import * as oppgaverOperations from '../ducks/oppgaver/operations';
 import * as MPT from '../proptypes';
-import { sokOperations, sokSelectors } from '../ducks/sok';
+import {sokOperations, sokSelectors} from '../ducks/sok';
+
+const PDFDokument = React.lazy(() => import('../soknad-komponenter/journalforing/pdfdokument'));
+const Informasjon = React.lazy(() => import('../soknad-komponenter/journalforing/informasjon'));
+const EksisterendeSaker = React.lazy(() => import('../soknad-komponenter/journalforing/eksisterendeSaker'));
+const OpprettNyFagSak = React.lazy(() => import('../soknad-komponenter/journalforing/opprettnyfagsak'));
 
 class Journalforing extends Component {
   static propTypes = {
@@ -66,7 +68,7 @@ class Journalforing extends Component {
   };
 
   async componentDidMount() {
-    const { journalpostID } = this.props.match.params;
+    const {journalpostID} = this.props.match.params;
     queryParamLogger(this.props.location, 'kilde', 'GOSYS');
     await this.props.hentJournalOppgave(journalpostID);
   }
@@ -91,7 +93,7 @@ class Journalforing extends Component {
     this.props.history.push('/');
   };
 
-  mapVedleggsTittlerTilVedlegg = titler => titler.map(tittel => ({ dokumentID: null, tittel }));
+  mapVedleggsTittlerTilVedlegg = titler => titler.map(tittel => ({dokumentID: null, tittel}));
 
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
    * settes inn i skjemaet kun til info - ikke til endring - slik som feks navn på bruker.
@@ -101,12 +103,12 @@ class Journalforing extends Component {
    */
   vaskDokumentInformasjon = intensjon => {
     /* eslint-disable no-console */
-    console.assert(intensjon, { message: 'intensjon må ha verdi' });
+    console.assert(intensjon, {message: 'intensjon må ha verdi'});
     /* eslint-enable no-console */
-    const { oppgaveID, journalpostID } = this.props.match.params;
+    const {oppgaveID, journalpostID} = this.props.match.params;
     const {
       journalforingSkjemaVerdier,
-      journalforing: { hoveddokument = {} },
+      journalforing: {hoveddokument = {}},
     } = this.props;
     const {
       brukerID, avsenderID, arbeidsgiverID,
@@ -114,7 +116,7 @@ class Journalforing extends Component {
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
     } = journalforingSkjemaVerdier;
 
-    const { dokumentID } = hoveddokument;
+    const {dokumentID} = hoveddokument;
     const vedlegg = this.mapVedleggsTittlerTilVedlegg(vedleggsTitler);
 
     // Data for /tilordne i.e KNYTT
@@ -131,7 +133,10 @@ class Journalforing extends Component {
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
-        arbeidsgiverID, behandlingstypeKode, representantID, representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
+        arbeidsgiverID,
+        behandlingstypeKode,
+        representantID,
+        representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
       });
     }
     return journalPostData;
@@ -144,10 +149,10 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier: {saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering}, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
-    const { resetSkjemaFelterForOpprettFagsak } = this;
+    const {resetSkjemaFelterForOpprettFagsak} = this;
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = {
@@ -181,7 +186,7 @@ class Journalforing extends Component {
       journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
-    const { resetSkjemaFelterForEksisterendeSaker } = this;
+    const {resetSkjemaFelterForEksisterendeSaker} = this;
     const {
       journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
@@ -223,17 +228,23 @@ class Journalforing extends Component {
    * @param brukerID {string} Verdien vi ønsker å sjekke på.
    */
   hentOgVisBruker = async brukerID => {
-    if (!Person.erGyldigFnr(brukerID) && !Person.erGyldigDnr(brukerID)) { return; }
+    if (!Person.erGyldigFnr(brukerID) && !Person.erGyldigDnr(brukerID)) {
+      return;
+    }
 
-    const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
+    const {sokFnrDnr, settFeltInnhold, hentFagsakListe} = this.props;
     settFeltInnhold('brukerNavn', '');
     const response = await sokFnrDnr(brukerID);
-    if (!response.data) { return false; }
-    const { sammensattNavn = '' } = response.data;
-    if (!sammensattNavn) { return false; }
+    if (!response.data) {
+      return false;
+    }
+    const {sammensattNavn = ''} = response.data;
+    if (!sammensattNavn) {
+      return false;
+    }
     settFeltInnhold('brukerNavn', sammensattNavn);
     await hentFagsakListe(brukerID);
-    return { brukerID, sammensattNavn };
+    return {brukerID, sammensattNavn};
   };
 
   /** Vi ønsker kun å gjøre et søk på avsenderID dersom antall tegn matcher enten 9 (orgnr) eller er et gyldig FNR || DNR.
@@ -241,38 +252,48 @@ class Journalforing extends Component {
    * @param value {string} Verdien vi ønsker å sjekke på.
    */
   hentOgVisAvsender = async value => {
-    const { sokOrgnr, sokFnrDnr, settFeltInnhold } = this.props;
+    const {sokOrgnr, sokFnrDnr, settFeltInnhold} = this.props;
 
-    if (!value) { return; }
+    if (!value) {
+      return;
+    }
 
     if (value.length === ANTALL_TALL_I_ORGNR) {
       settFeltInnhold('avsenderNavn', '');
       const response = await sokOrgnr(value);
-      if (!response.data) { return false; }
-      const { navn = '' } = response.data;
+      if (!response.data) {
+        return false;
+      }
+      const {navn = ''} = response.data;
       settFeltInnhold('avsenderNavn', navn);
     }
 
     if (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) {
       settFeltInnhold('avsenderNavn', '');
       const response = await sokFnrDnr(value);
-      if (!response.data) { return false; }
-      const { sammensattNavn = '' } = response.data;
+      if (!response.data) {
+        return false;
+      }
+      const {sammensattNavn = ''} = response.data;
       settFeltInnhold('avsenderNavn', sammensattNavn);
     }
   };
 
 
   hentOgVisRepresentant = async value => {
-    const { sokOrgnr, settFeltInnhold } = this.props;
+    const {sokOrgnr, settFeltInnhold} = this.props;
 
-    if (!value) { return; }
+    if (!value) {
+      return;
+    }
 
     if (value.length === ANTALL_TALL_I_ORGNR) {
       settFeltInnhold('representantNavn', '');
       const response = await sokOrgnr(value);
-      if (!response.data) { return false; }
-      const { navn = '' } = response.data;
+      if (!response.data) {
+        return false;
+      }
+      const {navn = ''} = response.data;
       settFeltInnhold('representantNavn', navn);
     }
   };
@@ -282,7 +303,7 @@ class Journalforing extends Component {
   };
 
   resetSkjemaFelterForOpprettFagsak = () => {
-    const { settFeltInnhold } = this.props;
+    const {settFeltInnhold} = this.props;
     settFeltInnhold('journalforingPeriodeFraOgMed', '');
     settFeltInnhold('journalforingPeriodeTilOgMed', '');
     settFeltInnhold('representantID', '');
@@ -290,14 +311,14 @@ class Journalforing extends Component {
   };
 
   resetSkjemaFelterForEksisterendeSaker = () => {
-    const { settFeltInnhold } = this.props;
+    const {settFeltInnhold} = this.props;
     settFeltInnhold('saksnummer', '');
     settFeltInnhold('behandlingstype', '');
   };
 
   render() {
     const {
-      journalforing: { hoveddokument = {} },
+      journalforing: {hoveddokument = {}},
       fagsakListe,
     } = this.props;
 
@@ -305,8 +326,8 @@ class Journalforing extends Component {
       knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
     } = this;
 
-    const { journalpostID } = this.props.match.params;
-    const { dokumentID } = hoveddokument;
+    const {journalpostID} = this.props.match.params;
+    const {dokumentID} = hoveddokument;
 
     return (
       <div className="journalforing">
@@ -320,34 +341,39 @@ class Journalforing extends Component {
             <Nav.Row>
               <Nav.Column xs="4">
                 <Sticky>
-                  <Nav.Panel className="journalforing__skjema">
-                    <div className="journalforing__skjema__scroll">
-                      <Informasjon
-                        journalpostID={journalpostID}
-                        dokumentID={dokumentID}
-                        hentOgVisAvsender={hentOgVisAvsender}
-                        hentOgVisBruker={hentOgVisBruker}
-                      />
-                      <EksisterendeSaker
-                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
-                        fagsakListe={fagsakListe}
-                        knyttTilEksisterendeSak={knyttTilEksisterendeSak}
-                      />
-                      <OpprettNyFagSak
-                        sakstyper={MKV.KTObjects.sakstyper}
-                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
-                        opprettFagsak={opprettFagsak}
-                        hentOgVisRepresentant={hentOgVisRepresentant}
-                      />
-                      <div className="journalforing__fotknapper">
-                        <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                  <Suspense fallback={<div>Loading...</div>}>
+                    <Nav.Panel className="journalforing__skjema">
+                      <div className="journalforing__skjema__scroll">
+                        <Informasjon
+                          journalpostID={journalpostID}
+                          dokumentID={dokumentID}
+                          hentOgVisAvsender={hentOgVisAvsender}
+                          hentOgVisBruker={hentOgVisBruker}
+                        />
+                        <EksisterendeSaker
+                          behandlingstyper={MKV.KTObjects.behandlinger.typer}
+                          fagsakListe={fagsakListe}
+                          knyttTilEksisterendeSak={knyttTilEksisterendeSak}
+                        />
+                        <OpprettNyFagSak
+                          sakstyper={MKV.KTObjects.sakstyper}
+                          behandlingstyper={MKV.KTObjects.behandlinger.typer}
+                          opprettFagsak={opprettFagsak}
+                          hentOgVisRepresentant={hentOgVisRepresentant}
+                        />
+                        <div className="journalforing__fotknapper">
+                          <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                        </div>
                       </div>
-                    </div>
-                  </Nav.Panel>
+                    </Nav.Panel>
+                  </Suspense>
                 </Sticky>
               </Nav.Column>
               <Nav.Column xs="8">
-                { dokumentID && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={dokumentID} /></Nav.Panel> }
+                <Suspense fallback={<div>Loading...</div>}>
+                  {dokumentID &&
+                  <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={dokumentID}/></Nav.Panel>}
+                </Suspense>
               </Nav.Column>
             </Nav.Row>
           </form>
@@ -393,7 +419,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const kontekster = [
-  { navn: 'journalforing', melding: 'Det har oppstått en feil: Kunne ikke hente journalforing.' },
+  {navn: 'journalforing', melding: 'Det har oppstått en feil: Kunne ikke hente journalforing.'},
 ];
 
 const form = {
@@ -402,7 +428,8 @@ const form = {
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
   validate: journalforingValidering,
-  onSubmit: () => {},
+  onSubmit: () => {
+  },
 };
 
 export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Journalforing))));
