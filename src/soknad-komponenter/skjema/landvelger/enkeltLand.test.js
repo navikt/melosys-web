@@ -16,6 +16,7 @@ describe('EnkeltLand', () => {
     };
   });
 
+
   it('viser en NAV Input med riktige props', () => {
     props.disabled = true;
     props.dataListID = '999';

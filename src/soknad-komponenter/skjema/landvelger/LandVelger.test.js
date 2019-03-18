@@ -1,5 +1,5 @@
 import React from 'react';
-import Landvelger from './index';
+import Landvelger from './LandVelger';
 
 describe(('Landvelger'), () => {
   let props = null;

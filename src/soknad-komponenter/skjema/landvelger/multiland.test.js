@@ -1,6 +1,5 @@
 import React from 'react';
 import { MultiLand } from './multiLand';
-import { EnkeltLand } from './enkeltLand';
 
 describe('EnkeltLand', () => {
   let props = null;
@@ -16,6 +15,7 @@ describe('EnkeltLand', () => {
       disabled: false,
     };
   });
+
 
   it('viser en NAV input med riktige props', () => {
     props.disabled = true;
@@ -53,16 +53,16 @@ describe('EnkeltLand', () => {
       expect(multiland.find('Input').props().value).toBe('');
     });
 
-    // it('hvis tekst er skrevet inn men land ikke finnes i landkode prop, vis feilmelding', () => {
-    //   props.landkoder = [];
-    //   const multiland = shallow(<MultiLand {...props} />);
-    //   const input = multiland.find('Input');
-    //
-    //   input.simulate('change', { target: { value: 'NO' } });
-    //   input.simulate('blur');
-    //
-    //   expect(multiland.find('Input').props().feil).toBeTruthy();
-    // });
+    it('hvis tekst er skrevet inn men land ikke finnes i landkode prop, vis feilmelding', () => {
+      props.landkoder = [];
+      const multiland = shallow(<MultiLand {...props} />);
+      const input = multiland.find('Input');
+
+      input.simulate('change', { target: { value: 'NO' } });
+      input.simulate('blur');
+
+      expect(multiland.find('Input').props().feil).toBeTruthy();
+    });
 
     it('hvis tekst ikke er skrevet inn, ikke vis feilmelding', () => {
       const multiland = shallow(<MultiLand {...props} />);
