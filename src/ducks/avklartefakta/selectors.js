@@ -189,38 +189,37 @@ const FlagglandSelector = createSelector(
     .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland))
 );
 
-const finnStyrendeLand = (soknadsLand, flaggLand, alleVilkar) => {
-  if (alleVilkar.length <= 0) return soknadsLand;
-
-  switch (true) {
-    case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, alleVilkar):
-      if (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, alleVilkar)) {
-        return flaggLand;
-      }
-      return MKV.Koder.landkoder.NO;
-    case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, alleVilkar):
-      return flaggLand;
-    case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, alleVilkar) || erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar):
-      return soknadsLand;
-    case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, alleVilkar):
-      if (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, alleVilkar)) {
-        return flaggLand;
-      }
-      return soknadsLand;
-    default:
-      return soknadsLand;
-  }
-};
-
-export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
+const StyrendeLandSelector = createSelector(
   state => SoknadslandSelector(state),
   state => FlagglandSelector(state),
   state => vilkarSelectors.VilkarSelector(state),
   (soknadsland, flaggland, vilkar) => {
-    const styrendeLandListe = finnStyrendeLand(soknadsland, flaggland, vilkar);
+    if (vilkar.length <= 0) return soknadsland;
 
-    return MKV.KTObjects.landkoder.filter(landkodeObjekt => styrendeLandListe.includes(landkodeObjekt.kode));
+    switch (true) {
+      case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, vilkar):
+        if (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, vilkar)) {
+          return flaggland;
+        }
+        return MKV.Koder.landkoder.NO;
+      case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, vilkar):
+        return flaggland;
+      case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, vilkar) || erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, vilkar):
+        return soknadsland;
+      case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, vilkar):
+        if (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, vilkar)) {
+          return flaggland;
+        }
+        return soknadsland;
+      default:
+        return soknadsland;
+    }
   }
+);
+
+export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
+  state => StyrendeLandSelector(state),
+  styrendeLand => MKV.KTObjects.landkoder.filter(landkodeObjekt => styrendeLand.includes(landkodeObjekt.kode))
 );
 
 export const AvklartefaktaLovvalgKodeSelector = createSelector(
