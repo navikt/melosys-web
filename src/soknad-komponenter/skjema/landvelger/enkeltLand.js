@@ -9,7 +9,7 @@ import * as MPT from '../../../proptypes/';
 import { kodeTilObjekt, landTekstFormat } from './LandVelger';
 import './landvelger.css';
 
-class EnkeltLand extends Component {
+export class EnkeltLand extends Component {
   state = {
     inputVerdi: '',
     error: null,
@@ -146,8 +146,6 @@ EnkeltLand.defaultProps = {
   feil: '',
   disabled: false,
 };
-
-export { EnkeltLand };
 
 const EnkeltLandWrapper = props => (<Field name={props.feltNavn} component={EnkeltLand} props={props} />);
 

@@ -30,7 +30,7 @@ MultiLandEnkelt.propTypes = {
   slettLandHandler: PT.func.isRequired,
 };
 
-const MultiLand = props => {
+export const MultiLand = props => {
   const [inputVerdi, setInputVerdi] = useState('');
   const [error, setError] = useState({});
 
@@ -94,10 +94,10 @@ const MultiLand = props => {
     const landKodeObjekt = finnEttLand(inputVerdi);
     if (landKodeObjekt) {
       reduxLeggTilLand(landKodeObjekt.kode);
-      setError({});
+      tomFeilmelding();
       setInputVerdi('');
     } else {
-      setError('Finner ikke landet du har skrevet inn.');
+      setError({ internLandError: 'Finner ikke landet du har skrevet inn.' });
     }
   };
 
