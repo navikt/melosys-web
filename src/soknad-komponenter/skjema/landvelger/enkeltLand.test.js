@@ -74,7 +74,7 @@ describe('EnkeltLand', () => {
   });
 
   describe('ved tastetrykk', () => {
-    it('dersom tasten er Enter, oppdaterer input verdi', () => {
+    it('dersom tasten er Enter, kall preventDefault', () => {
       const enkeltLand = shallow(<EnkeltLand {...props} />);
       const input = enkeltLand.find('Input');
 

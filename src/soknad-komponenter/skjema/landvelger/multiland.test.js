@@ -41,7 +41,7 @@ describe('EnkeltLand', () => {
       expect(multiland.find('Input').props().feil).toBeFalsy();
     });
 
-    it('hvis tekst er skrevet inn og landkoder prop er oppgitt: tøm feilmelding, tøm tekst-input og kall push-metoden til field prop', () => {
+    it('hvis tekst er skrevet inn og landkoder prop er oppgitt: tøm feilmelding, tøm tekst-input', () => {
       props.fields.getAll = () => ['NO', 'SE'];
       const multiland = shallow(<MultiLand {...props} />);
       const input = multiland.find('Input');
@@ -53,17 +53,36 @@ describe('EnkeltLand', () => {
       expect(multiland.find('Input').props().value).toBe('');
     });
 
-    it('hvis tekst er skrevet inn men land ikke finnes i landkode prop, vis feilmelding', () => {
-      props.landkoder = [];
+    // it('hvis tekst er skrevet inn men land ikke finnes i landkode prop, vis feilmelding', () => {
+    //   props.landkoder = [];
+    //   const multiland = shallow(<MultiLand {...props} />);
+    //   const input = multiland.find('Input');
+    //
+    //   input.simulate('change', { target: { value: 'NO' } });
+    //   input.simulate('blur');
+    //
+    //   expect(multiland.find('Input').props().feil).toBeTruthy();
+    // });
+
+    it('hvis tekst ikke er skrevet inn, ikke vis feilmelding', () => {
       const multiland = shallow(<MultiLand {...props} />);
       const input = multiland.find('Input');
 
-      input.simulate('change', { target: { value: 'NO' } });
       input.simulate('blur');
 
-      expect(multiland.find('Input').props().feil).toBeTruthy();
+      expect(multiland.find('Input').props().feil).toBeFalsy();
     });
+  });
 
+  describe('ved tastetrykk', () => {
+    it('dersom tasten er enter, kaller preventdefault', () => {
+      const multiLand = shallow(<MultiLand {...props} />);
+      const input = multiLand.find('Input');
 
+      const event = { keyCode: 13, preventDefault: jest.fn() };
+      input.simulate('keyDown', event);
+
+      expect(event.preventDefault).toHaveBeenCalled();
+    });
   });
 });

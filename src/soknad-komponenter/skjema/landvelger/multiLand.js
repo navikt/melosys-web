@@ -32,7 +32,7 @@ MultiLandEnkelt.propTypes = {
 
 export const MultiLand = props => {
   const [inputVerdi, setInputVerdi] = useState('');
-  const [error, setError] = useState({});
+  const [error, setError] = useState('');
 
   const reduxLeggTilLand = landKode => {
     const valgteLand = props.fields.getAll() || [];
@@ -97,7 +97,7 @@ export const MultiLand = props => {
       tomFeilmelding();
       setInputVerdi('');
     } else {
-      setError({ internLandError: 'Finner ikke landet du har skrevet inn.' });
+      setError('Finner ikke landet du har skrevet inn.');
     }
   };
 
