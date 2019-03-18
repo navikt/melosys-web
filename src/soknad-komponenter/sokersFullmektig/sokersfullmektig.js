@@ -127,8 +127,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = () => ({});
 
 const hentOrg = async orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
-const hentAktoer = async (saksnr, rolleKode, representererKode) => Api.Aktoer.hent(saksnr, rolleKode, representererKode);
-const hentKontaktopplysninger = async (saksnummer, juridiskorgnr) => Api.Kontaktopplysninger.hent(saksnummer, juridiskorgnr);
+const hentAktoer = async (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
+const hentKontaktopplysninger = async (saksnummer, juridiskorgnr) => Api.Fagsaker.kontaktopplysninger.hent(saksnummer, juridiskorgnr);
 
 const SokersFullmektigWrapper = props => <SokersFullmektig {...props} hentAktoer={hentAktoer} hentOrg={hentOrg} hentKontaktopplysninger={hentKontaktopplysninger} />;
 
