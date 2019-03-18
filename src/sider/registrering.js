@@ -7,6 +7,7 @@ import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
 import './registrering.css';
 import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 import { fagsakSelectors } from '../ducks/fagsaker';
+
 import * as MPT from '../proptypes';
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 

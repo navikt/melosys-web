@@ -5,7 +5,7 @@ import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
 import * as MPT from '../../proptypes';
 
-import { erGyldigDnr, erGyldigFnr } from '../skjema/validering/generisk/person';
+import * as PersonValidering from '../skjema/validering/generisk/person';
 import { beregnAlder } from '../../utils/dato';
 
 import './medfolgendeAndre.css';
@@ -18,7 +18,7 @@ const MedfolgendeAndre = props => {
   const sokHandle = () => {
     const { sjekkPerson } = props;
 
-    if (erGyldigFnr(fnr) || erGyldigDnr(fnr)) {
+    if (PersonValidering.erGyldigFnr(fnr) || PersonValidering.erGyldigDnr(fnr)) {
       setDirty(false);
       sjekkPerson(fnr);
     }
@@ -40,7 +40,7 @@ const MedfolgendeAndre = props => {
     </div>
   ) : null;
 
-  const innhold = (
+  return (
     <div className="medfolgendeAndre">
       <Nav.Fieldset legend="Søker følger med et familiemedlem som utfører arbeid i landet:">
         <div className="medfolgendeAndre__wrapper">
@@ -57,7 +57,6 @@ const MedfolgendeAndre = props => {
       </Nav.Fieldset>
     </div>
   );
-  return innhold;
 };
 
 MedfolgendeAndre.propTypes = {
