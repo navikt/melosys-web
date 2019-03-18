@@ -175,16 +175,18 @@ export const SokkelEllerSkipSelector = createSelector(
  *
  */
 
-const finnSoknadslandListe = avklartefaktaLand => (
-  avklartefaktaLand
+const SoknadslandSelector = createSelector(
+  state => Oppholdsland(state) || [],
+  avklartefaktaLandListe => (avklartefaktaLandListe
     .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
-    .map(avklartfakta => avklartfakta.subjektID)
+    .map(avklartfakta => avklartfakta.subjektID))
 );
 
-const finnFlagglandListe = sokkelEllerSkipListe => (
-  sokkelEllerSkipListe
+const FlagglandSelector = createSelector(
+  state => SokkelEllerSkipSelector(state),
+  sokkelEllerSkipListe => (sokkelEllerSkipListe
     .filter(sokkelEllerSkip => sokkelEllerSkip.installasjonsType === KV.Koder.SKIP)
-    .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland)
+    .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland))
 );
 
 const finnStyrendeLand = (soknadsLand, flaggLand, alleVilkar) => {
@@ -211,13 +213,11 @@ const finnStyrendeLand = (soknadsLand, flaggLand, alleVilkar) => {
 };
 
 export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
-  state => Oppholdsland(state) || [],
-  state => SokkelEllerSkipSelector(state),
+  state => SoknadslandSelector(state),
+  state => FlagglandSelector(state),
   state => vilkarSelectors.VilkarSelector(state),
-  (avklartefaktaLandListe, sokkelEllerSkipListe, vilkar) => {
-    const soknadslandListe = finnSoknadslandListe(avklartefaktaLandListe);
-    const flagglandListe = finnFlagglandListe(sokkelEllerSkipListe);
-    const styrendeLandListe = finnStyrendeLand(soknadslandListe, flagglandListe, vilkar);
+  (soknadsland, flaggland, vilkar) => {
+    const styrendeLandListe = finnStyrendeLand(soknadsland, flaggland, vilkar);
 
     return MKV.KTObjects.landkoder.filter(landkodeObjekt => styrendeLandListe.includes(landkodeObjekt.kode));
   }
