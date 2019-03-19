@@ -46,10 +46,10 @@ const withErrorHandling = (kontekster, WrappedComponent) => props => {
         const { data: payload } = reduxRootState[navn];
 
         // Deretter kan vi bruke 'data' slik vi mener å bruke den.
-        const { response, data } = payload;
+        const { data } = payload;
         const fetchdata = Utils.isJSON(data) ? JSON.parse(data) : data;
 
-        const { status, statusText } = response;
+        const { status, message: statusText } = fetchdata;
         feilSamling.push({
           status, statusText, melding, fetchdata,
         });
