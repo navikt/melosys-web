@@ -19,11 +19,21 @@ export class KontaktOpplysninger extends Component {
     kontaktnavn: '',
   };
 
+  componentDidMount() {
+    this.hentOgVisKontaktOpplysninger();
+  }
+
   settKontaktOrgnrTouched = () => this.setState({ kontaktorgnrTouched: true });
 
   settKontaktOrgnr = orgnr => this.setState({ kontaktorgnr: orgnr, orgnrFeilmelding: undefined });
 
   settKontaktNavn = navn => this.setState({ kontaktnavn: navn });
+
+  hentOgVisKontaktOpplysninger = async () => {
+    const { hentKontaktopplysninger, juridiskOrg, oppsummering } = this.props;
+    const kontaktopplysninger = await hentKontaktopplysninger(oppsummering.saksnummer, juridiskOrg.orgnr);
+    this.setState({ kontaktorgnr: kontaktopplysninger.kontaktorgnr, kontaktnavn: kontaktopplysninger.kontaktnavn });
+  };
 
   visFeilmelding = feilmelding => this.setState({ orgnrFeilmelding: { feilmelding } });
 
@@ -32,6 +42,11 @@ export class KontaktOpplysninger extends Component {
   vedKontaktorgnrEndring = event => this.settKontaktOrgnr(event.target.value);
 
   fjernResultat = () => this.setState({ sokeResultat: null });
+
+  fjernOppforing = () => {
+    this.props.toggleVisLeggTilKnapp();
+    this.fjernResultat();
+  };
 
   validerOgLagreKontaktOgAktoer = async () => {
     const {
@@ -87,20 +102,22 @@ export class KontaktOpplysninger extends Component {
       vedKontaktorgnrEndring,
       vedKontaktnavnEndring,
       settKontaktOrgnrTouched,
+      fjernOppforing,
     } = this;
 
     const {
       redigerbart,
       visLeggTilKnapp,
       toggleVisLeggTilKnapp,
-      renderCheckbox,
     } = this.props;
+
+    const { kontaktorgnr, kontaktnavn } = this.state;
 
     return (
       <Fragment>
         {
           visLeggTilKnapp &&
-          <Nav.Knapp mini onClick={toggleVisLeggTilKnapp}>+ Legg til kontaktopplysninger</Nav.Knapp>
+          <Nav.Knapp mini onClick={toggleVisLeggTilKnapp}>+ LEGG TIL KONTAKTOPPLYSNINGER</Nav.Knapp>
         }
         {
           !visLeggTilKnapp &&
@@ -109,6 +126,7 @@ export class KontaktOpplysninger extends Component {
                 disabled={!redigerbart}
                 onChange={vedKontaktnavnEndring}
                 onBlur={validerOgLagreKontaktOgAktoer}
+                value={kontaktnavn}
                 label="Kontaktperson"
               />
               <Nav.Input
@@ -117,6 +135,7 @@ export class KontaktOpplysninger extends Component {
                 feil={orgnrFeilmelding}
                 onChange={vedKontaktorgnrEndring}
                 onBlur={validerOgLagreKontaktOgAktoer}
+                value={kontaktorgnr}
                 label="Organisasjonsnummer"
               />
             </Fragment>
@@ -129,7 +148,8 @@ export class KontaktOpplysninger extends Component {
             </Fragment>
         }
         {
-          !visLeggTilKnapp && renderCheckbox && renderCheckbox(validerOgLagreKontaktOgAktoer)
+          !visLeggTilKnapp &&
+          <Nav.Knapp mini onClick={fjernOppforing}>&times; FJERN OPPFØRING</Nav.Knapp>
         }
       </Fragment>
     );
@@ -146,12 +166,11 @@ KontaktOpplysninger.propTypes = {
   representererKode: PT.string.isRequired,
   lagreAktoer: PT.func.isRequired,
   juridiskOrg: PT.object.isRequired,
-  renderCheckbox: PT.func,
+  hentKontaktopplysninger: PT.func.isRequired,
 };
 
 KontaktOpplysninger.defaultProps = {
   redigerbart: true,
-  renderCheckbox: null,
 };
 
 const mapStateToProps = state => ({
@@ -161,8 +180,17 @@ const mapStateToProps = state => ({
 
 const hentOrg = async orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
 const lagreKontaktopplysninger = async (saksnr, juridiskorgnr, data) => Api.Fagsaker.kontaktopplysninger.send(saksnr, juridiskorgnr, data);
+const hentKontaktopplysninger = async (saksnr, juridiskorgnr) => Api.Fagsaker.kontaktopplysninger.hent(saksnr, juridiskorgnr);
 const lagreAktoer = async (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
 
-const KontaktOpplysningerWrapper = props => <KontaktOpplysninger {...props} hentOrg={hentOrg} lagreKontaktopplysninger={lagreKontaktopplysninger} lagreAktoer={lagreAktoer} />;
+const KontaktOpplysningerWrapper = props => (
+  <KontaktOpplysninger
+    {...props}
+    hentOrg={hentOrg}
+    hentKontaktopplysninger={hentKontaktopplysninger}
+    lagreKontaktopplysninger={lagreKontaktopplysninger}
+    lagreAktoer={lagreAktoer}
+  />
+);
 
 export default connect(mapStateToProps)(KontaktOpplysningerWrapper);

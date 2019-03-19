@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, useState } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
@@ -10,102 +10,99 @@ import * as Utils from '../../utils';
 
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import Kontaktopplysninger from '../kontaktopplysninger';
-import ForretningsAdresse from '../../komponenter/adresser/forretningsAdresse';
+import PostAdresse from '../../komponenter/adresser/postAdresse';
 
 import { fagsakSelectors } from '../../ducks/fagsaker';
 
 import './sokersfullmektig.css';
 
+const Fullmektig = ({ fullmektig, lagreFullmektig }) => {
+  const [visLeggTilKnapp, settVisLeggTilKnapp] = useState(true);
+  const toggleVisLeggTilKnapp = () => settVisLeggTilKnapp(!visLeggTilKnapp);
+
+  const [representererKode, settRepresentererKode] = useState(MKV.Koder.representerer.BRUKER);
+
+  return (
+    <Nav.Row>
+      <Nav.Column xs="6">
+        {
+          fullmektig.org && fullmektig.org.navn
+        }
+        {
+          fullmektig.kontaktopplysninger &&
+          <Fragment>
+            <div className="postadresse_tittel">Postadresse</div>
+            <PostAdresse postadresse={fullmektig.org.postadresse} />
+          </Fragment>
+        }
+        <Nav.Fieldset onChange={e => settRepresentererKode(e.target.value)} onBlur={() => lagreFullmektig(representererKode)} legend="Hvem er dette fullmektig for?" >
+          <Nav.Radio label="Arbeidsgiver" name="representerer" value={MKV.Koder.representerer.ARBEIDSGIVER} />
+          <Nav.Radio label="Arbeidstaker" name="representerer" value={MKV.Koder.representerer.BRUKER} />
+          <Nav.Radio label="Både arbeidstaker og arbeidsgiver" name="representerer" value={MKV.Koder.representerer.BEGGE} />
+        </Nav.Fieldset>
+        <Nav.Knapp disabled type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
+      </Nav.Column>
+      <Nav.Column xs="6">
+        <Kontaktopplysninger
+          representererKode={fullmektig.representererKode}
+          juridiskOrg={fullmektig.org}
+          visLeggTilKnapp={visLeggTilKnapp}
+          toggleVisLeggTilKnapp={toggleVisLeggTilKnapp}
+        />
+      </Nav.Column>
+    </Nav.Row>
+  );
+};
+
+Fullmektig.propTypes = {
+  fullmektig: PT.object,
+  lagreFullmektig: PT.func.isRequired,
+};
+
+Fullmektig.defaultProps = {
+  fullmektig: {},
+};
+
 export class SokersFullmektig extends Component {
   state = {
-    fullmektigOrg: null,
-    kontaktopplysninger: null,
-    visLeggTilKnapp: true,
-    representererKode: MKV.Koder.representerer.BRUKER,
+    fullmektige: [],
   };
 
   componentDidMount() {
-    this.hentLagretForretningsAdresse();
+    this.hentFullmektige();
   }
 
-  settRepresentererKode = event => {
-    if (event.target.checked) {
-      this.setState({ representererKode: MKV.Koder.representerer.BEGGE });
-    } else {
-      this.setState({ representererKode: MKV.Koder.representerer.BRUKER });
-    }
-  };
-
-  toggleVisLeggTilKnapp = () => {
-    this.setState(gammelState => ({
-      visLeggTilKnapp: !gammelState.visLeggTilKnapp,
-    }));
-  };
-
-  hentLagretForretningsAdresse = async () => {
+  hentFullmektige = async () => {
     const { saksnummer } = this.props.oppsummering;
     const { hentAktoer, hentKontaktopplysninger, hentOrg } = this.props;
-    const { representererKode } = this.state;
 
     try {
-      const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT, representererKode);
-      const fullmektig = fullmektige[0];
-
-      const org = await hentOrg(fullmektig.orgnr);
-      const kontaktopplysninger = await hentKontaktopplysninger(saksnummer, fullmektig.orgnr);
-      this.setState({ kontaktopplysninger, fullmektigOrg: org });
+      /* eslint-disable no-param-reassign */
+      const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
+      fullmektige.forEach(async fullmektig => {
+        fullmektig.org = await hentOrg(fullmektig.orgnr);
+        fullmektig.kontaktopplysninger = await hentKontaktopplysninger(saksnummer, fullmektig.orgnr);
+      });
+      /* eslint-enable no-param-reassign */
+      this.setState({ fullmektige });
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
   render() {
-    const {
-      kontaktopplysninger,
-      visLeggTilKnapp,
-      fullmektigOrg,
-      representererKode,
-    } = this.state;
-    const { toggleVisLeggTilKnapp, settRepresentererKode } = this;
     const panelIkon = Ikoner.Ferdig;
+    const { lagreAktoer, oppsummering: { saksnummer } } = this.props;
 
     return (
       <div>
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel="Søkers fullmektig" />}
-          ariaTittel="Opplysninger om søkers fullmektig">
+          heading={<PanelHeader ikon={panelIkon} tittel="Fullmektig" />}
+          ariaTittel="Opplysninger om fullmektig">
           <Nav.Container fluid>
-            <Nav.Row>
-              <Nav.Column xs="6">
-                {
-                  fullmektigOrg && kontaktopplysninger.kontaktnavn
-                }
-                {
-                  kontaktopplysninger &&
-                  <Fragment>
-                    <div className="postadresse_tittel">Postadresse</div>
-                    <ForretningsAdresse forretningsadresse={fullmektigOrg.forretningsadresse} />
-                  </Fragment>
-                }
-              </Nav.Column>
-              <Nav.Column xs="6">
-                <Kontaktopplysninger
-                  representererKode={representererKode}
-                  juridiskOrg={fullmektigOrg}
-                  visLeggTilKnapp={visLeggTilKnapp}
-                  toggleVisLeggTilKnapp={toggleVisLeggTilKnapp}
-                  renderCheckbox={validerOgLagreKontaktOgAktoer => (
-                    <Nav.Fieldset legend="" >
-                      <Nav.Checkbox
-                        onChange={settRepresentererKode}
-                        onBlur={validerOgLagreKontaktOgAktoer}
-                        label="Fullmektig for både arbeidstaker og arbeidsgiver"
-                      />
-                    </Nav.Fieldset>
-                  )}
-                />
-              </Nav.Column>
-            </Nav.Row>
+            {this.state.fullmektige.map(fullmektig => (
+              <Fullmektig key={fullmektig.aktoerID} fullmektig={fullmektig} lagreFullmektig={representererKode => lagreAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT, representererKode)} />
+            ))}
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
@@ -118,6 +115,7 @@ SokersFullmektig.propTypes = {
   hentAktoer: PT.func.isRequired,
   oppsummering: PT.object.isRequired,
   hentKontaktopplysninger: PT.func.isRequired,
+  lagreAktoer: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -129,7 +127,8 @@ const mapDispatchToProps = () => ({});
 const hentOrg = async orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
 const hentAktoer = async (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
 const hentKontaktopplysninger = async (saksnummer, juridiskorgnr) => Api.Fagsaker.kontaktopplysninger.hent(saksnummer, juridiskorgnr);
+const lagreAktoer = async (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.send(saksnr, rolleKode, representererKode);
 
-const SokersFullmektigWrapper = props => <SokersFullmektig {...props} hentAktoer={hentAktoer} hentOrg={hentOrg} hentKontaktopplysninger={hentKontaktopplysninger} />;
+const SokersFullmektigWrapper = props => <SokersFullmektig {...props} lagreAktoer={lagreAktoer} hentAktoer={hentAktoer} hentOrg={hentOrg} hentKontaktopplysninger={hentKontaktopplysninger} />;
 
 export default connect(mapStateToProps, mapDispatchToProps)(SokersFullmektigWrapper);
