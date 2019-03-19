@@ -80,7 +80,7 @@ const setCachedItem = (cacheKey, content) => {
   localStorage.setItem(getCacheTS(cacheKey), Date.now());
 };
 
-const cachedFetch = (url, cacheDurationSec) => {
+const cachedFetch = async (url, cacheDurationSec) => {
   // Use the URL as the cache key to sessionStorage
   const cacheKey = url;
 
@@ -133,30 +133,28 @@ const cachedFetch = (url, cacheDurationSec) => {
     // referrer: // *client, no-referrer
   };
 
-  return fetch(url, fetchConfig).then(response => {
-    // let's only store in cache if the content-type is
-    // JSON or something non-binary
-    if (response.status === 200) {
-      const ct = response.headers.get('Content-Type');
-      if (ct && (ct.match(/application\/json/i) || ct.match(/text\//i))) {
-        // There is a .json() instead of .text() but
-        // we're going to store it in sessionStorage as
-        // string anyway.
-        // If we don't clone the response, it will be
-        // consumed by the time it's returned. This
-        // way we're being un-intrusive.
-        if (localStorage.getItem(cacheKey)) {
-          console.log('Remove cache item', cacheKey); // eslint-disable-line no-console
-          removeCachedItem(cacheKey);
-        }
-        console.log('Insert fresh content into cache item', url); // eslint-disable-line no-console
-        response.clone().text().then(content => {
-          setCachedItem(cacheKey, content);
-        });
+  const fetchResponse = await fetch(url, fetchConfig);
+  // let's only store in cache if the content-type is
+  // JSON or something non-binary
+  if (fetchResponse.status === 200) {
+    const ct = fetchResponse.headers.get('Content-Type');
+    if (ct && (ct.match(/application\/json/i) || ct.match(/text\//i))) {
+      // There is a .json() instead of .text() but
+      // we're going to store it in sessionStorage as
+      // string anyway.
+      // If we don't clone the response, it will be
+      // consumed by the time it's returned. This
+      // way we're being un-intrusive.
+      if (localStorage.getItem(cacheKey)) {
+        console.log('Remove cache item', cacheKey); // eslint-disable-line no-console
+        removeCachedItem(cacheKey);
       }
+      console.log('Insert fresh content into cache item', url); // eslint-disable-line no-console
+      const content = await fetchResponse.clone().text();
+      setCachedItem(cacheKey, content);
     }
-    return response;
-  }).then(toJson);
+  }
+  return toJson(fetchResponse);
 };
 
 const toJsonExtended = async fetchResponse => {
