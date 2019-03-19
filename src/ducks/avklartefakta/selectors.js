@@ -16,7 +16,7 @@ import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
 import { vilkarSelectors } from '../vilkar';
 
-import { erVilkarOppfylt } from '../../regler/vilkar';
+import { velgMellomSoknadslandEllerFlaggland } from '../../regler/vilkar';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -195,25 +195,8 @@ const StyrendeLandSelector = createSelector(
   state => vilkarSelectors.VilkarSelector(state),
   (soknadsland, flaggland, vilkar) => {
     if (vilkar.length <= 0) return soknadsland;
-
-    switch (true) {
-      case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, vilkar):
-        if (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, vilkar)) {
-          return flaggland;
-        }
-        return MKV.Koder.landkoder.NO;
-      case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, vilkar):
-        return flaggland;
-      case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, vilkar) || erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, vilkar):
-        return soknadsland;
-      case erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, vilkar):
-        if (erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, vilkar)) {
-          return flaggland;
-        }
-        return soknadsland;
-      default:
-        return soknadsland;
-    }
+    const soknadEllerFlaggLand = velgMellomSoknadslandEllerFlaggland(vilkar, soknadsland, flaggland);
+    return soknadEllerFlaggLand;
   }
 );
 
