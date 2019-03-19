@@ -6,6 +6,7 @@ import * as MPT from '../../../proptypes/';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
+import { StegvelgerConsumer } from '../../../soknad-komponenter/stegvelger/StegvelgerContext';
 import OppholdsLandListe from './inngang/oppholdsLandListe';
 
 const VurderingInngang = props => {
@@ -17,28 +18,35 @@ const VurderingInngang = props => {
   const { harAvklaring } = tilstand;
 
   return (
-    <div className="vurderingInngang">
-      <Nav.Undertittel>Kontroller inngangsvilkår</Nav.Undertittel>
-      <ul className="betingelser__liste">
-        <li className="liste__element liste__element--oppfylt">
-          { KV.objektTilTerm(vurdering) }
-        </li>
-        <li className="liste__element liste__element--varsel">
-          Sjekk at land er innenfor et territorium / område som dekkes av forordningen.
-        </li>
-      </ul>
-      <FieldArray
-        name="avklartefakta.oppholdsland"
-        component={OppholdsLandListe}
-        avklartefakta={avklartefakta}
-        oppholdBegrunnelser={oppholdBegrunnelser}
-        alleLandKoder={alleLandKoder}
-        redigerbart={redigerbart}
-      />
-      <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Start behandling</Nav.Knapp>
-      </div>
-    </div>
+    <StegvelgerConsumer>
+      {stegContext => {
+        console.log('VurderingInngang', stegContext);
+        return (
+          <div className="vurderingInngang">
+            <Nav.Undertittel>Kontroller inngangsvilkår</Nav.Undertittel>
+            <ul className="betingelser__liste">
+              <li className="liste__element liste__element--oppfylt">
+                { KV.objektTilTerm(vurdering) }
+              </li>
+              <li className="liste__element liste__element--varsel">
+                Sjekk at land er innenfor et territorium / område som dekkes av forordningen.
+              </li>
+            </ul>
+            <FieldArray
+              name="avklartefakta.oppholdsland"
+              component={OppholdsLandListe}
+              avklartefakta={avklartefakta}
+              oppholdBegrunnelser={oppholdBegrunnelser}
+              alleLandKoder={alleLandKoder}
+              redigerbart={redigerbart}
+            />
+            <div className="fane__knapplinje">
+              <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Start behandling</Nav.Knapp>
+            </div>
+          </div>
+        );
+      }}
+    </StegvelgerConsumer>
   );
 };
 

@@ -9,6 +9,8 @@ import * as KV from '../../kodeverk';
 import * as Validering from '../../soknad-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
 
+import { StegvelgerProvider } from '../../soknad-komponenter/stegvelger/StegvelgerContext';
+
 import ArbeidsgivereNorge from '../../soknad-komponenter/arbeidsgivereNorge';
 import ArbeidUtland from '../../soknad-komponenter/arbeidutland';
 import Bosted from '../../soknad-komponenter/bosted';
@@ -39,7 +41,6 @@ import { vilkarSelectors } from '../../ducks/vilkar/';
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
 import { formSelectors } from '../../ducks/form/';
 import { formatterDatoTilNorsk } from '../../utils/dato';
-
 
 class Saksopplysninger extends Component {
   state = {
@@ -115,18 +116,32 @@ class Saksopplysninger extends Component {
             fritekst={henleggelseFritekst} />
         }
         { visStegVelger &&
-          <Stegvelger
-            lagreVilkarHandler={this.props.lagreVilkarHandler}
-            lagreAvklartefaktaHandler={this.props.lagreAvklartefaktaHandler}
-            lagreLovvalgsperioderHandler={this.props.lagreLovvalgsperioderHandler}
-            lagreBehandlingerHandler={this.props.lagreBehandlingerHandler}
-            lagreAllData={this.props.lagreAllData}
-            fatteVedtakHandler={this.fatteVedtakHandler}
-            lagreSoknadHandler={this.lagreSoknadHandler}
-            oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
-            begrunnelser={MKV.KTObjects.begrunnelser}
-            landkoder={MKV.KTObjects.landkoder}
-          />
+          <StegvelgerProvider
+            value={
+              {
+                state: this.state,
+                lagreVilkarHandler: this.props.lagreVilkarHandler,
+                lagreAvklartefaktaHandler: this.props.lagreAvklartefaktaHandler,
+                lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
+                lagreBehandlingerHandler: this.props.lagreBehandlingerHandler,
+                lagreAllData: this.props.lagreAllData,
+                fatteVedtakHandler: this.fatteVedtakHandler,
+                lagreSoknadHandler: this.lagreSoknadHandler,
+                oppdaterLokalSoknadHandler: this.oppdaterLokalSoknadHandler,
+              }
+            }
+          >
+            <Stegvelger
+              lagreVilkarHandler={this.props.lagreVilkarHandler}
+              lagreAvklartefaktaHandler={this.props.lagreAvklartefaktaHandler}
+              lagreLovvalgsperioderHandler={this.props.lagreLovvalgsperioderHandler}
+              lagreBehandlingerHandler={this.props.lagreBehandlingerHandler}
+              lagreAllData={this.props.lagreAllData}
+              fatteVedtakHandler={this.fatteVedtakHandler}
+              lagreSoknadHandler={this.lagreSoknadHandler}
+              oppdaterLokalSoknadHandler={this.oppdaterLokalSoknadHandler}
+            />
+          </StegvelgerProvider>
         }
         <Personopplysninger />
         <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />

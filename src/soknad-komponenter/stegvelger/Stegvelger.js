@@ -21,10 +21,11 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../duc
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
-
+import { StegvelgerContext } from '../../soknad-komponenter/stegvelger/StegvelgerContext';
 import './stegvelger.css';
 
 class Stegvelger extends Component {
+  static contextType = StegvelgerContext;
   state = { aktivtStegNummer: 0, aktuelleSteg: [], didUpdateAfterLastStep: false };
 
   componentWillMount() {
@@ -36,6 +37,10 @@ class Stegvelger extends Component {
     this.props.hentVilkar(bid);
     this.props.hentAvklartefakta(bid);
     this.props.hentLovvalgsperioder(bid);
+  }
+
+  componentDidMount() {
+    console.log('Stegvelger:didMount', this.context);
   }
 
   componentWillReceiveProps(nextProps) {
