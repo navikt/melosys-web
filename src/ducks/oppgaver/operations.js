@@ -43,7 +43,7 @@ export async function sendBehandlingsOppgave(checkboxliste) {
   const behandlingstyper = Object.keys(behandlingstyperListe);
 
   const oppgave = {
-    oppgavetype: MKV.Koder.oppgavetyper.BEH_SAK,
+    oppgavetype: MKV.Koder.oppgavetyper.BEH_SAK_MK,
     sakstyper,
     behandlingstyper,
   };
