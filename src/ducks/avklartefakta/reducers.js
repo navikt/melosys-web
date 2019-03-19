@@ -8,6 +8,7 @@
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
 
+
 const initialState = {
   data: [],
   status: STATUS.NOT_STARTED,
@@ -79,7 +80,7 @@ const avklarEllerUtledBostedsland = (bostedsland, bosattINorge) => {
   return lagBostedsland(bostedsland, 'BOSTEDSLAND', 'BOSTEDSLAND');
 };
 
-const lagArbeidslandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
+const lagFlagglandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
   if (!avklarteFakta) { return []; }
 
   return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
@@ -131,7 +132,7 @@ export default function reducer(state = initialState, action) {
         lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
         avklarEllerUtledBostedsland(dokument.avklartefakta.bostedsland, dokument.vilkar.bosattINorge),
         ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
-        ...lagArbeidslandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),
+        ...lagFlagglandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'FLAGGLAND', dokument.maritimtArbeid),
         lagArbeidsKonklusjon(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP', null, dokument.maritimtArbeid),
       ].filter(fakta => fakta !== null);
 
