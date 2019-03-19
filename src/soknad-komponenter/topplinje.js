@@ -22,17 +22,17 @@ const Topplinje = props => {
 
   const tilForsidenHandler = event => {
     event.preventDefault();
-    const { hentOppgaver, history } = props;
+    const { hentOppgaveOversikt, history } = props;
     const { push } = history;
     const { byggVersjon } = Utils.buildinfo();
     if (byggVersjon === 'local') {
-      hentOppgaver();
+      hentOppgaveOversikt();
       push('/');
       return;
     }
     /* eslint no-alert: off */
     if (window.confirm('Noen endringer vil kanskje ikke bli lagret. Vil du fortsette?')) {
-      hentOppgaver();
+      hentOppgaveOversikt();
       push('/');
     }
   };
@@ -60,7 +60,7 @@ const Topplinje = props => {
 Topplinje.propTypes = {
   saksbehandler: MPT.Saksbehandler.isRequired,
   history: PT.object.isRequired,
-  hentOppgaver: PT.func.isRequired,
+  hentOppgaveOversikt: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -73,7 +73,7 @@ const mapDispatchToProps = dispatch => ({
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
   resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
   resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
-  hentOppgaver: () => dispatch(oppgaverOperations.hent()),
+  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Topplinje));

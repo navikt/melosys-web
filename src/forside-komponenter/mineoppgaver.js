@@ -35,7 +35,7 @@ const MineOppgaver = props => {
 };
 
 MineOppgaver.propTypes = {
-  hentMineSaker: PT.func.isRequired,
+  hentOppgaveOversikt: PT.func.isRequired,
   minesaker: MPT.MineOppgaver,
 };
 
@@ -48,7 +48,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentMineSaker: () => dispatch(Oppgaver.oppgaverOperations.hent()),
+  hentOppgaveOversikt: () => dispatch(Oppgaver.oppgaverOperations.oversikt()),
 });
 const kontekster = [
   { navn: 'oppgaver', melding: 'Det har oppstått en feil: Kunne ikke søke etter oppgaver' },

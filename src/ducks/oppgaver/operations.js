@@ -17,7 +17,7 @@ import * as Types from './types';
  * Hent Soknad
  * @returns {*}
  */
-export const hent = () =>
+export const oversikt = () =>
   doThenDispatch(() => Api.Oppgaver.oversikt(), {
     OK: Types.OK,
     FEILET: Types.FEILET,

@@ -9,7 +9,7 @@ export default async function loadInitialData(store) {
     res = await store.dispatch(saksbehandlerOperations.hent());
     if (res && res.type === saksbehandlerTypes.OK) {
       window.frontendlogger.info(res.data);
-      await store.dispatch(oppgaverOperations.hent());
+      await store.dispatch(oppgaverOperations.oversikt());
     }
   } catch (e) {
     console.log(e); // eslint-disable-line no-console
