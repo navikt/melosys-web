@@ -7,7 +7,7 @@
 
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
-
+import { _isNil, _isUndefined } from '../../utils';
 
 const initialState = {
   data: [],
@@ -33,15 +33,31 @@ const lagAvklartStateObjekt = (avklartFakta, referanse) => (
 );
 
 // En faktisk avklart fakta
-const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => (
-  {
+const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => {
+  if (_isNil(avklarteFakta)) {
+    return null;
+  }
+  return {
     ...avklartfaktaMal,
     avklartefaktaKode,
     referanse: avklartefaktaKode,
     subjektID: null,
     fakta: [avklarteFakta],
+  };
+};
+
+const lagAvklartfaktaObjektMedReferanse = (avklarteFakta, referanse, avklartefaktaKode) => {
+  if (_isUndefined(avklarteFakta)) {
+    return null;
   }
-);
+  return {
+    ...avklartfaktaMal,
+    avklartefaktaKode,
+    referanse,
+    subjektID: null,
+    fakta: [avklarteFakta],
+  };
+};
 
 const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
   if (!avklarteFakta) { return []; }
@@ -62,22 +78,11 @@ const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, m
   }, []);
 };
 
-const lagBostedsland = (avklarteFakta, referanse, avklartefaktaKode) => (
-  {
-    ...avklartfaktaMal,
-    avklartefaktaKode,
-    referanse,
-    subjektID: null,
-    fakta: [avklarteFakta],
-  }
-);
-
 const avklarEllerUtledBostedsland = (bostedsland, bosattINorge) => {
   if (bosattINorge) {
-    return lagBostedsland('NO', 'BOSTEDSLAND', 'BOSTEDSLAND');
+    return lagAvklartfaktaObjektMedReferanse('NO', 'BOSTEDSLAND', 'BOSTEDSLAND');
   }
-
-  return lagBostedsland(bostedsland, 'BOSTEDSLAND', 'BOSTEDSLAND');
+  return lagAvklartfaktaObjektMedReferanse(bostedsland, 'BOSTEDSLAND', 'BOSTEDSLAND');
 };
 
 const lagFlagglandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
@@ -96,16 +101,6 @@ const lagFlagglandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritim
     }] : [...samling];
   }, []);
 };
-
-const lagArbeidsKonklusjon = (avklarteFakta, referanse, avklartefaktaKode) => (
-  {
-    ...avklartfaktaMal,
-    avklartefaktaKode,
-    referanse,
-    subjektID: null,
-    fakta: [avklarteFakta],
-  }
-);
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -133,7 +128,7 @@ export default function reducer(state = initialState, action) {
         avklarEllerUtledBostedsland(dokument.avklartefakta.bostedsland, dokument.vilkar.bosattINorge),
         ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
         ...lagFlagglandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'FLAGGLAND', dokument.maritimtArbeid),
-        lagArbeidsKonklusjon(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP', null, dokument.maritimtArbeid),
+        lagAvklartfaktaObjekt(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP'),
       ].filter(fakta => fakta !== null);
 
       return { ...state, data: [...avklartefakta] };
