@@ -66,11 +66,13 @@ class Saksopplysninger extends Component {
     const unntaksperiode = {
       landKode, startdato, sluttdato, hjemmel,
     };
+    /* eslint-disable no-console */
     Api.Registrering.unntaksperioder(4, unntaksperiode)
       .then(() => {
         console.log('[POST] successful');
       })
       .catch(err => console.error(err));
+    /* eslint-enable no-console */
     return true;
   };
   render() {
