@@ -140,7 +140,7 @@ class VurderingArtikkel11_4 extends Component {
                   onChange={this.radioEndringHandler}
                   value={this.TIL_VURDERING_12_1}
                   checked={valgtVilkar === this.TIL_VURDERING_12_1}
-                  label="11.4 i - flagglandet, men jeg vil vurdere Artikkel 12.1"
+                  label="11.4 i - flagglandet er ikke Norge, men jeg vil vurdere Artikkel 12.1"
                   disabled={!redigerbart}
                 />
               </Nav.Fieldset>
