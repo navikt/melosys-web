@@ -6,8 +6,8 @@
  */
 
 import { STATUS } from '../../services/utils';
+import * as Utils from '../../utils';
 import * as Types from './types';
-import { _isNil, _isUndefined } from '../../utils';
 
 const initialState = {
   data: [],
@@ -34,7 +34,7 @@ const lagAvklartStateObjekt = (avklartFakta, referanse) => (
 
 // En faktisk avklart fakta
 const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => {
-  if (_isNil(avklarteFakta)) {
+  if (Utils._isNil(avklarteFakta)) {
     return null;
   }
   return {
@@ -47,7 +47,7 @@ const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => {
 };
 
 const lagAvklartfaktaObjektMedReferanse = (avklarteFakta, referanse, avklartefaktaKode) => {
-  if (_isUndefined(avklarteFakta)) {
+  if (Utils._isUndefined(avklarteFakta)) {
     return null;
   }
   return {
