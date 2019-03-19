@@ -42,8 +42,9 @@ const parseMockErrorObject = (kontekst, currentReduxState) => {
 };
 const parseErrorObject = (kontekst, currentReduxState) => {
   debugger;
+  // TODO under er kun eksempel på errorObject properties.
   return {
-    status: '403', statusText: 'statusText', melding: 'melding', fetchdata: 'fetchdata',
+    status: '403', statusText: 'statusText', melding: 'melding', fetchdata: { timestamp: Date() },
   };
 };
 
