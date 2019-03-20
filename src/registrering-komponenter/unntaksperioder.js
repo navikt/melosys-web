@@ -1,10 +1,7 @@
-import React, { Component } from 'react';
+import React from 'react';
 
-class UnntaksPerioder extends Component {
-  render() {
-    return (
-      <h1>Registrering av Unntaksperioder</h1>
-    );
-  }
-}
+const UnntaksPerioder = () => (
+  <h1>Registrering av Unntaksperioder</h1>
+);
+
 export default UnntaksPerioder;

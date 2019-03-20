@@ -9,7 +9,7 @@ import * as MPT from '../../../proptypes/';
 import { kodeTilObjekt, landTekstFormat } from './LandVelger';
 import './landvelger.css';
 
-class EnkeltLand extends Component {
+export class EnkeltLand extends Component {
   state = {
     inputVerdi: '',
     error: null,
