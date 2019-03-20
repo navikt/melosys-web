@@ -1,4 +1,4 @@
-import { isUndefined, cloneDeep, assign } from 'lodash';
+import { assign, cloneDeep, isFunction, isNil, isUndefined, isString } from 'lodash';
 import throttle from 'lodash.throttle';
 import * as dato from './dato';
 import * as streng from './streng';
@@ -12,5 +12,8 @@ export {
   isUndefined as _isUndefined,
   cloneDeep as _cloneDeep,
   assign as _assign,
+  isFunction as _isFunction,
+  isNil as _isNil,
+  isString as _isString,
   throttle as _throttle,
 };

@@ -7,7 +7,7 @@ class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_NORSK" (til vedtak)',
         exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK),
@@ -29,26 +29,26 @@ class SokkelSkip extends Steg {
         nesteSteg: null,
       },
     ];
-    this._id = STEG.SOKKEL_SKIP;
-    this._tittel = 'Sokkel / skip';
-    this._komponent = VurderingSokkelSkip;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.SOKKEL_SKIP;
+    this.tittel = 'Sokkel / skip';
+    this.komponent = VurderingSokkelSkip;
+    this.samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.sokkel,
       skjema: _propsLight.skjema,
       redigerbart: _propsLight.redigerbart,
     });
-    this._beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = _propsLight => {
       const { sokkelEllerSkip = [], sokkelSkipKonklusjon } = _propsLight.skjema.avklartefakta;
 
       return ({
         harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon),
       });
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {

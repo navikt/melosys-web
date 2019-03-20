@@ -5,17 +5,15 @@ import PT from 'prop-types';
 import * as KV from '../kodeverk';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
-import * as Skjema from './skjema';
 import * as Ikoner from '../resources/images';
 
-import { beregnAlder, formatterDatoTilNorsk } from '../utils/dato';
+import { beregnAlder } from '../utils/dato';
 
-import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
+import PersonInfo from '../komponenter/personInfo';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
 import BostedsAdresse from '../komponenter/adresser/bostedsAdresse';
-import LandVelger from './skjema/landvelger';
-
+import OppgittAdresseSoknad from './personopplysninger/oppgittAdresseSoknad';
 import UtenlandskIdent from './personopplysninger/utenlandskIdent';
 
 import './personopplysninger.css';
@@ -66,13 +64,10 @@ class Personopplysninger extends Component {
   };
 
   render() {
-    const { redigerbart, person } = this.props;
+    const { registrering = false, redigerbart, person } = this.props;
 
     const {
       fnr,
-      sivilstand,
-      statsborgerskap,
-      statsborgerskapDato,
       kjoenn,
       sammensattNavn,
       foedselsdato,
@@ -96,14 +91,7 @@ class Personopplysninger extends Component {
             {/* START PERSONINFO */}
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="6">
-                <dl className="person__detaljer">
-                  <dt>Fnr / dnr:</dt><dd>{fnr}</dd>
-                  <dt>Statsborgerskap pr {formatterDatoTilNorsk(statsborgerskapDato)}:</dt>
-                  <dd>{KV.objektTilTerm(statsborgerskap)}</dd>
-                  <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
-                  <dt>Kjønn:</dt><dd>{KV.objektTilTerm(kjoenn)}</dd>
-                  <dt>Sivilstand:</dt><dd>{KV.objektTilTerm(sivilstand)}</dd>
-                </dl>
+                <PersonInfo person={person} />
               </Nav.Column>
               <Nav.Column xs="6">
                 <UtenlandskIdent disabled={!redigerbart} />
@@ -117,26 +105,8 @@ class Personopplysninger extends Component {
                 </dl>
               </Nav.Column>
             </Nav.Row>
-            <Nav.Row className="person__seksjon">
-              <Nav.Column xs="6">
-                <Nav.Fieldset legend="Adresse oppgitt i søknad:">
-                  <dl className="person__detaljer">
-                    <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" disabled={!redigerbart} />
-                    <Skjema.Input feltNavn="oppgittAdresseHusnummer" bredde="XS" label="Husnummer:" disabled={!redigerbart} />
-                    <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" disabled={!redigerbart} />
-                    <Nav.Row>
-                      <Nav.Column xs="4">
-                        <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnr:" disabled={!redigerbart} />
-                      </Nav.Column>
-                      <Nav.Column xs="8">
-                        <Skjema.Input feltNavn="oppgittAdressePoststed" label="Poststed:" disabled={!redigerbart} />
-                      </Nav.Column>
-                    </Nav.Row>
-                    <LandVelger disabled={!redigerbart} feltNavn="oppgittAdresseLand" label="Land:" />
-                  </dl>
-                </Nav.Fieldset>
-              </Nav.Column>
-            </Nav.Row>
+            {!registrering &&
+              <OppgittAdresseSoknad redigerbart={redigerbart} /> }
             {/* SLUTT PERSONINFO */}
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
@@ -146,6 +116,7 @@ class Personopplysninger extends Component {
 }
 
 Personopplysninger.propTypes = {
+  registrering: PT.bool,
   redigerbart: PT.bool.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Person).isRequired,
   hentPerson: PT.func.isRequired,
@@ -155,6 +126,7 @@ Personopplysninger.propTypes = {
 };
 
 Personopplysninger.defaultProps = {
+  registrering: undefined,
   medfolgendeAndre: {},
 };
 

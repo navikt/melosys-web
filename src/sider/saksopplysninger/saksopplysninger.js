@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router';
+import { withRouter } from 'react-router-dom';
 import { reduxForm } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
 
+import * as KV from '../../kodeverk';
 import * as Validering from '../../soknad-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
 
@@ -14,7 +15,7 @@ import Bosted from '../../soknad-komponenter/bosted';
 import ForetakUtland from '../../soknad-komponenter/foretakutland';
 import Inntekt from '../../soknad-komponenter/inntektUtland';
 import MaritimtArbeid from '../../soknad-komponenter/maritimtArbeid';
-import Medlemskap from '../../soknad-komponenter/medlemskap';
+import Medlemskap from '../../komponenter/medlemskap';
 import OppholdPeriode from '../../soknad-komponenter/oppholdPeriode';
 import Personopplysninger from '../../soknad-komponenter/personopplysninger';
 import SelvstendigArbeid from '../../soknad-komponenter/selvstendigarbeid';
@@ -22,6 +23,7 @@ import UtsendendeArbeidsgiver from '../../soknad-komponenter/utsendendeArbeidsgi
 import Stegvelger from '../../soknad-komponenter/stegvelger';
 import HenlagtInformasjon from '../../soknad-komponenter/stegErstatter/henlagtInformasjon';
 import VirksomhetNorge from '../../soknad-komponenter/virksomhetNorge';
+import SokersFullmektig from '../../soknad-komponenter/sokersFullmektig';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
@@ -133,6 +135,7 @@ class Saksopplysninger extends Component {
         <ForetakUtland />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />
         <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
+        <SokersFullmektig />
         <ArbeidUtland />
         <VirksomhetNorge />
         <MaritimtArbeid />
@@ -293,7 +296,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const SaksopplysningerForm = reduxForm({
-  form: 'soknad',
+  form: KV.Form.SOKNAD,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,

@@ -14,6 +14,9 @@ import * as KV from '../../kodeverk';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
+import { vilkarSelectors } from '../vilkar';
+
+import { velgMellomSoknadslandEllerFlaggland } from '../../regler/vilkar';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -43,12 +46,12 @@ export const Oppholdsland = createSelector(
   (alleAvklartefakta, alleLandISoknaden) => (
     alleLandISoknaden.map(enkeltLand => (
       alleAvklartefakta.find(avklaring => avklaring.subjektID === enkeltLand) ||
-        {
-          ...avklartFaktaTemplate,
-          referanse: KV.Koder.avklartefaktaKoder.OPPHOLDSLAND,
-          subjektID: enkeltLand,
-          fakta: ['TRUE'],
-        }
+      {
+        ...avklartFaktaTemplate,
+        referanse: KV.Koder.avklartefaktaKoder.OPPHOLDSLAND,
+        subjektID: enkeltLand,
+        fakta: ['TRUE'],
+      }
     ))
   )
 );
@@ -172,21 +175,34 @@ export const SokkelEllerSkipSelector = createSelector(
  *
  */
 
-export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
+const SoknadslandSelector = createSelector(
   state => Oppholdsland(state) || [],
+  avklartefaktaLandListe => (avklartefaktaLandListe
+    .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
+    .map(avklartfakta => avklartfakta.subjektID))
+);
+
+const FlagglandSelector = createSelector(
   state => SokkelEllerSkipSelector(state),
-  (avklartefaktaLand, sokkelEllerSkip) => {
-    const landAvklartVedInngang = avklartefaktaLand
-      .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
-      .map(avklartfakta => avklartfakta.subjektID);
+  sokkelEllerSkipListe => (sokkelEllerSkipListe
+    .filter(sokkelEllerSkip => sokkelEllerSkip.installasjonsType === KV.Koder.SKIP)
+    .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland))
+);
 
-    const landOverstyrtAvSkip = sokkelEllerSkip
-      .reduce((collection, enkelt) => (enkelt.installasjonsType === KV.Koder.SKIP ? [...collection, enkelt.arbeidsland] : [...collection]), []);
-
-    const styrendeLand = landOverstyrtAvSkip.length > 0 ? landOverstyrtAvSkip : landAvklartVedInngang;
-
-    return MKV.KTObjects.landkoder.filter(enkeltObjekt => styrendeLand.includes(enkeltObjekt.kode));
+const StyrendeLandSelector = createSelector(
+  state => SoknadslandSelector(state),
+  state => FlagglandSelector(state),
+  state => vilkarSelectors.VilkarSelector(state),
+  (soknadsland, flaggland, vilkar) => {
+    if (vilkar.length <= 0) return soknadsland;
+    const soknadEllerFlaggLand = velgMellomSoknadslandEllerFlaggland(vilkar, soknadsland, flaggland);
+    return soknadEllerFlaggLand;
   }
+);
+
+export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
+  state => StyrendeLandSelector(state),
+  styrendeLand => MKV.KTObjects.landkoder.filter(landkodeObjekt => styrendeLand.includes(landkodeObjekt.kode))
 );
 
 export const AvklartefaktaLovvalgKodeSelector = createSelector(

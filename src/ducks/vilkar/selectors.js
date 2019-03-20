@@ -86,7 +86,7 @@ export const art16_1_begrunnelserSelector = createSelector(
 
 export const art16_1_fritekstSelector = createSelector(
   state => art16_1(state),
-  art16_1_vilkar => art16_1_vilkar.begrunnelseFritekst || null
+  art16_1_vilkar => art16_1_vilkar.begrunnelseFritekst
 );
 
 export const valgteLovvalgsVilkar = createSelector(
@@ -97,6 +97,16 @@ export const valgteLovvalgsVilkar = createSelector(
       ...MKV.KTObjects.lovvalgsbestemmelser.forordning_987_2009,
     ];
     return alleVilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar));
+  }
+);
+
+export const valgteTilleggsVilkar = createSelector(
+  state => VilkarSelector(state),
+  alleVilkar => {
+    const alleTilleggsbestemmelser = [
+      ...MKV.KTObjects.lovvalgsbestemmelser.tillegg,
+    ];
+    return alleVilkar.filter(enkeltVilkar => alleTilleggsbestemmelser.find(enkeltTilleggslovvalg => enkeltTilleggslovvalg.kode === enkeltVilkar.vilkaar));
   }
 );
 

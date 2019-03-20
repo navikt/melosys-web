@@ -176,13 +176,13 @@ class SideOppsummering extends Component {
                 <dd>{KV.objektTilTerm(saksstatus)}</dd>
                 <dt>Behandlingsstatus:</dt>
                 <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
-                <dt>Arbeids- / Oppholdsland:</dt>
+                <dt>Arbeidsland:</dt>
                 <dd>{gyldigeOppholdsLandSetning}</dd>
-                <dt>Periode:</dt>
+                <dt>Søknadsperiode:</dt>
                 <dd>{oppholdUtlandFom} - {oppholdUtlandTom}</dd>
-                <dt>Sist oppdatert:</dt>
+                <dt>Behandling sist oppdatert:</dt>
                 <dd><EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt /></dd>
-                <dt>Registrert dato:</dt>
+                <dt>Behandling registrert dato:</dt>
                 <dd><EnkeltDato dato={registrertDato} /></dd>
               </dl>
             </Nav.Column>

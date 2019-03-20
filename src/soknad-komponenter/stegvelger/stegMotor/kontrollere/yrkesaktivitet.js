@@ -6,7 +6,7 @@ import * as KV from '../../../../kodeverk';
 class Yrkesaktivitet extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'yrkesaktivitet ER LIK "ORDINAER_ARBEIDSTAKER"',
         exec: avklartefakta => Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER),
@@ -23,23 +23,23 @@ class Yrkesaktivitet extends Steg {
         nesteSteg: null,
       },
     ];
-    this._id = STEG.YRKESAKTIVITET;
-    this._tittel = 'Yrkes-aktivitet';
-    this._komponent = VurderingYrkesaktivitet;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.YRKESAKTIVITET;
+    this.tittel = 'Yrkes-aktivitet';
+    this.komponent = VurderingYrkesaktivitet;
+    this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
     });
-    this._beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = _propsLight => {
       const { yrkesaktivitet } = _propsLight.skjema.avklartefakta;
 
       return ({
         harAvklaring: yrkesaktivitet !== null && yrkesaktivitet !== undefined,
       });
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
