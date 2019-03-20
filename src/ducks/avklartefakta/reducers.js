@@ -6,6 +6,7 @@
  */
 
 import { STATUS } from '../../services/utils';
+import * as Utils from '../../utils';
 import * as Types from './types';
 
 const initialState = {
@@ -28,27 +29,43 @@ const lagAvklartStateObjekt = (avklartFakta, referanse) => (
     ...avklartfaktaMal,
     referanse,
     fakta: [avklartFakta],
-  } : null
+  } : Types.NULL
 );
 
 // En faktisk avklart fakta
-const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => (
-  {
+const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => {
+  if (Utils._isNil(avklarteFakta)) {
+    return Types.NULL;
+  }
+  return {
     ...avklartfaktaMal,
     avklartefaktaKode,
     referanse: avklartefaktaKode,
     subjektID: null,
     fakta: [avklarteFakta],
+  };
+};
+
+const lagAvklartfaktaObjektMedReferanse = (avklarteFakta, referanse, avklartefaktaKode) => {
+  if (Utils._isUndefined(avklarteFakta)) {
+    return Types.NULL;
   }
-);
+  return {
+    ...avklartfaktaMal,
+    avklartefaktaKode,
+    referanse,
+    subjektID: null,
+    fakta: [avklarteFakta],
+  };
+};
 
 const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
   if (!avklarteFakta) { return []; }
 
   return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
     const installasjon = maritimtArbeid[index] || {};
-    const installasjonsNavn = installasjon.navn || null;
-    const begrunnelseKoder = enkeltAvklaring.installasjonsTypeBegrunnelse ? [enkeltAvklaring.installasjonsTypeBegrunnelse] : null;
+    const installasjonsNavn = installasjon.navn || Types.NULL;
+    const begrunnelseKoder = enkeltAvklaring.installasjonsTypeBegrunnelse ? [enkeltAvklaring.installasjonsTypeBegrunnelse] : Types.NULL;
 
     return enkeltAvklaring.installasjonsType ? [...samling, {
       ...avklartfaktaMal,
@@ -61,30 +78,19 @@ const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, m
   }, []);
 };
 
-const lagBostedsland = (avklarteFakta, referanse, avklartefaktaKode) => (
-  {
-    ...avklartfaktaMal,
-    avklartefaktaKode,
-    referanse,
-    subjektID: null,
-    fakta: [avklarteFakta],
-  }
-);
-
 const avklarEllerUtledBostedsland = (bostedsland, bosattINorge) => {
   if (bosattINorge) {
-    return lagBostedsland('NO', 'BOSTEDSLAND', 'BOSTEDSLAND');
+    return lagAvklartfaktaObjektMedReferanse('NO', 'BOSTEDSLAND', 'BOSTEDSLAND');
   }
-
-  return lagBostedsland(bostedsland, 'BOSTEDSLAND', 'BOSTEDSLAND');
+  return lagAvklartfaktaObjektMedReferanse(bostedsland, 'BOSTEDSLAND', 'BOSTEDSLAND');
 };
 
-const lagArbeidslandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
+const lagFlagglandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
   if (!avklarteFakta) { return []; }
 
   return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
     const installasjon = maritimtArbeid[index] || {};
-    const installasjonsNavn = installasjon.navn || null;
+    const installasjonsNavn = installasjon.navn || Types.NULL;
 
     return enkeltAvklaring.installasjonsType ? [...samling, {
       ...avklartfaktaMal,
@@ -95,16 +101,6 @@ const lagArbeidslandObjekt = (avklarteFakta, referanse, avklartefaktaKode, marit
     }] : [...samling];
   }, []);
 };
-
-const lagArbeidsKonklusjon = (avklarteFakta, referanse, avklartefaktaKode) => (
-  {
-    ...avklartfaktaMal,
-    avklartefaktaKode,
-    referanse,
-    subjektID: null,
-    fakta: [avklarteFakta],
-  }
-);
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -131,9 +127,9 @@ export default function reducer(state = initialState, action) {
         lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
         avklarEllerUtledBostedsland(dokument.avklartefakta.bostedsland, dokument.vilkar.bosattINorge),
         ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
-        ...lagArbeidslandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),
-        lagArbeidsKonklusjon(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP', null, dokument.maritimtArbeid),
-      ].filter(fakta => fakta !== null);
+        ...lagFlagglandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'FLAGGLAND', dokument.maritimtArbeid),
+        lagAvklartfaktaObjekt(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP'),
+      ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefakta] };
     }
