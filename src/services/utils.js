@@ -244,6 +244,7 @@ const methodToJson = (method, url, data, extendResponse = false, accept = 'appli
 
 export const cachedGetAsJson = (url, cacheDurationSec = 60) => cachedFetch(url, cacheDurationSec);
 
+export const deleteAsJson = (url, extendResponse = true) => methodToJson('DELETE', url, extendResponse);
 export const getAsJson = (url, extendResponse = false) => methodToJson('GET', url, extendResponse);
 
 export const postAsJson = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse);
