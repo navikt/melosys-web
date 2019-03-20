@@ -26,12 +26,7 @@ FeilKomponent.propTypes = {
   }).isRequired,
 };
 
-const parseMockErrorObject = (kontekst, currentReduxState) => {
-  const { melding } = kontekst;
-  // Siden fetch-APIet resulterer i en modell med strukturen 'data.data', lager vi aliaset 'payload'.
-  const { data: payload } = currentReduxState;
-
-  // Deretter kan vi bruke 'data' slik vi mener å bruke den.
+const parseStructuredPayload = (melding, payload) => {
   const { data } = payload;
   const fetchdata = Utils.isJSON(data) ? JSON.parse(data) : data;
 
@@ -41,11 +36,19 @@ const parseMockErrorObject = (kontekst, currentReduxState) => {
   };
 };
 const parseErrorObject = (kontekst, currentReduxState) => {
-  debugger;
-  // TODO under er kun eksempel på errorObject properties.
-  return {
-    status: '403', statusText: 'statusText', melding: 'melding', fetchdata: { timestamp: Date() },
-  };
+  const { data: payload, status } = currentReduxState;
+  const { melding } = kontekst;
+
+  if (Utils._isString(payload)) {
+    return {
+      status,
+      statusText: payload,
+      melding,
+      fetchdata: { timestamp: Date() },
+    };
+  }
+
+  return parseStructuredPayload(melding, payload);
 };
 
 /** Dette er en HOC som benyttes til å wrappe rundt alle komponenter som
@@ -56,8 +59,6 @@ const parseErrorObject = (kontekst, currentReduxState) => {
  */
 
 const withErrorHandling = (kontekster, WrappedComponent) => props => {
-  const NODE_ENV = `${process.env.NODE_ENV}`; // default =>  'development' : 'production'
-
   const ErrorComponent = errorProps => {
     const { reduxRootState } = errorProps;
     const feilSamling = [];
@@ -66,13 +67,8 @@ const withErrorHandling = (kontekster, WrappedComponent) => props => {
       const currentReduxState = reduxRootState[kontekst.navn];
       const { status: feilStatus } = currentReduxState;
       if (feilStatus === 'ERROR') {
-        if (NODE_ENV === 'development') {
-          const emo = parseMockErrorObject(kontekst, currentReduxState);
-          feilSamling.push(emo);
-        } else {
-          const eobj = parseErrorObject(kontekst, currentReduxState);
-          feilSamling.push(eobj);
-        }
+        const eobj = parseErrorObject(kontekst, currentReduxState);
+        feilSamling.push(eobj);
       }
     });
 
