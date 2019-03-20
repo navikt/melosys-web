@@ -17,15 +17,14 @@ import * as Types from './types';
  * Hent Soknad
  * @returns {*}
  */
-export function hent() {
-  return doThenDispatch(() => Api.Oppgaver.oversikt(), {
+export const oversikt = () =>
+  doThenDispatch(() => Api.Oppgaver.oversikt(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
-}
 
-export async function tilbakelegge(behandlingID, venterPaaDokumentasjon) {
+export const tilbakelegge = (behandlingID, venterPaaDokumentasjon) => {
   const oppgaveObjekt = {
     behandlingID,
     begrunnelse: null, // Ingen begrunnelse i Melosys 1.0
@@ -33,9 +32,9 @@ export async function tilbakelegge(behandlingID, venterPaaDokumentasjon) {
   };
 
   return Api.Oppgaver.tilbakelegge(oppgaveObjekt).catch(error => error);
-}
+};
 
-export async function sendBehandlingsOppgave(checkboxliste) {
+export const sendBehandlingsOppgave = async checkboxliste => {
   const { sakstyper: sakstyperListe = [], behandlingstyper: behandlingstyperListe = [] } = checkboxliste;
   if (sakstyperListe.length === 0 || behandlingstyperListe.length === 0) { return false; }
 
@@ -52,9 +51,9 @@ export async function sendBehandlingsOppgave(checkboxliste) {
   const { saksnummer } = response;
   if (!saksnummer) { return false; }
   return `/saksbehandling/${saksnummer}`;
-}
+};
 
-export async function sendJournalOppgave(fagomrade) {
+export const sendJournalOppgave = async fagomrade => {
   const oppgave = {
     oppgavetype: MKV.Koder.oppgavetyper.JFR,
     sakstyper: [],
@@ -65,4 +64,4 @@ export async function sendJournalOppgave(fagomrade) {
   const { oppgaveID, journalpostID } = response;
   if (!(oppgaveID || journalpostID)) { return false; }
   return `/journalforing/${journalpostID}/${oppgaveID}`;
-}
+};

@@ -133,8 +133,8 @@ class Saksbehandling extends Component {
 
   lagreOgLukk = async () => {
     this.lagreAllData();
-    const { history, hentOppgaver } = this.props;
-    await hentOppgaver();
+    const { history, hentOppgaveOversikt } = this.props;
+    await hentOppgaveOversikt();
     history.push('/');
   };
 
@@ -314,7 +314,7 @@ Saksbehandling.propTypes = {
   sendSoknad: PT.func.isRequired,
   soknad: PT.object,
   vilkar: PT.array,
-  hentOppgaver: PT.func.isRequired,
+  hentOppgaveOversikt: PT.func.isRequired,
   tilbakeleggeOppgave: PT.func.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
@@ -369,7 +369,7 @@ const mapDispatchToProps = dispatch => ({
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegge(oppgaveID, venterPaaDokumentasjon),
-  hentOppgaver: () => dispatch(oppgaverOperations.hent()),
+  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),

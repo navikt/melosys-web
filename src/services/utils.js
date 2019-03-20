@@ -6,107 +6,62 @@ export const STATUS = {
   ERROR: 'ERROR',
 };
 
-export function sjekkStatuskode(response) {
+export const sjekkStatuskode = response => {
   if (response.status >= 200 && response.status < 300 && response.ok && !response.redirected) {
     return response;
   }
   const error = new Error(response.statusText || response.type);
   error.response = response;
   throw error;
-}
+};
 
-export function toJson(response) {
-  if (response.status !== 204) {
-    return response.json().catch(res => {
-      console.error(res); // eslint-disable-line no-console
-      return {};
-    });
+const toJson = async response => {
+  if (response.status === 204) {
+    return response;
   }
-  // No content
-  return response;
-}
-
-export function print(response) {
-  console.log(response); // eslint-disable-line no-console
-  return response;
-}
-
-export function sendResultatTilDispatch(dispatch, action, validering) {
-  return async (...data) => {
-    const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
-    if (validering && typeof validering === 'function') {
-      validering(dispatch, dataSomSkalDispatches);
-    }
-    return dispatch({ type: action, data: dataSomSkalDispatches });
-  };
-}
-
-export function handterFeil(dispatch, action) {
-  return error => {
-    if (error.response) {
-      error.response.text().then(data => {
-        console.error(error, error.stack, data); // eslint-disable-line no-console
-        window.frontendlogger.error({
-          error,
-          stack: error.stack,
-          data,
-        });
-        dispatch({
-          type: action,
-          data: { response: error.response, data },
-        });
-      });
-    } else {
-      console.error(error, error.stack); // eslint-disable-line no-console
-      window.frontendlogger.error({
-        error,
-        stack: error.stack,
-        data: error.toString(),
-      });
-      dispatch({ type: action, data: error.toString() });
-    }
-  };
-}
-
-/*
-function parseError(errorData) {
   try {
-    return JSON.parse(errorData);
-  } catch (e) {
-    console.error(e); // eslint-disable-line no-console
-    return errorData;
+    return await response.json();
+  } catch (res) {
+    console.error(res); // eslint-disable-line no-console
+    return {};
   }
-}
+};
 
-export function handterFeil(dispatch, FEILET_TYPE) {
-  return error => {
-    const { response } = error;
-    if (response) {
-      response.text().then(data => {
-        console.error(error, error.stack, data); // eslint-disable-line no-console
-        dispatch({
-          type: FEILET_TYPE,
-          data: {
-            type: FEILET_TYPE,
-            httpStatus: response.status,
-            melding: parseError(data),
-          },
-        });
-      });
-    } else {
-      console.error(error, error.stack); // eslint-disable-line no-console
-      dispatch({
-        type: FEILET_TYPE,
-        data: {
-          type: FEILET_TYPE,
-          melding: error.toString(),
-        },
-      });
-    }
-    return Promise.reject(error);
-  };
-}
-*/
+export const sendResultatTilDispatch = (dispatch, action, validering) => (...data) => {
+  const dataSomSkalDispatches = data.length === 1 ? data[0] : data;
+  if (validering && typeof validering === 'function') {
+    validering(dispatch, dataSomSkalDispatches);
+  }
+  return dispatch({ type: action, data: dataSomSkalDispatches });
+};
+
+export const handterFeil = (dispatch, action) => async error => {
+  if (error.response) {
+    const data = await error.response.text();
+    console.error(error, error.stack, data); // eslint-disable-line no-console
+
+    window.frontendlogger.error({
+      error,
+      stack: error.stack,
+      data,
+    });
+
+    dispatch({
+      type: action,
+      data: { response: error.response, data },
+    });
+  } else {
+    console.error(error, error.stack); // eslint-disable-line no-console
+
+    window.frontendlogger.error({
+      error,
+      stack: error.stack,
+      data: error.toString(),
+    });
+    dispatch({ type: action, data: error.toString() });
+  }
+};
+
 export const getCookie = name => {
   const re = new RegExp(`${name}=([^;]+)`);
   const match = re.exec(document.cookie);
@@ -125,7 +80,7 @@ const setCachedItem = (cacheKey, content) => {
   localStorage.setItem(getCacheTS(cacheKey), Date.now());
 };
 
-const cachedFetch = (url, cacheDurationSec) => {
+const cachedFetch = async (url, cacheDurationSec) => {
   // Use the URL as the cache key to sessionStorage
   const cacheKey = url;
 
@@ -178,30 +133,28 @@ const cachedFetch = (url, cacheDurationSec) => {
     // referrer: // *client, no-referrer
   };
 
-  return fetch(url, fetchConfig).then(response => {
-    // let's only store in cache if the content-type is
-    // JSON or something non-binary
-    if (response.status === 200) {
-      const ct = response.headers.get('Content-Type');
-      if (ct && (ct.match(/application\/json/i) || ct.match(/text\//i))) {
-        // There is a .json() instead of .text() but
-        // we're going to store it in sessionStorage as
-        // string anyway.
-        // If we don't clone the response, it will be
-        // consumed by the time it's returned. This
-        // way we're being un-intrusive.
-        if (localStorage.getItem(cacheKey)) {
-          console.log('Remove cache item', cacheKey); // eslint-disable-line no-console
-          removeCachedItem(cacheKey);
-        }
-        console.log('Insert fresh content into cache item', url); // eslint-disable-line no-console
-        response.clone().text().then(content => {
-          setCachedItem(cacheKey, content);
-        });
+  const fetchResponse = await fetch(url, fetchConfig);
+  // let's only store in cache if the content-type is
+  // JSON or something non-binary
+  if (fetchResponse.status === 200) {
+    const ct = fetchResponse.headers.get('Content-Type');
+    if (ct && (ct.match(/application\/json/i) || ct.match(/text\//i))) {
+      // There is a .json() instead of .text() but
+      // we're going to store it in sessionStorage as
+      // string anyway.
+      // If we don't clone the response, it will be
+      // consumed by the time it's returned. This
+      // way we're being un-intrusive.
+      if (localStorage.getItem(cacheKey)) {
+        console.log('Remove cache item', cacheKey); // eslint-disable-line no-console
+        removeCachedItem(cacheKey);
       }
+      console.log('Insert fresh content into cache item', url); // eslint-disable-line no-console
+      const content = await fetchResponse.clone().text();
+      setCachedItem(cacheKey, content);
     }
-    return response;
-  }).then(toJson);
+  }
+  return toJson(fetchResponse);
 };
 
 const toJsonExtended = async fetchResponse => {
@@ -238,7 +191,8 @@ const toJsonExtended = async fetchResponse => {
   }
   return fetchResponse;
 };
-export async function fetchToJson(url, config = {}, extendResponse = false) {
+
+export const fetchToJson = async (url, config = {}, extendResponse = false) => {
   /*
 if (config.headers) {
   for (let entry of config.headers) {
@@ -255,9 +209,9 @@ if (config.headers) {
 
   const sjekketResponse = sjekkStatuskode(fetchResponse);
   return toJson(sjekketResponse);
-}
+};
 
-async function methodToJson(method, url, data, extendResponse = false, accept = 'application/json') {
+const methodToJson = (method, url, data, extendResponse = false, accept = 'application/json') => {
   const headers = {
     Accept: accept,
     'Accept-Charset': 'UTF-8',
@@ -286,23 +240,15 @@ async function methodToJson(method, url, data, extendResponse = false, accept = 
   }
 
   return fetchToJson(url, fetchConfig, extendResponse);
-}
+};
 
-export function cachedGetAsJson(url, cacheDurationSec = 60) {
-  return cachedFetch(url, cacheDurationSec);
-}
+export const cachedGetAsJson = (url, cacheDurationSec = 60) => cachedFetch(url, cacheDurationSec);
 
-export async function getAsJson(url, extendResponse = false) {
-  return methodToJson('GET', url, extendResponse);
-}
+export const getAsJson = (url, extendResponse = false) => methodToJson('GET', url, extendResponse);
 
-export async function postAsJson(url, data = {}, extendResponse = false) {
-  return methodToJson('POST', url, data, extendResponse);
-}
+export const postAsJson = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse);
 
-export async function postAsJsonReceiveAsPDF(url, data = {}, extendResponse = false) {
-  return methodToJson('POST', url, data, extendResponse, 'application/pdf');
-}
+export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse, 'application/pdf');
 
 export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
   return async (dispatch, getState) => {
