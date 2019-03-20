@@ -44,6 +44,11 @@ import { formSelectors } from '../form';
  * koden mer lesbar.
  */
 
+const finnValgteVilkar = alleLovvalgsVilkar => {
+  const vilkarObjekt = alleLovvalgsVilkar.find(enkeltLovvalg => enkeltLovvalg.oppfylt) || {};
+  return vilkarObjekt.vilkaar || false;
+};
+
 const byggLovvalgsPeriodeArtikkel12_1 = state => {
   const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
   return [{
@@ -78,11 +83,13 @@ const byggLovvalgsPeriodeArtikkel12_2 = state => {
 
 const byggLovvalgsPeriodeArtikkel11_3A = state => {
   const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const tilleggsbestemmelse = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(state));
+
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A,
-    tilleggBestemmelse: MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1,
+    tilleggBestemmelse: tilleggsbestemmelse || null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
@@ -148,7 +155,6 @@ const byggAvslaattLovvalg = state => {
     medlemskapstype: null,
   }];
 };
-
 const byggLovvalgsPerioder = (valgtLovvalg, state) => {
   if (!valgtLovvalg) return byggAvslaattLovvalg(state);
 
@@ -162,11 +168,6 @@ const byggLovvalgsPerioder = (valgtLovvalg, state) => {
       return [];
     }
   }
-};
-
-const finnValgteVilkar = alleLovvalgsVilkar => {
-  const vilkarObjekt = alleLovvalgsVilkar.find(enkeltLovvalg => enkeltLovvalg.oppfylt) || {};
-  return vilkarObjekt.vilkaar || false;
 };
 
 export function hent(behandlingID) {

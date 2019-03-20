@@ -100,6 +100,16 @@ export const valgteLovvalgsVilkar = createSelector(
   }
 );
 
+export const valgteTilleggsVilkar = createSelector(
+  state => VilkarSelector(state),
+  alleVilkar => {
+    const alleTilleggsbestemmelser = [
+      ...MKV.KTObjects.lovvalgsbestemmelser.tillegg,
+    ];
+    return alleVilkar.filter(enkeltVilkar => alleTilleggsbestemmelser.find(enkeltTilleggslovvalg => enkeltTilleggslovvalg.kode === enkeltVilkar.vilkaar));
+  }
+);
+
 export const vilkarBegrunnelserSelector = createSelector(
   state => vesentligVirksomhetSelector(state),
   state => normaltDriverVirksomhetSelector(state),
