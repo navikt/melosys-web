@@ -7,7 +7,7 @@ import { erVilkarOppfylt } from '../../../../regler/vilkar';
 class Artikkel11_4 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'vilkar for artikkel 11.4.1 (og implissit 11.3A) er oppfylt',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1, alleVilkar) &&
@@ -30,10 +30,10 @@ class Artikkel11_4 extends Steg {
         nesteSteg: null,
       },
     ];
-    this._id = STEG.ARTIKKEL_11_4;
-    this._tittel = 'Vurdering av 11.4';
-    this._komponent = VurderingArtikkel11_4;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.ARTIKKEL_11_4;
+    this.tittel = 'Vurdering av 11.4';
+    this.komponent = VurderingArtikkel11_4;
+    this.samleRelevanteData = _propsLight => ({
       artikkel: { kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2, term: '11.4' },
       bostedsland: _propsLight.bostedsland,
       oppholdsland: _propsLight.oppholdsland,
@@ -42,7 +42,7 @@ class Artikkel11_4 extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
 
-    this._beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = _propsLight => {
       const {
         art11_3A, art11_4_1, art11_4_2, nis,
       } = _propsLight.skjema.vilkar;
@@ -59,7 +59,7 @@ class Artikkel11_4 extends Steg {
         visNISAvsnitt,
       };
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };

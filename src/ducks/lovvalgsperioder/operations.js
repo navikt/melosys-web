@@ -18,7 +18,6 @@ import * as Actions from './actions';
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
 import { formSelectors } from '../form';
-import { lovvalgsperioderSelectors } from './index';
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -44,6 +43,11 @@ import { lovvalgsperioderSelectors } from './index';
  * Disse eksponeres ikke utad, men er kun ment for å bryte opp komplisert logikk og gjøre
  * koden mer lesbar.
  */
+
+const finnValgteVilkar = alleLovvalgsVilkar => {
+  const vilkarObjekt = alleLovvalgsVilkar.find(enkeltLovvalg => enkeltLovvalg.oppfylt) || {};
+  return vilkarObjekt.vilkaar || false;
+};
 
 const byggLovvalgsPeriodeArtikkel12_1 = state => {
   const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
@@ -79,11 +83,13 @@ const byggLovvalgsPeriodeArtikkel12_2 = state => {
 
 const byggLovvalgsPeriodeArtikkel11_3A = state => {
   const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const tilleggsbestemmelse = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(state));
+
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A,
-    tilleggBestemmelse: MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1,
+    tilleggBestemmelse: tilleggsbestemmelse || null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
@@ -133,28 +139,24 @@ const byggLovvalgsPeriodeArtikkel16_1 = state => {
   }];
 };
 
-const byggAvslaattLovvalg = (state, lovvalgBestemmelse) => {
+const byggAvslaattLovvalg = state => {
   const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse,
+    lovvalgBestemmelse: null,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.AVSLAATT,
-    lovvalgsland: MKV.Koder.landkoder.NO,
+    lovvalgsland: null,
     trygdeDekning: MKV.Koder.trygdedekninger.UTEN_DEKNING,
     medlemskapstype: null,
   }];
 };
-
 const byggLovvalgsPerioder = (valgtLovvalg, state) => {
-  if (!valgtLovvalg) {
-    const lovvalgBestemmelse = lovvalgsperioderSelectors.LovvalgBestemmelseSelector(state);
-    if (lovvalgBestemmelse) return byggAvslaattLovvalg(state, lovvalgBestemmelse);
-  }
+  if (!valgtLovvalg) return byggAvslaattLovvalg(state);
 
   switch (valgtLovvalg) {
     case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(state);
@@ -166,11 +168,6 @@ const byggLovvalgsPerioder = (valgtLovvalg, state) => {
       return [];
     }
   }
-};
-
-const finnValgteVilkar = alleLovvalgsVilkar => {
-  const vilkarObjekt = alleLovvalgsVilkar.find(enkeltLovvalg => enkeltLovvalg.oppfylt) || {};
-  return vilkarObjekt.vilkaar || false;
 };
 
 export function hent(behandlingID) {

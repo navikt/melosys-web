@@ -7,7 +7,7 @@ class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
 
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'yrkesgruppeType ER LIK "ORDINAER"',
         exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER),
@@ -24,22 +24,22 @@ class Yrkesgruppe extends Steg {
         nesteSteg: null,
       },
     ];
-    this._id = STEG.YRKESGRUPPE;
-    this._tittel = 'Yrkes\u00ADgruppe';
-    this._komponent = VurderingYrkesgruppe;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.YRKESGRUPPE;
+    this.tittel = 'Yrkes\u00ADgruppe';
+    this.komponent = VurderingYrkesgruppe;
+    this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
     });
-    this._beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = _propsLight => {
       const { yrkesgruppe } = _propsLight.skjema.avklartefakta;
       return ({
         harAvklaring: yrkesgruppe !== null && yrkesgruppe !== undefined,
       });
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {

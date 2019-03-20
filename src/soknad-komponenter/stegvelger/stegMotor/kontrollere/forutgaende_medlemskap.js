@@ -6,7 +6,7 @@ import { erVilkarOppfylt } from '../../../../regler/vilkar';
 class ForutgaendeMedlemskap extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
-    this._kriterier = [
+    this.kriterier = [
       {
         beskrivelse: 'harForutgaendeMedlemskap ER LIK TRUE',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt('ART12_1_FORUTGAAENDE_MEDLEMSKAP', alleVilkar) !== undefined,
@@ -18,14 +18,14 @@ class ForutgaendeMedlemskap extends Steg {
         nesteSteg: null,
       },
     ];
-    this._id = STEG.FORUTGAENDE_MEDLEMSKAP;
-    this._tittel = 'Forutg. medl';
-    this._komponent = VurderingForutgaendeMedlemskap;
-    this._samleRelevanteData = _propsLight => ({
+    this.id = STEG.FORUTGAENDE_MEDLEMSKAP;
+    this.tittel = 'Forutg. medl';
+    this.komponent = VurderingForutgaendeMedlemskap;
+    this.samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.art12_1_forutgaaende_medl || [],
       redigerbart: _propsLight.redigerbart,
     });
-    this._beregnRelevantUI = _propsLight => {
+    this.beregnRelevantUI = _propsLight => {
       const { forutgaendeMedlemskap, forutgaendeMedlemskapBegrunnelser = [] } = _propsLight.skjema.vilkar;
       const harAvklaring = forutgaendeMedlemskap === true || (forutgaendeMedlemskap === false && forutgaendeMedlemskapBegrunnelser.length > 0);
 
@@ -34,11 +34,11 @@ class ForutgaendeMedlemskap extends Steg {
         harAvklaring,
       };
     };
-    this._handlers = {
+    this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
     };
-    this._status = FANE_STATUS.OK;
+    this.status = FANE_STATUS.OK;
   }
 }
 

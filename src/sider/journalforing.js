@@ -1,12 +1,12 @@
 /* eslint no-alert:off, consistent-return:off */
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
-import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
-
+import * as KV from '../kodeverk';
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
@@ -36,35 +36,6 @@ import * as MPT from '../proptypes';
 import { sokOperations, sokSelectors } from '../ducks/sok';
 
 class Journalforing extends Component {
-  static propTypes = {
-    match: PT.object.isRequired,
-    location: PT.object.isRequired,
-    history: PT.object.isRequired,
-    hentJournalOppgave: PT.func.isRequired,
-    hentFagsakListe: PT.func.isRequired,
-    hentOppgaver: PT.func.isRequired,
-    tilordneSak: PT.func.isRequired,
-    opprettNySak: PT.func.isRequired,
-    settFeltInnhold: PT.func.isRequired,
-    settFeilFelt: PT.func.isRequired,
-    settJournalforingHensikt: PT.func.isRequired,
-    journalforing: MPT.Journalforing,
-    journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
-    fagsakListe: PT.array,
-    valid: PT.bool.isRequired,
-    sokFnrDnr: PT.func.isRequired,
-    sokOrgnr: PT.func.isRequired,
-    errors: PT.object.isRequired,
-    touch: PT.func.isRequired,
-    resetJournalforingState: PT.func.isRequired,
-  };
-
-  static defaultProps = {
-    journalforing: {},
-    fagsakListe: [],
-    journalforingSkjemaVerdier: {},
-  };
-
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
     queryParamLogger(this.props.location, 'kilde', 'GOSYS');
@@ -167,7 +138,7 @@ class Journalforing extends Component {
     }
     const response = await tilordneSak(journalforingData);
     if (response.ok) {
-      this.props.hentOppgaver();
+      this.props.hentOppgaveOversikt();
       history.push('/');
     }
   };
@@ -214,7 +185,7 @@ class Journalforing extends Component {
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
-      this.props.hentOppgaver();
+      this.props.hentOppgaveOversikt();
       history.push('/');
     }
   };
@@ -357,11 +328,39 @@ class Journalforing extends Component {
   }
 }
 
+Journalforing.propTypes = {
+  match: PT.object.isRequired,
+  location: PT.object.isRequired,
+  history: PT.object.isRequired,
+  hentJournalOppgave: PT.func.isRequired,
+  hentFagsakListe: PT.func.isRequired,
+  hentOppgaveOversikt: PT.func.isRequired,
+  tilordneSak: PT.func.isRequired,
+  opprettNySak: PT.func.isRequired,
+  settFeltInnhold: PT.func.isRequired,
+  settFeilFelt: PT.func.isRequired,
+  settJournalforingHensikt: PT.func.isRequired,
+  journalforing: MPT.Journalforing,
+  journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
+  fagsakListe: PT.array,
+  valid: PT.bool.isRequired,
+  sokFnrDnr: PT.func.isRequired,
+  sokOrgnr: PT.func.isRequired,
+  errors: PT.object.isRequired,
+  touch: PT.func.isRequired,
+  resetJournalforingState: PT.func.isRequired,
+};
+
+Journalforing.defaultProps = {
+  journalforing: {},
+  fagsakListe: [],
+  journalforingSkjemaVerdier: {},
+};
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: sokSelectors.FagsakSokSelector(state),
-  errors: getFormSyncErrors('journalforing')(state),
+  errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
   initialValues: {
     behandlingstype: null,
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
@@ -381,11 +380,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentJournalOppgave: journalpostID => dispatch(journalforingOperations.hent(journalpostID)),
   hentFagsakListe: fnr => dispatch(sokOperations.sok(fnr)),
-  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill('journalforing', feltNavn, verdi)),
-  settFeilFelt: (...feltNavn) => (setSubmitFailed('journalforing', ...feltNavn)),
-  settJournalforingHensikt: journalforingHensikt => dispatch(change('journalforing', 'journalforingHensikt', journalforingHensikt)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill(KV.Form.JOURNALFORING, feltNavn, verdi)),
+  settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.JOURNALFORING, ...feltNavn)),
+  settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
   opprettNySak: data => Api.Journalforing.opprett(data),
-  hentOppgaver: () => dispatch(oppgaverOperations.hent()),
+  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilordneSak: data => Api.Journalforing.tilordne(data),
   resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
   sokFnrDnr: fnr => dispatch(PersonOperations.hent(fnr)),
@@ -397,7 +396,7 @@ const kontekster = [
 ];
 
 const form = {
-  form: 'journalforing',
+  form: KV.Form.JOURNALFORING,
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,

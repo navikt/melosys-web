@@ -4,12 +4,11 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
-import PdfLenkeListe from '../../pdfLenkeListe';
-
-import { vilkarBegrunnelserSelector, art12_1_begrunnelserSelector, art12_2_begrunnelserSelector, art16_1_begrunnelserSelector, art16_1_fritekstSelector } from '../../../ducks/vilkar/selectors';
+import * as VilkarSelectors from '../../../ducks/vilkar/selectors';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
-
 import * as KV from '../../../kodeverk';
+
+import PdfLenkeListe from '../../pdfLenkeListe';
 
 import './vurderingAvslag12_x_og_16.css';
 
@@ -43,23 +42,28 @@ Begrunnelser.defaultProps = {
   fritekst: '',
 };
 
-function VurderingAvslag12_x_og_16(props) {
-  const {
-    valgte_art_12_1_begrunnelser,
-    valgte_art_12_2_begrunnelser,
-    valgte_art_16_1_begrunnelser,
-    art16_1_fritekst,
-    vilkarBegrunnelser,
-    oppsummering,
-    fattVedtak,
-  } = props;
-
+const VurderingAvslag12_x_og_16 = ({
+  valgte_art_12_1_begrunnelser,
+  valgte_art_12_2_begrunnelser,
+  valgte_art_16_1_begrunnelser,
+  art16_1_fritekst,
+  vilkarBegrunnelser,
+  oppsummering,
+  fattVedtak,
+}) => {
   const dokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
+      },
+    },
+    {
+      navn: 'Orientering til arbeidsgiver om avslag',
+      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
   ];
@@ -96,7 +100,7 @@ function VurderingAvslag12_x_og_16(props) {
           ]}
         />
       }
-      {valgte_art_16_1_begrunnelser.length > 0 &&
+      {(valgte_art_16_1_begrunnelser.length > 0 || art16_1_fritekst) &&
         <Begrunnelser
           label="Søkeren fyller ikke kriteriene for artikkel 16, nr. 1:"
           valgteBegrunnelser={valgte_art_16_1_begrunnelser}
@@ -110,7 +114,7 @@ function VurderingAvslag12_x_og_16(props) {
       </Nav.Hovedknapp>
     </div>
   );
-}
+};
 
 VurderingAvslag12_x_og_16.propTypes = {
   valgte_art_12_1_begrunnelser: PT.array.isRequired,
@@ -127,12 +131,12 @@ VurderingAvslag12_x_og_16.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  valgte_art_12_1_begrunnelser: art12_1_begrunnelserSelector(state),
-  valgte_art_12_2_begrunnelser: art12_2_begrunnelserSelector(state),
-  valgte_art_16_1_begrunnelser: art16_1_begrunnelserSelector(state),
-  art16_1_fritekst: art16_1_fritekstSelector(state),
-  vilkarBegrunnelser: vilkarBegrunnelserSelector(state),
+  valgte_art_12_1_begrunnelser: VilkarSelectors.art12_1_begrunnelserSelector(state),
+  valgte_art_12_2_begrunnelser: VilkarSelectors.art12_2_begrunnelserSelector(state),
+  valgte_art_16_1_begrunnelser: VilkarSelectors.art16_1_begrunnelserSelector(state),
+  art16_1_fritekst: VilkarSelectors.art16_1_fritekstSelector(state),
+  vilkarBegrunnelser: VilkarSelectors.vilkarBegrunnelserSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
 });
 
-export default connect(mapStateToProps, null)(VurderingAvslag12_x_og_16);
+export default connect(mapStateToProps)(VurderingAvslag12_x_og_16);
