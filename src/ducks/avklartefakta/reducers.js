@@ -29,13 +29,13 @@ const lagAvklartStateObjekt = (avklartFakta, referanse) => (
     ...avklartfaktaMal,
     referanse,
     fakta: [avklartFakta],
-  } : null
+  } : Types.NULL
 );
 
 // En faktisk avklart fakta
 const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => {
   if (Utils._isNil(avklarteFakta)) {
-    return null;
+    return Types.NULL;
   }
   return {
     ...avklartfaktaMal,
@@ -48,7 +48,7 @@ const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => {
 
 const lagAvklartfaktaObjektMedReferanse = (avklarteFakta, referanse, avklartefaktaKode) => {
   if (Utils._isUndefined(avklarteFakta)) {
-    return null;
+    return Types.NULL;
   }
   return {
     ...avklartfaktaMal,
@@ -64,8 +64,8 @@ const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, m
 
   return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
     const installasjon = maritimtArbeid[index] || {};
-    const installasjonsNavn = installasjon.navn || null;
-    const begrunnelseKoder = enkeltAvklaring.installasjonsTypeBegrunnelse ? [enkeltAvklaring.installasjonsTypeBegrunnelse] : null;
+    const installasjonsNavn = installasjon.navn || Types.NULL;
+    const begrunnelseKoder = enkeltAvklaring.installasjonsTypeBegrunnelse ? [enkeltAvklaring.installasjonsTypeBegrunnelse] : Types.NULL;
 
     return enkeltAvklaring.installasjonsType ? [...samling, {
       ...avklartfaktaMal,
@@ -90,7 +90,7 @@ const lagFlagglandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritim
 
   return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
     const installasjon = maritimtArbeid[index] || {};
-    const installasjonsNavn = installasjon.navn || null;
+    const installasjonsNavn = installasjon.navn || Types.NULL;
 
     return enkeltAvklaring.installasjonsType ? [...samling, {
       ...avklartfaktaMal,
@@ -129,7 +129,7 @@ export default function reducer(state = initialState, action) {
         ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
         ...lagFlagglandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'FLAGGLAND', dokument.maritimtArbeid),
         lagAvklartfaktaObjekt(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP'),
-      ].filter(fakta => fakta !== null);
+      ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefakta] };
     }
