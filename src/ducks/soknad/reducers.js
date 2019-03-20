@@ -110,7 +110,11 @@ export default function reducer(state = initialState, action) {
           studentSemester: null,
           studentFinansieringKode: null,
         },
-        foretakUtland: dokument.foretakUtland,
+        foretakUtland: dokument.foretakUtland.filter(foretakUtland => (
+          foretakUtland.navn
+          && foretakUtland.orgnr
+          && foretakUtland.adresse
+        )),
         bosted: {
           intensjonOmRetur: null,
           familiesBostedLandKode: dokument.familiesBosted,
@@ -126,7 +130,12 @@ export default function reducer(state = initialState, action) {
             landKode: dokument.oppgittAdresseLand,
           },
         },
-        maritimtArbeid: dokument.maritimtArbeid,
+        maritimtArbeid: dokument.maritimtArbeid.filter(maritimtArbeid => (
+          maritimtArbeid.navn && maritimtArbeid.fartsomradeKode && maritimtArbeid.flaggLandKode && maritimtArbeid.installasjonsLandKode
+        )).map(maritimtArbeid => ({
+          ...maritimtArbeid,
+          territorialfarvann: maritimtArbeid.territorialfarvann ? maritimtArbeid.territorialfarvann : null,
+        })),
         selvstendigArbeid: {
           erSelvstendig: dokument.erSelvstendig,
           selvstendigForetak: dokument.selvstendigForetak,
