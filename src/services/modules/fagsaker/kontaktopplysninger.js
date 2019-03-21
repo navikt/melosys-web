@@ -11,7 +11,7 @@ export const send = (saksnr, juridiskorgnr, data) => {
   return postAsJson(URI_KONTAKTOPPLYSNINGER, data);
 };
 
-export const slett = saksnr => {
-  const URI_KONTAKTOPPLYSNINGER = `${API_BASE_URL}${FAGSAKER}/${saksnr}/kontaktopplysninger`;
+export const slett = (saksnr, juridiskorgnr) => {
+  const URI_KONTAKTOPPLYSNINGER = `${API_BASE_URL}${FAGSAKER}/${saksnr}/kontaktopplysninger/${juridiskorgnr}`;
   return deleteAsJson(URI_KONTAKTOPPLYSNINGER);
 };

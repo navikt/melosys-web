@@ -26,7 +26,7 @@ const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
           fullmektig.org && fullmektig.org.navn
         }
         {
-          fullmektig.kontaktopplysninger &&
+          fullmektig.org &&
           <Fragment>
             <div className="postadresse_tittel">Postadresse</div>
             <PostAdresse postadresse={fullmektig.org.postadresse} />
@@ -79,14 +79,13 @@ export class SokersFullmektig extends Component {
 
   hentFullmektige = async () => {
     const { saksnummer } = this.props.oppsummering;
-    const { hentAktoer, hentKontaktopplysninger, hentOrg } = this.props;
+    const { hentAktoer, hentOrg } = this.props;
 
     try {
       /* eslint-disable no-param-reassign */
       const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
       fullmektige.forEach(async fullmektig => {
         fullmektig.org = await hentOrg(fullmektig.orgnr);
-        fullmektig.kontaktopplysninger = await hentKontaktopplysninger(saksnummer, fullmektig.orgnr);
       });
       /* eslint-enable no-param-reassign */
       this.setState({ fullmektige });
@@ -106,7 +105,12 @@ export class SokersFullmektig extends Component {
           ariaTittel="Opplysninger om fullmektig">
           <Nav.Container fluid>
             {this.state.fullmektige.map(fullmektig => (
-              <Fullmektig redigerbart={redigerbart} key={fullmektig.aktoerID} fullmektig={fullmektig} lagreFullmektig={this.lagreFullmektig} />
+              <Fullmektig
+                key={fullmektig.aktoerID}
+                redigerbart={redigerbart}
+                fullmektig={fullmektig}
+                lagreFullmektig={this.lagreFullmektig}
+              />
             ))}
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
@@ -119,7 +123,6 @@ SokersFullmektig.propTypes = {
   hentOrg: PT.func.isRequired,
   hentAktoer: PT.func.isRequired,
   oppsummering: PT.object.isRequired,
-  hentKontaktopplysninger: PT.func.isRequired,
   lagreAktoer: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
@@ -129,13 +132,18 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
-const mapDispatchToProps = () => ({});
 
-const hentOrg = async orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
-const hentAktoer = async (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
-const hentKontaktopplysninger = async (saksnummer, juridiskorgnr) => Api.Fagsaker.kontaktopplysninger.hent(saksnummer, juridiskorgnr);
-const lagreAktoer = async (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
+const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
+const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
+const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
 
-const SokersFullmektigWrapper = props => <SokersFullmektig {...props} lagreAktoer={lagreAktoer} hentAktoer={hentAktoer} hentOrg={hentOrg} hentKontaktopplysninger={hentKontaktopplysninger} />;
+const SokersFullmektigWrapper = props => (
+  <SokersFullmektig
+    {...props}
+    lagreAktoer={lagreAktoer}
+    hentAktoer={hentAktoer}
+    hentOrg={hentOrg}
+  />
+);
 
-export default connect(mapStateToProps, mapDispatchToProps)(SokersFullmektigWrapper);
+export default connect(mapStateToProps)(SokersFullmektigWrapper);
