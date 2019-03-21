@@ -20,7 +20,7 @@ const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
   const vedRolleEndring = event => lagreFullmektig(event.target.value, fullmektig.org.orgnr);
 
   return (
-    <Nav.Row>
+    <Nav.Row className="fullmektig">
       <Nav.Column xs="6">
         {
           fullmektig.org && fullmektig.org.navn

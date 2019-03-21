@@ -9,6 +9,8 @@ import * as Utils from '../utils';
 import ForretningsAdresse from '../komponenter/adresser/forretningsAdresse';
 import { fagsakSelectors } from '../ducks/fagsaker';
 
+import './kontaktopplysninger.css';
+
 export class KontaktOpplysninger extends Component {
   state = {
     sokeResultat: null,
@@ -151,7 +153,7 @@ export class KontaktOpplysninger extends Component {
         }
         {
           !skjulInput &&
-          <Nav.Knapp disabled={!redigerbart} mini onClick={fjernOppforing}>&times; FJERN OPPFØRING</Nav.Knapp>
+          <Nav.Knapp className="fjernOppforingKnapp" disabled={!redigerbart} mini onClick={fjernOppforing}>&times; FJERN OPPFØRING</Nav.Knapp>
         }
       </Fragment>
     );
