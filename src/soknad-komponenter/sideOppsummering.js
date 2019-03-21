@@ -233,7 +233,7 @@ const mapStateToProps = state => ({
   person: fagsakSelectors.PersonSelector(state),
   oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
   oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
-  gyldigeOppholdsLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
+  gyldigeOppholdsLand: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 

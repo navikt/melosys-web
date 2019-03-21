@@ -14,9 +14,6 @@ import * as KV from '../../kodeverk';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
-import { vilkarSelectors } from '../vilkar';
-
-import { velgMellomSoknadslandEllerFlaggland } from '../../regler/vilkar';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -182,27 +179,25 @@ const SoknadslandSelector = createSelector(
     .map(avklartfakta => avklartfakta.subjektID))
 );
 
-const FlagglandSelector = createSelector(
+const MaritimeArbeidslandSelector = createSelector(
   state => SokkelEllerSkipSelector(state),
   sokkelEllerSkipListe => (sokkelEllerSkipListe
     .filter(sokkelEllerSkip => sokkelEllerSkip.installasjonsType === KV.Koder.SKIP)
     .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland))
 );
 
-const StyrendeLandSelector = createSelector(
+const ArbeidslandSelector = createSelector(
   state => SoknadslandSelector(state),
-  state => FlagglandSelector(state),
-  state => vilkarSelectors.VilkarSelector(state),
-  (soknadsland, flaggland, vilkar) => {
-    if (vilkar.length <= 0) return soknadsland;
-    const soknadEllerFlaggLand = velgMellomSoknadslandEllerFlaggland(vilkar, soknadsland, flaggland);
-    return soknadEllerFlaggLand;
+  state => MaritimeArbeidslandSelector(state),
+  (soknadsland, maritimeArbeidsland) => {
+    if (maritimeArbeidsland.length > 0) return maritimeArbeidsland;
+    return soknadsland;
   }
 );
 
-export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
-  state => StyrendeLandSelector(state),
-  styrendeLand => MKV.KTObjects.landkoder.filter(landkodeObjekt => styrendeLand.includes(landkodeObjekt.kode))
+export const ArbeidslandKTSelector = createSelector(
+  state => ArbeidslandSelector(state),
+  arbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => arbeidsland.includes(landkodeObjekt.kode))
 );
 
 export const AvklartefaktaLovvalgKodeSelector = createSelector(

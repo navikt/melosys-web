@@ -105,7 +105,7 @@ VurderingVedtak.defaultProps = {
 
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
+  gyldigeOppholdLand: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
