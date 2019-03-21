@@ -1,4 +1,4 @@
-import React, { Component, Fragment, useState } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
@@ -16,10 +16,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker';
 
 import './sokersfullmektig.css';
 
-const Fullmektig = ({ fullmektig, lagreFullmektig }) => {
-  const [visLeggTilKnapp, settVisLeggTilKnapp] = useState(true);
-  const toggleVisLeggTilKnapp = () => settVisLeggTilKnapp(!visLeggTilKnapp);
-
+const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
   const vedRolleEndring = event => lagreFullmektig(event.target.value, fullmektig.org.orgnr);
 
   return (
@@ -35,7 +32,7 @@ const Fullmektig = ({ fullmektig, lagreFullmektig }) => {
             <PostAdresse postadresse={fullmektig.org.postadresse} />
           </Fragment>
         }
-        <Nav.Fieldset onChange={vedRolleEndring} legend="Hvem er dette fullmektig for?" >
+        <Nav.Fieldset disabled={!redigerbart} onChange={vedRolleEndring} legend="Hvem er dette fullmektig for?" >
           <Nav.Radio label="Arbeidsgiver" name="representerer" value={MKV.Koder.representerer.ARBEIDSGIVER} />
           <Nav.Radio label="Arbeidstaker" name="representerer" value={MKV.Koder.representerer.BRUKER} />
           <Nav.Radio label="Både arbeidstaker og arbeidsgiver" name="representerer" value={MKV.Koder.representerer.BEGGE} />
@@ -43,11 +40,7 @@ const Fullmektig = ({ fullmektig, lagreFullmektig }) => {
         <Nav.Knapp disabled type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
       </Nav.Column>
       <Nav.Column xs="6">
-        <Kontaktopplysninger
-          juridiskOrg={fullmektig.org}
-          visLeggTilKnapp={visLeggTilKnapp}
-          toggleVisLeggTilKnapp={toggleVisLeggTilKnapp}
-        />
+        <Kontaktopplysninger juridiskOrg={fullmektig.org} />
       </Nav.Column>
     </Nav.Row>
   );
@@ -56,6 +49,7 @@ const Fullmektig = ({ fullmektig, lagreFullmektig }) => {
 Fullmektig.propTypes = {
   fullmektig: PT.object,
   lagreFullmektig: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 Fullmektig.defaultProps = {
@@ -103,6 +97,7 @@ export class SokersFullmektig extends Component {
 
   render() {
     const panelIkon = Ikoner.Ferdig;
+    const { redigerbart } = this.props;
 
     return (
       <div>
@@ -111,7 +106,7 @@ export class SokersFullmektig extends Component {
           ariaTittel="Opplysninger om fullmektig">
           <Nav.Container fluid>
             {this.state.fullmektige.map(fullmektig => (
-              <Fullmektig key={fullmektig.aktoerID} fullmektig={fullmektig} lagreFullmektig={this.lagreFullmektig} />
+              <Fullmektig redigerbart={redigerbart} key={fullmektig.aktoerID} fullmektig={fullmektig} lagreFullmektig={this.lagreFullmektig} />
             ))}
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
@@ -126,11 +121,13 @@ SokersFullmektig.propTypes = {
   oppsummering: PT.object.isRequired,
   hentKontaktopplysninger: PT.func.isRequired,
   lagreAktoer: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 const mapDispatchToProps = () => ({});
 

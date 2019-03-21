@@ -13,22 +13,31 @@ export class KontaktOpplysninger extends Component {
   state = {
     sokeResultat: null,
     kontaktorgnr: null,
-    orgnrFeilmelding: undefined,
     kontaktnavn: '',
+    orgnrFeilmelding: undefined,
+    skjulInput: true,
   };
 
-  componentDidMount() {
-    this.hentOgVisKontaktOpplysninger();
+  async componentDidMount() {
+    const kontaktopplysninger = await this.hentOgVisKontaktOpplysninger();
+    this.kalkulerSynlighetVedMount(kontaktopplysninger);
   }
 
   settKontaktOrgnr = orgnr => this.setState({ kontaktorgnr: orgnr, orgnrFeilmelding: undefined });
 
   settKontaktNavn = navn => this.setState({ kontaktnavn: navn });
 
+  toggleSkjulInput = () => this.setState({ skjulInput: !this.state.skjulInput });
+
+  kalkulerSynlighetVedMount = ({ kontaktorgnr, kontaktnavn }) => this.setState({ skjulInput: !(kontaktorgnr || kontaktnavn) });
+
   hentOgVisKontaktOpplysninger = async () => {
     const { hentKontaktopplysninger, juridiskOrg, oppsummering } = this.props;
     const kontaktopplysninger = await hentKontaktopplysninger(oppsummering.saksnummer, juridiskOrg.orgnr);
+
     this.setState({ kontaktorgnr: kontaktopplysninger.kontaktorgnr, kontaktnavn: kontaktopplysninger.kontaktnavn });
+
+    return kontaktopplysninger;
   };
 
   visFeilmelding = feilmelding => this.setState({ orgnrFeilmelding: { feilmelding } });
@@ -40,7 +49,7 @@ export class KontaktOpplysninger extends Component {
   fjernResultat = () => this.setState({ sokeResultat: null });
 
   fjernOppforing = () => {
-    this.props.toggleVisLeggTilKnapp();
+    this.toggleSkjulInput();
     this.fjernResultat();
   };
 
@@ -90,24 +99,21 @@ export class KontaktOpplysninger extends Component {
       vedKontaktorgnrEndring,
       vedKontaktnavnEndring,
       fjernOppforing,
+      toggleSkjulInput,
     } = this;
 
-    const {
-      redigerbart,
-      visLeggTilKnapp,
-      toggleVisLeggTilKnapp,
-    } = this.props;
+    const { redigerbart } = this.props;
 
-    const { kontaktorgnr, kontaktnavn } = this.state;
+    const { kontaktorgnr, kontaktnavn, skjulInput } = this.state;
 
     return (
       <Fragment>
         {
-          visLeggTilKnapp &&
-          <Nav.Knapp mini onClick={toggleVisLeggTilKnapp}>+ LEGG TIL KONTAKTOPPLYSNINGER</Nav.Knapp>
+          skjulInput &&
+          <Nav.Knapp disabled={!redigerbart} mini onClick={toggleSkjulInput}>+ LEGG TIL KONTAKTOPPLYSNINGER</Nav.Knapp>
         }
         {
-          !visLeggTilKnapp &&
+          !skjulInput &&
             <Fragment>
               <Nav.Input
                 disabled={!redigerbart}
@@ -127,15 +133,15 @@ export class KontaktOpplysninger extends Component {
             </Fragment>
         }
         {
-          !visLeggTilKnapp && sokeResultat &&
+          !skjulInput && sokeResultat &&
             <Fragment>
               {sokeResultat.navn}
               <ForretningsAdresse forretningsadresse={sokeResultat.forretningsadresse} />
             </Fragment>
         }
         {
-          !visLeggTilKnapp &&
-          <Nav.Knapp mini onClick={fjernOppforing}>&times; FJERN OPPFØRING</Nav.Knapp>
+          !skjulInput &&
+          <Nav.Knapp disabled={!redigerbart} mini onClick={fjernOppforing}>&times; FJERN OPPFØRING</Nav.Knapp>
         }
       </Fragment>
     );
@@ -146,8 +152,6 @@ KontaktOpplysninger.propTypes = {
   lagreKontaktopplysninger: PT.func.isRequired,
   hentOrg: PT.func.isRequired,
   redigerbart: PT.bool,
-  visLeggTilKnapp: PT.bool.isRequired,
-  toggleVisLeggTilKnapp: PT.func.isRequired,
   oppsummering: PT.object.isRequired,
   juridiskOrg: PT.object.isRequired,
   hentKontaktopplysninger: PT.func.isRequired,
