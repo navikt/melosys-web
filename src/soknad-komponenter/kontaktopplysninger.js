@@ -13,7 +13,6 @@ export class KontaktOpplysninger extends Component {
   state = {
     sokeResultat: null,
     kontaktorgnr: null,
-    kontaktorgnrTouched: false,
     orgnrFeilmelding: undefined,
     kontaktnavn: '',
   };
@@ -21,8 +20,6 @@ export class KontaktOpplysninger extends Component {
   componentDidMount() {
     this.hentOgVisKontaktOpplysninger();
   }
-
-  settKontaktOrgnrTouched = () => this.setState({ kontaktorgnrTouched: true });
 
   settKontaktOrgnr = orgnr => this.setState({ kontaktorgnr: orgnr, orgnrFeilmelding: undefined });
 
@@ -49,36 +46,39 @@ export class KontaktOpplysninger extends Component {
 
   validerOgLagreKontaktOgAktoer = async () => {
     const {
-      hentOrg,
       lagreKontaktopplysninger,
       oppsummering: { saksnummer },
       juridiskOrg,
     } = this.props;
-    const { kontaktorgnr, kontaktnavn, kontaktorgnrTouched } = this.state;
-    const { visFeilmelding, fjernResultat } = this;
+    const { kontaktorgnr, kontaktnavn } = this.state;
+    const { visFeilmelding, fjernResultat, finnOrganisasjon } = this;
 
     fjernResultat();
 
-    if (!kontaktnavn || !kontaktorgnrTouched) return;
-
-    if (!kontaktorgnr || kontaktorgnr.length !== 9) {
+    if (kontaktorgnr && kontaktorgnr.length !== 9) {
       visFeilmelding('Org.nr. må være 9 siffer');
       return;
     }
 
-    try {
-      const resultat = await hentOrg(kontaktorgnr);
+    const org = await finnOrganisasjon(kontaktorgnr);
+    if (!org && kontaktorgnr) this.visFeilmelding('Kunne ikke finne organisasjon, organisasjonsnummer blir ikke lagret');
+    this.setState({ sokeResultat: org });
 
-      if (resultat.navn) {
-        this.setState({ sokeResultat: resultat });
-        lagreKontaktopplysninger(saksnummer, juridiskOrg.orgnr, { kontaktnavn, kontaktorgnr });
-      } else {
-        visFeilmelding('Kunne ikke finne organisasjon');
-      }
+    lagreKontaktopplysninger(saksnummer, juridiskOrg.orgnr, {
+      kontaktnavn: kontaktnavn || null,
+      kontaktorgnr: org ? kontaktorgnr : null,
+    });
+  };
+
+  finnOrganisasjon = async kontaktorgnr => {
+    if (!kontaktorgnr) return null;
+
+    try {
+      const org = await this.props.hentOrg(kontaktorgnr);
+      return org === null || Utils._isEmpty(org) ? null : org;
     } catch (e) {
       Utils.logger.error(e);
-      this.setState({ sokeResultat: null });
-      visFeilmelding('Kunne ikke finne organisasjon');
+      return null;
     }
   };
 
@@ -89,7 +89,6 @@ export class KontaktOpplysninger extends Component {
       validerOgLagreKontaktOgAktoer,
       vedKontaktorgnrEndring,
       vedKontaktnavnEndring,
-      settKontaktOrgnrTouched,
       fjernOppforing,
     } = this;
 
@@ -119,7 +118,6 @@ export class KontaktOpplysninger extends Component {
               />
               <Nav.Input
                 disabled={!redigerbart}
-                onClick={settKontaktOrgnrTouched}
                 feil={orgnrFeilmelding}
                 onChange={vedKontaktorgnrEndring}
                 onBlur={validerOgLagreKontaktOgAktoer}
