@@ -300,7 +300,7 @@ VurderingArtikkel16.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  gyldigeOppholdLand: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
+  gyldigeOppholdLand: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),

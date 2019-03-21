@@ -127,7 +127,7 @@ export default function reducer(state = initialState, action) {
         lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
         avklarEllerUtledBostedsland(dokument.avklartefakta.bostedsland, dokument.vilkar.bosattINorge),
         ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
-        ...lagFlagglandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'FLAGGLAND', dokument.maritimtArbeid),
+        ...lagFlagglandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),
         lagAvklartfaktaObjekt(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP'),
       ].filter(fakta => fakta !== Types.NULL);
 
