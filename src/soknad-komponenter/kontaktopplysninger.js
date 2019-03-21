@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
@@ -52,9 +51,7 @@ export class KontaktOpplysninger extends Component {
     const {
       hentOrg,
       lagreKontaktopplysninger,
-      lagreAktoer,
       oppsummering: { saksnummer },
-      representererKode,
       juridiskOrg,
     } = this.props;
     const { kontaktorgnr, kontaktnavn, kontaktorgnrTouched } = this.state;
@@ -75,15 +72,6 @@ export class KontaktOpplysninger extends Component {
       if (resultat.navn) {
         this.setState({ sokeResultat: resultat });
         lagreKontaktopplysninger(saksnummer, juridiskOrg.orgnr, { kontaktnavn, kontaktorgnr });
-
-        lagreAktoer(saksnummer, {
-          aktoerID: null,
-          orgnr: kontaktorgnr,
-          utenlandskPersonID: null,
-          institusjonsID: null,
-          rolleKode: MKV.Koder.aktoersroller.REPRESENTANT,
-          representererKode,
-        });
       } else {
         visFeilmelding('Kunne ikke finne organisasjon');
       }
@@ -163,8 +151,6 @@ KontaktOpplysninger.propTypes = {
   visLeggTilKnapp: PT.bool.isRequired,
   toggleVisLeggTilKnapp: PT.func.isRequired,
   oppsummering: PT.object.isRequired,
-  representererKode: PT.string.isRequired,
-  lagreAktoer: PT.func.isRequired,
   juridiskOrg: PT.object.isRequired,
   hentKontaktopplysninger: PT.func.isRequired,
 };
@@ -181,7 +167,6 @@ const mapStateToProps = state => ({
 const hentOrg = async orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
 const lagreKontaktopplysninger = async (saksnr, juridiskorgnr, data) => Api.Fagsaker.kontaktopplysninger.send(saksnr, juridiskorgnr, data);
 const hentKontaktopplysninger = async (saksnr, juridiskorgnr) => Api.Fagsaker.kontaktopplysninger.hent(saksnr, juridiskorgnr);
-const lagreAktoer = async (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
 
 const KontaktOpplysningerWrapper = props => (
   <KontaktOpplysninger
@@ -189,7 +174,6 @@ const KontaktOpplysningerWrapper = props => (
     hentOrg={hentOrg}
     hentKontaktopplysninger={hentKontaktopplysninger}
     lagreKontaktopplysninger={lagreKontaktopplysninger}
-    lagreAktoer={lagreAktoer}
   />
 );
 
