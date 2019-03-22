@@ -18,6 +18,7 @@ import * as Actions from './actions';
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
 import { formSelectors } from '../form';
+import { avklartefaktaSelectors } from '../avklartefakta'
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -139,13 +140,13 @@ const byggLovvalgsPeriodeArtikkel16_1 = state => {
   }];
 };
 
-const byggAvslaattLovvalg = state => {
+const byggAvslaattLovvalg = (state, lovvalgBestemmelse) => {
   const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: null,
+    lovvalgBestemmelse,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -155,8 +156,17 @@ const byggAvslaattLovvalg = state => {
     medlemskapstype: null,
   }];
 };
+
+const hentLovvalgsBestemmelseForAvslag = state => {
+  if (avklartefaktaSelectors.Yrkesaktivitet(state) === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE)
+    return MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2;
+  return MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1;
+};
+
 const byggLovvalgsPerioder = (valgtLovvalg, state) => {
-  if (!valgtLovvalg) return byggAvslaattLovvalg(state);
+  if (!valgtLovvalg) {
+    return byggAvslaattLovvalg(state, hentLovvalgsBestemmelseForAvslag(state));
+  }
 
   switch (valgtLovvalg) {
     case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(state);
