@@ -83,7 +83,7 @@ class VurderingArtikkel11_4 extends Component {
 
   render () {
     const {
-      bekreftOgFortsett, tilstand, bostedsland, arbeidsland, valgteArbeidsgivere, redigerbart,
+      bekreftOgFortsett, tilstand, bostedsland, arbeidsland, valgteVirksomheter, redigerbart,
     } = this.props;
 
     const { valgtVilkar } = this.state;
@@ -91,7 +91,7 @@ class VurderingArtikkel11_4 extends Component {
 
     const arbeidsLandSetning = arrayTilKonjunksjon(arbeidsland.map(land => KV.objektTilTerm(land)));
 
-    const virksomhetLandListe = valgteArbeidsgivere
+    const virksomhetLandListe = valgteVirksomheter
       .reduce((samling, arbeidsgiver) => {
         const land = (arbeidsgiver.forretningsadresse ? arbeidsgiver.forretningsadresse.land : null);
         const landMedstorForbokstav = land.charAt(0).toUpperCase() + land.slice(1).toLowerCase();
@@ -165,7 +165,7 @@ class VurderingArtikkel11_4 extends Component {
 VurderingArtikkel11_4.propTypes = {
   bostedsland: MPT.Kodeverk,
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
-  valgteArbeidsgivere: PT.arrayOf(MPT.Kodeverk),
+  valgteVirksomheter: PT.arrayOf(MPT.Kodeverk),
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
@@ -178,7 +178,7 @@ VurderingArtikkel11_4.defaultProps = {
   artikkel: {},
   bostedsland: {},
   arbeidsland: [],
-  valgteArbeidsgivere: {},
+  valgteVirksomheter: {},
 };
 
 export default VurderingArtikkel11_4;

@@ -45,15 +45,15 @@ class Arbeidsgivere extends Steg {
       },
     ];
     this.id = STEG.ARBEIDSGIVERE;
-    this.tittel = 'Arbeids\u00ADgiver';
+    this.tittel = 'Arbeidsgiver';
     this.komponent = VurderingArbeidsgiver;
     this.samleRelevanteData = _propsLight => ({
-      arbeidsgivereIPerioden: _propsLight.arbeidsgivereIPerioden,
+      virksomheterIPerioden: _propsLight.virksomheterIPerioden,
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { arbeidsgivere } = _propsLight.skjema.avklartefakta;
-      const harAvklaring = arbeidsgivere.some(arbeidsgiver => arbeidsgiver.fakta.includes('TRUE'));
+      const { virksomheter } = _propsLight.skjema.avklartefakta;
+      const harAvklaring = virksomheter.some(virksomhet => virksomhet.fakta.includes('TRUE'));
 
       return ({
         harAvklaring,
@@ -65,7 +65,7 @@ class Arbeidsgivere extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  static harValgtArbeidsgiver = avklartefakta => avklartefakta.some(enkeltFakta => ((enkeltFakta.referanse === KV.Koder.AVKLARTE_ARBEIDSGIVER) && enkeltFakta.fakta.includes('TRUE')));
+  static harValgtArbeidsgiver = avklartefakta => avklartefakta.some(enkeltFakta => ((enkeltFakta.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET) && enkeltFakta.fakta.includes('TRUE')));
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
     const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESGRUPPE);

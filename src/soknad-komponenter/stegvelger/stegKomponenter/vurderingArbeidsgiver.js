@@ -14,26 +14,26 @@ const uuid = require('uuid/v4');
  *
  * @param props Objekt Diverse props (se propTypes)
  */
-const ArbeidsgiverLinje = props => {
+const VirksomheterLinje = props => {
   const {
-    arbeidsgiveren, erValgt, arbeidsgiverKlikkHandler, redigerbart,
+    virksomheten, erValgt, virksomhetKlikkHandler, redigerbart,
   } = props;
 
   return (
     <div className="arbeidsgiver__enkeltlinje">
-      <Nav.Checkbox disabled={!redigerbart} checked={erValgt} onChange={() => arbeidsgiverKlikkHandler(arbeidsgiveren.orgnr)} label={`${arbeidsgiveren.navn}`} />
+      <Nav.Checkbox disabled={!redigerbart} checked={erValgt} onChange={() => virksomhetKlikkHandler(virksomheten.orgnr)} label={`${virksomheten.navn}`} />
     </div>
   );
 };
 
-ArbeidsgiverLinje.propTypes = {
-  arbeidsgiverKlikkHandler: PT.func.isRequired,
-  arbeidsgiveren: MPT.Organisasjon.isRequired,
+VirksomheterLinje.propTypes = {
+  virksomhetKlikkHandler: PT.func.isRequired,
+  virksomheten: MPT.Organisasjon.isRequired,
   erValgt: PT.bool,
   redigerbart: PT.bool.isRequired,
 };
 
-ArbeidsgiverLinje.defaultProps = {
+VirksomheterLinje.defaultProps = {
   erValgt: false,
 };
 
@@ -44,57 +44,57 @@ ArbeidsgiverLinje.defaultProps = {
  *
  * @param props Objekt Diverse props Se prop types
  */
-class ArbeidsgivereListe extends Component {
-  arbeidsgiverKlikkHandler = orgnr => {
+class VirksomheterListe extends Component {
+  virksomhetKlikkHandler = orgnr => {
     const { fields } = this.props;
     const alleOpprinneligValgte = fields.getAll() || [];
     const indexPosition = alleOpprinneligValgte.findIndex(enkeltFakta => enkeltFakta.subjektID === orgnr);
     const avklartfakta = { ...alleOpprinneligValgte[indexPosition] };
 
-    const arbeidsgiverErValgt = avklartfakta.fakta.includes('TRUE') ? 'FALSE' : 'TRUE';
-    fields.push({ ...avklartfakta, fakta: [arbeidsgiverErValgt] });
+    const virksomhetErValgt = avklartfakta.fakta.includes('TRUE') ? 'FALSE' : 'TRUE';
+    fields.push({ ...avklartfakta, fakta: [virksomhetErValgt] });
 
     return indexPosition >= 0 ? fields.remove(indexPosition) : fields.push(orgnr);
   };
 
   render() {
-    const { fields, arbeidsgivereIPerioden, redigerbart } = this.props;
+    const { fields, virksomheterIPerioden, redigerbart } = this.props;
     const alleAvklartefakta = fields.getAll();
 
-    const ingenArbeidsgivereVarsel = alleAvklartefakta.length === 0 && (
-      <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere hvor søker har arbeidsforhold innenfor den angitte søknadsperioden.</Nav.AlertStripe>
+    const ingenVirksomheterVarsel = alleAvklartefakta.length === 0 && (
+      <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere, selvsetendig næringsdrivende eller frilansere fra saksopplysninger.</Nav.AlertStripe>
     );
 
     return (
       <div>
-        {arbeidsgivereIPerioden.map(arbeidsgiveren => {
-          const avklartfaktaForArbeidsgiver = alleAvklartefakta.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidsgiveren.orgnr);
-          const arbeidsGiverErValgt = avklartfaktaForArbeidsgiver.fakta.includes('TRUE');
+        {virksomheterIPerioden.map(virksomheten => {
+          const avklartfaktaForVirksomhet = alleAvklartefakta.find(enkeltAvklaring => enkeltAvklaring.subjektID === virksomheten.orgnr);
+          const virksomhetErValgt = avklartfaktaForVirksomhet.fakta.includes('TRUE');
 
-          return <ArbeidsgiverLinje
-            arbeidsgiveren={arbeidsgiveren}
-            erValgt={arbeidsGiverErValgt}
+          return <VirksomheterLinje
+            virksomheten={virksomheten}
+            erValgt={virksomhetErValgt}
             key={uuid()}
-            arbeidsgiverKlikkHandler={this.arbeidsgiverKlikkHandler}
+            virksomhetKlikkHandler={this.virksomhetKlikkHandler}
             redigerbart={redigerbart}
           />;
         })
         }
-        {ingenArbeidsgivereVarsel}
+        {ingenVirksomheterVarsel}
       </div>
     );
   }
 }
 
-ArbeidsgivereListe.propTypes = {
+VirksomheterListe.propTypes = {
   fields: PT.object.isRequired,
-  arbeidsgivereIPerioden: PT.array,
+  virksomheterIPerioden: PT.array,
   redigerbart: PT.bool.isRequired,
 
 };
 
-ArbeidsgivereListe.defaultProps = {
-  arbeidsgivereIPerioden: [],
+VirksomheterListe.defaultProps = {
+  virksomheterIPerioden: [],
 };
 
 /**
@@ -105,7 +105,7 @@ ArbeidsgivereListe.defaultProps = {
  */
 const VurderingArbeidsgiver = props => {
   const {
-    bekreftOgFortsett, arbeidsgivereIPerioden, tilstand, redigerbart,
+    bekreftOgFortsett, virksomheterIPerioden, tilstand, redigerbart,
   } = props;
   const { harAvklaring } = tilstand;
 
@@ -113,7 +113,7 @@ const VurderingArbeidsgiver = props => {
     <div className="vurderingArbeidsgiver">
       <Nav.Undertittel>Velg arbeidsgiver, oppdragsgiver eller selvstendig næringsvirksomhet:</Nav.Undertittel>
       <div className="arbeidsgiver">
-        <FieldArray name="avklartefakta.arbeidsgivere" component={arrayProps => <ArbeidsgivereListe {...arrayProps} redigerbart={redigerbart} arbeidsgivereIPerioden={arbeidsgivereIPerioden} />} />
+        <FieldArray name="avklartefakta.virksomheter" component={arrayProps => <VirksomheterListe {...arrayProps} redigerbart={redigerbart} virksomheterIPerioden={virksomheterIPerioden} />} />
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
@@ -127,7 +127,7 @@ VurderingArbeidsgiver.propTypes = {
   tilstand: PT.shape({
     harAvklaring: PT.bool,
   }).isRequired,
-  arbeidsgivereIPerioden: MPT.Organisasjoner.isRequired,
+  virksomheterIPerioden: MPT.Organisasjoner.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 
