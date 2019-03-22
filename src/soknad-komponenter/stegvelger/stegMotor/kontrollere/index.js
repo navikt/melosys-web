@@ -1,5 +1,5 @@
 import Aktivitet from './aktivitet';
-import Arbeidsgivere from './arbeidsgivere';
+import Virksomheter from './virksomheter';
 import Avslag_12_x_og_16 from './avslag_12_x_og_16';
 import Bostedsland from './bostedsland';
 import Forretningssted from './forretningssted';
@@ -13,7 +13,7 @@ import Artikkel12_1 from './artikkel12_1';
 import Artikkel12_2 from './artikkel12_2';
 import Artikkel11_4 from './artikkel11_4';
 import Artikkel16 from './artikkel16';
-import Virksomhet from './virksomhet';
+import VirksomhetType from './virksomhet_type';
 import VesentligVirksomhet from './vesentlig_virksomhet';
 import NormaltDriverVirksomhet from './normalt_driver_virksomhet';
 import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
@@ -35,14 +35,14 @@ export const stegKatalogMap = new Map([
   [STEG.FORUTGAENDE_MEDLEMSKAP, ForutgaendeMedlemskap],
   [STEG.YRKESAKTIVITET, Yrkesaktivitet],
   [STEG.YRKESAKTIVITET_ANTALL_LAND, YrkesaktivitetAntallLand],
-  [STEG.VIRKSOMHET, Virksomhet],
+  [STEG.VIRKSOMHET_TYPE, VirksomhetType],
   [STEG.VESENTLIG_VIRKSOMHET, VesentligVirksomhet],
   [STEG.NORMALT_DRIVER_VIRKSOMHET, NormaltDriverVirksomhet],
   [STEG.AKTIVITET, Aktivitet],
   [STEG.BOSTEDSLAND, Bostedsland],
   [STEG.TJENESTEMANN, Tjenestemann],
   [STEG.FORRETNINGSSTED, Forretningssted],
-  [STEG.ARBEIDSGIVERE, Arbeidsgivere],
+  [STEG.VIRKSOMHETER, Virksomheter],
   [STEG.SOKKEL_SKIP, SokkelSkip],
   [STEG.VEDTAK, Vedtak],
   [STEG.ENDRET_PERIODE, EndrePeriode],
