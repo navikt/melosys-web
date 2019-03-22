@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component, Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
@@ -17,7 +17,16 @@ import { fagsakSelectors } from '../../ducks/fagsaker';
 import './sokersfullmektig.css';
 
 const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
-  const vedRolleEndring = event => lagreFullmektig(event.target.value, fullmektig.org.orgnr);
+  const [representererKode, settRepresentererKode] = useState(null);
+
+  const vedRolleEndring = event => {
+    lagreFullmektig(event.target.value, fullmektig.org.orgnr);
+    settRepresentererKode(event.target.value);
+  };
+
+  useEffect(() => {
+    settRepresentererKode(fullmektig.representererKode);
+  }, []);
 
   return (
     <Nav.Row className="fullmektig">
@@ -32,10 +41,25 @@ const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
             <PostAdresse postadresse={fullmektig.org.postadresse} />
           </Fragment>
         }
-        <Nav.Fieldset disabled={!redigerbart} onChange={vedRolleEndring} legend="Hvem er dette fullmektig for?" >
-          <Nav.Radio label="Arbeidsgiver" name="representerer" value={MKV.Koder.representerer.ARBEIDSGIVER} />
-          <Nav.Radio label="Arbeidstaker" name="representerer" value={MKV.Koder.representerer.BRUKER} />
-          <Nav.Radio label="Både arbeidstaker og arbeidsgiver" name="representerer" value={MKV.Koder.representerer.BEGGE} />
+        <Nav.Fieldset disabled={!redigerbart} legend="Hvem er dette fullmektig for?" >
+          <Nav.Radio
+            onChange={vedRolleEndring}
+            checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
+            label="Arbeidsgiver"
+            value={MKV.Koder.representerer.ARBEIDSGIVER}
+          />
+          <Nav.Radio
+            onChange={vedRolleEndring}
+            checked={representererKode === MKV.Koder.representerer.BRUKER}
+            label="Arbeidstaker"
+            value={MKV.Koder.representerer.BRUKER}
+          />
+          <Nav.Radio
+            onChange={vedRolleEndring}
+            checked={representererKode === MKV.Koder.representerer.BEGGE}
+            label="Både arbeidstaker og arbeidsgiver"
+            value={MKV.Koder.representerer.BEGGE}
+          />
         </Nav.Fieldset>
         <Nav.Knapp disabled type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
       </Nav.Column>
