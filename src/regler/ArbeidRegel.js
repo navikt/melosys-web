@@ -1,6 +1,6 @@
-import DomeneRegel from '../domeneRegel';
+import DomeneRegel from './DomeneRegel';
 
-import { datoDiff, formatterDatoTilISO } from '../../utils/dato';
+import { datoDiff, formatterDatoTilISO } from '../utils/dato';
 
 /** Klassen inneholder funksjoner som hver evaluerer konkrete situasjoner basert på
  * opplysninger fra søknaden, avklartefakta og fagsak. Utfallet av hver funksjon
@@ -19,7 +19,7 @@ import { datoDiff, formatterDatoTilISO } from '../../utils/dato';
  * {status: true, tekst: 'Har forutgående bosted i Norge'}
  * {status: false, tekst: 'Har IKKE forutgående bosted i Norge'}
  */
-class Arbeid extends DomeneRegel {
+class ArbeidRegel extends DomeneRegel {
   erArbeidsforholdetRelevantForSoknadsperioden = ansettelsesPeriode => {
     const { skjema } = this;
     const { oppholdUtlandFom, oppholdUtlandTom } = skjema;
@@ -39,4 +39,4 @@ class Arbeid extends DomeneRegel {
   }
 }
 
-export default Arbeid;
+export default ArbeidRegel;

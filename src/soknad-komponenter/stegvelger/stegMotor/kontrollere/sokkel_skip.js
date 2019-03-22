@@ -16,12 +16,12 @@ class SokkelSkip extends Steg {
       {
         beskrivelse: 'sokkelSkipKonklusjon ER LIK "SOKKEL_UTLAND" (videre til 12.1 eller 12.2)',
         exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SOKKEL_UTLAND),
-        nesteSteg: STEG.ARBEIDSGIVERE,
+        nesteSteg: STEG.VIRKSOMHETER,
       },
       {
         beskrivelse: 'sokkelSkipKonklusjon ER LIK "SKIP_ETT_LAND" (videre til 12.1 eller 12.2)',
         exec: avklartefakta => SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND),
-        nesteSteg: STEG.ARBEIDSGIVERE,
+        nesteSteg: STEG.VIRKSOMHETER,
       },
       {
         beskrivelse: 'alle andre valg',
