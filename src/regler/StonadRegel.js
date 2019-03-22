@@ -1,4 +1,4 @@
-import DomeneRegel from '../domeneRegel';
+import DomeneRegel from './DomeneRegel';
 
 /** Klassen inneholder funksjoner som hver evaluerer konkrete situasjoner basert på
  * opplysninger fra søknaden, avklartefakta og fagsak. Utfallet av hver funksjon
@@ -17,7 +17,7 @@ import DomeneRegel from '../domeneRegel';
  * {status: true, tekst: 'Har forutgående bosted i Norge'}
  * {status: false, tekst: 'Har IKKE forutgående bosted i Norge'}
  */
-class Stonad extends DomeneRegel {
+class StonadRegel extends DomeneRegel {
   mottarEOSBarnetrygdFraNav = () => {
     const { saksopplysninger } = this;
     const { eosBarnetrygd } = saksopplysninger.sakOgBehandling;
@@ -33,4 +33,4 @@ class Stonad extends DomeneRegel {
   }
 }
 
-export default Stonad;
+export default StonadRegel;
