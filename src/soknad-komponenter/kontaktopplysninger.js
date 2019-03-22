@@ -51,13 +51,17 @@ export class KontaktOpplysninger extends Component {
 
   fjernResultat = () => this.setState({ sokeResultat: null });
 
-  fjernOppforing = () => {
+  fjernOppforing = async () => {
     const { oppsummering: { saksnummer }, juridiskOrg: { orgnr } } = this.props;
-    this.props.slettKontaktopplysninger(saksnummer, orgnr);
-    this.toggleSkjulInput();
-    this.fjernResultat();
-    this.settKontaktNavn('');
-    this.settKontaktOrgnr('');
+    try {
+      await this.props.slettKontaktopplysninger(saksnummer, orgnr);
+      this.toggleSkjulInput();
+      this.fjernResultat();
+      this.settKontaktNavn('');
+      this.settKontaktOrgnr('');
+    } catch (e) {
+      Utils.logger.error(e);
+    }
   };
 
   validerOgLagreKontaktOgAktoer = async () => {

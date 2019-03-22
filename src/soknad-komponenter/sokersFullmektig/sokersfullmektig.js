@@ -42,7 +42,7 @@ const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
             <PostAdresse postadresse={fullmektig.org.postadresse} />
           </Fragment>
         }
-        <Nav.Fieldset disabled={!redigerbart} legend="Hvem er dette fullmektig for?" >
+        <Nav.Fieldset disabled={!redigerbart} legend="Hvem er dette fullmektig for?" className="radioknapper">
           <Nav.Radio
             onChange={vedRolleEndring}
             checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
