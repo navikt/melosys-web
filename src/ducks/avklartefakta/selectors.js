@@ -14,9 +14,6 @@ import * as KV from '../../kodeverk';
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
-import { vilkarSelectors } from '../vilkar';
-
-import { velgMellomSoknadslandEllerFlaggland } from '../../regler/vilkar';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -86,10 +83,10 @@ export const Yrkesaktivitet = createSelector(
   }
 );
 
-/* Det er den juridiske arbeidsgiveren som skal vises i stegvelgeren. Derfor må vi traversere listen over arbeidsforhold
+/* Det er den juridiske virksomheten som skal vises i stegvelgeren. Derfor må vi traversere listen over arbeidsforhold
  * og merge inn organisasjoner slik at det er der den juridiske organisasjonens navn som vises i panelet.
  */
-export const ArbeidsgivereIPeriodenSelector = createSelector(
+export const VirksomheterIPeriodenSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
   state => fagsakSelectors.OrganisasjonerSelector(state),
   state => soknadSelectors.EkstraArbeidsgivereSelector(state),
@@ -104,24 +101,24 @@ export const ArbeidsgivereIPeriodenSelector = createSelector(
   }
 );
 
-/* Det er kun arbeidsgivere som saksbehandler har krysset av som skal være med videre som grunnlag
- * for vurderingen. Alle arbeidsgivere som ikke er krysset av skal automatisk markeres som om de ikke er med videre
+/* Det er kun virksomheter som saksbehandler har krysset av som skal være med videre som grunnlag
+ * for vurderingen. Alle virksomheter som ikke er krysset av skal automatisk markeres som om de ikke er med videre
  * dvs "FALSE" som fakta.
  */
-export const ArbeidsgivereSelector = createSelector(
+export const VirksomhetSelector = createSelector(
   state => AvklartefaktaSelector(state),
-  state => ArbeidsgivereIPeriodenSelector(state),
+  state => VirksomheterIPeriodenSelector(state),
   (alleAvklarteFakta, alleArbeidsgivere) => {
-    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER);
+    const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET);
     return alleArbeidsgivere.map(arbeidsgiver => {
       const eksisterendeAvklaring = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.orgnr);
 
       return eksisterendeAvklaring || {
         ...avklartFaktaTemplate,
-        referanse: KV.Koder.avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER,
+        referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
         fakta: ['FALSE'],
         subjektID: arbeidsgiver.orgnr,
-        avklartefaktaKode: KV.Koder.avklartefaktaKoder.AVKLARTE_ARBEIDSGIVER,
+        avklartefaktaKode: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
       };
     });
   }
@@ -182,27 +179,25 @@ const SoknadslandSelector = createSelector(
     .map(avklartfakta => avklartfakta.subjektID))
 );
 
-const FlagglandSelector = createSelector(
+const MaritimeArbeidslandSelector = createSelector(
   state => SokkelEllerSkipSelector(state),
   sokkelEllerSkipListe => (sokkelEllerSkipListe
     .filter(sokkelEllerSkip => sokkelEllerSkip.installasjonsType === KV.Koder.SKIP)
     .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland))
 );
 
-const StyrendeLandSelector = createSelector(
+const ArbeidslandSelector = createSelector(
   state => SoknadslandSelector(state),
-  state => FlagglandSelector(state),
-  state => vilkarSelectors.VilkarSelector(state),
-  (soknadsland, flaggland, vilkar) => {
-    if (vilkar.length <= 0) return soknadsland;
-    const soknadEllerFlaggLand = velgMellomSoknadslandEllerFlaggland(vilkar, soknadsland, flaggland);
-    return soknadEllerFlaggLand;
+  state => MaritimeArbeidslandSelector(state),
+  (soknadsland, maritimeArbeidsland) => {
+    if (maritimeArbeidsland.length > 0) return maritimeArbeidsland;
+    return soknadsland;
   }
 );
 
-export const AvklartefaktaGyldigeOppholdLandSelector = createSelector(
-  state => StyrendeLandSelector(state),
-  styrendeLand => MKV.KTObjects.landkoder.filter(landkodeObjekt => styrendeLand.includes(landkodeObjekt.kode))
+export const ArbeidslandKTSelector = createSelector(
+  state => ArbeidslandSelector(state),
+  arbeidsland => MKV.KTObjects.landkoder.filter(landkodeObjekt => arbeidsland.includes(landkodeObjekt.kode))
 );
 
 export const AvklartefaktaLovvalgKodeSelector = createSelector(
@@ -210,8 +205,8 @@ export const AvklartefaktaLovvalgKodeSelector = createSelector(
   vurdering => (vurdering.lovvalgKode ? vurdering.lovvalgKode : '')
 );
 
-export const AvklartefaktaValgteArbeidsgivereSelector = createSelector(
-  state => ArbeidsgivereSelector(state),
+export const AvklarteVirksomheterSelector = createSelector(
+  state => VirksomhetSelector(state),
   state => fagsakSelectors.OrganisasjonerSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
   (alleArbeidsgivere, fagsakOrganisasjoner, soknadOrganisasjoner) => {

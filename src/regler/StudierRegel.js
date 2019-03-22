@@ -1,4 +1,4 @@
-import DomeneRegel from '../domeneRegel';
+import DomeneRegel from './DomeneRegel';
 
 /** Klassen inneholder funksjoner som hver evaluerer konkrete situasjoner basert på
  * opplysninger fra søknaden, avklartefakta og fagsak. Utfallet av hver funksjon
@@ -17,7 +17,7 @@ import DomeneRegel from '../domeneRegel';
  * {status: true, tekst: 'Har forutgående bosted i Norge'}
  * {status: false, tekst: 'Har IKKE forutgående bosted i Norge'}
  */
-class Studier extends DomeneRegel {
+class StudierRegel extends DomeneRegel {
   studererIUtlandet = () => {
     const { skjema } = this;
     const { oppholdsland } = skjema;
@@ -49,4 +49,4 @@ class Studier extends DomeneRegel {
   }
 }
 
-export default Studier;
+export default StudierRegel;

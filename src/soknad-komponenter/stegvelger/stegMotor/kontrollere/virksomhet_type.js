@@ -1,9 +1,9 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingVirksomhet from '../../stegKomponenter/vurderingVirksomhet';
+import VurderingVirksomhetType from '../../stegKomponenter/vurderingVirksomhetType';
 import * as KV from '../../../../kodeverk';
 
-class Virksomhet extends Steg {
+class VirksomhetType extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this.kriterier = [
@@ -33,9 +33,9 @@ class Virksomhet extends Steg {
         nesteSteg: STEG.VEDTAK,
       },
     ];
-    this.id = STEG.VIRKSOMHET;
+    this.id = STEG.VIRKSOMHET_TYPE;
     this.tittel = 'Arbeids\u00ADmønster';
-    this.komponent = VurderingVirksomhet;
+    this.komponent = VurderingVirksomhetType;
     this.samleRelevanteData = () => ({ });
     this.beregnRelevantUI = () => ({
       visVekslingMellomLand: true,
@@ -49,4 +49,4 @@ class Virksomhet extends Steg {
   }
 }
 
-export default Virksomhet;
+export default VirksomhetType;
