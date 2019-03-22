@@ -2,6 +2,7 @@ import React, { Component, Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import uuid from 'uuid/v4';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Ikoner from '../../resources/images';
@@ -130,7 +131,7 @@ export class SokersFullmektig extends Component {
           <Nav.Container fluid>
             {this.state.fullmektige.map(fullmektig => (
               <Fullmektig
-                key={fullmektig.aktoerID}
+                key={uuid()}
                 redigerbart={redigerbart}
                 fullmektig={fullmektig}
                 lagreFullmektig={this.lagreFullmektig}
