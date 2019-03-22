@@ -121,7 +121,7 @@ export default function reducer(state = initialState, action) {
       const { dokument } = action;
       const avklartefakta = [
         ...dokument.avklartefakta.oppholdsland,
-        ...dokument.avklartefakta.arbeidsgivere,
+        ...dokument.avklartefakta.virksomheter,
         lagAvklartfaktaObjekt(dokument.avklartefakta.yrkesgruppe, 'YRKESGRUPPE'),
         lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
         lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),

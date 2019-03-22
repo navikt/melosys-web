@@ -25,7 +25,7 @@ class VesentligVirksomhet extends Steg {
     this.tittel = 'Vesentlig virksomhet';
     this.komponent = VurderingVesentligVirksomhet;
     this.samleRelevanteData = _propsLight => ({
-      valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
+      valgteVirksomheter: _propsLight.valgteVirksomheter,
       begrunnelser: _propsLight.begrunnelser.art12_1_vesentlig_virksomhet,
       redigerbart: _propsLight.redigerbart,
     });

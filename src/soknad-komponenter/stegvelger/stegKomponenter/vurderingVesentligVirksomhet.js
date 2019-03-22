@@ -22,7 +22,7 @@ class VurderingVesentligVirksomhet extends Component {
     } = this.props;
     const { visBegrunnelser, harAvklaring } = tilstand;
 
-    const arbeidsgivereTekst = this.props.valgteArbeidsgivere.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteArbeidsgivere.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
+    const arbeidsgivereTekst = this.props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
     return (
       <div>
         <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
@@ -65,7 +65,7 @@ VurderingVesentligVirksomhet.ID = 'VESENTLIG_VIRKSOMHET';
 VurderingVesentligVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
-  valgteArbeidsgivere: PT.array,
+  valgteVirksomheter: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   settSkjemaVerdi: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -73,7 +73,7 @@ VurderingVesentligVirksomhet.propTypes = {
 
 VurderingVesentligVirksomhet.defaultProps = {
   tilstand: {},
-  valgteArbeidsgivere: [],
+  valgteVirksomheter: [],
   begrunnelser: [],
 };
 
