@@ -83,15 +83,15 @@ class VurderingArtikkel11_4 extends Component {
 
   render () {
     const {
-      bekreftOgFortsett, tilstand, bostedsland, oppholdsland, valgteArbeidsgivere, redigerbart,
+      bekreftOgFortsett, tilstand, bostedsland, arbeidsland, valgteVirksomheter, redigerbart,
     } = this.props;
 
     const { valgtVilkar } = this.state;
     const { harAvklaring, visNISAvsnitt } = tilstand;
 
-    const oppholdsLandSetning = arrayTilKonjunksjon(oppholdsland.map(land => KV.objektTilTerm(land)));
+    const arbeidsLandSetning = arrayTilKonjunksjon(arbeidsland.map(land => KV.objektTilTerm(land)));
 
-    const virksomhetLandListe = valgteArbeidsgivere
+    const virksomhetLandListe = valgteVirksomheter
       .reduce((samling, arbeidsgiver) => {
         const land = (arbeidsgiver.forretningsadresse ? arbeidsgiver.forretningsadresse.land : null);
         const landMedstorForbokstav = land.charAt(0).toUpperCase() + land.slice(1).toLowerCase();
@@ -107,8 +107,8 @@ class VurderingArtikkel11_4 extends Component {
           <Nav.Row>
             <Nav.Column xs="12">
               <dl className="vurdering__land">
-                <dt>Arbeidsland / flaggland er:</dt>
-                <dd>{oppholdsLandSetning}</dd>
+                <dt>Arbeidsland er:</dt>
+                <dd>{arbeidsLandSetning}</dd>
                 <dt>Arbeidsgiver / selvstendig næringsdrivende har virksomhet i:</dt>
                 <dd>{virksomhetsLandSetning}</dd>
                 <dt>Søker er bosatt i:</dt>
@@ -124,7 +124,7 @@ class VurderingArtikkel11_4 extends Component {
                   onChange={this.radioEndringHandler}
                   value={this.ART11_4_1}
                   checked={valgtVilkar === this.ART11_4_1}
-                  label="11.4 i - Norge er flagglandet"
+                  label="11.4 i - Norge er arbeidslandet"
                   disabled={!redigerbart}
                 />
                 <Nav.Radio
@@ -140,7 +140,7 @@ class VurderingArtikkel11_4 extends Component {
                   onChange={this.radioEndringHandler}
                   value={this.TIL_VURDERING_12_1}
                   checked={valgtVilkar === this.TIL_VURDERING_12_1}
-                  label="11.4 i - flagglandet er ikke Norge, men jeg vil vurdere Artikkel 12.1"
+                  label="11.4 i - arbeidslandet er ikke Norge, men jeg vil vurdere Artikkel 12.1"
                   disabled={!redigerbart}
                 />
               </Nav.Fieldset>
@@ -164,8 +164,8 @@ class VurderingArtikkel11_4 extends Component {
 
 VurderingArtikkel11_4.propTypes = {
   bostedsland: MPT.Kodeverk,
-  oppholdsland: PT.arrayOf(MPT.Kodeverk),
-  valgteArbeidsgivere: PT.arrayOf(MPT.Kodeverk),
+  arbeidsland: PT.arrayOf(MPT.Kodeverk),
+  valgteVirksomheter: PT.arrayOf(MPT.Kodeverk),
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
@@ -177,8 +177,8 @@ VurderingArtikkel11_4.defaultProps = {
   tilstand: {},
   artikkel: {},
   bostedsland: {},
-  oppholdsland: [],
-  valgteArbeidsgivere: {},
+  arbeidsland: [],
+  valgteVirksomheter: {},
 };
 
 export default VurderingArtikkel11_4;

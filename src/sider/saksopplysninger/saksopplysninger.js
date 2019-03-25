@@ -19,11 +19,10 @@ import Medlemskap from '../../komponenter/medlemskap';
 import OppholdPeriode from '../../soknad-komponenter/oppholdPeriode';
 import Personopplysninger from '../../soknad-komponenter/personopplysninger';
 import SelvstendigArbeid from '../../soknad-komponenter/selvstendigarbeid';
-import UtsendendeArbeidsgiver from '../../soknad-komponenter/utsendendeArbeidsgiver';
 import Stegvelger from '../../soknad-komponenter/stegvelger';
 import HenlagtInformasjon from '../../soknad-komponenter/stegErstatter/henlagtInformasjon';
 import VirksomhetNorge from '../../soknad-komponenter/virksomhetNorge';
-import SokersFullmektig from '../../soknad-komponenter/sokersFullmektig';
+import FullmektigPanel from '../../soknad-komponenter/fullmektig';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
@@ -134,8 +133,7 @@ class Saksopplysninger extends Component {
         <ArbeidsgivereNorge />
         <ForetakUtland />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-        <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
-        <SokersFullmektig />
+        <FullmektigPanel />
         <ArbeidUtland />
         <VirksomhetNorge />
         <MaritimtArbeid />
@@ -259,7 +257,7 @@ const mapStateToProps = state => ({
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
       yrkesaktivitetAntallLand: avklartefaktaSelectors.YrkesaktivitetAntallLand(state),
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
-      arbeidsgivere: avklartefaktaSelectors.ArbeidsgivereSelector(state),
+      virksomheter: avklartefaktaSelectors.VirksomhetSelector(state),
       sokkelEllerSkip: avklartefaktaSelectors.SokkelEllerSkipSelector(state),
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },

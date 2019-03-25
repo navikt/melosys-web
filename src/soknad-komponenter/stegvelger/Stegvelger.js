@@ -115,7 +115,7 @@ class Stegvelger extends Component {
     };
 
     const propsLight = {
-      arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
+      virksomheterIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
       begrunnelser: MKV.KTObjects.begrunnelser,
       bostedsland: props.bostedsland,
@@ -126,8 +126,8 @@ class Stegvelger extends Component {
       tilgjengeligeHandlers,
       saksopplysninger: props.saksopplysninger,
       skjema: props.skjema,
-      oppholdsland: props.oppholdsland,
-      valgteArbeidsgivere: props.valgteArbeidsgivere,
+      arbeidsland: props.arbeidsland,
+      valgteVirksomheter: props.valgteVirksomheter,
       vilkar: props.vilkar,
       redigerbart: props.redigerbart,
     };
@@ -233,7 +233,7 @@ Stegvelger.propTypes = {
   settSkjemaVerdi: PT.func.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   skjema: PT.object.isRequired,
-  valgteArbeidsgivere: PT.array,
+  valgteVirksomheter: PT.array,
   vilkar: PT.array.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
   lagreVilkarHandler: PT.func.isRequired,
@@ -248,22 +248,22 @@ Stegvelger.defaultProps = {
   avklartefakta: [],
   inngang: {},
   oppsummering: [],
-  valgteArbeidsgivere: [],
+  valgteVirksomheter: [],
 };
 
 const mapStateToProps = state => ({
-  arbeidsgivereIPerioden: avklartefaktaSelectors.ArbeidsgivereIPeriodenSelector(state),
+  arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlinger: behandlingerSelectors.behandlingerSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
-  oppholdsland: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
+  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   saksopplysninger: fagsakSelectors.SaksopplysningerSelector(state),
-  valgteArbeidsgivere: avklartefaktaSelectors.AvklartefaktaValgteArbeidsgivereSelector(state),
+  valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
