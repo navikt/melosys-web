@@ -15,7 +15,7 @@ import PostAdresse from '../../komponenter/adresser/postAdresse';
 
 import { fagsakSelectors } from '../../ducks/fagsaker';
 
-import './sokersfullmektig.css';
+import './fullmektig.css';
 
 const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
   const [representererKode, settRepresentererKode] = useState(null);
@@ -86,7 +86,7 @@ Fullmektig.defaultProps = {
   fullmektig: {},
 };
 
-export class SokersFullmektig extends Component {
+export class FullmektigPanel extends Component {
   state = {
     fullmektige: [],
   };
@@ -149,7 +149,7 @@ export class SokersFullmektig extends Component {
   }
 }
 
-SokersFullmektig.propTypes = {
+FullmektigPanel.propTypes = {
   hentOrg: PT.func.isRequired,
   hentAktoer: PT.func.isRequired,
   oppsummering: PT.object.isRequired,
@@ -168,7 +168,7 @@ const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer
 const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
 
 const SokersFullmektigWrapper = props => (
-  <SokersFullmektig
+  <FullmektigPanel
     {...props}
     lagreAktoer={lagreAktoer}
     hentAktoer={hentAktoer}
