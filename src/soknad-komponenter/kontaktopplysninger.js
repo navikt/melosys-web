@@ -1,7 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
@@ -10,20 +9,39 @@ import * as Utils from '../utils';
 import ForretningsAdresse from '../komponenter/adresser/forretningsAdresse';
 import { fagsakSelectors } from '../ducks/fagsaker';
 
+import './kontaktopplysninger.css';
+
 export class KontaktOpplysninger extends Component {
   state = {
     sokeResultat: null,
     kontaktorgnr: null,
-    kontaktorgnrTouched: false,
-    orgnrFeilmelding: undefined,
     kontaktnavn: '',
+    orgnrFeilmelding: undefined,
+    skjulInput: true,
   };
 
-  settKontaktOrgnrTouched = () => this.setState({ kontaktorgnrTouched: true });
+  async componentDidMount() {
+    const kontaktopplysninger = await this.hentOgVisKontaktOpplysninger();
+    this.kalkulerSynlighetVedMount(kontaktopplysninger);
+    this.finnOgVisOrganisasjon(kontaktopplysninger.kontaktorgnr);
+  }
 
   settKontaktOrgnr = orgnr => this.setState({ kontaktorgnr: orgnr, orgnrFeilmelding: undefined });
 
   settKontaktNavn = navn => this.setState({ kontaktnavn: navn });
+
+  toggleSkjulInput = () => this.setState({ skjulInput: !this.state.skjulInput });
+
+  kalkulerSynlighetVedMount = ({ kontaktorgnr, kontaktnavn }) => this.setState({ skjulInput: !(kontaktorgnr || kontaktnavn) });
+
+  hentOgVisKontaktOpplysninger = async () => {
+    const { hentKontaktopplysninger, juridiskOrg, oppsummering } = this.props;
+    const kontaktopplysninger = await hentKontaktopplysninger(oppsummering.saksnummer, juridiskOrg.orgnr);
+
+    this.setState({ kontaktorgnr: kontaktopplysninger.kontaktorgnr, kontaktnavn: kontaktopplysninger.kontaktnavn });
+
+    return kontaktopplysninger;
+  };
 
   visFeilmelding = feilmelding => this.setState({ orgnrFeilmelding: { feilmelding } });
 
@@ -33,49 +51,59 @@ export class KontaktOpplysninger extends Component {
 
   fjernResultat = () => this.setState({ sokeResultat: null });
 
+  fjernOppforing = async () => {
+    const { oppsummering: { saksnummer }, juridiskOrg: { orgnr } } = this.props;
+    try {
+      await this.props.slettKontaktopplysninger(saksnummer, orgnr);
+      this.toggleSkjulInput();
+      this.fjernResultat();
+      this.settKontaktNavn('');
+      this.settKontaktOrgnr('');
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  };
+
   validerOgLagreKontaktOgAktoer = async () => {
     const {
-      hentOrg,
       lagreKontaktopplysninger,
-      lagreAktoer,
       oppsummering: { saksnummer },
-      representererKode,
       juridiskOrg,
     } = this.props;
-    const { kontaktorgnr, kontaktnavn, kontaktorgnrTouched } = this.state;
-    const { visFeilmelding, fjernResultat } = this;
+    const { kontaktorgnr, kontaktnavn } = this.state;
+    const { visFeilmelding, fjernResultat, finnOgVisOrganisasjon } = this;
 
     fjernResultat();
 
-    if (!kontaktnavn || !kontaktorgnrTouched) return;
-
-    if (!kontaktorgnr || kontaktorgnr.length !== 9) {
+    if (kontaktorgnr && kontaktorgnr.length !== 9) {
       visFeilmelding('Org.nr. må være 9 siffer');
       return;
     }
 
+    const org = await finnOgVisOrganisasjon(kontaktorgnr);
+    if (!org && kontaktorgnr) this.visFeilmelding('Kunne ikke finne organisasjon, organisasjonsnummer blir ikke lagret');
+
+    lagreKontaktopplysninger(saksnummer, juridiskOrg.orgnr, {
+      kontaktnavn: kontaktnavn || null,
+      kontaktorgnr: org ? kontaktorgnr : null,
+    });
+  };
+
+  finnOgVisOrganisasjon = async kontaktOrgnr => {
+    const org = await this.finnOrganisasjon(kontaktOrgnr);
+    this.setState({ sokeResultat: org });
+    return org;
+  };
+
+  finnOrganisasjon = async kontaktorgnr => {
+    if (!kontaktorgnr) return null;
+
     try {
-      const resultat = await hentOrg(kontaktorgnr);
-
-      if (resultat.navn) {
-        this.setState({ sokeResultat: resultat });
-        lagreKontaktopplysninger(saksnummer, juridiskOrg.orgnr, { kontaktnavn, kontaktorgnr });
-
-        lagreAktoer(saksnummer, {
-          aktoerID: null,
-          orgnr: kontaktorgnr,
-          utenlandskPersonID: null,
-          institusjonsID: null,
-          rolleKode: MKV.Koder.aktoersroller.REPRESENTANT,
-          representererKode,
-        });
-      } else {
-        visFeilmelding('Kunne ikke finne organisasjon');
-      }
+      const org = await this.props.hentOrg(kontaktorgnr);
+      return org === null || Utils._isEmpty(org) ? null : org;
     } catch (e) {
       Utils.logger.error(e);
-      this.setState({ sokeResultat: null });
-      visFeilmelding('Kunne ikke finne organisasjon');
+      return null;
     }
   };
 
@@ -86,50 +114,50 @@ export class KontaktOpplysninger extends Component {
       validerOgLagreKontaktOgAktoer,
       vedKontaktorgnrEndring,
       vedKontaktnavnEndring,
-      settKontaktOrgnrTouched,
+      fjernOppforing,
+      toggleSkjulInput,
     } = this;
 
-    const {
-      redigerbart,
-      visLeggTilKnapp,
-      toggleVisLeggTilKnapp,
-      renderCheckbox,
-    } = this.props;
+    const { redigerbart } = this.props;
+
+    const { kontaktorgnr, kontaktnavn, skjulInput } = this.state;
 
     return (
       <Fragment>
         {
-          visLeggTilKnapp &&
-          <Nav.Knapp mini onClick={toggleVisLeggTilKnapp}>+ Legg til kontaktopplysninger</Nav.Knapp>
+          skjulInput &&
+          <Nav.Knapp disabled={!redigerbart} mini onClick={toggleSkjulInput}>+ LEGG TIL KONTAKTOPPLYSNINGER</Nav.Knapp>
         }
         {
-          !visLeggTilKnapp &&
+          !skjulInput &&
             <Fragment>
               <Nav.Input
                 disabled={!redigerbart}
                 onChange={vedKontaktnavnEndring}
                 onBlur={validerOgLagreKontaktOgAktoer}
+                value={kontaktnavn}
                 label="Kontaktperson"
               />
               <Nav.Input
                 disabled={!redigerbart}
-                onClick={settKontaktOrgnrTouched}
                 feil={orgnrFeilmelding}
                 onChange={vedKontaktorgnrEndring}
                 onBlur={validerOgLagreKontaktOgAktoer}
+                value={kontaktorgnr}
                 label="Organisasjonsnummer"
               />
             </Fragment>
         }
         {
-          !visLeggTilKnapp && sokeResultat &&
+          !skjulInput && sokeResultat &&
             <Fragment>
               {sokeResultat.navn}
               <ForretningsAdresse forretningsadresse={sokeResultat.forretningsadresse} />
             </Fragment>
         }
         {
-          !visLeggTilKnapp && renderCheckbox && renderCheckbox(validerOgLagreKontaktOgAktoer)
+          !skjulInput &&
+          <Nav.Knapp className="fjernOppforingKnapp" disabled={!redigerbart} mini onClick={fjernOppforing}>&times; FJERN OPPFØRING</Nav.Knapp>
         }
       </Fragment>
     );
@@ -140,18 +168,14 @@ KontaktOpplysninger.propTypes = {
   lagreKontaktopplysninger: PT.func.isRequired,
   hentOrg: PT.func.isRequired,
   redigerbart: PT.bool,
-  visLeggTilKnapp: PT.bool.isRequired,
-  toggleVisLeggTilKnapp: PT.func.isRequired,
   oppsummering: PT.object.isRequired,
-  representererKode: PT.string.isRequired,
-  lagreAktoer: PT.func.isRequired,
   juridiskOrg: PT.object.isRequired,
-  renderCheckbox: PT.func,
+  hentKontaktopplysninger: PT.func.isRequired,
+  slettKontaktopplysninger: PT.func.isRequired,
 };
 
 KontaktOpplysninger.defaultProps = {
   redigerbart: true,
-  renderCheckbox: null,
 };
 
 const mapStateToProps = state => ({
@@ -159,10 +183,19 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
 });
 
-const hentOrg = async orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
-const lagreKontaktopplysninger = async (saksnr, juridiskorgnr, data) => Api.Fagsaker.kontaktopplysninger.send(saksnr, juridiskorgnr, data);
-const lagreAktoer = async (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
+const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
+const lagreKontaktopplysninger = (saksnr, juridiskorgnr, data) => Api.Fagsaker.kontaktopplysninger.send(saksnr, juridiskorgnr, data);
+const hentKontaktopplysninger = (saksnr, juridiskorgnr) => Api.Fagsaker.kontaktopplysninger.hent(saksnr, juridiskorgnr);
+const slettKontaktOpplysninger = (saksnr, juridiskorgnr) => Api.Fagsaker.kontaktopplysninger.slett(saksnr, juridiskorgnr);
 
-const KontaktOpplysningerWrapper = props => <KontaktOpplysninger {...props} hentOrg={hentOrg} lagreKontaktopplysninger={lagreKontaktopplysninger} lagreAktoer={lagreAktoer} />;
+const KontaktOpplysningerWrapper = props => (
+  <KontaktOpplysninger
+    {...props}
+    hentOrg={hentOrg}
+    hentKontaktopplysninger={hentKontaktopplysninger}
+    lagreKontaktopplysninger={lagreKontaktopplysninger}
+    slettKontaktopplysninger={slettKontaktOpplysninger}
+  />
+);
 
 export default connect(mapStateToProps)(KontaktOpplysningerWrapper);
