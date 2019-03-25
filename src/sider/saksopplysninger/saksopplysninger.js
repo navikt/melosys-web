@@ -133,7 +133,6 @@ class Saksopplysninger extends Component {
         <ArbeidsgivereNorge />
         <ForetakUtland />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-        <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
         <FullmektigPanel />
         <ArbeidUtland />
         <VirksomhetNorge />
