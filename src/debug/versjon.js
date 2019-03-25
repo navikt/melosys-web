@@ -6,7 +6,7 @@ import Clipboard from './clipboard';
 
 import './versjon.css';
 
-export default function Versjon() {
+function Versjon() {
   const [visVersjonDetaljer, setState] = useState(false);
 
   const toggleVersjon = () => {
@@ -23,7 +23,6 @@ export default function Versjon() {
     Clipboard.copy(versionString);
   };
 
-
   const versjonKlasse = classnames({ App__versjonering: true, 'App__versjonering--vis': visVersjonDetaljer });
   const versjonInnhold = visVersjonDetaljer ?
     <div className="versjonInnhold">
@@ -35,7 +34,8 @@ export default function Versjon() {
       <button className="App__versjonering__kopierknapp" onClick={copyToClipBoard}>Klikk for å kopiere versjonsinfo</button>
     </div>
     : null;
-  const innhold = (
+
+  return (
     <div className={versjonKlasse} onClick={toggleVersjon}>
       <button className="App__versjonering__ekspandknapp">
         {versjon()}
@@ -43,6 +43,6 @@ export default function Versjon() {
       { versjonInnhold }
     </div>
   );
-  return innhold;
 }
 
+export default Versjon;

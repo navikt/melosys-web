@@ -82,7 +82,7 @@ function OppholdsLandLeggTil(props) {
   };
 
   const { alleLandKoder, oppholdBegrunnelser, redigerbart } = props;
-  const innhold = (
+  return (
     <div>
       <div>
         {!erLeggTilIntensjon && (
@@ -108,7 +108,6 @@ function OppholdsLandLeggTil(props) {
       </div>
     </div>
   );
-  return innhold;
 }
 
 OppholdsLandLeggTil.propTypes = {

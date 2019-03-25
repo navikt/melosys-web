@@ -11,7 +11,7 @@ import { beregnAlder } from '../../utils/dato';
 import './medfolgendeAndre.css';
 import BostedsAdresse from '../../komponenter/adresser/bostedsAdresse';
 
-export default function MedfolgendeAndre(props) {
+function MedfolgendeAndre(props) {
   const [fnr, setFnr] = useState('');
   const [erDirty, setDirty] = useState('');
 
@@ -69,3 +69,4 @@ MedfolgendeAndre.defaultProps = {
   medfolgendeAndre: {},
 };
 
+export default MedfolgendeAndre;
