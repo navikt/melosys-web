@@ -1,4 +1,4 @@
-import Regel from '../index';
+import StonadRegel from './StonadRegel';
 
 describe('Tester regler for stonad', () => {
   describe('mottarEOSBarnetrygdFraNav', () => {
@@ -6,27 +6,27 @@ describe('Tester regler for stonad', () => {
       const mockSkjema = {};
       const mockSaksopplysning = { sakOgBehandling: { eosBarnetrygd: true } };
 
-      const regel = new Regel(mockSkjema, mockSaksopplysning);
+      const stonadRegel = new StonadRegel(mockSkjema, mockSaksopplysning);
 
-      expect(regel.stonad().mottarEOSBarnetrygdFraNav().status).toBe(true);
+      expect(stonadRegel.mottarEOSBarnetrygdFraNav().status).toBe(true);
     });
 
     test('returnerer false ved EOSBarnetrygdFraNAV === false', () => {
       const mockSkjema = {};
       const mockSaksopplysning = { sakOgBehandling: { eosBarnetrygd: false } };
 
-      const regel = new Regel(mockSkjema, mockSaksopplysning);
+      const stonadRegel = new StonadRegel(mockSkjema, mockSaksopplysning);
 
-      expect(regel.stonad().mottarEOSBarnetrygdFraNav().status).toBe(false);
+      expect(stonadRegel.mottarEOSBarnetrygdFraNav().status).toBe(false);
     });
 
     test('returnerer false ved EOSBarnetrygdFraNAV === null', () => {
       const mockSkjema = {};
       const mockSaksopplysning = { sakOgBehandling: { eosBarnetrygd: null } };
 
-      const regel = new Regel(mockSkjema, mockSaksopplysning);
+      const stonadRegel = new StonadRegel(mockSkjema, mockSaksopplysning);
 
-      expect(regel.stonad().mottarEOSBarnetrygdFraNav().status).toBe(undefined);
+      expect(stonadRegel.mottarEOSBarnetrygdFraNav().status).toBe(undefined);
     });
   });
 });

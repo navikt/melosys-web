@@ -29,7 +29,7 @@ const SokkelSkipEnkelt = props => {
         </Skjema.Select>
       </Nav.Column>
       <Nav.Column xs="3" className="rad__land">
-        <LandVelger disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`} multiLand={false} label="Arbeids- / flaggland" />
+        <LandVelger disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`} multiLand={false} label="Arbeidsland" />
       </Nav.Column>
     </Nav.Row>
   );

@@ -1,4 +1,4 @@
-import Regel from '../index';
+import OppholdRegel from './OppholdRegel';
 
 describe('Tester at regler for opphold', () => {
   describe('inntilTolvManeder', () => {
@@ -8,9 +8,9 @@ describe('Tester at regler for opphold', () => {
         oppholdUtlandTom: '31.12.2018',
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().inntilTolvMaaneder().status).toBe(true);
+      expect(oppholdRegel.inntilTolvMaaneder().status).toBe(true);
     });
 
     test('returnerer false ved mer enn 12 mnd', () => {
@@ -19,9 +19,9 @@ describe('Tester at regler for opphold', () => {
         oppholdUtlandTom: '04.01.2019',
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().inntilTolvMaaneder().status).toBe(false);
+      expect(oppholdRegel.inntilTolvMaaneder().status).toBe(false);
     });
 
     test('returnerer undefined ved ingen eller ukurant dato', () => {
@@ -30,9 +30,9 @@ describe('Tester at regler for opphold', () => {
         oppholdUtlandTom: null,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().inntilTolvMaaneder().status).toBe(undefined);
+      expect(oppholdRegel.inntilTolvMaaneder().status).toBe(undefined);
     });
   });
 
@@ -42,9 +42,9 @@ describe('Tester at regler for opphold', () => {
         antallMaanederINorge: 6,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().erINorgeSeksManederEllerMerPerKalenderAr().status).toBe(true);
+      expect(oppholdRegel.erINorgeSeksManederEllerMerPerKalenderAr().status).toBe(true);
     });
 
     test('returnerer false ved 5 måneder.', () => {
@@ -52,9 +52,9 @@ describe('Tester at regler for opphold', () => {
         antallMaanederINorge: 5,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().erINorgeSeksManederEllerMerPerKalenderAr().status).toBe(false);
+      expect(oppholdRegel.erINorgeSeksManederEllerMerPerKalenderAr().status).toBe(false);
     });
   });
 
@@ -64,9 +64,9 @@ describe('Tester at regler for opphold', () => {
         avklartefaktaOppholdsLand: ['GB'],
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().oppholderSegIUtlandet().status).toBe(true);
+      expect(oppholdRegel.oppholderSegIUtlandet().status).toBe(true);
     });
 
     test('returnerer true ved avklartefaktaOppholdsLand === "NO"', () => {
@@ -74,9 +74,9 @@ describe('Tester at regler for opphold', () => {
         avklartefaktaOppholdsLand: ['NO'],
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().oppholderSegIUtlandet().status).toBe(false);
+      expect(oppholdRegel.oppholderSegIUtlandet().status).toBe(false);
     });
 
     test('returnerer undefined ved avklartefaktaOppholdsLand === []', () => {
@@ -84,9 +84,9 @@ describe('Tester at regler for opphold', () => {
         avklartefaktaOppholdsLand: [],
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().oppholderSegIUtlandet().status).toBe(undefined);
+      expect(oppholdRegel.oppholderSegIUtlandet().status).toBe(undefined);
     });
 
     test('returnerer undefined ved avklartefaktaOppholdsLand === null', () => {
@@ -94,9 +94,9 @@ describe('Tester at regler for opphold', () => {
         avklartefaktaOppholdsLand: null,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().oppholderSegIUtlandet().status).toBe(undefined);
+      expect(oppholdRegel.oppholderSegIUtlandet().status).toBe(undefined);
     });
 
     test('returnerer undefined ved avklartefaktaOppholdsLand === undefined', () => {
@@ -104,9 +104,9 @@ describe('Tester at regler for opphold', () => {
         avklartefaktaOppholdsLand: undefined,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().oppholderSegIUtlandet().status).toBe(undefined);
+      expect(oppholdRegel.oppholderSegIUtlandet().status).toBe(undefined);
     });
   });
 
@@ -116,9 +116,9 @@ describe('Tester at regler for opphold', () => {
         sammeAdresseSomArbeidsgiver: true,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harSammeAdresseSomArbeidsgiver().status).toBe(true);
+      expect(oppholdRegel.harSammeAdresseSomArbeidsgiver().status).toBe(true);
     });
 
     test('returnerer true ved sammeAdresseSomArbeidsgiver === false', () => {
@@ -126,9 +126,9 @@ describe('Tester at regler for opphold', () => {
         sammeAdresseSomArbeidsgiver: false,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harSammeAdresseSomArbeidsgiver().status).toBe(false);
+      expect(oppholdRegel.harSammeAdresseSomArbeidsgiver().status).toBe(false);
     });
 
     test('returnerer undefined ved sammeAdresseSomArbeidsgiver === undefined', () => {
@@ -136,9 +136,9 @@ describe('Tester at regler for opphold', () => {
         sammeAdresseSomArbeidsgiver: undefined,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harSammeAdresseSomArbeidsgiver().status).toBe(undefined);
+      expect(oppholdRegel.harSammeAdresseSomArbeidsgiver().status).toBe(undefined);
     });
 
     test('returnerer undefined ved sammeAdresseSomArbeidsgiver === null', () => {
@@ -146,9 +146,9 @@ describe('Tester at regler for opphold', () => {
         sammeAdresseSomArbeidsgiver: null,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harSammeAdresseSomArbeidsgiver().status).toBe(undefined);
+      expect(oppholdRegel.harSammeAdresseSomArbeidsgiver().status).toBe(undefined);
     });
   });
 
@@ -158,9 +158,9 @@ describe('Tester at regler for opphold', () => {
         ektefelleEllerBarnINorge: true,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harEktefelleEllerBarnINorge().status).toBe(true);
+      expect(oppholdRegel.harEktefelleEllerBarnINorge().status).toBe(true);
     });
 
     test('returnerer true ved harEktefelleEllerBarnINorge === false', () => {
@@ -168,9 +168,9 @@ describe('Tester at regler for opphold', () => {
         ektefelleEllerBarnINorge: false,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harEktefelleEllerBarnINorge().status).toBe(false);
+      expect(oppholdRegel.harEktefelleEllerBarnINorge().status).toBe(false);
     });
 
     test('returnerer undefined ved harEktefelleEllerBarnINorge === undefined', () => {
@@ -178,9 +178,9 @@ describe('Tester at regler for opphold', () => {
         ektefelleEllerBarnINorge: undefined,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harEktefelleEllerBarnINorge().status).toBe(undefined);
+      expect(oppholdRegel.harEktefelleEllerBarnINorge().status).toBe(undefined);
     });
 
     test('returnerer undefined ved harEktefelleEllerBarnINorge === null', () => {
@@ -188,9 +188,9 @@ describe('Tester at regler for opphold', () => {
         ektefelleEllerBarnINorge: null,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harEktefelleEllerBarnINorge().status).toBe(undefined);
+      expect(oppholdRegel.harEktefelleEllerBarnINorge().status).toBe(undefined);
     });
   });
 
@@ -200,9 +200,9 @@ describe('Tester at regler for opphold', () => {
         forutgaendeBostedINorge: true,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harForutgaendeBostedINorge().status).toBe(true);
+      expect(oppholdRegel.harForutgaendeBostedINorge().status).toBe(true);
     });
 
     test('returnerer true ved forutgaendeBostedINorge === false', () => {
@@ -210,9 +210,9 @@ describe('Tester at regler for opphold', () => {
         forutgaendeBostedINorge: false,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harForutgaendeBostedINorge().status).toBe(false);
+      expect(oppholdRegel.harForutgaendeBostedINorge().status).toBe(false);
     });
 
     test('returnerer undefined ved forutgaendeBostedINorge === undefined', () => {
@@ -220,9 +220,9 @@ describe('Tester at regler for opphold', () => {
         forutgaendeBostedINorge: undefined,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harForutgaendeBostedINorge().status).toBe(undefined);
+      expect(oppholdRegel.harForutgaendeBostedINorge().status).toBe(undefined);
     });
 
     test('returnerer undefined ved forutgaendeBostedINorge === null', () => {
@@ -230,9 +230,9 @@ describe('Tester at regler for opphold', () => {
         forutgaendeBostedINorge: null,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harForutgaendeBostedINorge().status).toBe(undefined);
+      expect(oppholdRegel.harForutgaendeBostedINorge().status).toBe(undefined);
     });
   });
 
@@ -242,9 +242,9 @@ describe('Tester at regler for opphold', () => {
         familiesBosted: 'NO',
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().familieBorINorge().status).toBe(true);
+      expect(oppholdRegel.familieBorINorge().status).toBe(true);
     });
 
     test('returnerer true ved familiesBosted !== "NO"', () => {
@@ -252,9 +252,9 @@ describe('Tester at regler for opphold', () => {
         familiesBosted: 'GB',
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().familieBorINorge().status).toBe(false);
+      expect(oppholdRegel.familieBorINorge().status).toBe(false);
     });
 
     test('returnerer undefined ved familiesBosted === ""', () => {
@@ -262,9 +262,9 @@ describe('Tester at regler for opphold', () => {
         familiesBosted: '',
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().familieBorINorge().status).toBe(undefined);
+      expect(oppholdRegel.familieBorINorge().status).toBe(undefined);
     });
 
     test('returnerer undefined ved familiesBosted === null', () => {
@@ -272,9 +272,9 @@ describe('Tester at regler for opphold', () => {
         familiesBosted: null,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().familieBorINorge().status).toBe(undefined);
+      expect(oppholdRegel.familieBorINorge().status).toBe(undefined);
     });
   });
 
@@ -284,9 +284,9 @@ describe('Tester at regler for opphold', () => {
         adresseIUtlandet: true,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harAdresseIUtlandet().status).toBe(true);
+      expect(oppholdRegel.harAdresseIUtlandet().status).toBe(true);
     });
 
     test('returnerer true ved adresseIUtlandet === false', () => {
@@ -294,9 +294,9 @@ describe('Tester at regler for opphold', () => {
         adresseIUtlandet: false,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harAdresseIUtlandet().status).toBe(false);
+      expect(oppholdRegel.harAdresseIUtlandet().status).toBe(false);
     });
 
     test('returnerer undefined ved adresseIUtlandet === undefined', () => {
@@ -304,9 +304,9 @@ describe('Tester at regler for opphold', () => {
         adresseIUtlandet: undefined,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harAdresseIUtlandet().status).toBe(undefined);
+      expect(oppholdRegel.harAdresseIUtlandet().status).toBe(undefined);
     });
 
     test('returnerer undefined ved adresseIUtlandet === null', () => {
@@ -314,9 +314,9 @@ describe('Tester at regler for opphold', () => {
         adresseIUtlandet: null,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harAdresseIUtlandet().status).toBe(undefined);
+      expect(oppholdRegel.harAdresseIUtlandet().status).toBe(undefined);
     });
   });
 
@@ -326,9 +326,9 @@ describe('Tester at regler for opphold', () => {
         intensjonOmRetur: true,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harIntensjonOmReturTilNorge().status).toBe(true);
+      expect(oppholdRegel.harIntensjonOmReturTilNorge().status).toBe(true);
     });
 
     test('returnerer true ved harIntensjonOmReturTilNorge === false', () => {
@@ -336,9 +336,9 @@ describe('Tester at regler for opphold', () => {
         intensjonOmRetur: false,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harIntensjonOmReturTilNorge().status).toBe(false);
+      expect(oppholdRegel.harIntensjonOmReturTilNorge().status).toBe(false);
     });
 
     test('returnerer undefined ved harIntensjonOmReturTilNorge === undefined', () => {
@@ -346,9 +346,9 @@ describe('Tester at regler for opphold', () => {
         intensjonOmRetur: undefined,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harIntensjonOmReturTilNorge().status).toBe(undefined);
+      expect(oppholdRegel.harIntensjonOmReturTilNorge().status).toBe(undefined);
     });
 
     test('returnerer undefined ved harIntensjonOmReturTilNorge === null', () => {
@@ -356,9 +356,9 @@ describe('Tester at regler for opphold', () => {
         intensjonOmRetur: null,
       };
 
-      const regel = new Regel(mockSkjema);
+      const oppholdRegel = new OppholdRegel(mockSkjema);
 
-      expect(regel.opphold().harIntensjonOmReturTilNorge().status).toBe(undefined);
+      expect(oppholdRegel.harIntensjonOmReturTilNorge().status).toBe(undefined);
     });
   });
 });
