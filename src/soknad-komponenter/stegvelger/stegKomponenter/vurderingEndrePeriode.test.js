@@ -3,13 +3,17 @@ import React from 'react';
 import { VurderingEndrePeriode } from './vurderingEndrePeriode';
 
 describe('vurderingEndrePeriode', () => {
-  const sendEndretLovvalgsPeriode = jest.fn();
+  let props = null;
 
-  const props = {
-    oppsummering: { behandlingID: 1 },
-    lovvalgsPeriode: {},
-    sendEndretLovvalgsPeriode,
-  };
+  beforeEach(() => {
+    props = {
+      oppsummering: { behandlingID: 1 },
+      lovvalgsPeriode: {},
+      endreDatoOgSendLovvalgsperioderHandler: jest.fn(),
+      vedtaEndretPeriode: jest.fn(),
+      tilForsiden: jest.fn(),
+    };
+  });
 
   it('viser en pdfLenkeListe', () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
@@ -21,13 +25,14 @@ describe('vurderingEndrePeriode', () => {
     expect(component.find('Hovedknapp')).toHaveLength(1);
   });
 
+
   describe('knappen', () => {
     it('endrer periode når den trykkes', () => {
       const component = shallow(<VurderingEndrePeriode {...props} />);
       const knapp = component.find('Hovedknapp');
       component.instance().validerAlt = jest.fn(() => true);
       knapp.simulate('click');
-      expect(sendEndretLovvalgsPeriode).toHaveBeenCalled();
+      expect(props.endreDatoOgSendLovvalgsperioderHandler).toHaveBeenCalled();
     });
   });
 
