@@ -20,14 +20,14 @@ EnkeltLand.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-const OppholdsLandEnkelt = props => {
+function OppholdsLandEnkelt(props) {
   const [erSlettingIntensjon, settSlettIntensjon] = useState(false);
 
   const avbryt = () => this.settSlettIntensjon(false);
   const {
     landKodeObjekt, bekreftFjern, oppholdBegrunnelser, redigerbart,
   } = props;
-  const innhold =
+  return (
     <div>
       {erSlettingIntensjon ?
         <OppholdslandHandlingSlett
@@ -44,9 +44,9 @@ const OppholdsLandEnkelt = props => {
           redigerbart={redigerbart}
         />
       }
-    </div>;
-  return innhold;
-};
+    </div>
+  );
+}
 
 OppholdsLandEnkelt.propTypes = {
   bekreftFjern: PT.func.isRequired,

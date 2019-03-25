@@ -11,7 +11,7 @@ import { beregnAlder } from '../../utils/dato';
 import './medfolgendeAndre.css';
 import BostedsAdresse from '../../komponenter/adresser/bostedsAdresse';
 
-const MedfolgendeAndre = props => {
+function MedfolgendeAndre(props) {
   const [fnr, setFnr] = useState('');
   const [erDirty, setDirty] = useState('');
 
@@ -57,7 +57,7 @@ const MedfolgendeAndre = props => {
       </Nav.Fieldset>
     </div>
   );
-};
+}
 
 MedfolgendeAndre.propTypes = {
   disabled: PT.bool.isRequired,
