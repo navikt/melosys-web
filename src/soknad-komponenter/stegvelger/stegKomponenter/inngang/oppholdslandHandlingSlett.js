@@ -4,7 +4,7 @@ import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
-const OppholdslandHandlingSlett = props => {
+function OppholdslandHandlingSlett(props) {
   const [begrunnelse, setBegrunnelse] = useState('0');
 
   const onChange = event => {
@@ -32,7 +32,7 @@ const OppholdslandHandlingSlett = props => {
     </div>
   );
   return innhold;
-};
+}
 
 OppholdslandHandlingSlett.propTypes = {
   avbryt: PT.func.isRequired,

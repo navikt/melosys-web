@@ -26,7 +26,7 @@ TabellLinje.propTypes = {
  *
  * @param props. Se prop types for detaljer.
  */
-const Tabell = props => {
+export default function Tabell(props) {
   const [aktivSide, setState] = useState(0);
 
   /** Håndterer klikk på pagineringsknapper for å bytte visningsside
@@ -83,7 +83,7 @@ const Tabell = props => {
     </div>
   );
   return innhold;
-};
+}
 
 Tabell.propTypes = {
   overskrift: PT.string,
@@ -101,4 +101,3 @@ Tabell.defaultProps = {
   className: '',
 };
 
-export default Tabell;

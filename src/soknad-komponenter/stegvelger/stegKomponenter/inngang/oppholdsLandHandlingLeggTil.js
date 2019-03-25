@@ -10,7 +10,7 @@ import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
 
 import { landTekstFormat } from '../../../skjema/landvelger';
 
-const LeggTilWrapper = props => {
+export function LeggTilWrapper(props) {
   const [landKode, setLandKode] = useState('');
   const [begrunnelseKode, setBegrunnelseKode] = useState('0');
 
@@ -54,7 +54,7 @@ const LeggTilWrapper = props => {
     </div>
   );
   return innhold;
-};
+}
 
 LeggTilWrapper.propTypes = {
   avbryt: PT.func.isRequired,
@@ -64,7 +64,13 @@ LeggTilWrapper.propTypes = {
   redigerbart: PT.bool.isRequired,
 };
 
-const OppholdsLandLeggTil = props => {
+/**
+ * OppholdsLandLeggTil
+ * @param props
+ * @returns {*}
+ * @constructor
+ */
+function OppholdsLandLeggTil(props) {
   const [erLeggTilIntensjon, setIntensjon] = useState(false);
 
   const settLeggTilIntensjon = () => setIntensjon(true);
@@ -103,7 +109,7 @@ const OppholdsLandLeggTil = props => {
     </div>
   );
   return innhold;
-};
+}
 
 OppholdsLandLeggTil.propTypes = {
   bekreftLeggTil: PT.func.isRequired,

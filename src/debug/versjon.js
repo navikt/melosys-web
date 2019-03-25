@@ -6,7 +6,7 @@ import Clipboard from './clipboard';
 
 import './versjon.css';
 
-const Versjon  = props => {
+export default function Versjon() {
   const [visVersjonDetaljer, setState] = useState(false);
 
   const toggleVersjon = () => {
@@ -44,6 +44,5 @@ const Versjon  = props => {
     </div>
   );
   return innhold;
-};
+}
 
-export default Versjon;
