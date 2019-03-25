@@ -18,7 +18,9 @@ class EndrePeriode extends Steg {
     this.samleRelevanteData = () => ({});
     this.beregnRelevantUI = () => ({});
     this.handlers = {
-      sendEndretLovvalgsPeriode: this._propsLight.tilgjengeligeHandlers.sendEndretLovvalgsPeriode,
+      tilForsiden: this._propsLight.tilgjengeligeHandlers.tilForsiden,
+      vedtaEndretPeriode: this._propsLight.tilgjengeligeHandlers.vedtaEndretPeriode,
+      endreDatoOgSendLovvalgsperioderHandler: this._propsLight.tilgjengeligeHandlers.endreDatoOgSendLovvalgsperioderHandler,
     };
     this.status = FANE_STATUS.OK;
   }
