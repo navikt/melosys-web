@@ -30,7 +30,7 @@ MultiLandEnkelt.propTypes = {
   slettLandHandler: PT.func.isRequired,
 };
 
-export function MultiLand(props) {
+function MultiLand(props) {
   const [inputVerdi, setInputVerdi] = useState('');
   const [error, setError] = useState('');
 
@@ -159,6 +159,8 @@ MultiLand.defaultProps = {
   feil: {},
   disabled: false,
 };
+
+export { MultiLand };
 
 const MultiLandWrapper = props => (<FieldArray name={props.feltNavn} component={MultiLand} props={props} />);
 
