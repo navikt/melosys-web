@@ -14,7 +14,7 @@ node {
   def scmVars, prNummer
 
   /* tools: http://a34apvl00025.devillo.no:8080/configureTools/ */
-  def NODEJS_HOME = tool "node-10.10.0" // => "installation directory" = "/opt/node"
+  def NODEJS_HOME = tool "node-11.12.0" // => "installation directory" = "/opt/node"
   echo "${NODEJS_HOME}"
   def node = "${NODEJS_HOME}/bin/node"
   def npm = "${NODEJS_HOME}/bin/npm"
