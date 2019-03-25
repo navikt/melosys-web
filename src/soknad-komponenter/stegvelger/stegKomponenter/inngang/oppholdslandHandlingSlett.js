@@ -4,7 +4,7 @@ import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
-const OppholdslandHandlingSlett = props => {
+function OppholdslandHandlingSlett(props) {
   const [begrunnelse, setBegrunnelse] = useState('0');
 
   const onChange = event => {
@@ -16,7 +16,7 @@ const OppholdslandHandlingSlett = props => {
   } = props;
   const landKode = KV.objektTilKode(landKodeObjekt);
   const landTerm = KV.objektTilTerm(landKodeObjekt);
-  const innhold = (
+  return (
     <div className="fjernland__linje">
       <div className="linje__land">{landTerm} ({landKode})</div>
       <div className="linje__begrunnelse">
@@ -31,8 +31,7 @@ const OppholdslandHandlingSlett = props => {
       </div>
     </div>
   );
-  return innhold;
-};
+}
 
 OppholdslandHandlingSlett.propTypes = {
   avbryt: PT.func.isRequired,
