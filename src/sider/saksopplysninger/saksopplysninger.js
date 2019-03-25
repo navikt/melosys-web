@@ -22,7 +22,7 @@ import SelvstendigArbeid from '../../soknad-komponenter/selvstendigarbeid';
 import Stegvelger from '../../soknad-komponenter/stegvelger';
 import HenlagtInformasjon from '../../soknad-komponenter/stegErstatter/henlagtInformasjon';
 import VirksomhetNorge from '../../soknad-komponenter/virksomhetNorge';
-import SokersFullmektig from '../../soknad-komponenter/sokersFullmektig';
+import FullmektigPanel from '../../soknad-komponenter/fullmektig';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
@@ -133,7 +133,8 @@ class Saksopplysninger extends Component {
         <ArbeidsgivereNorge />
         <ForetakUtland />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-        <SokersFullmektig />
+        <UtsendendeArbeidsgiver soknadVerdier={soknadVerdier} />
+        <FullmektigPanel />
         <ArbeidUtland />
         <VirksomhetNorge />
         <MaritimtArbeid />

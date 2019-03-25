@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
@@ -20,11 +19,6 @@ import './organisasjon.css';
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
 const Organisasjon = props => {
-  const [erLeggTilKnappSynlig, setSynlighet] = useState(true);
-
-  const toggleVisLeggTilKnapp = () => {
-    setSynlighet(!erLeggTilKnappSynlig);
-  };
   const { organisasjon, slettHandle } = props;
 
   if (!organisasjon) { return null; }
@@ -52,12 +46,7 @@ const Organisasjon = props => {
               </dl>
             </Nav.Column>
             <Nav.Column xs="6" className="organisasjon__slettwrapper">
-              <KontaktOpplysninger
-                representererKode={MKV.Koder.representerer.ARBEIDSGIVER}
-                juridiskOrg={organisasjon}
-                visLeggTilKnapp={erLeggTilKnappSynlig}
-                toggleVisLeggTilKnapp={toggleVisLeggTilKnapp}
-              />
+              <KontaktOpplysninger juridiskOrg={organisasjon} />
               <div className="organisasjon__slettknapp">
                 { slettHandle && <Nav.Knapp onClick={slettHandle}>Slett</Nav.Knapp> }
               </div>
