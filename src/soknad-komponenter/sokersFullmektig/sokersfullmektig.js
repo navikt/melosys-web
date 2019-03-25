@@ -29,6 +29,8 @@ const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
     settRepresentererKode(fullmektig.representererKode);
   }, []);
 
+  const uniktNavn = uuid();
+
   return (
     <Nav.Row className="fullmektig">
       <Nav.Column xs="6">
@@ -48,18 +50,21 @@ const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
             checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
             label="Arbeidsgiver"
             value={MKV.Koder.representerer.ARBEIDSGIVER}
+            name={uniktNavn}
           />
           <Nav.Radio
             onChange={vedRolleEndring}
             checked={representererKode === MKV.Koder.representerer.BRUKER}
             label="Arbeidstaker"
             value={MKV.Koder.representerer.BRUKER}
+            name={uniktNavn}
           />
           <Nav.Radio
             onChange={vedRolleEndring}
             checked={representererKode === MKV.Koder.representerer.BEGGE}
             label="Både arbeidstaker og arbeidsgiver"
             value={MKV.Koder.representerer.BEGGE}
+            name={uniktNavn}
           />
         </Nav.Fieldset>
         <Nav.Knapp disabled type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
