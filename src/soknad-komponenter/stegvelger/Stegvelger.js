@@ -66,10 +66,10 @@ class Stegvelger extends Component {
     const vedtakBody = { behandlingsresultattype };
     try {
       await fatteVedtak(bid, vedtakBody);
+      this.tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
     }
-    this.tilForsiden();
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
@@ -77,14 +77,15 @@ class Stegvelger extends Component {
     this.fatteVedtakHandler(behandlingsresultattype);
   };
 
-  endreDatoOgSendLovvalgsperioderHandler = async (fomdato, tomdato) => {
+  endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
     const bid = this.props.oppsummering.behandlingID;
     const { lovvalgsperioder } = this.props;
+
     const forkortetPeriode = lovvalgsperioder.map(periode => ({ ...periode, fomDato: fomdato, tomDato: tomdato }));
     API.Lovvalgsperioder.send(bid, forkortetPeriode).catch(e => Utils.logger.error(e));
   };
 
-  vedtaEndretPeriode = async begrunnelseKode => {
+  vedtaEndretPeriode = begrunnelseKode => {
     const { oppsummering: { behandlingID } } = this.props;
 
     API.Vedtak.endrePeriode(behandlingID, { begrunnelseKode }).catch(e => Utils.logger.error(e));
