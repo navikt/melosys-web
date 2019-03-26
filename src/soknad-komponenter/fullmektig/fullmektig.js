@@ -2,7 +2,6 @@ import React, { Component, Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
-import uuid from 'uuid/v4';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Ikoner from '../../resources/images';
@@ -17,7 +16,12 @@ import { fagsakSelectors } from '../../ducks/fagsaker';
 
 import './fullmektig.css';
 
-const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
+const Fullmektig = ({
+  fullmektig,
+  lagreFullmektig,
+  redigerbart,
+  databaseID,
+}) => {
   const [representererKode, settRepresentererKode] = useState(null);
 
   const vedRolleEndring = event => {
@@ -29,7 +33,7 @@ const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
     settRepresentererKode(fullmektig.representererKode);
   }, []);
 
-  const uniktNavn = uuid();
+  const databaseIDString = databaseID.toString();
 
   return (
     <Nav.Row className="fullmektig">
@@ -50,21 +54,21 @@ const Fullmektig = ({ fullmektig, lagreFullmektig, redigerbart }) => {
             checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
             label="Arbeidsgiver"
             value={MKV.Koder.representerer.ARBEIDSGIVER}
-            name={uniktNavn}
+            name={databaseIDString}
           />
           <Nav.Radio
             onChange={vedRolleEndring}
             checked={representererKode === MKV.Koder.representerer.BRUKER}
             label="Arbeidstaker"
             value={MKV.Koder.representerer.BRUKER}
-            name={uniktNavn}
+            name={databaseIDString}
           />
           <Nav.Radio
             onChange={vedRolleEndring}
             checked={representererKode === MKV.Koder.representerer.BEGGE}
             label="Både arbeidstaker og arbeidsgiver"
             value={MKV.Koder.representerer.BEGGE}
-            name={uniktNavn}
+            name={databaseIDString}
           />
         </Nav.Fieldset>
         <Nav.Knapp disabled type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
@@ -80,6 +84,7 @@ Fullmektig.propTypes = {
   fullmektig: PT.object,
   lagreFullmektig: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
+  databaseID: PT.number.isRequired,
 };
 
 Fullmektig.defaultProps = {
@@ -136,7 +141,8 @@ export class FullmektigPanel extends Component {
           <Nav.Container fluid>
             {this.state.fullmektige.map(fullmektig => (
               <Fullmektig
-                key={uuid()}
+                key={fullmektig.databaseID}
+                databaseID={fullmektig.databaseID}
                 redigerbart={redigerbart}
                 fullmektig={fullmektig}
                 lagreFullmektig={this.lagreFullmektig}
