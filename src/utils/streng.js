@@ -17,7 +17,7 @@ export function strengTilBool (value) {
 }
 
 export function strengTilInt (value) {
-  return parseInt(value, 10) || 0;
+  return parseInt(value, 10) || null;
 }
 
 export function tekstEllerDash(data) {
