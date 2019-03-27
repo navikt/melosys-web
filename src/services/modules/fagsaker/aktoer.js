@@ -15,7 +15,7 @@ export const send = (saksnr, data) => {
   return postAsJson(URI_AKTOER, data);
 };
 
-export const slett = databaseID => {
-  const URI_SLETT = `${API_BASE_URL}${FAGSAKER}/aktoerer/${databaseID}`;
-  return deleteAsJson(URI_SLETT);
+export const slett = databaseid => {
+  const URI_AKTOER = `${API_BASE_URL}${FAGSAKER}/aktoerer/${databaseid}`;
+  return deleteAsJson(URI_AKTOER);
 };
