@@ -100,10 +100,10 @@ const Fullmektig = ({
   const slettFullmektig = async () => {
     try {
       await slettAktoer(databaseID);
+      slettFullmektigLokalt(databaseID);
     } catch (e) {
       Utils.logger.error(e);
     }
-    slettFullmektigLokalt(databaseID);
   };
 
   const databaseIDString = databaseID.toString();
@@ -178,6 +178,7 @@ Fullmektig.defaultProps = {
 export class FullmektigPanel extends Component {
   state = {
     fullmektige: [],
+    disableLeggTilFullmektig: false,
   };
 
   componentDidMount() {
@@ -189,6 +190,7 @@ export class FullmektigPanel extends Component {
       const lagretFullmektig = await this.lagreFullmektig(representererKode, orgnr);
       this.setState(prevState => ({
         fullmektige: this.byttUtTemplateMedLagretFullmektig(prevState.fullmektige, lagretFullmektig),
+        disableLeggTilFullmektig: false,
       }));
     } catch (e) {
       Utils.logger.error(e);
@@ -210,7 +212,10 @@ export class FullmektigPanel extends Component {
   });
 
   apneLeggTilFullmektigDialog = () => {
-    this.setState(prevState => ({ fullmektige: [...prevState.fullmektige, { ...aktoerTemplate }] }));
+    this.setState(prevState => ({
+      fullmektige: [...prevState.fullmektige, { ...aktoerTemplate }],
+      disableLeggTilFullmektig: true,
+    }));
   };
 
   hentFullmektige = async () => {
@@ -230,17 +235,22 @@ export class FullmektigPanel extends Component {
     this.setState({
       fullmektige: nyFullmektige,
     });
+    this.setState({ disableLeggTilFullmektig: false });
   };
 
   render() {
     const panelIkon = Ikoner.Ferdig;
+
     const { redigerbart, slettAktoer, hentOrg } = this.props;
+
     const {
       lagreFullmektig,
       slettFullmektigLokalt,
       apneLeggTilFullmektigDialog,
       lagreNyFullmektigOgOppdaterLokalt,
     } = this;
+
+    const { disableLeggTilFullmektig } = this.state;
 
     return (
       <div>
@@ -261,7 +271,7 @@ export class FullmektigPanel extends Component {
                 hentOrg={hentOrg}
               />
             ))}
-            <Nav.Knapp onClick={apneLeggTilFullmektigDialog} type="mini">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
+            <Nav.Knapp disabled={disableLeggTilFullmektig} onClick={apneLeggTilFullmektigDialog} type="mini">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
