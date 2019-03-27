@@ -131,7 +131,10 @@ export default function reducer(state = initialState, action) {
           },
         },
         maritimtArbeid: dokument.maritimtArbeid.map(maritimtArbeid => ({
-          ...maritimtArbeid,
+          navn: maritimtArbeid.navn ? maritimtArbeid.navn : null,
+          fartsomradeKode: maritimtArbeid.fartsomradeKode ? maritimtArbeid.fartsomradeKode : null,
+          flaggLandKode: maritimtArbeid.flaggLandKode ? maritimtArbeid.flaggLandKode : null,
+          installasjonsLandKode: maritimtArbeid.installasjonsLandKode ? maritimtArbeid.installasjonsLandKode : null,
           territorialfarvann: maritimtArbeid.territorialfarvann ? maritimtArbeid.territorialfarvann : null,
         })),
         selvstendigArbeid: {
