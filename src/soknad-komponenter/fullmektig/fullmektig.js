@@ -21,6 +21,8 @@ const Fullmektig = ({
   lagreFullmektig,
   redigerbart,
   databaseID,
+  slettAktoer,
+  slettFullmektigFraListe,
 }) => {
   const [representererKode, settRepresentererKode] = useState(null);
 
@@ -34,6 +36,15 @@ const Fullmektig = ({
   }, []);
 
   const databaseIDString = databaseID.toString();
+
+  const slettFullmektig = async () => {
+    try {
+      await slettAktoer(databaseID);
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+    slettFullmektigFraListe(databaseID);
+  };
 
   return (
     <Nav.Row className="fullmektig">
@@ -71,7 +82,7 @@ const Fullmektig = ({
             name={databaseIDString}
           />
         </Nav.Fieldset>
-        <Nav.Knapp disabled type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
+        <Nav.Knapp onClick={slettFullmektig} type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
       </Nav.Column>
       <Nav.Column xs="6">
         <Kontaktopplysninger juridiskOrg={fullmektig.org} />
@@ -85,6 +96,8 @@ Fullmektig.propTypes = {
   lagreFullmektig: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   databaseID: PT.number.isRequired,
+  slettAktoer: PT.func.isRequired,
+  slettFullmektigFraListe: PT.func.isRequired,
 };
 
 Fullmektig.defaultProps = {
@@ -129,9 +142,17 @@ export class FullmektigPanel extends Component {
     }
   };
 
+  slettFullmektigFraListe = databaseID => {
+    const nyFullmektige = this.state.fullmektige.filter(fullmektig => fullmektig.databaseID !== databaseID);
+    this.setState({
+      fullmektige: nyFullmektige,
+    });
+  };
+
   render() {
     const panelIkon = Ikoner.Ferdig;
-    const { redigerbart } = this.props;
+    const { redigerbart, slettAktoer } = this.props;
+    const { slettFullmektigFraListe } = this;
 
     return (
       <div>
@@ -146,6 +167,8 @@ export class FullmektigPanel extends Component {
                 redigerbart={redigerbart}
                 fullmektig={fullmektig}
                 lagreFullmektig={this.lagreFullmektig}
+                slettAktoer={slettAktoer}
+                slettFullmektigFraListe={slettFullmektigFraListe}
               />
             ))}
           </Nav.Container>
@@ -158,6 +181,7 @@ export class FullmektigPanel extends Component {
 FullmektigPanel.propTypes = {
   hentOrg: PT.func.isRequired,
   hentAktoer: PT.func.isRequired,
+  slettAktoer: PT.func.isRequired,
   oppsummering: PT.object.isRequired,
   lagreAktoer: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -172,6 +196,7 @@ const mapStateToProps = state => ({
 const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
 const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
 const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
+const slettAktoer = databaseID => Api.Fagsaker.aktoer.slett(databaseID);
 
 const SokersFullmektigWrapper = props => (
   <FullmektigPanel
@@ -179,6 +204,7 @@ const SokersFullmektigWrapper = props => (
     lagreAktoer={lagreAktoer}
     hentAktoer={hentAktoer}
     hentOrg={hentOrg}
+    slettAktoer={slettAktoer}
   />
 );
 
