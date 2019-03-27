@@ -130,9 +130,7 @@ export default function reducer(state = initialState, action) {
             landKode: dokument.oppgittAdresseLand,
           },
         },
-        maritimtArbeid: dokument.maritimtArbeid.filter(maritimtArbeid => (
-          maritimtArbeid.navn && maritimtArbeid.fartsomradeKode && maritimtArbeid.flaggLandKode && maritimtArbeid.installasjonsLandKode
-        )).map(maritimtArbeid => ({
+        maritimtArbeid: dokument.maritimtArbeid.map(maritimtArbeid => ({
           ...maritimtArbeid,
           territorialfarvann: maritimtArbeid.territorialfarvann ? maritimtArbeid.territorialfarvann : null,
         })),

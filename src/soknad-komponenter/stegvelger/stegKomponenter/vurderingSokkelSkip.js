@@ -5,6 +5,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
+import * as Utils from '../../../utils';
 
 import LandVelger from '../../skjema/landvelger';
 
@@ -107,8 +108,10 @@ class VurderingSokkelSkip extends React.Component {
         <SokkelSkipListe alleSokkelSkip={maritimtArbeid} begrunnelser={begrunnelser} redigerbart={redigerbart} />
         {maritimtArbeid.length === 0 && (
           <div className="sokkelSkip__varsel"><Nav.AlertStripe type="advarsel">Det er ikke registrert verken sokkel eller skip.</Nav.AlertStripe></div>
-        )
-        }
+        )}
+        {maritimtArbeid.some(marArb => Utils._isEmpty(marArb.navn)) && (
+          <div className="sokkelSkip__varsel"><Nav.AlertStripe type="advarsel">Navn på fartøyet må fylles ut.</Nav.AlertStripe></div>
+        )}
         <Nav.Fieldset legend="Hvordan arbeider søkeren:" onChange={radioEndringHandler}>
           <Skjema.Radio disabled={!redigerbart} feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_NORSK} label="På norsk sokkel eller innenfor norsk territorialfarvann (art. 11.3.a)" />
           <Skjema.Radio disabled={!redigerbart} feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_ETT_LAND} label="På skip registrert i ett land" />
