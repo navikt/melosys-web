@@ -11,10 +11,60 @@ import * as Utils from '../../utils';
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import Kontaktopplysninger from '../kontaktopplysninger';
 import PostAdresse from '../../komponenter/adresser/postAdresse';
+import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
 
 import { fagsakSelectors } from '../../ducks/fagsaker';
 
 import './fullmektig.css';
+
+const aktoerTemplate = {
+  aktoerID: undefined,
+  databaseID: 0,
+  institusjonsID: undefined,
+  orgnr: undefined,
+  representererKode: undefined,
+  rolleKode: undefined,
+  utenlandskPersonID: undefined,
+};
+
+const SokFullmektigOrg = ({ lagreNyFullmektigOgOppdaterLokalt }) => {
+  const [orgnr, settOrgnr] = useState('');
+  const [feilmelding, settFeilmelding] = useState(undefined);
+
+  const sok = () => {
+    if (erOrgnrGyldig(orgnr)) {
+      lagreNyFullmektigOgOppdaterLokalt(orgnr);
+    } else {
+      settFeilmelding({ feilmelding: 'Ugyldig orgnr' });
+    }
+  };
+
+  const vedEndretInput = event => {
+    settOrgnr(event.target.value);
+    settFeilmelding(undefined);
+  };
+
+  return (
+    <Nav.Row>
+      <Nav.Column xs="9">
+        <Nav.Input
+          label="Organisasjonsnummer"
+          placeholder="Skriv inn..."
+          onChange={vedEndretInput}
+          value={orgnr}
+          feil={feilmelding}
+        />
+      </Nav.Column>
+      <Nav.Column xs="3">
+        <Nav.Knapp onClick={sok} type="mini" className="sokKnapp">SØK</Nav.Knapp>
+      </Nav.Column>
+    </Nav.Row>
+  );
+};
+
+SokFullmektigOrg.propTypes = {
+  lagreNyFullmektigOgOppdaterLokalt: PT.func.isRequired,
+};
 
 const Fullmektig = ({
   fullmektig,
@@ -22,27 +72,30 @@ const Fullmektig = ({
   redigerbart,
   databaseID,
   slettAktoer,
-  slettFullmektigFraListe,
+  slettFullmektigLokalt,
+  lagreNyFullmektigOgOppdaterLokalt,
   hentOrg,
 }) => {
   const [representererKode, settRepresentererKode] = useState(null);
   const [org, settOrg] = useState(null);
 
-  const vedRolleEndring = event => {
-    lagreFullmektig(event.target.value, org.orgnr);
-    settRepresentererKode(event.target.value);
+  const vedRolleEndring = async event => {
+    try {
+      if (org) await lagreFullmektig(event.target.value, org.orgnr);
+      settRepresentererKode(event.target.value);
+    } catch (e) {
+      Utils.logger.error(e);
+    }
   };
 
   const hentOrgFraApi = async () => {
-    settOrg(await hentOrg(fullmektig.orgnr));
+    if (fullmektig.orgnr) settOrg(await hentOrg(fullmektig.orgnr));
   };
 
   useEffect(() => {
-    settRepresentererKode(fullmektig.representererKode);
+    if (fullmektig.representererKode) settRepresentererKode(fullmektig.representererKode);
     hentOrgFraApi();
-  }, []);
-
-  const databaseIDString = databaseID.toString();
+  }, [fullmektig.representererKode, fullmektig.orgnr]);
 
   const slettFullmektig = async () => {
     try {
@@ -50,20 +103,26 @@ const Fullmektig = ({
     } catch (e) {
       Utils.logger.error(e);
     }
-    slettFullmektigFraListe(databaseID);
+    slettFullmektigLokalt(databaseID);
   };
+
+  const databaseIDString = databaseID.toString();
 
   return (
     <Nav.Row className="fullmektig">
       <Nav.Column xs="6">
         {
-          org && org.navn
-        }
-        {
           org &&
           <Fragment>
+            {org.navn}
             <div className="postadresse_tittel">Postadresse</div>
             <PostAdresse postadresse={org.postadresse} />
+          </Fragment>
+        }
+        {
+          !org &&
+          <Fragment>
+            <SokFullmektigOrg lagreNyFullmektigOgOppdaterLokalt={orgnr => lagreNyFullmektigOgOppdaterLokalt(representererKode, orgnr)} />
           </Fragment>
         }
         <Nav.Fieldset disabled={!redigerbart} legend="Hvem er dette fullmektig for?" className="radioknapper">
@@ -104,14 +163,16 @@ Fullmektig.propTypes = {
   fullmektig: PT.object,
   lagreFullmektig: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
-  databaseID: PT.number.isRequired,
+  databaseID: PT.number,
   slettAktoer: PT.func.isRequired,
-  slettFullmektigFraListe: PT.func.isRequired,
+  slettFullmektigLokalt: PT.func.isRequired,
+  lagreNyFullmektigOgOppdaterLokalt: PT.func.isRequired,
   hentOrg: PT.func.isRequired,
 };
 
 Fullmektig.defaultProps = {
   fullmektig: {},
+  databaseID: 0,
 };
 
 export class FullmektigPanel extends Component {
@@ -123,16 +184,33 @@ export class FullmektigPanel extends Component {
     this.hentFullmektige();
   }
 
-  lagreFullmektig = (representererKode, orgnr) => {
-    const { lagreAktoer, oppsummering: { saksnummer } } = this.props;
-    lagreAktoer(saksnummer, {
-      aktoerID: null,
-      orgnr,
-      utenlandskPersonID: null,
-      institusjonsID: null,
-      rolleKode: MKV.Koder.aktoersroller.REPRESENTANT,
-      representererKode,
-    });
+  lagreNyFullmektigOgOppdaterLokalt = async (representererKode, orgnr) => {
+    try {
+      const lagretFullmektig = await this.lagreFullmektig(representererKode, orgnr);
+      this.setState(prevState => ({
+        fullmektige: this.byttUtTemplateMedLagretFullmektig(prevState.fullmektige, lagretFullmektig),
+      }));
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  };
+
+  byttUtTemplateMedLagretFullmektig = (fullmektige, lagretFullmektig) => fullmektige.map(fullmektig => {
+    if (fullmektig.databaseID === 0) return { ...lagretFullmektig };
+    return { ...fullmektig };
+  });
+
+  lagreFullmektig = (representererKode, orgnr) => this.props.lagreAktoer(this.props.oppsummering.saksnummer, {
+    aktoerID: null,
+    orgnr,
+    utenlandskPersonID: null,
+    institusjonsID: null,
+    rolleKode: MKV.Koder.aktoersroller.REPRESENTANT,
+    representererKode,
+  });
+
+  apneLeggTilFullmektigDialog = () => {
+    this.setState(prevState => ({ fullmektige: [...prevState.fullmektige, { ...aktoerTemplate }] }));
   };
 
   hentFullmektige = async () => {
@@ -147,7 +225,7 @@ export class FullmektigPanel extends Component {
     }
   };
 
-  slettFullmektigFraListe = databaseID => {
+  slettFullmektigLokalt = databaseID => {
     const nyFullmektige = this.state.fullmektige.filter(fullmektig => fullmektig.databaseID !== databaseID);
     this.setState({
       fullmektige: nyFullmektige,
@@ -157,7 +235,12 @@ export class FullmektigPanel extends Component {
   render() {
     const panelIkon = Ikoner.Ferdig;
     const { redigerbart, slettAktoer, hentOrg } = this.props;
-    const { slettFullmektigFraListe } = this;
+    const {
+      lagreFullmektig,
+      slettFullmektigLokalt,
+      apneLeggTilFullmektigDialog,
+      lagreNyFullmektigOgOppdaterLokalt,
+    } = this;
 
     return (
       <div>
@@ -171,12 +254,14 @@ export class FullmektigPanel extends Component {
                 databaseID={fullmektig.databaseID}
                 redigerbart={redigerbart}
                 fullmektig={fullmektig}
-                lagreFullmektig={this.lagreFullmektig}
+                lagreFullmektig={lagreFullmektig}
                 slettAktoer={slettAktoer}
-                slettFullmektigFraListe={slettFullmektigFraListe}
+                slettFullmektigLokalt={slettFullmektigLokalt}
+                lagreNyFullmektigOgOppdaterLokalt={lagreNyFullmektigOgOppdaterLokalt}
                 hentOrg={hentOrg}
               />
             ))}
+            <Nav.Knapp onClick={apneLeggTilFullmektigDialog} type="mini">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
