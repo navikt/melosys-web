@@ -23,16 +23,23 @@ const Fullmektig = ({
   databaseID,
   slettAktoer,
   slettFullmektigFraListe,
+  hentOrg,
 }) => {
   const [representererKode, settRepresentererKode] = useState(null);
+  const [org, settOrg] = useState(null);
 
   const vedRolleEndring = event => {
-    lagreFullmektig(event.target.value, fullmektig.org.orgnr);
+    lagreFullmektig(event.target.value, org.orgnr);
     settRepresentererKode(event.target.value);
+  };
+
+  const hentOrgFraApi = async () => {
+    settOrg(await hentOrg(fullmektig.orgnr));
   };
 
   useEffect(() => {
     settRepresentererKode(fullmektig.representererKode);
+    hentOrgFraApi();
   }, []);
 
   const databaseIDString = databaseID.toString();
@@ -50,13 +57,13 @@ const Fullmektig = ({
     <Nav.Row className="fullmektig">
       <Nav.Column xs="6">
         {
-          fullmektig.org && fullmektig.org.navn
+          org && org.navn
         }
         {
-          fullmektig.org &&
+          org &&
           <Fragment>
             <div className="postadresse_tittel">Postadresse</div>
-            <PostAdresse postadresse={fullmektig.org.postadresse} />
+            <PostAdresse postadresse={org.postadresse} />
           </Fragment>
         }
         <Nav.Fieldset disabled={!redigerbart} legend="Hvem er dette fullmektig for?" className="radioknapper">
@@ -85,7 +92,9 @@ const Fullmektig = ({
         <Nav.Knapp onClick={slettFullmektig} type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
       </Nav.Column>
       <Nav.Column xs="6">
-        <Kontaktopplysninger juridiskOrg={fullmektig.org} />
+        {
+          org && <Kontaktopplysninger juridiskOrg={org} />
+        }
       </Nav.Column>
     </Nav.Row>
   );
@@ -98,6 +107,7 @@ Fullmektig.propTypes = {
   databaseID: PT.number.isRequired,
   slettAktoer: PT.func.isRequired,
   slettFullmektigFraListe: PT.func.isRequired,
+  hentOrg: PT.func.isRequired,
 };
 
 Fullmektig.defaultProps = {
@@ -127,15 +137,10 @@ export class FullmektigPanel extends Component {
 
   hentFullmektige = async () => {
     const { saksnummer } = this.props.oppsummering;
-    const { hentAktoer, hentOrg } = this.props;
+    const { hentAktoer } = this.props;
 
     try {
-      /* eslint-disable no-param-reassign */
       const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
-      fullmektige.forEach(async fullmektig => {
-        fullmektig.org = await hentOrg(fullmektig.orgnr);
-      });
-      /* eslint-enable no-param-reassign */
       this.setState({ fullmektige });
     } catch (e) {
       Utils.logger.error(e);
@@ -151,7 +156,7 @@ export class FullmektigPanel extends Component {
 
   render() {
     const panelIkon = Ikoner.Ferdig;
-    const { redigerbart, slettAktoer } = this.props;
+    const { redigerbart, slettAktoer, hentOrg } = this.props;
     const { slettFullmektigFraListe } = this;
 
     return (
@@ -169,6 +174,7 @@ export class FullmektigPanel extends Component {
                 lagreFullmektig={this.lagreFullmektig}
                 slettAktoer={slettAktoer}
                 slettFullmektigFraListe={slettFullmektigFraListe}
+                hentOrg={hentOrg}
               />
             ))}
           </Nav.Container>
