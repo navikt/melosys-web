@@ -82,7 +82,7 @@ const Fullmektig = ({
   const vedRolleEndring = async event => {
     event.persist();
     try {
-      if (org) await lagreFullmektig(event.target.value, org.orgnr);
+      if (org) await lagreFullmektig(event.target.value, org.orgnr, databaseID);
       settRepresentererKode(event.target.value);
     } catch (e) {
       Utils.logger.error(e);
@@ -203,7 +203,8 @@ class FullmektigPanel extends Component {
     return { ...fullmektig };
   });
 
-  lagreFullmektig = (representererKode, orgnr) => this.props.lagreAktoer(this.props.oppsummering.saksnummer, {
+  lagreFullmektig = (representererKode, orgnr, databaseID) => this.props.lagreAktoer(this.props.oppsummering.saksnummer, {
+    databaseID: databaseID || null,
     aktoerID: null,
     orgnr,
     utenlandskPersonID: null,
