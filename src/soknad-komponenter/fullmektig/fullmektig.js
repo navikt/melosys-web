@@ -11,7 +11,7 @@ import SokFullmektigOrg from './sokFullmektigOrg';
 
 import './fullmektig.css';
 
-export function Fullmektig(props) {
+function Fullmektig(props) {
   const {
     fullmektig,
     lagreFullmektig,
@@ -121,3 +121,5 @@ Fullmektig.defaultProps = {
   fullmektig: {},
   databaseID: 0,
 };
+
+export default Fullmektig;

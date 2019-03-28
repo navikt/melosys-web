@@ -10,7 +10,7 @@ import * as Utils from '../../utils';
 
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import { fagsakSelectors } from '../../ducks/fagsaker';
-import { Fullmektig } from './fullmektig';
+import Fullmektig from './fullmektig';
 
 import './fullmektig.css';
 
