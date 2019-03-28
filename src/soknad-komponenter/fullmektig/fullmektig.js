@@ -26,8 +26,9 @@ export function Fullmektig(props) {
   const [org, settOrg] = useState(null);
 
   const vedRolleEndring = async event => {
+    event.persist();
     try {
-      if (org) await lagreFullmektig(event.target.value, org.orgnr);
+      if (org) await lagreFullmektig(event.target.value, org.orgnr, databaseID);
       settRepresentererKode(event.target.value);
     } catch (e) {
       Utils.logger.error(e);
@@ -94,7 +95,7 @@ export function Fullmektig(props) {
             name={databaseIDString}
           />
         </Nav.Fieldset>
-        <Nav.Knapp onClick={slettFullmektig} type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
+        <Nav.Knapp disabled={!redigerbart} onClick={slettFullmektig} type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
       </Nav.Column>
       <Nav.Column xs="6">
         {
