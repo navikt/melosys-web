@@ -8,6 +8,7 @@ import * as Utils from '../utils';
 
 import ForretningsAdresse from '../komponenter/adresser/forretningsAdresse';
 import { fagsakSelectors } from '../ducks/fagsaker';
+import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
 
 import './kontaktopplysninger.css';
 
@@ -75,8 +76,8 @@ export class KontaktOpplysninger extends Component {
 
     fjernResultat();
 
-    if (kontaktorgnr && kontaktorgnr.length !== 9) {
-      visFeilmelding('Org.nr. må være 9 siffer');
+    if (kontaktorgnr && !erOrgnrGyldig(kontaktorgnr)) {
+      visFeilmelding('Ugyldig orgnr');
       return;
     }
 
