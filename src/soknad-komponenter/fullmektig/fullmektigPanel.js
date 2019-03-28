@@ -24,7 +24,7 @@ const aktoerTemplate = {
   utenlandskPersonID: undefined,
 };
 
-export class FullmektigPanel extends Component {
+class FullmektigPanel extends Component {
   state = {
     fullmektige: [],
     disableLeggTilFullmektig: false,
@@ -51,7 +51,8 @@ export class FullmektigPanel extends Component {
     return { ...fullmektig };
   });
 
-  lagreFullmektig = (representererKode, orgnr) => this.props.lagreAktoer(this.props.oppsummering.saksnummer, {
+  lagreFullmektig = (representererKode, orgnr, databaseID) => this.props.lagreAktoer(this.props.oppsummering.saksnummer, {
+    databaseID: databaseID || null,
     aktoerID: null,
     orgnr,
     utenlandskPersonID: null,
@@ -120,7 +121,7 @@ export class FullmektigPanel extends Component {
                 hentOrg={hentOrg}
               />
             ))}
-            <Nav.Knapp disabled={disableLeggTilFullmektig} onClick={apneLeggTilFullmektigDialog} type="mini">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
+            <Nav.Knapp disabled={disableLeggTilFullmektig || !redigerbart} onClick={apneLeggTilFullmektigDialog} type="mini">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
@@ -157,5 +158,5 @@ const SokersFullmektigWrapper = props => (
     slettAktoer={slettAktoer}
   />
 );
-
+export { FullmektigPanel };
 export default connect(mapStateToProps)(SokersFullmektigWrapper);

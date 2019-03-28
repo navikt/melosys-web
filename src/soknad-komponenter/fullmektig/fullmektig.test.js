@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { SokFullmektigOrg, Fullmektig, FullmektigPanel } from './fullmektig';
+import FullmektigPanel from './fullmektigPanel';
+import { Fullmektig } from './fullmektig';
+import { SokFullmektigOrg } from './sokFullmektigOrg';
 
 describe('SokFullmektigOrg', () => {
   let props = null;
