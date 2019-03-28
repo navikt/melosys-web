@@ -148,7 +148,7 @@ const Fullmektig = ({
             name={databaseIDString}
           />
         </Nav.Fieldset>
-        <Nav.Knapp onClick={slettFullmektig} type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
+        <Nav.Knapp disabled={!redigerbart} onClick={slettFullmektig} type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
       </Nav.Column>
       <Nav.Column xs="6">
         {
@@ -175,7 +175,7 @@ Fullmektig.defaultProps = {
   databaseID: 0,
 };
 
-export class FullmektigPanel extends Component {
+class FullmektigPanel extends Component {
   state = {
     fullmektige: [],
     disableLeggTilFullmektig: false,
@@ -271,7 +271,7 @@ export class FullmektigPanel extends Component {
                 hentOrg={hentOrg}
               />
             ))}
-            <Nav.Knapp disabled={disableLeggTilFullmektig} onClick={apneLeggTilFullmektigDialog} type="mini">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
+            <Nav.Knapp disabled={disableLeggTilFullmektig || !redigerbart} onClick={apneLeggTilFullmektigDialog} type="mini">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
@@ -308,5 +308,7 @@ const SokersFullmektigWrapper = props => (
     slettAktoer={slettAktoer}
   />
 );
+
+export { SokFullmektigOrg, Fullmektig, FullmektigPanel };
 
 export default connect(mapStateToProps)(SokersFullmektigWrapper);
