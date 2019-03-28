@@ -80,6 +80,7 @@ const Fullmektig = ({
   const [org, settOrg] = useState(null);
 
   const vedRolleEndring = async event => {
+    event.persist();
     try {
       if (org) await lagreFullmektig(event.target.value, org.orgnr);
       settRepresentererKode(event.target.value);
