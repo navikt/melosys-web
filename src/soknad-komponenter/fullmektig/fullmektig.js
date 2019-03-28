@@ -11,8 +11,7 @@ import * as Utils from '../../utils';
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import Kontaktopplysninger from '../kontaktopplysninger';
 import PostAdresse from '../../komponenter/adresser/postAdresse';
-import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
-
+import SokFullmektigOrg from './sokFullmektigOrg';
 import { fagsakSelectors } from '../../ducks/fagsaker';
 
 import './fullmektig.css';
@@ -25,45 +24,6 @@ const aktoerTemplate = {
   representererKode: undefined,
   rolleKode: undefined,
   utenlandskPersonID: undefined,
-};
-
-const SokFullmektigOrg = ({ lagreNyFullmektigOgOppdaterLokalt }) => {
-  const [orgnr, settOrgnr] = useState('');
-  const [feilmelding, settFeilmelding] = useState(undefined);
-
-  const sok = () => {
-    if (erOrgnrGyldig(orgnr)) {
-      lagreNyFullmektigOgOppdaterLokalt(orgnr);
-    } else {
-      settFeilmelding({ feilmelding: 'Ugyldig orgnr' });
-    }
-  };
-
-  const vedEndretInput = event => {
-    settOrgnr(event.target.value);
-    settFeilmelding(undefined);
-  };
-
-  return (
-    <Nav.Row>
-      <Nav.Column xs="9">
-        <Nav.Input
-          label="Organisasjonsnummer"
-          placeholder="Skriv inn..."
-          onChange={vedEndretInput}
-          value={orgnr}
-          feil={feilmelding}
-        />
-      </Nav.Column>
-      <Nav.Column xs="3">
-        <Nav.Knapp onClick={sok} type="mini" className="sokKnapp">SØK</Nav.Knapp>
-      </Nav.Column>
-    </Nav.Row>
-  );
-};
-
-SokFullmektigOrg.propTypes = {
-  lagreNyFullmektigOgOppdaterLokalt: PT.func.isRequired,
 };
 
 const Fullmektig = ({
