@@ -194,6 +194,7 @@ class VurderingArtikkel16 extends Component {
       medlemskap,
       oppsummering,
       redigerbart,
+      art16Begrunnelser,
     } = this.props;
 
     const {
@@ -223,6 +224,7 @@ class VurderingArtikkel16 extends Component {
     const begrunnelseError = begrunnelserFeilmelding ? { error: begrunnelserFeilmelding } : {};
     const fritekstError = fritekstFeilmelding ? { error: fritekstFeilmelding, touched: true } : {};
 
+    const visFritekstfelt = art16Begrunnelser.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
     /* eslint-disable max-len */
     return (
@@ -242,15 +244,40 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="10">
-              <Skjema.Select feil={lovvalgFeilmelding} onBlur={lagreLovvalgsPerioder} disabled={!redigerbart} feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
+              <Skjema.Select
+                feil={lovvalgFeilmelding}
+                onBlur={lagreLovvalgsPerioder}
+                disabled={!redigerbart}
+                feltNavn="lovvalgsperiode.unntakFraBestemmelse"
+                label="Artikkelen det søkes unntak fra:"
+                bredde="xl"
+              >
                 { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
               </Skjema.Select>
-              <Listevelger meta={begrunnelseError} disabled={!redigerbart} gruppe muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
+              <Listevelger
+                meta={begrunnelseError}
+                disabled={!redigerbart}
+                gruppe
+                muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning}
+                feltNavn="vilkar.art16_1_begrunnelser"
+                label="Legg til begrunnelse:"
+              />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.Textarea meta={fritekstError} onBlur={lagreVilkar} disabled={!redigerbart} feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
+              {
+                visFritekstfelt &&
+                <Skjema.Textarea
+                  meta={fritekstError}
+                  onBlur={lagreVilkar}
+                  disabled={!redigerbart}
+                  feltNavn="vilkar.art16_1_begrunnelser_fritekst"
+                  label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                  maxLength={255}
+                  bredde="fullbredde"
+                />
+              }
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
