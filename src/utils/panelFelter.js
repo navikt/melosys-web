@@ -56,7 +56,7 @@ export const feltGrupper = {
     installasjonsLand: [],
   },
   avklartefakta: {
-    avklartefaktaOppholdsLand: [],
+    avklartefaktaSoknadsland: [],
     avklartefaktaPeriodeFraOgMed: [value => Skjema.Validering.erPakrevet(value)],
     avklartefaktaPeriodeTilOgMed: [value => Skjema.Validering.erPakrevet(value)],
     avklartefaktaYrkesgruppe: [],

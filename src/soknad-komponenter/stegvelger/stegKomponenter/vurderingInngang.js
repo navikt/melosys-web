@@ -6,14 +6,14 @@ import * as MPT from '../../../proptypes/';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
-import OppholdsLandListe from './inngang/oppholdsLandListe';
+import SoknadslandListe from './inngang/soknadslandListe';
 
 const VurderingInngang = props => {
   const {
     bekreftOgFortsett, inngangsvilkar, alleLandKoder, begrunnelser, avklartefakta, tilstand, redigerbart,
   } = props;
   const { vurdering } = inngangsvilkar;
-  const oppholdBegrunnelser = begrunnelser.opphold;
+  const soknadslandBegrunnelser = begrunnelser.opphold;
   const { harAvklaring } = tilstand;
 
   return (
@@ -28,10 +28,10 @@ const VurderingInngang = props => {
         </li>
       </ul>
       <FieldArray
-        name="avklartefakta.oppholdsland"
-        component={OppholdsLandListe}
+        name="avklartefakta.soknadsland"
+        component={SoknadslandListe}
         avklartefakta={avklartefakta}
-        oppholdBegrunnelser={oppholdBegrunnelser}
+        soknadslandBegrunnelser={soknadslandBegrunnelser}
         alleLandKoder={alleLandKoder}
         redigerbart={redigerbart}
       />

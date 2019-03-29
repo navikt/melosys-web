@@ -10,7 +10,7 @@ class Inngang extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'Hvis minst ett land finnes',
-        exec: avklartefakta => (Inngang.harMinstEttGyldigOppholdsland(avklartefakta)),
+        exec: avklartefakta => (Inngang.harMinstEttGyldigSoknadsland(avklartefakta)),
         nesteSteg: STEG.YRKESGRUPPE,
       },
       {
@@ -30,8 +30,8 @@ class Inngang extends Steg {
       redigerbart: props.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { oppholdsland } = _propsLight.skjema.avklartefakta;
-      const harAvklaring = oppholdsland.some(land => land.fakta.includes('TRUE'));
+      const { soknadsland } = _propsLight.skjema.avklartefakta;
+      const harAvklaring = soknadsland.some(land => land.fakta.includes('TRUE'));
       return ({
         harAvklaring,
       });
@@ -42,8 +42,8 @@ class Inngang extends Steg {
     this.status = FANE_STATUS.OK;
   }
 
-  static harMinstEttGyldigOppholdsland = avklartefakta => avklartefakta
-    .some(enkeltFakta => ((enkeltFakta.referanse === KV.Koder.OPPHOLDSLAND) && enkeltFakta.fakta.includes('TRUE')));
+  static harMinstEttGyldigSoknadsland = avklartefakta => avklartefakta
+    .some(enkeltFakta => ((enkeltFakta.referanse === KV.Koder.SOKNADSLAND) && enkeltFakta.fakta.includes('TRUE')));
 }
 
 export default Inngang;

@@ -120,7 +120,7 @@ export default function reducer(state = initialState, action) {
     case Types.OPPDATER_AVKLARTEFAKTA: {
       const { dokument } = action;
       const avklartefakta = [
-        ...dokument.avklartefakta.oppholdsland,
+        ...dokument.avklartefakta.soknadsland,
         ...dokument.avklartefakta.virksomheter,
         lagAvklartfaktaObjekt(dokument.avklartefakta.yrkesgruppe, 'YRKESGRUPPE'),
         lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),

@@ -242,6 +242,7 @@ const mapStateToProps = state => ({
     EOSBarnetrygdFraNAV: soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
     adresseIUtlandet: soknadSelectors.BostedSelector(state).adresseIUtlandet,
     maritimtArbeid: soknadSelectors.MaritimtArbeidSelector(state),
+    soknadsland: soknadSelectors.SoknadslandSelector(state),
     foretakUtland: soknadSelectors.ForetakUtlandSelector(state),
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
@@ -253,7 +254,7 @@ const mapStateToProps = state => ({
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandKode,
     tidligeremedlemskap: behandlingerSelectors.tidligereMedlemskap(state),
     avklartefakta: {
-      oppholdsland: avklartefaktaSelectors.Oppholdsland(state),
+      soknadsland: avklartefaktaSelectors.Soknadsland(state),
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
       yrkesaktivitetAntallLand: avklartefaktaSelectors.YrkesaktivitetAntallLand(state),
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),

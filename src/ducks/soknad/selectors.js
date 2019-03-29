@@ -115,6 +115,11 @@ export const MaritimtArbeidSelector = createSelector(
   maritimtArbeid => maritimtArbeid || []
 );
 
+export const SoknadslandSelector = createSelector(
+  state => (state.soknad.data.soeknadDokument ? [state.soknad.data.soeknadDokument.soeknadsland.landKode] : []),
+  soknadsland => soknadsland || []
+);
+
 export const PersonOpplysningerSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.personOpplysninger : {}),
   person => person || {}

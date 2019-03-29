@@ -10,7 +10,7 @@ const FjernetLandEnkelt = props => {
     landKodeObjekt, angreFjern, begrunnelseTerm, redigerbart,
   } = props;
 
-  const landTerm = KV.objektTilKode(landKodeObjekt);
+  const landTerm = KV.objektTilTerm(landKodeObjekt);
   const landKode = KV.objektTilKode(landKodeObjekt);
 
   return (
