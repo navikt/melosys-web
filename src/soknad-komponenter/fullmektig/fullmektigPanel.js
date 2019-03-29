@@ -15,8 +15,6 @@ import Fullmektig from './fullmektig';
 
 import './fullmektig.css';
 
-const uuid = require('uuid/v4');
-
 const aktoerTemplate = {
   aktoerID: undefined,
   databaseID: 0,
@@ -27,7 +25,7 @@ const aktoerTemplate = {
   utenlandskPersonID: undefined,
 };
 
-export class FullmektigPanel extends Component {
+class FullmektigPanel extends Component {
   state = {
     fullmektige: [],
     disableLeggTilFullmektig: false,
@@ -36,10 +34,6 @@ export class FullmektigPanel extends Component {
   componentDidMount() {
     this.hentFullmektige();
   }
-  hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
-  hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
-  lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
-  slettAktoer = databaseID => Api.Fagsaker.aktoer.slett(databaseID);
 
   lagreNyFullmektigOgOppdaterLokalt = async (representererKode, orgnr) => {
     try {
@@ -53,24 +47,20 @@ export class FullmektigPanel extends Component {
     }
   };
 
-  byttUtTemplateMedLagretFullmektig = (fullmektige, lagretFullmektig) => fullmektige.map(fullmektig => ((fullmektig.databaseID === 0) ? { ...lagretFullmektig } : { ...fullmektig }));
+  byttUtTemplateMedLagretFullmektig = (fullmektige, lagretFullmektig) => fullmektige.map(fullmektig => {
+    if (fullmektig.databaseID === 0) return { ...lagretFullmektig };
+    return { ...fullmektig };
+  });
 
-  lagreFullmektig = (representererKode, orgnr, databaseID) => {
-    const { lagreAktoer } = this;
-    const { oppsummering } = this.props;
-
-    const aktoer = {
-      ...aktoerTemplate,
-      aktoerID: null,
-      databaseID: databaseID || null,
-      orgnr,
-      utenlandskPersonID: null,
-      institusjonsID: null,
-      rolleKode: MKV.Koder.aktoersroller.REPRESENTANT,
-      representererKode,
-    };
-    lagreAktoer(oppsummering.saksnummer, aktoer);
-  };
+  lagreFullmektig = (representererKode, orgnr, databaseID) => this.props.lagreAktoer(this.props.oppsummering.saksnummer, {
+    databaseID: databaseID || null,
+    aktoerID: null,
+    orgnr,
+    utenlandskPersonID: null,
+    institusjonsID: null,
+    rolleKode: MKV.Koder.aktoersroller.REPRESENTANT,
+    representererKode,
+  });
 
   apneLeggTilFullmektigDialog = () => {
     this.setState(prevState => ({
@@ -80,8 +70,8 @@ export class FullmektigPanel extends Component {
   };
 
   hentFullmektige = async () => {
-    const { hentAktoer } = this;
     const { saksnummer } = this.props.oppsummering;
+    const { hentAktoer } = this.props;
 
     try {
       const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
@@ -100,17 +90,16 @@ export class FullmektigPanel extends Component {
   };
 
   render() {
+    const panelIkon = Ikoner.Ferdig;
+
+    const { redigerbart, slettAktoer, hentOrg } = this.props;
+
     const {
-      hentOrg,
-      slettAktoer,
       lagreFullmektig,
       slettFullmektigLokalt,
       apneLeggTilFullmektigDialog,
       lagreNyFullmektigOgOppdaterLokalt,
     } = this;
-
-    const { redigerbart } = this.props;
-    const panelIkon = Ikoner.Ferdig;
 
     const { disableLeggTilFullmektig } = this.state;
 
@@ -122,7 +111,7 @@ export class FullmektigPanel extends Component {
           <Nav.Container fluid>
             {this.state.fullmektige.map(fullmektig => (
               <Fullmektig
-                key={uuid()} // Kan ikke bruke databaseID her da den er nullable
+                key={fullmektig.databaseID}
                 databaseID={fullmektig.databaseID}
                 redigerbart={redigerbart}
                 fullmektig={fullmektig}
@@ -142,7 +131,11 @@ export class FullmektigPanel extends Component {
 }
 
 FullmektigPanel.propTypes = {
+  hentOrg: PT.func.isRequired,
+  hentAktoer: PT.func.isRequired,
+  slettAktoer: PT.func.isRequired,
   oppsummering: PT.object.isRequired,
+  lagreAktoer: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 
@@ -151,12 +144,20 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
-/*
-const ConnectedFullmektigPanel = props => (
+
+const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
+const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
+const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
+const slettAktoer = databaseID => Api.Fagsaker.aktoer.slett(databaseID);
+
+const SokersFullmektigWrapper = props => (
   <FullmektigPanel
     {...props}
+    lagreAktoer={lagreAktoer}
+    hentAktoer={hentAktoer}
+    hentOrg={hentOrg}
+    slettAktoer={slettAktoer}
   />
 );
-*/
-export default connect(mapStateToProps)(FullmektigPanel);
-
+export { FullmektigPanel };
+export default connect(mapStateToProps)(SokersFullmektigWrapper);
