@@ -23,6 +23,7 @@ const MineOppgaver = props => {
     return jf + sb;
   };
   const ingenSakerMelding = 'Du har ingen saker akkurat nå. Velg en ny sak eller journalføringsoppgave fra panelene til høyre.';
+
   return (
     <div className="minesaker">
       <h1>Mine Oppgaver ({antall()})</h1>
