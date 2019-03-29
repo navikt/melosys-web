@@ -72,29 +72,32 @@ function Fullmektig(props) {
             <SokFullmektigOrg lagreNyFullmektigOgOppdaterLokalt={orgnr => lagreNyFullmektigOgOppdaterLokalt(representererKode, orgnr)} />
           </Fragment>
         }
-        <Nav.Fieldset disabled={!redigerbart} legend="Hvem er dette fullmektig for?" className="radioknapper">
-          <Nav.Radio
-            onChange={vedRolleEndring}
-            checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
-            label="Arbeidsgiver"
-            value={MKV.Koder.representerer.ARBEIDSGIVER}
-            name={databaseIDString}
-          />
-          <Nav.Radio
-            onChange={vedRolleEndring}
-            checked={representererKode === MKV.Koder.representerer.BRUKER}
-            label="Arbeidstaker"
-            value={MKV.Koder.representerer.BRUKER}
-            name={databaseIDString}
-          />
-          <Nav.Radio
-            onChange={vedRolleEndring}
-            checked={representererKode === MKV.Koder.representerer.BEGGE}
-            label="Både arbeidstaker og arbeidsgiver"
-            value={MKV.Koder.representerer.BEGGE}
-            name={databaseIDString}
-          />
-        </Nav.Fieldset>
+        {
+          org &&
+          <Nav.Fieldset disabled={!redigerbart} legend="Hvem er dette fullmektig for?" className="radioknapper">
+            <Nav.Radio
+              onChange={vedRolleEndring}
+              checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
+              label="Arbeidsgiver"
+              value={MKV.Koder.representerer.ARBEIDSGIVER}
+              name={databaseIDString}
+            />
+            <Nav.Radio
+              onChange={vedRolleEndring}
+              checked={representererKode === MKV.Koder.representerer.BRUKER}
+              label="Arbeidstaker"
+              value={MKV.Koder.representerer.BRUKER}
+              name={databaseIDString}
+            />
+            <Nav.Radio
+              onChange={vedRolleEndring}
+              checked={representererKode === MKV.Koder.representerer.BEGGE}
+              label="Både arbeidstaker og arbeidsgiver"
+              value={MKV.Koder.representerer.BEGGE}
+              name={databaseIDString}
+            />
+          </Nav.Fieldset>
+        }
         <Nav.Knapp disabled={!redigerbart} onClick={slettFullmektig} type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
       </Nav.Column>
       <Nav.Column xs="6">
