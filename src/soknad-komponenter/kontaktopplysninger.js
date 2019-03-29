@@ -130,7 +130,7 @@ export class KontaktOpplysninger extends Component {
         }
         {
           !skjulInput &&
-            <Fragment>
+            <Nav.Fieldset legend="Kontaktopplysninger">
               <Nav.Input
                 disabled={!redigerbart}
                 onChange={vedKontaktnavnEndring}
@@ -146,7 +146,7 @@ export class KontaktOpplysninger extends Component {
                 value={kontaktorgnr}
                 label="Organisasjonsnummer"
               />
-            </Fragment>
+            </Nav.Fieldset>
         }
         {
           !skjulInput && sokeResultat &&
