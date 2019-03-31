@@ -91,6 +91,7 @@ class OpprettNyFagSak extends Component {
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
+        <Skjema.Checkbox feltNavn="roar" label="roar" />
         <div className="opprettnysak__knapper">
           <Nav.Knapp className="knapp" onClick={opprettFagsak}>Opprett ny sak</Nav.Knapp>
         </div>

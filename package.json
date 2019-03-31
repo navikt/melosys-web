@@ -111,7 +111,7 @@
     "eslint:scripts": "eslint scripts --ext .js",
     "eslint": "npm-run-all -s eslint:*",
     "lesshint": "lesshint --reporter ./lesshint-reporter src/",
-    "mocha": "mocha"
+    "cypress:open": "cypress open"
   },
   "jest-junit": {
     "suiteName": "jest tests",
@@ -127,6 +127,7 @@
     "babel-preset-env": "^1.6.1",
     "body-parser": "^1.18.3",
     "cross-env": "^5.2.0",
+    "cypress": "^3.2.0",
     "dotenv-save": "^1.2.0",
     "enzyme": "^3.9.0",
     "enzyme-adapter-react-16": "^1.11.2",

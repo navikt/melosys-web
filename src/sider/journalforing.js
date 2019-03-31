@@ -83,6 +83,7 @@ class Journalforing extends Component {
       brukerID, avsenderID, arbeidsgiverID,
       opprettnysak_behandlingstype: behandlingstypeKode,
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
+      roar,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -98,6 +99,7 @@ class Journalforing extends Component {
       journalpostID,
       oppgaveID,
       vedlegg,
+      roar,
     };
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
@@ -115,7 +117,8 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering },
+      tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
@@ -374,6 +377,7 @@ const mapStateToProps = state => ({
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
     ingenVurdering: false,
+    roar: false,
   },
 });
 
