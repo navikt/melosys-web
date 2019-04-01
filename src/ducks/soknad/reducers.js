@@ -137,7 +137,7 @@ export default function reducer(state = initialState, action) {
           territorialfarvann: maritimtArbeid.territorialfarvann ? maritimtArbeid.territorialfarvann : null,
         })),
         soeknadsland: {
-          landKode: dokument.soknadsland[0],
+          landKoder: dokument.soknadsland,
         },
         selvstendigArbeid: {
           erSelvstendig: dokument.erSelvstendig,

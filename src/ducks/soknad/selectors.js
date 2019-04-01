@@ -116,7 +116,7 @@ export const MaritimtArbeidSelector = createSelector(
 );
 
 export const SoknadslandSelector = createSelector(
-  state => (state.soknad.data.soeknadDokument ? [state.soknad.data.soeknadDokument.soeknadsland.landKode] : []),
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.soeknadsland.landKoder : []),
   soknadsland => soknadsland || []
 );
 
