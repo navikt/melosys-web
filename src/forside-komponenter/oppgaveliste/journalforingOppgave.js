@@ -10,8 +10,14 @@ import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import './journalforingOppgave.css';
 
 const JournalforingOppgave = ({ sak }) => {
-  const { journalpostID, oppgaveID, aktivTil } = sak;
-  const tittel = 'Journalføring';
+  const {
+    journalpostID,
+    oppgaveID,
+    aktivTil,
+    fnr,
+    sammensattNavn,
+  } = sak;
+  const tittel = `Journalføring - ${sammensattNavn} - ${fnr}`;
   const link = `/journalforing/${journalpostID}/${oppgaveID}`;
 
   const undertittel = () => (
