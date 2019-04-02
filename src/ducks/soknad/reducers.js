@@ -40,16 +40,13 @@ export default function reducer(state = initialState, action) {
     case Types.RESET:
       return { ...initialState };
     case Types.OPPDATER_PERIODE: {
-      const { oppholdsPeriode } = action.data;
+      const { soknadsperiode } = action.data;
 
       const soknad = {
         ...state.data.soeknadDokument,
-        oppholdUtland: {
-          ...state.data.soeknadDokument.oppholdUtland,
-          oppholdsPeriode: {
-            fom: oppholdsPeriode.fom,
-            tom: oppholdsPeriode.tom,
-          },
+        periode: {
+          fom: soknadsperiode.fom,
+          tom: soknadsperiode.tom,
         },
       };
 
@@ -138,6 +135,10 @@ export default function reducer(state = initialState, action) {
         })),
         soeknadsland: {
           landKoder: dokument.soknadsland,
+        },
+        periode: {
+          fom: formatterDatoTilISO(dokument.soknadsperiodeFom),
+          tom: formatterDatoTilISO(dokument.soknadsperiodeTom),
         },
         selvstendigArbeid: {
           erSelvstendig: dokument.erSelvstendig,

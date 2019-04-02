@@ -120,6 +120,11 @@ export const SoknadslandSelector = createSelector(
   soknadsland => soknadsland || []
 );
 
+export const SoknadsperiodeSelector = createSelector(
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.periode : {}),
+  soknadsperiode => soknadsperiode || {}
+);
+
 export const PersonOpplysningerSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.personOpplysninger : {}),
   person => person || {}

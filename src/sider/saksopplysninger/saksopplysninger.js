@@ -16,7 +16,7 @@ import ForetakUtland from '../../soknad-komponenter/foretakutland';
 import Inntekt from '../../soknad-komponenter/inntektUtland';
 import MaritimtArbeid from '../../soknad-komponenter/maritimtArbeid';
 import Medlemskap from '../../komponenter/medlemskap';
-import OppholdPeriode from '../../soknad-komponenter/oppholdPeriode';
+import Soknadsperiode from '../../soknad-komponenter/soknadsperiode';
 import Personopplysninger from '../../soknad-komponenter/personopplysninger';
 import SelvstendigArbeid from '../../soknad-komponenter/selvstendigarbeid';
 import Stegvelger from '../../soknad-komponenter/stegvelger';
@@ -128,7 +128,7 @@ class Saksopplysninger extends Component {
           />
         }
         <Personopplysninger />
-        <OppholdPeriode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
+        <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
         <Bosted erValidert={this.state.gyldigePaneler.bosted} />
         <ArbeidsgivereNorge />
         <ForetakUtland />
@@ -243,6 +243,8 @@ const mapStateToProps = state => ({
     adresseIUtlandet: soknadSelectors.BostedSelector(state).adresseIUtlandet,
     maritimtArbeid: soknadSelectors.MaritimtArbeidSelector(state),
     soknadsland: soknadSelectors.SoknadslandSelector(state),
+    soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
+    soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
     foretakUtland: soknadSelectors.ForetakUtlandSelector(state),
     kontaktNavn: soknadSelectors.ArbeidNorgeSelector(state).kontaktNavn,
     kontaktEpost: soknadSelectors.ArbeidNorgeSelector(state).kontaktEpost,
