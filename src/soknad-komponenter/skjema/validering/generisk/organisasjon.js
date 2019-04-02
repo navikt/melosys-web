@@ -22,7 +22,6 @@ const erOrgnrGyldig = verdi => {
   return (parseInt(verdi.charAt(8), 10) === Q1);
 };
 
-/* eslint import/prefer-default-export:off */
 export {
   erOrgnrLengde,
   erOrgnrGyldig,

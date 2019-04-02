@@ -8,6 +8,7 @@ import * as Utils from '../utils';
 
 import ForretningsAdresse from '../komponenter/adresser/forretningsAdresse';
 import { fagsakSelectors } from '../ducks/fagsaker';
+import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
 
 import './kontaktopplysninger.css';
 
@@ -47,7 +48,10 @@ export class KontaktOpplysninger extends Component {
 
   vedKontaktnavnEndring = event => this.settKontaktNavn(event.target.value);
 
-  vedKontaktorgnrEndring = event => this.settKontaktOrgnr(event.target.value);
+  vedKontaktorgnrEndring = event => {
+    this.settKontaktOrgnr(event.target.value);
+    this.fjernResultat();
+  };
 
   fjernResultat = () => this.setState({ sokeResultat: null });
 
@@ -64,34 +68,44 @@ export class KontaktOpplysninger extends Component {
     }
   };
 
-  validerOgLagreKontaktOgAktoer = async () => {
+  validerOrgnr = () => {
+    const { kontaktorgnr } = this.state;
+    const { visFeilmelding } = this;
+
+    if (kontaktorgnr && !erOrgnrGyldig(kontaktorgnr)) {
+      visFeilmelding('Ugyldig orgnr');
+      return false;
+    }
+    return true;
+  };
+
+  validerOgLagreKontakt = async () => {
     const {
       lagreKontaktopplysninger,
       oppsummering: { saksnummer },
       juridiskOrg,
     } = this.props;
     const { kontaktorgnr, kontaktnavn } = this.state;
-    const { visFeilmelding, fjernResultat, finnOgVisOrganisasjon } = this;
+    const { validerOrgnr } = this;
 
-    fjernResultat();
-
-    if (kontaktorgnr && kontaktorgnr.length !== 9) {
-      visFeilmelding('Org.nr. må være 9 siffer');
-      return;
+    if (validerOrgnr()) {
+      lagreKontaktopplysninger(saksnummer, juridiskOrg.orgnr, {
+        kontaktnavn: kontaktnavn || null,
+        kontaktorgnr: kontaktorgnr || null,
+      });
     }
-
-    const org = await finnOgVisOrganisasjon(kontaktorgnr);
-    if (!org && kontaktorgnr) this.visFeilmelding('Kunne ikke finne organisasjon, organisasjonsnummer blir ikke lagret');
-
-    lagreKontaktopplysninger(saksnummer, juridiskOrg.orgnr, {
-      kontaktnavn: kontaktnavn || null,
-      kontaktorgnr: org ? kontaktorgnr : null,
-    });
   };
 
-  finnOgVisOrganisasjon = async kontaktOrgnr => {
-    const org = await this.finnOrganisasjon(kontaktOrgnr);
-    this.setState({ sokeResultat: org });
+  vedKlikkSok = () => {
+    if (this.validerOrgnr()) this.finnOgVisOrganisasjon();
+  };
+
+  finnOgVisOrganisasjon = async () => {
+    const org = await this.finnOrganisasjon(this.state.kontaktorgnr);
+
+    if (org) this.setState({ sokeResultat: org });
+    else this.visFeilmelding('Kunne ikke finne organisasjon');
+
     return org;
   };
 
@@ -111,11 +125,12 @@ export class KontaktOpplysninger extends Component {
     const { sokeResultat, orgnrFeilmelding } = this.state;
 
     const {
-      validerOgLagreKontaktOgAktoer,
+      validerOgLagreKontakt,
       vedKontaktorgnrEndring,
       vedKontaktnavnEndring,
       fjernOppforing,
       toggleSkjulInput,
+      vedKlikkSok,
     } = this;
 
     const { redigerbart } = this.props;
@@ -130,23 +145,36 @@ export class KontaktOpplysninger extends Component {
         }
         {
           !skjulInput &&
-            <Fragment>
-              <Nav.Input
-                disabled={!redigerbart}
-                onChange={vedKontaktnavnEndring}
-                onBlur={validerOgLagreKontaktOgAktoer}
-                value={kontaktnavn}
-                label="Kontaktperson"
-              />
-              <Nav.Input
-                disabled={!redigerbart}
-                feil={orgnrFeilmelding}
-                onChange={vedKontaktorgnrEndring}
-                onBlur={validerOgLagreKontaktOgAktoer}
-                value={kontaktorgnr}
-                label="Organisasjonsnummer"
-              />
-            </Fragment>
+          <Nav.Fieldset legend="Kontaktopplysninger">
+            <Nav.Row>
+              <Nav.Column xs="12">
+                <Nav.Input
+                  disabled={!redigerbart}
+                  onChange={vedKontaktnavnEndring}
+                  onBlur={validerOgLagreKontakt}
+                  value={kontaktnavn}
+                  label="Kontaktperson"
+                  placeholder="Skriv inn..."
+                />
+              </Nav.Column>
+            </Nav.Row>
+            <Nav.Row>
+              <Nav.Column xs="8">
+                <Nav.Input
+                  disabled={!redigerbart}
+                  feil={orgnrFeilmelding}
+                  onChange={vedKontaktorgnrEndring}
+                  onBlur={validerOgLagreKontakt}
+                  value={kontaktorgnr}
+                  label="Organisasjonsnummer"
+                  placeholder="Skriv inn..."
+                />
+              </Nav.Column>
+              <Nav.Column xs="4">
+                <Nav.Knapp onClick={vedKlikkSok} className="sokKnapp">SØK</Nav.Knapp>
+              </Nav.Column>
+            </Nav.Row>
+          </Nav.Fieldset>
         }
         {
           !skjulInput && sokeResultat &&
