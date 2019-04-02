@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
@@ -9,8 +9,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker';
 import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../../constants';
 
-import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
-
+import PostEllerForretningsAdresse from '../../komponenter/adresser/postEllerForretningsAdresse';
 
 import './selvstendigArbeid.css';
 
@@ -63,7 +62,13 @@ class EnkeltForetak extends Component {
                 onBlur={() => this.presjekkOrganisasjon()}
                 disabled={!redigerbart}
               />
-              { organisasjon && <OrganisasjonsAdresse className="enkeltforetak__adresse" organisasjon={organisasjon} /> }
+              {
+                organisasjon &&
+                  <Fragment>
+                    <div>{organisasjon.navn}</div>
+                    <PostEllerForretningsAdresse className="enkeltforetakAdresse" organisasjon={organisasjon} />
+                  </Fragment>
+              }
             </Nav.Column>
             <Nav.Column xs="5">
               <label>Oppgir at virksomheten fortsetter etter arbeid i utlandet:

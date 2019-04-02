@@ -6,9 +6,7 @@ import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 
 import PanelHeader from '../panelHeader/panelHeader';
-
-import ForretningsAdresse from '../adresser/forretningsAdresse';
-
+import PostEllerForretningsAdresse from '../adresser/postEllerForretningsAdresse';
 import KontaktOpplysninger from '../../soknad-komponenter/kontaktopplysninger';
 
 import './organisasjon.css';
@@ -25,10 +23,9 @@ const Organisasjon = props => {
   const {
     orgnr,
     navn,
-    forretningsadresse,
   } = organisasjon;
 
-  const content = (
+  return (
     <div className="panelSeksjon organisasjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader
@@ -41,8 +38,7 @@ const Organisasjon = props => {
           <Nav.Row>
             <Nav.Column xs="6">
               <dl className="organisasjon__detaljer">
-                <dt>Forretningsadresse</dt>
-                <dd>{<ForretningsAdresse forretningsadresse={forretningsadresse} />}</dd>
+                <PostEllerForretningsAdresse className="organisasjon__adresse" organisasjon={organisasjon} />
               </dl>
             </Nav.Column>
             <Nav.Column xs="6" className="organisasjon__slettwrapper">
@@ -56,7 +52,6 @@ const Organisasjon = props => {
       </Nav.EkspanderbartpanelBase>
     </div>
   );
-  return content;
 };
 
 Organisasjon.propTypes = {

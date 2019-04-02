@@ -4,7 +4,7 @@ import PT from 'prop-types';
 
 import { fagsakSelectors } from '../../ducks/fagsaker';
 import * as Nav from '../../utils/navFrontend';
-import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
+import PostEllerForretningsAdresse from '../../komponenter/adresser/postEllerForretningsAdresse';
 
 import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
 
@@ -18,7 +18,8 @@ import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
 const FunnetOrganisasjon = ({ leggTil, organisasjon }) => (
   <Nav.Panel border>
     <Nav.Undertittel>Fant følgende organisasjon:</Nav.Undertittel>
-    <OrganisasjonsAdresse organisasjon={organisasjon} />
+    <div className="organisasjonNavn">{organisasjon.navn}</div>
+    <PostEllerForretningsAdresse className="adresse" organisasjon={organisasjon} />
     <Nav.Knapp onClick={() => leggTil(organisasjon.orgnr)} className="knapp">Legg til</Nav.Knapp>
   </Nav.Panel>
 );

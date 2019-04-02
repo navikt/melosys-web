@@ -12,7 +12,7 @@ import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
 import Arbeidsavtaler from './arbeidsavtaler';
-import ForretningsAdresse from '../adresser/forretningsAdresse';
+import PostEllerForretningsAdresse from '../adresser/postEllerForretningsAdresse';
 
 import './arbeidsforhold.css';
 
@@ -37,7 +37,6 @@ const Arbeidsforholdet = props => {
   } = props.arbeidsforholdet;
 
   const { navn: arbeidsgiverNavn } = arbeidsgiver;
-  const { forretningsadresse } = arbeidsgiver;
 
   const varighet = Utils.dato.datoDiff(ansettelsesPeriode.fom, ansettelsesPeriode.tom);
   const varighetLabel = `${varighet} mnd`;
@@ -69,8 +68,7 @@ const Arbeidsforholdet = props => {
                   <dl className="arbeidsforholdet__detaljer">
                     <dt>Org. nr</dt>
                     <dd>{arbeidsgiver.orgnr}</dd>
-                    <dt>Forretningsadresse:</dt>
-                    <ForretningsAdresse forretningsadresse={forretningsadresse} />
+                    <PostEllerForretningsAdresse className="adresse" organisasjon={arbeidsgiver} />
                     <dt>A-ordning:</dt>
                     <dd>{Utils.streng.boolTilNorsk(Aordning)}</dd>
                   </dl>
