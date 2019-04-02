@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
@@ -63,11 +63,7 @@ class EnkeltForetak extends Component {
                 disabled={!redigerbart}
               />
               {
-                organisasjon &&
-                  <Fragment>
-                    <div>{organisasjon.navn}</div>
-                    <PostEllerForretningsAdresse className="enkeltforetakAdresse" organisasjon={organisasjon} />
-                  </Fragment>
+                organisasjon && <PostEllerForretningsAdresse className="enkeltforetakAdresse" organisasjon={organisasjon} />
               }
             </Nav.Column>
             <Nav.Column xs="5">

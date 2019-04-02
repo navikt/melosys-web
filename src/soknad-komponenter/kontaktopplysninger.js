@@ -177,11 +177,7 @@ export class KontaktOpplysninger extends Component {
           </Nav.Fieldset>
         }
         {
-          !skjulInput && sokeResultat &&
-            <Fragment>
-              {sokeResultat.navn}
-              <PostEllerForretningsAdresse className="adresse" organisasjon={sokeResultat} />
-            </Fragment>
+          !skjulInput && sokeResultat && <PostEllerForretningsAdresse className="adresse" organisasjon={sokeResultat} />
         }
         {
           !skjulInput &&

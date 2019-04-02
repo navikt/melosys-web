@@ -38,7 +38,7 @@ const Organisasjon = props => {
           <Nav.Row>
             <Nav.Column xs="6">
               <dl className="organisasjon__detaljer">
-                <PostEllerForretningsAdresse className="organisasjon__adresse" organisasjon={organisasjon} />
+                <PostEllerForretningsAdresse visNavn={false} className="organisasjon__adresse" organisasjon={organisasjon} />
               </dl>
             </Nav.Column>
             <Nav.Column xs="6" className="organisasjon__slettwrapper">

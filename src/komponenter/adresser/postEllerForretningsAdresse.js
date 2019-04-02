@@ -7,8 +7,8 @@ import GeneriskAdresse from './generiskAdresse';
 
 import './postEllerForretningsAdresse.css';
 
-const PostEllerForretningsAdresse = ({ organisasjon, className }) => {
-  const { postadresse, forretningsadresse } = organisasjon;
+const PostEllerForretningsAdresse = ({ organisasjon, className, visNavn }) => {
+  const { postadresse, forretningsadresse, navn } = organisasjon;
 
   if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
 
@@ -17,6 +17,7 @@ const PostEllerForretningsAdresse = ({ organisasjon, className }) => {
 
   return (
     <div className={className}>
+      { visNavn && <div>{navn}</div>}
       <div className="tittel">{tittel}</div>
       <GeneriskAdresse adresse={adresse} />
     </div>
@@ -26,10 +27,12 @@ const PostEllerForretningsAdresse = ({ organisasjon, className }) => {
 PostEllerForretningsAdresse.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
   className: PT.string,
+  visNavn: PT.bool,
 };
 
 PostEllerForretningsAdresse.defaultProps = {
   className: '',
+  visNavn: true,
 };
 
 export default PostEllerForretningsAdresse;

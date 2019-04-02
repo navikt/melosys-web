@@ -68,7 +68,7 @@ const Arbeidsforholdet = props => {
                   <dl className="arbeidsforholdet__detaljer">
                     <dt>Org. nr</dt>
                     <dd>{arbeidsgiver.orgnr}</dd>
-                    <PostEllerForretningsAdresse className="adresse" organisasjon={arbeidsgiver} />
+                    <PostEllerForretningsAdresse visNavn={false} className="adresse" organisasjon={arbeidsgiver} />
                     <dt>A-ordning:</dt>
                     <dd>{Utils.streng.boolTilNorsk(Aordning)}</dd>
                   </dl>
