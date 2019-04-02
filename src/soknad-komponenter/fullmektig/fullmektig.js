@@ -61,7 +61,8 @@ function Fullmektig(props) {
         {
           org &&
           <Fragment>
-            {org.navn}
+            <Nav.Element>Juridisk enhet</Nav.Element>
+            <div className="organisasjon_navn">{org.navn}</div>
             <div className="postadresse_tittel">Postadresse</div>
             <PostAdresse postadresse={org.postadresse} />
           </Fragment>
