@@ -9,7 +9,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker';
 import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../../constants';
 
-import PostEllerForretningsAdresse from '../../komponenter/adresser/postEllerForretningsAdresse';
+import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
 
 import './selvstendigArbeid.css';
 
@@ -63,7 +63,7 @@ class EnkeltForetak extends Component {
                 disabled={!redigerbart}
               />
               {
-                organisasjon && <PostEllerForretningsAdresse className="enkeltforetakAdresse" organisasjon={organisasjon} />
+                organisasjon && <OrganisasjonsAdresse className="enkeltforetakAdresse" organisasjon={organisasjon} />
               }
             </Nav.Column>
             <Nav.Column xs="5">

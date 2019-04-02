@@ -12,7 +12,7 @@ import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
 import Arbeidsavtaler from './arbeidsavtaler';
-import PostEllerForretningsAdresse from '../adresser/postEllerForretningsAdresse';
+import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
 
 import './arbeidsforhold.css';
 
@@ -68,7 +68,7 @@ const Arbeidsforholdet = props => {
                   <dl className="arbeidsforholdet__detaljer">
                     <dt>Org. nr</dt>
                     <dd>{arbeidsgiver.orgnr}</dd>
-                    <PostEllerForretningsAdresse visNavn={false} className="adresse" organisasjon={arbeidsgiver} />
+                    <OrganisasjonsAdresse visNavn={false} className="adresse" organisasjon={arbeidsgiver} />
                     <dt>A-ordning:</dt>
                     <dd>{Utils.streng.boolTilNorsk(Aordning)}</dd>
                   </dl>

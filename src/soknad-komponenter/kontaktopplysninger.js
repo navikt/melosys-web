@@ -6,7 +6,7 @@ import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import * as Utils from '../utils';
 
-import PostEllerForretningsAdresse from '../komponenter/adresser/postEllerForretningsAdresse';
+import OrganisasjonsAdresse from '../komponenter/adresser/organisasjonsAdresse';
 import { fagsakSelectors } from '../ducks/fagsaker';
 import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
 
@@ -177,7 +177,7 @@ export class KontaktOpplysninger extends Component {
           </Nav.Fieldset>
         }
         {
-          !skjulInput && sokeResultat && <PostEllerForretningsAdresse className="adresse" organisasjon={sokeResultat} />
+          !skjulInput && sokeResultat && <OrganisasjonsAdresse className="adresse" organisasjon={sokeResultat} />
         }
         {
           !skjulInput &&

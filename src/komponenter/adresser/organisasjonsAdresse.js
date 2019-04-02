@@ -5,9 +5,9 @@ import * as MPT from '../../proptypes';
 
 import GeneriskAdresse from './generiskAdresse';
 
-import './postEllerForretningsAdresse.css';
+import './organisasjonsAdresse.css';
 
-const PostEllerForretningsAdresse = ({ organisasjon, className, visNavn }) => {
+const OrganisasjonsAdresse = ({ organisasjon, className, visNavn }) => {
   const { postadresse, forretningsadresse, navn } = organisasjon;
 
   if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
@@ -24,15 +24,15 @@ const PostEllerForretningsAdresse = ({ organisasjon, className, visNavn }) => {
   );
 };
 
-PostEllerForretningsAdresse.propTypes = {
+OrganisasjonsAdresse.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
   className: PT.string,
   visNavn: PT.bool,
 };
 
-PostEllerForretningsAdresse.defaultProps = {
+OrganisasjonsAdresse.defaultProps = {
   className: '',
   visNavn: true,
 };
 
-export default PostEllerForretningsAdresse;
+export default OrganisasjonsAdresse;

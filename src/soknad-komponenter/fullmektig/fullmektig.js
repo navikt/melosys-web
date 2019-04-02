@@ -6,7 +6,7 @@ import * as Nav from '../../utils/navFrontend';
 import * as Utils from '../../utils';
 
 import Kontaktopplysninger from '../kontaktopplysninger';
-import PostEllerForretningsAdresse from '../../komponenter/adresser/postEllerForretningsAdresse';
+import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
 import SokFullmektigOrg from './sokFullmektigOrg';
 
 import './fullmektig.css';
@@ -59,7 +59,7 @@ function Fullmektig(props) {
     <Nav.Row className="fullmektig">
       <Nav.Column xs="6">
         {
-          org && <PostEllerForretningsAdresse organisasjon={org} className="adresse" />
+          org && <OrganisasjonsAdresse organisasjon={org} className="adresse" />
         }
         {
           !org && <SokFullmektigOrg lagreNyFullmektigOgOppdaterLokalt={orgnr => lagreNyFullmektigOgOppdaterLokalt(representererKode, orgnr)} />

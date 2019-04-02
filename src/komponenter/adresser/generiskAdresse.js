@@ -3,7 +3,7 @@ import * as MPT from '../../proptypes';
 
 import * as KV from '../../kodeverk';
 
-import './generiskadresse.css';
+import './generiskAdresse.css';
 
 /** Forretningsadresse formatterer adressen korrekt med sjekk på
  * varierende keys i objektet.

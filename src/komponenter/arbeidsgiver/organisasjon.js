@@ -6,7 +6,7 @@ import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 
 import PanelHeader from '../panelHeader/panelHeader';
-import PostEllerForretningsAdresse from '../adresser/postEllerForretningsAdresse';
+import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
 import KontaktOpplysninger from '../../soknad-komponenter/kontaktopplysninger';
 
 import './organisasjon.css';
@@ -38,7 +38,7 @@ const Organisasjon = props => {
           <Nav.Row>
             <Nav.Column xs="6">
               <dl className="organisasjon__detaljer">
-                <PostEllerForretningsAdresse visNavn={false} className="organisasjon__adresse" organisasjon={organisasjon} />
+                <OrganisasjonsAdresse visNavn={false} className="organisasjon__adresse" organisasjon={organisasjon} />
               </dl>
             </Nav.Column>
             <Nav.Column xs="6" className="organisasjon__slettwrapper">
