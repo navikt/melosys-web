@@ -9,7 +9,7 @@ import * as PersonValidering from '../skjema/validering/generisk/person';
 import { beregnAlder } from '../../utils/dato';
 
 import './medfolgendeAndre.css';
-import BostedsAdresse from '../../komponenter/adresser/bostedsAdresse';
+import GeneriskAdresse from '../../komponenter/adresser/generiskAdresse';
 
 function MedfolgendeAndre(props) {
   const [fnr, setFnr] = useState('');
@@ -36,7 +36,7 @@ function MedfolgendeAndre(props) {
   const funnetPerson = (!erDirty) && Object.keys(medfolgendeAndre).length > 0 ? (
     <div className="medfolgendeAndre__person">
       {sammensattNavn} ({beregnAlder(foedselsdato)})
-      <BostedsAdresse bostedsadresse={bostedsadresse} />
+      <GeneriskAdresse adresse={bostedsadresse} />
     </div>
   ) : null;
 

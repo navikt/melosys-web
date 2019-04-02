@@ -1,7 +1,7 @@
 /* eslint import/prefer-default-export:"off" */
 import PT from 'prop-types';
 
-import { BostedsAdresse } from './adresser';
+import { GeneriskAdresse } from './adresser';
 import { Kodeverk } from './kodeverk';
 
 const FamiliemedlemmerPropType = PT.shape({
@@ -15,7 +15,7 @@ const PersonPropType = PT.shape({
   sivilstand: Kodeverk,
   statsborgerskap: Kodeverk,
   sammensattNavn: PT.string,
-  bostedsadresse: BostedsAdresse,
+  bostedsadresse: GeneriskAdresse,
   kjoenn: Kodeverk,
   foedselsdato: PT.string,
   personStatus: Kodeverk,

@@ -7,7 +7,7 @@ import { MedlemskapEnkeltPeriode, MedlemskapPerioder, Medlemskap } from './medle
 import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
 import { Kodeverk } from './kodeverk';
 import { Person } from './person';
-import { BostedsAdresse, PostAdresse, ForretningsAdresse, GeneriskAdresse } from './adresser';
+import { GeneriskAdresse } from './adresser';
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { Saksbehandler } from './saksbehandler';
 import { FagsakOppsummering } from './fagsakOppsummering';
@@ -35,14 +35,12 @@ export {
   ArbeidsgivereNorge,
   Bekreftelser,
   Behandlingsresultat,
-  BostedsAdresse,
   Dokument,
   DokumentMetadataListe,
   DokumentNullable,
   FagsakOppsummering,
   Feilmelding,
   Feilmeldinger,
-  ForretningsAdresse,
   GeneriskAdresse,
   Inntekt,
   InntektEnkeltLinje,
@@ -68,7 +66,6 @@ export {
   Permisjoner,
   PermisjonOgPermittering,
   Person,
-  PostAdresse,
   SaksbehandlingOppgave,
   Saksbehandler,
   SoknadForm,
