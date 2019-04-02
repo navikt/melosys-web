@@ -194,6 +194,7 @@ class VurderingArtikkel16 extends Component {
       medlemskap,
       oppsummering,
       redigerbart,
+      art16Begrunnelser,
     } = this.props;
 
     const {
@@ -216,13 +217,14 @@ class VurderingArtikkel16 extends Component {
     const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
     const dokumenter = [
-      { navn: 'Forhåndsvis anmodning til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
+      { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
       { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
     ];
 
     const begrunnelseError = begrunnelserFeilmelding ? { error: begrunnelserFeilmelding } : {};
     const fritekstError = fritekstFeilmelding ? { error: fritekstFeilmelding, touched: true } : {};
 
+    const visFritekstfelt = art16Begrunnelser.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
     /* eslint-disable max-len */
     return (
@@ -241,16 +243,44 @@ class VurderingArtikkel16 extends Component {
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
-            <Nav.Column xs="10">
-              <Skjema.Select feil={lovvalgFeilmelding} onBlur={lagreLovvalgsPerioder} disabled={!redigerbart} feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
+            <Nav.Column xs="7">
+              <Skjema.Select
+                feil={lovvalgFeilmelding}
+                onBlur={lagreLovvalgsPerioder}
+                disabled={!redigerbart}
+                feltNavn="lovvalgsperiode.unntakFraBestemmelse"
+                label="Artikkelen det søkes unntak fra:"
+              >
                 { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
               </Skjema.Select>
-              <Listevelger meta={begrunnelseError} disabled={!redigerbart} gruppe muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="7">
+              <Listevelger
+                meta={begrunnelseError}
+                disabled={!redigerbart}
+                gruppe
+                muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning}
+                feltNavn="vilkar.art16_1_begrunnelser"
+                label="Legg til begrunnelse:"
+              />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.Textarea meta={fritekstError} onBlur={lagreVilkar} disabled={!redigerbart} feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
+              {
+                visFritekstfelt &&
+                <Skjema.Textarea
+                  meta={fritekstError}
+                  onBlur={lagreVilkar}
+                  disabled={!redigerbart}
+                  feltNavn="vilkar.art16_1_begrunnelser_fritekst"
+                  label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                  maxLength={255}
+                  bredde="fullbredde"
+                />
+              }
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
