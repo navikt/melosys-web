@@ -118,9 +118,9 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = state => {
 
 const byggLovvalgsPeriodeArtikkel16_1 = state => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
-  const soknadOppholdsland = soknadSelectors.OppholdsLandSelector(state);
+  const soknadsland = soknadSelectors.SoknadslandSelector(state);
 
-  const unntakFraLovvalgsland = soknadOppholdsland.join('');
+  const unntakFraLovvalgsland = soknadsland.join('');
   const lovvalgsperiode = formSelectors.Lovvalgsperiode(state);
   const { unntakFraBestemmelse } = lovvalgsperiode;
 

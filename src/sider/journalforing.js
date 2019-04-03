@@ -154,7 +154,7 @@ class Journalforing extends Component {
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const {
-      journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
+      journalforingSoknadsland, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
@@ -165,7 +165,7 @@ class Journalforing extends Component {
     resetSkjemaFelterForEksisterendeSaker();
 
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, JOURNALFORING_HENSIKT.OPPRETT)) {
-      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingOppholdsLand');
+      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingSoknadsland');
       return false;
     }
 
@@ -175,7 +175,7 @@ class Journalforing extends Component {
         fom: Utils.dato.formatterDatoTilISO(journalforingPeriodeFraOgMed),
         tom: Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed),
       },
-      land: journalforingOppholdsLand,
+      land: journalforingSoknadsland,
     };
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.OPPRETT);
@@ -257,7 +257,7 @@ class Journalforing extends Component {
     settFeltInnhold('journalforingPeriodeFraOgMed', '');
     settFeltInnhold('journalforingPeriodeTilOgMed', '');
     settFeltInnhold('representantID', '');
-    settFeltInnhold('journalforingOppholdsLand', []);
+    settFeltInnhold('journalforingSoknadsland', []);
   };
 
   resetSkjemaFelterForEksisterendeSaker = () => {

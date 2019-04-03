@@ -33,7 +33,7 @@ export const AvklartefaktaSelector = createSelector(
   avklartefakta => avklartefakta || []
 );
 
-/* Oppholdsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
+/* Soknadsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
  * territoriet som søkeren skal til faktisk er med i forordningen gjøres i avklartefakta.
  * Derfor må både avklartefakta og soknad settes inn slik at disse kan flettes til avklart fakta.
  */

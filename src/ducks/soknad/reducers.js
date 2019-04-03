@@ -137,8 +137,8 @@ export default function reducer(state = initialState, action) {
           landKoder: dokument.soknadsland,
         },
         periode: {
-          fom: formatterDatoTilISO(dokument.soknadsperiodeFom),
-          tom: formatterDatoTilISO(dokument.soknadsperiodeTom),
+          fom: dokument.soknadsperiodeFom ? formatterDatoTilISO(dokument.soknadsperiodeFom) : null,
+          tom: dokument.soknadsperiodeTom ? formatterDatoTilISO(dokument.soknadsperiodeTom) : null,
         },
         selvstendigArbeid: {
           erSelvstendig: dokument.erSelvstendig,
