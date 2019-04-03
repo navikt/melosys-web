@@ -158,22 +158,25 @@ export class KontaktOpplysninger extends Component {
                 />
               </Nav.Column>
             </Nav.Row>
-            <Nav.Row>
-              <Nav.Column xs="8">
-                <Nav.Input
-                  disabled={!redigerbart}
-                  feil={orgnrFeilmelding}
-                  onChange={vedKontaktorgnrEndring}
-                  onBlur={validerOgLagreKontakt}
-                  value={kontaktorgnr}
-                  label="Organisasjonsnummer"
-                  placeholder="Skriv inn..."
-                />
-              </Nav.Column>
-              <Nav.Column xs="4">
-                <Nav.Knapp onClick={vedKlikkSok} className="sokKnapp">SØK</Nav.Knapp>
-              </Nav.Column>
-            </Nav.Row>
+            {
+              !sokeResultat &&
+              <Nav.Row>
+                <Nav.Column xs="8">
+                  <Nav.Input
+                    disabled={!redigerbart}
+                    feil={orgnrFeilmelding}
+                    onChange={vedKontaktorgnrEndring}
+                    onBlur={validerOgLagreKontakt}
+                    value={kontaktorgnr}
+                    label="Organisasjonsnummer"
+                    placeholder="Skriv inn..."
+                  />
+                </Nav.Column>
+                <Nav.Column xs="4">
+                  <Nav.Knapp onClick={vedKlikkSok} className="sokKnapp">SØK</Nav.Knapp>
+                </Nav.Column>
+              </Nav.Row>
+            }
           </Nav.Fieldset>
         }
         {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -59,7 +59,11 @@ function Fullmektig(props) {
     <Nav.Row className="fullmektig">
       <Nav.Column xs="6">
         {
-          org && <OrganisasjonsAdresse organisasjon={org} className="adresse" />
+          org &&
+          <Fragment>
+            <Nav.Element>Juridisk enhet</Nav.Element>
+            <OrganisasjonsAdresse organisasjon={org} className="adresse" />
+          </Fragment>
         }
         {
           !org && <SokFullmektigOrg lagreNyFullmektigOgOppdaterLokalt={orgnr => lagreNyFullmektigOgOppdaterLokalt(representererKode, orgnr)} />
