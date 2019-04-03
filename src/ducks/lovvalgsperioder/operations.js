@@ -51,7 +51,7 @@ const finnValgteVilkar = alleLovvalgsVilkar => {
 };
 
 const byggLovvalgsPeriodeArtikkel12_1 = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
@@ -67,7 +67,7 @@ const byggLovvalgsPeriodeArtikkel12_1 = state => {
 };
 
 const byggLovvalgsPeriodeArtikkel12_2 = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
@@ -83,7 +83,7 @@ const byggLovvalgsPeriodeArtikkel12_2 = state => {
 };
 
 const byggLovvalgsPeriodeArtikkel11_3A = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   const tilleggsbestemmelse = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(state));
 
   return [{
@@ -101,7 +101,7 @@ const byggLovvalgsPeriodeArtikkel11_3A = state => {
 };
 
 const byggLovvalgsPeriodeArtikkel11_4_2 = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
@@ -117,7 +117,7 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = state => {
 };
 
 const byggLovvalgsPeriodeArtikkel16_1 = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   const soknadOppholdsland = soknadSelectors.OppholdsLandSelector(state);
 
   const unntakFraLovvalgsland = soknadOppholdsland.join('');
@@ -141,7 +141,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = state => {
 };
 
 const byggAvslaattLovvalg = (state, lovvalgBestemmelse) => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
 
   return [{
     fomDato: soknadPeriode.fom,
