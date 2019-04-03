@@ -97,8 +97,8 @@ export default function reducer(state = initialState, action) {
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
           oppholdsPeriode: {
-            fom: formatterDatoTilISO(dokument.oppholdUtlandFom),
-            tom: formatterDatoTilISO(dokument.oppholdUtlandTom),
+            fom: dokument.oppholdUtlandFom ? formatterDatoTilISO(dokument.oppholdUtlandFom) : null,
+            tom: dokument.oppholdUtlandTom ? formatterDatoTilISO(dokument.oppholdUtlandTom) : null,
           },
           oppholdslandKoder: dokument.oppholdsland,
           sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
