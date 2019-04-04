@@ -2,7 +2,7 @@
 import PT from 'prop-types';
 
 const SoknadslandEnkeltPropType = PT.shape({
-  landKode: PT.string,
+  landkode: PT.string,
   erGyldig: PT.bool,
   begrunnelseKode: PT.string,
 });

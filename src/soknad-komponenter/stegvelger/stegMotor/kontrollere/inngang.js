@@ -25,7 +25,7 @@ class Inngang extends Steg {
     this.samleRelevanteData = props => ({
       inngangsvilkar: props.inngang,
       begrunnelser: props.begrunnelser,
-      alleLandKoder: props.landkoder,
+      alleLandkoder: props.landkoder,
       avklartefakta: props.avklartefakta,
       redigerbart: props.redigerbart,
     });

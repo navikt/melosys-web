@@ -7,18 +7,18 @@ import * as KV from '../../../../kodeverk';
 
 const FjernetLandEnkelt = props => {
   const {
-    landKodeObjekt, angreFjern, begrunnelseTerm, redigerbart,
+    landkodeObjekt, angreFjern, begrunnelseTerm, redigerbart,
   } = props;
 
-  const landTerm = KV.objektTilTerm(landKodeObjekt);
-  const landKode = KV.objektTilKode(landKodeObjekt);
+  const landTerm = KV.objektTilTerm(landkodeObjekt);
+  const landkode = KV.objektTilKode(landkodeObjekt);
 
   return (
     <div>
       <div className="fjernetland__linje">
-        <div className="linje__land">{landTerm} ({landKode})</div>
+        <div className="linje__land">{landTerm} ({landkode})</div>
         <div className="linje__begrunnelse">{begrunnelseTerm}</div>
-        <div className="linje__knapper"><Nav.Knapp disabled={!redigerbart} onClick={() => angreFjern(landKode)}>Angre fjern</Nav.Knapp></div>
+        <div className="linje__knapper"><Nav.Knapp disabled={!redigerbart} onClick={() => angreFjern(landkode)}>Angre fjern</Nav.Knapp></div>
       </div>
     </div>
   );
@@ -27,7 +27,7 @@ const FjernetLandEnkelt = props => {
 FjernetLandEnkelt.propTypes = {
   angreFjern: PT.func.isRequired,
   begrunnelseTerm: PT.string.isRequired,
-  landKodeObjekt: MPT.Kodeverk.isRequired,
+  landkodeObjekt: MPT.Kodeverk.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

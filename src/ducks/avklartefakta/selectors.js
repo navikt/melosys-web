@@ -226,7 +226,7 @@ export const BostedslandSelector = createSelector(
   alleAvklarteFakta => {
     const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
     if (!avklartFakta) return null;
-    const bostedslandKode = avklartFakta.fakta[0];
-    return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
+    const bostedslandkode = avklartFakta.fakta[0];
+    return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandkode);
   }
 );

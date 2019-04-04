@@ -10,7 +10,7 @@ import SoknadslandListe from './inngang/soknadslandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, alleLandKoder, begrunnelser, avklartefakta, tilstand, redigerbart,
+    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta, tilstand, redigerbart,
   } = props;
   const { vurdering } = inngangsvilkar;
   const soknadslandBegrunnelser = begrunnelser.opphold;
@@ -32,7 +32,7 @@ const VurderingInngang = props => {
         component={SoknadslandListe}
         avklartefakta={avklartefakta}
         soknadslandBegrunnelser={soknadslandBegrunnelser}
-        alleLandKoder={alleLandKoder}
+        alleLandkoder={alleLandkoder}
         redigerbart={redigerbart}
       />
       <div className="fane__knapplinje">
@@ -45,7 +45,7 @@ const VurderingInngang = props => {
 VurderingInngang.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   avklartefakta: PT.array.isRequired,
-  alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
   tilstand: PT.object.isRequired,
   inngangsvilkar: PT.shape({

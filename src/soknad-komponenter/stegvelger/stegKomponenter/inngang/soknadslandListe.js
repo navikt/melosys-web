@@ -15,36 +15,36 @@ import SoknadslandHandlingLeggTil from './soknadslandHandlingLeggTil';
 import './soknadslandListe.css';
 
 class SoknadslandListe extends Component {
-  bekreftFjern = (landKode, begrunnelseKode) => {
+  bekreftFjern = (landkode, begrunnelseKode) => {
     const avklartefakta = this.props.fields.getAll();
-    const enkeltFakta = avklartefakta.find(enkelt => enkelt.subjektID === landKode);
+    const enkeltFakta = avklartefakta.find(enkelt => enkelt.subjektID === landkode);
     const oppdatertEnkeltFakta = {
       ...enkeltFakta,
       fakta: ['FALSE'],
       begrunnelseKoder: [begrunnelseKode],
     };
-    const posisjon = avklartefakta.findIndex(avklart => avklart.subjektID === landKode);
+    const posisjon = avklartefakta.findIndex(avklart => avklart.subjektID === landkode);
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
     if (begrunnelseKode === MKV.Koder.begrunnelser.opphold.FEIL_LAND_JOURNALFOERING
      || begrunnelseKode === MKV.Koder.begrunnelser.opphold.NYE_OPPLYSNINGER_LAND) {
-      this.fjernLandFraSoknad(landKode);
+      this.fjernLandFraSoknad(landkode);
     }
   };
 
-  bekreftLeggTil = (landKode, begrunnelseKode) => {
+  bekreftLeggTil = (landkode, begrunnelseKode) => {
     const avklartFakta = {
       referanse: KV.Koder.SOKNADSLAND,
       avklartefaktaKode: null,
       fakta: ['TRUE'],
-      subjektID: landKode,
+      subjektID: landkode,
       begrunnelseKoder: [begrunnelseKode],
       begrunnelseFritekst: null,
     };
 
     this.props.fields.push(avklartFakta);
-    this.leggLandTilSoknad(landKode);
+    this.leggLandTilSoknad(landkode);
   };
 
   fjernLandFraSoknad = valgtLand => {
@@ -57,25 +57,25 @@ class SoknadslandListe extends Component {
     this.props.erstattSoknadsland(oppdaterteSoknadsland);
   };
 
-  angreFjern = landKode => {
+  angreFjern = landkode => {
     const avklartefakta = this.props.fields.getAll();
-    const enkeltFakta = avklartefakta.find(enkelt => enkelt.subjektID === landKode);
+    const enkeltFakta = avklartefakta.find(enkelt => enkelt.subjektID === landkode);
     const oppdatertEnkeltFakta = {
       ...enkeltFakta,
       fakta: ['TRUE'],
       begrunnelseKoder: [],
     };
-    const posisjon = avklartefakta.findIndex(avklart => avklart.subjektID === landKode);
+    const posisjon = avklartefakta.findIndex(avklart => avklart.subjektID === landkode);
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
     if (enkeltFakta.begrunnelseKoder.includes(MKV.Koder.begrunnelser.opphold.FEIL_LAND_JOURNALFOERING)
         || enkeltFakta.begrunnelseKoder.includes(MKV.Koder.begrunnelser.opphold.NYE_OPPLYSNINGER_LAND)) {
-      this.leggLandTilSoknad(landKode);
+      this.leggLandTilSoknad(landkode);
     }
   };
 
-  finnLandVedKode = kode => (this.props.alleLandKoder.find(land => land.kode === kode));
+  finnLandVedKode = kode => (this.props.alleLandkoder.find(land => land.kode === kode));
 
   finnBegrunnelse = koder => {
     const enkeltKode = koder[0];
@@ -85,7 +85,7 @@ class SoknadslandListe extends Component {
 
   render () {
     const {
-      fields, soknadslandBegrunnelser, alleLandKoder, soknadslandFraSoknad, redigerbart,
+      fields, soknadslandBegrunnelser, alleLandkoder, soknadslandFraSoknad, redigerbart,
     } = this.props;
 
     const {
@@ -97,7 +97,7 @@ class SoknadslandListe extends Component {
     const alleGyldigeSoknadsland = alleAvklarteFakta.filter(avklartFakta => avklartFakta.fakta.includes('TRUE'));
     const alleIkkeGyldigeSoknadsland = alleAvklarteFakta.filter(avklartFakta => avklartFakta.fakta.includes('FALSE'));
 
-    const alleUbrukteLandkoder = alleLandKoder.filter(landKode => !soknadslandFraSoknad.includes(landKode.kode));
+    const alleUbrukteLandkoder = alleLandkoder.filter(landkode => !soknadslandFraSoknad.includes(landkode.kode));
 
     return (
       <div>
@@ -106,7 +106,7 @@ class SoknadslandListe extends Component {
             { alleGyldigeSoknadsland.map(soknadslandFakta => ( // TODO
               <SoknadslandEnkelt
                 key={soknadslandFakta.subjektID}
-                landKodeObjekt={finnLandVedKode(soknadslandFakta.subjektID)}
+                landkodeObjekt={finnLandVedKode(soknadslandFakta.subjektID)}
                 bekreftFjern={bekreftFjern}
                 erGyldig={soknadslandFakta.erGyldig}
                 soknadslandBegrunnelser={soknadslandBegrunnelser}
@@ -121,7 +121,7 @@ class SoknadslandListe extends Component {
             }
             <SoknadslandHandlingLeggTil
               bekreftLeggTil={bekreftLeggTil}
-              alleLandKoder={alleUbrukteLandkoder}
+              alleLandkoder={alleUbrukteLandkoder}
               soknadslandBegrunnelser={soknadslandBegrunnelser}
               redigerbart={redigerbart}
             />
@@ -133,7 +133,7 @@ class SoknadslandListe extends Component {
             {alleIkkeGyldigeSoknadsland.map(soknadslandFakta => (
               <FjernetLandEnkelt
                 key={soknadslandFakta.subjektID}
-                landKodeObjekt={finnLandVedKode(soknadslandFakta.subjektID)}
+                landkodeObjekt={finnLandVedKode(soknadslandFakta.subjektID)}
                 begrunnelseTerm={finnBegrunnelse(soknadslandFakta.begrunnelseKoder)}
                 angreFjern={angreFjern}
                 erGyldig={soknadslandFakta.erGyldig}
@@ -154,7 +154,7 @@ SoknadslandListe.propTypes = {
   soknadslandBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   soknadslandFraSoknad: PT.arrayOf(PT.string).isRequired,
   erstattSoknadsland: PT.func.isRequired,
-  alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   avklartefakta: PT.array.isRequired,
   redigerbart: PT.bool.isRequired,
 };

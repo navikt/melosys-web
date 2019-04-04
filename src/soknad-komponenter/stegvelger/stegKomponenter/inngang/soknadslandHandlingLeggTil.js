@@ -11,7 +11,7 @@ import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
 import { landTekstFormat } from '../../../skjema/landvelger';
 
 export function LeggTilWrapper(props) {
-  const [landKode, setLandKode] = useState('');
+  const [landkode, setLandkode] = useState('');
   const [begrunnelseKode, setBegrunnelseKode] = useState('0');
 
   const oppdaterBegrunnelse = event => {
@@ -19,13 +19,13 @@ export function LeggTilWrapper(props) {
     setBegrunnelseKode(kode);
   };
 
-  const oppdaterLand = kode => (setLandKode(kode));
+  const oppdaterLand = kode => (setLandkode(kode));
 
   const {
-    bekreft, avbryt, alleLandKoder, soknadslandBegrunnelser, redigerbart,
+    bekreft, avbryt, alleLandkoder, soknadslandBegrunnelser, redigerbart,
   } = props;
 
-  const erInputGyldig = (landKode && begrunnelseKode && begrunnelseKode !== '0');
+  const erInputGyldig = (landkode && begrunnelseKode && begrunnelseKode !== '0');
 
   const innhold = (
     <div className="leggtilland__linje">
@@ -35,8 +35,8 @@ export function LeggTilWrapper(props) {
           label="Velg land:"
           meta={{ error: undefined }}
           onChange={oppdaterLand}
-          value={landKode}
-          landkoder={alleLandKoder}
+          value={landkode}
+          landkoder={alleLandkoder}
           className="linje__nedtrekksvelger"
           disabled={!redigerbart}
         />
@@ -49,7 +49,7 @@ export function LeggTilWrapper(props) {
       </div>
       <div className="linje__knapper">
         <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
-        <Nav.Knapp onClick={() => bekreft(landKode, begrunnelseKode)} disabled={!(redigerbart && erInputGyldig)}>Legg til</Nav.Knapp>
+        <Nav.Knapp onClick={() => bekreft(landkode, begrunnelseKode)} disabled={!(redigerbart && erInputGyldig)}>Legg til</Nav.Knapp>
       </div>
     </div>
   );
@@ -59,7 +59,7 @@ export function LeggTilWrapper(props) {
 LeggTilWrapper.propTypes = {
   avbryt: PT.func.isRequired,
   bekreft: PT.func.isRequired,
-  alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   soknadslandBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
 };
@@ -76,12 +76,12 @@ function SoknadslandHandlingLeggTil(props) {
   const settLeggTilIntensjon = () => setIntensjon(true);
   const lukk = () => setIntensjon(false);
 
-  const bekreftLeggTil = (landKode, begrunnelseKode) => {
-    props.bekreftLeggTil(landKode, begrunnelseKode);
+  const bekreftLeggTil = (landkode, begrunnelseKode) => {
+    props.bekreftLeggTil(landkode, begrunnelseKode);
     lukk();
   };
 
-  const { alleLandKoder, soknadslandBegrunnelser, redigerbart } = props;
+  const { alleLandkoder, soknadslandBegrunnelser, redigerbart } = props;
   return (
     <div>
       <div>
@@ -93,7 +93,7 @@ function SoknadslandHandlingLeggTil(props) {
 
         {erLeggTilIntensjon && (
           <LeggTilWrapper
-            alleLandKoder={alleLandKoder}
+            alleLandkoder={alleLandkoder}
             soknadslandBegrunnelser={soknadslandBegrunnelser}
             bekreft={bekreftLeggTil}
             avbryt={lukk}
@@ -103,7 +103,7 @@ function SoknadslandHandlingLeggTil(props) {
       </div>
       <div className="soknadsland__dataliste">
         <datalist id="alleLand">
-          {alleLandKoder.map(item => (<option key={KV.objektTilKode(item)} value={landTekstFormat(item)} />))}
+          {alleLandkoder.map(item => (<option key={KV.objektTilKode(item)} value={landTekstFormat(item)} />))}
         </datalist>
       </div>
     </div>
@@ -112,7 +112,7 @@ function SoknadslandHandlingLeggTil(props) {
 
 SoknadslandHandlingLeggTil.propTypes = {
   bekreftLeggTil: PT.func.isRequired,
-  alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   soknadslandBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
 };

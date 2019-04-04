@@ -51,8 +51,8 @@ const MaritimtEnkelt = ({
           }
         </Nav.Column>
         <Nav.Column xs="6">
-          <LandVelger feltNavn={`${navn}flaggLandKode`} label="Flaggland:" disabled={!redigerbart} />
-          <LandVelger feltNavn={`${navn}installasjonsLandKode`} label="Kontinentalsokkel:" disabled={!redigerbart} />
+          <LandVelger feltNavn={`${navn}flaggLandkode`} label="Flaggland:" disabled={!redigerbart} />
+          <LandVelger feltNavn={`${navn}installasjonsLandkode`} label="Kontinentalsokkel:" disabled={!redigerbart} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
