@@ -85,4 +85,5 @@ Radio.propTypes = {
   className: PT.string,
 };
 
+export { InnerInputComponent };
 export default Radio;
