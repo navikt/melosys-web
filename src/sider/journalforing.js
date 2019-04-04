@@ -83,6 +83,7 @@ class Journalforing extends Component {
       brukerID, avsenderID, arbeidsgiverID,
       opprettnysak_behandlingstype: behandlingstypeKode,
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
+      skalTilordnes,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -98,6 +99,7 @@ class Journalforing extends Component {
       journalpostID,
       oppgaveID,
       vedlegg,
+      skalTilordnes,
     };
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
@@ -374,6 +376,7 @@ const mapStateToProps = state => ({
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
     ingenVurdering: false,
+    skalTilordnes: false,
   },
 });
 

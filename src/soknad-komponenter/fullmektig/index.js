@@ -1,3 +1,5 @@
 import Fullmektig from './fullmektig';
+import FullmektigPanel from './fullmektigPanel';
 
-export default Fullmektig;
+export { Fullmektig };
+export default FullmektigPanel;
