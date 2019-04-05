@@ -12,7 +12,7 @@ import { beregnAlder } from '../utils/dato';
 import PersonInfo from '../komponenter/personInfo';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
-import BostedsAdresse from '../komponenter/adresser/bostedsAdresse';
+import GeneriskAdresse from '../komponenter/adresser/generiskAdresse';
 import OppgittAdresseSoknad from './personopplysninger/oppgittAdresseSoknad';
 import UtenlandskIdent from './personopplysninger/utenlandskIdent';
 
@@ -101,7 +101,7 @@ class Personopplysninger extends Component {
               <Nav.Column xs="4">
                 <dl className="person__detaljer">
                   <dt>Bostedsadresse (TPS):</dt>
-                  <BostedsAdresse bostedsadresse={bostedsadresse} />
+                  <GeneriskAdresse adresse={bostedsadresse} />
                 </dl>
               </Nav.Column>
             </Nav.Row>

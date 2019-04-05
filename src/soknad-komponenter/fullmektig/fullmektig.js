@@ -6,7 +6,7 @@ import * as Nav from '../../utils/navFrontend';
 import * as Utils from '../../utils';
 
 import Kontaktopplysninger from '../kontaktopplysninger';
-import PostAdresse from '../../komponenter/adresser/postAdresse';
+import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
 import SokFullmektigOrg from './sokFullmektigOrg';
 
 import './fullmektig.css';
@@ -62,16 +62,11 @@ function Fullmektig(props) {
           org &&
           <Fragment>
             <Nav.Element>Juridisk enhet</Nav.Element>
-            <div className="organisasjon_navn">{org.navn}</div>
-            <div className="postadresse_tittel">Postadresse</div>
-            <PostAdresse postadresse={org.postadresse} />
+            <OrganisasjonsAdresse organisasjon={org} className="adresse" />
           </Fragment>
         }
         {
-          !org &&
-          <Fragment>
-            <SokFullmektigOrg lagreNyFullmektigOgOppdaterLokalt={orgnr => lagreNyFullmektigOgOppdaterLokalt(representererKode, orgnr)} />
-          </Fragment>
+          !org && <SokFullmektigOrg lagreNyFullmektigOgOppdaterLokalt={orgnr => lagreNyFullmektigOgOppdaterLokalt(representererKode, orgnr)} />
         }
         {
           org &&
