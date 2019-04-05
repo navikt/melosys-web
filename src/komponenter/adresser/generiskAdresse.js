@@ -22,12 +22,21 @@ const GeneriskAdresse = ({ adresse }) => {
   } = gateadresse;
 
   const landNavn = (typeof land === 'string' ? land : KV.objektTilTerm(land));
+  const visGate = gatenavn || gatenummer || husnummer || husbokstav;
 
   return (gatenavn || gatenummer || husnummer || husbokstav || land || postnr || poststed) ? (
     <address className="generiskadresse">
-      {gatenavn} {gatenummer} {husnummer} {husbokstav}<br />
-      {postnr} {poststed}<br />
-      {landNavn}
+      { visGate &&
+        <div>{gatenavn} {gatenummer} {husnummer} {husbokstav}</div>
+      }
+      {
+        (postnr || poststed) &&
+        <div>{postnr} {poststed}</div>
+      }
+      {
+        landNavn &&
+        <div>{landNavn}</div>
+      }
     </address>
   ) : INGEN_TILGJENGELIG_TEKST;
 };
