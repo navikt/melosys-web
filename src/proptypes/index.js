@@ -25,6 +25,8 @@ import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './opp
 import { Journalforing, JournalforingSkjemaVerdier } from './journalforing';
 import { DokumentMetadataListe } from './dokumentMetadata';
 import { Dokument, DokumentNullable, Vedlegg } from './dokument';
+import { Soknadsland } from './soknadsland';
+import { Soknadsperiode } from './soknadsperiode';
 
 export {
   ArbeidNorge,
@@ -74,4 +76,6 @@ export {
   TimerTimelonnetLinje,
   Utenlandsopphold,
   Vedlegg,
+  Soknadsland,
+  Soknadsperiode,
 };

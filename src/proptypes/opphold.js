@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import { Periode } from './periode';
 
 const OppholdEnkeltPropType = PT.shape({
-  landKode: PT.string,
+  landkode: PT.string,
   erGyldig: PT.bool,
   begrunnelseKode: PT.string,
 });
