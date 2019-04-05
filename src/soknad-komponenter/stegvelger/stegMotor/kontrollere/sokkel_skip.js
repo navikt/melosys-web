@@ -46,7 +46,9 @@ class SokkelSkip extends Steg {
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
-      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
+      oppdaterRessurs: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegressurs(this.id, felt, verdi),
+      slettRessurs: felt => this._propsLight.tilgjengeligeHandlers.slettStegressurs(this.id, felt),
+      slettAllStegdata: felt => this._propsLight.tilgjengeligeHandlers.slettStegressurs(this.id, felt),
     };
     this.status = FANE_STATUS.OK;
   }

@@ -16,6 +16,12 @@ export function strengTilBool (value) {
   return value === 'true';
 }
 
+export function tryParseBool(value) {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return value; // undefined, null, bool
+}
+
 export function strengTilInt (value) {
   return parseInt(value, 10) || 0;
 }

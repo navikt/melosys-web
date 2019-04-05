@@ -50,7 +50,7 @@ ListevelgerValgtElement.defaultProps = {
  * For hvert nye valg legges dette til som en FieldArray i Redux Form.
  */
 class ListevelgerFlervalg extends Component {
-  state = { inputVerdi: '', feilmelding: '' };
+  state = { valgteElementer: [], inputVerdi: '', feilmelding: '' };
 
   vedEndring = event => {
     this.setState({ inputVerdi: event.target.value, feilmelding: '' });
@@ -80,9 +80,9 @@ class ListevelgerFlervalg extends Component {
 
   leggValgTilListe = e => {
     e.preventDefault();
-    const { inputVerdi } = this.state;
+    const { inputVerdi, valgteElementer } = this.state;
     const { verdiTilKode, erAlleredeLagtTil } = this;
-    const { fields, tillatFritekst } = this.props;
+    const { fields, tillatFritekst, onChange } = this.props;
 
     const valg = tillatFritekst ? inputVerdi : verdiTilKode(inputVerdi);
 
@@ -93,16 +93,27 @@ class ListevelgerFlervalg extends Component {
 
     if (valg) {
       fields.push(valg);
-      this.setState({ inputVerdi: '', feilmelding: null });
+      valgteElementer.push(valg);
+
+      this.setState({ inputVerdi: '', valgteElementer, feilmelding: null });
     } else {
       this.setState({ feilmelding: 'I dette feltet må du velge fra alternativene i nedtrekkslisten.' });
+    }
+
+    if (onChange) {
+      onChange({ value: valgteElementer });
     }
 
     return true;
   };
 
   slettValgFraListe = index => {
-    const { fields } = this.props;
+    const { fields, onChange } = this.props;
+
+    if (onChange) {
+      onChange({ value: this.state.valgteElementer });
+    }
+
     fields.remove(index);
   };
 
@@ -205,11 +216,17 @@ ListevelgerFlervalg.propTypes = {
   muligeValg: PT.array.isRequired,
   tillatFritekst: PT.bool.isRequired,
   placeholder: PT.string,
+  onAdd: PT.func,
+  onChange: PT.func,
+  onDelete: PT.func,
   disabled: PT.bool.isRequired,
 };
 
 ListevelgerFlervalg.defaultProps = {
   placeholder: '',
+  onAdd: undefined,
+  onDelete: undefined,
+  onChange: undefined,
 };
 
 export default ListevelgerFlervalg;

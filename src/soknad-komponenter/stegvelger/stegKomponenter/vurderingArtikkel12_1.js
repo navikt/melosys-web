@@ -5,6 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
+import { konverterTilRessurs, lagRessurs } from '../../../regler/vilkar';
 
 class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -22,64 +23,31 @@ class VurderingArtikkel12_1 extends Component {
     this.AVSLAG = 'AVSLAG';
   }
 
-  state = { valgtVilkar: '' };
-
   componentDidMount() {
-    this.lagreValgtVilkarState({});
-  }
-
-  componentDidUpdate(prevProps) {
-    this.lagreValgtVilkarState(prevProps);
+    const { oppdaterRessurs, tilstand } = this.props;
+    oppdaterRessurs(konverterTilRessurs('art12_1', tilstand.art12_1));
+    oppdaterRessurs(konverterTilRessurs('art16_1', tilstand.art16_1));
   }
 
   componentWillUnmount() {
-    this.clearVilkarSkjema();
+    const { slettAllStegdata } = this.props;
+    slettAllStegdata();
   }
-
-  settStateForVilkar = vilkar => this.setState({ valgtVilkar: vilkar });
-
-  clearVilkarSkjema = () => {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.art12_1', null);
-    settSkjemaVerdi('vilkar.art16_1', null);
-    settSkjemaVerdi('vilkar.art12_1_begrunnelser', []);
-    settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
-    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
-  };
-
-  lagreValgtVilkarState = ({ tilstand = {} }) => {
-    const { art12_1: old_art12_1, art16_1: old_art16_1 } = tilstand;
-    const { art12_1, art16_1 } = this.props.tilstand;
-
-    if ((art12_1 === old_art12_1) && (art16_1 === old_art16_1)) { return; }
-
-    if (art12_1) (this.settStateForVilkar(this.ART12_1));
-    if (art16_1 && art12_1 === false) (this.settStateForVilkar(this.ART16_1));
-    if (art16_1 === false && art12_1 === false) (this.settStateForVilkar(this.AVSLAG));
-  };
-
-  clearBegrunnelserSkjema = () => {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.art12_1_begrunnelser', []);
-    settSkjemaVerdi('vilkar.art16_1_begrunnelser', []);
-    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', '');
-  };
 
   radioEndringHandler = event => {
     const { value } = event.target;
-    const { settSkjemaVerdi } = this.props;
+    const { oppdaterRessurs, slettRessurs } = this.props;
 
     if (value === this.ART12_1) {
-      settSkjemaVerdi('vilkar.art12_1', true);
-      settSkjemaVerdi('vilkar.art16_1', null);
+      oppdaterRessurs(lagRessurs('art12_1', true));
+      slettRessurs('art16_1');
     } else if (value === this.ART16_1) {
-      settSkjemaVerdi('vilkar.art12_1', false);
-      settSkjemaVerdi('vilkar.art16_1', true);
+      oppdaterRessurs(lagRessurs('art12_1', false, [], ''));
+      oppdaterRessurs(lagRessurs('art16_1', true));
     } else if (value === this.AVSLAG) {
-      settSkjemaVerdi('vilkar.art12_1', false);
-      settSkjemaVerdi('vilkar.art16_1', false);
+      oppdaterRessurs(lagRessurs('art12_1', false, [], ''));
+      oppdaterRessurs(lagRessurs('art16_1', false, [], ''));
     }
-    this.clearBegrunnelserSkjema();
   };
 
   render () {
@@ -87,8 +55,9 @@ class VurderingArtikkel12_1 extends Component {
       bekreftOgFortsett, tilstand, redigerbart,
     } = this.props;
 
-    const { valgtVilkar } = this.state;
-    const { visBegrunnelser12, visBegrunnelser16, harAvklaring } = tilstand;
+    const {
+      art12_1, anmodningOmUnntak, visBegrunnelser12, visBegrunnelser16, harAvklaring,
+    } = tilstand;
 
     return (
       <div>
@@ -101,7 +70,7 @@ class VurderingArtikkel12_1 extends Component {
                   name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.ART12_1}
-                  checked={valgtVilkar === this.ART12_1}
+                  checked={art12_1.oppfylt}
                   label="Ja"
                   disabled={!redigerbart}
                 />
@@ -109,7 +78,7 @@ class VurderingArtikkel12_1 extends Component {
                   name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.ART16_1}
-                  checked={valgtVilkar === this.ART16_1}
+                  checked={anmodningOmUnntak}
                   label="Nei, jeg vil vurdere artikkel 16.1"
                   disabled={!redigerbart}
                 />
@@ -117,7 +86,7 @@ class VurderingArtikkel12_1 extends Component {
                   name="artikkel12"
                   onChange={this.radioEndringHandler}
                   value={this.AVSLAG}
-                  checked={valgtVilkar === this.AVSLAG}
+                  checked={art12_1.oppfylt === false && !anmodningOmUnntak}
                   label="Nei, jeg vil avslå søknaden etter artikkel 12.1 og 16.1"
                   disabled={!redigerbart}
                 />
@@ -172,6 +141,9 @@ VurderingArtikkel12_1.propTypes = {
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
   settSkjemaVerdi: PT.func.isRequired,
+  oppdaterRessurs: PT.func.isRequired,
+  slettRessurs: PT.func.isRequired,
+  slettAllStegdata: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

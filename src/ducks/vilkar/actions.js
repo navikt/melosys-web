@@ -8,10 +8,10 @@ import * as Types from './types';
  */
 
 /* eslint-disable import/prefer-default-export */
-export function oppdaterVilkarState(dokument) {
+export function oppdaterVilkarState(alleVilkaar) {
   return ({
     type: Types.OPPDATER_VILKAR,
-    data: dokument,
+    data: { vilkar: alleVilkaar },
   });
 }
 
