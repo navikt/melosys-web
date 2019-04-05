@@ -8,30 +8,55 @@ import * as Skjema from '../../skjema';
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import { BOOLSK } from '../../../constants';
+import { konverterTilRessurs, lagBegrunnelse, lagRessurs } from '../../../regler/vilkar';
 
 class VurderingVesentligVirksomhet extends Component {
-  componentWillUnmount() {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.vesentligVirksomhet', null);
-    settSkjemaVerdi('vilkar.vesentligVirksomhetBegrunnelser', []);
+  componentDidMount() {
+    const { oppdaterRessurs, tilstand } = this.props;
+    oppdaterRessurs(konverterTilRessurs('vesentligVirksomhet', tilstand.vesentligVirksomhetVilkaar));
   }
+
+  componentWillUnmount() {
+    const { slettAllStegdata } = this.props;
+    slettAllStegdata();
+  }
+
+  radioEndringHandler = event => {
+    const { oppdaterRessurs } = this.props;
+    oppdaterRessurs(lagRessurs('vesentligVirksomhet', event.target.value));
+  };
+
+  listeVelgerHandler = event => {
+    const { oppdaterRessurs } = this.props;
+    oppdaterRessurs(lagBegrunnelse('vesentligVirksomhet', event.value));
+  };
 
   render () {
     const {
       bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
     } = this.props;
-    const { visBegrunnelser, harAvklaring } = tilstand;
+    const { vesentligVirksomhet, visBegrunnelser, harAvklaring } = tilstand;
 
     const arbeidsgivereTekst = this.props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
     return (
       <div>
         <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
-        <div className="vurderingBostedsland__skjemafelt">
+        <div className="vurderingVesentligVirksomhet__skjemafelt">
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Virksomheten har:">
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.vesentligVirksomhet" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.vesentligVirksomhet" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
+                <Nav.Radio
+                  disabled={!redigerbart}
+                  onChange={this.radioEndringHandler}
+                  checked={vesentligVirksomhet === true}
+                  value={BOOLSK.SANN}
+                  label="Vesentlig virksomhet" />
+                <Nav.Radio
+                  disabled={!redigerbart}
+                  onChange={this.radioEndringHandler}
+                  checked={vesentligVirksomhet === false}
+                  value={BOOLSK.USANN}
+                  label="Ikke vesentlig virksomhet" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -44,6 +69,7 @@ class VurderingVesentligVirksomhet extends Component {
                     muligeValg={begrunnelser}
                     disabled={!redigerbart}
                     label="Legg til begrunnelse:"
+                    onChange={this.listeVelgerHandler}
                     gruppe
                     tillatFritekst={false}
                   />
@@ -68,13 +94,17 @@ VurderingVesentligVirksomhet.propTypes = {
   valgteVirksomheter: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   settSkjemaVerdi: PT.func.isRequired,
+  oppdaterRessurs: PT.func.isRequired,
+  slettAllStegdata: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
+  vesentligVirksomhetBegrunnelser: PT.array,
 };
 
 VurderingVesentligVirksomhet.defaultProps = {
   tilstand: {},
   valgteVirksomheter: [],
   begrunnelser: [],
+  vesentligVirksomhetBegrunnelser: [],
 };
 
 export default VurderingVesentligVirksomhet;

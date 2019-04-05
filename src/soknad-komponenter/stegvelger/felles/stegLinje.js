@@ -13,10 +13,10 @@ const StegLinje = props => {
   const stegKnapper = steg.map((item, index) => (<StegIkon
     key={uuid()}
     onClick={() => props.stegKlikk(index)}
-    id={item.id}
-    tittel={item.tittel}
-    status={item.status}
-    aktivtSteg={item.aktivtSteg}
+    id={item.byggSteg().id}
+    tittel={item.byggSteg().tittel}
+    status={item.byggSteg().status}
+    aktivtSteg={item.byggSteg().aktivtSteg}
   />));
 
   return (

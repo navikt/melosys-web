@@ -11,6 +11,7 @@ import LandVelger from '../../skjema/landvelger';
 
 import './vurderingSokkelSkip.css';
 import { SokkelEllerSkipSelector } from '../../../ducks/form/selectors';
+import { lagRessurs } from '../../../regler/vilkar';
 
 const SokkelSkipEnkelt = props => {
   const {
@@ -95,21 +96,17 @@ SokkelSkipListe.defaultProps = {
 
 class VurderingSokkelSkip extends React.Component {
   componentWillUnmount() {
-    this.clearSkjema();
+    const { slettAllStegdata } = this.props;
+    slettAllStegdata();
   }
-
-  clearSkjema = () => {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.art11_3A', null);
-  };
 
   radioEndringHandler = event => {
     const { value } = event.target;
-    const { settSkjemaVerdi } = this.props;
+    const { oppdaterRessurs, slettRessurs } = this.props;
     if (value === KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK) {
-      settSkjemaVerdi('vilkar.art11_3A', true);
+      oppdaterRessurs(lagRessurs('art11_3A', true));
     } else {
-      this.clearSkjema();
+      slettRessurs('art11_3A');
     }
   };
 
@@ -153,7 +150,9 @@ VurderingSokkelSkip.propTypes = {
   tilstand: PT.object,
   skjema: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
-  settSkjemaVerdi: PT.func.isRequired,
+  oppdaterRessurs: PT.func.isRequired,
+  slettRessurs: PT.func.isRequired,
+  slettAllStegdata: PT.func.isRequired,
 };
 
 VurderingSokkelSkip.defaultProps = {

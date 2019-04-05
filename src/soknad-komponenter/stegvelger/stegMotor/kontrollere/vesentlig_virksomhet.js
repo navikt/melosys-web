@@ -3,7 +3,7 @@ import * as MKV from 'melosys-kodeverk';
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingVesentligVirksomhet from '../../stegKomponenter/vurderingVesentligVirksomhet';
-import { erVilkarOppfylt } from '../../../../regler/vilkar';
+import { erVilkarOppfylt, hentVilkar } from '../../../../regler/vilkar';
 
 class VesentligVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -31,16 +31,22 @@ class VesentligVirksomhet extends Steg {
     });
     this.beregnRelevantUI = _propsLight => {
       const { vesentligVirksomhet, vesentligVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;
+      const vesentligVirksomhetVilkaar = hentVilkar(MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET, _propsLight.vilkar);
       const harAvklaring = vesentligVirksomhet === true || (vesentligVirksomhet === false && vesentligVirksomhetBegrunnelser.length > 0);
 
       return {
-        visBegrunnelser: !vesentligVirksomhet,
+        visBegrunnelser: !vesentligVirksomhetVilkaar.oppfylt,
         harAvklaring,
+        vesentligVirksomhetVilkaar,
+        vesentligVirksomhetBegrunnelser,
+        vesentligVirksomhet,
       };
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
+      oppdaterRessurs: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegressurs(this.id, felt, verdi),
+      slettAllStegdata: () => this._propsLight.tilgjengeligeHandlers.slettAllStegdata(this.id),
     };
     this.status = FANE_STATUS.OK;
   }
