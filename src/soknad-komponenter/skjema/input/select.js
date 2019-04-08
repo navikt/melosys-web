@@ -62,4 +62,5 @@ Select.propTypes = {
   className: PT.string,
 };
 
+export { SelectWrappedComponent };
 export default Select;
