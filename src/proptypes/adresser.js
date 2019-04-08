@@ -14,13 +14,4 @@ const GeneriskAdressePropType = PT.shape({
   land: PT.oneOfType([Kodeverk, PT.string]),
 });
 
-const BostedsAdressePropType = GeneriskAdressePropType;
-const ForretningsAdressePropType = GeneriskAdressePropType;
-const PostAdressePropType = GeneriskAdressePropType;
-
-export {
-  BostedsAdressePropType as BostedsAdresse,
-  ForretningsAdressePropType as ForretningsAdresse,
-  PostAdressePropType as PostAdresse,
-  GeneriskAdressePropType as GeneriskAdresse,
-};
+export { GeneriskAdressePropType as GeneriskAdresse };

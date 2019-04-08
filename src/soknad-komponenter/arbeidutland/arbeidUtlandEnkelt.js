@@ -21,7 +21,7 @@ const ArbeidUtlandEnkelt = ({ indeks, slettArbeidHandler, redigerbart }) => (
           <Skjema.Input disabled={!redigerbart} label="Postnummer" feltNavn={`arbeidUtland[${indeks}].adresse.postnummer`} />
           <Skjema.Input disabled={!redigerbart} label="Region" feltNavn={`arbeidUtland[${indeks}].adresse.region`} />
           <Skjema.Input disabled={!redigerbart} label="Poststed" feltNavn={`arbeidUtland[${indeks}].adresse.poststed`} />
-          <Landvelger disabled={!redigerbart} label="Land" feltNavn={`arbeidUtland[${indeks}].adresse.landKode`} />
+          <Landvelger disabled={!redigerbart} label="Land" feltNavn={`arbeidUtland[${indeks}].adresse.landkode`} />
         </Nav.Fieldset>
       </Nav.Column>
       <Nav.Column className="hoyreKolonne" xs="6">

@@ -81,7 +81,7 @@ export const OppholdUtlandSelector = createSelector(
 
 export const OppholdsLandSelector = createSelector(
   state => OppholdUtlandSelector(state),
-  oppholdUtland => oppholdUtland.oppholdslandKoder || []
+  oppholdUtland => oppholdUtland.oppholdslandkoder || []
 );
 
 export const OppholdUtlandPeriodeSelector = createSelector(
@@ -113,6 +113,16 @@ export const ArbeidsgiversBekreftelseSelector = createSelector(
 export const MaritimtArbeidSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.maritimtArbeid : []),
   maritimtArbeid => maritimtArbeid || []
+);
+
+export const SoknadslandSelector = createSelector(
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.soeknadsland.landkoder : []),
+  soknadsland => soknadsland || []
+);
+
+export const SoknadsperiodeSelector = createSelector(
+  state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.periode : {}),
+  soknadsperiode => soknadsperiode || {}
 );
 
 export const PersonOpplysningerSelector = createSelector(

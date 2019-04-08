@@ -57,14 +57,14 @@ class Saksopplysninger extends Component {
   submitRegistrering = () => {
     const { registreringSkjemaVerdier, settFeilFelt } = this.props;
     if (!erSkjemaGyldig(registreringSkjemaVerdier)) {
-      settFeilFelt('landKode', 'startdato', 'sluttdato', 'hjemmel');
+      settFeilFelt('landkode', 'startdato', 'sluttdato', 'hjemmel');
       return false;
     }
     const {
-      landKode, startdato, sluttdato, hjemmel,
+      landkode, startdato, sluttdato, hjemmel,
     } = this.props;
     const unntaksperiode = {
-      landKode, startdato, sluttdato, hjemmel,
+      landkode, startdato, sluttdato, hjemmel,
     };
     /* eslint-disable no-console */
     Api.Registrering.unntaksperioder(4, unntaksperiode)
@@ -96,7 +96,7 @@ class Saksopplysninger extends Component {
                 </Nav.Row>
                 <Nav.Row>
                   <Nav.Column xs="3">
-                    <Landvelger label="Land" feltNavn="landKode" />
+                    <Landvelger label="Land" feltNavn="landkode" />
                   </Nav.Column>
                   <Nav.Column xs="3">
                     <Skjema.Input label="Hjemmel" feltNavn="hjemmel" />
@@ -126,7 +126,7 @@ Saksopplysninger.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
   lovvalgsPeriode: PT.object.isRequired,
   skjema: PT.any,
-  landKode: PT.string,
+  landkode: PT.string,
   startdato: PT.string,
   sluttdato: PT.string,
   hjemmel: PT.string,
@@ -138,7 +138,7 @@ Saksopplysninger.defaultProps = {
   inntekt: {},
   medlemskap: {},
   skjema: {},
-  landKode: '',
+  landkode: '',
   startdato: '',
   sluttdato: '',
   hjemmel: '',
@@ -152,14 +152,14 @@ const mapStateToProps = state => ({
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  landKode: skjemaSelector(state, 'landKode'),
+  landkode: skjemaSelector(state, 'landkode'),
   startdato: skjemaSelector(state, 'startdato'),
   sluttdato: skjemaSelector(state, 'sluttdato'),
   hjemmel: skjemaSelector(state, 'hjemmel'),
   initialValues: {
     startdato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.LovvalgsperiodeSelector(state).fomDato),
     sluttdato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.LovvalgsperiodeSelector(state).tomDato),
-    landKode: 'NO',
+    landkode: 'NO',
     hjemmel: 'Hva er hjemmel?',
   },
 });
@@ -179,11 +179,11 @@ const datoValidering = (values, feltnavn) => (
 const validering = values => {
   const startdato = datoValidering(values, 'startdato') || null;
   const sluttdato = datoValidering(values, 'sluttdato') || null;
-  const landKode = !values.landKode ? 'Du må velge land.' : null;
+  const landkode = !values.landkode ? 'Du må velge land.' : null;
   return {
     startdato,
     sluttdato,
-    landKode,
+    landkode,
   };
 };
 

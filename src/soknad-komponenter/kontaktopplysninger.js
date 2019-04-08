@@ -6,7 +6,7 @@ import * as Nav from '../utils/navFrontend';
 import * as Api from '../services/api';
 import * as Utils from '../utils';
 
-import ForretningsAdresse from '../komponenter/adresser/forretningsAdresse';
+import OrganisasjonsAdresse from '../komponenter/adresser/organisasjonsAdresse';
 import { fagsakSelectors } from '../ducks/fagsaker';
 import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
 
@@ -158,30 +158,29 @@ export class KontaktOpplysninger extends Component {
                 />
               </Nav.Column>
             </Nav.Row>
-            <Nav.Row>
-              <Nav.Column xs="8">
-                <Nav.Input
-                  disabled={!redigerbart}
-                  feil={orgnrFeilmelding}
-                  onChange={vedKontaktorgnrEndring}
-                  onBlur={validerOgLagreKontakt}
-                  value={kontaktorgnr}
-                  label="Organisasjonsnummer"
-                  placeholder="Skriv inn..."
-                />
-              </Nav.Column>
-              <Nav.Column xs="4">
-                <Nav.Knapp onClick={vedKlikkSok} className="sokKnapp">SØK</Nav.Knapp>
-              </Nav.Column>
-            </Nav.Row>
+            {
+              !sokeResultat &&
+              <Nav.Row>
+                <Nav.Column xs="8">
+                  <Nav.Input
+                    disabled={!redigerbart}
+                    feil={orgnrFeilmelding}
+                    onChange={vedKontaktorgnrEndring}
+                    onBlur={validerOgLagreKontakt}
+                    value={kontaktorgnr}
+                    label="Organisasjonsnummer"
+                    placeholder="Skriv inn..."
+                  />
+                </Nav.Column>
+                <Nav.Column xs="4">
+                  <Nav.Knapp onClick={vedKlikkSok} className="sokKnapp">SØK</Nav.Knapp>
+                </Nav.Column>
+              </Nav.Row>
+            }
           </Nav.Fieldset>
         }
         {
-          !skjulInput && sokeResultat &&
-            <Fragment>
-              {sokeResultat.navn}
-              <ForretningsAdresse forretningsadresse={sokeResultat.forretningsadresse} />
-            </Fragment>
+          !skjulInput && sokeResultat && <OrganisasjonsAdresse className="adresse" organisasjon={sokeResultat} />
         }
         {
           !skjulInput &&

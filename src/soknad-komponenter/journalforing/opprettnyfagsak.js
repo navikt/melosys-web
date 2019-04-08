@@ -71,7 +71,7 @@ class OpprettNyFagSak extends Component {
             <Skjema.Input feltNavn="representantID" label="Fullmektigens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
             <Skjema.Input feltNavn="representantNavn" label="Organisasjonsnavn" disabled />
             <Skjema.Input feltNavn="representantKontaktPerson" label="Kontaktperson hos fullmektig" />
-            { visArbeidsgiverSpinner && <Nav.NavFrontendSpinner className="sok__spinner" /> }
+          { visArbeidsgiverSpinner && <Nav.NavFrontendSpinner className="sok__spinner" /> }
           </Nav.Column>
         </Nav.Row>
         <Nav.Fieldset legend="Soknadperiode:" className="opprettnysak__soknadsperiode">
@@ -87,10 +87,11 @@ class OpprettNyFagSak extends Component {
         <Nav.Fieldset legend="Land:">
           <Nav.Row>
             <Nav.Column xs="12">
-              <LandVelger feltNavn="journalforingOppholdsLand" multiLand />
+              <LandVelger feltNavn="journalforingSoknadsland" multiLand />
             </Nav.Column>
           </Nav.Row>
         </Nav.Fieldset>
+        <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
         <div className="opprettnysak__knapper">
           <Nav.Knapp className="knapp" onClick={opprettFagsak}>Opprett ny sak</Nav.Knapp>
         </div>

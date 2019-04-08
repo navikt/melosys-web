@@ -3,6 +3,8 @@ import * as MPT from '../../proptypes';
 
 import * as KV from '../../kodeverk';
 
+import './generiskAdresse.css';
+
 /** Forretningsadresse formatterer adressen korrekt med sjekk på
  * varierende keys i objektet.
  *
@@ -20,12 +22,21 @@ const GeneriskAdresse = ({ adresse }) => {
   } = gateadresse;
 
   const landNavn = (typeof land === 'string' ? land : KV.objektTilTerm(land));
+  const visGate = gatenavn || gatenummer || husnummer || husbokstav;
 
   return (gatenavn || gatenummer || husnummer || husbokstav || land || postnr || poststed) ? (
-    <address className="bostedsadresse">
-      {gatenavn} {gatenummer} {husnummer} {husbokstav}<br />
-      {postnr} {poststed}<br />
-      {landNavn}
+    <address className="generiskadresse">
+      { visGate &&
+        <div>{gatenavn} {gatenummer} {husnummer} {husbokstav}</div>
+      }
+      {
+        (postnr || poststed) &&
+        <div>{postnr} {poststed}</div>
+      }
+      {
+        landNavn &&
+        <div>{landNavn}</div>
+      }
     </address>
   ) : INGEN_TILGJENGELIG_TEKST;
 };

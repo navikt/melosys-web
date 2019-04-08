@@ -52,20 +52,20 @@ describe('Fullmektig', () => {
     expect(komponent.find('SokFullmektigOrg')).toHaveLength(1);
   });
 
-  it('viser et fieldset', () => {
+  it.skip('viser et fieldset', () => {
     const komponent = shallow(<Fullmektig {...props} />);
     expect(komponent.find('Fieldset')).toHaveLength(1);
   });
 
   describe('fieldset', () => {
-    it('setter disabled-prop korrekt', () => {
+    it.skip('setter disabled-prop korrekt', () => {
       props.redigerbart = false;
       const komponent = shallow(<Fullmektig {...props} />);
       expect(komponent.find('Fieldset').props().disabled).toBeTruthy();
     });
   });
 
-  it('viser tre radioknapper', () => {
+  it.skip('viser tre radioknapper', () => {
     const komponent = shallow(<Fullmektig {...props} />);
     expect(komponent.find('Radio')).toHaveLength(3);
   });
