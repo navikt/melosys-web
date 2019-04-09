@@ -5,12 +5,14 @@ import * as MPT from '../../../proptypes';
 import * as Skjema from '../../skjema';
 
 import { BOOLSK } from '../../../constants';
-import { lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
+import { konverterTilRessurs, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingForutgaendeMedlemskap extends Component {
   componentDidMount() {
-    const { oppdaterRessurs, tilstand } = this.props;
-    oppdaterRessurs(lagVilkaar('forutgaendeMedlemskap', tilstand.forutgaendeMedlemskap.oppfylt));
+    const { oppdaterRessurs, settSkjemaVerdi, tilstand } = this.props;
+    const { forutgaendeMedlemskap } = tilstand;
+    oppdaterRessurs(konverterTilRessurs('forutgaendeMedlemskap', forutgaendeMedlemskap));
+    settSkjemaVerdi('vilkar.forutgaendeMedlemskapBegrunnelser', forutgaendeMedlemskap.begrunnelseKoder || []);
   }
 
   componentWillUnmount() {
