@@ -97,7 +97,7 @@ const MaritimtAlle = props => {
           fartsomradeKode={fartsomradeKoder[index]}
           settSkjemaVerdi={settSkjemaVerdi} />)}
       </div>
-      <Nav.Knapp onClick={() => push({})} className="leggtil">+ Legg til nytt skip eller sokkel</Nav.Knapp>
+      <Nav.Knapp disabled={!redigerbart} onClick={() => push({})} className="leggtil">+ Legg til nytt skip eller sokkel</Nav.Knapp>
     </Fragment>
   );
 };
