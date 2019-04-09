@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import PT from 'prop-types';
@@ -45,16 +45,19 @@ const BehandlingOppgave = ({ sak }) => {
     aktivTil,
     soknadsperiode,
     land,
+    fnr,
   } = sak;
 
   const {
     sisteOpplysningerHentetDato,
     erUnderOppdatering,
+    behandlingsstatus,
+    behandlingstype,
+    registrertDato,
   } = behandling;
 
-  const { behandlingsstatus } = behandling;
   const { fom, tom } = soknadsperiode;
-  const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn}`;
+  const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
   const link = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
@@ -72,26 +75,52 @@ const BehandlingOppgave = ({ sak }) => {
           ikon={Ikoner.IkonSak}
           tittel={tittel}
           undertittel={
-            <Nav.Row>
-              <Nav.Column xs="12" md="6">
-                <dl className="behandlingOppgave__meta">
-                  <dt className="behandlingOppgave__meta__term">Behandlingsstatus:</dt>
-                  <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
-                  <dt className="behandlingOppgave__meta__term">Frist:</dt>
-                  <dd className="behandlingOppgave__meta__detalj">{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
-                  <dt className="behandlingOppgave__meta__term">Sist oppdatert:</dt>
-                  <dd className="behandlingOppgave__meta__detalj">{oppdateringStatus || formatterDatoTilNorsk(sisteOpplysningerHentetDato, true)}</dd>
-                </dl>
-              </Nav.Column>
-              <Nav.Column xs="12" md="6">
-                <dl className="behandlingOppgave__meta">
-                  <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
-                  <dd className="behandlingOppgave__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
-                  <dt className="behandlingOppgave__meta__term">Land:</dt>
-                  <dd className="behandlingOppgave__meta__detalj">{landListeSomStreng}</dd>
-                </dl>
-              </Nav.Column>
-            </Nav.Row>
+            <Fragment>
+              <div className="behandlingOppgave__info">
+                <Nav.Row>
+                  <dl className="behandlingOppgave__meta">
+                    <Nav.Column xs="12" md="5">
+                      <dt className="behandlingOppgave__meta__term">Behandlingstype:</dt>
+                      <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingstype) || '(ukjent)'}</dd>
+                    </Nav.Column>
+                    <Nav.Column xs="12" md="7">
+                      <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
+                      <dd className="behandlingOppgave__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
+                    </Nav.Column>
+                  </dl>
+                </Nav.Row>
+
+                <Nav.Row>
+                  <dl className="behandlingOppgave__meta">
+                    <Nav.Column xs="12" md="5">
+                      <dt className="behandlingOppgave__meta__term">Behandlingsstatus:</dt>
+                      <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
+                    </Nav.Column>
+                    <Nav.Column xs="12" md="7">
+                      <dt className="behandlingOppgave__meta__term">Land:</dt>
+                      <dd className="behandlingOppgave__meta__detalj">{landListeSomStreng}</dd>
+                    </Nav.Column>
+                  </dl>
+                </Nav.Row>
+
+                <Nav.Row>
+                  <dl className="behandlingOppgave__meta">
+                    <Nav.Column xs="12" md="5">
+                      <dt className="behandlingOppgave__meta__term">Opprettelsesdato:</dt>
+                      <dd className="behandlingOppgave__meta__detalj">{<EnkeltDato dato={registrertDato} /> || '(ukjent)'}</dd>
+                    </Nav.Column>
+                    <Nav.Column xs="12" md="5">
+                      <dt className="behandlingOppgave__meta__term">Sist oppdatert:</dt>
+                      <dd className="behandlingOppgave__meta__detalj">{oppdateringStatus || formatterDatoTilNorsk(sisteOpplysningerHentetDato, true)}</dd>
+                    </Nav.Column>
+                    <Nav.Column xs="12" md="2">
+                      <dt className="behandlingOppgave__meta__term">Frist:</dt>
+                      <dd className="behandlingOppgave__meta__detalj">{<EnkeltDato dato={aktivTil} /> || '(ukjent)'}</dd>
+                    </Nav.Column>
+                  </dl>
+                </Nav.Row>
+              </div>
+            </Fragment>
           }
         />
       </Nav.Panel>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { MultiLand } from './multiLand';
 
-describe('EnkeltLand', () => {
+describe.skip('EnkeltLand', () => {
   let props = null;
 
   beforeEach(() => {

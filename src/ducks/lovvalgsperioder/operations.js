@@ -18,6 +18,7 @@ import * as Actions from './actions';
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
 import { formSelectors } from '../form';
+import { avklartefaktaSelectors } from '../avklartefakta';
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -50,7 +51,7 @@ const finnValgteVilkar = alleLovvalgsVilkar => {
 };
 
 const byggLovvalgsPeriodeArtikkel12_1 = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
@@ -66,7 +67,7 @@ const byggLovvalgsPeriodeArtikkel12_1 = state => {
 };
 
 const byggLovvalgsPeriodeArtikkel12_2 = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
@@ -82,7 +83,7 @@ const byggLovvalgsPeriodeArtikkel12_2 = state => {
 };
 
 const byggLovvalgsPeriodeArtikkel11_3A = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   const tilleggsbestemmelse = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(state));
 
   return [{
@@ -100,7 +101,7 @@ const byggLovvalgsPeriodeArtikkel11_3A = state => {
 };
 
 const byggLovvalgsPeriodeArtikkel11_4_2 = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
@@ -116,10 +117,10 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = state => {
 };
 
 const byggLovvalgsPeriodeArtikkel16_1 = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
-  const soknadOppholdsland = soknadSelectors.OppholdsLandSelector(state);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
+  const soknadsland = soknadSelectors.SoknadslandSelector(state);
 
-  const unntakFraLovvalgsland = soknadOppholdsland.join('');
+  const unntakFraLovvalgsland = soknadsland.join('');
   const lovvalgsperiode = formSelectors.Lovvalgsperiode(state);
   const { unntakFraBestemmelse } = lovvalgsperiode;
 
@@ -139,13 +140,13 @@ const byggLovvalgsPeriodeArtikkel16_1 = state => {
   }];
 };
 
-const byggAvslaattLovvalg = state => {
-  const soknadPeriode = soknadSelectors.OppholdUtlandPeriodeSelector(state);
+const byggAvslaattLovvalg = (state, lovvalgBestemmelse) => {
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: null,
+    lovvalgBestemmelse,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -155,8 +156,18 @@ const byggAvslaattLovvalg = state => {
     medlemskapstype: null,
   }];
 };
+
+const hentLovvalgsBestemmelseForAvslag = state => {
+  if (avklartefaktaSelectors.Yrkesaktivitet(state) === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
+    return MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2;
+  }
+  return MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1;
+};
+
 const byggLovvalgsPerioder = (valgtLovvalg, state) => {
-  if (!valgtLovvalg) return byggAvslaattLovvalg(state);
+  if (!valgtLovvalg) {
+    return byggAvslaattLovvalg(state, hentLovvalgsBestemmelseForAvslag(state));
+  }
 
   switch (valgtLovvalg) {
     case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(state);

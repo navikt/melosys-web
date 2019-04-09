@@ -36,8 +36,8 @@ class Artikkel11_4 extends Steg {
     this.samleRelevanteData = _propsLight => ({
       artikkel: { kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2, term: '11.4' },
       bostedsland: _propsLight.bostedsland,
-      oppholdsland: _propsLight.oppholdsland,
-      valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
+      arbeidsland: _propsLight.arbeidsland,
+      valgteVirksomheter: _propsLight.valgteVirksomheter,
       begrunnelser: _propsLight.begrunnelser.art11_4_begrunnelser || [],
       redigerbart: _propsLight.redigerbart,
     });

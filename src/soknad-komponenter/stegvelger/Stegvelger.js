@@ -66,10 +66,10 @@ class Stegvelger extends Component {
     const vedtakBody = { behandlingsresultattype };
     try {
       await fatteVedtak(bid, vedtakBody);
+      this.tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
     }
-    this.tilForsiden();
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
@@ -77,25 +77,18 @@ class Stegvelger extends Component {
     this.fatteVedtakHandler(behandlingsresultattype);
   };
 
-  endreDatoOgSendLovvalgsperioderHandler = async (fomdato, tomdato) => {
-    await this.props.endreLovvalgsPeriode(fomdato, tomdato);
-
+  endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
     const bid = this.props.oppsummering.behandlingID;
-    const { lovvalgsperioder, sendLovvalgsperioder } = this.props;
-    sendLovvalgsperioder(bid, lovvalgsperioder);
+    const { lovvalgsperioder } = this.props;
+
+    const forkortetPeriode = lovvalgsperioder.map(periode => ({ ...periode, fomDato: fomdato, tomDato: tomdato }));
+    API.Lovvalgsperioder.send(bid, forkortetPeriode).catch(e => Utils.logger.error(e));
   };
 
-  sendEndretLovvalgsPeriode = async (fomdato, tomdato, begrunnelseKode) => {
-    const { oppsummering } = this.props;
-    const { tilForsiden, endreDatoOgSendLovvalgsperioderHandler } = this;
+  vedtaEndretPeriode = begrunnelseKode => {
+    const { oppsummering: { behandlingID } } = this.props;
 
-    try {
-      await endreDatoOgSendLovvalgsperioderHandler(fomdato, tomdato);
-      API.Vedtak.endrePeriode(oppsummering.behandlingID, { begrunnelseKode });
-      tilForsiden();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
+    API.Vedtak.endrePeriode(behandlingID, { begrunnelseKode }).catch(e => Utils.logger.error(e));
   };
 
   tilForsiden = () => {
@@ -115,13 +108,15 @@ class Stegvelger extends Component {
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
       oppdaterOgLagreBehandlinger: this.props.lagreBehandlingerHandler,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
-      sendEndretLovvalgsPeriode: this.sendEndretLovvalgsPeriode,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
       lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
+      vedtaEndretPeriode: this.vedtaEndretPeriode,
+      endreDatoOgSendLovvalgsperioderHandler: this.endreDatoOgSendLovvalgsperioderHandler,
+      tilForsiden: this.tilForsiden,
     };
 
     const propsLight = {
-      arbeidsgivereIPerioden: props.arbeidsgivereIPerioden,
+      virksomheterIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
       begrunnelser: MKV.KTObjects.begrunnelser,
       bostedsland: props.bostedsland,
@@ -132,8 +127,8 @@ class Stegvelger extends Component {
       tilgjengeligeHandlers,
       saksopplysninger: props.saksopplysninger,
       skjema: props.skjema,
-      oppholdsland: props.oppholdsland,
-      valgteArbeidsgivere: props.valgteArbeidsgivere,
+      arbeidsland: props.arbeidsland,
+      valgteVirksomheter: props.valgteVirksomheter,
       vilkar: props.vilkar,
       redigerbart: props.redigerbart,
     };
@@ -239,7 +234,7 @@ Stegvelger.propTypes = {
   settSkjemaVerdi: PT.func.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   skjema: PT.object.isRequired,
-  valgteArbeidsgivere: PT.array,
+  valgteVirksomheter: PT.array,
   vilkar: PT.array.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
   lagreVilkarHandler: PT.func.isRequired,
@@ -254,22 +249,22 @@ Stegvelger.defaultProps = {
   avklartefakta: [],
   inngang: {},
   oppsummering: [],
-  valgteArbeidsgivere: [],
+  valgteVirksomheter: [],
 };
 
 const mapStateToProps = state => ({
-  arbeidsgivereIPerioden: avklartefaktaSelectors.ArbeidsgivereIPeriodenSelector(state),
+  arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlinger: behandlingerSelectors.behandlingerSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
-  oppholdsland: avklartefaktaSelectors.AvklartefaktaGyldigeOppholdLandSelector(state),
+  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   saksopplysninger: fagsakSelectors.SaksopplysningerSelector(state),
-  valgteArbeidsgivere: avklartefaktaSelectors.AvklartefaktaValgteArbeidsgivereSelector(state),
+  valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 

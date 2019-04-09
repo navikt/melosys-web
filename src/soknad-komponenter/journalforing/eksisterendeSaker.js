@@ -82,6 +82,7 @@ const EksisterendeSaker = props => {
         }
       </Skjema.Select>
       <Skjema.Checkbox feltNavn="ingenVurdering" label="Dokumentet trenger ingen vurdering" />
+      <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
       {
         fagsakListe.length > 0 &&
         <Nav.Knapp className="eksisterendeSaker__knyttTilSak" onClick={knyttTilEksisterendeSak}>Knytt til sak</Nav.Knapp>

@@ -30,47 +30,62 @@ export class VurderingEndrePeriode extends React.Component {
     this.setState({ nyTomDato: event.target.value, nyTomDatoFeilmelding: undefined });
   };
 
-  validerTomDato = () => {
-    const { nyTomDato } = this.state;
-    const vasketTomDato = Utils.dato.vaskInputDato(nyTomDato);
-    if (vasketTomDato) {
-      return true;
+  lagrePeriodeForForhandsvisning = () => {
+    if (this.erTomDatoOgPeriodeGyldige()) {
+      const { lovvalgsPeriode: { fomDato } } = this.props;
+      const { nyTomDato } = this.state;
+
+      this.props.endreDatoOgSendLovvalgsperioderHandler(fomDato, Utils.dato.formatterDatoTilISO(nyTomDato));
     }
-    this.setState({ nyTomDatoFeilmelding: { feilmelding: 'Ugyldig dato' } });
-    return false;
   };
 
+  erTomDatoOgPeriodeGyldige = () => this.erTomDatoGyldig() && this.erPeriodeGyldig();
+
+  erTomDatoGyldig = () => Utils.dato.vaskInputDato(this.state.nyTomDato);
+
+  validerTomDato = () => {
+    const tomDatoGyldig = this.erTomDatoGyldig();
+    if (!tomDatoGyldig) this.setState({ nyTomDatoFeilmelding: { feilmelding: 'Ugyldig dato' } });
+    return tomDatoGyldig;
+  };
+
+  erBegrunnelseGyldig = () => this.state.begrunnelsekode !== '';
+
   validerBegrunnelse = () => {
-    const begrunnelseValid = this.state.begrunnelsekode !== '';
-    if (begrunnelseValid) {
-      return true;
-    }
-    this.setState({ begrunnelseFeilmelding: { feilmelding: 'Ugyldig begrunnelse' } });
-    return false;
+    const begrunnelseGyldig = this.erBegrunnelseGyldig();
+    if (!begrunnelseGyldig) this.setState({ begrunnelseFeilmelding: { feilmelding: 'Ugyldig begrunnelse' } });
+    return begrunnelseGyldig;
+  };
+
+  erPeriodeGyldig = () => {
+    const { nyTomDato } = this.state;
+    const { fomDato, tomDato } = this.props.lovvalgsPeriode;
+    return Utils.dato.erIPeriode(fomDato, tomDato, Utils.dato.formatterDatoTilISO(nyTomDato));
   };
 
   validerPeriode = () => {
-    const { nyTomDato } = this.state;
-    const { fomDato, tomDato } = this.props.lovvalgsPeriode;
-    const periodeValid = Utils.dato.erIPeriode(fomDato, tomDato, Utils.dato.formatterDatoTilISO(nyTomDato));
-    if (periodeValid) {
-      return true;
-    }
-    this.setState({ nyTomDatoFeilmelding: { feilmelding: 'Ugyldig periode' } });
-    return false;
+    const periodeGyldig = this.erPeriodeGyldig();
+    if (!periodeGyldig) this.setState({ nyTomDatoFeilmelding: { feilmelding: 'Ugyldig periode' } });
+    return periodeGyldig;
   };
 
-  vedBegrunnelseEndret = event => {
+  vedBegrunnelseEndring = event => {
     this.setState({ begrunnelsekode: event.target.value, begrunnelseFeilmelding: undefined });
   };
 
-  vedKlikkEndrePeriode = () => {
+  vedKlikkEndrePeriode = async () => {
     if (this.validerAlt()) {
-      const { lovvalgsPeriode: { fomDato } } = this.props;
-      const { begrunnelsekode, nyTomDato } = this.state;
-
-      this.props.sendEndretLovvalgsPeriode(fomDato, Utils.dato.formatterDatoTilISO(nyTomDato), begrunnelsekode);
+      await this.sendEndretLovvalgsPeriode();
+      await this.props.vedtaEndretPeriode(this.state.begrunnelsekode);
+      this.props.tilForsiden();
     }
+  };
+
+  sendEndretLovvalgsPeriode = async () => {
+    const { lovvalgsPeriode: { fomDato } } = this.props;
+    const { nyTomDato } = this.state;
+
+    this.props.endreDatoOgSendLovvalgsperioderHandler(fomDato, Utils.dato.formatterDatoTilISO(nyTomDato));
   };
 
   validerAlt = () => this.validerTomDato() && this.validerPeriode() && this.validerBegrunnelse();
@@ -82,9 +97,10 @@ export class VurderingEndrePeriode extends React.Component {
 
     const {
       vedTomDatoEndring,
-      vedBegrunnelseEndret,
+      vedBegrunnelseEndring,
       vedKlikkEndrePeriode,
       vedKlikkPdf,
+      lagrePeriodeForForhandsvisning,
     } = this;
 
     const {
@@ -148,6 +164,7 @@ export class VurderingEndrePeriode extends React.Component {
               bredde="fullbredde"
               label="Sluttdato"
               onChange={vedTomDatoEndring}
+              onBlur={lagrePeriodeForForhandsvisning}
               value={nyTomDato}
               feil={nyTomDatoFeilmelding}
             />
@@ -160,13 +177,12 @@ export class VurderingEndrePeriode extends React.Component {
               koder={MKV.KTObjects.begrunnelser.endretperiode}
               label="Begrunnelse"
               value={begrunnelsekode}
-              onChange={vedBegrunnelseEndret}
-              redigerbar
+              onChange={vedBegrunnelseEndring}
             />
           </Nav.Column>
         </Nav.Row>
         <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={vedKlikkPdf} />
-        <Nav.Hovedknapp onClick={vedKlikkEndrePeriode} >Endre periode</Nav.Hovedknapp>
+        <Nav.Hovedknapp onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
       </div>
     );
   }
@@ -175,8 +191,10 @@ export class VurderingEndrePeriode extends React.Component {
 VurderingEndrePeriode.propTypes = {
   oppsummering: MPT.Oppsummering.isRequired,
   lovvalgsPeriode: PT.object.isRequired,
-  sendEndretLovvalgsPeriode: PT.func.isRequired,
+  endreDatoOgSendLovvalgsperioderHandler: PT.func.isRequired,
   fomDato: PT.string,
+  tilForsiden: PT.func.isRequired,
+  vedtaEndretPeriode: PT.func.isRequired,
 };
 
 VurderingEndrePeriode.defaultProps = {

@@ -30,26 +30,26 @@ MultiLandEnkelt.propTypes = {
   slettLandHandler: PT.func.isRequired,
 };
 
-export const MultiLand = props => {
+function MultiLand(props) {
   const [inputVerdi, setInputVerdi] = useState('');
   const [error, setError] = useState('');
 
-  const reduxLeggTilLand = landKode => {
+  const reduxLeggTilLand = landkode => {
     const valgteLand = props.fields.getAll() || [];
 
-    if (!landKode) {
-      const e = new Error('landKode må inneholde verdi.');
+    if (!landkode) {
+      const e = new Error('landkode må inneholde verdi.');
       Utils.logger.error(e);
       throw e;
     }
 
-    if (!valgteLand.includes(landKode)) {
-      props.fields.push(landKode);
+    if (!valgteLand.includes(landkode)) {
+      props.fields.push(landkode);
     }
   };
 
-  const reduxSlettEttLand = landKode => {
-    const index = props.fields.getAll().findIndex(item => item === landKode);
+  const reduxSlettEttLand = landkode => {
+    const index = props.fields.getAll().findIndex(item => item === landkode);
     return (index > -1 && props.fields.remove(index));
   };
 
@@ -80,9 +80,9 @@ export const MultiLand = props => {
    * -----------------------------------------------------------------------
    */
 
-  const slettLandHandler = (e, landKode) => {
+  const slettLandHandler = (e, landkode) => {
     e.preventDefault();
-    reduxSlettEttLand(landKode);
+    reduxSlettEttLand(landkode);
   };
 
   const fokusUtHandler = () => {
@@ -91,9 +91,9 @@ export const MultiLand = props => {
       return;
     }
 
-    const landKodeObjekt = finnEttLand(inputVerdi);
-    if (landKodeObjekt) {
-      reduxLeggTilLand(landKodeObjekt.kode);
+    const landkodeObjekt = finnEttLand(inputVerdi);
+    if (landkodeObjekt) {
+      reduxLeggTilLand(landkodeObjekt.kode);
       tomFeilmelding();
       setInputVerdi('');
     } else {
@@ -142,7 +142,7 @@ export const MultiLand = props => {
       </div>
     </div>
   );
-};
+}
 
 MultiLand.propTypes = {
   dataListID: PT.string.isRequired,
@@ -159,6 +159,8 @@ MultiLand.defaultProps = {
   feil: {},
   disabled: false,
 };
+
+export { MultiLand };
 
 const MultiLandWrapper = props => (<FieldArray name={props.feltNavn} component={MultiLand} props={props} />);
 

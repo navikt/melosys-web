@@ -54,7 +54,7 @@ function InnerTextAreaComponent({
 InnerTextAreaComponent.propTypes = {
   label: PT.string,
   placeholder: PT.string,
-  maxLength: PT.number.isRequired,
+  maxLength: PT.number,
   visTellerFra: PT.number,
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   input: PT.object, // eslint-disable-line react/forbid-prop-types
@@ -63,6 +63,7 @@ InnerTextAreaComponent.propTypes = {
 InnerTextAreaComponent.defaultProps = {
   meta: undefined,
   input: undefined,
+  maxLength: undefined,
   visTellerFra: undefined,
   label: undefined,
   placeholder: undefined,
