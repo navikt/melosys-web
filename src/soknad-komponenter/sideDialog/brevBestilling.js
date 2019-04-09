@@ -29,9 +29,9 @@ const InfoPanel = () => (
       Din tekst starter etter teksten &laquo;Dette må du sende oss:&raquo;.
     </p>
     <p>
-      Brevet inneholder allerede en innleding, beskrivelse av hvordan informasjon sendes inn og en avsluttende tekst.
-      Trykk på &laquo;forhåndsvis brev&raquo; for å se brevet når du er fgerdig med å skrive.<br />
-      OBS! Det er ikke automatisk stavekontroll, så sjekk teksten to har skrevet.
+      Brevet inneholder allerede en innledning, beskrivelse av hvordan informasjon sendes inn og en avsluttende tekst.
+      Trykk på &laquo;forhåndsvis brev&raquo; for å se brevet når du er ferdig med å skrive.<br />
+      OBS! Det er ikke automatisk stavekontroll, så sjekk teksten du har skrevet.
     </p>
   </Nav.Lesmerpanel>
 );
@@ -111,10 +111,10 @@ class BrevBestilling extends Component {
 
     const data = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
     const ForhandsvistePdfDokumenter = [
-      { navn: 'Vis utkast', type: dokumenttypeKode, data },
+      { navn: 'Forhåndsvis brev', type: dokumenttypeKode, data },
     ];
 
-    const placeholder = 'Feks: "Opplysning om antall utsendet i perioden, "Opplysninger om den utsendte fortsetter sitt norske arbeidsforhold""';
+    const placeholder = 'F.eks.: Opplysninger om antall utsendte ansatte i perioden, Opplysninger om den ansatte erstatter en annen utsendt ansatt';
     return (
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
@@ -127,7 +127,7 @@ class BrevBestilling extends Component {
             </Skjema.Select>
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
-            <Skjema.Textarea disabled={!redigerbart} feltNavn="fritekst" label="Hva skal søker sende inn?" maxLength={200} placeholder={placeholder} visTellerFra={100} feil={undefined} />}
+            <Skjema.Textarea disabled={!redigerbart} feltNavn="fritekst" label="Hva skal søker sende inn?" placeholder={placeholder} feil={undefined} />}
             { behandlingID && redigerbart &&
               <PdfLenkeListe behandlingID={behandlingID} dokumenter={ForhandsvistePdfDokumenter} vedKlikk={this.validerBrev} />
             }
