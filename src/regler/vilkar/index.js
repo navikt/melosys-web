@@ -12,25 +12,27 @@ export const hentBegrunnelser = (spesifiktVilkar, alleVilkar) => {
   return funnetVilkar.begrunnelser;
 };
 
-export const lagRessurs = (felt, verdi, begrunnelse, fritekst) => {
+export const lagVilkaar = (felt, verdi, begrunnelse, fritekst) => {
   const oppfylt = tryParseBool(verdi);
   if (oppfylt === true) {
     return {
       felt,
+      type: 'vilkaar',
       innhold: { oppfylt, begrunnelse: [], fritekst: null },
     };
   }
   return {
     felt,
+    type: 'vilkaar',
     innhold: { oppfylt, begrunnelse, fritekst },
   };
 };
 
 export const lagBegrunnelse = (felt, begrunnelse, fritekst) => {
-  return lagRessurs(felt, null, begrunnelse, fritekst);
+  return lagVilkaar(felt, null, begrunnelse, fritekst);
 };
 
 export const konverterTilRessurs = (felt, vilkaar) => {
   const { oppfylt, begrunnelseKoder, begrunnelseFritekst } = vilkaar;
-  return lagRessurs(felt, oppfylt, begrunnelseKoder, begrunnelseFritekst);
+  return lagVilkaar(felt, oppfylt, begrunnelseKoder, begrunnelseFritekst);
 };

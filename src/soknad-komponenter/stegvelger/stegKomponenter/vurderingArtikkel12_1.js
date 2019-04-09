@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import { konverterTilRessurs, lagRessurs } from '../../../regler/vilkar';
+import { konverterTilRessurs, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -39,14 +39,14 @@ class VurderingArtikkel12_1 extends Component {
     const { oppdaterRessurs, slettRessurs } = this.props;
 
     if (value === this.ART12_1) {
-      oppdaterRessurs(lagRessurs('art12_1', true));
-      slettRessurs('art16_1');
+      oppdaterRessurs(lagVilkaar('art12_1', true));
+      slettRessurs('vilkaar', 'art16_1');
     } else if (value === this.ART16_1) {
-      oppdaterRessurs(lagRessurs('art12_1', false, [], ''));
-      oppdaterRessurs(lagRessurs('art16_1', true));
+      oppdaterRessurs(lagVilkaar('art12_1', false, [], ''));
+      oppdaterRessurs(lagVilkaar('art16_1', true));
     } else if (value === this.AVSLAG) {
-      oppdaterRessurs(lagRessurs('art12_1', false, [], ''));
-      oppdaterRessurs(lagRessurs('art16_1', false, [], ''));
+      oppdaterRessurs(lagVilkaar('art12_1', false, [], ''));
+      oppdaterRessurs(lagVilkaar('art16_1', false, [], ''));
     }
   };
 

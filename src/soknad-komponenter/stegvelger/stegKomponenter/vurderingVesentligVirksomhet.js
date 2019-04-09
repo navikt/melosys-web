@@ -8,7 +8,7 @@ import * as Skjema from '../../skjema';
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import { BOOLSK } from '../../../constants';
-import { konverterTilRessurs, lagBegrunnelse, lagRessurs } from '../../../regler/vilkar';
+import { konverterTilRessurs, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingVesentligVirksomhet extends Component {
   componentDidMount() {
@@ -23,7 +23,7 @@ class VurderingVesentligVirksomhet extends Component {
 
   radioEndringHandler = event => {
     const { oppdaterRessurs } = this.props;
-    oppdaterRessurs(lagRessurs('vesentligVirksomhet', event.target.value));
+    oppdaterRessurs(lagVilkaar('vesentligVirksomhet', event.target.value));
   };
 
   listeVelgerHandler = event => {
