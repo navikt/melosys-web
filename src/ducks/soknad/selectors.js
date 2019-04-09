@@ -41,7 +41,7 @@ export const ArbeidsinntektSelector = createSelector(
 
 export const ArbeidsinntektNaturalytelserSelector = createSelector(
   state => ArbeidsinntektSelector(state),
-  arbeidsinntekt => arbeidsinntekt.inntektNaturalytelser || []
+  arbeidsinntekt => arbeidsinntekt.inntektNaturalytelser || {}
 );
 
 export const ForetakUtlandSelector = createSelector(
