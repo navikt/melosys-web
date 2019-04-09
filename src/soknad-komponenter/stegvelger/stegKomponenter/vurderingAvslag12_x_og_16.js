@@ -50,6 +50,7 @@ const VurderingAvslag12_x_og_16 = ({
   vilkarBegrunnelser,
   oppsummering,
   fattVedtak,
+  redigerbart,
 }) => {
   const dokumenter = [
     {
@@ -108,8 +109,8 @@ const VurderingAvslag12_x_og_16 = ({
           fritekst={art16_1_fritekst}
         />
       }
-      <PdfLenkeListe behandlingID={oppsummering.behandlingID} dokumenter={dokumenter} />
-      <Nav.Hovedknapp onClick={() => fattVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>
+      {redigerbart && <PdfLenkeListe behandlingID={oppsummering.behandlingID} dokumenter={dokumenter} />}
+      <Nav.Hovedknapp disabled={!redigerbart} onClick={() => fattVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>
         Fatt vedtak
       </Nav.Hovedknapp>
     </div>
@@ -124,10 +125,12 @@ VurderingAvslag12_x_og_16.propTypes = {
   vilkarBegrunnelser: PT.array.isRequired,
   oppsummering: PT.object.isRequired,
   fattVedtak: PT.func.isRequired,
+  redigerbart: PT.bool,
 };
 
 VurderingAvslag12_x_og_16.defaultProps = {
   art16_1_fritekst: '',
+  redigerbart: true,
 };
 
 const mapStateToProps = state => ({

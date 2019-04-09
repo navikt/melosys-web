@@ -71,7 +71,7 @@ class OpprettNyFagSak extends Component {
             <Skjema.Input feltNavn="representantID" label="Fullmektigens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
             <Skjema.Input feltNavn="representantNavn" label="Organisasjonsnavn" disabled />
             <Skjema.Input feltNavn="representantKontaktPerson" label="Kontaktperson hos fullmektig" />
-          { visArbeidsgiverSpinner && <Nav.NavFrontendSpinner className="sok__spinner" /> }
+            { visArbeidsgiverSpinner && <Nav.NavFrontendSpinner className="sok__spinner" /> }
           </Nav.Column>
         </Nav.Row>
         <Nav.Fieldset legend="Soknadperiode:" className="opprettnysak__soknadsperiode">
