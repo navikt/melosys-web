@@ -40,7 +40,7 @@ class ForutgaendeMedlemskap extends Steg {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
       oppdaterRessurs: (felt, innhold) => this._propsLight.tilgjengeligeHandlers.oppdaterStegressurs(this.id, felt, innhold),
-      slettAllStegdata: () => this._propsLight.tilgjengeligeHandlers.slettAllStegdata(this.id),
+      slettAllStegdata: () => this._propsLight.tilgjengeligeHandlers.slettAlleRessurserForSteg(this.id),
     };
     this.status = FANE_STATUS.OK;
   }

@@ -15,21 +15,25 @@ import StegMotor from './stegMotor';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
-import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
-import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
+import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta/';
+import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder/';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
 
 import './stegvelger.css';
+import StegState from './StegState';
 
 class Stegvelger extends Component {
   state = {
     aktivtStegNummer: 0,
     aktuelleSteg: [],
     didUpdateAfterLastStep: false,
-    stegStore: new Map(),
+    stegStores: {
+      avklartefakta: new StegState(),
+      vilkaar: new StegState(),
+    },
   };
 
   componentWillMount() {
@@ -66,84 +70,31 @@ class Stegvelger extends Component {
     this.tilSteg(this.beregnNesteSteg());
   };
 
-  slettStegressurs = (stegID, felt) => {
-    const { stegStore } = this.state;
-    if (stegStore.has(stegID)) {
-      const steg = stegStore.get(stegID);
-      delete steg[felt];
-      stegStore.set(stegID, steg);
-    }
-    this.setState(stegStore);
+  slettStegressurs = (stegID, type, felt) => {
+    const { stegStores } = this.state;
+    stegStores[type].slettStegressurs(stegID, felt);
+    this.setState(stegStores);
   };
 
-  oppdaterStegressurs = (stegID, { felt, innhold }) => {
-    const eksisterendeFeltData = this.hentEksisterendeFelt(stegID, felt);
-    if (eksisterendeFeltData) {
-      const feltData = this.oppdaterfelt(eksisterendeFeltData, innhold);
-      this.lagreFelt(stegID, felt, feltData);
-    } else {
-      this.lagreFelt(stegID, felt, innhold);
-    }
+  oppdaterStegressurs = (stegID, { felt, type, innhold }) => {
+    const { stegStores } = this.state;
+    stegStores[type].oppdaterStegressurs(stegID, { felt, type, innhold });
+    this.setState(stegStores);
 
     this.konverterStegressursTilRedux();
   };
 
-  lagreFelt = (stegID, felt, data) => {
-    const { stegStore } = this.state;
-    let steg = stegStore.get(stegID);
-    if (!steg) {
-      steg = {};
-    }
-    steg[felt] = data;
-
-    stegStore.set(stegID, steg);
-    this.setState(stegStore);
-  }
-
-  hentEksisterendeFelt = (stegID, felt) => {
-    const { stegStore } = this.state;
-    if (!stegStore.has(stegID)) {
-      return null;
-    }
-    const steg = stegStore.get(stegID);
-    return steg[felt];
-  };
-
-  oppdaterfelt = ({ oppfylt, begrunnelse, fritekst }, nyData) => {
-    const nyttFelt = { oppfylt, begrunnelse, fritekst };
-    if (nyData.oppfylt !== null && nyData.oppfylt !== undefined) {
-      nyttFelt.oppfylt = nyData.oppfylt;
-    }
-    if (nyData.begrunnelse !== null && nyData.begrunnelse !== undefined) {
-      nyttFelt.begrunnelse = nyData.begrunnelse;
-    }
-    if (nyData.fritekst !== undefined) {
-      nyttFelt.fritekst = nyData.fritekst;
-    }
-    return nyttFelt;
-  };
-
-  slettStegressurser = steg => {
-    const { stegStore } = this.state;
-    stegStore.delete(steg);
-    this.setState(stegStore);
+  slettAlleRessurserForSteg = stegID => {
+    const { stegStores } = this.state;
+    Object.keys(stegStores).forEach(type => stegStores[type].slettStegressurs(stegID));
+    this.setState(stegStores);
   };
 
   konverterStegressursTilRedux = () => {
-    const vilkaar = {};
-    const { stegStore } = this.state;
-    stegStore.forEach(steg => {
-      Object.keys(steg).forEach(key => {
-        const { oppfylt, begrunnelse } = steg[key];
-        vilkaar[key] = oppfylt;
+    const { vilkaar } = this.state.stegStores;
 
-        if (begrunnelse && begrunnelse.length > 0) {
-          vilkaar[`${key}Begrunnelser`] = begrunnelse;
-        }
-      });
-    });
-
-    this.props.oppdaterVilkaar(vilkaar);
+    const vilkaarKonvertert = vilkaar.konverterStegressursTilRedux();
+    this.props.oppdaterVilkaar(vilkaarKonvertert);
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {
@@ -196,7 +147,7 @@ class Stegvelger extends Component {
       settSkjemaVerdi: this.props.settSkjemaVerdi,
       oppdaterStegressurs: this.oppdaterStegressurs,
       slettStegressurs: this.slettStegressurs,
-      slettAllStegdata: this.slettStegressurser,
+      slettAlleRessurserForSteg: this.slettAlleRessurserForSteg,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
       lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
       vedtaEndretPeriode: this.vedtaEndretPeriode,
@@ -326,6 +277,7 @@ Stegvelger.propTypes = {
   sendLovvalgsperioder: PT.func.isRequired,
   skjema: PT.object.isRequired,
   oppdaterVilkaar: PT.func.isRequired,
+  oppdaterAvklartefakta: PT.func.isRequired,
   valgteVirksomheter: PT.array,
   vilkar: PT.array.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
@@ -375,6 +327,7 @@ const mapDispatchToProps = dispatch => ({
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
   oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
+  oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

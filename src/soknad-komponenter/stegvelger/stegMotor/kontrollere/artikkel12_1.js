@@ -64,7 +64,7 @@ class Artikkel12_1 extends Steg {
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
-      slettAllStegdata: () => this._propsLight.tilgjengeligeHandlers.slettAllStegdata(this.id),
+      slettAllStegdata: () => this._propsLight.tilgjengeligeHandlers.slettAlleRessurserForSteg(this.id),
       oppdaterRessurs: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegressurs(this.id, felt, verdi),
       slettRessurs: felt => this._propsLight.tilgjengeligeHandlers.slettStegressurs(this.id, felt),
     };

@@ -5,12 +5,12 @@ import * as MPT from '../../../proptypes';
 import * as Skjema from '../../skjema';
 
 import { BOOLSK } from '../../../constants';
-import { lagBegrunnelse, lagRessurs } from '../../../regler/vilkar';
+import { lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingForutgaendeMedlemskap extends Component {
   componentDidMount() {
     const { oppdaterRessurs, tilstand } = this.props;
-    oppdaterRessurs(lagRessurs('forutgaendeMedlemskap', tilstand.forutgaendeMedlemskap.oppfylt));
+    oppdaterRessurs(lagVilkaar('forutgaendeMedlemskap', tilstand.forutgaendeMedlemskap.oppfylt));
   }
 
   componentWillUnmount() {
@@ -20,7 +20,7 @@ class VurderingForutgaendeMedlemskap extends Component {
 
   radioEndringHandler = event => {
     const { oppdaterRessurs } = this.props;
-    oppdaterRessurs(lagRessurs('forutgaendeMedlemskap', event.target.value));
+    oppdaterRessurs(lagVilkaar('forutgaendeMedlemskap', event.target.value));
   };
 
   listevalgEndringHandler = event => {

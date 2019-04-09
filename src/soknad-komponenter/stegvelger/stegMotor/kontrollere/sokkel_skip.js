@@ -42,13 +42,15 @@ class SokkelSkip extends Steg {
 
       return ({
         harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon),
+        sokkelEllerSkip,
+        sokkelSkipKonklusjon,
       });
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterRessurs: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegressurs(this.id, felt, verdi),
       slettRessurs: felt => this._propsLight.tilgjengeligeHandlers.slettStegressurs(this.id, felt),
-      slettAllStegdata: felt => this._propsLight.tilgjengeligeHandlers.slettStegressurs(this.id, felt),
+      slettAllStegdata: () => this._propsLight.tilgjengeligeHandlers.slettAlleRessurserForSteg(this.id),
     };
     this.status = FANE_STATUS.OK;
   }
