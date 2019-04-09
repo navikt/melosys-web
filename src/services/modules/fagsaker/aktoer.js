@@ -1,5 +1,5 @@
 import * as QS from 'qs';
-import { getAsJson, postAsJson } from '../../utils';
+import { getAsJson, postAsJson, deleteAsJson } from '../../utils';
 import { API_BASE_URL, FAGSAKER } from '../../api-constants';
 
 export const hent = (saksnr, rolleKode, representererKode) => {
@@ -13,4 +13,9 @@ export const hent = (saksnr, rolleKode, representererKode) => {
 export const send = (saksnr, data) => {
   const URI_AKTOER = `${API_BASE_URL}${FAGSAKER}/${saksnr}/aktoerer`;
   return postAsJson(URI_AKTOER, data);
+};
+
+export const slett = databaseid => {
+  const URI_AKTOER = `${API_BASE_URL}${FAGSAKER}/aktoerer/${databaseid}`;
+  return deleteAsJson(URI_AKTOER);
 };

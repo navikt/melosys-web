@@ -189,11 +189,12 @@ class VurderingArtikkel16 extends Component {
 
   render() {
     const {
-      gyldigeOppholdLand,
-      oppholdPeriode,
+      gyldigeSoknadsland,
+      soknadsperiode,
       medlemskap,
       oppsummering,
       redigerbart,
+      art16Begrunnelser,
     } = this.props;
 
     const {
@@ -211,18 +212,19 @@ class VurderingArtikkel16 extends Component {
 
     const { behandlingID } = oppsummering;
 
-    const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
+    const antallManeder = datoDiffMenneskelig(soknadsperiode.fom, soknadsperiode.tom);
 
-    const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
+    const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
     const dokumenter = [
-      { navn: 'Forhåndsvis anmodning til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
-      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
+      { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
+      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
     ];
 
     const begrunnelseError = begrunnelserFeilmelding ? { error: begrunnelserFeilmelding } : {};
     const fritekstError = fritekstFeilmelding ? { error: fritekstFeilmelding, touched: true } : {};
 
+    const visFritekstfelt = art16Begrunnelser.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
     /* eslint-disable max-len */
     return (
@@ -237,20 +239,48 @@ class VurderingArtikkel16 extends Component {
             <Nav.Column xs="6">
               <Nav.Element type="element">Antall måneder:</Nav.Element>
               <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
-              <DatoOmrade periode={oppholdPeriode} />
+              <DatoOmrade periode={soknadsperiode} />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
-            <Nav.Column xs="10">
-              <Skjema.Select feil={lovvalgFeilmelding} onBlur={lagreLovvalgsPerioder} disabled={!redigerbart} feltNavn="lovvalgsperiode.unntakFraBestemmelse" label="Artikkelen det søkes unntak fra:" bredde="m" >
+            <Nav.Column xs="7">
+              <Skjema.Select
+                feil={lovvalgFeilmelding}
+                onBlur={lagreLovvalgsPerioder}
+                disabled={!redigerbart}
+                feltNavn="lovvalgsperiode.unntakFraBestemmelse"
+                label="Artikkelen det søkes unntak fra:"
+              >
                 { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
               </Skjema.Select>
-              <Listevelger meta={begrunnelseError} disabled={!redigerbart} gruppe muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning} feltNavn="vilkar.art16_1_begrunnelser" label="Legg til begrunnelse:" />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="7">
+              <Listevelger
+                meta={begrunnelseError}
+                disabled={!redigerbart}
+                gruppe
+                muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning}
+                feltNavn="vilkar.art16_1_begrunnelser"
+                label="Legg til begrunnelse:"
+              />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.Textarea meta={fritekstError} onBlur={lagreVilkar} disabled={!redigerbart} feltNavn="vilkar.art16_1_begrunnelser_fritekst" label="Begrunnelse til utenlandsk myndighet (engelsk):" maxLength={255} bredde="fullbredde" />
+              {
+                visFritekstfelt &&
+                <Skjema.Textarea
+                  meta={fritekstError}
+                  onBlur={lagreVilkar}
+                  disabled={!redigerbart}
+                  feltNavn="vilkar.art16_1_begrunnelser_fritekst"
+                  label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                  maxLength={255}
+                  bredde="fullbredde"
+                />
+              }
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
@@ -281,8 +311,8 @@ class VurderingArtikkel16 extends Component {
 VurderingArtikkel16.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
-  gyldigeOppholdLand: MPT.OppholdLand.isRequired,
-  oppholdPeriode: MPT.OppholdPeriode.isRequired,
+  gyldigeSoknadsland: MPT.Soknadsland.isRequired, // TODO:
+  soknadsperiode: MPT.Soknadsperiode.isRequired,
   oppsummering: PT.object.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -300,9 +330,9 @@ VurderingArtikkel16.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  gyldigeOppholdLand: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
-  oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
+  soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   art16Begrunnelser: formSelectors.Art16BegrunnelserSelector(state),

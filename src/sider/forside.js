@@ -18,7 +18,7 @@ const Forside = props => {
   return (
     <div className="forside">
       { children }
-      <Nav.Container>
+      <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="7">
             <MineOppgaver />

@@ -36,7 +36,7 @@ function InnerCheckboxComponent({
 
 InnerCheckboxComponent.propTypes = {
   label: PT.string.isRequired,
-  errorMessage: PT.arrayOf([PT.string]),
+  errorMessage: PT.arrayOf(PT.string),
   submitOnChange: PT.bool,
   input: PT.object, // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
@@ -75,4 +75,5 @@ Checkbox.defaultProps = {
   className: undefined,
 };
 
+export { InnerCheckboxComponent };
 export default Checkbox;

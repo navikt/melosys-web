@@ -18,19 +18,19 @@ export class EnkeltLand extends Component {
   componentDidMount = () => {
     const { value } = this.props.input;
     const { landkoder } = this.props;
-    const landKodeObjekt = value && kodeTilObjekt(value, landkoder);
-    const inputVerdi = landKodeObjekt ? landTekstFormat(landKodeObjekt) : '';
+    const landkodeObjekt = value && kodeTilObjekt(value, landkoder);
+    const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
     this.setState({ inputVerdi });
   };
 
-  reduxOppdaterLand = landKode => {
-    if (!landKode) {
-      const e = new Error('landKode må inneholde verdi.');
+  reduxOppdaterLand = landkode => {
+    if (!landkode) {
+      const e = new Error('landkode må inneholde verdi.');
       Utils.logger.error(e);
       throw e;
     }
     const { onChange } = this.props.input;
-    onChange(landKode);
+    onChange(landkode);
   };
 
   reduxFjernLand = () => {
@@ -78,11 +78,11 @@ export class EnkeltLand extends Component {
       return;
     }
 
-    const landKodeObjekt = this.finnEttLand(inputVerdi);
+    const landkodeObjekt = this.finnEttLand(inputVerdi);
 
-    if (landKodeObjekt) {
-      this.reduxOppdaterLand(landKodeObjekt.kode);
-      this.setState({ inputVerdi: landTekstFormat(landKodeObjekt), error: null });
+    if (landkodeObjekt) {
+      this.reduxOppdaterLand(landkodeObjekt.kode);
+      this.setState({ inputVerdi: landTekstFormat(landkodeObjekt), error: null });
     } else {
       this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
     }

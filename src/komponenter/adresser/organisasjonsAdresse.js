@@ -1,40 +1,38 @@
 import React from 'react';
+import PT from 'prop-types';
+
 import * as MPT from '../../proptypes';
 
-import './adresse.css';
+import GeneriskAdresse from './generiskAdresse';
 
-/** Organisasjon formatterer navn adressen korrekt med sjekk på
- * varierende keys i objektet.
- *
- */
-const OrganisasjonsAdresse = ({ organisasjon }) => {
-  if (!organisasjon) return '(ingen tilgjengelig)';
+import './organisasjonsAdresse.css';
 
-  const { forretningsadresse, navn = '' } = organisasjon;
+const OrganisasjonsAdresse = ({ organisasjon, className, visNavn }) => {
+  const { postadresse, forretningsadresse, navn } = organisasjon;
 
-  if (!forretningsadresse) return null;
+  if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
 
-  const {
-    gateadresse, land, postnr, poststed,
-  } = forretningsadresse;
-  const gatenavn = gateadresse ? gateadresse.gatenavn : '';
+  const adresse = postadresse || forretningsadresse;
+  const tittel = postadresse ? 'Postadresse' : 'Forretningsadresse';
 
-  return Object.keys(organisasjon).length > 0 ? (
-    <address className="organisasjonsadresse">
-      {navn || '-'}<br />
-      {gatenavn || '-'}<br />
-      {postnr || '-'} {poststed || '-'}<br />
-      {land || '-'}
-    </address>
-  ) : null;
+  return (
+    <div className={className}>
+      { visNavn && <div>{navn}</div>}
+      <div className="tittel">{tittel}</div>
+      <GeneriskAdresse adresse={adresse} />
+    </div>
+  );
 };
 
 OrganisasjonsAdresse.propTypes = {
-  organisasjon: MPT.Organisasjon,
+  organisasjon: MPT.Organisasjon.isRequired,
+  className: PT.string,
+  visNavn: PT.bool,
 };
 
 OrganisasjonsAdresse.defaultProps = {
-  organisasjon: {},
+  className: '',
+  visNavn: true,
 };
 
 export default OrganisasjonsAdresse;

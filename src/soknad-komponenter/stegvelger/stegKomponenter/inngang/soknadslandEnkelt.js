@@ -5,41 +5,41 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 import * as KV from '../../../../kodeverk';
 
-import OppholdslandHandlingSlett from './oppholdslandHandlingSlett';
+import SoknadslandHandlingSlett from './soknadslandHandlingSlett';
 
-const EnkeltLand = ({ landKodeObjekt, settSlettIntensjon, redigerbart }) => (
-  <div className="oppholdsland__linje">
-    <div className="linje__land">{KV.objektTilTerm(landKodeObjekt)} ({KV.objektTilKode(landKodeObjekt)})</div>
+const EnkeltLand = ({ landkodeObjekt, settSlettIntensjon, redigerbart }) => (
+  <div className="soknadsland__linje">
+    <div className="linje__land">{KV.objektTilTerm(landkodeObjekt)} ({KV.objektTilKode(landkodeObjekt)})</div>
     <div className="linje__knapper"><Nav.Knapp className="knappMedIkon" disabled={!redigerbart} onClick={settSlettIntensjon} ><Ikon kind="minus" />Fjern</Nav.Knapp></div>
   </div>
 );
 
 EnkeltLand.propTypes = {
-  landKodeObjekt: MPT.Kodeverk.isRequired,
+  landkodeObjekt: MPT.Kodeverk.isRequired,
   settSlettIntensjon: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 
-function OppholdsLandEnkelt(props) {
+function SoknadslandEnkelt(props) {
   const [erSlettingIntensjon, settSlettIntensjon] = useState(false);
 
-  const avbryt = () => this.settSlettIntensjon(false);
+  const avbryt = () => settSlettIntensjon(false);
   const {
-    landKodeObjekt, bekreftFjern, oppholdBegrunnelser, redigerbart,
+    landkodeObjekt, bekreftFjern, soknadslandBegrunnelser, redigerbart,
   } = props;
   return (
     <div>
       {erSlettingIntensjon ?
-        <OppholdslandHandlingSlett
-          oppholdBegrunnelser={oppholdBegrunnelser}
-          landKodeObjekt={landKodeObjekt}
+        <SoknadslandHandlingSlett
+          soknadslandBegrunnelser={soknadslandBegrunnelser}
+          landkodeObjekt={landkodeObjekt}
           bekreft={bekreftFjern}
           avbryt={avbryt}
           redigerbart={redigerbart}
         />
         :
         <EnkeltLand
-          landKodeObjekt={landKodeObjekt}
+          landkodeObjekt={landkodeObjekt}
           settSlettIntensjon={() => settSlettIntensjon(true)}
           redigerbart={redigerbart}
         />
@@ -48,11 +48,11 @@ function OppholdsLandEnkelt(props) {
   );
 }
 
-OppholdsLandEnkelt.propTypes = {
+SoknadslandEnkelt.propTypes = {
   bekreftFjern: PT.func.isRequired,
-  landKodeObjekt: MPT.Kodeverk.isRequired,
-  oppholdBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
+  landkodeObjekt: MPT.Kodeverk.isRequired,
+  soknadslandBegrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
 };
 
-export default OppholdsLandEnkelt;
+export default SoknadslandEnkelt;

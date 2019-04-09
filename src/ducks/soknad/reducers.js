@@ -40,16 +40,13 @@ export default function reducer(state = initialState, action) {
     case Types.RESET:
       return { ...initialState };
     case Types.OPPDATER_PERIODE: {
-      const { oppholdsPeriode } = action.data;
+      const { soknadsperiode } = action.data;
 
       const soknad = {
         ...state.data.soeknadDokument,
-        oppholdUtland: {
-          ...state.data.soeknadDokument.oppholdUtland,
-          oppholdsPeriode: {
-            fom: oppholdsPeriode.fom,
-            tom: oppholdsPeriode.tom,
-          },
+        periode: {
+          fom: soknadsperiode.fom,
+          tom: soknadsperiode.tom,
         },
       };
 
@@ -79,7 +76,7 @@ export default function reducer(state = initialState, action) {
           fullmektigPostnr: dokument.fullmektigPostnr,
           fullmektigPoststed: dokument.fullmektigPoststed,
           fullmektigRegion: dokument.fullmektigRegion,
-          fullmektigLandKode: dokument.fullmektigLand,
+          fullmektigLandkode: dokument.fullmektigLand,
         },
         arbeidUtland: dokument.arbeidUtland,
         juridiskArbeidsgiverNorge: {
@@ -106,10 +103,10 @@ export default function reducer(state = initialState, action) {
         oppholdUtland: {
           ...state.data.soeknadDokument.oppholdUtland,
           oppholdsPeriode: {
-            fom: formatterDatoTilISO(dokument.oppholdUtlandFom),
-            tom: formatterDatoTilISO(dokument.oppholdUtlandTom),
+            fom: dokument.oppholdUtlandFom ? formatterDatoTilISO(dokument.oppholdUtlandFom) : null,
+            tom: dokument.oppholdUtlandTom ? formatterDatoTilISO(dokument.oppholdUtlandTom) : null,
           },
-          oppholdslandKoder: dokument.oppholdsland,
+          oppholdslandkoder: dokument.oppholdsland,
           sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
           ektefelleEllerBarnINorge: null,
           forutgaendeBostedINorge: dokument.forutgaendeBostedINorge,
@@ -123,7 +120,7 @@ export default function reducer(state = initialState, action) {
         )),
         bosted: {
           intensjonOmRetur: null,
-          familiesBostedLandKode: dokument.familiesBosted,
+          familiesBostedLandkode: dokument.familiesBosted,
           antallMaanederINorge: null,
           EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
           adresseIUtlandet: dokument.adresseIUtlandet,
@@ -133,15 +130,22 @@ export default function reducer(state = initialState, action) {
             region: dokument.oppgittAdresseRegion,
             postnummer: dokument.oppgittAdressePostnummer,
             poststed: dokument.oppgittAdressePoststed,
-            landKode: dokument.oppgittAdresseLand,
+            landkode: dokument.oppgittAdresseLand,
           },
         },
         maritimtArbeid: dokument.maritimtArbeid.filter(maritimtArbeid => (
-          maritimtArbeid.navn && maritimtArbeid.fartsomradeKode && maritimtArbeid.flaggLandKode && maritimtArbeid.installasjonsLandKode
+          maritimtArbeid.navn && maritimtArbeid.fartsomradeKode && maritimtArbeid.flaggLandkode && maritimtArbeid.installasjonsLandkode
         )).map(maritimtArbeid => ({
           ...maritimtArbeid,
           territorialfarvann: maritimtArbeid.territorialfarvann ? maritimtArbeid.territorialfarvann : null,
         })),
+        soeknadsland: {
+          landkoder: dokument.soknadsland,
+        },
+        periode: {
+          fom: dokument.soknadsperiodeFom ? formatterDatoTilISO(dokument.soknadsperiodeFom) : null,
+          tom: dokument.soknadsperiodeTom ? formatterDatoTilISO(dokument.soknadsperiodeTom) : null,
+        },
         selvstendigArbeid: {
           erSelvstendig: dokument.erSelvstendig,
           selvstendigForetak: dokument.selvstendigForetak,

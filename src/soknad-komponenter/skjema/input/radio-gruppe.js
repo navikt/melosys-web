@@ -60,4 +60,5 @@ RadioGruppe.defaultProps = {
   label: '',
 };
 
+export { RadioGruppeWrappedComponent };
 export default RadioGruppe;

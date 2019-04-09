@@ -33,19 +33,19 @@ export const AvklartefaktaSelector = createSelector(
   avklartefakta => avklartefakta || []
 );
 
-/* Oppholdsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
+/* Soknadsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
  * territoriet som søkeren skal til faktisk er med i forordningen gjøres i avklartefakta.
  * Derfor må både avklartefakta og soknad settes inn slik at disse kan flettes til avklart fakta.
  */
-export const Oppholdsland = createSelector(
+export const Soknadsland = createSelector(
   state => AvklartefaktaSelector(state),
-  state => soknadSelectors.OppholdsLandSelector(state),
+  state => soknadSelectors.SoknadslandSelector(state),
   (alleAvklartefakta, alleLandISoknaden) => (
     alleLandISoknaden.map(enkeltLand => (
       alleAvklartefakta.find(avklaring => avklaring.subjektID === enkeltLand) ||
       {
         ...avklartFaktaTemplate,
-        referanse: KV.Koder.avklartefaktaKoder.OPPHOLDSLAND,
+        referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
         subjektID: enkeltLand,
         fakta: ['TRUE'],
       }
@@ -173,7 +173,7 @@ export const SokkelEllerSkipSelector = createSelector(
  */
 
 const SoknadslandSelector = createSelector(
-  state => Oppholdsland(state) || [],
+  state => Soknadsland(state) || [],
   avklartefaktaLandListe => (avklartefaktaLandListe
     .filter(avklartfakta => avklartfakta.fakta.includes('TRUE'))
     .map(avklartfakta => avklartfakta.subjektID))
@@ -226,7 +226,7 @@ export const BostedslandSelector = createSelector(
   alleAvklarteFakta => {
     const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
     if (!avklartFakta) return null;
-    const bostedslandKode = avklartFakta.fakta[0];
-    return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandKode);
+    const bostedslandkode = avklartFakta.fakta[0];
+    return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandkode);
   }
 );
