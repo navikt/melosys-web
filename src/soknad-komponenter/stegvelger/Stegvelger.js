@@ -74,6 +74,8 @@ class Stegvelger extends Component {
     const { stegStores } = this.state;
     stegStores[type].slettStegressurs(stegID, felt);
     this.setState(stegStores);
+
+    this.konverterStegressursTilRedux();
   };
 
   oppdaterStegressurs = (stegID, { felt, type, innhold }) => {
@@ -247,7 +249,7 @@ class Stegvelger extends Component {
       <div className="stegvelger panelSeksjon">
         <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.tilSteg} />
         {
-          this.state.aktuelleSteg.map(item => <StegFane key={item.byggSteg().id} faneData={item.byggSteg()} />)
+          this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
         }
       </div>
     );

@@ -12,8 +12,10 @@ import { konverterTilRessurs, lagBegrunnelse, lagVilkaar } from '../../../regler
 
 class VurderingVesentligVirksomhet extends Component {
   componentDidMount() {
-    const { oppdaterRessurs, tilstand } = this.props;
-    oppdaterRessurs(konverterTilRessurs('vesentligVirksomhet', tilstand.vesentligVirksomhetVilkaar));
+    const { oppdaterRessurs, settSkjemaVerdi, tilstand } = this.props;
+    const { vesentligVirksomhetVilkaar } = tilstand;
+    oppdaterRessurs(konverterTilRessurs('vesentligVirksomhet', vesentligVirksomhetVilkaar));
+    settSkjemaVerdi('vilkar.vesentligVirksomhetBegrunnelser', vesentligVirksomhetVilkaar.begrunnelseKoder || []);
   }
 
   componentWillUnmount() {
@@ -105,7 +107,6 @@ VurderingVesentligVirksomhet.defaultProps = {
   tilstand: {},
   valgteVirksomheter: [],
   begrunnelser: [],
-  vesentligVirksomhetBegrunnelser: [],
 };
 
 export default VurderingVesentligVirksomhet;

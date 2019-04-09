@@ -20,7 +20,7 @@ class StegMotor {
     do {
       const nesteStegPosisjon = stegSamling.length;
       gjeldendeSteg = this.beregnNesteSteg(gjeldendeSteg, nesteStegPosisjon);
-      if (gjeldendeSteg) { stegSamling.push(gjeldendeSteg); }
+      if (gjeldendeSteg) { stegSamling.push(gjeldendeSteg.byggSteg()); }
       iterations += 1;
     } while (gjeldendeSteg && iterations < 30);
 

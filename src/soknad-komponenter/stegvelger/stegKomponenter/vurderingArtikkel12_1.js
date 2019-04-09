@@ -24,9 +24,14 @@ class VurderingArtikkel12_1 extends Component {
   }
 
   componentDidMount() {
-    const { oppdaterRessurs, tilstand } = this.props;
-    oppdaterRessurs(konverterTilRessurs('art12_1', tilstand.art12_1));
-    oppdaterRessurs(konverterTilRessurs('art16_1', tilstand.art16_1));
+    const { oppdaterRessurs, settSkjemaVerdi, tilstand } = this.props;
+    const { art12_1, art16_1 } = tilstand;
+    oppdaterRessurs(konverterTilRessurs('art12_1', art12_1));
+    oppdaterRessurs(konverterTilRessurs('art16_1', art16_1));
+
+    settSkjemaVerdi('vilkar.art12_1_begrunnelser', art12_1.begrunnelseKoder || []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser', art16_1.begrunnelseKoder || []);
+    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', art16_1.begrunnelseFritekst || '');
   }
 
   componentWillUnmount() {
@@ -76,13 +81,14 @@ class VurderingArtikkel12_1 extends Component {
         <div>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Fyller søker kriterier for artikkel 12.1?" disabled={!redigerbart}>
+              <Nav.Fieldset legend="Fyller søker kriterier for artikkel 12.1?">
                 <Nav.Radio
                   name="artikkel12"
                   onChange={this.vilkaarEndret}
                   value={this.ART12_1}
                   checked={art12_1.oppfylt}
                   label="Ja"
+                  disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel12"
@@ -90,6 +96,7 @@ class VurderingArtikkel12_1 extends Component {
                   value={this.ART16_1}
                   checked={anmodningOmUnntak}
                   label="Nei, jeg vil vurdere artikkel 16.1"
+                  disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel12"
@@ -97,6 +104,7 @@ class VurderingArtikkel12_1 extends Component {
                   value={this.AVSLAG}
                   checked={art12_1.oppfylt === false && !anmodningOmUnntak}
                   label="Nei, jeg vil avslå søknaden etter artikkel 12.1 og 16.1"
+                  disabled={!redigerbart}
                 />
               </Nav.Fieldset>
             </Nav.Column>
