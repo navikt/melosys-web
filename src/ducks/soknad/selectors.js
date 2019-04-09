@@ -39,6 +39,11 @@ export const ArbeidsinntektSelector = createSelector(
   soknad => soknad || {}
 );
 
+export const ArbeidsinntektNaturalytelserSelector = createSelector(
+  state => ArbeidsinntektSelector(state),
+  arbeidsinntekt => arbeidsinntekt.inntektNaturalytelser || {}
+);
+
 export const ForetakUtlandSelector = createSelector(
   state => (state.soknad.data.soeknadDokument ? state.soknad.data.soeknadDokument.foretakUtland : []),
   foretakUtland => foretakUtland || []
