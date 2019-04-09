@@ -25,7 +25,7 @@ class VurderingForutgaendeMedlemskap extends Component {
 
   listevalgEndringHandler = event => {
     const { oppdaterRessurs } = this.props;
-    oppdaterRessurs(lagBegrunnelse('forutgaendeMedlemskapBegrunnelser', event.value));
+    oppdaterRessurs(lagBegrunnelse('forutgaendeMedlemskap', event.value));
   };
 
   render() {
@@ -40,14 +40,16 @@ class VurderingForutgaendeMedlemskap extends Component {
         <div>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Søkeren har:">
+              <Nav.Fieldset legend="Søkeren har:" disabled={!redigerbart}>
                 <Nav.Radio
+                  name="forutgaendeMedlemskap"
                   disabled={!redigerbart}
                   onChange={this.radioEndringHandler}
                   checked={forutgaendeMedlemskap.oppfylt === true}
                   value={BOOLSK.SANN}
                   label="Har forutgående medlemskap" />
                 <Nav.Radio
+                  name="forutgaendeMedlemskap"
                   disabled={!redigerbart}
                   onChange={this.radioEndringHandler}
                   checked={forutgaendeMedlemskap.oppfylt === false}
@@ -92,7 +94,6 @@ VurderingForutgaendeMedlemskap.propTypes = {
   oppdaterRessurs: PT.func.isRequired,
   slettAllStegdata: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
-  lagreVilkaar: PT.func.isRequired,
 };
 
 VurderingForutgaendeMedlemskap.defaultProps = {

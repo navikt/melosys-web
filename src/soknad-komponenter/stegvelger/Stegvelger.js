@@ -86,14 +86,16 @@ class Stegvelger extends Component {
 
   slettAlleRessurserForSteg = stegID => {
     const { stegStores } = this.state;
-    Object.keys(stegStores).forEach(type => stegStores[type].slettStegressurs(stegID));
+    Object.keys(stegStores).forEach(type => stegStores[type].slettSteg(stegID));
     this.setState(stegStores);
+
+    this.konverterStegressursTilRedux();
   };
 
   konverterStegressursTilRedux = () => {
     const { vilkaar } = this.state.stegStores;
 
-    const vilkaarKonvertert = vilkaar.konverterStegressursTilRedux();
+    const vilkaarKonvertert = vilkaar.hent();
     this.props.oppdaterVilkaar(vilkaarKonvertert);
   };
 

@@ -56,7 +56,7 @@ class Steg {
 
   slett = () => {
     const { tilgjengeligeHandlers } = this._propsLight;
-    tilgjengeligeHandlers.slettStegressurser(this._id);
+    tilgjengeligeHandlers.slettSteg(this._id);
   };
 
   assertRegel = (regel, avklartefakta, vilkar) => (Utils._isFunction(regel) ? regel(avklartefakta, vilkar) : false);

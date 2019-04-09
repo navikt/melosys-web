@@ -19,8 +19,8 @@ const SokkelSkipEnkelt = props => {
     begrunnelser,
     index,
     redigerbart,
-    radioEndretHandler,
-    selectEndretHandler,
+    // radioEndretHandler,
+    // selectEndretHandler,
   } = props;
 
   const { navn } = maritimtArbeid;
@@ -35,16 +35,16 @@ const SokkelSkipEnkelt = props => {
         <Skjema.Radio
           disabled={!redigerbart}
           feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`}
-          id="installasjonsType"
-          onChange={e => radioEndretHandler(e, navn)}
+          // id="installasjonsType"
+          // onChange={e => radioEndretHandler(e, navn)}
           value={SOKKEL}
           checked={installasjonsType === SOKKEL}
           label="Sokkel" />
         <Skjema.Radio
           disabled={!redigerbart}
           feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`}
-          id="installasjonsType"
-          onChange={e => radioEndretHandler(e, navn)}
+          // id="installasjonsType"
+          // onChange={e => radioEndretHandler(e, navn)}
           checked={installasjonsType === SKIP}
           value={SKIP}
           label="Skip" />
@@ -55,11 +55,10 @@ const SokkelSkipEnkelt = props => {
           <Skjema.Select
             disabled={!redigerbart}
             feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsTypeBegrunnelse`}
-            className="installasjonsTypeBegrunnelse"
             label="Begrunnelse hvis sokkel"
-            id="installasjonsTypeBegrunnelser"
-            value={installasjonsTypeBegrunnelser}
-            onChange={e => selectEndretHandler(e, navn)}>
+            // id="installasjonsTypeBegrunnelser"
+            // onChange={e => selectEndretHandler(e, navn)}
+            value={installasjonsTypeBegrunnelser}>
             {begrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
           </Skjema.Select>
         </Nav.Column>
@@ -141,7 +140,7 @@ class VurderingSokkelSkip extends React.Component {
   konklusjonEndretHandler = event => {
     const { value } = event.target;
     const { oppdaterRessurs, slettRessurs } = this.props;
-    this.avklartefaktaEndret({ value, id: 'sokkelSkipKonklusjon' });
+    // this.avklartefaktaEndret({ value, id: 'sokkelSkipKonklusjon' });
 
     if (value === KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK) {
       oppdaterRessurs(lagVilkaar('art11_3A', true));
@@ -197,7 +196,7 @@ VurderingSokkelSkip.propTypes = {
   tilstand: PT.object,
   skjema: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
-  sokkelEllerSkip: PT.object.isRequired,
+  sokkelEllerSkip: PT.object,
   oppdaterRessurs: PT.func.isRequired,
   slettRessurs: PT.func.isRequired,
   slettAllStegdata: PT.func.isRequired,
@@ -205,6 +204,7 @@ VurderingSokkelSkip.propTypes = {
 
 VurderingSokkelSkip.defaultProps = {
   tilstand: {},
+  sokkelEllerSkip: {},
 };
 
 

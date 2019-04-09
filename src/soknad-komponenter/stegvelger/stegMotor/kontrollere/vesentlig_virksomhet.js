@@ -30,16 +30,13 @@ class VesentligVirksomhet extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { vesentligVirksomhet, vesentligVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;
       const vesentligVirksomhetVilkaar = hentVilkar(MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET, _propsLight.vilkar);
-      const harAvklaring = vesentligVirksomhet === true || (vesentligVirksomhet === false && vesentligVirksomhetBegrunnelser.length > 0);
+      const harAvklaring = vesentligVirksomhetVilkaar.oppfylt === true || (vesentligVirksomhetVilkaar.oppfylt === false && vesentligVirksomhetVilkaar.begrunnelseKoder.length > 0);
 
       return {
         visBegrunnelser: !vesentligVirksomhetVilkaar.oppfylt,
         harAvklaring,
         vesentligVirksomhetVilkaar,
-        vesentligVirksomhetBegrunnelser,
-        vesentligVirksomhet,
       };
     };
     this.handlers = {
