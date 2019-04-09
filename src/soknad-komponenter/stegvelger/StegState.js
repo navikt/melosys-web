@@ -1,4 +1,5 @@
 import './stegvelger.css';
+import * as Utils from '../../utils';
 
 class StegState {
   constructor() {
@@ -23,8 +24,6 @@ class StegState {
     } else {
       this.lagreFelt(stegID, felt, innhold);
     }
-
-    this.konverterStegressursTilRedux();
   };
 
   lagreFelt = (stegID, felt, data) => {
@@ -54,7 +53,7 @@ class StegState {
       const { oppfylt } = eksisterendeData;
       const nyttFelt = { oppfylt, begrunnelse, fritekst };
 
-      if (nyData.oppfylt !== null && nyData.oppfylt !== undefined) {
+      if (!Utils._isNil(nyData.oppfylt) && !Utils._isUndefined(nyData.oppfylt)) {
         nyttFelt.oppfylt = nyData.oppfylt;
       }
       return nyttFelt;
@@ -68,36 +67,40 @@ class StegState {
       fritekst,
     };
 
-    if (nyData.fakta !== null && nyData.fakta !== undefined) {
+    if (!Utils._isNil(nyData.fakta) && !Utils._isUndefined(nyData.fakta)) {
       nyttFelt.fakta = nyData.fakta;
     }
 
-    if (nyData.subjektID !== null && nyData.subjektID) {
+    if (!Utils._isNil(nyData.subjektID) && !Utils._isUndefined(nyData.subjektID)) {
       nyttFelt.subjektID = nyData.subjektID;
     }
 
     return nyttFelt;
   };
 
-  slettStegressurser = steg => {
+  slettSteg = steg => {
     const { stegStore } = this;
     stegStore.delete(steg);
   };
 
-  konverterStegressursTilRedux = () => {
-    const vilkaar = {};
+  hent = () => {
+    const ressurser = {};
     const { stegStore } = this;
     stegStore.forEach(steg => {
       Object.keys(steg).forEach(key => {
-        const { oppfylt, begrunnelse } = steg[key];
-        vilkaar[key] = oppfylt;
+        const { oppfylt, begrunnelse, fritekst } = steg[key];
+        ressurser[key] = oppfylt;
 
         if (begrunnelse && begrunnelse.length > 0) {
-          vilkaar[`${key}Begrunnelser`] = begrunnelse;
+          ressurser[`${key}_begrunnelser`] = begrunnelse;
+        }
+
+        if (fritekst && fritekst.length > 0) {
+          ressurser[`${key}_begrunnelser_fritekst`] = fritekst;
         }
       });
     });
-    return vilkaar;
+    return ressurser;
   };
 }
 

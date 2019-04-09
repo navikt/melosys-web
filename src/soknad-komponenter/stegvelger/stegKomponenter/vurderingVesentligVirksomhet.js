@@ -35,7 +35,7 @@ class VurderingVesentligVirksomhet extends Component {
     const {
       bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
     } = this.props;
-    const { vesentligVirksomhet, visBegrunnelser, harAvklaring } = tilstand;
+    const { vesentligVirksomhetVilkaar, visBegrunnelser, harAvklaring } = tilstand;
 
     const arbeidsgivereTekst = this.props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
     return (
@@ -46,15 +46,17 @@ class VurderingVesentligVirksomhet extends Component {
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Virksomheten har:">
                 <Nav.Radio
+                  name="vesentligVirksomhet"
                   disabled={!redigerbart}
                   onChange={this.radioEndringHandler}
-                  checked={vesentligVirksomhet === true}
+                  checked={vesentligVirksomhetVilkaar.oppfylt === true}
                   value={BOOLSK.SANN}
                   label="Vesentlig virksomhet" />
                 <Nav.Radio
+                  name="vesentligVirksomhet"
                   disabled={!redigerbart}
                   onChange={this.radioEndringHandler}
-                  checked={vesentligVirksomhet === false}
+                  checked={vesentligVirksomhetVilkaar.oppfylt === false}
                   value={BOOLSK.USANN}
                   label="Ikke vesentlig virksomhet" />
               </Nav.Fieldset>
@@ -97,7 +99,6 @@ VurderingVesentligVirksomhet.propTypes = {
   oppdaterRessurs: PT.func.isRequired,
   slettAllStegdata: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
-  vesentligVirksomhetBegrunnelser: PT.array,
 };
 
 VurderingVesentligVirksomhet.defaultProps = {

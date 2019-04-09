@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import { konverterTilRessurs, lagVilkaar } from '../../../regler/vilkar';
+import { konverterTilRessurs, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -34,7 +34,7 @@ class VurderingArtikkel12_1 extends Component {
     slettAllStegdata();
   }
 
-  radioEndringHandler = event => {
+  vilkaarEndret = event => {
     const { value } = event.target;
     const { oppdaterRessurs, slettRessurs } = this.props;
 
@@ -42,12 +42,23 @@ class VurderingArtikkel12_1 extends Component {
       oppdaterRessurs(lagVilkaar('art12_1', true));
       slettRessurs('vilkaar', 'art16_1');
     } else if (value === this.ART16_1) {
-      oppdaterRessurs(lagVilkaar('art12_1', false, [], ''));
+      oppdaterRessurs(lagVilkaar('art12_1', false));
       oppdaterRessurs(lagVilkaar('art16_1', true));
     } else if (value === this.AVSLAG) {
-      oppdaterRessurs(lagVilkaar('art12_1', false, [], ''));
-      oppdaterRessurs(lagVilkaar('art16_1', false, [], ''));
+      oppdaterRessurs(lagVilkaar('art12_1', false));
+      oppdaterRessurs(lagVilkaar('art16_1', false));
     }
+  };
+
+  begrunnelseEndret = ({ value }, id) => {
+    const { oppdaterRessurs } = this.props;
+    oppdaterRessurs(lagBegrunnelse(id, value));
+  };
+
+  fritekstEndret = event => {
+    const { value, id } = event.target;
+    const { oppdaterRessurs } = this.props;
+    oppdaterRessurs(lagBegrunnelse(id, null, value));
   };
 
   render () {
@@ -65,30 +76,27 @@ class VurderingArtikkel12_1 extends Component {
         <div>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Fyller søker kriterier for artikkel 12.1?">
+              <Nav.Fieldset legend="Fyller søker kriterier for artikkel 12.1?" disabled={!redigerbart}>
                 <Nav.Radio
                   name="artikkel12"
-                  onChange={this.radioEndringHandler}
+                  onChange={this.vilkaarEndret}
                   value={this.ART12_1}
                   checked={art12_1.oppfylt}
                   label="Ja"
-                  disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel12"
-                  onChange={this.radioEndringHandler}
+                  onChange={this.vilkaarEndret}
                   value={this.ART16_1}
                   checked={anmodningOmUnntak}
                   label="Nei, jeg vil vurdere artikkel 16.1"
-                  disabled={!redigerbart}
                 />
                 <Nav.Radio
                   name="artikkel12"
-                  onChange={this.radioEndringHandler}
+                  onChange={this.vilkaarEndret}
                   value={this.AVSLAG}
                   checked={art12_1.oppfylt === false && !anmodningOmUnntak}
                   label="Nei, jeg vil avslå søknaden etter artikkel 12.1 og 16.1"
-                  disabled={!redigerbart}
                 />
               </Nav.Fieldset>
             </Nav.Column>
@@ -99,11 +107,13 @@ class VurderingArtikkel12_1 extends Component {
                 <Nav.Fieldset legend="Begrunnelse artikkel 12.1:">
                   <Skjema.ListeVelger
                     feltNavn="vilkar.art12_1_begrunnelser"
+                    id="art12_1"
                     muligeValg={MKV.KTObjects.begrunnelser.art12_1_begrunnelser}
                     label="Legg til begrunnelse for ikke oppfylt:"
                     gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
+                    onChange={e => this.begrunnelseEndret(e, 'art12_1')}
                   />
                 </Nav.Fieldset>
               )}
@@ -111,18 +121,23 @@ class VurderingArtikkel12_1 extends Component {
                 <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
                   <Skjema.ListeVelger
                     feltNavn="vilkar.art16_1_begrunnelser"
+                    id="art16_1"
                     muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
                     label="Legg til begrunnelse for avslag:"
                     gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
+                    onChange={e => this.begrunnelseEndret(e, 'art16_1')}
                   />
                   <Skjema.Textarea
                     disabled={!redigerbart}
+                    id="art16_1"
                     feltNavn="vilkar.art16_1_begrunnelser_fritekst"
                     label="Begrunnelse for avslag (fritekst):"
                     maxLength={255}
-                    bredde="fullbredde" />
+                    bredde="fullbredde"
+                    onBlur={this.fritekstEndret}
+                  />
                 </Nav.Fieldset>
               )}
             </Nav.Column>
