@@ -76,7 +76,7 @@ const VurderingVedtak = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
+            {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
