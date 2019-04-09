@@ -95,10 +95,13 @@ class Stegvelger extends Component {
   };
 
   konverterStegressursTilRedux = () => {
-    const { vilkaar } = this.state.stegStores;
+    const { vilkaar, avklartefakta } = this.state.stegStores;
 
     const vilkaarKonvertert = vilkaar.hent();
     this.props.oppdaterVilkaar(vilkaarKonvertert);
+
+    const avklartefaktaKonvertert = avklartefakta.hent();
+    this.props.oppdaterAvklartefakta(avklartefaktaKonvertert);
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {
