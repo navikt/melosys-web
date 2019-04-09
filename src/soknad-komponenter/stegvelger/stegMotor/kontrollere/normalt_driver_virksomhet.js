@@ -24,7 +24,7 @@ class NormaltDriverVirksomhet extends Steg {
     this.tittel = 'Normalt driver virksomhet';
     this.komponent = VurderingNormaltDriverVirksomhet;
     this.samleRelevanteData = _propsLight => ({
-      valgteArbeidsgivere: _propsLight.valgteArbeidsgivere,
+      valgteVirksomheter: _propsLight.valgteVirksomheter,
       begrunnelser: _propsLight.begrunnelser.art12_2_normalt_virksomhet,
       redigerbart: _propsLight.redigerbart,
     });

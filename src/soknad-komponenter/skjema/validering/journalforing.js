@@ -87,7 +87,7 @@ const journalforingTilknyttSakValidering = verdier => {
 /** Dersom saksbehandler forsøker å opprette en ny fagsak, skal de relaterte
  * feltene valideres.
  * @param verdier {object} Alle skjemaverdiene i redux-form-skjemaet.
- * @returns {{journalforingPeriodeFraOgMed: (*|boolean), journalforingPeriodeTilOgMed: (*|boolean), journalforingOppholdsLand: *}}
+ * @returns {{journalforingPeriodeFraOgMed: (*|boolean), journalforingPeriodeTilOgMed: (*|boolean), journalforingSoknadsland: *}}
  */
 const journalforingOpprettSakValidering = verdier => {
   const journalforingPeriodeFraOgMed = (
@@ -102,12 +102,12 @@ const journalforingOpprettSakValidering = verdier => {
     false
   );
 
-  const journalforingOppholdsLand = (landErIkkeValgt(verdier.journalforingOppholdsLand) ? { _error: landErIkkeValgt(verdier.journalforingOppholdsLand) } : false);
+  const journalforingSoknadsland = (landErIkkeValgt(verdier.journalforingSoknadsland) ? { _error: landErIkkeValgt(verdier.journalforingSoknadsland) } : false);
 
   return {
     journalforingPeriodeFraOgMed,
     journalforingPeriodeTilOgMed,
-    journalforingOppholdsLand,
+    journalforingSoknadsland,
   };
 };
 

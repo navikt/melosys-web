@@ -17,15 +17,15 @@ class EnkeltLandPure extends Component {
   componentDidMount = () => {
     const { value } = this.props;
     const { landkoder } = this.props;
-    const landKodeObjekt = value && kodeTilObjekt(value, landkoder);
-    const inputVerdi = landKodeObjekt ? landTekstFormat(landKodeObjekt) : '';
+    const landkodeObjekt = value && kodeTilObjekt(value, landkoder);
+    const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
     this.setState({ inputVerdi });
   };
 
-  oppdaterLand = landKode => {
-    if (!landKode) throw new Error('landKode må inneholde verdi.');
+  oppdaterLand = landkode => {
+    if (!landkode) throw new Error('landkode må inneholde verdi.');
     const { onChange } = this.props;
-    onChange(landKode);
+    onChange(landkode);
   };
 
   fokusInnHandler = e => {
@@ -67,11 +67,11 @@ class EnkeltLandPure extends Component {
       return;
     }
 
-    const landKodeObjekt = this.finnEttLand(inputVerdi);
+    const landkodeObjekt = this.finnEttLand(inputVerdi);
 
-    if (landKodeObjekt) {
-      this.oppdaterLand(landKodeObjekt.kode);
-      this.setState({ inputVerdi: landTekstFormat(landKodeObjekt), error: null });
+    if (landkodeObjekt) {
+      this.oppdaterLand(landkodeObjekt.kode);
+      this.setState({ inputVerdi: landTekstFormat(landkodeObjekt), error: null });
     } else {
       this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
     }

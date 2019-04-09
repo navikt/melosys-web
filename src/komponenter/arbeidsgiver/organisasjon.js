@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 
 import PanelHeader from '../panelHeader/panelHeader';
-
-import ForretningsAdresse from '../adresser/forretningsAdresse';
-
+import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
 import KontaktOpplysninger from '../../soknad-komponenter/kontaktopplysninger';
 
 import './organisasjon.css';
@@ -20,21 +17,15 @@ import './organisasjon.css';
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
 const Organisasjon = props => {
-  const [erLeggTilKnappSynlig, setSynlighet] = useState(true);
-
-  const toggleVisLeggTilKnapp = () => {
-    setSynlighet(!erLeggTilKnappSynlig);
-  };
   const { organisasjon, slettHandle } = props;
 
   if (!organisasjon) { return null; }
   const {
     orgnr,
     navn,
-    forretningsadresse,
   } = organisasjon;
 
-  const content = (
+  return (
     <div className="panelSeksjon organisasjon">
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader
@@ -47,17 +38,11 @@ const Organisasjon = props => {
           <Nav.Row>
             <Nav.Column xs="6">
               <dl className="organisasjon__detaljer">
-                <dt>Forretningsadresse</dt>
-                <dd>{<ForretningsAdresse forretningsadresse={forretningsadresse} />}</dd>
+                <OrganisasjonsAdresse visNavn={false} className="organisasjon__adresse" organisasjon={organisasjon} />
               </dl>
             </Nav.Column>
             <Nav.Column xs="6" className="organisasjon__slettwrapper">
-              <KontaktOpplysninger
-                representererKode={MKV.Koder.representerer.ARBEIDSGIVER}
-                juridiskOrg={organisasjon}
-                visLeggTilKnapp={erLeggTilKnappSynlig}
-                toggleVisLeggTilKnapp={toggleVisLeggTilKnapp}
-              />
+              <KontaktOpplysninger juridiskOrg={organisasjon} />
               <div className="organisasjon__slettknapp">
                 { slettHandle && <Nav.Knapp onClick={slettHandle}>Slett</Nav.Knapp> }
               </div>
@@ -67,7 +52,6 @@ const Organisasjon = props => {
       </Nav.EkspanderbartpanelBase>
     </div>
   );
-  return content;
 };
 
 Organisasjon.propTypes = {

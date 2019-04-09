@@ -14,7 +14,7 @@ class YrkesaktivitetAntallLand extends Steg {
           Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
         ),
-        nesteSteg: STEG.ARBEIDSGIVERE,
+        nesteSteg: STEG.VIRKSOMHETER,
       },
       {
         beskrivelse: 'yrkesgruppeType ER LIK "YRKESAKTIV_SOKKEL_SKIP" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
@@ -22,7 +22,7 @@ class YrkesaktivitetAntallLand extends Steg {
           Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
         ),
-        nesteSteg: STEG.ARBEIDSGIVERE,
+        nesteSteg: STEG.VIRKSOMHETER,
       },
       {
         beskrivelse: 'alle andre valg',
@@ -33,7 +33,9 @@ class YrkesaktivitetAntallLand extends Steg {
     this.id = STEG.YRKESAKTIVITET_ANTALL_LAND;
     this.tittel = 'Arbeids\u00ADland';
     this.komponent = VurderingYrkesaktivitetAntallLand;
-    this.samleRelevanteData = () => ({});
+    this.samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.redigerbart,
+    });
     this.beregnRelevantUI = _propsLight => {
       const { yrkesaktivitetAntallLand } = _propsLight.skjema.avklartefakta;
       return ({

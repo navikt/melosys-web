@@ -66,3 +66,8 @@ export const Art16BegrunnelseFritekstSelector = createSelector(
   state => SoknadenFormSelector(state).values,
   skjemaverdier => skjemaverdier.vilkar.art16_1_begrunnelser_fritekst
 );
+
+export const SokkelEllerSkipSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  skjemaverdier => skjemaverdier.avklartefakta.sokkelEllerSkip
+);

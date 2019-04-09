@@ -6,7 +6,7 @@ export const AVSLAATT = 'AVSLAATT';
 
 // Interne frontend-spesifikke koder. Disse har ikke fag, brev eller arkitektur noe
 // forhold til, og benyttes kun frontend for å avgjøre riktige steg pr ID.
-export const OPPHOLDSLAND = 'OPPHOLDSLAND';
+export const SOKNADSLAND = 'SOKNADSLAND';
 export const YRKESGRUPPE = 'YRKESGRUPPE';
 export const YRKESAKTIVITET_ANTALL_LAND = 'YRKESAKTIVITET_ANTALL_LAND';
 export const YRKESAKTIVITET = 'YRKESAKTIVITET';
@@ -72,11 +72,11 @@ export const VurderingYrkesgruppeTyper = {
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
  */
 export const avklartefaktaKoder = {
-  OPPHOLDSLAND: 'OPPHOLDSLAND',
+  SOKNADSLAND: 'SOKNADSLAND',
   YRKESGRUPPE: 'YRKESGRUPPE',
   YRKESAKTIVITET_ANTALL_LAND: 'YRKESAKTIVITET_ANTALL_LAND',
   YRKESAKTIVITET: 'YRKESAKTIVITET',
-  AVKLARTE_ARBEIDSGIVER: 'AVKLARTE_ARBEIDSGIVER',
+  VIRKSOMHET: 'VIRKSOMHET',
   SOKKEL_ELLER_SKIP: 'SOKKEL_ELLER_SKIP',
   ARBEIDSLAND: 'ARBEIDSLAND',
   BOSTEDSLAND: 'BOSTEDSLAND',

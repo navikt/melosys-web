@@ -1,6 +1,6 @@
 import PT from 'prop-types';
 
-import { ForretningsAdresse } from './adresser';
+import { GeneriskAdresse } from './adresser';
 
 const OrgnummerNavnPropType = PT.shape({
   orgnummer: PT.string,
@@ -10,7 +10,8 @@ const OrgnummerNavnPropType = PT.shape({
 const OrganisasjonPropType = PT.shape({
   orgnr: PT.string,
   navn: PT.string,
-  forretningsadresse: ForretningsAdresse,
+  forretningsadresse: GeneriskAdresse,
+  postadresse: GeneriskAdresse,
 });
 
 const OrganisasjonerPropType = PT.arrayOf(OrganisasjonPropType);
