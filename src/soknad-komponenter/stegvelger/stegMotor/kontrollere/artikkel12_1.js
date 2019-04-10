@@ -4,7 +4,6 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel12_1 from '../../stegKomponenter/vurderingArtikkel12_1';
 import { erVilkarOppfylt, hentVilkar } from '../../../../regler/vilkar';
 
-
 class Artikkel12_1 extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
@@ -64,9 +63,9 @@ class Artikkel12_1 extends Steg {
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
-      slettAllStegdata: () => this._propsLight.tilgjengeligeHandlers.slettAlleRessurserForSteg(this.id),
-      oppdaterRessurs: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegressurs(this.id, felt, verdi),
-      slettRessurs: felt => this._propsLight.tilgjengeligeHandlers.slettStegressurs(this.id, felt),
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (type, felt) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, type, felt),
     };
 
     this._status = FANE_STATUS.OK;

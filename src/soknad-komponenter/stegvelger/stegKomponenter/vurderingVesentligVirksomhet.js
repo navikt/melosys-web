@@ -8,29 +8,29 @@ import * as Skjema from '../../skjema';
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import { BOOLSK } from '../../../constants';
-import { konverterTilRessurs, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
+import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingVesentligVirksomhet extends Component {
   componentDidMount() {
-    const { oppdaterRessurs, settSkjemaVerdi, tilstand } = this.props;
+    const { oppdaterData, settSkjemaVerdi, tilstand } = this.props;
     const { vesentligVirksomhetVilkaar } = tilstand;
-    oppdaterRessurs(konverterTilRessurs('vesentligVirksomhet', vesentligVirksomhetVilkaar));
+    oppdaterData(konverterTilStegData('vesentligVirksomhet', vesentligVirksomhetVilkaar));
     settSkjemaVerdi('vilkar.vesentligVirksomhetBegrunnelser', vesentligVirksomhetVilkaar.begrunnelseKoder || []);
   }
 
   componentWillUnmount() {
-    const { slettAllStegdata } = this.props;
-    slettAllStegdata();
+    const { slettAllDataForSteg } = this.props;
+    slettAllDataForSteg();
   }
 
   radioEndringHandler = event => {
-    const { oppdaterRessurs } = this.props;
-    oppdaterRessurs(lagVilkaar('vesentligVirksomhet', event.target.value));
+    const { oppdaterData } = this.props;
+    oppdaterData(lagVilkaar('vesentligVirksomhet', event.target.value));
   };
 
   listeVelgerHandler = event => {
-    const { oppdaterRessurs } = this.props;
-    oppdaterRessurs(lagBegrunnelse('vesentligVirksomhet', event.value));
+    const { oppdaterData } = this.props;
+    oppdaterData(lagBegrunnelse('vesentligVirksomhet', event.value));
   };
 
   render () {
@@ -98,8 +98,8 @@ VurderingVesentligVirksomhet.propTypes = {
   valgteVirksomheter: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   settSkjemaVerdi: PT.func.isRequired,
-  oppdaterRessurs: PT.func.isRequired,
-  slettAllStegdata: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

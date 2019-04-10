@@ -32,7 +32,7 @@ export const lagBegrunnelse = (felt, begrunnelse, fritekst) => {
   return lagVilkaar(felt, null, begrunnelse, fritekst);
 };
 
-export const konverterTilRessurs = (felt, vilkaar) => {
+export const konverterTilStegData = (felt, vilkaar) => {
   const { oppfylt, begrunnelseKoder, begrunnelseFritekst } = vilkaar;
   return lagVilkaar(felt, oppfylt, begrunnelseKoder, begrunnelseFritekst);
 };

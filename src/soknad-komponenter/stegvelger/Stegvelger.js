@@ -21,9 +21,10 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../duc
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
+import { AvklartefaktaStore, VilkaarStore } from './StegState/';
 
 import './stegvelger.css';
-import StegState from './StegState';
+
 
 class Stegvelger extends Component {
   state = {
@@ -31,8 +32,8 @@ class Stegvelger extends Component {
     aktuelleSteg: [],
     didUpdateAfterLastStep: false,
     stegStores: {
-      avklartefakta: new StegState(),
-      vilkaar: new StegState(),
+      avklartefakta: new AvklartefaktaStore(),
+      vilkaar: new VilkaarStore(),
     },
   };
 
@@ -66,42 +67,42 @@ class Stegvelger extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
-    this.konverterStegressursTilRedux();
+    this.publiserStegdataTilRedux();
     this.tilSteg(this.beregnNesteSteg());
   };
 
-  slettStegressurs = (stegID, type, felt) => {
+  slettStegData = (stegID, type, felt) => {
     const { stegStores } = this.state;
-    stegStores[type].slettStegressurs(stegID, felt);
+    stegStores[type].slettStegData(stegID, felt);
     this.setState(stegStores);
 
-    this.konverterStegressursTilRedux();
+    this.publiserStegdataTilRedux();
   };
 
-  oppdaterStegressurs = (stegID, { felt, type, innhold }) => {
+  oppdaterStegData = (stegID, { felt, type, innhold }) => {
     const { stegStores } = this.state;
-    stegStores[type].oppdaterStegressurs(stegID, { felt, type, innhold });
+    stegStores[type].oppdaterStegData(stegID, { felt, type, innhold });
     this.setState(stegStores);
 
-    this.konverterStegressursTilRedux();
+    this.publiserStegdataTilRedux();
   };
 
-  slettAlleRessurserForSteg = stegID => {
+  slettAllDataForSteg = stegID => {
     const { stegStores } = this.state;
     Object.keys(stegStores).forEach(type => stegStores[type].slettSteg(stegID));
     this.setState(stegStores);
 
-    this.konverterStegressursTilRedux();
+    this.publiserStegdataTilRedux();
   };
 
-  konverterStegressursTilRedux = () => {
-    const { vilkaar, avklartefakta } = this.state.stegStores;
+  publiserStegdataTilRedux = () => {
+    const { vilkaar } = this.state.stegStores;
 
     const vilkaarKonvertert = vilkaar.hent();
     this.props.oppdaterVilkaar(vilkaarKonvertert);
 
-    const avklartefaktaKonvertert = avklartefakta.hent();
-    this.props.oppdaterAvklartefakta(avklartefaktaKonvertert);
+    // const avklartefaktaKonvertert = avklartefakta.hentAvklartfakta();
+    // this.props.oppdaterAvklartefakta(avklartefaktaKonvertert);
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {
@@ -152,9 +153,9 @@ class Stegvelger extends Component {
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
       oppdaterOgLagreBehandlinger: this.props.lagreBehandlingerHandler,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
-      oppdaterStegressurs: this.oppdaterStegressurs,
-      slettStegressurs: this.slettStegressurs,
-      slettAlleRessurserForSteg: this.slettAlleRessurserForSteg,
+      oppdaterStegData: this.oppdaterStegData,
+      slettStegData: this.slettStegData,
+      slettAllDataForSteg: this.slettAllDataForSteg,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
       lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
       vedtaEndretPeriode: this.vedtaEndretPeriode,
