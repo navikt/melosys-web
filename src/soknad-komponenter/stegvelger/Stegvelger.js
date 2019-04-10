@@ -181,8 +181,6 @@ class Stegvelger extends Component {
       redigerbart: props.redigerbart,
     };
 
-    // this.state.aktuelleSteg.forEach(steg => steg.slett());
-
     const stegMotor = new StegMotor(propsLight);
     const aktuelleSteg = stegMotor.beregnAlleSteg();
     // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg

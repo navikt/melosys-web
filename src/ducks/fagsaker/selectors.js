@@ -239,7 +239,7 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
-  state => soknadSelectors.OppholdUtlandPeriodeSelector(state),
+  state => soknadSelectors.SoknadsperiodeSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
     // tilbake i tid, skal også inntekt i selve perioden vises.

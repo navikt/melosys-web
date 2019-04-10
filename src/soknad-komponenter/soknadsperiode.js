@@ -13,12 +13,12 @@ import { fagsakSelectors } from '../ducks/fagsaker/';
 import { soknadSelectors, soknadOperations } from '../ducks/soknad';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
-import './oppholdPeriode.css';
+import './soknadsperiode.css';
 
-export const OppholdEndring = props => {
+export const SoknadsperiodeEndring = props => {
   const {
-    oppholdUtlandNyFom,
-    oppholdUtlandNyTom,
+    soknadsperiodeNyFom,
+    soknadsperiodeNyTom,
     vedFeltEndring,
     avbryt,
     oppdaterPeriode,
@@ -35,18 +35,18 @@ export const OppholdEndring = props => {
               <Nav.Input
                 bredde="S"
                 label="Fra og med:"
-                value={oppholdUtlandNyFom}
-                onChange={event => vedFeltEndring('oppholdUtlandNyFom', event.target.value)}
-                onBlur={() => vedFeltFokusUt('oppholdUtlandNyFom')}
+                value={soknadsperiodeNyFom}
+                onChange={event => vedFeltEndring('soknadsperiodeNyFom', event.target.value)}
+                onBlur={() => vedFeltFokusUt('soknadsperiodeNyFom')}
               />
             </Nav.Column>
             <Nav.Column xs="3">
               <Nav.Input
                 bredde="S"
                 label="Til og med:"
-                value={oppholdUtlandNyTom}
-                onChange={event => vedFeltEndring('oppholdUtlandNyTom', event.target.value)}
-                onBlur={() => vedFeltFokusUt('oppholdUtlandNyTom')}
+                value={soknadsperiodeNyTom}
+                onChange={event => vedFeltEndring('soknadsperiodeNyTom', event.target.value)}
+                onBlur={() => vedFeltFokusUt('soknadsperiodeNyTom')}
               />
             </Nav.Column>
             <Nav.Column xs="12">
@@ -60,45 +60,45 @@ export const OppholdEndring = props => {
   );
 };
 
-OppholdEndring.propTypes = {
+SoknadsperiodeEndring.propTypes = {
   avbryt: PT.func.isRequired,
   oppdaterPeriode: PT.func.isRequired,
-  oppholdUtlandNyFom: PT.string.isRequired,
-  oppholdUtlandNyTom: PT.string.isRequired,
+  soknadsperiodeNyFom: PT.string.isRequired,
+  soknadsperiodeNyTom: PT.string.isRequired,
   vedFeltEndring: PT.func.isRequired,
   vedFeltFokusUt: PT.func.isRequired,
   erDatoerGyldig: PT.bool.isRequired,
 };
 
-class OppholdPeriode extends Component {
+class Soknadsperiode extends Component {
   state = {
     erEndrePeriodeSynlig: false,
     erPeriodeOppdatertOgGyldig: false,
-    oppholdUtlandNyFom: '',
-    oppholdUtlandNyTom: '',
+    soknadsperiodeNyFom: '',
+    soknadsperiodeNyTom: '',
   };
 
   componentDidUpdate(prevProps) {
-    const { oppholdUtlandFom, oppholdUtlandTom } = this.props;
-    if (prevProps.oppholdUtlandFom === oppholdUtlandFom && prevProps.oppholdUtlandTom === oppholdUtlandTom) {
+    const { soknadsperiodeFom, soknadsperiodeTom } = this.props;
+    if (prevProps.soknadsperiodeFom === soknadsperiodeFom && prevProps.soknadsperiodeTom === soknadsperiodeTom) {
       return;
     }
 
-    this.kopierPeriodeTilLokalState(oppholdUtlandFom, oppholdUtlandTom);
+    this.kopierPeriodeTilLokalState(soknadsperiodeFom, soknadsperiodeTom);
   }
 
-  kopierPeriodeTilLokalState = (oppholdUtlandNyFom, oppholdUtlandNyTom) => {
+  kopierPeriodeTilLokalState = (soknadsperiodeNyFom, soknadsperiodeNyTom) => {
     this.setState(state => ({
       ...state,
-      oppholdUtlandNyFom,
-      oppholdUtlandNyTom,
+      soknadsperiodeNyFom,
+      soknadsperiodeNyTom,
     }));
   };
 
   visEndrePeriode = () => {
-    const { oppholdUtlandFom, oppholdUtlandTom } = this.props;
+    const { soknadsperiodeFom, soknadsperiodeTom } = this.props;
 
-    this.kopierPeriodeTilLokalState(oppholdUtlandFom, oppholdUtlandTom);
+    this.kopierPeriodeTilLokalState(soknadsperiodeFom, soknadsperiodeTom);
     this.setState({ erEndrePeriodeSynlig: true });
   };
 
@@ -107,7 +107,7 @@ class OppholdPeriode extends Component {
   oppdaterFelt = (feltNavn, verdi) => {
     this.setState({ [feltNavn]: verdi });
 
-    const erPeriodeOppdatertOgGyldig = this.validerDato('oppholdUtlandNyFom') && this.validerDato('oppholdUtlandNyTom');
+    const erPeriodeOppdatertOgGyldig = this.validerDato('soknadsperiodeNyFom') && this.validerDato('soknadsperiodeNyTom');
     this.setState({ erPeriodeOppdatertOgGyldig });
   };
 
@@ -118,9 +118,9 @@ class OppholdPeriode extends Component {
   };
 
   validerFelter = () => {
-    const erPeriodeOppdatertOgGyldig = this.vaskOgValiderDato('oppholdUtlandNyFom') &&
-                                       this.vaskOgValiderDato('oppholdUtlandNyTom') &&
-      Utils.dato.erGyldigPeriode(this.state.oppholdUtlandNyFom, this.state.oppholdUtlandNyTom);
+    const erPeriodeOppdatertOgGyldig = this.vaskOgValiderDato('soknadsperiodeNyFom') &&
+                                       this.vaskOgValiderDato('soknadsperiodeNyTom') &&
+      Utils.dato.erGyldigPeriode(this.state.soknadsperiodeNyFom, this.state.soknadsperiodeNyTom);
 
     this.setState({ erPeriodeOppdatertOgGyldig });
   };
@@ -139,8 +139,8 @@ class OppholdPeriode extends Component {
 
   oppdaterPeriode = event => {
     event.preventDefault();
-    const { oppholdUtlandNyFom, oppholdUtlandNyTom } = this.state;
-    const periode = { fom: Utils.dato.formatterDatoTilISO(oppholdUtlandNyFom), tom: Utils.dato.formatterDatoTilISO(oppholdUtlandNyTom) };
+    const { soknadsperiodeNyFom, soknadsperiodeNyTom } = this.state;
+    const periode = { fom: Utils.dato.formatterDatoTilISO(soknadsperiodeNyFom), tom: Utils.dato.formatterDatoTilISO(soknadsperiodeNyTom) };
     this.props.oppdaterPeriode(periode);
     // Todo: Denne er hacky. Bakgrunn: oppdatert soknad rekker ikke å re-propagate til parent før
     // funksjonen nedenfor kalles. Vurder å skrive om til en async await-aktig løsning.
@@ -149,30 +149,30 @@ class OppholdPeriode extends Component {
 
   avbryt = event => {
     event.preventDefault();
-    const { oppholdUtlandFom, oppholdUtlandTom } = this.props;
+    const { soknadsperiodeFom, soknadsperiodeTom } = this.props;
     this.setState(state => ({
       ...state,
-      oppholdUtlandNyFom: oppholdUtlandFom,
-      oppholdUtlandNyTom: oppholdUtlandTom,
+      soknadsperiodeNyFom: soknadsperiodeFom,
+      soknadsperiodeNyTom: soknadsperiodeTom,
     }));
     this.skjulEndrePeriode();
   };
 
   render () {
     const panelIkon = Ikoner.Ferdig;
-    const { redigerbart, oppholdUtlandFom, oppholdUtlandTom } = this.props;
+    const { redigerbart, soknadsperiodeFom, soknadsperiodeTom } = this.props;
     const {
       visEndrePeriode, skjulEndrePeriode, validerFelter, oppdaterPeriode, oppdaterFelt, avbryt,
     } = this;
 
     const {
-      erEndrePeriodeSynlig, oppholdUtlandNyFom, oppholdUtlandNyTom,
+      erEndrePeriodeSynlig, soknadsperiodeNyFom, soknadsperiodeNyTom,
     } = this.state;
 
     return (
-      <div className="oppholdPeriode panelSeksjon">
+      <div className="soknadsperiode panelSeksjon">
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel="Søknadsperiode" undertittel={`${oppholdUtlandFom} - ${oppholdUtlandTom}`} />}
+          heading={<PanelHeader ikon={panelIkon} tittel="Søknadsperiode" undertittel={`${soknadsperiodeFom} - ${soknadsperiodeTom}`} />}
           ariaTittel="Panel for søknadsperiode">
           <Nav.Container fluid>
             {
@@ -189,9 +189,9 @@ class OppholdPeriode extends Component {
             }
             {
               erEndrePeriodeSynlig &&
-              <OppholdEndring
-                oppholdUtlandNyFom={oppholdUtlandNyFom}
-                oppholdUtlandNyTom={oppholdUtlandNyTom}
+              <SoknadsperiodeEndring
+                soknadsperiodeNyFom={soknadsperiodeNyFom}
+                soknadsperiodeNyTom={soknadsperiodeNyTom}
                 skjulEndrePeriode={skjulEndrePeriode}
                 oppdaterPeriode={oppdaterPeriode}
                 vedFeltEndring={oppdaterFelt}
@@ -207,25 +207,25 @@ class OppholdPeriode extends Component {
   }
 }
 
-OppholdPeriode.propTypes = {
+Soknadsperiode.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterPeriode: PT.func.isRequired,
   lagreSoknadOgOppfriskSaksopplysninger: PT.func.isRequired,
-  oppholdUtlandFom: PT.string.isRequired,
-  oppholdUtlandTom: PT.string.isRequired,
+  soknadsperiodeFom: PT.string.isRequired,
+  soknadsperiodeTom: PT.string.isRequired,
 };
 
-OppholdPeriode.propTypes = {
+Soknadsperiode.propTypes = {
   soknadVerdier: MPT.SoknadForm,
 };
 
-OppholdPeriode.defaultProps = {
+Soknadsperiode.defaultProps = {
   soknadVerdier: {},
 };
 
 const mapStateToProps = state => ({
-  oppholdUtlandFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
-  oppholdUtlandTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
+  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
+  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
@@ -233,4 +233,4 @@ const mapDispatchToProps = dispatch => ({
   oppdaterPeriode: periode => dispatch(soknadOperations.oppdaterPeriode(periode)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(OppholdPeriode);
+export default connect(mapStateToProps, mapDispatchToProps)(Soknadsperiode);

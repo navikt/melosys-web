@@ -59,4 +59,5 @@ Input.defaultProps = {
   datoFelt: false,
 };
 
+export { InnerInputComponent };
 export default Input;

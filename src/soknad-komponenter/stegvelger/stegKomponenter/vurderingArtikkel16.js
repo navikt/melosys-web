@@ -189,8 +189,8 @@ class VurderingArtikkel16 extends Component {
 
   render() {
     const {
-      gyldigeOppholdLand,
-      oppholdPeriode,
+      gyldigeSoknadsland,
+      soknadsperiode,
       medlemskap,
       oppsummering,
       redigerbart,
@@ -212,13 +212,13 @@ class VurderingArtikkel16 extends Component {
 
     const { behandlingID } = oppsummering;
 
-    const antallManeder = datoDiffMenneskelig(oppholdPeriode.fom, oppholdPeriode.tom);
+    const antallManeder = datoDiffMenneskelig(soknadsperiode.fom, soknadsperiode.tom);
 
-    const landSomTekstListe = gyldigeOppholdLand.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
+    const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
     const dokumenter = [
       { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
-      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: 'SED_A001', data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
+      { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
     ];
 
     const begrunnelseError = begrunnelserFeilmelding ? { error: begrunnelserFeilmelding } : {};
@@ -239,7 +239,7 @@ class VurderingArtikkel16 extends Component {
             <Nav.Column xs="6">
               <Nav.Element type="element">Antall måneder:</Nav.Element>
               <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
-              <DatoOmrade periode={oppholdPeriode} />
+              <DatoOmrade periode={soknadsperiode} />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -292,7 +292,7 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="6">
-              <PdfLenkeListe vedKlikk={validerAlt} behandlingID={behandlingID} dokumenter={dokumenter} />
+              {redigerbart && <PdfLenkeListe vedKlikk={validerAlt} behandlingID={behandlingID} dokumenter={dokumenter} />}
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
@@ -311,8 +311,8 @@ class VurderingArtikkel16 extends Component {
 VurderingArtikkel16.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
-  gyldigeOppholdLand: MPT.OppholdLand.isRequired,
-  oppholdPeriode: MPT.OppholdPeriode.isRequired,
+  gyldigeSoknadsland: MPT.Soknadsland.isRequired, // TODO:
+  soknadsperiode: MPT.Soknadsperiode.isRequired,
   oppsummering: PT.object.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -330,9 +330,9 @@ VurderingArtikkel16.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  gyldigeOppholdLand: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
-  oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
+  soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   art16Begrunnelser: formSelectors.Art16BegrunnelserSelector(state),

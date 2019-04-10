@@ -6,14 +6,14 @@ import * as MPT from '../../../proptypes/';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
-import OppholdsLandListe from './inngang/oppholdsLandListe';
+import SoknadslandListe from './inngang/soknadslandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, alleLandKoder, begrunnelser, avklartefakta, tilstand, redigerbart,
+    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta, tilstand, redigerbart,
   } = props;
   const { vurdering } = inngangsvilkar;
-  const oppholdBegrunnelser = begrunnelser.opphold;
+  const soknadslandBegrunnelser = begrunnelser.opphold;
   const { harAvklaring } = tilstand;
 
   return (
@@ -28,11 +28,11 @@ const VurderingInngang = props => {
         </li>
       </ul>
       <FieldArray
-        name="avklartefakta.oppholdsland"
-        component={OppholdsLandListe}
+        name="avklartefakta.soknadsland"
+        component={SoknadslandListe}
         avklartefakta={avklartefakta}
-        oppholdBegrunnelser={oppholdBegrunnelser}
-        alleLandKoder={alleLandKoder}
+        soknadslandBegrunnelser={soknadslandBegrunnelser}
+        alleLandkoder={alleLandkoder}
         redigerbart={redigerbart}
       />
       <div className="fane__knapplinje">
@@ -45,7 +45,7 @@ const VurderingInngang = props => {
 VurderingInngang.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   avklartefakta: PT.array.isRequired,
-  alleLandKoder: PT.arrayOf(MPT.Kodeverk).isRequired,
+  alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
   tilstand: PT.object.isRequired,
   inngangsvilkar: PT.shape({

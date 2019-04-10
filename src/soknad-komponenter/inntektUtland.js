@@ -33,7 +33,7 @@ function Inntekt (props) {
               <Skjema.Input feltNavn="inntektNaturalIAnnet" label="Annen naturalytelse" disabled={!redigerbart} />
             </Nav.Fieldset>
             <Nav.Fieldset legend="Annet">
-              <Skjema.Checkbox feltNavn="inntektInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." disabled={!redigerbart} />
+              <Skjema.Checkbox feltNavn="inntektErInnrapporteringspliktig" label="Inntekten i utenlandsperioden er innrapporteringspliktig." disabled={!redigerbart} />
               <Skjema.Checkbox feltNavn="inntektTrygdeavgiftBlirTrukket" label="Trygdeavgift blir trukket med skatten." disabled={!redigerbart} />
             </Nav.Fieldset>
           </Nav.Column>

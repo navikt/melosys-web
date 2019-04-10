@@ -24,7 +24,7 @@ const alleLovvalg = [
 ];
 
 const VurderingVedtak = ({
-  gyldigeOppholdLand,
+  gyldigeSoknadsland,
   lovvalgsperioder,
   redigerbart,
   oppsummering: { behandlingID },
@@ -44,7 +44,7 @@ const VurderingVedtak = ({
   const antallManeder = datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgBestemmelse, alleLovvalg);
 
-  const landSomTekstListe = gyldigeOppholdLand.map(enkeltLand => enkeltLand.term).join(', ');
+  const landSomTekstListe = gyldigeSoknadsland.map(enkeltLand => enkeltLand.term).join(', ');
 
   const dokumenter = [
     { navn: 'Forhåndsvis vedtaksbrev', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
@@ -76,7 +76,7 @@ const VurderingVedtak = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
+            {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -92,8 +92,8 @@ const VurderingVedtak = ({
 VurderingVedtak.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
-  gyldigeOppholdLand: MPT.OppholdLand.isRequired,
-  oppholdPeriode: MPT.OppholdPeriode.isRequired,
+  gyldigeSoknadsland: MPT.Soknadsland.isRequired,
+  soknadsperiode: MPT.Soknadsperiode.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
@@ -105,8 +105,8 @@ VurderingVedtak.defaultProps = {
 
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  gyldigeOppholdLand: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  oppholdPeriode: soknadSelectors.OppholdUtlandPeriodeSelector(state),
+  gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  soknadslande: soknadSelectors.SoknadsperiodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
 });

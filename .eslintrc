@@ -69,6 +69,7 @@
   },
   "globals": {
     "shallow": true,
-    "mount": true
+    "mount": true,
+    "each": true
   }
 }

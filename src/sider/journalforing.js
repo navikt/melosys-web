@@ -83,6 +83,7 @@ class Journalforing extends Component {
       brukerID, avsenderID, arbeidsgiverID,
       opprettnysak_behandlingstype: behandlingstypeKode,
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
+      skalTilordnes,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -98,6 +99,7 @@ class Journalforing extends Component {
       journalpostID,
       oppgaveID,
       vedlegg,
+      skalTilordnes,
     };
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
@@ -154,7 +156,7 @@ class Journalforing extends Component {
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const {
-      journalforingOppholdsLand, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
+      journalforingSoknadsland, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
     } = journalforingSkjemaVerdier;
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
@@ -165,7 +167,7 @@ class Journalforing extends Component {
     resetSkjemaFelterForEksisterendeSaker();
 
     if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, JOURNALFORING_HENSIKT.OPPRETT)) {
-      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingOppholdsLand');
+      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingSoknadsland');
       return false;
     }
 
@@ -175,7 +177,7 @@ class Journalforing extends Component {
         fom: Utils.dato.formatterDatoTilISO(journalforingPeriodeFraOgMed),
         tom: Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed),
       },
-      land: journalforingOppholdsLand,
+      land: journalforingSoknadsland,
     };
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.OPPRETT);
@@ -257,7 +259,7 @@ class Journalforing extends Component {
     settFeltInnhold('journalforingPeriodeFraOgMed', '');
     settFeltInnhold('journalforingPeriodeTilOgMed', '');
     settFeltInnhold('representantID', '');
-    settFeltInnhold('journalforingOppholdsLand', []);
+    settFeltInnhold('journalforingSoknadsland', []);
   };
 
   resetSkjemaFelterForEksisterendeSaker = () => {
@@ -374,6 +376,7 @@ const mapStateToProps = state => ({
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
     ingenVurdering: false,
+    skalTilordnes: false,
   },
 });
 
