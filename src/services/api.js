@@ -15,6 +15,7 @@ import * as Saksbehandler from './modules/saksbehandler';
 import * as Soknader from './modules/soknader';
 import * as Vedtak from './modules/vedtak';
 import * as Vilkar from './modules/vilkar';
+import * as Solsiden from './modules/solsiden';
 
 /*
 function erDev() {
@@ -48,4 +49,5 @@ export {
   Soknader,
   Vedtak,
   Vilkar,
+  Solsiden,
 };

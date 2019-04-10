@@ -30,6 +30,12 @@ const RegistreringLoadable = Loadable({
   loader: () => import('./sider/registrering'),
   loading: SideLoadingStatus,
 });
+
+const SolsidenLoadable = Loadable({
+  loader: () => import('./sider/solsiden'),
+  loading: SideLoadingStatus,
+});
+
 const featureToggle = `${process.env.REACT_APP_FEATURE_TOGGLE}`;
 console.log('featureToggle', featureToggle); // eslint-disable-line no-console
 
@@ -40,6 +46,7 @@ const Routing = ({ location }) => (
     {featureToggle === 'REL1.1' && <Route exact path="/registrering" component={RegistreringLoadable} />}
     <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
     <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
+    <Route path="/even" component={SolsidenLoadable} />
     <Route component={UkjentSideLoadable} />
   </Switch>
 );

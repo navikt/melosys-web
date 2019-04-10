@@ -19,3 +19,4 @@ export const SAKSOPPLYSNINGER = 'saksopplysninger';
 export const SOKNADER = 'soknader';
 export const VEDTAK = 'vedtak';
 export const VILKAAR = 'vilkaar';
+export const SOLSIDEN = 'solsiden';

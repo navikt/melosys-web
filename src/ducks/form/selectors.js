@@ -71,3 +71,8 @@ export const SokkelEllerSkipSelector = createSelector(
   state => SoknadenFormSelector(state).values,
   skjemaverdier => skjemaverdier.avklartefakta.sokkelEllerSkip
 );
+
+export const SolsidenSelector = createSelector(
+  state => getFormState(state, 'solsiden_skjema', {}),
+  solsiden => solsiden
+);
