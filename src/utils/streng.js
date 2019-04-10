@@ -1,3 +1,4 @@
+import { toInteger} from 'lodash';
 
 export function boolTilNorsk (value) {
   return value ? 'JA' : 'NEI';
@@ -17,7 +18,7 @@ export function strengTilBool (value) {
 }
 
 export function strengTilInt (value) {
-  return parseInt(value, 10) || 0;
+  return toInteger(value);
 }
 
 export function tekstEllerDash(data) {
