@@ -96,8 +96,8 @@ SokkelSkipListe.defaultProps = {
 
 class VurderingSokkelSkip extends React.Component {
   componentWillUnmount() {
-    const { slettAllStegdata } = this.props;
-    slettAllStegdata();
+    const { slettAllDataForSteg } = this.props;
+    slettAllDataForSteg();
   }
 
   radioEndringHandler = event => {
