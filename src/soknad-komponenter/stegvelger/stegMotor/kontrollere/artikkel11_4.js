@@ -2,7 +2,7 @@ import * as MKV from 'melosys-kodeverk';
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel11_4 from '../../stegKomponenter/vurderingArtikkel11_4';
-import { erVilkarOppfylt } from '../../../../regler/vilkar';
+import { erVilkarOppfylt, hentVilkar } from '../../../../regler/vilkar';
 
 class Artikkel11_4 extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -43,25 +43,30 @@ class Artikkel11_4 extends Steg {
     });
 
     this.beregnRelevantUI = _propsLight => {
-      const {
-        art11_3A, art11_4_1, art11_4_2, nis,
-      } = _propsLight.skjema.vilkar;
+      const art11_3A = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, _propsLight.vilkar);
+      const art11_4_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, _propsLight.vilkar);
+      const art11_4_2 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, _propsLight.vilkar);
+      const nis = hentVilkar(MKV.Koder.vilkaar.FTRL_2_12_UNNTAK_TURISTSKIP, _propsLight.vilkar);
 
-      const visNISAvsnitt = art11_4_1 && art11_3A;
+      const visNISAvsnitt = art11_4_1.oppfylt && art11_3A.oppfylt;
 
-      const harAvklaring = (art11_4_1 && art11_3A && (nis === true || nis === false)) || art11_4_2 || (art11_4_1 && !art11_3A);
+      const harAvklaring = (art11_4_1.oppfylt && art11_3A.oppfylt && (nis.oppfylt || nis.oppfylt === false)) || art11_4_2.oppfylt || (art11_4_1.oppfylt && !art11_3A.oppfylt);
 
       return {
         harAvklaring,
         art11_3A,
         art11_4_1,
         art11_4_2,
+        nis,
         visNISAvsnitt,
       };
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (type, felt) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, type, felt),
     };
     this._status = FANE_STATUS.OK;
   }
