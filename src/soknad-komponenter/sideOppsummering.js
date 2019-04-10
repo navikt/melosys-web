@@ -103,8 +103,8 @@ class SideOppsummering extends Component {
       redigerbart,
       oppsummering,
       person,
-      oppholdUtlandFom,
-      oppholdUtlandTom,
+      soknadsperiodeFom,
+      soknadsperiodeTom,
     } = this.props;
 
     if (!oppsummering) return <div />;
@@ -179,7 +179,7 @@ class SideOppsummering extends Component {
                 <dt>Arbeidsland:</dt>
                 <dd>{arbeidslandSetning}</dd>
                 <dt>Søknadsperiode:</dt>
-                <dd>{oppholdUtlandFom} - {oppholdUtlandTom}</dd>
+                <dd>{soknadsperiodeFom} - {soknadsperiodeTom}</dd>
                 <dt>Behandling sist oppdatert:</dt>
                 <dd><EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt /></dd>
                 <dt>Behandling registrert dato:</dt>
@@ -217,8 +217,8 @@ SideOppsummering.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   person: MPT.Person.isRequired,
-  oppholdUtlandFom: PT.string.isRequired,
-  oppholdUtlandTom: PT.string.isRequired,
+  soknadsperiodeFom: PT.string.isRequired,
+  soknadsperiodeTom: PT.string.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
@@ -231,8 +231,8 @@ SideOppsummering.propTypes = {
 const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   person: fagsakSelectors.PersonSelector(state),
-  oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
-  oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
+  soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
+  soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });

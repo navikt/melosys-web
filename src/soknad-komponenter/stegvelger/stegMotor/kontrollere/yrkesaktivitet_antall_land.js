@@ -33,7 +33,9 @@ class YrkesaktivitetAntallLand extends Steg {
     this.id = STEG.YRKESAKTIVITET_ANTALL_LAND;
     this.tittel = 'Arbeids\u00ADland';
     this.komponent = VurderingYrkesaktivitetAntallLand;
-    this.samleRelevanteData = () => ({});
+    this.samleRelevanteData = _propsLight => ({
+      redigerbart: _propsLight.redigerbart,
+    });
     this.beregnRelevantUI = _propsLight => {
       const { yrkesaktivitetAntallLand } = _propsLight.skjema.avklartefakta;
       return ({

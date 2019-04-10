@@ -11,7 +11,6 @@ import { BOOLSK } from '../../constants';
 
 import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
 
-
 import './selvstendigArbeid.css';
 
 class EnkeltForetak extends Component {
@@ -63,7 +62,9 @@ class EnkeltForetak extends Component {
                 onBlur={() => this.presjekkOrganisasjon()}
                 disabled={!redigerbart}
               />
-              { organisasjon && <OrganisasjonsAdresse className="enkeltforetak__adresse" organisasjon={organisasjon} /> }
+              {
+                organisasjon && <OrganisasjonsAdresse className="enkeltforetakAdresse" organisasjon={organisasjon} />
+              }
             </Nav.Column>
             <Nav.Column xs="5">
               <label>Oppgir at virksomheten fortsetter etter arbeid i utlandet:
