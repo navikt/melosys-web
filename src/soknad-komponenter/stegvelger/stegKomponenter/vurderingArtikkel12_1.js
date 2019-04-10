@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
-import { konverterTilRessurs, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
+import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -24,10 +24,10 @@ class VurderingArtikkel12_1 extends Component {
   }
 
   componentDidMount() {
-    const { oppdaterRessurs, settSkjemaVerdi, tilstand } = this.props;
+    const { oppdaterData, settSkjemaVerdi, tilstand } = this.props;
     const { art12_1, art16_1 } = tilstand;
-    oppdaterRessurs(konverterTilRessurs('art12_1', art12_1));
-    oppdaterRessurs(konverterTilRessurs('art16_1', art16_1));
+    oppdaterData(konverterTilStegData('art12_1', art12_1));
+    oppdaterData(konverterTilStegData('art16_1', art16_1));
 
     settSkjemaVerdi('vilkar.art12_1_begrunnelser', art12_1.begrunnelseKoder || []);
     settSkjemaVerdi('vilkar.art16_1_begrunnelser', art16_1.begrunnelseKoder || []);
@@ -35,35 +35,35 @@ class VurderingArtikkel12_1 extends Component {
   }
 
   componentWillUnmount() {
-    const { slettAllStegdata } = this.props;
-    slettAllStegdata();
+    const { slettAllDataForSteg } = this.props;
+    slettAllDataForSteg();
   }
 
   vilkaarEndret = event => {
     const { value } = event.target;
-    const { oppdaterRessurs, slettRessurs } = this.props;
+    const { oppdaterData, slettData } = this.props;
 
     if (value === this.ART12_1) {
-      oppdaterRessurs(lagVilkaar('art12_1', true));
-      slettRessurs('vilkaar', 'art16_1');
+      oppdaterData(lagVilkaar('art12_1', true));
+      slettData('vilkaar', 'art16_1');
     } else if (value === this.ART16_1) {
-      oppdaterRessurs(lagVilkaar('art12_1', false));
-      oppdaterRessurs(lagVilkaar('art16_1', true));
+      oppdaterData(lagVilkaar('art12_1', false));
+      oppdaterData(lagVilkaar('art16_1', true));
     } else if (value === this.AVSLAG) {
-      oppdaterRessurs(lagVilkaar('art12_1', false));
-      oppdaterRessurs(lagVilkaar('art16_1', false));
+      oppdaterData(lagVilkaar('art12_1', false));
+      oppdaterData(lagVilkaar('art16_1', false));
     }
   };
 
   begrunnelseEndret = ({ value }, id) => {
-    const { oppdaterRessurs } = this.props;
-    oppdaterRessurs(lagBegrunnelse(id, value));
+    const { oppdaterData } = this.props;
+    oppdaterData(lagBegrunnelse(id, value));
   };
 
   fritekstEndret = event => {
     const { value, id } = event.target;
-    const { oppdaterRessurs } = this.props;
-    oppdaterRessurs(lagBegrunnelse(id, null, value));
+    const { oppdaterData } = this.props;
+    oppdaterData(lagBegrunnelse(id, null, value));
   };
 
   render () {
@@ -164,9 +164,9 @@ VurderingArtikkel12_1.propTypes = {
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
   settSkjemaVerdi: PT.func.isRequired,
-  oppdaterRessurs: PT.func.isRequired,
-  slettRessurs: PT.func.isRequired,
-  slettAllStegdata: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

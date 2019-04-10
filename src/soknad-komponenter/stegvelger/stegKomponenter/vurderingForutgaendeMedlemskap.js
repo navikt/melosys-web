@@ -5,29 +5,29 @@ import * as MPT from '../../../proptypes';
 import * as Skjema from '../../skjema';
 
 import { BOOLSK } from '../../../constants';
-import { konverterTilRessurs, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
+import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingForutgaendeMedlemskap extends Component {
   componentDidMount() {
-    const { oppdaterRessurs, settSkjemaVerdi, tilstand } = this.props;
+    const { oppdaterData, settSkjemaVerdi, tilstand } = this.props;
     const { forutgaendeMedlemskap } = tilstand;
-    oppdaterRessurs(konverterTilRessurs('forutgaendeMedlemskap', forutgaendeMedlemskap));
+    oppdaterData(konverterTilStegData('forutgaendeMedlemskap', forutgaendeMedlemskap));
     settSkjemaVerdi('vilkar.forutgaendeMedlemskapBegrunnelser', forutgaendeMedlemskap.begrunnelseKoder || []);
   }
 
   componentWillUnmount() {
-    const { slettAllStegdata } = this.props;
-    slettAllStegdata();
+    const { slettAllDataForSteg } = this.props;
+    slettAllDataForSteg();
   }
 
   radioEndringHandler = event => {
-    const { oppdaterRessurs } = this.props;
-    oppdaterRessurs(lagVilkaar('forutgaendeMedlemskap', event.target.value));
+    const { oppdaterData } = this.props;
+    oppdaterData(lagVilkaar('forutgaendeMedlemskap', event.target.value));
   };
 
   listevalgEndringHandler = event => {
-    const { oppdaterRessurs } = this.props;
-    oppdaterRessurs(lagBegrunnelse('forutgaendeMedlemskap', event.value));
+    const { oppdaterData } = this.props;
+    oppdaterData(lagBegrunnelse('forutgaendeMedlemskap', event.value));
   };
 
   render() {
@@ -93,8 +93,8 @@ VurderingForutgaendeMedlemskap.propTypes = {
   tilstand: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   settSkjemaVerdi: PT.func.isRequired,
-  oppdaterRessurs: PT.func.isRequired,
-  slettAllStegdata: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 
