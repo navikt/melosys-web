@@ -11,7 +11,7 @@ import * as Skjema from '../soknad-komponenter/skjema/';
 import { formSelectors } from '../ducks/form/';
 import { solsidenOperations } from '../ducks/solsiden/';
 
-
+import * as KV from '../kodeverk';
 import './journalforing.css';
 
 class Solsiden extends Component {
@@ -82,9 +82,9 @@ const mapDispatchToProps = dispatch => ({
   sendInnData: data => dispatch(solsidenOperations.post(data)),
 });
 
-const form = {
-  form: 'solsiden_skjema',
-  onSubmit: () => { },
-};
+const SolsidenForm = reduxForm({
+  form: KV.Form.SOLSIDEN,
+})(Solsiden);
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Solsiden)));
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SolsidenForm));
