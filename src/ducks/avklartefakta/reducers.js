@@ -23,14 +23,23 @@ const avklartfaktaMal = {
   begrunnelseFritekst: null,
 };
 
-// Kun for å holde state i stegvelgeren.
-const lagAvklartStateObjekt = (avklartFakta, referanse) => (
-  avklartFakta ? {
-    ...avklartfaktaMal,
-    referanse,
-    fakta: [avklartFakta],
-  } : Types.NULL
-);
+const lagAvklartfaktaObjektMedKode = (avklarteFakta, avklartefaktaKode) => {
+  if (Utils._isNil(avklarteFakta)) {
+    return [];
+  }
+
+  return avklarteFakta.reduce((samling, enkeltAvklaring) => (
+    [...samling, {
+      avklartefaktaKode,
+      referanse: enkeltAvklaring.referanse,
+      fakta: enkeltAvklaring.fakta,
+      subjektID: enkeltAvklaring.subjektID,
+      begrunnelseKoder: enkeltAvklaring.begrunnelseKoder || [],
+      begrunnelseFritekst: enkeltAvklaring.begrunnelseFritekst || null,
+    }]
+  ), []);
+};
+
 
 // En faktisk avklart fakta
 const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => {
@@ -42,7 +51,7 @@ const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => {
     avklartefaktaKode,
     referanse: avklartefaktaKode,
     subjektID: null,
-    fakta: [avklarteFakta],
+    fakta: avklarteFakta,
   };
 };
 
@@ -55,7 +64,7 @@ const lagAvklartfaktaObjektMedReferanse = (avklarteFakta, referanse, avklartefak
     avklartefaktaKode,
     referanse,
     subjektID: null,
-    fakta: [avklarteFakta],
+    fakta: avklarteFakta,
   };
 };
 
@@ -76,13 +85,6 @@ const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, m
       fakta: [enkeltAvklaring.installasjonsType],
     }] : [...samling];
   }, []);
-};
-
-const avklarEllerUtledBostedsland = (bostedsland, bosattINorge) => {
-  if (bosattINorge) {
-    return lagAvklartfaktaObjektMedReferanse('NO', 'BOSTEDSLAND', 'BOSTEDSLAND');
-  }
-  return lagAvklartfaktaObjektMedReferanse(bostedsland, 'BOSTEDSLAND', 'BOSTEDSLAND');
 };
 
 const lagFlagglandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
@@ -118,20 +120,20 @@ export default function reducer(state = initialState, action) {
     case Types.RESET:
       return { ...initialState };
     case Types.OPPDATER_AVKLARTEFAKTA: {
-      const { dokument } = action;
-      const avklartefakta = [
-        ...dokument.avklartefakta.soknadsland,
-        ...dokument.avklartefakta.virksomheter,
-        lagAvklartfaktaObjekt(dokument.avklartefakta.yrkesgruppe, 'YRKESGRUPPE'),
-        lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
-        lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
-        avklarEllerUtledBostedsland(dokument.avklartefakta.bostedsland, dokument.vilkar.bosattINorge),
-        ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
-        ...lagFlagglandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),
-        lagAvklartfaktaObjekt(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP'),
+      const { avklartefakta } = action;
+      const avklartefaktaUt = [
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.SOKNADSLAND, 'SOKNADSLAND'),
+        lagAvklartfaktaObjekt(avklartefakta.virksomheter, 'VIRKSOMHET'),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESGRUPPE, null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET_ANTALL_LAND, 'YRKESAKTIVITET_ANTALL_LAND'),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET, 'YRKESAKTIVITET'),
+        lagAvklartfaktaObjekt(avklartefakta.bostedsland),
+        lagAvklartfaktaObjektMedReferanse(avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP'),
+        lagAvklartfaktaObjektMedReferanse(avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND'),
+        lagAvklartfaktaObjekt(avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP'),
       ].filter(fakta => fakta !== Types.NULL);
 
-      return { ...state, data: [...avklartefakta] };
+      return { ...state, data: [...avklartefaktaUt] };
     }
     default:
       return state;

@@ -30,7 +30,9 @@ class Yrkesaktivitet extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { yrkesaktivitet } = _propsLight.skjema.avklartefakta;
+      const yrkesaktivitet = _propsLight.avklartefakta[KV.Koder.YRKESAKTIVITET];
+      const fakta = yrkesaktivitet ? yrkesaktivitet.fakta[0] : [];
+      this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi('avklartefakta.yrkesaktivitet', fakta);
 
       return ({
         harAvklaring: yrkesaktivitet !== null && yrkesaktivitet !== undefined,
@@ -38,6 +40,8 @@ class Yrkesaktivitet extends Steg {
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      slettAllStegdata: () => this._propsLight.tilgjengeligeHandlers.slettAllStegData(this.id),
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
     };
     this.status = FANE_STATUS.OK;
   }

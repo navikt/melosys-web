@@ -12,9 +12,19 @@ import FjernetLandEnkelt from './fjernetLandEnkelt';
 import SoknadslandEnkelt from './soknadslandEnkelt';
 import SoknadslandHandlingLeggTil from './soknadslandHandlingLeggTil';
 
+import { konverterTilStegData, lagAvklartfakta } from '../../../../regler/avklartefakta';
+import * as avklartefaktaSelectors from '../../../../ducks/avklartefakta/selectors';
+
 import './soknadslandListe.css';
 
 class SoknadslandListe extends Component {
+  componentDidMount() {
+    const { avklarteSoknadsland, oppdaterData } = this.props;
+    avklarteSoknadsland.forEach(soknadsland => {
+      oppdaterData(konverterTilStegData(KV.Koder.SOKNADSLAND, soknadsland));
+    });
+  }
+
   bekreftFjern = (landkode, begrunnelseKode) => {
     const avklartefakta = this.props.fields.getAll();
     const enkeltFakta = avklartefakta.find(enkelt => enkelt.subjektID === landkode);
@@ -31,6 +41,7 @@ class SoknadslandListe extends Component {
      || begrunnelseKode === MKV.Koder.begrunnelser.opphold.NYE_OPPLYSNINGER_LAND) {
       this.fjernLandFraSoknad(landkode);
     }
+    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, ['FALSE'], [begrunnelseKode]));
   };
 
   bekreftLeggTil = (landkode, begrunnelseKode) => {
@@ -45,6 +56,7 @@ class SoknadslandListe extends Component {
 
     this.props.fields.push(avklartFakta);
     this.leggLandTilSoknad(landkode);
+    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, ['TRUE'], [begrunnelseKode]));
   };
 
   fjernLandFraSoknad = valgtLand => {
@@ -103,7 +115,7 @@ class SoknadslandListe extends Component {
       <div>
         <div className="soknadsland__liste">
           <Nav.Fieldset legend="Land:" >
-            { alleGyldigeSoknadsland.map(soknadslandFakta => ( // TODO
+            { alleGyldigeSoknadsland.map(soknadslandFakta => (
               <SoknadslandEnkelt
                 key={soknadslandFakta.subjektID}
                 landkodeObjekt={finnLandVedKode(soknadslandFakta.subjektID)}
@@ -157,10 +169,14 @@ SoknadslandListe.propTypes = {
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   avklartefakta: PT.array.isRequired,
   redigerbart: PT.bool.isRequired,
+  oppdaterData: PT.func.isRequired,
+  avklarteSoknadsland: PT.array.isRequired,
 };
 
 const mapStateToProps = state => ({
   soknadslandFraSoknad: formValues(state, 'soknadsland'),
+  avklarteSoknadsland: avklartefaktaSelectors.Soknadsland(state),
+
 });
 
 const mapDispatchToProps = dispatch => ({

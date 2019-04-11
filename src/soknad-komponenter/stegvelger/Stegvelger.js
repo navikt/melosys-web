@@ -96,13 +96,13 @@ class Stegvelger extends Component {
   };
 
   publiserStegdataTilRedux = () => {
-    const { vilkaar } = this.state.stegStores;
+    const { vilkaar, avklartefakta } = this.state.stegStores;
 
     const vilkaarKonvertert = vilkaar.hent();
     this.props.oppdaterVilkaar(vilkaarKonvertert);
 
-    // const avklartefaktaKonvertert = avklartefakta.hentAvklartfakta();
-    // this.props.oppdaterAvklartefakta(avklartefaktaKonvertert);
+    const avklartefaktaKonvertert = avklartefakta.hent();
+    this.props.oppdaterAvklartefakta(avklartefaktaKonvertert);
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {

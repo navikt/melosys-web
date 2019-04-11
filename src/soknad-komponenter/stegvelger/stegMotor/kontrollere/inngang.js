@@ -38,6 +38,7 @@ class Inngang extends Steg {
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
     };
     this.status = FANE_STATUS.OK;
   }
