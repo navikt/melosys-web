@@ -123,8 +123,8 @@ SokkelSkipListe.defaultProps = {
 
 class VurderingSokkelSkip extends React.Component {
   componentWillUnmount() {
-    const { slettAllStegdata } = this.props;
-    slettAllStegdata();
+    const { slettAllDataForSteg } = this.props;
+    slettAllDataForSteg();
   }
 
   avklartefaktaEndret = (event, subjektID) => {
@@ -201,7 +201,7 @@ VurderingSokkelSkip.propTypes = {
   settSkjemaVerdi: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  slettAllStegdata: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingSokkelSkip.defaultProps = {
