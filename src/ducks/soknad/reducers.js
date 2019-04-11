@@ -58,10 +58,16 @@ export default function reducer(state = initialState, action) {
       const soknad = {
         ...state.data.soeknadDokument,
         arbeidsinntekt: {
-          ...state.data.soeknadDokument.arbeidsinntekt,
           inntektNorskIPerioden: strengTilInt(dokument.inntektNorskIPerioden),
           inntektUtenlandskIPerioden: strengTilInt(dokument.inntektUtenlandskIPerioden),
           inntektNaeringIPerioden: strengTilInt(dokument.inntektNaeringIPerioden),
+          inntektNaturalytelser: {
+            friBil: dokument.inntektNaturalFribil,
+            friBolig: dokument.inntektNaturalFribolig,
+            friAnnet: dokument.inntektNaturalIAnnet || null,
+          },
+          inntektErInnrapporteringspliktig: dokument.inntektErInnrapporteringspliktig,
+          inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
         },
         arbeidNorge: {
           ...state.data.soeknadDokument.arbeidNorge,
