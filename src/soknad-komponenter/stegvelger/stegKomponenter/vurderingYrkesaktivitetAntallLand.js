@@ -1,18 +1,35 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
+import { lagAvklartfakta } from '../../../regler/avklartefakta';
+import { konverterTilStegData } from '../../../regler/vilkar';
 
 const VurderingYrkesaktivitetAntallLand = props => {
   const { bekreftOgFortsett, tilstand, redigerbart } = props;
   const { harAvklaring } = tilstand;
 
+  useEffect(() => {
+    const { settSkjemaVerdi, oppdaterData } = props;
+    const { yrkesaktivitetAntallLand } = tilstand;
+    if (yrkesaktivitetAntallLand.fakta) {
+      oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, yrkesaktivitetAntallLand));
+    }
+    const fakta = yrkesaktivitetAntallLand.fakta ? yrkesaktivitetAntallLand.fakta[0] : null;
+    settSkjemaVerdi('avklartefakta.yrkesaktivitetAntallLand', fakta);
+  }, []);
+
+  const radioEndret = event => {
+    const { oppdaterData } = props;
+    oppdaterData(lagAvklartfakta(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, null, [event.target.value]));
+  };
+
   return (
     <div>
       <Nav.Undertittel>Vurdering av antall land</Nav.Undertittel>
-      <Nav.Fieldset disabled={!redigerbart} legend="Hvor mange land skal søker ha yrkesaktivitet i?">
+      <Nav.Fieldset disabled={!redigerbart} legend="Hvor mange land skal søker ha yrkesaktivitet i?" onChange={radioEndret}>
         <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitetAntallLand" value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE} label="Kun Norge" />
         <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitetAntallLand" value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE} label="Ett land, ikke Norge" />
         <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitetAntallLand" value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND} label="To eller flere land" />
@@ -30,6 +47,8 @@ VurderingYrkesaktivitetAntallLand.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   tilstand: PT.object,
+  oppdaterData: PT.func.isRequired,
+  settSkjemaVerdi: PT.func.isRequired,
 };
 
 VurderingYrkesaktivitetAntallLand.defaultProps = {

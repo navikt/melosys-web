@@ -2,6 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingSokkelSkip from '../../stegKomponenter/vurderingSokkelSkip';
 import * as KV from '../../../../kodeverk';
+import { hentFakta } from '../../../../regler/avklartefakta';
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -38,8 +39,8 @@ class SokkelSkip extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { sokkelEllerSkip = [], sokkelSkipKonklusjon } = _propsLight.skjema.avklartefakta;
-
+      const sokkelEllerSkip = hentFakta(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, _propsLight.vilkar);
+      const sokkelSkipKonklusjon = hentFakta(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, _propsLight.vilkar);
       return ({
         harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon),
         sokkelEllerSkip,
@@ -48,9 +49,10 @@ class SokkelSkip extends Steg {
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
-      oppdaterRessurs: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegressurs(this.id, felt, verdi),
-      slettRessurs: felt => this._propsLight.tilgjengeligeHandlers.slettStegressurs(this.id, felt),
-      slettAllStegdata: () => this._propsLight.tilgjengeligeHandlers.slettAlleRessurserForSteg(this.id),
+      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (type, felt) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, type, felt),
+      slettAllStegdata: () => this._propsLight.tilgjengeligeHandlers.slettAllStegData(this.id),
     };
     this.status = FANE_STATUS.OK;
   }
