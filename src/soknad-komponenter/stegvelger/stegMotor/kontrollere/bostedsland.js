@@ -4,6 +4,8 @@ import VurderingBostedsland from '../../stegKomponenter/vurderingBostedsland';
 import * as KV from '../../../../kodeverk';
 
 import Regler from '../../../../regler';
+import { hentVilkar } from '../../../../regler/vilkar';
+import * as MKV from 'melosys-kodeverk';
 
 class Bostedsland extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -44,6 +46,7 @@ class Bostedsland extends Steg {
       } = skjema;
 
       const { bosattINorge, bosattINorgeBegrunnelser } = vilkar;
+      const bosattINorgeVilkaar = hentVilkar(MKV.Koder.vilkaar.BOSATT_I_NORGE, _propsLight.vilkar);
 
       const regler = new Regler(skjema, saksopplysninger);
 
@@ -95,12 +98,15 @@ class Bostedsland extends Steg {
       return {
         erAvklart: Bostedsland.alleErAvklart(bosattINorge, bosattINorgeBegrunnelser, bostedsland, begrunnelserPaaKrevd),
         erBosattINorge: bosattINorge,
+        bosattINorgeVilkaar,
         harEOSBarnetrygdSak: eosBarnetrygd,
         avklaringer,
       };
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
     };
     this.status = FANE_STATUS.OK;
   }
