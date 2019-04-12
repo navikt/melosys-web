@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
-import { hentFoersteFaktaVerdi, lagAvklartfakta } from '../../../regler/avklartefakta';
+import { hentFaktaVerdi, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterTilStegData } from '../../../regler/vilkar';
 
 const VurderingYrkesaktivitetAntallLand = props => {
@@ -16,7 +16,7 @@ const VurderingYrkesaktivitetAntallLand = props => {
     const { yrkesaktivitetAntallLand } = tilstand;
     oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, yrkesaktivitetAntallLand));
 
-    const fakta = hentFoersteFaktaVerdi(yrkesaktivitetAntallLand);
+    const fakta = hentFaktaVerdi(yrkesaktivitetAntallLand);
     settSkjemaVerdi('avklartefakta.yrkesaktivitetAntallLand', fakta);
   }, []);
 

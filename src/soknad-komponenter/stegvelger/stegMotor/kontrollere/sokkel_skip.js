@@ -2,7 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingSokkelSkip from '../../stegKomponenter/vurderingSokkelSkip';
 import * as KV from '../../../../kodeverk';
-import { hentFakta, hentFoersteFakta, hentFoersteFaktaVerdi } from '../../../../regler/avklartefakta';
+import { hentFaktaListe, hentFakta, hentFaktaVerdi } from '../../../../regler/avklartefakta';
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -39,15 +39,15 @@ class SokkelSkip extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const installasjonArbeidsland = hentFakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, _propsLight.avklartefakta);
-      const sokkelEllerSkip = hentFakta(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, _propsLight.avklartefakta);
-      const sokkelSkipKonklusjon = hentFoersteFakta(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, _propsLight.avklartefakta);
+      const installasjonArbeidslandListe = hentFaktaListe(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, _propsLight.avklartefakta);
+      const sokkelEllerSkipListe = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, _propsLight.avklartefakta);
+      const sokkelSkipKonklusjon = hentFakta(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, _propsLight.avklartefakta);
 
       return ({
-        harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon, installasjonArbeidsland),
-        sokkelEllerSkip,
+        harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkipListe, sokkelSkipKonklusjon, installasjonArbeidslandListe),
+        sokkelEllerSkipListe,
         sokkelSkipKonklusjon,
-        installasjonArbeidsland,
+        installasjonArbeidslandListe,
       });
     };
     this.handlers = {
@@ -66,13 +66,13 @@ class SokkelSkip extends Steg {
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   };
 
-  static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon, arbeidsland) => {
-    const avklartSokkelEllerSkip = sokkelEllerSkip.length > 0 &&
-      sokkelEllerSkip.map(enkelt => {
-        if (!arbeidsland.find(land => land.subjektID === enkelt.subjektID)) {
+  static alleErAvklart = (sokkelEllerSkipListe, sokkelSkipKonklusjon, arbeidslandListe) => {
+    const avklartSokkelEllerSkip = sokkelEllerSkipListe.length > 0 &&
+      sokkelEllerSkipListe.map(enkelt => {
+        if (!arbeidslandListe.find(land => land.subjektID === enkelt.subjektID)) {
           return false;
         }
-        const installasjonsType = hentFoersteFaktaVerdi(enkelt);
+        const installasjonsType = hentFaktaVerdi(enkelt);
         if (installasjonsType === KV.Koder.SOKKEL) {
           return enkelt.begrunnelseKoder.length > 0;
         }
@@ -80,7 +80,7 @@ class SokkelSkip extends Steg {
       })
         .every(enkelt => enkelt === true);
 
-    return (avklartSokkelEllerSkip && hentFoersteFaktaVerdi(sokkelSkipKonklusjon));
+    return (avklartSokkelEllerSkip && hentFaktaVerdi(sokkelSkipKonklusjon));
   };
 }
 

@@ -10,7 +10,7 @@ import LandVelger from '../../skjema/landvelger';
 import './vurderingSokkelSkip.css';
 import { lagVilkaar } from '../../../regler/vilkar';
 import {
-  hentFoersteFaktaVerdi,
+  hentFaktaVerdi,
   konverterTilStegData,
   lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
@@ -29,7 +29,7 @@ const SokkelSkipEnkelt = props => {
 
   const { navn } = maritimtArbeid;
   const { begrunnelseKoder } = avklartefakta;
-  const installasjonsType = hentFoersteFaktaVerdi(avklartefakta);
+  const installasjonsType = hentFaktaVerdi(avklartefakta);
 
   const { SOKKEL, SKIP } = KV.Koder;
 
@@ -133,11 +133,11 @@ SokkelSkipListe.defaultProps = {
 class VurderingSokkelSkip extends React.Component {
   componentDidMount() {
     const { tilstand, oppdaterData } = this.props;
-    const { installasjonArbeidsland, sokkelEllerSkip, sokkelSkipKonklusjon } = tilstand;
-    installasjonArbeidsland.forEach(land => {
+    const { installasjonArbeidslandListe, sokkelEllerSkipListe, sokkelSkipKonklusjon } = tilstand;
+    installasjonArbeidslandListe.forEach(land => {
       oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, land));
     });
-    sokkelEllerSkip.forEach(sES => {
+    sokkelEllerSkipListe.forEach(sES => {
       oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, sES));
     });
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, sokkelSkipKonklusjon));
@@ -179,8 +179,8 @@ class VurderingSokkelSkip extends React.Component {
       bekreftOgFortsett, tilstand, skjema, begrunnelser, redigerbart,
     } = this.props;
 
-    const { sokkelEllerSkip, sokkelSkipKonklusjon } = tilstand;
-    const fakta = sokkelSkipKonklusjon.fakta ? sokkelSkipKonklusjon.fakta[0] : null;
+    const { sokkelEllerSkipListe, sokkelSkipKonklusjon } = tilstand;
+    const fakta = hentFaktaVerdi(sokkelSkipKonklusjon);
 
     const { konklusjonEndretHandler } = this;
     const { VurderingSokkelSkipTyper } = KV.Koder;
@@ -191,7 +191,7 @@ class VurderingSokkelSkip extends React.Component {
       <div className="vurderingSokkelSkip">
         <Nav.Undertittel>Vurdering av sokkel eller skip</Nav.Undertittel>
         <SokkelSkipListe
-          avklartefakta={sokkelEllerSkip}
+          avklartefakta={sokkelEllerSkipListe}
           maritimtArbeid={maritimtArbeid}
           begrunnelser={begrunnelser}
           redigerbart={redigerbart}
