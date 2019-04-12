@@ -47,6 +47,7 @@ class SokkelSkip extends Steg {
         harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon, installasjonArbeidsland),
         sokkelEllerSkip,
         sokkelSkipKonklusjon,
+        installasjonArbeidsland,
       });
     };
     this.handlers = {

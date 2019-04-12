@@ -28,11 +28,16 @@ export const lagVilkaar = (felt, verdi, begrunnelse, fritekst) => {
   };
 };
 
-export const lagBegrunnelse = (felt, begrunnelse, fritekst) => {
-  return lagVilkaar(felt, null, begrunnelse, fritekst);
-};
+export const lagBegrunnelse = (felt, begrunnelse, fritekst) => (
+  lagVilkaar(felt, null, begrunnelse, fritekst)
+);
 
 export const konverterTilStegData = (felt, vilkaar) => {
   const { oppfylt, begrunnelseKoder, begrunnelseFritekst } = vilkaar;
-  return lagVilkaar(felt, oppfylt, begrunnelseKoder, begrunnelseFritekst);
+  return {
+    felt,
+    ignorer: true,
+    type: 'vilkaar',
+    innhold: { oppfylt, begrunnelse: begrunnelseKoder, fritekst: begrunnelseFritekst },
+  };
 };
