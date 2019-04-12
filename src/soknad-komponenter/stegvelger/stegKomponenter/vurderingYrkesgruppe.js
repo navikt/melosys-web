@@ -4,8 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
-import { lagAvklartfakta } from '../../../regler/avklartefakta';
-import { konverterTilStegData } from '../../../regler/vilkar';
+import { hentFoersteFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../regler/avklartefakta';
 
 const VurderingYrkesgruppe = props => {
   const {
@@ -14,16 +13,13 @@ const VurderingYrkesgruppe = props => {
   const { harAvklaring, yrkesgruppe } = tilstand;
 
   useEffect(() => {
-    let avklartfakta = null;
-    if (yrkesgruppe.fakta) {
-      oppdaterData(konverterTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
-      avklartfakta = yrkesgruppe.fakta[0];
-    }
-    settSkjemaVerdi('yrkesgruppe', avklartfakta);
+    oppdaterData(konverterTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
+    const fakta = hentFoersteFaktaVerdi(yrkesgruppe);
+    settSkjemaVerdi('yrkesgruppe', fakta);
   }, []);
 
   const radioEndret = event => {
-    oppdaterData(lagAvklartfakta(KV.Koder.YRKESGRUPPE, null, [event.target.value]));
+    oppdaterData(lagAvklartfakta(KV.Koder.YRKESGRUPPE, null, event.target.value));
   };
 
   return (

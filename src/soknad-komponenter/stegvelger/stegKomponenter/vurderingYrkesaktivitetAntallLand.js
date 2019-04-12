@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
-import { lagAvklartfakta } from '../../../regler/avklartefakta';
+import { hentFoersteFaktaVerdi, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterTilStegData } from '../../../regler/vilkar';
 
 const VurderingYrkesaktivitetAntallLand = props => {
@@ -14,16 +14,15 @@ const VurderingYrkesaktivitetAntallLand = props => {
   useEffect(() => {
     const { settSkjemaVerdi, oppdaterData } = props;
     const { yrkesaktivitetAntallLand } = tilstand;
-    if (yrkesaktivitetAntallLand.fakta) {
-      oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, yrkesaktivitetAntallLand));
-    }
-    const fakta = yrkesaktivitetAntallLand.fakta ? yrkesaktivitetAntallLand.fakta[0] : null;
+    oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, yrkesaktivitetAntallLand));
+
+    const fakta = hentFoersteFaktaVerdi(yrkesaktivitetAntallLand);
     settSkjemaVerdi('avklartefakta.yrkesaktivitetAntallLand', fakta);
   }, []);
 
   const radioEndret = event => {
     const { oppdaterData } = props;
-    oppdaterData(lagAvklartfakta(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, null, [event.target.value]));
+    oppdaterData(lagAvklartfakta(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, null, event.target.value));
   };
 
   return (

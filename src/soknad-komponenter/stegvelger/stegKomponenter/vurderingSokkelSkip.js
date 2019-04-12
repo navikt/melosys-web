@@ -9,7 +9,12 @@ import LandVelger from '../../skjema/landvelger';
 
 import './vurderingSokkelSkip.css';
 import { lagVilkaar } from '../../../regler/vilkar';
-import { hentFoersteFaktaVerdi, lagAvklartefaktaBegrunnelse, lagAvklartfakta } from '../../../regler/avklartefakta';
+import {
+  hentFoersteFaktaVerdi,
+  konverterTilStegData,
+  lagAvklartefaktaBegrunnelse,
+  lagAvklartfakta,
+} from '../../../regler/avklartefakta';
 
 const SokkelSkipEnkelt = props => {
   const {
@@ -126,6 +131,18 @@ SokkelSkipListe.defaultProps = {
 };
 
 class VurderingSokkelSkip extends React.Component {
+  componentDidMount() {
+    const { tilstand, oppdaterData } = this.props;
+    const { installasjonArbeidsland, sokkelEllerSkip, sokkelSkipKonklusjon } = tilstand;
+    installasjonArbeidsland.forEach(land => {
+      oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, land));
+    });
+    sokkelEllerSkip.forEach(sES => {
+      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, sES));
+    });
+    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, sokkelSkipKonklusjon));
+  }
+
   componentWillUnmount() {
     const { slettAllDataForSteg } = this.props;
     slettAllDataForSteg();

@@ -10,8 +10,8 @@ export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrun
     innhold: {
       referanse: felt,
       subjektID,
-      fakta,
-      begrunnelseKoder,
+      fakta: [fakta],
+      begrunnelseKoder: [begrunnelseKoder],
       begrunnelseFritekst,
     },
   });
@@ -24,11 +24,23 @@ export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelse, fritek
   return lagAvklartfakta(felt, subjektID, null, begrunnelseListe, fritekst);
 };
 
-
 export const konverterTilStegData = (felt, avklartfakta) => {
+  if (!avklartfakta) return null;
+
   const {
-    subjektID, fakta, begrunnelse, fritekst,
+    subjektID, fakta, begrunnelseKoder, begrunnelseFritekst,
   } = avklartfakta;
 
-  return lagAvklartfakta(felt, subjektID, fakta, begrunnelse, fritekst);
+  return {
+    felt,
+    type: 'avklartefakta',
+    ignorer: true,
+    innhold: {
+      referanse: felt,
+      subjektID,
+      fakta,
+      begrunnelseKoder,
+      begrunnelseFritekst,
+    },
+  };
 };
