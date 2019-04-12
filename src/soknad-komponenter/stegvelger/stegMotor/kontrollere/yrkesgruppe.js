@@ -2,7 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesgruppe from '../../stegKomponenter/vurderingYrkesgruppe';
 import * as KV from '../../../../kodeverk';
-import { hentFoersteFakta } from '../../../../regler/avklartefakta';
+import { hentFakta } from '../../../../regler/avklartefakta';
 
 class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -32,7 +32,7 @@ class Yrkesgruppe extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const yrkesgruppe = hentFoersteFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, _propsLight.avklartefakta);
+      const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, _propsLight.avklartefakta);
       return ({
         harAvklaring: yrkesgruppe !== null && yrkesgruppe !== undefined,
         yrkesgruppe,

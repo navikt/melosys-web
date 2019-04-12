@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
-import { hentFoersteFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../regler/avklartefakta';
+import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../regler/avklartefakta';
 
 const VurderingYrkesgruppe = props => {
   const {
@@ -14,7 +14,7 @@ const VurderingYrkesgruppe = props => {
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
-    const fakta = hentFoersteFaktaVerdi(yrkesgruppe);
+    const fakta = hentFaktaVerdi(yrkesgruppe);
     settSkjemaVerdi('yrkesgruppe', fakta);
   }, []);
 

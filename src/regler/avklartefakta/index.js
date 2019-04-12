@@ -1,7 +1,7 @@
 
-export const hentFakta = (spesifiktFakta, alleFakta) => alleFakta.filter(enkelt => enkelt.referanse === spesifiktFakta) || [];
-export const hentFoersteFakta = (spesifiktFakta, alleFakta) => alleFakta.find(enkelt => enkelt.referanse === spesifiktFakta) || {};
-export const hentFoersteFaktaVerdi = avklartfakta => (avklartfakta.fakta ? avklartfakta.fakta[0] : null);
+export const hentFaktaListe = (spesifiktFakta, alleFakta) => alleFakta.filter(enkelt => enkelt.referanse === spesifiktFakta) || [];
+export const hentFakta = (spesifiktFakta, alleFakta) => alleFakta.find(enkelt => enkelt.referanse === spesifiktFakta) || {};
+export const hentFaktaVerdi = avklartfakta => (avklartfakta.fakta ? avklartfakta.fakta[0] : null);
 
 export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrunnelseFritekst) =>
   ({
