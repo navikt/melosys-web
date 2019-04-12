@@ -1,0 +1,69 @@
+@import '../constants';
+
+.listevelger {
+  margin: 0 0 1em 0;
+
+  .listevelger__linje {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 1em 0;
+  }
+
+  .listevelger__innhold {
+    display: flex;
+    flex: 1;
+    align-items: center;
+
+    .listevelger__ikon {
+      display: flex;
+      flex: 1;
+      align-items: center;
+    }
+
+    .listevelger__innhold__label {
+      flex: 20;
+      padding-left: .5em;
+    }
+  }
+
+  .listevelger__linje__input {
+    margin-bottom: 0;
+    flex: 6;
+  }
+
+  .listevelger__linje__knapp {
+    margin: 0.4em 0 0 0.5em;
+    height: 2.5em;
+    display: flex;
+    align-items: center;
+    width: 8em;
+    font-size: 1em;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    &:hover {
+      .knapp__ikon path {
+        stroke: @white !important;
+      }
+    }
+  }
+
+  .knapp__ikon {
+    display: flex;
+
+    svg {
+      margin: -0.4em 0 -0.4em 0;
+    }
+  }
+
+  .knapp__tittel {
+    margin-left: 0.5em;
+  }
+
+  .listevelger__linje__knapp--leggtil {
+    align-self: flex-start;
+    margin-top: 1.8em;
+  }
+}
