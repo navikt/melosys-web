@@ -9,8 +9,8 @@ import * as KV from '../../../kodeverk';
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import './vurderingArtikkel11_4.css';
-import * as Skjema from '../../skjema';
 import { BOOLSK } from '../../../constants';
+import { konverterTilStegData, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingArtikkel11_4 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -28,56 +28,45 @@ class VurderingArtikkel11_4 extends Component {
     this.TIL_VURDERING_12_1 = 'TIL_VURDERING_12_1';
   }
 
-  state = { valgtVilkar: '' };
-
   componentDidMount() {
-    this.lagreValgtVilkarState({});
-  }
-
-  componentDidUpdate(prevProps) {
-    this.lagreValgtVilkarState(prevProps);
+    const { oppdaterData, tilstand } = this.props;
+    const {
+      art11_4_1, art11_4_2, art11_3A, nis,
+    } = tilstand;
+    oppdaterData(konverterTilStegData('art11_4_1', art11_4_1));
+    oppdaterData(konverterTilStegData('art11_4_2', art11_4_2));
+    oppdaterData(konverterTilStegData('art11_3A', art11_3A));
+    oppdaterData(konverterTilStegData('nis', nis));
   }
 
   componentWillUnmount() {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.art11_4_1', null);
-    settSkjemaVerdi('vilkar.art11_4_2', null);
-    settSkjemaVerdi('vilkar.art11_3A', null);
-    settSkjemaVerdi('vilkar.nis', null);
+    const { slettAllDataForSteg } = this.props;
+    slettAllDataForSteg();
   }
 
-  settStateForVilkar = vilkar => this.setState({ valgtVilkar: vilkar });
-
-  lagreValgtVilkarState = ({ tilstand = {} }) => {
-    const { art11_3A: old_art11_3A, art11_4_1: old_art11_4_1, art11_4_2: old_art11_4_2 } = tilstand;
-    const { art11_3A, art11_4_1, art11_4_2 } = this.props.tilstand;
-
-    if ((art11_4_1 === old_art11_4_1) && (art11_4_2 === old_art11_4_2) && (art11_3A === old_art11_3A)) { return false; }
-
-    if (art11_4_1 && art11_3A) (this.settStateForVilkar(this.ART11_4_1));
-    if (art11_4_2) (this.settStateForVilkar(this.ART11_4_2));
-    if (art11_4_1 && !art11_3A) (this.settStateForVilkar(this.TIL_VURDERING_12_1));
-    return true;
+  nisEndret = event => {
+    const { oppdaterData } = this.props;
+    oppdaterData(lagVilkaar('nis', event.target.value));
   };
 
   radioEndringHandler = event => {
     const { value } = event.target;
-    const { settSkjemaVerdi } = this.props;
+    const { slettData, oppdaterData } = this.props;
 
     if (value === this.ART11_4_1) {
-      settSkjemaVerdi('vilkar.art11_4_1', true);
-      settSkjemaVerdi('vilkar.art11_3A', true);
-      settSkjemaVerdi('vilkar.art11_4_2', null);
+      oppdaterData(lagVilkaar('art11_4_1', true));
+      oppdaterData(lagVilkaar('art11_3A', true));
+      slettData('vilkaar', 'art11_4_2');
     } else if (value === this.ART11_4_2) {
-      settSkjemaVerdi('vilkar.art11_3A', null);
-      settSkjemaVerdi('vilkar.art11_4_1', null);
-      settSkjemaVerdi('vilkar.art11_4_2', true);
-      settSkjemaVerdi('vilkar.nis', null);
+      slettData('vilkaar', 'art11_3A');
+      slettData('vilkaar', 'art11_4_1');
+      oppdaterData(lagVilkaar('art11_4_2', true));
+      slettData('vilkaar', 'nis');
     } else {
-      settSkjemaVerdi('vilkar.art11_3A', null);
-      settSkjemaVerdi('vilkar.art11_4_1', true);
-      settSkjemaVerdi('vilkar.art11_4_2', null);
-      settSkjemaVerdi('vilkar.nis', null);
+      slettData('vilkaar', 'art11_3A');
+      oppdaterData(lagVilkaar('art11_4_1', true));
+      slettData('vilkaar', 'art11_4_2');
+      slettData('vilkaar', 'nis');
     }
   };
 
@@ -86,8 +75,9 @@ class VurderingArtikkel11_4 extends Component {
       bekreftOgFortsett, tilstand, bostedsland, arbeidsland, valgteVirksomheter, redigerbart,
     } = this.props;
 
-    const { valgtVilkar } = this.state;
-    const { harAvklaring, visNISAvsnitt } = tilstand;
+    const {
+      harAvklaring, visNISAvsnitt, art11_4_1, art11_4_2, art11_3A, nis,
+    } = tilstand;
 
     const arbeidsLandSetning = arrayTilKonjunksjon(arbeidsland.map(land => KV.objektTilTerm(land)));
 
@@ -123,7 +113,7 @@ class VurderingArtikkel11_4 extends Component {
                   name="artikkel11"
                   onChange={this.radioEndringHandler}
                   value={this.ART11_4_1}
-                  checked={valgtVilkar === this.ART11_4_1}
+                  checked={art11_4_1.oppfylt === true && art11_3A.oppfylt === true}
                   label="11.4 i - Norge er arbeidslandet"
                   disabled={!redigerbart}
                 />
@@ -131,7 +121,7 @@ class VurderingArtikkel11_4 extends Component {
                   name="artikkel11"
                   onChange={this.radioEndringHandler}
                   value={this.ART11_4_2}
-                  checked={valgtVilkar === this.ART11_4_2}
+                  checked={art11_4_2.oppfylt === true}
                   label="11.4 ii - arbeidsgiver i bostedslandet"
                   disabled={!redigerbart}
                 />
@@ -139,15 +129,15 @@ class VurderingArtikkel11_4 extends Component {
                   name="artikkel11"
                   onChange={this.radioEndringHandler}
                   value={this.TIL_VURDERING_12_1}
-                  checked={valgtVilkar === this.TIL_VURDERING_12_1}
+                  checked={art11_4_1.oppfylt === true && art11_3A.oppfylt === undefined}
                   label="11.4 i - arbeidslandet er ikke Norge, men jeg vil vurdere Artikkel 12.1"
                   disabled={!redigerbart}
                 />
               </Nav.Fieldset>
               { visNISAvsnitt && (
-                <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?">
-                  <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.nis" value={BOOLSK.USANN} label="Nei" />
-                  <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.nis" value={BOOLSK.SANN} label="Ja" />
+                <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?" onChange={this.nisEndret}>
+                  <Nav.Radio name="nis" disabled={!redigerbart} checked={nis.oppfylt === BOOLSK.USANN} value={BOOLSK.USANN} label="Nei" />
+                  <Nav.Radio name="nis" disabled={!redigerbart} checked={nis.oppfylt === BOOLSK.SANN} value={BOOLSK.SANN} label="Ja" />
                 </Nav.Fieldset>
               )
               }
@@ -171,6 +161,9 @@ VurderingArtikkel11_4.propTypes = {
   artikkel: MPT.Kodeverk,
   settSkjemaVerdi: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingArtikkel11_4.defaultProps = {

@@ -88,7 +88,7 @@ class VurderingArtikkel12_1 extends Component {
                   name="artikkel12"
                   onChange={this.vilkaarEndret}
                   value={this.ART12_1}
-                  checked={art12_1.oppfylt}
+                  checked={art12_1.oppfylt === true}
                   label="Ja"
                   disabled={!redigerbart}
                 />
@@ -96,7 +96,7 @@ class VurderingArtikkel12_1 extends Component {
                   name="artikkel12"
                   onChange={this.vilkaarEndret}
                   value={this.ART16_1}
-                  checked={anmodningOmUnntak}
+                  checked={anmodningOmUnntak === true}
                   label="Nei, jeg vil vurdere artikkel 16.1"
                   disabled={!redigerbart}
                 />
