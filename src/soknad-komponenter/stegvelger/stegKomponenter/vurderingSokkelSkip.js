@@ -151,7 +151,7 @@ class VurderingSokkelSkip extends React.Component {
   avklartefaktaEndret = (event, subjektID) => {
     const { oppdaterData } = this.props;
     const { value, name } = event.target;
-    oppdaterData(lagAvklartfakta(name, subjektID, [value]));
+    oppdaterData(lagAvklartfakta(name, subjektID, value));
   };
 
   avklartefaktaBegrunnelseEndret = (event, subjektID) => {

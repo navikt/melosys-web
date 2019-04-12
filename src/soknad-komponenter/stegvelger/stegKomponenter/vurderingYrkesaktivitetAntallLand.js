@@ -8,30 +8,42 @@ import { hentFaktaVerdi, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterTilStegData } from '../../../regler/vilkar';
 
 const VurderingYrkesaktivitetAntallLand = props => {
-  const { bekreftOgFortsett, tilstand, redigerbart } = props;
-  const { harAvklaring } = tilstand;
+  const {
+    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+  } = props;
+  const { harAvklaring, yrkesaktivitetAntallLand } = tilstand;
 
   useEffect(() => {
-    const { settSkjemaVerdi, oppdaterData } = props;
-    const { yrkesaktivitetAntallLand } = tilstand;
     oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, yrkesaktivitetAntallLand));
-
-    const fakta = hentFaktaVerdi(yrkesaktivitetAntallLand);
-    settSkjemaVerdi('avklartefakta.yrkesaktivitetAntallLand', fakta);
+    return function cleanup() {
+      slettAllDataForSteg();
+    };
   }, []);
 
   const radioEndret = event => {
-    const { oppdaterData } = props;
     oppdaterData(lagAvklartfakta(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, null, event.target.value));
   };
 
+  const fakta = hentFaktaVerdi(yrkesaktivitetAntallLand);
   return (
     <div>
       <Nav.Undertittel>Vurdering av antall land</Nav.Undertittel>
       <Nav.Fieldset disabled={!redigerbart} legend="Hvor mange land skal søker ha yrkesaktivitet i?" onChange={radioEndret}>
-        <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitetAntallLand" value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE} label="Kun Norge" />
-        <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitetAntallLand" value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE} label="Ett land, ikke Norge" />
-        <Skjema.Radio feltNavn="avklartefakta.yrkesaktivitetAntallLand" value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND} label="To eller flere land" />
+        <Nav.Radio
+          name="yrkesaktivitetAntallLand"
+          checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
+          value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
+          label="Kun Norge" />
+        <Nav.Radio
+          name="yrkesaktivitetAntallLand"
+          checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE}
+          value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE}
+          label="Ett land, ikke Norge" />
+        <Nav.Radio
+          name="yrkesaktivitetAntallLand"
+          checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND}
+          value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND}
+          label="To eller flere land" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp disabled={!redigerbart || !harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -47,7 +59,7 @@ VurderingYrkesaktivitetAntallLand.propTypes = {
   redigerbart: PT.bool.isRequired,
   tilstand: PT.object,
   oppdaterData: PT.func.isRequired,
-  settSkjemaVerdi: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingYrkesaktivitetAntallLand.defaultProps = {
