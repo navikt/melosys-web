@@ -16,16 +16,26 @@ export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrun
     },
   });
 
-export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelse, fritekst) => {
+export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelse, begrunnelseFritekst) => {
   let begrunnelseListe = [];
   if (begrunnelse && begrunnelse.length > 0) {
     begrunnelseListe = [begrunnelse];
   }
-  return lagAvklartfakta(felt, subjektID, null, begrunnelseListe, fritekst);
+  return {
+    felt,
+    type: 'avklartefakta',
+    innhold: {
+      referanse: felt,
+      subjektID,
+      fakta: null,
+      begrunnelseKoder: begrunnelseListe,
+      begrunnelseFritekst,
+    },
+  };
 };
 
 export const konverterTilStegData = (felt, avklartfakta) => {
-  if (!avklartfakta) return null;
+  if (!avklartfakta || !avklartfakta.fakta) return null;
 
   const {
     subjektID, fakta, begrunnelseKoder, begrunnelseFritekst,

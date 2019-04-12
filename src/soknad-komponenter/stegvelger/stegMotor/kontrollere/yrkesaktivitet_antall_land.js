@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitetAntallLand from '../../stegKomponenter/vurderingYrkesaktivitetAntallLand';
 import * as KV from '../../../../kodeverk';
 import Yrkesgruppe from '../../stegMotor/kontrollere/yrkesgruppe';
-import { hentFaktaListe } from '../../../../regler/avklartefakta';
+import { hentFakta } from '../../../../regler/avklartefakta';
 
 class YrkesaktivitetAntallLand extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -38,7 +38,7 @@ class YrkesaktivitetAntallLand extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const yrkesaktivitetAntallLand = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, _propsLight.vilkar);
+      const yrkesaktivitetAntallLand = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND, _propsLight.avklartefakta);
       return ({
         harAvklaring: yrkesaktivitetAntallLand !== null && yrkesaktivitetAntallLand !== undefined,
         yrkesaktivitetAntallLand,
@@ -46,8 +46,8 @@ class YrkesaktivitetAntallLand extends Steg {
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
-      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
     };
     this.status = FANE_STATUS.OK;
   }

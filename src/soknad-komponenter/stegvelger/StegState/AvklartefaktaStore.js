@@ -2,7 +2,7 @@ import StegState from './StegState';
 import * as Utils from '../../../utils';
 
 class Avklartfakta extends StegState {
-  lagKey = data => (data.referanse + data.subjektID || '');
+  lagKey = data => (data.referanse + (data.subjektID || ''));
 
   oppdaterfelt = (eksisterendeAvklarteSubjekter, nyData) => {
     const key = this.lagKey(nyData);

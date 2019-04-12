@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 
@@ -6,6 +6,8 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
 import './vurderingArbeidsgiver.css';
+import { konverterTilStegData } from '../../../regler/avklartefakta';
+import * as KV from '../../../kodeverk';
 
 const uuid = require('uuid/v4');
 
@@ -105,15 +107,33 @@ VirksomheterListe.defaultProps = {
  */
 const VurderingVirksomhet = props => {
   const {
-    bekreftOgFortsett, virksomheterIPerioden, tilstand, redigerbart,
+    bekreftOgFortsett, virksomheterIPerioden, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
   } = props;
-  const { harAvklaring } = tilstand;
+  const { harAvklaring, virksomheter } = tilstand;
+
+  useEffect(() => {
+    virksomheter.forEach(virksomhet => {
+      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomhet));
+    });
+    return function cleanup() {
+      slettAllDataForSteg();
+    };
+  }, []);
 
   return (
     <div className="vurderingArbeidsgiver">
       <Nav.Undertittel>Velg arbeidsgiver, oppdragsgiver eller selvstendig næringsvirksomhet:</Nav.Undertittel>
       <div className="arbeidsgiver">
-        <FieldArray name="avklartefakta.virksomheter" component={arrayProps => <VirksomheterListe {...arrayProps} redigerbart={redigerbart} virksomheterIPerioden={virksomheterIPerioden} />} />
+        <FieldArray
+          name="avklartefakta.virksomheter"
+          component={arrayProps =>
+            <VirksomheterListe
+              {...arrayProps}
+              redigerbart={redigerbart}
+              virksomheter={virksomheter}
+              virksomheterIPerioden={virksomheterIPerioden}
+            />}
+        />
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
@@ -124,6 +144,8 @@ const VurderingVirksomhet = props => {
 
 VurderingVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
   tilstand: PT.shape({
     harAvklaring: PT.bool,
   }).isRequired,
