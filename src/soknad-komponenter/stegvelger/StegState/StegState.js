@@ -13,34 +13,35 @@ class StegState {
     }
   };
 
-  oppdaterStegData = (stegID, { felt, type, innhold }) => {
-    const eksisterendeFeltData = this.hentEksisterendeFelt(stegID, felt);
-    if (eksisterendeFeltData) {
-      const feltData = this.oppdaterfelt(eksisterendeFeltData, type, innhold);
-      this.lagreFelt(stegID, felt, feltData);
-    } else {
-      this.lagreFelt(stegID, felt, innhold);
-    }
+  oppdaterStegData = (stegID, { felt, innhold }) => {
+    const eksisterendeFelt = this.hentStegMedFelt(stegID, felt);
+    const oppdaterFelt = this.oppdaterfelt(eksisterendeFelt, innhold);
+    this.lagreFelt(stegID, felt, oppdaterFelt);
   };
 
   lagreFelt = (stegID, felt, data) => {
     const { stegStore } = this;
-    let steg = stegStore.get(stegID);
-    if (!steg) {
-      steg = {};
-    }
+    const steg = stegStore.get(stegID);
     steg[felt] = data;
     stegStore.set(stegID, steg);
   };
 
-  hentEksisterendeFelt = (stegID, felt) => {
+  hentStegMedFelt = (stegID, felt) => {
     const { stegStore } = this;
+    let steg = {};
     if (!stegStore.has(stegID)) {
-      return null;
+      stegStore.set(stegID, steg);
     }
-    const steg = stegStore.get(stegID);
+    steg = stegStore.get(stegID);
+    if (!steg[felt]) {
+      const nyttFelt = this.nyttFelt();
+      steg[felt] = nyttFelt;
+      stegStore.set(stegID, steg);
+    }
     return steg[felt];
   };
+
+  nyttFelt = () => ({});
 
   slettSteg = steg => {
     const { stegStore } = this;

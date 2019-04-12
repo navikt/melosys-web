@@ -33,7 +33,7 @@ const lagAvklartfaktaObjektMedKode = (avklarteFakta, avklartefaktaKode) => {
       avklartefaktaKode,
       referanse: enkeltAvklaring.referanse,
       fakta: enkeltAvklaring.fakta,
-      subjektID: enkeltAvklaring.subjektID,
+      subjektID: enkeltAvklaring.subjektID || null,
       begrunnelseKoder: enkeltAvklaring.begrunnelseKoder || [],
       begrunnelseFritekst: enkeltAvklaring.begrunnelseFritekst || null,
     }]
@@ -55,54 +55,6 @@ const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => {
   };
 };
 
-const lagAvklartfaktaObjektMedReferanse = (avklarteFakta, referanse, avklartefaktaKode) => {
-  if (Utils._isUndefined(avklarteFakta)) {
-    return Types.NULL;
-  }
-  return {
-    ...avklartfaktaMal,
-    avklartefaktaKode,
-    referanse,
-    subjektID: null,
-    fakta: avklarteFakta,
-  };
-};
-
-const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
-  if (!avklarteFakta) { return []; }
-
-  return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
-    const installasjon = maritimtArbeid[index] || {};
-    const installasjonsNavn = installasjon.navn || Types.NULL;
-    const begrunnelseKoder = enkeltAvklaring.installasjonsTypeBegrunnelse ? [enkeltAvklaring.installasjonsTypeBegrunnelse] : Types.NULL;
-
-    return enkeltAvklaring.installasjonsType ? [...samling, {
-      ...avklartfaktaMal,
-      avklartefaktaKode,
-      referanse,
-      subjektID: installasjonsNavn,
-      begrunnelseKoder,
-      fakta: [enkeltAvklaring.installasjonsType],
-    }] : [...samling];
-  }, []);
-};
-
-const lagFlagglandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
-  if (!avklarteFakta) { return []; }
-
-  return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
-    const installasjon = maritimtArbeid[index] || {};
-    const installasjonsNavn = installasjon.navn || Types.NULL;
-
-    return enkeltAvklaring.installasjonsType ? [...samling, {
-      ...avklartfaktaMal,
-      avklartefaktaKode,
-      referanse,
-      subjektID: installasjonsNavn,
-      fakta: [enkeltAvklaring.arbeidsland],
-    }] : [...samling];
-  }, []);
-};
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -128,9 +80,9 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET_ANTALL_LAND, 'YRKESAKTIVITET_ANTALL_LAND'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET, 'YRKESAKTIVITET'),
         lagAvklartfaktaObjekt(avklartefakta.bostedsland),
-        lagAvklartfaktaObjektMedReferanse(avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP'),
-        lagAvklartfaktaObjektMedReferanse(avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND'),
-        lagAvklartfaktaObjekt(avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP'),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.SOKKEL_ELLER_SKIP, 'SOKKEL_ELLER_SKIP'),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.INSTALLASJON_ARBEIDSLAND, 'ARBEIDSLAND'),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.ARBEID_SOKKEL_SKIP, 'ARBEID_SOKKEL_SKIP'),
       ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefaktaUt] };

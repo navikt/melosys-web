@@ -2,7 +2,7 @@ import StegState from './StegState';
 import * as Utils from '../../../utils';
 
 class VilkaarStore extends StegState {
-  oppdaterfelt = (eksisterendeData, type, nyData) => {
+  oppdaterfelt = (eksisterendeData, nyData) => {
     const fritekst = nyData.fritekst || eksisterendeData.fritekst;
     const begrunnelse = nyData.begrunnelse || eksisterendeData.begrunnelse;
 
