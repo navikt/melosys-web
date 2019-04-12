@@ -177,19 +177,21 @@ class ListevelgerFlervalg extends Component {
 
     const feil = this.byggFeilmelding();
 
+    const datalistID = uuid();
+
     return (
       <div className="listevelger">
         {byggValgtListe(valgteElementer)}
         <div className="listevelger__linje">
           <Nav.Input
-            id={`listevelger-${label}`}
+            id={`listevelger-${datalistID}`}
             label={label}
             feil={feil}
             placeholder={placeholder}
             onChange={this.vedEndring}
             onKeyDown={this.vedTastNed}
             value={this.state.inputVerdi}
-            list={`dataliste-${label}`}
+            list={datalistID}
             className="listevelger__linje__input"
             disabled={disabled}
           />
@@ -203,7 +205,7 @@ class ListevelgerFlervalg extends Component {
             <div className="knapp__tittel">Legg til</div>
           </Nav.Knapp>
         </div>
-        <datalist id={`dataliste-${label}`}>
+        <datalist id={datalistID}>
           {muligeValg.map(valg => <option key={uuid()} value={KV.objektTilTerm(valg)} />)}
         </datalist>
       </div>
