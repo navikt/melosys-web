@@ -2,7 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingSokkelSkip from '../../stegKomponenter/vurderingSokkelSkip';
 import * as KV from '../../../../kodeverk';
-import { hentFakta } from '../../../../regler/avklartefakta';
+import { hentFakta, hentFoersteFakta, hentFoersteFaktaVerdi } from '../../../../regler/avklartefakta';
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -39,10 +39,12 @@ class SokkelSkip extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const sokkelEllerSkip = hentFakta(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, _propsLight.vilkar);
-      const sokkelSkipKonklusjon = hentFakta(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, _propsLight.vilkar);
+      const installasjonArbeidsland = hentFakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, _propsLight.avklartefakta);
+      const sokkelEllerSkip = hentFakta(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, _propsLight.avklartefakta);
+      const sokkelSkipKonklusjon = hentFoersteFakta(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, _propsLight.avklartefakta);
+
       return ({
-        harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon),
+        harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon, installasjonArbeidsland),
         sokkelEllerSkip,
         sokkelSkipKonklusjon,
       });
@@ -57,25 +59,27 @@ class SokkelSkip extends Steg {
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
-    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === 'ARBEID_SOKKEL_SKIP');
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP);
 
     if (!enkeltFakta) { return false; }
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   };
 
-  // Hvis SKIP er valgt som vurdering, så skal det ikke legges inn
-  // en begrunnelse.
-  static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon) => {
-    const avklartSokkelEllerSkip = sokkelEllerSkip.length > 0 && sokkelEllerSkip
-      .map(enkelt => {
-        if (enkelt.installasjonsType === KV.Koder.SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
-        return (enkelt.installasjonsType === KV.Koder.SKIP && enkelt.arbeidsland && true);
+  static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon, arbeidsland) => {
+    const avklartSokkelEllerSkip = sokkelEllerSkip.length > 0 &&
+      sokkelEllerSkip.map(enkelt => {
+        if (!arbeidsland.find(land => land.subjektID === enkelt.subjektID)) {
+          return false;
+        }
+        const installasjonsType = hentFoersteFaktaVerdi(enkelt);
+        if (installasjonsType === KV.Koder.SOKKEL) {
+          return enkelt.begrunnelseKoder.length > 0;
+        }
+        return true;
       })
-      .every(enkelt => enkelt === true);
+        .every(enkelt => enkelt === true);
 
-    const avklartArbeidSokkelSkip = sokkelSkipKonklusjon && sokkelSkipKonklusjon !== '';
-
-    return (avklartSokkelEllerSkip && avklartArbeidSokkelSkip);
+    return (avklartSokkelEllerSkip && hentFoersteFaktaVerdi(sokkelSkipKonklusjon));
   };
 }
 

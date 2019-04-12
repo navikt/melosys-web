@@ -182,8 +182,8 @@ const SoknadslandSelector = createSelector(
 const MaritimeArbeidslandSelector = createSelector(
   state => SokkelEllerSkipSelector(state),
   sokkelEllerSkipListe => (sokkelEllerSkipListe
-    .filter(sokkelEllerSkip => sokkelEllerSkip.installasjonsType === KV.Koder.SKIP)
-    .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland))
+    .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland)
+    .filter(arbeidsland => arbeidsland))
 );
 
 const ArbeidslandSelector = createSelector(

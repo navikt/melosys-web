@@ -2,24 +2,24 @@ import StegState from './StegState';
 import * as Utils from '../../../utils';
 
 class Avklartfakta extends StegState {
-  oppdaterfelt = (eksisterendeAvklarteSubjekter, type, nyData) => {
-    const key = nyData.referanse + nyData.subjektID;
+  lagKey = data => (data.referanse + data.subjektID || '');
+
+  oppdaterfelt = (eksisterendeAvklarteSubjekter, nyData) => {
+    const key = this.lagKey(nyData);
     if (!eksisterendeAvklarteSubjekter.has(key)) {
       eksisterendeAvklarteSubjekter.set(key, nyData);
     } else {
       const eksisterendeSubjekt = eksisterendeAvklarteSubjekter.get(key);
-      const fritekst = nyData.begrunnelseFritekst || eksisterendeSubjekt.begrunnelseFritekst;
-      const begrunnelse = nyData.begrunnelseKoder || eksisterendeSubjekt.begrunnelseKoder;
-
       const { referanse, fakta, subjektID } = eksisterendeSubjekt;
       const oppdaterFelt = {
+        referanse,
         fakta,
         subjektID,
-        begrunnelse,
-        fritekst,
-        referanse,
+        begrunnelseKoder: nyData.begrunnelseKoder || eksisterendeSubjekt.begrunnelseKoder,
+        begrunnelseFritekst: nyData.begrunnelseFritekst || eksisterendeSubjekt.begrunnelseFritekst,
       };
-      if (!Utils._isNil(nyData.fakta) && !Utils._isUndefined(nyData.fakta)) {
+
+      if (!Utils._isNil(nyData.fakta)) {
         oppdaterFelt.fakta = nyData.fakta;
       }
       if (!Utils._isNil(nyData.subjektID) && !Utils._isUndefined(nyData.subjektID)) {
@@ -30,18 +30,7 @@ class Avklartfakta extends StegState {
     return eksisterendeAvklarteSubjekter;
   };
 
-  lagreFelt = (stegID, felt, data) => {
-    const { stegStore } = this;
-    let steg = stegStore.get(stegID);
-    if (!steg) {
-      steg = {};
-      steg[felt] = new Map();
-      steg[felt].set(data.referanse + data.subjektID, data);
-    } else {
-      steg[felt] = data;
-    }
-    stegStore.set(stegID, steg);
-  };
+  nyttFelt = () => (new Map());
 
   hent = () => {
     const avklartefakta = {};
