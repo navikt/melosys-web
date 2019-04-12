@@ -20,6 +20,8 @@ import DatoOmrade from '../../../komponenter/datoOmrade/datoOmrade';
 import PdfLenkeListe from '../../pdfLenkeListe';
 import ListevelgerFlervalg from '../../listevelgerFlervalg';
 
+import { konverterTilStegData, lagBegrunnelse } from '../../../regler/vilkar';
+
 import './vurderingArtikkel16.css';
 
 const uuid = require('uuid/v4');
@@ -118,10 +120,15 @@ TidligereMedlemskap.defaultProps = {
 class VurderingArtikkel16 extends Component {
   state = {
     lovvalgFeilmelding: undefined,
-    art16Begrunnelser: [],
     begrunnelserFeilmelding: undefined,
     fritekstFeilmelding: undefined,
   };
+
+  componentDidMount() {
+    const { oppdaterData, tilstand: { art16_1 } } = this.props;
+
+    oppdaterData(konverterTilStegData('art16_1', art16_1));
+  }
 
   componentDidUpdate(prevProps) {
     if (prevProps.tidligeremedlemskap !== this.props.tidligeremedlemskap) {
@@ -153,8 +160,10 @@ class VurderingArtikkel16 extends Component {
     this.props.oppdaterOgLagreBehandlinger().catch(e => Utils.logger.error(e));
   };
 
-  begrunnelserEndringHandler = event => {
-    this.setState({ art16Begrunnelser: event.target.value });
+  begrunnelserEndringHandler = async event => {
+    const { oppdaterData } = this.props;
+
+    await oppdaterData(lagBegrunnelse('art16_1', event.value));
     this.lagreVilkar();
   };
 
@@ -165,7 +174,8 @@ class VurderingArtikkel16 extends Component {
   };
 
   validerBegrunnelser = () => {
-    const valid = this.state.art16Begrunnelser.length !== 0;
+    const { tilstand } = this.props;
+    const valid = tilstand.art16_1.begrunnelseKoder.length !== 0;
     if (!valid) this.setState({ begrunnelserFeilmelding: 'Velg begrunnelser' });
     return valid;
   };
@@ -177,9 +187,11 @@ class VurderingArtikkel16 extends Component {
   };
 
   validerAlt = () => {
+    const { tilstand } = this.props;
+
     const lovvalgValid = this.validerLovvalg();
     const begrunnelserValid = this.validerBegrunnelser();
-    const fritekstValid = this.state.art16Begrunnelser.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
+    const fritekstValid = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
 
     return lovvalgValid && begrunnelserValid && fritekstValid;
   };
@@ -197,6 +209,7 @@ class VurderingArtikkel16 extends Component {
       medlemskap,
       oppsummering,
       redigerbart,
+      tilstand,
     } = this.props;
 
     const {
@@ -211,7 +224,6 @@ class VurderingArtikkel16 extends Component {
       begrunnelserFeilmelding,
       fritekstFeilmelding,
       lovvalgFeilmelding,
-      art16Begrunnelser,
     } = this.state;
 
     const { behandlingID } = oppsummering;
@@ -227,7 +239,9 @@ class VurderingArtikkel16 extends Component {
 
     const fritekstError = fritekstFeilmelding ? { error: fritekstFeilmelding, touched: true } : {};
 
-    const visFritekstfelt = art16Begrunnelser.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
+    const visFritekstfelt = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
+
+    const { art16_1 } = tilstand;
 
     /* eslint-disable max-len */
     return (
@@ -264,8 +278,10 @@ class VurderingArtikkel16 extends Component {
                 disabled={!redigerbart}
                 feil={begrunnelserFeilmelding}
                 muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning}
+                tillatFritekst={false}
                 label="Legg til begrunnelse:"
                 onChange={begrunnelserEndringHandler}
+                defaultElementer={art16_1.begrunnelseKoder}
               />
             </Nav.Column>
           </Nav.Row>
@@ -324,6 +340,8 @@ VurderingArtikkel16.propTypes = {
   tidligeremedlemskap: PT.array.isRequired,
   lagreVilkarHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  tilstand: PT.object.isRequired,
 };
 
 VurderingArtikkel16.defaultProps = {
