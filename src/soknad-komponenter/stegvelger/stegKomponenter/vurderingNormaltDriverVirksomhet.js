@@ -4,6 +4,8 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../skjema';
 
+import ListevelgerFlervalg from '../../listevelgerFlervalg';
+
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import { BOOLSK } from '../../../constants';
@@ -39,11 +41,9 @@ class NormaltDriverVirksomhet extends Component {
             <Nav.Row>
               <Nav.Column xs="12" md="10" lg="8">
                 <Nav.Fieldset legend="Begrunnelse:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.normaltDriverVirksomhetBegrunnelser"
+                  <ListevelgerFlervalg
                     muligeValg={begrunnelser}
                     label="Legg til begrunnelse:"
-                    gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
                   />

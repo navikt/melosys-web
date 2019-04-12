@@ -6,6 +6,8 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
 
+import ListevelgerFlervalg from '../../listevelgerFlervalg';
+
 class VurderingArtikkel12_2 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
    * med de 3 radiovalgene i grensesnittet er at disse ville representert en tri-state ("ja", "nei, men..." og "nei").
@@ -81,7 +83,14 @@ class VurderingArtikkel12_2 extends Component {
     } = this.props;
 
     const { valgtVilkar } = this.state;
-    const { visBegrunnelser12, visBegrunnelser16, harAvklaring } = tilstand;
+
+    const {
+      art12_2,
+      art16_1,
+      visBegrunnelser12,
+      visBegrunnelser16,
+      harAvklaring,
+    } = tilstand;
 
     return (
       <div>
@@ -121,25 +130,23 @@ class VurderingArtikkel12_2 extends Component {
             <Nav.Column xs="12" md="10" lg="8">
               { visBegrunnelser12 && (
                 <Nav.Fieldset legend="Begrunnelse artikkel 12.2:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.art12_2_begrunnelser"
+                  <ListevelgerFlervalg
                     muligeValg={MKV.KTObjects.begrunnelser.art12_2_begrunnelser}
                     label="Legg til begrunnelse for ikke oppfylt:"
-                    gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
+                    defaultElementer={art12_2.begrunnelseKoder}
                   />
                 </Nav.Fieldset>
               )}
               { visBegrunnelser16 && (
                 <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.art16_1_begrunnelser"
+                  <ListevelgerFlervalg
                     muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
                     label="Legg til begrunnelse for avslag:"
-                    gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
+                    defaultElementer={art16_1.begrunnelseKoder}
                   />
                   <Skjema.Textarea
                     disabled={!redigerbart}

@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 
+import ListevelgerFlervalg from '../../listevelgerFlervalg';
 import LandVelger from '../../skjema/landvelger/';
 import { BOOLSK } from '../../../constants';
 
@@ -86,11 +87,9 @@ const VurderingBostedsland = props => {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Begrunnelse:">
-                <Skjema.ListeVelger
-                  feltNavn="vilkar.bosattINorgeBegrunnelser"
+                <ListevelgerFlervalg
                   muligeValg={begrunnelser}
                   label="Legg til begrunnelse:"
-                  gruppe
                   tillatFritekst={false}
                   disabled={!redigerbart}
                 />
