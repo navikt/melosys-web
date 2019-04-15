@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 import PT from 'prop-types';
 import classnames from 'classnames';
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
 
-import ListevelgerFlervalg from '../../listevelgerFlervalg';
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 import LandVelger from '../../skjema/landvelger/';
 import { BOOLSK } from '../../../constants';
 

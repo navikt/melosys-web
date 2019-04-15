@@ -6,7 +6,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
 
-import ListevelgerFlervalg from '../../listevelgerFlervalg';
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 class VurderingArtikkel12_2 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet

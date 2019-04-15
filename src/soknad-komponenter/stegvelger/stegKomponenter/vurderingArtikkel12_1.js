@@ -7,7 +7,7 @@ import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
-import ListevelgerFlervalg from '../../listevelgerFlervalg';
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet

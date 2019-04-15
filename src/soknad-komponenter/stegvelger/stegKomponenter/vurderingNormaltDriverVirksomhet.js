@@ -4,7 +4,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../skjema';
 
-import ListevelgerFlervalg from '../../listevelgerFlervalg';
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 

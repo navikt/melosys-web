@@ -3,9 +3,9 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import Ikon from 'melosys-ikoner-assets';
 
-import * as KV from '../kodeverk';
-import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes';
+import * as KV from '../../kodeverk';
+import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../proptypes';
 
 import './listevelgerFlervalg.css';
 

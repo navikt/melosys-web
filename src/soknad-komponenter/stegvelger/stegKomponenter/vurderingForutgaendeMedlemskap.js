@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
-import ListevelgerFlervalg from '../../listevelgerFlervalg';
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { BOOLSK } from '../../../constants';
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';

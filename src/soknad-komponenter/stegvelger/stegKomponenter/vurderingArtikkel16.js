@@ -18,7 +18,7 @@ import { formSelectors } from '../../../ducks/form';
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
 import DatoOmrade from '../../../komponenter/datoOmrade/datoOmrade';
 import PdfLenkeListe from '../../pdfLenkeListe';
-import ListevelgerFlervalg from '../../listevelgerFlervalg';
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../regler/vilkar';
 
