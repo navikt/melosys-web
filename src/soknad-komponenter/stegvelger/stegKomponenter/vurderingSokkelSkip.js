@@ -1,6 +1,5 @@
 import React from 'react';
 import PT from 'prop-types';
-import { connect } from 'react-redux';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
@@ -10,7 +9,6 @@ import * as MPT from '../../../proptypes';
 import LandVelger from '../../skjema/landvelger';
 
 import './vurderingSokkelSkip.css';
-import { SokkelEllerSkipSelector } from '../../../ducks/form/selectors';
 
 const SokkelSkipEnkelt = props => {
   const {
@@ -18,10 +16,11 @@ const SokkelSkipEnkelt = props => {
     begrunnelser,
     index,
     redigerbart,
-    installasjonsType,
   } = props;
 
-  const { navn } = sokkelSkipInfo;
+  const { navn, sokkelEllerSkip } = sokkelSkipInfo;
+
+  const { installasjonsType } = sokkelEllerSkip || {};
 
   const { SOKKEL, SKIP } = KV.Koder;
 
@@ -29,19 +28,19 @@ const SokkelSkipEnkelt = props => {
     <Nav.Row className="sokkelSkip__liste__rad">
       <Nav.Column xs="4" className="rad__navn">{navn}</Nav.Column>
       <Nav.Column xs="2" className="rad__sokkel">
-        <Skjema.Radio disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={SOKKEL} label="Sokkel" />
-        <Skjema.Radio disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={SKIP} label="Skip" />
+        <Skjema.Radio disabled={!redigerbart} feltNavn={`maritimtArbeid[${index}].sokkelEllerSkip.installasjonsType`} value={SOKKEL} label="Sokkel" />
+        <Skjema.Radio disabled={!redigerbart} feltNavn={`maritimtArbeid[${index}].sokkelEllerSkip.installasjonsType`} value={SKIP} label="Skip" />
       </Nav.Column>
       {
         installasjonsType === SOKKEL &&
         <Nav.Column xs="3" className="rad__begrunnelse">
-          <Skjema.Select disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsTypeBegrunnelse`} label="Begrunnelse hvis sokkel">
+          <Skjema.Select disabled={!redigerbart} feltNavn={`maritimtArbeid[${index}].sokkelEllerSkip.installasjonsTypeBegrunnelse`} label="Begrunnelse hvis sokkel">
             {begrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
           </Skjema.Select>
         </Nav.Column>
       }
       <Nav.Column xs="3" className="rad__land">
-        <LandVelger disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`} multiLand={false} label="Arbeidsland" />
+        <LandVelger disabled={!redigerbart} feltNavn={`maritimtArbeid[${index}].sokkelEllerSkip.arbeidsland`} multiLand={false} label="Arbeidsland" />
       </Nav.Column>
     </Nav.Row>
   );
@@ -52,18 +51,7 @@ SokkelSkipEnkelt.propTypes = {
   sokkelSkipInfo: PT.object.isRequired,
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
-  installasjonsType: PT.string,
 };
-
-SokkelSkipEnkelt.defaultProps = {
-  installasjonsType: '',
-};
-
-const mapStateToProps = (state, ownProps) => ({
-  installasjonsType: SokkelEllerSkipSelector(state)[ownProps.index].installasjonsType,
-});
-
-const SokkelSkipEnkeltConnected = connect(mapStateToProps)(SokkelSkipEnkelt);
 
 const SokkelSkipListe = props => {
   const { alleSokkelSkip, begrunnelser, redigerbart } = props;
@@ -71,7 +59,7 @@ const SokkelSkipListe = props => {
   return (
     <div className="sokkelSkip__liste">
       { alleSokkelSkip.map((enkelt, index) => (
-        <SokkelSkipEnkeltConnected
+        <SokkelSkipEnkelt
           key={JSON.stringify(enkelt)}
           sokkelSkipInfo={enkelt}
           index={index}
