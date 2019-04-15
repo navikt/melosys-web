@@ -1,3 +1,5 @@
+import * as MKV from 'melosys-kodeverk';
+
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingBostedsland from '../../stegKomponenter/vurderingBostedsland';
@@ -5,7 +7,7 @@ import * as KV from '../../../../kodeverk';
 
 import Regler from '../../../../regler';
 import { hentVilkar } from '../../../../regler/vilkar';
-import * as MKV from 'melosys-kodeverk';
+
 
 class Bostedsland extends Steg {
   constructor(propsLight, stegPosisjon) {
