@@ -140,7 +140,7 @@ export default function reducer(state = initialState, action) {
           fartsomradeKode: maritimtArbeid.fartsomradeKode,
           flaggLandkode: maritimtArbeid.flaggLandkode,
           installasjonsLandkode: maritimtArbeid.installasjonsLandkode,
-          territorialfarvann: maritimtArbeid.territorialfarvann ? maritimtArbeid.territorialfarvann : null,
+          territorialfarvann: maritimtArbeid.territorialfarvann || null,
         })),
         soeknadsland: {
           landkoder: dokument.soknadsland,
