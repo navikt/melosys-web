@@ -1,5 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
+import uuid from 'uuid';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
@@ -60,7 +61,7 @@ const SokkelSkipListe = props => {
     <div className="sokkelSkip__liste">
       { alleSokkelSkip.map((enkelt, index) => (
         <SokkelSkipEnkelt
-          key={JSON.stringify(enkelt)}
+          key={uuid()}
           sokkelSkipInfo={enkelt}
           index={index}
           begrunnelser={begrunnelser}
