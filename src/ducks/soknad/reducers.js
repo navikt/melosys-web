@@ -136,7 +136,10 @@ export default function reducer(state = initialState, action) {
         maritimtArbeid: dokument.maritimtArbeid.filter(maritimtArbeid => (
           maritimtArbeid.navn && maritimtArbeid.fartsomradeKode && maritimtArbeid.flaggLandkode && maritimtArbeid.installasjonsLandkode
         )).map(maritimtArbeid => ({
-          ...maritimtArbeid,
+          navn: maritimtArbeid.navn,
+          fartsomradeKode: maritimtArbeid.fartsomradeKode,
+          flaggLandkode: maritimtArbeid.flaggLandkode,
+          installasjonsLandkode: maritimtArbeid.installasjonsLandkode,
           territorialfarvann: maritimtArbeid.territorialfarvann ? maritimtArbeid.territorialfarvann : null,
         })),
         soeknadsland: {
