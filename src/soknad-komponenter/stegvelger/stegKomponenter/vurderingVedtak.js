@@ -8,7 +8,6 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
-import { soknadSelectors } from '../../../ducks/soknad/';
 import { fagsakSelectors } from '../../../ducks/fagsaker/';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
 
@@ -96,7 +95,6 @@ VurderingVedtak.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired,
-  soknadsperiode: MPT.Soknadsperiode.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
@@ -109,7 +107,6 @@ VurderingVedtak.defaultProps = {
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  soknadslande: soknadSelectors.SoknadsperiodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
 });
