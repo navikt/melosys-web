@@ -1,0 +1,1 @@
+export SoknadFeilmelding from './soknadFeilmelding';

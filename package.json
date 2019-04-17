@@ -86,7 +86,8 @@
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "sanitize-html": "^1.20.0",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.2",
+    "yup": "^0.27.0"
   },
   "disabled-homepage": "http://eesi2.no/melosys",
   "scripts": {
