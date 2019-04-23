@@ -59,24 +59,27 @@ const lagAvklartfaktaObjektMedReferanse = (avklarteFakta, referanse, avklartefak
   };
 };
 
-const lagSokkelEllerSkipObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
-  if (!avklarteFakta) { return []; }
-
-  return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
-    const installasjon = maritimtArbeid[index] || {};
+const lagSokkelEllerSkipObjekt = (referanse, avklartefaktaKode, maritimtArbeid) => (
+  maritimtArbeid.reduce((samling, installasjon = {}) => {
     const installasjonsNavn = installasjon.navn || Types.NULL;
-    const begrunnelseKoder = enkeltAvklaring.installasjonsTypeBegrunnelse ? [enkeltAvklaring.installasjonsTypeBegrunnelse] : Types.NULL;
 
-    return enkeltAvklaring.installasjonsType ? [...samling, {
-      ...avklartfaktaMal,
-      avklartefaktaKode,
-      referanse,
-      subjektID: installasjonsNavn,
-      begrunnelseKoder,
-      fakta: [enkeltAvklaring.installasjonsType],
-    }] : [...samling];
-  }, []);
-};
+    const { sokkelEllerSkip } = installasjon;
+    const installasjonsType = sokkelEllerSkip ? sokkelEllerSkip.installasjonsType : Types.NULL;
+    const begrunnelseKoder = sokkelEllerSkip ? [sokkelEllerSkip.installasjonsTypeBegrunnelse] : Types.NULL;
+
+    return installasjonsType ? [
+      ...samling,
+      {
+        ...avklartfaktaMal,
+        avklartefaktaKode,
+        referanse,
+        subjektID: installasjonsNavn,
+        begrunnelseKoder,
+        fakta: [installasjonsType],
+      },
+    ] : [...samling];
+  }, [])
+);
 
 const avklarEllerUtledBostedsland = (bostedsland, bosattINorge) => {
   if (bosattINorge) {
@@ -85,22 +88,23 @@ const avklarEllerUtledBostedsland = (bostedsland, bosattINorge) => {
   return lagAvklartfaktaObjektMedReferanse(bostedsland, 'BOSTEDSLAND', 'BOSTEDSLAND');
 };
 
-const lagFlagglandObjekt = (avklarteFakta, referanse, avklartefaktaKode, maritimtArbeid) => {
-  if (!avklarteFakta) { return []; }
-
-  return avklarteFakta.reduce((samling, enkeltAvklaring, index) => {
-    const installasjon = maritimtArbeid[index] || {};
+const lagFlagglandObjekt = (referanse, avklartefaktaKode, maritimtArbeid) => (
+  maritimtArbeid.reduce((samling, installasjon = {}) => {
     const installasjonsNavn = installasjon.navn || Types.NULL;
 
-    return enkeltAvklaring.installasjonsType ? [...samling, {
+    const { sokkelEllerSkip } = installasjon;
+    const installasjonsType = sokkelEllerSkip ? sokkelEllerSkip.installasjonsType : Types.NULL;
+    const arbeidsland = sokkelEllerSkip ? sokkelEllerSkip.arbeidsland : Types.NULL;
+
+    return installasjonsType ? [...samling, {
       ...avklartfaktaMal,
       avklartefaktaKode,
       referanse,
       subjektID: installasjonsNavn,
-      fakta: [enkeltAvklaring.arbeidsland],
+      fakta: [arbeidsland],
     }] : [...samling];
-  }, []);
-};
+  }, [])
+);
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -119,6 +123,7 @@ export default function reducer(state = initialState, action) {
       return { ...initialState };
     case Types.OPPDATER_AVKLARTEFAKTA: {
       const { dokument } = action;
+
       const avklartefakta = [
         ...dokument.avklartefakta.soknadsland,
         ...dokument.avklartefakta.virksomheter,
@@ -126,8 +131,8 @@ export default function reducer(state = initialState, action) {
         lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitetAntallLand, 'YRKESAKTIVITET_ANTALL_LAND'),
         lagAvklartStateObjekt(dokument.avklartefakta.yrkesaktivitet, 'YRKESAKTIVITET'),
         avklarEllerUtledBostedsland(dokument.avklartefakta.bostedsland, dokument.vilkar.bosattINorge),
-        ...lagSokkelEllerSkipObjekt(dokument.avklartefakta.sokkelEllerSkip, 'SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
-        ...lagFlagglandObjekt(dokument.avklartefakta.sokkelEllerSkip, 'INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),
+        ...lagSokkelEllerSkipObjekt('SOKKEL_ELLER_SKIP', 'SOKKEL_ELLER_SKIP', dokument.maritimtArbeid),
+        ...lagFlagglandObjekt('INSTALLASJON_ARBEIDSLAND', 'ARBEIDSLAND', dokument.maritimtArbeid),
         lagAvklartfaktaObjekt(dokument.avklartefakta.sokkelSkipKonklusjon, 'ARBEID_SOKKEL_SKIP'),
       ].filter(fakta => fakta !== Types.NULL);
 
