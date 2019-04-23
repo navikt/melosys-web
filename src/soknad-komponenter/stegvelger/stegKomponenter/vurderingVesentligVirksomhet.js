@@ -3,7 +3,8 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-import * as Skjema from '../../skjema';
+
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
@@ -68,14 +69,13 @@ class VurderingVesentligVirksomhet extends Component {
             <Nav.Row>
               <Nav.Column xs="12" md="10" lg="8">
                 <Nav.Fieldset legend="Begrunnelse:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.vesentligVirksomhetBegrunnelser"
+                  <ListevelgerFlervalg
                     muligeValg={begrunnelser}
                     disabled={!redigerbart}
                     label="Legg til begrunnelse:"
                     onChange={this.listeVelgerHandler}
-                    gruppe
                     tillatFritekst={false}
+                    defaultElementer={vesentligVirksomhetVilkaar.begrunnelseKoder}
                   />
                 </Nav.Fieldset>
               </Nav.Column>

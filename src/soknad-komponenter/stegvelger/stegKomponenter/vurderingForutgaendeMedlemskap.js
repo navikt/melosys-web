@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-import * as Skjema from '../../skjema';
+
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { BOOLSK } from '../../../constants';
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
@@ -64,14 +66,13 @@ class VurderingForutgaendeMedlemskap extends Component {
             <Nav.Row>
               <Nav.Column xs="12" md="10" lg="8">
                 <Nav.Fieldset legend="Begrunnelse:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.forutgaendeMedlemskapBegrunnelser"
+                  <ListevelgerFlervalg
                     muligeValg={begrunnelser}
                     label="Legg til begrunnelse:"
-                    gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
                     onChange={this.listevalgEndringHandler}
+                    defaultElementer={forutgaendeMedlemskap.begrunnelseKoder}
                   />
                 </Nav.Fieldset>
               </Nav.Column>

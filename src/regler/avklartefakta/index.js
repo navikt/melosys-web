@@ -12,9 +12,9 @@ export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelse, fritekst) =
   });
 
 
-export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelse, fritekst) => {
-  return lagAvklartfakta(felt, subjektID, null, begrunnelse, fritekst);
-};
+export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelse, fritekst) => (
+  lagAvklartfakta(felt, subjektID, null, begrunnelse, fritekst)
+);
 
 
 export const konverterTilRessurs = (felt, avklartfakta) => {
