@@ -14,6 +14,7 @@ import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
 import PdfLenkeListe from '../../pdfLenkeListe';
+import { SoknadFeilmeldinger } from '../../soknadFeilmeldinger';
 
 import './vurderingVedtak.css';
 
@@ -56,6 +57,7 @@ const VurderingVedtak = ({
 
   return (
     <div className="vedtak">
+      <SoknadFeilmeldinger />
       <Nav.Undertittel>Medlemskap i norsk folketrygd {lovvalgsResultat} etter<br />{ KV.objektTilTerm(lovvalgSomKodeTerm) }:</Nav.Undertittel>
       <div>
         <Nav.Row className="vedtak__oppsummering">
