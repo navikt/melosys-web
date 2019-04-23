@@ -27,21 +27,24 @@ const VurderingYrkesaktivitetAntallLand = props => {
   return (
     <div>
       <Nav.Undertittel>Vurdering av antall land</Nav.Undertittel>
-      <Nav.Fieldset disabled={!redigerbart} legend="Hvor mange land skal søker ha yrkesaktivitet i?" onChange={radioEndret}>
+      <Nav.Fieldset disabled={!redigerbart} legend="Hvor mange land skal søker ha yrkesaktivitet i?">
         <Nav.Radio
           name="yrkesaktivitetAntallLand"
           checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
           value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
+          onChange={radioEndret}
           label="Kun Norge" />
         <Nav.Radio
           name="yrkesaktivitetAntallLand"
           checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE}
           value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE}
+          onChange={radioEndret}
           label="Ett land, ikke Norge" />
         <Nav.Radio
           name="yrkesaktivitetAntallLand"
           checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND}
           value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND}
+          onChange={radioEndret}
           label="To eller flere land" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
