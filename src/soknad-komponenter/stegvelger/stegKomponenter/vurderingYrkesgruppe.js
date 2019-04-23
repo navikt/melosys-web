@@ -26,36 +26,41 @@ const VurderingYrkesgruppe = props => {
   return (
     <div>
       <Nav.Undertittel>Vurdering av yrkesgruppe</Nav.Undertittel>
-      <Nav.Fieldset legend="Vurder om søkeren er:" onChange={radioEndret}>
+      <Nav.Fieldset legend="Vurder om søkeren er:">
         <Nav.Radio
           name="yrkesgruppe"
           disabled={!redigerbart}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER}
           value={KV.Koder.VurderingYrkesgruppeTyper.ORDINAER}
+          onChange={radioEndret}
           label="Yrkesaktiv" />
         <Nav.Radio
           name="yrkesgruppe"
           disabled={!redigerbart}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP}
           value={KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP}
+          onChange={radioEndret}
           label="Yrkesaktiv på sokkel eller skip" />
         <Nav.Radio
           name="yrkesgruppe"
           disabled={!redigerbart}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           value={KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
+          onChange={radioEndret}
           label="Yrkesaktiv som flyvende personell" />
         <Nav.Radio
           name="yrkesgruppe"
           disabled={!redigerbart}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV}
           value={KV.Koder.VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV}
+          onChange={radioEndret}
           label="Ikke yrkesaktiv" />
         <Nav.Radio
           name="yrkesgruppe"
           disabled={!redigerbart}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER}
           value={KV.Koder.VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER}
+          onChange={radioEndret}
           label="Kontantytelsesmottaker" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">

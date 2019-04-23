@@ -14,15 +14,6 @@ const initialState = {
   status: STATUS.NOT_STARTED,
 };
 
-const avklartfaktaMal = {
-  referanse: null,
-  avklartefaktaKode: null,
-  fakta: [],
-  subjektID: null,
-  begrunnelseKoder: [],
-  begrunnelseFritekst: null,
-};
-
 const lagAvklartfaktaObjektMedKode = (avklarteFakta, avklartefaktaKode) => {
   if (Utils._isNil(avklarteFakta)) {
     return [];
@@ -39,22 +30,6 @@ const lagAvklartfaktaObjektMedKode = (avklarteFakta, avklartefaktaKode) => {
     }]
   ), []);
 };
-
-
-// En faktisk avklart fakta
-const lagAvklartfaktaObjekt = (avklarteFakta, avklartefaktaKode) => {
-  if (Utils._isNil(avklarteFakta)) {
-    return Types.NULL;
-  }
-  return {
-    ...avklartfaktaMal,
-    avklartefaktaKode,
-    referanse: avklartefaktaKode,
-    subjektID: null,
-    fakta: avklarteFakta,
-  };
-};
-
 
 // Reducer
 export default function reducer(state = initialState, action) {
@@ -79,7 +54,7 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESGRUPPE, null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET_ANTALL_LAND, 'YRKESAKTIVITET_ANTALL_LAND'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET, 'YRKESAKTIVITET'),
-        lagAvklartfaktaObjekt(avklartefakta.bostedsland),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.BOSTEDSLAND, 'BOSTEDSLAND'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.SOKKEL_ELLER_SKIP, 'SOKKEL_ELLER_SKIP'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.INSTALLASJON_ARBEIDSLAND, 'ARBEIDSLAND'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.ARBEID_SOKKEL_SKIP, 'ARBEID_SOKKEL_SKIP'),
