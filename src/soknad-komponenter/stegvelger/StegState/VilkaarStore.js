@@ -21,7 +21,9 @@ class VilkaarStore extends StegState {
     stegStore.forEach(steg => {
       Object.keys(steg).forEach(key => {
         const { oppfylt, begrunnelse, fritekst } = steg[key];
-        vilkaar[key] = oppfylt;
+        if (!Utils._isNil(oppfylt)) {
+          vilkaar[key] = oppfylt;
+        }
 
         if (begrunnelse && begrunnelse.length > 0) {
           vilkaar[`${key}_begrunnelser`] = begrunnelse;
