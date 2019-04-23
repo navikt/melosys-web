@@ -1,4 +1,4 @@
-import { toInteger} from 'lodash';
+import { toInteger } from 'lodash';
 
 export function boolTilNorsk (value) {
   return value ? 'JA' : 'NEI';

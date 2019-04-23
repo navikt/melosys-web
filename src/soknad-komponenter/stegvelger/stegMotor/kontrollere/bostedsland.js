@@ -6,6 +6,8 @@ import VurderingBostedsland from '../../stegKomponenter/vurderingBostedsland';
 
 import Regler from '../../../../regler';
 import { hentVilkar } from '../../../../regler/vilkar';
+import { hentFakta } from '../../../../regler/avklartefakta';
+
 
 class Bostedsland extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -36,24 +38,21 @@ class Bostedsland extends Steg {
     });
     this.beregnRelevantUI = _propsLight => {
       const { skjema = {}, saksopplysninger = {} } = _propsLight;
-      const { bostedsland, yrkesaktivitet } = skjema.avklartefakta;
       const { sakOgBehandling } = saksopplysninger;
       const { eosBarnetrygd = {} } = sakOgBehandling;
 
-      const {
-        avklartefaktaYrkesgruppeType,
-        vilkar,
-      } = skjema;
+      const bostedsland = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, _propsLight.avklartefakta);
+      const yrkesaktivitet = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta);
+      const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, _propsLight.avklartefakta);
 
-      const { bosattINorge, bosattINorgeBegrunnelser } = vilkar;
       const bosattINorgeVilkaar = hentVilkar(MKV.Koder.vilkaar.BOSATT_I_NORGE, _propsLight.vilkar);
+      const { oppfylt: bosattINorge, begrunnelseKoder } = bosattINorgeVilkaar;
 
       const regler = new Regler(skjema, saksopplysninger);
-
       const erYrkesaktiv = (
-        avklartefaktaYrkesgruppeType === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER ||
-        avklartefaktaYrkesgruppeType === KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP ||
-        avklartefaktaYrkesgruppeType === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL
+        yrkesgruppe === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER ||
+        yrkesgruppe === KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP ||
+        yrkesgruppe === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL
       );
 
       let avklaringer;
@@ -96,7 +95,7 @@ class Bostedsland extends Steg {
       }
 
       return {
-        erAvklart: Bostedsland.alleErAvklart(bosattINorge, bosattINorgeBegrunnelser, bostedsland, begrunnelserPaaKrevd),
+        erAvklart: Bostedsland.alleErAvklart(bosattINorge, begrunnelseKoder, bostedsland, begrunnelserPaaKrevd),
         erBosattINorge: bosattINorge,
         bosattINorgeVilkaar,
         harEOSBarnetrygdSak: eosBarnetrygd,

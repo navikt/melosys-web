@@ -7,6 +7,8 @@ import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
+
 class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
    * med de 3 radiovalgene i grensesnittet er at disse ville representert en tri-state ("ja", "nei, men..." og "nei").
@@ -72,7 +74,7 @@ class VurderingArtikkel12_1 extends Component {
     } = this.props;
 
     const {
-      art12_1, anmodningOmUnntak, visBegrunnelser12, visBegrunnelser16, harAvklaring,
+      art12_1, art16_1, anmodningOmUnntak, visBegrunnelser12, visBegrunnelser16, harAvklaring,
     } = tilstand;
 
     return (
@@ -113,29 +115,25 @@ class VurderingArtikkel12_1 extends Component {
             <Nav.Column xs="12" md="10" lg="8">
               { visBegrunnelser12 && (
                 <Nav.Fieldset legend="Begrunnelse artikkel 12.1:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.art12_1_begrunnelser"
-                    id="art12_1"
+                  <ListevelgerFlervalg
                     muligeValg={MKV.KTObjects.begrunnelser.art12_1_begrunnelser}
                     label="Legg til begrunnelse for ikke oppfylt:"
-                    gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
                     onChange={e => this.begrunnelseEndret(e, 'art12_1')}
+                    defaultElementer={art12_1.begrunnelseKoder}
                   />
                 </Nav.Fieldset>
               )}
               { visBegrunnelser16 && (
                 <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.art16_1_begrunnelser"
-                    id="art16_1"
+                  <ListevelgerFlervalg
                     muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
                     label="Legg til begrunnelse for avslag:"
-                    gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
                     onChange={e => this.begrunnelseEndret(e, 'art16_1')}
+                    defaultElementer={art16_1.begrunnelseKoder}
                   />
                   <Skjema.Textarea
                     disabled={!redigerbart}
