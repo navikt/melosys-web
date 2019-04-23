@@ -3,18 +3,23 @@ export const hentFaktaListe = (spesifiktFakta, alleFakta) => alleFakta.filter(en
 export const hentFakta = (spesifiktFakta, alleFakta) => alleFakta.find(enkelt => enkelt.referanse === spesifiktFakta) || {};
 export const hentFaktaVerdi = avklartfakta => (avklartfakta.fakta ? avklartfakta.fakta[0] : null);
 
-export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrunnelseFritekst) =>
-  ({
+export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrunnelseFritekst) => {
+  let begrunnelseListe = [];
+  if (begrunnelseKoder && begrunnelseKoder.length > 0) {
+    begrunnelseListe = [begrunnelseKoder];
+  }
+  return {
     felt,
     type: 'avklartefakta',
     innhold: {
       referanse: felt,
       subjektID,
       fakta: [fakta],
-      begrunnelseKoder: [begrunnelseKoder],
+      begrunnelseKoder: begrunnelseListe,
       begrunnelseFritekst,
     },
-  });
+  };
+};
 
 export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelse, begrunnelseFritekst) => {
   let begrunnelseListe = [];

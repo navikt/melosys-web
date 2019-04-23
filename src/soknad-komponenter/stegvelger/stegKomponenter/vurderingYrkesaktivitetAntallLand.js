@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
 import { hentFaktaVerdi, lagAvklartfakta } from '../../../regler/avklartefakta';
 import { konverterTilStegData } from '../../../regler/vilkar';

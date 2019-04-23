@@ -75,7 +75,7 @@ export default function reducer(state = initialState, action) {
       const { avklartefakta } = action;
       const avklartefaktaUt = [
         ...lagAvklartfaktaObjektMedKode(avklartefakta.SOKNADSLAND, 'SOKNADSLAND'),
-        lagAvklartfaktaObjekt(avklartefakta.virksomheter, 'VIRKSOMHET'),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.VIRKSOMHET, 'VIRKSOMHET'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESGRUPPE, null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET_ANTALL_LAND, 'YRKESAKTIVITET_ANTALL_LAND'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET, 'YRKESAKTIVITET'),
