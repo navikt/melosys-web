@@ -38,7 +38,7 @@ import { vilkarSelectors } from '../../ducks/vilkar/';
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
 import { formSelectors } from '../../ducks/form/';
 import { formatterDatoTilNorsk } from '../../utils/dato';
-
+import { lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
 
 class Saksopplysninger extends Component {
   state = {
@@ -291,6 +291,9 @@ const mapStateToProps = state => ({
     },
     vurderingLovvalg: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
     vurderingBegrunnelser: avklartefaktaSelectors.AvklartefaktaVurderingSelector(state).begrunnelser,
+    lovvalgsperiode: {
+      unntakFraBestemmelse: lovvalgsperioderSelectors.UnntakFraBestemmelseSelector(state),
+    },
   },
 });
 
