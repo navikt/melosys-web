@@ -2,6 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingSokkelSkip from '../../stegKomponenter/vurderingSokkelSkip';
 import * as KV from '../../../../kodeverk';
+import * as Utils from '../../../../utils';
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -38,7 +39,10 @@ class SokkelSkip extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { sokkelEllerSkip = [], sokkelSkipKonklusjon } = _propsLight.skjema.avklartefakta;
+      const { sokkelSkipKonklusjon } = _propsLight.skjema.avklartefakta;
+      const sokkelEllerSkip = _propsLight.skjema.maritimtArbeid.map(maritimtArbeid => (
+        Utils._isEmpty(maritimtArbeid.sokkelEllerSkip) ? {} : maritimtArbeid.sokkelEllerSkip
+      ));
 
       return ({
         harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon),
@@ -60,7 +64,7 @@ class SokkelSkip extends Steg {
 
   // Hvis SKIP er valgt som vurdering, så skal det ikke legges inn
   // en begrunnelse.
-  static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon) => {
+  static alleErAvklart = (sokkelEllerSkip = [], sokkelSkipKonklusjon) => {
     const avklartSokkelEllerSkip = sokkelEllerSkip.length > 0 && sokkelEllerSkip
       .map(enkelt => {
         if (enkelt.installasjonsType === KV.Koder.SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
