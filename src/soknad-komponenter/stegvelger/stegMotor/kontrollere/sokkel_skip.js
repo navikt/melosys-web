@@ -77,8 +77,7 @@ class SokkelSkip extends Steg {
           return enkelt.begrunnelseKoder.length > 0;
         }
         return true;
-      })
-        .every(enkelt => enkelt === true);
+      }).every(enkelt => enkelt === true);
 
     return (avklartSokkelEllerSkip && hentFaktaVerdi(sokkelSkipKonklusjon));
   };
