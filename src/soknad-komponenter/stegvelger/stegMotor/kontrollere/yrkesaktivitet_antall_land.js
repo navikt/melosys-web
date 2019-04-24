@@ -40,7 +40,7 @@ class YrkesaktivitetAntallLand extends Steg {
     this.beregnRelevantUI = _propsLight => {
       const yrkesaktivitetAntallLand = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND, _propsLight.avklartefakta);
       return ({
-        harAvklaring: yrkesaktivitetAntallLand !== null && yrkesaktivitetAntallLand !== undefined,
+        harAvklaring: yrkesaktivitetAntallLand.fakta && yrkesaktivitetAntallLand.fakta.length > 0,
         yrkesaktivitetAntallLand,
       });
     };
