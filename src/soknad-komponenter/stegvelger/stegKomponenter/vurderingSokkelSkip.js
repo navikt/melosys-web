@@ -23,31 +23,45 @@ const SokkelSkipEnkelt = props => {
     begrunnelser,
     index,
     redigerbart,
-    radioEndretHandler,
-    selectEndretHandler,
+    avklartefaktaEndretHandler,
+    avklartefaktaBegrunnelserEndretHandler,
   } = props;
 
   const { navn } = maritimtArbeid;
+
   const { begrunnelseKoder } = avklartefakta;
   const installasjonsType = hentFaktaVerdi(avklartefakta);
-
   const { SOKKEL, SKIP } = KV.Koder;
+
+  const key = `${KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}${navn}`;
+
+  const sokkelSkipEndret = e => (
+    avklartefaktaEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, navn, e.target.value)
+  );
+
+  const begrunnelserEndret = e => (
+    avklartefaktaBegrunnelserEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, navn, e.target.value)
+  );
+
+  const landVelgerEndret = e => (
+    avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, navn, e)
+  );
 
   return (
     <Nav.Row className="sokkelSkip__liste__rad">
       <Nav.Column xs="4" className="rad__navn">{navn}</Nav.Column>
       <Nav.Column xs="2" className="rad__sokkel">
         <Nav.Radio
-          name={KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}
+          name={key}
           disabled={!redigerbart}
-          onChange={e => radioEndretHandler(e, navn)}
+          onChange={sokkelSkipEndret}
           value={SOKKEL}
           checked={installasjonsType === SOKKEL}
           label="Sokkel" />
         <Nav.Radio
-          name={KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}
+          name={key}
           disabled={!redigerbart}
-          onChange={e => radioEndretHandler(e, navn)}
+          onChange={sokkelSkipEndret}
           checked={installasjonsType === SKIP}
           value={SKIP}
           label="Skip" />
@@ -56,11 +70,11 @@ const SokkelSkipEnkelt = props => {
         installasjonsType === SOKKEL &&
         <Nav.Column xs="3" className="rad__begrunnelse">
           <Nav.Select
-            name={KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}
+            name={`${key}_begrunnelser`}
             disabled={!redigerbart}
-            label="Begrunnelse hvis sokkel"
             id="installasjonsTypeBegrunnelser"
-            onChange={e => selectEndretHandler(e, navn)}
+            label="Begrunnelse hvis sokkel"
+            onChange={begrunnelserEndret}
             value={begrunnelseKoder[0]} >
             <option key={null} value={null} />
             {begrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
@@ -71,7 +85,8 @@ const SokkelSkipEnkelt = props => {
         <LandVelger
           feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`}
           disabled={!redigerbart}
-          onChange={e => radioEndretHandler({ target: { name: KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, value: e } }, navn)}
+          id="installasjonsTypeBegrunnelser"
+          onChange={landVelgerEndret}
           multiLand={false}
           label="Arbeidsland" />
       </Nav.Column>
@@ -85,8 +100,8 @@ SokkelSkipEnkelt.propTypes = {
   avklartefakta: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
-  radioEndretHandler: PT.func.isRequired,
-  selectEndretHandler: PT.func.isRequired,
+  avklartefaktaEndretHandler: PT.func.isRequired,
+  avklartefaktaBegrunnelserEndretHandler: PT.func.isRequired,
 };
 
 SokkelSkipEnkelt.defaultProps = {
@@ -95,7 +110,7 @@ SokkelSkipEnkelt.defaultProps = {
 
 const SokkelSkipListe = props => {
   const {
-    avklartefakta, maritimtArbeid, begrunnelser, redigerbart, radioEndretHandler, selectEndretHandler,
+    avklartefakta, maritimtArbeid, begrunnelser, redigerbart, avklartefaktaEndretHandler, avklartefaktaBegrunnelserEndretHandler,
   } = props;
 
   return (
@@ -108,8 +123,8 @@ const SokkelSkipListe = props => {
           index={index}
           begrunnelser={begrunnelser}
           redigerbart={redigerbart}
-          radioEndretHandler={radioEndretHandler}
-          selectEndretHandler={selectEndretHandler}
+          avklartefaktaEndretHandler={avklartefaktaEndretHandler}
+          avklartefaktaBegrunnelserEndretHandler={avklartefaktaBegrunnelserEndretHandler}
         />))
       }
     </div>
@@ -121,8 +136,8 @@ SokkelSkipListe.propTypes = {
   maritimtArbeid: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
-  radioEndretHandler: PT.func.isRequired,
-  selectEndretHandler: PT.func.isRequired,
+  avklartefaktaEndretHandler: PT.func.isRequired,
+  avklartefaktaBegrunnelserEndretHandler: PT.func.isRequired,
 };
 
 SokkelSkipListe.defaultProps = {
@@ -148,22 +163,20 @@ class VurderingSokkelSkip extends React.Component {
     slettAllDataForSteg();
   }
 
-  avklartefaktaEndret = (event, subjektID) => {
+  avklartefaktaEndret = (type, subjektID, verdi) => {
     const { oppdaterData } = this.props;
-    const { value, name } = event.target;
-    oppdaterData(lagAvklartfakta(name, subjektID, value));
+    oppdaterData(lagAvklartfakta(type, subjektID, verdi));
   };
 
-  avklartefaktaBegrunnelseEndret = (event, subjektID) => {
+  avklartefaktaBegrunnelseEndret = (type, subjektID, verdi) => {
     const { oppdaterData } = this.props;
-    const { value, name } = event.target;
-    oppdaterData(lagAvklartefaktaBegrunnelse(name, subjektID, value));
+    oppdaterData(lagAvklartefaktaBegrunnelse(type, subjektID, verdi));
   };
 
   konklusjonEndretHandler = event => {
     const { value } = event.target;
     const { oppdaterData, slettData } = this.props;
-    this.avklartefaktaEndret(event);
+    this.avklartefaktaEndret(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, null, value);
 
     if (value === KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK) {
       oppdaterData(lagVilkaar('art11_3A', true));
@@ -195,8 +208,8 @@ class VurderingSokkelSkip extends React.Component {
           maritimtArbeid={maritimtArbeid}
           begrunnelser={begrunnelser}
           redigerbart={redigerbart}
-          radioEndretHandler={this.avklartefaktaEndret}
-          selectEndretHandler={this.avklartefaktaBegrunnelseEndret} />
+          avklartefaktaEndretHandler={this.avklartefaktaEndret}
+          avklartefaktaBegrunnelserEndretHandler={this.avklartefaktaBegrunnelseEndret} />
         {
           maritimtArbeid.length === 0 && (
             <div className="sokkelSkip__varsel"><Nav.AlertStripe type="advarsel">Det er ikke registrert verken sokkel eller skip.</Nav.AlertStripe></div>
