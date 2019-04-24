@@ -58,10 +58,16 @@ export default function reducer(state = initialState, action) {
       const soknad = {
         ...state.data.soeknadDokument,
         arbeidsinntekt: {
-          ...state.data.soeknadDokument.arbeidsinntekt,
           inntektNorskIPerioden: strengTilInt(dokument.inntektNorskIPerioden),
           inntektUtenlandskIPerioden: strengTilInt(dokument.inntektUtenlandskIPerioden),
           inntektNaeringIPerioden: strengTilInt(dokument.inntektNaeringIPerioden),
+          inntektNaturalytelser: {
+            friBil: dokument.inntektNaturalFribil,
+            friBolig: dokument.inntektNaturalFribolig,
+            friAnnet: dokument.inntektNaturalIAnnet || null,
+          },
+          inntektErInnrapporteringspliktig: dokument.inntektErInnrapporteringspliktig,
+          inntektTrygdeavgiftBlirTrukket: dokument.inntektTrygdeavgiftBlirTrukket,
         },
         arbeidNorge: {
           ...state.data.soeknadDokument.arbeidNorge,
@@ -130,8 +136,11 @@ export default function reducer(state = initialState, action) {
         maritimtArbeid: dokument.maritimtArbeid.filter(maritimtArbeid => (
           maritimtArbeid.navn && maritimtArbeid.fartsomradeKode && maritimtArbeid.flaggLandkode && maritimtArbeid.installasjonsLandkode
         )).map(maritimtArbeid => ({
-          ...maritimtArbeid,
-          territorialfarvann: maritimtArbeid.territorialfarvann ? maritimtArbeid.territorialfarvann : null,
+          navn: maritimtArbeid.navn,
+          fartsomradeKode: maritimtArbeid.fartsomradeKode,
+          flaggLandkode: maritimtArbeid.flaggLandkode,
+          installasjonsLandkode: maritimtArbeid.installasjonsLandkode,
+          territorialfarvann: maritimtArbeid.territorialfarvann || null,
         })),
         soeknadsland: {
           landkoder: dokument.soknadsland,
