@@ -49,7 +49,7 @@ export default function reducer(state = initialState, action) {
     case Types.OPPDATER_AVKLARTEFAKTA: {
       const { avklartefakta } = action;
       const avklartefaktaUt = [
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.SOKNADSLAND, 'SOKNADSLAND'),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.SOKNADSLAND, null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.VIRKSOMHET, 'VIRKSOMHET'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESGRUPPE, null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET_ANTALL_LAND, 'YRKESAKTIVITET_ANTALL_LAND'),
