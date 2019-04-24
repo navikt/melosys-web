@@ -5,9 +5,10 @@ import { formSelectors } from '../../ducks/form';
 
 import * as Nav from '../../utils/navFrontend';
 
+import './soknadFeilmeldinger.css';
 
 const Feilmelding = props => (
-  <Nav.AlertStripe type="advarsel" >{props.feilmelding}</Nav.AlertStripe>
+  <Nav.AlertStripe className="feilmelding" type="advarsel" >{props.feilmelding}</Nav.AlertStripe>
 );
 
 Feilmelding.propTypes = {

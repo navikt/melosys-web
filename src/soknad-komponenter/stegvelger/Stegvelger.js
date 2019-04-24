@@ -5,6 +5,7 @@ import { change } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import TrackVisibility from 'react-on-screen';
 
 import * as MPT from '../../proptypes/';
 import * as API from '../../services/api';
@@ -21,6 +22,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../duc
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
+import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 
 import './stegvelger.css';
 
@@ -36,6 +38,7 @@ class Stegvelger extends Component {
     this.props.hentVilkar(bid);
     this.props.hentAvklartefakta(bid);
     this.props.hentLovvalgsperioder(bid);
+    this.props.hentPerioder(bid);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -200,12 +203,17 @@ class Stegvelger extends Component {
 
   render() {
     return (
-      <div className="stegvelger panelSeksjon">
-        <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.tilSteg} />
-        {
-          this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
-        }
-      </div>
+      <TrackVisibility partialVisibility>
+        {({ isVisible }) => (
+          <div className="stegvelger panelSeksjon">
+            <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.tilSteg} />
+            {
+              this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
+            }
+            { isVisible && <SoknadFeilmeldinger /> }
+          </div>
+        )}
+      </TrackVisibility>
     );
   }
 }
@@ -242,6 +250,7 @@ Stegvelger.propTypes = {
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   lagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
+  hentPerioder: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -282,6 +291,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
+  hentPerioder: behandlingID => dispatch(behandlingerOperations.hentPerioder(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
