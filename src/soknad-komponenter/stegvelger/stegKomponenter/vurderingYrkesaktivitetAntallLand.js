@@ -3,8 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
-import { hentFaktaVerdi, lagAvklartfakta } from '../../../regler/avklartefakta';
-import { konverterTilStegData } from '../../../regler/vilkar';
+import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../regler/avklartefakta';
 
 const VurderingYrkesaktivitetAntallLand = props => {
   const {
@@ -13,14 +12,14 @@ const VurderingYrkesaktivitetAntallLand = props => {
   const { harAvklaring, yrkesaktivitetAntallLand } = tilstand;
 
   useEffect(() => {
-    oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, yrkesaktivitetAntallLand));
+    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND, yrkesaktivitetAntallLand));
     return function cleanup() {
       slettAllDataForSteg();
     };
   }, []);
 
   const radioEndret = event => {
-    oppdaterData(lagAvklartfakta(KV.Koder.YRKESAKTIVITET_ANTALL_LAND, null, event.target.value));
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND, null, event.target.value));
   };
 
   const fakta = hentFaktaVerdi(yrkesaktivitetAntallLand);
