@@ -28,6 +28,7 @@ class Inngang extends Steg {
       alleLandkoder: props.landkoder,
       avklartefakta: props.avklartefakta,
       redigerbart: props.redigerbart,
+      erSoknadValid: props.erSoknadValid,
     });
     this.beregnRelevantUI = _propsLight => {
       const { soknadsland } = _propsLight.skjema.avklartefakta;

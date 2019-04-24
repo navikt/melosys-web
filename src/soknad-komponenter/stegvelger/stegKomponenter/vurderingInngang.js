@@ -10,7 +10,7 @@ import SoknadslandListe from './inngang/soknadslandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta, tilstand, redigerbart,
+    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta, tilstand, redigerbart, erSoknadValid,
   } = props;
   const { vurdering } = inngangsvilkar;
   const soknadslandBegrunnelser = begrunnelser.opphold;
@@ -36,7 +36,7 @@ const VurderingInngang = props => {
         redigerbart={redigerbart}
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Start behandling</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring && erSoknadValid)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Start behandling</Nav.Knapp>
       </div>
     </div>
   );
@@ -52,6 +52,7 @@ VurderingInngang.propTypes = {
     vurdering: MPT.Kodeverk,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
+  erSoknadValid: PT.bool.isRequired,
 };
 
 export default VurderingInngang;
