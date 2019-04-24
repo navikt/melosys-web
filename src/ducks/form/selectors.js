@@ -78,6 +78,6 @@ export const SokkelEllerSkipSelector = createSelector(
 );
 
 export const SoknadErrorsSelector = createSelector(
-  state => SoknadenFormSelector(state).syncErrors || [],
+  state => SoknadenFormSelector(state).syncErrors || {},
   errors => errors
 );

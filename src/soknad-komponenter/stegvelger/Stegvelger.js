@@ -27,7 +27,12 @@ import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import './stegvelger.css';
 
 class Stegvelger extends Component {
-  state = { aktivtStegNummer: 0, aktuelleSteg: [], didUpdateAfterLastStep: false };
+  state = {
+    aktivtStegNummer: 0,
+    aktuelleSteg: [],
+    didUpdateAfterLastStep: false,
+    visSoknadFeilmeldinger: false,
+  };
 
   componentWillMount() {
     const { snr } = this.props.match.params;
@@ -60,8 +65,17 @@ class Stegvelger extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
-    this.tilSteg(this.beregnNesteSteg());
+    if (Utils._isEmpty(this.props.soknadFeilmeldinger)) {
+      this.tilSteg(this.beregnNesteSteg());
+      this.gjemSoknadFeilmeldinger();
+    } else {
+      this.visSoknadFeilmeldinger();
+    }
   };
+
+  gjemSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: false });
+
+  visSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: true });
 
   fatteVedtakHandler = async behandlingsresultattype => {
     const bid = this.props.oppsummering.behandlingID;
@@ -134,7 +148,6 @@ class Stegvelger extends Component {
       valgteVirksomheter: props.valgteVirksomheter,
       vilkar: props.vilkar,
       redigerbart: props.redigerbart,
-      erSoknadValid: props.soknadFeilmeldinger.length === 0,
     };
 
     const stegMotor = new StegMotor(propsLight);
@@ -203,6 +216,8 @@ class Stegvelger extends Component {
   }
 
   render() {
+    const { visSoknadFeilmeldinger } = this.state;
+
     return (
       <TrackVisibility partialVisibility>
         {({ isVisible }) => (
@@ -211,7 +226,7 @@ class Stegvelger extends Component {
             {
               this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
             }
-            { isVisible && <SoknadFeilmeldinger /> }
+            { isVisible && visSoknadFeilmeldinger && <SoknadFeilmeldinger />}
           </div>
         )}
       </TrackVisibility>
@@ -252,7 +267,7 @@ Stegvelger.propTypes = {
   lagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   hentPerioder: PT.func.isRequired,
-  soknadFeilmeldinger: PT.array.isRequired,
+  soknadFeilmeldinger: PT.object.isRequired,
 };
 
 Stegvelger.defaultProps = {
