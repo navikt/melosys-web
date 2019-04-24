@@ -13,6 +13,7 @@ import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 
 import * as MPT from '../../../proptypes';
+import * as API from '../../../services/api';
 
 import './vurderingEndrePeriode.css';
 import { soknadOperations } from '../../../ducks/soknad';
@@ -24,8 +25,17 @@ export class VurderingEndrePeriode extends React.Component {
     begrunnelsekode: '',
     begrunnelseFeilmelding: undefined,
     fritekst: null,
+    opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
   };
 
+  async componentDidMount() {
+    await this.hentOpprinneligPeriode(4);
+  }
+
+  hentOpprinneligPeriode = async behandlingID => {
+    const opprinneligLovvalgsperiode = await API.OpprinneligLovvalgsperiode.hent(behandlingID);
+    this.setState(opprinneligLovvalgsperiode);
+  };
   vedTomDatoEndring = event => {
     this.setState({ nyTomDato: event.target.value, nyTomDatoFeilmelding: undefined });
   };
@@ -36,6 +46,8 @@ export class VurderingEndrePeriode extends React.Component {
       const { nyTomDato } = this.state;
 
       this.props.endreDatoOgSendLovvalgsperioderHandler(fomDato, Utils.dato.formatterDatoTilISO(nyTomDato));
+    } else {
+      this.validerPeriode();
     }
   };
 
@@ -59,8 +71,9 @@ export class VurderingEndrePeriode extends React.Component {
 
   erPeriodeGyldig = () => {
     const { nyTomDato } = this.state;
-    const { fomDato, tomDato } = this.props.lovvalgsPeriode;
-    return Utils.dato.erIPeriode(fomDato, tomDato, Utils.dato.formatterDatoTilISO(nyTomDato));
+    const { fom, tom } = this.state.opprinneligLovvalgsperiode;
+    const nyTomDatoISO = Utils.dato.formatterDatoTilISO(nyTomDato);
+    return Utils.dato.erIPeriode(fom, tom, nyTomDatoISO);
   };
 
   validerPeriode = () => {
@@ -93,7 +106,7 @@ export class VurderingEndrePeriode extends React.Component {
   vedKlikkPdf = async () => this.validerAlt();
 
   render() {
-    const { oppsummering, lovvalgsPeriode: { fomDato, tomDato } } = this.props;
+    const { oppsummering, lovvalgsPeriode: { fomDato } } = this.props;
 
     const {
       vedTomDatoEndring,
@@ -109,6 +122,7 @@ export class VurderingEndrePeriode extends React.Component {
       nyTomDatoFeilmelding,
       begrunnelseFeilmelding,
       fritekst,
+      opprinneligLovvalgsperiode: { fom, tom },
     } = this.state;
 
     const dokumenter = [
@@ -135,7 +149,9 @@ export class VurderingEndrePeriode extends React.Component {
     const { behandlingID } = oppsummering;
 
     const formattertFomDato = Utils.dato.formatterDatoTilNorsk(fomDato);
-    const formattertTomDato = Utils.dato.formatterDatoTilNorsk(tomDato);
+
+    const formattertOpprinneligFom = Utils.dato.formatterDatoTilNorsk(fom);
+    const formattertOpprinneligTom = Utils.dato.formatterDatoTilNorsk(tom);
 
     return (
       <div className="vurderingEndrePeriode">
@@ -143,10 +159,10 @@ export class VurderingEndrePeriode extends React.Component {
         <Nav.Element className="mindreTittel">Opprinnelig lovvalgsperiode</Nav.Element>
         <Nav.Row>
           <Nav.Column xs="3">
-            <Nav.Normaltekst>Fra {formattertFomDato}</Nav.Normaltekst>
+            <Nav.Normaltekst>Fra {formattertOpprinneligFom}</Nav.Normaltekst>
           </Nav.Column>
           <Nav.Column xs="3">
-            <Nav.Normaltekst>Til {formattertTomDato}</Nav.Normaltekst>
+            <Nav.Normaltekst>Til {formattertOpprinneligTom}</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <Nav.Element className="mindreTittel">Ny lovvalgsperiode</Nav.Element>
