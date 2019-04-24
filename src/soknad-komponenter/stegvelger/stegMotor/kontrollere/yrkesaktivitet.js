@@ -34,7 +34,7 @@ class Yrkesaktivitet extends Steg {
       const yrkesaktivitet = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta);
 
       return ({
-        harAvklaring: yrkesaktivitet !== null && yrkesaktivitet !== undefined,
+        harAvklaring: yrkesaktivitet.fakta && yrkesaktivitet.fakta.length > 0,
         yrkesaktivitet,
       });
     };

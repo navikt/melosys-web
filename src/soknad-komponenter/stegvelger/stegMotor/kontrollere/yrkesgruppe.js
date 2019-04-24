@@ -34,7 +34,7 @@ class Yrkesgruppe extends Steg {
     this.beregnRelevantUI = _propsLight => {
       const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, _propsLight.avklartefakta);
       return ({
-        harAvklaring: yrkesgruppe !== null && yrkesgruppe !== undefined,
+        harAvklaring: yrkesgruppe.fakta && yrkesgruppe.fakta.length > 0,
         yrkesgruppe,
       });
     };
