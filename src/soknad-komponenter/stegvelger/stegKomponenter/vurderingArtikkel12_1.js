@@ -3,7 +3,6 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
 import * as MPT from './../../../proptypes';
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
@@ -12,11 +11,6 @@ import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 class VurderingArtikkel12_1 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
    * med de 3 radiovalgene i grensesnittet er at disse ville representert en tri-state ("ja", "nei, men..." og "nei").
-   * Siden Redux Form ikke støtter at man setter flere verdier til forskjellige felter må vi bruke
-   * ikke-knyttede NAV-komponenter og håndtere Redux Form-oppdateringen manuelt via funksjonen 'settSkjemaVerdi'
-   * som vi får fra stegvelger-parenten.
-   *
-   * Dette er årsaken til at denne komponenten avviker fra de andre og ikke benytter NAV-Skjema-komponentene direkte.
    */
   constructor() {
     super();
@@ -26,19 +20,14 @@ class VurderingArtikkel12_1 extends Component {
   }
 
   componentDidMount() {
-    const { oppdaterData, settSkjemaVerdi, tilstand } = this.props;
+    const { oppdaterData, tilstand } = this.props;
     const { art12_1, art16_1 } = tilstand;
     oppdaterData(konverterTilStegData('art12_1', art12_1));
     oppdaterData(konverterTilStegData('art16_1', art16_1));
-
-    settSkjemaVerdi('vilkar.art12_1_begrunnelser', art12_1.begrunnelseKoder || []);
-    settSkjemaVerdi('vilkar.art16_1_begrunnelser', art16_1.begrunnelseKoder || []);
-    settSkjemaVerdi('vilkar.art16_1_begrunnelser_fritekst', art16_1.begrunnelseFritekst || '');
   }
 
   componentWillUnmount() {
-    const { slettAllDataForSteg } = this.props;
-    slettAllDataForSteg();
+    this.props.slettAllDataForSteg();
   }
 
   vilkaarEndret = event => {
@@ -74,8 +63,12 @@ class VurderingArtikkel12_1 extends Component {
     } = this.props;
 
     const {
-      art12_1, art16_1, anmodningOmUnntak, visBegrunnelser12, visBegrunnelser16, harAvklaring,
+      art12_1, art16_1, art16_1_fritekst, visBegrunnelser12, visBegrunnelser16, harAvklaring,
     } = tilstand;
+
+    const innvilgelse = art12_1.oppfylt;
+    const anmodningOmUnntak = art12_1.oppfylt === false && art16_1.oppfylt === true;
+    const avslag = art12_1.oppfylt === false && art16_1.oppfylt === false;
 
     return (
       <div>
@@ -88,7 +81,7 @@ class VurderingArtikkel12_1 extends Component {
                   name="artikkel12"
                   onChange={this.vilkaarEndret}
                   value={this.ART12_1}
-                  checked={art12_1.oppfylt === true}
+                  checked={innvilgelse === true}
                   label="Ja"
                   disabled={!redigerbart}
                 />
@@ -104,7 +97,7 @@ class VurderingArtikkel12_1 extends Component {
                   name="artikkel12"
                   onChange={this.vilkaarEndret}
                   value={this.AVSLAG}
-                  checked={art12_1.oppfylt === false && !anmodningOmUnntak}
+                  checked={avslag === true}
                   label="Nei, jeg vil avslå søknaden etter artikkel 12.1 og 16.1"
                   disabled={!redigerbart}
                 />
@@ -119,9 +112,9 @@ class VurderingArtikkel12_1 extends Component {
                     muligeValg={MKV.KTObjects.begrunnelser.art12_1_begrunnelser}
                     label="Legg til begrunnelse for ikke oppfylt:"
                     tillatFritekst={false}
-                    disabled={!redigerbart}
                     onChange={e => this.begrunnelseEndret(e, 'art12_1')}
                     defaultElementer={art12_1.begrunnelseKoder}
+                    disabled={!redigerbart}
                   />
                 </Nav.Fieldset>
               )}
@@ -131,18 +124,19 @@ class VurderingArtikkel12_1 extends Component {
                     muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
                     label="Legg til begrunnelse for avslag:"
                     tillatFritekst={false}
-                    disabled={!redigerbart}
                     onChange={e => this.begrunnelseEndret(e, 'art16_1')}
                     defaultElementer={art16_1.begrunnelseKoder}
-                  />
-                  <Skjema.Textarea
                     disabled={!redigerbart}
+                  />
+                  <Nav.Textarea
                     id="art16_1"
                     feltNavn="vilkar.art16_1_begrunnelser_fritekst"
                     label="Begrunnelse for avslag (fritekst):"
                     maxLength={255}
                     bredde="fullbredde"
-                    onBlur={this.fritekstEndret}
+                    value={art16_1_fritekst}
+                    onChange={this.fritekstEndret}
+                    disabled={!redigerbart}
                   />
                 </Nav.Fieldset>
               )}
@@ -161,7 +155,6 @@ VurderingArtikkel12_1.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
-  settSkjemaVerdi: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   slettAllDataForSteg: PT.func.isRequired,

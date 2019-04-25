@@ -45,24 +45,21 @@ class Artikkel12_1 extends Steg {
       const art12_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_1, _propsLight.vilkar);
       const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar);
 
-      const harAvklaring = (art12_1 !== null && art12_1 !== undefined) || (art16_1 !== null && art16_1 !== undefined);
+      const harAvklaring = art12_1.oppfylt != null || art16_1.oppfylt != null;
       const manglerBegrunnelse12 = art12_1.oppfylt === false && art12_1.begrunnelseKoder.length === 0;
       const manglerBegrunnelse16 = art16_1.oppfylt === false && art16_1.begrunnelseKoder.length === 0 && art16_1.begrunnelseFritekst !== null;
 
-      const anmodningOmUnntak = art12_1.oppfylt === false && art16_1.oppfylt === true;
-
       return {
         harAvklaring: harAvklaring && !manglerBegrunnelse12 && !manglerBegrunnelse16,
-        anmodningOmUnntak,
         visBegrunnelser12: art12_1.oppfylt === false,
         visBegrunnelser16: art16_1.oppfylt === false,
         art12_1,
         art16_1,
+        art16_1_fritekst: art16_1.begrunnelseFritekst || '',
       };
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
-      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
       slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (type, felt) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, type, felt),

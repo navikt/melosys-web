@@ -11,10 +11,9 @@ import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regle
 
 class VurderingForutgaendeMedlemskap extends Component {
   componentDidMount() {
-    const { oppdaterData, settSkjemaVerdi, tilstand } = this.props;
+    const { oppdaterData, tilstand } = this.props;
     const { forutgaendeMedlemskap } = tilstand;
     oppdaterData(konverterTilStegData('forutgaendeMedlemskap', forutgaendeMedlemskap));
-    settSkjemaVerdi('vilkar.forutgaendeMedlemskapBegrunnelser', forutgaendeMedlemskap.begrunnelseKoder || []);
   }
 
   componentWillUnmount() {
@@ -93,7 +92,6 @@ VurderingForutgaendeMedlemskap.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
-  settSkjemaVerdi: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
