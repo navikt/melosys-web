@@ -65,13 +65,10 @@ class Stegvelger extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
-    if (Utils._isEmpty(this.props.soknadFeilmeldinger)) {
-      this.tilSteg(this.beregnNesteSteg());
-      this.gjemSoknadFeilmeldinger();
-    } else {
-      this.visSoknadFeilmeldinger();
-    }
+    this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
   };
+
+  harSoknadIngenFeilmeldinger = () => Utils._isEmpty(this.props.soknadFeilmeldinger);
 
   gjemSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: false });
 
@@ -163,6 +160,15 @@ class Stegvelger extends Component {
     return aktuelleSteg;
   };
 
+  validerSoknadOgGaTilSteg = nyttStegNummer => {
+    if (this.harSoknadIngenFeilmeldinger()) {
+      this.tilSteg(nyttStegNummer);
+      this.gjemSoknadFeilmeldinger();
+    } else {
+      this.visSoknadFeilmeldinger();
+    }
+  };
+
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
    * @param nyttStegNummer Number Steget som det skal byttes til.
@@ -222,7 +228,7 @@ class Stegvelger extends Component {
       <TrackVisibility partialVisibility>
         {({ isVisible }) => (
           <div className="stegvelger panelSeksjon">
-            <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.tilSteg} />
+            <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
             {
               this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
             }
