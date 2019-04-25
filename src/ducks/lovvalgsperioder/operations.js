@@ -199,9 +199,14 @@ export function send(behandlingID, body) {
 
 export function oppdaterLovvalgsperioderState() {
   return (dispatch, getState) => {
-    const valgtLovvalg = finnValgteVilkar(vilkarSelectors.valgteLovvalgsVilkar(getState()));
-    const lovvalgsPerioder = byggLovvalgsPerioder(valgtLovvalg, getState());
-    (dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder)));
+    const alleLovvalgsvilkar = vilkarSelectors.valgteLovvalgsVilkar(getState());
+    if (alleLovvalgsvilkar.length > 0) {
+      const valgtLovvalg = finnValgteVilkar(alleLovvalgsvilkar);
+      const lovvalgsPerioder = byggLovvalgsPerioder(valgtLovvalg, getState());
+      dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
+    } else {
+      dispatch(Actions.resetLovvalgsperioderState());
+    }
   };
 }
 
