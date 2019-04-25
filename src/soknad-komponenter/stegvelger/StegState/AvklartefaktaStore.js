@@ -11,7 +11,7 @@ class Avklartfakta extends StegState {
     } else {
       const eksisterendeSubjekt = eksisterendeAvklarteSubjekter.get(key);
       const { referanse, fakta, subjektID } = eksisterendeSubjekt;
-      const oppdaterFelt = {
+      const oppdatertFelt = {
         referanse,
         fakta,
         subjektID,
@@ -20,12 +20,12 @@ class Avklartfakta extends StegState {
       };
 
       if (!Utils._isNil(nyData.fakta)) {
-        oppdaterFelt.fakta = nyData.fakta;
+        oppdatertFelt.fakta = nyData.fakta;
       }
       if (!Utils._isNil(nyData.subjektID) && !Utils._isUndefined(nyData.subjektID)) {
-        oppdaterFelt.subjektID = nyData.subjektID;
+        oppdatertFelt.subjektID = nyData.subjektID;
       }
-      eksisterendeAvklarteSubjekter.set(key, oppdaterFelt);
+      eksisterendeAvklarteSubjekter.set(key, oppdatertFelt);
     }
     return eksisterendeAvklarteSubjekter;
   };
