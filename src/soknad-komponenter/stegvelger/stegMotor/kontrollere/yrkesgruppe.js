@@ -2,6 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesgruppe from '../../stegKomponenter/vurderingYrkesgruppe';
 import * as KV from '../../../../kodeverk';
+import * as Utils from '../../../../utils';
 
 class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -33,7 +34,7 @@ class Yrkesgruppe extends Steg {
     this.beregnRelevantUI = _propsLight => {
       const { yrkesgruppe } = _propsLight.skjema.avklartefakta;
       return ({
-        harAvklaring: yrkesgruppe !== null && yrkesgruppe !== undefined,
+        harAvklaring: !Utils._isNil(yrkesgruppe),
       });
     };
     this.handlers = {
