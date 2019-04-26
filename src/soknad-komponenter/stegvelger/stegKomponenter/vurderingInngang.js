@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
 
@@ -10,8 +10,13 @@ import SoknadslandListe from './inngang/soknadslandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta, tilstand, redigerbart,
+    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
   } = props;
+
+  useEffect(() => function cleanup() {
+    slettAllDataForSteg();
+  }, []);
+
   const { vurdering } = inngangsvilkar;
   const soknadslandBegrunnelser = begrunnelser.opphold;
   const { harAvklaring } = tilstand;
@@ -34,6 +39,7 @@ const VurderingInngang = props => {
         soknadslandBegrunnelser={soknadslandBegrunnelser}
         alleLandkoder={alleLandkoder}
         redigerbart={redigerbart}
+        oppdaterData={oppdaterData}
       />
       <div className="fane__knapplinje">
         <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Start behandling</Nav.Knapp>
@@ -52,6 +58,8 @@ VurderingInngang.propTypes = {
     vurdering: MPT.Kodeverk,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
 };
 
 export default VurderingInngang;

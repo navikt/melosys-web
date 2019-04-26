@@ -3,7 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitetAntallLand from '../../stegKomponenter/vurderingYrkesaktivitetAntallLand';
 import * as KV from '../../../../kodeverk';
 import Yrkesgruppe from '../../stegMotor/kontrollere/yrkesgruppe';
-import * as Utils from '../../../../utils';
+import { hentFakta } from '../../../../regler/avklartefakta';
 
 class YrkesaktivitetAntallLand extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -38,13 +38,16 @@ class YrkesaktivitetAntallLand extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { yrkesaktivitetAntallLand } = _propsLight.skjema.avklartefakta;
+      const yrkesaktivitetAntallLand = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND, _propsLight.avklartefakta);
       return ({
-        harAvklaring: !Utils._isNil(yrkesaktivitetAntallLand),
+        harAvklaring: yrkesaktivitetAntallLand.fakta && yrkesaktivitetAntallLand.fakta.length > 0,
+        yrkesaktivitetAntallLand,
       });
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
     };
     this.status = FANE_STATUS.OK;
   }

@@ -17,12 +17,14 @@ export const lagVilkaar = (felt, verdi, begrunnelse, fritekst) => {
   if (oppfylt === true) {
     return {
       felt,
+      oppdaterRedux: true,
       type: 'vilkaar',
       innhold: { oppfylt, begrunnelse: [], fritekst: null },
     };
   }
   return {
     felt,
+    oppdaterRedux: true,
     type: 'vilkaar',
     innhold: { oppfylt, begrunnelse, fritekst },
   };
@@ -34,5 +36,9 @@ export const lagBegrunnelse = (felt, begrunnelse, fritekst) => (
 
 export const konverterTilStegData = (felt, vilkaar) => {
   const { oppfylt, begrunnelseKoder, begrunnelseFritekst } = vilkaar;
-  return lagVilkaar(felt, oppfylt, begrunnelseKoder, begrunnelseFritekst);
+  return {
+    felt,
+    type: 'vilkaar',
+    innhold: { oppfylt, begrunnelse: begrunnelseKoder, fritekst: begrunnelseFritekst },
+  };
 };

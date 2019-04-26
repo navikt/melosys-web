@@ -126,7 +126,6 @@ class VurderingArtikkel16 extends Component {
 
   componentDidMount() {
     const { oppdaterData, tilstand: { art16_1 } } = this.props;
-
     oppdaterData(konverterTilStegData('art16_1', art16_1));
   }
 
@@ -134,6 +133,10 @@ class VurderingArtikkel16 extends Component {
     if (prevProps.tidligeremedlemskap !== this.props.tidligeremedlemskap) {
       this.lagreBehandlinger();
     }
+  }
+
+  componentWillUnmount() {
+    this.props.slettAllDataForSteg();
   }
 
   lagreBehandlingerOgFatteVedtak = async behandlingsresultattype => {
@@ -341,6 +344,7 @@ VurderingArtikkel16.propTypes = {
   lagreVilkarHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
   tilstand: PT.object.isRequired,
 };
 

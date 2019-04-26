@@ -10,6 +10,8 @@ import { BOOLSK } from '../../../constants';
 import './vurderingBostedsland.css';
 import * as MPT from '../../../proptypes';
 import { konverterTilStegData, lagVilkaar } from '../../../regler/vilkar';
+import { lagAvklartfakta } from '../../../regler/avklartefakta';
+import * as KV from '../../../kodeverk';
 
 const uuid = require('uuid/v4');
 
@@ -59,12 +61,16 @@ AvklaringsListe.propTypes = {
  */
 const VurderingBostedsland = props => {
   const {
-    bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData,
+    bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData, slettAllDataForSteg,
   } = props;
 
   useEffect(() => {
     const { bosattINorgeVilkaar } = tilstand;
     oppdaterData(konverterTilStegData('bosattINorge', bosattINorgeVilkaar));
+
+    return function cleanup() {
+      slettAllDataForSteg();
+    };
   }, []);
 
   const {
@@ -75,6 +81,11 @@ const VurderingBostedsland = props => {
 
   const radioEndringHandler = event => {
     oppdaterData(lagVilkaar('bosattINorge', event.target.value));
+    slettData('avklartefakta', KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
+  };
+
+  const landEndretHandler = landKode => {
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, landKode));
   };
 
   return (
@@ -103,7 +114,13 @@ const VurderingBostedsland = props => {
                 label="Annet"
               />
               {!erBosattINorge &&
-                <LandVelger disabled={!redigerbart} label="Velg land:" feltNavn="avklartefakta.bostedsland" multiland={false} />
+                <LandVelger
+                  disabled={!redigerbart}
+                  label="Velg land:"
+                  feltNavn="vurderingBostedsland.bostedsland"
+                  multiland={false}
+                  onChange={landEndretHandler}
+                />
               }
             </Nav.Fieldset>
           </Nav.Column>
@@ -137,6 +154,7 @@ VurderingBostedsland.propTypes = {
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
   slettAllDataForSteg: PT.func.isRequired,
 };
 

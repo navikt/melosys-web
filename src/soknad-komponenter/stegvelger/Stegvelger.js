@@ -46,6 +46,7 @@ class Stegvelger extends Component {
     this.props.hentVilkar(bid);
     this.props.hentAvklartefakta(bid);
     this.props.hentLovvalgsperioder(bid);
+    this.props.hentPerioder(bid);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -79,12 +80,17 @@ class Stegvelger extends Component {
     this.publiserStegdataTilRedux();
   };
 
-  oppdaterStegData = (stegID, { felt, type, innhold }) => {
+  oppdaterStegData = (stegID, data) => {
+    if (!data) return;
+
+    const { felt, type, innhold } = data;
     const { stegStores } = this.state;
     stegStores[type].oppdaterStegData(stegID, { felt, type, innhold });
     this.setState(stegStores);
 
-    this.publiserStegdataTilRedux();
+    if (data.oppdaterRedux) {
+      this.publiserStegdataTilRedux();
+    }
   };
 
   slettAllDataForSteg = stegID => {
@@ -96,13 +102,13 @@ class Stegvelger extends Component {
   };
 
   publiserStegdataTilRedux = () => {
-    const { vilkaar } = this.state.stegStores;
+    const { vilkaar, avklartefakta } = this.state.stegStores;
 
     const vilkaarKonvertert = vilkaar.hent();
     this.props.oppdaterVilkaar(vilkaarKonvertert);
 
-    // const avklartefaktaKonvertert = avklartefakta.hentAvklartfakta();
-    // this.props.oppdaterAvklartefakta(avklartefaktaKonvertert);
+    const avklartefaktaKonvertert = avklartefakta.hent();
+    this.props.oppdaterAvklartefakta(avklartefaktaKonvertert);
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {
@@ -292,6 +298,7 @@ Stegvelger.propTypes = {
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   lagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
+  hentPerioder: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -334,6 +341,7 @@ const mapDispatchToProps = dispatch => ({
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
   oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
   oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
+  hentPerioder: behandlingID => dispatch(behandlingerOperations.hentPerioder(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

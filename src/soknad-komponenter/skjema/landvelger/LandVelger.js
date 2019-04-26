@@ -41,12 +41,14 @@ LandVelger.propTypes = {
   feltNavn: PT.string.isRequired,
   multiLand: PT.bool,
   label: PT.string,
+  bredde: PT.string,
 };
 
 LandVelger.defaultProps = {
   disabled: false,
   multiLand: false,
   label: undefined,
+  bredde: 'XL',
 };
 
 export { kodeTilObjekt, landTekstFormat };

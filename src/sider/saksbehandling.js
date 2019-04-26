@@ -162,9 +162,6 @@ class Saksbehandling extends Component {
   };
 
   lagreAvklartefaktaHandler = async () => {
-    const { skjema, oppdaterAvklarteFaktaState } = this.props;
-    await oppdaterAvklarteFaktaState(skjema);
-
     const { sendAvklartefakta, avklartefakta } = this.props;
     const bid = this.props.oppsummering.behandlingID;
     sendAvklartefakta(bid, avklartefakta);
