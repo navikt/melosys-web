@@ -3,6 +3,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel12_1 from '../../stegKomponenter/vurderingArtikkel12_1';
 import { erVilkarOppfylt, hentVilkar } from '../../../../regler/vilkar';
+import * as Utils from '../../../../utils';
 
 class Artikkel12_1 extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -45,7 +46,7 @@ class Artikkel12_1 extends Steg {
       const art12_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_1, _propsLight.vilkar);
       const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar);
 
-      const harAvklaring = art12_1.oppfylt != null || art16_1.oppfylt != null;
+      const harAvklaring = !Utils._isNil(art12_1.oppfylt) || !Utils._isNil(art16_1.oppfylt);
       const manglerBegrunnelse12 = art12_1.oppfylt === false && art12_1.begrunnelseKoder.length === 0;
       const manglerBegrunnelse16 = art16_1.oppfylt === false && art16_1.begrunnelseKoder.length === 0 && art16_1.begrunnelseFritekst !== null;
 

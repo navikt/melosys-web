@@ -3,6 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitetAntallLand from '../../stegKomponenter/vurderingYrkesaktivitetAntallLand';
 import * as KV from '../../../../kodeverk';
 import Yrkesgruppe from '../../stegMotor/kontrollere/yrkesgruppe';
+import * as Utils from '../../../../utils';
 
 class YrkesaktivitetAntallLand extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -39,7 +40,7 @@ class YrkesaktivitetAntallLand extends Steg {
     this.beregnRelevantUI = _propsLight => {
       const { yrkesaktivitetAntallLand } = _propsLight.skjema.avklartefakta;
       return ({
-        harAvklaring: yrkesaktivitetAntallLand !== null && yrkesaktivitetAntallLand !== undefined,
+        harAvklaring: !Utils._isNil(yrkesaktivitetAntallLand),
       });
     };
     this.handlers = {

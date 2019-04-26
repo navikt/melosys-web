@@ -2,6 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitet from '../../stegKomponenter/vurderingYrkesaktivitet';
 import * as KV from '../../../../kodeverk';
+import * as Utils from '../../../../utils';
 
 class Yrkesaktivitet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -33,7 +34,7 @@ class Yrkesaktivitet extends Steg {
       const { yrkesaktivitet } = _propsLight.skjema.avklartefakta;
 
       return ({
-        harAvklaring: yrkesaktivitet !== null && yrkesaktivitet !== undefined,
+        harAvklaring: !Utils._isNil(yrkesaktivitet),
       });
     };
     this.handlers = {
