@@ -28,9 +28,9 @@ export class VurderingEndrePeriode extends React.Component {
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     const { oppsummering: { behandlingID } } = this.props;
-    await this.hentOpprinneligPeriode(behandlingID);
+    this.hentOpprinneligPeriode(behandlingID);
   }
 
   hentOpprinneligPeriode = async behandlingID => {
