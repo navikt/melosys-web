@@ -42,17 +42,15 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   lagrePeriodeForForhandsvisning = () => {
-    if (this.erTomDatoOgPeriodeGyldige()) {
+    if (this.validerTomDatoOgPeriode()) {
       const { lovvalgsPeriode: { fomDato } } = this.props;
       const { nyTomDato } = this.state;
 
       this.props.endreDatoOgSendLovvalgsperioderHandler(fomDato, Utils.dato.formatterDatoTilISO(nyTomDato));
-    } else {
-      this.validerPeriode();
     }
   };
 
-  erTomDatoOgPeriodeGyldige = () => this.erTomDatoGyldig() && this.erPeriodeGyldig();
+  validerTomDatoOgPeriode = () => this.validerTomDato() && this.validerPeriode();
 
   erTomDatoGyldig = () => Utils.dato.vaskInputDato(this.state.nyTomDato);
 
