@@ -87,7 +87,7 @@ class Stegvelger extends Component {
     stegStores[type].oppdaterStegData(stegID, { felt, type, innhold });
     this.setState(stegStores);
 
-    if (!data.ignorer) {
+    if (data.oppdaterRedux) {
       this.publiserStegdataTilRedux();
     }
   };
