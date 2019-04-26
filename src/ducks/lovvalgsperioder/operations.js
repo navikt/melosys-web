@@ -19,6 +19,7 @@ import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
 import { formSelectors } from '../form';
 import { avklartefaktaSelectors } from '../avklartefakta';
+import { lovvalgsperioderSelectors } from './index';
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -52,10 +53,13 @@ const finnValgteVilkar = alleLovvalgsVilkar => {
 
 const byggLovvalgsPeriodeArtikkel12_1 = state => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1,
+    medlemskapsperiodeID,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -68,10 +72,13 @@ const byggLovvalgsPeriodeArtikkel12_1 = state => {
 
 const byggLovvalgsPeriodeArtikkel12_2 = state => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2,
+    medlemskapsperiodeID,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -85,11 +92,13 @@ const byggLovvalgsPeriodeArtikkel12_2 = state => {
 const byggLovvalgsPeriodeArtikkel11_3A = state => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   const tilleggsbestemmelse = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(state));
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A,
+    medlemskapsperiodeID,
     tilleggBestemmelse: tilleggsbestemmelse || null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -102,10 +111,13 @@ const byggLovvalgsPeriodeArtikkel11_3A = state => {
 
 const byggLovvalgsPeriodeArtikkel11_4_2 = state => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2,
+    medlemskapsperiodeID,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
@@ -119,17 +131,17 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = state => {
 const byggLovvalgsPeriodeArtikkel16_1 = state => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   const soknadsland = soknadSelectors.SoknadslandSelector(state);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
 
   const unntakFraLovvalgsland = soknadsland.join('');
   const lovvalgsperiode = formSelectors.Lovvalgsperiode(state);
   const { unntakFraBestemmelse } = lovvalgsperiode;
 
-  if (!unntakFraLovvalgsland || !lovvalgsperiode || !unntakFraBestemmelse) { return false; }
-
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1,
+    medlemskapsperiodeID,
     tilleggBestemmelse: null,
     unntakFraBestemmelse,
     unntakFraLovvalgsland,
@@ -142,11 +154,13 @@ const byggLovvalgsPeriodeArtikkel16_1 = state => {
 
 const byggAvslaattLovvalg = (state, lovvalgBestemmelse) => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse,
+    medlemskapsperiodeID,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
