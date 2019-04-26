@@ -29,7 +29,8 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   async componentDidMount() {
-    await this.hentOpprinneligPeriode(4);
+    const { oppsummering: { behandlingID } } = this.props;
+    await this.hentOpprinneligPeriode(behandlingID);
   }
 
   hentOpprinneligPeriode = async behandlingID => {
