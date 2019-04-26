@@ -129,7 +129,7 @@ class Saksopplysninger extends Component {
         }
         <Personopplysninger />
         <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
-        <Bosted erValidert={this.state.gyldigePaneler.bosted} />
+        <Bosted />
         <ArbeidsgivereNorge />
         <ForetakUtland />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />
