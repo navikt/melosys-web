@@ -82,7 +82,7 @@ class NormaltDriverVirksomhet extends Component {
           }
         </div>
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!harAvklaring || !redigerbart} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     );

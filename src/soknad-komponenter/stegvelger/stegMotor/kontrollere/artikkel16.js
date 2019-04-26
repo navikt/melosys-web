@@ -30,6 +30,7 @@ class Artikkel16 extends Steg {
       lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers.lagreVilkarHandler,
       lagreLovvalgsperioderHandler: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioderHandler,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
     };
     this._status = FANE_STATUS.OK;
   }

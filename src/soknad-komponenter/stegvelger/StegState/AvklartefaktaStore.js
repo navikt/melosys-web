@@ -2,40 +2,46 @@ import StegState from './StegState';
 import * as Utils from '../../../utils';
 
 class Avklartfakta extends StegState {
-  oppdaterfelt = (eksisterendeData, type, nyData) => {
-    const fritekst = nyData.fritekst || eksisterendeData.fritekst;
-    const begrunnelse = nyData.begrunnelse || eksisterendeData.begrunnelse;
+  lagKey = data => (data.referanse + (data.subjektID || ''));
 
-    const { fakta, subjektID } = eksisterendeData;
-    const nyttFelt = {
-      fakta,
-      subjektID,
-      begrunnelse,
-      fritekst,
-    };
+  oppdaterfelt = (eksisterendeAvklarteSubjekter, nyData) => {
+    const key = this.lagKey(nyData);
+    if (!eksisterendeAvklarteSubjekter.has(key)) {
+      eksisterendeAvklarteSubjekter.set(key, nyData);
+    } else {
+      const eksisterendeSubjekt = eksisterendeAvklarteSubjekter.get(key);
+      const { referanse, fakta, subjektID } = eksisterendeSubjekt;
+      const oppdatertFelt = {
+        referanse,
+        fakta,
+        subjektID,
+        begrunnelseKoder: nyData.begrunnelseKoder || eksisterendeSubjekt.begrunnelseKoder,
+        begrunnelseFritekst: nyData.begrunnelseFritekst || eksisterendeSubjekt.begrunnelseFritekst,
+      };
 
-    if (!Utils._isNil(nyData.fakta) && !Utils._isUndefined(nyData.fakta)) {
-      nyttFelt.fakta = nyData.fakta;
+      if (!Utils._isNil(nyData.fakta)) {
+        oppdatertFelt.fakta = nyData.fakta;
+      }
+      if (!Utils._isNil(nyData.subjektID) && !Utils._isUndefined(nyData.subjektID)) {
+        oppdatertFelt.subjektID = nyData.subjektID;
+      }
+      eksisterendeAvklarteSubjekter.set(key, oppdatertFelt);
     }
-
-    if (!Utils._isNil(nyData.subjektID) && !Utils._isUndefined(nyData.subjektID)) {
-      nyttFelt.subjektID = nyData.subjektID;
-    }
-    return nyttFelt;
+    return eksisterendeAvklarteSubjekter;
   };
+
+  nyttFelt = () => (new Map());
 
   hent = () => {
     const avklartefakta = {};
     const { stegStore } = this;
     stegStore.forEach(steg => {
       Object.keys(steg).forEach(referanse => {
-        const { fakta, subjektID, begrunnelse } = steg[referanse];
-        avklartefakta[referanse] = {
-          fakta,
-          subjektID,
-          begrunnelse,
-          referanse,
-        };
+        avklartefakta[referanse] = [];
+        const avklarteSubjekter = steg[referanse];
+        avklarteSubjekter.forEach(value => {
+          avklartefakta[referanse].push(value);
+        });
       });
     });
     return avklartefakta;

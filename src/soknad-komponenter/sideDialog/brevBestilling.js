@@ -114,7 +114,8 @@ class BrevBestilling extends Component {
       { navn: 'Forhåndsvis brev', type: dokumenttypeKode, data },
     ];
 
-    const placeholder = 'F.eks.: Opplysninger om antall utsendte ansatte i perioden, Opplysninger om den ansatte erstatter en annen utsendt ansatt';
+    const placeholder = 'F.eks.: \u00ABOpplysninger om antall utsendte ansatte i perioden\u00BB, \u00ABOpplysninger om den ansatte erstatter en annen utsendt ansatt\u00BB.';
+
     return (
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
