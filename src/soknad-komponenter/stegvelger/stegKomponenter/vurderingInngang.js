@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
 
@@ -10,8 +10,13 @@ import SoknadslandListe from './inngang/soknadslandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta, tilstand, redigerbart, oppdaterData,
+    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
   } = props;
+
+  useEffect(() => function cleanup() {
+    slettAllDataForSteg();
+  }, []);
+
   const { vurdering } = inngangsvilkar;
   const soknadslandBegrunnelser = begrunnelser.opphold;
   const { harAvklaring } = tilstand;
@@ -54,6 +59,7 @@ VurderingInngang.propTypes = {
   }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
 };
 
 export default VurderingInngang;

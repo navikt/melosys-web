@@ -10,6 +10,7 @@ export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrun
   }
   return {
     felt,
+    oppdaterRedux: true,
     type: 'avklartefakta',
     innhold: {
       referanse: felt,
@@ -28,6 +29,7 @@ export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelse, begrun
   }
   return {
     felt,
+    oppdaterRedux: true,
     type: 'avklartefakta',
     innhold: {
       referanse: felt,
@@ -49,7 +51,6 @@ export const konverterTilStegData = (felt, avklartfakta) => {
   return {
     felt,
     type: 'avklartefakta',
-    ignorer: true,
     innhold: {
       referanse: felt,
       subjektID,
