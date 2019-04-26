@@ -10,7 +10,8 @@ class Artikkel11_4 extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'vilkar for artikkel 11.4.1 (og implissit 11.3A) er oppfylt',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1, alleVilkar) &&
+        exec: (avklartefakta, alleVilkar) =>
+          erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1, alleVilkar) &&
           erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },

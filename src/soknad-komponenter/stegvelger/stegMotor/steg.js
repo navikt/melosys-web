@@ -54,11 +54,6 @@ class Steg {
     return kriterieMatch.nesteSteg;
   };
 
-  slett = () => {
-    const { tilgjengeligeHandlers } = this._propsLight;
-    tilgjengeligeHandlers.slettSteg(this._id);
-  };
-
   assertRegel = (regel, avklartefakta, vilkar) => (Utils._isFunction(regel) ? regel(avklartefakta, vilkar) : false);
 }
 
