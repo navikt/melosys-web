@@ -14,7 +14,7 @@ const uuid = require('uuid/v4');
  * slik at brukeren kan redigere innholdet i feltet også ETTER at det er lagt til.
  */
 const ListevelgerValgtElement = ({
-  label, slettElement, oppdaterElement, tillatFritekst,
+  label, slettElement, oppdaterElement, tillatFritekst, disabled,
 }) => {
   const element = tillatFritekst ?
     <Nav.Input value={label} label="" className="listevelger__linje__input" onChange={oppdaterElement} onKeyDown={event => (event.key === 'Enter') && event.preventDefault()} />
@@ -26,7 +26,7 @@ const ListevelgerValgtElement = ({
       <div className="listevelger__innhold">
         { element }
       </div>
-      <Nav.Knapp mini className="listevelger__linje__knapp" onClick={slettElement}>
+      <Nav.Knapp mini disabled={disabled} className="listevelger__linje__knapp" onClick={slettElement}>
         <div className="knapp__ikon"><Ikon kind="minus" size="24" /></div>
         <div className="knapp__tittel">Fjern</div>
       </Nav.Knapp>
@@ -35,6 +35,7 @@ const ListevelgerValgtElement = ({
 };
 
 ListevelgerValgtElement.propTypes = {
+  disabled: PT.bool,
   label: PT.string.isRequired,
   slettElement: PT.func.isRequired,
   tillatFritekst: PT.bool,
@@ -44,6 +45,7 @@ ListevelgerValgtElement.propTypes = {
 ListevelgerValgtElement.defaultProps = {
   oppdaterElement: () => {},
   tillatFritekst: false,
+  disabled: false,
 };
 
 /** Komponenten lar brukeren legge til flere valg.
@@ -130,6 +132,7 @@ class ListevelgerFlervalg extends Component {
       slettElement={() => this.slettValgFraListe(index)}
       oppdaterElement={event => this.oppdaterEksisterendeValg(event.target.value, index)}
       tillatFritekst
+      disabled={this.props.disabled}
     />);
 
   byggValgtElement = (verdi, index) => (
@@ -137,6 +140,7 @@ class ListevelgerFlervalg extends Component {
       key={index}
       label={verdi}
       slettElement={() => this.slettValgFraListe(index)}
+      disabled={this.props.disabled}
     />);
 
   byggValgtListe = eksisterendeValg => {

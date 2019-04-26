@@ -46,6 +46,7 @@ class Stegvelger extends Component {
     this.props.hentVilkar(bid);
     this.props.hentAvklartefakta(bid);
     this.props.hentLovvalgsperioder(bid);
+    this.props.hentPerioder(bid);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -297,6 +298,7 @@ Stegvelger.propTypes = {
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   lagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
+  hentPerioder: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -339,6 +341,7 @@ const mapDispatchToProps = dispatch => ({
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
   oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
   oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
+  hentPerioder: behandlingID => dispatch(behandlingerOperations.hentPerioder(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
