@@ -53,7 +53,7 @@ class SideOppsummering extends Component {
     if (kode === 'VELG') {
       return false;
     }
-    const { oppdaterBehandlingsStatus, oppsummering: { behandlingID } } = this.props;
+    const { oppdaterBehandlingsStatus, behandlingID } = this.props;
     const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.status);
     const nystatus = { kode, term };
     Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {

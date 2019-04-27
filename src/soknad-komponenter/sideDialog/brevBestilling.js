@@ -6,7 +6,6 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as KV from '../../kodeverk';
 import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes/';
 import * as Skjema from '../skjema';
 import { formSelectors } from '../../ducks/form/';
 
@@ -16,7 +15,7 @@ import { fagsakSelectors } from '../../ducks/fagsaker';
 import PdfLenkeListe from '../pdfLenkeListe';
 
 import './brevBestilling.css';
-import * as Utils from '../../utils/utils';
+import * as Utils from '../../utils';
 
 const InfoPanel = () => (
   <Nav.Lesmerpanel
@@ -51,9 +50,9 @@ class BrevBestilling extends Component {
 
   sendBrev = async () => {
     const {
-      brevbestillingSkjemaVerdier, opprettDokument, oppsummering,
+      behandlingID,
+      brevbestillingSkjemaVerdier, opprettDokument,
     } = this.props;
-    const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
     const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker, begrunnelseKode: null }) : {};
 
@@ -102,11 +101,10 @@ class BrevBestilling extends Component {
 
   render () {
     const {
+      behandlingID,
       brevbestillingSkjemaVerdier,
-      oppsummering,
       redigerbart,
     } = this.props;
-    const { behandlingID } = oppsummering;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
 
     const data = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
@@ -144,19 +142,18 @@ class BrevBestilling extends Component {
 }
 
 BrevBestilling.propTypes = {
+  behandlingID: PT.number.isRequired,
   resetBrevBestillingForm: PT.func.isRequired,
   opprettDokument: PT.func.isRequired,
   settFeilFelt: PT.func.isRequired,
   resetDokument: PT.func.isRequired,
   brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
-  oppsummering: MPT.Oppsummering,
   redigerbart: PT.bool.isRequired,
 };
 BrevBestilling.defaultProps = {
   brevbestillingSkjemaVerdier: {},
   dokumenter: {},
-  oppsummering: {},
 };
 
 const form = {
@@ -171,7 +168,6 @@ const form = {
 const mapStateToProps = state => ({
   brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
   dokumenter: dokumenterSelectors.dokumenterSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
   initialValues: {
     dokumenttypeKode: MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER,

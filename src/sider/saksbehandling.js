@@ -31,13 +31,12 @@ import * as Api from '../services/api';
 import './saksbehandling.css';
 import '../soknad-komponenter/skjema/skjema.css';
 
-const qs = require('qs');
-
 class Saksbehandling extends Component {
   state = {
     visOppfriskDialog: false,
     oppfriskningBlokkererInnhold: false,
     visHenleggDialog: false,
+    behandlingID: 0,
   };
 
   componentDidMount() {
@@ -54,22 +53,21 @@ class Saksbehandling extends Component {
   }
 
   lastInnSaksopplysninger = async () => {
+    const { match, location } = this.props;
+    const { snr } = match.params;
+    const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
+    this.setState({ behandlingID: Utils._toInteger(behandlingID) });
+
     const {
       hentFagsaker, hentBehandlingsresultat,
       hentSoknad, sjekkOppfriskningStatus,
-      match,
-      location,
     } = this.props;
-    const { snr } = match.params;
-    console.log(location);
-    const queryObject = qs.parse(location.search, { ignoreQueryPrefix: true });
-    console.log(queryObject);
+
     try {
       const response = await hentFagsaker(snr);
       const { behandlinger } = response.data;
 
       if (!behandlinger) return false;
-      const { oppsummering: { behandlingID } } = behandlinger[0];
 
       await hentBehandlingsresultat(behandlingID);
 
@@ -95,9 +93,8 @@ class Saksbehandling extends Component {
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    const { oppfriskSaksopplysninger, sendSoknad } = this.props;
-    const { behandlingID } = this.props.oppsummering;
-    const { soknad } = this.props;
+    const { behandlingID } = this.state;
+    const { oppfriskSaksopplysninger, sendSoknad, soknad } = this.props;
     await sendSoknad(behandlingID, soknad);
     await oppfriskSaksopplysninger(behandlingID);
     this.blokkerInnholdMedOppfriskSpinner();
@@ -126,8 +123,8 @@ class Saksbehandling extends Component {
   };
 
   hentBehandlingStatus = async () => {
+    const { behandlingID } = this.state;
     const { sjekkOppfriskningStatus } = this.props;
-    const { behandlingID } = this.props.oppsummering;
     const oppfriskning = await sjekkOppfriskningStatus(behandlingID);
 
     if (oppfriskning && oppfriskning.response) {
@@ -146,8 +143,8 @@ class Saksbehandling extends Component {
   };
 
   tilbakeleggeHandle = async () => {
-    const { tilbakeleggeOppgave, oppsummering } = this.props;
-    const { behandlingID } = oppsummering;
+    const { behandlingID } = this.state;
+    const { tilbakeleggeOppgave } = this.props;
     const venterPaaDokumentasjon = true;
 
     await tilbakeleggeOppgave(behandlingID, venterPaaDokumentasjon);
@@ -155,45 +152,47 @@ class Saksbehandling extends Component {
   };
 
   lagreSoknadHandler = async () => {
+    const { behandlingID } = this.state;
     const { skjema, oppdaterSoknadState } = this.props;
     await oppdaterSoknadState(skjema);
 
-    const { soknad, sendSoknad, oppsummering: { behandlingID } } = this.props;
+    const { soknad, sendSoknad } = this.props;
     sendSoknad(behandlingID, soknad);
   };
 
   lagreVilkarHandler = async () => {
+    const { behandlingID } = this.state;
     const { skjema, oppdaterVilkarState } = this.props;
     await oppdaterVilkarState(skjema);
 
     const { sendVilkar, vilkar } = this.props;
-    const bid = this.props.oppsummering.behandlingID;
-    sendVilkar(bid, vilkar);
+    sendVilkar(behandlingID, vilkar);
   };
 
   lagreAvklartefaktaHandler = async () => {
+    const { behandlingID } = this.state;
     const { skjema, oppdaterAvklarteFaktaState } = this.props;
     await oppdaterAvklarteFaktaState(skjema);
 
     const { sendAvklartefakta, avklartefakta } = this.props;
-    const bid = this.props.oppsummering.behandlingID;
-    sendAvklartefakta(bid, avklartefakta);
+    sendAvklartefakta(behandlingID, avklartefakta);
   };
 
   lagreLovvalgsperioderHandler = async () => {
+    const { behandlingID } = this.state;
     const { skjema, oppdaterLovvalgperioderState } = this.props;
     await oppdaterLovvalgperioderState(skjema);
 
     const { sendLovvalgsperioder, lovvalgsperioder } = this.props;
-    const bid = this.props.oppsummering.behandlingID;
-    sendLovvalgsperioder(bid, lovvalgsperioder);
+    sendLovvalgsperioder(behandlingID, lovvalgsperioder);
   };
 
   lagreBehandlingerHandler = async () => {
+    const { behandlingID } = this.state;
     const { skjema, oppdaterBehandlingerState } = this.props;
     await oppdaterBehandlingerState(skjema);
 
-    const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
+    const { behandlinger, sendPerioder } = this.props;
     sendPerioder(behandlingID, behandlinger);
   };
 
@@ -237,6 +236,7 @@ class Saksbehandling extends Component {
   };
 
   render() {
+    const { behandlingID } = this.state;
     const { oppsummering } = this.props;
     const { blokkerInnholdMedOppfriskSpinner } = this;
 
@@ -258,6 +258,7 @@ class Saksbehandling extends Component {
           <Nav.Row>
             <Nav.Column xs="7">
               <Saksopplysninger
+                behandlingID={behandlingID}
                 blokkerInnholdMedOppfriskSpinner={blokkerInnholdMedOppfriskSpinner}
                 lagreVilkarHandler={this.lagreVilkarHandler}
                 lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
@@ -268,6 +269,7 @@ class Saksbehandling extends Component {
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering
+                behandlingID={behandlingID}
                 oppsummering={oppsummering}
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
@@ -275,7 +277,7 @@ class Saksbehandling extends Component {
                 visHenleggDialogHandle={this.visHenleggDialog}
                 tilForsidenHandle={this.navigerTilOversiktSide}
               />
-              <SideDialog />
+              <SideDialog behandlingID={behandlingID} />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
