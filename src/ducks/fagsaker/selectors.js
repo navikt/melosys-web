@@ -280,14 +280,14 @@ export const ArbeidsgivereNorgeSelector = createSelector(
 export const OppsummeringSelector = createSelector(
   state => (state.fagsaker.data ? state.fagsaker.data : {}),
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].oppsummering : []),
-  (saksdata, behandlingsdata) => ({
+  (saksdata, oppsummering) => ({
     saksnummer: saksdata.saksnummer,
-    behandlingID: behandlingsdata.behandlingID,
+    behandlingID: oppsummering.behandlingID,
     sakstype: saksdata.sakstype,
     saksstatus: saksdata.saksstatus,
-    behandlingsstatus: behandlingsdata.behandlingsstatus,
-    registrertDato: behandlingsdata.registrertDato,
-    sisteOpplysningerHentetDato: behandlingsdata.sisteOpplysningerHentetDato,
-    behandlingstype: behandlingsdata.behandlingstype,
+    behandlingsstatus: oppsummering.behandlingsstatus,
+    registrertDato: oppsummering.registrertDato,
+    sisteOpplysningerHentetDato: oppsummering.sisteOpplysningerHentetDato,
+    behandlingstype: oppsummering.behandlingstype,
   })
 );

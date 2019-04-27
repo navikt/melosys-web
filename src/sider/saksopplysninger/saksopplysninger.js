@@ -58,12 +58,11 @@ class Saksopplysninger extends Component {
   }
 
   lagreSoknadHandler = async () => {
-    const bid = this.props.oppsummering.behandlingID;
     const {
-      valid, sendSoknad, soknad,
+      behandlingID, valid, sendSoknad, soknad,
     } = this.props;
     if (valid) {
-      await sendSoknad(bid, soknad);
+      await sendSoknad(behandlingID, soknad);
     }
   };
 
@@ -77,8 +76,7 @@ class Saksopplysninger extends Component {
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    const { oppfriskSaksopplysninger, sendSoknad, soknad } = this.props;
-    const { behandlingID } = this.props.oppsummering;
+    const { behandlingID, oppfriskSaksopplysninger, sendSoknad, soknad } = this.props;
     await sendSoknad(behandlingID, soknad);
     await oppfriskSaksopplysninger(behandlingID);
     this.props.blokkerInnholdMedOppfriskSpinner();
@@ -86,6 +84,7 @@ class Saksopplysninger extends Component {
 
   render () {
     const {
+      behandlingID,
       medlemskap,
       inntekt,
       soknadArbeidsinntekt,
@@ -98,7 +97,6 @@ class Saksopplysninger extends Component {
     if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
     const { values: soknadVerdier } = soknadForm;
 
-    const { behandlingID } = this.props.oppsummering;
     if (!behandlingID) {
       return null;
     }
@@ -115,6 +113,7 @@ class Saksopplysninger extends Component {
         }
         { visStegVelger &&
           <Stegvelger
+            behandlingID={behandlingID}
             lagreVilkarHandler={this.props.lagreVilkarHandler}
             lagreAvklartefaktaHandler={this.props.lagreAvklartefaktaHandler}
             lagreLovvalgsperioderHandler={this.props.lagreLovvalgsperioderHandler}
@@ -145,6 +144,7 @@ class Saksopplysninger extends Component {
 }
 
 Saksopplysninger.propTypes = {
+  behandlingID: PT.number.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Person),
   avklartefakta: PT.array.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,

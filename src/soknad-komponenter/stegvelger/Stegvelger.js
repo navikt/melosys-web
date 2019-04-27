@@ -31,12 +31,12 @@ class Stegvelger extends Component {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
 
-    const bid = this.props.oppsummering.behandlingID;
+    const { behandlingID } = this.props;
 
-    this.props.hentVilkar(bid);
-    this.props.hentAvklartefakta(bid);
-    this.props.hentLovvalgsperioder(bid);
-    this.props.hentPerioder(bid);
+    this.props.hentVilkar(behandlingID);
+    this.props.hentAvklartefakta(behandlingID);
+    this.props.hentLovvalgsperioder(behandlingID);
+    this.props.hentPerioder(behandlingID);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -62,11 +62,10 @@ class Stegvelger extends Component {
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { fatteVedtak } = this.props;
+    const { behandlingID, fatteVedtak } = this.props;
     const vedtakBody = { behandlingsresultattype };
     try {
-      await fatteVedtak(bid, vedtakBody);
+      await fatteVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
@@ -79,15 +78,14 @@ class Stegvelger extends Component {
   };
 
   endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { lovvalgsperioder } = this.props;
+    const { behandlingID, lovvalgsperioder } = this.props;
 
     const forkortetPeriode = lovvalgsperioder.map(periode => ({ ...periode, fomDato: fomdato, tomDato: tomdato }));
-    API.Lovvalgsperioder.send(bid, forkortetPeriode).catch(e => Utils.logger.error(e));
+    API.Lovvalgsperioder.send(behandlingID, forkortetPeriode).catch(e => Utils.logger.error(e));
   };
 
   vedtaEndretPeriode = begrunnelseKode => {
-    const { oppsummering: { behandlingID } } = this.props;
+    const { behandlingID } = this.props;
 
     API.Vedtak.endrePeriode(behandlingID, { begrunnelseKode }).catch(e => Utils.logger.error(e));
   };
@@ -167,12 +165,11 @@ class Stegvelger extends Component {
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     const {
+      behandlingID,
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
     } = this.props;
-
-    const { behandlingID } = this.props.oppsummering;
 
     await oppdaterBehandlingerState(skjema);
 
@@ -212,6 +209,7 @@ class Stegvelger extends Component {
 }
 
 Stegvelger.propTypes = {
+  behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
   avklartefakta: PT.array,
   behandlinger: PT.object.isRequired,
