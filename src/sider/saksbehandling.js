@@ -31,6 +31,8 @@ import * as Api from '../services/api';
 import './saksbehandling.css';
 import '../soknad-komponenter/skjema/skjema.css';
 
+const qs = require('qs');
+
 class Saksbehandling extends Component {
   state = {
     visOppfriskDialog: false,
@@ -55,8 +57,13 @@ class Saksbehandling extends Component {
     const {
       hentFagsaker, hentBehandlingsresultat,
       hentSoknad, sjekkOppfriskningStatus,
+      match,
+      location,
     } = this.props;
-    const { snr } = this.props.match.params;
+    const { snr } = match.params;
+    console.log(location);
+    const queryObject = qs.parse(location.search, { ignoreQueryPrefix: true });
+    console.log(queryObject);
     try {
       const response = await hentFagsaker(snr);
       const { behandlinger } = response.data;
@@ -301,6 +308,7 @@ Saksbehandling.propTypes = {
   hentSoknad: PT.func.isRequired,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
+  location: PT.object.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
   resetBehandlingsresultatState: PT.func.isRequired,

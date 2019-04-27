@@ -32,7 +32,7 @@ const Fagsak = ({ sak }) => {
 
   const { fom, tom } = soknadsperiode;
   const tittel = `${KV.objektTilTerm(sakstype)}`;
-  const link = `/saksbehandling/${saksnummer}`;
+  const routePath = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
 
@@ -63,7 +63,10 @@ const Fagsak = ({ sak }) => {
         </Nav.Row>
         <Nav.Row className="fagsak__behandlinger">
           {
-            behandlingOversikter.map(behandling => <Behandling key={behandling.behandlingID} behandling={behandling} link={link} />)
+            behandlingOversikter.map(behandling => {
+              const link = `${routePath}/?behandlingID=${behandling.behandlingID}`;
+              return (<Behandling key={behandling.behandlingID} behandling={behandling} link={link} />);
+            })
           }
         </Nav.Row>
       </Nav.Container>
