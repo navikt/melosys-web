@@ -10,6 +10,7 @@ import * as Personer from './modules/personer';
 import * as Organisasjoner from './modules/organisasjoner';
 import * as Saksopplysninger from './modules/saksopplysninger';
 import * as Oppgaver from './modules/oppgaver';
+import * as OpprinneligLovvalgsperiode from './modules/opprinneligLovvalgsperiode';
 import * as Registrering from './modules/registrering';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Soknader from './modules/soknader';
@@ -40,11 +41,12 @@ export {
   Journalforing,
   Lovvalgsperioder,
   Oppgaver,
-  Saksopplysninger,
+  OpprinneligLovvalgsperiode,
   Organisasjoner,
   Personer,
   Registrering,
   Saksbehandler,
+  Saksopplysninger,
   Soknader,
   Vedtak,
   Vilkar,

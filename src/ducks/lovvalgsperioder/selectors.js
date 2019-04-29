@@ -35,3 +35,8 @@ export const UnntakFraBestemmelseSelector = createSelector(
   state => LovvalgsperiodeSelector(state),
   lovvalgsperiode => lovvalgsperiode.unntakFraBestemmelse
 );
+
+export const MedlemskapsperiodeIDSelector = createSelector(
+  state => LovvalgsperiodeSelector(state),
+  lovvalgsperiode => lovvalgsperiode.medlemskapsperiodeID
+);
