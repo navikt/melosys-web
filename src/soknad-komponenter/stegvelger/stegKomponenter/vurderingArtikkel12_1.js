@@ -130,7 +130,6 @@ class VurderingArtikkel12_1 extends Component {
                   />
                   <Nav.Textarea
                     id="art16_1"
-                    feltNavn="vilkar.art16_1_begrunnelser_fritekst"
                     label="Begrunnelse for avslag (fritekst):"
                     maxLength={255}
                     bredde="fullbredde"

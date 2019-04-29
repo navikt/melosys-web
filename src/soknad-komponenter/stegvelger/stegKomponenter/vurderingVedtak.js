@@ -50,7 +50,7 @@ const VurderingVedtak = ({
     { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
   ];
 
-  if (lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1) {
+  if (lovvalgSomKodeTerm && lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1) {
     dokumenter.push({ navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } });
   }
 
