@@ -11,6 +11,7 @@ export const INNGANG = 'inngang';
 export const JOURNALFORING = 'journalforing';
 export const LOVVALGSPERIODER = 'lovvalgsperioder';
 export const OPPGAVER = 'oppgaver';
+export const OPPRINNELIG_LOVVALGS_PERIODE = 'opprinneligLovvalgsperiode';
 export const ORGANISASJONER = 'organisasjoner';
 export const PERSONER = 'personer';
 export const REGISTRERING = 'registrering';

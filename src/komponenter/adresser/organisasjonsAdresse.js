@@ -2,6 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 
 import * as MPT from '../../proptypes';
+import * as Utils from '../../utils';
 
 import GeneriskAdresse from './generiskAdresse';
 
@@ -12,8 +13,9 @@ const OrganisasjonsAdresse = ({ organisasjon, className, visNavn }) => {
 
   if (!postadresse && !forretningsadresse) return <div>(Ingen adresse tilgjengelig)</div>;
 
-  const adresse = postadresse || forretningsadresse;
-  const tittel = postadresse ? 'Postadresse' : 'Forretningsadresse';
+  const visPostadresse = !Utils.adresse.erAdresseObjektTomt(postadresse);
+  const adresse = visPostadresse ? postadresse : forretningsadresse;
+  const tittel = visPostadresse ? 'Postadresse' : 'Forretningsadresse';
 
   return (
     <div className={className}>
