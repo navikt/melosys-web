@@ -2,27 +2,40 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-import * as Skjema from '../../skjema';
 
 import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import { BOOLSK } from '../../../constants';
+import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
 class NormaltDriverVirksomhet extends Component {
-  componentWillUnmount() {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.normaltDriverVirksomhet', null);
-    settSkjemaVerdi('vilkar.normaltDriverVirksomhetBegrunnelser', []);
+  componentDidMount() {
+    const { oppdaterData, tilstand } = this.props;
+    oppdaterData(konverterTilStegData('normaltDriverVirksomhet', tilstand.normaltDriverVirksomhet));
   }
+
+  componentWillUnmount() {
+    this.props.slettAllDataForSteg();
+  }
+
+  radioEndringHandler = event => {
+    const { oppdaterData } = this.props;
+    oppdaterData(lagVilkaar('normaltDriverVirksomhet', event.target.value));
+  };
+
+  listevalgEndringHandler = event => {
+    const { oppdaterData } = this.props;
+    oppdaterData(lagBegrunnelse('normaltDriverVirksomhet', event.value));
+  };
 
   render () {
     const {
       bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
     } = this.props;
 
-    const { visBegrunnelser, harAvklaring } = tilstand;
+    const { visBegrunnelser, harAvklaring, normaltDriverVirksomhet } = tilstand;
     const arbeidsgivereTekst = this.props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
 
     return (
@@ -32,8 +45,22 @@ class NormaltDriverVirksomhet extends Component {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Virksomheten har:">
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.normaltDriverVirksomhet" value={BOOLSK.SANN} label="Driver normalt virksomhet i Norge" />
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.normaltDriverVirksomhet" value={BOOLSK.USANN} label="Driver normalt IKKE virksomhet i Norge" />
+                <Nav.Radio
+                  name="normaltDriverVirksomhet"
+                  label="Driver normalt virksomhet i Norge"
+                  value={BOOLSK.SANN}
+                  checked={normaltDriverVirksomhet.oppfylt === BOOLSK.SANN}
+                  onChange={this.radioEndringHandler}
+                  disabled={!redigerbart}
+                />
+                <Nav.Radio
+                  name="normaltDriverVirksomhet"
+                  label="Driver normalt IKKE virksomhet i Norge"
+                  value={BOOLSK.USANN}
+                  checked={normaltDriverVirksomhet.oppfylt === BOOLSK.USANN}
+                  onChange={this.radioEndringHandler}
+                  disabled={!redigerbart}
+                />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -45,6 +72,8 @@ class NormaltDriverVirksomhet extends Component {
                     muligeValg={begrunnelser}
                     label="Legg til begrunnelse:"
                     tillatFritekst={false}
+                    onChange={this.listevalgEndringHandler}
+                    defaultElementer={normaltDriverVirksomhet.begrunnelseKoder}
                     disabled={!redigerbart}
                   />
                 </Nav.Fieldset>
@@ -67,7 +96,8 @@ NormaltDriverVirksomhet.propTypes = {
   tilstand: PT.object,
   valgteVirksomheter: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
-  settSkjemaVerdi: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

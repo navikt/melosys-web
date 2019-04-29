@@ -13,10 +13,8 @@ import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regle
 
 class VurderingVesentligVirksomhet extends Component {
   componentDidMount() {
-    const { oppdaterData, settSkjemaVerdi, tilstand } = this.props;
-    const { vesentligVirksomhetVilkaar } = tilstand;
-    oppdaterData(konverterTilStegData('vesentligVirksomhet', vesentligVirksomhetVilkaar));
-    settSkjemaVerdi('vilkar.vesentligVirksomhetBegrunnelser', vesentligVirksomhetVilkaar.begrunnelseKoder || []);
+    const { oppdaterData, tilstand } = this.props;
+    oppdaterData(konverterTilStegData('vesentligVirksomhet', tilstand.vesentligVirksomhetVilkaar));
   }
 
   componentWillUnmount() {
@@ -97,7 +95,6 @@ VurderingVesentligVirksomhet.propTypes = {
   tilstand: PT.object,
   valgteVirksomheter: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
-  settSkjemaVerdi: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,

@@ -2,7 +2,7 @@ import * as MKV from 'melosys-kodeverk';
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingNormaltDriverVirksomhet from '../../stegKomponenter/vurderingNormaltDriverVirksomhet';
-import { erVilkarOppfylt } from '../../../../regler/vilkar';
+import { erVilkarOppfylt, hentVilkar } from '../../../../regler/vilkar';
 
 class NormaltDriverVirksomhet extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -29,17 +29,19 @@ class NormaltDriverVirksomhet extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { normaltDriverVirksomhet, normaltDriverVirksomhetBegrunnelser = [] } = _propsLight.skjema.vilkar;
-      const harAvklaring = normaltDriverVirksomhet === true || (normaltDriverVirksomhet === false && normaltDriverVirksomhetBegrunnelser.length > 0);
-
+      const normaltDriverVirksomhet = hentVilkar(MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, _propsLight.vilkar);
+      const harAvklaring = normaltDriverVirksomhet.oppfylt === true ||
+                           (normaltDriverVirksomhet.oppfylt === false && normaltDriverVirksomhet.begrunnelseKoder.length > 0);
       return {
-        visBegrunnelser: !_propsLight.skjema.vilkar.normaltDriverVirksomhet,
+        visBegrunnelser: !normaltDriverVirksomhet.oppfylt,
         harAvklaring,
+        normaltDriverVirksomhet,
       };
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
-      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
     };
     this.status = FANE_STATUS.OK;
   }
