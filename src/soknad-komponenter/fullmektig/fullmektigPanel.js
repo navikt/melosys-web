@@ -101,7 +101,7 @@ class FullmektigPanel extends Component {
 
     const { disableLeggTilFullmektig, fullmektige } = this.state;
 
-    const panelIkon = fullmektige.some(fullmektig => fullmektig.orgnr) > 0 ? Ikoner.Ferdig : Ikoner.Ubehandlet;
+    const panelIkon = fullmektige.some(fullmektig => fullmektig.orgnr) ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
     return (
       <div>
