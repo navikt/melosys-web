@@ -135,9 +135,9 @@ class VurderingArtikkel11_4 extends Component {
                 />
               </Nav.Fieldset>
               { visNISAvsnitt && (
-                <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?" onChange={this.nisEndret}>
-                  <Nav.Radio name="nis" disabled={!redigerbart} checked={nis.oppfylt === BOOLSK.USANN} value={BOOLSK.USANN} label="Nei" />
-                  <Nav.Radio name="nis" disabled={!redigerbart} checked={nis.oppfylt === BOOLSK.SANN} value={BOOLSK.SANN} label="Ja" />
+                <Nav.Fieldset legend="Jobber søker i hotell- eller restaurantnæring på NIS-registrert skip?">
+                  <Nav.Radio name="nis" disabled={!redigerbart} checked={nis.oppfylt === BOOLSK.USANN} onChange={this.nisEndret} value={BOOLSK.USANN} label="Nei" />
+                  <Nav.Radio name="nis" disabled={!redigerbart} checked={nis.oppfylt === BOOLSK.SANN} onChange={this.nisEndret} value={BOOLSK.SANN} label="Ja" />
                 </Nav.Fieldset>
               )
               }

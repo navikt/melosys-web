@@ -48,7 +48,7 @@ class Artikkel12_1 extends Steg {
 
       const harAvklaring = !Utils._isNil(art12_1.oppfylt) || !Utils._isNil(art16_1.oppfylt);
       const manglerBegrunnelse12 = art12_1.oppfylt === false && art12_1.begrunnelseKoder.length === 0;
-      const manglerBegrunnelse16 = art16_1.oppfylt === false && art16_1.begrunnelseKoder.length === 0 && art16_1.begrunnelseFritekst !== null;
+      const manglerBegrunnelse16 = art16_1.oppfylt === false && art16_1.begrunnelseKoder.length === 0 && art16_1.begrunnelseFritekst === null;
 
       return {
         harAvklaring: harAvklaring && !manglerBegrunnelse12 && !manglerBegrunnelse16,
