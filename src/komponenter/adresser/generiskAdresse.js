@@ -21,7 +21,7 @@ const GeneriskAdresse = ({ adresse }) => {
     gatenavn, gatenummer, husnummer, husbokstav,
   } = gateadresse;
 
-  const landNavn = (typeof land === 'string' ? land : KV.objektTilTerm(land));
+  const landNavn = (typeof land === 'string' ? land : KV.objektTilTermUtenFeilmelding(land));
   const visGate = gatenavn || gatenummer || husnummer || husbokstav;
 
   return (gatenavn || gatenummer || husnummer || husbokstav || land || postnr || poststed) ? (
