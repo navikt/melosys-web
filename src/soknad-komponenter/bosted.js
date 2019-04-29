@@ -6,6 +6,7 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
+import * as Utils from '../utils';
 
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import Landvelger from './skjema/landvelger';
@@ -17,9 +18,16 @@ import { BOOLSK } from '../constants';
 import { boolTilNorsk } from '../utils/streng';
 
 const Bosted = props => {
-  const { redigerbart, erValidert } = props;
+  const { redigerbart, soknadForm: { values } } = props;
 
-  const panelIkon = erValidert ? Ikoner.Ferdig : Ikoner.Varsel;
+  const felter = [
+    values.forutgaendeBostedINorge,
+    values.familiesBosted,
+    values.adresseIUtlandet,
+    values.sammeAdresseSomArbeidsgiver,
+  ];
+  const minstEttFeltErUtfylt = felter.some(felt => felt !== '' && !Utils._isNil(felt));
+  const panelIkon = minstEttFeltErUtfylt ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
   const { eosBarnetrygd } = props.sakOgBehandling;
 
@@ -60,14 +68,12 @@ const Bosted = props => {
 
 Bosted.propTypes = {
   soknadForm: MPT.SoknadForm,
-  erValidert: PT.bool,
   redigerbart: PT.bool.isRequired,
   sakOgBehandling: PT.object.isRequired,
 };
 
 Bosted.defaultProps = {
   soknadForm: {},
-  erValidert: true,
 };
 
 
