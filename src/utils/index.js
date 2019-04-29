@@ -3,10 +3,10 @@ import throttle from 'lodash.throttle';
 import * as dato from './dato';
 import * as streng from './streng';
 import * as logger from './logger';
-import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt } from './utils';
+import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, grupperEtterKey } from './utils';
 
 export {
-  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt,
+  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, grupperEtterKey,
   dato, streng,
   logger,
   isUndefined as _isUndefined,

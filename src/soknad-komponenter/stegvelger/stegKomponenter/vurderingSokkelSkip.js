@@ -6,10 +6,28 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
-
-import LandVelger from '../../skjema/landvelger';
+import * as Utils from '../../../utils';
 
 import './vurderingSokkelSkip.css';
+
+const ArbeidslandRadioButtons = props => {
+  const { landliste, feltNavn } = props;
+
+  const grupperEtterKode = Utils.grupperEtterKey('kode');
+  const landGruppertEtterKode = grupperEtterKode(landliste);
+
+  return Object.keys(landGruppertEtterKode).map(landGruppeNavn => {
+    const landTermerAssosiertMedRadiobutton = landGruppertEtterKode[landGruppeNavn].map(land => land.term);
+    const label = `${landGruppeNavn}: ${landTermerAssosiertMedRadiobutton.join(' - ')}`;
+
+    return <Skjema.Radio key={label} feltNavn={feltNavn} value={landGruppeNavn} label={label} />;
+  });
+};
+
+ArbeidslandRadioButtons.propTypes = {
+  landliste: PT.array.isRequired,
+  feltNavn: PT.string.isRequired,
+};
 
 const SokkelSkipEnkelt = props => {
   const {
@@ -19,7 +37,9 @@ const SokkelSkipEnkelt = props => {
     redigerbart,
   } = props;
 
-  const { navn, sokkelEllerSkip } = sokkelSkipInfo;
+  const {
+    navn, sokkelEllerSkip, flaggLandkode, installasjonsLandkode, territorialfarvann,
+  } = sokkelSkipInfo;
 
   const { installasjonsType } = sokkelEllerSkip || {};
 
@@ -27,21 +47,30 @@ const SokkelSkipEnkelt = props => {
 
   return (
     <Nav.Row className="sokkelSkip__liste__rad">
-      <Nav.Column xs="4" className="rad__navn">{navn}</Nav.Column>
+      <Nav.Column xs="3" className="rad__navn">{navn}</Nav.Column>
       <Nav.Column xs="2" className="rad__sokkel">
         <Skjema.Radio disabled={!redigerbart} feltNavn={`maritimtArbeid[${index}].sokkelEllerSkip.installasjonsType`} value={SOKKEL} label="Sokkel" />
         <Skjema.Radio disabled={!redigerbart} feltNavn={`maritimtArbeid[${index}].sokkelEllerSkip.installasjonsType`} value={SKIP} label="Skip" />
       </Nav.Column>
       {
         installasjonsType === SOKKEL &&
-        <Nav.Column xs="3" className="rad__begrunnelse">
+        <Nav.Column xs="2" className="rad__begrunnelse">
           <Skjema.Select disabled={!redigerbart} feltNavn={`maritimtArbeid[${index}].sokkelEllerSkip.installasjonsTypeBegrunnelse`} label="Begrunnelse hvis sokkel">
             {begrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
           </Skjema.Select>
         </Nav.Column>
       }
-      <Nav.Column xs="3" className="rad__land">
-        <LandVelger disabled={!redigerbart} feltNavn={`maritimtArbeid[${index}].sokkelEllerSkip.arbeidsland`} multiLand={false} label="Arbeidsland" />
+      <Nav.Column xs="5" className="rad__land">
+        <Nav.Fieldset disabled={!redigerbart} legend="Velg arbeidsland">
+          <ArbeidslandRadioButtons
+            landliste={[
+              { term: 'Flaggland', kode: flaggLandkode },
+              { term: 'Sokkelland', kode: installasjonsLandkode },
+              { term: 'Territorialfarvandsland', kode: territorialfarvann },
+            ]}
+            feltNavn={`maritimtArbeid[${index}].sokkelEllerSkip.arbeidsland`}
+          />
+        </Nav.Fieldset>
       </Nav.Column>
     </Nav.Row>
   );

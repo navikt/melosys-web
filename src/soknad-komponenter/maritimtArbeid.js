@@ -57,7 +57,7 @@ const MaritimtEnkelt = ({
         <Nav.Column xs="6">
           {
             fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
-            <LandVelger bredde="fullbredde" feltNavn={`${navn}territorialfarvann`} label="Territorialfarvannsland:" disabled={!redigerbart} />
+            <LandVelger bredde="fullbredde" feltNavn={`${navn}territorialfarvann`} label="Territorialfarvandsland:" disabled={!redigerbart} />
           }
         </Nav.Column>
       </Nav.Row>
