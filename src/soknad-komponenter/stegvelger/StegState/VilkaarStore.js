@@ -3,13 +3,13 @@ import * as Utils from '../../../utils';
 
 class VilkaarStore extends StegState {
   oppdaterfelt = (eksisterendeData, nyData) => {
-    const fritekst = nyData.fritekst || eksisterendeData.fritekst;
+    const fritekst = !Utils._isNil(nyData.fritekst) ? nyData.fritekst : eksisterendeData.fritekst;
     const begrunnelse = nyData.begrunnelse || eksisterendeData.begrunnelse;
 
     const { oppfylt } = eksisterendeData;
     const nyttFelt = { oppfylt, begrunnelse, fritekst };
 
-    if (!Utils._isNil(nyData.oppfylt) && !Utils._isUndefined(nyData.oppfylt)) {
+    if (!Utils._isNil(nyData.oppfylt)) {
       nyttFelt.oppfylt = nyData.oppfylt;
     }
     return nyttFelt;
