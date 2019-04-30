@@ -1,18 +1,24 @@
 import React from 'react';
 import PT from 'prop-types';
 import { Field } from 'redux-form';
+import { connect } from 'react-redux';
 
 import * as Nav from '../../../utils/navFrontend';
+
 import { normaliserInputDato } from '../../../utils/dato';
+
+import { formSelectors } from '../../../ducks/form';
+
 import '../skjema.css';
 
 /** Komponenten nedenfor tar imot errorMessage (og alle andre props). ErrorMessage gjøres om til
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
  */
 function InnerInputComponent({
-  input, label, ...rest
+  input, label, feltNavn, hentFeltFeil, ...rest
 }) {
-  const feil = (rest.meta.error && rest.meta.touched && !rest.meta.active) ? { feilmelding: rest.meta.error } : undefined;
+  const feltFeilmelding = hentFeltFeil(feltNavn);
+  const feil = feltFeilmelding ? { feilmelding: feltFeilmelding } : undefined;
   const inputProps = { ...input, ...rest };
   return !rest.hidden && <Nav.Input label={label} feil={feil} {...inputProps} />;
 }
@@ -20,8 +26,10 @@ function InnerInputComponent({
 InnerInputComponent.propTypes = {
   label: PT.string.isRequired,
   bredde: PT.string,
-  meta: PT.object, // eslint-disable-line react/forbid-prop-types
-  input: PT.object, // eslint-disable-line react/forbid-prop-types
+  meta: PT.object,
+  input: PT.object,
+  feltNavn: PT.string.isRequired,
+  hentFeltFeil: PT.func.isRequired,
 };
 
 InnerInputComponent.defaultProps = {
@@ -29,6 +37,12 @@ InnerInputComponent.defaultProps = {
   meta: undefined,
   input: undefined,
 };
+
+const mapStateToProps = state => ({
+  hentFeltFeil: feltNavn => formSelectors.SoknadErrorsSelector(state)[feltNavn],
+});
+
+const ConnectedInnerInputComponent = connect(mapStateToProps, () => ({}))(InnerInputComponent);
 
 function Input({
   feltNavn, bredde, datoFelt, ...rest
@@ -41,9 +55,9 @@ function Input({
       bredde={bredde}
       name={feltNavn}
       normalize={normaliserDatoFunksjon}
-      component={InnerInputComponent}
+      component={ConnectedInnerInputComponent}
       placeholder={placeholderTekst}
-      props={rest}
+      props={{ ...rest, feltNavn }}
     />
   );
 }
