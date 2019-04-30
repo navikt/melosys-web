@@ -1,6 +1,5 @@
 import React from 'react';
 import PT from 'prop-types';
-import uuid from 'uuid';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
