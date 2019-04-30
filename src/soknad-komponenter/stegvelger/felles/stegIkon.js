@@ -8,7 +8,7 @@ import * as Ikon from '../../../resources/images';
 
 import './stegIkon.css';
 
-const ikonVelger = (id, status, aktivtSteg) => {
+const ikonVelger = (id, status) => {
   const IKONER = {
     STEG: {
       UBEHANDLET: Ikon.Ubehandlet,
@@ -25,11 +25,7 @@ const ikonVelger = (id, status, aktivtSteg) => {
   };
 
   if (id === STEG.VEDTAK || id === STEG.ENDRET_PERIODE || id === STEG.AVSLAG_12_X_OG_16) {
-    return IKONER.VEDTAK[status];
-  }
-
-  if (aktivtSteg) {
-    return Ikon.Ubehandlet;
+    return IKONER.VEDTAK.OK;
   }
 
   return IKONER.STEG[status];
@@ -45,7 +41,9 @@ const StegIkon = props => {
 
   const cl = classnames(
     'stegIkon',
-    (!erTilgjengelig ? 'stegIkon-utilgjengelig' : '')
+    (!erTilgjengelig ? 'stegIkon-utilgjengelig' : ''),
+    (aktivtSteg && 'stegIkon--aktiv'),
+    (aktivtSteg && !erTilgjengelig && 'stegIkon--aktiv--utilgjengelig')
   );
 
   const knappKlasser = classnames({
