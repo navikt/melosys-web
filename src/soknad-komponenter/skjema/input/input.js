@@ -1,7 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import { Field } from 'redux-form';
-import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 
 import * as Nav from '../../../utils/navFrontend';
 
