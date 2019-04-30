@@ -133,8 +133,13 @@ class Stegvelger extends Component {
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
-    await this.props.lagreAllData();
-    this.fatteVedtakHandler(behandlingsresultattype);
+    if (this.harSoknadIngenFeilmeldinger()) {
+      this.gjemSoknadFeilmeldinger();
+      await this.props.lagreAllData();
+      this.fatteVedtakHandler(behandlingsresultattype);
+    } else {
+      this.visSoknadFeilmeldinger();
+    }
   };
 
   endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
@@ -211,8 +216,8 @@ class Stegvelger extends Component {
 
   validerSoknadOgGaTilSteg = nyttStegNummer => {
     if (this.harSoknadIngenFeilmeldinger()) {
-      this.tilSteg(nyttStegNummer);
       this.gjemSoknadFeilmeldinger();
+      this.tilSteg(nyttStegNummer);
     } else {
       this.visSoknadFeilmeldinger();
     }
