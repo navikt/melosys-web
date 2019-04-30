@@ -156,18 +156,12 @@ class Saksbehandling extends Component {
   };
 
   lagreVilkarHandler = async () => {
-    const { skjema, oppdaterVilkarState } = this.props;
-    await oppdaterVilkarState(skjema);
-
     const { sendVilkar, vilkar } = this.props;
     const bid = this.props.oppsummering.behandlingID;
     sendVilkar(bid, vilkar);
   };
 
   lagreAvklartefaktaHandler = async () => {
-    const { skjema, oppdaterAvklarteFaktaState } = this.props;
-    await oppdaterAvklarteFaktaState(skjema);
-
     const { sendAvklartefakta, avklartefakta } = this.props;
     const bid = this.props.oppsummering.behandlingID;
     sendAvklartefakta(bid, avklartefakta);
@@ -323,7 +317,6 @@ Saksbehandling.propTypes = {
   lovvalgsperioder: PT.array.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   sendPerioder: PT.func.isRequired,
-  oppdaterVilkarState: PT.func.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterLovvalgperioderState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
@@ -372,7 +365,6 @@ const mapDispatchToProps = dispatch => ({
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
-  oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),

@@ -35,11 +35,19 @@ export class EnkeltLand extends Component {
     }
     const { onChange } = this.props.input;
     onChange(landkode);
+
+    if (this.props.onChange) {
+      this.props.onChange(landkode);
+    }
   };
 
   reduxFjernLand = () => {
     const { onChange } = this.props.input;
     onChange('');
+
+    if (this.props.onChange) {
+      this.props.onChange();
+    }
   };
 
   fokusInnHandler = e => {
@@ -154,6 +162,7 @@ EnkeltLand.propTypes = {
   bredde: PT.string,
   feltNavn: PT.string.isRequired,
   hentFeltFeil: PT.func.isRequired,
+  onChange: PT.func,
 };
 
 EnkeltLand.defaultProps = {
@@ -161,6 +170,7 @@ EnkeltLand.defaultProps = {
   feil: '',
   disabled: false,
   bredde: 'XL',
+  onChange: null,
 };
 
 const mapStateToProps = state => ({

@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
 import classnames from 'classnames';
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
 
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 import LandVelger from '../../skjema/landvelger/';
 import { BOOLSK } from '../../../constants';
 
 import './vurderingBostedsland.css';
 import * as MPT from '../../../proptypes';
+import { konverterTilStegData, lagVilkaar } from '../../../regler/vilkar';
+import { lagAvklartfakta } from '../../../regler/avklartefakta';
+import * as KV from '../../../kodeverk';
 
 const uuid = require('uuid/v4');
 
@@ -58,14 +61,32 @@ AvklaringsListe.propTypes = {
  */
 const VurderingBostedsland = props => {
   const {
-    bekreftOgFortsett, tilstand, begrunnelser, redigerbart,
+    bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData, slettAllDataForSteg,
   } = props;
+
+  useEffect(() => {
+    const { bosattINorgeVilkaar } = tilstand;
+    oppdaterData(konverterTilStegData('bosattINorge', bosattINorgeVilkaar));
+
+    return function cleanup() {
+      slettAllDataForSteg();
+    };
+  }, []);
 
   const {
     erBosattINorge, erAvklart, harEOSBarnetrygdSak, begrunnelserPaaKrevd,
   } = tilstand;
 
   const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
+
+  const radioEndringHandler = event => {
+    oppdaterData(lagVilkaar('bosattINorge', event.target.value));
+    slettData('avklartefakta', KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
+  };
+
+  const landEndretHandler = landKode => {
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, landKode));
+  };
 
   return (
     <div className="vurderingBostedsland">
@@ -76,9 +97,31 @@ const VurderingBostedsland = props => {
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend="Bostedsland er:">
-              <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.bosattINorge" value={BOOLSK.SANN} label="Norge" />
-              <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.bosattINorge" value={BOOLSK.USANN} label="Annet" />
-              {!erBosattINorge && <LandVelger disabled={!redigerbart} label="Velg land:" feltNavn="avklartefakta.bostedsland" multiland={false} />}
+              <Nav.Radio
+                name="bostedsland"
+                disabled={!redigerbart}
+                value={BOOLSK.SANN}
+                onChange={radioEndringHandler}
+                checked={erBosattINorge === BOOLSK.SANN}
+                label="Norge"
+              />
+              <Nav.Radio
+                name="bostedsland"
+                disabled={!redigerbart}
+                value={BOOLSK.USANN}
+                onChange={radioEndringHandler}
+                checked={erBosattINorge === BOOLSK.USANN}
+                label="Annet"
+              />
+              {!erBosattINorge &&
+                <LandVelger
+                  disabled={!redigerbart}
+                  label="Velg land:"
+                  feltNavn="vurderingBostedsland.bostedsland"
+                  multiland={false}
+                  onChange={landEndretHandler}
+                />
+              }
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
@@ -86,11 +129,9 @@ const VurderingBostedsland = props => {
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Begrunnelse:">
-                <Skjema.ListeVelger
-                  feltNavn="vilkar.bosattINorgeBegrunnelser"
+                <ListevelgerFlervalg
                   muligeValg={begrunnelser}
                   label="Legg til begrunnelse:"
-                  gruppe
                   tillatFritekst={false}
                   disabled={!redigerbart}
                 />
@@ -112,6 +153,9 @@ VurderingBostedsland.propTypes = {
   vurdering: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   redigerbart: PT.bool.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingBostedsland.defaultProps = {
