@@ -17,7 +17,8 @@ import '../skjema.css';
 function InnerInputComponent({
   input, label, feltNavn, hentFeltFeil, ...rest
 }) {
-  const feltFeilmelding = hentFeltFeil(feltNavn);
+  const feltFeil = hentFeltFeil(feltNavn);
+  const feltFeilmelding = feltFeil ? feltFeil.melding : null;
   const feil = feltFeilmelding ? { feilmelding: feltFeilmelding } : undefined;
   const inputProps = { ...input, ...rest };
   return !rest.hidden && <Nav.Input label={label} feil={feil} {...inputProps} />;

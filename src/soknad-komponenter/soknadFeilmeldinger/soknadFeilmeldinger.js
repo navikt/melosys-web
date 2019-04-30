@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { formSelectors } from '../../ducks/form';
@@ -7,32 +7,34 @@ import * as Nav from '../../utils/navFrontend';
 
 import './soknadFeilmeldinger.css';
 
-const Feilmelding = props => (
-  <Nav.AlertStripe className="feilmelding" type="advarsel" >{props.feilmelding}</Nav.AlertStripe>
-);
 
-Feilmelding.propTypes = {
-  feilmelding: PT.string.isRequired,
+const SoknadFeilmeldinger = ({ panelerMedFeil }) => {
+  if (panelerMedFeil.length === 0) return null;
+
+  return (
+    <Nav.AlertStripe className="feilmelding" type="advarsel" >
+      En feil har oppstått. Sjekk følgende panel(er):
+      <ul>
+        {
+          panelerMedFeil.map(panelnavn => (
+            <li key={panelnavn}>{panelnavn}</li>
+          ))
+        }
+      </ul>
+    </Nav.AlertStripe>
+  );
 };
 
-const SoknadFeilmeldinger = ({
-  valideringErrors,
-}) => (
-  <Fragment>
-    {Object.keys(valideringErrors).map(error => <Feilmelding key={valideringErrors[error]} feilmelding={valideringErrors[error]} />)}
-  </Fragment>
-);
-
 SoknadFeilmeldinger.propTypes = {
-  valideringErrors: PT.object,
+  panelerMedFeil: PT.arrayOf(PT.string),
 };
 
 SoknadFeilmeldinger.defaultProps = {
-  valideringErrors: {},
+  panelerMedFeil: [],
 };
 
 const mapStateToProps = state => ({
-  valideringErrors: formSelectors.SoknadErrorsSelector(state),
+  panelerMedFeil: formSelectors.PanelerMedFeilSelector(state),
 });
 
 export default connect(mapStateToProps)(SoknadFeilmeldinger);
