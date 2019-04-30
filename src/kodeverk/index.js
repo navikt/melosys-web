@@ -1,10 +1,12 @@
 import * as Koder from './koder';
 import * as Form from './form';
 
-const objektTilTerm = KTObjekt => {
-  if (!KTObjekt || !KTObjekt.term) { return '(mangler informasjon)'; }
+const objektTilTermUtenFeilmelding = KTObjekt => {
+  if (!KTObjekt || !KTObjekt.term) return null;
   return Object.keys(KTObjekt).includes('term') ? KTObjekt.term : null;
 };
+
+const objektTilTerm = KTObjekt => objektTilTermUtenFeilmelding(KTObjekt) || '(mangler informasjon)';
 
 const objektTilKode = KTObjekt => {
   if (!KTObjekt || !KTObjekt.kode) { throw new Error('Ukjent kode'); }
@@ -29,6 +31,7 @@ export {
   Koder,
   Form,
   objektTilTerm,
+  objektTilTermUtenFeilmelding,
   objektTilKode,
   finnEnkeltKodeFraListe,
   kodeTilTerm,

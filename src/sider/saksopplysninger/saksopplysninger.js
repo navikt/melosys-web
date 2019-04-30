@@ -41,22 +41,6 @@ import { formatterDatoTilNorsk } from '../../utils/dato';
 import { lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
 
 class Saksopplysninger extends Component {
-  state = {
-    gyldigePaneler: {},
-  };
-
-  componentDidUpdate(prevProps) {
-    const { syncErrors } = this.props.soknadForm;
-
-    // Oppdaterer alle paneler og setter grønn hake dersom ingen felter
-    // i panelet lenger er ugyldig (ikke validerer).
-    if (JSON.toString(syncErrors) !== JSON.toString(prevProps.syncErrors)) {
-      this.onUpdate(function callback() {
-        this.setState({ gyldigePaneler: Validering.Felles.gyldigePaneler(syncErrors) });
-      });
-    }
-  }
-
   lagreSoknadHandler = async () => {
     const bid = this.props.oppsummering.behandlingID;
     const {
@@ -129,7 +113,7 @@ class Saksopplysninger extends Component {
         }
         <Personopplysninger />
         <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
-        <Bosted erValidert={this.state.gyldigePaneler.bosted} />
+        <Bosted />
         <ArbeidsgivereNorge />
         <ForetakUtland />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />
