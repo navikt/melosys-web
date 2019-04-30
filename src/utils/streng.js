@@ -1,4 +1,4 @@
-import { toInteger} from 'lodash';
+import { toInteger } from 'lodash';
 
 export function boolTilNorsk (value) {
   return value ? 'JA' : 'NEI';
@@ -15,6 +15,12 @@ export function boolTilStreng (value) {
 
 export function strengTilBool (value) {
   return value === 'true';
+}
+
+export function tryParseBool(value) {
+  if (value === 'true') return true;
+  if (value === 'false') return false;
+  return value; // undefined, null, bool
 }
 
 export function strengTilInt (value) {

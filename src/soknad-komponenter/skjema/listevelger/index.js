@@ -43,6 +43,7 @@ Listevelger.propTypes = {
   feltNavn: PT.string.isRequired,
   className: PT.string,
   gruppe: PT.bool,
+  onChange: PT.func,
   muligeValg: PT.arrayOf(MPT.Kodeverk),
   tillatFritekst: PT.bool,
   disabled: PT.bool,
@@ -54,6 +55,7 @@ Listevelger.defaultProps = {
   muligeValg: [],
   tillatFritekst: false,
   disabled: false,
+  onChange: undefined,
 };
 
 export default Listevelger;
