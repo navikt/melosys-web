@@ -19,6 +19,7 @@ function InnerInputComponent({
 }) {
   let feil = (rest.meta.error && rest.meta.touched && !rest.meta.active) ? { feilmelding: rest.meta.error } : undefined;
 
+  /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
   if (!feil) {
     const feltFeil = hentFeltFeil(feltNavn);
     const feltFeilmelding = feltFeil ? feltFeil.melding : null;

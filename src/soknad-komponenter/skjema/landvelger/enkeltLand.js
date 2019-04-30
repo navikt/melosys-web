@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { Field } from 'redux-form';
+import { connect } from 'react-redux';
 
 import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 
 import { kodeTilObjekt, landTekstFormat } from './LandVelger';
+
+import { formSelectors } from '../../../ducks/form';
+
 import './landvelger.css';
 
 export class EnkeltLand extends Component {
@@ -103,13 +107,21 @@ export class EnkeltLand extends Component {
     } = this;
 
     const {
-      label, meta, dataListID, disabled, bredde,
+      label, meta, dataListID, disabled, bredde, feltNavn, hentFeltFeil,
     } = this.props;
 
     const { inputVerdi } = this.state;
     const { error: skjemaError = '' } = meta;
     const { error: landError = '' } = this.state;
-    const feilObjekt = skjemaError || landError ? { feilmelding: `${skjemaError} ${landError}` } : null;
+    let feilObjekt = skjemaError || landError ? { feilmelding: `${skjemaError} ${landError}` } : null;
+
+    /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
+    if (!feilObjekt) {
+      const feltFeil = hentFeltFeil(feltNavn);
+      const feltFeilmelding = feltFeil ? feltFeil.melding : null;
+
+      if (feltFeilmelding) feilObjekt = { feilmelding: feltFeilmelding };
+    }
 
     return (
       <div>
@@ -140,6 +152,8 @@ EnkeltLand.propTypes = {
   input: PT.object.isRequired,
   disabled: PT.bool,
   bredde: PT.string,
+  feltNavn: PT.string.isRequired,
+  hentFeltFeil: PT.func.isRequired,
 };
 
 EnkeltLand.defaultProps = {
@@ -149,7 +163,13 @@ EnkeltLand.defaultProps = {
   bredde: 'XL',
 };
 
-const EnkeltLandWrapper = props => (<Field name={props.feltNavn} component={EnkeltLand} props={props} />);
+const mapStateToProps = state => ({
+  hentFeltFeil: feltNavn => formSelectors.SoknadErrorsSelector(state)[feltNavn],
+});
+
+const ConnectedEnkeltLand = connect(mapStateToProps)(EnkeltLand);
+
+const EnkeltLandWrapper = props => (<Field name={props.feltNavn} component={ConnectedEnkeltLand} props={props} />);
 
 EnkeltLandWrapper.propTypes = {
   feltNavn: PT.string.isRequired,
