@@ -16,7 +16,7 @@ const initialState = {
 
 const OppdaterOppsummeringBehandlingsStatus = (state, action) => {
   const nydata = Utils._cloneDeep(state.data);
-  Utils._assign(nydata.behandlinger[0].oppsummering.behandlingsstatus, action.data);
+  Utils._assign(nydata.behandling.oppsummering.behandlingsstatus, action.data);
   return nydata;
 };
 /**

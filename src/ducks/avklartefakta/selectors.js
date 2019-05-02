@@ -87,7 +87,7 @@ export const Yrkesaktivitet = createSelector(
  * og merge inn organisasjoner slik at det er der den juridiske organisasjonens navn som vises i panelet.
  */
 export const VirksomheterIPeriodenSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.arbeidsforhold : []),
   state => fagsakSelectors.OrganisasjonerSelector(state),
   state => soknadSelectors.EkstraArbeidsgivereSelector(state),
   state => soknadSelectors.SelvstendigNaringsvirksomhetSelector(state),
