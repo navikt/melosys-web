@@ -16,9 +16,11 @@ import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { formSelectors } from '../../../ducks/form';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
-import Listevelger from '../../skjema/listevelger';
 import DatoOmrade from '../../../komponenter/datoOmrade/datoOmrade';
 import PdfLenkeListe from '../../pdfLenkeListe';
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
+
+import { konverterTilStegData, lagBegrunnelse } from '../../../regler/vilkar';
 
 import './vurderingArtikkel16.css';
 
@@ -122,13 +124,19 @@ class VurderingArtikkel16 extends Component {
     fritekstFeilmelding: undefined,
   };
 
+  componentDidMount() {
+    const { oppdaterData, tilstand: { art16_1 } } = this.props;
+    oppdaterData(konverterTilStegData('art16_1', art16_1));
+  }
+
   componentDidUpdate(prevProps) {
-    if (prevProps.art16Begrunnelser !== this.props.art16Begrunnelser) {
-      this.lagreVilkar();
-    }
     if (prevProps.tidligeremedlemskap !== this.props.tidligeremedlemskap) {
       this.lagreBehandlinger();
     }
+  }
+
+  componentWillUnmount() {
+    this.props.slettAllDataForSteg();
   }
 
   lagreBehandlingerOgFatteVedtak = async behandlingsresultattype => {
@@ -155,6 +163,13 @@ class VurderingArtikkel16 extends Component {
     this.props.oppdaterOgLagreBehandlinger().catch(e => Utils.logger.error(e));
   };
 
+  begrunnelserEndringHandler = async event => {
+    const { oppdaterData } = this.props;
+
+    await oppdaterData(lagBegrunnelse('art16_1', event.value));
+    this.lagreVilkar();
+  };
+
   validerLovvalg = () => {
     const valid = !Utils._isNil(this.props.unntakFraBestemmelse);
     if (!valid) this.setState({ lovvalgFeilmelding: { feilmelding: 'Velg lovvalg' } });
@@ -162,7 +177,8 @@ class VurderingArtikkel16 extends Component {
   };
 
   validerBegrunnelser = () => {
-    const valid = this.props.art16Begrunnelser.length !== 0;
+    const { tilstand } = this.props;
+    const valid = tilstand.art16_1.begrunnelseKoder.length !== 0;
     if (!valid) this.setState({ begrunnelserFeilmelding: 'Velg begrunnelser' });
     return valid;
   };
@@ -174,9 +190,11 @@ class VurderingArtikkel16 extends Component {
   };
 
   validerAlt = () => {
+    const { tilstand } = this.props;
+
     const lovvalgValid = this.validerLovvalg();
     const begrunnelserValid = this.validerBegrunnelser();
-    const fritekstValid = this.props.art16Begrunnelser.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
+    const fritekstValid = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
 
     return lovvalgValid && begrunnelserValid && fritekstValid;
   };
@@ -194,10 +212,11 @@ class VurderingArtikkel16 extends Component {
       medlemskap,
       oppsummering,
       redigerbart,
-      art16Begrunnelser,
+      tilstand,
     } = this.props;
 
     const {
+      begrunnelserEndringHandler,
       lagreLovvalgsPerioder,
       lagreVilkar,
       validerAlt,
@@ -221,10 +240,11 @@ class VurderingArtikkel16 extends Component {
       { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
     ];
 
-    const begrunnelseError = begrunnelserFeilmelding ? { error: begrunnelserFeilmelding } : {};
     const fritekstError = fritekstFeilmelding ? { error: fritekstFeilmelding, touched: true } : {};
 
-    const visFritekstfelt = art16Begrunnelser.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
+    const visFritekstfelt = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
+
+    const { art16_1 } = tilstand;
 
     /* eslint-disable max-len */
     return (
@@ -257,13 +277,14 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Listevelger
-                meta={begrunnelseError}
+              <ListevelgerFlervalg
                 disabled={!redigerbart}
-                gruppe
+                feil={begrunnelserFeilmelding}
                 muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning}
-                feltNavn="vilkar.art16_1_begrunnelser"
+                tillatFritekst={false}
                 label="Legg til begrunnelse:"
+                onChange={begrunnelserEndringHandler}
+                defaultElementer={art16_1.begrunnelseKoder}
               />
             </Nav.Column>
           </Nav.Row>
@@ -318,12 +339,15 @@ VurderingArtikkel16.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
   unntakFraBestemmelse: PT.string,
-  art16Begrunnelser: PT.array.isRequired,
   art16begrunnelserFritekst: PT.string,
   tidligeremedlemskap: PT.array.isRequired,
   lagreVilkarHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
+  tilstand: PT.object.isRequired,
 };
+
 VurderingArtikkel16.defaultProps = {
   art16begrunnelserFritekst: '',
   unntakFraBestemmelse: '',
@@ -335,7 +359,6 @@ const mapStateToProps = state => ({
   soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
-  art16Begrunnelser: formSelectors.Art16BegrunnelserSelector(state),
   art16begrunnelserFritekst: formSelectors.Art16BegrunnelseFritekstSelector(state),
   tidligeremedlemskap: formSelectors.TidligereMedlemskapSelector(state),
   unntakFraBestemmelse: formSelectors.UnntakFraBestemmelse(state),

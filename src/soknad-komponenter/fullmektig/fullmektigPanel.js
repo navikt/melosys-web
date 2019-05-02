@@ -90,8 +90,6 @@ class FullmektigPanel extends Component {
   };
 
   render() {
-    const panelIkon = Ikoner.Ferdig;
-
     const { redigerbart, slettAktoer, hentOrg } = this.props;
 
     const {
@@ -101,7 +99,9 @@ class FullmektigPanel extends Component {
       lagreNyFullmektigOgOppdaterLokalt,
     } = this;
 
-    const { disableLeggTilFullmektig } = this.state;
+    const { disableLeggTilFullmektig, fullmektige } = this.state;
+
+    const panelIkon = fullmektige.some(fullmektig => fullmektig.orgnr) ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
     return (
       <div>
@@ -109,7 +109,7 @@ class FullmektigPanel extends Component {
           heading={<PanelHeader ikon={panelIkon} tittel="Fullmektig" />}
           ariaTittel="Opplysninger om fullmektig">
           <Nav.Container fluid>
-            {this.state.fullmektige.map(fullmektig => (
+            {fullmektige.map(fullmektig => (
               <Fullmektig
                 key={fullmektig.databaseID}
                 databaseID={fullmektig.databaseID}

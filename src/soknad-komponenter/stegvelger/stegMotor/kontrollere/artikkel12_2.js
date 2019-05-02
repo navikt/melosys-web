@@ -3,7 +3,8 @@ import * as MKV from 'melosys-kodeverk';
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel12_2 from '../../stegKomponenter/vurderingArtikkel12_2';
-import { erVilkarOppfylt } from '../../../../regler/vilkar';
+import { erVilkarOppfylt, hentVilkar } from '../../../../regler/vilkar';
+import * as Utils from '../../../../utils';
 
 class Artikkel12_2 extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -42,26 +43,27 @@ class Artikkel12_2 extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const {
-        art12_2, art12_2_begrunnelser = [],
-        art16_1, art16_1_begrunnelser = [], art16_1_begrunnelser_fritekst = '',
-      } = _propsLight.skjema.vilkar;
+      const art12_2 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_2, _propsLight.vilkar);
+      const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar);
 
-      const harAvklaring = (art12_2 !== null && art12_2 !== undefined) || (art16_1 !== null && art16_1 !== undefined);
-      const manglerBegrunnelse12 = art12_2 === false && art12_2_begrunnelser.length === 0;
-      const manglerBegrunnelse16 = art16_1 === false && art16_1_begrunnelser.length === 0 && art16_1_begrunnelser_fritekst.length < 1;
+      const harAvklaring = !Utils._isNil(art12_2.oppfylt) || !Utils._isNil(art16_1.oppfylt);
+      const manglerBegrunnelse12 = art12_2.oppfylt === false && art12_2.begrunnelseKoder.length === 0;
+      const manglerBegrunnelse16 = art16_1.oppfylt === false && art16_1.begrunnelseKoder.length === 0 && art16_1.begrunnelseFritekst === null;
 
       return {
         harAvklaring: harAvklaring && !manglerBegrunnelse12 && !manglerBegrunnelse16,
-        visBegrunnelser12: art12_2 === false,
-        visBegrunnelser16: art16_1 === false,
-        art12_2: _propsLight.skjema.vilkar.art12_2,
-        art16_1: _propsLight.skjema.vilkar.art16_1,
+        visBegrunnelser12: art12_2.oppfylt === false,
+        visBegrunnelser16: art16_1.oppfylt === false,
+        art12_2,
+        art16_1,
+        art16_1_fritekst: art16_1.begrunnelseFritekst || '',
       };
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
-      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (type, felt) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, type, felt),
     };
     this._status = FANE_STATUS.OK;
   }
