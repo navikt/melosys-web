@@ -13,6 +13,7 @@ import * as KV from '../../kodeverk';
 
 import { fagsakSelectors } from '../fagsaker/';
 import { soknadSelectors } from '../soknad';
+import { vilkarSelectors } from '../vilkar';
 import { OrganisasjonSelectors } from '../organisasjoner';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
@@ -182,8 +183,8 @@ const SoknadslandSelector = createSelector(
 const MaritimeArbeidslandSelector = createSelector(
   state => SokkelEllerSkipSelector(state),
   sokkelEllerSkipListe => (sokkelEllerSkipListe
-    .filter(sokkelEllerSkip => sokkelEllerSkip.installasjonsType === KV.Koder.SKIP)
-    .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland))
+    .map(sokkelEllerSkip => sokkelEllerSkip.arbeidsland)
+    .filter(arbeidsland => arbeidsland))
 );
 
 const ArbeidslandSelector = createSelector(
@@ -222,11 +223,17 @@ export const AvklartefaktaVurderingSelector = createSelector(
 );
 
 export const BostedslandSelector = createSelector(
+  state => vilkarSelectors.bosattINorge(state),
   state => AvklartefaktaSelector(state),
-  alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
-    if (!avklartFakta) return null;
-    const bostedslandkode = avklartFakta.fakta[0];
+  (bosattINorge, alleAvklarteFakta) => {
+    let bostedslandkode;
+    if (bosattINorge.oppfylt) {
+      bostedslandkode = MKV.Koder.landkoder.NO;
+    } else {
+      const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
+      if (!avklartFakta) return null;
+      [bostedslandkode] = avklartFakta.fakta;
+    }
     return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandkode);
   }
 );

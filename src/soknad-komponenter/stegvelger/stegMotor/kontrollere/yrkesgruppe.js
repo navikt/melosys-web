@@ -2,6 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesgruppe from '../../stegKomponenter/vurderingYrkesgruppe';
 import * as KV from '../../../../kodeverk';
+import { hentFakta } from '../../../../regler/avklartefakta';
 
 class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -31,13 +32,16 @@ class Yrkesgruppe extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { yrkesgruppe } = _propsLight.skjema.avklartefakta;
+      const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, _propsLight.avklartefakta);
       return ({
-        harAvklaring: yrkesgruppe !== null && yrkesgruppe !== undefined,
+        harAvklaring: yrkesgruppe.fakta && yrkesgruppe.fakta.length > 0,
+        yrkesgruppe,
       });
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
     };
     this.status = FANE_STATUS.OK;
   }

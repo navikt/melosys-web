@@ -8,10 +8,10 @@
 import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
-export function oppdaterAvklartefaktaState(dokument) {
+export function oppdaterAvklartefaktaState(avklartefakta) {
   return ({
     type: Types.OPPDATER_AVKLARTEFAKTA,
-    dokument,
+    avklartefakta,
   });
 }
 
