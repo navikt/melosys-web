@@ -65,9 +65,9 @@ class Saksbehandling extends Component {
 
     try {
       const response = await hentFagsaker(snr);
-      const { behandlinger } = response.data;
+      const { behandling } = response.data;
 
-      if (!behandlinger) return false;
+      if (!behandling) return false;
 
       await hentBehandlingsresultat(behandlingID);
 
@@ -192,8 +192,8 @@ class Saksbehandling extends Component {
     const { skjema, oppdaterBehandlingerState } = this.props;
     await oppdaterBehandlingerState(skjema);
 
-    const { behandlinger, sendPerioder } = this.props;
-    sendPerioder(behandlingID, behandlinger);
+    const { behandling, sendPerioder } = this.props;
+    sendPerioder(behandlingID, behandling);
   };
 
   lagreAllData = async () => {
@@ -329,7 +329,7 @@ Saksbehandling.propTypes = {
   oppdaterSoknadState: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
-  behandlinger: PT.object.isRequired,
+  behandling: PT.object.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   sendPerioder: PT.func.isRequired,
@@ -359,7 +359,7 @@ const mapStateToProps = state => ({
   vilkar: vilkarSelectors.VilkarSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  behandlinger: behandlingerSelectors.behandlingerSelector(state),
+  behandling: behandlingerSelectors.behandlingerSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

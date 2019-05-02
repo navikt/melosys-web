@@ -6,28 +6,23 @@ import * as KV from '../../kodeverk';
 import { soknadSelectors } from '../soknad/';
 import { datoDiff } from '../../utils/dato';
 
-export const BehandlingSelector = behandlingID => createSelector(
-  state => state.data.behandlinger.find(item => item.behandlingID === behandlingID),
-  behandling => behandling || {}
-);
-
 export const PersonSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.person : state.fagsaker.data),
   person => person
 );
 
 export const OrganisasjonerSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.organisasjoner : []),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.organisasjoner : []),
   organisasjoner => organisasjoner || []
 );
 
 export const SakOgBehandlingSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.sakOgBehandling : {}),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.sakOgBehandling : {}),
   sakOgBehandling => sakOgBehandling || {}
 );
 
 export const RedigerbartSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].redigerbart : false),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.redigerbart : false),
   redigerbart => redigerbart
 );
 
@@ -37,7 +32,7 @@ export const FagsakStatusSelector = createSelector(
 );
 
 export const SaksopplysningerSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger : {}),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger : {}),
   saksopplysninger => saksopplysninger || {}
 );
 
@@ -134,7 +129,7 @@ const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
 };
 
 export const InntektSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.inntekt : {}),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.inntekt : {}),
   inntekt => {
     if (!inntekt) return [];
     const { arbeidsInntektMaanedListe } = inntekt;
@@ -146,7 +141,7 @@ export const InntektSelector = createSelector(
 );
 
 export const SoknadenSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.soknaden : state.fagsaker.data),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.soknaden : state.fagsaker.data),
   soknaden => soknaden
 );
 
@@ -156,12 +151,12 @@ export const InntektSoknadenSelector = createStructuredSelector({
 });
 
 export const BekreftelserSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? {} : {}),
+  state => (state.fagsaker.data.behandling ? {} : {}),
   bekreftelser => bekreftelser
 );
 
 export const MedlemskapSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.medlemskap : {}),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.medlemskap : {}),
   medlemskap => {
     // Medlemskapskoder fra kodeverk
     const PERIODE_MED_MEDLEMSKAP = 'PMMEDSKP';
@@ -188,7 +183,7 @@ export const MedlemskapSelector = createSelector(
  * i arbeidsforholdet dersom det finnes.
  */
 export const ArbeidsforholdeneSelector = createSelector(
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.arbeidsforhold : []),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.arbeidsforhold : []),
   state => OrganisasjonerSelector(state),
   state => InntektSelector(state),
   (arbeidsforhold, organisasjoner, inntekt) => (arbeidsforhold.map(item => {
@@ -284,10 +279,9 @@ export const ArbeidsgivereNorgeSelector = createSelector(
 
 export const OppsummeringSelector = createSelector(
   state => (state.fagsaker.data ? state.fagsaker.data : {}),
-  state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].oppsummering : []),
+  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.oppsummering : []),
   (saksdata, oppsummering) => ({
     saksnummer: saksdata.saksnummer,
-    behandlingID: oppsummering.behandlingID,
     sakstype: saksdata.sakstype,
     saksstatus: saksdata.saksstatus,
     behandlingsstatus: oppsummering.behandlingsstatus,
