@@ -7,6 +7,7 @@ import * as Nav from '../../utils/navFrontend';
 import * as Ikoner from '../../resources/images';
 import * as Api from '../../services/api';
 import * as Utils from '../../utils';
+import * as KV from '../../kodeverk';
 
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import { fagsakSelectors } from '../../ducks/fagsaker';
@@ -106,7 +107,7 @@ class FullmektigPanel extends Component {
     return (
       <div>
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel="Fullmektig" />}
+          heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.fullmektig} />}
           ariaTittel="Opplysninger om fullmektig">
           <Nav.Container fluid>
             {fullmektige.map(fullmektig => (

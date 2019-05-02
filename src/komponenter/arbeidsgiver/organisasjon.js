@@ -4,6 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
+import * as KV from '../../kodeverk';
 
 import PanelHeader from '../panelHeader/panelHeader';
 import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
@@ -30,7 +31,7 @@ const Organisasjon = props => {
       <Nav.EkspanderbartpanelBase
         heading={<PanelHeader
           ikon={Ikoner.Arbeidsgiver}
-          tittel={`Arbeidsgiver i Norge: ${navn}`}
+          tittel={KV.Paneltitler.arbeidsgiverINorge(navn)}
           undertittel={<div>{`Org.nr: ${orgnr}`} </div>}
         />}
         ariaTittel={`Panel for arbeidsgiveren ${navn}`} >
