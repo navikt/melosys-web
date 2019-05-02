@@ -6,6 +6,11 @@ import * as KV from '../../kodeverk';
 import { soknadSelectors } from '../soknad/';
 import { datoDiff } from '../../utils/dato';
 
+export const BehandlingSelector = behandlingID => createSelector(
+  state => state.data.behandlinger.find(item => item.behandlingID === behandlingID),
+  behandling => behandling || {}
+);
+
 export const PersonSelector = createSelector(
   state => (state.fagsaker.data.behandlinger ? state.fagsaker.data.behandlinger[0].saksopplysninger.person : state.fagsaker.data),
   person => person

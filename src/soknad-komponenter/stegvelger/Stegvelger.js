@@ -115,6 +115,7 @@ class Stegvelger extends Component {
     };
 
     const propsLight = {
+      behandlingID: props.behandlingID,
       virksomheterIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
       begrunnelser: MKV.KTObjects.begrunnelser,
