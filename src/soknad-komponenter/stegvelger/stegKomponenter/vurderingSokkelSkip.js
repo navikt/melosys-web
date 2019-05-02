@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
@@ -18,7 +18,7 @@ import './vurderingSokkelSkip.css';
 
 
 const ArbeidslandRadioButtons = props => {
-  const { landliste, feltNavn } = props;
+  const { landliste, onChange } = props;
 
   const grupperEtterKode = Utils.grupperEtterKey('kode');
   const landGruppertEtterKode = grupperEtterKode(landliste);
@@ -27,13 +27,16 @@ const ArbeidslandRadioButtons = props => {
     const landTermerAssosiertMedRadiobutton = landGruppertEtterKode[landGruppeNavn].map(land => land.term);
     const label = `${landGruppeNavn}: ${landTermerAssosiertMedRadiobutton.join(' - ')}`;
 
-    return <Skjema.Radio key={label} feltNavn={feltNavn} value={landGruppeNavn} label={label} />;
+    return <Nav.Radio onChange={onChange} key={label} value={landGruppeNavn} label={label} name="arbeidsland" />;
   });
 };
 
 ArbeidslandRadioButtons.propTypes = {
-  landliste: PT.array.isRequired,
-  feltNavn: PT.string.isRequired,
+  landliste: PT.arrayOf(PT.shape({
+    term: PT.string.isRequired,
+    kode: PT.string.isRequired,
+  })).isRequired,
+  onChange: PT.func.isRequired,
 };
 
 const SokkelSkipEnkelt = props => {
@@ -41,14 +44,14 @@ const SokkelSkipEnkelt = props => {
     maritimtArbeid,
     avklartefakta,
     begrunnelser,
-    index,
     redigerbart,
     avklartefaktaEndretHandler,
     avklartefaktaBegrunnelserEndretHandler,
+    oppdaterData,
   } = props;
 
   const {
-    navn, sokkelEllerSkip, flaggLandkode, installasjonsLandkode, territorialfarvann,
+    navn, flaggLandkode, installasjonsLandkode, territorialfarvann,
   } = maritimtArbeid;
 
   const { begrunnelseKoder } = avklartefakta;
@@ -56,6 +59,10 @@ const SokkelSkipEnkelt = props => {
   const { SOKKEL, SKIP } = KV.Koder;
 
   const key = `${KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}${navn}`;
+
+  useEffect(() => {
+    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, avklartefakta));
+  }, []);
 
   const sokkelSkipEndret = e => (
     avklartefaktaEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, navn, e.target.value)
@@ -65,7 +72,7 @@ const SokkelSkipEnkelt = props => {
     avklartefaktaBegrunnelserEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, navn, e.target.value)
   );
 
-  const landVelgerEndret = e => (
+  const arbeidslandEndret = e => (
     avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, navn, e)
   );
 
@@ -111,7 +118,7 @@ const SokkelSkipEnkelt = props => {
               { term: 'Sokkelland', kode: installasjonsLandkode },
               { term: 'Territorialfarvandsland', kode: territorialfarvann },
             ]}
-            onChange={landVelgerEndret}
+            onChange={arbeidslandEndret}
           />
         </Nav.Fieldset>
       </Nav.Column>
@@ -127,6 +134,7 @@ SokkelSkipEnkelt.propTypes = {
   redigerbart: PT.bool.isRequired,
   avklartefaktaEndretHandler: PT.func.isRequired,
   avklartefaktaBegrunnelserEndretHandler: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
 };
 
 SokkelSkipEnkelt.defaultProps = {
@@ -135,7 +143,7 @@ SokkelSkipEnkelt.defaultProps = {
 
 const SokkelSkipListe = props => {
   const {
-    avklartefakta, maritimtArbeid, begrunnelser, redigerbart, avklartefaktaEndretHandler, avklartefaktaBegrunnelserEndretHandler,
+    avklartefakta, maritimtArbeid, begrunnelser, redigerbart, avklartefaktaEndretHandler, avklartefaktaBegrunnelserEndretHandler, oppdaterData,
   } = props;
 
   return (
@@ -150,6 +158,7 @@ const SokkelSkipListe = props => {
           redigerbart={redigerbart}
           avklartefaktaEndretHandler={avklartefaktaEndretHandler}
           avklartefaktaBegrunnelserEndretHandler={avklartefaktaBegrunnelserEndretHandler}
+          oppdaterData={oppdaterData}
         />))
       }
     </div>
@@ -163,6 +172,7 @@ SokkelSkipListe.propTypes = {
   redigerbart: PT.bool.isRequired,
   avklartefaktaEndretHandler: PT.func.isRequired,
   avklartefaktaBegrunnelserEndretHandler: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
 };
 
 SokkelSkipListe.defaultProps = {
@@ -173,12 +183,9 @@ SokkelSkipListe.defaultProps = {
 class VurderingSokkelSkip extends React.Component {
   componentDidMount() {
     const { tilstand, oppdaterData } = this.props;
-    const { installasjonArbeidslandListe, sokkelEllerSkipListe, sokkelSkipKonklusjon } = tilstand;
+    const { installasjonArbeidslandListe, sokkelSkipKonklusjon } = tilstand;
     installasjonArbeidslandListe.forEach(land => {
       oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, land));
-    });
-    sokkelEllerSkipListe.forEach(sES => {
-      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, sES));
     });
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, sokkelSkipKonklusjon));
   }
@@ -214,7 +221,7 @@ class VurderingSokkelSkip extends React.Component {
     // Merknad fra møte 12.12.18: Vi må huske å gå innom “vurdering antall land”
     // dersom man har valgt “to sokler / skip i flere land” siden vi går inn i artikkel 13.
     const {
-      bekreftOgFortsett, tilstand, skjema, begrunnelser, redigerbart,
+      bekreftOgFortsett, tilstand, skjema, begrunnelser, redigerbart, oppdaterData,
     } = this.props;
 
     const { sokkelEllerSkipListe, sokkelSkipKonklusjon } = tilstand;
@@ -234,7 +241,9 @@ class VurderingSokkelSkip extends React.Component {
           begrunnelser={begrunnelser}
           redigerbart={redigerbart}
           avklartefaktaEndretHandler={this.avklartefaktaEndret}
-          avklartefaktaBegrunnelserEndretHandler={this.avklartefaktaBegrunnelseEndret} />
+          avklartefaktaBegrunnelserEndretHandler={this.avklartefaktaBegrunnelseEndret}
+          oppdaterData={oppdaterData}
+        />
         {
           maritimtArbeid.length === 0 && (
             <div className="sokkelSkip__varsel"><Nav.AlertStripe type="advarsel">Det er ikke registrert verken sokkel eller skip.</Nav.AlertStripe></div>
