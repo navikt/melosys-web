@@ -41,18 +41,24 @@ const MaritimtEnkelt = ({
     <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input feltNavn={`${navn}navn`} label="Navn på fartøyet:" disabled={!redigerbart} />
-          <Skjema.Select feltNavn={`${navn}fartsomradeKode`} label="Fartsomrade:" disabled={!redigerbart} onChange={fartsomradeChangeHandler}>
-            {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
-          </Skjema.Select>
-          {
-            fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
-            <LandVelger feltNavn={`${navn}territorialfarvann`} label="Territorialfarvann" disabled={!redigerbart} />
-          }
+          <Skjema.Input feltNavn={`${navn}navn`} label="Navn på enhet:" disabled={!redigerbart} />
         </Nav.Column>
         <Nav.Column xs="6">
-          <LandVelger feltNavn={`${navn}flaggLandkode`} label="Flaggland:" disabled={!redigerbart} />
-          <LandVelger feltNavn={`${navn}installasjonsLandkode`} label="Kontinentalsokkel:" disabled={!redigerbart} />
+          <LandVelger bredde="fullbredde" feltNavn={`${navn}flaggLandkode`} label="Flaggland:" disabled={!redigerbart} />
+          <LandVelger bredde="fullbredde" feltNavn={`${navn}installasjonsLandkode`} label="Sokkelland:" disabled={!redigerbart} />
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="6">
+          <Skjema.Select feltNavn={`${navn}fartsomradeKode`} label="Fartsområde:" disabled={!redigerbart} onChange={fartsomradeChangeHandler}>
+            {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
+          </Skjema.Select>
+        </Nav.Column>
+        <Nav.Column xs="6">
+          {
+            fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
+            <LandVelger bredde="fullbredde" feltNavn={`${navn}territorialfarvann`} label="Territorialfarvannsland:" disabled={!redigerbart} />
+          }
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>

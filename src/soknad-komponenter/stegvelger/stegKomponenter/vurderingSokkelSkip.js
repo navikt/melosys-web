@@ -1,47 +1,94 @@
 import React from 'react';
 import PT from 'prop-types';
-import { connect } from 'react-redux';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
 
 import LandVelger from '../../skjema/landvelger';
 
 import './vurderingSokkelSkip.css';
-import { SokkelEllerSkipSelector } from '../../../ducks/form/selectors';
+import { lagVilkaar } from '../../../regler/vilkar';
+import {
+  hentFaktaVerdi,
+  konverterTilStegData,
+  lagAvklartefaktaBegrunnelse,
+  lagAvklartfakta,
+} from '../../../regler/avklartefakta';
 
 const SokkelSkipEnkelt = props => {
   const {
-    sokkelSkipInfo,
+    maritimtArbeid,
+    avklartefakta,
     begrunnelser,
     index,
     redigerbart,
-    installasjonsType,
+    avklartefaktaEndretHandler,
+    avklartefaktaBegrunnelserEndretHandler,
   } = props;
 
-  const { navn } = sokkelSkipInfo;
+  const { navn } = maritimtArbeid;
 
+  const { begrunnelseKoder } = avklartefakta;
+  const installasjonsType = hentFaktaVerdi(avklartefakta);
   const { SOKKEL, SKIP } = KV.Koder;
+
+  const key = `${KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}${navn}`;
+
+  const sokkelSkipEndret = e => (
+    avklartefaktaEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, navn, e.target.value)
+  );
+
+  const begrunnelserEndret = e => (
+    avklartefaktaBegrunnelserEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, navn, e.target.value)
+  );
+
+  const landVelgerEndret = e => (
+    avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, navn, e)
+  );
 
   return (
     <Nav.Row className="sokkelSkip__liste__rad">
       <Nav.Column xs="4" className="rad__navn">{navn}</Nav.Column>
       <Nav.Column xs="2" className="rad__sokkel">
-        <Skjema.Radio disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={SOKKEL} label="Sokkel" />
-        <Skjema.Radio disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsType`} value={SKIP} label="Skip" />
+        <Nav.Radio
+          name={key}
+          disabled={!redigerbart}
+          onChange={sokkelSkipEndret}
+          value={SOKKEL}
+          checked={installasjonsType === SOKKEL}
+          label="Sokkel" />
+        <Nav.Radio
+          name={key}
+          disabled={!redigerbart}
+          onChange={sokkelSkipEndret}
+          checked={installasjonsType === SKIP}
+          value={SKIP}
+          label="Skip" />
       </Nav.Column>
       {
         installasjonsType === SOKKEL &&
         <Nav.Column xs="3" className="rad__begrunnelse">
-          <Skjema.Select disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].installasjonsTypeBegrunnelse`} label="Begrunnelse hvis sokkel">
+          <Nav.Select
+            name={`${key}_begrunnelser`}
+            disabled={!redigerbart}
+            id="installasjonsTypeBegrunnelser"
+            label="Begrunnelse hvis sokkel"
+            onChange={begrunnelserEndret}
+            value={begrunnelseKoder[0]} >
+            <option key={null} value={null} />
             {begrunnelser.map(enkelt => <option key={enkelt.kode} value={enkelt.kode}>{enkelt.term}</option>)}
-          </Skjema.Select>
+          </Nav.Select>
         </Nav.Column>
       }
       <Nav.Column xs="3" className="rad__land">
-        <LandVelger disabled={!redigerbart} feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`} multiLand={false} label="Arbeidsland" />
+        <LandVelger
+          feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`}
+          disabled={!redigerbart}
+          id="installasjonsTypeBegrunnelser"
+          onChange={landVelgerEndret}
+          multiLand={false}
+          label="Arbeidsland" />
       </Nav.Column>
     </Nav.Row>
   );
@@ -49,34 +96,35 @@ const SokkelSkipEnkelt = props => {
 
 SokkelSkipEnkelt.propTypes = {
   index: PT.number.isRequired,
-  sokkelSkipInfo: PT.object.isRequired,
+  maritimtArbeid: PT.object.isRequired,
+  avklartefakta: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
-  installasjonsType: PT.string,
+  avklartefaktaEndretHandler: PT.func.isRequired,
+  avklartefaktaBegrunnelserEndretHandler: PT.func.isRequired,
 };
 
 SokkelSkipEnkelt.defaultProps = {
-  installasjonsType: '',
+  avklartefakta: {},
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  installasjonsType: SokkelEllerSkipSelector(state)[ownProps.index].installasjonsType,
-});
-
-const SokkelSkipEnkeltConnected = connect(mapStateToProps)(SokkelSkipEnkelt);
-
 const SokkelSkipListe = props => {
-  const { alleSokkelSkip, begrunnelser, redigerbart } = props;
+  const {
+    avklartefakta, maritimtArbeid, begrunnelser, redigerbart, avklartefaktaEndretHandler, avklartefaktaBegrunnelserEndretHandler,
+  } = props;
 
   return (
     <div className="sokkelSkip__liste">
-      { alleSokkelSkip.map((enkelt, index) => (
-        <SokkelSkipEnkeltConnected
+      { maritimtArbeid.map((enkelt, index) => (
+        <SokkelSkipEnkelt
           key={JSON.stringify(enkelt)}
-          sokkelSkipInfo={enkelt}
+          maritimtArbeid={enkelt}
+          avklartefakta={avklartefakta[index]}
           index={index}
           begrunnelser={begrunnelser}
           redigerbart={redigerbart}
+          avklartefaktaEndretHandler={avklartefaktaEndretHandler}
+          avklartefaktaBegrunnelserEndretHandler={avklartefaktaBegrunnelserEndretHandler}
         />))
       }
     </div>
@@ -84,32 +132,56 @@ const SokkelSkipListe = props => {
 };
 
 SokkelSkipListe.propTypes = {
-  alleSokkelSkip: PT.array,
+  avklartefakta: PT.array,
+  maritimtArbeid: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
+  avklartefaktaEndretHandler: PT.func.isRequired,
+  avklartefaktaBegrunnelserEndretHandler: PT.func.isRequired,
 };
 
 SokkelSkipListe.defaultProps = {
-  alleSokkelSkip: [],
+  avklartefakta: [],
+  maritimtArbeid: [],
 };
 
 class VurderingSokkelSkip extends React.Component {
-  componentWillUnmount() {
-    this.clearSkjema();
+  componentDidMount() {
+    const { tilstand, oppdaterData } = this.props;
+    const { installasjonArbeidslandListe, sokkelEllerSkipListe, sokkelSkipKonklusjon } = tilstand;
+    installasjonArbeidslandListe.forEach(land => {
+      oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, land));
+    });
+    sokkelEllerSkipListe.forEach(sES => {
+      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, sES));
+    });
+    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, sokkelSkipKonklusjon));
   }
 
-  clearSkjema = () => {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.art11_3A', null);
+  componentWillUnmount() {
+    const { slettAllDataForSteg } = this.props;
+    slettAllDataForSteg();
+  }
+
+  avklartefaktaEndret = (type, subjektID, verdi) => {
+    const { oppdaterData } = this.props;
+    oppdaterData(lagAvklartfakta(type, subjektID, verdi));
   };
 
-  radioEndringHandler = event => {
+  avklartefaktaBegrunnelseEndret = (type, subjektID, verdi) => {
+    const { oppdaterData } = this.props;
+    oppdaterData(lagAvklartefaktaBegrunnelse(type, subjektID, verdi));
+  };
+
+  konklusjonEndretHandler = event => {
     const { value } = event.target;
-    const { settSkjemaVerdi } = this.props;
+    const { oppdaterData, slettData } = this.props;
+    this.avklartefaktaEndret(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, null, value);
+
     if (value === KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK) {
-      settSkjemaVerdi('vilkar.art11_3A', true);
+      oppdaterData(lagVilkaar('art11_3A', true));
     } else {
-      this.clearSkjema();
+      slettData('vilkaar', 'art11_3A');
     }
   };
 
@@ -119,7 +191,11 @@ class VurderingSokkelSkip extends React.Component {
     const {
       bekreftOgFortsett, tilstand, skjema, begrunnelser, redigerbart,
     } = this.props;
-    const { radioEndringHandler } = this;
+
+    const { sokkelEllerSkipListe, sokkelSkipKonklusjon } = tilstand;
+    const fakta = hentFaktaVerdi(sokkelSkipKonklusjon);
+
+    const { konklusjonEndretHandler } = this;
     const { VurderingSokkelSkipTyper } = KV.Koder;
     const { maritimtArbeid } = skjema;
     const { harAvklaring } = tilstand;
@@ -127,16 +203,47 @@ class VurderingSokkelSkip extends React.Component {
     return (
       <div className="vurderingSokkelSkip">
         <Nav.Undertittel>Vurdering av sokkel eller skip</Nav.Undertittel>
-        <SokkelSkipListe alleSokkelSkip={maritimtArbeid} begrunnelser={begrunnelser} redigerbart={redigerbart} />
-        {maritimtArbeid.length === 0 && (
-          <div className="sokkelSkip__varsel"><Nav.AlertStripe type="advarsel">Det er ikke registrert verken sokkel eller skip.</Nav.AlertStripe></div>
-        )
+        <SokkelSkipListe
+          avklartefakta={sokkelEllerSkipListe}
+          maritimtArbeid={maritimtArbeid}
+          begrunnelser={begrunnelser}
+          redigerbart={redigerbart}
+          avklartefaktaEndretHandler={this.avklartefaktaEndret}
+          avklartefaktaBegrunnelserEndretHandler={this.avklartefaktaBegrunnelseEndret} />
+        {
+          maritimtArbeid.length === 0 && (
+            <div className="sokkelSkip__varsel"><Nav.AlertStripe type="advarsel">Det er ikke registrert verken sokkel eller skip.</Nav.AlertStripe></div>
+          )
         }
-        <Nav.Fieldset legend="Hvordan arbeider søkeren:" onChange={radioEndringHandler}>
-          <Skjema.Radio disabled={!redigerbart} feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_NORSK} label="På norsk sokkel eller innenfor norsk territorialfarvann (art. 11.3.a)" />
-          <Skjema.Radio disabled={!redigerbart} feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SKIP_ETT_LAND} label="På skip registrert i ett land" />
-          <Skjema.Radio disabled={!redigerbart} feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_UTLAND} label="Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)" />
-          <Skjema.Radio disabled feltNavn="avklartefakta.sokkelSkipKonklusjon" value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND} label="To sokler / skip i flere land (art. 13)" />
+        <Nav.Fieldset legend="Hvordan arbeider søkeren:">
+          <Nav.Radio
+            name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
+            disabled={!redigerbart}
+            onChange={konklusjonEndretHandler}
+            checked={fakta === VurderingSokkelSkipTyper.SOKKEL_NORSK}
+            value={VurderingSokkelSkipTyper.SOKKEL_NORSK}
+            label="På norsk sokkel eller innenfor norsk territorialfarvann (art. 11.3.a)" />
+          <Nav.Radio
+            name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
+            disabled={!redigerbart}
+            onChange={konklusjonEndretHandler}
+            checked={fakta === VurderingSokkelSkipTyper.SKIP_ETT_LAND}
+            value={VurderingSokkelSkipTyper.SKIP_ETT_LAND}
+            label="På skip registrert i ett land" />
+          <Nav.Radio
+            name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
+            disabled={!redigerbart}
+            onChange={konklusjonEndretHandler}
+            checked={fakta === VurderingSokkelSkipTyper.SOKKEL_UTLAND}
+            value={VurderingSokkelSkipTyper.SOKKEL_UTLAND}
+            label="Utsendt til sokkel eller til annet lands territorialfarvann (art. 12)" />
+          <Nav.Radio
+            name={KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP}
+            disabled
+            onChange={konklusjonEndretHandler}
+            checked={fakta === VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}
+            value={VurderingSokkelSkipTyper.SOKKEL_ELLER_SKIP_FLERE_LAND}
+            label="To sokler / skip i flere land (art. 13)" />
         </Nav.Fieldset>
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -153,7 +260,9 @@ VurderingSokkelSkip.propTypes = {
   tilstand: PT.object,
   skjema: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
-  settSkjemaVerdi: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingSokkelSkip.defaultProps = {

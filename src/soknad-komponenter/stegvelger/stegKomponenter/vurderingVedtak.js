@@ -8,7 +8,6 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
-import { soknadSelectors } from '../../../ducks/soknad/';
 import { fagsakSelectors } from '../../../ducks/fagsaker/';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
 
@@ -49,8 +48,11 @@ const VurderingVedtak = ({
   const dokumenter = [
     { navn: 'Forhåndsvis vedtaksbrev', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
     { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
-    { navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } },
   ];
+
+  if (lovvalgSomKodeTerm && lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1) {
+    dokumenter.push({ navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } });
+  }
 
   const lovvalgslandTekst = KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder) || '...';
 
@@ -93,7 +95,6 @@ VurderingVedtak.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired,
-  soknadsperiode: MPT.Soknadsperiode.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
@@ -106,7 +107,6 @@ VurderingVedtak.defaultProps = {
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  soknadslande: soknadSelectors.SoknadsperiodeSelector(state),
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
 });

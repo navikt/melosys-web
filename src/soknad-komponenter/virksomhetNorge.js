@@ -5,16 +5,31 @@ import PT from 'prop-types';
 import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
-import LandVelger from './skjema/landvelger';
+import * as MPT from '../proptypes';
 
+import LandVelger from './skjema/landvelger';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
 import { fagsakSelectors } from '../ducks/fagsaker/';
+import { formSelectors } from '../ducks/form';
+
 import './virksomhetNorge.css';
 
 function VirksomhetNorge (props) {
-  const { redigerbart } = props;
-  const panelIkon = Ikoner.Ferdig;
+  const { redigerbart, soknadForm: { values } } = props;
+
+  const felter = [
+    values.antallAnsatte,
+    values.utsendteNeste12Mnd,
+    values.antallAdmAnsatte,
+    values.andelOmsetningINorge,
+    values.andelKontrakterINorge,
+    values.andelOppdragINorge,
+    values.arbeidstakereRekruttertILand,
+    values.oppdragsKontrakterIHovedsakInngaattILand,
+  ];
+  const minstEttFeltErUtfylt = felter.some(felt => felt !== '');
+  const panelIkon = minstEttFeltErUtfylt ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
   return (
     <div className="virksomhetNorge panelSeksjon">
@@ -51,10 +66,16 @@ function VirksomhetNorge (props) {
 }
 VirksomhetNorge.propTypes = {
   redigerbart: PT.bool.isRequired,
+  soknadForm: MPT.SoknadForm,
+};
+
+VirksomhetNorge.defaultProps = {
+  soknadForm: {},
 };
 
 const mapStateToProps = state => ({
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 const mapDispatchToProps = () => ({});
 

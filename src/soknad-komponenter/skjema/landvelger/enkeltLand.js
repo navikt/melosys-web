@@ -31,11 +31,19 @@ export class EnkeltLand extends Component {
     }
     const { onChange } = this.props.input;
     onChange(landkode);
+
+    if (this.props.onChange) {
+      this.props.onChange(landkode);
+    }
   };
 
   reduxFjernLand = () => {
     const { onChange } = this.props.input;
     onChange('');
+
+    if (this.props.onChange) {
+      this.props.onChange();
+    }
   };
 
   fokusInnHandler = e => {
@@ -103,7 +111,7 @@ export class EnkeltLand extends Component {
     } = this;
 
     const {
-      label, meta, dataListID, disabled,
+      label, meta, dataListID, disabled, bredde,
     } = this.props;
 
     const { inputVerdi } = this.state;
@@ -117,7 +125,7 @@ export class EnkeltLand extends Component {
           disabled={disabled}
           list={dataListID}
           label={label}
-          bredde="XL"
+          bredde={bredde}
           feil={feilObjekt}
           className="landliste__linje__input"
           value={inputVerdi}
@@ -139,12 +147,16 @@ EnkeltLand.propTypes = {
   feil: PT.string,
   input: PT.object.isRequired,
   disabled: PT.bool,
+  bredde: PT.string,
+  onChange: PT.func,
 };
 
 EnkeltLand.defaultProps = {
   label: '',
   feil: '',
   disabled: false,
+  bredde: 'XL',
+  onChange: null,
 };
 
 const EnkeltLandWrapper = props => (<Field name={props.feltNavn} component={EnkeltLand} props={props} />);

@@ -119,7 +119,7 @@ function MultiLand(props) {
   const valgteLand = props.fields.getAll() || [];
   const dynamiskFeltTittel = props.label || dynamiskTittel();
 
-  const { dataListID, disabled } = props;
+  const { dataListID, disabled, bredde } = props;
   return (
     <div className="landliste">
       {
@@ -130,7 +130,7 @@ function MultiLand(props) {
           list={dataListID}
           disabled={disabled}
           label={dynamiskFeltTittel}
-          bredde="XL"
+          bredde={bredde}
           feil={feilObjekt}
           className="landliste__linje__input"
           value={inputVerdi}
@@ -152,12 +152,14 @@ MultiLand.propTypes = {
   fields: PT.object.isRequired,
   meta: PT.object.isRequired,
   disabled: PT.bool,
+  bredde: PT.string,
 };
 
 MultiLand.defaultProps = {
   label: '',
   feil: {},
   disabled: false,
+  bredde: 'XL',
 };
 
 export { MultiLand };

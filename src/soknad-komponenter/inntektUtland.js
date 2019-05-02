@@ -10,10 +10,24 @@ import * as Skjema from './skjema/index';
 import { fagsakSelectors } from '../ducks/fagsaker/';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import './inntektUtland.css';
+import * as Utils from '../utils';
+import { formSelectors } from '../ducks/form';
 
 function Inntekt (props) {
-  const { redigerbart } = props;
-  const panelIkon = Ikoner.Ferdig;
+  const { redigerbart, soknadForm: { values } } = props;
+
+  const felter = [
+    values.inntektNorskIPerioden,
+    values.inntektUtenlandskIPerioden,
+    values.inntektNaeringIPerioden,
+    values.inntektNaturalFribolig,
+    values.inntektNaturalFribil,
+    values.inntektNaturalIAnnet,
+    values.inntektErInnrapporteringspliktig,
+    values.inntektTrygdeavgiftBlirTrukket,
+  ];
+  const minstEttFeltErUtfylt = felter.some(felt => felt !== '' && !Utils._isNil(felt) && felt !== false);
+  const panelIkon = minstEttFeltErUtfylt ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
   return (
     <div className="inntektUtland panelSeksjon">
@@ -46,14 +60,17 @@ function Inntekt (props) {
 Inntekt.propTypes = {
   redigerbart: PT.bool.isRequired,
   inntekt: MPT.Inntekt,
+  soknadForm: MPT.SoknadForm,
 };
 
 Inntekt.defaultProps = {
   inntekt: {},
+  soknadForm: {},
 };
 
 const mapStateToProps = state => ({
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 const mapDispatchToProps = () => ({});
 
