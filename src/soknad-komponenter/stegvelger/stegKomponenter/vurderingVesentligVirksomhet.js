@@ -3,35 +3,63 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-import * as Skjema from '../../skjema';
+
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import { BOOLSK } from '../../../constants';
+import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingVesentligVirksomhet extends Component {
-  componentWillUnmount() {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.vesentligVirksomhet', null);
-    settSkjemaVerdi('vilkar.vesentligVirksomhetBegrunnelser', []);
+  componentDidMount() {
+    const { oppdaterData, tilstand } = this.props;
+    oppdaterData(konverterTilStegData('vesentligVirksomhet', tilstand.vesentligVirksomhetVilkaar));
   }
+
+  componentWillUnmount() {
+    const { slettAllDataForSteg } = this.props;
+    slettAllDataForSteg();
+  }
+
+  radioEndringHandler = event => {
+    const { oppdaterData } = this.props;
+    oppdaterData(lagVilkaar('vesentligVirksomhet', event.target.value));
+  };
+
+  listeVelgerHandler = event => {
+    const { oppdaterData } = this.props;
+    oppdaterData(lagBegrunnelse('vesentligVirksomhet', event.value));
+  };
 
   render () {
     const {
       bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
     } = this.props;
-    const { visBegrunnelser, harAvklaring } = tilstand;
+    const { vesentligVirksomhetVilkaar, visBegrunnelser, harAvklaring } = tilstand;
 
     const arbeidsgivereTekst = this.props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
     return (
       <div>
         <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
-        <div className="vurderingBostedsland__skjemafelt">
+        <div className="vurderingVesentligVirksomhet__skjemafelt">
           <Nav.Row>
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Virksomheten har:">
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.vesentligVirksomhet" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.vesentligVirksomhet" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
+                <Nav.Radio
+                  name="vesentligVirksomhet"
+                  disabled={!redigerbart}
+                  onChange={this.radioEndringHandler}
+                  checked={vesentligVirksomhetVilkaar.oppfylt === true}
+                  value={BOOLSK.SANN}
+                  label="Vesentlig virksomhet" />
+                <Nav.Radio
+                  name="vesentligVirksomhet"
+                  disabled={!redigerbart}
+                  onChange={this.radioEndringHandler}
+                  checked={vesentligVirksomhetVilkaar.oppfylt === false}
+                  value={BOOLSK.USANN}
+                  label="Ikke vesentlig virksomhet" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -39,13 +67,13 @@ class VurderingVesentligVirksomhet extends Component {
             <Nav.Row>
               <Nav.Column xs="12" md="10" lg="8">
                 <Nav.Fieldset legend="Begrunnelse:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.vesentligVirksomhetBegrunnelser"
+                  <ListevelgerFlervalg
                     muligeValg={begrunnelser}
                     disabled={!redigerbart}
                     label="Legg til begrunnelse:"
-                    gruppe
+                    onChange={this.listeVelgerHandler}
                     tillatFritekst={false}
+                    defaultElementer={vesentligVirksomhetVilkaar.begrunnelseKoder}
                   />
                 </Nav.Fieldset>
               </Nav.Column>
@@ -67,7 +95,8 @@ VurderingVesentligVirksomhet.propTypes = {
   tilstand: PT.object,
   valgteVirksomheter: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
-  settSkjemaVerdi: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

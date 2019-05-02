@@ -1,41 +1,62 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
+import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 
 const VurderingYrkesaktivitet = props => {
-  const { bekreftOgFortsett, tilstand, redigerbart } = props;
-  const { harAvklaring } = tilstand;
+  const {
+    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+  } = props;
+  const { harAvklaring, yrkesaktivitet } = tilstand;
 
+  useEffect(() => {
+    oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
+    return function cleanup() {
+      slettAllDataForSteg();
+    };
+  }, []);
+
+  const radioEndret = event => {
+    oppdaterData(lagAvklartfakta(KV.Koder.YRKESAKTIVITET, null, event.target.value));
+  };
+
+  const fakta = hentFaktaVerdi(yrkesaktivitet);
   return (
     <div>
       <Nav.Undertittel>Vurdering av yrkesaktivitet</Nav.Undertittel>
       <Nav.Fieldset legend="Hva gjelder for søkeren?">
-        <Skjema.Radio
+        <Nav.Radio
+          name="yrkesaktivitet"
           disabled={!redigerbart}
-          feltNavn="avklartefakta.yrkesaktivitet"
+          checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}
           value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}
+          onChange={radioEndret}
           label="Arbeidstaker eller frilanser"
-
         />
-        <Skjema.Radio
+        <Nav.Radio
+          name="yrkesaktivitet"
           disabled={!redigerbart}
-          feltNavn="avklartefakta.yrkesaktivitet"
+          checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}
           value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}
+          onChange={radioEndret}
           label="Selvstendig næringsdrivende"
         />
-        <Skjema.Radio
+        <Nav.Radio
+          name="yrkesaktivitet"
           disabled={!redigerbart}
-          feltNavn="avklartefakta.yrkesaktivitet"
+          checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
           value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
+          onChange={radioEndret}
           label="Arbeidstaker eller frilanser og selvstendig næringsdrivende"
         />
-        <Skjema.Radio
+        <Nav.Radio
+          name="yrkesaktivitet"
           disabled={!redigerbart}
-          feltNavn="avklartefakta.yrkesaktivitet"
+          checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
+          onChange={radioEndret}
           label="Tjenesteperson i norsk statsforvaltning"
         />
       </Nav.Fieldset>
@@ -50,6 +71,8 @@ VurderingYrkesaktivitet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   redigerbart: PT.bool.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingYrkesaktivitet.defaultProps = {

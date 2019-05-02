@@ -2,6 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingSokkelSkip from '../../stegKomponenter/vurderingSokkelSkip';
 import * as KV from '../../../../kodeverk';
+import { hentFaktaListe, hentFakta, hentFaktaVerdi } from '../../../../regler/avklartefakta';
 
 class SokkelSkip extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -38,39 +39,47 @@ class SokkelSkip extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { sokkelEllerSkip = [], sokkelSkipKonklusjon } = _propsLight.skjema.avklartefakta;
+      const installasjonArbeidslandListe = hentFaktaListe(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, _propsLight.avklartefakta);
+      const sokkelEllerSkipListe = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, _propsLight.avklartefakta);
+      const sokkelSkipKonklusjon = hentFakta(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, _propsLight.avklartefakta);
 
       return ({
-        harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkip, sokkelSkipKonklusjon),
+        harAvklaring: SokkelSkip.alleErAvklart(sokkelEllerSkipListe, sokkelSkipKonklusjon, installasjonArbeidslandListe),
+        sokkelEllerSkipListe,
+        sokkelSkipKonklusjon,
+        installasjonArbeidslandListe,
       });
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
-      settSkjemaVerdi: this._propsLight.tilgjengeligeHandlers.settSkjemaVerdi,
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (type, felt) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, type, felt),
     };
     this.status = FANE_STATUS.OK;
   }
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
-    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === 'ARBEID_SOKKEL_SKIP');
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP);
 
     if (!enkeltFakta) { return false; }
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   };
 
-  // Hvis SKIP er valgt som vurdering, så skal det ikke legges inn
-  // en begrunnelse.
-  static alleErAvklart = (sokkelEllerSkip, sokkelSkipKonklusjon) => {
-    const avklartSokkelEllerSkip = sokkelEllerSkip.length > 0 && sokkelEllerSkip
-      .map(enkelt => {
-        if (enkelt.installasjonsType === KV.Koder.SOKKEL && enkelt.installasjonsTypeBegrunnelse && enkelt.arbeidsland) { return true; }
-        return (enkelt.installasjonsType === KV.Koder.SKIP && enkelt.arbeidsland && true);
-      })
-      .every(enkelt => enkelt === true);
+  static alleErAvklart = (sokkelEllerSkipListe, sokkelSkipKonklusjon, arbeidslandListe) => {
+    const avklartSokkelEllerSkip = sokkelEllerSkipListe.length > 0 &&
+      sokkelEllerSkipListe.map(enkelt => {
+        if (!arbeidslandListe.find(land => land.subjektID === enkelt.subjektID)) {
+          return false;
+        }
+        const installasjonsType = hentFaktaVerdi(enkelt);
+        if (installasjonsType === KV.Koder.SOKKEL) {
+          return enkelt.begrunnelseKoder.length > 0;
+        }
+        return true;
+      }).every(enkelt => enkelt === true);
 
-    const avklartArbeidSokkelSkip = sokkelSkipKonklusjon && sokkelSkipKonklusjon !== '';
-
-    return (avklartSokkelEllerSkip && avklartArbeidSokkelSkip);
+    return (avklartSokkelEllerSkip && hentFaktaVerdi(sokkelSkipKonklusjon));
   };
 }
 

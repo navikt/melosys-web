@@ -11,7 +11,14 @@ import * as Actions from './actions';
 import * as Api from '../../services/api';
 import * as Types from './types';
 
-/* eslint-disable import/prefer-default-export */
+export function hentPerioder(behandlingID) {
+  return doThenDispatch(() => Api.Behandlinger.hentPerioder(behandlingID), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function sendPerioder(behandlingID, perioder) {
   return doThenDispatch(() => Api.Behandlinger.sendPerioder(behandlingID, perioder), {
     OK: Types.OK,

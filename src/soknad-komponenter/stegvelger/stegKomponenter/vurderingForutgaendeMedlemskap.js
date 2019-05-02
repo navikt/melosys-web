@@ -1,23 +1,41 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
+
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-import * as Skjema from '../../skjema';
+
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { BOOLSK } from '../../../constants';
+import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
 
 class VurderingForutgaendeMedlemskap extends Component {
-  componentWillUnmount() {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.forutgaendeMedlemskap', null);
-    settSkjemaVerdi('vilkar.forutgaendeMedlemskapBegrunnelser', []);
+  componentDidMount() {
+    const { oppdaterData, tilstand } = this.props;
+    const { forutgaendeMedlemskap } = tilstand;
+    oppdaterData(konverterTilStegData('forutgaendeMedlemskap', forutgaendeMedlemskap));
   }
+
+  componentWillUnmount() {
+    const { slettAllDataForSteg } = this.props;
+    slettAllDataForSteg();
+  }
+
+  radioEndringHandler = event => {
+    const { oppdaterData } = this.props;
+    oppdaterData(lagVilkaar('forutgaendeMedlemskap', event.target.value));
+  };
+
+  listevalgEndringHandler = event => {
+    const { oppdaterData } = this.props;
+    oppdaterData(lagBegrunnelse('forutgaendeMedlemskap', event.value));
+  };
 
   render() {
     const {
       bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
     } = this.props;
-    const { visBegrunnelser, harAvklaring } = tilstand;
+    const { visBegrunnelser, harAvklaring, forutgaendeMedlemskap } = tilstand;
 
     return (
       <div>
@@ -25,9 +43,21 @@ class VurderingForutgaendeMedlemskap extends Component {
         <div>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend="Søkeren har:">
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
+              <Nav.Fieldset legend="Søkeren har:" disabled={!redigerbart}>
+                <Nav.Radio
+                  name="forutgaendeMedlemskap"
+                  disabled={!redigerbart}
+                  onChange={this.radioEndringHandler}
+                  checked={forutgaendeMedlemskap.oppfylt === true}
+                  value={BOOLSK.SANN}
+                  label="Har forutgående medlemskap" />
+                <Nav.Radio
+                  name="forutgaendeMedlemskap"
+                  disabled={!redigerbart}
+                  onChange={this.radioEndringHandler}
+                  checked={forutgaendeMedlemskap.oppfylt === false}
+                  value={BOOLSK.USANN}
+                  label="Har ikke forutgående medlemskap" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -35,13 +65,13 @@ class VurderingForutgaendeMedlemskap extends Component {
             <Nav.Row>
               <Nav.Column xs="12" md="10" lg="8">
                 <Nav.Fieldset legend="Begrunnelse:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.forutgaendeMedlemskapBegrunnelser"
+                  <ListevelgerFlervalg
                     muligeValg={begrunnelser}
                     label="Legg til begrunnelse:"
-                    gruppe
                     tillatFritekst={false}
                     disabled={!redigerbart}
+                    onChange={this.listevalgEndringHandler}
+                    defaultElementer={forutgaendeMedlemskap.begrunnelseKoder}
                   />
                 </Nav.Fieldset>
               </Nav.Column>
@@ -62,7 +92,8 @@ VurderingForutgaendeMedlemskap.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
-  settSkjemaVerdi: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 
