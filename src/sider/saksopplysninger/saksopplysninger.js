@@ -293,7 +293,7 @@ const SaksopplysningerForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Felles.byggValidering(values, props),
+  validate: Validering.Skjemaer.createValidator(Validering.Skjemaer.saksopplysninger),
 })(Saksopplysninger);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksopplysningerForm));

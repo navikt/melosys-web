@@ -5,6 +5,7 @@ import { change } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import TrackVisibility from 'react-on-screen';
 
 import * as MPT from '../../proptypes/';
 import * as API from '../../services/api';
@@ -21,6 +22,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../duc
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
+import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore } from './StegState/';
 
 import './stegvelger.css';
@@ -35,6 +37,7 @@ class Stegvelger extends Component {
       avklartefakta: new AvklartefaktaStore(),
       vilkaar: new VilkaarStore(),
     },
+    visSoknadFeilmeldinger: false,
   };
 
   componentWillMount() {
@@ -69,8 +72,14 @@ class Stegvelger extends Component {
    */
   bekreftOgFortsett = () => {
     this.publiserStegdataTilRedux();
-    this.tilSteg(this.beregnNesteSteg());
+    this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
   };
+
+  harSoknadIngenFeilmeldinger = () => Utils._isEmpty(this.props.soknadFeilmeldinger);
+
+  gjemSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: false });
+
+  visSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: true });
 
   slettStegData = (stegID, type, felt) => {
     const { stegStores } = this.state;
@@ -124,8 +133,13 @@ class Stegvelger extends Component {
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
-    await this.props.lagreAllData();
-    this.fatteVedtakHandler(behandlingsresultattype);
+    if (this.harSoknadIngenFeilmeldinger()) {
+      this.gjemSoknadFeilmeldinger();
+      await this.props.lagreAllData();
+      this.fatteVedtakHandler(behandlingsresultattype);
+    } else {
+      this.visSoknadFeilmeldinger();
+    }
   };
 
   endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
@@ -200,6 +214,15 @@ class Stegvelger extends Component {
     return aktuelleSteg;
   };
 
+  validerSoknadOgGaTilSteg = nyttStegNummer => {
+    if (this.harSoknadIngenFeilmeldinger()) {
+      this.gjemSoknadFeilmeldinger();
+      this.tilSteg(nyttStegNummer);
+    } else {
+      this.visSoknadFeilmeldinger();
+    }
+  };
+
   /** Gå til et konkret steg i steglisten, angitt av en indeks
    * som begynnner med 0.
    * @param nyttStegNummer Number Steget som det skal byttes til.
@@ -253,13 +276,20 @@ class Stegvelger extends Component {
   }
 
   render() {
+    const { visSoknadFeilmeldinger } = this.state;
+
     return (
-      <div className="stegvelger panelSeksjon">
-        <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.tilSteg} />
-        {
-          this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
-        }
-      </div>
+      <TrackVisibility partialVisibility>
+        {({ isVisible }) => (
+          <div className="stegvelger panelSeksjon">
+            <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
+            {
+              this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
+            }
+            { isVisible && visSoknadFeilmeldinger && <SoknadFeilmeldinger />}
+          </div>
+        )}
+      </TrackVisibility>
     );
   }
 }
@@ -299,6 +329,7 @@ Stegvelger.propTypes = {
   lagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   hentPerioder: PT.func.isRequired,
+  soknadFeilmeldinger: PT.object.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -323,6 +354,7 @@ const mapStateToProps = state => ({
   saksopplysninger: fagsakSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
 });
 
 /* eslint no-alert:off */

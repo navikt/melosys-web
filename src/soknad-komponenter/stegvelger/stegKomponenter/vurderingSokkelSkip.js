@@ -83,7 +83,7 @@ const SokkelSkipEnkelt = props => {
       }
       <Nav.Column xs="3" className="rad__land">
         <LandVelger
-          feltNavn={`avklartefakta.sokkelEllerSkip[${index}].arbeidsland`}
+          feltNavn={`maritimtArbeid[${index}].sokkelEllerSkip.arbeidsland`}
           disabled={!redigerbart}
           id="installasjonsTypeBegrunnelser"
           onChange={landVelgerEndret}

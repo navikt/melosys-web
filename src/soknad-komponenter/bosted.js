@@ -7,6 +7,7 @@ import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 import * as Utils from '../utils';
+import * as KV from '../kodeverk';
 
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import Landvelger from './skjema/landvelger';
@@ -34,7 +35,7 @@ const Bosted = props => {
   return (
     <div className="bosted panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger for vurdering av bosted" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.bosted} undertittel="" />}
         ariaTittel="Panel for opplysninger om bosted, fra søknaden">
         <Nav.Container fluid>
           <Nav.Row>
