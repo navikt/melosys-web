@@ -217,7 +217,7 @@ ListevelgerFlervalg.propTypes = {
   className: PT.string,
   defaultElementer: PT.arrayOf(PT.string),
   disabled: PT.bool.isRequired,
-  feil: PT.object,
+  feil: PT.string,
   label: PT.string.isRequired,
   muligeValg: PT.arrayOf(MPT.Kodeverk).isRequired,
   onChange: PT.func,
