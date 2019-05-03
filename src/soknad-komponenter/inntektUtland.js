@@ -6,6 +6,7 @@ import * as Ikoner from '../resources/images/index';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/index';
 import * as Skjema from './skjema/index';
+import * as KV from '../kodeverk';
 
 import { fagsakSelectors } from '../ducks/fagsaker/';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
@@ -32,7 +33,7 @@ function Inntekt (props) {
   return (
     <div className="inntektUtland panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Inntekt under oppholdet" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.inntektUnderOpphold} undertittel="" />}
         ariaTittel="Panel for inntekt under oppholdet">
         <Nav.Row className="iinntektUtland__seksjon">
           <Nav.Column xs="9">

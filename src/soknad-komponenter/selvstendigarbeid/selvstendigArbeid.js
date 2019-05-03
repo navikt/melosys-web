@@ -8,6 +8,8 @@ import * as Ikoner from '../../resources/images';
 import * as Skjema from '../skjema';
 import * as formSelectors from '../../ducks/form/selectors';
 import * as soknadActions from '../../ducks/soknad/actions';
+import * as KV from '../../kodeverk';
+
 import { fagsakSelectors } from '../../ducks/fagsaker';
 
 import SelvstendigeForetak from './selvstendigeforetak';
@@ -43,7 +45,7 @@ const SelvstendigArbeid = props => {
   return (
     <div className="selvstendigArbeid panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Arbeid som selvstendig næringsdrivende" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.selvstendigNaeringsdrivende} undertittel="" />}
         ariaTittel="Arbeid som selvstendig næringsdrivende">
         <Nav.Container fluid>
           <Nav.Row>
