@@ -7,6 +7,7 @@
 
 import { createSelector } from 'reselect';
 import * as KV from '../../kodeverk';
+import * as Utils from '../../utils';
 
 const getFormState = (state, formName, defaultValue = {}) => (
   state.form[formName] ? state.form[formName] : defaultValue
@@ -75,4 +76,22 @@ export const MaritimtArbeidSelector = createSelector(
 export const SokkelEllerSkipSelector = createSelector(
   state => SoknadenFormSelector(state).values,
   skjemaverdier => skjemaverdier.avklartefakta.sokkelEllerSkip
+);
+
+export const SoknadErrorsSelector = createSelector(
+  state => SoknadenFormSelector(state).syncErrors || {},
+  errors => errors
+);
+
+const finnPanelerMedFeil = errors => {
+  const panelerMedFeil = Object.keys(errors)
+    .map(error => errors[error].panel)
+    .filter(panel => !Utils._isNil(panel));
+
+  return [...new Set(panelerMedFeil)];
+};
+
+export const PanelerMedFeilSelector = createSelector(
+  SoknadErrorsSelector,
+  soknadErrors => finnPanelerMedFeil(soknadErrors)
 );
