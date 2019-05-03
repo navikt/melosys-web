@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
@@ -18,17 +18,23 @@ import './vurderingSokkelSkip.css';
 
 
 const ArbeidslandRadioButtons = props => {
-  const { landliste, onChange } = props;
+  const { landliste, onChange, arbeidsland } = props;
+
+  if (landliste.every(land => !land.kode)) return <Fragment>Ingen flaggland, sokkelland eller territorialfarvandsland valgt.</Fragment>;
 
   const grupperEtterKode = Utils.grupperEtterKey('kode');
   const landGruppertEtterKode = grupperEtterKode(landliste);
 
-  return Object.keys(landGruppertEtterKode).map(landGruppeNavn => {
-    const landTermerAssosiertMedRadiobutton = landGruppertEtterKode[landGruppeNavn].map(land => land.term);
-    const label = `${landGruppeNavn}: ${landTermerAssosiertMedRadiobutton.join(' - ')}`;
+  return (
+    Object.keys(landGruppertEtterKode)
+      .filter(landGruppe => landGruppe)
+      .map(landGruppeNavn => {
+        const landTermerAssosiertMedRadiobutton = landGruppertEtterKode[landGruppeNavn].map(land => land.term);
+        const label = `${landGruppeNavn}: ${landTermerAssosiertMedRadiobutton.join(' - ')}`;
 
-    return <Nav.Radio onChange={onChange} key={label} value={landGruppeNavn} label={label} name="arbeidsland" />;
-  });
+        return <Nav.Radio onChange={onChange} key={label} checked={arbeidsland === landGruppeNavn} value={landGruppeNavn} label={label} name="arbeidsland" />;
+      })
+  );
 };
 
 ArbeidslandRadioButtons.propTypes = {
@@ -37,12 +43,18 @@ ArbeidslandRadioButtons.propTypes = {
     kode: PT.string.isRequired,
   })).isRequired,
   onChange: PT.func.isRequired,
+  arbeidsland: PT.string,
+};
+
+ArbeidslandRadioButtons.defaultProps = {
+  arbeidsland: '',
 };
 
 const SokkelSkipEnkelt = props => {
   const {
     maritimtArbeid,
     avklartefakta,
+    arbeidslandAvklartfakta,
     begrunnelser,
     redigerbart,
     avklartefaktaEndretHandler,
@@ -56,6 +68,7 @@ const SokkelSkipEnkelt = props => {
 
   const { begrunnelseKoder } = avklartefakta;
   const installasjonsType = hentFaktaVerdi(avklartefakta);
+  const arbeidsland = hentFaktaVerdi(arbeidslandAvklartfakta);
   const { SOKKEL, SKIP } = KV.Koder;
 
   const key = `${KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}${navn}`;
@@ -73,7 +86,7 @@ const SokkelSkipEnkelt = props => {
   );
 
   const arbeidslandEndret = e => (
-    avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, navn, e)
+    avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, navn, e.target.value)
   );
 
   return (
@@ -119,6 +132,7 @@ const SokkelSkipEnkelt = props => {
               { term: 'Territorialfarvandsland', kode: territorialfarvann },
             ]}
             onChange={arbeidslandEndret}
+            arbeidsland={arbeidsland}
           />
         </Nav.Fieldset>
       </Nav.Column>
@@ -130,6 +144,7 @@ SokkelSkipEnkelt.propTypes = {
   index: PT.number.isRequired,
   maritimtArbeid: PT.object.isRequired,
   avklartefakta: PT.object,
+  arbeidslandAvklartfakta: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
   avklartefaktaEndretHandler: PT.func.isRequired,
@@ -139,11 +154,12 @@ SokkelSkipEnkelt.propTypes = {
 
 SokkelSkipEnkelt.defaultProps = {
   avklartefakta: {},
+  arbeidslandAvklartfakta: {},
 };
 
 const SokkelSkipListe = props => {
   const {
-    avklartefakta, maritimtArbeid, begrunnelser, redigerbart, avklartefaktaEndretHandler, avklartefaktaBegrunnelserEndretHandler, oppdaterData,
+    avklartefakta, maritimtArbeid, begrunnelser, redigerbart, avklartefaktaEndretHandler, avklartefaktaBegrunnelserEndretHandler, oppdaterData, installasjonArbeidslandListe,
   } = props;
 
   return (
@@ -153,6 +169,7 @@ const SokkelSkipListe = props => {
           key={JSON.stringify(enkelt)}
           maritimtArbeid={enkelt}
           avklartefakta={avklartefakta[index]}
+          arbeidslandAvklartfakta={installasjonArbeidslandListe.find(avklartFakta => avklartFakta.subjektID === enkelt.navn)}
           index={index}
           begrunnelser={begrunnelser}
           redigerbart={redigerbart}
@@ -167,6 +184,7 @@ const SokkelSkipListe = props => {
 
 SokkelSkipListe.propTypes = {
   avklartefakta: PT.array,
+  installasjonArbeidslandListe: PT.array,
   maritimtArbeid: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   redigerbart: PT.bool.isRequired,
@@ -178,6 +196,7 @@ SokkelSkipListe.propTypes = {
 SokkelSkipListe.defaultProps = {
   avklartefakta: [],
   maritimtArbeid: [],
+  installasjonArbeidslandListe: [],
 };
 
 class VurderingSokkelSkip extends React.Component {
@@ -224,7 +243,7 @@ class VurderingSokkelSkip extends React.Component {
       bekreftOgFortsett, tilstand, skjema, begrunnelser, redigerbart, oppdaterData,
     } = this.props;
 
-    const { sokkelEllerSkipListe, sokkelSkipKonklusjon } = tilstand;
+    const { sokkelEllerSkipListe, sokkelSkipKonklusjon, installasjonArbeidslandListe } = tilstand;
     const fakta = hentFaktaVerdi(sokkelSkipKonklusjon);
 
     const { konklusjonEndretHandler } = this;
@@ -237,6 +256,7 @@ class VurderingSokkelSkip extends React.Component {
         <Nav.Undertittel>Vurdering av sokkel eller skip</Nav.Undertittel>
         <SokkelSkipListe
           avklartefakta={sokkelEllerSkipListe}
+          installasjonArbeidslandListe={installasjonArbeidslandListe}
           maritimtArbeid={maritimtArbeid}
           begrunnelser={begrunnelser}
           redigerbart={redigerbart}
