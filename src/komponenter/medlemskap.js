@@ -109,7 +109,7 @@ const Medlemskap = props => {
   return (
     <div className="medlemskap panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={Ikoner.Medlemskap} tittel="Medlemskap" undertittel="" />}
+        heading={<PanelHeader ikon={Ikoner.Medlemskap} tittel={KV.Paneltitler.medlemskap} undertittel="" />}
         ariaTittel="Panel for medlemskap">
         <section aria-label="Panel for medlemskap">
           <Nav.Container fluid>

@@ -1,5 +1,6 @@
 import * as Koder from './koder';
 import * as Form from './form';
+import * as Paneltitler from './paneltitler';
 
 const objektTilTermUtenFeilmelding = KTObjekt => {
   if (!KTObjekt || !KTObjekt.term) return null;
@@ -36,4 +37,5 @@ export {
   finnEnkeltKodeFraListe,
   kodeTilTerm,
   termTilKode,
+  Paneltitler,
 };
