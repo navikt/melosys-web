@@ -13,7 +13,7 @@ const SoknadFeilmeldinger = ({ panelerMedFeil }) => {
 
   return (
     <Nav.AlertStripe className="feilmelding" type="advarsel" >
-      En feil har oppstått. Sjekk følgende panel(er):
+      Ugyldige felter. Sjekk følgende panel(er):
       <ul>
         {
           panelerMedFeil.map(panelnavn => (
