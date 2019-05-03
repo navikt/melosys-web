@@ -21,9 +21,11 @@ const LandLinje = props => {
     landKode, erValgt, klikkHandler, redigerbart,
   } = props;
 
+
   return (
     <div className="land__enkeltlinje">
-      <Nav.Checkbox disabled={!redigerbart} checked={erValgt} onChange={() => klikkHandler(landKode.kode, erValgt)} label={`${landKode.term}`} />
+      <span>{`${landKode.term} (${landKode.kode})`}</span>
+      <Nav.Checkbox disabled={!redigerbart} checked={erValgt} onChange={() => klikkHandler(landKode.kode, erValgt)} label="ja" />
     </div>
   );
 };
@@ -57,22 +59,28 @@ class LandListe extends Component {
     );
 
     return (
-      <div>
-        {arbeidsland.map(arbeidslandet => {
-          const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidslandet);
-          const erMarginaltArbeidIArbeidsland = avklartMarginaltArbeidILand && avklartMarginaltArbeidILand.fakta.includes('TRUE');
+      <Nav.Fieldset legend="Er det marginalt arbeid i noen av landene?">
+        <div className="landliste_innhold">
+          <div className="land__enkeltlinje">
+            <Nav.UndertekstBold>Land</Nav.UndertekstBold>
+            <Nav.UndertekstBold>Marginalt arbeid? <br /> {'(<5%)'}</Nav.UndertekstBold>
+          </div>
+          {arbeidsland.map(arbeidslandet => {
+            const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidslandet);
+            const erMarginaltArbeidIArbeidsland = avklartMarginaltArbeidILand && avklartMarginaltArbeidILand.fakta.includes('TRUE');
 
-          return <LandLinje
-            landKode={arbeidslandet}
-            erValgt={erMarginaltArbeidIArbeidsland}
-            key={uuid()}
-            klikkHandler={this.landValgEndret}
-            redigerbart={redigerbart}
-          />;
-        })
-        }
-        {ingenArbeidslandVarsel}
-      </div>
+            return <LandLinje
+              landKode={arbeidslandet}
+              erValgt={erMarginaltArbeidIArbeidsland}
+              key={uuid()}
+              klikkHandler={this.landValgEndret}
+              redigerbart={redigerbart}
+            />;
+          })
+          }
+          {ingenArbeidslandVarsel}
+        </div>
+      </Nav.Fieldset>
     );
   }
 }
@@ -119,14 +127,12 @@ const VurderingArbeidsmonster = props => {
     <div className="vurderingArbeidsmonster">
       <Nav.Undertittel>Vurdering av arbeidsmønster</Nav.Undertittel>
       <div className="arbeidsmonster">
-        <Nav.Fieldset legend="Er det marginalt arbeid i noen av landene?">
-          <LandListe
-            redigerbart={redigerbart}
-            marginaltArbeid={marginaltArbeid}
-            arbeidsland={arbeidsland}
-            oppdaterData={oppdaterData}
-          />
-        </Nav.Fieldset>
+        <LandListe
+          redigerbart={redigerbart}
+          marginaltArbeid={marginaltArbeid}
+          arbeidsland={arbeidsland}
+          oppdaterData={oppdaterData}
+        />
         <EnkeltAvklartfakta
           redigerbart={redigerbart}
           avklartfakta={aktivitetINorge}
