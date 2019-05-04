@@ -79,7 +79,7 @@ const LandListe = props => {
         {arbeidsland.map(arbeidslandet => {
           const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidslandet.kode);
 
-          const key = `marginaltArbeidslandListe${arbeidsland.kode}`;
+          const key = `marginaltArbeidslandListe${arbeidslandet.kode}`;
           return <LandLinje
             landKode={arbeidslandet}
             avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
@@ -119,11 +119,11 @@ const VurderingArbeidsmonster = props => {
   } = props;
   const { harAvklaring, marginaltArbeid, aktivitetINorge } = tilstand;
 
-  useEffect(() => {
-    return function cleanup() {
+  useEffect(() => (
+    function cleanup() {
       slettAllDataForSteg();
-    };
-  }, []);
+    }
+  ), []);
 
   const avklartefaktaTyper = [
     { label: '25% eller mer', type: 'TRUE' },

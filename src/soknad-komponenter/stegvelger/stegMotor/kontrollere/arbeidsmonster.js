@@ -42,12 +42,6 @@ class Arbeidsmonster extends Steg {
     };
     this._status = FANE_STATUS.OK;
   }
-
-  static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
-    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESGRUPPE);
-    if (!enkeltFakta) { return false; }
-    return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
-  };
 }
 
 export default Arbeidsmonster;
