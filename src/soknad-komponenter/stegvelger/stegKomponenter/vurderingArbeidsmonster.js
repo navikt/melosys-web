@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
@@ -9,8 +9,6 @@ import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartef
 import * as KV from '../../../kodeverk';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
 
-const uuid = require('uuid/v4');
-
 /**
  * Enkeltsjekkboks for marginalt arbeid i et land.
  *
@@ -18,72 +16,84 @@ const uuid = require('uuid/v4');
  */
 const LandLinje = props => {
   const {
-    landKode, erValgt, klikkHandler, redigerbart,
+    landKode, avklartMarginaltArbeidILand, oppdaterData, redigerbart,
   } = props;
 
+  useEffect(() => {
+    if (avklartMarginaltArbeidILand) {
+      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, avklartMarginaltArbeidILand));
+    }
+  }, []);
+
+  const erMarginaltArbeidIArbeidsland = avklartMarginaltArbeidILand && avklartMarginaltArbeidILand.fakta.includes('TRUE');
+
+  const klikkHandler = () => {
+    const verdi = erMarginaltArbeidIArbeidsland ? 'FALSE' : 'TRUE';
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, landKode.kode, verdi));
+  };
 
   return (
     <div className="land__enkeltlinje">
       <span>{`${landKode.term} (${landKode.kode})`}</span>
-      <Nav.Checkbox disabled={!redigerbart} checked={erValgt} onChange={() => klikkHandler(landKode.kode, erValgt)} label="ja" />
+      <Nav.Checkbox
+        disabled={!redigerbart}
+        checked={erMarginaltArbeidIArbeidsland === true}
+        value="TRUE"
+        onChange={klikkHandler}
+        label="ja"
+      />
     </div>
   );
 };
 
 LandLinje.propTypes = {
-  klikkHandler: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
   landKode: MPT.Kodeverk.isRequired,
-  erValgt: PT.bool,
+  avklartMarginaltArbeidILand: PT.object,
   redigerbart: PT.bool.isRequired,
 };
 
 LandLinje.defaultProps = {
-  erValgt: false,
+  avklartMarginaltArbeidILand: undefined,
 };
 
 /**
  * @param props Objekt Diverse props Se prop types
  */
-class LandListe extends Component {
-  landValgEndret = (orgnr, erValgt) => {
-    const { oppdaterData } = this.props;
-    const verdi = erValgt ? 'FALSE' : 'TRUE';
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, orgnr, verdi));
-  };
+const LandListe = props => {
+  const {
+    arbeidsland, redigerbart, marginaltArbeid, oppdaterData,
+  } = props;
 
-  render() {
-    const { arbeidsland, redigerbart, marginaltArbeid } = this.props;
+  const ingenArbeidslandVarsel = arbeidsland.length === 0 && (
+    <Nav.AlertStripe type="advarsel">Finner ingen arbeidsland.</Nav.AlertStripe>
+  );
 
-    const ingenArbeidslandVarsel = arbeidsland.length === 0 && (
-      <Nav.AlertStripe type="advarsel">Finner ingen arbeidsland.</Nav.AlertStripe>
-    );
-
-    return (
-      <Nav.Fieldset legend="Er det marginalt arbeid i noen av landene?">
-        <div className="landliste_innhold">
-          <div className="land__enkeltlinje">
-            <Nav.UndertekstBold>Land</Nav.UndertekstBold>
-            <Nav.UndertekstBold>Marginalt arbeid? <br /> {'(<5%)'}</Nav.UndertekstBold>
-          </div>
-          {arbeidsland.map(arbeidslandet => {
-            const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidslandet);
-            const erMarginaltArbeidIArbeidsland = avklartMarginaltArbeidILand && avklartMarginaltArbeidILand.fakta.includes('TRUE');
-
-            return <LandLinje
-              landKode={arbeidslandet}
-              erValgt={erMarginaltArbeidIArbeidsland}
-              key={uuid()}
-              klikkHandler={this.landValgEndret}
-              redigerbart={redigerbart}
-            />;
-          })
-          }
-          {ingenArbeidslandVarsel}
+  return (
+    <Nav.Fieldset legend="Er det marginalt arbeid i noen av landene?">
+      <div className="landliste_innhold">
+        <div className="land__enkeltlinje">
+          <Nav.UndertekstBold>Land</Nav.UndertekstBold>
+          <Nav.UndertekstBold>Marginalt arbeid? <br /> {'(<5%)'}</Nav.UndertekstBold>
         </div>
-      </Nav.Fieldset>
-    );
-  }
-}
+        {arbeidsland.map(arbeidslandet => {
+          const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidslandet.kode);
+
+          const key = `marginaltArbeidslandListe${arbeidsland.kode}`;
+          return <LandLinje
+            landKode={arbeidslandet}
+            avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
+            key={key}
+            oppdaterData={oppdaterData}
+            redigerbart={redigerbart}
+          />;
+        })
+        }
+        {ingenArbeidslandVarsel}
+      </div>
+    </Nav.Fieldset>
+  );
+};
 
 LandListe.propTypes = {
   arbeidsland: PT.array,
@@ -110,9 +120,6 @@ const VurderingArbeidsmonster = props => {
   const { harAvklaring, marginaltArbeid, aktivitetINorge } = tilstand;
 
   useEffect(() => {
-    marginaltArbeid.forEach(ma => {
-      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, ma));
-    });
     return function cleanup() {
       slettAllDataForSteg();
     };

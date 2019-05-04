@@ -1,8 +1,9 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import * as KV from '../../../../kodeverk';
+import * as Utils from '../../../../utils';
 
-import { hentFakta, hentFaktaListe } from '../../../../regler/avklartefakta';
+import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../../regler/avklartefakta';
 import VurderingArbeidsmonster from '../../stegKomponenter/vurderingArbeidsmonster';
 
 class Arbeidsmonster extends Steg {
@@ -26,8 +27,10 @@ class Arbeidsmonster extends Steg {
       const marginaltArbeid = hentFaktaListe(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, _propsLight.avklartefakta);
       const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, _propsLight.avklartefakta);
 
+      const harAvklaring = !Utils._isNil(hentFaktaVerdi(aktivitetINorge));
+
       return ({
-        harAvklaring: true,
+        harAvklaring,
         marginaltArbeid,
         aktivitetINorge,
       });
