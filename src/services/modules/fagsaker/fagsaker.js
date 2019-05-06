@@ -20,3 +20,7 @@ export const henlegg = (snr, body) => {
   return postAsJson(URI_HENLEGGSAK, body);
 };
 
+export const bortfall = snr => {
+  const URI_AVSLUTTSAKSOMBORTFALL = `${API_BASE_URL}${FAGSAKER}/${snr}/henlegg`;
+  return postAsJson(URI_AVSLUTTSAKSOMBORTFALL);
+};
