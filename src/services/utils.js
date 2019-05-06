@@ -248,6 +248,7 @@ export const deleteAsJson = (url, extendResponse = true) => methodToJson('DELETE
 export const getAsJson = (url, extendResponse = false) => methodToJson('GET', url, extendResponse);
 
 export const postAsJson = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse);
+export const putAsJson = (url, data = '', extendResponse = false) => methodToJson('PUT', url, data, extendResponse);
 
 export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse, 'application/pdf');
 
@@ -261,8 +262,3 @@ export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
       .catch(handterFeil(dispatch, FEILET));
   };
 }
-
-export const putAsJson = () => {
-  console.log('Bytt meg ut med en ekte metode!');
-  return Promise.resolve();
-};
