@@ -261,3 +261,8 @@ export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
       .catch(handterFeil(dispatch, FEILET));
   };
 }
+
+export const putAsJson = () => {
+  console.log('Bytt meg ut med en ekte metode!');
+  return Promise.resolve();
+};

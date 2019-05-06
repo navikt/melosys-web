@@ -223,6 +223,11 @@ class Saksbehandling extends Component {
     Api.Fagsaker.henlegg(saksnummer, data);
   };
 
+  avsluttSakSomBortfalt = () => {
+    const { oppsummering: { saksnummer } } = this.props;
+    Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
+  };
+
   render() {
     const { oppsummering } = this.props;
     const { blokkerInnholdMedOppfriskSpinner } = this;
@@ -255,6 +260,7 @@ class Saksbehandling extends Component {
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering
+                avsluttSakSomBortfalt={this.avsluttSakSomBortfalt}
                 oppsummering={oppsummering}
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
