@@ -1,4 +1,4 @@
-import { getAsJson, postAsJson, putAsJson } from '../../utils';
+import {getAsJson, postAsJson, putAsJson, putAsText} from '../../utils';
 import { API_BASE_URL, FAGSAKER } from '../../api-constants';
 
 export const hent = snr => {
@@ -22,5 +22,5 @@ export const henlegg = (snr, body) => {
 
 export const bortfall = snr => {
   const URI_AVSLUTTSAKSOMBORTFALL = `${API_BASE_URL}${FAGSAKER}/${snr}/avsluttsaksombortfalt`;
-  return putAsJson(URI_AVSLUTTSAKSOMBORTFALL);
+  return putAsText(URI_AVSLUTTSAKSOMBORTFALL);
 };
