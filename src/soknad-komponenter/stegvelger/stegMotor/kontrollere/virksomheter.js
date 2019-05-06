@@ -46,7 +46,7 @@ class Virksomheter extends Steg {
       },
     ];
     this.id = STEG.VIRKSOMHETER;
-    this.tittel = 'Arbeidsgiver';
+    this.tittel = 'Virksomhet';
     this.komponent = VurderingVirksomhet;
     this.samleRelevanteData = _propsLight => ({
       virksomheterIPerioden: _propsLight.virksomheterIPerioden,

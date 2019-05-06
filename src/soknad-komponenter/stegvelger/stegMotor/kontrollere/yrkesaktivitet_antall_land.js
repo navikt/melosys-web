@@ -10,7 +10,7 @@ class YrkesaktivitetAntallLand extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
-        beskrivelse: 'yrkesgruppeType ER LIK "YRKESAKTIV" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
+        beskrivelse: 'yrkesgruppeType ER LIK "ORDINAER" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
         exec: avklartefakta => (
           Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
@@ -24,6 +24,14 @@ class YrkesaktivitetAntallLand extends Steg {
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
         ),
         nesteSteg: STEG.VIRKSOMHETER,
+      },
+      {
+        beskrivelse: 'yrkesgruppeType ER LIK "ORDINAER" OG yrkesaktivitetAntallLand ER LIK "TO_ELLER_FLERE_LAND"',
+        exec: avklartefakta => (
+          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) &&
+          YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND)
+        ),
+        nesteSteg: STEG.ARBEIDSMONSTER,
       },
       {
         beskrivelse: 'alle andre valg',
