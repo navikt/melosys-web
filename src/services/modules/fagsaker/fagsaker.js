@@ -1,4 +1,4 @@
-import {getAsJson, postAsJson, putAsJson, putAsText} from '../../utils';
+import {getAsJson, postAsJson, putAsText } from '../../utils';
 import { API_BASE_URL, FAGSAKER } from '../../api-constants';
 
 export const hent = snr => {

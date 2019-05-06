@@ -280,7 +280,6 @@ export const getAsJson = (url, extendResponse = false) => methodToJson('GET', ur
 
 // [post|put]AsJson, data MUST be a valid JSON object, ie. {} or []. Cannot be a empty "" string.
 export const postAsJson = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse);
-export const putAsJson = (url, data = {}, extendResponse = false) => methodToJson('PUT', url, data, extendResponse);
 // putAsText, data can be empty string.
 export const putAsText = (url, data = '') => methodToText('PUT', url, data);
 
