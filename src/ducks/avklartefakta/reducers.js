@@ -54,6 +54,8 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESGRUPPE, 'YRKESGRUPPE'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET_ANTALL_LAND, null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET, null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.AKTIVITET_I_NORGE, null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.MARGINALT_ARBEID, null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.BOSTEDSLAND, 'BOSTEDSLAND'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.SOKKEL_ELLER_SKIP, 'SOKKEL_ELLER_SKIP'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.INSTALLASJON_ARBEIDSLAND, 'ARBEIDSLAND'),
