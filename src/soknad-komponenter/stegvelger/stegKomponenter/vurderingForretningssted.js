@@ -1,103 +1,100 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
-import { FieldArray, Field } from 'redux-form';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
 import * as KV from '../../../kodeverk';
 
-import LandVelger from '../../skjema/landvelger/';
+import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
+import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
 
-const uuid = require('uuid/v4');
-
-/** Det gir ingen mening å legge inn input=hidden i Redux Form, men vi trenger allikevel å knytte et felt
- * med arbeidsgiverID til hver gruppe av svar slik at vi vet hvilken arbeidsgiverID som saksbehandler har gitt vilke svar til.
- * Løsningen på dette ble å lage en egen custom component som ikke returnerer noe synlig felt, men som umiddelbart
- * ved mount lagrer arbeidsgiverID (onChange) til sitt tilhørende object i den tilhørende form field arrayen.
- * @param props
- * @returns {*}
- * @constructor
- */
-const ArbeidsgiverIDField = props => {
-  props.input.onChange(props.arbeidsgiverID);
-  return (<div />);
-};
-
-ArbeidsgiverIDField.propTypes = {
-  input: PT.object.isRequired,
-  arbeidsgiverID: PT.string.isRequired,
-};
-
-/** Dette er enkeltkomponenten for hver gruppe av valgte arbeidsforhold. Komponenten itereres av Forretningssteder
- * slik at alle valgte arbeidsgivere blir listet, uavhengig av om saksbehandler har besvart spørsmålene eller ikke.
- *
- * @param props
- * @returns {Object}
- */
 const Forretningsstedet = props => {
-  const { index } = props;
-  const { arbeidsgiver, arbeidsgiverID } = props.forretningsstedet;
-  if (!arbeidsgiver) return null;
+  const { forretningsstedet, avklartForretningsland, oppdaterData } = props;
+  if (!forretningsstedet) return null;
 
-  const { navn = '' } = arbeidsgiver;
+  useEffect(() => {
+    if (avklartForretningsland) {
+      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland));
+    }
+  }, []);
+
+  const { navn, orgnr } = forretningsstedet;
+  const landEndretHandler = e => {
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, orgnr, e));
+  };
+
+  const eksisterendeLand = hentFaktaVerdi(avklartForretningsland) || '';
 
   return (
     <Nav.Fieldset legend={navn}>
-      <Field name={`avklartefaktaForretningsstedLand[${index}].arbeidsgiverID`} value={arbeidsgiverID} component={ArbeidsgiverIDField} arbeidsgiverID={arbeidsgiverID} />
-      <LandVelger feltNavn={`avklartefaktaForretningsstedLand[${index}].beslutninger`} label="Tar viktige beslutninger i:" multiland={false} />
-      <LandVelger feltNavn={`avklartefaktaForretningsstedLand[${index}].virksomhet`} label="Har vesentlig virksomhet i:" multiland={false} />
+      <EnkeltLandPure
+        label="Forretningssted:"
+        onChange={landEndretHandler}
+        value={eksisterendeLand}
+        landkoder={MKV.KTObjects.landkoder}
+        multiland={false}
+      />
     </Nav.Fieldset>
   );
 };
 
 Forretningsstedet.propTypes = {
   forretningsstedet: PT.object.isRequired,
-  index: PT.number.isRequired,
+  avklartForretningsland: PT.object,
+  oppdaterData: PT.func.isRequired,
 };
 
-/** Dette er komponenten som benyttes av FieldArray og som gjør at felter for hver valgte arbeidsforhold kan
- * legges inn som array og underliggende felter kan fylles ut. Merk at istedet for å loope igjennom ArrayField for å finne
- * alle felter (slik man vanligvis ville ha gjort) looper denne komponenten igjennom 'valgteArbeidsforhold'-arrayen
- * som består av alle arbeidsgiverID'er som saksbehandleren har valgt i tidligere steg.
- *
- * @param props
- * @returns {Object}
- */
+Forretningsstedet.defaultProps = {
+  avklartForretningsland: null,
+};
+
+
 const Forretningssteder = props => {
-  const { valgteArbeidsforhold } = props;
+  const { valgteVirksomheter, avklarteForretningsland } = props;
+
+  const ingenValgteVirksomheterVarsel = valgteVirksomheter.length === 0 && (
+    <Nav.AlertStripe type="advarsel">Finner ingen valgte virksomheter.</Nav.AlertStripe>
+  );
+
   return (
     <div>
       {
-        valgteArbeidsforhold.map((forretningsstedet, index) => <Forretningsstedet key={uuid()} forretningsstedet={forretningsstedet} index={index} {...props} />)
+        valgteVirksomheter.map(valgtVirksomhet => {
+          const key = `forretningssted${valgtVirksomhet.orgnr}-${valgtVirksomhet.navn}`;
+          const avklartForretningsland = avklarteForretningsland.find(enkeltAvklaring => enkeltAvklaring.subjektID === valgtVirksomhet.orgnr);
+
+          return <Forretningsstedet
+            key={key}
+            forretningsstedet={valgtVirksomhet}
+            avklartForretningsland={avklartForretningsland}
+            oppdaterData={props.oppdaterData}
+          />;
+        })
       }
+      {ingenValgteVirksomheterVarsel}
     </div>
   );
 };
 
 Forretningssteder.propTypes = {
-  valgteArbeidsforhold: PT.array.isRequired,
+  valgteVirksomheter: PT.array.isRequired,
+  avklarteForretningsland: PT.array.isRequired,
+  oppdaterData: PT.func.isRequired,
 };
 
-/** Hovedkomponenten som rigges opp mot stegvelgeren.
- *
- * @param props
- * @returns {Object}
- */
 const VurderingForretningssted = props => {
-  const { bekreftOgFortsett, valgteArbeidsforhold } = props;
+  const { bekreftOgFortsett } = props;
+
+  useEffect(() => (
+    function cleanup() {
+      props.slettAllDataForSteg();
+    }
+  ), []);
 
   return (
     <div>
       <Nav.Undertittel>Vurder arbeidsgivers forretningssted</Nav.Undertittel>
-      <FieldArray name="avklartefaktaForretningsstedLand" component={Forretningssteder} valgteArbeidsforhold={valgteArbeidsforhold} />
-      <Nav.Fieldset legend="Hvor mange arbeidsgivere har søker?">
-        <Skjema.Radio feltNavn="avklartefaktaForretningsstedAntallArbeidsgivere" value={KV.Koder.VurderingForretningsstedTyper.EN_ARBEIDSGIVER} label="Én" />
-        <Skjema.Radio feltNavn="avklartefaktaForretningsstedAntallArbeidsgivere" value={KV.Koder.VurderingForretningsstedTyper.TO_ELLER_FLERE_ARBEIDSGIVERE} label="To eller flere" />
-      </Nav.Fieldset>
-      <Nav.Fieldset legend="Er arbeidsgivere i samme land eller ulike land?">
-        <Skjema.Radio feltNavn="avklartefaktaForretningsstedFordelingArbeidsgivere" value={KV.Koder.VurderingForretningsstedTyper.SAMME_LAND} label="I samme land" />
-        <Skjema.Radio feltNavn="avklartefaktaForretningsstedFordelingArbeidsgivere" value={KV.Koder.VurderingForretningsstedTyper.ULIKE_LAND} label="I ulike land" />
-      </Nav.Fieldset>
+      <Forretningssteder {...props} />
       <div className="fane__knapplinje">
         <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
@@ -108,12 +105,14 @@ const VurderingForretningssted = props => {
 VurderingForretningssted.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
-  valgteArbeidsforhold: PT.array,
+  valgteVirksomheter: PT.array,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingForretningssted.defaultProps = {
   tilstand: {},
-  valgteArbeidsforhold: [],
+  valgteVirksomheter: [],
 };
 
 export default VurderingForretningssted;
