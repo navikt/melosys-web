@@ -74,6 +74,7 @@ const SokkelSkipEnkelt = props => {
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, sokkelEllerSkip));
+    oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, arbeidslandAvklartfakta));
   }, []);
 
   const sokkelSkipEndret = e => (
@@ -201,10 +202,8 @@ SokkelSkipListe.defaultProps = {
 class VurderingSokkelSkip extends React.Component {
   componentDidMount() {
     const { tilstand, oppdaterData } = this.props;
-    const { installasjonArbeidslandListe, sokkelSkipKonklusjon } = tilstand;
-    installasjonArbeidslandListe.forEach(land => {
-      oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, land));
-    });
+    const { sokkelSkipKonklusjon } = tilstand;
+
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, sokkelSkipKonklusjon));
   }
 
