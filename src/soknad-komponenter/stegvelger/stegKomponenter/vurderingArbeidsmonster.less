@@ -1,0 +1,36 @@
+@import '../../../constants';
+
+.vurderingArbeidsmonster {
+
+  .arbeidsmonster {
+    > * {
+      margin-top: 3rem;
+    }
+  }
+
+  .landliste_innhold {
+    width:70%;
+    display: flex;
+    flex-direction: column;
+
+    >:first-child {
+      padding-top: 0;
+    }
+  }
+
+  .land__enkeltlinje {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 1rem 20% 0.2rem 0;
+    border-bottom: 1px solid black;
+
+    :last-child {
+      width: 50px;
+    }
+
+    * {
+      margin-bottom: 0px;  // RESET av Nav.Checkbox
+    }
+  }
+}
