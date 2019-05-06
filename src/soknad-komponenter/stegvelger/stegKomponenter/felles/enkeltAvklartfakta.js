@@ -56,7 +56,7 @@ const EnkeltAvklartfakta = props => {
           </Nav.Fieldset>
         </Nav.Column>
       </Nav.Row>
-      {false && (
+      {begrunnelser.length > 0 && (
         <Nav.Row>
           <Nav.Column xs="12" md="10" lg="8">
             <Nav.Fieldset legend="Begrunnelse:">
