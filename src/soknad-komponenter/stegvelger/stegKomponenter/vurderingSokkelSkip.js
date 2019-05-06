@@ -23,11 +23,10 @@ const ArbeidslandRadioButtons = props => {
   if (landliste.every(land => !land.kode)) return <Fragment>Ingen flaggland, sokkelland eller territorialfarvandsland valgt.</Fragment>;
 
   const grupperEtterKode = Utils.grupperEtterKey('kode');
-  const landGruppertEtterKode = grupperEtterKode(landliste);
+  const landGruppertEtterKode = grupperEtterKode(landliste.filter(land => land.kode));
 
   return (
     Object.keys(landGruppertEtterKode)
-      .filter(landGruppe => landGruppe)
       .map(landGruppeNavn => {
         const landTermerAssosiertMedRadiobutton = landGruppertEtterKode[landGruppeNavn].map(land => land.term);
         const label = `${landGruppeNavn}: ${landTermerAssosiertMedRadiobutton.join(' - ')}`;
