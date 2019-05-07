@@ -226,6 +226,7 @@ class Saksbehandling extends Component {
   avsluttSakSomBortfalt = () => {
     const { oppsummering: { saksnummer } } = this.props;
     Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
+    this.props.history.push('/');
   };
 
   render() {
