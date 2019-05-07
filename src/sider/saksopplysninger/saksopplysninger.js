@@ -33,7 +33,6 @@ import {
 } from '../../ducks/soknad/';
 
 import { avklartefaktaSelectors } from '../../ducks/avklartefakta/';
-// import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { vilkarSelectors } from '../../ducks/vilkar/';
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';

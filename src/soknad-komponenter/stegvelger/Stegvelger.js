@@ -16,7 +16,6 @@ import StegMotor from './stegMotor';
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
-// import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger';
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../ducks/behandlingsperioder';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder/';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
@@ -214,7 +213,7 @@ Stegvelger.propTypes = {
   behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
   avklartefakta: PT.array,
-  behandlinger: PT.object.isRequired,
+  behandlingsPerioder: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
@@ -259,7 +258,7 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  behandlinger: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
+  behandlingsPerioder: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),

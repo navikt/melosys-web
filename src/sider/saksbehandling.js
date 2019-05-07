@@ -24,7 +24,6 @@ import { saksopplysningerOperations, saksopplysningerSelectors } from '../ducks/
 import { oppgaverOperations } from '../ducks/oppgaver/';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder/';
 import { soknadOperations, soknadSelectors, soknadActions } from '../ducks/soknad/';
-// import { behandlingsOperations, behandlingerSelectors } from '../ducks/behandlinger';
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
 import { formSelectors } from '../ducks/form';
 import * as Api from '../services/api';
@@ -193,8 +192,8 @@ class Saksbehandling extends Component {
     const { skjema, oppdaterBehandlingerState } = this.props;
     await oppdaterBehandlingerState(skjema);
 
-    const { behandling, sendPerioder } = this.props;
-    sendPerioder(behandlingID, behandling);
+    const { behandlingsPeriode, sendPerioder } = this.props;
+    sendPerioder(behandlingID, behandlingsPeriode);
   };
 
   lagreAllData = async () => {
@@ -330,7 +329,7 @@ Saksbehandling.propTypes = {
   oppdaterSoknadState: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
-  behandling: PT.object.isRequired,
+  behandlingsPeriode: PT.object.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   sendPerioder: PT.func.isRequired,
@@ -360,8 +359,7 @@ const mapStateToProps = state => ({
   vilkar: vilkarSelectors.VilkarSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  // behandling: behandlingerSelectors.behandlingerSelector(state),
-  behandling: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
+  behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
