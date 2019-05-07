@@ -33,7 +33,8 @@ import {
 } from '../../ducks/soknad/';
 
 import { avklartefaktaSelectors } from '../../ducks/avklartefakta/';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
+// import { behandlingerSelectors } from '../../ducks/behandlinger';
+import { behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { vilkarSelectors } from '../../ducks/vilkar/';
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
 import { formSelectors } from '../../ducks/form/';
@@ -259,7 +260,7 @@ const mapStateToProps = state => ({
     fullmektigPoststed: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
     fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandkode,
-    tidligeremedlemskap: behandlingerSelectors.tidligereMedlemskap(state),
+    tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     avklartefakta: {
       soknadsland: avklartefaktaSelectors.Soknadsland(state),
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
