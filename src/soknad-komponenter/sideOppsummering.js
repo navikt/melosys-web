@@ -56,7 +56,7 @@ class SideOppsummering extends Component {
     const { oppdaterBehandlingsStatus, behandlingID } = this.props;
     const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.status);
     const nystatus = { kode, term };
-    Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {
+    Api.Behandlingsperioder.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nystatus);
       this.oppdaterStatusMelding();
     });
@@ -214,6 +214,7 @@ class SideOppsummering extends Component {
 }
 
 SideOppsummering.propTypes = {
+  behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   oppsummering: MPT.Oppsummering.isRequired,
   person: MPT.Person.isRequired,

@@ -24,7 +24,8 @@ import { saksopplysningerOperations, saksopplysningerSelectors } from '../ducks/
 import { oppgaverOperations } from '../ducks/oppgaver/';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder/';
 import { soknadOperations, soknadSelectors, soknadActions } from '../ducks/soknad/';
-import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger';
+// import { behandlingsOperations, behandlingerSelectors } from '../ducks/behandlinger';
+import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
 import { formSelectors } from '../ducks/form';
 import * as Api from '../services/api';
 
@@ -359,7 +360,8 @@ const mapStateToProps = state => ({
   vilkar: vilkarSelectors.VilkarSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  behandling: behandlingerSelectors.behandlingerSelector(state),
+  // behandling: behandlingerSelectors.behandlingerSelector(state),
+  behandling: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -373,7 +375,7 @@ const mapDispatchToProps = dispatch => ({
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
   resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
   resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
-  resetBehandlingerState: () => dispatch(behandlingerOperations.resetPerioderState()),
+  resetBehandlingerState: () => dispatch(behandlingsperioderOperations.resetPerioderState()),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
@@ -384,9 +386,9 @@ const mapDispatchToProps = dispatch => ({
   oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
-  oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
+  oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
-  sendPerioder: (behandlingID, body) => dispatch(behandlingerOperations.sendPerioder(behandlingID, body)),
+  sendPerioder: (behandlingID, body) => dispatch(behandlingsperioderOperations.sendPerioder(behandlingID, body)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

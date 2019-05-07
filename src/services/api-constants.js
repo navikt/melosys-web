@@ -4,6 +4,7 @@ export const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 
 export const AVKLARTEFAKTA = 'avklartefakta';
 export const BEHANDLINGER = 'behandlinger';
+export const BEHANDLINGSPERIODER = 'behandlinger';
 export const BEHANDLINGSRESULTAT = 'behandlingsresultat';
 export const DOKUMENTER = 'dokumenter';
 export const FAGSAKER = 'fagsaker';
