@@ -36,7 +36,7 @@ class Stegvelger extends Component {
     this.props.hentVilkar(behandlingID);
     this.props.hentAvklartefakta(behandlingID);
     this.props.hentLovvalgsperioder(behandlingID);
-    this.props.hentPerioder(behandlingID);
+    this.props.hentMedlemsPerioder(behandlingID);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -217,7 +217,7 @@ Stegvelger.propTypes = {
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
-  sendPerioder: PT.func.isRequired,
+  sendMedlemsPerioder: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
@@ -242,7 +242,7 @@ Stegvelger.propTypes = {
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   lagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
-  hentPerioder: PT.func.isRequired,
+  hentMedlemsPerioder: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -274,7 +274,7 @@ const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  sendPerioder: (behandlingID, body) => dispatch(behandlingsperioderOperations.sendPerioder(behandlingID, body)),
+  sendMedlemsPerioder: (behandlingID, body) => dispatch(behandlingsperioderOperations.sendMedlemsPerioder(behandlingID, body)),
   fatteVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
@@ -283,7 +283,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
-  hentPerioder: behandlingID => dispatch(behandlingsperioderOperations.hentPerioder(behandlingID)),
+  hentMedlemsPerioder: behandlingID => dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

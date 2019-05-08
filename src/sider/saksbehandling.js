@@ -386,7 +386,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
-  sendPerioder: (behandlingID, body) => dispatch(behandlingsperioderOperations.sendPerioder(behandlingID, body)),
+  sendPerioder: (behandlingID, body) => dispatch(behandlingsperioderOperations.sendMedlemsPerioder(behandlingID, body)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
