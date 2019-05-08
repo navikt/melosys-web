@@ -22,10 +22,6 @@ export default function reducer(state = initalState, action) {
     case Types.OK: {
       return { ...state, status: STATUS.OK, data: action.data };
     }
-    case Types.OPPDATER_BEHANDLINGER: {
-      const { tidligeremedlemskap: tidligere_medlemsperiode_ids } = action.data;
-      return { ...state, data: { tidligere_medlemsperiode_ids } };
-    }
     default:
       return state;
   }

@@ -52,7 +52,7 @@ class FullmektigPanel extends Component {
     return { ...fullmektig };
   });
 
-  lagreFullmektig = (representererKode, orgnr, databaseID) => this.props.lagreAktoer(this.props.oppsummering.saksnummer, {
+  lagreFullmektig = (representererKode, orgnr, databaseID) => this.props.lagreAktoer(this.props.fagsak.saksnummer, {
     databaseID: databaseID || null,
     aktoerID: null,
     orgnr,
@@ -70,7 +70,7 @@ class FullmektigPanel extends Component {
   };
 
   hentFullmektige = async () => {
-    const { saksnummer } = this.props.oppsummering;
+    const { saksnummer } = this.props.fagsak;
     const { hentAktoer } = this.props;
 
     try {
@@ -134,14 +134,14 @@ FullmektigPanel.propTypes = {
   hentOrg: PT.func.isRequired,
   hentAktoer: PT.func.isRequired,
   slettAktoer: PT.func.isRequired,
-  oppsummering: PT.object.isRequired,
+  fagsak: PT.object.isRequired,
   lagreAktoer: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  fagsak: fagsakSelectors.FagsakSelector(state),
   redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 

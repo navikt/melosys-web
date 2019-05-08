@@ -1,5 +1,5 @@
-import { getAsJson, postAsJson } from '../utils';
-import { API_BASE_URL, BEHANDLINGSPERIODER } from '../api-constants';
+import { getAsJson, postAsJson } from '../../utils';
+import { API_BASE_URL, BEHANDLINGSPERIODER } from '../../api-constants';
 
 export const oppdaterStatus = (behandlingID, status) => {
   const URI_BEHANDLINGER_STATUS = `${API_BASE_URL}${BEHANDLINGSPERIODER}/${behandlingID}/status`;

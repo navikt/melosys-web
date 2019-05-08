@@ -14,6 +14,7 @@ import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
+import { behandlingerSelectors } from '../ducks/behandlinger/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { KodeTermSelect } from './kodeTermSelect';
 
@@ -101,6 +102,7 @@ class SideOppsummering extends Component {
   render() {
     const {
       redigerbart,
+      fagsak,
       oppsummering,
       person,
       soknadsperiodeFom,
@@ -108,13 +110,14 @@ class SideOppsummering extends Component {
     } = this.props;
 
     if (!oppsummering) return <div />;
-
     const {
       saksnummer,
       sakstype,
       saksstatus,
+      registrertDato
+    } = fagsak;
+    const {
       behandlingsstatus,
-      registrertDato,
       sisteOpplysningerHentetDato,
     } = oppsummering;
 
@@ -230,8 +233,9 @@ SideOppsummering.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  person: fagsakSelectors.PersonSelector(state),
+  fagsak: fagsakSelectors.FagsakSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  person: behandlingerSelectors.PersonSelector(state),
   soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
   soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),

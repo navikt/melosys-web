@@ -1,7 +1,7 @@
 import * as Avklartefakta from './modules/avklartefakta';
-// import * as Behandlinger from './modules/behandlinger';
-import * as Behandlingsperioder from './modules/behandlingsperioder';
-import * as Behandlingsresultat from './modules/behandlingsresultat';
+import * as Behandlinger from './modules/behandlinger/behandlinger';
+import * as Behandlingsperioder from './modules/behandlinger/behandlingsperioder';
+import * as Behandlingsresultat from './modules/behandlinger/behandlingsresultat';
 import * as Dokumenter from './modules/dokumenter';
 import * as Fagsaker from './modules/fagsaker/';
 import * as Inngang from './modules/inngang';
@@ -34,7 +34,7 @@ function erDev() {
 
 export {
   Avklartefakta,
-  // Behandlinger,
+  Behandlinger,
   Behandlingsperioder,
   Behandlingsresultat,
   Dokumenter,
