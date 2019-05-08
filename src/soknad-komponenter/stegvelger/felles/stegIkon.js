@@ -8,6 +8,8 @@ import * as Ikon from '../../../resources/images';
 
 import './stegIkon.css';
 
+const erVedtakSteg = id => id === STEG.VEDTAK || id === STEG.ENDRET_PERIODE || id === STEG.AVSLAG_12_X_OG_16;
+
 const ikonVelger = (id, status) => {
   const IKONER = {
     STEG: {
@@ -24,7 +26,7 @@ const ikonVelger = (id, status) => {
     },
   };
 
-  if (id === STEG.VEDTAK || id === STEG.ENDRET_PERIODE || id === STEG.AVSLAG_12_X_OG_16) {
+  if (erVedtakSteg(id)) {
     return IKONER.VEDTAK.OK;
   }
 
@@ -37,7 +39,7 @@ const StegIkon = props => {
   } = props;
 
   const erTilgjengelig = status !== FANE_STATUS.UBEHANDLET;
-  const ikon = ikonVelger(id, status, aktivtSteg);
+  const ikon = ikonVelger(id, status);
 
   const cl = classnames(
     'stegIkon',
@@ -47,8 +49,8 @@ const StegIkon = props => {
   );
 
   const knappKlasser = classnames({
-    stegIkon__enkeltSteg: id !== STEG.VEDTAK,
-    stegIkon__vedtak: id === STEG.VEDTAK,
+    stegIkon__enkeltSteg: !erVedtakSteg(id),
+    stegIkon__vedtak: erVedtakSteg(id),
   });
 
   return (
