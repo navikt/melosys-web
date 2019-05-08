@@ -13,6 +13,7 @@ import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
+import { behandlingerSelectors } from '../../ducks/behandlinger/';
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
@@ -249,7 +250,7 @@ Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
   inngang: {},
-  oppsummering: [],
+  oppsummering: {},
   valgteVirksomheter: [],
 };
 

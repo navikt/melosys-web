@@ -2,7 +2,7 @@ import { combineReducers } from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
 import avklartefaktaReducer from './ducks/avklartefakta/';
-// import behandlingerReducer from './ducks/behandlinger';
+import behandlingerReducer from './ducks/behandlinger';
 import behandlingsperioderReducer from './ducks/behandlingsperioder';
 import behandlingsresultatReducer from './ducks/behandlingsresultat';
 import dokumenterReducer from './ducks/dokumenter/';
@@ -24,7 +24,7 @@ import customFormReducer from './ducks/form';
 export default combineReducers({
   form: formReducer.plugin({ forretningsValidering: customFormReducer }),
   avklartefakta: avklartefaktaReducer,
-  // behandlinger: behandlingerReducer,
+  behandlinger: behandlingerReducer,
   behandlingsperioder: behandlingsperioderReducer,
   behandlingsresultat: behandlingsresultatReducer,
   dokumenter: dokumenterReducer,

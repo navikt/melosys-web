@@ -277,6 +277,17 @@ export const ArbeidsgivereNorgeSelector = createSelector(
   }
 );
 
+export const FagsakSelector = createSelector(
+  state => (state.fagsaker.data ? state.fagsaker.data : {}),
+  saksdata => ({
+    saksnummer: saksdata.saksnummer,
+    sakstype: saksdata.sakstype,
+    saksstatus: saksdata.saksstatus,
+    endretDato: saksdata.endretDato,
+    gsakSaksnummer: saksdata.gsakSaksnummer,
+  })
+);
+
 export const OppsummeringSelector = createSelector(
   state => (state.fagsaker.data ? state.fagsaker.data : {}),
   state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.oppsummering : []),
@@ -290,3 +301,4 @@ export const OppsummeringSelector = createSelector(
     behandlingstype: oppsummering.behandlingstype,
   })
 );
+

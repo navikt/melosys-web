@@ -7,30 +7,13 @@
  *
  */
 import { doThenDispatch } from '../../services/utils';
-import * as Actions from './actions';
 import * as Api from '../../services/api';
 import * as Types from './types';
 
-export function hentPerioder(behandlingID) {
-  return doThenDispatch(() => Api.Behandlinger.hentPerioder(behandlingID), {
+export function hentBehandling(behandlingID) {
+  return doThenDispatch(() => Api.Behandlinger.hentBehandling(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
-}
-
-export function sendPerioder(behandlingID, perioder) {
-  return doThenDispatch(() => Api.Behandlinger.sendPerioder(behandlingID, perioder), {
-    OK: Types.OK,
-    FEILET: Types.FEILET,
-    PENDING: Types.PENDING,
-  });
-}
-
-export function oppdaterPerioderState(state) {
-  return dispatch => (dispatch(Actions.oppdaterPerioderState(state)));
-}
-
-export function resetPerioderState() {
-  return Actions.resetPerioderState();
 }

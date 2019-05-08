@@ -17,6 +17,7 @@ import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingsresultatOperations } from '../ducks/behandlingsresultat/';
+import { behandlingerOperations } from '../ducks/behandlinger/';
 
 import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
@@ -59,14 +60,15 @@ class Saksbehandling extends Component {
     this.setState({ behandlingID: Utils._toInteger(behandlingID) });
 
     const {
-      hentFagsaker, hentBehandlingsresultat,
+      hentFagsaker, hentBehandling, hentBehandlingsresultat,
       hentSoknad, sjekkOppfriskningStatus,
     } = this.props;
 
     try {
-      const response = await hentFagsaker(snr);
-      const { behandling } = response.data;
+      await hentFagsaker(snr);
 
+      const response = await hentBehandling(behandlingID);
+      const behandling = response.data;
       if (!behandling) return false;
 
       await hentBehandlingsresultat(behandlingID);
@@ -231,13 +233,12 @@ class Saksbehandling extends Component {
   };
 
   henleggSak = async data => {
-    const { oppsummering: { saksnummer } } = this.props;
+    const { fagsak: { saksnummer } } = this.props;
     Api.Fagsaker.henlegg(saksnummer, data);
   };
 
   render() {
     const { behandlingID } = this.state;
-    const { oppsummering } = this.props;
     const { blokkerInnholdMedOppfriskSpinner } = this;
 
     const oppfriskVenterDialog = this.state.oppfriskningBlokkererInnhold && (
@@ -270,7 +271,6 @@ class Saksbehandling extends Component {
             <Nav.Column xs="5">
               <SideOppsummering
                 behandlingID={behandlingID}
-                oppsummering={oppsummering}
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
                 tilbakeleggeHandle={this.tilbakeleggeHandle}
@@ -306,6 +306,7 @@ class Saksbehandling extends Component {
 Saksbehandling.propTypes = {
   avklartefakta: PT.array,
   hentFagsaker: PT.func.isRequired,
+  hentBehandling: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
   hentSoknad: PT.func.isRequired,
   history: PT.object.isRequired,
@@ -320,7 +321,7 @@ Saksbehandling.propTypes = {
   resetBehandlingerState: PT.func.isRequired,
   resetLovvalgsperiode: PT.func.isRequired,
   sjekkOppfriskningStatus: PT.func.isRequired,
-  oppsummering: MPT.Oppsummering,
+  fagsak: PT.object, // TODO fix proptype
   sendSoknad: PT.func.isRequired,
   soknad: PT.object,
   vilkar: PT.array,
@@ -342,7 +343,7 @@ Saksbehandling.propTypes = {
 
 Saksbehandling.defaultProps = {
   avklartefakta: [],
-  oppsummering: {},
+  fagsak: {},
   soknad: {},
   vilkar: [],
   skjema: {},
@@ -353,7 +354,7 @@ Saksbehandling.defaultProps = {
  */
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  fagsak: fagsakSelectors.FagsakSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
@@ -365,6 +366,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
+  hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentBehandlingsresultat: bid => dispatch(behandlingsresultatOperations.hent(bid)),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),

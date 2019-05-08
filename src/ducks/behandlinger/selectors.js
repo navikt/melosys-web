@@ -8,12 +8,40 @@
 import { createSelector } from 'reselect';
 
 /* eslint import/prefer-default-export:"off" */
-export const behandlingerSelector = createSelector(
-  state => (state.behandlinger.data ? state.behandlinger.data : []),
-  behandlinger => behandlinger
+export const BehandlingerSelector = createSelector(
+  state => (state.behandlinger.data ? state.behandlinger.data : {}),
+  behandling => behandling
 );
 
-export const tidligereMedlemskap = createSelector(
-  state => behandlingerSelector(state),
-  behandlinger => behandlinger.tidligere_medlemsperiode_ids || []
+export const SaksOpplysningerSelector = createSelector(
+  state => BehandlingerSelector(state),
+  saksopplysninger => saksopplysninger
 );
+
+export const PersonSelector = createSelector(
+  state => SaksOpplysningerSelector(state),
+  person => person
+);
+
+export const OrganisasjonerSelector = createSelector(
+  state => SaksOpplysningerSelector(state),
+  organisasjoner => organisasjoner || []
+);
+/*
+export const OppsummeringSelector = createSelector(
+  state => BehandlingerSelector(state),
+  oppsummering => oppsummering || {}
+);
+*/
+
+export const OppsummeringSelector = createSelector(
+  state => BehandlingerSelector(state),
+  oppsummering => ({
+    behandlingstype: oppsummering.behandlingstype,
+    behandlingsstatus: oppsummering.behandlingsstatus,
+    registrertDato: oppsummering.registrertDato,
+    sisteOpplysningerHentetDato: oppsummering.sisteOpplysningerHentetDato,
+    endretDato: oppsummering.endretDato
+  })
+);
+
