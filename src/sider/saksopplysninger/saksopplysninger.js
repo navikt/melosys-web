@@ -76,7 +76,9 @@ class Saksopplysninger extends Component {
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    const { behandlingID, oppfriskSaksopplysninger, sendSoknad, soknad } = this.props;
+    const {
+      behandlingID, oppfriskSaksopplysninger, sendSoknad, soknad,
+    } = this.props;
     await sendSoknad(behandlingID, soknad);
     await oppfriskSaksopplysninger(behandlingID);
     this.props.blokkerInnholdMedOppfriskSpinner();

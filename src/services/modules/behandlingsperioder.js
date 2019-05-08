@@ -6,12 +6,12 @@ export const oppdaterStatus = (behandlingID, status) => {
   return postAsJson(URI_BEHANDLINGER_STATUS, { behandlingsstatus: status });
 };
 
-export const sendPerioder = (behandlingID, perioder) => {
-  const URI_BEHANDLINGER_PERIODER = `${API_BASE_URL}${BEHANDLINGSPERIODER}/${behandlingID}/perioder`;
+export const sendMedlemsPerioder = (behandlingID, perioder) => {
+  const URI_BEHANDLINGER_PERIODER = `${API_BASE_URL}${BEHANDLINGSPERIODER}/${behandlingID}/medlemsperioder`;
   return postAsJson(URI_BEHANDLINGER_PERIODER, perioder);
 };
 
-export const hentPerioder = behandlingID => {
-  const URI_BEHANDLINGER_PERIODER = `${API_BASE_URL}${BEHANDLINGSPERIODER}/${behandlingID}/perioder`;
+export const hentMedlemsPerioder = behandlingID => {
+  const URI_BEHANDLINGER_PERIODER = `${API_BASE_URL}${BEHANDLINGSPERIODER}/${behandlingID}/medlemsperioder`;
   return getAsJson(URI_BEHANDLINGER_PERIODER);
 };

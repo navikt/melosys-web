@@ -11,15 +11,15 @@ import * as Actions from './actions';
 import * as Api from '../../services/api';
 import * as Types from './types';
 
-export function hentPerioder(behandlingID) {
-  return doThenDispatch(() => Api.Behandlingsperioder.hentPerioder(behandlingID), {
+export function hentMedlemsPerioder(behandlingID) {
+  return doThenDispatch(() => Api.Behandlingsperioder.hentMedlemsPerioder(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
-export function sendPerioder(behandlingID, perioder) {
-  return doThenDispatch(() => Api.Behandlingsperioder.sendPerioder(behandlingID, perioder), {
+export function sendMedlemsPerioder(behandlingID, perioder) {
+  return doThenDispatch(() => Api.Behandlingsperioder.sendMedlemsPerioder(behandlingID, perioder), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

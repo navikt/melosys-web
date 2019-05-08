@@ -5,6 +5,4 @@ export const getParam = (location, param) => {
   return queryObject[param];
 };
 
-export const toObject = location => {
-  return qs.parse(location.search, { ignoreQueryPrefix: true });
-};
+export const toObject = location => qs.parse(location.search, { ignoreQueryPrefix: true });
