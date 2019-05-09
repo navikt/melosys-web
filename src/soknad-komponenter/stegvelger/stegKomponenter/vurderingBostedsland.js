@@ -74,7 +74,7 @@ const VurderingBostedsland = props => {
   }, []);
 
   const {
-    erBosattINorge, erAvklart, harEOSBarnetrygdSak, begrunnelserPaaKrevd,
+    erBosattINorge, harAvklaring, harEOSBarnetrygdSak, begrunnelserPaaKrevd,
   } = tilstand;
 
   const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
@@ -141,7 +141,7 @@ const VurderingBostedsland = props => {
         )}
       </div>
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" disabled={!(redigerbart && erAvklart)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp type="hoved" disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
