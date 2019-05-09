@@ -10,6 +10,7 @@ import * as Utils from '../../utils';
 
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import { fagsakSelectors } from '../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 
 import Fullmektig from './fullmektig';
 
@@ -142,7 +143,7 @@ FullmektigPanel.propTypes = {
 const mapStateToProps = state => ({
   arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
 const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);

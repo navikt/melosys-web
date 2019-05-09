@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
+// TODO props; import * as MPT from '../proptypes/';
 
 import DialogboksOppfriskSak from '../soknad-komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../soknad-komponenter/dialogboks/dialogboksVenter';

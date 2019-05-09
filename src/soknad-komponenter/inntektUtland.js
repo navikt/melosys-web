@@ -7,7 +7,7 @@ import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/index';
 import * as Skjema from './skjema/index';
 
-import { fagsakSelectors } from '../ducks/fagsaker/';
+import { behandlingerSelectors } from '../ducks/behandlinger/';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import './inntektUtland.css';
 
@@ -53,7 +53,7 @@ Inntekt.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 const mapDispatchToProps = () => ({});
 

@@ -14,7 +14,6 @@ import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger/';
-import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../ducks/behandlingsperioder';
@@ -263,11 +262,11 @@ const mapStateToProps = state => ({
   inngang: inngangSelectors.InngangSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
-  saksopplysninger: fagsakSelectors.SaksopplysningerSelector(state),
+  saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
 /* eslint no-alert:off */

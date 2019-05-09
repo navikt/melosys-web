@@ -9,7 +9,7 @@ import LandVelger from './skjema/landvelger';
 
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
-import { fagsakSelectors } from '../ducks/fagsaker/';
+import { behandlingerSelectors } from '../ducks/behandlinger/';
 import './virksomhetNorge.css';
 
 function VirksomhetNorge (props) {
@@ -54,7 +54,7 @@ VirksomhetNorge.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 const mapDispatchToProps = () => ({});
 

@@ -3,37 +3,23 @@ import { createSelector, createStructuredSelector } from 'reselect';
 import moment from 'moment/moment';
 import * as KV from '../../kodeverk';
 
+import { behandlingerSelectors } from '../behandlinger';
 import { soknadSelectors } from '../soknad/';
 import { datoDiff } from '../../utils/dato';
 
-export const PersonSelector = createSelector(
-  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.person : state.fagsaker.data),
-  person => person
+export const FagsakSelector = createSelector(
+  state => (state.fagsaker.data ? state.fagsaker.data : {}),
+  fagsak => fagsak
 );
 
-export const OrganisasjonerSelector = createSelector(
-  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.organisasjoner : []),
-  organisasjoner => organisasjoner || []
-);
-
-export const SakOgBehandlingSelector = createSelector(
-  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.sakOgBehandling : {}),
-  sakOgBehandling => sakOgBehandling || {}
-);
-
-export const RedigerbartSelector = createSelector(
-  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.redigerbart : false),
-  redigerbart => redigerbart
+export const SaksnummerSelector = createSelector(
+  state => (state.fagsaker.data ? state.fagsaker.data.saksnummer : ''),
+  saksnummer => saksnummer
 );
 
 export const FagsakStatusSelector = createSelector(
   state => (state.fagsaker.data.saksstatus ? state.fagsaker.data.saksstatus.kode : ''),
   fagsakStatus => fagsakStatus
-);
-
-export const SaksopplysningerSelector = createSelector(
-  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger : {}),
-  saksopplysninger => saksopplysninger || {}
 );
 
 /**
@@ -184,7 +170,7 @@ export const MedlemskapSelector = createSelector(
  */
 export const ArbeidsforholdeneSelector = createSelector(
   state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.arbeidsforhold : []),
-  state => OrganisasjonerSelector(state),
+  state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => InntektSelector(state),
   (arbeidsforhold, organisasjoner, inntekt) => (arbeidsforhold.map(item => {
     if (!arbeidsforhold || !organisasjoner || !inntekt) return [];
@@ -200,7 +186,7 @@ export const ArbeidsforholdeneSelector = createSelector(
  * regner som relevante å vise.
  */
 export const OrganisasjonSelector = createSelector(
-  state => OrganisasjonerSelector(state),
+  state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   (organisasjoner, arbeidsforholdene) => {
     // Lag en array med orgnummer (arbeidsgiverID)
@@ -236,7 +222,7 @@ const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter,
  *  - inntekt
  */
 export const ArbeidsgivereNorgeSelector = createSelector(
-  state => OrganisasjonerSelector(state),
+  state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
   state => InntektSelector(state),
   state => soknadSelectors.SoknadsperiodeSelector(state),
@@ -275,30 +261,5 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       return tmpSamling;
     }, []);
   }
-);
-
-export const FagsakSelector = createSelector(
-  state => (state.fagsaker.data ? state.fagsaker.data : {}),
-  saksdata => ({
-    saksnummer: saksdata.saksnummer,
-    sakstype: saksdata.sakstype,
-    saksstatus: saksdata.saksstatus,
-    endretDato: saksdata.endretDato,
-    gsakSaksnummer: saksdata.gsakSaksnummer,
-  })
-);
-
-export const OppsummeringSelector = createSelector(
-  state => (state.fagsaker.data ? state.fagsaker.data : {}),
-  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.oppsummering : []),
-  (saksdata, oppsummering) => ({
-    saksnummer: saksdata.saksnummer,
-    sakstype: saksdata.sakstype,
-    saksstatus: saksdata.saksstatus,
-    behandlingsstatus: oppsummering.behandlingsstatus,
-    registrertDato: oppsummering.registrertDato,
-    sisteOpplysningerHentetDato: oppsummering.sisteOpplysningerHentetDato,
-    behandlingstype: oppsummering.behandlingstype,
-  })
 );
 
