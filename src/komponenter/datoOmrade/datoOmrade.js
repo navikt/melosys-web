@@ -20,4 +20,16 @@ DatoOmrade.propTypes = {
   periode: MPT.Periode.isRequired,
 };
 
+export const DatoOmradeTekst = ({ periode }) => (
+  periode ?
+    <React.Fragment>
+      <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} />
+    </React.Fragment>
+    : '(ukjent)'
+);
+
+DatoOmradeTekst.propTypes = {
+  periode: MPT.Periode.isRequired,
+};
+
 export default DatoOmrade;
