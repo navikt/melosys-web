@@ -26,14 +26,6 @@ class SideOppsummering extends Component {
     statusmelding: null,
   };
 
-  componentDidMount() {
-    /* Sjekker for undefined da this.props.oppsummering.behandlingsstatus er undefined
-     de første gangene komponenten rendres. */
-    if (this.props.oppsummering.behandlingsstatus) {
-      this.oppdaterValg(this.props.oppsummering.behandlingsstatus.kode);
-    }
-  }
-
   onChange = event => {
     const { value } = event.currentTarget;
     this.setState({ behandlingsstatus: value, statusmelding: null });
@@ -102,7 +94,7 @@ class SideOppsummering extends Component {
   render() {
     const {
       redigerbart,
-      fagsak,
+      fagsak, // TODO create new prop-type
       oppsummering,
       person,
       soknadsperiodeFom,
@@ -110,12 +102,14 @@ class SideOppsummering extends Component {
     } = this.props;
 
     if (!oppsummering) return <div />;
+
     const {
       saksnummer,
       sakstype,
       saksstatus,
-      registrertDato
+      registrertDato,
     } = fagsak;
+
     const {
       behandlingsstatus,
       sisteOpplysningerHentetDato,
@@ -218,8 +212,8 @@ class SideOppsummering extends Component {
 
 SideOppsummering.propTypes = {
   behandlingID: PT.number.isRequired,
-  redigerbart: PT.bool.isRequired,
-  oppsummering: MPT.Oppsummering.isRequired,
+  redigerbart: PT.bool,
+  oppsummering: PT.object, // TODO Fix MPT.Oppsummering,
   person: MPT.Person.isRequired,
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
@@ -231,15 +225,19 @@ SideOppsummering.propTypes = {
   tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
+SideOppsummering.defaultProps = {
+  oppsummering: undefined,
+  redigerbart: false,
+};
 
 const mapStateToProps = state => ({
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
   soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

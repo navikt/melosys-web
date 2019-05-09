@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import { fagsakSelectors } from '../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 import * as Nav from '../../utils/navFrontend';
 import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
 
@@ -162,7 +162,7 @@ EkstraArbeidsgivereLeggTil.propTypes = {
 
 
 const mapStateToProps = state => ({
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = () => ({});

@@ -11,7 +11,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as KV from '../../kodeverk';
 
-import { fagsakSelectors } from '../fagsaker/';
+import { behandlingerSelectors } from '../behandlinger';
 import { soknadSelectors } from '../soknad';
 import { OrganisasjonSelectors } from '../organisasjoner';
 
@@ -87,8 +87,8 @@ export const Yrkesaktivitet = createSelector(
  * og merge inn organisasjoner slik at det er der den juridiske organisasjonens navn som vises i panelet.
  */
 export const VirksomheterIPeriodenSelector = createSelector(
-  state => (state.fagsaker.data.behandling ? state.fagsaker.data.behandling.saksopplysninger.arbeidsforhold : []),
-  state => fagsakSelectors.OrganisasjonerSelector(state),
+  state => behandlingerSelectors.ArbeidsforholdSelector(state),
+  state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => soknadSelectors.EkstraArbeidsgivereSelector(state),
   state => soknadSelectors.SelvstendigNaringsvirksomhetSelector(state),
   (arbeidsforholdene, organisasjoner, ekstraArbeidsgivere, selvstendigeNaringer) => {
@@ -207,7 +207,7 @@ export const AvklartefaktaLovvalgKodeSelector = createSelector(
 
 export const AvklarteVirksomheterSelector = createSelector(
   state => VirksomhetSelector(state),
-  state => fagsakSelectors.OrganisasjonerSelector(state),
+  state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
   (alleArbeidsgivere, fagsakOrganisasjoner, soknadOrganisasjoner) => {
     const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];

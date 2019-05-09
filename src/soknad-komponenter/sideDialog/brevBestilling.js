@@ -11,7 +11,7 @@ import { formSelectors } from '../../ducks/form/';
 
 import { brevbestillingValidering, erSkjemaGyldig } from '../skjema/validering/brevbestilling';
 import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
-import { fagsakSelectors } from '../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 import PdfLenkeListe from '../pdfLenkeListe';
 
 import './brevBestilling.css';
@@ -168,7 +168,7 @@ const form = {
 const mapStateToProps = state => ({
   brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
   dokumenter: dokumenterSelectors.dokumenterSelector(state),
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   initialValues: {
     dokumenttypeKode: MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER,
     mottaker: MKV.Koder.representerer.BRUKER,
