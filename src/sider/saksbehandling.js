@@ -176,10 +176,14 @@ class Saksbehandling extends Component {
     sendLovvalgsperioder(bid, lovvalgsperioder);
   };
 
-  lagreBehandlingerHandler = async () => {
+  oppdaterOgLagreBehandlingerHandler = async () => {
     const { skjema, oppdaterBehandlingerState } = this.props;
     await oppdaterBehandlingerState(skjema);
 
+    this.lagreBehandlinger();
+  };
+
+  lagreBehandlinger = () => {
     const { behandlinger, sendPerioder, oppsummering: { behandlingID } } = this.props;
     sendPerioder(behandlingID, behandlinger);
   };
@@ -190,7 +194,7 @@ class Saksbehandling extends Component {
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
-      lagreBehandlingerHandler,
+      oppdaterOgLagreBehandlingerHandler,
     } = this;
 
     try {
@@ -198,7 +202,7 @@ class Saksbehandling extends Component {
         lagreSoknadHandler(),
         lagreVilkarHandler(),
         lagreAvklartefaktaHandler(),
-        lagreBehandlingerHandler(),
+        oppdaterOgLagreBehandlingerHandler(),
       ]);
 
       lagreLovvalgsperioderHandler();
@@ -255,7 +259,7 @@ class Saksbehandling extends Component {
                 lagreVilkarHandler={this.lagreVilkarHandler}
                 lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
-                lagreBehandlingerHandler={this.lagreBehandlingerHandler}
+                oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
                 lagreAllData={this.lagreAllData}
               />
             </Nav.Column>

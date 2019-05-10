@@ -59,17 +59,19 @@ TidligereMedlemPeriodeLinje.defaultProps = {
 };
 
 class TidligereMedlemskapPerioder extends Component {
-  onChange = periodeID => {
-    const { fields } = this.props;
+  onChange = async periodeID => {
+    const { fields, oppdaterOgLagreBehandlinger } = this.props;
     const { push, remove } = fields;
     const alleValgtePeriodeID = fields.getAll() || [];
     const eksistererVedPosisjon = alleValgtePeriodeID.findIndex(valgt => valgt === periodeID);
 
     if (eksistererVedPosisjon === -1) {
-      push(periodeID);
+      await push(periodeID);
     } else {
-      remove(eksistererVedPosisjon);
+      await remove(eksistererVedPosisjon);
     }
+
+    oppdaterOgLagreBehandlinger().catch(e => Utils.logger.error(e));
   };
 
   render() {
@@ -101,6 +103,7 @@ TidligereMedlemskapPerioder.propTypes = {
   fields: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
   feil: PT.object,
+  oppdaterOgLagreBehandlinger: PT.func.isRequired,
 };
 
 TidligereMedlemskapPerioder.defaultProps = {
@@ -127,12 +130,6 @@ class VurderingArtikkel16 extends Component {
   componentDidMount() {
     const { oppdaterData, tilstand: { art16_1 } } = this.props;
     oppdaterData(konverterTilStegData('art16_1', art16_1));
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.tidligeremedlemskap !== this.props.tidligeremedlemskap) {
-      this.lagreBehandlinger();
-    }
   }
 
   componentWillUnmount() {
@@ -307,7 +304,7 @@ class VurderingArtikkel16 extends Component {
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="12">
               <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}:`}>
-                <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} />
+                <TidligereMedlemskap oppdaterOgLagreBehandlinger={this.props.oppdaterOgLagreBehandlinger} redigerbart={redigerbart} medlemskap={medlemskap} />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -340,7 +337,6 @@ VurderingArtikkel16.propTypes = {
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
   unntakFraBestemmelse: PT.string,
   art16begrunnelserFritekst: PT.string,
-  tidligeremedlemskap: PT.array.isRequired,
   lagreVilkarHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
@@ -360,7 +356,6 @@ const mapStateToProps = state => ({
   oppsummering: fagsakSelectors.OppsummeringSelector(state),
   medlemskap: fagsakSelectors.MedlemskapSelector(state),
   art16begrunnelserFritekst: formSelectors.Art16BegrunnelseFritekstSelector(state),
-  tidligeremedlemskap: formSelectors.TidligereMedlemskapSelector(state),
   unntakFraBestemmelse: formSelectors.UnntakFraBestemmelse(state),
 });
 
