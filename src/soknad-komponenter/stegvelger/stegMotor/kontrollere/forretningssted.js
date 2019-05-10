@@ -11,9 +11,9 @@ class Forretningssted extends Steg {
     super(avklartefakta);
     this.kriterier = [
       {
-        beskrivelse: 'alle andre valg',
+        beskrivelse: 'dead end',
         exec: () => true,
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: null,
       },
     ];
     this.id = STEG.FORRETNINGSSTED;
