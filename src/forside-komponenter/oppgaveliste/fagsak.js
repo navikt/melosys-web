@@ -8,7 +8,7 @@ import * as KV from '../../kodeverk';
 import Behandling from './behandling';
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
-import { DatoOmradeTekst } from '../../komponenter/datoOmrade/datoOmrade';
+import { DatoOmradeDescription } from '../../komponenter/datoOmrade/datoOmrade';
 
 import './fagsak.css';
 
@@ -48,8 +48,7 @@ const Fagsak = ({ sak }) => {
             <dl className="fagsak__meta">
               <dt>Saksstatus:</dt>
               <dd>{KV.objektTilTerm(saksstatus) || '(ukjent)'}</dd>
-              <dt>Søknadsperiode: </dt>
-              <dd><DatoOmradeTekst periode={soknadsperiode} /></dd>
+              <DatoOmradeDescription tekst="Søknadsperiode: " periode={soknadsperiode} />
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="5">
