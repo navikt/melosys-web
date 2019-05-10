@@ -1,6 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import { Link } from 'react-router-dom';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
@@ -47,7 +48,7 @@ BehandlingPanel.propTypes = {
 };
 
 // Er ikke mulig å vise behandlinger med type UNNTAK_FRA_MEDLEMSKAP
-const behandlingKanVises = type => `${KV.objektTilKode(type)}` !== 'UNNTAK_FRA_MEDLEMSKAP';
+const behandlingKanVises = type => `${KV.objektTilKode(type)}` !== MKV.Koder.behandlinger.typer.UNNTAK_FRA_MEDLEMSKAP;
 
 const Behandling = ({ behandling, link }) => (
   behandlingKanVises(behandling.behandlingstype) ?
