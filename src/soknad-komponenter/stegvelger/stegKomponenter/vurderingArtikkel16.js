@@ -153,30 +153,28 @@ class VurderingArtikkel16 extends Component {
 
   lagreVilkar = () => {
     this.props.lagreVilkarHandler().catch(e => Utils.logger.error(e));
-    this.setState({ begrunnelserFeilmelding: undefined, fritekstFeilmelding: undefined });
   };
 
   lagreBehandlinger = () => {
     this.props.oppdaterOgLagreBehandlinger().catch(e => Utils.logger.error(e));
   };
 
-  fritekstEndretHandler = async event => {
+  fritekstEndretHandler = event => {
+    this.setState({ fritekstFeilmelding: undefined });
+
     const { oppdaterData } = this.props;
     const { id, value } = event.target;
 
-    await oppdaterData(lagBegrunnelse(id, null, value));
-    this.lagreVilkar();
+    oppdaterData(lagBegrunnelse(id, null, value));
   };
 
-  fritekstFokusFlyttetHandler = async event => {
-    const { oppdaterData } = this.props;
-    const { id, value } = event.target;
-
-    await oppdaterData(lagBegrunnelse(id, null, value));
+  fritekstFokusFlyttetHandler = () => {
     this.lagreVilkar();
   }
 
   begrunnelserEndringHandler = async event => {
+    this.setState({ begrunnelserFeilmelding: undefined });
+
     const { oppdaterData } = this.props;
 
     await oppdaterData(lagBegrunnelse('art16_1', event.value));
@@ -310,7 +308,7 @@ class VurderingArtikkel16 extends Component {
                   id="art16_1"
                   label="Begrunnelse til utenlandsk myndighet (engelsk):"
                   disabled={!redigerbart}
-                  // onBlur={fritekstFokusFlyttetHandler}
+                  onBlur={fritekstFokusFlyttetHandler}
                   onChange={fritekstEndretHandler}
                   value={art16fritekst}
                   feil={fritekstFeilmelding}
