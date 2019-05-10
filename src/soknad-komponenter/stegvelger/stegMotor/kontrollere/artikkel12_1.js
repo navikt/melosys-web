@@ -44,7 +44,15 @@ class Artikkel12_1 extends Steg {
     });
     this.beregnRelevantUI = _propsLight => {
       const art12_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_1, _propsLight.vilkar);
-      const art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar);
+      let art16_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar);
+
+      if (art16_1.oppfylt === true) {
+        art16_1 = {
+          ...art16_1,
+          begrunnelseKoder: null,
+          begrunnelseFritekst: null,
+        };
+      }
 
       const harAvklaring = !Utils._isNil(art12_1.oppfylt) || !Utils._isNil(art16_1.oppfylt);
       const manglerBegrunnelse12 = art12_1.oppfylt === false && art12_1.begrunnelseKoder.length === 0;
@@ -56,7 +64,6 @@ class Artikkel12_1 extends Steg {
         visBegrunnelser16: art16_1.oppfylt === false,
         art12_1,
         art16_1,
-        art16_1_fritekst: art16_1.begrunnelseFritekst || '',
       };
     };
     this.handlers = {
