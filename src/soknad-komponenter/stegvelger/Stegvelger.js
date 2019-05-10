@@ -1,7 +1,6 @@
 /* eslint-disable react/no-did-update-set-state */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { change } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
@@ -26,44 +25,35 @@ import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore } from './StegState/';
 
 import './stegvelger.css';
+import LovvalgsbestemmelseStore from './StegState/LovvalgsbestemmelseStore';
 
 
 class Stegvelger extends Component {
   state = {
     aktivtStegNummer: 0,
     aktuelleSteg: [],
-    didUpdateAfterLastStep: false,
     stegStores: {
       avklartefakta: new AvklartefaktaStore(),
       vilkaar: new VilkaarStore(),
+      lovvalgsbestemmelse: new LovvalgsbestemmelseStore(),
     },
     visSoknadFeilmeldinger: false,
   };
 
-  componentWillMount() {
+  async componentWillMount() {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
 
     const bid = this.props.oppsummering.behandlingID;
 
-    this.props.hentVilkar(bid);
-    this.props.hentAvklartefakta(bid);
-    this.props.hentLovvalgsperioder(bid);
-    this.props.hentPerioder(bid);
-  }
+    await Promise.all([
+      this.props.hentPerioder(bid),
+      this.props.hentVilkar(bid),
+      this.props.hentAvklartefakta(bid),
+      this.props.hentLovvalgsperioder(bid),
+    ]);
 
-  componentWillReceiveProps(nextProps) {
-    this.oppdaterAktuelleSteg(nextProps);
-  }
-
-  async componentDidUpdate(prevProps) {
-    const formHasSetteled = JSON.stringify(prevProps.skjema) === JSON.stringify(this.props.skjema);
-    const { didUpdateAfterLastStep } = this.state;
-    const shouldUpdate = (formHasSetteled && !didUpdateAfterLastStep);
-
-    if (!shouldUpdate) { return; }
-
-    this.setState({ didUpdateAfterLastStep: true });
+    this.oppdaterAktuelleSteg();
   }
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
@@ -71,7 +61,7 @@ class Stegvelger extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
-    this.publiserStegdataTilRedux();
+    this.publiserStegdata();
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
   };
 
@@ -86,7 +76,7 @@ class Stegvelger extends Component {
     stegStores[type].slettStegData(stegID, felt);
     this.setState(stegStores);
 
-    this.publiserStegdataTilRedux();
+    this.publiserStegdata();
   };
 
   oppdaterStegData = (stegID, data) => {
@@ -98,7 +88,7 @@ class Stegvelger extends Component {
     this.setState(stegStores);
 
     if (data.oppdaterRedux) {
-      this.publiserStegdataTilRedux();
+      this.publiserStegdata();
     }
   };
 
@@ -107,17 +97,19 @@ class Stegvelger extends Component {
     Object.keys(stegStores).forEach(type => stegStores[type].slettSteg(stegID));
     this.setState(stegStores);
 
-    this.publiserStegdataTilRedux();
+    this.publiserStegdata();
   };
 
-  publiserStegdataTilRedux = () => {
-    const { vilkaar, avklartefakta } = this.state.stegStores;
+  publiserStegdata = async () => {
+    const { vilkaar, avklartefakta, lovvalgsbestemmelse } = this.state.stegStores;
 
-    const vilkaarKonvertert = vilkaar.hent();
-    this.props.oppdaterVilkaar(vilkaarKonvertert);
+    await Promise.all([
+      this.props.oppdaterVilkaar(vilkaar.hent()),
+      this.props.oppdaterAvklartefakta(avklartefakta.hent()),
+      this.props.oppdaterLovvalgperioder(lovvalgsbestemmelse.hent()),
+    ]);
 
-    const avklartefaktaKonvertert = avklartefakta.hent();
-    this.props.oppdaterAvklartefakta(avklartefaktaKonvertert);
+    this.oppdaterAktuelleSteg();
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {
@@ -166,13 +158,11 @@ class Stegvelger extends Component {
    * @param props
    * @returns {Array}
    */
-  oppdaterAktuelleSteg = props => {
+  oppdaterAktuelleSteg = () => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
-      lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
       oppdaterOgLagreBehandlinger: this.props.lagreBehandlingerHandler,
-      settSkjemaVerdi: this.props.settSkjemaVerdi,
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,
       slettAllDataForSteg: this.slettAllDataForSteg,
@@ -182,6 +172,8 @@ class Stegvelger extends Component {
       endreDatoOgSendLovvalgsperioderHandler: this.endreDatoOgSendLovvalgsperioderHandler,
       tilForsiden: this.tilForsiden,
     };
+
+    const { props } = this;
 
     const propsLight = {
       virksomheterIPerioden: props.arbeidsgivereIPerioden,
@@ -229,13 +221,10 @@ class Stegvelger extends Component {
    */
   tilSteg = async nyttStegNummer => {
     const {
-      avklartefakta,
       skjema,
       oppdaterBehandlingerState,
       oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
-      lovvalgsperioder,
-      vilkar,
     } = this.props;
 
     await oppdaterLokalSoknadHandler();
@@ -248,17 +237,17 @@ class Stegvelger extends Component {
       lagreLovvalgsperioderHandler,
     } = this.props;
 
-    const { behandlingID } = this.props.oppsummering;
-
     await oppdaterBehandlingerState(skjema);
 
-    await lagreAvklartefaktaHandler(behandlingID, avklartefakta);
-    await lagreVilkarHandler(behandlingID, vilkar);
-    await lagreLovvalgsperioderHandler(behandlingID, lovvalgsperioder);
+    await lagreAvklartefaktaHandler();
+    await lagreVilkarHandler();
+    await lagreLovvalgsperioderHandler();
 
     if (this.erSisteSteg(nyttStegNummer)) {
       await lagreSoknadHandler();
     }
+
+    this.oppdaterAktuelleSteg();
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
@@ -300,10 +289,7 @@ Stegvelger.propTypes = {
   behandlinger: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
-  sendVilkar: PT.func.isRequired,
-  sendPerioder: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
-  sendAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
   history: PT.object.isRequired,
   fatteVedtak: PT.func.isRequired,
@@ -315,11 +301,10 @@ Stegvelger.propTypes = {
   oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
-  settSkjemaVerdi: PT.func.isRequired,
-  sendLovvalgsperioder: PT.func.isRequired,
   skjema: PT.object.isRequired,
   oppdaterVilkaar: PT.func.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
+  oppdaterLovvalgperioder: PT.func.isRequired,
   valgteVirksomheter: PT.array,
   vilkar: PT.array.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
@@ -361,18 +346,14 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
-  sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  sendPerioder: (behandlingID, body) => dispatch(behandlingerOperations.sendPerioder(behandlingID, body)),
   fatteVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
-  sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
-  settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
   oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
   oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
+  oppdaterLovvalgperioder: lovvalgsperiode => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lovvalgsperiode)),
   hentPerioder: behandlingID => dispatch(behandlingerOperations.hentPerioder(behandlingID)),
 });
 
