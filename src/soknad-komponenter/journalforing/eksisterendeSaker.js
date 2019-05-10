@@ -40,7 +40,7 @@ const EnkeltSak = props => {
         <dd>{<EnkeltDato dato={opprettetDato} />}</dd>
         <DatoOmradeDescription tekst="Søknadsperiode: " periode={soknadsperiode} />
         <dt>Land:</dt>
-        <dd>{land.join(', ')}</dd>
+        <dd>{land ? land.join(', ') : '(ukjent)'}</dd>
       </dl>
     </div>
   );
