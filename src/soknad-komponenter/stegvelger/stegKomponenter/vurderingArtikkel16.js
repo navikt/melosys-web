@@ -163,6 +163,22 @@ class VurderingArtikkel16 extends Component {
     this.props.oppdaterOgLagreBehandlinger().catch(e => Utils.logger.error(e));
   };
 
+  fritekstEndretHandler = async event => {
+    const { oppdaterData } = this.props;
+    const { id, value } = event.target;
+
+    await oppdaterData(lagBegrunnelse(id, null, value));
+    this.lagreVilkar();
+  };
+
+  fritekstFokusFlyttetHandler = async event => {
+    const { oppdaterData } = this.props;
+    const { id, value } = event.target;
+
+    await oppdaterData(lagBegrunnelse(id, null, value));
+    this.lagreVilkar();
+  }
+
   begrunnelserEndringHandler = async event => {
     const { oppdaterData } = this.props;
 
@@ -184,8 +200,8 @@ class VurderingArtikkel16 extends Component {
   };
 
   validerFritekst = () => {
-    const valid = this.props.art16begrunnelserFritekst !== '';
-    if (!valid) this.setState({ fritekstFeilmelding: 'Fyll inn fritekst' });
+    const valid = this.props.tilstand.art16_1.begrunnelseFritekst;
+    if (!valid) this.setState({ fritekstFeilmelding: { feilmelding: 'Fyll inn fritekst' } });
     return valid;
   };
 
@@ -218,9 +234,10 @@ class VurderingArtikkel16 extends Component {
     const {
       begrunnelserEndringHandler,
       lagreLovvalgsPerioder,
-      lagreVilkar,
       validerAlt,
       validerOgLagreBehandling,
+      fritekstFokusFlyttetHandler,
+      fritekstEndretHandler,
     } = this;
 
     const {
@@ -240,11 +257,11 @@ class VurderingArtikkel16 extends Component {
       { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
     ];
 
-    const fritekstError = fritekstFeilmelding ? { error: fritekstFeilmelding, touched: true } : {};
-
     const visFritekstfelt = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
-    const { art16_1 } = tilstand;
+    const { art16_1, art16_1: { begrunnelseFritekst } } = tilstand;
+
+    const art16fritekst = begrunnelseFritekst || '';
 
     /* eslint-disable max-len */
     return (
@@ -292,12 +309,14 @@ class VurderingArtikkel16 extends Component {
             <Nav.Column xs="12">
               {
                 visFritekstfelt &&
-                <Skjema.Textarea
-                  meta={fritekstError}
-                  onBlur={lagreVilkar}
-                  disabled={!redigerbart}
-                  feltNavn="vilkar.art16_1_begrunnelser_fritekst"
+                <Nav.Textarea
+                  id="art16_1"
                   label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                  disabled={!redigerbart}
+                  // onBlur={fritekstFokusFlyttetHandler}
+                  onChange={fritekstEndretHandler}
+                  value={art16fritekst}
+                  feil={fritekstFeilmelding}
                   maxLength={255}
                   bredde="fullbredde"
                 />
