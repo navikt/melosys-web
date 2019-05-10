@@ -4,6 +4,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as KV from '../../kodeverk';
 import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
+import { DatoOmradeDescription } from '../../komponenter/datoOmrade/datoOmrade';
 import * as Skjema from '../skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
@@ -24,8 +25,6 @@ const EnkeltSak = props => {
     land, behandlingstype, soknadsperiode, behandlingsstatus,
   } = aktivBehandling;
 
-  const { fom, tom } = soknadsperiode;
-
   return (
     <div className="enkeltSak__meta">
       <dl>
@@ -39,8 +38,7 @@ const EnkeltSak = props => {
         <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
         <dt>Opprettet:</dt>
         <dd>{<EnkeltDato dato={opprettetDato} />}</dd>
-        <dt>Søknadsperiode: </dt>
-        <dd>{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
+        <DatoOmradeDescription tekst="Søknadsperiode: " periode={soknadsperiode} />
         <dt>Land:</dt>
         <dd>{land.join(', ')}</dd>
       </dl>
