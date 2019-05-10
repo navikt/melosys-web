@@ -56,11 +56,6 @@ export default function reducer(state = initialState, action) {
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, action.data.vilkar.art11_4_2),
-        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART13_1_B1, action.data.vilkar.art13_1_b1),
-        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART13_1_B2, action.data.vilkar.art13_1_b2),
-        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART13_1_B3, action.data.vilkar.art13_1_b3),
-        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART13_1_B4, action.data.vilkar.art13_1_b4),
-        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART14_11, action.data.vilkar.art14_11),
       ].filter(vilkar => vilkar !== null);
       /* eslint-enable max-len */
       return {
