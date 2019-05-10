@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
-import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData as konverterFaktaTilStegData } from '../../../regler/avklartefakta';
-import { konverterTilStegData, lagVilkaar } from '../../../regler/vilkar';
+import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../regler/avklartefakta';
 import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
 
 import './vurderingForretningssted.css';
+import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 
 const Forretningsstedet = props => {
   const { forretningsstedet, avklartForretningsland, oppdaterData } = props;
@@ -87,22 +87,44 @@ Forretningssteder.propTypes = {
 
 const VurderingForretningssted = props => {
   const {
-    bekreftOgFortsett, omfattetINorge, omfattetILand, redigerbart, oppdaterData, slettData,
-    art13_1_b1, art13_1_b2, art13_1_b3, art13_1_b4, art14_11,
+    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
 
+  const {
+    omfattetINorge, omfattetILand, lovvalgsbestemmelse, harAvklaring,
+  } = tilstand;
+
   const lovvalgsvilkaar = [
-    { kode: 'art13_1_b1', vilkaar: art13_1_b1, label: '13.1 b i: en arbeidsgiver' },
-    { kode: 'art13_1_b2', vilkaar: art13_1_b2, label: '13.1 b ii: to arbeidsgivere' },
-    { kode: 'art13_1_b3', vilkaar: art13_1_b3, label: '13.1 b iii: Flere arbeidsgivere, med forretningssted i to land, hvorav et er Norge' },
-    { kode: 'art13_1_b4', vilkaar: art13_1_b4, label: '13.1 b iv: Flere arbeidsgivere, med forretningssted i flere land, hvorav flere enn to er utenfor Norge' },
-    { kode: 'art14_11', vilkaar: art14_11, label: '14.11: Forordning 987, artikkel 14: arbeidsgiver utenfor EU/EØS-område' },
+    {
+      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1B1,
+      label: '13.1 b i: en arbeidsgiver',
+    },
+    {
+      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1_B2,
+      label: '13.1 b ii: to arbeidsgivere',
+    },
+    {
+      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1_B3,
+      label: '13.1 b iii: Flere arbeidsgivere, med forretningssted i to land, hvorav et er Norge',
+    },
+    {
+      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1_B4,
+      label: '13.1 b iv: Flere arbeidsgivere, med forretningssted i flere land, hvorav flere enn to er utenfor Norge',
+    },
+    {
+      kode: MKV.Koder.lovvalgsbestemmelser.forordning_987_2009.FO_987_2009_ART14_11,
+      label: '14.11: Forordning 987, artikkel 14: arbeidsgiver utenfor EU/EØS-område',
+    },
   ];
 
-  useEffect(() => {
-    lovvalgsvilkaar.forEach(({ kode, vilkaar }) => oppdaterData(konverterTilStegData(kode, vilkaar)));
-    oppdaterData(konverterFaktaTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, omfattetINorge));
-    oppdaterData(konverterFaktaTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattetILand));
+  useLayoutEffect(() => {
+    const bestemmelseFunnet = lovvalgsvilkaar.some(lb => lb.kode === lovvalgsbestemmelse);
+    if (bestemmelseFunnet) {
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
+    }
+
+    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, omfattetINorge));
+    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattetILand));
 
     return function cleanup() {
       props.slettAllDataForSteg();
@@ -119,22 +141,18 @@ const VurderingForretningssted = props => {
     }
   };
 
-  const vilkaarEndret = e => {
-    oppdaterData(lagVilkaar(e.target.value, true));
+  const lovvalgsbestemmelseEndret = e => {
+    oppdaterData(lagLovvalgsbestemmelse(e.target.value));
+  };
 
-    // Det er kun mulig å ha et av vilkårene. Det er derfor nødvendig å gå gjennom og slette de andre.
+  const finnOppfyltVilkaarKode = () => (
     lovvalgsvilkaar
-      .filter(lv => lv.kode !== e.target.value)
-      .forEach(lv => slettData('vilkaar', lv.kode));
-  };
-
-  const finnOppfyltVilkaarKode = () => {
-    const oppfyltVilkaar = lovvalgsvilkaar.find(lv => lv.vilkaar.oppfylt) || {};
-    return oppfyltVilkaar.kode;
-  };
+      .map(lb => lb.kode)
+      .find(kode => kode === lovvalgsbestemmelse)
+  );
 
   const avklartOmfattetINorge = hentFaktaVerdi(omfattetINorge);
-  const avklartLand = hentFaktaVerdi(omfattetILand);
+  const avklartLand = hentFaktaVerdi(omfattetILand) || '';
 
   const avklartefaktaTyper = [
     { label: 'Norge', type: 'TRUE' },
@@ -145,7 +163,7 @@ const VurderingForretningssted = props => {
     <div>
       <Nav.Undertittel>Vurder arbeidsgivers forretningssted</Nav.Undertittel>
       <Nav.Fieldset legend="Vurder hvor virksomhetene har forretningssted">
-        <Forretningssteder {...props} />
+        <Forretningssteder {...tilstand}{...props} />
       </Nav.Fieldset>
 
       <Nav.Fieldset legend="Vurder" className="vilkaar">
@@ -153,7 +171,7 @@ const VurderingForretningssted = props => {
           name="artikkel3_1_vurdering"
           id="vurdering13_1"
           label="Velg Artikkel"
-          onChange={vilkaarEndret}
+          onChange={lovvalgsbestemmelseEndret}
           disabled={!redigerbart}
           value={finnOppfyltVilkaarKode()}
         >
@@ -176,6 +194,7 @@ const VurderingForretningssted = props => {
       { avklartOmfattetINorge === 'FALSE' &&
       <div className="land">
         <EnkeltLandPure
+          label="Velg land:"
           landkoder={MKV.KTObjects.landkoder}
           value={avklartLand}
           onChange={avklartfaktaEndret}
@@ -183,7 +202,7 @@ const VurderingForretningssted = props => {
       </div>
       }
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp type="hoved" disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
@@ -196,6 +215,7 @@ VurderingForretningssted.propTypes = {
   avklartForretningsland: PT.array,
   omfattetINorge: PT.object,
   omfattetILand: PT.object,
+  lovvalgsbestemmelse: PT.string,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
@@ -208,6 +228,7 @@ VurderingForretningssted.defaultProps = {
   avklartForretningsland: [],
   omfattetINorge: {},
   omfattetILand: {},
+  lovvalgsbestemmelse: null,
 };
 
 export default VurderingForretningssted;

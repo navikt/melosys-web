@@ -1,11 +1,10 @@
-import * as MKV from 'melosys-kodeverk';
-
+/* eslint-disable consistent-return */
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingForretningssted from '../../stegKomponenter/vurderingForretningssted';
-import { hentFakta, hentFaktaListe } from '../../../../regler/avklartefakta';
+import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../../regler/avklartefakta';
 import * as KV from '../../../../kodeverk';
-import { hentVilkar } from '../../../../regler/vilkar';
+import * as Utils from '../../../../utils';
 
 class Forretningssted extends Steg {
   constructor(avklartefakta) {
@@ -23,19 +22,31 @@ class Forretningssted extends Steg {
     this.samleRelevanteData = _propsLight => ({
       valgteVirksomheter: _propsLight.valgteVirksomheter,
       redigerbart: _propsLight.redigerbart,
-
-      art13_1_b1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART13_1_B1, _propsLight.vilkar),
-      art13_1_b2: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART13_1_B2, _propsLight.vilkar),
-      art13_1_b3: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART13_1_B3, _propsLight.vilkar),
-      art13_1_b4: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART13_1_B4, _propsLight.vilkar),
-      art14_11: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART14_11, _propsLight.vilkar),
-
-      avklarteForretningsland: hentFaktaListe(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, _propsLight.avklartefakta),
-      omfattetINorge: hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, _propsLight.avklartefakta),
-      omfattetILand: hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, _propsLight.avklartefakta),
     });
 
-    this.beregnRelevantUI = () => {};
+    this.beregnRelevantUI = _propsLight => {
+      const lovvalgsbestemmelse = this.hentLovvalgsbestemmelse(_propsLight.lovvalgsperioder);
+      const avklarteForretningsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, _propsLight.avklartefakta);
+      const omfattetINorge = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, _propsLight.avklartefakta);
+      const omfattetILand = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, _propsLight.avklartefakta);
+
+      const harLovvalgsbestemmelse = !Utils._isNil(lovvalgsbestemmelse);
+      const harOmfattetAvklaring = this.harOmfattetAvklaring(omfattetINorge, omfattetILand);
+      const harAvklartForretningsland = _propsLight.valgteVirksomheter.every(vv => (
+        avklarteForretningsland.some(afl => (
+          afl.subjektID === vv.orgnr && !Utils._isNil(hentFaktaVerdi(afl))
+        ))
+      ));
+
+      return {
+        lovvalgsbestemmelse,
+        avklarteForretningsland,
+        omfattetINorge,
+        omfattetILand,
+        harAvklaring: harAvklartForretningsland && harOmfattetAvklaring && harLovvalgsbestemmelse,
+      };
+    };
+
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
@@ -43,6 +54,24 @@ class Forretningssted extends Steg {
       slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
     };
     this.status = FANE_STATUS.OK;
+  }
+
+  harOmfattetAvklaring = (omfattetINorge, omfattetILand) => {
+    const sokerOmfattetINorge = hentFaktaVerdi(omfattetINorge);
+    if (Utils._isNil(sokerOmfattetINorge)) {
+      return false;
+    }
+
+    if (sokerOmfattetINorge === 'TRUE') {
+      return true;
+    }
+
+    return !Utils._isNil(hentFaktaVerdi(omfattetILand));
+  };
+
+  hentLovvalgsbestemmelse = lovvalgsperioder => {
+    const periode = lovvalgsperioder.length > 0 ? lovvalgsperioder[0] : {};
+    return periode.lovvalgBestemmelse;
   }
 }
 
