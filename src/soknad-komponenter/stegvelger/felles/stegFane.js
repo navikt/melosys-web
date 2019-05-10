@@ -10,7 +10,7 @@ import './stegFane.css';
 const StegFane = props => {
   const { faneData } = props;
   const componentProps = { ...faneData.data, ...faneData.handlers };
-  const stegFaneKlasse = classnames({ stegFane: true, 'stegFane--aktiv': faneData.aktivtSteg });
+  const stegFaneKlasse = classnames({ stegFane: true, [`steg${faneData.stegPosisjon}`]: true, 'stegFane--aktiv': faneData.aktivtSteg });
   return (
     <Nav.Panel className={stegFaneKlasse}>
       <div>{React.createElement(faneData.komponent, componentProps)}</div>
