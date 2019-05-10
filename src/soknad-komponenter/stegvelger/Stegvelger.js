@@ -40,7 +40,7 @@ class Stegvelger extends Component {
     visSoknadFeilmeldinger: false,
   };
 
-  componentWillMount() {
+  componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
 
@@ -171,7 +171,7 @@ class Stegvelger extends Component {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
-      oppdaterOgLagreBehandlinger: this.props.lagreBehandlingerHandler,
+      oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,
@@ -326,7 +326,7 @@ Stegvelger.propTypes = {
   lagreVilkarHandler: PT.func.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
-  lagreBehandlingerHandler: PT.func.isRequired,
+  oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   hentPerioder: PT.func.isRequired,
   soknadFeilmeldinger: PT.object.isRequired,
