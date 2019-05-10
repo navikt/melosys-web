@@ -105,7 +105,7 @@ class Bostedsland extends Steg {
       }
 
       return {
-        erAvklart: Bostedsland.alleErAvklart(bosattINorge, begrunnelseKoder, bostedsland, begrunnelserPaaKrevd),
+        harAvklaring: Bostedsland.alleErAvklart(bosattINorge, begrunnelseKoder, bostedsland, begrunnelserPaaKrevd),
         erBosattINorge: bosattINorge,
         bosattINorgeVilkaar,
         harEOSBarnetrygdSak: eosBarnetrygd,
