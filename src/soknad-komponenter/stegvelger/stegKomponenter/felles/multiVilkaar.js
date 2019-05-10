@@ -31,6 +31,7 @@ class MultiVilkaar extends Component {
       slettData('vilkaar', 'art16_1');
     } else if (value === this.VilkaarKode16) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
+      slettData('vilkaar', 'art16_1');
       oppdaterData(lagVilkaar('art16_1', true));
     } else if (value === this.AVSLAG) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
