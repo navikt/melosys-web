@@ -1,4 +1,5 @@
 import React from 'react';
+import * as PT from 'prop-types';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 
@@ -20,16 +21,18 @@ DatoOmrade.propTypes = {
   periode: MPT.Periode.isRequired,
 };
 
-export const DatoOmradeTekst = ({ periode }) => (
+export const DatoOmradeDescription = ({ periode, tekst }) => (
   periode ?
     <React.Fragment>
-      <EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} />
+      <dt>{tekst}</dt>
+      <dd><EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} /></dd>
     </React.Fragment>
-    : '(ukjent)'
+    : null
 );
 
-DatoOmradeTekst.propTypes = {
+DatoOmradeDescription.propTypes = {
   periode: MPT.Periode.isRequired,
+  tekst: PT.string.isRequired,
 };
 
 export default DatoOmrade;
