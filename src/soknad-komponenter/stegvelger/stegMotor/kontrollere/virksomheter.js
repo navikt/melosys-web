@@ -4,6 +4,7 @@ import VurderingVirksomhet from '../../stegKomponenter/vurderingVirksomhet';
 import * as KV from '../../../../kodeverk';
 
 import SokkelSkip from './sokkel_skip';
+import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
 import { hentFaktaListe } from '../../../../regler/avklartefakta';
 
 class Virksomheter extends Steg {
@@ -11,11 +12,12 @@ class Virksomheter extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
-        beskrivelse: 'Valgt minst én arbeidsgiver og yrkesgruppeType === ORDINAER',
+        beskrivelse: 'Valgt minst én arbeidsgiver og yrkesgruppeType === ORDINAER og kun ET_LAND',
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(avklartefakta);
           const erVanligYrkesaktiv = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
-          return harValgtArbeidsgiver && erVanligYrkesaktiv;
+          const erKunEtLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
+          return harValgtArbeidsgiver && erVanligYrkesaktiv && erKunEtLand;
         },
         nesteSteg: STEG.YRKESAKTIVITET,
       },
@@ -36,6 +38,16 @@ class Virksomheter extends Steg {
           const arbeiderPaSokkelEllerSkip = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
           const erSkipEttLand = SokkelSkip.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND);
           return harValgtArbeidsgiver && arbeiderPaSokkelEllerSkip && erSkipEttLand;
+        },
+        nesteSteg: STEG.BOSTEDSLAND,
+      },
+      {
+        beskrivelse: 'Valgt minst én arbeidsgiver og ordinaert arbeid og i flere land',
+        exec: avklartefakta => {
+          const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(avklartefakta);
+          const erVanligYrkesaktiv = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
+          const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
+          return harValgtArbeidsgiver && erVanligYrkesaktiv && erToEllerFlereLand;
         },
         nesteSteg: STEG.BOSTEDSLAND,
       },
@@ -72,7 +84,7 @@ class Virksomheter extends Steg {
   static harValgtArbeidsgiver = avklartefakta => avklartefakta.some(enkeltFakta => ((enkeltFakta.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET) && enkeltFakta.fakta.includes('TRUE')));
 
   static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
-    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === STEG.YRKESGRUPPE);
+    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === KV.Koder.avklartefaktaKoder.YRKESGRUPPE);
     if (!enkeltFakta) { return false; }
     return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
   };
