@@ -242,12 +242,46 @@ const methodToJson = (method, url, data, extendResponse = false, accept = 'appli
   return fetchToJson(url, fetchConfig, extendResponse);
 };
 
+const methodToText = (method, url, data) => {
+  const headers = {
+    Accept: 'text/plain',
+    'Accept-Charset': 'UTF-8',
+    // 'Cache-control': 'no-store, must-revalidate, no-cache, max-age=0',
+    // Expires: 'Mon, 01 Jan 1990 00:00:00 GMT',
+    // Pragma: 'no-cache',
+    // Origin: window.location.origin, // Set by fetch() automagically
+    // 'Access-Control-Request-Method': method, // Kun ved preflight
+  };
+
+  const fetchConfig = {
+    // body: below, for POST, PUT
+    credentials: 'include', // *same-origin, include, omit; NB! MUST use 'include' to pass fetchConfig to fetch(),
+    cache: 'no-cache', // *default, no-cache, force-cache, only-if-cached
+    headers: new Headers(headers),
+    method, // *GET, POST, ....
+    mode: 'same-origin', // *same-origin, no-cors, cors
+    redirect: 'follow', // *manual, follow, error
+    // referrer: // *client, no-referrer
+  };
+
+  const httpVerbsWithBody = ['POST', 'PUT'];
+  if (httpVerbsWithBody.includes(method)) {
+    fetchConfig.body = data;
+    fetchConfig.headers.append('Content-Type', 'text/plain');
+  }
+
+  return fetchToJson(url, fetchConfig, true);
+};
+
 export const cachedGetAsJson = (url, cacheDurationSec = 60) => cachedFetch(url, cacheDurationSec);
 
 export const deleteAsJson = (url, extendResponse = true) => methodToJson('DELETE', url, extendResponse);
 export const getAsJson = (url, extendResponse = false) => methodToJson('GET', url, extendResponse);
 
+// [post|put]AsJson, data MUST be a valid JSON object, ie. {} or []. Cannot be a empty "" string.
 export const postAsJson = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse);
+// putAsText, data can be empty string.
+export const putAsText = (url, data = '') => methodToText('PUT', url, data);
 
 export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse, 'application/pdf');
 
