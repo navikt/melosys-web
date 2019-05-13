@@ -75,7 +75,7 @@ const Fagsak = ({ sak }) => {
 };
 
 Fagsak.propTypes = {
-  sak: MPT.FagsakOppsummering,
+  sak: MPT.BehandligOversikt,
 };
 
 Fagsak.defaultProps = {

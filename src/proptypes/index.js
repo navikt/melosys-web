@@ -10,7 +10,8 @@ import { Person } from './person';
 import { GeneriskAdresse } from './adresser';
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { Saksbehandler } from './saksbehandler';
-import { FagsakOppsummering } from './fagsakOppsummering';
+import { BehandligOversikt, BehandligOversikter } from './behandlingOversikt';
+import { Fagsak } from './fagsak';
 import { Oppsummering } from './oppsummering';
 import { Periode } from './periode';
 import { Bekreftelser } from './bekreftelser';
@@ -35,12 +36,14 @@ export {
   Arbeidsforholdene,
   Arbeidsforholdet,
   ArbeidsgivereNorge,
+  BehandligOversikt,
+  BehandligOversikter,
   Bekreftelser,
   Behandlingsresultat,
   Dokument,
   DokumentMetadataListe,
   DokumentNullable,
-  FagsakOppsummering,
+  Fagsak,
   Feilmelding,
   Feilmeldinger,
   GeneriskAdresse,
