@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
-// TODO props; import * as MPT from '../proptypes/';
+import * as MPT from '../proptypes/';
 
 import DialogboksOppfriskSak from '../soknad-komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../soknad-komponenter/dialogboks/dialogboksVenter';
@@ -321,7 +321,7 @@ Saksbehandling.propTypes = {
   resetBehandlingerState: PT.func.isRequired,
   resetLovvalgsperiode: PT.func.isRequired,
   sjekkOppfriskningStatus: PT.func.isRequired,
-  fagsak: PT.object, // TODO fix proptype
+  fagsak: MPT.Fagsak,
   sendSoknad: PT.func.isRequired,
   soknad: PT.object,
   vilkar: PT.array,
