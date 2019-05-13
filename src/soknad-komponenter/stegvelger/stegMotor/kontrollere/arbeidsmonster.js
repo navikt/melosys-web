@@ -26,6 +26,7 @@ class Arbeidsmonster extends Steg {
     this.beregnRelevantUI = _propsLight => {
       const marginaltArbeid = hentFaktaListe(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, _propsLight.avklartefakta);
       const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, _propsLight.avklartefakta);
+      const arbeidsmonster = hentFakta(KV.Koder.avklartefaktaKoder.ARBEIDSMONSTER, _propsLight.avklartefakta);
 
       const harAvklaring = !Utils._isNil(hentFaktaVerdi(aktivitetINorge));
 
@@ -33,6 +34,7 @@ class Arbeidsmonster extends Steg {
         harAvklaring,
         marginaltArbeid,
         aktivitetINorge,
+        arbeidsmonster,
       });
     };
     this.handlers = {
