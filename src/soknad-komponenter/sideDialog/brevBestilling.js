@@ -125,7 +125,7 @@ class BrevBestilling extends Component {
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
           <Nav.Fieldset legend="Nytt brev">
-            <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker" disabled={!redigerbart}>
+            <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Brevet gjelder" disabled={!redigerbart}>
               {muligeMottakere.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>

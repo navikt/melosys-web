@@ -20,7 +20,7 @@ import './vurderingSokkelSkip.css';
 const ArbeidslandRadioButtons = props => {
   const { landliste, onChange } = props;
 
-  if (landliste.every(land => !land.kode)) return <Fragment>Ingen flaggland, sokkelland eller territorialfarvandsland valgt.</Fragment>;
+  if (landliste.every(land => !land.kode)) return <Fragment>Ingen flaggland, sokkelland eller territorialfarvannsland valgt.</Fragment>;
 
   const utfylteLand = landliste.filter(land => land.kode);
 
@@ -116,7 +116,7 @@ const SokkelSkipEnkelt = props => {
             landliste={[
               { term: 'Flaggland', kode: flaggLandkode },
               { term: 'Sokkelland', kode: installasjonsLandkode },
-              { term: 'Territorialfarvandsland', kode: territorialfarvann },
+              { term: 'Territorialfarvannsland', kode: territorialfarvann },
             ]}
             onChange={arbeidslandEndret}
           />
