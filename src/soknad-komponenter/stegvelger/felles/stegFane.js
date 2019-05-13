@@ -6,6 +6,7 @@ import * as Nav from '../../../utils/navFrontend';
 
 import './stegFane.css';
 
+// Stegfanen er komponenten som vises for hvert steg
 const StegFane = props => {
   const { faneData } = props;
   const componentProps = { ...faneData.data, ...faneData.handlers };

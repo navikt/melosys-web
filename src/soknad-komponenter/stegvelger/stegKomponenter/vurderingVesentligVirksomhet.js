@@ -1,64 +1,45 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-import * as Skjema from '../../skjema';
 
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
-import { BOOLSK } from '../../../constants';
+import EnkeltVilkaar from './felles/enkeltVilkaar';
 
-class VurderingVesentligVirksomhet extends Component {
-  componentWillUnmount() {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.vesentligVirksomhet', null);
-    settSkjemaVerdi('vilkar.vesentligVirksomhetBegrunnelser', []);
-  }
+const VurderingVesentligVirksomhet = props => {
+  const {
+    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+  } = props;
+  const { vesentligVirksomhetVilkaar, harAvklaring } = tilstand;
 
-  render () {
-    const {
-      bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
-    } = this.props;
-    const { visBegrunnelser, harAvklaring } = tilstand;
+  useEffect(() => (
+    function cleanup() {
+      slettAllDataForSteg();
+    }
+  ), []);
 
-    const arbeidsgivereTekst = this.props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
-    return (
-      <div>
-        <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
-        <div className="vurderingBostedsland__skjemafelt">
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Nav.Fieldset legend="Virksomheten har:">
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.vesentligVirksomhet" value={BOOLSK.SANN} label="Vesentlig virksomhet" />
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.vesentligVirksomhet" value={BOOLSK.USANN} label="Ikke vesentlig virksomhet" />
-              </Nav.Fieldset>
-            </Nav.Column>
-          </Nav.Row>
-          {visBegrunnelser && (
-            <Nav.Row>
-              <Nav.Column xs="12" md="10" lg="8">
-                <Nav.Fieldset legend="Begrunnelse:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.vesentligVirksomhetBegrunnelser"
-                    muligeValg={begrunnelser}
-                    disabled={!redigerbart}
-                    label="Legg til begrunnelse:"
-                    gruppe
-                    tillatFritekst={false}
-                  />
-                </Nav.Fieldset>
-              </Nav.Column>
-            </Nav.Row>)
-          }
-        </div>
-        <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
-        </div>
+  const arbeidsgivereTekst = props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
+  return (
+    <div>
+      <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
+      <EnkeltVilkaar
+        redigerbart={redigerbart}
+        begrunnelser={begrunnelser}
+        vilkaar={vesentligVirksomhetVilkaar}
+        vilkaarKode="vesentligVirksomhet"
+        tittel="Virksomheten har:"
+        labelOppfylt="Vesentlig virksomhet"
+        labelIkkeOppfylt="Ikke vesentlig virksomhet"
+        oppdaterData={oppdaterData}
+      />
+      <div className="fane__knapplinje">
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 VurderingVesentligVirksomhet.ID = 'VESENTLIG_VIRKSOMHET';
 
@@ -67,7 +48,8 @@ VurderingVesentligVirksomhet.propTypes = {
   tilstand: PT.object,
   valgteVirksomheter: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
-  settSkjemaVerdi: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

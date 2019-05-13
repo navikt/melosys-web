@@ -7,6 +7,7 @@ import * as Nav from '../../utils/navFrontend';
 import * as Ikoner from '../../resources/images';
 import * as Api from '../../services/api';
 import * as Utils from '../../utils';
+import * as KV from '../../kodeverk';
 
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import { fagsakSelectors } from '../../ducks/fagsaker';
@@ -91,8 +92,6 @@ class FullmektigPanel extends Component {
   };
 
   render() {
-    const panelIkon = Ikoner.Ferdig;
-
     const { redigerbart, slettAktoer, hentOrg } = this.props;
 
     const {
@@ -102,15 +101,17 @@ class FullmektigPanel extends Component {
       lagreNyFullmektigOgOppdaterLokalt,
     } = this;
 
-    const { disableLeggTilFullmektig } = this.state;
+    const { disableLeggTilFullmektig, fullmektige } = this.state;
+
+    const panelIkon = fullmektige.some(fullmektig => fullmektig.orgnr) ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
     return (
       <div>
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel="Fullmektig" />}
+          heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.fullmektig} />}
           ariaTittel="Opplysninger om fullmektig">
           <Nav.Container fluid>
-            {this.state.fullmektige.map(fullmektig => (
+            {fullmektige.map(fullmektig => (
               <Fullmektig
                 key={fullmektig.databaseID}
                 databaseID={fullmektig.databaseID}

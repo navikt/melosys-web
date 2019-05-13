@@ -1,60 +1,42 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
+
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
-import * as Skjema from '../../skjema';
 
-import { BOOLSK } from '../../../constants';
+import EnkeltVilkaar from './felles/enkeltVilkaar';
 
-class VurderingForutgaendeMedlemskap extends Component {
-  componentWillUnmount() {
-    const { settSkjemaVerdi } = this.props;
-    settSkjemaVerdi('vilkar.forutgaendeMedlemskap', null);
-    settSkjemaVerdi('vilkar.forutgaendeMedlemskapBegrunnelser', []);
-  }
+const VurderingForutgaendeMedlemskap = props => {
+  const {
+    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+  } = props;
+  const { harAvklaring, forutgaendeMedlemskap } = tilstand;
 
-  render() {
-    const {
-      bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
-    } = this.props;
-    const { visBegrunnelser, harAvklaring } = tilstand;
+  useEffect(() => (
+    function cleanup() {
+      slettAllDataForSteg();
+    }
+  ), []);
 
-    return (
-      <div>
-        <Nav.Undertittel>Vurdering av forutgående medlemskap</Nav.Undertittel>
-        <div>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Nav.Fieldset legend="Søkeren har:">
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.SANN} label="Har forutgående medlemskap" />
-                <Skjema.Radio disabled={!redigerbart} feltNavn="vilkar.forutgaendeMedlemskap" value={BOOLSK.USANN} label="Har ikke forutgående medlemskap" />
-              </Nav.Fieldset>
-            </Nav.Column>
-          </Nav.Row>
-          { visBegrunnelser && (
-            <Nav.Row>
-              <Nav.Column xs="12" md="10" lg="8">
-                <Nav.Fieldset legend="Begrunnelse:">
-                  <Skjema.ListeVelger
-                    feltNavn="vilkar.forutgaendeMedlemskapBegrunnelser"
-                    muligeValg={begrunnelser}
-                    label="Legg til begrunnelse:"
-                    gruppe
-                    tillatFritekst={false}
-                    disabled={!redigerbart}
-                  />
-                </Nav.Fieldset>
-              </Nav.Column>
-            </Nav.Row>
-          ) }
-        </div>
-        <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
-        </div>
+  return (
+    <div>
+      <Nav.Undertittel>Vurdering av forutgående medlemskap</Nav.Undertittel>
+      <EnkeltVilkaar
+        redigerbart={redigerbart}
+        vilkaar={forutgaendeMedlemskap}
+        vilkaarKode="forutgaendeMedlemskap"
+        tittel="Søkeren har:"
+        labelOppfylt="Har forutgående medlemskap"
+        labelIkkeOppfylt="Har ikke forutgående medlemskap"
+        begrunnelser={begrunnelser}
+        oppdaterData={oppdaterData}
+      />
+      <div className="fane__knapplinje">
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 VurderingForutgaendeMedlemskap.ID = 'FORUTGAENDE_MEDLEMSKAP';
 
@@ -62,7 +44,8 @@ VurderingForutgaendeMedlemskap.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
-  settSkjemaVerdi: PT.func.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

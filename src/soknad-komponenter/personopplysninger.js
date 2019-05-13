@@ -17,7 +17,6 @@ import OppgittAdresseSoknad from './personopplysninger/oppgittAdresseSoknad';
 import UtenlandskIdent from './personopplysninger/utenlandskIdent';
 
 import './personopplysninger.css';
-//import { fagsakSelectors } from '../ducks/fagsaker';
 import { behandlingerSelectors } from '../ducks/behandlinger';
 import { PersonSelectors, PersonOperations } from '../ducks/personer';
 import { soknadSelectors } from '../ducks/soknad';
