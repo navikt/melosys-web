@@ -112,6 +112,11 @@ class BrevBestilling extends Component {
       { navn: 'Forhåndsvis brev', type: dokumenttypeKode, data },
     ];
 
+    const muligeMottakere = MKV.KTObjects.aktoersroller.filter(rolle => (
+      rolle.kode === MKV.Koder.aktoersroller.BRUKER ||
+      rolle.kode === MKV.Koder.aktoersroller.ARBEIDSGIVER
+    ));
+
     const placeholder = 'F.eks.: \u00ABOpplysninger om antall utsendte ansatte i perioden\u00BB, \u00ABOpplysninger om den ansatte erstatter en annen utsendt ansatt\u00BB.';
 
     return (
@@ -119,7 +124,7 @@ class BrevBestilling extends Component {
         <form onSubmit={this.overstyrSubmit}>
           <Nav.Fieldset legend="Nytt brev">
             <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Mottaker" disabled={!redigerbart}>
-              {MKV.KTObjects.aktoersroller.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+              {muligeMottakere.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
               {MKV.KTObjects.brev.produserbaredokumenter.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}

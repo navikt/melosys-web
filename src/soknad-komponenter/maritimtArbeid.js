@@ -8,6 +8,7 @@ import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 import * as MPT from '../proptypes';
+import * as KV from '../kodeverk';
 
 import { formSelectors } from '../ducks/form/';
 import { behandlingerSelectors } from '../ducks/behandlinger/';
@@ -57,7 +58,7 @@ const MaritimtEnkelt = ({
         <Nav.Column xs="6">
           {
             fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
-            <LandVelger bredde="fullbredde" feltNavn={`${navn}territorialfarvann`} label="Territorialfarvannsland:" disabled={!redigerbart} />
+            <LandVelger bredde="fullbredde" feltNavn={`${navn}territorialfarvann`} label="Territorialfarvandsland:" disabled={!redigerbart} />
           }
         </Nav.Column>
       </Nav.Row>
@@ -141,7 +142,7 @@ const MaritimtArbeid = props => {
   return (
     <div className="maritimtArbeid panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Maritimt Arbeid" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.maritimtArbeid} undertittel="" />}
         ariaTittel="Maritimt Arbeid">
         <Nav.Container fluid>
           <FieldArray name="maritimtArbeid" component={ConnectedMaritimtAlle} fartsomrader={MKV.KTObjects.begrunnelser.fartsomrader} redigerbart={redigerbart} />

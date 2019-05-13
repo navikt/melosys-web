@@ -4,6 +4,7 @@ import VurderingVirksomhet from '../../stegKomponenter/vurderingVirksomhet';
 import * as KV from '../../../../kodeverk';
 
 import SokkelSkip from './sokkel_skip';
+import { hentFaktaListe } from '../../../../regler/avklartefakta';
 
 class Virksomheter extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -45,22 +46,25 @@ class Virksomheter extends Steg {
       },
     ];
     this.id = STEG.VIRKSOMHETER;
-    this.tittel = 'Arbeidsgiver';
+    this.tittel = 'Virksomhet';
     this.komponent = VurderingVirksomhet;
     this.samleRelevanteData = _propsLight => ({
       virksomheterIPerioden: _propsLight.virksomheterIPerioden,
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { virksomheter } = _propsLight.skjema.avklartefakta;
+      const virksomheter = hentFaktaListe(KV.Koder.avklartefaktaKoder.VIRKSOMHET, _propsLight.avklartefakta);
       const harAvklaring = virksomheter.some(virksomhet => virksomhet.fakta.includes('TRUE'));
 
       return ({
         harAvklaring,
+        virksomheter,
       });
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
     };
     this._status = FANE_STATUS.OK;
   }

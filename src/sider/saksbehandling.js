@@ -189,11 +189,15 @@ class Saksbehandling extends Component {
     sendLovvalgsperioder(behandlingID, lovvalgsperioder);
   };
 
-  lagreBehandlingerHandler = async () => {
-    const { behandlingID } = this.state;
+  oppdaterOgLagreBehandlingerHandler = async () => {
     const { skjema, oppdaterBehandlingerState } = this.props;
     await oppdaterBehandlingerState(skjema);
 
+    this.lagreBehandlinger();
+  };
+
+  lagreBehandlinger = () => {
+    const { behandlingID } = this.state;
     const { behandlingsPeriode, sendPerioder } = this.props;
     sendPerioder(behandlingID, behandlingsPeriode);
   };
@@ -204,7 +208,7 @@ class Saksbehandling extends Component {
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
-      lagreBehandlingerHandler,
+      oppdaterOgLagreBehandlingerHandler,
     } = this;
 
     try {
@@ -212,7 +216,7 @@ class Saksbehandling extends Component {
         lagreSoknadHandler(),
         lagreVilkarHandler(),
         lagreAvklartefaktaHandler(),
-        lagreBehandlingerHandler(),
+        oppdaterOgLagreBehandlingerHandler(),
       ]);
 
       lagreLovvalgsperioderHandler();
@@ -235,6 +239,12 @@ class Saksbehandling extends Component {
   henleggSak = async data => {
     const { fagsak: { saksnummer } } = this.props;
     Api.Fagsaker.henlegg(saksnummer, data);
+  };
+
+  avsluttSakSomBortfalt = () => {
+    const { fagsak: { saksnummer } } = this.props;
+    Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
+    this.props.history.push('/');
   };
 
   render() {
@@ -264,13 +274,14 @@ class Saksbehandling extends Component {
                 lagreVilkarHandler={this.lagreVilkarHandler}
                 lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
-                lagreBehandlingerHandler={this.lagreBehandlingerHandler}
+                oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
                 lagreAllData={this.lagreAllData}
               />
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering
                 behandlingID={behandlingID}
+                avsluttSakSomBortfalt={this.avsluttSakSomBortfalt}
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
                 tilbakeleggeHandle={this.tilbakeleggeHandle}

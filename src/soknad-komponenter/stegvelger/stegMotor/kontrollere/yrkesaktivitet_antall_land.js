@@ -3,13 +3,14 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitetAntallLand from '../../stegKomponenter/vurderingYrkesaktivitetAntallLand';
 import * as KV from '../../../../kodeverk';
 import Yrkesgruppe from '../../stegMotor/kontrollere/yrkesgruppe';
+import { hentFakta } from '../../../../regler/avklartefakta';
 
 class YrkesaktivitetAntallLand extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
-        beskrivelse: 'yrkesgruppeType ER LIK "YRKESAKTIV" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
+        beskrivelse: 'yrkesgruppeType ER LIK "ORDINAER" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
         exec: avklartefakta => (
           Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
@@ -25,6 +26,14 @@ class YrkesaktivitetAntallLand extends Steg {
         nesteSteg: STEG.VIRKSOMHETER,
       },
       {
+        beskrivelse: 'yrkesgruppeType ER LIK "ORDINAER" OG yrkesaktivitetAntallLand ER LIK "TO_ELLER_FLERE_LAND"',
+        exec: avklartefakta => (
+          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) &&
+          YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND)
+        ),
+        nesteSteg: STEG.ARBEIDSMONSTER,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: null,
@@ -37,13 +46,16 @@ class YrkesaktivitetAntallLand extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { yrkesaktivitetAntallLand } = _propsLight.skjema.avklartefakta;
+      const yrkesaktivitetAntallLand = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND, _propsLight.avklartefakta);
       return ({
-        harAvklaring: yrkesaktivitetAntallLand !== null && yrkesaktivitetAntallLand !== undefined,
+        harAvklaring: yrkesaktivitetAntallLand.fakta && yrkesaktivitetAntallLand.fakta.length > 0,
+        yrkesaktivitetAntallLand,
       });
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
+      oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
     };
     this.status = FANE_STATUS.OK;
   }

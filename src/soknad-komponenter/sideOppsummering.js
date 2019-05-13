@@ -94,7 +94,7 @@ class SideOppsummering extends Component {
   render() {
     const {
       redigerbart,
-      fagsak, // TODO create new prop-type
+      fagsak,
       oppsummering,
       person,
       soknadsperiodeFom,
@@ -126,6 +126,7 @@ class SideOppsummering extends Component {
       tilbakeleggeHandle,
       visHenleggDialogHandle,
       arbeidsland,
+      avsluttSakSomBortfalt,
     } = this.props;
 
     const arbeidslandSetning = Utils.streng.arrayTilKonjunksjon(arbeidsland.map(land => land.term));
@@ -145,6 +146,7 @@ class SideOppsummering extends Component {
                     <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
                     <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppdater saksopplysninger</Nav.Knapp>
                     { redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={visHenleggDialogHandle}>Henlegg sak</Nav.Knapp> }
+                    { redigerbart && <Nav.Knapp type="hoved" mini className="innhold_element" onClick={avsluttSakSomBortfalt}>Avslutt sak som bortfalt</Nav.Knapp>}
                     { <Nav.Knapp type="hoved" mini className="innhold__element" onClick={this.apneTidligereBehandlinger}>Vis tidligere behandlinger</Nav.Knapp> }
                   </div>
                 </Nav.EkspanderbartpanelBase>
@@ -213,7 +215,9 @@ class SideOppsummering extends Component {
 SideOppsummering.propTypes = {
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool,
+  fagsak: MPT.Fagsak,
   oppsummering: PT.object, // TODO Fix MPT.Oppsummering,
+  avsluttSakSomBortfalt: PT.func.isRequired,
   person: MPT.Person.isRequired,
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
@@ -226,8 +230,9 @@ SideOppsummering.propTypes = {
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
 SideOppsummering.defaultProps = {
-  oppsummering: undefined,
   redigerbart: false,
+  fagsak: undefined,
+  oppsummering: undefined,
 };
 
 const mapStateToProps = state => ({

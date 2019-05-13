@@ -6,6 +6,7 @@ import { behandlingerSelectors } from '../../ducks/behandlinger';
 import ArbeidUtlandEnkelt from './arbeidUtlandEnkelt';
 import * as Nav from '../../utils/navFrontend';
 import * as Ikoner from '../../resources/images';
+import * as KV from '../../kodeverk';
 
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 
@@ -31,7 +32,7 @@ class ArbeidUtlandWrapper extends Component {
     return (
       <div className="arbeidUtland panelSeksjon">
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om fysisk arbeidssted i utlandet" undertittel="" />}
+          heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.arbeidUtland} undertittel="" />}
           ariaTittel="Panel for arbeidssted i utlandet">
           <Nav.Container fluid>
             {this.props.fields.map((fieldName, indeks) => <ArbeidUtlandEnkelt key={fieldName} indeks={indeks} slettArbeidHandler={slettArbeidHandler} redigerbart={redigerbart} />)}

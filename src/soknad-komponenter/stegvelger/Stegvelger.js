@@ -5,6 +5,7 @@ import { change } from 'redux-form';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import TrackVisibility from 'react-on-screen';
 
 import * as MPT from '../../proptypes/';
 import * as API from '../../services/api';
@@ -13,21 +14,33 @@ import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
-import { behandlingerSelectors } from '../../ducks/behandlinger/';
+import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
-import { avklartefaktaSelectors, avklartefaktaOperations } from '../../ducks/avklartefakta/';
+import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta/';
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../ducks/behandlingsperioder';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder/';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
+import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
+import { AvklartefaktaStore, VilkaarStore } from './StegState/';
 
 import './stegvelger.css';
 
-class Stegvelger extends Component {
-  state = { aktivtStegNummer: 0, aktuelleSteg: [], didUpdateAfterLastStep: false };
 
-  componentWillMount() {
+class Stegvelger extends Component {
+  state = {
+    aktivtStegNummer: 0,
+    aktuelleSteg: [],
+    didUpdateAfterLastStep: false,
+    stegStores: {
+      avklartefakta: new AvklartefaktaStore(),
+      vilkaar: new VilkaarStore(),
+    },
+    visSoknadFeilmeldinger: false,
+  };
+
+  componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
 
@@ -58,7 +71,53 @@ class Stegvelger extends Component {
    * har bekreftet valgene.
    */
   bekreftOgFortsett = () => {
-    this.tilSteg(this.beregnNesteSteg());
+    this.publiserStegdataTilRedux();
+    this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
+  };
+
+  harSoknadIngenFeilmeldinger = () => Utils._isEmpty(this.props.soknadFeilmeldinger);
+
+  gjemSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: false });
+
+  visSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: true });
+
+  slettStegData = (stegID, type, felt) => {
+    const { stegStores } = this.state;
+    stegStores[type].slettStegData(stegID, felt);
+    this.setState(stegStores);
+
+    this.publiserStegdataTilRedux();
+  };
+
+  oppdaterStegData = (stegID, data) => {
+    if (!data) return;
+
+    const { felt, type, innhold } = data;
+    const { stegStores } = this.state;
+    stegStores[type].oppdaterStegData(stegID, { felt, type, innhold });
+    this.setState(stegStores);
+
+    if (data.oppdaterRedux) {
+      this.publiserStegdataTilRedux();
+    }
+  };
+
+  slettAllDataForSteg = stegID => {
+    const { stegStores } = this.state;
+    Object.keys(stegStores).forEach(type => stegStores[type].slettSteg(stegID));
+    this.setState(stegStores);
+
+    this.publiserStegdataTilRedux();
+  };
+
+  publiserStegdataTilRedux = () => {
+    const { vilkaar, avklartefakta } = this.state.stegStores;
+
+    const vilkaarKonvertert = vilkaar.hent();
+    this.props.oppdaterVilkaar(vilkaarKonvertert);
+
+    const avklartefaktaKonvertert = avklartefakta.hent();
+    this.props.oppdaterAvklartefakta(avklartefaktaKonvertert);
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {
@@ -73,8 +132,13 @@ class Stegvelger extends Component {
   };
 
   lagreOgFatteVedtak = async behandlingsresultattype => {
-    await this.props.lagreAllData();
-    this.fatteVedtakHandler(behandlingsresultattype);
+    if (this.harSoknadIngenFeilmeldinger()) {
+      this.gjemSoknadFeilmeldinger();
+      await this.props.lagreAllData();
+      this.fatteVedtakHandler(behandlingsresultattype);
+    } else {
+      this.visSoknadFeilmeldinger();
+    }
   };
 
   endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
@@ -105,8 +169,11 @@ class Stegvelger extends Component {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
-      oppdaterOgLagreBehandlinger: this.props.lagreBehandlingerHandler,
+      oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       settSkjemaVerdi: this.props.settSkjemaVerdi,
+      oppdaterStegData: this.oppdaterStegData,
+      slettStegData: this.slettStegData,
+      slettAllDataForSteg: this.slettAllDataForSteg,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
       lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
       vedtaEndretPeriode: this.vedtaEndretPeriode,
@@ -144,6 +211,15 @@ class Stegvelger extends Component {
 
     this.setState({ aktuelleSteg });
     return aktuelleSteg;
+  };
+
+  validerSoknadOgGaTilSteg = nyttStegNummer => {
+    if (this.harSoknadIngenFeilmeldinger()) {
+      this.gjemSoknadFeilmeldinger();
+      this.tilSteg(nyttStegNummer);
+    } else {
+      this.visSoknadFeilmeldinger();
+    }
   };
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
@@ -198,13 +274,20 @@ class Stegvelger extends Component {
   }
 
   render() {
+    const { visSoknadFeilmeldinger } = this.state;
+
     return (
-      <div className="stegvelger panelSeksjon">
-        <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.tilSteg} />
-        {
-          this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
-        }
-      </div>
+      <TrackVisibility partialVisibility>
+        {({ isVisible }) => (
+          <div className="stegvelger panelSeksjon">
+            <StegLinje steg={this.state.aktuelleSteg} stegKlikk={this.validerSoknadOgGaTilSteg} />
+            {
+              this.state.aktuelleSteg.map(item => <StegFane key={item.id} faneData={item} />)
+            }
+            { isVisible && visSoknadFeilmeldinger && <SoknadFeilmeldinger />}
+          </div>
+        )}
+      </TrackVisibility>
     );
   }
 }
@@ -234,15 +317,18 @@ Stegvelger.propTypes = {
   settSkjemaVerdi: PT.func.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   skjema: PT.object.isRequired,
+  oppdaterVilkaar: PT.func.isRequired,
+  oppdaterAvklartefakta: PT.func.isRequired,
   valgteVirksomheter: PT.array,
   vilkar: PT.array.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
   lagreVilkarHandler: PT.func.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
-  lagreBehandlingerHandler: PT.func.isRequired,
+  oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
+  soknadFeilmeldinger: PT.object.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -267,6 +353,7 @@ const mapStateToProps = state => ({
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
 });
 
 /* eslint no-alert:off */
@@ -281,9 +368,12 @@ const mapDispatchToProps = dispatch => ({
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
-  settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   hentMedlemsPerioder: behandlingID => dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
+  settSkjemaVerdi: (felt, verdi) => dispatch(change('soknad', felt, verdi)),
+  oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
+  oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
+  hentPerioder: behandlingID => dispatch(behandlingerOperations.hentPerioder(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
