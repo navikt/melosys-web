@@ -40,14 +40,7 @@ export const VurderingTjenestemannTyper = {
   FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND: 'FLERE_LAND_YRKESAKTIVITET_ANDRE_LAND',
   IKKE_TJENESTEMANN: 'IKKE_TJENESTEMANN',
 };
-export const VurderingVirksomhetTyper = {
-  EN_ELLER_BEGGE: 'EN_ELLER_BEGGE',
-  INGEN_VEKSLING: 'INGEN_VEKSLING',
-  MARGINALT_JA: 'MARGINALT_JA',
-  MARGINALT_NEI: 'MARGINALT_NEI',
-  UNDER_25_PROSENT: 'UNDER_25_PROSENT',
-  OVER_25_PROSENT: 'OVER_25_PROSENT',
-};
+
 export const VurderingYrkesaktivitetTyper = {
   ID: 'YRKESAKTIVITET',
   ORDINAER_ARBEIDSTAKER: 'ORDINAER_ARBEIDSTAKER',
@@ -68,6 +61,11 @@ export const VurderingYrkesgruppeTyper = {
   KONTANTYTELSESMOTTAKER: 'KONTANTYTELSESMOTTAKER',
 };
 
+export const VurderingSkiftesvisSekvensieltArrbeid = {
+  SKIFTESVIS: 'SKIFTESVIS',
+  SEKVENSIELT: 'SEKVENSIELT',
+};
+
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
  */
@@ -83,6 +81,7 @@ export const avklartefaktaKoder = {
   ARBEIDSLAND: 'ARBEIDSLAND',
   BOSTEDSLAND: 'BOSTEDSLAND',
   ARBEID_SOKKEL_SKIP: 'ARBEID_SOKKEL_SKIP',
+  ARBEIDSMONSTER: 'ARBEIDSMONSTER',
 };
 export const referanseKoder = {
   INSTALLASJON_ARBEIDSLAND: 'INSTALLASJON_ARBEIDSLAND',
