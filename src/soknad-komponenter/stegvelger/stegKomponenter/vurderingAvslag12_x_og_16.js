@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as VilkarSelectors from '../../../ducks/vilkar/selectors';
-import { fagsakSelectors } from '../../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import * as KV from '../../../kodeverk';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
@@ -139,7 +139,7 @@ const mapStateToProps = state => ({
   valgte_art_16_1_begrunnelser: VilkarSelectors.art16_1_begrunnelserSelector(state),
   art16_1_fritekst: VilkarSelectors.art16_1_fritekstSelector(state),
   vilkarBegrunnelser: VilkarSelectors.vilkarBegrunnelserSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingAvslag12_x_og_16);

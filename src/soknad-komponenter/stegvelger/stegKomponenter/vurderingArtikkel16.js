@@ -13,7 +13,6 @@ import * as Utils from '../../../utils';
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { soknadSelectors } from '../../../ducks/soknad/';
-import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { formSelectors } from '../../../ducks/form';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
@@ -353,7 +352,7 @@ const mapStateToProps = state => ({
   soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
-  medlemskap: fagsakSelectors.MedlemskapSelector(state),
+  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   art16begrunnelserFritekst: formSelectors.Art16BegrunnelseFritekstSelector(state),
   unntakFraBestemmelse: formSelectors.UnntakFraBestemmelse(state),
 });

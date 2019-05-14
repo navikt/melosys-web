@@ -142,7 +142,7 @@ FullmektigPanel.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  arbeidsgivereNorge: fagsakSelectors.ArbeidsgivereNorgeSelector(state),
+  arbeidsgivereNorge: behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });

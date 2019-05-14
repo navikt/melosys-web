@@ -25,6 +25,7 @@ import VirksomhetNorge from '../../soknad-komponenter/virksomhetNorge';
 import FullmektigPanel from '../../soknad-komponenter/fullmektig';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
+import { behandlingerSelectors } from '../../ducks/behandlinger/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
 import {
   soknadOperations,
@@ -172,10 +173,10 @@ Saksopplysninger.defaultProps = {
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
-  medlemskap: fagsakSelectors.MedlemskapSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
-  inntekt: fagsakSelectors.InntektSoknadenSelector(state),
-  bekreftelser: fagsakSelectors.BekreftelserSelector(state),
+  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
+  inntekt: behandlingerSelectors.InntektSoknadenSelector(state),
+  bekreftelser: behandlingerSelectors.BekreftelserSelector(state),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
