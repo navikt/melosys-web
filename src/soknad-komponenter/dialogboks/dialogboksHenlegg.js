@@ -7,7 +7,7 @@ import * as MPT from '../../proptypes';
 
 import PdfLenkeListe from '../pdfLenkeListe';
 import { KodeTermSelect } from '../kodeTermSelect';
-import { fagsakSelectors } from '../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 
 import * as Nav from '../../utils/navFrontend';
 
@@ -168,8 +168,8 @@ DialogboksHenleggSak.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
 export default connect(mapStateToProps, null)(DialogboksHenleggSak);
