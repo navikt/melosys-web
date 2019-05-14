@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import uuid from 'uuid';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
@@ -24,8 +25,10 @@ const ArbeidslandRadioButtons = props => {
 
   const utfylteLand = landliste.filter(land => land.kode);
 
+  const unikRadioButtonGruppeID = uuid();
+
   return utfylteLand.map(land => (
-    <Nav.Radio onChange={() => onChange(land)} key={land.term} value={land} label={`${KV.kodeTilTerm(land.kode, MKV.KTObjects.landkoder)} - ${land.term}`} name="arbeidsland" />
+    <Nav.Radio onChange={() => onChange(land)} key={land.term} value={land} label={`${KV.kodeTilTerm(land.kode, MKV.KTObjects.landkoder)} - ${land.term}`} name={unikRadioButtonGruppeID} />
   ));
 };
 
