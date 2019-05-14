@@ -5,7 +5,7 @@ import PT from 'prop-types';
 
 import * as MPT from '../proptypes/';
 
-import { behandlingerSelectors} from '../ducks/behandlinger';
+import { behandlingerSelectors } from '../ducks/behandlinger';
 import { soknadSelectors, soknadActions } from '../ducks/soknad';
 import { OrganisasjonOperations, OrganisasjonSelectors } from '../ducks/organisasjoner';
 import { formSelectors } from '../ducks/form/';

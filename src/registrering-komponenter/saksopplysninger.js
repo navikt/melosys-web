@@ -13,8 +13,8 @@ import * as Nav from '../utils/navFrontend';
 
 import Personopplysninger from '../soknad-komponenter/personopplysninger';
 import Medlemskap from '../komponenter/medlemskap';
-import { behandlingerSelectors} from '../ducks/behandlinger'
-import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
+import { behandlingerSelectors } from '../ducks/behandlinger';
+import { fagsakOperations } from '../ducks/fagsaker';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder';
 import Landvelger from '../soknad-komponenter/skjema/landvelger';
 import * as Dato from '../soknad-komponenter/skjema/validering/generisk/dato';

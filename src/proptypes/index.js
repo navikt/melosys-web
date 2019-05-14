@@ -23,7 +23,7 @@ import { Periode } from './periode';
 import { Person } from './person';
 import { Saksbehandler } from './saksbehandler';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
-import { Soknad} from './soknad';
+import { Soknad } from './soknad';
 import { SoknadForm } from './soknadForm';
 import { Soknadsland } from './soknadsland';
 import { Soknadsperiode } from './soknadsperiode';

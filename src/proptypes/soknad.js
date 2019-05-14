@@ -2,7 +2,7 @@
 import PT from 'prop-types';
 import { ArbeidNorge } from './arbeidNorge';
 import { ArbeidUtland } from './arbeidUtland';
-import { Kodeverk} from './kodeverk';
+import { Kodeverk } from './kodeverk';
 import { Periode } from './periode';
 
 const ArbeidsgiversBekreftelse = PT.shape({

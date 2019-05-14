@@ -7,7 +7,7 @@ const AvklartefaktaPropType = PT.arrayOf(PT.shape({
   begrunnelseKoder: PT.arrayOf(PT.string),
   fakta: PT.arrayOf(PT.string),
   referanse: PT.string,
-  subjektID: PT.string
+  subjektID: PT.string,
 }));
 
 export { AvklartefaktaPropType as Avklartefakta };
