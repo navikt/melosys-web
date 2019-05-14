@@ -295,7 +295,7 @@ class Stegvelger extends Component {
 Stegvelger.propTypes = {
   behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
-  avklartefakta: PT.array,
+  avklartefakta: MPT.Avklartefakta,
   behandlingsPerioder: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,

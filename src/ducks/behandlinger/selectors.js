@@ -12,7 +12,7 @@ export const BehandlingerSelector = createSelector(
   state => (state.behandlinger.data ? state.behandlinger.data : {}),
   behandling => behandling
 );
-export const BehandlingIDtSelector = createSelector(
+export const BehandlingIDSelector = createSelector(
   state => (state.behandlinger.data ? state.behandlinger.data.behandlingID : -1),
   behandlingID => behandlingID
 );
