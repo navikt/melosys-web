@@ -129,7 +129,7 @@ class VurderingArtikkel16 extends Component {
 
   componentDidMount() {
     const { oppdaterData, tilstand: { art16_1 } } = this.props;
-    oppdaterData(konverterTilStegData('art16_1', art16_1));
+    oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
   }
 
   componentWillUnmount() {
@@ -177,7 +177,7 @@ class VurderingArtikkel16 extends Component {
 
     const { oppdaterData } = this.props;
 
-    await oppdaterData(lagBegrunnelse('art16_1', event.value));
+    await oppdaterData(lagBegrunnelse('art16_1_anmodning', event.value));
     this.lagreVilkar();
   };
 
@@ -305,7 +305,7 @@ class VurderingArtikkel16 extends Component {
               {
                 visFritekstfelt &&
                 <Nav.Textarea
-                  id="art16_1"
+                  id="art16_1_anmodning"
                   label="Begrunnelse til utenlandsk myndighet (engelsk):"
                   disabled={!redigerbart}
                   onBlur={fritekstFokusFlyttetHandler}
