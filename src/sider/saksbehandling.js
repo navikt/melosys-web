@@ -37,7 +37,7 @@ class Saksbehandling extends Component {
     visOppfriskDialog: false,
     oppfriskningBlokkererInnhold: false,
     visHenleggDialog: false,
-    behandlingID: 0,
+    behandlingID: -1,
   };
 
   componentDidMount() {
@@ -164,8 +164,6 @@ class Saksbehandling extends Component {
 
   lagreVilkarHandler = async () => {
     const { behandlingID } = this.state;
-    const { skjema, oppdaterVilkarState } = this.props;
-    await oppdaterVilkarState(skjema);
 
     const { sendVilkar, vilkar } = this.props;
     sendVilkar(behandlingID, vilkar);
@@ -173,8 +171,6 @@ class Saksbehandling extends Component {
 
   lagreAvklartefaktaHandler = async () => {
     const { behandlingID } = this.state;
-    const { skjema, oppdaterAvklarteFaktaState } = this.props;
-    await oppdaterAvklarteFaktaState(skjema);
 
     const { sendAvklartefakta, avklartefakta } = this.props;
     sendAvklartefakta(behandlingID, avklartefakta);
@@ -315,7 +311,7 @@ class Saksbehandling extends Component {
 }
 
 Saksbehandling.propTypes = {
-  avklartefakta: PT.array,
+  avklartefakta: MPT.Avklartefakta,
   hentFagsaker: PT.func.isRequired,
   hentBehandling: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
@@ -334,7 +330,7 @@ Saksbehandling.propTypes = {
   sjekkOppfriskningStatus: PT.func.isRequired,
   fagsak: MPT.Fagsak,
   sendSoknad: PT.func.isRequired,
-  soknad: PT.object,
+  soknad: MPT.Soknad,
   vilkar: PT.array,
   hentOppgaveOversikt: PT.func.isRequired,
   tilbakeleggeOppgave: PT.func.isRequired,

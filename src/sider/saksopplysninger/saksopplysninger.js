@@ -132,7 +132,7 @@ class Saksopplysninger extends Component {
 Saksopplysninger.propTypes = {
   behandlingID: PT.number.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Person),
-  avklartefakta: PT.array.isRequired,
+  avklartefakta: MPT.Avklartefakta.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   fagsakStatusKode: PT.string.isRequired,
@@ -145,7 +145,7 @@ Saksopplysninger.propTypes = {
   sjekkOppfriskningStatus: PT.func.isRequired,
   person: MPT.Person,
   sendSoknad: PT.func.isRequired,
-  soknad: PT.object,
+  soknad: MPT.Soknad,
   soknadArbeidsinntekt: PT.object,
   soknadForm: PT.object.isRequired,
   valid: PT.bool.isRequired,
