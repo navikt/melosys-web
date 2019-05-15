@@ -73,10 +73,13 @@ class FullmektigPanel extends Component {
   };
 
   hentFullmektige = async () => {
-    const { saksnummer } = this.props.fagsak;
-    const { hentAktoer } = this.props;
+    const { hentAktoer, fagsak } = this.props;
+    const { saksnummer } = fagsak;
 
     try {
+      if (!saksnummer) {
+        throw new Error('fagsak.saksnummer er undefined', 'fullmektigPanel', '80');
+      }
       const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
       this.setState({ fullmektige });
     } catch (e) {
