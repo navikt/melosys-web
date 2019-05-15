@@ -28,7 +28,14 @@ const ArbeidslandRadioButtons = props => {
   const unikRadioButtonGruppeID = uuid();
 
   return utfylteLand.map(land => (
-    <Nav.Radio onChange={() => onChange(land)} checked={arbeidslandType === land.term} key={land.term} value={land} label={`${KV.kodeTilTerm(land.kode, MKV.KTObjects.landkoder)} - ${land.term}`} name={unikRadioButtonGruppeID} />
+    <Nav.Radio
+      onChange={() => onChange(land)}
+      checked={arbeidslandType === land.term}
+      key={land.term}
+      value={land}
+      label={`${KV.kodeTilTerm(land.kode, MKV.KTObjects.landkoder)} - ${land.term}`}
+      name={unikRadioButtonGruppeID}
+    />
   ));
 };
 
@@ -159,28 +166,26 @@ SokkelSkipEnkelt.defaultProps = {
 
 const SokkelSkipListe = props => {
   const {
-    sokkelEllerSkipListe, maritimtArbeid, begrunnelser, redigerbart, avklartefaktaEndretHandler, avklartefaktaBegrunnelserEndretHandler, oppdaterData, installasjonArbeidslandListe, installasjonArbeidslandTypeListe,
+    sokkelEllerSkipListe, maritimtArbeid, begrunnelser, redigerbart, avklartefaktaEndretHandler,
+    avklartefaktaBegrunnelserEndretHandler, oppdaterData, installasjonArbeidslandListe, installasjonArbeidslandTypeListe,
   } = props;
 
   return (
     <div className="sokkelSkip__liste">
-      { maritimtArbeid.map((enkelt, index) => {
-        return (
-          <SokkelSkipEnkelt
-            key={JSON.stringify(enkelt)}
-            maritimtArbeid={enkelt}
-            sokkelEllerSkip={sokkelEllerSkipListe.find(avklartFakta => avklartFakta.subjektID === enkelt.navn)}
-            arbeidslandAvklartfakta={installasjonArbeidslandListe.find(avklartFakta => avklartFakta.subjektID === enkelt.navn)}
-            arbeidslandTypeAvklartfakta={installasjonArbeidslandTypeListe.find(avklartfakta => avklartfakta.subjektID === enkelt.navn)}
-            index={index}
-            begrunnelser={begrunnelser}
-            redigerbart={redigerbart}
-            avklartefaktaEndretHandler={avklartefaktaEndretHandler}
-            avklartefaktaBegrunnelserEndretHandler={avklartefaktaBegrunnelserEndretHandler}
-            oppdaterData={oppdaterData}
-        />)}
-        )
-      }
+      { maritimtArbeid.map((enkelt, index) => (
+        <SokkelSkipEnkelt
+          key={JSON.stringify(enkelt)}
+          maritimtArbeid={enkelt}
+          sokkelEllerSkip={sokkelEllerSkipListe.find(avklartFakta => avklartFakta.subjektID === enkelt.navn)}
+          arbeidslandAvklartfakta={installasjonArbeidslandListe.find(avklartFakta => avklartFakta.subjektID === enkelt.navn)}
+          arbeidslandTypeAvklartfakta={installasjonArbeidslandTypeListe.find(avklartfakta => avklartfakta.subjektID === enkelt.navn)}
+          index={index}
+          begrunnelser={begrunnelser}
+          redigerbart={redigerbart}
+          avklartefaktaEndretHandler={avklartefaktaEndretHandler}
+          avklartefaktaBegrunnelserEndretHandler={avklartefaktaBegrunnelserEndretHandler}
+          oppdaterData={oppdaterData}
+        />))}
     </div>
   );
 };
