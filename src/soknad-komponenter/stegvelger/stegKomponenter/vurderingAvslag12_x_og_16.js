@@ -48,7 +48,7 @@ const VurderingAvslag12_x_og_16 = ({
   valgte_art_16_1_begrunnelser,
   art16_1_fritekst,
   vilkarBegrunnelser,
-  oppsummering,
+  behandlingID,
   fattVedtak,
   redigerbart,
 }) => {
@@ -109,7 +109,7 @@ const VurderingAvslag12_x_og_16 = ({
           fritekst={art16_1_fritekst}
         />
       }
-      {redigerbart && <PdfLenkeListe behandlingID={oppsummering.behandlingID} dokumenter={dokumenter} />}
+      {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
       <Nav.Hovedknapp disabled={!redigerbart} onClick={() => fattVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>
         Fatt vedtak
       </Nav.Hovedknapp>
@@ -123,7 +123,7 @@ VurderingAvslag12_x_og_16.propTypes = {
   valgte_art_16_1_begrunnelser: PT.array.isRequired,
   art16_1_fritekst: PT.string,
   vilkarBegrunnelser: PT.array.isRequired,
-  oppsummering: PT.object.isRequired,
+  behandlingID: PT.number.isRequired,
   fattVedtak: PT.func.isRequired,
   redigerbart: PT.bool,
 };
@@ -139,7 +139,7 @@ const mapStateToProps = state => ({
   valgte_art_16_1_begrunnelser: VilkarSelectors.art16_1_begrunnelserSelector(state),
   art16_1_fritekst: VilkarSelectors.art16_1_fritekstSelector(state),
   vilkarBegrunnelser: VilkarSelectors.vilkarBegrunnelserSelector(state),
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingAvslag12_x_og_16);
