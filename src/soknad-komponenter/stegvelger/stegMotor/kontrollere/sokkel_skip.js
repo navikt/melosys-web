@@ -40,6 +40,7 @@ class SokkelSkip extends Steg {
     });
     this.beregnRelevantUI = _propsLight => {
       const installasjonArbeidslandListe = hentFaktaListe(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, _propsLight.avklartefakta);
+      const installasjonArbeidslandTypeListe = hentFaktaListe(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, _propsLight.avklartefakta);
       const sokkelEllerSkipListe = hentFaktaListe(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, _propsLight.avklartefakta);
       const sokkelSkipKonklusjon = hentFakta(KV.Koder.avklartefaktaKoder.ARBEID_SOKKEL_SKIP, _propsLight.avklartefakta);
 
@@ -48,6 +49,7 @@ class SokkelSkip extends Steg {
         sokkelEllerSkipListe,
         sokkelSkipKonklusjon,
         installasjonArbeidslandListe,
+        installasjonArbeidslandTypeListe,
       });
     };
     this.handlers = {
