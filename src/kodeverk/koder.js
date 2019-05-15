@@ -61,9 +61,19 @@ export const VurderingYrkesgruppeTyper = {
   KONTANTYTELSESMOTTAKER: 'KONTANTYTELSESMOTTAKER',
 };
 
-export const VurderingSkiftesvisSekvensieltArrbeid = {
+export const VurderingSkiftesvisSekvensieltArbeid = {
   SKIFTESVIS: 'SKIFTESVIS',
   SEKVENSIELT: 'SEKVENSIELT',
+};
+
+export const VurderingVesentligAktivitetINorgeTyper = {
+  UNDER_25_PROSENT: 'UNDER_25_PROSENT',
+  OVER_25_PROSENT: 'OVER_25_PROSENT',
+};
+
+export const BoolskAvklartfaktaType = {
+  SANN: 'TRUE',
+  USANN: 'FALSE',
 };
 
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
