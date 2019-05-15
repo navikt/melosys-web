@@ -2,7 +2,7 @@ import * as QS from 'qs';
 import { getAsJson, postAsJson, deleteAsJson } from '../../utils';
 import { API_BASE_URL, FAGSAKER } from '../../api-constants';
 
-export const hent = (saksnr, rolleKode, representererKode) => {
+export const hentAktoer = (saksnr, rolleKode, representererKode) => {
   const URI_PATH = `${API_BASE_URL}${FAGSAKER}/${saksnr}/aktoerer`;
   const qs = QS.stringify({ rolleKode, representererKode });
 
@@ -10,12 +10,12 @@ export const hent = (saksnr, rolleKode, representererKode) => {
   return getAsJson(URI_AKTOER);
 };
 
-export const send = (saksnr, data) => {
+export const sendAktoer = (saksnr, data) => {
   const URI_AKTOER = `${API_BASE_URL}${FAGSAKER}/${saksnr}/aktoerer`;
   return postAsJson(URI_AKTOER, data);
 };
 
-export const slett = databaseid => {
+export const slettAktoer = databaseid => {
   const URI_AKTOER = `${API_BASE_URL}${FAGSAKER}/aktoerer/${databaseid}`;
   return deleteAsJson(URI_AKTOER);
 };
