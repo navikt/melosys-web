@@ -40,7 +40,7 @@ class Stegvelger extends Component {
     visSoknadFeilmeldinger: false,
   };
 
-  async componentWillMount() {
+  async componentDidMount() {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
 

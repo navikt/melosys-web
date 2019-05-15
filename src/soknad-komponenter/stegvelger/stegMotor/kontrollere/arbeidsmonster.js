@@ -50,13 +50,6 @@ class Arbeidsmonster extends Steg {
     };
     this._status = FANE_STATUS.OK;
   }
-
-  static finnAvklaring = (avklartefakta, typeSomSkalSjekkes) => {
-    const enkeltFakta = avklartefakta.find(fakta => fakta.referanse === KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID);
-
-    if (!enkeltFakta) { return false; }
-    return enkeltFakta.fakta.includes(typeSomSkalSjekkes);
-  };
 }
 
 export default Arbeidsmonster;
