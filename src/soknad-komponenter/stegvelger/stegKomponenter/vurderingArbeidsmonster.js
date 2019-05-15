@@ -1,4 +1,3 @@
-import * as MKV from 'melosys-kodeverk';
 import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
@@ -9,6 +8,7 @@ import './vurderingArbeidsmonster.css';
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import * as KV from '../../../kodeverk';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
+import { BoolskAvklartfaktaType, VurderingVesentligAktivitetINorgeTyper } from '../../../kodeverk/koder';
 
 /**
  * Enkeltsjekkboks for marginalt arbeid i et land.
@@ -29,7 +29,7 @@ const LandLinje = props => {
   const erMarginaltArbeidIArbeidsland = avklartMarginaltArbeidILand && avklartMarginaltArbeidILand.fakta.includes('TRUE');
 
   const klikkHandler = () => {
-    const verdi = erMarginaltArbeidIArbeidsland ? 'FALSE' : 'TRUE';
+    const verdi = erMarginaltArbeidIArbeidsland ? BoolskAvklartfaktaType.USANN : BoolskAvklartfaktaType.SANN;
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, landKode.kode, verdi));
   };
 
@@ -39,7 +39,7 @@ const LandLinje = props => {
       <Nav.Checkbox
         disabled={!redigerbart}
         checked={erMarginaltArbeidIArbeidsland === true}
-        value="TRUE"
+        value={BoolskAvklartfaktaType.SANN}
         onChange={klikkHandler}
         label="ja"
       />
@@ -63,42 +63,15 @@ LandLinje.defaultProps = {
  */
 const MarginaltArbeid = props => {
   const {
-    arbeidsland, redigerbart, marginaltArbeid, oppdaterData,
+    arbeidsland, redigerbart, marginaltArbeid, landMedVesentligArbeid, erNorgeValgt, oppdaterData,
   } = props;
 
-  const hentLandMedVesentligArbeid = () => {
-    const erArbeidMarginaltILand = landkode => (
-      marginaltArbeid.some(ma => (
-        ma.subjektID === landkode &&
-        hentFaktaVerdi(ma) === 'TRUE'
-      ))
-    );
-    return arbeidsland.map(al => al.kode)
-      .filter(kode => !erArbeidMarginaltILand(kode));
-  };
 
-  const hentKombinasjonsbeskrivelse = land => {
-    const erNorgeValgt = land.includes(MKV.Koder.landkoder.NO);
-    const erFlereLand = land.length > 1;
-
-    if (erFlereLand) {
-      let flereLandBeskrivelse = 'flere land, ';
-      if (erNorgeValgt) {
-        flereLandBeskrivelse += 'hvorav et er Norge';
-      } else {
-        flereLandBeskrivelse += 'ikke Norge';
-      }
-      return flereLandBeskrivelse;
-    }
-
-    return erNorgeValgt ? 'kun Norge' : 'et land, ikke Norge (Art.12)';
-  };
-
-  const landMedVesentligArbeid = hentLandMedVesentligArbeid();
+  const kombinasjonsbeskrivelse = erNorgeValgt ? 'kun Norge' : 'et land, ikke Norge (Fortsetter med Art.12)';
   const valgtKombinasjonInformasjon = landMedVesentligArbeid.length === 1 &&
     (
       <Nav.AlertStripeInfo>
-        Valgt kombinasjon er { hentKombinasjonsbeskrivelse(landMedVesentligArbeid) }
+        Valgt kombinasjon er { kombinasjonsbeskrivelse }
       </Nav.AlertStripeInfo>
     );
 
@@ -138,6 +111,8 @@ const MarginaltArbeid = props => {
 MarginaltArbeid.propTypes = {
   arbeidsland: PT.array,
   marginaltArbeid: PT.array,
+  landMedVesentligArbeid: PT.array.isRequired,
+  erNorgeValgt: PT.bool.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
 };
@@ -155,10 +130,11 @@ MarginaltArbeid.defaultProps = {
  */
 const VurderingArbeidsmonster = props => {
   const {
-    bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+    bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettData, slettAllDataForSteg,
   } = props;
   const {
-    harAvklaring, arbeidsmonster, marginaltArbeid, aktivitetINorge,
+    arbeidsmonster, marginaltArbeid, aktivitetINorge,
+    aktivitetINorgeNodvendig, harAvklaring,
   } = tilstand;
 
   useEffect(() => (
@@ -168,17 +144,16 @@ const VurderingArbeidsmonster = props => {
   ), []);
 
   const skiftesvisSekvensieltValg = [
-    { label: 'Skiftesvis eller med regelmessig veksling av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArrbeid.SKIFTESVIS },
-    { label: 'Sekvensielt, uten regelmessig skifte av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArrbeid.SEKVENSIELT },
+    { label: 'Skiftesvis eller med regelmessig veksling av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS },
+    { label: 'Sekvensielt, uten regelmessig skifte av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SEKVENSIELT },
   ];
 
   const vesentligAktivitetINorgeValg = [
-    { label: '25% eller mer', type: 'TRUE' },
-    { label: 'Mindre enn 25%', type: 'FALSE' },
+    { label: '25% eller mer', type: VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT },
+    { label: 'Mindre enn 25%', type: VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT },
   ];
 
-  const visMarginaltArbeid = hentFaktaVerdi(arbeidsmonster) === KV.Koder.VurderingSkiftesvisSekvensieltArrbeid.SKIFTESVIS;
-  const visAktivitetINorge = visMarginaltArbeid;
+  const visMarginaltArbeid = hentFaktaVerdi(arbeidsmonster) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS;
 
   return (
     <div className="vurderingArbeidsmonster">
@@ -198,9 +173,10 @@ const VurderingArbeidsmonster = props => {
           marginaltArbeid={marginaltArbeid}
           arbeidsland={arbeidsland}
           oppdaterData={oppdaterData}
+          {...tilstand}
         />
         }
-        { visAktivitetINorge &&
+        { visMarginaltArbeid && aktivitetINorgeNodvendig &&
         <EnkeltAvklartfakta
           redigerbart={redigerbart}
           avklartfakta={aktivitetINorge}
@@ -208,6 +184,7 @@ const VurderingArbeidsmonster = props => {
           avklartefaktaTyper={vesentligAktivitetINorgeValg}
           tittel="Vurdering av aktivitet i Norge"
           oppdaterData={oppdaterData}
+          slettData={slettData}
         />
         }
         <div className="fane__knapplinje">
@@ -221,6 +198,7 @@ const VurderingArbeidsmonster = props => {
 VurderingArbeidsmonster.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
   slettAllDataForSteg: PT.func.isRequired,
   arbeidsland: PT.array.isRequired,
   tilstand: PT.shape({
