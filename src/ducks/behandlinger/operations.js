@@ -9,6 +9,7 @@
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import * as Actions from './actions';
 
 export function hentBehandling(behandlingID) {
   return doThenDispatch(() => Api.Behandlinger.hentBehandling(behandlingID), {
@@ -16,4 +17,11 @@ export function hentBehandling(behandlingID) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function oppdaterBehandlingsStatus(status) {
+  return Actions.oppdaterBehandlingsStatus(status);
+}
+export function resetBehandlingerState() {
+  return Actions.resetBenadlingerState();
 }

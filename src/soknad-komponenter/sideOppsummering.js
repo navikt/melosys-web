@@ -13,8 +13,8 @@ import * as MPT from '../proptypes/';
 import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
-import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
-import { behandlingerSelectors } from '../ducks/behandlinger/';
+import { fagsakSelectors } from '../ducks/fagsaker/';
+import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { KodeTermSelect } from './kodeTermSelect';
 
@@ -48,9 +48,9 @@ class SideOppsummering extends Component {
     }
     const { oppdaterBehandlingsStatus, behandlingID } = this.props;
     const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.status);
-    const nystatus = { kode, term };
+    const nyBehandlingsStatus = { kode, term };
     Api.Behandlingsperioder.oppdaterStatus(behandlingID, kode).then(() => {
-      oppdaterBehandlingsStatus(nystatus);
+      oppdaterBehandlingsStatus(nyBehandlingsStatus);
       this.oppdaterStatusMelding();
     });
     return true;
@@ -246,7 +246,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterBehandlingsStatus: status => dispatch(fagsakOperations.oppdaterBehandlingsStatus(status)),
+  oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
