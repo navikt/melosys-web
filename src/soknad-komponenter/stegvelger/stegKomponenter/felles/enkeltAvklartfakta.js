@@ -26,6 +26,12 @@ const EnkeltAvklartfakta = props => {
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(avklartfaktaKode, avklartfakta));
+
+    return function cleanup() {
+      if (props.slettData) {
+        props.slettData('avklartefakta', avklartfaktaKode);
+      }
+    };
   }, []);
 
   const radioEndringHandler = event => {
@@ -89,11 +95,14 @@ EnkeltAvklartfakta.propTypes = {
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
   onChange: PT.func,
+  slettData: PT.func,
 };
 
 EnkeltAvklartfakta.defaultProps = {
   begrunnelser: [],
   onChange: null,
+  slettData: null,
+
 };
 
 export default EnkeltAvklartfakta;
