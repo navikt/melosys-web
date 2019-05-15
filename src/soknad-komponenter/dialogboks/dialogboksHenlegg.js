@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import * as MKV from 'melosys-kodeverk';
-
-import * as MPT from '../../proptypes';
-
 import PdfLenkeListe from '../pdfLenkeListe';
 import { KodeTermSelect } from '../kodeTermSelect';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
@@ -82,7 +79,7 @@ export class DialogboksHenleggSak extends Component {
   render() {
     const {
       avbryt,
-      oppsummering,
+      behandlingID,
       redigerbart,
       ariaHideApp,
     } = this.props;
@@ -137,7 +134,7 @@ export class DialogboksHenleggSak extends Component {
             visTekstFelt && <Nav.Textarea feil={feilmeldingFritekst} label="Fritekst" onChange={this.fritekstOnchange} value={fritekst} />
           }
           {
-            redigerbart && <PdfLenkeListe behandlingID={oppsummering.behandlingID} dokumenter={dokumenter} vedKlikk={this.vedKlikkLenke} />
+            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={this.vedKlikkLenke} />
           }
           <div className="dialogboksHenlegg__container__knapperad">
             <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
@@ -157,18 +154,17 @@ export class DialogboksHenleggSak extends Component {
 DialogboksHenleggSak.propTypes = {
   henleggHandle: PT.func.isRequired,
   avbryt: PT.func.isRequired,
-  oppsummering: MPT.Oppsummering,
+  behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   ariaHideApp: PT.bool,
 };
 
 DialogboksHenleggSak.defaultProps = {
-  oppsummering: {},
   ariaHideApp: true,
 };
 
 const mapStateToProps = state => ({
-  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
