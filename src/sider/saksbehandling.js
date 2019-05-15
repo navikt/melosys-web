@@ -46,11 +46,12 @@ class Saksbehandling extends Component {
 
   componentWillUnmount() {
     this.props.resetFagsakState();
+    this.props.resetBehandlingerState();
     this.props.resetAvklartefaktaState();
     this.props.resetLovvalgsperiode();
     this.props.resetVilkarState();
     this.props.resetSoknadState();
-    this.props.resetBehandlingerState();
+    this.props.resetBehandlingsPerioderState();
   }
 
   lastInnSaksopplysninger = async () => {
@@ -333,6 +334,7 @@ Saksbehandling.propTypes = {
   resetAvklartefaktaState: PT.func.isRequired,
   resetSoknadState: PT.func.isRequired,
   resetBehandlingerState: PT.func.isRequired,
+  resetBehandlingsPerioderState: PT.func.isRequired,
   resetLovvalgsperiode: PT.func.isRequired,
   sjekkOppfriskningStatus: PT.func.isRequired,
   sendSoknad: PT.func.isRequired,
@@ -346,7 +348,7 @@ Saksbehandling.propTypes = {
   oppdaterVilkarState: PT.func.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterLovvalgperioderState: PT.func.isRequired,
-  oppdaterBehandlingerState: PT.func.isRequired
+  oppdaterBehandlingerState: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -383,7 +385,8 @@ const mapDispatchToProps = dispatch => ({
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
   resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
   resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
-  resetBehandlingerState: () => dispatch(behandlingsperioderOperations.resetPerioderState()),
+  resetBehandlingerState: () => dispatch(behandlingerOperations.res()),
+  resetBehandlingsPerioderState: () => dispatch(behandlingsperioderOperations.resetPerioderState()),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
