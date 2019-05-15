@@ -25,11 +25,11 @@ const InfoPanel = () => (
   >
     <p>
       En beskrivelse av hvilken informasjon eller dokumentasjon som mangler for å gjøre søknaden komplett.
-      Din tekst starter etter teksten &laquo;Dette må du sende oss:&raquo;.
+      Din tekst starter etter teksten &laquo;Du må sende oss dette innen <i>dato</i>:&raquo;.
     </p>
     <p>
       Brevet inneholder allerede en innledning, beskrivelse av hvordan informasjon sendes inn og en avsluttende tekst.
-      Trykk på &laquo;forhåndsvis brev&raquo; for å se brevet når du er ferdig med å skrive.<br />
+      Trykk på &laquo;Forhåndsvis brev&raquo; for å se brevet når du er ferdig med å skrive.<br />
       OBS! Det er ikke automatisk stavekontroll, så sjekk teksten du har skrevet.
     </p>
   </Nav.Lesmerpanel>

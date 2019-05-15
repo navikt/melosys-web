@@ -1,3 +1,4 @@
+import * as MKV from 'melosys-kodeverk';
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import * as KV from '../../../../kodeverk';
@@ -5,6 +6,7 @@ import * as Utils from '../../../../utils';
 
 import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../../regler/avklartefakta';
 import VurderingArbeidsmonster from '../../stegKomponenter/vurderingArbeidsmonster';
+import { BoolskAvklartfaktaType } from '../../../../kodeverk/koder';
 
 class Arbeidsmonster extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -26,21 +28,44 @@ class Arbeidsmonster extends Steg {
     this.beregnRelevantUI = _propsLight => {
       const marginaltArbeid = hentFaktaListe(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, _propsLight.avklartefakta);
       const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, _propsLight.avklartefakta);
+      const arbeidsmonster = hentFakta(KV.Koder.avklartefaktaKoder.ARBEIDSMONSTER, _propsLight.avklartefakta);
 
-      const harAvklaring = !Utils._isNil(hentFaktaVerdi(aktivitetINorge));
+      const landMedVesentligArbeid = this.hentLandMedVesentligArbeid(_propsLight.arbeidsland, marginaltArbeid);
+      const erNorgeValgt = landMedVesentligArbeid.includes(MKV.Koder.landkoder.NO);
+      const aktivitetINorgeNodvendig = landMedVesentligArbeid.length > 1 && erNorgeValgt;
+
+      const harAvklaring = !Utils._isNil(hentFaktaVerdi(arbeidsmonster)) &&
+                           landMedVesentligArbeid.length > 0 &&
+                           (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1;
 
       return ({
-        harAvklaring,
         marginaltArbeid,
         aktivitetINorge,
+        arbeidsmonster,
+        landMedVesentligArbeid,
+        erNorgeValgt,
+        aktivitetINorgeNodvendig,
+        harAvklaring,
       });
     };
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
+      slettData: (type, felt) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, type, felt),
       slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
     };
     this._status = FANE_STATUS.OK;
+
+    this.hentLandMedVesentligArbeid = (arbeidsland, marginaltArbeid) => {
+      const erArbeidMarginaltILand = landkode => (
+        marginaltArbeid.some(ma => (
+          ma.subjektID === landkode &&
+          hentFaktaVerdi(ma) === BoolskAvklartfaktaType.SANN
+        ))
+      );
+      return arbeidsland.map(al => al.kode)
+        .filter(kode => !erArbeidMarginaltILand(kode));
+    };
   }
 }
 
