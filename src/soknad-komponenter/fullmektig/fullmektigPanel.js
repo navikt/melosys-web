@@ -8,6 +8,7 @@ import * as Ikoner from '../../resources/images';
 import * as Api from '../../services/api';
 import * as Utils from '../../utils';
 import * as KV from '../../kodeverk';
+import * as MPT from '../../proptypes/';
 
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import { fagsakSelectors } from '../../ducks/fagsaker';
@@ -133,10 +134,10 @@ class FullmektigPanel extends Component {
 }
 
 FullmektigPanel.propTypes = {
+  fagsak: MPT.Fagsak.isRequired,
   hentOrg: PT.func.isRequired,
   hentAktoer: PT.func.isRequired,
   slettAktoer: PT.func.isRequired,
-  fagsak: PT.object.isRequired,
   lagreAktoer: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
@@ -148,9 +149,9 @@ const mapStateToProps = state => ({
 });
 
 const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
-const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
-const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
-const slettAktoer = databaseID => Api.Fagsaker.aktoer.slett(databaseID);
+const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hentAktoer(saksnr, rolleKode, representererKode);
+const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.sendAktoer(saksnr, data);
+const slettAktoer = databaseID => Api.Fagsaker.aktoer.slettAktoer(databaseID);
 
 const SokersFullmektigWrapper = props => (
   <FullmektigPanel
