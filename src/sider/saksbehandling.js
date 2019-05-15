@@ -312,13 +312,20 @@ class Saksbehandling extends Component {
 
 Saksbehandling.propTypes = {
   avklartefakta: MPT.Avklartefakta,
+  fagsak: MPT.Fagsak,
+  soknad: MPT.Soknad,
+  vilkar: PT.array, // TODO lag proptype
+  behandlingsPeriode: PT.object.isRequired, // TODO lag proptype
+  lovvalgsperioder: PT.array.isRequired, // TODO lag proptype
+  history: PT.object.isRequired,
+  match: PT.object.isRequired,
+  location: PT.object.isRequired,
+  skjema: PT.any,
+  // Funcs
   hentFagsaker: PT.func.isRequired,
   hentBehandling: PT.func.isRequired,
   hentBehandlingsresultat: PT.func.isRequired,
   hentSoknad: PT.func.isRequired,
-  history: PT.object.isRequired,
-  match: PT.object.isRequired,
-  location: PT.object.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
   resetBehandlingsresultatState: PT.func.isRequired,
@@ -328,24 +335,18 @@ Saksbehandling.propTypes = {
   resetBehandlingerState: PT.func.isRequired,
   resetLovvalgsperiode: PT.func.isRequired,
   sjekkOppfriskningStatus: PT.func.isRequired,
-  fagsak: MPT.Fagsak,
   sendSoknad: PT.func.isRequired,
-  soknad: MPT.Soknad,
-  vilkar: PT.array,
   hentOppgaveOversikt: PT.func.isRequired,
   tilbakeleggeOppgave: PT.func.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
-  behandlingsPeriode: PT.object.isRequired,
-  lovvalgsperioder: PT.array.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
   sendPerioder: PT.func.isRequired,
   oppdaterVilkarState: PT.func.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterLovvalgperioderState: PT.func.isRequired,
-  oppdaterBehandlingerState: PT.func.isRequired,
-  skjema: PT.any,
+  oppdaterBehandlingerState: PT.func.isRequired
 };
 
 Saksbehandling.defaultProps = {
