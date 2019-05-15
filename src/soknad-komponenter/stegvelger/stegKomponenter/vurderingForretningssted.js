@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect } from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
@@ -117,7 +117,7 @@ const VurderingForretningssted = props => {
     },
   ];
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const bestemmelseFunnet = lovvalgsvilkaar.some(lb => lb.kode === lovvalgsbestemmelse);
     if (bestemmelseFunnet) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
@@ -133,7 +133,7 @@ const VurderingForretningssted = props => {
 
   const avklartfaktaEndret = e => {
     if (e === 'TRUE') {
-      oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, 'NO'));
+      oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, MKV.Koder.landkoder.NO));
     } else if (e === 'FALSE') {
       slettData('avklartefakta', KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND);
     } else {
