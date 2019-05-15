@@ -1,6 +1,6 @@
 import { EkspanderbartpanelBase } from 'nav-frontend-ekspanderbartpanel';
 import { Panel } from 'nav-frontend-paneler';
-import AlertStripe, { AlertStripeAdvarsel } from 'nav-frontend-alertstriper';
+import AlertStripe, { AlertStripeAdvarsel, AlertStripeInfo } from 'nav-frontend-alertstriper';
 import EtikettBase from 'nav-frontend-etiketter';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Checkbox, Radio, SkjemaGruppe, Fieldset, Select, Input, Textarea } from 'nav-frontend-skjema';
@@ -15,7 +15,7 @@ import Modal from 'nav-frontend-modal';
 import Tekstomrade from 'nav-frontend-tekstomrade';
 
 export {
-  AlertStripeAdvarsel, AlertStripe,
+  AlertStripeAdvarsel, AlertStripe, AlertStripeInfo,
   Container, Row, Column,
   Checkbox, Radio, SkjemaGruppe, Fieldset, Select, Input, Textarea,
   EkspanderbartpanelBase, Panel,
