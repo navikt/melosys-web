@@ -9,11 +9,12 @@ import { Behandlingsresultat } from './behandlingsresultat';
 import { Dokument, DokumentNullable, Vedlegg } from './dokument';
 import { DokumentMetadataListe } from './dokumentMetadata';
 import { Fagsak } from './fagsak';
+import { FagsakSokListe } from './fagsakSokListe';
 import { GeneriskAdresse } from './adresser';
 import { Inntekt, InntektListe, InntektEnkeltLinje } from './inntekt';
 import { Journalforing, JournalforingSkjemaVerdier } from './journalforing';
 import { Kodeverk } from './kodeverk';
-import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger } from './vurdering';
+import { Vurdering, Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger } from './vurdering';
 import { MedlemskapEnkeltPeriode, MedlemskapPerioder, Medlemskap } from './medlemskap';
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { OppholdLand, OppholdPeriode } from './opphold';
@@ -47,6 +48,7 @@ export {
   DokumentMetadataListe,
   DokumentNullable,
   Fagsak,
+  FagsakSokListe,
   Feilmelding,
   Feilmeldinger,
   GeneriskAdresse,
@@ -78,11 +80,12 @@ export {
   Saksbehandler,
   Soknad,
   SoknadForm,
-  Yrkesgruppe,
-  TimerTimelonnet,
-  TimerTimelonnetLinje,
-  Utenlandsopphold,
-  Vedlegg,
   Soknadsland,
   Soknadsperiode,
+  TimerTimelonnet,
+  TimerTimelonnetLinje,
+  Yrkesgruppe,
+  Utenlandsopphold,
+  Vedlegg,
+  Vurdering,
 };
