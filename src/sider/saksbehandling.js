@@ -385,7 +385,7 @@ const mapDispatchToProps = dispatch => ({
   resetAvklartefaktaState: () => dispatch(avklartefaktaOperations.resetAvklartefaktaState()),
   resetSoknadState: () => dispatch(soknadOperations.resetSoknadState()),
   resetLovvalgsperiode: () => dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState()),
-  resetBehandlingerState: () => dispatch(behandlingerOperations.res()),
+  resetBehandlingerState: () => dispatch(behandlingerOperations.resetBehandlingerState()),
   resetBehandlingsPerioderState: () => dispatch(behandlingsperioderOperations.resetPerioderState()),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
