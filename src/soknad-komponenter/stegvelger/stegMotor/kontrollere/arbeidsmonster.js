@@ -13,6 +13,14 @@ class Arbeidsmonster extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
+        beskrivelse: 'Ga videre til forretningssted hvis aktivitet i norge er avklart',
+        exec: avklartefakta => {
+          const harAktivitetINorge = hentFaktaListe(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta).length > 0;
+          return harAktivitetINorge;
+        },
+        nesteSteg: STEG.FORRETNINGSSTED,
+      },
+      {
         beskrivelse: 'Stopp steg',
         exec: () => true,
         nesteSteg: null,

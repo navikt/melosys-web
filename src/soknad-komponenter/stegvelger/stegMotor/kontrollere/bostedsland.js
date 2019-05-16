@@ -7,6 +7,7 @@ import VurderingBostedsland from '../../stegKomponenter/vurderingBostedsland';
 import Regler from '../../../../regler';
 import { hentVilkar } from '../../../../regler/vilkar';
 import { hentFakta } from '../../../../regler/avklartefakta';
+import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
 
 
 class Bostedsland extends Steg {
@@ -19,6 +20,15 @@ class Bostedsland extends Steg {
           Bostedsland.finnAvklaring(avklartefakta, KV.Koder.VurderingSokkelSkipTyper.SKIP_ETT_LAND) && vilkar.find(enkelt => enkelt.vilkaar === 'BOSATT_I_NORGE') && true
         ),
         nesteSteg: STEG.ARTIKKEL_11_4,
+      },
+      {
+        beskrivelse: 'to eller flere land',
+        exec: (avklartefakta, vilkar) => {
+          const harBostedsland = vilkar.some(enkelt => enkelt.vilkaar === 'BOSATT_I_NORGE');
+          const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
+          return harBostedsland && erToEllerFlereLand;
+        },
+        nesteSteg: STEG.ARBEIDSMONSTER,
       },
       {
         beskrivelse: 'dead end',

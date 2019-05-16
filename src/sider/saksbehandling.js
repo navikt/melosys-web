@@ -172,17 +172,15 @@ class Saksbehandling extends Component {
 
   lagreAvklartefaktaHandler = async () => {
     const { behandlingID } = this.state;
-
     const { sendAvklartefakta, avklartefakta } = this.props;
+
     sendAvklartefakta(behandlingID, avklartefakta);
   };
 
   lagreLovvalgsperioderHandler = async () => {
     const { behandlingID } = this.state;
-    const { skjema, oppdaterLovvalgperioderState } = this.props;
-    await oppdaterLovvalgperioderState(skjema);
-
     const { sendLovvalgsperioder, lovvalgsperioder } = this.props;
+
     sendLovvalgsperioder(behandlingID, lovvalgsperioder);
   };
 
@@ -262,6 +260,7 @@ class Saksbehandling extends Component {
         />
       </div>
     );
+
     return (
       <div className="saksbehandling">
         <Nav.Container fluid>
