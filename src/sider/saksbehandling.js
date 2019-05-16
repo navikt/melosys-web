@@ -17,7 +17,7 @@ import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingsresultatOperations } from '../ducks/behandlingsresultat/';
-import { behandlingerOperations } from '../ducks/behandlinger/';
+import {behandlingerOperations, behandlingerSelectors} from '../ducks/behandlinger/';
 
 import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
@@ -245,8 +245,11 @@ class Saksbehandling extends Component {
   };
 
   render() {
+    const { redigerbart } = this.props;
     const { behandlingID } = this.state;
     const { blokkerInnholdMedOppfriskSpinner } = this;
+
+    if (Utils._isNil(redigerbart)) return null;
 
     const oppfriskVenterDialog = this.state.oppfriskningBlokkererInnhold && (
       <div>
@@ -259,7 +262,6 @@ class Saksbehandling extends Component {
         />
       </div>
     );
-
     return (
       <div className="saksbehandling">
         <Nav.Container fluid>
@@ -312,6 +314,7 @@ class Saksbehandling extends Component {
 }
 
 Saksbehandling.propTypes = {
+  redigerbart: PT.bool,
   avklartefakta: MPT.Avklartefakta,
   fagsak: MPT.Fagsak,
   soknad: MPT.Soknad,
@@ -352,6 +355,7 @@ Saksbehandling.propTypes = {
 };
 
 Saksbehandling.defaultProps = {
+  redigerbart: null,
   avklartefakta: [],
   fagsak: {},
   soknad: {},
@@ -363,6 +367,7 @@ Saksbehandling.defaultProps = {
  * @param state
  */
 const mapStateToProps = state => ({
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),

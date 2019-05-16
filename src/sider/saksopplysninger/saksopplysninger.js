@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { reduxForm } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
-
+import * as Utils from '../../utils';
 import * as KV from '../../kodeverk';
 import * as Validering from '../../soknad-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
@@ -71,6 +71,7 @@ class Saksopplysninger extends Component {
 
   render () {
     const {
+      redigerbart,
       behandlingID,
       medlemskap,
       inntekterPrAarMaaned,
@@ -81,6 +82,7 @@ class Saksopplysninger extends Component {
       fagsakStatusKode,
     } = this.props;
 
+    if (Utils._isNil(redigerbart)) return null;
     if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
     const { values: soknadVerdier } = soknadForm;
 
@@ -131,6 +133,7 @@ class Saksopplysninger extends Component {
 }
 
 Saksopplysninger.propTypes = {
+  redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Person),
   avklartefakta: MPT.Avklartefakta.isRequired,
@@ -160,6 +163,7 @@ Saksopplysninger.propTypes = {
 };
 
 Saksopplysninger.defaultProps = {
+  redigerbart: null,
   alleRelevantePersoner: [],
   inntekterPrAarMaaned: [],
   medlemskap: {},
@@ -171,6 +175,7 @@ Saksopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
