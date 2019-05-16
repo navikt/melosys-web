@@ -1,3 +1,5 @@
+import * as Utils from '../../../utils';
+
 class StegState {
   constructor() {
     this.stegStore = new Map();
@@ -8,8 +10,12 @@ class StegState {
 
     if (stegStore.has(stegID)) {
       const steg = stegStore.get(stegID);
-      delete steg[felt];
-      stegStore.set(stegID, steg);
+      if (Utils._isNil(felt)) {
+        stegStore.delete(stegID);
+      } else {
+        delete steg[felt];
+        stegStore.set(stegID, steg);
+      }
     }
   };
 
@@ -43,9 +49,9 @@ class StegState {
 
   nyttFelt = () => ({});
 
-  slettSteg = steg => {
+  slettSteg = stegID => {
     const { stegStore } = this;
-    stegStore.delete(steg);
+    stegStore.delete(stegID);
   };
 }
 

@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../../utils/navFrontend';
-import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../../regler/vilkar';
+import { konverterTilStegData, lagBegrunnelse, lagVilkaar, vilkaarType } from '../../../../regler/vilkar';
 
 import ListevelgerFlervalg from '../../../../komponenter/ui/listevelgerFlervalg';
 
@@ -28,15 +28,15 @@ class MultiVilkaar extends Component {
 
     if (value === vilkaarKode12) {
       oppdaterData(lagVilkaar(vilkaarKode12, true));
-      slettData('vilkaar', 'art16_1_avslag');
-      slettData('vilkaar', 'art16_1_anmodning');
+      slettData(vilkaarType, 'art16_1_avslag');
+      slettData(vilkaarType, 'art16_1_anmodning');
     } else if (value === this.VilkaarKode16) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
-      slettData('vilkaar', 'art16_1_avslag');
+      slettData(vilkaarType, 'art16_1_avslag');
       oppdaterData(lagVilkaar('art16_1_anmodning', true));
     } else if (value === this.AVSLAG) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
-      slettData('vilkaar', 'art16_1_anmodning');
+      slettData(vilkaarType, 'art16_1_anmodning');
       oppdaterData(lagVilkaar('art16_1_avslag', false));
     }
   };

@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react';
+import * as MKV from 'melosys-kodeverk';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
-import './vurderingArbeidsmonster.css';
-import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import * as KV from '../../../kodeverk';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
 import { BoolskAvklartfaktaType, VurderingVesentligAktivitetINorgeTyper } from '../../../kodeverk/koder';
+import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
+import { lagLovvalgsbestemmelse, lovvalgsbestemmelseType } from '../../../regler/lovvalgsbestemmelser';
+
+import './vurderingArbeidsmonster.css';
 
 /**
  * Enkeltsjekkboks for marginalt arbeid i et land.
@@ -130,18 +133,29 @@ MarginaltArbeid.defaultProps = {
  */
 const VurderingArbeidsmonster = props => {
   const {
-    bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettData, slettAllDataForSteg,
+    bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
   const {
     arbeidsmonster, marginaltArbeid, aktivitetINorge,
     aktivitetINorgeNodvendig, harAvklaring,
   } = tilstand;
 
-  useEffect(() => (
-    function cleanup() {
-      slettAllDataForSteg();
+
+  const oppdaterLovvalgsperiode = avklartAktivitetINorge => {
+    if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1A));
+    } else {
+      slettData(lovvalgsbestemmelseType);
     }
-  ), []);
+  };
+
+  useEffect(() => {
+    const avklartAktivitetINorge = hentFaktaVerdi(aktivitetINorge);
+    oppdaterLovvalgsperiode(avklartAktivitetINorge);
+    return function cleanup() {
+      slettData();
+    };
+  }, []);
 
   const skiftesvisSekvensieltValg = [
     { label: 'Skiftesvis eller med regelmessig veksling av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS },
@@ -185,6 +199,7 @@ const VurderingArbeidsmonster = props => {
           tittel="Vurdering av aktivitet i Norge"
           oppdaterData={oppdaterData}
           slettData={slettData}
+          onChange={oppdaterLovvalgsperiode}
         />
         }
         <div className="fane__knapplinje">
@@ -199,7 +214,6 @@ VurderingArbeidsmonster.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
   arbeidsland: PT.array.isRequired,
   tilstand: PT.shape({
     harAvklaring: PT.bool,
