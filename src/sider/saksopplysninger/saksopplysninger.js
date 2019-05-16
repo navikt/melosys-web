@@ -73,7 +73,7 @@ class Saksopplysninger extends Component {
     const {
       behandlingID,
       medlemskap,
-      inntekt,
+      inntekterPrAarMaaned,
       soknadArbeidsinntekt,
       soknadForm,
       soknad,
@@ -124,7 +124,7 @@ class Saksopplysninger extends Component {
         <VirksomhetNorge />
         <MaritimtArbeid />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-        {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
+        {inntekterPrAarMaaned.length && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
       </form>
     );
   }
@@ -138,7 +138,7 @@ Saksopplysninger.propTypes = {
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   handleSubmit: PT.func.isRequired,
-  inntekt: MPT.Inntekt,
+  inntekterPrAarMaaned: MPT.InntekterPrAarMaaned,
   match: PT.object.isRequired,
   medlemskap: MPT.Medlemskap,
   oppdaterSoknad: PT.func.isRequired,
@@ -161,7 +161,7 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   alleRelevantePersoner: [],
-  inntekt: {},
+  inntekterPrAarMaaned: [],
   medlemskap: {},
   person: {},
   soknad: {},
@@ -175,7 +175,7 @@ const mapStateToProps = state => ({
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
-  inntekt: behandlingerSelectors.InntektSoknadenSelector(state),
+  inntekterPrAarMaaned: behandlingerSelectors.InntekterPrAarMaanedSelector(state),
   bekreftelser: behandlingerSelectors.BekreftelserSelector(state),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),

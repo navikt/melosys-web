@@ -11,7 +11,7 @@ import { DokumentMetadataListe } from './dokumentMetadata';
 import { Fagsak } from './fagsak';
 import { FagsakSokListe } from './fagsakSokListe';
 import { GeneriskAdresse } from './adresser';
-import { Inntekt, InntektListe, InntektEnkeltLinje } from './inntekt';
+import { Inntekt, InntektListe, InntekterPrAarMaaned } from './inntekt';
 import { Journalforing, JournalforingSkjemaVerdier } from './journalforing';
 import { Kodeverk } from './kodeverk';
 import { Vurdering, Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger } from './vurdering';
@@ -53,7 +53,7 @@ export {
   Feilmeldinger,
   GeneriskAdresse,
   Inntekt,
-  InntektEnkeltLinje,
+  InntekterPrAarMaaned,
   InntektListe,
   Journalforing,
   JournalforingOppgave,
