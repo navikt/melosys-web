@@ -60,12 +60,10 @@ function Inntekt (props) {
 
 Inntekt.propTypes = {
   redigerbart: PT.bool.isRequired,
-  inntekt: MPT.Inntekt,
   soknadForm: MPT.SoknadForm,
 };
 
 Inntekt.defaultProps = {
-  inntekt: {},
   soknadForm: {},
 };
 

@@ -122,7 +122,6 @@ class Saksopplysninger extends Component {
 Saksopplysninger.propTypes = {
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
-  inntekt: MPT.Inntekt,
   medlemskap: MPT.Medlemskap,
   oppsummering: MPT.Oppsummering.isRequired,
   lovvalgsPeriode: PT.object.isRequired,
@@ -136,7 +135,6 @@ Saksopplysninger.propTypes = {
 };
 
 Saksopplysninger.defaultProps = {
-  inntekt: {},
   medlemskap: {},
   skjema: {},
   landkode: '',
@@ -149,7 +147,6 @@ Saksopplysninger.defaultProps = {
 const skjemaSelector = formValueSelector(KV.Form.REGISTRERING);
 const mapStateToProps = state => ({
   registreringSkjemaVerdier: formSelectors.RegistreringFormSelector(state).values,
-  inntekt: behandlingerSelectors.InntektSoknadenSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),

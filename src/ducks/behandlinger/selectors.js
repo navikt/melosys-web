@@ -5,7 +5,7 @@
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
 
-import { createSelector, createStructuredSelector } from 'reselect';
+import { createSelector } from 'reselect';
 import moment from 'moment/moment';
 import { datoDiff } from '../../utils/dato';
 import * as KV from '../../kodeverk';
@@ -25,30 +25,30 @@ export const RedigerbartSelector = createSelector(
   redigerbart => redigerbart
 );
 export const OppsummeringSelector = createSelector(
-  state => (state.behandlinger.data ? state.behandlinger.data.oppsummering : {}),
+  state => BehandlingerSelector(state).oppsummering || {},
   oppsummering => oppsummering
 );
 
 export const SaksopplysningerSelector = createSelector(
-  state => (state.behandlinger.data ? state.behandlinger.data.saksopplysninger : {}),
-  saksopplysninger => saksopplysninger || {}
+  state => BehandlingerSelector(state).saksopplysninger || {},
+  saksopplysninger => saksopplysninger
 );
 export const SakOgBehandlingSelector = createSelector(
-  state => (state.behandlinger.data.saksopplysninger ? state.behandlinger.data.saksopplysninger.sakOgBehandling : {}),
-  sakOgBehandling => sakOgBehandling || {}
+  state => SaksopplysningerSelector(state).sakOgBehandling || {},
+  sakOgBehandling => sakOgBehandling
 );
 export const PersonSelector = createSelector(
-  state => (state.behandlinger.data && state.behandlinger.data.saksopplysninger ? state.behandlinger.data.saksopplysninger.person : {}),
+  state => SaksopplysningerSelector(state).person || {},
   person => person
 );
 
 export const OrganisasjonerSelector = createSelector(
-  state => (state.behandlinger.data && state.behandlinger.data.saksopplysninger ? state.behandlinger.data.saksopplysninger.organisasjoner : []),
+  state => SaksopplysningerSelector(state).organisasjoner || [],
   organisasjoner => organisasjoner
 );
 
 export const ArbeidsforholdSelector = createSelector(
-  state => (state.behandlinger.data && state.behandlinger.data.saksopplysninger ? state.behandlinger.data.saksopplysninger.arbeidsforhold : []),
+  state => SaksopplysningerSelector(state).arbeidsforhold || [],
   arbeidsforhold => arbeidsforhold
 );
 
@@ -145,7 +145,13 @@ const filtrerOgSpreInntekt = (relevantPeriode, orgnr, inntekter) => {
 };
 
 export const InntektSelector = createSelector(
-  state => (state.behandlinger.data && state.behandlinger.data.saksopplysninger ? state.behandlinger.data.saksopplysninger.inntekt : {}),
+  state => SaksopplysningerSelector(state).inntekt || {},
+  inntekt => inntekt
+);
+
+// {inntekt:[{opplysningspliktigID: "973063804", beloep: 30000, aarMaaned: "2017-12"}]}
+export const InntekterPrAarMaanedSelector = createSelector(
+  state => SaksopplysningerSelector(state).inntekt || {},
   inntekt => {
     if (!inntekt) return [];
     const { arbeidsInntektMaanedListe } = inntekt;
@@ -156,14 +162,6 @@ export const InntektSelector = createSelector(
   }
 );
 
-export const SoknadenSelector = createSelector(
-  state => (state.behandlinger.data && state.behandlinger.data.saksopplysninger ? state.behandlinger.data.saksopplysninger.soknaden : {}),
-  soknaden => soknaden
-);
-export const InntektSoknadenSelector = createStructuredSelector({
-  inntekt: InntektSelector,
-  soknaden: SoknadenSelector,
-});
 export const BekreftelserSelector = createSelector(
   state => (state.behandlinger.data ? {} : {}),
   bekreftelser => bekreftelser
@@ -199,7 +197,7 @@ export const MedlemskapSelector = createSelector(
 export const ArbeidsforholdeneSelector = createSelector(
   state => (state.behandlinger.data ? state.behandlinger.data.saksopplysninger.arbeidsforhold : []),
   state => OrganisasjonerSelector(state),
-  state => InntektSelector(state),
+  state => InntekterPrAarMaanedSelector(state),
   (arbeidsforhold, organisasjoner, inntekt) => (arbeidsforhold.map(item => {
     if (!arbeidsforhold || !organisasjoner || !inntekt) return [];
     const arbeid = { ...item };
@@ -250,7 +248,7 @@ const byggNyArbeidsforholdGruppe = (arbeidsforholdet, organisasjoner, inntekter,
 export const ArbeidsgivereNorgeSelector = createSelector(
   state => OrganisasjonerSelector(state),
   state => ArbeidsforholdeneSelector(state),
-  state => InntektSelector(state),
+  state => InntekterPrAarMaanedSelector(state),
   state => soknadSelectors.SoknadsperiodeSelector(state),
   (organisasjoner, arbeidsforholdene, inntekter, oppholdsPeriode) => {
     // Inntekten skal vises 6 måneder forut for startdato. Dersom søknaden gjelder en periode
