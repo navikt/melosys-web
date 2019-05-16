@@ -15,10 +15,6 @@ import { konverterTilStegData, lagVilkaar } from '../../../regler/vilkar';
 class VurderingArtikkel11_4 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
    * med de 3 radiovalgene i grensesnittet er at disse ville representert en tri-state ("ja", "nei, men..." og "nei").
-   * Siden Redux Form ikke støtter at man setter flere verdier til forskjellige felter må vi bruke
-   * ikke-knyttede NAV-komponenter og håndtere Redux Form-oppdateringen manuelt via funksjonen 'settSkjemaVerdi'
-   * som vi får fra stegvelger-parenten.
-   *
    * Dette er årsaken til at denne komponenten avviker fra de andre og ikke benytter NAV-Skjema-komponentene direkte.
    */
   constructor() {
@@ -159,7 +155,6 @@ VurderingArtikkel11_4.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
-  settSkjemaVerdi: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
