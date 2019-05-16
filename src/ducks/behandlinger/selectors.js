@@ -17,11 +17,11 @@ export const BehandlingerSelector = createSelector(
   behandling => behandling
 );
 export const BehandlingIDSelector = createSelector(
-  state => (state.behandlinger.data ? state.behandlinger.data.behandlingID : -1),
+  state => BehandlingerSelector(state).behandlingID || -1,
   behandlingID => behandlingID
 );
 export const RedigerbartSelector = createSelector(
-  state => (state.behandlinger.data ? state.behandlinger.data.redigerbart : false),
+  state => BehandlingerSelector(state).redigerbart || false,
   redigerbart => redigerbart
 );
 export const OppsummeringSelector = createSelector(
@@ -195,7 +195,7 @@ export const MedlemskapSelector = createSelector(
  * i arbeidsforholdet dersom det finnes.
  */
 export const ArbeidsforholdeneSelector = createSelector(
-  state => (state.behandlinger.data ? state.behandlinger.data.saksopplysninger.arbeidsforhold : []),
+  state => ArbeidsforholdSelector(state),
   state => OrganisasjonerSelector(state),
   state => InntekterPrAarMaanedSelector(state),
   (arbeidsforhold, organisasjoner, inntekt) => (arbeidsforhold.map(item => {
