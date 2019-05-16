@@ -183,7 +183,7 @@ const hentLovvalgsBestemmelseForAvslag = state => {
   return MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1;
 };
 
-const byggLovvalgsPerioder = (valgtLovvalg, state) => {
+const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, state) => {
   if (!valgtLovvalg) {
     return byggAvslaattLovvalg(state, hentLovvalgsBestemmelseForAvslag(state));
   }
@@ -198,6 +198,25 @@ const byggLovvalgsPerioder = (valgtLovvalg, state) => {
       return [];
     }
   }
+};
+
+const byggLovvalgsPerioder = (lovvalgBestemmelse, state) => {
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+
+  return [{
+    fomDato: soknadPeriode.fom,
+    tomDato: soknadPeriode.tom,
+    lovvalgBestemmelse,
+    medlemskapsperiodeID: medlemskapsperiodeID || null,
+    tilleggBestemmelse: null,
+    unntakFraBestemmelse: null,
+    unntakFraLovvalgsland: null,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
+    lovvalgsland: null,
+    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
+    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
+  }];
 };
 
 export function hent(behandlingID) {
@@ -216,12 +235,15 @@ export function send(behandlingID, body) {
   });
 }
 
-export function oppdaterLovvalgsperioderState() {
+export function oppdaterLovvalgsperioderState(lovvalgsbestemmelse) {
   return (dispatch, getState) => {
     const alleLovvalgsvilkar = vilkarSelectors.valgteLovvalgsVilkar(getState());
-    if (alleLovvalgsvilkar.length > 0) {
+    if (lovvalgsbestemmelse) {
+      const lovvalgsPerioder = byggLovvalgsPerioder(lovvalgsbestemmelse, getState());
+      dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
+    } else if (alleLovvalgsvilkar.length > 0) {
       const valgtLovvalg = finnValgteVilkar(alleLovvalgsvilkar);
-      const lovvalgsPerioder = byggLovvalgsPerioder(valgtLovvalg, getState());
+      const lovvalgsPerioder = byggLovvalgsPerioderFraVilkaar(valgtLovvalg, getState());
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
     } else {
       dispatch(Actions.resetLovvalgsperioderState());

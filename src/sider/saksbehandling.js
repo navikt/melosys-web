@@ -168,9 +168,6 @@ class Saksbehandling extends Component {
   };
 
   lagreLovvalgsperioderHandler = async () => {
-    const { skjema, oppdaterLovvalgperioderState } = this.props;
-    await oppdaterLovvalgperioderState(skjema);
-
     const { sendLovvalgsperioder, lovvalgsperioder } = this.props;
     const bid = this.props.oppsummering.behandlingID;
     sendLovvalgsperioder(bid, lovvalgsperioder);
@@ -329,7 +326,6 @@ Saksbehandling.propTypes = {
   sendLovvalgsperioder: PT.func.isRequired,
   sendPerioder: PT.func.isRequired,
   oppdaterAvklarteFaktaState: PT.func.isRequired,
-  oppdaterLovvalgperioderState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
   skjema: PT.any,
 };
@@ -376,7 +372,6 @@ const mapDispatchToProps = dispatch => ({
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
-  oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   sendPerioder: (behandlingID, body) => dispatch(behandlingerOperations.sendPerioder(behandlingID, body)),
