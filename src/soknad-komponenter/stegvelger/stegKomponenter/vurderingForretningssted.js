@@ -4,12 +4,21 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
-import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../regler/avklartefakta';
+import {
+  hentFaktaVerdi,
+  lagAvklartfakta,
+  konverterTilStegData,
+  avklartefaktaType,
+} from '../../../regler/avklartefakta';
 import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
 
 import './vurderingForretningssted.css';
-import { konverterLovvalgsbestemmelseTilStegData, lagLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
+import {
+  finnLovvalgsbestemmelse,
+  konverterLovvalgsbestemmelseTilStegData,
+  lagLovvalgsbestemmelse,
+} from '../../../regler/lovvalgsbestemmelser';
 
 const Forretningsstedet = props => {
   const { forretningsstedet, avklartForretningsland, oppdaterData } = props;
@@ -94,7 +103,7 @@ const VurderingForretningssted = props => {
     omfattetINorge, omfattetILand, lovvalgsbestemmelse, harAvklaring,
   } = tilstand;
 
-  const lovvalgsvilkaar = [
+  const stegetsLovvalgsbestemmelser = [
     {
       kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1B1,
       label: '13.1 b i: en arbeidsgiver',
@@ -118,7 +127,7 @@ const VurderingForretningssted = props => {
   ];
 
   useEffect(() => {
-    const bestemmelseFunnet = lovvalgsvilkaar.some(lb => lb.kode === lovvalgsbestemmelse);
+    const bestemmelseFunnet = finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser);
     if (bestemmelseFunnet) {
       oppdaterData(konverterLovvalgsbestemmelseTilStegData(lovvalgsbestemmelse));
     }
@@ -132,10 +141,10 @@ const VurderingForretningssted = props => {
   }, []);
 
   const avklartfaktaEndret = e => {
-    if (e === 'TRUE') {
+    if (e === KV.Koder.BoolskAvklartfaktaType.SANN) {
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, MKV.Koder.landkoder.NO));
-    } else if (e === 'FALSE') {
-      slettData('avklartefakta', KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND);
+    } else if (e === KV.Koder.BoolskAvklartfaktaType.USANN) {
+      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND);
     } else {
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, e));
     }
@@ -145,18 +154,12 @@ const VurderingForretningssted = props => {
     oppdaterData(lagLovvalgsbestemmelse(e.target.value));
   };
 
-  const finnOppfyltVilkaarKode = () => (
-    lovvalgsvilkaar
-      .map(lb => lb.kode)
-      .find(kode => kode === lovvalgsbestemmelse)
-  );
-
   const avklartOmfattetINorge = hentFaktaVerdi(omfattetINorge);
   const avklartLand = hentFaktaVerdi(omfattetILand) || '';
 
   const avklartefaktaTyper = [
-    { label: 'Norge', type: 'TRUE' },
-    { label: 'Annet', type: 'FALSE' },
+    { label: 'Norge', type: KV.Koder.BoolskAvklartfaktaType.SANN },
+    { label: 'Annet', type: KV.Koder.BoolskAvklartfaktaType.USANN },
   ];
 
   return (
@@ -173,10 +176,10 @@ const VurderingForretningssted = props => {
           label="Velg Artikkel"
           onChange={lovvalgsbestemmelseEndret}
           disabled={!redigerbart}
-          value={finnOppfyltVilkaarKode()}
+          value={finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser)}
         >
           <option />
-          { lovvalgsvilkaar.map(({ kode, label }) =>
+          { stegetsLovvalgsbestemmelser.map(({ kode, label }) =>
             <option key={kode} value={kode} >{label}</option>)
           }
         </Nav.Select>

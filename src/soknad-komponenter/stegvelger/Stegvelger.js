@@ -22,10 +22,9 @@ import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
-import { AvklartefaktaStore, VilkaarStore } from './StegState/';
+import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore } from './StegState/';
 
 import './stegvelger.css';
-import LovvalgsbestemmelseStore from './StegState/LovvalgsbestemmelseStore';
 
 
 class Stegvelger extends Component {
@@ -71,14 +70,6 @@ class Stegvelger extends Component {
 
   visSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: true });
 
-  slettStegData = (stegID, type, felt) => {
-    const { stegStores } = this.state;
-    stegStores[type].slettStegData(stegID, felt);
-    this.setState(stegStores);
-
-    this.publiserStegdata();
-  };
-
   oppdaterStegData = (stegID, data) => {
     if (!data) return;
 
@@ -92,7 +83,18 @@ class Stegvelger extends Component {
     }
   };
 
-  slettAllDataForSteg = stegID => {
+  slettStegData = (stegID, type, felt) => {
+    if (Utils._isNil(type) && Utils._isNil(felt)) {
+      this.slettSteg(stegID);
+    } else {
+      const { stegStores } = this.state;
+      stegStores[type].slettStegData(stegID, felt);
+      this.setState(stegStores);
+      this.publiserStegdata();
+    }
+  };
+
+  slettSteg = stegID => {
     const { stegStores } = this.state;
     Object.keys(stegStores).forEach(type => stegStores[type].slettSteg(stegID));
     this.setState(stegStores);
@@ -165,7 +167,7 @@ class Stegvelger extends Component {
       oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,
-      slettAllDataForSteg: this.slettAllDataForSteg,
+      slettAllDataForSteg: this.slettSteg,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
       lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
       vedtaEndretPeriode: this.vedtaEndretPeriode,
