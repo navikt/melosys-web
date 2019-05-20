@@ -5,10 +5,10 @@ import * as adresse from './adresse';
 import * as dato from './dato';
 import * as streng from './streng';
 import * as logger from './logger';
-import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt } from './utils';
+import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik } from './utils';
 
 export {
-  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt,
+  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik,
   adresse,
   dato, streng,
   logger,

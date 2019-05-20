@@ -81,9 +81,9 @@ class Stegvelger extends Component {
 
   visSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: true });
 
-  slettStegData = (stegID, type, felt) => {
+  slettStegData = (stegID, type, felt, filtere ) => {
     const { stegStores } = this.state;
-    stegStores[type].slettStegData(stegID, felt);
+    stegStores[type].slettStegData(stegID, felt, filtere);
     this.setState(stegStores);
 
     this.publiserStegdataTilRedux();

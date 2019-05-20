@@ -57,6 +57,7 @@ class SokkelSkip extends Steg {
       slettAllDataForSteg: () => this._propsLight.tilgjengeligeHandlers.slettAllDataForSteg(this.id),
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
       slettData: (type, felt) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, type, felt),
+      slettDataMedFiltere: (type, felt, filtere) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, type, felt, filtere),
     };
     this.status = FANE_STATUS.OK;
   }

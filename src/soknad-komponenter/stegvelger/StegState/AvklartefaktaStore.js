@@ -4,6 +4,27 @@ import * as Utils from '../../../utils';
 class Avklartfakta extends StegState {
   lagKey = data => (data.referanse + (data.subjektID || ''));
 
+  slettStegData = (stegID, felt, filtere) => {
+    const { stegStore } = this;
+
+    if (stegStore.has(stegID)) {
+      const steg = stegStore.get(stegID);
+      if (filtere) {
+        Object.keys(filtere).forEach(filter => {
+          const filterValue = filtere[filter];
+          const keyToDelete = `${felt}${filterValue}`;
+          const stegFelt = steg[felt].get(keyToDelete);
+          if (stegFelt[filter] === filterValue) {
+            steg[felt].delete(keyToDelete);
+          }
+        });
+      } else {
+        delete steg[felt];
+      }
+      stegStore.set(stegID, steg);
+    }
+  };
+
   oppdaterfelt = (eksisterendeAvklarteSubjekter, nyData) => {
     const key = this.lagKey(nyData);
     if (!eksisterendeAvklarteSubjekter.has(key)) {

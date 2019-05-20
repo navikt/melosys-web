@@ -17,14 +17,16 @@ import '../skjema.css';
 function InnerInputComponent({
   input, label, feltNavn, hentFeltFeil, ...rest
 }) {
-  let feil = (rest.meta.error && rest.meta.touched && !rest.meta.active) ? { feilmelding: rest.meta.error } : undefined;
+  const { meta: { error, touched, active } } = rest;
+
+  let feil = (error && touched && !active) ? { feilmelding: rest.meta.error } : undefined;
 
   /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
   if (!feil) {
     const feltFeil = hentFeltFeil(feltNavn);
     const feltFeilmelding = feltFeil ? feltFeil.melding : null;
 
-    if (feltFeilmelding) feil = { feilmelding: feltFeilmelding };
+    if (feltFeilmelding && touched && !active) feil = { feilmelding: feltFeilmelding };
   }
 
   const inputProps = { ...input, ...rest };

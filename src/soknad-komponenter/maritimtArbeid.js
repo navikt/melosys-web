@@ -42,7 +42,7 @@ const MaritimtEnkelt = ({
     <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input feltNavn={`${navn}navn`} label="Navn på enhet:" disabled={!redigerbart} />
+          <Skjema.Input feltNavn={`${navn}.navn`} label="Navn på enhet:" disabled={!redigerbart} />
         </Nav.Column>
         <Nav.Column xs="6">
           <LandVelger bredde="fullbredde" feltNavn={`${navn}flaggLandkode`} label="Flaggland:" disabled={!redigerbart} />
