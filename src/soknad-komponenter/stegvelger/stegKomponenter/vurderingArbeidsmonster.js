@@ -1,13 +1,17 @@
 import React, { useEffect } from 'react';
+import * as MKV from 'melosys-kodeverk';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
-import './vurderingArbeidsmonster.css';
-import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import * as KV from '../../../kodeverk';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
+import { BoolskAvklartfaktaType, VurderingVesentligAktivitetINorgeTyper } from '../../../kodeverk/koder';
+import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
+import { lagLovvalgsbestemmelse, lovvalgsbestemmelseType } from '../../../regler/lovvalgsbestemmelser';
+
+import './vurderingArbeidsmonster.css';
 
 /**
  * Enkeltsjekkboks for marginalt arbeid i et land.
@@ -28,7 +32,7 @@ const LandLinje = props => {
   const erMarginaltArbeidIArbeidsland = avklartMarginaltArbeidILand && avklartMarginaltArbeidILand.fakta.includes('TRUE');
 
   const klikkHandler = () => {
-    const verdi = erMarginaltArbeidIArbeidsland ? 'FALSE' : 'TRUE';
+    const verdi = erMarginaltArbeidIArbeidsland ? BoolskAvklartfaktaType.USANN : BoolskAvklartfaktaType.SANN;
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, landKode.kode, verdi));
   };
 
@@ -38,7 +42,7 @@ const LandLinje = props => {
       <Nav.Checkbox
         disabled={!redigerbart}
         checked={erMarginaltArbeidIArbeidsland === true}
-        value="TRUE"
+        value={BoolskAvklartfaktaType.SANN}
         onChange={klikkHandler}
         label="ja"
       />
@@ -60,94 +64,144 @@ LandLinje.defaultProps = {
 /**
  * @param props Objekt Diverse props Se prop types
  */
-const LandListe = props => {
+const MarginaltArbeid = props => {
   const {
-    arbeidsland, redigerbart, marginaltArbeid, oppdaterData,
+    arbeidsland, redigerbart, marginaltArbeid, landMedVesentligArbeid, erNorgeValgt, oppdaterData,
   } = props;
 
-  const ingenArbeidslandVarsel = arbeidsland.length === 0 && (
-    <Nav.AlertStripe type="advarsel">Finner ingen arbeidsland.</Nav.AlertStripe>
+
+  const kombinasjonsbeskrivelse = erNorgeValgt ? 'kun Norge' : 'et land, ikke Norge (Fortsetter med Art.12)';
+  const valgtKombinasjonInformasjon = landMedVesentligArbeid.length === 1 &&
+    (
+      <Nav.AlertStripeInfo>
+        Valgt kombinasjon er { kombinasjonsbeskrivelse }
+      </Nav.AlertStripeInfo>
+    );
+
+  const ingenArbeidslandVarsel = landMedVesentligArbeid.length === 0 && (
+    <Nav.AlertStripe type="advarsel">Finner ingen arbeidsland, eller ingen land med vesentlig virksomhet.</Nav.AlertStripe>
   );
 
   return (
     <Nav.Fieldset legend="Er det marginalt arbeid i noen av landene?">
-      <div className="landliste_innhold">
-        <div className="land__enkeltlinje">
-          <Nav.UndertekstBold>Land</Nav.UndertekstBold>
-          <Nav.UndertekstBold>Marginalt arbeid? <br /> {'(<5%)'}</Nav.UndertekstBold>
-        </div>
-        {arbeidsland.map(arbeidslandet => {
-          const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidslandet.kode);
+      <div className="marginaltArbeid">
+        <div className="landliste_innhold">
+          <div className="land__enkeltlinje">
+            <Nav.UndertekstBold>Land</Nav.UndertekstBold>
+            <Nav.UndertekstBold>Marginalt arbeid? <br /> {'(<5%)'}</Nav.UndertekstBold>
+          </div>
+          {arbeidsland.map(arbeidslandet => {
+            const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidslandet.kode);
 
-          const key = `marginaltArbeidslandListe${arbeidslandet.kode}`;
-          return <LandLinje
-            landKode={arbeidslandet}
-            avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
-            key={key}
-            oppdaterData={oppdaterData}
-            redigerbart={redigerbart}
-          />;
-        })
-        }
+            const key = `marginaltArbeidslandListe${arbeidslandet.kode}`;
+            return <LandLinje
+              landKode={arbeidslandet}
+              avklartMarginaltArbeidILand={avklartMarginaltArbeidILand}
+              key={key}
+              oppdaterData={oppdaterData}
+              redigerbart={redigerbart}
+            />;
+          })
+          }
+        </div>
         {ingenArbeidslandVarsel}
+        {valgtKombinasjonInformasjon}
       </div>
     </Nav.Fieldset>
   );
 };
 
-LandListe.propTypes = {
+MarginaltArbeid.propTypes = {
   arbeidsland: PT.array,
   marginaltArbeid: PT.array,
+  landMedVesentligArbeid: PT.array.isRequired,
+  erNorgeValgt: PT.bool.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
 };
 
-LandListe.defaultProps = {
+MarginaltArbeid.defaultProps = {
   arbeidsland: [],
   marginaltArbeid: [],
 };
 
 /**
- * Dette er hovedkomponenten for fanen "Arbeidsmønster". Denne trekker inn LandListe som er utlistingen av sjekkbokser og håndtereren
+ * Dette er hovedkomponenten for fanen "Arbeidsmønster". Denne trekker inn MarginaltArbeid som er utlistingen av sjekkbokser og håndtereren
  * av event handlers hvor bruker velger marginalt arbeid i land.
  *
  * @param props
  */
 const VurderingArbeidsmonster = props => {
   const {
-    bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+    bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
-  const { harAvklaring, marginaltArbeid, aktivitetINorge } = tilstand;
+  const {
+    arbeidsmonster, marginaltArbeid, aktivitetINorge,
+    aktivitetINorgeNodvendig, harAvklaring,
+  } = tilstand;
 
-  useEffect(() => (
-    function cleanup() {
-      slettAllDataForSteg();
+
+  const oppdaterLovvalgsperiode = avklartAktivitetINorge => {
+    if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1A));
+    } else {
+      slettData(lovvalgsbestemmelseType);
     }
-  ), []);
+  };
 
-  const avklartefaktaTyper = [
-    { label: '25% eller mer', type: 'TRUE' },
-    { label: 'Mindre enn 25%', type: 'FALSE' },
+  useEffect(() => {
+    const avklartAktivitetINorge = hentFaktaVerdi(aktivitetINorge);
+    oppdaterLovvalgsperiode(avklartAktivitetINorge);
+    return function cleanup() {
+      slettData();
+    };
+  }, []);
+
+  const skiftesvisSekvensieltValg = [
+    { label: 'Skiftesvis eller med regelmessig veksling av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS },
+    { label: 'Sekvensielt, uten regelmessig skifte av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SEKVENSIELT },
   ];
+
+  const vesentligAktivitetINorgeValg = [
+    { label: '25% eller mer', type: VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT },
+    { label: 'Mindre enn 25%', type: VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT },
+  ];
+
+  const visMarginaltArbeid = hentFaktaVerdi(arbeidsmonster) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS;
 
   return (
     <div className="vurderingArbeidsmonster">
       <Nav.Undertittel>Vurdering av arbeidsmønster</Nav.Undertittel>
       <div className="arbeidsmonster">
-        <LandListe
+        <EnkeltAvklartfakta
+          redigerbart={redigerbart}
+          avklartfakta={arbeidsmonster}
+          avklartfaktaKode={KV.Koder.avklartefaktaKoder.ARBEIDSMONSTER}
+          avklartefaktaTyper={skiftesvisSekvensieltValg}
+          tittel="Hvordan utføres arbeidet?"
+          oppdaterData={oppdaterData}
+        />
+        { visMarginaltArbeid &&
+        <MarginaltArbeid
           redigerbart={redigerbart}
           marginaltArbeid={marginaltArbeid}
           arbeidsland={arbeidsland}
           oppdaterData={oppdaterData}
+          {...tilstand}
         />
+        }
+        { visMarginaltArbeid && aktivitetINorgeNodvendig &&
         <EnkeltAvklartfakta
           redigerbart={redigerbart}
           avklartfakta={aktivitetINorge}
           avklartfaktaKode={KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE}
-          avklartefaktaTyper={avklartefaktaTyper}
+          avklartefaktaTyper={vesentligAktivitetINorgeValg}
           tittel="Vurdering av aktivitet i Norge"
           oppdaterData={oppdaterData}
+          slettData={slettData}
+          onChange={oppdaterLovvalgsperiode}
         />
+        }
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
@@ -159,7 +213,7 @@ const VurderingArbeidsmonster = props => {
 VurderingArbeidsmonster.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
+  slettData: PT.func.isRequired,
   arbeidsland: PT.array.isRequired,
   tilstand: PT.shape({
     harAvklaring: PT.bool,

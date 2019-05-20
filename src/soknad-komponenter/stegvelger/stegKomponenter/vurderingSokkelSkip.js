@@ -8,7 +8,7 @@ import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 
-import { lagVilkaar } from '../../../regler/vilkar';
+import { lagVilkaar, vilkaarType } from '../../../regler/vilkar';
 import {
   hentFaktaVerdi,
   konverterTilStegData,
@@ -249,7 +249,7 @@ class VurderingSokkelSkip extends React.Component {
     if (value === KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK) {
       oppdaterData(lagVilkaar('art11_3A', true));
     } else {
-      slettData('vilkaar', 'art11_3A');
+      slettData(vilkaarType, 'art11_3A');
     }
   };
 
