@@ -83,12 +83,12 @@ class Stegvelger extends Component {
     }
   };
 
-  slettStegData = (stegID, type, felt) => {
+  slettStegData = (stegID, type, felt, filtere) => {
     if (Utils._isNil(type) && Utils._isNil(felt)) {
       this.slettSteg(stegID);
     } else {
       const { stegStores } = this.state;
-      stegStores[type].slettStegData(stegID, felt);
+      stegStores[type].slettStegData(stegID, felt, filtere);
       this.setState(stegStores);
       this.publiserStegdata();
     }

@@ -5,24 +5,40 @@ class Avklartfakta extends StegState {
   lagKey = data => (data.referanse + (data.subjektID || ''));
 
   slettStegData = (stegID, felt, filtere) => {
+    if (this.stegStore.has(stegID)) {
+      if (Utils._isNil(felt)) {
+        this.slettSteg(stegID);
+      } else {
+        this.slettFelt(stegID, felt, filtere);
+      }
+    }
+  };
+
+  slettFelt = (stegID, felt, filtere) => {
     const { stegStore } = this;
 
     if (stegStore.has(stegID)) {
       const steg = stegStore.get(stegID);
       if (filtere) {
-        Object.keys(filtere).forEach(filter => {
-          const filterValue = filtere[filter];
-          const keyToDelete = `${felt}${filterValue}`;
-          const stegFelt = steg[felt].get(keyToDelete);
-          if (stegFelt[filter] === filterValue) {
-            steg[felt].delete(keyToDelete);
-          }
-        });
+        this.slettFeltMedFilter(steg, felt, filtere);
       } else {
         delete steg[felt];
       }
       stegStore.set(stegID, steg);
     }
+  };
+
+  slettFeltMedFilter = (steg, felt, filtere) => {
+    Object.keys(filtere).forEach(filter => {
+      const filterValue = filtere[filter];
+      const keyToDelete = `${felt}${filterValue}`;
+
+      const stegFelt = steg[felt].has(keyToDelete) ? steg[felt].get(keyToDelete) : null;
+
+      if (stegFelt && stegFelt[filter] === filterValue) {
+        steg[felt].delete(keyToDelete);
+      }
+    });
   };
 
   oppdaterfelt = (eksisterendeAvklarteSubjekter, nyData) => {
