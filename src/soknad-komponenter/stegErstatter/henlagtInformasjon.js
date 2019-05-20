@@ -2,13 +2,16 @@ import React from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes';
+import * as MKV from 'melosys-kodeverk';
+import * as KV from '../../kodeverk';
 
 import './henlagtInformasjon.css';
 
-const HenlagtInformasjon = ({ begrunnelse, fritekst }) => {
-  const begrunnelseBeskrivelse = begrunnelse ? begrunnelse.term : 'Ukjent grunn';
-  const henlagtTekst = (fritekst && fritekst.length > 1) ? fritekst : begrunnelseBeskrivelse;
+const HenlagtInformasjon = ({ begrunnelser, begrunnelseFritekst }) => {
+  const begrunnelseBeskrivelse = !begrunnelser || begrunnelser.length === 0 ? 'Ukjent grunn'
+    : KV.kodeTilTerm(begrunnelser[0], MKV.KTObjects.henleggelsesgrunner);
+  const henlagtTekst = (begrunnelseFritekst && begrunnelseFritekst.length > 1) ? begrunnelseFritekst : begrunnelseBeskrivelse;
+
 
   return (
     <section aria-label="henlagtStatus" className="henlagtStatus panelSeksjon stegErstatter">
@@ -23,12 +26,13 @@ const HenlagtInformasjon = ({ begrunnelse, fritekst }) => {
 };
 
 HenlagtInformasjon.propTypes = {
-  begrunnelse: MPT.Kodeverk.isRequired,
-  fritekst: PT.string,
+  begrunnelser:  PT.array.isRequired,
+  begrunnelseFritekst: PT.string,
 };
 
 HenlagtInformasjon.defaultProps = {
-  fritekst: '',
+  begrunnelser: [],
+  begrunnelseFritekst: ''
 };
 
 export default HenlagtInformasjon;
