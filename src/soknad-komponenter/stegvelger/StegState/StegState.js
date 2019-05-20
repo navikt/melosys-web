@@ -6,17 +6,24 @@ class StegState {
   }
 
   slettStegData = (stegID, felt) => {
-    const { stegStore } = this;
-
-    if (stegStore.has(stegID)) {
-      const steg = stegStore.get(stegID);
+    if (this.stegStore.has(stegID)) {
       if (Utils._isNil(felt)) {
-        stegStore.delete(stegID);
+        this.slettSteg(stegID);
       } else {
-        delete steg[felt];
-        stegStore.set(stegID, steg);
+        this.slettFelt(stegID, felt);
       }
     }
+  };
+
+  slettFelt = (stegID, felt) => {
+    const { stegStore } = this;
+    const steg = stegStore.get(stegID);
+    delete steg[felt];
+    stegStore.set(stegID, steg);
+  };
+
+  slettSteg = stegID => {
+    this.stegStore.delete(stegID);
   };
 
   oppdaterStegData = (stegID, { felt, innhold }) => {
@@ -48,11 +55,6 @@ class StegState {
   };
 
   nyttFelt = () => ({});
-
-  slettSteg = stegID => {
-    const { stegStore } = this;
-    stegStore.delete(stegID);
-  };
 }
 
 export default StegState;
