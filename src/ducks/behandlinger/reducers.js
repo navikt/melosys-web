@@ -4,16 +4,22 @@
  * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
  * action types som sendes inn sammen med dataene.
  */
-
+import * as Utils from '../../utils';
 import { STATUS } from '../../services/utils';
 import * as Types from './types';
 
-const initalState = {
+const initialState = {
   status: STATUS.NOT_STARTED,
   data: {},
 };
+const OppdaterBehandlingsStatus = (state, action) => {
+  console.log(state.data);
+  const nydata = Utils._cloneDeep(state.data);
+  Utils._assign(nydata.oppsummering.behandlingsstatus, action.data);
+  return nydata;
+};
 
-export default function reducer(state = initalState, action) {
+export default function reducer(state = initialState, action) {
   switch (action.type) {
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
@@ -22,10 +28,10 @@ export default function reducer(state = initalState, action) {
     case Types.OK: {
       return { ...state, status: STATUS.OK, data: action.data };
     }
-    case Types.OPPDATER_BEHANDLINGER: {
-      const { tidligeremedlemskap: tidligere_medlemsperiode_ids } = action.data;
-      return { ...state, data: { tidligere_medlemsperiode_ids } };
-    }
+    case Types.RESET:
+      return initialState;
+    case Types.BEHANDLINGSSTATUS_UPDATE:
+      return { ...state, status: STATUS.OK, data: OppdaterBehandlingsStatus(state, action) };
     default:
       return state;
   }

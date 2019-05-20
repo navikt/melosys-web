@@ -13,20 +13,19 @@ import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
-import { fagsakSelectors } from '../../ducks/fagsaker/';
+import { behandlingerSelectors } from '../../ducks/behandlinger/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta/';
-import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
+import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../ducks/behandlingsperioder';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder/';
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore } from './StegState/';
-
-import './stegvelger.css';
 import LovvalgsbestemmelseStore from './StegState/LovvalgsbestemmelseStore';
 
+import './stegvelger.css';
 
 class Stegvelger extends Component {
   state = {
@@ -44,13 +43,13 @@ class Stegvelger extends Component {
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
 
-    const bid = this.props.oppsummering.behandlingID;
+    const { behandlingID } = this.props;
 
     await Promise.all([
-      this.props.hentPerioder(bid),
-      this.props.hentVilkar(bid),
-      this.props.hentAvklartefakta(bid),
-      this.props.hentLovvalgsperioder(bid),
+      this.props.hentMedlemsPerioder(behandlingID),
+      this.props.hentVilkar(behandlingID),
+      this.props.hentAvklartefakta(behandlingID),
+      this.props.hentLovvalgsperioder(behandlingID),
     ]);
 
     this.oppdaterAktuelleSteg();
@@ -113,11 +112,10 @@ class Stegvelger extends Component {
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { fatteVedtak } = this.props;
+    const { behandlingID, fatteVedtak } = this.props;
     const vedtakBody = { behandlingsresultattype };
     try {
-      await fatteVedtak(bid, vedtakBody);
+      await fatteVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
@@ -135,15 +133,14 @@ class Stegvelger extends Component {
   };
 
   endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
-    const bid = this.props.oppsummering.behandlingID;
-    const { lovvalgsperioder } = this.props;
+    const { behandlingID, lovvalgsperioder } = this.props;
 
     const forkortetPeriode = lovvalgsperioder.map(periode => ({ ...periode, fomDato: fomdato, tomDato: tomdato }));
-    API.Lovvalgsperioder.send(bid, forkortetPeriode).catch(e => Utils.logger.error(e));
+    API.Lovvalgsperioder.send(behandlingID, forkortetPeriode).catch(e => Utils.logger.error(e));
   };
 
   vedtaEndretPeriode = begrunnelseKode => {
-    const { oppsummering: { behandlingID } } = this.props;
+    const { behandlingID } = this.props;
 
     API.Vedtak.endrePeriode(behandlingID, { begrunnelseKode }).catch(e => Utils.logger.error(e));
   };
@@ -176,6 +173,7 @@ class Stegvelger extends Component {
     const { props } = this;
 
     const propsLight = {
+      behandlingID: props.behandlingID,
       virksomheterIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
       begrunnelser: MKV.KTObjects.begrunnelser,
@@ -222,7 +220,7 @@ class Stegvelger extends Component {
   tilSteg = async nyttStegNummer => {
     const {
       skjema,
-      oppdaterBehandlingerState,
+      oppdaterPerioderState,
       oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
     } = this.props;
@@ -237,7 +235,7 @@ class Stegvelger extends Component {
       lagreLovvalgsperioderHandler,
     } = this.props;
 
-    await oppdaterBehandlingerState(skjema);
+    await oppdaterPerioderState(skjema);
 
     await lagreAvklartefaktaHandler();
     await lagreVilkarHandler();
@@ -284,9 +282,10 @@ class Stegvelger extends Component {
 }
 
 Stegvelger.propTypes = {
+  behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
-  avklartefakta: PT.array,
-  behandlinger: PT.object.isRequired,
+  avklartefakta: MPT.Avklartefakta,
+  behandlingsPerioder: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
@@ -297,7 +296,7 @@ Stegvelger.propTypes = {
   lovvalgsperioder: PT.array.isRequired,
   inngang: PT.object,
   match: PT.object.isRequired,
-  oppdaterBehandlingerState: PT.func.isRequired,
+  oppdaterPerioderState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
@@ -313,7 +312,7 @@ Stegvelger.propTypes = {
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
-  hentPerioder: PT.func.isRequired,
+  hentMedlemsPerioder: PT.func.isRequired,
   soknadFeilmeldinger: PT.object.isRequired,
 };
 
@@ -321,7 +320,7 @@ Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
   inngang: {},
-  oppsummering: [],
+  oppsummering: {},
   valgteVirksomheter: [],
 };
 
@@ -330,15 +329,15 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  behandlinger: behandlingerSelectors.behandlingerSelector(state),
+  behandlingsPerioder: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   inngang: inngangSelectors.InngangSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
-  saksopplysninger: fagsakSelectors.SaksopplysningerSelector(state),
+  saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
 });
 
@@ -349,12 +348,12 @@ const mapDispatchToProps = dispatch => ({
   fatteVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
+  oppdaterPerioderState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
   oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
   oppdaterLovvalgperioder: lovvalgsperiode => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lovvalgsperiode)),
-  hentPerioder: behandlingID => dispatch(behandlingerOperations.hentPerioder(behandlingID)),
+  hentMedlemsPerioder: behandlingID => dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
