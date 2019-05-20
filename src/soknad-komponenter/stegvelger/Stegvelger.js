@@ -220,7 +220,7 @@ class Stegvelger extends Component {
   tilSteg = async nyttStegNummer => {
     const {
       skjema,
-      oppdaterBehandlingerState,
+      oppdaterBehandlingsStatus,
       oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
     } = this.props;
@@ -235,7 +235,7 @@ class Stegvelger extends Component {
       lagreLovvalgsperioderHandler,
     } = this.props;
 
-    await oppdaterBehandlingerState(skjema);
+    await oppdaterBehandlingsStatus(skjema);
 
     await lagreAvklartefaktaHandler();
     await lagreVilkarHandler();
@@ -296,7 +296,7 @@ Stegvelger.propTypes = {
   lovvalgsperioder: PT.array.isRequired,
   inngang: PT.object,
   match: PT.object.isRequired,
-  oppdaterBehandlingerState: PT.func.isRequired,
+  oppdaterBehandlingsStatus: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
@@ -348,7 +348,7 @@ const mapDispatchToProps = dispatch => ({
   fatteVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  oppdaterBehandlingerState: skjema => dispatch(behandlingerOperations.oppdaterPerioderState(skjema)),
+  oppdaterBehandlingsStatus: skjema => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(skjema)),
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
   oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
