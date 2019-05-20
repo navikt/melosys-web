@@ -11,4 +11,3 @@ export const PENDING = 'fagsaker/PENDING';
 
 export const RESET = 'fagsaker/RESET';
 
-export const BEHANDLINGSSTATUS_UPDATE = 'fagsaker/BEHANDLINGSSTATUS_UPDATE';

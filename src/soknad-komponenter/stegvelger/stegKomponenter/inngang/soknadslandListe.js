@@ -167,7 +167,7 @@ SoknadslandListe.propTypes = {
   soknadslandFraSoknad: PT.arrayOf(PT.string).isRequired,
   erstattSoknadsland: PT.func.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  avklartefakta: PT.array.isRequired,
+  avklartefakta: MPT.Avklartefakta.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   avklarteSoknadsland: PT.array.isRequired,

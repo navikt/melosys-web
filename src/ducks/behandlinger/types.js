@@ -1,6 +1,6 @@
-export const OK = 'Behandlinger/OK';
-export const FEILET = 'Behandlinger/FEILET';
-export const PENDING = 'Behandlinger/PENDING';
+export const OK = 'behandlinger/OK';
+export const FEILET = 'behandlinger/FEILET';
+export const PENDING = 'behandlinger/PENDING';
 
-export const OPPDATER_BEHANDLINGER = 'Behandlinger/OPPDATER_BEHANDLINGER';
-export const RESET = 'Behandlinger/RESET';
+export const RESET = 'behandlinger/RESET';
+export const BEHANDLINGSSTATUS_UPDATE = 'behandlinger/BEHANDLINGSSTATUS_UPDATE';

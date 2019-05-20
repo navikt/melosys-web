@@ -1,20 +1,17 @@
+import * as Types from './types';
+
 /**
  * Actions
  * -----------------------------------------------------------------------
  * Dette er action creators som returnerer Redux-klargjorte actions
  * uten support for asynkrone kall.
  */
-import * as Types from './types';
-
-export function oppdaterPerioderState(status) {
-  return ({
-    type: Types.OPPDATER_BEHANDLINGER,
+export const oppdaterBehandlingsStatus = status => (
+  {
+    type: Types.BEHANDLINGSSTATUS_UPDATE,
     data: status,
-  });
-}
-
-
-export function resetPerioderState() {
+  }
+);
+export function resetBenadlingerState() {
   return { type: Types.RESET };
 }
-
