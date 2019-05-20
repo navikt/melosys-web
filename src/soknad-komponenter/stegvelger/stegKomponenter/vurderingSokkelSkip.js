@@ -208,8 +208,7 @@ class VurderingSokkelSkip extends React.Component {
   }
 
   componentWillUnmount() {
-    const { slettAllDataForSteg } = this.props;
-    slettAllDataForSteg();
+    this.props.slettData();
   }
 
   avklartefaktaEndret = (type, subjektID, verdi) => {
@@ -314,7 +313,6 @@ VurderingSokkelSkip.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingSokkelSkip.defaultProps = {
