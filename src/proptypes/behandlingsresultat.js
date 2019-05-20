@@ -2,8 +2,8 @@
 import PT from 'prop-types';
 
 const BehandlingsresultatPropType = PT.shape({
-  henleggelsesFritekst: PT.string,
-  henleggelsesgrunner: PT.string,
+  begrunnelseKoder: PT.arrayOf(PT.string),
+  begrunnelseFritekst: PT.string,
 });
 
 export { BehandlingsresultatPropType as Behandlingsresultat };
