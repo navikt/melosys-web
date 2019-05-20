@@ -13,11 +13,12 @@ const initialState = {
   data: {},
 };
 const OppdaterBehandlingsStatus = (state, action) => {
-
+  console.log(state.data);
   const nydata = Utils._cloneDeep(state.data);
-  Utils._assign(nydata.behandlingOversikter.behandlingsstatus, action.data);
+  Utils._assign(nydata.oppsummering.behandlingsstatus, action.data);
   return nydata;
 };
+
 export default function reducer(state = initialState, action) {
   switch (action.type) {
     case Types.PENDING:

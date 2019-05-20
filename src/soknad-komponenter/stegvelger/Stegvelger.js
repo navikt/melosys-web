@@ -13,7 +13,7 @@ import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
-import { behandlingerSelectors, behandlingerOperations } from '../../ducks/behandlinger/';
+import { behandlingerSelectors } from '../../ducks/behandlinger/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta/';
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../ducks/behandlingsperioder';
@@ -220,7 +220,7 @@ class Stegvelger extends Component {
   tilSteg = async nyttStegNummer => {
     const {
       skjema,
-      oppdaterBehandlingsStatus,
+      oppdaterPerioderState,
       oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
     } = this.props;
@@ -235,7 +235,7 @@ class Stegvelger extends Component {
       lagreLovvalgsperioderHandler,
     } = this.props;
 
-    await oppdaterBehandlingsStatus(skjema);
+    await oppdaterPerioderState(skjema);
 
     await lagreAvklartefaktaHandler();
     await lagreVilkarHandler();
@@ -296,7 +296,7 @@ Stegvelger.propTypes = {
   lovvalgsperioder: PT.array.isRequired,
   inngang: PT.object,
   match: PT.object.isRequired,
-  oppdaterBehandlingsStatus: PT.func.isRequired,
+  oppdaterPerioderState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Oppsummering,
   saksopplysninger: PT.object.isRequired,
@@ -348,7 +348,7 @@ const mapDispatchToProps = dispatch => ({
   fatteVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  oppdaterBehandlingsStatus: skjema => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(skjema)),
+  oppdaterPerioderState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
   oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
