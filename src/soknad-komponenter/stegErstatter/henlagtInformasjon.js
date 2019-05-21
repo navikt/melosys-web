@@ -7,19 +7,19 @@ import * as Nav from '../../utils/navFrontend';
 
 import './henlagtInformasjon.css';
 
-function begrunnelseBeskrivelse(begrunnelser) {
-  if (!begrunnelser || begrunnelser.length === 0) {
+function begrunnelseBeskrivelse(begrunnelseKoder) {
+  if (!begrunnelseKoder || begrunnelseKoder.length === 0) {
     return 'Ukjent grunn';
   }
-  return KV.kodeTilTerm(begrunnelser[0], MKV.KTObjects.henleggelsesgrunner);
+  return KV.kodeTilTerm(begrunnelseKoder[0], MKV.KTObjects.henleggelsesgrunner);
 }
 
 function henlagtTekstEllerBeskrivelse(behandlingsresultat) {
-  const { begrunnelser, begrunnelseFritekst } = behandlingsresultat;
+  const { begrunnelseKoder, begrunnelseFritekst } = behandlingsresultat;
   if (begrunnelseFritekst && begrunnelseFritekst.length > 1) {
     return begrunnelseFritekst;
   }
-  return begrunnelseBeskrivelse(begrunnelser);
+  return begrunnelseBeskrivelse(begrunnelseKoder);
 }
 
 const HenlagtInformasjon = ({ behandlingsresultat }) => {
