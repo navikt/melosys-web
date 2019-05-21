@@ -8,7 +8,6 @@ import * as API from '../../services/api';
 import { formatterDatoTilNorsk } from '../../utils/dato';
 import * as Ikoner from '../../resources/images/index';
 import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
-
 import './sideDialogDokumenter.css';
 
 const uuid = require('uuid/v4');
@@ -121,15 +120,15 @@ class SideDialogDokumenter extends Component {
   state = { oversiktDokumenter: [] };
 
   async componentDidMount() {
-    const { oppsummering: { saksnummer } } = this.props;
+    const { fagsak: { saksnummer } } = this.props;
     if (saksnummer) {
       await this.hentDokumentOversikt(saksnummer);
     }
   }
 
   async componentDidUpdate(prevProps) {
-    const { oppsummering: { saksnummer: prevSaksnummer } } = prevProps;
-    const { oppsummering: { saksnummer } } = this.props;
+    const { fagsak: { saksnummer: prevSaksnummer } } = prevProps;
+    const { fagsak: { saksnummer } } = this.props;
 
     if (prevSaksnummer !== saksnummer) {
       await this.hentDokumentOversikt(saksnummer);
@@ -163,11 +162,11 @@ class SideDialogDokumenter extends Component {
   }
 }
 SideDialogDokumenter.propTypes = {
-  oppsummering: PT.object.isRequired,
+  fagsak: PT.object.isRequired,
 };
 
 const mapStateToProps = state => ({
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  fagsak: fagsakSelectors.FagsakSelector(state),
 });
 
 const mapDispatchToProps = () => ({});

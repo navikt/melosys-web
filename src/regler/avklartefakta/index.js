@@ -1,3 +1,4 @@
+export const avklartefaktaType = 'avklartefakta';
 
 export const hentFaktaListe = (spesifiktFakta, alleFakta) => alleFakta.filter(enkelt => enkelt.referanse === spesifiktFakta) || [];
 export const hentFakta = (spesifiktFakta, alleFakta) => alleFakta.find(enkelt => enkelt.referanse === spesifiktFakta) || {};
@@ -11,7 +12,7 @@ export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrun
   return {
     felt,
     oppdaterRedux: true,
-    type: 'avklartefakta',
+    type: avklartefaktaType,
     innhold: {
       referanse: felt,
       subjektID,
@@ -30,7 +31,7 @@ export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelse, begrun
   return {
     felt,
     oppdaterRedux: true,
-    type: 'avklartefakta',
+    type: avklartefaktaType,
     innhold: {
       referanse: felt,
       subjektID,
@@ -50,7 +51,7 @@ export const konverterTilStegData = (felt, avklartfakta) => {
 
   return {
     felt,
-    type: 'avklartefakta',
+    type: avklartefaktaType,
     innhold: {
       referanse: felt,
       subjektID,

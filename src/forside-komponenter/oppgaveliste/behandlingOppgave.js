@@ -49,6 +49,7 @@ const BehandlingOppgave = ({ sak }) => {
   } = sak;
 
   const {
+    behandlingID,
     sisteOpplysningerHentetDato,
     erUnderOppdatering,
     behandlingsstatus,
@@ -58,7 +59,7 @@ const BehandlingOppgave = ({ sak }) => {
 
   const { fom, tom } = soknadsperiode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
-  const link = `/saksbehandling/${saksnummer}`;
+  const link = `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';

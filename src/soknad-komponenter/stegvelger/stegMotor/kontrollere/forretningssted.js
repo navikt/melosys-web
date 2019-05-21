@@ -5,6 +5,7 @@ import VurderingForretningssted from '../../stegKomponenter/vurderingForretnings
 import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../../regler/avklartefakta';
 import * as KV from '../../../../kodeverk';
 import * as Utils from '../../../../utils';
+import { hentLovvalgsbestemmelse } from '../../../../regler/lovvalgsbestemmelser';
 
 class Forretningssted extends Steg {
   constructor(avklartefakta) {
@@ -25,7 +26,7 @@ class Forretningssted extends Steg {
     });
 
     this.beregnRelevantUI = _propsLight => {
-      const lovvalgsbestemmelse = this.hentLovvalgsbestemmelse(_propsLight.lovvalgsperioder);
+      const lovvalgsbestemmelse = hentLovvalgsbestemmelse(_propsLight.lovvalgsperioder);
       const avklarteForretningsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, _propsLight.avklartefakta);
       const omfattetINorge = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, _propsLight.avklartefakta);
       const omfattetILand = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, _propsLight.avklartefakta);
@@ -62,17 +63,12 @@ class Forretningssted extends Steg {
       return false;
     }
 
-    if (sokerOmfattetINorge === 'TRUE') {
+    if (sokerOmfattetINorge === KV.Koder.BoolskAvklartfaktaType.SANN) {
       return true;
     }
 
     return !Utils._isNil(hentFaktaVerdi(omfattetILand));
   };
-
-  hentLovvalgsbestemmelse = lovvalgsperioder => {
-    const periode = lovvalgsperioder.length > 0 ? lovvalgsperioder[0] : {};
-    return periode.lovvalgBestemmelse;
-  }
 }
 
 export default Forretningssted;

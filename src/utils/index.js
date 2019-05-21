@@ -1,17 +1,21 @@
-import { assign, cloneDeep, isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean } from 'lodash';
+import { assign, cloneDeep, isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger } from 'lodash';
+
 import throttle from 'lodash.throttle';
 
 import * as adresse from './adresse';
 import * as dato from './dato';
 import * as streng from './streng';
 import * as logger from './logger';
-import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, grupperEtterKey } from './utils';
+import * as queryString from './queryString';
+
+import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt } from './utils';
 
 export {
-  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, grupperEtterKey,
+  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt,
   adresse,
   dato, streng,
   logger,
+  queryString,
   isUndefined as _isUndefined,
   cloneDeep as _cloneDeep,
   assign as _assign,
@@ -22,4 +26,5 @@ export {
   isEmpty as _isEmpty,
   isObject as _isObject,
   isBoolean as _isBoolean,
+  toInteger as _toInteger,
 };

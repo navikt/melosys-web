@@ -1,5 +1,7 @@
 import { tryParseBool } from '../../utils/streng';
 
+export const vilkaarType = 'vilkaar';
+
 export const hentVilkar = (spesifiktVilkar, alleVilkar) => alleVilkar.find(enkelt => enkelt.vilkaar === spesifiktVilkar) || {};
 
 export const erVilkarOppfylt = (spesifiktVilkar, alleVilkar) => {
@@ -18,14 +20,14 @@ export const lagVilkaar = (felt, verdi, begrunnelse, fritekst) => {
     return {
       felt,
       oppdaterRedux: true,
-      type: 'vilkaar',
+      type: vilkaarType,
       innhold: { oppfylt, begrunnelse: [], fritekst: null },
     };
   }
   return {
     felt,
     oppdaterRedux: true,
-    type: 'vilkaar',
+    type: vilkaarType,
     innhold: { oppfylt, begrunnelse, fritekst },
   };
 };
@@ -38,7 +40,7 @@ export const konverterTilStegData = (felt, vilkaar) => {
   const { oppfylt, begrunnelseKoder, begrunnelseFritekst } = vilkaar;
   return {
     felt,
-    type: 'vilkaar',
+    type: vilkaarType,
     innhold: { oppfylt, begrunnelse: begrunnelseKoder, fritekst: begrunnelseFritekst },
   };
 };

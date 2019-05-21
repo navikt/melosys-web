@@ -15,8 +15,11 @@ class Arbeidsmonster extends Steg {
       {
         beskrivelse: 'Ga videre til forretningssted hvis aktivitet i norge er avklart',
         exec: avklartefakta => {
-          const harAktivitetINorge = hentFaktaListe(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta).length > 0;
-          return harAktivitetINorge;
+          const skiftesvisArbeid = hentFakta(KV.Koder.avklartefaktaKoder.ARBEIDSMONSTER, avklartefakta);
+          const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
+
+          return hentFaktaVerdi(skiftesvisArbeid) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS &&
+                 hentFaktaVerdi(aktivitetINorge) !== KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT;
         },
         nesteSteg: STEG.FORRETNINGSSTED,
       },
@@ -43,8 +46,8 @@ class Arbeidsmonster extends Steg {
       const aktivitetINorgeNodvendig = landMedVesentligArbeid.length > 1 && erNorgeValgt;
 
       const harAvklaring = !Utils._isNil(hentFaktaVerdi(arbeidsmonster)) &&
-                           landMedVesentligArbeid.length > 0 &&
-                           (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1;
+        landMedVesentligArbeid.length > 0 &&
+        (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1;
 
       return ({
         marginaltArbeid,

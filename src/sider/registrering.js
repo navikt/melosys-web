@@ -6,7 +6,7 @@ import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
 
 import './registrering.css';
 import SideOppsummering from '../soknad-komponenter/sideOppsummering';
-import { fagsakSelectors } from '../ducks/fagsaker';
+import { behandlingerSelectors } from '../ducks/behandlinger';
 
 import * as MPT from '../proptypes';
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
@@ -52,7 +52,7 @@ Registrering.defaultProps = {
   oppsummering: {},
 };
 const mapStateToProps = state => ({
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
 });
 
 const mapDispatchToProps = () => ({});
