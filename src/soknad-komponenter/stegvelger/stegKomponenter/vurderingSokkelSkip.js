@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 import uuid from 'uuid';
@@ -14,7 +15,10 @@ import {
   konverterTilStegData,
   lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
+  avklartefaktaType,
 } from '../../../regler/avklartefakta';
+
+import { formSelectors } from '../../../ducks/form';
 
 import './vurderingSokkelSkip.css';
 
@@ -83,7 +87,9 @@ const SokkelSkipEnkelt = props => {
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, arbeidslandAvklartfakta));
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, arbeidslandTypeAvklartfakta));
     return function cleanup() {
-      slettDataMedFiltere('avklartefakta', KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, { subjektID: navn });
+      slettDataMedFiltere(avklartefaktaType, KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, { subjektID: navn });
+      slettDataMedFiltere(avklartefaktaType, KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, { subjektID: navn });
+      slettDataMedFiltere(avklartefaktaType, KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, { subjektID: navn });
     };
   }, []);
 
@@ -257,7 +263,7 @@ class VurderingSokkelSkip extends React.Component {
     // Merknad fra møte 12.12.18: Vi må huske å gå innom “vurdering antall land”
     // dersom man har valgt “to sokler / skip i flere land” siden vi går inn i artikkel 13.
     const {
-      bekreftOgFortsett, tilstand, skjema, begrunnelser, redigerbart, oppdaterData, slettDataMedFiltere,
+      bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettDataMedFiltere, maritimtArbeid,
     } = this.props;
 
     const {
@@ -267,7 +273,6 @@ class VurderingSokkelSkip extends React.Component {
 
     const { konklusjonEndretHandler } = this;
     const { VurderingSokkelSkipTyper } = KV.Koder;
-    const { maritimtArbeid } = skjema;
     const { harAvklaring } = tilstand;
     const harMaritimeArbeidUnikeNavn = Utils.erPropertyUnik(maritimtArbeid, enkeltMaritimtArbeid => enkeltMaritimtArbeid.navn);
     /* eslint-disable max-len */
@@ -338,8 +343,8 @@ class VurderingSokkelSkip extends React.Component {
 VurderingSokkelSkip.propTypes = {
   begrunnelser: PT.arrayOf(MPT.Kodeverk).isRequired,
   bekreftOgFortsett: PT.func.isRequired,
+  maritimtArbeid: PT.array,
   tilstand: PT.object,
-  skjema: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
@@ -349,7 +354,11 @@ VurderingSokkelSkip.propTypes = {
 
 VurderingSokkelSkip.defaultProps = {
   tilstand: {},
+  maritimtArbeid: [],
 };
 
+const mapStateToProps = state => ({
+  maritimtArbeid: formSelectors.MaritimtArbeidSelector(state),
+});
 
-export default VurderingSokkelSkip;
+export default connect(mapStateToProps)(VurderingSokkelSkip);

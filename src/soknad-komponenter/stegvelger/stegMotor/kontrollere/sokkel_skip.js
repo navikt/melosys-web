@@ -35,7 +35,6 @@ class SokkelSkip extends Steg {
     this.komponent = VurderingSokkelSkip;
     this.samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.sokkel,
-      skjema: _propsLight.skjema,
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
