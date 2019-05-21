@@ -1,5 +1,5 @@
 /* eslint-disable */
-import {fn, isJSON, queryParamsTilObjekt, grupperEtterKey } from './utils';
+import {fn, isJSON, queryParamsTilObjekt } from './utils';
 
 describe('utils.js:', () => {
 
@@ -36,35 +36,6 @@ describe('utils.js:', () => {
         sid: '3'
       }
       expect(queryParamsTilObjekt(url)).toEqual(resultat);
-    });
-  });
-
-  describe('grupperEtterKey', () => {
-    it('returnerer en funksjon', () => {
-      expect(grupperEtterKey([])).toBeInstanceOf(Function);
-    });
-
-    describe('funksjonen', () => {
-      it('grupperer elementene i en array etter en key', () => {
-        const f = grupperEtterKey('dag');
-        const array = [
-          { dag: 'mandag', nummer: '1' },
-          { dag: 'tirsdag', nummer: '2' },
-          { dag: 'mandag', nummer: '3' },
-          { dag: 'tirsdag', nummer: '4' },
-        ];
-
-        expect(f(array)).toEqual({
-          mandag: [
-            { dag: 'mandag', nummer: '1' },
-            { dag: 'mandag', nummer: '3' },
-          ],
-          tirsdag: [
-            { dag: 'tirsdag', nummer: '2' },
-            { dag: 'tirsdag', nummer: '4' },
-          ],
-        });
-      });
     });
   });
 });
