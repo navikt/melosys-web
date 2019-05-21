@@ -8,6 +8,7 @@ import * as Utils from '../utils';
 
 import OrganisasjonsAdresse from '../komponenter/adresser/organisasjonsAdresse';
 import { fagsakSelectors } from '../ducks/fagsaker';
+import { behandlingerSelectors } from '../ducks/behandlinger';
 import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
 
 import './kontaktopplysninger.css';
@@ -36,8 +37,8 @@ export class KontaktOpplysninger extends Component {
   kalkulerSynlighetVedMount = ({ kontaktorgnr, kontaktnavn }) => this.setState({ skjulInput: !(kontaktorgnr || kontaktnavn) });
 
   hentOgVisKontaktOpplysninger = async () => {
-    const { hentKontaktopplysninger, juridiskOrg, oppsummering } = this.props;
-    const kontaktopplysninger = await hentKontaktopplysninger(oppsummering.saksnummer, juridiskOrg.orgnr);
+    const { hentKontaktopplysninger, juridiskOrg, saksnummer } = this.props;
+    const kontaktopplysninger = await hentKontaktopplysninger(saksnummer, juridiskOrg.orgnr);
 
     this.setState({ kontaktorgnr: kontaktopplysninger.kontaktorgnr, kontaktnavn: kontaktopplysninger.kontaktnavn });
 
@@ -56,7 +57,7 @@ export class KontaktOpplysninger extends Component {
   fjernResultat = () => this.setState({ sokeResultat: null });
 
   fjernOppforing = async () => {
-    const { oppsummering: { saksnummer }, juridiskOrg: { orgnr } } = this.props;
+    const { saksnummer, juridiskOrg: { orgnr } } = this.props;
     try {
       await this.props.slettKontaktopplysninger(saksnummer, orgnr);
       this.toggleSkjulInput();
@@ -82,7 +83,7 @@ export class KontaktOpplysninger extends Component {
   validerOgLagreKontakt = async () => {
     const {
       lagreKontaktopplysninger,
-      oppsummering: { saksnummer },
+      saksnummer,
       juridiskOrg,
     } = this.props;
     const { kontaktorgnr, kontaktnavn } = this.state;
@@ -192,10 +193,10 @@ export class KontaktOpplysninger extends Component {
 }
 
 KontaktOpplysninger.propTypes = {
+  saksnummer: PT.string.isRequired,
   lagreKontaktopplysninger: PT.func.isRequired,
   hentOrg: PT.func.isRequired,
   redigerbart: PT.bool,
-  oppsummering: PT.object.isRequired,
   juridiskOrg: PT.object.isRequired,
   hentKontaktopplysninger: PT.func.isRequired,
   slettKontaktopplysninger: PT.func.isRequired,
@@ -206,8 +207,8 @@ KontaktOpplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  saksnummer: fagsakSelectors.SaksnummerSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
 const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
