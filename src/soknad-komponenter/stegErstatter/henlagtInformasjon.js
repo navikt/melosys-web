@@ -1,19 +1,29 @@
 import React from 'react';
 import * as MKV from 'melosys-kodeverk';
 
-import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
+import * as MPT from '../../proptypes';
+import * as Nav from '../../utils/navFrontend';
 
 import './henlagtInformasjon.css';
-import * as MPT from "../../proptypes";
+
+function begrunnelseBeskrivelse(begrunnelser) {
+  if (!begrunnelser || begrunnelser.length === 0) {
+    return 'Ukjent grunn';
+  }
+  return KV.kodeTilTerm(begrunnelser[0], MKV.KTObjects.henleggelsesgrunner);
+}
+
+function henlagtTekstEllerBeskrivelse(behandlingsresultat) {
+  const { begrunnelser, begrunnelseFritekst } = behandlingsresultat;
+  if (begrunnelseFritekst && begrunnelseFritekst.length > 1) {
+    return begrunnelseFritekst;
+  }
+  return begrunnelseBeskrivelse(begrunnelser);
+}
 
 const HenlagtInformasjon = ({ behandlingsresultat }) => {
-  const { begrunnelseKoder, begrunnelseFritekst } = behandlingsresultat;
-
-  const begrunnelseBeskrivelse = !begrunnelseKoder || begrunnelseKoder.length === 0 ? 'Ukjent grunn'
-    : KV.kodeTilTerm(begrunnelseKoder[0], MKV.KTObjects.henleggelsesgrunner);
-  const henlagtTekst = (begrunnelseFritekst && begrunnelseFritekst.length > 1) ? begrunnelseFritekst : begrunnelseBeskrivelse;
-
+  const henlagtTekst = henlagtTekstEllerBeskrivelse(behandlingsresultat);
 
   return (
     <section aria-label="henlagtStatus" className="henlagtStatus panelSeksjon stegErstatter">
@@ -29,10 +39,6 @@ const HenlagtInformasjon = ({ behandlingsresultat }) => {
 
 HenlagtInformasjon.propTypes = {
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
-};
-
-HenlagtInformasjon.defaultProps = {
-  behandlingsresultat: {},
 };
 
 export default HenlagtInformasjon;
