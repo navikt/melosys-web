@@ -8,6 +8,7 @@ import * as KV from '../../kodeverk';
 import Behandling from './behandling';
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
+import { DatoOmradeDescription } from '../../komponenter/datoOmrade/datoOmrade';
 
 import './fagsak.css';
 
@@ -30,9 +31,8 @@ const Fagsak = ({ sak }) => {
     land,
   } = behandlingOversikter[0];
 
-  const { fom, tom } = soknadsperiode;
   const tittel = `${KV.objektTilTerm(sakstype)}`;
-  const link = `/saksbehandling/${saksnummer}`;
+  const routePath = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
 
@@ -48,8 +48,7 @@ const Fagsak = ({ sak }) => {
             <dl className="fagsak__meta">
               <dt>Saksstatus:</dt>
               <dd>{KV.objektTilTerm(saksstatus) || '(ukjent)'}</dd>
-              <dt>Søknadsperiode: </dt>
-              <dd>{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
+              <DatoOmradeDescription tekst="Søknadsperiode: " periode={soknadsperiode} />
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="5">
@@ -63,7 +62,10 @@ const Fagsak = ({ sak }) => {
         </Nav.Row>
         <Nav.Row className="fagsak__behandlinger">
           {
-            behandlingOversikter.map(behandling => <Behandling key={behandling.behandlingID} behandling={behandling} link={link} />)
+            behandlingOversikter.map(behandling => {
+              const link = `${routePath}/?behandlingID=${behandling.behandlingID}`;
+              return (<Behandling key={behandling.behandlingID} behandling={behandling} link={link} />);
+            })
           }
         </Nav.Row>
       </Nav.Container>
@@ -72,7 +74,7 @@ const Fagsak = ({ sak }) => {
 };
 
 Fagsak.propTypes = {
-  sak: MPT.FagsakOppsummering,
+  sak: MPT.BehandligOversikt,
 };
 
 Fagsak.defaultProps = {

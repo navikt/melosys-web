@@ -1,90 +1,42 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
-import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
+import EnkeltVilkaar from './felles/enkeltVilkaar';
 
-import { BOOLSK } from '../../../constants';
-import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
+const VurderingForutgaendeMedlemskap = props => {
+  const {
+    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+  } = props;
+  const { harAvklaring, forutgaendeMedlemskap } = tilstand;
 
-class VurderingForutgaendeMedlemskap extends Component {
-  componentDidMount() {
-    const { oppdaterData, tilstand } = this.props;
-    const { forutgaendeMedlemskap } = tilstand;
-    oppdaterData(konverterTilStegData('forutgaendeMedlemskap', forutgaendeMedlemskap));
-  }
+  useEffect(() => (
+    function cleanup() {
+      slettAllDataForSteg();
+    }
+  ), []);
 
-  componentWillUnmount() {
-    const { slettAllDataForSteg } = this.props;
-    slettAllDataForSteg();
-  }
-
-  radioEndringHandler = event => {
-    const { oppdaterData } = this.props;
-    oppdaterData(lagVilkaar('forutgaendeMedlemskap', event.target.value));
-  };
-
-  listevalgEndringHandler = event => {
-    const { oppdaterData } = this.props;
-    oppdaterData(lagBegrunnelse('forutgaendeMedlemskap', event.value));
-  };
-
-  render() {
-    const {
-      bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
-    } = this.props;
-    const { visBegrunnelser, harAvklaring, forutgaendeMedlemskap } = tilstand;
-
-    return (
-      <div>
-        <Nav.Undertittel>Vurdering av forutgående medlemskap</Nav.Undertittel>
-        <div>
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Nav.Fieldset legend="Søkeren har:" disabled={!redigerbart}>
-                <Nav.Radio
-                  name="forutgaendeMedlemskap"
-                  disabled={!redigerbart}
-                  onChange={this.radioEndringHandler}
-                  checked={forutgaendeMedlemskap.oppfylt === true}
-                  value={BOOLSK.SANN}
-                  label="Har forutgående medlemskap" />
-                <Nav.Radio
-                  name="forutgaendeMedlemskap"
-                  disabled={!redigerbart}
-                  onChange={this.radioEndringHandler}
-                  checked={forutgaendeMedlemskap.oppfylt === false}
-                  value={BOOLSK.USANN}
-                  label="Har ikke forutgående medlemskap" />
-              </Nav.Fieldset>
-            </Nav.Column>
-          </Nav.Row>
-          { visBegrunnelser && (
-            <Nav.Row>
-              <Nav.Column xs="12" md="10" lg="8">
-                <Nav.Fieldset legend="Begrunnelse:">
-                  <ListevelgerFlervalg
-                    muligeValg={begrunnelser}
-                    label="Legg til begrunnelse:"
-                    tillatFritekst={false}
-                    disabled={!redigerbart}
-                    onChange={this.listevalgEndringHandler}
-                    defaultElementer={forutgaendeMedlemskap.begrunnelseKoder}
-                  />
-                </Nav.Fieldset>
-              </Nav.Column>
-            </Nav.Row>
-          ) }
-        </div>
-        <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
-        </div>
+  return (
+    <div>
+      <Nav.Undertittel>Vurdering av forutgående medlemskap</Nav.Undertittel>
+      <EnkeltVilkaar
+        redigerbart={redigerbart}
+        vilkaar={forutgaendeMedlemskap}
+        vilkaarKode="forutgaendeMedlemskap"
+        tittel="Søkeren har:"
+        labelOppfylt="Har forutgående medlemskap"
+        labelIkkeOppfylt="Har ikke forutgående medlemskap"
+        begrunnelser={begrunnelser}
+        oppdaterData={oppdaterData}
+      />
+      <div className="fane__knapplinje">
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 VurderingForutgaendeMedlemskap.ID = 'FORUTGAENDE_MEDLEMSKAP';
 

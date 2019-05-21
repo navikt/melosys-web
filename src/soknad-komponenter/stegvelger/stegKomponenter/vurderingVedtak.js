@@ -8,7 +8,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
-import { fagsakSelectors } from '../../../ducks/fagsaker/';
+import { behandlingerSelectors } from '../../../ducks/behandlinger/';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
@@ -26,7 +26,7 @@ const VurderingVedtak = ({
   gyldigeSoknadsland,
   lovvalgsperioder,
   redigerbart,
-  oppsummering: { behandlingID },
+  behandlingID,
   lagreOgFatteVedtak,
   lovvalgsland,
 }) => {
@@ -95,7 +95,7 @@ VurderingVedtak.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired,
-  oppsummering: MPT.Oppsummering.isRequired,
+  behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
 };
@@ -107,7 +107,7 @@ VurderingVedtak.defaultProps = {
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
 });
 

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { reduxForm } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
-
+import * as Utils from '../../utils';
 import * as KV from '../../kodeverk';
 import * as Validering from '../../soknad-komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
@@ -25,6 +25,7 @@ import VirksomhetNorge from '../../soknad-komponenter/virksomhetNorge';
 import FullmektigPanel from '../../soknad-komponenter/fullmektig';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
+import { behandlingerSelectors } from '../../ducks/behandlinger/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
 import {
   soknadOperations,
@@ -33,7 +34,7 @@ import {
 } from '../../ducks/soknad/';
 
 import { avklartefaktaSelectors } from '../../ducks/avklartefakta/';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
+import { behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { vilkarSelectors } from '../../ducks/vilkar/';
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
 import { formSelectors } from '../../ducks/form/';
@@ -42,12 +43,11 @@ import { lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
 
 class Saksopplysninger extends Component {
   lagreSoknadHandler = async () => {
-    const bid = this.props.oppsummering.behandlingID;
     const {
-      valid, sendSoknad, soknad,
+      behandlingID, valid, sendSoknad, soknad,
     } = this.props;
     if (valid) {
-      await sendSoknad(bid, soknad);
+      await sendSoknad(behandlingID, soknad);
     }
   };
 
@@ -61,8 +61,9 @@ class Saksopplysninger extends Component {
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    const { oppfriskSaksopplysninger, sendSoknad, soknad } = this.props;
-    const { behandlingID } = this.props.oppsummering;
+    const {
+      behandlingID, oppfriskSaksopplysninger, sendSoknad, soknad,
+    } = this.props;
     await sendSoknad(behandlingID, soknad);
     await oppfriskSaksopplysninger(behandlingID);
     this.props.blokkerInnholdMedOppfriskSpinner();
@@ -70,8 +71,10 @@ class Saksopplysninger extends Component {
 
   render () {
     const {
+      redigerbart,
+      behandlingID,
       medlemskap,
-      inntekt,
+      inntekterPrAarMaaned,
       soknadArbeidsinntekt,
       soknadForm,
       soknad,
@@ -79,30 +82,29 @@ class Saksopplysninger extends Component {
       fagsakStatusKode,
     } = this.props;
 
+    if (Utils._isNil(redigerbart)) return null;
     if (Object.keys(soknadForm).length === 0 || Object.keys(soknad).length === 0) { return null; }
     const { values: soknadVerdier } = soknadForm;
 
-    const { behandlingID } = this.props.oppsummering;
     if (!behandlingID) {
       return null;
     }
 
-    const { henleggelsegrunnKode, henleggelseFritekst } = behandlingsresultat;
     const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
     const visStegVelger = !visHenlagtSak;
     return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
         { visHenlagtSak &&
           <HenlagtInformasjon
-            begrunnelse={henleggelsegrunnKode}
-            fritekst={henleggelseFritekst} />
+            behandlingsresultat={behandlingsresultat} />
         }
         { visStegVelger &&
           <Stegvelger
+            behandlingID={behandlingID}
             lagreVilkarHandler={this.props.lagreVilkarHandler}
             lagreAvklartefaktaHandler={this.props.lagreAvklartefaktaHandler}
             lagreLovvalgsperioderHandler={this.props.lagreLovvalgsperioderHandler}
-            lagreBehandlingerHandler={this.props.lagreBehandlingerHandler}
+            oppdaterOgLagreBehandlingerHandler={this.props.oppdaterOgLagreBehandlingerHandler}
             lagreAllData={this.props.lagreAllData}
             fatteVedtakHandler={this.fatteVedtakHandler}
             lagreSoknadHandler={this.lagreSoknadHandler}
@@ -122,29 +124,30 @@ class Saksopplysninger extends Component {
         <VirksomhetNorge />
         <MaritimtArbeid />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-        {inntekt && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
+        {inntekterPrAarMaaned.length && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
       </form>
     );
   }
 }
 
 Saksopplysninger.propTypes = {
+  redigerbart: PT.bool,
+  behandlingID: PT.number.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Person),
-  avklartefakta: PT.array.isRequired,
+  avklartefakta: MPT.Avklartefakta.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   handleSubmit: PT.func.isRequired,
-  inntekt: MPT.Inntekt,
+  inntekterPrAarMaaned: MPT.InntekterPrAarMaaned,
   match: PT.object.isRequired,
   medlemskap: MPT.Medlemskap,
   oppdaterSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   sjekkOppfriskningStatus: PT.func.isRequired,
-  oppsummering: MPT.Oppsummering,
   person: MPT.Person,
   sendSoknad: PT.func.isRequired,
-  soknad: PT.object,
+  soknad: MPT.Soknad,
   soknadArbeidsinntekt: PT.object,
   soknadForm: PT.object.isRequired,
   valid: PT.bool.isRequired,
@@ -153,15 +156,15 @@ Saksopplysninger.propTypes = {
   lagreVilkarHandler: PT.func.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
-  lagreBehandlingerHandler: PT.func.isRequired,
+  oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
+  redigerbart: null,
   alleRelevantePersoner: [],
-  inntekt: {},
+  inntekterPrAarMaaned: [],
   medlemskap: {},
-  oppsummering: {},
   person: {},
   soknad: {},
   soknadArbeidsinntekt: {},
@@ -170,13 +173,13 @@ Saksopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
-  medlemskap: fagsakSelectors.MedlemskapSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
-  inntekt: fagsakSelectors.InntektSoknadenSelector(state),
-  bekreftelser: fagsakSelectors.BekreftelserSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
+  inntekterPrAarMaaned: behandlingerSelectors.InntekterPrAarMaanedSelector(state),
+  bekreftelser: behandlingerSelectors.BekreftelserSelector(state),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
@@ -243,7 +246,7 @@ const mapStateToProps = state => ({
     fullmektigPoststed: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
     fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandkode,
-    tidligeremedlemskap: behandlingerSelectors.tidligereMedlemskap(state),
+    tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     avklartefakta: {
       soknadsland: avklartefaktaSelectors.Soknadsland(state),
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
@@ -293,7 +296,7 @@ const SaksopplysningerForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Felles.byggValidering(values, props),
+  validate: Validering.Skjemaer.createValidator(Validering.Skjemaer.saksopplysninger),
 })(Saksopplysninger);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksopplysningerForm));
