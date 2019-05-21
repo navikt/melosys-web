@@ -6,6 +6,7 @@ import * as MPT from '../../../../proptypes';
 import ListevelgerFlervalg from '../../../../komponenter/ui/listevelgerFlervalg';
 
 import {
+  avklartefaktaType,
   hentFaktaVerdi,
   konverterTilStegData,
   lagAvklartefaktaBegrunnelse,
@@ -29,7 +30,7 @@ const EnkeltAvklartfakta = props => {
 
     return function cleanup() {
       if (props.slettData) {
-        props.slettData('avklartefakta', avklartfaktaKode);
+        props.slettData(avklartefaktaType, avklartfaktaKode);
       }
     };
   }, []);

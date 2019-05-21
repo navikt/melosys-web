@@ -10,7 +10,7 @@ import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import './vurderingArtikkel11_4.css';
 import { BOOLSK } from '../../../constants';
-import { konverterTilStegData, lagVilkaar } from '../../../regler/vilkar';
+import { konverterTilStegData, lagVilkaar, vilkaarType } from '../../../regler/vilkar';
 
 class VurderingArtikkel11_4 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -52,17 +52,17 @@ class VurderingArtikkel11_4 extends Component {
     if (value === this.ART11_4_1) {
       oppdaterData(lagVilkaar('art11_4_1', true));
       oppdaterData(lagVilkaar('art11_3A', true));
-      slettData('vilkaar', 'art11_4_2');
+      slettData(vilkaarType, 'art11_4_2');
     } else if (value === this.ART11_4_2) {
-      slettData('vilkaar', 'art11_3A');
-      slettData('vilkaar', 'art11_4_1');
+      slettData(vilkaarType, 'art11_3A');
+      slettData(vilkaarType, 'art11_4_1');
       oppdaterData(lagVilkaar('art11_4_2', true));
-      slettData('vilkaar', 'nis');
+      slettData(vilkaarType, 'nis');
     } else {
-      slettData('vilkaar', 'art11_3A');
+      slettData(vilkaarType, 'art11_3A');
       oppdaterData(lagVilkaar('art11_4_1', true));
-      slettData('vilkaar', 'art11_4_2');
-      slettData('vilkaar', 'nis');
+      slettData(vilkaarType, 'art11_4_2');
+      slettData(vilkaarType, 'nis');
     }
   };
 
