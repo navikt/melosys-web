@@ -32,11 +32,13 @@ class Avklartfakta extends StegState {
     Object.keys(filtere).forEach(filter => {
       const filterValue = filtere[filter];
       const keyToDelete = `${felt}${filterValue}`;
+      const stegFelt = steg[felt];
+      if (!stegFelt) return;
 
-      const stegFelt = steg[felt].has(keyToDelete) ? steg[felt].get(keyToDelete) : null;
+      const stegFeltVerdi = stegFelt.has(keyToDelete) ? steg[felt].get(keyToDelete) : null;
 
-      if (stegFelt && stegFelt[filter] === filterValue) {
-        steg[felt].delete(keyToDelete);
+      if (stegFeltVerdi && stegFeltVerdi[filter] === filterValue) {
+        stegFelt.delete(keyToDelete);
       }
     });
   };
