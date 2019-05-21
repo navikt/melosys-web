@@ -1,4 +1,4 @@
-import { assign, cloneDeep, isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger } from 'lodash';
+import { isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger } from 'lodash';
 
 import throttle from 'lodash.throttle';
 
@@ -17,8 +17,6 @@ export {
   logger,
   queryString,
   isUndefined as _isUndefined,
-  cloneDeep as _cloneDeep,
-  assign as _assign,
   isFunction as _isFunction,
   isNil as _isNil,
   isString as _isString,
