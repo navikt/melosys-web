@@ -1,92 +1,45 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
-import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
-
 import { arrayTilKonjunksjon } from '../../../utils/streng';
 
-import { BOOLSK } from '../../../constants';
-import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../regler/vilkar';
+import EnkeltVilkaar from './felles/enkeltVilkaar';
 
-class VurderingVesentligVirksomhet extends Component {
-  componentDidMount() {
-    const { oppdaterData, tilstand } = this.props;
-    oppdaterData(konverterTilStegData('vesentligVirksomhet', tilstand.vesentligVirksomhetVilkaar));
-  }
+const VurderingVesentligVirksomhet = props => {
+  const {
+    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+  } = props;
+  const { vesentligVirksomhetVilkaar, harAvklaring } = tilstand;
 
-  componentWillUnmount() {
-    const { slettAllDataForSteg } = this.props;
-    slettAllDataForSteg();
-  }
+  useEffect(() => (
+    function cleanup() {
+      slettAllDataForSteg();
+    }
+  ), []);
 
-  radioEndringHandler = event => {
-    const { oppdaterData } = this.props;
-    oppdaterData(lagVilkaar('vesentligVirksomhet', event.target.value));
-  };
-
-  listeVelgerHandler = event => {
-    const { oppdaterData } = this.props;
-    oppdaterData(lagBegrunnelse('vesentligVirksomhet', event.value));
-  };
-
-  render () {
-    const {
-      bekreftOgFortsett, begrunnelser, tilstand, redigerbart,
-    } = this.props;
-    const { vesentligVirksomhetVilkaar, visBegrunnelser, harAvklaring } = tilstand;
-
-    const arbeidsgivereTekst = this.props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(this.props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
-    return (
-      <div>
-        <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
-        <div className="vurderingVesentligVirksomhet__skjemafelt">
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Nav.Fieldset legend="Virksomheten har:">
-                <Nav.Radio
-                  name="vesentligVirksomhet"
-                  disabled={!redigerbart}
-                  onChange={this.radioEndringHandler}
-                  checked={vesentligVirksomhetVilkaar.oppfylt === true}
-                  value={BOOLSK.SANN}
-                  label="Vesentlig virksomhet" />
-                <Nav.Radio
-                  name="vesentligVirksomhet"
-                  disabled={!redigerbart}
-                  onChange={this.radioEndringHandler}
-                  checked={vesentligVirksomhetVilkaar.oppfylt === false}
-                  value={BOOLSK.USANN}
-                  label="Ikke vesentlig virksomhet" />
-              </Nav.Fieldset>
-            </Nav.Column>
-          </Nav.Row>
-          {visBegrunnelser && (
-            <Nav.Row>
-              <Nav.Column xs="12" md="10" lg="8">
-                <Nav.Fieldset legend="Begrunnelse:">
-                  <ListevelgerFlervalg
-                    muligeValg={begrunnelser}
-                    disabled={!redigerbart}
-                    label="Legg til begrunnelse:"
-                    onChange={this.listeVelgerHandler}
-                    tillatFritekst={false}
-                    defaultElementer={vesentligVirksomhetVilkaar.begrunnelseKoder}
-                  />
-                </Nav.Fieldset>
-              </Nav.Column>
-            </Nav.Row>)
-          }
-        </div>
-        <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
-        </div>
+  const arbeidsgivereTekst = props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
+  return (
+    <div>
+      <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
+      <EnkeltVilkaar
+        redigerbart={redigerbart}
+        begrunnelser={begrunnelser}
+        vilkaar={vesentligVirksomhetVilkaar}
+        vilkaarKode="vesentligVirksomhet"
+        tittel="Virksomheten har:"
+        labelOppfylt="Vesentlig virksomhet"
+        labelIkkeOppfylt="Ikke vesentlig virksomhet"
+        oppdaterData={oppdaterData}
+      />
+      <div className="fane__knapplinje">
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 VurderingVesentligVirksomhet.ID = 'VESENTLIG_VIRKSOMHET';
 

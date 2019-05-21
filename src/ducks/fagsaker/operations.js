@@ -21,7 +21,7 @@ import * as Validering from '../../soknad-komponenter/skjema/validering';
  * @param snr String Saksnummeret
  * @returns {*}
  */
-function hent(snr) {
+export function hent(snr) {
   return doThenDispatch(() => Api.Fagsaker.hent(snr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
@@ -36,7 +36,7 @@ function hent(snr) {
  * @returns {*}
  */
 
-function opprett(fnr) {
+export function opprett(fnr) {
   return doThenDispatch(
     () => Api.Fagsaker.opprett(fnr), {
       OK: Types.OK,
@@ -47,15 +47,6 @@ function opprett(fnr) {
   );
 }
 
-function resetFagsakState() {
+export function resetFagsakState() {
   return Actions.resetFagsakState();
 }
-function oppdaterBehandlingsStatus(status) {
-  return Actions.oppdaterBehandlingsStatus(status);
-}
-export {
-  hent,
-  opprett,
-  resetFagsakState,
-  oppdaterBehandlingsStatus,
-};

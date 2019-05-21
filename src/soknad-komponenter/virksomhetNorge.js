@@ -6,13 +6,13 @@ import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 import * as MPT from '../proptypes';
+import * as KV from '../kodeverk';
 
 import LandVelger from './skjema/landvelger';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
-import { fagsakSelectors } from '../ducks/fagsaker/';
+import { behandlingerSelectors } from '../ducks/behandlinger/';
 import { formSelectors } from '../ducks/form';
-
 import './virksomhetNorge.css';
 
 function VirksomhetNorge (props) {
@@ -34,7 +34,7 @@ function VirksomhetNorge (props) {
   return (
     <div className="virksomhetNorge panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger om arbeidsgivers virksomhet i Norge" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.arbeidsgiversVirksomhetINorge} undertittel="" />}
         ariaTittel="Opplysninger om arbeidsgivers virksomhet i Norge">
         <Nav.Container fluid>
           <Nav.Row>
@@ -74,7 +74,7 @@ VirksomhetNorge.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 const mapDispatchToProps = () => ({});

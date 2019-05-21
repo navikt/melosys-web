@@ -13,6 +13,8 @@ describe('EnkeltLand', () => {
       feil: undefined,
       input: { onChange: () => null },
       disabled: false,
+      hentFeltFeil: () => null,
+      feltNavn: 'navn',
     };
   });
 

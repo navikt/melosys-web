@@ -10,7 +10,7 @@ import { BOOLSK } from '../../../constants';
 import './vurderingBostedsland.css';
 import * as MPT from '../../../proptypes';
 import { konverterTilStegData, lagVilkaar } from '../../../regler/vilkar';
-import { lagAvklartfakta } from '../../../regler/avklartefakta';
+import { avklartefaktaType, lagAvklartfakta } from '../../../regler/avklartefakta';
 import * as KV from '../../../kodeverk';
 
 const uuid = require('uuid/v4');
@@ -74,14 +74,14 @@ const VurderingBostedsland = props => {
   }, []);
 
   const {
-    erBosattINorge, erAvklart, harEOSBarnetrygdSak, begrunnelserPaaKrevd,
+    erBosattINorge, harAvklaring, harEOSBarnetrygdSak, begrunnelserPaaKrevd,
   } = tilstand;
 
   const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
 
   const radioEndringHandler = event => {
     oppdaterData(lagVilkaar('bosattINorge', event.target.value));
-    slettData('avklartefakta', KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
+    slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
   };
 
   const landEndretHandler = landKode => {
@@ -141,7 +141,7 @@ const VurderingBostedsland = props => {
         )}
       </div>
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" disabled={!(redigerbart && erAvklart)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp type="hoved" disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );

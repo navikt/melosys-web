@@ -7,12 +7,13 @@ import * as MPT from '../proptypes/';
 import * as Ikoner from '../resources/images';
 import * as Skjema from './skjema';
 import * as Utils from '../utils';
+import * as KV from '../kodeverk';
 
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import Landvelger from './skjema/landvelger';
 
 import './bosted.css';
-import { fagsakSelectors } from '../ducks/fagsaker';
+import { behandlingerSelectors } from '../ducks/behandlinger';
 import { formSelectors } from '../ducks/form';
 import { BOOLSK } from '../constants';
 import { boolTilNorsk } from '../utils/streng';
@@ -34,7 +35,7 @@ const Bosted = props => {
   return (
     <div className="bosted panelSeksjon">
       <Nav.EkspanderbartpanelBase
-        heading={<PanelHeader ikon={panelIkon} tittel="Opplysninger for vurdering av bosted" undertittel="" />}
+        heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.bosted} undertittel="" />}
         ariaTittel="Panel for opplysninger om bosted, fra søknaden">
         <Nav.Container fluid>
           <Nav.Row>
@@ -78,8 +79,8 @@ Bosted.defaultProps = {
 
 
 const mapStateToProps = state => ({
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
-  sakOgBehandling: fagsakSelectors.SakOgBehandlingSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  sakOgBehandling: behandlingerSelectors.SakOgBehandlingSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 

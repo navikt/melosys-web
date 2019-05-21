@@ -56,7 +56,6 @@ class Artikkel12_1 extends Steg {
         visBegrunnelser16: art16_1.oppfylt === false,
         art12_1,
         art16_1,
-        art16_1_fritekst: art16_1.begrunnelseFritekst || '',
       };
     };
     this.handlers = {

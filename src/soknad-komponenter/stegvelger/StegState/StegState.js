@@ -1,16 +1,29 @@
+import * as Utils from '../../../utils';
+
 class StegState {
   constructor() {
     this.stegStore = new Map();
   }
 
   slettStegData = (stegID, felt) => {
-    const { stegStore } = this;
-
-    if (stegStore.has(stegID)) {
-      const steg = stegStore.get(stegID);
-      delete steg[felt];
-      stegStore.set(stegID, steg);
+    if (this.stegStore.has(stegID)) {
+      if (Utils._isNil(felt)) {
+        this.slettSteg(stegID);
+      } else {
+        this.slettFelt(stegID, felt);
+      }
     }
+  };
+
+  slettFelt = (stegID, felt) => {
+    const { stegStore } = this;
+    const steg = stegStore.get(stegID);
+    delete steg[felt];
+    stegStore.set(stegID, steg);
+  };
+
+  slettSteg = stegID => {
+    this.stegStore.delete(stegID);
   };
 
   oppdaterStegData = (stegID, { felt, innhold }) => {
@@ -42,11 +55,6 @@ class StegState {
   };
 
   nyttFelt = () => ({});
-
-  slettSteg = steg => {
-    const { stegStore } = this;
-    stegStore.delete(steg);
-  };
 }
 
 export default StegState;

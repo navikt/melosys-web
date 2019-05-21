@@ -11,8 +11,8 @@ import * as MPT from '../../../proptypes/';
 import * as Utils from '../../../utils';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { soknadSelectors } from '../../../ducks/soknad/';
-import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { formSelectors } from '../../../ducks/form';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
@@ -59,17 +59,19 @@ TidligereMedlemPeriodeLinje.defaultProps = {
 };
 
 class TidligereMedlemskapPerioder extends Component {
-  onChange = periodeID => {
-    const { fields } = this.props;
+  onChange = async periodeID => {
+    const { fields, oppdaterOgLagreBehandlinger } = this.props;
     const { push, remove } = fields;
     const alleValgtePeriodeID = fields.getAll() || [];
     const eksistererVedPosisjon = alleValgtePeriodeID.findIndex(valgt => valgt === periodeID);
 
     if (eksistererVedPosisjon === -1) {
-      push(periodeID);
+      await push(periodeID);
     } else {
-      remove(eksistererVedPosisjon);
+      await remove(eksistererVedPosisjon);
     }
+
+    oppdaterOgLagreBehandlinger().catch(e => Utils.logger.error(e));
   };
 
   render() {
@@ -101,6 +103,7 @@ TidligereMedlemskapPerioder.propTypes = {
   fields: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
   feil: PT.object,
+  oppdaterOgLagreBehandlinger: PT.func.isRequired,
 };
 
 TidligereMedlemskapPerioder.defaultProps = {
@@ -126,13 +129,7 @@ class VurderingArtikkel16 extends Component {
 
   componentDidMount() {
     const { oppdaterData, tilstand: { art16_1 } } = this.props;
-    oppdaterData(konverterTilStegData('art16_1', art16_1));
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.tidligeremedlemskap !== this.props.tidligeremedlemskap) {
-      this.lagreBehandlinger();
-    }
+    oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
   }
 
   componentWillUnmount() {
@@ -156,22 +153,36 @@ class VurderingArtikkel16 extends Component {
 
   lagreVilkar = () => {
     this.props.lagreVilkarHandler().catch(e => Utils.logger.error(e));
-    this.setState({ begrunnelserFeilmelding: undefined, fritekstFeilmelding: undefined });
   };
 
   lagreBehandlinger = () => {
     this.props.oppdaterOgLagreBehandlinger().catch(e => Utils.logger.error(e));
   };
 
+  fritekstEndretHandler = event => {
+    this.setState({ fritekstFeilmelding: undefined });
+
+    const { oppdaterData } = this.props;
+    const { id, value } = event.target;
+
+    oppdaterData(lagBegrunnelse(id, null, value));
+  };
+
+  fritekstFokusFlyttetHandler = () => {
+    this.lagreVilkar();
+  }
+
   begrunnelserEndringHandler = async event => {
+    this.setState({ begrunnelserFeilmelding: undefined });
+
     const { oppdaterData } = this.props;
 
-    await oppdaterData(lagBegrunnelse('art16_1', event.value));
+    await oppdaterData(lagBegrunnelse('art16_1_anmodning', event.value));
     this.lagreVilkar();
   };
 
   validerLovvalg = () => {
-    const valid = !Utils._isNil(this.props.unntakFraBestemmelse);
+    const valid = this.props.unntakFraBestemmelse;
     if (!valid) this.setState({ lovvalgFeilmelding: { feilmelding: 'Velg lovvalg' } });
     return valid;
   };
@@ -184,8 +195,8 @@ class VurderingArtikkel16 extends Component {
   };
 
   validerFritekst = () => {
-    const valid = this.props.art16begrunnelserFritekst !== '';
-    if (!valid) this.setState({ fritekstFeilmelding: 'Fyll inn fritekst' });
+    const valid = this.props.tilstand.art16_1.begrunnelseFritekst;
+    if (!valid) this.setState({ fritekstFeilmelding: { feilmelding: 'Fyll inn fritekst' } });
     return valid;
   };
 
@@ -207,10 +218,10 @@ class VurderingArtikkel16 extends Component {
 
   render() {
     const {
+      behandlingID,
       gyldigeSoknadsland,
       soknadsperiode,
       medlemskap,
-      oppsummering,
       redigerbart,
       tilstand,
     } = this.props;
@@ -218,9 +229,10 @@ class VurderingArtikkel16 extends Component {
     const {
       begrunnelserEndringHandler,
       lagreLovvalgsPerioder,
-      lagreVilkar,
       validerAlt,
       validerOgLagreBehandling,
+      fritekstFokusFlyttetHandler,
+      fritekstEndretHandler,
     } = this;
 
     const {
@@ -228,8 +240,6 @@ class VurderingArtikkel16 extends Component {
       fritekstFeilmelding,
       lovvalgFeilmelding,
     } = this.state;
-
-    const { behandlingID } = oppsummering;
 
     const antallManeder = datoDiffMenneskelig(soknadsperiode.fom, soknadsperiode.tom);
 
@@ -240,11 +250,11 @@ class VurderingArtikkel16 extends Component {
       { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
     ];
 
-    const fritekstError = fritekstFeilmelding ? { error: fritekstFeilmelding, touched: true } : {};
-
     const visFritekstfelt = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
-    const { art16_1 } = tilstand;
+    const { art16_1, art16_1: { begrunnelseFritekst } } = tilstand;
+
+    const art16fritekst = begrunnelseFritekst || '';
 
     /* eslint-disable max-len */
     return (
@@ -292,12 +302,14 @@ class VurderingArtikkel16 extends Component {
             <Nav.Column xs="12">
               {
                 visFritekstfelt &&
-                <Skjema.Textarea
-                  meta={fritekstError}
-                  onBlur={lagreVilkar}
-                  disabled={!redigerbart}
-                  feltNavn="vilkar.art16_1_begrunnelser_fritekst"
+                <Nav.Textarea
+                  id="art16_1_anmodning"
                   label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                  disabled={!redigerbart}
+                  onBlur={fritekstFokusFlyttetHandler}
+                  onChange={fritekstEndretHandler}
+                  value={art16fritekst}
+                  feil={fritekstFeilmelding}
                   maxLength={255}
                   bredde="fullbredde"
                 />
@@ -307,7 +319,7 @@ class VurderingArtikkel16 extends Component {
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="12">
               <Nav.Fieldset legend={`Velg direkte forutgående perioder i ${landSomTekstListe}:`}>
-                <TidligereMedlemskap redigerbart={redigerbart} medlemskap={medlemskap} />
+                <TidligereMedlemskap oppdaterOgLagreBehandlinger={this.props.oppdaterOgLagreBehandlinger} redigerbart={redigerbart} medlemskap={medlemskap} />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
@@ -334,13 +346,12 @@ VurderingArtikkel16.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired, // TODO:
   soknadsperiode: MPT.Soknadsperiode.isRequired,
-  oppsummering: PT.object.isRequired,
+  behandlingID: PT.number.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
   unntakFraBestemmelse: PT.string,
   art16begrunnelserFritekst: PT.string,
-  tidligeremedlemskap: PT.array.isRequired,
   lagreVilkarHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
@@ -354,13 +365,12 @@ VurderingArtikkel16.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
-  soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  medlemskap: fagsakSelectors.MedlemskapSelector(state),
+  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   art16begrunnelserFritekst: formSelectors.Art16BegrunnelseFritekstSelector(state),
-  tidligeremedlemskap: formSelectors.TidligereMedlemskapSelector(state),
   unntakFraBestemmelse: formSelectors.UnntakFraBestemmelse(state),
 });
 

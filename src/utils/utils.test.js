@@ -1,5 +1,5 @@
 /* eslint-disable */
-import {fn, isJSON, queryParamsTilObjekt} from './utils';
+import {fn, isJSON, queryParamsTilObjekt } from './utils';
 
 describe('utils.js:', () => {
 
@@ -26,6 +26,7 @@ describe('utils.js:', () => {
       expect(isJSON(testObjekt)).toEqual(false);
     });
   });
+
   describe('queryParamsTilObjekt', () => {
     test('Dekonstruerer querystring til object med props fra querystring', () => {
       const url = '?id=1&bid=2&sid=3';

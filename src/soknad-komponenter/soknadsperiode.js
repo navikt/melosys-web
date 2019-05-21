@@ -6,10 +6,10 @@ import PT from 'prop-types';
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as KV from '../kodeverk';
 
 import * as Ikoner from '../resources/images';
-import { fagsakSelectors } from '../ducks/fagsaker/';
-
+import { behandlingerSelectors } from '../ducks/behandlinger';
 import { soknadSelectors, soknadOperations } from '../ducks/soknad';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
@@ -172,7 +172,7 @@ class Soknadsperiode extends Component {
     return (
       <div className="soknadsperiode panelSeksjon">
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel="Søknadsperiode" undertittel={`${soknadsperiodeFom} - ${soknadsperiodeTom}`} />}
+          heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.soknadsPeriode} undertittel={`${soknadsperiodeFom} - ${soknadsperiodeTom}`} />}
           ariaTittel="Panel for søknadsperiode">
           <Nav.Container fluid>
             {
@@ -226,7 +226,7 @@ Soknadsperiode.defaultProps = {
 const mapStateToProps = state => ({
   soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
   soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
