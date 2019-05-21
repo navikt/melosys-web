@@ -137,8 +137,8 @@ class BrevBestilling extends Component {
             { behandlingID && redigerbart &&
               <PdfLenkeListe behandlingID={behandlingID} dokumenter={ForhandsvistePdfDokumenter} vedKlikk={this.validerBrev} />
             }
-            <Nav.Knapp htmlType="reset" type="standard" disabled={!redigerbart} onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>&nbsp;
-            <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>
+            <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>&nbsp;
+            <Nav.Knapp htmlType="reset" type="standard" disabled={!redigerbart} onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>
             { this.state.erBrevSendt && <Nav.AlertStripe type="suksess" className="varsel">Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.</Nav.AlertStripe> }
             { this.state.feilmelding && <Nav.AlertStripe type="advarsel" className="varsel">{this.state.feilmelding}</Nav.AlertStripe> }
           </Nav.Fieldset>

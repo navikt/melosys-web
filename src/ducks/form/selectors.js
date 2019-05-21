@@ -8,6 +8,7 @@
 import { createSelector } from 'reselect';
 import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
+import sedBestilling from '../../soknad-komponenter/sideDialog/sedBestilling';
 
 const getFormState = (state, formName, defaultValue = {}) => (
   state.form[formName] ? state.form[formName] : defaultValue
@@ -36,6 +37,11 @@ export const ForretningsValideringSelector = createSelector(
 export const BrevBestillingFormSelector = createSelector(
   state => getFormState(state, KV.Form.BREV_BESTILLING, {}),
   brevbestilling => brevbestilling
+);
+
+export const SedBestillingFormSelector = createSelector(
+  state => getFormState(state, KV.Form.SED_BESTILLING, {}),
+  sedbestilling => sedbestilling
 );
 
 export const Lovvalgsperiode = createSelector(

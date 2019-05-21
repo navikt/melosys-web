@@ -13,6 +13,7 @@ import * as Oppgaver from './modules/oppgaver';
 import * as OpprinneligLovvalgsperiode from './modules/opprinneligLovvalgsperiode';
 import * as Registrering from './modules/registrering';
 import * as Saksbehandler from './modules/saksbehandler';
+import * as Sed from './modules/sed';
 import * as Soknader from './modules/soknader';
 import * as Vedtak from './modules/vedtak';
 import * as Vilkar from './modules/vilkar';
@@ -47,6 +48,7 @@ export {
   Registrering,
   Saksbehandler,
   Saksopplysninger,
+  Sed,
   Soknader,
   Vedtak,
   Vilkar,
