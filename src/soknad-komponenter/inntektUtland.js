@@ -8,7 +8,7 @@ import * as MPT from '../proptypes/index';
 import * as Skjema from './skjema/index';
 import * as KV from '../kodeverk';
 
-import { fagsakSelectors } from '../ducks/fagsaker/';
+import { behandlingerSelectors } from '../ducks/behandlinger/';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 import './inntektUtland.css';
 import * as Utils from '../utils';
@@ -60,18 +60,16 @@ function Inntekt (props) {
 
 Inntekt.propTypes = {
   redigerbart: PT.bool.isRequired,
-  inntekt: MPT.Inntekt,
   soknadForm: MPT.SoknadForm,
 };
 
 Inntekt.defaultProps = {
-  inntekt: {},
   soknadForm: {},
 };
 
 const mapStateToProps = state => ({
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 const mapDispatchToProps = () => ({});
 

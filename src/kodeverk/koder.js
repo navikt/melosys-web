@@ -98,4 +98,5 @@ export const avklartefaktaKoder = {
 };
 export const referanseKoder = {
   INSTALLASJON_ARBEIDSLAND: 'INSTALLASJON_ARBEIDSLAND',
+  INSTALLASJON_ARBEIDSLAND_TYPE: 'INSTALLASJON_ARBEIDSLAND_TYPE',
 };

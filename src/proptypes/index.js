@@ -1,32 +1,36 @@
-import { Behandlingsresultat } from './behandlingsresultat';
-import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
-import { Inntekt, InntektListe, InntektEnkeltLinje } from './inntekt';
-import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
-import { TimerTimelonnet, TimerTimelonnetLinje } from './timerTimelonnet';
-import { MedlemskapEnkeltPeriode, MedlemskapPerioder, Medlemskap } from './medlemskap';
-import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
-import { Kodeverk } from './kodeverk';
-import { Person } from './person';
-import { GeneriskAdresse } from './adresser';
-import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
-import { Saksbehandler } from './saksbehandler';
-import { FagsakOppsummering } from './fagsakOppsummering';
-import { Oppsummering } from './oppsummering';
-import { Periode } from './periode';
-import { Bekreftelser } from './bekreftelser';
-import { SoknadForm } from './soknadForm';
-import { Utenlandsopphold } from './utenlandsopphold';
 import { ArbeidNorge } from './arbeidNorge';
-import { Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger } from './vurdering';
-import { OppholdLand, OppholdPeriode } from './opphold';
-import { Yrkesgruppe } from './yrkesgruppe';
+import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
+import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
 import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
-import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
-import { Journalforing, JournalforingSkjemaVerdier } from './journalforing';
-import { DokumentMetadataListe } from './dokumentMetadata';
+import { Avklartefakta } from './avklartefakta';
+import { BehandligOversikt, BehandligOversikter } from './behandlingOversikt';
+import { Bekreftelser } from './bekreftelser';
+import { Behandlingsresultat } from './behandlingsresultat';
 import { Dokument, DokumentNullable, Vedlegg } from './dokument';
+import { DokumentMetadataListe } from './dokumentMetadata';
+import { Fagsak } from './fagsak';
+import { FagsakSokListe } from './fagsakSokListe';
+import { GeneriskAdresse } from './adresser';
+import { Inntekt, InntektListe, InntekterPrAarMaaned } from './inntekt';
+import { Journalforing, JournalforingSkjemaVerdier } from './journalforing';
+import { Kodeverk } from './kodeverk';
+import { Vurdering, Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feilmeldinger } from './vurdering';
+import { MedlemskapEnkeltPeriode, MedlemskapPerioder, Medlemskap } from './medlemskap';
+import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
+import { OppholdLand, OppholdPeriode } from './opphold';
+import { Oppsummering } from './oppsummering';
+import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
+import { Periode } from './periode';
+import { Person } from './person';
+import { Saksbehandler } from './saksbehandler';
+import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
+import { Soknad } from './soknad';
+import { SoknadForm } from './soknadForm';
 import { Soknadsland } from './soknadsland';
 import { Soknadsperiode } from './soknadsperiode';
+import { TimerTimelonnet, TimerTimelonnetLinje } from './timerTimelonnet';
+import { Utenlandsopphold } from './utenlandsopphold';
+import { Yrkesgruppe } from './yrkesgruppe';
 
 export {
   ArbeidNorge,
@@ -35,17 +39,21 @@ export {
   Arbeidsforholdene,
   Arbeidsforholdet,
   ArbeidsgivereNorge,
+  Avklartefakta,
+  BehandligOversikt,
+  BehandligOversikter,
   Bekreftelser,
   Behandlingsresultat,
   Dokument,
   DokumentMetadataListe,
   DokumentNullable,
-  FagsakOppsummering,
+  Fagsak,
+  FagsakSokListe,
   Feilmelding,
   Feilmeldinger,
   GeneriskAdresse,
   Inntekt,
-  InntektEnkeltLinje,
+  InntekterPrAarMaaned,
   InntektListe,
   Journalforing,
   JournalforingOppgave,
@@ -70,12 +78,14 @@ export {
   Person,
   SaksbehandlingOppgave,
   Saksbehandler,
+  Soknad,
   SoknadForm,
-  Yrkesgruppe,
-  TimerTimelonnet,
-  TimerTimelonnetLinje,
-  Utenlandsopphold,
-  Vedlegg,
   Soknadsland,
   Soknadsperiode,
+  TimerTimelonnet,
+  TimerTimelonnetLinje,
+  Yrkesgruppe,
+  Utenlandsopphold,
+  Vedlegg,
+  Vurdering,
 };
