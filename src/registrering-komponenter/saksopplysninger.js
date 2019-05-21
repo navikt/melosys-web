@@ -13,7 +13,8 @@ import * as Nav from '../utils/navFrontend';
 
 import Personopplysninger from '../soknad-komponenter/personopplysninger';
 import Medlemskap from '../komponenter/medlemskap';
-import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
+import { behandlingerSelectors } from '../ducks/behandlinger';
+import { fagsakOperations } from '../ducks/fagsaker';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder';
 import Landvelger from '../soknad-komponenter/skjema/landvelger';
 import * as Dato from '../soknad-komponenter/skjema/validering/generisk/dato';
@@ -121,7 +122,6 @@ class Saksopplysninger extends Component {
 Saksopplysninger.propTypes = {
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
-  inntekt: MPT.Inntekt,
   medlemskap: MPT.Medlemskap,
   oppsummering: MPT.Oppsummering.isRequired,
   lovvalgsPeriode: PT.object.isRequired,
@@ -135,7 +135,6 @@ Saksopplysninger.propTypes = {
 };
 
 Saksopplysninger.defaultProps = {
-  inntekt: {},
   medlemskap: {},
   skjema: {},
   landkode: '',
@@ -148,9 +147,8 @@ Saksopplysninger.defaultProps = {
 const skjemaSelector = formValueSelector(KV.Form.REGISTRERING);
 const mapStateToProps = state => ({
   registreringSkjemaVerdier: formSelectors.RegistreringFormSelector(state).values,
-  inntekt: fagsakSelectors.InntektSoknadenSelector(state),
-  medlemskap: fagsakSelectors.MedlemskapSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
+  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   landkode: skjemaSelector(state, 'landkode'),
   startdato: skjemaSelector(state, 'startdato'),

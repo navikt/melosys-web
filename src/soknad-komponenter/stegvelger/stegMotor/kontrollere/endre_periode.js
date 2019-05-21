@@ -15,7 +15,7 @@ class EndrePeriode extends Steg {
     this.id = STEG.ENDRET_PERIODE;
     this.tittel = 'Endre lovvalgsperiode';
     this.komponent = VurderingEndrePeriode;
-    this.samleRelevanteData = () => ({});
+    this.samleRelevanteData = _propsLight => ({ behandlingID: _propsLight.behandlingID }); // TODO; Refactor with React Context API!!!
     this.beregnRelevantUI = () => ({});
     this.handlers = {
       tilForsiden: this._propsLight.tilgjengeligeHandlers.tilForsiden,
