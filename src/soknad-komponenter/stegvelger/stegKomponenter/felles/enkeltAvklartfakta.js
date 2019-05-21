@@ -19,17 +19,27 @@ const EnkeltAvklartfakta = props => {
     redigerbart, begrunnelser, tittel,
     avklartefaktaTyper,
     avklartfakta, avklartfaktaKode,
-    oppdaterData,
+    oppdaterData, onChange,
   } = props;
 
   const fakta = hentFaktaVerdi(avklartfakta);
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(avklartfaktaKode, avklartfakta));
+
+    return function cleanup() {
+      if (props.slettData) {
+        props.slettData('avklartefakta', avklartfaktaKode);
+      }
+    };
   }, []);
 
   const radioEndringHandler = event => {
     oppdaterData(lagAvklartfakta(avklartfaktaKode, null, event.target.value));
+
+    if (onChange) {
+      onChange(event.target.value);
+    }
   };
 
   const listevalgEndringHandler = event => {
@@ -84,10 +94,15 @@ EnkeltAvklartfakta.propTypes = {
   tittel: PT.string.isRequired,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
+  onChange: PT.func,
+  slettData: PT.func,
 };
 
 EnkeltAvklartfakta.defaultProps = {
   begrunnelser: [],
+  onChange: null,
+  slettData: null,
+
 };
 
 export default EnkeltAvklartfakta;

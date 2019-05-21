@@ -16,9 +16,3 @@ export function resetFagsakState() {
   return { type: Types.RESET };
 }
 
-export const oppdaterBehandlingsStatus = status => (
-  {
-    type: Types.BEHANDLINGSSTATUS_UPDATE,
-    data: status,
-  }
-);

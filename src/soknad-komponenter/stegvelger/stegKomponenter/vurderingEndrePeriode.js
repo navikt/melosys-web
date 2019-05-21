@@ -8,11 +8,9 @@ import PdfLenkeListe from '../../pdfLenkeListe';
 import { KodeTermSelect } from '../../kodeTermSelect';
 
 import * as Nav from '../../../utils/navFrontend';
-import { fagsakSelectors } from '../../../ducks/fagsaker';
 
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 
-import * as MPT from '../../../proptypes';
 import * as API from '../../../services/api';
 
 import './vurderingEndrePeriode.css';
@@ -29,7 +27,7 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   componentDidMount() {
-    const { oppsummering: { behandlingID } } = this.props;
+    const { behandlingID } = this.props;
     this.hentOpprinneligPeriode(behandlingID);
   }
 
@@ -105,7 +103,7 @@ export class VurderingEndrePeriode extends React.Component {
   vedKlikkPdf = async () => this.validerAlt();
 
   render() {
-    const { oppsummering, lovvalgsPeriode: { fomDato } } = this.props;
+    const { behandlingID, lovvalgsPeriode: { fomDato } } = this.props;
 
     const {
       vedTomDatoEndring,
@@ -144,8 +142,6 @@ export class VurderingEndrePeriode extends React.Component {
         },
       },
     ];
-
-    const { behandlingID } = oppsummering;
 
     const formattertFomDato = Utils.dato.formatterDatoTilNorsk(fomDato);
 
@@ -204,7 +200,7 @@ export class VurderingEndrePeriode extends React.Component {
 }
 
 VurderingEndrePeriode.propTypes = {
-  oppsummering: MPT.Oppsummering.isRequired,
+  behandlingID: PT.number.isRequired,
   lovvalgsPeriode: PT.object.isRequired,
   endreDatoOgSendLovvalgsperioderHandler: PT.func.isRequired,
   fomDato: PT.string,
@@ -217,7 +213,6 @@ VurderingEndrePeriode.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
 });
 
