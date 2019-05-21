@@ -8,10 +8,10 @@ import './henlagtInformasjon.css';
 import * as MPT from "../../proptypes";
 
 const HenlagtInformasjon = ({ behandlingsresultat }) => {
-  const { begrunnelser, begrunnelseFritekst } = behandlingsresultat;
+  const { begrunnelseKoder, begrunnelseFritekst } = behandlingsresultat;
 
-  const begrunnelseBeskrivelse = !begrunnelser || begrunnelser.length === 0 ? 'Ukjent grunn'
-    : KV.kodeTilTerm(begrunnelser[0], MKV.KTObjects.henleggelsesgrunner);
+  const begrunnelseBeskrivelse = !begrunnelseKoder || begrunnelseKoder.length === 0 ? 'Ukjent grunn'
+    : KV.kodeTilTerm(begrunnelseKoder[0], MKV.KTObjects.henleggelsesgrunner);
   const henlagtTekst = (begrunnelseFritekst && begrunnelseFritekst.length > 1) ? begrunnelseFritekst : begrunnelseBeskrivelse;
 
 
