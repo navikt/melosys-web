@@ -87,15 +87,13 @@ class Saksopplysninger extends Component {
       return null;
     }
 
-    const { begrunnelseKoder, begrunnelseFritekst } = behandlingsresultat;
     const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
     const visStegVelger = !visHenlagtSak;
     return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
         { visHenlagtSak &&
           <HenlagtInformasjon
-            begrunnelseKoder={begrunnelseKoder}
-            begrunnelseFritekst={begrunnelseFritekst} />
+            behandlingsresultat={behandlingsresultat} />
         }
         { visStegVelger &&
           <Stegvelger

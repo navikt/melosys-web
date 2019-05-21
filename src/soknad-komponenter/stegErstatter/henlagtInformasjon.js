@@ -1,15 +1,17 @@
 import React from 'react';
-import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
 
 import './henlagtInformasjon.css';
+import * as MPT from "../../proptypes";
 
-const HenlagtInformasjon = ({ begrunnelseKoder, begrunnelseFritekst }) => {
-  const begrunnelseBeskrivelse = !begrunnelseKoder || begrunnelseKoder.length === 0 ? 'Ukjent grunn'
-    : KV.kodeTilTerm(begrunnelseKoder[0], MKV.KTObjects.henleggelsesgrunner);
+const HenlagtInformasjon = ({ behandlingsresultat }) => {
+  const { begrunnelser, begrunnelseFritekst } = behandlingsresultat;
+
+  const begrunnelseBeskrivelse = !begrunnelser || begrunnelser.length === 0 ? 'Ukjent grunn'
+    : KV.kodeTilTerm(begrunnelser[0], MKV.KTObjects.henleggelsesgrunner);
   const henlagtTekst = (begrunnelseFritekst && begrunnelseFritekst.length > 1) ? begrunnelseFritekst : begrunnelseBeskrivelse;
 
 
@@ -26,13 +28,11 @@ const HenlagtInformasjon = ({ begrunnelseKoder, begrunnelseFritekst }) => {
 };
 
 HenlagtInformasjon.propTypes = {
-  begrunnelseKoder: PT.arrayOf(PT.string),
-  begrunnelseFritekst: PT.string,
+  behandlingsresultat: MPT.Behandlingsresultat.isRequired,
 };
 
 HenlagtInformasjon.defaultProps = {
-  begrunnelseKoder: [],
-  begrunnelseFritekst: '',
+  behandlingsresultat: {},
 };
 
 export default HenlagtInformasjon;
