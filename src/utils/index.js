@@ -8,10 +8,10 @@ import * as streng from './streng';
 import * as logger from './logger';
 import * as queryString from './queryString';
 
-import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, grupperEtterKey } from './utils';
+import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt } from './utils';
 
 export {
-  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, grupperEtterKey,
+  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt,
   adresse,
   dato, streng,
   logger,
