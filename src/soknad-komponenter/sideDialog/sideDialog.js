@@ -6,6 +6,8 @@ import { Panel } from 'nav-frontend-paneler';
 
 import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
+import SideDialogSedBestilling from './sedBestilling';
+import SideDialogSedUnderArbeid from './sideDialogSedUnderArbeid';
 
 import './sideDialog.css';
 
@@ -18,6 +20,8 @@ class SideDialog extends Component {
 
   static defaultProps = {
     faner: [
+      { navn: 'sedunderarbeid', tittel: 'SED under arbeid', komponent: <SideDialogSedUnderArbeid key={uuid()} /> },
+      { navn: 'sedbestilling', tittel: 'Send SED', komponent: <SideDialogSedBestilling key={uuid()} /> },
       { navn: 'dokumenter', tittel: 'Dokumenter', komponent: <SideDialogDokumenter key={uuid()} /> },
       { navn: 'brevbestilling', tittel: 'Send brev', komponent: <SideDialogBrevBestilling key={uuid()} /> },
     ],
