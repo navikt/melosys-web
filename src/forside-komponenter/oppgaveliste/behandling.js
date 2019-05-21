@@ -10,7 +10,7 @@ import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import './behandling.css';
 
 const BehandlingPanel = ({ behandling, kanVises }) => {
-  const { behandlingstype, behandlingsstatus, registrertDato } = behandling;
+  const { behandlingstype, behandlingsstatus, opprettetDato } = behandling;
 
   return (
     <Nav.Panel className="behandling">
@@ -21,7 +21,7 @@ const BehandlingPanel = ({ behandling, kanVises }) => {
               <dt>Behandlingstype:</dt>
               <dd>{KV.objektTilTerm(behandlingstype) || '(ukjent)'}</dd>
               <dt>Opprettelsesdato:</dt>
-              <dd>{<EnkeltDato dato={registrertDato} /> || '(ukjent)'}</dd>
+              <dd>{<EnkeltDato dato={opprettetDato} /> || '(ukjent)'}</dd>
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="4">
