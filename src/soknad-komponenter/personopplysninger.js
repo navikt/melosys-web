@@ -17,7 +17,7 @@ import OppgittAdresseSoknad from './personopplysninger/oppgittAdresseSoknad';
 import UtenlandskIdent from './personopplysninger/utenlandskIdent';
 
 import './personopplysninger.css';
-import { fagsakSelectors } from '../ducks/fagsaker';
+import { behandlingerSelectors } from '../ducks/behandlinger';
 import { PersonSelectors, PersonOperations } from '../ducks/personer';
 import { soknadSelectors } from '../ducks/soknad';
 
@@ -133,8 +133,8 @@ Personopplysninger.defaultProps = {
 const mapStateToProps = state => ({
   alleRelevantePersoner: PersonSelectors.personerSelector(state),
   personOpplysninger: soknadSelectors.PersonOpplysningerSelector(state),
-  person: fagsakSelectors.PersonSelector(state),
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  person: behandlingerSelectors.PersonSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
 });
 

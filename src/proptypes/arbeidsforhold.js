@@ -5,7 +5,7 @@ import { Periode } from './periode';
 import { Permisjoner } from './permisjon';
 import { TimerTimelonnet } from './timerTimelonnet';
 import { Arbeidsavtale } from './arbeidsavtale';
-import { InntektEnkeltLinje } from './inntekt';
+import { InntektListe } from './inntekt';
 
 const ArbeidsforholdetPropType = PT.shape({
   arbeidsforholdID: PT.string,
@@ -14,7 +14,7 @@ const ArbeidsforholdetPropType = PT.shape({
   arbeidsforholdstype: PT.string,
   permisjonOgPermittering: Permisjoner,
   timerTimelonnet: TimerTimelonnet,
-  inntekt: PT.arrayOf(InntektEnkeltLinje),
+  inntekt: InntektListe,
   utenlandsopphold: PT.array,
   arbeidsgiverID: PT.string,
   arbeidstakerID: PT.string,

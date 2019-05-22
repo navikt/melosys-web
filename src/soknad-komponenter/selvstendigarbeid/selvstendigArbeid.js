@@ -8,9 +8,8 @@ import * as Ikoner from '../../resources/images';
 import * as Skjema from '../skjema';
 import * as formSelectors from '../../ducks/form/selectors';
 import * as soknadActions from '../../ducks/soknad/actions';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 import * as KV from '../../kodeverk';
-
-import { fagsakSelectors } from '../../ducks/fagsaker';
 
 import SelvstendigeForetak from './selvstendigeforetak';
 import { BOOLSK } from '../../constants';
@@ -78,7 +77,7 @@ SelvstendigArbeid.defaultProps = {
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

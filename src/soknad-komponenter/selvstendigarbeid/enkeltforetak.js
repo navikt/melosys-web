@@ -5,7 +5,7 @@ import PT from 'prop-types';
 import * as Nav from '../../utils/navFrontend';
 import * as Skjema from '../skjema';
 
-import { fagsakSelectors } from '../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../../constants';
 
@@ -102,7 +102,7 @@ EnkeltForetak.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = () => ({});

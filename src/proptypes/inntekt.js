@@ -1,41 +1,61 @@
 import PT from 'prop-types';
 import { Periode } from './periode';
 
-const InntektEnkeltLinjePropType = PT.shape({
-  beloep: PT.number,
-  fordel: PT.string,
-  inntektskilde: PT.string,
-  inntektsperiodetype: PT.string,
-  inntektsstatus: PT.string,
+const InntektListePropType = PT.arrayOf(PT.shape({
+  opplysningspliktigID: PT.string,
   levereringstidspunkt: PT.string,
   utbetaltIPeriode: PT.string,
-  opplysningspliktigID: PT.string,
-  opptjeningsperiode: Periode,
+  inntektsperiodetype: PT.string,
+  inntektskilde: PT.string,
+  fordel: PT.string,
+  beloep: PT.number,
+  inntektsstatus: PT.string,
+  utloeserArbeidsgiveravgift: PT.bool,
+  opptjeningsland: PT.string,
+  informasjonsstatus: PT.string,
   virksomhetID: PT.string,
+  beskrivelse: PT.string,
   inntektsmottakerID: PT.string,
   inngaarIGrunnlagForTrekk: PT.bool,
-  utloeserArbeidsgiveravgift: PT.bool,
-  beskrivelse: PT.string,
+  opptjeningsperiode: Periode,
+}));
+
+const ArbeidsInntektInformasjonPropType = PT.shape({
+  inntektListe: InntektListePropType,
 });
 
-const InntektListePropType = PT.arrayOf(InntektEnkeltLinjePropType);
+const ArbeidsInntektMaanedListePropType = PT.arrayOf(PT.shape({
+  arbeidsInntektInformasjon: ArbeidsInntektInformasjonPropType,
+  aarMaaned: PT.string,
+}));
 
+// ==============================================================
+
+const ArbeidsforholdFrilanserListePropType = PT.arrayOf(PT.shape({
+  frilansPeriode: Periode,
+  yrke: PT.string,
+}));
+const FrilansInntektInformasjonPropType = PT.shape({
+  arbeidsforholdFrilanserListe: ArbeidsforholdFrilanserListePropType,
+});
+const FrilansInntektMaanedListePropType = PT.arrayOf(PT.shape({
+  frilansInntektInformasjon: FrilansInntektInformasjonPropType,
+  aarMaaned: PT.string,
+}));
+
+const InntekterPrAarMaanedPropType = PT.arrayOf(PT.shape({
+  opplysningspliktigID: PT.string,
+  beloep: PT.number,
+  aarMaaned: PT.string,
+}));
+// ==============================================================
 const InntektPropType = PT.shape({
-  ident: PT.shape({
-    personIdent: PT.string,
-  }),
-  arbeidsInntektIdent: PT.shape({
-    arbeidsInntektMaaned: PT.shape({
-      aarMaaned: PT.string,
-      arbeidsInntektInformasjon: PT.shape({
-        inntektListe: InntektEnkeltLinjePropType,
-      }),
-    }),
-  }),
+  arbeidsInntektMaanedListe: ArbeidsInntektMaanedListePropType,
+  frilansInntektMaanedListe: FrilansInntektMaanedListePropType,
 });
 
 export {
-  InntektEnkeltLinjePropType as InntektEnkeltLinje,
+  InntekterPrAarMaanedPropType as InntekterPrAarMaaned,
   InntektListePropType as InntektListe,
   InntektPropType as Inntekt,
 };

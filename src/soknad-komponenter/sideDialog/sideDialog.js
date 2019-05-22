@@ -6,8 +6,6 @@ import { Panel } from 'nav-frontend-paneler';
 
 import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
-import SideDialogSedBestilling from './sedBestilling';
-import SideDialogSedUnderArbeid from './sideDialogSedUnderArbeid';
 
 import './sideDialog.css';
 
@@ -16,14 +14,13 @@ const uuid = require('uuid/v4');
 class SideDialog extends Component {
   static propTypes = {
     faner: PT.array,
+    behandlingID: PT.number.isRequired,
   };
 
   static defaultProps = {
     faner: [
-      { navn: 'sedunderarbeid', tittel: 'SED under arbeid', komponent: <SideDialogSedUnderArbeid key={uuid()} /> },
-      { navn: 'sedbestilling', tittel: 'Send SED', komponent: <SideDialogSedBestilling key={uuid()} /> },
-      { navn: 'dokumenter', tittel: 'Dokumenter', komponent: <SideDialogDokumenter key={uuid()} /> },
-      { navn: 'brevbestilling', tittel: 'Send brev', komponent: <SideDialogBrevBestilling key={uuid()} /> },
+      { navn: 'dokumenter', tittel: 'Dokumenter' },
+      { navn: 'brevbestilling', tittel: 'Send brev' },
     ],
   };
 
@@ -31,7 +28,14 @@ class SideDialog extends Component {
   state = {
     aktivFane: this.props.faner[0].navn,
   };
-
+  getFaneKomponent = (navn, behandlingID) => {
+    if (navn === 'dokumenter') {
+      return <SideDialogDokumenter key={uuid()} />;
+    } else if (navn === 'brevbestilling') {
+      return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} />;
+    }
+    return <SideDialogDokumenter key={uuid()} />;
+  };
   /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
    * slik at riktig komponent under menyen vises. Data fra komponenten slik som navn ligger under
    * props.faner-objektet.
@@ -43,6 +47,8 @@ class SideDialog extends Component {
   };
 
   render() {
+    const { behandlingID } = this.props;
+    const { navn } = this.props.faner.find(item => item.navn === this.state.aktivFane);
     return (
       <div className="dialog panelSeksjon">
         <Panel>
@@ -55,7 +61,7 @@ class SideDialog extends Component {
               </button>))}
           </div>
           <div>
-            { this.props.faner.find(item => item.navn === this.state.aktivFane).komponent }
+            { this.getFaneKomponent(navn, behandlingID)}
           </div>
         </Panel>
       </div>
