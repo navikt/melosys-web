@@ -58,9 +58,9 @@ export default function reducer(state = initialState, action) {
       const soknad = {
         ...state.data.soeknadDokument,
         arbeidsinntekt: {
-          inntektNorskIPerioden: dokument.antallAnsatte ? strengTilInt(dokument.inntektNorskIPerioden) : null,
-          inntektUtenlandskIPerioden: dokument.antallAnsatte ? strengTilInt(dokument.inntektUtenlandskIPerioden) : null,
-          inntektNaeringIPerioden: dokument.antallAnsatte ? strengTilInt(dokument.inntektNaeringIPerioden) : null,
+          inntektNorskIPerioden: dokument.inntektNorskIPerioden ? strengTilInt(dokument.inntektNorskIPerioden) : null,
+          inntektUtenlandskIPerioden: dokument.inntektUtenlandskIPerioden ? strengTilInt(dokument.inntektUtenlandskIPerioden) : null,
+          inntektNaeringIPerioden: dokument.inntektNaeringIPerioden ? strengTilInt(dokument.inntektNaeringIPerioden) : null,
           inntektNaturalytelser: {
             friBil: dokument.inntektNaturalFribil,
             friBolig: dokument.inntektNaturalFribolig,
@@ -81,11 +81,11 @@ export default function reducer(state = initialState, action) {
         arbeidUtland: dokument.arbeidUtland,
         juridiskArbeidsgiverNorge: {
           antallAnsatte: dokument.antallAnsatte ? strengTilInt(dokument.antallAnsatte) : null,
-          utsendteNeste12Mnd: dokument.antallAnsatte ? strengTilInt(dokument.utsendteNeste12Mnd) : null,
-          antallAdmAnsatte: dokument.antallAnsatte ? strengTilInt(dokument.antallAdmAnsatte) : null,
-          andelOmsetningINorge: dokument.antallAnsatte ? strengTilInt(dokument.andelOmsetningINorge) : null,
-          andelOppdragINorge: dokument.antallAnsatte ? strengTilInt(dokument.andelOppdragINorge) : null,
-          andelKontrakterINorge: dokument.antallAnsatte ? strengTilInt(dokument.andelKontrakterINorge) : null,
+          utsendteNeste12Mnd: dokument.utsendteNeste12Mnd ? strengTilInt(dokument.utsendteNeste12Mnd) : null,
+          antallAdmAnsatte: dokument.antallAdmAnsatte ? strengTilInt(dokument.antallAdmAnsatte) : null,
+          andelOmsetningINorge: dokument.andelOmsetningINorge ? strengTilInt(dokument.andelOmsetningINorge) : null,
+          andelOppdragINorge: dokument.andelOppdragINorge ? strengTilInt(dokument.andelOppdragINorge) : null,
+          andelKontrakterINorge: dokument.andelKontrakterINorge ? strengTilInt(dokument.andelKontrakterINorge) : null,
           arbeidstakereRekruttertILand: dokument.arbeidstakereRekruttertILand || null,
           oppdragsKontrakterIHovedsakInngaattILand: dokument.oppdragsKontrakterIHovedsakInngaattILand || null,
           ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
