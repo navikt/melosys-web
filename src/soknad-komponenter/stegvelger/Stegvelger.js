@@ -97,8 +97,6 @@ class Stegvelger extends Component {
     const { stegStores } = this.state;
     Object.keys(stegStores).forEach(type => stegStores[type].slettSteg(stegID));
     this.setState(stegStores);
-
-    this.publiserStegdata();
   };
 
   publiserStegdata = async () => {
@@ -285,7 +283,7 @@ class Stegvelger extends Component {
 Stegvelger.propTypes = {
   behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
-  avklartefakta: MPT.Avklartefakta,
+  avklartefakta: MPT.AvklartefaktaListe,
   behandlingsPerioder: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
