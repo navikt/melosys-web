@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../../utils/navFrontend';
-import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../../regler/vilkar';
+import { konverterTilStegData, lagBegrunnelse, lagVilkaar, vilkaarType } from '../../../../regler/vilkar';
 
 import ListevelgerFlervalg from '../../../../komponenter/ui/listevelgerFlervalg';
 
@@ -28,13 +28,16 @@ class MultiVilkaar extends Component {
 
     if (value === vilkaarKode12) {
       oppdaterData(lagVilkaar(vilkaarKode12, true));
-      slettData('vilkaar', 'art16_1');
+      slettData(vilkaarType, 'art16_1_avslag');
+      slettData(vilkaarType, 'art16_1_anmodning');
     } else if (value === this.VilkaarKode16) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
-      oppdaterData(lagVilkaar('art16_1', true));
+      slettData(vilkaarType, 'art16_1_avslag');
+      oppdaterData(lagVilkaar('art16_1_anmodning', true));
     } else if (value === this.AVSLAG) {
       oppdaterData(lagVilkaar(vilkaarKode12, false));
-      oppdaterData(lagVilkaar('art16_1', false));
+      slettData(vilkaarType, 'art16_1_anmodning');
+      oppdaterData(lagVilkaar('art16_1_avslag', false));
     }
   };
 
@@ -112,12 +115,12 @@ class MultiVilkaar extends Component {
                     muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
                     label="Legg til begrunnelse for avslag:"
                     tillatFritekst={false}
-                    onChange={e => this.begrunnelseEndret(e, 'art16_1')}
+                    onChange={e => this.begrunnelseEndret(e, 'art16_1_avslag')}
                     defaultElementer={vilkaar16.begrunnelseKoder}
                     disabled={!redigerbart}
                   />
                   <Nav.Textarea
-                    id="art16_1"
+                    id="art16_1_avslag"
                     label="Begrunnelse for avslag (fritekst):"
                     maxLength={255}
                     bredde="fullbredde"

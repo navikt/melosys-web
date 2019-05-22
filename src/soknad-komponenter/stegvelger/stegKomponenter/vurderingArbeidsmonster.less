@@ -4,33 +4,38 @@
 
   .arbeidsmonster {
     > * {
-      margin-top: 3rem;
+      margin-top: 1rem;
     }
-  }
 
-  .landliste_innhold {
-    width:70%;
+  }
+  .marginaltArbeid {
+    width: 70%;
     display: flex;
     flex-direction: column;
+    padding-bottom: 1rem;
 
-    >:first-child {
-      padding-top: 0;
-    }
-  }
+    .landliste_innhold {
+      padding-bottom: 1rem;
 
-  .land__enkeltlinje {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 1rem 20% 0.2rem 0;
-    border-bottom: 1px solid black;
+      > :first-child {
+        padding-top: 0;
+      }
 
-    :last-child {
-      width: 50px;
-    }
+      .land__enkeltlinje {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        padding: 0.5rem 20% 0.5rem 0;
+        border-bottom: 1px solid black;
 
-    * {
-      margin-bottom: 0px;  // RESET av Nav.Checkbox
+        :last-child {
+          width: 50px;
+        }
+
+        * {
+          margin-bottom: 0; // Fjerner margin på Nav.Checkbox for å passe inn i rad
+        }
+      }
     }
   }
 }

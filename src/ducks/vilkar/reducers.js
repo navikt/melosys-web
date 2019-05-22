@@ -24,6 +24,10 @@ const vilkarTilObjekt = (vilkaar, oppfylt, begrunnelseKoder, begrunnelseFritekst
   }
 );
 
+const velgArt16Objekt = (art16avslag, art16anmodning) => (
+  art16avslag || art16anmodning
+);
+
 // Reducer
 export default function reducer(state = initialState, action) {
   switch (action.type) {
@@ -52,7 +56,10 @@ export default function reducer(state = initialState, action) {
         vilkarTilObjekt(MKV.Koder.vilkaar.FTRL_2_12_UNNTAK_TURISTSKIP, action.data.vilkar.nis),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, action.data.vilkar.art12_2, action.data.vilkar.art12_2_begrunnelser),
-        vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, action.data.vilkar.art16_1, action.data.vilkar.art16_1_begrunnelser, action.data.vilkar.art16_1_begrunnelser_fritekst),
+        velgArt16Objekt(
+          vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, action.data.vilkar.art16_1_avslag, action.data.vilkar.art16_1_avslag_begrunnelser, action.data.vilkar.art16_1_avslag_begrunnelser_fritekst),
+          vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, action.data.vilkar.art16_1_anmodning, action.data.vilkar.art16_1_anmodning_begrunnelser, action.data.vilkar.art16_1_anmodning_begrunnelser_fritekst)
+        ),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_3A, action.data.vilkar.art11_3A),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_1, action.data.vilkar.art11_4_1),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART11_4_2, action.data.vilkar.art11_4_2),
