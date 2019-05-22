@@ -61,11 +61,3 @@ export function queryParamsTilObjekt(sporreStreng) {
       return key ? { ...samling, [key]: value } : { ...samling };
     }, {});
 }
-
-export const grupperEtterKey = key => array => (
-  array.reduce((samling, element) => {
-    const verdi = element[key];
-    samling[verdi] = (samling[verdi] || []).concat(element); // eslint-disable-line no-param-reassign
-    return samling;
-  }, {})
-);

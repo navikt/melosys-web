@@ -13,7 +13,8 @@ import * as MPT from '../proptypes/';
 import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
-import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
+import { fagsakSelectors } from '../ducks/fagsaker/';
+import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { KodeTermSelect } from './kodeTermSelect';
 
@@ -24,14 +25,6 @@ class SideOppsummering extends Component {
     behandlingsstatus: 'VELG',
     statusmelding: null,
   };
-
-  componentDidMount() {
-    /* Sjekker for undefined da this.props.oppsummering.behandlingsstatus er undefined
-     de første gangene komponenten rendres. */
-    if (this.props.oppsummering.behandlingsstatus) {
-      this.oppdaterValg(this.props.oppsummering.behandlingsstatus.kode);
-    }
-  }
 
   onChange = event => {
     const { value } = event.currentTarget;
@@ -53,11 +46,11 @@ class SideOppsummering extends Component {
     if (kode === 'VELG') {
       return false;
     }
-    const { oppdaterBehandlingsStatus, oppsummering: { behandlingID } } = this.props;
+    const { oppdaterBehandlingsStatus, behandlingID } = this.props;
     const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.status);
-    const nystatus = { kode, term };
-    Api.Behandlinger.oppdaterStatus(behandlingID, kode).then(() => {
-      oppdaterBehandlingsStatus(nystatus);
+    const nyBehandlingsStatus = { kode, term };
+    Api.Behandlingsperioder.oppdaterStatus(behandlingID, kode).then(() => {
+      oppdaterBehandlingsStatus(nyBehandlingsStatus);
       this.oppdaterStatusMelding();
     });
     return true;
@@ -101,6 +94,7 @@ class SideOppsummering extends Component {
   render() {
     const {
       redigerbart,
+      fagsak,
       oppsummering,
       person,
       soknadsperiodeFom,
@@ -113,8 +107,11 @@ class SideOppsummering extends Component {
       saksnummer,
       sakstype,
       saksstatus,
-      behandlingsstatus,
       registrertDato,
+    } = fagsak;
+
+    const {
+      behandlingsstatus,
       sisteOpplysningerHentetDato,
     } = oppsummering;
 
@@ -216,9 +213,11 @@ class SideOppsummering extends Component {
 }
 
 SideOppsummering.propTypes = {
+  behandlingID: PT.number.isRequired,
+  redigerbart: PT.bool,
+  fagsak: MPT.Fagsak,
+  oppsummering: PT.object, // TODO Fix MPT.Oppsummering,
   avsluttSakSomBortfalt: PT.func.isRequired,
-  redigerbart: PT.bool.isRequired,
-  oppsummering: MPT.Oppsummering.isRequired,
   person: MPT.Person.isRequired,
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
@@ -230,18 +229,24 @@ SideOppsummering.propTypes = {
   tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
+SideOppsummering.defaultProps = {
+  redigerbart: false,
+  fagsak: undefined,
+  oppsummering: undefined,
+};
 
 const mapStateToProps = state => ({
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  person: fagsakSelectors.PersonSelector(state),
+  fagsak: fagsakSelectors.FagsakSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  person: behandlingerSelectors.PersonSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
   soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-  oppdaterBehandlingsStatus: status => dispatch(fagsakOperations.oppdaterBehandlingsStatus(status)),
+  oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
