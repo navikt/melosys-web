@@ -39,6 +39,7 @@ class Stegvelger extends Component {
   };
 
   async componentDidMount() {
+    this.aktiv = true;
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
 
@@ -53,6 +54,12 @@ class Stegvelger extends Component {
 
     this.oppdaterAktuelleSteg();
   }
+
+  componentWillUnmount() {
+    this.aktiv = false;
+  }
+
+  aktiv = true;
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
@@ -89,8 +96,8 @@ class Stegvelger extends Component {
       const { stegStores } = this.state;
       stegStores[type].slettStegData(stegID, felt);
       this.setState(stegStores);
-      this.publiserStegdata();
     }
+    this.publiserStegdata();
   };
 
   slettSteg = stegID => {
@@ -100,6 +107,8 @@ class Stegvelger extends Component {
   };
 
   publiserStegdata = async () => {
+    if (!this.aktiv) { return; }
+
     const { vilkaar, avklartefakta, lovvalgsbestemmelse } = this.state.stegStores;
 
     await Promise.all([
