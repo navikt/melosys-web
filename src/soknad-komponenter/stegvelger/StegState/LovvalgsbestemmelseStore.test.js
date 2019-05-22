@@ -45,8 +45,8 @@ describe('LovvalgsbestemmelseStore slettData', () => {
   });
 
   it('Sletter lovvalgsbestemmelse etter oppdatering', () => {
+    store.oppdaterStegData('TESTSTEG-1', lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_2A));
     store.slettStegData('TESTSTEG-1');
-    store.oppdaterStegData('TESTSTEG-1', MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_2A);
     expect(store.hent()).toBeFalsy();
   });
 

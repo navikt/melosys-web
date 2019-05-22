@@ -31,8 +31,6 @@ describe('VilkaarStore oppdatering av eksisterende data', () => {
 
     const vilkaar = store.hent();
     expect(vilkaar.art11_3A).toBeTruthy();
-    expect(vilkaar.art11_3A_begrunnelser).toBeUndefined();
-    expect(vilkaar.art11_3A_begrunnelser_fritekst).toBeUndefined();
   });
 
   it('Oppdater vilkaarbegrunnelse', () => {
