@@ -16,39 +16,37 @@ import './vurderingArbeidsgiver.css';
  */
 const VirksomheterLinje = props => {
   const {
-    virksomheten, erValgt, redigerbart, oppdaterData, slettData,
+    virksomheten, avklartVirksomhet, redigerbart, oppdaterData, slettData,
   } = props;
 
   useEffect(() => {
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten));
+    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, avklartVirksomhet));
 
     return function cleanup() {
       slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.VIRKSOMHET);
     };
   }, []);
 
+  const virksomhetErValgt = avklartVirksomhet && avklartVirksomhet.fakta.includes('TRUE');
+
   const virksomhetKlikkHandler = () => {
-    const verdi = erValgt ? 'FALSE' : 'TRUE';
+    const verdi = virksomhetErValgt ? 'FALSE' : 'TRUE';
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.orgnr, verdi));
   };
 
   return (
     <div className="arbeidsgiver__enkeltlinje">
-      <Nav.Checkbox disabled={!redigerbart} checked={erValgt} onChange={virksomhetKlikkHandler} label={`${virksomheten.navn}`} />
+      <Nav.Checkbox disabled={!redigerbart} checked={virksomhetErValgt} onChange={virksomhetKlikkHandler} label={`${virksomheten.navn}`} />
     </div>
   );
 };
 
 VirksomheterLinje.propTypes = {
   virksomheten: MPT.Organisasjon.isRequired,
-  erValgt: PT.bool,
+  avklartVirksomhet: MPT.Avklartefakta.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-};
-
-VirksomheterLinje.defaultProps = {
-  erValgt: false,
 };
 
 /**
@@ -71,15 +69,12 @@ const VirksomheterListe = props => {
     <div>
       {virksomheterIPerioden.map(virksomheten => {
         const avklartfaktaForVirksomhet = avklarteVirksomheter.find(enkeltAvklaring => enkeltAvklaring.subjektID === virksomheten.orgnr);
-        let virksomhetErValgt = false;
-        if (avklartfaktaForVirksomhet) {
-          virksomhetErValgt = avklartfaktaForVirksomhet.fakta.includes('TRUE');
-        }
+
 
         const key = `avklartVirksomhet${virksomheten.orgnr}`;
         return <VirksomheterLinje
           virksomheten={virksomheten}
-          erValgt={virksomhetErValgt}
+          avklartVirksomhet={avklartfaktaForVirksomhet}
           key={key}
           redigerbart={redigerbart}
           oppdaterData={oppdaterData}

@@ -26,8 +26,6 @@ import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore } from './St
 
 import './stegvelger.css';
 
-import './stegvelger.css';
-
 class Stegvelger extends Component {
   state = {
     aktivtStegNummer: 0,
