@@ -134,7 +134,7 @@ Saksopplysninger.propTypes = {
   redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Person),
-  avklartefakta: MPT.Avklartefakta.isRequired,
+  avklartefakta: MPT.AvklartefaktaListe.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   fagsakStatusKode: PT.string.isRequired,

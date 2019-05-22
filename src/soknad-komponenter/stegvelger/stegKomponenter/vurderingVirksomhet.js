@@ -43,10 +43,14 @@ const VirksomheterLinje = props => {
 
 VirksomheterLinje.propTypes = {
   virksomheten: MPT.Organisasjon.isRequired,
-  avklartVirksomhet: MPT.Avklartefakta.isRequired,
+  avklartVirksomhet: MPT.Avklartefakta,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+};
+
+VirksomheterLinje.defaultProps = {
+  avklartVirksomhet: null,
 };
 
 /**

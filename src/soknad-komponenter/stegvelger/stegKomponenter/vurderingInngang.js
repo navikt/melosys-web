@@ -51,7 +51,7 @@ const VurderingInngang = props => {
 
 VurderingInngang.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  avklartefakta: MPT.Avklartefakta.isRequired,
+  avklartefakta: MPT.AvklartefaktaListe.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
   tilstand: PT.object.isRequired,
