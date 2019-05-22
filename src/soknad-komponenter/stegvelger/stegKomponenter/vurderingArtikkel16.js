@@ -11,8 +11,8 @@ import * as MPT from '../../../proptypes/';
 import * as Utils from '../../../utils';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { soknadSelectors } from '../../../ducks/soknad/';
-import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { formSelectors } from '../../../ducks/form';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
@@ -218,10 +218,10 @@ class VurderingArtikkel16 extends Component {
 
   render() {
     const {
+      behandlingID,
       gyldigeSoknadsland,
       soknadsperiode,
       medlemskap,
-      oppsummering,
       redigerbart,
       tilstand,
     } = this.props;
@@ -240,8 +240,6 @@ class VurderingArtikkel16 extends Component {
       fritekstFeilmelding,
       lovvalgFeilmelding,
     } = this.state;
-
-    const { behandlingID } = oppsummering;
 
     const antallManeder = datoDiffMenneskelig(soknadsperiode.fom, soknadsperiode.tom);
 
@@ -348,7 +346,7 @@ VurderingArtikkel16.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired, // TODO:
   soknadsperiode: MPT.Soknadsperiode.isRequired,
-  oppsummering: PT.object.isRequired,
+  behandlingID: PT.number.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
@@ -367,11 +365,11 @@ VurderingArtikkel16.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
-  soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
-  oppsummering: fagsakSelectors.OppsummeringSelector(state),
-  medlemskap: fagsakSelectors.MedlemskapSelector(state),
+  medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   art16begrunnelserFritekst: formSelectors.Art16BegrunnelseFritekstSelector(state),
   unntakFraBestemmelse: formSelectors.UnntakFraBestemmelse(state),
 });

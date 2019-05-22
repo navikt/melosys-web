@@ -9,7 +9,7 @@ import EnkeltForetak from './enkeltforetak';
 
 import PanelHeader from '../../komponenter/panelHeader/panelHeader';
 
-import { fagsakSelectors } from '../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 import './foretakUtland.css';
 
 class ForetakUtlandWrapper extends Component {
@@ -49,7 +49,7 @@ ForetakUtlandWrapper.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = () => ({});

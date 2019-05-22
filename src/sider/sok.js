@@ -4,6 +4,7 @@ import PT from 'prop-types';
 
 import withErrorHandling from '../hoc/withErrorHandling';
 import * as Nav from '../utils/navFrontend';
+import * as MPT from '../proptypes/';
 import Fagsak from '../forside-komponenter/oppgaveliste/fagsak';
 
 import { sokSelectors, sokOperations } from '../ducks/sok';
@@ -52,7 +53,7 @@ class Sok extends Component {
 
 Sok.propTypes = {
   location: PT.object.isRequired,
-  sokResultat: PT.array.isRequired,
+  sokResultat: MPT.FagsakSokListe.isRequired,
   sokFagsaker: PT.func.isRequired,
   sokStreng: PT.string,
   children: PT.node,
