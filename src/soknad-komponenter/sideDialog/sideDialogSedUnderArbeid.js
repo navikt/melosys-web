@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import PT from 'prop-types';
-
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
+import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Utils from '../../utils/dato';
 import './sideDialogSedUnderArbeid.css';
-import * as sedOperations from '../../ducks/sed/operations';
+import { sedOperations, sedSelectors } from '../../ducks/sed';
 
 const uuid = require('uuid/v4');
 
@@ -47,16 +46,21 @@ EnkeltSedUnderArbeid.propTypes = {
   status: PT.string.isRequired,
 };
 
-const SideDialogSedUnderArbeid = ({ hentSedUnderArbeid }) => {
-  const [sedUnderArbeid, setSedUnderArbeid] = useState(null); // TODO: Må lagres til store for å unngå flere kall
+const SideDialogSedUnderArbeid = ({
+  behandlingID, sedUnderArbeid, hentSedUnderArbeid, oppdaterSedUnderArbeid,
+}) => {
+  const hentOgLagreSedUnderArbeid = async () => {
+    if (behandlingID !== -1 && sedUnderArbeid.length === 0) {
+      const response = await hentSedUnderArbeid(behandlingID);
 
-  const hentOgSettSedUnderArbeid = async () => {
-    const response = await hentSedUnderArbeid('4'); // TODO: Hent behandlingID.
-    setSedUnderArbeid(response.data);
+      if (response) {
+        oppdaterSedUnderArbeid(response.data);
+      }
+    }
   };
 
   useEffect(() => {
-    hentOgSettSedUnderArbeid();
+    hentOgLagreSedUnderArbeid();
   }, []);
 
   const kanViseListe = liste => liste && liste.constructor === Array && liste.length > 0;
@@ -66,19 +70,26 @@ const SideDialogSedUnderArbeid = ({ hentSedUnderArbeid }) => {
       {
         kanViseListe(sedUnderArbeid) ?
           sedUnderArbeid.map(sed => <EnkeltSedUnderArbeid {...sed} key={uuid()} />) :
-          'For øyeblikket ingen SED under arbeid' // TODO: Trenger en tekst e.l.
+          'For øyeblikket ingen SED under arbeid'
       }
     </div>
   );
 };
 
 SideDialogSedUnderArbeid.propTypes = {
+  behandlingID: PT.number.isRequired,
+  sedUnderArbeid: PT.array.isRequired,
   hentSedUnderArbeid: PT.func.isRequired,
+  oppdaterSedUnderArbeid: PT.func.isRequired,
 };
+
+const mapStateToProps = state => ({
+  sedUnderArbeid: sedSelectors.SedUnderArbeidSelector(state),
+});
 
 const mapDispatchToProps = dispatch => ({
   hentSedUnderArbeid: behandlingID => dispatch(sedOperations.hentSedUnderArbeid(behandlingID)),
-  // TODO: Må hente sak/behandling
+  oppdaterSedUnderArbeid: sedUnderArbeid => dispatch(sedOperations.oppdaterSedUnderArbeid(sedUnderArbeid)),
 });
 
-export default connect(null, mapDispatchToProps)(SideDialogSedUnderArbeid);
+export default connect(mapStateToProps, mapDispatchToProps)(SideDialogSedUnderArbeid);

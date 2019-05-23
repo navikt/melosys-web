@@ -10,15 +10,19 @@
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
-// import * as Actions from './actions';
+import * as Actions from './actions';
 
 /* eslint-disable import/prefer-default-export */
-export function hentInformasjon() {
+export function hentBucinformasjon() {
   return doThenDispatch(() => Api.Sed.hentInformasjon(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function oppdaterBucinfo(bucinfo) {
+  return Actions.oppdaterBucinfo(bucinfo);
 }
 
 export function hentSedUnderArbeid(behandlingID) {
@@ -27,4 +31,8 @@ export function hentSedUnderArbeid(behandlingID) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function oppdaterSedUnderArbeid(sedUnderArbeid) {
+  return Actions.oppdaterSedUnderArbeid(sedUnderArbeid);
 }
