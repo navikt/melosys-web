@@ -124,7 +124,7 @@ class Saksopplysninger extends Component {
         <VirksomhetNorge />
         <MaritimtArbeid />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-        {inntekterPrAarMaaned.length && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
+        {inntekterPrAarMaaned.length > 0 && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
       </form>
     );
   }
