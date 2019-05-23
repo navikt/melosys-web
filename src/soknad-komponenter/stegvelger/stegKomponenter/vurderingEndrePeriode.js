@@ -27,9 +27,12 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   componentDidMount() {
-    const { behandlingID } = this.props;
+    const { behandlingID, redigerbart, lovvalgsPeriode } = this.props;
     this.hentOpprinneligPeriode(behandlingID);
+    if (!redigerbart) this.settSluttDato(lovvalgsPeriode.tomDato);
   }
+
+  settSluttDato = nyTomDato => this.setState({ nyTomDato });
 
   hentOpprinneligPeriode = async behandlingID => {
     const opprinneligLovvalgsperiode = await API.OpprinneligLovvalgsperiode.hent(behandlingID);
