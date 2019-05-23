@@ -86,6 +86,7 @@ const Forretningssteder = props => {
             forretningsstedet={valgtVirksomhet}
             avklartForretningsland={avklartForretningsland}
             oppdaterData={props.oppdaterData}
+            slettData={props.slettData}
           />;
         })
       }
@@ -98,6 +99,7 @@ Forretningssteder.propTypes = {
   valgteVirksomheter: PT.array.isRequired,
   avklarteForretningsland: PT.array.isRequired,
   oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 const VurderingForretningssted = props => {
