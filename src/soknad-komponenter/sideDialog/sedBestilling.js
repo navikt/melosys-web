@@ -189,7 +189,7 @@ const form = {
 
 const mapStateToProps = state => ({
   sedBestillingSkjemaVerdier: formSelectors.SedBestillingFormSelector(state).values,
-  redigerbart: fagsakSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   initialValues: {
     fagomrade: 'MEDLEMSKAP',
     buc: '',
