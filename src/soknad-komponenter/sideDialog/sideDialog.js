@@ -6,6 +6,8 @@ import { Panel } from 'nav-frontend-paneler';
 
 import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
+import SideDialogSedBestilling from './sedBestilling';
+import SideDialogSedUnderArbeid from './sideDialogSedUnderArbeid';
 
 import './sideDialog.css';
 
@@ -19,6 +21,8 @@ class SideDialog extends Component {
 
   static defaultProps = {
     faner: [
+      { navn: 'sedunderarbeid', tittel: 'SED under arbeid' },
+      { navn: 'sedbestilling', tittel: 'Send SED' },
       { navn: 'dokumenter', tittel: 'Dokumenter' },
       { navn: 'brevbestilling', tittel: 'Send brev' },
     ],
@@ -33,6 +37,10 @@ class SideDialog extends Component {
       return <SideDialogDokumenter key={uuid()} />;
     } else if (navn === 'brevbestilling') {
       return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} />;
+    } else if (navn === 'sedbestilling') {
+      return <SideDialogSedBestilling key={uuid()} />;
+    } else if (navn === 'sedunderarbeid') {
+      return <SideDialogSedUnderArbeid key={uuid()} behandlingID={behandlingID} />;
     }
     return <SideDialogDokumenter key={uuid()} />;
   };
