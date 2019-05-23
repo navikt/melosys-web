@@ -18,6 +18,7 @@
 # misc
 .idea
 !.idea/runConfigurations/
+.vscode
 .DS_Store
 .env.local
 .env.development.local
