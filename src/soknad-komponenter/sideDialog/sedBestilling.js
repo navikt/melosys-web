@@ -9,8 +9,8 @@ import * as Nav from '../../utils/navFrontend';
 // import * as MPT from '../../proptypes/';
 import * as Skjema from '../skjema';
 
-import { fagsakSelectors } from '../../ducks/fagsaker';
-import * as sedOperations from '../../ducks/sed/operations';
+import { behandlingerSelectors } from '../../ducks/behandlinger';
+import { sedOperations, sedSelectors } from '../../ducks/sed';
 import './sedBestilling.css';
 import { formSelectors } from '../../ducks/form';
 
@@ -202,7 +202,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   // settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed(KV.Form.SED_BESTILLING, ...feltNavn)),
   // settIngenFeilFelt: (...feltNavn) => dispatch(set(KV.Form.SED_BESTILLING, ...feltNavn)),
-  hentDropdownData: () => dispatch(sedOperations.hentInformasjon()),
+  hentBucinformasjon: () => dispatch(sedOperations.hentBucinformasjon()),
+  oppdaterBucinfo: bucinfo => dispatch(sedOperations.oppdaterBucinfo(bucinfo)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change(KV.Form.SED_BESTILLING, felt, verdi)),
 });
 
