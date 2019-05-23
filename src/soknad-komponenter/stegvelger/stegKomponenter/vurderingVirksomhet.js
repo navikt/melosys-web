@@ -36,7 +36,7 @@ const VirksomheterLinje = props => {
 
   return (
     <div className="arbeidsgiver__enkeltlinje">
-      <Nav.Checkbox disabled={!redigerbart} checked={virksomhetErValgt} onChange={virksomhetKlikkHandler} label={`${virksomheten.navn}`} />
+      <Nav.Checkbox disabled={!redigerbart} checked={virksomhetErValgt === true} onChange={virksomhetKlikkHandler} label={`${virksomheten.navn}`} />
     </div>
   );
 };
