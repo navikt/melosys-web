@@ -105,6 +105,17 @@ describe('AvklartefaktaStore sletting av avklartefakta', () => {
       ]));
   });
 
+  it('Sletter ingenting hvis filter mangler subjektID', () => {
+    store.slettStegData('TESTSTEG-1', KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, {});
+
+    const avklartefaktaListe = store.hent();
+    expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND)
+      .toEqual(expect.arrayContaining([
+        expect.objectContaining({ fakta: ['GB'] }),
+        expect.objectContaining({ fakta: ['NO'] }),
+      ]));
+  });
+
   it('Slett alle avklartfakta tilhørende steg', () => {
     store.slettStegData('TESTSTEG-1');
     expect(store.hent()).toEqual({});
