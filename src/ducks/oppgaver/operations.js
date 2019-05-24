@@ -46,9 +46,9 @@ export const sendBehandlingsOppgave = async checkboxliste => {
   };
 
   const response = await Api.Oppgaver.send(oppgave);
-  const { saksnummer } = response;
+  const { saksnummer, behandlingID } = response;
   if (!saksnummer) { return false; }
-  return `/saksbehandling/${saksnummer}`;
+  return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
 };
 
 export const sendJournalOppgave = async fagomrade => {
