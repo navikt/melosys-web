@@ -96,6 +96,10 @@ describe('AvklartefaktaStore sletting av avklartefakta', () => {
 
     const avklartefaktaListe = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND)
+      .toEqual(expect.arrayContaining([
+        expect.objectContaining({ fakta: ['GB'] }),
+      ]));
+    expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND)
       .not.toEqual(expect.arrayContaining([
         expect.objectContaining({ fakta: ['NO'] }),
       ]));
