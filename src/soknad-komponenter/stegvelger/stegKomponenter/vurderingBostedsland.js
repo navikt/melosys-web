@@ -61,7 +61,7 @@ AvklaringsListe.propTypes = {
  */
 const VurderingBostedsland = props => {
   const {
-    bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData, slettAllDataForSteg,
+    bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData,
   } = props;
 
   useEffect(() => {
@@ -69,7 +69,7 @@ const VurderingBostedsland = props => {
     oppdaterData(konverterTilStegData('bosattINorge', bosattINorgeVilkaar));
 
     return function cleanup() {
-      slettAllDataForSteg();
+      slettData();
     };
   }, []);
 
@@ -155,7 +155,6 @@ VurderingBostedsland.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingBostedsland.defaultProps = {

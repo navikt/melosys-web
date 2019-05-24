@@ -7,14 +7,14 @@ import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../
 
 const VurderingYrkesaktivitetAntallLand = props => {
   const {
-    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
   const { harAvklaring, yrkesaktivitetAntallLand } = tilstand;
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND, yrkesaktivitetAntallLand));
     return function cleanup() {
-      slettAllDataForSteg();
+      slettData();
     };
   }, []);
 
@@ -60,7 +60,7 @@ VurderingYrkesaktivitetAntallLand.propTypes = {
   redigerbart: PT.bool.isRequired,
   tilstand: PT.object,
   oppdaterData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 VurderingYrkesaktivitetAntallLand.defaultProps = {

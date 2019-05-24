@@ -314,7 +314,7 @@ class Saksbehandling extends Component {
 
 Saksbehandling.propTypes = {
   redigerbart: PT.bool,
-  avklartefakta: MPT.Avklartefakta,
+  avklartefakta: MPT.AvklartefaktaListe,
   fagsak: MPT.Fagsak,
   soknad: MPT.Soknad,
   vilkar: PT.array, // TODO lag proptype
