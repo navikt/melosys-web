@@ -68,7 +68,7 @@ const SokkelSkipEnkelt = props => {
     avklartefaktaEndretHandler,
     avklartefaktaBegrunnelserEndretHandler,
     oppdaterData,
-    slettDataMedFiltere,
+    slettData,
   } = props;
 
   const {
@@ -87,9 +87,9 @@ const SokkelSkipEnkelt = props => {
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, arbeidslandAvklartfakta));
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, arbeidslandTypeAvklartfakta));
     return function cleanup() {
-      slettDataMedFiltere(avklartefaktaType, KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, { subjektID: navn });
-      slettDataMedFiltere(avklartefaktaType, KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, { subjektID: navn });
-      slettDataMedFiltere(avklartefaktaType, KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, { subjektID: navn });
+      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, { subjektID: navn });
+      slettData(avklartefaktaType, KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, { subjektID: navn });
+      slettData(avklartefaktaType, KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, { subjektID: navn });
     };
   }, []);
 
@@ -168,7 +168,7 @@ SokkelSkipEnkelt.propTypes = {
   avklartefaktaEndretHandler: PT.func.isRequired,
   avklartefaktaBegrunnelserEndretHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
-  slettDataMedFiltere: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 SokkelSkipEnkelt.defaultProps = {
@@ -180,7 +180,7 @@ SokkelSkipEnkelt.defaultProps = {
 const SokkelSkipListe = props => {
   const {
     sokkelEllerSkipListe, maritimtArbeid, begrunnelser, redigerbart, avklartefaktaEndretHandler,
-    avklartefaktaBegrunnelserEndretHandler, oppdaterData, slettDataMedFiltere, installasjonArbeidslandListe, installasjonArbeidslandTypeListe,
+    avklartefaktaBegrunnelserEndretHandler, oppdaterData, slettData, installasjonArbeidslandListe, installasjonArbeidslandTypeListe,
   } = props;
 
   return (
@@ -198,7 +198,7 @@ const SokkelSkipListe = props => {
           avklartefaktaEndretHandler={avklartefaktaEndretHandler}
           avklartefaktaBegrunnelserEndretHandler={avklartefaktaBegrunnelserEndretHandler}
           oppdaterData={oppdaterData}
-          slettDataMedFiltere={slettDataMedFiltere}
+          slettData={slettData}
         />))}
     </div>
   );
@@ -214,7 +214,7 @@ SokkelSkipListe.propTypes = {
   avklartefaktaEndretHandler: PT.func.isRequired,
   avklartefaktaBegrunnelserEndretHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
-  slettDataMedFiltere: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 SokkelSkipListe.defaultProps = {
@@ -233,8 +233,7 @@ class VurderingSokkelSkip extends React.Component {
   }
 
   componentWillUnmount() {
-    const { slettAllDataForSteg } = this.props;
-    slettAllDataForSteg();
+    this.props.slettData();
   }
 
   avklartefaktaEndret = (type, subjektID, verdi) => {
@@ -263,7 +262,7 @@ class VurderingSokkelSkip extends React.Component {
     // Merknad fra møte 12.12.18: Vi må huske å gå innom “vurdering antall land”
     // dersom man har valgt “to sokler / skip i flere land” siden vi går inn i artikkel 13.
     const {
-      bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettDataMedFiltere, maritimtArbeid,
+      bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData, maritimtArbeid,
     } = this.props;
 
     const {
@@ -289,7 +288,7 @@ class VurderingSokkelSkip extends React.Component {
           avklartefaktaEndretHandler={this.avklartefaktaEndret}
           avklartefaktaBegrunnelserEndretHandler={this.avklartefaktaBegrunnelseEndret}
           oppdaterData={oppdaterData}
-          slettDataMedFiltere={slettDataMedFiltere}
+          slettData={slettData}
         />
         {
           maritimtArbeid.length === 0 && (
@@ -348,8 +347,6 @@ VurderingSokkelSkip.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
-  slettDataMedFiltere: PT.func.isRequired,
 };
 
 VurderingSokkelSkip.defaultProps = {

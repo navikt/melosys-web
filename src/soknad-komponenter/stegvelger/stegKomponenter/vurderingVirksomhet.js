@@ -1,15 +1,13 @@
-import React, { Component, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
-import { FieldArray } from 'redux-form';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
-import './vurderingArbeidsgiver.css';
-import { konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
+import { avklartefaktaType, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
 import * as KV from '../../../kodeverk';
 
-const uuid = require('uuid/v4');
+import './vurderingArbeidsgiver.css';
 
 /**
  * Enkeltsjekkboks for ett arbeidsgiver.
@@ -18,25 +16,41 @@ const uuid = require('uuid/v4');
  */
 const VirksomheterLinje = props => {
   const {
-    virksomheten, erValgt, virksomhetKlikkHandler, redigerbart,
+    virksomheten, avklartVirksomhet, redigerbart, oppdaterData, slettData,
   } = props;
+
+  useEffect(() => {
+    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, avklartVirksomhet));
+
+    return function cleanup() {
+      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.VIRKSOMHET);
+    };
+  }, []);
+
+  const virksomhetErValgt = avklartVirksomhet && avklartVirksomhet.fakta.includes('TRUE');
+
+  const virksomhetKlikkHandler = () => {
+    const verdi = virksomhetErValgt ? 'FALSE' : 'TRUE';
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.orgnr, verdi));
+  };
 
   return (
     <div className="arbeidsgiver__enkeltlinje">
-      <Nav.Checkbox disabled={!redigerbart} checked={erValgt} onChange={() => virksomhetKlikkHandler(virksomheten.orgnr, erValgt)} label={`${virksomheten.navn}`} />
+      <Nav.Checkbox disabled={!redigerbart} checked={virksomhetErValgt === true} onChange={virksomhetKlikkHandler} label={`${virksomheten.navn}`} />
     </div>
   );
 };
 
 VirksomheterLinje.propTypes = {
-  virksomhetKlikkHandler: PT.func.isRequired,
   virksomheten: MPT.Organisasjon.isRequired,
-  erValgt: PT.bool,
+  avklartVirksomhet: MPT.Avklartefakta,
   redigerbart: PT.bool.isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 VirksomheterLinje.defaultProps = {
-  erValgt: false,
+  avklartVirksomhet: null,
 };
 
 /**
@@ -46,49 +60,43 @@ VirksomheterLinje.defaultProps = {
  *
  * @param props Objekt Diverse props Se prop types
  */
-class VirksomheterListe extends Component {
-  virksomhetKlikkHandler = (orgnr, erValgt) => {
-    const { oppdaterData } = this.props;
-    const verdi = erValgt ? 'FALSE' : 'TRUE';
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, orgnr, verdi));
-  };
+const VirksomheterListe = props => {
+  const {
+    virksomheterIPerioden, redigerbart, avklarteVirksomheter, oppdaterData, slettData,
+  } = props;
 
-  render() {
-    const { virksomheterIPerioden, redigerbart, avklarteVirksomheter } = this.props;
+  const ingenVirksomheterVarsel = virksomheterIPerioden.length === 0 && (
+    <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere, selvsetendig næringsdrivende eller frilansere fra saksopplysninger.</Nav.AlertStripe>
+  );
 
-    const ingenVirksomheterVarsel = virksomheterIPerioden.length === 0 && (
-      <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere, selvsetendig næringsdrivende eller frilansere fra saksopplysninger.</Nav.AlertStripe>
-    );
+  return (
+    <div>
+      {virksomheterIPerioden.map(virksomheten => {
+        const avklartfaktaForVirksomhet = avklarteVirksomheter.find(enkeltAvklaring => enkeltAvklaring.subjektID === virksomheten.orgnr);
 
-    return (
-      <div>
-        {virksomheterIPerioden.map(virksomheten => {
-          const avklartfaktaForVirksomhet = avklarteVirksomheter.find(enkeltAvklaring => enkeltAvklaring.subjektID === virksomheten.orgnr);
-          let virksomhetErValgt = false;
-          if (avklartfaktaForVirksomhet) {
-            virksomhetErValgt = avklartfaktaForVirksomhet.fakta.includes('TRUE');
-          }
 
-          return <VirksomheterLinje
-            virksomheten={virksomheten}
-            erValgt={virksomhetErValgt}
-            key={uuid()}
-            virksomhetKlikkHandler={this.virksomhetKlikkHandler}
-            redigerbart={redigerbart}
-          />;
-        })
-        }
-        {ingenVirksomheterVarsel}
-      </div>
-    );
-  }
-}
+        const key = `avklartVirksomhet${virksomheten.orgnr}`;
+        return <VirksomheterLinje
+          virksomheten={virksomheten}
+          avklartVirksomhet={avklartfaktaForVirksomhet}
+          key={key}
+          redigerbart={redigerbart}
+          oppdaterData={oppdaterData}
+          slettData={slettData}
+        />;
+      })
+      }
+      {ingenVirksomheterVarsel}
+    </div>
+  );
+};
 
 VirksomheterListe.propTypes = {
   virksomheterIPerioden: PT.array,
   avklarteVirksomheter: PT.array,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 VirksomheterListe.defaultProps = {
@@ -104,33 +112,24 @@ VirksomheterListe.defaultProps = {
  */
 const VurderingVirksomhet = props => {
   const {
-    bekreftOgFortsett, virksomheterIPerioden, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+    bekreftOgFortsett, virksomheterIPerioden, tilstand, redigerbart, slettData,
   } = props;
   const { harAvklaring, virksomheter } = tilstand;
 
-  useEffect(() => {
-    virksomheter.forEach(virksomhet => {
-      oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomhet));
-    });
-    return function cleanup() {
-      slettAllDataForSteg();
-    };
-  }, []);
+  useEffect(() => (
+    function cleanup() {
+      slettData();
+    }
+  ), []);
 
   return (
     <div className="vurderingArbeidsgiver">
       <Nav.Undertittel>Velg arbeidsgiver, oppdragsgiver eller selvstendig næringsvirksomhet:</Nav.Undertittel>
       <div className="arbeidsgiver">
-        <FieldArray
-          name="avklartefakta.virksomheter"
-          component={arrayProps =>
-            <VirksomheterListe
-              {...arrayProps}
-              redigerbart={redigerbart}
-              avklarteVirksomheter={virksomheter}
-              virksomheterIPerioden={virksomheterIPerioden}
-              oppdaterData={oppdaterData}
-            />}
+        <VirksomheterListe
+          avklarteVirksomheter={virksomheter}
+          virksomheterIPerioden={virksomheterIPerioden}
+          {...props}
         />
         <div className="fane__knapplinje">
           <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
@@ -143,7 +142,7 @@ const VurderingVirksomhet = props => {
 VurderingVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
+  slettData: PT.func.isRequired,
   tilstand: PT.shape({
     harAvklaring: PT.bool,
   }).isRequired,

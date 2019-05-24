@@ -36,8 +36,7 @@ class VurderingArtikkel11_4 extends Component {
   }
 
   componentWillUnmount() {
-    const { slettAllDataForSteg } = this.props;
-    slettAllDataForSteg();
+    this.props.slettData();
   }
 
   nisEndret = event => {
@@ -158,7 +157,6 @@ VurderingArtikkel11_4.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingArtikkel11_4.defaultProps = {
