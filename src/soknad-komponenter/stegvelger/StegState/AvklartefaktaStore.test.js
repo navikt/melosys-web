@@ -91,6 +91,16 @@ describe('AvklartefaktaStore sletting av avklartefakta', () => {
       ]));
   });
 
+  it('Sletter kun avklartefakta som matcher filtere', () => {
+    store.slettStegData('TESTSTEG-1', KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, { subjektID: 'Olympic Bibby' });
+
+    const avklartefaktaListe = store.hent();
+    expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND)
+      .not.toEqual(expect.arrayContaining([
+        expect.objectContaining({ fakta: ['NO'] }),
+      ]));
+  });
+
   it('Slett alle avklartfakta tilhørende steg', () => {
     store.slettStegData('TESTSTEG-1');
     expect(store.hent()).toEqual({});
