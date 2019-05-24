@@ -9,13 +9,13 @@ import * as KV from '../../../kodeverk';
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 
-import { lagVilkaar, vilkaarType } from '../../../regler/vilkar';
+import { lagVilkaar, slettVilkar } from '../../../regler/vilkar';
 import {
   hentFaktaVerdi,
   konverterTilStegData,
   lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
-  avklartefaktaType,
+  slettAvklartfakta,
 } from '../../../regler/avklartefakta';
 
 import { formSelectors } from '../../../ducks/form';
@@ -87,9 +87,9 @@ const SokkelSkipEnkelt = props => {
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, arbeidslandAvklartfakta));
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, arbeidslandTypeAvklartfakta));
     return function cleanup() {
-      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, { subjektID: navn });
-      slettData(avklartefaktaType, KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, { subjektID: navn });
-      slettData(avklartefaktaType, KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, { subjektID: navn });
+      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, navn));
+      slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, navn));
+      slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, navn));
     };
   }, []);
 
@@ -254,7 +254,7 @@ class VurderingSokkelSkip extends React.Component {
     if (value === KV.Koder.VurderingSokkelSkipTyper.SOKKEL_NORSK) {
       oppdaterData(lagVilkaar('art11_3A', true));
     } else {
-      slettData(vilkaarType, 'art11_3A');
+      slettData(slettVilkar('art11_3A'));
     }
   };
 

@@ -4,23 +4,14 @@ import * as Utils from '../../../utils';
 class Avklartfakta extends StegState {
   lagKey = data => (data.referanse + (data.subjektID || ''));
 
-  slettStegData = (stegID, felt, filtere) => {
-    if (this.stegStore.has(stegID)) {
-      if (Utils._isNil(felt)) {
-        this.slettSteg(stegID);
-      } else {
-        this.slettFelt(stegID, felt, filtere);
-      }
-    }
-  };
-
-  slettFelt = (stegID, felt, filtere) => {
+  slettFelt = (stegID, data) => {
     const { stegStore } = this;
+    const { subjektID, felt } = data;
 
     if (stegStore.has(stegID)) {
       const steg = stegStore.get(stegID);
-      if (filtere) {
-        this.slettFeltMedFilter(steg, felt, filtere);
+      if (subjektID) {
+        this.slettFeltMedSubjektID(steg, data);
       } else {
         delete steg[felt];
       }
@@ -28,22 +19,13 @@ class Avklartfakta extends StegState {
     }
   };
 
-  slettFeltMedFilter = (steg, felt, filtere) => {
-    const { subjektID } = filtere;
-    if (!subjektID) return;
+  slettFeltMedSubjektID = (steg, data) => {
+    const { felt, subjektID } = data;
 
-    Object.keys(filtere).forEach(filter => {
-      const filterValue = filtere[filter];
-      const keyToDelete = `${felt}${subjektID}`;
-      const stegFelt = steg[felt];
-      if (!stegFelt) return;
-
-      const stegFeltVerdi = stegFelt.has(keyToDelete) ? steg[felt].get(keyToDelete) : null;
-
-      if (stegFeltVerdi && stegFeltVerdi[filter] === filterValue) {
-        stegFelt.delete(keyToDelete);
-      }
-    });
+    const keyToDelete = `${felt}${subjektID}`;
+    const stegFelt = steg[felt];
+    if (!stegFelt) return;
+    stegFelt.delete(keyToDelete);
   };
 
   oppdaterfelt = (eksisterendeAvklarteSubjekter, nyData) => {

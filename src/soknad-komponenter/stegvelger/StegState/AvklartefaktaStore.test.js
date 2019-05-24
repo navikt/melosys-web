@@ -1,5 +1,5 @@
 import AvklartefaktaStore from './AvklartefaktaStore';
-import { konverterTilStegData, lagAvklartefaktaBegrunnelse, lagAvklartfakta } from '../../../regler/avklartefakta';
+import { konverterTilStegData, lagAvklartefaktaBegrunnelse, lagAvklartfakta, slettAvklartfakta } from '../../../regler/avklartefakta';
 import * as KV from '../../../kodeverk';
 
 const fakta =
@@ -76,12 +76,12 @@ describe('AvklartefaktaStore sletting av avklartefakta', () => {
   });
 
   it('Slett avklartfakta basert på felt-type', () => {
-    store.slettStegData('TESTSTEG-1', KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND);
+    store.slettStegData('TESTSTEG-1', slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND));
     expect(store.hent()).toEqual({});
   });
 
   it('Sletter kun oppgitt felt-type', () => {
-    store.slettStegData('TESTSTEG-1', KV.Koder.avklartefaktaKoder.VIRKSOMHET);
+    store.slettStegData('TESTSTEG-1', slettAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET));
 
     const avklartefaktaListe = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND)
@@ -91,8 +91,8 @@ describe('AvklartefaktaStore sletting av avklartefakta', () => {
       ]));
   });
 
-  it('Sletter kun avklartefakta som matcher filtere', () => {
-    store.slettStegData('TESTSTEG-1', KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, { subjektID: 'Olympic Bibby' });
+  it('Sletter kun avklartefakta som matcher subjektID', () => {
+    store.slettStegData('TESTSTEG-1', slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, 'Olympic Bibby'));
 
     const avklartefaktaListe = store.hent();
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND)
@@ -101,17 +101,6 @@ describe('AvklartefaktaStore sletting av avklartefakta', () => {
       ]));
     expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND)
       .not.toEqual(expect.arrayContaining([
-        expect.objectContaining({ fakta: ['NO'] }),
-      ]));
-  });
-
-  it('Sletter ingenting hvis filter mangler subjektID', () => {
-    store.slettStegData('TESTSTEG-1', KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, {});
-
-    const avklartefaktaListe = store.hent();
-    expect(avklartefaktaListe.INSTALLASJON_ARBEIDSLAND)
-      .toEqual(expect.arrayContaining([
-        expect.objectContaining({ fakta: ['GB'] }),
         expect.objectContaining({ fakta: ['NO'] }),
       ]));
   });

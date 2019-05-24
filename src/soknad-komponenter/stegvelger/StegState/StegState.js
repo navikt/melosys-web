@@ -5,17 +5,19 @@ class StegState {
     this.stegStore = new Map();
   }
 
-  slettStegData = (stegID, felt) => {
+  slettStegData = (stegID, data = {}) => {
+    const { felt } = data;
     if (this.stegStore.has(stegID)) {
       if (Utils._isNil(felt)) {
         this.slettSteg(stegID);
       } else {
-        this.slettFelt(stegID, felt);
+        this.slettFelt(stegID, data);
       }
     }
   };
 
-  slettFelt = (stegID, felt) => {
+  slettFelt = (stegID, data) => {
+    const { felt } = data;
     const { stegStore } = this;
     const steg = stegStore.get(stegID);
     delete steg[felt];

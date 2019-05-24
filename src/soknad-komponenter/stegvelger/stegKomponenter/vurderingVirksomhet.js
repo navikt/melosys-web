@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
-import { avklartefaktaType, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
+import { konverterTilStegData, lagAvklartfakta, slettAvklartfakta } from '../../../regler/avklartefakta';
 import * as KV from '../../../kodeverk';
 
 import './vurderingArbeidsgiver.css';
@@ -23,7 +23,7 @@ const VirksomheterLinje = props => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, avklartVirksomhet));
 
     return function cleanup() {
-      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.VIRKSOMHET);
+      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET));
     };
   }, []);
 
