@@ -29,9 +29,12 @@ class Avklartfakta extends StegState {
   };
 
   slettFeltMedFilter = (steg, felt, filtere) => {
+    const { subjektID } = filtere;
+    if (!subjektID) return;
+
     Object.keys(filtere).forEach(filter => {
       const filterValue = filtere[filter];
-      const keyToDelete = `${felt}${filterValue}`;
+      const keyToDelete = `${felt}${subjektID}`;
       const stegFelt = steg[felt];
       if (!stegFelt) return;
 
