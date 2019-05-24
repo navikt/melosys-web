@@ -26,8 +26,6 @@ import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore } from './St
 
 import './stegvelger.css';
 
-import './stegvelger.css';
-
 class Stegvelger extends Component {
   state = {
     aktivtStegNummer: 0,
@@ -41,6 +39,7 @@ class Stegvelger extends Component {
   };
 
   async componentDidMount() {
+    this.aktiv = true;
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
 
@@ -55,6 +54,12 @@ class Stegvelger extends Component {
 
     this.oppdaterAktuelleSteg();
   }
+
+  componentWillUnmount() {
+    this.aktiv = false;
+  }
+
+  aktiv = true;
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
@@ -91,19 +96,19 @@ class Stegvelger extends Component {
       const { stegStores } = this.state;
       stegStores[type].slettStegData(stegID, felt);
       this.setState(stegStores);
-      this.publiserStegdata();
     }
+    this.publiserStegdata();
   };
 
   slettSteg = stegID => {
     const { stegStores } = this.state;
     Object.keys(stegStores).forEach(type => stegStores[type].slettSteg(stegID));
     this.setState(stegStores);
-
-    this.publiserStegdata();
   };
 
   publiserStegdata = async () => {
+    if (!this.aktiv) { return; }
+
     const { vilkaar, avklartefakta, lovvalgsbestemmelse } = this.state.stegStores;
 
     await Promise.all([
@@ -166,7 +171,6 @@ class Stegvelger extends Component {
       oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,
-      slettAllDataForSteg: this.slettSteg,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
       lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
       vedtaEndretPeriode: this.vedtaEndretPeriode,
@@ -288,7 +292,7 @@ class Stegvelger extends Component {
 Stegvelger.propTypes = {
   behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
-  avklartefakta: MPT.Avklartefakta,
+  avklartefakta: MPT.AvklartefaktaListe,
   behandlingsPerioder: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,

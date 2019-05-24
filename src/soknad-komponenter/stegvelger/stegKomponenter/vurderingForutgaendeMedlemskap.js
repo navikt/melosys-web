@@ -8,13 +8,13 @@ import EnkeltVilkaar from './felles/enkeltVilkaar';
 
 const VurderingForutgaendeMedlemskap = props => {
   const {
-    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
   const { harAvklaring, forutgaendeMedlemskap } = tilstand;
 
   useEffect(() => (
     function cleanup() {
-      slettAllDataForSteg();
+      slettData();
     }
   ), []);
 
@@ -45,7 +45,7 @@ VurderingForutgaendeMedlemskap.propTypes = {
   tilstand: PT.object,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
+  slettData: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 
