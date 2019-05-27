@@ -13,16 +13,28 @@ import * as Types from './types';
 import * as Actions from './actions';
 
 /* eslint-disable import/prefer-default-export */
-export function hentBucinformasjon() {
-  return doThenDispatch(() => Api.Sed.hentInformasjon(), {
+export function hentBucSedRelasjoner() {
+  return doThenDispatch(() => Api.Sed.hentBucSedRelasjoner(), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function oppdaterBucinfo(bucinfo) {
-  return Actions.oppdaterBucinfo(bucinfo);
+export function oppdaterBucSedRelasjoner(bucinfo) {
+  return Actions.oppdaterBucSedRelasjoner(bucinfo);
+}
+
+export function hentMottakerinstitusjoner(bucType) {
+  return doThenDispatch(() => Api.Sed.hentMottakerinstitusjoner(bucType), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
+export function oppdaterMottakerinstitusjoner(institusjoner) {
+  return Actions.oppdaterMottakerinstitusjoner(institusjoner);
 }
 
 export function hentSedUnderArbeid(behandlingID) {

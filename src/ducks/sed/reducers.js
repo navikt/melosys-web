@@ -4,7 +4,8 @@ import * as Types from './types';
 const initialState = {
   status: STATUS.NOT_STARTED,
   data: {
-    bucinfo: {},
+    bucsedrelasjoner: [],
+    mottakerinstitusjoner: [],
     sedunderarbeid: [],
   },
 };
@@ -19,8 +20,10 @@ export default function reducer(state = initialState, action) {
       return { ...state, status: STATUS.OK };
     case Types.OPPDATER_SEDUNDERARBEID:
       return { ...state, status: STATUS.OK, data: { ...state.data, sedunderarbeid: [...action.data] } };
-    case Types.OPPDATER_BUCINFO:
-      return { ...state, status: STATUS.OK, data: { ...state.data, bucinfo: { ...action.data } } };
+    case Types.OPPDATER_BUCSEDRELASJONER:
+      return { ...state, status: STATUS.OK, data: { ...state.data, bucsedrelasjoner: [...action.data] } };
+    case Types.OPPDATER_MOTTAKERINSTITUSJONER:
+      return { ...state, status: STATUS.OK, data: { ...state.data, mottakerinstitusjoner: [...action.data] } };
     default:
       return state;
   }

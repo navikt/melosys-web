@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import { connect } from 'react-redux';
 import { reduxForm, reset, setSubmitFailed, Field, Fields, change } from 'redux-form';
@@ -13,8 +14,43 @@ import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { sedOperations, sedSelectors } from '../../ducks/sed';
 import './sedBestilling.css';
 import { formSelectors } from '../../ducks/form';
+import LandVelger from '../skjema/landvelger';
+import { kodeTilTerm, kodeTilObjekt } from '../../kodeverk';
 
-const harBlankMelding = (verdi, melding = 'Velg et element i nedtrekkslisten') => ((!verdi || verdi === '') ? melding : false);
+const bucinfoOLD = [
+  {
+    buc: 'LA_BUC_01',
+    forsteSed: 'A001',
+    fagomrade: 'HORISONTAL',
+  },
+  {
+    buc: 'LA_BUC_02',
+    forsteSed: 'A003',
+    fagomrade: 'LOVVALG',
+  },
+  {
+    buc: 'LA_BUC_03',
+    forsteSed: 'A008',
+    fagomrade: 'LOVVALG',
+  },
+  {
+    buc: 'LA_BUC_04',
+    forsteSed: 'A009',
+    fagomrade: 'LOVVALG',
+  },
+  {
+    buc: 'LA_BUC_05',
+    forsteSed: 'A010',
+    fagomrade: 'LOVVALG',
+  },
+  {
+    buc: 'LA_BUC_06',
+    forsteSed: 'A005',
+    fagomrade: 'LOVVALG',
+  },
+];
+
+const harBlankMelding = (verdi, melding = 'Velg et element i nedtrekkslisten') => ((verdi === '') ? melding : false);
 
 const sedBestillingValidering = verdier => ({
   // fagomrade: (harBlankMelding(verdier.fagomrade) || false),
@@ -24,7 +60,16 @@ const sedBestillingValidering = verdier => ({
   mottakerinstitusjon: (harBlankMelding(verdier.mottakerinstitusjon) || false),
 });
 
-const BucOgSed = ({feltData, redigerbart, meta, settSkjemaVerdi}) => {
+const erSkjemaGyldig = verdier => {
+  const verdiKopi = { ...verdier };
+  const validering = sedBestillingValidering(verdiKopi);
+  return Object.values(validering)
+    .every(enkeltValidering => enkeltValidering === false);
+};
+
+const BucOgSed = ({
+  feltData, redigerbart, meta, settSkjemaVerdi,
+}) => {
   const feil = meta.error ? { feilmelding: meta.error } : undefined;
 
   const [valgtBuc, setValgtBuc] = useState('');
@@ -64,38 +109,41 @@ const BucOgSed = ({feltData, redigerbart, meta, settSkjemaVerdi}) => {
             .map(elem => <option key={elem.kode} value={elem.kode}>{displayName(elem)}</option>)
         }
       </Skjema.Select>
-      */ }
+      */}
     </React.Fragment>
   );
 };
 
-const erSkjemaGyldig = verdier => {
-  const verdiKopi = { ...verdier };
-  const validering = sedBestillingValidering(verdiKopi);
-  return Object.values(validering).every(enkeltValidering => enkeltValidering === false);
-};
-
-
 const SideDialogSedBestilling = ({
-  redigerbart, hentDropdownData, /*settFeilFelt,*/ sedBestillingSkjemaVerdier, settSkjemaVerdi,
+  redigerbart, bucinfo, mottakerinstitusjoner, hentMottakerinstitusjoner, hentBucSedRelasjoner, oppdaterBucSedRelasjoner, oppdaterMottakerinstitusjoner, settSkjemaVerdi,
 }) => {
-  const [feltData, setFeltData] = useState(null); // TODO: Disse må lagres til en store, og ikke bli hentet hver gang.
-
-  const hentOgSettFelt = async () => {
-    const felt = await hentDropdownData();
-    setFeltData(felt.data);
+  const hentOgLagreBucinformasjon = async () => {
+    const rel = await hentBucSedRelasjoner();
+    oppdaterBucSedRelasjoner(rel.data);
   };
 
-  // Henter data for dropdowns ved lasting av komponenten
   useEffect(() => {
-    hentOgSettFelt();
+    hentOgLagreBucinformasjon();
   }, []);
+
+  const hentOgLagreMottakerinstitusjoner = async bucType => {
+    if (bucType) {
+      const institusjoner = await hentMottakerinstitusjoner(bucType);
+      oppdaterMottakerinstitusjoner(institusjoner.data);
+    }
+  };
+
+  const [valgtFagomrade, setValgtFagomrade] = useState(MKV.Koder.sed.fagomrader.LOVVALG);
+  const [valgtBuc, setValgtBuc] = useState('');
+  const [valgtSed, setValgtSed] = useState('');
+  const [valgtLand, setValgtLand] = useState('');
+  const [valgtMottakerinstitusjon, setValgtMottakerinstitusjon] = useState('');
 
   const overstyrSubmit = event => {
     event.preventDefault();
   };
 
-  const validerFelt = async () => {
+  /* const validerFelt = async () => {
     if (!erSkjemaGyldig(sedBestillingSkjemaVerdier)) {
       console.dir(sedBestillingSkjemaVerdier);
       // settFeilFelt('fagomrade', 'buc', 'sed', 'land', 'mottakerinstitusjon');
@@ -112,58 +160,123 @@ const SideDialogSedBestilling = ({
     }
 
     return true;
+  }; */
+  const sendSed = () => {
+    console.dir({
+      fagomrade: valgtFagomrade,
+      buc: valgtBuc,
+      sed: valgtSed,
+      land: valgtLand,
+      mottakerinstitusjon: valgtMottakerinstitusjon,
+    });
   };
 
-  // TODO: states under skal skilles ut i egne komponenter
-  // <LandOgMottakerinstitusjon />
-  const [valgtLand, setValgtLand] = useState('');
-  const [tilgjengeligeMottakerinstitusjoner, setTilgjengeligeMottakerinstitusjoner] = useState([]);
+  const resetFelter = () => {
+    setValgtFagomrade(MKV.Koder.sed.fagomrader.LOVVALG);
+    setValgtBuc('');
+    setValgtSed('');
+    setValgtLand('');
+    setValgtMottakerinstitusjon('');
+  };
+
+  const hentValgtKode = event => event.nativeEvent.target[event.nativeEvent.target.selectedIndex].value;
+
+  const fagomradeSelector = relasjon => Array.from(new Set(relasjon.map(rel => rel.fagomrade)))
+    .map(kode => kodeTilObjekt(kode, MKV.KTObjects.sed.fagomrader));
+
+  const bucSelector = (fagomrade, relasjon) => relasjon.filter(rel => rel.fagomrade === fagomrade).map(rel => rel.buc)
+    .map(kode => kodeTilObjekt(kode, MKV.KTObjects.sed.bucer));
+
+  const sedSelector = (buc, relasjon) => relasjon.filter(rel => rel.buc === buc).map(rel => rel.forsteSed)
+    .map(kode => kodeTilObjekt(kode, MKV.KTObjects.sed.seder));
+
+  const tilgjengeligeMottakerinstitusjoner = land => (land ? mottakerinstitusjoner.filter(institusjon => institusjon.landkode === land) : []);
+
+  const fagomradeEndret = event => {
+    const fagomrade = hentValgtKode(event);
+    setValgtFagomrade(fagomrade);
+    settSkjemaVerdi('fagomrade', fagomrade);
+  };
+
+  const bucEndret = event => {
+    const buc = hentValgtKode(event);
+    setValgtBuc(buc);
+    settSkjemaVerdi('buc', buc);
+
+    setValgtSed(buc ? sedSelector(buc, bucinfo)[0].kode : '');
+
+    hentOgLagreMottakerinstitusjoner(buc);
+  };
 
   const landEndret = event => {
-    const index = event.nativeEvent.target.selectedIndex;
-    const valgtLandKode = event.nativeEvent.target[index].value;
-    setValgtLand(valgtLandKode);
-
-    const landObject = feltData.land[index - 1];
-    setTilgjengeligeMottakerinstitusjoner(landObject ? landObject.mottakerinstitusjoner : []);
+    const land = hentValgtKode(event);
+    setValgtLand(land);
+    settSkjemaVerdi('land', land);
   };
 
-  return feltData && (
+  const mottakerinstitusjonEndret = event => {
+    const institusjon = hentValgtKode(event);
+    setValgtMottakerinstitusjon(institusjon);
+    settSkjemaVerdi('mottakerinstitusjon', institusjon);
+  };
+
+  const displayName = elem => `${elem.kode} - ${elem.term}`;
+
+  return bucinfo && (
     <div className="sedbestilling">
       <form onSubmit={overstyrSubmit}>
         <Nav.Fieldset legend="Ny SED">
-          <Skjema.Select feltNavn="fagomrade" bredde="fullbredde" label="Fagområde" disabled>
-            {feltData.fagomrader.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+          <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade} disabled >
+            <option />
+            {fagomradeSelector(bucinfo).map(fagomrade => <option key={fagomrade.kode} value={fagomrade.kode}>{fagomrade.term}</option>)}
+          </Nav.Select>
+          <Skjema.Select bredde="fullbredde" feltNavn="buc" label="BUC" disabled={!redigerbart} onChange={bucEndret} value={valgtBuc}>
+            { bucSelector(valgtFagomrade, bucinfo).map(buc => <option key={buc.kode} value={buc.kode}>{displayName(buc)}</option>) }
           </Skjema.Select>
-          { /* TODO: Buc og Sed i egen komponent */ }
-          <Field name="buc" component={BucOgSed} feltData={feltData} settSkjemaVerdi={settSkjemaVerdi} redigerbart={redigerbart} />
-          { /* TODO: Land og mottakerinstitusjoner i egen komponent */ }
-          <Skjema.Select feltNavn="land" bredde="fullbredde" label="Land" disabled={!redigerbart} onChange={landEndret} value={valgtLand}>
-            {feltData.land.map(({ land }) => <option key={land.kode} value={land.kode}>{land.term}</option>)}
+          <Nav.Select bredde="fullbredde" label="SED" value={valgtSed} disabled>
+            <option />
+            { sedSelector(valgtBuc, bucinfo).map(forsteSed => <option key={forsteSed.kode} value={forsteSed.kode}>{displayName(forsteSed)}</option>)}
+          </Nav.Select>
+          <Skjema.Select bredde="fullbredde" feltNavn="land" label="Land" disabled={!redigerbart} onChange={landEndret}>
+            {MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={item.kode}>{`${item.term} (${item.kode})`}</option>))}
           </Skjema.Select>
-          <Skjema.Select feltNavn="mottakerinstitusjon" bredde="fullbredde" label="Mottaker institusjon" disabled={!redigerbart}>
-            {
-              tilgjengeligeMottakerinstitusjoner &&
-                tilgjengeligeMottakerinstitusjoner.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
-            }
+          <Skjema.Select bredde="fullbredde" feltNavn="mottakerinstitusjon" label="Mottaker institusjon" disabled={!redigerbart} onChange={mottakerinstitusjonEndret} >
+            { tilgjengeligeMottakerinstitusjoner(valgtLand).map(elem => <option key={elem.id} value={elem.id}>{elem.navn}</option>) }
           </Skjema.Select>
           <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={sendSed}>Opprett sed i rina</Nav.Hovedknapp>&nbsp;
-          { /* TODO: Bug: Reset resetter også fagområde (sjekk brevBestilling) */ }
-          <Nav.Knapp htmlType="reset" type="standard" disabled={!redigerbart} onClick={() => {}}>Avbryt utfylling</Nav.Knapp>
+          { /* TODO: Bug: Reset resetter også fagområde (sjekk brevBestilling) */}
+          <Nav.Knapp htmlType="reset" type="standard" disabled={!redigerbart} onClick={resetFelter}>Avbryt utfylling</Nav.Knapp>
           { /* TODO: infoboks med lenke til sak i rina */
-            false && <Nav.AlertStripe type="suksess" className="varsel">Saken er nå opprettet i RINA [link]</Nav.AlertStripe> }
+            false && <Nav.AlertStripe type="suksess" className="varsel">Saken er nå opprettet i RINA [link]</Nav.AlertStripe>}
           { /* TODO: alert-boks dersom sak ikke blir opprettet */
-            false && <Nav.AlertStripe type="advarsel" className="varsel">{this.state.feilmelding}</Nav.AlertStripe> }
+            false && <Nav.AlertStripe type="advarsel" className="varsel">{this.state.feilmelding}</Nav.AlertStripe>}
         </Nav.Fieldset>
       </form>
     </div>
   );
 };
 
+/*
+const EnkelLandVelger = ({ redigerbart, landEndret }) => (
+  <Nav.Select bredde="fullbredde" label="Land" disabled={!redigerbart} onChange={landEndret}>
+    {MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={item.kode}>{`${item.term} (${item.kode})`}</option>))}
+  </Nav.Select>
+);
+*/
+/*
+const TomtValg = ({ tekst = 'Velg...' }) => (
+  <option value="">{tekst}</option>
+);
+*/
+
 SideDialogSedBestilling.propTypes = {
   redigerbart: PT.bool.isRequired,
-  hentDropdownData: PT.func.isRequired,
-  // settFeilFelt: PT.func.isRequired,
+  bucinfo: PT.array.isRequired,
+  mottakerinstitusjoner: PT.array.isRequired,
+  hentMottakerinstitusjoner: PT.func.isRequired,
+  oppdaterBucSedRelasjoner: PT.func.isRequired,
+  oppdaterMottakerinstitusjoner: PT.func.isRequired,
+  //
   sedBestillingSkjemaVerdier: PT.object,
   settSkjemaVerdi: PT.func.isRequired,
 };
@@ -171,12 +284,6 @@ SideDialogSedBestilling.propTypes = {
 SideDialogSedBestilling.defaultProps = {
   sedBestillingSkjemaVerdier: {},
 };
-
-/* SedBestillingForm.propTypes = {
-  redigerbart: PT.bool.isRequired,
-  data: PT.object.isRequired,
-  settFeilFelt: PT.func.isRequired,
-}; */
 
 const form = {
   form: KV.Form.SED_BESTILLING,
@@ -188,12 +295,12 @@ const form = {
 };
 
 const mapStateToProps = state => ({
-  sedBestillingSkjemaVerdier: formSelectors.SedBestillingFormSelector(state).values,
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  bucinfo: sedSelectors.BucSedRelasjonSelector(state),
+  mottakerinstitusjoner: sedSelectors.MottakerinstitusjonerSelector(state),
+  sedBestillingSkjemaVerdier: formSelectors.SedBestillingFormSelector(state).values,
   initialValues: {
-    fagomrade: 'MEDLEMSKAP',
     buc: '',
-    sed: '',
     land: '',
     mottakerinstitusjon: '',
   },
@@ -202,9 +309,12 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   // settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed(KV.Form.SED_BESTILLING, ...feltNavn)),
   // settIngenFeilFelt: (...feltNavn) => dispatch(set(KV.Form.SED_BESTILLING, ...feltNavn)),
-  hentBucinformasjon: () => dispatch(sedOperations.hentBucinformasjon()),
-  oppdaterBucinfo: bucinfo => dispatch(sedOperations.oppdaterBucinfo(bucinfo)),
+  hentBucSedRelasjoner: () => dispatch(sedOperations.hentBucSedRelasjoner()),
+  hentMottakerinstitusjoner: bucType => dispatch(sedOperations.hentMottakerinstitusjoner(bucType)),
+  oppdaterBucSedRelasjoner: relasjoner => dispatch(sedOperations.oppdaterBucSedRelasjoner(relasjoner)),
+  oppdaterMottakerinstitusjoner: institusjoner => dispatch(sedOperations.oppdaterMottakerinstitusjoner(institusjoner)),
   settSkjemaVerdi: (felt, verdi) => dispatch(change(KV.Form.SED_BESTILLING, felt, verdi)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(SideDialogSedBestilling));
+// export default connect(mapStateToProps, mapDispatchToProps)(SideDialogSedBestilling);

@@ -17,7 +17,12 @@ export const SedUnderArbeidSelector = createSelector(
   sedunderarbeid => sedunderarbeid
 );
 
-export const BucinformasjonSelector = createSelector(
-  state => SedSelector(state).bucinfo || {},
+export const BucSedRelasjonSelector = createSelector(
+  state => SedSelector(state).bucsedrelasjoner || [],
   bucinfo => bucinfo
+);
+
+export const MottakerinstitusjonerSelector = createSelector(
+  state => SedSelector(state).mottakerinstitusjoner || [],
+  mottakerinstitusjoner => mottakerinstitusjoner
 );
