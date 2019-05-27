@@ -22,7 +22,7 @@ class Avklartfakta extends StegState {
   slettFeltMedSubjektID = (steg, data) => {
     const { felt, subjektID } = data;
 
-    const keyToDelete = `${felt}${subjektID}`;
+    const keyToDelete = this.lagKey({ referanse: felt, subjektID });
     const stegFelt = steg[felt];
     if (!stegFelt) return;
     stegFelt.delete(keyToDelete);
