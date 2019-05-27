@@ -35,7 +35,6 @@ class SokkelSkip extends Steg {
     this.komponent = VurderingSokkelSkip;
     this.samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.sokkel,
-      skjema: _propsLight.skjema,
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
@@ -55,7 +54,7 @@ class SokkelSkip extends Steg {
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       oppdaterData: (felt, verdi) => this._propsLight.tilgjengeligeHandlers.oppdaterStegData(this.id, felt, verdi),
-      slettData: (type, felt) => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, type, felt),
+      slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this.status = FANE_STATUS.OK;
   }

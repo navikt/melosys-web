@@ -61,3 +61,7 @@ export function queryParamsTilObjekt(sporreStreng) {
       return key ? { ...samling, [key]: value } : { ...samling };
     }, {});
 }
+
+export function erPropertyUnik(array, mapper = x => x) {
+  return array.length === [...new Set(array.map(mapper))].length;
+}

@@ -133,13 +133,11 @@ export default function reducer(state = initialState, action) {
             landkode: dokument.oppgittAdresseLand,
           },
         },
-        maritimtArbeid: dokument.maritimtArbeid.filter(maritimtArbeid => (
-          maritimtArbeid.navn && maritimtArbeid.fartsomradeKode && maritimtArbeid.flaggLandkode && maritimtArbeid.installasjonsLandkode
-        )).map(maritimtArbeid => ({
-          navn: maritimtArbeid.navn,
-          fartsomradeKode: maritimtArbeid.fartsomradeKode,
-          flaggLandkode: maritimtArbeid.flaggLandkode,
-          installasjonsLandkode: maritimtArbeid.installasjonsLandkode,
+        maritimtArbeid: dokument.maritimtArbeid.map(maritimtArbeid => ({
+          navn: maritimtArbeid.navn || null,
+          fartsomradeKode: maritimtArbeid.fartsomradeKode || null,
+          flaggLandkode: maritimtArbeid.flaggLandkode || null,
+          installasjonsLandkode: maritimtArbeid.installasjonsLandkode || null,
           territorialfarvann: maritimtArbeid.territorialfarvann || null,
         })),
         soeknadsland: {

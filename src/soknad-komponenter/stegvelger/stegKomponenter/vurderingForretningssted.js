@@ -8,7 +8,7 @@ import {
   hentFaktaVerdi,
   lagAvklartfakta,
   konverterTilStegData,
-  avklartefaktaType,
+  slettAvklartfakta,
 } from '../../../regler/avklartefakta';
 import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
@@ -31,7 +31,7 @@ const Forretningsstedet = props => {
       oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland));
     }
     return function cleanup() {
-      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED);
+      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED));
     };
   }, []);
 
@@ -152,7 +152,7 @@ const VurderingForretningssted = props => {
     if (e === KV.Koder.BoolskAvklartfaktaType.SANN) {
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, MKV.Koder.landkoder.NO));
     } else if (e === KV.Koder.BoolskAvklartfaktaType.USANN) {
-      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND);
+      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND));
     } else {
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, e));
     }
