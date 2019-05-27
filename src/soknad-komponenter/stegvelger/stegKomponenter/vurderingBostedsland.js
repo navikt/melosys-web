@@ -10,7 +10,7 @@ import { BOOLSK } from '../../../constants';
 import './vurderingBostedsland.css';
 import * as MPT from '../../../proptypes';
 import { konverterTilStegData, lagVilkaar } from '../../../regler/vilkar';
-import { avklartefaktaType, lagAvklartfakta } from '../../../regler/avklartefakta';
+import { lagAvklartfakta, slettAvklartfakta } from '../../../regler/avklartefakta';
 import * as KV from '../../../kodeverk';
 
 const uuid = require('uuid/v4');
@@ -81,7 +81,7 @@ const VurderingBostedsland = props => {
 
   const radioEndringHandler = event => {
     oppdaterData(lagVilkaar('bosattINorge', event.target.value));
-    slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
+    slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND));
   };
 
   const landEndretHandler = landKode => {
