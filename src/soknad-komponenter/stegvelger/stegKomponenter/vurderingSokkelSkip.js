@@ -106,20 +106,22 @@ const SokkelSkipEnkelt = props => {
     avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, navn, land.term);
   };
 
+  const sokkelSkipDisabled = !(redigerbart && navn);
+
   return (
     <Nav.Row className="sokkelSkip__liste__rad">
       <Nav.Column xs="3" className="rad__navn">{navn}</Nav.Column>
       <Nav.Column xs="2" className="rad__sokkel">
         <Nav.Radio
           name={key}
-          disabled={!(redigerbart && navn)}
+          disabled={sokkelSkipDisabled}
           onChange={sokkelSkipEndret}
           value={SOKKEL}
           checked={installasjonsType === SOKKEL}
           label="Sokkel" />
         <Nav.Radio
           name={key}
-          disabled={!(redigerbart && navn)}
+          disabled={sokkelSkipDisabled}
           onChange={sokkelSkipEndret}
           checked={installasjonsType === SKIP}
           value={SKIP}
@@ -130,7 +132,7 @@ const SokkelSkipEnkelt = props => {
         <Nav.Column xs="2" className="rad__begrunnelse">
           <Nav.Select
             name={`${key}_begrunnelser`}
-            disabled={!(redigerbart && navn)}
+            disabled={sokkelSkipDisabled}
             id="installasjonsTypeBegrunnelser"
             label="Begrunnelse hvis sokkel"
             onChange={begrunnelserEndret}
@@ -141,7 +143,7 @@ const SokkelSkipEnkelt = props => {
         </Nav.Column>
       }
       <Nav.Column xs="5" className="rad__land">
-        <Nav.Fieldset disabled={!(redigerbart && navn)} legend="Velg arbeidsland">
+        <Nav.Fieldset disabled={sokkelSkipDisabled} legend="Velg arbeidsland">
           <ArbeidslandRadioButtons
             landliste={[
               { term: 'Flaggland', kode: flaggLandkode },
