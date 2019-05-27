@@ -4,6 +4,7 @@
  * Målet med selectorer er å samle funksjonalitet som behandler, itererer og omformer
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
+import * as MKV from 'melosys-kodeverk';
 
 import { createSelector } from 'reselect';
 import moment from 'moment/moment';
@@ -20,13 +21,18 @@ export const BehandlingIDSelector = createSelector(
   state => BehandlingerSelector(state).behandlingID || -1,
   behandlingID => behandlingID
 );
-export const RedigerbartSelector = createSelector(
-  state => BehandlingerSelector(state).redigerbart || false,
-  redigerbart => redigerbart
-);
 export const OppsummeringSelector = createSelector(
   state => BehandlingerSelector(state).oppsummering || {},
   oppsummering => oppsummering
+);
+export const RedigerbartSelector = createSelector(
+  state => BehandlingerSelector(state).redigerbart || false,
+  state => OppsummeringSelector(state),
+  (redigerbart, oppsummering) => redigerbart && oppsummering.behandlingstype.kode !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE
+);
+export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
+  state => BehandlingerSelector(state).redigerbart || false,
+  redigerbart => redigerbart
 );
 
 export const SaksopplysningerSelector = createSelector(
