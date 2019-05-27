@@ -1,9 +1,16 @@
 import * as Types from './types';
 
-export const oppdaterBucinfo = bucinfo => (
+export const oppdaterBucSedRelasjoner = bucinfo => (
   {
-    type: Types.OPPDATER_BUCINFO,
+    type: Types.OPPDATER_BUCSEDRELASJONER,
     data: bucinfo,
+  }
+);
+
+export const oppdaterMottakerinstitusjoner = institusjoner => (
+  {
+    type: Types.OPPDATER_MOTTAKERINSTITUSJONER,
+    data: institusjoner,
   }
 );
 
