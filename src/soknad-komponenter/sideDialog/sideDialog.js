@@ -21,8 +21,8 @@ class SideDialog extends Component {
 
   static defaultProps = {
     faner: [
-      { navn: 'sedunderarbeid', tittel: 'SED under arbeid' },
       { navn: 'sedbestilling', tittel: 'Send SED' },
+      { navn: 'sedunderarbeid', tittel: 'SED under arbeid' },
       { navn: 'dokumenter', tittel: 'Dokumenter' },
       { navn: 'brevbestilling', tittel: 'Send brev' },
     ],
@@ -38,7 +38,7 @@ class SideDialog extends Component {
     } else if (navn === 'brevbestilling') {
       return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} />;
     } else if (navn === 'sedbestilling') {
-      return <SideDialogSedBestilling key={uuid()} />;
+      return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} />;
     } else if (navn === 'sedunderarbeid') {
       return <SideDialogSedUnderArbeid key={uuid()} behandlingID={behandlingID} />;
     }

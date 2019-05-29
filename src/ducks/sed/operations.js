@@ -37,6 +37,14 @@ export function oppdaterMottakerinstitusjoner(institusjoner) {
   return Actions.oppdaterMottakerinstitusjoner(institusjoner);
 }
 
+export function opprettBuc(behandlingID, bucData) {
+  return doThenDispatch(() => Api.Sed.opprettBuc(behandlingID, bucData), {
+    OK: Types.OK,
+    FEILET: Types.FEILET,
+    PENDING: Types.PENDING,
+  });
+}
+
 export function hentSedUnderArbeid(behandlingID) {
   return doThenDispatch(() => Api.Sed.hentSedUnderArbeid(behandlingID), {
     OK: Types.OK,
