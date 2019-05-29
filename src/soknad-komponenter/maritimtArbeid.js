@@ -45,20 +45,20 @@ const MaritimtEnkelt = ({
           <Skjema.Input feltNavn={`${navn}.navn`} label="Navn på enhet:" disabled={!redigerbart} />
         </Nav.Column>
         <Nav.Column xs="6">
-          <LandVelger bredde="fullbredde" feltNavn={`${navn}flaggLandkode`} label="Flaggland:" disabled={!redigerbart} />
-          <LandVelger bredde="fullbredde" feltNavn={`${navn}installasjonsLandkode`} label="Sokkelland:" disabled={!redigerbart} />
+          <LandVelger bredde="fullbredde" feltNavn={`${navn}.flaggLandkode`} label="Flaggland:" disabled={!redigerbart} />
+          <LandVelger bredde="fullbredde" feltNavn={`${navn}.installasjonsLandkode`} label="Sokkelland:" disabled={!redigerbart} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Select feltNavn={`${navn}fartsomradeKode`} label="Fartsområde:" disabled={!redigerbart} onChange={fartsomradeChangeHandler}>
+          <Skjema.Select feltNavn={`${navn}.fartsomradeKode`} label="Fartsområde:" disabled={!redigerbart} onChange={fartsomradeChangeHandler}>
             {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
           </Skjema.Select>
         </Nav.Column>
         <Nav.Column xs="6">
           {
             fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
-            <LandVelger bredde="fullbredde" feltNavn={`${navn}territorialfarvann`} label="Territorialfarvannsland:" disabled={!redigerbart} />
+            <LandVelger bredde="fullbredde" feltNavn={`${navn}.territorialfarvann`} label="Territorialfarvannsland:" disabled={!redigerbart} />
           }
         </Nav.Column>
       </Nav.Row>
