@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect, useState } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Utils from '../../utils/dato';
+import * as Api from '../../services/api';
 import './sideDialogSedUnderArbeid.css';
-import { sedOperations, sedSelectors } from '../../ducks/sed';
 
 const uuid = require('uuid/v4');
 
@@ -46,21 +45,18 @@ EnkeltSedUnderArbeid.propTypes = {
   status: PT.string.isRequired,
 };
 
-const SideDialogSedUnderArbeid = ({
-  behandlingID, sedUnderArbeid, hentSedUnderArbeid, oppdaterSedUnderArbeid,
-}) => {
-  const hentOgLagreSedUnderArbeid = async () => {
-    if (behandlingID !== -1 && sedUnderArbeid.length === 0) {
-      const response = await hentSedUnderArbeid(behandlingID);
+const SideDialogSedUnderArbeid = ({ behandlingID }) => {
+  const [sedUnderArbeid, setSedUnderArbeid] = useState([]);
 
-      if (response) {
-        oppdaterSedUnderArbeid(response.data);
-      }
+  const hentSedUnderArbeid = async () => {
+    if (behandlingID !== -1 && sedUnderArbeid.length === 0) {
+      Api.Sed.hentSedUnderArbeid(behandlingID)
+        .then(data => setSedUnderArbeid(data));
     }
   };
 
   useEffect(() => {
-    hentOgLagreSedUnderArbeid();
+    hentSedUnderArbeid();
   }, []);
 
   const kanViseListe = liste => liste && liste.constructor === Array && liste.length > 0;
@@ -78,18 +74,6 @@ const SideDialogSedUnderArbeid = ({
 
 SideDialogSedUnderArbeid.propTypes = {
   behandlingID: PT.number.isRequired,
-  sedUnderArbeid: PT.array.isRequired,
-  hentSedUnderArbeid: PT.func.isRequired,
-  oppdaterSedUnderArbeid: PT.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-  sedUnderArbeid: sedSelectors.SedUnderArbeidSelector(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  hentSedUnderArbeid: behandlingID => dispatch(sedOperations.hentSedUnderArbeid(behandlingID)),
-  oppdaterSedUnderArbeid: sedUnderArbeid => dispatch(sedOperations.oppdaterSedUnderArbeid(sedUnderArbeid)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SideDialogSedUnderArbeid);
+export default SideDialogSedUnderArbeid;

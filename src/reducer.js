@@ -15,7 +15,6 @@ import organisasjonerReducer from './ducks/organisasjoner';
 import personerReducer from './ducks/personer';
 import saksbehandlerReducer from './ducks/saksbehandler/';
 import saksopplysningerReducer from './ducks/saksopplysninger';
-import sedReducer from './ducks/sed';
 import sokReducer from './ducks/sok';
 import soknadReducer from './ducks/soknad/';
 import vilkarReducer from './ducks/vilkar/';
@@ -38,7 +37,6 @@ export default combineReducers({
   personer: personerReducer,
   saksbehandler: saksbehandlerReducer,
   saksopplysninger: saksopplysningerReducer,
-  sed: sedReducer,
   sok: sokReducer,
   soknad: soknadReducer,
   vilkar: vilkarReducer,
