@@ -29,14 +29,14 @@ export class VurderingEndrePeriode extends React.Component {
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
   };
 
-  async componentDidMount() {
+  componentDidMount() {
     const {
       behandlingID, redigerbart, lovvalgsPeriode, oppdaterData, tilstand: { aarsakEndringPeriodeAvklartfakta },
     } = this.props;
 
     oppdaterData(konverterTilStegData(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE, aarsakEndringPeriodeAvklartfakta));
 
-    await this.hentOpprinneligPeriode(behandlingID);
+    this.hentOpprinneligPeriode(behandlingID);
 
     if (!redigerbart) this.settSluttDato(lovvalgsPeriode.tomDato);
   }
