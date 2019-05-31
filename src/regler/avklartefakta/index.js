@@ -4,6 +4,12 @@ export const hentFaktaListe = (spesifiktFakta, alleFakta) => alleFakta.filter(en
 export const hentFakta = (spesifiktFakta, alleFakta) => alleFakta.find(enkelt => enkelt.referanse === spesifiktFakta) || {};
 export const hentFaktaVerdi = avklartfakta => (avklartfakta && avklartfakta.fakta ? avklartfakta.fakta[0] : null);
 
+export const slettAvklartfakta = (felt, subjektID) => ({
+  felt,
+  subjektID,
+  type: avklartefaktaType,
+});
+
 export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrunnelseFritekst) => {
   let begrunnelseListe = [];
   if (begrunnelseKoder && begrunnelseKoder.length > 0) {

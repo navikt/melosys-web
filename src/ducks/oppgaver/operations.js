@@ -35,20 +35,22 @@ export const tilbakelegge = (behandlingID, venterPaaDokumentasjon) => {
 };
 
 export const sendBehandlingsOppgave = async checkboxliste => {
-  const { sakstyper: sakstyperListe = [] } = checkboxliste;
+  const { sakstyper: sakstyperListe = [], behandlingstyper: behandlingstyperListe = [] } = checkboxliste;
   if (sakstyperListe.length === 0) { return false; }
 
-  const sakstyper = Object.keys(sakstyperListe);
+  const sakstyper = Object.keys(sakstyperListe).filter(sakstype => sakstyperListe[sakstype]);
+  const behandlingstyper = Object.keys(behandlingstyperListe).filter(behandlingstype => behandlingstyperListe[behandlingstype]);
 
   const oppgave = {
     oppgavetype: MKV.Koder.oppgavetyper.BEH_SAK_MK,
     sakstyper,
+    behandlingstyper,
   };
 
   const response = await Api.Oppgaver.send(oppgave);
-  const { saksnummer } = response;
+  const { saksnummer, behandlingID } = response;
   if (!saksnummer) { return false; }
-  return `/saksbehandling/${saksnummer}`;
+  return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
 };
 
 export const sendJournalOppgave = async fagomrade => {

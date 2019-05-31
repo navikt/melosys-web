@@ -10,13 +10,13 @@ import EnkeltVilkaar from './felles/enkeltVilkaar';
 
 const VurderingVesentligVirksomhet = props => {
   const {
-    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
   const { vesentligVirksomhetVilkaar, harAvklaring } = tilstand;
 
   useEffect(() => (
     function cleanup() {
-      slettAllDataForSteg();
+      slettData();
     }
   ), []);
 
@@ -49,7 +49,7 @@ VurderingVesentligVirksomhet.propTypes = {
   valgteVirksomheter: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
+  slettData: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

@@ -12,6 +12,7 @@ describe('vurderingEndrePeriode', () => {
       endreDatoOgSendLovvalgsperioderHandler: jest.fn(),
       vedtaEndretPeriode: jest.fn(),
       tilForsiden: jest.fn(),
+      redigerbart: true,
     };
   });
 

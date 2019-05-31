@@ -2,6 +2,11 @@ import { tryParseBool } from '../../utils/streng';
 
 export const vilkaarType = 'vilkaar';
 
+export const slettVilkar = felt => ({
+  felt,
+  type: vilkaarType,
+});
+
 export const hentVilkar = (spesifiktVilkar, alleVilkar) => alleVilkar.find(enkelt => enkelt.vilkaar === spesifiktVilkar) || {};
 
 export const erVilkarOppfylt = (spesifiktVilkar, alleVilkar) => {

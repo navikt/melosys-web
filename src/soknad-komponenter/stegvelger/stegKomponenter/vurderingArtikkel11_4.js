@@ -10,7 +10,7 @@ import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 import './vurderingArtikkel11_4.css';
 import { BOOLSK } from '../../../constants';
-import { konverterTilStegData, lagVilkaar, vilkaarType } from '../../../regler/vilkar';
+import { konverterTilStegData, lagVilkaar, slettVilkar } from '../../../regler/vilkar';
 
 class VurderingArtikkel11_4 extends Component {
   /* Bakgrunn: Hvert vilkår er uttrykt som en two-state, dvs true eller false i domenemodellen. Problemet
@@ -36,8 +36,7 @@ class VurderingArtikkel11_4 extends Component {
   }
 
   componentWillUnmount() {
-    const { slettAllDataForSteg } = this.props;
-    slettAllDataForSteg();
+    this.props.slettData();
   }
 
   nisEndret = event => {
@@ -52,17 +51,17 @@ class VurderingArtikkel11_4 extends Component {
     if (value === this.ART11_4_1) {
       oppdaterData(lagVilkaar('art11_4_1', true));
       oppdaterData(lagVilkaar('art11_3A', true));
-      slettData(vilkaarType, 'art11_4_2');
+      slettData(slettVilkar('art11_4_2'));
     } else if (value === this.ART11_4_2) {
-      slettData(vilkaarType, 'art11_3A');
-      slettData(vilkaarType, 'art11_4_1');
+      slettData(slettVilkar('art11_3A'));
+      slettData(slettVilkar('art11_4_1'));
       oppdaterData(lagVilkaar('art11_4_2', true));
-      slettData(vilkaarType, 'nis');
+      slettData(slettVilkar('nis'));
     } else {
-      slettData(vilkaarType, 'art11_3A');
+      slettData(slettVilkar('art11_3A'));
       oppdaterData(lagVilkaar('art11_4_1', true));
-      slettData(vilkaarType, 'art11_4_2');
-      slettData(vilkaarType, 'nis');
+      slettData(slettVilkar('art11_4_2'));
+      slettData(slettVilkar('nis'));
     }
   };
 
@@ -158,7 +157,6 @@ VurderingArtikkel11_4.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingArtikkel11_4.defaultProps = {
