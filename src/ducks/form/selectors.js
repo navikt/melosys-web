@@ -96,3 +96,9 @@ export const PanelerMedFeilSelector = createSelector(
   SoknadErrorsSelector,
   soknadErrors => finnPanelerMedFeil(soknadErrors)
 );
+
+export const ErAlleMaritimtArbeidNavnUnikeSelector = createSelector(
+  MaritimtArbeidSelector,
+  maritimtarbeidListe => maritimtarbeidListe.length === [...new Set(maritimtarbeidListe.map(maritimtarbeid => maritimtarbeid.navn))].length
+);
+

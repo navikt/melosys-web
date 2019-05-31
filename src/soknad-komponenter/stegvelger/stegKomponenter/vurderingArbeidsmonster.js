@@ -9,7 +9,7 @@ import * as KV from '../../../kodeverk';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
 import { BoolskAvklartfaktaType, VurderingVesentligAktivitetINorgeTyper } from '../../../kodeverk/koder';
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
-import { lagLovvalgsbestemmelse, lovvalgsbestemmelseType } from '../../../regler/lovvalgsbestemmelser';
+import { lagLovvalgsbestemmelse, slettLovvalgsbestemmelse } from '../../../regler/lovvalgsbestemmelser';
 
 import './vurderingArbeidsmonster.css';
 
@@ -145,7 +145,7 @@ const VurderingArbeidsmonster = props => {
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
       oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1A));
     } else {
-      slettData(lovvalgsbestemmelseType);
+      slettData(slettLovvalgsbestemmelse());
     }
   };
 

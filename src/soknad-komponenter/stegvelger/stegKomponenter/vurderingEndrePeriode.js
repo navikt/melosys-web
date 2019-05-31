@@ -4,17 +4,17 @@ import { connect } from 'react-redux';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../../../utils';
+import * as Nav from '../../../utils/navFrontend';
 import PdfLenkeListe from '../../pdfLenkeListe';
 import { KodeTermSelect } from '../../kodeTermSelect';
 
-import * as Nav from '../../../utils/navFrontend';
-
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { soknadOperations } from '../../../ducks/soknad';
 
 import * as API from '../../../services/api';
 
 import './vurderingEndrePeriode.css';
-import { soknadOperations } from '../../../ducks/soknad';
 
 export class VurderingEndrePeriode extends React.Component {
   state = {
@@ -27,9 +27,12 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   componentDidMount() {
-    const { behandlingID } = this.props;
+    const { behandlingID, redigerbart, lovvalgsPeriode } = this.props;
     this.hentOpprinneligPeriode(behandlingID);
+    if (!redigerbart) this.settSluttDato(lovvalgsPeriode.tomDato);
   }
+
+  settSluttDato = nyTomDato => this.setState({ nyTomDato });
 
   hentOpprinneligPeriode = async behandlingID => {
     const opprinneligLovvalgsperiode = await API.OpprinneligLovvalgsperiode.hent(behandlingID);
@@ -103,7 +106,7 @@ export class VurderingEndrePeriode extends React.Component {
   vedKlikkPdf = async () => this.validerAlt();
 
   render() {
-    const { behandlingID, lovvalgsPeriode: { fomDato } } = this.props;
+    const { behandlingID, lovvalgsPeriode: { fomDato }, redigerbart } = this.props;
 
     const {
       vedTomDatoEndring,
@@ -178,6 +181,7 @@ export class VurderingEndrePeriode extends React.Component {
               onBlur={lagrePeriodeForForhandsvisning}
               value={nyTomDato}
               feil={nyTomDatoFeilmelding}
+              disabled={!redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
@@ -189,11 +193,12 @@ export class VurderingEndrePeriode extends React.Component {
               label="Begrunnelse"
               value={begrunnelsekode}
               onChange={vedBegrunnelseEndring}
+              redigerbart={redigerbart}
             />
           </Nav.Column>
         </Nav.Row>
-        <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={vedKlikkPdf} />
-        <Nav.Hovedknapp onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
+        {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={vedKlikkPdf} />}
+        <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
       </div>
     );
   }
@@ -206,6 +211,7 @@ VurderingEndrePeriode.propTypes = {
   fomDato: PT.string,
   tilForsiden: PT.func.isRequired,
   vedtaEndretPeriode: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 VurderingEndrePeriode.defaultProps = {
@@ -214,10 +220,12 @@ VurderingEndrePeriode.defaultProps = {
 
 const mapStateToProps = state => ({
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+  redigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   oppdaterPeriode: periode => dispatch(soknadOperations.oppdaterPeriode(periode)),
+
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingEndrePeriode);

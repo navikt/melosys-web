@@ -10,11 +10,12 @@ import SoknadslandListe from './inngang/soknadslandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta,
+    tilstand, redigerbart, oppdaterData, slettData,
   } = props;
 
   useEffect(() => function cleanup() {
-    slettAllDataForSteg();
+    slettData();
   }, []);
 
   const { vurdering } = inngangsvilkar;
@@ -50,7 +51,7 @@ const VurderingInngang = props => {
 
 VurderingInngang.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  avklartefakta: MPT.Avklartefakta.isRequired,
+  avklartefakta: MPT.AvklartefaktaListe.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
   tilstand: PT.object.isRequired,
@@ -59,7 +60,7 @@ VurderingInngang.propTypes = {
   }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 export default VurderingInngang;

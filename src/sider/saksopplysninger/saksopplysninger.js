@@ -74,7 +74,6 @@ class Saksopplysninger extends Component {
       redigerbart,
       behandlingID,
       medlemskap,
-      inntekterPrAarMaaned,
       soknadArbeidsinntekt,
       soknadForm,
       soknad,
@@ -89,7 +88,7 @@ class Saksopplysninger extends Component {
     if (!behandlingID) {
       return null;
     }
-
+    
     const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
     const visStegVelger = !visHenlagtSak;
     return (
@@ -124,7 +123,7 @@ class Saksopplysninger extends Component {
         <VirksomhetNorge />
         <MaritimtArbeid />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-        {inntekterPrAarMaaned.length && <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />}
+        <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
       </form>
     );
   }
@@ -134,12 +133,11 @@ Saksopplysninger.propTypes = {
   redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
   alleRelevantePersoner: PT.arrayOf(MPT.Person),
-  avklartefakta: MPT.Avklartefakta.isRequired,
+  avklartefakta: MPT.AvklartefaktaListe.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
   fagsakStatusKode: PT.string.isRequired,
   handleSubmit: PT.func.isRequired,
-  inntekterPrAarMaaned: MPT.InntekterPrAarMaaned,
   match: PT.object.isRequired,
   medlemskap: MPT.Medlemskap,
   oppdaterSoknad: PT.func.isRequired,
@@ -163,7 +161,6 @@ Saksopplysninger.propTypes = {
 Saksopplysninger.defaultProps = {
   redigerbart: null,
   alleRelevantePersoner: [],
-  inntekterPrAarMaaned: [],
   medlemskap: {},
   person: {},
   soknad: {},
@@ -178,7 +175,6 @@ const mapStateToProps = state => ({
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
-  inntekterPrAarMaaned: behandlingerSelectors.InntekterPrAarMaanedSelector(state),
   bekreftelser: behandlingerSelectors.BekreftelserSelector(state),
   behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
@@ -210,12 +206,12 @@ const mapStateToProps = state => ({
     oppgittAdressePostnummer: soknadSelectors.BostedAdresseSelector(state).postnummer,
     oppgittAdressePoststed: soknadSelectors.BostedAdresseSelector(state).poststed,
     oppgittAdresseLand: soknadSelectors.BostedAdresseSelector(state).landkode,
-    utsendteNeste12Mnd: Math.trunc(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendteNeste12Mnd),
-    antallAdmAnsatte: Math.trunc(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte),
-    antallAnsatte: Math.trunc(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAnsatte),
-    andelOmsetningINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge),
-    andelOppdragINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge),
-    andelKontrakterINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge),
+    utsendteNeste12Mnd: Math.trunc(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).utsendteNeste12Mnd) || null,
+    antallAdmAnsatte: Math.trunc(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAdmAnsatte) || null,
+    antallAnsatte: Math.trunc(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).antallAnsatte) || null,
+    andelOmsetningINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOmsetningINorge) || null,
+    andelOppdragINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge) || null,
+    andelKontrakterINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
     arbeidstakereRekruttertILand: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).arbeidstakereRekruttertILand,
     oppdragsKontrakterIHovedsakInngaattILand: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).oppdragsKontrakterIHovedsakInngaattILand,
     ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,

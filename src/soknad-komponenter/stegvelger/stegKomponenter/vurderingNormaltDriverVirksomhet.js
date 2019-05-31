@@ -8,12 +8,12 @@ import { arrayTilKonjunksjon } from '../../../utils/streng';
 
 const NormaltDriverVirksomhet = props => {
   const {
-    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
 
   useEffect(() => (
     function cleanup() {
-      slettAllDataForSteg();
+      slettData();
     }
   ), []);
 
@@ -48,7 +48,7 @@ NormaltDriverVirksomhet.propTypes = {
   valgteVirksomheter: PT.array,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
+  slettData: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 
