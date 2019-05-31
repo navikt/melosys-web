@@ -8,7 +8,6 @@
 import { createSelector } from 'reselect';
 import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
-import sedBestilling from '../../soknad-komponenter/sideDialog/sedBestilling';
 
 const getFormState = (state, formName, defaultValue = {}) => (
   state.form[formName] ? state.form[formName] : defaultValue
