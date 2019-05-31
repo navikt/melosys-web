@@ -39,11 +39,6 @@ export const BrevBestillingFormSelector = createSelector(
   brevbestilling => brevbestilling
 );
 
-export const SedBestillingFormSelector = createSelector(
-  state => getFormState(state, KV.Form.SED_BESTILLING, {}),
-  sedbestilling => sedbestilling
-);
-
 export const Lovvalgsperiode = createSelector(
   state => SoknadenFormSelector(state).values,
   skjemaverdier => skjemaverdier.lovvalgsperiode || {}
