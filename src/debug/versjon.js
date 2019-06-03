@@ -4,14 +4,15 @@ import classnames from 'classnames';
 
 import Clipboard from './clipboard';
 import * as Api from '../services/api';
+import * as Utils from '../utils';
 import './versjon.css';
 
 function Versjon() {
-  const [visVersjonDetaljer, setToggleState] = useState(false);
+  const [visVersjonDetaljer, setVisVersjonDetaljer] = useState(false);
   const [serverInfo, setServerInfo] = useState({});
 
   const toggleVersjon = () => {
-    setToggleState(!visVersjonDetaljer);
+    setVisVersjonDetaljer(!visVersjonDetaljer);
   };
 
   const versjon = () => (process.env.REACT_APP_VERSION ? `v${process.env.REACT_APP_VERSION}` : '(ukjent)');
@@ -25,7 +26,7 @@ function Versjon() {
       setServerInfo({...serverinfo});
     }
     catch (e) {
-      console.error(e);
+      Utils.logger(e);
     }
   };
   useEffect(() => {
