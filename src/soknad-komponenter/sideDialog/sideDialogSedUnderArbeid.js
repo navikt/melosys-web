@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-import * as Utils from '../../utils/dato';
+import * as Utils from '../../utils';
 import * as Api from '../../services/api';
 import './sideDialogSedUnderArbeid.css';
 
@@ -26,7 +26,7 @@ const EnkeltSedUnderArbeid = ({
     <Nav.Row>
       <Nav.Column xs="4">
         <Nav.Undertittel>{sedType}</Nav.Undertittel>
-        <Nav.Normaltekst>Opprettet: {Utils.formatterDatoTilNorsk(opprettetDato)}</Nav.Normaltekst>
+        <Nav.Normaltekst>Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}</Nav.Normaltekst>
       </Nav.Column>
       <Nav.Column xs="4" className="status-etikett">
         <StatusEtikett status={status} />
@@ -50,8 +50,12 @@ const SideDialogSedUnderArbeid = ({ behandlingID }) => {
 
   const hentSedUnderArbeid = async () => {
     if (behandlingID !== -1 && sedUnderArbeid.length === 0) {
-      Api.Sed.hentSedUnderArbeid(behandlingID)
-        .then(data => setSedUnderArbeid(data));
+      try {
+        const data = await Api.Sed.hentSedUnderArbeid(behandlingID);
+        setSedUnderArbeid(data);
+      } catch (e) {
+        Utils.logger.error(e);
+      }
     }
   };
 

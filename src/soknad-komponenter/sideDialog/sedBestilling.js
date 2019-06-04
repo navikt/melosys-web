@@ -5,6 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Api from '../../services/api';
+import * as Utils from '../../utils';
 import { createValidator } from '../skjema/validering/skjemaer/createValidator';
 import { sed as sedSchema } from '../skjema/validering/skjemaer/sed';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
@@ -40,8 +41,12 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
 
   const hentMottakerinstitusjoner = async bucType => {
     if (bucType) {
-      Api.Sed.hentMottakerinstitusjoner(bucType)
-        .then(institusjoner => setMottakerinstitusjoner(institusjoner));
+      try {
+        const institusjoner = await Api.Sed.hentMottakerinstitusjoner(bucType);
+        setMottakerinstitusjoner(institusjoner);
+      } catch (e) {
+        Utils.logger.error(e);
+      }
     }
   };
 
@@ -80,16 +85,20 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
 
   const sendSed = async () => {
     if (erValidert()) {
-      const sedResponse = await Api.Sed.opprettBuc(behandlingID, {
-        bucType: valgtBuc,
-        mottakerLand: valgtLand,
-        mottakerId: valgtMottakerinstitusjon,
-      });
+      try {
+        const sedResponse = await Api.Sed.opprettBuc(behandlingID, {
+          bucType: valgtBuc,
+          mottakerLand: valgtLand,
+          mottakerId: valgtMottakerinstitusjon,
+        });
 
-      setSedSendt(true);
-      if (sedResponse) {
-        setOpprettetSedUrl(sedResponse);
-        resetForm();
+        setSedSendt(true);
+        if (sedResponse) {
+          setOpprettetSedUrl(sedResponse);
+          resetForm();
+        }
+      } catch (e) {
+        Utils.logger.error(e);
       }
     } else {
       setOppdaterteFelt({ buc: true, land: true, mottakerinstitusjon: true });
@@ -143,7 +152,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   return (
     <div className="sedbestilling">
       <form onSubmit={overstyrSubmit}>
-        <Nav.Fieldset legend="Ny SED">
+        <Nav.Fieldset legend="">
           <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade} disabled >
             <TomtFelt redigerbart={redigerbart} />
             { kodeverk.tilgjengeligeFagomrader.map(fagomrade => <option key={fagomrade.kode} value={fagomrade.kode}>{fagomrade.term}</option>) }
@@ -166,13 +175,13 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
           </Nav.Select>
           <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={sendSed}>Opprett sed i rina</Nav.Hovedknapp>&nbsp;
           <Nav.Knapp type="standard" disabled={!redigerbart} onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
-          {(opprettetSedUrl && sedSendt) &&
-            <Nav.AlertStripe type="suksess" className="varsel">
-              Saken er nå opprettet i RINA <Nav.Lenker href={opprettetSedUrl}>{opprettetSedUrl}</Nav.Lenker>
-            </Nav.AlertStripe>}
-          {(!opprettetSedUrl && sedSendt) &&
-            <Nav.AlertStripe type="advarsel" className="varsel">Saken kunne ikke opprettes i RINA</Nav.AlertStripe>}
         </Nav.Fieldset>
+        {(opprettetSedUrl && sedSendt) &&
+          <Nav.AlertStripe type="suksess" className="varsel">
+            Saken er nå opprettet i RINA <Nav.Lenker href={opprettetSedUrl}>{opprettetSedUrl}</Nav.Lenker>
+          </Nav.AlertStripe>}
+        {(!opprettetSedUrl && sedSendt) &&
+          <Nav.AlertStripe type="advarsel" className="varsel">Saken kunne ikke opprettes i RINA</Nav.AlertStripe>}
       </form>
     </div>
   );
