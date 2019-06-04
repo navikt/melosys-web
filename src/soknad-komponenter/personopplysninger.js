@@ -24,6 +24,7 @@ import './personopplysninger.css';
 import { behandlingerSelectors } from '../ducks/behandlinger';
 import { PersonSelectors, PersonOperations } from '../ducks/personer';
 import { soknadSelectors } from '../ducks/soknad';
+import { formSelectors } from '../ducks/form';
 
 const ikonFraKjonn = kjoenn => {
   switch (kjoenn) {
@@ -144,7 +145,7 @@ ExpandableList.defaultProps = {
 
 class Personopplysninger extends Component {
   state = {
-    visAnnenAdresseFelter: false,
+    visAnnenAdresseFelter: this.props.oppgittAdresseHarVerdier,
   };
 
   settVisAnnenAdresseFelterTrue = () => this.setState({ visAnnenAdresseFelter: true });
@@ -287,6 +288,7 @@ Personopplysninger.propTypes = {
   medfolgendeAndre: MPT.Person,
   person: MPT.Person.isRequired,
   personOpplysninger: PT.object.isRequired,
+  oppgittAdresseHarVerdier: PT.bool.isRequired,
 };
 
 Personopplysninger.defaultProps = {
@@ -299,6 +301,7 @@ const mapStateToProps = state => ({
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
+  oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
