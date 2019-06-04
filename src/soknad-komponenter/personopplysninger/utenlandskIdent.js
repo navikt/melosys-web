@@ -28,7 +28,7 @@ const UtenlandskIdentWrapper = props => {
   return (
     <div className="utenlandskIdent__wrapper">
       { linjer.map((linje, indeks) => <UtenlandskIdentLinje key={indeks} indeks={indeks} remove={remove} disabled={disabled} />) }
-      <Nav.Knapp disabled={disabled} mini className="utenlandskIdent__leggtil" onClick={() => push({ ident: '', landkode: '' })}>Legg til flere ID</Nav.Knapp>
+      <Nav.Knapp disabled={disabled} mini className="utenlandskIdent__leggtil" onClick={() => push({ ident: '', landkode: '' })}>LEGG TIL FLERE ID-ER</Nav.Knapp>
     </div>
   );
 };
