@@ -19,6 +19,7 @@ export const REGISTRERING = 'registrering';
 export const SAKSBEHANDLER = 'saksbehandler';
 export const SAKSOPPLYSNINGER = 'saksopplysninger';
 export const SED = 'sed';
+export const SERVERINFO = 'serverinfo';
 export const SOKNADER = 'soknader';
 export const VEDTAK = 'vedtak';
 export const VILKAAR = 'vilkaar';
