@@ -26,7 +26,7 @@ function Versjon() {
       setServerInfo({...serverinfo});
     }
     catch (e) {
-      Utils.logger(e);
+      Utils.logger.error(e);
     }
   };
   useEffect(() => {
@@ -35,8 +35,8 @@ function Versjon() {
 
   const copyToClipBoard = () => {
     const clientVersionString = `WEB; Versjon: ${versjon()}, Byggetidspunkt: ${byggTidspunkt()}, Byggeversjon: ${byggVersjon()}, Branch: ${branchVersjon()}`; // eslint-disable-line max-len
-    const { version, namespace, cluster, branchName, build_date_time, longVersionHash} = serverInfo;
-    const serverVersionString = `SERVER; Versjon: ${version}, Namespace: ${namespace}, Cluster: ${cluster} BranchName: ${branchName}, Build time: ${build_date_time}, VersionHash: ${longVersionHash}, Branch: ${branchVersjon()}`; // eslint-disable-line max-len
+    const { namespace, cluster, branchName, veraUrl, longVersionHash} = serverInfo;
+    const serverVersionString = `SERVER; Namespace: ${namespace}, Cluster: ${cluster} BranchName: ${branchName}, Vera: ${veraUrl}, VersionHash: ${longVersionHash}, Branch: ${branchVersjon()}`; // eslint-disable-line max-len
     const versionString = clientVersionString + '\n' + serverVersionString;
     Clipboard.copy(versionString);
   };
@@ -51,11 +51,10 @@ function Versjon() {
         <dt>Branch:</dt><dd>{branchVersjon()}</dd>
         <dt>&nbsp;</dt><dd />
         <dt>Server</dt><dd />
-        <dt>Version:</dt><dd>{serverInfo.version}</dd>
         <dt>Namespace:</dt><dd>{serverInfo.namespace}</dd>
         <dt>Cluster:</dt><dd>{serverInfo.cluster}</dd>
         <dt>BranchName:</dt><dd>{serverInfo.branchName}</dd>
-        <dt>Build time:</dt><dd>{serverInfo.build_date_time}</dd>
+        <dt>Vera:</dt><dd>{serverInfo.veraUrl}</dd>
         <dt>VersionHash:</dt><dd>{serverInfo.longVersionHash}</dd>
       </dl>
       <button className="App__versjonering__kopierknapp" onClick={copyToClipBoard}>Klikk for å kopiere versjonsinfo</button>
