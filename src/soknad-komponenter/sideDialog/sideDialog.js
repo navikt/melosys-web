@@ -4,6 +4,7 @@ import classnames from 'classnames';
 import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 
+import * as Utils from './../../utils';
 import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
 import SideDialogSedBestilling from './sedBestilling';
@@ -21,11 +22,11 @@ class SideDialog extends Component {
 
   static defaultProps = {
     faner: [
-      { navn: 'sedbestilling', tittel: 'Send SED' },
-      { navn: 'sedunderarbeid', tittel: 'SED under arbeid' },
       { navn: 'dokumenter', tittel: 'Dokumenter' },
       { navn: 'brevbestilling', tittel: 'Send brev' },
-    ],
+      Utils.feature.namespaceToggle('q2', 't8') ? { navn: 'sedbestilling', tittel: 'Send SED' } : undefined,
+      Utils.feature.namespaceToggle('q2', 't8') ? { navn: 'sedunderarbeid', tittel: 'SED under arbeid' } : undefined,
+    ].filter(fane => fane !== undefined),
   };
 
   // Forvent at minst én fane finnes og sett denne som standard aktiv.
