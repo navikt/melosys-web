@@ -18,6 +18,7 @@ export const PERSONER = 'personer';
 export const REGISTRERING = 'registrering';
 export const SAKSBEHANDLER = 'saksbehandler';
 export const SAKSOPPLYSNINGER = 'saksopplysninger';
+export const SERVERINFO = 'serverinfo';
 export const SOKNADER = 'soknader';
 export const VEDTAK = 'vedtak';
 export const VILKAAR = 'vilkaar';
