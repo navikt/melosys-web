@@ -13,6 +13,7 @@ import NavFrontendSpinner from 'nav-frontend-spinner';
 import Lenker from 'nav-frontend-lenker';
 import Modal from 'nav-frontend-modal';
 import Tekstomrade from 'nav-frontend-tekstomrade';
+import Chevron from 'nav-frontend-chevron';
 
 export {
   AlertStripeAdvarsel, AlertStripe, AlertStripeInfo,
@@ -29,4 +30,5 @@ export {
   Lenker,
   Modal,
   Tekstomrade,
+  Chevron,
 };
