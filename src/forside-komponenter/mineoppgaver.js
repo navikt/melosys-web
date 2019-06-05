@@ -19,8 +19,8 @@ const sortBehandlinger = order => (forsteOppgave, andreOppgave) => {
   const { behandling: { registrertDato: forsteRegistrertDato } } = forsteOppgave;
   const { behandling: { registrertDato: andreRegistrertDato } } = andreOppgave;
 
-  const datoDiff = Utils.dato.datoDiff(forsteRegistrertDato, andreRegistrertDato, 'milliseconds');
-  return order === 'descending' ? datoDiff : -datoDiff;
+  const datoDiff = Utils.dato.datoDiffPure(forsteRegistrertDato, andreRegistrertDato, 'seconds');
+  return order === 'descending' ? -datoDiff : datoDiff;
 };
 
 const Saksbehandlinger = ({ saksbehandlinger }) => {
@@ -103,3 +103,5 @@ const kontekster = [
   { navn: 'oppgaver', melding: 'Det har oppstått en feil: Kunne ikke søke etter oppgaver' },
 ];
 export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(MineOppgaver));
+
+export { sortBehandlinger };
