@@ -15,7 +15,7 @@ export const kodemapsSelector = createSelector(
 export const sektor2bucSelector = createSelector(
   state => kodemapsSelector(state),
   kodemaps => kodemaps.SEKTOR2BUC
-)
+);
 
 export const sektorSelector = createSelector(
   state => state.eessikodeverk.data.sektor,

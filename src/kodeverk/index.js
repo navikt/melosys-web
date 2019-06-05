@@ -28,10 +28,6 @@ const termTilKode = (verdi, muligeValg) => {
   return valgtKodeverkObjekt && objektTilKode(valgtKodeverkObjekt);
 };
 
-const kodeTilObjekt = (kode, objekt) => {
-  return ({ kode, term: kodeTilTerm(kode, objekt) });
-};
-
 export {
   Koder,
   Form,
@@ -41,6 +37,5 @@ export {
   finnEnkeltKodeFraListe,
   kodeTilTerm,
   termTilKode,
-  kodeTilObjekt,
   Paneltitler,
 };
