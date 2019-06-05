@@ -47,7 +47,11 @@ export const PersonSelector = createSelector(
   state => SaksopplysningerSelector(state).person || {},
   person => person
 );
-
+export const SEDSelector = createSelector(
+  state => SaksopplysningerSelector(state).sed || {},
+  sed => sed
+);
+export const LovvalgsperiodeSelector = createSelector(state => SEDSelector(state).lovvalgsperiode || {}, lovvalgsperiode => lovvalgsperiode);
 export const OrganisasjonerSelector = createSelector(
   state => SaksopplysningerSelector(state).organisasjoner || [],
   organisasjoner => organisasjoner
