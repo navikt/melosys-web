@@ -6,9 +6,9 @@ const caseInsensitiveIncludes = (collection, searchElement) =>
 
 export const featureToggle = (...features) => caseInsensitiveIncludes(features, `${process.env.REACT_APP_FEATURE_TOGGLE}`);
 
-export const namespaceToggle = (...namespaces) => {
+export const namespaceToggle = async (...namespaces) => {
   try {
-    const { namespace } = Api.ServerInfo.hentServerInfo();
+    const { namespace } = await Api.ServerInfo.hentServerInfo();
     return caseInsensitiveIncludes(namespaces, namespace || '');
   } catch (e) {
     Utils.logger.error(e);
@@ -16,9 +16,9 @@ export const namespaceToggle = (...namespaces) => {
   }
 };
 
-export const clusterToggle = (...clusters) => {
+export const clusterToggle = async (...clusters) => {
   try {
-    const { cluster } = Api.ServerInfo.hentServerInfo();
+    const { cluster } = await Api.ServerInfo.hentServerInfo();
     return caseInsensitiveIncludes(clusters, cluster || '');
   } catch (e) {
     Utils.logger.error(e);
