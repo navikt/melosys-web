@@ -56,7 +56,7 @@ PersonMerkelapper.defaultProps = {
   erEgenAnsatt: false,
 };
 
-const AdresseRad = ({ periode: { fom, tom }, adresseKomponent }) => (
+export const AdresseRad = ({ periode: { fom, tom }, adresseKomponent }) => (
   <tr>
     <td>
       { adresseKomponent }
@@ -82,7 +82,7 @@ AdresseRad.defaultProps = {
   },
 };
 
-const AdresseHeader = ({ adresseTittel }) => (
+export const AdresseHeader = ({ adresseTittel }) => (
   <thead>
     <tr>
       <th className="adresseTittel">{adresseTittel}</th>
@@ -96,7 +96,7 @@ AdresseHeader.propTypes = {
   adresseTittel: PT.string.isRequired,
 };
 
-const ExpandableList = props => {
+export const ExpandableList = props => {
   const {
     render, defaultMax, altMax, btnTextExpanded, btnTextCollapsed, chevron, expandable,
   } = props;
