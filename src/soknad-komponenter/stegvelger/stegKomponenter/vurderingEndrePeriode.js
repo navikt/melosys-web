@@ -46,7 +46,7 @@ export class VurderingEndrePeriode extends React.Component {
     slettData(slettAvklartfakta(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE));
   }
 
-  settSluttDato = nyTomDato => this.setState({ nyTomDato });
+  settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
 
   hentOpprinneligPeriode = async behandlingID => {
     const opprinneligLovvalgsperiode = await API.OpprinneligLovvalgsperiode.hent(behandlingID).catch(Utils.logger.error);
