@@ -23,6 +23,7 @@ import Stegvelger from '../../soknad-komponenter/stegvelger';
 import HenlagtInformasjon from '../../soknad-komponenter/stegErstatter/henlagtInformasjon';
 import VirksomhetNorge from '../../soknad-komponenter/virksomhetNorge';
 import FullmektigPanel from '../../soknad-komponenter/fullmektig';
+import Kontantytelser from '../../soknad-komponenter/kontantytelser';
 
 import { fagsakSelectors } from '../../ducks/fagsaker/';
 import { behandlingerSelectors } from '../../ducks/behandlinger/';
@@ -88,7 +89,7 @@ class Saksopplysninger extends Component {
     if (!behandlingID) {
       return null;
     }
-    
+
     const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
     const visStegVelger = !visHenlagtSak;
     return (
@@ -124,6 +125,7 @@ class Saksopplysninger extends Component {
         <MaritimtArbeid />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
         <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
+        <Kontantytelser />
       </form>
     );
   }
