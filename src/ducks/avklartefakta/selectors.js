@@ -33,7 +33,12 @@ export const AvklartefaktaSelector = createSelector(
   state => (state.avklartefakta.data ? state.avklartefakta.data : []),
   avklartefakta => avklartefakta || []
 );
-
+export const VurderingUnntakPeriode = createSelector(
+  state => AvklartefaktaSelector(state) || [],
+  (alleAvklartefakta) => (
+    alleAvklartefakta.find(avklaring => avklaring.avklartefaktaKode === 'VURDERING_UNNTAK_PERIODE') || {}
+  )
+);
 /* Soknadsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
  * territoriet som søkeren skal til faktisk er med i forordningen gjøres i avklartefakta.
  * Derfor må både avklartefakta og soknad settes inn slik at disse kan flettes til avklart fakta.
