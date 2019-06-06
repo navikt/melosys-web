@@ -3,40 +3,64 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector, autofill, setSubmitFailed } from 'redux-form';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as KV from '../kodeverk';
 import * as Utils from '../utils';
 import * as Api from '../services/api';
+import * as Skjema from '../soknad-komponenter/skjema';
 import * as MPT from '../proptypes';
-
 import * as Nav from '../utils/navFrontend';
+import ListevelgerFlervalg from '../komponenter/ui/listevelgerFlervalg';
 import Personopplysninger from '../soknad-komponenter/personopplysninger';
 import Medlemskap from '../komponenter/medlemskap';
-import Landvelger from '../soknad-komponenter/skjema/landvelger';
 import { formSelectors } from '../ducks/form';
+
+const uuid = require('uuid/v4');
+
+const UnntakPeriodeBegrunnelse = kode => {
+  if (!kode) return '';
+  return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.unntak_periode_begrunnelser);
+};
+const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 
 class Saksopplysninger extends Component {
   overstyrSubmit = event => {
     event.preventDefault();
   };
+
   submitRegistrering = () => {
-    const { behandlingID } = this.props;
+    const { behandlingID, unntaksperiode } = this.props;
+    console.log(unntaksperiode);
+    switch (unntaksperiode) {
+      case 'GODKJENT':
+      case 'INNHENT':
+      case 'AVSLAG':
+        return true;
+      default:
+        return false;
+    }
     /* eslint-disable no-console */
+    /*
     Api.Registrering.unntaksperioder(behandlingID, {})
       .then(() => {
         console.log('[POST] successful');
       })
       .catch(err => console.error(err));
+    */
     /* eslint-enable no-console */
     return true;
   };
   render() {
-    const { medlemskap, sed } = this.props;
+    const {
+      medlemskap, sed, vurderingBegrunnelser, unntaksperiode,
+    } = this.props;
     if (!sed.lovvalgsperiode) {
       return null;
     }
-    console.log(sed);
-    const { lovvalgsperiode, lovvalgBestemmelse } = sed;
+
+    const { lovvalgsperiode, lovvalgBestemmelse, lovvalgslandKode } = sed;
+    const lovvalgsland = KV.kodeTilObjekt(lovvalgslandKode, MKV.KTObjects.landkoder);
     const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fom);
     const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tom);
     const inputStyle = {
@@ -53,7 +77,6 @@ class Saksopplysninger extends Component {
                 <Nav.Undertittel>Lovvalgsperiode fra SED</Nav.Undertittel>
                 <Nav.Row>
                   <Nav.Column xs="3">
-                    {/* <Skjema.Input datoFelt label="Startdato" feltNavn="startdato" /> */}
                     <Nav.Input
                       bredde="XXL"
                       label="Startdato"
@@ -62,7 +85,6 @@ class Saksopplysninger extends Component {
                     />
                   </Nav.Column>
                   <Nav.Column xs="3">
-                    {/* <Skjema.Input datoFelt label="Sluttdato" feltNavn="sluttdato" /> */}
                     <Nav.Input
                       style={inputStyle}
                       bredde="XXL"
@@ -74,10 +96,14 @@ class Saksopplysninger extends Component {
                 </Nav.Row>
                 <Nav.Row>
                   <Nav.Column xs="3">
-                    <Landvelger label="Land" feltNavn="landkode" disabled={true}/>
+                    <Nav.Input
+                      bredde="XXL"
+                      label="Land"
+                      value={landTekstFormat(lovvalgsland)}
+                      readOnly
+                    />
                   </Nav.Column>
                   <Nav.Column xs="3">
-                    {/* <Skjema.Input label="Hjemmel" feltNavn="hjemmel" /> */}
                     <Nav.Input
                       style={inputStyle}
                       bredde="XXL"
@@ -88,13 +114,43 @@ class Saksopplysninger extends Component {
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
-                  <Nav.Column xs="3">
-                    <h3>Treff ved registerkontroll</h3>
+                  <Nav.Column xs="12">
+                    <Nav.Undertittel>Treff ved registerkontroll</Nav.Undertittel>
+                    <ul>
+                      {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode => <li key={uuid()}>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</li>)}
+                    </ul>
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
+                  <Nav.Column xs="12">
+                    <Skjema.RadioGruppe feltNavn="unntaksperiode" label="Vurder unntaksperiode">
+                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value="GODKJENT" label="Godkjenn" />
+                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value="INNHENT" label="Innhent informasjon" />
+                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value="AVSLAG" label="Ikke godkjenn" />
+                    </Skjema.RadioGruppe>
+                  </Nav.Column>
+                </Nav.Row>
+                {unntaksperiode === 'AVSLAG' && (
+                  <Nav.Row>
+                    <Nav.Column xs="12">
+                      <Nav.Fieldset legend="Begrunnelse for ikke godkjent unntaksperiode">
+                        <ListevelgerFlervalg
+                          disabled={false}
+                          muligeValg={MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser}
+                          label="Legg til begrunnelse for ikke oppfylt:"
+                          tillatFritekst
+                        />
+                      </Nav.Fieldset>
+                      {/* <ul>
+                        {MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser.map(begrunnelse =>
+                          <li key={uuid()}>{begrunnelse.term}</li>)}
+                      </ul> */}
+                    </Nav.Column>
+                  </Nav.Row>
+                )}
+                <Nav.Row>
                   <Nav.Column xs="3">
-                    <Nav.Knapp onClick={() => this.submitRegistrering()}>GODKJENN</Nav.Knapp>
+                    <Nav.Knapp type="hoved" onClick={() => this.submitRegistrering()}>LAGRE</Nav.Knapp>
                   </Nav.Column>
                 </Nav.Row>
               </div>
@@ -112,9 +168,9 @@ Saksopplysninger.propTypes = {
   behandlingID: PT.number.isRequired,
   medlemskap: MPT.Medlemskap,
   sed: PT.object, // TODO prop-type
+  vurderingBegrunnelser: PT.object,
   skjema: PT.any,
-  landkode: PT.string,
-  hjemmel: PT.string,
+  unntaksperiode: PT.string,
   registreringSkjemaVerdier: PT.object,
   settFeilFelt: PT.func.isRequired,
   match: PT.object.isRequired,
@@ -123,42 +179,40 @@ Saksopplysninger.propTypes = {
 
 Saksopplysninger.defaultProps = {
   medlemskap: {},
+  vurderingBegrunnelser: {},
   sed: {},
   skjema: {},
-  landkode: '',
-  hjemmel: '',
+  unntaksperiode: '',
   registreringSkjemaVerdier: {},
 };
 
 const skjemaSelector = formValueSelector(KV.Form.REGISTRERING);
 const mapStateToProps = state => ({
   registreringSkjemaVerdier: formSelectors.RegistreringFormSelector(state).values,
-  landkode: skjemaSelector(state, 'landkode'),
-  hjemmel: skjemaSelector(state, 'hjemmel'),
+  unntaksperiode: skjemaSelector(state, 'unntaksperiode'),
   initialValues: {
-    landkode: 'NO',
-    hjemmel: 'Hva er hjemmel?',
+    unntaksperiode: 'GODKJENT',
   },
 });
 const mapDispatchToProps = dispatch => ({
   settFeltInnhold: (feltNavn, verdi) => dispatch(autofill(KV.Form.REGISTRERING, feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.REGISTRERING, ...feltNavn)),
 });
-
+/*
 const validering = values => {
   const landkode = !values.landkode ? 'Du må velge land.' : null;
   return {
     landkode,
   };
 };
-
+*/
 const SaksopplysningerForm = reduxForm({
   form: KV.Form.REGISTRERING,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: validering,
+  // validate: validering,
   onSubmit: () => {},
 })(Saksopplysninger);
 
