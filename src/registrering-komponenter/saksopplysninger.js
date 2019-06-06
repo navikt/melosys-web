@@ -31,25 +31,32 @@ class Saksopplysninger extends Component {
 
   submitRegistrering = () => {
     const { behandlingID, unntaksperiode } = this.props;
-    console.log(unntaksperiode);
+    // TODO replace static data with handlier
+    const ikkegodkjenn = {
+      ikkeGodkjentBegrunnelseKoder: ['UTSENDELSE_OVER_24_MND', 'TREDJELANDSBORGER_IKKE_AVTALELAND', 'ANNET'],
+      begrunnelseFritekst: 'DE>TTE  ipsumlorum',
+    };
+    /* eslint-disable no-console */
     switch (unntaksperiode) {
       case 'GODKJENT':
+        Api.Saksflyt.Unntaksperode.godkjenn(behandlingID).then(() => {
+          console.log('[PUT] successful');
+        }).catch(err => console.error(err));
+        return true;
       case 'INNHENT':
+        Api.Saksflyt.Unntaksperode.innhentinfo(behandlingID).then(() => {
+          console.log('[PUT] successful');
+        }).catch(err => console.error(err));
+        return true;
       case 'AVSLAG':
+        Api.Saksflyt.Unntaksperode.ikkegodkjenn(behandlingID, { ...ikkegodkjenn }).then(() => {
+          console.log('[POST] successful');
+        }).catch(err => console.error(err));
         return true;
       default:
         return false;
     }
-    /* eslint-disable no-console */
-    /*
-    Api.Registrering.unntaksperioder(behandlingID, {})
-      .then(() => {
-        console.log('[POST] successful');
-      })
-      .catch(err => console.error(err));
-    */
     /* eslint-enable no-console */
-    return true;
   };
   render() {
     const {
