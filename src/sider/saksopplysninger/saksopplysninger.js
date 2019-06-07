@@ -260,8 +260,6 @@ const mapStateToProps = state => ({
       normaltDriverVirksomhetBegrunnelser: (vilkarSelectors.normaltDriverVirksomhetSelector(state).begrunnelseKoder),
       forutgaendeMedlemskap: (vilkarSelectors.forutgaendeMedlemskap(state).oppfylt),
       forutgaendeMedlemskapBegrunnelser: (vilkarSelectors.forutgaendeMedlemskap(state).begrunnelseKoder),
-      bosattINorge: (vilkarSelectors.bosattINorge(state).oppfylt),
-      bosattINorgeBegrunnelser: (vilkarSelectors.bosattINorge(state).begrunnelseKoder),
       art11_3A: vilkarSelectors.art11_3A(state).oppfylt,
       art11_4_1: vilkarSelectors.art11_4_1(state).oppfylt,
       art11_4_2: vilkarSelectors.art11_4_2(state).oppfylt,

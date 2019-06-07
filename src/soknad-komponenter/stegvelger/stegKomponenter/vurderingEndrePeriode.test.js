@@ -1,18 +1,24 @@
 import React from 'react';
 
 import { VurderingEndrePeriode } from './vurderingEndrePeriode';
+import { lagAvklartfakta } from '../../../regler/avklartefakta';
 
 describe('vurderingEndrePeriode', () => {
   let props = null;
 
   beforeEach(() => {
     props = {
-      oppsummering: { behandlingID: 1 },
+      behandlingID: 1,
       lovvalgsPeriode: {},
       endreDatoOgSendLovvalgsperioderHandler: jest.fn(),
       vedtaEndretPeriode: jest.fn(),
       tilForsiden: jest.fn(),
       redigerbart: true,
+      tilstand: {
+        aarsakEndringPeriodeAvklartfakta: lagAvklartfakta('a', 'b', 'c', [], 'fritekst'),
+      },
+      oppdaterData: jest.fn(),
+      slettData: jest.fn(),
     };
   });
 
@@ -25,7 +31,6 @@ describe('vurderingEndrePeriode', () => {
     const component = shallow(<VurderingEndrePeriode {...props} />);
     expect(component.find('Hovedknapp')).toHaveLength(1);
   });
-
 
   describe('knappen', () => {
     it('endrer periode når den trykkes', () => {
