@@ -162,7 +162,7 @@ class Personopplysninger extends Component {
   };
 
   render() {
-    const { redigerbart, person } = this.props;
+    const { redigerbart, person, personhistorikk } = this.props;
 
     const { visAnnenAdresseFelter } = this.state;
 
@@ -173,7 +173,6 @@ class Personopplysninger extends Component {
       kjoenn,
       sammensattNavn,
       foedselsdato,
-      personhistorikk,
       personStatus,
       erEgenAnsatt,
     } = person;
@@ -287,6 +286,7 @@ Personopplysninger.propTypes = {
   hentPerson: PT.func.isRequired,
   medfolgendeAndre: MPT.Person,
   person: MPT.Person.isRequired,
+  personhistorikk: MPT.Personhistorikk.isRequired,
   personOpplysninger: PT.object.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
 };
@@ -299,6 +299,7 @@ const mapStateToProps = state => ({
   alleRelevantePersoner: PersonSelectors.personerSelector(state),
   personOpplysninger: soknadSelectors.PersonOpplysningerSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
+  personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
   oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
