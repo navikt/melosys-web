@@ -11,7 +11,6 @@ import * as MPT from '../../proptypes/';
 
 import ArbeidsgivereNorge from '../../soknad-komponenter/arbeidsgivereNorge';
 import ArbeidUtland from '../../soknad-komponenter/arbeidutland';
-import Bosted from '../../soknad-komponenter/bosted';
 import ForetakUtland from '../../soknad-komponenter/foretakutland';
 import Inntekt from '../../soknad-komponenter/inntektUtland';
 import MaritimtArbeid from '../../soknad-komponenter/maritimtArbeid';
@@ -115,7 +114,6 @@ class Saksopplysninger extends Component {
         }
         <Personopplysninger />
         <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
-        <Bosted />
         <ArbeidsgivereNorge />
         <ForetakUtland />
         <SelvstendigArbeid soknadVerdier={soknadVerdier} />

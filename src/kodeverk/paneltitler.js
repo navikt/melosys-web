@@ -1,7 +1,6 @@
 export const foretakUtland = 'Arbeidsgiver i utlandet';
 export const arbeidUtland = 'Opplysninger om fysisk arbeidssted i utlandet';
 export const soknadsPeriode = 'Søknadsperiode';
-export const bosted = 'Opplysninger for vurdering av bosted';
 export const selvstendigNaeringsdrivende = 'Arbeid som selvstendig næringsdrivende';
 export const fullmektig = 'Fullmektig';
 export const arbeidsgiversVirksomhetINorge = 'Opplysninger om arbeidsgivers virksomhet i Norge';
