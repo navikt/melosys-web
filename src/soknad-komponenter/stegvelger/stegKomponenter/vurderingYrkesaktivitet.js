@@ -45,7 +45,7 @@ const VurderingYrkesaktivitet = props => {
         />
         <Nav.Radio
           name="yrkesaktivitet"
-          disabled={!redigerbart}
+          disabled="true"
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
           value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
           onChange={radioEndret}
@@ -53,7 +53,7 @@ const VurderingYrkesaktivitet = props => {
         />
         <Nav.Radio
           name="yrkesaktivitet"
-          disabled={!redigerbart}
+          disabled="true"
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           onChange={radioEndret}
