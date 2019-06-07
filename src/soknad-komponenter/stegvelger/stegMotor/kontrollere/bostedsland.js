@@ -34,9 +34,12 @@ class Bostedsland extends Steg {
         beskrivelse: 'to eller flere land',
         exec: avklartefakta => {
           const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
-          const bostedsland = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, avklartefakta));
+          const bostedsfakta = hentFakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, avklartefakta);
+          const bostedsland = hentFaktaVerdi(bostedsfakta);
+          const { begrunnelseKoder = [] } = bostedsfakta;
+          const begrunnelserErOppgitt = begrunnelseKoder.length > 0;
           const harAvklartBostedsland = !Utils._isNil(bostedsland);
-          return erToEllerFlereLand && harAvklartBostedsland;
+          return erToEllerFlereLand && harAvklartBostedsland && begrunnelserErOppgitt;
         },
         nesteSteg: STEG.VEDTAK,
       },
