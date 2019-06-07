@@ -1,20 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import classnames from 'classnames';
+
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
-
-import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
-import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
-import { BOOLSK } from '../../../constants';
+import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
+
+import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
+import Checkboxgruppe from '../../../komponenter/ui/checkboxgruppe';
+
+import { BOOLSK } from '../../../constants';
 import {
   avklartefaktaType, lagAvklartfakta, konverterTilStegData,
   lagAvklartefaktaBegrunnelse, hentFaktaVerdi,
 } from '../../../regler/avklartefakta';
 
 import './vurderingBostedsland.css';
-import * as Utils from '../../../utils';
+
+const uuid = require('uuid/v4');
+
+const Avklaringer = ({ avklaringer }) => (
+  <div>
+    <ul className="betingelser__liste">
+      {
+        avklaringer.map(({ tekst, status }) => {
+          let iconClassName;
+          if (status === undefined) {
+            iconClassName = 'liste__element--varsel';
+          }
+          const cl = classnames({ liste__element: true, [iconClassName]: true });
+          return (<li key={uuid()} className={cl}>{tekst}</li>);
+        })
+      }
+    </ul>
+  </div>
+);
+
+Avklaringer.propTypes = {
+  avklaringer: PT.array,
+};
+
+Avklaringer.defaultProps = {
+  avklaringer: [],
+};
 
 const VurderingBostedsland = props => {
   const {
@@ -58,8 +88,8 @@ const VurderingBostedsland = props => {
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, landKode));
   };
 
-  const begrunnelseEndret = event => {
-    oppdaterData(lagAvklartefaktaBegrunnelse(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, event.value));
+  const begrunnelseEndret = begrunnelseKoder => {
+    oppdaterData(lagAvklartefaktaBegrunnelse(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, begrunnelseKoder));
   };
 
   const eksisterendeLand = hentFaktaVerdi(bostedslandFakta) || '';
@@ -104,16 +134,15 @@ const VurderingBostedsland = props => {
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
-        { erBegrunnelserPaakrevd && erNorgeValgt === false && (
+        {erBegrunnelserPaakrevd && erNorgeValgt === false && (
           <Nav.Row>
-            <Nav.Column xs="12" md="12" lg="8">
-              <Nav.Fieldset legend="Begrunnelse:">
-                <ListevelgerFlervalg
+            <Nav.Column xs="6">
+              <Nav.Fieldset legend="">
+                <Checkboxgruppe
                   muligeValg={begrunnelser}
-                  label="Legg til begrunnelse:"
-                  tillatFritekst={false}
+                  legend="Legg til begrunnelse:"
                   onChange={begrunnelseEndret}
-                  defaultElementer={bostedslandFakta.begrunnelseKoder}
+                  defaultValg={bostedslandFakta.begrunnelseKoder}
                   disabled={!redigerbart}
                 />
               </Nav.Fieldset>

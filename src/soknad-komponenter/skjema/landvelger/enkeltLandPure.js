@@ -91,7 +91,9 @@ class EnkeltLandPure extends Component {
       fokusInnHandler, fokusUtHandler, inputTastNedHandler, inputEndringHandler,
     } = this;
 
-    const { label, bredde, className } = this.props;
+    const {
+      label, bredde, className, disabled,
+    } = this.props;
 
     const { inputVerdi } = this.state;
     const { error: landError = '' } = this.state;
@@ -112,6 +114,7 @@ class EnkeltLandPure extends Component {
           onFocus={fokusInnHandler}
           onChange={inputEndringHandler}
           onKeyDown={inputTastNedHandler}
+          disabled={disabled}
         />
       </div>
     );

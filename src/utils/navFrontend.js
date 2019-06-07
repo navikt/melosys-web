@@ -3,7 +3,7 @@ import { Panel } from 'nav-frontend-paneler';
 import AlertStripe, { AlertStripeAdvarsel, AlertStripeInfo } from 'nav-frontend-alertstriper';
 import EtikettBase from 'nav-frontend-etiketter';
 import { Container, Row, Column } from 'nav-frontend-grid';
-import { Checkbox, Radio, SkjemaGruppe, Fieldset, Select, Input, Textarea } from 'nav-frontend-skjema';
+import { Checkbox, CheckboksPanelGruppe, CheckboksPanel, Radio, SkjemaGruppe, Fieldset, Select, Input, Textarea } from 'nav-frontend-skjema';
 import { Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
 import { Knapp, Hovedknapp, Flatknapp } from 'nav-frontend-knapper';
 import Lesmerpanel from 'nav-frontend-lesmerpanel';
@@ -18,7 +18,7 @@ import Chevron from 'nav-frontend-chevron';
 export {
   AlertStripeAdvarsel, AlertStripe, AlertStripeInfo,
   Container, Row, Column,
-  Checkbox, Radio, SkjemaGruppe, Fieldset, Select, Input, Textarea,
+  Checkbox, CheckboksPanelGruppe, CheckboksPanel, Radio, SkjemaGruppe, Fieldset, Select, Input, Textarea,
   EkspanderbartpanelBase, Panel,
   EtikettBase,
   Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold,
