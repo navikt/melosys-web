@@ -203,7 +203,7 @@ class Personopplysninger extends Component {
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="12">
                 <ExpandableList
-                  defaultMax={2}
+                  defaultMax={1}
                   altMax={100}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
@@ -223,7 +223,7 @@ class Personopplysninger extends Component {
                   )}
                 />
                 <ExpandableList
-                  defaultMax={2}
+                  defaultMax={1}
                   altMax={100}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
@@ -243,7 +243,7 @@ class Personopplysninger extends Component {
                   )}
                 />
                 <ExpandableList
-                  defaultMax={2}
+                  defaultMax={1}
                   altMax={100}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
