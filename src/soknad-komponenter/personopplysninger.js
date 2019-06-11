@@ -98,7 +98,7 @@ AdresseHeader.propTypes = {
 
 export const ExpandableList = props => {
   const {
-    render, defaultMax, altMax, btnTextExpanded, btnTextCollapsed, chevron, expandable,
+    renderElement, elements, header, defaultMax, altMax, btnTextExpanded, btnTextCollapsed, chevron, expandable,
   } = props;
 
   const [maxElements, setMaxElements] = useState(defaultMax);
@@ -114,7 +114,12 @@ export const ExpandableList = props => {
 
   return (
     <div className="expandableList">
-      {render(maxElements)}
+      <table>
+        {header}
+        <tbody>
+          {elements.map((element, index) => (index < maxElements ? renderElement(element) : null))}
+        </tbody>
+      </table>
       <div className="btnContainer">
         {
           expandable &&
@@ -129,7 +134,9 @@ export const ExpandableList = props => {
 };
 
 ExpandableList.propTypes = {
-  render: PT.func.isRequired,
+  renderElement: PT.func.isRequired,
+  header: PT.node.isRequired,
+  elements: PT.array.isRequired,
   defaultMax: PT.number.isRequired,
   altMax: PT.number.isRequired,
   btnTextExpanded: PT.string.isRequired,
@@ -209,17 +216,10 @@ class Personopplysninger extends Component {
                   btnTextCollapsed="Vis flere"
                   expandable={bostedsadressePerioder.length > 2}
                   chevron
-                  render={maxElements => (
-                    <table>
-                      <AdresseHeader adresseTittel="Bostedsadresse (TPS)" />
-                      <tbody>
-                        {
-                          bostedsadressePerioder.map(({ bostedsadresse, periode }, index) => (
-                            index < maxElements ? <AdresseRad key={uuid()} adresseKomponent={<GeneriskAdresse adresse={bostedsadresse} />} periode={periode} /> : null
-                          ))
-                        }
-                      </tbody>
-                    </table>
+                  header={<AdresseHeader adresseTittel="Bostedsadresse (TPS)" />}
+                  elements={bostedsadressePerioder}
+                  renderElement={element => (
+                    <AdresseRad key={uuid()} adresseKomponent={<GeneriskAdresse adresse={element.bostedsadresse} />} periode={element.periode} />
                   )}
                 />
                 <ExpandableList
@@ -229,17 +229,10 @@ class Personopplysninger extends Component {
                   btnTextCollapsed="Vis flere"
                   expandable={postadressePerioder.length > 2}
                   chevron
-                  render={maxElements => (
-                    <table>
-                      <AdresseHeader adresseTittel="Postadresse (TPS)" />
-                      <tbody>
-                        {
-                          postadressePerioder.map(({ postadresse, periode }, index) => (
-                            index < maxElements ? <AdresseRad key={uuid()} adresseKomponent={<UstrukturertAdresse adresse={postadresse} />} periode={periode} /> : null
-                          ))
-                        }
-                      </tbody>
-                    </table>
+                  header={<AdresseHeader adresseTittel="Postadresse (TPS)" />}
+                  elements={postadressePerioder}
+                  renderElement={element => (
+                    <AdresseRad key={uuid()} adresseKomponent={<UstrukturertAdresse adresse={element.postadresse} />} periode={element.periode} />
                   )}
                 />
                 <ExpandableList
@@ -249,24 +242,19 @@ class Personopplysninger extends Component {
                   btnTextCollapsed="Vis flere"
                   expandable={midlertidigAdressePerioder.length > 2}
                   chevron
-                  render={maxElements => (
-                    <table>
-                      <AdresseHeader adresseTittel="Midlertidig postadresse" />
-                      <tbody>
-                        {
-                          midlertidigAdressePerioder.map(({ midlertidigAdresse: { adressetype, strukturertAdresse, ustrukturertAdresse }, periode }, index) => {
-                            if ((index >= maxElements)) return null;
+                  header={<AdresseHeader adresseTittel="Midlertidig postadresse" />}
+                  elements={midlertidigAdressePerioder}
+                  renderElement={element => {
+                    const {
+                      midlertidigAdresse: { adressetype, strukturertAdresse, ustrukturertAdresse }, periode,
+                    } = element;
+                    let adresseKomponent = null;
 
-                            let adresseKomponent = null;
-                            if (adressetype === KV.Koder.AdresseType.STRUKTURERT) adresseKomponent = <StrukturertAdresse adresse={strukturertAdresse} />;
-                            else if (adressetype === KV.Koder.AdresseType.USTRUKTURERT) adresseKomponent = <UstrukturertAdresse adresse={ustrukturertAdresse} />;
+                    if (adressetype === KV.Koder.AdresseType.STRUKTURERT) adresseKomponent = <StrukturertAdresse adresse={strukturertAdresse} />;
+                    else if (adressetype === KV.Koder.AdresseType.USTRUKTURERT) adresseKomponent = <UstrukturertAdresse adresse={ustrukturertAdresse} />;
 
-                            return <AdresseRad key={uuid()} adresseKomponent={adresseKomponent} periode={periode} />;
-                          })
-                        }
-                      </tbody>
-                    </table>
-                  )}
+                    return <AdresseRad key={uuid()} adresseKomponent={adresseKomponent} periode={periode} />;
+                  }}
                 />
               </Nav.Column>
             </Nav.Row>
