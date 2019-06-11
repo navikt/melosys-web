@@ -214,7 +214,7 @@ class Personopplysninger extends Component {
                   altMax={100}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
-                  expandable={bostedsadressePerioder.length > 2}
+                  expandable={bostedsadressePerioder.length > 1}
                   chevron
                   header={<AdresseHeader adresseTittel="Bostedsadresse (TPS)" />}
                   elements={bostedsadressePerioder}
@@ -227,7 +227,7 @@ class Personopplysninger extends Component {
                   altMax={100}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
-                  expandable={postadressePerioder.length > 2}
+                  expandable={postadressePerioder.length > 1}
                   chevron
                   header={<AdresseHeader adresseTittel="Postadresse (TPS)" />}
                   elements={postadressePerioder}
@@ -240,7 +240,7 @@ class Personopplysninger extends Component {
                   altMax={100}
                   btnTextExpanded="Vis mindre"
                   btnTextCollapsed="Vis flere"
-                  expandable={midlertidigAdressePerioder.length > 2}
+                  expandable={midlertidigAdressePerioder.length > 1}
                   chevron
                   header={<AdresseHeader adresseTittel="Midlertidig postadresse" />}
                   elements={midlertidigAdressePerioder}
