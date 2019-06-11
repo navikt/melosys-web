@@ -5,7 +5,6 @@ import PT from 'prop-types';
 import * as Nav from '../utils/navFrontend';
 import * as KV from '../kodeverk';
 import * as Ikoner from '../resources/images/index';
-import * as Skjema from './skjema';
 import * as Utils from '../utils';
 
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
@@ -20,9 +19,9 @@ const Kontantytelser = ({ sakOgBehandling: { eosBarnetrygd } }) => (
     >
       <Nav.Row>
         <Nav.Column xs="9">
-          <Skjema.RadioGruppe feltNavn="sammeAdresseSomArbeidsgiver" legend="Mottar EU / EØS barnetrygd fra NAV?">
+          <Nav.Fieldset legend="Mottar EU / EØS barnetrygd fra NAV?">
             {Utils.streng.boolTilNorsk(eosBarnetrygd)}
-          </Skjema.RadioGruppe>
+          </Nav.Fieldset>
         </Nav.Column>
       </Nav.Row>
     </Nav.EkspanderbartpanelBase>
