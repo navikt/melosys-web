@@ -7,6 +7,7 @@ export const BEHANDLINGER = 'behandlinger';
 export const BEHANDLINGSPERIODER = 'behandlinger';
 export const BEHANDLINGSRESULTAT = 'behandlingsresultat';
 export const DOKUMENTER = 'dokumenter';
+export const EESSI = 'eessi';
 export const FAGSAKER = 'fagsaker';
 export const INNGANG = 'inngang';
 export const JOURNALFORING = 'journalforing';
