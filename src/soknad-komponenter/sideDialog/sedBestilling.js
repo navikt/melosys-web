@@ -38,14 +38,16 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   const [sedSendt, setSedSendt] = useState(false);
   const [feilmeldinger, setFeilmeldinger] = useState({ buc: undefined, land: undefined, mottakerinstitusjon: undefined });
   const [oppdaterteFelt, setOppdaterteFelt] = useState({ buc: false, land: false, mottakerinstitusjon: false });
+  const [alertmelding, setAlertmelding] = useState('');
 
   const hentMottakerinstitusjoner = async bucType => {
     if (bucType) {
       try {
-        const institusjoner = await Api.Sed.hentMottakerinstitusjoner(bucType);
+        const institusjoner = await Api.Eessi.hentMottakerinstitusjoner(bucType);
         setMottakerinstitusjoner(institusjoner);
       } catch (e) {
         Utils.logger.error(e);
+        setAlertmelding('Finner ingen mottakerinstitusjoner');
       }
     }
   };
@@ -67,6 +69,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   const resetState = () => {
     setSedSendt(false);
     setOpprettetSedUrl('');
+    setAlertmelding('');
   };
 
   const resetKomponent = () => {
@@ -86,7 +89,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   const sendSed = async () => {
     if (erValidert()) {
       try {
-        const sedResponse = await Api.Sed.opprettBuc(behandlingID, {
+        const sedResponse = await Api.Eessi.opprettBuc(behandlingID, {
           bucType: valgtBuc,
           mottakerLand: valgtLand,
           mottakerId: valgtMottakerinstitusjon,
@@ -95,10 +98,12 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
         setSedSendt(true);
         if (sedResponse) {
           setOpprettetSedUrl(sedResponse);
+          setAlertmelding('');
           resetForm();
         }
       } catch (e) {
         Utils.logger.error(e);
+        setAlertmelding('Saken kunne ikke opprettes i RINA');
       }
     } else {
       setOppdaterteFelt({ buc: true, land: true, mottakerinstitusjon: true });
@@ -180,8 +185,8 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
           <Nav.AlertStripe type="suksess" className="varsel">
             Saken er nå opprettet i RINA <Nav.Lenker href={opprettetSedUrl}>{opprettetSedUrl}</Nav.Lenker>
           </Nav.AlertStripe>}
-        {(!opprettetSedUrl && sedSendt) &&
-          <Nav.AlertStripe type="advarsel" className="varsel">Saken kunne ikke opprettes i RINA</Nav.AlertStripe>}
+        {alertmelding &&
+          <Nav.AlertStripe type="advarsel" className="varsel">{alertmelding}</Nav.AlertStripe>}
       </form>
     </div>
   );
