@@ -1,6 +1,7 @@
 import * as Utils from './utils';
 import { saksbehandlerOperations, saksbehandlerTypes } from './ducks/saksbehandler/';
 import { oppgaverOperations } from './ducks/oppgaver/';
+import { EessiKodeverkOperations } from './ducks/eessikodeverk';
 
 export default async function loadInitialData(store) {
   let res;
@@ -11,6 +12,7 @@ export default async function loadInitialData(store) {
       window.frontendlogger.info(res.data);
       await store.dispatch(oppgaverOperations.oversikt());
     }
+    await store.dispatch(EessiKodeverkOperations.preload());
   } catch (e) {
     console.log(e); // eslint-disable-line no-console
     window.frontendlogger.error({
