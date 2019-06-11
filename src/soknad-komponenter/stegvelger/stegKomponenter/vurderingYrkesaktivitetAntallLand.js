@@ -4,6 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../regler/avklartefakta';
+import { BOOLSK } from '../../../constants';
 
 const VurderingYrkesaktivitetAntallLand = props => {
   const {
@@ -33,7 +34,7 @@ const VurderingYrkesaktivitetAntallLand = props => {
           value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
           onChange={radioEndret}
           label="Kun Norge"
-          disabled="true" />
+          disabled={BOOLSK.SANN} />
         <Nav.Radio
           name="yrkesaktivitetAntallLand"
           checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE}
