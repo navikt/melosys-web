@@ -47,14 +47,16 @@ EnkeltSedUnderArbeid.propTypes = {
 
 const SideDialogSedUnderArbeid = ({ behandlingID }) => {
   const [sedUnderArbeid, setSedUnderArbeid] = useState([]);
+  const [feilmelding, setFeilmelding] = useState('');
 
   const hentSedUnderArbeid = async () => {
     if (behandlingID !== -1 && sedUnderArbeid.length === 0) {
       try {
-        const data = await Api.Sed.hentSedUnderArbeid(behandlingID);
+        const data = await Api.Eessi.hentSedUnderArbeid(behandlingID);
         setSedUnderArbeid(data);
       } catch (e) {
         Utils.logger.error(e);
+        setFeilmelding('Kunne ikke hente SED under arbeid');
       }
     }
   };
@@ -63,14 +65,14 @@ const SideDialogSedUnderArbeid = ({ behandlingID }) => {
     hentSedUnderArbeid();
   }, []);
 
-  const kanViseListe = liste => liste && liste.constructor === Array && liste.length > 0;
+  const kanViseListe = liste => !feilmelding && liste && liste.constructor === Array && liste.length > 0;
 
   return (
     <div className="sedunderarbeid">
       {
         kanViseListe(sedUnderArbeid) ?
           sedUnderArbeid.map(sed => <EnkeltSedUnderArbeid {...sed} key={uuid()} />) :
-          'For øyeblikket ingen SED under arbeid'
+          <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding || 'For øyeblikket ingen SED under arbeid'}</Nav.AlertStripe>
       }
     </div>
   );
