@@ -10,9 +10,9 @@ class Artikkel16 extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
-        beskrivelse: 'alle valg',
+        beskrivelse: 'mottatt svar',
         exec: () => true,
-        nesteSteg: null,
+        nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
       },
     ];
     this.id = STEG.ARTIKKEL_16;
