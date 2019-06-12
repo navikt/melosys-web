@@ -1,6 +1,7 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
@@ -11,23 +12,33 @@ import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrad
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad';
 
+import { lagAvklartefaktaBegrunnelse, slettAvklartfakta, konverterTilStegData } from '../../../regler/avklartefakta';
+
 import './vurderingArtikkel16MottaSvar.css';
 
 const VurderingArtikkel16MottaSvar = props => {
   const {
-    gyldigeSoknadsland, soknadsperiode, redigerbart, bekreftOgFortsett,
+    gyldigeSoknadsland, soknadsperiode, redigerbart, bekreftOgFortsett, oppdaterData, slettData, tilstand: { svarAnmodningUnntakAvklartfakta },
   } = props;
 
   const [visLovvalgsperiode, setVisLovvalgsperiode] = useState(false);
-  const [begrunnelse, setBegrunnelse] = useState('');
+
+  useEffect(() => {
+    oppdaterData(konverterTilStegData(MKV.Koder.avklartefakta.SVAR_ANMODNING_UNNTAK, svarAnmodningUnntakAvklartfakta));
+    return function cleanup() {
+      slettData(slettAvklartfakta(MKV.Koder.avklartefakta.SVAR_ANMODNING_UNNTAK));
+    };
+  }, []);
 
   const handleSvarChange = e => {
     setVisLovvalgsperiode(e.target.value === KV.Koder.DELVIS_INNVILGET);
   };
 
   const handleBegrunnelseChange = e => {
-    setBegrunnelse(e.target.value);
+    oppdaterData(lagAvklartefaktaBegrunnelse(MKV.Koder.avklartefakta.SVAR_ANMODNING_UNNTAK, null, null, e.target.value));
   };
+  console.log(svarAnmodningUnntakAvklartfakta)
+  const { begrunnelseFritekst = '' } = svarAnmodningUnntakAvklartfakta;
 
   return (
     <Fragment>
@@ -71,7 +82,7 @@ const VurderingArtikkel16MottaSvar = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Textarea disabled={!redigerbart} label="Begrunnelse" value={begrunnelse} onChange={handleBegrunnelseChange} tellerTekst={() => {}} />
+          <Nav.Textarea disabled={!redigerbart} label="Begrunnelse" value={begrunnelseFritekst} onChange={handleBegrunnelseChange} tellerTekst={() => {}} />
         </Nav.Column>
       </Nav.Row>
       <div className="fane__knapplinje">
@@ -88,6 +99,11 @@ VurderingArtikkel16MottaSvar.propTypes = {
   redigerbart: PT.bool.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
+  oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
+  tilstand: PT.shape({
+    svarAnmodningUnntakAvklartfakta: MPT.Avklartefakta,
+  }).isRequired,
 };
 
 VurderingArtikkel16MottaSvar.defaultProps = {

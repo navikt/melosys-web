@@ -40,7 +40,7 @@ class Avklartfakta extends StegState {
         fakta,
         subjektID,
         begrunnelseKoder: nyData.begrunnelseKoder || eksisterendeSubjekt.begrunnelseKoder,
-        begrunnelseFritekst: nyData.begrunnelseFritekst || eksisterendeSubjekt.begrunnelseFritekst,
+        begrunnelseFritekst: nyData.begrunnelseFritekst === undefined ? eksisterendeSubjekt.begrunnelseFritekst : nyData.begrunnelseFritekst,
       };
 
       if (!Utils._isNil(nyData.fakta)) {
