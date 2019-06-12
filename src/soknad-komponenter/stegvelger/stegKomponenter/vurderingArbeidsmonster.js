@@ -70,7 +70,7 @@ const MarginaltArbeid = props => {
   } = props;
 
 
-  const kombinasjonsbeskrivelse = erNorgeValgt ? 'kun Norge' : 'et land, ikke Norge (Fortsetter med Art.12)';
+  const kombinasjonsbeskrivelse = erNorgeValgt ? 'kun Norge' : 'ett land, ikke Norge (Fortsetter med Art.12)';
   const valgtKombinasjonInformasjon = landMedVesentligArbeid.length === 1 &&
     (
       <Nav.AlertStripeInfo>
@@ -171,7 +171,7 @@ const VurderingArbeidsmonster = props => {
 
   return (
     <div className="vurderingArbeidsmonster">
-      <Nav.Undertittel>Vurdering av arbeidsmønster</Nav.Undertittel>
+      <Nav.Undertittel>Vurdering av arbeidsmønster og fordeling</Nav.Undertittel>
       <div className="arbeidsmonster">
         <EnkeltAvklartfakta
           redigerbart={redigerbart}
@@ -196,7 +196,7 @@ const VurderingArbeidsmonster = props => {
           avklartfakta={aktivitetINorge}
           avklartfaktaKode={KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE}
           avklartefaktaTyper={vesentligAktivitetINorgeValg}
-          tittel="Vurdering av aktivitet i Norge"
+          tittel="Vurdering av vesentlig aktivitet i Norge"
           oppdaterData={oppdaterData}
           slettData={slettData}
           onChange={oppdaterLovvalgsperiode}
