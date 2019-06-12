@@ -48,7 +48,9 @@ describe('ExpandableList', () => {
 
   beforeEach(() => {
     props = {
-      render: jest.fn(() => <span />),
+      renderElement: jest.fn(() => <span />),
+      elements: [],
+      header: '',
       defaultMax: 2,
       altMax: 10,
       btnTextExpanded: 'vis mindre',
@@ -58,12 +60,10 @@ describe('ExpandableList', () => {
     };
   });
 
-  it('viser render prop', () => {
-    const expandableList = shallow(<ExpandableList {...props} />);
+  it('viser elementer', () => {
+    shallow(<ExpandableList {...props} />);
 
-    expect(props.render).toHaveBeenCalledTimes(1);
-    expect(props.render).toHaveBeenCalledWith(props.defaultMax);
-    expect(expandableList.contains(props.render())).toBe(true);
+    expect(props.renderElement).toHaveBeenCalledTimes(props.elements.length);
   });
 
   it('viser en knapp med tekst og chevron', () => {
