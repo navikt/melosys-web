@@ -4,8 +4,11 @@ import classnames from 'classnames';
 import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 
+import * as Utils from './../../utils';
 import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
+import SideDialogSedBestilling from './sedBestilling';
+import SideDialogSedUnderArbeid from './sideDialogSedUnderArbeid';
 
 import './sideDialog.css';
 
@@ -27,12 +30,28 @@ class SideDialog extends Component {
   // Forvent at minst én fane finnes og sett denne som standard aktiv.
   state = {
     aktivFane: this.props.faner[0].navn,
+    faner: this.props.faner,
   };
+
+  componentDidMount() {
+    Utils.feature.namespaceToggle('q2', 't8')
+      .then(skalVises => {
+        if (skalVises) {
+          this.leggTilFane({ navn: 'sedbestilling', tittel: 'Send SED' });
+          this.leggTilFane({ navn: 'sedunderarbeid', tittel: 'SED under arbeid' });
+        }
+      });
+  }
+
   getFaneKomponent = (navn, behandlingID) => {
     if (navn === 'dokumenter') {
       return <SideDialogDokumenter key={uuid()} />;
     } else if (navn === 'brevbestilling') {
       return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} />;
+    } else if (navn === 'sedbestilling') {
+      return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} />;
+    } else if (navn === 'sedunderarbeid') {
+      return <SideDialogSedUnderArbeid key={uuid()} behandlingID={behandlingID} />;
     }
     return <SideDialogDokumenter key={uuid()} />;
   };
@@ -46,14 +65,18 @@ class SideDialog extends Component {
     this.setState({ aktivFane: navn });
   };
 
+  leggTilFane = fane => {
+    this.setState(prevState => ({ faner: [...prevState.faner, fane] }));
+  };
+
   render() {
     const { behandlingID } = this.props;
-    const { navn } = this.props.faner.find(item => item.navn === this.state.aktivFane);
+    const { navn } = this.state.faner.find(item => item.navn === this.state.aktivFane);
     return (
       <div className="dialog panelSeksjon">
         <Panel>
           <div className="dialog__meny" role="navigation">
-            { this.props.faner.map(item => (
+            { this.state.faner.map(item => (
               <button
                 className={classnames({ meny__element: true, 'meny__element--aktiv': (item.navn === this.state.aktivFane) })}
                 key={uuid()}
