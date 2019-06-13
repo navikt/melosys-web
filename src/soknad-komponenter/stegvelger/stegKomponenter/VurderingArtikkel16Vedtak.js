@@ -13,7 +13,7 @@ import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrad
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 
-const VurderingArtikkel16Vedtak = props => {
+export const VurderingArtikkel16Vedtak = props => {
   const {
     lagreOgFatteVedtak, redigerbart, behandlingID, lovvalgsperiode, innvilgelsesResultat, tilstand: { svarAnmodningUnntakFritekst = '' },
   } = props;
