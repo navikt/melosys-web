@@ -16,7 +16,7 @@ import { lagAvklartefaktaBegrunnelse, slettAvklartfakta, konverterTilStegData } 
 
 import './vurderingArtikkel16MottaSvar.css';
 
-const VurderingArtikkel16MottaSvar = props => {
+export const VurderingArtikkel16MottaSvar = props => {
   const {
     gyldigeSoknadsland, soknadsperiode, redigerbart, bekreftOgFortsett, oppdaterData, slettData, tilstand: { svarAnmodningUnntakAvklartfakta },
   } = props;
