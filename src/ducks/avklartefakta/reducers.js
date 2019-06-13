@@ -26,7 +26,7 @@ const lagAvklartfaktaObjektMedKode = (avklarteFakta, avklartefaktaKode) => {
       fakta: enkeltAvklaring.fakta,
       subjektID: enkeltAvklaring.subjektID || null,
       begrunnelseKoder: enkeltAvklaring.begrunnelseKoder || [],
-      begrunnelseFritekst: enkeltAvklaring.begrunnelseFritekst || null,
+      begrunnelseFritekst: enkeltAvklaring.begrunnelseFritekst !== undefined ? enkeltAvklaring.begrunnelseFritekst : undefined,
     }]
   ), []);
 };
