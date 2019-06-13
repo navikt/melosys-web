@@ -37,7 +37,7 @@ const VurderingArtikkel16MottaSvar = props => {
   const handleBegrunnelseChange = e => {
     oppdaterData(lagAvklartefaktaBegrunnelse(MKV.Koder.avklartefakta.SVAR_ANMODNING_UNNTAK, null, null, e.target.value));
   };
-  console.log(svarAnmodningUnntakAvklartfakta)
+
   const { begrunnelseFritekst = '' } = svarAnmodningUnntakAvklartfakta;
 
   return (
@@ -49,12 +49,12 @@ const VurderingArtikkel16MottaSvar = props => {
           <Nav.Normaltekst>{gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ')}</Nav.Normaltekst>
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
+      <Nav.Row className="soknadsperiodeRow">
         <Nav.Column xs="6">
           <DatoOmradeMedVarighet periode={soknadsperiode} tekst="Søknadsperiode" />
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
+      <Nav.Row className="svarFraMyndighetRow">
         <Nav.Column xs="6">
           <Nav.Fieldset disabled={!redigerbart} onChange={handleSvarChange} legend="Svar fra myndighetene">
             <Nav.Radio name="svarFraMyndighetene" label="Innvilgelse" value={KV.Koder.INNVILGET} />

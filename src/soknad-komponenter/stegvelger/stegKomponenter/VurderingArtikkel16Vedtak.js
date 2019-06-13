@@ -7,7 +7,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 
-import PdfLenkeListe from '../../../soknad-komponenter/pdfLenkeListe';
+import PdfLenkeListe from '../../pdfLenkeListe';
 import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrade';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
@@ -15,21 +15,20 @@ import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 
 const VurderingArtikkel16Vedtak = props => {
   const {
-    lagreOgFatteVedtak, redigerbart, behandlingID, lovvalgsperiode, innvilgelsesResultat,
+    lagreOgFatteVedtak, redigerbart, behandlingID, lovvalgsperiode, innvilgelsesResultat, tilstand: { svarAnmodningUnntakFritekst = '' },
   } = props;
 
-  const fritekst = 'Må hentes fra avklartfakta for begrunnelse i forrige steg';
-  const innvilget = innvilgelsesResultat === KV.Koder.INNVILGET; /*Må hentes fra MKV*/
+  const innvilget = innvilgelsesResultat === KV.Koder.INNVILGET; /*TODO: Må hentes fra MKV*/
   const innvilgetYrkesaktivType = innvilget ? MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV : MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV;
   const innvilgetArbeidsgiverType = innvilget ? MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER : MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER;
-  const innvilgetTekst = 'innvilget'; /*Må hentes fra innvilgelsesResultat sin tilsvarende term*/
+  const innvilgetTekst = 'innvilget'; /*TODO: Må hentes fra innvilgelsesResultat sin tilsvarende term*/
 
   const dokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: innvilgetYrkesaktivType,
       data: {
-        fritekst,
+        svarAnmodningUnntakFritekst,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
@@ -37,7 +36,7 @@ const VurderingArtikkel16Vedtak = props => {
       navn: 'Forhåndsvis A1',
       type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
       data: {
-        fritekst,
+        svarAnmodningUnntakFritekst,
         mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
       },
     },
@@ -45,7 +44,7 @@ const VurderingArtikkel16Vedtak = props => {
       navn: 'Brev til arbeidsgiver',
       type: innvilgetArbeidsgiverType,
       data: {
-        fritekst,
+        svarAnmodningUnntakFritekst,
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
@@ -53,7 +52,7 @@ const VurderingArtikkel16Vedtak = props => {
       navn: 'Brev til skatteoppkrever utland',
       type: innvilgetYrkesaktivType,
       data: {
-        fritekst,
+        svarAnmodningUnntakFritekst,
         mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
       },
     },
@@ -69,7 +68,7 @@ const VurderingArtikkel16Vedtak = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value="Begrunnelse her, hentes fra avklartfakta" /> {/*TODO: hente begrunnelse fra avklartfakta*/}
+          <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value={svarAnmodningUnntakFritekst} tellerTekst={() => {}} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -97,6 +96,9 @@ VurderingArtikkel16Vedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   lovvalgsperiode: MPT.Periode.isRequired,
   innvilgelsesResultat: PT.string.isRequired,
+  tilstand: PT.shape({
+    svarAnmodningUnntakFritekst: PT.string,
+  }).isRequired,
 };
 
 const mapStateToProps = state => ({
