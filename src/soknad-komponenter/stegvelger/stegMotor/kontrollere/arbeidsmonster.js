@@ -19,9 +19,16 @@ class Arbeidsmonster extends Steg {
           const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
 
           return hentFaktaVerdi(skiftesvisArbeid) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS &&
-                 hentFaktaVerdi(aktivitetINorge) !== KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT;
+          hentFaktaVerdi(aktivitetINorge) !== KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT;
         },
         nesteSteg: STEG.FORRETNINGSSTED,
+      },
+      {
+        beskrivelse: 'vedtak art 13.1 a',
+        exec: () => avklartefakta => (
+          avklartefakta.some(enkelt => enkelt.referanse === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SEKVENSIELT)
+        ),
+        nesteSteg: STEG.ARTIKKEL_13_1_A_VEDTAK,
       },
       {
         beskrivelse: 'Stopp steg',
