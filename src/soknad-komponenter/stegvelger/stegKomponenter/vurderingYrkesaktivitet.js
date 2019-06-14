@@ -4,6 +4,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../regler/avklartefakta';
+import { BOOLSK } from '../../../constants';
 
 const VurderingYrkesaktivitet = props => {
   const {
@@ -45,7 +46,7 @@ const VurderingYrkesaktivitet = props => {
         />
         <Nav.Radio
           name="yrkesaktivitet"
-          disabled={!redigerbart}
+          disabled={BOOLSK.SANN}
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
           value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
           onChange={radioEndret}
@@ -53,7 +54,7 @@ const VurderingYrkesaktivitet = props => {
         />
         <Nav.Radio
           name="yrkesaktivitet"
-          disabled={!redigerbart}
+          disabled={BOOLSK.SANN}
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           onChange={radioEndret}
