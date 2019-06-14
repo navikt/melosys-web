@@ -1,16 +1,65 @@
-import React from 'react';
+import React, { useState, Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 
 import * as Oppgaver from '../ducks/oppgaver';
 import * as MPT from '../proptypes';
+import * as Utils from '../utils';
+import * as Nav from '../utils/navFrontend';
+
 import BehandlingOppgave from './oppgaveliste/behandlingOppgave';
 import JournalforingOppgave from './oppgaveliste/journalforingOppgave';
-
-import './mineoppgaver.css';
 import withErrorHandling from '../hoc/withErrorHandling';
 
+import './mineoppgaver.css';
+
 const uuid = require('uuid/v4');
+
+const sortBehandlinger = order => (forsteOppgave, andreOppgave) => {
+  const { behandling: { registrertDato: forsteRegistrertDato } } = forsteOppgave;
+  const { behandling: { registrertDato: andreRegistrertDato } } = andreOppgave;
+
+  const datoDiff = Utils.dato.datoDiffPure(forsteRegistrertDato, andreRegistrertDato, 'seconds');
+  return order === 'descending' ? -datoDiff : datoDiff;
+};
+
+const Saksbehandlinger = ({ saksbehandlinger }) => {
+  const [sortOrder, setSortOrder] = useState('descending');
+
+  const handleSortOrderChange = event => {
+    setSortOrder(event.target.value);
+  };
+
+  return (
+    <Fragment>
+      <Nav.Fieldset className="sorteringRadiogruppe" onChange={handleSortOrderChange} legend="Sorter behandlinger etter opprettelsesdato:">
+        <div>
+          <Nav.Radio
+            name="behandlingsortering"
+            label="Nyeste først"
+            value="descending"
+            defaultChecked
+          />
+          <Nav.Radio
+            name="behandlingsortering"
+            label="Eldste først"
+            value="ascending"
+          />
+        </div>
+      </Nav.Fieldset>
+      {saksbehandlinger && saksbehandlinger.slice().sort(sortBehandlinger(sortOrder)).map(oppgave => <BehandlingOppgave key={uuid()} sak={oppgave} />)}
+    </Fragment>
+  );
+};
+
+Saksbehandlinger.propTypes = {
+  saksbehandlinger: PT.arrayOf(MPT.SaksbehandlingOppgave),
+};
+
+Saksbehandlinger.defaultProps = {
+  saksbehandlinger: [],
+};
+
 /**
  * Mine saker lister ut alle saker som saksbehandleren jobber med akkurat nå.
  */
@@ -28,8 +77,7 @@ const MineOppgaver = props => {
     <div className="minesaker">
       <h1>Mine Oppgaver ({antall()})</h1>
       {journalforing && journalforing.map(oppgave => <JournalforingOppgave key={uuid()} sak={oppgave} />)}
-
-      {saksbehandling && saksbehandling.map(oppgave => <BehandlingOppgave key={uuid()} sak={oppgave} />)}
+      <Saksbehandlinger saksbehandlinger={saksbehandling} />
       {antall() === 0 && ingenSakerMelding}
     </div>
   );
@@ -55,3 +103,5 @@ const kontekster = [
   { navn: 'oppgaver', melding: 'Det har oppstått en feil: Kunne ikke søke etter oppgaver' },
 ];
 export default withErrorHandling(kontekster, connect(mapStateToProps, mapDispatchToProps)(MineOppgaver));
+
+export { sortBehandlinger };
