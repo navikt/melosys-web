@@ -97,9 +97,13 @@ const BehandlingOppgave = ({ sak }) => {
                       <dt className="behandlingOppgave__meta__term">Behandlingsstatus:</dt>
                       <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
                     </Nav.Column>
-                    <Nav.Column xs="12" md="7">
+                    <Nav.Column xs="12" md="5">
                       <dt className="behandlingOppgave__meta__term">Land:</dt>
                       <dd className="behandlingOppgave__meta__detalj">{landListeSomStreng}</dd>
+                    </Nav.Column>
+                    <Nav.Column xs="12" md="2">
+                      <dt className="behandlingOppgave__meta__term">Saksnr:</dt>
+                      <dd className="behandlingOppgave__meta__detalj">{saksnummer || '(ukjent)'}</dd>
                     </Nav.Column>
                   </dl>
                 </Nav.Row>
