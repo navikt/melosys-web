@@ -20,6 +20,6 @@ export const SAKSBEHANDLER = 'saksbehandler';
 export const SAKSFLYT = 'saksflyt';
 export const SAKSOPPLYSNINGER = 'saksopplysninger';
 export const SOKNADER = 'soknader';
-export const UNNTAKSPERIODE = 'unntaksperiode';
+export const UNNTAKSPERIODER = 'unntaksperioder';
 export const VEDTAK = 'vedtak';
 export const VILKAAR = 'vilkaar';
