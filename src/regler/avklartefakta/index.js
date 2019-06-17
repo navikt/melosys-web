@@ -10,7 +10,7 @@ export const slettAvklartfakta = (felt, subjektID) => ({
   type: avklartefaktaType,
 });
 
-export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrunnelseFritekst) => (
+export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrunnelseFritekst = null) => (
   {
     felt,
     oppdaterRedux: true,
@@ -25,7 +25,7 @@ export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrun
   }
 );
 
-export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelseKoder, begrunnelseFritekst) => (
+export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelseKoder, begrunnelseFritekst = null) => (
   {
     felt,
     oppdaterRedux: true,
@@ -44,7 +44,7 @@ export const konverterTilStegData = (felt, avklartfakta) => {
   if (!avklartfakta || !avklartfakta.fakta) return null;
 
   const {
-    subjektID, fakta, begrunnelseKoder, begrunnelseFritekst,
+    subjektID, fakta, begrunnelseKoder, begrunnelseFritekst = null,
   } = avklartfakta;
 
   return {
