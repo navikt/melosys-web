@@ -14,4 +14,28 @@ const GeneriskAdressePropType = PT.shape({
   land: PT.oneOfType([Kodeverk, PT.string]),
 });
 
-export { GeneriskAdressePropType as GeneriskAdresse };
+const UstrukturertAdressePropType = PT.shape({
+  landkode: PT.string,
+  adresselinjer: PT.arrayOf(PT.string),
+});
+
+const StrukturertAdressePropType = PT.shape({
+  gatenavn: PT.string,
+  husnummer: PT.string,
+  region: PT.string,
+  postnummer: PT.string,
+  poststed: PT.string,
+  landkode: PT.string,
+});
+
+const MidlertidigAdressePropType = PT.shape({
+  adressetype: PT.string,
+  strukturertAdresse: StrukturertAdressePropType,
+  UstrukturertAdresse: PT.UstrukturertAdressePropType,
+});
+
+export {
+  GeneriskAdressePropType as GeneriskAdresse,
+  UstrukturertAdressePropType as UstrukturertAdresse,
+  MidlertidigAdressePropType as MidlertidigAdresse,
+};
