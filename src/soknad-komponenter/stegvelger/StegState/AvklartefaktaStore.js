@@ -39,14 +39,14 @@ class Avklartfakta extends StegState {
         referanse,
         fakta,
         subjektID,
-        begrunnelseKoder: nyData.begrunnelseKoder || eksisterendeSubjekt.begrunnelseKoder,
-        begrunnelseFritekst: nyData.begrunnelseFritekst === undefined ? eksisterendeSubjekt.begrunnelseFritekst : nyData.begrunnelseFritekst,
+        begrunnelseKoder: !Utils._isUndefined(nyData.begrunnelseKoder) ? nyData.begrunnelseKoder : eksisterendeSubjekt.begrunnelseKoder,
+        begrunnelseFritekst: !Utils._isUndefined(nyData.begrunnelseFritekst) ? nyData.begrunnelseFritekst : eksisterendeSubjekt.begrunnelseFritekst,
       };
 
       if (!Utils._isNil(nyData.fakta)) {
         oppdatertFelt.fakta = nyData.fakta;
       }
-      if (!Utils._isNil(nyData.subjektID) && !Utils._isUndefined(nyData.subjektID)) {
+      if (!Utils._isNil(nyData.subjektID)) {
         oppdatertFelt.subjektID = nyData.subjektID;
       }
       eksisterendeAvklarteSubjekter.set(key, oppdatertFelt);
