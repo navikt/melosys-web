@@ -27,7 +27,9 @@ const ArbeidsinntektPropType = PT.shape({
   inntektUtenlandskIPerioden: PT.number,
 });
 const BostedPropType = PT.shape({
+  adresseIUtlandet: PT.bool,
   antallMaanederINorge: PT.number,
+  familiesBostedLandkode: PT.string,
   intensjonOmRetur: PT.bool,
 });
 const ForetakUtlandPropType = PT.arrayOf(PT.shape({
@@ -61,8 +63,10 @@ const MaritimtArbeidPropType = PT.arrayOf(PT.shape({
 }));
 const OppholdUtlandPropType = PT.shape({
   ektefelleEllerBarnINorge: PT.bool,
+  forutgaendeBostedINorge: PT.bool,
   oppholdsPeriode: Periode,
   oppholdslandkoder: PT.arrayOf(PT.string),
+  sammeAdresseSomArbeidsgiver: PT.bool,
   studentFinansieringKode: PT.string,
   studentSemester: PT.string,
 });

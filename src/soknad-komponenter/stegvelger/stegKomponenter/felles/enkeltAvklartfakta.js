@@ -44,7 +44,7 @@ const EnkeltAvklartfakta = props => {
   };
 
   const listevalgEndringHandler = event => {
-    oppdaterData(lagAvklartefaktaBegrunnelse(avklartfaktaKode, null, [event.value]));
+    oppdaterData(lagAvklartefaktaBegrunnelse(avklartfaktaKode, null, event.value));
   };
 
   return (

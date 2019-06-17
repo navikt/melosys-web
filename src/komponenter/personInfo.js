@@ -12,7 +12,6 @@ const PersonInfo = ({
     foedselsdato,
     kjoenn,
     sivilstand,
-    personStatus,
   },
 }) => (
   <dl className="person__detaljer">
@@ -22,7 +21,6 @@ const PersonInfo = ({
     <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
     <dt>Kjønn:</dt><dd>{KV.objektTilTerm(kjoenn)}</dd>
     <dt>Sivilstand:</dt><dd>{KV.objektTilTerm(sivilstand)}</dd>
-    <dt>Personstatus fra folkeregisteret:</dt><dd>{KV.objektTilTerm(personStatus)}</dd>
   </dl>
 );
 PersonInfo.propTypes = {

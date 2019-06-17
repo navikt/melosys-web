@@ -22,7 +22,6 @@ import { Oppsummering } from './oppsummering';
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
 import { Periode } from './periode';
 import { Person } from './person';
-import { Personhistorikk } from './personhistorikk';
 import { Saksbehandler } from './saksbehandler';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
 import { Soknad } from './soknad';
@@ -78,7 +77,6 @@ export {
   Permisjoner,
   PermisjonOgPermittering,
   Person,
-  Personhistorikk,
   SaksbehandlingOppgave,
   Saksbehandler,
   Soknad,

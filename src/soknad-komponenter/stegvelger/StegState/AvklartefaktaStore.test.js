@@ -43,7 +43,7 @@ describe('AvklartefaktaStore oppdatering av eksisterende data med subjektID', ()
   });
 
   it('Legg til begrunnelse på ny avklartfakta', () => {
-    const af = lagAvklartefaktaBegrunnelse(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, 'Olympic Bibby', ['Flagglandet er Norge']);
+    const af = lagAvklartefaktaBegrunnelse(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, 'Olympic Bibby', 'Flagglandet er Norge');
     store.oppdaterStegData('TESTSTEG-1', af);
 
     const avklartefaktaListe = store.hent();

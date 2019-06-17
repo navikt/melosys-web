@@ -10,8 +10,12 @@ export const slettAvklartfakta = (felt, subjektID) => ({
   type: avklartefaktaType,
 });
 
-export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrunnelseFritekst) => (
-  {
+export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrunnelseFritekst) => {
+  let begrunnelseListe = [];
+  if (begrunnelseKoder && begrunnelseKoder.length > 0) {
+    begrunnelseListe = [begrunnelseKoder];
+  }
+  return {
     felt,
     oppdaterRedux: true,
     type: avklartefaktaType,
@@ -19,14 +23,18 @@ export const lagAvklartfakta = (felt, subjektID, fakta, begrunnelseKoder, begrun
       referanse: felt,
       subjektID,
       fakta: [fakta],
-      begrunnelseKoder,
+      begrunnelseKoder: begrunnelseListe,
       begrunnelseFritekst,
     },
-  }
-);
+  };
+};
 
-export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelseKoder, begrunnelseFritekst) => (
-  {
+export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelse, begrunnelseFritekst) => {
+  let begrunnelseListe = [];
+  if (begrunnelse && begrunnelse.length > 0) {
+    begrunnelseListe = [begrunnelse];
+  }
+  return {
     felt,
     oppdaterRedux: true,
     type: avklartefaktaType,
@@ -34,11 +42,11 @@ export const lagAvklartefaktaBegrunnelse = (felt, subjektID, begrunnelseKoder, b
       referanse: felt,
       subjektID,
       fakta: null,
-      begrunnelseKoder,
+      begrunnelseKoder: begrunnelseListe,
       begrunnelseFritekst,
     },
-  }
-);
+  };
+};
 
 export const konverterTilStegData = (felt, avklartfakta) => {
   if (!avklartfakta || !avklartfakta.fakta) return null;

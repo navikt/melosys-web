@@ -52,6 +52,7 @@ export default function reducer(state = initialState, action) {
         vilkarTilObjekt(MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP, action.data.vilkar.forutgaendeMedlemskap, action.data.vilkar.forutgaendeMedlemskap_begrunnelser),
         vilkarTilObjekt(MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET, action.data.vilkar.vesentligVirksomhet, action.data.vilkar.vesentligVirksomhet_begrunnelser),
         vilkarTilObjekt(MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, action.data.vilkar.normaltDriverVirksomhet, action.data.vilkar.normaltDriverVirksomhet_begrunnelser),
+        vilkarTilObjekt(MKV.Koder.vilkaar.BOSATT_I_NORGE, action.data.vilkar.bosattINorge, action.data.vilkar.bosattINorge_begrunnelser),
         vilkarTilObjekt(MKV.Koder.vilkaar.FTRL_2_12_UNNTAK_TURISTSKIP, action.data.vilkar.nis),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART12_1, action.data.vilkar.art12_1, action.data.vilkar.art12_1_begrunnelser),
         vilkarTilObjekt(MKV.Koder.vilkaar.FO_883_2004_ART12_2, action.data.vilkar.art12_2, action.data.vilkar.art12_2_begrunnelser),

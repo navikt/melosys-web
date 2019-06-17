@@ -24,14 +24,11 @@ const UtenlandskIdentWrapper = props => {
   const { disabled, fields } = props;
   const { push, remove } = fields;
   const linjer = props.fields.getAll() || [];
-
-  const btnText = 'LEGG TIL UTENLANDSK ID-NUMMER';
-
   /* eslint react/no-array-index-key:off */
   return (
     <div className="utenlandskIdent__wrapper">
       { linjer.map((linje, indeks) => <UtenlandskIdentLinje key={indeks} indeks={indeks} remove={remove} disabled={disabled} />) }
-      <Nav.Knapp disabled={disabled} mini className="utenlandskIdent__leggtil" onClick={() => push({ ident: '', landkode: '' })}>{btnText}</Nav.Knapp>
+      <Nav.Knapp disabled={disabled} mini className="utenlandskIdent__leggtil" onClick={() => push({ ident: '', landkode: '' })}>Legg til flere ID</Nav.Knapp>
     </div>
   );
 };

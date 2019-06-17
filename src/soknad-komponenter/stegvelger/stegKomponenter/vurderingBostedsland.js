@@ -1,23 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 import classnames from 'classnames';
-
-import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
-import * as Utils from '../../../utils';
-import * as MPT from '../../../proptypes';
 
-import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
-import Checkboxgruppe from '../../../komponenter/ui/checkboxgruppe';
-
+import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
+import LandVelger from '../../skjema/landvelger/';
 import { BOOLSK } from '../../../constants';
-import {
-  avklartefaktaType, lagAvklartfakta, konverterTilStegData,
-  lagAvklartefaktaBegrunnelse, hentFaktaVerdi,
-} from '../../../regler/avklartefakta';
 
 import './vurderingBostedsland.css';
+import * as MPT from '../../../proptypes';
+import { konverterTilStegData, lagVilkaar } from '../../../regler/vilkar';
+import { lagAvklartfakta, slettAvklartfakta } from '../../../regler/avklartefakta';
+import * as KV from '../../../kodeverk';
 
 const uuid = require('uuid/v4');
 
@@ -46,14 +40,33 @@ Avklaringer.defaultProps = {
   avklaringer: [],
 };
 
+
+/** Vises dersom API returnerte en liste over avklaringer, dvs at ingen
+ * informasjon mangler.
+ */
+const AvklaringsListe = ({
+  tilstand: { avklaringer },
+}) => (
+  <div>
+    <Avklaringer avklaringer={avklaringer} />
+  </div>
+);
+
+AvklaringsListe.propTypes = {
+  tilstand: PT.object.isRequired,
+};
+
+/** Hovedklasse som eksponeres ut.
+ * ------------------------------
+ */
 const VurderingBostedsland = props => {
   const {
     bekreftOgFortsett, tilstand, begrunnelser, redigerbart, oppdaterData, slettData,
   } = props;
 
   useEffect(() => {
-    const { bostedslandFakta } = tilstand;
-    oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, bostedslandFakta));
+    const { bosattINorgeVilkaar } = tilstand;
+    oppdaterData(konverterTilStegData('bosattINorge', bosattINorgeVilkaar));
 
     return function cleanup() {
       slettData();
@@ -61,88 +74,65 @@ const VurderingBostedsland = props => {
   }, []);
 
   const {
-    bostedslandFakta, harAvklaring, erBegrunnelserPaakrevd,
+    erBosattINorge, harAvklaring, harEOSBarnetrygdSak, begrunnelserPaaKrevd,
   } = tilstand;
 
-  const erBosattINorge = () => {
-    const bostedsland = hentFaktaVerdi(bostedslandFakta);
-    if (Utils._isNil(bostedsland)) {
-      return null;
-    }
-    return bostedsland === MKV.Koder.landkoder.NO;
-  };
-
-  const [erNorgeValgt, setNorgeErValgt] = useState(erBosattINorge());
+  const barnetrygdTekst = harEOSBarnetrygdSak ? 'Søker har sak om EU/EØS barnetrygd fra NAV.' : 'Søker har IKKE sak om EU/EØS barnetrygd fra NAV';
 
   const radioEndringHandler = event => {
-    if (event.target.value === 'true') {
-      setNorgeErValgt(BOOLSK.SANN);
-      oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, MKV.Koder.landkoder.NO, null));
-    } else {
-      setNorgeErValgt(BOOLSK.USANN);
-      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
-    }
+    oppdaterData(lagVilkaar('bosattINorge', event.target.value));
+    slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND));
   };
 
   const landEndretHandler = landKode => {
     oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, landKode));
   };
 
-  const begrunnelseEndret = begrunnelseKoder => {
-    oppdaterData(lagAvklartefaktaBegrunnelse(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, null, begrunnelseKoder));
-  };
-
-  const eksisterendeLand = hentFaktaVerdi(bostedslandFakta) || '';
-
   return (
     <div className="vurderingBostedsland">
       <Nav.Undertittel>Vurdering av bosted</Nav.Undertittel>
+      <AvklaringsListe tilstand={tilstand} />
+      <div className="vurderingBostedsland__barnetrygd">{barnetrygdTekst}</div>
       <div className="vurderingBostedsland__skjemafelt">
         <Nav.Row>
           <Nav.Column xs="12">
             <Nav.Fieldset legend="Bostedsland er:">
               <Nav.Radio
                 name="bostedsland"
-                label="Norge"
+                disabled={!redigerbart}
                 value={BOOLSK.SANN}
                 onChange={radioEndringHandler}
-                checked={erNorgeValgt === BOOLSK.SANN}
-                disabled={!redigerbart}
+                checked={erBosattINorge === BOOLSK.SANN}
+                label="Norge"
               />
               <Nav.Radio
                 name="bostedsland"
-                label="Annet"
+                disabled={!redigerbart}
                 value={BOOLSK.USANN}
                 onChange={radioEndringHandler}
-                checked={erNorgeValgt === BOOLSK.USANN}
-                disabled={!redigerbart}
+                checked={erBosattINorge === BOOLSK.USANN}
+                label="Annet"
               />
-              {eksisterendeLand !== MKV.Koder.landkoder.NO &&
-              <Nav.Row>
-                <Nav.Column xs="8" md="6" lg="4">
-                  <EnkeltLandPure
-                    label="Velg land:"
-                    value={eksisterendeLand}
-                    onChange={landEndretHandler}
-                    landkoder={MKV.KTObjects.landkoder}
-                    multiland={false}
-                    disabled={!redigerbart}
-                  />
-                </Nav.Column>
-              </Nav.Row>
+              {!erBosattINorge &&
+                <LandVelger
+                  disabled={!redigerbart}
+                  label="Velg land:"
+                  feltNavn="vurderingBostedsland.bostedsland"
+                  multiland={false}
+                  onChange={landEndretHandler}
+                />
               }
             </Nav.Fieldset>
           </Nav.Column>
         </Nav.Row>
-        {erBegrunnelserPaakrevd && erNorgeValgt === false && (
+        {begrunnelserPaaKrevd && !erBosattINorge && (
           <Nav.Row>
-            <Nav.Column xs="6">
-              <Nav.Fieldset legend="">
-                <Checkboxgruppe
+            <Nav.Column xs="12">
+              <Nav.Fieldset legend="Begrunnelse:">
+                <ListevelgerFlervalg
                   muligeValg={begrunnelser}
-                  legend="Legg til begrunnelse:"
-                  onChange={begrunnelseEndret}
-                  defaultValg={bostedslandFakta.begrunnelseKoder}
+                  label="Legg til begrunnelse:"
+                  tillatFritekst={false}
                   disabled={!redigerbart}
                 />
               </Nav.Fieldset>

@@ -13,8 +13,8 @@ import * as KV from '../../kodeverk';
 
 import { behandlingerSelectors } from '../behandlinger';
 import { soknadSelectors } from '../soknad';
+import { vilkarSelectors } from '../vilkar';
 import { OrganisasjonSelectors } from '../organisasjoner';
-import { hentFaktaVerdi } from '../../regler/avklartefakta';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -223,11 +223,17 @@ export const AvklartefaktaVurderingSelector = createSelector(
 );
 
 export const BostedslandSelector = createSelector(
+  state => vilkarSelectors.bosattINorge(state),
   state => AvklartefaktaSelector(state),
-  alleAvklarteFakta => {
-    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
-    if (!avklartFakta) return null;
-    const bostedslandkode = hentFaktaVerdi(avklartFakta);
+  (bosattINorge, alleAvklarteFakta) => {
+    let bostedslandkode;
+    if (bosattINorge.oppfylt) {
+      bostedslandkode = MKV.Koder.landkoder.NO;
+    } else {
+      const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
+      if (!avklartFakta) return null;
+      [bostedslandkode] = avklartFakta.fakta;
+    }
     return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandkode);
   }
 );

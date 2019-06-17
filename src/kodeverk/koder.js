@@ -76,11 +76,6 @@ export const BoolskAvklartfaktaType = {
   USANN: 'FALSE',
 };
 
-export const AdresseType = {
-  STRUKTURERT: 'STRUKTURERT',
-  USTRUKTURERT: 'USTRUKTURERT',
-};
-
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
  */

@@ -107,7 +107,9 @@ export default function reducer(state = initialState, action) {
             tom: dokument.oppholdUtlandTom ? formatterDatoTilISO(dokument.oppholdUtlandTom) : null,
           },
           oppholdslandkoder: dokument.oppholdsland,
+          sammeAdresseSomArbeidsgiver: dokument.sammeAdresseSomArbeidsgiver,
           ektefelleEllerBarnINorge: null,
+          forutgaendeBostedINorge: dokument.forutgaendeBostedINorge,
           studentSemester: null,
           studentFinansieringKode: null,
         },
@@ -118,8 +120,10 @@ export default function reducer(state = initialState, action) {
         )),
         bosted: {
           intensjonOmRetur: null,
+          familiesBostedLandkode: dokument.familiesBosted,
           antallMaanederINorge: null,
           EOSBarnetrygdFraNAV: dokument.EOSBarnetrygdFraNAV,
+          adresseIUtlandet: dokument.adresseIUtlandet,
           oppgittAdresse: {
             gatenavn: dokument.oppgittAdresseGatenavn,
             husnummer: dokument.oppgittAdresseHusnummer,
