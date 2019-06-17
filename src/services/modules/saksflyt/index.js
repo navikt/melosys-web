@@ -1,7 +1,7 @@
 import * as Vedtak from './vedtak';
-import * as Unntaksperode from './unntaksperiode';
+import * as Unntaksperioder from './unntaksperioder';
 
 export {
   Vedtak,
-  Unntaksperode,
+  Unntaksperioder,
 };
