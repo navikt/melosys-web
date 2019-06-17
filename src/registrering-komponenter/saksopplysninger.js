@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { reduxForm, formValueSelector, autofill, setSubmitFailed } from 'redux-form';
@@ -25,16 +25,23 @@ const UnntakPeriodeBegrunnelse = kode => {
 const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
 
 class Saksopplysninger extends Component {
+  state = {
+    begrunnelseFritekst: '',
+    ikkeGodkjentBegrunnelseKoder: [],
+  };
   overstyrSubmit = event => {
     event.preventDefault();
   };
-
+  textAreaOnChange = event => {
+    const begrunnelseFritekst = event.target.value;
+    this.setState({ begrunnelseFritekst });
+  };
   submitRegistrering = () => {
     const { behandlingID, unntaksperiode } = this.props;
     // TODO replace static data with handlier
     const ikkegodkjenn = {
       ikkeGodkjentBegrunnelseKoder: ['UTSENDELSE_OVER_24_MND', 'TREDJELANDSBORGER_IKKE_AVTALELAND', 'ANNET'],
-      begrunnelseFritekst: 'DE>TTE  ipsumlorum',
+      begrunnelseFritekst: this.state.begrunnelseFritekst,
     };
     /* eslint-disable no-console */
     switch (unntaksperiode) {
@@ -129,7 +136,7 @@ class Saksopplysninger extends Component {
                   </Nav.Column>
                 </Nav.Row>
                 <Nav.Row>
-                  <Nav.Column xs="12">
+                  <Nav.Column xs="3">
                     <Skjema.RadioGruppe feltNavn="unntaksperiode" label="Vurder unntaksperiode">
                       <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value="GODKJENT" label="Godkjenn" />
                       <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value="INNHENT" label="Innhent informasjon" />
@@ -138,22 +145,30 @@ class Saksopplysninger extends Component {
                   </Nav.Column>
                 </Nav.Row>
                 {unntaksperiode === 'AVSLAG' && (
-                  <Nav.Row>
-                    <Nav.Column xs="12">
-                      <Nav.Fieldset legend="Begrunnelse for ikke godkjent unntaksperiode">
-                        <ListevelgerFlervalg
-                          disabled={false}
-                          muligeValg={MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser}
-                          label="Legg til begrunnelse for ikke oppfylt:"
-                          tillatFritekst
-                        />
-                      </Nav.Fieldset>
-                      {/* <ul>
-                        {MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser.map(begrunnelse =>
-                          <li key={uuid()}>{begrunnelse.term}</li>)}
-                      </ul> */}
-                    </Nav.Column>
-                  </Nav.Row>
+                  <Fragment>
+                    <Nav.Row>
+                      <Nav.Column xs="6">
+                        <Nav.Fieldset legend="Begrunnelse for ikke godkjent unntaksperiode">
+                          <ListevelgerFlervalg
+                            disabled={false}
+                            muligeValg={MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser}
+                            label="Legg til begrunnelse for ikke oppfylt:"
+                            tillatFritekst={false}
+                          />
+                        </Nav.Fieldset>
+                      </Nav.Column>
+                    </Nav.Row>
+                    <Nav.Row>
+                      <Nav.Column xs="6">
+                        <Nav.Textarea
+                          label="Skriv inn begrunnelse for avslaget..."
+                          onChange={this.textAreaOnChange}
+                          value={this.state.begrunnelseFritekst}
+                          maxLength={255}
+                          bredde="fullbredde" />
+                      </Nav.Column>
+                    </Nav.Row>
+                  </Fragment>
                 )}
                 <Nav.Row>
                   <Nav.Column xs="3">
