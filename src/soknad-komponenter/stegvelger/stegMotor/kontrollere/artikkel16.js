@@ -11,8 +11,13 @@ class Artikkel16 extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'mottatt svar',
-        exec: () => true,
+        exec: () => propsLight.behandlingsstatus.kode === MKV.Koder.behandlinger.status.UNDER_BEHANDLING,
         nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
+      },
+      {
+        beskrivelse: 'alle andre valg',
+        exec: () => true,
+        nesteSteg: null,
       },
     ];
     this.id = STEG.ARTIKKEL_16;
