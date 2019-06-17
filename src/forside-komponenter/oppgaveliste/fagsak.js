@@ -35,7 +35,7 @@ const Fagsak = ({ sak }) => {
   const routePath = `/saksbehandling/${saksnummer}`;
 
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
-
+  const customMargin = { marginLeft: '1em' };
   return (
     <Nav.Panel className="fagsak">
       <PanelHeader
@@ -51,12 +51,20 @@ const Fagsak = ({ sak }) => {
               <DatoOmradeDescription tekst="Søknadsperiode: " periode={soknadsperiode} />
             </dl>
           </Nav.Column>
-          <Nav.Column xs="12" md="5">
+          <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
               <dt>Opprettelsesdato:</dt>
               <dd>{<EnkeltDato dato={opprettetDato} /> || '(ukjent)'}</dd>
               <dt>Land:</dt>
               <dd>{landListeSomStreng}</dd>
+            </dl>
+          </Nav.Column>
+          <Nav.Column xs="12" md="3">
+            <dl style={customMargin} className="fagsak__meta">
+              <dt>&nbsp;</dt>
+              <dd>&nbsp;</dd>
+              <dt>Saksnummer:</dt>
+              <dd>{saksnummer}</dd>
             </dl>
           </Nav.Column>
         </Nav.Row>
