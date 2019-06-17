@@ -96,12 +96,11 @@ class ListevelgerFlervalg extends Component {
 
     if (valg) {
       this.setState(prevState => ({ inputVerdi: '', valgteElementer: [...prevState.valgteElementer, valg], feilmelding: null }));
+      if (onChange) {
+        onChange({ value: [...valgteElementer, valg] });
+      }
     } else {
       this.setState({ feilmelding: 'I dette feltet må du velge fra alternativene i nedtrekkslisten.' });
-    }
-
-    if (onChange) {
-      onChange({ value: [...valgteElementer, valg] });
     }
 
     return true;
