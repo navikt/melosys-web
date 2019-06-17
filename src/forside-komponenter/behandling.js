@@ -46,8 +46,11 @@ class Behandling extends Component {
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
                 {MKV.KTObjects.behandlinger.typer.map(type => {
-                  const isDisabled = type.kode !== MKV.Koder.behandlinger.typer.SOEKNAD;
-                  return (<Skjema.Checkbox key={uuid()} label={type.term} disabled={isDisabled} feltNavn={`behandlingstyper.${type.kode}`} />);
+                  const isDisabled = ![
+                    MKV.Koder.behandlinger.typer.SOEKNAD,
+                    MKV.Koder.behandlinger.typer.ENDRET_PERIODE,
+                  ].includes(type.kode);
+                  return (<Skjema.Checkbox key={type.kode} label={type.term} disabled={isDisabled} feltNavn={`behandlingstyper.${type.kode}`} />);
                 })}
               </Nav.Fieldset>
             </Nav.Column>

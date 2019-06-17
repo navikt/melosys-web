@@ -42,7 +42,7 @@ export const sendBehandlingsOppgave = async checkboxliste => {
   const behandlingstyper = Object.keys(behandlingstyperListe).filter(behandlingstype => behandlingstyperListe[behandlingstype]);
 
   const oppgave = {
-    oppgavetype: MKV.Koder.oppgavetyper.BEH_SAK_MK,
+    oppgavetype: null,
     sakstyper,
     behandlingstyper,
   };
@@ -54,11 +54,12 @@ export const sendBehandlingsOppgave = async checkboxliste => {
 };
 
 export const sendJournalOppgave = async fagomrade => {
+  const behandlingstyper = fagomrade === 'MED' ? [] : [fagomrade];
+
   const oppgave = {
     oppgavetype: MKV.Koder.oppgavetyper.JFR,
     sakstyper: [],
-    behandlingstyper: [],
-    fagomrade, // 'UFM' || 'MDL'
+    behandlingstyper,
   };
   const response = await Api.Oppgaver.send(oppgave);
   const { oppgaveID, journalpostID } = response;
