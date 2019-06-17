@@ -48,6 +48,11 @@ export const PersonSelector = createSelector(
   person => person
 );
 
+export const PersonhistorikkSelector = createSelector(
+  state => SaksopplysningerSelector(state).personhistorikk || {},
+  personhistorikk => personhistorikk
+)
+
 export const OrganisasjonerSelector = createSelector(
   state => SaksopplysningerSelector(state).organisasjoner || [],
   organisasjoner => organisasjoner
