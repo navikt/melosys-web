@@ -20,6 +20,7 @@ import { MedlemskapEnkeltPeriode, MedlemskapPerioder, Medlemskap } from './medle
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { OppholdLand, OppholdPeriode } from './opphold';
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
+import { Personhistorikk } from './personhistorikk';
 import { Periode } from './periode';
 import { Saksbehandler } from './saksbehandler';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
@@ -75,6 +76,7 @@ export {
   Permisjonen,
   Permisjoner,
   PermisjonOgPermittering,
+  Personhistorikk,
   SaksbehandlingOppgave,
   Saksbehandler,
   Soknad,

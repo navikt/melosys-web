@@ -6,7 +6,7 @@ import PT from 'prop-types';
 import * as Nav from '../utils/navFrontend';
 import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
 import './registrering.css';
-import SideOppsummering from '../soknad-komponenter/sideOppsummering';
+// import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger';
 import * as MPT from '../proptypes';
