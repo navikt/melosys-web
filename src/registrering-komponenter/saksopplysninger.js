@@ -37,7 +37,7 @@ class Saksopplysninger extends Component {
     this.setState({ begrunnelseFritekst });
   };
   submitRegistrering = () => {
-    const { behandlingID, unntaksperiode } = this.props;
+    const { behandlingID, unntaksperiode, history } = this.props;
     // TODO replace static data with handlier
     const ikkegodkjenn = {
       ikkeGodkjentBegrunnelseKoder: ['UTSENDELSE_OVER_24_MND', 'TREDJELANDSBORGER_IKKE_AVTALELAND', 'ANNET'],
@@ -48,21 +48,25 @@ class Saksopplysninger extends Component {
       case 'GODKJENT':
         Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID).then(() => {
           console.log('[PUT] successful');
+          history.push('/');
         }).catch(err => console.error(err));
         return true;
       case 'INNHENT':
         Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID).then(() => {
           console.log('[PUT] successful');
+          history.push('/');
         }).catch(err => console.error(err));
         return true;
       case 'ANMODNING':
         Api.Saksflyt.Unntaksperioder.anmodning(behandlingID).then(() => {
           console.log('[PUT] successful');
+          history.push('/');
         }).catch(err => console.error(err));
         return true;
       case 'AVSLAG':
         Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn }).then(() => {
           console.log('[POST] successful');
+          history.push('/');
         }).catch(err => console.error(err));
         return true;
       default:
@@ -200,6 +204,7 @@ Saksopplysninger.propTypes = {
   unntaksperiode: PT.string,
   registreringSkjemaVerdier: PT.object,
   settFeilFelt: PT.func.isRequired,
+  history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
 };

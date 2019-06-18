@@ -19,5 +19,5 @@ export const anmodning = behandlingID => {
 
 export const ikkegodkjenn = (behandlingID, body) => {
   const URI_SAKSFLYT_UNNTAKSPERIODER_IKKEGODKJENN = `${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/ikkegodkjenn`;
-  return putAsText(URI_SAKSFLYT_UNNTAKSPERIODER_IKKEGODKJENN, body);
+  return postAsJson(URI_SAKSFLYT_UNNTAKSPERIODER_IKKEGODKJENN, body);
 };
