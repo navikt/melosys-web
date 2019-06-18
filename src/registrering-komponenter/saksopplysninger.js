@@ -82,7 +82,7 @@ class Saksopplysninger extends Component {
       return null;
     }
 
-    const { lovvalgsperiode, lovvalgBestemmelse, lovvalgslandKode } = sed;
+    const { lovvalgsperiode, lovvalgsBestemmelse, lovvalgslandKode } = sed;
     const lovvalgsland = KV.kodeTilObjekt(lovvalgslandKode, MKV.KTObjects.landkoder);
     const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fom);
     const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tom);
@@ -131,7 +131,7 @@ class Saksopplysninger extends Component {
                       style={inputStyle}
                       bredde="XXL"
                       label="Hjemmel"
-                      value={lovvalgBestemmelse}
+                      value={lovvalgsBestemmelse}
                       readOnly
                     />
                   </Nav.Column>

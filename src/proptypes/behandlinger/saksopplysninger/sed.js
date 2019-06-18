@@ -4,11 +4,11 @@ import PT from 'prop-types';
 import { Periode } from '../../periode';
 
 const SedPropType = PT.shape({
-  rinaSaksnummer: PT.number,
+  rinaSaksnummer: PT.string,
   rinaDokumentID: PT.string,
   fnr: PT.number,
   lovvalgsPeriode: Periode,
-  lovvalgBestemmelse: PT.string,
+  lovvalgsBestemmelse: PT.string,
   lovvalgslandKode: PT.string,
   erEnding: PT.bool,
   statsborgerskapKoder: PT.arrayOf(PT.string),

@@ -37,11 +37,11 @@ const VurderingVedtak = ({
   const lovvalget = lovvalgsperioder[0] || {};
 
   const {
-    fomDato, tomDato, lovvalgBestemmelse, lovvalgsResultat,
+    fomDato, tomDato, lovvalgsBestemmelse, lovvalgsResultat,
   } = lovvalget;
 
   const antallManeder = datoDiffMenneskelig(fomDato, tomDato);
-  const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgBestemmelse, alleLovvalg);
+  const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsBestemmelse, alleLovvalg);
 
   const landSomTekstListe = gyldigeSoknadsland.map(enkeltLand => enkeltLand.term).join(', ');
 
