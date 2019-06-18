@@ -39,17 +39,22 @@ class Saksopplysninger extends Component {
     /* eslint-disable no-console */
     switch (unntaksperiode) {
       case 'GODKJENT':
-        Api.Saksflyt.Unntaksperode.godkjenn(behandlingID).then(() => {
+        Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID).then(() => {
           console.log('[PUT] successful');
         }).catch(err => console.error(err));
         return true;
       case 'INNHENT':
-        Api.Saksflyt.Unntaksperode.innhentinfo(behandlingID).then(() => {
+        Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID).then(() => {
+          console.log('[PUT] successful');
+        }).catch(err => console.error(err));
+        return true;
+      case 'ANMODNING':
+        Api.Saksflyt.Unntaksperioder.anmodning(behandlingID).then(() => {
           console.log('[PUT] successful');
         }).catch(err => console.error(err));
         return true;
       case 'AVSLAG':
-        Api.Saksflyt.Unntaksperode.ikkegodkjenn(behandlingID, { ...ikkegodkjenn }).then(() => {
+        Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn }).then(() => {
           console.log('[POST] successful');
         }).catch(err => console.error(err));
         return true;
