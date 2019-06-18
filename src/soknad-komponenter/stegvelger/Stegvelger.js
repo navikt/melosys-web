@@ -13,6 +13,7 @@ import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
 import StegMotor from './stegMotor';
 
+import { anmodningsperioderSelectors, anmodningsperioderOperations } from '../../ducks/anmodningsperioder';
 import { behandlingerSelectors } from '../../ducks/behandlinger/';
 import { inngangOperations, inngangSelectors } from '../../ducks/inngang/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta/';
@@ -50,6 +51,7 @@ class Stegvelger extends Component {
       this.props.hentVilkar(behandlingID),
       this.props.hentAvklartefakta(behandlingID),
       this.props.hentLovvalgsperioder(behandlingID),
+      this.props.hentAnmodningsperioder(behandlingID),
     ]);
 
     this.oppdaterAktuelleSteg();
@@ -325,6 +327,8 @@ Stegvelger.propTypes = {
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
   soknadFeilmeldinger: PT.object.isRequired,
+  hentAnmodningsperioder: PT.func.isRequired,
+  anmodningsperioder: PT.array.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -336,6 +340,7 @@ Stegvelger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
   arbeidsgivereIPerioden: avklartefaktaSelectors.VirksomheterIPeriodenSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
@@ -365,6 +370,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
   oppdaterLovvalgperioder: lovvalgsperiode => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lovvalgsperiode)),
   hentMedlemsPerioder: behandlingID => dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
+  hentAnmodningsperioder: behandlingID => dispatch(anmodningsperioderOperations.hent(behandlingID)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));
