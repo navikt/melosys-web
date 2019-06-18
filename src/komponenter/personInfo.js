@@ -24,6 +24,6 @@ const PersonInfo = ({
   </dl>
 );
 PersonInfo.propTypes = {
-  person: MPT.Person.isRequired,
+  person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
 };
 export default PersonInfo;

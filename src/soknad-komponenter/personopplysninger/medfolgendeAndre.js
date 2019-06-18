@@ -61,7 +61,7 @@ function MedfolgendeAndre(props) {
 
 MedfolgendeAndre.propTypes = {
   disabled: PT.bool.isRequired,
-  medfolgendeAndre: MPT.Person,
+  medfolgendeAndre: MPT.Behandlinger.Saksopplysninger.Person,
   sjekkPerson: PT.func.isRequired,
 };
 

@@ -69,6 +69,7 @@ class Registrering extends Component {
               />
             </Nav.Column>
             <Nav.Column xs="5">
+              {/*
               <SideOppsummering
                 behandlingID={behandlingID}
                 avsluttSakSomBortfalt={this.avsluttSakSomBortfalt}
@@ -77,7 +78,8 @@ class Registrering extends Component {
                 tilbakeleggeHandle={this.tilbakeleggeHandle}
                 visHenleggDialogHandle={this.visHenleggDialog}
                 tilForsidenHandle={this.navigerTilOversiktSide}
-              />
+                />
+               */}
               <SideDialog behandlingID={behandlingID} />
             </Nav.Column>
           </Nav.Row>
@@ -95,8 +97,8 @@ Registrering.propTypes = {
   vurderingBegrunnelser: PT.object,
   fagsak: MPT.Fagsak,
   medlemskap: MPT.Medlemskap,
-  oppsummering: MPT.Oppsummering,
-  sed: PT.object, // TODO lage proptype
+  oppsummering: MPT.Behandlinger.Oppsummering,
+  sed: MPT.Behandlinger.Saksopplysninger.SED,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,

@@ -308,7 +308,7 @@ Stegvelger.propTypes = {
   match: PT.object.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
-  oppsummering: MPT.Oppsummering,
+  oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   skjema: PT.object.isRequired,
   oppdaterVilkaar: PT.func.isRequired,

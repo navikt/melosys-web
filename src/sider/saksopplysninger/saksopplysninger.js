@@ -88,7 +88,7 @@ class Saksopplysninger extends Component {
     if (!behandlingID) {
       return null;
     }
-    
+
     const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
     const visStegVelger = !visHenlagtSak;
     return (
@@ -132,7 +132,7 @@ class Saksopplysninger extends Component {
 Saksopplysninger.propTypes = {
   redigerbart: PT.bool,
   behandlingID: PT.number.isRequired,
-  alleRelevantePersoner: PT.arrayOf(MPT.Person),
+  alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person),
   avklartefakta: MPT.AvklartefaktaListe.isRequired,
   behandlingsresultat: MPT.Behandlingsresultat.isRequired,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
@@ -143,7 +143,7 @@ Saksopplysninger.propTypes = {
   oppdaterSoknad: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
   sjekkOppfriskningStatus: PT.func.isRequired,
-  person: MPT.Person,
+  person: MPT.Behandlinger.Saksopplysninger.Person,
   sendSoknad: PT.func.isRequired,
   soknad: MPT.Soknad,
   soknadArbeidsinntekt: PT.object,

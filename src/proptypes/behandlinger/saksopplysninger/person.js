@@ -1,8 +1,8 @@
 /* eslint import/prefer-default-export:"off" */
 import PT from 'prop-types';
 
-import { GeneriskAdresse } from './adresser';
-import { Kodeverk } from './kodeverk';
+import { GeneriskAdresse } from '../../adresser';
+import { Kodeverk } from '../../kodeverk';
 
 const FamiliemedlemmerPropType = PT.shape({
   sammensattNavn: PT.string,
