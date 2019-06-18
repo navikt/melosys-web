@@ -16,8 +16,8 @@ import * as Registrering from './modules/registrering';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Eessi from './modules/eessi';
 import * as ServerInfo from './modules/serverinfo';
+import * as Saksflyt from './modules/saksflyt';
 import * as Soknader from './modules/soknader';
-import * as Vedtak from './modules/vedtak';
 import * as Vilkar from './modules/vilkar';
 
 /*
@@ -53,7 +53,7 @@ export {
   Saksopplysninger,
   Eessi,
   ServerInfo,
+  Saksflyt,
   Soknader,
-  Vedtak,
   Vilkar,
 };
