@@ -188,7 +188,7 @@ class Saksopplysninger extends Component {
             </div>
           </div>
         </form>
-        <Personopplysninger redigerbart registrering />
+        <Personopplysninger redigerbart />
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
       </div>
     );

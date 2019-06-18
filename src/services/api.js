@@ -3,6 +3,7 @@ import * as Behandlinger from './modules/behandlinger/behandlinger';
 import * as Behandlingsperioder from './modules/behandlinger/behandlingsperioder';
 import * as Behandlingsresultat from './modules/behandlinger/behandlingsresultat';
 import * as Dokumenter from './modules/dokumenter';
+import * as Eessi from './modules/eessi';
 import * as Fagsaker from './modules/fagsaker/';
 import * as Inngang from './modules/inngang';
 import * as Journalforing from './modules/journalforing';
@@ -15,7 +16,9 @@ import * as OpprinneligLovvalgsperiode from './modules/opprinneligLovvalgsperiod
 import * as Registrering from './modules/registrering';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Saksflyt from './modules/saksflyt';
+import * as ServerInfo from './modules/serverinfo';
 import * as Soknader from './modules/soknader';
+import * as Vedtak from './modules/vedtak';
 import * as Vilkar from './modules/vilkar';
 
 /*
@@ -38,6 +41,7 @@ export {
   Behandlingsperioder,
   Behandlingsresultat,
   Dokumenter,
+  Eessi,
   Fagsaker,
   Inngang,
   Journalforing,
@@ -50,6 +54,8 @@ export {
   Saksbehandler,
   Saksopplysninger,
   Saksflyt,
+  ServerInfo,
   Soknader,
+  Vedtak,
   Vilkar,
 };
