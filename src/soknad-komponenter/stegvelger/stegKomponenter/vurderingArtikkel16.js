@@ -21,6 +21,7 @@ import PdfLenkeListe from '../../pdfLenkeListe';
 import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../regler/vilkar';
+import { konverterAnmodningsperioderTilStegData } from '../../../regler/anmodningsperioder';
 
 import './vurderingArtikkel16.css';
 
@@ -128,8 +129,9 @@ class VurderingArtikkel16 extends Component {
   };
 
   componentDidMount() {
-    const { oppdaterData, tilstand: { art16_1 } } = this.props;
+    const { oppdaterData, tilstand: { art16_1, anmodningsperioder } } = this.props;
     oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
+    oppdaterData(konverterAnmodningsperioderTilStegData(anmodningsperioder));
   }
 
   componentWillUnmount() {

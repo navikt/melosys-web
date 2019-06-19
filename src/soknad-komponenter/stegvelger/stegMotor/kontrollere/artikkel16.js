@@ -11,7 +11,7 @@ class Artikkel16 extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'mottatt svar',
-        exec: () => propsLight.behandlingsstatus.kode === MKV.Koder.behandlinger.status.UNDER_BEHANDLING,
+        exec: () => propsLight.anmodningsperioder.length > 0,
         nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
       },
       {
@@ -28,6 +28,7 @@ class Artikkel16 extends Steg {
     });
     this.beregnRelevantUI = _propsLight => ({
       art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
+      anmodningsperioder: _propsLight.anmodningsperioder,
     });
     this.handlers = {
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
