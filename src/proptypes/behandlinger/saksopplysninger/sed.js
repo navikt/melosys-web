@@ -8,7 +8,7 @@ const SedPropType = PT.shape({
   rinaDokumentID: PT.string,
   fnr: PT.string,
   lovvalgsPeriode: Periode,
-  lovvalgsBestemmelse: PT.string,
+  lovvalgsbestemmelse: PT.string,
   lovvalgslandKode: PT.string,
   erEnding: PT.bool,
   statsborgerskapKoder: PT.arrayOf(PT.string),
