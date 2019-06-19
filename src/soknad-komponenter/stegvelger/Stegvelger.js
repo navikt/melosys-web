@@ -180,7 +180,7 @@ class Stegvelger extends Component {
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
-      lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
+      lagreAnmodningsperioderHandler: this.props.lagreAnmodningsperioderHandler,
       vedtaEndretPeriode: this.vedtaEndretPeriode,
       endreDatoOgSendLovvalgsperioderHandler: this.endreDatoOgSendLovvalgsperioderHandler,
       tilForsiden: this.tilForsiden,
@@ -335,6 +335,7 @@ Stegvelger.propTypes = {
   hentAnmodningsperioder: PT.func.isRequired,
   anmodningsperioder: PT.array.isRequired,
   oppdaterAnmodningsPerioder: PT.func.isRequired,
+  lagreAnmodningsperioderHandler: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {

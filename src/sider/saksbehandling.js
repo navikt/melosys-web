@@ -185,7 +185,7 @@ class Saksbehandling extends Component {
     sendLovvalgsperioder(behandlingID, lovvalgsperioder);
   };
 
-  lagreAnmodningsperioderHandler = () => {
+  lagreAnmodningsperioderHandler = async () => {
     const { behandlingID } = this.state;
     const { sendAnmodningsperioder, anmodningsperioder } = this.props;
 
@@ -282,6 +282,7 @@ class Saksbehandling extends Component {
                 lagreVilkarHandler={this.lagreVilkarHandler}
                 lagreAvklartefaktaHandler={this.lagreAvklartefaktaHandler}
                 lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
+                lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
                 oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
                 lagreAllData={this.lagreAllData}
               />

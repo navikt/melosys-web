@@ -14,6 +14,7 @@ import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { soknadSelectors } from '../../../ducks/soknad/';
 import { formSelectors } from '../../../ducks/form';
+import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
 import DatoOmrade from '../../../komponenter/datoOmrade/datoOmrade';
@@ -148,9 +149,10 @@ class VurderingArtikkel16 extends Component {
     }
   };
 
-  lagreLovvalgsPerioder = () => {
-    this.props.lagreLovvalgsperioderHandler().catch(e => Utils.logger.error(e));
-    this.setState({ lovvalgFeilmelding: undefined });
+  lagreAnmodningsperioder = () => {
+    // this.props.oppdaterData(konverterAnmodningsperioderTilStegData(this.props.tilstand.anmodningsperioder));
+    // this.props.lagreAnmodningsperioderHandler().catch(Utils.logger.error);
+    // this.setState({ lovvalgFeilmelding: undefined });
   };
 
   lagreVilkar = () => {
@@ -220,9 +222,9 @@ class VurderingArtikkel16 extends Component {
 
   render() {
     const {
+      anmodningsperiode,
       behandlingID,
       gyldigeSoknadsland,
-      soknadsperiode,
       medlemskap,
       redigerbart,
       tilstand,
@@ -230,7 +232,7 @@ class VurderingArtikkel16 extends Component {
 
     const {
       begrunnelserEndringHandler,
-      lagreLovvalgsPerioder,
+      lagreAnmodningsperioder,
       validerAlt,
       validerOgLagreBehandling,
       fritekstFokusFlyttetHandler,
@@ -243,7 +245,7 @@ class VurderingArtikkel16 extends Component {
       lovvalgFeilmelding,
     } = this.state;
 
-    const antallManeder = datoDiffMenneskelig(soknadsperiode.fom, soknadsperiode.tom);
+    const antallManeder = datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato);
 
     const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
@@ -271,14 +273,14 @@ class VurderingArtikkel16 extends Component {
             <Nav.Column xs="6">
               <Nav.Element type="element">Antall måneder:</Nav.Element>
               <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
-              <DatoOmrade periode={soknadsperiode} />
+              <DatoOmrade periode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }} />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="7">
               <Skjema.Select
                 feil={lovvalgFeilmelding}
-                onBlur={lagreLovvalgsPerioder}
+                onBlur={lagreAnmodningsperioder}
                 disabled={!redigerbart}
                 feltNavn="lovvalgsperiode.unntakFraBestemmelse"
                 label="Artikkelen det søkes unntak fra:"
@@ -344,10 +346,10 @@ class VurderingArtikkel16 extends Component {
 }
 
 VurderingArtikkel16.propTypes = {
+  anmodningsperiode: PT.object,
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
-  gyldigeSoknadsland: MPT.Soknadsland.isRequired, // TODO:
-  soknadsperiode: MPT.Soknadsperiode.isRequired,
+  gyldigeSoknadsland: MPT.Soknadsland.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -355,7 +357,7 @@ VurderingArtikkel16.propTypes = {
   unntakFraBestemmelse: PT.string,
   art16begrunnelserFritekst: PT.string,
   lagreVilkarHandler: PT.func.isRequired,
-  lagreLovvalgsperioderHandler: PT.func.isRequired,
+  lagreAnmodningsperioderHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   tilstand: PT.object.isRequired,
@@ -364,11 +366,12 @@ VurderingArtikkel16.propTypes = {
 VurderingArtikkel16.defaultProps = {
   art16begrunnelserFritekst: '',
   unntakFraBestemmelse: '',
+  anmodningsperiode: {},
 };
 
 const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
+  anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
