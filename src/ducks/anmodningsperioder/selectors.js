@@ -5,3 +5,7 @@ export const AnmodningsperioderSelector = createSelector(
   anmodningsperioder => anmodningsperioder
 );
 
+export const AnmodningsperiodeSelector = createSelector(
+  AnmodningsperioderSelector,
+  anmodningsperioder => anmodningsperioder[0] || null
+);
