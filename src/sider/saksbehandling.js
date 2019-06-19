@@ -31,6 +31,7 @@ import * as Api from '../services/api';
 
 import './saksbehandling.css';
 import '../soknad-komponenter/skjema/skjema.css';
+import { anmodningsperioderOperations, anmodningsperioderSelectors } from '../ducks/anmodningsperioder';
 
 class Saksbehandling extends Component {
   state = {
@@ -184,6 +185,13 @@ class Saksbehandling extends Component {
     sendLovvalgsperioder(behandlingID, lovvalgsperioder);
   };
 
+  lagreAnmodningsperioderHandler = () => {
+    const { behandlingID } = this.state;
+    const { sendAnmodningsperioder, anmodningsperioder } = this.props;
+
+    sendAnmodningsperioder(behandlingID, anmodningsperioder);
+  };
+
   oppdaterOgLagreBehandlingerHandler = async () => {
     const { skjema, oppdaterBehandlingerState } = this.props;
     await oppdaterBehandlingerState(skjema);
@@ -203,6 +211,7 @@ class Saksbehandling extends Component {
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
+      lagreAnmodningsperioderHandler,
       oppdaterOgLagreBehandlingerHandler,
     } = this;
 
@@ -215,6 +224,7 @@ class Saksbehandling extends Component {
       ]);
 
       lagreLovvalgsperioderHandler();
+      lagreAnmodningsperioderHandler();
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -351,6 +361,8 @@ Saksbehandling.propTypes = {
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterLovvalgperioderState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
+  anmodningsperioder: PT.array,
+  sendAnmodningsperioder: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -360,6 +372,7 @@ Saksbehandling.defaultProps = {
   soknad: {},
   vilkar: [],
   skjema: {},
+  anmodningsperioder: [],
 };
 /** Mapper både fast tekst inn til de forskjellige panelene i tillegg til å
  * mappe verdier fra søknaden (soknad) ut til Redux Form via initialValue.
@@ -375,6 +388,7 @@ const mapStateToProps = state => ({
   skjema: formSelectors.SoknadenFormSelector(state).values,
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
+  anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -404,6 +418,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   sendPerioder: (behandlingID, body) => dispatch(behandlingsperioderOperations.sendMedlemsPerioder(behandlingID, body)),
+  sendAnmodningsperioder: (behandlingID, body) => anmodningsperioderOperations.send(behandlingID, body),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

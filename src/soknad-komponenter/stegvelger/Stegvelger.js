@@ -23,7 +23,7 @@ import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
-import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore } from './StegState/';
+import { AnmodningsperioderStore, AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore } from './StegState/';
 
 import './stegvelger.css';
 
@@ -32,6 +32,7 @@ class Stegvelger extends Component {
     aktivtStegNummer: 0,
     aktuelleSteg: [],
     stegStores: {
+      anmodningsperioder: new AnmodningsperioderStore(),
       avklartefakta: new AvklartefaktaStore(),
       vilkaar: new VilkaarStore(),
       lovvalgsbestemmelse: new LovvalgsbestemmelseStore(),
@@ -113,9 +114,12 @@ class Stegvelger extends Component {
   publiserStegdata = async () => {
     if (!this.aktiv) { return; }
 
-    const { vilkaar, avklartefakta, lovvalgsbestemmelse } = this.state.stegStores;
+    const {
+      anmodningsperioder, vilkaar, avklartefakta, lovvalgsbestemmelse,
+    } = this.state.stegStores;
 
     await Promise.all([
+      this.props.oppdaterAnmodningsPerioder(anmodningsperioder.hent()),
       this.props.oppdaterVilkaar(vilkaar.hent()),
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
       this.props.oppdaterLovvalgperioder(lovvalgsbestemmelse.hent()),
@@ -184,7 +188,8 @@ class Stegvelger extends Component {
 
     const { props } = this;
 
-    const propsLight = {
+    const propsLight = { //TODO oppdater anmodningsperioder
+      anmodningsperioder: props.anmodningsperioder,
       behandlingID: props.behandlingID,
       virksomheterIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
@@ -329,6 +334,7 @@ Stegvelger.propTypes = {
   soknadFeilmeldinger: PT.object.isRequired,
   hentAnmodningsperioder: PT.func.isRequired,
   anmodningsperioder: PT.array.isRequired,
+  oppdaterAnmodningsPerioder: PT.func.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -371,6 +377,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterLovvalgperioder: lovvalgsperiode => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lovvalgsperiode)),
   hentMedlemsPerioder: behandlingID => dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
   hentAnmodningsperioder: behandlingID => dispatch(anmodningsperioderOperations.hent(behandlingID)),
+  oppdaterAnmodningsPerioder: anmodningsperioder => dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(anmodningsperioder)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Stegvelger));

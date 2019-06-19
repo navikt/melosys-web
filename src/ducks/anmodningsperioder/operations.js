@@ -21,6 +21,7 @@ export function hent(behandlingID) {
 }
 
 export function send(bid, anmodningsperioder) {
+  console.log(bid, anmodningsperioder)
   return doThenDispatch(() => Api.Saksflyt.Anmodningsperioder.send(bid, anmodningsperioder), {
     OK: Types.OK,
     FEILET: Types.FEILET,
