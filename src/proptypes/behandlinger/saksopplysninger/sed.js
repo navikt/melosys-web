@@ -6,7 +6,7 @@ import { Periode } from '../../periode';
 const SedPropType = PT.shape({
   rinaSaksnummer: PT.string,
   rinaDokumentID: PT.string,
-  fnr: PT.number,
+  fnr: PT.string,
   lovvalgsPeriode: Periode,
   lovvalgsBestemmelse: PT.string,
   lovvalgslandKode: PT.string,

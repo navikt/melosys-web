@@ -35,7 +35,7 @@ export const AvklartefaktaSelector = createSelector(
 );
 export const VurderingUnntakPeriode = createSelector(
   state => AvklartefaktaSelector(state) || [],
-  (alleAvklartefakta) => (
+  alleAvklartefakta => (
     alleAvklartefakta.find(avklaring => avklaring.avklartefaktaKode === 'VURDERING_UNNTAK_PERIODE') || {}
   )
 );

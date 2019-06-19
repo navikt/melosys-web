@@ -14,7 +14,6 @@ import * as Nav from '../utils/navFrontend';
 import ListevelgerFlervalg from '../komponenter/ui/listevelgerFlervalg';
 import Personopplysninger from '../soknad-komponenter/personopplysninger';
 import Medlemskap from '../komponenter/medlemskap';
-import { formSelectors } from '../ducks/form';
 
 const uuid = require('uuid/v4');
 
@@ -38,42 +37,32 @@ class Saksopplysninger extends Component {
   };
   submitRegistrering = () => {
     const { behandlingID, unntaksperiode, history } = this.props;
-    // TODO replace static data with handlier
-    const ikkegodkjenn = {
-      ikkeGodkjentBegrunnelseKoder: ['UTSENDELSE_OVER_24_MND', 'TREDJELANDSBORGER_IKKE_AVTALELAND', 'ANNET'],
-      begrunnelseFritekst: this.state.begrunnelseFritekst,
-    };
-    /* eslint-disable no-console */
     switch (unntaksperiode) {
       case 'GODKJENT':
         Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID).then(() => {
-          console.log('[PUT] successful');
           history.push('/');
-        }).catch(err => console.error(err));
+        }).catch(err => Utils.logger.error(err));
         return true;
       case 'INNHENT':
         Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID).then(() => {
-          console.log('[PUT] successful');
           history.push('/');
-        }).catch(err => console.error(err));
+        }).catch(err => Utils.logger.error(err));
         return true;
-      case 'ANMODNING':
-        Api.Saksflyt.Unntaksperioder.anmodning(behandlingID).then(() => {
-          console.log('[PUT] successful');
-          history.push('/');
-        }).catch(err => console.error(err));
-        return true;
-      case 'AVSLAG':
+      case 'AVSLAG': {
+        const ikkegodkjenn = {
+          ikkeGodkjentBegrunnelseKoder: [...this.state.ikkeGodkjentBegrunnelseKoder],
+          begrunnelseFritekst: this.state.begrunnelseFritekst,
+        };
         Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn }).then(() => {
-          console.log('[POST] successful');
           history.push('/');
-        }).catch(err => console.error(err));
+        }).catch(err => Utils.logger.error(err));
         return true;
+      }
       default:
         return false;
     }
-    /* eslint-enable no-console */
   };
+
   render() {
     const {
       medlemskap, sed, vurderingBegrunnelser, unntaksperiode,
@@ -89,9 +78,13 @@ class Saksopplysninger extends Component {
     const inputStyle = {
       width: '110%',
     };
+    const listevalgEndringHandler = event => {
+      const ikkeGodkjentBegrunnelseKoder = [...event.value];
+      this.setState({ ikkeGodkjentBegrunnelseKoder });
+    };
     return (
       <div>
-        <form name="registrering" id="registrering" onSubmit={this.overstyrSubmit} >
+        <form name="registrering" id="registrering" onSubmit={this.overstyrSubmit}>
           <div className="stegvelger panelSeksjon">
             <div className="panel stegFane steg0 stegFane--aktiv">
               <Nav.Systemtittel>Redigering av unntaksperioder</Nav.Systemtittel>
@@ -140,7 +133,8 @@ class Saksopplysninger extends Component {
                   <Nav.Column xs="12">
                     <Nav.Undertittel>Treff ved registerkontroll</Nav.Undertittel>
                     <ul>
-                      {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode => <li key={uuid()}>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</li>)}
+                      {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
+                        <li key={uuid()}>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</li>)}
                     </ul>
                   </Nav.Column>
                 </Nav.Row>
@@ -163,18 +157,21 @@ class Saksopplysninger extends Component {
                             muligeValg={MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser}
                             label="Legg til begrunnelse for ikke oppfylt:"
                             tillatFritekst={false}
+                            onChange={listevalgEndringHandler}
                           />
                         </Nav.Fieldset>
                       </Nav.Column>
                     </Nav.Row>
                     <Nav.Row>
                       <Nav.Column xs="6">
+                        {this.state.ikkeGodkjentBegrunnelseKoder.includes('ANNET') &&
                         <Nav.Textarea
                           label="Skriv inn begrunnelse for avslaget..."
                           onChange={this.textAreaOnChange}
                           value={this.state.begrunnelseFritekst}
                           maxLength={255}
                           bredde="fullbredde" />
+                        }
                       </Nav.Column>
                     </Nav.Row>
                   </Fragment>
@@ -202,7 +199,6 @@ Saksopplysninger.propTypes = {
   vurderingBegrunnelser: PT.object,
   skjema: PT.any,
   unntaksperiode: PT.string,
-  registreringSkjemaVerdier: PT.object,
   settFeilFelt: PT.func.isRequired,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
@@ -215,37 +211,28 @@ Saksopplysninger.defaultProps = {
   sed: {},
   skjema: {},
   unntaksperiode: '',
-  registreringSkjemaVerdier: {},
 };
 
-const skjemaSelector = formValueSelector(KV.Form.REGISTRERING);
+const skjemaSelector = formValueSelector(KV.Form.SOKNAD);
 const mapStateToProps = state => ({
-  registreringSkjemaVerdier: formSelectors.RegistreringFormSelector(state).values,
   unntaksperiode: skjemaSelector(state, 'unntaksperiode'),
   initialValues: {
     unntaksperiode: 'GODKJENT',
   },
 });
 const mapDispatchToProps = dispatch => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill(KV.Form.REGISTRERING, feltNavn, verdi)),
-  settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.REGISTRERING, ...feltNavn)),
+  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill(KV.Form.SOKNAD, feltNavn, verdi)),
+  settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.SOKNAD, ...feltNavn)),
 });
-/*
-const validering = values => {
-  const landkode = !values.landkode ? 'Du må velge land.' : null;
-  return {
-    landkode,
-  };
-};
-*/
+
 const SaksopplysningerForm = reduxForm({
-  form: KV.Form.REGISTRERING,
+  form: KV.Form.SOKNAD,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  // validate: validering,
-  onSubmit: () => {},
+  onSubmit: () => {
+  },
 })(Saksopplysninger);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksopplysningerForm));

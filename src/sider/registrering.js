@@ -13,8 +13,10 @@ import * as MPT from '../proptypes';
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 import * as Utils from '../utils';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
-import * as Api from '../services/api';
+// import * as Api from '../services/api';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta';
+// import { formSelectors } from '../ducks/form';
+import { soknadOperations } from '../ducks/soknad';
 
 class Registrering extends Component {
   state = {
@@ -30,29 +32,32 @@ class Registrering extends Component {
     const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
     this.setState({ behandlingID: Utils._toInteger(behandlingID) });
 
-    const { hentAvklartefakta, hentBehandling, hentFagsaker } = this.props;
+    const {
+      hentAvklartefakta, hentBehandling, hentFagsaker, hentSoknad,
+    } = this.props;
     try {
       await hentFagsaker(snr);
       await hentBehandling(behandlingID);
       await hentAvklartefakta(behandlingID);
+      await hentSoknad(behandlingID);
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
+  /*
   avsluttSakSomBortfalt = () => {
     const { fagsak: { saksnummer } } = this.props;
     Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
     this.props.history.push('/');
   };
-
   avsluttSakSomBortfalt = () => {};
   visOppfriskBekreftelse = () => {};
   lagreOgLukk = () => {};
   tilbakeleggeHandle = () => {};
   visHenleggDialog = () => {};
   navigerTilOversiktSide = () => {};
-
+  */
   render() {
     const { behandlingID } = this.state;
     const { vurderingBegrunnelser, medlemskap, sed } = this.props;
@@ -92,6 +97,7 @@ Registrering.propTypes = {
   hentAvklartefakta: PT.func.isRequired,
   hentBehandling: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
+  hentSoknad: PT.func.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   vurderingBegrunnelser: PT.object,
@@ -126,6 +132,7 @@ const mapDispatchToProps = dispatch => ({
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
+  hentSoknad: behandlingID => dispatch(soknadOperations.hent(behandlingID)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Registrering);

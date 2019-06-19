@@ -23,5 +23,5 @@ export const SAKSOPPLYSNINGER = 'saksopplysninger';
 export const SERVERINFO = 'serverinfo';
 export const SOKNADER = 'soknader';
 export const UNNTAKSPERIODER = 'unntaksperioder';
-export const VEDTAK = 'saksflyt/vedtak';
+export const VEDTAK = 'vedtak';
 export const VILKAAR = 'vilkaar';
