@@ -11,6 +11,7 @@ import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import { DatoOmradeDescription } from '../../komponenter/datoOmrade/datoOmrade';
 
 import './fagsak.css';
+import * as MKV from 'melosys-kodeverk';
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -27,13 +28,15 @@ const Fagsak = ({ sak }) => {
   } = sak;
 
   const {
+    behandlingstype,
     soknadsperiode,
     land,
   } = behandlingOversikter[0];
-
   const tittel = `${KV.objektTilTerm(sakstype)}`;
-  const routePath = `/saksbehandling/${saksnummer}`;
-
+  let routePath = `/saksbehandling/${saksnummer}`;
+  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.UNNTAK_FRA_MEDLEMSKAP) {
+    routePath = `/registrering/${saksnummer}`;
+  }
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const customMargin = { marginLeft: '1em' };
   return (
