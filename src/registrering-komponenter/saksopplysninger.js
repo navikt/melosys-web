@@ -37,25 +37,26 @@ class Saksopplysninger extends Component {
   };
   submitRegistrering = () => {
     const { behandlingID, unntaksperiode, history } = this.props;
+    const tilForsiden = () => history.push('/');
     switch (unntaksperiode) {
       case 'GODKJENT':
-        Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID).then(() => {
-          history.push('/');
-        }).catch(err => Utils.logger.error(err));
+        Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID)
+          .then(tilForsiden)
+          .catch(Utils.logger.error);
         return true;
       case 'INNHENT':
-        Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID).then(() => {
-          history.push('/');
-        }).catch(err => Utils.logger.error(err));
+        Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID)
+          .then(tilForsiden)
+          .catch(Utils.logger.error);
         return true;
       case 'AVSLAG': {
         const ikkegodkjenn = {
           ikkeGodkjentBegrunnelseKoder: [...this.state.ikkeGodkjentBegrunnelseKoder],
           begrunnelseFritekst: this.state.begrunnelseFritekst,
         };
-        Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn }).then(() => {
-          history.push('/');
-        }).catch(err => Utils.logger.error(err));
+        Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn })
+          .then(tilForsiden)
+          .catch(Utils.logger.error);
         return true;
       }
       default:
