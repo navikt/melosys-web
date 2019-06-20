@@ -50,7 +50,7 @@ export class DialogboksHenleggSak extends Component {
     return fritekstValideringPassert;
   };
 
-  fritekstValgt = () => this.state.begrunnelseKode === MKV.Koder.henleggelsesgrunner.ANNET;
+  fritekstValgt = () => this.state.begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
 
   fritekstTom = () => this.state.fritekst === '';
 
