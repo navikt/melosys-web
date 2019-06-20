@@ -81,6 +81,14 @@ export const AdresseType = {
   USTRUKTURERT: 'USTRUKTURERT',
 };
 
+export const SedStatus = {
+  UTKAST: 'UTKAST',
+  SENDT: 'SENDT',
+  MOTTATT: 'MOTTATT',
+  TOM: 'TOM',
+  AVBRUTT: 'AVBRUTT',
+};
+
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
  */
