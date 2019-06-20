@@ -74,16 +74,27 @@ EnkeltBuc.propTypes = {
   kodeverk: PT.object.isRequired,
 };
 
+const HenterOpplysningerSpinner = () => (
+  <div className="henter_opplysninger">
+    <Nav.NavFrontendSpinner />
+    <Nav.Normaltekst>Henter BUCer under arbeid</Nav.Normaltekst>
+  </div>
+);
+
 const SideDialogBesvarSed = ({ behandlingID, kodeverk }) => {
   const [bucer, setBucer] = useState([]);
   const [feilmelding, setFeilmelding] = useState('');
+  const [henterData, setHenterData] = useState(true);
 
   const hentBucUnderArbeid = async () => {
     if (behandlingID !== -1 && bucer.length === 0) {
       try {
+        setHenterData(true);
         const data = await Api.Eessi.hentBucerForBehandling(behandlingID);
         setBucer(data);
+        setHenterData(false);
       } catch (e) {
+        setHenterData(false);
         Utils.logger.error(e);
         setFeilmelding('Kunne ikke hente BUCer under arbeid');
       }
@@ -94,17 +105,21 @@ const SideDialogBesvarSed = ({ behandlingID, kodeverk }) => {
     hentBucUnderArbeid();
   }, []);
 
-  const kanViseListe = liste => !feilmelding && liste && liste.length > 0;
+  const kanViseListe = liste => !henterData && !feilmelding && liste && liste.length > 0;
 
-  return (
-    <div className="besvar_sed">
-      {
-        kanViseListe(bucer) ?
-          bucer.map(buc => <EnkeltBuc key={buc.id} buc={buc} kodeverk={kodeverk} />) :
-          <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding || 'For øyeblikket ingen BUCer under arbeid'}</Nav.AlertStripe>
-      }
-    </div>
-  );
+  const getKomponent = () => {
+    if (kanViseListe(bucer)) {
+      return bucer.map(buc => <EnkeltBuc key={buc.id} buc={buc} kodeverk={kodeverk} />);
+    } else if (henterData) {
+      return <HenterOpplysningerSpinner />;
+    }
+
+    return (
+      <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding || 'For øyeblikket ingen BUCer under arbeid'}</Nav.AlertStripe>
+    );
+  };
+
+  return <div className="besvar_sed">{ getKomponent() }</div>;
 };
 
 SideDialogBesvarSed.propTypes = {
