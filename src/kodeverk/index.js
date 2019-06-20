@@ -14,6 +14,8 @@ const objektTilKode = KTObjekt => {
   return Object.keys(KTObjekt).includes('kode') ? KTObjekt.kode : null;
 };
 
+const kodeTilObjekt = (kode, muligeKoder) => muligeKoder.find(enkeltKode => objektTilKode(enkeltKode) === kode);
+
 const finnEnkeltKodeFraListe = (kodeSomSkalFinnes, kodeverkListe) => (
   kodeverkListe.find(enkelt => enkelt.kode === kodeSomSkalFinnes) || undefined
 );
@@ -36,6 +38,7 @@ export {
   objektTilKode,
   finnEnkeltKodeFraListe,
   kodeTilTerm,
+  kodeTilObjekt,
   termTilKode,
   Paneltitler,
 };

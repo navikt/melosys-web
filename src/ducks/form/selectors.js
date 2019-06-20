@@ -23,11 +23,6 @@ export const JournalforingFormSelector = createSelector(
   journalforing => journalforing
 );
 
-export const RegistreringFormSelector = createSelector(
-  state => getFormState(state, KV.Form.REGISTRERING, {}),
-  registrering => registrering
-);
-
 export const ForretningsValideringSelector = createSelector(
   state => (state.form.forretningsValidering ? state.form.forretningsValidering : {}),
   skjemaValidering => skjemaValidering.regler
@@ -101,3 +96,42 @@ export const ErAlleMaritimtArbeidNavnUnikeSelector = createSelector(
   maritimtarbeidListe => maritimtarbeidListe.length === [...new Set(maritimtarbeidListe.map(maritimtarbeid => maritimtarbeid.navn))].length
 );
 
+export const OppgittAdresseHusnummerSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  soknad => soknad.oppgittAdresseHusnummer
+);
+
+export const OppgittAdresseGatenavnSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  soknad => soknad.oppgittAdresseGatenavn
+);
+
+export const OppgittAdresseRegionSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  soknad => soknad.oppgittAdresseRegion
+);
+
+export const OppgittAdressePostnummerSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  soknad => soknad.oppgittAdressePostnummer
+);
+
+export const OppgittAdressePoststedSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  soknad => soknad.oppgittAdressePoststed
+);
+
+export const OppgittAdresseLandSelector = createSelector(
+  state => SoknadenFormSelector(state).values,
+  soknad => soknad.oppgittAdresseLand
+);
+
+export const OppgittAdresseHarVerdierSelector = createSelector(
+  OppgittAdresseHusnummerSelector,
+  OppgittAdresseGatenavnSelector,
+  OppgittAdresseRegionSelector,
+  OppgittAdressePostnummerSelector,
+  OppgittAdressePoststedSelector,
+  OppgittAdresseLandSelector,
+  (...felter) => !felter.every(Utils._isNil)
+);

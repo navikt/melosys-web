@@ -29,11 +29,6 @@ export const forutgaendeMedlemskap = createSelector(
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP) || {})
 );
 
-export const bosattINorge = createSelector(
-  state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.vilkaar.BOSATT_I_NORGE) || {})
-);
-
 export const art11_3A = createSelector(
   state => VilkarSelector(state),
   alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A) || {})
@@ -114,11 +109,9 @@ export const vilkarBegrunnelserSelector = createSelector(
   state => vesentligVirksomhetSelector(state),
   state => normaltDriverVirksomhetSelector(state),
   state => forutgaendeMedlemskap(state),
-  state => bosattINorge(state),
-  (vesentligvirksomhet, normaltDrivervirksomhet, forutgaendemedlemskap, bosattinorge) => ([
+  (vesentligvirksomhet, normaltDrivervirksomhet, forutgaendemedlemskap) => ([
     ...(vesentligvirksomhet.begrunnelseKoder || []),
     ...(normaltDrivervirksomhet.begrunnelseKoder || []),
     ...(forutgaendemedlemskap.begrunnelseKoder || []),
-    ...(bosattinorge.begrunnelseKoder || []),
   ] || [])
 );

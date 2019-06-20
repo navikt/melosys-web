@@ -5,6 +5,7 @@ import { ArbeidsgivereNorge } from './arbeidsgivereNorge';
 import { Avklartefakta, AvklartefaktaListe } from './avklartefakta';
 import { BehandligOversikt, BehandligOversikter } from './behandlingOversikt';
 import { Bekreftelser } from './bekreftelser';
+import * as Behandlinger from './behandlinger';
 import { Behandlingsresultat } from './behandlingsresultat';
 import { Dokument, DokumentNullable, Vedlegg } from './dokument';
 import { DokumentMetadataListe } from './dokumentMetadata';
@@ -18,10 +19,9 @@ import { Vurdering, Lovvalgsbestemmelse, Lovvalgsbestemmelser, Feilmelding, Feil
 import { MedlemskapEnkeltPeriode, MedlemskapPerioder, Medlemskap } from './medlemskap';
 import { OrgnummerNavn, Organisasjon, Organisasjoner } from './organisasjon';
 import { OppholdLand, OppholdPeriode } from './opphold';
-import { Oppsummering } from './oppsummering';
 import { Permisjonen, Permisjoner, PermisjonOgPermittering } from './permisjon';
+import { Personhistorikk } from './personhistorikk';
 import { Periode } from './periode';
-import { Person } from './person';
 import { Saksbehandler } from './saksbehandler';
 import { SaksbehandlingOppgave, MineOppgaver, JournalforingOppgave } from './oppgaver';
 import { Soknad } from './soknad';
@@ -41,6 +41,7 @@ export {
   ArbeidsgivereNorge,
   Avklartefakta,
   AvklartefaktaListe,
+  Behandlinger,
   BehandligOversikt,
   BehandligOversikter,
   Bekreftelser,
@@ -68,7 +69,6 @@ export {
   MineOppgaver,
   OppholdLand,
   OppholdPeriode,
-  Oppsummering,
   Organisasjon,
   Organisasjoner,
   OrgnummerNavn,
@@ -76,7 +76,7 @@ export {
   Permisjonen,
   Permisjoner,
   PermisjonOgPermittering,
-  Person,
+  Personhistorikk,
   SaksbehandlingOppgave,
   Saksbehandler,
   Soknad,

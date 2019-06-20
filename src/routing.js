@@ -36,7 +36,7 @@ const Routing = ({ location }) => (
   <Switch location={location}>
     <Route exact path="/" component={ForsideLoadable} />
     <Route exact path="/sok/:fnr" component={SokLoadable} />
-    {Utils.feature.featureToggle('REL1.1') && <Route exact path="/registrering" component={RegistreringLoadable} />}
+    {Utils.feature.featureToggle('REL1.1') && <Route exact path="/registrering/:snr" component={RegistreringLoadable} />}
     <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
     <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
     <Route component={UkjentSideLoadable} />

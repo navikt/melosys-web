@@ -13,8 +13,8 @@ import * as KV from '../../kodeverk';
 
 import { behandlingerSelectors } from '../behandlinger';
 import { soknadSelectors } from '../soknad';
-import { vilkarSelectors } from '../vilkar';
 import { OrganisasjonSelectors } from '../organisasjoner';
+import { hentFaktaVerdi } from '../../regler/avklartefakta';
 
 /* Dersom en avklartfakta må bygges opp, benyttes denne malen. Det er dette objektet som utgjør
  * hele enkeltvise avklartfakta og som sendes til backend.
@@ -33,7 +33,12 @@ export const AvklartefaktaSelector = createSelector(
   state => (state.avklartefakta.data ? state.avklartefakta.data : []),
   avklartefakta => avklartefakta || []
 );
-
+export const VurderingUnntakPeriode = createSelector(
+  state => AvklartefaktaSelector(state) || [],
+  alleAvklartefakta => (
+    alleAvklartefakta.find(avklaring => avklaring.avklartefaktaKode === KV.Koder.avklartefaktaKoder.VURDERING_UNNTAK_PERIODE) || {}
+  )
+);
 /* Soknadsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
  * territoriet som søkeren skal til faktisk er med i forordningen gjøres i avklartefakta.
  * Derfor må både avklartefakta og soknad settes inn slik at disse kan flettes til avklart fakta.
@@ -223,17 +228,11 @@ export const AvklartefaktaVurderingSelector = createSelector(
 );
 
 export const BostedslandSelector = createSelector(
-  state => vilkarSelectors.bosattINorge(state),
   state => AvklartefaktaSelector(state),
-  (bosattINorge, alleAvklarteFakta) => {
-    let bostedslandkode;
-    if (bosattINorge.oppfylt) {
-      bostedslandkode = MKV.Koder.landkoder.NO;
-    } else {
-      const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
-      if (!avklartFakta) return null;
-      [bostedslandkode] = avklartFakta.fakta;
-    }
+  alleAvklarteFakta => {
+    const avklartFakta = alleAvklarteFakta.find(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.BOSTEDSLAND);
+    if (!avklartFakta) return null;
+    const bostedslandkode = hentFaktaVerdi(avklartFakta);
     return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandkode);
   }
 );
