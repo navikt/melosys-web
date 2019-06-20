@@ -13,7 +13,7 @@ import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
 export function fatte(behandlingID, body) {
-  return doThenDispatch(() => Api.Vedtak.fatte(behandlingID, body), {
+  return doThenDispatch(() => Api.Saksflyt.Vedtak.fatte(behandlingID, body), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
