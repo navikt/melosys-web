@@ -13,6 +13,12 @@ export const YRKESAKTIVITET = 'YRKESAKTIVITET';
 export const AVKLARTE_ARBEIDSGIVER = 'AVKLARTE_ARBEIDSGIVER';
 export const SOKKEL = 'SOKKEL';
 export const SKIP = 'SKIP';
+
+export const Unntaksperiode = {
+  GODKJENT: 'GODKJENT',
+  INNHENT: 'INNHENT',
+  AVSLAG: 'AVSLAG',
+};
 export const VurderingSokkelSkipTyper = {
   SKIP_NORSK_TERRITORIAL: 'SKIP_NORSK_TERRITORIAL',
   SKIP_ETT_LAND: 'SKIP_ETT_LAND',

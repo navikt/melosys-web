@@ -39,17 +39,17 @@ class Saksopplysninger extends Component {
     const { behandlingID, unntaksperiode, history } = this.props;
     const tilForsiden = () => history.push('/');
     switch (unntaksperiode) {
-      case 'GODKJENT':
+      case KV.Koder.Unntaksperiode.GODKJENT:
         Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID)
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
-      case 'INNHENT':
+      case KV.Koder.Unntaksperiode.INNHENT:
         Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID)
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
-      case 'AVSLAG': {
+      case KV.Koder.Unntaksperiode.AVSLAG: {
         const ikkegodkjenn = {
           ikkeGodkjentBegrunnelseKoder: [...this.state.ikkeGodkjentBegrunnelseKoder],
           begrunnelseFritekst: this.state.begrunnelseFritekst,
@@ -142,13 +142,13 @@ class Saksopplysninger extends Component {
                 <Nav.Row>
                   <Nav.Column xs="3">
                     <Skjema.RadioGruppe feltNavn="unntaksperiode" label="Vurder unntaksperiode">
-                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value="GODKJENT" label="Godkjenn" />
-                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value="INNHENT" label="Innhent informasjon" />
-                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value="AVSLAG" label="Ikke godkjenn" />
+                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value={KV.Koder.Unntaksperiode.GODKJENT} label="Godkjenn" />
+                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value={KV.Koder.Unntaksperiode.INNHENT} label="Innhent informasjon" />
+                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value={KV.Koder.Unntaksperiode.AVSLAG} label="Ikke godkjenn" />
                     </Skjema.RadioGruppe>
                   </Nav.Column>
                 </Nav.Row>
-                {unntaksperiode === 'AVSLAG' && (
+                {unntaksperiode === KV.Koder.Unntaksperiode.AVSLAG && (
                   <Fragment>
                     <Nav.Row>
                       <Nav.Column xs="6">
@@ -218,7 +218,7 @@ const skjemaSelector = formValueSelector(KV.Form.SOKNAD);
 const mapStateToProps = state => ({
   unntaksperiode: skjemaSelector(state, 'unntaksperiode'),
   initialValues: {
-    unntaksperiode: 'GODKJENT',
+    unntaksperiode: KV.Koder.Unntaksperiode.GODKJENT,
   },
 });
 const mapDispatchToProps = dispatch => ({
