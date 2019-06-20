@@ -36,7 +36,7 @@ export const AvklartefaktaSelector = createSelector(
 export const VurderingUnntakPeriode = createSelector(
   state => AvklartefaktaSelector(state) || [],
   alleAvklartefakta => (
-    alleAvklartefakta.find(avklaring => avklaring.avklartefaktaKode === 'VURDERING_UNNTAK_PERIODE') || {}
+    alleAvklartefakta.find(avklaring => avklaring.avklartefaktaKode === KV.Koder.avklartefaktaKoder.VURDERING_UNNTAK_PERIODE) || {}
   )
 );
 /* Soknadsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt
