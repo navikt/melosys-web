@@ -4,17 +4,18 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../regler/avklartefakta';
+import { BOOLSK } from '../../../constants';
 
 const VurderingYrkesgruppe = props => {
   const {
-    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
   const { harAvklaring, yrkesgruppe } = tilstand;
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
     return function cleanup() {
-      slettAllDataForSteg();
+      slettData();
     };
   }, []);
 
@@ -43,21 +44,21 @@ const VurderingYrkesgruppe = props => {
           label="Yrkesaktiv på sokkel eller skip" />
         <Nav.Radio
           name="yrkesgruppe"
-          disabled={!redigerbart}
+          disabled={BOOLSK.SANN}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           value={KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           onChange={radioEndret}
           label="Yrkesaktiv som flyvende personell" />
         <Nav.Radio
           name="yrkesgruppe"
-          disabled={!redigerbart}
+          disabled={BOOLSK.SANN}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV}
           value={KV.Koder.VurderingYrkesgruppeTyper.IKKE_YRKESAKTIV}
           onChange={radioEndret}
           label="Ikke yrkesaktiv" />
         <Nav.Radio
           name="yrkesgruppe"
-          disabled={!redigerbart}
+          disabled={BOOLSK.SANN}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER}
           value={KV.Koder.VurderingYrkesgruppeTyper.KONTANTYTELSESMOTTAKER}
           onChange={radioEndret}
@@ -78,7 +79,7 @@ VurderingYrkesgruppe.propTypes = {
   tilstand: PT.object,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 VurderingYrkesgruppe.defaultProps = {

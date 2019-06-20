@@ -112,6 +112,11 @@ function datoDiff (fom, tom, enhet = 'months', presis = true) {
   return moment(momentTom).diff(fom, enhet, presis);
 }
 
+function datoDiffPure (fom, tom, enhet = 'months', presis = true) {
+  if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
+  return moment(fom).diff(tom, enhet, presis);
+}
+
 function datoDiffMenneskelig (fom, tom) {
   if (!moment(fom, 'YYYY-MM-DD').isValid() || !moment(tom, 'YYYY-MM-DD').isValid()) return false;
 
@@ -141,6 +146,7 @@ export {
   formatterDatoTilISO,
   formatterKortDatoTilNorsk,
   datoDiff,
+  datoDiffPure,
   datoDiffMenneskelig,
   beregnAlder,
   erGyldigPeriode,

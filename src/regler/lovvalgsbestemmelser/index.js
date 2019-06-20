@@ -1,8 +1,13 @@
 export const lovvalgsbestemmelseType = 'lovvalgsbestemmelse';
 
+export const slettLovvalgsbestemmelse = felt => ({
+  felt,
+  type: lovvalgsbestemmelseType,
+});
+
 export const hentLovvalgsbestemmelse = lovvalgsperioder => {
   const periode = lovvalgsperioder.length > 0 ? lovvalgsperioder[0] : {};
-  return periode.lovvalgBestemmelse;
+  return periode.lovvalgsbestemmelse;
 };
 
 export const finnLovvalgsbestemmelse = (lovvalgsbestemmelseKode, lovvalgsbestemmelser) => (

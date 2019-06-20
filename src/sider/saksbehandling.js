@@ -17,7 +17,7 @@ import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingsresultatOperations } from '../ducks/behandlingsresultat/';
-import {behandlingerOperations, behandlingerSelectors} from '../ducks/behandlinger/';
+import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger/';
 
 import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
@@ -314,7 +314,7 @@ class Saksbehandling extends Component {
 
 Saksbehandling.propTypes = {
   redigerbart: PT.bool,
-  avklartefakta: MPT.Avklartefakta,
+  avklartefakta: MPT.AvklartefaktaListe,
   fagsak: MPT.Fagsak,
   soknad: MPT.Soknad,
   vilkar: PT.array, // TODO lag proptype

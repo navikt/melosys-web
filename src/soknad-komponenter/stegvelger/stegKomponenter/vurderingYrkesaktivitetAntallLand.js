@@ -4,17 +4,18 @@ import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../regler/avklartefakta';
+import { BOOLSK } from '../../../constants';
 
 const VurderingYrkesaktivitetAntallLand = props => {
   const {
-    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettAllDataForSteg,
+    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
   const { harAvklaring, yrkesaktivitetAntallLand } = tilstand;
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND, yrkesaktivitetAntallLand));
     return function cleanup() {
-      slettAllDataForSteg();
+      slettData();
     };
   }, []);
 
@@ -32,7 +33,8 @@ const VurderingYrkesaktivitetAntallLand = props => {
           checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
           value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
           onChange={radioEndret}
-          label="Kun Norge" />
+          label="Kun Norge"
+          disabled={BOOLSK.SANN} />
         <Nav.Radio
           name="yrkesaktivitetAntallLand"
           checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE}
@@ -60,7 +62,7 @@ VurderingYrkesaktivitetAntallLand.propTypes = {
   redigerbart: PT.bool.isRequired,
   tilstand: PT.object,
   oppdaterData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 VurderingYrkesaktivitetAntallLand.defaultProps = {

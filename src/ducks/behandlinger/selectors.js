@@ -4,6 +4,7 @@
  * Målet med selectorer er å samle funksjonalitet som behandler, itererer og omformer
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
+import * as MKV from 'melosys-kodeverk';
 
 import { createSelector } from 'reselect';
 import moment from 'moment/moment';
@@ -20,13 +21,18 @@ export const BehandlingIDSelector = createSelector(
   state => BehandlingerSelector(state).behandlingID || -1,
   behandlingID => behandlingID
 );
-export const RedigerbartSelector = createSelector(
-  state => BehandlingerSelector(state).redigerbart || false,
-  redigerbart => redigerbart
-);
 export const OppsummeringSelector = createSelector(
   state => BehandlingerSelector(state).oppsummering || {},
   oppsummering => oppsummering
+);
+export const RedigerbartSelector = createSelector(
+  state => BehandlingerSelector(state).redigerbart || false,
+  state => OppsummeringSelector(state),
+  (redigerbart, oppsummering) => redigerbart && oppsummering.behandlingstype.kode !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE
+);
+export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
+  state => BehandlingerSelector(state).redigerbart || false,
+  redigerbart => redigerbart
 );
 
 export const SaksopplysningerSelector = createSelector(
@@ -41,7 +47,16 @@ export const PersonSelector = createSelector(
   state => SaksopplysningerSelector(state).person || {},
   person => person
 );
+export const PersonhistorikkSelector = createSelector(
+  state => SaksopplysningerSelector(state).personhistorikk || {},
+  personhistorikk => personhistorikk
+);
 
+export const SEDSelector = createSelector(
+  state => SaksopplysningerSelector(state).sed || {},
+  sed => sed
+);
+export const LovvalgsperiodeSelector = createSelector(state => SEDSelector(state).lovvalgsperiode || {}, lovvalgsperiode => lovvalgsperiode);
 export const OrganisasjonerSelector = createSelector(
   state => SaksopplysningerSelector(state).organisasjoner || [],
   organisasjoner => organisasjoner

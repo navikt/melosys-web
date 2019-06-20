@@ -8,7 +8,7 @@ import {
   hentFaktaVerdi,
   lagAvklartfakta,
   konverterTilStegData,
-  avklartefaktaType,
+  slettAvklartfakta,
 } from '../../../regler/avklartefakta';
 import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
@@ -21,13 +21,18 @@ import {
 } from '../../../regler/lovvalgsbestemmelser';
 
 const Forretningsstedet = props => {
-  const { forretningsstedet, avklartForretningsland, oppdaterData } = props;
+  const {
+    forretningsstedet, avklartForretningsland, oppdaterData, slettData,
+  } = props;
   if (!forretningsstedet) return null;
 
   useEffect(() => {
     if (avklartForretningsland) {
       oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland));
     }
+    return function cleanup() {
+      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED));
+    };
   }, []);
 
   const { navn, orgnr } = forretningsstedet;
@@ -54,6 +59,7 @@ Forretningsstedet.propTypes = {
   forretningsstedet: PT.object.isRequired,
   avklartForretningsland: PT.object,
   oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 Forretningsstedet.defaultProps = {
@@ -80,6 +86,7 @@ const Forretningssteder = props => {
             forretningsstedet={valgtVirksomhet}
             avklartForretningsland={avklartForretningsland}
             oppdaterData={props.oppdaterData}
+            slettData={props.slettData}
           />;
         })
       }
@@ -92,6 +99,7 @@ Forretningssteder.propTypes = {
   valgteVirksomheter: PT.array.isRequired,
   avklarteForretningsland: PT.array.isRequired,
   oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
 };
 
 const VurderingForretningssted = props => {
@@ -136,7 +144,7 @@ const VurderingForretningssted = props => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattetILand));
 
     return function cleanup() {
-      props.slettAllDataForSteg();
+      props.slettData();
     };
   }, []);
 
@@ -144,7 +152,7 @@ const VurderingForretningssted = props => {
     if (e === KV.Koder.BoolskAvklartfaktaType.SANN) {
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, MKV.Koder.landkoder.NO));
     } else if (e === KV.Koder.BoolskAvklartfaktaType.USANN) {
-      slettData(avklartefaktaType, KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND);
+      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND));
     } else {
       oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, null, e));
     }
@@ -164,7 +172,7 @@ const VurderingForretningssted = props => {
 
   return (
     <div>
-      <Nav.Undertittel>Vurder arbeidsgivers forretningssted</Nav.Undertittel>
+      <Nav.Undertittel>Vurdering av artikkel 13.1b)</Nav.Undertittel>
       <Nav.Fieldset legend="Vurder hvor virksomhetene har forretningssted">
         <Forretningssteder {...tilstand}{...props} />
       </Nav.Fieldset>
@@ -192,6 +200,7 @@ const VurderingForretningssted = props => {
         avklartefaktaTyper={avklartefaktaTyper}
         tittel="Landet søkeren skal omfattes i:"
         oppdaterData={oppdaterData}
+        slettData={slettData}
         onChange={avklartfaktaEndret}
       />
       { avklartOmfattetINorge === 'FALSE' &&
@@ -222,7 +231,6 @@ VurderingForretningssted.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
 };
 
 VurderingForretningssted.defaultProps = {
