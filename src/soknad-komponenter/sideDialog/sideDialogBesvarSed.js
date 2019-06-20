@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
+import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
 import * as Api from '../../services/api';
 import { EessiKodeverkSelectors } from '../../ducks/eessikodeverk';
 import './sideDialogBesvarSed.css';
 
 // Per i dag finnes det bare status=UTKAST, men legger til rette for støtte av flere statuser.
-const STATUS_UTKAST = 'UTKAST';
 const StatusEtikett = ({ status }) => (
-  status.toUpperCase() === STATUS_UTKAST &&
+  status.toUpperCase() === KV.Koder.SedStatus.UTKAST &&
     <Nav.EtikettBase type="fokus">Utkast</Nav.EtikettBase>
 );
 
