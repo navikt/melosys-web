@@ -4,19 +4,16 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
-import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
-import './registrering.css';
-// import SideOppsummering from '../soknad-komponenter/sideOppsummering';
-
-import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger';
 import * as MPT from '../proptypes';
-import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 import * as Utils from '../utils';
+import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
+import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger';
+import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
-// import * as Api from '../services/api';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta';
-// import { formSelectors } from '../ducks/form';
 import { soknadOperations } from '../ducks/soknad';
+
+import './registrering.css';
 
 class Registrering extends Component {
   state = {
@@ -45,19 +42,6 @@ class Registrering extends Component {
     }
   };
 
-  /*
-  avsluttSakSomBortfalt = () => {
-    const { fagsak: { saksnummer } } = this.props;
-    Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
-    this.props.history.push('/');
-  };
-  avsluttSakSomBortfalt = () => {};
-  visOppfriskBekreftelse = () => {};
-  lagreOgLukk = () => {};
-  tilbakeleggeHandle = () => {};
-  visHenleggDialog = () => {};
-  navigerTilOversiktSide = () => {};
-  */
   render() {
     const { behandlingID } = this.state;
     const { vurderingBegrunnelser, medlemskap, sed } = this.props;
@@ -74,17 +58,6 @@ class Registrering extends Component {
               />
             </Nav.Column>
             <Nav.Column xs="5">
-              {/*
-              <SideOppsummering
-                behandlingID={behandlingID}
-                avsluttSakSomBortfalt={this.avsluttSakSomBortfalt}
-                oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
-                lagreOgLukkHandle={this.lagreOgLukk}
-                tilbakeleggeHandle={this.tilbakeleggeHandle}
-                visHenleggDialogHandle={this.visHenleggDialog}
-                tilForsidenHandle={this.navigerTilOversiktSide}
-                />
-               */}
               <SideDialog behandlingID={behandlingID} />
             </Nav.Column>
           </Nav.Row>
