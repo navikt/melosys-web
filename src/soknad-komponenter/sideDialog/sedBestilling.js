@@ -183,7 +183,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
         </Nav.Fieldset>
         {(opprettetSedUrl && sedSendt) &&
           <Nav.AlertStripe type="suksess" className="varsel">
-            Saken er nå opprettet i RINA <Nav.Lenker href={opprettetSedUrl}>{opprettetSedUrl}</Nav.Lenker>
+            Saken er nå opprettet i RINA <Nav.Lenker href={opprettetSedUrl} target="_blank">{opprettetSedUrl}</Nav.Lenker>
           </Nav.AlertStripe>}
         {alertmelding &&
           <Nav.AlertStripe type="advarsel" className="varsel">{alertmelding}</Nav.AlertStripe>}

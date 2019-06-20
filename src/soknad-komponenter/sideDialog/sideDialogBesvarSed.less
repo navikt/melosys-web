@@ -1,0 +1,48 @@
+@import '../../constants';
+
+.besvar_sed {
+  .ekspanderbartPanel:not(:last-child) {
+    margin-bottom: 1em;
+  }
+
+  .buc_tabell {
+    display: grid;
+    grid-template-columns: [navn] 1fr [status] 1fr;
+
+    .tabell_header {
+      border-bottom: 2px solid @blue-nav;
+      margin-bottom: .5em;
+      padding-bottom: .25em;
+
+      &.kolonne__navn {
+        grid-column: navn / span 1;
+        padding-left: 1em;
+      }
+
+      &.kolonne__status {
+        grid-column: status / span 1;
+      }
+    }
+
+    .lenkepanel {
+      grid-column: navn / span 2;
+
+      .kolonne__navn {
+        width: 50%;
+      }
+
+      .kolonne__status {
+        width: 50%;
+        padding-left: .5em;
+      }
+
+      &:first-of-type {
+        margin-top: .5em;
+      }
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
