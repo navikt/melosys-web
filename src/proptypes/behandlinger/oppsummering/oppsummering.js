@@ -1,7 +1,7 @@
 /* eslint import/prefer-default-export:"off" */
 import PT from 'prop-types';
 
-import { Kodeverk } from './kodeverk';
+import { Kodeverk } from '../../kodeverk';
 
 const OppsummeringPropType = PT.shape({
   saksnummer: PT.string,
