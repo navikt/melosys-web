@@ -65,6 +65,7 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta.INSTALLASJON_ARBEIDSLAND, 'ARBEIDSLAND'),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.INSTALLASJON_ARBEIDSLAND_TYPE, null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta.ARBEID_SOKKEL_SKIP, 'ARBEID_SOKKEL_SKIP'),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta.AARSAK_ENDRING_PERIODE, 'AARSAK_ENDRING_PERIODE'),
       ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefaktaUt] };

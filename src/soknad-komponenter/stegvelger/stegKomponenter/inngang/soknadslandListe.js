@@ -41,7 +41,7 @@ class SoknadslandListe extends Component {
      || begrunnelseKode === MKV.Koder.begrunnelser.opphold.NYE_OPPLYSNINGER_LAND) {
       this.fjernLandFraSoknad(landkode);
     }
-    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, 'FALSE', begrunnelseKode));
+    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, 'FALSE', [begrunnelseKode]));
   };
 
   bekreftLeggTil = (landkode, begrunnelseKode) => {
@@ -56,7 +56,7 @@ class SoknadslandListe extends Component {
 
     this.props.fields.push(avklartFakta);
     this.leggLandTilSoknad(landkode);
-    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, 'TRUE', begrunnelseKode));
+    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, 'TRUE', [begrunnelseKode]));
   };
 
   fjernLandFraSoknad = valgtLand => {
@@ -167,7 +167,7 @@ SoknadslandListe.propTypes = {
   soknadslandFraSoknad: PT.arrayOf(PT.string).isRequired,
   erstattSoknadsland: PT.func.isRequired,
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  avklartefakta: MPT.Avklartefakta.isRequired,
+  avklartefakta: MPT.AvklartefaktaListe.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   avklarteSoknadsland: PT.array.isRequired,

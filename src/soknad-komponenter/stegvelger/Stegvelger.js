@@ -7,7 +7,7 @@ import * as MKV from 'melosys-kodeverk';
 import TrackVisibility from 'react-on-screen';
 
 import * as MPT from '../../proptypes/';
-import * as API from '../../services/api';
+import * as Api from '../../services/api';
 import * as Utils from '../../utils';
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
@@ -26,8 +26,6 @@ import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore } from './St
 
 import './stegvelger.css';
 
-import './stegvelger.css';
-
 class Stegvelger extends Component {
   state = {
     aktivtStegNummer: 0,
@@ -41,6 +39,7 @@ class Stegvelger extends Component {
   };
 
   async componentDidMount() {
+    this.aktiv = true;
     const { snr } = this.props.match.params;
     this.props.hentInngang(snr);
 
@@ -55,6 +54,12 @@ class Stegvelger extends Component {
 
     this.oppdaterAktuelleSteg();
   }
+
+  componentWillUnmount() {
+    this.aktiv = false;
+  }
+
+  aktiv = true;
 
   /** Her vil validering på hver enkelt felt / fane kunne åpne
    * opp for nye tilgjengelige faner etter at saksbehandler
@@ -84,26 +89,28 @@ class Stegvelger extends Component {
     }
   };
 
-  slettStegData = (stegID, type, felt) => {
+  slettStegData = (stegID, data = {}) => {
+    const { felt, type } = data;
+
     if (Utils._isNil(type) && Utils._isNil(felt)) {
       this.slettSteg(stegID);
     } else {
       const { stegStores } = this.state;
-      stegStores[type].slettStegData(stegID, felt);
+      stegStores[type].slettStegData(stegID, data);
       this.setState(stegStores);
-      this.publiserStegdata();
     }
+    this.publiserStegdata();
   };
 
   slettSteg = stegID => {
     const { stegStores } = this.state;
     Object.keys(stegStores).forEach(type => stegStores[type].slettSteg(stegID));
     this.setState(stegStores);
-
-    this.publiserStegdata();
   };
 
   publiserStegdata = async () => {
+    if (!this.aktiv) { return; }
+
     const { vilkaar, avklartefakta, lovvalgsbestemmelse } = this.state.stegStores;
 
     await Promise.all([
@@ -140,13 +147,13 @@ class Stegvelger extends Component {
     const { behandlingID, lovvalgsperioder } = this.props;
 
     const forkortetPeriode = lovvalgsperioder.map(periode => ({ ...periode, fomDato: fomdato, tomDato: tomdato }));
-    API.Lovvalgsperioder.send(behandlingID, forkortetPeriode).catch(e => Utils.logger.error(e));
+    Api.Lovvalgsperioder.send(behandlingID, forkortetPeriode).catch(e => Utils.logger.error(e));
   };
 
   vedtaEndretPeriode = begrunnelseKode => {
     const { behandlingID } = this.props;
 
-    API.Vedtak.endrePeriode(behandlingID, { begrunnelseKode }).catch(e => Utils.logger.error(e));
+    Api.Saksflyt.Vedtak.endrePeriode(behandlingID, { begrunnelseKode }).catch(e => Utils.logger.error(e));
   };
 
   tilForsiden = () => {
@@ -166,7 +173,6 @@ class Stegvelger extends Component {
       oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       oppdaterStegData: this.oppdaterStegData,
       slettStegData: this.slettStegData,
-      slettAllDataForSteg: this.slettSteg,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
       lagreLovvalgsperioderHandler: this.props.lagreLovvalgsperioderHandler,
       vedtaEndretPeriode: this.vedtaEndretPeriode,
@@ -288,7 +294,7 @@ class Stegvelger extends Component {
 Stegvelger.propTypes = {
   behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
-  avklartefakta: MPT.Avklartefakta,
+  avklartefakta: MPT.AvklartefaktaListe,
   behandlingsPerioder: PT.object.isRequired,
   hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
@@ -302,7 +308,7 @@ Stegvelger.propTypes = {
   match: PT.object.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
-  oppsummering: MPT.Oppsummering,
+  oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   skjema: PT.object.isRequired,
   oppdaterVilkaar: PT.func.isRequired,

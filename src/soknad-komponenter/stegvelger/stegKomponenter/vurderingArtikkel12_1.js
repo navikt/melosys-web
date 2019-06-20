@@ -8,12 +8,12 @@ import MultiVilkaar from './felles/multiVilkaar';
 
 const VurderingArtikkel12_1 = props => {
   const {
-    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData, slettAllDataForSteg,
+    bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
 
   useEffect(() => (
     function cleanup() {
-      slettAllDataForSteg();
+      slettData();
     }
   ), []);
 
@@ -46,7 +46,6 @@ VurderingArtikkel12_1.propTypes = {
   artikkel: MPT.Kodeverk,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

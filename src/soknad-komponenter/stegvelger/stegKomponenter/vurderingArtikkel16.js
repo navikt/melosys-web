@@ -133,7 +133,7 @@ class VurderingArtikkel16 extends Component {
   }
 
   componentWillUnmount() {
-    this.props.slettAllDataForSteg();
+    this.props.slettData();
   }
 
   lagreBehandlingerOgFatteVedtak = async behandlingsresultattype => {
@@ -170,7 +170,7 @@ class VurderingArtikkel16 extends Component {
 
   fritekstFokusFlyttetHandler = () => {
     this.lagreVilkar();
-  }
+  };
 
   begrunnelserEndringHandler = async event => {
     this.setState({ begrunnelserFeilmelding: undefined });
@@ -355,7 +355,7 @@ VurderingArtikkel16.propTypes = {
   lagreVilkarHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
-  slettAllDataForSteg: PT.func.isRequired,
+  slettData: PT.func.isRequired,
   tilstand: PT.object.isRequired,
 };
 

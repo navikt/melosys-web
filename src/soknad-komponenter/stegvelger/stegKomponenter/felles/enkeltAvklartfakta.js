@@ -6,11 +6,11 @@ import * as MPT from '../../../../proptypes';
 import ListevelgerFlervalg from '../../../../komponenter/ui/listevelgerFlervalg';
 
 import {
-  avklartefaktaType,
   hentFaktaVerdi,
   konverterTilStegData,
   lagAvklartefaktaBegrunnelse,
   lagAvklartfakta,
+  slettAvklartfakta,
 } from '../../../../regler/avklartefakta';
 
 const uuid = require('uuid/v4');
@@ -30,7 +30,7 @@ const EnkeltAvklartfakta = props => {
 
     return function cleanup() {
       if (props.slettData) {
-        props.slettData(avklartefaktaType, avklartfaktaKode);
+        props.slettData(slettAvklartfakta(avklartfaktaKode));
       }
     };
   }, []);
@@ -44,7 +44,7 @@ const EnkeltAvklartfakta = props => {
   };
 
   const listevalgEndringHandler = event => {
-    oppdaterData(lagAvklartefaktaBegrunnelse(avklartfaktaKode, null, event.value));
+    oppdaterData(lagAvklartefaktaBegrunnelse(avklartfaktaKode, null, [event.value]));
   };
 
   return (

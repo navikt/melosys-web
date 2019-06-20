@@ -11,7 +11,7 @@ describe('Dialogbokshenlegg', () => {
   beforeEach(() => {
     props = {
       avbryt,
-      oppsummering: { behandlingID: 1 },
+      behandlingID: 1,
       redigerbart: true,
       henleggHandle,
       ariaHideApp: false,

@@ -8,20 +8,34 @@ import LandVelger from '../skjema/landvelger';
 const OppgittAdresseSoknad = ({ redigerbart }) => (
   <Nav.Row className="person__seksjon">
     <Nav.Column xs="6">
-      <Nav.Fieldset legend="Adresse oppgitt i søknad:">
+      <Nav.Fieldset legend="Annen adresse oppgitt i søknaden som ikke er registrert i TPS:">
         <dl className="person__detaljer">
-          <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" disabled={!redigerbart} />
-          <Skjema.Input feltNavn="oppgittAdresseHusnummer" bredde="XS" label="Husnummer:" disabled={!redigerbart} />
-          <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" disabled={!redigerbart} />
+          <Nav.Row>
+            <Nav.Column xs="8">
+              <Skjema.Input feltNavn="oppgittAdresseGatenavn" label="Gatenavn:" disabled={!redigerbart} />
+            </Nav.Column>
+            <Nav.Column xs="4">
+              <Skjema.Input feltNavn="oppgittAdresseHusnummer" label="Husnummer:" disabled={!redigerbart} />
+            </Nav.Column>
+          </Nav.Row>
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <Skjema.Input feltNavn="oppgittAdresseRegion" label="Region:" disabled={!redigerbart} />
+            </Nav.Column>
+          </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="4">
-              <Skjema.Input feltNavn="oppgittAdressePostnummer" bredde="XS" label="Postnr:" disabled={!redigerbart} />
+              <Skjema.Input feltNavn="oppgittAdressePostnummer" label="Postnr:" disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="8">
               <Skjema.Input feltNavn="oppgittAdressePoststed" label="Poststed:" disabled={!redigerbart} />
             </Nav.Column>
           </Nav.Row>
-          <LandVelger disabled={!redigerbart} feltNavn="oppgittAdresseLand" label="Land:" />
+          <Nav.Row>
+            <Nav.Column xs="12">
+              <LandVelger disabled={!redigerbart} bredde="fullbredde" feltNavn="oppgittAdresseLand" label="Land:" />
+            </Nav.Column>
+          </Nav.Row>
         </dl>
       </Nav.Fieldset>
     </Nav.Column>

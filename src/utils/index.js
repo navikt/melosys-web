@@ -7,15 +7,19 @@ import * as dato from './dato';
 import * as streng from './streng';
 import * as logger from './logger';
 import * as queryString from './queryString';
+import * as yup from './yup';
+import * as feature from './feature';
 
-import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt } from './utils';
+import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik } from './utils';
 
 export {
-  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt,
+  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik,
   adresse,
   dato, streng,
+  feature,
   logger,
   queryString,
+  yup,
   isUndefined as _isUndefined,
   isFunction as _isFunction,
   isNil as _isNil,

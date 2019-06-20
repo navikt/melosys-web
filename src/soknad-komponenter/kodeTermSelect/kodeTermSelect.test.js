@@ -13,7 +13,7 @@ describe('KodeTermSelect', () => {
       label: '',
       feil: undefined,
       disableForsteValg: false,
-      redigerbar: true,
+      redigerbart: true,
     };
   });
 
@@ -39,11 +39,11 @@ describe('KodeTermSelect', () => {
     });
 
     it('setter disabled til det motsatte av redigerbar prop', () => {
-      props.redigerbar = true;
+      props.redigerbart = true;
       let komponent = shallow(<KodeTermSelect {...props} />);
       expect(komponent.props().disabled).toBe(false);
 
-      props.redigerbar = false;
+      props.redigerbart = false;
       komponent = shallow(<KodeTermSelect {...props} />);
       expect(komponent.props().disabled).toBe(true);
     });

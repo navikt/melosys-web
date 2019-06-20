@@ -11,6 +11,7 @@ import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import { DatoOmradeDescription } from '../../komponenter/datoOmrade/datoOmrade';
 
 import './fagsak.css';
+import * as MKV from 'melosys-kodeverk';
 
 /**
  * Dette er enkeltlinjen for én sak som inneholder sakstittel og metadata
@@ -27,15 +28,17 @@ const Fagsak = ({ sak }) => {
   } = sak;
 
   const {
+    behandlingstype,
     soknadsperiode,
     land,
   } = behandlingOversikter[0];
-
   const tittel = `${KV.objektTilTerm(sakstype)}`;
-  const routePath = `/saksbehandling/${saksnummer}`;
-
+  let routePath = `/saksbehandling/${saksnummer}`;
+  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.UNNTAK_FRA_MEDLEMSKAP) {
+    routePath = `/registrering/${saksnummer}`;
+  }
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
-
+  const customMargin = { marginLeft: '1em' };
   return (
     <Nav.Panel className="fagsak">
       <PanelHeader
@@ -51,12 +54,20 @@ const Fagsak = ({ sak }) => {
               <DatoOmradeDescription tekst="Søknadsperiode: " periode={soknadsperiode} />
             </dl>
           </Nav.Column>
-          <Nav.Column xs="12" md="5">
+          <Nav.Column xs="12" md="4">
             <dl className="fagsak__meta">
               <dt>Opprettelsesdato:</dt>
               <dd>{<EnkeltDato dato={opprettetDato} /> || '(ukjent)'}</dd>
               <dt>Land:</dt>
               <dd>{landListeSomStreng}</dd>
+            </dl>
+          </Nav.Column>
+          <Nav.Column xs="12" md="3">
+            <dl style={customMargin} className="fagsak__meta">
+              <dt>&nbsp;</dt>
+              <dd>&nbsp;</dd>
+              <dt>Saksnummer:</dt>
+              <dd>{saksnummer}</dd>
             </dl>
           </Nav.Column>
         </Nav.Row>

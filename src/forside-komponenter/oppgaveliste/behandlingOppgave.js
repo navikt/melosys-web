@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
@@ -59,8 +60,11 @@ const BehandlingOppgave = ({ sak }) => {
 
   const { fom, tom } = soknadsperiode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
-  const link = `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
-
+  let rute = 'saksbehandling';
+  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.UNNTAK_FRA_MEDLEMSKAP) {
+    rute = 'registrering';
+  }
+  const link = `/${rute}/${saksnummer}/?behandlingID=${behandlingID}`;
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
 
@@ -97,9 +101,13 @@ const BehandlingOppgave = ({ sak }) => {
                       <dt className="behandlingOppgave__meta__term">Behandlingsstatus:</dt>
                       <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingsstatus) || '(ukjent)'}</dd>
                     </Nav.Column>
-                    <Nav.Column xs="12" md="7">
+                    <Nav.Column xs="12" md="5">
                       <dt className="behandlingOppgave__meta__term">Land:</dt>
                       <dd className="behandlingOppgave__meta__detalj">{landListeSomStreng}</dd>
+                    </Nav.Column>
+                    <Nav.Column xs="12" md="2">
+                      <dt className="behandlingOppgave__meta__term">Saksnr:</dt>
+                      <dd className="behandlingOppgave__meta__detalj">{saksnummer || '(ukjent)'}</dd>
                     </Nav.Column>
                   </dl>
                 </Nav.Row>
