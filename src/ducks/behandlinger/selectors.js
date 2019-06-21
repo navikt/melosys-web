@@ -25,10 +25,14 @@ export const OppsummeringSelector = createSelector(
   state => BehandlingerSelector(state).oppsummering || {},
   oppsummering => oppsummering
 );
+export const BehandlingstypeKodeSelector = createSelector(
+  OppsummeringSelector,
+  oppsummering => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : '')
+);
 export const RedigerbartSelector = createSelector(
   state => BehandlingerSelector(state).redigerbart || false,
-  state => OppsummeringSelector(state),
-  (redigerbart, oppsummering) => redigerbart && oppsummering.behandlingstype.kode !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE
+  BehandlingstypeKodeSelector,
+  (redigerbart, behandlingstypeKode) => redigerbart && behandlingstypeKode !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE
 );
 export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
   state => BehandlingerSelector(state).redigerbart || false,
