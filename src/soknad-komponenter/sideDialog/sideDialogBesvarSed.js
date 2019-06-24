@@ -91,7 +91,7 @@ const SideDialogBesvarSed = ({ behandlingID, kodeverk }) => {
       try {
         setHenterData(true);
         const data = await Api.Eessi.hentBucerForBehandling(behandlingID);
-        setBucer(data);
+        setBucer(data.bucer);
         setHenterData(false);
       } catch (e) {
         setHenterData(false);
