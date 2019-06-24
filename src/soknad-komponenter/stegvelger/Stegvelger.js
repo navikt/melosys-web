@@ -7,7 +7,7 @@ import * as MKV from 'melosys-kodeverk';
 import TrackVisibility from 'react-on-screen';
 
 import * as MPT from '../../proptypes/';
-import * as API from '../../services/api';
+import * as Api from '../../services/api';
 import * as Utils from '../../utils';
 import StegLinje from './felles/stegLinje';
 import StegFane from './felles/stegFane';
@@ -147,13 +147,13 @@ class Stegvelger extends Component {
     const { behandlingID, lovvalgsperioder } = this.props;
 
     const forkortetPeriode = lovvalgsperioder.map(periode => ({ ...periode, fomDato: fomdato, tomDato: tomdato }));
-    API.Lovvalgsperioder.send(behandlingID, forkortetPeriode).catch(e => Utils.logger.error(e));
+    Api.Lovvalgsperioder.send(behandlingID, forkortetPeriode).catch(e => Utils.logger.error(e));
   };
 
   vedtaEndretPeriode = begrunnelseKode => {
     const { behandlingID } = this.props;
 
-    API.Vedtak.endrePeriode(behandlingID, { begrunnelseKode }).catch(e => Utils.logger.error(e));
+    Api.Saksflyt.Vedtak.endrePeriode(behandlingID, { begrunnelseKode }).catch(e => Utils.logger.error(e));
   };
 
   tilForsiden = () => {
@@ -308,7 +308,7 @@ Stegvelger.propTypes = {
   match: PT.object.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
-  oppsummering: MPT.Oppsummering,
+  oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   skjema: PT.object.isRequired,
   oppdaterVilkaar: PT.func.isRequired,
