@@ -17,6 +17,7 @@ import { fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { KodeTermSelect } from './kodeTermSelect';
+import Behandlingsmeny from './behandlingsmeny';
 
 import './sideOppsummering.css';
 
@@ -99,6 +100,7 @@ class SideOppsummering extends Component {
       person,
       soknadsperiodeFom,
       soknadsperiodeTom,
+      behandlingstype,
     } = this.props;
 
     if (!oppsummering) return <div />;
@@ -127,6 +129,7 @@ class SideOppsummering extends Component {
       visHenleggDialogHandle,
       arbeidsland,
       avsluttSakSomBortfalt,
+      endreLovvalgsperiodeRedigerbart,
     } = this.props;
 
     const arbeidslandSetning = Utils.streng.arrayTilKonjunksjon(arbeidsland.map(land => land.term));
@@ -136,24 +139,22 @@ class SideOppsummering extends Component {
     return (
       <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
         <Nav.Panel className="saksbehandling__soknadSammendrag">
-          {/* START BEHANDLINGSMENY */}
           <Nav.Row>
             <Nav.Column xs="12" md="12">
               <div className="oppsummering__menylinje">
-                <Nav.EkspanderbartpanelBase ariaTittel="Behandlingsmeny" className="oppsummering__meny" heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}>
-                  <div className="meny__innhold">
-                    { redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp> }
-                    <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
-                    <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppdater saksopplysninger</Nav.Knapp>
-                    { redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={visHenleggDialogHandle}>Henlegg sak</Nav.Knapp> }
-                    { redigerbart && <Nav.Knapp type="hoved" mini className="innhold_element" onClick={avsluttSakSomBortfalt}>Avslutt sak som bortfalt</Nav.Knapp>}
-                    { <Nav.Knapp type="hoved" mini className="innhold__element" onClick={this.apneTidligereBehandlinger}>Vis tidligere behandlinger</Nav.Knapp> }
-                  </div>
-                </Nav.EkspanderbartpanelBase>
+                <Behandlingsmeny
+                  lagreOgLukkHandle={lagreOgLukkHandle}
+                  tilbakeleggeHandle={tilbakeleggeHandle}
+                  oppfriskSaksopplysningerHandle={oppfriskSaksopplysningerHandle}
+                  visHenleggDialogHandle={visHenleggDialogHandle}
+                  avsluttSakSomBortfalt={avsluttSakSomBortfalt}
+                  apneTidligereBehandlinger={this.apneTidligereBehandlinger}
+                  redigerbart={endreLovvalgsperiodeRedigerbart}
+                  visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
+                />
               </div>
             </Nav.Column>
           </Nav.Row>
-          {/* END BEHANDLINGSMENY */}
           <Nav.Row>
             <Nav.Column xs="12" md="6">
               <Nav.Undertittel className="soknadSammendrag__header">Søknad</Nav.Undertittel>
@@ -214,7 +215,9 @@ class SideOppsummering extends Component {
 
 SideOppsummering.propTypes = {
   behandlingID: PT.number.isRequired,
+  behandlingstype: PT.string.isRequired,
   redigerbart: PT.bool,
+  endreLovvalgsperiodeRedigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
   avsluttSakSomBortfalt: PT.func.isRequired,
@@ -240,6 +243,8 @@ const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  endreLovvalgsperiodeRedigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
   soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
