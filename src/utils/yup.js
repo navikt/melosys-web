@@ -1,4 +1,4 @@
-import { addMethod, object, array, string } from 'yup';
+import { addMethod, object, array, string, date, bool } from 'yup';
 
 /* eslint-disable */
 addMethod(object, 'uniqueProperty', function (propertyName, message) {
@@ -29,4 +29,6 @@ export {
   object,
   array,
   string,
+  date,
+  bool,
 };

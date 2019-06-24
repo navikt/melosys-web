@@ -197,7 +197,7 @@ class Saksbehandling extends Component {
     sendPerioder(behandlingID, behandlingsPeriode);
   };
 
-  lagreAllData = async () => {
+  lagreAllData = async (ignorerLovvalgsperioder = false) => {
     const {
       lagreSoknadHandler,
       lagreVilkarHandler,
@@ -214,7 +214,7 @@ class Saksbehandling extends Component {
         oppdaterOgLagreBehandlingerHandler(),
       ]);
 
-      lagreLovvalgsperioderHandler();
+      if (!ignorerLovvalgsperioder) lagreLovvalgsperioderHandler();
     } catch (e) {
       Utils.logger.error(e);
     }
