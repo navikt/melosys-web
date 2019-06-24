@@ -34,6 +34,7 @@ import { PersonOperations } from '../ducks/personer';
 import * as oppgaverOperations from '../ducks/oppgaver/operations';
 import * as MPT from '../proptypes';
 import { sokOperations, sokSelectors } from '../ducks/sok';
+import journalforing from '../soknad-komponenter/forside/journalforing';
 
 class Journalforing extends Component {
   async componentDidMount() {
@@ -270,14 +271,13 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing: { hoveddokument = {} },
+      journalforing: { vedlegg = [], hoveddokument = {} },
       fagsakListe,
     } = this.props;
-
     const {
       knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
     } = this;
-
+console.log(vedlegg);
     const { journalpostID } = this.props.match.params;
     const { dokumentID } = hoveddokument;
 
@@ -320,6 +320,7 @@ class Journalforing extends Component {
                 </Sticky>
               </Nav.Column>
               <Nav.Column xs="8">
+                <p>{JSON.stringify(vedlegg)}</p>
                 { dokumentID && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={dokumentID} /></Nav.Panel> }
               </Nav.Column>
             </Nav.Row>
