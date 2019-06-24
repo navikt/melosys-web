@@ -25,10 +25,14 @@ export const OppsummeringSelector = createSelector(
   state => BehandlingerSelector(state).oppsummering || {},
   oppsummering => oppsummering
 );
+export const BehandlingstypeKodeSelector = createSelector(
+  OppsummeringSelector,
+  oppsummering => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : '')
+);
 export const RedigerbartSelector = createSelector(
   state => BehandlingerSelector(state).redigerbart || false,
-  state => OppsummeringSelector(state),
-  (redigerbart, oppsummering) => redigerbart && oppsummering.behandlingstype.kode !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE
+  BehandlingstypeKodeSelector,
+  (redigerbart, behandlingstypeKode) => redigerbart && behandlingstypeKode !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE
 );
 export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
   state => BehandlingerSelector(state).redigerbart || false,
@@ -47,12 +51,16 @@ export const PersonSelector = createSelector(
   state => SaksopplysningerSelector(state).person || {},
   person => person
 );
-
 export const PersonhistorikkSelector = createSelector(
   state => SaksopplysningerSelector(state).personhistorikk || {},
   personhistorikk => personhistorikk
-)
+);
 
+export const SEDSelector = createSelector(
+  state => SaksopplysningerSelector(state).sed || {},
+  sed => sed
+);
+export const LovvalgsperiodeSelector = createSelector(state => SEDSelector(state).lovvalgsperiode || {}, lovvalgsperiode => lovvalgsperiode);
 export const OrganisasjonerSelector = createSelector(
   state => SaksopplysningerSelector(state).organisasjoner || [],
   organisasjoner => organisasjoner

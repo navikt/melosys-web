@@ -15,7 +15,7 @@ const UkjentSide = ({ location }) => {
   };
   window.frontendlogger.error(logdata);
   return (
-    <Nav.AlertStripe type="stopp" className="ukjentSide">
+    <Nav.AlertStripe type="feil" className="ukjentSide">
       <Nav.Systemtittel>Denne siden finnes ikke: &quot;{location.pathname}&quot;.</Nav.Systemtittel>
       <p>Dersom du ble sendt hit fra Gosys eller et annet Nav-system, ta kontakt med driftsansvarlig.</p>
       <Nav.Lenker href="/" ariaLabel="Navigasjonslink tilbake til forsiden">
