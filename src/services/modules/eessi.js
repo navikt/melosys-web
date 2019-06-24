@@ -5,4 +5,4 @@ export const hentMottakerinstitusjoner = bucType => getAsJson(`${API_BASE_URL}${
 
 export const opprettBuc = (behandlingID, bucData) => postAsJson(`${API_BASE_URL}${EESSI}/bucer/${behandlingID}/opprett`, bucData);
 
-export const hentSedUnderArbeid = behandlingID => getAsJson(`${API_BASE_URL}${EESSI}/seder/${behandlingID}?status=utkast`);
+export const hentBucerForBehandling = behandlingID => getAsJson(`${API_BASE_URL}${EESSI}/bucer/${behandlingID}?status=utkast`);
