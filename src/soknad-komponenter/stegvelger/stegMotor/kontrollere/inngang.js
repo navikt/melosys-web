@@ -30,7 +30,8 @@ class Inngang extends Steg {
       redigerbart: props.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
-      const { soknadsland } = _propsLight.skjema.avklartefakta;
+      const soknadsland = _propsLight.avklartefakta.filter(af => af.referanse === KV.Koder.SOKNADSLAND);
+
       const harAvklaring = soknadsland.some(land => land.fakta.includes('TRUE'));
       return ({
         harAvklaring,
