@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -92,7 +92,7 @@ class Saksopplysninger extends Component {
     const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
     const visStegVelger = !visHenlagtSak;
     return (
-      <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
+      <Fragment>
         { visHenlagtSak &&
           <HenlagtInformasjon
             behandlingsresultat={behandlingsresultat} />
@@ -112,19 +112,21 @@ class Saksopplysninger extends Component {
             landkoder={MKV.KTObjects.landkoder}
           />
         }
-        <Personopplysninger />
-        <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
-        <ArbeidsgivereNorge />
-        <ForetakUtland />
-        <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-        <FullmektigPanel />
-        <ArbeidUtland />
-        <VirksomhetNorge />
-        <MaritimtArbeid />
-        {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-        <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
-        <Kontantytelser />
-      </form>
+        <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
+          <Personopplysninger />
+          <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
+          <ArbeidsgivereNorge />
+          <ForetakUtland />
+          <SelvstendigArbeid soknadVerdier={soknadVerdier} />
+          <FullmektigPanel />
+          <ArbeidUtland />
+          <VirksomhetNorge />
+          <MaritimtArbeid />
+          {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+          <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
+          <Kontantytelser />
+        </form>
+      </Fragment>
     );
   }
 }
@@ -238,7 +240,6 @@ const mapStateToProps = state => ({
     fullmektigPoststed: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
     fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandkode,
-    tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     avklartefakta: {
       soknadsland: avklartefaktaSelectors.Soknadsland(state),
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
@@ -267,9 +268,6 @@ const mapStateToProps = state => ({
     },
     vurderingLovvalg: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
     vurderingBegrunnelser: avklartefaktaSelectors.AvklartefaktaVurderingSelector(state).begrunnelser,
-    lovvalgsperiode: {
-      unntakFraBestemmelse: lovvalgsperioderSelectors.UnntakFraBestemmelseSelector(state),
-    },
   },
 });
 

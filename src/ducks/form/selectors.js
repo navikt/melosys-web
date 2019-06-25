@@ -18,6 +18,11 @@ export const SoknadenFormSelector = createSelector(
   soknaden => soknaden
 );
 
+export const Artikkel16AnmodningFormSelector = createSelector(
+  state => getFormState(state, KV.Form.ARTIKKEL_16_ANMODNING, {}),
+  artikkel16Anmodning => artikkel16Anmodning
+);
+
 export const JournalforingFormSelector = createSelector(
   state => getFormState(state, KV.Form.JOURNALFORING, {}),
   journalforing => journalforing
@@ -33,11 +38,6 @@ export const BrevBestillingFormSelector = createSelector(
   brevbestilling => brevbestilling
 );
 
-export const Lovvalgsperiode = createSelector(
-  state => SoknadenFormSelector(state).values,
-  skjemaverdier => skjemaverdier.lovvalgsperiode || {}
-);
-
 export const FartsomradeKodeSelector = createSelector(
   state => SoknadenFormSelector(state).values,
   skjemaverdier => skjemaverdier.maritimtArbeid.map(maritimtArbeid => maritimtArbeid.fartsomradeKode) || undefined
@@ -49,13 +49,13 @@ export const Art16BegrunnelserSelector = createSelector(
 );
 
 export const TidligereMedlemskapSelector = createSelector(
-  state => SoknadenFormSelector(state).values,
+  state => Artikkel16AnmodningFormSelector(state).values,
   skjemaverdier => skjemaverdier.tidligeremedlemskap || []
 );
 
-export const UnntakFraBestemmelse = createSelector(
-  state => Lovvalgsperiode(state),
-  lovvalgsperiode => lovvalgsperiode.unntakFraBestemmelse
+export const UnntakFraBestemmelseSelector = createSelector(
+  state => Artikkel16AnmodningFormSelector(state).values,
+  skjemaverdier => (skjemaverdier ? skjemaverdier.unntakFraBestemmelse : null)
 );
 
 export const Art16BegrunnelseFritekstSelector = createSelector(

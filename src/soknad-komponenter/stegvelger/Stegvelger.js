@@ -230,6 +230,7 @@ class Stegvelger extends Component {
   tilSteg = async nyttStegNummer => {
     const {
       skjema,
+      artikkel16_skjema,
       oppdaterPerioderState,
       oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
@@ -245,7 +246,7 @@ class Stegvelger extends Component {
       lagreLovvalgsperioderHandler,
     } = this.props;
 
-    await oppdaterPerioderState(skjema);
+    await oppdaterPerioderState(artikkel16_skjema);
 
     await lagreAvklartefaktaHandler();
     await lagreVilkarHandler();
@@ -311,6 +312,7 @@ Stegvelger.propTypes = {
   oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
   skjema: PT.object.isRequired,
+  artikkel16_skjema: PT.object,
   oppdaterVilkaar: PT.func.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgperioder: PT.func.isRequired,
@@ -332,6 +334,7 @@ Stegvelger.defaultProps = {
   inngang: {},
   oppsummering: {},
   valgteVirksomheter: [],
+  artikkel16_skjema: {},
 };
 
 const mapStateToProps = state => ({
@@ -345,6 +348,7 @@ const mapStateToProps = state => ({
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
+  artikkel16_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
