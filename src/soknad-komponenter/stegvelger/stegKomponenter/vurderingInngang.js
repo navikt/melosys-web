@@ -7,7 +7,6 @@ import * as MPT from '../../../proptypes/';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
-import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { soknadSelectors } from '../../../ducks/soknad';
 
 import SoknadslandListe from './inngang/soknadslandListe';
@@ -69,9 +68,6 @@ VurderingInngang.propTypes = {
 
 const mapStateToProps = state => ({
   initialValues: {
-    avklartefakta: {
-      soknadsland: avklartefaktaSelectors.Soknadsland(state),
-    },
     soknadsland: soknadSelectors.SoknadslandSelector(state),
   },
 });
