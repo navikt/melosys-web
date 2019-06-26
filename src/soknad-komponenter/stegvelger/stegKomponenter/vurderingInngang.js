@@ -8,6 +8,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
+import { soknadSelectors } from '../../../ducks/soknad';
 
 import SoknadslandListe from './inngang/soknadslandListe';
 
@@ -71,6 +72,7 @@ const mapStateToProps = state => ({
     avklartefakta: {
       soknadsland: avklartefaktaSelectors.Soknadsland(state),
     },
+    soknadsland: soknadSelectors.SoknadslandSelector(state),
   },
 });
 

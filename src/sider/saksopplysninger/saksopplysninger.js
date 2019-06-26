@@ -34,12 +34,11 @@ import {
 } from '../../ducks/soknad/';
 
 import { avklartefaktaSelectors } from '../../ducks/avklartefakta/';
-import { behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { vilkarSelectors } from '../../ducks/vilkar/';
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
 import { formSelectors } from '../../ducks/form/';
 import { formatterDatoTilNorsk } from '../../utils/dato';
-import { lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
+
 
 class Saksopplysninger extends Component {
   lagreSoknadHandler = async () => {
@@ -56,8 +55,8 @@ class Saksopplysninger extends Component {
   };
 
   oppdaterLokalSoknadHandler = () => {
-    const { oppdaterSoknad, soknadForm } = this.props;
-    oppdaterSoknad(soknadForm.values);
+    const { oppdaterSoknad, soknadForm, inngangForm } = this.props;
+    oppdaterSoknad({ ...soknadForm.values, ...inngangForm.values });
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
@@ -150,6 +149,7 @@ Saksopplysninger.propTypes = {
   soknad: MPT.Soknad,
   soknadArbeidsinntekt: PT.object,
   soknadForm: PT.object.isRequired,
+  inngangForm: PT.object,
   valid: PT.bool.isRequired,
   vurdering: PT.object,
   syncErrors: PT.object,
@@ -169,6 +169,7 @@ Saksopplysninger.defaultProps = {
   soknadArbeidsinntekt: {},
   vurdering: {},
   syncErrors: {},
+  inngangForm: {},
 };
 
 const mapStateToProps = state => ({
@@ -182,6 +183,7 @@ const mapStateToProps = state => ({
   soknad: soknadSelectors.SoknadSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  inngangForm: formSelectors.InngangFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
   initialValues: {
     utenlandskIdent: soknadSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
@@ -228,7 +230,6 @@ const mapStateToProps = state => ({
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
     maritimtArbeid: soknadSelectors.MaritimtArbeidSelector(state),
-    soknadsland: soknadSelectors.SoknadslandSelector(state),
     soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
     soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
     foretakUtland: soknadSelectors.ForetakUtlandSelector(state),

@@ -23,6 +23,11 @@ export const Artikkel16AnmodningFormSelector = createSelector(
   artikkel16Anmodning => artikkel16Anmodning
 );
 
+export const InngangFormSelector = createSelector(
+  state => getFormState(state, KV.Form.INNGANG, {}),
+  inngang => inngang
+);
+
 export const JournalforingFormSelector = createSelector(
   state => getFormState(state, KV.Form.JOURNALFORING, {}),
   journalforing => journalforing
