@@ -34,8 +34,9 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   const [valgtLand, setValgtLand] = useState('');
   const [valgtMottakerinstitusjon, setValgtMottakerinstitusjon] = useState('');
 
-  const [opprettetSedUrl, setOpprettetSedUrl] = useState('');
-  const [sedSendt, setSedSendt] = useState(false);
+  const [opprettetBucUrl, setOpprettetBucUrl] = useState('');
+  const [bucOpprettet, setBucOpprettet] = useState(false);
+  const [oppretterBuc, setOppretterBuc] = useState(false);
   const [feilmeldinger, setFeilmeldinger] = useState({ buc: undefined, land: undefined, mottakerinstitusjon: undefined });
   const [oppdaterteFelt, setOppdaterteFelt] = useState({ buc: false, land: false, mottakerinstitusjon: false });
   const [alertmelding, setAlertmelding] = useState('');
@@ -67,8 +68,9 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   };
 
   const resetState = () => {
-    setSedSendt(false);
-    setOpprettetSedUrl('');
+    setBucOpprettet(false);
+    setOppretterBuc(false);
+    setOpprettetBucUrl('');
     setAlertmelding('');
   };
 
@@ -89,15 +91,16 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   const sendSed = async () => {
     if (erValidert()) {
       try {
+        setOppretterBuc(true);
         const sedResponse = await Api.Eessi.opprettBuc(behandlingID, {
           bucType: valgtBuc,
           mottakerLand: valgtLand,
           mottakerId: valgtMottakerinstitusjon,
         });
 
-        setSedSendt(true);
+        setBucOpprettet(true);
         if (sedResponse) {
-          setOpprettetSedUrl(sedResponse);
+          setOpprettetBucUrl(sedResponse);
           setAlertmelding('');
           resetForm();
         }
@@ -109,6 +112,8 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
       setOppdaterteFelt({ buc: true, land: true, mottakerinstitusjon: true });
       valider({});
     }
+
+    setOppretterBuc(false);
   };
 
   const tilgjengeligeMottakerinstitusjoner = land => (land ? mottakerinstitusjoner.filter(institusjon => institusjon.landkode === land) : []);
@@ -178,12 +183,12 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
             <TomtFelt redigerbart={redigerbart} />
             { tilgjengeligeMottakerinstitusjoner(valgtLand).map(elem => <option key={elem.id} value={elem.id}>{elem.navn}</option>) }
           </Nav.Select>
-          <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={sendSed}>Opprett sed i rina</Nav.Hovedknapp>&nbsp;
+          <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" disabled={!redigerbart} onClick={sendSed}>Opprett BUC</Nav.Hovedknapp>&nbsp;
           <Nav.Knapp type="standard" disabled={!redigerbart} onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
         </Nav.Fieldset>
-        {(opprettetSedUrl && sedSendt) &&
+        {(opprettetBucUrl && bucOpprettet) &&
           <Nav.AlertStripe type="suksess" className="varsel">
-            Saken er nå opprettet i RINA <Nav.Lenker href={opprettetSedUrl}>{opprettetSedUrl}</Nav.Lenker>
+            Saken er nå opprettet i RINA <Nav.Lenker href={opprettetBucUrl} target="_blank">{opprettetBucUrl}</Nav.Lenker>
           </Nav.AlertStripe>}
         {alertmelding &&
           <Nav.AlertStripe type="advarsel" className="varsel">{alertmelding}</Nav.AlertStripe>}

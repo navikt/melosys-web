@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
@@ -34,12 +34,11 @@ import {
 } from '../../ducks/soknad/';
 
 import { avklartefaktaSelectors } from '../../ducks/avklartefakta/';
-import { behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { vilkarSelectors } from '../../ducks/vilkar/';
 import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
 import { formSelectors } from '../../ducks/form/';
 import { formatterDatoTilNorsk } from '../../utils/dato';
-import { lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
+
 
 class Saksopplysninger extends Component {
   lagreSoknadHandler = async () => {
@@ -56,8 +55,8 @@ class Saksopplysninger extends Component {
   };
 
   oppdaterLokalSoknadHandler = () => {
-    const { oppdaterSoknad, soknadForm } = this.props;
-    oppdaterSoknad(soknadForm.values);
+    const { oppdaterSoknad, soknadForm, inngangForm } = this.props;
+    oppdaterSoknad({ ...soknadForm.values, ...inngangForm.values });
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
@@ -92,7 +91,7 @@ class Saksopplysninger extends Component {
     const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
     const visStegVelger = !visHenlagtSak;
     return (
-      <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
+      <Fragment>
         { visHenlagtSak &&
           <HenlagtInformasjon
             behandlingsresultat={behandlingsresultat} />
@@ -112,19 +111,21 @@ class Saksopplysninger extends Component {
             landkoder={MKV.KTObjects.landkoder}
           />
         }
-        <Personopplysninger />
-        <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
-        <ArbeidsgivereNorge />
-        <ForetakUtland />
-        <SelvstendigArbeid soknadVerdier={soknadVerdier} />
-        <FullmektigPanel />
-        <ArbeidUtland />
-        <VirksomhetNorge />
-        <MaritimtArbeid />
-        {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-        <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
-        <Kontantytelser />
-      </form>
+        <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
+          <Personopplysninger />
+          <Soknadsperiode lagreSoknadOgOppfriskSaksopplysninger={this.lagreSoknadOgOppfriskSaksopplysninger} />
+          <ArbeidsgivereNorge />
+          <ForetakUtland />
+          <SelvstendigArbeid soknadVerdier={soknadVerdier} />
+          <FullmektigPanel />
+          <ArbeidUtland />
+          <VirksomhetNorge />
+          <MaritimtArbeid />
+          {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+          <Inntekt soknadArbeidsinntekt={soknadArbeidsinntekt} />
+          <Kontantytelser />
+        </form>
+      </Fragment>
     );
   }
 }
@@ -148,6 +149,7 @@ Saksopplysninger.propTypes = {
   soknad: MPT.Soknad,
   soknadArbeidsinntekt: PT.object,
   soknadForm: PT.object.isRequired,
+  inngangForm: PT.object,
   valid: PT.bool.isRequired,
   vurdering: PT.object,
   syncErrors: PT.object,
@@ -167,6 +169,7 @@ Saksopplysninger.defaultProps = {
   soknadArbeidsinntekt: {},
   vurdering: {},
   syncErrors: {},
+  inngangForm: {},
 };
 
 const mapStateToProps = state => ({
@@ -180,6 +183,7 @@ const mapStateToProps = state => ({
   soknad: soknadSelectors.SoknadSelector(state),
   forretningsValidering: formSelectors.ForretningsValideringSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
+  inngangForm: formSelectors.InngangFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
   initialValues: {
     utenlandskIdent: soknadSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
@@ -226,7 +230,6 @@ const mapStateToProps = state => ({
     antallMaanederINorge: soknadSelectors.BostedSelector(state).antallMaanederINorge,
     EOSBarnetrygdFraNAV: soknadSelectors.BostedSelector(state).EOSBarnetrygdFraNAV,
     maritimtArbeid: soknadSelectors.MaritimtArbeidSelector(state),
-    soknadsland: soknadSelectors.SoknadslandSelector(state),
     soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
     soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
     foretakUtland: soknadSelectors.ForetakUtlandSelector(state),
@@ -238,9 +241,7 @@ const mapStateToProps = state => ({
     fullmektigPoststed: soknadSelectors.ArbeidNorgeSelector(state).fullmektigPoststed,
     fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandkode,
-    tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
     avklartefakta: {
-      soknadsland: avklartefaktaSelectors.Soknadsland(state),
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
       yrkesaktivitetAntallLand: avklartefaktaSelectors.YrkesaktivitetAntallLand(state),
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
@@ -267,9 +268,6 @@ const mapStateToProps = state => ({
     },
     vurderingLovvalg: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
     vurderingBegrunnelser: avklartefaktaSelectors.AvklartefaktaVurderingSelector(state).begrunnelser,
-    lovvalgsperiode: {
-      unntakFraBestemmelse: lovvalgsperioderSelectors.UnntakFraBestemmelseSelector(state),
-    },
   },
 });
 

@@ -191,10 +191,11 @@ class Stegvelger extends Component {
       landkoder: MKV.KTObjects.landkoder,
       behandlingstype: props.oppsummering.behandlingstype,
       lovvalgsperioder: props.lovvalgsperioder,
+      artikkel16_anmodning_skjema: props.artikkel16_anmodning_skjema,
+      soknad_skjema: props.soknad_skjema,
       inngang: props.inngang,
       tilgjengeligeHandlers,
       saksopplysninger: props.saksopplysninger,
-      skjema: props.skjema,
       arbeidsland: props.arbeidsland,
       valgteVirksomheter: props.valgteVirksomheter,
       vilkar: props.vilkar,
@@ -229,7 +230,7 @@ class Stegvelger extends Component {
    */
   tilSteg = async nyttStegNummer => {
     const {
-      skjema,
+      artikkel16_anmodning_skjema,
       oppdaterPerioderState,
       oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
@@ -245,7 +246,7 @@ class Stegvelger extends Component {
       lagreLovvalgsperioderHandler,
     } = this.props;
 
-    await oppdaterPerioderState(skjema);
+    await oppdaterPerioderState(artikkel16_anmodning_skjema);
 
     await lagreAvklartefaktaHandler();
     await lagreVilkarHandler();
@@ -310,7 +311,8 @@ Stegvelger.propTypes = {
   oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
-  skjema: PT.object.isRequired,
+  soknad_skjema: PT.object.isRequired,
+  artikkel16_anmodning_skjema: PT.object,
   oppdaterVilkaar: PT.func.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgperioder: PT.func.isRequired,
@@ -332,6 +334,7 @@ Stegvelger.defaultProps = {
   inngang: {},
   oppsummering: {},
   valgteVirksomheter: [],
+  artikkel16_anmodning_skjema: {},
 };
 
 const mapStateToProps = state => ({
@@ -344,7 +347,8 @@ const mapStateToProps = state => ({
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  skjema: formSelectors.SoknadenFormSelector(state).values,
+  soknad_skjema: formSelectors.SoknadenFormSelector(state).values,
+  artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
