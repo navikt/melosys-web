@@ -1,50 +1,37 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
+import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Utils from '../../../utils';
-import * as MPT from '../../../proptypes';
 import * as Validering from '../../skjema/validering';
+import * as Skjema from '../../skjema';
+import * as KV from '../../../kodeverk';
 
 import PdfLenkeListe from '../../../soknad-komponenter/pdfLenkeListe';
-import { KodeTermSelect } from '../../kodeTermSelect';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
-
-import {
-  hentFaktaVerdi,
-  konverterTilStegData,
-  lagAvklartefaktaBegrunnelse,
-  lagAvklartfakta,
-  slettAvklartfakta,
-} from '../../../regler/avklartefakta';
+import { soknadSelectors } from '../../../ducks/soknad';
 
 import './vurderingArtikkel13_1_a_vedtak.css';
-import { skjemaelementFeilmeldingShape } from 'nav-frontend-skjema/lib/skjemaelement-feilmelding';
 
 const VurderingArtikkel13_1_a_vedtak = props => {
   const {
-    redigerbart, behandlingID, lovvalgsperiode, oppdaterData, slettData, tilstand: { aarsakEndringPeriodeFakta }, endreDatoOgSendLovvalgsperioder, lagreOgFatteVedtak,
+    redigerbart, behandlingID, lovvalgsperiode, endreDatoOgSendLovvalgsperioder, lagreOgFatteVedtak, formIsValid, formValues,
   } = props;
-  const [forkortLovvalgsperiode, setForkortLovvalgsperiode] = useState(false);
-  const [tomDatoInput, setTomDatoInput] = useState('');
-  const [feil, setFeil] = useState({});
 
-  useEffect(() => {
-    oppdaterData(konverterTilStegData(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE, aarsakEndringPeriodeFakta));
+  const vedKlikk = async () => {
+    if (!formIsValid) return;
 
-    // TODO: Komme tilbake til dette når det er bestemt hvordan begrunnelse skal håndteres. Det må lagres noe info som kan sette state for checkboxen.
-    if (!Utils._isEmpty(aarsakEndringPeriodeFakta)) setForkortLovvalgsperiode(true);
+    if (formValues.forkortLovvalgsperiode) {
+      await endreDatoOgSendLovvalgsperioder(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+    }
 
-    if (!redigerbart) setTomDatoInput(lovvalgsperiode.tom);
-
-    return function cleanup() {
-      slettData(slettAvklartfakta(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE));
-    };
-  }, []);
+    lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND, true); // TODO: Sjekke hvilken resultattype som skal brukes her
+  };
 
   const dokumenter = [
     {
@@ -63,51 +50,8 @@ const VurderingArtikkel13_1_a_vedtak = props => {
     },
   ];
 
-  const handleCheckboxChange = () => {
-    setForkortLovvalgsperiode(!forkortLovvalgsperiode);
-    slettData(slettAvklartfakta(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE));
-  };
-
-  const handleBegrunnelseChange = e => {
-    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE, null, e.target.value));
-  };
-
   const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato);
   const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
-
-  const aarsakEndringPeriodeBegrunnelse = hentFaktaVerdi(aarsakEndringPeriodeFakta);
-
-  const vedTomDatoEndring = e => {
-    setTomDatoInput(e.target.value);
-  };
-
-  const vedTomDatoBlur = e => {
-    const nyTomDato = Utils.dato.vaskInputDato(e.target.value) || e.target.value;
-    setTomDatoInput(nyTomDato);
-  };
-
-  const valider = Validering.Skjemaer.createValidator(Validering.Skjemaer.artikkel13_1_a);
-
-  const erValid = () => {
-    const validateResult = valider({ fomDato: lovvalgsperiode.fom, tomDato: tomDatoInput, forkortLovvalgsperiode });
-    setFeil(validateResult);
-
-    return Utils._isEmpty(validateResult);
-  };
-
-  const vedKlikk = async () => {
-    if (!erValid()) return;
-
-    if (forkortLovvalgsperiode) {
-      await endreDatoOgSendLovvalgsperioder(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(tomDatoInput));
-    }
-
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.IKKE_FASTSATT, true); // TODO: Sjekke hvilken resultattype som skal brukes her
-  };
-
-  const feilmeldinger = Object.keys(feil).reduce((feilSamling, enkeltFeil) => (
-    { ...feilSamling, [enkeltFeil]: { feilmelding: feil[enkeltFeil] } }
-  ), []);
 
   return (
     <Fragment>
@@ -125,23 +69,31 @@ const VurderingArtikkel13_1_a_vedtak = props => {
       }
       <Nav.Row className="checkboxRow">
         <Nav.Column xs="6">
-          <Nav.Checkbox checked={forkortLovvalgsperiode} disabled={!redigerbart} onChange={handleCheckboxChange} label="Lovvalgsperioden er avkortet." />
+          {/* <Nav.Checkbox checked={forkortLovvalgsperiode} disabled={!redigerbart} onChange={handleCheckboxChange} label="Lovvalgsperioden er avkortet." /> */}
+          <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalgsperioden er avkortet." disabled={!redigerbart} />
         </Nav.Column>
       </Nav.Row>
       {
-        forkortLovvalgsperiode &&
+        formValues.forkortLovvalgsperiode &&
         <Fragment>
           <Nav.Row>
             <Nav.Column xs="3">
-              <Nav.Input
+              <Skjema.Input
                 bredde="fullbredde"
                 label="Startdato"
-                value={fom}
                 disabled
+                feltNavn="fomDato"
               />
             </Nav.Column>
             <Nav.Column xs="3">
-              <Nav.Input
+              <Skjema.Input
+                bredde="fullbredde"
+                label="Sluttdato"
+                disabled={!redigerbart}
+                feltNavn="tomDato"
+                datoFelt
+              />
+              {/* <Nav.Input
                 bredde="fullbredde"
                 label="Sluttdato"
                 onChange={vedTomDatoEndring}
@@ -149,21 +101,9 @@ const VurderingArtikkel13_1_a_vedtak = props => {
                 value={tomDatoInput}
                 feil={feilmeldinger.tomDato}
                 disabled={!redigerbart}
-              />
+              /> */}
             </Nav.Column>
           </Nav.Row>
-          {/* <Nav.Row>
-            <Nav.Column xs="6">
-              <KodeTermSelect
-                // feil={begrunnelseFeilmelding}
-                koder={MKV.KTObjects.begrunnelser.endretperiode}
-                label="Begrunnelse for endret periode"
-                value={aarsakEndringPeriodeBegrunnelse}
-                onChange={handleBegrunnelseChange}
-                redigerbart={redigerbart}
-              />
-            </Nav.Column>
-          </Nav.Row> */}
         </Fragment>
       }
       <Nav.Row>
@@ -180,23 +120,45 @@ VurderingArtikkel13_1_a_vedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgsperiode: PT.object,
-  oppdaterData: PT.func.isRequired,
-  slettData: PT.func.isRequired,
-  tilstand: PT.shape({
-    aarsakEndringPeriodeFakta: MPT.Avklartefakta,
-  }).isRequired,
   endreDatoOgSendLovvalgsperioder: PT.func.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
+  formIsValid: PT.bool.isRequired,
+  formValues: PT.object,
 };
 
 VurderingArtikkel13_1_a_vedtak.defaultProps = {
   lovvalgsperiode: {},
+  formValues: {},
 };
 
 const mapStateToProps = state => ({
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+  formIsValid: isValid(KV.Form.ARTIKKEL_13_1_A_VEDTAK)(state),
+  formValues: getFormValues(KV.Form.ARTIKKEL_13_1_A_VEDTAK)(state),
+  initialValues: {
+    forkortLovvalgsperiode: Utils.dato.datoDiffPure(
+      soknadSelectors.SoknadsperiodeSelector(state).tom,
+      lovvalgsperioderSelectors.TomDatoSelector(state),
+      'days'
+    ) !== 0,
+    tomDato: behandlingerSelectors.RedigerbartSelector(state) ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
+    fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
+  },
 });
 
-export default connect(mapStateToProps)(VurderingArtikkel13_1_a_vedtak);
+const VurderingArtikkel13_1_a_vedtak_form = reduxForm({
+  form: KV.Form.ARTIKKEL_13_1_A_VEDTAK,
+  enableReinitialize: true,
+  destroyOnUnmount: true,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+  validate: (values, props) => Validering.Skjemaer.createValidator(Validering.Skjemaer.artikkel13_1_a_vedtak, {
+    context: {
+      lovvalgsperiode: props.lovvalgsperiode,
+    },
+  })(values),
+})(VurderingArtikkel13_1_a_vedtak);
+
+export default connect(mapStateToProps)(VurderingArtikkel13_1_a_vedtak_form);

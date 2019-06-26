@@ -1,0 +1,20 @@
+import * as Utils from '../../../../utils';
+
+const { object, string, bool } = Utils.yup;
+
+/* eslint-disable */
+const artikkel13_1_a_vedtak = object().shape({
+  forkortLovvalgsperiode: bool().required(),
+  tomDato: string()
+    .when('forkortLovvalgsperiode', {
+      is: true,
+      then: string().required('Dato kreves')
+        .validDate('Dato kreves')
+        .test('periode er forkortet', 'Ugyldig periode', function test(value) {
+          const { context: { lovvalgsperiode } } = this.options;
+          return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, value);
+        }),
+      }),
+});
+
+export { artikkel13_1_a_vedtak };

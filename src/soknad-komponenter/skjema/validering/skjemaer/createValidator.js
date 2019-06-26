@@ -1,6 +1,9 @@
-const createValidator = schema => values => {
+/* eslint-disable */
+const createValidator = (schema, config = {}) => values => {
+  config.abortEarly = config.abortEarly || false;
+
   try {
-    schema.validateSync(values, { abortEarly: false });
+    schema.validateSync(values, config);
     return {};
   } catch (e) {
     return e.inner.reduce((errors, err) => ({
@@ -9,5 +12,6 @@ const createValidator = schema => values => {
     }), {});
   }
 };
+/* eslint-enable */
 
 export { createValidator };
