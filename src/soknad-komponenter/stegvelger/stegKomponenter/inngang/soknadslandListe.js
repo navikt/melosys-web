@@ -81,6 +81,8 @@ class SoknadslandListe extends Component {
     this.props.fields.remove(posisjon);
     this.props.fields.push(oppdatertEnkeltFakta);
 
+    this.props.oppdaterData(lagAvklartfakta(KV.Koder.SOKNADSLAND, landkode, 'TRUE', []));
+
     if (enkeltFakta.begrunnelseKoder.includes(MKV.Koder.begrunnelser.opphold.FEIL_LAND_JOURNALFOERING)
         || enkeltFakta.begrunnelseKoder.includes(MKV.Koder.begrunnelser.opphold.NYE_OPPLYSNINGER_LAND)) {
       this.leggLandTilSoknad(landkode);
@@ -159,7 +161,7 @@ class SoknadslandListe extends Component {
   }
 }
 
-const formValues = formValueSelector('soknad');
+const formValues = formValueSelector('inngang');
 
 SoknadslandListe.propTypes = {
   fields: PT.object.isRequired,
@@ -176,11 +178,10 @@ SoknadslandListe.propTypes = {
 const mapStateToProps = state => ({
   soknadslandFraSoknad: formValues(state, 'soknadsland'),
   avklarteSoknadsland: avklartefaktaSelectors.Soknadsland(state),
-
 });
 
 const mapDispatchToProps = dispatch => ({
-  erstattSoknadsland: nyttSoknadsland => dispatch(change('soknad', 'soknadsland', nyttSoknadsland)),
+  erstattSoknadsland: nyttSoknadsland => dispatch(change('inngang', 'soknadsland', nyttSoknadsland)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SoknadslandListe);
