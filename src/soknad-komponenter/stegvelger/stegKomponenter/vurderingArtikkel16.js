@@ -277,15 +277,6 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="7">
-              {/* <Skjema.Select
-                feil={lovvalgFeilmelding}
-                onBlur={lagreLovvalgsPerioder}
-                disabled={!redigerbart}
-                feltNavn="lovvalgsperiode.unntakFraBestemmelse"
-                label="Artikkelen det søkes unntak fra:"
-              >
-                { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
-              </Skjema.Select> */}
               <Skjema.Select
                 feil={lovvalgFeilmelding}
                 onBlur={lagreLovvalgsPerioder}
