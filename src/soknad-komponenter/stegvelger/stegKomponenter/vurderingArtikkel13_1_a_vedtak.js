@@ -30,7 +30,7 @@ const VurderingArtikkel13_1_a_vedtak = props => {
       await endreDatoOgSendLovvalgsperioder(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
     }
 
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND, true); // TODO: Sjekke hvilken resultattype som skal brukes her
+    lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND, true);
   };
 
   const dokumenter = [
@@ -69,7 +69,6 @@ const VurderingArtikkel13_1_a_vedtak = props => {
       }
       <Nav.Row className="checkboxRow">
         <Nav.Column xs="6">
-          {/* <Nav.Checkbox checked={forkortLovvalgsperiode} disabled={!redigerbart} onChange={handleCheckboxChange} label="Lovvalgsperioden er avkortet." /> */}
           <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalgsperioden er avkortet." disabled={!redigerbart} />
         </Nav.Column>
       </Nav.Row>
@@ -93,15 +92,6 @@ const VurderingArtikkel13_1_a_vedtak = props => {
                 feltNavn="tomDato"
                 datoFelt
               />
-              {/* <Nav.Input
-                bredde="fullbredde"
-                label="Sluttdato"
-                onChange={vedTomDatoEndring}
-                onBlur={vedTomDatoBlur}
-                value={tomDatoInput}
-                feil={feilmeldinger.tomDato}
-                disabled={!redigerbart}
-              /> */}
             </Nav.Column>
           </Nav.Row>
         </Fragment>
