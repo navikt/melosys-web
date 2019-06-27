@@ -20,10 +20,11 @@ import './vurderingArtikkel13_1_a_vedtak.css';
 
 const VurderingArtikkel13_1_a_vedtak = props => {
   const {
-    redigerbart, behandlingID, lovvalgsperiode, endreDatoOgSendLovvalgsperioder, lagreOgFatteVedtak, formIsValid, formValues,
+    redigerbart, behandlingID, lovvalgsperiode, endreDatoOgSendLovvalgsperioder, lagreOgFatteVedtak, formIsValid, formValues, touch,
   } = props;
 
   const vedKlikk = async () => {
+    touch('tomDato');
     if (!formIsValid) return;
 
     if (formValues.forkortLovvalgsperiode) {
@@ -114,6 +115,7 @@ VurderingArtikkel13_1_a_vedtak.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
+  touch: PT.func.isRequired,
 };
 
 VurderingArtikkel13_1_a_vedtak.defaultProps = {
