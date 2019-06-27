@@ -110,6 +110,7 @@ class Stegvelger extends Component {
 
   publiserStegdata = async () => {
     if (!this.aktiv) { return; }
+    if (!this.props.redigerbart) return;
 
     const { vilkaar, avklartefakta, lovvalgsbestemmelse } = this.state.stegStores;
 
@@ -233,22 +234,22 @@ class Stegvelger extends Component {
       oppdaterPerioderState,
       oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
-    } = this.props;
-
-    await oppdaterLokalSoknadHandler();
-
-    this.setState({ aktivtStegNummer: nyttStegNummer });
-
-    const {
+      redigerbart,
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
     } = this.props;
 
-    await oppdaterPerioderState(skjema);
+    if (redigerbart) await oppdaterLokalSoknadHandler();
 
-    await lagreAvklartefaktaHandler();
-    await lagreVilkarHandler();
+    this.setState({ aktivtStegNummer: nyttStegNummer });
+
+    if (redigerbart) {
+      await oppdaterPerioderState(skjema);
+      await lagreAvklartefaktaHandler();
+      await lagreVilkarHandler();
+    }
+
     await lagreLovvalgsperioderHandler();
 
     if (this.erSisteSteg(nyttStegNummer)) {
@@ -324,6 +325,7 @@ Stegvelger.propTypes = {
   lagreAllData: PT.func.isRequired,
   hentMedlemsPerioder: PT.func.isRequired,
   soknadFeilmeldinger: PT.object.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
