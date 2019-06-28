@@ -40,11 +40,12 @@ class Stegvelger extends Component {
 
   async componentDidMount() {
     this.aktiv = true;
-    const { snr } = this.props.match.params;
-    this.props.hentInngang(snr);
 
-    const { behandlingID } = this.props;
+    const { behandlingID, match, hentInngang } = this.props;
     const { aktivtStegNummer } = this.state;
+
+    const { snr } = match.params;
+    hentInngang(snr);
 
     await Promise.all([
       this.props.hentMedlemsPerioder(behandlingID),
@@ -242,11 +243,10 @@ class Stegvelger extends Component {
       lagreLovvalgsperioderHandler,
     } = this.props;
 
-    if (redigerbart) await oppdaterLokalSoknadHandler();
-
     this.setState({ aktivtStegNummer: nyttStegNummer });
 
     if (redigerbart) {
+      await oppdaterLokalSoknadHandler();
       await oppdaterPerioderState(skjema);
       await lagreAvklartefaktaHandler();
       await lagreVilkarHandler();
