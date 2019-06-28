@@ -11,7 +11,6 @@ import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandli
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta';
-import { soknadOperations } from '../ducks/soknad';
 
 import './registrering.css';
 import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder';
@@ -31,13 +30,12 @@ class Registrering extends Component {
     this.setState({ behandlingID: Utils._toInteger(behandlingID) });
 
     const {
-      hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder, hentSoknad,
+      hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder,
     } = this.props;
     try {
       await hentFagsaker(snr);
       await hentBehandling(behandlingID);
       await hentAvklartefakta(behandlingID);
-      await hentSoknad(behandlingID);
       await hentLovvalgsperioder(behandlingID);
     } catch (e) {
       Utils.logger.error(e);
@@ -73,7 +71,6 @@ Registrering.propTypes = {
   hentBehandling: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
-  hentSoknad: PT.func.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   vurderingBegrunnelser: PT.object,
@@ -109,7 +106,6 @@ const mapDispatchToProps = dispatch => ({
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  hentSoknad: behandlingID => dispatch(soknadOperations.hent(behandlingID)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Registrering);
