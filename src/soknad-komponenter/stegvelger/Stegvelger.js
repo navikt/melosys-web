@@ -44,6 +44,7 @@ class Stegvelger extends Component {
     this.props.hentInngang(snr);
 
     const { behandlingID } = this.props;
+    const { aktivtStegNummer } = this.state;
 
     await Promise.all([
       this.props.hentMedlemsPerioder(behandlingID),
@@ -52,7 +53,7 @@ class Stegvelger extends Component {
       this.props.hentLovvalgsperioder(behandlingID),
     ]);
 
-    this.oppdaterAktuelleSteg();
+    this.oppdaterAktuelleSteg(aktivtStegNummer);
   }
 
   componentWillUnmount() {
@@ -112,7 +113,8 @@ class Stegvelger extends Component {
     if (!this.aktiv) { return; }
     if (!this.props.redigerbart) return;
 
-    const { vilkaar, avklartefakta, lovvalgsbestemmelse } = this.state.stegStores;
+    const { aktivtStegNummer, stegStores } = this.state;
+    const { vilkaar, avklartefakta, lovvalgsbestemmelse } = stegStores;
 
     await Promise.all([
       this.props.oppdaterVilkaar(vilkaar.hent()),
@@ -120,7 +122,7 @@ class Stegvelger extends Component {
       this.props.oppdaterLovvalgperioder(lovvalgsbestemmelse.hent()),
     ]);
 
-    this.oppdaterAktuelleSteg();
+    this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {
@@ -167,7 +169,7 @@ class Stegvelger extends Component {
    * @param props
    * @returns {Array}
    */
-  oppdaterAktuelleSteg = () => {
+  oppdaterAktuelleSteg = aktivtStegNummer => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
@@ -207,7 +209,7 @@ class Stegvelger extends Component {
     // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg
     // må vi normalisere siden aktivtStegNummer vil ligge 1 steg foran det som er mulig. Sjekk derfor
     // på faktisk antall mulige steg.
-    const normalisertAktivtSteg = Math.min(this.state.aktivtStegNummer, aktuelleSteg.length - 1);
+    const normalisertAktivtSteg = Math.min(aktivtStegNummer, aktuelleSteg.length - 1);
 
     aktuelleSteg[normalisertAktivtSteg].aktivtSteg = true;
 
@@ -248,15 +250,14 @@ class Stegvelger extends Component {
       await oppdaterPerioderState(skjema);
       await lagreAvklartefaktaHandler();
       await lagreVilkarHandler();
+      await lagreLovvalgsperioderHandler();
+
+      if (this.erSisteSteg(nyttStegNummer)) {
+        await lagreSoknadHandler();
+      }
     }
 
-    await lagreLovvalgsperioderHandler();
-
-    if (this.erSisteSteg(nyttStegNummer)) {
-      await lagreSoknadHandler();
-    }
-
-    this.oppdaterAktuelleSteg();
+    this.oppdaterAktuelleSteg(nyttStegNummer);
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
