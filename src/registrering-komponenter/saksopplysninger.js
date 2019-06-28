@@ -14,6 +14,9 @@ import * as Nav from '../utils/navFrontend';
 import ListevelgerFlervalg from '../komponenter/ui/listevelgerFlervalg';
 import Personopplysninger from '../soknad-komponenter/personopplysninger';
 import Medlemskap from '../komponenter/medlemskap';
+import { lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder';
+import { EndrePeriode } from './endrePeriode';
+import './saksopplysninger.css';
 
 const uuid = require('uuid/v4');
 
@@ -21,13 +24,26 @@ const UnntakPeriodeBegrunnelse = kode => {
   if (!kode) return '';
   return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.unntak_periode_begrunnelser);
 };
-const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
+
+const RegisterkontrollTreff = ({ begrunnelseKode }) => (
+  <div className="registerkontroll-listeelement">
+    <Nav.Ikoner kind="advarsel-sirkel-fyll" size="24" />
+    <Nav.Normaltekst>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</Nav.Normaltekst>
+  </div>
+);
+
+RegisterkontrollTreff.propTypes = {
+  begrunnelseKode: PT.string.isRequired,
+};
 
 class Saksopplysninger extends Component {
   state = {
     begrunnelseFritekst: '',
     ikkeGodkjentBegrunnelseKoder: [],
   };
+
+  endrePeriode = React.createRef();
+
   overstyrSubmit = event => {
     event.preventDefault();
   };
@@ -36,17 +52,21 @@ class Saksopplysninger extends Component {
     this.setState({ begrunnelseFritekst });
   };
   submitRegistrering = () => {
+    if (!this.validerFelt()) {
+      return false;
+    }
+
     const { behandlingID, unntaksperiode, history } = this.props;
     const tilForsiden = () => history.push('/');
     switch (unntaksperiode) {
       case KV.Koder.Unntaksperiode.GODKJENT:
-        Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID)
-          .then(tilForsiden)
+        this.endrePeriode.current.dispatchEndrePeriode(behandlingID)
+          .then(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID).then(tilForsiden))
           .catch(Utils.logger.error);
         return true;
       case KV.Koder.Unntaksperiode.INNHENT:
-        Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID)
-          .then(tilForsiden)
+        this.endrePeriode.current.dispatchEndrePeriode(behandlingID)
+          .then(() => Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID).then(tilForsiden))
           .catch(Utils.logger.error);
         return true;
       case KV.Koder.Unntaksperiode.AVSLAG: {
@@ -64,6 +84,21 @@ class Saksopplysninger extends Component {
     }
   };
 
+  kanEndrePeriode = () => this.props.unntaksperiode === KV.Koder.Unntaksperiode.GODKJENT
+    || this.props.unntaksperiode === KV.Koder.Unntaksperiode.INNHENT;
+
+  validerFelt = () => this.endrePeriode.current.validerEndringPeriode();
+
+  tilPeriode = (fom, tom) => ({
+    fom: Utils.dato.formatterDatoTilNorsk(fom),
+    tom: Utils.dato.formatterDatoTilNorsk(tom),
+  });
+
+  hentLovvalgsperiode = () => (
+    !Utils._isEmpty(this.props.lovvalgsperiode)
+      ? this.tilPeriode(this.props.lovvalgsperiode.fomDato, this.props.lovvalgsperiode.tomDato)
+      : this.tilPeriode(this.props.sed.lovvalgsperiode.fom, this.props.sed.lovvalgsperiode.tom));
+
   render() {
     const {
       medlemskap, sed, vurderingBegrunnelser, unntaksperiode,
@@ -72,13 +107,7 @@ class Saksopplysninger extends Component {
       return null;
     }
 
-    const { lovvalgsperiode, lovvalgsbestemmelse, lovvalgslandKode } = sed;
-    const lovvalgsland = KV.kodeTilObjekt(lovvalgslandKode, MKV.KTObjects.landkoder);
-    const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fom);
-    const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tom);
-    const inputStyle = {
-      width: '110%',
-    };
+    const { lovvalgsbestemmelse, lovvalgslandKode } = sed;
     const listevalgEndringHandler = event => {
       const ikkeGodkjentBegrunnelseKoder = [...event.value];
       this.setState({ ikkeGodkjentBegrunnelseKoder });
@@ -88,59 +117,18 @@ class Saksopplysninger extends Component {
         <form name="registrering" id="registrering" onSubmit={this.overstyrSubmit}>
           <div className="stegvelger panelSeksjon">
             <div className="panel stegFane steg0 stegFane--aktiv">
-              <Nav.Systemtittel>Redigering av unntaksperioder</Nav.Systemtittel>
+              <Nav.Systemtittel>Registrering av unntaksperioder</Nav.Systemtittel>
               <br />
               <div className="vurderingEndrePeriode">
-                <Nav.Undertittel>Lovvalgsperiode fra SED</Nav.Undertittel>
-                <Nav.Row>
-                  <Nav.Column xs="3">
-                    <Nav.Input
-                      bredde="XXL"
-                      label="Startdato"
-                      value={fom}
-                      readOnly
-                    />
-                  </Nav.Column>
-                  <Nav.Column xs="3">
-                    <Nav.Input
-                      style={inputStyle}
-                      bredde="XXL"
-                      label="Sluttdato"
-                      value={tom}
-                      readOnly
-                    />
-                  </Nav.Column>
-                </Nav.Row>
-                <Nav.Row>
-                  <Nav.Column xs="3">
-                    <Nav.Input
-                      bredde="XXL"
-                      label="Land"
-                      value={landTekstFormat(lovvalgsland)}
-                      readOnly
-                    />
-                  </Nav.Column>
-                  <Nav.Column xs="3">
-                    <Nav.Input
-                      style={inputStyle}
-                      bredde="XXL"
-                      label="Hjemmel"
-                      value={lovvalgsbestemmelse}
-                      readOnly
-                    />
-                  </Nav.Column>
-                </Nav.Row>
-                <Nav.Row>
+                <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
-                    <Nav.Undertittel>Treff ved registerkontroll</Nav.Undertittel>
-                    <ul>
-                      {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
-                        <li key={uuid()}>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</li>)}
-                    </ul>
+                    <Nav.Element>Treff ved automatisk kontroll</Nav.Element>
+                    {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
+                      <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
                   </Nav.Column>
                 </Nav.Row>
-                <Nav.Row>
-                  <Nav.Column xs="3">
+                <Nav.Row className="seksjon">
+                  <Nav.Column xs="12">
                     <Skjema.RadioGruppe feltNavn="unntaksperiode" label="Vurder unntaksperiode">
                       <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value={KV.Koder.Unntaksperiode.GODKJENT} label="Godkjenn" />
                       <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value={KV.Koder.Unntaksperiode.INNHENT} label="Innhent informasjon" />
@@ -177,9 +165,17 @@ class Saksopplysninger extends Component {
                     </Nav.Row>
                   </Fragment>
                 )}
-                <Nav.Row>
+                <Nav.Row className="seksjon">
+                  <EndrePeriode
+                    ref={this.endrePeriode}
+                    periode={({ ...this.hentLovvalgsperiode() })}
+                    lovvalgsbestemmelse={lovvalgsbestemmelse}
+                    lovvalgsland={lovvalgslandKode}
+                    redigerbart={this.kanEndrePeriode()} />
+                </Nav.Row>
+                <Nav.Row className="seksjon">
                   <Nav.Column xs="3">
-                    <Nav.Knapp type="hoved" onClick={() => this.submitRegistrering()}>LAGRE</Nav.Knapp>
+                    <Nav.Hovedknapp onClick={() => this.submitRegistrering()}>LAGRE</Nav.Hovedknapp>
                   </Nav.Column>
                 </Nav.Row>
               </div>
@@ -200,6 +196,7 @@ Saksopplysninger.propTypes = {
   vurderingBegrunnelser: PT.object,
   skjema: PT.any,
   unntaksperiode: PT.string,
+  lovvalgsperiode: PT.object.isRequired,
   settFeilFelt: PT.func.isRequired,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
@@ -217,6 +214,7 @@ Saksopplysninger.defaultProps = {
 const skjemaSelector = formValueSelector(KV.Form.SOKNAD);
 const mapStateToProps = state => ({
   unntaksperiode: skjemaSelector(state, 'unntaksperiode'),
+  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   initialValues: {
     unntaksperiode: KV.Koder.Unntaksperiode.GODKJENT,
   },
