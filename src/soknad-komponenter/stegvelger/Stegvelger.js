@@ -112,7 +112,6 @@ class Stegvelger extends Component {
 
   publiserStegdata = async () => {
     if (!this.aktiv) { return; }
-    if (!this.props.redigerbart) return;
 
     const { aktivtStegNummer, stegStores } = this.state;
     const { vilkaar, avklartefakta, lovvalgsbestemmelse } = stegStores;
