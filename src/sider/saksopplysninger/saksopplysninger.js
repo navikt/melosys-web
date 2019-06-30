@@ -242,6 +242,7 @@ const mapStateToProps = state => ({
     fullmektigRegion: soknadSelectors.ArbeidNorgeSelector(state).fullmektigRegion,
     fullmektigLand: soknadSelectors.ArbeidNorgeSelector(state).fullmektigLandkode,
     avklartefakta: {
+      soknadsland: avklartefaktaSelectors.Soknadsland(state),
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
       yrkesaktivitetAntallLand: avklartefaktaSelectors.YrkesaktivitetAntallLand(state),
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
