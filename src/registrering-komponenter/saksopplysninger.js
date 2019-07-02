@@ -44,8 +44,8 @@ class Saksopplysninger extends Component {
     begrunnelseFritekst: '',
     ikkeGodkjentBegrunnelseKoder: [],
     skalEndrePeriode: false,
-    fom: '',
-    tom: '',
+    fom: null,
+    tom: null,
     endrePeriodeBegrunnelse: MKV.Koder.begrunnelser.ftrl_endret_unntaksperiode.PERIODE_FEILREGISTRERT,
     endrePeriodeBegrunnelseFritekst: '',
     endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
@@ -56,10 +56,9 @@ class Saksopplysninger extends Component {
       return;
     }
     const periode = this.hentLovvalgsperiode(nextProps);
-    this.setState({
-      fom: periode.fom,
-      tom: periode.tom,
-    });
+    const fom = this.state.fom || periode.fom;
+    const tom = this.state.tom || periode.tom;
+    this.setState({ fom, tom });
   }
 
   overstyrSubmit = event => {
