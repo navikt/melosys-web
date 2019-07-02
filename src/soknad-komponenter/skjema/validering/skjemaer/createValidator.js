@@ -1,4 +1,4 @@
-const createValidator = schema => (values, settings) => {
+const createValidator = (schema, settings) => values => {
   try {
     schema.validateSync(values, { abortEarly: false, ...settings });
     return {};

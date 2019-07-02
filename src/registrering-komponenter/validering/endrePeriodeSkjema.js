@@ -26,7 +26,7 @@ export const endrePeriodeSkjema = Yup.object().shape({
     .test(gyldigDatoTest('sluttdato'))
     .required({ feilmelding: 'Sluttdato er påkrevd' }),
   fritekst: Yup.string()
-    .when('$paakrevd', {
+    .when('$fritekstPakrevd', {
       is: true,
       then: fritekstSkjema => fritekstSkjema.required({ feilmelding: 'Begrunnelse for endring av periode er påkrevd' }),
     }),
