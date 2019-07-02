@@ -47,7 +47,7 @@ BehandlingPanel.propTypes = {
   kanVises: PT.bool.isRequired,
 };
 
-// Er ikke mulig å vise behandlinger med type UNNTAK_FRA_MEDLEMSKAP
+// Er ikke mulig å vise behandlinger med type REGISTRERING_UNNTAK_NORSK_TRYGD
 const behandlingKanVises = type => KV.objektTilKode(type) !== MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD;
 
 const Behandling = ({ behandling, link }) => (
