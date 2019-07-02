@@ -34,7 +34,7 @@ const Fagsak = ({ sak }) => {
   } = behandlingOversikter[0];
   const tittel = `${KV.objektTilTerm(sakstype)}`;
   let routePath = `/saksbehandling/${saksnummer}`;
-  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.UNNTAK_FRA_MEDLEMSKAP) {
+  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
     routePath = `/registrering/${saksnummer}`;
   }
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';

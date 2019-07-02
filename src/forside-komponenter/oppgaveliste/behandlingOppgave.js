@@ -61,7 +61,7 @@ const BehandlingOppgave = ({ sak }) => {
   const { fom, tom } = soknadsperiode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
   let rute = 'saksbehandling';
-  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.UNNTAK_FRA_MEDLEMSKAP) {
+  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
     rute = 'registrering';
   }
   const link = `/${rute}/${saksnummer}/?behandlingID=${behandlingID}`;
