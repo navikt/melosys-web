@@ -119,6 +119,7 @@ class Stegvelger extends Component {
       this.props.oppdaterLovvalgperioder(lovvalgsbestemmelse.hent()),
     ]);
 
+    this.props.oppdaterLokalSoknadHandler();
     this.oppdaterAktuelleSteg();
   };
 
