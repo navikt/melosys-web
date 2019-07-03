@@ -34,7 +34,6 @@ import { PersonOperations } from '../ducks/personer';
 import * as oppgaverOperations from '../ducks/oppgaver/operations';
 import * as MPT from '../proptypes';
 import { sokOperations, sokSelectors } from '../ducks/sok';
-import journalforing from '../soknad-komponenter/forside/journalforing';
 
 class Journalforing extends Component {
   state = {
@@ -295,7 +294,7 @@ class Journalforing extends Component {
       knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
     } = this;
     const { journalpostID } = this.props.match.params;
-    const { dokumentID: hoveddokumentID } = hoveddokument;
+    const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = 'Hoveddokument' } = hoveddokument;
 
     return (
       <div className="journalforing">
@@ -314,6 +313,8 @@ class Journalforing extends Component {
                       <Informasjon
                         journalpostID={journalpostID}
                         dokumentID={hoveddokumentID}
+                        dokumentTittel={hoveddokumentTittel}
+                        vedlegg={vedlegg}
                         hentOgVisAvsender={hentOgVisAvsender}
                         hentOgVisBruker={hentOgVisBruker}
                       />
@@ -336,16 +337,19 @@ class Journalforing extends Component {
                 </Sticky>
               </Nav.Column>
               <Nav.Column xs="8">
-                <Nav.Panel>
-                  <Nav.Select
-                    name="journalforing_pdf_dokumenter"
-                    label="Dokumentvisning"
-                    defaultValue={hoveddokumentID}
-                    onChange={this.onChangeVedlegg}>
-                    <option key={hoveddokumentID} value={hoveddokumentID}>Hoveddokument</option>
-                    {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
-                  </Nav.Select>
-                </Nav.Panel>
+                {vedlegg.length > 0 &&
+                  <Nav.Panel>
+                    <Nav.Select
+                      className="journalforing__dokument_visning"
+                      name="journalforing_pdf_dokumenter"
+                      label="Dokumentvisning"
+                      defaultValue={hoveddokumentID}
+                      onChange={this.onChangeVedlegg}>
+                      <option key={hoveddokumentID} value={hoveddokumentID}>{hoveddokumentTittel}</option>
+                      {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
+                    </Nav.Select>
+                  </Nav.Panel>
+                }
                 {this.velgDokumentID() && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} /></Nav.Panel>}
               </Nav.Column>
             </Nav.Row>
