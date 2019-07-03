@@ -37,6 +37,9 @@ import { sokOperations, sokSelectors } from '../ducks/sok';
 import journalforing from '../soknad-komponenter/forside/journalforing';
 
 class Journalforing extends Component {
+  state = {
+    valgtDokumentID: -1,
+  };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
     queryParamLogger(this.props.location, 'kilde', 'GOSYS');
@@ -269,6 +272,19 @@ class Journalforing extends Component {
     settFeltInnhold('behandlingstype', '');
   };
 
+  onChangeVedlegg = e => {
+    const { value: valgtDokumentID } = e.target;
+    this.setState({ valgtDokumentID });
+  };
+  velgDokument = () => {
+    const { valgtDokumentID } = this.state;
+    const {
+      journalforing: { hoveddokument = {} },
+    } = this.props;
+    if (valgtDokumentID === -1 && !hoveddokument.dokumentID) return null;
+    if (valgtDokumentID === -1 && hoveddokument.dokumentID) return hoveddokument.dokumentID;
+    return valgtDokumentID;
+  };
   render() {
     const {
       journalforing: { vedlegg = [], hoveddokument = {} },
@@ -277,9 +293,8 @@ class Journalforing extends Component {
     const {
       knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
     } = this;
-console.log(vedlegg);
     const { journalpostID } = this.props.match.params;
-    const { dokumentID } = hoveddokument;
+    const { dokumentID: hoveddokumentID } = hoveddokument;
 
     return (
       <div className="journalforing">
@@ -297,7 +312,7 @@ console.log(vedlegg);
                     <div className="journalforing__skjema__scroll">
                       <Informasjon
                         journalpostID={journalpostID}
-                        dokumentID={dokumentID}
+                        dokumentID={hoveddokumentID}
                         hentOgVisAvsender={hentOgVisAvsender}
                         hentOgVisBruker={hentOgVisBruker}
                       />
@@ -320,8 +335,15 @@ console.log(vedlegg);
                 </Sticky>
               </Nav.Column>
               <Nav.Column xs="8">
-                <p>{JSON.stringify(vedlegg)}</p>
-                { dokumentID && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={dokumentID} /></Nav.Panel> }
+                <Nav.Select
+                  name="journalforing_pdf_dokumenter"
+                  label="Dokumentvisning"
+                  value={hoveddokumentID}
+                  onChange={this.onChangeVedlegg}>
+                  <option key={hoveddokumentID} value={hoveddokumentID}>Hoveddokument</option>
+                  {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
+                </Nav.Select>
+                {this.velgDokument() && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokument()} /></Nav.Panel>}
               </Nav.Column>
             </Nav.Row>
           </form>
