@@ -49,6 +49,10 @@ class Journalforing extends Component {
   async componentWillUnmount() {
     await this.props.resetJournalforingState();
   }
+  onChangeVedlegg = e => {
+    const { value: valgtDokumentID } = e.target;
+    this.setState({ valgtDokumentID });
+  };
 
   /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
    * funksjoner. Allikevel trenger vi en default handler som Redux Form hekter på gjennom <form onsubmit="" .../>
@@ -272,11 +276,7 @@ class Journalforing extends Component {
     settFeltInnhold('behandlingstype', '');
   };
 
-  onChangeVedlegg = e => {
-    const { value: valgtDokumentID } = e.target;
-    this.setState({ valgtDokumentID });
-  };
-  velgDokument = () => {
+  velgDokumentID = () => {
     const { valgtDokumentID } = this.state;
     const {
       journalforing: { hoveddokument = {} },
@@ -285,6 +285,7 @@ class Journalforing extends Component {
     if (valgtDokumentID === -1 && hoveddokument.dokumentID) return hoveddokument.dokumentID;
     return valgtDokumentID;
   };
+
   render() {
     const {
       journalforing: { vedlegg = [], hoveddokument = {} },
@@ -335,15 +336,17 @@ class Journalforing extends Component {
                 </Sticky>
               </Nav.Column>
               <Nav.Column xs="8">
-                <Nav.Select
-                  name="journalforing_pdf_dokumenter"
-                  label="Dokumentvisning"
-                  value={hoveddokumentID}
-                  onChange={this.onChangeVedlegg}>
-                  <option key={hoveddokumentID} value={hoveddokumentID}>Hoveddokument</option>
-                  {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
-                </Nav.Select>
-                {this.velgDokument() && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokument()} /></Nav.Panel>}
+                <Nav.Panel>
+                  <Nav.Select
+                    name="journalforing_pdf_dokumenter"
+                    label="Dokumentvisning"
+                    defaultValue={hoveddokumentID}
+                    onChange={this.onChangeVedlegg}>
+                    <option key={hoveddokumentID} value={hoveddokumentID}>Hoveddokument</option>
+                    {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
+                  </Nav.Select>
+                </Nav.Panel>
+                {this.velgDokumentID() && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} /></Nav.Panel>}
               </Nav.Column>
             </Nav.Row>
           </form>
