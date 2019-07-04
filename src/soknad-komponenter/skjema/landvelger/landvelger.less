@@ -1,0 +1,49 @@
+@import '../../../constants';
+
+.landliste {
+
+  .landliste__linje__knapp {
+    width: 100px;
+  }
+
+  .landliste__linje {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0 0 1em 0;
+
+    .landliste__linje__navn {
+      width: 200px;
+      margin-bottom: 0;
+    }
+
+    .landliste__linje__knapp {
+      margin-left: 1em;
+    }
+  }
+
+  .landliste__leggtil {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin: 0 0 1em 0;
+
+    .landliste__linje__input {
+      width: 200px;
+      margin-bottom: 0;
+    }
+
+    .landliste__linje__knapp {
+      margin: 2.4em 0 0 1em;
+    }
+
+    .landliste__linje__navn {
+      width: 200px;
+    }
+  }
+
+  .landliste__dataliste {
+    overflow: scroll;
+    height: 100px;
+  }
+}

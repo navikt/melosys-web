@@ -1,0 +1,37 @@
+@import '../../../constants.less';
+
+.customRadioPanelGruppe {
+  margin-top: 1em;
+
+  .customRadioPanel {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-items: center;
+    border: 1px solid @gray-dark;
+    margin: 0.5em 0;
+    padding: 0.5em;
+    border-radius: 3px;
+  }
+
+  .customRadioPanel--checked {
+    background-color: #0067C540;
+  }
+
+  .customRadioPanel--focused {
+  }
+
+  .customRadioPanel--disabled {
+    background-color: #ff0000;
+  }
+
+  .radioPanel__Input {
+    margin: 0.5em;
+    flex: 1;
+  }
+
+  .radioPanel__innhold {
+    flex: 10;
+  }
+}
+

@@ -1,40 +1,30 @@
-import React, { Component } from 'react';
-import './App.css';
-//import { Container, Row, Column } from 'nav-frontend-grid';
-import Header from './components/Header';
-import Main from './Main';
+import React from 'react';
+import PT from 'prop-types';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loaded: false,
-      saksbehandler: {}
-    }
-  }
-  componentDidMount() {
-    let API_MELOSYS_URL = 'http://localhost:3002/api/';
-    fetch(API_MELOSYS_URL+'saksbehandler')
-      .then(response => response.json())
-      .then(result => this.setState({saksbehandler: result}))
-      .catch(error => {
-        // eslint-disable-next-line
-        console.log(`request failed ${error}`);
-      });
-  }
-  render() {
-    return (
-      <RootApp>
-        <Header saksbehandlerName={this.state.saksbehandler.navn}/>
-        <Main/>
-      </RootApp>
-    );
-  }
+import Rammeverk from './sider/rammeverk';
+
+import Versjon from './debug/versjon';
+
+function App({ children }) {
+  return (
+    <div className="App">
+      <Rammeverk>{children}</Rammeverk>
+      <Versjon />
+    </div>
+  );
 }
 
+App.defaultProps = {
+  children: null,
+  routes: null,
+};
 
-const RootApp = (props) => (
-  <div className="App" {...props}/>)
+App.propTypes = {
+  children: PT.node,
+  routes: PT.node,
+};
 
-
+App.defaultProps = {
+  children: undefined,
+};
 export default App;
