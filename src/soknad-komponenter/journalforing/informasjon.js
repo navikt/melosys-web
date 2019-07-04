@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
+import uuid from 'uuid';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../../utils/utils';
@@ -148,7 +149,7 @@ class Informasjon extends Component {
 
   render() {
     const {
-      journalpostID, dokumentID,
+      journalpostID, dokumentID, vedlegg,
     } = this.props;
     const {
       spinner: { brukerNavn: visBrukerSpinner },
@@ -156,8 +157,16 @@ class Informasjon extends Component {
     } = this.state;
     const { skalFeltetDisables } = this;
 
-    const dokumentURI = Api.Dokumenter.pdfURI(journalpostID, dokumentID);
-
+    const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdfURI(jpostID, dokID);
+    const VedleggLenkeListe = () => {
+      if (vedlegg && vedlegg.length === 0) return null;
+      const lenker = vedlegg.map(elem => <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">{elem.tittel}</Link>);
+      return (
+        <ol>
+          {lenker.map(lenke => <li key={uuid()}>{lenke}</li>)}
+        </ol>
+      );
+    };
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
@@ -171,7 +180,6 @@ class Informasjon extends Component {
           <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsenderNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
           <Skjema.Input feltNavn="mottattDato" label="Registrert dato:" disabled />
-          <Link to={dokumentURI} target="_blank" className="informasjon__dokumentlenke">Åpne dokument i nytt vindu</Link>
 
           <Nav.Fieldset legend="Hoveddokument:">
             <Skjema.ListeVelger
@@ -180,7 +188,9 @@ class Informasjon extends Component {
               placeholder="(velg eller skriv inn egen tittel)"
               muligeValg={MKV.KTObjects.dokumenttitler}
             />
+            <Link to={dokumentURI(journalpostID, dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne dokument i ny fane</Link>
           </Nav.Fieldset>
+
           <Nav.Fieldset legend="Vedlegg:">
             <Skjema.ListeVelger
               feltNavn="vedleggsTitler"
@@ -190,6 +200,7 @@ class Informasjon extends Component {
               muligeValg={MKV.KTObjects.dokumenttitler}
               placeholder="(Velg eller skriv inn egen tittel)"
             />
+            <VedleggLenkeListe />
           </Nav.Fieldset>
         </Nav.Fieldset>
       </div>
@@ -203,6 +214,8 @@ Informasjon.propTypes = {
   hentOgVisAvsender: PT.func.isRequired,
   journalpostID: PT.string,
   dokumentID: PT.string,
+  dokumentTittel: PT.string,
+  vedlegg: PT.array,
   settFeltInnhold: PT.func.isRequired,
 };
 
@@ -210,6 +223,8 @@ Informasjon.defaultProps = {
   journalforingSkjemaVerdier: {},
   journalpostID: '',
   dokumentID: '',
+  dokumentTittel: null,
+  vedlegg: [],
 };
 
 const mapStateToProps = state => ({
