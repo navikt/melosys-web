@@ -1,10 +1,11 @@
+import * as MKV from 'melosys-kodeverk';
 import * as Types from './types';
 
 export const initialState = {
   skalEndres: false,
   fom: '',
   tom: '',
-  begrunnelse: '',
+  begrunnelse: MKV.Koder.folketrygdloven.begrunnelser_endret_unntaksperiode.PERIODE_FEILREGISTERT,
   fritekst: '',
 };
 

@@ -132,11 +132,11 @@ class Saksopplysninger extends Component {
   validerFelt = () => this.validerEndrePeriode();
 
   validerEndrePeriode = () => {
-    if (!this.kanEndrePeriode()) {
+    const { endrePeriode } = this.props;
+    if (!this.kanEndrePeriode() || !endrePeriode.skalEndres) {
       return true;
     }
 
-    const { endrePeriode } = this.props;
     const fritekstPakrevd = endrePeriode.begrunnelse === MKV.Koder.folketrygdloven.begrunnelser_endret_unntaksperiode.ANNET;
     const settings = { context: { fritekstPakrevd } };
     const stateObject = { fom: endrePeriode.fom, tom: endrePeriode.tom, fritekst: endrePeriode.fritekst };
@@ -229,7 +229,7 @@ class Saksopplysninger extends Component {
             </div>
           </div>
         </form>
-{/*        <Personopplysninger redigerbart />*/}
+        {/* <Personopplysninger redigerbart /> TODO: Må hentes fra context (SPRINT-34) */}
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
       </div>
     );
