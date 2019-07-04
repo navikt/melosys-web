@@ -13,8 +13,8 @@ import * as Types from './types';
 import * as Actions from './actions';
 
 /* eslint-disable import/prefer-default-export */
-export function hentDokument(journalforingID, dokumentID) {
-  return doThenDispatch(() => Api.Dokumenter.hentDokument(journalforingID, dokumentID), {
+export function hentDokument(journalpostID, dokumentID) {
+  return doThenDispatch(() => Api.Dokumenter.hentDokument(journalpostID, dokumentID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
