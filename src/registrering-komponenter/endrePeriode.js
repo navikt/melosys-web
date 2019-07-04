@@ -5,29 +5,51 @@ import * as MKV from 'melosys-kodeverk';
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import './endrePeriode.css';
+import { connectRegistreringContext } from '../registrering-komponenter/state/registreringStateProvider';
+import { endrePeriodeSelectors, endrePeriodeActions } from './state/ducks/endrePeriode/';
+import { lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder';
+import { behandlingerSelectors } from '../ducks/behandlinger';
 
-export const EndrePeriode = ({
-  skalEndres,
-  skalEndresChangeHandler,
-  fom,
-  fomChangeHandler,
-  tom,
-  tomChangeHandler,
-  begrunnelse,
-  begrunnelseChangeHandler,
-  fritekst,
-  fritekstChangeHandler,
+const EndrePeriode = ({
+  endrePeriode,
+  lovvalgsperiode,
+  sedLovvalgsperiode,
+  toggleSkalEndres,
+  oppdaterFom,
+  oppdaterTom,
+  oppdaterBegrunnelse,
+  oppdaterFritekst,
   feilmeldinger,
   redigerbart,
 }) => {
-  const settValgtBegrunnelse = event => begrunnelseChangeHandler(event.nativeEvent.target[event.nativeEvent.target.selectedIndex].value);
+  const {
+    skalEndres, fom, tom, begrunnelse, fritekst,
+  } = endrePeriode;
 
-  const fritekstPaakrevd = () => begrunnelse === MKV.Koder.begrunnelser.ftrl_endret_unntaksperiode.ANNET;
+  const tilPeriode = (fomDato, tomDato) => ({
+    fom: Utils.dato.formatterDatoTilNorsk(fomDato),
+    tom: Utils.dato.formatterDatoTilNorsk(tomDato),
+  });
 
-  const formaterDato = (event, changeHandler) => {
+  const hentLovvalgsperiode = props => (
+    !Utils._isEmpty(props.lovvalgsperiode)
+      ? tilPeriode(props.lovvalgsperiode.fomDato, props.lovvalgsperiode.tomDato)
+      : tilPeriode(props.sedLovvalgsperiode.fom, props.sedLovvalgsperiode.tom));
+
+  React.useEffect(() => {
+    const periode = hentLovvalgsperiode({ lovvalgsperiode, sedLovvalgsperiode });
+    oppdaterFom(periode.fom);
+    oppdaterTom(periode.tom);
+  }, [lovvalgsperiode]);
+
+  const settValgtBegrunnelse = event => oppdaterBegrunnelse(event.nativeEvent.target[event.nativeEvent.target.selectedIndex].value);
+
+  const fritekstPaakrevd = () => begrunnelse === MKV.Koder.folketrygdloven.begrunnelser_endret_unntaksperiode.ANNET;
+
+  const formaterDato = (event, oppdater) => {
     const nyDato = Utils.dato.vaskInputDato(event.target.value);
     if (nyDato) {
-      changeHandler(nyDato);
+      oppdater(nyDato);
     }
   };
 
@@ -38,7 +60,7 @@ export const EndrePeriode = ({
         <Nav.Checkbox
           label="Jeg vil endre perioden"
           checked={skalEndres}
-          onChange={() => skalEndresChangeHandler(!skalEndres)}
+          onChange={toggleSkalEndres}
           disabled={!redigerbart} />
       </Nav.Column>
       {skalEndres &&
@@ -48,8 +70,8 @@ export const EndrePeriode = ({
             bredde="fullbredde"
             label="Startdato"
             value={fom}
-            onChange={e => fomChangeHandler(e.target.value)}
-            onBlur={e => formaterDato(e, fomChangeHandler)}
+            onChange={e => oppdaterFom(e.target.value)}
+            onBlur={e => formaterDato(e, oppdaterFom)}
             feil={feilmeldinger.fom}
             disabled={!redigerbart} />
         </Nav.Column>
@@ -58,8 +80,8 @@ export const EndrePeriode = ({
             bredde="fullbredde"
             label="Sluttdato"
             value={tom}
-            onChange={e => tomChangeHandler(e.target.value)}
-            onBlur={e => formaterDato(e, tomChangeHandler)}
+            onChange={e => oppdaterTom(e.target.value)}
+            onBlur={e => formaterDato(e, oppdaterTom)}
             feil={feilmeldinger.tom}
             disabled={!redigerbart} />
         </Nav.Column>
@@ -71,7 +93,7 @@ export const EndrePeriode = ({
             onChange={settValgtBegrunnelse}
             disabled={!redigerbart}
           >
-            {MKV.KTObjects.begrunnelser.ftrl_endret_unntaksperiode.map(kodeobjekt =>
+            {MKV.KTObjects.folketrygdloven.begrunnelser_endret_unntaksperiode.map(kodeobjekt =>
               <option key={kodeobjekt.kode} value={kodeobjekt.kode}>{kodeobjekt.term}</option>)}
           </Nav.Select>
         </Nav.Column>
@@ -80,7 +102,7 @@ export const EndrePeriode = ({
           <Nav.Textarea
             label="Skriv inn begrunnelse for endring av periode..."
             maxLength={255}
-            onChange={e => fritekstChangeHandler(e.target.value)}
+            onChange={e => oppdaterFritekst(e.target.value)}
             value={fritekst}
             feil={feilmeldinger.fritekst}
             disabled={!redigerbart} />
@@ -93,20 +115,34 @@ export const EndrePeriode = ({
 };
 
 EndrePeriode.propTypes = {
-  skalEndres: PT.bool.isRequired,
-  skalEndresChangeHandler: PT.func.isRequired,
-  fom: PT.string.isRequired,
-  tom: PT.string.isRequired,
-  fomChangeHandler: PT.func.isRequired,
-  tomChangeHandler: PT.func.isRequired,
-  begrunnelse: PT.string.isRequired,
-  begrunnelseChangeHandler: PT.func.isRequired,
-  fritekst: PT.string,
-  fritekstChangeHandler: PT.func.isRequired,
+  endrePeriode: PT.object.isRequired, // TODO: shape()
+  lovvalgsperiode: PT.object.isRequired,
+  sedLovvalgsperiode: PT.object,
+  toggleSkalEndres: PT.func.isRequired,
+  oppdaterFom: PT.func.isRequired,
+  oppdaterTom: PT.func.isRequired,
+  oppdaterBegrunnelse: PT.func.isRequired,
+  oppdaterFritekst: PT.func.isRequired,
   feilmeldinger: PT.object.isRequired,
   redigerbart: PT.bool.isRequired,
 };
 
 EndrePeriode.defaultProps = {
-  fritekst: '',
+  sedLovvalgsperiode: {},
 };
+
+const mapStateToProps = state => ({
+  endrePeriode: endrePeriodeSelectors.EndrePeriodeSelector(state),
+  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+  sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode,
+});
+
+const mapDispatchToProps = dispatch => ({
+  toggleSkalEndres: () => dispatch(endrePeriodeActions.toggleSkalEndres()),
+  oppdaterFom: fom => dispatch(endrePeriodeActions.oppdaterFom(fom)),
+  oppdaterTom: tom => dispatch(endrePeriodeActions.oppdaterTom(tom)),
+  oppdaterBegrunnelse: begrunnelse => dispatch(endrePeriodeActions.oppdaterBegrunnelse(begrunnelse)),
+  oppdaterFritekst: fritekst => dispatch(endrePeriodeActions.oppdaterFritekst(fritekst)),
+});
+
+export default connectRegistreringContext(mapStateToProps, mapDispatchToProps)(EndrePeriode);
