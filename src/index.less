@@ -1,22 +1,55 @@
-@coreModulePath: "./../node_modules/";
-@nodeModulesPath: "./../node_modules/";
+@coreModulePath: './../node_modules/';
+@nodeModulesPath: './../node_modules/';
 
-@frontendModuler: "@{nodeModulesPath}nav-frontend-";
-@indexFil: "-style/src/index";
+
+@frontendModuler: '@{nodeModulesPath}nav-frontend-';
+@indexFil: '-style/src/index';
+
+@import '@{frontendModuler}core/less/core';
+@import '@{frontendModuler}typografi@{indexFil}';
+@import '@{frontendModuler}chevron@{indexFil}';
+@import '@{frontendModuler}alertstriper@{indexFil}';
+@import '@{frontendModuler}knapper@{indexFil}';
+@import '@{frontendModuler}modal@{indexFil}';
+@import '@{frontendModuler}paneler@{indexFil}';
+@import '@{frontendModuler}lenkepanel@{indexFil}';
+@import '@{frontendModuler}ekspanderbartpanel@{indexFil}';
+@import '@{frontendModuler}tabell@{indexFil}';
+@import '@{frontendModuler}alertstriper@{indexFil}';
+@import '@{frontendModuler}grid@{indexFil}';
+@import '@{frontendModuler}stegindikator@{indexFil}';
+@import '@{frontendModuler}etiketter@{indexFil}';
+@import '@{frontendModuler}skjema@{indexFil}';
+
+
+//Disse må importeres separat siden de ikke inneholder src/index.less.
+@import '@{frontendModuler}spinner-style/src/spinner-style';
+@import '@{frontendModuler}lenker-style/src/lenker-style';
+@import '@{frontendModuler}snakkeboble-style/src/snakkeboble-style';
+@import '@{frontendModuler}lesmerpanel-style/src/lesmerpanel-style';
+
+@import './constants';
+
+
+/** Denne løsningen har en avhengighet av nav-frontend-typografi-* for å hente inn
+ * riktig typografi/fonter i tillegg til riktig base fontstørrelse (se mixin .typo-normal-mixin());
+ */
 
 body {
   margin: 0;
   padding: 0;
-  font-family: Arial,sans-serif;
-  line-height:  1.42857143;
-  color: #3e3832;
-  background-color: #efefef;
+
+  background-color: @white-off;
+  color: @font-color;
+
+  line-height: 1.42857143;
+  padding-bottom: 50vh;
 }
 
-@import "@{frontendModuler}typografi@{indexFil}";
-@import "@{frontendModuler}skjema@{indexFil}";
-@import "@{frontendModuler}knapper@{indexFil}";
-@import "@{frontendModuler}grid@{indexFil}";
-@import "@{frontendModuler}paneler@{indexFil}";
-@import "@{frontendModuler}tabell@{indexFil}";
+section {
+  margin:0.5em 0;
+}
 
+.panelSeksjon {
+  margin:1em 0;
+}

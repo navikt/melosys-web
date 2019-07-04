@@ -1,0 +1,31 @@
+@import '../../constants';
+
+.sideDialogDokumenter {
+  ul {
+    list-style: none;
+    padding:0;
+  }
+
+  a {
+    display: inline-block;
+    clear:both;
+  }
+
+  a:link, a:visited, a:hover {
+    color: black;
+  }
+
+  .dokumentTabell {
+    border-collapse: collapse;
+
+    th {
+      text-align: left;
+    }
+
+    td {
+      padding: .5em .2em;
+      vertical-align: top;
+      border-bottom: 1px solid @gray;
+    }
+  }
+}

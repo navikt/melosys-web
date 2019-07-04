@@ -1,0 +1,7 @@
+{
+  "excludedFiles": [],
+  "propertyOrdering":false,
+  "zeroUnit":"no_unit",
+  "spaceAfterPropertyColon":"at_least_one_space",
+  "qualifyingElement":false
+}

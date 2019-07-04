@@ -1,0 +1,24 @@
+import * as Utils from './utils';
+import { saksbehandlerOperations, saksbehandlerTypes } from './ducks/saksbehandler/';
+import { oppgaverOperations } from './ducks/oppgaver/';
+import { EessiKodeverkOperations } from './ducks/eessikodeverk';
+
+export default async function loadInitialData(store) {
+  let res;
+  try {
+    window.frontendlogger.info(Utils.buildinfo());
+    res = await store.dispatch(saksbehandlerOperations.hent());
+    if (res && res.type === saksbehandlerTypes.OK) {
+      window.frontendlogger.info(res.data);
+      await store.dispatch(oppgaverOperations.oversikt());
+    }
+    await store.dispatch(EessiKodeverkOperations.preload());
+  } catch (e) {
+    console.log(e); // eslint-disable-line no-console
+    window.frontendlogger.error({
+      e,
+      stack: e.stack,
+      res,
+    });
+  }
+}

@@ -1,0 +1,47 @@
+@import '../../node_modules/nav-frontend-typografi-style/src/mixins';
+@import '../../node_modules/nav-frontend-core/less/_mixins';
+
+@import '../constants';
+
+.beskrivliste-mixin(@dir) {
+  margin:0;
+  display:block;
+
+  dt,
+  dd {
+    display:block;
+    margin:0;
+  }
+
+  dt {
+    font-weight:600;
+  }
+}
+
+.beskrivliste-mixin(@dir) when (@dir = 'row') {
+  dd {
+    padding:0 0 0 8px;
+  }
+
+  dt,
+  dd {
+    float:left;
+    width:50%;
+  }
+}
+
+.beskrivliste-mixin(@dir) when (@dir = 'col') {
+
+  dt {
+    margin-top:0.8em;
+  }
+}
+
+.seksjonmixin() {
+  margin:0 0 1em;
+  padding:0 0 1em;
+
+  &:last-child {
+    margin:0;
+  }
+}
