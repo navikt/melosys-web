@@ -5,11 +5,7 @@ const { object, array, string } = Utils.yup;
 
 const saksopplysninger = object().shape({
   foretakUtland: array().of(object().shape({
-    adresse: object().shape({
-      postnummer: string().required({ melding: 'Postnummer kreves', panel: KV.Paneltitler.foretakUtland }),
-      landkode: string().required({ melding: 'Land kreves', panel: KV.Paneltitler.foretakUtland }),
-      poststed: string().required({ melding: 'Poststed kreves', panel: KV.Paneltitler.foretakUtland }),
-    }),
+    navn: string().required({ melding: 'Foretaksnavn kreves', panel: KV.Paneltitler.foretakUtland }),
   })),
   arbeidUtland: array().of(object().shape({
     adresse: object().shape({
