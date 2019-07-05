@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import './endrePeriode.css';
-import { connectRegistreringContext } from '../registrering-komponenter/state/registreringStateProvider';
+import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
 import { endrePeriodeSelectors, endrePeriodeActions } from './state/ducks/endrePeriode/';
 import { lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder';
 import { behandlingerSelectors } from '../ducks/behandlinger';
@@ -41,8 +41,6 @@ const EndrePeriode = ({
     oppdaterFom(periode.fom);
     oppdaterTom(periode.tom);
   }, [lovvalgsperiode]);
-
-  const settValgtBegrunnelse = event => oppdaterBegrunnelse(event.nativeEvent.target[event.nativeEvent.target.selectedIndex].value);
 
   const fritekstPaakrevd = () => begrunnelse === MKV.Koder.folketrygdloven.begrunnelser_endret_unntaksperiode.ANNET;
 
@@ -90,7 +88,7 @@ const EndrePeriode = ({
             bredde="xl"
             label="Begrunnelse for endret periode"
             value={begrunnelse}
-            onChange={settValgtBegrunnelse}
+            onChange={e => oppdaterBegrunnelse(e.target.value)}
             disabled={!redigerbart}
           >
             {MKV.KTObjects.folketrygdloven.begrunnelser_endret_unntaksperiode.map(kodeobjekt =>
@@ -145,4 +143,4 @@ const mapDispatchToProps = dispatch => ({
   oppdaterFritekst: fritekst => dispatch(endrePeriodeActions.oppdaterFritekst(fritekst)),
 });
 
-export default connectRegistreringContext(mapStateToProps, mapDispatchToProps)(EndrePeriode);
+export default RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(EndrePeriode);

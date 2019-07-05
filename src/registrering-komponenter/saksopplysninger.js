@@ -15,9 +15,9 @@ import EndrePeriode from './endrePeriode';
 import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
 import { endrePeriodeSkjema } from './validering/endrePeriodeSkjema';
-import { endrePeriodeSelectors, endrePeriodeActions } from './state/ducks/endrePeriode';
+import { endrePeriodeSelectors } from './state/ducks/endrePeriode';
 import { createValidator } from '../soknad-komponenter/skjema/validering/skjemaer/createValidator';
-import { connectRegistreringContext } from './state/registreringStateProvider';
+import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
 import './saksopplysninger.css';
 
 const uuid = require('uuid/v4');
@@ -249,8 +249,6 @@ Saksopplysninger.propTypes = {
   location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgsperioder: PT.func.isRequired,
-  oppdaterEndrePeriodeFom: PT.func.isRequired,
-  oppdaterEndrePeriodeTom: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -267,8 +265,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   oppdaterLovvalgsperioder: (behandlingID, lovvalgsperiodeListe) => dispatch(lovvalgsperioderOperations.send(behandlingID, lovvalgsperiodeListe)),
-  oppdaterEndrePeriodeFom: fom => dispatch(endrePeriodeActions.oppdaterFom(fom)),
-  oppdaterEndrePeriodeTom: tom => dispatch(endrePeriodeActions.oppdaterTom(tom)),
 });
 
-export default withRouter(connectRegistreringContext(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
+export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

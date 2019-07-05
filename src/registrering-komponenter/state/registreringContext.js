@@ -1,13 +1,13 @@
 import React from 'react';
+import { connectCustomContext, useCustomContext } from '../../utils/customContext';
 
-export const RegistreringContext = React.createContext({});
+const RegistreringContext = React.createContext({});
 
-export const useRegistreringContext = () => {
-  const [state, dispatch] = React.useContext(RegistreringContext);
-  return ([
-    state,
-    arg => (typeof arg === 'function'
-      ? arg(dispatch)
-      : dispatch(arg)),
-  ]);
-};
+const useRegistreringContext = () => useCustomContext(RegistreringContext);
+
+const connectRegistreringContext = (stateToProps, dispatchToProps) => component => props =>
+  connectCustomContext(stateToProps, dispatchToProps)(component)(props)(RegistreringContext);
+
+export const Context = RegistreringContext;
+export const useContext = useRegistreringContext;
+export const connect = connectRegistreringContext;

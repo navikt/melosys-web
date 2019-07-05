@@ -10,11 +10,11 @@ import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta';
-import { soknadOperations } from '../ducks/soknad';
 
 import './registrering.css';
 import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder';
-import { connectRegistreringContext, RegistreringStateProvider } from '../registrering-komponenter/state/registreringStateProvider';
+import { RegistreringStateProvider } from '../registrering-komponenter/state/registreringStateProvider';
+import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
 import { initialState, reducer } from '../registrering-komponenter/state/reducer';
 
 const Registrering = props => {
@@ -27,14 +27,13 @@ const Registrering = props => {
     setBehandlingID(Utils._toInteger(_behandlingID));
 
     const {
-      hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder, hentSoknad,
+      hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder,
     } = props;
     try {
       await hentFagsaker(snr);
       await hentBehandling(_behandlingID);
       await hentAvklartefakta(_behandlingID);
       await hentLovvalgsperioder(_behandlingID);
-      await hentSoknad(_behandlingID);
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -70,7 +69,6 @@ Registrering.propTypes = {
   hentBehandling: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
-  hentSoknad: PT.func.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   vurderingBegrunnelser: PT.object,
@@ -106,12 +104,11 @@ const mapDispatchToProps = dispatch => ({
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  hentSoknad: behandlingID => dispatch(soknadOperations.hent(behandlingID)),
 });
 
 const RegistreringStateProviderWrapper = props => (
   <RegistreringStateProvider initialState={initialState} reducer={reducer}>
-    { connectRegistreringContext(mapStateToProps, mapDispatchToProps)(Registrering)(props) }
+    { RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Registrering)(props) }
   </RegistreringStateProvider>
 );
 
