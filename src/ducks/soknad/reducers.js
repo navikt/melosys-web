@@ -12,7 +12,7 @@ import { formatterDatoTilISO } from '../../utils/dato';
  * action types som sendes inn sammen med dataene.
  */
 
-const initialState = {
+export const initialState = {
   data: {},
   status: STATUS.NOT_STARTED,
 };
