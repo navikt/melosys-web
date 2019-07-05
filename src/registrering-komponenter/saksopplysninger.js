@@ -46,7 +46,7 @@ class Saksopplysninger extends Component {
     skalEndrePeriode: false,
     fom: null,
     tom: null,
-    endrePeriodeBegrunnelse: MKV.Koder.folketrygdloven.begrunnelser_endret_unntaksperiode.PERIODE_FEILREGISTRERT,
+    endrePeriodeBegrunnelse: MKV.Koder.folketrygdloven.begrunnelser.endret_unntaksperiode.PERIODE_FEILREGISTRERT,
     endrePeriodeBegrunnelseFritekst: '',
     endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
   };
