@@ -30,10 +30,12 @@ const Registrering = props => {
       hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder,
     } = props;
     try {
-      await hentFagsaker(snr);
-      await hentBehandling(_behandlingID);
-      await hentAvklartefakta(_behandlingID);
-      await hentLovvalgsperioder(_behandlingID);
+      await Promise.all([
+        hentFagsaker(snr),
+        hentBehandling(_behandlingID),
+        hentAvklartefakta(_behandlingID),
+        hentLovvalgsperioder(_behandlingID),
+      ]);
     } catch (e) {
       Utils.logger.error(e);
     }
