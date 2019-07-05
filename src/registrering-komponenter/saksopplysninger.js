@@ -137,7 +137,7 @@ class Saksopplysninger extends Component {
       return true;
     }
 
-    const fritekstPakrevd = endrePeriode.begrunnelse === MKV.Koder.folketrygdloven.begrunnelser_endret_unntaksperiode.ANNET;
+    const fritekstPakrevd = endrePeriode.begrunnelse === MKV.Koder.folketrygdloven.begrunnelser.endret_unntaksperiode.ANNET;
     const settings = { context: { fritekstPakrevd } };
     const stateObject = { fom: endrePeriode.fom, tom: endrePeriode.tom, fritekst: endrePeriode.fritekst };
     const endrePeriodeFeilmeldinger = createValidator(endrePeriodeSkjema, settings)(stateObject);
