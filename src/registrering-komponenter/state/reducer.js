@@ -8,8 +8,6 @@ import fagsakerReducer from '../../ducks/fagsaker/';
 import { initialState as fagsakerInitialState } from '../../ducks/fagsaker/reducers';
 import lovvalgsperioderReducer from '../../ducks/lovvalgsperioder';
 import { initialState as lovvalgsperioderInitialState } from '../../ducks/lovvalgsperioder/reducers';
-import soknadReducer from '../../ducks/soknad/';
-import { initialState as soknadInitialState } from '../../ducks/soknad/reducers';
 
 export const initialState = {
   avklartefakta: avklartefaktaInitialState,
@@ -17,7 +15,6 @@ export const initialState = {
   endrePeriode: endrePeriodeInitialState,
   fagsaker: fagsakerInitialState,
   lovvalgsperioder: lovvalgsperioderInitialState,
-  soknad: soknadInitialState,
 };
 
 export const reducer = ({
@@ -28,5 +25,4 @@ export const reducer = ({
   endrePeriode: endrePeriodeReducer(endrePeriode, action),
   fagsaker: fagsakerReducer(fagsaker, action),
   lovvalgsperioder: lovvalgsperioderReducer(lovvalgsperioder, action),
-  soknad: soknadReducer(soknad, action),
 });
