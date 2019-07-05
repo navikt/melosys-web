@@ -4,11 +4,12 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
-import './endrePeriode.css';
+import * as MPT from '../proptypes';
 import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
 import { endrePeriodeSelectors, endrePeriodeActions } from './state/ducks/endrePeriode/';
 import { lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder';
 import { behandlingerSelectors } from '../ducks/behandlinger';
+import './endrePeriode.css';
 
 const EndrePeriode = ({
   endrePeriode,
@@ -42,7 +43,7 @@ const EndrePeriode = ({
     oppdaterTom(periode.tom);
   }, [lovvalgsperiode]);
 
-  const fritekstPaakrevd = () => begrunnelse === MKV.Koder.folketrygdloven.begrunnelser_endret_unntaksperiode.ANNET;
+  const fritekstPaakrevd = () => begrunnelse === MKV.Koder.folketrygdloven.begrunnelser.endret_unntaksperiode.ANNET;
 
   const formaterDato = (event, oppdater) => {
     const nyDato = Utils.dato.vaskInputDato(event.target.value);
@@ -91,7 +92,7 @@ const EndrePeriode = ({
             onChange={e => oppdaterBegrunnelse(e.target.value)}
             disabled={!redigerbart}
           >
-            {MKV.KTObjects.folketrygdloven.begrunnelser_endret_unntaksperiode.map(kodeobjekt =>
+            {MKV.KTObjects.folketrygdloven.begrunnelser.endret_unntaksperiode.map(kodeobjekt =>
               <option key={kodeobjekt.kode} value={kodeobjekt.kode}>{kodeobjekt.term}</option>)}
           </Nav.Select>
         </Nav.Column>
@@ -115,7 +116,7 @@ const EndrePeriode = ({
 EndrePeriode.propTypes = {
   endrePeriode: PT.object.isRequired, // TODO: shape()
   lovvalgsperiode: PT.object.isRequired,
-  sedLovvalgsperiode: PT.object,
+  sedLovvalgsperiode: MPT.Periode,
   toggleSkalEndres: PT.func.isRequired,
   oppdaterFom: PT.func.isRequired,
   oppdaterTom: PT.func.isRequired,
