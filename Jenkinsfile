@@ -67,7 +67,7 @@ node {
   stage('Build') {
     echo('Build Web App')
 
-    if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+    if (scmVars.GIT_BRANCH.equalsIgnoreCase("master")) {
       buildVersion = "${semver}-${BUILD_NUMBER}"
     }
     else if (prNummer != null) {
@@ -94,7 +94,7 @@ node {
 
   stage('Deploy to Nexus') {
     def repositoryId
-    if (scmVars.GIT_BRANCH.equalsIgnoreCase("develop")) {
+    if (scmVars.GIT_BRANCH.equalsIgnoreCase("master")) {
       repositoryId = "m2internal"
     }
     else {
