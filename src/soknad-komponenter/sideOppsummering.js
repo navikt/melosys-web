@@ -13,11 +13,10 @@ import * as MPT from '../proptypes/';
 import EnkeltDato from '../komponenter/datoOmrade/enkeltDato';
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
-import { fagsakSelectors } from '../ducks/fagsaker/';
+import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger/';
-import { avklartefaktaSelectors } from '../ducks/avklartefakta';
+import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta';
 import { KodeTermSelect } from './kodeTermSelect';
-import Behandlingsmeny from './behandlingsmeny';
 
 import './sideOppsummering.css';
 
@@ -26,6 +25,24 @@ class SideOppsummering extends Component {
     behandlingsstatus: 'VELG',
     statusmelding: null,
   };
+  async componentDidMount() {
+    const {
+      snr,
+      behandlingID,
+      hentFagsaker,
+      hentBehandling,
+      hentAvklartefakta,
+    } = this.props;
+    try {
+      Promise.all([])
+    }
+    catch (e) {
+      console.log(e);
+    }
+    await hentFagsaker(snr);
+    await hentBehandling(behandlingID);
+    //await hentAvklartefakta(behandlingID);
+  }
 
   onChange = event => {
     const { value } = event.currentTarget;
@@ -87,11 +104,6 @@ class SideOppsummering extends Component {
     return endreStatusValg;
   };
 
-  apneTidligereBehandlinger = () => {
-    const URI_SOK = `/sok/${this.props.person.fnr}`;
-    window.open(URI_SOK);
-  };
-
   render() {
     const {
       redigerbart,
@@ -100,7 +112,6 @@ class SideOppsummering extends Component {
       person,
       soknadsperiodeFom,
       soknadsperiodeTom,
-      behandlingstype,
     } = this.props;
 
     if (!oppsummering) return <div />;
@@ -123,13 +134,7 @@ class SideOppsummering extends Component {
     } = person;
 
     const {
-      lagreOgLukkHandle,
-      oppfriskSaksopplysningerHandle,
-      tilbakeleggeHandle,
-      visHenleggDialogHandle,
       arbeidsland,
-      avsluttSakSomBortfalt,
-      endreLovvalgsperiodeRedigerbart,
     } = this.props;
 
     const arbeidslandSetning = Utils.streng.arrayTilKonjunksjon(arbeidsland.map(land => land.term));
@@ -139,22 +144,6 @@ class SideOppsummering extends Component {
     return (
       <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
         <Nav.Panel className="saksbehandling__soknadSammendrag">
-          <Nav.Row>
-            <Nav.Column xs="12" md="12">
-              <div className="oppsummering__menylinje">
-                <Behandlingsmeny
-                  lagreOgLukkHandle={lagreOgLukkHandle}
-                  tilbakeleggeHandle={tilbakeleggeHandle}
-                  oppfriskSaksopplysningerHandle={oppfriskSaksopplysningerHandle}
-                  visHenleggDialogHandle={visHenleggDialogHandle}
-                  avsluttSakSomBortfalt={avsluttSakSomBortfalt}
-                  apneTidligereBehandlinger={this.apneTidligereBehandlinger}
-                  redigerbart={endreLovvalgsperiodeRedigerbart}
-                  visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
-                />
-              </div>
-            </Nav.Column>
-          </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="12" md="6">
               <Nav.Undertittel className="soknadSammendrag__header">Søknad</Nav.Undertittel>
@@ -214,22 +203,17 @@ class SideOppsummering extends Component {
 }
 
 SideOppsummering.propTypes = {
+  snr: PT.number.isRequired,
   behandlingID: PT.number.isRequired,
   behandlingstype: PT.string.isRequired,
   redigerbart: PT.bool,
   endreLovvalgsperiodeRedigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
-  avsluttSakSomBortfalt: PT.func.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
-  oppfriskSaksopplysningerHandle: PT.func.isRequired,
-  lagreOgLukkHandle: PT.func.isRequired,
-  tilbakeleggeHandle: PT.func.isRequired,
-  visHenleggDialogHandle: PT.func.isRequired,
-  tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
 SideOppsummering.defaultProps = {
@@ -251,6 +235,9 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+  hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
+  hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
+  hentAvklartefakta: behandingID => dispatch(avklartefaktaOperations.hent(behandingID)),
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
 });
 

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
@@ -14,6 +15,7 @@ import { Saksopplysninger } from './saksopplysninger';
 
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 import SideOppsummering from '../soknad-komponenter/sideOppsummering';
+import Behandlingsmeny from '../soknad-komponenter/behandlingsmeny';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingsresultatOperations } from '../ducks/behandlingsresultat/';
@@ -38,6 +40,7 @@ class Saksbehandling extends Component {
     oppfriskningBlokkererInnhold: false,
     visHenleggDialog: false,
     behandlingID: -1,
+    snr: -1,
   };
 
   componentDidMount() {
@@ -58,7 +61,10 @@ class Saksbehandling extends Component {
     const { match, location } = this.props;
     const { snr } = match.params;
     const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
-    this.setState({ behandlingID: Utils._toInteger(behandlingID) });
+    this.setState({
+      snr: Utils._toInteger(snr),
+      behandlingID: Utils._toInteger(behandlingID),
+    });
 
     const {
       hentFagsaker, hentBehandling, hentBehandlingsresultat,
@@ -241,10 +247,14 @@ class Saksbehandling extends Component {
     Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
     this.props.history.push('/');
   };
+  apneTidligereBehandlinger = () => {
+    const URI_SOK = `/sok/${this.props.person.fnr}`;
+    window.open(URI_SOK);
+  };
 
   render() {
-    const { redigerbart } = this.props;
-    const { behandlingID } = this.state;
+    const { redigerbart, behandlingstype, endreLovvalgsperiodeRedigerbart } = this.props;
+    const { snr, behandlingID } = this.state;
     const { blokkerInnholdMedOppfriskSpinner } = this;
 
     if (Utils._isNil(redigerbart)) return null;
@@ -277,15 +287,27 @@ class Saksbehandling extends Component {
               />
             </Nav.Column>
             <Nav.Column xs="5">
-              <SideOppsummering
-                behandlingID={behandlingID}
-                avsluttSakSomBortfalt={this.avsluttSakSomBortfalt}
-                oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
-                lagreOgLukkHandle={this.lagreOgLukk}
-                tilbakeleggeHandle={this.tilbakeleggeHandle}
-                visHenleggDialogHandle={this.visHenleggDialog}
-                tilForsidenHandle={this.navigerTilOversiktSide}
-              />
+              <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
+                <Nav.Panel className="saksbehandling__soknadSammendrag">
+                  <Nav.Row>
+                    <Nav.Column xs="12" md="12">
+                      <div className="oppsummering__menylinje">
+                        <Behandlingsmeny
+                          lagreOgLukkHandle={this.lagreOgLukk}
+                          tilbakeleggeHandle={this.tilbakeleggeHandle}
+                          oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
+                          visHenleggDialogHandle={this.visHenleggDialog}
+                          avsluttSakSomBortfalt={this.avsluttSakSomBortfalt}
+                          apneTidligereBehandlinger={this.apneTidligereBehandlinger}
+                          redigerbart={endreLovvalgsperiodeRedigerbart}
+                          visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
+                        />
+                      </div>
+                    </Nav.Column>
+                  </Nav.Row>
+                </Nav.Panel>
+              </section>
+              <SideOppsummering snr={snr} behandlingID={behandlingID} />
               <SideDialog behandlingID={behandlingID} />
             </Nav.Column>
           </Nav.Row>
@@ -351,6 +373,9 @@ Saksbehandling.propTypes = {
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterLovvalgperioderState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
+  behandlingstype: PT.string.isRequired,
+  endreLovvalgsperiodeRedigerbart: PT.bool.isRequired,
+  person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -375,6 +400,9 @@ const mapStateToProps = state => ({
   skjema: formSelectors.SoknadenFormSelector(state).values,
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  endreLovvalgsperiodeRedigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
+  person: behandlingerSelectors.PersonSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

@@ -7,6 +7,8 @@ import * as MPT from '../proptypes';
 import * as Utils from '../utils';
 import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
+import SideOppsummering from '../soknad-komponenter/sideOppsummering';
+
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta';
@@ -19,10 +21,12 @@ import { initialState, reducer } from '../registrering-komponenter/state/reducer
 
 const Registrering = props => {
   const [behandlingID, setBehandlingID] = React.useState(-1);
+  const [saksnummer, setSaksnummer] = React.useState(-1);
 
   const lastInnSaksopplysninger = async () => {
     const { match, location } = props;
     const { snr } = match.params;
+    setSaksnummer(Utils._toInteger(snr));
     const _behandlingID = Utils.queryString.getParam(location, 'behandlingID');
     setBehandlingID(Utils._toInteger(_behandlingID));
 
@@ -59,6 +63,7 @@ const Registrering = props => {
             />
           </Nav.Column>
           <Nav.Column xs="5">
+            {saksnummer !== -1 && <SideOppsummering snr={saksnummer} behandlingID={behandlingID} />}
             <SideDialog behandlingID={behandlingID} />
           </Nav.Column>
         </Nav.Row>
