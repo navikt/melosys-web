@@ -129,7 +129,8 @@ SideDialogBesvarSed.propTypes = {
 
 const mapStateToProps = state => ({
   kodeverk: {
-    bucTypeTerm: bucType => Object.values(EessiKodeverkSelectors.alleBUCtyperSelector(state)).flat()
+    bucTypeTerm: bucType => Object.values(EessiKodeverkSelectors.alleBUCtyperSelector(state))
+      .reduce((acc, val) => acc.concat(val)) // flatten
       .filter(buc => buc.kode === bucType).map(buc => buc.term),
     sedTypeTerm: sedType => EessiKodeverkSelectors.alleSEDtyperSelector(state)
       .filter(sed => sed.kode === sedType).map(sed => sed.term),

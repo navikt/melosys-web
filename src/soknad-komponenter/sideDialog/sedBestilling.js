@@ -118,7 +118,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
 
   const tilgjengeligeMottakerinstitusjoner = land => (land ? mottakerinstitusjoner.filter(institusjon => institusjon.landkode === land) : []);
 
-  const hentValgtKode = event => event.nativeEvent.target[event.nativeEvent.target.selectedIndex].value;
+  const hentValgtKode = event => event.target.value;
 
   const oppdaterFelt = felt => {
     const prevState = { ...oppdaterteFelt };

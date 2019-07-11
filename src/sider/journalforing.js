@@ -36,6 +36,9 @@ import * as MPT from '../proptypes';
 import { sokOperations, sokSelectors } from '../ducks/sok';
 
 class Journalforing extends Component {
+  state = {
+    valgtDokumentID: -1,
+  };
   async componentDidMount() {
     const { journalpostID } = this.props.match.params;
     queryParamLogger(this.props.location, 'kilde', 'GOSYS');
@@ -45,6 +48,10 @@ class Journalforing extends Component {
   async componentWillUnmount() {
     await this.props.resetJournalforingState();
   }
+  onChangeVedlegg = e => {
+    const { value: valgtDokumentID } = e.target;
+    this.setState({ valgtDokumentID });
+  };
 
   /** Handlers for de 2 individuelle knappene "knytt til sak" og "opprett ny sak" er egne
    * funksjoner. Allikevel trenger vi en default handler som Redux Form hekter på gjennom <form onsubmit="" .../>
@@ -268,18 +275,26 @@ class Journalforing extends Component {
     settFeltInnhold('behandlingstype', '');
   };
 
-  render() {
+  velgDokumentID = () => {
+    const { valgtDokumentID } = this.state;
     const {
       journalforing: { hoveddokument = {} },
+    } = this.props;
+    if (valgtDokumentID === -1 && !hoveddokument.dokumentID) return null;
+    if (valgtDokumentID === -1 && hoveddokument.dokumentID) return hoveddokument.dokumentID;
+    return valgtDokumentID;
+  };
+
+  render() {
+    const {
+      journalforing: { vedlegg = [], hoveddokument = {} },
       fagsakListe,
     } = this.props;
-
     const {
       knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
     } = this;
-
     const { journalpostID } = this.props.match.params;
-    const { dokumentID } = hoveddokument;
+    const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = 'Hoveddokument' } = hoveddokument;
 
     return (
       <div className="journalforing">
@@ -297,7 +312,9 @@ class Journalforing extends Component {
                     <div className="journalforing__skjema__scroll">
                       <Informasjon
                         journalpostID={journalpostID}
-                        dokumentID={dokumentID}
+                        dokumentID={hoveddokumentID}
+                        dokumentTittel={hoveddokumentTittel}
+                        vedlegg={vedlegg}
                         hentOgVisAvsender={hentOgVisAvsender}
                         hentOgVisBruker={hentOgVisBruker}
                       />
@@ -320,7 +337,20 @@ class Journalforing extends Component {
                 </Sticky>
               </Nav.Column>
               <Nav.Column xs="8">
-                { dokumentID && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={dokumentID} /></Nav.Panel> }
+                {vedlegg.length > 0 &&
+                  <Nav.Panel>
+                    <Nav.Select
+                      className="journalforing__dokument_visning"
+                      name="journalforing_pdf_dokumenter"
+                      label="Dokumentvisning"
+                      defaultValue={hoveddokumentID}
+                      onChange={this.onChangeVedlegg}>
+                      <option key={hoveddokumentID} value={hoveddokumentID}>{hoveddokumentTittel}</option>
+                      {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
+                    </Nav.Select>
+                  </Nav.Panel>
+                }
+                {this.velgDokumentID() && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} /></Nav.Panel>}
               </Nav.Column>
             </Nav.Row>
           </form>

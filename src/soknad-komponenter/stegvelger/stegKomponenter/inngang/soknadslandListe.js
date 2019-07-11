@@ -69,14 +69,14 @@ class SoknadslandListe extends Component {
 
   render () {
     const {
-      soknadslandBegrunnelser, alleLandkoder, soknadslandFraSoknad, redigerbart, soknadslandFaktaer,
+      soknadslandBegrunnelser, alleLandkoder, soknadslandFraSoknad, redigerbart, avklarteSoknadsland, soknadslandFaktaer,
     } = this.props;
 
     const {
       bekreftFjern, angreFjern, finnBegrunnelse, bekreftLeggTil, finnLandVedKode,
     } = this;
 
-    const alleGyldigeSoknadsland = soknadslandFaktaer.filter(avklartFakta => avklartFakta.fakta.includes('TRUE'));
+    const alleGyldigeSoknadsland = avklarteSoknadsland;
     const alleIkkeGyldigeSoknadsland = soknadslandFaktaer.filter(avklartFakta => avklartFakta.fakta.includes('FALSE'));
 
     const alleUbrukteLandkoder = alleLandkoder.filter(landkode => !soknadslandFraSoknad.includes(landkode.kode));

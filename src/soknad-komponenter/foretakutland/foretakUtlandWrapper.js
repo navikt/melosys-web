@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
+import * as KV from '../../kodeverk';
 import * as Nav from '../../utils/navFrontend';
 import * as Ikoner from '../../resources/images';
 
@@ -31,7 +32,7 @@ class ForetakUtlandWrapper extends Component {
     return (
       <div className="foretakUtland panelSeksjon">
         <Nav.EkspanderbartpanelBase
-          heading={<PanelHeader ikon={panelIkon} tittel="Arbeidsgiver i utlandet" undertittel="" />}
+          heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.foretakUtland} undertittel="" />}
           ariaTittel="Panel for arbeidsforholdene i utlandet">
           <Nav.Container fluid>
             { fields.map((fieldName, indeks) => (<EnkeltForetak key={fieldName} indeks={indeks} slettForetakHandler={slettForetakHandler} redigerbart={redigerbart} />))}
