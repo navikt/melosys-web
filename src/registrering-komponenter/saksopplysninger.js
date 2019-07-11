@@ -1,19 +1,24 @@
 import React, { Component, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { reduxForm, formValueSelector, autofill, setSubmitFailed } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as KV from '../kodeverk';
 import * as Utils from '../utils';
 import * as Api from '../services/api';
-import * as Skjema from '../soknad-komponenter/skjema';
 import * as MPT from '../proptypes';
 import * as Nav from '../utils/navFrontend';
 import ListevelgerFlervalg from '../komponenter/ui/listevelgerFlervalg';
 import Personopplysninger from '../soknad-komponenter/personopplysninger';
 import Medlemskap from '../komponenter/medlemskap';
+import EndrePeriode from './endrePeriode';
+import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder';
+import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
+import { endrePeriodeSkjema } from './validering/endrePeriodeSkjema';
+import { endrePeriodeSelectors } from './state/ducks/endrePeriode';
+import { createValidator } from '../soknad-komponenter/skjema/validering/skjemaer/createValidator';
+import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
+import './saksopplysninger.css';
 
 const uuid = require('uuid/v4');
 
@@ -21,13 +26,26 @@ const UnntakPeriodeBegrunnelse = kode => {
   if (!kode) return '';
   return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.unntak_periode_begrunnelser);
 };
-const landTekstFormat = landObjekt => (`${landObjekt.term} (${landObjekt.kode})`);
+
+const RegisterkontrollTreff = ({ begrunnelseKode }) => (
+  <div className="registerkontroll-listeelement">
+    <Nav.Ikoner kind="advarsel-sirkel-fyll" size="24" />
+    <Nav.Normaltekst>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</Nav.Normaltekst>
+  </div>
+);
+
+RegisterkontrollTreff.propTypes = {
+  begrunnelseKode: PT.string.isRequired,
+};
 
 class Saksopplysninger extends Component {
   state = {
+    unntaksperiodeVurdering: KV.Koder.Unntaksperiode.GODKJENT,
     begrunnelseFritekst: '',
     ikkeGodkjentBegrunnelseKoder: [],
+    endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
   };
+
   overstyrSubmit = event => {
     event.preventDefault();
   };
@@ -36,16 +54,20 @@ class Saksopplysninger extends Component {
     this.setState({ begrunnelseFritekst });
   };
   submitRegistrering = () => {
-    const { behandlingID, unntaksperiode, history } = this.props;
+    if (!this.validerFelt()) {
+      return false;
+    }
+
+    const { behandlingID, history } = this.props;
     const tilForsiden = () => history.push('/');
-    switch (unntaksperiode) {
+    switch (this.state.unntaksperiodeVurdering) {
       case KV.Koder.Unntaksperiode.GODKJENT:
-        Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID)
+        this.godkjenn(behandlingID)
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
       case KV.Koder.Unntaksperiode.INNHENT:
-        Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID)
+        this.innhentInfo(behandlingID)
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
@@ -64,91 +86,107 @@ class Saksopplysninger extends Component {
     }
   };
 
+  godkjenn = behandlingID => this.endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID));
+
+  innhentInfo = behandlingID => this.endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID));
+
+  endrePeriodeOgLagre = dispatchSaksflyt => (
+    this.props.endrePeriode.skalEndres
+      ? this.oppdaterAvklartefakta()
+        .then(() => this.oppdaterLovvalgsperioder()
+          .then(() => dispatchSaksflyt()))
+      : dispatchSaksflyt());
+
+  lagAvklartfakta = () => ({
+    referanse: MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE,
+    avklartefaktaKode: MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE,
+    fakta: [this.props.endrePeriode.begrunnelse],
+    subjektID: null,
+    begrunnelseKoder: [],
+    begrunnelseFritekst: this.props.endrePeriode.fritekst || null,
+  });
+
+  oppdaterAvklartefakta = () =>
+    this.props.oppdaterAvklartefakta(this.props.behandlingID, [...this.props.avklartefakta, this.lagAvklartfakta()]);
+
+  lagLovvalgsperioder = () => ([{
+    fomDato: `${Utils.dato.formatterDatoTilISO(this.props.endrePeriode.fom)}`,
+    tomDato: `${Utils.dato.formatterDatoTilISO(this.props.endrePeriode.tom)}`,
+    lovvalgsbestemmelse: this.props.sed.lovvalgsbestemmelse,
+    tilleggBestemmelse: null,
+    unntakFraBestemmelse: null,
+    innvilgelsesResultat: KV.Koder.INNVILGET,
+    lovvalgsland: this.props.sed.lovvalgslandKode,
+    unntakFraLovvalgsland: null,
+    trygdeDekning: MKV.Koder.trygdedekninger.UTEN_DEKNING,
+    medlemskapstype: MKV.Koder.medlemskapstyper.UNNTATT,
+    medlemskapsperiodeID: null,
+  }]);
+
+  oppdaterLovvalgsperioder = () =>
+    this.props.oppdaterLovvalgsperioder(this.props.behandlingID, this.lagLovvalgsperioder());
+
+  kanEndrePeriode = () => this.state.unntaksperiodeVurdering === KV.Koder.Unntaksperiode.GODKJENT
+    || this.state.unntaksperiodeVurdering === KV.Koder.Unntaksperiode.INNHENT;
+
+  validerFelt = () => this.validerEndrePeriode();
+
+  validerEndrePeriode = () => {
+    const { endrePeriode } = this.props;
+    if (!this.kanEndrePeriode() || !endrePeriode.skalEndres) {
+      return true;
+    }
+
+    const fritekstPakrevd = endrePeriode.begrunnelse === MKV.Koder.folketrygdloven.begrunnelser.endret_unntaksperiode.ANNET;
+    const settings = { context: { fritekstPakrevd } };
+    const stateObject = { fom: endrePeriode.fom, tom: endrePeriode.tom, fritekst: endrePeriode.fritekst };
+    const endrePeriodeFeilmeldinger = createValidator(endrePeriodeSkjema, settings)(stateObject);
+    const validert = Utils._isEmpty(endrePeriodeFeilmeldinger);
+
+    if (!validert) {
+      this.setState({ endrePeriodeFeilmeldinger });
+    }
+    return validert;
+  };
+
   render() {
     const {
-      medlemskap, sed, vurderingBegrunnelser, unntaksperiode,
+      medlemskap, sed, vurderingBegrunnelser,
     } = this.props;
     if (!sed.lovvalgsperiode) {
       return null;
     }
 
-    const { lovvalgsperiode, lovvalgsbestemmelse, lovvalgslandKode } = sed;
-    const lovvalgsland = KV.kodeTilObjekt(lovvalgslandKode, MKV.KTObjects.landkoder);
-    const fom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fom);
-    const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tom);
-    const inputStyle = {
-      width: '110%',
-    };
     const listevalgEndringHandler = event => {
       const ikkeGodkjentBegrunnelseKoder = [...event.value];
       this.setState({ ikkeGodkjentBegrunnelseKoder });
     };
+    const unikRadioButtonGruppeID = uuid();
     return (
       <div>
         <form name="registrering" id="registrering" onSubmit={this.overstyrSubmit}>
           <div className="stegvelger panelSeksjon">
             <div className="panel stegFane steg0 stegFane--aktiv">
-              <Nav.Systemtittel>Redigering av unntaksperioder</Nav.Systemtittel>
+              <Nav.Systemtittel>Registrering av unntaksperioder</Nav.Systemtittel>
               <br />
               <div className="vurderingEndrePeriode">
-                <Nav.Undertittel>Lovvalgsperiode fra SED</Nav.Undertittel>
-                <Nav.Row>
-                  <Nav.Column xs="3">
-                    <Nav.Input
-                      bredde="XXL"
-                      label="Startdato"
-                      value={fom}
-                      readOnly
-                    />
-                  </Nav.Column>
-                  <Nav.Column xs="3">
-                    <Nav.Input
-                      style={inputStyle}
-                      bredde="XXL"
-                      label="Sluttdato"
-                      value={tom}
-                      readOnly
-                    />
-                  </Nav.Column>
-                </Nav.Row>
-                <Nav.Row>
-                  <Nav.Column xs="3">
-                    <Nav.Input
-                      bredde="XXL"
-                      label="Land"
-                      value={landTekstFormat(lovvalgsland)}
-                      readOnly
-                    />
-                  </Nav.Column>
-                  <Nav.Column xs="3">
-                    <Nav.Input
-                      style={inputStyle}
-                      bredde="XXL"
-                      label="Hjemmel"
-                      value={lovvalgsbestemmelse}
-                      readOnly
-                    />
-                  </Nav.Column>
-                </Nav.Row>
-                <Nav.Row>
+                <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
-                    <Nav.Undertittel>Treff ved registerkontroll</Nav.Undertittel>
-                    <ul>
-                      {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
-                        <li key={uuid()}>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</li>)}
-                    </ul>
+                    <Nav.Element>Treff ved automatisk kontroll</Nav.Element>
+                    {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
+                      <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
                   </Nav.Column>
                 </Nav.Row>
-                <Nav.Row>
-                  <Nav.Column xs="3">
-                    <Skjema.RadioGruppe feltNavn="unntaksperiode" label="Vurder unntaksperiode">
-                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value={KV.Koder.Unntaksperiode.GODKJENT} label="Godkjenn" />
-                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value={KV.Koder.Unntaksperiode.INNHENT} label="Innhent informasjon" />
-                      <Skjema.Radio key={uuid()} feltNavn="unntaksperiode" value={KV.Koder.Unntaksperiode.AVSLAG} label="Ikke godkjenn" />
-                    </Skjema.RadioGruppe>
+                <Nav.Row className="seksjon">
+                  <Nav.Column xs="12">
+                    <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => this.setState({ unntaksperiodeVurdering: e.target.value })}>
+                      <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.GODKJENT} label="Godkjenn" defaultChecked />
+                      <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.INNHENT} label="Innhent informasjon" />
+                      <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.AVSLAG} label="Ikke godkjenn" />
+                    </Nav.Fieldset>
                   </Nav.Column>
                 </Nav.Row>
-                {unntaksperiode === KV.Koder.Unntaksperiode.AVSLAG && (
+                {this.state.unntaksperiodeVurdering === KV.Koder.Unntaksperiode.AVSLAG && (
                   <Fragment>
                     <Nav.Row>
                       <Nav.Column xs="6">
@@ -177,16 +215,21 @@ class Saksopplysninger extends Component {
                     </Nav.Row>
                   </Fragment>
                 )}
-                <Nav.Row>
+                <Nav.Row className="seksjon">
+                  <EndrePeriode
+                    feilmeldinger={this.state.endrePeriodeFeilmeldinger}
+                    redigerbart={this.kanEndrePeriode()} />
+                </Nav.Row>
+                <Nav.Row className="seksjon">
                   <Nav.Column xs="3">
-                    <Nav.Knapp type="hoved" onClick={() => this.submitRegistrering()}>LAGRE</Nav.Knapp>
+                    <Nav.Hovedknapp onClick={() => this.submitRegistrering()}>LAGRE</Nav.Hovedknapp>
                   </Nav.Column>
                 </Nav.Row>
               </div>
             </div>
           </div>
         </form>
-        <Personopplysninger redigerbart />
+        {/* <Personopplysninger redigerbart /> TODO: Må hentes fra context (SPRINT-34) */}
         {medlemskap && <Medlemskap medlemskap={medlemskap} />}
       </div>
     );
@@ -199,11 +242,13 @@ Saksopplysninger.propTypes = {
   sed: PT.object, // TODO prop-type
   vurderingBegrunnelser: PT.object,
   skjema: PT.any,
-  unntaksperiode: PT.string,
-  settFeilFelt: PT.func.isRequired,
+  avklartefakta: PT.array.isRequired,
+  endrePeriode: PT.object.isRequired,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
+  oppdaterAvklartefakta: PT.func.isRequired,
+  oppdaterLovvalgsperioder: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -211,29 +256,15 @@ Saksopplysninger.defaultProps = {
   vurderingBegrunnelser: {},
   sed: {},
   skjema: {},
-  unntaksperiode: '',
 };
 
-const skjemaSelector = formValueSelector(KV.Form.SOKNAD);
 const mapStateToProps = state => ({
-  unntaksperiode: skjemaSelector(state, 'unntaksperiode'),
-  initialValues: {
-    unntaksperiode: KV.Koder.Unntaksperiode.GODKJENT,
-  },
+  avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
+  endrePeriode: endrePeriodeSelectors.EndrePeriodeSelector(state),
 });
 const mapDispatchToProps = dispatch => ({
-  settFeltInnhold: (feltNavn, verdi) => dispatch(autofill(KV.Form.SOKNAD, feltNavn, verdi)),
-  settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.SOKNAD, ...feltNavn)),
+  oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
+  oppdaterLovvalgsperioder: (behandlingID, lovvalgsperiodeListe) => dispatch(lovvalgsperioderOperations.send(behandlingID, lovvalgsperiodeListe)),
 });
 
-const SaksopplysningerForm = reduxForm({
-  form: KV.Form.SOKNAD,
-  enableReinitialize: true,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-  onSubmit: () => {
-  },
-})(Saksopplysninger);
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksopplysningerForm));
+export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
