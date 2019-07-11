@@ -156,8 +156,8 @@ class Saksbehandling extends Component {
 
   lagreSoknadHandler = async () => {
     const { behandlingID } = this.state;
-    const { skjema, oppdaterSoknadState } = this.props;
-    await oppdaterSoknadState(skjema);
+    const { skjema, inngang_skjema, oppdaterSoknadState } = this.props;
+    await oppdaterSoknadState({ ...skjema, ...inngang_skjema });
 
     const { soknad, sendSoknad } = this.props;
     sendSoknad(behandlingID, soknad);
@@ -325,6 +325,7 @@ Saksbehandling.propTypes = {
   location: PT.object.isRequired,
   skjema: PT.any,
   artikkel16_skjema: PT.any,
+  inngang_skjema: PT.object,
   // Funcs
   hentFagsaker: PT.func.isRequired,
   hentBehandling: PT.func.isRequired,
@@ -362,6 +363,7 @@ Saksbehandling.defaultProps = {
   vilkar: [],
   skjema: {},
   artikkel16_skjema: {},
+  inngang_skjema: {},
 };
 /** Mapper både fast tekst inn til de forskjellige panelene i tillegg til å
  * mappe verdier fra søknaden (soknad) ut til Redux Form via initialValue.
@@ -376,6 +378,7 @@ const mapStateToProps = state => ({
   vilkar: vilkarSelectors.VilkarSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
   artikkel16_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
+  inngang_skjema: formSelectors.InngangFormSelector(state).values,
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
 });
