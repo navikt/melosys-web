@@ -235,6 +235,7 @@ class Stegvelger extends Component {
   tilSteg = async nyttStegNummer => {
     const {
       artikkel16_anmodning_skjema,
+      soknad_skjema,
       oppdaterPerioderState,
       oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
@@ -248,7 +249,7 @@ class Stegvelger extends Component {
 
     if (redigerbart) {
       await oppdaterLokalSoknadHandler();
-      await oppdaterPerioderState(artikkel16_anmodning_skjema);
+      await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
       await lagreAvklartefaktaHandler();
       await lagreVilkarHandler();
       await lagreLovvalgsperioderHandler();
