@@ -17,7 +17,6 @@ import * as Registrering from './modules/registrering';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Saksflyt from './modules/saksflyt';
 import * as ServerInfo from './modules/serverinfo';
-import * as Saksflyt from './modules/saksflyt';
 import * as Soknader from './modules/soknader';
 import * as Vilkar from './modules/vilkar';
 
@@ -55,7 +54,6 @@ export {
   Saksopplysninger,
   Saksflyt,
   ServerInfo,
-  Saksflyt,
   Soknader,
   Vilkar,
 };
