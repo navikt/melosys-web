@@ -11,7 +11,7 @@ const artikkel13_1_a_vedtak = object().shape({
       then: string().required('Dato kreves')
         .validDate('Dato kreves')
         .test('periode er forkortet', 'Ugyldig periode', function test(value) {
-          const { context: { lovvalgsperiode } } = this.options;
+          const { lovvalgsperiode } = this.options.context;
           return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, value);
         }),
       }),
