@@ -134,8 +134,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = state => {
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
 
   const unntakFraLovvalgsland = soknadsland.join('');
-  const lovvalgsperiode = formSelectors.Lovvalgsperiode(state);
-  const { unntakFraBestemmelse } = lovvalgsperiode;
+  const unntakFraBestemmelse = formSelectors.UnntakFraBestemmelseSelector(state);
 
   // Det er ikke et gyldig art16-lovvalg før unntakene er oppgitt
   if (!unntakFraBestemmelse || !unntakFraLovvalgsland) {
