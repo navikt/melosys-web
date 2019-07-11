@@ -18,7 +18,7 @@ import { soknadSelectors } from '../../../ducks/soknad';
 
 import './vurderingArtikkel13_1_a_vedtak.css';
 
-const VurderingArtikkel13_1_a_vedtak = props => {
+export const VurderingArtikkel13_1_A_Vedtak = props => {
   const {
     redigerbart, behandlingID, lovvalgsperiode, endreDatoOgSendLovvalgsperioder, lagreOgFatteVedtak, formIsValid, formValues, touch,
   } = props;
@@ -107,7 +107,7 @@ const VurderingArtikkel13_1_a_vedtak = props => {
   );
 };
 
-VurderingArtikkel13_1_a_vedtak.propTypes = {
+VurderingArtikkel13_1_A_Vedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgsperiode: PT.object,
@@ -118,7 +118,7 @@ VurderingArtikkel13_1_a_vedtak.propTypes = {
   touch: PT.func.isRequired,
 };
 
-VurderingArtikkel13_1_a_vedtak.defaultProps = {
+VurderingArtikkel13_1_A_Vedtak.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
 };
@@ -151,6 +151,6 @@ const VurderingArtikkel13_1_a_vedtak_form = reduxForm({
       lovvalgsperiode: props.lovvalgsperiode,
     },
   })(values),
-})(VurderingArtikkel13_1_a_vedtak);
+})(VurderingArtikkel13_1_A_Vedtak);
 
 export default connect(mapStateToProps)(VurderingArtikkel13_1_a_vedtak_form);
