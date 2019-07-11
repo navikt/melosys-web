@@ -185,8 +185,8 @@ class Saksbehandling extends Component {
   };
 
   oppdaterOgLagreBehandlingerHandler = async () => {
-    const { artikkel16_skjema, oppdaterBehandlingerState } = this.props;
-    await oppdaterBehandlingerState(artikkel16_skjema);
+    const { skjema, artikkel16_skjema, oppdaterBehandlingerState } = this.props;
+    await oppdaterBehandlingerState({ ...skjema, ...artikkel16_skjema });
 
     this.lagreBehandlinger();
   };
