@@ -23,7 +23,7 @@ import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar/';
 import { vedtakOperations } from '../../ducks/vedtak/';
 import { formSelectors } from '../../ducks/form/';
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
-import { AnmodningsperioderStore, AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore } from './StegState/';
+import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore } from './StegState/';
 
 import './stegvelger.css';
 
@@ -32,7 +32,6 @@ class Stegvelger extends Component {
     aktivtStegNummer: 0,
     aktuelleSteg: [],
     stegStores: {
-      anmodningsperioder: new AnmodningsperioderStore(),
       avklartefakta: new AvklartefaktaStore(),
       vilkaar: new VilkaarStore(),
       lovvalgsbestemmelse: new LovvalgsbestemmelseStore(),
@@ -118,14 +117,14 @@ class Stegvelger extends Component {
 
     const { aktivtStegNummer, stegStores } = this.state;
     const {
-      anmodningsperioder, vilkaar, avklartefakta, lovvalgsbestemmelse,
+      vilkaar, avklartefakta, lovvalgsbestemmelse,
     } = stegStores;
 
     await Promise.all([
-      this.props.oppdaterAnmodningsPerioder(anmodningsperioder.hent()),
       this.props.oppdaterVilkaar(vilkaar.hent()),
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
       this.props.oppdaterLovvalgperioder(lovvalgsbestemmelse.hent()),
+      this.props.oppdaterAnmodningsPerioder(lovvalgsbestemmelse.hent()),
     ]);
 
     this.props.oppdaterLokalSoknadHandler();
@@ -192,7 +191,7 @@ class Stegvelger extends Component {
 
     const { props } = this;
 
-    const propsLight = { //TODO: oppdater anmodningsperioder
+    const propsLight = {
       anmodningsperioder: props.anmodningsperioder,
       behandlingID: props.behandlingID,
       virksomheterIPerioden: props.arbeidsgivereIPerioden,
