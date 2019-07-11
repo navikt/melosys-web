@@ -9,6 +9,5 @@ const createValidator = (schema, settings) => values => {
     }), {});
   }
 };
-/* eslint-enable */
 
 export { createValidator };
