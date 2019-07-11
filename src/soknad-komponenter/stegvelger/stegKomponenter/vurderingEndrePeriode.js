@@ -7,7 +7,7 @@ import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
-import { lagAvklartfakta, slettAvklartfakta, konverterTilStegData, hentFaktaVerdi } from '../../../regler/avklartefakta';
+import { konverterTilStegData, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import { KodeTermSelect } from '../../kodeTermSelect';
@@ -24,6 +24,7 @@ export class VurderingEndrePeriode extends React.Component {
   state = {
     nyTomDato: '',
     nyTomDatoFeilmelding: undefined,
+    begrunnelse: hentFaktaVerdi(this.props.tilstand.aarsakEndringPeriodeAvklartfakta) || '',
     begrunnelseFeilmelding: undefined,
     fritekst: null,
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
@@ -39,11 +40,6 @@ export class VurderingEndrePeriode extends React.Component {
     this.hentOpprinneligPeriode(behandlingID);
 
     if (!redigerbart) this.settSluttDato(lovvalgsPeriode.tomDato);
-  }
-
-  componentWillUnmount() {
-    const { slettData } = this.props;
-    slettData(slettAvklartfakta(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE));
   }
 
   settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
@@ -75,7 +71,7 @@ export class VurderingEndrePeriode extends React.Component {
     return tomDatoGyldig;
   };
 
-  erBegrunnelseGyldig = () => hentFaktaVerdi(this.props.tilstand.aarsakEndringPeriodeAvklartfakta);
+  erBegrunnelseGyldig = () => this.state.begrunnelse;
 
   validerBegrunnelse = () => {
     const begrunnelseGyldig = this.erBegrunnelseGyldig();
@@ -97,20 +93,17 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   vedBegrunnelseEndring = event => {
-    const { oppdaterData } = this.props;
-
-    oppdaterData(lagAvklartfakta(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE, null, event.target.value));
-
-    this.setState({ begrunnelseFeilmelding: undefined });
+    this.setState({ begrunnelse: event.target.value, begrunnelseFeilmelding: undefined });
   };
 
   vedKlikkEndrePeriode = async () => {
-    const { vedtaEndretPeriode, tilForsiden, tilstand: { aarsakEndringPeriodeAvklartfakta } } = this.props;
+    const { vedtaEndretPeriode, tilForsiden } = this.props;
     const { sendEndretLovvalgsPeriode, validerAlt } = this;
+    const { begrunnelse } = this.state;
 
     if (validerAlt()) {
       await sendEndretLovvalgsPeriode();
-      await vedtaEndretPeriode(hentFaktaVerdi(aarsakEndringPeriodeAvklartfakta));
+      await vedtaEndretPeriode(begrunnelse);
       tilForsiden();
     }
   };
@@ -141,6 +134,7 @@ export class VurderingEndrePeriode extends React.Component {
     const {
       nyTomDato,
       nyTomDatoFeilmelding,
+      begrunnelse,
       begrunnelseFeilmelding,
       fritekst,
       opprinneligLovvalgsperiode: { fom, tom },
@@ -212,7 +206,7 @@ export class VurderingEndrePeriode extends React.Component {
               feil={begrunnelseFeilmelding}
               koder={MKV.KTObjects.begrunnelser.endretperiode}
               label="Begrunnelse"
-              value={endretPeriodeBegrunnelse || ''}
+              value={begrunnelse}
               onChange={vedBegrunnelseEndring}
               redigerbart={redigerbart}
             />

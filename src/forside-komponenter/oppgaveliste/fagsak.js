@@ -1,6 +1,7 @@
 import React from 'react';
-import * as MPT from '../../proptypes';
+import * as MKV from 'melosys-kodeverk';
 
+import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
@@ -27,13 +28,15 @@ const Fagsak = ({ sak }) => {
   } = sak;
 
   const {
+    behandlingstype,
     soknadsperiode,
     land,
   } = behandlingOversikter[0];
-
   const tittel = `${KV.objektTilTerm(sakstype)}`;
-  const routePath = `/saksbehandling/${saksnummer}`;
-
+  let routePath = `/saksbehandling/${saksnummer}`;
+  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
+    routePath = `/registrering/${saksnummer}`;
+  }
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const customMargin = { marginLeft: '1em' };
   return (

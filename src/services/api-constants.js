@@ -23,6 +23,6 @@ export const SAKSFLYT = 'saksflyt';
 export const SAKSOPPLYSNINGER = 'saksopplysninger';
 export const SERVERINFO = 'serverinfo';
 export const SOKNADER = 'soknader';
-export const VEDTAK = 'vedtak';
 export const UNNTAKSPERIODER = 'unntaksperioder';
+export const VEDTAK = 'vedtak';
 export const VILKAAR = 'vilkaar';

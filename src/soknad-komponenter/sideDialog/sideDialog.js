@@ -8,7 +8,7 @@ import * as Utils from './../../utils';
 import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
 import SideDialogSedBestilling from './sedBestilling';
-import SideDialogSedUnderArbeid from './sideDialogSedUnderArbeid';
+import SideDialogBesvarSed from './sideDialogBesvarSed';
 
 import './sideDialog.css';
 
@@ -37,8 +37,8 @@ class SideDialog extends Component {
     Utils.feature.namespaceToggle('q2', 't8')
       .then(skalVises => {
         if (skalVises) {
-          this.leggTilFane({ navn: 'sedbestilling', tittel: 'Send SED' });
-          this.leggTilFane({ navn: 'sedunderarbeid', tittel: 'SED under arbeid' });
+          this.leggTilFane({ navn: 'sedbestilling', tittel: 'Opprett ny BUC' });
+          this.leggTilFane({ navn: 'besvarsed', tittel: 'Besvar SED' });
         }
       });
   }
@@ -50,8 +50,8 @@ class SideDialog extends Component {
       return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} />;
     } else if (navn === 'sedbestilling') {
       return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} />;
-    } else if (navn === 'sedunderarbeid') {
-      return <SideDialogSedUnderArbeid key={uuid()} behandlingID={behandlingID} />;
+    } else if (navn === 'besvarsed') {
+      return <SideDialogBesvarSed key={uuid()} behandlingID={behandlingID} />;
     }
     return <SideDialogDokumenter key={uuid()} />;
   };

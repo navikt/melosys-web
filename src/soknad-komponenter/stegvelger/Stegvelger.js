@@ -42,10 +42,12 @@ class Stegvelger extends Component {
 
   async componentDidMount() {
     this.aktiv = true;
-    const { snr } = this.props.match.params;
-    this.props.hentInngang(snr);
 
-    const { behandlingID } = this.props;
+    const { behandlingID, match, hentInngang } = this.props;
+    const { aktivtStegNummer } = this.state;
+
+    const { snr } = match.params;
+    hentInngang(snr);
 
     await Promise.all([
       this.props.hentMedlemsPerioder(behandlingID),
@@ -55,7 +57,7 @@ class Stegvelger extends Component {
       this.props.hentAnmodningsperioder(behandlingID),
     ]);
 
-    this.oppdaterAktuelleSteg();
+    this.oppdaterAktuelleSteg(aktivtStegNummer);
   }
 
   componentWillUnmount() {
@@ -114,9 +116,10 @@ class Stegvelger extends Component {
   publiserStegdata = async () => {
     if (!this.aktiv) { return; }
 
+    const { aktivtStegNummer, stegStores } = this.state;
     const {
       anmodningsperioder, vilkaar, avklartefakta, lovvalgsbestemmelse,
-    } = this.state.stegStores;
+    } = stegStores;
 
     await Promise.all([
       this.props.oppdaterAnmodningsPerioder(anmodningsperioder.hent()),
@@ -125,7 +128,8 @@ class Stegvelger extends Component {
       this.props.oppdaterLovvalgperioder(lovvalgsbestemmelse.hent()),
     ]);
 
-    this.oppdaterAktuelleSteg();
+    this.props.oppdaterLokalSoknadHandler();
+    this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
   fatteVedtakHandler = async behandlingsresultattype => {
@@ -172,7 +176,7 @@ class Stegvelger extends Component {
    * @param props
    * @returns {Array}
    */
-  oppdaterAktuelleSteg = () => {
+  oppdaterAktuelleSteg = aktivtStegNummer => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
@@ -188,7 +192,7 @@ class Stegvelger extends Component {
 
     const { props } = this;
 
-    const propsLight = { //TODO oppdater anmodningsperioder
+    const propsLight = { //TODO: oppdater anmodningsperioder
       anmodningsperioder: props.anmodningsperioder,
       behandlingID: props.behandlingID,
       virksomheterIPerioden: props.arbeidsgivereIPerioden,
@@ -199,10 +203,11 @@ class Stegvelger extends Component {
       behandlingstype: props.oppsummering.behandlingstype,
       behandlingsstatus: props.oppsummering.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
+      artikkel16_anmodning_skjema: props.artikkel16_anmodning_skjema,
+      soknad_skjema: props.soknad_skjema,
       inngang: props.inngang,
       tilgjengeligeHandlers,
       saksopplysninger: props.saksopplysninger,
-      skjema: props.skjema,
       arbeidsland: props.arbeidsland,
       valgteVirksomheter: props.valgteVirksomheter,
       vilkar: props.vilkar,
@@ -214,7 +219,7 @@ class Stegvelger extends Component {
     // Dersom ved en re-kalkulering av aktuelle steg viser seg at det ikke er flere mulige steg
     // må vi normalisere siden aktivtStegNummer vil ligge 1 steg foran det som er mulig. Sjekk derfor
     // på faktisk antall mulige steg.
-    const normalisertAktivtSteg = Math.min(this.state.aktivtStegNummer, aktuelleSteg.length - 1);
+    const normalisertAktivtSteg = Math.min(aktivtStegNummer, aktuelleSteg.length - 1);
 
     aktuelleSteg[normalisertAktivtSteg].aktivtSteg = true;
 
@@ -237,33 +242,32 @@ class Stegvelger extends Component {
    */
   tilSteg = async nyttStegNummer => {
     const {
-      skjema,
+      artikkel16_anmodning_skjema,
+      soknad_skjema,
       oppdaterPerioderState,
       oppdaterLokalSoknadHandler,
       lagreSoknadHandler,
-    } = this.props;
-
-    await oppdaterLokalSoknadHandler();
-
-    this.setState({ aktivtStegNummer: nyttStegNummer });
-
-    const {
+      redigerbart,
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
     } = this.props;
 
-    await oppdaterPerioderState(skjema);
+    this.setState({ aktivtStegNummer: nyttStegNummer });
 
-    await lagreAvklartefaktaHandler();
-    await lagreVilkarHandler();
-    await lagreLovvalgsperioderHandler();
+    if (redigerbart) {
+      await oppdaterLokalSoknadHandler();
+      await oppdaterPerioderState({ ...soknad_skjema, ...artikkel16_anmodning_skjema });
+      await lagreAvklartefaktaHandler();
+      await lagreVilkarHandler();
+      await lagreLovvalgsperioderHandler();
 
-    if (this.erSisteSteg(nyttStegNummer)) {
-      await lagreSoknadHandler();
+      if (this.erSisteSteg(nyttStegNummer)) {
+        await lagreSoknadHandler();
+      }
     }
 
-    this.oppdaterAktuelleSteg();
+    this.oppdaterAktuelleSteg(nyttStegNummer);
   };
 
   /** Beregn neste steg i rekken, men ikke lenger enn
@@ -316,9 +320,10 @@ Stegvelger.propTypes = {
   match: PT.object.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
-  oppsummering: MPT.Oppsummering,
+  oppsummering: MPT.Behandlinger.Oppsummering,
   saksopplysninger: PT.object.isRequired,
-  skjema: PT.object.isRequired,
+  soknad_skjema: PT.object.isRequired,
+  artikkel16_anmodning_skjema: PT.object,
   oppdaterVilkaar: PT.func.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgperioder: PT.func.isRequired,
@@ -336,6 +341,7 @@ Stegvelger.propTypes = {
   anmodningsperioder: PT.array.isRequired,
   oppdaterAnmodningsPerioder: PT.func.isRequired,
   lagreAnmodningsperioderHandler: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -344,6 +350,7 @@ Stegvelger.defaultProps = {
   inngang: {},
   oppsummering: {},
   valgteVirksomheter: [],
+  artikkel16_anmodning_skjema: {},
 };
 
 const mapStateToProps = state => ({
@@ -357,7 +364,8 @@ const mapStateToProps = state => ({
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  skjema: formSelectors.SoknadenFormSelector(state).values,
+  soknad_skjema: formSelectors.SoknadenFormSelector(state).values,
+  artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),

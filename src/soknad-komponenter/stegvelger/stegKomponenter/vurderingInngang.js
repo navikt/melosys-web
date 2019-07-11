@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
-import { FieldArray } from 'redux-form';
+import { FieldArray, reduxForm } from 'redux-form';
+import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as MPT from '../../../proptypes/';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
+
+import { soknadSelectors } from '../../../ducks/soknad';
 
 import SoknadslandListe from './inngang/soknadslandListe';
 
@@ -63,4 +66,18 @@ VurderingInngang.propTypes = {
   slettData: PT.func.isRequired,
 };
 
-export default VurderingInngang;
+const mapStateToProps = state => ({
+  initialValues: {
+    soknadsland: soknadSelectors.SoknadslandSelector(state),
+  },
+});
+
+const VurderingInngangForm = reduxForm({
+  form: KV.Form.INNGANG,
+  enableReinitialize: true,
+  destroyOnUnmount: true,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+})(VurderingInngang);
+
+export default connect(mapStateToProps)(VurderingInngangForm);
