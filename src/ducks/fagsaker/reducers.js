@@ -8,7 +8,7 @@ import * as Types from './types';
 
 import { STATUS } from '../../services/utils';
 
-const initialState = {
+export const initialState = {
   data: {},
   status: STATUS.NOT_STARTED,
 };

@@ -4,6 +4,7 @@ import * as Types from './types';
 
 import { strengTilInt } from '../../utils/streng';
 import { formatterDatoTilISO } from '../../utils/dato';
+import * as Utils from '../../utils';
 
 /**
  * Reducers
@@ -12,7 +13,28 @@ import { formatterDatoTilISO } from '../../utils/dato';
  * action types som sendes inn sammen med dataene.
  */
 
-const initialState = {
+const lagNullableAdresse = adresse => {
+  if (Utils._isNil(adresse)) {
+    return {
+      gatenavn: null,
+      husnummer: null,
+      region: null,
+      postnummer: null,
+      poststed: null,
+      landkode: null,
+    };
+  }
+  return {
+    gatenavn: adresse.gatenavn || null,
+    husnummer: adresse.husnummer || null,
+    region: adresse.region || null,
+    postnummer: adresse.postnummer || null,
+    poststed: adresse.poststed || null,
+    landkode: adresse.landkode || null,
+  };
+};
+
+export const initialState = {
   data: {},
   status: STATUS.NOT_STARTED,
 };
@@ -111,11 +133,11 @@ export default function reducer(state = initialState, action) {
           studentSemester: null,
           studentFinansieringKode: null,
         },
-        foretakUtland: dokument.foretakUtland.filter(foretakUtland => (
-          foretakUtland.navn
-          && foretakUtland.orgnr
-          && foretakUtland.adresse
-        )),
+        foretakUtland: dokument.foretakUtland.map(foretakUtland => ({
+          navn: foretakUtland.navn || null,
+          orgnr: foretakUtland.orgnr || null,
+          adresse: lagNullableAdresse(foretakUtland.adresse),
+        })),
         bosted: {
           intensjonOmRetur: null,
           antallMaanederINorge: null,

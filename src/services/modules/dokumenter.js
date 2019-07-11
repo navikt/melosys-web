@@ -2,9 +2,9 @@ import { getAsJson, postAsJson, postAsJsonReceiveAsPDF } from '../utils';
 import { API_BASE_URL, DOKUMENTER } from '../api-constants';
 
 // eslint-disable-next-line import/prefer-default-export
-export const pdfURI = (journalforingID, dokumentID) => (`${API_BASE_URL}${DOKUMENTER}/pdf/${journalforingID}/${dokumentID}`);
+export const pdfURI = (journalpostID, dokumentID) => (`${API_BASE_URL}${DOKUMENTER}/pdf/${journalpostID}/${dokumentID}`);
 
-export const hentDokument = (journalforingID, dokumentID) => getAsJson(pdfURI(journalforingID, dokumentID));
+export const hentDokument = (journalpostID, dokumentID) => getAsJson(pdfURI(journalpostID, dokumentID));
 /**
  * Lag pdfUtkast henter pdf dokument basert på :behandligID og :dokumentytpekode
  * @param behandlingID
@@ -22,7 +22,7 @@ export const forhandsvisPDF = (behandlingID, dokumenttypeKode, data) => {
  * @param behandlingID
  * @param dokumenttypeKode see kodeverk#dokumenttyper
  * @param dokument
- * @returns {Promise<*>} med {location: `/dokumenter/pdf/${journalforingID}/${dokumentID}`}
+ * @returns {Promise<*>} med {location: `/dokumenter/pdf/${journalpostID}/${dokumentID}`}
  * Retur objektet benyttes til å kalle
  */
 export const opprettDokument = (behandlingID, dokumenttypeKode, dokument) => {
