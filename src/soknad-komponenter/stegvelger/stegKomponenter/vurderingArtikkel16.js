@@ -1,7 +1,7 @@
 /* eslint-disable react/no-multi-comp */
 import React, { Component, Fragment } from 'react';
 import { connect } from 'react-redux';
-import { FieldArray } from 'redux-form';
+import { FieldArray, reduxForm } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -9,12 +9,14 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../skjema';
 import * as MPT from '../../../proptypes/';
 import * as Utils from '../../../utils';
+import * as KV from '../../../kodeverk';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { soknadSelectors } from '../../../ducks/soknad/';
 import { formSelectors } from '../../../ducks/form';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
+import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
+import { behandlingsperioderSelectors } from '../../../ducks/behandlingsperioder';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
 import DatoOmrade from '../../../komponenter/datoOmrade/datoOmrade';
@@ -282,7 +284,7 @@ class VurderingArtikkel16 extends Component {
                 feil={lovvalgFeilmelding}
                 onBlur={lagreAnmodningsperioder}
                 disabled={!redigerbart}
-                feltNavn="lovvalgsperiode.unntakFraBestemmelse"
+                feltNavn="unntakFraBestemmelse"
                 label="Artikkelen det søkes unntak fra:"
               >
                 { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
@@ -376,7 +378,19 @@ const mapStateToProps = state => ({
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   art16begrunnelserFritekst: formSelectors.Art16BegrunnelseFritekstSelector(state),
-  unntakFraBestemmelse: formSelectors.UnntakFraBestemmelse(state),
+  unntakFraBestemmelse: formSelectors.UnntakFraBestemmelseSelector(state),
+  initialValues: {
+    unntakFraBestemmelse: lovvalgsperioderSelectors.UnntakFraBestemmelseSelector(state),
+    tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
+  },
 });
 
-export default connect(mapStateToProps)(VurderingArtikkel16);
+const VurderingArtikkel16Form = reduxForm({
+  form: KV.Form.ARTIKKEL_16_ANMODNING,
+  enableReinitialize: true,
+  destroyOnUnmount: true,
+  keepDirtyOnReinitialize: true,
+  updateUnregisteredFields: true,
+})(VurderingArtikkel16);
+
+export default connect(mapStateToProps)(VurderingArtikkel16Form);

@@ -2,6 +2,7 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
@@ -59,8 +60,11 @@ const BehandlingOppgave = ({ sak }) => {
 
   const { fom, tom } = soknadsperiode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
-  const link = `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
-
+  let rute = 'saksbehandling';
+  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
+    rute = 'registrering';
+  }
+  const link = `/${rute}/${saksnummer}/?behandlingID=${behandlingID}`;
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
 

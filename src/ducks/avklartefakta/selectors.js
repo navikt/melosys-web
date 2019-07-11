@@ -33,10 +33,16 @@ export const AvklartefaktaSelector = createSelector(
   state => (state.avklartefakta.data ? state.avklartefakta.data : []),
   avklartefakta => avklartefakta || []
 );
+
+export const SoknadslandFaktaerSelector = createSelector(
+  AvklartefaktaSelector,
+  avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === KV.Koder.avklartefaktaKoder.SOKNADSLAND)
+);
+
 export const VurderingUnntakPeriode = createSelector(
   state => AvklartefaktaSelector(state) || [],
-  (alleAvklartefakta) => (
-    alleAvklartefakta.find(avklaring => avklaring.avklartefaktaKode === 'VURDERING_UNNTAK_PERIODE') || {}
+  alleAvklartefakta => (
+    alleAvklartefakta.find(avklaring => avklaring.avklartefaktaKode === KV.Koder.avklartefaktaKoder.VURDERING_UNNTAK_PERIODE) || {}
   )
 );
 /* Soknadsland hentes fra selve søknaden (se soknad-duck), men avklaringen rundt hvorvidt

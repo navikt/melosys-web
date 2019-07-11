@@ -50,7 +50,7 @@ export class DialogboksHenleggSak extends Component {
     return fritekstValideringPassert;
   };
 
-  fritekstValgt = () => this.state.begrunnelseKode === MKV.Koder.henleggelsesgrunner.ANNET;
+  fritekstValgt = () => this.state.begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
 
   fritekstTom = () => this.state.fritekst === '';
 
@@ -108,8 +108,7 @@ export class DialogboksHenleggSak extends Component {
       data,
     }];
 
-    const visTekstFelt = begrunnelseKode === MKV.Koder.henleggelsesgrunner.ANNET;
-
+    const visTekstFelt = begrunnelseKode === MKV.Koder.begrunnelser.henleggelsesgrunner.ANNET;
     return (
       <Nav.Modal
         className="dialogboksHenlegg"
@@ -126,7 +125,7 @@ export class DialogboksHenleggSak extends Component {
             onChange={this.velgBegrunnelseHandle}
             label="Begrunnelse"
             value={begrunnelseKode}
-            koder={MKV.KTObjects.henleggelsesgrunner}
+            koder={MKV.KTObjects.begrunnelser.henleggelsesgrunner}
             disableForsteValg={erBegrunnelseValgt()}
             redigerbar={redigerbart}
           />

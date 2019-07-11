@@ -14,10 +14,10 @@ export const innhentinfo = behandlingID => {
 
 export const anmodning = behandlingID => {
   const URI_SAKSFLYT_UNNTAKPERIODER_ANMODNING = `${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/anmodning`;
-  return postAsJson(URI_SAKSFLYT_UNNTAKPERIODER_ANMODNING);
+  return putAsText(URI_SAKSFLYT_UNNTAKPERIODER_ANMODNING);
 };
 
 export const ikkegodkjenn = (behandlingID, body) => {
   const URI_SAKSFLYT_UNNTAKSPERIODER_IKKEGODKJENN = `${API_BASE_URL}${SAKSFLYT}/${UNNTAKSPERIODER}/${behandlingID}/ikkegodkjenn`;
-  return putAsText(URI_SAKSFLYT_UNNTAKSPERIODER_IKKEGODKJENN, body);
+  return postAsJson(URI_SAKSFLYT_UNNTAKSPERIODER_IKKEGODKJENN, body);
 };

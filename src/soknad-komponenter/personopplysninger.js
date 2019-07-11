@@ -269,17 +269,19 @@ class Personopplysninger extends Component {
 }
 
 Personopplysninger.propTypes = {
+  registrering: PT.bool,
   redigerbart: PT.bool.isRequired,
-  alleRelevantePersoner: PT.arrayOf(MPT.Person).isRequired,
+  alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person).isRequired,
   hentPerson: PT.func.isRequired,
-  medfolgendeAndre: MPT.Person,
-  person: MPT.Person.isRequired,
+  medfolgendeAndre: MPT.Behandlinger.Saksopplysninger.Person,
+  person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   personhistorikk: MPT.Personhistorikk.isRequired,
   personOpplysninger: PT.object.isRequired,
   oppgittAdresseHarVerdier: PT.bool.isRequired,
 };
 
 Personopplysninger.defaultProps = {
+  registrering: undefined,
   medfolgendeAndre: {},
 };
 
