@@ -5,6 +5,8 @@ import PT from 'prop-types';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 import * as Utils from '../utils';
+import * as Api from '../services/api';
+
 import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 import SideOppsummering from '../registrering-komponenter/sideOppsummering';
@@ -23,6 +25,7 @@ import './registrering.css';
 
 const Registrering = props => {
   const [behandlingID, setBehandlingID] = React.useState(-1);
+  // const [ oppfriskDialog, visOppfriskDialog ] = React.useState(false);
 
   const lastInnSaksopplysninger = async () => {
     const { match, location } = props;
@@ -34,32 +37,26 @@ const Registrering = props => {
       hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder, hentSoknad,
     } = props;
     try {
-      /*
       await Promise.all([
-        hentFagsaker(snr),
         hentBehandling(_behandlingID),
+        hentFagsaker(snr),
         hentAvklartefakta(_behandlingID),
+        hentSoknad(_behandlingID),
         hentLovvalgsperioder(_behandlingID),
       ]);
-      */
-      await hentBehandling(_behandlingID);
-      await hentFagsaker(snr);
-      await hentAvklartefakta(_behandlingID);
-      await hentSoknad(_behandlingID);
-      await hentLovvalgsperioder(_behandlingID);
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
   const avsluttSakSomBortfalt = () => {
-    // const { fagsak: { saksnummer } } = props;
-    // Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
+    const { fagsak: { saksnummer } } = props;
+    Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
     props.history.push('/');
   };
 
   const visOppfriskBekreftelse = () => {
-    // TODO this.setState({ visOppfriskDialog: true });
+    // visOppfriskDialog(true);
   };
   const lagreOgLukk = async () => {
     // this.lagreAllData();
@@ -71,7 +68,6 @@ const Registrering = props => {
     /*
     const { behandlingID } = this.state;
     const { tilbakeleggeOppgave } = this.props;
-    const venterPaaDokumentasjon = true;
 
     await tilbakeleggeOppgave(behandlingID, venterPaaDokumentasjon);
     this.lagreOgLukk();

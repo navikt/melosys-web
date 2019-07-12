@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import moment from 'moment/moment';
 
@@ -14,43 +14,41 @@ import { KodeTermSelect } from '../komponenter/ui/kodeTermSelect';
 
 import './sideOppsummering.css';
 
-class BehandlingsStatus extends Component {
-  state = {
-    behandlingsstatus: 'VELG',
-    statusmelding: null,
-  };
+const BehandlingsStatus = props => {
+  const [behandlingsstatus, setBehandlingsStatus] = React.useState('VELG');
+  const [statusmelding, setStatusMelding] = React.useState(null);
 
-  onChange = event => {
+  const onChange = event => {
     const { value } = event.currentTarget;
-    this.setState({ behandlingsstatus: value, statusmelding: null });
+    setBehandlingsStatus(value);
+    setStatusMelding(null);
   };
 
-  overstyrSubmit = event => {
+  const overstyrSubmit = event => {
     event.preventDefault();
   };
 
-  oppdaterStatusMelding = () => {
-    const { behandlingsstatus } = this.state;
+  const oppdaterStatusMelding = () => {
     const hhmm = moment().format('HH:mm');
-    this.setState({ behandlingsstatus, statusmelding: `Behandlingstatus ble oppdatert ${hhmm}` });
+    setStatusMelding(`Behandlingstatus ble oppdatert ${hhmm}`);
   };
 
-  sendOppdatering = () => {
-    const { behandlingsstatus: kode } = this.state;
+  const sendOppdatering = () => {
+    const { kode } = behandlingsstatus;
     if (kode === 'VELG') {
       return false;
     }
-    const { oppdaterBehandlingsStatus, behandlingID } = this.props;
+    const { oppdaterBehandlingsStatus, behandlingID } = props;
     const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.status);
     const nyBehandlingsStatus = { kode, term };
     Api.Behandlingsperioder.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nyBehandlingsStatus);
-      this.oppdaterStatusMelding();
+      oppdaterStatusMelding();
     });
     return true;
   };
 
-  hentBehandlingsStatusValg = kode => {
+  const hentBehandlingsStatusValg = kode => {
     let endreStatusValg = [];
 
     switch (kode) {
@@ -80,36 +78,34 @@ class BehandlingsStatus extends Component {
     return endreStatusValg;
   };
 
-  render() {
-    const {
-      redigerbart,
-      oppsummering,
-    } = this.props;
+  const {
+    redigerbart,
+    oppsummering,
+  } = props;
 
-    if (!oppsummering) return <div />;
+  if (!oppsummering) return <div />;
 
-    let endreBehandlingsStatusValg = [];
-    if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = this.hentBehandlingsStatusValg(oppsummering.behandlingsstatus.kode);
+  let endreBehandlingsStatusValg = [];
+  if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = hentBehandlingsStatusValg(oppsummering.behandlingsstatus.kode);
 
-    return (
-      <div className="oppsummering__behandlingsstatus">
-        { endreBehandlingsStatusValg.length !== 0 &&
-        <form onSubmit={this.overstyrSubmit}>
-          <KodeTermSelect
-            koder={endreBehandlingsStatusValg}
-            value={this.state.behandlingsstatus}
-            onChange={this.onChange}
-            label="Endre status på behandlingen:"
-            redigerbar={redigerbart}
-          />
-          <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={this.sendOppdatering}>Oppdater</Nav.Hovedknapp>
-          {this.state.statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{this.state.statusmelding}</Nav.AlertStripe></div>}
-        </form>
-        }
-      </div>
-    );
-  }
-}
+  return (
+    <div className="oppsummering__behandlingsstatus">
+      { endreBehandlingsStatusValg.length !== 0 &&
+      <form onSubmit={overstyrSubmit}>
+        <KodeTermSelect
+          koder={endreBehandlingsStatusValg}
+          value={behandlingsstatus}
+          onChange={onChange}
+          label="Endre status på behandlingen:"
+          redigerbar={redigerbart}
+        />
+        <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={sendOppdatering}>Oppdater</Nav.Hovedknapp>
+        {statusmelding && <div><br /><Nav.AlertStripe type="suksess" className="varsel">{statusmelding}</Nav.AlertStripe></div>}
+      </form>
+      }
+    </div>
+  );
+};
 
 BehandlingsStatus.propTypes = {
   behandlingID: PT.number.isRequired,
