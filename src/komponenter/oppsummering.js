@@ -30,7 +30,7 @@ const Oppsummering = props => {
     sammensattNavn,
   } = person;
 
-  const arbeidslandSetning = Utils.streng.arrayTilKonjunksjon(arbeidsland.map(land => land.term));
+  const arbeidslandSetning = arbeidsland && arbeidsland.length > 0 ? Utils.streng.arrayTilKonjunksjon(arbeidsland.map(land => land.term)) : 'Ukjent';
 
   return (
     <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
@@ -49,7 +49,7 @@ const Oppsummering = props => {
       <dt>Arbeidsland:</dt>
       <dd>{arbeidslandSetning}</dd>
       <dt>Søknadsperiode:</dt>
-      <dd>{soknadsperiodeFom} - {soknadsperiodeTom}</dd>
+      <dd>{soknadsperiodeFom || 'ukjent'} - {soknadsperiodeTom || 'ukjent'}</dd>
       <dt>Behandling sist oppdatert:</dt>
       <dd><EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt /></dd>
       <dt>Behandling registrert dato:</dt>
@@ -59,13 +59,17 @@ const Oppsummering = props => {
 };
 
 Oppsummering.propTypes = {
-  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk),
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
-  soknadsperiodeFom: PT.string.isRequired,
-  soknadsperiodeTom: PT.string.isRequired,
+  soknadsperiodeFom: PT.string,
+  soknadsperiodeTom: PT.string,
 };
-
+Oppsummering.defaultProps = {
+  arbeidsland: [],
+  soknadsperiodeFom: undefined,
+  soknadsperiodeTom: undefined,
+};
 
 export default Oppsummering;

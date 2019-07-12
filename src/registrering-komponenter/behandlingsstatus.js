@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
 import moment from 'moment/moment';
-import * as MKV from 'melosys-kodeverk';
 
+import * as MKV from 'melosys-kodeverk';
+import * as RegistreringContext from './state/registreringContext';
 import * as KV from '../kodeverk';
 import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
@@ -132,4 +132,4 @@ const mapDispatchToProps = dispatch => ({
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(BehandlingsStatus);
+export default RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(BehandlingsStatus);
