@@ -7,6 +7,7 @@ import * as MPT from '../proptypes';
 import * as Utils from '../utils';
 import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
+import SideOppsummering from '../registrering-komponenter/sideOppsummering';
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta';
@@ -41,6 +42,38 @@ const Registrering = props => {
     }
   };
 
+  const avsluttSakSomBortfalt = () => {
+    // const { fagsak: { saksnummer } } = this.props;
+    // Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
+    this.props.history.push('/');
+  };
+
+  const visOppfriskBekreftelse = () => {
+    // TODO this.setState({ visOppfriskDialog: true });
+  };
+  const lagreOgLukk = async () => {
+    // this.lagreAllData();
+    // const { history, hentOppgaveOversikt } = this.props;
+    // await hentOppgaveOversikt();
+    // history.push('/');
+  };
+  const tilbakeleggeHandle = async () => {
+    /*
+    const { behandlingID } = this.state;
+    const { tilbakeleggeOppgave } = this.props;
+    const venterPaaDokumentasjon = true;
+
+    await tilbakeleggeOppgave(behandlingID, venterPaaDokumentasjon);
+    this.lagreOgLukk();
+    */
+  };
+  const visHenleggDialog = () => {
+    // this.setState({ visHenleggDialog: true });
+  };
+  const navigerTilOversiktSide = () => {
+    // this.skjulOppfriskBekreftelse();
+    // this.props.history.push('/');
+  };
   React.useEffect(() => {
     lastInnSaksopplysninger();
   }, []);
@@ -59,6 +92,15 @@ const Registrering = props => {
             />
           </Nav.Column>
           <Nav.Column xs="5">
+            <SideOppsummering
+              behandlingID={behandlingID}
+              avsluttSakSomBortfalt={avsluttSakSomBortfalt}
+              oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+              lagreOgLukkHandle={lagreOgLukk}
+              tilbakeleggeHandle={tilbakeleggeHandle}
+              visHenleggDialogHandle={visHenleggDialog}
+              tilForsidenHandle={navigerTilOversiktSide}
+            />
             <SideDialog behandlingID={behandlingID} />
           </Nav.Column>
         </Nav.Row>

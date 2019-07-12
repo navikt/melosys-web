@@ -1,0 +1,69 @@
+@import '../utils/mixins';
+@import '../constants';
+
+.sideOppsummering {
+  margin-bottom: 0.5em;
+
+  .oppsummering__detaljer {
+    .beskrivliste-mixin('col');
+    margin-bottom: 1em;
+  }
+
+  .oppsummering__detaljer--rad {
+    .beskrivliste-mixin('row');
+  }
+
+  .oppsummering__menylinje {
+    display: flex;
+    justify-content: flex-end;
+    z-index: 2;
+    height: 3em;
+  }
+
+  .oppsummering__behandlingsstatus {
+    margin: 2em 0 0 0;
+  }
+
+  /**
+   * -------------------------------------------------------------------
+   * BEHANDLINGSMENY
+   * -------------------------------------------------------------------
+   */
+
+  /** Override EkspanderbartPanel **/
+  .oppsummering__meny {
+    position: absolute;
+    z-index: 2;
+    background-color: @white;
+    border: 2px solid @blue-nav;
+    border-radius: 4px;
+
+    .ekspanderbartPanel__hode {
+      padding: 0.3em 0.4em;
+    }
+
+    .ekspanderbartPanel__innhold {
+      padding: 0.2em;
+    }
+
+    .ekspanderbartPanel__indikator {
+      color: @blue-nav;
+    }
+  }
+  /** End override **/
+
+  .meny__innhold {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+
+    .innhold__element {
+      margin: 0.2em;
+    }
+  }
+
+  .behandlingsmeny_title {
+    color: @blue-nav;
+    font-weight: bold;
+  }
+}
