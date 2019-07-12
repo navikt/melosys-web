@@ -137,10 +137,10 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = async behandlingsresultattype => {
+  lagreOgFatteVedtak = async (behandlingsresultattype, ignorerLovvalgsperioder) => {
     if (this.harSoknadIngenFeilmeldinger()) {
       this.gjemSoknadFeilmeldinger();
-      await this.props.lagreAllData();
+      await this.props.lagreAllData(ignorerLovvalgsperioder);
       this.fatteVedtakHandler(behandlingsresultattype);
     } else {
       this.visSoknadFeilmeldinger();
