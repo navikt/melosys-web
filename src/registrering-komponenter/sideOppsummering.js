@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 
 import * as MKV from 'melosys-kodeverk';
@@ -18,86 +18,84 @@ import Oppsummering from '../komponenter/oppsummering';
 
 import './sideOppsummering.css';
 
-class SideOppsummering extends Component {
-  apneTidligereBehandlinger = () => {
+const SideOppsummering = props => {
+  const {
+    behandlingID,
+    fagsak,
+    oppsummering,
+    person,
+    soknadsperiodeFom,
+    soknadsperiodeTom,
+    behandlingstype,
+  } = props;
+
+  if (!oppsummering) return <div />;
+
+  const {
+    lagreOgLukkHandle,
+    oppfriskSaksopplysningerHandle,
+    tilbakeleggeHandle,
+    visHenleggDialogHandle,
+    arbeidsland,
+    avsluttSakSomBortfalt,
+    endreLovvalgsperiodeRedigerbart,
+  } = props;
+
+  const apneTidligereBehandlinger = () => {
     const URI_SOK = `/sok/${this.props.person.fnr}`;
     window.open(URI_SOK);
   };
 
-  render() {
-    const {
-      behandlingID,
-      fagsak,
-      oppsummering,
-      person,
-      soknadsperiodeFom,
-      soknadsperiodeTom,
-      behandlingstype,
-    } = this.props;
-
-    if (!oppsummering) return <div />;
-
-    const {
-      lagreOgLukkHandle,
-      oppfriskSaksopplysningerHandle,
-      tilbakeleggeHandle,
-      visHenleggDialogHandle,
-      arbeidsland,
-      avsluttSakSomBortfalt,
-      endreLovvalgsperiodeRedigerbart,
-    } = this.props;
-
-    return (
-      <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
-        <Nav.Panel className="saksbehandling__soknadSammendrag">
-          <Nav.Row>
-            <Nav.Column xs="12" md="12">
-              <div className="oppsummering__menylinje">
-                <Behandlingsmeny
-                  lagreOgLukkHandle={lagreOgLukkHandle}
-                  tilbakeleggeHandle={tilbakeleggeHandle}
-                  oppfriskSaksopplysningerHandle={oppfriskSaksopplysningerHandle}
-                  visHenleggDialogHandle={visHenleggDialogHandle}
-                  avsluttSakSomBortfalt={avsluttSakSomBortfalt}
-                  apneTidligereBehandlinger={this.apneTidligereBehandlinger}
-                  redigerbart={endreLovvalgsperiodeRedigerbart}
-                  visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
-                />
-              </div>
-            </Nav.Column>
-          </Nav.Row>
-          <Nav.Row>
-            <Nav.Column xs="12" md="6">
-              <Nav.Undertittel className="soknadSammendrag__header">Søknad</Nav.Undertittel>
-            </Nav.Column>
-          </Nav.Row>
-          {/* START OPPSUMMERING */}
-          <Nav.Row>
-            <Nav.Column xs="12">
-              {oppsummering && <Oppsummering
-                arbeidsland={arbeidsland}
-                fagsak={fagsak}
-                oppsummering={oppsummering}
-                person={person}
-                soknadsperiodeFom={soknadsperiodeFom}
-                soknadsperiodeTom={soknadsperiodeTom}
+  return (
+    <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
+      <Nav.Panel className="saksbehandling__soknadSammendrag">
+        <Nav.Row>
+          <Nav.Column xs="12" md="12">
+            <div className="oppsummering__menylinje">
+              <Behandlingsmeny
+                lagreOgLukkHandle={lagreOgLukkHandle}
+                tilbakeleggeHandle={tilbakeleggeHandle}
+                oppfriskSaksopplysningerHandle={oppfriskSaksopplysningerHandle}
+                visHenleggDialogHandle={visHenleggDialogHandle}
+                avsluttSakSomBortfalt={avsluttSakSomBortfalt}
+                apneTidligereBehandlinger={apneTidligereBehandlinger}
+                redigerbart={endreLovvalgsperiodeRedigerbart}
+                visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
               />
-              }
-            </Nav.Column>
-          </Nav.Row>
-          {/* END OPPSUMMERING */}
-          {/* START BEHANDLINGSSTATUS */}
-          <Nav.Row>
-            <Nav.Column xs="12">
-              <Behandlingsstatus behandlingID={behandlingID} />
-            </Nav.Column>
-          </Nav.Row>
-          {/* SLUTT BEHANDLINGSSTATUS */}
-        </Nav.Panel>
-      </section>
-    );
-  }
-}
+            </div>
+          </Nav.Column>
+        </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="12" md="6">
+            <Nav.Undertittel className="soknadSammendrag__header">Søknad</Nav.Undertittel>
+          </Nav.Column>
+        </Nav.Row>
+        {/* START OPPSUMMERING */}
+        <Nav.Row>
+          <Nav.Column xs="12">
+            {oppsummering && <Oppsummering
+              arbeidsland={arbeidsland}
+              fagsak={fagsak}
+              oppsummering={oppsummering}
+              person={person}
+              soknadsperiodeFom={soknadsperiodeFom}
+              soknadsperiodeTom={soknadsperiodeTom}
+            />
+            }
+          </Nav.Column>
+        </Nav.Row>
+        {/* END OPPSUMMERING */}
+        {/* START BEHANDLINGSSTATUS */}
+        <Nav.Row>
+          <Nav.Column xs="12">
+            <Behandlingsstatus behandlingID={behandlingID} />
+          </Nav.Column>
+        </Nav.Row>
+        {/* SLUTT BEHANDLINGSSTATUS */}
+      </Nav.Panel>
+    </section>
+  );
+};
 
 SideOppsummering.propTypes = {
   behandlingID: PT.number.isRequired,
