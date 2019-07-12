@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as RegistreringContext from './state/registreringContext';
 
 import { formatterDatoTilNorsk } from '../utils/dato';
 import { soknadSelectors } from '../ducks/soknad';
@@ -17,7 +17,6 @@ import Behandlingsstatus from './behandlingsstatus';
 import Oppsummering from '../komponenter/oppsummering';
 
 import './sideOppsummering.css';
-import * as RegistreringContext from './state/registreringContext';
 
 class SideOppsummering extends Component {
   apneTidligereBehandlinger = () => {
@@ -109,9 +108,9 @@ SideOppsummering.propTypes = {
   oppsummering: MPT.Behandlinger.Oppsummering,
   avsluttSakSomBortfalt: PT.func.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
-  soknadsperiodeFom: PT.string.isRequired,
-  soknadsperiodeTom: PT.string.isRequired,
-  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
+  soknadsperiodeFom: PT.string,
+  soknadsperiodeTom: PT.string,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk),
   oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
@@ -120,9 +119,12 @@ SideOppsummering.propTypes = {
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
 SideOppsummering.defaultProps = {
+  arbeidsland: [],
   redigerbart: false,
   fagsak: undefined,
   oppsummering: undefined,
+  soknadsperiodeFom: undefined,
+  soknadsperiodeTom: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -136,9 +138,9 @@ const mapStateToProps = state => ({
   soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
 });
-// TODO Rewrite to use context; export default RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
+
 const mapDispatchToProps = dispatch => ({
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);
+export default RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(SideOppsummering);

@@ -3,9 +3,10 @@ import * as fagsakOperations from './operations';
 import * as fagsakTypes from './types';
 import * as fagsakSelectors from './selectors';
 
-import fagsakReducers from './reducers';
+import fagsakReducers, { initialState } from './reducers';
 
 export {
+  initialState,
   fagsakActions,
   fagsakOperations,
   fagsakTypes,

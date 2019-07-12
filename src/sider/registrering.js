@@ -12,11 +12,14 @@ import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandli
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta';
 
-import './registrering.css';
 import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder';
+import { soknadOperations, soknadSelectors } from '../ducks/soknad';
+
+import { initialState, reducer } from '../registrering-komponenter/state/reducer';
 import { RegistreringStateProvider } from '../registrering-komponenter/state/registreringStateProvider';
 import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
-import { initialState, reducer } from '../registrering-komponenter/state/reducer';
+
+import './registrering.css';
 
 const Registrering = props => {
   const [behandlingID, setBehandlingID] = React.useState(-1);
@@ -28,24 +31,31 @@ const Registrering = props => {
     setBehandlingID(Utils._toInteger(_behandlingID));
 
     const {
-      hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder,
+      hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder, hentSoknad,
     } = props;
     try {
+      /*
       await Promise.all([
         hentFagsaker(snr),
         hentBehandling(_behandlingID),
         hentAvklartefakta(_behandlingID),
         hentLovvalgsperioder(_behandlingID),
       ]);
+      */
+      await hentBehandling(_behandlingID);
+      await hentFagsaker(snr);
+      await hentAvklartefakta(_behandlingID);
+      await hentSoknad(_behandlingID);
+      await hentLovvalgsperioder(_behandlingID);
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
   const avsluttSakSomBortfalt = () => {
-    // const { fagsak: { saksnummer } } = this.props;
+    // const { fagsak: { saksnummer } } = props;
     // Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
-    this.props.history.push('/');
+    props.history.push('/');
   };
 
   const visOppfriskBekreftelse = () => {
@@ -53,9 +63,9 @@ const Registrering = props => {
   };
   const lagreOgLukk = async () => {
     // this.lagreAllData();
-    // const { history, hentOppgaveOversikt } = this.props;
+    // const { history, hentOppgaveOversikt } = props;
     // await hentOppgaveOversikt();
-    // history.push('/');
+    props.history.push('/');
   };
   const tilbakeleggeHandle = async () => {
     /*
@@ -72,7 +82,7 @@ const Registrering = props => {
   };
   const navigerTilOversiktSide = () => {
     // this.skjulOppfriskBekreftelse();
-    // this.props.history.push('/');
+    props.history.push('/');
   };
   React.useEffect(() => {
     lastInnSaksopplysninger();
@@ -113,6 +123,7 @@ Registrering.propTypes = {
   hentBehandling: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
+  hentSoknad: PT.func.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   vurderingBegrunnelser: PT.object,
@@ -120,6 +131,7 @@ Registrering.propTypes = {
   medlemskap: MPT.Medlemskap,
   oppsummering: MPT.Behandlinger.Oppsummering,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
+  soknad: MPT.Soknad,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
@@ -131,6 +143,7 @@ Registrering.defaultProps = {
   medlemskap: {},
   oppsummering: {},
   sed: {},
+  soknad: {},
   vurderingBegrunnelser: {},
 };
 const mapStateToProps = state => ({
@@ -141,6 +154,7 @@ const mapStateToProps = state => ({
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   sed: behandlingerSelectors.SEDSelector(state),
+  soknad: soknadSelectors.SoknadSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -148,6 +162,7 @@ const mapDispatchToProps = dispatch => ({
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+  hentSoknad: behandlingID => dispatch(soknadOperations.hent(behandlingID)),
 });
 
 const RegistreringStateProviderWrapper = props => (
