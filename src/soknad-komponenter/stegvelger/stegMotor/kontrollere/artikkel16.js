@@ -28,10 +28,10 @@ class Artikkel16 extends Steg {
     });
     this.beregnRelevantUI = _propsLight => ({
       art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
-      anmodningsperioder: _propsLight.anmodningsperioder,
     });
     this.handlers = {
-      lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
+      lagreOgStartAnmodningSaksflyt: this._propsLight.tilgjengeligeHandlers.lagreOgStartAnmodningSaksflyt,
+      byggAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers.byggAnmodningsperioderHandler,
       oppdaterOgLagreBehandlinger: this._propsLight.tilgjengeligeHandlers.oppdaterOgLagreBehandlinger,
       lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers.lagreVilkarHandler,
       lagreAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers.lagreAnmodningsperioderHandler,

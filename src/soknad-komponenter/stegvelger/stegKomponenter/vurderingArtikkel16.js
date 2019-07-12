@@ -24,7 +24,7 @@ import PdfLenkeListe from '../../pdfLenkeListe';
 import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../regler/vilkar';
-import { konverterAnmodningsperioderTilStegData } from '../../../regler/anmodningsperioder';
+import { konverterLovvalgsbestemmelseTilStegData } from '../../../regler/lovvalgsbestemmelser';
 
 import './vurderingArtikkel16.css';
 
@@ -132,29 +132,32 @@ class VurderingArtikkel16 extends Component {
   };
 
   componentDidMount() {
-    const { oppdaterData, tilstand: { art16_1, anmodningsperioder } } = this.props;
+    const { oppdaterData, tilstand: { art16_1 } } = this.props;
     oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
-    oppdaterData(konverterAnmodningsperioderTilStegData(anmodningsperioder));
+    oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1));
   }
 
   componentWillUnmount() {
     this.props.slettData();
   }
 
-  lagreBehandlingerOgFatteVedtak = async behandlingsresultattype => {
-    const { oppdaterOgLagreBehandlinger, lagreOgFatteVedtak } = this.props;
+  lagreBehandlingerOgStartAnmodningSaksflyt = async behandlingsresultattype => {
+    const { oppdaterOgLagreBehandlinger, lagreOgStartAnmodningSaksflyt } = this.props;
     try {
       await oppdaterOgLagreBehandlinger();
-      lagreOgFatteVedtak(behandlingsresultattype);
+      lagreOgStartAnmodningSaksflyt(behandlingsresultattype);
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
-  lagreAnmodningsperioder = () => {
-    // this.props.oppdaterData(konverterAnmodningsperioderTilStegData(this.props.tilstand.anmodningsperioder));
-    // this.props.lagreAnmodningsperioderHandler().catch(Utils.logger.error);
-    // this.setState({ lovvalgFeilmelding: undefined });
+  lagreAnmodningsperioder = async () => {
+    const { byggAnmodningsperioderHandler, lagreAnmodningsperioderHandler } = this.props;
+
+    await byggAnmodningsperioderHandler();
+    await lagreAnmodningsperioderHandler();
+
+    this.setState({ lovvalgFeilmelding: undefined });
   };
 
   lagreVilkar = () => {
@@ -216,9 +219,9 @@ class VurderingArtikkel16 extends Component {
     return lovvalgValid && begrunnelserValid && fritekstValid;
   };
 
-  validerOgLagreBehandling = () => {
+  validerOgLagreBehandling = async () => {
     if (this.validerAlt()) {
-      this.lagreBehandlingerOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.ANMODNING_OM_UNNTAK);
+      this.lagreBehandlingerOgStartAnmodningSaksflyt(MKV.Koder.behandlinger.resultattyper.ANMODNING_OM_UNNTAK);
     }
   };
 
@@ -350,7 +353,7 @@ class VurderingArtikkel16 extends Component {
 VurderingArtikkel16.propTypes = {
   anmodningsperiode: PT.object,
   medlemskap: MPT.Medlemskap.isRequired,
-  lagreOgFatteVedtak: PT.func.isRequired,
+  lagreOgStartAnmodningSaksflyt: PT.func.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgKode: PT.string.isRequired,
@@ -363,6 +366,7 @@ VurderingArtikkel16.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   tilstand: PT.object.isRequired,
+  byggAnmodningsperioderHandler: PT.func.isRequired,
 };
 
 VurderingArtikkel16.defaultProps = {

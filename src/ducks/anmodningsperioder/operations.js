@@ -18,15 +18,15 @@ import { lovvalgsperioderSelectors } from '../lovvalgsperioder';
 import { formSelectors } from '../form';
 
 export function hent(behandlingID) {
-  return doThenDispatch(() => Api.Saksflyt.Anmodningsperioder.hent(behandlingID), {
+  return doThenDispatch(() => Api.Anmodningsperioder.hent(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export function send(bid, anmodningsperioder) {
-  return doThenDispatch(() => Api.Saksflyt.Anmodningsperioder.send(bid, anmodningsperioder), {
+export function send(behandlingID, anmodningsperioder) {
+  return doThenDispatch(() => Api.Anmodningsperioder.send(behandlingID, anmodningsperioder), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -46,9 +46,9 @@ const byggAnmodningsperiodeArtikkel16 = state => {
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1,
-    tilleggBestetemmelse: null,
+    tilleggBestemmelse: null,
     lovvalgsland: MKV.Koder.landkoder.NO,
-    unntakFraBestemmelse,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
   }];

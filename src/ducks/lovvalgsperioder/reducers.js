@@ -32,6 +32,7 @@ export default function reducer(state = initialState, action) {
     case Types.OPPDATER_LOVVALGSPERIODER: {
       return {
         data: [...action.data],
+        status: STATUS.OK,
       };
     }
     case Types.ENDRE_PERIODE: {

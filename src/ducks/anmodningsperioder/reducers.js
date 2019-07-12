@@ -22,7 +22,11 @@ export default function reducer(state = initialState, action) {
       return { ...initialState };
     case Types.OPPDATER_ANMODNINGSPERIODER: {
       const { anmodningsperioder } = action;
-      return { ...state, data: [...anmodningsperioder] };
+      return {
+        ...state,
+        data: anmodningsperioder,
+        status: STATUS.OK,
+      };
     }
     default:
       return state;
