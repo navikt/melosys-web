@@ -1,3 +1,4 @@
+import * as Anmodningsperioder from './modules/anmodningsperioder';
 import * as Avklartefakta from './modules/avklartefakta';
 import * as Behandlinger from './modules/behandlinger/behandlinger';
 import * as Behandlingsperioder from './modules/behandlinger/behandlingsperioder';
@@ -35,6 +36,7 @@ function erDev() {
 
 
 export {
+  Anmodningsperioder,
   Avklartefakta,
   Behandlinger,
   Behandlingsperioder,
