@@ -24,6 +24,7 @@ export default function reducer(state = initalState, action) {
     }
     case Types.OPPDATER_BEHANDLINGER: {
       const { tidligeremedlemskap: tidligere_medlemsperiode_ids } = action.data;
+      if (!tidligere_medlemsperiode_ids) return { ...state };
       return { ...state, data: { tidligere_medlemsperiode_ids } };
     }
     default:
