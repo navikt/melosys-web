@@ -12,6 +12,7 @@ import Tjenestemann from './tjenestemann';
 import Artikkel12_1 from './artikkel12_1';
 import Artikkel12_2 from './artikkel12_2';
 import Artikkel11_4 from './artikkel11_4';
+import Artikkel13_1_A_Vedtak from './artikkel13_1_a_vedtak';
 import Artikkel16 from './artikkel16';
 import Artikkel16MottaSvar from './artikkel16_motta_svar';
 import Artikkel16Vedtak from './artikkel16_vedtak';
@@ -35,6 +36,7 @@ export const stegKatalogMap = new Map([
   [STEG.ARTIKKEL_12_1, Artikkel12_1],
   [STEG.ARTIKKEL_12_2, Artikkel12_2],
   [STEG.ARTIKKEL_11_4, Artikkel11_4],
+  [STEG.ARTIKKEL_13_1_A_VEDTAK, Artikkel13_1_A_Vedtak],
   [STEG.YRKESGRUPPE, Yrkesgruppe],
   [STEG.IKKE_YRKESAKTIV, IkkeYrkesaktiv],
   [STEG.FORUTGAENDE_MEDLEMSKAP, ForutgaendeMedlemskap],

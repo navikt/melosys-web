@@ -50,3 +50,12 @@ export const InnvilgelsesResultatSelector = createSelector(
   LovvalgsperiodeSelector,
   lovvalgsperiode => lovvalgsperiode.innvilgelsesResultat
 )
+export const FomDatoSelector = createSelector(
+  LovvalgsperiodeSelector,
+  lovvalgsperiode => lovvalgsperiode.fomDato
+);
+
+export const TomDatoSelector = createSelector(
+  LovvalgsperiodeSelector,
+  lovvalgsperiode => lovvalgsperiode.tomDato
+);
