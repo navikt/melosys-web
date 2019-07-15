@@ -160,11 +160,11 @@ class Informasjon extends Component {
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdfURI(jpostID, dokID);
     const VedleggLenkeListe = () => {
       if (vedlegg && vedlegg.length === 0) return null;
-      const lenker = vedlegg.map(elem => <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">{elem.tittel}</Link>);
+      const lenker = vedlegg.map((elem, index) => <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">Vedlegg {index + 1}</Link>);
       return (
-        <ol>
+        <ul>
           {lenker.map(lenke => <li key={uuid()}>{lenke}</li>)}
-        </ol>
+        </ul>
       );
     };
     return (
