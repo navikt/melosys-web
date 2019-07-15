@@ -11,7 +11,7 @@ class Artikkel16 extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'mottatt svar',
-        exec: () => propsLight.anmodningsperioder.length > 0,
+        exec: () => propsLight.anmodningsperioder.every(anmodningsperiode => anmodningsperiode.id),
         nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
       },
       {

@@ -7,3 +7,4 @@ export const SOKNAD = 'soknad';
 export const SOK_ETTER_SAK = 'sokEtterSak';
 export const ARTIKKEL_16_ANMODNING = 'artikkel_16_anmodning';
 export const INNGANG = 'inngang';
+export const ARTIKKEL_16_MOTTA_SVAR = 'artikkel_16_motta_svar';
