@@ -125,7 +125,7 @@ export const VurderingArtikkel16MottaSvar = props => {
 };
 
 VurderingArtikkel16MottaSvar.propTypes = {
-  anmodningsperiodeID: PT.string.isRequired,
+  anmodningsperiodeID: PT.string,
   bekreftOgFortsett: PT.func.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired,
   soknadsperiode: MPT.Soknadsperiode.isRequired,
@@ -148,6 +148,7 @@ VurderingArtikkel16MottaSvar.defaultProps = {
   endretPeriode: { fom: '', tom: '' },
   svartype: '',
   formIsValid: false,
+  anmodningsperiodeID: '',
 };
 
 const mapStateToProps = state => ({
