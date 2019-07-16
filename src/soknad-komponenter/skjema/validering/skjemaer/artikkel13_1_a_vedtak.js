@@ -8,9 +8,9 @@ const artikkel13_1_a_vedtak = object().shape({
   tomDato: string()
     .when('forkortLovvalgsperiode', {
       is: true,
-      then: string().required('Dato kreves')
+      then: string().required({ melding: 'Dato kreves' })
         .validDate({ melding: 'Dato kreves' })
-        .test('periode er forkortet', 'Ugyldig periode', function test(value) {
+        .test('periode er forkortet', { melding: 'Ugyldig periode' }, function test(value) {
           const { lovvalgsperiode } = this.options.context;
           return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, value);
         }),
