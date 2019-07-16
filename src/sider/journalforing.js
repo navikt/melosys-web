@@ -69,7 +69,13 @@ class Journalforing extends Component {
     this.props.history.push('/');
   };
 
-  mapVedleggsTittlerTilVedlegg = titler => titler.map(tittel => ({ dokumentID: null, tittel }));
+  mapVedleggsTittlerTilVedlegg = titler => {
+    const { vedleggsdokumenter } = this.props;
+    return titler.map((tittel, index) => {
+      const dokumentID = (index < vedleggsdokumenter.length) ? vedleggsdokumenter[index].dokumentID : null;
+      return ({ dokumentID, tittel });
+    });
+  };
 
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
    * settes inn i skjemaet kun til info - ikke til endring - slik som feks navn på bruker.
@@ -381,6 +387,7 @@ Journalforing.propTypes = {
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
   resetJournalforingState: PT.func.isRequired,
+  vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string })).isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -388,10 +395,12 @@ Journalforing.defaultProps = {
   fagsakListe: [],
   journalforingSkjemaVerdier: {},
 };
+
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: sokSelectors.FagsakSokSelector(state),
+  vedleggsdokumenter: journalforingSelectors.JournalforingVedleggsDokumenter(state),
   errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
   initialValues: {
     behandlingstype: null,
@@ -402,7 +411,7 @@ const mapStateToProps = state => ({
     representantID: '',
     mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
     hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
-    vedleggsTitler: [],
+    vedleggsTitler: journalforingSelectors.JournalforingVedleggsDokumenter(state).map(elem => elem.tittel),
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
     ingenVurdering: false,
