@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
@@ -6,29 +6,44 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
+import * as Api from '../../../services/api';
+import * as Utils from '../../../utils';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrade';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
+import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 
 export const VurderingArtikkel16Vedtak = props => {
   const {
-    lagreOgFatteVedtak, redigerbart, behandlingID, lovvalgsperiode, innvilgelsesResultat, tilstand: { svarAnmodningUnntakFritekst = '' },
+    lagreOgFatteVedtak, redigerbart, behandlingID, anmodningsperiodeID,
   } = props;
 
-  const innvilget = innvilgelsesResultat === KV.Koder.INNVILGET; /*TODO: Må hentes fra MKV*/
+  const [svar, setSvar] = useState({
+    begrunnelseFritekst: '',
+    endretPeriode: { fom: '', tom: '' },
+    anmodningsperiodeSvarType: '',
+  });
+
+  useEffect(() => {
+    Api.Anmodningsperioder.hentSvar(anmodningsperiodeID).then(setSvar).catch(Utils.logger.error);
+  }, []);
+
+  const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = svar;
+
+  const innvilget = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;
   const innvilgetYrkesaktivType = innvilget ? MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV : MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV;
   const innvilgetArbeidsgiverType = innvilget ? MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER : MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER;
-  const innvilgetTekst = 'innvilget'; /*TODO: Må hentes fra innvilgelsesResultat sin tilsvarende term*/
+  const innvilgetTekst = `Svar på anmodning om unntak: ${KV.kodeTilTerm(anmodningsperiodeSvarType, MKV.KTObjects.anmodningsperiodesvartyper)}.`;
 
   const dokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: innvilgetYrkesaktivType,
       data: {
-        svarAnmodningUnntakFritekst,
+        begrunnelseFritekst,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
@@ -36,7 +51,7 @@ export const VurderingArtikkel16Vedtak = props => {
       navn: 'Forhåndsvis A1',
       type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
       data: {
-        svarAnmodningUnntakFritekst,
+        begrunnelseFritekst,
         mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
       },
     },
@@ -44,7 +59,7 @@ export const VurderingArtikkel16Vedtak = props => {
       navn: 'Brev til arbeidsgiver',
       type: innvilgetArbeidsgiverType,
       data: {
-        svarAnmodningUnntakFritekst,
+        begrunnelseFritekst,
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
@@ -52,7 +67,7 @@ export const VurderingArtikkel16Vedtak = props => {
       navn: 'Brev til skatteoppkrever utland',
       type: innvilgetYrkesaktivType,
       data: {
-        svarAnmodningUnntakFritekst,
+        begrunnelseFritekst,
         mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
       },
     },
@@ -67,17 +82,17 @@ export const VurderingArtikkel16Vedtak = props => {
       <Nav.Undertittel>Svar fra myndigheten</Nav.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
-          Anmodning om unntak er {innvilgetTekst}.
+          {innvilgetTekst}
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value={svarAnmodningUnntakFritekst} tellerTekst={() => {}} />
+          <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value={begrunnelseFritekst} tellerTekst={() => {}} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          <DatoOmradeMedVarighet periode={lovvalgsperiode} tekst="Lovvalgsperiode" />
+          <DatoOmradeMedVarighet periode={endretPeriode} tekst="Lovvalgsperiode" />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -100,15 +115,18 @@ VurderingArtikkel16Vedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   lovvalgsperiode: MPT.Periode.isRequired,
   innvilgelsesResultat: PT.string.isRequired,
-  tilstand: PT.shape({
-    svarAnmodningUnntakFritekst: PT.string,
-  }).isRequired,
+  anmodningsperiodeID: PT.string,
+};
+
+VurderingArtikkel16Vedtak.defaultProps = {
+  anmodningsperiodeID: '',
 };
 
 const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.PeriodeSelector(state),
   innvilgelsesResultat: lovvalgsperioderSelectors.InnvilgelsesResultatSelector(state),
+  anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingArtikkel16Vedtak);
