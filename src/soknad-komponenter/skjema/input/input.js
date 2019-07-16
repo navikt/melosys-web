@@ -15,7 +15,7 @@ import '../skjema.css';
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
  */
 function InnerInputComponent({
-  input, label, feltNavn, hentFeltFeil, ...rest
+  input, label, feltFeil, feltNavn, ...rest
 }) {
   const { meta: { error, touched, active } } = rest;
 
@@ -23,7 +23,6 @@ function InnerInputComponent({
 
   /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
   if (!feil) {
-    const feltFeil = hentFeltFeil(feltNavn);
     const feltFeilmelding = feltFeil ? feltFeil.melding : null;
 
     if (feltFeilmelding && touched && !active) feil = { feilmelding: feltFeilmelding };
@@ -39,18 +38,19 @@ InnerInputComponent.propTypes = {
   bredde: PT.string,
   meta: PT.object,
   input: PT.object,
+  feltFeil: PT.object,
   feltNavn: PT.string.isRequired,
-  hentFeltFeil: PT.func.isRequired,
 };
 
 InnerInputComponent.defaultProps = {
   bredde: undefined,
   meta: undefined,
   input: undefined,
+  feltFeil: {},
 };
 
-const mapStateToProps = state => ({
-  hentFeltFeil: feltNavn => formSelectors.SoknadErrorsSelector(state)[feltNavn],
+const mapStateToProps = (state, ownProps) => ({
+  feltFeil: formSelectors.FormSelector(state)[ownProps.meta.form].syncErrors ? formSelectors.FormSelector(state)[ownProps.meta.form].syncErrors[ownProps.feltNavn] : null,
 });
 
 const ConnectedInnerInputComponent = connect(mapStateToProps, () => ({}))(InnerInputComponent);

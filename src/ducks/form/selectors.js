@@ -13,6 +13,11 @@ const getFormState = (state, formName, defaultValue = {}) => (
   state.form[formName] ? state.form[formName] : defaultValue
 );
 
+export const FormSelector = createSelector(
+  state => state,
+  state => state.form
+);
+
 export const SoknadenFormSelector = createSelector(
   state => getFormState(state, KV.Form.SOKNAD, {}),
   soknaden => soknaden
@@ -81,6 +86,11 @@ export const MaritimtArbeidSelector = createSelector(
 export const SokkelEllerSkipSelector = createSelector(
   state => SoknadenFormSelector(state).values,
   skjemaverdier => skjemaverdier.avklartefakta.sokkelEllerSkip
+);
+
+export const Artikkel16MottaSvarSyncErrorsSelector = createSelector(
+  state => Artikkel16MottaSvarFormSelector(state).syncErrors,
+  errors => errors
 );
 
 export const SoknadErrorsSelector = createSelector(
