@@ -28,6 +28,7 @@ class Artikkel16 extends Steg {
     });
     this.beregnRelevantUI = _propsLight => ({
       art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
+      harAvklaring: _propsLight.anmodningsperioder.every(anmodningsperiode => anmodningsperiode.id),
     });
     this.handlers = {
       lagreOgStartAnmodningSaksflyt: this._propsLight.tilgjengeligeHandlers.lagreOgStartAnmodningSaksflyt,
