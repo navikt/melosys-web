@@ -221,6 +221,7 @@ class VurderingArtikkel16 extends Component {
 
   validerOgLagreBehandling = async () => {
     if (this.validerAlt()) {
+      await this.lagreAnmodningsperioder();
       this.lagreBehandlingerOgStartAnmodningSaksflyt(MKV.Koder.behandlinger.resultattyper.ANMODNING_OM_UNNTAK);
     }
   };
@@ -237,7 +238,6 @@ class VurderingArtikkel16 extends Component {
 
     const {
       begrunnelserEndringHandler,
-      lagreAnmodningsperioder,
       validerAlt,
       validerOgLagreBehandling,
       fritekstFokusFlyttetHandler,
@@ -261,7 +261,7 @@ class VurderingArtikkel16 extends Component {
 
     const visFritekstfelt = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
-    const { art16_1, art16_1: { begrunnelseFritekst } } = tilstand;
+    const { art16_1, art16_1: { begrunnelseFritekst }, harAvklaring } = tilstand;
 
     const art16fritekst = begrunnelseFritekst || '';
 
@@ -285,7 +285,6 @@ class VurderingArtikkel16 extends Component {
             <Nav.Column xs="7">
               <Skjema.Select
                 feil={lovvalgFeilmelding}
-                onBlur={lagreAnmodningsperioder}
                 disabled={!redigerbart}
                 feltNavn="unntakFraBestemmelse"
                 label="Artikkelen det søkes unntak fra:"
@@ -339,7 +338,7 @@ class VurderingArtikkel16 extends Component {
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={validerOgLagreBehandling}>
+              <Nav.Hovedknapp type="hoved" disabled={!redigerbart || harAvklaring} onClick={validerOgLagreBehandling}>
                 Send brevene
               </Nav.Hovedknapp>
             </Nav.Column>
