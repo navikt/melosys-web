@@ -50,13 +50,6 @@ export const VurderingArtikkel16MottaSvar = props => {
         tom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : null,
       },
       begrunnelseFritekst: fritekst,
-    }).then(response => {
-      change('svartype', response.anmodningsperiodeSvarType);
-      change('endretPeriode', {
-        fom: Utils.dato.formatterDatoTilNorsk(response.endretPeriode.fom),
-        tom: Utils.dato.formatterDatoTilNorsk(response.endretPeriode.tom),
-      });
-      change('fritekst', response.fritekst);
     }).catch(Utils.logger.error);
   };
 
@@ -78,10 +71,10 @@ export const VurderingArtikkel16MottaSvar = props => {
           <DatoOmradeMedVarighet periode={soknadsperiode} tekst="Søknadsperiode" />
         </Nav.Column>
       </Nav.Row>
-      <form name="anmodningSvar" id="anmodningSvar" onSubmit={e => e.preventDefault()} >
+      <form name="anmodningSvar" id="anmodningSvar" onBlur={lagreSvarHandler} onSubmit={e => e.preventDefault()} >
         <Nav.Row className="svarFraMyndighetRow">
           <Nav.Column xs="6">
-            <Nav.Fieldset disabled={!redigerbart} onBlur={lagreSvarHandler} legend="Svar fra myndighetene">
+            <Nav.Fieldset disabled={!redigerbart} legend="Svar fra myndighetene">
               <Skjema.Radio name="svarFraMyndighetene" feltNavn="svartype" label="Innvilgelse" value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE} />
               <Skjema.Radio name="svarFraMyndighetene" feltNavn="svartype" label="Delvis innvilgelse" value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} />
               {
