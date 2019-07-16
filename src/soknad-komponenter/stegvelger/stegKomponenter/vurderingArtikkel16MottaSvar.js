@@ -113,7 +113,7 @@ export const VurderingArtikkel16MottaSvar = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            <Skjema.Textarea feltNavn="fritekst" disabled={!redigerbart} label="Begrunnelse" tellerTekst={() => {}} onBlur={lagreSvarHandler} />
+            { svartype !== MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE && <Skjema.Textarea feltNavn="fritekst" disabled={!redigerbart} label="Begrunnelse" tellerTekst={() => {}} onBlur={lagreSvarHandler} />}
           </Nav.Column>
         </Nav.Row>
       </form>
