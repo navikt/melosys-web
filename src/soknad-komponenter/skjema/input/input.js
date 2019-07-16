@@ -15,7 +15,7 @@ import '../skjema.css';
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
  */
 function InnerInputComponent({
-  input, label, feltFeil, feltNavn, ...rest
+  input, label, feltFeil, ...rest
 }) {
   const { meta: { error, touched, active } } = rest;
 
@@ -39,7 +39,6 @@ InnerInputComponent.propTypes = {
   meta: PT.object,
   input: PT.object,
   feltFeil: PT.object,
-  feltNavn: PT.string.isRequired,
 };
 
 InnerInputComponent.defaultProps = {
