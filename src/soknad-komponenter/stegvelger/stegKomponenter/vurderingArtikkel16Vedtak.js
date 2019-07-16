@@ -58,6 +58,10 @@ export const VurderingArtikkel16Vedtak = props => {
     },
   ];
 
+  const vedKlikk = () => {
+    lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND);
+  };
+
   return (
     <Fragment>
       <Nav.Undertittel>Svar fra myndigheten</Nav.Undertittel>
@@ -83,7 +87,7 @@ export const VurderingArtikkel16Vedtak = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          <Nav.Hovedknapp disabled={!redigerbart} type="hoved" onClick={lagreOgFatteVedtak}>FATT VEDTAK</Nav.Hovedknapp>
+          <Nav.Hovedknapp disabled={!redigerbart} type="hoved" onClick={vedKlikk}>FATT VEDTAK</Nav.Hovedknapp>
         </Nav.Column>
       </Nav.Row>
     </Fragment>
