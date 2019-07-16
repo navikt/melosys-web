@@ -47,14 +47,14 @@ export const VurderingArtikkel16Vedtak = props => {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
-    {
-      navn: 'Forhåndsvis A1',
-      type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
-      data: {
-        begrunnelseFritekst,
-        mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-      },
-    },
+    // {
+    //   navn: 'Forhåndsvis A1',
+    //   type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
+    //   data: {
+    //     begrunnelseFritekst,
+    //     mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
+    //   },
+    // },
     {
       navn: 'Brev til arbeidsgiver',
       type: innvilgetArbeidsgiverType,
@@ -63,14 +63,14 @@ export const VurderingArtikkel16Vedtak = props => {
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
-    {
-      navn: 'Brev til skatteoppkrever utland',
-      type: innvilgetYrkesaktivType,
-      data: {
-        begrunnelseFritekst,
-        mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-      },
-    },
+    // {
+    //   navn: 'Brev til skatteoppkrever utland',
+    //   type: innvilgetYrkesaktivType,
+    //   data: {
+    //     begrunnelseFritekst,
+    //     mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
+    //   },
+    // },
   ];
 
   const vedKlikk = () => {
@@ -87,7 +87,7 @@ export const VurderingArtikkel16Vedtak = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          { svar.begrunnelseFritekst !== MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE && <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value={begrunnelseFritekst} tellerTekst={() => {}} />}
+          { anmodningsperiodeSvarType !== MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE && <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value={begrunnelseFritekst} tellerTekst={() => {}} />}
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
