@@ -124,7 +124,6 @@ class Stegvelger extends Component {
       this.props.oppdaterVilkaar(vilkaar.hent()),
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
       this.props.oppdaterLovvalgperioder(lovvalgsbestemmelse.hent()),
-      this.props.oppdaterAnmodningsPerioder(lovvalgsbestemmelse.hent()),
     ]);
 
     this.props.oppdaterLokalSoknadHandler();
