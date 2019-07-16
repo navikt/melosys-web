@@ -40,12 +40,14 @@ export const VurderingArtikkel16MottaSvar = props => {
     }).catch(Utils.logger.error);
   }, []);
 
+  const visLovvalgsperiode = svartype === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
+
   const lagreSvar = () => {
     Api.Anmodningsperioder.sendSvar(anmodningsperiodeID, {
       anmodningsperiodeSvarType: svartype,
       endretPeriode: {
-        fom: Utils.dato.formatterDatoTilISO(endretPeriode.fom),
-        tom: Utils.dato.formatterDatoTilISO(endretPeriode.tom),
+        fom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.fom) : null,
+        tom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : null,
       },
       begrunnelseFritekst: fritekst,
     }).then(response => {
@@ -61,8 +63,6 @@ export const VurderingArtikkel16MottaSvar = props => {
   const lagreSvarHandler = () => {
     if (svartype && formIsValid) lagreSvar();
   };
-
-  const visLovvalgsperiode = svartype === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
 
   return (
     <Fragment>
