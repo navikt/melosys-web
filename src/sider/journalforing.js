@@ -74,11 +74,14 @@ class Journalforing extends Component {
   };
   mapFysiskeVedleggsTitlerTilVedlegg = pdf => {
     const { vedleggsdokumenter } = this.props;
-    return Object.values(pdf).map((tittel, index) => {
-      const dokumentID = vedleggsdokumenter.length > 0 ? vedleggsdokumenter[index].dokumentID : null;
+    if (!vedleggsdokumenter || vedleggsdokumenter.length === 0) return [];
+    const pdfTitler = Object.values(pdf);
+    if (pdfTitler.length === 0) return [];
+    return pdfTitler.map((tittel, index) => {
+      const { dokumentID } = vedleggsdokumenter[index];
       return ({ dokumentID, tittel });
     });
-  }
+  };
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
    * settes inn i skjemaet kun til info - ikke til endring - slik som feks navn på bruker.
    * Derfor må vi bygge opp og evt vaske et nytt objekt som kan sendes til backend.
