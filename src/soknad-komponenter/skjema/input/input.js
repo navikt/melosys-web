@@ -15,7 +15,7 @@ import '../skjema.css';
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
  */
 function InnerInputComponent({
-  input, label, feltFeil, ...rest
+  input, label, feltFeil, /* eslint-disable */feltNavn/* eslint-enable */, ...rest
 }) {
   const { meta: { error, touched, active } } = rest;
 
