@@ -2,7 +2,7 @@ import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
-import { reduxForm, formValueSelector } from 'redux-form';
+import { reduxForm, formValueSelector, getFormSyncErrors } from 'redux-form';
 
 import * as Skjema from '../../../soknad-komponenter/skjema';
 import * as Api from '../../../services/api';
@@ -17,6 +17,7 @@ import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrad
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
+import { formSelectors } from '../../../ducks/form';
 
 import './vurderingArtikkel16MottaSvar.css';
 
@@ -25,16 +26,19 @@ const artikkel16MottaSvarFormValueSelector = formValueSelector(KV.Form.ARTIKKEL_
 export const VurderingArtikkel16MottaSvar = props => {
   const {
     anmodningsperiodeID, gyldigeSoknadsland, soknadsperiode, redigerbart, bekreftOgFortsett, change,
-    endretPeriode, svartype, fritekst,
+    endretPeriode, svartype, fritekst, formIsValid,
   } = props;
 
   useEffect(() => {
     Api.Anmodningsperioder.hentSvar(anmodningsperiodeID).then(response => {
       change('svartype', response.anmodningsperiodeSvarType);
-      change('endretPeriode', response.endretPeriode);
+      change('endretPeriode', {
+        fom: Utils.dato.formatterDatoTilNorsk(response.endretPeriode.fom),
+        tom: Utils.dato.formatterDatoTilNorsk(response.endretPeriode.tom),
+      });
       change('fritekst', response.begrunnelseFritekst);
     }).catch(Utils.logger.error);
-  }, [anmodningsperiodeID]);
+  }, []);
 
   const lagreSvar = () => {
     Api.Anmodningsperioder.sendSvar(anmodningsperiodeID, {
@@ -45,14 +49,17 @@ export const VurderingArtikkel16MottaSvar = props => {
       },
       begrunnelseFritekst: fritekst,
     }).then(response => {
-      change('anmodningsperiodeSvarType', response.anmodningsperiodeSvarType);
-      change('endretPeriode', response.endretPeriode);
+      change('svartype', response.anmodningsperiodeSvarType);
+      change('endretPeriode', {
+        fom: Utils.dato.formatterDatoTilNorsk(response.endretPeriode.fom),
+        tom: Utils.dato.formatterDatoTilNorsk(response.endretPeriode.tom),
+      });
       change('fritekst', response.fritekst);
     }).catch(Utils.logger.error);
   };
 
   const lagreSvarHandler = () => {
-    if (svartype) lagreSvar();
+    if (svartype && formIsValid) lagreSvar();
   };
 
   const visLovvalgsperiode = svartype === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
@@ -127,18 +134,20 @@ VurderingArtikkel16MottaSvar.propTypes = {
   lovvalgsperiodeTom: PT.string,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  tilstand: PT.shape({
-    svarAnmodningUnntakAvklartfakta: MPT.Avklartefakta,
-  }).isRequired,
   change: PT.func.isRequired,
-  endretPeriode: MPT.Periode.isRequired,
-  svartype: PT.string.isRequired,
-  fritekst: PT.string.isRequired,
+  endretPeriode: MPT.Periode,
+  svartype: PT.string,
+  fritekst: PT.string,
+  formIsValid: PT.bool,
 };
 
 VurderingArtikkel16MottaSvar.defaultProps = {
   lovvalgsperiodeFom: '',
   lovvalgsperiodeTom: '',
+  fritekst: '',
+  endretPeriode: { fom: '', tom: '' },
+  svartype: '',
+  formIsValid: false,
 };
 
 const mapStateToProps = state => ({
@@ -156,6 +165,7 @@ const mapStateToProps = state => ({
     svartype: '',
     fritekst: '',
   },
+  formIsValid: formSelectors.Artikkel16MottaSvarSyncErrorsSelector(state) === undefined,
 });
 
 const Artikkel16MottaSvarForm = reduxForm({
@@ -164,7 +174,7 @@ const Artikkel16MottaSvarForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.createValidator(Validering.Skjemaer.saksopplysninger),
+  validate: (values, props) => Validering.Skjemaer.createValidator(Validering.Skjemaer.artikkel16_motta_svar, { context: { svartype: props.svartype } })(values),
 })(VurderingArtikkel16MottaSvar);
 
 export default connect(mapStateToProps)(Artikkel16MottaSvarForm);
