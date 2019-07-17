@@ -2,7 +2,7 @@ import { STATUS } from '../../services/utils';
 import * as Types from './types';
 
 const initialState = {
-  data: [],
+  data: {},
   status: STATUS.NOT_STARTED,
 };
 

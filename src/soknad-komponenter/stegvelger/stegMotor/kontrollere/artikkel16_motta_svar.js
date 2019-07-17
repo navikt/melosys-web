@@ -26,7 +26,6 @@ class Artikkel16MottaSvar extends Steg {
     this.komponent = VurderingArtikkel16MottaSvar;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
-      anmodningsperiodesvar: _propsLight.anmodningsperiodesvar,
     });
     this.beregnRelevantUI = _propsLight => ({
       svarAnmodningUnntakAvklartfakta: hentFakta(MKV.Koder.avklartefakta.SVAR_ANMODNING_UNNTAK, _propsLight.avklartefakta),
