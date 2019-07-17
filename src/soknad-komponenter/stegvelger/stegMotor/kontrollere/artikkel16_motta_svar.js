@@ -12,7 +12,7 @@ class Artikkel16MottaSvar extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'Artikkel 16 vedtak',
-        exec: () => Artikkel16MottaSvar.finnAvklaring(propsLight.artikkel16_motta_svar_skjema),
+        exec: () => Artikkel16MottaSvar.finnAvklaring(propsLight.anmodningsperiodesvar),
         nesteSteg: STEG.ARTIKKEL_16_VEDTAK,
       },
       {
@@ -26,10 +26,11 @@ class Artikkel16MottaSvar extends Steg {
     this.komponent = VurderingArtikkel16MottaSvar;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
+      anmodningsperiodesvar: _propsLight.anmodningsperiodesvar,
     });
     this.beregnRelevantUI = _propsLight => ({
       svarAnmodningUnntakAvklartfakta: hentFakta(MKV.Koder.avklartefakta.SVAR_ANMODNING_UNNTAK, _propsLight.avklartefakta),
-      harAvklaring: Artikkel16MottaSvar.finnAvklaring(_propsLight.artikkel16_motta_svar_skjema),
+      harAvklaring: Artikkel16MottaSvar.finnAvklaring(_propsLight.anmodningsperiodesvar),
     });
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
@@ -39,11 +40,11 @@ class Artikkel16MottaSvar extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  static finnAvklaring = artikkel16_motta_svar_skjema => {
-    const { endretPeriode, svartype } = artikkel16_motta_svar_skjema;
+  static finnAvklaring = anmodningsperiodesvar => {
+    const { endretPeriode, anmodningsperiodeSvarType } = anmodningsperiodesvar;
 
-    if (!svartype) return false;
-    if (svartype === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
+    if (!anmodningsperiodeSvarType) return false;
+    if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
       if (!endretPeriode.fom || !endretPeriode.tom) return false;
     }
 

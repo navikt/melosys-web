@@ -18,6 +18,9 @@ import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 import { formSelectors } from '../../../ducks/form';
+import { anmodningsperiodesvarOperations } from '../../../ducks/anmodningsperiodesvar';
+
+import { lagAnmodningsperiodesvar, slettAnmodningsperiodesvar, konverterAnmodningsperiodesvarTilStegData } from '../../../regler/anmodningsperiodesvar';
 
 import './vurderingArtikkel16MottaSvar.css';
 
@@ -26,10 +29,12 @@ const artikkel16MottaSvarFormValueSelector = formValueSelector(KV.Form.ARTIKKEL_
 export const VurderingArtikkel16MottaSvar = props => {
   const {
     anmodningsperiodeID, gyldigeSoknadsland, soknadsperiode, redigerbart, bekreftOgFortsett, change,
-    endretPeriode, svartype, fritekst, formIsValid,
+    endretPeriode, svartype, fritekst, formIsValid, oppdaterData, hentAnmodningsperiodesvar,
   } = props;
 
   useEffect(() => {
+    hentAnmodningsperiodesvar(anmodningsperiodeID).then(svar => oppdaterData(lagAnmodningsperiodesvar(svar.data)));
+
     Api.Anmodningsperioder.hentSvar(anmodningsperiodeID).then(response => {
       change('svartype', response.anmodningsperiodeSvarType);
       change('endretPeriode', {
@@ -132,6 +137,8 @@ VurderingArtikkel16MottaSvar.propTypes = {
   svartype: PT.string,
   fritekst: PT.string,
   formIsValid: PT.bool,
+  hentAnmodningsperiodesvar: PT.func.isRequired,
+  anmodningsperiodesvar: PT.object,
 };
 
 VurderingArtikkel16MottaSvar.defaultProps = {
@@ -142,6 +149,7 @@ VurderingArtikkel16MottaSvar.defaultProps = {
   svartype: '',
   formIsValid: false,
   anmodningsperiodeID: '',
+  anmodningsperiodesvar: {},
 };
 
 const mapStateToProps = state => ({
@@ -162,6 +170,10 @@ const mapStateToProps = state => ({
   formIsValid: formSelectors.Artikkel16MottaSvarSyncErrorsSelector(state) === undefined,
 });
 
+const mapDispatchToProps = dispatch => ({
+  hentAnmodningsperiodesvar: async anmodningsperiodeID => dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
+});
+
 const Artikkel16MottaSvarForm = reduxForm({
   form: KV.Form.ARTIKKEL_16_MOTTA_SVAR,
   enableReinitialize: true,
@@ -171,4 +183,4 @@ const Artikkel16MottaSvarForm = reduxForm({
   validate: (values, props) => Validering.Skjemaer.createValidator(Validering.Skjemaer.artikkel16_motta_svar, { context: { svartype: props.svartype } })(values),
 })(VurderingArtikkel16MottaSvar);
 
-export default connect(mapStateToProps)(Artikkel16MottaSvarForm);
+export default connect(mapStateToProps, mapDispatchToProps)(Artikkel16MottaSvarForm);
