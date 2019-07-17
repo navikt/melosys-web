@@ -1,10 +1,6 @@
-import * as MKV from 'melosys-kodeverk';
-
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel16Vedtak from '../../stegKomponenter/vurderingArtikkel16Vedtak';
-import { hentVilkar } from '../../../../regler/vilkar';
-
 
 class Artikkel16Vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
