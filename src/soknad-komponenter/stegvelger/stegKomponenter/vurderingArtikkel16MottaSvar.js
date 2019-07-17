@@ -41,12 +41,14 @@ export const VurderingArtikkel16MottaSvar = props => {
 
   const visLovvalgsperiode = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
 
+  const visFritekstFelt = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
+
   const lagreSvar = () => {
     const svar = {
       anmodningsperiodeSvarType,
       endretPeriode: {
-        fom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.fom) : null,
-        tom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : null,
+        fom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.fom) : soknadsperiode.fom,
+        tom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : soknadsperiode.tom,
       },
       begrunnelseFritekst,
     };
@@ -109,7 +111,7 @@ export const VurderingArtikkel16MottaSvar = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            { anmodningsperiodeSvarType !== MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE && <Skjema.Textarea feltNavn="begrunnelseFritekst" disabled={!redigerbart} label="Begrunnelse" tellerTekst={() => {}} onBlur={lagreSvarHandler} />}
+            { visFritekstFelt && <Skjema.Textarea feltNavn="begrunnelseFritekst" disabled={!redigerbart} label="Begrunnelse" tellerTekst={() => {}} onBlur={lagreSvarHandler} />}
           </Nav.Column>
         </Nav.Row>
       </form>
