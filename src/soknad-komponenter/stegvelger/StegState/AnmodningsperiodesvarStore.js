@@ -1,7 +1,7 @@
 import StegState from './StegState';
 import * as Utils from '../../../utils';
 
-class AnmodningsperioderStore extends StegState {
+class AnmodningsperiodesvarStore extends StegState {
   oppdaterfelt = (eksisterendeData, nyData) => {
     if (!Utils._isNil(nyData)) {
       return nyData;
@@ -11,17 +11,17 @@ class AnmodningsperioderStore extends StegState {
 
   hent = () => {
     const { stegStore } = this;
-    let anmodningsperiode = null;
+    let anmodningsperiodesvar = null;
     stegStore.forEach(steg => {
       Object.keys(steg).forEach(key => {
         const stegData = steg[key];
-        if (!Utils._isNil(stegData) && Utils._isNil(anmodningsperiode)) {
-          anmodningsperiode = stegData;
+        if (!Utils._isNil(stegData) && Utils._isNil(anmodningsperiodesvar)) {
+          anmodningsperiodesvar = stegData;
         }
       });
     });
-    return anmodningsperiode;
+    return anmodningsperiodesvar;
   };
 }
 
-export default AnmodningsperioderStore;
+export default AnmodningsperiodesvarStore;
