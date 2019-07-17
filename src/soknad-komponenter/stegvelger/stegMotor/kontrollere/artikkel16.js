@@ -11,7 +11,7 @@ class Artikkel16 extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'mottatt svar',
-        exec: () => propsLight.anmodningsperioder.every(anmodningsperiode => anmodningsperiode.id),
+        exec: () => Artikkel16.harAvklaring(propsLight.anmodningsperioder),
         nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
       },
       {
@@ -28,7 +28,7 @@ class Artikkel16 extends Steg {
     });
     this.beregnRelevantUI = _propsLight => ({
       art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
-      harAvklaring: _propsLight.anmodningsperioder.every(anmodningsperiode => anmodningsperiode.id),
+      harAvklaring: Artikkel16.harAvklaring(_propsLight.anmodningsperioder),
     });
     this.handlers = {
       lagreOgStartAnmodningSaksflyt: this._propsLight.tilgjengeligeHandlers.lagreOgStartAnmodningSaksflyt,
@@ -40,6 +40,10 @@ class Artikkel16 extends Steg {
       slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
+  }
+
+  static harAvklaring(anmodningsperioder) {
+    return anmodningsperioder.length > 0 && anmodningsperioder.every(anmodningsperiode => anmodningsperiode.id);
   }
 }
 
