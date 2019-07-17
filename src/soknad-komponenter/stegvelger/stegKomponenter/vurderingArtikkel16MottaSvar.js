@@ -27,7 +27,7 @@ const artikkel16MottaSvarFormValueSelector = formValueSelector(KV.Form.ARTIKKEL_
 
 export const VurderingArtikkel16MottaSvar = props => {
   const {
-    anmodningsperiodeID, gyldigeSoknadsland, soknadsperiode, redigerbart, bekreftOgFortsett, slettData,
+    anmodningsperiodeID, gyldigeSoknadsland, soknadsperiode, redigerbart, bekreftOgFortsett, slettData, tilstand,
     endretPeriode, anmodningsperiodeSvarType, begrunnelseFritekst, formIsValid, oppdaterData, hentAnmodningsperiodesvar, sendAnmodningsperiodeSvar,
   } = props;
 
@@ -116,7 +116,7 @@ export const VurderingArtikkel16MottaSvar = props => {
         </Nav.Row>
       </form>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!redigerbart || !formIsValid} type="hoved" onClick={bekreftOgFortsett} className="fane__navigasjonsknapp">BEKREFT OG FORTSETT</Nav.Knapp>
+        <Nav.Knapp disabled={!redigerbart || !formIsValid || !tilstand.harAvklaring} type="hoved" onClick={bekreftOgFortsett} className="fane__navigasjonsknapp">BEKREFT OG FORTSETT</Nav.Knapp>
       </div>
     </Fragment>
   );
@@ -139,6 +139,7 @@ VurderingArtikkel16MottaSvar.propTypes = {
   formIsValid: PT.bool,
   hentAnmodningsperiodesvar: PT.func.isRequired,
   sendAnmodningsperiodeSvar: PT.func.isRequired,
+  tilstand: PT.object.isRequired,
 };
 
 VurderingArtikkel16MottaSvar.defaultProps = {
