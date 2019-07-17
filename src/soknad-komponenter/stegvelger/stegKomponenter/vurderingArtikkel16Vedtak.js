@@ -6,8 +6,6 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
-import * as Api from '../../../services/api';
-import * as Utils from '../../../utils';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrade';

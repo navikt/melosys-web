@@ -1,4 +1,5 @@
 import React from 'react';
+import * as MKV from 'melosys-kodeverk';
 
 import { VurderingArtikkel16MottaSvar } from './vurderingArtikkel16MottaSvar';
 import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrade';
@@ -10,6 +11,7 @@ describe('VurderingArtikkel16MottaSvar', () => {
     props = {
       bekreftOgFortsett: jest.fn(),
       gyldigeSoknadsland: [],
+      anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE,
       soknadsperiode: {
         periode: {
           fom: 'fomdato',
@@ -21,15 +23,6 @@ describe('VurderingArtikkel16MottaSvar', () => {
       lovvalgsperiodeTom: 'lovtom',
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
-      tilstand: {
-        svarAnmodningUnntakAvklartfakta: {
-          referanse: 'felt',
-          subjektID: 'subjektID',
-          fakta: ['fakta'],
-          begrunnelseKoder: ['begrunnelse'],
-          begrunnelseFritekst: 'fritekst',
-        },
-      },
     };
   });
 
@@ -44,11 +37,10 @@ describe('VurderingArtikkel16MottaSvar', () => {
     expect(vurderingArtikkel16Vedtak.find(DatoOmradeMedVarighet).props().periode).toBe(props.soknadsperiode);
   });
 
-  it('viser en textarea', () => {
+  it('viser en textarea ved delvis innvilgelse', () => {
     const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16MottaSvar {...props} />);
 
     expect(vurderingArtikkel16Vedtak.find('Textarea')).toHaveLength(1);
-    expect(vurderingArtikkel16Vedtak.find('Textarea').props().value).toBe(props.tilstand.svarAnmodningUnntakAvklartfakta.begrunnelseFritekst);
   });
 
   it('viser en knapp', () => {

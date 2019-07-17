@@ -1,6 +1,5 @@
 import React from 'react';
-
-import * as KV from '../../../kodeverk';
+import * as MKV from 'melosys-kodeverk';
 
 import { VurderingArtikkel16Vedtak } from './vurderingArtikkel16Vedtak';
 import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrade';
@@ -10,11 +9,16 @@ describe('VurderingArtikkel16Vedtak', () => {
 
   beforeEach(() => {
     props = {
+      anmodningsperiodesvar: {
+        anmodningsperiodeSvarType: 'test',
+        endretPeriode: { fom: 'datofom', tom: 'datotom' },
+        begrunnelseFritekst: 'fritekst',
+      },
       behandlingID: 1,
       lagreOgFatteVedtak: jest.fn(),
       redigerbart: true,
       lovvalgsperiode: { fom: 'datofom', tom: 'datotom' },
-      innvilgelsesResultat: KV.Koder.INNVILGET,
+      innvilgelsesResultat: MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE,
       tilstand: {
         svarAnmodningUnntakFritekst: 'Fritekst',
       },
@@ -29,7 +33,7 @@ describe('VurderingArtikkel16Vedtak', () => {
     const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
 
     expect(vurderingArtikkel16Vedtak.find(DatoOmradeMedVarighet)).toHaveLength(1);
-    expect(vurderingArtikkel16Vedtak.find(DatoOmradeMedVarighet).props().periode).toBe(props.lovvalgsperiode);
+    expect(vurderingArtikkel16Vedtak.find(DatoOmradeMedVarighet).props().periode).toBe(props.anmodningsperiodesvar.endretPeriode);
   });
 
   it('viser en pdflenkeliste', () => {
