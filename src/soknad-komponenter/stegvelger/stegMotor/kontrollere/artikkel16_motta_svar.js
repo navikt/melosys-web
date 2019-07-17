@@ -12,8 +12,13 @@ class Artikkel16MottaSvar extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'Artikkel 16 vedtak',
-        exec: () => true,
+        exec: () => Artikkel16MottaSvar.finnAvklaring(propsLight.artikkel16_motta_svar_skjema),
         nesteSteg: STEG.ARTIKKEL_16_VEDTAK,
+      },
+      {
+        beskrivelse: 'alle valg',
+        exec: () => true,
+        nesteSteg: null,
       },
     ];
     this.id = STEG.ARTIKKEL_16_MOTTA_SVAR;
@@ -24,6 +29,7 @@ class Artikkel16MottaSvar extends Steg {
     });
     this.beregnRelevantUI = _propsLight => ({
       svarAnmodningUnntakAvklartfakta: hentFakta(MKV.Koder.avklartefakta.SVAR_ANMODNING_UNNTAK, _propsLight.avklartefakta),
+      harAvklaring: Artikkel16MottaSvar.finnAvklaring(_propsLight.artikkel16_motta_svar_skjema),
     });
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
@@ -31,6 +37,17 @@ class Artikkel16MottaSvar extends Steg {
       slettData: data => this._propsLight.tilgjengeligeHandlers.slettStegData(this.id, data),
     };
     this._status = FANE_STATUS.OK;
+  }
+
+  static finnAvklaring = artikkel16_motta_svar_skjema => {
+    const { endretPeriode, svartype } = artikkel16_motta_svar_skjema;
+
+    if (!svartype) return false;
+    if (svartype === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
+      if (!endretPeriode.fom || !endretPeriode.tom) return false;
+    }
+
+    return true;
   }
 }
 

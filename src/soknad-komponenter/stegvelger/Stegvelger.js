@@ -230,6 +230,7 @@ class Stegvelger extends Component {
       behandlingsstatus: props.oppsummering.behandlingsstatus,
       lovvalgsperioder: props.lovvalgsperioder,
       artikkel16_anmodning_skjema: props.artikkel16_anmodning_skjema,
+      artikkel16_motta_svar_skjema: props.artikkel16_motta_svar_skjema,
       soknad_skjema: props.soknad_skjema,
       inngang: props.inngang,
       tilgjengeligeHandlers,
@@ -350,6 +351,7 @@ Stegvelger.propTypes = {
   saksopplysninger: PT.object.isRequired,
   soknad_skjema: PT.object.isRequired,
   artikkel16_anmodning_skjema: PT.object,
+  artikkel16_motta_svar_skjema: PT.object,
   oppdaterVilkaar: PT.func.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgperioder: PT.func.isRequired,
@@ -377,6 +379,7 @@ Stegvelger.defaultProps = {
   oppsummering: {},
   valgteVirksomheter: [],
   artikkel16_anmodning_skjema: {},
+  artikkel16_motta_svar_skjema: {},
 };
 
 const mapStateToProps = state => ({
@@ -392,6 +395,7 @@ const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   soknad_skjema: formSelectors.SoknadenFormSelector(state).values,
   artikkel16_anmodning_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
+  artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
