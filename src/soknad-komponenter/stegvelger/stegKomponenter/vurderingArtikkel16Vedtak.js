@@ -15,28 +15,19 @@ import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrad
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
+import { anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
 
 export const VurderingArtikkel16Vedtak = props => {
   const {
-    lagreOgFatteVedtak, redigerbart, behandlingID, anmodningsperiodeID,
+    lagreOgFatteVedtak, redigerbart, behandlingID, anmodningsperiodesvar,
   } = props;
 
-  const [svar, setSvar] = useState({
-    begrunnelseFritekst: '',
-    endretPeriode: { fom: '', tom: '' },
-    anmodningsperiodeSvarType: '',
-  });
-
-  useEffect(() => {
-    Api.Anmodningsperioder.hentSvar(anmodningsperiodeID).then(setSvar).catch(Utils.logger.error);
-  }, []);
-
-  const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = svar;
+  const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = anmodningsperiodesvar;
 
   const innvilget = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;
   const innvilgetYrkesaktivType = innvilget ? MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV : MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV;
   const innvilgetArbeidsgiverType = innvilget ? MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER : MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER;
-  const innvilgetTekst = `Svar på anmodning om unntak: ${KV.kodeTilTerm(anmodningsperiodeSvarType, MKV.KTObjects.anmodningsperiodesvartyper)}.`;
+  const resultatTekst = `Svar på anmodning om unntak: ${KV.kodeTilTerm(anmodningsperiodeSvarType, MKV.KTObjects.anmodningsperiodesvartyper)}.`;
 
   const dokumenter = [
     {
@@ -73,6 +64,8 @@ export const VurderingArtikkel16Vedtak = props => {
     // },
   ];
 
+  const visFritekstFelt = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
+
   const vedKlikk = () => {
     lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND);
   };
@@ -82,12 +75,12 @@ export const VurderingArtikkel16Vedtak = props => {
       <Nav.Undertittel>Svar fra myndigheten</Nav.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
-          {innvilgetTekst}
+          {resultatTekst}
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          { anmodningsperiodeSvarType !== MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE && <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value={begrunnelseFritekst} tellerTekst={() => {}} />}
+          { visFritekstFelt && <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value={begrunnelseFritekst} tellerTekst={() => {}} />}
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -110,6 +103,7 @@ export const VurderingArtikkel16Vedtak = props => {
 };
 
 VurderingArtikkel16Vedtak.propTypes = {
+  anmodningsperiodesvar: PT.object,
   behandlingID: PT.number.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -119,6 +113,7 @@ VurderingArtikkel16Vedtak.propTypes = {
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
+  anmodningsperiodesvar: {},
   anmodningsperiodeID: '',
 };
 
@@ -127,6 +122,7 @@ const mapStateToProps = state => ({
   lovvalgsperiode: lovvalgsperioderSelectors.PeriodeSelector(state),
   innvilgelsesResultat: lovvalgsperioderSelectors.InnvilgelsesResultatSelector(state),
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
+  anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingArtikkel16Vedtak);
