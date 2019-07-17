@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
@@ -158,15 +158,6 @@ class Informasjon extends Component {
     const { skalFeltetDisables } = this;
 
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdfURI(jpostID, dokID);
-    const VedleggLenkeListe = () => {
-      if (vedlegg && vedlegg.length === 0) return null;
-      const lenker = vedlegg.map((elem, index) => <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">Vedlegg {index + 1}</Link>);
-      return (
-        <ul>
-          {lenker.map(lenke => <li key={uuid()}>{lenke}</li>)}
-        </ul>
-      );
-    };
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
@@ -191,18 +182,32 @@ class Informasjon extends Component {
             <Link to={dokumentURI(journalpostID, dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne dokument i ny fane</Link>
           </Nav.Fieldset>
 
-          <Nav.Fieldset legend="Vedlegg:">
+          {vedlegg.length > 0 &&
+            <Nav.Fieldset legend="Fysiske Vedlegg:">
+              {vedlegg.map((elem, index) =>
+                <Fragment>
+                  <Skjema.ListeVelger
+                    feltNavn={`vedlegg.pdf.tittel_${index}`}
+                    label={`Tittel på vedlegg: ${index + 1}`}
+                    placeholder="(velg eller skriv inn egen tittel)"
+                    muligeValg={MKV.KTObjects.dokumenttitler}
+                  />
+                  <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne vedlegg i ny fane</Link>
+                </Fragment>)}
+            </Nav.Fieldset>
+          }
+          <Nav.Fieldset legend="Logiske Vedlegg:">
             <Skjema.ListeVelger
-              feltNavn="vedleggsTitler"
+              feltNavn="vedlegg.logiskeTitler"
               label="Velg ny tittel:"
               gruppe
               tillatFritekst
               muligeValg={MKV.KTObjects.dokumenttitler}
               placeholder="(Velg eller skriv inn egen tittel)"
             />
-            <VedleggLenkeListe />
           </Nav.Fieldset>
         </Nav.Fieldset>
+
       </div>
     );
   }
