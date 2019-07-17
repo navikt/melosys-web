@@ -9,7 +9,6 @@ import * as Api from '../services/api';
 import * as MPT from '../proptypes';
 import * as Nav from '../utils/navFrontend';
 import ListevelgerFlervalg from '../komponenter/ui/listevelgerFlervalg';
-import Personopplysninger from '../soknad-komponenter/personopplysninger';
 import Medlemskap from '../komponenter/medlemskap';
 import EndrePeriode from './endrePeriode';
 import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder';

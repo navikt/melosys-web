@@ -1,17 +1,15 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 
 import PdfLenkeListe from '../../pdfLenkeListe';
 import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrade';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
 
@@ -105,8 +103,6 @@ VurderingArtikkel16Vedtak.propTypes = {
   behandlingID: PT.number.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
-  lovvalgsperiode: MPT.Periode.isRequired,
-  innvilgelsesResultat: PT.string.isRequired,
   anmodningsperiodeID: PT.string,
 };
 
@@ -117,8 +113,6 @@ VurderingArtikkel16Vedtak.defaultProps = {
 
 const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  lovvalgsperiode: lovvalgsperioderSelectors.PeriodeSelector(state),
-  innvilgelsesResultat: lovvalgsperioderSelectors.InnvilgelsesResultatSelector(state),
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
   anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
 });
