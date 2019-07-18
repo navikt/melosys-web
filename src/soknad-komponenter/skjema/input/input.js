@@ -22,7 +22,7 @@ function InnerInputComponent({
 
   let feil = (error && touched && !active) ? { feilmelding: rest.meta.error } : undefined;
   /* Vi forventer at meta.error er en string eller et objekt */
-  if (Utils._isObjectLike(feil)) feil = { feilmelding: feil.melding };
+  if (feil && Utils._isObject(feil.feilmelding)) feil.feilmelding = feil.feilmelding.melding;
 
   /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
   if (!feil) {
