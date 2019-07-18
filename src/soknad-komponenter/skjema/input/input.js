@@ -4,6 +4,7 @@ import { Field } from 'redux-form';
 import { connect } from 'react-redux';
 
 import * as Nav from '../../../utils/navFrontend';
+import * as Utils from '../../../utils';
 
 import { normaliserInputDato } from '../../../utils/dato';
 
@@ -20,6 +21,8 @@ function InnerInputComponent({
   const { meta: { error, touched, active } } = rest;
 
   let feil = (error && touched && !active) ? { feilmelding: rest.meta.error } : undefined;
+  /* Vi forventer at meta.error er en string eller et objekt */
+  if (Utils._isObjectLike(feil)) feil = { feilmelding: feil.melding };
 
   /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
   if (!feil) {
