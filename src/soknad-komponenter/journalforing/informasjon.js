@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
-import uuid from 'uuid';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../../utils/utils';
 import * as Skjema from '../skjema/';
@@ -21,6 +19,18 @@ import { OrganisasjonSelectors } from '../../ducks/organisasjoner';
 import { formSelectors } from '../../ducks/form';
 
 import './informasjon.css';
+
+const dokumenttitler = [
+  { term: 'Arbeidsforhold' },
+  { term: 'Bekreftelse på medlemskap i folketrygden' },
+  { term: 'Inntektsopplysninger' },
+  { term: 'Merknad til sak' },
+  { term: 'Studiedokumentasjon' },
+  { term: 'Søknad om medlemskap' },
+  { term: 'Unntak' },
+  { term: 'Søknad om A1 - Avklaring av trygdetilhørighet ved yrkesaktivitet innen EØS/Sveits' },
+  { term: 'Skjema for arbeidsgiver som sender arbeidstaker eller frilanser på midlertidig oppdrag i EØS/Sveits' },
+];
 
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
  * slik som informasjon om bruker, informasjon om dokument etc.
@@ -177,7 +187,7 @@ class Informasjon extends Component {
               feltNavn="hoveddokumentTittel"
               label="Tittel på hoveddokument:"
               placeholder="(velg eller skriv inn egen tittel)"
-              muligeValg={MKV.KTObjects.dokumenttitler}
+              muligeValg={dokumenttitler}
             />
             <Link to={dokumentURI(journalpostID, dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne dokument i ny fane</Link>
           </Nav.Fieldset>
@@ -190,7 +200,7 @@ class Informasjon extends Component {
                     feltNavn={`vedlegg.pdf.tittel_${index}`}
                     label={`Tittel på vedlegg: ${index + 1}`}
                     placeholder="(velg eller skriv inn egen tittel)"
-                    muligeValg={MKV.KTObjects.dokumenttitler}
+                    muligeValg={dokumenttitler}
                   />
                   <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne vedlegg i ny fane</Link>
                 </Fragment>)}
@@ -202,7 +212,7 @@ class Informasjon extends Component {
               label="Velg ny tittel:"
               gruppe
               tillatFritekst
-              muligeValg={MKV.KTObjects.dokumenttitler}
+              muligeValg={dokumenttitler}
               placeholder="(Velg eller skriv inn egen tittel)"
             />
           </Nav.Fieldset>
