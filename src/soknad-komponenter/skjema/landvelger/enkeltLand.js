@@ -122,7 +122,7 @@ export class EnkeltLand extends Component {
 
     let { error: skjemaError = '' } = meta;
     /* Vi forventer at meta.error er en string eller et objekt */
-    if (Utils._isObjectLike(skjemaError)) skjemaError = skjemaError.melding;
+    if (Utils._isObject(skjemaError)) skjemaError = skjemaError.melding;
     const { error: landError = '' } = this.state;
     let feilObjekt = skjemaError || landError ? { feilmelding: `${skjemaError} ${landError}` } : null;
 
