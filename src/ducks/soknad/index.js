@@ -3,9 +3,10 @@ import * as soknadSelectors from './selectors';
 import * as soknadActions from './actions';
 import * as soknadTypes from './types';
 
-import soknadReducers from './reducers';
+import soknadReducers, { initialState } from './reducers';
 
 export {
+  initialState,
   soknadOperations,
   soknadSelectors,
   soknadTypes,
