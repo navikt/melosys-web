@@ -1,5 +1,7 @@
 import * as MKV from 'melosys-kodeverk';
 
+import * as KV from '../../../../kodeverk';
+
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel16 from '../../stegKomponenter/vurderingArtikkel16';
@@ -11,7 +13,7 @@ class Artikkel16 extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'mottatt svar',
-        exec: () => Artikkel16.harAvklaring(propsLight.anmodningsperioder),
+        exec: () => Artikkel16.harAvklaring(propsLight),
         nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
       },
       {
@@ -28,7 +30,7 @@ class Artikkel16 extends Steg {
     });
     this.beregnRelevantUI = _propsLight => ({
       art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
-      harAvklaring: Artikkel16.harAvklaring(_propsLight.anmodningsperioder),
+      harAvklaring: Artikkel16.harAvklaring(_propsLight),
     });
     this.handlers = {
       lagreOgStartAnmodningSaksflyt: this._propsLight.tilgjengeligeHandlers.lagreOgStartAnmodningSaksflyt,
@@ -42,8 +44,14 @@ class Artikkel16 extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  static harAvklaring(anmodningsperioder) {
-    return anmodningsperioder.length > 0 && anmodningsperioder.every(anmodningsperiode => anmodningsperiode.id);
+  static harAvklaring({ anmodningsperioder, behandlingsstatus }) {
+    const avklaring = (
+      anmodningsperioder.length > 0 &&
+      anmodningsperioder.every(anmodningsperiode => anmodningsperiode.anmodningSaksflytSendt) &&
+      KV.objektTilKode(behandlingsstatus) === MKV.Koder.behandlinger.status.UNDER_BEHANDLING
+    );
+
+    return avklaring;
   }
 }
 
