@@ -242,6 +242,7 @@ class VurderingArtikkel16 extends Component {
       validerOgLagreBehandling,
       fritekstFokusFlyttetHandler,
       fritekstEndretHandler,
+      lagreAnmodningsperioder,
     } = this;
 
     const {
@@ -285,6 +286,7 @@ class VurderingArtikkel16 extends Component {
             <Nav.Column xs="7">
               <Skjema.Select
                 feil={lovvalgFeilmelding}
+                onBlur={lagreAnmodningsperioder}
                 disabled={!redigerbart}
                 feltNavn="unntakFraBestemmelse"
                 label="Artikkelen det søkes unntak fra:"
