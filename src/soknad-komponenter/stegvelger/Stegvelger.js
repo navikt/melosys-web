@@ -61,6 +61,14 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   }
 
+  componentDidUpdate(prevProps) {
+    const { aktivtStegNummer } = this.state;
+
+    if (this.props.oppsummering.behandlingsstatus !== prevProps.oppsummering.behandlingsstatus) {
+      this.oppdaterAktuelleSteg(aktivtStegNummer);
+    }
+  }
+
   componentWillUnmount() {
     this.aktiv = false;
   }
