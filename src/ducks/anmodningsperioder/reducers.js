@@ -16,7 +16,7 @@ export default function reducer(state = initialState, action) {
       return {
         ...state,
         status: STATUS.OK,
-        data: action.data,
+        data: action.data.anmodningsperioder,
       };
     case Types.RESET:
       return { ...initialState };

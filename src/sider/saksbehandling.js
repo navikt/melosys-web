@@ -189,7 +189,7 @@ class Saksbehandling extends Component {
     const { behandlingID } = this.state;
     const { sendAnmodningsperioder, anmodningsperioder } = this.props;
 
-    sendAnmodningsperioder(behandlingID, anmodningsperioder);
+    sendAnmodningsperioder(behandlingID, { anmodningsperioder });
   };
 
   oppdaterOgLagreBehandlingerHandler = async () => {
