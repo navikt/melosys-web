@@ -20,5 +20,5 @@ export const JournalforingHovedDokument = createSelector(
 
 export const JournalforingVedleggsDokumenter = createSelector(
   state => state.journalforing.data || {},
-  journalforing => journalforing.vedlegg
+  journalforing => journalforing.vedlegg || []
 );

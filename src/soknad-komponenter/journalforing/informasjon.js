@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
-import uuid from 'uuid';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../../utils/utils';
 import * as Skjema from '../skjema/';
@@ -21,6 +19,18 @@ import { OrganisasjonSelectors } from '../../ducks/organisasjoner';
 import { formSelectors } from '../../ducks/form';
 
 import './informasjon.css';
+
+const dokumenttitler = [
+  { term: 'Arbeidsforhold' },
+  { term: 'Bekreftelse på medlemskap i folketrygden' },
+  { term: 'Inntektsopplysninger' },
+  { term: 'Merknad til sak' },
+  { term: 'Studiedokumentasjon' },
+  { term: 'Søknad om medlemskap' },
+  { term: 'Unntak' },
+  { term: 'Søknad om A1 - Avklaring av trygdetilhørighet ved yrkesaktivitet innen EØS/Sveits' },
+  { term: 'Skjema for arbeidsgiver som sender arbeidstaker eller frilanser på midlertidig oppdrag i EØS/Sveits' },
+];
 
 /** Denne komponenten inneholder skjemafelter nødvendig for journalføringen
  * slik som informasjon om bruker, informasjon om dokument etc.
@@ -158,15 +168,6 @@ class Informasjon extends Component {
     const { skalFeltetDisables } = this;
 
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdfURI(jpostID, dokID);
-    const VedleggLenkeListe = () => {
-      if (vedlegg && vedlegg.length === 0) return null;
-      const lenker = vedlegg.map(elem => <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">{elem.tittel}</Link>);
-      return (
-        <ol>
-          {lenker.map(lenke => <li key={uuid()}>{lenke}</li>)}
-        </ol>
-      );
-    };
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
@@ -186,23 +187,37 @@ class Informasjon extends Component {
               feltNavn="hoveddokumentTittel"
               label="Tittel på hoveddokument:"
               placeholder="(velg eller skriv inn egen tittel)"
-              muligeValg={MKV.KTObjects.dokumenttitler}
+              muligeValg={dokumenttitler}
             />
             <Link to={dokumentURI(journalpostID, dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne dokument i ny fane</Link>
           </Nav.Fieldset>
 
-          <Nav.Fieldset legend="Vedlegg:">
+          {vedlegg.length > 0 &&
+            <Nav.Fieldset legend="Fysiske Vedlegg:">
+              {vedlegg.map((elem, index) =>
+                <Fragment>
+                  <Skjema.ListeVelger
+                    feltNavn={`vedlegg.pdf.tittel_${index}`}
+                    label={`Tittel på vedlegg: ${index + 1}`}
+                    placeholder="(velg eller skriv inn egen tittel)"
+                    muligeValg={dokumenttitler}
+                  />
+                  <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne vedlegg i ny fane</Link>
+                </Fragment>)}
+            </Nav.Fieldset>
+          }
+          <Nav.Fieldset legend="Logiske Vedlegg:">
             <Skjema.ListeVelger
-              feltNavn="vedleggsTitler"
+              feltNavn="vedlegg.logiskeTitler"
               label="Velg ny tittel:"
               gruppe
               tillatFritekst
-              muligeValg={MKV.KTObjects.dokumenttitler}
+              muligeValg={dokumenttitler}
               placeholder="(Velg eller skriv inn egen tittel)"
             />
-            <VedleggLenkeListe />
           </Nav.Fieldset>
         </Nav.Fieldset>
+
       </div>
     );
   }

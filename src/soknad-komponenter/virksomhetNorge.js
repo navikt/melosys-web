@@ -28,7 +28,7 @@ function VirksomhetNorge (props) {
     values.arbeidstakereRekruttertILand,
     values.oppdragsKontrakterIHovedsakInngaattILand,
   ];
-  const minstEttFeltErUtfylt = felter.some(felt => felt !== '');
+  const minstEttFeltErUtfylt = felter.some(felt => felt !== '' && felt !== null);
   const panelIkon = minstEttFeltErUtfylt ? Ikoner.Ferdig : Ikoner.Ubehandlet;
 
   return (
