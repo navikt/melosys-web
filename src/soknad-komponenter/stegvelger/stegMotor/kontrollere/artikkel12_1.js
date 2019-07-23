@@ -18,7 +18,7 @@ class Artikkel12_1 extends Steg {
       {
         beskrivelse: 'ønsker å vurdere 16.1',
         exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.vilkaar.FO_883_2004_ART16_1, alleVilkar),
-        nesteSteg: STEG.ARTIKKEL_16,
+        nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
       },
       {
         beskrivelse: 'avslår søknad',
