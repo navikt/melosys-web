@@ -162,23 +162,22 @@ class Stegvelger extends Component {
     }
   };
 
-  startAnmodningSaksflytHandler = async behandlingsresultattype => {
+  bestillAnmodningsperioder = () => {
     const { behandlingID } = this.props;
-    const body = { behandlingsresultattype };
 
     try {
-      Api.Saksflyt.Anmodningsperioder.send(behandlingID, body);
+      Api.Saksflyt.Anmodningsperioder.bestill(behandlingID);
       this.tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
-  lagreOgStartAnmodningSaksflyt = async behandlingsresultattype => {
+  lagreOgBestillAnmodningsperioder = async () => {
     if (this.harSoknadIngenFeilmeldinger()) {
       this.gjemSoknadFeilmeldinger();
       await this.props.lagreAllData();
-      this.startAnmodningSaksflytHandler(behandlingsresultattype);
+      this.bestillAnmodningsperioder();
     } else {
       this.visSoknadFeilmeldinger();
     }
@@ -223,7 +222,7 @@ class Stegvelger extends Component {
       vedtaEndretPeriode: this.vedtaEndretPeriode,
       endreDatoOgSendLovvalgsperioderHandler: this.endreDatoOgSendLovvalgsperioderHandler,
       tilForsiden: this.tilForsiden,
-      lagreOgStartAnmodningSaksflyt: this.lagreOgStartAnmodningSaksflyt,
+      lagreOgBestillAnmodningsperioder: this.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this.byggAnmodningsperioderHandler,
     };
 

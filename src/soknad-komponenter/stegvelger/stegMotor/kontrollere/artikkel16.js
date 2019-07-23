@@ -33,7 +33,7 @@ class Artikkel16 extends Steg {
       harAvklaring: Artikkel16.harAvklaring(_propsLight),
     });
     this.handlers = {
-      lagreOgStartAnmodningSaksflyt: this._propsLight.tilgjengeligeHandlers.lagreOgStartAnmodningSaksflyt,
+      lagreOgBestillAnmodningsperioder: this._propsLight.tilgjengeligeHandlers.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers.byggAnmodningsperioderHandler,
       oppdaterOgLagreBehandlinger: this._propsLight.tilgjengeligeHandlers.oppdaterOgLagreBehandlinger,
       lagreVilkarHandler: this._propsLight.tilgjengeligeHandlers.lagreVilkarHandler,
