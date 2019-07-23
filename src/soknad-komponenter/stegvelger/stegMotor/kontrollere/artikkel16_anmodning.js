@@ -4,16 +4,16 @@ import * as KV from '../../../../kodeverk';
 
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingArtikkel16 from '../../stegKomponenter/vurderingArtikkel16';
+import VurderingArtikkel16Anmodning from '../../stegKomponenter/vurderingArtikkel16Anmodning';
 import { hentVilkar } from '../../../../regler/vilkar';
 
-class Artikkel16 extends Steg {
+class Artikkel16Anmodning extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
         beskrivelse: 'mottatt svar',
-        exec: () => Artikkel16.harAvklaring(propsLight),
+        exec: () => Artikkel16Anmodning.harAvklaring(propsLight),
         nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
       },
       {
@@ -22,15 +22,15 @@ class Artikkel16 extends Steg {
         nesteSteg: null,
       },
     ];
-    this.id = STEG.ARTIKKEL_16;
+    this.id = STEG.ARTIKKEL_16_ANMODNING;
     this.tittel = 'Artikkel 16.1';
-    this.komponent = VurderingArtikkel16;
+    this.komponent = VurderingArtikkel16Anmodning;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => ({
       art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
-      harAvklaring: Artikkel16.harAvklaring(_propsLight),
+      harAvklaring: Artikkel16Anmodning.harAvklaring(_propsLight),
     });
     this.handlers = {
       lagreOgBestillAnmodningsperioder: this._propsLight.tilgjengeligeHandlers.lagreOgBestillAnmodningsperioder,
@@ -45,14 +45,12 @@ class Artikkel16 extends Steg {
   }
 
   static harAvklaring({ anmodningsperioder, behandlingsstatus }) {
-    const avklaring = (
+    return (
       anmodningsperioder.length > 0 &&
       anmodningsperioder.every(anmodningsperiode => anmodningsperiode.anmodningSaksflytSendt) &&
       KV.objektTilKode(behandlingsstatus) === MKV.Koder.behandlinger.status.UNDER_BEHANDLING
     );
-
-    return avklaring;
   }
 }
 
-export default Artikkel16;
+export default Artikkel16Anmodning;

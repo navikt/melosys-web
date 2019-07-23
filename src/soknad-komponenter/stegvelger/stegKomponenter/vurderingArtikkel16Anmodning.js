@@ -26,7 +26,7 @@ import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 import { konverterTilStegData, lagBegrunnelse } from '../../../regler/vilkar';
 import { konverterLovvalgsbestemmelseTilStegData } from '../../../regler/lovvalgsbestemmelser';
 
-import './vurderingArtikkel16.css';
+import './vurderingArtikkel16Anmodning.css';
 
 const uuid = require('uuid/v4');
 
@@ -124,7 +124,7 @@ TidligereMedlemskap.defaultProps = {
   feil: undefined,
 };
 
-class VurderingArtikkel16 extends Component {
+class VurderingArtikkel16Anmodning extends Component {
   state = {
     lovvalgFeilmelding: undefined,
     begrunnelserFeilmelding: undefined,
@@ -351,7 +351,7 @@ class VurderingArtikkel16 extends Component {
   }
 }
 
-VurderingArtikkel16.propTypes = {
+VurderingArtikkel16Anmodning.propTypes = {
   anmodningsperiode: PT.object,
   medlemskap: MPT.Medlemskap.isRequired,
   lagreOgBestillAnmodningsperioder: PT.func.isRequired,
@@ -370,7 +370,7 @@ VurderingArtikkel16.propTypes = {
   byggAnmodningsperioderHandler: PT.func.isRequired,
 };
 
-VurderingArtikkel16.defaultProps = {
+VurderingArtikkel16Anmodning.defaultProps = {
   art16begrunnelserFritekst: '',
   unntakFraBestemmelse: '',
   anmodningsperiode: {},
@@ -390,12 +390,12 @@ const mapStateToProps = state => ({
   },
 });
 
-const VurderingArtikkel16Form = reduxForm({
+const VurderingArtikkel16AnmodningForm = reduxForm({
   form: KV.Form.ARTIKKEL_16_ANMODNING,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-})(VurderingArtikkel16);
+})(VurderingArtikkel16Anmodning);
 
-export default connect(mapStateToProps)(VurderingArtikkel16Form);
+export default connect(mapStateToProps)(VurderingArtikkel16AnmodningForm);
