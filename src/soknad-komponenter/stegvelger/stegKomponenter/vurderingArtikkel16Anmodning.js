@@ -340,7 +340,7 @@ class VurderingArtikkel16Anmodning extends Component {
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Hovedknapp type="hoved" disabled={!redigerbart || harAvklaring} onClick={validerOgLagreBehandling}>
+              <Nav.Hovedknapp type="hoved" disabled={!redigerbart} onClick={validerOgLagreBehandling}>
                 Send brevene
               </Nav.Hovedknapp>
             </Nav.Column>
