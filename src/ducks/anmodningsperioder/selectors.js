@@ -14,3 +14,8 @@ export const AnmodningsperiodeIDSelector = createSelector(
   AnmodningsperiodeSelector,
   anmodningsperiode => anmodningsperiode.id
 );
+
+export const UnntakFraBestemmelseSelector = createSelector(
+  AnmodningsperiodeSelector,
+  anmodningsperiode => anmodningsperiode.unntakFraBestemmelse
+);
