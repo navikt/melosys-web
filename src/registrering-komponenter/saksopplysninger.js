@@ -8,6 +8,7 @@ import * as Utils from '../utils';
 import * as Api from '../services/api';
 import * as MPT from '../proptypes';
 import * as Nav from '../utils/navFrontend';
+import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
 import ListevelgerFlervalg from '../komponenter/ui/listevelgerFlervalg';
 import Medlemskap from '../komponenter/medlemskap';
 import EndrePeriode from './endrePeriode';
@@ -16,7 +17,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklar
 import { endrePeriodeSkjema } from './validering/endrePeriodeSkjema';
 import { endrePeriodeSelectors } from './state/ducks/endrePeriode';
 import { createValidator } from '../soknad-komponenter/skjema/validering/skjemaer/createValidator';
-import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
+
 import './saksopplysninger.css';
 
 const uuid = require('uuid/v4');

@@ -3,9 +3,10 @@ import * as lovvalgsperioderSelectors from './selectors';
 import * as lovvalgsperioderActions from './actions';
 import * as lovvalgsperioderTypes from './types';
 
-import lovvalgsperioderReducers from './reducers';
+import lovvalgsperioderReducers, { initialState } from './reducers';
 
 export {
+  initialState,
   lovvalgsperioderOperations,
   lovvalgsperioderSelectors,
   lovvalgsperioderTypes,
