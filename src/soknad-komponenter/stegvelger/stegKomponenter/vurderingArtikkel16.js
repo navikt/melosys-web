@@ -141,11 +141,11 @@ class VurderingArtikkel16 extends Component {
     this.props.slettData();
   }
 
-  lagreBehandlingerOgStartAnmodningSaksflyt = async behandlingsresultattype => {
-    const { oppdaterOgLagreBehandlinger, lagreOgStartAnmodningSaksflyt } = this.props;
+  lagreBehandlingerOgBestillAnmodningsperioder = async () => {
+    const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodningsperioder } = this.props;
     try {
       await oppdaterOgLagreBehandlinger();
-      lagreOgStartAnmodningSaksflyt(behandlingsresultattype);
+      lagreOgBestillAnmodningsperioder();
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -222,7 +222,7 @@ class VurderingArtikkel16 extends Component {
   validerOgLagreBehandling = async () => {
     if (this.validerAlt()) {
       await this.lagreAnmodningsperioder();
-      this.lagreBehandlingerOgStartAnmodningSaksflyt(MKV.Koder.behandlinger.resultattyper.ANMODNING_OM_UNNTAK);
+      this.lagreBehandlingerOgBestillAnmodningsperioder();
     }
   };
 
@@ -354,7 +354,7 @@ class VurderingArtikkel16 extends Component {
 VurderingArtikkel16.propTypes = {
   anmodningsperiode: PT.object,
   medlemskap: MPT.Medlemskap.isRequired,
-  lagreOgStartAnmodningSaksflyt: PT.func.isRequired,
+  lagreOgBestillAnmodningsperioder: PT.func.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgKode: PT.string.isRequired,

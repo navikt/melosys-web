@@ -1,7 +1,7 @@
-import { postAsJson } from '../../utils';
+import { putAsText } from '../../utils';
 import { API_BASE_URL, SAKSFLYT, ANMODNINGSPERIODER } from '../../api-constants';
 
-export const send = (behandlingID, body) => {
-  const URI_SAKSFLYT_ANMODNINGSPERIODER = `${API_BASE_URL}${SAKSFLYT}/${ANMODNINGSPERIODER}/${behandlingID}`;
-  return postAsJson(URI_SAKSFLYT_ANMODNINGSPERIODER, body);
+export const bestill = behandlingID => {
+  const URI_SAKSFLYT_ANMODNINGSPERIODER = `${API_BASE_URL}${SAKSFLYT}/${ANMODNINGSPERIODER}/${behandlingID}/bestill`;
+  return putAsText(URI_SAKSFLYT_ANMODNINGSPERIODER);
 };
