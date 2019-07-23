@@ -5,20 +5,27 @@ import PT from 'prop-types';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes';
 import * as Utils from '../utils';
+import * as Api from '../services/api';
+
 import Saksopplysninger from '../registrering-komponenter/saksopplysninger';
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
+import SideOppsummering from '../registrering-komponenter/sideOppsummering';
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger';
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta';
 
-import './registrering.css';
 import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder';
+import { soknadOperations, soknadSelectors } from '../ducks/soknad';
+
+import { initialState, reducer } from '../registrering-komponenter/state/reducer';
 import { RegistreringStateProvider } from '../registrering-komponenter/state/registreringStateProvider';
 import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
-import { initialState, reducer } from '../registrering-komponenter/state/reducer';
+
+import './registrering.css';
 
 const Registrering = props => {
   const [behandlingID, setBehandlingID] = React.useState(-1);
+  // const [ oppfriskDialog, visOppfriskDialog ] = React.useState(false);
 
   const lastInnSaksopplysninger = async () => {
     const { match, location } = props;
@@ -27,13 +34,14 @@ const Registrering = props => {
     setBehandlingID(Utils._toInteger(_behandlingID));
 
     const {
-      hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder,
+      hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder, hentSoknad,
     } = props;
     try {
       await Promise.all([
-        hentFagsaker(snr),
         hentBehandling(_behandlingID),
+        hentFagsaker(snr),
         hentAvklartefakta(_behandlingID),
+        hentSoknad(_behandlingID),
         hentLovvalgsperioder(_behandlingID),
       ]);
     } catch (e) {
@@ -41,6 +49,37 @@ const Registrering = props => {
     }
   };
 
+  const avsluttSakSomBortfalt = () => {
+    const { fagsak: { saksnummer } } = props;
+    Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
+    props.history.push('/');
+  };
+
+  const visOppfriskBekreftelse = () => {
+    // visOppfriskDialog(true);
+  };
+  const lagreOgLukk = async () => {
+    // this.lagreAllData();
+    // const { history, hentOppgaveOversikt } = props;
+    // await hentOppgaveOversikt();
+    props.history.push('/');
+  };
+  const tilbakeleggeHandle = async () => {
+    /*
+    const { behandlingID } = this.state;
+    const { tilbakeleggeOppgave } = this.props;
+
+    await tilbakeleggeOppgave(behandlingID, venterPaaDokumentasjon);
+    this.lagreOgLukk();
+    */
+  };
+  const visHenleggDialog = () => {
+    // this.setState({ visHenleggDialog: true });
+  };
+  const navigerTilOversiktSide = () => {
+    // this.skjulOppfriskBekreftelse();
+    props.history.push('/');
+  };
   React.useEffect(() => {
     lastInnSaksopplysninger();
   }, []);
@@ -59,6 +98,15 @@ const Registrering = props => {
             />
           </Nav.Column>
           <Nav.Column xs="5">
+            <SideOppsummering
+              behandlingID={behandlingID}
+              avsluttSakSomBortfalt={avsluttSakSomBortfalt}
+              oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+              lagreOgLukkHandle={lagreOgLukk}
+              tilbakeleggeHandle={tilbakeleggeHandle}
+              visHenleggDialogHandle={visHenleggDialog}
+              tilForsidenHandle={navigerTilOversiktSide}
+            />
             <SideDialog behandlingID={behandlingID} />
           </Nav.Column>
         </Nav.Row>
@@ -71,6 +119,7 @@ Registrering.propTypes = {
   hentBehandling: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
+  hentSoknad: PT.func.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   vurderingBegrunnelser: PT.object,
@@ -78,6 +127,7 @@ Registrering.propTypes = {
   medlemskap: MPT.Medlemskap,
   oppsummering: MPT.Behandlinger.Oppsummering,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
+  soknad: MPT.Soknad,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
@@ -89,6 +139,7 @@ Registrering.defaultProps = {
   medlemskap: {},
   oppsummering: {},
   sed: {},
+  soknad: {},
   vurderingBegrunnelser: {},
 };
 const mapStateToProps = state => ({
@@ -99,6 +150,7 @@ const mapStateToProps = state => ({
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   sed: behandlingerSelectors.SEDSelector(state),
+  soknad: soknadSelectors.SoknadSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -106,6 +158,7 @@ const mapDispatchToProps = dispatch => ({
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
+  hentSoknad: behandlingID => dispatch(soknadOperations.hent(behandlingID)),
 });
 
 const RegistreringStateProviderWrapper = props => (

@@ -1,13 +1,9 @@
-import avklartefaktaReducer from '../../ducks/avklartefakta/';
-import { initialState as avklartefaktaInitialState } from '../../ducks/avklartefakta/reducers';
-import behandlingerReducer from '../../ducks/behandlinger';
-import { initialState as behandlingerInitialState } from '../../ducks/behandlinger/reducers';
-import endrePeriodeReducer from './ducks/endrePeriode';
-import { initialState as endrePeriodeInitialState } from './ducks/endrePeriode/reducers';
-import fagsakerReducer from '../../ducks/fagsaker/';
-import { initialState as fagsakerInitialState } from '../../ducks/fagsaker/reducers';
-import lovvalgsperioderReducer from '../../ducks/lovvalgsperioder';
-import { initialState as lovvalgsperioderInitialState } from '../../ducks/lovvalgsperioder/reducers';
+import avklartefaktaReducer, { initialState as avklartefaktaInitialState } from '../../ducks/avklartefakta';
+import behandlingerReducer, { initialState as behandlingerInitialState } from '../../ducks/behandlinger';
+import endrePeriodeReducer, { initialState as endrePeriodeInitialState } from './ducks/endrePeriode';
+import fagsakerReducer, { initialState as fagsakerInitialState } from '../../ducks/fagsaker';
+import lovvalgsperioderReducer, { initialState as lovvalgsperioderInitialState } from '../../ducks/lovvalgsperioder';
+import soknadReducer, { initialState as soknadInitialState } from '../../ducks/soknad';
 
 export const initialState = {
   avklartefakta: avklartefaktaInitialState,
@@ -15,6 +11,7 @@ export const initialState = {
   endrePeriode: endrePeriodeInitialState,
   fagsaker: fagsakerInitialState,
   lovvalgsperioder: lovvalgsperioderInitialState,
+  soknad: soknadInitialState,
 };
 
 export const reducer = ({
@@ -25,4 +22,5 @@ export const reducer = ({
   endrePeriode: endrePeriodeReducer(endrePeriode, action),
   fagsaker: fagsakerReducer(fagsaker, action),
   lovvalgsperioder: lovvalgsperioderReducer(lovvalgsperioder, action),
+  soknad: soknadReducer(soknad, action),
 });
