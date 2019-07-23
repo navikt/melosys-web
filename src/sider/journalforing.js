@@ -68,9 +68,20 @@ class Journalforing extends Component {
   avbrytJournalforing = () => {
     this.props.history.push('/');
   };
-
-  mapVedleggsTittlerTilVedlegg = titler => titler.map(tittel => ({ dokumentID: null, tittel }));
-
+  mapLogiskeVedleggsTitlerTilVedlegg = titler => {
+    const dokumentID = null;
+    return titler.map(tittel => ({ dokumentID, tittel }));
+  };
+  mapFysiskeVedleggsTitlerTilVedlegg = pdf => {
+    const { vedleggsdokumenter } = this.props;
+    if (!vedleggsdokumenter || vedleggsdokumenter.length === 0) return [];
+    const pdfTitler = Object.values(pdf);
+    if (pdfTitler.length === 0) return [];
+    return pdfTitler.map((tittel, index) => {
+      const { dokumentID } = vedleggsdokumenter[index];
+      return ({ dokumentID, tittel });
+    });
+  };
   /** Ikke all informasjon som vises i skjemaet skal sendes tilbake til backend. Et eksempel på det er dato som
    * settes inn i skjemaet kun til info - ikke til endring - slik som feks navn på bruker.
    * Derfor må vi bygge opp og evt vaske et nytt objekt som kan sendes til backend.
@@ -89,12 +100,12 @@ class Journalforing extends Component {
     const {
       brukerID, avsenderID, arbeidsgiverID,
       opprettnysak_behandlingstype: behandlingstypeKode,
-      representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedleggsTitler,
+      representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
       skalTilordnes,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
-    const vedlegg = this.mapVedleggsTittlerTilVedlegg(vedleggsTitler);
+    const vedlegg = [...this.mapFysiskeVedleggsTitlerTilVedlegg(vedleggSkjema.pdf), ...this.mapLogiskeVedleggsTitlerTilVedlegg(vedleggSkjema.logiskeTitler)];
 
     // Data for /tilordne i.e KNYTT
     let journalPostData = {
@@ -381,6 +392,7 @@ Journalforing.propTypes = {
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
   resetJournalforingState: PT.func.isRequired,
+  vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string })).isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -388,10 +400,13 @@ Journalforing.defaultProps = {
   fagsakListe: [],
   journalforingSkjemaVerdier: {},
 };
+
+const toVedleggMedProps = vedlegg => vedlegg.reduce((acc, d, index) => { acc[`tittel_${index}`] = d.tittel; return acc; }, {});
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: sokSelectors.FagsakSokSelector(state),
+  vedleggsdokumenter: journalforingSelectors.JournalforingVedleggsDokumenter(state),
   errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
   initialValues: {
     behandlingstype: null,
@@ -402,7 +417,10 @@ const mapStateToProps = state => ({
     representantID: '',
     mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
     hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
-    vedleggsTitler: [],
+    vedlegg: {
+      pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
+      logiskeTitler: [],
+    },
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
     ingenVurdering: false,

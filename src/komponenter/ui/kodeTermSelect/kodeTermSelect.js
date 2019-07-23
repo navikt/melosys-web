@@ -1,6 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
-import * as Nav from '../../utils/navFrontend';
+import * as Nav from '../../../utils/navFrontend';
 
 const kodeTermSelect = ({
   koder,

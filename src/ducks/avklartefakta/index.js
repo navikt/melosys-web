@@ -3,9 +3,10 @@ import * as avklartefaktaOperations from './operations';
 import * as avklartefaktaTypes from './types';
 import * as avklartefaktaSelectors from './selectors';
 
-import avklartefaktaReducers from './reducers';
+import avklartefaktaReducers, { initialState } from './reducers';
 
 export {
+  initialState,
   avklartefaktaActions,
   avklartefaktaOperations,
   avklartefaktaTypes,
