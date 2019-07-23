@@ -1,5 +1,5 @@
 import { postAsJson, getAsJson } from '../utils';
-import { API_BASE_URL, ANMODNINGSPERIODER, ANMODNINGSPERIODE } from '../api-constants';
+import { API_BASE_URL, ANMODNINGSPERIODER, SVAR } from '../api-constants';
 
 export const send = (behandlingID, body) => {
   const URI_ANMODNINGSPERIODER = `${API_BASE_URL}${ANMODNINGSPERIODER}/${behandlingID}`;
@@ -12,11 +12,11 @@ export const hent = behandlingID => {
 };
 
 export const hentSvar = anmodningsperiodeID => {
-  const URI_ANMODNINGSPERIODE_SVAR = `${API_BASE_URL}${ANMODNINGSPERIODE}/${anmodningsperiodeID}/svar`;
+  const URI_ANMODNINGSPERIODE_SVAR = `${API_BASE_URL}${ANMODNINGSPERIODER}/${SVAR}/${anmodningsperiodeID}`;
   return getAsJson(URI_ANMODNINGSPERIODE_SVAR);
 };
 
 export const sendSvar = (anmodningsperiodeID, body) => {
-  const URI_ANMODNINGSPERIODE_SVAR = `${API_BASE_URL}${ANMODNINGSPERIODE}/${anmodningsperiodeID}/svar`;
+  const URI_ANMODNINGSPERIODE_SVAR = `${API_BASE_URL}${ANMODNINGSPERIODER}/${SVAR}/${anmodningsperiodeID}`;
   return postAsJson(URI_ANMODNINGSPERIODE_SVAR, body);
 };
