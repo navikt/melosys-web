@@ -15,7 +15,6 @@ import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { formSelectors } from '../../../ducks/form';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
-import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { behandlingsperioderSelectors } from '../../../ducks/behandlingsperioder';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
@@ -262,7 +261,7 @@ class VurderingArtikkel16Anmodning extends Component {
 
     const visFritekstfelt = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
-    const { art16_1, art16_1: { begrunnelseFritekst }, harAvklaring } = tilstand;
+    const { art16_1, art16_1: { begrunnelseFritekst } } = tilstand;
 
     const art16fritekst = begrunnelseFritekst || '';
 
@@ -385,7 +384,7 @@ const mapStateToProps = state => ({
   art16begrunnelserFritekst: formSelectors.Art16BegrunnelseFritekstSelector(state),
   unntakFraBestemmelse: formSelectors.UnntakFraBestemmelseSelector(state),
   initialValues: {
-    unntakFraBestemmelse: lovvalgsperioderSelectors.UnntakFraBestemmelseSelector(state),
+    unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
   },
 });
