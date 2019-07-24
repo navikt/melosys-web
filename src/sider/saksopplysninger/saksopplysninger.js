@@ -103,6 +103,7 @@ class Saksopplysninger extends Component {
             lagreVilkarHandler={this.props.lagreVilkarHandler}
             lagreAvklartefaktaHandler={this.props.lagreAvklartefaktaHandler}
             lagreLovvalgsperioderHandler={this.props.lagreLovvalgsperioderHandler}
+            lagreAnmodningsperioderHandler={this.props.lagreAnmodningsperioderHandler}
             oppdaterOgLagreBehandlingerHandler={this.props.oppdaterOgLagreBehandlingerHandler}
             lagreAllData={this.props.lagreAllData}
             fatteVedtakHandler={this.fatteVedtakHandler}
@@ -157,6 +158,7 @@ Saksopplysninger.propTypes = {
   lagreVilkarHandler: PT.func.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
+  lagreAnmodningsperioderHandler: PT.func.isRequired,
   oppdaterOgLagreBehandlingerHandler: PT.func.isRequired,
   lagreAllData: PT.func.isRequired,
 };

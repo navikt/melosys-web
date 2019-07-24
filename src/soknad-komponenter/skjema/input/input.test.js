@@ -64,7 +64,7 @@ describe('InnerInputComponent', () => {
         active: true,
       },
       input: {},
-      hentFeltFeil: () => null,
+      feltFeil: {},
       feltNavn: 'navn',
     };
   });

@@ -13,9 +13,8 @@ import * as KV from '../../../kodeverk';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { soknadSelectors } from '../../../ducks/soknad/';
 import { formSelectors } from '../../../ducks/form';
-import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
+import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 import { behandlingsperioderSelectors } from '../../../ducks/behandlingsperioder';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
@@ -24,8 +23,9 @@ import PdfLenkeListe from '../../pdfLenkeListe';
 import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../regler/vilkar';
+import { konverterLovvalgsbestemmelseTilStegData } from '../../../regler/lovvalgsbestemmelser';
 
-import './vurderingArtikkel16.css';
+import './vurderingArtikkel16Anmodning.css';
 
 const uuid = require('uuid/v4');
 
@@ -123,7 +123,7 @@ TidligereMedlemskap.defaultProps = {
   feil: undefined,
 };
 
-class VurderingArtikkel16 extends Component {
+class VurderingArtikkel16Anmodning extends Component {
   state = {
     lovvalgFeilmelding: undefined,
     begrunnelserFeilmelding: undefined,
@@ -133,24 +133,29 @@ class VurderingArtikkel16 extends Component {
   componentDidMount() {
     const { oppdaterData, tilstand: { art16_1 } } = this.props;
     oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
+    oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1));
   }
 
   componentWillUnmount() {
     this.props.slettData();
   }
 
-  lagreBehandlingerOgFatteVedtak = async behandlingsresultattype => {
-    const { oppdaterOgLagreBehandlinger, lagreOgFatteVedtak } = this.props;
+  lagreBehandlingerOgBestillAnmodningsperioder = async () => {
+    const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodningsperioder } = this.props;
     try {
       await oppdaterOgLagreBehandlinger();
-      lagreOgFatteVedtak(behandlingsresultattype);
+      lagreOgBestillAnmodningsperioder();
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
-  lagreLovvalgsPerioder = () => {
-    this.props.lagreLovvalgsperioderHandler().catch(e => Utils.logger.error(e));
+  lagreAnmodningsperioder = async () => {
+    const { byggAnmodningsperioderHandler, lagreAnmodningsperioderHandler } = this.props;
+
+    await byggAnmodningsperioderHandler();
+    await lagreAnmodningsperioderHandler();
+
     this.setState({ lovvalgFeilmelding: undefined });
   };
 
@@ -213,17 +218,18 @@ class VurderingArtikkel16 extends Component {
     return lovvalgValid && begrunnelserValid && fritekstValid;
   };
 
-  validerOgLagreBehandling = () => {
+  validerOgLagreBehandling = async () => {
     if (this.validerAlt()) {
-      this.lagreBehandlingerOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.ANMODNING_OM_UNNTAK);
+      await this.lagreAnmodningsperioder();
+      this.lagreBehandlingerOgBestillAnmodningsperioder();
     }
   };
 
   render() {
     const {
+      anmodningsperiode,
       behandlingID,
       gyldigeSoknadsland,
-      soknadsperiode,
       medlemskap,
       redigerbart,
       tilstand,
@@ -231,11 +237,11 @@ class VurderingArtikkel16 extends Component {
 
     const {
       begrunnelserEndringHandler,
-      lagreLovvalgsPerioder,
       validerAlt,
       validerOgLagreBehandling,
       fritekstFokusFlyttetHandler,
       fritekstEndretHandler,
+      lagreAnmodningsperioder,
     } = this;
 
     const {
@@ -244,7 +250,7 @@ class VurderingArtikkel16 extends Component {
       lovvalgFeilmelding,
     } = this.state;
 
-    const antallManeder = datoDiffMenneskelig(soknadsperiode.fom, soknadsperiode.tom);
+    const antallManeder = datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato);
 
     const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
@@ -272,14 +278,14 @@ class VurderingArtikkel16 extends Component {
             <Nav.Column xs="6">
               <Nav.Element type="element">Antall måneder:</Nav.Element>
               <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
-              <DatoOmrade periode={soknadsperiode} />
+              <DatoOmrade periode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }} />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="7">
               <Skjema.Select
                 feil={lovvalgFeilmelding}
-                onBlur={lagreLovvalgsPerioder}
+                onBlur={lagreAnmodningsperioder}
                 disabled={!redigerbart}
                 feltNavn="unntakFraBestemmelse"
                 label="Artikkelen det søkes unntak fra:"
@@ -344,11 +350,11 @@ class VurderingArtikkel16 extends Component {
   }
 }
 
-VurderingArtikkel16.propTypes = {
+VurderingArtikkel16Anmodning.propTypes = {
+  anmodningsperiode: PT.object,
   medlemskap: MPT.Medlemskap.isRequired,
-  lagreOgFatteVedtak: PT.func.isRequired,
-  gyldigeSoknadsland: MPT.Soknadsland.isRequired, // TODO:
-  soknadsperiode: MPT.Soknadsperiode.isRequired,
+  lagreOgBestillAnmodningsperioder: PT.func.isRequired,
+  gyldigeSoknadsland: MPT.Soknadsland.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgKode: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
@@ -356,37 +362,39 @@ VurderingArtikkel16.propTypes = {
   unntakFraBestemmelse: PT.string,
   art16begrunnelserFritekst: PT.string,
   lagreVilkarHandler: PT.func.isRequired,
-  lagreLovvalgsperioderHandler: PT.func.isRequired,
+  lagreAnmodningsperioderHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   tilstand: PT.object.isRequired,
+  byggAnmodningsperioderHandler: PT.func.isRequired,
 };
 
-VurderingArtikkel16.defaultProps = {
+VurderingArtikkel16Anmodning.defaultProps = {
   art16begrunnelserFritekst: '',
   unntakFraBestemmelse: '',
+  anmodningsperiode: {},
 };
 
 const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  soknadsperiode: soknadSelectors.SoknadsperiodeSelector(state),
+  anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   art16begrunnelserFritekst: formSelectors.Art16BegrunnelseFritekstSelector(state),
   unntakFraBestemmelse: formSelectors.UnntakFraBestemmelseSelector(state),
   initialValues: {
-    unntakFraBestemmelse: lovvalgsperioderSelectors.UnntakFraBestemmelseSelector(state),
+    unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
   },
 });
 
-const VurderingArtikkel16Form = reduxForm({
+const VurderingArtikkel16AnmodningForm = reduxForm({
   form: KV.Form.ARTIKKEL_16_ANMODNING,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-})(VurderingArtikkel16);
+})(VurderingArtikkel16Anmodning);
 
-export default connect(mapStateToProps)(VurderingArtikkel16Form);
+export default connect(mapStateToProps)(VurderingArtikkel16AnmodningForm);

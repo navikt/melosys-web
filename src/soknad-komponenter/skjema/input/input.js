@@ -4,6 +4,7 @@ import { Field } from 'redux-form';
 import { connect } from 'react-redux';
 
 import * as Nav from '../../../utils/navFrontend';
+import * as Utils from '../../../utils';
 
 import { normaliserInputDato } from '../../../utils/dato';
 
@@ -15,15 +16,16 @@ import '../skjema.css';
  * objekt som NAV-Input-komponenten forventer. Før den settes inn i Nav.Input.
  */
 function InnerInputComponent({
-  input, label, feltNavn, hentFeltFeil, ...rest
+  input, label, feltFeil, /* eslint-disable */feltNavn/* eslint-enable */, ...rest
 }) {
   const { meta: { error, touched, active } } = rest;
 
   let feil = (error && touched && !active) ? { feilmelding: rest.meta.error } : undefined;
+  /* Vi forventer at meta.error er en string eller et objekt */
+  if (feil && Utils._isObject(feil.feilmelding)) feil.feilmelding = feil.feilmelding.melding;
 
   /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
   if (!feil) {
-    const feltFeil = hentFeltFeil(feltNavn);
     const feltFeilmelding = feltFeil ? feltFeil.melding : null;
 
     if (feltFeilmelding && touched && !active) feil = { feilmelding: feltFeilmelding };
@@ -39,18 +41,18 @@ InnerInputComponent.propTypes = {
   bredde: PT.string,
   meta: PT.object,
   input: PT.object,
-  feltNavn: PT.string.isRequired,
-  hentFeltFeil: PT.func.isRequired,
+  feltFeil: PT.object,
 };
 
 InnerInputComponent.defaultProps = {
   bredde: undefined,
   meta: undefined,
   input: undefined,
+  feltFeil: {},
 };
 
-const mapStateToProps = state => ({
-  hentFeltFeil: feltNavn => formSelectors.SoknadErrorsSelector(state)[feltNavn],
+const mapStateToProps = (state, ownProps) => ({
+  feltFeil: formSelectors.FormSelector(state)[ownProps.meta.form].syncErrors ? formSelectors.FormSelector(state)[ownProps.meta.form].syncErrors[ownProps.feltNavn] : null,
 });
 
 const ConnectedInnerInputComponent = connect(mapStateToProps, () => ({}))(InnerInputComponent);
