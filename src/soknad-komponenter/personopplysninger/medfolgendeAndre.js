@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-import * as Skjema from '../skjema';
+import * as Skjema from '../../komponenter/skjema';
 import * as MPT from '../../proptypes';
 
-import * as PersonValidering from '../skjema/validering/generisk/person';
+import * as PersonValidering from '../../komponenter/skjema/validering/generisk/person';
 import { beregnAlder } from '../../utils/dato';
 
 import './medfolgendeAndre.css';

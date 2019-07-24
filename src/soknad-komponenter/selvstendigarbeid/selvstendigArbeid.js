@@ -5,7 +5,7 @@ import { FieldArray } from 'redux-form';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Ikoner from '../../resources/images';
-import * as Skjema from '../skjema';
+import * as Skjema from '../../komponenter/skjema';
 import * as formSelectors from '../../ducks/form/selectors';
 import * as soknadActions from '../../ducks/soknad/actions';
 import { behandlingerSelectors } from '../../ducks/behandlinger';

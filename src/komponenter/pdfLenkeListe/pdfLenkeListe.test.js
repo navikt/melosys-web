@@ -1,5 +1,5 @@
 import React from 'react';
-import PdfLenkeListe from './index';
+import PdfLenkeListe from '.';
 
 describe('PdfLenkeListe', () => {
   const vedKlikk = jest.fn();

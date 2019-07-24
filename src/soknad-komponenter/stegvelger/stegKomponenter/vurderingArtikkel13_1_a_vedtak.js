@@ -6,11 +6,11 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Utils from '../../../utils';
-import * as Validering from '../../skjema/validering';
-import * as Skjema from '../../skjema';
+import * as Validering from '../../../komponenter/skjema/validering';
+import * as Skjema from '../../../komponenter/skjema';
 import * as KV from '../../../kodeverk';
 
-import PdfLenkeListe from '../../../soknad-komponenter/pdfLenkeListe';
+import PdfLenkeListe from '../../../komponenter/pdfLenkeListe';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';

@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-import * as Skjema from '../skjema';
+import * as Skjema from '../../komponenter/skjema';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
-import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
+import { erOrgnrGyldig } from '../../komponenter/skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../../constants';
 
 import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';

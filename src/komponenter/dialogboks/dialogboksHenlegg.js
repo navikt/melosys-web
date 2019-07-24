@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import { connect } from 'react-redux';
 import * as MKV from 'melosys-kodeverk';
 import PdfLenkeListe from '../pdfLenkeListe';
-import { KodeTermSelect } from '../../komponenter/ui/kodeTermSelect';
+import { KodeTermSelect } from '../ui/kodeTermSelect';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
 
 import * as Nav from '../../utils/navFrontend';

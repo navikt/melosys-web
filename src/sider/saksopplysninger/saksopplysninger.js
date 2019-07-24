@@ -6,7 +6,7 @@ import { reduxForm } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
 import * as Utils from '../../utils';
 import * as KV from '../../kodeverk';
-import * as Validering from '../../soknad-komponenter/skjema/validering';
+import * as Validering from '../../komponenter/skjema/validering';
 import * as MPT from '../../proptypes/';
 
 import ArbeidsgivereNorge from '../../soknad-komponenter/arbeidsgivereNorge';

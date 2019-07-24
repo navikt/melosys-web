@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 
-import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
+import { erOrgnrGyldig } from '../../komponenter/skjema/validering/generisk/organisasjon';
 
 
 import './fullmektig.css';

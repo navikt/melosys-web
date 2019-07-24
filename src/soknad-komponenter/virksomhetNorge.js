@@ -4,11 +4,11 @@ import PT from 'prop-types';
 
 import * as Nav from '../utils/navFrontend';
 import * as Ikoner from '../resources/images';
-import * as Skjema from './skjema';
+import * as Skjema from '../komponenter/skjema';
 import * as MPT from '../proptypes';
 import * as KV from '../kodeverk';
 
-import LandVelger from './skjema/landvelger';
+import LandVelger from '../komponenter/skjema/landvelger';
 import PanelHeader from '../komponenter/panelHeader/panelHeader';
 
 import { behandlingerSelectors } from '../ducks/behandlinger/';

@@ -6,7 +6,7 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
+import * as Skjema from '../../../komponenter/skjema';
 import * as MPT from '../../../proptypes/';
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
@@ -19,7 +19,7 @@ import { behandlingsperioderSelectors } from '../../../ducks/behandlingsperioder
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
 import DatoOmrade from '../../../komponenter/datoOmrade/datoOmrade';
-import PdfLenkeListe from '../../pdfLenkeListe';
+import PdfLenkeListe from '../../../komponenter/pdfLenkeListe';
 import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../regler/vilkar';

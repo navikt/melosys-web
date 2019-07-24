@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import * as MPT from '../../proptypes/';
+import * as MPT from '../../proptypes';
 import { dokumenterOperations } from '../../ducks/dokumenter';
 import * as Nav from '../../utils/navFrontend';
 

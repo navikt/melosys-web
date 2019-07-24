@@ -9,7 +9,7 @@ import * as MPT from '../../../proptypes';
 
 import { konverterTilStegData, hentFaktaVerdi } from '../../../regler/avklartefakta';
 
-import PdfLenkeListe from '../../pdfLenkeListe';
+import PdfLenkeListe from '../../../komponenter/pdfLenkeListe';
 import { KodeTermSelect } from '../../../komponenter/ui/kodeTermSelect';
 
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
