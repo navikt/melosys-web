@@ -276,7 +276,8 @@ export const ArbeidsgivereNorgeSelector = createSelector(
       .subtract(6, 'months')
       .format('YYYY-MM-DD');
 
-    const relevantPeriodeSlutt = moment(soknadPeriodeSlutt, 'YYYY-MM-DD') < moment() ? soknadPeriodeSlutt : moment().format('YYYY-MM-DD');
+    let relevantPeriodeSlutt = moment(soknadPeriodeSlutt, 'YYYY-MM-DD') < moment() ? soknadPeriodeSlutt : moment().format('YYYY-MM-DD');
+    if (moment(relevantPeriodeSlutt, 'YYYY-MM-DD').isBefore(moment(soknadPeriodeStart, 'YYYY-MM-DD'))) relevantPeriodeSlutt = soknadPeriodeStart;
 
     const relevantPeriode = {
       fom: relevantPeriodeStart,
