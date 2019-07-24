@@ -6,9 +6,9 @@ import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
-import EnkeltLandPure from '../../../skjema/landvelger/enkeltLandPure';
+import EnkeltLandPure from '../../../../komponenter/skjema/landvelger/enkeltLandPure';
 
-import { landTekstFormat } from '../../../skjema/landvelger';
+import { landTekstFormat } from '../../../../komponenter/skjema/landvelger';
 
 export function LeggTilWrapper(props) {
   const [landkode, setLandkode] = useState('');

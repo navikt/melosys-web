@@ -16,7 +16,7 @@ import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
 import { endrePeriodeSkjema } from './validering/endrePeriodeSkjema';
 import { endrePeriodeSelectors } from './state/ducks/endrePeriode';
-import { createValidator } from '../soknad-komponenter/skjema/validering/skjemaer/createValidator';
+import { createValidator } from '../komponenter/skjema/validering/skjemaer/createValidator';
 
 import './saksopplysninger.css';
 

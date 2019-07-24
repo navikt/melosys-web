@@ -6,12 +6,12 @@ import { change } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import * as Skjema from '../skjema/';
+import * as Skjema from '../../komponenter/skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 
 import './opprettnyfagsak.css';
-import LandVelger from '../skjema/landvelger';
+import LandVelger from '../../komponenter/skjema/landvelger';
 import * as Utils from '../../utils';
 import * as Konstanter from '../../constants';
 

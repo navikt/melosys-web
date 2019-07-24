@@ -9,7 +9,7 @@ import * as Utils from '../utils';
 import OrganisasjonsAdresse from '../komponenter/adresser/organisasjonsAdresse';
 import { fagsakSelectors } from '../ducks/fagsaker';
 import { behandlingerSelectors } from '../ducks/behandlinger';
-import { erOrgnrGyldig } from './skjema/validering/generisk/organisasjon';
+import { erOrgnrGyldig } from '../komponenter/skjema/validering/generisk/organisasjon';
 
 import './kontaktopplysninger.css';
 

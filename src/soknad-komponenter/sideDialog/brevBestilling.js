@@ -6,13 +6,13 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as KV from '../../kodeverk';
 import * as Nav from '../../utils/navFrontend';
-import * as Skjema from '../skjema';
+import * as Skjema from '../../komponenter/skjema';
 import { formSelectors } from '../../ducks/form/';
 
-import { brevbestillingValidering, erSkjemaGyldig } from '../skjema/validering/brevbestilling';
+import { brevbestillingValidering, erSkjemaGyldig } from '../../komponenter/skjema/validering/brevbestilling';
 import { dokumenterOperations, dokumenterSelectors } from '../../ducks/dokumenter';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
-import PdfLenkeListe from '../pdfLenkeListe';
+import PdfLenkeListe from '../../komponenter/pdfLenkeListe';
 
 import './brevBestilling.css';
 import * as Utils from '../../utils';

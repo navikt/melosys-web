@@ -6,7 +6,7 @@ import { behandlingerSelectors } from '../../ducks/behandlinger';
 import * as Nav from '../../utils/navFrontend';
 import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
 
-import { erOrgnrGyldig } from '../skjema/validering/generisk/organisasjon';
+import { erOrgnrGyldig } from '../../komponenter/skjema/validering/generisk/organisasjon';
 
 /** Komponent for å vise organisasjonen som ble funnet ved søk.
  *

@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as KV from '../../kodeverk';
 import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
 import { DatoOmradeDescription } from '../../komponenter/datoOmrade/datoOmrade';
-import * as Skjema from '../skjema/';
+import * as Skjema from '../../komponenter/skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 

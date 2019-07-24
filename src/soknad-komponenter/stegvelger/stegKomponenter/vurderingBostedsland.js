@@ -8,7 +8,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 
-import EnkeltLandPure from '../../skjema/landvelger/enkeltLandPure';
+import EnkeltLandPure from '../../../komponenter/skjema/landvelger/enkeltLandPure';
 import Checkboxgruppe from '../../../komponenter/ui/checkboxgruppe';
 
 import { BOOLSK } from '../../../constants';

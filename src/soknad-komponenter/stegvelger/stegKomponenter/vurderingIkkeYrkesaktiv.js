@@ -2,7 +2,7 @@ import React from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../skjema';
+import * as Skjema from '../../../komponenter/skjema';
 import * as KV from '../../../kodeverk';
 
 const IkkeYrkesaktiv = () => (

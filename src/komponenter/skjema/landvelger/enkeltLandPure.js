@@ -1,53 +1,31 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
-import { Field } from 'redux-form';
-import { connect } from 'react-redux';
+import classnames from 'classnames';
 
-import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes/';
-
+import * as MPT from '../../../proptypes';
 import { kodeTilObjekt, landTekstFormat } from './LandVelger';
-
-import { formSelectors } from '../../../ducks/form';
 
 import './landvelger.css';
 
-export class EnkeltLand extends Component {
+class EnkeltLandPure extends Component {
   state = {
     inputVerdi: '',
     error: null,
   };
 
   componentDidMount = () => {
-    const { value } = this.props.input;
+    const { value } = this.props;
     const { landkoder } = this.props;
     const landkodeObjekt = value && kodeTilObjekt(value, landkoder);
     const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
     this.setState({ inputVerdi });
   };
 
-  reduxOppdaterLand = landkode => {
-    if (!landkode) {
-      const e = new Error('landkode må inneholde verdi.');
-      Utils.logger.error(e);
-      throw e;
-    }
-    const { onChange } = this.props.input;
+  oppdaterLand = landkode => {
+    if (!landkode) throw new Error('landkode må inneholde verdi.');
+    const { onChange } = this.props;
     onChange(landkode);
-
-    if (this.props.onChange) {
-      this.props.onChange(landkode);
-    }
-  };
-
-  reduxFjernLand = () => {
-    const { onChange } = this.props.input;
-    onChange('');
-
-    if (this.props.onChange) {
-      this.props.onChange();
-    }
   };
 
   fokusInnHandler = e => {
@@ -85,7 +63,6 @@ export class EnkeltLand extends Component {
     const { inputVerdi } = this.state;
 
     if (!inputVerdi) {
-      this.reduxFjernLand();
       this.tomFeilmelding();
       return;
     }
@@ -93,7 +70,7 @@ export class EnkeltLand extends Component {
     const landkodeObjekt = this.finnEttLand(inputVerdi);
 
     if (landkodeObjekt) {
-      this.reduxOppdaterLand(landkodeObjekt.kode);
+      this.oppdaterLand(landkodeObjekt.kode);
       this.setState({ inputVerdi: landTekstFormat(landkodeObjekt), error: null });
     } else {
       this.setState({ error: 'Finner ikke landet du har skrevet inn.' });
@@ -115,75 +92,52 @@ export class EnkeltLand extends Component {
     } = this;
 
     const {
-      label, meta, dataListID, disabled, bredde, feltFeil,
+      label, bredde, className, disabled,
     } = this.props;
 
     const { inputVerdi } = this.state;
-
-    let { error: skjemaError = '' } = meta;
-    /* Vi forventer at meta.error er en string eller et objekt */
-    if (Utils._isObject(skjemaError)) skjemaError = skjemaError.melding;
     const { error: landError = '' } = this.state;
-    let feilObjekt = skjemaError || landError ? { feilmelding: `${skjemaError} ${landError}` } : null;
+    const feilObjekt = landError ? { feilmelding: `${landError}` } : null;
 
-    /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
-    if (!feilObjekt) {
-      const feltFeilmelding = feltFeil ? feltFeil.melding : null;
-
-      if (feltFeilmelding) feilObjekt = { feilmelding: feltFeilmelding };
-    }
+    const cl = classnames({ landliste__linje__input: true, [className]: true });
 
     return (
       <div>
         <Nav.Input
-          disabled={disabled}
-          list={dataListID}
+          list="alleLand"
           label={label}
           bredde={bredde}
           feil={feilObjekt}
-          className="landliste__linje__input"
+          className={cl}
           value={inputVerdi}
           onBlur={fokusUtHandler}
           onFocus={fokusInnHandler}
           onChange={inputEndringHandler}
           onKeyDown={inputTastNedHandler}
+          disabled={disabled}
         />
       </div>
     );
   }
 }
 
-EnkeltLand.propTypes = {
-  dataListID: PT.string.isRequired,
+EnkeltLandPure.propTypes = {
+  className: PT.string,
   landkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
-  meta: PT.object.isRequired,
+  value: PT.string.isRequired,
+  onChange: PT.func.isRequired,
+  bredde: PT.string,
   label: PT.string,
   feil: PT.string,
-  input: PT.object.isRequired,
   disabled: PT.bool,
-  bredde: PT.string,
-  feltFeil: PT.object.isRequired,
-  onChange: PT.func,
 };
 
-EnkeltLand.defaultProps = {
+EnkeltLandPure.defaultProps = {
+  className: '',
   label: '',
   feil: '',
+  bredde: 'fullbredde',
   disabled: false,
-  bredde: 'XL',
-  onChange: null,
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  feltFeil: formSelectors.FormSelector(state)[ownProps.meta.form].syncErrors ? formSelectors.FormSelector(state)[ownProps.meta.form].syncErrors[ownProps.feltNavn] : null,
-});
-
-const ConnectedEnkeltLand = connect(mapStateToProps)(EnkeltLand);
-
-const EnkeltLandWrapper = props => (<Field name={props.feltNavn} component={ConnectedEnkeltLand} props={props} />);
-
-EnkeltLandWrapper.propTypes = {
-  feltNavn: PT.string.isRequired,
-};
-
-export default EnkeltLandWrapper;
+export default EnkeltLandPure;

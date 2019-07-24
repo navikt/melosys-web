@@ -7,9 +7,9 @@ import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
 
-import DialogboksOppfriskSak from '../soknad-komponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from '../soknad-komponenter/dialogboks/dialogboksVenter';
-import DialogboksHenlegg from '../soknad-komponenter/dialogboks/dialogboksHenlegg';
+import DialogboksOppfriskSak from '../komponenter/dialogboks/dialogboksOppfrisk';
+import DialogboksVenter from '../komponenter/dialogboks/dialogboksVenter';
+import DialogboksHenlegg from '../komponenter/dialogboks/dialogboksHenlegg';
 import { Saksopplysninger } from './saksopplysninger';
 
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
@@ -30,7 +30,7 @@ import { formSelectors } from '../ducks/form';
 import * as Api from '../services/api';
 
 import './saksbehandling.css';
-import '../soknad-komponenter/skjema/skjema.css';
+import '../komponenter/skjema/skjema.css';
 import { anmodningsperioderOperations, anmodningsperioderSelectors } from '../ducks/anmodningsperioder';
 
 class Saksbehandling extends Component {
