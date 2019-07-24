@@ -115,17 +115,19 @@ export class EnkeltLand extends Component {
     } = this;
 
     const {
-      label, meta, dataListID, disabled, bredde, feltNavn, hentFeltFeil,
+      label, meta, dataListID, disabled, bredde, feltFeil,
     } = this.props;
 
     const { inputVerdi } = this.state;
-    const { error: skjemaError = '' } = meta;
+
+    let { error: skjemaError = '' } = meta;
+    /* Vi forventer at meta.error er en string eller et objekt */
+    if (Utils._isObject(skjemaError)) skjemaError = skjemaError.melding;
     const { error: landError = '' } = this.state;
     let feilObjekt = skjemaError || landError ? { feilmelding: `${skjemaError} ${landError}` } : null;
 
     /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
     if (!feilObjekt) {
-      const feltFeil = hentFeltFeil(feltNavn);
       const feltFeilmelding = feltFeil ? feltFeil.melding : null;
 
       if (feltFeilmelding) feilObjekt = { feilmelding: feltFeilmelding };
@@ -160,8 +162,7 @@ EnkeltLand.propTypes = {
   input: PT.object.isRequired,
   disabled: PT.bool,
   bredde: PT.string,
-  feltNavn: PT.string.isRequired,
-  hentFeltFeil: PT.func.isRequired,
+  feltFeil: PT.object.isRequired,
   onChange: PT.func,
 };
 
@@ -173,8 +174,8 @@ EnkeltLand.defaultProps = {
   onChange: null,
 };
 
-const mapStateToProps = state => ({
-  hentFeltFeil: feltNavn => formSelectors.SoknadErrorsSelector(state)[feltNavn],
+const mapStateToProps = (state, ownProps) => ({
+  feltFeil: formSelectors.FormSelector(state)[ownProps.meta.form].syncErrors ? formSelectors.FormSelector(state)[ownProps.meta.form].syncErrors[ownProps.feltNavn] : null,
 });
 
 const ConnectedEnkeltLand = connect(mapStateToProps)(EnkeltLand);

@@ -8,7 +8,12 @@ import * as Ikon from '../../../resources/images';
 
 import './stegIkon.css';
 
-const erVedtakSteg = id => id === STEG.VEDTAK || id === STEG.ENDRET_PERIODE || id === STEG.AVSLAG_12_X_OG_16;
+const erVedtakSteg = id => (
+  id === STEG.VEDTAK ||
+  id === STEG.ENDRET_PERIODE ||
+  id === STEG.AVSLAG_12_X_OG_16 ||
+  id === STEG.ARTIKKEL_16_VEDTAK
+);
 
 const ikonVelger = (id, status) => {
   const IKONER = {

@@ -2,6 +2,7 @@
 // eslint-disable-next-line import/prefer-default-export
 export const API_BASE_URL = `${process.env.REACT_APP_API_BASE_URL}`;
 
+export const ANMODNINGSPERIODER = 'anmodningsperioder';
 export const AVKLARTEFAKTA = 'avklartefakta';
 export const BEHANDLINGER = 'behandlinger';
 export const BEHANDLINGSPERIODER = 'behandlinger';
@@ -22,6 +23,7 @@ export const SAKSFLYT = 'saksflyt';
 export const SAKSOPPLYSNINGER = 'saksopplysninger';
 export const SERVERINFO = 'serverinfo';
 export const SOKNADER = 'soknader';
+export const SVAR = 'svar';
 export const UNNTAKSPERIODER = 'unntaksperioder';
 export const VEDTAK = 'vedtak';
 export const VILKAAR = 'vilkaar';

@@ -209,6 +209,8 @@ const bestemLovvalgsland = lovvalgsbestemmelse => {
 };
 
 const byggLovvalgsPerioder = (lovvalgsbestemmelse, state) => {
+  if (lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1) return [];
+
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
   const lovvalgsland = bestemLovvalgsland(lovvalgsbestemmelse);
