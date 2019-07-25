@@ -7,9 +7,9 @@ import * as MPT from '../../proptypes';
 import * as Utils from '../../utils';
 import * as Api from '../../services/api';
 
-import Saksopplysninger from '../../registrering-komponenter/saksopplysninger';
+import Saksopplysninger from './komponenter/saksopplysninger';
 import SideDialog from '../../felleskomponenter/sideDialog/sideDialog';
-import SideOppsummering from '../../registrering-komponenter/sideOppsummering';
+import SideOppsummering from './komponenter/sideOppsummering';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import { fagsakOperations, fagsakSelectors } from '../../ducks/fagsaker';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta';
@@ -17,9 +17,9 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avk
 import { lovvalgsperioderOperations } from '../../ducks/lovvalgsperioder';
 import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
 
-import { initialState, reducer } from '../../registrering-komponenter/state/reducer';
-import { RegistreringStateProvider } from '../../registrering-komponenter/state/registreringStateProvider';
-import * as RegistreringContext from '../../registrering-komponenter/state/registreringContext';
+import { initialState, reducer } from './state/reducer';
+import { RegistreringStateProvider } from './state/registreringStateProvider';
+import * as RegistreringContext from './state/registreringContext';
 
 import './registrering.css';
 
