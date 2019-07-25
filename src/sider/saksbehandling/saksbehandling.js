@@ -10,7 +10,7 @@ import * as MPT from '../../proptypes';
 import DialogboksOppfriskSak from '../../komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../../komponenter/dialogboks/dialogboksVenter';
 import DialogboksHenlegg from '../../komponenter/dialogboks/dialogboksHenlegg';
-import { Saksopplysninger } from '../saksopplysninger';
+import { Saksopplysninger } from './komponenter/saksopplysninger';
 
 import SideDialog from '../../soknad-komponenter/sideDialog/sideDialog';
 import SideOppsummering from '../../soknad-komponenter/sideOppsummering';
