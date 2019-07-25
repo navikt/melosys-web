@@ -3,15 +3,15 @@ import { connect } from 'react-redux';
 
 import PT from 'prop-types';
 
-import * as Utils from '../utils';
-import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
-import * as KV from '../kodeverk';
+import * as Utils from '../../../utils';
+import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes';
+import * as KV from '../../../kodeverk';
 
-import * as Ikoner from '../resources/images';
-import { behandlingerSelectors } from '../ducks/behandlinger';
-import { soknadSelectors, soknadOperations } from '../ducks/soknad';
-import PanelHeader from '../felleskomponenter/panelHeader/panelHeader';
+import * as Ikoner from '../../../resources/images';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { soknadSelectors, soknadOperations } from '../../../ducks/soknad';
+import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
 
 import './soknadsperiode.css';
 

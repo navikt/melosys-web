@@ -2,17 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import * as Ikoner from '../resources/images/index';
-import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/index';
-import * as Skjema from '../felleskomponenter/skjema/index';
-import * as KV from '../kodeverk';
+import * as Ikoner from '../../../resources/images';
+import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes';
+import * as Skjema from '../../../felleskomponenter/skjema';
+import * as KV from '../../../kodeverk';
 
-import { behandlingerSelectors } from '../ducks/behandlinger/';
-import PanelHeader from '../felleskomponenter/panelHeader/panelHeader';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
 import './inntektUtland.css';
-import * as Utils from '../utils';
-import { formSelectors } from '../ducks/form';
+import * as Utils from '../../../utils';
+import { formSelectors } from '../../../ducks/form';
 
 function Inntekt (props) {
   const { redigerbart, soknadForm: { values } } = props;

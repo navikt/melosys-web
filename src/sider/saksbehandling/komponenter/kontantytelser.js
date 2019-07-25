@@ -2,16 +2,16 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import * as Nav from '../utils/navFrontend';
-import * as KV from '../kodeverk';
-import * as Ikoner from '../resources/images/index';
-import * as Utils from '../utils';
+import * as Nav from '../../../utils/navFrontend';
+import * as KV from '../../../kodeverk';
+import * as Ikoner from '../../../resources/images';
+import * as Utils from '../../../utils';
 
-import PanelHeader from '../felleskomponenter/panelHeader/panelHeader';
+import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
 
-import { behandlingerSelectors } from '../ducks/behandlinger';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
 
-const Kontantytelser = ({ sakOgBehandling: { eosBarnetrygd } }) => (
+export const Kontantytelser = ({ sakOgBehandling: { eosBarnetrygd } }) => (
   <div className="panelSeksjon">
     <Nav.EkspanderbartpanelBase
       heading={<PanelHeader ikon={Ikoner.Inntekt} tittel={KV.Paneltitler.kontantytelser} />}

@@ -4,13 +4,13 @@ import PT from 'prop-types';
 import moment from 'moment/moment';
 import * as MKV from 'melosys-kodeverk';
 
-import * as KV from '../kodeverk';
-import * as Api from '../services/api';
-import * as Nav from '../utils/navFrontend';
+import * as KV from '../../../kodeverk';
+import * as Api from '../../../services/api';
+import * as Nav from '../../../utils/navFrontend';
 
-import * as MPT from '../proptypes/';
-import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger/';
-import { KodeTermSelect } from '../felleskomponenter/ui/kodeTermSelect';
+import * as MPT from '../../../proptypes';
+import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
+import { KodeTermSelect } from '../../../felleskomponenter/ui/kodeTermSelect';
 
 import './sideOppsummering.css';
 
