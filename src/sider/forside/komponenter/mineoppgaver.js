@@ -2,14 +2,14 @@ import React, { useState, Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 
-import * as Oppgaver from '../ducks/oppgaver';
-import * as MPT from '../proptypes';
-import * as Utils from '../utils';
-import * as Nav from '../utils/navFrontend';
+import * as Oppgaver from '../../../ducks/oppgaver';
+import * as MPT from '../../../proptypes';
+import * as Utils from '../../../utils';
+import * as Nav from '../../../utils/navFrontend';
 
-import BehandlingOppgave from '../komponenter/oppgaveliste/behandlingOppgave';
-import JournalforingOppgave from '../komponenter/oppgaveliste/journalforingOppgave';
-import withErrorHandling from '../hoc/withErrorHandling';
+import BehandlingOppgave from '../../../komponenter/oppgaveliste/behandlingOppgave';
+import JournalforingOppgave from '../../../komponenter/oppgaveliste/journalforingOppgave';
+import withErrorHandling from '../../../hoc/withErrorHandling';
 
 import './mineoppgaver.css';
 
