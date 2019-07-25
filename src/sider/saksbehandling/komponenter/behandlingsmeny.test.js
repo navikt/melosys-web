@@ -1,7 +1,7 @@
 import React from 'react';
 
 import Behandlingsmeny from './behandlingsmeny';
-import * as Nav from '../utils/navFrontend';
+import * as Nav from '../../../utils/navFrontend';
 
 describe('behandlingsmeny', () => {
   let props = null;
