@@ -15,7 +15,7 @@ import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../../constants';
 import * as Person from '../../felleskomponenter/skjema/validering/generisk/person';
 
 import Sticky from '../../felleskomponenter/sticky';
-import withErrorHandling from '../../hoc/withErrorHandling';
+import withErrorHandling from '../../felleskomponenter/withErrorHandling';
 import Informasjon from '../../soknad-komponenter/journalforing/informasjon';
 import EksisterendeSaker from '../../soknad-komponenter/journalforing/eksisterendeSaker';
 import PDFDokument from '../../soknad-komponenter/journalforing/pdfdokument';

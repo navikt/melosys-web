@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import withErrorHandling from '../../hoc/withErrorHandling';
+import withErrorHandling from '../../felleskomponenter/withErrorHandling';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 import Fagsak from '../../felleskomponenter/oppgaveliste/fagsak';
