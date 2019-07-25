@@ -2,13 +2,13 @@ import React from 'react';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import * as Utils from '../utils';
-import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes';
-import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
-import { endrePeriodeSelectors, endrePeriodeActions } from './state/ducks/endrePeriode/';
-import { lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder';
-import { behandlingerSelectors } from '../ducks/behandlinger';
+import * as Utils from '../../../utils';
+import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes';
+import * as RegistreringContext from '../state/registreringContext';
+import { endrePeriodeSelectors, endrePeriodeActions } from '../state/ducks/endrePeriode';
+import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import './endrePeriode.css';
 
 const EndrePeriode = ({
