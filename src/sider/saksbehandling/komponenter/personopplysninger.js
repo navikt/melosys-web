@@ -4,27 +4,27 @@ import PT from 'prop-types';
 import uuid from 'uuid';
 import Ikon from 'melosys-ikoner-assets';
 
-import * as KV from '../kodeverk';
-import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes';
-import * as Ikoner from '../resources/images';
+import * as KV from '../../../kodeverk';
+import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes';
+import * as Ikoner from '../../../resources/images';
 
-import { beregnAlder, formatterDatoTilNorsk } from '../utils/dato';
+import { beregnAlder, formatterDatoTilNorsk } from '../../../utils/dato';
 
-import PersonInfo from '../felleskomponenter/personInfo';
-import PanelHeader from '../felleskomponenter/panelHeader/panelHeader';
+import PersonInfo from '../../../felleskomponenter/personInfo';
+import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
 
-import GeneriskAdresse from '../felleskomponenter/adresser/generiskAdresse';
-import StrukturertAdresse from '../felleskomponenter/adresser/strukturertAdresse';
-import UstrukturertAdresse from '../felleskomponenter/adresser/ustrukturertAdresse';
-import OppgittAdresseSoknad from '../sider/saksbehandling/komponenter/personopplysninger/oppgittAdresseSoknad';
-import UtenlandskIdent from '../sider/saksbehandling/komponenter/personopplysninger/utenlandskIdent';
+import GeneriskAdresse from '../../../felleskomponenter/adresser/generiskAdresse';
+import StrukturertAdresse from '../../../felleskomponenter/adresser/strukturertAdresse';
+import UstrukturertAdresse from '../../../felleskomponenter/adresser/ustrukturertAdresse';
+import OppgittAdresseSoknad from './personopplysninger/oppgittAdresseSoknad';
+import UtenlandskIdent from './personopplysninger/utenlandskIdent';
 
 import './personopplysninger.css';
-import { behandlingerSelectors } from '../ducks/behandlinger';
-import { PersonSelectors, PersonOperations } from '../ducks/personer';
-import { soknadSelectors } from '../ducks/soknad';
-import { formSelectors } from '../ducks/form';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { PersonSelectors, PersonOperations } from '../../../ducks/personer';
+import { soknadSelectors } from '../../../ducks/soknad';
+import { formSelectors } from '../../../ducks/form';
 
 const ikonFraKjonn = kjoenn => {
   switch (kjoenn) {

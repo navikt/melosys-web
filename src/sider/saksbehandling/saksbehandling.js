@@ -13,7 +13,7 @@ import DialogboksHenlegg from '../../felleskomponenter/dialogboks/dialogboksHenl
 import { Saksopplysninger } from './komponenter/saksopplysninger';
 
 import SideDialog from '../../felleskomponenter/sideDialog/sideDialog';
-import SideOppsummering from '../../soknad-komponenter/sideOppsummering';
+import SideOppsummering from './komponenter/sideOppsummering';
 
 import { fagsakOperations, fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingsresultatOperations } from '../../ducks/behandlingsresultat';

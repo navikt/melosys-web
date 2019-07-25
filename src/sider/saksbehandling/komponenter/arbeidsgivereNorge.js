@@ -3,17 +3,17 @@ import { connect } from 'react-redux';
 import { FieldArray } from 'redux-form';
 import PT from 'prop-types';
 
-import * as MPT from '../proptypes/';
+import * as MPT from '../../../proptypes';
 
-import { behandlingerSelectors } from '../ducks/behandlinger';
-import { soknadSelectors, soknadActions } from '../ducks/soknad';
-import { OrganisasjonOperations, OrganisasjonSelectors } from '../ducks/organisasjoner';
-import { formSelectors } from '../ducks/form/';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { soknadSelectors, soknadActions } from '../../../ducks/soknad';
+import { OrganisasjonOperations, OrganisasjonSelectors } from '../../../ducks/organisasjoner';
+import { formSelectors } from '../../../ducks/form';
 
-import Organisasjon from '../felleskomponenter/arbeidsgiver/organisasjon';
-import Arbeidsforholdene from '../felleskomponenter/arbeidsgiver/arbeidsforhold';
-import Inntekt from '../felleskomponenter/arbeidsgiver/inntekt';
-import EkstraArbeidsgivere from '../sider/saksbehandling/komponenter/arbeidsgiver/ekstraArbeidsgivere';
+import Organisasjon from '../../../felleskomponenter/arbeidsgiver/organisasjon';
+import Arbeidsforholdene from '../../../felleskomponenter/arbeidsgiver/arbeidsforhold';
+import Inntekt from '../../../felleskomponenter/arbeidsgiver/inntekt';
+import EkstraArbeidsgivere from './arbeidsgiver/ekstraArbeidsgivere';
 
 import './arbeidsgivereNorge.css';
 

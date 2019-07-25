@@ -3,19 +3,19 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
-import * as navLogo from '../resources/images/nav.svg';
+import * as navLogo from '../../../resources/images/nav.svg';
+import * as MPT from '../../../proptypes/';
+import * as Utils from '../../../utils/utils';
+
+import { saksbehandlerSelectors } from '../../../ducks/saksbehandler/';
+import { fagsakOperations } from '../../../ducks/fagsaker/';
+import { vilkarOperations } from '../../../ducks/vilkar/';
+import { avklartefaktaOperations } from '../../../ducks/avklartefakta/';
+import { lovvalgsperioderOperations } from '../../../ducks/lovvalgsperioder/';
+import { soknadOperations } from '../../../ducks/soknad/';
+import { oppgaverOperations } from '../../../ducks/oppgaver/';
 
 import './topplinje.css';
-import * as MPT from '../proptypes/';
-
-import * as Utils from '../utils/utils';
-import { saksbehandlerSelectors } from '../ducks/saksbehandler/';
-import { fagsakOperations } from '../ducks/fagsaker/';
-import { vilkarOperations } from '../ducks/vilkar/';
-import { avklartefaktaOperations } from '../ducks/avklartefakta/';
-import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder/';
-import { soknadOperations } from '../ducks/soknad/';
-import { oppgaverOperations } from '../ducks/oppgaver/';
 
 const Topplinje = props => {
   const { saksbehandler: { navn } } = props;

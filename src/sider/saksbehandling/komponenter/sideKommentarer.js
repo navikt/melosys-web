@@ -6,7 +6,7 @@ import { TextareaControlled } from 'nav-frontend-skjema';
 import { Knapp } from 'nav-frontend-knapper';
 import { Undertittel } from 'nav-frontend-typografi';
 
-import { behandlingerSelectors } from '../ducks/behandlinger/';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import './sideKommentarer.css';
 
 const SideKommentarer = props => {

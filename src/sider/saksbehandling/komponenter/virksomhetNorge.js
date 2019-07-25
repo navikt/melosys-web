@@ -2,17 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import * as Nav from '../utils/navFrontend';
-import * as Ikoner from '../resources/images';
-import * as Skjema from '../felleskomponenter/skjema';
-import * as MPT from '../proptypes';
-import * as KV from '../kodeverk';
+import * as Nav from '../../../utils/navFrontend';
+import * as Ikoner from '../../../resources/images';
+import * as Skjema from '../../../felleskomponenter/skjema';
+import * as MPT from '../../../proptypes';
+import * as KV from '../../../kodeverk';
 
-import LandVelger from '../felleskomponenter/skjema/landvelger';
-import PanelHeader from '../felleskomponenter/panelHeader/panelHeader';
+import LandVelger from '../../../felleskomponenter/skjema/landvelger';
+import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
 
-import { behandlingerSelectors } from '../ducks/behandlinger/';
-import { formSelectors } from '../ducks/form';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { formSelectors } from '../../../ducks/form';
 import './virksomhetNorge.css';
 
 function VirksomhetNorge (props) {
