@@ -7,8 +7,8 @@ import * as MPT from '../proptypes';
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 
-import BehandlingOppgave from './oppgaveliste/behandlingOppgave';
-import JournalforingOppgave from './oppgaveliste/journalforingOppgave';
+import BehandlingOppgave from '../komponenter/oppgaveliste/behandlingOppgave';
+import JournalforingOppgave from '../komponenter/oppgaveliste/journalforingOppgave';
 import withErrorHandling from '../hoc/withErrorHandling';
 
 import './mineoppgaver.css';

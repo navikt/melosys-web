@@ -9,8 +9,8 @@ import * as Ikoner from '../../resources/images';
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
 
-import PanelHeader from '../../komponenter/panelHeader/panelHeader';
-import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
+import PanelHeader from '../panelHeader/panelHeader';
+import EnkeltDato from '../datoOmrade/enkeltDato';
 import { formatterDatoTilNorsk } from '../../utils/dato';
 
 import './behandlingOppgave.css';

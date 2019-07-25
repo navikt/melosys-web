@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
-import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
+import EnkeltDato from '../datoOmrade/enkeltDato';
 
 import './behandling.css';
 
