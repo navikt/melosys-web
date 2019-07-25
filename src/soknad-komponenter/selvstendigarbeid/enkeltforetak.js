@@ -3,13 +3,13 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-import * as Skjema from '../../komponenter/skjema';
+import * as Skjema from '../../felleskomponenter/skjema';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
-import { erOrgnrGyldig } from '../../komponenter/skjema/validering/generisk/organisasjon';
+import { erOrgnrGyldig } from '../../felleskomponenter/skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../../constants';
 
-import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
+import OrganisasjonsAdresse from '../../felleskomponenter/adresser/organisasjonsAdresse';
 
 import './selvstendigArbeid.css';
 

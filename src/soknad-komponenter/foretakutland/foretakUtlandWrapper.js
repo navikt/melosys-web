@@ -8,7 +8,7 @@ import * as Ikoner from '../../resources/images';
 
 import EnkeltForetak from './enkeltforetak';
 
-import PanelHeader from '../../komponenter/panelHeader/panelHeader';
+import PanelHeader from '../../felleskomponenter/panelHeader/panelHeader';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
 import './foretakUtland.css';

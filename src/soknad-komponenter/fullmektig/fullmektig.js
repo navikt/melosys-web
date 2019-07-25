@@ -6,7 +6,7 @@ import * as Nav from '../../utils/navFrontend';
 import * as Utils from '../../utils';
 
 import Kontaktopplysninger from '../kontaktopplysninger';
-import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
+import OrganisasjonsAdresse from '../../felleskomponenter/adresser/organisasjonsAdresse';
 import SokFullmektigOrg from './sokFullmektigOrg';
 
 import './fullmektig.css';

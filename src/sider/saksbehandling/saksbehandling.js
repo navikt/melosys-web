@@ -7,9 +7,9 @@ import * as Utils from '../../utils';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 
-import DialogboksOppfriskSak from '../../komponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from '../../komponenter/dialogboks/dialogboksVenter';
-import DialogboksHenlegg from '../../komponenter/dialogboks/dialogboksHenlegg';
+import DialogboksOppfriskSak from '../../felleskomponenter/dialogboks/dialogboksOppfrisk';
+import DialogboksVenter from '../../felleskomponenter/dialogboks/dialogboksVenter';
+import DialogboksHenlegg from '../../felleskomponenter/dialogboks/dialogboksHenlegg';
 import { Saksopplysninger } from './komponenter/saksopplysninger';
 
 import SideDialog from '../../soknad-komponenter/sideDialog/sideDialog';

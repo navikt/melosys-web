@@ -6,7 +6,7 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
-import * as Skjema from '../../../komponenter/skjema';
+import * as Skjema from '../../../felleskomponenter/skjema';
 import * as MPT from '../../../proptypes/';
 import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
@@ -18,9 +18,9 @@ import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
 import { behandlingsperioderSelectors } from '../../../ducks/behandlingsperioder';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../utils/dato';
-import DatoOmrade from '../../../komponenter/datoOmrade/datoOmrade';
-import PdfLenkeListe from '../../../komponenter/pdfLenkeListe';
-import ListevelgerFlervalg from '../../../komponenter/ui/listevelgerFlervalg';
+import DatoOmrade from '../../../felleskomponenter/datoOmrade/datoOmrade';
+import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
+import ListevelgerFlervalg from '../../../felleskomponenter/ui/listevelgerFlervalg';
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../regler/vilkar';
 import { konverterLovvalgsbestemmelseTilStegData } from '../../../regler/lovvalgsbestemmelser';

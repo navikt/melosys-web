@@ -9,14 +9,14 @@ import * as Api from '../services/api';
 import * as MPT from '../proptypes';
 import * as Nav from '../utils/navFrontend';
 import * as RegistreringContext from '../registrering-komponenter/state/registreringContext';
-import ListevelgerFlervalg from '../komponenter/ui/listevelgerFlervalg';
-import Medlemskap from '../komponenter/medlemskap';
+import ListevelgerFlervalg from '../felleskomponenter/ui/listevelgerFlervalg';
+import Medlemskap from '../felleskomponenter/medlemskap';
 import EndrePeriode from './endrePeriode';
 import { lovvalgsperioderOperations } from '../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
 import { endrePeriodeSkjema } from './validering/endrePeriodeSkjema';
 import { endrePeriodeSelectors } from './state/ducks/endrePeriode';
-import { createValidator } from '../komponenter/skjema/validering/skjemaer/createValidator';
+import { createValidator } from '../felleskomponenter/skjema/validering/skjemaer/createValidator';
 
 import './saksopplysninger.css';
 

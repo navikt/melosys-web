@@ -4,14 +4,14 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 import { reduxForm, formValueSelector } from 'redux-form';
 
-import * as Skjema from '../../../komponenter/skjema';
+import * as Skjema from '../../../felleskomponenter/skjema';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 import * as Utils from '../../../utils';
-import * as Validering from '../../../komponenter/skjema/validering';
+import * as Validering from '../../../felleskomponenter/skjema/validering';
 
-import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrade';
+import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
 
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta/';
 import { soknadSelectors } from '../../../ducks/soknad';

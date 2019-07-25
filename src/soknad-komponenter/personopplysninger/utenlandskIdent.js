@@ -2,8 +2,8 @@ import React from 'react';
 import PT from 'prop-types';
 import { FieldArray } from 'redux-form';
 
-import * as Skjema from '../../komponenter/skjema';
-import Landvelger from '../../komponenter/skjema/landvelger';
+import * as Skjema from '../../felleskomponenter/skjema';
+import Landvelger from '../../felleskomponenter/skjema/landvelger';
 import * as Nav from '../../utils/navFrontend';
 
 const UtenlandskIdentLinje = ({ indeks, remove, disabled }) => (

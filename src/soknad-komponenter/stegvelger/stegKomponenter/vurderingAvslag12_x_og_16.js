@@ -8,7 +8,7 @@ import * as VilkarSelectors from '../../../ducks/vilkar/selectors';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import * as KV from '../../../kodeverk';
 
-import PdfLenkeListe from '../../../komponenter/pdfLenkeListe';
+import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
 import './vurderingAvslag12_x_og_16.css';
 

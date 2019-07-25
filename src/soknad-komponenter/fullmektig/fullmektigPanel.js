@@ -10,7 +10,7 @@ import * as Utils from '../../utils';
 import * as KV from '../../kodeverk';
 import * as MPT from '../../proptypes/';
 
-import PanelHeader from '../../komponenter/panelHeader/panelHeader';
+import PanelHeader from '../../felleskomponenter/panelHeader/panelHeader';
 import { fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
 

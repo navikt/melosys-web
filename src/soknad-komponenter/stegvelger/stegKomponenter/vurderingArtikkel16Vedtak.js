@@ -6,8 +6,8 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as KV from '../../../kodeverk';
 
-import PdfLenkeListe from '../../../komponenter/pdfLenkeListe';
-import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrade';
+import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
+import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';

@@ -10,7 +10,7 @@ import {
   konverterTilStegData,
   slettAvklartfakta,
 } from '../../../regler/avklartefakta';
-import EnkeltLandPure from '../../../komponenter/skjema/landvelger/enkeltLandPure';
+import EnkeltLandPure from '../../../felleskomponenter/skjema/landvelger/enkeltLandPure';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
 
 import './vurderingForretningssted.css';
