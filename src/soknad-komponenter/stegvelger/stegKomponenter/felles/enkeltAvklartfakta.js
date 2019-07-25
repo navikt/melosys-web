@@ -3,7 +3,7 @@ import PT from 'prop-types';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 
-import ListevelgerFlervalg from '../../../../komponenter/ui/listevelgerFlervalg';
+import ListevelgerFlervalg from '../../../../felleskomponenter/ui/listevelgerFlervalg';
 
 import {
   hentFaktaVerdi,

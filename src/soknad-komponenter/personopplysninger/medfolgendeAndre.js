@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-import * as Skjema from '../../komponenter/skjema';
+import * as Skjema from '../../felleskomponenter/skjema';
 import * as MPT from '../../proptypes';
 
-import * as PersonValidering from '../../komponenter/skjema/validering/generisk/person';
+import * as PersonValidering from '../../felleskomponenter/skjema/validering/generisk/person';
 import { beregnAlder } from '../../utils/dato';
 
 import './medfolgendeAndre.css';
-import GeneriskAdresse from '../../komponenter/adresser/generiskAdresse';
+import GeneriskAdresse from '../../felleskomponenter/adresser/generiskAdresse';
 
 function MedfolgendeAndre(props) {
   const [fnr, setFnr] = useState('');

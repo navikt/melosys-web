@@ -12,7 +12,7 @@ import { behandlingerSelectors } from '../../../ducks/behandlinger/';
 import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder/';
 
 import { datoDiffMenneskelig } from '../../../utils/dato';
-import PdfLenkeListe from '../../../komponenter/pdfLenkeListe';
+import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
 import './vurderingVedtak.css';
 

@@ -5,11 +5,11 @@ import PT from 'prop-types';
 import * as Ikoner from '../resources/images/index';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/index';
-import * as Skjema from '../komponenter/skjema/index';
+import * as Skjema from '../felleskomponenter/skjema/index';
 import * as KV from '../kodeverk';
 
 import { behandlingerSelectors } from '../ducks/behandlinger/';
-import PanelHeader from '../komponenter/panelHeader/panelHeader';
+import PanelHeader from '../felleskomponenter/panelHeader/panelHeader';
 import './inntektUtland.css';
 import * as Utils from '../utils';
 import { formSelectors } from '../ducks/form';

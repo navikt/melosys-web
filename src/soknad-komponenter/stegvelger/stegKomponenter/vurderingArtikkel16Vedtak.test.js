@@ -2,7 +2,7 @@ import React from 'react';
 import * as MKV from 'melosys-kodeverk';
 
 import { VurderingArtikkel16Vedtak } from './vurderingArtikkel16Vedtak';
-import { DatoOmradeMedVarighet } from '../../../komponenter/datoOmrade/datoOmrade';
+import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
 
 describe('VurderingArtikkel16Vedtak', () => {
   let props = null;

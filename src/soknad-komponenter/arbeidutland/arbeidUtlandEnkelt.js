@@ -2,9 +2,9 @@ import React from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-import * as Skjema from '../../komponenter/skjema';
+import * as Skjema from '../../felleskomponenter/skjema';
 
-import Landvelger from '../../komponenter/skjema/landvelger';
+import Landvelger from '../../felleskomponenter/skjema/landvelger';
 
 import { BOOLSK } from '../../constants';
 

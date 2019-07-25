@@ -10,7 +10,7 @@ import * as Nav from '../utils/navFrontend';
 
 import * as MPT from '../proptypes/';
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger/';
-import { KodeTermSelect } from '../komponenter/ui/kodeTermSelect';
+import { KodeTermSelect } from '../felleskomponenter/ui/kodeTermSelect';
 
 import './sideOppsummering.css';
 

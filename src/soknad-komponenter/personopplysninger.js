@@ -11,12 +11,12 @@ import * as Ikoner from '../resources/images';
 
 import { beregnAlder, formatterDatoTilNorsk } from '../utils/dato';
 
-import PersonInfo from '../komponenter/personInfo';
-import PanelHeader from '../komponenter/panelHeader/panelHeader';
+import PersonInfo from '../felleskomponenter/personInfo';
+import PanelHeader from '../felleskomponenter/panelHeader/panelHeader';
 
-import GeneriskAdresse from '../komponenter/adresser/generiskAdresse';
-import StrukturertAdresse from '../komponenter/adresser/strukturertAdresse';
-import UstrukturertAdresse from '../komponenter/adresser/ustrukturertAdresse';
+import GeneriskAdresse from '../felleskomponenter/adresser/generiskAdresse';
+import StrukturertAdresse from '../felleskomponenter/adresser/strukturertAdresse';
+import UstrukturertAdresse from '../felleskomponenter/adresser/ustrukturertAdresse';
 import OppgittAdresseSoknad from './personopplysninger/oppgittAdresseSoknad';
 import UtenlandskIdent from './personopplysninger/utenlandskIdent';
 

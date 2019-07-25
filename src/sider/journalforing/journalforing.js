@@ -12,7 +12,7 @@ import * as Nav from '../../utils/navFrontend';
 import * as Api from '../../services/api';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../../constants';
 
-import * as Person from '../../komponenter/skjema/validering/generisk/person';
+import * as Person from '../../felleskomponenter/skjema/validering/generisk/person';
 
 import Sticky from '../../hjelpekomponenter/sticky';
 import withErrorHandling from '../../hoc/withErrorHandling';
@@ -22,7 +22,7 @@ import PDFDokument from '../../soknad-komponenter/journalforing/pdfdokument';
 import OpprettNyFagSak from '../../soknad-komponenter/journalforing/opprettnyfagsak';
 import { queryParamLogger } from '../../utils/queryParamLogger';
 
-import { journalforingValidering, erSkjemaGyldig } from '../../komponenter/skjema/validering/journalforing';
+import { journalforingValidering, erSkjemaGyldig } from '../../felleskomponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
   journalforingSelectors,

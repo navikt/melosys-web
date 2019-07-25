@@ -3,9 +3,9 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as KV from '../../kodeverk';
-import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
-import { DatoOmradeDescription } from '../../komponenter/datoOmrade/datoOmrade';
-import * as Skjema from '../../komponenter/skjema/';
+import EnkeltDato from '../../felleskomponenter/datoOmrade/enkeltDato';
+import { DatoOmradeDescription } from '../../felleskomponenter/datoOmrade/datoOmrade';
+import * as Skjema from '../../felleskomponenter/skjema/';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes/';
 

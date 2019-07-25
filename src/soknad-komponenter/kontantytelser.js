@@ -7,7 +7,7 @@ import * as KV from '../kodeverk';
 import * as Ikoner from '../resources/images/index';
 import * as Utils from '../utils';
 
-import PanelHeader from '../komponenter/panelHeader/panelHeader';
+import PanelHeader from '../felleskomponenter/panelHeader/panelHeader';
 
 import { behandlingerSelectors } from '../ducks/behandlinger';
 

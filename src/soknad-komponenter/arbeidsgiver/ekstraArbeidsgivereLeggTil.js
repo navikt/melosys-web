@@ -4,9 +4,9 @@ import PT from 'prop-types';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
 import * as Nav from '../../utils/navFrontend';
-import OrganisasjonsAdresse from '../../komponenter/adresser/organisasjonsAdresse';
+import OrganisasjonsAdresse from '../../felleskomponenter/adresser/organisasjonsAdresse';
 
-import { erOrgnrGyldig } from '../../komponenter/skjema/validering/generisk/organisasjon';
+import { erOrgnrGyldig } from '../../felleskomponenter/skjema/validering/generisk/organisasjon';
 
 /** Komponent for å vise organisasjonen som ble funnet ved søk.
  *

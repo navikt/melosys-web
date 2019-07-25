@@ -2,8 +2,8 @@ import React from 'react';
 import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
-import * as Skjema from '../../komponenter/skjema';
-import LandVelger from '../../komponenter/skjema/landvelger';
+import * as Skjema from '../../felleskomponenter/skjema';
+import LandVelger from '../../felleskomponenter/skjema/landvelger';
 
 
 import './foretakUtland.css';

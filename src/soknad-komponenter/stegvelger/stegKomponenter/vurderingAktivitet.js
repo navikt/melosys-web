@@ -1,7 +1,7 @@
 import React from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../utils/navFrontend';
-import LandVelger from '../../../komponenter/skjema/landvelger';
+import LandVelger from '../../../felleskomponenter/skjema/landvelger';
 
 const VurderingAktivitet = props => {
   const { bekreftOgFortsett, tilstand } = props;

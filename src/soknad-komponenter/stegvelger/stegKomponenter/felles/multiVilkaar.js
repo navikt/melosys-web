@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar, slettVilkar } from '../../../../regler/vilkar';
 
-import ListevelgerFlervalg from '../../../../komponenter/ui/listevelgerFlervalg';
+import ListevelgerFlervalg from '../../../../felleskomponenter/ui/listevelgerFlervalg';
 
 class MultiVilkaar extends Component {
   constructor() {

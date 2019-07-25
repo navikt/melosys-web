@@ -7,7 +7,7 @@ import PT from 'prop-types';
 import * as KV from '../../../kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import { oppgaverOperations } from '../../../ducks/oppgaver';
-import * as Skjema from '../../../komponenter/skjema';
+import * as Skjema from '../../../felleskomponenter/skjema';
 
 class Journalforing extends Component {
   submitOgVideresend = async values => {

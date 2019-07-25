@@ -14,7 +14,7 @@ import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandli
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
 import Behandlingsmeny from './behandlingsmeny';
 import Behandlingsstatus from './behandlingsstatus';
-import Oppsummering from '../komponenter/oppsummering';
+import Oppsummering from '../felleskomponenter/oppsummering';
 
 import './sideOppsummering.css';
 

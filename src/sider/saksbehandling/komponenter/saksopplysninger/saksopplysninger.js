@@ -6,7 +6,7 @@ import { reduxForm } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
 import * as Utils from '../../../../utils';
 import * as KV from '../../../../kodeverk';
-import * as Validering from '../../../../komponenter/skjema/validering';
+import * as Validering from '../../../../felleskomponenter/skjema/validering';
 import * as MPT from '../../../../proptypes';
 
 import ArbeidsgivereNorge from '../../../../soknad-komponenter/arbeidsgivereNorge';
@@ -14,7 +14,7 @@ import ArbeidUtland from '../../../../soknad-komponenter/arbeidutland';
 import ForetakUtland from '../../../../soknad-komponenter/foretakutland';
 import Inntekt from '../../../../soknad-komponenter/inntektUtland';
 import MaritimtArbeid from '../../../../soknad-komponenter/maritimtArbeid';
-import Medlemskap from '../../../../komponenter/medlemskap';
+import Medlemskap from '../../../../felleskomponenter/medlemskap';
 import Soknadsperiode from '../../../../soknad-komponenter/soknadsperiode';
 import Personopplysninger from '../../../../soknad-komponenter/personopplysninger';
 import SelvstendigArbeid from '../../../../soknad-komponenter/selvstendigarbeid';

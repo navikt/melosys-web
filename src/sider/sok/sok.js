@@ -5,7 +5,7 @@ import PT from 'prop-types';
 import withErrorHandling from '../../hoc/withErrorHandling';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
-import Fagsak from '../../komponenter/oppgaveliste/fagsak';
+import Fagsak from '../../felleskomponenter/oppgaveliste/fagsak';
 
 import { sokSelectors, sokOperations } from '../../ducks/sok';
 

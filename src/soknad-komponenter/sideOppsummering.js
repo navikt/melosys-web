@@ -12,9 +12,9 @@ import { soknadSelectors } from '../ducks/soknad';
 import { fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger/';
 import { avklartefaktaSelectors } from '../ducks/avklartefakta';
-import Behandlingsmeny from '../komponenter/behandlingsmeny';
+import Behandlingsmeny from '../felleskomponenter/behandlingsmeny';
 import Behandlingsstatus from './behandlingsstatus';
-import Oppsummering from '../komponenter/oppsummering';
+import Oppsummering from '../felleskomponenter/oppsummering';
 
 import './sideOppsummering.css';
 
