@@ -1,7 +1,7 @@
 import PT from 'prop-types';
 import React from 'react';
 
-import * as Nav from '../utils/navFrontend';
+import * as Nav from '../../utils/navFrontend';
 
 import './ukjentSide.css';
 

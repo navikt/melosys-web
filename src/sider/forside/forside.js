@@ -2,14 +2,14 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
-import withErrorHandling from '../hoc/withErrorHandling';
-import * as Nav from '../utils/navFrontend';
+import withErrorHandling from '../../hoc/withErrorHandling';
+import * as Nav from '../../utils/navFrontend';
 
 // import Statistikk from '../felles-komponenter/forside/statistikk';
-import Journalforing from '../forside-komponenter/journalforing';
-import Behandling from '../forside-komponenter/behandling';
-import MineOppgaver from '../forside-komponenter/mineoppgaver';
-import SokSkjema from '../forside-komponenter/sokskjema';
+import Journalforing from '../../forside-komponenter/journalforing';
+import Behandling from '../../forside-komponenter/behandling';
+import MineOppgaver from '../../forside-komponenter/mineoppgaver';
+import SokSkjema from '../../forside-komponenter/sokskjema';
 
 import './forside.css';
 
