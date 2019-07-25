@@ -10,18 +10,18 @@ import * as Validering from '../../../../felleskomponenter/skjema/validering';
 import * as MPT from '../../../../proptypes';
 
 import ArbeidsgivereNorge from '../../../../soknad-komponenter/arbeidsgivereNorge';
-import ArbeidUtland from '../../../../soknad-komponenter/arbeidutland';
-import ForetakUtland from '../../../../soknad-komponenter/foretakutland';
+import ArbeidUtland from '../arbeidutland';
+import ForetakUtland from '../foretakutland';
 import Inntekt from '../../../../soknad-komponenter/inntektUtland';
 import MaritimtArbeid from '../../../../soknad-komponenter/maritimtArbeid';
 import Medlemskap from '../../../../felleskomponenter/medlemskap';
 import Soknadsperiode from '../../../../soknad-komponenter/soknadsperiode';
 import Personopplysninger from '../../../../soknad-komponenter/personopplysninger';
-import SelvstendigArbeid from '../../../../soknad-komponenter/selvstendigarbeid';
-import Stegvelger from '../../../../soknad-komponenter/stegvelger';
-import HenlagtInformasjon from '../../../../soknad-komponenter/stegErstatter/henlagtInformasjon';
+import SelvstendigArbeid from '../selvstendigarbeid';
+import Stegvelger from '../stegvelger';
+import HenlagtInformasjon from '../stegErstatter/henlagtInformasjon';
 import VirksomhetNorge from '../../../../soknad-komponenter/virksomhetNorge';
-import FullmektigPanel from '../../../../soknad-komponenter/fullmektig';
+import FullmektigPanel from '../fullmektig';
 import Kontantytelser from '../../../../soknad-komponenter/kontantytelser';
 
 import { fagsakSelectors } from '../../../../ducks/fagsaker';

@@ -13,7 +13,7 @@ import { formSelectors } from '../ducks/form/';
 import Organisasjon from '../felleskomponenter/arbeidsgiver/organisasjon';
 import Arbeidsforholdene from '../felleskomponenter/arbeidsgiver/arbeidsforhold';
 import Inntekt from '../felleskomponenter/arbeidsgiver/inntekt';
-import EkstraArbeidsgivere from './arbeidsgiver/ekstraArbeidsgivere';
+import EkstraArbeidsgivere from '../sider/saksbehandling/komponenter/arbeidsgiver/ekstraArbeidsgivere';
 
 import './arbeidsgivereNorge.css';
 

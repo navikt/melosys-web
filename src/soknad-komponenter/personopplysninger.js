@@ -17,8 +17,8 @@ import PanelHeader from '../felleskomponenter/panelHeader/panelHeader';
 import GeneriskAdresse from '../felleskomponenter/adresser/generiskAdresse';
 import StrukturertAdresse from '../felleskomponenter/adresser/strukturertAdresse';
 import UstrukturertAdresse from '../felleskomponenter/adresser/ustrukturertAdresse';
-import OppgittAdresseSoknad from './personopplysninger/oppgittAdresseSoknad';
-import UtenlandskIdent from './personopplysninger/utenlandskIdent';
+import OppgittAdresseSoknad from '../sider/saksbehandling/komponenter/personopplysninger/oppgittAdresseSoknad';
+import UtenlandskIdent from '../sider/saksbehandling/komponenter/personopplysninger/utenlandskIdent';
 
 import './personopplysninger.css';
 import { behandlingerSelectors } from '../ducks/behandlinger';
