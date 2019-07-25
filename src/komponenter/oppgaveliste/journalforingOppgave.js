@@ -5,7 +5,7 @@ import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 import * as Nav from '../../utils/navFrontend';
 
-import PanelHeader from '../../komponenter/panelHeader/panelHeader';
+import PanelHeader from '../panelHeader/panelHeader';
 
 import './journalforingOppgave.css';
 

@@ -7,9 +7,9 @@ import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
 
 import Behandling from './behandling';
-import PanelHeader from '../../komponenter/panelHeader/panelHeader';
-import EnkeltDato from '../../komponenter/datoOmrade/enkeltDato';
-import { DatoOmradeDescription } from '../../komponenter/datoOmrade/datoOmrade';
+import PanelHeader from '../panelHeader/panelHeader';
+import EnkeltDato from '../datoOmrade/enkeltDato';
+import { DatoOmradeDescription } from '../datoOmrade/datoOmrade';
 
 import './fagsak.css';
 
