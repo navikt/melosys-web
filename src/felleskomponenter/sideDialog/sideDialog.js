@@ -4,7 +4,7 @@ import classnames from 'classnames';
 import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
 
-import * as Utils from './../../utils';
+import * as Utils from '../../utils';
 import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
 import SideDialogSedBestilling from './sedBestilling';
