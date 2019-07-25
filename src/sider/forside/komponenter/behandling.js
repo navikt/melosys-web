@@ -5,11 +5,11 @@ import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import * as KV from '../kodeverk';
-import * as Nav from '../utils/navFrontend';
-import * as Skjema from '../komponenter/skjema';
+import * as KV from '../../../kodeverk';
+import * as Nav from '../../../utils/navFrontend';
+import * as Skjema from '../../../komponenter/skjema';
 
-import { oppgaverOperations } from '../ducks/oppgaver';
+import { oppgaverOperations } from '../../../ducks/oppgaver';
 
 import './behandling.css';
 
