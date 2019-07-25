@@ -3,35 +3,33 @@ import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
-import * as Utils from '../utils';
-import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
+import * as Utils from '../../utils';
+import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../proptypes';
 
-import DialogboksOppfriskSak from '../komponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from '../komponenter/dialogboks/dialogboksVenter';
-import DialogboksHenlegg from '../komponenter/dialogboks/dialogboksHenlegg';
-import { Saksopplysninger } from './saksopplysninger';
+import DialogboksOppfriskSak from '../../komponenter/dialogboks/dialogboksOppfrisk';
+import DialogboksVenter from '../../komponenter/dialogboks/dialogboksVenter';
+import DialogboksHenlegg from '../../komponenter/dialogboks/dialogboksHenlegg';
+import { Saksopplysninger } from '../saksopplysninger';
 
-import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
-import SideOppsummering from '../soknad-komponenter/sideOppsummering';
+import SideDialog from '../../soknad-komponenter/sideDialog/sideDialog';
+import SideOppsummering from '../../soknad-komponenter/sideOppsummering';
 
-import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
-import { behandlingsresultatOperations } from '../ducks/behandlingsresultat/';
-import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger/';
-
-import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
-import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
-import { saksopplysningerOperations, saksopplysningerSelectors } from '../ducks/saksopplysninger';
-import { oppgaverOperations } from '../ducks/oppgaver/';
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../ducks/lovvalgsperioder/';
-import { soknadOperations, soknadSelectors, soknadActions } from '../ducks/soknad/';
-import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
-import { formSelectors } from '../ducks/form';
-import * as Api from '../services/api';
+import { fagsakOperations, fagsakSelectors } from '../../ducks/fagsaker';
+import { behandlingsresultatOperations } from '../../ducks/behandlingsresultat';
+import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
+import { anmodningsperioderOperations, anmodningsperioderSelectors } from '../../ducks/anmodningsperioder';
+import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar';
+import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta';
+import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
+import { oppgaverOperations } from '../../ducks/oppgaver';
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
+import { soknadOperations, soknadSelectors, soknadActions } from '../../ducks/soknad';
+import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
+import { formSelectors } from '../../ducks/form';
+import * as Api from '../../services/api';
 
 import './saksbehandling.css';
-import '../komponenter/skjema/skjema.css';
-import { anmodningsperioderOperations, anmodningsperioderSelectors } from '../ducks/anmodningsperioder';
 
 class Saksbehandling extends Component {
   state = {

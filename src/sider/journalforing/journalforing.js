@@ -6,34 +6,35 @@ import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import * as KV from '../kodeverk';
-import * as Utils from '../utils';
-import * as Nav from '../utils/navFrontend';
-import * as Api from '../services/api';
-import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../constants';
+import * as KV from '../../kodeverk';
+import * as Utils from '../../utils';
+import * as Nav from '../../utils/navFrontend';
+import * as Api from '../../services/api';
+import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../../constants';
 
-import * as Person from '../komponenter/skjema/validering/generisk/person';
+import * as Person from '../../komponenter/skjema/validering/generisk/person';
 
-import Sticky from '../hjelpekomponenter/sticky';
-import withErrorHandling from '../hoc/withErrorHandling';
-import Informasjon from '../soknad-komponenter/journalforing/informasjon';
-import EksisterendeSaker from '../soknad-komponenter/journalforing/eksisterendeSaker';
-import PDFDokument from '../soknad-komponenter/journalforing/pdfdokument';
-import OpprettNyFagSak from '../soknad-komponenter/journalforing/opprettnyfagsak';
-import { queryParamLogger } from '../utils/queryParamLogger';
+import Sticky from '../../hjelpekomponenter/sticky';
+import withErrorHandling from '../../hoc/withErrorHandling';
+import Informasjon from '../../soknad-komponenter/journalforing/informasjon';
+import EksisterendeSaker from '../../soknad-komponenter/journalforing/eksisterendeSaker';
+import PDFDokument from '../../soknad-komponenter/journalforing/pdfdokument';
+import OpprettNyFagSak from '../../soknad-komponenter/journalforing/opprettnyfagsak';
+import { queryParamLogger } from '../../utils/queryParamLogger';
 
-import { journalforingValidering, erSkjemaGyldig } from '../komponenter/skjema/validering/journalforing';
+import { journalforingValidering, erSkjemaGyldig } from '../../komponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
   journalforingSelectors,
-} from '../ducks/journalforing/';
-import { formSelectors } from '../ducks/form/';
+} from '../../ducks/journalforing';
+import { formSelectors } from '../../ducks/form';
+import { OrganisasjonOperations } from '../../ducks/organisasjoner';
+import { PersonOperations } from '../../ducks/personer';
+import * as oppgaverOperations from '../../ducks/oppgaver/operations';
+import * as MPT from '../../proptypes';
+import { sokOperations, sokSelectors } from '../../ducks/sok';
+
 import './journalforing.css';
-import { OrganisasjonOperations } from '../ducks/organisasjoner';
-import { PersonOperations } from '../ducks/personer';
-import * as oppgaverOperations from '../ducks/oppgaver/operations';
-import * as MPT from '../proptypes';
-import { sokOperations, sokSelectors } from '../ducks/sok';
 
 class Journalforing extends Component {
   state = {

@@ -2,14 +2,14 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import withErrorHandling from '../hoc/withErrorHandling';
-import * as Nav from '../utils/navFrontend';
-import * as MPT from '../proptypes/';
-import Fagsak from '../forside-komponenter/oppgaveliste/fagsak';
+import withErrorHandling from '../../hoc/withErrorHandling';
+import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../proptypes';
+import Fagsak from '../../forside-komponenter/oppgaveliste/fagsak';
 
-import { sokSelectors, sokOperations } from '../ducks/sok';
+import { sokSelectors, sokOperations } from '../../ducks/sok';
 
-import { queryParamLogger } from '../utils/queryParamLogger';
+import { queryParamLogger } from '../../utils/queryParamLogger';
 import './sok.css';
 
 class Sok extends Component {
