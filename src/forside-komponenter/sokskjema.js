@@ -7,7 +7,7 @@ import PT from 'prop-types';
 import * as KV from '../kodeverk';
 import * as Nav from '../utils/navFrontend';
 
-import './sokeskjema.css';
+import './sokskjema.css';
 
 class SokSkjema extends Component {
   componentWillMount() {
