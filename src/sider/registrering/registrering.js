@@ -8,7 +8,7 @@ import * as Utils from '../../utils';
 import * as Api from '../../services/api';
 
 import Saksopplysninger from '../../registrering-komponenter/saksopplysninger';
-import SideDialog from '../../soknad-komponenter/sideDialog/sideDialog';
+import SideDialog from '../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from '../../registrering-komponenter/sideOppsummering';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import { fagsakOperations, fagsakSelectors } from '../../ducks/fagsaker';
