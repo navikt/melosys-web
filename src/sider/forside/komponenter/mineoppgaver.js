@@ -9,7 +9,7 @@ import * as Nav from '../../../utils/navFrontend';
 
 import BehandlingOppgave from '../../../felleskomponenter/oppgaveliste/behandlingOppgave';
 import JournalforingOppgave from '../../../felleskomponenter/oppgaveliste/journalforingOppgave';
-import withErrorHandling from '../../../hoc/withErrorHandling';
+import withErrorHandling from '../../../felleskomponenter/withErrorHandling';
 
 import './mineoppgaver.css';
 

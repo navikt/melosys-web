@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 
-import withErrorHandling from '../../hoc/withErrorHandling';
+import withErrorHandling from '../../felleskomponenter/withErrorHandling';
 import * as Nav from '../../utils/navFrontend';
 
 // import Statistikk from '../felles-komponenter/forside/statistikk';
