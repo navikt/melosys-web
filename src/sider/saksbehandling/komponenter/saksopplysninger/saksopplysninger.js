@@ -4,41 +4,41 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { reduxForm } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
-import * as Utils from '../../utils';
-import * as KV from '../../kodeverk';
-import * as Validering from '../../komponenter/skjema/validering';
-import * as MPT from '../../proptypes/';
+import * as Utils from '../../../../utils';
+import * as KV from '../../../../kodeverk';
+import * as Validering from '../../../../komponenter/skjema/validering';
+import * as MPT from '../../../../proptypes';
 
-import ArbeidsgivereNorge from '../../soknad-komponenter/arbeidsgivereNorge';
-import ArbeidUtland from '../../soknad-komponenter/arbeidutland';
-import ForetakUtland from '../../soknad-komponenter/foretakutland';
-import Inntekt from '../../soknad-komponenter/inntektUtland';
-import MaritimtArbeid from '../../soknad-komponenter/maritimtArbeid';
-import Medlemskap from '../../komponenter/medlemskap';
-import Soknadsperiode from '../../soknad-komponenter/soknadsperiode';
-import Personopplysninger from '../../soknad-komponenter/personopplysninger';
-import SelvstendigArbeid from '../../soknad-komponenter/selvstendigarbeid';
-import Stegvelger from '../../soknad-komponenter/stegvelger';
-import HenlagtInformasjon from '../../soknad-komponenter/stegErstatter/henlagtInformasjon';
-import VirksomhetNorge from '../../soknad-komponenter/virksomhetNorge';
-import FullmektigPanel from '../../soknad-komponenter/fullmektig';
-import Kontantytelser from '../../soknad-komponenter/kontantytelser';
+import ArbeidsgivereNorge from '../../../../soknad-komponenter/arbeidsgivereNorge';
+import ArbeidUtland from '../../../../soknad-komponenter/arbeidutland';
+import ForetakUtland from '../../../../soknad-komponenter/foretakutland';
+import Inntekt from '../../../../soknad-komponenter/inntektUtland';
+import MaritimtArbeid from '../../../../soknad-komponenter/maritimtArbeid';
+import Medlemskap from '../../../../komponenter/medlemskap';
+import Soknadsperiode from '../../../../soknad-komponenter/soknadsperiode';
+import Personopplysninger from '../../../../soknad-komponenter/personopplysninger';
+import SelvstendigArbeid from '../../../../soknad-komponenter/selvstendigarbeid';
+import Stegvelger from '../../../../soknad-komponenter/stegvelger';
+import HenlagtInformasjon from '../../../../soknad-komponenter/stegErstatter/henlagtInformasjon';
+import VirksomhetNorge from '../../../../soknad-komponenter/virksomhetNorge';
+import FullmektigPanel from '../../../../soknad-komponenter/fullmektig';
+import Kontantytelser from '../../../../soknad-komponenter/kontantytelser';
 
-import { fagsakSelectors } from '../../ducks/fagsaker/';
-import { behandlingerSelectors } from '../../ducks/behandlinger/';
-import { behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
-import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
+import { fagsakSelectors } from '../../../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { behandlingsperioderSelectors } from '../../../../ducks/behandlingsperioder';
+import { saksopplysningerOperations, saksopplysningerSelectors } from '../../../../ducks/saksopplysninger';
 import {
   soknadOperations,
   soknadActions,
   soknadSelectors,
-} from '../../ducks/soknad/';
+} from '../../../../ducks/soknad';
 
-import { avklartefaktaSelectors } from '../../ducks/avklartefakta/';
-import { vilkarSelectors } from '../../ducks/vilkar/';
-import { behandlingsresultatSelectors } from '../../ducks/behandlingsresultat/';
-import { formSelectors } from '../../ducks/form/';
-import { formatterDatoTilNorsk } from '../../utils/dato';
+import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
+import { vilkarSelectors } from '../../../../ducks/vilkar';
+import { behandlingsresultatSelectors } from '../../../../ducks/behandlingsresultat';
+import { formSelectors } from '../../../../ducks/form';
+import { formatterDatoTilNorsk } from '../../../../utils/dato';
 
 
 class Saksopplysninger extends Component {
