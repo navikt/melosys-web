@@ -2,8 +2,8 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { Document, Page } from 'react-pdf/dist/entry.webpack';
-import * as Utils from '../../utils';
-import * as Api from '../../services/api';
+import * as Utils from '../../../utils';
+import * as Api from '../../../services/api';
 
 import './pdfdokument.css';
 

@@ -4,19 +4,19 @@ import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
 
-import * as Utils from '../../utils/utils';
-import * as Skjema from '../../felleskomponenter/skjema/';
-import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes/';
-import * as Konstanter from '../../constants';
+import * as Utils from '../../../utils/utils';
+import * as Skjema from '../../../felleskomponenter/skjema/';
+import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes/';
+import * as Konstanter from '../../../constants';
 
-import * as Api from '../../services/api';
+import * as Api from '../../../services/api';
 
-import * as Person from '../../felleskomponenter/skjema/validering/generisk/person';
+import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
 
-import { PersonSelectors } from '../../ducks/personer';
-import { OrganisasjonSelectors } from '../../ducks/organisasjoner';
-import { formSelectors } from '../../ducks/form';
+import { PersonSelectors } from '../../../ducks/personer';
+import { OrganisasjonSelectors } from '../../../ducks/organisasjoner';
+import { formSelectors } from '../../../ducks/form';
 
 import './informasjon.css';
 

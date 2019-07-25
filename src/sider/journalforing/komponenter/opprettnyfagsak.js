@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
-
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import * as Skjema from '../../felleskomponenter/skjema/';
-import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes/';
+import * as Skjema from '../../../felleskomponenter/skjema/';
+import * as Nav from '../../../utils/navFrontend';
+import * as MPT from '../../../proptypes/';
+import * as Utils from '../../../utils';
+import * as Konstanter from '../../../constants';
+
+import LandVelger from '../../../felleskomponenter/skjema/landvelger';
 
 import './opprettnyfagsak.css';
-import LandVelger from '../../felleskomponenter/skjema/landvelger';
-import * as Utils from '../../utils';
-import * as Konstanter from '../../constants';
+
 
 class OpprettNyFagSak extends Component {
   state = { spinner: {} };

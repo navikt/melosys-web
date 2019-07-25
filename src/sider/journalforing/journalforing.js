@@ -16,10 +16,10 @@ import * as Person from '../../felleskomponenter/skjema/validering/generisk/pers
 
 import Sticky from '../../felleskomponenter/sticky';
 import withErrorHandling from '../../felleskomponenter/withErrorHandling';
-import Informasjon from '../../soknad-komponenter/journalforing/informasjon';
-import EksisterendeSaker from '../../soknad-komponenter/journalforing/eksisterendeSaker';
-import PDFDokument from '../../soknad-komponenter/journalforing/pdfdokument';
-import OpprettNyFagSak from '../../soknad-komponenter/journalforing/opprettnyfagsak';
+import Informasjon from './komponenter/informasjon';
+import EksisterendeSaker from './komponenter/eksisterendeSaker';
+import PDFDokument from './komponenter/pdfdokument';
+import OpprettNyFagSak from './komponenter/opprettnyfagsak';
 import { queryParamLogger } from '../../utils/queryParamLogger';
 
 import { journalforingValidering, erSkjemaGyldig } from '../../felleskomponenter/skjema/validering/journalforing';
