@@ -127,7 +127,7 @@ class SideOppsummering extends Component {
       oppfriskSaksopplysningerHandle,
       tilbakeleggeHandle,
       visHenleggDialogHandle,
-      visAvslaSoknadDialogHandle,
+      visAvslagSoknadDialogHandle,
       arbeidsland,
       avsluttSakSomBortfalt,
       endreLovvalgsperiodeRedigerbart,
@@ -152,7 +152,7 @@ class SideOppsummering extends Component {
                   apneTidligereBehandlinger={this.apneTidligereBehandlinger}
                   redigerbart={endreLovvalgsperiodeRedigerbart}
                   visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
-                  visAvslaSoknadDialogHandle={visAvslaSoknadDialogHandle}
+                  visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                 />
               </div>
             </Nav.Column>
@@ -231,7 +231,7 @@ SideOppsummering.propTypes = {
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
-  visAvslaSoknadDialogHandle: PT.func.isRequired,
+  visAvslagSoknadDialogHandle: PT.func.isRequired,
   tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
