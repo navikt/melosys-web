@@ -1,18 +1,18 @@
 import React from 'react';
 
-import * as Utils from '../../utils';
-import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes';
-import * as Ikoner from '../../resources/images';
+import * as Utils from '../../../../utils';
+import * as Nav from '../../../../utils/navFrontend';
+import * as MPT from '../../../../proptypes';
+import * as Ikoner from '../../../../resources/images';
 
-import DatoOmrade from '../datoOmrade/datoOmrade';
-import EnkeltDato from '../datoOmrade/enkeltDato';
-import PanelHeader from '../panelHeader/panelHeader';
+import DatoOmrade from '../../../../felleskomponenter/datoOmrade/datoOmrade';
+import EnkeltDato from '../../../../felleskomponenter/datoOmrade/enkeltDato';
+import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
 import Permisjoner from './permisjoner';
 import TimerTimelonnet from './timertimelonnet';
 import Utenlandsopphold from './utenlandsopphold';
 import Arbeidsavtaler from './arbeidsavtaler';
-import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
+import OrganisasjonsAdresse from '../../../../felleskomponenter/adresser/organisasjonsAdresse';
 
 import './arbeidsforhold.css';
 

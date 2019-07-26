@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Utils from '../../../../utils';
 
-import Kontaktopplysninger from '../../../../soknad-komponenter/kontaktopplysninger';
+import Kontaktopplysninger from '../kontaktopplysninger';
 import OrganisasjonsAdresse from '../../../../felleskomponenter/adresser/organisasjonsAdresse';
 import SokFullmektigOrg from './sokFullmektigOrg';
 

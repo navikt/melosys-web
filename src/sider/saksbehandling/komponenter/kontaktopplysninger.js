@@ -2,14 +2,14 @@ import React, { Component, Fragment } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 
-import * as Nav from '../utils/navFrontend';
-import * as Api from '../services/api';
-import * as Utils from '../utils';
+import * as Nav from '../../../utils/navFrontend';
+import * as Api from '../../../services/api';
+import * as Utils from '../../../utils';
 
-import OrganisasjonsAdresse from '../felleskomponenter/adresser/organisasjonsAdresse';
-import { fagsakSelectors } from '../ducks/fagsaker';
-import { behandlingerSelectors } from '../ducks/behandlinger';
-import { erOrgnrGyldig } from '../felleskomponenter/skjema/validering/generisk/organisasjon';
+import OrganisasjonsAdresse from '../../../felleskomponenter/adresser/organisasjonsAdresse';
+import { fagsakSelectors } from '../../../ducks/fagsaker';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { erOrgnrGyldig } from '../../../felleskomponenter/skjema/validering/generisk/organisasjon';
 
 import './kontaktopplysninger.css';
 

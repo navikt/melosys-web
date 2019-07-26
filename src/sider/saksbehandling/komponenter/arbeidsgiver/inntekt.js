@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import ReactHighcharts from 'react-highcharts';
 
-import * as MPT from '../../proptypes';
-import * as Nav from '../../utils/navFrontend';
-import Tabell from '../tabell/tabell';
-import * as Ikoner from '../../resources/images';
+import * as MPT from '../../../../proptypes';
+import * as Nav from '../../../../utils/navFrontend';
+import Tabell from '../../../../felleskomponenter/tabell/tabell';
+import * as Ikoner from '../../../../resources/images';
 
-import PanelHeader from '../panelHeader/panelHeader';
-import { formatterKortDatoTilNorsk } from '../../utils/dato';
+import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
+import { formatterKortDatoTilNorsk } from '../../../../utils/dato';
 
 import './inntekt.css';
 

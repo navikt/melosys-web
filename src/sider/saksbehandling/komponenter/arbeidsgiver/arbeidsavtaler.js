@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-import * as MPT from '../../proptypes';
-import * as Nav from '../../utils/navFrontend';
-import * as KV from '../../kodeverk';
+import * as MPT from '../../../../proptypes';
+import * as Nav from '../../../../utils/navFrontend';
+import * as KV from '../../../../kodeverk';
 
-import Tabell from '../tabell/tabell';
-import EnkeltDato from '../datoOmrade/enkeltDato';
+import Tabell from '../../../../felleskomponenter/tabell/tabell';
+import EnkeltDato from '../../../../felleskomponenter/datoOmrade/enkeltDato';
 
 import './arbeidsavtaler.css';
 
