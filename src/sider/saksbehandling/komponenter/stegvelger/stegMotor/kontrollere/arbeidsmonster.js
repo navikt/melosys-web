@@ -18,7 +18,11 @@ class Arbeidsmonster extends Steg {
           const skiftesvisArbeid = hentFakta(KV.Koder.avklartefaktaKoder.ARBEIDSMONSTER, avklartefakta);
           const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
 
-          return hentFaktaVerdi(skiftesvisArbeid) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS && aktivitetINorge && hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT;
+          return (
+            hentFaktaVerdi(skiftesvisArbeid) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS &&
+            aktivitetINorge &&
+            hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT
+          );
         },
         nesteSteg: STEG.FORRETNINGSSTED,
       },
