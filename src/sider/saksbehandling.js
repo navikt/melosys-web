@@ -2,23 +2,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../utils';
 import * as Nav from '../utils/navFrontend';
 import * as MPT from '../proptypes/';
+import * as Api from '../services/api';
 
 import DialogboksOppfriskSak from '../soknad-komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../soknad-komponenter/dialogboks/dialogboksVenter';
 import DialogboksHenlegg from '../soknad-komponenter/dialogboks/dialogboksHenlegg';
 import { Saksopplysninger } from './saksopplysninger';
-
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 import SideOppsummering from '../soknad-komponenter/sideOppsummering';
 
 import { fagsakOperations, fagsakSelectors } from '../ducks/fagsaker/';
 import { behandlingsresultatOperations } from '../ducks/behandlingsresultat/';
 import { behandlingerOperations, behandlingerSelectors } from '../ducks/behandlinger/';
-
 import { vilkarOperations, vilkarSelectors } from '../ducks/vilkar/';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../ducks/avklartefakta/';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../ducks/saksopplysninger';
@@ -27,7 +27,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../ducks/
 import { soknadOperations, soknadSelectors, soknadActions } from '../ducks/soknad/';
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../ducks/behandlingsperioder';
 import { formSelectors } from '../ducks/form';
-import * as Api from '../services/api';
+import { vedtakOperations } from '../ducks/vedtak';
 
 import './saksbehandling.css';
 import '../soknad-komponenter/skjema/skjema.css';
@@ -37,6 +37,7 @@ class Saksbehandling extends Component {
     visOppfriskDialog: false,
     oppfriskningBlokkererInnhold: false,
     visHenleggDialog: false,
+    visAvslagSoknadDialog: false,
     behandlingID: -1,
   };
 
@@ -105,7 +106,7 @@ class Saksbehandling extends Component {
 
   navigerTilOversiktSide = () => {
     this.skjulOppfriskBekreftelse();
-    this.props.history.push('/');
+    this.tilForsiden();
   };
 
   visOppfriskBekreftelse = () => {
@@ -123,6 +124,14 @@ class Saksbehandling extends Component {
 
   skjulHenleggDialog = () => {
     this.setState({ visHenleggDialog: false });
+  };
+
+  visAvslaSoknadDialog = () => {
+    this.setState({ visAvslagSoknadDialog: true });
+  };
+
+  skjulAvslaSoknadDialog = () => {
+    this.setState({ visAvslagSoknadDialog: false });
   };
 
   hentBehandlingStatus = async () => {
@@ -227,7 +236,7 @@ class Saksbehandling extends Component {
     } catch (e) {
       Utils.logger.error(e);
     } finally {
-      this.props.history.push('/');
+      this.tilForsiden();
     }
   };
 
@@ -236,9 +245,29 @@ class Saksbehandling extends Component {
     Api.Fagsaker.henlegg(saksnummer, data);
   };
 
+  avslaSoknadHandle = async () => {
+    try {
+      await this.lagreAllData();
+      await this.avslaSoknad();
+    } catch (e) {
+      Utils.logger.error(e);
+    } finally {
+      this.tilForsiden();
+    }
+  };
+
+  avslaSoknad = async () => {
+    const { behandlingID, fattVedtak } = this.props;
+    fattVedtak(behandlingID, { behandlingsresultattype: MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL });
+  };
+
   avsluttSakSomBortfalt = () => {
     const { fagsak: { saksnummer } } = this.props;
     Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
+    this.tilForsiden();
+  };
+
+  tilForsiden = () => {
     this.props.history.push('/');
   };
 
@@ -284,6 +313,7 @@ class Saksbehandling extends Component {
                 lagreOgLukkHandle={this.lagreOgLukk}
                 tilbakeleggeHandle={this.tilbakeleggeHandle}
                 visHenleggDialogHandle={this.visHenleggDialog}
+                visAvslaSoknadDialogHandle={this.visAvslaSoknadDialog}
                 tilForsidenHandle={this.navigerTilOversiktSide}
               />
               <SideDialog behandlingID={behandlingID} />
@@ -307,12 +337,17 @@ class Saksbehandling extends Component {
             henleggHandle={this.henleggHandle}
           />
         }
+        {
+          this.state.visAvslagSoknadDialog &&
+          console.log('hei')
+        }
       </div>
     );
   }
 }
 
 Saksbehandling.propTypes = {
+  behandlingID: PT.string.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   fagsak: MPT.Fagsak,
@@ -351,6 +386,7 @@ Saksbehandling.propTypes = {
   oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterLovvalgperioderState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
+  fattVedtak: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -375,6 +411,7 @@ const mapStateToProps = state => ({
   skjema: formSelectors.SoknadenFormSelector(state).values,
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
+  behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -404,6 +441,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   sendPerioder: (behandlingID, body) => dispatch(behandlingsperioderOperations.sendMedlemsPerioder(behandlingID, body)),
+  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

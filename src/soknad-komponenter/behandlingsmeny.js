@@ -5,7 +5,7 @@ import * as Nav from '../utils/navFrontend';
 
 const Behandlingsmeny = props => {
   const {
-    redigerbart, lagreOgLukkHandle, tilbakeleggeHandle, oppfriskSaksopplysningerHandle, visHenleggDialogHandle, apneTidligereBehandlinger, avsluttSakSomBortfalt, visHenleggSak,
+    redigerbart, lagreOgLukkHandle, tilbakeleggeHandle, oppfriskSaksopplysningerHandle, visHenleggDialogHandle, apneTidligereBehandlinger, avsluttSakSomBortfalt, visHenleggSak, visAvslaSoknadDialogHandle,
   } = props;
 
   return (
@@ -16,6 +16,7 @@ const Behandlingsmeny = props => {
         <Nav.Knapp disabled={!redigerbart} type="hoved" mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppdater saksopplysninger</Nav.Knapp>
         { redigerbart && visHenleggSak && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={visHenleggDialogHandle}>Henlegg sak</Nav.Knapp> }
         { redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={avsluttSakSomBortfalt}>Avslutt sak som bortfalt</Nav.Knapp>}
+        { redigerbart && <Nav.Knapp type="hoved" mini className="innhold__element" onClick={visAvslaSoknadDialogHandle}>Avslå søknad - manglende opplysninger</Nav.Knapp>}
         { <Nav.Knapp type="hoved" mini className="innhold__element" onClick={apneTidligereBehandlinger}>Vis tidligere behandlinger</Nav.Knapp> }
       </div>
     </Nav.EkspanderbartpanelBase>
@@ -29,6 +30,7 @@ Behandlingsmeny.propTypes = {
   visHenleggDialogHandle: PT.func.isRequired,
   avsluttSakSomBortfalt: PT.func.isRequired,
   apneTidligereBehandlinger: PT.func.isRequired,
+  visAvslaSoknadDialogHandle: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   visHenleggSak: PT.bool.isRequired,
 };
