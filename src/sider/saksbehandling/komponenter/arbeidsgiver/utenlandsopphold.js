@@ -1,10 +1,10 @@
 import React from 'react';
 
-import * as MPT from '../../proptypes';
-import * as Nav from '../../utils/navFrontend';
+import * as MPT from '../../../../proptypes';
+import * as Nav from '../../../../utils/navFrontend';
 
-import EnkeltDato from '../datoOmrade/enkeltDato';
-import Tabell from '../tabell/tabell';
+import EnkeltDato from '../../../../felleskomponenter/datoOmrade/enkeltDato';
+import Tabell from '../../../../felleskomponenter/tabell/tabell';
 
 /** Lister alle timer utenlandsopphold i form av en table.
  *

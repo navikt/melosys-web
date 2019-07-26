@@ -1,14 +1,14 @@
 import React from 'react';
 import PT from 'prop-types';
 
-import * as Nav from '../../utils/navFrontend';
-import * as MPT from '../../proptypes';
-import * as Ikoner from '../../resources/images';
-import * as KV from '../../kodeverk';
+import * as Nav from '../../../../utils/navFrontend';
+import * as MPT from '../../../../proptypes';
+import * as Ikoner from '../../../../resources/images';
+import * as KV from '../../../../kodeverk';
 
-import PanelHeader from '../panelHeader/panelHeader';
-import OrganisasjonsAdresse from '../adresser/organisasjonsAdresse';
-import KontaktOpplysninger from '../../soknad-komponenter/kontaktopplysninger';
+import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
+import OrganisasjonsAdresse from '../../../../felleskomponenter/adresser/organisasjonsAdresse';
+import KontaktOpplysninger from '../kontaktopplysninger';
 
 import './organisasjon.css';
 

@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as MPT from '../../../../proptypes';
 
-import Organisasjon from '../../../../felleskomponenter/arbeidsgiver/organisasjon';
+import Organisasjon from './organisasjon';
 import EkstraArbeidsgiverLeggTil from './ekstraArbeidsgivereLeggTil';
 
 import './ekstraArbeidsgivere.css';
