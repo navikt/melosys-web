@@ -49,7 +49,7 @@ export const PeriodeSelector = createSelector(
 export const InnvilgelsesResultatSelector = createSelector(
   LovvalgsperiodeSelector,
   lovvalgsperiode => lovvalgsperiode.innvilgelsesResultat
-)
+);
 export const FomDatoSelector = createSelector(
   LovvalgsperiodeSelector,
   lovvalgsperiode => lovvalgsperiode.fomDato
