@@ -12,6 +12,7 @@ import * as Api from '../services/api';
 import DialogboksOppfriskSak from '../soknad-komponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../soknad-komponenter/dialogboks/dialogboksVenter';
 import DialogboksHenlegg from '../soknad-komponenter/dialogboks/dialogboksHenlegg';
+import DialogboksAvslagSoknad from '../soknad-komponenter/dialogboks/dialogboksAvslagSoknad';
 import { Saksopplysninger } from './saksopplysninger';
 import SideDialog from '../soknad-komponenter/sideDialog/sideDialog';
 import SideOppsummering from '../soknad-komponenter/sideOppsummering';
@@ -126,11 +127,11 @@ class Saksbehandling extends Component {
     this.setState({ visHenleggDialog: false });
   };
 
-  visAvslaSoknadDialog = () => {
+  visAvslagSoknadDialog = () => {
     this.setState({ visAvslagSoknadDialog: true });
   };
 
-  skjulAvslaSoknadDialog = () => {
+  skjulAvslagSoknadDialog = () => {
     this.setState({ visAvslagSoknadDialog: false });
   };
 
@@ -245,10 +246,10 @@ class Saksbehandling extends Component {
     Api.Fagsaker.henlegg(saksnummer, data);
   };
 
-  avslaSoknadHandle = async () => {
+  avslaaSoknadHandle = async () => {
     try {
       await this.lagreAllData();
-      await this.avslaSoknad();
+      await this.avslaaSoknad();
     } catch (e) {
       Utils.logger.error(e);
     } finally {
@@ -256,9 +257,10 @@ class Saksbehandling extends Component {
     }
   };
 
-  avslaSoknad = async () => {
+  avslaaSoknad = () => {
     const { behandlingID, fattVedtak } = this.props;
     fattVedtak(behandlingID, { behandlingsresultattype: MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL });
+    this.tilForsiden();
   };
 
   avsluttSakSomBortfalt = () => {
@@ -313,7 +315,7 @@ class Saksbehandling extends Component {
                 lagreOgLukkHandle={this.lagreOgLukk}
                 tilbakeleggeHandle={this.tilbakeleggeHandle}
                 visHenleggDialogHandle={this.visHenleggDialog}
-                visAvslaSoknadDialogHandle={this.visAvslaSoknadDialog}
+                visAvslagSoknadDialogHandle={this.visAvslagSoknadDialog}
                 tilForsidenHandle={this.navigerTilOversiktSide}
               />
               <SideDialog behandlingID={behandlingID} />
@@ -339,7 +341,10 @@ class Saksbehandling extends Component {
         }
         {
           this.state.visAvslagSoknadDialog &&
-          console.log('hei')
+          <DialogboksAvslagSoknad
+            avbryt={this.skjulAvslagSoknadDialog}
+            avslaaSoknad={this.avslaaSoknad}
+          />
         }
       </div>
     );
@@ -347,7 +352,7 @@ class Saksbehandling extends Component {
 }
 
 Saksbehandling.propTypes = {
-  behandlingID: PT.string.isRequired,
+  behandlingID: PT.number.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   fagsak: MPT.Fagsak,
