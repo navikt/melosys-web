@@ -84,13 +84,16 @@ const Registrering = props => {
     lastInnSaksopplysninger();
   }, []);
 
-  const { vurderingBegrunnelser, medlemskap, sed } = props;
+  const {
+    vurderingBegrunnelser, medlemskap, sed, redigerbart,
+  } = props;
   return (
     <div className="registrering">
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="7">
             <Saksopplysninger
+              redigerbart={redigerbart}
               behandlingID={behandlingID}
               medlemskap={medlemskap}
               sed={sed}
