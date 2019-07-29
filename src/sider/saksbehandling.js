@@ -259,7 +259,7 @@ class Saksbehandling extends Component {
 
   avslaaSoknad = () => {
     const { behandlingID, fattVedtak } = this.props;
-    fattVedtak(behandlingID, { behandlingsresultattype: MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL });
+    fattVedtak(behandlingID, { behandlingsresultatTypeKode: MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL });
     this.tilForsiden();
   };
 
