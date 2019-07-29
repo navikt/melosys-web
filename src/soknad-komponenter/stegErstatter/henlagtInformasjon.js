@@ -11,7 +11,7 @@ function begrunnelseBeskrivelse(begrunnelseKoder) {
   if (!begrunnelseKoder || begrunnelseKoder.length === 0) {
     return 'Ukjent grunn';
   }
-  return KV.kodeTilTerm(begrunnelseKoder[0], MKV.KTObjects.henleggelsesgrunner);
+  return KV.kodeTilTerm(begrunnelseKoder[0], MKV.KTObjects.begrunnelser.henleggelsesgrunner);
 }
 
 function henlagtTekstEllerBeskrivelse(behandlingsresultat) {
