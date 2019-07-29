@@ -19,7 +19,7 @@ import Soknadsperiode from '../../soknad-komponenter/soknadsperiode';
 import Personopplysninger from '../../soknad-komponenter/personopplysninger';
 import SelvstendigArbeid from '../../soknad-komponenter/selvstendigarbeid';
 import Stegvelger from '../../soknad-komponenter/stegvelger';
-import HenlagtInformasjon from '../../soknad-komponenter/stegErstatter/henlagtInformasjon';
+import { HenlagtSak, AvslaattSoknad } from '../../soknad-komponenter/stegerstatter';
 import VirksomhetNorge from '../../soknad-komponenter/virksomhetNorge';
 import FullmektigPanel from '../../soknad-komponenter/fullmektig';
 import Kontantytelser from '../../soknad-komponenter/kontantytelser';
@@ -90,12 +90,17 @@ class Saksopplysninger extends Component {
     }
 
     const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-    const visStegVelger = !visHenlagtSak;
+    const visAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL;
+    const visStegVelger = !visHenlagtSak && !visAvslaattSoknad;
+
     return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
         { visHenlagtSak &&
-          <HenlagtInformasjon
-            behandlingsresultat={behandlingsresultat} />
+          <HenlagtSak behandlingsresultat={behandlingsresultat} />
+        }
+        {
+          visAvslaattSoknad &&
+          <AvslaattSoknad behandlingsresultat={behandlingsresultat} />
         }
         { visStegVelger &&
           <Stegvelger
