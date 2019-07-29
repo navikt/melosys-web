@@ -1,0 +1,69 @@
+@import '../../../../../../constants';
+
+.soknadsland__liste, .avvistland__liste {
+  display: flex;
+  margin-top: 2em;
+  flex: 1;
+  flex-direction: column;
+
+  .soknadsland__linje, .fjernland__linje, .fjernetland__linje, .leggtilland__linje {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    margin-bottom: 1em;
+  }
+
+  .soknadsland__liste__varsel {
+    margin: 0 0 1em 0;
+  }
+
+  .leggtilland__linje {
+    margin-top: 3em;
+  }
+
+  .fjernland__linje, .leggtilland__linje {
+    margin: 2.2em 0;
+    border-radius: 5px;
+  }
+
+  .linje__land {
+    width: 25%;
+  }
+
+  .linje__begrunnelse {
+    width: 35%;
+    margin-left: 1em;
+  }
+
+  .linje__knapper {
+    width: 40%;
+    margin-left: 0.6em;
+
+    .knapp {
+      margin-right: 0.5em;
+    }
+  }
+
+  .linje__nedtrekksvelger {
+    margin-top: -0.8em;
+  }
+
+  .knappMedIkon {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    svg {
+      width: 24px;
+      margin: -0.4em 1em -0.4em -0.5em
+    }
+  }
+
+  .knappMedIkon:hover {
+    svg {
+      path {
+        stroke: white;
+      }
+    }
+  }
+}
