@@ -1,0 +1,29 @@
+@import '../../../constants';
+
+.pdfdokument {
+  height: auto;
+  width: 100%;
+  display: flex;
+
+  .dokument__pdfwrapper {
+    width: 100%;
+  }
+}
+
+.pdfviser {
+  display: block;
+  position: relative;
+
+  .pdfviser__side {
+    border-bottom: 4px dotted @gray-dark;
+  }
+
+  .pdfviser__side:last-of-type {
+    border-bottom: 0;
+  }
+
+  .pdfviser__sideinfo {
+    text-align:center;
+    margin: 0 0 1em 0;
+  }
+}
