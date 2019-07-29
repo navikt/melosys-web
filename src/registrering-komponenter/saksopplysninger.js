@@ -126,8 +126,9 @@ class Saksopplysninger extends Component {
   oppdaterLovvalgsperioder = () =>
     this.props.oppdaterLovvalgsperioder(this.props.behandlingID, this.lagLovvalgsperioder());
 
-  kanEndrePeriode = () => this.state.unntaksperiodeVurdering === KV.Koder.Unntaksperiode.GODKJENT
-    || this.state.unntaksperiodeVurdering === KV.Koder.Unntaksperiode.INNHENT;
+  kanEndrePeriode = () => this.props.redigerbart
+    && (this.state.unntaksperiodeVurdering === KV.Koder.Unntaksperiode.GODKJENT
+    || this.state.unntaksperiodeVurdering === KV.Koder.Unntaksperiode.INNHENT);
 
   validerFelt = () => this.validerEndrePeriode();
 
@@ -151,7 +152,7 @@ class Saksopplysninger extends Component {
 
   render() {
     const {
-      medlemskap, sed, vurderingBegrunnelser,
+      medlemskap, sed, vurderingBegrunnelser, redigerbart,
     } = this.props;
     if (!sed.lovvalgsperiode) {
       return null;
@@ -179,7 +180,7 @@ class Saksopplysninger extends Component {
                 </Nav.Row>
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
-                    <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => this.setState({ unntaksperiodeVurdering: e.target.value })}>
+                    <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => this.setState({ unntaksperiodeVurdering: e.target.value })} disabled={!redigerbart}>
                       <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.GODKJENT} label="Godkjenn" defaultChecked />
                       <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.INNHENT} label="Innhent informasjon" />
                       <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.AVSLAG} label="Ikke godkjenn" />
@@ -222,7 +223,7 @@ class Saksopplysninger extends Component {
                 </Nav.Row>
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="3">
-                    <Nav.Hovedknapp onClick={() => this.submitRegistrering()}>LAGRE</Nav.Hovedknapp>
+                    <Nav.Hovedknapp onClick={() => this.submitRegistrering()} disabled={!redigerbart}>LAGRE</Nav.Hovedknapp>
                   </Nav.Column>
                 </Nav.Row>
               </div>
@@ -237,6 +238,7 @@ class Saksopplysninger extends Component {
 }
 
 Saksopplysninger.propTypes = {
+  redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   medlemskap: MPT.Medlemskap,
   sed: PT.object, // TODO prop-type

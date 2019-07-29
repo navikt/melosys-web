@@ -27,16 +27,22 @@ const Fagsak = ({ sak }) => {
     behandlingOversikter,
   } = sak;
 
+  const behandlingUrl = behandling => {
+    const { behandlingstype, behandlingID } = behandling;
+    const queryParams = `?behandlingID=${behandlingID}`;
+
+    if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD
+        || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
+      return `/registrering/${saksnummer}/${queryParams}`;
+    }
+    return `/saksbehandling/${saksnummer}/${queryParams}`;
+  };
+
   const {
-    behandlingstype,
     soknadsperiode,
     land,
   } = behandlingOversikter[0];
   const tittel = `${KV.objektTilTerm(sakstype)}`;
-  let routePath = `/saksbehandling/${saksnummer}`;
-  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
-    routePath = `/registrering/${saksnummer}`;
-  }
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const customMargin = { marginLeft: '1em' };
   return (
@@ -73,10 +79,8 @@ const Fagsak = ({ sak }) => {
         </Nav.Row>
         <Nav.Row className="fagsak__behandlinger">
           {
-            behandlingOversikter.map(behandling => {
-              const link = `${routePath}/?behandlingID=${behandling.behandlingID}`;
-              return (<Behandling key={behandling.behandlingID} behandling={behandling} link={link} />);
-            })
+            behandlingOversikter.map(behandling =>
+              <Behandling key={behandling.behandlingID} behandling={behandling} link={behandlingUrl(behandling)} />)
           }
         </Nav.Row>
       </Nav.Container>
