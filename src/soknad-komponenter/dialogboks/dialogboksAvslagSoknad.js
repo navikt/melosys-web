@@ -50,7 +50,7 @@ export const DialogboksAvslagSoknad = props => {
           <div>
             <Nav.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.Systemtittel>
             {
-              redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={this.vedKlikkLenke} />
+              redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
             }
             <div className="dialogboksAvslagSoknad__container__knapperad">
               <Nav.Hovedknapp onClick={avslaaSoknad} disabled={!redigerbart}>
