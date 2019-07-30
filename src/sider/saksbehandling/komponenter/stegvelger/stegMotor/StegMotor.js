@@ -1,11 +1,11 @@
 import * as MKV from 'melosys-kodeverk';
 
+import { STEG } from './typer';
+
 import { stegKatalogMap } from './kontrollere';
 
 class StegMotor {
   _propsLight;
-  _forsteStegID = 'INNGANG';
-  _endrePeriodeStegID = 'ENDRE_PERIODE';
   constructor(props) {
     this._propsLight = props;
   }
@@ -30,9 +30,9 @@ class StegMotor {
   beregnNesteSteg = (gjeldendeSteg, nesteStegPosisjon) => {
     if (gjeldendeSteg === null) {
       if (this._propsLight.behandlingstype && this._propsLight.behandlingstype.kode === MKV.Koder.behandlinger.typer.ENDRET_PERIODE) {
-        return this.lagKlasseBasertPaID(this._endrePeriodeStegID, 0);
+        return this.lagKlasseBasertPaID(STEG.ENDRET_PERIODE, 0);
       }
-      return this.lagKlasseBasertPaID(this._forsteStegID, 0);
+      return this.lagKlasseBasertPaID(STEG.INNGANG, 0);
     }
     const nesteSteg = gjeldendeSteg.nesteSteg();
     return nesteSteg && this.lagKlasseBasertPaID(gjeldendeSteg.nesteSteg(), nesteStegPosisjon);

@@ -21,6 +21,7 @@ import saksopplysningerReducer from './ducks/saksopplysninger';
 import sokReducer from './ducks/sok';
 import soknadReducer from './ducks/soknad/';
 import vilkarReducer from './ducks/vilkar/';
+import vedtakReducer from './ducks/vedtak';
 
 import customFormReducer from './ducks/form';
 
@@ -45,5 +46,6 @@ export default combineReducers({
   saksopplysninger: saksopplysningerReducer,
   sok: sokReducer,
   soknad: soknadReducer,
+  vedtak: vedtakReducer,
   vilkar: vilkarReducer,
 });
