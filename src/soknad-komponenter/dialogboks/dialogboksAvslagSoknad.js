@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import * as MKV from 'melosys-kodeverk';
@@ -41,26 +41,24 @@ export const DialogboksAvslagSoknad = props => {
       closeButton={false}
       shouldCloseOnOverlayClick
       ariaHideApp={ariaHideApp}>
-      <Fragment>
-        <div className="avslagsoknadcontainer">
-          <div
-            className="vedtakIkon"
-            style={{ backgroundImage: `url(${Ikon.VedtakGodkjent})` }}
-          />
-          <div>
-            <Nav.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.Systemtittel>
-            {
-              redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
-            }
-            <div className="dialogboksAvslagSoknad__container__knapperad">
-              <Nav.Hovedknapp onClick={avslaaSoknad} disabled={!redigerbart}>
-                  AVSLÅ SØKNAD
-              </Nav.Hovedknapp>
-              <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
-            </div>
+      <div className="avslagsoknadcontainer">
+        <div
+          className="vedtakIkon"
+          style={{ backgroundImage: `url(${Ikon.VedtakGodkjent})` }}
+        />
+        <div>
+          <Nav.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.Systemtittel>
+          {
+            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
+          }
+          <div className="dialogboksAvslagSoknad__container__knapperad">
+            <Nav.Hovedknapp onClick={avslaaSoknad} disabled={!redigerbart}>
+                AVSLÅ SØKNAD
+            </Nav.Hovedknapp>
+            <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
           </div>
         </div>
-      </Fragment>
+      </div>
     </Nav.Modal>
   );
 };
