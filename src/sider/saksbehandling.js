@@ -260,7 +260,6 @@ class Saksbehandling extends Component {
   avslaaSoknad = () => {
     const { behandlingID, fattVedtak } = this.props;
     fattVedtak(behandlingID, { behandlingsresultatTypeKode: MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL });
-    this.tilForsiden();
   };
 
   avsluttSakSomBortfalt = () => {
@@ -343,7 +342,7 @@ class Saksbehandling extends Component {
           this.state.visAvslagSoknadDialog &&
           <DialogboksAvslagSoknad
             avbryt={this.skjulAvslagSoknadDialog}
-            avslaaSoknad={this.avslaaSoknad}
+            avslaaSoknad={this.avslaaSoknadHandle}
           />
         }
       </div>
