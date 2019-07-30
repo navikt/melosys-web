@@ -19,6 +19,6 @@ const StegerstatterBase = ({ tittel, beskrivelse }) => (
 StegerstatterBase.propTypes = {
   tittel: PT.string.isRequired,
   beskrivelse: PT.string.isRequired,
-}
+};
 
 export default StegerstatterBase;

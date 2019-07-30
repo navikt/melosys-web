@@ -5,7 +5,8 @@ import * as Nav from '../utils/navFrontend';
 
 const Behandlingsmeny = props => {
   const {
-    redigerbart, lagreOgLukkHandle, tilbakeleggeHandle, oppfriskSaksopplysningerHandle, visHenleggDialogHandle, apneTidligereBehandlinger, avsluttSakSomBortfalt, visHenleggSak, visAvslagSoknadDialogHandle,
+    redigerbart, lagreOgLukkHandle, tilbakeleggeHandle, oppfriskSaksopplysningerHandle, visHenleggDialogHandle, apneTidligereBehandlinger, avsluttSakSomBortfalt, visHenleggSak,
+    visAvslagSoknadDialogHandle,
   } = props;
 
   return (
