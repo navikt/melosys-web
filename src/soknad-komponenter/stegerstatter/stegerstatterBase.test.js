@@ -1,5 +1,4 @@
 import React from 'react';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import StegerstatterBase from './stegerstatterBase';
