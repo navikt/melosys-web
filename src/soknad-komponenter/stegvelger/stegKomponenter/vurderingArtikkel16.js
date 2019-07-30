@@ -136,11 +136,11 @@ class VurderingArtikkel16 extends Component {
     this.props.slettData();
   }
 
-  lagreBehandlingerOgFatteVedtak = async behandlingsresultattype => {
+  lagreBehandlingerOgFatteVedtak = async behandlingsresultatTypeKode => {
     const { oppdaterOgLagreBehandlinger, lagreOgFatteVedtak } = this.props;
     try {
       await oppdaterOgLagreBehandlinger();
-      lagreOgFatteVedtak(behandlingsresultattype);
+      lagreOgFatteVedtak(behandlingsresultatTypeKode);
     } catch (e) {
       Utils.logger.error(e);
     }
