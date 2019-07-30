@@ -14,19 +14,14 @@ import * as Ikon from '../../resources/images';
 import './dialogboksAvslagSoknad.css';
 
 export class DialogboksAvslagSoknad extends Component {
-  vedKlikkAvslag = () => {
-    this.props.avslaaSoknad();
-  };
-
   render() {
     const {
       ariaHideApp,
       avbryt,
       behandlingID,
       redigerbart,
+      avslaaSoknad,
     } = this.props;
-
-    const { vedKlikkAvslag } = this;
 
     const dokumenter = [{
       navn: 'Forhåndsvis vedtaksbrev',
@@ -59,7 +54,7 @@ export class DialogboksAvslagSoknad extends Component {
                 redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={this.vedKlikkLenke} />
               }
               <div className="dialogboksAvslagSoknad__container__knapperad">
-                <Nav.Hovedknapp onClick={vedKlikkAvslag} disabled={!redigerbart}>
+                <Nav.Hovedknapp onClick={avslaaSoknad} disabled={!redigerbart}>
                     AVSLÅ SØKNAD
                 </Nav.Hovedknapp>
                 <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
