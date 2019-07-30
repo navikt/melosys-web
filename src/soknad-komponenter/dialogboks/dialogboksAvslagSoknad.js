@@ -32,7 +32,7 @@ export class DialogboksAvslagSoknad extends Component {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
       data: {
-        begrunnelseKode: MKV.Koder.begrunnelser.ftrl_21_3_avslag.MANGLENDE_OPPLYSNINGER,
+        begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
         fritekst: null,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
