@@ -89,13 +89,14 @@ class Saksopplysninger extends Component {
       return null;
     }
 
-    const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-    const visAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL;
-    const visStegVelger = !visHenlagtSak && !visAvslaattSoknad;
+    const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
+    const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL;
+    const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
+    const visStegVelger = !erHenlagtSak && !erAvslaattSoknad;
 
     return (
       <form name="soknad" id="soknad" onSubmit={this.overstyrSubmit}>
-        { visHenlagtSak &&
+        { erHenlagtSak &&
           <HenlagtSak behandlingsresultat={behandlingsresultat} />
         }
         {
