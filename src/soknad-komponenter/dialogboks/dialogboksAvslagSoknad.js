@@ -13,59 +13,57 @@ import * as Ikon from '../../resources/images';
 
 import './dialogboksAvslagSoknad.css';
 
-export class DialogboksAvslagSoknad extends Component {
-  render() {
-    const {
-      ariaHideApp,
-      avbryt,
-      behandlingID,
-      redigerbart,
-      avslaaSoknad,
-    } = this.props;
+export const DialogboksAvslagSoknad = props => {
+  const {
+    ariaHideApp,
+    avbryt,
+    behandlingID,
+    redigerbart,
+    avslaaSoknad,
+  } = props;
 
-    const dokumenter = [{
-      navn: 'Forhåndsvis vedtaksbrev',
-      type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
-      data: {
-        begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
-        fritekst: null,
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
-      },
-    }];
+  const dokumenter = [{
+    navn: 'Forhåndsvis vedtaksbrev',
+    type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
+    data: {
+      begrunnelseKode: MKV.Koder.begrunnelser.folketrygdloven.avslag.MANGLENDE_OPPLYSNINGER,
+      fritekst: null,
+      mottaker: MKV.Koder.aktoersroller.BRUKER,
+    },
+  }];
 
-    return (
-      <Nav.Modal
-        className="dialogboksAvslagSoknad"
-        isOpen
-        contentLabel="Avslå søknad"
-        onRequestClose={avbryt}
-        closeButton={false}
-        shouldCloseOnOverlayClick
-        ariaHideApp={ariaHideApp}>
-        <Fragment>
-          <div className="avslagsoknadcontainer">
-            <div
-              className="vedtakIkon"
-              style={{ backgroundImage: `url(${Ikon.VedtakGodkjent})` }}
-            />
-            <div>
-              <Nav.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.Systemtittel>
-              {
-                redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={this.vedKlikkLenke} />
-              }
-              <div className="dialogboksAvslagSoknad__container__knapperad">
-                <Nav.Hovedknapp onClick={avslaaSoknad} disabled={!redigerbart}>
-                    AVSLÅ SØKNAD
-                </Nav.Hovedknapp>
-                <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
-              </div>
+  return (
+    <Nav.Modal
+      className="dialogboksAvslagSoknad"
+      isOpen
+      contentLabel="Avslå søknad"
+      onRequestClose={avbryt}
+      closeButton={false}
+      shouldCloseOnOverlayClick
+      ariaHideApp={ariaHideApp}>
+      <Fragment>
+        <div className="avslagsoknadcontainer">
+          <div
+            className="vedtakIkon"
+            style={{ backgroundImage: `url(${Ikon.VedtakGodkjent})` }}
+          />
+          <div>
+            <Nav.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.Systemtittel>
+            {
+              redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={this.vedKlikkLenke} />
+            }
+            <div className="dialogboksAvslagSoknad__container__knapperad">
+              <Nav.Hovedknapp onClick={avslaaSoknad} disabled={!redigerbart}>
+                  AVSLÅ SØKNAD
+              </Nav.Hovedknapp>
+              <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
             </div>
           </div>
-        </Fragment>
-      </Nav.Modal>
-    );
-  }
-}
+        </div>
+      </Fragment>
+    </Nav.Modal>
+  );
+};
 
 DialogboksAvslagSoknad.propTypes = {
   avslaaSoknad: PT.func.isRequired,
