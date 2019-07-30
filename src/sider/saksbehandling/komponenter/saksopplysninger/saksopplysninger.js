@@ -19,7 +19,7 @@ import Soknadsperiode from '../soknadsperiode';
 import Personopplysninger from '../personopplysninger';
 import SelvstendigArbeid from '../selvstendigarbeid';
 import Stegvelger from '../stegvelger';
-import HenlagtInformasjon from '../stegErstatter/henlagtInformasjon';
+import { HenlagtSak, AvslaattSoknad } from '../stegErstatter';
 import VirksomhetNorge from '../virksomhetNorge';
 import FullmektigPanel from '../fullmektig';
 import Kontantytelser from '../kontantytelser';
@@ -89,13 +89,19 @@ class Saksopplysninger extends Component {
       return null;
     }
 
-    const visHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-    const visStegVelger = !visHenlagtSak;
+    const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
+    const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL;
+    const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
+    const visStegVelger = !erHenlagtSak && !erAvslaattSoknad;
+
     return (
       <Fragment>
-        { visHenlagtSak &&
-          <HenlagtInformasjon
-            behandlingsresultat={behandlingsresultat} />
+        { erHenlagtSak &&
+          <HenlagtSak behandlingsresultat={behandlingsresultat} />
+        }
+        {
+          visAvslaattSoknad &&
+          <AvslaattSoknad behandlingsresultat={behandlingsresultat} />
         }
         { visStegVelger &&
           <Stegvelger

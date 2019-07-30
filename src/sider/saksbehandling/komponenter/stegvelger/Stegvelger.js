@@ -141,9 +141,9 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  fatteVedtakHandler = async behandlingsresultattype => {
+  fatteVedtakHandler = async behandlingsresultatTypeKode => {
     const { behandlingID, fatteVedtak } = this.props;
-    const vedtakBody = { behandlingsresultattype };
+    const vedtakBody = { behandlingsresultatTypeKode };
     try {
       await fatteVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
@@ -152,11 +152,11 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = async (behandlingsresultattype, ignorerLovvalgsperioder) => {
+  lagreOgFatteVedtak = async (behandlingsresultatTypeKode, ignorerLovvalgsperioder) => {
     if (this.harSoknadIngenFeilmeldinger()) {
       this.gjemSoknadFeilmeldinger();
       await this.props.lagreAllData(ignorerLovvalgsperioder);
-      this.fatteVedtakHandler(behandlingsresultattype);
+      this.fatteVedtakHandler(behandlingsresultatTypeKode);
     } else {
       this.visSoknadFeilmeldinger();
     }
