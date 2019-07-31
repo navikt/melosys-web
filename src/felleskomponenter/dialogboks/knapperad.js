@@ -18,12 +18,8 @@ Knapperad.propTypes = {
   bekreft: PT.func.isRequired,
   bekreftTekst: PT.string.isRequired,
   avbryt: PT.func.isRequired,
-  avbrytTekst: PT.string,
+  avbrytTekst: PT.string.isRequired,
   redigerbart: PT.bool.isRequired,
-};
-
-Knapperad.defaultProps = {
-  avbrytTekst: 'AVBRYT',
 };
 
 export default Knapperad;
