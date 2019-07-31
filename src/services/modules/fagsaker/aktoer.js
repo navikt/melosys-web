@@ -3,9 +3,6 @@ import { getAsJson, postAsJson, deleteAsJson } from '../../utils';
 import { API_BASE_URL, FAGSAKER } from '../../api-constants';
 
 export const hentAktoer = (saksnr, rolleKode, representererKode) => {
-  if (!saksnr) {
-    console.error('saksnummer is REQUIRED');
-  }
   const URI_PATH = `${API_BASE_URL}${FAGSAKER}/${saksnr}/aktoerer`;
   const qs = QS.stringify({ rolleKode, representererKode });
 
