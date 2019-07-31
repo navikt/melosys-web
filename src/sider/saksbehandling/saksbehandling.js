@@ -12,6 +12,7 @@ import * as Api from '../../services/api';
 import DialogboksOppfriskSak from '../../felleskomponenter/dialogboks/dialogboksOppfrisk';
 import DialogboksVenter from '../../felleskomponenter/dialogboks/dialogboksVenter';
 import DialogboksHenlegg from '../../felleskomponenter/dialogboks/dialogboksHenlegg';
+import DialogboksAvsluttSakSomBortfalt from '../../felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt';
 import { Saksopplysninger } from './komponenter/saksopplysninger';
 import DialogboksAvslagSoknad from '../../felleskomponenter/dialogboks/dialogboksAvslagSoknad';
 
@@ -41,6 +42,7 @@ class Saksbehandling extends Component {
     oppfriskningBlokkererInnhold: false,
     visHenleggDialog: false,
     visAvslagSoknadDialog: false,
+    visAvsluttSakSomBortfaltDialog: false,
     behandlingID: -1,
   };
 
@@ -135,6 +137,14 @@ class Saksbehandling extends Component {
 
   skjulAvslagSoknadDialog = () => {
     this.setState({ visAvslagSoknadDialog: false });
+  };
+
+  visAvsluttSakSomBortfaltDialog = () => {
+    this.setState({ visAvsluttSakSomBortfaltDialog: true });
+  };
+
+  skjulAvsluttSakSomBortfaltDialog = () => {
+    this.setState({ visAvsluttSakSomBortfaltDialog: false });
   };
 
   hentBehandlingStatus = async () => {
@@ -273,10 +283,15 @@ class Saksbehandling extends Component {
     fattVedtak(behandlingID, { behandlingsresultatTypeKode: MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL });
   };
 
-  avsluttSakSomBortfalt = () => {
-    const { fagsak: { saksnummer } } = this.props;
-    Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
-    this.tilForsiden();
+  avsluttSakSomBortfalt = async () => {
+    const { saksnummer } = this.props.fagsak;
+
+    try {
+      await Api.Fagsaker.bortfall(saksnummer);
+      this.tilForsiden();
+    } catch (e) {
+      Utils.logger.error(e);
+    }
   };
 
   tilForsiden = () => {
@@ -321,12 +336,12 @@ class Saksbehandling extends Component {
             <Nav.Column xs="5">
               <SideOppsummering
                 behandlingID={behandlingID}
-                avsluttSakSomBortfalt={this.avsluttSakSomBortfalt}
                 oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
                 lagreOgLukkHandle={this.lagreOgLukk}
                 tilbakeleggeHandle={this.tilbakeleggeHandle}
                 visHenleggDialogHandle={this.visHenleggDialog}
                 visAvslagSoknadDialogHandle={this.visAvslagSoknadDialog}
+                visAvsluttSakSomBortfaltDialogHandle={this.visAvsluttSakSomBortfaltDialog}
                 tilForsidenHandle={this.navigerTilOversiktSide}
               />
               <SideDialog behandlingID={behandlingID} />
@@ -355,6 +370,13 @@ class Saksbehandling extends Component {
           <DialogboksAvslagSoknad
             avbryt={this.skjulAvslagSoknadDialog}
             avslaaSoknad={this.avslaaSoknadHandle}
+          />
+        }
+        {
+          this.state.visAvsluttSakSomBortfaltDialog &&
+          <DialogboksAvsluttSakSomBortfalt
+            avbryt={this.skjulAvsluttSakSomBortfaltDialog}
+            avsluttSakSomBortfalt={this.avsluttSakSomBortfalt}
           />
         }
       </div>
