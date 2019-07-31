@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 
-import Knapperad from './knapperad';
+import Knapperad from '../knapperad';
 
 import './dialogboksBekreft.css';
 
