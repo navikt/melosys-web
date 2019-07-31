@@ -56,7 +56,6 @@ export const sendBehandlingsOppgave = async checkboxliste => {
   } else if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SED) {
     return `/registrering/${saksnummer}/?behandlingID=${behandlingID}`;
   }
-  return false;
 };
 
 export const sendJournalOppgave = async fagomrade => {
