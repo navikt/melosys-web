@@ -43,7 +43,7 @@ const EndrePeriode = ({
     oppdaterTom(periode.tom);
   }, [lovvalgsperiode]);
 
-  const fritekstPaakrevd = () => begrunnelse === MKV.Koder.folketrygdloven.begrunnelser.endret_unntaksperiode.ANNET;
+  const fritekstPaakrevd = () => begrunnelse === MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.ANNET;
 
   const formaterDato = (event, oppdater) => {
     const nyDato = Utils.dato.vaskInputDato(event.target.value);
@@ -92,7 +92,7 @@ const EndrePeriode = ({
             onChange={e => oppdaterBegrunnelse(e.target.value)}
             disabled={!redigerbart}
           >
-            {MKV.KTObjects.folketrygdloven.begrunnelser.endret_unntaksperiode.map(kodeobjekt =>
+            {MKV.KTObjects.begrunnelser.folketrygdloven.endret_unntaksperiode.map(kodeobjekt =>
               <option key={kodeobjekt.kode} value={kodeobjekt.kode}>{kodeobjekt.term}</option>)}
           </Nav.Select>
         </Nav.Column>
