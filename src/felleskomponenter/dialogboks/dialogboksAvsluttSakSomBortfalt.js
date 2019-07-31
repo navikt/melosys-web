@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import * as Nav from '../../utils/navFrontend';
 
-import Knapperad from './knapperad';
+import Knapperad from '../knapperad';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
 

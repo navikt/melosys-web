@@ -7,7 +7,7 @@ import * as Nav from '../../utils/navFrontend';
 import * as Ikon from '../../resources/images';
 
 import PdfLenkeListe from '../pdfLenkeListe';
-import Knapperad from './knapperad';
+import Knapperad from '../knapperad';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
 
