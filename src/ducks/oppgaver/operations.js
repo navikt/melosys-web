@@ -48,9 +48,15 @@ export const sendBehandlingsOppgave = async checkboxliste => {
   };
 
   const response = await Api.Oppgaver.send(oppgave);
-  const { saksnummer, behandlingID } = response;
+  const { saksnummer, behandlingID, oppgavetype } = response;
   if (!saksnummer) { return false; }
-  return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+
+  if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SAK_MK || oppgavetype === MKV.Koder.oppgavetyper.VUR) {
+    return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  } else if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SED) {
+    return `/registrering/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
+  return false;
 };
 
 export const sendJournalOppgave = async fagomrade => {
