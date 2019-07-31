@@ -43,8 +43,8 @@ class SideOppsummering extends Component {
       tilbakeleggeHandle,
       visHenleggDialogHandle,
       visAvslagSoknadDialogHandle,
+      visAvsluttSakSomBortfaltDialogHandle,
       arbeidsland,
-      avsluttSakSomBortfalt,
       endreLovvalgsperiodeRedigerbart,
     } = this.props;
 
@@ -59,7 +59,7 @@ class SideOppsummering extends Component {
                   tilbakeleggeHandle={tilbakeleggeHandle}
                   oppfriskSaksopplysningerHandle={oppfriskSaksopplysningerHandle}
                   visHenleggDialogHandle={visHenleggDialogHandle}
-                  avsluttSakSomBortfalt={avsluttSakSomBortfalt}
+                  visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
                   apneTidligereBehandlinger={this.apneTidligereBehandlinger}
                   redigerbart={endreLovvalgsperiodeRedigerbart}
                   visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
@@ -108,7 +108,6 @@ SideOppsummering.propTypes = {
   endreLovvalgsperiodeRedigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
-  avsluttSakSomBortfalt: PT.func.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
@@ -118,6 +117,7 @@ SideOppsummering.propTypes = {
   tilbakeleggeHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvslagSoknadDialogHandle: PT.func.isRequired,
+  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
