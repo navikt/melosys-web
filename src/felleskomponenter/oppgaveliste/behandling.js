@@ -1,7 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
 import { Link } from 'react-router-dom';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
@@ -47,22 +46,15 @@ BehandlingPanel.propTypes = {
   kanVises: PT.bool.isRequired,
 };
 
-// Er ikke mulig å vise behandlinger med type REGISTRERING_UNNTAK_NORSK_TRYGD
-const behandlingKanVises = type => KV.objektTilKode(type) !== MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD;
-
 const Behandling = ({ behandling, link }) => (
-  behandlingKanVises(behandling.behandlingstype) ?
-    <Link to={link} className="behandling__link">
-      <BehandlingPanel behandling={behandling} kanVises />
-    </Link>
-    :
-    <BehandlingPanel behandling={behandling} kanVises={false} />
+  <Link to={link} className="behandling__link">
+    <BehandlingPanel behandling={behandling} kanVises />
+  </Link>
 );
 
 Behandling.propTypes = {
   behandling: PT.object.isRequired,
   link: PT.string.isRequired,
 };
-
 
 export default Behandling;

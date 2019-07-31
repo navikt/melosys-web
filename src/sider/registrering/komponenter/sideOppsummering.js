@@ -42,7 +42,7 @@ const SideOppsummering = props => {
   } = props;
 
   const apneTidligereBehandlinger = () => {
-    const URI_SOK = `/sok/${this.props.person.fnr}`;
+    const URI_SOK = `/sok/${props.person.fnr}`;
     window.open(URI_SOK);
   };
 
