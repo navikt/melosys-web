@@ -51,13 +51,15 @@ export const DialogboksAvslagSoknad = props => {
           {
             redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
           }
-          <Knapperad
-            avbryt={avbryt}
-            avbrytTekst="AVBRYT"
-            bekreft={avslaaSoknad}
-            bekreftTekst="AVSLÅ SØKNAD"
-            redigerbart={redigerbart}
-          />
+          <div className="knapperadcontainer">
+            <Knapperad
+              avbryt={avbryt}
+              avbrytTekst="AVBRYT"
+              bekreft={avslaaSoknad}
+              bekreftTekst="AVSLÅ SØKNAD"
+              redigerbart={redigerbart}
+            />
+          </div>
         </div>
       </div>
     </Nav.Modal>
