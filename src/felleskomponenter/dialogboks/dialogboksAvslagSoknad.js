@@ -4,12 +4,12 @@ import { connect } from 'react-redux';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
+import * as Ikon from '../../resources/images';
 
 import PdfLenkeListe from '../pdfLenkeListe';
+import Knapperad from './knapperad';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
-
-import * as Ikon from '../../resources/images';
 
 import './dialogboksAvslagSoknad.css';
 
@@ -51,12 +51,13 @@ export const DialogboksAvslagSoknad = props => {
           {
             redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
           }
-          <div className="dialogboksAvslagSoknad__container__knapperad">
-            <Nav.Hovedknapp onClick={avslaaSoknad} disabled={!redigerbart}>
-                AVSLÅ SØKNAD
-            </Nav.Hovedknapp>
-            <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
-          </div>
+          <Knapperad
+            avbryt={avbryt}
+            avbrytTekst="AVBRYT"
+            bekreft={avslaaSoknad}
+            bekreftTekst="AVSLÅ SØKNAD"
+            redigerbart={redigerbart}
+          />
         </div>
       </div>
     </Nav.Modal>
