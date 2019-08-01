@@ -5,7 +5,7 @@ export const initialState = {
   skalEndres: false,
   fom: '',
   tom: '',
-  begrunnelse: MKV.Koder.folketrygdloven.begrunnelser.endret_unntaksperiode.PERIODE_FEILREGISTERT,
+  begrunnelse: MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.PERIODE_FEILREGISTERT,
   fritekst: '',
 };
 
