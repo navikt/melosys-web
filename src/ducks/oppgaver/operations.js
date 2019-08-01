@@ -12,6 +12,7 @@ import * as MKV from 'melosys-kodeverk';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import * as Utils from '../../utils';
 
 /**
  * Hent Soknad
@@ -56,6 +57,9 @@ export const sendBehandlingsOppgave = async checkboxliste => {
   } else if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SED) {
     return `/registrering/${saksnummer}/?behandlingID=${behandlingID}`;
   }
+
+  Utils.logger.error(`Ukjent oppgavetype ${oppgavetype} kan ikke åpnes.`);
+  return null;
 };
 
 export const sendJournalOppgave = async fagomrade => {
