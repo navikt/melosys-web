@@ -3,6 +3,7 @@ import ReactHighcharts from 'react-highcharts';
 
 import * as MPT from '../../../../proptypes';
 import * as Nav from '../../../../utils/navFrontend';
+import * as Utils from '../../../../utils';
 import Tabell from '../../../../felleskomponenter/tabell/tabell';
 import * as Ikoner from '../../../../resources/images';
 
@@ -82,7 +83,7 @@ class Inntekt extends Component {
       .map(linje => (
         [
           formatterKortDatoTilNorsk(linje.aarMaaned),
-          linje.beloep,
+          Utils._round(linje.beloep, 2),
         ]));
 
     const uuTabell = this.state.visInntektTabell ? (
