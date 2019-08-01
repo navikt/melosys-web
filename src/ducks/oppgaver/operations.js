@@ -12,6 +12,7 @@ import * as MKV from 'melosys-kodeverk';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import * as Utils from '../../utils';
 
 /**
  * Hent Soknad
@@ -48,9 +49,17 @@ export const sendBehandlingsOppgave = async checkboxliste => {
   };
 
   const response = await Api.Oppgaver.send(oppgave);
-  const { saksnummer, behandlingID } = response;
+  const { saksnummer, behandlingID, oppgavetype } = response;
   if (!saksnummer) { return false; }
-  return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+
+  if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SAK_MK || oppgavetype === MKV.Koder.oppgavetyper.VUR) {
+    return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  } else if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SED) {
+    return `/registrering/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
+
+  Utils.logger.error(`Ukjent oppgavetype ${oppgavetype} kan ikke åpnes.`);
+  return null;
 };
 
 export const sendJournalOppgave = async fagomrade => {
