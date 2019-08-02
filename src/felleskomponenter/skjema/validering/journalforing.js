@@ -83,16 +83,16 @@ const journalforingOpprettSakValidering = verdier => {
   const journalforingPeriodeFraOgMed = (
     datoErIkkeGyldig(verdier.journalforingPeriodeFraOgMed) ||
     datoErBlank(verdier.journalforingPeriodeFraOgMed) ||
-    false
+    undefined
   );
 
   const journalforingPeriodeTilOgMed = (
     datoErIkkeGyldig(verdier.journalforingPeriodeTilOgMed) ||
     datoErBlank(verdier.journalforingPeriodeTilOgMed) ||
-    false
+    undefined
   );
 
-  const journalforingSoknadsland = (landErIkkeValgt(verdier.journalforingSoknadsland) ? { _error: landErIkkeValgt(verdier.journalforingSoknadsland) } : false);
+  const journalforingSoknadsland = (landErIkkeValgt(verdier.journalforingSoknadsland) ? { _error: landErIkkeValgt(verdier.journalforingSoknadsland) } : undefined);
 
   return {
     journalforingPeriodeFraOgMed,
