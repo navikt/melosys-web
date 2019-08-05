@@ -1,4 +1,4 @@
-import { isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger, round } from 'lodash';
+import { isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger, round, set } from 'lodash';
 
 import throttle from 'lodash.throttle';
 
@@ -30,4 +30,5 @@ export {
   isBoolean as _isBoolean,
   toInteger as _toInteger,
   round as _round,
+  set as _set,
 };
