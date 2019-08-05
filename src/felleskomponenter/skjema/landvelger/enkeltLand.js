@@ -124,7 +124,7 @@ export class EnkeltLand extends Component {
     /* Vi forventer at meta.error er en string eller et objekt */
     if (Utils._isObject(skjemaError)) skjemaError = skjemaError.melding;
     const { error: landError = '' } = this.state;
-    let feilObjekt = skjemaError || landError ? { feilmelding: `${skjemaError} ${landError}` } : null;
+    let feilObjekt = skjemaError || landError ? { feilmelding: `${skjemaError || ''} ${landError || ''}` } : null;
 
     /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
     if (!feilObjekt) {
