@@ -62,6 +62,8 @@ export const VurderingArtikkel16Vedtak = props => {
 
   const visFritekstFelt = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
 
+  const visLovvalgsperiode = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;
+
   const vedKlikk = () => {
     lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND);
   };
@@ -79,11 +81,14 @@ export const VurderingArtikkel16Vedtak = props => {
           { visFritekstFelt && <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value={begrunnelseFritekst} tellerTekst={() => {}} />}
         </Nav.Column>
       </Nav.Row>
-      <Nav.Row>
-        <Nav.Column xs="7">
-          <DatoOmradeMedVarighet periode={endretPeriode} tekst="Lovvalgsperiode" />
-        </Nav.Column>
-      </Nav.Row>
+      {
+        visLovvalgsperiode &&
+        <Nav.Row>
+          <Nav.Column xs="7">
+            <DatoOmradeMedVarighet periode={endretPeriode} tekst="Lovvalgsperiode" />
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row>
         <Nav.Column xs="7">
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
