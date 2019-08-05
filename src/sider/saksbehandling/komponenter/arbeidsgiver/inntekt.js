@@ -3,11 +3,11 @@ import ReactHighcharts from 'react-highcharts';
 
 import * as MPT from '../../../../proptypes';
 import * as Nav from '../../../../utils/navFrontend';
-import Tabell from '../../../../felleskomponenter/tabell/tabell';
+import * as Utils from '../../../../utils';
 import * as Ikoner from '../../../../resources/images';
 
 import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
-import { formatterKortDatoTilNorsk } from '../../../../utils/dato';
+import Tabell from '../../../../felleskomponenter/tabell/tabell';
 
 import './inntekt.css';
 
@@ -50,7 +50,7 @@ class Inntekt extends Component {
         labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
       },
       xAxis: {
-        categories: inntektListe.map(linje => formatterKortDatoTilNorsk(linje.aarMaaned)),
+        categories: inntektListe.map(linje => Utils.dato.formatterKortDatoTilNorsk(linje.aarMaaned)),
         crosshair: true,
         description: 'Perioder med inntekt.',
         labels: { style: { fontSize: '13px', fontWeight: 'bold' } },
@@ -81,8 +81,8 @@ class Inntekt extends Component {
     const inntektArrayed = omvendtInntektListe
       .map(linje => (
         [
-          formatterKortDatoTilNorsk(linje.aarMaaned),
-          linje.beloep,
+          Utils.dato.formatterKortDatoTilNorsk(linje.aarMaaned),
+          Utils._round(linje.beloep, 2),
         ]));
 
     const uuTabell = this.state.visInntektTabell ? (
