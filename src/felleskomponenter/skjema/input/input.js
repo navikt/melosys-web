@@ -37,7 +37,6 @@ InnerInputComponent.defaultProps = {
   bredde: undefined,
   meta: undefined,
   input: undefined,
-  feltFeil: {},
 };
 
 
