@@ -14,6 +14,7 @@ describe('Knapperad', () => {
       avbryt: jest.fn(),
       avbrytTekst: 'avbryttekst',
       redigerbart: true,
+      bekreftRedigerbart: true,
     };
   });
 
@@ -32,5 +33,34 @@ describe('Knapperad', () => {
 
     expect(knapperad.find(Nav.Knapp).childAt(0).text()).toBe(props.avbrytTekst);
     expect(knapperad.find(Nav.Hovedknapp).childAt(0).text()).toBe(props.bekreftTekst);
+  });
+
+  it('redigerbart-prop setter disabled korrekt', () => {
+    let knapperad = shallow(<Knapperad {...props} />);
+
+    expect(knapperad.find(Nav.Knapp).props().disabled).toBe(false);
+    expect(knapperad.find(Nav.Hovedknapp).props().disabled).toBe(false);
+
+    props.redigerbart = false;
+
+    knapperad = shallow(<Knapperad {...props} />);
+
+    expect(knapperad.find(Nav.Knapp).props().disabled).toBe(true);
+    expect(knapperad.find(Nav.Hovedknapp).props().disabled).toBe(true);
+  });
+
+  it('bekreftRedigerbart-prop setter disabled korrekt', () => {
+    let knapperad = shallow(<Knapperad {...props} />);
+
+    expect(knapperad.find(Nav.Hovedknapp).props().disabled).toBe(false);
+    expect(knapperad.find(Nav.Knapp).props().disabled).toBe(false);
+
+
+    props.bekreftRedigerbart = false;
+
+    knapperad = shallow(<Knapperad {...props} />);
+
+    expect(knapperad.find(Nav.Knapp).props().disabled).toBe(false);
+    expect(knapperad.find(Nav.Hovedknapp).props().disabled).toBe(true);
   });
 });
