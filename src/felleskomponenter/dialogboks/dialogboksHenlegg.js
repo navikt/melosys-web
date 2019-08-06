@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import * as MKV from 'melosys-kodeverk';
-import PdfLenkeListe from '../pdfLenkeListe';
-import { KodeTermSelect } from '../ui/kodeTermSelect';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
 
 import * as Nav from '../../utils/navFrontend';
+
+import PdfLenkeListe from '../pdfLenkeListe';
+import { KodeTermSelect } from '../ui/kodeTermSelect';
+import Knapperad from '../knapperad';
+
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 
 import './dialogboksHenlegg.css';
 
@@ -135,15 +138,14 @@ export class DialogboksHenleggSak extends Component {
           {
             redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={this.vedKlikkLenke} />
           }
-          <div className="dialogboksHenlegg__container__knapperad">
-            <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
-            <Nav.Hovedknapp
-              disabled={!erBegrunnelseValgt()}
-              onClick={vedKlikkHenlegg}
-            >
-              Henlegg saken
-            </Nav.Hovedknapp>
-          </div>
+          <Knapperad
+            bekreft={vedKlikkHenlegg}
+            bekreftTekst="HENLEGG SAKEN"
+            bekreftRedigerbart={erBegrunnelseValgt()}
+            avbryt={avbryt}
+            avbrytTekst="AVBRYT"
+            redigerbart={redigerbart}
+          />
         </div>
       </Nav.Modal>
     );

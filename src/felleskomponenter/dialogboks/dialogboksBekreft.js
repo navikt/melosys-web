@@ -3,6 +3,8 @@ import PT from 'prop-types';
 
 import * as Nav from '../../utils/navFrontend';
 
+import Knapperad from '../knapperad';
+
 import './dialogboksBekreft.css';
 
 /* eslint react/prefer-stateless-function:off */
@@ -23,9 +25,14 @@ class DialogboksBekreft extends Component {
         <div>
           <Nav.Systemtittel>{tittel}</Nav.Systemtittel>
           <Nav.Normaltekst>{tekst}</Nav.Normaltekst>
-          <div className="dialogboks__container__knapperad">
-            <Nav.Hovedknapp onClick={bekreft}>Fortsett oppdatering</Nav.Hovedknapp>
-            <Nav.Knapp onClick={avbryt}>Avbryt oppdatering</Nav.Knapp>
+          <div className="knapperadcontainer">
+            <Knapperad
+              bekreft={bekreft}
+              bekreftTekst="Fortsett oppdatering"
+              avbryt={avbryt}
+              avbrytTekst="Avbryt oppdatering"
+              redigerbart
+            />
           </div>
         </div>
       </Nav.Modal>
