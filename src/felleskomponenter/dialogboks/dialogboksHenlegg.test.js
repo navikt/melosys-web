@@ -1,6 +1,11 @@
 import React from 'react';
 
+import * as Nav from '../../utils/navFrontend';
+
 import { DialogboksHenleggSak } from './dialogboksHenlegg';
+import Knapperad from '../knapperad';
+import { KodeTermSelect } from '../ui/kodeTermSelect';
+import PdfLenkeListe from '../pdfLenkeListe';
 
 describe('Dialogbokshenlegg', () => {
   let props = null;
@@ -19,38 +24,28 @@ describe('Dialogbokshenlegg', () => {
   });
 
   it('viser en Nav Modal', () => {
-    const komponent = mount(<DialogboksHenleggSak {...props} />);
-    expect(komponent.exists('Modal')).toBe(true);
+    const komponent = shallow(<DialogboksHenleggSak {...props} />);
+    expect(komponent.exists(Nav.Modal)).toBe(true);
   });
 
   describe('Modal', () => {
     it('viser en dropdownliste', () => {
       const komponent = shallow(<DialogboksHenleggSak {...props} />);
-      expect(komponent.exists('kodeTermSelect')).toBe(true);
+      expect(komponent.exists(KodeTermSelect)).toBe(true);
     });
+
     it('viser en pdflenkeliste', () => {
       const komponent = shallow(<DialogboksHenleggSak {...props} />);
-      expect(komponent.exists('PdfLenkeListe')).toBe(true);
+      expect(komponent.exists(PdfLenkeListe)).toBe(true);
     });
-  });
 
-  it('viser en Nav Knapp for avbryting av dialog', () => {
-    const komponent = mount(<DialogboksHenleggSak {...props} />);
-    expect(komponent.exists('Knapp')).toBe(true);
-  });
+    it('viser en Knapperad', () => {
+      props.redigerbart = false;
+      const komponent = shallow(<DialogboksHenleggSak {...props} />);
 
-  describe('Avbryt knapp', () => {
-    it('avbryter dialogen', () => {
-      const komponent = mount(<DialogboksHenleggSak {...props} />);
-      const avbrytKnapp = komponent.find('Knapp');
-      avbrytKnapp.simulate('click');
-      expect(props.avbryt).toHaveBeenCalled();
+      expect(komponent.find(Knapperad).props().redigerbart).toBe(props.redigerbart);
+      expect(komponent.find(Knapperad).props().avbryt).toBe(props.avbryt);
     });
-  });
-
-  it('viser en Nav Hovedknapp for henlegging av sak', () => {
-    const komponent = mount(<DialogboksHenleggSak {...props} />);
-    expect(komponent.exists('Knapp')).toBe(true);
   });
 });
 
