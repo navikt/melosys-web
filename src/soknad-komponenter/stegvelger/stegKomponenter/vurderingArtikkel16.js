@@ -136,7 +136,7 @@ class VurderingArtikkel16 extends Component {
     this.props.slettData();
   }
 
-  lagreBehandlingerOgFatteVedtak = async behandlingsresultatTypeKode => {
+  lagreBehandlingerOgBestillAnmodning = async behandlingsresultatTypeKode => {
     const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodning } = this.props;
     try {
       await oppdaterOgLagreBehandlinger();
@@ -212,7 +212,7 @@ class VurderingArtikkel16 extends Component {
 
   validerOgLagreBehandling = () => {
     if (this.validerAlt()) {
-      this.lagreBehandlingerOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.ANMODNING_OM_UNNTAK);
+      this.lagreBehandlingerOgBestillAnmodning(MKV.Koder.behandlinger.resultattyper.ANMODNING_OM_UNNTAK);
     }
   };
 
