@@ -146,6 +146,26 @@ class Stegvelger extends Component {
     }
   };
 
+  bestillAnmodningHandler = async behandlingsresultatTypeKode => {
+    const { behandlingID } = this.props;
+    try {
+      await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, { behandlingsresultatTypeKode });
+      this.tilForsiden();
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  };
+
+  lagreOgBestillAnmodning = async behandlingsresultatTypeKode => {
+    if (this.harSoknadIngenFeilmeldinger()) {
+      this.gjemSoknadFeilmeldinger();
+      await this.props.lagreAllData();
+      this.bestillAnmodningHandler(behandlingsresultatTypeKode);
+    } else {
+      this.visSoknadFeilmeldinger();
+    }
+  };
+
   endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
     const { behandlingID, lovvalgsperioder } = this.props;
 
@@ -172,6 +192,7 @@ class Stegvelger extends Component {
   oppdaterAktuelleSteg = aktivtStegNummer => {
     const tilgjengeligeHandlers = {
       bekreftOgFortsett: this.bekreftOgFortsett,
+      lagreOgBestillAnmodning: this.lagreOgBestillAnmodning,
       lagreOgFatteVedtak: this.lagreOgFatteVedtak,
       oppdaterOgLagreBehandlinger: this.props.oppdaterOgLagreBehandlingerHandler,
       oppdaterStegData: this.oppdaterStegData,

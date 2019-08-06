@@ -137,10 +137,10 @@ class VurderingArtikkel16 extends Component {
   }
 
   lagreBehandlingerOgFatteVedtak = async behandlingsresultatTypeKode => {
-    const { oppdaterOgLagreBehandlinger, lagreOgFatteVedtak } = this.props;
+    const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodning } = this.props;
     try {
       await oppdaterOgLagreBehandlinger();
-      lagreOgFatteVedtak(behandlingsresultatTypeKode);
+      lagreOgBestillAnmodning(behandlingsresultatTypeKode);
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -343,7 +343,7 @@ class VurderingArtikkel16 extends Component {
 
 VurderingArtikkel16.propTypes = {
   medlemskap: MPT.Medlemskap.isRequired,
-  lagreOgFatteVedtak: PT.func.isRequired,
+  lagreOgBestillAnmodning: PT.func.isRequired,
   gyldigeSoknadsland: MPT.Soknadsland.isRequired, // TODO:
   soknadsperiode: MPT.Soknadsperiode.isRequired,
   behandlingID: PT.number.isRequired,
