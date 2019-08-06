@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import * as MKV from 'melosys-kodeverk';
-import PdfLenkeListe from '../pdfLenkeListe';
-import { KodeTermSelect } from '../ui/kodeTermSelect';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
-import Knapperad from '../knapperad';
 
 import * as Nav from '../../utils/navFrontend';
+
+import PdfLenkeListe from '../pdfLenkeListe';
+import { KodeTermSelect } from '../ui/kodeTermSelect';
+import Knapperad from '../knapperad';
+
+import { behandlingerSelectors } from '../../ducks/behandlinger';
 
 import './dialogboksHenlegg.css';
 
