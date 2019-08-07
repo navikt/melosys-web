@@ -112,9 +112,10 @@ function MultiLand(props) {
     setInputVerdi(e.target.value);
   };
 
-  const { error: skjemaError = '' } = props.meta;
+  let { error: skjemaError = '' } = props.meta;
   const { internLandError = '' } = error;
-
+  /* Vi forventer at meta.error er en string eller et objekt */
+  if (Utils._isObject(skjemaError)) skjemaError = skjemaError.melding;
   const feilObjekt = skjemaError || internLandError ? { feilmelding: `${skjemaError} ${internLandError}` } : null;
   const valgteLand = props.fields.getAll() || [];
   const dynamiskFeltTittel = props.label || dynamiskTittel();
