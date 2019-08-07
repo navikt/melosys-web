@@ -195,7 +195,7 @@ class Informasjon extends Component {
           {vedlegg.length > 0 &&
             <Nav.Fieldset legend="Fysiske Vedlegg:">
               {vedlegg.map((elem, index) =>
-                <Fragment>
+                <Fragment key={elem.dokumentID}>
                   <Skjema.ListeVelger
                     feltNavn={`vedlegg.pdf.tittel_${index}`}
                     label={`Tittel på vedlegg: ${index + 1}`}
