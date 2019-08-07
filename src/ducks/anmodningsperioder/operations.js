@@ -51,6 +51,7 @@ const byggAnmodningsperiodeArtikkel16 = state => {
     unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
+    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
   }];
 };
 
