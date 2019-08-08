@@ -12,10 +12,7 @@ export const hentDokument = (journalpostID, dokumentID) => getAsJson(pdfURI(jour
  * @param data
  * @returns {Promise<*>} PDF dokument
  */
-export const forhandsvisPDF = (behandlingID, dokumenttypeKode, data) => {
-  const URI_DOKUMENT_UTKAST = `${API_BASE_URL}${DOKUMENTER}/utkast/pdf/${behandlingID}/${dokumenttypeKode}`;
-  return postAsJsonReceiveAsPDF(URI_DOKUMENT_UTKAST, data, true);
-};
+export const forhandsvisPDF = (behandlingID, dokumenttypeKode, data) => postAsJsonReceiveAsPDF(`${API_BASE_URL}${DOKUMENTER}/utkast/pdf/${behandlingID}/${dokumenttypeKode}`, data, true);
 
 /**
  * opprettDokument gjør oppslag DocProd med :behandlingID og :dokumenttypeKode
@@ -25,11 +22,5 @@ export const forhandsvisPDF = (behandlingID, dokumenttypeKode, data) => {
  * @returns {Promise<*>} med {location: `/dokumenter/pdf/${journalpostID}/${dokumentID}`}
  * Retur objektet benyttes til å kalle
  */
-export const opprettDokument = (behandlingID, dokumenttypeKode, dokument) => {
-  const URI_DOKUMENT_OPPRETT = `${API_BASE_URL}${DOKUMENTER}/opprett/${behandlingID}/${dokumenttypeKode}`;
-  return postAsJson(URI_DOKUMENT_OPPRETT, dokument);
-};
-export const hentOversiktDokumenter = snr => {
-  const URI_DOKUMENT_OVERSIKT = `${API_BASE_URL}${DOKUMENTER}/oversikt/${snr}`;
-  return getAsJson(URI_DOKUMENT_OVERSIKT);
-};
+export const opprettDokument = (behandlingID, dokumenttypeKode, dokument) => postAsJson(`${API_BASE_URL}${DOKUMENTER}/opprett/${behandlingID}/${dokumenttypeKode}`, dokument);
+export const hentOversiktDokumenter = snr => getAsJson(`${API_BASE_URL}${DOKUMENTER}/oversikt/${snr}`);
