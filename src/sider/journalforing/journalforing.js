@@ -1,5 +1,5 @@
 /* eslint no-alert:off, consistent-return:off */
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
@@ -46,9 +46,6 @@ class Journalforing extends Component {
     await this.props.hentJournalOppgave(journalpostID);
   }
 
-  async componentWillUnmount() {
-    await this.props.resetJournalforingState();
-  }
   onChangeVedlegg = e => {
     const { value: valgtDokumentID } = e.target;
     this.setState({ valgtDokumentID });
@@ -392,7 +389,6 @@ Journalforing.propTypes = {
   sokOrgnr: PT.func.isRequired,
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
-  resetJournalforingState: PT.func.isRequired,
   vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string })).isRequired,
 };
 
@@ -438,7 +434,6 @@ const mapDispatchToProps = dispatch => ({
   opprettNySak: data => Api.Journalforing.opprett(data),
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilordneSak: data => Api.Journalforing.tilordne(data),
-  resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
   sokFnrDnr: fnr => dispatch(PersonOperations.hent(fnr)),
   sokOrgnr: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
 });
@@ -456,4 +451,22 @@ const form = {
   onSubmit: () => {},
 };
 
-export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Journalforing))));
+const JournalforingWrapper = ({ resetJournalforingState }) => {
+  useEffect(() => function cleanup() {
+    resetJournalforingState();
+  }, []);
+
+  const JournalforingMedErrorHandling = withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Journalforing))));
+
+  return <JournalforingMedErrorHandling />;
+};
+
+JournalforingWrapper.propTypes = {
+  resetJournalforingState: PT.func.isRequired,
+};
+
+const journalforingWrapperMapDispatchToProps = dispatch => ({
+  resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
+});
+
+export default connect(null, journalforingWrapperMapDispatchToProps)(JournalforingWrapper);
