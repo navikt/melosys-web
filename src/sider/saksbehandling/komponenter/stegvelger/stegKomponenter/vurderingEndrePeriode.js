@@ -16,7 +16,7 @@ import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { soknadOperations } from '../../../../../ducks/soknad';
 
-import * as API from '../../../../../services/api';
+import * as Api from '../../../../../services/api';
 
 import './vurderingEndrePeriode.css';
 
@@ -45,7 +45,7 @@ export class VurderingEndrePeriode extends React.Component {
   settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
 
   hentOpprinneligPeriode = async behandlingID => {
-    const opprinneligLovvalgsperiode = await API.OpprinneligLovvalgsperiode.hent(behandlingID).catch(Utils.logger.error);
+    const opprinneligLovvalgsperiode = await Api.Lovvalgsperioder.hentOpprinnelig(behandlingID).catch(Utils.logger.error);
     this.setState(opprinneligLovvalgsperiode);
   };
 

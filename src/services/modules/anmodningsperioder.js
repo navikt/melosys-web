@@ -12,11 +12,11 @@ export const hent = behandlingID => {
 };
 
 export const hentSvar = anmodningsperiodeID => {
-  const URI_ANMODNINGSPERIODE_SVAR = `${API_BASE_URL}${ANMODNINGSPERIODER}/${SVAR}/${anmodningsperiodeID}`;
+  const URI_ANMODNINGSPERIODE_SVAR = `${API_BASE_URL}${ANMODNINGSPERIODER}/${anmodningsperiodeID}/${SVAR}`;
   return getAsJson(URI_ANMODNINGSPERIODE_SVAR);
 };
 
 export const sendSvar = (anmodningsperiodeID, body) => {
-  const URI_ANMODNINGSPERIODE_SVAR = `${API_BASE_URL}${ANMODNINGSPERIODER}/${SVAR}/${anmodningsperiodeID}`;
+  const URI_ANMODNINGSPERIODE_SVAR = `${API_BASE_URL}${ANMODNINGSPERIODER}/${anmodningsperiodeID}/${SVAR}`;
   return postAsJson(URI_ANMODNINGSPERIODE_SVAR, body);
 };

@@ -12,7 +12,7 @@ import * as Types from './types';
 import * as Actions from './actions';
 
 export function hentBehandling(behandlingID) {
-  return doThenDispatch(() => Api.Behandlinger.hentBehandling(behandlingID), {
+  return doThenDispatch(() => Api.Behandlinger.behandling.hentBehandling(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
