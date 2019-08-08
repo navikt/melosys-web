@@ -32,6 +32,7 @@ export const tilbakelegge = (behandlingID, venterPaaDokumentasjon) => {
     venterPaaDokumentasjon,
   };
 
+  // TODO legge på logging
   return Api.Oppgaver.tilbakelegge(oppgaveObjekt).catch(error => error);
 };
 

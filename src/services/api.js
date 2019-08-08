@@ -1,8 +1,7 @@
 import * as Anmodningsperioder from './modules/anmodningsperioder';
 import * as Avklartefakta from './modules/avklartefakta';
-import * as Behandlinger from './modules/behandlinger/behandlinger';
-import * as Behandlingsperioder from './modules/behandlinger/behandlingsperioder';
-import * as Behandlingsresultat from './modules/behandlinger/behandlingsresultat';
+import * as Behandlinger from './modules/behandlinger';
+// TODO import * as Behandlingsperioder from './modules/behandlinger/behandlingsperioder';
 import * as Dokumenter from './modules/dokumenter';
 import * as Eessi from './modules/eessi';
 import * as Fagsaker from './modules/fagsaker/';
@@ -13,7 +12,6 @@ import * as Personer from './modules/personer';
 import * as Organisasjoner from './modules/organisasjoner';
 import * as Saksopplysninger from './modules/saksopplysninger';
 import * as Oppgaver from './modules/oppgaver';
-import * as OpprinneligLovvalgsperiode from './modules/opprinneligLovvalgsperiode';
 import * as Registrering from './modules/registrering';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Saksflyt from './modules/saksflyt';
@@ -39,8 +37,7 @@ export {
   Anmodningsperioder,
   Avklartefakta,
   Behandlinger,
-  Behandlingsperioder,
-  Behandlingsresultat,
+  // Behandlingsperioder,
   Dokumenter,
   Eessi,
   Fagsaker,
@@ -48,7 +45,6 @@ export {
   Journalforing,
   Lovvalgsperioder,
   Oppgaver,
-  OpprinneligLovvalgsperiode,
   Organisasjoner,
   Personer,
   Registrering,
