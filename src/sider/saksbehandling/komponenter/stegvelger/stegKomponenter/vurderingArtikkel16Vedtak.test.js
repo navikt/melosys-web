@@ -19,7 +19,7 @@ describe('VurderingArtikkel16Vedtak', () => {
       behandlingID: 1,
       lagreOgFatteVedtak: jest.fn(),
       redigerbart: true,
-      lovvalgsperiode: { fom: 'datofom', tom: 'datotom' },
+      anmodningsperiode: { fom: '01.01.2018', tom: '01.01.2019' },
     };
   });
 
