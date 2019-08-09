@@ -112,18 +112,15 @@ VurderingArtikkel16Vedtak.propTypes = {
   behandlingID: PT.number.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
-  anmodningsperiodeID: PT.string,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
   anmodningsperiodesvar: {},
-  anmodningsperiodeID: '',
 };
 
 const mapStateToProps = state => ({
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
   anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
 });
 
