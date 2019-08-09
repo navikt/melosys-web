@@ -35,14 +35,6 @@ export const VurderingArtikkel16Vedtak = props => {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
-    // {
-    //   navn: 'Forhåndsvis A1',
-    //   type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
-    //   data: {
-    //     begrunnelseFritekst,
-    //     mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-    //   },
-    // },
     {
       navn: 'Brev til arbeidsgiver',
       type: innvilgetArbeidsgiverType,
@@ -51,14 +43,6 @@ export const VurderingArtikkel16Vedtak = props => {
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
-    // {
-    //   navn: 'Brev til skatteoppkrever utland',
-    //   type: innvilgetYrkesaktivType,
-    //   data: {
-    //     begrunnelseFritekst,
-    //     mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-    //   },
-    // },
   ];
 
   const visFritekstFelt = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
