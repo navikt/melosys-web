@@ -5,6 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
+import * as MPT from '../../../../../proptypes';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import { DatoOmradeMedVarighet } from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
@@ -15,7 +16,7 @@ import { anmodningsperiodesvarSelectors } from '../../../../../ducks/anmodningsp
 
 export const VurderingArtikkel16Vedtak = props => {
   const {
-    lagreOgFatteVedtak, redigerbart, behandlingID, anmodningsperiodesvar,
+    lagreOgFatteVedtak, redigerbart, behandlingID, anmodningsperiodesvar, anmodningsperiode,
   } = props;
 
   const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = anmodningsperiodesvar;
@@ -64,6 +65,8 @@ export const VurderingArtikkel16Vedtak = props => {
 
   const visLovvalgsperiode = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;
 
+  const periodeSomVises = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE ? endretPeriode : { fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato };
+
   const vedKlikk = () => {
     lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND);
   };
@@ -85,7 +88,7 @@ export const VurderingArtikkel16Vedtak = props => {
         visLovvalgsperiode &&
         <Nav.Row>
           <Nav.Column xs="7">
-            <DatoOmradeMedVarighet periode={endretPeriode} tekst="Lovvalgsperiode" />
+            <DatoOmradeMedVarighet periode={periodeSomVises} tekst="Lovvalgsperiode" />
           </Nav.Column>
         </Nav.Row>
       }
@@ -104,6 +107,7 @@ export const VurderingArtikkel16Vedtak = props => {
 };
 
 VurderingArtikkel16Vedtak.propTypes = {
+  anmodningsperiode: MPT.Periode.isRequired,
   anmodningsperiodesvar: PT.object,
   behandlingID: PT.number.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
@@ -117,6 +121,7 @@ VurderingArtikkel16Vedtak.defaultProps = {
 };
 
 const mapStateToProps = state => ({
+  anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
   anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
