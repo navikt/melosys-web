@@ -49,7 +49,7 @@ class Virksomheter extends Steg {
           const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
           return harValgtArbeidsgiver && erVanligYrkesaktiv && erToEllerFlereLand;
         },
-        nesteSteg: STEG.BOSTEDSLAND,
+        nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
         beskrivelse: 'Stopp steg',
