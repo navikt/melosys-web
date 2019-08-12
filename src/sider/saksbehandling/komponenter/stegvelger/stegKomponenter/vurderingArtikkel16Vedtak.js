@@ -21,7 +21,7 @@ export const VurderingArtikkel16Vedtak = props => {
 
   const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = anmodningsperiodesvar;
 
-  const innvilget = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;
+  const innvilget = [MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE, MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE].includes(anmodningsperiodeSvarType);
   const innvilgetYrkesaktivType = innvilget ? MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV : MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV;
   const innvilgetArbeidsgiverType = innvilget ? MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER : MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER;
   const resultatTekst = `Svar på anmodning om unntak: ${KV.kodeTilTerm(anmodningsperiodeSvarType, MKV.KTObjects.anmodningsperiodesvartyper)}.`;
