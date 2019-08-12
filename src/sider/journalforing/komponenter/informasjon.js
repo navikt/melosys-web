@@ -167,7 +167,7 @@ class Informasjon extends Component {
     } = this.state;
     const { skalFeltetDisables } = this;
 
-    const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdfURI(jpostID, dokID);
+    const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
