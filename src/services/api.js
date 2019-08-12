@@ -12,7 +12,7 @@ import * as Personer from './modules/personer';
 import * as Organisasjoner from './modules/organisasjoner';
 import * as Saksopplysninger from './modules/saksopplysninger';
 import * as Oppgaver from './modules/oppgaver';
-import * as Registrering from './modules/registrering';
+import * as Registrering from './modules/registrering/';
 import * as Saksbehandler from './modules/saksbehandler';
 import * as Saksflyt from './modules/saksflyt';
 import * as ServerInfo from './modules/serverinfo';
