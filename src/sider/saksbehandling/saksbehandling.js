@@ -203,6 +203,8 @@ class Saksbehandling extends Component {
     const { behandlingID } = this.state;
     const { sendLovvalgsperioder, lovvalgsperioder } = this.props;
 
+    if (lovvalgsperioder.length === 0) return;
+
     sendLovvalgsperioder(behandlingID, lovvalgsperioder);
   };
 
