@@ -1,4 +1,4 @@
-import * as Anmodningsperioder from './modules/anmodningsperioder';
+import * as Anmodningsperioder from './modules/anmodningsperioder/';
 import * as Avklartefakta from './modules/avklartefakta';
 import * as Behandlinger from './modules/behandlinger';
 // TODO import * as Behandlingsperioder from './modules/behandlinger/behandlingsperioder';
