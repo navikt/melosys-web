@@ -65,7 +65,7 @@ export const VurderingArtikkel16Vedtak = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          { visFritekstFelt && <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value={begrunnelseFritekst} tellerTekst={() => {}} />}
+          { visFritekstFelt && <Nav.Textarea label="Begrunnelse" onChange={() => {}} disabled value={begrunnelseFritekst || ''} tellerTekst={() => {}} />}
         </Nav.Column>
       </Nav.Row>
       {
