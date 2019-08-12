@@ -264,7 +264,7 @@ class Saksbehandling extends Component {
 
   henleggSak = async data => {
     const { fagsak: { saksnummer } } = this.props;
-    Api.Fagsaker.henlegg(saksnummer, data);
+    Api.Fagsaker.fagsak.henlegg(saksnummer, data);
   };
 
   avslaaSoknadHandle = async () => {
@@ -287,7 +287,7 @@ class Saksbehandling extends Component {
     const { saksnummer } = this.props.fagsak;
 
     try {
-      await Api.Fagsaker.bortfall(saksnummer);
+      await Api.Fagsaker.fagsak.bortfall(saksnummer);
       this.tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
