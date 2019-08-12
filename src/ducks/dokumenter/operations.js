@@ -14,14 +14,14 @@ import * as Actions from './actions';
 
 /* eslint-disable import/prefer-default-export */
 export function hentDokument(journalpostID, dokumentID) {
-  return doThenDispatch(() => Api.Dokumenter.hentDokument(journalpostID, dokumentID), {
+  return doThenDispatch(() => Api.Dokumenter.pdf.hent(journalpostID, dokumentID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 export function opprettDokument(behandlingID, dokumenttypeKode, dokument) {
-  return doThenDispatch(() => Api.Dokumenter.opprettDokument(behandlingID, dokumenttypeKode, dokument), {
+  return doThenDispatch(() => Api.Dokumenter.dokument.opprett(behandlingID, dokumenttypeKode, dokument), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -35,7 +35,7 @@ export async function forhandsvisPDF(behandlingID, dokumenttypeKode, data) {
     begrunnelseKode: data.begrunnelseKode ? data.begrunnelseKode : null,
   };
 
-  const response = await Api.Dokumenter.forhandsvisPDF(behandlingID, dokumenttypeKode, utfyltdata);
+  const response = await Api.Dokumenter.pdf.forhandsvisPDF(behandlingID, dokumenttypeKode, utfyltdata);
 
   if (response.ok) {
     const arrayBuffer = await response.arrayBuffer();
