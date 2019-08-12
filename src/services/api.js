@@ -3,7 +3,7 @@ import * as Avklartefakta from './modules/avklartefakta';
 import * as Behandlinger from './modules/behandlinger';
 // TODO import * as Behandlingsperioder from './modules/behandlinger/behandlingsperioder';
 import * as Dokumenter from './modules/dokumenter/';
-import * as Eessi from './modules/eessi';
+import * as Eessi from './modules/eessi/';
 import * as Fagsaker from './modules/fagsaker/';
 import * as Inngang from './modules/inngang';
 import * as Journalforing from './modules/journalforing';
