@@ -7,6 +7,7 @@ import * as Utils from '../../../../../../utils';
 import { hentFakta, hentFaktaListe, hentFaktaVerdi } from '../../../../../../regler/avklartefakta';
 import VurderingArbeidsmonster from '../../stegKomponenter/vurderingArbeidsmonster';
 import { BoolskAvklartfaktaType } from '../../../../../../kodeverk/koder';
+import Yrkesaktivitet from './yrkesaktivitet';
 
 class Arbeidsmonster extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -21,7 +22,8 @@ class Arbeidsmonster extends Steg {
           return (
             hentFaktaVerdi(skiftesvisArbeid) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS &&
             aktivitetINorge &&
-            hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT
+            hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT &&
+            Yrkesaktivitet.erArbeidstaker(avklartefakta)
           );
         },
         nesteSteg: STEG.FORRETNINGSSTED,
@@ -33,7 +35,8 @@ class Arbeidsmonster extends Steg {
           const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
 
           return hentFaktaVerdi(skiftesvisArbeid) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS &&
-          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT;
+          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
+          Yrkesaktivitet.erArbeidstaker(avklartefakta);
         },
         nesteSteg: STEG.ARTIKKEL_13_1_A_VEDTAK,
       },
@@ -61,6 +64,7 @@ class Arbeidsmonster extends Steg {
 
       const harAvklaring = !Utils._isNil(hentFaktaVerdi(arbeidsmonster)) &&
         landMedVesentligArbeid.length > 0 &&
+        Yrkesaktivitet.erArbeidstaker(_propsLight.avklartefakta) &&
         (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1;
 
       return ({
