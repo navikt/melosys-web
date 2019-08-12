@@ -41,7 +41,7 @@ const BehandlingsStatus = props => {
     const { oppdaterBehandlingsStatus, behandlingID } = props;
     const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.status);
     const nyBehandlingsStatus = { kode, term };
-    Api.Behandlinger.perioder.oppdaterStatus(behandlingID, kode).then(() => {
+    Api.Behandlinger.status.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nyBehandlingsStatus);
       oppdaterStatusMelding();
     });
