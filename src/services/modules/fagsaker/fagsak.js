@@ -5,11 +5,6 @@ export const hent = snr => {
   const URI_FAGSAKER = `${API_BASE_URL}${FAGSAKER}/${snr}`;
   return getAsJson(URI_FAGSAKER);
 };
-
-export const sok = fnr => {
-  const URI_FAGSAKER = `${API_BASE_URL}${FAGSAKER}/sok/?fnr=${fnr}`;
-  return getAsJson(URI_FAGSAKER);
-};
 export const opprett = fnr => {
   const URI_OPPRETTSAK = `${API_BASE_URL}${FAGSAKER}/ny/${fnr}`;
   return getAsJson(URI_OPPRETTSAK);

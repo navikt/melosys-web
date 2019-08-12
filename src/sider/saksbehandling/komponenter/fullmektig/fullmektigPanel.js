@@ -152,9 +152,9 @@ const mapStateToProps = state => ({
 });
 
 const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);
-const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hentAktoer(saksnr, rolleKode, representererKode);
-const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.sendAktoer(saksnr, data);
-const slettAktoer = databaseID => Api.Fagsaker.aktoer.slettAktoer(databaseID);
+const hentAktoer = (saksnr, rolleKode, representererKode) => Api.Fagsaker.aktoer.hent(saksnr, rolleKode, representererKode);
+const lagreAktoer = (saksnr, data) => Api.Fagsaker.aktoer.send(saksnr, data);
+const slettAktoer = databaseID => Api.Fagsaker.aktoer.slett(databaseID);
 
 const SokersFullmektigWrapper = props => (
   <FullmektigPanel
