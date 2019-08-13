@@ -90,7 +90,7 @@ const SideDialogBesvarSed = ({ behandlingID, kodeverk }) => {
     if (behandlingID !== -1 && bucer.length === 0) {
       try {
         setHenterData(true);
-        const data = await Api.Eessi.hentBucerForBehandling(behandlingID);
+        const data = await Api.Eessi.bucer.hentBucerForBehandling(behandlingID);
         setBucer(data.bucer);
         setHenterData(false);
       } catch (e) {

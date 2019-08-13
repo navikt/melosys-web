@@ -1,6 +1,7 @@
-import { hent, sok, henlegg, opprett, bortfall } from './fagsaker';
+import * as fagsak from './fagsak';
 import * as aktoer from './aktoer';
 import * as kontaktopplysninger from './kontaktopplysninger';
+import * as sok from './sok';
 
-export { hent, sok, henlegg, opprett, bortfall, aktoer, kontaktopplysninger };
+export { fagsak, aktoer, kontaktopplysninger, sok };
 
