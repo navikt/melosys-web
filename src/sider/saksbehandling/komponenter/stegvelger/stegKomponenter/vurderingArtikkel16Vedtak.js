@@ -60,7 +60,7 @@ VurderingArtikkel16VedtakBegrunnelser.propTypes = {
   vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
 };
 
-export const VurderingArtikkel16VedtakInnvilgelse = props => {
+export const Innvilgelse = props => {
   const {
     redigerbart,
     behandlingID,
@@ -104,18 +104,18 @@ export const VurderingArtikkel16VedtakInnvilgelse = props => {
   );
 };
 
-VurderingArtikkel16VedtakInnvilgelse.propTypes = {
+Innvilgelse.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   gjeldendePeriode: MPT.Periode.isRequired,
   begrunnelseFritekst: PT.string,
 };
 
-VurderingArtikkel16VedtakInnvilgelse.defaultProps = {
+Innvilgelse.defaultProps = {
   begrunnelseFritekst: '',
 };
 
-export const VurderingArtikkel16VedtakDelvisInnvilgelse = props => {
+export const DelvisInnvilgelse = props => {
   const {
     redigerbart,
     behandlingID,
@@ -165,7 +165,7 @@ export const VurderingArtikkel16VedtakDelvisInnvilgelse = props => {
   );
 };
 
-VurderingArtikkel16VedtakDelvisInnvilgelse.propTypes = {
+DelvisInnvilgelse.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   gjeldendePeriode: MPT.Periode.isRequired,
@@ -173,11 +173,11 @@ VurderingArtikkel16VedtakDelvisInnvilgelse.propTypes = {
   renderBegrunnelser: PT.func.isRequired,
 };
 
-VurderingArtikkel16VedtakDelvisInnvilgelse.defaultProps = {
+DelvisInnvilgelse.defaultProps = {
   begrunnelseFritekst: '',
 };
 
-export const VurderingArtikkel16VedtakAvslag = props => {
+export const Avslag = props => {
   const {
     redigerbart,
     behandlingID,
@@ -221,14 +221,14 @@ export const VurderingArtikkel16VedtakAvslag = props => {
   );
 };
 
-VurderingArtikkel16VedtakAvslag.propTypes = {
+Avslag.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   begrunnelseFritekst: PT.string,
   renderBegrunnelser: PT.func.isRequired,
 };
 
-VurderingArtikkel16VedtakAvslag.defaultProps = {
+Avslag.defaultProps = {
   begrunnelseFritekst: '',
 };
 
@@ -254,14 +254,14 @@ export const VurderingArtikkel16Vedtak = props => {
   const finnVedtakInnhold = svarType => {
     switch (svarType) {
       case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
-        return <VurderingArtikkel16VedtakInnvilgelse
+        return <Innvilgelse
           redigerbart={redigerbart}
           behandlingID={behandlingID}
           begrunnelseFritekst={begrunnelseFritekst}
           gjeldendePeriode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }}
         />;
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
-        return <VurderingArtikkel16VedtakDelvisInnvilgelse
+        return <DelvisInnvilgelse
           redigerbart={redigerbart}
           behandlingID={behandlingID}
           begrunnelseFritekst={begrunnelseFritekst}
@@ -269,7 +269,7 @@ export const VurderingArtikkel16Vedtak = props => {
           renderBegrunnelser={renderBegrunnelser}
         />;
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
-        return <VurderingArtikkel16VedtakAvslag
+        return <Avslag
           redigerbart={redigerbart}
           behandlingID={behandlingID}
           begrunnelseFritekst={begrunnelseFritekst}
