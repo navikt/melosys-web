@@ -6,41 +6,9 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as VilkarSelectors from '../../../../../ducks/vilkar/selectors';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
-import * as KV from '../../../../../kodeverk';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-
-import './vurderingAvslag12_x_og_16.css';
-
-const Begrunnelser = ({
-  label,
-  valgteBegrunnelser,
-  muligeBegrunnelser,
-  fritekst,
-}) => (
-  <div className="begrunnelser">
-    <Nav.Element className="begrunnelseTittel">
-      {label}
-    </Nav.Element>
-    {
-      valgteBegrunnelser.map(begrunnelse => <div className="begrunnelse" key={begrunnelse}>{KV.kodeTilTerm(begrunnelse, muligeBegrunnelser)}</div>)
-    }
-    {
-      fritekst && <div className="begrunnelse">{fritekst}</div>
-    }
-  </div>
-);
-
-Begrunnelser.propTypes = {
-  label: PT.string.isRequired,
-  valgteBegrunnelser: PT.array.isRequired,
-  muligeBegrunnelser: PT.array.isRequired,
-  fritekst: PT.string,
-};
-
-Begrunnelser.defaultProps = {
-  fritekst: '',
-};
+import Begrunnelser from '../../../../../felleskomponenter/begrunnelser';
 
 const VurderingAvslag12_x_og_16 = ({
   valgte_art_12_1_begrunnelser,
