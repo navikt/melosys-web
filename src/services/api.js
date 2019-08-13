@@ -5,7 +5,7 @@ import * as Behandlinger from './modules/behandlinger';
 import * as Dokumenter from './modules/dokumenter/';
 import * as Eessi from './modules/eessi/';
 import * as Fagsaker from './modules/fagsaker/';
-import * as Inngang from './modules/inngang';
+import * as Inngang from './modules/inngangsvilkaar';
 import * as Journalforing from './modules/journalforing';
 import * as Lovvalgsperioder from './modules/lovvalgsperioder';
 import * as Personer from './modules/personer';
