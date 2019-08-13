@@ -6,12 +6,59 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';
 
+import Begrunnelser from '../../../../../felleskomponenter/begrunnelser';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { anmodningsperioderSelectors } from '../../../../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors } from '../../../../../ducks/anmodningsperiodesvar';
+import { vilkarSelectors } from '../../../../../ducks/vilkar';
+
+export const VurderingArtikkel16VedtakBegrunnelser = ({ art12_1_begrunnelser, art12_2_begrunnelser, vilkarBegrunnelser }) => {
+  const muligeVirksomhetBegrunnelser = [
+    ...MKV.KTObjects.begrunnelser.art12_2_normalt_virksomhet,
+    ...MKV.KTObjects.begrunnelser.art12_1_vesentlig_virksomhet,
+    ...MKV.KTObjects.begrunnelser.art12_1_forutgaaende_medl,
+    ...MKV.KTObjects.begrunnelser.bosted,
+  ];
+
+  return (
+    <Fragment>
+      {
+        art12_1_begrunnelser.length > 0 &&
+        <Begrunnelser
+          label="Søkeren fyller ikke kriteriene for artikkel 12 nr. 1."
+          valgteBegrunnelser={[...art12_1_begrunnelser, ...vilkarBegrunnelser]}
+          muligeBegrunnelser={[
+            ...MKV.KTObjects.begrunnelser.art12_1_begrunnelser,
+            ...muligeVirksomhetBegrunnelser,
+          ]}
+        />
+      }
+      { art12_2_begrunnelser.length > 0 &&
+        <Begrunnelser
+          label="Søkeren fyller ikke kriteriene for artikkel 12 nr. 2."
+          valgteBegrunnelser={[...art12_2_begrunnelser, ...vilkarBegrunnelser]}
+          muligeBegrunnelser={[
+            ...MKV.KTObjects.begrunnelser.art12_2_begrunnelser,
+            ...muligeVirksomhetBegrunnelser,
+          ]}
+        />
+      }
+      <Begrunnelser
+        label="Søkeren fyller ikke kriteriene for artikkel 16 nr. 1."
+        fritekst="Utenlandske trygdemyndigheter har avslått anmodningen om unntak"
+      />
+    </Fragment>
+  );
+};
+
+VurderingArtikkel16VedtakBegrunnelser.propTypes = {
+  art12_1_begrunnelser: PT.arrayOf(PT.string).isRequired,
+  art12_2_begrunnelser: PT.arrayOf(PT.string).isRequired,
+  vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
+};
 
 export const VurderingArtikkel16VedtakInnvilgelse = props => {
   const {
@@ -74,6 +121,7 @@ export const VurderingArtikkel16VedtakDelvisInnvilgelse = props => {
     behandlingID,
     gjeldendePeriode,
     begrunnelseFritekst,
+    renderBegrunnelser,
   } = props;
 
   const dokumenter = [
@@ -103,7 +151,11 @@ export const VurderingArtikkel16VedtakDelvisInnvilgelse = props => {
           <DatoOmrade periode={gjeldendePeriode} tekst="Lovvalgsperiode" />
         </Nav.Column>
       </Nav.Row>
-      { /* TODO: begrunnelser komponent fra avslag 12.1 */}
+      <Nav.Row>
+        <Nav.Column xs="7">
+          { renderBegrunnelser() }
+        </Nav.Column>
+      </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
@@ -118,6 +170,7 @@ VurderingArtikkel16VedtakDelvisInnvilgelse.propTypes = {
   behandlingID: PT.number.isRequired,
   gjeldendePeriode: MPT.Periode.isRequired,
   begrunnelseFritekst: PT.string,
+  renderBegrunnelser: PT.func.isRequired,
 };
 
 VurderingArtikkel16VedtakDelvisInnvilgelse.defaultProps = {
@@ -129,6 +182,7 @@ export const VurderingArtikkel16VedtakAvslag = props => {
     redigerbart,
     behandlingID,
     begrunnelseFritekst,
+    renderBegrunnelser,
   } = props;
 
   const dokumenter = [
@@ -153,7 +207,11 @@ export const VurderingArtikkel16VedtakAvslag = props => {
   return (
     <Fragment>
       <Nav.Undertittel>Avslag</Nav.Undertittel>
-      { /* TODO: begrunnelser komponent fra avslag 12.1 */}
+      <Nav.Row>
+        <Nav.Column xs="7">
+          { renderBegrunnelser() }
+        </Nav.Column>
+      </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
@@ -167,6 +225,7 @@ VurderingArtikkel16VedtakAvslag.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   begrunnelseFritekst: PT.string,
+  renderBegrunnelser: PT.func.isRequired,
 };
 
 VurderingArtikkel16VedtakAvslag.defaultProps = {
@@ -175,14 +234,22 @@ VurderingArtikkel16VedtakAvslag.defaultProps = {
 
 export const VurderingArtikkel16Vedtak = props => {
   const {
-    lagreOgFatteVedtak, redigerbart, behandlingID, anmodningsperiodesvar, anmodningsperiode,
+    lagreOgFatteVedtak, redigerbart, behandlingID, anmodningsperiodesvar, anmodningsperiode, art_12_1_begrunnelser, art_12_2_begrunnelser, vilkarBegrunnelser,
   } = props;
+
+  const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = anmodningsperiodesvar;
 
   const vedKlikk = () => {
     lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND);
   };
 
-  const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = anmodningsperiodesvar;
+  const renderBegrunnelser = () => (
+    <VurderingArtikkel16VedtakBegrunnelser
+      art12_1_begrunnelser={art_12_1_begrunnelser}
+      art12_2_begrunnelser={art_12_2_begrunnelser}
+      vilkarBegrunnelser={vilkarBegrunnelser}
+    />
+  );
 
   const finnVedtakInnhold = svarType => {
     switch (svarType) {
@@ -199,12 +266,14 @@ export const VurderingArtikkel16Vedtak = props => {
           behandlingID={behandlingID}
           begrunnelseFritekst={begrunnelseFritekst}
           gjeldendePeriode={endretPeriode}
+          renderBegrunnelser={renderBegrunnelser}
         />;
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
         return <VurderingArtikkel16VedtakAvslag
           redigerbart={redigerbart}
           behandlingID={behandlingID}
           begrunnelseFritekst={begrunnelseFritekst}
+          renderBegrunnelser={renderBegrunnelser}
         />;
       default:
         throw new Error('AnmodningsperiodeSvarType må være satt');
@@ -231,6 +300,9 @@ VurderingArtikkel16Vedtak.propTypes = {
   behandlingID: PT.number.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
+  vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
+  art_12_1_begrunnelser: PT.arrayOf(PT.string).isRequired,
+  art_12_2_begrunnelser: PT.arrayOf(PT.string).isRequired,
 };
 
 VurderingArtikkel16Vedtak.defaultProps = {
@@ -241,6 +313,9 @@ const mapStateToProps = state => ({
   anmodningsperiode: anmodningsperioderSelectors.AnmodningsperiodeSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   anmodningsperiodesvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
+  vilkarBegrunnelser: vilkarSelectors.vilkarBegrunnelserSelector(state),
+  art_12_1_begrunnelser: vilkarSelectors.art12_1_begrunnelserSelector(state),
+  art_12_2_begrunnelser: vilkarSelectors.art12_2_begrunnelserSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingArtikkel16Vedtak);

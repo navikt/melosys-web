@@ -27,12 +27,14 @@ const Begrunnelser = ({
 
 Begrunnelser.propTypes = {
   label: PT.string.isRequired,
-  valgteBegrunnelser: PT.array.isRequired,
-  muligeBegrunnelser: PT.array.isRequired,
+  valgteBegrunnelser: PT.array,
+  muligeBegrunnelser: PT.array,
   fritekst: PT.string,
 };
 
 Begrunnelser.defaultProps = {
+  valgteBegrunnelser: [],
+  muligeBegrunnelser: [],
   fritekst: '',
 };
 
