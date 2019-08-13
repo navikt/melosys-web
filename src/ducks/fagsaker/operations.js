@@ -22,7 +22,7 @@ import * as Validering from '../../felleskomponenter/skjema/validering';
  * @returns {*}
  */
 export function hent(snr) {
-  return doThenDispatch(() => Api.Fagsaker.hent(snr), {
+  return doThenDispatch(() => Api.Fagsaker.fagsak.hent(snr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -38,7 +38,7 @@ export function hent(snr) {
 
 export function opprett(fnr) {
   return doThenDispatch(
-    () => Api.Fagsaker.opprett(fnr), {
+    () => Api.Fagsaker.fagsak.opprett(fnr), {
       OK: Types.OK,
       FEILET: Types.FEILET,
       PENDING: Types.PENDING,

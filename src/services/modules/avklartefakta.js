@@ -1,12 +1,6 @@
 import { getAsJson, postAsJson } from '../utils';
 import { API_BASE_URL, AVKLARTEFAKTA } from '../api-constants';
 
-export const hent = bid => {
-  const URI_AVKLARTEFAKTA = `${API_BASE_URL}${AVKLARTEFAKTA}/${bid}`;
-  return getAsJson(URI_AVKLARTEFAKTA);
-};
+export const hent = behandlingID => getAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`);
 
-export const send = (bid, dokument) => {
-  const URI_AVKLARTEFAKTA = `${API_BASE_URL}${AVKLARTEFAKTA}/${bid}`;
-  return postAsJson(URI_AVKLARTEFAKTA, dokument);
-};
+export const send = (behandlingID, dokument) => postAsJson(`${API_BASE_URL}${AVKLARTEFAKTA}/${behandlingID}`, dokument);
