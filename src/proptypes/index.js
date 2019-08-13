@@ -1,3 +1,4 @@
+import { AnmodningsperioderSvar } from './anmodningsperiodersvar';
 import { ArbeidNorge } from './arbeidNorge';
 import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
 import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
@@ -33,6 +34,7 @@ import { Utenlandsopphold } from './utenlandsopphold';
 import { Yrkesgruppe } from './yrkesgruppe';
 
 export {
+  AnmodningsperioderSvar,
   ArbeidNorge,
   Arbeidsavtale,
   Arbeidsavtaler,
