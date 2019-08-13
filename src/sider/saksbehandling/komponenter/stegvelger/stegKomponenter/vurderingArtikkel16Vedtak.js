@@ -145,7 +145,7 @@ export const DelvisInnvilgelse = props => {
 
   return (
     <Fragment>
-      <Nav.Undertittel>Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.</Nav.Undertittel>
+      <Nav.Undertittel>Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden</Nav.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} tekst="Lovvalgsperiode" />
