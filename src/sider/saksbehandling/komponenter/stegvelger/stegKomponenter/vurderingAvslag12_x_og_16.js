@@ -8,7 +8,7 @@ import * as VilkarSelectors from '../../../../../ducks/vilkar/selectors';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-import Begrunnelser from '../../../../../felleskomponenter/begrunnelser';
+import Begrunnelser from '../../begrunnelser';
 
 const VurderingAvslag12_x_og_16 = ({
   valgte_art_12_1_begrunnelser,
