@@ -58,11 +58,11 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   };
 
   const resetForm = () => {
-    setValgtFagomrade(kodeverk.fagomradeLovvalg.kode);
     setValgtBuc('');
     setValgtSed('');
     setValgtLand('');
     setValgtMottakerinstitusjon('');
+    setValgtFagomrade(kodeverk.fagomradeLovvalg.kode);
     setFeilmeldinger({ buc: undefined, land: undefined, mottakerinstitusjon: undefined });
     setOppdaterteFelt({ buc: false, land: false, mottakerinstitusjon: false });
   };
@@ -100,7 +100,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
 
         setBucOpprettet(true);
         if (sedResponse) {
-          setOpprettetBucUrl(sedResponse);
+          setOpprettetBucUrl(sedResponse.rinaUrl);
           setAlertmelding('');
           resetForm();
         }
@@ -128,6 +128,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
 
   const fagomradeEndret = event => {
     const fagomrade = hentValgtKode(event);
+    setValgtBuc('');
     setValgtFagomrade(fagomrade);
   };
 
@@ -163,7 +164,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
     <div className="sedbestilling">
       <form onSubmit={overstyrSubmit}>
         <Nav.Fieldset legend="">
-          <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade} disabled >
+          <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade} >
             <TomtFelt redigerbart={redigerbart} />
             { kodeverk.tilgjengeligeFagomrader.map(fagomrade => <option key={fagomrade.kode} value={fagomrade.kode}>{fagomrade.term}</option>) }
           </Nav.Select>
@@ -203,12 +204,20 @@ SideDialogSedBestilling.propTypes = {
   kodeverk: PT.object.isRequired,
 };
 
+const lovvalgEllerHorisontalSektor = sektor => sektor.kode === 'LA' || sektor.kode === 'HZ';
+
+const tilgjengeligeHBucer = [
+  'H_BUC_02a',
+];
+
 const mapStateToProps = state => ({
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   kodeverk: {
     fagomradeLovvalg: EessiKodeverkSelectors.sektorSelector(state).filter(el => el.kode === 'LA')[0],
-    tilgjengeligeFagomrader: EessiKodeverkSelectors.sektorSelector(state),
-    tilgjengeligeBucer: fagomrade => EessiKodeverkSelectors.alleBUCtyperSelector(state)[EessiKodeverkSelectors.kodemapsSelector(state).SEKTOR2BUC[fagomrade]],
+    tilgjengeligeFagomrader: EessiKodeverkSelectors.sektorSelector(state).filter(lovvalgEllerHorisontalSektor),
+    tilgjengeligeBucer: fagomrade =>
+      EessiKodeverkSelectors.alleBUCtyperSelector(state)[EessiKodeverkSelectors.kodemapsSelector(state).SEKTOR2BUC[fagomrade]]
+        .filter(buc => fagomrade !== 'HZ' || (fagomrade === 'HZ' && tilgjengeligeHBucer.includes(buc.kode))),
     tilgjengeligeSeder: (buc, fagomrade) => (
       (buc && fagomrade)
         ? EessiKodeverkSelectors.alleSEDtyperSelector(state)
