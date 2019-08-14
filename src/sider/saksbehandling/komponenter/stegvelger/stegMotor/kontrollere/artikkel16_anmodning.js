@@ -51,7 +51,7 @@ class Artikkel16Anmodning extends Steg {
   static harAvklaring({ anmodningsperioder }) {
     return (
       anmodningsperioder.length > 0 &&
-      anmodningsperioder.every(anmodningsperiode => anmodningsperiode.anmodningSaksflytSendt)
+      anmodningsperioder.every(anmodningsperiode => anmodningsperiode.sendtUtland)
     );
   }
 }
