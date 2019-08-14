@@ -21,7 +21,6 @@ class Artikkel13_1_a_vedtak extends Steg {
     this.beregnRelevantUI = _propsLight => ({});
     this.handlers = {
       bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
-      endreDatoOgSendLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.endreDatoOgSendLovvalgsperioderHandler,
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
     };
     this._status = FANE_STATUS.OK;
