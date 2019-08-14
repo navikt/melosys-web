@@ -44,7 +44,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   const hentMottakerinstitusjoner = async bucType => {
     if (bucType) {
       try {
-        const institusjoner = await Api.Eessi.hentMottakerinstitusjoner(bucType);
+        const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(bucType);
         setMottakerinstitusjoner(institusjoner);
       } catch (e) {
         Utils.logger.error(e);
@@ -92,7 +92,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
     if (erValidert()) {
       try {
         setOppretterBuc(true);
-        const sedResponse = await Api.Eessi.opprettBuc(behandlingID, {
+        const sedResponse = await Api.Eessi.bucer.opprett(behandlingID, {
           bucType: valgtBuc,
           mottakerLand: valgtLand,
           mottakerId: valgtMottakerinstitusjon,

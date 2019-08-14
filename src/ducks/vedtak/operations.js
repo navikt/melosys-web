@@ -12,8 +12,8 @@ import * as Api from '../../services/api';
 import * as Types from './types';
 
 /* eslint-disable import/prefer-default-export */
-export function fatte(behandlingID, body) {
-  return doThenDispatch(() => Api.Saksflyt.Vedtak.fatte(behandlingID, body), {
+export function fatt(behandlingID, body) {
+  return doThenDispatch(() => Api.Saksflyt.Vedtak.fatt(behandlingID, body), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

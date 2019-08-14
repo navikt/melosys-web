@@ -142,10 +142,10 @@ class Stegvelger extends Component {
   };
 
   fatteVedtakHandler = async behandlingsresultatTypeKode => {
-    const { behandlingID, fatteVedtak } = this.props;
+    const { behandlingID, fattVedtak } = this.props;
     const vedtakBody = { behandlingsresultatTypeKode };
     try {
-      await fatteVedtak(behandlingID, vedtakBody);
+      await fattVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
@@ -351,7 +351,7 @@ Stegvelger.propTypes = {
   hentAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
   history: PT.object.isRequired,
-  fatteVedtak: PT.func.isRequired,
+  fattVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
   inngang: PT.object,
@@ -418,7 +418,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
-  fatteVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
+  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   oppdaterPerioderState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),

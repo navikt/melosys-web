@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { AdresseHeader, AdresseRad, ExpandableList } from './personopplysninger';
+import { AdresseHeader, AdresseRad, ExpandableTable } from './personopplysninger';
 
 describe('AdresseRad', () => {
   const props = {
@@ -43,7 +43,7 @@ describe('AdresseHeader', () => {
   });
 });
 
-describe('ExpandableList', () => {
+describe('ExpandableTable', () => {
   let props = null;
 
   beforeEach(() => {
@@ -61,13 +61,13 @@ describe('ExpandableList', () => {
   });
 
   it('viser elementer', () => {
-    shallow(<ExpandableList {...props} />);
+    shallow(<ExpandableTable {...props} />);
 
     expect(props.renderElement).toHaveBeenCalledTimes(props.elements.length);
   });
 
   it('viser en knapp med tekst og chevron', () => {
-    const expandableList = shallow(<ExpandableList {...props} />);
+    const expandableList = shallow(<ExpandableTable {...props} />);
 
     expect(expandableList.exists('button')).toBe(true);
     expect(expandableList.find('button').contains(props.btnTextCollapsed)).toBe(true);
