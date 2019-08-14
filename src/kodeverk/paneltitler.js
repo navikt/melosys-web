@@ -9,3 +9,4 @@ export const medlemskap = 'Medlemskap';
 export const inntektUnderOpphold = 'Inntekt under oppholdet';
 export const arbeidsgiverINorge = navn => `Arbeidsgiver i Norge: ${navn}`;
 export const kontantytelser = 'Kontantytelser fra NAV';
+export const personopplysningspanel = 'Personopplysningspanel';
