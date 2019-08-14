@@ -9,7 +9,7 @@ describe('VurderingArtikkel13_1_A_Vedtak', () => {
       redigerbart: true,
       behandlingID: 4,
       lovvalgsperiode: {},
-      endreDatoOgSendLovvalgsperioder: jest.fn(),
+      endreLovvalgsPeriode: jest.fn(),
       lagreOgFatteVedtak: jest.fn(),
       formIsValid: true,
       formValues: {},
