@@ -138,7 +138,7 @@ class SideDialogDokumenter extends Component {
   settOversikt = oversiktDokumenter => this.setState({ oversiktDokumenter });
 
   hentDokumentOversikt = async snr => {
-    const oversiktDokumenter = await API.Dokumenter.hentOversiktDokumenter(snr);
+    const oversiktDokumenter = await API.Dokumenter.dokument.hentOversikt(snr);
     this.settOversikt(oversiktDokumenter);
   };
   render() {

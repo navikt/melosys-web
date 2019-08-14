@@ -13,7 +13,7 @@ import * as Types from './types';
 import * as Actions from './actions';
 
 export function hent(anmodningsperiodeID) {
-  return doThenDispatch(() => Api.Anmodningsperioder.hentSvar(anmodningsperiodeID), {
+  return doThenDispatch(() => Api.Anmodningsperioder.svar.hent(anmodningsperiodeID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -21,7 +21,7 @@ export function hent(anmodningsperiodeID) {
 }
 
 export function send(anmodningsperiodeID, anmodningsperiodesvar) {
-  return doThenDispatch(() => Api.Anmodningsperioder.sendSvar(anmodningsperiodeID, anmodningsperiodesvar), {
+  return doThenDispatch(() => Api.Anmodningsperioder.svar.send(anmodningsperiodeID, anmodningsperiodesvar), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,

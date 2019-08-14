@@ -13,14 +13,14 @@ import * as KV from '../../../../../kodeverk';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
-import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
+import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../../../ducks/lovvalgsperioder';
 import { soknadSelectors } from '../../../../../ducks/soknad';
 
 import './vurderingArtikkel13_1_a_vedtak.css';
 
 export const VurderingArtikkel13_1_A_Vedtak = props => {
   const {
-    redigerbart, behandlingID, lovvalgsperiode, endreDatoOgSendLovvalgsperioder, lagreOgFatteVedtak, formIsValid, formValues, touch,
+    redigerbart, behandlingID, lovvalgsperiode, lagreOgFatteVedtak, formIsValid, formValues, touch, endreLovvalgsPeriode,
   } = props;
 
   const vedKlikk = async () => {
@@ -28,10 +28,10 @@ export const VurderingArtikkel13_1_A_Vedtak = props => {
     if (!formIsValid) return;
 
     if (formValues.forkortLovvalgsperiode) {
-      await endreDatoOgSendLovvalgsperioder(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+      await endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
     }
 
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND, true);
+    lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND);
   };
 
   const dokumenter = [
@@ -111,11 +111,11 @@ VurderingArtikkel13_1_A_Vedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   lovvalgsperiode: PT.object,
-  endreDatoOgSendLovvalgsperioder: PT.func.isRequired,
   lagreOgFatteVedtak: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touch: PT.func.isRequired,
+  endreLovvalgsPeriode: PT.func.isRequired,
 };
 
 VurderingArtikkel13_1_A_Vedtak.defaultProps = {
@@ -140,6 +140,10 @@ const mapStateToProps = state => ({
   },
 });
 
+const mapDispatchToProps = dispatch => ({
+  endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
+});
+
 const VurderingArtikkel13_1_a_vedtak_form = reduxForm({
   form: KV.Form.ARTIKKEL_13_1_A_VEDTAK,
   enableReinitialize: true,
@@ -153,4 +157,4 @@ const VurderingArtikkel13_1_a_vedtak_form = reduxForm({
   })(values),
 })(VurderingArtikkel13_1_A_Vedtak);
 
-export default connect(mapStateToProps)(VurderingArtikkel13_1_a_vedtak_form);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel13_1_a_vedtak_form);
