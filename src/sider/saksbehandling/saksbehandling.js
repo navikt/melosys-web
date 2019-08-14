@@ -212,6 +212,9 @@ class Saksbehandling extends Component {
     const { behandlingID } = this.state;
     const { sendAnmodningsperioder, anmodningsperioder } = this.props;
 
+    if (anmodningsperioder.length === 0) return;
+    if (anmodningsperioder.some(anmodningsperiode => anmodningsperiode.sendtUtland !== undefined)) return;
+
     sendAnmodningsperioder(behandlingID, { anmodningsperioder });
   };
 
@@ -228,7 +231,7 @@ class Saksbehandling extends Component {
     sendPerioder(behandlingID, behandlingsPeriode);
   };
 
-  lagreAllData = async (ignorerLovvalgsperioder = false, ignorerAnmodningsperioder = false) => {
+  lagreAllData = async () => {
     const {
       lagreSoknadHandler,
       lagreVilkarHandler,
@@ -246,8 +249,8 @@ class Saksbehandling extends Component {
         oppdaterOgLagreBehandlingerHandler(),
       ]);
 
-      if (!ignorerAnmodningsperioder) lagreAnmodningsperioderHandler();
-      if (!ignorerLovvalgsperioder) lagreLovvalgsperioderHandler();
+      lagreAnmodningsperioderHandler();
+      lagreLovvalgsperioderHandler();
     } catch (e) {
       Utils.logger.error(e);
     }

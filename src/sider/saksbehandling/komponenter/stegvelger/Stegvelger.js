@@ -152,10 +152,10 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = async (behandlingsresultatTypeKode, ignorerLovvalgsperioder) => {
+  lagreOgFatteVedtak = async behandlingsresultatTypeKode => {
     if (this.harSoknadIngenFeilmeldinger()) {
       this.gjemSoknadFeilmeldinger();
-      await this.props.lagreAllData(ignorerLovvalgsperioder, true);
+      await this.props.lagreAllData();
       this.fatteVedtakHandler(behandlingsresultatTypeKode);
     } else {
       this.visSoknadFeilmeldinger();
@@ -176,7 +176,7 @@ class Stegvelger extends Component {
   lagreOgBestillAnmodningsperioder = async () => {
     if (this.harSoknadIngenFeilmeldinger()) {
       this.gjemSoknadFeilmeldinger();
-      await this.props.lagreAllData(true);
+      await this.props.lagreAllData();
       this.bestillAnmodningsperioder();
     } else {
       this.visSoknadFeilmeldinger();
@@ -368,7 +368,6 @@ Stegvelger.propTypes = {
   oppdaterLovvalgperioder: PT.func.isRequired,
   valgteVirksomheter: PT.array,
   vilkar: PT.array.isRequired,
-  endreLovvalgsPeriode: PT.func.isRequired,
   lagreVilkarHandler: PT.func.isRequired,
   lagreAvklartefaktaHandler: PT.func.isRequired,
   lagreLovvalgsperioderHandler: PT.func.isRequired,
@@ -423,7 +422,6 @@ const mapDispatchToProps = dispatch => ({
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   oppdaterPerioderState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
-  endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
   oppdaterVilkaar: vilkaarListe => dispatch(vilkarOperations.oppdaterVilkarState(vilkaarListe)),
   oppdaterAvklartefakta: avklartefaktaListe => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(avklartefaktaListe)),
   oppdaterLovvalgperioder: lovvalgsperiode => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lovvalgsperiode)),
