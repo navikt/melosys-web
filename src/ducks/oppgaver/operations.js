@@ -32,6 +32,7 @@ export const tilbakelegge = (behandlingID, venterPaaDokumentasjon) => {
     venterPaaDokumentasjon,
   };
 
+  // TODO legge på logging
   return Api.Oppgaver.tilbakelegge(oppgaveObjekt).catch(error => error);
 };
 
@@ -48,7 +49,7 @@ export const sendBehandlingsOppgave = async checkboxliste => {
     behandlingstyper,
   };
 
-  const response = await Api.Oppgaver.send(oppgave);
+  const response = await Api.Oppgaver.sendPlukk(oppgave);
   const { saksnummer, behandlingID, oppgavetype } = response;
   if (!saksnummer) { return false; }
 
@@ -70,7 +71,7 @@ export const sendJournalOppgave = async fagomrade => {
     sakstyper: [],
     behandlingstyper,
   };
-  const response = await Api.Oppgaver.send(oppgave);
+  const response = await Api.Oppgaver.sendPlukk(oppgave);
   const { oppgaveID, journalpostID } = response;
   if (!(oppgaveID || journalpostID)) { return false; }
   return `/journalforing/${journalpostID}/${oppgaveID}`;

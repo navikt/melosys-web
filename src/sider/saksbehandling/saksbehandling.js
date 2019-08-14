@@ -212,6 +212,9 @@ class Saksbehandling extends Component {
     const { behandlingID } = this.state;
     const { sendAnmodningsperioder, anmodningsperioder } = this.props;
 
+    if (anmodningsperioder.length === 0) return;
+    if (anmodningsperioder.some(anmodningsperiode => anmodningsperiode.sendtUtland !== undefined)) return;
+
     sendAnmodningsperioder(behandlingID, { anmodningsperioder });
   };
 
@@ -228,7 +231,7 @@ class Saksbehandling extends Component {
     sendPerioder(behandlingID, behandlingsPeriode);
   };
 
-  lagreAllData = async (ignorerLovvalgsperioder = false, ignorerAnmodningsperioder = false) => {
+  lagreAllData = async () => {
     const {
       lagreSoknadHandler,
       lagreVilkarHandler,
@@ -246,8 +249,8 @@ class Saksbehandling extends Component {
         oppdaterOgLagreBehandlingerHandler(),
       ]);
 
-      if (!ignorerAnmodningsperioder) lagreAnmodningsperioderHandler();
-      if (!ignorerLovvalgsperioder) lagreLovvalgsperioderHandler();
+      lagreAnmodningsperioderHandler();
+      lagreLovvalgsperioderHandler();
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -266,7 +269,7 @@ class Saksbehandling extends Component {
 
   henleggSak = async data => {
     const { fagsak: { saksnummer } } = this.props;
-    Api.Fagsaker.henlegg(saksnummer, data);
+    Api.Fagsaker.fagsak.henlegg(saksnummer, data);
   };
 
   avslaaSoknadHandle = async () => {
@@ -289,7 +292,7 @@ class Saksbehandling extends Component {
     const { saksnummer } = this.props.fagsak;
 
     try {
-      await Api.Fagsaker.bortfall(saksnummer);
+      await Api.Fagsaker.fagsak.bortfall(saksnummer);
       this.tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
@@ -492,7 +495,7 @@ const mapDispatchToProps = dispatch => ({
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
   sendPerioder: (behandlingID, body) => dispatch(behandlingsperioderOperations.sendMedlemsPerioder(behandlingID, body)),
   sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
-  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatte(behandlingID, body)),
+  fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));

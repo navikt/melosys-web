@@ -139,7 +139,7 @@ const journalforingValidering = verdier => ({
 const erSkjemaGyldig = (verdier, journalforingHensikt) => {
   const verdiKopi = { ...verdier, journalforingHensikt };
   const validering = journalforingValidering(verdiKopi);
-  return Object.values(validering).every(enkeltValidering => enkeltValidering === false);
+  return Object.values(validering).every(enkeltValidering => enkeltValidering === undefined);
 };
 
 export { journalforingValidering, erSkjemaGyldig };
