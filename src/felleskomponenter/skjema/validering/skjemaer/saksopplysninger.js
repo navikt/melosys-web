@@ -17,6 +17,10 @@ const saksopplysninger = object().shape({
   maritimtArbeid: array().of(object().shape({
     navn: string().required({ melding: 'Navn kreves', panel: KV.Paneltitler.maritimtArbeid }),
   }).uniqueProperty('navn', { melding: 'Navn må være unikt', panel: KV.Paneltitler.maritimtArbeid })),
+  oppgittAdresseGatenavn: string().required({ melding: 'Gatenavn kreves', panel: KV.Paneltitler.personopplysningspanel }),
+  oppgittAdressePostnummer: string().required({ melding: 'Postnummer kreves', panel: KV.Paneltitler.personopplysningspanel }),
+  oppgittAdressePoststed: string().required({ melding: 'Poststed kreves', panel: KV.Paneltitler.personopplysningspanel }),
+  oppgittAdresseLand: string().required({ melding: 'Land kreves', panel: KV.Paneltitler.personopplysningspanel }),
 });
 
 export { saksopplysninger };

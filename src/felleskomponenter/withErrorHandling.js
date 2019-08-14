@@ -20,7 +20,7 @@ const FeilKomponent = ({ feilobjekt }) => (
 
 FeilKomponent.propTypes = {
   feilobjekt: PT.shape({
-    status: PT.number,
+    status: PT.oneOfType([PT.string, PT.number]),
     statusText: PT.string,
     fetchdata: PT.object,
   }).isRequired,
