@@ -51,7 +51,7 @@ const Registrering = props => {
 
   const avsluttSakSomBortfalt = () => {
     const { fagsak: { saksnummer } } = props;
-    Api.Fagsaker.bortfall(saksnummer).catch(err => Utils.logger.error(err));
+    Api.Fagsaker.fagsak.bortfall(saksnummer).catch(err => Utils.logger.error(err));
     props.history.push('/');
   };
 
