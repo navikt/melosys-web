@@ -6,7 +6,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';
 
-import Begrunnelser from '../../../../../felleskomponenter/begrunnelser';
+import Begrunnelser from '../../begrunnelser';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 
