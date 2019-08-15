@@ -99,11 +99,10 @@ export const SoknadErrorsSelector = createSelector(
 );
 
 const finnPanelerMedFeil = errors => {
-  const panelerMedFeil = Object.keys(errors)
-    .map(error => errors[error].panel)
-    .filter(panel => !Utils._isNil(panel));
+  const panelerMedFeil = Utils.finnVerdierMedKey(errors, 'panel');
+  const unikePaneler = [...new Set(panelerMedFeil)];
 
-  return [...new Set(panelerMedFeil)];
+  return unikePaneler;
 };
 
 export const PanelerMedFeilSelector = createSelector(
