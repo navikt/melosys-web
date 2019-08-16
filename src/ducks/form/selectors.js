@@ -99,11 +99,10 @@ export const SoknadErrorsSelector = createSelector(
 );
 
 const finnPanelerMedFeil = errors => {
-  const panelerMedFeil = Object.keys(errors)
-    .map(error => errors[error].panel)
-    .filter(panel => !Utils._isNil(panel));
+  const panelerMedFeil = Utils.finnVerdierMedKey(errors, 'panel');
+  const unikePaneler = [...new Set(panelerMedFeil)];
 
-  return [...new Set(panelerMedFeil)];
+  return unikePaneler;
 };
 
 export const PanelerMedFeilSelector = createSelector(
@@ -117,32 +116,32 @@ export const ErAlleMaritimtArbeidNavnUnikeSelector = createSelector(
 );
 
 export const OppgittAdresseHusnummerSelector = createSelector(
-  state => SoknadenFormSelector(state).values,
+  state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdresseHusnummer
 );
 
 export const OppgittAdresseGatenavnSelector = createSelector(
-  state => SoknadenFormSelector(state).values,
+  state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdresseGatenavn
 );
 
 export const OppgittAdresseRegionSelector = createSelector(
-  state => SoknadenFormSelector(state).values,
+  state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdresseRegion
 );
 
 export const OppgittAdressePostnummerSelector = createSelector(
-  state => SoknadenFormSelector(state).values,
+  state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdressePostnummer
 );
 
 export const OppgittAdressePoststedSelector = createSelector(
-  state => SoknadenFormSelector(state).values,
+  state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdressePoststed
 );
 
 export const OppgittAdresseLandSelector = createSelector(
-  state => SoknadenFormSelector(state).values,
+  state => SoknadenFormSelector(state).values || {},
   soknad => soknad.oppgittAdresseLand
 );
 
@@ -153,5 +152,5 @@ export const OppgittAdresseHarVerdierSelector = createSelector(
   OppgittAdressePostnummerSelector,
   OppgittAdressePoststedSelector,
   OppgittAdresseLandSelector,
-  (...felter) => !felter.every(Utils._isNil)
+  (...felter) => !felter.every(felt => Utils._isNil(felt) || felt === '')
 );

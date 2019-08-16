@@ -10,10 +10,10 @@ import * as queryString from './queryString';
 import * as yup from './yup';
 import * as feature from './feature';
 
-import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik } from './utils';
+import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from './utils';
 
 export {
-  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik,
+  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey,
   adresse,
   dato, streng,
   feature,

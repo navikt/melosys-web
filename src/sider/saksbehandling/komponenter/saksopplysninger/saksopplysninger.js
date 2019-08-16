@@ -194,6 +194,7 @@ const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   inngangForm: formSelectors.InngangFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
+  oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
   initialValues: {
     utenlandskIdent: soknadSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
@@ -295,7 +296,15 @@ const SaksopplysningerForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.createValidator(Validering.Skjemaer.saksopplysninger),
+  validate: (values, props) => {
+    const settings = {
+      context: {
+        skalOppgittAdresseValideres: props.oppgittAdresseHarVerdier,
+      },
+    };
+
+    return Validering.Skjemaer.createValidator(Validering.Skjemaer.saksopplysninger, settings)(values);
+  },
 })(Saksopplysninger);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksopplysningerForm));
