@@ -92,7 +92,7 @@ export const Innvilgelse = props => {
       <Nav.Undertittel>Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.</Nav.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
-          <DatoOmrade periode={gjeldendePeriode} tekst="Lovvalgsperiode" />
+          <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -148,7 +148,7 @@ export const DelvisInnvilgelse = props => {
       <Nav.Undertittel>Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden</Nav.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
-          <DatoOmrade periode={gjeldendePeriode} tekst="Lovvalgsperiode" />
+          <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
