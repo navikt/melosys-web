@@ -13,13 +13,13 @@ import './datoOmrade.css';
  * @param periode
  * @constructor
  */
-const DatoOmrade = ({ periode, tekst }) => (
+const DatoOmrade = ({ periode, label }) => (
   <Fragment>
     {
-      tekst &&
+      label &&
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Element>{tekst}</Nav.Element>
+          <Nav.Element>{label}</Nav.Element>
         </Nav.Column>
       </Nav.Row>
     }
@@ -32,21 +32,21 @@ const DatoOmrade = ({ periode, tekst }) => (
 
 DatoOmrade.propTypes = {
   periode: MPT.Periode.isRequired,
-  tekst: PT.string,
+  label: PT.string,
 };
 
 DatoOmrade.defaultProps = {
-  tekst: '',
+  label: '',
 };
 
-export const DatoOmradeMedVarighet = ({ periode, tekst }) => {
+export const DatoOmradeMedVarighet = ({ periode, label }) => {
   const varighet = Utils.dato.datoDiffMenneskelig(periode.fom, periode.tom);
 
   return (
     <div className="datoomradevarighet">
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Element>{tekst}</Nav.Element>
+          <Nav.Element>{label}</Nav.Element>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
@@ -60,17 +60,17 @@ export const DatoOmradeMedVarighet = ({ periode, tekst }) => {
 
 DatoOmradeMedVarighet.propTypes = {
   periode: MPT.Periode.isRequired,
-  tekst: PT.string,
+  label: PT.string,
 };
 
 DatoOmradeMedVarighet.defaultProps = {
-  tekst: '',
+  label: '',
 };
 
-export const DatoOmradeDescription = ({ periode, tekst }) => (
+export const DatoOmradeDescription = ({ periode, label }) => (
   periode ?
     <Fragment>
-      <dt>{tekst}</dt>
+      <dt>{label}</dt>
       <dd><EnkeltDato dato={periode.fom} /> - <EnkeltDato dato={periode.tom} /></dd>
     </Fragment>
     : null
@@ -78,7 +78,7 @@ export const DatoOmradeDescription = ({ periode, tekst }) => (
 
 DatoOmradeDescription.propTypes = {
   periode: MPT.Periode.isRequired,
-  tekst: PT.string.isRequired,
+  label: PT.string.isRequired,
 };
 
 export default DatoOmrade;

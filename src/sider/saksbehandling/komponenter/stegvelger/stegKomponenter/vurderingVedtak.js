@@ -56,7 +56,7 @@ const VurderingVedtak = ({
       <div>
         <Nav.Row className="lovvalgsperiode">
           <Nav.Column xs="6">
-            <DatoOmrade periode={{ fom: lovvalget.fomDato, tom: lovvalget.tomDato }} tekst="Lovvalgsperiode" />
+            <DatoOmrade periode={{ fom: lovvalget.fomDato, tom: lovvalget.tomDato }} label="Lovvalgsperiode" />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row className="vedtak__oppsummering">
