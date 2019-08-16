@@ -1,10 +1,7 @@
 import React from 'react';
 import * as MKV from 'melosys-kodeverk';
 
-import * as Nav from '../../../../../utils/navFrontend';
-
-import { VurderingArtikkel16Vedtak } from './vurderingArtikkel16Vedtak';
-import { DatoOmradeMedVarighet } from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
+import { VurderingArtikkel16Vedtak, Innvilgelse, DelvisInnvilgelse, Avslag } from './vurderingArtikkel16Vedtak';
 
 describe('VurderingArtikkel16Vedtak', () => {
   let props = null;
@@ -20,41 +17,31 @@ describe('VurderingArtikkel16Vedtak', () => {
       lagreOgFatteVedtak: jest.fn(),
       redigerbart: true,
       anmodningsperiode: { fom: '01.01.2018', tom: '01.01.2019' },
+      vilkarBegrunnelser: [],
+      art_12_1_begrunnelser: [],
+      art_12_2_begrunnelser: [],
     };
   });
 
-  it('viser ett Datoomrademedvarighet ved delvis innvilgelse', () => {
-    const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
-
-    expect(vurderingArtikkel16Vedtak.find(DatoOmradeMedVarighet)).toHaveLength(1);
-    expect(vurderingArtikkel16Vedtak.find(DatoOmradeMedVarighet).props().periode).toBe(props.anmodningsperiodesvar.endretPeriode);
-  });
-
-  it('viser ikke et Datoomrademedvarighet ved avslag', () => {
-    props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
-    const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
-
-    expect(vurderingArtikkel16Vedtak.find(DatoOmradeMedVarighet)).toHaveLength(0);
-  });
-
-  it('viser en nav textarea ved delvis innvilgelse', () => {
-    const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
-
-    expect(vurderingArtikkel16Vedtak.find(Nav.Textarea)).toHaveLength(1);
-  });
-
-  it('viser ikke en nav textarea ved innvilgelse', () => {
+  it('viser innvilgelse-komponent ved innvilgelse', () => {
     props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE;
     const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
 
-    expect(vurderingArtikkel16Vedtak.find(Nav.Textarea)).toHaveLength(0);
+    expect(vurderingArtikkel16Vedtak.find(Innvilgelse)).toHaveLength(1);
   });
 
-  it('viser en pdflenkeliste', () => {
+  it('viser "delvis innvilgelse"-komponent ved delvis innvilgelse', () => {
+    props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
     const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
 
-    expect(vurderingArtikkel16Vedtak.find('PdfLenkeListe')).toHaveLength(1);
-    expect(vurderingArtikkel16Vedtak.find('PdfLenkeListe').props().behandlingID).toBe(props.behandlingID);
+    expect(vurderingArtikkel16Vedtak.find(DelvisInnvilgelse)).toHaveLength(1);
+  });
+
+  it('viser avslag-komponent ved avslag', () => {
+    props.anmodningsperiodesvar.anmodningsperiodeSvarType = MKV.Koder.anmodningsperiodesvartyper.AVSLAG;
+    const vurderingArtikkel16Vedtak = shallow(<VurderingArtikkel16Vedtak {...props} />);
+
+    expect(vurderingArtikkel16Vedtak.find(Avslag)).toHaveLength(1);
   });
 
   it('viser en knapp', () => {
