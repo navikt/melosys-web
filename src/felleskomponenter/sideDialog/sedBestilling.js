@@ -164,7 +164,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
     <div className="sedbestilling">
       <form onSubmit={overstyrSubmit}>
         <Nav.Fieldset legend="">
-          <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade} >
+          <Nav.Select bredde="fullbredde" label="Fagområde" disabled={!redigerbart} onChange={fagomradeEndret} value={valgtFagomrade}>
             <TomtFelt redigerbart={redigerbart} />
             { kodeverk.tilgjengeligeFagomrader.map(fagomrade => <option key={fagomrade.kode} value={fagomrade.kode}>{fagomrade.term}</option>) }
           </Nav.Select>
