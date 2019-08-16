@@ -215,15 +215,16 @@ const mapStateToProps = state => ({
   kodeverk: {
     fagomradeLovvalg: EessiKodeverkSelectors.sektorSelector(state).filter(el => el.kode === 'LA')[0],
     tilgjengeligeFagomrader: EessiKodeverkSelectors.sektorSelector(state).filter(lovvalgEllerHorisontalSektor),
-    tilgjengeligeBucer: fagomrade =>
-      EessiKodeverkSelectors.alleBUCtyperSelector(state)[EessiKodeverkSelectors.kodemapsSelector(state).SEKTOR2BUC[fagomrade]]
-        .filter(buc => fagomrade !== 'HZ' || (fagomrade === 'HZ' && tilgjengeligeHBucer.includes(buc.kode))),
-    tilgjengeligeSeder: (buc, fagomrade) => (
-      (buc && fagomrade)
-        ? EessiKodeverkSelectors.alleSEDtyperSelector(state)
-          .filter(el => EessiKodeverkSelectors.kodemapsSelector(state).BUC2SEDS[fagomrade][buc].includes(el.kode))
-        : []
-    ),
+    tilgjengeligeBucer: fagomrade => {
+      if (!fagomrade) return [];
+      return EessiKodeverkSelectors.alleBUCtyperSelector(state)[EessiKodeverkSelectors.kodemapsSelector(state).SEKTOR2BUC[fagomrade]]
+        .filter(buc => fagomrade !== 'HZ' || (fagomrade === 'HZ' && tilgjengeligeHBucer.includes(buc.kode)));
+    },
+    tilgjengeligeSeder: (buc, fagomrade) => {
+      if (!(buc && fagomrade)) return [];
+      return EessiKodeverkSelectors.alleSEDtyperSelector(state)
+        .filter(el => EessiKodeverkSelectors.kodemapsSelector(state).BUC2SEDS[fagomrade][buc].includes(el.kode));
+    },
   },
 });
 
