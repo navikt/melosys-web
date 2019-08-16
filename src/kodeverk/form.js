@@ -5,3 +5,7 @@ export const JOURNALFORING = 'journalforing';
 export const REGISTRERING = 'registrering';
 export const SOKNAD = 'soknad';
 export const SOK_ETTER_SAK = 'sokEtterSak';
+export const ARTIKKEL_16_ANMODNING = 'artikkel_16_anmodning';
+export const INNGANG = 'inngang';
+export const ARTIKKEL_16_MOTTA_SVAR = 'artikkel_16_motta_svar';
+export const ARTIKKEL_13_1_A_VEDTAK = 'artikkel_13_1_a_vedtak';

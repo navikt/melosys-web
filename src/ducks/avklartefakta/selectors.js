@@ -33,6 +33,12 @@ export const AvklartefaktaSelector = createSelector(
   state => (state.avklartefakta.data ? state.avklartefakta.data : []),
   avklartefakta => avklartefakta || []
 );
+
+export const SoknadslandFaktaerSelector = createSelector(
+  AvklartefaktaSelector,
+  avklartefakta => avklartefakta.filter(enkelt => enkelt.referanse === KV.Koder.avklartefaktaKoder.SOKNADSLAND)
+);
+
 export const VurderingUnntakPeriode = createSelector(
   state => AvklartefaktaSelector(state) || [],
   alleAvklartefakta => (

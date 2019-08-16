@@ -34,7 +34,7 @@ const lagNullableAdresse = adresse => {
   };
 };
 
-const initialState = {
+export const initialState = {
   data: {},
   status: STATUS.NOT_STARTED,
 };

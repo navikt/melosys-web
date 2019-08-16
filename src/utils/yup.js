@@ -1,4 +1,6 @@
-import { addMethod, object, array, string } from 'yup';
+import { addMethod, object, array, string, date, bool } from 'yup';
+
+import * as Utils from './';
 
 /* eslint-disable */
 addMethod(object, 'uniqueProperty', function (propertyName, message) {
@@ -23,10 +25,28 @@ addMethod(object, 'uniqueProperty', function (propertyName, message) {
     return true;
   });
 });
+
+addMethod(string, 'validDate', function (message) {
+  return this.test('valid', message, function(value) {
+    const { path } = this;
+
+    if (!Utils.dato.vaskInputDato(value)) {
+      throw this.createError({
+        path,
+        message,
+      });
+    }
+
+    return true;
+  });
+});
 /* eslint-enable */
+
 
 export {
   object,
   array,
   string,
+  date,
+  bool,
 };

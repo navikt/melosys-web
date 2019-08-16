@@ -1,0 +1,121 @@
+@import '../../../utils/mixins';
+
+.personopplysninger {
+
+  .person__seksjon {
+    .seksjonmixin();
+  }
+
+  .personopplysninger__panelheader {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .personopplysninger__personstatus {
+    .etikett {
+      margin: 0 .3em;
+    }
+  }
+
+  .person__detaljer {
+    .beskrivliste-mixin('col');
+  }
+
+  .skjemaelement__label {
+    font-weight: bold;
+  }
+}
+
+.utenlandskIdent {
+  margin-top: 0.8em;
+
+  .utenlandskIdent__wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .landliste {
+    margin-left: 0.5em;
+  }
+
+  .utenlandskIdent__linje {
+    display: flex;
+    flex-direction: row;
+
+    .skjemaelement {
+      margin-left: 0.3em;
+    }
+
+    .knapp {
+      align-self: flex-start;
+      margin: 2.4em 0 0 0.4em;
+    }
+  }
+}
+
+.expandableList {
+  margin-bottom: 1em;
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 0.5em;
+
+    thead {
+      border-bottom: 1px solid @gray;
+    }
+
+    th {
+      text-align: left;
+    }
+
+    td {
+      padding: .3em .2em;
+      vertical-align: top;
+      border-bottom: 1px solid @gray;
+    }
+
+    .adresseTittel {
+      width: 50%;
+    }
+  }
+
+  .btnContainer {
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      text-decoration: underline;
+      display: block;
+      border:0;
+      padding:0;
+      outline: 0;
+      background: transparent;
+      color: @blue-nav;
+      cursor: pointer;
+    }
+  }
+}
+
+.knappMedIkon {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  svg {
+    width: 24px;
+    margin: -0.4em 1em -0.4em -0.5em
+  }
+}
+
+.knappMedIkon:hover {
+  svg {
+    path {
+      stroke: white;
+    }
+  }
+}

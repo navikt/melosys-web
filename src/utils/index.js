@@ -1,4 +1,4 @@
-import { isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger } from 'lodash';
+import { isFunction, isNil, isUndefined, isString, isEmpty, isObject, isBoolean, toInteger, round, set } from 'lodash';
 
 import throttle from 'lodash.throttle';
 
@@ -10,10 +10,10 @@ import * as queryString from './queryString';
 import * as yup from './yup';
 import * as feature from './feature';
 
-import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik } from './utils';
+import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from './utils';
 
 export {
-  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik,
+  buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey,
   adresse,
   dato, streng,
   feature,
@@ -29,4 +29,6 @@ export {
   isObject as _isObject,
   isBoolean as _isBoolean,
   toInteger as _toInteger,
+  round as _round,
+  set as _set,
 };

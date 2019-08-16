@@ -134,8 +134,7 @@ const byggLovvalgsPeriodeArtikkel16_1 = state => {
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
 
   const unntakFraLovvalgsland = soknadsland.join('');
-  const lovvalgsperiode = formSelectors.Lovvalgsperiode(state);
-  const { unntakFraBestemmelse } = lovvalgsperiode;
+  const unntakFraBestemmelse = formSelectors.UnntakFraBestemmelseSelector(state);
 
   // Det er ikke et gyldig art16-lovvalg før unntakene er oppgitt
   if (!unntakFraBestemmelse || !unntakFraLovvalgsland) {
@@ -200,9 +199,21 @@ const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, state) => {
   }
 };
 
+const bestemLovvalgsland = lovvalgsbestemmelse => {
+  switch (lovvalgsbestemmelse) {
+    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1A:
+      return MKV.Koder.landkoder.NO;
+    default:
+      return null;
+  }
+};
+
 const byggLovvalgsPerioder = (lovvalgsbestemmelse, state) => {
+  if (lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1) return [];
+
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+  const lovvalgsland = bestemLovvalgsland(lovvalgsbestemmelse);
 
   return [{
     fomDato: soknadPeriode.fom,
@@ -213,7 +224,7 @@ const byggLovvalgsPerioder = (lovvalgsbestemmelse, state) => {
     unntakFraBestemmelse: null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
-    lovvalgsland: null,
+    lovvalgsland,
     trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
     medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
   }];

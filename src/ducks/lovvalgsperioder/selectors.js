@@ -40,3 +40,22 @@ export const MedlemskapsperiodeIDSelector = createSelector(
   state => LovvalgsperiodeSelector(state),
   lovvalgsperiode => lovvalgsperiode.medlemskapsperiodeID
 );
+
+export const PeriodeSelector = createSelector(
+  LovvalgsperiodeSelector,
+  lovvalgsperiode => ({ fom: lovvalgsperiode.fomDato, tom: lovvalgsperiode.tomDato })
+);
+
+export const InnvilgelsesResultatSelector = createSelector(
+  LovvalgsperiodeSelector,
+  lovvalgsperiode => lovvalgsperiode.innvilgelsesResultat
+);
+export const FomDatoSelector = createSelector(
+  LovvalgsperiodeSelector,
+  lovvalgsperiode => lovvalgsperiode.fomDato
+);
+
+export const TomDatoSelector = createSelector(
+  LovvalgsperiodeSelector,
+  lovvalgsperiode => lovvalgsperiode.tomDato
+);

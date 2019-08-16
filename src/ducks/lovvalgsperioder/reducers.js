@@ -9,7 +9,7 @@ import { STATUS } from '../../services/utils';
 
 import * as Types from './types';
 
-const initialState = {
+export const initialState = {
   data: [],
   status: STATUS.NOT_STARTED,
 };
@@ -32,6 +32,7 @@ export default function reducer(state = initialState, action) {
     case Types.OPPDATER_LOVVALGSPERIODER: {
       return {
         data: [...action.data],
+        status: STATUS.OK,
       };
     }
     case Types.ENDRE_PERIODE: {
