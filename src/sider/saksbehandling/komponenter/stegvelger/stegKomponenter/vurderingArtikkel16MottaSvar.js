@@ -73,7 +73,7 @@ export const VurderingArtikkel16MottaSvar = props => {
       </Nav.Row>
       <Nav.Row className="soknadsperiodeRow">
         <Nav.Column xs="6">
-          <DatoOmradeMedVarighet periode={soknadsperiode} tekst="Søknadsperiode" />
+          <DatoOmradeMedVarighet periode={soknadsperiode} label="Søknadsperiode" />
         </Nav.Column>
       </Nav.Row>
       <form name="anmodningSvar" id="anmodningSvar" onBlur={lagreSvarHandler} onSubmit={e => e.preventDefault()} >
