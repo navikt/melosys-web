@@ -2,7 +2,4 @@ import { getAsJson } from '../utils';
 import { API_BASE_URL, SAKSBEHANDLER } from '../api-constants';
 
 // eslint-disable-next-line import/prefer-default-export
-export const hent = () => {
-  const URI_SAKSBEHANDLER = `${API_BASE_URL}${SAKSBEHANDLER}`;
-  return getAsJson(URI_SAKSBEHANDLER);
-};
+export const hent = () => getAsJson(`${API_BASE_URL}${SAKSBEHANDLER}`);

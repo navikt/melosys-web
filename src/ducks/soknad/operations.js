@@ -1,4 +1,4 @@
-import * as Validering from '../../soknad-komponenter/skjema/validering';
+import * as Validering from '../../felleskomponenter/skjema/validering';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Actions from './actions';

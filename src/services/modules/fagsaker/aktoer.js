@@ -2,10 +2,7 @@ import * as QS from 'qs';
 import { getAsJson, postAsJson, deleteAsJson } from '../../utils';
 import { API_BASE_URL, FAGSAKER } from '../../api-constants';
 
-export const hentAktoer = (saksnr, rolleKode, representererKode) => {
-  if (!saksnr) {
-    console.error('saksnummer is REQUIRED');
-  }
+export const hent = (saksnr, rolleKode, representererKode) => {
   const URI_PATH = `${API_BASE_URL}${FAGSAKER}/${saksnr}/aktoerer`;
   const qs = QS.stringify({ rolleKode, representererKode });
 
@@ -13,12 +10,6 @@ export const hentAktoer = (saksnr, rolleKode, representererKode) => {
   return getAsJson(URI_AKTOER);
 };
 
-export const sendAktoer = (saksnr, data) => {
-  const URI_AKTOER = `${API_BASE_URL}${FAGSAKER}/${saksnr}/aktoerer`;
-  return postAsJson(URI_AKTOER, data);
-};
+export const send = (saksnr, data) => postAsJson(`${API_BASE_URL}${FAGSAKER}/${saksnr}/aktoerer`, data);
 
-export const slettAktoer = databaseid => {
-  const URI_AKTOER = `${API_BASE_URL}${FAGSAKER}/aktoerer/${databaseid}`;
-  return deleteAsJson(URI_AKTOER);
-};
+export const slett = databaseid => deleteAsJson(`${API_BASE_URL}${FAGSAKER}/aktoerer/${databaseid}`);

@@ -1,0 +1,20 @@
+@import '../../../../utils/mixins';
+
+.arbeidsforholdet {
+
+  .arbeidsforholdet__enkelt {
+    .seksjonmixin();
+  }
+
+  .arbeidsforholdet__detaljer {
+    .beskrivliste-mixin('col');
+
+    .adresse {
+      margin-top: 0.8em;
+    }
+  }
+
+  .arbeidsforholdet__relevantknapp {
+    float: right;
+  }
+}

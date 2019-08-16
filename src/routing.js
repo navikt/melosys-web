@@ -4,7 +4,7 @@ import Loadable from 'react-loadable';
 import PT from 'prop-types';
 import * as Utils from './utils';
 
-import SideLoadingStatus from './komponenter/SideLoadingStatus';
+import SideLoadingStatus from './felleskomponenter/SideLoadingStatus';
 
 const UkjentSideLoadable = Loadable({
   loader: () => import('./sider/ukjentSide'),

@@ -12,6 +12,7 @@ import * as MKV from 'melosys-kodeverk';
 import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import * as Utils from '../../utils';
 
 /**
  * Hent Soknad
@@ -31,6 +32,7 @@ export const tilbakelegge = (behandlingID, venterPaaDokumentasjon) => {
     venterPaaDokumentasjon,
   };
 
+  // TODO legge på logging
   return Api.Oppgaver.tilbakelegge(oppgaveObjekt).catch(error => error);
 };
 
@@ -47,10 +49,18 @@ export const sendBehandlingsOppgave = async checkboxliste => {
     behandlingstyper,
   };
 
-  const response = await Api.Oppgaver.send(oppgave);
-  const { saksnummer, behandlingID } = response;
+  const response = await Api.Oppgaver.sendPlukk(oppgave);
+  const { saksnummer, behandlingID, oppgavetype } = response;
   if (!saksnummer) { return false; }
-  return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+
+  if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SAK_MK || oppgavetype === MKV.Koder.oppgavetyper.VUR) {
+    return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+  } else if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SED) {
+    return `/registrering/${saksnummer}/?behandlingID=${behandlingID}`;
+  }
+
+  Utils.logger.error(`Ukjent oppgavetype ${oppgavetype} kan ikke åpnes.`);
+  return null;
 };
 
 export const sendJournalOppgave = async fagomrade => {
@@ -61,7 +71,7 @@ export const sendJournalOppgave = async fagomrade => {
     sakstyper: [],
     behandlingstyper,
   };
-  const response = await Api.Oppgaver.send(oppgave);
+  const response = await Api.Oppgaver.sendPlukk(oppgave);
   const { oppgaveID, journalpostID } = response;
   if (!(oppgaveID || journalpostID)) { return false; }
   return `/journalforing/${journalpostID}/${oppgaveID}`;

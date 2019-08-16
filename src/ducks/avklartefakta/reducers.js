@@ -9,7 +9,7 @@ import { STATUS } from '../../services/utils';
 import * as Utils from '../../utils';
 import * as Types from './types';
 
-const initialState = {
+export const initialState = {
   data: [],
   status: STATUS.NOT_STARTED,
 };
@@ -26,7 +26,7 @@ const lagAvklartfaktaObjektMedKode = (avklarteFakta, avklartefaktaKode) => {
       fakta: enkeltAvklaring.fakta,
       subjektID: enkeltAvklaring.subjektID || null,
       begrunnelseKoder: enkeltAvklaring.begrunnelseKoder || [],
-      begrunnelseFritekst: enkeltAvklaring.begrunnelseFritekst || null,
+      begrunnelseFritekst: enkeltAvklaring.begrunnelseFritekst !== undefined ? enkeltAvklaring.begrunnelseFritekst : undefined,
     }]
   ), []);
 };

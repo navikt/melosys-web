@@ -1,9 +1,10 @@
 import * as behandlingerOperations from './operations';
 import * as behandlingerSelectors from './selectors';
 
-import behandlingerReducers from './reducers';
+import behandlingerReducers, { initialState } from './reducers';
 
 export {
+  initialState,
   behandlingerOperations,
   behandlingerSelectors,
 };
