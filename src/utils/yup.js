@@ -40,6 +40,18 @@ addMethod(string, 'validDate', function (message) {
     return true;
   });
 });
+
+addMethod(string, 'periodeErGyldig', function (message) {
+  return this.test('periode er gyldig', message, function(value) {
+    const { lovvalgsperiode } = this.options.context;
+
+    if (!lovvalgsperiode) return false;
+
+    return Utils.dato.erIPeriode(lovvalgsperiode.fomDato, lovvalgsperiode.tomDato, value);
+  });
+});
+
+
 /* eslint-enable */
 
 
