@@ -158,6 +158,8 @@ export default function reducer(state = initialState, action) {
           flaggLandkode: maritimtArbeid.flaggLandkode || null,
           installasjonsLandkode: maritimtArbeid.installasjonsLandkode || null,
           territorialfarvann: maritimtArbeid.territorialfarvann || null,
+          foretakNavn: maritimtArbeid.foretakNavn || null,
+          foretakOrgnr: maritimtArbeid.foretakOrgnr || null,
         })),
         soeknadsland: {
           landkoder: dokument.soknadsland,
