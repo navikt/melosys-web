@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import * as EKV from 'eessi-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Api from '../../services/api';
@@ -9,7 +10,8 @@ import * as Utils from '../../utils';
 import { createValidator } from '../skjema/validering/skjemaer/createValidator';
 import { sed as sedSchema } from '../skjema/validering/skjemaer/sed';
 import { behandlingerSelectors } from '../../ducks/behandlinger';
-import { EessiKodeverkSelectors } from '../../ducks/eessikodeverk';
+import { kodeTilObjekt } from '../../kodeverk';
+import { hentBucTyperForFagomrade, hentSedTyperForBuc } from '../../kodeverk/eessiKodeverkHelper';
 import './sedBestilling.css';
 
 const TomtFelt = ({ redigerbart, tekst }) => (
@@ -25,10 +27,10 @@ TomtFelt.defaultProps = {
   tekst: 'Velg...',
 };
 
-const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
+const SideDialogSedBestilling = ({ redigerbart, behandlingID }) => {
   const [mottakerinstitusjoner, setMottakerinstitusjoner] = useState([]);
 
-  const [valgtFagomrade, setValgtFagomrade] = useState(kodeverk.fagomradeLovvalg.kode);
+  const [valgtFagomrade, setValgtFagomrade] = useState(EKV.Koder.sektor.LA);
   const [valgtBuc, setValgtBuc] = useState('');
   const [valgtSed, setValgtSed] = useState('');
   const [valgtLand, setValgtLand] = useState('');
@@ -62,7 +64,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
     setValgtSed('');
     setValgtLand('');
     setValgtMottakerinstitusjon('');
-    setValgtFagomrade(kodeverk.fagomradeLovvalg.kode);
+    setValgtFagomrade(EKV.Koder.sektor.LA);
     setFeilmeldinger({ buc: undefined, land: undefined, mottakerinstitusjon: undefined });
     setOppdaterteFelt({ buc: false, land: false, mottakerinstitusjon: false });
   };
@@ -116,6 +118,18 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
     setOppretterBuc(false);
   };
 
+  const tilgjengeligeFagomrader = [
+    kodeTilObjekt(EKV.Koder.sektor.LA, EKV.KTObjects.sektor),
+    kodeTilObjekt(EKV.Koder.sektor.HZ, EKV.KTObjects.sektor),
+  ];
+
+  const tilgjengeligeHBucer = [EKV.Koder.buctyper.horizontal.H_BUC_02a];
+  const ignorerteHBucer = EKV.KTObjects.buctyper.horizontal.filter(({ kode }) => !tilgjengeligeHBucer.includes(kode));
+
+  const tilgjengeligeBucer = fagomrade => hentBucTyperForFagomrade(fagomrade).filter(buc => !ignorerteHBucer.includes(buc));
+
+  const tilgjengeligeSeder = buc => hentSedTyperForBuc(buc);
+
   const tilgjengeligeMottakerinstitusjoner = land => (land ? mottakerinstitusjoner.filter(institusjon => institusjon.landkode === land) : []);
 
   const hentValgtKode = event => event.target.value;
@@ -138,7 +152,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
     oppdaterFelt('buc');
     valider({ buc });
 
-    setValgtSed(buc ? kodeverk.tilgjengeligeSeder(buc, valgtFagomrade)[0].kode : '');
+    setValgtSed(buc ? tilgjengeligeSeder(buc, valgtFagomrade)[0].kode : '');
     hentMottakerinstitusjoner(buc);
   };
 
@@ -166,15 +180,15 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
         <Nav.Fieldset legend="">
           <Nav.Select bredde="fullbredde" label="Fagområde" disabled={!redigerbart} onChange={fagomradeEndret} value={valgtFagomrade}>
             <TomtFelt redigerbart={redigerbart} />
-            { kodeverk.tilgjengeligeFagomrader.map(fagomrade => <option key={fagomrade.kode} value={fagomrade.kode}>{fagomrade.term}</option>) }
+            { tilgjengeligeFagomrader.map(fagomrade => <option key={fagomrade.kode} value={fagomrade.kode}>{fagomrade.term}</option>) }
           </Nav.Select>
           <Nav.Select bredde="fullbredde" label="BUC" disabled={!redigerbart} onChange={bucEndret} value={valgtBuc} feil={feil('buc')}>
             <TomtFelt redigerbart={redigerbart} />
-            { kodeverk.tilgjengeligeBucer(valgtFagomrade).map(buc => <option key={buc.kode} value={buc.kode}>{displayName(buc)}</option>) }
+            { tilgjengeligeBucer(valgtFagomrade).map(buc => <option key={buc.kode} value={buc.kode}>{displayName(buc)}</option>) }
           </Nav.Select>
           <Nav.Select bredde="fullbredde" label="SED" value={valgtSed} disabled>
             <TomtFelt redigerbart={redigerbart} tekst="" />
-            { kodeverk.tilgjengeligeSeder(valgtBuc, valgtFagomrade).map(forsteSed => <option key={forsteSed.kode} value={forsteSed.kode}>{displayName(forsteSed)}</option>) }
+            { tilgjengeligeSeder(valgtBuc, valgtFagomrade).map(forsteSed => <option key={forsteSed.kode} value={forsteSed.kode}>{displayName(forsteSed)}</option>) }
           </Nav.Select>
           <Nav.Select bredde="fullbredde" label="Land" disabled={!redigerbart} onChange={landEndret} value={valgtLand} feil={feil('land')}>
             <TomtFelt redigerbart={redigerbart} />
@@ -201,31 +215,10 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
 SideDialogSedBestilling.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
-  kodeverk: PT.object.isRequired,
 };
-
-const lovvalgEllerHorisontalSektor = sektor => sektor.kode === 'LA' || sektor.kode === 'HZ';
-
-const tilgjengeligeHBucer = [
-  'H_BUC_02a',
-];
 
 const mapStateToProps = state => ({
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
-  kodeverk: {
-    fagomradeLovvalg: EessiKodeverkSelectors.sektorSelector(state).filter(el => el.kode === 'LA')[0],
-    tilgjengeligeFagomrader: EessiKodeverkSelectors.sektorSelector(state).filter(lovvalgEllerHorisontalSektor),
-    tilgjengeligeBucer: fagomrade => {
-      if (!fagomrade) return [];
-      return EessiKodeverkSelectors.alleBUCtyperSelector(state)[EessiKodeverkSelectors.kodemapsSelector(state).SEKTOR2BUC[fagomrade]]
-        .filter(buc => fagomrade !== 'HZ' || (fagomrade === 'HZ' && tilgjengeligeHBucer.includes(buc.kode)));
-    },
-    tilgjengeligeSeder: (buc, fagomrade) => {
-      if (!(buc && fagomrade)) return [];
-      return EessiKodeverkSelectors.alleSEDtyperSelector(state)
-        .filter(el => EessiKodeverkSelectors.kodemapsSelector(state).BUC2SEDS[fagomrade][buc].includes(el.kode));
-    },
-  },
 });
 
 export default connect(mapStateToProps)(SideDialogSedBestilling);
