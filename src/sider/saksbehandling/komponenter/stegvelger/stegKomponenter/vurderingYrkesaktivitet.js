@@ -10,7 +10,7 @@ const VurderingYrkesaktivitet = props => {
   const {
     bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
-  const { erKunEttLand, harAvklaring, yrkesaktivitet } = tilstand;
+  const { visArbeidtakerFrilanserOgSelvstendigNaeringsdrivende, harAvklaring, yrkesaktivitet } = tilstand;
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
@@ -45,7 +45,7 @@ const VurderingYrkesaktivitet = props => {
           label="Selvstendig næringsdrivende"
         />
         {
-          !erKunEttLand &&
+          !visArbeidtakerFrilanserOgSelvstendigNaeringsdrivende &&
           <Nav.Radio
             name="yrkesaktivitet"
             checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}

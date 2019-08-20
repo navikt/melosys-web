@@ -59,10 +59,13 @@ class Yrkesaktivitet extends Steg {
     });
     this.beregnRelevantUI = _propsLight => {
       const yrkesaktivitet = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET, _propsLight.avklartefakta);
+
       const erKunEttLand = YrkesaktivitetAntallLand.finnAvklaring(_propsLight.avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
+      const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(_propsLight.avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
+      const visArbeidtakerFrilanserOgSelvstendigNaeringsdrivende = erKunEttLand || erSokkelEllerSkip;
 
       return ({
-        erKunEttLand,
+        visArbeidtakerFrilanserOgSelvstendigNaeringsdrivende,
         harAvklaring: yrkesaktivitet.fakta && yrkesaktivitet.fakta.length > 0,
         yrkesaktivitet,
       });
