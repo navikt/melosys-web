@@ -14,6 +14,7 @@
   "dependencies": {
     "babel-polyfill": "^6.26.0",
     "classnames": "^2.2.6",
+    "eessi-kodeverk": "0.1.0",
     "highcharts": "^7.0.3",
     "history": "^4.7.2",
     "http-proxy-middleware": "^0.19.1",
