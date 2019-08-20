@@ -2,6 +2,7 @@ import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesaktivitet from '../../stegKomponenter/vurderingYrkesaktivitet';
 import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
+import Yrkesgruppe from './yrkesgruppe';
 
 import * as KV from '../../../../../../kodeverk';
 import { hentFakta } from '../../../../../../regler/avklartefakta';
@@ -14,8 +15,9 @@ class Yrkesaktivitet extends Steg {
         beskrivelse: 'yrkesaktivitet ER LIK "ORDINAER_ARBEIDSTAKER" && VurderingYrkesaktivitetAntallLandTyper ER LIK "ETT_LAND_IKKE_NORGE"',
         exec: avklartefakta => {
           const erKunEttLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
+          const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
           const erOrdinaerArbeidstaker = Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER);
-          return erKunEttLand && erOrdinaerArbeidstaker;
+          return (erKunEttLand || erSokkelEllerSkip) && erOrdinaerArbeidstaker;
         },
         nesteSteg: STEG.FORUTGAENDE_MEDLEMSKAP,
       },
@@ -23,8 +25,9 @@ class Yrkesaktivitet extends Steg {
         beskrivelse: 'yrkesaktivitet ER LIK "SELVSTENDIG_NAERINGSDRIVENDE" && VurderingYrkesaktivitetAntallLandTyper ER LIK "ETT_LAND_IKKE_NORGE"',
         exec: avklartefakta => {
           const erKunEttLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
+          const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
           const erSelvstendigNaeringsdrivende = Yrkesaktivitet.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE);
-          return erKunEttLand && erSelvstendigNaeringsdrivende;
+          return (erKunEttLand || erSokkelEllerSkip) && erSelvstendigNaeringsdrivende;
         },
         nesteSteg: STEG.NORMALT_DRIVER_VIRKSOMHET,
       },
