@@ -12,6 +12,7 @@ const EnkeltForetak = ({ indeks, slettForetakHandler, redigerbart }) => (
   <Nav.Row className="foretakUtland__enkelt">
     <Nav.Column xs="6">
       <Nav.Fieldset legend="Om foretaket">
+        <Skjema.Checkbox disabled={!redigerbart} label="Opplysningene gjelder selvstendig næringsvirksomhet" feltNavn={`foretakUtland[${indeks}].selvstendigNaeringsvirksomhet`} />
         <Skjema.Input disabled={!redigerbart} label="Firmanavn" feltNavn={`foretakUtland[${indeks}].navn`} />
         <Skjema.Input disabled={!redigerbart} label="Orgnr / ID nr" feltNavn={`foretakUtland[${indeks}].orgnr`} />
       </Nav.Fieldset>

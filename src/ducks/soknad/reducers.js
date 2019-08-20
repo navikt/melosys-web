@@ -136,6 +136,7 @@ export default function reducer(state = initialState, action) {
         foretakUtland: dokument.foretakUtland.map(foretakUtland => ({
           navn: foretakUtland.navn || null,
           orgnr: foretakUtland.orgnr || null,
+          selvstendigNaeringsvirksomhet: foretakUtland.selvstendigNaeringsvirksomhet,
           adresse: lagNullableAdresse(foretakUtland.adresse),
         })),
         bosted: {
