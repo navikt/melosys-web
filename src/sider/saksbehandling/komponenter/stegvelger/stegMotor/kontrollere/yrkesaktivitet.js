@@ -62,10 +62,10 @@ class Yrkesaktivitet extends Steg {
 
       const erKunEttLand = YrkesaktivitetAntallLand.finnAvklaring(_propsLight.avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
       const erSokkelEllerSkip = Yrkesgruppe.finnAvklaring(_propsLight.avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.SOKKEL_ELLER_SKIP);
-      const visArbeidtakerFrilanserOgSelvstendigNaeringsdrivende = erKunEttLand || erSokkelEllerSkip;
+      const skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende = erKunEttLand || erSokkelEllerSkip;
 
       return ({
-        visArbeidtakerFrilanserOgSelvstendigNaeringsdrivende,
+        skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende,
         harAvklaring: yrkesaktivitet.fakta && yrkesaktivitet.fakta.length > 0,
         yrkesaktivitet,
       });
