@@ -5,12 +5,12 @@ export const hentBucTyperForFagomrade = fagomrade => {
   if (!fagomrade) {
     return [];
   }
-  return EKV.KTObjects.buctyper[EKV.kodemaps.SEKTOR2BUC[fagomrade]];
+  return EKV.KTObjects.buctyper[EKV.Kodemaps.SEKTOR2BUC[fagomrade]];
 };
 
 export const alleBucer = Object.assign({}, ...Object.values(EKV.Terms.buctyper));
 
-const alleBuc2Seds = Object.assign({}, ...Object.values(EKV.kodemaps.BUC2SEDS));
+const alleBuc2Seds = Object.assign({}, ...Object.values(EKV.Kodemaps.BUC2SEDS));
 export const hentSedTyperForBuc = buc => {
   if (!buc) {
     return [];
