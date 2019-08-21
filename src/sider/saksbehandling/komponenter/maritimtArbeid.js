@@ -50,21 +50,19 @@ const MaritimtEnkelt = ({
       </Nav.Row>
       <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
         <Nav.Row>
-          <Nav.Column xs="6">
+          <Nav.Column xs="5">
             <Skjema.Input feltNavn={`${navn}.navn`} label="Navn på enhet:" disabled={!redigerbart} />
+            <Skjema.Select feltNavn={`${navn}.fartsomradeKode`} label="Fartsområde:" disabled={!redigerbart} onChange={fartsomradeChangeHandler}>
+              {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
+            </Skjema.Select>
           </Nav.Column>
-          <Nav.Column xs="6">
+          <Nav.Column xs="5">
             <LandVelger bredde="fullbredde" feltNavn={`${navn}.flaggLandkode`} label="Flaggland:" disabled={!redigerbart} />
             <LandVelger bredde="fullbredde" feltNavn={`${navn}.installasjonsLandkode`} label="Sokkelland:" disabled={!redigerbart} />
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="6">
-            <Skjema.Select feltNavn={`${navn}.fartsomradeKode`} label="Fartsområde:" disabled={!redigerbart} onChange={fartsomradeChangeHandler}>
-              {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
-            </Skjema.Select>
-          </Nav.Column>
-          <Nav.Column xs="6">
+          <Nav.Column xs="5">
             {
               fartsomradeKode === MKV.Koder.begrunnelser.fartsomrader.INNENRIKS &&
               <LandVelger bredde="fullbredde" feltNavn={`${navn}.territorialfarvann`} label="Territorialfarvannsland:" disabled={!redigerbart} />
