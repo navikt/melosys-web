@@ -12,7 +12,8 @@ const erVedtakSteg = id => (
   id === STEG.VEDTAK ||
   id === STEG.ENDRET_PERIODE ||
   id === STEG.AVSLAG_12_X_OG_16 ||
-  id === STEG.ARTIKKEL_16_VEDTAK
+  id === STEG.ARTIKKEL_16_VEDTAK ||
+  id === STEG.ARTIKKEL_13_1_A_VEDTAK
 );
 
 const ikonVelger = (id, status) => {
