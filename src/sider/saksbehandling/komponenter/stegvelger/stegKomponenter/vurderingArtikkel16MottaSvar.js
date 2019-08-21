@@ -50,7 +50,7 @@ export const VurderingArtikkel16MottaSvar = props => {
         fom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.fom) : null,
         tom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : null,
       },
-      begrunnelseFritekst,
+      begrunnelseFritekst: begrunnelseFritekst || null,
     };
 
     oppdaterData(lagAnmodningsperiodesvar(svar));
@@ -111,7 +111,7 @@ export const VurderingArtikkel16MottaSvar = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            { visFritekstFelt && <Skjema.Textarea feltNavn="begrunnelseFritekst" disabled={!redigerbart} label="Begrunnelse" tellerTekst={() => {}} onBlur={lagreSvarHandler} />}
+            { visFritekstFelt && <Skjema.Textarea feltNavn="begrunnelseFritekst" disabled={!redigerbart} label="Begrunnelse" tellerTekst={() => {}} />}
           </Nav.Column>
         </Nav.Row>
       </form>
