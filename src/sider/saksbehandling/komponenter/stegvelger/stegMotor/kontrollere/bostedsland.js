@@ -41,7 +41,7 @@ class Bostedsland extends Steg {
           const harAvklartBostedsland = !Utils._isNil(bostedsland);
           return erToEllerFlereLand && harAvklartBostedsland && begrunnelserErOppgitt;
         },
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: STEG.VIDERESEND,
       },
       {
         beskrivelse: 'dead end',
