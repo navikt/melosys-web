@@ -136,6 +136,7 @@ export default function reducer(state = initialState, action) {
         foretakUtland: dokument.foretakUtland.map(foretakUtland => ({
           navn: foretakUtland.navn || null,
           orgnr: foretakUtland.orgnr || null,
+          selvstendigNaeringsvirksomhet: foretakUtland.selvstendigNaeringsvirksomhet,
           adresse: lagNullableAdresse(foretakUtland.adresse),
         })),
         bosted: {
@@ -152,11 +153,13 @@ export default function reducer(state = initialState, action) {
           },
         },
         maritimtArbeid: dokument.maritimtArbeid.map(maritimtArbeid => ({
-          navn: maritimtArbeid.navn || null,
+          enhetNavn: maritimtArbeid.enhetNavn || null,
           fartsomradeKode: maritimtArbeid.fartsomradeKode || null,
           flaggLandkode: maritimtArbeid.flaggLandkode || null,
           installasjonsLandkode: maritimtArbeid.installasjonsLandkode || null,
           territorialfarvann: maritimtArbeid.territorialfarvann || null,
+          foretakNavn: maritimtArbeid.foretakNavn || null,
+          foretakOrgnr: maritimtArbeid.foretakOrgnr || null,
         })),
         soeknadsland: {
           landkoder: dokument.soknadsland,

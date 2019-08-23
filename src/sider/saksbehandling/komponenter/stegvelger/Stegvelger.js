@@ -84,7 +84,7 @@ class Stegvelger extends Component {
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
   };
 
-  harSoknadIngenFeilmeldinger = () => Utils._isEmpty(this.props.soknadFeilmeldinger);
+  harSoknadFeilmeldinger = () => !Utils._isEmpty(this.props.soknadFeilmeldinger);
 
   gjemSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: false });
 
@@ -152,14 +152,11 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = async behandlingsresultatTypeKode => {
-    if (this.harSoknadIngenFeilmeldinger()) {
-      this.gjemSoknadFeilmeldinger();
+  lagreOgFatteVedtak = behandlingsresultatTypeKode => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
       this.fatteVedtakHandler(behandlingsresultatTypeKode);
-    } else {
-      this.visSoknadFeilmeldinger();
-    }
+    });
   };
 
   bestillAnmodningsperioder = () => {
@@ -173,15 +170,35 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgBestillAnmodningsperioder = async () => {
-    if (this.harSoknadIngenFeilmeldinger()) {
-      this.gjemSoknadFeilmeldinger();
+  lagreOgBestillAnmodningsperioder = () => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
       this.bestillAnmodningsperioder();
-    } else {
-      this.visSoknadFeilmeldinger();
-    }
+    });
   };
+
+  videresendSoknad = () => {
+    const { behandlingID } = this.props;
+
+    return Api.Saksflyt.Soknader.videresend(behandlingID);
+  };
+
+  lagreAvklartefaktaOgVideresendSoknad = () => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
+      await this.props.lagreAvklartefaktaHandler();
+      await this.videresendSoknad();
+      this.tilForsiden();
+    });
+  };
+
+  sjekkOgVisSoknadFeilmeldinger = ingenFeilmeldingerCallback => {
+    if (this.harSoknadFeilmeldinger()) {
+      this.visSoknadFeilmeldinger();
+    } else {
+      this.gjemSoknadFeilmeldinger();
+      if (ingenFeilmeldingerCallback) ingenFeilmeldingerCallback();
+    }
+  }
 
   byggAnmodningsperioderHandler = () => {
     this.props.oppdaterAnmodningsPerioder(this.state.stegStores.lovvalgsbestemmelse.hent());
@@ -224,6 +241,8 @@ class Stegvelger extends Component {
       tilForsiden: this.tilForsiden,
       lagreOgBestillAnmodningsperioder: this.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this.byggAnmodningsperioderHandler,
+      lagreAvklartefakta: this.props.lagreAvklartefaktaHandler,
+      lagreAvklartefaktaOgVideresendSoknad: this.lagreAvklartefaktaOgVideresendSoknad,
     };
 
     const { props } = this;
@@ -266,12 +285,9 @@ class Stegvelger extends Component {
   };
 
   validerSoknadOgGaTilSteg = nyttStegNummer => {
-    if (this.harSoknadIngenFeilmeldinger()) {
-      this.gjemSoknadFeilmeldinger();
+    this.sjekkOgVisSoknadFeilmeldinger(() => {
       this.tilSteg(nyttStegNummer);
-    } else {
-      this.visSoknadFeilmeldinger();
-    }
+    });
   };
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
