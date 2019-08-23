@@ -39,13 +39,16 @@ export const VurderingVideresend = ({
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, //TODO: avventer kode her
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
-        fritekst: begrunnelseFritekst || '',
+        fritekst: begrunnelseFritekst,
       },
     },
     {
       navn: 'Forhåndsvis brev til utenlandske trygdemyndigheter:',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, //TODO: avventer kode her
-      data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET },
+      data: {
+        mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
+        fritekst: begrunnelseFritekst,
+      },
     },
   ];
 
