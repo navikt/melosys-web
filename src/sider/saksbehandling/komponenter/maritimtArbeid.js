@@ -51,7 +51,7 @@ const MaritimtEnkelt = ({
       <Nav.Fieldset legend="Detaljer om skip eller installasjon fra søknaden:">
         <Nav.Row>
           <Nav.Column xs="5">
-            <Skjema.Input feltNavn={`${navn}.navn`} label="Navn på enhet:" disabled={!redigerbart} />
+            <Skjema.Input feltNavn={`${navn}.enhetNavn`} label="Navn på enhet:" disabled={!redigerbart} />
             <Skjema.Select feltNavn={`${navn}.fartsomradeKode`} label="Fartsområde:" disabled={!redigerbart} onChange={fartsomradeChangeHandler}>
               {fartsomrader.map(omrade => <option key={omrade.kode} value={omrade.kode}>{omrade.term}</option>)}
             </Skjema.Select>
