@@ -196,7 +196,7 @@ class Saksbehandling extends Component {
     const { behandlingID } = this.state;
     const { sendAvklartefakta, avklartefakta } = this.props;
 
-    sendAvklartefakta(behandlingID, avklartefakta);
+    return sendAvklartefakta(behandlingID, avklartefakta);
   };
 
   lagreLovvalgsperioderHandler = async () => {

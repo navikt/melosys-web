@@ -1,55 +1,82 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
-import { reduxForm } from 'redux-form';
 
 import * as Nav from '../../../../../utils/navFrontend';
-import * as Skjema from '../../../../../felleskomponenter/skjema';
-import * as KV from '../../../../../kodeverk';
+import * as MPT from '../../../../../proptypes';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 
+import { konverterTilStegData, lagAvklartefaktaBegrunnelse } from '../../../../../regler/avklartefakta';
+
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 
-const VurderingVideresend = ({ redigerbart, videresend, behandlingID }) => {
+const VurderingVideresend = ({
+  redigerbart,
+  lagreAvklartefakta,
+  lagreAvklartefaktaOgVideresendSoknad,
+  behandlingID,
+  tilstand,
+  oppdaterData,
+  slettData,
+}) => {
+  const { bostedslandFakta = {} } = tilstand;
+  const { begrunnelseFritekst } = bostedslandFakta;
+
+  useEffect(() => {
+    oppdaterData(konverterTilStegData(MKV.Koder.avklartefakta.IKKE_BOSATT_NORGE, bostedslandFakta));
+
+    return function cleanup() {
+      slettData();
+    };
+  }, []);
+
+  // TODO: Avventer nye koder fra brev for brevtype. I mellomtiden bruker vi tilfeldige brevtyper(avtalt med Yvonne).
   const dokumenter = [
-    /*
-    TODO: avventer koder for Brev om orientering til bruker om videresending og Brev til utenlandske trygdemyndigheter.
-    */
     {
       navn: 'Forhåndsvis orienteringsbrev',
-      type: '', //TODO: trenger kode her
-      data: { mottaker: MKV.Koder.aktoersroller.BRUKER },
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, //TODO: avventer kode her
+      data: {
+        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        fritekst: begrunnelseFritekst || '',
+      },
     },
     {
-      navn: 'Forhåndsvis brev til utenlandske trygdemyndigheter',
-      type: '', //TODO: trenger kode her
-      data: { mottaker: MKV.Koder.aktoersroller.BRUKER },
+      navn: 'Forhåndsvis brev til utenlandske trygdemyndigheter:',
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, //TODO: avventer kode her
+      data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET },
     },
   ];
+
+  const fritekstEndret = e => {
+    oppdaterData(lagAvklartefaktaBegrunnelse(MKV.Koder.avklartefakta.IKKE_BOSATT_NORGE, null, null, e.target.value));
+  };
 
   return (
     <div>
       <Nav.Row>
         <Nav.Column xs="6">
-          <form>
             <Nav.Undertittel>Videresending av søknad</Nav.Undertittel>
-            <Skjema.Textarea
+            <Nav.Textarea
               disabled={!redigerbart}
               label="Begrunnelse og informasjon til utenlandske myndigheter"
-              feltNavn="begrunnelseVidereSending"
+              value={begrunnelseFritekst || ''}
+              onChange={fritekstEndret}
             />
-            {
-              redigerbart &&
-              <PdfLenkeListe dokumenter={dokumenter} behandlingID={behandlingID} />
-            }
-          </form>
+          {
+            redigerbart &&
+            <PdfLenkeListe
+              dokumenter={dokumenter}
+              behandlingID={behandlingID}
+              vedKlikk={lagreAvklartefakta}
+            />
+          }
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6" className="fane__fot">
-          <Nav.Hovedknapp disabled={!redigerbart} onClick={videresend}>
+          <Nav.Hovedknapp disabled={!redigerbart} onClick={lagreAvklartefaktaOgVideresendSoknad}>
             VIDERESEND SØKNAD
           </Nav.Hovedknapp>
         </Nav.Column>
@@ -59,21 +86,19 @@ const VurderingVideresend = ({ redigerbart, videresend, behandlingID }) => {
 };
 
 VurderingVideresend.propTypes = {
-  videresend: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
+  tilstand: PT.shape({
+    bostedslandFakta: MPT.Avklartefakta,
+  }).isRequired,
+  oppdaterData: PT.func.isRequired,
+  slettData: PT.func.isRequired,
+  lagreAvklartefaktaOgVideresendSoknad: PT.func.isRequired,
+  lagreAvklartefakta: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
-const VurderingVideresendForm = reduxForm({
-  form: KV.Form.VIDERESENDING,
-  enableReinitialize: true,
-  destroyOnUnmount: true,
-  keepDirtyOnReinitialize: true,
-  updateUnregisteredFields: true,
-})(VurderingVideresend);
-
-export default connect(mapStateToProps)(VurderingVideresendForm);
+export default connect(mapStateToProps)(VurderingVideresend);
