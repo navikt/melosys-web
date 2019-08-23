@@ -5,7 +5,7 @@ import * as Nav from '../../../../../utils/navFrontend';
 import { VurderingVideresend } from './vurderingVideresend';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 
-describe('Vurderingvideresen', () => {
+describe('Vurderingvideresend', () => {
   let props = null;
 
   beforeEach(() => {
