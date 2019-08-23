@@ -4,10 +4,12 @@
  * Dette er Redux-reducere som håndterer state-manipulasjon direkte, basert på
  * action types som sendes inn sammen med dataene.
  */
+import * as MKV from 'melosys-kodeverk';
 
 import { STATUS } from '../../services/utils';
 import * as Utils from '../../utils';
 import * as Types from './types';
+import * as KV from '../../kodeverk';
 
 export const initialState = {
   data: [],
@@ -48,25 +50,55 @@ export default function reducer(state = initialState, action) {
       return { ...initialState };
     case Types.OPPDATER_AVKLARTEFAKTA: {
       const { avklartefakta } = action;
+
+      const {
+        VIRKSOMHET,
+        YRKESGRUPPE,
+        BOSTEDSLAND,
+        SOKKEL_ELLER_SKIP,
+        ARBEIDSLAND,
+        ARBEID_SOKKEL_SKIP,
+        AARSAK_ENDRING_PERIODE,
+        IKKE_BOSATT_NORGE,
+      } = MKV.Koder.avklartefakta;
+
+      const {
+        SOKNADSLAND,
+        YRKESAKTIVITET_ANTALL_LAND,
+        YRKESAKTIVITET,
+        avklartefaktaKoder: {
+          AKTIVITET_I_NORGE,
+          MARGINALT_ARBEID,
+          ARBEIDSGIVERS_FORRETNINGSSTED,
+          OMFATTES_I_NORGE,
+          OMFATTES_I_LAND,
+          ARBEIDSMONSTER,
+        },
+        referanseKoder: {
+          INSTALLASJON_ARBEIDSLAND,
+          INSTALLASJON_ARBEIDSLAND_TYPE,
+        },
+      } = KV.Koder;
+
       const avklartefaktaUt = [
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.SOKNADSLAND, null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.VIRKSOMHET, 'VIRKSOMHET'),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESGRUPPE, 'YRKESGRUPPE'),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET_ANTALL_LAND, null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.YRKESAKTIVITET, null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.AKTIVITET_I_NORGE, null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.MARGINALT_ARBEID, null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.ARBEIDSGIVERS_FORRETNINGSSTED, null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.OMFATTES_I_NORGE, null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.OMFATTES_I_LAND, null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.ARBEIDSMONSTER, null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.BOSTEDSLAND, 'BOSTEDSLAND'),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.SOKKEL_ELLER_SKIP, 'SOKKEL_ELLER_SKIP'),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.INSTALLASJON_ARBEIDSLAND, 'ARBEIDSLAND'),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.INSTALLASJON_ARBEIDSLAND_TYPE, null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.ARBEID_SOKKEL_SKIP, 'ARBEID_SOKKEL_SKIP'),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.AARSAK_ENDRING_PERIODE, 'AARSAK_ENDRING_PERIODE'),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta.IKKE_BOSATT_NORGE, 'IKKE_BOSATT_NORGE'),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[SOKNADSLAND], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[VIRKSOMHET], VIRKSOMHET),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESGRUPPE], YRKESGRUPPE),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESAKTIVITET_ANTALL_LAND], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[YRKESAKTIVITET], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[AKTIVITET_I_NORGE], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[MARGINALT_ARBEID], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEIDSGIVERS_FORRETNINGSSTED], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[OMFATTES_I_NORGE], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[OMFATTES_I_LAND], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEIDSMONSTER], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[BOSTEDSLAND], BOSTEDSLAND),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[SOKKEL_ELLER_SKIP], SOKKEL_ELLER_SKIP),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND], ARBEIDSLAND),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND_TYPE], null),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEID_SOKKEL_SKIP], ARBEID_SOKKEL_SKIP),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[AARSAK_ENDRING_PERIODE], AARSAK_ENDRING_PERIODE),
+        ...lagAvklartfaktaObjektMedKode(avklartefakta[IKKE_BOSATT_NORGE], IKKE_BOSATT_NORGE),
       ].filter(fakta => fakta !== Types.NULL);
 
       return { ...state, data: [...avklartefaktaUt] };
