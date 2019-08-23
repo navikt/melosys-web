@@ -11,6 +11,7 @@ function InnerCheckboxComponent({
   submitOnChange,
   onClick,
   disabled,
+  className,
 }) {
   const feil = (meta.error && meta.touched && !meta.active) ? { feilmelding: meta.error } : undefined;
 
@@ -30,6 +31,7 @@ function InnerCheckboxComponent({
       {...input}
       onChange={onChange}
       disabled={disabled}
+      className={className}
     />
   );
 }
@@ -42,6 +44,7 @@ InnerCheckboxComponent.propTypes = {
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
   onClick: PT.func,
   disabled: PT.bool,
+  className: PT.string,
 };
 
 InnerCheckboxComponent.defaultProps = {
@@ -52,6 +55,7 @@ InnerCheckboxComponent.defaultProps = {
   input: {},
   meta: {},
   disabled: false,
+  className: undefined,
 };
 
 function Checkbox({ feltNavn, className, ...rest }) {
