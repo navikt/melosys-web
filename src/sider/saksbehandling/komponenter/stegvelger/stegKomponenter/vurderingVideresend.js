@@ -12,7 +12,7 @@ import { konverterTilStegData, lagAvklartefaktaBegrunnelse } from '../../../../.
 
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 
-const VurderingVideresend = ({
+export const VurderingVideresend = ({
   redigerbart,
   lagreAvklartefakta,
   lagreAvklartefaktaOgVideresendSoknad,
@@ -57,13 +57,13 @@ const VurderingVideresend = ({
     <div>
       <Nav.Row>
         <Nav.Column xs="6">
-            <Nav.Undertittel>Videresending av søknad</Nav.Undertittel>
-            <Nav.Textarea
-              disabled={!redigerbart}
-              label="Begrunnelse og informasjon til utenlandske myndigheter"
-              value={begrunnelseFritekst || ''}
-              onChange={fritekstEndret}
-            />
+          <Nav.Undertittel>Videresending av søknad</Nav.Undertittel>
+          <Nav.Textarea
+            disabled={!redigerbart}
+            label="Begrunnelse og informasjon til utenlandske myndigheter"
+            value={begrunnelseFritekst || ''}
+            onChange={fritekstEndret}
+          />
           {
             redigerbart &&
             <PdfLenkeListe
