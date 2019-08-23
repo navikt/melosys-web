@@ -1,4 +1,4 @@
-export const foretakUtland = 'Arbeidsgiver/Foretak i utlandet';
+export const foretakUtland = 'Arbeidsgiver/selvstendig næringsvirksomhet i utlandet';
 export const arbeidUtland = 'Opplysninger om fysisk arbeidssted i utlandet';
 export const soknadsPeriode = 'Søknadsperiode';
 export const selvstendigNaeringsdrivende = 'Arbeid som selvstendig næringsdrivende';
