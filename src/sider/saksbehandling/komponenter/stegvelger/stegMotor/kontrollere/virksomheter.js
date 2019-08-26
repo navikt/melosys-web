@@ -62,7 +62,7 @@ class Virksomheter extends Steg {
     this.komponent = VurderingVirksomhet;
     this.samleRelevanteData = _propsLight => ({
       virksomheterIPerioden: _propsLight.virksomheterIPerioden,
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const virksomheter = hentFaktaListe(KV.Koder.avklartefaktaKoder.VIRKSOMHET, _propsLight.avklartefakta);

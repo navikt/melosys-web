@@ -11,6 +11,7 @@ import moment from 'moment/moment';
 import { datoDiff } from '../../utils/dato';
 import * as KV from '../../kodeverk';
 import * as soknadSelectors from '../soknad/selectors';
+import { anmodningsperioderSelectors } from '../anmodningsperioder';
 
 /* eslint import/prefer-default-export:"off" */
 export const BehandlingerSelector = createSelector(
@@ -29,6 +30,12 @@ export const BehandlingstypeKodeSelector = createSelector(
   OppsummeringSelector,
   oppsummering => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : '')
 );
+
+export const ErArtikkel16AnmodningSendt = createSelector(
+  anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
+  anmodningsperioderSendtUtland => anmodningsperioderSendtUtland
+);
+
 export const RedigerbartSelector = createSelector(
   state => BehandlingerSelector(state).redigerbart || false,
   BehandlingstypeKodeSelector,
@@ -37,6 +44,11 @@ export const RedigerbartSelector = createSelector(
 export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
   state => BehandlingerSelector(state).redigerbart || false,
   redigerbart => redigerbart
+);
+export const StegRedigerbartSelector = createSelector(
+  RedigerbartSelector,
+  ErArtikkel16AnmodningSendt,
+  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
 );
 
 export const SaksopplysningerSelector = createSelector(
