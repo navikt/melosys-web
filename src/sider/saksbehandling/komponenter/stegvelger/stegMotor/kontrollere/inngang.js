@@ -22,12 +22,12 @@ class Inngang extends Steg {
     this.id = STEG.INNGANG;
     this.tittel = 'Inngang';
     this.komponent = VurderingInngang;
-    this.samleRelevanteData = props => ({
-      inngangsvilkar: props.inngang,
-      begrunnelser: props.begrunnelser,
-      alleLandkoder: props.landkoder,
-      avklartefakta: props.avklartefakta,
-      redigerbart: props.redigerbart,
+    this.samleRelevanteData = _propsLight => ({
+      inngangsvilkar: _propsLight.inngang,
+      begrunnelser: _propsLight.begrunnelser,
+      alleLandkoder: _propsLight.landkoder,
+      avklartefakta: _propsLight.avklartefakta,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const { soknadsland } = _propsLight.soknad_skjema.avklartefakta;

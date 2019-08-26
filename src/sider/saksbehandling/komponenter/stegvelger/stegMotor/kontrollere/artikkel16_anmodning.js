@@ -26,7 +26,7 @@ class Artikkel16Anmodning extends Steg {
     this.tittel = 'Artikkel 16.1';
     this.komponent = VurderingArtikkel16Anmodning;
     this.samleRelevanteData = _propsLight => ({
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => ({
       art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),

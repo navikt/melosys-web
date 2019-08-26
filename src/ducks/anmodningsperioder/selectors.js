@@ -19,3 +19,11 @@ export const UnntakFraBestemmelseSelector = createSelector(
   AnmodningsperiodeSelector,
   anmodningsperiode => anmodningsperiode.unntakFraBestemmelse
 );
+
+export const AlleAnmodningsperioderSendtUtlandSelector = createSelector(
+  AnmodningsperioderSelector,
+  anmodningsperioder => (
+    anmodningsperioder.length > 0 &&
+    anmodningsperioder.every(anmodningsperiode => anmodningsperiode.sendtUtland)
+  )
+);

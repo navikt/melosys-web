@@ -24,7 +24,7 @@ class ForutgaendeMedlemskap extends Steg {
     this.komponent = VurderingForutgaendeMedlemskap;
     this.samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.art12_1_forutgaaende_medl,
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const forutgaendeMedlemskap = hentVilkar(MKV.Koder.vilkaar.ART12_1_FORUTGAAENDE_MEDLEMSKAP, _propsLight.vilkar);
