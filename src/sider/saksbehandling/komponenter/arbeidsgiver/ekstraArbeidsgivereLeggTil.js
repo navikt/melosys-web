@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import * as Nav from '../../../../utils/navFrontend';
 import OrganisasjonsAdresse from '../../../../felleskomponenter/adresser/organisasjonsAdresse';
 
@@ -160,11 +158,4 @@ EkstraArbeidsgivereLeggTil.propTypes = {
   leggTil: PT.func.isRequired,
 };
 
-
-const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
-});
-
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(EkstraArbeidsgivereLeggTil);
+export default EkstraArbeidsgivereLeggTil;

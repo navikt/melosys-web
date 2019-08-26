@@ -31,7 +31,7 @@ export const BehandlingstypeKodeSelector = createSelector(
   oppsummering => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : '')
 );
 
-export const ErArtikkel16AnmodningSendt = createSelector(
+export const ErArtikkel16AnmodningSendtSelector = createSelector(
   anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
   anmodningsperioderSendtUtland => anmodningsperioderSendtUtland
 );
@@ -47,7 +47,17 @@ export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
 );
 export const GeneriskStegRedigerbartSelector = createSelector(
   RedigerbartSelector,
-  ErArtikkel16AnmodningSendt,
+  ErArtikkel16AnmodningSendtSelector,
+  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
+);
+export const PanelerRedigerbartSelector = createSelector(
+  RedigerbartSelector,
+  ErArtikkel16AnmodningSendtSelector,
+  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
+);
+export const BrevDialogRedigerbartSelector = createSelector(
+  RedigerbartSelector,
+  ErArtikkel16AnmodningSendtSelector,
   (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
 );
 
