@@ -20,11 +20,13 @@ import './arbeidsgivereNorge.css';
 const uuid = require('uuid/v4');
 
 const ArbeidsgivereEnkeltNorge = props => {
-  const { organisasjon, arbeidsforholdene, inntektListe } = props;
+  const {
+    organisasjon, arbeidsforholdene, inntektListe, redigerbart,
+  } = props;
 
   return (
     <div>
-      <Organisasjon organisasjon={organisasjon} />
+      <Organisasjon organisasjon={organisasjon} redigerbart={redigerbart} />
       <Inntekt inntektListe={inntektListe} />
       <Arbeidsforholdene arbeidsforholdene={arbeidsforholdene} />
     </div>
@@ -35,19 +37,23 @@ ArbeidsgivereEnkeltNorge.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
   arbeidsforholdene: MPT.Arbeidsforholdene.isRequired,
   inntektListe: MPT.InntektListe.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 const ArbeidsgivereNorge = props => {
-  const { arbeidsgivereNorge, hentOrganisasjon, organisasjoner } = props;
+  const {
+    arbeidsgivereNorge, hentOrganisasjon, organisasjoner, redigerbart,
+  } = props;
 
   return (
     <div className="arbeidsgivereNorge">
-      {arbeidsgivereNorge.map(arbeidsgiver => <ArbeidsgivereEnkeltNorge key={uuid()} {...arbeidsgiver} />)}
+      {arbeidsgivereNorge.map(arbeidsgiver => <ArbeidsgivereEnkeltNorge key={uuid()} {...arbeidsgiver} redigerbart={redigerbart} />)}
       <FieldArray
         name="ekstraArbeidsgivere"
         component={EkstraArbeidsgivere}
         organisasjoner={organisasjoner}
         hentOrganisasjon={hentOrganisasjon}
+        redigerbart={redigerbart}
         oppdaterSoknadState={() => props.oppdaterSoknadState(props.skjema)} />
     </div>
   );
@@ -59,6 +65,7 @@ ArbeidsgivereNorge.propTypes = {
   hentOrganisasjon: PT.func.isRequired,
   skjema: PT.object.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -66,6 +73,7 @@ const mapStateToProps = state => ({
   ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
+  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
