@@ -3,18 +3,18 @@ import PT from 'prop-types';
 
 import * as MKV from 'melosys-kodeverk';
 
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
+import * as Nav from '../../../../utils/navFrontend';
+import * as MPT from '../../../../proptypes';
 import * as RegistreringContext from '../state/registreringContext';
 
-import { formatterDatoTilNorsk } from '../../../utils/dato';
-import { soknadSelectors } from '../../../ducks/soknad';
-import { fagsakSelectors } from '../../../ducks/fagsaker';
-import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
-import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
+import { formatterDatoTilNorsk } from '../../../../utils/dato';
+import { soknadSelectors } from '../../../../ducks/soknad';
+import { fagsakSelectors } from '../../../../ducks/fagsaker';
+import { behandlingerOperations, behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
 import Behandlingsmeny from './behandlingsmeny';
 import Behandlingsstatus from './behandlingsstatus';
-import Oppsummering from '../../../felleskomponenter/oppsummering';
+import Oppsummering from '../../../../felleskomponenter/oppsummering';
 
 import './sideOppsummering.css';
 

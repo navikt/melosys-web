@@ -64,7 +64,7 @@ const BehandlingOppgave = ({ sak }) => {
   if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
     rute = 'registrering';
   }
-  const link = `/${rute}/${saksnummer}/?behandlingID=${behandlingID}`;
+  const link = `/${rute}/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
 
