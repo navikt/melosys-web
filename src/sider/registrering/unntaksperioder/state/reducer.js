@@ -1,9 +1,9 @@
-import avklartefaktaReducer, { initialState as avklartefaktaInitialState } from '../../../ducks/avklartefakta';
-import behandlingerReducer, { initialState as behandlingerInitialState } from '../../../ducks/behandlinger';
+import avklartefaktaReducer, { initialState as avklartefaktaInitialState } from '../../../../ducks/avklartefakta';
+import behandlingerReducer, { initialState as behandlingerInitialState } from '../../../../ducks/behandlinger';
 import endrePeriodeReducer, { initialState as endrePeriodeInitialState } from './ducks/endrePeriode';
-import fagsakerReducer, { initialState as fagsakerInitialState } from '../../../ducks/fagsaker';
-import lovvalgsperioderReducer, { initialState as lovvalgsperioderInitialState } from '../../../ducks/lovvalgsperioder';
-import soknadReducer, { initialState as soknadInitialState } from '../../../ducks/soknad';
+import fagsakerReducer, { initialState as fagsakerInitialState } from '../../../../ducks/fagsaker';
+import lovvalgsperioderReducer, { initialState as lovvalgsperioderInitialState } from '../../../../ducks/lovvalgsperioder';
+import soknadReducer, { initialState as soknadInitialState } from '../../../../ducks/soknad';
 
 export const initialState = {
   avklartefakta: avklartefaktaInitialState,
