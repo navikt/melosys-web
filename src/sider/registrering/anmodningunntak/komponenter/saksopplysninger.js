@@ -40,7 +40,7 @@ RegisterkontrollTreff.propTypes = {
 
 class Saksopplysninger extends Component {
   state = {
-    unntaksperiodeVurdering: KV.Koder.Unntaksperiode.GODKJENT,
+    anmodningUnntakVurdering: MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
     begrunnelseFritekst: '',
     ikkeGodkjentBegrunnelseKoder: [],
     // endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
@@ -60,22 +60,23 @@ class Saksopplysninger extends Component {
 
     const { behandlingID, history } = this.props;
     const tilForsiden = () => history.push('/');
-    switch (this.state.unntaksperiodeVurdering) {
-      case KV.Koder.Unntaksperiode.GODKJENT:
+    switch (this.state.anmodningUnntakVurdering) {
+      case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
         this.godkjenn(behandlingID)
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
-      case KV.Koder.Unntaksperiode.INNHENT:
+      case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
         this.innhentInfo(behandlingID)
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
-      case KV.Koder.Unntaksperiode.AVSLAG: {
+      case MKV.Koder.anmodningsperiodesvartyper.AVSLAG: {
         const ikkegodkjenn = {
           ikkeGodkjentBegrunnelseKoder: [...this.state.ikkeGodkjentBegrunnelseKoder],
           begrunnelseFritekst: this.state.begrunnelseFritekst,
         };
+        // TODO Api.Saksflyt.Anmodningsperioder.ikkegodkjenn()...
         Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn })
           .then(tilForsiden)
           .catch(Utils.logger.error);
@@ -127,38 +128,28 @@ class Saksopplysninger extends Component {
                 </Nav.Row>
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
-                    <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => this.setState({ unntaksperiodeVurdering: e.target.value })} disabled={!redigerbart}>
-                      <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.GODKJENT} label="Godkjenn" defaultChecked />
-                      <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.INNHENT} label="Innhent informasjon" />
-                      <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.AVSLAG} label="Ikke godkjenn" />
+                    <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => this.setState({ anmodningUnntakVurdering: e.target.value })} disabled={!redigerbart}>
+                      <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.INNVILGELSE} defaultChecked />
+                      <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} />
+                      <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} label={MKV.Terms.anmodningsperiodesvartyper.AVSLAG} />
                     </Nav.Fieldset>
                   </Nav.Column>
                 </Nav.Row>
-                {this.state.unntaksperiodeVurdering === KV.Koder.Unntaksperiode.AVSLAG && (
+                {this.state.anmodningUnntakVurdering === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
+                  <Fragment>
+                    <p>DELVIS_INNVILGELSE</p>
+                  </Fragment>
+                )}
+                {this.state.anmodningUnntakVurdering === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
                   <Fragment>
                     <Nav.Row>
                       <Nav.Column xs="6">
-                        <Nav.Fieldset legend="Begrunnelse for ikke godkjent unntaksperiode">
-                          <ListevelgerFlervalg
-                            disabled={false}
-                            muligeValg={MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser}
-                            label="Legg til begrunnelse for ikke oppfylt:"
-                            tillatFritekst={false}
-                            onChange={listevalgEndringHandler}
-                          />
-                        </Nav.Fieldset>
-                      </Nav.Column>
-                    </Nav.Row>
-                    <Nav.Row>
-                      <Nav.Column xs="6">
-                        {this.state.ikkeGodkjentBegrunnelseKoder.includes('ANNET') &&
                         <Nav.Textarea
                           label="Skriv inn begrunnelse for avslaget..."
                           onChange={this.textAreaOnChange}
                           value={this.state.begrunnelseFritekst}
                           maxLength={255}
                           bredde="fullbredde" />
-                        }
                       </Nav.Column>
                     </Nav.Row>
                   </Fragment>
