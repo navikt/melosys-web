@@ -290,7 +290,7 @@ const mapStateToProps = state => ({
   personOpplysninger: soknadSelectors.PersonOpplysningerSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
   medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
   oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
 });
