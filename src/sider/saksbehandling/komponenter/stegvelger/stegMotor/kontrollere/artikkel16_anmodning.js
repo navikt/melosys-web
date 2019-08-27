@@ -13,7 +13,7 @@ class Artikkel16Anmodning extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'mottatt svar',
-        exec: () => Artikkel16Anmodning.harAvklaring(propsLight) && Artikkel16Anmodning.erUnderBehandling(propsLight),
+        exec: () => Artikkel16Anmodning.skalArt16SvarstegVaereSynlig(propsLight),
         nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
       },
       {
@@ -44,8 +44,15 @@ class Artikkel16Anmodning extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  static erUnderBehandling({ behandlingsstatus }) {
-    return KV.objektTilKode(behandlingsstatus) === MKV.Koder.behandlinger.status.UNDER_BEHANDLING;
+  static skalArt16SvarstegVaereSynlig(propsLight) {
+    return Artikkel16Anmodning.erUnderBehandlingEllerAvsluttet(propsLight) && Artikkel16Anmodning.harAvklaring(propsLight);
+  }
+
+  static erUnderBehandlingEllerAvsluttet({ behandlingsstatus }) {
+    return [
+      MKV.Koder.behandlinger.status.UNDER_BEHANDLING,
+      MKV.Koder.behandlinger.status.AVSLUTTET,
+    ].includes(KV.objektTilKode(behandlingsstatus));
   }
 
   static harAvklaring({ anmodningsperioder }) {
