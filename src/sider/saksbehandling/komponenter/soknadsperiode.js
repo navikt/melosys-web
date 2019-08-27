@@ -226,7 +226,7 @@ Soknadsperiode.defaultProps = {
 const mapStateToProps = state => ({
   soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
   soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

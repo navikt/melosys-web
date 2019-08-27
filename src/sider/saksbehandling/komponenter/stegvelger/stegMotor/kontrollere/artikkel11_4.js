@@ -40,7 +40,7 @@ class Artikkel11_4 extends Steg {
       arbeidsland: _propsLight.arbeidsland,
       valgteVirksomheter: _propsLight.valgteVirksomheter,
       begrunnelser: _propsLight.begrunnelser.art11_4_begrunnelser || [],
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
 
     this.beregnRelevantUI = _propsLight => {

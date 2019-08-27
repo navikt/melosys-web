@@ -269,6 +269,7 @@ class Stegvelger extends Component {
       valgteVirksomheter: props.valgteVirksomheter,
       vilkar: props.vilkar,
       redigerbart: props.redigerbart,
+      generiskStegRedigerbart: props.generiskStegRedigerbart,
     };
 
     const stegMotor = new StegMotor(propsLight);
@@ -397,6 +398,7 @@ Stegvelger.propTypes = {
   lagreAnmodningsperioderHandler: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterAnmodningsperiodesvar: PT.func.isRequired,
+  generiskStegRedigerbart: PT.bool.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -428,6 +430,7 @@ const mapStateToProps = state => ({
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
+  generiskStegRedigerbart: behandlingerSelectors.GeneriskStegRedigerbartSelector(state),
 });
 
 /* eslint no-alert:off */
