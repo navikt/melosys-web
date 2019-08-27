@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as Skjema from '../../../../felleskomponenter/skjema';
 
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { erOrgnrGyldig } from '../../../../felleskomponenter/skjema/validering/generisk/organisasjon';
 import { BOOLSK } from '../../../../constants';
 
@@ -101,10 +99,4 @@ EnkeltForetak.defaultProps = {
   organisasjon: null,
 };
 
-const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
-});
-
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(EnkeltForetak);
+export default EnkeltForetak;

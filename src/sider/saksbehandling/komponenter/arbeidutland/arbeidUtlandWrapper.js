@@ -50,7 +50,7 @@ ArbeidUtlandWrapper.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = () => ({});

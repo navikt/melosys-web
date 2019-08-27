@@ -51,7 +51,7 @@ class Arbeidsmonster extends Steg {
     this.komponent = VurderingArbeidsmonster;
     this.samleRelevanteData = _propsLight => ({
       arbeidsland: _propsLight.arbeidsland,
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const marginaltArbeid = hentFaktaListe(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, _propsLight.avklartefakta);
