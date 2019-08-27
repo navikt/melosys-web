@@ -32,11 +32,10 @@ export const VurderingVideresend = ({
     };
   }, []);
 
-  // TODO: Avventer nye koder fra brev for brevtype. I mellomtiden bruker vi tilfeldige brevtyper(avtalt med Yvonne).
   const dokumenter = [
     {
       navn: 'Forhåndsvis orienteringsbrev',
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, //TODO: avventer kode her
+      type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
         fritekst: begrunnelseFritekst,
@@ -44,7 +43,7 @@ export const VurderingVideresend = ({
     },
     {
       navn: 'Forhåndsvis brev til utenlandske trygdemyndigheter:',
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, //TODO: avventer kode her
+      type: MKV.Koder.brev.produserbaredokumenter.VIDERESENDT_SOEKNAD_UTLAND,
       data: {
         mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
         fritekst: begrunnelseFritekst,
