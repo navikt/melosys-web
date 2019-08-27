@@ -55,8 +55,7 @@ class Bostedsland extends Steg {
     this.komponent = VurderingBostedsland;
     this.samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.bosted || [],
-      redigerbart: _propsLight.redigerbart,
-
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const { saksopplysninger = {} } = _propsLight;

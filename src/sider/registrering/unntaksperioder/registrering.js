@@ -110,7 +110,7 @@ const Registrering = props => {
               visHenleggDialogHandle={visHenleggDialog}
               tilForsidenHandle={navigerTilOversiktSide}
             />
-            <SideDialog behandlingID={behandlingID} />
+            <SideDialog behandlingID={behandlingID} redigerbart={redigerbart} />
           </Nav.Column>
         </Nav.Row>
       </Nav.Container>

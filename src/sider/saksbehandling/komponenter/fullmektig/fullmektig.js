@@ -98,7 +98,7 @@ function Fullmektig(props) {
       </Nav.Column>
       <Nav.Column xs="6">
         {
-          org && <Kontaktopplysninger juridiskOrg={org} />
+          org && <Kontaktopplysninger juridiskOrg={org} redigerbart={redigerbart} />
         }
       </Nav.Column>
     </Nav.Row>
