@@ -18,6 +18,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../duc
 import { createValidator } from '../../../../felleskomponenter/skjema/validering/skjemaer/createValidator';
 
 import './saksopplysninger.css';
+import { DatoOmradeMedVarighet } from '../../../../felleskomponenter/datoOmrade/datoOmrade';
 
 const uuid = require('uuid/v4');
 
@@ -88,6 +89,7 @@ class Saksopplysninger extends Component {
     const {
       medlemskap, sed, vurderingBegrunnelser, redigerbart,
     } = this.props;
+
     if (!sed.lovvalgsperiode) {
       return null;
     }
@@ -105,6 +107,17 @@ class Saksopplysninger extends Component {
               <Nav.Systemtittel>Behandle anmoding om unntak</Nav.Systemtittel>
               <br />
               <div className="vurderUnntaksperiode">
+                <Nav.Row className="seksjon">
+                  <Nav.Column xs="12">
+                    <Nav.Element>Land:</Nav.Element>
+                    <Nav.Normaltekst>{KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})</Nav.Normaltekst>
+                  </Nav.Column>
+                </Nav.Row>
+                <Nav.Row className="seksjon">
+                  <Nav.Column xs="12">
+                    <DatoOmradeMedVarighet periode={sed.lovvalgsperiode} label="Søknadsperiode" />
+                  </Nav.Column>
+                </Nav.Row>
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
                     <Nav.Element>Treff ved automatisk kontroll</Nav.Element>
