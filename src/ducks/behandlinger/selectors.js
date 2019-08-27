@@ -55,7 +55,7 @@ export const PanelerRedigerbartSelector = createSelector(
   ErArtikkel16AnmodningSendtSelector,
   (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
 );
-export const BrevDialogRedigerbartSelector = createSelector(
+export const SidedialogRedigerbartSelector = createSelector(
   RedigerbartSelector,
   ErArtikkel16AnmodningSendtSelector,
   (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
