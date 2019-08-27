@@ -74,9 +74,8 @@ VirksomhetNorge.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });
-const mapDispatchToProps = () => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(VirksomhetNorge);
+export default connect(mapStateToProps)(VirksomhetNorge);
