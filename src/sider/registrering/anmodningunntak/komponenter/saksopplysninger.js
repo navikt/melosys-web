@@ -11,10 +11,11 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as RegistreringContext from '../state/registreringContext';
 import ListevelgerFlervalg from '../../../../felleskomponenter/ui/listevelgerFlervalg';
 import Medlemskap from '../../../../felleskomponenter/medlemskap';
-
+import EndrePeriode from './endrePeriode';
 import { lovvalgsperioderOperations } from '../../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
-
+import { endrePeriodeSkjema } from '../validering/endrePeriodeSkjema';
+import { endrePeriodeSelectors } from '../state/ducks/endrePeriode';
 import { createValidator } from '../../../../felleskomponenter/skjema/validering/skjemaer/createValidator';
 
 import './saksopplysninger.css';
@@ -43,7 +44,7 @@ class Saksopplysninger extends Component {
     anmodningUnntakVurdering: MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
     begrunnelseFritekst: '',
     ikkeGodkjentBegrunnelseKoder: [],
-    // endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
+    endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
   };
 
   overstyrSubmit = event => {
@@ -86,6 +87,8 @@ class Saksopplysninger extends Component {
         return false;
     }
   };
+  kanEndrePeriode = () => true; // TODO (this.state.unntaksperiodeVurdering === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE);
+
   render() {
     const {
       medlemskap, sed, vurderingBegrunnelser, redigerbart,
@@ -95,10 +98,6 @@ class Saksopplysninger extends Component {
       return null;
     }
 
-    const listevalgEndringHandler = event => {
-      const ikkeGodkjentBegrunnelseKoder = [...event.value];
-      this.setState({ ikkeGodkjentBegrunnelseKoder });
-    };
     const unikRadioButtonGruppeID = uuid();
     return (
       <div>
@@ -136,9 +135,11 @@ class Saksopplysninger extends Component {
                   </Nav.Column>
                 </Nav.Row>
                 {this.state.anmodningUnntakVurdering === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
-                  <Fragment>
-                    <p>DELVIS_INNVILGELSE</p>
-                  </Fragment>
+                  <Nav.Row className="seksjon">
+                    <EndrePeriode
+                      feilmeldinger={this.state.endrePeriodeFeilmeldinger}
+                      redigerbart={this.kanEndrePeriode()} />
+                  </Nav.Row>
                 )}
                 {this.state.anmodningUnntakVurdering === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
                   <Fragment>
@@ -174,14 +175,16 @@ Saksopplysninger.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   medlemskap: MPT.Medlemskap,
-  sed: PT.object, // TODO prop-type
+  sed: MPT.Behandlinger.Saksopplysninger.SED,
   vurderingBegrunnelser: PT.object,
   skjema: PT.any,
   avklartefakta: PT.array.isRequired,
+  endrePeriode: PT.object.isRequired,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
+  oppdaterLovvalgsperioder: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -193,9 +196,11 @@ Saksopplysninger.defaultProps = {
 
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
+  endrePeriode: endrePeriodeSelectors.EndrePeriodeSelector(state),
 });
 const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
+  oppdaterLovvalgsperioder: (behandlingID, lovvalgsperiodeListe) => dispatch(lovvalgsperioderOperations.send(behandlingID, lovvalgsperiodeListe)),
 });
 
 export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
