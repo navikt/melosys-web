@@ -43,7 +43,7 @@ class YrkesaktivitetAntallLand extends Steg {
     this.tittel = 'Arbeids\u00ADland';
     this.komponent = VurderingYrkesaktivitetAntallLand;
     this.samleRelevanteData = _propsLight => ({
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const yrkesaktivitetAntallLand = hentFakta(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND, _propsLight.avklartefakta);
