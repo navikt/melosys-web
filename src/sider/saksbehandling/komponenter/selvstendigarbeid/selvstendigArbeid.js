@@ -38,6 +38,7 @@ const SelvstendigArbeid = props => {
       hentOrganisasjon={hentOrganisasjon}
       oppdaterSoknadState={oppdaterSoknadState}
       skjema={soknadVerdier}
+      redigerbart={redigerbart}
     />
     : null;
 
@@ -77,7 +78,7 @@ SelvstendigArbeid.defaultProps = {
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

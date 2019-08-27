@@ -40,7 +40,7 @@ class Artikkel12_1 extends Steg {
     this.samleRelevanteData = _propsLight => ({
       artikkel: { kode: MKV.Koder.vilkaar.FO_883_2004_ART12_1, term: '12.1' },
       begrunnelser: _propsLight.begrunnelser.art12_1_begrunnelser || [],
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const art12_1 = hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART12_1, _propsLight.vilkar);

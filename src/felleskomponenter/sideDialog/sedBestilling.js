@@ -8,7 +8,6 @@ import * as Api from '../../services/api';
 import * as Utils from '../../utils';
 import { createValidator } from '../skjema/validering/skjemaer/createValidator';
 import { sed as sedSchema } from '../skjema/validering/skjemaer/sed';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
 import { EessiKodeverkSelectors } from '../../ducks/eessikodeverk';
 import './sedBestilling.css';
 
@@ -204,7 +203,6 @@ SideDialogSedBestilling.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   kodeverk: {
     fagomradeLovvalg: EessiKodeverkSelectors.sektorSelector(state).filter(el => el.kode === 'LA')[0],
     tilgjengeligeFagomrader: EessiKodeverkSelectors.sektorSelector(state),
