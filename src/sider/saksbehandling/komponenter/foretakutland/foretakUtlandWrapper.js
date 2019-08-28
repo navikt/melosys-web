@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import uuid from 'uuid/v4';
 
 import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
@@ -11,11 +12,12 @@ import EnkeltForetak from './enkeltforetak';
 import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
 
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+
 import './foretakUtland.css';
 
 class ForetakUtlandWrapper extends Component {
   leggTilForetakHandler = () => {
-    this.props.fields.push({});
+    this.props.fields.push({ uuid: uuid() });
   };
 
   slettForetakHandler = indeks => {
