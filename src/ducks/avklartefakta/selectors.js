@@ -104,9 +104,9 @@ export const VirksomheterIPeriodenSelector = createSelector(
   state => soknadSelectors.EkstraArbeidsgivereSelector(state),
   state => soknadSelectors.SelvstendigNaringsvirksomhetSelector(state),
   (arbeidsforholdene, organisasjoner, ekstraArbeidsgivere, selvstendigeNaringer) => {
-    const relevanteOrganisasjoner = organisasjoner.reduce((samling, organisasjonen) => {
+    const relevanteOrganisasjoner = organisasjoner.filter(organisasjonen => {
       const organisasjonenHarArbeidsforhold = arbeidsforholdene.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
-      return organisasjonenHarArbeidsforhold ? [...samling, organisasjonen] : [...samling];
+      return organisasjonenHarArbeidsforhold;
     }, []);
 
     return [...relevanteOrganisasjoner, ...ekstraArbeidsgivere, ...selvstendigeNaringer];
