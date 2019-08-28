@@ -103,13 +103,22 @@ export const VirksomheterIPeriodenSelector = createSelector(
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => soknadSelectors.EkstraArbeidsgivereSelector(state),
   state => soknadSelectors.SelvstendigNaringsvirksomhetSelector(state),
-  (arbeidsforholdene, organisasjoner, ekstraArbeidsgivere, selvstendigeNaringer) => {
+  state => soknadSelectors.ForetakUtlandSelector(state),
+  (
+    arbeidsforholdene,
+    organisasjoner,
+    ekstraArbeidsgivere,
+    selvstendigeNaringer,
+    foretakUtland
+  ) => {
     const relevanteOrganisasjoner = organisasjoner.filter(organisasjonen => {
       const organisasjonenHarArbeidsforhold = arbeidsforholdene.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
       return organisasjonenHarArbeidsforhold;
     }, []);
 
-    return [...relevanteOrganisasjoner, ...ekstraArbeidsgivere, ...selvstendigeNaringer];
+    const foretakUtlandMedNavn = foretakUtland.filter(foretak => foretak.navn);
+
+    return [...relevanteOrganisasjoner, ...ekstraArbeidsgivere, ...selvstendigeNaringer, ...foretakUtlandMedNavn];
   }
 );
 
@@ -123,13 +132,16 @@ export const VirksomhetSelector = createSelector(
   (alleAvklarteFakta, alleArbeidsgivere) => {
     const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET);
     return alleArbeidsgivere.map(arbeidsgiver => {
-      const eksisterendeAvklaring = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.orgnr);
+      const eksisterendeAvklaring = avklartefakta.find(fakta => (
+        fakta.subjektID === arbeidsgiver.uuid ||
+        fakta.subjektID === arbeidsgiver.orgnr
+      ));
 
       return eksisterendeAvklaring || {
         ...avklartFaktaTemplate,
         referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
         fakta: ['FALSE'],
-        subjektID: arbeidsgiver.orgnr,
+        subjektID: arbeidsgiver.uuid || arbeidsgiver.orgnr,
         avklartefaktaKode: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
       };
     });

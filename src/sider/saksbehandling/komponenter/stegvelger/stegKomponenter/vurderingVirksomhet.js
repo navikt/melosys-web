@@ -31,7 +31,7 @@ const VirksomheterLinje = props => {
 
   const virksomhetKlikkHandler = () => {
     const verdi = virksomhetErValgt ? 'FALSE' : 'TRUE';
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.orgnr, verdi));
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.uuid || virksomheten.orgnr, verdi));
   };
 
   return (
@@ -72,8 +72,10 @@ const VirksomheterListe = props => {
   return (
     <div>
       {virksomheterIPerioden.map(virksomheten => {
-        const avklartfaktaForVirksomhet = avklarteVirksomheter.find(enkeltAvklaring => enkeltAvklaring.subjektID === virksomheten.orgnr);
-
+        const avklartfaktaForVirksomhet = avklarteVirksomheter.find(enkeltAvklaring => (
+          enkeltAvklaring.subjektID === virksomheten.uuid ||
+          enkeltAvklaring.subjektID === virksomheten.orgnr
+        ));
 
         const key = `avklartVirksomhet${virksomheten.orgnr}`;
         return <VirksomheterLinje
