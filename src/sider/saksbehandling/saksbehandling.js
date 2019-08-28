@@ -169,10 +169,10 @@ class Saksbehandling extends Component {
 
   tilbakeleggeHandle = async () => {
     const { behandlingID } = this.state;
-    const { tilbakeleggeOppgave } = this.props;
+    const { tilbakeleggOppgave } = this.props;
     const venterPaaDokumentasjon = true;
 
-    await tilbakeleggeOppgave(behandlingID, venterPaaDokumentasjon);
+    await tilbakeleggOppgave(behandlingID, venterPaaDokumentasjon);
     this.lagreOgLukk();
   };
 
@@ -421,7 +421,7 @@ Saksbehandling.propTypes = {
   sjekkOppfriskningStatus: PT.func.isRequired,
   sendSoknad: PT.func.isRequired,
   hentOppgaveOversikt: PT.func.isRequired,
-  tilbakeleggeOppgave: PT.func.isRequired,
+  tilbakeleggOppgave: PT.func.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
@@ -488,7 +488,7 @@ const mapDispatchToProps = dispatch => ({
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegge(oppgaveID, venterPaaDokumentasjon),
+  tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
   oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
