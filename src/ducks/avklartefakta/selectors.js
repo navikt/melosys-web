@@ -103,13 +103,22 @@ export const VirksomheterIPeriodenSelector = createSelector(
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => soknadSelectors.EkstraArbeidsgivereSelector(state),
   state => soknadSelectors.SelvstendigNaringsvirksomhetSelector(state),
-  (arbeidsforholdene, organisasjoner, ekstraArbeidsgivere, selvstendigeNaringer) => {
+  state => soknadSelectors.ForetakUtlandSelector(state),
+  (
+    arbeidsforholdene,
+    organisasjoner,
+    ekstraArbeidsgivere,
+    selvstendigeNaringer,
+    foretakUtland
+  ) => {
     const relevanteOrganisasjoner = organisasjoner.filter(organisasjonen => {
       const organisasjonenHarArbeidsforhold = arbeidsforholdene.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
       return organisasjonenHarArbeidsforhold;
     }, []);
 
-    return [...relevanteOrganisasjoner, ...ekstraArbeidsgivere, ...selvstendigeNaringer];
+    const foretakUtlandMedNavn = foretakUtland.filter(foretak => foretak.navn);
+
+    return [...relevanteOrganisasjoner, ...ekstraArbeidsgivere, ...selvstendigeNaringer, ...foretakUtlandMedNavn];
   }
 );
 
