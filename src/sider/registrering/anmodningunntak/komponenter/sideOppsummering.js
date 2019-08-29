@@ -1,8 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
 
-import * as MKV from 'melosys-kodeverk';
-
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 import * as RegistreringContext from '../state/registreringContext';
@@ -12,7 +10,6 @@ import { soknadSelectors } from '../../../../ducks/soknad';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
-import Behandlingsmeny from './behandlingsmeny';
 import Behandlingsstatus from './behandlingsstatus';
 import Oppsummering from '../../../../felleskomponenter/oppsummering';
 
@@ -26,45 +23,17 @@ const SideOppsummering = props => {
     person,
     soknadsperiodeFom,
     soknadsperiodeTom,
-    behandlingstype,
   } = props;
 
   if (!oppsummering) return <div />;
 
   const {
-    lagreOgLukkHandle,
-    oppfriskSaksopplysningerHandle,
-    tilbakeleggeHandle,
-    visHenleggDialogHandle,
     arbeidsland,
-    avsluttSakSomBortfalt,
-    endreLovvalgsperiodeRedigerbart,
   } = props;
-
-  const apneTidligereBehandlinger = () => {
-    const URI_SOK = `/sok/${props.person.fnr}`;
-    window.open(URI_SOK);
-  };
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
       <Nav.Panel className="saksbehandling__soknadSammendrag">
-        <Nav.Row>
-          <Nav.Column xs="12" md="12">
-            <div className="oppsummering__menylinje">
-              <Behandlingsmeny
-                lagreOgLukkHandle={lagreOgLukkHandle}
-                tilbakeleggeHandle={tilbakeleggeHandle}
-                oppfriskSaksopplysningerHandle={oppfriskSaksopplysningerHandle}
-                visHenleggDialogHandle={visHenleggDialogHandle}
-                avsluttSakSomBortfalt={avsluttSakSomBortfalt}
-                apneTidligereBehandlinger={apneTidligereBehandlinger}
-                redigerbart={endreLovvalgsperiodeRedigerbart}
-                visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
-              />
-            </div>
-          </Nav.Column>
-        </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12" md="6">
             <Nav.Undertittel className="soknadSammendrag__header">Søknad</Nav.Undertittel>
@@ -104,7 +73,6 @@ SideOppsummering.propTypes = {
   endreLovvalgsperiodeRedigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
-  avsluttSakSomBortfalt: PT.func.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   soknadsperiodeFom: PT.string,
   soknadsperiodeTom: PT.string,
@@ -113,7 +81,6 @@ SideOppsummering.propTypes = {
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
-  tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
 SideOppsummering.defaultProps = {
