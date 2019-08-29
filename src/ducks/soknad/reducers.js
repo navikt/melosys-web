@@ -134,9 +134,10 @@ export default function reducer(state = initialState, action) {
           studentFinansieringKode: null,
         },
         foretakUtland: dokument.foretakUtland.map(foretakUtland => ({
+          uuid: foretakUtland.uuid,
           navn: foretakUtland.navn || null,
           orgnr: foretakUtland.orgnr || null,
-          selvstendigNaeringsvirksomhet: foretakUtland.selvstendigNaeringsvirksomhet,
+          selvstendigNaeringsvirksomhet: foretakUtland.selvstendigNaeringsvirksomhet || false,
           adresse: lagNullableAdresse(foretakUtland.adresse),
         })),
         bosted: {
