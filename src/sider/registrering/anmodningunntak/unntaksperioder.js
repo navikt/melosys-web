@@ -2,12 +2,13 @@
 import React from 'react';
 
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 import * as Api from '../../../services/api';
-
+import Behandlingsmeny from './komponenter/behandlingsmeny';
 import Saksopplysninger from './komponenter/saksopplysninger';
 import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from './komponenter/sideOppsummering';
@@ -82,8 +83,12 @@ const RegistreringAnmodningunntak = props => {
     lastInnSaksopplysninger();
   }, []);
 
+  const apneTidligereBehandlinger = () => {
+    const URI_SOK = `/sok/${props.person.fnr}`;
+    window.open(URI_SOK);
+  };
   const {
-    vurderingBegrunnelser, medlemskap, sed, redigerbart,
+    vurderingBegrunnelser, medlemskap, sed, redigerbart, behandlingstype,
   } = props;
   return (
     <div className="registrering">
@@ -99,16 +104,26 @@ const RegistreringAnmodningunntak = props => {
             />
           </Nav.Column>
           <Nav.Column xs="5">
-            <SideOppsummering
-              behandlingID={behandlingID}
-              avsluttSakSomBortfalt={avsluttSakSomBortfalt}
-              oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
-              lagreOgLukkHandle={lagreOgLukk}
-              tilbakeleggeHandle={tilbakeleggeHandle}
-              visHenleggDialogHandle={visHenleggDialog}
-              tilForsidenHandle={navigerTilOversiktSide}
-            />
-            <SideDialog behandlingID={behandlingID} />
+            <Nav.Panel>
+              <Nav.Row>
+                <Nav.Column xs="12" md="12">
+                  <div className="oppsummering__menylinje">
+                    <Behandlingsmeny
+                      lagreOgLukkHandle={lagreOgLukk}
+                      tilbakeleggeHandle={tilbakeleggeHandle}
+                      oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+                      visHenleggDialogHandle={visHenleggDialog}
+                      avsluttSakSomBortfalt={avsluttSakSomBortfalt}
+                      apneTidligereBehandlinger={apneTidligereBehandlinger}
+                      redigerbart={redigerbart}
+                      visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
+                    />
+                  </div>
+                </Nav.Column>
+              </Nav.Row>
+            </Nav.Panel>
+            <SideOppsummering behandlingID={behandlingID} />
+            <SideDialog behandlingID={behandlingID} redigerbart={redigerbart}/>
           </Nav.Column>
         </Nav.Row>
       </Nav.Container>
@@ -116,17 +131,20 @@ const RegistreringAnmodningunntak = props => {
   );
 };
 RegistreringAnmodningunntak.propTypes = {
+  avsluttSakSomBortfalt: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
   hentBehandling: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
   hentSoknad: PT.func.isRequired,
   redigerbart: PT.bool,
+  behandlingstype: PT.string.isRequired,
   avklartefakta: MPT.AvklartefaktaListe,
   vurderingBegrunnelser: PT.object,
   fagsak: MPT.Fagsak,
   medlemskap: MPT.Medlemskap,
   oppsummering: MPT.Behandlinger.Oppsummering,
+  person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
   soknad: MPT.Soknad,
   history: PT.object.isRequired,
@@ -138,6 +156,7 @@ RegistreringAnmodningunntak.defaultProps = {
   fagsak: {},
   medlemskap: {},
   oppsummering: {},
+  redigerbart: false,
   sed: {},
   soknad: {},
   vurderingBegrunnelser: {},
@@ -147,8 +166,10 @@ const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vurderingBegrunnelser: avklartefaktaSelectors.VurderingUnntakPeriode(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  person: behandlingerSelectors.PersonSelector(state),
   sed: behandlingerSelectors.SEDSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
 });

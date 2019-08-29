@@ -13,19 +13,20 @@ import SideOppsummering from './komponenter/sideOppsummering';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
 import { fagsakOperations, fagsakSelectors } from '../../../ducks/fagsaker';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-
 import { lovvalgsperioderOperations } from '../../../ducks/lovvalgsperioder';
+import { oppgaverOperations } from '../../../ducks/oppgaver';
 import { soknadOperations, soknadSelectors } from '../../../ducks/soknad';
 
 import { initialState, reducer } from './state/reducer';
 import { RegistreringStateProvider } from './state/registreringStateProvider';
-import * as RegistreringContext from './state/registreringContext';
 
+import * as RegistreringContext from './state/registreringContext';
 import './registrering.css';
 
 const Registrering = props => {
   const [behandlingID, setBehandlingID] = React.useState(-1);
-  // const [ oppfriskDialog, visOppfriskDialog ] = React.useState(false);
+  const [oppfriskDialog, visOppfriskDialog] = React.useState(false);
+  const [henleggDialog, visHenleggDialog] = React.useState(false);
 
   const lastInnSaksopplysninger = async () => {
     const { match, location } = props;
@@ -56,28 +57,26 @@ const Registrering = props => {
   };
 
   const visOppfriskBekreftelse = () => {
-    // visOppfriskDialog(true);
+    visOppfriskDialog(true);
   };
   const lagreOgLukk = async () => {
-    // this.lagreAllData();
-    // const { history, hentOppgaveOversikt } = props;
-    // await hentOppgaveOversikt();
-    props.history.push('/');
+    this.lagreAllData();
+    const { history, hentOppgaveOversikt } = props;
+    await hentOppgaveOversikt();
+    history.push('/');
   };
-  const tilbakeleggeHandle = async () => {
-    /*
-    const { behandlingID } = this.state;
-    const { tilbakeleggeOppgave } = this.props;
+  const tilbakeleggHandle = async () => {
+    const { tilbakeleggOppgave } = this.props;
+    const venterPaaDokumentasjon = true;
 
-    await tilbakeleggeOppgave(behandlingID, venterPaaDokumentasjon);
+    await tilbakeleggOppgave(behandlingID, venterPaaDokumentasjon);
     this.lagreOgLukk();
-    */
   };
-  const visHenleggDialog = () => {
-    // this.setState({ visHenleggDialog: true });
+  const visHenleggDialogHandle = () => {
+    visHenleggDialog(true);
   };
   const navigerTilOversiktSide = () => {
-    // this.skjulOppfriskBekreftelse();
+    visOppfriskDialog(false);
     props.history.push('/');
   };
   React.useEffect(() => {
@@ -87,6 +86,8 @@ const Registrering = props => {
   const {
     vurderingBegrunnelser, medlemskap, sed, redigerbart,
   } = props;
+  console.log('oppfriskDialog', oppfriskDialog);
+  console.log('henleggDialog', henleggDialog);
   return (
     <div className="registrering">
       <Nav.Container fluid>
@@ -106,8 +107,8 @@ const Registrering = props => {
               avsluttSakSomBortfalt={avsluttSakSomBortfalt}
               oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
               lagreOgLukkHandle={lagreOgLukk}
-              tilbakeleggeHandle={tilbakeleggeHandle}
-              visHenleggDialogHandle={visHenleggDialog}
+              tilbakeleggeHandle={tilbakeleggHandle}
+              visHenleggDialogHandle={visHenleggDialogHandle}
               tilForsidenHandle={navigerTilOversiktSide}
             />
             <SideDialog behandlingID={behandlingID} redigerbart={redigerbart} />
@@ -122,7 +123,9 @@ Registrering.propTypes = {
   hentBehandling: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
+  hentOppgaveOversikt: PT.func.isRequired,
   hentSoknad: PT.func.isRequired,
+  tilbakeleggOppgave: PT.func.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
   vurderingBegrunnelser: PT.object,
@@ -162,6 +165,8 @@ const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
   hentSoknad: behandlingID => dispatch(soknadOperations.hent(behandlingID)),
+  tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
+  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
 });
 
 const RegistreringStateProviderWrapper = props => (
