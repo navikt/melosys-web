@@ -41,8 +41,9 @@ RegisterkontrollTreff.propTypes = {
 
 class Saksopplysninger extends Component {
   state = {
-    anmodningUnntakVurdering: MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
+    anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
     begrunnelseFritekst: '',
+    endretPeriode: { fom: null, tom: null },
     ikkeGodkjentBegrunnelseKoder: [],
     endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
   };
@@ -54,38 +55,58 @@ class Saksopplysninger extends Component {
     const begrunnelseFritekst = event.target.value;
     this.setState({ begrunnelseFritekst });
   };
-  submitRegistrering = () => {
+  makeResponse = () => {
+    const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = this.state;
+    const response = {
+      anmodningsperiodeSvarType,
+      endretPeriode,
+      begrunnelseFritekst,
+    };
+    return response;
+  };
+  submitRegistrering = async () => {
+    /* TODO
     if (!this.validerFelt()) {
       return false;
     }
-
+*/
     const { behandlingID, history } = this.props;
     const tilForsiden = () => history.push('/');
-    switch (this.state.anmodningUnntakVurdering) {
-      case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
-        this.godkjenn(behandlingID)
-          .then(tilForsiden)
-          .catch(Utils.logger.error);
-        return true;
-      case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
-        this.innhentInfo(behandlingID)
-          .then(tilForsiden)
-          .catch(Utils.logger.error);
-        return true;
-      case MKV.Koder.anmodningsperiodesvartyper.AVSLAG: {
-        const ikkegodkjenn = {
-          ikkeGodkjentBegrunnelseKoder: [...this.state.ikkeGodkjentBegrunnelseKoder],
-          begrunnelseFritekst: this.state.begrunnelseFritekst,
-        };
-        // TODO Api.Saksflyt.Anmodningsperioder.ikkegodkjenn()...
-        Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn })
-          .then(tilForsiden)
-          .catch(Utils.logger.error);
-        return true;
-      }
-      default:
-        return false;
+    try {
+      const anmodningsperioder = await Api.Anmodningsperioder.hent(behandlingID);
+      console.log(anmodningsperioder);
+      const response = this.makeResponse();
+      const { id: anmodningsperiodeID } = anmodningsperioder[0];
+      await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, response);
+    } catch (e) {
+      console.log(e);
+      return false;
+    } finally {
+      tilForsiden();
+      return true;
     }
+
+    // GET: /anmodningperioder/:behandlingID
+    // POST: /anmodningsperioder/:anmodningsperiodeID/svar
+    /*
+ {
+  "anmodningsperiodeSvarType": "INNVILGELSE",
+  "endretPeriode": {
+    "fom": "2017-02-01",
+    "tom": "2020-01-01"
+  },
+  "begrunnelseFritekst": "Fritekst"
+}
+
+ved INNVILGELSE:
+  endretPeriode og begrunnelseFritekst = null
+ved DELVIS_INNVILGELSE
+  endretPeriode ny periode i datofelt og fritekst = null
+ved AVSLAG
+  endretPeriode = null og begrunnelseFritekst fra fritekstfelt
+     */
+    // PUT: /saksflyt/anmodningsperioder/:behandlingID/svar
+    // Til slutt: tilForside()
   };
   kanEndrePeriode = () => true; // TODO (this.state.unntaksperiodeVurdering === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE);
 
@@ -127,21 +148,21 @@ class Saksopplysninger extends Component {
                 </Nav.Row>
                 <Nav.Row className="seksjon">
                   <Nav.Column xs="12">
-                    <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => this.setState({ anmodningUnntakVurdering: e.target.value })} disabled={!redigerbart}>
+                    <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => this.setState({ anmodningsperiodeSvarType: e.target.value })} disabled={!redigerbart}>
                       <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.INNVILGELSE} defaultChecked />
                       <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} />
                       <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} label={MKV.Terms.anmodningsperiodesvartyper.AVSLAG} />
                     </Nav.Fieldset>
                   </Nav.Column>
                 </Nav.Row>
-                {this.state.anmodningUnntakVurdering === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
+                {this.state.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
                   <Nav.Row className="seksjon">
                     <EndrePeriode
                       feilmeldinger={this.state.endrePeriodeFeilmeldinger}
                       redigerbart={this.kanEndrePeriode()} />
                   </Nav.Row>
                 )}
-                {this.state.anmodningUnntakVurdering === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
+                {this.state.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
                   <Fragment>
                     <Nav.Row>
                       <Nav.Column xs="6">
