@@ -9,6 +9,7 @@ import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
 import * as Api from '../../../services/api';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
+import Behandlingsmeny2 from './komponenter/behandlingmeny2';
 import Saksopplysninger from './komponenter/saksopplysninger';
 import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from './komponenter/sideOppsummering';
@@ -50,18 +51,23 @@ const RegistreringAnmodningunntak = props => {
   };
 
   const avsluttSakSomBortfalt = () => {
+    /*
     const { fagsak: { saksnummer } } = props;
     Api.Fagsaker.fagsak.bortfall(saksnummer).catch(err => Utils.logger.error(err));
     props.history.push('/');
+    */
+    alert('avsluttSakSomBortfalt');
   };
   const visOppfriskBekreftelse = () => {
     // visOppfriskDialog(true);
+    alert('visOppfriskBekreftelse');
   };
   const lagreOgLukk = async () => {
     // this.lagreAllData();
     // const { history, hentOppgaveOversikt } = props;
     // await hentOppgaveOversikt();
-    props.history.push('/');
+    //props.history.push('/');
+    alert('LagreOgLukk');
   };
   const tilbakeleggeHandle = async () => {
     /*
@@ -71,9 +77,11 @@ const RegistreringAnmodningunntak = props => {
     await tilbakeleggeOppgave(behandlingID, venterPaaDokumentasjon);
     this.lagreOgLukk();
     */
+    alert('tilbakeleggeHandle');
   };
   const visHenleggDialog = () => {
     // this.setState({ visHenleggDialog: true });
+    alert('visHenleggDialog');
   };
   const navigerTilOversiktSide = () => {
     // this.skjulOppfriskBekreftelse();
@@ -90,6 +98,34 @@ const RegistreringAnmodningunntak = props => {
   const {
     vurderingBegrunnelser, medlemskap, sed, redigerbart, behandlingstype,
   } = props;
+
+
+  const visHenleggSak = () => redigerbart && behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE;
+  const knappeRader = [{
+    label: 'Lagre og lukk',
+    clickFunc: lagreOgLukk,
+    redigerbart,
+  }, {
+    label: 'Legg tilbake i kø',
+    clickFunc: tilbakeleggeHandle,
+    disabled: !redigerbart,
+  }, {
+    label: 'Oppdater saksopplysninger',
+    clickFunc: visOppfriskBekreftelse,
+    disabled: !redigerbart,
+  }, {
+    label: 'Henlegg sak',
+    clickFunc: visHenleggDialog,
+    redigerbart: visHenleggSak(),
+  }, {
+    label: 'Avslutt sak som bortfalt',
+    clickFunc: avsluttSakSomBortfalt,
+    redigerbart,
+  }, {
+    label: ' Vis tidligere behandlinger',
+    clickFunc: apneTidligereBehandlinger,
+  }];
+
   return (
     <div className="registrering">
       <Nav.Container fluid>
@@ -118,6 +154,15 @@ const RegistreringAnmodningunntak = props => {
                       redigerbart={redigerbart}
                       visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
                     />
+                  </div>
+                </Nav.Column>
+              </Nav.Row>
+            </Nav.Panel>
+            <Nav.Panel>
+              <Nav.Row>
+                <Nav.Column xs="12" md="12">
+                  <div className="oppsummering__menylinje">
+                    <Behandlingsmeny2 title="Behandlingsmeny" knappeRader={knappeRader} />
                   </div>
                 </Nav.Column>
               </Nav.Row>
