@@ -22,7 +22,7 @@ import {
 
 const Forretningsstedet = props => {
   const {
-    forretningsstedet, avklartForretningsland, oppdaterData, slettData,
+    forretningsstedet, avklartForretningsland, oppdaterData, slettData, redigerbart,
   } = props;
   if (!forretningsstedet) return null;
 
@@ -50,6 +50,7 @@ const Forretningsstedet = props => {
         value={eksisterendeLand}
         landkoder={MKV.KTObjects.landkoder}
         multiland={false}
+        disabled={!redigerbart}
       />
     </Nav.Fieldset>
   );
@@ -60,6 +61,7 @@ Forretningsstedet.propTypes = {
   avklartForretningsland: PT.object,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 Forretningsstedet.defaultProps = {
@@ -68,7 +70,7 @@ Forretningsstedet.defaultProps = {
 
 
 const Forretningssteder = props => {
-  const { valgteVirksomheter, avklarteForretningsland } = props;
+  const { valgteVirksomheter, avklarteForretningsland, redigerbart } = props;
 
   const ingenValgteVirksomheterVarsel = valgteVirksomheter.length === 0 && (
     <Nav.AlertStripe type="advarsel">Finner ingen valgte virksomheter.</Nav.AlertStripe>
@@ -87,6 +89,7 @@ const Forretningssteder = props => {
             avklartForretningsland={avklartForretningsland}
             oppdaterData={props.oppdaterData}
             slettData={props.slettData}
+            redigerbart={redigerbart}
           />;
         })
       }
@@ -100,6 +103,7 @@ Forretningssteder.propTypes = {
   avklarteForretningsland: PT.array.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 const VurderingForretningssted = props => {
@@ -210,6 +214,7 @@ const VurderingForretningssted = props => {
           landkoder={MKV.KTObjects.landkoder}
           value={avklartLand}
           onChange={avklartfaktaEndret}
+          disabled={!redigerbart}
         />
       </div>
       }
