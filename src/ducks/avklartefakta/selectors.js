@@ -131,20 +131,15 @@ export const VirksomhetSelector = createSelector(
   state => VirksomheterIPeriodenSelector(state),
   (alleAvklarteFakta, alleArbeidsgivere) => {
     const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET);
-    return alleArbeidsgivere.map(arbeidsgiver => {
-      const eksisterendeAvklaring = avklartefakta.find(fakta => (
-        fakta.subjektID === arbeidsgiver.uuid ||
-        fakta.subjektID === arbeidsgiver.orgnr
-      ));
 
-      return eksisterendeAvklaring || {
-        ...avklartFaktaTemplate,
-        referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
-        fakta: ['FALSE'],
-        subjektID: arbeidsgiver.uuid || arbeidsgiver.orgnr,
-        avklartefaktaKode: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
-      };
-    });
+    return alleArbeidsgivere.reduce((arbeidsgivereMedFakta, arbeidsgiver) => {
+      const eksisterendeForetakUtlandFakta = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.uuid);
+      const eksisterendeOrganisasjonFakta = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.orgnr);
+
+      if (eksisterendeForetakUtlandFakta) return [...arbeidsgivereMedFakta, { type: KV.Koder.VirksomhetType.FORETAKUTLAND, avklartFakta: eksisterendeForetakUtlandFakta }];
+      if (eksisterendeOrganisasjonFakta) return [...arbeidsgivereMedFakta, { type: KV.Koder.VirksomhetType.ORGANISASJON, avklartFakta: eksisterendeOrganisasjonFakta }];
+      return arbeidsgivereMedFakta;
+    }, []);
   }
 );
 
@@ -233,10 +228,21 @@ export const AvklarteVirksomheterSelector = createSelector(
   state => VirksomhetSelector(state),
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
-  (alleArbeidsgivere, fagsakOrganisasjoner, soknadOrganisasjoner) => {
+  state => soknadSelectors.ForetakUtlandSelector(state),
+  (alleArbeidsgivere, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland) => {
     const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
-    const avklarte = alleArbeidsgivere.filter(avklart => avklart.fakta.includes('TRUE'));
-    return avklarte.map(avklart => alleOrganisasjoner.find(org => org.orgnr === avklart.subjektID));
+    const alleAvklarteArbeidsgivere = alleArbeidsgivere.filter(arbeidsgiver => arbeidsgiver.avklartFakta.fakta.includes('TRUE'));
+
+    return alleAvklarteArbeidsgivere.map(arbeidsgiver => {
+      switch (arbeidsgiver.type) {
+        case KV.Koder.VirksomhetType.FORETAKUTLAND:
+          return foretakUtland.find(foretak => foretak.uuid === arbeidsgiver.avklartFakta.subjektID);
+        case KV.Koder.VirksomhetType.ORGANISASJON:
+          return alleOrganisasjoner.find(org => org.orgnr === arbeidsgiver.avklartFakta.subjektID);
+        default:
+          throw new Error('Avklart arbeidsgiver må enten tilhøre et utenlandsk foretak eller en organisasjon');
+      }
+    });
   }
 );
 
