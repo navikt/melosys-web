@@ -38,8 +38,8 @@ const Forretningsstedet = props => {
   }, []);
 
   const { navn, id } = forretningsstedet;
-  const landEndretHandler = e => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, id, e));
+  const landEndretHandler = landKode => {
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, id, landKode));
   };
 
   const eksisterendeLand = hentFaktaVerdi(avklartForretningsland) || '';
