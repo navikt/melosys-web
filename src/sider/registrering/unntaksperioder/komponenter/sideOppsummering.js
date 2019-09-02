@@ -26,18 +26,14 @@ const SideOppsummering = props => {
     person,
     soknadsperiodeFom,
     soknadsperiodeTom,
-    behandlingstype,
   } = props;
 
   if (!oppsummering) return <div />;
 
   const {
     lagreOgLukkHandle,
-    oppfriskSaksopplysningerHandle,
     tilbakeleggeHandle,
-    visHenleggDialogHandle,
     arbeidsland,
-    avsluttSakSomBortfalt,
     endreLovvalgsperiodeRedigerbart,
   } = props;
 
@@ -55,12 +51,8 @@ const SideOppsummering = props => {
               <Behandlingsmeny
                 lagreOgLukkHandle={lagreOgLukkHandle}
                 tilbakeleggeHandle={tilbakeleggeHandle}
-                oppfriskSaksopplysningerHandle={oppfriskSaksopplysningerHandle}
-                visHenleggDialogHandle={visHenleggDialogHandle}
-                avsluttSakSomBortfalt={avsluttSakSomBortfalt}
                 apneTidligereBehandlinger={apneTidligereBehandlinger}
                 redigerbart={endreLovvalgsperiodeRedigerbart}
-                visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
               />
             </div>
           </Nav.Column>
@@ -104,15 +96,12 @@ SideOppsummering.propTypes = {
   endreLovvalgsperiodeRedigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
-  avsluttSakSomBortfalt: PT.func.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   soknadsperiodeFom: PT.string,
   soknadsperiodeTom: PT.string,
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
-  oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
-  visHenleggDialogHandle: PT.func.isRequired,
   tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
