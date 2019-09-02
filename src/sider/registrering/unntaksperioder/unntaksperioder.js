@@ -29,6 +29,7 @@ import './registrering.css';
 import { saksopplysningerOperations } from '../../../ducks/saksopplysninger';
 
 const Unntaksperioder = props => {
+  const [saksnummer, setSaksnummer] = React.useState('0');
   const [behandlingID, setBehandlingID] = React.useState(-1);
   const [oppfriskDialog, visOppfriskDialog] = React.useState(false);
   const [henleggDialog, visHenleggDialog] = React.useState(false);
@@ -44,6 +45,7 @@ const Unntaksperioder = props => {
   const lastInnSaksopplysninger = async () => {
     const { match, location } = props;
     const { snr } = match.params;
+    setSaksnummer(snr);
     const _behandlingID = Utils.queryString.getParam(location, 'behandlingID');
     setBehandlingID(Utils._toInteger(_behandlingID));
 
@@ -66,15 +68,6 @@ const Unntaksperioder = props => {
   const henleggSak = async data => {
     const { fagsak: { saksnummer } } = props;
     Api.Fagsaker.fagsak.henlegg(saksnummer, data);
-  };
-  const avsluttSakSomBortfalt = () => {
-    const { fagsak: { saksnummer } } = props;
-    Api.Fagsaker.fagsak.bortfall(saksnummer).catch(err => Utils.logger.error(err));
-    props.history.push('/');
-  };
-
-  const visOppfriskBekreftelse = () => {
-    visOppfriskDialog(true);
   };
   const hentBehandlingStatus = async () => {
     const oppfriskning = await Api.Saksopplysninger.sjekkStatus(behandlingID);
@@ -107,9 +100,6 @@ const Unntaksperioder = props => {
 
     await tilbakeleggOppgave(behandlingID, venterPaaDokumentasjon);
     lagreOgLukk();
-  };
-  const visHenleggDialogHandle = () => {
-    visHenleggDialog(true);
   };
   const skjulHenleggDialog = () => {
     visHenleggDialog(false);
@@ -172,7 +162,7 @@ const Unntaksperioder = props => {
               tilbakeleggeHandle={tilbakeleggHandle}
               tilForsidenHandle={navigerTilOversiktSide}
             />
-            <SideDialog behandlingID={behandlingID} redigerbart={redigerbart} />
+            <SideDialog saksnummer={saksnummer} behandlingID={behandlingID} redigerbart={redigerbart} />
           </Nav.Column>
         </Nav.Row>
       </Nav.Container>
@@ -251,7 +241,7 @@ const mapDispatchToProps = dispatch => ({
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
-  tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegge(oppgaveID, venterPaaDokumentasjon),
+  tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
 });
 
 const RegistreringStateProviderWrapper = props => (

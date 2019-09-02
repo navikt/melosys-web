@@ -19,6 +19,7 @@ class SideDialog extends Component {
     faner: PT.array,
     behandlingID: PT.number.isRequired,
     redigerbart: PT.bool.isRequired,
+    saksnummer: PT.string.isRequired,
   };
 
   static defaultProps = {
@@ -44,9 +45,9 @@ class SideDialog extends Component {
       });
   }
 
-  getFaneKomponent = (navn, behandlingID, redigerbart) => {
+  getFaneKomponent = (navn, saksnummer, behandlingID, redigerbart) => {
     if (navn === 'dokumenter') {
-      return <SideDialogDokumenter key={uuid()} />;
+      return <SideDialogDokumenter key={uuid()} saksnummer={saksnummer} />;
     } else if (navn === 'brevbestilling') {
       return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} redigerbart={redigerbart} />;
     } else if (navn === 'sedbestilling') {
@@ -54,7 +55,7 @@ class SideDialog extends Component {
     } else if (navn === 'besvarsed') {
       return <SideDialogBesvarSed key={uuid()} behandlingID={behandlingID} />;
     }
-    return <SideDialogDokumenter key={uuid()} />;
+    return <SideDialogDokumenter key={uuid()} saksnummer={saksnummer} />;
   };
   /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
    * slik at riktig komponent under menyen vises. Data fra komponenten slik som navn ligger under
@@ -71,7 +72,7 @@ class SideDialog extends Component {
   };
 
   render() {
-    const { behandlingID, redigerbart } = this.props;
+    const { saksnummer, behandlingID, redigerbart } = this.props;
     const { navn } = this.state.faner.find(item => item.navn === this.state.aktivFane);
     return (
       <div className="dialog panelSeksjon">
@@ -85,16 +86,12 @@ class SideDialog extends Component {
               </button>))}
           </div>
           <div>
-            { this.getFaneKomponent(navn, behandlingID, redigerbart)}
+            { this.getFaneKomponent(navn, saksnummer, behandlingID, redigerbart)}
           </div>
         </Panel>
       </div>
     );
   }
 }
+export default SideDialog;
 
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SideDialog);

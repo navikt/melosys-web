@@ -120,15 +120,15 @@ class SideDialogDokumenter extends Component {
   state = { oversiktDokumenter: [] };
 
   async componentDidMount() {
-    const { fagsak: { saksnummer } } = this.props;
+    const { saksnummer } = this.props;
     if (saksnummer) {
       await this.hentDokumentOversikt(saksnummer);
     }
   }
 
   async componentDidUpdate(prevProps) {
-    const { fagsak: { saksnummer: prevSaksnummer } } = prevProps;
-    const { fagsak: { saksnummer } } = this.props;
+    const { saksnummer: prevSaksnummer } = prevProps;
+    const { saksnummer } = this.props;
 
     if (prevSaksnummer !== saksnummer) {
       await this.hentDokumentOversikt(saksnummer);
@@ -162,12 +162,7 @@ class SideDialogDokumenter extends Component {
   }
 }
 SideDialogDokumenter.propTypes = {
-  fagsak: PT.object.isRequired,
+  saksnummer: PT.string.isRequired,
 };
 
-const mapStateToProps = state => ({
-  fagsak: fagsakSelectors.FagsakSelector(state),
-});
-
-const mapDispatchToProps = () => ({});
-export default connect(mapStateToProps, mapDispatchToProps)(SideDialogDokumenter);
+export default SideDialogDokumenter;
