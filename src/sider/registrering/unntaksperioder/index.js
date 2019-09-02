@@ -1,3 +1,3 @@
-import Registrering from './registrering';
+import Registrering from './unntaksperioder';
 
 export default Registrering;

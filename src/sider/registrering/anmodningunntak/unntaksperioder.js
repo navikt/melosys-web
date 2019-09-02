@@ -7,9 +7,9 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Utils from '../../../utils';
-import * as Api from '../../../services/api';
+//import * as Api from '../../../services/api';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
-import Behandlingsmeny2 from './komponenter/behandlingmeny2';
+// import Behandlingsmeny2 from './komponenter/bhandlingmeny2';
 import Saksopplysninger from './komponenter/saksopplysninger';
 import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from './komponenter/sideOppsummering';
@@ -158,7 +158,7 @@ const RegistreringAnmodningunntak = props => {
                 </Nav.Column>
               </Nav.Row>
             </Nav.Panel>
-            <Nav.Panel>
+            {/*<Nav.Panel>
               <Nav.Row>
                 <Nav.Column xs="12" md="12">
                   <div className="oppsummering__menylinje">
@@ -166,7 +166,7 @@ const RegistreringAnmodningunntak = props => {
                   </div>
                 </Nav.Column>
               </Nav.Row>
-            </Nav.Panel>
+            </Nav.Panel>*/}
             <SideOppsummering behandlingID={behandlingID} />
             <SideDialog behandlingID={behandlingID} redigerbart={redigerbart}/>
           </Nav.Column>
