@@ -235,16 +235,27 @@ export const AvklarteVirksomheterSelector = createSelector(
 
     return alleAvklarteArbeidsgivere.map(arbeidsgiver => {
       switch (arbeidsgiver.type) {
-        case KV.Koder.VirksomhetType.FORETAKUTLAND:
-          return foretakUtland.find(foretak => foretak.uuid === arbeidsgiver.avklartFakta.subjektID);
-        case KV.Koder.VirksomhetType.ORGANISASJON:
-          return alleOrganisasjoner.find(org => org.orgnr === arbeidsgiver.avklartFakta.subjektID);
+        case KV.Koder.VirksomhetType.FORETAKUTLAND: {
+          const avklartForetak = foretakUtland.find(foretak => foretak.uuid === arbeidsgiver.avklartFakta.subjektID);
+          return {
+            navn: avklartForetak.navn,
+            id: avklartForetak.uuid,
+          };
+        }
+        case KV.Koder.VirksomhetType.ORGANISASJON: {
+          const avklartOrganisasjon = alleOrganisasjoner.find(org => org.orgnr === arbeidsgiver.avklartFakta.subjektID);
+          return {
+            navn: avklartOrganisasjon.navn,
+            id: avklartOrganisasjon.orgnr,
+          };
+        }
         default:
           throw new Error('Avklart arbeidsgiver må enten tilhøre et utenlandsk foretak eller en organisasjon');
       }
     });
   }
 );
+
 
 export const AvklartefaktaVurderingSelector = createSelector(
   state => AvklartefaktaSelector(state).vurdering,

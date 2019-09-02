@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import PT from 'prop-types';
+
 import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
+import * as MPT from '../../../../../proptypes';
 
 import {
   hentFaktaVerdi,
@@ -35,9 +37,9 @@ const Forretningsstedet = props => {
     };
   }, []);
 
-  const { navn, orgnr } = forretningsstedet;
+  const { navn, id } = forretningsstedet;
   const landEndretHandler = e => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, orgnr, e));
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, id, e));
   };
 
   const eksisterendeLand = hentFaktaVerdi(avklartForretningsland) || '';
@@ -80,8 +82,8 @@ const Forretningssteder = props => {
     <div>
       {
         valgteVirksomheter.map(valgtVirksomhet => {
-          const key = `forretningssted${valgtVirksomhet.orgnr}-${valgtVirksomhet.navn}`;
-          const avklartForretningsland = avklarteForretningsland.find(enkeltAvklaring => enkeltAvklaring.subjektID === valgtVirksomhet.orgnr);
+          const key = `forretningssted${valgtVirksomhet.id}-${valgtVirksomhet.navn}`;
+          const avklartForretningsland = avklarteForretningsland.find(enkeltAvklaring => enkeltAvklaring.subjektID === valgtVirksomhet.id);
 
           return <Forretningsstedet
             key={key}
@@ -228,7 +230,7 @@ const VurderingForretningssted = props => {
 VurderingForretningssted.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
-  valgteVirksomheter: PT.array,
+  valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
   avklartForretningsland: PT.array,
   omfattetINorge: PT.object,
   omfattetILand: PT.object,
