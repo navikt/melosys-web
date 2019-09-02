@@ -240,6 +240,9 @@ export const AvklarteVirksomheterSelector = createSelector(
           return {
             navn: avklartForetak.navn,
             id: avklartForetak.uuid,
+            adresse: {
+              land: KV.kodeTilTerm(avklartForetak.adresse.landkode, MKV.KTObjects.landkoder),
+            },
           };
         }
         case KV.Koder.VirksomhetType.ORGANISASJON: {
@@ -247,6 +250,9 @@ export const AvklarteVirksomheterSelector = createSelector(
           return {
             navn: avklartOrganisasjon.navn,
             id: avklartOrganisasjon.orgnr,
+            adresse: {
+              land: avklartOrganisasjon.forretningsadresse.land,
+            },
           };
         }
         default:
