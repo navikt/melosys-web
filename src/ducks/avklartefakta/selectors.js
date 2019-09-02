@@ -126,19 +126,19 @@ export const VirksomheterIPeriodenSelector = createSelector(
  * for vurderingen. Alle virksomheter som ikke er krysset av skal automatisk markeres som om de ikke er med videre
  * dvs "FALSE" som fakta.
  */
-export const VirksomhetSelector = createSelector(
+export const VirksomhetFaktaerSelector = createSelector(
   state => AvklartefaktaSelector(state),
   state => VirksomheterIPeriodenSelector(state),
-  (alleAvklarteFakta, alleArbeidsgivere) => {
+  (alleAvklarteFakta, alleVirksomheter) => {
     const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET);
 
-    return alleArbeidsgivere.reduce((arbeidsgivereMedFakta, arbeidsgiver) => {
-      const eksisterendeForetakUtlandFakta = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.uuid);
-      const eksisterendeOrganisasjonFakta = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.orgnr);
+    return alleVirksomheter.reduce((virksomhetFaktaer, virksomhet) => {
+      const eksisterendeForetakUtlandFakta = avklartefakta.find(fakta => fakta.subjektID === virksomhet.uuid);
+      const eksisterendeOrganisasjonFakta = avklartefakta.find(fakta => fakta.subjektID === virksomhet.orgnr);
 
-      if (eksisterendeForetakUtlandFakta) return [...arbeidsgivereMedFakta, { type: KV.Koder.VirksomhetType.FORETAKUTLAND, avklartFakta: eksisterendeForetakUtlandFakta }];
-      if (eksisterendeOrganisasjonFakta) return [...arbeidsgivereMedFakta, { type: KV.Koder.VirksomhetType.ORGANISASJON, avklartFakta: eksisterendeOrganisasjonFakta }];
-      return arbeidsgivereMedFakta;
+      if (eksisterendeForetakUtlandFakta) return [...virksomhetFaktaer, { type: KV.Koder.VirksomhetType.FORETAKUTLAND, avklartFakta: eksisterendeForetakUtlandFakta }];
+      if (eksisterendeOrganisasjonFakta) return [...virksomhetFaktaer, { type: KV.Koder.VirksomhetType.ORGANISASJON, avklartFakta: eksisterendeOrganisasjonFakta }];
+      return virksomhetFaktaer;
     }, []);
   }
 );
@@ -225,18 +225,18 @@ export const AvklartefaktaLovvalgKodeSelector = createSelector(
 );
 
 export const AvklarteVirksomheterSelector = createSelector(
-  state => VirksomhetSelector(state),
+  state => VirksomhetFaktaerSelector(state),
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
   state => soknadSelectors.ForetakUtlandSelector(state),
-  (alleArbeidsgivere, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland) => {
+  (virksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland) => {
     const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
-    const alleAvklarteArbeidsgivere = alleArbeidsgivere.filter(arbeidsgiver => arbeidsgiver.avklartFakta.fakta.includes('TRUE'));
+    const alleAvklarteVirksomheter = virksomhetFaktaer.filter(virksomhet => virksomhet.avklartFakta.fakta.includes('TRUE'));
 
-    return alleAvklarteArbeidsgivere.map(arbeidsgiver => {
-      switch (arbeidsgiver.type) {
+    return alleAvklarteVirksomheter.map(virksomhet => {
+      switch (virksomhet.type) {
         case KV.Koder.VirksomhetType.FORETAKUTLAND: {
-          const avklartForetak = foretakUtland.find(foretak => foretak.uuid === arbeidsgiver.avklartFakta.subjektID);
+          const avklartForetak = foretakUtland.find(foretak => foretak.uuid === virksomhet.avklartFakta.subjektID);
           return {
             navn: avklartForetak.navn,
             id: avklartForetak.uuid,
@@ -246,7 +246,7 @@ export const AvklarteVirksomheterSelector = createSelector(
           };
         }
         case KV.Koder.VirksomhetType.ORGANISASJON: {
-          const avklartOrganisasjon = alleOrganisasjoner.find(org => org.orgnr === arbeidsgiver.avklartFakta.subjektID);
+          const avklartOrganisasjon = alleOrganisasjoner.find(org => org.orgnr === virksomhet.avklartFakta.subjektID);
           return {
             navn: avklartOrganisasjon.navn,
             id: avklartOrganisasjon.orgnr,
@@ -256,7 +256,7 @@ export const AvklarteVirksomheterSelector = createSelector(
           };
         }
         default:
-          throw new Error('Avklart arbeidsgiver må enten tilhøre et utenlandsk foretak eller en organisasjon');
+          throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
       }
     });
   }
