@@ -25,7 +25,7 @@ export const oversikt = () =>
     PENDING: Types.PENDING,
   });
 
-export const tilbakelegge = (behandlingID, venterPaaDokumentasjon) => {
+export const tilbakelegg = (behandlingID, venterPaaDokumentasjon) => {
   const oppgaveObjekt = {
     behandlingID,
     begrunnelse: null, // Ingen begrunnelse i Melosys 1.0
@@ -33,7 +33,7 @@ export const tilbakelegge = (behandlingID, venterPaaDokumentasjon) => {
   };
 
   // TODO legge på logging
-  return Api.Oppgaver.tilbakelegge(oppgaveObjekt).catch(error => error);
+  return Api.Oppgaver.tilbakelegg(oppgaveObjekt).catch(error => error);
 };
 
 export const sendBehandlingsOppgave = async checkboxliste => {

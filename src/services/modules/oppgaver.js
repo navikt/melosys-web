@@ -6,4 +6,4 @@ export const sok = () => getAsJson(`${API_BASE_URL}${OPPGAVER}/sok`);
 
 export const sendPlukk = oppgave => postAsJson(`${API_BASE_URL}${OPPGAVER}/plukk`, oppgave);
 
-export const tilbakelegge = oppgave => postAsJson(`${API_BASE_URL}${OPPGAVER}/tilbakelegge`, oppgave);
+export const tilbakelegg = oppgave => postAsJson(`${API_BASE_URL}${OPPGAVER}/tilbakelegg`, oppgave);
