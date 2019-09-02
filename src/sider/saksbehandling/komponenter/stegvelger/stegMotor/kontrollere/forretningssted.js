@@ -22,7 +22,7 @@ class Forretningssted extends Steg {
     this.komponent = VurderingForretningssted;
     this.samleRelevanteData = _propsLight => ({
       valgteVirksomheter: _propsLight.valgteVirksomheter,
-      redigerbart: _propsLight.generiskStegRedigerbartt,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
 
     this.beregnRelevantUI = _propsLight => {
