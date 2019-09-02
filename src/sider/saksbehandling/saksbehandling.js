@@ -44,6 +44,7 @@ class Saksbehandling extends Component {
     visAvslagSoknadDialog: false,
     visAvsluttSakSomBortfaltDialog: false,
     behandlingID: -1,
+    saksnummer: '0',
   };
 
   componentDidMount() {
@@ -65,6 +66,7 @@ class Saksbehandling extends Component {
     const { snr } = match.params;
     const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
     this.setState({ behandlingID: Utils._toInteger(behandlingID) });
+    this.setState({ saksnummer: snr });
 
     const {
       hentFagsaker, hentBehandling, hentBehandlingsresultat,
@@ -349,7 +351,7 @@ class Saksbehandling extends Component {
                 visAvsluttSakSomBortfaltDialogHandle={this.visAvsluttSakSomBortfaltDialog}
                 tilForsidenHandle={this.navigerTilOversiktSide}
               />
-              <SideDialog behandlingID={behandlingID} redigerbart={sidedialogRedigerbart} />
+              <SideDialog saksnummer={this.state.saksnummer} behandlingID={behandlingID} redigerbart={sidedialogRedigerbart} />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
