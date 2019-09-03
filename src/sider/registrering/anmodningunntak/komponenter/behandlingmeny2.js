@@ -8,17 +8,17 @@ const Behandlingsmeny2 = props => {
   return (
     <Nav.EkspanderbartpanelBase ariaTittel="Behandlingsmeny" className="oppsummering__meny" heading={<div className="behandlingsmeny_title">{title}</div>}>
       <div className="meny__innhold">
-        {/* {knappeRader && knappeRader.map(knappeRad => <Nav.Knapp type="hoved" mini className="innhold__element" onClick={knappeRad.clickFunc}>{knappeRad.label}</Nav.Knapp>)} */}
+        {/* {knappeRader && knappeRader.map(knappeRad => <Nav.Knapp mini className="innhold__element" onClick={knappeRad.clickFunc}>{knappeRad.label}</Nav.Knapp>)} */}
         {knappeRader && knappeRader.map(knappeRad => {
           if (knappeRad.redigerbart === true) {
-            return (<Nav.Knapp type="hoved" mini className="innhold__element" onClick={knappeRad.clickFunc}>{knappeRad.label}</Nav.Knapp>);
+            return (<Nav.Knapp mini className="innhold__element" onClick={knappeRad.clickFunc}>{knappeRad.label}</Nav.Knapp>);
           }
           else if (knappeRad.redigerbart === undefined) {
             if (knappeRad.disabled === true) {
-              return (<Nav.Knapp disabled={knappeRad.disabled} type="hoved" mini className="innhold__element" onClick={knappeRad.clickFunc}>{knappeRad.label}</Nav.Knapp>);
+              return (<Nav.Knapp disabled={knappeRad.disabled} mini className="innhold__element" onClick={knappeRad.clickFunc}>{knappeRad.label}</Nav.Knapp>);
             }
             else {
-              return (<Nav.Knapp type="hoved" mini className="innhold__element" onClick={knappeRad.clickFunc}>{knappeRad.label}</Nav.Knapp>);
+              return (<Nav.Knapp mini className="innhold__element" onClick={knappeRad.clickFunc}>{knappeRad.label}</Nav.Knapp>);
             }
           }
         })}
