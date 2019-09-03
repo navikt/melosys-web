@@ -34,7 +34,7 @@ const NormaltDriverVirksomhet = props => {
         vilkaarKode="normaltDriverVirksomhet"
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!harAvklaring || !redigerbart} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!harAvklaring || !redigerbart} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
