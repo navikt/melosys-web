@@ -31,7 +31,7 @@ const VirksomheterLinje = props => {
 
   const virksomhetKlikkHandler = () => {
     const verdi = virksomhetErValgt ? 'FALSE' : 'TRUE';
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.uuid || virksomheten.orgnr, verdi));
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.virksomhetId, verdi));
   };
 
   return (
@@ -42,7 +42,7 @@ const VirksomheterLinje = props => {
 };
 
 VirksomheterLinje.propTypes = {
-  virksomheten: MPT.Organisasjon.isRequired,
+  virksomheten: MPT.Virksomhet.isRequired,
   avklartVirksomhet: MPT.Avklartefakta,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
@@ -72,12 +72,9 @@ const VirksomheterListe = props => {
   return (
     <div>
       {virksomheterIPerioden.map(virksomheten => {
-        const avklartfaktaForVirksomhet = avklarteVirksomheter.find(enkeltAvklaring => (
-          enkeltAvklaring.subjektID === virksomheten.uuid ||
-          enkeltAvklaring.subjektID === virksomheten.orgnr
-        ));
+        const avklartfaktaForVirksomhet = avklarteVirksomheter.find(enkeltAvklaring => enkeltAvklaring.subjektID === virksomheten.virksomhetId);
 
-        const key = `avklartVirksomhet${virksomheten.orgnr}`;
+        const key = `avklartVirksomhet${virksomheten.virksomhetId}`;
         return <VirksomheterLinje
           virksomheten={virksomheten}
           avklartVirksomhet={avklartfaktaForVirksomhet}
@@ -94,7 +91,7 @@ const VirksomheterListe = props => {
 };
 
 VirksomheterListe.propTypes = {
-  virksomheterIPerioden: PT.array,
+  virksomheterIPerioden: PT.arrayOf(MPT.Virksomhet),
   avklarteVirksomheter: PT.array,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
@@ -148,7 +145,7 @@ VurderingVirksomhet.propTypes = {
   tilstand: PT.shape({
     harAvklaring: PT.bool,
   }).isRequired,
-  virksomheterIPerioden: MPT.Organisasjoner.isRequired,
+  virksomheterIPerioden: PT.arrayOf(MPT.Virksomhet).isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

@@ -95,6 +95,22 @@ export const Yrkesaktivitet = createSelector(
   }
 );
 
+const konverterForetakUtlandTilVirksomhet = foretakUtland => ({
+  navn: foretakUtland.navn,
+  virksomhetId: foretakUtland.uuid,
+  adresse: {
+    land: KV.kodeTilTerm(foretakUtland.adresse.landkode, MKV.KTObjects.landkoder),
+  },
+});
+
+const konverterOrganisasjonTilVirksomhet = org => ({
+  navn: org.navn,
+  virksomhetId: org.orgnr,
+  adresse: {
+    land: org.forretningsadresse.land,
+  },
+});
+
 /* Det er den juridiske virksomheten som skal vises i stegvelgeren. Derfor må vi traversere listen over arbeidsforhold
  * og merge inn organisasjoner slik at det er der den juridiske organisasjonens navn som vises i panelet.
  */
@@ -114,11 +130,16 @@ export const VirksomheterIPeriodenSelector = createSelector(
     const relevanteOrganisasjoner = organisasjoner.filter(organisasjonen => {
       const organisasjonenHarArbeidsforhold = arbeidsforholdene.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
       return organisasjonenHarArbeidsforhold;
-    }, []);
+    });
 
     const foretakUtlandMedNavn = foretakUtland.filter(foretak => foretak.navn);
 
-    return [...relevanteOrganisasjoner, ...ekstraArbeidsgivere, ...selvstendigeNaringer, ...foretakUtlandMedNavn];
+    return [
+      ...relevanteOrganisasjoner.map(konverterOrganisasjonTilVirksomhet),
+      ...ekstraArbeidsgivere.map(konverterOrganisasjonTilVirksomhet),
+      ...selvstendigeNaringer.map(konverterOrganisasjonTilVirksomhet),
+      ...foretakUtlandMedNavn.map(konverterForetakUtlandTilVirksomhet),
+    ];
   }
 );
 
@@ -133,11 +154,9 @@ export const VirksomhetFaktaerSelector = createSelector(
     const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET);
 
     return alleVirksomheter.reduce((virksomhetFaktaer, virksomhet) => {
-      const eksisterendeForetakUtlandFakta = avklartefakta.find(fakta => fakta.subjektID === virksomhet.uuid);
-      const eksisterendeOrganisasjonFakta = avklartefakta.find(fakta => fakta.subjektID === virksomhet.orgnr);
+      const eksisterendeVirksomhetFakta = avklartefakta.find(fakta => fakta.subjektID === virksomhet.virksomhetId);
 
-      if (eksisterendeForetakUtlandFakta) return [...virksomhetFaktaer, { type: KV.Koder.VirksomhetType.FORETAKUTLAND, avklartFakta: eksisterendeForetakUtlandFakta }];
-      if (eksisterendeOrganisasjonFakta) return [...virksomhetFaktaer, { type: KV.Koder.VirksomhetType.ORGANISASJON, avklartFakta: eksisterendeOrganisasjonFakta }];
+      if (eksisterendeVirksomhetFakta) return [...virksomhetFaktaer, eksisterendeVirksomhetFakta];
       return virksomhetFaktaer;
     }, []);
   }
@@ -231,33 +250,16 @@ export const AvklarteVirksomheterSelector = createSelector(
   state => soknadSelectors.ForetakUtlandSelector(state),
   (virksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland) => {
     const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
-    const alleAvklarteVirksomheter = virksomhetFaktaer.filter(virksomhet => virksomhet.avklartFakta.fakta.includes('TRUE'));
+    const alleAvklarteVirksomheter = virksomhetFaktaer.filter(virksomhet => virksomhet.fakta.includes('TRUE'));
 
     return alleAvklarteVirksomheter.map(virksomhet => {
-      switch (virksomhet.type) {
-        case KV.Koder.VirksomhetType.FORETAKUTLAND: {
-          const avklartForetak = foretakUtland.find(foretak => foretak.uuid === virksomhet.avklartFakta.subjektID);
-          return {
-            navn: avklartForetak.navn,
-            id: avklartForetak.uuid,
-            adresse: {
-              land: KV.kodeTilTerm(avklartForetak.adresse.landkode, MKV.KTObjects.landkoder),
-            },
-          };
-        }
-        case KV.Koder.VirksomhetType.ORGANISASJON: {
-          const avklartOrganisasjon = alleOrganisasjoner.find(org => org.orgnr === virksomhet.avklartFakta.subjektID);
-          return {
-            navn: avklartOrganisasjon.navn,
-            id: avklartOrganisasjon.orgnr,
-            adresse: {
-              land: avklartOrganisasjon.forretningsadresse.land,
-            },
-          };
-        }
-        default:
-          throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
-      }
+      const avklartForetak = foretakUtland.find(foretak => foretak.uuid === virksomhet.subjektID);
+      if (avklartForetak) return konverterForetakUtlandTilVirksomhet(avklartForetak);
+
+      const avklartOrganisasjon = alleOrganisasjoner.find(org => org.orgnr === virksomhet.subjektID);
+      if (avklartOrganisasjon) return konverterOrganisasjonTilVirksomhet(avklartOrganisasjon);
+
+      throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
     });
   }
 );
