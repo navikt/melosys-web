@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -7,7 +6,6 @@ import * as MPT from '../../proptypes';
 import * as API from '../../services/api';
 import { formatterDatoTilNorsk } from '../../utils/dato';
 import * as Ikoner from '../../resources/images';
-import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
 import './sideDialogDokumenter.css';
 
 const uuid = require('uuid/v4');

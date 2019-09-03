@@ -10,6 +10,7 @@ import { soknadSelectors } from '../../../../ducks/soknad';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
+import Behandlingsmeny from './behandlingsmeny';
 import Behandlingsstatus from './behandlingsstatus';
 import Oppsummering from '../../../../felleskomponenter/oppsummering';
 
@@ -28,12 +29,32 @@ const SideOppsummering = props => {
   if (!oppsummering) return <div />;
 
   const {
+    lagreOgLukkHandle,
+    tilbakeleggeHandle,
     arbeidsland,
+    endreLovvalgsperiodeRedigerbart,
   } = props;
+
+  const apneTidligereBehandlinger = () => {
+    const URI_SOK = `/sok/${props.person.fnr}`;
+    window.open(URI_SOK);
+  };
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
       <Nav.Panel className="saksbehandling__soknadSammendrag">
+        <Nav.Row>
+          <Nav.Column xs="12" md="12">
+            <div className="oppsummering__menylinje">
+              <Behandlingsmeny
+                lagreOgLukkHandle={lagreOgLukkHandle}
+                tilbakeleggeHandle={tilbakeleggeHandle}
+                apneTidligereBehandlinger={apneTidligereBehandlinger}
+                redigerbart={endreLovvalgsperiodeRedigerbart}
+              />
+            </div>
+          </Nav.Column>
+        </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12" md="6">
             <Nav.Undertittel className="soknadSammendrag__header">Søknad</Nav.Undertittel>
@@ -77,10 +98,9 @@ SideOppsummering.propTypes = {
   soknadsperiodeFom: PT.string,
   soknadsperiodeTom: PT.string,
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
-  oppfriskSaksopplysningerHandle: PT.func.isRequired,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
-  visHenleggDialogHandle: PT.func.isRequired,
+  tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
 SideOppsummering.defaultProps = {

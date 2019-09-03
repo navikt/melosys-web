@@ -237,11 +237,12 @@ class Saksopplysninger extends Component {
   }
 }
 
+
 Saksopplysninger.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   medlemskap: MPT.Medlemskap,
-  sed: PT.object, // TODO prop-type
+  sed: MPT.Behandlinger.Saksopplysninger.SED,
   vurderingBegrunnelser: PT.object,
   skjema: PT.any,
   avklartefakta: PT.array.isRequired,
