@@ -116,7 +116,7 @@ export const VurderingArtikkel16MottaSvar = props => {
         </Nav.Row>
       </form>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!redigerbart || !formIsValid || !tilstand.harAvklaring} type="hoved" onClick={bekreftOgFortsett} className="fane__navigasjonsknapp">BEKREFT OG FORTSETT</Nav.Knapp>
+        <Nav.Knapp disabled={!redigerbart || !formIsValid || !tilstand.harAvklaring} onClick={bekreftOgFortsett} className="fane__navigasjonsknapp">BEKREFT OG FORTSETT</Nav.Knapp>
       </div>
     </Fragment>
   );

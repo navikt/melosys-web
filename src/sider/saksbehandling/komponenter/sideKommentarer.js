@@ -18,7 +18,7 @@ const SideKommentarer = props => {
           <Undertittel>Kommentarer:</Undertittel>
           <TextareaControlled disabled={!redigerbart} textareaClass="kommentar__tekst" label="" />
           <p className="kommentar__advarsel">Merk: Fremtidige innsynskrav vil også medføre utlevering av kommentarer. Ta hensyn til dette når du skriver.</p>
-          <Knapp type="hoved" disabled={!redigerbart}>Lagre kommentar</Knapp>
+          <Knapp disabled={!redigerbart}>Lagre kommentar</Knapp>
         </form>
       </Panel>
     </div>
