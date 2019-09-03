@@ -37,9 +37,9 @@ const Forretningsstedet = props => {
     };
   }, []);
 
-  const { navn, id } = forretningsstedet;
+  const { navn, virksomhetId } = forretningsstedet;
   const landEndretHandler = landKode => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, id, landKode));
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, virksomhetId, landKode));
   };
 
   const eksisterendeLand = hentFaktaVerdi(avklartForretningsland) || '';
@@ -82,8 +82,8 @@ const Forretningssteder = props => {
     <div>
       {
         valgteVirksomheter.map(valgtVirksomhet => {
-          const key = `forretningssted${valgtVirksomhet.id}-${valgtVirksomhet.navn}`;
-          const avklartForretningsland = avklarteForretningsland.find(enkeltAvklaring => enkeltAvklaring.subjektID === valgtVirksomhet.id);
+          const key = `forretningssted${valgtVirksomhet.virksomhetId}-${valgtVirksomhet.navn}`;
+          const avklartForretningsland = avklarteForretningsland.find(enkeltAvklaring => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId);
 
           return <Forretningsstedet
             key={key}
