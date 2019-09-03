@@ -106,7 +106,7 @@
     "start:javalocal": "npm-run-all -s unpatch patch:env patch:javalocal -p start:css start:js",
     "start": "npm-run-all -s unpatch patch:env -p start:css start:js",
     "build": "npm-run-all unpatch patch:env build:css build:js",
-    "build:javalocal": "npm-run-all patch:env patch:javalocal build:css build:js",
+    "build:javalocal": "npm-run-all -s unpatch patch:env patch:javalocal -p build:css build:js",
     "test": "npm run build:css && react-scripts test --env=jsdom",
     "test:ci": "npm run build:css && react-scripts test --env=jsdom --testResultsProcessor ./node_modules/jest-junit --coverage --coverageDirectory=test/coverage",
     "coverage": "npm test -- --coverage",
