@@ -10,7 +10,7 @@ import * as Nav from '../../../utils/navFrontend';
 import './sokskjema.css';
 
 class SokSkjema extends Component {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { fnr } = this.props.match.params;
     this.oppdaterLokalSokState(fnr);
   }
