@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';

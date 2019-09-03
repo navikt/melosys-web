@@ -27,7 +27,7 @@ const JournalforingLoadable = Loadable({
   loading: SideLoadingStatus,
 });
 
-const RegistreringLoadable = Loadable({
+const RegistreringUnntaksperioderLoadable = Loadable({
   loader: () => import('./sider/registrering/unntaksperioder'),
   loading: SideLoadingStatus,
 });
@@ -41,7 +41,7 @@ const Routing = ({ location }) => (
   <Switch location={location}>
     <Route exact path="/" component={ForsideLoadable} />
     <Route exact path="/sok/:fnr" component={SokLoadable} />
-    {Utils.feature.featureToggle('REL1.1') && <Route exact path="/registrering/:snr/unntaksperioder" component={RegistreringLoadable} />}
+    {Utils.feature.featureToggle('REL1.1') && <Route exact path="/registrering/:snr/unntaksperioder" component={RegistreringUnntaksperioderLoadable} />}
     {Utils.feature.featureToggle('REL1.1') && <Route exact path="/registrering/:snr/anmodningunntak" component={RegistreringAnmodningunntakLoadable} />}
     <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
     <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />

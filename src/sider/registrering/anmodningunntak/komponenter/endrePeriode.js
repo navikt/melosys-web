@@ -1,6 +1,5 @@
 import React from 'react';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../../../../utils';
 import * as Nav from '../../../../utils/navFrontend';
@@ -17,13 +16,11 @@ const EndrePeriode = ({
   sedLovvalgsperiode,
   oppdaterFom,
   oppdaterTom,
-  oppdaterBegrunnelse,
-  oppdaterFritekst,
   feilmeldinger,
   redigerbart,
 }) => {
   const {
-    fom, tom, begrunnelse, fritekst,
+    fom, tom,
   } = endrePeriode;
 
   const tilPeriode = (fomDato, tomDato) => ({

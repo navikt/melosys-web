@@ -4,19 +4,18 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as KV from '../../../../kodeverk';
-import * as Utils from '../../../../utils';
+// import * as Utils from '../../../../utils';
 import * as Api from '../../../../services/api';
 import * as MPT from '../../../../proptypes';
 import * as Nav from '../../../../utils/navFrontend';
 import * as RegistreringContext from '../state/registreringContext';
-import ListevelgerFlervalg from '../../../../felleskomponenter/ui/listevelgerFlervalg';
 import Medlemskap from '../../../../felleskomponenter/medlemskap';
 import EndrePeriode from './endrePeriode';
 import { lovvalgsperioderOperations } from '../../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
-import { endrePeriodeSkjema } from '../validering/endrePeriodeSkjema';
+// import { endrePeriodeSkjema } from '../validering/endrePeriodeSkjema';
 import { endrePeriodeSelectors } from '../state/ducks/endrePeriode';
-import { createValidator } from '../../../../felleskomponenter/skjema/validering/skjemaer/createValidator';
+// import { createValidator } from '../../../../felleskomponenter/skjema/validering/skjemaer/createValidator';
 
 import './saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../../felleskomponenter/datoOmrade/datoOmrade';
@@ -44,7 +43,6 @@ class Saksopplysninger extends Component {
     anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
     begrunnelseFritekst: '',
     endretPeriode: { fom: null, tom: null },
-    ikkeGodkjentBegrunnelseKoder: [],
     endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
   };
 
@@ -55,8 +53,9 @@ class Saksopplysninger extends Component {
     const begrunnelseFritekst = event.target.value;
     this.setState({ begrunnelseFritekst });
   };
-  makeResponse = () => {
-    const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = this.state;
+
+  makeResponse = (endretPeriode = null, begrunnelseFritekst = null) => {
+    const { anmodningsperiodeSvarType } = this.state;
     const response = {
       anmodningsperiodeSvarType,
       endretPeriode,
@@ -64,28 +63,38 @@ class Saksopplysninger extends Component {
     };
     return response;
   };
+
   submitRegistrering = async () => {
-    /* TODO
-    if (!this.validerFelt()) {
-      return false;
-    }
-*/
     const { behandlingID, history } = this.props;
     const tilForsiden = () => history.push('/');
+    const { anmodningsperiodeSvarType, begrunnelseFritekst } = this.state;
+    const { INNVILGELSE, DELVIS_INNVILGELSE, AVSLAG } = MKV.Koder.anmodningsperiodesvartyper;
+    let response;
+    switch (anmodningsperiodeSvarType) {
+      case INNVILGELSE:
+        response = this.makeResponse(null, null);
+        break;
+      case DELVIS_INNVILGELSE:
+        response = this.makeResponse(this.props.endrePeriode, null);
+        break;
+      case AVSLAG:
+        response = this.makeResponse(null, begrunnelseFritekst);
+        break;
+      default:
+        break;
+    }
     try {
-      const anmodningsperioder = await Api.Anmodningsperioder.hent(behandlingID);
-      console.log(anmodningsperioder);
-      const response = this.makeResponse();
-      const { id: anmodningsperiodeID } = anmodningsperioder[0];
+      const data = await Api.Anmodningsperioder.hent(behandlingID);
+      const { anmodningsperioder } = data;
+      const anmodningsperiodeID = anmodningsperioder[0].id;
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, response);
     } catch (e) {
       console.log(e);
       return false;
     } finally {
       tilForsiden();
-      return true;
     }
-
+    return true;
     // GET: /anmodningperioder/:behandlingID
     // POST: /anmodningsperioder/:anmodningsperiodeID/svar
     /*

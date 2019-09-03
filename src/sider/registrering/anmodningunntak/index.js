@@ -1,3 +1,3 @@
-import RegistreringAnmodningunntak from './unntaksperioder';
+import RegistreringAnmodningunntak from './anmodningunntak';
 
 export default RegistreringAnmodningunntak;
