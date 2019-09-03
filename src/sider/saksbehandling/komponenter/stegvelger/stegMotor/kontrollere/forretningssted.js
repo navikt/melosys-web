@@ -35,7 +35,7 @@ class Forretningssted extends Steg {
       const harOmfattetAvklaring = this.harOmfattetAvklaring(omfattetINorge, omfattetILand);
       const harAvklartForretningsland = _propsLight.valgteVirksomheter.every(vv => (
         avklarteForretningsland.some(afl => (
-          afl.subjektID === vv.orgnr && !Utils._isNil(hentFaktaVerdi(afl))
+          afl.subjektID === vv.virksomhetId && !Utils._isNil(hentFaktaVerdi(afl))
         ))
       ));
 
