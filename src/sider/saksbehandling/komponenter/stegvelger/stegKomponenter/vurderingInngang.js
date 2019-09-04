@@ -33,7 +33,7 @@ const VurderingInngang = props => {
           { KV.objektTilTerm(vurdering) }
         </li>
         <li className="liste__element liste__element--varsel">
-          Sjekk at land er innenfor et territorium / område som dekkes av forordningen.
+          Sjekk eventuelt at området dekkes av forordningen.
         </li>
       </ul>
       <FieldArray

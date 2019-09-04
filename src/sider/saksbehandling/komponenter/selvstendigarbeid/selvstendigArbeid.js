@@ -50,7 +50,7 @@ const SelvstendigArbeid = props => {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.RadioGruppe feltNavn="erSelvstendig" label="Oppgir søker at han eller hun jobber som selvstendig næringsdrivende?">
+              <Skjema.RadioGruppe feltNavn="erSelvstendig" label="Oppgir søkeren å være selvstendig næringsdrivende?">
                 <Skjema.Radio feltNavn="erSelvstendig" value={BOOLSK.SANN} label="Ja" disabled={!redigerbart} />
                 <Skjema.Radio feltNavn="erSelvstendig" value={BOOLSK.USANN} label="Nei" disabled={!redigerbart} />
               </Skjema.RadioGruppe>
