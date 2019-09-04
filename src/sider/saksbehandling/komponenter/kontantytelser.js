@@ -19,7 +19,7 @@ export const Kontantytelser = ({ sakOgBehandling: { eosBarnetrygd } }) => (
     >
       <Nav.Row>
         <Nav.Column xs="9">
-          <Nav.Fieldset legend="Mottar EU / EØS barnetrygd fra NAV?">
+          <Nav.Fieldset legend="Mottar søkeren EU-/EØS-barnetrygd fra NAV?">
             {Utils.streng.boolTilNorsk(eosBarnetrygd)}
           </Nav.Fieldset>
         </Nav.Column>
