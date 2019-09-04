@@ -149,9 +149,16 @@ const VurderingArbeidsmonster = props => {
     }
   };
 
+  const oppdaterLovvalgsperiodeVedMount = avklartAktivitetINorge => {
+    if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1A));
+    }
+  };
+
   useEffect(() => {
     const avklartAktivitetINorge = hentFaktaVerdi(aktivitetINorge);
-    oppdaterLovvalgsperiode(avklartAktivitetINorge);
+    oppdaterLovvalgsperiodeVedMount(avklartAktivitetINorge);
+
     return function cleanup() {
       slettData();
     };
