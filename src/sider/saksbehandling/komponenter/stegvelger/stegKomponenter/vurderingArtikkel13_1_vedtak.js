@@ -163,7 +163,7 @@ VurderingArtikkel13_1_Vedtak.defaultProps = {
   formValues: {},
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
@@ -175,7 +175,7 @@ const mapStateToProps = state => ({
       lovvalgsperioderSelectors.TomDatoSelector(state),
       'days'
     ) !== 0,
-    tomDato: behandlingerSelectors.RedigerbartSelector(state) ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
+    tomDato: ownProps.redigerbart ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
     fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
   },
 });
