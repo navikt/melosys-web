@@ -183,6 +183,10 @@ class Stegvelger extends Component {
     }
   };
 
+  byggLovvalgsperioderHandler = () => {
+    this.props.oppdaterLovvalgperioder(this.state.stegStores.lovvalgsbestemmelse.hent());
+  };
+
   byggAnmodningsperioderHandler = () => {
     this.props.oppdaterAnmodningsPerioder(this.state.stegStores.lovvalgsbestemmelse.hent());
   };
@@ -224,6 +228,8 @@ class Stegvelger extends Component {
       tilForsiden: this.tilForsiden,
       lagreOgBestillAnmodningsperioder: this.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this.byggAnmodningsperioderHandler,
+      byggLovvalgsperioder: this.byggLovvalgsperioderHandler,
+      lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
     };
 
     const { props } = this;
