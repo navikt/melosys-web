@@ -25,7 +25,7 @@ class Journalforing extends Component {
         <p>Velg saksområde for å starte en journalføringsoppgave.</p>
 
         <form onSubmit={this.overrideDefaultSubmit}>
-          <Skjema.RadioGruppe feltNavn="Behandlingstype" label="Velg saksområde">
+          <Skjema.RadioGruppe feltNavn="Behandlingstype">
             <div className="skjema__horisontalefelter">
               <Skjema.Radio feltNavn="fagomrade" label="Medlemskap" value="MED" />
               <Skjema.Radio feltNavn="fagomrade" label="Unntak" value="UFM" disabled />

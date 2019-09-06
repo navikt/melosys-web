@@ -42,7 +42,7 @@ class SelvstendigeForetak extends Component {
         <div className="leggTilForetak">
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Knapp disabled={!redigerbart} mini onClick={() => fields.push({})}>Legg til nytt foretak</Nav.Knapp>
+              <Nav.Knapp disabled={!redigerbart} mini onClick={() => fields.push({})}>Legg til foretak</Nav.Knapp>
             </Nav.Column>
           </Nav.Row>
         </div>
