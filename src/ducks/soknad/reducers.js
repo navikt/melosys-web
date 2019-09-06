@@ -166,8 +166,11 @@ export default function reducer(state = initialState, action) {
           tom: dokument.soknadsperiodeTom ? formatterDatoTilISO(dokument.soknadsperiodeTom) : null,
         },
         selvstendigArbeid: {
-          erSelvstendig: dokument.erSelvstendig,
-          selvstendigForetak: dokument.selvstendigForetak,
+          erSelvstendig: dokument.erSelvstendig || null,
+          selvstendigForetak: dokument.selvstendigForetak.map(foretak => ({
+            orgnr: foretak.orgnr || null,
+            fortsetterEtterArbeidIUtlandet: foretak.fortsetterEtterArbeidIUtlandet || null,
+          })),
         },
         personOpplysninger: {
           utenlandskIdent: dokument.utenlandskIdent,
