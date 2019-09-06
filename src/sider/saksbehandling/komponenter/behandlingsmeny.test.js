@@ -14,6 +14,7 @@ describe('behandlingsmeny', () => {
       visHenleggDialogHandle: jest.fn(),
       visAvsluttSakSomBortfaltDialogHandle: jest.fn(),
       apneTidligereBehandlinger: jest.fn(),
+      visAvslagSoknadDialogHandle: jest.fn(),
       redigerbart: true,
       visHenleggSak: true,
     };
