@@ -28,11 +28,11 @@ const artikkel16MottaSvarFormValueSelector = formValueSelector(KV.Form.ARTIKKEL_
 export const VurderingArtikkel16MottaSvar = props => {
   const {
     anmodningsperiodeID, gyldigeSoknadsland, soknadsperiode, redigerbart, bekreftOgFortsett, slettData, tilstand,
-    endretPeriode, anmodningsperiodeSvarType, begrunnelseFritekst, formIsValid, oppdaterData, hentAnmodningsperiodesvar, sendAnmodningsperiodeSvar,
+    endretPeriode, anmodningsperiodeSvarType, begrunnelseFritekst, formIsValid, oppdaterData, hentAnmodningsperiodeSvar, sendAnmodningsperiodeSvar,
   } = props;
 
   useEffect(() => {
-    hentAnmodningsperiodesvar(anmodningsperiodeID).then(svar => oppdaterData(lagAnmodningsperiodesvar(svar.data)));
+    hentAnmodningsperiodeSvar(anmodningsperiodeID).then(svar => oppdaterData(lagAnmodningsperiodesvar(svar.data)));
 
     return function cleanup() {
       slettData();
@@ -132,12 +132,11 @@ VurderingArtikkel16MottaSvar.propTypes = {
   lovvalgsperiodeTom: PT.string,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  change: PT.func.isRequired,
   endretPeriode: MPT.Periode,
   anmodningsperiodeSvarType: PT.string,
   begrunnelseFritekst: PT.string,
   formIsValid: PT.bool,
-  hentAnmodningsperiodesvar: PT.func.isRequired,
+  hentAnmodningsperiodeSvar: PT.func.isRequired,
   sendAnmodningsperiodeSvar: PT.func.isRequired,
   tilstand: PT.object.isRequired,
 };
@@ -171,7 +170,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentAnmodningsperiodesvar: async anmodningsperiodeID => dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
+  hentAnmodningsperiodeSvar: async anmodningsperiodeID => dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
   sendAnmodningsperiodeSvar: (anmodningsperiodeID, anmodningsperiodeSvar) => dispatch(anmodningsperiodesvarOperations.send(anmodningsperiodeID, anmodningsperiodeSvar)),
 });
 
