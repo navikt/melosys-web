@@ -54,7 +54,7 @@ const ArbeidsgivereNorge = props => {
         organisasjoner={organisasjoner}
         hentOrganisasjon={hentOrganisasjon}
         redigerbart={redigerbart}
-        oppdaterSoknadState={() => props.oppdaterSoknadState(props.skjema)} />
+        oppdaterSoknadState={() => props.oppdaterSoknadState({ ...props.soknadSkjema, ...props.inngangSkjema })} />
     </div>
   );
 };
@@ -63,7 +63,8 @@ ArbeidsgivereNorge.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge.isRequired,
   organisasjoner: MPT.Organisasjoner.isRequired,
   hentOrganisasjon: PT.func.isRequired,
-  skjema: PT.object.isRequired,
+  soknadSkjema: PT.object.isRequired,
+  inngangSkjema: PT.object.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
@@ -72,7 +73,8 @@ const mapStateToProps = state => ({
   arbeidsgivereNorge: behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
   ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
-  skjema: formSelectors.SoknadenFormSelector(state).values,
+  soknadSkjema: formSelectors.SoknadenFormSelector(state).values,
+  inngangSkjema: formSelectors.InngangFormSelector(state).values,
   redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
 });
 
