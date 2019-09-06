@@ -13,7 +13,7 @@ import SoknadslandListe from './inngang/soknadslandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta,
+    bekreftOgFortsett, alleLandkoder, begrunnelser, avklartefakta,
     tilstand, redigerbart, oppdaterData, slettData,
   } = props;
 
@@ -21,7 +21,6 @@ const VurderingInngang = props => {
     slettData();
   }, []);
 
-  const { vurdering } = inngangsvilkar;
   const soknadslandBegrunnelser = begrunnelser.opphold;
   const { harAvklaring } = tilstand;
 
@@ -58,9 +57,6 @@ VurderingInngang.propTypes = {
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
   tilstand: PT.object.isRequired,
-  inngangsvilkar: PT.shape({
-    vurdering: MPT.Kodeverk,
-  }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
