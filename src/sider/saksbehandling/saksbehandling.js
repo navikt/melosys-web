@@ -428,7 +428,6 @@ Saksbehandling.propTypes = {
   sendLovvalgsperioder: PT.func.isRequired,
   sendPerioder: PT.func.isRequired,
   oppdaterVilkarState: PT.func.isRequired,
-  oppdaterAvklarteFaktaState: PT.func.isRequired,
   oppdaterLovvalgperioderState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
   anmodningsperioder: PT.array,

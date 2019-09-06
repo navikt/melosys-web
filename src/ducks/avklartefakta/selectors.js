@@ -95,6 +95,22 @@ export const Yrkesaktivitet = createSelector(
   }
 );
 
+const konverterForetakUtlandTilVirksomhet = foretakUtland => ({
+  navn: foretakUtland.navn,
+  virksomhetId: foretakUtland.uuid,
+  adresse: {
+    land: KV.kodeTilTerm(foretakUtland.adresse.landkode, MKV.KTObjects.landkoder),
+  },
+});
+
+const konverterOrganisasjonTilVirksomhet = org => ({
+  navn: org.navn,
+  virksomhetId: org.orgnr,
+  adresse: {
+    land: org.forretningsadresse.land,
+  },
+});
+
 /* Det er den juridiske virksomheten som skal vises i stegvelgeren. Derfor må vi traversere listen over arbeidsforhold
  * og merge inn organisasjoner slik at det er der den juridiske organisasjonens navn som vises i panelet.
  */
@@ -103,13 +119,27 @@ export const VirksomheterIPeriodenSelector = createSelector(
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => soknadSelectors.EkstraArbeidsgivereSelector(state),
   state => soknadSelectors.SelvstendigNaringsvirksomhetSelector(state),
-  (arbeidsforholdene, organisasjoner, ekstraArbeidsgivere, selvstendigeNaringer) => {
-    const relevanteOrganisasjoner = organisasjoner.reduce((samling, organisasjonen) => {
+  state => soknadSelectors.ForetakUtlandSelector(state),
+  (
+    arbeidsforholdene,
+    organisasjoner,
+    ekstraArbeidsgivere,
+    selvstendigeNaringer,
+    foretakUtland
+  ) => {
+    const relevanteOrganisasjoner = organisasjoner.filter(organisasjonen => {
       const organisasjonenHarArbeidsforhold = arbeidsforholdene.some(forholdet => forholdet.opplysningspliktigID === organisasjonen.orgnr);
-      return organisasjonenHarArbeidsforhold ? [...samling, organisasjonen] : [...samling];
-    }, []);
+      return organisasjonenHarArbeidsforhold;
+    });
 
-    return [...relevanteOrganisasjoner, ...ekstraArbeidsgivere, ...selvstendigeNaringer];
+    const foretakUtlandMedNavn = foretakUtland.filter(foretak => foretak.navn);
+
+    return [
+      ...relevanteOrganisasjoner.map(konverterOrganisasjonTilVirksomhet),
+      ...ekstraArbeidsgivere.map(konverterOrganisasjonTilVirksomhet),
+      ...selvstendigeNaringer.map(konverterOrganisasjonTilVirksomhet),
+      ...foretakUtlandMedNavn.map(konverterForetakUtlandTilVirksomhet),
+    ];
   }
 );
 
@@ -117,22 +147,18 @@ export const VirksomheterIPeriodenSelector = createSelector(
  * for vurderingen. Alle virksomheter som ikke er krysset av skal automatisk markeres som om de ikke er med videre
  * dvs "FALSE" som fakta.
  */
-export const VirksomhetSelector = createSelector(
+export const VirksomhetFaktaerSelector = createSelector(
   state => AvklartefaktaSelector(state),
   state => VirksomheterIPeriodenSelector(state),
-  (alleAvklarteFakta, alleArbeidsgivere) => {
+  (alleAvklarteFakta, alleVirksomheter) => {
     const avklartefakta = alleAvklarteFakta.filter(avklaring => avklaring.referanse === KV.Koder.avklartefaktaKoder.VIRKSOMHET);
-    return alleArbeidsgivere.map(arbeidsgiver => {
-      const eksisterendeAvklaring = avklartefakta.find(fakta => fakta.subjektID === arbeidsgiver.orgnr);
 
-      return eksisterendeAvklaring || {
-        ...avklartFaktaTemplate,
-        referanse: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
-        fakta: ['FALSE'],
-        subjektID: arbeidsgiver.orgnr,
-        avklartefaktaKode: KV.Koder.avklartefaktaKoder.VIRKSOMHET,
-      };
-    });
+    return alleVirksomheter.reduce((virksomhetFaktaer, virksomhet) => {
+      const eksisterendeVirksomhetFakta = avklartefakta.find(fakta => fakta.subjektID === virksomhet.virksomhetId);
+
+      if (eksisterendeVirksomhetFakta) return [...virksomhetFaktaer, eksisterendeVirksomhetFakta];
+      return virksomhetFaktaer;
+    }, []);
   }
 );
 
@@ -218,15 +244,26 @@ export const AvklartefaktaLovvalgKodeSelector = createSelector(
 );
 
 export const AvklarteVirksomheterSelector = createSelector(
-  state => VirksomhetSelector(state),
+  state => VirksomhetFaktaerSelector(state),
   state => behandlingerSelectors.OrganisasjonerSelector(state),
   state => OrganisasjonSelectors.organisasjonerSelector(state),
-  (alleArbeidsgivere, fagsakOrganisasjoner, soknadOrganisasjoner) => {
+  state => soknadSelectors.ForetakUtlandSelector(state),
+  (virksomhetFaktaer, fagsakOrganisasjoner, soknadOrganisasjoner, foretakUtland) => {
     const alleOrganisasjoner = [...fagsakOrganisasjoner, ...soknadOrganisasjoner];
-    const avklarte = alleArbeidsgivere.filter(avklart => avklart.fakta.includes('TRUE'));
-    return avklarte.map(avklart => alleOrganisasjoner.find(org => org.orgnr === avklart.subjektID));
+    const alleAvklarteVirksomheter = virksomhetFaktaer.filter(virksomhet => virksomhet.fakta.includes('TRUE'));
+
+    return alleAvklarteVirksomheter.map(virksomhet => {
+      const avklartForetak = foretakUtland.find(foretak => foretak.uuid === virksomhet.subjektID);
+      if (avklartForetak) return konverterForetakUtlandTilVirksomhet(avklartForetak);
+
+      const avklartOrganisasjon = alleOrganisasjoner.find(org => org.orgnr === virksomhet.subjektID);
+      if (avklartOrganisasjon) return konverterOrganisasjonTilVirksomhet(avklartOrganisasjon);
+
+      throw new Error('Avklart virksomhet må enten tilhøre et utenlandsk foretak eller en organisasjon');
+    });
   }
 );
+
 
 export const AvklartefaktaVurderingSelector = createSelector(
   state => AvklartefaktaSelector(state).vurdering,
