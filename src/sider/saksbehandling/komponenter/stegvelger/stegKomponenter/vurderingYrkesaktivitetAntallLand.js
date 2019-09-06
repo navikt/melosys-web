@@ -33,7 +33,7 @@ const VurderingYrkesaktivitetAntallLand = props => {
           checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
           value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
           onChange={radioEndret}
-          label="Kun Norge"
+          label="Ett land, Norge"
           disabled={BOOLSK.SANN} />
         <Nav.Radio
           name="yrkesaktivitetAntallLand"

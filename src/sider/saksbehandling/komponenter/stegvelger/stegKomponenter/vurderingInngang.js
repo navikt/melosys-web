@@ -30,7 +30,7 @@ const VurderingInngang = props => {
       <Nav.Undertittel>Kontroller inngangsvilkår</Nav.Undertittel>
       <ul className="betingelser__liste">
         <li className="liste__element liste__element--oppfylt">
-          { KV.objektTilTerm(vurdering) }
+          Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.
         </li>
         <li className="liste__element liste__element--varsel">
           Sjekk eventuelt at området dekkes av forordningen.
