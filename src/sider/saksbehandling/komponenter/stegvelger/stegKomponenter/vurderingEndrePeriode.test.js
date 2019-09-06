@@ -3,10 +3,13 @@ import React from 'react';
 import { VurderingEndrePeriode } from './vurderingEndrePeriode';
 import { lagAvklartfakta } from '../../../../../regler/avklartefakta';
 
-describe.skip('vurderingEndrePeriode', () => {
+describe('vurderingEndrePeriode', () => {
   let props = null;
 
   beforeEach(() => {
+    fetch.resetMocks();
+    fetch.mockResponse(JSON.stringify({}));
+
     props = {
       behandlingID: 1,
       lovvalgsPeriode: {},
