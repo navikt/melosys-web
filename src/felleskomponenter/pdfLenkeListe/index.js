@@ -22,7 +22,13 @@ class PdfLenkeListe extends Component {
       }
     }
 
-    const fileURL = await dokumenterOperations.forhandsvisPDF(behandlingID, dokument.type, dokument.data);
+    let fileURL;
+    if (dokument.erSed) {
+      fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.type);
+    } else {
+      fileURL = await dokumenterOperations.forhandsvisBrev(behandlingID, dokument.type, dokument.data);
+    }
+
     if (fileURL) {
       window.open(fileURL);
       this.setState({ feilmelding: false });

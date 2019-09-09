@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import * as EKV from 'eessi-kodeverk';
 
 import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
@@ -44,6 +45,7 @@ const VurderingVedtak = ({
 
   const dokumenter = [
     { navn: 'Forhåndsvis vedtaksbrev og A1', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
+    { navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper, erSed: true },
   ];
 
   if (lovvalgSomKodeTerm && lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1) {
