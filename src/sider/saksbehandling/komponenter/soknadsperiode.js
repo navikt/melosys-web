@@ -9,7 +9,7 @@ import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 
 import * as Ikoner from '../../../resources/images';
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { soknadSelectors, soknadOperations } from '../../../ducks/soknad';
 import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
 
@@ -226,7 +226,7 @@ Soknadsperiode.defaultProps = {
 const mapStateToProps = state => ({
   soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
   soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
