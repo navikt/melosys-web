@@ -29,6 +29,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avk
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
 import { oppgaverOperations } from '../../ducks/oppgaver';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
+import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { formSelectors } from '../../ducks/form';
@@ -449,7 +450,7 @@ Saksbehandling.defaultProps = {
  * @param state
  */
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),

@@ -11,6 +11,7 @@ import Saksopplysninger from './komponenter/saksopplysninger';
 import SideDialog from '../../felleskomponenter/sideDialog/sideDialog';
 import SideOppsummering from './komponenter/sideOppsummering';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { fagsakOperations, fagsakSelectors } from '../../ducks/fagsaker';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta';
 
@@ -146,7 +147,7 @@ Registrering.defaultProps = {
   vurderingBegrunnelser: {},
 };
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   vurderingBegrunnelser: avklartefaktaSelectors.VurderingUnntakPeriode(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
