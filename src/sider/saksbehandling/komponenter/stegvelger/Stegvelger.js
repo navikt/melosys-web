@@ -20,8 +20,10 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../duc
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../../../ducks/behandlingsperioder';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
 import { vilkarOperations, vilkarSelectors } from '../../../../ducks/vilkar';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { vedtakOperations } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
+
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore, AnmodningsperiodesvarStore } from './StegState';
 
@@ -410,7 +412,7 @@ const mapStateToProps = state => ({
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
-  generiskStegRedigerbart: behandlingerSelectors.GeneriskStegRedigerbartSelector(state),
+  generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
 });
 
 /* eslint no-alert:off */
