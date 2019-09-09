@@ -72,7 +72,7 @@ const SokkelSkipEnkelt = props => {
   } = props;
 
   const {
-    navn, flaggLandkode, installasjonsLandkode, territorialfarvann,
+    enhetNavn, flaggLandkode, installasjonsLandkode, territorialfarvann,
   } = maritimtArbeid;
 
   const { begrunnelseKoder } = sokkelEllerSkip;
@@ -80,37 +80,37 @@ const SokkelSkipEnkelt = props => {
   const arbeidslandType = hentFaktaVerdi(arbeidslandTypeAvklartfakta);
   const { SOKKEL, SKIP } = KV.Koder;
 
-  const key = `${KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}${navn}`;
+  const key = `${KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP}${enhetNavn}`;
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, sokkelEllerSkip));
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, arbeidslandAvklartfakta));
     oppdaterData(konverterTilStegData(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, arbeidslandTypeAvklartfakta));
     return function cleanup() {
-      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, navn));
-      slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, navn));
-      slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, navn));
+      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, enhetNavn));
+      slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, enhetNavn));
+      slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, enhetNavn));
     };
   }, []);
 
   const sokkelSkipEndret = e => (
-    avklartefaktaEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, navn, e.target.value)
+    avklartefaktaEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, enhetNavn, e.target.value)
   );
 
   const begrunnelserEndret = e => (
-    avklartefaktaBegrunnelserEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, navn, e.target.value)
+    avklartefaktaBegrunnelserEndretHandler(KV.Koder.avklartefaktaKoder.SOKKEL_ELLER_SKIP, enhetNavn, e.target.value)
   );
 
   const arbeidslandEndret = (land = {}) => {
-    avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, navn, land.kode);
-    avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, navn, land.term);
+    avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, enhetNavn, land.kode);
+    avklartefaktaEndretHandler(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, enhetNavn, land.term);
   };
 
-  const sokkelSkipDisabled = !(redigerbart && navn);
+  const sokkelSkipDisabled = !(redigerbart && enhetNavn);
 
   return (
     <Nav.Row className="sokkelSkip__liste__rad">
-      <Nav.Column xs="3" className="rad__navn">{navn}</Nav.Column>
+      <Nav.Column xs="3" className="rad__navn">{enhetNavn}</Nav.Column>
       <Nav.Column xs="2" className="rad__sokkel">
         <Nav.Radio
           name={key}
@@ -191,9 +191,9 @@ const SokkelSkipListe = props => {
         <SokkelSkipEnkelt
           key={JSON.stringify(enkelt)}
           maritimtArbeid={enkelt}
-          sokkelEllerSkip={sokkelEllerSkipListe.find(avklartFakta => avklartFakta.subjektID === enkelt.navn)}
-          arbeidslandAvklartfakta={installasjonArbeidslandListe.find(avklartFakta => avklartFakta.subjektID === enkelt.navn)}
-          arbeidslandTypeAvklartfakta={installasjonArbeidslandTypeListe.find(avklartfakta => avklartfakta.subjektID === enkelt.navn)}
+          sokkelEllerSkip={sokkelEllerSkipListe.find(avklartFakta => avklartFakta.subjektID === enkelt.enhetNavn)}
+          arbeidslandAvklartfakta={installasjonArbeidslandListe.find(avklartFakta => avklartFakta.subjektID === enkelt.enhetNavn)}
+          arbeidslandTypeAvklartfakta={installasjonArbeidslandTypeListe.find(avklartfakta => avklartfakta.subjektID === enkelt.enhetNavn)}
           index={index}
           begrunnelser={begrunnelser}
           redigerbart={redigerbart}
@@ -275,7 +275,7 @@ class VurderingSokkelSkip extends React.Component {
     const { konklusjonEndretHandler } = this;
     const { VurderingSokkelSkipTyper } = KV.Koder;
     const { harAvklaring } = tilstand;
-    const harMaritimeArbeidUnikeNavn = Utils.erPropertyUnik(maritimtArbeid, enkeltMaritimtArbeid => enkeltMaritimtArbeid.navn);
+    const harMaritimeArbeidUnikeNavn = Utils.erPropertyUnik(maritimtArbeid, enkeltMaritimtArbeid => enkeltMaritimtArbeid.enhetNavn);
     /* eslint-disable max-len */
     return (
       <div className="vurderingSokkelSkip">
@@ -333,7 +333,7 @@ class VurderingSokkelSkip extends React.Component {
             label="To sokler / skip i flere land (art. 13)" />
         </Nav.Fieldset>
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     );

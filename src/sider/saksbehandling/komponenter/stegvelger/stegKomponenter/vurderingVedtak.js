@@ -13,6 +13,7 @@ import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder
 
 import { datoDiffMenneskelig } from '../../../../../utils/dato';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
+import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 
 import './vurderingVedtak.css';
 
@@ -23,12 +24,10 @@ const alleLovvalg = [
 ];
 
 const VurderingVedtak = ({
-  gyldigeSoknadsland,
   lovvalgsperioder,
   redigerbart,
   behandlingID,
   lagreOgFatteVedtak,
-  lovvalgsland,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
@@ -37,43 +36,33 @@ const VurderingVedtak = ({
   const lovvalget = lovvalgsperioder[0] || {};
 
   const {
-    fomDato, tomDato, lovvalgsbestemmelse, lovvalgsResultat,
+    fomDato, tomDato, lovvalgsbestemmelse,
   } = lovvalget;
 
   const antallManeder = datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, alleLovvalg);
 
-  const landSomTekstListe = gyldigeSoknadsland.map(enkeltLand => enkeltLand.term).join(', ');
-
   const dokumenter = [
-    { navn: 'Forhåndsvis vedtaksbrev', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
-    { navn: 'Forhåndsvis A1 til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
+    { navn: 'Forhåndsvis vedtaksbrev og A1', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
   ];
 
   if (lovvalgSomKodeTerm && lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1) {
     dokumenter.push({ navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } });
   }
 
-  const lovvalgslandTekst = KV.kodeTilTerm(lovvalgsland, MKV.KTObjects.landkoder) || '...';
-
   return (
     <div className="vedtak">
-      <Nav.Undertittel>Medlemskap i norsk folketrygd {lovvalgsResultat} etter<br />{ KV.objektTilTerm(lovvalgSomKodeTerm) }:</Nav.Undertittel>
+      <Nav.Undertittel>Omfattet av norsk trygdelovgivning etter { KV.objektTilTerm(lovvalgSomKodeTerm) }</Nav.Undertittel>
       <div>
+        <Nav.Row className="lovvalgsperiode">
+          <Nav.Column xs="6">
+            <DatoOmrade periode={{ fom: lovvalget.fomDato, tom: lovvalget.tomDato }} label="Lovvalgsperiode" />
+          </Nav.Column>
+        </Nav.Row>
         <Nav.Row className="vedtak__oppsummering">
           <Nav.Column xs="6">
             <Nav.Element type="element">Antall måneder i utlandet</Nav.Element>
             <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
-          </Nav.Column>
-          <Nav.Column xs="6">
-            <Nav.Element type="element">Arbeidsland</Nav.Element>
-            <Nav.Normaltekst>{ landSomTekstListe }</Nav.Normaltekst>
-          </Nav.Column>
-          <Nav.Column xs="6">
-          </Nav.Column>
-          <Nav.Column xs="6">
-            <Nav.Element type="element">Lovvalgsland</Nav.Element>
-            <Nav.Normaltekst>{ lovvalgslandTekst }</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
@@ -83,7 +72,7 @@ const VurderingVedtak = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
+            <Nav.Hovedknapp disabled={!redigerbart} onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>

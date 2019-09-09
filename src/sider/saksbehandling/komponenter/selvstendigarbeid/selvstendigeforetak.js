@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import EnkeltForetak from './enkeltforetak';
 
 import './selvstendigArbeid.css';
@@ -11,12 +9,12 @@ import './selvstendigArbeid.css';
 class SelvstendigeForetak extends Component {
   componentDidUpdate(prevProps) {
     const { fields: oldFields } = prevProps;
-    const { oppdaterSoknadState, skjema, fields } = this.props;
+    const { oppdaterSoknadState, fields } = this.props;
 
     // Sjekk om listen over selvstendig næringsdrivende
     // har oppdatert seg siden sist. I såfall, oppdaterSoknadState.
     if (fields.length !== oldFields.length) {
-      oppdaterSoknadState(skjema);
+      oppdaterSoknadState();
     }
   }
 
@@ -38,6 +36,7 @@ class SelvstendigeForetak extends Component {
             slettForetak={() => fields.remove(index)}
             oppdaterSoknadState={oppdaterSoknadState}
             skjema={skjema}
+            redigerbart={redigerbart}
           />))
         }
         <div className="leggTilForetak">
@@ -61,10 +60,5 @@ SelvstendigeForetak.propTypes = {
   skjema: PT.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
-});
 
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SelvstendigeForetak);
+export default SelvstendigeForetak;

@@ -17,13 +17,14 @@ const uuid = require('uuid/v4');
  * @returns {*}
  * @constructor
  */
-const ArbeidsgiverEnkelt = ({ organisasjon, slettHandle }) => (
-  <Organisasjon organisasjon={organisasjon} slettHandle={slettHandle} />
+const ArbeidsgiverEnkelt = ({ organisasjon, slettHandle, redigerbart }) => (
+  <Organisasjon organisasjon={organisasjon} slettHandle={slettHandle} redigerbart={redigerbart} />
 );
 
 ArbeidsgiverEnkelt.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
   slettHandle: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 /** Hovedkomponent for å liste ut og legge til ekstra arbeidsgivere. Denne connecter
@@ -70,7 +71,9 @@ class EkstraArbeidsgivere extends Component {
 
   render () {
     const { leggTil, slett } = this;
-    const { fields, hentOrganisasjon, organisasjoner } = this.props;
+    const {
+      fields, hentOrganisasjon, organisasjoner, redigerbart,
+    } = this.props;
 
     const alleEkstraArbeidsgivere = fields.getAll() || [];
 
@@ -80,8 +83,9 @@ class EkstraArbeidsgivere extends Component {
           key={uuid()}
           slettHandle={() => slett(indeks)}
           organisasjon={organisasjoner.find(organisasjon => organisasjon.orgnr === orgnr) || {}}
+          redigerbart={redigerbart}
         />)}
-        <EkstraArbeidsgiverLeggTil leggTil={leggTil} hentOrganisasjon={hentOrganisasjon} />
+        <EkstraArbeidsgiverLeggTil leggTil={leggTil} hentOrganisasjon={hentOrganisasjon} redigerbart={redigerbart} />
       </div>
     );
   }
@@ -92,6 +96,7 @@ EkstraArbeidsgivere.propTypes = {
   organisasjoner: MPT.Organisasjoner.isRequired,
   hentOrganisasjon: PT.func.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 export default EkstraArbeidsgivere;

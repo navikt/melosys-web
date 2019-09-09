@@ -57,7 +57,7 @@ const Fagsak = ({ sak }) => {
             <dl className="fagsak__meta">
               <dt>Saksstatus:</dt>
               <dd>{KV.objektTilTerm(saksstatus) || '(ukjent)'}</dd>
-              <DatoOmradeDescription tekst="Søknadsperiode: " periode={soknadsperiode} />
+              <DatoOmradeDescription label="Søknadsperiode: " periode={soknadsperiode} />
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="4">

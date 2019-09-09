@@ -18,6 +18,7 @@ class SideDialog extends Component {
   static propTypes = {
     faner: PT.array,
     behandlingID: PT.number.isRequired,
+    redigerbart: PT.bool.isRequired,
   };
 
   static defaultProps = {
@@ -43,13 +44,13 @@ class SideDialog extends Component {
       });
   }
 
-  getFaneKomponent = (navn, behandlingID) => {
+  getFaneKomponent = (navn, behandlingID, redigerbart) => {
     if (navn === 'dokumenter') {
       return <SideDialogDokumenter key={uuid()} />;
     } else if (navn === 'brevbestilling') {
-      return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} />;
+      return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} redigerbart={redigerbart} />;
     } else if (navn === 'sedbestilling') {
-      return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} />;
+      return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} redigerbart={redigerbart} />;
     } else if (navn === 'besvarsed') {
       return <SideDialogBesvarSed key={uuid()} behandlingID={behandlingID} />;
     }
@@ -70,7 +71,7 @@ class SideDialog extends Component {
   };
 
   render() {
-    const { behandlingID } = this.props;
+    const { behandlingID, redigerbart } = this.props;
     const { navn } = this.state.faner.find(item => item.navn === this.state.aktivFane);
     return (
       <div className="dialog panelSeksjon">
@@ -84,7 +85,7 @@ class SideDialog extends Component {
               </button>))}
           </div>
           <div>
-            { this.getFaneKomponent(navn, behandlingID)}
+            { this.getFaneKomponent(navn, behandlingID, redigerbart)}
           </div>
         </Panel>
       </div>

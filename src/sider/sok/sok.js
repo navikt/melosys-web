@@ -13,7 +13,7 @@ import { queryParamLogger } from '../../utils/queryParamLogger';
 import './sok.css';
 
 class Sok extends Component {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { match, location, sokFagsaker } = this.props;
     const { fnr } = match.params;
     if (fnr) {

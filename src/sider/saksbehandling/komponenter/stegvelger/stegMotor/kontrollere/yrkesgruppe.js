@@ -29,7 +29,7 @@ class Yrkesgruppe extends Steg {
     this.tittel = 'Yrkes\u00ADgruppe';
     this.komponent = VurderingYrkesgruppe;
     this.samleRelevanteData = _propsLight => ({
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, _propsLight.avklartefakta);

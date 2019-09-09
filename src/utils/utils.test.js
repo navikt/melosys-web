@@ -1,5 +1,5 @@
 /* eslint-disable */
-import {fn, isJSON, queryParamsTilObjekt } from './utils';
+import {fn, isJSON, queryParamsTilObjekt, finnVerdierMedKey } from './utils';
 
 describe('utils.js:', () => {
 
@@ -36,6 +36,47 @@ describe('utils.js:', () => {
         sid: '3'
       }
       expect(queryParamsTilObjekt(url)).toEqual(resultat);
+    });
+  });
+
+  describe('finnVerdierMedKey', () => {
+    it('returnerer en tom array dersom objekt er falsy', () => {
+      expect(finnVerdierMedKey(null)).toEqual([]);
+    });
+
+    it('ignorerer falsy verdier', () => {
+      expect(finnVerdierMedKey({ panel: null }, 'panel')).toEqual([]);
+      expect(finnVerdierMedKey({ panel: undefined }, 'panel')).toEqual([]);
+      expect(finnVerdierMedKey({ panel: '' }, 'panel')).toEqual([]);
+      expect(finnVerdierMedKey({ panel: 0 }, 'panel')).toEqual([]);
+      expect(finnVerdierMedKey({ panel: NaN }, 'panel')).toEqual([]);
+      expect(finnVerdierMedKey({ panel: false }, 'panel')).toEqual([]);
+    });
+
+    it('returnerer en tom array hvis key ikke finnes', () => {
+      expect(finnVerdierMedKey({
+        foretakUtland: 'foretakUtland',
+        arbeidUtland: 'arbeidUtland',
+      }, 'inntekt')).toEqual([]);
+    })
+
+    it('returnerer korrekt verdi for en array', () => {
+      expect(finnVerdierMedKey([
+        {
+          arbeidUtland: [
+            { panel: 'arbeidUtlandPanel' },
+          ],
+        },
+      ], 'panel')).toEqual(['arbeidUtlandPanel']);
+    });
+
+    it('returnerer korrekt verdi for et objekt', () => {
+      expect(finnVerdierMedKey({
+        oppgittAdresse: {
+          gatenavn: {
+            panel: 'personinfoPanel' },
+        },
+      }, 'panel')).toEqual(['personinfoPanel']);
     });
   });
 });
