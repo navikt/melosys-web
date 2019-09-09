@@ -219,7 +219,7 @@ const VurderingForretningssted = props => {
       </div>
       }
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
