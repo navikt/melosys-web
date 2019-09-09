@@ -89,7 +89,7 @@ class Forretningssted extends Steg {
 
     return propsLight.valgteVirksomheter.every(vv => (
       avklarteForretningsland.some(afl => (
-        afl.subjektID === vv.orgnr && !Utils._isNil(hentFaktaVerdi(afl))
+        afl.subjektID === vv.virksomhetId && !Utils._isNil(hentFaktaVerdi(afl))
       ))
     ));
   }
