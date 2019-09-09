@@ -9,7 +9,6 @@ import behandlingsperioderReducer from './ducks/behandlingsperioder';
 import behandlingsresultatReducer from './ducks/behandlingsresultat';
 import dokumenterReducer from './ducks/dokumenter/';
 import fagsakerReducer from './ducks/fagsaker/';
-import inngangReducer from './ducks/inngang';
 import journalforingReducer from './ducks/journalforing';
 import eessikodeverkReducer from './ducks/eessikodeverk';
 import lovvalgsperioderReducer from './ducks/lovvalgsperioder';
@@ -35,7 +34,6 @@ export default combineReducers({
   behandlingsresultat: behandlingsresultatReducer,
   dokumenter: dokumenterReducer,
   fagsaker: fagsakerReducer,
-  inngang: inngangReducer,
   journalforing: journalforingReducer,
   eessikodeverk: eessikodeverkReducer,
   lovvalgsperioder: lovvalgsperioderReducer,
