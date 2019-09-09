@@ -10,7 +10,7 @@ import EnkeltVilkaar from './felles/enkeltVilkaar';
 
 const VurderingVesentligVirksomhet = props => {
   const {
-    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData,
+    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, valgteVirksomheter,
   } = props;
   const { vesentligVirksomhetVilkaar, harAvklaring } = tilstand;
 
@@ -20,7 +20,8 @@ const VurderingVesentligVirksomhet = props => {
     }
   ), []);
 
-  const arbeidsgivereTekst = props.valgteVirksomheter.length > 0 ? `${arrayTilKonjunksjon(props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
+  const arbeidsgivereTekst = valgteVirksomheter.length > 0 ? `${arrayTilKonjunksjon(valgteVirksomheter.map(virksomhet => virksomhet.navn))}` : '';
+
   return (
     <div>
       <Nav.Undertittel>Har {arbeidsgivereTekst} vesentlig virksomhet i Norge?</Nav.Undertittel>
@@ -45,7 +46,7 @@ VurderingVesentligVirksomhet.ID = 'VESENTLIG_VIRKSOMHET';
 VurderingVesentligVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
-  valgteVirksomheter: PT.array,
+  valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
