@@ -7,7 +7,6 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as Ikoner from '../../../../resources/images';
 import * as Skjema from '../../../../felleskomponenter/skjema';
 import * as formSelectors from '../../../../ducks/form/selectors';
-import * as soknadActions from '../../../../ducks/soknad/actions';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import * as KV from '../../../../kodeverk';
 
@@ -17,6 +16,7 @@ import { BOOLSK } from '../../../../constants';
 import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
 
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../../../ducks/organisasjoner';
+import { soknadOperations } from '../../../../ducks/soknad';
 
 import './selvstendigArbeid.css';
 
@@ -83,7 +83,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   hentOrganisasjon: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
-  oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
+  oppdaterSoknadState: () => dispatch(soknadOperations.oppdaterSoknadState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelvstendigArbeid);

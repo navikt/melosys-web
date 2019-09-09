@@ -1,8 +1,10 @@
 import * as Validering from '../../felleskomponenter/skjema/validering';
-import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Actions from './actions';
 import * as Types from './types';
+
+import { doThenDispatch } from '../../services/utils';
+import { formSelectors } from '../form';
 
 /**
  * Operations
@@ -31,6 +33,17 @@ export function send(bid, soknad) {
     },
     (dispatch, data) => Validering.Felles.forsokValidering(dispatch, data)
   );
+}
+
+export function oppdaterSoknadState() {
+  return (dispatch, getState) => {
+    const soknadData = {
+      ...formSelectors.SoknadenFormSelector(getState()).values,
+      ...formSelectors.InngangFormSelector(getState()).values,
+    };
+
+    dispatch(Actions.oppdaterSoknadState(soknadData));
+  };
 }
 
 export function oppdaterPeriode(periode) {

@@ -1,6 +1,6 @@
 {
   "name": "melosys-web",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Medlemsskap og lovvalgssystem",
   "author": {
     "name": "are.bjolseth@nav.no"
@@ -93,9 +93,11 @@
   },
   "disabled-homepage": "http://eesi2.no/melosys",
   "scripts": {
+    "echo:env": "node ./scripts/echoenv.js",
+    "patch:init": "node ./scripts/patchinit.js",
     "patch:env": "node ./scripts/patchenv.js",
+    "patch:nodelocal": "node ./scripts/patchnodelocal.js",
     "patch:javalocal": "node ./scripts/patchjavalocal.js",
-    "unpatch": "node ./scripts/unpatch.js",
     "serve": "node ./scripts/serve.js",
     "serve:dbg": "node $NODE_DEBUG_OPTION ./scripts/serve.js",
     "analyze": "source-map-explorer build/static/js/main.*",
@@ -103,12 +105,12 @@
     "build:js": "react-scripts build",
     "start:css": "less-watch-compiler --config less.json",
     "build:css": "less-watch-compiler --run-once --config less.json",
-    "start:javalocal": "npm-run-all -s unpatch patch:env patch:javalocal -p start:css start:js",
-    "start": "npm-run-all -s unpatch patch:env -p start:css start:js",
-    "build": "npm-run-all unpatch patch:env build:css build:js",
-    "build:javalocal": "npm-run-all -s unpatch patch:env patch:javalocal -p build:css build:js",
-    "test": "npm run build:css && react-scripts test --env=jsdom",
-    "test:ci": "npm run build:css && react-scripts test --env=jsdom --testResultsProcessor ./node_modules/jest-junit --coverage --coverageDirectory=test/coverage",
+    "start": "npm-run-all -s patch:init patch:env patch:nodelocal echo:env -p start:css start:js",
+    "start:javalocal": "npm-run-all -s patch:init patch:env patch:javalocal echo:env -p start:css start:js",
+    "build": "npm-run-all -s patch:init patch:env patch:nodelocal echo:env -p build:css build:js",
+    "build:javalocal": "npm-run-all -s patch:init patch:env patch:javalocal echo:env -p build:css build:js",
+    "test": "npm run patch:init && npm run patch:env && npm run build:css && react-scripts test --env=jsdom",
+    "test:ci": "npm run patch:init && npm run patch:env && npm run build:css && react-scripts test --env=jsdom --coverage --coverageDirectory=test/coverage",
     "coverage": "npm test -- --coverage",
     "eject": "react-scripts eject",
     "eslint:src": "eslint src --ext .js",
@@ -123,7 +125,12 @@
     "classNameTemplate": "{classname} - {title}",
     "titleTemplate": "{classname} - {title}",
     "ancestorSeparator": " > ",
-    "usePathForSuiteName": "true"
+    "usePathForSuiteName": "true",
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
+    "testResultsProcessor": "jest-junit"
   },
   "devDependencies": {
     "@types/jest": "^24.0.6",
@@ -156,6 +163,7 @@
     "react-test-renderer": "^16.9.0",
     "redux-mock-store": "^1.5.3",
     "semver": "^6.3.0",
+    "shelljs": "^0.8.3",
     "source-map-explorer": "^2.0.1",
     "webpack": "^3.12.0",
     "write-pkg": "^4.0.0"
