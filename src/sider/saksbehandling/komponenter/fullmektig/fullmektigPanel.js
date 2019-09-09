@@ -13,6 +13,7 @@ import * as MPT from '../../../../proptypes';
 import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import Fullmektig from './fullmektig';
 
@@ -148,7 +149,7 @@ FullmektigPanel.propTypes = {
 const mapStateToProps = state => ({
   arbeidsgivereNorge: behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);

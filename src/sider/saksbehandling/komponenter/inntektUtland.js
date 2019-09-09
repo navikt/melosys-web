@@ -6,13 +6,15 @@ import * as Ikoner from '../../../resources/images';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../../felleskomponenter/skjema';
+import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
 
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
-import './inntektUtland.css';
-import * as Utils from '../../../utils';
 import { formSelectors } from '../../../ducks/form';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
+
+import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
+
+import './inntektUtland.css';
 
 function Inntekt (props) {
   const { redigerbart, soknadForm: { values } } = props;
@@ -69,7 +71,7 @@ Inntekt.defaultProps = {
 
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 const mapDispatchToProps = () => ({});
 
