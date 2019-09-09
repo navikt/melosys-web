@@ -304,7 +304,7 @@ class Saksbehandling extends Component {
   };
 
   render() {
-    const { redigerbart, sidedialogRedigerbart } = this.props;
+    const { redigerbart } = this.props;
     const { behandlingID } = this.state;
     const { blokkerInnholdMedOppfriskSpinner } = this;
 
@@ -349,7 +349,7 @@ class Saksbehandling extends Component {
                 visAvsluttSakSomBortfaltDialogHandle={this.visAvsluttSakSomBortfaltDialog}
                 tilForsidenHandle={this.navigerTilOversiktSide}
               />
-              <SideDialog behandlingID={behandlingID} redigerbart={sidedialogRedigerbart} />
+              <SideDialog behandlingID={behandlingID} />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
@@ -432,7 +432,6 @@ Saksbehandling.propTypes = {
   anmodningsperioder: PT.array,
   sendAnmodningsperioder: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
-  sidedialogRedigerbart: PT.bool.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -462,7 +461,6 @@ const mapStateToProps = state => ({
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  sidedialogRedigerbart: behandlingerSelectors.SidedialogRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
