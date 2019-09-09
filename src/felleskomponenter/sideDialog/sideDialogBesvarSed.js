@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as EKV from 'eessi-kodeverk';
 
@@ -7,7 +6,6 @@ import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
 import * as Api from '../../services/api';
-import { alleBucer } from '../../kodeverk/eessiKodeverkHelper';
 import './sideDialogBesvarSed.css';
 
 // Per i dag finnes det bare status=UTKAST, men legger til rette for støtte av flere statuser.
@@ -44,7 +42,7 @@ EnkeltSed.propTypes = {
   }).isRequired,
 };
 
-const bucTypeTerm = bucType => alleBucer[bucType];
+const bucTypeTerm = bucType => EKV.Selectors.alleBucer[bucType];
 
 const EnkeltBucHeading = ({ bucType, opprettetDato }) => (
   <div>
@@ -128,4 +126,4 @@ SideDialogBesvarSed.propTypes = {
   behandlingID: PT.number.isRequired,
 };
 
-export default connect()(SideDialogBesvarSed);
+export default SideDialogBesvarSed;
