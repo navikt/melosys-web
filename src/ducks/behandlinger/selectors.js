@@ -55,12 +55,6 @@ export const PanelerRedigerbartSelector = createSelector(
   ErArtikkel16AnmodningSendtSelector,
   (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
 );
-export const SidedialogRedigerbartSelector = createSelector(
-  RedigerbartSelector,
-  ErArtikkel16AnmodningSendtSelector,
-  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
-);
-
 export const SaksopplysningerSelector = createSelector(
   state => BehandlingerSelector(state).saksopplysninger || {},
   saksopplysninger => saksopplysninger
