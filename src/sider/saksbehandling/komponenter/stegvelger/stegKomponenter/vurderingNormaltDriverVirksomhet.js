@@ -18,16 +18,16 @@ const NormaltDriverVirksomhet = props => {
   ), []);
 
   const { harAvklaring, normaltDriverVirksomhet } = tilstand;
-  const arbeidsgivereTekst = valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(valgteVirksomheter.map(virksomhet => virksomhet.navn))}` : '';
+
+  const arbeidsgivereTekst = valgteVirksomheter.length > 0 ? `${arrayTilKonjunksjon(valgteVirksomheter.map(virksomhet => virksomhet.navn))}` : '';
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering av selvstendig virksomhet til {arbeidsgivereTekst}</Nav.Undertittel>
+      <Nav.Undertittel>Driver {arbeidsgivereTekst} vanligvis virksomhet i Norge?</Nav.Undertittel>
       <EnkeltVilkaar
         oppdaterData={oppdaterData}
-        tittel="Virksomheten har:"
-        labelOppfylt="Driver normalt virksomhet i Norge"
-        labelIkkeOppfylt="Driver normalt ikke virksomhet i Norge"
+        labelOppfylt="Ja"
+        labelIkkeOppfylt="Nei"
         begrunnelser={begrunnelser}
         redigerbart={redigerbart}
         vilkaar={normaltDriverVirksomhet}
