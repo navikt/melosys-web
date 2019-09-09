@@ -10,7 +10,7 @@ const VurderingYrkesaktivitet = props => {
   const {
     bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
-  const { erKunEttLand, harAvklaring, yrkesaktivitet } = tilstand;
+  const { skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende, harAvklaring, yrkesaktivitet } = tilstand;
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
@@ -45,7 +45,7 @@ const VurderingYrkesaktivitet = props => {
           label="Selvstendig næringsdrivende"
         />
         {
-          !erKunEttLand &&
+          !skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende &&
           <Nav.Radio
             name="yrkesaktivitet"
             checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
@@ -64,7 +64,7 @@ const VurderingYrkesaktivitet = props => {
         />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );

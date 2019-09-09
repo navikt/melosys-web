@@ -134,8 +134,10 @@ export default function reducer(state = initialState, action) {
           studentFinansieringKode: null,
         },
         foretakUtland: dokument.foretakUtland.map(foretakUtland => ({
+          uuid: foretakUtland.uuid,
           navn: foretakUtland.navn || null,
           orgnr: foretakUtland.orgnr || null,
+          selvstendigNaeringsvirksomhet: foretakUtland.selvstendigNaeringsvirksomhet || false,
           adresse: lagNullableAdresse(foretakUtland.adresse),
         })),
         bosted: {
@@ -152,11 +154,13 @@ export default function reducer(state = initialState, action) {
           },
         },
         maritimtArbeid: dokument.maritimtArbeid.map(maritimtArbeid => ({
-          navn: maritimtArbeid.navn || null,
+          enhetNavn: maritimtArbeid.enhetNavn || null,
           fartsomradeKode: maritimtArbeid.fartsomradeKode || null,
           flaggLandkode: maritimtArbeid.flaggLandkode || null,
           installasjonsLandkode: maritimtArbeid.installasjonsLandkode || null,
           territorialfarvann: maritimtArbeid.territorialfarvann || null,
+          foretakNavn: maritimtArbeid.foretakNavn || null,
+          foretakOrgnr: maritimtArbeid.foretakOrgnr || null,
         })),
         soeknadsland: {
           landkoder: dokument.soknadsland,
@@ -166,8 +170,11 @@ export default function reducer(state = initialState, action) {
           tom: dokument.soknadsperiodeTom ? formatterDatoTilISO(dokument.soknadsperiodeTom) : null,
         },
         selvstendigArbeid: {
-          erSelvstendig: dokument.erSelvstendig,
-          selvstendigForetak: dokument.selvstendigForetak,
+          erSelvstendig: dokument.erSelvstendig || null,
+          selvstendigForetak: dokument.selvstendigForetak.map(foretak => ({
+            orgnr: foretak.orgnr || null,
+            fortsetterEtterArbeidIUtlandet: foretak.fortsetterEtterArbeidIUtlandet || null,
+          })),
         },
         personOpplysninger: {
           utenlandskIdent: dokument.utenlandskIdent,

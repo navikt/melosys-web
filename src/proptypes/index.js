@@ -1,3 +1,4 @@
+import { AnmodningsperioderSvar } from './anmodningsperiodersvar';
 import { ArbeidNorge } from './arbeidNorge';
 import { Arbeidsavtale, Arbeidsavtaler } from './arbeidsavtale';
 import { Arbeidsforholdet, Arbeidsforholdene } from './arbeidsforhold';
@@ -30,9 +31,11 @@ import { Soknadsland } from './soknadsland';
 import { Soknadsperiode } from './soknadsperiode';
 import { TimerTimelonnet, TimerTimelonnetLinje } from './timerTimelonnet';
 import { Utenlandsopphold } from './utenlandsopphold';
+import { Virksomhet } from './virksomhet';
 import { Yrkesgruppe } from './yrkesgruppe';
 
 export {
+  AnmodningsperioderSvar,
   ArbeidNorge,
   Arbeidsavtale,
   Arbeidsavtaler,
@@ -88,5 +91,6 @@ export {
   Yrkesgruppe,
   Utenlandsopphold,
   Vedlegg,
+  Virksomhet,
   Vurdering,
 };

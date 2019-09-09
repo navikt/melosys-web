@@ -27,7 +27,7 @@ class VesentligVirksomhet extends Steg {
     this.samleRelevanteData = _propsLight => ({
       valgteVirksomheter: _propsLight.valgteVirksomheter,
       begrunnelser: _propsLight.begrunnelser.art12_1_vesentlig_virksomhet,
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const vesentligVirksomhetVilkaar = hentVilkar(MKV.Koder.vilkaar.ART12_1_VESENTLIG_VIRKSOMHET, _propsLight.vilkar);

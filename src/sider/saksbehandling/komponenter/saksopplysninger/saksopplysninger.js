@@ -30,7 +30,6 @@ import { behandlingsperioderSelectors } from '../../../../ducks/behandlingsperio
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../../../ducks/saksopplysninger';
 import {
   soknadOperations,
-  soknadActions,
   soknadSelectors,
 } from '../../../../ducks/soknad';
 
@@ -56,8 +55,7 @@ class Saksopplysninger extends Component {
   };
 
   oppdaterLokalSoknadHandler = () => {
-    const { oppdaterSoknad, soknadForm, inngangForm } = this.props;
-    oppdaterSoknad({ ...soknadForm.values, ...inngangForm.values });
+    this.props.oppdaterSoknad();
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
@@ -194,6 +192,7 @@ const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   inngangForm: formSelectors.InngangFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
+  oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
   initialValues: {
     utenlandskIdent: soknadSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
@@ -256,7 +255,6 @@ const mapStateToProps = state => ({
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
       yrkesaktivitetAntallLand: avklartefaktaSelectors.YrkesaktivitetAntallLand(state),
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
-      virksomheter: avklartefaktaSelectors.VirksomhetSelector(state),
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },
     vilkar: {
@@ -286,7 +284,7 @@ const mapDispatchToProps = dispatch => ({
   sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
-  oppdaterSoknad: values => { dispatch(soknadActions.oppdaterSoknadState(values)); },
+  oppdaterSoknad: () => dispatch(soknadOperations.oppdaterSoknadState()),
 });
 
 const SaksopplysningerForm = reduxForm({
@@ -295,7 +293,15 @@ const SaksopplysningerForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.createValidator(Validering.Skjemaer.saksopplysninger),
+  validate: (values, props) => {
+    const settings = {
+      context: {
+        skalOppgittAdresseValideres: props.oppgittAdresseHarVerdier,
+      },
+    };
+
+    return Validering.Skjemaer.createValidator(Validering.Skjemaer.saksopplysninger, settings)(values);
+  },
 })(Saksopplysninger);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksopplysningerForm));

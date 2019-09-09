@@ -69,7 +69,7 @@ Inntekt.defaultProps = {
 
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
 });
 const mapDispatchToProps = () => ({});
 
