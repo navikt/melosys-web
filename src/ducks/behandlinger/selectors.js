@@ -45,11 +45,6 @@ export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
   state => BehandlingerSelector(state).redigerbart || false,
   redigerbart => redigerbart
 );
-export const GeneriskStegRedigerbartSelector = createSelector(
-  RedigerbartSelector,
-  ErArtikkel16AnmodningSendtSelector,
-  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
-);
 export const SaksopplysningerSelector = createSelector(
   state => BehandlingerSelector(state).saksopplysninger || {},
   saksopplysninger => saksopplysninger
