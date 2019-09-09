@@ -9,12 +9,12 @@ import './selvstendigArbeid.css';
 class SelvstendigeForetak extends Component {
   componentDidUpdate(prevProps) {
     const { fields: oldFields } = prevProps;
-    const { oppdaterSoknadState, skjema, fields } = this.props;
+    const { oppdaterSoknadState, fields } = this.props;
 
     // Sjekk om listen over selvstendig næringsdrivende
     // har oppdatert seg siden sist. I såfall, oppdaterSoknadState.
     if (fields.length !== oldFields.length) {
-      oppdaterSoknadState(skjema);
+      oppdaterSoknadState();
     }
   }
 

@@ -30,7 +30,6 @@ import { behandlingsperioderSelectors } from '../../../../ducks/behandlingsperio
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../../../ducks/saksopplysninger';
 import {
   soknadOperations,
-  soknadActions,
   soknadSelectors,
 } from '../../../../ducks/soknad';
 
@@ -56,8 +55,7 @@ class Saksopplysninger extends Component {
   };
 
   oppdaterLokalSoknadHandler = () => {
-    const { oppdaterSoknad, soknadForm, inngangForm } = this.props;
-    oppdaterSoknad({ ...soknadForm.values, ...inngangForm.values });
+    this.props.oppdaterSoknad();
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
@@ -287,7 +285,7 @@ const mapDispatchToProps = dispatch => ({
   sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
-  oppdaterSoknad: values => { dispatch(soknadActions.oppdaterSoknadState(values)); },
+  oppdaterSoknad: () => dispatch(soknadOperations.oppdaterSoknadState()),
 });
 
 const SaksopplysningerForm = reduxForm({
