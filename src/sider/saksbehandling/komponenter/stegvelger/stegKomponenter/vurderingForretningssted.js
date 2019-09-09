@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import PT from 'prop-types';
+
 import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
+import * as MPT from '../../../../../proptypes';
 
 import {
   hentFaktaVerdi,
@@ -31,13 +33,13 @@ const Forretningsstedet = props => {
       oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland));
     }
     return function cleanup() {
-      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED));
+      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId));
     };
   }, []);
 
-  const { navn, orgnr } = forretningsstedet;
-  const landEndretHandler = e => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, orgnr, e));
+  const { navn, virksomhetId } = forretningsstedet;
+  const landEndretHandler = landKode => {
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, virksomhetId, landKode));
   };
 
   const eksisterendeLand = hentFaktaVerdi(avklartForretningsland) || '';
@@ -80,8 +82,8 @@ const Forretningssteder = props => {
     <div>
       {
         valgteVirksomheter.map(valgtVirksomhet => {
-          const key = `forretningssted${valgtVirksomhet.orgnr}-${valgtVirksomhet.navn}`;
-          const avklartForretningsland = avklarteForretningsland.find(enkeltAvklaring => enkeltAvklaring.subjektID === valgtVirksomhet.orgnr);
+          const key = `forretningssted${valgtVirksomhet.virksomhetId}-${valgtVirksomhet.navn}`;
+          const avklartForretningsland = avklarteForretningsland.find(enkeltAvklaring => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId);
 
           return <Forretningsstedet
             key={key}
@@ -228,7 +230,7 @@ const VurderingForretningssted = props => {
 VurderingForretningssted.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
-  valgteVirksomheter: PT.array,
+  valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
   avklartForretningsland: PT.array,
   omfattetINorge: PT.object,
   omfattetILand: PT.object,
