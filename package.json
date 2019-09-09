@@ -1,6 +1,6 @@
 {
   "name": "melosys-web",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Medlemsskap og lovvalgssystem",
   "author": {
     "name": "are.bjolseth@nav.no"
@@ -103,9 +103,10 @@
     "build:js": "react-scripts build",
     "start:css": "less-watch-compiler --config less.json",
     "build:css": "less-watch-compiler --run-once --config less.json",
-    "start": "npm-run-all -s unpatch patch:env -p start:*",
+    "start:javalocal": "npm-run-all -s unpatch patch:env patch:javalocal -p start:css start:js",
+    "start": "npm-run-all -s unpatch patch:env -p start:css start:js",
     "build": "npm-run-all unpatch patch:env build:css build:js",
-    "build:javalocal": "npm-run-all patch:env patch:javalocal build:css build:js",
+    "build:javalocal": "npm-run-all -s unpatch patch:env patch:javalocal -p build:css build:js",
     "test": "npm run build:css && react-scripts test --env=jsdom",
     "test:ci": "npm run build:css && react-scripts test --env=jsdom --testResultsProcessor ./node_modules/jest-junit --coverage --coverageDirectory=test/coverage",
     "coverage": "npm test -- --coverage",
@@ -143,9 +144,9 @@
     "eslint-plugin-react": "^7.11.1",
     "express": "^4.17.1",
     "git-branch": "^2.0.1",
-    "jest-each": "^24.7.1",
-    "jest-fetch-mock": "^1.7.5",
-    "jest-junit": "^5.1.0",
+    "jest-each": "^24.9.0",
+    "jest-fetch-mock": "^2.1.2",
+    "jest-junit": "^8.0.0",
     "less": "^3.10.3",
     "less-plugin-npm-import": "^2.1.0",
     "less-watch-compiler": "^1.13.0",
