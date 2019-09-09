@@ -130,7 +130,7 @@ const mapStateToProps = state => ({
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   endreLovvalgsperiodeRedigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),

@@ -125,7 +125,7 @@ BehandlingsStatus.defaultProps = {
 
 const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   endreLovvalgsperiodeRedigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
 });
 
