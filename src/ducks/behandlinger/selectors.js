@@ -41,10 +41,6 @@ export const RedigerbartSelector = createSelector(
   BehandlingstypeKodeSelector,
   (redigerbart, behandlingstypeKode) => redigerbart && behandlingstypeKode !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE
 );
-export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
-  state => BehandlingerSelector(state).redigerbart || false,
-  redigerbart => redigerbart
-);
 export const SaksopplysningerSelector = createSelector(
   state => BehandlingerSelector(state).saksopplysninger || {},
   saksopplysninger => saksopplysninger

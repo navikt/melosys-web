@@ -11,6 +11,7 @@ import { formatterDatoTilNorsk } from '../../../utils/dato';
 import { soknadSelectors } from '../../../ducks/soknad';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import Behandlingsmeny from './behandlingsmeny';
 import Behandlingsstatus from './behandlingsstatus';
@@ -132,7 +133,7 @@ const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
-  endreLovvalgsperiodeRedigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
+  endreLovvalgsperiodeRedigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
   soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
