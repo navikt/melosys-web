@@ -10,6 +10,7 @@ import * as Nav from '../../../utils/navFrontend';
 
 import * as MPT from '../../../proptypes';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { KodeTermSelect } from '../../../felleskomponenter/ui/kodeTermSelect';
 
 import './sideOppsummering.css';
@@ -121,7 +122,7 @@ BehandlingsStatus.defaultProps = {
 const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
-  endreLovvalgsperiodeRedigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
+  endreLovvalgsperiodeRedigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
