@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import * as EKV from 'eessi-kodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as Utils from '../../../../../utils';
@@ -48,6 +49,11 @@ export const VurderingArtikkel13_1_A_Vedtak = props => {
       data: {
         mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
       },
+    },
+    {
+      navn: 'Forhåndsvis SED A003',
+      type: EKV.Koder.sedtyper.A003,
+      erSed: true,
     },
   ];
 
