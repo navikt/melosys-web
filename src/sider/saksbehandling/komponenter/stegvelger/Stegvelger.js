@@ -43,10 +43,8 @@ class Stegvelger extends Component {
   async componentDidMount() {
     this.aktiv = true;
 
-    const { behandlingID, match } = this.props;
+    const { behandlingID } = this.props;
     const { aktivtStegNummer } = this.state;
-
-    const { snr } = match.params;
 
     await Promise.all([
       this.props.hentMedlemsPerioder(behandlingID),
@@ -357,7 +355,6 @@ Stegvelger.propTypes = {
   fattVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
-  match: PT.object.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
