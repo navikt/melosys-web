@@ -1,36 +1,15 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import Loadable from 'react-loadable';
+import loadable from '@loadable/component';
 import PT from 'prop-types';
 import * as Utils from './utils';
 
-import SideLoadingStatus from './felleskomponenter/SideLoadingStatus';
-
-const UkjentSideLoadable = Loadable({
-  loader: () => import('./sider/ukjentSide'),
-  loading: SideLoadingStatus,
-});
-const ForsideLoadable = Loadable({
-  loader: () => import('./sider/forside'),
-  loading: SideLoadingStatus,
-});
-const SokLoadable = Loadable({
-  loader: () => import('./sider/sok'),
-  loading: SideLoadingStatus,
-});
-const SaksbehandlingLoadable = Loadable({
-  loader: () => import('./sider/saksbehandling'),
-  loading: SideLoadingStatus,
-});
-const JournalforingLoadable = Loadable({
-  loader: () => import('./sider/journalforing'),
-  loading: SideLoadingStatus,
-});
-
-const RegistreringLoadable = Loadable({
-  loader: () => import('./sider/registrering'),
-  loading: SideLoadingStatus,
-});
+const UkjentSideLoadable = loadable(() => import('./sider/ukjentSide'));
+const ForsideLoadable = loadable(() => import('./sider/forside'));
+const SokLoadable = loadable(() => import('./sider/sok'));
+const SaksbehandlingLoadable = loadable(() => import('./sider/saksbehandling'));
+const JournalforingLoadable = loadable(() => import('./sider/journalforing'));
+const RegistreringLoadable = loadable(() => import('./sider/registrering'));
 
 const Routing = ({ location }) => (
   <Switch location={location}>
