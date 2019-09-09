@@ -159,7 +159,7 @@ const VurderingArbeidsmonster = props => {
     const avklartAktivitetINorge = hentFaktaVerdi(aktivitetINorge);
     oppdaterLovvalgsperiodeVedMount(avklartAktivitetINorge);
 
-    return function cleanup() {
+    return () => {
       slettData();
     };
   }, []);
