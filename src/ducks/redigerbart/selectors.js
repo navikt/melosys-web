@@ -4,6 +4,7 @@ import * as MKV from 'melosys-kodeverk';
 
 import { avklartefaktaSelectors } from '../avklartefakta';
 import { behandlingerSelectors } from '../behandlinger';
+import { formSelectors } from '../form';
 
 export const RedigerbartSelector = createSelector(
   state => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
@@ -29,15 +30,21 @@ export const SidedialogRedigerbartSelector = createSelector(
   behandlingerSelectors.ErArtikkel16AnmodningSendtSelector,
   (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
 );
-export const ErIArtikkel13_1FlytSelector = () => false;
 export const BrevBestillingRedigerbartSelector = createSelector(
   SidedialogRedigerbartSelector,
-  ErIArtikkel13_1FlytSelector,
-  avklartefaktaSelectors.AvklarteVirksomheterSelector,
-  (sideDialogRedigerbart, erIArtikkel13_1Flyt, avklarteVirksomheter) => sideDialogRedigerbart && !erIArtikkel13_1Flyt && avklarteVirksomheter.length === 1
+  sideDialogRedigerbart => sideDialogRedigerbart
 );
 export const SedBestillingRedigerbartSelector = createSelector(
   SidedialogRedigerbartSelector,
-  ErIArtikkel13_1FlytSelector,
   sideDialogRedigerbart => sideDialogRedigerbart
+);
+export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(
+  avklartefaktaSelectors.ErIArtikkel13_1FlytSelector,
+  avklartefaktaSelectors.EnVirksomhetErAvklartSelector,
+  formSelectors.BrevBestillingFormSelector,
+  (erIArtikkel13_1Flyt, enVirksomhetErAvklart, brevBestillingForm) => {
+    const { values: { mottaker } = {} } = brevBestillingForm;
+
+    return !erIArtikkel13_1Flyt || enVirksomhetErAvklart || mottaker !== MKV.Koder.aktoersroller.ARBEIDSGIVER;
+  }
 );
