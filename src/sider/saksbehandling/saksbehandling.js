@@ -29,7 +29,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avk
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
 import { oppgaverOperations } from '../../ducks/oppgaver';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
-import { soknadOperations, soknadSelectors, soknadActions } from '../../ducks/soknad';
+import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { formSelectors } from '../../ducks/form';
 import { vedtakOperations } from '../../ducks/vedtak';
@@ -178,8 +178,8 @@ class Saksbehandling extends Component {
 
   lagreSoknadHandler = async () => {
     const { behandlingID } = this.state;
-    const { skjema, inngang_skjema, oppdaterSoknadState } = this.props;
-    await oppdaterSoknadState({ ...skjema, ...inngang_skjema });
+    const { oppdaterSoknadState } = this.props;
+    await oppdaterSoknadState();
 
     const { soknad, sendSoknad } = this.props;
     sendSoknad(behandlingID, soknad);
@@ -403,7 +403,6 @@ Saksbehandling.propTypes = {
   location: PT.object.isRequired,
   skjema: PT.object,
   artikkel16_skjema: PT.object,
-  inngang_skjema: PT.object,
   // Funcs
   hentFagsaker: PT.func.isRequired,
   hentBehandling: PT.func.isRequired,
@@ -445,7 +444,6 @@ Saksbehandling.defaultProps = {
   skjema: {},
   anmodningsperioder: [],
   artikkel16_skjema: {},
-  inngang_skjema: {},
 };
 /** Mapper både fast tekst inn til de forskjellige panelene i tillegg til å
  * mappe verdier fra søknaden (soknad) ut til Redux Form via initialValue.
@@ -459,7 +457,6 @@ const mapStateToProps = state => ({
   soknad: soknadSelectors.SoknadSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
   skjema: formSelectors.SoknadenFormSelector(state).values,
-  inngang_skjema: formSelectors.InngangFormSelector(state).values,
   artikkel16_skjema: formSelectors.Artikkel16AnmodningFormSelector(state).values,
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
@@ -489,7 +486,7 @@ const mapDispatchToProps = dispatch => ({
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
   tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   oppdaterAvklarteFaktaState: skjema => dispatch(avklartefaktaOperations.oppdaterAvklarteFaktaState(skjema)),
-  oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
+  oppdaterSoknadState: () => dispatch(soknadOperations.oppdaterSoknadState()),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
