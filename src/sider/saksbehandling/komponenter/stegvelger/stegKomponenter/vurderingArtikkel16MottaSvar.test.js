@@ -23,6 +23,9 @@ describe('VurderingArtikkel16MottaSvar', () => {
       lovvalgsperiodeTom: 'lovtom',
       oppdaterData: jest.fn(),
       slettData: jest.fn(),
+      hentAnmodningsperiodeSvar: jest.fn(),
+      sendAnmodningsperiodeSvar: jest.fn(),
+      tilstand: {},
     };
   });
 
