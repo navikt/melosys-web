@@ -10,15 +10,11 @@ import * as MPT from '../../../../proptypes';
 import * as Nav from '../../../../utils/navFrontend';
 import * as RegistreringContext from '../../state/registreringContext';
 import Medlemskap from '../../../../felleskomponenter/medlemskap';
-import EndrePeriode from './endrePeriode';
-import { lovvalgsperioderOperations } from '../../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
-// import { endrePeriodeSkjema } from '../validering/endrePeriodeSkjema';
-import { endrePeriodeSelectors } from '../../state/ducks/endrePeriode';
-// import { createValidator } from '../../../../felleskomponenter/skjema/validering/skjemaer/createValidator';
 
 import './saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../../felleskomponenter/datoOmrade/datoOmrade';
+import * as Utils from '../../../../utils';
 
 const uuid = require('uuid/v4');
 
@@ -42,7 +38,8 @@ class Saksopplysninger extends Component {
   state = {
     anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
     begrunnelseFritekst: '',
-    endretPeriode: { fom: null, tom: null },
+    endretPeriodeFom: null, // this.props.sed.lovvalgsperiode.fom,
+    endretPeriodeTom: null, // this.props.sed.lovvalgsperiode.tom,
     endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
   };
 
@@ -75,7 +72,7 @@ class Saksopplysninger extends Component {
         response = this.makeResponse(null, null);
         break;
       case DELVIS_INNVILGELSE:
-        response = this.makeResponse(this.props.endrePeriode, null);
+        response = this.makeResponse({ fom: this.state.endretPeriodeFom, tom: this.state.endretPeriodeTom }, null);
         break;
       case AVSLAG:
         response = this.makeResponse(null, begrunnelseFritekst);
@@ -95,29 +92,17 @@ class Saksopplysninger extends Component {
       tilForsiden();
     }
     return true;
-    // GET: /anmodningperioder/:behandlingID
-    // POST: /anmodningsperioder/:anmodningsperiodeID/svar
-    /*
- {
-  "anmodningsperiodeSvarType": "INNVILGELSE",
-  "endretPeriode": {
-    "fom": "2017-02-01",
-    "tom": "2020-01-01"
-  },
-  "begrunnelseFritekst": "Fritekst"
-}
-
-ved INNVILGELSE:
-  endretPeriode og begrunnelseFritekst = null
-ved DELVIS_INNVILGELSE
-  endretPeriode ny periode i datofelt og fritekst = null
-ved AVSLAG
-  endretPeriode = null og begrunnelseFritekst fra fritekstfelt
-     */
-    // PUT: /saksflyt/anmodningsperioder/:behandlingID/svar
-    // Til slutt: tilForside()
   };
-  kanEndrePeriode = () => true; // TODO (this.state.unntaksperiodeVurdering === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE);
+
+  formaterFom = event => {
+    const nyDato = Utils.dato.vaskInputDato(event.target.value);
+    this.setState({ endretPeriodeFom: nyDato });
+  };
+
+  formaterTom = event => {
+    const nyDato = Utils.dato.vaskInputDato(event.target.value);
+    this.setState({ endretPeriodeTom: nyDato });
+  };
 
   render() {
     const {
@@ -127,7 +112,7 @@ ved AVSLAG
     if (!sed.lovvalgsperiode) {
       return null;
     }
-
+    const { endretPeriodeFom, endretPeriodeTom, endrePeriodeFeilmeldinger } = this.state;
     const unikRadioButtonGruppeID = uuid();
     return (
       <div>
@@ -166,9 +151,28 @@ ved AVSLAG
                 </Nav.Row>
                 {this.state.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
                   <Nav.Row className="seksjon">
-                    <EndrePeriode
-                      feilmeldinger={this.state.endrePeriodeFeilmeldinger}
-                      redigerbart={this.kanEndrePeriode()} />
+                    <div className="endre_periode">
+                      <Nav.Column xs="3">
+                        <Nav.Input
+                          bredde="fullbredde"
+                          label="Startdato"
+                          value={endretPeriodeFom}
+                          onChange={e => this.setState({ endretPeriodeFom: e.target.value })}
+                          onBlur={e => this.formaterFom(e)}
+                          feil={endrePeriodeFeilmeldinger.fom}
+                          disabled={!redigerbart} />
+                      </Nav.Column>
+                      <Nav.Column xs="3">
+                        <Nav.Input
+                          bredde="fullbredde"
+                          label="Sluttdato"
+                          value={endretPeriodeTom}
+                          onChange={e => this.setState({ endretPeriodeTom: e.target.value })}
+                          onBlur={e => this.formaterTom(e)}
+                          feil={endrePeriodeFeilmeldinger.tom}
+                          disabled={!redigerbart} />
+                      </Nav.Column>
+                    </div>
                   </Nav.Row>
                 )}
                 {this.state.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
@@ -209,12 +213,10 @@ Saksopplysninger.propTypes = {
   vurderingBegrunnelser: PT.object,
   skjema: PT.any,
   avklartefakta: PT.array.isRequired,
-  endrePeriode: PT.object.isRequired,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
-  oppdaterLovvalgsperioder: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -226,11 +228,9 @@ Saksopplysninger.defaultProps = {
 
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  endrePeriode: endrePeriodeSelectors.EndrePeriodeSelector(state),
 });
 const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
-  oppdaterLovvalgsperioder: (behandlingID, lovvalgsperiodeListe) => dispatch(lovvalgsperioderOperations.send(behandlingID, lovvalgsperiodeListe)),
 });
 
 export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
