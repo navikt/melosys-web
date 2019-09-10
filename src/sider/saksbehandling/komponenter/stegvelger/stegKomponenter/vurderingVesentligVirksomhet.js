@@ -20,19 +20,18 @@ const VurderingVesentligVirksomhet = props => {
     }
   ), []);
 
-  const arbeidsgivereTekst = valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(valgteVirksomheter.map(virksomhet => virksomhet.navn))}` : '';
+  const arbeidsgivereTekst = valgteVirksomheter.length > 0 ? `${arrayTilKonjunksjon(valgteVirksomheter.map(virksomhet => virksomhet.navn))}` : '';
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
+      <Nav.Undertittel>Har {arbeidsgivereTekst} vesentlig virksomhet i Norge?</Nav.Undertittel>
       <EnkeltVilkaar
         redigerbart={redigerbart}
         begrunnelser={begrunnelser}
         vilkaar={vesentligVirksomhetVilkaar}
         vilkaarKode="vesentligVirksomhet"
-        tittel="Virksomheten har:"
-        labelOppfylt="Vesentlig virksomhet"
-        labelIkkeOppfylt="Ikke vesentlig virksomhet"
+        labelOppfylt="Ja"
+        labelIkkeOppfylt="Nei"
         oppdaterData={oppdaterData}
       />
       <div className="fane__knapplinje">
