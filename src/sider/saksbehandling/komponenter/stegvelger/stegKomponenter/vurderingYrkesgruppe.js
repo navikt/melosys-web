@@ -26,8 +26,8 @@ const VurderingYrkesgruppe = props => {
   const fakta = hentFaktaVerdi(yrkesgruppe);
   return (
     <div>
-      <Nav.Undertittel>Vurdering av yrkesgruppe</Nav.Undertittel>
-      <Nav.Fieldset legend="Vurder om søkeren er:">
+      <Nav.Undertittel>Hva er søkerens yrkessituasjon?</Nav.Undertittel>
+      <Nav.Fieldset legend="">
         <Nav.Radio
           name="yrkesgruppe"
           disabled={!redigerbart}
