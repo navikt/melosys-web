@@ -9,12 +9,12 @@ import './selvstendigArbeid.css';
 class SelvstendigeForetak extends Component {
   componentDidUpdate(prevProps) {
     const { fields: oldFields } = prevProps;
-    const { oppdaterSoknadState, skjema, fields } = this.props;
+    const { oppdaterSoknadState, fields } = this.props;
 
     // Sjekk om listen over selvstendig næringsdrivende
     // har oppdatert seg siden sist. I såfall, oppdaterSoknadState.
     if (fields.length !== oldFields.length) {
-      oppdaterSoknadState(skjema);
+      oppdaterSoknadState();
     }
   }
 
@@ -42,7 +42,7 @@ class SelvstendigeForetak extends Component {
         <div className="leggTilForetak">
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Knapp disabled={!redigerbart} mini onClick={() => fields.push({})}>Legg til nytt foretak</Nav.Knapp>
+              <Nav.Knapp disabled={!redigerbart} mini onClick={() => fields.push({})}>Legg til foretak</Nav.Knapp>
             </Nav.Column>
           </Nav.Row>
         </div>

@@ -34,11 +34,11 @@ const Oppsummering = props => {
 
   return (
     <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
-      <dt>Søknadstype:</dt>
+      <dt>Sakstype:</dt>
       <dd>{KV.objektTilTerm(sakstype)}</dd>
       <dt>Fullt navn:</dt>
       <dd>{sammensattNavn}</dd>
-      <dt>Fnr / dnr:</dt>
+      <dt>F.nr./d-nr.:</dt>
       <dd>{fnr}</dd>
       <dt>Saksnummer:</dt>
       <dd>{saksnummer || '-'}</dd>

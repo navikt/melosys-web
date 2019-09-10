@@ -52,7 +52,7 @@ const VurderingVedtak = ({
 
   return (
     <div className="vedtak">
-      <Nav.Undertittel>Omfattet av norsk trygdelovgivning etter Fo 883/2004, artikkel 12 nr. 1</Nav.Undertittel>
+      <Nav.Undertittel>Omfattet av norsk trygdelovgivning etter { KV.objektTilTerm(lovvalgSomKodeTerm) }</Nav.Undertittel>
       <div>
         <Nav.Row className="lovvalgsperiode">
           <Nav.Column xs="6">
@@ -72,7 +72,7 @@ const VurderingVedtak = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Knapp disabled={!redigerbart} type="hoved" onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Knapp>
+            <Nav.Hovedknapp disabled={!redigerbart} onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>
