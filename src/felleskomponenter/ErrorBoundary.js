@@ -17,13 +17,11 @@ class ErrorBoundary extends React.Component {
   }
 
   static getDerivedStateFromError(error) {
-    // Update state so the next render will show the fallback UI.
     Utils.logger.error(error);
     return { hasError: true };
   }
 
   componentDidCatch(error, errorInfo) {
-    // You can also log the error to an error reporting service
     this.setState({
       error,
       hasError: true,
@@ -33,13 +31,13 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      // You can render any custom fallback UI
-      return <div>Beklager, kan ikke laste inn side komponenten. {this.state.error}</div>;
+      return <div><h3>{this.message}</h3><p>{this.state.error}</p></div>;
     }
     return this.props.children;
   }
 }
 ErrorBoundary.propTypes = {
+  message: PT.string.isRequired,
   children: PT.node.isRequired,
 };
 export default ErrorBoundary;

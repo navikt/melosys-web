@@ -1,12 +1,12 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-// https://www.smooth-code.com/open-source/loadable-components/docs/getting-started/
 import loadable from '@loadable/component';
 import PT from 'prop-types';
 import * as Utils from './utils';
 import ErrorBoundary from './felleskomponenter/ErrorBoundary';
 
 const SideLoadingStatus = <div>Laster inn side komponenten!</div>;
+const SideLoadingFailMessage = 'Beklager, kan ikke laste inn side komponenten.';
 
 const UkjentSideLoadable = loadable(() => import('./sider/ukjentSide'), { fallback: SideLoadingStatus });
 const ForsideLoadable = loadable(() => import('./sider/forside'), { fallback: SideLoadingStatus });
@@ -17,7 +17,7 @@ const RegistreringLoadable = loadable(() => import('./sider/registrering'), { fa
 
 const Routing = ({ location }) => (
   <Switch location={location}>
-    <ErrorBoundary>
+    <ErrorBoundary message={SideLoadingFailMessage}>
       <Route exact path="/" component={ForsideLoadable} />
       <Route exact path="/sok/:fnr" component={SokLoadable} />
       {Utils.feature.featureToggle('REL1.1') && <Route exact path="/registrering/:snr" component={RegistreringLoadable} />}
