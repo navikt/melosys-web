@@ -26,7 +26,7 @@ class Yrkesgruppe extends Steg {
       },
     ];
     this.id = STEG.YRKESGRUPPE;
-    this.tittel = 'Yrkes\u00ADgruppe';
+    this.tittel = 'Yrkes\u00ADsituasjon';
     this.komponent = VurderingYrkesgruppe;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.generiskStegRedigerbart,

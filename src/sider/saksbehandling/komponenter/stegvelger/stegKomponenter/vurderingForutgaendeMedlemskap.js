@@ -20,19 +20,18 @@ const VurderingForutgaendeMedlemskap = props => {
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering av forutgående medlemskap</Nav.Undertittel>
+      <Nav.Undertittel>Har søkeren tilstrekkelig forutgående medlemskap i folketrygden?</Nav.Undertittel>
       <EnkeltVilkaar
         redigerbart={redigerbart}
         vilkaar={forutgaendeMedlemskap}
         vilkaarKode="forutgaendeMedlemskap"
-        tittel="Søkeren har:"
-        labelOppfylt="Har forutgående medlemskap"
-        labelIkkeOppfylt="Har ikke forutgående medlemskap"
+        labelOppfylt="Ja"
+        labelIkkeOppfylt="Nei"
         begrunnelser={begrunnelser}
         oppdaterData={oppdaterData}
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );

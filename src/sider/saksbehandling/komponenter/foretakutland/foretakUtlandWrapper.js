@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
+import uuid from 'uuid/v4';
 
 import * as KV from '../../../../kodeverk';
 import * as Nav from '../../../../utils/navFrontend';
@@ -11,11 +12,12 @@ import EnkeltForetak from './enkeltforetak';
 import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
 
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+
 import './foretakUtland.css';
 
 class ForetakUtlandWrapper extends Component {
   leggTilForetakHandler = () => {
-    this.props.fields.push({});
+    this.props.fields.push({ uuid: uuid() });
   };
 
   slettForetakHandler = indeks => {
@@ -36,7 +38,7 @@ class ForetakUtlandWrapper extends Component {
           ariaTittel="Panel for arbeidsforholdene i utlandet">
           <Nav.Container fluid>
             { fields.map((fieldName, indeks) => (<EnkeltForetak key={fieldName} indeks={indeks} slettForetakHandler={slettForetakHandler} redigerbart={redigerbart} />))}
-            <Nav.Knapp disabled={!redigerbart} className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>+ Legg til flere arbeidsforhold i utlandet</Nav.Knapp>
+            <Nav.Knapp disabled={!redigerbart} className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>+ Legg til arbeidsforhold i utlandet</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>

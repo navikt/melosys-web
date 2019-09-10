@@ -8,7 +8,7 @@ import { arrayTilKonjunksjon } from '../../../../../utils/streng';
 
 const NormaltDriverVirksomhet = props => {
   const {
-    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData,
+    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, valgteVirksomheter,
   } = props;
 
   useEffect(() => (
@@ -18,23 +18,23 @@ const NormaltDriverVirksomhet = props => {
   ), []);
 
   const { harAvklaring, normaltDriverVirksomhet } = tilstand;
-  const arbeidsgivereTekst = props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
+
+  const arbeidsgivereTekst = valgteVirksomheter.length > 0 ? `${arrayTilKonjunksjon(valgteVirksomheter.map(virksomhet => virksomhet.navn))}` : '';
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering av selvstendig virksomhet til {arbeidsgivereTekst}</Nav.Undertittel>
+      <Nav.Undertittel>Driver {arbeidsgivereTekst} vanligvis virksomhet i Norge?</Nav.Undertittel>
       <EnkeltVilkaar
         oppdaterData={oppdaterData}
-        tittel="Virksomheten har:"
-        labelOppfylt="Driver normalt virksomhet i Norge"
-        labelIkkeOppfylt="Driver normalt ikke virksomhet i Norge"
+        labelOppfylt="Ja"
+        labelIkkeOppfylt="Nei"
         begrunnelser={begrunnelser}
         redigerbart={redigerbart}
         vilkaar={normaltDriverVirksomhet}
         vilkaarKode="normaltDriverVirksomhet"
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!harAvklaring || !redigerbart} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!harAvklaring || !redigerbart} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
@@ -45,7 +45,7 @@ NormaltDriverVirksomhet.ID = 'NORMALT_DRIVER_VIRKSOMHET';
 NormaltDriverVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
-  valgteVirksomheter: PT.array,
+  valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
