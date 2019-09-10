@@ -12,10 +12,10 @@ import * as RegistreringContext from '../../state/registreringContext';
 import ListevelgerFlervalg from '../../../../felleskomponenter/ui/listevelgerFlervalg';
 import Medlemskap from '../../../../felleskomponenter/medlemskap';
 import EndrePeriode from './endrePeriode';
-import { lovvalgsperioderOperations } from '../../../../ducks/lovvalgsperioder';
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
 import { endrePeriodeSkjema } from '../validering/endrePeriodeSkjema';
-import { endrePeriodeSelectors } from '../../state/ducks/endrePeriode';
+import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { createValidator } from '../../../../felleskomponenter/skjema/validering/skjemaer/createValidator';
 
 import './saksopplysninger.css';
@@ -43,6 +43,11 @@ const Saksopplysninger = props => {
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState('');
   const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = React.useState([]);
   const [endrePeriodeFeilmeldinger, setEndrePeriodeFeilmeldinger] = React.useState({ fom: undefined, tom: undefined, fritekst: undefined });
+  const [endrePeriodeFom, setEndrePeriodeFom] = React.useState('');
+  const [endrePeriodeTom, setEndrePeriodeTom] = React.useState('');
+  const [endrePeriodeBegrunnelse, setEndrePeriodeBegrunnelse] = React.useState(MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.PERIODE_FEILREGISTERT);
+  const [endrePeriodeFritekst, setEndrePeriodeFritekst] = React.useState('');
+  const [endrePeriodeSkalEndres, setEndrePeriodeSkalEndres] = React.useState(false);
 
   const overstyrSubmit = event => {
     event.preventDefault();
@@ -55,18 +60,18 @@ const Saksopplysninger = props => {
   const lagAvklartfakta = () => ({
     referanse: MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE,
     avklartefaktaKode: MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE,
-    fakta: [props.endrePeriode.begrunnelse],
+    fakta: [endrePeriodeBegrunnelse],
     subjektID: null,
     begrunnelseKoder: [],
-    begrunnelseFritekst: props.endrePeriode.fritekst || null,
+    begrunnelseFritekst: endrePeriodeFritekst || null,
   });
 
   const oppdaterAvklartefakta = () =>
     props.oppdaterAvklartefakta(props.behandlingID, [...props.avklartefakta, lagAvklartfakta()]);
 
   const lagLovvalgsperioder = () => ([{
-    fomDato: `${Utils.dato.formatterDatoTilISO(props.endrePeriode.fom)}`,
-    tomDato: `${Utils.dato.formatterDatoTilISO(props.endrePeriode.tom)}`,
+    fomDato: `${Utils.dato.formatterDatoTilISO(endrePeriodeFom)}`,
+    tomDato: `${Utils.dato.formatterDatoTilISO(endrePeriodeTom)}`,
     lovvalgsbestemmelse: props.sed.lovvalgsbestemmelse,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
@@ -82,7 +87,7 @@ const Saksopplysninger = props => {
     props.oppdaterLovvalgsperioder(props.behandlingID, lagLovvalgsperioder());
 
   const endrePeriodeOgLagre = dispatchSaksflyt => (
-    props.endrePeriode.skalEndres
+    endrePeriodeSkalEndres
       ? oppdaterAvklartefakta()
         .then(() => oppdaterLovvalgsperioder()
           .then(() => dispatchSaksflyt()))
@@ -97,14 +102,13 @@ const Saksopplysninger = props => {
     || unntaksperiodeVurdering === KV.Koder.Unntaksperiode.INNHENT);
 
   const validerEndrePeriode = () => {
-    const { endrePeriode } = props;
-    if (!kanEndrePeriode() || !endrePeriode.skalEndres) {
+    if (!kanEndrePeriode() || !endrePeriodeSkalEndres) {
       return true;
     }
 
-    const fritekstPakrevd = endrePeriode.begrunnelse === MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.ANNET;
+    const fritekstPakrevd = endrePeriodeBegrunnelse === MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.ANNET;
     const settings = { context: { fritekstPakrevd } };
-    const stateObject = { fom: endrePeriode.fom, tom: endrePeriode.tom, fritekst: endrePeriode.fritekst };
+    const stateObject = { fom: endrePeriodeFom, tom: endrePeriodeTom, fritekst: endrePeriodeFritekst };
     const feilmeldinger = createValidator(endrePeriodeSkjema, settings)(stateObject);
     const validert = Utils._isEmpty(feilmeldinger);
 
@@ -216,8 +220,23 @@ const Saksopplysninger = props => {
               )}
               <Nav.Row className="seksjon">
                 <EndrePeriode
+                  redigerbart={kanEndrePeriode()}
                   feilmeldinger={endrePeriodeFeilmeldinger}
-                  redigerbart={kanEndrePeriode()} />
+                  sedLovvalgsperiode={props.sedLovvalgsperiode}
+                  lovvalgsperiode={props.lovvalgsperiode}
+                  oppdaterFom={setEndrePeriodeFom}
+                  oppdaterTom={setEndrePeriodeTom}
+                  oppdaterBegrunnelse={setEndrePeriodeBegrunnelse}
+                  oppdaterFritekst={setEndrePeriodeFritekst}
+                  toggleSkalEndres={() => setEndrePeriodeSkalEndres(!endrePeriodeSkalEndres)}
+                  endrePeriode={({
+                    fom: endrePeriodeFom,
+                    tom: endrePeriodeTom,
+                    begrunnelse: endrePeriodeBegrunnelse,
+                    fritekst: endrePeriodeFritekst,
+                    skalEndres: endrePeriodeSkalEndres,
+                  })}
+                />
               </Nav.Row>
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
@@ -243,7 +262,8 @@ Saksopplysninger.propTypes = {
   vurderingBegrunnelser: PT.object,
   skjema: PT.any,
   avklartefakta: PT.array.isRequired,
-  endrePeriode: PT.object.isRequired,
+  lovvalgsperiode: PT.object.isRequired,
+  sedLovvalgsperiode: MPT.Periode,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
@@ -256,11 +276,13 @@ Saksopplysninger.defaultProps = {
   vurderingBegrunnelser: {},
   sed: {},
   skjema: {},
+  sedLovvalgsperiode: {},
 };
 
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
-  endrePeriode: endrePeriodeSelectors.EndrePeriodeSelector(state),
+  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
+  sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode,
 });
 const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
