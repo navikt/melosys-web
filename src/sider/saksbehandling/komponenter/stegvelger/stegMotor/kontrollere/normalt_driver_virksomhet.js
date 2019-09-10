@@ -21,7 +21,7 @@ class NormaltDriverVirksomhet extends Steg {
     ];
 
     this.id = STEG.NORMALT_DRIVER_VIRKSOMHET;
-    this.tittel = 'Normalt driver virksomhet';
+    this.tittel = 'Vanligvis drift i Norge?';
     this.komponent = VurderingNormaltDriverVirksomhet;
     this.samleRelevanteData = _propsLight => ({
       valgteVirksomheter: _propsLight.valgteVirksomheter,

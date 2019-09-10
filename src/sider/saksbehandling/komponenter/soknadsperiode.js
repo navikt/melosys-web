@@ -179,7 +179,7 @@ class Soknadsperiode extends Component {
               !erEndrePeriodeSynlig && (
                 <Nav.Row>
                   <Nav.Column xs="12">
-                    <p>Dersom søker har meldt inn en endring i søknadsperioden, kan du gjøre dette her og deretter oppdatere saksopplysningene:</p>
+                    <p>Dersom søkeren har opplyst at søknadsperioden er endret, legger du inn den korrigerte perioden her og oppdaterer saksopplysningene.</p>
                     <div className="knapper">
                       <Nav.Hovedknapp disabled={!redigerbart} onClick={visEndrePeriode}>Endre søknadsperioden</Nav.Hovedknapp>
                     </div>

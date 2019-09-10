@@ -75,7 +75,7 @@ const MineOppgaver = props => {
 
   return (
     <div className="minesaker">
-      <h1>Mine Oppgaver ({antall()})</h1>
+      <h1>Mine oppgaver ({antall()})</h1>
       {journalforing && journalforing.map(oppgave => <JournalforingOppgave key={uuid()} sak={oppgave} />)}
       <Saksbehandlinger saksbehandlinger={saksbehandling} />
       {antall() === 0 && ingenSakerMelding}
