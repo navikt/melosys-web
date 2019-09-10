@@ -72,7 +72,7 @@ export const VurderingArtikkel13_1_Vedtak = props => {
   const dokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
