@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
@@ -52,50 +52,6 @@ const Saksopplysninger = props => {
     setBegrunnelseFritekst(event.target.value);
   };
 
-  const submitRegistrering = () => {
-    if (!validerFelt()) {
-      return false;
-    }
-
-    const { behandlingID, history } = props;
-    const tilForsiden = () => history.push('/');
-    switch (unntaksperiodeVurdering) {
-      case KV.Koder.Unntaksperiode.GODKJENT:
-        godkjenn(behandlingID)
-          .then(tilForsiden)
-          .catch(Utils.logger.error);
-        return true;
-      case KV.Koder.Unntaksperiode.INNHENT:
-        innhentInfo(behandlingID)
-          .then(tilForsiden)
-          .catch(Utils.logger.error);
-        return true;
-      case KV.Koder.Unntaksperiode.AVSLAG: {
-        const ikkegodkjenn = {
-          ikkeGodkjentBegrunnelseKoder: [...ikkeGodkjentBegrunnelseKoder],
-          begrunnelseFritekst: begrunnelseFritekst,
-        };
-        Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn })
-          .then(tilForsiden)
-          .catch(Utils.logger.error);
-        return true;
-      }
-      default:
-        return false;
-    }
-  };
-
-  const godkjenn = behandlingID => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID));
-
-  const innhentInfo = behandlingID => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID));
-
-  const endrePeriodeOgLagre = dispatchSaksflyt => (
-    props.endrePeriode.skalEndres
-      ? oppdaterAvklartefakta()
-        .then(() => oppdaterLovvalgsperioder()
-          .then(() => dispatchSaksflyt()))
-      : dispatchSaksflyt());
-
   const lagAvklartfakta = () => ({
     referanse: MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE,
     avklartefaktaKode: MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE,
@@ -125,11 +81,20 @@ const Saksopplysninger = props => {
   const oppdaterLovvalgsperioder = () =>
     props.oppdaterLovvalgsperioder(props.behandlingID, lagLovvalgsperioder());
 
+  const endrePeriodeOgLagre = dispatchSaksflyt => (
+    props.endrePeriode.skalEndres
+      ? oppdaterAvklartefakta()
+        .then(() => oppdaterLovvalgsperioder()
+          .then(() => dispatchSaksflyt()))
+      : dispatchSaksflyt());
+
+  const godkjenn = behandlingID => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID));
+
+  const innhentInfo = behandlingID => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID));
+
   const kanEndrePeriode = () => props.redigerbart
     && (unntaksperiodeVurdering === KV.Koder.Unntaksperiode.GODKJENT
     || unntaksperiodeVurdering === KV.Koder.Unntaksperiode.INNHENT);
-
-  const validerFelt = () => validerEndrePeriode();
 
   const validerEndrePeriode = () => {
     const { endrePeriode } = props;
@@ -147,6 +112,41 @@ const Saksopplysninger = props => {
       setEndrePeriodeFeilmeldinger(feilmeldinger);
     }
     return validert;
+  };
+
+  const validerFelt = () => validerEndrePeriode();
+
+  const submitRegistrering = () => {
+    if (!validerFelt()) {
+      return false;
+    }
+
+    const { behandlingID, history } = props;
+    const tilForsiden = () => history.push('/');
+    switch (unntaksperiodeVurdering) {
+      case KV.Koder.Unntaksperiode.GODKJENT:
+        godkjenn(behandlingID)
+          .then(tilForsiden)
+          .catch(Utils.logger.error);
+        return true;
+      case KV.Koder.Unntaksperiode.INNHENT:
+        innhentInfo(behandlingID)
+          .then(tilForsiden)
+          .catch(Utils.logger.error);
+        return true;
+      case KV.Koder.Unntaksperiode.AVSLAG: {
+        const ikkegodkjenn = {
+          ikkeGodkjentBegrunnelseKoder: [...ikkeGodkjentBegrunnelseKoder],
+          begrunnelseFritekst,
+        };
+        Api.Saksflyt.Unntaksperioder.ikkegodkjenn(behandlingID, { ...ikkegodkjenn })
+          .then(tilForsiden)
+          .catch(Utils.logger.error);
+        return true;
+      }
+      default:
+        return false;
+    }
   };
 
   const {
