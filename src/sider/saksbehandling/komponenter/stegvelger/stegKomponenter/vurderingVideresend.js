@@ -27,7 +27,7 @@ export const VurderingVideresend = ({
   useEffect(() => {
     oppdaterData(konverterTilStegData(MKV.Koder.avklartefakta.IKKE_BOSATT_NORGE, bostedslandFakta));
 
-    return function cleanup() {
+    return () => {
       slettData();
     };
   }, []);
