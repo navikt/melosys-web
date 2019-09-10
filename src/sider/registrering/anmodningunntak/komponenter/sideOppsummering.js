@@ -3,7 +3,7 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
-import * as RegistreringContext from '../state/registreringContext';
+import * as RegistreringContext from '../../state/registreringContext';
 
 import { formatterDatoTilNorsk } from '../../../../utils/dato';
 import { soknadSelectors } from '../../../../ducks/soknad';

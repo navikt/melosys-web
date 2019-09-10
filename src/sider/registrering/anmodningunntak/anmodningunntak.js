@@ -20,13 +20,10 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../
 import { oppgaverOperations } from '../../../ducks/oppgaver';
 import { soknadOperations, soknadSelectors } from '../../../ducks/soknad';
 
-import { initialState, reducer } from './state/reducer';
-import { RegistreringStateProvider } from './state/registreringStateProvider';
-
-import * as RegistreringContext from './state/registreringContext';
 import './registrering.css';
 
 import { saksopplysningerOperations } from '../../../ducks/saksopplysninger';
+import { RegistreringStateProviderWrapper } from '../state/registreringStateProvider';
 
 const Anmodningunntak = props => {
   const [saksnummer, setSaksnummer] = React.useState('0');
@@ -246,10 +243,4 @@ const mapDispatchToProps = dispatch => ({
   tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
 });
 
-const RegistreringStateProviderWrapper = props => (
-  <RegistreringStateProvider initialState={initialState} reducer={reducer}>
-    { RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Anmodningunntak)(props) }
-  </RegistreringStateProvider>
-);
-
-export default RegistreringStateProviderWrapper;
+export default RegistreringStateProviderWrapper(mapStateToProps, mapDispatchToProps)(Anmodningunntak);
