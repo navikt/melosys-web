@@ -36,7 +36,7 @@ class ArbeidUtlandWrapper extends Component {
           ariaTittel="Panel for arbeidssted i utlandet">
           <Nav.Container fluid>
             {this.props.fields.map((fieldName, indeks) => <ArbeidUtlandEnkelt key={fieldName} indeks={indeks} slettArbeidHandler={slettArbeidHandler} redigerbart={redigerbart} />)}
-            <Nav.Knapp disabled={!redigerbart} className="arbeidUtland__leggtil" onClick={leggTilArbeidHandler}>+ Legg til flere arbeidssteder i utlandet</Nav.Knapp>
+            <Nav.Knapp disabled={!redigerbart} className="arbeidUtland__leggtil" onClick={leggTilArbeidHandler}>+ Legg til arbeidssted i utlandet</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
@@ -50,7 +50,7 @@ ArbeidUtlandWrapper.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = () => ({});

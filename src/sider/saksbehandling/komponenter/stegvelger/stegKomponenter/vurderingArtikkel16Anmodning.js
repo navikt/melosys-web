@@ -272,7 +272,7 @@ class VurderingArtikkel16Anmodning extends Component {
         <div className="artikkel16">
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Element type="element">Lands lovgivning det søkes unntak fra:</Nav.Element>
+              <Nav.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.Element>
               <Nav.Normaltekst>{landSomTekstListe}</Nav.Normaltekst>
             </Nav.Column>
             <Nav.Column xs="6">

@@ -28,11 +28,11 @@ const artikkel16MottaSvarFormValueSelector = formValueSelector(KV.Form.ARTIKKEL_
 export const VurderingArtikkel16MottaSvar = props => {
   const {
     anmodningsperiodeID, gyldigeSoknadsland, soknadsperiode, redigerbart, bekreftOgFortsett, slettData, tilstand,
-    endretPeriode, anmodningsperiodeSvarType, begrunnelseFritekst, formIsValid, oppdaterData, hentAnmodningsperiodesvar, sendAnmodningsperiodeSvar,
+    endretPeriode, anmodningsperiodeSvarType, begrunnelseFritekst, formIsValid, oppdaterData, hentAnmodningsperiodeSvar, sendAnmodningsperiodeSvar,
   } = props;
 
   useEffect(() => {
-    hentAnmodningsperiodesvar(anmodningsperiodeID).then(svar => oppdaterData(lagAnmodningsperiodesvar(svar.data)));
+    hentAnmodningsperiodeSvar(anmodningsperiodeID).then(svar => oppdaterData(lagAnmodningsperiodesvar(svar.data)));
 
     return function cleanup() {
       slettData();
@@ -50,7 +50,7 @@ export const VurderingArtikkel16MottaSvar = props => {
         fom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.fom) : null,
         tom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : null,
       },
-      begrunnelseFritekst,
+      begrunnelseFritekst: begrunnelseFritekst || null,
     };
 
     oppdaterData(lagAnmodningsperiodesvar(svar));
@@ -111,12 +111,12 @@ export const VurderingArtikkel16MottaSvar = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            { visFritekstFelt && <Skjema.Textarea feltNavn="begrunnelseFritekst" disabled={!redigerbart} label="Begrunnelse" tellerTekst={() => {}} onBlur={lagreSvarHandler} />}
+            { visFritekstFelt && <Skjema.Textarea feltNavn="begrunnelseFritekst" disabled={!redigerbart} label="Begrunnelse" tellerTekst={() => {}} />}
           </Nav.Column>
         </Nav.Row>
       </form>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!redigerbart || !formIsValid || !tilstand.harAvklaring} type="hoved" onClick={bekreftOgFortsett} className="fane__navigasjonsknapp">BEKREFT OG FORTSETT</Nav.Knapp>
+        <Nav.Knapp disabled={!redigerbart || !formIsValid || !tilstand.harAvklaring} onClick={bekreftOgFortsett} className="fane__navigasjonsknapp">BEKREFT OG FORTSETT</Nav.Knapp>
       </div>
     </Fragment>
   );
@@ -132,12 +132,11 @@ VurderingArtikkel16MottaSvar.propTypes = {
   lovvalgsperiodeTom: PT.string,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  change: PT.func.isRequired,
   endretPeriode: MPT.Periode,
   anmodningsperiodeSvarType: PT.string,
   begrunnelseFritekst: PT.string,
   formIsValid: PT.bool,
-  hentAnmodningsperiodesvar: PT.func.isRequired,
+  hentAnmodningsperiodeSvar: PT.func.isRequired,
   sendAnmodningsperiodeSvar: PT.func.isRequired,
   tilstand: PT.object.isRequired,
 };
@@ -171,7 +170,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentAnmodningsperiodesvar: async anmodningsperiodeID => dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
+  hentAnmodningsperiodeSvar: async anmodningsperiodeID => dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
   sendAnmodningsperiodeSvar: (anmodningsperiodeID, anmodningsperiodeSvar) => dispatch(anmodningsperiodesvarOperations.send(anmodningsperiodeID, anmodningsperiodeSvar)),
 });
 

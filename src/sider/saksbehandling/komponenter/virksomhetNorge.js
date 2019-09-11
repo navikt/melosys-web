@@ -40,13 +40,13 @@ function VirksomhetNorge (props) {
           <Nav.Row>
             <Nav.Column xs="6">
               <Skjema.Input bredde="XS" type="number" feltNavn="antallAnsatte" label="Antall ansatte:" disabled={!redigerbart} />
-              <Skjema.Input bredde="XS" type="number" feltNavn="utsendteNeste12Mnd" label="Antall utsendte de neste 12 mnd:" disabled={!redigerbart} />
+              <Skjema.Input bredde="XS" type="number" feltNavn="utsendteNeste12Mnd" label="Antall utsendte:" disabled={!redigerbart} />
               <Skjema.Input bredde="XS" type="number" feltNavn="antallAdmAnsatte" label="Antall administrativt ansatte:" disabled={!redigerbart} />
             </Nav.Column>
             <Nav.Column xs="6">
-              <Skjema.Input bredde="XS" type="number" feltNavn="andelOmsetningINorge" label="Andel av omsetning i Norge (prosent):" disabled={!redigerbart} />
-              <Skjema.Input bredde="XS" type="number" feltNavn="andelKontrakterINorge" label="Andel av kontrakter i Norge (prosent):" disabled={!redigerbart} />
-              <Skjema.Input bredde="XS" type="number" feltNavn="andelOppdragINorge" label="Andel av oppdrag i Norge (prosent):" disabled={!redigerbart} />
+              <Skjema.Input bredde="XS" type="number" feltNavn="andelOmsetningINorge" label="Andel omsetning opptjent i Norge (prosent):" disabled={!redigerbart} />
+              <Skjema.Input bredde="XS" type="number" feltNavn="andelKontrakterINorge" label="Andel kontrakter inngått i Norge (prosent):" disabled={!redigerbart} />
+              <Skjema.Input bredde="XS" type="number" feltNavn="andelOppdragINorge" label="Andel oppdrag utført i Norge (prosent):" disabled={!redigerbart} />
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -74,9 +74,8 @@ VirksomhetNorge.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });
-const mapDispatchToProps = () => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(VirksomhetNorge);
+export default connect(mapStateToProps)(VirksomhetNorge);
