@@ -38,10 +38,19 @@ class Saksopplysninger extends Component {
   state = {
     anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
     begrunnelseFritekst: '',
-    endretPeriodeFom: null, // this.props.sed.lovvalgsperiode.fom,
-    endretPeriodeTom: null, // this.props.sed.lovvalgsperiode.tom,
+    endretPeriodeFom: null,
+    endretPeriodeTom: null,
     endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
   };
+  UNSAFE_componentWillReceiveProps() {
+    const { sed } = this.props;
+    if (sed && sed.lovvalgsperiode) {
+      this.setState({
+        endretPeriodeFom: Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.fom),
+        endretPeriodeTom: Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.tom),
+      });
+    }
+  }
 
   overstyrSubmit = event => {
     event.preventDefault();
@@ -72,7 +81,10 @@ class Saksopplysninger extends Component {
         response = this.makeResponse(null, null);
         break;
       case DELVIS_INNVILGELSE:
-        response = this.makeResponse({ fom: this.state.endretPeriodeFom, tom: this.state.endretPeriodeTom }, null);
+        response = this.makeResponse({
+          fom: Utils.dato.formatterDatoTilISO(this.state.endretPeriodeFom),
+          tom: Utils.dato.formatterDatoTilISO(this.state.endretPeriodeTom),
+        }, null);
         break;
       case AVSLAG:
         response = this.makeResponse(null, begrunnelseFritekst);
@@ -84,9 +96,10 @@ class Saksopplysninger extends Component {
       const data = await Api.Anmodningsperioder.hent(behandlingID);
       const { anmodningsperioder } = data;
       const anmodningsperiodeID = anmodningsperioder[0].id;
-      await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, response);
+      //await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, response);
+      await Api.Registrering.anmodningunntak.send(behandlingID, response);
     } catch (e) {
-      console.log(e);
+      Utils.logger.error(e);
       return false;
     } finally {
       tilForsiden();
