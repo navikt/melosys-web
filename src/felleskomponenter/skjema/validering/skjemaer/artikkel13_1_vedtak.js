@@ -3,7 +3,7 @@ import * as Utils from '../../../../utils';
 const { object, string, bool } = Utils.yup;
 
 /* eslint-disable */
-const artikkel13_1_a_vedtak = object().shape({
+const artikkel13_1_vedtak = object().shape({
   forkortLovvalgsperiode: bool().required(),
   tomDato: string()
     .when('forkortLovvalgsperiode', {
@@ -17,4 +17,4 @@ const artikkel13_1_a_vedtak = object().shape({
       }),
 });
 
-export { artikkel13_1_a_vedtak };
+export { artikkel13_1_vedtak };

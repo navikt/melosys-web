@@ -7,6 +7,9 @@ describe('vurderingEndrePeriode', () => {
   let props = null;
 
   beforeEach(() => {
+    fetch.resetMocks();
+    fetch.mockResponse(JSON.stringify({}));
+
     props = {
       behandlingID: 1,
       lovvalgsPeriode: {},
