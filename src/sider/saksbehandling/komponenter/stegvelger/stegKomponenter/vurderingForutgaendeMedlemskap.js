@@ -20,14 +20,13 @@ const VurderingForutgaendeMedlemskap = props => {
 
   return (
     <div>
-      <Nav.Undertittel>Vurdering av forutgående medlemskap</Nav.Undertittel>
+      <Nav.Undertittel>Har søkeren tilstrekkelig forutgående medlemskap i folketrygden?</Nav.Undertittel>
       <EnkeltVilkaar
         redigerbart={redigerbart}
         vilkaar={forutgaendeMedlemskap}
         vilkaarKode="forutgaendeMedlemskap"
-        tittel="Søkeren har:"
-        labelOppfylt="Har forutgående medlemskap"
-        labelIkkeOppfylt="Har ikke forutgående medlemskap"
+        labelOppfylt="Ja"
+        labelIkkeOppfylt="Nei"
         begrunnelser={begrunnelser}
         oppdaterData={oppdaterData}
       />

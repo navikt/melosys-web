@@ -20,6 +20,7 @@ function Versjon() {
   const byggVersjon = () => process.env.REACT_APP_BUILD_VERSION || '(ukjent)';
   const branchVersjon = () => process.env.REACT_APP_BRANCH_NAME || '(lokal)';
   const melosysKodeverk = () => process.env.REACT_APP_MELOSYS_KODEVERK || '(ukjent)';
+  const reactLibVersion = () => process.env.REACT_APP_REACT_LIB || '(ukjent)';
 
   const hentServerInfo = async () => {
     try {
@@ -35,7 +36,7 @@ function Versjon() {
   }, []);
 
   const copyToClipBoard = () => {
-    const clientVersionString = `WEB; Versjon: ${versjon()}, Byggetidspunkt: ${byggTidspunkt()}, Byggeversjon: ${byggVersjon()}, Branch: ${branchVersjon()}, melosys-kodeverk:${melosysKodeverk()}`; // eslint-disable-line max-len
+    const clientVersionString = `WEB; Versjon: ${versjon()}, Byggetidspunkt: ${byggTidspunkt()}, Byggeversjon: ${byggVersjon()}, Branch: ${branchVersjon()}, melosys-kodeverk:${melosysKodeverk()}, React:${reactLibVersion()}`; // eslint-disable-line max-len
     const { namespace, cluster, branchName, veraUrl, longVersionHash} = serverInfo;
     const serverVersionString = `SERVER; Namespace: ${namespace}, Cluster: ${cluster} BranchName: ${branchName}, Vera: ${veraUrl}, VersionHash: ${longVersionHash}, Branch: ${branchVersjon()}`; // eslint-disable-line max-len
     const versionString = clientVersionString + '\n' + serverVersionString;
@@ -51,6 +52,7 @@ function Versjon() {
         <dt>Build version:</dt><dd>{byggVersjon()}</dd>
         <dt>Branch:</dt><dd>{branchVersjon()}</dd>
         <dt>melosys-kodeverk:</dt><dd>{melosysKodeverk()}</dd>
+        <dt>React:</dt><dd>{reactLibVersion()}</dd>
         <dt>&nbsp;</dt><dd />
         <dt>Server</dt><dd />
         <dt>Namespace:</dt><dd>{serverInfo.namespace}</dd>

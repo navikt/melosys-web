@@ -38,7 +38,7 @@ class ForetakUtlandWrapper extends Component {
           ariaTittel="Panel for arbeidsforholdene i utlandet">
           <Nav.Container fluid>
             { fields.map((fieldName, indeks) => (<EnkeltForetak key={fieldName} indeks={indeks} slettForetakHandler={slettForetakHandler} redigerbart={redigerbart} />))}
-            <Nav.Knapp disabled={!redigerbart} className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>+ Legg til flere arbeidsforhold i utlandet</Nav.Knapp>
+            <Nav.Knapp disabled={!redigerbart} className="foretakUtland__leggtil" onClick={this.leggTilForetakHandler}>+ Legg til arbeidsforhold i utlandet</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>

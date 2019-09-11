@@ -3,6 +3,8 @@ import React from 'react';
 import { FullmektigPanel } from './fullmektigPanel';
 import Fullmektig from './fullmektig';
 import SokFullmektigOrg from './sokFullmektigOrg';
+import PT from 'prop-types';
+import {BehandligOversikt, Kodeverk} from '../../../../proptypes';
 
 describe('SokFullmektigOrg', () => {
   let props = null;
@@ -87,6 +89,21 @@ describe('FullmektigPanel', () => {
       oppsummering: { saksnummer: 4 },
       lagreAktoer: jest.fn(),
       redigerbart: true,
+      fagsak: {
+        saksnummer: '4',
+        sakstype: {
+          kode: 'SOKNAD',
+          term: 'Søknad',
+        },
+        saksstatus: {
+          kode: 'UNDER_BEHANDLING',
+          term: 'Under behandling',
+        },
+        registrertDato: '01-01-2011',
+        endretDato: '12-12-2012',
+        gsakSaksnummer: 4,
+        behandlingOversikter: [],
+      },
     };
   });
 
