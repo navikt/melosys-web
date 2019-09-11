@@ -10,7 +10,7 @@ import EnkeltVilkaar from './felles/enkeltVilkaar';
 
 const VurderingVesentligVirksomhet = props => {
   const {
-    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData,
+    bekreftOgFortsett, begrunnelser, tilstand, redigerbart, oppdaterData, slettData, valgteVirksomheter,
   } = props;
   const { vesentligVirksomhetVilkaar, harAvklaring } = tilstand;
 
@@ -20,22 +20,22 @@ const VurderingVesentligVirksomhet = props => {
     }
   ), []);
 
-  const arbeidsgivereTekst = props.valgteVirksomheter.length > 0 ? `til ${arrayTilKonjunksjon(props.valgteVirksomheter.map(arbeidsgiver => arbeidsgiver.navn))}` : '';
+  const arbeidsgivereTekst = valgteVirksomheter.length > 0 ? `${arrayTilKonjunksjon(valgteVirksomheter.map(virksomhet => virksomhet.navn))}` : '';
+
   return (
     <div>
-      <Nav.Undertittel>Vurdering av vesentlig virksomhet {arbeidsgivereTekst}</Nav.Undertittel>
+      <Nav.Undertittel>Har {arbeidsgivereTekst} vesentlig virksomhet i Norge?</Nav.Undertittel>
       <EnkeltVilkaar
         redigerbart={redigerbart}
         begrunnelser={begrunnelser}
         vilkaar={vesentligVirksomhetVilkaar}
         vilkaarKode="vesentligVirksomhet"
-        tittel="Virksomheten har:"
-        labelOppfylt="Vesentlig virksomhet"
-        labelIkkeOppfylt="Ikke vesentlig virksomhet"
+        labelOppfylt="Ja"
+        labelIkkeOppfylt="Nei"
         oppdaterData={oppdaterData}
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
@@ -46,7 +46,7 @@ VurderingVesentligVirksomhet.ID = 'VESENTLIG_VIRKSOMHET';
 VurderingVesentligVirksomhet.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
-  valgteVirksomheter: PT.array,
+  valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,

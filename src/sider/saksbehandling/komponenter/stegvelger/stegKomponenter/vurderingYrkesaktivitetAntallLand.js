@@ -26,14 +26,14 @@ const VurderingYrkesaktivitetAntallLand = props => {
   const fakta = hentFaktaVerdi(yrkesaktivitetAntallLand);
   return (
     <div>
-      <Nav.Undertittel>Vurdering av antall land</Nav.Undertittel>
-      <Nav.Fieldset disabled={!redigerbart} legend="Hvor mange land skal søker ha yrkesaktivitet i?">
+      <Nav.Undertittel>Skal søkeren ha yrkesaktivitet i ett eller flere land?</Nav.Undertittel>
+      <Nav.Fieldset disabled={!redigerbart} legend="">
         <Nav.Radio
           name="yrkesaktivitetAntallLand"
           checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
           value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.KUN_NORGE}
           onChange={radioEndret}
-          label="Kun Norge"
+          label="Ett land, Norge"
           disabled={BOOLSK.SANN} />
         <Nav.Radio
           name="yrkesaktivitetAntallLand"
@@ -49,7 +49,7 @@ const VurderingYrkesaktivitetAntallLand = props => {
           label="To eller flere land" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!redigerbart || !harAvklaring} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!redigerbart || !harAvklaring} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );

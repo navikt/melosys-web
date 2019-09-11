@@ -15,8 +15,8 @@ const saksopplysninger = object().shape({
     }),
   })),
   maritimtArbeid: array().of(object().shape({
-    navn: string().nullable().required({ melding: 'Navn kreves', panel: KV.Paneltitler.maritimtArbeid }),
-  }).uniqueProperty('navn', { melding: 'Navn må være unikt', panel: KV.Paneltitler.maritimtArbeid })),
+    enhetNavn: string().nullable().required({ melding: 'Navn kreves', panel: KV.Paneltitler.maritimtArbeid }),
+  }).uniqueProperty('enhetNavn', { melding: 'Navn på enhet må være unikt', panel: KV.Paneltitler.maritimtArbeid })),
   oppgittAdresseGatenavn: string().nullable().when('$skalOppgittAdresseValideres', {
     is: true,
     then: string().nullable().required({ melding: 'Gatenavn kreves', panel: KV.Paneltitler.personopplysningspanel }),

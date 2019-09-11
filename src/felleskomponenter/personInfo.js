@@ -16,8 +16,8 @@ const PersonInfo = ({
   },
 }) => (
   <dl className="person__detaljer">
-    <dt>Fnr / dnr:</dt><dd>{fnr}</dd>
-    <dt>Statsborgerskap pr {formatterDatoTilNorsk(statsborgerskapDato)}:</dt>
+    <dt>F.nr./d-nr.:</dt><dd>{fnr}</dd>
+    <dt>Statsborgerskap per {formatterDatoTilNorsk(statsborgerskapDato)}:</dt>
     <dd>{KV.objektTilTerm(statsborgerskap)}</dd>
     <dt>Fødselsdato:</dt><dd><EnkeltDato dato={foedselsdato} /></dd>
     <dt>Kjønn:</dt><dd>{KV.objektTilTerm(kjoenn)}</dd>

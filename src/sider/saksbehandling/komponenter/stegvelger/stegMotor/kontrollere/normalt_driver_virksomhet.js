@@ -21,12 +21,12 @@ class NormaltDriverVirksomhet extends Steg {
     ];
 
     this.id = STEG.NORMALT_DRIVER_VIRKSOMHET;
-    this.tittel = 'Normalt driver virksomhet';
+    this.tittel = 'Vanligvis drift i Norge?';
     this.komponent = VurderingNormaltDriverVirksomhet;
     this.samleRelevanteData = _propsLight => ({
       valgteVirksomheter: _propsLight.valgteVirksomheter,
       begrunnelser: _propsLight.begrunnelser.art12_2_normalt_virksomhet,
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const normaltDriverVirksomhet = hentVilkar(MKV.Koder.vilkaar.ART12_2_NORMALT_DRIVER_VIRKSOMHET, _propsLight.vilkar);

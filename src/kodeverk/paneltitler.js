@@ -1,12 +1,12 @@
-export const foretakUtland = 'Arbeidsgiver/Foretak i utlandet';
+export const foretakUtland = 'Arbeidsgiver/selvstendig næringsvirksomhet i utlandet';
 export const arbeidUtland = 'Opplysninger om fysisk arbeidssted i utlandet';
 export const soknadsPeriode = 'Søknadsperiode';
 export const selvstendigNaeringsdrivende = 'Arbeid som selvstendig næringsdrivende';
 export const fullmektig = 'Fullmektig';
 export const arbeidsgiversVirksomhetINorge = 'Opplysninger om arbeidsgivers virksomhet i Norge';
-export const maritimtArbeid = 'Maritimt Arbeid';
+export const maritimtArbeid = 'Maritimt arbeid';
 export const medlemskap = 'Medlemskap';
-export const inntektUnderOpphold = 'Inntekt under oppholdet';
+export const inntektUnderOpphold = 'Inntekt i søknadesperioden';
 export const arbeidsgiverINorge = navn => `Arbeidsgiver i Norge: ${navn}`;
 export const kontantytelser = 'Kontantytelser fra NAV';
 export const personopplysningspanel = 'Personopplysningspanel';

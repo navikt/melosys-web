@@ -77,8 +77,9 @@ class VurderingArtikkel11_4 extends Component {
     const arbeidsLandSetning = arrayTilKonjunksjon(arbeidsland.map(land => KV.objektTilTerm(land)));
 
     const virksomhetLandListe = valgteVirksomheter
-      .reduce((samling, arbeidsgiver) => {
-        const land = (arbeidsgiver.forretningsadresse ? arbeidsgiver.forretningsadresse.land : null);
+      .filter(virksomhet => virksomhet.adresse.land)
+      .reduce((samling, virksomhet) => {
+        const land = (virksomhet.adresse ? virksomhet.adresse.land : null);
         const landMedstorForbokstav = land.charAt(0).toUpperCase() + land.slice(1).toLowerCase();
 
         return land ? [...samling, landMedstorForbokstav] : [...samling];
@@ -140,7 +141,7 @@ class VurderingArtikkel11_4 extends Component {
           </Nav.Row>
         </div>
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     );
@@ -150,7 +151,7 @@ class VurderingArtikkel11_4 extends Component {
 VurderingArtikkel11_4.propTypes = {
   bostedsland: MPT.Kodeverk,
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
-  valgteVirksomheter: PT.arrayOf(MPT.Kodeverk),
+  valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
   artikkel: MPT.Kodeverk,
