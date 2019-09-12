@@ -7,8 +7,9 @@ const artikkel13_1_vedtak = object().shape({
   tomDato: string()
     .when('forkortLovvalgsperiode', {
       is: true,
-      then: string().required({ melding: 'Dato kreves' })
-        .validDate({ melding: 'Dato kreves' })
+      then: string()
+        .required({ melding: 'Dato kreves' })
+        .erGyldigDato({ melding: 'Dato kreves' })
         .periodeErGyldig({ melding: 'Ugyldig periode' }),
     }),
 });

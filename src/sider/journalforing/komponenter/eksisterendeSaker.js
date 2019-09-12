@@ -56,7 +56,7 @@ EnkeltSak.propTypes = {
  */
 const EksisterendeSaker = props => {
   const {
-    behandlingstyper, fagsakListe, knyttTilEksisterendeSak, feil,
+    behandlingstyper, fagsakListe, knyttTilEksisterendeSak,
   } = props;
 
   const radioValg = fagsakListe.reduce((samling, sak) =>
@@ -69,7 +69,6 @@ const EksisterendeSaker = props => {
         feltNavn="saksnummer"
         legend="Velg fra listen over saker:"
         radios={radioValg}
-        feil={feil}
       />}
       { fagsakListe.length === 0 && 'Ingen eksisterende saker funnet.'}
 
@@ -93,11 +92,6 @@ EksisterendeSaker.propTypes = {
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   fagsakListe: PT.array.isRequired,
   knyttTilEksisterendeSak: PT.func.isRequired,
-  feil: PT.object,
-};
-
-EksisterendeSaker.defaultProps = {
-  feil: undefined,
 };
 
 export default EksisterendeSaker;
