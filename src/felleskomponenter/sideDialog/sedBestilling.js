@@ -6,7 +6,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../utils/navFrontend';
 import * as Api from '../../services/api';
 import * as Utils from '../../utils';
-import { createValidator } from '../skjema/validering/skjemaer/createValidator';
+import { createYupToReduxformErrorMapper } from '../skjema/validering/skjemaer/createYupToReduxformErrorMapper';
 import { sed as sedSchema } from '../skjema/validering/skjemaer/sed';
 import { EessiKodeverkSelectors } from '../../ducks/eessikodeverk';
 import './sedBestilling.css';
@@ -85,7 +85,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   });
 
   const valider = ({ buc = valgtBuc, land = valgtLand, mottakerinstitusjon = valgtMottakerinstitusjon }) =>
-    setFeilmeldinger(createValidator(sedSchema)({ buc, land, mottakerinstitusjon }));
+    setFeilmeldinger(createYupToReduxformErrorMapper(sedSchema)({ buc, land, mottakerinstitusjon }));
 
   const sendSed = async () => {
     if (erValidert()) {

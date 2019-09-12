@@ -1,6 +1,6 @@
 import * as Utils from '../../../../utils';
 
-const createValidator = (schema, settings) => {
+const createYupToReduxformErrorMapper = (schema, settings) => {
   if (!schema) throw new Error('Schema kan ikke være falsy');
 
   return values => {
@@ -18,4 +18,4 @@ const createValidator = (schema, settings) => {
   };
 };
 
-export { createValidator };
+export { createYupToReduxformErrorMapper };
