@@ -16,7 +16,7 @@ import { lovvalgsperioderOperations } from '../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { endrePeriodeSkjema } from '../validering/endrePeriodeSkjema';
 import { endrePeriodeSelectors } from '../state/ducks/endrePeriode';
-import { createYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer/createYupToReduxformErrorMapper';
+import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
 
 import './saksopplysninger.css';
 
@@ -141,7 +141,7 @@ class Saksopplysninger extends Component {
     const fritekstPakrevd = endrePeriode.begrunnelse === MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.ANNET;
     const settings = { context: { fritekstPakrevd } };
     const stateObject = { fom: endrePeriode.fom, tom: endrePeriode.tom, fritekst: endrePeriode.fritekst };
-    const endrePeriodeFeilmeldinger = createYupToReduxformErrorMapper(endrePeriodeSkjema, settings)(stateObject);
+    const endrePeriodeFeilmeldinger = lagYupToReduxformErrorMapper(endrePeriodeSkjema, settings)(stateObject);
     const validert = Utils._isEmpty(endrePeriodeFeilmeldinger);
 
     if (!validert) {

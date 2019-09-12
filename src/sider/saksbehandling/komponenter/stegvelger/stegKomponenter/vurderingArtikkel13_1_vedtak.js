@@ -190,7 +190,7 @@ const VurderingArtikkel13_1_vedtak_form = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.createYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_1_vedtak, {
+  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_1_vedtak, {
     context: {
       lovvalgsperiode: props.lovvalgsperiode,
     },
