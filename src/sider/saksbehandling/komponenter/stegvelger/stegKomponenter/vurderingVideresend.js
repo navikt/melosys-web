@@ -32,7 +32,7 @@ export const VurderingVideresend = ({
     };
   }, []);
 
-  const dokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis orienteringsbrev',
       type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
@@ -69,7 +69,7 @@ export const VurderingVideresend = ({
           {
             redigerbart &&
             <PdfLenkeListe
-              dokumenter={dokumenter}
+              dokumenter={pdfDokumenter}
               behandlingID={behandlingID}
               vedKlikk={lagreAvklartefakta}
             />
