@@ -105,7 +105,7 @@ export class DialogboksHenleggSak extends Component {
       mottaker: MKV.Koder.aktoersroller.BRUKER,
     } : {};
 
-    const dokumenter = [{
+    const pdfDokumenter = [{
       navn: 'Forhåndsvis brev',
       type: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
       data,
@@ -136,7 +136,7 @@ export class DialogboksHenleggSak extends Component {
             visTekstFelt && <Nav.Textarea feil={feilmeldingFritekst} label="Fritekst" onChange={this.fritekstOnchange} value={fritekst} />
           }
           {
-            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={this.vedKlikkLenke} />
+            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={this.vedKlikkLenke} />
           }
           <Knapperad
             bekreft={vedKlikkHenlegg}

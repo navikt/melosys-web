@@ -22,7 +22,7 @@ export const DialogboksAvslagSoknad = props => {
     avslaaSoknad,
   } = props;
 
-  const dokumenter = [{
+  const pdfDokumenter = [{
     navn: 'Forhåndsvis vedtaksbrev',
     type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
     data: {
@@ -49,7 +49,7 @@ export const DialogboksAvslagSoknad = props => {
         <div>
           <Nav.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.Systemtittel>
           {
-            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
+            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
           }
           <div className="knapperadcontainer">
             <Knapperad
