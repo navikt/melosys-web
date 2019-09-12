@@ -180,7 +180,7 @@ const Artikkel16MottaSvarForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.createYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_motta_svar, { context: { anmodningsperiodeSvarType: props.anmodningsperiodeSvarType } })(values),
+  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_motta_svar, { context: { anmodningsperiodeSvarType: props.anmodningsperiodeSvarType } })(values),
 })(VurderingArtikkel16MottaSvar);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Artikkel16MottaSvarForm);

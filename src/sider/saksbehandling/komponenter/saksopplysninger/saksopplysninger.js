@@ -300,7 +300,7 @@ const SaksopplysningerForm = reduxForm({
       },
     };
 
-    return Validering.Skjemaer.createYupToReduxformErrorMapper(Validering.Skjemaer.saksopplysninger, settings)(values);
+    return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.saksopplysninger, settings)(values);
   },
 })(Saksopplysninger);
 

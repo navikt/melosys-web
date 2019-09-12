@@ -1,6 +1,6 @@
 import * as Utils from '../../../../utils';
 
-const createYupToReduxformErrorMapper = (schema, settings) => {
+const lagYupToReduxformErrorMapper = (schema, settings) => {
   if (!schema) throw new Error('Schema kan ikke være falsy');
 
   return values => {
@@ -18,4 +18,4 @@ const createYupToReduxformErrorMapper = (schema, settings) => {
   };
 };
 
-export { createYupToReduxformErrorMapper };
+export { lagYupToReduxformErrorMapper };

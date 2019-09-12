@@ -1,4 +1,4 @@
-import { createYupToReduxformErrorMapper } from './createYupToReduxformErrorMapper';
+import { lagYupToReduxformErrorMapper } from './lagYupToReduxformErrorMapper';
 
 import * as Utils from '../../../../utils';
 
@@ -6,10 +6,10 @@ const {
   object, array, number,
 } = Utils.yup;
 
-describe('createYupToReduxformErrorMapper', () => {
+describe('lagYupToReduxformErrorMapper', () => {
   it('throw Error hvis schema er falsy', () => {
     expect(() => {
-      createYupToReduxformErrorMapper(null);
+      lagYupToReduxformErrorMapper(null);
     }).toThrow();
   });
 
@@ -19,7 +19,7 @@ describe('createYupToReduxformErrorMapper', () => {
         verdi: array().of(number())
           .required({ melding: 'Verdi er påkrevd' }),
       });
-      const mapYupToReduxformError = createYupToReduxformErrorMapper(schema);
+      const mapYupToReduxformError = lagYupToReduxformErrorMapper(schema);
 
       expect(mapYupToReduxformError({})).toEqual({ verdi: { melding: 'Verdi er påkrevd' } });
       expect(mapYupToReduxformError({
@@ -29,7 +29,7 @@ describe('createYupToReduxformErrorMapper', () => {
 
     it('returnerer ingen feilmeldinger for et tomt schema', () => {
       const schema = object().shape({});
-      const mapYupToReduxformError = createYupToReduxformErrorMapper(schema);
+      const mapYupToReduxformError = lagYupToReduxformErrorMapper(schema);
 
       expect(mapYupToReduxformError({})).toEqual({});
     });

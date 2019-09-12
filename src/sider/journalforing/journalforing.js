@@ -459,7 +459,7 @@ const form = {
       },
     };
 
-    return Validering.Skjemaer.createYupToReduxformErrorMapper(Validering.Skjemaer.journalforing, options)(values);
+    return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.journalforing, options)(values);
   },
   onSubmit: () => {},
 };
