@@ -1,10 +1,8 @@
-import { mixed, addMethod, object, array, string, date, bool, lazy } from 'yup';
+import { mixed, addMethod, object, array, string, date, bool, lazy, number } from 'yup';
 
 import * as Utils from './';
-import * as MikroValidering from '../felleskomponenter/skjema/validering/mikrovalidering';
 import * as Person from '../felleskomponenter/skjema/validering/generisk/person';
 import * as Organisasjon from '../felleskomponenter/skjema/validering/generisk/organisasjon';
-import * as Dato from '../'
 
 /* eslint-disable func-names */
 /* eslint-disable prefer-arrow-callback */
@@ -133,4 +131,5 @@ export {
   date,
   bool,
   lazy,
+  number,
 };
