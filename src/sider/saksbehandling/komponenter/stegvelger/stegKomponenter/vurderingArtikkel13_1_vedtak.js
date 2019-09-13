@@ -15,6 +15,7 @@ import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../../../ducks/lovvalgsperioder';
+import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
 import { soknadSelectors } from '../../../../../ducks/soknad';
 
 import './vurderingArtikkel13_1_vedtak.css';
@@ -72,7 +73,7 @@ export const VurderingArtikkel13_1_Vedtak = props => {
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
@@ -164,7 +165,7 @@ VurderingArtikkel13_1_Vedtak.defaultProps = {
 };
 
 const mapStateToProps = (state, ownProps) => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_13_1_VEDTAK)(state),

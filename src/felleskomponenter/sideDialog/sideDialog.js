@@ -10,6 +10,8 @@ import SideDialogBrevBestilling from './brevBestilling';
 import SideDialogSedBestilling from './sedBestilling';
 import SideDialogBesvarSed from './sideDialogBesvarSed';
 
+import { redigerbartSelectors } from '../../ducks/redigerbart';
+
 import './sideDialog.css';
 
 const uuid = require('uuid/v4');
@@ -18,7 +20,9 @@ class SideDialog extends Component {
   static propTypes = {
     faner: PT.array,
     behandlingID: PT.number.isRequired,
-    redigerbart: PT.bool.isRequired,
+    brevBestillingRedigerbart: PT.bool.isRequired,
+    sedBestillingRedigerbart: PT.bool.isRequired,
+    BrevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   };
 
   static defaultProps = {
@@ -44,13 +48,15 @@ class SideDialog extends Component {
       });
   }
 
-  getFaneKomponent = (navn, behandlingID, redigerbart) => {
+  getFaneKomponent = (navn, behandlingID) => {
+    const { brevBestillingRedigerbart, sedBestillingRedigerbart, BrevBestillingRedigerbartIArtikkel13 } = this.props;
+
     if (navn === 'dokumenter') {
       return <SideDialogDokumenter key={uuid()} />;
     } else if (navn === 'brevbestilling') {
-      return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} redigerbart={redigerbart} />;
+      return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} redigerbart={brevBestillingRedigerbart} brevBestillingRedigerbartIArtikkel13={BrevBestillingRedigerbartIArtikkel13} />;
     } else if (navn === 'sedbestilling') {
-      return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} redigerbart={redigerbart} />;
+      return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} redigerbart={sedBestillingRedigerbart} />;
     } else if (navn === 'besvarsed') {
       return <SideDialogBesvarSed key={uuid()} behandlingID={behandlingID} />;
     }
@@ -71,7 +77,7 @@ class SideDialog extends Component {
   };
 
   render() {
-    const { behandlingID, redigerbart } = this.props;
+    const { behandlingID } = this.props;
     const { navn } = this.state.faner.find(item => item.navn === this.state.aktivFane);
     return (
       <div className="dialog panelSeksjon">
@@ -85,7 +91,7 @@ class SideDialog extends Component {
               </button>))}
           </div>
           <div>
-            { this.getFaneKomponent(navn, behandlingID, redigerbart)}
+            { this.getFaneKomponent(navn, behandlingID)}
           </div>
         </Panel>
       </div>
@@ -93,7 +99,11 @@ class SideDialog extends Component {
   }
 }
 
-const mapStateToProps = () => ({});
+const mapStateToProps = state => ({
+  brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
+  sedBestillingRedigerbart: redigerbartSelectors.SedBestillingRedigerbartSelector(state),
+  BrevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
+});
 
 const mapDispatchToProps = () => ({});
 
