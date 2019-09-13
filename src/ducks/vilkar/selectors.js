@@ -31,17 +31,17 @@ export const forutgaendeMedlemskap = createSelector(
 
 export const art11_3A = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A) || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A) || {})
 );
 
 export const art11_4_1 = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1) || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1) || {})
 );
 
 export const art11_4_2 = createSelector(
   state => VilkarSelector(state),
-  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2) || {})
+  alleVilkar => (alleVilkar.find(enkelt => enkelt.vilkaar === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2) || {})
 );
 
 export const nis = createSelector(
@@ -88,8 +88,8 @@ export const valgteLovvalgsVilkar = createSelector(
   state => VilkarSelector(state),
   alleVilkar => {
     const alleLovvalg = [
-      ...MKV.KTObjects.lovvalgsbestemmelser.forordning_883_2004,
-      ...MKV.KTObjects.lovvalgsbestemmelser.forordning_987_2009,
+      ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+      ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
     ];
     return alleVilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar));
   }
@@ -99,7 +99,7 @@ export const valgteTilleggsVilkar = createSelector(
   state => VilkarSelector(state),
   alleVilkar => {
     const alleTilleggsbestemmelser = [
-      ...MKV.KTObjects.lovvalgsbestemmelser.tillegg,
+      ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
     ];
     return alleVilkar.filter(enkeltVilkar => alleTilleggsbestemmelser.find(enkeltTilleggslovvalg => enkeltTilleggslovvalg.kode === enkeltVilkar.vilkaar));
   }

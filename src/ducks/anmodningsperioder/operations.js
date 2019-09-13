@@ -45,7 +45,7 @@ const byggAnmodningsperiodeArtikkel16 = state => {
     id: null,
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1,
+    lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
     tilleggBestemmelse: null,
     lovvalgsland: MKV.Koder.landkoder.NO,
     unntakFraBestemmelse: unntakFraBestemmelse || null,
@@ -57,7 +57,7 @@ const byggAnmodningsperiodeArtikkel16 = state => {
 
 const byggAnmodningsperioder = (lovvalgsbestemmelse, state) => {
   switch (lovvalgsbestemmelse) {
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1:
       return byggAnmodningsperiodeArtikkel16(state);
     default: {
       return [];
