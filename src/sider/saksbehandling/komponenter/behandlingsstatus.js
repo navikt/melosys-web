@@ -42,7 +42,7 @@ class BehandlingsStatus extends Component {
       return false;
     }
     const { oppdaterBehandlingsStatus, behandlingID } = this.props;
-    const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.status);
+    const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.behandlingsstatus);
     const nyBehandlingsStatus = { kode, term };
     Api.Behandlinger.status.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nyBehandlingsStatus);
