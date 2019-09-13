@@ -61,7 +61,7 @@ const SideOppsummering = props => {
                 avsluttSakSomBortfalt={avsluttSakSomBortfalt}
                 apneTidligereBehandlinger={apneTidligereBehandlinger}
                 redigerbart={endreLovvalgsperiodeRedigerbart}
-                visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE}
+                visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
               />
             </div>
           </Nav.Column>

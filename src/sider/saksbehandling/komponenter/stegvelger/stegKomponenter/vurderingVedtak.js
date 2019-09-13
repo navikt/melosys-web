@@ -72,7 +72,7 @@ const VurderingVedtak = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Hovedknapp disabled={!redigerbart} onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Hovedknapp>
+            <Nav.Hovedknapp disabled={!redigerbart} onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>
