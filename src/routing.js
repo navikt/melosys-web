@@ -1,45 +1,30 @@
 import React from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
-import Loadable from 'react-loadable';
+import loadable from '@loadable/component';
 import PT from 'prop-types';
 import * as Utils from './utils';
+import ErrorBoundary from './felleskomponenter/ErrorBoundary';
 
-import SideLoadingStatus from './felleskomponenter/SideLoadingStatus';
+const SideLoadingStatus = <div>Laster inn side komponenten!</div>;
+const SideLoadingFailMessage = 'Beklager, kan ikke laste inn side komponenten.';
 
-const UkjentSideLoadable = Loadable({
-  loader: () => import('./sider/ukjentSide'),
-  loading: SideLoadingStatus,
-});
-const ForsideLoadable = Loadable({
-  loader: () => import('./sider/forside'),
-  loading: SideLoadingStatus,
-});
-const SokLoadable = Loadable({
-  loader: () => import('./sider/sok'),
-  loading: SideLoadingStatus,
-});
-const SaksbehandlingLoadable = Loadable({
-  loader: () => import('./sider/saksbehandling'),
-  loading: SideLoadingStatus,
-});
-const JournalforingLoadable = Loadable({
-  loader: () => import('./sider/journalforing'),
-  loading: SideLoadingStatus,
-});
-
-const RegistreringLoadable = Loadable({
-  loader: () => import('./sider/registrering'),
-  loading: SideLoadingStatus,
-});
+const UkjentSideLoadable = loadable(() => import('./sider/ukjentSide'), { fallback: SideLoadingStatus });
+const ForsideLoadable = loadable(() => import('./sider/forside'), { fallback: SideLoadingStatus });
+const SokLoadable = loadable(() => import('./sider/sok'), { fallback: SideLoadingStatus });
+const SaksbehandlingLoadable = loadable(() => import('./sider/saksbehandling'), { fallback: SideLoadingStatus });
+const JournalforingLoadable = loadable(() => import('./sider/journalforing'), { fallback: SideLoadingStatus });
+const RegistreringLoadable = loadable(() => import('./sider/registrering'), { fallback: SideLoadingStatus });
 
 const Routing = ({ location }) => (
   <Switch location={location}>
-    <Route exact path="/" component={ForsideLoadable} />
-    <Route exact path="/sok/:fnr" component={SokLoadable} />
-    {Utils.feature.featureToggle('REL1.1') && <Route exact path="/registrering/:snr" component={RegistreringLoadable} />}
-    <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
-    <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
-    <Route component={UkjentSideLoadable} />
+    <ErrorBoundary message={SideLoadingFailMessage}>
+      <Route exact path="/" component={ForsideLoadable} />
+      <Route exact path="/sok/:fnr" component={SokLoadable} />
+      {Utils.feature.featureToggle('REL1.1') && <Route exact path="/registrering/:snr" component={RegistreringLoadable} />}
+      <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
+      <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
+      <Route component={UkjentSideLoadable} />
+    </ErrorBoundary>
   </Switch>
 );
 

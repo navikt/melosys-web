@@ -20,8 +20,10 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../duc
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../../../ducks/behandlingsperioder';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
 import { vilkarOperations, vilkarSelectors } from '../../../../ducks/vilkar';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { vedtakOperations } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
+
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore, AnmodningsperiodesvarStore } from './StegState';
 
@@ -424,9 +426,9 @@ const mapStateToProps = state => ({
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
-  generiskStegRedigerbart: behandlingerSelectors.GeneriskStegRedigerbartSelector(state),
+  generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
 });
 
 /* eslint no-alert:off */

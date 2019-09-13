@@ -10,6 +10,7 @@ import PdfLenkeListe from '../pdfLenkeListe';
 import Knapperad from '../knapperad';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../ducks/redigerbart';
 
 import './dialogboksAvslagSoknad.css';
 
@@ -79,7 +80,7 @@ DialogboksAvslagSoknad.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 
