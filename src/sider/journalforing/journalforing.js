@@ -328,13 +328,13 @@ class Journalforing extends Component {
                         hentOgVisBruker={hentOgVisBruker}
                       />
                       <EksisterendeSaker
-                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
+                        behandlingstyper={MKV.KTObjects.behandlinger.behandlingstyper}
                         fagsakListe={fagsakListe}
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                       />
                       <OpprettNyFagSak
                         sakstyper={MKV.KTObjects.sakstyper}
-                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
+                        behandlingstyper={MKV.KTObjects.behandlinger.behandlingstyper}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
                       />

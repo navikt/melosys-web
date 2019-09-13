@@ -88,8 +88,8 @@ export const valgteLovvalgsVilkar = createSelector(
   state => VilkarSelector(state),
   alleVilkar => {
     const alleLovvalg = [
-      ...MKV.KTObjects.lovvalgsbestemmelser.forordning_883_2004,
-      ...MKV.KTObjects.lovvalgsbestemmelser.forordning_987_2009,
+      ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004,
+      ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgsbestemmelser_987_2009,
     ];
     return alleVilkar.filter(enkeltVilkar => alleLovvalg.find(enkeltLovvalg => enkeltLovvalg.kode === enkeltVilkar.vilkaar));
   }
@@ -99,7 +99,7 @@ export const valgteTilleggsVilkar = createSelector(
   state => VilkarSelector(state),
   alleVilkar => {
     const alleTilleggsbestemmelser = [
-      ...MKV.KTObjects.lovvalgsbestemmelser.tillegg,
+      ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
     ];
     return alleVilkar.filter(enkeltVilkar => alleTilleggsbestemmelser.find(enkeltTilleggslovvalg => enkeltTilleggslovvalg.kode === enkeltVilkar.vilkaar));
   }

@@ -45,7 +45,7 @@ class Behandling extends Component {
 
             <Nav.Column xs="8">
               <Nav.Fieldset legend="Behandlingstype">
-                {MKV.KTObjects.behandlinger.typer.map(type => {
+                {MKV.KTObjects.behandlinger.behandlingstyper.map(type => {
                   const isDisabled = ![
                     MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
                     MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,

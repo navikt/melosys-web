@@ -30,9 +30,9 @@ import './vurderingArtikkel16Anmodning.css';
 const uuid = require('uuid/v4');
 
 const alleLovvalg = [
-  ...MKV.KTObjects.lovvalgsbestemmelser.forordning_883_2004,
-  ...MKV.KTObjects.lovvalgsbestemmelser.forordning_987_2009,
-  ...MKV.KTObjects.lovvalgsbestemmelser.tillegg,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgsbestemmelser_987_2009,
+  ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
 ];
 
 const TidligereMedlemPeriodeLinje = ({
