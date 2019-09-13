@@ -23,7 +23,7 @@ class Videresend extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => ({
-      bostedslandFakta: hentFakta(MKV.Koder.avklartefakta.IKKE_BOSATT_NORGE, _propsLight.avklartefakta),
+      bostedslandFakta: hentFakta(MKV.Koder.avklartefaktatyper.IKKE_BOSATT_NORGE, _propsLight.avklartefakta),
     });
     this.handlers = {
       lagreAvklartefakta: this._propsLight.tilgjengeligeHandlers.lagreAvklartefakta,

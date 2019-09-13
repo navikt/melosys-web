@@ -60,7 +60,7 @@ export default function reducer(state = initialState, action) {
         ARBEID_SOKKEL_SKIP,
         AARSAK_ENDRING_PERIODE,
         IKKE_BOSATT_NORGE,
-      } = MKV.Koder.avklartefakta;
+      } = MKV.Koder.avklartefaktatyper;
 
       const {
         SOKNADSLAND,

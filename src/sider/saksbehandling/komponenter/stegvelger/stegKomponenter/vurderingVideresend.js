@@ -25,7 +25,7 @@ export const VurderingVideresend = ({
   const { begrunnelseFritekst } = bostedslandFakta;
 
   useEffect(() => {
-    oppdaterData(konverterTilStegData(MKV.Koder.avklartefakta.IKKE_BOSATT_NORGE, bostedslandFakta));
+    oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.IKKE_BOSATT_NORGE, bostedslandFakta));
 
     return () => {
       slettData();
@@ -52,7 +52,7 @@ export const VurderingVideresend = ({
   ];
 
   const fritekstEndret = e => {
-    oppdaterData(lagAvklartefaktaBegrunnelse(MKV.Koder.avklartefakta.IKKE_BOSATT_NORGE, null, null, e.target.value));
+    oppdaterData(lagAvklartefaktaBegrunnelse(MKV.Koder.avklartefaktatyper.IKKE_BOSATT_NORGE, null, null, e.target.value));
   };
 
   return (
