@@ -20,7 +20,7 @@ class VurderingArtikkel11_4 extends Component {
   constructor() {
     super();
     this.ART11_4_1 = MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1;
-    this.ART11_4_2 = MKV.Koder.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004.FO_883_2004_ART11_4_2;
+    this.ART11_4_2 = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2;
     this.TIL_VURDERING_12_1 = 'TIL_VURDERING_12_1';
   }
 
