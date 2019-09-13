@@ -11,8 +11,9 @@ import * as KV from '../../../kodeverk';
 import LandVelger from '../../../felleskomponenter/skjema/landvelger';
 import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
 
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { formSelectors } from '../../../ducks/form';
+
 import './virksomhetNorge.css';
 
 function VirksomhetNorge (props) {
@@ -74,7 +75,7 @@ VirksomhetNorge.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
   soknadForm: formSelectors.SoknadenFormSelector(state),
 });
 

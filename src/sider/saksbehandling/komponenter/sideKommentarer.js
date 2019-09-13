@@ -6,7 +6,8 @@ import { TextareaControlled } from 'nav-frontend-skjema';
 import { Knapp } from 'nav-frontend-knapper';
 import { Undertittel } from 'nav-frontend-typografi';
 
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
+
 import './sideKommentarer.css';
 
 const SideKommentarer = props => {
@@ -29,7 +30,7 @@ SideKommentarer.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
 const mapDispatchToProps = () => ({});

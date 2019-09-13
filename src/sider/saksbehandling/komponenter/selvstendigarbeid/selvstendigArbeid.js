@@ -7,7 +7,6 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as Ikoner from '../../../../resources/images';
 import * as Skjema from '../../../../felleskomponenter/skjema';
 import * as formSelectors from '../../../../ducks/form/selectors';
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import * as KV from '../../../../kodeverk';
 
 import SelvstendigeForetak from './selvstendigeforetak';
@@ -16,6 +15,7 @@ import { BOOLSK } from '../../../../constants';
 import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
 
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../../../ducks/organisasjoner';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { soknadOperations } from '../../../../ducks/soknad';
 
 import './selvstendigArbeid.css';
@@ -78,7 +78,7 @@ SelvstendigArbeid.defaultProps = {
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
