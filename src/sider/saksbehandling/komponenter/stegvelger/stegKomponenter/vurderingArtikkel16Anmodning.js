@@ -133,7 +133,7 @@ class VurderingArtikkel16Anmodning extends Component {
   componentDidMount() {
     const { oppdaterData, tilstand: { art16_1 } } = this.props;
     oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
-    oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1));
+    oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004.FO_883_2004_ART16_1));
   }
 
   componentWillUnmount() {

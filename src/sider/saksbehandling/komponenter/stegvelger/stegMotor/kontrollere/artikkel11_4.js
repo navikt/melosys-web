@@ -11,18 +11,18 @@ class Artikkel11_4 extends Steg {
       {
         beskrivelse: 'vilkar for artikkel 11.4.1 (og implissit 11.3A) er oppfylt',
         exec: (avklartefakta, alleVilkar) =>
-          erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1, alleVilkar) &&
-          erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A, alleVilkar),
+          erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1, alleVilkar) &&
+          erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004.FO_883_2004_ART11_3A, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
         beskrivelse: 'vilkar for artikkel 11.4.2 er oppfylt',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004.FO_883_2004_ART11_4_2, alleVilkar),
         nesteSteg: STEG.VEDTAK,
       },
       {
         beskrivelse: 'kun vilkår 11.4.1 er foreløpig oppfylt, så gå videre til 12.1-vurdering',
-        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tillegg.FO_883_2004_ART11_4_1, alleVilkar),
+        exec: (avklartefakta, alleVilkar) => erVilkarOppfylt(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_4_1, alleVilkar),
         nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
@@ -35,7 +35,7 @@ class Artikkel11_4 extends Steg {
     this.tittel = 'Vurdering av 11.4';
     this.komponent = VurderingArtikkel11_4;
     this.samleRelevanteData = _propsLight => ({
-      artikkel: { kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2, term: '11.4' },
+      artikkel: { kode: MKV.Koder.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004.FO_883_2004_ART11_4_2, term: '11.4' },
       bostedsland: _propsLight.bostedsland,
       arbeidsland: _propsLight.arbeidsland,
       valgteVirksomheter: _propsLight.valgteVirksomheter,
