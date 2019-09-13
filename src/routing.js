@@ -23,16 +23,16 @@ const Routing = ({ location }) => {
   });
 
   return (
-    <Switch location={location}>
-      <ErrorBoundary message={SideLoadingFailMessage}>
+    <ErrorBoundary message={SideLoadingFailMessage}>
+      <Switch location={location}>
         <Route exact path="/" component={ForsideLoadable} />
         <Route exact path="/sok/:fnr" component={SokLoadable} />
         {featureToggle && <Route exact path="/registrering/:snr" component={RegistreringLoadable} />}
         <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
         <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
         <Route component={UkjentSideLoadable} />
-      </ErrorBoundary>
-    </Switch>
+      </Switch>
+    </ErrorBoundary>
   );
 };
 
