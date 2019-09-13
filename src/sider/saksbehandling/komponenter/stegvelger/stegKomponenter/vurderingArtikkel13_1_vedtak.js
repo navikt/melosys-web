@@ -55,7 +55,7 @@ export const VurderingArtikkel13_1_Vedtak = props => {
       await forkortLovvalgsperiode();
     }
 
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND);
+    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND);
   };
 
   const vedKlikkForhandsvis = async () => {

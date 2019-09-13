@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import loadable from '@loadable/component';
 import PT from 'prop-types';
@@ -15,18 +15,26 @@ const SaksbehandlingLoadable = loadable(() => import('./sider/saksbehandling'), 
 const JournalforingLoadable = loadable(() => import('./sider/journalforing'), { fallback: SideLoadingStatus });
 const RegistreringLoadable = loadable(() => import('./sider/registrering'), { fallback: SideLoadingStatus });
 
-const Routing = ({ location }) => (
-  <Switch location={location}>
+const Routing = ({ location }) => {
+  const [featureToggle, setFeatureToggle] = useState(false);
+
+  useEffect(() => {
+    (async () => setFeatureToggle(await Utils.feature.namespaceToggle('q2', 't8')))();
+  });
+
+  return (
     <ErrorBoundary message={SideLoadingFailMessage}>
-      <Route exact path="/" component={ForsideLoadable} />
-      <Route exact path="/sok/:fnr" component={SokLoadable} />
-      {Utils.feature.featureToggle('REL1.1') && <Route exact path="/registrering/:snr" component={RegistreringLoadable} />}
-      <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
-      <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
-      <Route component={UkjentSideLoadable} />
+      <Switch location={location}>
+        <Route exact path="/" component={ForsideLoadable} />
+        <Route exact path="/sok/:fnr" component={SokLoadable} />
+        {featureToggle && <Route exact path="/registrering/:snr" component={RegistreringLoadable} />}
+        <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
+        <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
+        <Route component={UkjentSideLoadable} />
+      </Switch>
     </ErrorBoundary>
-  </Switch>
-);
+  );
+};
 
 Routing.propTypes = {
   location: PT.object.isRequired,

@@ -29,7 +29,7 @@ class StegMotor {
 
   beregnNesteSteg = (gjeldendeSteg, nesteStegPosisjon) => {
     if (gjeldendeSteg === null) {
-      if (this._propsLight.behandlingstype && this._propsLight.behandlingstype.kode === MKV.Koder.behandlinger.typer.ENDRET_PERIODE) {
+      if (this._propsLight.behandlingstype && this._propsLight.behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE) {
         return this.lagKlasseBasertPaID(STEG.ENDRET_PERIODE, 0);
       }
       return this.lagKlasseBasertPaID(STEG.INNGANG, 0);
