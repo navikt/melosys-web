@@ -18,8 +18,8 @@ import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 import './vurderingVedtak.css';
 
 const alleLovvalg = [
-  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004,
-  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgsbestemmelser_987_2009,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
   ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
 ];
 
@@ -46,7 +46,7 @@ const VurderingVedtak = ({
     { navn: 'Forhåndsvis vedtaksbrev og A1', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
   ];
 
-  if (lovvalgSomKodeTerm && lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004.FO_883_2004_ART12_1) {
+  if (lovvalgSomKodeTerm && lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1) {
     dokumenter.push({ navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } });
   }
 

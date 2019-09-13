@@ -30,8 +30,8 @@ import './vurderingArtikkel16Anmodning.css';
 const uuid = require('uuid/v4');
 
 const alleLovvalg = [
-  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004,
-  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgsbestemmelser_987_2009,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
   ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
 ];
 
@@ -133,7 +133,7 @@ class VurderingArtikkel16Anmodning extends Component {
   componentDidMount() {
     const { oppdaterData, tilstand: { art16_1 } } = this.props;
     oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
-    oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgsbestemmelser_883_2004.FO_883_2004_ART16_1));
+    oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1));
   }
 
   componentWillUnmount() {
