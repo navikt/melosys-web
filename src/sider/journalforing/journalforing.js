@@ -419,7 +419,7 @@ const mapStateToProps = state => ({
       logiskeTitler: [],
     },
     sakstype: MKV.Koder.sakstyper.EU_EOS,
-    opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
+    opprettnysak_behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
     ingenVurdering: false,
     skalTilordnes: false,
   },
