@@ -26,8 +26,6 @@ const Forretningsstedet = props => {
   const {
     forretningsstedet, avklartForretningsland, oppdaterData, slettData, redigerbart,
   } = props;
-  if (!forretningsstedet) return null;
-
   useEffect(() => {
     if (avklartForretningsland) {
       oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland));
@@ -81,7 +79,7 @@ const Forretningssteder = props => {
   return (
     <div>
       {
-        valgteVirksomheter.map(valgtVirksomhet => {
+        valgteVirksomheter.filter(virksomhet => virksomhet).map(valgtVirksomhet => {
           const key = `forretningssted${valgtVirksomhet.virksomhetId}-${valgtVirksomhet.navn}`;
           const avklartForretningsland = avklarteForretningsland.find(enkeltAvklaring => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId);
 
