@@ -11,7 +11,7 @@ import * as MPT from '../../../proptypes/';
 
 import './eksisterendeSaker.css';
 
-const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.status.AVSLUTTET);
+const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET);
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
@@ -76,7 +76,7 @@ const EksisterendeSaker = props => {
       <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
         {
           behandlingstyper &&
-          behandlingstyper.filter(elem => elem.kode !== MKV.Koder.behandlinger.typer.SOEKNAD).map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
+          behandlingstyper.filter(elem => elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD).map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
         }
       </Skjema.Select>
       <Skjema.Checkbox feltNavn="ingenVurdering" label="Dokumentet trenger ingen vurdering" />
