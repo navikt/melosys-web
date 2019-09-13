@@ -89,7 +89,7 @@ class Saksopplysninger extends Component {
     }
 
     const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-    const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL;
+    const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
     const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
     const visStegVelger = !erHenlagtSak && !erAvslaattSoknad;
 

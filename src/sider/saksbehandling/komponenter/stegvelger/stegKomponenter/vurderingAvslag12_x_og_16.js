@@ -78,7 +78,7 @@ const VurderingAvslag12_x_og_16 = ({
         />
       }
       {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
-      <Nav.Hovedknapp disabled={!redigerbart} onClick={() => fattVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>
+      <Nav.Hovedknapp disabled={!redigerbart} onClick={() => fattVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND)}>
         Fatt vedtak
       </Nav.Hovedknapp>
     </div>

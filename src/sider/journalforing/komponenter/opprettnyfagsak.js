@@ -60,7 +60,7 @@ class OpprettNyFagSak extends Component {
               {
                 behandlingstyper &&
                 behandlingstyper
-                  .filter(elem => (elem.kode !== MKV.Koder.behandlinger.typer.ANKE && elem.kode !== MKV.Koder.behandlinger.typer.KLAGE))
+                  .filter(elem => (elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ANKE && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.KLAGE))
                   .map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
               }
             </Skjema.Select>

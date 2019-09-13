@@ -9,7 +9,7 @@ import { formSelectors } from '../form';
 export const RedigerbartSelector = createSelector(
   state => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
   behandlingerSelectors.BehandlingstypeKodeSelector,
-  (redigerbart, behandlingstypeKode) => redigerbart && behandlingstypeKode !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE
+  (redigerbart, behandlingstypeKode) => redigerbart && behandlingstypeKode !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE
 );
 export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
   state => behandlingerSelectors.BehandlingerSelector(state).redigerbart || false,
