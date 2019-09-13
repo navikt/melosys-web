@@ -175,7 +175,7 @@ class Stegvelger extends Component {
     });
   };
 
-  videresendSoknad = () => {
+  videresendSoknad = async () => {
     const { behandlingID } = this.props;
 
     return Api.Saksflyt.Soknader.videresend(behandlingID);
@@ -183,9 +183,14 @@ class Stegvelger extends Component {
 
   lagreAvklartefaktaOgVideresendSoknad = () => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
-      await this.props.lagreAvklartefaktaHandler();
-      await this.videresendSoknad();
-      this.tilForsiden();
+      try {
+        await this.props.lagreAvklartefaktaHandler();
+        await this.videresendSoknad();
+      } catch (e) {
+        Utils.logger.error(e);
+      } finally {
+        this.tilForsiden();
+      }
     });
   };
 
