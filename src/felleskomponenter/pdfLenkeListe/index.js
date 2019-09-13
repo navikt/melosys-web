@@ -12,12 +12,12 @@ const uuid = require('uuid/v4');
 class PdfLenkeListe extends Component {
   state = {
     feilmelding: false,
-    kanViseSed: false,
+    kanForhandsviseSed: false,
   };
 
   componentDidMount() {
     Utils.feature.namespaceToggle('q2', 't8')
-      .then(kanVises => this.setState({ kanViseSed: kanVises }));
+      .then(kanVises => this.setState({ kanForhandsviseSed: kanVises }));
   }
 
   klikk = async dokument => {
@@ -50,7 +50,7 @@ class PdfLenkeListe extends Component {
     return (<button onClick={() => this.klikk(dokument)} key={uuid()}>{dokument.navn}</button>);
   }
 
-  featureToggleLenker = dokumenter => dokumenter.filter(dokument => !(dokument.erSed && !this.state.kanViseSed));
+  featureToggleLenker = dokumenter => dokumenter.filter(dokument => !(dokument.erSed && !this.state.kanForhandsviseSed));
 
   render() {
     const dokumenter = this.featureToggleLenker(this.props.dokumenter);
