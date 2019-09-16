@@ -117,8 +117,9 @@ const Saksopplysninger = props => {
         const { anmodningsperioder } = data;
         const anmodningsperiodeID = anmodningsperioder[0].id;
         await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, response);
+        await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
       } catch (e) {
-        console.log(e);
+        Utils.logger.error(e);
         return false;
       } finally {
         tilForsiden();
