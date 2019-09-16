@@ -20,7 +20,7 @@ class ForutgaendeMedlemskap extends Steg {
       },
     ];
     this.id = STEG.FORUTGAENDE_MEDLEMSKAP;
-    this.tittel = 'Forutg. medl';
+    this.tittel = 'Forutg. medl.';
     this.komponent = VurderingForutgaendeMedlemskap;
     this.samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.art12_1_forutgaaende_medl,

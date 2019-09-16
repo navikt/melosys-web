@@ -21,7 +21,7 @@ class EnkeltForetak extends Component {
 
   async componentDidUpdate(prevProps) {
     const { settFeilmelding } = this;
-    const { hentOrganisasjon, skjema } = this.props;
+    const { hentOrganisasjon } = this.props;
     const gammeltOrgnr = prevProps.orgnr;
     const nyttOrgnr = this.props.orgnr;
 
@@ -30,7 +30,7 @@ class EnkeltForetak extends Component {
 
     if (erOrgnrGyldig(nyttOrgnr)) {
       await hentOrganisasjon(nyttOrgnr);
-      this.props.oppdaterSoknadState(skjema);
+      this.props.oppdaterSoknadState();
     }
   }
 
@@ -91,7 +91,6 @@ EnkeltForetak.propTypes = {
   oppdaterSoknadState: PT.func.isRequired,
   posisjon: PT.number.isRequired,
   slettForetak: PT.func.isRequired,
-  skjema: PT.object.isRequired,
 };
 
 EnkeltForetak.defaultProps = {

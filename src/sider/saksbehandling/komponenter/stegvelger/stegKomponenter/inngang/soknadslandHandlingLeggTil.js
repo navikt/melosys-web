@@ -87,7 +87,7 @@ function SoknadslandHandlingLeggTil(props) {
       <div>
         {!erLeggTilIntensjon && (
           <Nav.Knapp onClick={settLeggTilIntensjon} className="knappMedIkon" disabled={!redigerbart}>
-            <Ikon kind="tilsette" /><div>Legg til nytt land</div>
+            <Ikon kind="tilsette" /><div>Legg til land</div>
           </Nav.Knapp>
         )}
 
