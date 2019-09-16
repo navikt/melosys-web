@@ -25,7 +25,7 @@ import { vedtakOperations } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
-import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore, AnmodningsperiodesvarStore } from './StegState';
+import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
 
 import './stegvelger.css';
 
@@ -34,10 +34,11 @@ class Stegvelger extends Component {
     aktivtStegNummer: 0,
     aktuelleSteg: [],
     stegStores: {
-      anmodningsperiodesvar: new AnmodningsperiodesvarStore(),
+      anmodningsperiodesvar: new EnkelDataStore(),
       avklartefakta: new AvklartefaktaStore(),
       vilkaar: new VilkaarStore(),
-      lovvalgsbestemmelse: new LovvalgsbestemmelseStore(),
+      lovvalgsbestemmelse: new EnkelDataStore(),
+      tilleggbestemmelse: new EnkelDataStore(),
     },
     visSoknadFeilmeldinger: false,
   };
