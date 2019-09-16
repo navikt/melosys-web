@@ -14,6 +14,9 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../duc
 
 import './saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../../felleskomponenter/datoOmrade/datoOmrade';
+import { createValidator } from '../../../../felleskomponenter/skjema/validering/skjemaer';
+import { endrePeriodeSkjema } from '../../unntaksperioder/validering/endrePeriodeSkjema';
+import { fritekstPakrevdSkjema } from '../validering/anmodningunntakSkjema';
 
 const uuid = require('uuid/v4');
 
@@ -34,10 +37,14 @@ RegisterkontrollTreff.propTypes = {
 };
 
 const Saksopplysninger = props => {
+  const {
+    medlemskap, sed, vurderingBegrunnelser, redigerbart,
+  } = props;
+
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
-  const [endretPeriodeFom, setEndretPeriodeFom] = useState(null);
-  const [endretPeriodeTom, setEndretPeriodeTom] = useState(null);
+  const [endretPeriodeFom, setEndretPeriodeFom] = useState('');
+  const [endretPeriodeTom, setEndretPeriodeTom] = useState('');
   const [feilmeldinger, setFeilmeldinger] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
 
   useEffect(() => {
@@ -46,6 +53,28 @@ const Saksopplysninger = props => {
       setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(props.sed.lovvalgsperiode.tom)}`);
     }
   }, [props]);
+
+  const validerFelt = () => {
+    let valideringsresultat;
+    switch (anmodningsperiodeSvarType) {
+      case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
+        return true;
+      case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
+        valideringsresultat = createValidator(endrePeriodeSkjema)({ fom: endretPeriodeFom, tom: endretPeriodeTom });
+        break;
+      case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
+        valideringsresultat = createValidator(fritekstPakrevdSkjema)({ fritekst: begrunnelseFritekst });
+        break;
+      default:
+        return false;
+    }
+
+    const validert = Utils._isEmpty(valideringsresultat);
+    if (!validert) {
+      setFeilmeldinger(valideringsresultat);
+    }
+    return validert;
+  };
 
   const overstyrSubmit = event => {
     event.preventDefault();
@@ -62,33 +91,38 @@ const Saksopplysninger = props => {
   });
 
   const submitRegistrering = async () => {
-    const { behandlingID, history } = props;
-    const tilForsiden = () => history.push('/');
-    const { INNVILGELSE, DELVIS_INNVILGELSE, AVSLAG } = MKV.Koder.anmodningsperiodesvartyper;
-    let response;
-    switch (anmodningsperiodeSvarType) {
-      case INNVILGELSE:
-        response = makeResponse(null, null);
-        break;
-      case DELVIS_INNVILGELSE:
-        response = makeResponse({ fom: endretPeriodeFom, tom: endretPeriodeTom }, null);
-        break;
-      case AVSLAG:
-        response = makeResponse(null, begrunnelseFritekst);
-        break;
-      default:
-        break;
-    }
-    try {
-      const data = await Api.Anmodningsperioder.hent(behandlingID);
-      const { anmodningsperioder } = data;
-      const anmodningsperiodeID = anmodningsperioder[0].id;
-      await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, response);
-    } catch (e) {
-      console.log(e);
-      return false;
-    } finally {
-      tilForsiden();
+    if (validerFelt()) {
+      const { behandlingID, history } = props;
+      const tilForsiden = () => history.push('/');
+      const { INNVILGELSE, DELVIS_INNVILGELSE, AVSLAG } = MKV.Koder.anmodningsperiodesvartyper;
+      let response;
+      switch (anmodningsperiodeSvarType) {
+        case INNVILGELSE:
+          response = makeResponse(null, null);
+          break;
+        case DELVIS_INNVILGELSE:
+          response = makeResponse({
+            fom: Utils.dato.formatterDatoTilISO(endretPeriodeFom),
+            tom: Utils.dato.formatterDatoTilISO(endretPeriodeTom),
+          }, null);
+          break;
+        case AVSLAG:
+          response = makeResponse(null, begrunnelseFritekst);
+          break;
+        default:
+          break;
+      }
+      try {
+        const data = await Api.Anmodningsperioder.hent(behandlingID);
+        const { anmodningsperioder } = data;
+        const anmodningsperiodeID = anmodningsperioder[0].id;
+        await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, response);
+      } catch (e) {
+        console.log(e);
+        return false;
+      } finally {
+        tilForsiden();
+      }
     }
     return true;
   };
@@ -99,10 +133,6 @@ const Saksopplysninger = props => {
       oppdater(nyDato);
     }
   };
-
-  const {
-    medlemskap, sed, vurderingBegrunnelser, redigerbart,
-  } = props;
 
   if (!sed.lovvalgsperiode) {
     return null;
@@ -147,28 +177,26 @@ const Saksopplysninger = props => {
               </Nav.Row>
               {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
                 <Nav.Row>
-                  <div className="endre_periode">
-                    <Nav.Column xs="3">
-                      <Nav.Input
-                        bredde="fullbredde"
-                        label="Startdato"
-                        value={endretPeriodeFom}
-                        onChange={e => setEndretPeriodeFom(e.target.value)}
-                        onBlur={e => formaterDato(e, setEndretPeriodeFom)}
-                        feil={feilmeldinger.fom}
-                        disabled={!redigerbart} />
-                    </Nav.Column>
-                    <Nav.Column xs="3">
-                      <Nav.Input
-                        bredde="fullbredde"
-                        label="Sluttdato"
-                        value={endretPeriodeTom}
-                        onChange={e => setEndretPeriodeTom(e.target.value)}
-                        onBlur={e => formaterDato(e, setEndretPeriodeTom)}
-                        feil={feilmeldinger.tom}
-                        disabled={!redigerbart} />
-                    </Nav.Column>
-                  </div>
+                  <Nav.Column xs="3">
+                    <Nav.Input
+                      bredde="fullbredde"
+                      label="Startdato"
+                      value={endretPeriodeFom}
+                      onChange={e => setEndretPeriodeFom(e.target.value)}
+                      onBlur={e => formaterDato(e, setEndretPeriodeFom)}
+                      feil={feilmeldinger.fom}
+                      disabled={!redigerbart} />
+                  </Nav.Column>
+                  <Nav.Column xs="3">
+                    <Nav.Input
+                      bredde="fullbredde"
+                      label="Sluttdato"
+                      value={endretPeriodeTom}
+                      onChange={e => setEndretPeriodeTom(e.target.value)}
+                      onBlur={e => formaterDato(e, setEndretPeriodeTom)}
+                      feil={feilmeldinger.tom}
+                      disabled={!redigerbart} />
+                  </Nav.Column>
                 </Nav.Row>
               )}
               {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
@@ -180,6 +208,7 @@ const Saksopplysninger = props => {
                         onChange={textAreaOnChange}
                         value={begrunnelseFritekst}
                         maxLength={255}
+                        feil={feilmeldinger.fritekst}
                         bredde="fullbredde" />
                     </Nav.Column>
                   </Nav.Row>
