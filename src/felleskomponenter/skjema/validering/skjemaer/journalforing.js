@@ -28,8 +28,8 @@ const journalforing = object().shape({
     .when('$brukerNavn', {
       is: '',
       then: string()
-        .throwErrorHvisVerdiHarOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR)
-        .throwErrorHvisVerdiHarFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
+        .harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR)
+        .harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
     }),
   avsenderID: lazy(value => (value === '' ?
     string()
@@ -43,8 +43,8 @@ const journalforing = object().shape({
           .when('avsenderNavn', {
             is: '',
             then: string()
-              .throwErrorHvisVerdiHarOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR)
-              .throwErrorHvisVerdiHarFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
+              .harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR)
+              .harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
           }),
       })
   )),
@@ -60,8 +60,8 @@ const journalforing = object().shape({
       .when('representantNavn', {
         is: '',
         then: string()
-          .throwErrorHvisVerdiHarOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR)
-          .throwErrorHvisVerdiHarFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
+          .harIkkeOrgnrLengde(FANT_INGEN_NAVN_PA_ORGNR)
+          .harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
       })
   )),
   saksnummer: string()
