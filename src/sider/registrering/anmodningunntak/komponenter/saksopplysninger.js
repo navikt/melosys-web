@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
@@ -33,57 +33,48 @@ RegisterkontrollTreff.propTypes = {
   begrunnelseKode: PT.string.isRequired,
 };
 
-class Saksopplysninger extends Component {
-  state = {
-    anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
-    begrunnelseFritekst: '',
-    endretPeriodeFom: null,
-    endretPeriodeTom: null,
-    feilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
-  };
+const Saksopplysninger = props => {
+  const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
+  const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
+  const [endretPeriodeFom, setEndretPeriodeFom] = useState(null);
+  const [endretPeriodeTom, setEndretPeriodeTom] = useState(null);
+  const [feilmeldinger, setFeilmeldinger] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.sed.lovvalgsperiode) {
-      this.setState({
-        endretPeriodeFom: `${Utils.dato.formatterDatoTilNorsk(nextProps.sed.lovvalgsperiode.fom)}`,
-        endretPeriodeTom: `${Utils.dato.formatterDatoTilNorsk(nextProps.sed.lovvalgsperiode.tom)}`,
-      });
+  useEffect(() => {
+    if (props.sed.lovvalgsperiode) {
+      setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(props.sed.lovvalgsperiode.fom)}`);
+      setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(props.sed.lovvalgsperiode.tom)}`);
     }
-  }
+  }, [props]);
 
-  overstyrSubmit = event => {
+  const overstyrSubmit = event => {
     event.preventDefault();
   };
-  textAreaOnChange = event => {
-    const begrunnelseFritekst = event.target.value;
-    this.setState({ begrunnelseFritekst });
+
+  const textAreaOnChange = event => {
+    setBegrunnelseFritekst(event.target.value);
   };
 
-  makeResponse = (endretPeriode = null, begrunnelseFritekst = null) => {
-    const { anmodningsperiodeSvarType } = this.state;
-    const response = {
-      anmodningsperiodeSvarType,
-      endretPeriode,
-      begrunnelseFritekst,
-    };
-    return response;
-  };
+  const makeResponse = (endretPeriode = null, fritekst = null) => ({
+    anmodningsperiodeSvarType,
+    endretPeriode,
+    begrunnelseFritekst: fritekst,
+  });
 
-  submitRegistrering = async () => {
-    const { behandlingID, history } = this.props;
+  const submitRegistrering = async () => {
+    const { behandlingID, history } = props;
     const tilForsiden = () => history.push('/');
-    const { anmodningsperiodeSvarType, begrunnelseFritekst } = this.state;
     const { INNVILGELSE, DELVIS_INNVILGELSE, AVSLAG } = MKV.Koder.anmodningsperiodesvartyper;
     let response;
     switch (anmodningsperiodeSvarType) {
       case INNVILGELSE:
-        response = this.makeResponse(null, null);
+        response = makeResponse(null, null);
         break;
       case DELVIS_INNVILGELSE:
-        response = this.makeResponse({ fom: this.state.endretPeriodeFom, tom: this.state.endretPeriodeTom }, null);
+        response = makeResponse({ fom: endretPeriodeFom, tom: endretPeriodeTom }, null);
         break;
       case AVSLAG:
-        response = this.makeResponse(null, begrunnelseFritekst);
+        response = makeResponse(null, begrunnelseFritekst);
         break;
       default:
         break;
@@ -102,112 +93,111 @@ class Saksopplysninger extends Component {
     return true;
   };
 
-  formaterDato = (event, felt) => {
+  const formaterDato = (event, oppdater) => {
     const nyDato = Utils.dato.vaskInputDato(event.target.value);
     if (nyDato) {
-      this.setState({ [felt]: nyDato });
+      oppdater(nyDato);
     }
   };
 
-  render() {
-    const {
-      medlemskap, sed, vurderingBegrunnelser, redigerbart,
-    } = this.props;
+  const {
+    medlemskap, sed, vurderingBegrunnelser, redigerbart,
+  } = props;
 
-    if (!sed.lovvalgsperiode) {
-      return null;
-    }
-    const { endretPeriodeFom, endretPeriodeTom, endrePeriodeFeilmeldinger } = this.state;
-    const unikRadioButtonGruppeID = uuid();
-    return (
-      <div>
-        <form name="anmodningunntak" id="anmodningunntak" onSubmit={this.overstyrSubmit}>
-          <div className="stegvelger panelSeksjon">
-            <div className="panel stegFane steg0 stegFane--aktiv">
-              <Nav.Systemtittel>Behandle anmoding om unntak</Nav.Systemtittel>
-              <br />
-              <div className="vurderUnntaksperiode">
-                <Nav.Row className="seksjon">
-                  <Nav.Column xs="12">
-                    <Nav.Element>Land:</Nav.Element>
-                    <Nav.Normaltekst>{KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})</Nav.Normaltekst>
-                  </Nav.Column>
+  if (!sed.lovvalgsperiode) {
+    return null;
+  }
+
+  const unikRadioButtonGruppeID = uuid();
+
+  return (
+    <div>
+      <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
+        <div className="stegvelger panelSeksjon">
+          <div className="panel stegFane steg0 stegFane--aktiv">
+            <Nav.Systemtittel>Behandle anmoding om unntak</Nav.Systemtittel>
+            <br />
+            <div className="vurderUnntaksperiode">
+              <Nav.Row className="seksjon">
+                <Nav.Column xs="12">
+                  <Nav.Element>Land:</Nav.Element>
+                  <Nav.Normaltekst>{KV.kodeTilTerm(sed.lovvalgslandKode, MKV.KTObjects.landkoder)}&nbsp;({sed.lovvalgslandKode})</Nav.Normaltekst>
+                </Nav.Column>
+              </Nav.Row>
+              <Nav.Row className="seksjon">
+                <Nav.Column xs="12">
+                  <DatoOmradeMedVarighet periode={sed.lovvalgsperiode} label="Søknadsperiode" />
+                </Nav.Column>
+              </Nav.Row>
+              <Nav.Row className="seksjon">
+                <Nav.Column xs="12">
+                  <Nav.Element>Treff ved automatisk kontroll</Nav.Element>
+                  {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
+                    <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
+                </Nav.Column>
+              </Nav.Row>
+              <Nav.Row className="seksjon">
+                <Nav.Column xs="12">
+                  <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => setAnmodningsperiodeSvarType(e.target.value)} disabled={!redigerbart}>
+                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.INNVILGELSE} defaultChecked />
+                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} />
+                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} label={MKV.Terms.anmodningsperiodesvartyper.AVSLAG} />
+                  </Nav.Fieldset>
+                </Nav.Column>
+              </Nav.Row>
+              {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
+                <Nav.Row>
+                  <div className="endre_periode">
+                    <Nav.Column xs="3">
+                      <Nav.Input
+                        bredde="fullbredde"
+                        label="Startdato"
+                        value={endretPeriodeFom}
+                        onChange={e => setEndretPeriodeFom(e.target.value)}
+                        onBlur={e => formaterDato(e, setEndretPeriodeFom)}
+                        feil={feilmeldinger.fom}
+                        disabled={!redigerbart} />
+                    </Nav.Column>
+                    <Nav.Column xs="3">
+                      <Nav.Input
+                        bredde="fullbredde"
+                        label="Sluttdato"
+                        value={endretPeriodeTom}
+                        onChange={e => setEndretPeriodeTom(e.target.value)}
+                        onBlur={e => formaterDato(e, setEndretPeriodeTom)}
+                        feil={feilmeldinger.tom}
+                        disabled={!redigerbart} />
+                    </Nav.Column>
+                  </div>
                 </Nav.Row>
-                <Nav.Row className="seksjon">
-                  <Nav.Column xs="12">
-                    <DatoOmradeMedVarighet periode={sed.lovvalgsperiode} label="Søknadsperiode" />
-                  </Nav.Column>
-                </Nav.Row>
-                <Nav.Row className="seksjon">
-                  <Nav.Column xs="12">
-                    <Nav.Element>Treff ved automatisk kontroll</Nav.Element>
-                    {vurderingBegrunnelser.begrunnelseKoder && vurderingBegrunnelser.begrunnelseKoder.map(begrunnelseKode =>
-                      <RegisterkontrollTreff key={uuid()} begrunnelseKode={begrunnelseKode} />)}
-                  </Nav.Column>
-                </Nav.Row>
-                <Nav.Row className="seksjon">
-                  <Nav.Column xs="12">
-                    <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => this.setState({ anmodningsperiodeSvarType: e.target.value })} disabled={!redigerbart}>
-                      <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.INNVILGELSE} defaultChecked />
-                      <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} />
-                      <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} label={MKV.Terms.anmodningsperiodesvartyper.AVSLAG} />
-                    </Nav.Fieldset>
-                  </Nav.Column>
-                </Nav.Row>
-                {this.state.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
+              )}
+              {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
+                <Fragment>
                   <Nav.Row>
-                    <div className="endre_periode">
-                      <Nav.Column xs="3">
-                        <Nav.Input
-                          bredde="fullbredde"
-                          label="Startdato"
-                          value={endretPeriodeFom}
-                          onChange={e => this.setState({ endretPeriodeFom: e.target.value })}
-                          onBlur={e => this.formaterDato(e, 'endretPeriodeFom')}
-                          feil={endrePeriodeFeilmeldinger.fom}
-                          disabled={!redigerbart} />
-                      </Nav.Column>
-                      <Nav.Column xs="3">
-                        <Nav.Input
-                          bredde="fullbredde"
-                          label="Sluttdato"
-                          value={endretPeriodeTom}
-                          onChange={e => this.setState({ endretPeriodeTom: e.target.value })}
-                          onBlur={e => this.formaterDato(e, 'endretPeriodeTom')}
-                          feil={endrePeriodeFeilmeldinger.tom}
-                          disabled={!redigerbart} />
-                      </Nav.Column>
-                    </div>
+                    <Nav.Column xs="6">
+                      <Nav.Textarea
+                        label="Skriv inn begrunnelse for avslaget..."
+                        onChange={textAreaOnChange}
+                        value={begrunnelseFritekst}
+                        maxLength={255}
+                        bredde="fullbredde" />
+                    </Nav.Column>
                   </Nav.Row>
-                )}
-                {this.state.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
-                  <Fragment>
-                    <Nav.Row>
-                      <Nav.Column xs="6">
-                        <Nav.Textarea
-                          label="Skriv inn begrunnelse for avslaget..."
-                          onChange={this.textAreaOnChange}
-                          value={this.state.begrunnelseFritekst}
-                          maxLength={255}
-                          bredde="fullbredde" />
-                      </Nav.Column>
-                    </Nav.Row>
-                  </Fragment>
-                )}
-                <Nav.Row className="seksjon">
-                  <Nav.Column xs="3">
-                    <Nav.Hovedknapp onClick={() => this.submitRegistrering()} disabled={!redigerbart}>Bekreft og fortsett</Nav.Hovedknapp>
-                  </Nav.Column>
-                </Nav.Row>
-              </div>
+                </Fragment>
+              )}
+              <Nav.Row className="seksjon">
+                <Nav.Column xs="3">
+                  <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>Bekreft og fortsett</Nav.Hovedknapp>
+                </Nav.Column>
+              </Nav.Row>
             </div>
           </div>
-        </form>
-        {medlemskap && <Medlemskap medlemskap={medlemskap} />}
-      </div>
-    );
-  }
-}
+        </div>
+      </form>
+      {medlemskap && <Medlemskap medlemskap={medlemskap} />}
+    </div>
+  );
+};
 
 
 Saksopplysninger.propTypes = {
