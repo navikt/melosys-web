@@ -20,6 +20,11 @@ class Yrkesgruppe extends Steg {
         nesteSteg: STEG.SOKKEL_SKIP,
       },
       {
+        beskrivelse: 'yrkesgruppeType ER LIK "FLYENDE_PERSONELL"',
+        exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL),
+        nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: null,
