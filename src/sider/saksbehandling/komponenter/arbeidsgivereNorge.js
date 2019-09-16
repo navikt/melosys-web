@@ -6,6 +6,7 @@ import PT from 'prop-types';
 import * as MPT from '../../../proptypes';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { soknadSelectors, soknadOperations } from '../../../ducks/soknad';
 import { OrganisasjonOperations, OrganisasjonSelectors } from '../../../ducks/organisasjoner';
 
@@ -70,7 +71,7 @@ const mapStateToProps = state => ({
   arbeidsgivereNorge: behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
   ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

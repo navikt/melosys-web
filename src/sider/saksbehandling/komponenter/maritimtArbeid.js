@@ -11,7 +11,7 @@ import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 
 import { formSelectors } from '../../../ducks/form';
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 
 import LandVelger from '../../../felleskomponenter/skjema/landvelger';
 import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
@@ -171,7 +171,7 @@ MaritimtArbeid.defaultProps = {
 
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 export default connect(mapStateToProps)(MaritimtArbeid);

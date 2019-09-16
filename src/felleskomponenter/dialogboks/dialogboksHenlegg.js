@@ -10,9 +10,9 @@ import { KodeTermSelect } from '../ui/kodeTermSelect';
 import Knapperad from '../knapperad';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../ducks/redigerbart';
 
 import './dialogboksHenlegg.css';
-
 
 export class DialogboksHenleggSak extends Component {
   state = {
@@ -166,7 +166,7 @@ DialogboksHenleggSak.defaultProps = {
 
 const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
 export default connect(mapStateToProps, null)(DialogboksHenleggSak);

@@ -103,6 +103,7 @@ class BrevBestilling extends Component {
       behandlingID,
       brevbestillingSkjemaVerdier,
       redigerbart,
+      brevBestillingRedigerbartIArtikkel13,
     } = this.props;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
 
@@ -118,6 +119,8 @@ class BrevBestilling extends Component {
 
     const placeholder = 'F.eks.: \u00ABOpplysninger om antall utsendte ansatte i perioden\u00BB, \u00ABOpplysninger om den ansatte erstatter en annen utsendt ansatt\u00BB.';
 
+    const disabled = !redigerbart || !brevBestillingRedigerbartIArtikkel13;
+
     return (
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
@@ -130,12 +133,12 @@ class BrevBestilling extends Component {
             </Skjema.Select>
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
-            <Skjema.Textarea disabled={!redigerbart} feltNavn="fritekst" label="Hva skal søker sende inn?" placeholder={placeholder} feil={undefined} />}
-            { behandlingID && redigerbart &&
+            <Skjema.Textarea disabled={disabled} feltNavn="fritekst" label="Hva skal søker sende inn?" placeholder={placeholder} feil={undefined} />}
+            { behandlingID && !disabled &&
               <PdfLenkeListe behandlingID={behandlingID} dokumenter={ForhandsvistePdfDokumenter} vedKlikk={this.validerBrev} />
             }
-            <Nav.Hovedknapp htmlType="submit" disabled={!redigerbart} onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>&nbsp;
-            <Nav.Knapp htmlType="reset" type="standard" disabled={!redigerbart} onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>
+            <Nav.Hovedknapp htmlType="submit" disabled={disabled} onClick={this.sendBrev}>Send brev</Nav.Hovedknapp>&nbsp;
+            <Nav.Knapp htmlType="reset" type="standard" disabled={disabled} onClick={this.forkastBrev}>Forkast Brev</Nav.Knapp>
             { this.state.erBrevSendt && <Nav.AlertStripe type="suksess" className="varsel">Brevet er sendt. Det kan ta noe tid før brevet vises i dokumentlisten.</Nav.AlertStripe> }
             { this.state.feilmelding && <Nav.AlertStripe type="advarsel" className="varsel">{this.state.feilmelding}</Nav.AlertStripe> }
           </Nav.Fieldset>
@@ -154,6 +157,7 @@ BrevBestilling.propTypes = {
   brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
   redigerbart: PT.bool.isRequired,
+  brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
 };
 BrevBestilling.defaultProps = {
   brevbestillingSkjemaVerdier: {},
@@ -162,7 +166,6 @@ BrevBestilling.defaultProps = {
 
 const form = {
   form: KV.Form.BREV_BESTILLING,
-  enableReinitialize: true,
   destroyOnUnmount: false,
   updateUnregisteredFields: true,
   validate: brevbestillingValidering,

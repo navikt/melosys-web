@@ -98,8 +98,8 @@ class Saksopplysninger extends Component {
       : dispatchSaksflyt());
 
   lagAvklartfakta = () => ({
-    referanse: MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE,
-    avklartefaktaKode: MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE,
+    referanse: MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE,
+    avklartefaktaKode: MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE,
     fakta: [this.props.endrePeriode.begrunnelse],
     subjektID: null,
     begrunnelseKoder: [],

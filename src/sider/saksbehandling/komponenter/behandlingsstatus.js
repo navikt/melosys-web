@@ -10,6 +10,7 @@ import * as Nav from '../../../utils/navFrontend';
 
 import * as MPT from '../../../proptypes';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { KodeTermSelect } from '../../../felleskomponenter/ui/kodeTermSelect';
 
 import './sideOppsummering.css';
@@ -41,7 +42,7 @@ class BehandlingsStatus extends Component {
       return false;
     }
     const { oppdaterBehandlingsStatus, behandlingID } = this.props;
-    const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.status);
+    const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.behandlingsstatus);
     const nyBehandlingsStatus = { kode, term };
     Api.Behandlinger.status.oppdaterStatus(behandlingID, kode).then(() => {
       oppdaterBehandlingsStatus(nyBehandlingsStatus);
@@ -54,29 +55,29 @@ class BehandlingsStatus extends Component {
     let endreStatusValg = [];
 
     switch (kode) {
-      case MKV.Koder.behandlinger.status.VURDER_DOKUMENT:
+      case MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT:
         endreStatusValg = [
-          { kode: MKV.Koder.behandlinger.status.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.status.AVVENT_DOK_UTL },
-          { kode: MKV.Koder.behandlinger.status.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.status.AVVENT_DOK_PART },
+          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
+          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
         ];
         break;
-      case MKV.Koder.behandlinger.status.AVVENT_DOK_UTL:
+      case MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL:
         endreStatusValg = [
-          { kode: MKV.Koder.behandlinger.status.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.status.AVVENT_DOK_PART },
+          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
         ];
         break;
-      case MKV.Koder.behandlinger.status.AVVENT_DOK_PART:
+      case MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART:
         endreStatusValg = [
-          { kode: MKV.Koder.behandlinger.status.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.status.AVVENT_DOK_UTL },
+          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
         ];
         break;
-      case MKV.Koder.behandlinger.status.UNDER_BEHANDLING:
+      case MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING:
         return [];
       default:
         return [];
     }
 
-    endreStatusValg = [...endreStatusValg, { kode: MKV.Koder.behandlinger.status.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.status.UNDER_BEHANDLING }];
+    endreStatusValg = [...endreStatusValg, { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING }];
     return endreStatusValg;
   };
 
@@ -124,8 +125,8 @@ BehandlingsStatus.defaultProps = {
 
 const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
-  endreLovvalgsperiodeRedigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  endreLovvalgsperiodeRedigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
