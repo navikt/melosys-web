@@ -6,9 +6,8 @@ import PT from 'prop-types';
 import * as MPT from '../../../proptypes';
 
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { soknadSelectors, soknadActions } from '../../../ducks/soknad';
+import { soknadSelectors, soknadOperations } from '../../../ducks/soknad';
 import { OrganisasjonOperations, OrganisasjonSelectors } from '../../../ducks/organisasjoner';
-import { formSelectors } from '../../../ducks/form';
 
 import Organisasjon from './arbeidsgiver/organisasjon';
 import Arbeidsforholdene from './arbeidsgiver/arbeidsforhold';
@@ -42,7 +41,7 @@ ArbeidsgivereEnkeltNorge.propTypes = {
 
 const ArbeidsgivereNorge = props => {
   const {
-    arbeidsgivereNorge, hentOrganisasjon, organisasjoner, redigerbart,
+    arbeidsgivereNorge, hentOrganisasjon, organisasjoner, redigerbart, oppdaterSoknadState,
   } = props;
 
   return (
@@ -54,7 +53,7 @@ const ArbeidsgivereNorge = props => {
         organisasjoner={organisasjoner}
         hentOrganisasjon={hentOrganisasjon}
         redigerbart={redigerbart}
-        oppdaterSoknadState={() => props.oppdaterSoknadState(props.skjema)} />
+        oppdaterSoknadState={oppdaterSoknadState} />
     </div>
   );
 };
@@ -63,7 +62,6 @@ ArbeidsgivereNorge.propTypes = {
   arbeidsgivereNorge: MPT.ArbeidsgivereNorge.isRequired,
   organisasjoner: MPT.Organisasjoner.isRequired,
   hentOrganisasjon: PT.func.isRequired,
-  skjema: PT.object.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
 };
@@ -72,13 +70,12 @@ const mapStateToProps = state => ({
   arbeidsgivereNorge: behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
   ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
-  skjema: formSelectors.SoknadenFormSelector(state).values,
   redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   hentOrganisasjon: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
-  oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
+  oppdaterSoknadState: () => dispatch(soknadOperations.oppdaterSoknadState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ArbeidsgivereNorge);

@@ -9,6 +9,7 @@ import * as Utils from '../../../../../utils';
 import * as Validering from '../../../../../felleskomponenter/skjema/validering';
 import * as Skjema from '../../../../../felleskomponenter/skjema';
 import * as KV from '../../../../../kodeverk';
+import * as MPT from '../../../../../proptypes';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 
@@ -16,22 +17,56 @@ import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../../../ducks/lovvalgsperioder';
 import { soknadSelectors } from '../../../../../ducks/soknad';
 
-import './vurderingArtikkel13_1_a_vedtak.css';
+import './vurderingArtikkel13_1_vedtak.css';
 
-export const VurderingArtikkel13_1_A_Vedtak = props => {
+export const VurderingArtikkel13_1_Vedtak = props => {
   const {
-    redigerbart, behandlingID, lovvalgsperiode, lagreOgFatteVedtak, formIsValid, formValues, touch, endreLovvalgsPeriode,
+    redigerbart,
+    behandlingID,
+    lovvalgsperiode,
+    lagreOgFatteVedtak,
+    formIsValid,
+    formValues,
+    touch,
+    endreLovvalgsPeriode,
+    tilstand: { overskrift },
+    lagreLovvalgsperioder,
+    byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   } = props;
 
-  const vedKlikk = async () => {
+  const vedCheck = e => {
+    if (e.target.value === 'true') {
+      gjenopprettOpprinneligLovvalgsperiode();
+    }
+  };
+
+  const validerForm = () => {
     touch('tomDato');
-    if (!formIsValid) return;
+    return formIsValid;
+  };
+
+  const forkortLovvalgsperiode = () => endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+
+  const vedKlikkVedtak = async () => {
+    if (!validerForm()) return;
 
     if (formValues.forkortLovvalgsperiode) {
-      await endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+      await forkortLovvalgsperiode();
     }
 
     lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND);
+  };
+
+  const vedKlikkForhandsvis = async () => {
+    if (!validerForm()) return false;
+
+    if (formValues.forkortLovvalgsperiode) {
+      await forkortLovvalgsperiode();
+    }
+
+    lagreLovvalgsperioder();
+
+    return true;
   };
 
   const dokumenter = [
@@ -56,7 +91,7 @@ export const VurderingArtikkel13_1_A_Vedtak = props => {
 
   return (
     <Fragment>
-      <Nav.Undertittel>Omfattet av norsk lovgivning, etter artikkel 13, nr 1, a</Nav.Undertittel>
+      <Nav.Undertittel>{overskrift}</Nav.Undertittel>
       {
         redigerbart &&
         <Fragment>
@@ -70,7 +105,7 @@ export const VurderingArtikkel13_1_A_Vedtak = props => {
       }
       <Nav.Row className="checkboxRow">
         <Nav.Column xs="6">
-          <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalgsperioden er avkortet." disabled={!redigerbart} />
+          <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalgsperioden er avkortet." disabled={!redigerbart} onClick={vedCheck} />
         </Nav.Column>
       </Nav.Row>
       {
@@ -99,43 +134,48 @@ export const VurderingArtikkel13_1_A_Vedtak = props => {
       }
       <Nav.Row>
         <Nav.Column xs="6">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
+          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={vedKlikkForhandsvis} />}
         </Nav.Column>
       </Nav.Row>
-      <Nav.Hovedknapp onClick={vedKlikk} disabled={!redigerbart} type="hoved">FATT VEDTAK</Nav.Hovedknapp>
+      <Nav.Hovedknapp onClick={vedKlikkVedtak} disabled={!redigerbart} type="hoved">FATT VEDTAK</Nav.Hovedknapp>
     </Fragment>
   );
 };
 
-VurderingArtikkel13_1_A_Vedtak.propTypes = {
+VurderingArtikkel13_1_Vedtak.propTypes = {
+  tilstand: PT.shape({
+    overskrift: PT.string.isRequired,
+  }).isRequired,
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
-  lovvalgsperiode: PT.object,
+  lovvalgsperiode: MPT.Periode,
   lagreOgFatteVedtak: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
   formValues: PT.object,
   touch: PT.func.isRequired,
   endreLovvalgsPeriode: PT.func.isRequired,
+  byggLovvalgsperioder: PT.func.isRequired,
+  lagreLovvalgsperioder: PT.func.isRequired,
 };
 
-VurderingArtikkel13_1_A_Vedtak.defaultProps = {
+VurderingArtikkel13_1_Vedtak.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, ownProps) => ({
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  formIsValid: isValid(KV.Form.ARTIKKEL_13_1_A_VEDTAK)(state),
-  formValues: getFormValues(KV.Form.ARTIKKEL_13_1_A_VEDTAK)(state),
+  formIsValid: isValid(KV.Form.ARTIKKEL_13_1_VEDTAK)(state),
+  formValues: getFormValues(KV.Form.ARTIKKEL_13_1_VEDTAK)(state),
   initialValues: {
     forkortLovvalgsperiode: Utils.dato.datoDiffPure(
       soknadSelectors.SoknadsperiodeSelector(state).tom,
       lovvalgsperioderSelectors.TomDatoSelector(state),
       'days'
     ) !== 0,
-    tomDato: behandlingerSelectors.RedigerbartSelector(state) ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
+    tomDato: ownProps.redigerbart ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
     fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
   },
 });
@@ -144,17 +184,17 @@ const mapDispatchToProps = dispatch => ({
   endreLovvalgsPeriode: (fomdato, tomdato) => dispatch(lovvalgsperioderOperations.endreLovvalgsPeriode(fomdato, tomdato)),
 });
 
-const VurderingArtikkel13_1_a_vedtak_form = reduxForm({
-  form: KV.Form.ARTIKKEL_13_1_A_VEDTAK,
+const VurderingArtikkel13_1_vedtak_form = reduxForm({
+  form: KV.Form.ARTIKKEL_13_1_VEDTAK,
   enableReinitialize: true,
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.createValidator(Validering.Skjemaer.artikkel13_1_a_vedtak, {
+  validate: (values, props) => Validering.Skjemaer.createValidator(Validering.Skjemaer.artikkel13_1_vedtak, {
     context: {
       lovvalgsperiode: props.lovvalgsperiode,
     },
   })(values),
-})(VurderingArtikkel13_1_A_Vedtak);
+})(VurderingArtikkel13_1_Vedtak);
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel13_1_a_vedtak_form);
+export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel13_1_vedtak_form);
