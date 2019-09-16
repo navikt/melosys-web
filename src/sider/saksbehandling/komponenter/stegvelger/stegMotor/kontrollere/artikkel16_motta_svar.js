@@ -28,7 +28,7 @@ class Artikkel16MottaSvar extends Steg {
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => ({
-      svarAnmodningUnntakAvklartfakta: hentFakta(MKV.Koder.avklartefakta.SVAR_ANMODNING_UNNTAK, _propsLight.avklartefakta),
+      svarAnmodningUnntakAvklartfakta: hentFakta(MKV.Koder.avklartefaktatyper.SVAR_ANMODNING_UNNTAK, _propsLight.avklartefakta),
       harAvklaring: Artikkel16MottaSvar.finnAvklaring(_propsLight.anmodningsperiodesvar),
     });
     this.handlers = {

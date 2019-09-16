@@ -328,13 +328,13 @@ class Journalforing extends Component {
                         hentOgVisBruker={hentOgVisBruker}
                       />
                       <EksisterendeSaker
-                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
+                        behandlingstyper={MKV.KTObjects.behandlinger.behandlingstyper}
                         fagsakListe={fagsakListe}
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                       />
                       <OpprettNyFagSak
                         sakstyper={MKV.KTObjects.sakstyper}
-                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
+                        behandlingstyper={MKV.KTObjects.behandlinger.behandlingstyper}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
                       />
@@ -424,7 +424,7 @@ const mapStateToProps = state => ({
       logiskeTitler: [],
     },
     sakstype: MKV.Koder.sakstyper.EU_EOS,
-    opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
+    opprettnysak_behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
     ingenVurdering: false,
     skalTilordnes: false,
   },

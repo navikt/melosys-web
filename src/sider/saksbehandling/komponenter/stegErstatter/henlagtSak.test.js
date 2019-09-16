@@ -12,7 +12,7 @@ describe('Henlagtsak', () => {
   beforeEach(() => {
     props = {
       behandlingsresultat: {
-        behandlingsresultatTypeKode: MKV.Koder.behandlinger.resultattyper.HENLEGGELSE,
+        behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.HENLEGGELSE,
         begrunnelseFritekst: null,
         begrunnelseKoder: [MKV.Koder.begrunnelser.henleggelsesgrunner.SOEKNADEN_TRUKKET],
       },

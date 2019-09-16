@@ -264,6 +264,10 @@ export const AvklarteVirksomheterSelector = createSelector(
   }
 );
 
+export const EnVirksomhetErAvklartSelector = createSelector(
+  AvklarteVirksomheterSelector,
+  avklarteVirksomheter => avklarteVirksomheter.length === 1
+);
 
 export const AvklartefaktaVurderingSelector = createSelector(
   state => AvklartefaktaSelector(state).vurdering,
@@ -278,4 +282,11 @@ export const BostedslandSelector = createSelector(
     const bostedslandkode = hentFaktaVerdi(avklartFakta);
     return MKV.KTObjects.landkoder.find(enkeltLand => enkeltLand.kode === bostedslandkode);
   }
+);
+
+export const ErIArtikkel13_1FlytSelector = createSelector(
+  AvklartefaktaSelector,
+  avklarteFakta => (
+    avklarteFakta.some(avklartFakta => avklartFakta.fakta.includes(KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND))
+  )
 );
