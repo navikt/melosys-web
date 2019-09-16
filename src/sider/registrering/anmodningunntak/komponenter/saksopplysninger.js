@@ -4,7 +4,7 @@ import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as KV from '../../../../kodeverk';
-// import * as Utils from '../../../../utils';
+import * as Utils from '../../../../utils';
 import * as Api from '../../../../services/api';
 import * as MPT from '../../../../proptypes';
 import * as Nav from '../../../../utils/navFrontend';
@@ -14,7 +14,6 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../duc
 
 import './saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../../felleskomponenter/datoOmrade/datoOmrade';
-import * as Utils from '../../../../utils';
 
 const uuid = require('uuid/v4');
 
@@ -38,10 +37,19 @@ class Saksopplysninger extends Component {
   state = {
     anmodningsperiodeSvarType: MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE,
     begrunnelseFritekst: '',
-    endretPeriodeFom: null, // this.props.sed.lovvalgsperiode.fom,
-    endretPeriodeTom: null, // this.props.sed.lovvalgsperiode.tom,
-    endrePeriodeFeilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
+    endretPeriodeFom: null,
+    endretPeriodeTom: null,
+    feilmeldinger: { fom: undefined, tom: undefined, fritekst: undefined },
   };
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.sed.lovvalgsperiode) {
+      this.setState({
+        endretPeriodeFom: `${Utils.dato.formatterDatoTilNorsk(nextProps.sed.lovvalgsperiode.fom)}`,
+        endretPeriodeTom: `${Utils.dato.formatterDatoTilNorsk(nextProps.sed.lovvalgsperiode.tom)}`,
+      });
+    }
+  }
 
   overstyrSubmit = event => {
     event.preventDefault();
@@ -94,14 +102,11 @@ class Saksopplysninger extends Component {
     return true;
   };
 
-  formaterFom = event => {
+  formaterDato = (event, felt) => {
     const nyDato = Utils.dato.vaskInputDato(event.target.value);
-    this.setState({ endretPeriodeFom: nyDato });
-  };
-
-  formaterTom = event => {
-    const nyDato = Utils.dato.vaskInputDato(event.target.value);
-    this.setState({ endretPeriodeTom: nyDato });
+    if (nyDato) {
+      this.setState({ [felt]: nyDato });
+    }
   };
 
   render() {
@@ -150,7 +155,7 @@ class Saksopplysninger extends Component {
                   </Nav.Column>
                 </Nav.Row>
                 {this.state.anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
-                  <Nav.Row className="seksjon">
+                  <Nav.Row>
                     <div className="endre_periode">
                       <Nav.Column xs="3">
                         <Nav.Input
@@ -158,7 +163,7 @@ class Saksopplysninger extends Component {
                           label="Startdato"
                           value={endretPeriodeFom}
                           onChange={e => this.setState({ endretPeriodeFom: e.target.value })}
-                          onBlur={e => this.formaterFom(e)}
+                          onBlur={e => this.formaterDato(e, 'endretPeriodeFom')}
                           feil={endrePeriodeFeilmeldinger.fom}
                           disabled={!redigerbart} />
                       </Nav.Column>
@@ -168,7 +173,7 @@ class Saksopplysninger extends Component {
                           label="Sluttdato"
                           value={endretPeriodeTom}
                           onChange={e => this.setState({ endretPeriodeTom: e.target.value })}
-                          onBlur={e => this.formaterTom(e)}
+                          onBlur={e => this.formaterDato(e, 'endretPeriodeTom')}
                           feil={endrePeriodeFeilmeldinger.tom}
                           disabled={!redigerbart} />
                       </Nav.Column>
