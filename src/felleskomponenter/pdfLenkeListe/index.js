@@ -15,9 +15,12 @@ class PdfLenkeListe extends Component {
     kanForhandsviseSed: false,
   };
 
-  componentDidMount() {
-    Utils.feature.namespaceToggle('q2', 't8')
-      .then(kanVises => this.setState({ kanForhandsviseSed: kanVises }));
+  async componentDidMount() {
+    this.oppdaterKanForhandsviseSed(await Utils.feature.namespaceToggle('q2', 't8'));
+  }
+
+  oppdaterKanForhandsviseSed(kanVises) {
+    this.setState({ kanForhandsviseSed: kanVises });
   }
 
   klikk = async dokument => {
