@@ -92,7 +92,7 @@ addMethod(string, 'erOrgnr', function(message) {
   });
 });
 
-addMethod(string, 'throwErrorHvisVerdiHarOrgnrLengde', function(message) {
+addMethod(string, 'harIkkeOrgnrLengde', function(message) {
   return this.test('er orgnrlengde', message, function(value) {
     const { path, createError } = this;
 
@@ -107,7 +107,7 @@ addMethod(string, 'throwErrorHvisVerdiHarOrgnrLengde', function(message) {
   });
 });
 
-addMethod(string, 'throwErrorHvisVerdiHarFnrEllerDnrLengde', function(message) {
+addMethod(string, 'harIkkeFnrEllerDnrLengde', function(message) {
   return this.test('er fnr eller dnr lengde', message, function(value) {
     const { path, createError } = this;
 
