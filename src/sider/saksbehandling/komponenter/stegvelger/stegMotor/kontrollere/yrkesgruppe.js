@@ -3,6 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesgruppe from '../../stegKomponenter/vurderingYrkesgruppe';
 import * as KV from '../../../../../../kodeverk';
 import { hentFakta } from '../../../../../../regler/avklartefakta';
+import { hentTilleggBestemmelse } from '../../../../../../regler/tilleggbestemmelser';
 
 class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -37,8 +38,10 @@ class Yrkesgruppe extends Steg {
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
+      const tilleggbestemmelse = hentTilleggBestemmelse(_propsLight.lovvalgsperioder);
       const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, _propsLight.avklartefakta);
       return ({
+        tilleggbestemmelse,
         harAvklaring: yrkesgruppe.fakta && yrkesgruppe.fakta.length > 0,
         yrkesgruppe,
       });

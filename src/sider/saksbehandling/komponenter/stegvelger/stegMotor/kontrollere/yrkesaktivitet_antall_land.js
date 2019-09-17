@@ -12,7 +12,8 @@ class YrkesaktivitetAntallLand extends Steg {
       {
         beskrivelse: 'yrkesgruppeType ER LIK "ORDINAER" OG yrkesaktivitetAntallLand ER LIK "ET_LAND_IKKE_NORGE"',
         exec: avklartefakta => (
-          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) &&
+          (Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) ||
+          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL)) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE)
         ),
         nesteSteg: STEG.VIRKSOMHETER,
@@ -28,7 +29,8 @@ class YrkesaktivitetAntallLand extends Steg {
       {
         beskrivelse: 'yrkesgruppeType ER LIK "ORDINAER" OG yrkesaktivitetAntallLand ER LIK "TO_ELLER_FLERE_LAND"',
         exec: avklartefakta => (
-          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) &&
+          (Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER) ||
+          Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL)) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND)
         ),
         nesteSteg: STEG.VIRKSOMHETER,

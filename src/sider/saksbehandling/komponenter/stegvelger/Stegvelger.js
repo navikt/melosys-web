@@ -126,13 +126,16 @@ class Stegvelger extends Component {
 
     const { aktivtStegNummer, stegStores } = this.state;
     const {
-      vilkaar, avklartefakta, lovvalgsbestemmelse, anmodningsperiodesvar,
+      vilkaar, avklartefakta, lovvalgsbestemmelse, anmodningsperiodesvar, tilleggbestemmelse,
     } = stegStores;
 
     await Promise.all([
       this.props.oppdaterVilkaar(vilkaar.hent()),
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
-      this.props.oppdaterLovvalgperioder(lovvalgsbestemmelse.hent()),
+      this.props.oppdaterLovvalgperioder({
+        lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+        tilleggbestemmelse: tilleggbestemmelse.hent(),
+      }),
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
 
@@ -183,11 +186,21 @@ class Stegvelger extends Component {
   };
 
   byggLovvalgsperioderHandler = () => {
-    this.props.oppdaterLovvalgperioder(this.state.stegStores.lovvalgsbestemmelse.hent());
+    const { lovvalgsbestemmelse, tilleggbestemmelse } = this.state.stegStores;
+
+    this.props.oppdaterLovvalgperioder({
+      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+      tilleggbestemmelse: tilleggbestemmelse.hent(),
+    });
   };
 
   byggAnmodningsperioderHandler = () => {
-    this.props.oppdaterAnmodningsPerioder(this.state.stegStores.lovvalgsbestemmelse.hent());
+    const { lovvalgsbestemmelse, tilleggbestemmelse } = this.state.stegStores;
+
+    this.props.oppdaterAnmodningsPerioder({
+      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+      tilleggbestemmelse: tilleggbestemmelse.hent(),
+    });
   };
 
   endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {

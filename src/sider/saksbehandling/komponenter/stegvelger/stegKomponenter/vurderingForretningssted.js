@@ -135,7 +135,7 @@ const VurderingForretningssted = props => {
       label: '13.1 b iv: Flere arbeidsgivere, med forretningssted i flere land, hvorav flere enn to er utenfor Norge',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_987_2009.FO_987_2009_ART14_11,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11,
       label: '14.11: Forordning 987, artikkel 14: arbeidsgiver utenfor EU/EØS-område',
     },
   ];
