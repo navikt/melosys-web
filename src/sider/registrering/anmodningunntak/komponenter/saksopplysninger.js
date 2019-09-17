@@ -135,6 +135,11 @@ const Saksopplysninger = props => {
     }
   };
 
+  const oppdaterDato = (event, oppdater) => {
+    event.stopPropagation();
+    oppdater(event.target.value);
+  };
+
   if (!sed.lovvalgsperiode) {
     return null;
   }
@@ -172,34 +177,34 @@ const Saksopplysninger = props => {
                   <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => setAnmodningsperiodeSvarType(e.target.value)} disabled={!redigerbart}>
                     <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.INNVILGELSE} defaultChecked />
                     <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} />
+                    {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
+                      <Nav.Row>
+                        <Nav.Column xs="3">
+                          <Nav.Input
+                            bredde="fullbredde"
+                            label="Startdato"
+                            value={endretPeriodeFom}
+                            onChange={e => oppdaterDato(e, setEndretPeriodeFom)}
+                            onBlur={e => formaterDato(e, setEndretPeriodeFom)}
+                            feil={feilmeldinger.fom}
+                            disabled={!redigerbart} />
+                        </Nav.Column>
+                        <Nav.Column xs="3">
+                          <Nav.Input
+                            bredde="fullbredde"
+                            label="Sluttdato"
+                            value={endretPeriodeTom}
+                            onChange={e => oppdaterDato(e, setEndretPeriodeTom)}
+                            onBlur={e => formaterDato(e, setEndretPeriodeTom)}
+                            feil={feilmeldinger.tom}
+                            disabled={!redigerbart} />
+                        </Nav.Column>
+                      </Nav.Row>
+                    )}
                     <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} label={MKV.Terms.anmodningsperiodesvartyper.AVSLAG} />
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>
-              {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
-                <Nav.Row>
-                  <Nav.Column xs="3">
-                    <Nav.Input
-                      bredde="fullbredde"
-                      label="Startdato"
-                      value={endretPeriodeFom}
-                      onChange={e => setEndretPeriodeFom(e.target.value)}
-                      onBlur={e => formaterDato(e, setEndretPeriodeFom)}
-                      feil={feilmeldinger.fom}
-                      disabled={!redigerbart} />
-                  </Nav.Column>
-                  <Nav.Column xs="3">
-                    <Nav.Input
-                      bredde="fullbredde"
-                      label="Sluttdato"
-                      value={endretPeriodeTom}
-                      onChange={e => setEndretPeriodeTom(e.target.value)}
-                      onBlur={e => formaterDato(e, setEndretPeriodeTom)}
-                      feil={feilmeldinger.tom}
-                      disabled={!redigerbart} />
-                  </Nav.Column>
-                </Nav.Row>
-              )}
               {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG && (
                 <Fragment>
                   <Nav.Row>
