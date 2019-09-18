@@ -6,7 +6,6 @@ import * as MPT from '../../../../proptypes';
 import * as RegistreringContext from '../../state/registreringContext';
 
 import { formatterDatoTilNorsk } from '../../../../utils/dato';
-import { soknadSelectors } from '../../../../ducks/soknad';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
@@ -24,16 +23,13 @@ const SideOppsummering = props => {
     person,
     soknadsperiodeFom,
     soknadsperiodeTom,
-  } = props;
-
-  if (!oppsummering) return <div />;
-
-  const {
     lagreOgLukkHandle,
     tilbakeleggeHandle,
     arbeidsland,
     endreLovvalgsperiodeRedigerbart,
   } = props;
+
+  if (!oppsummering) return <div />;
 
   const apneTidligereBehandlinger = () => {
     const URI_SOK = `/sok/${props.person.fnr}`;
@@ -119,8 +115,8 @@ const mapStateToProps = state => ({
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   endreLovvalgsperiodeRedigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
-  soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
+  soknadsperiodeFom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
+  soknadsperiodeTom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
 });
 

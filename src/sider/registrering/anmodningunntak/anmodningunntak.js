@@ -18,7 +18,6 @@ import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/be
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { oppgaverOperations } from '../../../ducks/oppgaver';
-import { soknadOperations, soknadSelectors } from '../../../ducks/soknad';
 
 import './registrering.css';
 
@@ -26,7 +25,7 @@ import { saksopplysningerOperations } from '../../../ducks/saksopplysninger';
 import { RegistreringStateProviderWrapper } from '../state/registreringStateProvider';
 
 const Anmodningunntak = props => {
-  const [saksnummer, setSaksnummer] = React.useState('0');
+  const [saksnummer, setSaksnummer] = React.useState(null);
   const [behandlingID, setBehandlingID] = React.useState(-1);
   const [oppfriskDialog, visOppfriskDialog] = React.useState(false);
   const [henleggDialog, visHenleggDialog] = React.useState(false);
@@ -47,14 +46,13 @@ const Anmodningunntak = props => {
     setBehandlingID(Utils._toInteger(_behandlingID));
 
     const {
-      hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder, hentSoknad,
+      hentAvklartefakta, hentBehandling, hentFagsaker, hentLovvalgsperioder,
     } = props;
     try {
       await Promise.all([
         hentBehandling(_behandlingID),
         hentFagsaker(snr),
         hentAvklartefakta(_behandlingID),
-        hentSoknad(_behandlingID),
         hentLovvalgsperioder(_behandlingID),
       ]);
     } catch (e) {
@@ -63,8 +61,8 @@ const Anmodningunntak = props => {
   };
 
   const henleggSak = async data => {
-    const { fagsak: { saksnummer } } = props;
-    Api.Fagsaker.fagsak.henlegg(saksnummer, data);
+    const { fagsak: { saksnummer: snr } } = props;
+    Api.Fagsaker.fagsak.henlegg(snr, data);
   };
   const hentBehandlingStatus = async () => {
     const oppfriskning = await Api.Saksopplysninger.sjekkStatus(behandlingID);
@@ -189,7 +187,6 @@ Anmodningunntak.propTypes = {
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
   hentOppgaveOversikt: PT.func.isRequired,
-  hentSoknad: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
   tilbakeleggOppgave: PT.func.isRequired,
   oppfriskSaksopplysninger: PT.func.isRequired,
@@ -202,7 +199,6 @@ Anmodningunntak.propTypes = {
   oppsummering: MPT.Behandlinger.Oppsummering,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   sed: MPT.Behandlinger.Saksopplysninger.SED,
-  soknad: MPT.Soknad,
   history: PT.object.isRequired,
   match: PT.object.isRequired,
   location: PT.object.isRequired,
@@ -214,7 +210,6 @@ Anmodningunntak.defaultProps = {
   medlemskap: {},
   oppsummering: {},
   sed: {},
-  soknad: {},
   vurderingBegrunnelser: {},
 };
 const mapStateToProps = state => ({
@@ -227,7 +222,6 @@ const mapStateToProps = state => ({
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   sed: behandlingerSelectors.SEDSelector(state),
-  soknad: soknadSelectors.SoknadSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -236,9 +230,7 @@ const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  hentSoknad: behandlingID => dispatch(soknadOperations.hent(behandlingID)),
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
-  sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
 });
