@@ -1,10 +1,10 @@
 import React from 'react';
-import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
+import * as Utils from '../../utils';
 
 import Behandling from './behandling';
 import PanelHeader from '../panelHeader/panelHeader';
@@ -26,17 +26,6 @@ const Fagsak = ({ sak }) => {
     saksnummer,
     behandlingOversikter,
   } = sak;
-
-  const behandlingUrl = behandling => {
-    const { behandlingstype, behandlingID } = behandling;
-    const queryParams = `?behandlingID=${behandlingID}`;
-
-    if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD
-        || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
-      return `/registrering/${saksnummer}/${queryParams}`;
-    }
-    return `/saksbehandling/${saksnummer}/${queryParams}`;
-  };
 
   const {
     soknadsperiode,
@@ -80,7 +69,7 @@ const Fagsak = ({ sak }) => {
         <Nav.Row className="fagsak__behandlinger">
           {
             behandlingOversikter.map(behandling =>
-              <Behandling key={behandling.behandlingID} behandling={behandling} link={behandlingUrl(behandling)} />)
+              <Behandling key={behandling.behandlingID} behandling={behandling} link={Utils.url.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstype)} />)
           }
         </Nav.Row>
       </Nav.Container>

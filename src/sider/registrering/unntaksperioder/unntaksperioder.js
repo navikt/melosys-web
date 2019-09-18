@@ -26,7 +26,7 @@ import { saksopplysningerOperations } from '../../../ducks/saksopplysninger';
 import { RegistreringStateProviderWrapper } from '../state/registreringStateProvider';
 
 const Unntaksperioder = props => {
-  const [saksnummer, setSaksnummer] = React.useState('0');
+  const [saksnummer, setSaksnummer] = React.useState(null);
   const [behandlingID, setBehandlingID] = React.useState(-1);
   const [oppfriskDialog, visOppfriskDialog] = React.useState(false);
   const [henleggDialog, visHenleggDialog] = React.useState(false);
@@ -63,8 +63,8 @@ const Unntaksperioder = props => {
   };
 
   const henleggSak = async data => {
-    const { fagsak: { saksnummer } } = props;
-    Api.Fagsaker.fagsak.henlegg(saksnummer, data);
+    const { fagsak: { saksnummer: snr } } = props;
+    Api.Fagsaker.fagsak.henlegg(snr, data);
   };
   const hentBehandlingStatus = async () => {
     const oppfriskning = await Api.Saksopplysninger.sjekkStatus(behandlingID);
