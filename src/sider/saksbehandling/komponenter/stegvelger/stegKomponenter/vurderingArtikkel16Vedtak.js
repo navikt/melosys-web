@@ -240,7 +240,7 @@ export const VurderingArtikkel16Vedtak = props => {
   const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = anmodningsperiodesvar;
 
   const vedKlikk = () => {
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND);
+    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND);
   };
 
   const renderBegrunnelser = () => (
@@ -287,7 +287,7 @@ export const VurderingArtikkel16Vedtak = props => {
       { vedtakInnhold }
       <Nav.Row>
         <Nav.Column xs="7">
-          <Nav.Hovedknapp disabled={!redigerbart} type="hoved" onClick={vedKlikk}>FATT VEDTAK</Nav.Hovedknapp>
+          <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikk}>FATT VEDTAK</Nav.Hovedknapp>
         </Nav.Column>
       </Nav.Row>
     </Fragment>

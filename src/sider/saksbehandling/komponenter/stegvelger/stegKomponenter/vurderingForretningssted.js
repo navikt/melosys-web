@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import PT from 'prop-types';
+
 import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
+import * as MPT from '../../../../../proptypes';
 
 import {
   hentFaktaVerdi,
@@ -22,7 +24,7 @@ import {
 
 const Forretningsstedet = props => {
   const {
-    forretningsstedet, avklartForretningsland, oppdaterData, slettData,
+    forretningsstedet, avklartForretningsland, oppdaterData, slettData, redigerbart,
   } = props;
   if (!forretningsstedet) return null;
 
@@ -31,13 +33,13 @@ const Forretningsstedet = props => {
       oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland));
     }
     return function cleanup() {
-      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED));
+      slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId));
     };
   }, []);
 
-  const { navn, orgnr } = forretningsstedet;
-  const landEndretHandler = e => {
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, orgnr, e));
+  const { navn, virksomhetId } = forretningsstedet;
+  const landEndretHandler = landKode => {
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, virksomhetId, landKode));
   };
 
   const eksisterendeLand = hentFaktaVerdi(avklartForretningsland) || '';
@@ -50,6 +52,7 @@ const Forretningsstedet = props => {
         value={eksisterendeLand}
         landkoder={MKV.KTObjects.landkoder}
         multiland={false}
+        disabled={!redigerbart}
       />
     </Nav.Fieldset>
   );
@@ -60,6 +63,7 @@ Forretningsstedet.propTypes = {
   avklartForretningsland: PT.object,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 Forretningsstedet.defaultProps = {
@@ -68,7 +72,7 @@ Forretningsstedet.defaultProps = {
 
 
 const Forretningssteder = props => {
-  const { valgteVirksomheter, avklarteForretningsland } = props;
+  const { valgteVirksomheter, avklarteForretningsland, redigerbart } = props;
 
   const ingenValgteVirksomheterVarsel = valgteVirksomheter.length === 0 && (
     <Nav.AlertStripe type="advarsel">Finner ingen valgte virksomheter.</Nav.AlertStripe>
@@ -78,8 +82,8 @@ const Forretningssteder = props => {
     <div>
       {
         valgteVirksomheter.map(valgtVirksomhet => {
-          const key = `forretningssted${valgtVirksomhet.orgnr}-${valgtVirksomhet.navn}`;
-          const avklartForretningsland = avklarteForretningsland.find(enkeltAvklaring => enkeltAvklaring.subjektID === valgtVirksomhet.orgnr);
+          const key = `forretningssted${valgtVirksomhet.virksomhetId}-${valgtVirksomhet.navn}`;
+          const avklartForretningsland = avklarteForretningsland.find(enkeltAvklaring => enkeltAvklaring.subjektID === valgtVirksomhet.virksomhetId);
 
           return <Forretningsstedet
             key={key}
@@ -87,6 +91,7 @@ const Forretningssteder = props => {
             avklartForretningsland={avklartForretningsland}
             oppdaterData={props.oppdaterData}
             slettData={props.slettData}
+            redigerbart={redigerbart}
           />;
         })
       }
@@ -100,6 +105,7 @@ Forretningssteder.propTypes = {
   avklarteForretningsland: PT.array.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
+  redigerbart: PT.bool.isRequired,
 };
 
 const VurderingForretningssted = props => {
@@ -113,23 +119,23 @@ const VurderingForretningssted = props => {
 
   const stegetsLovvalgsbestemmelser = [
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1B1,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1,
       label: '13.1 b i: en arbeidsgiver',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1_B2,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1_B2,
       label: '13.1 b ii: to arbeidsgivere',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1_B3,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1_B3,
       label: '13.1 b iii: Flere arbeidsgivere, med forretningssted i to land, hvorav et er Norge',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1_B4,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1_B4,
       label: '13.1 b iv: Flere arbeidsgivere, med forretningssted i flere land, hvorav flere enn to er utenfor Norge',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_987_2009.FO_987_2009_ART14_11,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11,
       label: '14.11: Forordning 987, artikkel 14: arbeidsgiver utenfor EU/EØS-område',
     },
   ];
@@ -210,11 +216,12 @@ const VurderingForretningssted = props => {
           landkoder={MKV.KTObjects.landkoder}
           value={avklartLand}
           onChange={avklartfaktaEndret}
+          disabled={!redigerbart}
         />
       </div>
       }
       <div className="fane__knapplinje">
-        <Nav.Knapp type="hoved" disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
@@ -223,7 +230,7 @@ const VurderingForretningssted = props => {
 VurderingForretningssted.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.object,
-  valgteVirksomheter: PT.array,
+  valgteVirksomheter: PT.arrayOf(MPT.Virksomhet),
   avklartForretningsland: PT.array,
   omfattetINorge: PT.object,
   omfattetILand: PT.object,

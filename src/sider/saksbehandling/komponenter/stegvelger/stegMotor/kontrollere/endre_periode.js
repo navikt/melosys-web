@@ -20,7 +20,7 @@ class EndrePeriode extends Steg {
     this.komponent = VurderingEndrePeriode;
     this.samleRelevanteData = _propsLight => ({ behandlingID: _propsLight.behandlingID }); // TODO; Refactor with React Context API!!!
     this.beregnRelevantUI = _propsLight => ({
-      aarsakEndringPeriodeAvklartfakta: hentFakta(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE, _propsLight.avklartefakta),
+      aarsakEndringPeriodeAvklartfakta: hentFakta(MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE, _propsLight.avklartefakta),
     });
     this.handlers = {
       tilForsiden: this._propsLight.tilgjengeligeHandlers.tilForsiden,

@@ -16,13 +16,14 @@ import StegMotor from './stegMotor';
 import { anmodningsperioderSelectors, anmodningsperioderOperations } from '../../../../ducks/anmodningsperioder';
 import { anmodningsperiodesvarSelectors, anmodningsperiodesvarOperations } from '../../../../ducks/anmodningsperiodesvar';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
-import { inngangOperations, inngangSelectors } from '../../../../ducks/inngang';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../../../ducks/behandlingsperioder';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
 import { vilkarOperations, vilkarSelectors } from '../../../../ducks/vilkar';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { vedtakOperations } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
+
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore, AnmodningsperiodesvarStore } from './StegState';
 
@@ -44,11 +45,8 @@ class Stegvelger extends Component {
   async componentDidMount() {
     this.aktiv = true;
 
-    const { behandlingID, match, hentInngang } = this.props;
+    const { behandlingID } = this.props;
     const { aktivtStegNummer } = this.state;
-
-    const { snr } = match.params;
-    hentInngang(snr);
 
     await Promise.all([
       this.props.hentMedlemsPerioder(behandlingID),
@@ -183,6 +181,10 @@ class Stegvelger extends Component {
     }
   };
 
+  byggLovvalgsperioderHandler = () => {
+    this.props.oppdaterLovvalgperioder(this.state.stegStores.lovvalgsbestemmelse.hent());
+  };
+
   byggAnmodningsperioderHandler = () => {
     this.props.oppdaterAnmodningsPerioder(this.state.stegStores.lovvalgsbestemmelse.hent());
   };
@@ -224,6 +226,8 @@ class Stegvelger extends Component {
       tilForsiden: this.tilForsiden,
       lagreOgBestillAnmodningsperioder: this.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this.byggAnmodningsperioderHandler,
+      byggLovvalgsperioder: this.byggLovvalgsperioderHandler,
+      lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
     };
 
     const { props } = this;
@@ -243,7 +247,6 @@ class Stegvelger extends Component {
       artikkel16_anmodning_skjema: props.artikkel16_anmodning_skjema,
       artikkel16_motta_svar_skjema: props.artikkel16_motta_svar_skjema,
       soknad_skjema: props.soknad_skjema,
-      inngang: props.inngang,
       tilgjengeligeHandlers,
       saksopplysninger: props.saksopplysninger,
       arbeidsland: props.arbeidsland,
@@ -347,7 +350,6 @@ Stegvelger.propTypes = {
   arbeidsgivereIPerioden: PT.array,
   avklartefakta: MPT.AvklartefaktaListe,
   behandlingsPerioder: PT.object.isRequired,
-  hentInngang: PT.func.isRequired,
   hentVilkar: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
@@ -355,8 +357,6 @@ Stegvelger.propTypes = {
   fattVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
-  inngang: PT.object,
-  match: PT.object.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
@@ -388,7 +388,6 @@ Stegvelger.propTypes = {
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
-  inngang: {},
   oppsummering: {},
   valgteVirksomheter: [],
   artikkel16_anmodning_skjema: {},
@@ -403,7 +402,6 @@ const mapStateToProps = state => ({
   vilkar: vilkarSelectors.VilkarSelector(state),
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   behandlingsPerioder: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
-  inngang: inngangSelectors.InngangSelector(state),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   bostedsland: avklartefaktaSelectors.BostedslandSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
@@ -412,14 +410,13 @@ const mapStateToProps = state => ({
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
-  generiskStegRedigerbart: behandlingerSelectors.GeneriskStegRedigerbartSelector(state),
+  generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
 });
 
 /* eslint no-alert:off */
 const mapDispatchToProps = dispatch => ({
-  hentInngang: snr => dispatch(inngangOperations.hent(snr)),
   hentVilkar: behandlingID => dispatch(vilkarOperations.hent(behandlingID)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
   hentAvklartefakta: behandlingID => dispatch(avklartefaktaOperations.hent(behandlingID)),

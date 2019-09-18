@@ -76,7 +76,7 @@ EnkeltVilkaar.propTypes = {
   redigerbart: PT.bool.isRequired,
   vilkaar: PT.object.isRequired,
   vilkaarKode: PT.string.isRequired,
-  tittel: PT.string.isRequired,
+  tittel: PT.string,
   labelOppfylt: PT.string.isRequired,
   labelIkkeOppfylt: PT.string.isRequired,
   begrunnelser: PT.arrayOf(MPT.Kodeverk),
@@ -85,6 +85,7 @@ EnkeltVilkaar.propTypes = {
 
 EnkeltVilkaar.defaultProps = {
   begrunnelser: [],
+  tittel: '',
 };
 
 export default EnkeltVilkaar;

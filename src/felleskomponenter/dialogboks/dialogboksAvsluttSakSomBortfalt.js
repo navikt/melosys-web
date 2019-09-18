@@ -6,7 +6,7 @@ import * as Nav from '../../utils/navFrontend';
 
 import Knapperad from '../knapperad';
 
-import { behandlingerSelectors } from '../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../ducks/redigerbart';
 
 import './dialogboksAvsluttSakSomBortfalt.css';
 
@@ -44,7 +44,7 @@ DialogboksAvsluttSakSomBortfalt.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
 export default connect(mapStateToProps)(DialogboksAvsluttSakSomBortfalt);

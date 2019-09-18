@@ -6,13 +6,15 @@ import * as Ikoner from '../../../resources/images';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as Skjema from '../../../felleskomponenter/skjema';
+import * as Utils from '../../../utils';
 import * as KV from '../../../kodeverk';
 
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
-import './inntektUtland.css';
-import * as Utils from '../../../utils';
 import { formSelectors } from '../../../ducks/form';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
+
+import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
+
+import './inntektUtland.css';
 
 function Inntekt (props) {
   const { redigerbart, soknadForm: { values } } = props;
@@ -37,9 +39,9 @@ function Inntekt (props) {
         ariaTittel="Panel for inntekt under oppholdet">
         <Nav.Row className="iinntektUtland__seksjon">
           <Nav.Column xs="9">
-            <Nav.Fieldset legend="Lønn / inntekt i utlandet(NOK pr måned)">
-              <Skjema.Input feltNavn="inntektNorskIPerioden" label="Lønn fra norsk arbeidsgiver" disabled={!redigerbart} />
-              <Skjema.Input feltNavn="inntektUtenlandskIPerioden" label="Lønn fra utenlandsk arbeidsgiver" disabled={!redigerbart} />
+            <Nav.Fieldset legend="">
+              <Skjema.Input feltNavn="inntektNorskIPerioden" label="Utbetalt av arbeids-/oppdragsgivere i Norge" disabled={!redigerbart} />
+              <Skjema.Input feltNavn="inntektUtenlandskIPerioden" label="Utbetalt av arbeids-/oppdragsgivere i utlandet" disabled={!redigerbart} />
               <Skjema.Input feltNavn="inntektNaeringIPerioden" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" disabled={!redigerbart} />
             </Nav.Fieldset>
             <Nav.Fieldset legend="Naturalytelser betalt av norsk eller utenlandsk arbeidsgiver">
@@ -69,7 +71,7 @@ Inntekt.defaultProps = {
 
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 const mapDispatchToProps = () => ({});
 
