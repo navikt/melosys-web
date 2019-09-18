@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import ArbeidUtlandEnkelt from './arbeidUtlandEnkelt';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Ikoner from '../../../../resources/images';
@@ -36,7 +36,7 @@ class ArbeidUtlandWrapper extends Component {
           ariaTittel="Panel for arbeidssted i utlandet">
           <Nav.Container fluid>
             {this.props.fields.map((fieldName, indeks) => <ArbeidUtlandEnkelt key={fieldName} indeks={indeks} slettArbeidHandler={slettArbeidHandler} redigerbart={redigerbart} />)}
-            <Nav.Knapp disabled={!redigerbart} className="arbeidUtland__leggtil" onClick={leggTilArbeidHandler}>+ Legg til flere arbeidssteder i utlandet</Nav.Knapp>
+            <Nav.Knapp disabled={!redigerbart} className="arbeidUtland__leggtil" onClick={leggTilArbeidHandler}>+ Legg til arbeidssted i utlandet</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>
@@ -50,7 +50,7 @@ ArbeidUtlandWrapper.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = () => ({});

@@ -63,11 +63,11 @@ class MultiVilkaar extends Component {
 
     return (
       <div>
-        <Nav.Undertittel>{`Vurdering av artikkel ${vilkaarNavn12}`}</Nav.Undertittel>
+        <Nav.Undertittel>{`Fyller søker kriteriene for artikkel ${vilkaarNavn12}?`}</Nav.Undertittel>
         <div>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Nav.Fieldset legend={`Fyller søker kriterier for artikkel ${vilkaarNavn12}?`}>
+              <Nav.Fieldset legend="">
                 <Nav.Radio
                   name="artikkel12"
                   onChange={this.vilkaarEndret}

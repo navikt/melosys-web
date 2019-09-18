@@ -13,7 +13,7 @@ import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import { KodeTermSelect } from '../../../../../felleskomponenter/ui/kodeTermSelect';
 
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
-import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
 import { soknadOperations } from '../../../../../ducks/soknad';
 
 import * as Api from '../../../../../services/api';
@@ -35,7 +35,7 @@ export class VurderingEndrePeriode extends React.Component {
       behandlingID, redigerbart, lovvalgsPeriode, oppdaterData, tilstand: { aarsakEndringPeriodeAvklartfakta },
     } = this.props;
 
-    oppdaterData(konverterTilStegData(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE, aarsakEndringPeriodeAvklartfakta));
+    oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE, aarsakEndringPeriodeAvklartfakta));
 
     this.hentOpprinneligPeriode(behandlingID);
 
@@ -240,12 +240,11 @@ VurderingEndrePeriode.defaultProps = {
 
 const mapStateToProps = state => ({
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  redigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   oppdaterPeriode: periode => dispatch(soknadOperations.oppdaterPeriode(periode)),
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingEndrePeriode);

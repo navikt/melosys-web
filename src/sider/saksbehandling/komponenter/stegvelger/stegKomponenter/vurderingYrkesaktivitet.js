@@ -26,15 +26,15 @@ const VurderingYrkesaktivitet = props => {
   const fakta = hentFaktaVerdi(yrkesaktivitet);
   return (
     <div>
-      <Nav.Undertittel>Vurdering av yrkesaktivitet</Nav.Undertittel>
-      <Nav.Fieldset legend="Hva gjelder for søkeren?">
+      <Nav.Undertittel>Hva slags type yrkesaktivitet skal søkeren utøve?</Nav.Undertittel>
+      <Nav.Fieldset legend="">
         <Nav.Radio
           name="yrkesaktivitet"
           disabled={!redigerbart}
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}
           value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER}
           onChange={radioEndret}
-          label="Arbeidstaker eller frilanser"
+          label="Lønnet arbeid"
         />
         <Nav.Radio
           name="yrkesaktivitet"
@@ -42,7 +42,7 @@ const VurderingYrkesaktivitet = props => {
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}
           value={KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE}
           onChange={radioEndret}
-          label="Selvstendig næringsdrivende"
+          label="Selvstendig næringsvirksomhet"
         />
         {
           !skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende &&
@@ -60,11 +60,11 @@ const VurderingYrkesaktivitet = props => {
           checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           value={KV.Koder.VurderingYrkesaktivitetTyper.TJENESTEPERSON_NORSK_STATSFORVANTLING}
           onChange={radioEndret}
-          label="Tjenesteperson i norsk statsforvaltning"
+          label="Tjeneste i norsk statsforvaltning"
         />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );

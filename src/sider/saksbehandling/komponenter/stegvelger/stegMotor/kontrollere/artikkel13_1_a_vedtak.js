@@ -1,6 +1,6 @@
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
-import VurderingArtikkel13_1_a_vedtak from '../../stegKomponenter/vurderingArtikkel13_1_a_vedtak';
+import VurderingArtikkel13_1_vedtak from '../../stegKomponenter/vurderingArtikkel13_1_vedtak';
 
 class Artikkel13_1_a_vedtak extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -14,14 +14,17 @@ class Artikkel13_1_a_vedtak extends Steg {
     ];
     this.id = STEG.ARTIKKEL_13_1_A_VEDTAK;
     this.tittel = 'Vedtak';
-    this.komponent = VurderingArtikkel13_1_a_vedtak;
+    this.komponent = VurderingArtikkel13_1_vedtak;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.redigerbart,
     });
-    this.beregnRelevantUI = _propsLight => ({});
+    this.beregnRelevantUI = _propsLight => ({
+      overskrift: 'Omfattet av norsk lovgivning, etter artikkel 13, nr 1, a',
+    });
     this.handlers = {
-      bekreftOgFortsett: this._propsLight.tilgjengeligeHandlers.bekreftOgFortsett,
       lagreOgFatteVedtak: this._propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
+      lagreLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.lagreLovvalgsperioder,
+      byggLovvalgsperioder: this._propsLight.tilgjengeligeHandlers.byggLovvalgsperioder,
     };
     this._status = FANE_STATUS.OK;
   }

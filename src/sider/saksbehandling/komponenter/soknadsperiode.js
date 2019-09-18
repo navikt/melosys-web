@@ -9,7 +9,7 @@ import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 
 import * as Ikoner from '../../../resources/images';
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 import { soknadSelectors, soknadOperations } from '../../../ducks/soknad';
 import PanelHeader from '../../../felleskomponenter/panelHeader/panelHeader';
 
@@ -179,7 +179,7 @@ class Soknadsperiode extends Component {
               !erEndrePeriodeSynlig && (
                 <Nav.Row>
                   <Nav.Column xs="12">
-                    <p>Dersom søker har meldt inn en endring i søknadsperioden, kan du gjøre dette her og deretter oppdatere saksopplysningene:</p>
+                    <p>Dersom søkeren har opplyst at søknadsperioden er endret, legger du inn den korrigerte perioden her og oppdaterer saksopplysningene.</p>
                     <div className="knapper">
                       <Nav.Hovedknapp disabled={!redigerbart} onClick={visEndrePeriode}>Endre søknadsperioden</Nav.Hovedknapp>
                     </div>
@@ -226,7 +226,7 @@ Soknadsperiode.defaultProps = {
 const mapStateToProps = state => ({
   soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
   soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
