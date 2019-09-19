@@ -175,8 +175,8 @@ const Saksopplysninger = props => {
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
                   <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => setAnmodningsperiodeSvarType(e.target.value)} disabled={!redigerbart}>
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.INNVILGELSE} defaultChecked />
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} label={MKV.Terms.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} />
+                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE} label="Godkjenn unntaksperiode" defaultChecked />
+                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} label="Godkjenn, men endre periode" />
                     {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
                       <Nav.Row>
                         <Nav.Column xs="3">
@@ -201,7 +201,7 @@ const Saksopplysninger = props => {
                         </Nav.Column>
                       </Nav.Row>
                     )}
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} label={MKV.Terms.anmodningsperiodesvartyper.AVSLAG} />
+                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} label="Ikke godkjenn" />
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>

@@ -21,8 +21,8 @@ const SideOppsummering = props => {
     fagsak,
     oppsummering,
     person,
-    soknadsperiodeFom,
-    soknadsperiodeTom,
+    lovvalgsperiodeFom,
+    lovvalgsperiodeTom,
     lagreOgLukkHandle,
     tilbakeleggeHandle,
     arbeidsland,
@@ -60,12 +60,12 @@ const SideOppsummering = props => {
         <Nav.Row>
           <Nav.Column xs="12">
             {oppsummering && <Oppsummering
-              arbeidsland={arbeidsland}
+              arbeidsland={arbeidsland} // Lovvalgsland
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
-              soknadsperiodeFom={soknadsperiodeFom}
-              soknadsperiodeTom={soknadsperiodeTom}
+              lovvalgsperiodeFom={lovvalgsperiodeFom}
+              lovvalgsperiodeTom={lovvalgsperiodeTom}
             />
             }
           </Nav.Column>
@@ -91,8 +91,8 @@ SideOppsummering.propTypes = {
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
-  soknadsperiodeFom: PT.string,
-  soknadsperiodeTom: PT.string,
+  lovvalgsperiodeFom: PT.string,
+  lovvalgsperiodeTom: PT.string,
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
@@ -104,8 +104,8 @@ SideOppsummering.defaultProps = {
   redigerbart: false,
   fagsak: undefined,
   oppsummering: undefined,
-  soknadsperiodeFom: undefined,
-  soknadsperiodeTom: undefined,
+  lovvalgsperiodeFom: undefined,
+  lovvalgsperiodeTom: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -115,8 +115,8 @@ const mapStateToProps = state => ({
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   endreLovvalgsperiodeRedigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  soknadsperiodeFom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
-  soknadsperiodeTom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
+  lovvalgsperiodeFom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom), // TODO Prop-navn
+  lovvalgsperiodeTom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
 });
 
