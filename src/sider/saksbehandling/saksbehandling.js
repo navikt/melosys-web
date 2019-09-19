@@ -306,7 +306,7 @@ class Saksbehandling extends Component {
 
   render() {
     const {
-      redigerbart, brevBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13, sedBestillingRedigerbart, match,
+      redigerbart, brevBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13, match,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -358,7 +358,6 @@ class Saksbehandling extends Component {
                 saksnummer={saksnummer}
                 brevBestillingRedigerbart={brevBestillingRedigerbart}
                 brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-                sedBestillingRedigerbart={sedBestillingRedigerbart}
               />
             </Nav.Column>
           </Nav.Row>
@@ -443,7 +442,6 @@ Saksbehandling.propTypes = {
   sendAnmodningsperioder: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
-  sedBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
 };
 
@@ -475,7 +473,6 @@ const mapStateToProps = state => ({
   anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
-  sedBestillingRedigerbart: redigerbartSelectors.SedBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
 });
 
