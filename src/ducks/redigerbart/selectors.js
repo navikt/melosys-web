@@ -34,10 +34,6 @@ export const BrevBestillingRedigerbartSelector = createSelector(
   SidedialogRedigerbartSelector,
   sideDialogRedigerbart => sideDialogRedigerbart
 );
-export const SedBestillingRedigerbartSelector = createSelector(
-  SidedialogRedigerbartSelector,
-  sideDialogRedigerbart => sideDialogRedigerbart
-);
 export const BrevBestillingRedigerbartIArtikkel13Selector = createSelector(
   avklartefaktaSelectors.ErIArtikkel13_1FlytSelector,
   avklartefaktaSelectors.EnVirksomhetErAvklartSelector,
