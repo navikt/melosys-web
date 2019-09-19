@@ -306,8 +306,9 @@ class Saksbehandling extends Component {
 
   render() {
     const {
-      redigerbart, brevBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13, sedBestillingRedigerbart, fagsak: { saksnummer },
+      redigerbart, brevBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13, sedBestillingRedigerbart, match,
     } = this.props;
+    const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
     const { blokkerInnholdMedOppfriskSpinner } = this;
 

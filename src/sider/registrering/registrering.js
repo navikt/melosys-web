@@ -86,8 +86,9 @@ const Registrering = props => {
   }, []);
 
   const {
-    vurderingBegrunnelser, medlemskap, sed, redigerbart, fagsak: { saksnummer },
+    vurderingBegrunnelser, medlemskap, sed, redigerbart, match,
   } = props;
+  const { params: { snr: saksnummer } } = match;
   return (
     <div className="registrering">
       <Nav.Container fluid>

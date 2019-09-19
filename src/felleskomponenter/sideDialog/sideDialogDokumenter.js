@@ -160,11 +160,7 @@ class SideDialogDokumenter extends Component {
   }
 }
 SideDialogDokumenter.propTypes = {
-  saksnummer: PT.string,
-};
-
-SideDialogDokumenter.defaultProps = {
-  saksnummer: null,
+  saksnummer: PT.string.isRequired,
 };
 
 export default SideDialogDokumenter;

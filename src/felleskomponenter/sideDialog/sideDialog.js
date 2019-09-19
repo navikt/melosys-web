@@ -16,7 +16,7 @@ const uuid = require('uuid/v4');
 class SideDialog extends Component {
   static propTypes = {
     faner: PT.array,
-    saksnummer: PT.string,
+    saksnummer: PT.string.isRequired,
     behandlingID: PT.number.isRequired,
     brevBestillingRedigerbart: PT.bool.isRequired,
     sedBestillingRedigerbart: PT.bool.isRequired,
@@ -24,7 +24,6 @@ class SideDialog extends Component {
   };
 
   static defaultProps = {
-    saksnummer: null,
     faner: [
       { navn: 'dokumenter', tittel: 'Dokumenter' },
       { navn: 'brevbestilling', tittel: 'Send brev' },
