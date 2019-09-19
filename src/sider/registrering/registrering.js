@@ -86,7 +86,7 @@ const Registrering = props => {
   }, []);
 
   const {
-    vurderingBegrunnelser, medlemskap, sed, redigerbart,
+    vurderingBegrunnelser, medlemskap, sed, redigerbart, fagsak: { saksnummer },
   } = props;
   return (
     <div className="registrering">
@@ -111,7 +111,13 @@ const Registrering = props => {
               visHenleggDialogHandle={visHenleggDialog}
               tilForsidenHandle={navigerTilOversiktSide}
             />
-            <SideDialog behandlingID={behandlingID} redigerbart={redigerbart} />
+            <SideDialog
+              behandlingID={behandlingID}
+              saksnummer={saksnummer}
+              brevBestillingRedigerbart={redigerbart}
+              brevBestillingRedigerbartIArtikkel13={redigerbart}
+              sedBestillingRedigerbart={redigerbart}
+            />
           </Nav.Column>
         </Nav.Row>
       </Nav.Container>

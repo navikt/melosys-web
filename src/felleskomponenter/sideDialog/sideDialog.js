@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
@@ -10,8 +9,6 @@ import SideDialogBrevBestilling from './brevBestilling';
 import SideDialogSedBestilling from './sedBestilling';
 import SideDialogBesvarSed from './sideDialogBesvarSed';
 
-import { redigerbartSelectors } from '../../ducks/redigerbart';
-
 import './sideDialog.css';
 
 const uuid = require('uuid/v4');
@@ -19,13 +16,15 @@ const uuid = require('uuid/v4');
 class SideDialog extends Component {
   static propTypes = {
     faner: PT.array,
+    saksnummer: PT.string,
     behandlingID: PT.number.isRequired,
     brevBestillingRedigerbart: PT.bool.isRequired,
     sedBestillingRedigerbart: PT.bool.isRequired,
-    BrevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+    brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   };
 
   static defaultProps = {
+    saksnummer: null,
     faner: [
       { navn: 'dokumenter', tittel: 'Dokumenter' },
       { navn: 'brevbestilling', tittel: 'Send brev' },
@@ -49,18 +48,20 @@ class SideDialog extends Component {
   }
 
   getFaneKomponent = (navn, behandlingID) => {
-    const { brevBestillingRedigerbart, sedBestillingRedigerbart, BrevBestillingRedigerbartIArtikkel13 } = this.props;
+    const {
+      saksnummer, brevBestillingRedigerbart, sedBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13,
+    } = this.props;
 
     if (navn === 'dokumenter') {
-      return <SideDialogDokumenter key={uuid()} />;
+      return <SideDialogDokumenter key={uuid()} saksnummer={saksnummer} />;
     } else if (navn === 'brevbestilling') {
-      return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} redigerbart={brevBestillingRedigerbart} brevBestillingRedigerbartIArtikkel13={BrevBestillingRedigerbartIArtikkel13} />;
+      return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} redigerbart={brevBestillingRedigerbart} brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13} />;
     } else if (navn === 'sedbestilling') {
       return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} redigerbart={sedBestillingRedigerbart} />;
     } else if (navn === 'besvarsed') {
       return <SideDialogBesvarSed key={uuid()} behandlingID={behandlingID} />;
     }
-    return <SideDialogDokumenter key={uuid()} />;
+    return <SideDialogDokumenter key={uuid()} saksnummer={saksnummer} />;
   };
   /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
    * slik at riktig komponent under menyen vises. Data fra komponenten slik som navn ligger under
@@ -99,12 +100,4 @@ class SideDialog extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
-  sedBestillingRedigerbart: redigerbartSelectors.SedBestillingRedigerbartSelector(state),
-  BrevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
-});
-
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SideDialog);
+export default SideDialog;
