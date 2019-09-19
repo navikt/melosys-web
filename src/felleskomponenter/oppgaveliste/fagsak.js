@@ -31,8 +31,8 @@ const Fagsak = ({ sak }) => {
     const { behandlingstype, behandlingID } = behandling;
     const queryParams = `?behandlingID=${behandlingID}`;
 
-    if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD
-        || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
+    if (behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD
+        || behandlingstype.kode === MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_SEG_SELV) {
       return `/registrering/${saksnummer}/${queryParams}`;
     }
     return `/saksbehandling/${saksnummer}/${queryParams}`;
