@@ -50,8 +50,8 @@ class Artikkel16Anmodning extends Steg {
 
   static erUnderBehandlingEllerAvsluttet({ behandlingsstatus }) {
     return [
-      MKV.Koder.behandlinger.status.UNDER_BEHANDLING,
-      MKV.Koder.behandlinger.status.AVSLUTTET,
+      MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
     ].includes(KV.objektTilKode(behandlingsstatus));
   }
 

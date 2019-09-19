@@ -27,6 +27,7 @@ import Kontantytelser from '../kontantytelser';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { behandlingsperioderSelectors } from '../../../../ducks/behandlingsperioder';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../../../ducks/saksopplysninger';
 import {
   soknadOperations,
@@ -88,7 +89,7 @@ class Saksopplysninger extends Component {
     }
 
     const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-    const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL;
+    const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
     const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
     const visStegVelger = !erHenlagtSak && !erAvslaattSoknad;
 
@@ -180,7 +181,7 @@ Saksopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
