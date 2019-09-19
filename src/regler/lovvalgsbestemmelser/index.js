@@ -1,9 +1,8 @@
+import { konverterEnkelDataTilStegData, lagEnkelData, slettEnkelData } from '../enkelData';
+
 export const lovvalgsbestemmelseType = 'lovvalgsbestemmelse';
 
-export const slettLovvalgsbestemmelse = felt => ({
-  felt,
-  type: lovvalgsbestemmelseType,
-});
+export const slettLovvalgsbestemmelse = felt => slettEnkelData(felt, lovvalgsbestemmelseType);
 
 export const hentLovvalgsbestemmelse = lovvalgsperioder => {
   const periode = lovvalgsperioder.length > 0 ? lovvalgsperioder[0] : {};
@@ -16,19 +15,6 @@ export const finnLovvalgsbestemmelse = (lovvalgsbestemmelseKode, lovvalgsbestemm
     .find(kode => kode === lovvalgsbestemmelseKode)
 );
 
-export const lagLovvalgsbestemmelse = felt => (
-  {
-    felt: lovvalgsbestemmelseType,
-    oppdaterRedux: true,
-    type: lovvalgsbestemmelseType,
-    innhold: felt,
-  }
-);
+export const lagLovvalgsbestemmelse = felt => lagEnkelData(felt, lovvalgsbestemmelseType);
 
-export const konverterLovvalgsbestemmelseTilStegData = lovvalgsbestemmelse => (
-  {
-    felt: lovvalgsbestemmelseType,
-    type: lovvalgsbestemmelseType,
-    innhold: lovvalgsbestemmelse,
-  }
-);
+export const konverterLovvalgsbestemmelseTilStegData = lovvalgsbestemmelse => konverterEnkelDataTilStegData(lovvalgsbestemmelse, lovvalgsbestemmelseType);
