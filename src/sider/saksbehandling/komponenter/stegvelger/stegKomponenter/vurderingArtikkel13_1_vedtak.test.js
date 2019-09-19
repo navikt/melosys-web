@@ -17,6 +17,8 @@ describe('VurderingArtikkel13_1_Vedtak', () => {
       formIsValid: true,
       formValues: {},
       touch: jest.fn(),
+      byggLovvalgsperioder: jest.fn(),
+      lagreLovvalgsperioder: jest.fn(),
     };
 
     shallow(<VurderingArtikkel13_1_Vedtak {...props} />);

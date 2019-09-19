@@ -33,20 +33,20 @@ export function send(behandlingID, anmodningsperioder) {
   });
 }
 
-const byggAnmodningsperiodeArtikkel16 = state => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
-  const soknadsland = soknadSelectors.SoknadslandSelector(state);
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+const byggAnmodningsperiodeArtikkel16 = (stegState, reduxState) => {
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const soknadsland = soknadSelectors.SoknadslandSelector(reduxState);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
 
   const unntakFraLovvalgsland = soknadsland.join('');
-  const unntakFraBestemmelse = formSelectors.UnntakFraBestemmelseSelector(state);
+  const unntakFraBestemmelse = formSelectors.UnntakFraBestemmelseSelector(reduxState);
 
   return [{
     id: null,
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
     lovvalgBestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
-    tilleggBestemmelse: null,
+    tilleggBestemmelse: stegState.tilleggbestemmelse,
     lovvalgsland: MKV.Koder.landkoder.NO,
     unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland,
@@ -55,20 +55,20 @@ const byggAnmodningsperiodeArtikkel16 = state => {
   }];
 };
 
-const byggAnmodningsperioder = (lovvalgsbestemmelse, state) => {
-  switch (lovvalgsbestemmelse) {
+const byggAnmodningsperioder = (stegState, reduxState) => {
+  switch (stegState.lovvalgsbestemmelse) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1:
-      return byggAnmodningsperiodeArtikkel16(state);
+      return byggAnmodningsperiodeArtikkel16(stegState, reduxState);
     default: {
       return [];
     }
   }
 };
 
-export function oppdaterAnmodningsperioderState(lovvalgsbestemmelse) {
+export function oppdaterAnmodningsperioderState(stegState) {
   return (dispatch, getState) => {
-    if (lovvalgsbestemmelse) {
-      const anmodningsperioder = byggAnmodningsperioder(lovvalgsbestemmelse, getState());
+    if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse) {
+      const anmodningsperioder = byggAnmodningsperioder(stegState, getState());
       dispatch(Actions.oppdaterAnmodningsperioder(anmodningsperioder));
     } else {
       dispatch(Actions.resetAnmodningsperioderState());

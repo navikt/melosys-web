@@ -1,26 +1,47 @@
 import React, { useEffect } from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
 import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../../../regler/avklartefakta';
+import { konverterTilleggBestemmelseTilStegData, lagTilleggBestemmelse, slettTilleggBestemmelse, finnTilleggBestemmelse } from '../../../../../regler/tilleggbestemmelser';
 import { BOOLSK } from '../../../../../constants';
+
+const stegetsTilleggbestemmelser = [
+  {
+    kode: MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5,
+    label: MKV.Terms.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5,
+  },
+];
 
 const VurderingYrkesgruppe = props => {
   const {
     bekreftOgFortsett, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
-  const { harAvklaring, yrkesgruppe } = tilstand;
+  const { harAvklaring, yrkesgruppe, tilleggbestemmelse } = tilstand;
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.YRKESGRUPPE, yrkesgruppe));
+
+    const tilleggBestemmelseFunnet = finnTilleggBestemmelse(tilleggbestemmelse, stegetsTilleggbestemmelser);
+    if (tilleggBestemmelseFunnet) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggbestemmelse));
+
     return function cleanup() {
       slettData();
     };
   }, []);
 
   const radioEndret = event => {
-    oppdaterData(lagAvklartfakta(KV.Koder.YRKESGRUPPE, null, event.target.value));
+    const yrkessituasjon = event.target.value;
+
+    oppdaterData(lagAvklartfakta(KV.Koder.YRKESGRUPPE, null, yrkessituasjon));
+
+    if (yrkessituasjon === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL) {
+      oppdaterData(lagTilleggBestemmelse(MKV.Koder.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004.FO_883_2004_ART11_5));
+    } else {
+      slettData(slettTilleggBestemmelse());
+    }
   };
 
   const fakta = hentFaktaVerdi(yrkesgruppe);
@@ -44,7 +65,6 @@ const VurderingYrkesgruppe = props => {
           label="Yrkesaktiv på sokkel eller skip" />
         <Nav.Radio
           name="yrkesgruppe"
-          disabled={BOOLSK.SANN}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           value={KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           onChange={radioEndret}
@@ -76,15 +96,14 @@ VurderingYrkesgruppe.ID = 'YRKESGRUPPE';
 
 VurderingYrkesgruppe.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
-  tilstand: PT.object,
+  tilstand: PT.shape({
+    tilleggbestemmelse: PT.string,
+    harAvklaring: PT.bool,
+    yrkesgruppe: PT.object.isRequired,
+  }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
 };
-
-VurderingYrkesgruppe.defaultProps = {
-  tilstand: {},
-};
-
 
 export default VurderingYrkesgruppe;
