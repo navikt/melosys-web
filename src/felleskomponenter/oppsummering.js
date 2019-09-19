@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PT from 'prop-types';
 
 import * as Utils from '../utils';
@@ -9,7 +9,7 @@ import EnkeltDato from './datoOmrade/enkeltDato';
 
 const Oppsummering = props => {
   const {
-    arbeidsland, fagsak, oppsummering, person, soknadsperiodeFom, soknadsperiodeTom,
+    arbeidsland, lovvalgsland, fagsak, oppsummering, person, soknadsperiodeFom, soknadsperiodeTom, lovvalgsperiodeFom, lovvalgsperiodeTom,
   } = props;
   if (!oppsummering) return <div />;
 
@@ -46,10 +46,30 @@ const Oppsummering = props => {
       <dd>{KV.objektTilTerm(saksstatus)}</dd>
       <dt>Behandlingsstatus:</dt>
       <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
-      <dt>Arbeidsland:</dt>
-      <dd>{arbeidslandSetning}</dd>
-      <dt>Søknadsperiode:</dt>
-      <dd>{soknadsperiodeFom || 'ukjent'} - {soknadsperiodeTom || 'ukjent'}</dd>
+      { arbeidsland.length > 0 &&
+        <Fragment>
+          <dt>Arbeidsland:</dt>
+          <dd>{arbeidslandSetning}</dd>
+        </Fragment>
+      }
+      { lovvalgsland.length > 0 &&
+        <Fragment>
+          <dt>Lovvalgsland:</dt>
+          <dd>{lovvalgsland}</dd> {/* TODO */}
+        </Fragment>
+      }
+      { soknadsperiodeFom && soknadsperiodeTom &&
+        <Fragment>
+          <dt>Søknadsperiode:</dt>
+          <dd>{soknadsperiodeFom || 'ukjent'} - {soknadsperiodeTom || 'ukjent'}</dd>
+        </Fragment>
+      }
+      { lovvalgsperiodeFom && lovvalgsperiodeTom &&
+        <Fragment>
+          <dt>Lovvalgsperiode:</dt>
+          <dd>{lovvalgsperiodeFom || 'ukjent'} - {lovvalgsperiodeTom || 'ukjent'}</dd>
+        </Fragment>
+      }
       <dt>Behandling sist oppdatert:</dt>
       <dd><EnkeltDato dato={sisteOpplysningerHentetDato} visTidspunkt /></dd>
       <dt>Behandling registrert dato:</dt>
@@ -60,16 +80,22 @@ const Oppsummering = props => {
 
 Oppsummering.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
+  lovvalgsland: PT.arrayOf(MPT.Kodeverk),
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   soknadsperiodeFom: PT.string,
   soknadsperiodeTom: PT.string,
+  lovvalgsperiodeFom: PT.string,
+  lovvalgsperiodeTom: PT.string,
 };
 Oppsummering.defaultProps = {
   arbeidsland: [],
+  lovvalgsland: [],
   soknadsperiodeFom: undefined,
   soknadsperiodeTom: undefined,
+  lovvalgsperiodeFom: undefined,
+  lovvalgsperiodeTom: undefined,
 };
 
 export default Oppsummering;
