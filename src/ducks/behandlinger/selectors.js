@@ -7,6 +7,8 @@
 
 import { createSelector } from 'reselect';
 import moment from 'moment/moment';
+import * as MKV from 'melosys-kodeverk';
+
 import { datoDiff } from '../../utils/dato';
 import * as KV from '../../kodeverk';
 import * as soknadSelectors from '../soknad/selectors';

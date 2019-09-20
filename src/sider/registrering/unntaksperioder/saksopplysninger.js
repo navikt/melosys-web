@@ -3,23 +3,23 @@ import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import * as KV from '../../../../kodeverk';
-import * as Utils from '../../../../utils';
-import * as Api from '../../../../services/api';
-import * as MPT from '../../../../proptypes';
-import * as Nav from '../../../../utils/navFrontend';
-import * as RegistreringContext from '../../state/registreringContext';
-import ListevelgerFlervalg from '../../../../felleskomponenter/ui/listevelgerFlervalg';
-import Medlemskap from '../../../../felleskomponenter/medlemskap';
-import EndrePeriode from './endrePeriode';
-import RegisterkontrollTreff from '../../komponenter/registerkontrollTreff';
-import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
-import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
-import { endrePeriodeSkjema } from '../validering/endrePeriodeSkjema';
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
-import { createValidator } from '../../../../felleskomponenter/skjema/validering/skjemaer/createValidator';
+import * as KV from '../../../kodeverk';
+import * as Utils from '../../../utils';
+import * as Api from '../../../services/api';
+import * as MPT from '../../../proptypes';
+import * as Nav from '../../../utils/navFrontend';
+import * as RegistreringContext from '../state/registreringContext';
+import ListevelgerFlervalg from '../../../felleskomponenter/ui/listevelgerFlervalg';
+import Medlemskap from '../../../felleskomponenter/medlemskap';
+import EndrePeriode from './komponenter/endrePeriode';
+import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
+import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
+import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
+import { endrePeriodeSkjema } from './validering/endrePeriodeSkjema';
+import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { createValidator } from '../../../felleskomponenter/skjema/validering/skjemaer/createValidator';
 
-import '../../saksopplysninger.css';
+import '../saksopplysninger.css';
 
 const uuid = require('uuid/v4');
 
@@ -43,8 +43,8 @@ const Saksopplysninger = props => {
   };
 
   const lagAvklartfakta = () => ({
-    referanse: MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE,
-    avklartefaktaKode: MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE,
+    referanse: MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE,
+    avklartefaktaKode: MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE,
     fakta: [endrePeriodeBegrunnelse],
     subjektID: null,
     begrunnelseKoder: [],
