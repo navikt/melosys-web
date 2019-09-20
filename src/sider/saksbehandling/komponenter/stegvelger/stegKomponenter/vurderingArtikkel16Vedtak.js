@@ -240,7 +240,7 @@ export const VurderingArtikkel16Vedtak = props => {
   const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = anmodningsperiodesvar;
 
   const vedKlikk = () => {
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND);
+    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND);
   };
 
   const renderBegrunnelser = () => (

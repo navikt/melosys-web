@@ -3,6 +3,7 @@ import { FANE_STATUS, STEG } from '../typer';
 import VurderingYrkesgruppe from '../../stegKomponenter/vurderingYrkesgruppe';
 import * as KV from '../../../../../../kodeverk';
 import { hentFakta } from '../../../../../../regler/avklartefakta';
+import { hentTilleggBestemmelse } from '../../../../../../regler/tilleggbestemmelser';
 
 class Yrkesgruppe extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -20,6 +21,11 @@ class Yrkesgruppe extends Steg {
         nesteSteg: STEG.SOKKEL_SKIP,
       },
       {
+        beskrivelse: 'yrkesgruppeType ER LIK "FLYENDE_PERSONELL"',
+        exec: avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL),
+        nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: null,
@@ -32,8 +38,10 @@ class Yrkesgruppe extends Steg {
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
+      const tilleggbestemmelse = hentTilleggBestemmelse(_propsLight.lovvalgsperioder);
       const yrkesgruppe = hentFakta(KV.Koder.avklartefaktaKoder.YRKESGRUPPE, _propsLight.avklartefakta);
       return ({
+        tilleggbestemmelse,
         harAvklaring: yrkesgruppe.fakta && yrkesgruppe.fakta.length > 0,
         yrkesgruppe,
       });

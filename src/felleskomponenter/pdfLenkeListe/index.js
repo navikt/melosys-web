@@ -3,13 +3,25 @@ import PT from 'prop-types';
 import * as MPT from '../../proptypes';
 import { dokumenterOperations } from '../../ducks/dokumenter';
 import * as Nav from '../../utils/navFrontend';
+import * as Utils from '../../utils';
 
 import './pdfLenkeListe.css';
 
 const uuid = require('uuid/v4');
 
 class PdfLenkeListe extends Component {
-  state = { feilmelding: false };
+  state = {
+    feilmelding: false,
+    kanForhandsviseSed: false,
+  };
+
+  async componentDidMount() {
+    this.oppdaterKanForhandsviseSed(await Utils.feature.namespaceToggle('q2', 't8'));
+  }
+
+  oppdaterKanForhandsviseSed(kanVises) {
+    this.setState({ kanForhandsviseSed: kanVises });
+  }
 
   klikk = async dokument => {
     const { behandlingID, vedKlikk } = this.props;
@@ -22,7 +34,13 @@ class PdfLenkeListe extends Component {
       }
     }
 
-    const fileURL = await dokumenterOperations.forhandsvisPDF(behandlingID, dokument.type, dokument.data);
+    let fileURL;
+    if (dokument.erSed) {
+      fileURL = await dokumenterOperations.forhandsvisSed(behandlingID, dokument.type);
+    } else {
+      fileURL = await dokumenterOperations.forhandsvisBrev(behandlingID, dokument.type, dokument.data);
+    }
+
     if (fileURL) {
       window.open(fileURL);
       this.setState({ feilmelding: false });
@@ -35,8 +53,10 @@ class PdfLenkeListe extends Component {
     return (<button onClick={() => this.klikk(dokument)} key={uuid()}>{dokument.navn}</button>);
   }
 
+  featureToggleLenker = dokumenter => dokumenter.filter(dokument => !(dokument.erSed && !this.state.kanForhandsviseSed));
+
   render() {
-    const { dokumenter } = this.props;
+    const dokumenter = this.featureToggleLenker(this.props.dokumenter);
     return (
       <div className="pdfLenkeListe">
         { dokumenter.map(dokument => this.lagDokumentLenke(dokument)) }

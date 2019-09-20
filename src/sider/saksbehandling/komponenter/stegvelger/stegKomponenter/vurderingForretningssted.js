@@ -119,23 +119,23 @@ const VurderingForretningssted = props => {
 
   const stegetsLovvalgsbestemmelser = [
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1B1,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1,
       label: '13.1 b i: en arbeidsgiver',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1_B2,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1_B2,
       label: '13.1 b ii: to arbeidsgivere',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1_B3,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1_B3,
       label: '13.1 b iii: Flere arbeidsgivere, med forretningssted i to land, hvorav et er Norge',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1_B4,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1_B4,
       label: '13.1 b iv: Flere arbeidsgivere, med forretningssted i flere land, hvorav flere enn to er utenfor Norge',
     },
     {
-      kode: MKV.Koder.lovvalgsbestemmelser.forordning_987_2009.FO_987_2009_ART14_11,
+      kode: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11,
       label: '14.11: Forordning 987, artikkel 14: arbeidsgiver utenfor EU/EØS-område',
     },
   ];

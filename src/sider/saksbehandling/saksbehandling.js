@@ -29,6 +29,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avk
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
 import { oppgaverOperations } from '../../ducks/oppgaver';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
+import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { formSelectors } from '../../ducks/form';
@@ -44,7 +45,6 @@ class Saksbehandling extends Component {
     visAvslagSoknadDialog: false,
     visAvsluttSakSomBortfaltDialog: false,
     behandlingID: -1,
-    saksnummer: '0',
   };
 
   componentDidMount() {
@@ -66,7 +66,6 @@ class Saksbehandling extends Component {
     const { snr } = match.params;
     const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
     this.setState({ behandlingID: Utils._toInteger(behandlingID) });
-    this.setState({ saksnummer: snr });
 
     const {
       hentFagsaker, hentBehandling, hentBehandlingsresultat,
@@ -287,7 +286,7 @@ class Saksbehandling extends Component {
 
   avslaaSoknad = () => {
     const { behandlingID, fattVedtak } = this.props;
-    fattVedtak(behandlingID, { behandlingsresultatTypeKode: MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL });
+    fattVedtak(behandlingID, { behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL });
   };
 
   avsluttSakSomBortfalt = async () => {
@@ -306,7 +305,10 @@ class Saksbehandling extends Component {
   };
 
   render() {
-    const { redigerbart, sidedialogRedigerbart } = this.props;
+    const {
+      redigerbart, brevBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13, sedBestillingRedigerbart, match,
+    } = this.props;
+    const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
     const { blokkerInnholdMedOppfriskSpinner } = this;
 
@@ -351,7 +353,13 @@ class Saksbehandling extends Component {
                 visAvsluttSakSomBortfaltDialogHandle={this.visAvsluttSakSomBortfaltDialog}
                 tilForsidenHandle={this.navigerTilOversiktSide}
               />
-              <SideDialog saksnummer={this.state.saksnummer} behandlingID={behandlingID} redigerbart={sidedialogRedigerbart} />
+              <SideDialog
+                behandlingID={behandlingID}
+                saksnummer={saksnummer}
+                brevBestillingRedigerbart={brevBestillingRedigerbart}
+                brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+                sedBestillingRedigerbart={sedBestillingRedigerbart}
+              />
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
@@ -434,7 +442,9 @@ Saksbehandling.propTypes = {
   anmodningsperioder: PT.array,
   sendAnmodningsperioder: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
-  sidedialogRedigerbart: PT.bool.isRequired,
+  brevBestillingRedigerbart: PT.bool.isRequired,
+  sedBestillingRedigerbart: PT.bool.isRequired,
+  brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -452,7 +462,7 @@ Saksbehandling.defaultProps = {
  * @param state
  */
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
@@ -464,7 +474,9 @@ const mapStateToProps = state => ({
   behandlingsPeriode: behandlingsperioderSelectors.behandlingsPerioderSelector(state),
   anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  sidedialogRedigerbart: behandlingerSelectors.SidedialogRedigerbartSelector(state),
+  brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
+  sedBestillingRedigerbart: redigerbartSelectors.SedBestillingRedigerbartSelector(state),
+  brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

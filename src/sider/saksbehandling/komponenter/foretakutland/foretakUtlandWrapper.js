@@ -11,7 +11,7 @@ import EnkeltForetak from './enkeltforetak';
 
 import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
 
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import './foretakUtland.css';
 
@@ -52,7 +52,7 @@ ForetakUtlandWrapper.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = () => ({});

@@ -285,6 +285,8 @@ export const putAsText = (url, data = '') => methodToText('PUT', url, data);
 
 export const postAsJsonReceiveAsPDF = (url, data = {}, extendResponse = false) => methodToJson('POST', url, data, extendResponse, 'application/pdf');
 
+export const getAsPDF = (url, extendResponse = false) => methodToJson('GET', url, null, extendResponse, 'application/pdf');
+
 export function doThenDispatch(api, { OK, FEILET, PENDING }, validering) {
   return async (dispatch, getState) => {
     if (PENDING) {
