@@ -12,7 +12,7 @@ import DialogboksVenter from '../../../felleskomponenter/dialogboks/dialogboksVe
 import DialogboksHenlegg from '../../../felleskomponenter/dialogboks/dialogboksHenlegg';
 import Saksopplysninger from './komponenter/saksopplysninger';
 import SideDialog from '../../../felleskomponenter/sideDialog/sideDialog';
-import SideOppsummering from './komponenter/sideOppsummering';
+import SideOppsummering from '../komponenter/sideOppsummering';
 import { fagsakOperations, fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
@@ -20,7 +20,7 @@ import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../
 import { oppgaverOperations } from '../../../ducks/oppgaver';
 import { soknadOperations, soknadSelectors } from '../../../ducks/soknad';
 
-import './registrering.css';
+import '../registrering.css';
 
 import { saksopplysningerOperations } from '../../../ducks/saksopplysninger';
 import { RegistreringStateProviderWrapper } from '../state/registreringStateProvider';

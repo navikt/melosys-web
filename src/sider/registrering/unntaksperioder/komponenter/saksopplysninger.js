@@ -12,31 +12,16 @@ import * as RegistreringContext from '../../state/registreringContext';
 import ListevelgerFlervalg from '../../../../felleskomponenter/ui/listevelgerFlervalg';
 import Medlemskap from '../../../../felleskomponenter/medlemskap';
 import EndrePeriode from './endrePeriode';
+import RegisterkontrollTreff from '../../komponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
 import { endrePeriodeSkjema } from '../validering/endrePeriodeSkjema';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { createValidator } from '../../../../felleskomponenter/skjema/validering/skjemaer/createValidator';
 
-import './saksopplysninger.css';
+import '../../saksopplysninger.css';
 
 const uuid = require('uuid/v4');
-
-const UnntakPeriodeBegrunnelse = kode => {
-  if (!kode) return '';
-  return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.unntak_periode_begrunnelser);
-};
-
-const RegisterkontrollTreff = ({ begrunnelseKode }) => (
-  <div className="registerkontroll-listeelement">
-    <Nav.Ikoner kind="advarsel-sirkel-fyll" size="24" />
-    <Nav.Normaltekst>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</Nav.Normaltekst>
-  </div>
-);
-
-RegisterkontrollTreff.propTypes = {
-  begrunnelseKode: PT.string.isRequired,
-};
 
 const Saksopplysninger = props => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.GODKJENT);
