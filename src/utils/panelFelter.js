@@ -12,7 +12,6 @@ export const feltGrupper = {
   inntekt: {
     inntektNorskIPerioden: [],
     inntektUtenlandskIPerioden: [],
-    inntektNaeringIPerioden: [],
   },
   oppholdUtland: {
     studentSemester: [(value, props) => Skjema.Validering.avhengerAvSann('studentIEOS', value, props)],

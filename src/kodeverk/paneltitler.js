@@ -6,7 +6,7 @@ export const fullmektig = 'Fullmektig';
 export const arbeidsgiversVirksomhetINorge = 'Opplysninger om arbeidsgivers virksomhet i Norge';
 export const maritimtArbeid = 'Maritimt arbeid';
 export const medlemskap = 'Medlemskap';
-export const inntektUnderOpphold = 'Inntekt i søknadesperioden';
+export const inntektUnderOpphold = 'Inntekt i søknadsperioden';
 export const arbeidsgiverINorge = navn => `Arbeidsgiver i Norge: ${navn}`;
 export const kontantytelser = 'Kontantytelser fra NAV';
 export const personopplysningspanel = 'Personopplysningspanel';
