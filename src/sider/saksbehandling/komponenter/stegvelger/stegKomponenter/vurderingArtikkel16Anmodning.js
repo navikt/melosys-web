@@ -150,6 +150,14 @@ class VurderingArtikkel16Anmodning extends Component {
     }
   };
 
+  byggAnmodningsperioder = () => {
+    const { byggAnmodningsperioderHandler } = this.props;
+
+    byggAnmodningsperioderHandler();
+
+    this.setState({ lovvalgFeilmelding: undefined });
+  };
+
   lagreAnmodningsperioder = async () => {
     const { byggAnmodningsperioderHandler, lagreAnmodningsperioderHandler } = this.props;
 
@@ -220,7 +228,7 @@ class VurderingArtikkel16Anmodning extends Component {
 
   validerOgLagreBehandling = async () => {
     if (this.validerAlt()) {
-      await this.lagreAnmodningsperioder();
+      await this.byggAnmodningsperioder();
       this.lagreBehandlingerOgBestillAnmodningsperioder();
     }
   };
