@@ -204,8 +204,6 @@ class Saksbehandling extends Component {
     const { behandlingID } = this.state;
     const { sendLovvalgsperioder, lovvalgsperioder } = this.props;
 
-    if (lovvalgsperioder.length === 0) return;
-
     sendLovvalgsperioder(behandlingID, lovvalgsperioder);
   };
 
@@ -213,7 +211,6 @@ class Saksbehandling extends Component {
     const { behandlingID } = this.state;
     const { sendAnmodningsperioder, anmodningsperioder } = this.props;
 
-    if (anmodningsperioder.length === 0) return;
     if (anmodningsperioder.some(anmodningsperiode => anmodningsperiode.sendtUtland !== undefined)) return;
 
     sendAnmodningsperioder(behandlingID, { anmodningsperioder });
