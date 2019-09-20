@@ -1,3 +1,6 @@
-import RegistreringAnmodningunntak from './anmodningunntak';
+import React from 'react';
 
-export default RegistreringAnmodningunntak;
+import Saksopplysninger from './saksopplysninger';
+import Registrering from '../registrering';
+
+export default props => <Registrering Saksopplysninger={Saksopplysninger} {...props} />;

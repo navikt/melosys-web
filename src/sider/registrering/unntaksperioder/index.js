@@ -1,3 +1,6 @@
-import RegistreringUnntaksperioder from './unntaksperioder';
+import React from 'react';
 
-export default RegistreringUnntaksperioder;
+import Saksopplysninger from './saksopplysninger';
+import Registrering from '../registrering';
+
+export default props => <Registrering Saksopplysninger={Saksopplysninger} {...props} />;

@@ -11,7 +11,6 @@ import { formatterDatoTilNorsk } from '../../../utils/dato';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
-import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import Behandlingsmeny from './behandlingsmeny';
 import Behandlingsstatus from './behandlingsstatus';
 import Oppsummering from '../../../felleskomponenter/oppsummering';
@@ -40,7 +39,7 @@ const SideOppsummering = props => {
     window.open(URI_SOK);
   };
 
-  const tittel = KV.kodeTilTerm(behandlingstype, MKV.KTObjects.behandlinger.typer);
+  const tittel = KV.kodeTilTerm(behandlingstype, MKV.KTObjects.behandlinger.behandlingstyper) || '';
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
