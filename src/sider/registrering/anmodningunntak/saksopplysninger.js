@@ -3,38 +3,23 @@ import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import * as KV from '../../../../kodeverk';
-import * as Utils from '../../../../utils';
-import * as Api from '../../../../services/api';
-import * as MPT from '../../../../proptypes';
-import * as Nav from '../../../../utils/navFrontend';
-import * as RegistreringContext from '../../state/registreringContext';
-import Medlemskap from '../../../../felleskomponenter/medlemskap';
-import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
+import * as KV from '../../../kodeverk';
+import * as Utils from '../../../utils';
+import * as Api from '../../../services/api';
+import * as MPT from '../../../proptypes';
+import * as Nav from '../../../utils/navFrontend';
+import * as RegistreringContext from '../state/registreringContext';
+import Medlemskap from '../../../felleskomponenter/medlemskap';
+import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
+import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 
-import './saksopplysninger.css';
-import { DatoOmradeMedVarighet } from '../../../../felleskomponenter/datoOmrade/datoOmrade';
-import { createValidator } from '../../../../felleskomponenter/skjema/validering/skjemaer';
-import { endrePeriodeSkjema } from '../../unntaksperioder/validering/endrePeriodeSkjema';
-import { fritekstPakrevdSkjema } from '../validering/anmodningunntakSkjema';
+import '../saksopplysninger.css';
+import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
+import { createValidator } from '../../../felleskomponenter/skjema/validering/skjemaer';
+import { endrePeriodeSkjema } from '../unntaksperioder/validering/endrePeriodeSkjema';
+import { fritekstPakrevdSkjema } from './validering/anmodningunntakSkjema';
 
 const uuid = require('uuid/v4');
-
-const UnntakPeriodeBegrunnelse = kode => {
-  if (!kode) return '';
-  return KV.kodeTilTerm(kode, MKV.KTObjects.begrunnelser.unntak_periode_begrunnelser);
-};
-
-const RegisterkontrollTreff = ({ begrunnelseKode }) => (
-  <div className="registerkontroll-listeelement">
-    <Nav.Ikoner kind="advarsel-sirkel-fyll" size="24" />
-    <Nav.Normaltekst>{UnntakPeriodeBegrunnelse(begrunnelseKode)}</Nav.Normaltekst>
-  </div>
-);
-
-RegisterkontrollTreff.propTypes = {
-  begrunnelseKode: PT.string.isRequired,
-};
 
 const Saksopplysninger = props => {
   const {
@@ -222,7 +207,7 @@ const Saksopplysninger = props => {
               )}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
-                  <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>Bekreft og fortsett</Nav.Hovedknapp>
+                  <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>Bekreft og send</Nav.Hovedknapp>
                 </Nav.Column>
               </Nav.Row>
             </div>
@@ -233,7 +218,6 @@ const Saksopplysninger = props => {
     </div>
   );
 };
-
 
 Saksopplysninger.propTypes = {
   redigerbart: PT.bool.isRequired,
@@ -259,6 +243,7 @@ Saksopplysninger.defaultProps = {
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
 });
+
 const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
 });

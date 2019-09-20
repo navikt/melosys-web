@@ -1,16 +1,22 @@
-@import '../../../../utils/mixins';
-@import '../../../../constants';
+@import '../../utils/mixins';
+@import '../../constants';
 
-.sideOppsummering {
-  margin-bottom: 0.5em;
+.registrering {
+  width:100%;
 
-  .oppsummering__detaljer {
-    .beskrivliste-mixin('col');
-    margin-bottom: 1em;
+  .registrering__skjema__scroll {
+    overflow-y: scroll;
+    height: 100vh;
+    margin: 0 -1em;
+    padding: 0 1em;
   }
 
-  .oppsummering__detaljer--rad {
-    .beskrivliste-mixin('row');
+  .registrering__fotknapper {
+    display: flex;
+    flex-direction: row;
+    border-top: 1px solid #7f7f7f;
+    margin-top: 2em;
+    padding-top: 2em;
   }
 
   .oppsummering__menylinje {
