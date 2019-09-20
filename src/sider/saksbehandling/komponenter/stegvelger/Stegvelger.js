@@ -132,6 +132,7 @@ class Stegvelger extends Component {
       this.props.oppdaterVilkaar(vilkaar.hent()),
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
       this.props.oppdaterLovvalgperioder(lovvalgsbestemmelse.hent()),
+      this.props.oppdaterAnmodningsPerioder(lovvalgsbestemmelse.hent()),
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
 
@@ -293,6 +294,7 @@ class Stegvelger extends Component {
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
+      lagreAnmodningsperioderHandler,
     } = this.props;
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
@@ -303,6 +305,7 @@ class Stegvelger extends Component {
       await lagreAvklartefaktaHandler();
       await lagreVilkarHandler();
       await lagreLovvalgsperioderHandler();
+      await lagreAnmodningsperioderHandler();
 
       if (this.erSisteSteg(nyttStegNummer)) {
         await lagreSoknadHandler();
@@ -427,7 +430,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterLovvalgperioder: lovvalgsperiode => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lovvalgsperiode)),
   hentMedlemsPerioder: behandlingID => dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
   hentAnmodningsperioder: behandlingID => dispatch(anmodningsperioderOperations.hent(behandlingID)),
-  oppdaterAnmodningsPerioder: anmodningsperioder => dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(anmodningsperioder)),
+  oppdaterAnmodningsPerioder: lovvalgsbestemmelse => dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(lovvalgsbestemmelse)),
   oppdaterAnmodningsperiodesvar: anmodningsperiodesvar => dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
 });
 
