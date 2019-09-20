@@ -1,10 +1,12 @@
 import React from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 import * as RegistreringContext from '../../state/registreringContext';
 
+import * as KV from '../../../../kodeverk';
 import { formatterDatoTilNorsk } from '../../../../utils/dato';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../../../ducks/behandlinger';
@@ -18,6 +20,7 @@ import './sideOppsummering.css';
 const SideOppsummering = props => {
   const {
     behandlingID,
+    behandlingstype,
     fagsak,
     oppsummering,
     person,
@@ -36,6 +39,8 @@ const SideOppsummering = props => {
     window.open(URI_SOK);
   };
 
+  const tittel = KV.kodeTilTerm(behandlingstype, MKV.KTObjects.behandlinger.typer)
+
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
       <Nav.Panel className="saksbehandling__soknadSammendrag">
@@ -52,8 +57,8 @@ const SideOppsummering = props => {
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="12" md="6">
-            <Nav.Undertittel className="soknadSammendrag__header">Søknad</Nav.Undertittel>
+          <Nav.Column xs="12" md="12">
+            <Nav.Undertittel className="soknadSammendrag__header">{tittel}</Nav.Undertittel>
           </Nav.Column>
         </Nav.Row>
         {/* START OPPSUMMERING */}
@@ -115,7 +120,7 @@ const mapStateToProps = state => ({
   redigerbart: behandlingerSelectors.RedigerbartSelector(state),
   endreLovvalgsperiodeRedigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  lovvalgsperiodeFom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom), // TODO Prop-navn
+  lovvalgsperiodeFom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
 });

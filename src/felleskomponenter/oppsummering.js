@@ -30,7 +30,7 @@ const Oppsummering = props => {
     sammensattNavn,
   } = person;
 
-  const arbeidslandSetning = arbeidsland && arbeidsland.length > 0 ? Utils.streng.arrayTilKonjunksjon(arbeidsland.map(land => land.term)) : 'Ukjent';
+  const landTilSetning = land => (land && land.length > 0 ? Utils.streng.arrayTilKonjunksjon(land.map(enkeltLand => enkeltLand.term)) : 'Ukjent');
 
   return (
     <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
@@ -49,13 +49,13 @@ const Oppsummering = props => {
       { arbeidsland.length > 0 &&
         <Fragment>
           <dt>Arbeidsland:</dt>
-          <dd>{arbeidslandSetning}</dd>
+          <dd>{landTilSetning(arbeidsland)}</dd>
         </Fragment>
       }
       { lovvalgsland.length > 0 &&
         <Fragment>
           <dt>Lovvalgsland:</dt>
-          <dd>{lovvalgsland}</dd> {/* TODO */}
+          <dd>{landTilSetning(lovvalgsland)}</dd>
         </Fragment>
       }
       { soknadsperiodeFom && soknadsperiodeTom &&
