@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import * as EKV from 'eessi-kodeverk';
 
 import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
@@ -18,9 +19,9 @@ import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 import './vurderingVedtak.css';
 
 const alleLovvalg = [
-  ...MKV.KTObjects.lovvalgsbestemmelser.forordning_883_2004,
-  ...MKV.KTObjects.lovvalgsbestemmelser.forordning_987_2009,
-  ...MKV.KTObjects.lovvalgsbestemmelser.tillegg,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
+  ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
 ];
 
 const VurderingVedtak = ({
@@ -44,9 +45,10 @@ const VurderingVedtak = ({
 
   const dokumenter = [
     { navn: 'Forhåndsvis vedtaksbrev og A1', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
+    { navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true },
   ];
 
-  if (lovvalgSomKodeTerm && lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1) {
+  if (lovvalgSomKodeTerm && lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1) {
     dokumenter.push({ navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } });
   }
 
@@ -72,7 +74,7 @@ const VurderingVedtak = ({
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Hovedknapp disabled={!redigerbart} onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Hovedknapp>
+            <Nav.Hovedknapp disabled={!redigerbart} onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>

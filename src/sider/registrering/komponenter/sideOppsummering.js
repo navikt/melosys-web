@@ -10,6 +10,8 @@ import * as KV from '../../../kodeverk';
 import { formatterDatoTilNorsk } from '../../../utils/dato';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
+import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import Behandlingsmeny from './behandlingsmeny';
 import Behandlingsstatus from './behandlingsstatus';
 import Oppsummering from '../../../felleskomponenter/oppsummering';
@@ -116,8 +118,8 @@ const mapStateToProps = state => ({
   fagsak: fagsakSelectors.FagsakSelector(state),
   oppsummering: behandlingerSelectors.OppsummeringSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
-  endreLovvalgsperiodeRedigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
+  endreLovvalgsperiodeRedigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsperiodeFom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),

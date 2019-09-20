@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import ArbeidUtlandEnkelt from './arbeidUtlandEnkelt';
 import * as Nav from '../../../../utils/navFrontend';
 import * as Ikoner from '../../../../resources/images';
@@ -50,7 +50,7 @@ ArbeidUtlandWrapper.propTypes = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = () => ({});

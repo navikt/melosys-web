@@ -25,6 +25,7 @@ import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { PersonSelectors, PersonOperations } from '../../../ducks/personer';
 import { soknadSelectors } from '../../../ducks/soknad';
 import { formSelectors } from '../../../ducks/form';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 
 const ikonFraKjonn = kjoenn => {
   switch (kjoenn) {
@@ -290,7 +291,7 @@ const mapStateToProps = state => ({
   personOpplysninger: soknadSelectors.PersonOpplysningerSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
-  redigerbart: behandlingerSelectors.PanelerRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
   medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
   oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
 });
