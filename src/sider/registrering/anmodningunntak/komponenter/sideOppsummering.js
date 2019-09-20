@@ -10,7 +10,6 @@ import * as KV from '../../../../kodeverk';
 import { formatterDatoTilNorsk } from '../../../../utils/dato';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../../../ducks/behandlinger';
-import { avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
 import Behandlingsmeny from './behandlingsmeny';
 import Behandlingsstatus from './behandlingsstatus';
 import Oppsummering from '../../../../felleskomponenter/oppsummering';
@@ -28,7 +27,7 @@ const SideOppsummering = props => {
     lovvalgsperiodeTom,
     lagreOgLukkHandle,
     tilbakeleggeHandle,
-    arbeidsland,
+    lovvalgsland,
     endreLovvalgsperiodeRedigerbart,
   } = props;
 
@@ -39,7 +38,7 @@ const SideOppsummering = props => {
     window.open(URI_SOK);
   };
 
-  const tittel = KV.kodeTilTerm(behandlingstype, MKV.KTObjects.behandlinger.typer)
+  const tittel = KV.kodeTilTerm(behandlingstype, MKV.KTObjects.behandlinger.typer);
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -65,7 +64,7 @@ const SideOppsummering = props => {
         <Nav.Row>
           <Nav.Column xs="12">
             {oppsummering && <Oppsummering
-              arbeidsland={arbeidsland} // Lovvalgsland
+              lovvalgsland={[lovvalgsland]}
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
@@ -98,14 +97,14 @@ SideOppsummering.propTypes = {
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
-  arbeidsland: PT.arrayOf(MPT.Kodeverk),
+  lovvalgsland: MPT.Kodeverk,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
   tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
 SideOppsummering.defaultProps = {
-  arbeidsland: [],
+  lovvalgsland: [],
   redigerbart: false,
   fagsak: undefined,
   oppsummering: undefined,
@@ -122,7 +121,7 @@ const mapStateToProps = state => ({
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsperiodeFom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
-  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

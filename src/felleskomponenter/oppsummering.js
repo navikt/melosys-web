@@ -58,13 +58,13 @@ const Oppsummering = props => {
           <dd>{landTilSetning(lovvalgsland)}</dd>
         </Fragment>
       }
-      { soknadsperiodeFom && soknadsperiodeTom &&
+      { (soknadsperiodeFom || soknadsperiodeTom) &&
         <Fragment>
           <dt>Søknadsperiode:</dt>
           <dd>{soknadsperiodeFom || 'ukjent'} - {soknadsperiodeTom || 'ukjent'}</dd>
         </Fragment>
       }
-      { lovvalgsperiodeFom && lovvalgsperiodeTom &&
+      { (lovvalgsperiodeFom || lovvalgsperiodeTom) &&
         <Fragment>
           <dt>Lovvalgsperiode:</dt>
           <dd>{lovvalgsperiodeFom || 'ukjent'} - {lovvalgsperiodeTom || 'ukjent'}</dd>
