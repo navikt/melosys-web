@@ -83,6 +83,12 @@ export const SEDSelector = createSelector(
   sed => sed
 );
 export const LovvalgsperiodeSelector = createSelector(state => SEDSelector(state).lovvalgsperiode || {}, lovvalgsperiode => lovvalgsperiode);
+
+export const LovvalgslandSelector = createSelector(
+  state => SEDSelector(state).lovvalgslandKode || '',
+  lovvalgsland => lovvalgsland
+)
+
 export const OrganisasjonerSelector = createSelector(
   state => SaksopplysningerSelector(state).organisasjoner || [],
   organisasjoner => organisasjoner
