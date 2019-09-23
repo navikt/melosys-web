@@ -41,7 +41,7 @@ class SideDialog extends Component {
       .then(skalVises => {
         if (skalVises) {
           this.leggTilFane({ navn: 'sedbestilling', tittel: 'Opprett ny BUC' });
-          this.leggTilFane({ navn: 'besvarsed', tittel: 'Besvar SED' });
+          this.leggTilFane({ navn: 'besvarsed', tittel: 'SED-utveksling' });
         }
       });
   }

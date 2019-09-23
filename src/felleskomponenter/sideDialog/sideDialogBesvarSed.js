@@ -8,11 +8,25 @@ import * as Utils from '../../utils';
 import * as Api from '../../services/api';
 import './sideDialogBesvarSed.css';
 
-// Per i dag finnes det bare status=UTKAST, men legger til rette for støtte av flere statuser.
-const StatusEtikett = ({ status }) => (
-  status.toUpperCase() === KV.Koder.SedStatus.UTKAST &&
-    <Nav.EtikettBase type="fokus">Utkast</Nav.EtikettBase>
-);
+const StatusEtikett = ({ status }) => {
+  if (!status) {
+    return null;
+  }
+
+  const lagKomponent = (type, statusStreng) => (<Nav.EtikettBase type={type}>{statusStreng}</Nav.EtikettBase>);
+
+  switch (status.toUpperCase()) {
+    case KV.Koder.SedStatus.UTKAST:
+      return lagKomponent('fokus', 'Under arbeid');
+    case KV.Koder.SedStatus.SENDT:
+    case KV.Koder.SedStatus.MOTTATT:
+      return lagKomponent('suksess', Utils.streng.storeForbokstaver(status));
+    case KV.Koder.SedStatus.AVBRUTT:
+      return lagKomponent('advarsel', Utils.streng.storeForbokstaver(status));
+    default:
+      return lagKomponent('info', Utils.streng.storeForbokstaver(status));
+  }
+};
 
 StatusEtikett.propTypes = {
   status: PT.string.isRequired,
@@ -56,12 +70,14 @@ EnkeltBucHeading.propTypes = {
   opprettetDato: PT.string.isRequired,
 };
 
+const sorterEtterDato = liste => liste.sort((a, b) => new Date(b.opprettetDato) - new Date(a.opprettetDato));
+
 const EnkeltBuc = ({ buc }) => (
   <Nav.EkspanderbartpanelBase border heading={<EnkeltBucHeading {...buc} />}>
     <div className="buc_tabell">
       <Nav.Element className="tabell_header kolonne__navn">Navn på SED</Nav.Element>
       <Nav.Element className="tabell_header kolonne__status">Status</Nav.Element>
-      { buc.seder.map(sed => <EnkeltSed key={sed.sedId} sed={sed} />) }
+      { sorterEtterDato(buc.seder).map(sed => <EnkeltSed key={sed.sedId} sed={sed} />) }
     </div>
   </Nav.EkspanderbartpanelBase>
 );
@@ -77,7 +93,7 @@ EnkeltBuc.propTypes = {
 const HenterOpplysningerSpinner = () => (
   <div className="henter_opplysninger">
     <Nav.NavFrontendSpinner />
-    <Nav.Normaltekst>Henter BUCer under arbeid</Nav.Normaltekst>
+    <Nav.Normaltekst>Henter BUCer knyttet til saken</Nav.Normaltekst>
   </div>
 );
 
@@ -96,7 +112,7 @@ const SideDialogBesvarSed = ({ behandlingID }) => {
       } catch (e) {
         setHenterData(false);
         Utils.logger.error(e);
-        setFeilmelding('Kunne ikke hente BUCer under arbeid');
+        setFeilmelding('Kunne ikke hente BUCer knyttet til saken');
       }
     }
   };
@@ -107,19 +123,19 @@ const SideDialogBesvarSed = ({ behandlingID }) => {
 
   const kanViseListe = liste => !henterData && !feilmelding && liste && liste.length > 0;
 
-  const getKomponent = () => {
+  const hentKomponent = () => {
     if (kanViseListe(bucer)) {
-      return bucer.map(buc => <EnkeltBuc key={buc.id} buc={buc} />);
+      return sorterEtterDato(bucer).map(buc => <EnkeltBuc key={buc.id} buc={buc} />);
     } else if (henterData) {
       return <HenterOpplysningerSpinner />;
     }
 
     return (
-      <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding || 'For øyeblikket ingen BUCer under arbeid'}</Nav.AlertStripe>
+      <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding || 'For øyeblikket ingen BUCer knyttet til denne saken'}</Nav.AlertStripe>
     );
   };
 
-  return <div className="besvar_sed">{ getKomponent() }</div>;
+  return <div className="besvar_sed">{ hentKomponent() }</div>;
 };
 
 SideDialogBesvarSed.propTypes = {
