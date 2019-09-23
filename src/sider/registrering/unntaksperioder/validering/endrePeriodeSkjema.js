@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import * as Utils from '../../../utils';
+import * as Utils from '../../../../utils';
 
 const gyldigPeriodeTest = {
   name: 'Gyldig periode',
