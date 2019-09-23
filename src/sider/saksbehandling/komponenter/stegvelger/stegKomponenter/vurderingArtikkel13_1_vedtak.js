@@ -71,7 +71,7 @@ export const VurderingArtikkel13_1_Vedtak = props => {
     return true;
   };
 
-  const dokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
@@ -141,7 +141,7 @@ export const VurderingArtikkel13_1_Vedtak = props => {
       }
       <Nav.Row>
         <Nav.Column xs="6">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={vedKlikkForhandsvis} />}
+          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
         </Nav.Column>
       </Nav.Row>
       <Nav.Hovedknapp onClick={vedKlikkVedtak} disabled={!redigerbart} type="hoved">FATT VEDTAK</Nav.Hovedknapp>
