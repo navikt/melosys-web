@@ -142,7 +142,7 @@ export class VurderingEndrePeriode extends React.Component {
 
     const endretPeriodeBegrunnelse = hentFaktaVerdi(aarsakEndringPeriodeAvklartfakta);
 
-    const dokumenter = [
+    const pdfDokumenter = [
       {
         navn: 'Forhåndsvis vedtaksbrev',
         type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
@@ -212,7 +212,7 @@ export class VurderingEndrePeriode extends React.Component {
             />
           </Nav.Column>
         </Nav.Row>
-        {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={vedKlikkPdf} />}
+        {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
         <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
       </div>
     );
