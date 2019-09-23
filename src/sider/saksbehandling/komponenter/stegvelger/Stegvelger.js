@@ -20,10 +20,12 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../duc
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../../../ducks/behandlingsperioder';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
 import { vilkarOperations, vilkarSelectors } from '../../../../ducks/vilkar';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { vedtakOperations } from '../../../../ducks/vedtak';
 import { formSelectors } from '../../../../ducks/form';
+
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
-import { AvklartefaktaStore, VilkaarStore, LovvalgsbestemmelseStore, AnmodningsperiodesvarStore } from './StegState';
+import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
 
 import './stegvelger.css';
 
@@ -32,10 +34,11 @@ class Stegvelger extends Component {
     aktivtStegNummer: 0,
     aktuelleSteg: [],
     stegStores: {
-      anmodningsperiodesvar: new AnmodningsperiodesvarStore(),
+      anmodningsperiodesvar: new EnkelDataStore(),
       avklartefakta: new AvklartefaktaStore(),
       vilkaar: new VilkaarStore(),
-      lovvalgsbestemmelse: new LovvalgsbestemmelseStore(),
+      lovvalgsbestemmelse: new EnkelDataStore(),
+      tilleggbestemmelse: new EnkelDataStore(),
     },
     visSoknadFeilmeldinger: false,
   };
@@ -43,10 +46,8 @@ class Stegvelger extends Component {
   async componentDidMount() {
     this.aktiv = true;
 
-    const { behandlingID, match } = this.props;
+    const { behandlingID } = this.props;
     const { aktivtStegNummer } = this.state;
-
-    const { snr } = match.params;
 
     await Promise.all([
       this.props.hentMedlemsPerioder(behandlingID),
@@ -125,13 +126,20 @@ class Stegvelger extends Component {
 
     const { aktivtStegNummer, stegStores } = this.state;
     const {
-      vilkaar, avklartefakta, lovvalgsbestemmelse, anmodningsperiodesvar,
+      vilkaar, avklartefakta, lovvalgsbestemmelse, anmodningsperiodesvar, tilleggbestemmelse,
     } = stegStores;
 
     await Promise.all([
       this.props.oppdaterVilkaar(vilkaar.hent()),
       this.props.oppdaterAvklartefakta(avklartefakta.hent()),
-      this.props.oppdaterLovvalgperioder(lovvalgsbestemmelse.hent()),
+      this.props.oppdaterLovvalgperioder({
+        lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+        tilleggbestemmelse: tilleggbestemmelse.hent(),
+      }),
+      this.props.oppdaterAnmodningsPerioder({
+        lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+        tilleggbestemmelse: tilleggbestemmelse.hent(),
+      }),
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
 
@@ -182,11 +190,21 @@ class Stegvelger extends Component {
   };
 
   byggLovvalgsperioderHandler = () => {
-    this.props.oppdaterLovvalgperioder(this.state.stegStores.lovvalgsbestemmelse.hent());
+    const { lovvalgsbestemmelse, tilleggbestemmelse } = this.state.stegStores;
+
+    this.props.oppdaterLovvalgperioder({
+      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+      tilleggbestemmelse: tilleggbestemmelse.hent(),
+    });
   };
 
   byggAnmodningsperioderHandler = () => {
-    this.props.oppdaterAnmodningsPerioder(this.state.stegStores.lovvalgsbestemmelse.hent());
+    const { lovvalgsbestemmelse, tilleggbestemmelse } = this.state.stegStores;
+
+    this.props.oppdaterAnmodningsPerioder({
+      lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
+      tilleggbestemmelse: tilleggbestemmelse.hent(),
+    });
   };
 
   endreDatoOgSendLovvalgsperioderHandler = (fomdato, tomdato) => {
@@ -293,6 +311,7 @@ class Stegvelger extends Component {
       lagreVilkarHandler,
       lagreAvklartefaktaHandler,
       lagreLovvalgsperioderHandler,
+      lagreAnmodningsperioderHandler,
     } = this.props;
 
     this.setState({ aktivtStegNummer: nyttStegNummer });
@@ -303,6 +322,7 @@ class Stegvelger extends Component {
       await lagreAvklartefaktaHandler();
       await lagreVilkarHandler();
       await lagreLovvalgsperioderHandler();
+      await lagreAnmodningsperioderHandler();
 
       if (this.erSisteSteg(nyttStegNummer)) {
         await lagreSoknadHandler();
@@ -357,7 +377,6 @@ Stegvelger.propTypes = {
   fattVedtak: PT.func.isRequired,
   lagreSoknadHandler: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
-  match: PT.object.isRequired,
   oppdaterPerioderState: PT.func.isRequired,
   oppdaterLokalSoknadHandler: PT.func.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering,
@@ -411,9 +430,9 @@ const mapStateToProps = state => ({
   artikkel16_motta_svar_skjema: formSelectors.Artikkel16MottaSvarFormSelector(state).values,
   saksopplysninger: behandlingerSelectors.SaksopplysningerSelector(state),
   valgteVirksomheter: avklartefaktaSelectors.AvklarteVirksomheterSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
-  generiskStegRedigerbart: behandlingerSelectors.GeneriskStegRedigerbartSelector(state),
+  generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
 });
 
 /* eslint no-alert:off */
@@ -428,7 +447,7 @@ const mapDispatchToProps = dispatch => ({
   oppdaterLovvalgperioder: lovvalgsperiode => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(lovvalgsperiode)),
   hentMedlemsPerioder: behandlingID => dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID)),
   hentAnmodningsperioder: behandlingID => dispatch(anmodningsperioderOperations.hent(behandlingID)),
-  oppdaterAnmodningsPerioder: anmodningsperioder => dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(anmodningsperioder)),
+  oppdaterAnmodningsPerioder: lovvalgsbestemmelse => dispatch(anmodningsperioderOperations.oppdaterAnmodningsperioderState(lovvalgsbestemmelse)),
   oppdaterAnmodningsperiodesvar: anmodningsperiodesvar => dispatch(anmodningsperiodesvarOperations.oppdaterAnmodningsperiodesvarState(anmodningsperiodesvar)),
 });
 

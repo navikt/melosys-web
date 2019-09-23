@@ -4,7 +4,6 @@
  * Målet med selectorer er å samle funksjonalitet som behandler, itererer og omformer
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
-import * as MKV from 'melosys-kodeverk';
 
 import { createSelector } from 'reselect';
 import moment from 'moment/moment';
@@ -34,31 +33,6 @@ export const BehandlingstypeKodeSelector = createSelector(
 export const ErArtikkel16AnmodningSendtSelector = createSelector(
   anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
   anmodningsperioderSendtUtland => anmodningsperioderSendtUtland
-);
-
-export const RedigerbartSelector = createSelector(
-  state => BehandlingerSelector(state).redigerbart || false,
-  BehandlingstypeKodeSelector,
-  (redigerbart, behandlingstypeKode) => redigerbart && behandlingstypeKode !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE
-);
-export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
-  state => BehandlingerSelector(state).redigerbart || false,
-  redigerbart => redigerbart
-);
-export const GeneriskStegRedigerbartSelector = createSelector(
-  RedigerbartSelector,
-  ErArtikkel16AnmodningSendtSelector,
-  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
-);
-export const PanelerRedigerbartSelector = createSelector(
-  RedigerbartSelector,
-  ErArtikkel16AnmodningSendtSelector,
-  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
-);
-export const SidedialogRedigerbartSelector = createSelector(
-  RedigerbartSelector,
-  ErArtikkel16AnmodningSendtSelector,
-  (redigerbart, erArtikkel16AnmodningSendt) => redigerbart && !erArtikkel16AnmodningSendt
 );
 
 export const SaksopplysningerSelector = createSelector(
