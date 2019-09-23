@@ -33,7 +33,7 @@ class YrkesaktivitetAntallLand extends Steg {
           Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL)) &&
           YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND)
         ),
-        nesteSteg: STEG.VIRKSOMHETER,
+        nesteSteg: STEG.BOSTEDSLAND,
       },
       {
         beskrivelse: 'alle andre valg',
