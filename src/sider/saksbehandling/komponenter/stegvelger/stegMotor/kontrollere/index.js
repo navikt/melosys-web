@@ -25,6 +25,7 @@ import Arbeidsmonster from './arbeidsmonster';
 import SokkelSkip from './sokkel_skip';
 import Vedtak from './vedtak';
 import EndrePeriode from './endre_periode';
+import Videresend from './videresend';
 
 import { STEG } from '../typer';
 
@@ -56,5 +57,6 @@ export const stegKatalogMap = new Map([
   [STEG.SOKKEL_SKIP, SokkelSkip],
   [STEG.VEDTAK, Vedtak],
   [STEG.ENDRET_PERIODE, EndrePeriode],
+  [STEG.VIDERESEND, Videresend],
 ]);
 

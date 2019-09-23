@@ -18,6 +18,7 @@ import { anmodningsperiodesvarSelectors, anmodningsperiodesvarOperations } from 
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../../ducks/avklartefakta';
 import { behandlingsperioderSelectors, behandlingsperioderOperations } from '../../../../ducks/behandlingsperioder';
+import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../../ducks/lovvalgsperioder';
 import { vilkarOperations, vilkarSelectors } from '../../../../ducks/vilkar';
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
@@ -83,7 +84,7 @@ class Stegvelger extends Component {
     this.validerSoknadOgGaTilSteg(this.beregnNesteSteg());
   };
 
-  harSoknadIngenFeilmeldinger = () => Utils._isEmpty(this.props.soknadFeilmeldinger);
+  harSoknadFeilmeldinger = () => !Utils._isEmpty(this.props.soknadFeilmeldinger);
 
   gjemSoknadFeilmeldinger = () => this.setState({ visSoknadFeilmeldinger: false });
 
@@ -158,14 +159,11 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = async behandlingsresultatTypeKode => {
-    if (this.harSoknadIngenFeilmeldinger()) {
-      this.gjemSoknadFeilmeldinger();
+  lagreOgFatteVedtak = behandlingsresultatTypeKode => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
       this.fatteVedtakHandler(behandlingsresultatTypeKode);
-    } else {
-      this.visSoknadFeilmeldinger();
-    }
+    });
   };
 
   bestillAnmodningsperioder = () => {
@@ -179,15 +177,40 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgBestillAnmodningsperioder = async () => {
-    if (this.harSoknadIngenFeilmeldinger()) {
-      this.gjemSoknadFeilmeldinger();
+  lagreOgBestillAnmodningsperioder = () => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
       this.bestillAnmodningsperioder();
-    } else {
-      this.visSoknadFeilmeldinger();
-    }
+    });
   };
+
+  videresendSoknad = async () => {
+    const { saksnummer } = this.props;
+
+    return Api.Fagsaker.fagsak.videresend(saksnummer);
+  };
+
+  lagreAvklartefaktaOgVideresendSoknad = () => {
+    this.sjekkOgVisSoknadFeilmeldinger(async () => {
+      try {
+        await this.props.lagreAvklartefaktaHandler();
+        await this.videresendSoknad();
+      } catch (e) {
+        Utils.logger.error(e);
+      } finally {
+        this.tilForsiden();
+      }
+    });
+  };
+
+  sjekkOgVisSoknadFeilmeldinger = ingenFeilmeldingerCallback => {
+    if (this.harSoknadFeilmeldinger()) {
+      this.visSoknadFeilmeldinger();
+    } else {
+      this.gjemSoknadFeilmeldinger();
+      if (ingenFeilmeldingerCallback) ingenFeilmeldingerCallback();
+    }
+  }
 
   byggLovvalgsperioderHandler = () => {
     const { lovvalgsbestemmelse, tilleggbestemmelse } = this.state.stegStores;
@@ -244,6 +267,8 @@ class Stegvelger extends Component {
       tilForsiden: this.tilForsiden,
       lagreOgBestillAnmodningsperioder: this.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this.byggAnmodningsperioderHandler,
+      lagreAvklartefakta: this.props.lagreAvklartefaktaHandler,
+      lagreAvklartefaktaOgVideresendSoknad: this.lagreAvklartefaktaOgVideresendSoknad,
       byggLovvalgsperioder: this.byggLovvalgsperioderHandler,
       lagreLovvalgsperioder: this.props.lagreLovvalgsperioderHandler,
     };
@@ -288,12 +313,9 @@ class Stegvelger extends Component {
   };
 
   validerSoknadOgGaTilSteg = nyttStegNummer => {
-    if (this.harSoknadIngenFeilmeldinger()) {
-      this.gjemSoknadFeilmeldinger();
+    this.sjekkOgVisSoknadFeilmeldinger(() => {
       this.tilSteg(nyttStegNummer);
-    } else {
-      this.visSoknadFeilmeldinger();
-    }
+    });
   };
 
   /** Gå til et konkret steg i steglisten, angitt av en indeks
@@ -403,6 +425,7 @@ Stegvelger.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterAnmodningsperiodesvar: PT.func.isRequired,
   generiskStegRedigerbart: PT.bool.isRequired,
+  saksnummer: PT.string.isRequired,
 };
 
 Stegvelger.defaultProps = {
@@ -433,6 +456,7 @@ const mapStateToProps = state => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   soknadFeilmeldinger: formSelectors.SoknadErrorsSelector(state),
   generiskStegRedigerbart: redigerbartSelectors.GeneriskStegRedigerbartSelector(state),
+  saksnummer: fagsakSelectors.SaksnummerSelector(state),
 });
 
 /* eslint no-alert:off */
