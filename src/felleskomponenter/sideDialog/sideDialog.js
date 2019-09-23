@@ -98,5 +98,4 @@ class SideDialog extends Component {
     );
   }
 }
-
 export default SideDialog;
