@@ -80,10 +80,11 @@ const Saksopplysninger = props => {
       const { behandlingID, history } = props;
       const tilForsiden = () => history.push('/');
       const { INNVILGELSE, DELVIS_INNVILGELSE, AVSLAG } = MKV.Koder.anmodningsperiodesvartyper;
+      const tomPeriode = { fom: null, tom: null };
       let response;
       switch (anmodningsperiodeSvarType) {
         case INNVILGELSE:
-          response = makeResponse(null, null);
+          response = makeResponse(tomPeriode, null);
           break;
         case DELVIS_INNVILGELSE:
           response = makeResponse({
@@ -92,7 +93,7 @@ const Saksopplysninger = props => {
           }, null);
           break;
         case AVSLAG:
-          response = makeResponse(null, begrunnelseFritekst);
+          response = makeResponse(tomPeriode, begrunnelseFritekst);
           break;
         default:
           break;
