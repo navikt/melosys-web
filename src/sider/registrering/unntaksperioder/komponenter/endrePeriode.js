@@ -49,7 +49,9 @@ const EndrePeriode = ({
   };
 
   const datoSjekkGyldig = () => {
-    const varighet = Utils.dato.datoDiff(fom, tom, 'years');
+    const fomISO = Utils.dato.formatterDatoTilISO(fom);
+    const tomISO = Utils.dato.formatterDatoTilISO(tom);
+    const varighet = Utils.dato.datoDiff(fomISO, tomISO, 'years');
 
     if (varighet <= 0) {
       return 'Ugyldig periode';
