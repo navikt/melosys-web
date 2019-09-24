@@ -13,7 +13,8 @@ const ForsideLoadable = loadable(() => import('./sider/forside'), { fallback: Si
 const SokLoadable = loadable(() => import('./sider/sok'), { fallback: SideLoadingStatus });
 const SaksbehandlingLoadable = loadable(() => import('./sider/saksbehandling'), { fallback: SideLoadingStatus });
 const JournalforingLoadable = loadable(() => import('./sider/journalforing'), { fallback: SideLoadingStatus });
-const RegistreringLoadable = loadable(() => import('./sider/registrering'), { fallback: SideLoadingStatus });
+const RegistreringUnntaksperioderLoadable = loadable(() => import('./sider/registrering/unntaksperioder'), { fallback: SideLoadingStatus });
+const RegistreringAnmodningunntakLoadable = loadable(() => import('./sider/registrering/anmodningunntak'), { fallback: SideLoadingStatus });
 
 const Routing = ({ location }) => {
   const [featureToggle, setFeatureToggle] = useState(false);
@@ -27,7 +28,8 @@ const Routing = ({ location }) => {
       <Switch location={location}>
         <Route exact path="/" component={ForsideLoadable} />
         <Route exact path="/sok/:fnr" component={SokLoadable} />
-        {featureToggle && <Route exact path="/registrering/:snr" component={RegistreringLoadable} />}
+        {featureToggle && <Route exact path="/registrering/:snr/unntaksperioder" component={RegistreringUnntaksperioderLoadable} />}
+        {featureToggle && <Route exact path="/registrering/:snr/anmodningunntak" component={RegistreringAnmodningunntakLoadable} />}
         <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
         <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
         <Route component={UkjentSideLoadable} />

@@ -9,6 +9,7 @@ import * as logger from './logger';
 import * as queryString from './queryString';
 import * as yup from './yup';
 import * as feature from './feature';
+import * as url from './url';
 
 import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from './utils';
 
@@ -20,6 +21,7 @@ export {
   logger,
   queryString,
   yup,
+  url,
   isUndefined as _isUndefined,
   isFunction as _isFunction,
   isNil as _isNil,
