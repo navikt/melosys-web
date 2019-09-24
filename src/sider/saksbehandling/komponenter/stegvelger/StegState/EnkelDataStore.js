@@ -1,7 +1,7 @@
 import StegState from './StegState';
 import * as Utils from '../../../../../utils';
 
-class LovvalgsbestemmelseStore extends StegState {
+class EnkelDataStore extends StegState {
   oppdaterfelt = (eksisterendeData, nyData) => {
     if (!Utils._isNil(nyData)) {
       return nyData;
@@ -11,17 +11,17 @@ class LovvalgsbestemmelseStore extends StegState {
 
   hent = () => {
     const { stegStore } = this;
-    let lovvalgsbestemmelse = null;
+    let data = null;
     stegStore.forEach(steg => {
       Object.keys(steg).forEach(key => {
         const stegData = steg[key];
-        if (!Utils._isNil(stegData) && Utils._isNil(lovvalgsbestemmelse)) {
-          lovvalgsbestemmelse = stegData;
+        if (!Utils._isNil(stegData) && Utils._isNil(data)) {
+          data = stegData;
         }
       });
     });
-    return lovvalgsbestemmelse;
+    return data;
   };
 }
 
-export default LovvalgsbestemmelseStore;
+export default EnkelDataStore;

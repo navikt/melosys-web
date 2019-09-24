@@ -68,7 +68,7 @@ export const Innvilgelse = props => {
     begrunnelseFritekst,
   } = props;
 
-  const dokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
@@ -97,7 +97,7 @@ export const Innvilgelse = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
+          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
         </Nav.Column>
       </Nav.Row>
     </Fragment>
@@ -124,7 +124,7 @@ export const DelvisInnvilgelse = props => {
     renderBegrunnelser,
   } = props;
 
-  const dokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
@@ -158,7 +158,7 @@ export const DelvisInnvilgelse = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
+          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
         </Nav.Column>
       </Nav.Row>
     </Fragment>
@@ -185,7 +185,7 @@ export const Avslag = props => {
     renderBegrunnelser,
   } = props;
 
-  const dokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
@@ -214,7 +214,7 @@ export const Avslag = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
+          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
         </Nav.Column>
       </Nav.Row>
     </Fragment>

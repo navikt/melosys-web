@@ -1,11 +1,9 @@
 import AvklartefaktaStore from './AvklartefaktaStore';
+import EnkelDataStore from './EnkelDataStore';
 import VilkaarStore from './VilkaarStore';
-import LovvalgsbestemmelseStore from './LovvalgsbestemmelseStore';
-import AnmodningsperiodesvarStore from './AnmodningsperiodesvarStore';
 
 export {
-  AnmodningsperiodesvarStore,
   AvklartefaktaStore,
+  EnkelDataStore,
   VilkaarStore,
-  LovvalgsbestemmelseStore,
 };
