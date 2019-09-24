@@ -48,6 +48,29 @@ const EndrePeriode = ({
     }
   };
 
+  const datoSjekkGyldig = () => {
+    const varighet = Utils.dato.datoDiff(fom, tom, 'years');
+
+    if (varighet <= 0) {
+      return 'Ugyldig periode';
+    } else if (varighet > 5) {
+      return 'Perioden overstiger 5 år';
+    }
+    return null;
+  };
+  const datoVarselStripe = () => {
+    const gyldig = datoSjekkGyldig();
+    if (gyldig) {
+      return (
+        <Nav.Column xs="8">
+          <Nav.AlertStripe className="feilmelding" type="advarsel" >
+            {gyldig}
+          </Nav.AlertStripe>
+        </Nav.Column>
+      );
+    }
+    return null;
+  };
   return (
     <div className="endre_periode">
       <Nav.Column xs="12">
@@ -80,6 +103,7 @@ const EndrePeriode = ({
             feil={feilmeldinger.tom}
             disabled={!redigerbart} />
         </Nav.Column>
+        {datoVarselStripe()}
         <Nav.Column xs="12">
           <Nav.Select
             bredde="xl"
