@@ -19,7 +19,6 @@ class SideDialog extends Component {
     saksnummer: PT.string.isRequired,
     behandlingID: PT.number.isRequired,
     brevBestillingRedigerbart: PT.bool.isRequired,
-    sedBestillingRedigerbart: PT.bool.isRequired,
     brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   };
 
@@ -48,7 +47,7 @@ class SideDialog extends Component {
 
   getFaneKomponent = (navn, behandlingID) => {
     const {
-      saksnummer, brevBestillingRedigerbart, sedBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13,
+      saksnummer, brevBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13,
     } = this.props;
 
     if (navn === 'dokumenter') {
@@ -56,7 +55,7 @@ class SideDialog extends Component {
     } else if (navn === 'brevbestilling') {
       return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} redigerbart={brevBestillingRedigerbart} brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13} />;
     } else if (navn === 'sedbestilling') {
-      return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} redigerbart={sedBestillingRedigerbart} />;
+      return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} />;
     } else if (navn === 'besvarsed') {
       return <SideDialogBesvarSed key={uuid()} behandlingID={behandlingID} />;
     }
@@ -98,5 +97,4 @@ class SideDialog extends Component {
     );
   }
 }
-
 export default SideDialog;
