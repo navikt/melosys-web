@@ -16,8 +16,9 @@ class Virksomheter extends Steg {
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(avklartefakta);
           const erVanligYrkesaktiv = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
+          const erFlyendePersonell = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL);
           const erKunEtLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
-          return harValgtArbeidsgiver && erVanligYrkesaktiv && erKunEtLand;
+          return harValgtArbeidsgiver && (erVanligYrkesaktiv || erFlyendePersonell) && erKunEtLand;
         },
         nesteSteg: STEG.YRKESAKTIVITET,
       },
@@ -46,8 +47,9 @@ class Virksomheter extends Steg {
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(avklartefakta);
           const erVanligYrkesaktiv = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
+          const erFlyendePersonell = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL);
           const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
-          return harValgtArbeidsgiver && erVanligYrkesaktiv && erToEllerFlereLand;
+          return harValgtArbeidsgiver && (erVanligYrkesaktiv || erFlyendePersonell) && erToEllerFlereLand;
         },
         nesteSteg: STEG.YRKESAKTIVITET,
       },
