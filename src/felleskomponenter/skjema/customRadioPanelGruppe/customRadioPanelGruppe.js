@@ -77,7 +77,7 @@ const CustomRadioPanelGruppe = props => {
     radios, feltNavn, legend, input: { onChange, value: currentCheckedValue }, meta,
   } = props;
 
-  const feil = (meta.invalid) ? { feilmelding: meta.error } : null;
+  const feil = (meta.invalid) ? { feilmelding: meta.error.melding } : null;
 
   return (
     <Nav.SkjemaGruppe className="customRadioPanelGruppe" feil={feil}>

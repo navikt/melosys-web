@@ -48,13 +48,11 @@ class Informasjon extends Component {
     const {
       brukerID: gammelBrukerID,
       avsenderID: gammelAvsenderID,
-      erBrukerAvsender: gammelErBrukerAvsender,
     } = props.journalforingSkjemaVerdier;
     const {
-      brukerID = '', avsenderID = '', erBrukerAvsender, brukerNavn,
+      brukerID = '', avsenderID = '',
     } = this.props.journalforingSkjemaVerdier;
     const { hentOgVisBruker, hentOgVisAvsender } = this.props;
-    const { kopierBrukerTilAvsender, tomAvsender } = this;
 
     if ((gammelBrukerID !== brukerID) || tvingOppdatering) {
       await hentOgVisBruker(brukerID);
@@ -63,13 +61,15 @@ class Informasjon extends Component {
     if ((gammelAvsenderID !== avsenderID) || tvingOppdatering) {
       await hentOgVisAvsender(avsenderID);
     }
+  };
 
-    if ((gammelErBrukerAvsender !== erBrukerAvsender) || tvingOppdatering) {
-      if (erBrukerAvsender) {
-        kopierBrukerTilAvsender(brukerID, brukerNavn);
-      } else {
-        tomAvsender();
-      }
+  vedCheckBrukerErAvsender = e => {
+    const { brukerID = '', brukerNavn } = this.props.journalforingSkjemaVerdier;
+
+    if (e.target.checked) {
+      this.kopierBrukerTilAvsender(brukerID, brukerNavn);
+    } else {
+      this.tomAvsender();
     }
   };
 
@@ -165,7 +165,7 @@ class Informasjon extends Component {
       spinner: { brukerNavn: visBrukerSpinner },
       spinner: { avsenderNavn: visAvsenderSpinner },
     } = this.state;
-    const { skalFeltetDisables } = this;
+    const { skalFeltetDisables, vedCheckBrukerErAvsender } = this;
 
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
     return (
@@ -176,7 +176,7 @@ class Informasjon extends Component {
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
         <Nav.Fieldset legend="Informasjon om dokument">
-          <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
+          <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" onClick={vedCheckBrukerErAvsender} />
           <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsenderID')} onKeyUp={this.IDFeltTastOppHandler} />
           <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsenderNavn')} />
           { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
