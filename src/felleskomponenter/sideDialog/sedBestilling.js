@@ -6,7 +6,7 @@ import * as EKV from 'eessi-kodeverk';
 import * as Nav from '../../utils/navFrontend';
 import * as Api from '../../services/api';
 import * as Utils from '../../utils';
-import { createValidator } from '../skjema/validering/skjemaer/createValidator';
+import { lagYupToReduxformErrorMapper } from '../skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
 import { sed as sedSchema } from '../skjema/validering/skjemaer/sed';
 import { kodeTilObjekt } from '../../kodeverk';
 import './sedBestilling.css';
@@ -84,7 +84,7 @@ const SideDialogSedBestilling = ({ behandlingID }) => {
   });
 
   const valider = ({ buc = valgtBuc, land = valgtLand, mottakerinstitusjon = valgtMottakerinstitusjon }) =>
-    setFeilmeldinger(createValidator(sedSchema)({ buc, land, mottakerinstitusjon }));
+    setFeilmeldinger(lagYupToReduxformErrorMapper(sedSchema)({ buc, land, mottakerinstitusjon }));
 
   const sendSed = async () => {
     if (erValidert()) {
