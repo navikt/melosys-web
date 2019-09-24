@@ -15,7 +15,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/
 
 import '../saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
-import { createValidator } from '../../../felleskomponenter/skjema/validering/skjemaer';
+import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer';
 import { endrePeriodeSkjema } from '../unntaksperioder/validering/endrePeriodeSkjema';
 import { fritekstPakrevdSkjema } from './validering/anmodningunntakSkjema';
 
@@ -45,10 +45,10 @@ const Saksopplysninger = props => {
       case MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE:
         return true;
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
-        valideringsresultat = createValidator(endrePeriodeSkjema)({ fom: endretPeriodeFom, tom: endretPeriodeTom });
+        valideringsresultat = lagYupToReduxformErrorMapper(endrePeriodeSkjema)({ fom: endretPeriodeFom, tom: endretPeriodeTom });
         break;
       case MKV.Koder.anmodningsperiodesvartyper.AVSLAG:
-        valideringsresultat = createValidator(fritekstPakrevdSkjema)({ fritekst: begrunnelseFritekst });
+        valideringsresultat = lagYupToReduxformErrorMapper(fritekstPakrevdSkjema)({ fritekst: begrunnelseFritekst });
         break;
       default:
         return false;

@@ -94,7 +94,6 @@ const Registrering = props => {
               saksnummer={saksnummer}
               behandlingID={behandlingID}
               brevBestillingRedigerbart={redigerbart}
-              sedBestillingRedigerbart={redigerbart}
               brevBestillingRedigerbartIArtikkel13={redigerbart}
             />
           </Nav.Column>
