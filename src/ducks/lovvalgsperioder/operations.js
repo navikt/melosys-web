@@ -17,7 +17,6 @@ import * as Actions from './actions';
 
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
-import { formSelectors } from '../form';
 import { avklartefaktaSelectors } from '../avklartefakta';
 import { lovvalgsperioderSelectors } from './index';
 
@@ -128,34 +127,6 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
   }];
 };
 
-const byggLovvalgsPeriodeArtikkel16_1 = (stegState, reduxState) => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
-  const soknadsland = soknadSelectors.SoknadslandSelector(reduxState);
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
-
-  const unntakFraLovvalgsland = soknadsland.join('');
-  const unntakFraBestemmelse = formSelectors.UnntakFraBestemmelseSelector(reduxState);
-
-  // Det er ikke et gyldig art16-lovvalg før unntakene er oppgitt
-  if (!unntakFraBestemmelse || !unntakFraLovvalgsland) {
-    return [];
-  }
-
-  return [{
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
-    lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
-    medlemskapsperiodeID: medlemskapsperiodeID || null,
-    tilleggBestemmelse: stegState.tilleggbestemmelse || null,
-    unntakFraBestemmelse,
-    unntakFraLovvalgsland,
-    innvilgelsesResultat: KV.Koder.INNVILGET,
-    lovvalgsland: MKV.Koder.landkoder.NO,
-    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
-    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
-  }];
-};
-
 const byggAvslaattLovvalg = (reduxState, lovvalgsbestemmelse) => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
@@ -190,7 +161,6 @@ const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, stegState, reduxState) => 
   switch (valgtLovvalg) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(stegState, reduxState);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(stegState, reduxState);
-    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(stegState, reduxState);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(stegState, reduxState);
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(stegState, reduxState);
     default: {

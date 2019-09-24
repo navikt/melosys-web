@@ -43,7 +43,7 @@ class Yrkesaktivitet extends Steg {
           );
           return erToEllerFlereLand && erYrkesAktivitetValgt;
         },
-        nesteSteg: STEG.BOSTEDSLAND,
+        nesteSteg: STEG.ARBEIDSMONSTER,
       },
       {
         beskrivelse: 'alle andre valg',
