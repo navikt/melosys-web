@@ -151,6 +151,14 @@ class VurderingArtikkel16Anmodning extends Component {
     }
   };
 
+  byggAnmodningsperioder = () => {
+    const { byggAnmodningsperioderHandler } = this.props;
+
+    byggAnmodningsperioderHandler();
+
+    this.setState({ lovvalgFeilmelding: undefined });
+  };
+
   lagreAnmodningsperioder = async () => {
     const { byggAnmodningsperioderHandler, lagreAnmodningsperioderHandler } = this.props;
 
@@ -221,7 +229,7 @@ class VurderingArtikkel16Anmodning extends Component {
 
   validerOgLagreBehandling = async () => {
     if (this.validerAlt()) {
-      await this.lagreAnmodningsperioder();
+      await this.byggAnmodningsperioder();
       this.lagreBehandlingerOgBestillAnmodningsperioder();
     }
   };
@@ -255,7 +263,7 @@ class VurderingArtikkel16Anmodning extends Component {
 
     const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
-    const dokumenter = [
+    const pdfDokumenter = [
       { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
       { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
       { navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true },
@@ -336,7 +344,7 @@ class VurderingArtikkel16Anmodning extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="6">
-              {redigerbart && <PdfLenkeListe vedKlikk={validerAlt} behandlingID={behandlingID} dokumenter={dokumenter} />}
+              {redigerbart && <PdfLenkeListe vedKlikk={validerAlt} behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">

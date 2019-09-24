@@ -7,6 +7,8 @@
 
 import { createSelector } from 'reselect';
 import moment from 'moment/moment';
+import * as MKV from 'melosys-kodeverk';
+
 import { datoDiff } from '../../utils/dato';
 import * as KV from '../../kodeverk';
 import * as soknadSelectors from '../soknad/selectors';
@@ -57,6 +59,14 @@ export const SEDSelector = createSelector(
   sed => sed
 );
 export const LovvalgsperiodeSelector = createSelector(state => SEDSelector(state).lovvalgsperiode || {}, lovvalgsperiode => lovvalgsperiode);
+
+export const LovvalgslandSelector = createSelector(
+  state => SEDSelector(state).lovvalgslandKode || '',
+  lovvalgsland => landkodeTilKodeverksobjekt(lovvalgsland) || {}
+);
+
+const landkodeTilKodeverksobjekt = landkode => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder);
+
 export const OrganisasjonerSelector = createSelector(
   state => SaksopplysningerSelector(state).organisasjoner || [],
   organisasjoner => organisasjoner

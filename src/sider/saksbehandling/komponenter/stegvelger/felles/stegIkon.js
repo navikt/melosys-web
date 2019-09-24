@@ -14,6 +14,7 @@ const erVedtakSteg = id => (
   id === STEG.AVSLAG_12_X_OG_16 ||
   id === STEG.ARTIKKEL_16_VEDTAK ||
   id === STEG.ARTIKKEL_13_1_A_VEDTAK ||
+  id === STEG.VIDERESEND ||
   id === STEG.ARTIKKEL_13_1_B_VEDTAK
 );
 
