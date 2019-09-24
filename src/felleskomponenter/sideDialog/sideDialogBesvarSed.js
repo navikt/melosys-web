@@ -13,18 +13,18 @@ const StatusEtikett = ({ status }) => {
     return null;
   }
 
-  const lagKomponent = (type, statusStreng) => (<Nav.EtikettBase type={type}>{statusStreng}</Nav.EtikettBase>);
+  const lagEtikett = (type, statusStreng) => (<Nav.EtikettBase type={type}>{statusStreng}</Nav.EtikettBase>);
 
   switch (status.toUpperCase()) {
     case KV.Koder.SedStatus.UTKAST:
-      return lagKomponent('fokus', 'Under arbeid');
+      return lagEtikett('fokus', 'Under arbeid');
     case KV.Koder.SedStatus.SENDT:
     case KV.Koder.SedStatus.MOTTATT:
-      return lagKomponent('suksess', Utils.streng.storeForbokstaver(status));
+      return lagEtikett('suksess', Utils.streng.storeForbokstaver(status));
     case KV.Koder.SedStatus.AVBRUTT:
-      return lagKomponent('advarsel', Utils.streng.storeForbokstaver(status));
+      return lagEtikett('advarsel', Utils.streng.storeForbokstaver(status));
     default:
-      return lagKomponent('info', Utils.streng.storeForbokstaver(status));
+      return lagEtikett('info', Utils.streng.storeForbokstaver(status));
   }
 };
 
