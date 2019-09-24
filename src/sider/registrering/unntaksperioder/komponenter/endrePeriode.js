@@ -48,7 +48,7 @@ const EndrePeriode = ({
     }
   };
 
-  const datoSjekkGyldig = () => {
+  const sjekkDatoVarsel = () => {
     const fomISO = Utils.dato.formatterDatoTilISO(fom);
     const tomISO = Utils.dato.formatterDatoTilISO(tom);
     const varighet = Utils.dato.datoDiff(fomISO, tomISO, 'years');
@@ -61,17 +61,17 @@ const EndrePeriode = ({
     return null;
   };
   const datoVarselStripe = () => {
-    const gyldig = datoSjekkGyldig();
-    if (gyldig) {
-      return (
-        <Nav.Column xs="8">
-          <Nav.AlertStripe className="feilmelding" type="advarsel" >
-            {gyldig}
-          </Nav.AlertStripe>
-        </Nav.Column>
-      );
+    const varselMelding = sjekkDatoVarsel();
+    if (!varselMelding) {
+      return null;
     }
-    return null;
+    return (
+      <Nav.Column xs="8">
+        <Nav.AlertStripe className="feilmelding" type="advarsel" >
+          {varselMelding}
+        </Nav.AlertStripe>
+      </Nav.Column>
+    );
   };
   return (
     <div className="endre_periode">
