@@ -27,3 +27,8 @@ export const AlleAnmodningsperioderSendtUtlandSelector = createSelector(
     anmodningsperioder.every(anmodningsperiode => anmodningsperiode.sendtUtland)
   )
 );
+
+export const AnmodningsperioderErSendtUtlandetSelector = createSelector(
+  AnmodningsperioderSelector,
+  anmodningsperioder => anmodningsperioder.some(anmodningsperiode => anmodningsperiode.sendtUtland)
+);
