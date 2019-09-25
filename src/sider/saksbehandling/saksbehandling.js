@@ -202,18 +202,21 @@ class Saksbehandling extends Component {
 
   lagreLovvalgsperioderHandler = async () => {
     const { behandlingID } = this.state;
-    const { sendLovvalgsperioder, lovvalgsperioder } = this.props;
+    const { sendLovvalgsperioder, lovvalgsperioder, anmodningsperioderErSendtUtlandet } = this.props;
+
+    if (anmodningsperioderErSendtUtlandet) return;
 
     sendLovvalgsperioder(behandlingID, lovvalgsperioder);
   };
 
   lagreAnmodningsperioderHandler = async () => {
     const { behandlingID } = this.state;
-    const { sendAnmodningsperioder, anmodningsperioder } = this.props;
+    const { sendAnmodningsperioder, anmodningsperioder, anmodningsperioderErSendtUtlandet } = this.props;
 
-    if (anmodningsperioder.some(anmodningsperiode => anmodningsperiode.sendtUtland !== undefined)) return;
+    if (anmodningsperioderErSendtUtlandet) return;
 
-    sendAnmodningsperioder(behandlingID, { anmodningsperioder });
+    /* eslint-disable-next-line no-unused-vars */
+    sendAnmodningsperioder(behandlingID, { anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties) });
   };
 
   oppdaterOgLagreBehandlingerHandler = async () => {
@@ -440,6 +443,7 @@ Saksbehandling.propTypes = {
   fattVedtak: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+  anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -471,6 +475,7 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
+  anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
