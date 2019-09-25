@@ -120,7 +120,7 @@ export class VurderingEndrePeriode extends React.Component {
 
   render() {
     const {
-      behandlingID, redigerbart, tilstand: { aarsakEndringPeriodeAvklartfakta },
+      behandlingID, redigerbart,
     } = this.props;
 
     const {
@@ -140,7 +140,7 @@ export class VurderingEndrePeriode extends React.Component {
       opprinneligLovvalgsperiode: { fom, tom },
     } = this.state;
 
-    const endretPeriodeBegrunnelse = hentFaktaVerdi(aarsakEndringPeriodeAvklartfakta);
+    const endretPeriodeBegrunnelse = begrunnelse;
 
     const pdfDokumenter = [
       {
