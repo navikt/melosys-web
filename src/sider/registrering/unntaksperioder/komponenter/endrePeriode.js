@@ -48,31 +48,6 @@ const EndrePeriode = ({
     }
   };
 
-  const sjekkDatoVarsel = () => {
-    const fomISO = Utils.dato.formatterDatoTilISO(fom);
-    const tomISO = Utils.dato.formatterDatoTilISO(tom);
-    const varighet = Utils.dato.datoDiff(fomISO, tomISO, 'years');
-
-    if (varighet <= 0) {
-      return 'Ugyldig periode';
-    } else if (varighet > 5) {
-      return 'Perioden overstiger 5 år';
-    }
-    return null;
-  };
-  const datoVarselStripe = () => {
-    const varselMelding = sjekkDatoVarsel();
-    if (!varselMelding) {
-      return null;
-    }
-    return (
-      <Nav.Column xs="8">
-        <Nav.AlertStripe className="feilmelding" type="advarsel" >
-          {varselMelding}
-        </Nav.AlertStripe>
-      </Nav.Column>
-    );
-  };
   return (
     <div className="endre_periode">
       <Nav.Column xs="12">
@@ -105,7 +80,6 @@ const EndrePeriode = ({
             feil={feilmeldinger.tom}
             disabled={!redigerbart} />
         </Nav.Column>
-        {datoVarselStripe()}
         <Nav.Column xs="12">
           <Nav.Select
             bredde="xl"
@@ -113,7 +87,10 @@ const EndrePeriode = ({
             value={begrunnelse}
             onChange={e => oppdaterBegrunnelse(e.target.value)}
             disabled={!redigerbart}
+            feil={feilmeldinger.begrunnelse}
+            defaultValue="a3m3nb"
           >
+            <option key="a3m3nb" value="a3m3nb" disabled>Velg i listen</option>
             {MKV.KTObjects.begrunnelser.folketrygdloven.endret_unntaksperiode.map(kodeobjekt =>
               <option key={kodeobjekt.kode} value={kodeobjekt.kode}>{kodeobjekt.term}</option>)}
           </Nav.Select>
