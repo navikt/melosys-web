@@ -136,8 +136,17 @@ const EndrePeriode = ({
 };
 
 EndrePeriode.propTypes = {
-  endrePeriode: PT.object.isRequired, // TODO: shape()
-  lovvalgsperiode: PT.object.isRequired,
+  endrePeriode: PT.shape({
+    skalEndres: PT.bool,
+    fom: PT.string,
+    tom: PT.string,
+    begrunnelse: PT.string,
+    fritekst: PT.string,
+  }).isRequired,
+  lovvalgsperiode: PT.shape({
+    fomDato: PT.string,
+    tomDato: PT.string,
+  }).isRequired,
   sedLovvalgsperiode: MPT.Periode,
   toggleSkalEndres: PT.func.isRequired,
   oppdaterFom: PT.func.isRequired,
