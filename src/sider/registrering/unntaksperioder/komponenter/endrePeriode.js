@@ -88,9 +88,9 @@ const EndrePeriode = ({
             onChange={e => oppdaterBegrunnelse(e.target.value)}
             disabled={!redigerbart}
             feil={feilmeldinger.begrunnelse}
-            defaultValue="a3m3nb"
+            defaultValue="0"
           >
-            <option key="a3m3nb" value="a3m3nb" disabled>Velg i listen</option>
+            <option key="a3m3nb" value="0" disabled>Velg i listen</option>
             {MKV.KTObjects.begrunnelser.folketrygdloven.endret_unntaksperiode.map(kodeobjekt =>
               <option key={kodeobjekt.kode} value={kodeobjekt.kode}>{kodeobjekt.term}</option>)}
           </Nav.Select>
