@@ -6,6 +6,7 @@ import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
 import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../../../regler/avklartefakta';
 import { konverterTilleggBestemmelseTilStegData, lagTilleggBestemmelse, slettTilleggBestemmelse, finnTilleggBestemmelse } from '../../../../../regler/tilleggbestemmelser';
+import { lagVilkaar, slettVilkar } from '../../../../../regler/vilkar';
 import { BOOLSK } from '../../../../../constants';
 
 const stegetsTilleggbestemmelser = [
@@ -42,6 +43,12 @@ const VurderingYrkesgruppe = props => {
     } else {
       slettData(slettTilleggBestemmelse());
     }
+
+    if (yrkessituasjon === KV.Koder.VurderingYrkesgruppeTyper.IKKE_UTSENDT_ELLER_UTENLANDSK_ARBEIDSGIVER) {
+      oppdaterData(lagVilkaar('art16_1_anmodning', true));
+    } else {
+      slettData(slettVilkar('art16_1_anmodning'));
+    }
   };
 
   const fakta = hentFaktaVerdi(yrkesgruppe);
@@ -65,10 +72,18 @@ const VurderingYrkesgruppe = props => {
           label="Yrkesaktiv på sokkel eller skip" />
         <Nav.Radio
           name="yrkesgruppe"
+          disabled={!redigerbart}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           value={KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           onChange={radioEndret}
           label="Yrkesaktiv som flyvende personell" />
+        <Nav.Radio
+          name="yrkesgruppe"
+          disabled={!redigerbart}
+          checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.IKKE_UTSENDT_ELLER_UTENLANDSK_ARBEIDSGIVER}
+          value={KV.Koder.VurderingYrkesgruppeTyper.IKKE_UTSENDT_ELLER_UTENLANDSK_ARBEIDSGIVER}
+          onChange={radioEndret}
+          label="Gå til artikkel 16" />
         <Nav.Radio
           name="yrkesgruppe"
           disabled={BOOLSK.SANN}

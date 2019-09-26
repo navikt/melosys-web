@@ -5,12 +5,23 @@ import * as KV from '../../../../../../kodeverk';
 
 import SokkelSkip from './sokkel_skip';
 import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
+import Yrkesgruppe from './yrkesgruppe';
 import { hentFaktaListe } from '../../../../../../regler/avklartefakta';
 
 class Virksomheter extends Steg {
   constructor(propsLight, stegPosisjon) {
     super(propsLight, stegPosisjon);
     this.kriterier = [
+      {
+        beskrivelse: '',
+        exec: avklartefakta => {
+          const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(avklartefakta);
+          const garDirekteTilArtikkel16 = Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.IKKE_UTSENDT_ELLER_UTENLANDSK_ARBEIDSGIVER);
+
+          return harValgtArbeidsgiver && garDirekteTilArtikkel16;
+        },
+        nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
+      },
       {
         beskrivelse: 'Valgt minst én arbeidsgiver og yrkesgruppeType === ORDINAER og kun ET_LAND',
         exec: avklartefakta => {
