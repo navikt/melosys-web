@@ -1,11 +1,14 @@
 import React from 'react';
 import PT from 'prop-types';
+
 import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../../../../utils';
 import * as Nav from '../../../../utils/navFrontend';
 import * as MPT from '../../../../proptypes';
 import './endrePeriode.css';
+
+const uuid = require('uuid/v4');
 
 const EndrePeriode = ({
   endrePeriode,
@@ -90,7 +93,7 @@ const EndrePeriode = ({
             feil={feilmeldinger.begrunnelse}
             defaultValue="0"
           >
-            <option key="a3m3nb" value="0" disabled>Velg i listen</option>
+            <option key={uuid()} value="0" disabled>Velg i listen</option>
             {MKV.KTObjects.begrunnelser.folketrygdloven.endret_unntaksperiode.map(kodeobjekt =>
               <option key={kodeobjekt.kode} value={kodeobjekt.kode}>{kodeobjekt.term}</option>)}
           </Nav.Select>
