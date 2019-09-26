@@ -34,7 +34,7 @@ const EnkeltSed = ({ sed }) => (
 
 EnkeltSed.propTypes = {
   sed: PT.shape({
-    sedId: PT.string.isRequired,
+    sedID: PT.string.isRequired,
     rinaUrl: PT.string.isRequired,
     sedType: PT.string.isRequired,
     opprettetDato: PT.string.isRequired,
@@ -109,7 +109,7 @@ const SideDialogBesvarSed = ({ behandlingID }) => {
 
   const getKomponent = () => {
     if (kanViseListe(bucer)) {
-      return bucer.map(buc => <EnkeltBuc key={buc.id} buc={buc} />);
+      return bucer.map(buc => <EnkeltBuc key={buc.bucID} buc={buc} />);
     } else if (henterData) {
       return <HenterOpplysningerSpinner />;
     }
