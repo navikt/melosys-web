@@ -28,11 +28,11 @@ export const endrePeriodeSkjema = Yup.object().shape({
   fritekst: Yup.string()
     .when('$fritekstPakrevd', {
       is: true,
-      then: fritekstSkjema => fritekstSkjema.required({ feilmelding: 'Begrunnelse for endring av periode er påkrevd' }),
+      then: Yup.string().required({ feilmelding: 'Begrunnelse for endring av periode er påkrevd' }),
     }),
   begrunnelse: Yup.string()
     .when('$begrunnelsePakrevd', {
       is: true,
-      then: begrunnelseSkjema => begrunnelseSkjema.required({ feilmelding: 'Begrunnelse for endret periode er påkrevd' }),
+      then: Yup.string().required({ feilmelding: 'Begrunnelse for endret periode er påkrevd' }),
     }),
 });
