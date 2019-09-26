@@ -22,7 +22,6 @@ function Inntekt (props) {
   const felter = [
     values.inntektNorskIPerioden,
     values.inntektUtenlandskIPerioden,
-    values.inntektNaeringIPerioden,
     values.inntektNaturalFribolig,
     values.inntektNaturalFribil,
     values.inntektNaturalIAnnet,
@@ -42,7 +41,6 @@ function Inntekt (props) {
             <Nav.Fieldset legend="">
               <Skjema.Input feltNavn="inntektNorskIPerioden" label="Utbetalt av arbeids-/oppdragsgivere i Norge" disabled={!redigerbart} />
               <Skjema.Input feltNavn="inntektUtenlandskIPerioden" label="Utbetalt av arbeids-/oppdragsgivere i utlandet" disabled={!redigerbart} />
-              <Skjema.Input feltNavn="inntektNaeringIPerioden" label="Inntekt fra næringsvirksomhet, inkludert honorarer fra utenlandsk arbeidsgiver" disabled={!redigerbart} />
             </Nav.Fieldset>
             <Nav.Fieldset legend="Naturalytelser betalt av norsk eller utenlandsk arbeidsgiver">
               <Skjema.Checkbox feltNavn="inntektNaturalFribolig" label="Fri bolig" disabled={!redigerbart} />

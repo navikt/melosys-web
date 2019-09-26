@@ -82,7 +82,7 @@ export default function reducer(state = initialState, action) {
         arbeidsinntekt: {
           inntektNorskIPerioden: dokument.inntektNorskIPerioden ? strengTilInt(dokument.inntektNorskIPerioden) : null,
           inntektUtenlandskIPerioden: dokument.inntektUtenlandskIPerioden ? strengTilInt(dokument.inntektUtenlandskIPerioden) : null,
-          inntektNaeringIPerioden: dokument.inntektNaeringIPerioden ? strengTilInt(dokument.inntektNaeringIPerioden) : null,
+          inntektNaeringIPerioden: null,
           inntektNaturalytelser: {
             friBil: dokument.inntektNaturalFribil,
             friBolig: dokument.inntektNaturalFribolig,
@@ -109,7 +109,7 @@ export default function reducer(state = initialState, action) {
           andelOppdragINorge: dokument.andelOppdragINorge ? strengTilInt(dokument.andelOppdragINorge) : null,
           andelKontrakterINorge: dokument.andelKontrakterINorge ? strengTilInt(dokument.andelKontrakterINorge) : null,
           arbeidstakereRekruttertILand: dokument.arbeidstakereRekruttertILand || null,
-          oppdragsKontrakterIHovedsakInngaattILand: dokument.oppdragsKontrakterIHovedsakInngaattILand || null,
+          oppdragsKontrakterIHovedsakInngaattILand: null,
           ekstraArbeidsgivere: dokument.ekstraArbeidsgivere || [],
         },
         arbeidsgiversBekreftelse: {

@@ -1,18 +1,16 @@
 import React from 'react';
 import PT from 'prop-types';
-
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import * as RegistreringContext from '../state/registreringContext';
 
+import * as KV from '../../../kodeverk';
 import { formatterDatoTilNorsk } from '../../../utils/dato';
-import { soknadSelectors } from '../../../ducks/soknad';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
-import { avklartefaktaSelectors } from '../../../ducks/avklartefakta';
 import Behandlingsmeny from './behandlingsmeny';
 import Behandlingsstatus from './behandlingsstatus';
 import Oppsummering from '../../../felleskomponenter/oppsummering';
@@ -22,30 +20,26 @@ import './sideOppsummering.css';
 const SideOppsummering = props => {
   const {
     behandlingID,
+    behandlingstype,
     fagsak,
     oppsummering,
     person,
-    soknadsperiodeFom,
-    soknadsperiodeTom,
-    behandlingstype,
+    lovvalgsperiodeFom,
+    lovvalgsperiodeTom,
+    lagreOgLukkHandle,
+    tilbakeleggeHandle,
+    lovvalgsland,
+    endreLovvalgsperiodeRedigerbart,
   } = props;
 
   if (!oppsummering) return <div />;
-
-  const {
-    lagreOgLukkHandle,
-    oppfriskSaksopplysningerHandle,
-    tilbakeleggeHandle,
-    visHenleggDialogHandle,
-    arbeidsland,
-    avsluttSakSomBortfalt,
-    endreLovvalgsperiodeRedigerbart,
-  } = props;
 
   const apneTidligereBehandlinger = () => {
     const URI_SOK = `/sok/${props.person.fnr}`;
     window.open(URI_SOK);
   };
+
+  const tittel = KV.kodeTilTerm(behandlingstype, MKV.KTObjects.behandlinger.behandlingstyper) || '';
 
   return (
     <section aria-label="oppsummeringer" className="sideOppsummering panelSeksjon">
@@ -56,31 +50,27 @@ const SideOppsummering = props => {
               <Behandlingsmeny
                 lagreOgLukkHandle={lagreOgLukkHandle}
                 tilbakeleggeHandle={tilbakeleggeHandle}
-                oppfriskSaksopplysningerHandle={oppfriskSaksopplysningerHandle}
-                visHenleggDialogHandle={visHenleggDialogHandle}
-                avsluttSakSomBortfalt={avsluttSakSomBortfalt}
                 apneTidligereBehandlinger={apneTidligereBehandlinger}
                 redigerbart={endreLovvalgsperiodeRedigerbart}
-                visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
               />
             </div>
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="12" md="6">
-            <Nav.Undertittel className="soknadSammendrag__header">Søknad</Nav.Undertittel>
+          <Nav.Column xs="12" md="12">
+            <Nav.Undertittel className="soknadSammendrag__header">{tittel}</Nav.Undertittel>
           </Nav.Column>
         </Nav.Row>
         {/* START OPPSUMMERING */}
         <Nav.Row>
           <Nav.Column xs="12">
             {oppsummering && <Oppsummering
-              arbeidsland={arbeidsland}
+              lovvalgsland={[lovvalgsland]}
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
-              soknadsperiodeFom={soknadsperiodeFom}
-              soknadsperiodeTom={soknadsperiodeTom}
+              lovvalgsperiodeFom={lovvalgsperiodeFom}
+              lovvalgsperiodeTom={lovvalgsperiodeTom}
             />
             }
           </Nav.Column>
@@ -105,25 +95,22 @@ SideOppsummering.propTypes = {
   endreLovvalgsperiodeRedigerbart: PT.bool.isRequired,
   fagsak: MPT.Fagsak,
   oppsummering: MPT.Behandlinger.Oppsummering,
-  avsluttSakSomBortfalt: PT.func.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
-  soknadsperiodeFom: PT.string,
-  soknadsperiodeTom: PT.string,
-  arbeidsland: PT.arrayOf(MPT.Kodeverk),
-  oppfriskSaksopplysningerHandle: PT.func.isRequired,
+  lovvalgsperiodeFom: PT.string,
+  lovvalgsperiodeTom: PT.string,
+  lovvalgsland: MPT.Kodeverk,
   lagreOgLukkHandle: PT.func.isRequired,
   tilbakeleggeHandle: PT.func.isRequired,
-  visHenleggDialogHandle: PT.func.isRequired,
   tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
 SideOppsummering.defaultProps = {
-  arbeidsland: [],
+  lovvalgsland: [],
   redigerbart: false,
   fagsak: undefined,
   oppsummering: undefined,
-  soknadsperiodeFom: undefined,
-  soknadsperiodeTom: undefined,
+  lovvalgsperiodeFom: undefined,
+  lovvalgsperiodeTom: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -133,9 +120,9 @@ const mapStateToProps = state => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   endreLovvalgsperiodeRedigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
-  soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
-  soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
-  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  lovvalgsperiodeFom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
+  lovvalgsperiodeTom: formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
+  lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
