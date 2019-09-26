@@ -202,18 +202,21 @@ class Saksbehandling extends Component {
 
   lagreLovvalgsperioderHandler = async () => {
     const { behandlingID } = this.state;
-    const { sendLovvalgsperioder, lovvalgsperioder } = this.props;
+    const { sendLovvalgsperioder, lovvalgsperioder, anmodningsperioderErSendtUtlandet } = this.props;
+
+    if (anmodningsperioderErSendtUtlandet) return;
 
     sendLovvalgsperioder(behandlingID, lovvalgsperioder);
   };
 
   lagreAnmodningsperioderHandler = async () => {
     const { behandlingID } = this.state;
-    const { sendAnmodningsperioder, anmodningsperioder } = this.props;
+    const { sendAnmodningsperioder, anmodningsperioder, anmodningsperioderErSendtUtlandet } = this.props;
 
-    if (anmodningsperioder.some(anmodningsperiode => anmodningsperiode.sendtUtland !== undefined)) return;
+    if (anmodningsperioderErSendtUtlandet) return;
 
-    sendAnmodningsperioder(behandlingID, { anmodningsperioder });
+    /* eslint-disable-next-line no-unused-vars */
+    sendAnmodningsperioder(behandlingID, { anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties) });
   };
 
   oppdaterOgLagreBehandlingerHandler = async () => {
@@ -303,7 +306,7 @@ class Saksbehandling extends Component {
 
   render() {
     const {
-      redigerbart, brevBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13, sedBestillingRedigerbart, match,
+      redigerbart, brevBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13, match,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -355,7 +358,6 @@ class Saksbehandling extends Component {
                 saksnummer={saksnummer}
                 brevBestillingRedigerbart={brevBestillingRedigerbart}
                 brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
-                sedBestillingRedigerbart={sedBestillingRedigerbart}
               />
             </Nav.Column>
           </Nav.Row>
@@ -440,8 +442,8 @@ Saksbehandling.propTypes = {
   sendAnmodningsperioder: PT.func.isRequired,
   fattVedtak: PT.func.isRequired,
   brevBestillingRedigerbart: PT.bool.isRequired,
-  sedBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+  anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -472,8 +474,8 @@ const mapStateToProps = state => ({
   anmodningsperioder: anmodningsperioderSelectors.AnmodningsperioderSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
-  sedBestillingRedigerbart: redigerbartSelectors.SedBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
+  anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

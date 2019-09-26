@@ -16,6 +16,7 @@ import * as Actions from './actions';
 import { soknadSelectors } from '../soknad';
 import { lovvalgsperioderSelectors } from '../lovvalgsperioder';
 import { formSelectors } from '../form';
+import { anmodningsperioderSelectors } from '../anmodningsperioder';
 
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Anmodningsperioder.hent(behandlingID), {
@@ -67,6 +68,9 @@ const byggAnmodningsperioder = (stegState, reduxState) => {
 
 export function oppdaterAnmodningsperioderState(stegState) {
   return (dispatch, getState) => {
+    const anmodningsperioderErSendtUtland = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(getState());
+    if (anmodningsperioderErSendtUtland) return;
+
     if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse) {
       const anmodningsperioder = byggAnmodningsperioder(stegState, getState());
       dispatch(Actions.oppdaterAnmodningsperioder(anmodningsperioder));

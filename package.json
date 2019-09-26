@@ -144,7 +144,7 @@
     "enzyme-adapter-react-16": "^1.5.0",
     "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
-    "eslint-config-react-app": "^2.1.0",
+    "eslint-config-react-app": "^3.0.0",
     "eslint-plugin-flowtype": "^2.50.1",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^21.22.0",
@@ -182,5 +182,6 @@
         "^/frontendlogger/": "frontendlogger/"
       }
     }
-  }
+  },
+  "_id": "melosys-web@1.1.1"
 }

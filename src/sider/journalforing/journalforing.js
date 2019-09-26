@@ -2,7 +2,7 @@
 import React, { Component, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
+import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors, getFormValues, isValid } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -10,6 +10,7 @@ import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
 import * as Nav from '../../utils/navFrontend';
 import * as Api from '../../services/api';
+import * as Validering from '../../felleskomponenter/skjema/validering';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../../constants';
 
 import * as Person from '../../felleskomponenter/skjema/validering/generisk/person';
@@ -22,7 +23,6 @@ import PDFDokument from './komponenter/pdfdokument';
 import OpprettNyFagSak from './komponenter/opprettnyfagsak';
 import { queryParamLogger } from '../../utils/queryParamLogger';
 
-import { journalforingValidering, erSkjemaGyldig } from '../../felleskomponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
   journalforingSelectors,
@@ -133,7 +133,7 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering }, tilordneSak, history, settJournalforingHensikt, settFeilFelt, erSkjemaGyldig,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
@@ -150,7 +150,7 @@ class Journalforing extends Component {
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForOpprettFagsak();
 
-    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, JOURNALFORING_HENSIKT.KNYTT)) {
+    if (!erSkjemaGyldig) {
       settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer', 'behandlingstype');
       return false;
     }
@@ -167,7 +167,7 @@ class Journalforing extends Component {
    */
   opprettFagsak = async () => {
     const {
-      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt, erSkjemaGyldig,
     } = this.props;
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
@@ -182,7 +182,7 @@ class Journalforing extends Component {
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForEksisterendeSaker();
 
-    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, JOURNALFORING_HENSIKT.OPPRETT)) {
+    if (!erSkjemaGyldig) {
       settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingSoknadsland');
       return false;
     }
@@ -390,12 +390,15 @@ Journalforing.propTypes = {
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
   vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string })).isRequired,
+  formValues: PT.object,
+  erSkjemaGyldig: PT.bool.isRequired,
 };
 
 Journalforing.defaultProps = {
   journalforing: {},
   fagsakListe: [],
   journalforingSkjemaVerdier: {},
+  formValues: {},
 };
 
 const toVedleggMedProps = vedlegg => vedlegg.reduce((acc, d, index) => { acc[`tittel_${index}`] = d.tittel; return acc; }, {});
@@ -405,6 +408,8 @@ const mapStateToProps = state => ({
   fagsakListe: sokSelectors.FagsakSokSelector(state),
   vedleggsdokumenter: journalforingSelectors.JournalforingVedleggsDokumenter(state),
   errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
+  formValues: getFormValues(KV.Form.JOURNALFORING)(state),
+  erSkjemaGyldig: isValid(KV.Form.JOURNALFORING)(state),
   initialValues: {
     behandlingstype: null,
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
@@ -447,7 +452,15 @@ const form = {
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
-  validate: journalforingValidering,
+  validate: (values, props) => {
+    const options = {
+      context: {
+        brukerNavn: props.formValues ? props.formValues.brukerNavn : undefined,
+      },
+    };
+
+    return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.journalforing, options)(values);
+  },
   onSubmit: () => {},
 };
 

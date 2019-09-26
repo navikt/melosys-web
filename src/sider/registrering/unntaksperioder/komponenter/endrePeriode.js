@@ -2,13 +2,9 @@ import React from 'react';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
-import * as Utils from '../../../utils';
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
-import * as RegistreringContext from '../state/registreringContext';
-import { endrePeriodeSelectors, endrePeriodeActions } from '../state/ducks/endrePeriode';
-import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import * as Utils from '../../../../utils';
+import * as Nav from '../../../../utils/navFrontend';
+import * as MPT from '../../../../proptypes';
 import './endrePeriode.css';
 
 const EndrePeriode = ({
@@ -130,18 +126,4 @@ EndrePeriode.defaultProps = {
   sedLovvalgsperiode: {},
 };
 
-const mapStateToProps = state => ({
-  endrePeriode: endrePeriodeSelectors.EndrePeriodeSelector(state),
-  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode,
-});
-
-const mapDispatchToProps = dispatch => ({
-  toggleSkalEndres: () => dispatch(endrePeriodeActions.toggleSkalEndres()),
-  oppdaterFom: fom => dispatch(endrePeriodeActions.oppdaterFom(fom)),
-  oppdaterTom: tom => dispatch(endrePeriodeActions.oppdaterTom(tom)),
-  oppdaterBegrunnelse: begrunnelse => dispatch(endrePeriodeActions.oppdaterBegrunnelse(begrunnelse)),
-  oppdaterFritekst: fritekst => dispatch(endrePeriodeActions.oppdaterFritekst(fritekst)),
-});
-
-export default RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(EndrePeriode);
+export default EndrePeriode;

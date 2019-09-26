@@ -35,14 +35,13 @@ const BehandlingsStatus = props => {
   };
 
   const sendOppdatering = () => {
-    const { kode } = behandlingsstatus;
-    if (kode === 'VELG') {
+    if (behandlingsstatus === 'VELG') {
       return false;
     }
     const { oppdaterBehandlingsStatus, behandlingID } = props;
-    const term = KV.kodeTilTerm(kode, MKV.KTObjects.behandlinger.behandlingsstatus);
-    const nyBehandlingsStatus = { kode, term };
-    Api.Behandlinger.status.oppdaterStatus(behandlingID, kode).then(() => {
+    const term = KV.kodeTilTerm(behandlingsstatus, MKV.KTObjects.behandlinger.behandlingsstatus);
+    const nyBehandlingsStatus = { behandlingsstatus, term };
+    Api.Behandlinger.status.oppdaterStatus(behandlingID, behandlingsstatus).then(() => {
       oppdaterBehandlingsStatus(nyBehandlingsStatus);
       oppdaterStatusMelding();
     });
@@ -70,7 +69,10 @@ const BehandlingsStatus = props => {
         ];
         break;
       case MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING:
-        return [];
+        return [
+          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
+          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
+        ];
       default:
         return [];
     }
