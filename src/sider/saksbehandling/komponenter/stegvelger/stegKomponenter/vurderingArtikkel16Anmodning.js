@@ -205,8 +205,8 @@ class VurderingArtikkel16Anmodning extends Component {
   };
 
   validerBegrunnelser = () => {
-    const { tilstand } = this.props;
-    const valid = tilstand.art16_1.begrunnelseKoder.length !== 0;
+    const { begrunnelseKoder } = this.props.tilstand.art16_1;
+    const valid = begrunnelseKoder.length !== 0;
     if (!valid) this.setState({ begrunnelserFeilmelding: 'Velg begrunnelser' });
     return valid;
   };
@@ -218,11 +218,11 @@ class VurderingArtikkel16Anmodning extends Component {
   };
 
   validerAlt = () => {
-    const { tilstand } = this.props;
+    const { begrunnelseKoder } = this.props.tilstand.art16_1;
 
     const lovvalgValid = this.validerLovvalg();
     const begrunnelserValid = this.validerBegrunnelser();
-    const fritekstValid = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
+    const fritekstValid = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
 
     return lovvalgValid && begrunnelserValid && fritekstValid;
   };
@@ -269,9 +269,9 @@ class VurderingArtikkel16Anmodning extends Component {
       { navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true },
     ];
 
-    const visFritekstfelt = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
+    const { art16_1: { begrunnelseFritekst, begrunnelseKoder } } = tilstand;
 
-    const { art16_1, art16_1: { begrunnelseFritekst } } = tilstand;
+    const visFritekstfelt = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
     const art16fritekst = begrunnelseFritekst || '';
 
@@ -313,7 +313,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 tillatFritekst={false}
                 label="Legg til begrunnelse:"
                 onChange={begrunnelserEndringHandler}
-                defaultElementer={art16_1.begrunnelseKoder}
+                defaultElementer={begrunnelseKoder}
               />
             </Nav.Column>
           </Nav.Row>
@@ -370,7 +370,6 @@ VurderingArtikkel16Anmodning.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
   unntakFraBestemmelse: PT.string,
-  art16begrunnelserFritekst: PT.string,
   lagreVilkarHandler: PT.func.isRequired,
   lagreAnmodningsperioderHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
@@ -380,7 +379,6 @@ VurderingArtikkel16Anmodning.propTypes = {
 };
 
 VurderingArtikkel16Anmodning.defaultProps = {
-  art16begrunnelserFritekst: '',
   unntakFraBestemmelse: '',
   anmodningsperiode: {},
 };
@@ -391,7 +389,6 @@ const mapStateToProps = state => ({
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
-  art16begrunnelserFritekst: formSelectors.Art16BegrunnelseFritekstSelector(state),
   unntakFraBestemmelse: formSelectors.UnntakFraBestemmelseSelector(state),
   initialValues: {
     unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),

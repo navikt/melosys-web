@@ -26,6 +26,11 @@ class Yrkesgruppe extends Steg {
         nesteSteg: STEG.YRKESAKTIVITET_ANTALL_LAND,
       },
       {
+        beskrivelse: '',
+        exec: () => avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.IKKE_UTSENDT_ELLER_UTENLANDSK_ARBEIDSGIVER),
+        nesteSteg: STEG.VIRKSOMHETER,
+      },
+      {
         beskrivelse: 'alle andre valg',
         exec: () => true,
         nesteSteg: null,
