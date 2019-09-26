@@ -33,6 +33,8 @@ const Saksopplysninger = props => {
   const [endrePeriodeBegrunnelse, setEndrePeriodeBegrunnelse] = React.useState(MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.PERIODE_FEILREGISTERT);
   const [endrePeriodeFritekst, setEndrePeriodeFritekst] = React.useState('');
   const [endrePeriodeSkalEndres, setEndrePeriodeSkalEndres] = React.useState(false);
+  const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = React.useState(false);
+  const [durationWarningMessage, setDurationWarningMessage] = React.useState(null);
 
   const overstyrSubmit = event => {
     event.preventDefault();
@@ -86,14 +88,18 @@ const Saksopplysninger = props => {
     && (unntaksperiodeVurdering === KV.Koder.Unntaksperiode.GODKJENT
     || unntaksperiodeVurdering === KV.Koder.Unntaksperiode.INNHENT);
 
+
   const validerEndrePeriode = () => {
     if (!kanEndrePeriode() || !endrePeriodeSkalEndres) {
       return true;
     }
 
     const fritekstPakrevd = endrePeriodeBegrunnelse === MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.ANNET;
-    const settings = { context: { fritekstPakrevd } };
-    const stateObject = { fom: endrePeriodeFom, tom: endrePeriodeTom, fritekst: endrePeriodeFritekst };
+    const begrunnelsePakrevd = !endrePeriodeBegrunnelse;
+    const settings = { context: { fritekstPakrevd, begrunnelsePakrevd } };
+    const stateObject = {
+      fom: endrePeriodeFom, tom: endrePeriodeTom, fritekst: endrePeriodeFritekst, begrunnelse: endrePeriodeBegrunnelse,
+    };
     const feilmeldinger = lagYupToReduxformErrorMapper(endrePeriodeSkjema, settings)(stateObject);
     const validert = Utils._isEmpty(feilmeldinger);
 
@@ -104,12 +110,47 @@ const Saksopplysninger = props => {
   };
 
   const validerFelt = () => validerEndrePeriode();
+  const sjekkDatoVarsel = (fom, tom) => {
+    const fomISO = Utils.dato.formatterDatoTilISO(fom);
+    const tomISO = Utils.dato.formatterDatoTilISO(tom);
+    const varighet = Utils.dato.datoDiff(fomISO, tomISO, 'years');
+
+    if (varighet <= 0) {
+      return 'Ugyldig periode';
+    } else if (varighet > 5) {
+      return 'Perioden overstiger 5 år';
+    }
+    return null;
+  };
+  const visPeriodeVarselStripe = () => {
+    if (!durationWarningMessage) {
+      return null;
+    }
+    return (
+      <Nav.Row className="seksjon">
+        <Nav.Column xs="8">
+          <Nav.AlertStripe className="feilmelding" type="advarsel" >
+            {durationWarningMessage}
+          </Nav.AlertStripe>
+        </Nav.Column>
+      </Nav.Row>
+    );
+  };
 
   const submitRegistrering = () => {
     if (!validerFelt()) {
+      setPeriodeOver5aarVarslet(false);
       return false;
     }
 
+    const durationWarning = sjekkDatoVarsel(endrePeriodeFom, endrePeriodeTom);
+    setDurationWarningMessage(durationWarning);
+    if (durationWarning) {
+      if (!periodeOver5aarVarslet) {
+        setPeriodeOver5aarVarslet(true);
+        return false;
+      }
+    }
     const { behandlingID, history } = props;
     const tilForsiden = () => history.push('/');
     switch (unntaksperiodeVurdering) {
@@ -223,6 +264,7 @@ const Saksopplysninger = props => {
                   })}
                 />
               </Nav.Row>
+              {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
                   <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>LAGRE</Nav.Hovedknapp>
