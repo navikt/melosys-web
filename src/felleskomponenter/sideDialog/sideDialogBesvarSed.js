@@ -106,7 +106,12 @@ const SideDialogBesvarSed = ({ behandlingID }) => {
     if (behandlingID !== -1 && bucer.length === 0) {
       try {
         setHenterData(true);
-        const data = await Api.Eessi.bucer.hentBucerForBehandling(behandlingID);
+
+        const {
+          UTKAST, AVBRUTT, SENDT, MOTTATT,
+        } = KV.Koder.SedStatus;
+        const data = await Api.Eessi.bucer.hentBucerForBehandling(behandlingID, [UTKAST, AVBRUTT, SENDT, MOTTATT]);
+
         setBucer(data.bucer);
         setHenterData(false);
       } catch (e) {
