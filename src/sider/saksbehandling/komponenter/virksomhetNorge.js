@@ -27,7 +27,6 @@ function VirksomhetNorge (props) {
     values.andelKontrakterINorge,
     values.andelOppdragINorge,
     values.arbeidstakereRekruttertILand,
-    values.oppdragsKontrakterIHovedsakInngaattILand,
   ];
   const minstEttFeltErUtfylt = felter.some(felt => felt !== '' && felt !== null);
   const panelIkon = minstEttFeltErUtfylt ? Ikoner.Ferdig : Ikoner.Ubehandlet;
@@ -54,9 +53,6 @@ function VirksomhetNorge (props) {
             <Nav.Column xs="12">
               <Nav.Fieldset legend="Hvor blir arbeidstakerne i hovedsak rekruttert?">
                 <LandVelger disabled={!redigerbart} feltNavn="arbeidstakereRekruttertILand" label="Land:" />
-              </Nav.Fieldset>
-              <Nav.Fieldset legend="Etter hvilket lands rett blir oppdragskontraker i hovedsak inngått?">
-                <LandVelger disabled={!redigerbart} feltNavn="oppdragsKontrakterIHovedsakInngaattILand" label="Land:" />
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>

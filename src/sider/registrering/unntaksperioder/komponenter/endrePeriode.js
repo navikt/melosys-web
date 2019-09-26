@@ -1,15 +1,14 @@
 import React from 'react';
 import PT from 'prop-types';
+
 import * as MKV from 'melosys-kodeverk';
 
-import * as Utils from '../../../utils';
-import * as Nav from '../../../utils/navFrontend';
-import * as MPT from '../../../proptypes';
-import * as RegistreringContext from '../state/registreringContext';
-import { endrePeriodeSelectors, endrePeriodeActions } from '../state/ducks/endrePeriode';
-import { lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import * as Utils from '../../../../utils';
+import * as Nav from '../../../../utils/navFrontend';
+import * as MPT from '../../../../proptypes';
 import './endrePeriode.css';
+
+const uuid = require('uuid/v4');
 
 const EndrePeriode = ({
   endrePeriode,
@@ -91,7 +90,10 @@ const EndrePeriode = ({
             value={begrunnelse}
             onChange={e => oppdaterBegrunnelse(e.target.value)}
             disabled={!redigerbart}
+            feil={feilmeldinger.begrunnelse}
+            defaultValue="0"
           >
+            <option key={uuid()} value="0" disabled>Velg i listen</option>
             {MKV.KTObjects.begrunnelser.folketrygdloven.endret_unntaksperiode.map(kodeobjekt =>
               <option key={kodeobjekt.kode} value={kodeobjekt.kode}>{kodeobjekt.term}</option>)}
           </Nav.Select>
@@ -114,8 +116,17 @@ const EndrePeriode = ({
 };
 
 EndrePeriode.propTypes = {
-  endrePeriode: PT.object.isRequired, // TODO: shape()
-  lovvalgsperiode: PT.object.isRequired,
+  endrePeriode: PT.shape({
+    skalEndres: PT.bool,
+    fom: PT.string,
+    tom: PT.string,
+    begrunnelse: PT.string,
+    fritekst: PT.string,
+  }).isRequired,
+  lovvalgsperiode: PT.shape({
+    fomDato: PT.string,
+    tomDato: PT.string,
+  }).isRequired,
   sedLovvalgsperiode: MPT.Periode,
   toggleSkalEndres: PT.func.isRequired,
   oppdaterFom: PT.func.isRequired,
@@ -130,18 +141,4 @@ EndrePeriode.defaultProps = {
   sedLovvalgsperiode: {},
 };
 
-const mapStateToProps = state => ({
-  endrePeriode: endrePeriodeSelectors.EndrePeriodeSelector(state),
-  lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode,
-});
-
-const mapDispatchToProps = dispatch => ({
-  toggleSkalEndres: () => dispatch(endrePeriodeActions.toggleSkalEndres()),
-  oppdaterFom: fom => dispatch(endrePeriodeActions.oppdaterFom(fom)),
-  oppdaterTom: tom => dispatch(endrePeriodeActions.oppdaterTom(tom)),
-  oppdaterBegrunnelse: begrunnelse => dispatch(endrePeriodeActions.oppdaterBegrunnelse(begrunnelse)),
-  oppdaterFritekst: fritekst => dispatch(endrePeriodeActions.oppdaterFritekst(fritekst)),
-});
-
-export default RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(EndrePeriode);
+export default EndrePeriode;

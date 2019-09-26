@@ -56,7 +56,7 @@ export const sendBehandlingsOppgave = async checkboxliste => {
   if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SAK_MK || oppgavetype === MKV.Koder.oppgavetyper.VUR) {
     return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
   } else if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SED) {
-    return `/registrering/${saksnummer}/?behandlingID=${behandlingID}`;
+    return `/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
   }
 
   Utils.logger.error(`Ukjent oppgavetype ${oppgavetype} kan ikke åpnes.`);

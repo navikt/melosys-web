@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import * as Utils from '../../../utils';
+import * as Utils from '../../../../utils';
 
 const gyldigPeriodeTest = {
   name: 'Gyldig periode',
@@ -25,9 +25,9 @@ export const endrePeriodeSkjema = Yup.object().shape({
     .test(gyldigPeriodeTest)
     .test(gyldigDatoTest('sluttdato'))
     .required({ feilmelding: 'Sluttdato er påkrevd' }),
+});
+
+export const fritekstPakrevdSkjema = Yup.object().shape({
   fritekst: Yup.string()
-    .when('$fritekstPakrevd', {
-      is: true,
-      then: fritekstSkjema => fritekstSkjema.required({ feilmelding: 'Begrunnelse for endring av periode er påkrevd' }),
-    }),
+    .required({ feilmelding: 'Begrunnelse for endring av periode er påkrevd' }),
 });

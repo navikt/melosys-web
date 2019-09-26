@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { reduxForm, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import * as EKV from 'eessi-kodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as Utils from '../../../../../utils';
@@ -70,7 +71,7 @@ export const VurderingArtikkel13_1_Vedtak = props => {
     return true;
   };
 
-  const dokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
@@ -84,6 +85,11 @@ export const VurderingArtikkel13_1_Vedtak = props => {
       data: {
         mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
       },
+    },
+    {
+      navn: 'Forhåndsvis SED A003',
+      type: EKV.Koder.sedtyper.A003,
+      erSed: true,
     },
   ];
 
@@ -135,7 +141,7 @@ export const VurderingArtikkel13_1_Vedtak = props => {
       }
       <Nav.Row>
         <Nav.Column xs="6">
-          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={vedKlikkForhandsvis} />}
+          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
         </Nav.Column>
       </Nav.Row>
       <Nav.Hovedknapp onClick={vedKlikkVedtak} disabled={!redigerbart} type="hoved">FATT VEDTAK</Nav.Hovedknapp>
@@ -191,7 +197,7 @@ const VurderingArtikkel13_1_vedtak_form = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.createValidator(Validering.Skjemaer.artikkel13_1_vedtak, {
+  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_1_vedtak, {
     context: {
       lovvalgsperiode: props.lovvalgsperiode,
     },

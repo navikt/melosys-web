@@ -1,23 +1,9 @@
+import { konverterEnkelDataTilStegData, lagEnkelData, slettEnkelData } from '../enkelData';
+
 export const anmodningsperiodesvartype = 'anmodningsperiodesvar';
 
-export const slettAnmodningsperiodesvar = felt => ({
-  felt,
-  type: anmodningsperiodesvartype,
-});
+export const slettAnmodningsperiodesvar = felt => slettEnkelData(felt, anmodningsperiodesvartype);
 
-export const lagAnmodningsperiodesvar = felt => (
-  {
-    felt: anmodningsperiodesvartype,
-    oppdaterRedux: true,
-    type: anmodningsperiodesvartype,
-    innhold: felt,
-  }
-);
+export const lagAnmodningsperiodesvar = felt => lagEnkelData(felt, anmodningsperiodesvartype);
 
-export const konverterAnmodningsperiodesvarTilStegData = anmodningsperiodesvar => (
-  {
-    felt: anmodningsperiodesvartype,
-    type: anmodningsperiodesvartype,
-    innhold: anmodningsperiodesvar,
-  }
-);
+export const konverterAnmodningsperiodesvarTilStegData = anmodningsperiodesvar => konverterEnkelDataTilStegData(anmodningsperiodesvar, anmodningsperiodesvartype);
