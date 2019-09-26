@@ -120,7 +120,7 @@ class BrevBestilling extends Component {
     const placeholder = 'F.eks.: \u00ABOpplysninger om antall utsendte ansatte i perioden\u00BB, \u00ABOpplysninger om den ansatte erstatter en annen utsendt ansatt\u00BB.';
 
     const disabled = !redigerbart || !brevBestillingRedigerbartIArtikkel13;
-
+    const produserbaredokumenterStoettet = [MKV.Kode.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID]; // TODO
     return (
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
@@ -128,8 +128,10 @@ class BrevBestilling extends Component {
             <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Brevet gjelder" disabled={!redigerbart}>
               {muligeMottakere.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
-            <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
-              {MKV.KTObjects.brev.produserbaredokumenter.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+            <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev">
+              {MKV.KTObjects.brev.produserbaredokumenter
+                .filter(elem => produserbaredokumenterStoettet.includes(elem.kode))
+                .map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
