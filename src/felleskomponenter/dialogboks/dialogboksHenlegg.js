@@ -6,7 +6,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../utils/navFrontend';
 
 import PdfLenkeListe from '../pdfLenkeListe';
-import { KodeTermSelect } from '../ui/kodeTermSelect';
+import * as Mui from '../ui';
 import Knapperad from '../knapperad';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
@@ -123,7 +123,7 @@ export class DialogboksHenleggSak extends Component {
         ariaHideApp={ariaHideApp}>
         <div>
           <Nav.Systemtittel className="overskrift">Henlegg saken</Nav.Systemtittel>
-          <KodeTermSelect
+          <Mui.KodeTermSelect
             feil={feilmeldingSelect}
             onChange={this.velgBegrunnelseHandle}
             label="Begrunnelse"

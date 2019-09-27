@@ -2,8 +2,7 @@ import React, { useEffect } from 'react';
 import PT from 'prop-types';
 import * as Nav from '../../../../../../utils/navFrontend';
 import * as MPT from '../../../../../../proptypes';
-
-import ListevelgerFlervalg from '../../../../../../felleskomponenter/ui/listevelgerFlervalg';
+import * as Mui from '../../../../../../felleskomponenter/ui';
 
 import { BOOLSK } from '../../../../../../constants';
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar } from '../../../../../../regler/vilkar';
@@ -56,7 +55,7 @@ const EnkeltVilkaar = props => {
         <Nav.Row>
           <Nav.Column xs="12" md="10" lg="8">
             <Nav.Fieldset legend="Begrunnelse:">
-              <ListevelgerFlervalg
+              <Mui.ListevelgerFlervalg
                 muligeValg={begrunnelser}
                 label="Legg til begrunnelse:"
                 tillatFritekst={false}
