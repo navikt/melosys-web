@@ -10,7 +10,7 @@ import * as MPT from '../../../../../proptypes';
 import { konverterTilStegData, hentFaktaVerdi } from '../../../../../regler/avklartefakta';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-import { KodeTermSelect } from '../../../../../felleskomponenter/ui/kodeTermSelect';
+import * as Mui from '../../../../../felleskomponenter/ui';
 
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
 import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
@@ -202,7 +202,7 @@ export class VurderingEndrePeriode extends React.Component {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6">
-            <KodeTermSelect
+            <Mui.KodeTermSelect
               feil={begrunnelseFeilmelding}
               koder={MKV.KTObjects.begrunnelser.endretperiode}
               label="Begrunnelse"

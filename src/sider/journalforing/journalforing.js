@@ -133,14 +133,17 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering }, tilordneSak, history, settJournalforingHensikt, settFeilFelt, erSkjemaGyldig,
+      journalforingSkjemaVerdier: {
+        saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, skalSendesForvaltningsmelding,
+      },
+      tilordneSak, history, settJournalforingHensikt, settFeilFelt, erSkjemaGyldig,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = {
-      saksnummer, behandlingstypeKode, ingenVurdering, ...vasketJournalforing,
+      saksnummer, behandlingstypeKode, ingenVurdering, skalSendesForvaltningsmelding, ...vasketJournalforing,
     };
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
@@ -426,6 +429,7 @@ const mapStateToProps = state => ({
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
     ingenVurdering: false,
+    skalSendesForvaltningsmelding: false,
     skalTilordnes: false,
   },
 });
