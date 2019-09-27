@@ -21,7 +21,8 @@ import { behandlingsperioderSelectors } from '../../../../../ducks/behandlingspe
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../../../utils/dato';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-import ListevelgerFlervalg from '../../../../../felleskomponenter/ui/listevelgerFlervalg';
+import * as Mui from '../../../../../felleskomponenter/ui';
+
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../../../regler/vilkar';
 import { konverterLovvalgsbestemmelseTilStegData } from '../../../../../regler/lovvalgsbestemmelser';
@@ -306,7 +307,7 @@ class VurderingArtikkel16Anmodning extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="7">
-              <ListevelgerFlervalg
+              <Mui.ListevelgerFlervalg
                 disabled={!redigerbart}
                 feil={begrunnelserFeilmelding}
                 muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning}
