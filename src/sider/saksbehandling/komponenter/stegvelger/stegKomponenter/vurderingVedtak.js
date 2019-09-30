@@ -16,6 +16,8 @@ import { datoDiffMenneskelig } from '../../../../../utils/dato';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 
+import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
+
 import './vurderingVedtak.css';
 
 const alleLovvalg = [
@@ -34,6 +36,8 @@ const VurderingVedtak = ({
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
   // 3. Vise oppsummmeringen av kriteriene for artikkelen (kodeverk og avklartefakta)
 
+  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
+
   const lovvalget = lovvalgsperioder[0] || {};
 
   const {
@@ -44,8 +48,19 @@ const VurderingVedtak = ({
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, alleLovvalg);
 
   const pdfDokumenter = [
-    { navn: 'Forhåndsvis vedtaksbrev og A1', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
-    { navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true },
+    {
+      navn: 'Forhåndsvis vedtaksbrev og A1',
+      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
+      data: {
+        mottaker: MKV.Koder.aktoersroller.BRUKER,
+        fritekst: vedtaksbrevFritekst,
+      },
+    },
+    {
+      navn: 'Forhåndsvis SED A009',
+      type: EKV.Koder.sedtyper.A009,
+      erSed: true,
+    },
   ];
 
   if (lovvalgSomKodeTerm && lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1) {
@@ -67,14 +82,31 @@ const VurderingVedtak = ({
             <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>
+        <Nav.Row className="fritekst">
+          <Nav.Column xs="8">
+            <Nav.Textarea
+              label="Fritekst til vedtaksbrev"
+              placeholder="Skriv inn tekst til vedtaksbrevet..."
+              value={vedtaksbrevFritekst}
+              onChange={setVedtaksbrevFritekst}
+              maxLength={500}
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+        </Nav.Row>
         <Nav.Row>
-          <Nav.Column xs="6" className="fane__fot">
+          <Nav.Column xs="6">
             {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
           </Nav.Column>
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6" className="fane__fot">
-            <Nav.Hovedknapp disabled={!redigerbart} onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND)}>Fatt vedtak</Nav.Hovedknapp>
+            <Nav.Hovedknapp
+              disabled={!redigerbart}
+              onClick={() => lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND, vedtaksbrevFritekst)}
+            >
+              Fatt vedtak
+            </Nav.Hovedknapp>
           </Nav.Column>
         </Nav.Row>
       </div>
