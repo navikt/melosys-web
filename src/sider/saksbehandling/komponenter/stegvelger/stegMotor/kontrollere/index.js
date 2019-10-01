@@ -2,6 +2,7 @@ import Aktivitet from './aktivitet';
 import Virksomheter from './virksomheter';
 import Avslag_12_x_og_16 from './avslag_12_x_og_16';
 import Bostedsland from './bostedsland';
+import BestemLand from './bestemland';
 import Forretningssted from './forretningssted';
 import ForutgaendeMedlemskap from './forutgaende_medlemskap';
 import IkkeYrkesaktiv from './ikke_yrkesaktiv';
@@ -51,6 +52,7 @@ export const stegKatalogMap = new Map([
   [STEG.NORMALT_DRIVER_VIRKSOMHET, NormaltDriverVirksomhet],
   [STEG.AKTIVITET, Aktivitet],
   [STEG.BOSTEDSLAND, Bostedsland],
+  [STEG.BESTEM_LAND, BestemLand],
   [STEG.TJENESTEMANN, Tjenestemann],
   [STEG.FORRETNINGSSTED, Forretningssted],
   [STEG.VIRKSOMHETER, Virksomheter],

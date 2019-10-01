@@ -23,6 +23,17 @@ class Forretningssted extends Steg {
         nesteSteg: STEG.ARTIKKEL_13_1_B_VEDTAK,
       },
       {
+        beskrivelse: '',
+        exec: () => {
+          const harLovvalgsbestemmelse = this.harLovvalgsbestemmelse(propsLight);
+          const harAvklartForretningsland = this.harAvklartForretningsland(propsLight);
+          const erOmfattetINorge = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta)) === KV.Koder.BoolskAvklartfaktaType.USANN;
+
+          return harLovvalgsbestemmelse && harAvklartForretningsland && erOmfattetINorge;
+        },
+        nesteSteg: STEG.BESTEM_LAND,
+      },
+      {
         beskrivelse: 'dead end',
         exec: () => true,
         nesteSteg: null,
