@@ -26,8 +26,8 @@ export class VurderingEndrePeriode extends React.Component {
     nyTomDatoFeilmelding: undefined,
     begrunnelse: hentFaktaVerdi(this.props.tilstand.aarsakEndringPeriodeAvklartfakta) || '',
     begrunnelseFeilmelding: undefined,
-    fritekst: null,
     opprinneligLovvalgsperiode: { fom: undefined, tom: undefined },
+    vedtaksbrevFritekst: '',
   };
 
   componentDidMount() {
@@ -43,6 +43,8 @@ export class VurderingEndrePeriode extends React.Component {
   }
 
   settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
+
+  settVedtaksbrevFritekst = event => this.setState({ vedtaksbrevFritekst: event.target.value });
 
   hentOpprinneligPeriode = async behandlingID => {
     const opprinneligLovvalgsperiode = await Api.Lovvalgsperioder.hentOpprinnelig(behandlingID).catch(Utils.logger.error);
@@ -97,13 +99,19 @@ export class VurderingEndrePeriode extends React.Component {
   };
 
   vedKlikkEndrePeriode = async () => {
-    const { vedtaEndretPeriode, tilForsiden } = this.props;
+    const { endreVedtak, tilForsiden } = this.props;
     const { sendEndretLovvalgsPeriode, validerAlt } = this;
-    const { begrunnelse } = this.state;
+    const { begrunnelse, vedtaksbrevFritekst } = this.state;
 
     if (validerAlt()) {
       await sendEndretLovvalgsPeriode();
-      await vedtaEndretPeriode(begrunnelse);
+
+      const data = {
+        begrunnelseKode: begrunnelse,
+        fritekst: vedtaksbrevFritekst,
+        behandlingstype: MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
+      };
+      await endreVedtak(data);
       tilForsiden();
     }
   };
@@ -114,7 +122,13 @@ export class VurderingEndrePeriode extends React.Component {
     this.props.endreDatoOgSendLovvalgsperioderHandler(fom, Utils.dato.formatterDatoTilISO(nyTomDato));
   };
 
-  validerAlt = () => this.validerTomDato() && this.validerPeriode() && this.validerBegrunnelse();
+  validerAlt = () => {
+    const validPeriode = this.validerPeriode();
+    const validDato = this.validerTomDato();
+    const validBegrunnelse = this.validerBegrunnelse();
+
+    return validPeriode && validDato && validBegrunnelse;
+  };
 
   vedKlikkPdf = async () => this.validerAlt();
 
@@ -129,6 +143,7 @@ export class VurderingEndrePeriode extends React.Component {
       vedKlikkEndrePeriode,
       vedKlikkPdf,
       lagrePeriodeForForhandsvisning,
+      settVedtaksbrevFritekst,
     } = this;
 
     const {
@@ -136,8 +151,8 @@ export class VurderingEndrePeriode extends React.Component {
       nyTomDatoFeilmelding,
       begrunnelse,
       begrunnelseFeilmelding,
-      fritekst,
       opprinneligLovvalgsperiode: { fom, tom },
+      vedtaksbrevFritekst,
     } = this.state;
 
     const endretPeriodeBegrunnelse = begrunnelse;
@@ -148,7 +163,7 @@ export class VurderingEndrePeriode extends React.Component {
         type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
         data: {
           mottaker: MKV.Koder.aktoersroller.BRUKER,
-          fritekst,
+          fritekst: vedtaksbrevFritekst,
           begrunnelseKode: endretPeriodeBegrunnelse,
         },
       },
@@ -157,7 +172,6 @@ export class VurderingEndrePeriode extends React.Component {
         type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
         data: {
           mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-          fritekst,
           begrunnelseKode: endretPeriodeBegrunnelse,
         },
       },
@@ -212,6 +226,18 @@ export class VurderingEndrePeriode extends React.Component {
             />
           </Nav.Column>
         </Nav.Row>
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <Nav.Textarea
+              label="Fritekst til vedtaksbrev"
+              placeholder="Skriv inn tekst til vedtaksbrevet..."
+              value={vedtaksbrevFritekst}
+              onChange={settVedtaksbrevFritekst}
+              maxLength={500}
+              disabled={!redigerbart}
+            />
+          </Nav.Column>
+        </Nav.Row>
         {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
         <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
       </div>
@@ -225,7 +251,7 @@ VurderingEndrePeriode.propTypes = {
   endreDatoOgSendLovvalgsperioderHandler: PT.func.isRequired,
   fomDato: PT.string,
   tilForsiden: PT.func.isRequired,
-  vedtaEndretPeriode: PT.func.isRequired,
+  endreVedtak: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
