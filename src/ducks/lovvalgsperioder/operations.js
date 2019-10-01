@@ -173,6 +173,11 @@ const bestemLovvalgsland = lovvalgsbestemmelse => {
   switch (lovvalgsbestemmelse) {
     case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A:
       return MKV.Koder.landkoder.NO;
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4:
+      return MKV.Koder.landkoder.NO;
     default:
       return null;
   }
