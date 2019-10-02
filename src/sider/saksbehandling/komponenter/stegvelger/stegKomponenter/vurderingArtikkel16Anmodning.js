@@ -242,6 +242,7 @@ class VurderingArtikkel16Anmodning extends Component {
       medlemskap,
       redigerbart,
       tilstand,
+      erIDirekteTilArtikkel16Flyt,
     } = this.props;
 
     const {
@@ -280,6 +281,24 @@ class VurderingArtikkel16Anmodning extends Component {
       <div>
         <Nav.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Undertittel>
         <div className="artikkel16">
+          {
+            erIDirekteTilArtikkel16Flyt &&
+            <Nav.Row className="vilAnmode">
+              <Nav.Column xs="6">
+                <Nav.Radio
+                  name="vilAnmode"
+                  label="Ja, jeg vil anmode om unntak"
+                  checked
+                  disabled={!redigerbart}
+                />
+                <Nav.Radio
+                  name="vilAnmode"
+                  label="Nei, jeg vil avslå"
+                  disabled
+                />
+              </Nav.Column>
+            </Nav.Row>
+          }
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
               <Nav.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.Element>
@@ -376,6 +395,7 @@ VurderingArtikkel16Anmodning.propTypes = {
   slettData: PT.func.isRequired,
   tilstand: PT.object.isRequired,
   byggAnmodningsperioderHandler: PT.func.isRequired,
+  erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
 };
 
 VurderingArtikkel16Anmodning.defaultProps = {
@@ -394,6 +414,7 @@ const mapStateToProps = state => ({
     unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
   },
+  erIDirekteTilArtikkel16Flyt: avklartefaktaSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
 });
 
 const VurderingArtikkel16AnmodningForm = reduxForm({
