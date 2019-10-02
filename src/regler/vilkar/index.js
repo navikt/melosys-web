@@ -16,7 +16,7 @@ export const erVilkarOppfylt = (spesifiktVilkar, alleVilkar) => {
 
 export const hentBegrunnelser = (spesifiktVilkar, alleVilkar) => {
   const funnetVilkar = hentVilkar(spesifiktVilkar, alleVilkar);
-  return funnetVilkar.begrunnelser;
+  return funnetVilkar.begrunnelseKoder;
 };
 
 export const lagVilkaar = (felt, verdi, begrunnelse, fritekst) => {
