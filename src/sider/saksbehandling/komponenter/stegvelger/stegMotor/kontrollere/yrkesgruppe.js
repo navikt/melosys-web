@@ -27,7 +27,7 @@ class Yrkesgruppe extends Steg {
       },
       {
         beskrivelse: '',
-        exec: () => avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.IKKE_UTSENDT_ELLER_UTENLANDSK_ARBEIDSGIVER),
+        exec: () => avklartefakta => Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.YRKESAKTIV_DIREKTE_TIL_ARTIKKEL_16),
         nesteSteg: STEG.VIRKSOMHETER,
       },
       {
