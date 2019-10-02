@@ -44,7 +44,7 @@ const VurderingYrkesgruppe = props => {
       slettData(slettTilleggBestemmelse());
     }
 
-    if (yrkessituasjon === KV.Koder.VurderingYrkesgruppeTyper.IKKE_UTSENDT_ELLER_UTENLANDSK_ARBEIDSGIVER) {
+    if (yrkessituasjon === KV.Koder.VurderingYrkesgruppeTyper.YRKESAKTIV_DIREKTE_TIL_ARTIKKEL_16) {
       oppdaterData(lagVilkaar('art16_1_anmodning', true));
     } else {
       slettData(slettVilkar('art16_1_anmodning'));
@@ -76,14 +76,14 @@ const VurderingYrkesgruppe = props => {
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           value={KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           onChange={radioEndret}
-          label="Yrkesaktiv som flyvende personell" />
+          label="Yrkesaktiv, som flygende personell" />
         <Nav.Radio
           name="yrkesgruppe"
           disabled={!redigerbart}
-          checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.IKKE_UTSENDT_ELLER_UTENLANDSK_ARBEIDSGIVER}
-          value={KV.Koder.VurderingYrkesgruppeTyper.IKKE_UTSENDT_ELLER_UTENLANDSK_ARBEIDSGIVER}
+          checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.YRKESAKTIV_DIREKTE_TIL_ARTIKKEL_16}
+          value={KV.Koder.VurderingYrkesgruppeTyper.YRKESAKTIV_DIREKTE_TIL_ARTIKKEL_16}
           onChange={radioEndret}
-          label="Gå til artikkel 16" />
+          label="Yrkesaktiv, direkte til vurdering av artikkel 16" />
         <Nav.Radio
           name="yrkesgruppe"
           disabled={BOOLSK.SANN}
