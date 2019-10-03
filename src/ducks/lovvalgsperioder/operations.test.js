@@ -126,5 +126,23 @@ describe('Lovvalgsperioder operations', () => {
 
       expect(store.getActions()).toMatchObject(expectedActions);
     });
+
+    it('lager OPPDATER_LOVVALGSPERIODER dersom unntakfrabestemmelse er valgt', () => {
+      const unntakfrabestemmelse = MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009.FO_987_2009_ART14_11;
+
+      const expectedActions = [
+        { type: types.OPPDATER_LOVVALGSPERIODER, data: [{ unntakFraBestemmelse: unntakfrabestemmelse }] },
+      ];
+
+      const store = mockStore({
+        ...initialState,
+      });
+
+      const stegState = { unntakfrabestemmelse };
+
+      store.dispatch(operations.oppdaterLovvalgsperioderState(stegState));
+
+      expect(store.getActions()).toMatchObject(expectedActions);
+    });
   });
 });
