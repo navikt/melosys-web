@@ -289,6 +289,7 @@ class Stegvelger extends Component {
     const propsLight = {
       anmodningsperioder: props.anmodningsperioder,
       anmodningsperiodesvar: props.anmodningsperiodesvar,
+      anmodningsperiodesvarForm: props.artikkel16_motta_svar_skjema,
       behandlingID: props.behandlingID,
       virksomheterIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
@@ -399,6 +400,7 @@ class Stegvelger extends Component {
 }
 
 Stegvelger.propTypes = {
+  anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
   behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
   avklartefakta: MPT.AvklartefaktaListe,
