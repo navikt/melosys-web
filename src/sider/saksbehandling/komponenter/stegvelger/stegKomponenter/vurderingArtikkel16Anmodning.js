@@ -7,14 +7,12 @@ import * as MKV from 'melosys-kodeverk';
 import * as EKV from 'eessi-kodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
-import * as Skjema from '../../../../../felleskomponenter/skjema';
 import * as MPT from '../../../../../proptypes';
 import * as Utils from '../../../../../utils';
 import * as KV from '../../../../../kodeverk';
 
 import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
-import { formSelectors } from '../../../../../ducks/form';
 import { anmodningsperioderSelectors } from '../../../../../ducks/anmodningsperioder';
 import { behandlingsperioderSelectors } from '../../../../../ducks/behandlingsperioder';
 
@@ -25,6 +23,10 @@ import ListevelgerFlervalg from '../../../../../felleskomponenter/ui/listevelger
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../../../regler/vilkar';
 import { konverterLovvalgsbestemmelseTilStegData } from '../../../../../regler/lovvalgsbestemmelser';
+import {
+  konverterUnntakFraBestemmelseTilStegData,
+  lagUnntakFraBestemmelse,
+} from '../../../../../regler/unntakfrabestemmelse';
 
 import './vurderingArtikkel16Anmodning.css';
 
@@ -132,9 +134,10 @@ class VurderingArtikkel16Anmodning extends Component {
   };
 
   componentDidMount() {
-    const { oppdaterData, tilstand: { art16_1 } } = this.props;
+    const { oppdaterData, tilstand: { art16_1 }, unntakFraBestemmelse } = this.props;
     oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
     oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1));
+    oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
   }
 
   componentWillUnmount() {
@@ -151,19 +154,22 @@ class VurderingArtikkel16Anmodning extends Component {
     }
   };
 
-  byggAnmodningsperioder = () => {
-    const { byggAnmodningsperioderHandler } = this.props;
+  vedUnntakFraBestemmelseEndring = async event => {
+    const { oppdaterData } = this.props;
+    const { byggAnmodningsperioderHandler, lagreAnmodningsperioderHandler } = this.props;
 
-    byggAnmodningsperioderHandler();
+    oppdaterData(lagUnntakFraBestemmelse(event.target.value));
+
+    await byggAnmodningsperioderHandler();
+    await lagreAnmodningsperioderHandler();
 
     this.setState({ lovvalgFeilmelding: undefined });
   };
 
-  lagreAnmodningsperioder = async () => {
-    const { byggAnmodningsperioderHandler, lagreAnmodningsperioderHandler } = this.props;
+  byggAnmodningsperioder = () => {
+    const { byggAnmodningsperioderHandler } = this.props;
 
-    await byggAnmodningsperioderHandler();
-    await lagreAnmodningsperioderHandler();
+    byggAnmodningsperioderHandler();
 
     this.setState({ lovvalgFeilmelding: undefined });
   };
@@ -198,7 +204,7 @@ class VurderingArtikkel16Anmodning extends Component {
     this.lagreVilkar();
   };
 
-  validerLovvalg = () => {
+  validerUnntakFraBestemmelse = () => {
     const valid = this.props.unntakFraBestemmelse;
     if (!valid) this.setState({ lovvalgFeilmelding: { feilmelding: 'Velg lovvalg' } });
     return valid;
@@ -220,7 +226,7 @@ class VurderingArtikkel16Anmodning extends Component {
   validerAlt = () => {
     const { begrunnelseKoder } = this.props.tilstand.art16_1;
 
-    const lovvalgValid = this.validerLovvalg();
+    const lovvalgValid = this.validerUnntakFraBestemmelse();
     const begrunnelserValid = this.validerBegrunnelser();
     const fritekstValid = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
 
@@ -243,6 +249,7 @@ class VurderingArtikkel16Anmodning extends Component {
       redigerbart,
       tilstand,
       erIDirekteTilArtikkel16Flyt,
+      unntakFraBestemmelse,
     } = this.props;
 
     const {
@@ -251,7 +258,7 @@ class VurderingArtikkel16Anmodning extends Component {
       validerOgLagreBehandling,
       fritekstFokusFlyttetHandler,
       fritekstEndretHandler,
-      lagreAnmodningsperioder,
+      vedUnntakFraBestemmelseEndring,
     } = this;
 
     const {
@@ -312,15 +319,16 @@ class VurderingArtikkel16Anmodning extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Skjema.Select
+              <Nav.Select
                 feil={lovvalgFeilmelding}
-                onBlur={lagreAnmodningsperioder}
+                onChange={vedUnntakFraBestemmelseEndring}
+                value={unntakFraBestemmelse}
                 disabled={!redigerbart}
-                feltNavn="unntakFraBestemmelse"
                 label="Artikkelen det søkes unntak fra:"
               >
+                <option key={uuid()} value="" >Velg...</option>
                 { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
-              </Skjema.Select>
+              </Nav.Select>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
@@ -409,9 +417,8 @@ const mapStateToProps = state => ({
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
-  unntakFraBestemmelse: formSelectors.UnntakFraBestemmelseSelector(state),
+  unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
   initialValues: {
-    unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
   },
   erIDirekteTilArtikkel16Flyt: avklartefaktaSelectors.ErIDirekteTilArtikkel16FlytSelector(state),

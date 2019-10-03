@@ -53,6 +53,7 @@ const finnValgteVilkar = alleLovvalgsVilkar => {
 const byggLovvalgsPeriodeArtikkel12_1 = (stegState, reduxState) => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     fomDato: soknadPeriode.fom,
@@ -60,7 +61,7 @@ const byggLovvalgsPeriodeArtikkel12_1 = (stegState, reduxState) => {
     lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || null,
-    unntakFraBestemmelse: null,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
@@ -72,6 +73,7 @@ const byggLovvalgsPeriodeArtikkel12_1 = (stegState, reduxState) => {
 const byggLovvalgsPeriodeArtikkel12_2 = (stegState, reduState) => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduState);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     fomDato: soknadPeriode.fom,
@@ -79,7 +81,7 @@ const byggLovvalgsPeriodeArtikkel12_2 = (stegState, reduState) => {
     lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || null,
-    unntakFraBestemmelse: null,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
@@ -92,6 +94,7 @@ const byggLovvalgsPeriodeArtikkel11_3A = (stegState, reduxState) => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
   const tilleggsbestemmelseFraVilkar = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(reduxState));
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     fomDato: soknadPeriode.fom,
@@ -99,7 +102,7 @@ const byggLovvalgsPeriodeArtikkel11_3A = (stegState, reduxState) => {
     lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || tilleggsbestemmelseFraVilkar || null,
-    unntakFraBestemmelse: null,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
@@ -111,6 +114,7 @@ const byggLovvalgsPeriodeArtikkel11_3A = (stegState, reduxState) => {
 const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     fomDato: soknadPeriode.fom,
@@ -118,7 +122,7 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
     lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || null,
-    unntakFraBestemmelse: null,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
@@ -184,6 +188,7 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
   const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
   const lovvalgsland = bestemLovvalgsland(stegState.lovvalgsbestemmelse);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     fomDato: soknadPeriode.fom,
@@ -191,7 +196,7 @@ const byggLovvalgsPerioder = (stegState, reduxState) => {
     lovvalgsbestemmelse: stegState.lovvalgsbestemmelse || null,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
     tilleggBestemmelse: stegState.tilleggbestemmelse || null,
-    unntakFraBestemmelse: null,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland,
@@ -225,7 +230,7 @@ export function oppdaterLovvalgsperioderState(stegState) {
       const valgtLovvalg = finnValgteVilkar(alleLovvalgsvilkar);
       const lovvalgsPerioder = byggLovvalgsPerioderFraVilkaar(valgtLovvalg, stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
-    } else if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse) {
+    } else if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse || stegState.unntakfrabestemmelse) {
       const lovvalgsPerioder = byggLovvalgsPerioder(stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
     } else {
