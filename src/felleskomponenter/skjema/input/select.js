@@ -18,7 +18,7 @@ function SelectWrappedComponent({
   };
   return (
     <Nav.Select label={label} feil={feil} {...inputProps}>
-      <option />
+      <option disabled />
       {children}
     </Nav.Select>
   );
