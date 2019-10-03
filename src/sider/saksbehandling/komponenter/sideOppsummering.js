@@ -47,6 +47,7 @@ class SideOppsummering extends Component {
       visAvsluttSakSomBortfaltDialogHandle,
       arbeidsland,
       endreLovvalgsperiodeRedigerbart,
+      erArt16AnmodningSendt,
     } = this.props;
 
     return (
@@ -65,6 +66,7 @@ class SideOppsummering extends Component {
                   redigerbart={endreLovvalgsperiodeRedigerbart}
                   visHenleggSak={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE}
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                  visOppfriskSaksopplysninger={!erArt16AnmodningSendt}
                 />
               </div>
             </Nav.Column>
@@ -121,7 +123,9 @@ SideOppsummering.propTypes = {
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
   tilForsidenHandle: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
+  erArt16AnmodningSendt: PT.bool.isRequired,
 };
+
 SideOppsummering.defaultProps = {
   redigerbart: false,
   fagsak: undefined,
@@ -138,6 +142,7 @@ const mapStateToProps = state => ({
   soknadsperiodeFom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
   soknadsperiodeTom: formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
   arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  erArt16AnmodningSendt: behandlingerSelectors.ErArtikkel16AnmodningSendtSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
