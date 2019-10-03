@@ -27,6 +27,7 @@ import { formSelectors } from '../../../../ducks/form';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
+import { StegStoreTyper } from '../../../../regler';
 
 import './stegvelger.css';
 
@@ -35,11 +36,12 @@ class Stegvelger extends Component {
     aktivtStegNummer: 0,
     aktuelleSteg: [],
     stegStores: {
-      anmodningsperiodesvar: new EnkelDataStore(),
-      avklartefakta: new AvklartefaktaStore(),
-      vilkaar: new VilkaarStore(),
-      lovvalgsbestemmelse: new EnkelDataStore(),
-      tilleggbestemmelse: new EnkelDataStore(),
+      [StegStoreTyper.Anmodningsperiodersvar]: new EnkelDataStore(),
+      [StegStoreTyper.Avklartefakta]: new AvklartefaktaStore(),
+      [StegStoreTyper.Vilkar]: new VilkaarStore(),
+      [StegStoreTyper.Lovvalgsbestemmelser]: new EnkelDataStore(),
+      [StegStoreTyper.Tilleggbestemmelser]: new EnkelDataStore(),
+      [StegStoreTyper.UnntakFraBestemmelse]: new EnkelDataStore(),
     },
     visSoknadFeilmeldinger: false,
   };
@@ -127,7 +129,12 @@ class Stegvelger extends Component {
 
     const { aktivtStegNummer, stegStores } = this.state;
     const {
-      vilkaar, avklartefakta, lovvalgsbestemmelse, anmodningsperiodesvar, tilleggbestemmelse,
+      vilkaar,
+      avklartefakta,
+      lovvalgsbestemmelse,
+      anmodningsperiodesvar,
+      tilleggbestemmelse,
+      unntakfrabestemmelse,
     } = stegStores;
 
     await Promise.all([
@@ -136,10 +143,12 @@ class Stegvelger extends Component {
       this.props.oppdaterLovvalgperioder({
         lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
         tilleggbestemmelse: tilleggbestemmelse.hent(),
+        unntakfrabestemmelse: unntakfrabestemmelse.hent(),
       }),
       this.props.oppdaterAnmodningsPerioder({
         lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
         tilleggbestemmelse: tilleggbestemmelse.hent(),
+        unntakfrabestemmelse: unntakfrabestemmelse.hent(),
       }),
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
@@ -213,20 +222,22 @@ class Stegvelger extends Component {
   }
 
   byggLovvalgsperioderHandler = () => {
-    const { lovvalgsbestemmelse, tilleggbestemmelse } = this.state.stegStores;
+    const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse } = this.state.stegStores;
 
     this.props.oppdaterLovvalgperioder({
       lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
       tilleggbestemmelse: tilleggbestemmelse.hent(),
+      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
     });
   };
 
   byggAnmodningsperioderHandler = () => {
-    const { lovvalgsbestemmelse, tilleggbestemmelse } = this.state.stegStores;
+    const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse } = this.state.stegStores;
 
     this.props.oppdaterAnmodningsPerioder({
       lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
       tilleggbestemmelse: tilleggbestemmelse.hent(),
+      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
     });
   };
 
