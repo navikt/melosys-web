@@ -19,10 +19,13 @@ import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../
 import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
 import { soknadSelectors } from '../../../../../ducks/soknad';
 
+import './vurderingArtikkel13_1_vedtak.css';
+
 const VurderingArtikkel13_1b_UtpekLand = props => {
   const {
     redigerbart,
     behandlingID,
+    lovvalgsland,
     lovvalgsperiode,
     lagreOgFatteVedtak,
     formIsValid,
@@ -33,6 +36,42 @@ const VurderingArtikkel13_1b_UtpekLand = props => {
     lagreLovvalgsperioder,
     byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
   } = props;
+
+  const vedCheck = e => {
+    if (e.target.value === 'true') {
+      gjenopprettOpprinneligLovvalgsperiode();
+    }
+  };
+
+  const validerForm = () => {
+    touch('tomDato');
+    return formIsValid;
+  };
+
+  const forkortLovvalgsperiode = () => endreLovvalgsPeriode(lovvalgsperiode.fomDato, Utils.dato.formatterDatoTilISO(formValues.tomDato));
+
+  const vedKlikkVedtak = async () => {
+    if (!validerForm()) return;
+
+    if (formValues.forkortLovvalgsperiode) {
+      await forkortLovvalgsperiode();
+    }
+
+    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND);
+  };
+
+  const vedKlikkForhandsvis = async () => {
+    if (!validerForm()) return false;
+
+    if (formValues.forkortLovvalgsperiode) {
+      await forkortLovvalgsperiode();
+    }
+
+    lagreLovvalgsperioder();
+
+    return true;
+  };
+
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
@@ -60,16 +99,55 @@ const VurderingArtikkel13_1b_UtpekLand = props => {
   return (
     <Fragment>
       <Nav.Undertittel>{overskrift}</Nav.Undertittel>
-      <Fragment>
-        <Nav.Undertittel>
-          <Nav.Element className="undertittel">Lovvalgsperiode</Nav.Element>
-          <Nav.Row className="lovvalgsperiodeRow">
-            <Nav.Column xs="6">
-              {fom} - {tom}
-            </Nav.Column>
-          </Nav.Row>
-        </Nav.Undertittel>
-      </Fragment>
+      <Nav.Undertittel>
+        <Nav.Element className="undertittel">Lovvalgsland:</Nav.Element>
+      </Nav.Undertittel>
+      <Nav.Row className="lovvalgsperiodeRow">
+        <Nav.Column xs="6">
+          <p>{lovvalgsland && lovvalgsland.term}</p>
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Undertittel>
+        <Nav.Element className="undertittel">Lovvalgsperiode</Nav.Element>
+      </Nav.Undertittel>
+      <Nav.Row className="lovvalgsperiodeRow">
+        <Nav.Column xs="6">
+          {fom} - {tom}
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row className="checkboxRow">
+        <Nav.Column xs="6">
+          <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalgsperioden er avkortet." disabled={!redigerbart} onClick={vedCheck} />
+        </Nav.Column>
+      </Nav.Row>
+      {
+        formValues.forkortLovvalgsperiode &&
+        <Nav.Row>
+          <Nav.Column xs="3">
+            <Skjema.Input
+              bredde="fullbredde"
+              label="Startdato"
+              disabled
+              feltNavn="fomDato"
+            />
+          </Nav.Column>
+          <Nav.Column xs="3">
+            <Skjema.Input
+              bredde="fullbredde"
+              label="Sluttdato"
+              disabled={!redigerbart}
+              feltNavn="tomDato"
+              datoFelt
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
+      <Nav.Row>
+        <Nav.Column xs="6">
+          {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Hovedknapp onClick={vedKlikkVedtak} disabled={!redigerbart} type="hoved">SEND PÅSTAND</Nav.Hovedknapp>
     </Fragment>
   );
 };
@@ -79,6 +157,7 @@ VurderingArtikkel13_1b_UtpekLand.propTypes = {
   }).isRequired,
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
+  lovvalgsland: MPT.Kodeverk.isRequired,
   lovvalgsperiode: MPT.Periode,
   lagreOgFatteVedtak: PT.func.isRequired,
   formIsValid: PT.bool.isRequired,
@@ -95,6 +174,7 @@ VurderingArtikkel13_1b_UtpekLand.defaultProps = {
 const mapStateToProps = (state, ownProps) => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   formIsValid: isValid(KV.Form.ARTIKKEL_13_1B_UTPEKLAND)(state),
   formValues: getFormValues(KV.Form.ARTIKKEL_13_1B_UTPEKLAND)(state),
@@ -119,6 +199,11 @@ const VurderingArtikkel13_1b_UtpeklLand_form = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
+  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_1_vedtak, {
+    context: {
+      lovvalgsperiode: props.lovvalgsperiode,
+    },
+  })(values),
 })(VurderingArtikkel13_1b_UtpekLand);
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingArtikkel13_1b_UtpeklLand_form);
