@@ -63,13 +63,11 @@ describe('SideDialog', () => {
       });
     });
 
-    it('Viser SideDialogDokumenter hvis navn-prop ikke oppgitt', () => {
+    it('Throw error hvis navn-prop ikke oppgitt', () => {
       delete props.navn;
-      const faner = shallow(<FaneViser {...props} />);
-
-      const sideDialogDokumenter = faner.find(SideDialogDokumenter);
-      expect(sideDialogDokumenter).toHaveLength(1);
-      expect(sideDialogDokumenter.props().saksnummer).toBe(props.saksnummer);
+      expect(() => {
+        shallow(<FaneViser {...props} />);
+      }).toThrow();
     });
   });
 });
