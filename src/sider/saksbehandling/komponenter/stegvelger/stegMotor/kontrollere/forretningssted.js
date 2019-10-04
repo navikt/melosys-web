@@ -24,14 +24,14 @@ class Forretningssted extends Steg {
       },
       {
         beskrivelse: '',
-        exec: () => {
+        exec: () => { // TODO verify
           const harLovvalgsbestemmelse = this.harLovvalgsbestemmelse(propsLight);
           const harAvklartForretningsland = this.harAvklartForretningsland(propsLight);
           const erOmfattetINorge = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta)) === KV.Koder.BoolskAvklartfaktaType.USANN;
 
           return harLovvalgsbestemmelse && harAvklartForretningsland && erOmfattetINorge;
         },
-        nesteSteg: STEG.BESTEM_LAND,
+        nesteSteg: STEG.ARTIKKEL_13_1_B_UTPEK_LAND,
       },
       {
         beskrivelse: 'dead end',
