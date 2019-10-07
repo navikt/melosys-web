@@ -50,17 +50,10 @@ export const sendBehandlingsOppgave = async checkboxliste => {
   };
 
   const response = await Api.Oppgaver.sendPlukk(oppgave);
-  const { saksnummer, behandlingID, oppgavetype } = response;
+  const { saksnummer, behandlingID, behandlingstype } = response;
   if (!saksnummer) { return false; }
 
-  if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SAK_MK || oppgavetype === MKV.Koder.oppgavetyper.VUR) {
-    return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
-  } else if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SED) {
-    return `/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
-  }
-
-  Utils.logger.error(`Ukjent oppgavetype ${oppgavetype} kan ikke åpnes.`);
-  return null;
+  return Utils.url.lagUrl(saksnummer, behandlingID, behandlingstype);
 };
 
 export const sendJournalOppgave = async fagomrade => {
