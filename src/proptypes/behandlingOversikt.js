@@ -8,7 +8,7 @@ const BehandligOversiktPropType = PT.shape({
   behandlingstype: Kodeverk,
   land: PT.arrayOf(PT.string),
   opprettetDato: PT.string,
-  soknadsperiode: Periode,
+  periode: Periode,
 });
 const BehandligOversikterPropType = PT.arrayOf(BehandligOversiktPropType);
 export {
