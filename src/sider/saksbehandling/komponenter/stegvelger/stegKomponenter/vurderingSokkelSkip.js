@@ -189,7 +189,7 @@ const SokkelSkipListe = props => {
     <div className="sokkelSkip__liste">
       { maritimtArbeid.map((enkelt, index) => (
         <SokkelSkipEnkelt
-          key={JSON.stringify(enkelt)}
+          key={enkelt.enhetNavn}
           maritimtArbeid={enkelt}
           sokkelEllerSkip={sokkelEllerSkipListe.find(avklartFakta => avklartFakta.subjektID === enkelt.enhetNavn)}
           arbeidslandAvklartfakta={installasjonArbeidslandListe.find(avklartFakta => avklartFakta.subjektID === enkelt.enhetNavn)}

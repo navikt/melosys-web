@@ -8,7 +8,10 @@ export const lagUrl = (saksnummer, behandlingID, behandlingstype) => {
       return `/registrering/${saksnummer}/unntaksperioder/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL:
       return `/registrering/${saksnummer}/anmodningunntak/?behandlingID=${behandlingID}`;
-    default:
+    case MKV.Koder.behandlinger.behandlingstyper.SOEKNAD:
+    case MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE:
       return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
+    default:
+      return null;
   }
 };
