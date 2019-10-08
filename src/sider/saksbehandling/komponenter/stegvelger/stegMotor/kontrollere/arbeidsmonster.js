@@ -16,11 +16,9 @@ class Arbeidsmonster extends Steg {
       {
         beskrivelse: 'Ga videre til forretningssted hvis aktivitet i norge er avklart',
         exec: avklartefakta => {
-          const skiftesvisArbeid = hentFakta(KV.Koder.avklartefaktaKoder.ARBEIDSMONSTER, avklartefakta);
           const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
 
           return (
-            hentFaktaVerdi(skiftesvisArbeid) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS &&
             aktivitetINorge &&
             hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT &&
             Yrkesaktivitet.erArbeidstaker(avklartefakta)
@@ -31,11 +29,9 @@ class Arbeidsmonster extends Steg {
       {
         beskrivelse: 'vedtak art 13.1 a',
         exec: avklartefakta => {
-          const skiftesvisArbeid = hentFakta(KV.Koder.avklartefaktaKoder.ARBEIDSMONSTER, avklartefakta);
           const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, avklartefakta);
 
-          return hentFaktaVerdi(skiftesvisArbeid) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS &&
-          hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
+          return hentFaktaVerdi(aktivitetINorge) === KV.Koder.VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT &&
           Yrkesaktivitet.erArbeidstaker(avklartefakta);
         },
         nesteSteg: STEG.ARTIKKEL_13_1_A_VEDTAK,
@@ -56,21 +52,18 @@ class Arbeidsmonster extends Steg {
     this.beregnRelevantUI = _propsLight => {
       const marginaltArbeid = hentFaktaListe(KV.Koder.avklartefaktaKoder.MARGINALT_ARBEID, _propsLight.avklartefakta);
       const aktivitetINorge = hentFakta(KV.Koder.avklartefaktaKoder.AKTIVITET_I_NORGE, _propsLight.avklartefakta);
-      const arbeidsmonster = hentFakta(KV.Koder.avklartefaktaKoder.ARBEIDSMONSTER, _propsLight.avklartefakta);
 
       const landMedVesentligArbeid = this.hentLandMedVesentligArbeid(_propsLight.arbeidsland, marginaltArbeid);
       const erNorgeValgt = landMedVesentligArbeid.includes(MKV.Koder.landkoder.NO);
       const aktivitetINorgeNodvendig = landMedVesentligArbeid.length > 1 && erNorgeValgt;
 
-      const harAvklaring = !Utils._isNil(hentFaktaVerdi(arbeidsmonster)) &&
-        landMedVesentligArbeid.length > 0 &&
+      const harAvklaring = landMedVesentligArbeid.length > 0 &&
         Yrkesaktivitet.erArbeidstaker(_propsLight.avklartefakta) &&
         (aktivitetINorgeNodvendig ^ Utils._isNil(hentFaktaVerdi(aktivitetINorge))) === 1;
 
       return ({
         marginaltArbeid,
         aktivitetINorge,
-        arbeidsmonster,
         landMedVesentligArbeid,
         erNorgeValgt,
         aktivitetINorgeNodvendig,

@@ -74,20 +74,6 @@ const VurderingArtikkel13_1b_UtpekLand = props => {
 
   const pdfDokumenter = [
     {
-      navn: 'Forhåndsvis vedtaksbrev',
-      type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.BRUKER,
-      },
-    },
-    {
-      navn: 'Forhåndsvis A1',
-      type: MKV.Koder.brev.produserbaredokumenter.ATTEST_A1,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-      },
-    },
-    {
       navn: 'Forhåndsvis SED A003',
       type: EKV.Koder.sedtyper.A003,
       erSed: true,
@@ -117,7 +103,7 @@ const VurderingArtikkel13_1b_UtpekLand = props => {
       </Nav.Row>
       <Nav.Row className="checkboxRow">
         <Nav.Column xs="6">
-          <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalgsperioden er avkortet." disabled={!redigerbart} onClick={vedCheck} />
+          <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalget innvilges for en kortere periode" disabled={!redigerbart} onClick={vedCheck} />
         </Nav.Column>
       </Nav.Row>
       {

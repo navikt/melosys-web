@@ -97,6 +97,7 @@ VurderingYrkesgruppe.ID = 'YRKESGRUPPE';
 VurderingYrkesgruppe.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.shape({
+    marginaltArbeid: PT.array,
     tilleggbestemmelse: PT.string,
     harAvklaring: PT.bool,
     yrkesgruppe: PT.object.isRequired,

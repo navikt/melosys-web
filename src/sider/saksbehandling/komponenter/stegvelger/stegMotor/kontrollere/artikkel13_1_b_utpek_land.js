@@ -14,7 +14,7 @@ class Artikkel13_1_b_utpek_land extends Steg {
     ];
 
     this.id = STEG.ARTIKKEL_13_1_B_UTPEK_LAND;
-    this.tittel = 'Utpek\u00ADland';
+    this.tittel = 'Utpek\u00ADlandet';
     this.komponent = VurderingArtikkel13_1b_UtpekLand;
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
