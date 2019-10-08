@@ -60,12 +60,11 @@ export const SEDSelector = createSelector(
 );
 export const LovvalgsperiodeSelector = createSelector(state => SEDSelector(state).lovvalgsperiode || {}, lovvalgsperiode => lovvalgsperiode);
 
+const landkodeTilKodeverksobjekt = landkode => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder);
 export const LovvalgslandSelector = createSelector(
   state => SEDSelector(state).lovvalgslandKode || '',
   lovvalgsland => landkodeTilKodeverksobjekt(lovvalgsland) || {}
 );
-
-const landkodeTilKodeverksobjekt = landkode => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder);
 
 export const OrganisasjonerSelector = createSelector(
   state => SaksopplysningerSelector(state).organisasjoner || [],
