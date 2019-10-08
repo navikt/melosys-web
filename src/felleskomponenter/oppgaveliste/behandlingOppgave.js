@@ -44,7 +44,7 @@ const BehandlingOppgave = ({ sak }) => {
     saksnummer,
     behandling,
     aktivTil,
-    soknadsperiode,
+    periode,
     land,
     fnr,
   } = sak;
@@ -58,7 +58,7 @@ const BehandlingOppgave = ({ sak }) => {
     registrertDato,
   } = behandling;
 
-  const { fom, tom } = soknadsperiode;
+  const { fom, tom } = periode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
   const link = Utils.url.lagUrl(saksnummer, behandlingID, behandlingstype);
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
@@ -85,7 +85,7 @@ const BehandlingOppgave = ({ sak }) => {
                       <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingstype) || '(ukjent)'}</dd>
                     </Nav.Column>
                     <Nav.Column xs="12" md="7">
-                      <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
+                      <dt className="behandlingOppgave__meta__term">Periode: </dt>
                       <dd className="behandlingOppgave__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
                     </Nav.Column>
                   </dl>

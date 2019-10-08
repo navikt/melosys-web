@@ -15,7 +15,6 @@ import * as Actions from './actions';
 
 import { soknadSelectors } from '../soknad';
 import { lovvalgsperioderSelectors } from '../lovvalgsperioder';
-import { formSelectors } from '../form';
 import { anmodningsperioderSelectors } from '../anmodningsperioder';
 
 export function hent(behandlingID) {
@@ -40,7 +39,7 @@ const byggAnmodningsperiodeArtikkel16 = (stegState, reduxState) => {
   const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
 
   const unntakFraLovvalgsland = soknadsland.join('');
-  const unntakFraBestemmelse = formSelectors.UnntakFraBestemmelseSelector(reduxState);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     id: null,
@@ -71,7 +70,7 @@ export function oppdaterAnmodningsperioderState(stegState) {
     const anmodningsperioderErSendtUtland = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(getState());
     if (anmodningsperioderErSendtUtland) return;
 
-    if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse) {
+    if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse || stegState.unntakfrabestemmelse) {
       const anmodningsperioder = byggAnmodningsperioder(stegState, getState());
       dispatch(Actions.oppdaterAnmodningsperioder(anmodningsperioder));
     } else {

@@ -28,7 +28,7 @@ const Fagsak = ({ sak }) => {
   } = sak;
 
   const {
-    soknadsperiode,
+    periode,
     land,
   } = behandlingOversikter[0];
   const tittel = `${KV.objektTilTerm(sakstype)}`;
@@ -46,7 +46,7 @@ const Fagsak = ({ sak }) => {
             <dl className="fagsak__meta">
               <dt>Saksstatus:</dt>
               <dd>{KV.objektTilTerm(saksstatus) || '(ukjent)'}</dd>
-              <DatoOmradeDescription label="Søknadsperiode: " periode={soknadsperiode} />
+              <DatoOmradeDescription label="Periode: " periode={periode} />
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="4">
