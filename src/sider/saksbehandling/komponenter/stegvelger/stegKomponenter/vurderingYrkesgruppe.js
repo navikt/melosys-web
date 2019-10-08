@@ -65,6 +65,7 @@ const VurderingYrkesgruppe = props => {
           label="Yrkesaktiv på sokkel eller skip" />
         <Nav.Radio
           name="yrkesgruppe"
+          disabled={!redigerbart}
           checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           value={KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL}
           onChange={radioEndret}
