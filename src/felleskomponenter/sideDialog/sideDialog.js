@@ -13,6 +13,43 @@ import './sideDialog.css';
 
 const uuid = require('uuid/v4');
 
+export const FaneViser = ({
+  navn,
+  behandlingID,
+  saksnummer,
+  brevBestillingRedigerbartIArtikkel13,
+  brevBestillingRedigerbart,
+}) => {
+  switch (navn) {
+    case 'dokumenter':
+      return <SideDialogDokumenter saksnummer={saksnummer} />;
+    case 'brevbestilling':
+      return <SideDialogBrevBestilling
+        behandlingID={behandlingID}
+        redigerbart={brevBestillingRedigerbart}
+        brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+      />;
+    case 'sedbestilling':
+      return <SideDialogSedBestilling behandlingID={behandlingID} />;
+    case 'besvarsed':
+      return <SideDialogBesvarSed behandlingID={behandlingID} />;
+    default:
+      throw new Error('Navn er en påkrevd prop');
+  }
+};
+
+FaneViser.propTypes = {
+  navn: PT.string,
+  behandlingID: PT.number.isRequired,
+  saksnummer: PT.string.isRequired,
+  brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+  brevBestillingRedigerbart: PT.bool.isRequired,
+};
+
+FaneViser.defaultProps = {
+  navn: '',
+};
+
 class SideDialog extends Component {
   static propTypes = {
     faner: PT.array,
@@ -45,22 +82,6 @@ class SideDialog extends Component {
       });
   }
 
-  getFaneKomponent = (navn, behandlingID) => {
-    const {
-      saksnummer, brevBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13,
-    } = this.props;
-
-    if (navn === 'dokumenter') {
-      return <SideDialogDokumenter key={uuid()} saksnummer={saksnummer} />;
-    } else if (navn === 'brevbestilling') {
-      return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} redigerbart={brevBestillingRedigerbart} brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13} />;
-    } else if (navn === 'sedbestilling') {
-      return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} />;
-    } else if (navn === 'besvarsed') {
-      return <SideDialogBesvarSed key={uuid()} behandlingID={behandlingID} />;
-    }
-    return <SideDialogDokumenter key={uuid()} saksnummer={saksnummer} />;
-  };
   /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
    * slik at riktig komponent under menyen vises. Data fra komponenten slik som navn ligger under
    * props.faner-objektet.
@@ -76,8 +97,15 @@ class SideDialog extends Component {
   };
 
   render() {
-    const { behandlingID } = this.props;
+    const {
+      behandlingID,
+      saksnummer,
+      brevBestillingRedigerbart,
+      brevBestillingRedigerbartIArtikkel13,
+    } = this.props;
+
     const { navn } = this.state.faner.find(item => item.navn === this.state.aktivFane);
+
     return (
       <div className="dialog panelSeksjon">
         <Panel>
@@ -90,7 +118,13 @@ class SideDialog extends Component {
               </button>))}
           </div>
           <div>
-            { this.getFaneKomponent(navn, behandlingID)}
+            <FaneViser
+              navn={navn}
+              behandlingID={behandlingID}
+              saksnummer={saksnummer}
+              brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+              brevBestillingRedigerbart={brevBestillingRedigerbart}
+            />
           </div>
         </Panel>
       </div>
