@@ -55,11 +55,9 @@ export const VurderingArtikkel16MottaSvar = props => {
 
     oppdaterData(lagAnmodningsperiodesvar(svar));
 
-    sendAnmodningsperiodeSvar(anmodningsperiodeID, svar);
-  };
-
-  const lagreSvarHandler = () => {
-    if (anmodningsperiodeSvarType && formIsValid) lagreSvar();
+    if (anmodningsperiodeSvarType && formIsValid) {
+      sendAnmodningsperiodeSvar(anmodningsperiodeID, svar);
+    }
   };
 
   return (
@@ -76,7 +74,7 @@ export const VurderingArtikkel16MottaSvar = props => {
           <DatoOmradeMedVarighet periode={soknadsperiode} label="Søknadsperiode" />
         </Nav.Column>
       </Nav.Row>
-      <form name="anmodningSvar" id="anmodningSvar" onBlur={lagreSvarHandler} onSubmit={e => e.preventDefault()} >
+      <form name="anmodningSvar" id="anmodningSvar" onBlur={lagreSvar} onSubmit={e => e.preventDefault()} >
         <Nav.Row className="svarFraMyndighetRow">
           <Nav.Column xs="6">
             <Nav.Fieldset disabled={!redigerbart} legend="Svar fra myndighetene">
@@ -180,7 +178,11 @@ const Artikkel16MottaSvarForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_motta_svar, { context: { anmodningsperiodeSvarType: props.anmodningsperiodeSvarType } })(values),
+  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_motta_svar, {
+    context: {
+      anmodningsperiodeSvarType: props.anmodningsperiodeSvarType,
+    },
+  })(values),
 })(VurderingArtikkel16MottaSvar);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Artikkel16MottaSvarForm);
