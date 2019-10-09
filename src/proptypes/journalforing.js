@@ -25,6 +25,9 @@ const JournalforingSkjemaVerdierPropType = PT.shape({
   journalpostID: PT.string,
   respresentantID: PT.string,
   vedleggsTittler: PT.arrayOf(PT.string),
+  lovvalgsbestemmelse: PT.string,
+  unntakfralovvalgsbestemmelse: PT.string,
+  unntakfralovvalgsland: PT.string,
 });
 export {
   JournalforingPropType as Journalforing,
