@@ -5,7 +5,6 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
 import * as MPT from '../../../../../proptypes';
-import * as Utils from '../../../../../utils';
 
 import {
   hentFaktaVerdi,
@@ -194,8 +193,9 @@ const VurderingForretningssted = props => {
           value={finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser)}
         >
           <option />
-          { stegetsLovvalgsbestemmelser.map(({ kode, label }) =>
-            <option key={Utils._uuid()} value={kode} >{label}</option>)
+          { stegetsLovvalgsbestemmelser.map(({ kode, label }, index) =>
+            // eslint-disable-next-line react/no-array-index-key
+            <option key={index} value={kode} >{label}</option>)
           }
         </Nav.Select>
 

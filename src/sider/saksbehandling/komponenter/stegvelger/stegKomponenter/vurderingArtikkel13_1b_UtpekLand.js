@@ -90,7 +90,7 @@ export const VurderingArtikkel13_1b_UtpekLand = props => {
       </Nav.Undertittel>
       <Nav.Row className="lovvalgsperiodeRow">
         <Nav.Column xs="6">
-          <p>{lovvalgsland && lovvalgsland.term}</p>
+          <div>{lovvalgsland && lovvalgsland.term}</div>
         </Nav.Column>
       </Nav.Row>
       <Nav.Undertittel>
