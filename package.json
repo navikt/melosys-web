@@ -182,6 +182,5 @@
         "^/frontendlogger/": "frontendlogger/"
       }
     }
-  },
-  "_id": "melosys-web@1.2.0"
+  }
 }
