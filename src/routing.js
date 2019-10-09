@@ -15,6 +15,7 @@ const SaksbehandlingLoadable = loadable(() => import('./sider/saksbehandling'), 
 const JournalforingLoadable = loadable(() => import('./sider/journalforing'), { fallback: SideLoadingStatus });
 const RegistreringUnntaksperioderLoadable = loadable(() => import('./sider/registrering/unntaksperioder'), { fallback: SideLoadingStatus });
 const RegistreringAnmodningunntakLoadable = loadable(() => import('./sider/registrering/anmodningunntak'), { fallback: SideLoadingStatus });
+const VurderTrygdetidLoadable = loadable(() => import('./sider/vurdertrygdetid'), { fallback: SideLoadingStatus });
 
 const Routing = ({ location }) => {
   const [featureToggle, setFeatureToggle] = useState(false);
@@ -30,6 +31,7 @@ const Routing = ({ location }) => {
         <Route exact path="/sok/:fnr" component={SokLoadable} />
         {featureToggle && <Route exact path="/registrering/:snr/unntaksperioder" component={RegistreringUnntaksperioderLoadable} />}
         {featureToggle && <Route exact path="/registrering/:snr/anmodningunntak" component={RegistreringAnmodningunntakLoadable} />}
+        <Route path="/vurdertrygdetid/:snr" component={VurderTrygdetidLoadable} />
         <Route path="/saksbehandling/:snr" component={SaksbehandlingLoadable} />
         <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
         <Route component={UkjentSideLoadable} />
