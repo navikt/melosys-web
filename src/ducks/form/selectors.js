@@ -43,11 +43,6 @@ export const JournalforingFormSelector = createSelector(
   journalforing => journalforing
 );
 
-export const JournalforingSyncErrorSelector = createSelector(
-  state => JournalforingFormSelector(state).syncErrors,
-  errors => errors
-);
-
 export const ForretningsValideringSelector = createSelector(
   state => (state.form.forretningsValidering ? state.form.forretningsValidering : {}),
   skjemaValidering => skjemaValidering.regler
