@@ -5,6 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
 import * as MPT from '../../../../../proptypes';
+import * as Utils from '../../../../../utils';
 
 import {
   hentFaktaVerdi,
@@ -194,7 +195,7 @@ const VurderingForretningssted = props => {
         >
           <option />
           { stegetsLovvalgsbestemmelser.map(({ kode, label }) =>
-            <option key={kode} value={kode} >{label}</option>)
+            <option key={Utils._uuid()} value={kode} >{label}</option>)
           }
         </Nav.Select>
 
