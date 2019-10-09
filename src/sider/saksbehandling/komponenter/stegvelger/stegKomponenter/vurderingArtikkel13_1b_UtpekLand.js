@@ -21,7 +21,7 @@ import { soknadSelectors } from '../../../../../ducks/soknad';
 
 import './vurderingArtikkel13_1_vedtak.css';
 
-const VurderingArtikkel13_1b_UtpekLand = props => {
+export const VurderingArtikkel13_1b_UtpekLand = props => {
   const {
     redigerbart,
     behandlingID,
