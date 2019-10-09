@@ -164,17 +164,10 @@ const VurderingArbeidsmonster = props => {
     };
   }, []);
 
-  /* const skiftesvisSekvensieltValg = [
-    { label: 'Skiftesvis eller med regelmessig veksling av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS },
-    { label: 'Sekvensielt, uten regelmessig skifte av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SEKVENSIELT },
-  ]; */
-
   const vesentligAktivitetINorgeValg = [
     { label: '25% eller mer', type: VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT },
     { label: 'Mindre enn 25%', type: VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT },
   ];
-
-  // const visMarginaltArbeid = hentFaktaVerdi(arbeidsmonster) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS;
 
   return (
     <div className="vurderingArbeidsmonster">
@@ -213,6 +206,9 @@ VurderingArbeidsmonster.propTypes = {
   slettData: PT.func.isRequired,
   arbeidsland: PT.array.isRequired,
   tilstand: PT.shape({
+    marginaltArbeid: PT.array,
+    aktivitetINorge: PT.object,
+    aktivitetINorgeNodvendig: PT.bool,
     harAvklaring: PT.bool,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
