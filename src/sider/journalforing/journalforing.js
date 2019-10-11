@@ -2,7 +2,7 @@
 import React, { Component, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors, getFormValues, isValid } from 'redux-form';
+import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors, getFormValues } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -136,7 +136,7 @@ class Journalforing extends Component {
       journalforingSkjemaVerdier: {
         saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, skalSendesForvaltningsmelding,
       },
-      tilordneSak, history, settJournalforingHensikt, settFeilFelt, erSkjemaGyldig,
+      tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
@@ -153,7 +153,7 @@ class Journalforing extends Component {
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForOpprettFagsak();
 
-    if (!erSkjemaGyldig) {
+    if (!Utils._isEmpty(this.props.errors)) {
       settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer', 'behandlingstype');
       return false;
     }
@@ -170,12 +170,17 @@ class Journalforing extends Component {
    */
   opprettFagsak = async () => {
     const {
-      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt, erSkjemaGyldig,
+      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const {
-      journalforingSoknadsland, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
+      journalforingSoknadsland,
+      journalforingPeriodeFraOgMed,
+      journalforingPeriodeTilOgMed,
+      journalforingLovvalgsbestemmelse,
+      journalforingUnntakFraLovvalgsbestemmelse,
+      journalforingUnntakFraLovvalgsland,
     } = journalforingSkjemaVerdier;
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
@@ -185,8 +190,15 @@ class Journalforing extends Component {
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForEksisterendeSaker();
 
-    if (!erSkjemaGyldig) {
-      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingSoknadsland');
+    if (!Utils._isEmpty(this.props.errors)) {
+      settFeilFelt(
+        'journalforingPeriodeFraOgMed',
+        'journalforingPeriodeTilOgMed',
+        'journalforingSoknadsland',
+        'journalforingLovvalgsbestemmelse',
+        'journalforingUnntakFraLovvalgsbestemmelse',
+        'journalforingUnntakFraLovvalgsland'
+      );
       return false;
     }
 
@@ -199,10 +211,17 @@ class Journalforing extends Component {
       land: journalforingSoknadsland,
     };
 
+    const anmodningOmUnntak = {
+      lovvalgsbestemmelse: journalforingLovvalgsbestemmelse || null,
+      unntakFraLovvalgsbestemmelse: journalforingUnntakFraLovvalgsbestemmelse || null,
+      unntakFraLovvalgsland: journalforingUnntakFraLovvalgsland || null,
+    };
+
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.OPPRETT);
     const journalforingData = {
       ...vasketJournalforing,
       fagsak,
+      anmodningOmUnntak,
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
@@ -279,6 +298,9 @@ class Journalforing extends Component {
     settFeltInnhold('journalforingPeriodeTilOgMed', '');
     settFeltInnhold('representantID', '');
     settFeltInnhold('journalforingSoknadsland', []);
+    settFeltInnhold('journalforingLovvalgsbestemmelse', '');
+    settFeltInnhold('journalforingUnntakFraLovvalgsbestemmelse', '');
+    settFeltInnhold('journalforingUnntakFraLovvalgsland', '');
   };
 
   resetSkjemaFelterForEksisterendeSaker = () => {
@@ -394,7 +416,6 @@ Journalforing.propTypes = {
   touch: PT.func.isRequired,
   vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string })).isRequired,
   formValues: PT.object,
-  erSkjemaGyldig: PT.bool.isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -412,7 +433,6 @@ const mapStateToProps = state => ({
   vedleggsdokumenter: journalforingSelectors.JournalforingVedleggsDokumenter(state),
   errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
-  erSkjemaGyldig: isValid(KV.Form.JOURNALFORING)(state),
   initialValues: {
     behandlingstype: null,
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
