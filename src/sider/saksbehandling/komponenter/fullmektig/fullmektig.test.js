@@ -3,8 +3,6 @@ import React from 'react';
 import { FullmektigPanel } from './fullmektigPanel';
 import Fullmektig from './fullmektig';
 import SokFullmektigOrg from './sokFullmektigOrg';
-import PT from 'prop-types';
-import {BehandligOversikt, Kodeverk} from '../../../../proptypes';
 
 describe('SokFullmektigOrg', () => {
   let props = null;

@@ -144,6 +144,7 @@ VurderingVirksomhet.propTypes = {
   slettData: PT.func.isRequired,
   tilstand: PT.shape({
     harAvklaring: PT.bool,
+    virksomheter: PT.array,
   }).isRequired,
   virksomheterIPerioden: PT.arrayOf(MPT.Virksomhet).isRequired,
   redigerbart: PT.bool.isRequired,

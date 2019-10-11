@@ -403,8 +403,10 @@ Stegvelger.propTypes = {
   anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
   behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   avklartefakta: MPT.AvklartefaktaListe,
   behandlingsPerioder: PT.object.isRequired,
+  bostedsland: PT.string,
   hentVilkar: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
@@ -444,6 +446,7 @@ Stegvelger.propTypes = {
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
+  bostedsland: null,
   oppsummering: {},
   valgteVirksomheter: [],
   artikkel16_anmodning_skjema: {},

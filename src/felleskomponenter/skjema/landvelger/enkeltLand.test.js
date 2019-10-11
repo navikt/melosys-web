@@ -27,7 +27,6 @@ describe('EnkeltLand', () => {
     expect(input).toHaveLength(1);
 
     expect(input.props().disabled).toBe(props.disabled);
-    expect(input.props().list).toBe(props.dataListID);
     expect(input.props().label).toBe(props.label);
   });
 
