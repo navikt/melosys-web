@@ -17,8 +17,7 @@ import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/
 import '../saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer';
-import { endrePeriodeSkjema } from '../unntaksperioder/validering/endrePeriodeSkjema';
-import { fritekstPakrevdSkjema } from './validering/anmodningunntakSkjema';
+import { fritekstPakrevdSkjema, endrePeriodeSkjema } from './validering/anmodningunntakSkjema';
 import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
 const uuid = require('uuid/v4');
@@ -54,6 +53,8 @@ const Saksopplysninger = props => {
   const [endretPeriodeFom, setEndretPeriodeFom] = useState('');
   const [endretPeriodeTom, setEndretPeriodeTom] = useState('');
   const [feilmeldinger, setFeilmeldinger] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
+  const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = useState(false);
+  const [durationWarningMessage, setDurationWarningMessage] = useState(null);
 
   useEffect(() => {
     if (props.sed.lovvalgsperiode) {
@@ -120,20 +121,64 @@ const Saksopplysninger = props => {
     return anmodningsperioder[0].id;
   };
 
+  const sjekkDatoVarsel = (fom, tom) => {
+    if (anmodningsperiodeSvarType !== MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
+      return null;
+    }
+
+    const fomISO = Utils.dato.formatterDatoTilISO(fom);
+    const tomISO = Utils.dato.formatterDatoTilISO(tom);
+    const varighet = Utils.dato.datoDiff(fomISO, tomISO, 'years');
+
+    if (varighet <= 0) {
+      return 'Ugyldig periode';
+    } else if (varighet > 5) {
+      return 'Perioden overstiger 5 år';
+    }
+    return null;
+  };
+
+  const visPeriodeVarselStripe = () => {
+    if (!durationWarningMessage) {
+      return null;
+    }
+    return (
+      <Nav.Row className="seksjon">
+        <Nav.Column xs="8">
+          <Nav.AlertStripe className="feilmelding" type="advarsel" >
+            {durationWarningMessage}
+          </Nav.AlertStripe>
+        </Nav.Column>
+      </Nav.Row>
+    );
+  };
+
   const submitRegistrering = async () => {
-    if (validerFelt()) {
-      const { behandlingID, history } = props;
-      const tilForsiden = () => history.push('/');
-      try {
-        const anmodningsperiodeID = await hentAnmodningsperiodeId(behandlingID);
-        await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
-        await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
-      } catch (e) {
-        Utils.logger.error(e);
+    if (!validerFelt()) {
+      setPeriodeOver5aarVarslet(false);
+      return false;
+    }
+
+    const durationWarning = sjekkDatoVarsel(endretPeriodeFom, endretPeriodeTom);
+    setDurationWarningMessage(durationWarning);
+    if (durationWarning) {
+      if (!periodeOver5aarVarslet) {
+        setPeriodeOver5aarVarslet(true);
         return false;
-      } finally {
-        tilForsiden();
       }
+    }
+
+    const { behandlingID, history } = props;
+    const tilForsiden = () => history.push('/');
+    try {
+      const anmodningsperiodeID = await hentAnmodningsperiodeId(behandlingID);
+      await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
+      await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
+    } catch (e) {
+      Utils.logger.error(e);
+      return false;
+    } finally {
+      tilForsiden();
     }
     return true;
   };
@@ -176,7 +221,7 @@ const Saksopplysninger = props => {
       <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.Systemtittel>Behandle anmoding om unntak</Nav.Systemtittel>
+            <Nav.Systemtittel>Behandle anmodning om unntak</Nav.Systemtittel>
             <br />
             <div className="vurderUnntaksperiode">
               <Nav.Row className="seksjon">
@@ -253,6 +298,7 @@ const Saksopplysninger = props => {
                   vedKlikk={oppdaterAnmodningsperiodeSvar}
                 />
               </Nav.Row>
+              {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
                   <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>Bekreft og send</Nav.Hovedknapp>

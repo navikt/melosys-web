@@ -14,7 +14,6 @@ const EndrePeriode = ({
   endrePeriode,
   lovvalgsperiode,
   sedLovvalgsperiode,
-  toggleSkalEndres,
   oppdaterFom,
   oppdaterTom,
   oppdaterBegrunnelse,
@@ -23,7 +22,7 @@ const EndrePeriode = ({
   redigerbart,
 }) => {
   const {
-    skalEndres, fom, tom, begrunnelse, fritekst,
+    fom, tom, begrunnelse, fritekst,
   } = endrePeriode;
 
   const tilPeriode = (fomDato, tomDato) => ({
@@ -51,24 +50,20 @@ const EndrePeriode = ({
     }
   };
 
+  const oppdaterFelt = (event, oppdater) => {
+    event.stopPropagation();
+    oppdater(event.target.value);
+  };
+
   return (
     <div className="endre_periode">
-      <Nav.Column xs="12">
-        <Nav.Element>Lovvalgsperiode fra SED</Nav.Element>
-        <Nav.Checkbox
-          label="Jeg vil endre perioden"
-          checked={skalEndres}
-          onChange={toggleSkalEndres}
-          disabled={!redigerbart} />
-      </Nav.Column>
-      {skalEndres &&
       <React.Fragment>
         <Nav.Column xs="3">
           <Nav.Input
             bredde="fullbredde"
             label="Startdato"
             value={fom}
-            onChange={e => oppdaterFom(e.target.value)}
+            onChange={e => oppdaterFelt(e, oppdaterFom)}
             onBlur={e => formaterDato(e, oppdaterFom)}
             feil={feilmeldinger.fom}
             disabled={!redigerbart} />
@@ -78,7 +73,7 @@ const EndrePeriode = ({
             bredde="fullbredde"
             label="Sluttdato"
             value={tom}
-            onChange={e => oppdaterTom(e.target.value)}
+            onChange={e => oppdaterFelt(e, oppdaterTom)}
             onBlur={e => formaterDato(e, oppdaterTom)}
             feil={feilmeldinger.tom}
             disabled={!redigerbart} />
@@ -87,8 +82,7 @@ const EndrePeriode = ({
           <Nav.Select
             bredde="xl"
             label="Begrunnelse for endret periode"
-            value={begrunnelse}
-            onChange={e => oppdaterBegrunnelse(e.target.value)}
+            onChange={e => oppdaterFelt(e, oppdaterBegrunnelse)}
             disabled={!redigerbart}
             feil={feilmeldinger.begrunnelse}
             defaultValue="0"
@@ -103,21 +97,19 @@ const EndrePeriode = ({
           <Nav.Textarea
             label="Skriv inn begrunnelse for endring av periode..."
             maxLength={255}
-            onChange={e => oppdaterFritekst(e.target.value)}
+            onChange={e => oppdaterFelt(e, oppdaterFritekst)}
             value={fritekst}
             feil={feilmeldinger.fritekst}
             disabled={!redigerbart} />
         </Nav.Column>
         }
       </React.Fragment>
-      }
     </div>
   );
 };
 
 EndrePeriode.propTypes = {
   endrePeriode: PT.shape({
-    skalEndres: PT.bool,
     fom: PT.string,
     tom: PT.string,
     begrunnelse: PT.string,
@@ -128,7 +120,6 @@ EndrePeriode.propTypes = {
     tomDato: PT.string,
   }).isRequired,
   sedLovvalgsperiode: MPT.Periode,
-  toggleSkalEndres: PT.func.isRequired,
   oppdaterFom: PT.func.isRequired,
   oppdaterTom: PT.func.isRequired,
   oppdaterBegrunnelse: PT.func.isRequired,

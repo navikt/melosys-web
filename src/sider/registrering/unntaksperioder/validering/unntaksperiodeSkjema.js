@@ -36,3 +36,8 @@ export const endrePeriodeSkjema = Yup.object().shape({
       then: Yup.string().required({ feilmelding: 'Begrunnelse for endret periode er påkrevd' }),
     }),
 });
+
+export const ikkeGodkjentBegrunnelseSkjema = Yup.object().shape({
+  ikkeGodkjentBegrunnelseKoder: Yup.array().of(Yup.string())
+    .min(1, { feilmelding: 'Begrunnelse for avslag er påkrevd' }),
+});
