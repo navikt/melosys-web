@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-
+/* eslint-disable no-console */
 const useFetch = (url, dependencies) => {
   const [isLoading, setLoadState] = useState(false);
   const [fetchedData, setFetchedData] = useState(null);

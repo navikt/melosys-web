@@ -59,6 +59,10 @@ node {
     echo("semver=*${semver}*")
   }
 
+  stage('Lint') {
+    sh "${npm} run build:css"
+    sh "${npm} run eslint"
+  }
   stage('Test') {
     echo('CI=true && npm run-script test:ci')
     sh "CI=true && ${npm} run-script test:ci"

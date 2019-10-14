@@ -13,7 +13,7 @@ const Behandlingsmeny = props => {
       <div className="meny__innhold">
         { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={lagreOgLukkHandle}>Lukk</Nav.Knapp> }
         <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
-        { <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>Vis tidligere behandlinger</Nav.Knapp> }
+        <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>Vis tidligere behandlinger</Nav.Knapp>
       </div>
     </Nav.EkspanderbartpanelBase>
   );

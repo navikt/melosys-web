@@ -12,6 +12,7 @@ const EnkeltForetak = ({ indeks, slettForetakHandler, redigerbart }) => (
     <Nav.Row>
       <Nav.Column xs="6">
         <Nav.Fieldset legend="Om foretaket">
+          {/* eslint-disable-next-line max-len */}
           <Skjema.Checkbox className="selvstendigNaeringsvirksomhet" disabled={!redigerbart} label="Opplysningene gjelder selvstendig næringsvirksomhet" feltNavn={`foretakUtland[${indeks}].selvstendigNaeringsvirksomhet`} />
         </Nav.Fieldset>
       </Nav.Column>
