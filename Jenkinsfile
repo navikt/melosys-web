@@ -45,6 +45,9 @@ node {
         prNummer = it.split('/')[2]
       }
     }
+    if (GIT_BRANCH.startsWith('SPRINT') && prNummer == null) {
+      prNummer = GIT_BRANCH.split('-')[1].trim();
+    }
     echo("prNummer: ${prNummer}")
   }
 
