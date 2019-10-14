@@ -219,7 +219,7 @@ class Stegvelger extends Component {
       this.gjemSoknadFeilmeldinger();
       if (ingenFeilmeldingerCallback) ingenFeilmeldingerCallback();
     }
-  }
+  };
 
   byggLovvalgsperioderHandler = () => {
     const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse } = this.state.stegStores;
@@ -261,7 +261,7 @@ class Stegvelger extends Component {
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
    *
-   * @param props
+   * @param aktivtStegNummer
    * @returns {Array}
    */
   oppdaterAktuelleSteg = aktivtStegNummer => {
@@ -403,7 +403,9 @@ Stegvelger.propTypes = {
   anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
   behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   avklartefakta: MPT.AvklartefaktaListe,
+  bostedsland: PT.string,
   behandlingsPerioder: PT.object.isRequired,
   hentVilkar: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
@@ -444,6 +446,7 @@ Stegvelger.propTypes = {
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
+  bostedsland: null,
   oppsummering: {},
   valgteVirksomheter: [],
   artikkel16_anmodning_skjema: {},

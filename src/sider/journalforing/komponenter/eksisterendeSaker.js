@@ -37,7 +37,7 @@ const EnkeltSak = props => {
         <dt>Behandlingsstatus: </dt>
         <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
         <dt>Opprettet:</dt>
-        <dd>{<EnkeltDato dato={opprettetDato} />}</dd>
+        <dd><EnkeltDato dato={opprettetDato} /></dd>
         <DatoOmradeDescription label="Søknadsperiode: " periode={soknadsperiode} />
         <dt>Land:</dt>
         <dd>{land ? land.join(', ') : '(ukjent)'}</dd>
