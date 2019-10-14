@@ -172,13 +172,14 @@ class ListevelgerFlervalg extends Component {
       label,
       muligeValg,
       disabled,
+      feilmelding,
     } = this.props;
 
     const { valgteElementer } = this.state;
 
     const { byggValgtListe } = this;
 
-    const feil = this.byggFeilmelding();
+    const feil = feilmelding || this.byggFeilmelding();
 
     const datalistID = uuid();
 
@@ -226,6 +227,7 @@ ListevelgerFlervalg.propTypes = {
   onChange: PT.func,
   placeholder: PT.string,
   tillatFritekst: PT.bool.isRequired,
+  feilmelding: PT.object,
 };
 
 ListevelgerFlervalg.defaultProps = {
@@ -234,6 +236,7 @@ ListevelgerFlervalg.defaultProps = {
   feil: undefined,
   onChange: undefined,
   placeholder: '',
+  feilmelding: undefined,
 };
 
 export default ListevelgerFlervalg;
