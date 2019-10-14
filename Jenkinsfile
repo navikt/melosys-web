@@ -45,6 +45,9 @@ node {
         prNummer = it.split('/')[2]
       }
     }
+    if (scmVars.GIT_BRANCH.startsWith('SPRINT') && prNummer == null) {
+      prNummer = scmVars.GIT_BRANCH.split('-')[1].trim();
+    }
     echo("prNummer: ${prNummer}")
   }
 
@@ -59,6 +62,10 @@ node {
     echo("semver=*${semver}*")
   }
 
+  stage('Lint') {
+    sh "${npm} run build:css"
+    sh "${npm} run eslint"
+  }
   stage('Test') {
     echo('CI=true && npm run-script test:ci')
     sh "CI=true && ${npm} run-script test:ci"

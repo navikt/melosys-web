@@ -39,6 +39,14 @@ class FullmektigPanel extends Component {
     this.hentFullmektige();
   }
 
+  settRepresentant = (endretIndex, representererKode) => {
+    this.setState(prevState => ({
+      fullmektige: prevState.fullmektige.map((fullmektig, index) => (
+        index === endretIndex ? { ...fullmektig, representererKode } : fullmektig
+      )),
+    }));
+  };
+
   lagreNyFullmektigOgOppdaterLokalt = async (representererKode, orgnr) => {
     try {
       const lagretFullmektig = await this.lagreFullmektig(representererKode, orgnr);
@@ -63,7 +71,7 @@ class FullmektigPanel extends Component {
     utenlandskPersonID: null,
     institusjonsID: null,
     rolleKode: MKV.Koder.aktoersroller.REPRESENTANT,
-    representererKode,
+    representererKode: representererKode || null,
   });
 
   apneLeggTilFullmektigDialog = () => {
@@ -104,6 +112,7 @@ class FullmektigPanel extends Component {
       slettFullmektigLokalt,
       apneLeggTilFullmektigDialog,
       lagreNyFullmektigOgOppdaterLokalt,
+      settRepresentant,
     } = this;
 
     const { disableLeggTilFullmektig, fullmektige } = this.state;
@@ -116,9 +125,10 @@ class FullmektigPanel extends Component {
           heading={<PanelHeader ikon={panelIkon} tittel={KV.Paneltitler.fullmektig} />}
           ariaTittel="Opplysninger om fullmektig">
           <Nav.Container fluid>
-            {fullmektige.map(fullmektig => (
+            {fullmektige.map((fullmektig, index) => (
               <Fullmektig
                 key={fullmektig.databaseID}
+                index={index}
                 databaseID={fullmektig.databaseID}
                 redigerbart={redigerbart}
                 fullmektig={fullmektig}
@@ -127,9 +137,10 @@ class FullmektigPanel extends Component {
                 slettFullmektigLokalt={slettFullmektigLokalt}
                 lagreNyFullmektigOgOppdaterLokalt={lagreNyFullmektigOgOppdaterLokalt}
                 hentOrg={hentOrg}
+                settRepresentant={settRepresentant}
               />
             ))}
-            <Nav.Knapp disabled={disableLeggTilFullmektig || !redigerbart} onClick={apneLeggTilFullmektigDialog} type="mini">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
+            <Nav.Knapp disabled={disableLeggTilFullmektig || !redigerbart} onClick={apneLeggTilFullmektigDialog} type="standard">+ LEGG TIL FULLMEKTIG</Nav.Knapp>
           </Nav.Container>
         </Nav.EkspanderbartpanelBase>
       </div>

@@ -13,6 +13,8 @@ import * as url from './url';
 
 import { buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey } from './utils';
 
+const uuid = require('uuid/v4');
+
 export {
   buildinfo, delay, fn, isJSON, verdiSomNullable, queryParamsTilObjekt, erPropertyUnik, finnVerdierMedKey,
   adresse,
@@ -32,5 +34,6 @@ export {
   isBoolean as _isBoolean,
   toInteger as _toInteger,
   round as _round,
+  uuid as _uuid,
   set as _set,
 };

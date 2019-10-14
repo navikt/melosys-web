@@ -1,5 +1,6 @@
 const fs = require('fs');
 const shell = require('shelljs');
+
 const checkIfDotFileExists = (dir = `${process.cwd()}/.env`) => fs.existsSync(dir);
 
 if (!checkIfDotFileExists()) {
@@ -8,4 +9,6 @@ if (!checkIfDotFileExists()) {
 }
 shell.echo('.env');
 const shellString = shell.cat('-n', '.env');
+
+/* eslint-disable-next-line no-console */
 console.log(shellString.stdout);
