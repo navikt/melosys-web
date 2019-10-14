@@ -9,3 +9,4 @@ export const ARTIKKEL_16_ANMODNING = 'artikkel_16_anmodning';
 export const INNGANG = 'inngang';
 export const ARTIKKEL_16_MOTTA_SVAR = 'artikkel_16_motta_svar';
 export const ARTIKKEL_13_1_VEDTAK = 'artikkel_13_1_vedtak';
+export const ARTIKKEL_13_1B_UTPEKLAND = 'artikkel_13_1b_utpekland';

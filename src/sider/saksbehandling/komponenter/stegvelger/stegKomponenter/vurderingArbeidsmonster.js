@@ -136,7 +136,7 @@ const VurderingArbeidsmonster = props => {
     bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
   const {
-    arbeidsmonster, marginaltArbeid, aktivitetINorge,
+    marginaltArbeid, aktivitetINorge,
     aktivitetINorgeNodvendig, harAvklaring,
   } = tilstand;
 
@@ -164,31 +164,15 @@ const VurderingArbeidsmonster = props => {
     };
   }, []);
 
-  const skiftesvisSekvensieltValg = [
-    { label: 'Skiftesvis eller med regelmessig veksling av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS },
-    { label: 'Sekvensielt, uten regelmessig skifte av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SEKVENSIELT },
-  ];
-
   const vesentligAktivitetINorgeValg = [
     { label: '25% eller mer', type: VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT },
     { label: 'Mindre enn 25%', type: VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT },
   ];
 
-  const visMarginaltArbeid = hentFaktaVerdi(arbeidsmonster) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS;
-
   return (
     <div className="vurderingArbeidsmonster">
       <Nav.Undertittel>Vurdering av arbeidsmønster og fordeling</Nav.Undertittel>
       <div className="arbeidsmonster">
-        <EnkeltAvklartfakta
-          redigerbart={redigerbart}
-          avklartfakta={arbeidsmonster}
-          avklartfaktaKode={KV.Koder.avklartefaktaKoder.ARBEIDSMONSTER}
-          avklartefaktaTyper={skiftesvisSekvensieltValg}
-          tittel="Hvordan utføres arbeidet?"
-          oppdaterData={oppdaterData}
-        />
-        { visMarginaltArbeid &&
         <MarginaltArbeid
           redigerbart={redigerbart}
           marginaltArbeid={marginaltArbeid}
@@ -196,8 +180,7 @@ const VurderingArbeidsmonster = props => {
           oppdaterData={oppdaterData}
           {...tilstand}
         />
-        }
-        { visMarginaltArbeid && aktivitetINorgeNodvendig &&
+        { aktivitetINorgeNodvendig &&
         <EnkeltAvklartfakta
           redigerbart={redigerbart}
           avklartfakta={aktivitetINorge}
@@ -223,6 +206,9 @@ VurderingArbeidsmonster.propTypes = {
   slettData: PT.func.isRequired,
   arbeidsland: PT.array.isRequired,
   tilstand: PT.shape({
+    marginaltArbeid: PT.array,
+    aktivitetINorge: PT.object,
+    aktivitetINorgeNodvendig: PT.bool,
     harAvklaring: PT.bool,
   }).isRequired,
   redigerbart: PT.bool.isRequired,
