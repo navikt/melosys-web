@@ -1,7 +1,7 @@
 import * as MKV from 'melosys-kodeverk';
 
-export const lagUrl = (saksnummer, behandlingID, behandlingstype) => {
-  switch (behandlingstype.kode) {
+export const lagUrl = (saksnummer, behandlingID, behandlingstypeKode) => {
+  switch (behandlingstypeKode) {
     case MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING:
     case MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE:
     case MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_SEG_SELV:
