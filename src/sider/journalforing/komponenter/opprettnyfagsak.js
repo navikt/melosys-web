@@ -144,7 +144,7 @@ class OpprettNyFagSak extends Component {
             </Nav.Fieldset>
           </Fragment>
         }
-        <Skjema.Checkbox feltNavn="skalSendesForvaltningsmelding" label="Jeg ønsker ikke å sende forvaltingsmelding" />
+        <Skjema.Checkbox feltNavn="skalSendesForvaltningsmelding" label="Jeg ønsker ikke å sende forvaltningsmelding" />
         <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
         <div className="opprettnysak__knapper">
           <Nav.Knapp className="knapp" onClick={opprettFagsak}>Opprett ny sak</Nav.Knapp>
