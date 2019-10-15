@@ -45,7 +45,7 @@ const SideOppsummering = ({
         <Nav.Row>
           <Nav.Column xs="12">
             {oppsummering && <Oppsummering
-              lovvalgsland={[lovvalgsland]}
+              lovvalgsland={lovvalgsland}
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
@@ -75,8 +75,7 @@ SideOppsummering.propTypes = {
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
-  lovvalgsland: MPT.Kodeverk,
-  tilForsidenHandle: PT.func.isRequired,
+  lovvalgsland: PT.arrayOf(MPT.Kodeverk),
   renderBehandlingsmeny: PT.func.isRequired,
   renderBehandlingsstatus: PT.func.isRequired,
 };

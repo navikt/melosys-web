@@ -10,6 +10,9 @@ import { doThenDispatch } from '../../services/utils';
 import * as Actions from './actions';
 import * as Api from '../../services/api';
 import * as Types from './types';
+import * as Selectors from './selectors';
+
+import { behandlingerSelectors } from '../behandlinger';
 
 export function hentMedlemsPerioder(behandlingID) {
   return doThenDispatch(() => Api.Behandlinger.perioder.hentMedlemsPerioder(behandlingID), {
@@ -24,6 +27,14 @@ export function sendMedlemsPerioder(behandlingID, perioder) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function lagre() {
+  return (dispatch, getState) => {
+    const perioder = Selectors.behandlingsPerioderSelector(getState());
+    const behandlingID = behandlingerSelectors.BehandlingIDSelector(getState());
+    dispatch(sendMedlemsPerioder(behandlingID, perioder));
+  };
 }
 
 export function oppdaterPerioderState(state) {
