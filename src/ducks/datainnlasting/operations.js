@@ -8,10 +8,11 @@ import { soknadOperations } from '../soknad';
 import { lovvalgsperioderOperations } from '../lovvalgsperioder';
 import { vilkarOperations } from '../vilkar';
 import { behandlingsperioderOperations } from '../behandlingsperioder';
+import { anmodningsperioderOperations } from '../anmodningsperioder';
 
 
-export const lastInnSaksopplysninger = (saksnummer, behandlingID) => {
-  return dispatch => {
+export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
+  dispatch => {
     try {
       dispatch(fagsakOperations.hent(saksnummer));
       dispatch(behandlingerOperations.hentBehandling(behandlingID));
@@ -24,8 +25,8 @@ export const lastInnSaksopplysninger = (saksnummer, behandlingID) => {
     } catch (e) {
       Utils.logger.error(e);
     }
-  };
-};
+  }
+);
 
 export const resetSaksopplysninger = () => (
   dispatch => {
@@ -37,5 +38,23 @@ export const resetSaksopplysninger = () => (
     dispatch(lovvalgsperioderOperations.resetLovvalgsperioderState());
     dispatch(vilkarOperations.resetVilkarState());
     dispatch(behandlingsperioderOperations.resetPerioderState());
+  }
+);
+
+export const lagreAllData = () => (
+  async dispatch => {
+    try {
+      await Promise.all([
+        dispatch(soknadOperations.lagre()),
+        dispatch(vilkarOperations.lagre()),
+        dispatch(avklartefaktaOperations.lagre()),
+        dispatch(behandlingsperioderOperations.lagre()),
+      ]);
+
+      dispatch(anmodningsperioderOperations.lagre());
+      dispatch(lovvalgsperioderOperations.lagre());
+    } catch (e) {
+      Utils.logger.error(e);
+    }
   }
 );

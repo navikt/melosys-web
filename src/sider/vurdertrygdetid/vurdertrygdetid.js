@@ -29,13 +29,20 @@ const VurderTrygdetid = ({
   person,
   lovvalgsperiodeFom,
   lovvalgsperiodeTom,
-  lovvalgsland,
   oppdaterBehandlingsStatus,
   location,
   lastInnSaksopplysninger,
   resetSaksopplysninger,
+  lagreOgLukk,
+  tilbakeleggOppgave,
+  visHenleggDialogHandle,
+  visAvsluttSakSomBortfaltDialogHandle,
+  visAvslagSoknadDialogHandle,
+  visOppfriskBekreftelse,
+  apneTidligereBehandlinger,
 }) => {
-  const behandlingID = Utils.queryString.getParam(location, 'behandlingID');
+  const behandlingIDString = Utils.queryString.getParam(location, 'behandlingID');
+  const behandlingID = parseInt(behandlingIDString, 10);
   const { params: { snr: saksnummer } } = match;
 
   useEffect(() => {
@@ -60,16 +67,17 @@ const VurderTrygdetid = ({
               person={person}
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
-              lovvalgsland={lovvalgsland}
               renderBehandlingsmeny={() => <Behandlingsmeny
                 redigerbart={redigerbart}
-                lagreOgLukkHandle={() => null}
-                tilbakeleggeHandle={() => null}
-                visHenleggDialogHandle={() => null}
-                apneTidligereBehandlinger={() => null}
-                visAvsluttSakSomBortfaltDialogHandle={() => null}
-                visHenleggSak={() => null}
-                visAvslagSoknadDialogHandle={() => null}
+                lagreOgLukkHandle={lagreOgLukk}
+                tilbakeleggeHandle={tilbakeleggOppgave}
+                visHenleggDialogHandle={visHenleggDialogHandle}
+                apneTidligereBehandlinger={apneTidligereBehandlinger}
+                visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
+                visHenleggSak
+                visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                visOppfriskSaksopplysninger
+                oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
               />}
               renderBehandlingsstatus={() => <Behandlingsstatus
                 behandlingID={behandlingID}
@@ -102,19 +110,20 @@ VurderTrygdetid.propTypes = {
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
-  lovvalgsland: MPT.Kodeverk,
   oppdaterBehandlingsStatus: PT.func.isRequired,
   location: PT.object.isRequired,
-  hentFagsaker: PT.func.isRequired,
-  hentBehandling: PT.func.isRequired,
-  hentBehandlingsresultat: PT.func.isRequired,
-  hentSoknad: PT.func.isRequired,
   lastInnSaksopplysninger: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
+  lagreOgLukk: PT.func.isRequired,
+  tilbakeleggOppgave: PT.func.isRequired,
+  visHenleggDialogHandle: PT.func.isRequired,
+  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
+  visAvslagSoknadDialogHandle: PT.func.isRequired,
+  visOppfriskBekreftelse: PT.func.isRequired,
+  apneTidligereBehandlinger: PT.func.isRequired,
 };
 
 VurderTrygdetid.defaultProps = {
-  lovvalgsland: [],
   fagsak: undefined,
   oppsummering: undefined,
   lovvalgsperiodeFom: undefined,
@@ -130,7 +139,8 @@ const mapStateToProps = state => ({
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
-  lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
+  brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
+  brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
 });
 
 const mapDispatchToProps = dispatch => ({

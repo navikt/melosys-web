@@ -14,11 +14,15 @@ const Behandlingsmeny = ({
   visAvsluttSakSomBortfaltDialogHandle,
   visHenleggSak,
   visAvslagSoknadDialogHandle,
+  oppfriskSaksopplysningerHandle,
+  visOppfriskSaksopplysninger,
 }) => (
   <Nav.EkspanderbartpanelBase ariaTittel="Behandlingsmeny" className="oppsummering__meny" heading={<div className="behandlingsmeny_title">Behandlingsmeny</div>}>
     <div className="meny__innhold">
       { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={lagreOgLukkHandle}>Lagre og lukk</Nav.Knapp> }
       <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={tilbakeleggeHandle}>Legg tilbake i kø</Nav.Knapp>
+      { visOppfriskSaksopplysninger &&
+        <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppdater saksopplysninger</Nav.Knapp>}
       { redigerbart && visHenleggSak && <Nav.Knapp mini className="innhold__element" onClick={visHenleggDialogHandle}>Henlegg sak</Nav.Knapp> }
       { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={visAvsluttSakSomBortfaltDialogHandle}>Avslutt sak som bortfalt</Nav.Knapp>}
       { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={visAvslagSoknadDialogHandle}>Avslå søknad pga. manglende opplysninger</Nav.Knapp>}
@@ -36,6 +40,12 @@ Behandlingsmeny.propTypes = {
   apneTidligereBehandlinger: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   visHenleggSak: PT.bool.isRequired,
+  oppfriskSaksopplysningerHandle: PT.func.isRequired,
+  visOppfriskSaksopplysninger: PT.bool,
+};
+
+Behandlingsmeny.defaultProps = {
+  visOppfriskSaksopplysninger: true,
 };
 
 export default Behandlingsmeny;
