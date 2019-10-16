@@ -27,7 +27,7 @@ const Saksopplysninger = props => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.GODKJENT);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState('');
   const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = React.useState([]);
-  const [ikkeGodkjentFeilmeldinger, setIkkeGodkjentFeilmeldinger] = React.useState(undefined);
+  const [ikkeGodkjentFeilmeldinger, setIkkeGodkjentFeilmeldinger] = React.useState({ begrunnelseKoder: undefined, begrunnelseFritekst: undefined });
   const [endrePeriodeFeilmeldinger, setEndrePeriodeFeilmeldinger] = React.useState({ fom: undefined, tom: undefined, fritekst: undefined });
   const [endrePeriodeFom, setEndrePeriodeFom] = React.useState('');
   const [endrePeriodeTom, setEndrePeriodeTom] = React.useState('');
@@ -107,8 +107,15 @@ const Saksopplysninger = props => {
     }
 
     const koder = ikkeGodkjentBegrunnelse || ikkeGodkjentBegrunnelseKoder;
-    const feilmeldinger = lagYupToReduxformErrorMapper(ikkeGodkjentBegrunnelseSkjema)({ ikkeGodkjentBegrunnelseKoder: koder });
-    setIkkeGodkjentFeilmeldinger(feilmeldinger ? feilmeldinger.ikkeGodkjentBegrunnelseKoder : undefined);
+
+    const settings = { context: { fritekstPakrevd: koder.includes('ANNET') } };
+    const stateObject = {
+      begrunnelseKoder: koder,
+      begrunnelseFritekst,
+    };
+
+    const feilmeldinger = lagYupToReduxformErrorMapper(ikkeGodkjentBegrunnelseSkjema, settings)(stateObject);
+    setIkkeGodkjentFeilmeldinger(feilmeldinger);
 
     return Utils._isEmpty(feilmeldinger);
   };
@@ -257,7 +264,7 @@ const Saksopplysninger = props => {
                           label="Legg til begrunnelse for ikke oppfylt:"
                           tillatFritekst={false}
                           onChange={listevalgEndringHandler}
-                          feilmelding={ikkeGodkjentFeilmeldinger}
+                          feil={ikkeGodkjentFeilmeldinger.begrunnelseKoder}
                         />
                       </Nav.Fieldset>
                     </Nav.Column>
@@ -270,6 +277,7 @@ const Saksopplysninger = props => {
                           onChange={textAreaOnChange}
                           value={begrunnelseFritekst}
                           maxLength={255}
+                          feil={ikkeGodkjentFeilmeldinger.begrunnelseFritekst}
                           bredde="fullbredde" />
                       }
                     </Nav.Column>
