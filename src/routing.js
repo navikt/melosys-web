@@ -61,7 +61,7 @@ const Routing = ({
   });
 
   const behandlingIDString = Utils.queryString.getParam(location, 'behandlingID');
-  const behandlingID = parseInt(behandlingIDString, 10);
+  const behandlingID = Utils._toInteger(behandlingIDString);
 
   const visHenleggDialogHandle = () => {
     setVisHenleggDialog(true);
@@ -184,6 +184,8 @@ const Routing = ({
     visOppfriskBekreftelse,
     skjulOppfriskBekreftelseOgNavigerTilForside,
     apneTidligereBehandlinger,
+    blokkerInnholdMedOppfriskSpinner,
+    tilForsiden,
   };
 
   return (

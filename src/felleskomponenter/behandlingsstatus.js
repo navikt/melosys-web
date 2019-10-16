@@ -8,6 +8,7 @@ import * as Api from '../services/api';
 import * as Nav from '../utils/navFrontend';
 import * as Mui from '../felleskomponenter/ui';
 import * as MPT from '../proptypes';
+import * as Utils from '../utils';
 
 import './behandlingsstatus.css';
 
@@ -36,11 +37,11 @@ const BehandlingsStatus = ({
       return false;
     }
     const term = KV.kodeTilTerm(behandlingsstatus, MKV.KTObjects.behandlinger.behandlingsstatus);
-    const nyBehandlingsStatus = { behandlingsstatus, term };
+    const nyBehandlingsStatus = { kode: behandlingsstatus, term };
     Api.Behandlinger.status.oppdaterStatus(behandlingID, behandlingsstatus).then(() => {
       oppdaterBehandlingsStatus(nyBehandlingsStatus);
       oppdaterStatusMelding();
-    });
+    }).catch(Utils.logger.error);
     return true;
   };
 
@@ -65,10 +66,7 @@ const BehandlingsStatus = ({
         ];
         break;
       case MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING:
-        return [
-          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
-          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
-        ];
+        return [];
       default:
         return [];
     }
@@ -107,6 +105,7 @@ BehandlingsStatus.propTypes = {
   oppsummering: MPT.Behandlinger.Oppsummering,
   oppdaterBehandlingsStatus: PT.func.isRequired,
 };
+
 BehandlingsStatus.defaultProps = {
   redigerbart: false,
   oppsummering: undefined,
