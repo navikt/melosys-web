@@ -194,7 +194,7 @@ const SideDialogSedBestilling = ({ behandlingID }) => {
             <TomtFelt />
             { tilgjengeligeMottakerinstitusjoner(valgtLand).map(elem => <option key={elem.id} value={elem.id}>{elem.navn}</option>) }
           </Nav.Select>
-          <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>Opprett BUC</Nav.Hovedknapp>&nbsp;
+          <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>Opprett ny BUC</Nav.Hovedknapp>&nbsp;
           <Nav.Knapp type="standard" onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
         </Nav.Fieldset>
         {(opprettetBucUrl && bucOpprettet) &&
