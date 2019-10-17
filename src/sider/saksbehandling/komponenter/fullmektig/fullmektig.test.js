@@ -44,6 +44,8 @@ describe('Fullmektig', () => {
       slettFullmektigLokalt: jest.fn(),
       lagreNyFullmektigOgOppdaterLokalt: jest.fn(),
       hentOrg: jest.fn(),
+      index: 1,
+      settRepresentant: jest.fn(),
     };
   });
 
