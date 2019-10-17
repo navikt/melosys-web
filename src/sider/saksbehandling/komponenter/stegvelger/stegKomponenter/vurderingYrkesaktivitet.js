@@ -14,9 +14,10 @@ const VurderingYrkesaktivitet = props => {
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
-    return function cleanup() {
+    const cleanup = () => {
       slettData();
     };
+    return cleanup();
   }, []);
 
   const radioEndret = event => {

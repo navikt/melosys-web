@@ -47,8 +47,12 @@ const VurderingVedtak = ({
     { navn: 'Forhåndsvis vedtaksbrev og A1', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
     { navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true },
   ];
+  const visSedLenkeForLovvalgsbestemmelser = [
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
+    MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
+  ];
 
-  if (lovvalgSomKodeTerm && lovvalgSomKodeTerm.kode === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1) {
+  if (lovvalgSomKodeTerm && visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode)) {
     pdfDokumenter.push({ navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } });
   }
 

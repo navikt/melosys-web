@@ -17,7 +17,7 @@ export const SKIP = 'SKIP';
 
 export const Unntaksperiode = {
   GODKJENT: 'GODKJENT',
-  INNHENT: 'INNHENT',
+  DELVIS_GODKJENT: 'DELVIS_GODKJENT',
   AVSLAG: 'AVSLAG',
 };
 export const VurderingSokkelSkipTyper = {
