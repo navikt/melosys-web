@@ -100,7 +100,7 @@ class Journalforing extends Component {
       opprettnysak_behandlingstype: behandlingstypeKode,
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
       skalTilordnes,
-      skalSendesForvaltningsmelding,
+      ikkeSendForvaltingsmelding,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -125,7 +125,7 @@ class Journalforing extends Component {
         behandlingstypeKode,
         representantID,
         representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
-        skalSendesForvaltningsmelding,
+        ikkeSendForvaltingsmelding,
       });
     }
     return journalPostData;
@@ -454,7 +454,7 @@ const mapStateToProps = state => ({
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
     ingenVurdering: false,
-    skalSendesForvaltningsmelding: false,
+    ikkeSendForvaltingsmelding: false,
     skalTilordnes: false,
   },
 });
@@ -494,10 +494,11 @@ const form = {
 };
 
 const JournalforingWrapper = ({ resetJournalforingState }) => {
-  useEffect(() => function cleanup() {
-    resetJournalforingState();
-  }, []);
-
+  useEffect(() => (
+    function cleanup() {
+      resetJournalforingState();
+    }
+  ), []);
   const JournalforingMedErrorHandling = withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Journalforing))));
 
   return <JournalforingMedErrorHandling />;
