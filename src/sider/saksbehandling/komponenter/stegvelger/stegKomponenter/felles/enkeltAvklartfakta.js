@@ -26,12 +26,12 @@ const EnkeltAvklartfakta = props => {
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(avklartfaktaKode, avklartfakta));
-
-    return function cleanup() {
+    const cleanup = () => {
       if (props.slettData) {
         props.slettData(slettAvklartfakta(avklartfaktaKode));
       }
     };
+    return cleanup();
   }, []);
 
   const radioEndringHandler = event => {

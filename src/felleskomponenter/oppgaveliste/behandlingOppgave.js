@@ -60,7 +60,7 @@ const BehandlingOppgave = ({ sak }) => {
 
   const { fom, tom } = periode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
-  const link = Utils.url.lagUrl(saksnummer, behandlingID, behandlingstype);
+  const link = Utils.url.lagUrl(saksnummer, behandlingID, behandlingstype.kode);
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
 
