@@ -72,7 +72,6 @@ export default function reducer(state = initialState, action) {
           ARBEIDSGIVERS_FORRETNINGSSTED,
           OMFATTES_I_NORGE,
           OMFATTES_I_LAND,
-          ARBEIDSMONSTER,
         },
         referanseKoder: {
           INSTALLASJON_ARBEIDSLAND,
@@ -91,7 +90,6 @@ export default function reducer(state = initialState, action) {
         ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEIDSGIVERS_FORRETNINGSSTED], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[OMFATTES_I_NORGE], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[OMFATTES_I_LAND], null),
-        ...lagAvklartfaktaObjektMedKode(avklartefakta[ARBEIDSMONSTER], null),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[BOSTEDSLAND], BOSTEDSLAND),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[SOKKEL_ELLER_SKIP], SOKKEL_ELLER_SKIP),
         ...lagAvklartfaktaObjektMedKode(avklartefakta[INSTALLASJON_ARBEIDSLAND], ARBEIDSLAND),

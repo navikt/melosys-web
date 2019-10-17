@@ -21,7 +21,11 @@ export class EnkeltLand extends Component {
     const { landkoder } = this.props;
     const landkodeObjekt = value && kodeTilObjekt(value, landkoder);
     const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
-    this.setState({ inputVerdi });
+    this.setInputVerdi(inputVerdi);
+  };
+
+  setInputVerdi = verdi => {
+    this.setState({ inputVerdi: verdi });
   };
 
   reduxOppdaterLand = landkode => {

@@ -36,3 +36,13 @@ export const endrePeriodeSkjema = Yup.object().shape({
       then: Yup.string().required({ feilmelding: 'Begrunnelse for endret periode er påkrevd' }),
     }),
 });
+
+export const ikkeGodkjentBegrunnelseSkjema = Yup.object().shape({
+  begrunnelseKoder: Yup.array().of(Yup.string())
+    .min(1, 'Begrunnelse for avslag er påkrevd'),
+  begrunnelseFritekst: Yup.string()
+    .when('$fritekstPakrevd', {
+      is: true,
+      then: Yup.string().required({ feilmelding: 'Fritekstfelt er påkrevd' }),
+    }),
+});

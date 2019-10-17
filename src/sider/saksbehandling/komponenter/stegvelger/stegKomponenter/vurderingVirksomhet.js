@@ -22,9 +22,10 @@ const VirksomheterLinje = props => {
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, avklartVirksomhet));
 
-    return function cleanup() {
+    const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET));
     };
+    return cleanup();
   }, []);
 
   const virksomhetErValgt = avklartVirksomhet && avklartVirksomhet.fakta.includes('TRUE');
@@ -143,6 +144,7 @@ VurderingVirksomhet.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   tilstand: PT.shape({
+    virksomheter: PT.array,
     harAvklaring: PT.bool,
   }).isRequired,
   virksomheterIPerioden: PT.arrayOf(MPT.Virksomhet).isRequired,

@@ -28,9 +28,10 @@ const VurderingYrkesgruppe = props => {
     const tilleggBestemmelseFunnet = finnTilleggBestemmelse(tilleggbestemmelse, stegetsTilleggbestemmelser);
     if (tilleggBestemmelseFunnet) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggbestemmelse));
 
-    return function cleanup() {
+    const cleanup = () => {
       slettData();
     };
+    return cleanup();
   }, []);
 
   const radioEndret = event => {
@@ -112,6 +113,7 @@ VurderingYrkesgruppe.ID = 'YRKESGRUPPE';
 VurderingYrkesgruppe.propTypes = {
   bekreftOgFortsett: PT.func.isRequired,
   tilstand: PT.shape({
+    marginaltArbeid: PT.array,
     tilleggbestemmelse: PT.string,
     harAvklaring: PT.bool,
     yrkesgruppe: PT.object.isRequired,
