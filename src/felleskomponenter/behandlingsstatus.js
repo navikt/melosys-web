@@ -17,6 +17,7 @@ const BehandlingsStatus = ({
   behandlingID,
   redigerbart,
   oppsummering,
+  behandlingsstatusMap,
 }) => {
   const [behandlingsstatus, setBehandlingsStatus] = React.useState('VELG');
   const [statusmelding, setStatusMelding] = React.useState(null);
@@ -45,40 +46,10 @@ const BehandlingsStatus = ({
     return true;
   };
 
-  const hentBehandlingsStatusValg = kode => {
-    let endreStatusValg = [];
-
-    switch (kode) {
-      case MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT:
-        endreStatusValg = [
-          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
-          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
-        ];
-        break;
-      case MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL:
-        endreStatusValg = [
-          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
-        ];
-        break;
-      case MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART:
-        endreStatusValg = [
-          { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
-        ];
-        break;
-      case MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING:
-        return [];
-      default:
-        return [];
-    }
-
-    endreStatusValg = [...endreStatusValg, { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING }];
-    return endreStatusValg;
-  };
-
   if (!oppsummering) return <div />;
 
   let endreBehandlingsStatusValg = [];
-  if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = hentBehandlingsStatusValg(oppsummering.behandlingsstatus.kode);
+  if (oppsummering.behandlingsstatus) endreBehandlingsStatusValg = behandlingsstatusMap[oppsummering.behandlingsstatus.kode] || [];
 
   return (
     <div className="oppsummering__behandlingsstatus">
@@ -104,6 +75,12 @@ BehandlingsStatus.propTypes = {
   redigerbart: PT.bool,
   oppsummering: MPT.Behandlinger.Oppsummering,
   oppdaterBehandlingsStatus: PT.func.isRequired,
+  behandlingsstatusMap: PT.shape({
+    [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: PT.arrayOf(MPT.Kodeverk).isRequired,
+    [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: PT.arrayOf(MPT.Kodeverk).isRequired,
+    [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: PT.arrayOf(MPT.Kodeverk).isRequired,
+    [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: PT.arrayOf(MPT.Kodeverk).isRequired,
+  }).isRequired,
 };
 
 BehandlingsStatus.defaultProps = {

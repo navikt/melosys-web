@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Utils from '../../utils';
@@ -17,6 +18,23 @@ import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { dataInnlastingOperations } from '../../ducks/datainnlasting';
 
 import './vurdertrygdetid.css';
+
+const behandlingsstatusMap = {
+  [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
+};
 
 const VurderTrygdetid = ({
   brevBestillingRedigerbart,
@@ -84,6 +102,7 @@ const VurderTrygdetid = ({
                 redigerbart={redigerbart}
                 oppsummering={oppsummering}
                 oppdaterBehandlingsStatus={oppdaterBehandlingsStatus}
+                behandlingsstatusMap={behandlingsstatusMap}
               />}
             />
             <SideDialog
