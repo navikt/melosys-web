@@ -28,7 +28,7 @@ import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { formSelectors } from '../../ducks/form';
 import { vedtakOperations } from '../../ducks/vedtak';
-import { dataInnlastingOperations } from '../../ducks/datainnlasting';
+import { datalastingOperations } from '../../ducks/datalasting';
 
 import './saksbehandling.css';
 
@@ -364,10 +364,10 @@ const mapDispatchToProps = dispatch => ({
   lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
-  lagreAllData: () => dispatch(dataInnlastingOperations.lagreAllData()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
-  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(dataInnlastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
-  resetSaksopplysninger: () => dispatch(dataInnlastingOperations.resetSaksopplysninger()),
+  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
+  resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
