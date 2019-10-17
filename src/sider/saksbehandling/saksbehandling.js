@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import { withRouter } from 'react-router-dom';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Utils from '../../utils';
 import * as Nav from '../../utils/navFrontend';
@@ -30,6 +31,23 @@ import { vedtakOperations } from '../../ducks/vedtak';
 import { dataInnlastingOperations } from '../../ducks/datainnlasting';
 
 import './saksbehandling.css';
+
+const behandlingsstatusMap = {
+  [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
+};
 
 class Saksbehandling extends Component {
   state = {
@@ -198,6 +216,7 @@ class Saksbehandling extends Component {
                   redigerbart={redigerbart}
                   oppsummering={oppsummering}
                   oppdaterBehandlingsStatus={oppdaterBehandlingsStatus}
+                  behandlingsstatusMap={behandlingsstatusMap}
                 />}
               />
               <SideDialog
