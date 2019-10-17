@@ -15,7 +15,7 @@ import Behandlingsmeny from './komponenter/behandlingsmeny';
 import { fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
-import { dataInnlastingOperations } from '../../ducks/datainnlasting';
+import { datalastingOperations } from '../../ducks/datalasting';
 
 import './vurdertrygdetid.css';
 
@@ -163,8 +163,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
-  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(dataInnlastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
-  resetSaksopplysninger: () => dispatch(dataInnlastingOperations.resetSaksopplysninger()),
+  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
+  resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderTrygdetid);

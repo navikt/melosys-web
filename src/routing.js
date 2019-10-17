@@ -17,7 +17,7 @@ import ErrorBoundary from './felleskomponenter/ErrorBoundary';
 
 import { oppgaverOperations } from './ducks/oppgaver';
 import { soknadOperations } from './ducks/soknad';
-import { dataInnlastingOperations } from './ducks/datainnlasting';
+import { datalastingOperations } from './ducks/datalasting';
 import { vedtakOperations } from './ducks/vedtak';
 import { saksopplysningerOperations } from './ducks/saksopplysninger';
 import { fagsakSelectors } from './ducks/fagsaker';
@@ -268,13 +268,13 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  lagreAllData: () => dispatch(dataInnlastingOperations.lagreAllData()),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   lagreSoknad: () => dispatch(soknadOperations.lagre()),
   hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilbakeleggeOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
   sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
-  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(dataInnlastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
+  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   oppfriskSaksopplysninger: behandlingID => saksopplysningerOperations.oppfrisk(behandlingID),
   apneTidligereBehandlinger: () => dispatch(behandlingerOperations.apneTidligereBehandlinger()),
 });
