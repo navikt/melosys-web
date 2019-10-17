@@ -28,9 +28,10 @@ const VurderingYrkesgruppe = props => {
     const tilleggBestemmelseFunnet = finnTilleggBestemmelse(tilleggbestemmelse, stegetsTilleggbestemmelser);
     if (tilleggBestemmelseFunnet) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggbestemmelse));
 
-    return function cleanup() {
+    const cleanup = () => {
       slettData();
     };
+    return cleanup();
   }, []);
 
   const radioEndret = event => {
