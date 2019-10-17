@@ -32,9 +32,10 @@ const Forretningsstedet = props => {
     if (avklartForretningsland) {
       oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland));
     }
-    return function cleanup() {
+    const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId));
     };
+    return cleanup();
   }, []);
 
   const { navn, virksomhetId } = forretningsstedet;
@@ -149,9 +150,10 @@ const VurderingForretningssted = props => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, omfattetINorge));
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattetILand));
 
-    return function cleanup() {
-      props.slettData();
+    const cleanup = () => {
+      slettData();
     };
+    return cleanup();
   }, []);
 
   const avklartfaktaEndret = e => {

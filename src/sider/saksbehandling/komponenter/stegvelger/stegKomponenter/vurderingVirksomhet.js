@@ -22,9 +22,10 @@ const VirksomheterLinje = props => {
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, avklartVirksomhet));
 
-    return function cleanup() {
+    const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET));
     };
+    return cleanup();
   }, []);
 
   const virksomhetErValgt = avklartVirksomhet && avklartVirksomhet.fakta.includes('TRUE');

@@ -100,6 +100,7 @@ class Journalforing extends Component {
       opprettnysak_behandlingstype: behandlingstypeKode,
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
       skalTilordnes,
+      ikkeSendForvaltingsmelding,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -120,7 +121,11 @@ class Journalforing extends Component {
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
-        arbeidsgiverID, behandlingstypeKode, representantID, representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
+        arbeidsgiverID,
+        behandlingstypeKode,
+        representantID,
+        representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
+        ikkeSendForvaltingsmelding,
       });
     }
     return journalPostData;
@@ -134,7 +139,7 @@ class Journalforing extends Component {
     /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier: {
-        saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, skalSendesForvaltningsmelding,
+        saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering,
       },
       tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
@@ -143,7 +148,7 @@ class Journalforing extends Component {
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = {
-      saksnummer, behandlingstypeKode, ingenVurdering, skalSendesForvaltningsmelding, ...vasketJournalforing,
+      saksnummer, behandlingstypeKode, ingenVurdering, ...vasketJournalforing,
     };
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
@@ -449,7 +454,7 @@ const mapStateToProps = state => ({
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
     ingenVurdering: false,
-    skalSendesForvaltningsmelding: false,
+    ikkeSendForvaltingsmelding: false,
     skalTilordnes: false,
   },
 });
@@ -489,10 +494,11 @@ const form = {
 };
 
 const JournalforingWrapper = ({ resetJournalforingState }) => {
-  useEffect(() => function cleanup() {
-    resetJournalforingState();
-  }, []);
-
+  useEffect(() => (
+    function cleanup() {
+      resetJournalforingState();
+    }
+  ), []);
   const JournalforingMedErrorHandling = withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Journalforing))));
 
   return <JournalforingMedErrorHandling />;

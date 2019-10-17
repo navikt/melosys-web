@@ -33,10 +33,10 @@ export const VurderingArtikkel16MottaSvar = props => {
 
   useEffect(() => {
     hentAnmodningsperiodeSvar(anmodningsperiodeID).then(svar => oppdaterData(lagAnmodningsperiodesvar(svar.data)));
-
-    return function cleanup() {
+    const cleanup = () => {
       slettData();
     };
+    return cleanup();
   }, []);
 
   const visLovvalgsperiode = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
