@@ -4,8 +4,13 @@ import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 import * as KV from '../../../../../kodeverk';
-import { hentFaktaVerdi, lagAvklartfakta, konverterTilStegData } from '../../../../../regler/avklartefakta';
-import { konverterTilleggBestemmelseTilStegData, lagTilleggBestemmelse, slettTilleggBestemmelse, finnTilleggBestemmelse } from '../../../../../regler/tilleggbestemmelser';
+import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../../../regler/avklartefakta';
+import {
+  finnTilleggBestemmelse,
+  konverterTilleggBestemmelseTilStegData,
+  lagTilleggBestemmelse,
+  slettTilleggBestemmelse,
+} from '../../../../../regler/tilleggbestemmelser';
 import { lagVilkaar, slettVilkar } from '../../../../../regler/vilkar';
 import { BOOLSK } from '../../../../../constants';
 
@@ -27,11 +32,10 @@ const VurderingYrkesgruppe = props => {
 
     const tilleggBestemmelseFunnet = finnTilleggBestemmelse(tilleggbestemmelse, stegetsTilleggbestemmelser);
     if (tilleggBestemmelseFunnet) oppdaterData(konverterTilleggBestemmelseTilStegData(tilleggbestemmelse));
-
     const cleanup = () => {
       slettData();
     };
-    return cleanup();
+    return cleanup;
   }, []);
 
   const radioEndret = event => {
