@@ -324,6 +324,13 @@ class Journalforing extends Component {
     return valgtDokumentID;
   };
 
+  behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
+    .filter(({ kode }) =>
+      kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID);
+
   render() {
     const {
       journalforing: { vedlegg = [], hoveddokument = {} },
@@ -358,13 +365,13 @@ class Journalforing extends Component {
                         hentOgVisBruker={hentOgVisBruker}
                       />
                       <EksisterendeSaker
-                        behandlingstyper={MKV.KTObjects.behandlinger.behandlingstyper}
+                        behandlingstyper={this.behandlingstyper}
                         fagsakListe={fagsakListe}
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                       />
                       <OpprettNyFagSak
                         sakstyper={MKV.KTObjects.sakstyper}
-                        behandlingstyper={MKV.KTObjects.behandlinger.behandlingstyper}
+                        behandlingstyper={this.behandlingstyper}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
                       />
