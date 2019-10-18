@@ -17,7 +17,7 @@ const VurderingYrkesaktivitet = props => {
     const cleanup = () => {
       slettData();
     };
-    return cleanup();
+    return cleanup;
   }, []);
 
   const radioEndret = event => {

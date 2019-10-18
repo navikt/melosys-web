@@ -31,7 +31,7 @@ const EnkeltAvklartfakta = props => {
         props.slettData(slettAvklartfakta(avklartfaktaKode));
       }
     };
-    return cleanup();
+    return cleanup;
   }, []);
 
   const radioEndringHandler = event => {
