@@ -76,7 +76,9 @@ const EksisterendeSaker = props => {
         {
           behandlingstyper &&
           behandlingstyper
-            .filter(elem => elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL)
+            .filter(elem => elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
+              && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
+              && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED)
             .map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
         }
       </Skjema.Select>
