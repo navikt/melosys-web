@@ -91,7 +91,7 @@ const SokkelSkipEnkelt = props => {
       slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND, enhetNavn));
       slettData(slettAvklartfakta(KV.Koder.referanseKoder.INSTALLASJON_ARBEIDSLAND_TYPE, enhetNavn));
     };
-    return cleanup();
+    return cleanup;
   }, []);
 
   const sokkelSkipEndret = e => (
