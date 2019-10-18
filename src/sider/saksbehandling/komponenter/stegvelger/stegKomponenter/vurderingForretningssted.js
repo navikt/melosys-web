@@ -35,7 +35,7 @@ const Forretningsstedet = props => {
     const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId));
     };
-    return cleanup();
+    return cleanup;
   }, []);
 
   const { navn, virksomhetId } = forretningsstedet;
@@ -153,7 +153,7 @@ const VurderingForretningssted = props => {
     const cleanup = () => {
       slettData();
     };
-    return cleanup();
+    return cleanup;
   }, []);
 
   const avklartfaktaEndret = e => {

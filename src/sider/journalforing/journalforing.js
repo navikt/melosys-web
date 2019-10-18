@@ -118,6 +118,9 @@ class Journalforing extends Component {
       vedlegg,
       skalTilordnes,
     };
+    if (intensjon === JOURNALFORING_HENSIKT.KNYTT) {
+      journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null };
+    }
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
