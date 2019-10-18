@@ -329,7 +329,8 @@ class Journalforing extends Component {
       kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
       kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
       kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
-      kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID);
+      kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED);
 
   render() {
     const {
