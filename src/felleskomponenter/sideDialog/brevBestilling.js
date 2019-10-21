@@ -47,13 +47,26 @@ class BrevBestilling extends Component {
     return brevbestillingSkjemaVerdier.dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER;
   };
 
+  erMeldingOmForventetSaksbehandlingstid = () => {
+    const { brevbestillingSkjemaVerdier } = this.props;
+    if (!brevbestillingSkjemaVerdier) return false;
+    return brevbestillingSkjemaVerdier.dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID;
+  };
+
   sendBrev = async () => {
     const {
       behandlingID,
-      brevbestillingSkjemaVerdier, opprettDokument,
+      brevbestillingSkjemaVerdier,
+      opprettDokument,
     } = this.props;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
-    const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker, begrunnelseKode: null }) : {};
+    const dokumentFritekst = this.erMeldingOmForventetSaksbehandlingstid() || (fritekst === '') ? null : fritekst;
+
+    const dokument = Object.assign({
+      fritekst: dokumentFritekst,
+      mottaker,
+      begrunnelseKode: null,
+    });
 
     this.setState({ feilmelding: undefined });
 
@@ -107,7 +120,11 @@ class BrevBestilling extends Component {
     } = this.props;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
 
-    const data = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
+    const data = Object.assign({
+      fritekst: this.erMeldingOmForventetSaksbehandlingstid() ? null : fritekst,
+      mottaker,
+    });
+
     const ForhandsvistePdfDokumenter = [
       { navn: 'Forhåndsvis brev', type: dokumenttypeKode, data },
     ];

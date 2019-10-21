@@ -54,10 +54,10 @@ const VurderingBostedsland = props => {
   useEffect(() => {
     const { bostedslandFakta } = tilstand;
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, bostedslandFakta));
-
-    return function cleanup() {
+    const cleanup = () => {
       slettData();
     };
+    return cleanup;
   }, []);
 
   const {

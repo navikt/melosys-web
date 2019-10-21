@@ -11,7 +11,6 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
-//import { KodeTermSelect } from '../../../felleskomponenter/ui/kodeTermSelect';
 import * as Mui from '../../../felleskomponenter/ui';
 
 import './sideOppsummering.css';

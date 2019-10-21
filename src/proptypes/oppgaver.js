@@ -22,7 +22,7 @@ const SaksbehandlingOppgavePropType = PT.shape({
     endretDato: PT.string,
   }),
   aktivTil: PT.string,
-  soknadsperiode: MPT.Periode,
+  periode: MPT.Periode,
   land: PT.arrayOf(PT.string),
   prioritet: PT.string,
   versjon: PT.number,
