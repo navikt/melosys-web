@@ -350,7 +350,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 visFritekstfelt &&
                 <Nav.Textarea
                   id="art16_1_anmodning"
-                  label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                  label="Utdyp særlig grunn til bruker og utenlandsk myndighet"
                   disabled={!redigerbart}
                   onBlur={fritekstFokusFlyttetHandler}
                   onChange={fritekstEndretHandler}
