@@ -1,3 +1,4 @@
+import * as MKV from 'melosys-kodeverk';
 import * as Utils from '../../../../utils';
 import * as Konstanter from '../../../../constants';
 
@@ -18,6 +19,12 @@ const VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT = { melding: 'Velg
 const SKRIV_INN_EN_GYLDIG_DATO = { melding: 'Skriv inn en gyldig dato' };
 const TAST_INN_DATO = { melding: 'Tast inn dato' };
 const VELG_MINST_ETT_LAND = { melding: 'Velg minst ett land.' };
+const VELG_ETT_LAND = { melding: 'Velg ett land.' };
+const VELG_EN_BESTEMMELSE = 'Velg en bestemmelse.';
+
+const anmodningOmUnntak = (journalforingHensikt, behandlingstype) =>
+  journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
+  behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL;
 
 const journalforing = object().shape({
   brukerID: string()
@@ -91,11 +98,27 @@ const journalforing = object().shape({
       then: array().of(string())
         .min(1, { _error: VELG_MINST_ETT_LAND }),
     }),
+  journalforingUnntakFraLovvalgsland: string()
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+      is: anmodningOmUnntak,
+      then: string().required({ _error: VELG_ETT_LAND }),
+    }),
+  journalforingLovvalgsbestemmelse: string()
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+      is: anmodningOmUnntak,
+      then: string().required(VELG_EN_BESTEMMELSE),
+    }),
+  journalforingUnntakFraLovvalgsbestemmelse: string()
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+      is: anmodningOmUnntak,
+      then: string().required(VELG_EN_BESTEMMELSE),
+    }),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
   journalforingHensikt: string(),
   erBrukerAvsender: bool(),
   representantNavn: string(),
+  opprettnysak_behandlingstype: string(),
 });
 
 export { journalforing };

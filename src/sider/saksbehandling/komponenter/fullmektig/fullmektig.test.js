@@ -3,8 +3,6 @@ import React from 'react';
 import { FullmektigPanel } from './fullmektigPanel';
 import Fullmektig from './fullmektig';
 import SokFullmektigOrg from './sokFullmektigOrg';
-import PT from 'prop-types';
-import {BehandligOversikt, Kodeverk} from '../../../../proptypes';
 
 describe('SokFullmektigOrg', () => {
   let props = null;
@@ -46,6 +44,8 @@ describe('Fullmektig', () => {
       slettFullmektigLokalt: jest.fn(),
       lagreNyFullmektigOgOppdaterLokalt: jest.fn(),
       hentOrg: jest.fn(),
+      index: 1,
+      settRepresentant: jest.fn(),
     };
   });
 

@@ -1,6 +1,6 @@
 {
   "name": "melosys-web",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Medlemsskap og lovvalgssystem",
   "author": {
     "name": "are.bjolseth@nav.no"
@@ -22,7 +22,7 @@
     "lodash": "^4.17.15",
     "lodash.throttle": "^4.1.1",
     "melosys-ikoner-assets": "^1.0.1",
-    "melosys-kodeverk": "5.13.1",
+    "melosys-kodeverk": "5.14.3",
     "moment": "^2.24.0",
     "moment-duration-format": "^2.3.2",
     "nav-frontend-alertstriper": "^3.0.4",
@@ -68,9 +68,9 @@
     "nav-frontend-typografi-style": "^1.0.14",
     "prop-types": "^15.7.2",
     "qs": "^6.8.0",
-    "react": "^16.9.0",
+    "react": "^16.10.1",
     "react-collapse": "^4.0.3",
-    "react-dom": "^16.9.0",
+    "react-dom": "^16.10.1",
     "react-highcharts": "^16.0.2",
     "react-maskedinput": "^4.0.1",
     "react-modal": "^3.10.1",
@@ -183,6 +183,5 @@
         "^/frontendlogger/": "frontendlogger/"
       }
     }
-  },
-  "_id": "melosys-web@1.2.0"
+  }
 }

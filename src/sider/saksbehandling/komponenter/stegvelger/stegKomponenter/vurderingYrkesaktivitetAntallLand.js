@@ -14,9 +14,10 @@ const VurderingYrkesaktivitetAntallLand = props => {
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.YRKESAKTIVITET_ANTALL_LAND, yrkesaktivitetAntallLand));
-    return function cleanup() {
+    const cleanup = () => {
       slettData();
     };
+    return cleanup;
   }, []);
 
   const radioEndret = event => {
@@ -46,7 +47,7 @@ const VurderingYrkesaktivitetAntallLand = props => {
           checked={fakta === KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND}
           value={KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND}
           onChange={radioEndret}
-          label="To eller flere land" />
+          label="To eller flere land (med regelmessig veksling)" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
         <Nav.Knapp disabled={!redigerbart || !harAvklaring} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>

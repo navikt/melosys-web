@@ -15,7 +15,7 @@ import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import { endrePeriodeSkjema } from './validering/endrePeriodeSkjema';
+import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from './validering/unntaksperiodeSkjema';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
 
@@ -27,12 +27,12 @@ const Saksopplysninger = props => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.GODKJENT);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState('');
   const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = React.useState([]);
+  const [ikkeGodkjentFeilmeldinger, setIkkeGodkjentFeilmeldinger] = React.useState({ begrunnelseKoder: undefined, begrunnelseFritekst: undefined });
   const [endrePeriodeFeilmeldinger, setEndrePeriodeFeilmeldinger] = React.useState({ fom: undefined, tom: undefined, fritekst: undefined });
   const [endrePeriodeFom, setEndrePeriodeFom] = React.useState('');
   const [endrePeriodeTom, setEndrePeriodeTom] = React.useState('');
-  const [endrePeriodeBegrunnelse, setEndrePeriodeBegrunnelse] = React.useState(MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.PERIODE_FEILREGISTERT);
+  const [endrePeriodeBegrunnelse, setEndrePeriodeBegrunnelse] = React.useState(MKV.Koder.begrunnelser.folketrygdloven.endret_unntaksperiode.PERIODE_FEILREGISTRERT);
   const [endrePeriodeFritekst, setEndrePeriodeFritekst] = React.useState('');
-  const [endrePeriodeSkalEndres, setEndrePeriodeSkalEndres] = React.useState(false);
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = React.useState(false);
   const [durationWarningMessage, setDurationWarningMessage] = React.useState(null);
 
@@ -74,23 +74,18 @@ const Saksopplysninger = props => {
     props.oppdaterLovvalgsperioder(props.behandlingID, lagLovvalgsperioder());
 
   const endrePeriodeOgLagre = dispatchSaksflyt => (
-    endrePeriodeSkalEndres
-      ? oppdaterAvklartefakta()
-        .then(() => oppdaterLovvalgsperioder()
-          .then(() => dispatchSaksflyt()))
-      : dispatchSaksflyt());
+    oppdaterAvklartefakta()
+      .then(() => oppdaterLovvalgsperioder()
+        .then(() => dispatchSaksflyt())));
 
-  const godkjenn = behandlingID => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID));
+  const godkjenn = behandlingID => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
 
-  const innhentInfo = behandlingID => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.innhentinfo(behandlingID));
+  const delvisGodkjenn = behandlingID => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID));
 
-  const kanEndrePeriode = () => props.redigerbart
-    && (unntaksperiodeVurdering === KV.Koder.Unntaksperiode.GODKJENT
-    || unntaksperiodeVurdering === KV.Koder.Unntaksperiode.INNHENT);
-
+  const kanEndrePeriode = () => (unntaksperiodeVurdering === KV.Koder.Unntaksperiode.DELVIS_GODKJENT);
 
   const validerEndrePeriode = () => {
-    if (!kanEndrePeriode() || !endrePeriodeSkalEndres) {
+    if (!kanEndrePeriode()) {
       return true;
     }
 
@@ -101,16 +96,37 @@ const Saksopplysninger = props => {
       fom: endrePeriodeFom, tom: endrePeriodeTom, fritekst: endrePeriodeFritekst, begrunnelse: endrePeriodeBegrunnelse,
     };
     const feilmeldinger = lagYupToReduxformErrorMapper(endrePeriodeSkjema, settings)(stateObject);
-    const validert = Utils._isEmpty(feilmeldinger);
+    setEndrePeriodeFeilmeldinger(feilmeldinger);
 
-    if (!validert) {
-      setEndrePeriodeFeilmeldinger(feilmeldinger);
-    }
-    return validert;
+    return Utils._isEmpty(feilmeldinger);
   };
 
-  const validerFelt = () => validerEndrePeriode();
+  const validerAvslag = ikkeGodkjentBegrunnelse => {
+    if (unntaksperiodeVurdering !== KV.Koder.Unntaksperiode.AVSLAG) {
+      return true;
+    }
+
+    const koder = ikkeGodkjentBegrunnelse || ikkeGodkjentBegrunnelseKoder;
+
+    const settings = { context: { fritekstPakrevd: koder.includes('ANNET') } };
+    const stateObject = {
+      begrunnelseKoder: koder,
+      begrunnelseFritekst,
+    };
+
+    const feilmeldinger = lagYupToReduxformErrorMapper(ikkeGodkjentBegrunnelseSkjema, settings)(stateObject);
+    setIkkeGodkjentFeilmeldinger(feilmeldinger);
+
+    return Utils._isEmpty(feilmeldinger);
+  };
+
+  const validerFelt = () => validerEndrePeriode() && validerAvslag();
+
   const sjekkDatoVarsel = (fom, tom) => {
+    if (!kanEndrePeriode()) {
+      return null;
+    }
+
     const fomISO = Utils.dato.formatterDatoTilISO(fom);
     const tomISO = Utils.dato.formatterDatoTilISO(tom);
     const varighet = Utils.dato.datoDiff(fomISO, tomISO, 'years');
@@ -159,8 +175,8 @@ const Saksopplysninger = props => {
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
-      case KV.Koder.Unntaksperiode.INNHENT:
-        innhentInfo(behandlingID)
+      case KV.Koder.Unntaksperiode.DELVIS_GODKJENT:
+        delvisGodkjenn(behandlingID)
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
@@ -187,7 +203,9 @@ const Saksopplysninger = props => {
   }
 
   const listevalgEndringHandler = event => {
-    setIkkeGodkjentBegrunnelseKoder([...event.value]);
+    const ikkeGodkjentBegrunnelse = [...event.value];
+    setIkkeGodkjentBegrunnelseKoder(ikkeGodkjentBegrunnelse);
+    validerAvslag(ikkeGodkjentBegrunnelse);
   };
 
   const unikRadioButtonGruppeID = uuid();
@@ -209,8 +227,28 @@ const Saksopplysninger = props => {
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
                   <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => setUnntaksperiodeVurdering(e.target.value)} disabled={!redigerbart}>
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.GODKJENT} label="Godkjenn" defaultChecked />
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.INNHENT} label="Innhent informasjon" />
+                    <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.GODKJENT} label="Godkjenn unntaksperiode" defaultChecked />
+                    <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT} label="Godkjenn, men endre periode" />
+                    {kanEndrePeriode() && (
+                      <Nav.Row>
+                        <EndrePeriode
+                          redigerbart={redigerbart}
+                          feilmeldinger={endrePeriodeFeilmeldinger}
+                          sedLovvalgsperiode={props.sedLovvalgsperiode}
+                          lovvalgsperiode={props.lovvalgsperiode}
+                          oppdaterFom={setEndrePeriodeFom}
+                          oppdaterTom={setEndrePeriodeTom}
+                          oppdaterBegrunnelse={setEndrePeriodeBegrunnelse}
+                          oppdaterFritekst={setEndrePeriodeFritekst}
+                          endrePeriode={({
+                            fom: endrePeriodeFom,
+                            tom: endrePeriodeTom,
+                            begrunnelse: endrePeriodeBegrunnelse,
+                            fritekst: endrePeriodeFritekst,
+                          })}
+                        />
+                      </Nav.Row>
+                    )}
                     <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.AVSLAG} label="Ikke godkjenn" />
                   </Nav.Fieldset>
                 </Nav.Column>
@@ -226,6 +264,7 @@ const Saksopplysninger = props => {
                           label="Legg til begrunnelse for ikke oppfylt:"
                           tillatFritekst={false}
                           onChange={listevalgEndringHandler}
+                          feil={ikkeGodkjentFeilmeldinger.begrunnelseKoder}
                         />
                       </Nav.Fieldset>
                     </Nav.Column>
@@ -238,32 +277,13 @@ const Saksopplysninger = props => {
                           onChange={textAreaOnChange}
                           value={begrunnelseFritekst}
                           maxLength={255}
+                          feil={ikkeGodkjentFeilmeldinger.begrunnelseFritekst}
                           bredde="fullbredde" />
                       }
                     </Nav.Column>
                   </Nav.Row>
                 </Fragment>
               )}
-              <Nav.Row className="seksjon">
-                <EndrePeriode
-                  redigerbart={kanEndrePeriode()}
-                  feilmeldinger={endrePeriodeFeilmeldinger}
-                  sedLovvalgsperiode={props.sedLovvalgsperiode}
-                  lovvalgsperiode={props.lovvalgsperiode}
-                  oppdaterFom={setEndrePeriodeFom}
-                  oppdaterTom={setEndrePeriodeTom}
-                  oppdaterBegrunnelse={setEndrePeriodeBegrunnelse}
-                  oppdaterFritekst={setEndrePeriodeFritekst}
-                  toggleSkalEndres={() => setEndrePeriodeSkalEndres(!endrePeriodeSkalEndres)}
-                  endrePeriode={({
-                    fom: endrePeriodeFom,
-                    tom: endrePeriodeTom,
-                    begrunnelse: endrePeriodeBegrunnelse,
-                    fritekst: endrePeriodeFritekst,
-                    skalEndres: endrePeriodeSkalEndres,
-                  })}
-                />
-              </Nav.Row>
               {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">

@@ -2,7 +2,7 @@
 import React, { Component, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors, getFormValues, isValid } from 'redux-form';
+import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors, getFormValues } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -100,6 +100,7 @@ class Journalforing extends Component {
       opprettnysak_behandlingstype: behandlingstypeKode,
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
       skalTilordnes,
+      ikkeSendForvaltingsmelding,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -117,10 +118,17 @@ class Journalforing extends Component {
       vedlegg,
       skalTilordnes,
     };
+    if (intensjon === JOURNALFORING_HENSIKT.KNYTT) {
+      journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null };
+    }
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
-        arbeidsgiverID, behandlingstypeKode, representantID, representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
+        arbeidsgiverID,
+        behandlingstypeKode,
+        representantID,
+        representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
+        ikkeSendForvaltingsmelding,
       });
     }
     return journalPostData;
@@ -134,16 +142,16 @@ class Journalforing extends Component {
     /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier: {
-        saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, skalSendesForvaltningsmelding,
+        saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering,
       },
-      tilordneSak, history, settJournalforingHensikt, settFeilFelt, erSkjemaGyldig,
+      tilordneSak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = {
-      saksnummer, behandlingstypeKode, ingenVurdering, skalSendesForvaltningsmelding, ...vasketJournalforing,
+      saksnummer, behandlingstypeKode, ingenVurdering, ...vasketJournalforing,
     };
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
@@ -153,7 +161,7 @@ class Journalforing extends Component {
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForOpprettFagsak();
 
-    if (!erSkjemaGyldig) {
+    if (!Utils._isEmpty(this.props.errors)) {
       settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer', 'behandlingstype');
       return false;
     }
@@ -170,12 +178,17 @@ class Journalforing extends Component {
    */
   opprettFagsak = async () => {
     const {
-      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt, erSkjemaGyldig,
+      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
     } = this.props;
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const {
-      journalforingSoknadsland, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
+      journalforingSoknadsland,
+      journalforingPeriodeFraOgMed,
+      journalforingPeriodeTilOgMed,
+      journalforingLovvalgsbestemmelse,
+      journalforingUnntakFraLovvalgsbestemmelse,
+      journalforingUnntakFraLovvalgsland,
     } = journalforingSkjemaVerdier;
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
@@ -185,8 +198,15 @@ class Journalforing extends Component {
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForEksisterendeSaker();
 
-    if (!erSkjemaGyldig) {
-      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingSoknadsland');
+    if (!Utils._isEmpty(this.props.errors)) {
+      settFeilFelt(
+        'journalforingPeriodeFraOgMed',
+        'journalforingPeriodeTilOgMed',
+        'journalforingSoknadsland',
+        'journalforingLovvalgsbestemmelse',
+        'journalforingUnntakFraLovvalgsbestemmelse',
+        'journalforingUnntakFraLovvalgsland'
+      );
       return false;
     }
 
@@ -199,10 +219,17 @@ class Journalforing extends Component {
       land: journalforingSoknadsland,
     };
 
+    const anmodningOmUnntak = {
+      lovvalgsbestemmelse: journalforingLovvalgsbestemmelse || null,
+      unntakFraLovvalgsbestemmelse: journalforingUnntakFraLovvalgsbestemmelse || null,
+      unntakFraLovvalgsland: journalforingUnntakFraLovvalgsland || null,
+    };
+
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.OPPRETT);
     const journalforingData = {
       ...vasketJournalforing,
       fagsak,
+      anmodningOmUnntak,
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
@@ -279,6 +306,9 @@ class Journalforing extends Component {
     settFeltInnhold('journalforingPeriodeTilOgMed', '');
     settFeltInnhold('representantID', '');
     settFeltInnhold('journalforingSoknadsland', []);
+    settFeltInnhold('journalforingLovvalgsbestemmelse', '');
+    settFeltInnhold('journalforingUnntakFraLovvalgsbestemmelse', '');
+    settFeltInnhold('journalforingUnntakFraLovvalgsland', '');
   };
 
   resetSkjemaFelterForEksisterendeSaker = () => {
@@ -296,6 +326,14 @@ class Journalforing extends Component {
     if (valgtDokumentID === -1 && hoveddokument.dokumentID) return hoveddokument.dokumentID;
     return valgtDokumentID;
   };
+
+  behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
+    .filter(({ kode }) =>
+      kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED);
 
   render() {
     const {
@@ -331,13 +369,13 @@ class Journalforing extends Component {
                         hentOgVisBruker={hentOgVisBruker}
                       />
                       <EksisterendeSaker
-                        behandlingstyper={MKV.KTObjects.behandlinger.behandlingstyper}
+                        behandlingstyper={this.behandlingstyper}
                         fagsakListe={fagsakListe}
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                       />
                       <OpprettNyFagSak
                         sakstyper={MKV.KTObjects.sakstyper}
-                        behandlingstyper={MKV.KTObjects.behandlinger.behandlingstyper}
+                        behandlingstyper={this.behandlingstyper}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
                       />
@@ -394,7 +432,6 @@ Journalforing.propTypes = {
   touch: PT.func.isRequired,
   vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string })).isRequired,
   formValues: PT.object,
-  erSkjemaGyldig: PT.bool.isRequired,
 };
 
 Journalforing.defaultProps = {
@@ -412,7 +449,6 @@ const mapStateToProps = state => ({
   vedleggsdokumenter: journalforingSelectors.JournalforingVedleggsDokumenter(state),
   errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
-  erSkjemaGyldig: isValid(KV.Form.JOURNALFORING)(state),
   initialValues: {
     behandlingstype: null,
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
@@ -429,8 +465,10 @@ const mapStateToProps = state => ({
     sakstype: MKV.Koder.sakstyper.EU_EOS,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
     ingenVurdering: false,
-    skalSendesForvaltningsmelding: false,
+    ikkeSendForvaltingsmelding: false,
     skalTilordnes: false,
+    journalforingUnntakFraLovvalgsland: MKV.Koder.landkoder.NO,
+    journalforingLovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
   },
 });
 
@@ -469,10 +507,11 @@ const form = {
 };
 
 const JournalforingWrapper = ({ resetJournalforingState }) => {
-  useEffect(() => function cleanup() {
-    resetJournalforingState();
-  }, []);
-
+  useEffect(() => (
+    function cleanup() {
+      resetJournalforingState();
+    }
+  ), []);
   const JournalforingMedErrorHandling = withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Journalforing))));
 
   return <JournalforingMedErrorHandling />;
