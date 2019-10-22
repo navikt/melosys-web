@@ -21,6 +21,8 @@ import Informasjon from './komponenter/informasjon';
 import EksisterendeSaker from './komponenter/eksisterendeSaker';
 import PDFDokument from './komponenter/pdfdokument';
 import OpprettNyFagSak from './komponenter/opprettnyfagsak';
+import JournalforingAutomatiskSED from './komponenter/journalforingautomatisksed';
+import JournalforingForm from './komponenter/journalforingform';
 import { queryParamLogger } from '../../utils/queryParamLogger';
 
 import {
@@ -327,6 +329,10 @@ class Journalforing extends Component {
     return valgtDokumentID;
   };
 
+  journalforSed = () => {
+    console.log('journalfor sed');
+  };
+
   behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
     .filter(({ kode }) =>
       kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
@@ -337,14 +343,26 @@ class Journalforing extends Component {
 
   render() {
     const {
-      journalforing: { vedlegg = [], hoveddokument = {} },
+      journalforing: {
+        vedlegg = [],
+        hoveddokument = {},
+        sedBehandling,
+        avsenderID,
+        avsenderNavn = '',
+      },
       fagsakListe,
     } = this.props;
     const {
-      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
+      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant, journalforSed,
     } = this;
     const { journalpostID } = this.props.match.params;
     const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = 'Hoveddokument' } = hoveddokument;
+    const {
+      behandlingstype,
+      sakstype,
+    } = sedBehandling || {};
+
+    const visSedJournalforing = sedBehandling;
 
     return (
       <div className="journalforing">
@@ -354,56 +372,75 @@ class Journalforing extends Component {
               <h1>Journalføring</h1>
             </Nav.Column>
           </Nav.Row>
-          <form onSubmit={this.overstyrSubmit}>
-            <Nav.Row>
-              <Nav.Column xs="4">
-                <Sticky>
-                  <Nav.Panel className="journalforing__skjema">
-                    <div className="journalforing__skjema__scroll">
-                      <Informasjon
-                        journalpostID={journalpostID}
-                        dokumentID={hoveddokumentID}
-                        dokumentTittel={hoveddokumentTittel}
-                        vedlegg={vedlegg}
-                        hentOgVisAvsender={hentOgVisAvsender}
-                        hentOgVisBruker={hentOgVisBruker}
-                      />
-                      <EksisterendeSaker
-                        behandlingstyper={this.behandlingstyper}
-                        fagsakListe={fagsakListe}
-                        knyttTilEksisterendeSak={knyttTilEksisterendeSak}
-                      />
-                      <OpprettNyFagSak
-                        sakstyper={MKV.KTObjects.sakstyper}
-                        behandlingstyper={this.behandlingstyper}
-                        opprettFagsak={opprettFagsak}
-                        hentOgVisRepresentant={hentOgVisRepresentant}
-                      />
-                      <div className="journalforing__fotknapper">
-                        <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
-                      </div>
+          <Nav.Row>
+            <Nav.Column xs="4">
+              <Sticky>
+                <Nav.Panel className="journalforing__skjema">
+                  <div className="journalforing__skjema__scroll">
+                    {
+                      // visSedJournalforing &&
+                      // <JournalforingAutomatiskSED
+                      //   avsenderID={avsenderID}
+                      //   avsenderNavn={avsenderNavn}
+                      //   behandlingstype={behandlingstype}
+                      //   sakstype={sakstype}
+                      // />
+                    }
+                    {
+                      !visSedJournalforing &&
+                      <form onSubmit={this.overstyrSubmit}>
+                        <Informasjon
+                          journalpostID={journalpostID}
+                          dokumentID={hoveddokumentID}
+                          dokumentTittel={hoveddokumentTittel}
+                          vedlegg={vedlegg}
+                          hentOgVisAvsender={hentOgVisAvsender}
+                          hentOgVisBruker={hentOgVisBruker}
+                        />
+                        <EksisterendeSaker
+                          behandlingstyper={this.behandlingstyper}
+                          fagsakListe={fagsakListe}
+                          knyttTilEksisterendeSak={knyttTilEksisterendeSak}
+                        />
+                        <OpprettNyFagSak
+                          sakstyper={MKV.KTObjects.sakstyper}
+                          behandlingstyper={this.behandlingstyper}
+                          opprettFagsak={opprettFagsak}
+                          hentOgVisRepresentant={hentOgVisRepresentant}
+                        />
+                      </form>
+                    }
+                    <div className="journalforing__fotknapper">
+                      {
+                        /*
+                          TODO: Quick fix, viser denne knappen for Sed-journalføring.
+                          Denne knappen burde også brukes for det vanlige journalføringsbildet når vi skriver om journalføringen.
+                        */
+                        visSedJournalforing && <Nav.Hovedknapp onClick={journalforSed}>JOURNALFØR</Nav.Hovedknapp>
+                      }
+                      <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
                     </div>
-                  </Nav.Panel>
-                </Sticky>
-              </Nav.Column>
-              <Nav.Column xs="8">
-                {vedlegg.length > 0 &&
-                  <Nav.Panel>
-                    <Nav.Select
-                      className="journalforing__dokument_visning"
-                      name="journalforing_pdf_dokumenter"
-                      label="Dokumentvisning"
-                      defaultValue={hoveddokumentID}
-                      onChange={this.onChangeVedlegg}>
-                      <option key={hoveddokumentID} value={hoveddokumentID}>{hoveddokumentTittel}</option>
-                      {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
-                    </Nav.Select>
-                  </Nav.Panel>
-                }
-                {this.velgDokumentID() && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} /></Nav.Panel>}
-              </Nav.Column>
-            </Nav.Row>
-          </form>
+                  </div>
+                </Nav.Panel>
+              </Sticky>
+            </Nav.Column>
+            <Nav.Column xs="8">
+              {vedlegg.length > 0 &&
+                <Nav.Panel>
+                  <Nav.Select
+                    className="journalforing__dokument_visning"
+                    name="journalforing_pdf_dokumenter"
+                    label="Dokumentvisning"
+                    defaultValue={hoveddokumentID}
+                    onChange={this.onChangeVedlegg}>
+                    <option key={hoveddokumentID} value={hoveddokumentID}>{hoveddokumentTittel}</option>
+                    {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
+                  </Nav.Select>
+                </Nav.Panel>
+              }
+              {this.velgDokumentID() && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} /></Nav.Panel>}
+            </Nav.Column>
+          </Nav.Row>
         </Nav.Container>
       </div>
     );
