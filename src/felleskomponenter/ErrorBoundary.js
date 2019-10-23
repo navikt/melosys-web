@@ -11,7 +11,6 @@ class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: null,
       hasError: false,
     };
   }
@@ -23,7 +22,6 @@ class ErrorBoundary extends React.Component {
 
   componentDidCatch(error, errorInfo) {
     this.setState({
-      error,
       hasError: true,
     });
     Utils.logger.error({ error, stack: errorInfo.componentStack });
@@ -31,7 +29,11 @@ class ErrorBoundary extends React.Component {
 
   render() {
     if (this.state.hasError) {
-      return <div><h3>{this.message}</h3><p>{this.state.error}</p></div>;
+      return (
+        <div>
+          <h3>{this.props.message}</h3>
+        </div>
+      );
     }
     return this.props.children;
   }
