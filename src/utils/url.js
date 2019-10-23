@@ -12,7 +12,8 @@ export const lagUrl = (saksnummer, behandlingID, behandlingstypeKode) => {
     case MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE:
       return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     case MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID:
-      return `/vurdertrygdetid/${saksnummer}/?behandlingID=${behandlingID}`;
+    case MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED:
+      return `/sedbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
     default:
       return null;
   }

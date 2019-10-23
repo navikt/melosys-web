@@ -17,7 +17,7 @@ import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behan
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { datalastingOperations } from '../../ducks/datalasting';
 
-import './vurdertrygdetid.css';
+import './sedbehandling.css';
 
 const behandlingsstatusMap = {
   [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
@@ -41,7 +41,7 @@ const behandlingsstatusMap = {
   ],
 };
 
-const VurderTrygdetid = ({
+const SedBehandling = ({
   brevBestillingRedigerbart,
   brevBestillingRedigerbartIArtikkel13,
   match,
@@ -76,7 +76,7 @@ const VurderTrygdetid = ({
   }, []);
 
   return (
-    <div className="vurderTrygdetid">
+    <div className="sedbehandling">
       <Nav.Container fluid>
         <Nav.Row>
           <Nav.Column xs="7" />
@@ -122,7 +122,7 @@ const VurderTrygdetid = ({
   );
 };
 
-VurderTrygdetid.propTypes = {
+SedBehandling.propTypes = {
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   match: PT.object.isRequired,
@@ -146,7 +146,7 @@ VurderTrygdetid.propTypes = {
   apneTidligereBehandlinger: PT.func.isRequired,
 };
 
-VurderTrygdetid.defaultProps = {
+SedBehandling.defaultProps = {
   fagsak: undefined,
   oppsummering: undefined,
   lovvalgsperiodeFom: undefined,
@@ -167,8 +167,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
-  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysningerVurderTrygdetid(saksnummer, behandlingID)),
+  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(VurderTrygdetid);
+export default connect(mapStateToProps, mapDispatchToProps)(SedBehandling);

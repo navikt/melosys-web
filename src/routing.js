@@ -33,7 +33,7 @@ const SaksbehandlingLoadable = loadable(() => import('./sider/saksbehandling'), 
 const JournalforingLoadable = loadable(() => import('./sider/journalforing'), { fallback: SideLoadingStatus });
 const RegistreringUnntaksperioderLoadable = loadable(() => import('./sider/registrering/unntaksperioder'), { fallback: SideLoadingStatus });
 const RegistreringAnmodningunntakLoadable = loadable(() => import('./sider/registrering/anmodningunntak'), { fallback: SideLoadingStatus });
-const VurderTrygdetidLoadable = loadable(() => import('./sider/vurdertrygdetid'), { fallback: SideLoadingStatus });
+const SedBehandlingLoadable = loadable(() => import('./sider/sedbehandling'), { fallback: SideLoadingStatus });
 
 const Routing = ({
   location,
@@ -194,7 +194,7 @@ const Routing = ({
         <Route exact path="/sok/:fnr" component={SokLoadable} />
         {featureToggle && <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />}
         {featureToggle && <Route exact path="/registrering/:snr/anmodningunntak" render={props => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />} />}
-        <Route path="/vurdertrygdetid/:snr" render={props => <VurderTrygdetidLoadable {...props} {...fellesHandlers} />} />
+        <Route path="/sedbehandling/:snr" render={props => <SedBehandlingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/saksbehandling/:snr" render={props => <SaksbehandlingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
         <Route component={UkjentSideLoadable} />
