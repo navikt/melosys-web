@@ -249,7 +249,6 @@ class VurderingArtikkel16Anmodning extends Component {
       medlemskap,
       redigerbart,
       tilstand,
-      erIDirekteTilArtikkel16Flyt,
       unntakFraBestemmelse,
     } = this.props;
 
@@ -278,7 +277,7 @@ class VurderingArtikkel16Anmodning extends Component {
       { navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true },
     ];
 
-    const { art16_1: { begrunnelseFritekst, begrunnelseKoder } } = tilstand;
+    const { art16_1: { begrunnelseFritekst, begrunnelseKoder }, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt } = tilstand;
 
     const visFritekstfelt = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
@@ -296,7 +295,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 <Nav.Radio
                   name="vilAnmode"
                   label="Ja, jeg vil anmode om unntak"
-                  checked
+                  defaultChecked
                   disabled={!redigerbart}
                 />
                 <Nav.Radio
@@ -323,7 +322,7 @@ class VurderingArtikkel16Anmodning extends Component {
               <Nav.Select
                 feil={lovvalgFeilmelding}
                 onChange={vedUnntakFraBestemmelseEndring}
-                value={unntakFraBestemmelse}
+                value={unntakFraBestemmelse || ''}
                 disabled={!redigerbart}
                 label="Artikkelen det søkes unntak fra:"
               >
@@ -337,7 +336,7 @@ class VurderingArtikkel16Anmodning extends Component {
               <Mui.ListevelgerFlervalg
                 disabled={!redigerbart}
                 feil={begrunnelserFeilmelding}
-                muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning}
+                muligeValg={muligeBegrunnelseValg}
                 tillatFritekst={false}
                 label="Legg til begrunnelse:"
                 onChange={begrunnelserEndringHandler}
@@ -351,7 +350,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 visFritekstfelt &&
                 <Nav.Textarea
                   id="art16_1_anmodning"
-                  label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                  label="Utdyp særlig grunn til bruker og utenlandsk myndighet"
                   disabled={!redigerbart}
                   onBlur={fritekstFokusFlyttetHandler}
                   onChange={fritekstEndretHandler}
@@ -402,9 +401,12 @@ VurderingArtikkel16Anmodning.propTypes = {
   lagreAnmodningsperioderHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  tilstand: PT.object.isRequired,
+  tilstand: PT.shape({
+    muligeBegrunnelseValg: PT.arrayOf(MPT.Kodeverk).isRequired,
+    erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
+    art16_1: PT.object.isRequired,
+  }).isRequired,
   byggAnmodningsperioderHandler: PT.func.isRequired,
-  erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
 };
 
 VurderingArtikkel16Anmodning.defaultProps = {
@@ -422,7 +424,6 @@ const mapStateToProps = state => ({
   initialValues: {
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
   },
-  erIDirekteTilArtikkel16Flyt: avklartefaktaSelectors.ErIDirekteTilArtikkel16FlytSelector(state),
 });
 
 const VurderingArtikkel16AnmodningForm = reduxForm({

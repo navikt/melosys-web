@@ -84,7 +84,7 @@ class OpprettNyFagSak extends Component {
               {
                 behandlingstyper &&
                 behandlingstyper
-                  .filter(elem => (elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ANKE && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.KLAGE))
+                  .filter(elem => (elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE))
                   .map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>))
               }
             </Skjema.Select>
@@ -144,7 +144,7 @@ class OpprettNyFagSak extends Component {
             </Nav.Fieldset>
           </Fragment>
         }
-        <Skjema.Checkbox feltNavn="skalSendesForvaltningsmelding" label="Jeg ønsker ikke å sende forvaltningsmelding" />
+        <Skjema.Checkbox feltNavn="ikkeSendForvaltingsmelding" label="Jeg ønsker ikke å sende forvaltningsmelding" />
         <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
         <div className="opprettnysak__knapper">
           <Nav.Knapp className="knapp" onClick={opprettFagsak}>Opprett ny sak</Nav.Knapp>

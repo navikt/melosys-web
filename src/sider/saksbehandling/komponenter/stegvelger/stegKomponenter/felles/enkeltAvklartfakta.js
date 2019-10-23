@@ -31,7 +31,7 @@ const EnkeltAvklartfakta = props => {
         props.slettData(slettAvklartfakta(avklartfaktaKode));
       }
     };
-    return cleanup();
+    return cleanup;
   }, []);
 
   const radioEndringHandler = event => {
@@ -60,7 +60,7 @@ const EnkeltAvklartfakta = props => {
                   value={af.type}
                   checked={fakta === af.type}
                   onChange={radioEndringHandler}
-                  disabled={!redigerbart}
+                  disabled={!redigerbart || af.disabled}
                 />)
             }
           </Nav.Fieldset>

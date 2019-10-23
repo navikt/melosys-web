@@ -4,15 +4,6 @@ import PT from 'prop-types';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
 
-const createCheckbox = (kode, term, checked, disabled = false) => ({
-  label: term,
-  value: kode,
-  id: kode,
-  checked,
-  disabled,
-});
-// muligeValg.map(begrunnelse => createCheckbox(begrunnelse.kode, begrunnelse.term, defaultValg.includes(begrunnelse.kode)))
-
 const Checkboxgruppe = ({
   legend,
   muligeValg,
@@ -22,34 +13,29 @@ const Checkboxgruppe = ({
 }) => {
   const [valgteCheckboxer, setValgteCheckboxer] = useState(muligeValg.map(valg => valg.kode).filter(kode => defaultValg.includes(kode)));
 
-  const checkboxer = muligeValg.map(begrunnelse => createCheckbox(
-    begrunnelse.kode,
-    begrunnelse.term,
-    valgteCheckboxer.includes(begrunnelse.kode),
-    disabled
-  ));
-
   const onChangeHandler = e => {
-    const verdi = e.target.id;
+    const verdi = e.target.value;
 
-    let nyeValgteCheckboxer = [...valgteCheckboxer];
-
-    if (valgteCheckboxer.includes(verdi)) {
-      nyeValgteCheckboxer = valgteCheckboxer.filter(checkbox => checkbox !== verdi);
-    } else {
-      nyeValgteCheckboxer = [...valgteCheckboxer, verdi];
-    }
+    const nyeValgteCheckboxer = valgteCheckboxer.includes(verdi) ? valgteCheckboxer.filter(checkbox => checkbox !== verdi) : [...valgteCheckboxer, verdi];
 
     setValgteCheckboxer(nyeValgteCheckboxer);
     onChange(nyeValgteCheckboxer);
   };
 
   return (
-    <Nav.CheckboksPanelGruppe
-      checkboxes={checkboxer}
-      legend={legend}
-      onChange={onChangeHandler}
-    />
+    <Nav.Fieldset legend={legend}>
+      {
+        muligeValg.map(valg => <Nav.Checkbox
+          key={valg.kode}
+          name="annetBostedsland"
+          label={valg.term}
+          value={valg.kode}
+          defaultChecked={valgteCheckboxer.includes(valg.kode)}
+          disabled={disabled}
+          onChange={onChangeHandler}
+        />)
+      }
+    </Nav.Fieldset>
   );
 };
 

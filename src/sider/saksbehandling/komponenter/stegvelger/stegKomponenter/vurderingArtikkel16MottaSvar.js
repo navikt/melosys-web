@@ -36,7 +36,7 @@ export const VurderingArtikkel16MottaSvar = props => {
     const cleanup = () => {
       slettData();
     };
-    return cleanup();
+    return cleanup;
   }, []);
 
   const visLovvalgsperiode = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
