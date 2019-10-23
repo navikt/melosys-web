@@ -64,8 +64,7 @@ const VurderTrygdetid = ({
   visOppfriskBekreftelse,
   apneTidligereBehandlinger,
 }) => {
-  const behandlingIDString = Utils.queryString.getParam(location, 'behandlingID');
-  const behandlingID = parseInt(behandlingIDString, 10);
+  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
   const { params: { snr: saksnummer } } = match;
 
   useEffect(() => {

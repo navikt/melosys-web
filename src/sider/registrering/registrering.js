@@ -67,16 +67,15 @@ const Registrering = props => {
   } = props;
 
   const saksnummer = snr;
-  const _behandlingID = Utils.queryString.getParam(location, 'behandlingID');
-  const behandlingID = Utils._toInteger(_behandlingID);
+  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
 
   const lastInnSaksopplysninger = async () => {
     try {
       await Promise.all([
-        hentBehandling(_behandlingID),
+        hentBehandling(behandlingID),
         hentFagsaker(saksnummer),
-        hentAvklartefakta(_behandlingID),
-        hentLovvalgsperioder(_behandlingID),
+        hentAvklartefakta(behandlingID),
+        hentLovvalgsperioder(behandlingID),
       ]);
     } catch (e) {
       Utils.logger.error(e);

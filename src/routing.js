@@ -60,8 +60,7 @@ const Routing = ({
     (async () => setFeatureToggle(await Utils.feature.namespaceToggle('q2', 't8')))();
   });
 
-  const behandlingIDString = Utils.queryString.getParam(location, 'behandlingID');
-  const behandlingID = Utils._toInteger(behandlingIDString);
+  const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
 
   const visHenleggDialogHandle = () => {
     setVisHenleggDialog(true);
