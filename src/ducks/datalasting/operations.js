@@ -28,6 +28,22 @@ export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
   }
 );
 
+export const lastInnSaksopplysningerVurderTrygdetid = (saksnummer, behandlingID) => (
+  dispatch => {
+    try {
+      dispatch(fagsakOperations.hent(saksnummer));
+      dispatch(behandlingerOperations.hentBehandling(behandlingID));
+      dispatch(behandlingsresultatOperations.hent(behandlingID));
+      dispatch(avklartefaktaOperations.hent(behandlingID));
+      dispatch(vilkarOperations.hent(behandlingID));
+      dispatch(lovvalgsperioderOperations.hent(behandlingID));
+      dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  }
+);
+
 export const resetSaksopplysninger = () => (
   dispatch => {
     dispatch(fagsakOperations.resetFagsakState());
