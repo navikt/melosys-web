@@ -32,9 +32,10 @@ const Forretningsstedet = props => {
     if (avklartForretningsland) {
       oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, avklartForretningsland));
     }
-    return function cleanup() {
+    const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, forretningsstedet.virksomhetId));
     };
+    return cleanup;
   }, []);
 
   const { navn, virksomhetId } = forretningsstedet;
@@ -149,9 +150,10 @@ const VurderingForretningssted = props => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, omfattetINorge));
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, omfattetILand));
 
-    return function cleanup() {
-      props.slettData();
+    const cleanup = () => {
+      slettData();
     };
+    return cleanup;
   }, []);
 
   const avklartfaktaEndret = e => {
@@ -173,7 +175,7 @@ const VurderingForretningssted = props => {
 
   const avklartefaktaTyper = [
     { label: 'Norge', type: KV.Koder.BoolskAvklartfaktaType.SANN },
-    { label: 'Annet', type: KV.Koder.BoolskAvklartfaktaType.USANN },
+    { label: 'Annet', type: KV.Koder.BoolskAvklartfaktaType.USANN, disabled: true },
   ];
 
   return (
@@ -193,8 +195,9 @@ const VurderingForretningssted = props => {
           value={finnLovvalgsbestemmelse(lovvalgsbestemmelse, stegetsLovvalgsbestemmelser)}
         >
           <option />
-          { stegetsLovvalgsbestemmelser.map(({ kode, label }) =>
-            <option key={kode} value={kode} >{label}</option>)
+          { stegetsLovvalgsbestemmelser.map(({ kode, label }, index) =>
+            // eslint-disable-next-line react/no-array-index-key
+            <option key={index} value={kode} >{label}</option>)
           }
         </Nav.Select>
 

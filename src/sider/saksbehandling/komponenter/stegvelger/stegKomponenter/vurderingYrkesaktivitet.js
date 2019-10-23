@@ -14,9 +14,10 @@ const VurderingYrkesaktivitet = props => {
 
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.YRKESAKTIVITET, yrkesaktivitet));
-    return function cleanup() {
+    const cleanup = () => {
       slettData();
     };
+    return cleanup;
   }, []);
 
   const radioEndret = event => {
@@ -48,6 +49,7 @@ const VurderingYrkesaktivitet = props => {
           !skjulArbeidstakerFrilanserOgSelvstendigNaeringsdrivende &&
           <Nav.Radio
             name="yrkesaktivitet"
+            disabled={!redigerbart}
             checked={fakta === KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
             value={KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_OG_SELVSTENDIG}
             onChange={radioEndret}

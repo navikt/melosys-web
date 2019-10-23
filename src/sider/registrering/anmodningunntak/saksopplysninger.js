@@ -2,6 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { withRouter } from 'react-router-dom';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import * as EKV from 'eessi-kodeverk';
 
 import * as KV from '../../../kodeverk';
 import * as Utils from '../../../utils';
@@ -18,8 +19,30 @@ import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/dat
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer';
 import { endrePeriodeSkjema } from '../unntaksperioder/validering/endrePeriodeSkjema';
 import { fritekstPakrevdSkjema } from './validering/anmodningunntakSkjema';
+import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
 const uuid = require('uuid/v4');
+
+const LinkForhandsvisningSed = ({
+  redigerbart, behandlingID, anmodningsperiodeSvarType, vedKlikk,
+}) => {
+  let pdfDokument = [];
+  if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE) {
+    pdfDokument = [{ navn: 'Forhåndsvis SED A011', type: EKV.Koder.sedtyper.A011, erSed: true }];
+  } else if (anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE
+    || anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.AVSLAG) {
+    pdfDokument = [{ navn: 'Forhåndsvis SED A002', type: EKV.Koder.sedtyper.A002, erSed: true }];
+  }
+
+  return redigerbart && <PdfLenkeListe vedKlikk={vedKlikk} behandlingID={behandlingID} dokumenter={pdfDokument} />;
+};
+
+LinkForhandsvisningSed.propTypes = {
+  redigerbart: PT.bool.isRequired,
+  behandlingID: PT.number.isRequired,
+  anmodningsperiodeSvarType: PT.string.isRequired,
+  vedKlikk: PT.func.isRequired,
+};
 
 const Saksopplysninger = props => {
   const {
@@ -54,11 +77,8 @@ const Saksopplysninger = props => {
         return false;
     }
 
-    const validert = Utils._isEmpty(valideringsresultat);
-    if (!validert) {
-      setFeilmeldinger(valideringsresultat);
-    }
-    return validert;
+    setFeilmeldinger(valideringsresultat);
+    return Utils._isEmpty(valideringsresultat);
   };
 
   const overstyrSubmit = event => {
@@ -75,34 +95,38 @@ const Saksopplysninger = props => {
     begrunnelseFritekst: fritekst,
   });
 
+  const lagRequestAnmodningUnntakSvar = () => {
+    const { INNVILGELSE, DELVIS_INNVILGELSE, AVSLAG } = MKV.Koder.anmodningsperiodesvartyper;
+    const tomPeriode = { fom: null, tom: null };
+
+    switch (anmodningsperiodeSvarType) {
+      case INNVILGELSE:
+        return makeResponse(tomPeriode, null);
+      case DELVIS_INNVILGELSE:
+        return makeResponse({
+          fom: Utils.dato.formatterDatoTilISO(endretPeriodeFom),
+          tom: Utils.dato.formatterDatoTilISO(endretPeriodeTom),
+        }, null);
+      case AVSLAG:
+        return makeResponse(tomPeriode, begrunnelseFritekst);
+      default:
+        return null;
+    }
+  };
+
+  const hentAnmodningsperiodeId = async behandlingID => {
+    const data = await Api.Anmodningsperioder.hent(behandlingID);
+    const { anmodningsperioder } = data;
+    return anmodningsperioder[0].id;
+  };
+
   const submitRegistrering = async () => {
     if (validerFelt()) {
       const { behandlingID, history } = props;
       const tilForsiden = () => history.push('/');
-      const { INNVILGELSE, DELVIS_INNVILGELSE, AVSLAG } = MKV.Koder.anmodningsperiodesvartyper;
-      const tomPeriode = { fom: null, tom: null };
-      let response;
-      switch (anmodningsperiodeSvarType) {
-        case INNVILGELSE:
-          response = makeResponse(tomPeriode, null);
-          break;
-        case DELVIS_INNVILGELSE:
-          response = makeResponse({
-            fom: Utils.dato.formatterDatoTilISO(endretPeriodeFom),
-            tom: Utils.dato.formatterDatoTilISO(endretPeriodeTom),
-          }, null);
-          break;
-        case AVSLAG:
-          response = makeResponse(tomPeriode, begrunnelseFritekst);
-          break;
-        default:
-          break;
-      }
       try {
-        const data = await Api.Anmodningsperioder.hent(behandlingID);
-        const { anmodningsperioder } = data;
-        const anmodningsperiodeID = anmodningsperioder[0].id;
-        await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, response);
+        const anmodningsperiodeID = await hentAnmodningsperiodeId(behandlingID);
+        await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
         await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
       } catch (e) {
         Utils.logger.error(e);
@@ -124,6 +148,21 @@ const Saksopplysninger = props => {
   const oppdaterDato = (event, oppdater) => {
     event.stopPropagation();
     oppdater(event.target.value);
+  };
+
+  const oppdaterAnmodningsperiodeSvar = async () => {
+    if (!validerFelt()) {
+      return false;
+    }
+
+    try {
+      const anmodningsperiodeID = await hentAnmodningsperiodeId(props.behandlingID);
+      await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
+      return true;
+    } catch (e) {
+      Utils.logger.error(e);
+      return false;
+    }
   };
 
   if (!sed.lovvalgsperiode) {
@@ -206,6 +245,14 @@ const Saksopplysninger = props => {
                   </Nav.Row>
                 </Fragment>
               )}
+              <Nav.Row>
+                <LinkForhandsvisningSed
+                  redigerbart={redigerbart}
+                  behandlingID={props.behandlingID}
+                  anmodningsperiodeSvarType={anmodningsperiodeSvarType}
+                  vedKlikk={oppdaterAnmodningsperiodeSvar}
+                />
+              </Nav.Row>
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
                   <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>Bekreft og send</Nav.Hovedknapp>

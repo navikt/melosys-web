@@ -50,11 +50,11 @@ export const VurderingUnntakPeriode = createSelector(
  * Derfor må både avklartefakta og soknad settes inn slik at disse kan flettes til avklart fakta.
  */
 export const Soknadsland = createSelector(
-  state => AvklartefaktaSelector(state),
+  state => SoknadslandFaktaerSelector(state),
   state => soknadSelectors.SoknadslandSelector(state),
-  (alleAvklartefakta, alleLandISoknaden) => (
+  (soknadslandFaktaer, alleLandISoknaden) => (
     alleLandISoknaden.map(enkeltLand => (
-      alleAvklartefakta.find(avklaring => avklaring.subjektID === enkeltLand) ||
+      soknadslandFaktaer.find(avklaring => avklaring.subjektID === enkeltLand) ||
       {
         ...avklartFaktaTemplate,
         referanse: KV.Koder.avklartefaktaKoder.SOKNADSLAND,
@@ -288,5 +288,12 @@ export const ErIArtikkel13_1FlytSelector = createSelector(
   AvklartefaktaSelector,
   avklarteFakta => (
     avklarteFakta.some(avklartFakta => avklartFakta.fakta.includes(KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND))
+  )
+);
+
+export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
+  AvklartefaktaSelector,
+  avklarteFakta => (
+    avklarteFakta.some(avklartFakta => avklartFakta.fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.YRKESAKTIV_DIREKTE_TIL_ARTIKKEL_16))
   )
 );

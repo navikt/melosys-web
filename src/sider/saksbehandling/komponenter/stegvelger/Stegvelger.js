@@ -27,6 +27,7 @@ import { formSelectors } from '../../../../ducks/form';
 
 import { SoknadFeilmeldinger } from '../soknadFeilmeldinger';
 import { AvklartefaktaStore, VilkaarStore, EnkelDataStore } from './StegState';
+import { StegStoreTyper } from '../../../../regler';
 
 import './stegvelger.css';
 
@@ -35,11 +36,12 @@ class Stegvelger extends Component {
     aktivtStegNummer: 0,
     aktuelleSteg: [],
     stegStores: {
-      anmodningsperiodesvar: new EnkelDataStore(),
-      avklartefakta: new AvklartefaktaStore(),
-      vilkaar: new VilkaarStore(),
-      lovvalgsbestemmelse: new EnkelDataStore(),
-      tilleggbestemmelse: new EnkelDataStore(),
+      [StegStoreTyper.Anmodningsperiodersvar]: new EnkelDataStore(),
+      [StegStoreTyper.Avklartefakta]: new AvklartefaktaStore(),
+      [StegStoreTyper.Vilkar]: new VilkaarStore(),
+      [StegStoreTyper.Lovvalgsbestemmelser]: new EnkelDataStore(),
+      [StegStoreTyper.Tilleggbestemmelser]: new EnkelDataStore(),
+      [StegStoreTyper.UnntakFraBestemmelse]: new EnkelDataStore(),
     },
     visSoknadFeilmeldinger: false,
   };
@@ -127,7 +129,12 @@ class Stegvelger extends Component {
 
     const { aktivtStegNummer, stegStores } = this.state;
     const {
-      vilkaar, avklartefakta, lovvalgsbestemmelse, anmodningsperiodesvar, tilleggbestemmelse,
+      vilkaar,
+      avklartefakta,
+      lovvalgsbestemmelse,
+      anmodningsperiodesvar,
+      tilleggbestemmelse,
+      unntakfrabestemmelse,
     } = stegStores;
 
     await Promise.all([
@@ -136,10 +143,12 @@ class Stegvelger extends Component {
       this.props.oppdaterLovvalgperioder({
         lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
         tilleggbestemmelse: tilleggbestemmelse.hent(),
+        unntakfrabestemmelse: unntakfrabestemmelse.hent(),
       }),
       this.props.oppdaterAnmodningsPerioder({
         lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
         tilleggbestemmelse: tilleggbestemmelse.hent(),
+        unntakfrabestemmelse: unntakfrabestemmelse.hent(),
       }),
       this.props.oppdaterAnmodningsperiodesvar(anmodningsperiodesvar.hent()),
     ]);
@@ -210,23 +219,25 @@ class Stegvelger extends Component {
       this.gjemSoknadFeilmeldinger();
       if (ingenFeilmeldingerCallback) ingenFeilmeldingerCallback();
     }
-  }
+  };
 
   byggLovvalgsperioderHandler = () => {
-    const { lovvalgsbestemmelse, tilleggbestemmelse } = this.state.stegStores;
+    const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse } = this.state.stegStores;
 
     this.props.oppdaterLovvalgperioder({
       lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
       tilleggbestemmelse: tilleggbestemmelse.hent(),
+      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
     });
   };
 
   byggAnmodningsperioderHandler = () => {
-    const { lovvalgsbestemmelse, tilleggbestemmelse } = this.state.stegStores;
+    const { lovvalgsbestemmelse, tilleggbestemmelse, unntakfrabestemmelse } = this.state.stegStores;
 
     this.props.oppdaterAnmodningsPerioder({
       lovvalgsbestemmelse: lovvalgsbestemmelse.hent(),
       tilleggbestemmelse: tilleggbestemmelse.hent(),
+      unntakfrabestemmelse: unntakfrabestemmelse.hent(),
     });
   };
 
@@ -250,7 +261,7 @@ class Stegvelger extends Component {
   /** Analyser alle svar som er gjort i tidligere steg og bygg videre
    * steg så langt det er mulig å komme. Alle ubesvarte steg går direkte til vedtak som default.
    *
-   * @param props
+   * @param aktivtStegNummer
    * @returns {Array}
    */
   oppdaterAktuelleSteg = aktivtStegNummer => {
@@ -278,6 +289,7 @@ class Stegvelger extends Component {
     const propsLight = {
       anmodningsperioder: props.anmodningsperioder,
       anmodningsperiodesvar: props.anmodningsperiodesvar,
+      anmodningsperiodesvarForm: props.artikkel16_motta_svar_skjema,
       behandlingID: props.behandlingID,
       virksomheterIPerioden: props.arbeidsgivereIPerioden,
       avklartefakta: props.avklartefakta,
@@ -388,9 +400,12 @@ class Stegvelger extends Component {
 }
 
 Stegvelger.propTypes = {
+  anmodningsperiodesvar: MPT.AnmodningsperioderSvar.isRequired,
   behandlingID: PT.number.isRequired,
   arbeidsgivereIPerioden: PT.array,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   avklartefakta: MPT.AvklartefaktaListe,
+  bostedsland: PT.object,
   behandlingsPerioder: PT.object.isRequired,
   hentVilkar: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
@@ -431,6 +446,7 @@ Stegvelger.propTypes = {
 Stegvelger.defaultProps = {
   arbeidsgivereIPerioden: [],
   avklartefakta: [],
+  bostedsland: null,
   oppsummering: {},
   valgteVirksomheter: [],
   artikkel16_anmodning_skjema: {},
