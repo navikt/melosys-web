@@ -282,7 +282,6 @@ Saksbehandling.propTypes = {
   lagreOgLukk: PT.func.isRequired,
   tilbakeleggOppgave: PT.func.isRequired,
   oppdaterBehandlingsStatus: PT.func.isRequired,
-  lastInnSaksopplysninger: PT.func.isRequired,
   resetSaksopplysninger: PT.func.isRequired,
   visHenleggDialogHandle: PT.func.isRequired,
   visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
@@ -366,7 +365,6 @@ const mapDispatchToProps = dispatch => ({
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
   lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
-  lastInnSaksopplysninger: (saksnummer, behandlingID) => dispatch(datalastingOperations.lastInnSaksopplysninger(saksnummer, behandlingID)),
   resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
 });
 
