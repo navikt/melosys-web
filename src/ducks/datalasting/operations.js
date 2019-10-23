@@ -28,7 +28,7 @@ export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
   }
 );
 
-export const lastInnSaksopplysningerVurderTrygdetid = (saksnummer, behandlingID) => (
+export const lastInnSaksopplysningerSedBehandling = (saksnummer, behandlingID) => (
   dispatch => {
     try {
       dispatch(fagsakOperations.hent(saksnummer));
