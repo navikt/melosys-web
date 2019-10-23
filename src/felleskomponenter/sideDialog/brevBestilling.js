@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { reduxForm, reset, setSubmitFailed } from 'redux-form';
+import { reduxForm, change, reset, setSubmitFailed } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -47,13 +47,26 @@ class BrevBestilling extends Component {
     return brevbestillingSkjemaVerdier.dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER;
   };
 
+  erMeldingOmForventetSaksbehandlingstid = () => {
+    const { brevbestillingSkjemaVerdier } = this.props;
+    if (!brevbestillingSkjemaVerdier) return false;
+    return brevbestillingSkjemaVerdier.dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID;
+  };
+
   sendBrev = async () => {
     const {
       behandlingID,
-      brevbestillingSkjemaVerdier, opprettDokument,
+      brevbestillingSkjemaVerdier,
+      opprettDokument,
     } = this.props;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
-    const dokument = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker, begrunnelseKode: null }) : {};
+    const dokumentFritekst = this.erMeldingOmForventetSaksbehandlingstid() || (fritekst === '') ? null : fritekst;
+
+    const dokument = Object.assign({
+      fritekst: dokumentFritekst,
+      mottaker,
+      begrunnelseKode: null,
+    });
 
     this.setState({ feilmelding: undefined });
 
@@ -101,13 +114,17 @@ class BrevBestilling extends Component {
   render () {
     const {
       behandlingID,
-      brevbestillingSkjemaVerdier,
+      brevbestillingSkjemaVerdier, settFeltInnhold,
       redigerbart,
       brevBestillingRedigerbartIArtikkel13,
     } = this.props;
     const { fritekst, mottaker, dokumenttypeKode } = brevbestillingSkjemaVerdier;
 
-    const data = this.erMangelBrevMedFritekst() ? Object.assign({ fritekst, mottaker }) : {};
+    const data = Object.assign({
+      fritekst: this.erMeldingOmForventetSaksbehandlingstid() ? null : fritekst,
+      mottaker,
+    });
+
     const ForhandsvistePdfDokumenter = [
       { navn: 'Forhåndsvis brev', type: dokumenttypeKode, data },
     ];
@@ -120,16 +137,28 @@ class BrevBestilling extends Component {
     const placeholder = 'F.eks.: \u00ABOpplysninger om antall utsendte ansatte i perioden\u00BB, \u00ABOpplysninger om den ansatte erstatter en annen utsendt ansatt\u00BB.';
 
     const disabled = !redigerbart || !brevBestillingRedigerbartIArtikkel13;
-
+    const mottakerDisabled = (dokumenttypeKode && dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER) || !redigerbart;
+    if (dokumenttypeKode && dokumenttypeKode === MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID) {
+      if (mottaker !== MKV.Koder.aktoersroller.BRUKER) {
+        settFeltInnhold('mottaker', MKV.Koder.aktoersroller.BRUKER);
+      }
+    }
+    const aktiverteDokumenttypeKoder = [
+      MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER,
+      MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID,
+    ];
     return (
       <div className="brevBestilling">
         <form onSubmit={this.overstyrSubmit}>
           <Nav.Fieldset legend="Nytt brev">
-            <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Brevet gjelder" disabled={!redigerbart}>
-              {muligeMottakere.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+            <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev">
+              {/* TODO remove filter when all produserbaredokumenter dokumenttypeKoder are supported */}
+              {MKV.KTObjects.brev.produserbaredokumenter
+                .filter(elem => aktiverteDokumenttypeKoder.includes(elem.kode))
+                .map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
-            <Skjema.Select feltNavn="dokumenttypeKode" bredde="fullbredde" label="Type brev" disabled>
-              {MKV.KTObjects.brev.produserbaredokumenter.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
+            <Skjema.Select feltNavn="mottaker" bredde="fullbredde" label="Brevet gjelder" disabled={!mottakerDisabled}>
+              {muligeMottakere.map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)}
             </Skjema.Select>
             {this.erMangelBrevMedFritekst() && <InfoPanel />}
             {this.erMangelBrevMedFritekst() &&
@@ -157,6 +186,7 @@ BrevBestilling.propTypes = {
   brevbestillingSkjemaVerdier: PT.object,
   dokumenter: PT.object,
   redigerbart: PT.bool.isRequired,
+  settFeltInnhold: PT.func.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
 };
 BrevBestilling.defaultProps = {
@@ -176,13 +206,14 @@ const mapStateToProps = state => ({
   brevbestillingSkjemaVerdier: formSelectors.BrevBestillingFormSelector(state).values,
   dokumenter: dokumenterSelectors.dokumenterSelector(state),
   initialValues: {
-    dokumenttypeKode: MKV.Koder.brev.produserbaredokumenter.MELDING_MANGLENDE_OPPLYSNINGER,
+    dokumenttypeKode: MKV.Koder.brev.produserbaredokumenter.MELDING_FORVENTET_SAKSBEHANDLINGSTID,
     mottaker: MKV.Koder.representerer.BRUKER,
     fritekst: '',
   },
 });
 
 const mapDispatchToProps = dispatch => ({
+  settFeltInnhold: (feltNavn, verdi) => dispatch(change(KV.Form.BREV_BESTILLING, feltNavn, verdi)),
   settFeilFelt: (...feltNavn) => dispatch(setSubmitFailed(KV.Form.BREV_BESTILLING, ...feltNavn)),
   resetBrevBestillingForm: () => dispatch(reset(KV.Form.BREV_BESTILLING)),
   resetDokument: () => dispatch(dokumenterOperations.resetDokument()),

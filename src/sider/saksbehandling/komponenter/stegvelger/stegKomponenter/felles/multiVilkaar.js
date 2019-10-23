@@ -5,7 +5,7 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../../../utils/navFrontend';
 import { konverterTilStegData, lagBegrunnelse, lagVilkaar, slettVilkar } from '../../../../../../regler/vilkar';
 
-import ListevelgerFlervalg from '../../../../../../felleskomponenter/ui/listevelgerFlervalg';
+import * as Mui from '../../../../../../felleskomponenter/ui';
 
 class MultiVilkaar extends Component {
   constructor() {
@@ -99,7 +99,7 @@ class MultiVilkaar extends Component {
             <Nav.Column xs="12" md="10" lg="8">
               { vilkaar12.oppfylt === false && (
                 <Nav.Fieldset legend={`Begrunnelse artikkel ${vilkaarNavn12}:`}>
-                  <ListevelgerFlervalg
+                  <Mui.ListevelgerFlervalg
                     muligeValg={begrunnelser12}
                     label="Legg til begrunnelse for ikke oppfylt:"
                     tillatFritekst={false}
@@ -111,7 +111,7 @@ class MultiVilkaar extends Component {
               )}
               { vilkaar16.oppfylt === false && (
                 <Nav.Fieldset legend="Begrunnelse artikkel 16.1:">
-                  <ListevelgerFlervalg
+                  <Mui.ListevelgerFlervalg
                     muligeValg={MKV.KTObjects.begrunnelser.art16_1_avslag}
                     label="Legg til begrunnelse for avslag:"
                     tillatFritekst={false}

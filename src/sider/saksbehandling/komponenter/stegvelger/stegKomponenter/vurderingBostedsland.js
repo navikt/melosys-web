@@ -9,7 +9,7 @@ import * as Utils from '../../../../../utils';
 import * as MPT from '../../../../../proptypes';
 
 import EnkeltLandPure from '../../../../../felleskomponenter/skjema/landvelger/enkeltLandPure';
-import Checkboxgruppe from '../../../../../felleskomponenter/ui/checkboxgruppe';
+import * as Mui from '../../../../../felleskomponenter/ui';
 
 import { BOOLSK } from '../../../../../constants';
 import {
@@ -54,10 +54,10 @@ const VurderingBostedsland = props => {
   useEffect(() => {
     const { bostedslandFakta } = tilstand;
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.BOSTEDSLAND, bostedslandFakta));
-
-    return function cleanup() {
+    const cleanup = () => {
       slettData();
     };
+    return cleanup;
   }, []);
 
   const {
@@ -138,7 +138,7 @@ const VurderingBostedsland = props => {
           <Nav.Row>
             <Nav.Column xs="6">
               <Nav.Fieldset legend="">
-                <Checkboxgruppe
+                <Mui.Checkboxgruppe
                   muligeValg={begrunnelser}
                   legend="Legg til begrunnelse:"
                   onChange={begrunnelseEndret}

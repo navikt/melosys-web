@@ -9,7 +9,7 @@ import * as Api from '../../../services/api';
 import * as MPT from '../../../proptypes';
 import * as Nav from '../../../utils/navFrontend';
 import * as RegistreringContext from '../state/registreringContext';
-import ListevelgerFlervalg from '../../../felleskomponenter/ui/listevelgerFlervalg';
+import * as Mui from '../../../felleskomponenter/ui';
 import Medlemskap from '../../../felleskomponenter/medlemskap';
 import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
@@ -220,7 +220,7 @@ const Saksopplysninger = props => {
                   <Nav.Row>
                     <Nav.Column xs="6">
                       <Nav.Fieldset legend="Begrunnelse for ikke godkjent unntaksperiode">
-                        <ListevelgerFlervalg
+                        <Mui.ListevelgerFlervalg
                           disabled={false}
                           muligeValg={MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser}
                           label="Legg til begrunnelse for ikke oppfylt:"

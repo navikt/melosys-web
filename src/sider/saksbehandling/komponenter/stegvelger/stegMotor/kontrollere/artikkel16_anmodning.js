@@ -5,7 +5,7 @@ import * as KV from '../../../../../../kodeverk';
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel16Anmodning from '../../stegKomponenter/vurderingArtikkel16Anmodning';
-import { hentVilkar } from '../../../../../../regler/vilkar';
+import { hentVilkar, hentBegrunnelser } from '../../../../../../regler/vilkar';
 
 class Artikkel16Anmodning extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -45,7 +45,7 @@ class Artikkel16Anmodning extends Steg {
   }
 
   static skalArt16SvarstegVaereSynlig(propsLight) {
-    return Artikkel16Anmodning.erUnderBehandlingEllerAvsluttet(propsLight) && Artikkel16Anmodning.harAvklaring(propsLight);
+    return this.erUnderBehandlingEllerAvsluttet(propsLight) && this.anmodningErSendtUtland(propsLight);
   }
 
   static erUnderBehandlingEllerAvsluttet({ behandlingsstatus }) {
@@ -55,11 +55,18 @@ class Artikkel16Anmodning extends Steg {
     ].includes(KV.objektTilKode(behandlingsstatus));
   }
 
-  static harAvklaring({ anmodningsperioder }) {
+  static anmodningErSendtUtland({ anmodningsperioder }) {
     return (
       anmodningsperioder.length > 0 &&
       anmodningsperioder.every(anmodningsperiode => anmodningsperiode.sendtUtland)
     );
+  }
+
+  static harAvklaring({ anmodningsperioder, vilkar }) {
+    const unntakFraBestemmelseErSatt = anmodningsperioder.some(anmodningsperiode => anmodningsperiode.unntakFraBestemmelse);
+    const minstEnBegrunnelseErValgt = hentBegrunnelser(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1, vilkar).length > 0;
+
+    return unntakFraBestemmelseErSatt && minstEnBegrunnelseErValgt;
   }
 }
 

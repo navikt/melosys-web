@@ -11,7 +11,7 @@ import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 import { behandlingerOperations, behandlingerSelectors } from '../../../ducks/behandlinger';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
-import { KodeTermSelect } from '../../../felleskomponenter/ui/kodeTermSelect';
+import * as Mui from '../../../felleskomponenter/ui';
 
 import './sideOppsummering.css';
 
@@ -95,7 +95,7 @@ const BehandlingsStatus = props => {
     <div className="oppsummering__behandlingsstatus">
       { endreBehandlingsStatusValg.length !== 0 &&
       <form onSubmit={overstyrSubmit}>
-        <KodeTermSelect
+        <Mui.KodeTermSelect
           koder={endreBehandlingsStatusValg}
           value={behandlingsstatus}
           onChange={onChange}

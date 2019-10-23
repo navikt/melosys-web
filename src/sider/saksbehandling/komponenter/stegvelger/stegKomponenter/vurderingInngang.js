@@ -17,9 +17,11 @@ const VurderingInngang = props => {
     tilstand, redigerbart, oppdaterData, slettData,
   } = props;
 
-  useEffect(() => function cleanup() {
-    slettData();
-  }, []);
+  useEffect(() => (
+    function cleanup() {
+      slettData();
+    }
+  ), []);
 
   const soknadslandBegrunnelser = begrunnelser.opphold;
   const { harAvklaring } = tilstand;
