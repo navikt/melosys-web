@@ -25,7 +25,7 @@ const VirksomheterLinje = props => {
     const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET));
     };
-    return cleanup();
+    return cleanup;
   }, []);
 
   const virksomhetErValgt = avklartVirksomhet && avklartVirksomhet.fakta.includes('TRUE');

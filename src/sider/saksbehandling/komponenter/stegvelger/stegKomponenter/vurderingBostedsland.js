@@ -57,7 +57,7 @@ const VurderingBostedsland = props => {
     const cleanup = () => {
       slettData();
     };
-    return cleanup();
+    return cleanup;
   }, []);
 
   const {

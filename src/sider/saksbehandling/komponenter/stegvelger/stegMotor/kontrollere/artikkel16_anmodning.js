@@ -28,10 +28,16 @@ class Artikkel16Anmodning extends Steg {
     this.samleRelevanteData = _propsLight => ({
       redigerbart: _propsLight.generiskStegRedigerbart,
     });
-    this.beregnRelevantUI = _propsLight => ({
-      art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
-      harAvklaring: Artikkel16Anmodning.harAvklaring(_propsLight),
-    });
+    this.beregnRelevantUI = _propsLight => {
+      const muligeBegrunnelseValg = _propsLight.erIDirekteTilArtikkel16Flyt ? MKV.KTObjects.begrunnelser.art16_1_anmodning_uten_art12 : MKV.KTObjects.begrunnelser.art16_1_anmodning;
+
+      return {
+        muligeBegrunnelseValg,
+        erIDirekteTilArtikkel16Flyt: _propsLight.erIDirekteTilArtikkel16Flyt,
+        art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
+        harAvklaring: Artikkel16Anmodning.harAvklaring(_propsLight),
+      };
+    };
     this.handlers = {
       lagreOgBestillAnmodningsperioder: this._propsLight.tilgjengeligeHandlers.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers.byggAnmodningsperioderHandler,
