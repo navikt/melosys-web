@@ -175,7 +175,7 @@ const VurderingForretningssted = props => {
 
   const avklartefaktaTyper = [
     { label: 'Norge', type: KV.Koder.BoolskAvklartfaktaType.SANN },
-    { label: 'Annet', type: KV.Koder.BoolskAvklartfaktaType.USANN },
+    { label: 'Annet', type: KV.Koder.BoolskAvklartfaktaType.USANN, disabled: true },
   ];
 
   return (
