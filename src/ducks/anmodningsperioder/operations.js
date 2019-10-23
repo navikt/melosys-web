@@ -12,10 +12,12 @@ import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
 import * as Types from './types';
 import * as Actions from './actions';
+import * as Selectors from './selectors';
 
 import { soknadSelectors } from '../soknad';
 import { lovvalgsperioderSelectors } from '../lovvalgsperioder';
 import { anmodningsperioderSelectors } from '../anmodningsperioder';
+import { behandlingerSelectors } from '../behandlinger';
 
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Anmodningsperioder.hent(behandlingID), {
@@ -31,6 +33,19 @@ export function send(behandlingID, anmodningsperioder) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function lagre() {
+  return (dispatch, getState) => {
+    const anmodningsperioder = Selectors.AnmodningsperioderSelector(getState());
+    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    const anmodningsperioderErSendtUtlandet = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(getState());
+
+    if (anmodningsperioderErSendtUtlandet) return;
+
+    /* eslint-disable-next-line no-unused-vars */
+    dispatch(send(bid, { anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties) }));
+  };
 }
 
 const byggAnmodningsperiodeArtikkel16 = (stegState, reduxState) => {

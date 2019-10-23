@@ -7,18 +7,12 @@ import * as MKV from 'melosys-kodeverk';
 import * as Utils from '../../utils';
 import * as Nav from '../../utils/navFrontend';
 import * as MPT from '../../proptypes';
-import * as Api from '../../services/api';
 
-import DialogboksOppfriskSak from '../../felleskomponenter/dialogboks/dialogboksOppfrisk';
-import DialogboksVenter from '../../felleskomponenter/dialogboks/dialogboksVenter';
-import DialogboksHenlegg from '../../felleskomponenter/dialogboks/dialogboksHenlegg';
-import DialogboksAvsluttSakSomBortfalt from '../../felleskomponenter/dialogboks/dialogboksAvsluttSakSomBortfalt';
 import { Saksopplysninger } from './komponenter/saksopplysninger';
-import DialogboksAvslagSoknad from '../../felleskomponenter/dialogboks/dialogboksAvslagSoknad';
-
 import SideDialog from '../../felleskomponenter/sideDialog/sideDialog';
-import SideOppsummering from './komponenter/sideOppsummering';
-
+import SideOppsummering from '../../felleskomponenter/sideOppsummering';
+import Behandlingsstatus from '../../felleskomponenter/behandlingsstatus';
+import Behandlingsmeny from './komponenter/behandlingsmeny';
 
 import { fagsakOperations, fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingsresultatOperations } from '../../ducks/behandlingsresultat';
@@ -34,16 +28,29 @@ import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
 import { behandlingsperioderOperations, behandlingsperioderSelectors } from '../../ducks/behandlingsperioder';
 import { formSelectors } from '../../ducks/form';
 import { vedtakOperations } from '../../ducks/vedtak';
+import { datalastingOperations } from '../../ducks/datalasting';
 
 import './saksbehandling.css';
 
+const behandlingsstatusMap = {
+  [MKV.Koder.behandlinger.behandlingsstatus.VURDER_DOKUMENT]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_PART },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_PART]: [
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.AVVENT_DOK_UTL, term: MKV.Terms.behandlinger.behandlingsstatus.AVVENT_DOK_UTL },
+    { kode: MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING, term: MKV.Terms.behandlinger.behandlingsstatus.UNDER_BEHANDLING },
+  ],
+  [MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING]: [],
+};
+
 class Saksbehandling extends Component {
   state = {
-    visOppfriskDialog: false,
-    oppfriskningBlokkererInnhold: false,
-    visHenleggDialog: false,
-    visAvslagSoknadDialog: false,
-    visAvsluttSakSomBortfaltDialog: false,
     behandlingID: -1,
   };
 
@@ -69,7 +76,7 @@ class Saksbehandling extends Component {
 
     const {
       hentFagsaker, hentBehandling, hentBehandlingsresultat,
-      hentSoknad, sjekkOppfriskningStatus,
+      hentSoknad, sjekkOppfriskningStatus, blokkerInnholdMedOppfriskSpinner,
     } = this.props;
 
     try {
@@ -86,7 +93,7 @@ class Saksbehandling extends Component {
       const { data: status } = oppfriskningStatus;
 
       if (status === 'PROGRESS') {
-        this.blokkerInnholdMedOppfriskSpinner();
+        blokkerInnholdMedOppfriskSpinner();
         return false;
       }
 
@@ -96,94 +103,6 @@ class Saksbehandling extends Component {
       Utils.logger.error(e);
     }
     return false;
-  };
-
-  blokkerInnholdMedOppfriskSpinner = () => {
-    this.setState({ oppfriskningBlokkererInnhold: true });
-  };
-
-  lagreSoknadOgOppfriskSaksopplysninger = async () => {
-    const { behandlingID } = this.state;
-    const { oppfriskSaksopplysninger, sendSoknad, soknad } = this.props;
-    await sendSoknad(behandlingID, soknad);
-    await oppfriskSaksopplysninger(behandlingID);
-    this.blokkerInnholdMedOppfriskSpinner();
-  };
-
-  navigerTilOversiktSide = () => {
-    this.skjulOppfriskBekreftelse();
-    this.tilForsiden();
-  };
-
-  visOppfriskBekreftelse = () => {
-    this.setState({ visOppfriskDialog: true });
-  };
-
-  skjulOppfriskBekreftelse = () => {
-    this.setState({ visOppfriskDialog: false });
-    this.setState({ oppfriskningBlokkererInnhold: false });
-  };
-
-  visHenleggDialog = () => {
-    this.setState({ visHenleggDialog: true });
-  };
-
-  skjulHenleggDialog = () => {
-    this.setState({ visHenleggDialog: false });
-  };
-
-  visAvslagSoknadDialog = () => {
-    this.setState({ visAvslagSoknadDialog: true });
-  };
-
-  skjulAvslagSoknadDialog = () => {
-    this.setState({ visAvslagSoknadDialog: false });
-  };
-
-  visAvsluttSakSomBortfaltDialog = () => {
-    this.setState({ visAvsluttSakSomBortfaltDialog: true });
-  };
-
-  skjulAvsluttSakSomBortfaltDialog = () => {
-    this.setState({ visAvsluttSakSomBortfaltDialog: false });
-  };
-
-  hentBehandlingStatus = async () => {
-    const { behandlingID } = this.state;
-    const { sjekkOppfriskningStatus } = this.props;
-    const oppfriskning = await sjekkOppfriskningStatus(behandlingID);
-
-    if (oppfriskning && oppfriskning.response) {
-      this.skjulOppfriskBekreftelse();
-    } else if (oppfriskning.data === 'DONE') {
-      this.skjulOppfriskBekreftelse();
-      this.lastInnSaksopplysninger();
-    }
-  };
-
-  lagreOgLukk = async () => {
-    this.lagreAllData();
-    const { history, hentOppgaveOversikt } = this.props;
-    await hentOppgaveOversikt();
-    history.push('/');
-  };
-
-  tilbakeleggeHandle = async () => {
-    const { behandlingID } = this.state;
-    const { tilbakeleggOppgave } = this.props;
-    const venterPaaDokumentasjon = true;
-
-    await tilbakeleggOppgave(behandlingID, venterPaaDokumentasjon);
-    this.lagreOgLukk();
-  };
-
-  lagreSoknadHandler = async () => {
-    const { behandlingID } = this.state;
-    const { oppdaterSoknadState } = this.props;
-    await oppdaterSoknadState();
-
-    const { soknad, sendSoknad } = this.props;
-    sendSoknad(behandlingID, soknad);
   };
 
   lagreVilkarHandler = async () => {
@@ -220,111 +139,40 @@ class Saksbehandling extends Component {
   };
 
   oppdaterOgLagreBehandlingerHandler = async () => {
-    const { skjema, artikkel16_skjema, oppdaterBehandlingerState } = this.props;
+    const {
+      skjema, artikkel16_skjema, oppdaterBehandlingerState, lagrePerioder,
+    } = this.props;
     await oppdaterBehandlingerState({ ...skjema, ...artikkel16_skjema });
 
-    this.lagreBehandlinger();
-  };
-
-  lagreBehandlinger = () => {
-    const { behandlingID } = this.state;
-    const { behandlingsPeriode, sendPerioder } = this.props;
-    sendPerioder(behandlingID, behandlingsPeriode);
-  };
-
-  lagreAllData = async () => {
-    const {
-      lagreSoknadHandler,
-      lagreVilkarHandler,
-      lagreAvklartefaktaHandler,
-      lagreLovvalgsperioderHandler,
-      lagreAnmodningsperioderHandler,
-      oppdaterOgLagreBehandlingerHandler,
-    } = this;
-
-    try {
-      await Promise.all([
-        lagreSoknadHandler(),
-        lagreVilkarHandler(),
-        lagreAvklartefaktaHandler(),
-        oppdaterOgLagreBehandlingerHandler(),
-      ]);
-
-      lagreAnmodningsperioderHandler();
-      lagreLovvalgsperioderHandler();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
-  };
-
-  henleggHandle = async data => {
-    try {
-      await this.lagreAllData();
-      await this.henleggSak(data);
-    } catch (e) {
-      Utils.logger.error(e);
-    } finally {
-      this.tilForsiden();
-    }
-  };
-
-  henleggSak = async data => {
-    const { fagsak: { saksnummer } } = this.props;
-    Api.Fagsaker.fagsak.henlegg(saksnummer, data);
-  };
-
-  avslaaSoknadHandle = async () => {
-    try {
-      await this.lagreAllData();
-      await this.avslaaSoknad();
-    } catch (e) {
-      Utils.logger.error(e);
-    } finally {
-      this.tilForsiden();
-    }
-  };
-
-  avslaaSoknad = () => {
-    const { behandlingID, fattVedtak } = this.props;
-    fattVedtak(behandlingID, { behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL });
-  };
-
-  avsluttSakSomBortfalt = async () => {
-    const { saksnummer } = this.props.fagsak;
-
-    try {
-      await Api.Fagsaker.fagsak.bortfall(saksnummer);
-      this.tilForsiden();
-    } catch (e) {
-      Utils.logger.error(e);
-    }
-  };
-
-  tilForsiden = () => {
-    this.props.history.push('/');
+    lagrePerioder();
   };
 
   render() {
     const {
-      redigerbart, brevBestillingRedigerbart, brevBestillingRedigerbartIArtikkel13, match,
+      redigerbart,
+      brevBestillingRedigerbart,
+      brevBestillingRedigerbartIArtikkel13,
+      match,
+      lagreOgLukk,
+      tilbakeleggOppgave,
+      behandlingstype,
+      fagsak,
+      oppsummering,
+      person,
+      lovvalgsperiodeFom,
+      lovvalgsperiodeTom,
+      oppdaterBehandlingsStatus,
+      visHenleggDialogHandle,
+      visAvsluttSakSomBortfaltDialogHandle,
+      visAvslagSoknadDialogHandle,
+      visOppfriskBekreftelse,
+      apneTidligereBehandlinger,
+      blokkerInnholdMedOppfriskSpinner,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
-    const { blokkerInnholdMedOppfriskSpinner } = this;
 
     if (Utils._isNil(redigerbart)) return null;
-
-    const oppfriskVenterDialog = this.state.oppfriskningBlokkererInnhold && (
-      <div>
-        <DialogboksVenter
-          tittel="Oppdaterer registeropplysninger"
-          tekst="Vent mens registeropplysningene hentes på nytt fra TPS, Aa-register, Medl etc."
-          synlig
-          tilForsiden={this.navigerTilOversiktSide}
-          oppdater={this.hentBehandlingStatus}
-        />
-      </div>
-    );
 
     return (
       <div className="saksbehandling">
@@ -339,19 +187,37 @@ class Saksbehandling extends Component {
                 lagreLovvalgsperioderHandler={this.lagreLovvalgsperioderHandler}
                 lagreAnmodningsperioderHandler={this.lagreAnmodningsperioderHandler}
                 oppdaterOgLagreBehandlingerHandler={this.oppdaterOgLagreBehandlingerHandler}
-                lagreAllData={this.lagreAllData}
+                lagreAllData={this.props.lagreAllData}
               />
             </Nav.Column>
             <Nav.Column xs="5">
               <SideOppsummering
-                behandlingID={behandlingID}
-                oppfriskSaksopplysningerHandle={this.visOppfriskBekreftelse}
-                lagreOgLukkHandle={this.lagreOgLukk}
-                tilbakeleggeHandle={this.tilbakeleggeHandle}
-                visHenleggDialogHandle={this.visHenleggDialog}
-                visAvslagSoknadDialogHandle={this.visAvslagSoknadDialog}
-                visAvsluttSakSomBortfaltDialogHandle={this.visAvsluttSakSomBortfaltDialog}
-                tilForsidenHandle={this.navigerTilOversiktSide}
+                behandlingstype={behandlingstype}
+                redigerbart={redigerbart}
+                fagsak={fagsak}
+                oppsummering={oppsummering}
+                person={person}
+                lovvalgsperiodeFom={lovvalgsperiodeFom}
+                lovvalgsperiodeTom={lovvalgsperiodeTom}
+                renderBehandlingsmeny={() => <Behandlingsmeny
+                  redigerbart={redigerbart}
+                  lagreOgLukkHandle={lagreOgLukk}
+                  tilbakeleggeHandle={tilbakeleggOppgave}
+                  visHenleggDialogHandle={visHenleggDialogHandle}
+                  apneTidligereBehandlinger={apneTidligereBehandlinger}
+                  visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
+                  visHenleggSak
+                  visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                  visOppfriskSaksopplysninger
+                  oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+                />}
+                renderBehandlingsstatus={() => <Behandlingsstatus
+                  behandlingID={behandlingID}
+                  redigerbart={redigerbart}
+                  oppsummering={oppsummering}
+                  oppdaterBehandlingsStatus={oppdaterBehandlingsStatus}
+                  behandlingsstatusMap={behandlingsstatusMap}
+                />}
               />
               <SideDialog
                 behandlingID={behandlingID}
@@ -362,37 +228,6 @@ class Saksbehandling extends Component {
             </Nav.Column>
           </Nav.Row>
         </Nav.Container>
-        { oppfriskVenterDialog }
-        {
-          this.state.visOppfriskDialog &&
-          <DialogboksOppfriskSak
-            bekreft={this.lagreSoknadOgOppfriskSaksopplysninger}
-            avbryt={this.skjulOppfriskBekreftelse}
-            tilForsiden={this.navigerTilOversiktSide}
-            oppdater={this.hentBehandlingStatus}
-          />
-        }
-        {
-          this.state.visHenleggDialog &&
-          <DialogboksHenlegg
-            avbryt={this.skjulHenleggDialog}
-            henleggHandle={this.henleggHandle}
-          />
-        }
-        {
-          this.state.visAvslagSoknadDialog &&
-          <DialogboksAvslagSoknad
-            avbryt={this.skjulAvslagSoknadDialog}
-            avslaaSoknad={this.avslaaSoknadHandle}
-          />
-        }
-        {
-          this.state.visAvsluttSakSomBortfaltDialog &&
-          <DialogboksAvsluttSakSomBortfalt
-            avbryt={this.skjulAvsluttSakSomBortfaltDialog}
-            avsluttSakSomBortfalt={this.avsluttSakSomBortfalt}
-          />
-        }
       </div>
     );
   }
@@ -429,12 +264,11 @@ Saksbehandling.propTypes = {
   sjekkOppfriskningStatus: PT.func.isRequired,
   sendSoknad: PT.func.isRequired,
   hentOppgaveOversikt: PT.func.isRequired,
-  tilbakeleggOppgave: PT.func.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
   sendLovvalgsperioder: PT.func.isRequired,
-  sendPerioder: PT.func.isRequired,
+  lagrePerioder: PT.func.isRequired,
   oppdaterVilkarState: PT.func.isRequired,
   oppdaterLovvalgperioderState: PT.func.isRequired,
   oppdaterBehandlingerState: PT.func.isRequired,
@@ -444,6 +278,22 @@ Saksbehandling.propTypes = {
   brevBestillingRedigerbart: PT.bool.isRequired,
   brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   anmodningsperioderErSendtUtlandet: PT.bool.isRequired,
+  lagreAllData: PT.func.isRequired,
+  lagreOgLukk: PT.func.isRequired,
+  tilbakeleggOppgave: PT.func.isRequired,
+  oppdaterBehandlingsStatus: PT.func.isRequired,
+  resetSaksopplysninger: PT.func.isRequired,
+  visHenleggDialogHandle: PT.func.isRequired,
+  visAvsluttSakSomBortfaltDialogHandle: PT.func.isRequired,
+  visAvslagSoknadDialogHandle: PT.func.isRequired,
+  visOppfriskBekreftelse: PT.func.isRequired,
+  apneTidligereBehandlinger: PT.func.isRequired,
+  behandlingstype: PT.string.isRequired,
+  oppsummering: MPT.Behandlinger.Oppsummering,
+  person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
+  lovvalgsperiodeFom: PT.string,
+  lovvalgsperiodeTom: PT.string,
+  blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -455,6 +305,9 @@ Saksbehandling.defaultProps = {
   skjema: {},
   anmodningsperioder: [],
   artikkel16_skjema: {},
+  oppsummering: undefined,
+  lovvalgsperiodeFom: undefined,
+  lovvalgsperiodeTom: undefined,
 };
 /** Mapper både fast tekst inn til de forskjellige panelene i tillegg til å
  * mappe verdier fra søknaden (soknad) ut til Redux Form via initialValue.
@@ -464,6 +317,11 @@ const mapStateToProps = state => ({
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
+  oppsummering: behandlingerSelectors.OppsummeringSelector(state),
+  person: behandlingerSelectors.PersonSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
+  lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
+  lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   soknad: soknadSelectors.SoknadSelector(state),
   vilkar: vilkarSelectors.VilkarSelector(state),
@@ -497,15 +355,17 @@ const mapDispatchToProps = dispatch => ({
   sendAvklartefakta: (behandlingID, body) => dispatch(avklartefaktaOperations.send(behandlingID, body)),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
   sendVilkar: (behandlingID, body) => dispatch(vilkarOperations.send(behandlingID, body)),
-  tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
   oppdaterSoknadState: () => dispatch(soknadOperations.oppdaterSoknadState()),
   oppdaterVilkarState: skjema => dispatch(vilkarOperations.oppdaterVilkarState(skjema)),
   oppdaterLovvalgperioderState: skjema => dispatch(lovvalgsperioderOperations.oppdaterLovvalgsperioderState(skjema)),
   oppdaterBehandlingerState: skjema => dispatch(behandlingsperioderOperations.oppdaterPerioderState(skjema)),
   sendLovvalgsperioder: (behandlingID, body) => dispatch(lovvalgsperioderOperations.send(behandlingID, body)),
-  sendPerioder: (behandlingID, body) => dispatch(behandlingsperioderOperations.sendMedlemsPerioder(behandlingID, body)),
+  lagrePerioder: () => dispatch(behandlingsperioderOperations.lagre()),
   sendAnmodningsperioder: (behandlingID, body) => dispatch(anmodningsperioderOperations.send(behandlingID, body)),
   fattVedtak: (behandlingID, body) => dispatch(vedtakOperations.fatt(behandlingID, body)),
+  lagreAllData: () => dispatch(datalastingOperations.lagreAllData()),
+  oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
+  resetSaksopplysninger: () => dispatch(datalastingOperations.resetSaksopplysninger()),
 });
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Saksbehandling));
