@@ -60,7 +60,7 @@ const EnkeltAvklartfakta = props => {
                   value={af.type}
                   checked={fakta === af.type}
                   onChange={radioEndringHandler}
-                  disabled={!redigerbart}
+                  disabled={!redigerbart || af.disabled}
                 />)
             }
           </Nav.Fieldset>
