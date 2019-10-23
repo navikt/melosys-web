@@ -405,7 +405,7 @@ Stegvelger.propTypes = {
   arbeidsgivereIPerioden: PT.array,
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   avklartefakta: MPT.AvklartefaktaListe,
-  bostedsland: PT.string,
+  bostedsland: PT.object,
   behandlingsPerioder: PT.object.isRequired,
   hentVilkar: PT.func.isRequired,
   hentAvklartefakta: PT.func.isRequired,
