@@ -11,6 +11,9 @@ import * as Api from '../../services/api';
 import { doThenDispatch } from '../../services/utils';
 import * as Types from './types';
 import * as Actions from './actions';
+import * as Selectors from './selectors';
+
+import { behandlingerSelectors } from '../behandlinger';
 
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Avklartefakta.hent(behandlingID), {
@@ -26,6 +29,14 @@ export function send(bid, dokument) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function lagre() {
+  return (dispatch, getState) => {
+    const avklartefakta = Selectors.AvklartefaktaSelector(getState());
+    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    dispatch(send(bid, avklartefakta));
+  };
 }
 
 export function oppdaterAvklarteFaktaState(skjema) {
