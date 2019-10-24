@@ -4,10 +4,10 @@ const {
   object, string, mixed,
 } = Utils.yup;
 
-const SKRIV_INN_FNR_ELLER_DNR = { melding: 'Skriv inn fnr eller dnr.' };
+const SKRIV_INN_FNR_ELLER_DNR = { melding: 'Skriv inn f.nr eller d.nr' };
 const SKRIV_INN_KUN_NUMMER = { melding: 'Skriv inn kun nummer.' };
-const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: 'Skriv inn gyldig fnr eller dnr.' };
-const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: 'Fant ingen navn på dette fnr eller dnr.' };
+const SKRIV_INN_GYLDIG_FNR_ELLER_DNR = { melding: 'Skriv inn gyldig f.nr eller d.nr' };
+const FANT_INGEN_NAVN_PA_FNR_ELLER_DNR = { melding: 'Fant ingen navn på dette f.nr eller d.nr.' };
 
 const journalforingSED = object().shape({
   brukerID: string()
