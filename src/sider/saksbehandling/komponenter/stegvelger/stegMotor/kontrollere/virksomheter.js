@@ -16,7 +16,7 @@ class Virksomheter extends Steg {
         beskrivelse: '',
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(avklartefakta);
-          const garDirekteTilArtikkel16 = Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.YRKESAKTIV_DIREKTE_TIL_ARTIKKEL_16);
+          const garDirekteTilArtikkel16 = Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12);
 
           return harValgtArbeidsgiver && garDirekteTilArtikkel16;
         },
