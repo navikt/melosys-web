@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PT from 'prop-types';
 import { reduxForm, getFormValues, change } from 'redux-form';
 import { connect } from 'react-redux';
@@ -11,6 +11,8 @@ import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 import * as Ikoner from '../../../resources/images';
+
+import { journalforingSelectors } from '../../../ducks/journalforing';
 
 import './journalforingsed.css';
 
@@ -43,6 +45,7 @@ const JournalforingSED = ({
   settFormBruker,
 }) => {
   const [brukerSpinner, setBrukerSpinner] = useState(false);
+  const [brukerHentetVedOppstart, setBrukerHentetVedOppstart] = useState(false);
 
   const hentBruker = async fnrdnr => {
     setBrukerSpinner(true);
@@ -58,9 +61,16 @@ const JournalforingSED = ({
     }
   };
 
-  const vedBlur = () => {
+  const hentBrukerMedID = () => {
     hentBruker(formValues.brukerID);
   };
+
+  useEffect(() => {
+    if (formValues.brukerID && !brukerHentetVedOppstart) {
+      hentBrukerMedID();
+      setBrukerHentetVedOppstart(true);
+    }
+  }, [formValues.brukerID]);
 
   const { bruker = {} } = formValues;
   const { sammensattNavn = '' } = bruker;
@@ -70,7 +80,7 @@ const JournalforingSED = ({
       <Overskrift tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input onBlur={vedBlur} className="fetTekst" label="Brukers f.nr eller d.nr" feltNavn="brukerID" />
+          <Skjema.Input onBlur={hentBrukerMedID} className="fetTekst" label="Brukers f.nr eller d.nr" feltNavn="brukerID" />
           <Nav.Element>Brukers fulle navn</Nav.Element>
           <Nav.Normaltekst>
             { brukerSpinner && <Nav.NavFrontendSpinner /> }
@@ -125,6 +135,9 @@ const form = {
 
 const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.JOURNALFORING_SED)(state),
+  initialValues: {
+    brukerID: journalforingSelectors.BrukerIDSelector(state),
+  },
 });
 
 const mapDispatchToProps = dispatch => ({
