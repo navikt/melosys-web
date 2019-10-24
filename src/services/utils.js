@@ -154,7 +154,8 @@ const cachedFetch = async (url, cacheDurationSec) => {
       setCachedItem(cacheKey, content);
     }
   }
-  return toJson(fetchResponse);
+  const sjekketResponse = sjekkStatuskode(fetchResponse);
+  return toJson(sjekketResponse);
 };
 
 const toJsonExtended = async fetchResponse => {

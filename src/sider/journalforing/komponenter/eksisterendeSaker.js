@@ -22,7 +22,7 @@ const EnkeltSak = props => {
 
   const aktivBehandling = hentAktivBehandling(behandlingOversikter);
   const {
-    land, behandlingstype, soknadsperiode, behandlingsstatus,
+    land, behandlingstype, periode, behandlingsstatus,
   } = aktivBehandling;
 
   return (
@@ -38,7 +38,7 @@ const EnkeltSak = props => {
         <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
         <dt>Opprettet:</dt>
         <dd><EnkeltDato dato={opprettetDato} /></dd>
-        <DatoOmradeDescription label="Søknadsperiode: " periode={soknadsperiode} />
+        <DatoOmradeDescription label="Søknadsperiode: " periode={periode} />
         <dt>Land:</dt>
         <dd>{land ? land.join(', ') : '(ukjent)'}</dd>
       </dl>

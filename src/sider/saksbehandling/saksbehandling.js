@@ -21,7 +21,6 @@ import { anmodningsperioderOperations, anmodningsperioderSelectors } from '../..
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
-import { oppgaverOperations } from '../../ducks/oppgaver';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { soknadOperations, soknadSelectors } from '../../ducks/soknad';
@@ -263,7 +262,6 @@ Saksbehandling.propTypes = {
   resetLovvalgsperiode: PT.func.isRequired,
   sjekkOppfriskningStatus: PT.func.isRequired,
   sendSoknad: PT.func.isRequired,
-  hentOppgaveOversikt: PT.func.isRequired,
   oppdaterSoknadState: PT.func.isRequired,
   sendVilkar: PT.func.isRequired,
   sendAvklartefakta: PT.func.isRequired,
@@ -342,7 +340,6 @@ const mapDispatchToProps = dispatch => ({
   hentBehandling: behandlingID => dispatch(behandlingerOperations.hentBehandling(behandlingID)),
   hentBehandlingsresultat: bid => dispatch(behandlingsresultatOperations.hent(bid)),
   hentSoknad: bid => dispatch(soknadOperations.hent(bid)),
-  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   resetBehandlingsresultatState: () => dispatch(behandlingsresultatOperations.resetBehandlingsresultatState()),
