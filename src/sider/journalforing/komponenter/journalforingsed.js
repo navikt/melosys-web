@@ -10,8 +10,29 @@ import * as Api from '../../../services/api';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
+import * as Ikoner from '../../../resources/images';
 
-import './journalforingautomatisksed.css';
+import './journalforingsed.css';
+
+const Overskrift = ({
+  ikon,
+  tekst,
+  className,
+}) => (
+  <Nav.Undertittel className={className}>
+    <img src={ikon} height={25} alt={tekst} />{tekst}
+  </Nav.Undertittel>
+);
+
+Overskrift.propTypes = {
+  ikon: PT.any.isRequired,
+  tekst: PT.string.isRequired,
+  className: PT.string,
+};
+
+Overskrift.defaultProps = {
+  className: undefined,
+};
 
 const JournalforingSED = ({
   avsenderID,
@@ -46,7 +67,7 @@ const JournalforingSED = ({
 
   return (
     <form>
-      <Nav.Undertittel className="undertittel oversteUndertittel">Informasjon om bruker</Nav.Undertittel>
+      <Overskrift tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
       <Nav.Row>
         <Nav.Column xs="6">
           <Skjema.Input onBlur={vedBlur} className="fetTekst" label="Brukers f.nr eller d.nr" feltNavn="brukerID" />
@@ -57,7 +78,7 @@ const JournalforingSED = ({
           </Nav.Normaltekst>
         </Nav.Column>
       </Nav.Row>
-      <Nav.Undertittel className="undertittel">Informasjon om avsender</Nav.Undertittel>
+      <Overskrift tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
       <Nav.Row>
         <Nav.Column xs="6">
           <Nav.Element>Avsender ID</Nav.Element>
@@ -66,7 +87,7 @@ const JournalforingSED = ({
           <Nav.Normaltekst>{avsenderNavn}</Nav.Normaltekst>
         </Nav.Column>
       </Nav.Row>
-      <Nav.Undertittel className="undertittel">Saksinformasjon</Nav.Undertittel>
+      <Overskrift tekst="Saksinformasjon" ikon={Ikoner.ParagraphTwoColumns} className="undertittel" />
       <Nav.Row>
         <Nav.Column xs="5">
           <Nav.Element>Sakstype</Nav.Element>
