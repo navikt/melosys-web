@@ -117,6 +117,7 @@ const Routing = ({
   };
 
   const tilForsiden = () => {
+    hentOppgaveOversikt();
     history.push('/');
   };
 
@@ -125,9 +126,8 @@ const Routing = ({
     tilForsiden();
   };
 
-  const lagreOgLukk = async () => {
+  const lagreOgLukk = () => {
     lagreAllData();
-    await hentOppgaveOversikt();
     tilForsiden();
   };
 
