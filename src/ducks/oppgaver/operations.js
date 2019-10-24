@@ -41,7 +41,6 @@ export const sendBehandlingsOppgave = async form => {
   if (!sakstype) { return false; }
 
   const oppgave = {
-    oppgavetype: null,
     sakstype,
     behandlingstype: valgtBehandlingstype,
   };
