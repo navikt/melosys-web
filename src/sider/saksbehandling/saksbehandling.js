@@ -21,7 +21,6 @@ import { anmodningsperioderOperations, anmodningsperioderSelectors } from '../..
 import { vilkarOperations, vilkarSelectors } from '../../ducks/vilkar';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../ducks/avklartefakta';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../ducks/saksopplysninger';
-import { oppgaverOperations } from '../../ducks/oppgaver';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../ducks/lovvalgsperioder';
 import { redigerbartSelectors } from '../../ducks/redigerbart';
 import { soknadOperations, soknadSelectors } from '../../ducks/soknad';

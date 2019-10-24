@@ -28,7 +28,6 @@ import {
 import { formSelectors } from '../../ducks/form';
 import { OrganisasjonOperations } from '../../ducks/organisasjoner';
 import { PersonOperations } from '../../ducks/personer';
-import * as oppgaverOperations from '../../ducks/oppgaver/operations';
 import * as MPT from '../../proptypes';
 import { sokOperations, sokSelectors } from '../../ducks/sok';
 
