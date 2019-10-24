@@ -2,7 +2,7 @@
 import React, { Component, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors, getFormValues } from 'redux-form';
+import { autofill, setSubmitFailed, change, getFormSyncErrors, touch, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -10,18 +10,14 @@ import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
 import * as Nav from '../../utils/navFrontend';
 import * as Api from '../../services/api';
-import * as Validering from '../../felleskomponenter/skjema/validering';
 import { JOURNALFORING_HENSIKT, ANTALL_TALL_I_ORGNR } from '../../constants';
 
 import * as Person from '../../felleskomponenter/skjema/validering/generisk/person';
 
 import Sticky from '../../felleskomponenter/sticky';
 import withErrorHandling from '../../felleskomponenter/withErrorHandling';
-import Informasjon from './komponenter/informasjon';
-import EksisterendeSaker from './komponenter/eksisterendeSaker';
 import PDFDokument from './komponenter/pdfdokument';
-import OpprettNyFagSak from './komponenter/opprettnyfagsak';
-import JournalforingAutomatiskSED from './komponenter/journalforingautomatisksed';
+import JournalforingSED from './komponenter/journalforingsed';
 import JournalforingForm from './komponenter/journalforingform';
 import { queryParamLogger } from '../../utils/queryParamLogger';
 
@@ -158,7 +154,7 @@ class Journalforing extends Component {
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
 
-    this.touchAll(this.props.errors);
+    this.touchAll(KV.Form.JOURNALFORING, this.props.errors);
 
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForOpprettFagsak();
@@ -195,7 +191,7 @@ class Journalforing extends Component {
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
 
-    this.touchAll(this.props.errors);
+    this.touchAll(KV.Form.JOURNALFORING, this.props.errors);
 
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForEksisterendeSaker();
@@ -298,8 +294,8 @@ class Journalforing extends Component {
     }
   };
 
-  touchAll = (alleFeil = {}) => {
-    this.props.touch(...Object.keys(alleFeil));
+  touchAll = (formName, alleFeil = {}) => {
+    this.props.touch(formName, ...Object.keys(alleFeil));
   };
 
   resetSkjemaFelterForOpprettFagsak = () => {
@@ -329,8 +325,30 @@ class Journalforing extends Component {
     return valgtDokumentID;
   };
 
-  journalforSed = () => {
-    console.log('journalfor sed');
+  journalforSed = async () => {
+    const {
+      tilForsiden,
+      journalforSEDSkjemaIsValid,
+      journalforSEDSkjemaVerdier: {
+        brukerID,
+      },
+      journalforSEDSkjemaErrors,
+      match,
+    } = this.props;
+
+    const { oppgaveID, journalpostID } = match.params;
+
+    this.touchAll(KV.Form.JOURNALFORING_SED, journalforSEDSkjemaErrors);
+    if (!journalforSEDSkjemaIsValid) return;
+
+    const data = {
+      brukerID,
+      journalpostID,
+      oppgaveID,
+    };
+
+    await Api.Journalforing.sed(data);
+    tilForsiden();
   };
 
   behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
@@ -346,7 +364,7 @@ class Journalforing extends Component {
       journalforing: {
         vedlegg = [],
         hoveddokument = {},
-        sedBehandling,
+        behandlingsInformasjon,
         avsenderID,
         avsenderNavn = '',
       },
@@ -360,9 +378,10 @@ class Journalforing extends Component {
     const {
       behandlingstype,
       sakstype,
-    } = sedBehandling || {};
+    } = behandlingsInformasjon || {};
 
-    const visSedJournalforing = sedBehandling;
+    const visSedJournalforing = Utils._isObject(behandlingsInformasjon);
+    const visNormalJournalforing = behandlingsInformasjon === null;
 
     return (
       <div className="journalforing">
@@ -378,37 +397,30 @@ class Journalforing extends Component {
                 <Nav.Panel className="journalforing__skjema">
                   <div className="journalforing__skjema__scroll">
                     {
-                      // visSedJournalforing &&
-                      // <JournalforingAutomatiskSED
-                      //   avsenderID={avsenderID}
-                      //   avsenderNavn={avsenderNavn}
-                      //   behandlingstype={behandlingstype}
-                      //   sakstype={sakstype}
-                      // />
+                      visSedJournalforing &&
+                      <JournalforingSED
+                        avsenderID={avsenderID}
+                        avsenderNavn={avsenderNavn}
+                        behandlingstype={behandlingstype}
+                        sakstype={sakstype}
+                      />
                     }
                     {
-                      !visSedJournalforing &&
-                      <form onSubmit={this.overstyrSubmit}>
-                        <Informasjon
-                          journalpostID={journalpostID}
-                          dokumentID={hoveddokumentID}
-                          dokumentTittel={hoveddokumentTittel}
-                          vedlegg={vedlegg}
-                          hentOgVisAvsender={hentOgVisAvsender}
-                          hentOgVisBruker={hentOgVisBruker}
-                        />
-                        <EksisterendeSaker
-                          behandlingstyper={this.behandlingstyper}
-                          fagsakListe={fagsakListe}
-                          knyttTilEksisterendeSak={knyttTilEksisterendeSak}
-                        />
-                        <OpprettNyFagSak
-                          sakstyper={MKV.KTObjects.sakstyper}
-                          behandlingstyper={this.behandlingstyper}
-                          opprettFagsak={opprettFagsak}
-                          hentOgVisRepresentant={hentOgVisRepresentant}
-                        />
-                      </form>
+                      visNormalJournalforing &&
+                      <JournalforingForm
+                        journalpostID={journalpostID}
+                        hoveddokumentID={hoveddokumentID}
+                        hoveddokumentTittel={hoveddokumentTittel}
+                        vedlegg={vedlegg}
+                        hentOgVisAvsender={hentOgVisAvsender}
+                        hentOgVisBruker={hentOgVisBruker}
+                        fagsakListe={fagsakListe}
+                        knyttTilEksisterendeSak={knyttTilEksisterendeSak}
+                        opprettFagsak={opprettFagsak}
+                        hentOgVisRepresentant={hentOgVisRepresentant}
+                        overstyrSubmit={this.overstyrSubmit}
+                        behandlingstyper={this.behandlingstyper}
+                      />
                     }
                     <div className="journalforing__fotknapper">
                       {
@@ -462,51 +474,33 @@ Journalforing.propTypes = {
   journalforing: MPT.Journalforing,
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   fagsakListe: PT.array,
-  valid: PT.bool.isRequired,
   sokFnrDnr: PT.func.isRequired,
   sokOrgnr: PT.func.isRequired,
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
   vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string })).isRequired,
-  formValues: PT.object,
+  tilForsiden: PT.func.isRequired,
+  journalforSEDSkjemaIsValid: PT.bool.isRequired,
+  journalforSEDSkjemaVerdier: PT.object,
+  journalforSEDSkjemaErrors: PT.object.isRequired,
 };
 
 Journalforing.defaultProps = {
   journalforing: {},
   fagsakListe: [],
   journalforingSkjemaVerdier: {},
-  formValues: {},
+  journalforSEDSkjemaVerdier: {},
 };
 
-const toVedleggMedProps = vedlegg => vedlegg.reduce((acc, d, index) => { acc[`tittel_${index}`] = d.tittel; return acc; }, {});
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: sokSelectors.FagsakSokSelector(state),
   vedleggsdokumenter: journalforingSelectors.JournalforingVedleggsDokumenter(state),
   errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
-  formValues: getFormValues(KV.Form.JOURNALFORING)(state),
-  initialValues: {
-    behandlingstype: null,
-    brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
-    erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
-    avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
-    arbeidsgiverID: null,
-    representantID: '',
-    mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
-    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
-    vedlegg: {
-      pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
-      logiskeTitler: [],
-    },
-    sakstype: MKV.Koder.sakstyper.EU_EOS,
-    opprettnysak_behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
-    ingenVurdering: false,
-    ikkeSendForvaltingsmelding: false,
-    skalTilordnes: false,
-    journalforingUnntakFraLovvalgsland: MKV.Koder.landkoder.NO,
-    journalforingLovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
-  },
+  journalforSEDSkjemaIsValid: isValid(KV.Form.JOURNALFORING_SED)(state),
+  journalforSEDSkjemaVerdier: getFormValues(KV.Form.JOURNALFORING_SED)(state),
+  journalforSEDSkjemaErrors: getFormSyncErrors(KV.Form.JOURNALFORING_SED)(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -520,36 +514,21 @@ const mapDispatchToProps = dispatch => ({
   tilordneSak: data => Api.Journalforing.tilordne(data),
   sokFnrDnr: fnr => dispatch(PersonOperations.hent(fnr)),
   sokOrgnr: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
+  touch: (formName, ...fields) => dispatch(touch(formName, ...fields)),
 });
 
 const kontekster = [
   { navn: 'journalforing', melding: 'Det har oppstått en feil: Kunne ikke hente journalforing.' },
 ];
 
-const form = {
-  form: KV.Form.JOURNALFORING,
-  enableReinitialize: true,
-  destroyOnUnmount: true,
-  updateUnregisteredFields: true,
-  validate: (values, props) => {
-    const options = {
-      context: {
-        brukerNavn: props.formValues ? props.formValues.brukerNavn : undefined,
-      },
-    };
-
-    return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.journalforing, options)(values);
-  },
-  onSubmit: () => {},
-};
-
-const JournalforingWrapper = ({ resetJournalforingState }) => {
+const JournalforingWrapper = externalProps => {
   useEffect(() => (
     function cleanup() {
-      resetJournalforingState();
+      externalProps.resetJournalforingState();
     }
   ), []);
-  const JournalforingMedErrorHandling = withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Journalforing))));
+  const MergeProps = hocProps => <Journalforing {...hocProps} {...externalProps} />;
+  const JournalforingMedErrorHandling = withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(MergeProps)));
 
   return <JournalforingMedErrorHandling />;
 };

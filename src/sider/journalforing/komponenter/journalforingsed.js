@@ -1,46 +1,60 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PT from 'prop-types';
+import { reduxForm, getFormValues, change } from 'redux-form';
+import { connect } from 'react-redux';
 
 import * as Nav from '../../../utils/navFrontend';
 import * as Skjema from '../../../felleskomponenter/skjema';
+import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as Api from '../../../services/api';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
+import * as KV from '../../../kodeverk';
 
 import './journalforingautomatisksed.css';
 
-const JournalforingAutomatiskSED = ({
-  brukerID,
+const JournalforingSED = ({
   avsenderID,
   avsenderNavn,
   sakstype,
   behandlingstype,
-  formIsValid,
+  formValues,
+  settFormBruker,
 }) => {
-  const [bruker, setBruker] = useState({});
+  const [brukerSpinner, setBrukerSpinner] = useState(false);
 
   const hentBruker = async fnrdnr => {
+    setBrukerSpinner(true);
+
     try {
-      const response = await Api.Personer.hentPerson(fnrdnr);
-      setBruker(response);
+      const brukerRespons = await Api.Personer.hentPerson(fnrdnr);
+      settFormBruker(brukerRespons);
     } catch (e) {
+      settFormBruker('');
       Utils.logger.error(e);
+    } finally {
+      setBrukerSpinner(false);
     }
   };
 
-  useEffect(() => {
-    if (!formIsValid) return;
-    hentBruker(brukerID);
-  }, [brukerID]);
+  const vedBlur = () => {
+    hentBruker(formValues.brukerID);
+  };
+
+  const { bruker = {} } = formValues;
+  const { sammensattNavn = '' } = bruker;
 
   return (
     <form>
       <Nav.Undertittel className="undertittel oversteUndertittel">Informasjon om bruker</Nav.Undertittel>
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input className="fetTekst" label="Brukers f.nr eller d.nr" feltNavn="brukerId" />
+          <Skjema.Input onBlur={vedBlur} className="fetTekst" label="Brukers f.nr eller d.nr" feltNavn="brukerID" />
           <Nav.Element>Brukers fulle navn</Nav.Element>
-          <Nav.Normaltekst>{bruker.sammensattNavn}</Nav.Normaltekst>
+          <Nav.Normaltekst>
+            { brukerSpinner && <Nav.NavFrontendSpinner /> }
+            { sammensattNavn }
+          </Nav.Normaltekst>
         </Nav.Column>
       </Nav.Row>
       <Nav.Undertittel className="undertittel">Informasjon om avsender</Nav.Undertittel>
@@ -67,17 +81,33 @@ const JournalforingAutomatiskSED = ({
   );
 };
 
-JournalforingAutomatiskSED.propTypes = {
-  brukerID: PT.string,
+JournalforingSED.propTypes = {
   avsenderNavn: PT.string.isRequired,
   avsenderID: PT.string.isRequired,
   sakstype: MPT.Kodeverk.isRequired,
   behandlingstype: MPT.Kodeverk.isRequired,
-  formIsValid: PT.bool.isRequired,
+  formValues: PT.object,
+  settFormBruker: PT.func.isRequired,
 };
 
-JournalforingAutomatiskSED.defaultProps = {
-  brukerID: '',
+JournalforingSED.defaultProps = {
+  formValues: {},
 };
 
-export default JournalforingAutomatiskSED;
+const form = {
+  form: KV.Form.JOURNALFORING_SED,
+  enableReinitialize: true,
+  destroyOnUnmount: true,
+  updateUnregisteredFields: true,
+  validate: Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.journalforingSED),
+};
+
+const mapStateToProps = state => ({
+  formValues: getFormValues(KV.Form.JOURNALFORING_SED)(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+  settFormBruker: brukerNavn => dispatch(change(KV.Form.JOURNALFORING_SED, 'bruker', brukerNavn)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(JournalforingSED));
