@@ -44,22 +44,18 @@ class Behandling extends Component {
         <form className="behandling__skjema" onSubmit={this.submitOgVideresend}>
           <Nav.Row>
             <Nav.Column xs="4">
-              <Nav.Fieldset legend="Sakstype">
-                <Skjema.Select feltNavn="sakstype" bredde="fullbredde">
-                  {MKV.KTObjects.sakstyper
-                    .filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)
-                    .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))}
-                </Skjema.Select>
-              </Nav.Fieldset>
+              <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
+                {MKV.KTObjects.sakstyper
+                  .filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)
+                  .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))}
+              </Skjema.Select>
             </Nav.Column>
             <Nav.Column xs="8">
-              <Nav.Fieldset legend="Behandlingstype">
-                <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde">
-                  {MKV.KTObjects.behandlinger.behandlingstyper
-                    .filter(({ kode }) => this.gyldigeBehandlingstyper.includes(kode))
-                    .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))}
-                </Skjema.Select>
-              </Nav.Fieldset>
+              <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
+                {MKV.KTObjects.behandlinger.behandlingstyper
+                  .filter(({ kode }) => this.gyldigeBehandlingstyper.includes(kode))
+                  .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))}
+              </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
           <Nav.Knapp className="behandling__knapp">Behandle sak</Nav.Knapp>
@@ -87,6 +83,7 @@ const mapStateToProps = () => ({
 });
 const BehandlngForm = reduxForm({
   form: KV.Form.BEHANDLINGS_FORM,
+  destroyOnUnmount: false,
   onSubmit: form => oppgaverOperations.sendBehandlingsOppgave(form),
 })(Behandling);
 
