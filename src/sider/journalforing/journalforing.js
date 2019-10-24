@@ -62,7 +62,7 @@ class Journalforing extends Component {
    * noe er avbrutt - kun redirecte til forsiden.
    */
   avbrytJournalforing = () => {
-    this.props.history.push('/');
+    this.props.tilForsiden();
   };
   mapLogiskeVedleggsTitlerTilVedlegg = titler => {
     const dokumentID = null;
@@ -142,7 +142,7 @@ class Journalforing extends Component {
       journalforingSkjemaVerdier: {
         saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering,
       },
-      tilordneSak, history, settJournalforingHensikt, settFeilFelt,
+      tilordneSak, settJournalforingHensikt, settFeilFelt, tilForsiden,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
@@ -165,8 +165,7 @@ class Journalforing extends Component {
     }
     const response = await tilordneSak(journalforingData);
     if (response.ok) {
-      this.props.hentOppgaveOversikt();
-      history.push('/');
+      tilForsiden();
     }
   };
 
@@ -176,7 +175,7 @@ class Journalforing extends Component {
    */
   opprettFagsak = async () => {
     const {
-      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier, opprettNySak, settJournalforingHensikt, settFeilFelt, tilForsiden,
     } = this.props;
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
@@ -231,8 +230,7 @@ class Journalforing extends Component {
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
-      this.props.hentOppgaveOversikt();
-      history.push('/');
+      tilForsiden();
     }
   };
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
@@ -462,10 +460,8 @@ class Journalforing extends Component {
 Journalforing.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
-  history: PT.object.isRequired,
   hentJournalOppgave: PT.func.isRequired,
   hentFagsakListe: PT.func.isRequired,
-  hentOppgaveOversikt: PT.func.isRequired,
   tilordneSak: PT.func.isRequired,
   opprettNySak: PT.func.isRequired,
   settFeltInnhold: PT.func.isRequired,
@@ -510,7 +506,6 @@ const mapDispatchToProps = dispatch => ({
   settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.JOURNALFORING, ...feltNavn)),
   settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
   opprettNySak: data => Api.Journalforing.opprett(data),
-  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilordneSak: data => Api.Journalforing.tilordne(data),
   sokFnrDnr: fnr => dispatch(PersonOperations.hent(fnr)),
   sokOrgnr: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),

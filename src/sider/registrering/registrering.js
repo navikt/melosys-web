@@ -44,7 +44,6 @@ const behandlingsstatusMap = {
 const Registrering = props => {
   const {
     match: { params: { snr } },
-    hentOppgaveOversikt,
     tilForsiden,
     tilbakeleggOppgave,
     location,
@@ -87,8 +86,7 @@ const Registrering = props => {
     return () => props.resetFagsakState();
   }, []);
 
-  const lagreOgLukk = async () => {
-    await hentOppgaveOversikt();
+  const lagreOgLukk = () => {
     tilForsiden();
   };
 
@@ -159,7 +157,6 @@ Registrering.propTypes = {
   hentBehandling: PT.func.isRequired,
   hentFagsaker: PT.func.isRequired,
   hentLovvalgsperioder: PT.func.isRequired,
-  hentOppgaveOversikt: PT.func.isRequired,
   resetFagsakState: PT.func.isRequired,
   tilbakeleggOppgave: PT.func.isRequired,
   redigerbart: PT.bool,
@@ -211,7 +208,6 @@ const mapDispatchToProps = dispatch => ({
   hentFagsaker: saksnummer => dispatch(fagsakOperations.hent(saksnummer)),
   resetFagsakState: () => dispatch(fagsakOperations.resetFagsakState()),
   hentLovvalgsperioder: behandlingID => dispatch(lovvalgsperioderOperations.hent(behandlingID)),
-  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   oppdaterBehandlingsStatus: behandlingsstatus => dispatch(behandlingerOperations.oppdaterBehandlingsStatus(behandlingsstatus)),
   tilbakeleggOppgave: (oppgaveID, venterPaaDokumentasjon) => oppgaverOperations.tilbakelegg(oppgaveID, venterPaaDokumentasjon),
 });
