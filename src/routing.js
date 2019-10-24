@@ -196,7 +196,7 @@ const Routing = ({
         {featureToggle && <Route exact path="/registrering/:snr/anmodningunntak" render={props => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />} />}
         <Route path="/sedbehandling/:snr" render={props => <SedBehandlingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/saksbehandling/:snr" render={props => <SaksbehandlingLoadable {...props} {...fellesHandlers} />} />
-        <Route path="/journalforing/:journalpostID/:oppgaveID" component={JournalforingLoadable} />
+        <Route path="/journalforing/:journalpostID/:oppgaveID" render={props => <JournalforingLoadable {...props} {...fellesHandlers} />} />
         <Route component={UkjentSideLoadable} />
       </Switch>
       {

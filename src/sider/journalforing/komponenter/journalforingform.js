@@ -1,12 +1,13 @@
 import React from 'react';
 import PT from 'prop-types';
-import connect from 'react-redux';
+import { connect } from 'react-redux';
 import { reduxForm, getFormValues } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
 
 import * as KV from '../../../kodeverk';
 import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as Utils from '../../../utils';
+import * as MPT from '../../../proptypes';
 
 import Informasjon from '../komponenter/informasjon';
 import EksisterendeSaker from '../komponenter/eksisterendeSaker';
@@ -25,8 +26,10 @@ const JournalforingForm = ({
   knyttTilEksisterendeSak,
   opprettFagsak,
   hentOgVisRepresentant,
+  overstyrSubmit,
+  behandlingstyper,
 }) => (
-  <form onSubmit={this.overstyrSubmit}>
+  <form onSubmit={overstyrSubmit}>
     <Informasjon
       journalpostID={journalpostID}
       dokumentID={hoveddokumentID}
@@ -36,13 +39,13 @@ const JournalforingForm = ({
       hentOgVisBruker={hentOgVisBruker}
     />
     <EksisterendeSaker
-      behandlingstyper={this.behandlingstyper}
+      behandlingstyper={behandlingstyper}
       fagsakListe={fagsakListe}
       knyttTilEksisterendeSak={knyttTilEksisterendeSak}
     />
     <OpprettNyFagSak
       sakstyper={MKV.KTObjects.sakstyper}
-      behandlingstyper={this.behandlingstyper}
+      behandlingstyper={behandlingstyper}
       opprettFagsak={opprettFagsak}
       hentOgVisRepresentant={hentOgVisRepresentant}
     />
@@ -51,7 +54,7 @@ const JournalforingForm = ({
 
 JournalforingForm.propTypes = {
   journalpostID: PT.string.isRequired,
-  hoveddokumentID: PT.string.isRequired,
+  hoveddokumentID: PT.string,
   hoveddokumentTittel: PT.string.isRequired,
   vedlegg: PT.array.isRequired,
   hentOgVisAvsender: PT.func.isRequired,
@@ -61,10 +64,13 @@ JournalforingForm.propTypes = {
   opprettFagsak: PT.func.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
+  overstyrSubmit: PT.func.isRequired,
+  behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
 };
 
 JournalforingForm.defaultProps = {
   formValues: {},
+  hoveddokumentID: '',
 };
 
 const toVedleggMedProps = vedlegg => vedlegg.reduce((acc, d, index) => { acc[`tittel_${index}`] = d.tittel; return acc; }, {});
@@ -110,4 +116,4 @@ const form = {
   onSubmit: () => {},
 };
 
-export default reduxForm(form)(connect(mapStateToProps)(JournalforingForm));
+export default connect(mapStateToProps)(reduxForm(form)(JournalforingForm));
