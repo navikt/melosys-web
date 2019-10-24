@@ -12,7 +12,7 @@ import * as Types from '../personer/types';
 
 /* eslint-disable import/prefer-default-export */
 export function hent(fnr) {
-  return doThenDispatch(() => Api.Personer.hentPersonCached(fnr), {
+  return doThenDispatch(() => Api.Personer.hentPerson(fnr), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
