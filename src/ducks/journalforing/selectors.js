@@ -22,3 +22,8 @@ export const JournalforingVedleggsDokumenter = createSelector(
   state => state.journalforing.data || {},
   journalforing => journalforing.vedlegg || []
 );
+
+export const BrukerIDSelector = createSelector(
+  JournalforingAlle,
+  journalforing => journalforing.brukerID
+);
