@@ -121,11 +121,13 @@ export class EnkeltLand extends Component {
 
     const { inputVerdi } = this.state;
 
-    let { error: skjemaError = '' } = meta;
-    /* Vi forventer at meta.error er en string eller et objekt */
-    if (Utils._isObject(skjemaError)) skjemaError = skjemaError.melding;
-    const { error: landError = '' } = this.state;
-    const feilObjekt = skjemaError || landError ? { feilmelding: `${skjemaError || ''} ${landError || ''}` } : null;
+    const { error, touched, active } = meta;
+
+    let skjemaError = Utils._isObject(meta.error) ? error.melding : error;
+    if (!touched || active) skjemaError = undefined;
+
+    const { error: internError = '' } = this.state;
+    const feilObjekt = skjemaError || internError ? { feilmelding: `${skjemaError || ''} ${internError || ''}` } : null;
 
     return (
       <div>
