@@ -137,7 +137,7 @@ HvemErAvsender.propTypes = {
   tomAvsender: PT.func.isRequired,
   formValues: PT.object,
   settFeltInnhold: PT.func.isRequired,
-  visAvsenderSpinner: PT.bool.isRequired,
+  visAvsenderSpinner: PT.bool,
   journalforingAvsenderID: PT.string,
   journalforingAvsenderNavn: PT.string,
 };
@@ -147,6 +147,7 @@ HvemErAvsender.defaultProps = {
   formValues: {},
   journalforingAvsenderID: undefined,
   journalforingAvsenderNavn: undefined,
+  visAvsenderSpinner: false,
 };
 
 const mapStateToProps = state => ({
