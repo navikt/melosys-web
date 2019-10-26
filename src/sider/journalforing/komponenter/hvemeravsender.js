@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { getFormValues } from 'redux-form';
 import PT from 'prop-types';
@@ -16,10 +16,8 @@ const HvemErAvsender = ({
   settFeltInnhold,
   visAvsenderSpinner,
 }) => {
-  const avsenderTypeEndret = e => {
-    const avsender = e.target.value;
-
-    switch (avsender) {
+  const avsenderTypeEndret = avsenderType => {
+    switch (avsenderType) {
       case KV.Koder.Avsendere.BRUKER: {
         kopierBrukerTilAvsender();
         break;
@@ -34,6 +32,10 @@ const HvemErAvsender = ({
     }
   };
 
+  useEffect(() => {
+    if (formValues.avsenderType) avsenderTypeEndret(formValues.avsenderType);
+  }, [formValues.avsenderType]);
+
   const fullmektigLandEndret = (landkode = '') => {
     const avsenderNavn = landkode ? `Trygdemyndighet i ${KV.kodeTilTerm(landkode, MKV.KTObjects.landkoder)}` : '';
 
@@ -43,7 +45,7 @@ const HvemErAvsender = ({
 
   return (
     <div className={className}>
-      <Nav.Fieldset legend="Hvem er avsender?" onChange={avsenderTypeEndret}>
+      <Skjema.RadioGruppe feltNavn="avsenderType" label="Hvem er avsender?">
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Bruker"
@@ -59,7 +61,7 @@ const HvemErAvsender = ({
           label="Utenlandsk trygdemyndighet"
           value={KV.Koder.Avsendere.UTENLANDSK_TRYGDEMYNDIGHET}
         />
-      </Nav.Fieldset>
+      </Skjema.RadioGruppe>
       {
         formValues.avsenderType === KV.Koder.Avsendere.ARBEIDSGIVER_ELLER_FULLMEKTIG &&
         <Fragment>
