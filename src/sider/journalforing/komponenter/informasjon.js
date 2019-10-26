@@ -180,12 +180,6 @@ class Informasjon extends Component {
         />
 
         <Nav.Fieldset legend="Informasjon om dokument">
-          {/* <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" onClick={vedCheckBrukerErAvsender} />
-          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsenderID')} onKeyUp={this.IDFeltTastOppHandler} />
-          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsenderNavn')} />
-          { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-          <Skjema.Input feltNavn="mottattDato" label="Registrert dato:" disabled /> */}
-
           <Nav.Fieldset legend="Hoveddokument:">
             <Skjema.ListeVelger
               feltNavn="hoveddokumentTittel"
