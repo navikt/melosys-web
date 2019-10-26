@@ -171,6 +171,8 @@ class Informasjon extends Component {
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
 
+
+        <Nav.Element className="informasjonOmAvsenderTittel">Informasjon om avsender</Nav.Element>
         <HvemErAvsender
           className="hvemErAvsender"
           kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}

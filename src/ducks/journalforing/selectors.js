@@ -27,3 +27,13 @@ export const BrukerIDSelector = createSelector(
   JournalforingAlle,
   journalforing => journalforing.brukerID
 );
+
+export const AvsenderIDSelector = createSelector(
+  JournalforingAlle,
+  journalforing => journalforing.avsenderID
+);
+
+export const AvsenderNavnSelector = createSelector(
+  JournalforingAlle,
+  journalforing => journalforing.avsenderNavn
+);
