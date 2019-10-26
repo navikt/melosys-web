@@ -109,12 +109,12 @@ const form = {
   updateUnregisteredFields: true,
   touchOnChange: true,
   validate: (values, props) => {
-    const erAvsenderIDOgAvsenderNavnPreutfylt = props.journalforingAvsenderID && props.journalforingAvsenderNavn;
+    const erAvsenderIDOgAvsenderNavnPreutfylt = Boolean(props.journalforingAvsenderID && props.journalforingAvsenderNavn);
 
     const options = {
       context: {
         brukerNavn: props.formValues ? props.formValues.brukerNavn : undefined,
-        skalValidereAvsenderType: erAvsenderIDOgAvsenderNavnPreutfylt,
+        skalValidereAvsenderType: !erAvsenderIDOgAvsenderNavnPreutfylt,
       },
     };
 
