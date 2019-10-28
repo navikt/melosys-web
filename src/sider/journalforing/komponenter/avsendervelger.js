@@ -40,20 +40,21 @@ const AvsenderVelger = ({
   visAvsenderSpinner,
   journalforingAvsenderID,
   journalforingAvsenderNavn,
+  journalforingAvsenderType,
 }) => {
   const avsenderTypeEndret = avsenderType => {
     switch (avsenderType) {
-      case KV.Koder.Avsendere.BRUKER: {
+      case MKV.Koder.avsendertyper.PERSON: {
         kopierBrukerTilAvsender();
         break;
       }
-      case KV.Koder.Avsendere.ARBEIDSGIVER_ELLER_FULLMEKTIG:
-      case KV.Koder.Avsendere.UTENLANDSK_TRYGDEMYNDIGHET: {
+      case MKV.Koder.avsendertyper.ORGANISASJON:
+      case MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET: {
         tomAvsender();
         break;
       }
       default:
-        throw new Error('avsender må finnes blant avsendere-konstanter');
+        throw new Error('Ukjent avsenderType');
     }
   };
 
@@ -68,7 +69,7 @@ const AvsenderVelger = ({
     settFeltInnhold('avsenderNavn', avsenderNavn);
   };
 
-  if (journalforingAvsenderID && journalforingAvsenderNavn) {
+  if (journalforingAvsenderID && journalforingAvsenderNavn && journalforingAvsenderType) {
     return (
       <PreutfyltAvsender
         className={className}
@@ -84,21 +85,21 @@ const AvsenderVelger = ({
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Bruker"
-          value={KV.Koder.Avsendere.BRUKER}
+          value={MKV.Koder.avsendertyper.PERSON}
         />
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Arbeidsgiver/fullmektig"
-          value={KV.Koder.Avsendere.ARBEIDSGIVER_ELLER_FULLMEKTIG}
+          value={MKV.Koder.avsendertyper.ORGANISASJON}
         />
         <Skjema.Radio
           feltNavn="avsenderType"
           label="Utenlandsk trygdemyndighet"
-          value={KV.Koder.Avsendere.UTENLANDSK_TRYGDEMYNDIGHET}
+          value={MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET}
         />
       </Skjema.RadioGruppe>
       {
-        formValues.avsenderType === KV.Koder.Avsendere.ARBEIDSGIVER_ELLER_FULLMEKTIG &&
+        formValues.avsenderType === MKV.Koder.avsendertyper.ORGANISASJON &&
         <Fragment>
           <Skjema.Input
             feltNavn="avsenderID"
@@ -115,7 +116,7 @@ const AvsenderVelger = ({
         </Fragment>
       }
       {
-        formValues.avsenderType === KV.Koder.Avsendere.UTENLANDSK_TRYGDEMYNDIGHET &&
+        formValues.avsenderType === MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET &&
         <Fragment>
           <Skjema.LandVelger feltNavn="utenlandskTrygdemyndighetLandkode" label="Velg land" onChange={fullmektigLandEndret} />
           {
@@ -140,6 +141,7 @@ AvsenderVelger.propTypes = {
   visAvsenderSpinner: PT.bool,
   journalforingAvsenderID: PT.string,
   journalforingAvsenderNavn: PT.string,
+  journalforingAvsenderType: PT.string,
 };
 
 AvsenderVelger.defaultProps = {
@@ -147,6 +149,7 @@ AvsenderVelger.defaultProps = {
   formValues: {},
   journalforingAvsenderID: undefined,
   journalforingAvsenderNavn: undefined,
+  journalforingAvsenderType: undefined,
   visAvsenderSpinner: false,
 };
 
@@ -154,6 +157,7 @@ const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   journalforingAvsenderID: journalforingSelectors.AvsenderIDSelector(state),
   journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
+  journalforingAvsenderType: journalforingSelectors.AvsenderTypeSelector(state),
 });
 
 export default connect(mapStateToProps)(AvsenderVelger);
