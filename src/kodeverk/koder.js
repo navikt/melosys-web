@@ -97,6 +97,12 @@ export const SedStatus = {
   AVBRUTT: 'AVBRUTT',
 };
 
+export const Avsendere = {
+  BRUKER: 'BRUKER',
+  ARBEIDSGIVER_ELLER_FULLMEKTIG: 'ARBEIDSGIVER_ELLER_FULLMEKTIG',
+  UTENLANDSK_TRYGDEMYNDIGHET: 'UTENLANDSK_TRYGDEMYNDIGHET',
+};
+
 /* Dette er kodene for hver enkelt steg i stegvelgeren og avklartfakta eller vilkår. Fag eller arkitektur har ingen
  * spesielle krav eller forhold til disse kodene, men noen kan sammenfalle med koder som fag bruker.
  */
