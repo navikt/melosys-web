@@ -41,7 +41,7 @@ const journalforing = object().shape({
     }),
   avsenderID: string()
     .when('avsenderType', {
-      is: KV.Koder.Avsendere.ARBEIDSGIVER_ELLER_FULLMEKTIG,
+      is: MKV.Koder.avsendertyper.ORGANISASJON,
       then: string().nullable()
         .erNummer(SKRIV_INN_KUN_NUMMER)
         .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
@@ -111,7 +111,7 @@ const journalforing = object().shape({
     }),
   utenlandskTrygdemyndighetLandkode: string()
     .when('avsenderType', {
-      is: KV.Koder.Avsendere.UTENLANDSK_TRYGDEMYNDIGHET,
+      is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
       then: string().required(VELG_ETT_LAND),
     }),
   avsenderType: string()

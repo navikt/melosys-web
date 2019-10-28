@@ -79,6 +79,7 @@ const mapStateToProps = state => ({
   journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   initialValues: {
+    avsenderType: journalforingSelectors.JournalforingAlle(state).avsenderType,
     behandlingstype: null,
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,

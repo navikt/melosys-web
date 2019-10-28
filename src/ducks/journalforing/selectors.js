@@ -37,3 +37,8 @@ export const AvsenderNavnSelector = createSelector(
   JournalforingAlle,
   journalforing => journalforing.avsenderNavn
 );
+
+export const AvsenderTypeSelector = createSelector(
+  JournalforingAlle,
+  journalforing => journalforing.avsenderType
+);
