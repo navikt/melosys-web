@@ -12,7 +12,7 @@ import * as Konstanter from '../../../constants';
 import * as Api from '../../../services/api';
 import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
 
-import HvemErAvsender from './hvemeravsender';
+import AvsenderVelger from './avsendervelger';
 
 import { PersonSelectors } from '../../../ducks/personer';
 import { OrganisasjonSelectors } from '../../../ducks/organisasjoner';
@@ -171,10 +171,9 @@ class Informasjon extends Component {
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
 
-
         <Nav.Element className="informasjonOmAvsenderTittel">Informasjon om avsender</Nav.Element>
-        <HvemErAvsender
-          className="hvemErAvsender"
+        <AvsenderVelger
+          className="avsenderVelger"
           kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
           tomAvsender={this.tomAvsender}
           settFeltInnhold={settFeltInnhold}

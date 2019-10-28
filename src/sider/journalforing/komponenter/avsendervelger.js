@@ -10,7 +10,7 @@ import * as KV from '../../../kodeverk';
 
 import { journalforingSelectors } from '../../../ducks/journalforing';
 
-import './hvemeravsender.css';
+import './avsendervelger.css';
 
 const PreutfyltAvsender = ({
   className,
@@ -31,7 +31,7 @@ PreutfyltAvsender.propTypes = {
   avsenderNavn: PT.string.isRequired,
 };
 
-const HvemErAvsender = ({
+const AvsenderVelger = ({
   className,
   kopierBrukerTilAvsender,
   tomAvsender,
@@ -131,7 +131,7 @@ const HvemErAvsender = ({
   );
 };
 
-HvemErAvsender.propTypes = {
+AvsenderVelger.propTypes = {
   className: PT.string,
   kopierBrukerTilAvsender: PT.func.isRequired,
   tomAvsender: PT.func.isRequired,
@@ -142,7 +142,7 @@ HvemErAvsender.propTypes = {
   journalforingAvsenderNavn: PT.string,
 };
 
-HvemErAvsender.defaultProps = {
+AvsenderVelger.defaultProps = {
   className: undefined,
   formValues: {},
   journalforingAvsenderID: undefined,
@@ -156,4 +156,4 @@ const mapStateToProps = state => ({
   journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
 });
 
-export default connect(mapStateToProps)(HvemErAvsender);
+export default connect(mapStateToProps)(AvsenderVelger);
