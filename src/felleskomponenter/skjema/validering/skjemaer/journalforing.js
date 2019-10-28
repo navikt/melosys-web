@@ -1,7 +1,6 @@
 import * as MKV from 'melosys-kodeverk';
 import * as Utils from '../../../../utils';
 import * as Konstanter from '../../../../constants';
-import * as KV from '../../../../kodeverk';
 
 const {
   object, string, lazy, array,
