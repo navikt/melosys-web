@@ -75,12 +75,15 @@ JournalforingForm.defaultProps = {
 
 const toVedleggMedProps = vedlegg => vedlegg.reduce((acc, d, index) => { acc[`tittel_${index}`] = d.tittel; return acc; }, {});
 const mapStateToProps = state => ({
+  journalforingAvsenderID: journalforingSelectors.AvsenderIDSelector(state),
+  journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   initialValues: {
     behandlingstype: null,
     brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
     erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
     avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
+    avsenderNavn: journalforingSelectors.JournalforingAlle(state).avsenderNavn,
     arbeidsgiverID: null,
     representantID: '',
     mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
@@ -104,10 +107,14 @@ const form = {
   enableReinitialize: true,
   destroyOnUnmount: true,
   updateUnregisteredFields: true,
+  touchOnChange: true,
   validate: (values, props) => {
+    const erAvsenderIDOgAvsenderNavnPreutfylt = Boolean(props.journalforingAvsenderID && props.journalforingAvsenderNavn);
+
     const options = {
       context: {
         brukerNavn: props.formValues ? props.formValues.brukerNavn : undefined,
+        skalValidereAvsenderType: !erAvsenderIDOgAvsenderNavnPreutfylt,
       },
     };
 
