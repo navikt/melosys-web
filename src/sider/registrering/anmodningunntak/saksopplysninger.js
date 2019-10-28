@@ -63,6 +63,38 @@ const Saksopplysninger = props => {
     }
   }, [props]);
 
+  const hentAnmodningsperiodeId = async behandlingID => {
+    const data = await Api.Anmodningsperioder.hent(behandlingID);
+    const { anmodningsperioder } = data;
+    return anmodningsperioder[0].id;
+  };
+
+  const hentAnmodningsperiodeSvar = async () => {
+    try {
+      const anmodningsperiodeId = await hentAnmodningsperiodeId(props.behandlingID);
+      const anmodningsperiodeSvar = await Api.Anmodningsperioder.svar.hent(anmodningsperiodeId);
+
+      if (anmodningsperiodeSvar) {
+        if (anmodningsperiodeSvar.anmodningsperiodeSvarType) {
+          setAnmodningsperiodeSvarType(anmodningsperiodeSvar.anmodningsperiodeSvarType);
+        }
+        if (anmodningsperiodeSvar.begrunnelseFritekst) {
+          setBegrunnelseFritekst(anmodningsperiodeSvar.begrunnelseFritekst);
+        }
+        if (anmodningsperiodeSvar.endretPeriode) {
+          setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.fom)}`);
+          setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.tom)}`);
+        }
+      }
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  };
+
+  useEffect(() => {
+    hentAnmodningsperiodeSvar();
+  }, []);
+
   const validerFelt = () => {
     let valideringsresultat;
     switch (anmodningsperiodeSvarType) {
@@ -113,12 +145,6 @@ const Saksopplysninger = props => {
       default:
         return null;
     }
-  };
-
-  const hentAnmodningsperiodeId = async behandlingID => {
-    const data = await Api.Anmodningsperioder.hent(behandlingID);
-    const { anmodningsperioder } = data;
-    return anmodningsperioder[0].id;
   };
 
   const sjekkDatoVarsel = (fom, tom) => {
@@ -214,6 +240,8 @@ const Saksopplysninger = props => {
     return null;
   }
 
+  const endreAnmodningsperiodeSvarType = e => setAnmodningsperiodeSvarType(e.target.value);
+
   const unikRadioButtonGruppeID = uuid();
 
   return (
@@ -244,9 +272,21 @@ const Saksopplysninger = props => {
               </Nav.Row>
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => setAnmodningsperiodeSvarType(e.target.value)} disabled={!redigerbart}>
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE} label="Godkjenn unntaksperiode" defaultChecked />
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} label="Godkjenn, men endre periode" />
+                  <Nav.Fieldset legend="Vurder unntaksperiode" disabled={!redigerbart}>
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}
+                      checked={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE === anmodningsperiodeSvarType}
+                      onChange={endreAnmodningsperiodeSvarType}
+                      label="Godkjenn unntaksperiode"
+                    />
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}
+                      checked={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE === anmodningsperiodeSvarType}
+                      onChange={endreAnmodningsperiodeSvarType}
+                      label="Godkjenn, men endre periode"
+                    />
                     {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
                       <Nav.Row>
                         <Nav.Column xs="3">
@@ -271,7 +311,13 @@ const Saksopplysninger = props => {
                         </Nav.Column>
                       </Nav.Row>
                     )}
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} label="Ikke godkjenn" />
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}
+                      checked={MKV.Koder.anmodningsperiodesvartyper.AVSLAG === anmodningsperiodeSvarType}
+                      onChange={endreAnmodningsperiodeSvarType}
+                      label="Ikke godkjenn"
+                    />
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>

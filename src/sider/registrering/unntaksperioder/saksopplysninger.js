@@ -36,6 +36,49 @@ const Saksopplysninger = props => {
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = React.useState(false);
   const [durationWarningMessage, setDurationWarningMessage] = React.useState(null);
 
+  const hentBehandlingsresultat = async () => Api.Behandlinger.resultat.hentResultat(props.behandlingID);
+  const hentLovvalgsperioder = async () => Api.Lovvalgsperioder.hent(props.behandlingID);
+
+  const settEndretPeriodeOpplysninger = async avklartFakta => {
+    setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.DELVIS_GODKJENT);
+    setEndrePeriodeBegrunnelse(avklartFakta.fakta[0]); // Har alltid bare ett fakta i disse tilfellene
+    setEndrePeriodeFritekst(avklartFakta.begrunnelseFritekst);
+
+    const lovvalgsperioder = await hentLovvalgsperioder();
+    if (lovvalgsperioder) {
+      setEndrePeriodeFom(Utils.dato.formatterDatoTilNorsk(lovvalgsperioder[0].fomDato));
+      setEndrePeriodeTom(Utils.dato.formatterDatoTilNorsk(lovvalgsperioder[0].tomDato));
+    }
+  };
+
+  const godkjentUnntaksperiode = async () => {
+    const endretPeriodeFakta = props.avklartefakta.find(value => value.referanse === MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE);
+    if (endretPeriodeFakta) {
+      settEndretPeriodeOpplysninger(endretPeriodeFakta);
+    } else {
+      setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.GODKJENT);
+    }
+  };
+
+  const ikkeGodkjentUnntaksperiode = behandlingsresultat => {
+    setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.AVSLAG);
+    setBegrunnelseFritekst(behandlingsresultat.begrunnelseFritekst);
+    setIkkeGodkjentBegrunnelseKoder(behandlingsresultat.begrunnelseKoder);
+  };
+
+  const initialiserSkjema = async () => {
+    const behandlingsresultat = await hentBehandlingsresultat();
+    if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.GODKJENT) {
+      godkjentUnntaksperiode();
+    } else if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT) {
+      ikkeGodkjentUnntaksperiode(behandlingsresultat);
+    }
+  };
+
+  React.useEffect(() => {
+    initialiserSkjema();
+  }, [props.avklartefakta]);
+
   const overstyrSubmit = event => {
     event.preventDefault();
   };
@@ -208,6 +251,8 @@ const Saksopplysninger = props => {
     validerAvslag(ikkeGodkjentBegrunnelse);
   };
 
+  const endreUnntaksperiodeVurdering = e => setUnntaksperiodeVurdering(e.target.value);
+
   const unikRadioButtonGruppeID = uuid();
   return (
     <div>
@@ -226,9 +271,21 @@ const Saksopplysninger = props => {
               </Nav.Row>
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => setUnntaksperiodeVurdering(e.target.value)} disabled={!redigerbart}>
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.GODKJENT} label="Godkjenn unntaksperiode" defaultChecked />
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT} label="Godkjenn, men endre periode" />
+                  <Nav.Fieldset legend="Vurder unntaksperiode" disabled={!redigerbart}>
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={KV.Koder.Unntaksperiode.GODKJENT}
+                      checked={KV.Koder.Unntaksperiode.GODKJENT === unntaksperiodeVurdering}
+                      onChange={endreUnntaksperiodeVurdering}
+                      label="Godkjenn unntaksperiode"
+                    />
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}
+                      checked={KV.Koder.Unntaksperiode.DELVIS_GODKJENT === unntaksperiodeVurdering}
+                      onChange={endreUnntaksperiodeVurdering}
+                      label="Godkjenn, men endre periode"
+                    />
                     {kanEndrePeriode() && (
                       <Nav.Row>
                         <EndrePeriode
@@ -249,7 +306,13 @@ const Saksopplysninger = props => {
                         />
                       </Nav.Row>
                     )}
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.AVSLAG} label="Ikke godkjenn" />
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={KV.Koder.Unntaksperiode.AVSLAG}
+                      checked={KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering}
+                      onChange={endreUnntaksperiodeVurdering}
+                      label="Ikke godkjenn"
+                    />
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>
@@ -265,6 +328,7 @@ const Saksopplysninger = props => {
                           tillatFritekst={false}
                           onChange={listevalgEndringHandler}
                           feil={ikkeGodkjentFeilmeldinger.begrunnelseKoder}
+                          defaultElementer={ikkeGodkjentBegrunnelseKoder}
                         />
                       </Nav.Fieldset>
                     </Nav.Column>
