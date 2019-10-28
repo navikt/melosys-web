@@ -326,6 +326,7 @@ const Saksopplysninger = props => {
                   <Nav.Row>
                     <Nav.Column xs="6">
                       <Nav.Textarea
+                        disabled={!redigerbart}
                         label="Skriv inn begrunnelse for avslaget..."
                         onChange={textAreaOnChange}
                         value={begrunnelseFritekst}

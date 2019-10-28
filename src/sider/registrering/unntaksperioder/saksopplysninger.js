@@ -322,7 +322,7 @@ const Saksopplysninger = props => {
                     <Nav.Column xs="6">
                       <Nav.Fieldset legend="Begrunnelse for ikke godkjent unntaksperiode">
                         <Mui.ListevelgerFlervalg
-                          disabled={false}
+                          disabled={!redigerbart}
                           muligeValg={MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser}
                           label="Legg til begrunnelse for ikke oppfylt:"
                           tillatFritekst={false}
@@ -337,6 +337,7 @@ const Saksopplysninger = props => {
                     <Nav.Column xs="6">
                       {ikkeGodkjentBegrunnelseKoder.includes('ANNET') &&
                         <Nav.Textarea
+                          disabled={!redigerbart}
                           label="Skriv inn begrunnelse for avslaget..."
                           onChange={textAreaOnChange}
                           value={begrunnelseFritekst}
