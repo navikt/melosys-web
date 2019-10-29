@@ -9,6 +9,7 @@ import { lovvalgsperioderOperations } from '../lovvalgsperioder';
 import { vilkarOperations } from '../vilkar';
 import { behandlingsperioderOperations } from '../behandlingsperioder';
 import { anmodningsperioderOperations } from '../anmodningsperioder';
+import { anmodningsperiodesvarOperations } from "../anmodningsperiodesvar";
 
 
 export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
@@ -38,6 +39,18 @@ export const lastInnSaksopplysningerSedBehandling = (saksnummer, behandlingID) =
       dispatch(vilkarOperations.hent(behandlingID));
       dispatch(lovvalgsperioderOperations.hent(behandlingID));
       dispatch(behandlingsperioderOperations.hentMedlemsPerioder(behandlingID));
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  }
+);
+
+export const lastInnSaksopplysningerBehandleMottattAOU = (behandlingID, anmodningsperiodeID) => (
+  dispatch => {
+    try {
+      dispatch(behandlingerOperations.hentBehandling(behandlingID));
+      dispatch(anmodningsperioderOperations.hent(behandlingID));
+      dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID));
     } catch (e) {
       Utils.logger.error(e);
     }
