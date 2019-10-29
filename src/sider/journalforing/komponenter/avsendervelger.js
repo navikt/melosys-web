@@ -40,7 +40,7 @@ const AvsenderVelger = ({
   visAvsenderSpinner,
   journalforingAvsenderID,
   journalforingAvsenderNavn,
-  journalforingAvsenderType,
+  erAvsenderPreutfylt,
 }) => {
   const avsenderTypeEndret = avsenderType => {
     switch (avsenderType) {
@@ -69,7 +69,7 @@ const AvsenderVelger = ({
     settFeltInnhold('avsenderNavn', avsenderNavn);
   };
 
-  if (journalforingAvsenderID && journalforingAvsenderNavn && journalforingAvsenderType) {
+  if (erAvsenderPreutfylt) {
     return (
       <PreutfyltAvsender
         className={className}
@@ -141,7 +141,7 @@ AvsenderVelger.propTypes = {
   visAvsenderSpinner: PT.bool,
   journalforingAvsenderID: PT.string,
   journalforingAvsenderNavn: PT.string,
-  journalforingAvsenderType: PT.string,
+  erAvsenderPreutfylt: PT.bool.isRequired,
 };
 
 AvsenderVelger.defaultProps = {
@@ -149,7 +149,6 @@ AvsenderVelger.defaultProps = {
   formValues: {},
   journalforingAvsenderID: undefined,
   journalforingAvsenderNavn: undefined,
-  journalforingAvsenderType: undefined,
   visAvsenderSpinner: false,
 };
 
@@ -157,7 +156,7 @@ const mapStateToProps = state => ({
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   journalforingAvsenderID: journalforingSelectors.AvsenderIDSelector(state),
   journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
-  journalforingAvsenderType: journalforingSelectors.AvsenderTypeSelector(state),
+  erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
 });
 
 export default connect(mapStateToProps)(AvsenderVelger);

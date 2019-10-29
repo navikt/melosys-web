@@ -116,7 +116,9 @@ const journalforing = object().shape({
   avsenderType: string()
     .when('$skalValidereAvsenderType', {
       is: true,
-      then: string().required(VELG_EN_AVSENDER),
+      then: string()
+        .ensure()
+        .required(VELG_EN_AVSENDER),
     }),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
