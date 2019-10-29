@@ -4,19 +4,21 @@ import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
 
-import * as Utils from '../../../utils/utils';
+import * as Utils from '../../../utils';
 import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 import * as Konstanter from '../../../constants';
 import * as Api from '../../../services/api';
+import * as Ikoner from '../../../resources/images';
 import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
-
 import AvsenderVelger from './avsendervelger';
 
+import { Overskrift } from './overskrift';
 import { PersonSelectors } from '../../../ducks/personer';
 import { OrganisasjonSelectors } from '../../../ducks/organisasjoner';
 import { formSelectors } from '../../../ducks/form';
+import { journalforingSelectors } from '../../../ducks/journalforing';
 
 import './informasjon.css';
 
@@ -154,6 +156,7 @@ class Informasjon extends Component {
     const {
       journalpostID,
       dokumentID,
+      mottattDato,
       vedlegg,
       settFeltInnhold,
     } = this.props;
@@ -179,42 +182,47 @@ class Informasjon extends Component {
           settFeltInnhold={settFeltInnhold}
           visAvsenderSpinner={visAvsenderSpinner}
         />
+        <Overskrift tekst="Dokumenter" ikon={Ikoner.IkonSak} className="undertittel oversteUndertittel" />
+        <Nav.Input
+          label="Mottatt dato"
+          type="dato"
+          bredde="S"
+          disabled
+          value={Utils.dato.formatterDatoTilNorsk(mottattDato)}
+        />
+        <Nav.Fieldset legend="Hoveddokument:">
+          <Skjema.ListeVelger
+            feltNavn="hoveddokumentTittel"
+            label="Tittel på hoveddokument:"
+            placeholder="(velg eller skriv inn egen tittel)"
+            muligeValg={dokumenttitler}
+          />
+          <Link to={dokumentURI(journalpostID, dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne dokument i ny fane</Link>
+        </Nav.Fieldset>
 
-        <Nav.Fieldset legend="Informasjon om dokument">
-          <Nav.Fieldset legend="Hoveddokument:">
-            <Skjema.ListeVelger
-              feltNavn="hoveddokumentTittel"
-              label="Tittel på hoveddokument:"
-              placeholder="(velg eller skriv inn egen tittel)"
-              muligeValg={dokumenttitler}
-            />
-            <Link to={dokumentURI(journalpostID, dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne dokument i ny fane</Link>
+        {vedlegg.length > 0 &&
+          <Nav.Fieldset legend="Fysiske Vedlegg:">
+            {vedlegg.map((elem, index) =>
+              <Fragment key={elem.dokumentID}>
+                <Skjema.ListeVelger
+                  feltNavn={`vedlegg.pdf.tittel_${index}`}
+                  label={`Tittel på vedlegg: ${index + 1}`}
+                  placeholder="(velg eller skriv inn egen tittel)"
+                  muligeValg={dokumenttitler}
+                />
+                <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne vedlegg i ny fane</Link>
+              </Fragment>)}
           </Nav.Fieldset>
-
-          {vedlegg.length > 0 &&
-            <Nav.Fieldset legend="Fysiske Vedlegg:">
-              {vedlegg.map((elem, index) =>
-                <Fragment key={elem.dokumentID}>
-                  <Skjema.ListeVelger
-                    feltNavn={`vedlegg.pdf.tittel_${index}`}
-                    label={`Tittel på vedlegg: ${index + 1}`}
-                    placeholder="(velg eller skriv inn egen tittel)"
-                    muligeValg={dokumenttitler}
-                  />
-                  <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne vedlegg i ny fane</Link>
-                </Fragment>)}
-            </Nav.Fieldset>
-          }
-          <Nav.Fieldset legend="Logiske Vedlegg:">
-            <Skjema.ListeVelger
-              feltNavn="vedlegg.logiskeTitler"
-              label="Velg ny tittel:"
-              gruppe
-              tillatFritekst
-              muligeValg={dokumenttitler}
-              placeholder="(Velg eller skriv inn egen tittel)"
-            />
-          </Nav.Fieldset>
+        }
+        <Nav.Fieldset legend="Logiske Vedlegg:">
+          <Skjema.ListeVelger
+            feltNavn="vedlegg.logiskeTitler"
+            label="Velg ny tittel:"
+            gruppe
+            tillatFritekst
+            muligeValg={dokumenttitler}
+            placeholder="(Velg eller skriv inn egen tittel)"
+          />
         </Nav.Fieldset>
 
       </div>
@@ -229,6 +237,7 @@ Informasjon.propTypes = {
   journalpostID: PT.string,
   dokumentID: PT.string,
   dokumentTittel: PT.string,
+  mottattDato: PT.string.isRequired,
   vedlegg: PT.array,
   settFeltInnhold: PT.func.isRequired,
 };
@@ -244,6 +253,7 @@ Informasjon.defaultProps = {
 const mapStateToProps = state => ({
   person: PersonSelectors.personerSelector(state),
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
+  mottattDato: journalforingSelectors.MottattDatoSelector(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 
