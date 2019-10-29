@@ -42,3 +42,12 @@ export const AvsenderTypeSelector = createSelector(
   JournalforingAlle,
   journalforing => journalforing.avsenderType
 );
+
+export const ErAvsenderPreutfyltSelector = createSelector(
+  AvsenderIDSelector,
+  AvsenderNavnSelector,
+  AvsenderTypeSelector,
+  (avsenderID, avsenderNavn, avsenderType) => (
+    Boolean(avsenderID) && Boolean(avsenderNavn) && Boolean(avsenderType)
+  )
+);
