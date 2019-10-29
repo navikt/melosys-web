@@ -139,7 +139,7 @@ class Journalforing extends Component {
     /* eslint no-unreachable:off */
     const {
       journalforingSkjemaVerdier: {
-        saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering,
+        saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, avsenderType,
       },
       tilordneSak, settJournalforingHensikt, settFeilFelt, tilForsiden,
     } = this.props;
@@ -148,7 +148,11 @@ class Journalforing extends Component {
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = {
-      saksnummer, behandlingstypeKode, ingenVurdering, ...vasketJournalforing,
+      saksnummer,
+      behandlingstypeKode,
+      ingenVurdering,
+      avsenderType,
+      ...vasketJournalforing,
     };
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
@@ -185,6 +189,7 @@ class Journalforing extends Component {
       journalforingLovvalgsbestemmelse,
       journalforingUnntakFraLovvalgsbestemmelse,
       journalforingUnntakFraLovvalgsland,
+      avsenderType,
     } = journalforingSkjemaVerdier;
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
@@ -226,6 +231,7 @@ class Journalforing extends Component {
       ...vasketJournalforing,
       fagsak,
       anmodningOmUnntak,
+      avsenderType,
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
@@ -344,8 +350,12 @@ class Journalforing extends Component {
       oppgaveID,
     };
 
-    await Api.Journalforing.sed(data);
-    tilForsiden();
+    try {
+      await Api.Journalforing.sed(data);
+      tilForsiden();
+    } catch (e) {
+      Utils.logger.error(e);
+    }
   };
 
   behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
