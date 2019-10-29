@@ -22,7 +22,14 @@ const VELG_ETT_LAND = { melding: 'Velg ett land.' };
 const VELG_EN_AVSENDER = { melding: 'Velg en avsender' };
 const VELG_EN_BESTEMMELSE = 'Velg en bestemmelse.';
 
+const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) =>
+  journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
+    MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
+    MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
+  ].includes(behandlingstype);
+
 const anmodningOmUnntak = (journalforingHensikt, behandlingstype) =>
+  kreverPeriodeOgLand(journalforingHensikt, behandlingstype) &&
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
   behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL;
 
@@ -73,23 +80,23 @@ const journalforing = object().shape({
         .required(VELG_HVILKEN_SAK_DU_ONSKER_A_KNYTTE_JOURNALFORINGEN_MOT),
     }),
   journalforingPeriodeFraOgMed: string()
-    .when('journalforingHensikt', {
-      is: Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+      is: kreverPeriodeOgLand,
       then: string()
         .required(TAST_INN_DATO)
         .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO),
     }),
   journalforingPeriodeTilOgMed: string()
-    .when('journalforingHensikt', {
-      is: Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+      is: kreverPeriodeOgLand,
       then: string()
         .required(TAST_INN_DATO)
         .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO),
     }),
   journalforingSoknadsland: array().of(string())
     .ensure()
-    .when('journalforingHensikt', {
-      is: Konstanter.JOURNALFORING_HENSIKT.OPPRETT,
+    .when(['journalforingHensikt', 'opprettnysak_behandlingstype'], {
+      is: kreverPeriodeOgLand,
       then: array().of(string())
         .min(1, { _error: VELG_MINST_ETT_LAND }),
     }),
