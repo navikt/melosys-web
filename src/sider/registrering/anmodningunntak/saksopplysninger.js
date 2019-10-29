@@ -13,9 +13,9 @@ import * as RegistreringContext from '../state/registreringContext';
 import Medlemskap from '../../../felleskomponenter/medlemskap';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import { datalastingOperations } from "../../../ducks/datalasting";
-import { anmodningsperioderSelectors } from "../../../ducks/anmodningsperioder";
-import { anmodningsperiodesvarSelectors } from "../../../ducks/anmodningsperiodesvar";
+import { datalastingOperations } from '../../../ducks/datalasting';
+import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
+import { anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
 
 import '../saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
@@ -57,7 +57,6 @@ const Saksopplysninger = ({
   vurderingBegrunnelser,
   lastInnSaksopplysninger,
 }) => {
-
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
   const [endretPeriodeFom, setEndretPeriodeFom] = useState('');
@@ -67,7 +66,7 @@ const Saksopplysninger = ({
   const [durationWarningMessage, setDurationWarningMessage] = useState(null);
 
   useEffect(() => {
-    lastInnSaksopplysninger(behandlingID, anmodningsperiodeID)
+    lastInnSaksopplysninger(behandlingID, anmodningsperiodeID);
   }, [anmodningsperiodeID]);
 
   useEffect(() => {
