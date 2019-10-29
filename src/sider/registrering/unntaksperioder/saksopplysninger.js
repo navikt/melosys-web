@@ -15,8 +15,8 @@ import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import { datalastingOperations } from "../../../ducks/datalasting";
-import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
+import { datalastingOperations } from '../../../ducks/datalasting';
+import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from './validering/unntaksperiodeSkjema';
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
@@ -132,9 +132,9 @@ const Saksopplysninger = ({
       .then(() => oppdaterLovvalgsperioder(behandlingID, lagLovvalgsperioder())
         .then(() => dispatchSaksflyt())));
 
-  const godkjenn = behandlingID => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
+  const godkjenn = () => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
 
-  const delvisGodkjenn = behandlingID => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID));
+  const delvisGodkjenn = () => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID));
 
   const kanEndrePeriode = () => (unntaksperiodeVurdering === KV.Koder.Unntaksperiode.DELVIS_GODKJENT);
 
@@ -224,12 +224,12 @@ const Saksopplysninger = ({
     const tilForsiden = () => history.push('/');
     switch (unntaksperiodeVurdering) {
       case KV.Koder.Unntaksperiode.GODKJENT:
-        godkjenn(behandlingID)
+        godkjenn()
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
       case KV.Koder.Unntaksperiode.DELVIS_GODKJENT:
-        delvisGodkjenn(behandlingID)
+        delvisGodkjenn()
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;

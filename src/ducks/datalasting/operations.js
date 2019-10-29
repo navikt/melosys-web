@@ -9,7 +9,7 @@ import { lovvalgsperioderOperations } from '../lovvalgsperioder';
 import { vilkarOperations } from '../vilkar';
 import { behandlingsperioderOperations } from '../behandlingsperioder';
 import { anmodningsperioderOperations } from '../anmodningsperioder';
-import { anmodningsperiodesvarOperations } from "../anmodningsperiodesvar";
+import { anmodningsperiodesvarOperations } from '../anmodningsperiodesvar';
 
 
 export const lastInnSaksopplysninger = (saksnummer, behandlingID) => (
