@@ -17,6 +17,10 @@ export const JournalforingHovedDokument = createSelector(
   journalforing => journalforing.hoveddokument || { tittel: '', dokumentID: null }
 );
 
+export const JournalforingHovedDokumentTittelSelector = createSelector(
+  JournalforingHovedDokument,
+  hoveddokument => hoveddokument.tittel
+);
 
 export const JournalforingVedleggsDokumenter = createSelector(
   state => state.journalforing.data || {},
@@ -41,6 +45,16 @@ export const AvsenderNavnSelector = createSelector(
 export const AvsenderTypeSelector = createSelector(
   JournalforingAlle,
   journalforing => journalforing.avsenderType
+);
+
+export const ErBrukerAvsenderSelector = createSelector(
+  JournalforingAlle,
+  journalforing => journalforing.erBrukerAvsender
+);
+
+export const MottattDatoSelector = createSelector(
+  JournalforingAlle,
+  journalforing => journalforing.mottattDato
 );
 
 export const ErAvsenderPreutfyltSelector = createSelector(
