@@ -15,15 +15,32 @@ import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from './validering/unntaksperiodeSkjema';
+import { datalastingOperations } from "../../../ducks/datalasting";
+import { behandlingsresultatSelectors } from "../../../ducks/behandlingsresultat";
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from './validering/unntaksperiodeSkjema';
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
 
 import '../saksopplysninger.css';
 
 const uuid = require('uuid/v4');
 
-const Saksopplysninger = props => {
+const Saksopplysninger = ({
+  match,
+  behandlingID,
+  redigerbart,
+  history,
+  medlemskap,
+  sed,
+  sedLovvalgsperiode,
+  vurderingBegrunnelser,
+  lovvalgsperiode,
+  behandlingsresultat,
+  avklartefakta,
+  oppdaterAvklartefakta,
+  oppdaterLovvalgsperioder,
+  lastInnSaksopplysninger,
+}) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.GODKJENT);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState('');
   const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = React.useState([]);
@@ -36,23 +53,24 @@ const Saksopplysninger = props => {
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = React.useState(false);
   const [durationWarningMessage, setDurationWarningMessage] = React.useState(null);
 
-  const hentBehandlingsresultat = async () => Api.Behandlinger.resultat.hentResultat(props.behandlingID);
-  const hentLovvalgsperioder = async () => Api.Lovvalgsperioder.hent(props.behandlingID);
+  const { params: { snr: saksnummer } } = match;
+  React.useEffect(() => {
+    lastInnSaksopplysninger(saksnummer, behandlingID);
+  }, []);
 
   const settEndretPeriodeOpplysninger = async avklartFakta => {
     setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.DELVIS_GODKJENT);
     setEndrePeriodeBegrunnelse(avklartFakta.fakta[0]); // Har alltid bare ett fakta i disse tilfellene
     setEndrePeriodeFritekst(avklartFakta.begrunnelseFritekst);
 
-    const lovvalgsperioder = await hentLovvalgsperioder();
-    if (lovvalgsperioder) {
-      setEndrePeriodeFom(Utils.dato.formatterDatoTilNorsk(lovvalgsperioder[0].fomDato));
-      setEndrePeriodeTom(Utils.dato.formatterDatoTilNorsk(lovvalgsperioder[0].tomDato));
+    if (lovvalgsperiode) {
+      setEndrePeriodeFom(Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato));
+      setEndrePeriodeTom(Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato));
     }
   };
 
   const godkjentUnntaksperiode = async () => {
-    const endretPeriodeFakta = props.avklartefakta.find(value => value.referanse === MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE);
+    const endretPeriodeFakta = avklartefakta.find(value => value.referanse === MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE);
     if (endretPeriodeFakta) {
       settEndretPeriodeOpplysninger(endretPeriodeFakta);
     } else {
@@ -60,14 +78,13 @@ const Saksopplysninger = props => {
     }
   };
 
-  const ikkeGodkjentUnntaksperiode = behandlingsresultat => {
+  const ikkeGodkjentUnntaksperiode = () => {
     setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.AVSLAG);
     setBegrunnelseFritekst(behandlingsresultat.begrunnelseFritekst);
     setIkkeGodkjentBegrunnelseKoder(behandlingsresultat.begrunnelseKoder);
   };
 
-  const initialiserSkjema = async () => {
-    const behandlingsresultat = await hentBehandlingsresultat();
+  const initialiserSkjema = () => {
     if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.GODKJENT) {
       godkjentUnntaksperiode();
     } else if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT) {
@@ -77,7 +94,7 @@ const Saksopplysninger = props => {
 
   React.useEffect(() => {
     initialiserSkjema();
-  }, [props.avklartefakta]);
+  }, [avklartefakta, behandlingsresultat, lovvalgsperiode]);
 
   const overstyrSubmit = event => {
     event.preventDefault();
@@ -96,29 +113,23 @@ const Saksopplysninger = props => {
     begrunnelseFritekst: endrePeriodeFritekst || null,
   });
 
-  const oppdaterAvklartefakta = () =>
-    props.oppdaterAvklartefakta(props.behandlingID, [...props.avklartefakta, lagAvklartfakta()]);
-
   const lagLovvalgsperioder = () => ([{
     fomDato: `${Utils.dato.formatterDatoTilISO(endrePeriodeFom)}`,
     tomDato: `${Utils.dato.formatterDatoTilISO(endrePeriodeTom)}`,
-    lovvalgsbestemmelse: props.sed.lovvalgsbestemmelse,
+    lovvalgsbestemmelse: sed.lovvalgsbestemmelse,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
-    lovvalgsland: props.sed.lovvalgslandKode,
+    lovvalgsland: sed.lovvalgslandKode,
     unntakFraLovvalgsland: null,
     trygdeDekning: MKV.Koder.trygdedekninger.UTEN_DEKNING,
     medlemskapstype: MKV.Koder.medlemskapstyper.UNNTATT,
     medlemskapsperiodeID: null,
   }]);
 
-  const oppdaterLovvalgsperioder = () =>
-    props.oppdaterLovvalgsperioder(props.behandlingID, lagLovvalgsperioder());
-
   const endrePeriodeOgLagre = dispatchSaksflyt => (
-    oppdaterAvklartefakta()
-      .then(() => oppdaterLovvalgsperioder()
+    oppdaterAvklartefakta(behandlingID, [...avklartefakta, lagAvklartfakta()])
+      .then(() => oppdaterLovvalgsperioder(behandlingID, lagLovvalgsperioder())
         .then(() => dispatchSaksflyt())));
 
   const godkjenn = behandlingID => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
@@ -210,7 +221,6 @@ const Saksopplysninger = props => {
         return false;
       }
     }
-    const { behandlingID, history } = props;
     const tilForsiden = () => history.push('/');
     switch (unntaksperiodeVurdering) {
       case KV.Koder.Unntaksperiode.GODKJENT:
@@ -238,9 +248,6 @@ const Saksopplysninger = props => {
     }
   };
 
-  const {
-    medlemskap, sed, vurderingBegrunnelser, redigerbart,
-  } = props;
   if (!sed.lovvalgsperiode) {
     return null;
   }
@@ -291,8 +298,8 @@ const Saksopplysninger = props => {
                         <EndrePeriode
                           redigerbart={redigerbart}
                           feilmeldinger={endrePeriodeFeilmeldinger}
-                          sedLovvalgsperiode={props.sedLovvalgsperiode}
-                          lovvalgsperiode={props.lovvalgsperiode}
+                          sedLovvalgsperiode={sedLovvalgsperiode}
+                          lovvalgsperiode={lovvalgsperiode}
                           oppdaterFom={setEndrePeriodeFom}
                           oppdaterTom={setEndrePeriodeTom}
                           oppdaterBegrunnelse={setEndrePeriodeBegrunnelse}
@@ -381,6 +388,8 @@ Saksopplysninger.propTypes = {
   location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgsperioder: PT.func.isRequired,
+  lastInnSaksopplysninger: PT.func.isRequired,
+  behandlingsresultat: PT.object,
 };
 
 Saksopplysninger.defaultProps = {
@@ -389,16 +398,19 @@ Saksopplysninger.defaultProps = {
   sed: {},
   skjema: {},
   sedLovvalgsperiode: {},
+  behandlingsresultat: {},
 };
 
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode,
+  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
 });
 const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   oppdaterLovvalgsperioder: (behandlingID, lovvalgsperiodeListe) => dispatch(lovvalgsperioderOperations.send(behandlingID, lovvalgsperiodeListe)),
+  lastInnSaksopplysninger: (saksnummer, behandlingID) => datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
 });
 
 export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

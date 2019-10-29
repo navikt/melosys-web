@@ -2,6 +2,7 @@ import avklartefaktaReducer, { initialState as avklartefaktaInitialState } from 
 import anmodningsperiodeReducer, { initialState as anmodningsperioderInitialState } from '../../../ducks/anmodningsperioder';
 import anmodningsperiodesvarReducer, { initialState as anmodningsperiodesvarInitialState } from '../../../ducks/anmodningsperiodesvar';
 import behandlingerReducer, { initialState as behandlingerInitialState } from '../../../ducks/behandlinger';
+import behandlingsresultatReducer, { initialState as behandlingsresultatInitialState } from '../../../ducks/behandlingsresultat';
 import fagsakerReducer, { initialState as fagsakerInitialState } from '../../../ducks/fagsaker';
 import lovvalgsperioderReducer, { initialState as lovvalgsperioderInitialState } from '../../../ducks/lovvalgsperioder';
 import soknadReducer, { initialState as soknadInitialState } from '../../../ducks/soknad';
@@ -11,6 +12,7 @@ export const initialState = {
   anmodningsperioder: anmodningsperioderInitialState,
   anmodningsperiodesvar: anmodningsperiodesvarInitialState,
   behandlinger: behandlingerInitialState,
+  behandlingsresultat: behandlingsresultatInitialState,
   fagsaker: fagsakerInitialState,
   lovvalgsperioder: lovvalgsperioderInitialState,
   soknad: soknadInitialState,
@@ -21,6 +23,7 @@ export const reducer = ({
   anmodningsperioder,
   anmodningsperiodesvar,
   behandlinger,
+  behandlingsresultat,
   fagsaker,
   lovvalgsperioder,
   soknad,
@@ -29,6 +32,7 @@ export const reducer = ({
   anmodningsperioder: anmodningsperiodeReducer(anmodningsperioder, action),
   anmodningsperiodesvar: anmodningsperiodesvarReducer(anmodningsperiodesvar, action),
   behandlinger: behandlingerReducer(behandlinger, action),
+  behandlingsresultat: behandlingsresultatReducer(behandlingsresultat, action),
   fagsaker: fagsakerReducer(fagsaker, action),
   lovvalgsperioder: lovvalgsperioderReducer(lovvalgsperioder, action),
   soknad: soknadReducer(soknad, action),
