@@ -63,6 +63,7 @@ const Registrering = props => {
     lovvalgsperiodeFom,
     lovvalgsperiodeTom,
     oppdaterBehandlingsStatus,
+    lovvalgsland,
   } = props;
 
   const saksnummer = snr;
@@ -125,6 +126,7 @@ const Registrering = props => {
               person={person}
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
+              lovvalgsland={lovvalgsland}
               renderBehandlingsmeny={() => <Behandlingsmeny
                 redigerbart={redigerbart}
                 lagreOgLukkHandle={lagreOgLukk}
@@ -175,6 +177,7 @@ Registrering.propTypes = {
   lovvalgsperiodeTom: PT.string,
   oppdaterBehandlingsStatus: PT.func.isRequired,
   tilForsiden: PT.func.isRequired,
+  lovvalgsland: MPT.Kodeverk.isRequired,
 };
 Registrering.defaultProps = {
   redigerbart: null,
@@ -200,6 +203,7 @@ const mapStateToProps = state => ({
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsperiodeFom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).fom),
   lovvalgsperiodeTom: Utils.dato.formatterDatoTilNorsk(behandlingerSelectors.LovvalgsperiodeSelector(state).tom),
+  lovvalgsland: behandlingerSelectors.LovvalgslandSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
