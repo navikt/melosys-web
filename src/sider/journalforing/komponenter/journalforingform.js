@@ -75,19 +75,19 @@ JournalforingForm.defaultProps = {
 
 const toVedleggMedProps = vedlegg => vedlegg.reduce((acc, d, index) => { acc[`tittel_${index}`] = d.tittel; return acc; }, {});
 const mapStateToProps = state => ({
-  journalforingAvsenderID: journalforingSelectors.AvsenderIDSelector(state),
-  journalforingAvsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
+  erAvsenderPreutfylt: journalforingSelectors.ErAvsenderPreutfyltSelector(state),
   formValues: getFormValues(KV.Form.JOURNALFORING)(state),
   initialValues: {
+    avsenderType: journalforingSelectors.AvsenderTypeSelector(state),
     behandlingstype: null,
-    brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
-    erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
-    avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
-    avsenderNavn: journalforingSelectors.JournalforingAlle(state).avsenderNavn,
+    brukerID: journalforingSelectors.BrukerIDSelector(state),
+    erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
+    avsenderID: journalforingSelectors.AvsenderIDSelector(state),
+    avsenderNavn: journalforingSelectors.AvsenderNavnSelector(state),
     arbeidsgiverID: null,
     representantID: '',
-    mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
-    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
+    mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.MottattDatoSelector(state)),
+    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokumentTittelSelector(state),
     vedlegg: {
       pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
       logiskeTitler: [],
@@ -109,12 +109,10 @@ const form = {
   updateUnregisteredFields: true,
   touchOnChange: true,
   validate: (values, props) => {
-    const erAvsenderIDOgAvsenderNavnPreutfylt = Boolean(props.journalforingAvsenderID && props.journalforingAvsenderNavn);
-
     const options = {
       context: {
         brukerNavn: props.formValues ? props.formValues.brukerNavn : undefined,
-        skalValidereAvsenderType: !erAvsenderIDOgAvsenderNavnPreutfylt,
+        skalValidereAvsenderType: !props.erAvsenderPreutfylt,
       },
     };
 

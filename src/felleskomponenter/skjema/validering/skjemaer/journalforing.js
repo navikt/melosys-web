@@ -1,7 +1,6 @@
 import * as MKV from 'melosys-kodeverk';
 import * as Utils from '../../../../utils';
 import * as Konstanter from '../../../../constants';
-import * as KV from '../../../../kodeverk';
 
 const {
   object, string, lazy, array,
@@ -41,7 +40,7 @@ const journalforing = object().shape({
     }),
   avsenderID: string()
     .when('avsenderType', {
-      is: KV.Koder.Avsendere.ARBEIDSGIVER_ELLER_FULLMEKTIG,
+      is: MKV.Koder.avsendertyper.ORGANISASJON,
       then: string().nullable()
         .erNummer(SKRIV_INN_KUN_NUMMER)
         .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
@@ -111,13 +110,15 @@ const journalforing = object().shape({
     }),
   utenlandskTrygdemyndighetLandkode: string()
     .when('avsenderType', {
-      is: KV.Koder.Avsendere.UTENLANDSK_TRYGDEMYNDIGHET,
+      is: MKV.Koder.avsendertyper.UTENLANDSK_TRYGDEMYNDIGHET,
       then: string().required(VELG_ETT_LAND),
     }),
   avsenderType: string()
     .when('$skalValidereAvsenderType', {
       is: true,
-      then: string().required(VELG_EN_AVSENDER),
+      then: string()
+        .ensure()
+        .required(VELG_EN_AVSENDER),
     }),
 
   /* Følgene felter viser ingen feilmeldinger til bruker, men må være en del av skjemaet for å kunne benytte .when() for andre felter. */
