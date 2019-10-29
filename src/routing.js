@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Route, Switch, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import loadable from '@loadable/component';
@@ -49,16 +49,11 @@ const Routing = ({
   saksnummer,
   apneTidligereBehandlinger,
 }) => {
-  const [featureToggle, setFeatureToggle] = useState(false);
   const [visHenleggDialog, setVisHenleggDialog] = useState(false);
   const [visAvsluttSakSomBortfaltDialog, setVisAvsluttSakSomBortfaltDialog] = useState(false);
   const [visAvslagSoknadDialog, setVisAvslagSoknadDialog] = useState(false);
   const [visOppfriskDialog, setVisOppfriskDialog] = useState(false);
   const [oppfriskningBlokkererInnhold, setOppfriskningBlokkererInnhold] = useState(false);
-
-  useEffect(() => {
-    (async () => setFeatureToggle(await Utils.feature.namespaceToggle('q2', 't8')))();
-  });
 
   const behandlingID = Utils._toInteger(Utils.queryString.getParam(location, 'behandlingID'));
 
@@ -192,8 +187,8 @@ const Routing = ({
       <Switch location={location}>
         <Route exact path="/" component={ForsideLoadable} />
         <Route exact path="/sok/:fnr" component={SokLoadable} />
-        {featureToggle && <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />}
-        {featureToggle && <Route exact path="/registrering/:snr/anmodningunntak" render={props => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />} />}
+        <Route exact path="/registrering/:snr/unntaksperioder" render={props => <RegistreringUnntaksperioderLoadable {...props} {...fellesHandlers} />} />
+        <Route exact path="/registrering/:snr/anmodningunntak" render={props => <RegistreringAnmodningunntakLoadable {...props} {...fellesHandlers} />} />
         <Route path="/sedbehandling/:snr" render={props => <SedBehandlingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/saksbehandling/:snr" render={props => <SaksbehandlingLoadable {...props} {...fellesHandlers} />} />
         <Route path="/journalforing/:journalpostID/:oppgaveID" render={props => <JournalforingLoadable {...props} {...fellesHandlers} />} />

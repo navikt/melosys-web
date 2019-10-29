@@ -72,14 +72,17 @@ class SideDialog extends Component {
     faner: this.props.faner,
   };
 
-  componentDidMount() {
-    Utils.feature.namespaceToggle('q2', 't8')
-      .then(skalVises => {
-        if (skalVises) {
-          this.leggTilFane({ navn: 'sedbestilling', tittel: 'Opprett ny BUC' });
-          this.leggTilFane({ navn: 'besvarsed', tittel: 'SED-utveksling' });
-        }
-      });
+  async componentDidMount() {
+    const skalVises = await Utils.feature.toggle([
+      { namespace: 'default', cluster: 'prod-fss' },
+      { namespace: 'q2', cluster: 'dev-fss' },
+      { namespace: 't8', cluster: 'dev-fss' },
+    ]);
+
+    if (skalVises) {
+      this.leggTilFane({ navn: 'sedbestilling', tittel: 'Opprett ny BUC' });
+      this.leggTilFane({ navn: 'besvarsed', tittel: 'SED-utveksling' });
+    }
   }
 
   /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
