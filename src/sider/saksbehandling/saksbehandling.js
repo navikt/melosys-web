@@ -167,6 +167,9 @@ class Saksbehandling extends Component {
       visOppfriskBekreftelse,
       apneTidligereBehandlinger,
       blokkerInnholdMedOppfriskSpinner,
+      arbeidsland,
+      soknadsperiodeFom,
+      soknadsperiodeTom,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -198,6 +201,9 @@ class Saksbehandling extends Component {
                 person={person}
                 lovvalgsperiodeFom={lovvalgsperiodeFom}
                 lovvalgsperiodeTom={lovvalgsperiodeTom}
+                arbeidsland={arbeidsland}
+                soknadsperiodeFom={soknadsperiodeFom}
+                soknadsperiodeTom={soknadsperiodeTom}
                 renderBehandlingsmeny={() => <Behandlingsmeny
                   redigerbart={redigerbart}
                   lagreOgLukkHandle={lagreOgLukk}
@@ -292,6 +298,9 @@ Saksbehandling.propTypes = {
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
   blokkerInnholdMedOppfriskSpinner: PT.func.isRequired,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
+  soknadsperiodeFom: PT.string.isRequired,
+  soknadsperiodeTom: PT.string.isRequired,
 };
 
 Saksbehandling.defaultProps = {
@@ -332,6 +341,9 @@ const mapStateToProps = state => ({
   brevBestillingRedigerbart: redigerbartSelectors.BrevBestillingRedigerbartSelector(state),
   brevBestillingRedigerbartIArtikkel13: redigerbartSelectors.BrevBestillingRedigerbartIArtikkel13Selector(state),
   anmodningsperioderErSendtUtlandet: anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(state),
+  arbeidsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  soknadsperiodeFom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).fom),
+  soknadsperiodeTom: Utils.dato.formatterDatoTilNorsk(soknadSelectors.SoknadsperiodeSelector(state).tom),
 });
 
 const mapDispatchToProps = dispatch => ({
