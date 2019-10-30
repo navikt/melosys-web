@@ -3,8 +3,6 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 
-// import './journalforingsed.css';
-
 export const Overskrift = ({
   ikon,
   tekst,

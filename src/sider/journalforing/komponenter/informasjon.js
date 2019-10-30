@@ -13,6 +13,7 @@ import * as Api from '../../../services/api';
 import * as Ikoner from '../../../resources/images';
 import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
 import AvsenderVelger from './avsendervelger';
+import LenkeListeVelger from './lenkelistevelger';
 
 import { Overskrift } from './overskrift';
 import { PersonSelectors } from '../../../ducks/personer';
@@ -159,7 +160,9 @@ class Informasjon extends Component {
       mottattDato,
       vedlegg,
       settFeltInnhold,
+      journalforingSkjemaVerdier,
     } = this.props;
+    const { hoveddokumentTittel, vedlegg: skjemaVedlegg } = journalforingSkjemaVerdier;
     const {
       spinner: { brukerNavn: visBrukerSpinner },
       spinner: { avsenderNavn: visAvsenderSpinner },
@@ -190,41 +193,43 @@ class Informasjon extends Component {
           disabled
           value={Utils.dato.formatterDatoTilNorsk(mottattDato)}
         />
+
         <Nav.Fieldset legend="Hoveddokument:">
-          <Skjema.ListeVelger
+          {/* <Skjema.ListeVelger
             feltNavn="hoveddokumentTittel"
             label="Tittel på hoveddokument:"
             placeholder="(velg eller skriv inn egen tittel)"
             muligeValg={dokumenttitler}
-          />
-          <Link to={dokumentURI(journalpostID, dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne dokument i ny fane</Link>
-        </Nav.Fieldset>
-
-        {vedlegg.length > 0 &&
-          <Nav.Fieldset legend="Fysiske Vedlegg:">
-            {vedlegg.map((elem, index) =>
-              <Fragment key={elem.dokumentID}>
-                <Skjema.ListeVelger
-                  feltNavn={`vedlegg.pdf.tittel_${index}`}
-                  label={`Tittel på vedlegg: ${index + 1}`}
-                  placeholder="(velg eller skriv inn egen tittel)"
-                  muligeValg={dokumenttitler}
-                />
-                <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">Åpne vedlegg i ny fane</Link>
-              </Fragment>)}
-          </Nav.Fieldset>
-        }
-        <Nav.Fieldset legend="Logiske Vedlegg:">
-          <Skjema.ListeVelger
-            feltNavn="vedlegg.logiskeTitler"
-            label="Velg ny tittel:"
-            gruppe
-            tillatFritekst
+          /> */}
+          <LenkeListeVelger
+            feltNavn="hoveddokumentTittel"
+            label="Tittel på hoveddokument:"
+            placeholder="(velg eller skriv inn egen tittel)"
             muligeValg={dokumenttitler}
-            placeholder="(Velg eller skriv inn egen tittel)"
+            linkTo={dokumentURI(journalpostID, dokumentID)}
+            dokumentTittel={hoveddokumentTittel}
           />
         </Nav.Fieldset>
-
+        <p>Vedlegg</p>
+        {vedlegg.length > 0 && vedlegg.map((elem, index) =>
+          <Fragment key={elem.dokumentID}>
+            <Skjema.ListeVelger
+              feltNavn={`vedlegg.pdf.tittel_${index}`}
+              label={`Tittel ${index + 1}`}
+              placeholder="(velg eller skriv inn egen tittel)"
+              muligeValg={dokumenttitler}
+            />
+            <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">{skjemaVedlegg.pdf[`tittel_${index}`]}</Link>
+          </Fragment>)
+        }
+        <Skjema.ListeVelger
+          feltNavn="vedlegg.logiskeTitler"
+          label="Velg ny tittel:"
+          gruppe
+          tillatFritekst
+          muligeValg={dokumenttitler}
+          placeholder="(Velg eller skriv inn egen tittel)"
+        />
       </div>
     );
   }

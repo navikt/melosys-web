@@ -19,6 +19,7 @@ import BrevSendt from './emailsend.svg';
 import AccountCircle from './line-version-account-circle.svg';
 import Globe from './line-version-globe-1.svg';
 import ParagraphTwoColumns from './line-version-paragraph-two-columns.svg';
+import Pencil from './pencil-2.svg';
 
 export { Ubehandlet };
 export { Ferdig };
@@ -41,3 +42,4 @@ export { BrevSendt as InnBrev };
 export { AccountCircle };
 export { Globe };
 export { ParagraphTwoColumns };
+export { Pencil };
