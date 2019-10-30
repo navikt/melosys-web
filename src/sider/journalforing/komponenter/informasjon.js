@@ -213,13 +213,14 @@ class Informasjon extends Component {
         <p>Vedlegg</p>
         {vedlegg.length > 0 && vedlegg.map((elem, index) =>
           <Fragment key={elem.dokumentID}>
-            <Skjema.ListeVelger
+            <LenkeListeVelger
               feltNavn={`vedlegg.pdf.tittel_${index}`}
               label={`Tittel ${index + 1}`}
               placeholder="(velg eller skriv inn egen tittel)"
               muligeValg={dokumenttitler}
+              linkTo={dokumentURI(journalpostID, dokumentID)}
+              dokumentTittel={skjemaVedlegg.pdf[`tittel_${index}`]}
             />
-            <Link to={dokumentURI(journalpostID, elem.dokumentID)} target="_blank" className="informasjon__dokumentlenke">{skjemaVedlegg.pdf[`tittel_${index}`]}</Link>
           </Fragment>)
         }
         <Skjema.ListeVelger
