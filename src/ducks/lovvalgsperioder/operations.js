@@ -235,9 +235,9 @@ export function lagre() {
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
     const anmodningsperioderErSendtUtlandet = AnmodningsperioderErSendtUtlandetSelector(getState());
 
-    if (anmodningsperioderErSendtUtlandet) return;
+    if (anmodningsperioderErSendtUtlandet) return null;
 
-    dispatch(send(bid, lovvalgsperioder));
+    return dispatch(send(bid, lovvalgsperioder));
   };
 }
 
