@@ -15,12 +15,12 @@ function LenkeListeVelger(props) {
   };
   return (
     <Nav.Row>
-      <Nav.Column xs="6">
+      <Nav.Column xs="9">
         <Link to={linkTo} target="_blank" className="informasjon__dokumentlenke">{dokumentTittel}</Link>
       </Nav.Column>
-      <Nav.Column xs="6">
+      <Nav.Column xs="3">
         {/* <Nav.Knapp mini className="innhold__element" onClick={tittelEndres}><img src={Ikoner.Pencil} alt="Edit" /><span>Endre tittel</span></Nav.Knapp> */}
-        {!visListevelger && <Nav.Lenker onClick={tittelEndres}><img src={Ikoner.Pencil} alt="Edit" /><span>Endre tittel</span></Nav.Lenker>}
+        {!visListevelger && <Nav.Lenker onClick={tittelEndres}><img src={Ikoner.Pencil} alt="Edit" /><span>&nbsp;Endre tittel</span></Nav.Lenker>}
       </Nav.Column>
       <Nav.Column xs="12">
         {visListevelger &&
