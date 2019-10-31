@@ -112,7 +112,7 @@ const form = {
     const options = {
       context: {
         brukerNavn: props.formValues ? props.formValues.brukerNavn : undefined,
-        skalValidereAvsenderType: !props.erAvsenderPreutfylt,
+        erAvsenderPreutfylt: props.erAvsenderPreutfylt,
       },
     };
 
