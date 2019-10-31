@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { change } from 'redux-form';
 import PT from 'prop-types';
@@ -158,6 +157,7 @@ class Informasjon extends Component {
       journalpostID,
       dokumentID,
       mottattDato,
+      hoveddokument,
       vedlegg,
       settFeltInnhold,
       journalforingSkjemaVerdier,
@@ -208,6 +208,7 @@ class Informasjon extends Component {
             muligeValg={dokumenttitler}
             linkTo={dokumentURI(journalpostID, dokumentID)}
             dokumentTittel={hoveddokumentTittel}
+            initalTittel={hoveddokument.tittel}
           />
         </Nav.Fieldset>
         <p>Vedlegg</p>
@@ -220,6 +221,7 @@ class Informasjon extends Component {
               muligeValg={dokumenttitler}
               linkTo={dokumentURI(journalpostID, dokumentID)}
               dokumentTittel={skjemaVedlegg.pdf[`tittel_${index}`]}
+              initalTittel={vedlegg[index].tittel}
             />
           </Fragment>)
         }
@@ -244,7 +246,8 @@ Informasjon.propTypes = {
   dokumentID: PT.string,
   dokumentTittel: PT.string,
   mottattDato: PT.string.isRequired,
-  vedlegg: PT.array,
+  hoveddokument: PT.shape({ dokumentID: PT.string, tittel: PT.string }).isRequired,
+  vedlegg: PT.arrayOf(PT.shape({ dokumentID: PT.string, tittel: PT.string })),
   settFeltInnhold: PT.func.isRequired,
 };
 
@@ -260,6 +263,7 @@ const mapStateToProps = state => ({
   person: PersonSelectors.personerSelector(state),
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
   mottattDato: journalforingSelectors.MottattDatoSelector(state),
+  hoveddokument: journalforingSelectors.JournalforingHovedDokument(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 
