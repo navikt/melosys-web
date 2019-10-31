@@ -38,7 +38,6 @@ export const sendResultatTilDispatch = (dispatch, action, validering) => (...dat
 export const handterFeil = (dispatch, action) => async error => {
   if (error.response) {
     const data = await error.response.text();
-    console.error(error, error.stack, data); // eslint-disable-line no-console
 
     window.frontendlogger.error({
       error,
@@ -51,8 +50,6 @@ export const handterFeil = (dispatch, action) => async error => {
       data: { response: error.response, data },
     });
   } else {
-    console.error(error, error.stack); // eslint-disable-line no-console
-
     window.frontendlogger.error({
       error,
       stack: error.stack,

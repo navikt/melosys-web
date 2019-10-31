@@ -9,38 +9,101 @@ import * as KV from '../../kodeverk';
 const middlewares = [thunk];
 const mockStore = configureMockStore(middlewares);
 
-const initialState = {
-  form: {
-    [KV.Form.ARTIKKEL_16_ANMODNING]: {
-      values: {
-        unntakFraBestemmelse: 'Test',
+describe('Lovvalgsperioder operations', () => {
+  let initialState = null;
+
+  beforeEach(() => {
+    fetch.resetMocks();
+    fetch.mockResponse(JSON.stringify({}));
+
+    initialState = {
+      behandlinger: {
+        data: [
+          {
+            behandlingID: 4,
+          },
+        ],
       },
-    },
-  },
-  lovvalgsperioder: {
-    data: [
-      { medlemskapsperiodeID: '123' },
-    ],
-  },
-  vilkar: {
-    data: [],
-  },
-  soknad: {
-    data: {
-      soeknadDokument: {
-        periode: { fom: '1234', tom: '4321' },
-        soeknadsland: {
-          landkoder: [
-            'NO',
-            'DK',
-          ],
+      form: {
+        [KV.Form.ARTIKKEL_16_ANMODNING]: {
+          values: {
+            unntakFraBestemmelse: 'Test',
+          },
         },
       },
-    },
-  },
-};
+      anmodningsperioder: {
+        data: [
+          { sendtUtland: false },
+        ],
+      },
+      lovvalgsperioder: {
+        data: [
+          { medlemskapsperiodeID: '123' },
+        ],
+      },
+      vilkar: {
+        data: [],
+      },
+      soknad: {
+        data: {
+          soeknadDokument: {
+            periode: { fom: '1234', tom: '4321' },
+            soeknadsland: {
+              landkoder: [
+                'NO',
+                'DK',
+              ],
+            },
+          },
+        },
+      },
+    };
+  });
 
-describe('Lovvalgsperioder operations', () => {
+  describe('lagre', () => {
+    it('lager PENDING og OK ved normal tilstand', async () => {
+      const expectedActions = [
+        { type: types.PENDING },
+        { type: types.OK, data: {} },
+      ];
+
+      const store = mockStore(initialState);
+
+      await store.dispatch(operations.lagre());
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it('lager FEILET ved feil i api-kall', async () => {
+      const error = new Error('feil ved kall til Api');
+      fetch.resetMocks();
+      fetch.mockReject(error);
+
+      const expectedActions = [
+        { type: types.PENDING },
+        { type: types.FEILET, data: error.toString() },
+      ];
+
+      const store = mockStore(initialState);
+
+      await store.dispatch(operations.lagre());
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it('lager ingen actions dersom anmodning er sendt til utlandet', async () => {
+      initialState.anmodningsperioder.data = initialState.anmodningsperioder.data.map(anmodningsperiode => ({ ...anmodningsperiode, sendtUtland: true }));
+
+      const expectedActions = [];
+
+      const store = mockStore(initialState);
+
+      await store.dispatch(operations.lagre());
+
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
   describe('oppdaterLovvalgsperioderState', () => {
     it('lager RESET dersom ingen lovvalgsvilkar, lovvalgsbestemmelse eller tilleggbestemmelse er valgt', () => {
       const expectedActions = [
