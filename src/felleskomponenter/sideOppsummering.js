@@ -11,6 +11,7 @@ import Oppsummering from './oppsummering';
 import './sideOppsummering.css';
 
 const SideOppsummering = ({
+  arbeidsland,
   behandlingstype,
   fagsak,
   oppsummering,
@@ -20,6 +21,8 @@ const SideOppsummering = ({
   lovvalgsland,
   renderBehandlingsmeny,
   renderBehandlingsstatus,
+  soknadsperiodeFom,
+  soknadsperiodeTom,
 }) => {
   if (!oppsummering) return <div />;
 
@@ -45,12 +48,15 @@ const SideOppsummering = ({
         <Nav.Row>
           <Nav.Column xs="12">
             {oppsummering && <Oppsummering
+              arbeidsland={arbeidsland}
               lovvalgsland={lovvalgsland}
               fagsak={fagsak}
               oppsummering={oppsummering}
               person={person}
               lovvalgsperiodeFom={lovvalgsperiodeFom}
               lovvalgsperiodeTom={lovvalgsperiodeTom}
+              soknadsperiodeFom={soknadsperiodeFom}
+              soknadsperiodeTom={soknadsperiodeTom}
             />
             }
           </Nav.Column>
@@ -75,18 +81,24 @@ SideOppsummering.propTypes = {
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   lovvalgsperiodeFom: PT.string,
   lovvalgsperiodeTom: PT.string,
-  lovvalgsland: PT.arrayOf(MPT.Kodeverk),
+  lovvalgsland: MPT.Kodeverk,
   renderBehandlingsmeny: PT.func.isRequired,
   renderBehandlingsstatus: PT.func.isRequired,
+  arbeidsland: PT.arrayOf(MPT.Kodeverk),
+  soknadsperiodeFom: PT.string,
+  soknadsperiodeTom: PT.string,
 };
 
 SideOppsummering.defaultProps = {
-  lovvalgsland: [],
+  lovvalgsland: {},
+  arbeidsland: [],
   redigerbart: false,
   fagsak: undefined,
   oppsummering: undefined,
   lovvalgsperiodeFom: undefined,
   lovvalgsperiodeTom: undefined,
+  soknadsperiodeFom: undefined,
+  soknadsperiodeTom: undefined,
 };
 
 export default SideOppsummering;

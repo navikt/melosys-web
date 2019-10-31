@@ -211,13 +211,15 @@ class Journalforing extends Component {
       return false;
     }
 
+    const fom = journalforingPeriodeFraOgMed ? Utils.dato.formatterDatoTilISO(journalforingPeriodeFraOgMed) : null;
+    const tom = journalforingPeriodeTilOgMed ? Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed) : null;
     const fagsak = {
       sakstype: MKV.Koder.sakstyper.EU_EOS,
       soknadsperiode: {
-        fom: Utils.dato.formatterDatoTilISO(journalforingPeriodeFraOgMed),
-        tom: Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed),
+        fom,
+        tom,
       },
-      land: journalforingSoknadsland,
+      land: journalforingSoknadsland || [],
     };
 
     const anmodningOmUnntak = {

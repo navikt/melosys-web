@@ -138,21 +138,6 @@ class Informasjon extends Component {
     this.setState(this.toggleSpinn(navn, false));
   };
 
-  /** Noen felter skal disables dersom andre felter er fylt inn eller andre
-   * forutsetninger for disabling er tilstede.
-   * @param feltNavn {string} Navnet på feltet som skal disables.
-   * @returns {boolean} Hvorvidt feltet skal disables eller ikke
-   */
-  skalFeltetDisables = feltNavn => {
-    const { journalforingSkjemaVerdier } = this.props;
-
-    switch (feltNavn) {
-      case 'avsenderNavn': { return journalforingSkjemaVerdier.avsenderID !== ''; }
-      case 'avsenderID': { return journalforingSkjemaVerdier.erBrukerAvsender; }
-      default: return false;
-    }
-  };
-
   render() {
     const {
       journalpostID,
