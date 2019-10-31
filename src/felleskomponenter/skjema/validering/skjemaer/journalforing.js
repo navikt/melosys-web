@@ -33,6 +33,8 @@ const anmodningOmUnntak = (journalforingHensikt, behandlingstype) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT &&
   behandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL;
 
+const organisasjonOgIkkePreutfyltAvsender = (avsenderType, erAvsenderPreutfylt) => MKV.Koder.avsendertyper.ORGANISASJON === avsenderType && !erAvsenderPreutfylt;
+
 const journalforing = object().shape({
   brukerID: string()
     .ensure()
@@ -46,8 +48,8 @@ const journalforing = object().shape({
         .harIkkeFnrEllerDnrLengde(FANT_INGEN_NAVN_PA_FNR_ELLER_DNR),
     }),
   avsenderID: string()
-    .when('avsenderType', {
-      is: MKV.Koder.avsendertyper.ORGANISASJON,
+    .when(['avsenderType', '$erAvsenderPreutfylt'], {
+      is: organisasjonOgIkkePreutfyltAvsender,
       then: string().nullable()
         .erNummer(SKRIV_INN_KUN_NUMMER)
         .erOrgnr(SKRIV_INN_GYLDIG_ORGNR)
@@ -121,8 +123,8 @@ const journalforing = object().shape({
       then: string().required(VELG_ETT_LAND),
     }),
   avsenderType: string()
-    .when('$skalValidereAvsenderType', {
-      is: true,
+    .when('$erAvsenderPreutfylt', {
+      is: false,
       then: string()
         .ensure()
         .required(VELG_EN_AVSENDER),
