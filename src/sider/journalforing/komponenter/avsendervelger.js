@@ -43,6 +43,8 @@ const AvsenderVelger = ({
   erAvsenderPreutfylt,
 }) => {
   const avsenderTypeEndret = avsenderType => {
+    if (erAvsenderPreutfylt) return;
+
     switch (avsenderType) {
       case MKV.Koder.avsendertyper.PERSON: {
         kopierBrukerTilAvsender();
