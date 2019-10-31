@@ -3,9 +3,10 @@ import * as anmodningsperiodesvarOperations from './operations';
 import * as anmodningsperiodesvarTypes from './types';
 import * as anmodningsperiodesvarSelectors from './selectors';
 
-import anmodningsperiodesvarReducers from './reducers';
+import anmodningsperiodesvarReducers, { initialState } from './reducers';
 
 export {
+  initialState,
   anmodningsperiodesvarActions,
   anmodningsperiodesvarOperations,
   anmodningsperiodesvarTypes,

@@ -15,15 +15,32 @@ import EndrePeriode from './komponenter/endrePeriode';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { lovvalgsperioderOperations, lovvalgsperioderSelectors } from '../../../ducks/lovvalgsperioder';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
-import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from './validering/unntaksperiodeSkjema';
+import { datalastingOperations } from '../../../ducks/datalasting';
+import { behandlingsresultatSelectors } from '../../../ducks/behandlingsresultat';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
+import { endrePeriodeSkjema, ikkeGodkjentBegrunnelseSkjema } from './validering/unntaksperiodeSkjema';
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
 
 import '../saksopplysninger.css';
 
 const uuid = require('uuid/v4');
 
-const Saksopplysninger = props => {
+const Saksopplysninger = ({
+  match,
+  behandlingID,
+  redigerbart,
+  history,
+  medlemskap,
+  sed,
+  sedLovvalgsperiode,
+  vurderingBegrunnelser,
+  lovvalgsperiode,
+  behandlingsresultat,
+  avklartefakta,
+  oppdaterAvklartefakta,
+  oppdaterLovvalgsperioder,
+  lastInnSaksopplysninger,
+}) => {
   const [unntaksperiodeVurdering, setUnntaksperiodeVurdering] = React.useState(KV.Koder.Unntaksperiode.GODKJENT);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = React.useState('');
   const [ikkeGodkjentBegrunnelseKoder, setIkkeGodkjentBegrunnelseKoder] = React.useState([]);
@@ -35,6 +52,49 @@ const Saksopplysninger = props => {
   const [endrePeriodeFritekst, setEndrePeriodeFritekst] = React.useState('');
   const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = React.useState(false);
   const [durationWarningMessage, setDurationWarningMessage] = React.useState(null);
+
+  const { params: { snr: saksnummer } } = match;
+  React.useEffect(() => {
+    lastInnSaksopplysninger(saksnummer, behandlingID);
+  }, []);
+
+  const settEndretPeriodeOpplysninger = async avklartFakta => {
+    setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.DELVIS_GODKJENT);
+    setEndrePeriodeBegrunnelse(avklartFakta.fakta[0]); // Har alltid bare ett fakta i disse tilfellene
+    setEndrePeriodeFritekst(avklartFakta.begrunnelseFritekst);
+
+    if (lovvalgsperiode) {
+      setEndrePeriodeFom(Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.fomDato));
+      setEndrePeriodeTom(Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato));
+    }
+  };
+
+  const godkjentUnntaksperiode = async () => {
+    const endretPeriodeFakta = avklartefakta.find(value => value.referanse === MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE);
+    if (endretPeriodeFakta) {
+      settEndretPeriodeOpplysninger(endretPeriodeFakta);
+    } else {
+      setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.GODKJENT);
+    }
+  };
+
+  const ikkeGodkjentUnntaksperiode = () => {
+    setUnntaksperiodeVurdering(KV.Koder.Unntaksperiode.AVSLAG);
+    setBegrunnelseFritekst(behandlingsresultat.begrunnelseFritekst);
+    setIkkeGodkjentBegrunnelseKoder(behandlingsresultat.begrunnelseKoder);
+  };
+
+  const initialiserSkjema = () => {
+    if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.GODKJENT) {
+      godkjentUnntaksperiode();
+    } else if (behandlingsresultat.utfallRegistreringUnntak === MKV.Koder.utfallregistreringunntak.IKKE_GODKJENT) {
+      ikkeGodkjentUnntaksperiode(behandlingsresultat);
+    }
+  };
+
+  React.useEffect(() => {
+    initialiserSkjema();
+  }, [avklartefakta, behandlingsresultat, lovvalgsperiode]);
 
   const overstyrSubmit = event => {
     event.preventDefault();
@@ -53,34 +113,28 @@ const Saksopplysninger = props => {
     begrunnelseFritekst: endrePeriodeFritekst || null,
   });
 
-  const oppdaterAvklartefakta = () =>
-    props.oppdaterAvklartefakta(props.behandlingID, [...props.avklartefakta, lagAvklartfakta()]);
-
   const lagLovvalgsperioder = () => ([{
     fomDato: `${Utils.dato.formatterDatoTilISO(endrePeriodeFom)}`,
     tomDato: `${Utils.dato.formatterDatoTilISO(endrePeriodeTom)}`,
-    lovvalgsbestemmelse: props.sed.lovvalgsbestemmelse,
+    lovvalgsbestemmelse: sed.lovvalgsbestemmelse,
     tilleggBestemmelse: null,
     unntakFraBestemmelse: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
-    lovvalgsland: props.sed.lovvalgslandKode,
+    lovvalgsland: sed.lovvalgslandKode,
     unntakFraLovvalgsland: null,
     trygdeDekning: MKV.Koder.trygdedekninger.UTEN_DEKNING,
     medlemskapstype: MKV.Koder.medlemskapstyper.UNNTATT,
     medlemskapsperiodeID: null,
   }]);
 
-  const oppdaterLovvalgsperioder = () =>
-    props.oppdaterLovvalgsperioder(props.behandlingID, lagLovvalgsperioder());
-
   const endrePeriodeOgLagre = dispatchSaksflyt => (
-    oppdaterAvklartefakta()
-      .then(() => oppdaterLovvalgsperioder()
+    oppdaterAvklartefakta(behandlingID, [...avklartefakta, lagAvklartfakta()])
+      .then(() => oppdaterLovvalgsperioder(behandlingID, lagLovvalgsperioder())
         .then(() => dispatchSaksflyt())));
 
-  const godkjenn = behandlingID => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
+  const godkjenn = () => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID);
 
-  const delvisGodkjenn = behandlingID => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID));
+  const delvisGodkjenn = () => endrePeriodeOgLagre(() => Api.Saksflyt.Unntaksperioder.godkjenn(behandlingID));
 
   const kanEndrePeriode = () => (unntaksperiodeVurdering === KV.Koder.Unntaksperiode.DELVIS_GODKJENT);
 
@@ -167,16 +221,15 @@ const Saksopplysninger = props => {
         return false;
       }
     }
-    const { behandlingID, history } = props;
     const tilForsiden = () => history.push('/');
     switch (unntaksperiodeVurdering) {
       case KV.Koder.Unntaksperiode.GODKJENT:
-        godkjenn(behandlingID)
+        godkjenn()
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
       case KV.Koder.Unntaksperiode.DELVIS_GODKJENT:
-        delvisGodkjenn(behandlingID)
+        delvisGodkjenn()
           .then(tilForsiden)
           .catch(Utils.logger.error);
         return true;
@@ -195,9 +248,6 @@ const Saksopplysninger = props => {
     }
   };
 
-  const {
-    medlemskap, sed, vurderingBegrunnelser, redigerbart,
-  } = props;
   if (!sed.lovvalgsperiode) {
     return null;
   }
@@ -207,6 +257,8 @@ const Saksopplysninger = props => {
     setIkkeGodkjentBegrunnelseKoder(ikkeGodkjentBegrunnelse);
     validerAvslag(ikkeGodkjentBegrunnelse);
   };
+
+  const endreUnntaksperiodeVurdering = e => setUnntaksperiodeVurdering(e.target.value);
 
   const unikRadioButtonGruppeID = uuid();
   return (
@@ -226,16 +278,28 @@ const Saksopplysninger = props => {
               </Nav.Row>
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => setUnntaksperiodeVurdering(e.target.value)} disabled={!redigerbart}>
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.GODKJENT} label="Godkjenn unntaksperiode" defaultChecked />
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT} label="Godkjenn, men endre periode" />
+                  <Nav.Fieldset legend="Vurder unntaksperiode" disabled={!redigerbart}>
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={KV.Koder.Unntaksperiode.GODKJENT}
+                      checked={KV.Koder.Unntaksperiode.GODKJENT === unntaksperiodeVurdering}
+                      onChange={endreUnntaksperiodeVurdering}
+                      label="Godkjenn unntaksperiode"
+                    />
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={KV.Koder.Unntaksperiode.DELVIS_GODKJENT}
+                      checked={KV.Koder.Unntaksperiode.DELVIS_GODKJENT === unntaksperiodeVurdering}
+                      onChange={endreUnntaksperiodeVurdering}
+                      label="Godkjenn, men endre periode"
+                    />
                     {kanEndrePeriode() && (
                       <Nav.Row>
                         <EndrePeriode
                           redigerbart={redigerbart}
                           feilmeldinger={endrePeriodeFeilmeldinger}
-                          sedLovvalgsperiode={props.sedLovvalgsperiode}
-                          lovvalgsperiode={props.lovvalgsperiode}
+                          sedLovvalgsperiode={sedLovvalgsperiode}
+                          lovvalgsperiode={lovvalgsperiode}
                           oppdaterFom={setEndrePeriodeFom}
                           oppdaterTom={setEndrePeriodeTom}
                           oppdaterBegrunnelse={setEndrePeriodeBegrunnelse}
@@ -249,7 +313,13 @@ const Saksopplysninger = props => {
                         />
                       </Nav.Row>
                     )}
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={KV.Koder.Unntaksperiode.AVSLAG} label="Ikke godkjenn" />
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={KV.Koder.Unntaksperiode.AVSLAG}
+                      checked={KV.Koder.Unntaksperiode.AVSLAG === unntaksperiodeVurdering}
+                      onChange={endreUnntaksperiodeVurdering}
+                      label="Ikke godkjenn"
+                    />
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>
@@ -259,12 +329,13 @@ const Saksopplysninger = props => {
                     <Nav.Column xs="6">
                       <Nav.Fieldset legend="Begrunnelse for ikke godkjent unntaksperiode">
                         <Mui.ListevelgerFlervalg
-                          disabled={false}
+                          disabled={!redigerbart}
                           muligeValg={MKV.KTObjects.begrunnelser.ikke_godkjent_begrunnelser}
                           label="Legg til begrunnelse for ikke oppfylt:"
                           tillatFritekst={false}
                           onChange={listevalgEndringHandler}
                           feil={ikkeGodkjentFeilmeldinger.begrunnelseKoder}
+                          defaultElementer={ikkeGodkjentBegrunnelseKoder}
                         />
                       </Nav.Fieldset>
                     </Nav.Column>
@@ -273,6 +344,7 @@ const Saksopplysninger = props => {
                     <Nav.Column xs="6">
                       {ikkeGodkjentBegrunnelseKoder.includes('ANNET') &&
                         <Nav.Textarea
+                          disabled={!redigerbart}
                           label="Skriv inn begrunnelse for avslaget..."
                           onChange={textAreaOnChange}
                           value={begrunnelseFritekst}
@@ -316,6 +388,8 @@ Saksopplysninger.propTypes = {
   location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
   oppdaterLovvalgsperioder: PT.func.isRequired,
+  lastInnSaksopplysninger: PT.func.isRequired,
+  behandlingsresultat: PT.object,
 };
 
 Saksopplysninger.defaultProps = {
@@ -324,16 +398,19 @@ Saksopplysninger.defaultProps = {
   sed: {},
   skjema: {},
   sedLovvalgsperiode: {},
+  behandlingsresultat: {},
 };
 
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
   sedLovvalgsperiode: behandlingerSelectors.SEDSelector(state).lovvalgsperiode,
+  behandlingsresultat: behandlingsresultatSelectors.BehandlingsresultatSelector(state),
 });
 const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
   oppdaterLovvalgsperioder: (behandlingID, lovvalgsperiodeListe) => dispatch(lovvalgsperioderOperations.send(behandlingID, lovvalgsperiodeListe)),
+  lastInnSaksopplysninger: (saksnummer, behandlingID) => datalastingOperations.lastInnSaksopplysningerSedBehandling(saksnummer, behandlingID)(dispatch),
 });
 
 export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));

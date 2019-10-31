@@ -11,5 +11,10 @@ Enzyme.configure({ adapter: new Adapter() });
 
 global.shallow = shallow;
 global.mount = mount;
-
 global.each = each;
+
+// Mocker frontendlogger
+global.frontendlogger = {};
+global.frontendlogger.info = () => {};
+global.frontendlogger.warn = () => {};
+global.frontendlogger.error = () => {};
