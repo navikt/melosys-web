@@ -13,6 +13,7 @@ import * as Ikoner from '../../../resources/images';
 import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
 import AvsenderVelger from './avsendervelger';
 import LenkeListeVelger from './lenkelistevelger';
+// import TittelListeVelger from './tittelListeVelger';
 
 import { Overskrift } from './overskrift';
 import { PersonSelectors } from '../../../ducks/personer';
@@ -203,7 +204,6 @@ class Informasjon extends Component {
           /> */}
           <LenkeListeVelger
             feltNavn="hoveddokumentTittel"
-            label="Tittel på hoveddokument:"
             placeholder="(velg eller skriv inn egen tittel)"
             muligeValg={dokumenttitler}
             linkTo={dokumentURI(journalpostID, dokumentID)}
@@ -216,7 +216,6 @@ class Informasjon extends Component {
           <Fragment key={elem.dokumentID}>
             <LenkeListeVelger
               feltNavn={`vedlegg.pdf.tittel_${index}`}
-              label={`Tittel ${index + 1}`}
               placeholder="(velg eller skriv inn egen tittel)"
               muligeValg={dokumenttitler}
               linkTo={dokumentURI(journalpostID, dokumentID)}
@@ -225,6 +224,15 @@ class Informasjon extends Component {
             />
           </Fragment>)
         }
+        {/*
+        <TittelListeVelger
+          feltNavn="vedlegg.logiskeTitler"
+          label="Velg ny tittel:"
+          tillatFritekst
+          muligeValg={dokumenttitler}
+          placeholder="(Velg eller skriv inn egen tittel)"
+        />
+        */}
         <Skjema.ListeVelger
           feltNavn="vedlegg.logiskeTitler"
           label="Velg ny tittel:"

@@ -10,10 +10,11 @@ import { formSelectors } from '../../../ducks/form';
 
 function LenkeListeVelger(props) {
   const {
-    feltNavn, label, placeholder, muligeValg, linkTo, dokumentTittel, initalTittel,
+    feltNavn, placeholder, muligeValg, linkTo, dokumentTittel, initalTittel,
     settFeltInnhold,
   } = props;
   const [visListevelger, setState] = useState(false);
+  const style = { 'margin-bottom': '1em' };
 
   const tittelEndres = () => {
     setState(!visListevelger);
@@ -26,15 +27,14 @@ function LenkeListeVelger(props) {
     <Nav.Row>
       <Nav.Column xs="9">
         {!visListevelger && <Link to={linkTo} target="_blank" className="informasjon__dokumentlenke">{dokumentTittel}</Link>}
-        {visListevelger && <Nav.Normaltekst>Rediger...</Nav.Normaltekst>}
       </Nav.Column>
       <Nav.Column xs="3">
         {!visListevelger && <Nav.Lenker onClick={tittelEndres}><img src={Ikoner.Pencil} alt="Edit" /><span>&nbsp;Endre tittel</span></Nav.Lenker>}
       </Nav.Column>
-      <Nav.Column xs="12">
+      <Nav.Column xs="12" style={style}>
         {visListevelger &&
           <Fragment>
-            <Skjema.ListeVelger feltNavn={feltNavn} label={label} placeholdere={placeholder} muligeValg={muligeValg} />
+            <Skjema.ListeVelger feltNavn={feltNavn} placeholdere={placeholder} muligeValg={muligeValg} />
             <Nav.Knapp onClick={tittelEndres}>Lagre Tittel</Nav.Knapp>&nbsp;<Nav.Flatknapp onClick={avbryt}>Avbryt</Nav.Flatknapp>
           </Fragment>
         }
