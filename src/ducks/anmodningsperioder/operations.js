@@ -41,10 +41,10 @@ export function lagre() {
     const bid = behandlingerSelectors.BehandlingIDSelector(getState());
     const anmodningsperioderErSendtUtlandet = anmodningsperioderSelectors.AnmodningsperioderErSendtUtlandetSelector(getState());
 
-    if (anmodningsperioderErSendtUtlandet) return;
+    if (anmodningsperioderErSendtUtlandet) return null;
 
     /* eslint-disable-next-line no-unused-vars */
-    dispatch(send(bid, { anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties) }));
+    return dispatch(send(bid, { anmodningsperioder: anmodningsperioder.map(({ sendtUtland, ...beholdProperties }) => beholdProperties) }));
   };
 }
 
