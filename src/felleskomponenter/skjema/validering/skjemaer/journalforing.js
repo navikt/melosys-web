@@ -21,6 +21,7 @@ const VELG_MINST_ETT_LAND = { melding: 'Velg minst ett land.' };
 const VELG_ETT_LAND = { melding: 'Velg ett land.' };
 const VELG_EN_AVSENDER = { melding: 'Velg en avsender' };
 const VELG_EN_BESTEMMELSE = 'Velg en bestemmelse.';
+const DATO_MA_VAERE_ETTER_FOM = { melding: 'Dato må være lik eller senere enn fra.' };
 
 const kreverPeriodeOgLand = (journalforingHensikt, behandlingstype) =>
   journalforingHensikt === Konstanter.JOURNALFORING_HENSIKT.OPPRETT && ![
@@ -91,6 +92,7 @@ const journalforing = object().shape({
       is: kreverPeriodeOgLand,
       then: string()
         .required(TAST_INN_DATO)
+        .erEtterDatofelt('journalforingPeriodeFraOgMed', DATO_MA_VAERE_ETTER_FOM)
         .erGyldigDato(SKRIV_INN_EN_GYLDIG_DATO),
     }),
   journalforingSoknadsland: array().of(string())
