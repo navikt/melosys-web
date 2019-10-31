@@ -281,8 +281,10 @@ describe('dato.js:', () => {
       ['20.10.2020', '20.10.2010', false],
       ['20.10.2010', '20.10.2010', true],
       ['20.10.2010', '19.10.2010', false],
-    ]).it('sjekker om fra %p til %p er en gyldig periode', (fom, tom, forventetResultat) => {
-      expect(erGyldigPeriode(fom, tom)).toBe(forventetResultat);
+    ]).describe('fra %p til %p', (fom, tom, forventetResultat) => {
+      it(`returnerer ${forventetResultat}`, () => {
+        expect(erGyldigPeriode(fom, tom)).toBe(forventetResultat);
+      })
     });
   });
 });
