@@ -45,11 +45,9 @@ class Informasjon extends Component {
   };
 
   async componentDidMount() {
-    // console.dir(this.props);
     const { hoveddokument, vedlegg } = this.props;
     await this.oppdaterUndoState('hoveddokumentTittel', hoveddokument.tittel);
     await this.oppdaterUndoState('vedleggPdfTittler', vedlegg.reduce((acc, elem) => { acc.push(elem.tittel); return acc; }, []));
-    console.log('state', this.state);
     await this.oppdaterFelter(this.props, true);
   }
 
@@ -57,8 +55,8 @@ class Informasjon extends Component {
     await this.oppdaterFelter(prevProps);
   }
 
-  oppdaterUndoState = async (feltnavn, verdi) => {
-    await this.setState({ [feltnavn]: verdi });
+  oppdaterUndoState = async (stateNavn, verdi) => {
+    await this.setState({ [stateNavn]: verdi });
   };
   oppdaterFelter = async (props, tvingOppdatering) => {
     const {
@@ -149,10 +147,11 @@ class Informasjon extends Component {
   };
   updateTittel = (feltnavn, verdi) => {
     this.oppdaterUndoState(feltnavn, verdi);
-    console.log('updateTittel', feltnavn, verdi);
   };
-  updateVedleggTittel = (feltnavn, index, verdi) => {
-    this.oppdaterUndoState([feltnavn[index]], verdi);
+  updateVedleggTittel = async (index, verdi) => {
+    const tittler = [...this.state.vedleggPdfTittler];
+    tittler[index] = verdi;
+    await this.oppdaterUndoState('vedleggPdfTittler', tittler);
   };
   render() {
     const {
@@ -202,7 +201,7 @@ class Informasjon extends Component {
             muligeValg={dokumenttitler}
             linkTo={dokumentURI(journalpostID, dokumentID)}
             dokumentTittel={hoveddokumentTittel}
-            initalTittel={this.state.hoveddokumentTittel}
+            undoTittel={this.state.hoveddokumentTittel}
             updateTittel={() => this.updateTittel('hoveddokumentTittel', hoveddokumentTittel)}
           />
         </Nav.Fieldset>
@@ -215,8 +214,8 @@ class Informasjon extends Component {
               muligeValg={dokumenttitler}
               linkTo={dokumentURI(journalpostID, dokumentID)}
               dokumentTittel={skjemaVedlegg.pdf[`tittel_${index}`]}
-              initalTittel={this.state.vedleggPdfTittler[index]}
-              updateTittel={() => this.updateVedleggTittel('vedleggPdfTittler', index, skjemaVedlegg.pdf[`tittel_${index}`])}
+              undoTittel={this.state.vedleggPdfTittler[index]}
+              updateTittel={() => this.updateVedleggTittel(index, skjemaVedlegg.pdf[`tittel_${index}`])}
             />
           </Fragment>)
         }
@@ -259,7 +258,6 @@ const mapStateToProps = state => ({
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
   mottattDato: journalforingSelectors.MottattDatoSelector(state),
   hoveddokument: journalforingSelectors.JournalforingHovedDokument(state),
-  // vedleggsDokumenter: journalforingSelectors.JournalforingVedleggsDokumenter(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 

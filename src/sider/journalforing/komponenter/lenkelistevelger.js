@@ -10,7 +10,7 @@ import { formSelectors } from '../../../ducks/form';
 
 function LenkeListeVelger(props) {
   const {
-    feltNavn, placeholder, muligeValg, linkTo, dokumentTittel, initalTittel, updateTittel,
+    feltNavn, placeholder, muligeValg, linkTo, dokumentTittel, undoTittel, updateTittel,
     settFeltInnhold,
   } = props;
   const [visListevelger, setState] = useState(false);
@@ -20,7 +20,7 @@ function LenkeListeVelger(props) {
     setState(!visListevelger);
   };
   const avbryt = () => {
-    settFeltInnhold(feltNavn, initalTittel);
+    settFeltInnhold(feltNavn, undoTittel);
     setState(false);
   };
   const lagre = () => {
@@ -51,7 +51,7 @@ LenkeListeVelger.propTypes = {
   feltNavn: PT.string.isRequired,
   linkTo: PT.string.isRequired,
   dokumentTittel: PT.string.isRequired,
-  initalTittel: PT.string.isRequired,
+  undoTittel: PT.string.isRequired,
   updateTittel: PT.func.isRequired,
   label: PT.string,
   placeholder: PT.string,
