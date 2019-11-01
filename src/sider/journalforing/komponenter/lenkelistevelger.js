@@ -1,9 +1,10 @@
 import React, { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { change } from 'redux-form';
+import { change, formValueSelector } from 'redux-form';
 import PT from 'prop-types';
 import * as Skjema from '../../../felleskomponenter/skjema/';
+import * as Utils from '../../../utils';
 import * as Ikoner from '../../../resources/images';
 import * as Nav from '../../../utils/navFrontend';
 import { formSelectors } from '../../../ducks/form';
@@ -11,7 +12,7 @@ import { formSelectors } from '../../../ducks/form';
 function LenkeListeVelger(props) {
   const {
     feltNavn, placeholder, muligeValg, linkTo, dokumentTittel, undoTittel, updateTittel,
-    settFeltInnhold,
+    settFeltInnhold, currentTittel,
   } = props;
   const [visListevelger, setState] = useState(false);
   const style = { marginBottom: '1em' };
@@ -27,6 +28,7 @@ function LenkeListeVelger(props) {
     updateTittel();
     setState(false);
   };
+  const erTomTittel = () => Utils._isEmpty(currentTittel(feltNavn));
   return (
     <Nav.Row>
       <Nav.Column xs="9">
@@ -39,7 +41,7 @@ function LenkeListeVelger(props) {
         {visListevelger &&
           <Fragment>
             <Skjema.ListeVelger feltNavn={feltNavn} label="" placeholdere={placeholder} muligeValg={muligeValg} />
-            <Nav.Knapp onClick={lagre}>Lagre Tittel</Nav.Knapp>&nbsp;<Nav.Flatknapp onClick={avbryt}>Avbryt</Nav.Flatknapp>
+            <Nav.Knapp disabled={erTomTittel()} onClick={lagre}>Lagre Tittel</Nav.Knapp>&nbsp;<Nav.Flatknapp onClick={avbryt}>Avbryt</Nav.Flatknapp>
           </Fragment>
         }
       </Nav.Column>
@@ -57,14 +59,16 @@ LenkeListeVelger.propTypes = {
   placeholder: PT.string,
   muligeValg: PT.arrayOf(PT.string),
   settFeltInnhold: PT.func.isRequired,
+  currentTittel: PT.func.isRequired,
 };
 LenkeListeVelger.defaultProps = {
   label: '',
   placeholder: '',
   muligeValg: [],
 };
-
+const selector = formValueSelector('journalforing');
 const mapStateToProps = state => ({
+  currentTittel: feltNavn => selector(state, feltNavn),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 
