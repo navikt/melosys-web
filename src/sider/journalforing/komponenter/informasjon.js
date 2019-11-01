@@ -13,7 +13,6 @@ import * as Ikoner from '../../../resources/images';
 import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
 import AvsenderVelger from './avsendervelger';
 import LenkeListeVelger from './lenkelistevelger';
-// import TittelListeVelger from './tittelListeVelger';
 
 import { Overskrift } from './overskrift';
 import { PersonSelectors } from '../../../ducks/personer';
@@ -41,15 +40,26 @@ const dokumenttitler = [
 class Informasjon extends Component {
   state = {
     spinner: {},
+    hoveddokumentTittel: '',
+    vedleggPdfTittler: [],
   };
 
   async componentDidMount() {
+    // console.dir(this.props);
+    const { hoveddokument, vedlegg } = this.props;
+    await this.oppdaterUndoState('hoveddokumentTittel', hoveddokument.tittel);
+    await this.oppdaterUndoState('vedleggPdfTittler', vedlegg.reduce((acc, elem) => { acc.push(elem.tittel); return acc; }, []));
+    console.log('state', this.state);
     await this.oppdaterFelter(this.props, true);
   }
 
   async componentDidUpdate(prevProps) {
     await this.oppdaterFelter(prevProps);
   }
+
+  oppdaterUndoState = async (feltnavn, verdi) => {
+    await this.setState({ [feltnavn]: verdi });
+  };
   oppdaterFelter = async (props, tvingOppdatering) => {
     const {
       brukerID: gammelBrukerID,
@@ -137,13 +147,18 @@ class Informasjon extends Component {
     await Utils.delay(ms);
     this.setState(this.toggleSpinn(navn, false));
   };
-
+  updateTittel = (feltnavn, verdi) => {
+    this.oppdaterUndoState(feltnavn, verdi);
+    console.log('updateTittel', feltnavn, verdi);
+  };
+  updateVedleggTittel = (feltnavn, index, verdi) => {
+    this.oppdaterUndoState([feltnavn[index]], verdi);
+  };
   render() {
     const {
       journalpostID,
       dokumentID,
       mottattDato,
-      hoveddokument,
       vedlegg,
       settFeltInnhold,
       journalforingSkjemaVerdier,
@@ -181,19 +196,14 @@ class Informasjon extends Component {
         />
 
         <Nav.Fieldset legend="Hoveddokument:">
-          {/* <Skjema.ListeVelger
-            feltNavn="hoveddokumentTittel"
-            label="Tittel på hoveddokument:"
-            placeholder="(velg eller skriv inn egen tittel)"
-            muligeValg={dokumenttitler}
-          /> */}
           <LenkeListeVelger
             feltNavn="hoveddokumentTittel"
             placeholder="(velg eller skriv inn egen tittel)"
             muligeValg={dokumenttitler}
             linkTo={dokumentURI(journalpostID, dokumentID)}
             dokumentTittel={hoveddokumentTittel}
-            initalTittel={hoveddokument.tittel}
+            initalTittel={this.state.hoveddokumentTittel}
+            updateTittel={() => this.updateTittel('hoveddokumentTittel', hoveddokumentTittel)}
           />
         </Nav.Fieldset>
         <p>Vedlegg</p>
@@ -205,19 +215,11 @@ class Informasjon extends Component {
               muligeValg={dokumenttitler}
               linkTo={dokumentURI(journalpostID, dokumentID)}
               dokumentTittel={skjemaVedlegg.pdf[`tittel_${index}`]}
-              initalTittel={vedlegg[index].tittel}
+              initalTittel={this.state.vedleggPdfTittler[index]}
+              updateTittel={() => this.updateVedleggTittel('vedleggPdfTittler', index, skjemaVedlegg.pdf[`tittel_${index}`])}
             />
           </Fragment>)
         }
-        {/*
-        <TittelListeVelger
-          feltNavn="vedlegg.logiskeTitler"
-          label="Velg ny tittel:"
-          tillatFritekst
-          muligeValg={dokumenttitler}
-          placeholder="(Velg eller skriv inn egen tittel)"
-        />
-        */}
         <Skjema.ListeVelger
           feltNavn="vedlegg.logiskeTitler"
           label="Velg ny tittel:"
@@ -257,6 +259,7 @@ const mapStateToProps = state => ({
   organisasjon: OrganisasjonSelectors.organisasjonerSelector(state),
   mottattDato: journalforingSelectors.MottattDatoSelector(state),
   hoveddokument: journalforingSelectors.JournalforingHovedDokument(state),
+  // vedleggsDokumenter: journalforingSelectors.JournalforingVedleggsDokumenter(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
 });
 
