@@ -1,6 +1,16 @@
 /* eslint-disable */
 
-import { vaskInputDato, normaliserInputDato, formatterDatoTilNorsk, formatterDatoTilISO, formatterKortDatoTilNorsk, datoDiff, datoDiffMenneskelig, beregnAlder } from './dato';
+import {
+  vaskInputDato,
+  normaliserInputDato,
+  formatterDatoTilNorsk,
+  formatterDatoTilISO,
+  formatterKortDatoTilNorsk,
+  datoDiff,
+  datoDiffMenneskelig,
+  beregnAlder,
+  erGyldigPeriode,
+} from './dato';
 
 import MockDate from 'mockdate';
 import moment from 'moment/moment'
@@ -262,5 +272,19 @@ describe('dato.js:', () => {
       const forventetAlder = 40;
       expect(beregnAlder(foedselsdato)).toBe(forventetAlder);
     })
-  })
+  });
+
+  describe('erGyldigPeriode', () => {
+    each([
+      ['', '', false],
+      ['20.10.2010', '20.10.2020', true],
+      ['20.10.2020', '20.10.2010', false],
+      ['20.10.2010', '20.10.2010', true],
+      ['20.10.2010', '19.10.2010', false],
+    ]).describe('fra %p til %p', (fom, tom, forventetResultat) => {
+      it(`returnerer ${forventetResultat}`, () => {
+        expect(erGyldigPeriode(fom, tom)).toBe(forventetResultat);
+      })
+    });
+  });
 });
