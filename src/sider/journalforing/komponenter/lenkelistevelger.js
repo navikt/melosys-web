@@ -53,17 +53,18 @@ LenkeListeVelger.propTypes = {
   feltNavn: PT.string.isRequired,
   linkTo: PT.string.isRequired,
   dokumentTittel: PT.string.isRequired,
-  undoTittel: PT.string.isRequired,
+  undoTittel: PT.string,
   updateTittel: PT.func.isRequired,
   label: PT.string,
   placeholder: PT.string,
-  muligeValg: PT.arrayOf(PT.string),
+  muligeValg: PT.arrayOf(PT.shape({ term: PT.string })),
   settFeltInnhold: PT.func.isRequired,
   currentTittel: PT.func.isRequired,
 };
 LenkeListeVelger.defaultProps = {
   label: '',
   placeholder: '',
+  undoTittel: '',
   muligeValg: [],
 };
 const selector = formValueSelector('journalforing');
