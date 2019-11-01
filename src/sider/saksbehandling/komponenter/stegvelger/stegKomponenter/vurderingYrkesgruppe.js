@@ -49,7 +49,7 @@ const VurderingYrkesgruppe = props => {
       slettData(slettTilleggBestemmelse());
     }
 
-    if (yrkessituasjon === KV.Koder.VurderingYrkesgruppeTyper.YRKESAKTIV_DIREKTE_TIL_ARTIKKEL_16) {
+    if (yrkessituasjon === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12) {
       oppdaterData(lagVilkaar('art16_1_anmodning', true));
     } else {
       slettData(slettVilkar('art16_1_anmodning'));
@@ -85,8 +85,8 @@ const VurderingYrkesgruppe = props => {
         <Nav.Radio
           name="yrkesgruppe"
           disabled={!redigerbart}
-          checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.YRKESAKTIV_DIREKTE_TIL_ARTIKKEL_16}
-          value={KV.Koder.VurderingYrkesgruppeTyper.YRKESAKTIV_DIREKTE_TIL_ARTIKKEL_16}
+          checked={fakta === KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
+          value={KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12}
           onChange={radioEndret}
           label="Yrkesaktiv, direkte til vurdering av artikkel 16" />
         <Nav.Radio

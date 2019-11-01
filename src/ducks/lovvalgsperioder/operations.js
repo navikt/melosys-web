@@ -14,11 +14,14 @@ import * as KV from '../../kodeverk';
 
 import * as Types from './types';
 import * as Actions from './actions';
+import * as Selectors from './selectors';
 
+import { AnmodningsperioderErSendtUtlandetSelector } from '../anmodningsperioder/selectors';
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
 import { avklartefaktaSelectors } from '../avklartefakta';
 import { lovvalgsperioderSelectors } from './index';
+import { behandlingerSelectors } from '../behandlinger';
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -224,6 +227,18 @@ export function send(behandlingID, body) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function lagre() {
+  return (dispatch, getState) => {
+    const lovvalgsperioder = Selectors.LovvalgsperioderSelector(getState());
+    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    const anmodningsperioderErSendtUtlandet = AnmodningsperioderErSendtUtlandetSelector(getState());
+
+    if (anmodningsperioderErSendtUtlandet) return null;
+
+    return dispatch(send(bid, lovvalgsperioder));
+  };
 }
 
 export function oppdaterLovvalgsperioderState(stegState) {

@@ -13,12 +13,14 @@ import * as RegistreringContext from '../state/registreringContext';
 import Medlemskap from '../../../felleskomponenter/medlemskap';
 import RegisterkontrollTreff from '../komponenter/registerkontrollTreff';
 import { avklartefaktaOperations, avklartefaktaSelectors } from '../../../ducks/avklartefakta';
+import { datalastingOperations } from '../../../ducks/datalasting';
+import { anmodningsperioderSelectors } from '../../../ducks/anmodningsperioder';
+import { anmodningsperiodesvarSelectors } from '../../../ducks/anmodningsperiodesvar';
 
 import '../saksopplysninger.css';
 import { DatoOmradeMedVarighet } from '../../../felleskomponenter/datoOmrade/datoOmrade';
 import { lagYupToReduxformErrorMapper } from '../../../felleskomponenter/skjema/validering/skjemaer';
-import { endrePeriodeSkjema } from '../unntaksperioder/validering/endrePeriodeSkjema';
-import { fritekstPakrevdSkjema } from './validering/anmodningunntakSkjema';
+import { fritekstPakrevdSkjema, endrePeriodeSkjema } from './validering/anmodningunntakSkjema';
 import PdfLenkeListe from '../../../felleskomponenter/pdfLenkeListe';
 
 const uuid = require('uuid/v4');
@@ -44,23 +46,54 @@ LinkForhandsvisningSed.propTypes = {
   vedKlikk: PT.func.isRequired,
 };
 
-const Saksopplysninger = props => {
-  const {
-    medlemskap, sed, vurderingBegrunnelser, redigerbart,
-  } = props;
-
+const Saksopplysninger = ({
+  history,
+  redigerbart,
+  behandlingID,
+  anmodningsperiodeID,
+  anmodningsperiodeSvar,
+  medlemskap,
+  sed,
+  vurderingBegrunnelser,
+  lastInnSaksopplysninger,
+}) => {
   const [anmodningsperiodeSvarType, setAnmodningsperiodeSvarType] = useState(MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE);
   const [begrunnelseFritekst, setBegrunnelseFritekst] = useState('');
   const [endretPeriodeFom, setEndretPeriodeFom] = useState('');
   const [endretPeriodeTom, setEndretPeriodeTom] = useState('');
   const [feilmeldinger, setFeilmeldinger] = useState({ fom: undefined, tom: undefined, fritekst: undefined });
+  const [periodeOver5aarVarslet, setPeriodeOver5aarVarslet] = useState(false);
+  const [durationWarningMessage, setDurationWarningMessage] = useState(null);
 
   useEffect(() => {
-    if (props.sed.lovvalgsperiode) {
-      setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(props.sed.lovvalgsperiode.fom)}`);
-      setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(props.sed.lovvalgsperiode.tom)}`);
+    lastInnSaksopplysninger(behandlingID, anmodningsperiodeID);
+  }, [anmodningsperiodeID]);
+
+  useEffect(() => {
+    if (sed.lovvalgsperiode) {
+      setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.fom)}`);
+      setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(sed.lovvalgsperiode.tom)}`);
     }
-  }, [props]);
+  }, [sed]);
+
+  const initialiserSkjema = () => {
+    if (anmodningsperiodeSvar) {
+      if (anmodningsperiodeSvar.anmodningsperiodeSvarType) {
+        setAnmodningsperiodeSvarType(anmodningsperiodeSvar.anmodningsperiodeSvarType);
+      }
+      if (anmodningsperiodeSvar.begrunnelseFritekst) {
+        setBegrunnelseFritekst(anmodningsperiodeSvar.begrunnelseFritekst);
+      }
+      if (anmodningsperiodeSvar.endretPeriode) {
+        setEndretPeriodeFom(`${Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.fom)}`);
+        setEndretPeriodeTom(`${Utils.dato.formatterDatoTilNorsk(anmodningsperiodeSvar.endretPeriode.tom)}`);
+      }
+    }
+  };
+
+  useEffect(() => {
+    initialiserSkjema();
+  }, [anmodningsperiodeSvar]);
 
   const validerFelt = () => {
     let valideringsresultat;
@@ -114,26 +147,62 @@ const Saksopplysninger = props => {
     }
   };
 
-  const hentAnmodningsperiodeId = async behandlingID => {
-    const data = await Api.Anmodningsperioder.hent(behandlingID);
-    const { anmodningsperioder } = data;
-    return anmodningsperioder[0].id;
+  const sjekkDatoVarsel = (fom, tom) => {
+    if (anmodningsperiodeSvarType !== MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE) {
+      return null;
+    }
+
+    const fomISO = Utils.dato.formatterDatoTilISO(fom);
+    const tomISO = Utils.dato.formatterDatoTilISO(tom);
+    const varighet = Utils.dato.datoDiff(fomISO, tomISO, 'years');
+
+    if (varighet <= 0) {
+      return 'Ugyldig periode';
+    } else if (varighet > 5) {
+      return 'Perioden overstiger 5 år';
+    }
+    return null;
+  };
+
+  const visPeriodeVarselStripe = () => {
+    if (!durationWarningMessage) {
+      return null;
+    }
+    return (
+      <Nav.Row className="seksjon">
+        <Nav.Column xs="8">
+          <Nav.AlertStripe className="feilmelding" type="advarsel" >
+            {durationWarningMessage}
+          </Nav.AlertStripe>
+        </Nav.Column>
+      </Nav.Row>
+    );
   };
 
   const submitRegistrering = async () => {
-    if (validerFelt()) {
-      const { behandlingID, history } = props;
-      const tilForsiden = () => history.push('/');
-      try {
-        const anmodningsperiodeID = await hentAnmodningsperiodeId(behandlingID);
-        await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
-        await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
-      } catch (e) {
-        Utils.logger.error(e);
+    if (!validerFelt()) {
+      setPeriodeOver5aarVarslet(false);
+      return false;
+    }
+
+    const durationWarning = sjekkDatoVarsel(endretPeriodeFom, endretPeriodeTom);
+    setDurationWarningMessage(durationWarning);
+    if (durationWarning) {
+      if (!periodeOver5aarVarslet) {
+        setPeriodeOver5aarVarslet(true);
         return false;
-      } finally {
-        tilForsiden();
       }
+    }
+
+    const tilForsiden = () => history.push('/');
+    try {
+      await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
+      await Api.Saksflyt.Anmodningsperioder.svar(behandlingID);
+    } catch (e) {
+      Utils.logger.error(e);
+      return false;
+    } finally {
+      tilForsiden();
     }
     return true;
   };
@@ -156,7 +225,6 @@ const Saksopplysninger = props => {
     }
 
     try {
-      const anmodningsperiodeID = await hentAnmodningsperiodeId(props.behandlingID);
       await Api.Anmodningsperioder.svar.send(anmodningsperiodeID, lagRequestAnmodningUnntakSvar());
       return true;
     } catch (e) {
@@ -169,6 +237,8 @@ const Saksopplysninger = props => {
     return null;
   }
 
+  const endreAnmodningsperiodeSvarType = e => setAnmodningsperiodeSvarType(e.target.value);
+
   const unikRadioButtonGruppeID = uuid();
 
   return (
@@ -176,7 +246,7 @@ const Saksopplysninger = props => {
       <form name="anmodningunntak" id="anmodningunntak" onSubmit={overstyrSubmit}>
         <div className="stegvelger panelSeksjon">
           <div className="panel stegFane steg0 stegFane--aktiv">
-            <Nav.Systemtittel>Behandle anmoding om unntak</Nav.Systemtittel>
+            <Nav.Systemtittel>Behandle anmodning om unntak</Nav.Systemtittel>
             <br />
             <div className="vurderUnntaksperiode">
               <Nav.Row className="seksjon">
@@ -199,9 +269,21 @@ const Saksopplysninger = props => {
               </Nav.Row>
               <Nav.Row className="seksjon">
                 <Nav.Column xs="12">
-                  <Nav.Fieldset legend="Vurder unntaksperiode" onChange={e => setAnmodningsperiodeSvarType(e.target.value)} disabled={!redigerbart}>
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE} label="Godkjenn unntaksperiode" defaultChecked />
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE} label="Godkjenn, men endre periode" />
+                  <Nav.Fieldset legend="Vurder unntaksperiode" disabled={!redigerbart}>
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE}
+                      checked={MKV.Koder.anmodningsperiodesvartyper.INNVILGELSE === anmodningsperiodeSvarType}
+                      onChange={endreAnmodningsperiodeSvarType}
+                      label="Godkjenn unntaksperiode"
+                    />
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE}
+                      checked={MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE === anmodningsperiodeSvarType}
+                      onChange={endreAnmodningsperiodeSvarType}
+                      label="Godkjenn, men endre periode"
+                    />
                     {anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE && (
                       <Nav.Row>
                         <Nav.Column xs="3">
@@ -226,7 +308,13 @@ const Saksopplysninger = props => {
                         </Nav.Column>
                       </Nav.Row>
                     )}
-                    <Nav.Radio name={unikRadioButtonGruppeID} value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG} label="Ikke godkjenn" />
+                    <Nav.Radio
+                      name={unikRadioButtonGruppeID}
+                      value={MKV.Koder.anmodningsperiodesvartyper.AVSLAG}
+                      checked={MKV.Koder.anmodningsperiodesvartyper.AVSLAG === anmodningsperiodeSvarType}
+                      onChange={endreAnmodningsperiodeSvarType}
+                      label="Ikke godkjenn"
+                    />
                   </Nav.Fieldset>
                 </Nav.Column>
               </Nav.Row>
@@ -235,6 +323,7 @@ const Saksopplysninger = props => {
                   <Nav.Row>
                     <Nav.Column xs="6">
                       <Nav.Textarea
+                        disabled={!redigerbart}
                         label="Skriv inn begrunnelse for avslaget..."
                         onChange={textAreaOnChange}
                         value={begrunnelseFritekst}
@@ -248,11 +337,12 @@ const Saksopplysninger = props => {
               <Nav.Row>
                 <LinkForhandsvisningSed
                   redigerbart={redigerbart}
-                  behandlingID={props.behandlingID}
+                  behandlingID={behandlingID}
                   anmodningsperiodeSvarType={anmodningsperiodeSvarType}
                   vedKlikk={oppdaterAnmodningsperiodeSvar}
                 />
               </Nav.Row>
+              {durationWarningMessage && visPeriodeVarselStripe()}
               <Nav.Row className="seksjon">
                 <Nav.Column xs="3">
                   <Nav.Hovedknapp onClick={() => submitRegistrering()} disabled={!redigerbart}>Bekreft og send</Nav.Hovedknapp>
@@ -279,6 +369,9 @@ Saksopplysninger.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
   oppdaterAvklartefakta: PT.func.isRequired,
+  anmodningsperiodeID: PT.string,
+  anmodningsperiodeSvar: PT.object.isRequired,
+  lastInnSaksopplysninger: PT.func.isRequired,
 };
 
 Saksopplysninger.defaultProps = {
@@ -286,14 +379,18 @@ Saksopplysninger.defaultProps = {
   vurderingBegrunnelser: {},
   sed: {},
   skjema: {},
+  anmodningsperiodeID: undefined,
 };
 
 const mapStateToProps = state => ({
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
+  anmodningsperiodeID: anmodningsperioderSelectors.AnmodningsperiodeIDSelector(state),
+  anmodningsperiodeSvar: anmodningsperiodesvarSelectors.AnmodningsperiodesvarSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   oppdaterAvklartefakta: (behandlingID, avklartefaktaListe) => dispatch(avklartefaktaOperations.send(behandlingID, avklartefaktaListe)),
+  lastInnSaksopplysninger: (behandlingID, anmodningsperiodeID) => datalastingOperations.lastInnSaksopplysningerBehandleMottattAOU(behandlingID, anmodningsperiodeID)(dispatch),
 });
 
 export default withRouter(RegistreringContext.connect(mapStateToProps, mapDispatchToProps)(Saksopplysninger));
