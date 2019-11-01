@@ -10,17 +10,21 @@ import { formSelectors } from '../../../ducks/form';
 
 function LenkeListeVelger(props) {
   const {
-    feltNavn, placeholder, muligeValg, linkTo, dokumentTittel, initalTittel,
+    feltNavn, placeholder, muligeValg, linkTo, dokumentTittel, initalTittel, updateTittel,
     settFeltInnhold,
   } = props;
   const [visListevelger, setState] = useState(false);
-  const style = { 'margin-bottom': '1em' };
+  const style = { marginBottom: '1em' };
 
   const tittelEndres = () => {
     setState(!visListevelger);
   };
   const avbryt = () => {
     settFeltInnhold(feltNavn, initalTittel);
+    setState(false);
+  };
+  const lagre = () => {
+    updateTittel();
     setState(false);
   };
   return (
@@ -34,8 +38,8 @@ function LenkeListeVelger(props) {
       <Nav.Column xs="12" style={style}>
         {visListevelger &&
           <Fragment>
-            <Skjema.ListeVelger feltNavn={feltNavn} placeholdere={placeholder} muligeValg={muligeValg} />
-            <Nav.Knapp onClick={tittelEndres}>Lagre Tittel</Nav.Knapp>&nbsp;<Nav.Flatknapp onClick={avbryt}>Avbryt</Nav.Flatknapp>
+            <Skjema.ListeVelger feltNavn={feltNavn} label="" placeholdere={placeholder} muligeValg={muligeValg} />
+            <Nav.Knapp onClick={lagre}>Lagre Tittel</Nav.Knapp>&nbsp;<Nav.Flatknapp onClick={avbryt}>Avbryt</Nav.Flatknapp>
           </Fragment>
         }
       </Nav.Column>
@@ -48,6 +52,7 @@ LenkeListeVelger.propTypes = {
   linkTo: PT.string.isRequired,
   dokumentTittel: PT.string.isRequired,
   initalTittel: PT.string.isRequired,
+  updateTittel: PT.func.isRequired,
   label: PT.string,
   placeholder: PT.string,
   muligeValg: PT.arrayOf(PT.string),
