@@ -46,6 +46,15 @@ addMethod(string, 'periodeErGyldig', function (message) {
   });
 });
 
+addMethod(string, 'erEtterDatofelt', function(felt, message) {
+  return this.test('erEtterFraDato', message, function(value) {
+    const { [felt]: fomDato } = this.parent;
+    const tomDato = value;
+
+    return Utils.dato.erGyldigPeriode(fomDato, tomDato);
+  });
+});
+
 addMethod(string, 'erIkkeBlank', function(message) {
   return this.test('er ikke blank', message, function(value) {
     const { path } = this;

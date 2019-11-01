@@ -3,6 +3,8 @@ import PT from 'prop-types';
 
 import * as Nav from '../../../utils/navFrontend';
 
+import './behandlingsmeny.css';
+
 const Behandlingsmeny = props => {
   const {
     redigerbart, lagreOgLukkHandle, tilbakeleggeHandle, oppfriskSaksopplysningerHandle, visHenleggDialogHandle, apneTidligereBehandlinger, visAvsluttSakSomBortfaltDialogHandle, visHenleggSak,

@@ -67,7 +67,7 @@ const VirksomheterListe = props => {
   } = props;
 
   const ingenVirksomheterVarsel = virksomheterIPerioden.length === 0 && (
-    <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere, selvsetendig næringsdrivende eller frilansere fra saksopplysninger.</Nav.AlertStripe>
+    <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere, selvstendig næringsdrivende eller frilansere fra saksopplysninger.</Nav.AlertStripe>
   );
 
   return (

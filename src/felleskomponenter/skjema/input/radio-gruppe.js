@@ -3,17 +3,21 @@ import PT from 'prop-types';
 import classNames from 'classnames';
 import { Field } from 'redux-form';
 import * as Nav from '../../../utils/navFrontend';
+import * as Utils from '../../../utils';
+
 import '../skjema.css';
 
 const RadioGruppeWrappedComponent = ({
   feltNavn, legend, label, children, meta,
 }) => {
-  const { error } = meta;
-  const errorMessage = <div>{error}</div>;
+  const { error, touched, active } = meta;
+  const skjemaError = Utils._isObject(meta.error) ? error.melding : error;
+  const skalViseError = error && touched && !active;
+  const errorMessage = skalViseError ? <div>{skjemaError}</div> : null;
 
   return (
     <Nav.Fieldset legend={legend || label} >
-      <div className={classNames({ 'skjema__feilomrade--harFeil': error !== undefined })}>
+      <div className={classNames({ 'skjema__feilomrade--harFeil': skalViseError })}>
         <label className="skjemaelement__label" htmlFor={feltNavn}>
           {children}
           <div

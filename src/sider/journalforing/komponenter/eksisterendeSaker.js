@@ -22,7 +22,7 @@ const EnkeltSak = props => {
 
   const aktivBehandling = hentAktivBehandling(behandlingOversikter);
   const {
-    land, behandlingstype, soknadsperiode, behandlingsstatus,
+    land, behandlingstype, periode, behandlingsstatus,
   } = aktivBehandling;
 
   return (
@@ -38,7 +38,7 @@ const EnkeltSak = props => {
         <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
         <dt>Opprettet:</dt>
         <dd><EnkeltDato dato={opprettetDato} /></dd>
-        <DatoOmradeDescription label="Søknadsperiode: " periode={soknadsperiode} />
+        <DatoOmradeDescription label="Søknadsperiode: " periode={periode} />
         <dt>Land:</dt>
         <dd>{land ? land.join(', ') : '(ukjent)'}</dd>
       </dl>
@@ -72,10 +72,14 @@ const EksisterendeSaker = props => {
       />}
       { fagsakListe.length === 0 && 'Ingen eksisterende saker funnet.'}
 
-      <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
+      <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype" emptyFieldDisabled={false} >
         {
           behandlingstyper &&
-          behandlingstyper.filter(elem => elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD).map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
+          behandlingstyper
+            .filter(elem => elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
+              && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
+              && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED)
+            .map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
         }
       </Skjema.Select>
       <Skjema.Checkbox feltNavn="ingenVurdering" label="Dokumentet trenger ingen vurdering" />
