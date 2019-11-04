@@ -14,12 +14,14 @@ import * as KV from '../../kodeverk';
 
 import * as Types from './types';
 import * as Actions from './actions';
+import * as Selectors from './selectors';
 
+import { AnmodningsperioderErSendtUtlandetSelector } from '../anmodningsperioder/selectors';
 import { soknadSelectors } from '../soknad';
 import { vilkarSelectors } from '../vilkar';
-import { formSelectors } from '../form';
 import { avklartefaktaSelectors } from '../avklartefakta';
 import { lovvalgsperioderSelectors } from './index';
+import { behandlingerSelectors } from '../behandlinger';
 
 /** Lovvalgsperioder bygges basert på hvilken artikkel (lovvalg) som saksbehandler har valgt.
  * Hvert lovvalg har sin egen funksjon som kjenner til hvordan dette lovvalget skal bygges. Noen
@@ -51,17 +53,18 @@ const finnValgteVilkar = alleLovvalgsVilkar => {
   return vilkarObjekt.vilkaar || false;
 };
 
-const byggLovvalgsPeriodeArtikkel12_1 = state => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+const byggLovvalgsPeriodeArtikkel12_1 = (stegState, reduxState) => {
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1,
+    lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
-    tilleggBestemmelse: null,
-    unntakFraBestemmelse: null,
+    tilleggBestemmelse: stegState.tilleggbestemmelse || null,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
@@ -70,17 +73,18 @@ const byggLovvalgsPeriodeArtikkel12_1 = state => {
   }];
 };
 
-const byggLovvalgsPeriodeArtikkel12_2 = state => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+const byggLovvalgsPeriodeArtikkel12_2 = (stegState, reduState) => {
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduState);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduState);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2,
+    lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
-    tilleggBestemmelse: null,
-    unntakFraBestemmelse: null,
+    tilleggBestemmelse: stegState.tilleggbestemmelse || null,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
@@ -89,18 +93,19 @@ const byggLovvalgsPeriodeArtikkel12_2 = state => {
   }];
 };
 
-const byggLovvalgsPeriodeArtikkel11_3A = state => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
-  const tilleggsbestemmelse = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(state));
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+const byggLovvalgsPeriodeArtikkel11_3A = (stegState, reduxState) => {
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const tilleggsbestemmelseFraVilkar = finnValgteVilkar(vilkarSelectors.valgteTilleggsVilkar(reduxState));
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A,
+    lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
-    tilleggBestemmelse: tilleggsbestemmelse || null,
-    unntakFraBestemmelse: null,
+    tilleggBestemmelse: stegState.tilleggbestemmelse || tilleggsbestemmelseFraVilkar || null,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
@@ -109,17 +114,18 @@ const byggLovvalgsPeriodeArtikkel11_3A = state => {
   }];
 };
 
-const byggLovvalgsPeriodeArtikkel11_4_2 = state => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+const byggLovvalgsPeriodeArtikkel11_4_2 = (stegState, reduxState) => {
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2,
+    lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
-    tilleggBestemmelse: null,
-    unntakFraBestemmelse: null,
+    tilleggBestemmelse: stegState.tilleggbestemmelse || null,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland: MKV.Koder.landkoder.NO,
@@ -128,37 +134,9 @@ const byggLovvalgsPeriodeArtikkel11_4_2 = state => {
   }];
 };
 
-const byggLovvalgsPeriodeArtikkel16_1 = state => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
-  const soknadsland = soknadSelectors.SoknadslandSelector(state);
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
-
-  const unntakFraLovvalgsland = soknadsland.join('');
-  const unntakFraBestemmelse = formSelectors.UnntakFraBestemmelseSelector(state);
-
-  // Det er ikke et gyldig art16-lovvalg før unntakene er oppgitt
-  if (!unntakFraBestemmelse || !unntakFraLovvalgsland) {
-    return [];
-  }
-
-  return [{
-    fomDato: soknadPeriode.fom,
-    tomDato: soknadPeriode.tom,
-    lovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1,
-    medlemskapsperiodeID: medlemskapsperiodeID || null,
-    tilleggBestemmelse: null,
-    unntakFraBestemmelse,
-    unntakFraLovvalgsland,
-    innvilgelsesResultat: KV.Koder.INNVILGET,
-    lovvalgsland: MKV.Koder.landkoder.NO,
-    trygdeDekning: MKV.Koder.trygdedekninger.FULL_DEKNING_EOSFO,
-    medlemskapstype: MKV.Koder.medlemskapstyper.PLIKTIG,
-  }];
-};
-
-const byggAvslaattLovvalg = (state, lovvalgsbestemmelse) => {
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
+const byggAvslaattLovvalg = (reduxState, lovvalgsbestemmelse) => {
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
 
   return [{
     fomDato: soknadPeriode.fom,
@@ -177,22 +155,21 @@ const byggAvslaattLovvalg = (state, lovvalgsbestemmelse) => {
 
 const hentLovvalgsBestemmelseForAvslag = state => {
   if (avklartefaktaSelectors.Yrkesaktivitet(state) === KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE) {
-    return MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2;
+    return MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2;
   }
-  return MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1;
+  return MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1;
 };
 
-const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, state) => {
+const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, stegState, reduxState) => {
   if (!valgtLovvalg) {
-    return byggAvslaattLovvalg(state, hentLovvalgsBestemmelseForAvslag(state));
+    return byggAvslaattLovvalg(reduxState, hentLovvalgsBestemmelseForAvslag(reduxState));
   }
 
   switch (valgtLovvalg) {
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(state);
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(state);
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1: return byggLovvalgsPeriodeArtikkel16_1(state);
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(state);
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(state);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_1: return byggLovvalgsPeriodeArtikkel12_1(stegState, reduxState);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART12_2: return byggLovvalgsPeriodeArtikkel12_2(stegState, reduxState);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_3A: return byggLovvalgsPeriodeArtikkel11_3A(stegState, reduxState);
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART11_4_2: return byggLovvalgsPeriodeArtikkel11_4_2(stegState, reduxState);
     default: {
       return [];
     }
@@ -201,27 +178,33 @@ const byggLovvalgsPerioderFraVilkaar = (valgtLovvalg, state) => {
 
 const bestemLovvalgsland = lovvalgsbestemmelse => {
   switch (lovvalgsbestemmelse) {
-    case MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1A:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A:
+      return MKV.Koder.landkoder.NO;
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B1:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B2:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B3:
+    case MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1B4:
       return MKV.Koder.landkoder.NO;
     default:
       return null;
   }
 };
 
-const byggLovvalgsPerioder = (lovvalgsbestemmelse, state) => {
-  if (lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1) return [];
+const byggLovvalgsPerioder = (stegState, reduxState) => {
+  if (stegState.lovvalgsbestemmelse === MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1) return [];
 
-  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(state);
-  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(state);
-  const lovvalgsland = bestemLovvalgsland(lovvalgsbestemmelse);
+  const soknadPeriode = soknadSelectors.SoknadsperiodeSelector(reduxState);
+  const medlemskapsperiodeID = lovvalgsperioderSelectors.MedlemskapsperiodeIDSelector(reduxState);
+  const lovvalgsland = bestemLovvalgsland(stegState.lovvalgsbestemmelse);
+  const unntakFraBestemmelse = stegState.unntakfrabestemmelse;
 
   return [{
     fomDato: soknadPeriode.fom,
     tomDato: soknadPeriode.tom,
-    lovvalgsbestemmelse,
+    lovvalgsbestemmelse: stegState.lovvalgsbestemmelse || null,
     medlemskapsperiodeID: medlemskapsperiodeID || null,
-    tilleggBestemmelse: null,
-    unntakFraBestemmelse: null,
+    tilleggBestemmelse: stegState.tilleggbestemmelse || null,
+    unntakFraBestemmelse: unntakFraBestemmelse || null,
     unntakFraLovvalgsland: null,
     innvilgelsesResultat: KV.Koder.INNVILGET,
     lovvalgsland,
@@ -246,15 +229,29 @@ export function send(behandlingID, body) {
   });
 }
 
-export function oppdaterLovvalgsperioderState(lovvalgsbestemmelse) {
+export function lagre() {
   return (dispatch, getState) => {
-    const alleLovvalgsvilkar = vilkarSelectors.valgteLovvalgsVilkar(getState());
-    if (lovvalgsbestemmelse) {
-      const lovvalgsPerioder = byggLovvalgsPerioder(lovvalgsbestemmelse, getState());
-      dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
-    } else if (alleLovvalgsvilkar.length > 0) {
+    const lovvalgsperioder = Selectors.LovvalgsperioderSelector(getState());
+    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    const anmodningsperioderErSendtUtlandet = AnmodningsperioderErSendtUtlandetSelector(getState());
+
+    if (anmodningsperioderErSendtUtlandet) return null;
+
+    return dispatch(send(bid, lovvalgsperioder));
+  };
+}
+
+export function oppdaterLovvalgsperioderState(stegState) {
+  return (dispatch, getState) => {
+    const reduxState = getState();
+    const alleLovvalgsvilkar = vilkarSelectors.valgteLovvalgsVilkar(reduxState);
+
+    if (alleLovvalgsvilkar.length > 0) {
       const valgtLovvalg = finnValgteVilkar(alleLovvalgsvilkar);
-      const lovvalgsPerioder = byggLovvalgsPerioderFraVilkaar(valgtLovvalg, getState());
+      const lovvalgsPerioder = byggLovvalgsPerioderFraVilkaar(valgtLovvalg, stegState, reduxState);
+      dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
+    } else if (stegState.lovvalgsbestemmelse || stegState.tilleggbestemmelse || stegState.unntakfrabestemmelse) {
+      const lovvalgsPerioder = byggLovvalgsPerioder(stegState, reduxState);
       dispatch(Actions.oppdaterLovvalgsperioderState(lovvalgsPerioder));
     } else {
       dispatch(Actions.resetLovvalgsperioderState());

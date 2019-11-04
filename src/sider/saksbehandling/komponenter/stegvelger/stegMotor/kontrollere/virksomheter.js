@@ -5,6 +5,7 @@ import * as KV from '../../../../../../kodeverk';
 
 import SokkelSkip from './sokkel_skip';
 import YrkesaktivitetAntallLand from './yrkesaktivitet_antall_land';
+import Yrkesgruppe from './yrkesgruppe';
 import { hentFaktaListe } from '../../../../../../regler/avklartefakta';
 
 class Virksomheter extends Steg {
@@ -12,12 +13,23 @@ class Virksomheter extends Steg {
     super(propsLight, stegPosisjon);
     this.kriterier = [
       {
+        beskrivelse: '',
+        exec: avklartefakta => {
+          const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(avklartefakta);
+          const garDirekteTilArtikkel16 = Yrkesgruppe.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12);
+
+          return harValgtArbeidsgiver && garDirekteTilArtikkel16;
+        },
+        nesteSteg: STEG.ARTIKKEL_16_ANMODNING,
+      },
+      {
         beskrivelse: 'Valgt minst én arbeidsgiver og yrkesgruppeType === ORDINAER og kun ET_LAND',
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(avklartefakta);
           const erVanligYrkesaktiv = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
+          const erFlyendePersonell = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL);
           const erKunEtLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE);
-          return harValgtArbeidsgiver && erVanligYrkesaktiv && erKunEtLand;
+          return harValgtArbeidsgiver && (erVanligYrkesaktiv || erFlyendePersonell) && erKunEtLand;
         },
         nesteSteg: STEG.YRKESAKTIVITET,
       },
@@ -46,10 +58,11 @@ class Virksomheter extends Steg {
         exec: avklartefakta => {
           const harValgtArbeidsgiver = Virksomheter.harValgtArbeidsgiver(avklartefakta);
           const erVanligYrkesaktiv = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.ORDINAER);
+          const erFlyendePersonell = Virksomheter.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesgruppeTyper.FLYENDE_PERSONELL);
           const erToEllerFlereLand = YrkesaktivitetAntallLand.finnAvklaring(avklartefakta, KV.Koder.VurderingYrkesaktivitetAntallLandTyper.TO_ELLER_FLERE_LAND);
-          return harValgtArbeidsgiver && erVanligYrkesaktiv && erToEllerFlereLand;
+          return harValgtArbeidsgiver && (erVanligYrkesaktiv || erFlyendePersonell) && erToEllerFlereLand;
         },
-        nesteSteg: STEG.BOSTEDSLAND,
+        nesteSteg: STEG.YRKESAKTIVITET,
       },
       {
         beskrivelse: 'Stopp steg',
@@ -62,7 +75,7 @@ class Virksomheter extends Steg {
     this.komponent = VurderingVirksomhet;
     this.samleRelevanteData = _propsLight => ({
       virksomheterIPerioden: _propsLight.virksomheterIPerioden,
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const virksomheter = hentFaktaListe(KV.Koder.avklartefaktaKoder.VIRKSOMHET, _propsLight.avklartefakta);

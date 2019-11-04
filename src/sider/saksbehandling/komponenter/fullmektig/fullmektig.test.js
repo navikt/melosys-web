@@ -44,6 +44,8 @@ describe('Fullmektig', () => {
       slettFullmektigLokalt: jest.fn(),
       lagreNyFullmektigOgOppdaterLokalt: jest.fn(),
       hentOrg: jest.fn(),
+      index: 1,
+      settRepresentant: jest.fn(),
     };
   });
 
@@ -87,6 +89,21 @@ describe('FullmektigPanel', () => {
       oppsummering: { saksnummer: 4 },
       lagreAktoer: jest.fn(),
       redigerbart: true,
+      fagsak: {
+        saksnummer: '4',
+        sakstype: {
+          kode: 'SOKNAD',
+          term: 'Søknad',
+        },
+        saksstatus: {
+          kode: 'UNDER_BEHANDLING',
+          term: 'Under behandling',
+        },
+        registrertDato: '01-01-2011',
+        endretDato: '12-12-2012',
+        gsakSaksnummer: 4,
+        behandlingOversikter: [],
+      },
     };
   });
 

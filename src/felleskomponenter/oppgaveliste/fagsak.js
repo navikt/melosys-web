@@ -1,10 +1,10 @@
 import React from 'react';
-import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
+import * as Utils from '../../utils';
 
 import Behandling from './behandling';
 import PanelHeader from '../panelHeader/panelHeader';
@@ -27,19 +27,8 @@ const Fagsak = ({ sak }) => {
     behandlingOversikter,
   } = sak;
 
-  const behandlingUrl = behandling => {
-    const { behandlingstype, behandlingID } = behandling;
-    const queryParams = `?behandlingID=${behandlingID}`;
-
-    if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD
-        || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
-      return `/registrering/${saksnummer}/${queryParams}`;
-    }
-    return `/saksbehandling/${saksnummer}/${queryParams}`;
-  };
-
   const {
-    soknadsperiode,
+    periode,
     land,
   } = behandlingOversikter[0];
   const tittel = `${KV.objektTilTerm(sakstype)}`;
@@ -57,7 +46,7 @@ const Fagsak = ({ sak }) => {
             <dl className="fagsak__meta">
               <dt>Saksstatus:</dt>
               <dd>{KV.objektTilTerm(saksstatus) || '(ukjent)'}</dd>
-              <DatoOmradeDescription tekst="Søknadsperiode: " periode={soknadsperiode} />
+              <DatoOmradeDescription label="Periode: " periode={periode} />
             </dl>
           </Nav.Column>
           <Nav.Column xs="12" md="4">
@@ -80,7 +69,7 @@ const Fagsak = ({ sak }) => {
         <Nav.Row className="fagsak__behandlinger">
           {
             behandlingOversikter.map(behandling =>
-              <Behandling key={behandling.behandlingID} behandling={behandling} link={behandlingUrl(behandling)} />)
+              <Behandling key={behandling.behandlingID} behandling={behandling} link={Utils.url.lagUrl(saksnummer, behandling.behandlingID, behandling.behandlingstype.kode)} />)
           }
         </Nav.Row>
       </Nav.Container>

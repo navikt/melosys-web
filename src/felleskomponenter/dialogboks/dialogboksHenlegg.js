@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 import PT from 'prop-types';
 import { connect } from 'react-redux';
 import * as MKV from 'melosys-kodeverk';
-import PdfLenkeListe from '../pdfLenkeListe';
-import { KodeTermSelect } from '../ui/kodeTermSelect';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
 
 import * as Nav from '../../utils/navFrontend';
 
-import './dialogboksHenlegg.css';
+import PdfLenkeListe from '../pdfLenkeListe';
+import * as Mui from '../ui';
+import Knapperad from '../knapperad';
 
+import { behandlingerSelectors } from '../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../ducks/redigerbart';
+
+import './dialogboksHenlegg.css';
 
 export class DialogboksHenleggSak extends Component {
   state = {
@@ -102,7 +105,7 @@ export class DialogboksHenleggSak extends Component {
       mottaker: MKV.Koder.aktoersroller.BRUKER,
     } : {};
 
-    const dokumenter = [{
+    const pdfDokumenter = [{
       navn: 'Forhåndsvis brev',
       type: MKV.Koder.brev.produserbaredokumenter.MELDING_HENLAGT_SAK,
       data,
@@ -120,7 +123,7 @@ export class DialogboksHenleggSak extends Component {
         ariaHideApp={ariaHideApp}>
         <div>
           <Nav.Systemtittel className="overskrift">Henlegg saken</Nav.Systemtittel>
-          <KodeTermSelect
+          <Mui.KodeTermSelect
             feil={feilmeldingSelect}
             onChange={this.velgBegrunnelseHandle}
             label="Begrunnelse"
@@ -133,17 +136,16 @@ export class DialogboksHenleggSak extends Component {
             visTekstFelt && <Nav.Textarea feil={feilmeldingFritekst} label="Fritekst" onChange={this.fritekstOnchange} value={fritekst} />
           }
           {
-            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={this.vedKlikkLenke} />
+            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={this.vedKlikkLenke} />
           }
-          <div className="dialogboksHenlegg__container__knapperad">
-            <Nav.Knapp onClick={avbryt}>Avbryt</Nav.Knapp>
-            <Nav.Hovedknapp
-              disabled={!erBegrunnelseValgt()}
-              onClick={vedKlikkHenlegg}
-            >
-              Henlegg saken
-            </Nav.Hovedknapp>
-          </div>
+          <Knapperad
+            bekreft={vedKlikkHenlegg}
+            bekreftTekst="HENLEGG SAKEN"
+            bekreftRedigerbart={erBegrunnelseValgt()}
+            avbryt={avbryt}
+            avbrytTekst="AVBRYT"
+            redigerbart={redigerbart}
+          />
         </div>
       </Nav.Modal>
     );
@@ -164,7 +166,7 @@ DialogboksHenleggSak.defaultProps = {
 
 const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
 });
 
 export default connect(mapStateToProps, null)(DialogboksHenleggSak);

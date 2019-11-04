@@ -11,7 +11,7 @@ import * as MPT from '../../../proptypes/';
 
 import './eksisterendeSaker.css';
 
-const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.status.AVSLUTTET);
+const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET);
 
 /** Den enkelte sak-elementet som brukes i iterasjon i listen
  */
@@ -22,7 +22,7 @@ const EnkeltSak = props => {
 
   const aktivBehandling = hentAktivBehandling(behandlingOversikter);
   const {
-    land, behandlingstype, soknadsperiode, behandlingsstatus,
+    land, behandlingstype, periode, behandlingsstatus,
   } = aktivBehandling;
 
   return (
@@ -37,8 +37,8 @@ const EnkeltSak = props => {
         <dt>Behandlingsstatus: </dt>
         <dd>{KV.objektTilTerm(behandlingsstatus)}</dd>
         <dt>Opprettet:</dt>
-        <dd>{<EnkeltDato dato={opprettetDato} />}</dd>
-        <DatoOmradeDescription tekst="Søknadsperiode: " periode={soknadsperiode} />
+        <dd><EnkeltDato dato={opprettetDato} /></dd>
+        <DatoOmradeDescription label="Søknadsperiode: " periode={periode} />
         <dt>Land:</dt>
         <dd>{land ? land.join(', ') : '(ukjent)'}</dd>
       </dl>
@@ -56,7 +56,7 @@ EnkeltSak.propTypes = {
  */
 const EksisterendeSaker = props => {
   const {
-    behandlingstyper, fagsakListe, knyttTilEksisterendeSak, feil,
+    behandlingstyper, fagsakListe, knyttTilEksisterendeSak,
   } = props;
 
   const radioValg = fagsakListe.reduce((samling, sak) =>
@@ -69,14 +69,17 @@ const EksisterendeSaker = props => {
         feltNavn="saksnummer"
         legend="Velg fra listen over saker:"
         radios={radioValg}
-        feil={feil}
       />}
       { fagsakListe.length === 0 && 'Ingen eksisterende saker funnet.'}
 
-      <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
+      <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype" emptyFieldDisabled={false} >
         {
           behandlingstyper &&
-          behandlingstyper.filter(elem => elem.kode !== MKV.Koder.behandlinger.typer.SOEKNAD).map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
+          behandlingstyper
+            .filter(elem => elem.kode !== MKV.Koder.behandlinger.behandlingstyper.SOEKNAD
+              && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL
+              && elem.kode !== MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED)
+            .map(elem => <option key={elem.kode} value={elem.kode}>{elem.term}</option>)
         }
       </Skjema.Select>
       <Skjema.Checkbox feltNavn="ingenVurdering" label="Dokumentet trenger ingen vurdering" />
@@ -93,11 +96,6 @@ EksisterendeSaker.propTypes = {
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
   fagsakListe: PT.array.isRequired,
   knyttTilEksisterendeSak: PT.func.isRequired,
-  feil: PT.object,
-};
-
-EksisterendeSaker.defaultProps = {
-  feil: undefined,
 };
 
 export default EksisterendeSaker;

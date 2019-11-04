@@ -6,41 +6,9 @@ import * as MKV from 'melosys-kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
 import * as VilkarSelectors from '../../../../../ducks/vilkar/selectors';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
-import * as KV from '../../../../../kodeverk';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-
-import './vurderingAvslag12_x_og_16.css';
-
-const Begrunnelser = ({
-  label,
-  valgteBegrunnelser,
-  muligeBegrunnelser,
-  fritekst,
-}) => (
-  <div className="begrunnelser">
-    <Nav.Element className="begrunnelseTittel">
-      {label}
-    </Nav.Element>
-    {
-      valgteBegrunnelser.map(begrunnelse => <div className="begrunnelse" key={begrunnelse}>{KV.kodeTilTerm(begrunnelse, muligeBegrunnelser)}</div>)
-    }
-    {
-      fritekst && <div className="begrunnelse">{fritekst}</div>
-    }
-  </div>
-);
-
-Begrunnelser.propTypes = {
-  label: PT.string.isRequired,
-  valgteBegrunnelser: PT.array.isRequired,
-  muligeBegrunnelser: PT.array.isRequired,
-  fritekst: PT.string,
-};
-
-Begrunnelser.defaultProps = {
-  fritekst: '',
-};
+import Begrunnelser from '../../begrunnelser';
 
 const VurderingAvslag12_x_og_16 = ({
   valgte_art_12_1_begrunnelser,
@@ -52,7 +20,7 @@ const VurderingAvslag12_x_og_16 = ({
   fattVedtak,
   redigerbart,
 }) => {
-  const dokumenter = [
+  const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
@@ -109,8 +77,8 @@ const VurderingAvslag12_x_og_16 = ({
           fritekst={art16_1_fritekst}
         />
       }
-      {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />}
-      <Nav.Hovedknapp disabled={!redigerbart} onClick={() => fattVedtak(MKV.Koder.behandlinger.resultattyper.FASTSATT_LOVVALGSLAND)}>
+      {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
+      <Nav.Hovedknapp disabled={!redigerbart} onClick={() => fattVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND)}>
         Fatt vedtak
       </Nav.Hovedknapp>
     </div>

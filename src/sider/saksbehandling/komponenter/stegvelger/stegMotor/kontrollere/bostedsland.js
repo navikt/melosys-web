@@ -28,7 +28,7 @@ class Bostedsland extends Steg {
           const harBostedslandNorge = Bostedsland.finnAvklaring(avklartefakta, MKV.Koder.landkoder.NO);
           return erToEllerFlereLand && harBostedslandNorge;
         },
-        nesteSteg: STEG.ARBEIDSMONSTER,
+        nesteSteg: STEG.VIRKSOMHETER,
       },
       {
         beskrivelse: 'to eller flere land',
@@ -41,7 +41,7 @@ class Bostedsland extends Steg {
           const harAvklartBostedsland = !Utils._isNil(bostedsland);
           return erToEllerFlereLand && harAvklartBostedsland && begrunnelserErOppgitt;
         },
-        nesteSteg: STEG.VEDTAK,
+        nesteSteg: STEG.VIDERESEND,
       },
       {
         beskrivelse: 'dead end',
@@ -55,8 +55,7 @@ class Bostedsland extends Steg {
     this.komponent = VurderingBostedsland;
     this.samleRelevanteData = _propsLight => ({
       begrunnelser: _propsLight.begrunnelser.bosted || [],
-      redigerbart: _propsLight.redigerbart,
-
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
       const { saksopplysninger = {} } = _propsLight;

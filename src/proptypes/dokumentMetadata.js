@@ -5,6 +5,7 @@ const DokumentMetadataPropType = PT.shape({
   navn: PT.string,
   type: PT.string,
   data: PT.object,
+  erSed: PT.bool,
 });
 
 const DokumenterPropType = PT.arrayOf(DokumentMetadataPropType);

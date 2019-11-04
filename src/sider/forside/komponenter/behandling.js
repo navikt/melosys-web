@@ -13,8 +13,6 @@ import { oppgaverOperations } from '../../../ducks/oppgaver';
 
 import './behandling.css';
 
-const uuid = require('uuid/v4');
-
 class Behandling extends Component {
   submitOgVideresend = async form => {
     const { handleSubmit, history } = this.props;
@@ -27,35 +25,39 @@ class Behandling extends Component {
     return true;
   };
 
+  gyldigeBehandlingstyper = [
+    MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
+    MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE,
+    MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_UTSTASJONERING,
+    MKV.Koder.behandlinger.behandlingstyper.REGISTRERING_UNNTAK_NORSK_TRYGD_ØVRIGE,
+    MKV.Koder.behandlinger.behandlingstyper.UTL_MYND_UTPEKT_SEG_SELV,
+    MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL,
+    MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID,
+    MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED,
+  ];
+
   render() {
     return (
       <Nav.Panel className="forside__sidepanel sidepanel__behandling">
         <Nav.Systemtittel>Behandle sak</Nav.Systemtittel>
-        <p>Du kan oppgi sakstype og behandlingstype for å få tildelt en sak som du ønsker å behandle.</p>
+        <p>Velg sakstype og behandlingstype for å få tildelt en sak.</p>
         <form className="behandling__skjema" onSubmit={this.submitOgVideresend}>
           <Nav.Row>
             <Nav.Column xs="4">
-              <Nav.Fieldset legend="Sakstype">
-                {MKV.KTObjects.sakstyper.map(enkeltType => {
-                  const isDisabled = enkeltType.kode !== MKV.Koder.sakstyper.EU_EOS;
-                  return (<Skjema.Checkbox key={uuid()} label={enkeltType.term} disabled={isDisabled} feltNavn={`sakstyper.${enkeltType.kode}`} />);
-                })}
-              </Nav.Fieldset>
+              <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype">
+                {MKV.KTObjects.sakstyper
+                  .filter(({ kode }) => kode === MKV.Koder.sakstyper.EU_EOS)
+                  .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))}
+              </Skjema.Select>
             </Nav.Column>
-
             <Nav.Column xs="8">
-              <Nav.Fieldset legend="Behandlingstype">
-                {MKV.KTObjects.behandlinger.typer.map(type => {
-                  const isDisabled = ![
-                    MKV.Koder.behandlinger.typer.SOEKNAD,
-                    MKV.Koder.behandlinger.typer.ENDRET_PERIODE,
-                  ].includes(type.kode);
-                  return (<Skjema.Checkbox key={type.kode} label={type.term} disabled={isDisabled} feltNavn={`behandlingstyper.${type.kode}`} />);
-                })}
-              </Nav.Fieldset>
+              <Skjema.Select feltNavn="behandlingstype" bredde="fullbredde" label="Behandlingstype">
+                {MKV.KTObjects.behandlinger.behandlingstyper
+                  .filter(({ kode }) => this.gyldigeBehandlingstyper.includes(kode))
+                  .map(({ kode, term }) => (<option key={kode} value={kode}>{term}</option>))}
+              </Skjema.Select>
             </Nav.Column>
           </Nav.Row>
-
           <Nav.Knapp className="behandling__knapp">Behandle sak</Nav.Knapp>
         </form>
       </Nav.Panel>
@@ -75,17 +77,14 @@ Behandling.defaultProps = {
 
 const mapStateToProps = () => ({
   initialValues: {
-    sakstyper: {
-      EU_EOS: true,
-    },
-    behandlingstyper: {
-      SOEKNAD: true,
-    },
+    sakstype: MKV.Koder.sakstyper.EU_EOS,
+    behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
   },
 });
 const BehandlngForm = reduxForm({
   form: KV.Form.BEHANDLINGS_FORM,
-  onSubmit: checkboxliste => oppgaverOperations.sendBehandlingsOppgave(checkboxliste),
+  destroyOnUnmount: false,
+  onSubmit: form => oppgaverOperations.sendBehandlingsOppgave(form),
 })(Behandling);
 
 export default withRouter(connect(mapStateToProps, null)(BehandlngForm));

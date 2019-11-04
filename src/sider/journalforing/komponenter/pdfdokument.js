@@ -84,7 +84,7 @@ class PDFDokument extends Component {
 
   render() {
     const { journalpostID, dokumentID } = this.props;
-    const pdfDokumentURI = Api.Dokumenter.pdfURI(journalpostID, dokumentID);
+    const pdfDokumentURI = Api.Dokumenter.pdf.uriPath(journalpostID, dokumentID);
     return (
       <div
         id="row"

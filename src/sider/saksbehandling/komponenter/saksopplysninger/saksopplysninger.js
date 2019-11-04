@@ -27,10 +27,10 @@ import Kontantytelser from '../kontantytelser';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import { behandlingsperioderSelectors } from '../../../../ducks/behandlingsperioder';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 import { saksopplysningerOperations, saksopplysningerSelectors } from '../../../../ducks/saksopplysninger';
 import {
   soknadOperations,
-  soknadActions,
   soknadSelectors,
 } from '../../../../ducks/soknad';
 
@@ -56,8 +56,7 @@ class Saksopplysninger extends Component {
   };
 
   oppdaterLokalSoknadHandler = () => {
-    const { oppdaterSoknad, soknadForm, inngangForm } = this.props;
-    oppdaterSoknad({ ...soknadForm.values, ...inngangForm.values });
+    this.props.oppdaterSoknad();
   };
 
   lagreSoknadOgOppfriskSaksopplysninger = async () => {
@@ -90,7 +89,7 @@ class Saksopplysninger extends Component {
     }
 
     const erHenlagtSak = fagsakStatusKode === MKV.Koder.saksstatuser.HENLAGT;
-    const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.resultattyper.AVSLAG_MANGLENDE_OPPL;
+    const erAvslaattSoknad = behandlingsresultat.behandlingsresultatTypeKode === MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL;
     const visAvslaattSoknad = erAvslaattSoknad && !erHenlagtSak;
     const visStegVelger = !erHenlagtSak && !erAvslaattSoknad;
 
@@ -182,7 +181,7 @@ Saksopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   oppfriskning: saksopplysningerSelectors.SaksopplysningerSelector(state),
   fagsakStatusKode: fagsakSelectors.FagsakStatusSelector(state),
@@ -194,13 +193,13 @@ const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   inngangForm: formSelectors.InngangFormSelector(state),
   soknadArbeidsinntekt: soknadSelectors.ArbeidsinntektSelector(state),
+  oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
   initialValues: {
     utenlandskIdent: soknadSelectors.PersonOpplysningerSelector(state).utenlandskIdent,
     medfolgendeFamilie: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeFamilie,
     medfolgendeAndre: soknadSelectors.PersonOpplysningerSelector(state).medfolgendeAndre,
     inntektNorskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNorskIPerioden,
     inntektUtenlandskIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektUtenlandskIPerioden,
-    inntektNaeringIPerioden: soknadSelectors.ArbeidsinntektSelector(state).inntektNaeringIPerioden,
     inntektNaturalFribolig: soknadSelectors.ArbeidsinntektNaturalytelserSelector(state).friBil,
     inntektNaturalFribil: soknadSelectors.ArbeidsinntektNaturalytelserSelector(state).friBolig,
     inntektNaturalIAnnet: soknadSelectors.ArbeidsinntektNaturalytelserSelector(state).friAnnet,
@@ -226,7 +225,6 @@ const mapStateToProps = state => ({
     andelOppdragINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelOppdragINorge) || null,
     andelKontrakterINorge: Math.round(soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).andelKontrakterINorge) || null,
     arbeidstakereRekruttertILand: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).arbeidstakereRekruttertILand,
-    oppdragsKontrakterIHovedsakInngaattILand: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).oppdragsKontrakterIHovedsakInngaattILand,
     ekstraArbeidsgivere: soknadSelectors.JuridiskArbeidsgiverNorgeSelector(state).ekstraArbeidsgivere,
     oppholdUtlandFom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).fom),
     oppholdUtlandTom: formatterDatoTilNorsk(soknadSelectors.OppholdUtlandPeriodeSelector(state).tom),
@@ -256,7 +254,6 @@ const mapStateToProps = state => ({
       yrkesgruppe: avklartefaktaSelectors.Yrkesgruppe(state),
       yrkesaktivitetAntallLand: avklartefaktaSelectors.YrkesaktivitetAntallLand(state),
       yrkesaktivitet: avklartefaktaSelectors.Yrkesaktivitet(state),
-      virksomheter: avklartefaktaSelectors.VirksomhetSelector(state),
       sokkelSkipKonklusjon: avklartefaktaSelectors.ArbeidSokkelSkipSelector(state),
     },
     vilkar: {
@@ -286,7 +283,7 @@ const mapDispatchToProps = dispatch => ({
   sjekkOppfriskningStatus: behandlingID => dispatch(saksopplysningerOperations.sjekkStatus(behandlingID)),
   oppfriskSaksopplysninger: saksnummer => saksopplysningerOperations.oppfrisk(saksnummer),
   sendSoknad: (bid, dokument) => dispatch(soknadOperations.send(bid, dokument)),
-  oppdaterSoknad: values => { dispatch(soknadActions.oppdaterSoknadState(values)); },
+  oppdaterSoknad: () => dispatch(soknadOperations.oppdaterSoknadState()),
 });
 
 const SaksopplysningerForm = reduxForm({
@@ -295,7 +292,15 @@ const SaksopplysningerForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: Validering.Skjemaer.createValidator(Validering.Skjemaer.saksopplysninger),
+  validate: (values, props) => {
+    const settings = {
+      context: {
+        skalOppgittAdresseValideres: props.oppgittAdresseHarVerdier,
+      },
+    };
+
+    return Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.saksopplysninger, settings)(values);
+  },
 })(Saksopplysninger);
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(SaksopplysningerForm));

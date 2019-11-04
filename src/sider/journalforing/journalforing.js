@@ -1,8 +1,8 @@
 /* eslint no-alert:off, consistent-return:off */
-import React, { Component } from 'react';
+import React, { Component, useEffect } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { reduxForm, autofill, setSubmitFailed, change, getFormSyncErrors } from 'redux-form';
+import { autofill, setSubmitFailed, change, getFormSyncErrors, touch, isValid, getFormValues } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -16,13 +16,11 @@ import * as Person from '../../felleskomponenter/skjema/validering/generisk/pers
 
 import Sticky from '../../felleskomponenter/sticky';
 import withErrorHandling from '../../felleskomponenter/withErrorHandling';
-import Informasjon from './komponenter/informasjon';
-import EksisterendeSaker from './komponenter/eksisterendeSaker';
 import PDFDokument from './komponenter/pdfdokument';
-import OpprettNyFagSak from './komponenter/opprettnyfagsak';
+import JournalforingSED from './komponenter/journalforingsed';
+import JournalforingForm from './komponenter/journalforingform';
 import { queryParamLogger } from '../../utils/queryParamLogger';
 
-import { journalforingValidering, erSkjemaGyldig } from '../../felleskomponenter/skjema/validering/journalforing';
 import {
   journalforingOperations,
   journalforingSelectors,
@@ -30,7 +28,6 @@ import {
 import { formSelectors } from '../../ducks/form';
 import { OrganisasjonOperations } from '../../ducks/organisasjoner';
 import { PersonOperations } from '../../ducks/personer';
-import * as oppgaverOperations from '../../ducks/oppgaver/operations';
 import * as MPT from '../../proptypes';
 import { sokOperations, sokSelectors } from '../../ducks/sok';
 
@@ -46,9 +43,6 @@ class Journalforing extends Component {
     await this.props.hentJournalOppgave(journalpostID);
   }
 
-  async componentWillUnmount() {
-    await this.props.resetJournalforingState();
-  }
   onChangeVedlegg = e => {
     const { value: valgtDokumentID } = e.target;
     this.setState({ valgtDokumentID });
@@ -67,7 +61,7 @@ class Journalforing extends Component {
    * noe er avbrutt - kun redirecte til forsiden.
    */
   avbrytJournalforing = () => {
-    this.props.history.push('/');
+    this.props.tilForsiden();
   };
   mapLogiskeVedleggsTitlerTilVedlegg = titler => {
     const dokumentID = null;
@@ -103,6 +97,7 @@ class Journalforing extends Component {
       opprettnysak_behandlingstype: behandlingstypeKode,
       representantID, representantKontaktPerson, avsenderNavn, hoveddokumentTittel, vedlegg: vedleggSkjema,
       skalTilordnes,
+      ikkeSendForvaltingsmelding,
     } = journalforingSkjemaVerdier;
 
     const { dokumentID } = hoveddokument;
@@ -120,10 +115,17 @@ class Journalforing extends Component {
       vedlegg,
       skalTilordnes,
     };
+    if (intensjon === JOURNALFORING_HENSIKT.KNYTT) {
+      journalPostData = { ...journalPostData, ikkeSendForvaltingsmelding: null };
+    }
     // /opprett har i tillegg arbeidsgiverID og representantID
     if (intensjon === JOURNALFORING_HENSIKT.OPPRETT) {
       journalPostData = Object.assign(journalPostData, {
-        arbeidsgiverID, behandlingstypeKode, representantID, representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
+        arbeidsgiverID,
+        behandlingstypeKode,
+        representantID,
+        representantKontaktPerson: Utils.verdiSomNullable(representantKontaktPerson),
+        ikkeSendForvaltingsmelding,
       });
     }
     return journalPostData;
@@ -136,31 +138,37 @@ class Journalforing extends Component {
   knyttTilEksisterendeSak = async () => {
     /* eslint no-unreachable:off */
     const {
-      journalforingSkjemaVerdier: { saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering }, tilordneSak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier: {
+        saksnummer, behandlingstype: behandlingstypeKode, ingenVurdering, avsenderType,
+      },
+      tilordneSak, settJournalforingHensikt, settFeilFelt, tilForsiden,
     } = this.props;
 
     const { resetSkjemaFelterForOpprettFagsak } = this;
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.KNYTT);
     const journalforingData = {
-      saksnummer, behandlingstypeKode, ingenVurdering, ...vasketJournalforing,
+      saksnummer,
+      behandlingstypeKode,
+      ingenVurdering,
+      avsenderType,
+      ...vasketJournalforing,
     };
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.KNYTT);
 
-    this.touchAll(this.props.errors);
+    this.touchAll(KV.Form.JOURNALFORING, this.props.errors);
 
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForOpprettFagsak();
 
-    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, JOURNALFORING_HENSIKT.KNYTT)) {
+    if (!Utils._isEmpty(this.props.errors)) {
       settFeilFelt('avsenderNavn', 'vedleggsTitler', 'saksnummer', 'behandlingstype');
       return false;
     }
     const response = await tilordneSak(journalforingData);
     if (response.ok) {
-      this.props.hentOppgaveOversikt();
-      history.push('/');
+      tilForsiden();
     }
   };
 
@@ -170,44 +178,66 @@ class Journalforing extends Component {
    */
   opprettFagsak = async () => {
     const {
-      journalforingSkjemaVerdier, opprettNySak, history, settJournalforingHensikt, settFeilFelt,
+      journalforingSkjemaVerdier, opprettNySak, settJournalforingHensikt, settFeilFelt, tilForsiden,
     } = this.props;
 
     const { resetSkjemaFelterForEksisterendeSaker } = this;
     const {
-      journalforingSoknadsland, journalforingPeriodeFraOgMed, journalforingPeriodeTilOgMed,
+      journalforingSoknadsland,
+      journalforingPeriodeFraOgMed,
+      journalforingPeriodeTilOgMed,
+      journalforingLovvalgsbestemmelse,
+      journalforingUnntakFraLovvalgsbestemmelse,
+      journalforingUnntakFraLovvalgsland,
+      avsenderType,
     } = journalforingSkjemaVerdier;
 
     await settJournalforingHensikt(JOURNALFORING_HENSIKT.OPPRETT);
 
-    this.touchAll(this.props.errors);
+    this.touchAll(KV.Form.JOURNALFORING, this.props.errors);
 
     // Tøm den delen av skjema som ikke skal brukes.
     resetSkjemaFelterForEksisterendeSaker();
 
-    if (!erSkjemaGyldig(this.props.journalforingSkjemaVerdier, JOURNALFORING_HENSIKT.OPPRETT)) {
-      settFeilFelt('journalforingPeriodeFraOgMed', 'journalforingPeriodeTilOgMed', 'journalforingSoknadsland');
+    if (!Utils._isEmpty(this.props.errors)) {
+      settFeilFelt(
+        'journalforingPeriodeFraOgMed',
+        'journalforingPeriodeTilOgMed',
+        'journalforingSoknadsland',
+        'journalforingLovvalgsbestemmelse',
+        'journalforingUnntakFraLovvalgsbestemmelse',
+        'journalforingUnntakFraLovvalgsland'
+      );
       return false;
     }
 
+    const fom = journalforingPeriodeFraOgMed ? Utils.dato.formatterDatoTilISO(journalforingPeriodeFraOgMed) : null;
+    const tom = journalforingPeriodeTilOgMed ? Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed) : null;
     const fagsak = {
       sakstype: MKV.Koder.sakstyper.EU_EOS,
       soknadsperiode: {
-        fom: Utils.dato.formatterDatoTilISO(journalforingPeriodeFraOgMed),
-        tom: Utils.dato.formatterDatoTilISO(journalforingPeriodeTilOgMed),
+        fom,
+        tom,
       },
-      land: journalforingSoknadsland,
+      land: journalforingSoknadsland || [],
+    };
+
+    const anmodningOmUnntak = {
+      lovvalgsbestemmelse: journalforingLovvalgsbestemmelse || null,
+      unntakFraLovvalgsbestemmelse: journalforingUnntakFraLovvalgsbestemmelse || null,
+      unntakFraLovvalgsland: journalforingUnntakFraLovvalgsland || null,
     };
 
     const vasketJournalforing = this.vaskDokumentInformasjon(JOURNALFORING_HENSIKT.OPPRETT);
     const journalforingData = {
       ...vasketJournalforing,
       fagsak,
+      anmodningOmUnntak,
+      avsenderType,
     };
     const response = await opprettNySak(journalforingData);
     if (response.ok) {
-      this.props.hentOppgaveOversikt();
-      history.push('/');
+      tilForsiden();
     }
   };
   /** Vi ønsker kun å gjøre et søk på brukerID dersom det er et gyldig FNR eller DNR.
@@ -269,8 +299,8 @@ class Journalforing extends Component {
     }
   };
 
-  touchAll = (alleFeil = {}) => {
-    this.props.touch(...Object.keys(alleFeil));
+  touchAll = (formName, alleFeil = {}) => {
+    this.props.touch(formName, ...Object.keys(alleFeil));
   };
 
   resetSkjemaFelterForOpprettFagsak = () => {
@@ -279,6 +309,9 @@ class Journalforing extends Component {
     settFeltInnhold('journalforingPeriodeTilOgMed', '');
     settFeltInnhold('representantID', '');
     settFeltInnhold('journalforingSoknadsland', []);
+    settFeltInnhold('journalforingLovvalgsbestemmelse', '');
+    settFeltInnhold('journalforingUnntakFraLovvalgsbestemmelse', '');
+    settFeltInnhold('journalforingUnntakFraLovvalgsland', '');
   };
 
   resetSkjemaFelterForEksisterendeSaker = () => {
@@ -297,16 +330,67 @@ class Journalforing extends Component {
     return valgtDokumentID;
   };
 
+  journalforSed = async () => {
+    const {
+      tilForsiden,
+      journalforSEDSkjemaIsValid,
+      journalforSEDSkjemaVerdier: {
+        brukerID,
+      },
+      journalforSEDSkjemaErrors,
+      match,
+    } = this.props;
+
+    const { oppgaveID, journalpostID } = match.params;
+
+    this.touchAll(KV.Form.JOURNALFORING_SED, journalforSEDSkjemaErrors);
+    if (!journalforSEDSkjemaIsValid) return;
+
+    const data = {
+      brukerID,
+      journalpostID,
+      oppgaveID,
+    };
+
+    try {
+      await Api.Journalforing.sed(data);
+      tilForsiden();
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  };
+
+  behandlingstyper = MKV.KTObjects.behandlinger.behandlingstyper
+    .filter(({ kode }) =>
+      kode === MKV.Koder.behandlinger.behandlingstyper.SOEKNAD ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.ENDRET_PERIODE ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.VURDER_TRYGDETID ||
+      kode === MKV.Koder.behandlinger.behandlingstyper.ØVRIGE_SED);
+
   render() {
     const {
-      journalforing: { vedlegg = [], hoveddokument = {} },
+      journalforing: {
+        vedlegg = [],
+        hoveddokument = {},
+        behandlingsInformasjon,
+        avsenderID,
+        avsenderNavn = '',
+      },
       fagsakListe,
     } = this.props;
     const {
-      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
+      knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant, journalforSed,
     } = this;
     const { journalpostID } = this.props.match.params;
     const { dokumentID: hoveddokumentID, tittel: hoveddokumentTittel = 'Hoveddokument' } = hoveddokument;
+    const {
+      behandlingstype,
+      sakstype,
+    } = behandlingsInformasjon || {};
+
+    const visSedJournalforing = Utils._isObject(behandlingsInformasjon);
+    const visNormalJournalforing = behandlingsInformasjon === null;
 
     return (
       <div className="journalforing">
@@ -316,56 +400,68 @@ class Journalforing extends Component {
               <h1>Journalføring</h1>
             </Nav.Column>
           </Nav.Row>
-          <form onSubmit={this.overstyrSubmit}>
-            <Nav.Row>
-              <Nav.Column xs="4">
-                <Sticky>
-                  <Nav.Panel className="journalforing__skjema">
-                    <div className="journalforing__skjema__scroll">
-                      <Informasjon
+          <Nav.Row>
+            <Nav.Column xs="4">
+              <Sticky>
+                <Nav.Panel className="journalforing__skjema">
+                  <div className="journalforing__skjema__scroll">
+                    {
+                      visSedJournalforing &&
+                      <JournalforingSED
+                        avsenderID={avsenderID}
+                        avsenderNavn={avsenderNavn}
+                        behandlingstype={behandlingstype}
+                        sakstype={sakstype}
+                      />
+                    }
+                    {
+                      visNormalJournalforing &&
+                      <JournalforingForm
                         journalpostID={journalpostID}
-                        dokumentID={hoveddokumentID}
-                        dokumentTittel={hoveddokumentTittel}
+                        hoveddokumentID={hoveddokumentID}
+                        hoveddokumentTittel={hoveddokumentTittel}
                         vedlegg={vedlegg}
                         hentOgVisAvsender={hentOgVisAvsender}
                         hentOgVisBruker={hentOgVisBruker}
-                      />
-                      <EksisterendeSaker
-                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
                         fagsakListe={fagsakListe}
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
-                      />
-                      <OpprettNyFagSak
-                        sakstyper={MKV.KTObjects.sakstyper}
-                        behandlingstyper={MKV.KTObjects.behandlinger.typer}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
+                        overstyrSubmit={this.overstyrSubmit}
+                        behandlingstyper={this.behandlingstyper}
                       />
-                      <div className="journalforing__fotknapper">
-                        <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
-                      </div>
+                    }
+                    <div className="journalforing__fotknapper">
+                      {
+                        /*
+                          TODO: Quick fix, viser denne knappen for Sed-journalføring.
+                          Denne knappen burde også brukes for det vanlige journalføringsbildet når vi skriver om journalføringen.
+                        */
+                        visSedJournalforing && <Nav.Hovedknapp onClick={journalforSed}>JOURNALFØR</Nav.Hovedknapp>
+                      }
+                      <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
                     </div>
-                  </Nav.Panel>
-                </Sticky>
-              </Nav.Column>
-              <Nav.Column xs="8">
-                {vedlegg.length > 0 &&
-                  <Nav.Panel>
-                    <Nav.Select
-                      className="journalforing__dokument_visning"
-                      name="journalforing_pdf_dokumenter"
-                      label="Dokumentvisning"
-                      defaultValue={hoveddokumentID}
-                      onChange={this.onChangeVedlegg}>
-                      <option key={hoveddokumentID} value={hoveddokumentID}>{hoveddokumentTittel}</option>
-                      {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
-                    </Nav.Select>
-                  </Nav.Panel>
-                }
-                {this.velgDokumentID() && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} /></Nav.Panel>}
-              </Nav.Column>
-            </Nav.Row>
-          </form>
+                  </div>
+                </Nav.Panel>
+              </Sticky>
+            </Nav.Column>
+            <Nav.Column xs="8">
+              {vedlegg.length > 0 &&
+                <Nav.Panel>
+                  <Nav.Select
+                    className="journalforing__dokument_visning"
+                    name="journalforing_pdf_dokumenter"
+                    label="Dokumentvisning"
+                    defaultValue={hoveddokumentID}
+                    onChange={this.onChangeVedlegg}>
+                    <option key={hoveddokumentID} value={hoveddokumentID}>{hoveddokumentTittel}</option>
+                    {vedlegg.map(elem => <option key={elem.dokumentID} value={elem.dokumentID}>{elem.tittel}</option>)}
+                  </Nav.Select>
+                </Nav.Panel>
+              }
+              {this.velgDokumentID() && <Nav.Panel><PDFDokument journalpostID={journalpostID} dokumentID={this.velgDokumentID()} /></Nav.Panel>}
+            </Nav.Column>
+          </Nav.Row>
         </Nav.Container>
       </div>
     );
@@ -375,10 +471,8 @@ class Journalforing extends Component {
 Journalforing.propTypes = {
   match: PT.object.isRequired,
   location: PT.object.isRequired,
-  history: PT.object.isRequired,
   hentJournalOppgave: PT.func.isRequired,
   hentFagsakListe: PT.func.isRequired,
-  hentOppgaveOversikt: PT.func.isRequired,
   tilordneSak: PT.func.isRequired,
   opprettNySak: PT.func.isRequired,
   settFeltInnhold: PT.func.isRequired,
@@ -387,46 +481,33 @@ Journalforing.propTypes = {
   journalforing: MPT.Journalforing,
   journalforingSkjemaVerdier: MPT.JournalforingSkjemaVerdier,
   fagsakListe: PT.array,
-  valid: PT.bool.isRequired,
   sokFnrDnr: PT.func.isRequired,
   sokOrgnr: PT.func.isRequired,
   errors: PT.object.isRequired,
   touch: PT.func.isRequired,
-  resetJournalforingState: PT.func.isRequired,
   vedleggsdokumenter: PT.arrayOf(PT.shape({ tittel: PT.string, dokumentID: PT.string })).isRequired,
+  tilForsiden: PT.func.isRequired,
+  journalforSEDSkjemaIsValid: PT.bool.isRequired,
+  journalforSEDSkjemaVerdier: PT.object,
+  journalforSEDSkjemaErrors: PT.object.isRequired,
 };
 
 Journalforing.defaultProps = {
   journalforing: {},
   fagsakListe: [],
   journalforingSkjemaVerdier: {},
+  journalforSEDSkjemaVerdier: {},
 };
 
-const toVedleggMedProps = vedlegg => vedlegg.reduce((acc, d, index) => { acc[`tittel_${index}`] = d.tittel; return acc; }, {});
 const mapStateToProps = state => ({
   journalforing: journalforingSelectors.JournalforingAlle(state),
   journalforingSkjemaVerdier: formSelectors.JournalforingFormSelector(state).values,
   fagsakListe: sokSelectors.FagsakSokSelector(state),
   vedleggsdokumenter: journalforingSelectors.JournalforingVedleggsDokumenter(state),
   errors: getFormSyncErrors(KV.Form.JOURNALFORING)(state),
-  initialValues: {
-    behandlingstype: null,
-    brukerID: journalforingSelectors.JournalforingAlle(state).brukerID,
-    erBrukerAvsender: journalforingSelectors.JournalforingAlle(state).erBrukerAvsender,
-    avsenderID: journalforingSelectors.JournalforingAlle(state).avsenderID,
-    arbeidsgiverID: null,
-    representantID: '',
-    mottattDato: Utils.dato.formatterDatoTilNorsk(journalforingSelectors.JournalforingAlle(state).mottattDato),
-    hoveddokumentTittel: journalforingSelectors.JournalforingHovedDokument(state).tittel,
-    vedlegg: {
-      pdf: toVedleggMedProps(journalforingSelectors.JournalforingVedleggsDokumenter(state)),
-      logiskeTitler: [],
-    },
-    sakstype: MKV.Koder.sakstyper.EU_EOS,
-    opprettnysak_behandlingstype: MKV.Koder.behandlinger.typer.SOEKNAD,
-    ingenVurdering: false,
-    skalTilordnes: false,
-  },
+  journalforSEDSkjemaIsValid: isValid(KV.Form.JOURNALFORING_SED)(state),
+  journalforSEDSkjemaVerdier: getFormValues(KV.Form.JOURNALFORING_SED)(state),
+  journalforSEDSkjemaErrors: getFormSyncErrors(KV.Form.JOURNALFORING_SED)(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -436,24 +517,34 @@ const mapDispatchToProps = dispatch => ({
   settFeilFelt: (...feltNavn) => (setSubmitFailed(KV.Form.JOURNALFORING, ...feltNavn)),
   settJournalforingHensikt: journalforingHensikt => dispatch(change(KV.Form.JOURNALFORING, 'journalforingHensikt', journalforingHensikt)),
   opprettNySak: data => Api.Journalforing.opprett(data),
-  hentOppgaveOversikt: () => dispatch(oppgaverOperations.oversikt()),
   tilordneSak: data => Api.Journalforing.tilordne(data),
-  resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
   sokFnrDnr: fnr => dispatch(PersonOperations.hent(fnr)),
   sokOrgnr: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
+  touch: (formName, ...fields) => dispatch(touch(formName, ...fields)),
 });
 
 const kontekster = [
   { navn: 'journalforing', melding: 'Det har oppstått en feil: Kunne ikke hente journalforing.' },
 ];
 
-const form = {
-  form: KV.Form.JOURNALFORING,
-  enableReinitialize: true,
-  destroyOnUnmount: true,
-  updateUnregisteredFields: true,
-  validate: journalforingValidering,
-  onSubmit: () => {},
+const JournalforingWrapper = externalProps => {
+  useEffect(() => (
+    function cleanup() {
+      externalProps.resetJournalforingState();
+    }
+  ), []);
+  const MergeProps = hocProps => <Journalforing {...hocProps} {...externalProps} />;
+  const JournalforingMedErrorHandling = withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(MergeProps)));
+
+  return <JournalforingMedErrorHandling />;
 };
 
-export default withErrorHandling(kontekster, withRouter(connect(mapStateToProps, mapDispatchToProps)(reduxForm(form)(Journalforing))));
+JournalforingWrapper.propTypes = {
+  resetJournalforingState: PT.func.isRequired,
+};
+
+const journalforingWrapperMapDispatchToProps = dispatch => ({
+  resetJournalforingState: () => dispatch(journalforingOperations.resetJournalforing()),
+});
+
+export default connect(null, journalforingWrapperMapDispatchToProps)(JournalforingWrapper);

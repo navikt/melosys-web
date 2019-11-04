@@ -28,15 +28,15 @@ const artikkel16MottaSvarFormValueSelector = formValueSelector(KV.Form.ARTIKKEL_
 export const VurderingArtikkel16MottaSvar = props => {
   const {
     anmodningsperiodeID, gyldigeSoknadsland, soknadsperiode, redigerbart, bekreftOgFortsett, slettData, tilstand,
-    endretPeriode, anmodningsperiodeSvarType, begrunnelseFritekst, formIsValid, oppdaterData, hentAnmodningsperiodesvar, sendAnmodningsperiodeSvar,
+    endretPeriode, anmodningsperiodeSvarType, begrunnelseFritekst, formIsValid, oppdaterData, hentAnmodningsperiodeSvar, sendAnmodningsperiodeSvar,
   } = props;
 
   useEffect(() => {
-    hentAnmodningsperiodesvar(anmodningsperiodeID).then(svar => oppdaterData(lagAnmodningsperiodesvar(svar.data)));
-
-    return function cleanup() {
+    hentAnmodningsperiodeSvar(anmodningsperiodeID).then(svar => oppdaterData(lagAnmodningsperiodesvar(svar.data)));
+    const cleanup = () => {
       slettData();
     };
+    return cleanup;
   }, []);
 
   const visLovvalgsperiode = anmodningsperiodeSvarType === MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE;
@@ -47,19 +47,17 @@ export const VurderingArtikkel16MottaSvar = props => {
     const svar = {
       anmodningsperiodeSvarType,
       endretPeriode: {
-        fom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.fom) : soknadsperiode.fom,
-        tom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : soknadsperiode.tom,
+        fom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.fom) : null,
+        tom: visLovvalgsperiode ? Utils.dato.formatterDatoTilISO(endretPeriode.tom) : null,
       },
-      begrunnelseFritekst,
+      begrunnelseFritekst: begrunnelseFritekst || null,
     };
 
     oppdaterData(lagAnmodningsperiodesvar(svar));
 
-    sendAnmodningsperiodeSvar(anmodningsperiodeID, svar);
-  };
-
-  const lagreSvarHandler = () => {
-    if (anmodningsperiodeSvarType && formIsValid) lagreSvar();
+    if (anmodningsperiodeSvarType && formIsValid) {
+      sendAnmodningsperiodeSvar(anmodningsperiodeID, svar);
+    }
   };
 
   return (
@@ -73,10 +71,10 @@ export const VurderingArtikkel16MottaSvar = props => {
       </Nav.Row>
       <Nav.Row className="soknadsperiodeRow">
         <Nav.Column xs="6">
-          <DatoOmradeMedVarighet periode={soknadsperiode} tekst="Søknadsperiode" />
+          <DatoOmradeMedVarighet periode={soknadsperiode} label="Søknadsperiode" />
         </Nav.Column>
       </Nav.Row>
-      <form name="anmodningSvar" id="anmodningSvar" onBlur={lagreSvarHandler} onSubmit={e => e.preventDefault()} >
+      <form name="anmodningSvar" id="anmodningSvar" onBlur={lagreSvar} onSubmit={e => e.preventDefault()} >
         <Nav.Row className="svarFraMyndighetRow">
           <Nav.Column xs="6">
             <Nav.Fieldset disabled={!redigerbart} legend="Svar fra myndighetene">
@@ -111,12 +109,12 @@ export const VurderingArtikkel16MottaSvar = props => {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="12">
-            { visFritekstFelt && <Skjema.Textarea feltNavn="begrunnelseFritekst" disabled={!redigerbart} label="Begrunnelse" tellerTekst={() => {}} onBlur={lagreSvarHandler} />}
+            { visFritekstFelt && <Skjema.Textarea feltNavn="begrunnelseFritekst" disabled={!redigerbart} label="Begrunnelse" tellerTekst={() => {}} />}
           </Nav.Column>
         </Nav.Row>
       </form>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!redigerbart || !formIsValid || !tilstand.harAvklaring} type="hoved" onClick={bekreftOgFortsett} className="fane__navigasjonsknapp">BEKREFT OG FORTSETT</Nav.Knapp>
+        <Nav.Knapp disabled={!redigerbart || !formIsValid || !tilstand.harAvklaring} onClick={bekreftOgFortsett} className="fane__navigasjonsknapp">BEKREFT OG FORTSETT</Nav.Knapp>
       </div>
     </Fragment>
   );
@@ -132,12 +130,11 @@ VurderingArtikkel16MottaSvar.propTypes = {
   lovvalgsperiodeTom: PT.string,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  change: PT.func.isRequired,
   endretPeriode: MPT.Periode,
   anmodningsperiodeSvarType: PT.string,
   begrunnelseFritekst: PT.string,
   formIsValid: PT.bool,
-  hentAnmodningsperiodesvar: PT.func.isRequired,
+  hentAnmodningsperiodeSvar: PT.func.isRequired,
   sendAnmodningsperiodeSvar: PT.func.isRequired,
   tilstand: PT.object.isRequired,
 };
@@ -171,7 +168,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  hentAnmodningsperiodesvar: async anmodningsperiodeID => dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
+  hentAnmodningsperiodeSvar: async anmodningsperiodeID => dispatch(anmodningsperiodesvarOperations.hent(anmodningsperiodeID)),
   sendAnmodningsperiodeSvar: (anmodningsperiodeID, anmodningsperiodeSvar) => dispatch(anmodningsperiodesvarOperations.send(anmodningsperiodeID, anmodningsperiodeSvar)),
 });
 
@@ -181,7 +178,11 @@ const Artikkel16MottaSvarForm = reduxForm({
   destroyOnUnmount: true,
   keepDirtyOnReinitialize: true,
   updateUnregisteredFields: true,
-  validate: (values, props) => Validering.Skjemaer.createValidator(Validering.Skjemaer.artikkel16_motta_svar, { context: { anmodningsperiodeSvarType: props.anmodningsperiodeSvarType } })(values),
+  validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel16_motta_svar, {
+    context: {
+      anmodningsperiodeSvarType: props.anmodningsperiodeSvarType,
+    },
+  })(values),
 })(VurderingArtikkel16MottaSvar);
 
 export default connect(mapStateToProps, mapDispatchToProps)(Artikkel16MottaSvarForm);

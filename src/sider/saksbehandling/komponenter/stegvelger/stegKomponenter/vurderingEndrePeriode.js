@@ -10,13 +10,13 @@ import * as MPT from '../../../../../proptypes';
 import { konverterTilStegData, hentFaktaVerdi } from '../../../../../regler/avklartefakta';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-import { KodeTermSelect } from '../../../../../felleskomponenter/ui/kodeTermSelect';
+import * as Mui from '../../../../../felleskomponenter/ui';
 
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
-import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
+import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
 import { soknadOperations } from '../../../../../ducks/soknad';
 
-import * as API from '../../../../../services/api';
+import * as Api from '../../../../../services/api';
 
 import './vurderingEndrePeriode.css';
 
@@ -35,7 +35,7 @@ export class VurderingEndrePeriode extends React.Component {
       behandlingID, redigerbart, lovvalgsPeriode, oppdaterData, tilstand: { aarsakEndringPeriodeAvklartfakta },
     } = this.props;
 
-    oppdaterData(konverterTilStegData(MKV.Koder.avklartefakta.AARSAK_ENDRING_PERIODE, aarsakEndringPeriodeAvklartfakta));
+    oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.AARSAK_ENDRING_PERIODE, aarsakEndringPeriodeAvklartfakta));
 
     this.hentOpprinneligPeriode(behandlingID);
 
@@ -45,7 +45,7 @@ export class VurderingEndrePeriode extends React.Component {
   settSluttDato = nyTomDato => this.setState({ nyTomDato: Utils.dato.formatterDatoTilNorsk(nyTomDato) });
 
   hentOpprinneligPeriode = async behandlingID => {
-    const opprinneligLovvalgsperiode = await API.OpprinneligLovvalgsperiode.hent(behandlingID).catch(Utils.logger.error);
+    const opprinneligLovvalgsperiode = await Api.Lovvalgsperioder.hentOpprinnelig(behandlingID).catch(Utils.logger.error);
     this.setState(opprinneligLovvalgsperiode);
   };
 
@@ -120,7 +120,7 @@ export class VurderingEndrePeriode extends React.Component {
 
   render() {
     const {
-      behandlingID, redigerbart, tilstand: { aarsakEndringPeriodeAvklartfakta },
+      behandlingID, redigerbart,
     } = this.props;
 
     const {
@@ -140,9 +140,9 @@ export class VurderingEndrePeriode extends React.Component {
       opprinneligLovvalgsperiode: { fom, tom },
     } = this.state;
 
-    const endretPeriodeBegrunnelse = hentFaktaVerdi(aarsakEndringPeriodeAvklartfakta);
+    const endretPeriodeBegrunnelse = begrunnelse;
 
-    const dokumenter = [
+    const pdfDokumenter = [
       {
         navn: 'Forhåndsvis vedtaksbrev',
         type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
@@ -202,7 +202,7 @@ export class VurderingEndrePeriode extends React.Component {
         </Nav.Row>
         <Nav.Row>
           <Nav.Column xs="6">
-            <KodeTermSelect
+            <Mui.KodeTermSelect
               feil={begrunnelseFeilmelding}
               koder={MKV.KTObjects.begrunnelser.endretperiode}
               label="Begrunnelse"
@@ -212,7 +212,7 @@ export class VurderingEndrePeriode extends React.Component {
             />
           </Nav.Column>
         </Nav.Row>
-        {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} vedKlikk={vedKlikkPdf} />}
+        {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkPdf} />}
         <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikkEndrePeriode} >Fatt vedtak</Nav.Hovedknapp>
       </div>
     );
@@ -240,12 +240,11 @@ VurderingEndrePeriode.defaultProps = {
 
 const mapStateToProps = state => ({
   lovvalgsPeriode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
-  redigerbart: behandlingerSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.EndreLovvalgsPeriodeRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   oppdaterPeriode: periode => dispatch(soknadOperations.oppdaterPeriode(periode)),
-
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(VurderingEndrePeriode);

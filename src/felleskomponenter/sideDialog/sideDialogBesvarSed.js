@@ -1,28 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
+import * as EKV from 'eessi-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
 import * as Utils from '../../utils';
 import * as Api from '../../services/api';
-import { EessiKodeverkSelectors } from '../../ducks/eessikodeverk';
 import './sideDialogBesvarSed.css';
 
-// Per i dag finnes det bare status=UTKAST, men legger til rette for støtte av flere statuser.
-const StatusEtikett = ({ status }) => (
-  status.toUpperCase() === KV.Koder.SedStatus.UTKAST &&
-    <Nav.EtikettBase type="fokus">Utkast</Nav.EtikettBase>
-);
+const StatusEtikett = ({ status }) => {
+  if (!status) {
+    return null;
+  }
+
+  const lagEtikett = (type, statusStreng) => (<Nav.EtikettBase type={type}>{statusStreng}</Nav.EtikettBase>);
+
+  switch (status.toUpperCase()) {
+    case KV.Koder.SedStatus.UTKAST:
+      return lagEtikett('fokus', 'Under arbeid');
+    case KV.Koder.SedStatus.SENDT:
+    case KV.Koder.SedStatus.MOTTATT:
+      return lagEtikett('suksess', Utils.streng.storeForbokstaver(status));
+    case KV.Koder.SedStatus.AVBRUTT:
+      return lagEtikett('advarsel', Utils.streng.storeForbokstaver(status));
+    default:
+      return lagEtikett('info', Utils.streng.storeForbokstaver(status));
+  }
+};
 
 StatusEtikett.propTypes = {
   status: PT.string.isRequired,
 };
 
-const EnkeltSed = ({ sed, kodeverk }) => (
+const sedTypeTerm = sedType => EKV.Terms.sedtyper[sedType];
+
+const EnkeltSed = ({ sed }) => (
   <Nav.LenkepanelBase href={sed.rinaUrl} target="_blank" border>
     <div className="kolonne__navn">
-      <Nav.Element className="lenkepanel__heading">{sed.sedType} - {kodeverk.sedTypeTerm(sed.sedType)}</Nav.Element>
+      <Nav.Element className="lenkepanel__heading">{sed.sedType} - {sedTypeTerm(sed.sedType)}</Nav.Element>
       <Nav.Normaltekst>Opprettet: {Utils.dato.formatterDatoTilNorsk(sed.opprettetDato)}</Nav.Normaltekst>
     </div>
     <div className="kolonne__status">
@@ -39,12 +54,13 @@ EnkeltSed.propTypes = {
     opprettetDato: PT.string.isRequired,
     status: PT.string.isRequired,
   }).isRequired,
-  kodeverk: PT.object.isRequired,
 };
 
-const EnkeltBucHeading = ({ bucType, opprettetDato, kodeverk }) => (
+const bucTypeTerm = bucType => EKV.Selectors.alleBucer[bucType];
+
+const EnkeltBucHeading = ({ bucType, opprettetDato }) => (
   <div>
-    <Nav.Undertittel>{bucType} - {kodeverk.bucTypeTerm(bucType)}</Nav.Undertittel>
+    <Nav.Undertittel>{bucType} - {bucTypeTerm(bucType)}</Nav.Undertittel>
     <Nav.Normaltekst>Opprettet: {Utils.dato.formatterDatoTilNorsk(opprettetDato)}</Nav.Normaltekst>
   </div>
 );
@@ -52,15 +68,16 @@ const EnkeltBucHeading = ({ bucType, opprettetDato, kodeverk }) => (
 EnkeltBucHeading.propTypes = {
   bucType: PT.string.isRequired,
   opprettetDato: PT.string.isRequired,
-  kodeverk: PT.object.isRequired,
 };
 
-const EnkeltBuc = ({ buc, kodeverk }) => (
-  <Nav.EkspanderbartpanelBase border heading={<EnkeltBucHeading {...buc} kodeverk={kodeverk} />}>
+const sorterEtterDato = liste => liste.sort((a, b) => new Date(b.opprettetDato) - new Date(a.opprettetDato));
+
+const EnkeltBuc = ({ buc }) => (
+  <Nav.EkspanderbartpanelBase border heading={<EnkeltBucHeading {...buc} />}>
     <div className="buc_tabell">
       <Nav.Element className="tabell_header kolonne__navn">Navn på SED</Nav.Element>
       <Nav.Element className="tabell_header kolonne__status">Status</Nav.Element>
-      { buc.seder.map(sed => <EnkeltSed key={sed.sedId} sed={sed} kodeverk={kodeverk} />) }
+      { sorterEtterDato(buc.seder).map(sed => <EnkeltSed key={sed.sedId} sed={sed} />) }
     </div>
   </Nav.EkspanderbartpanelBase>
 );
@@ -71,17 +88,16 @@ EnkeltBuc.propTypes = {
     opprettetDato: PT.string.isRequired,
     seder: PT.arrayOf(EnkeltSed.propTypes.sed).isRequired,
   }).isRequired,
-  kodeverk: PT.object.isRequired,
 };
 
 const HenterOpplysningerSpinner = () => (
   <div className="henter_opplysninger">
     <Nav.NavFrontendSpinner />
-    <Nav.Normaltekst>Henter BUCer under arbeid</Nav.Normaltekst>
+    <Nav.Normaltekst>Henter BUCer knyttet til saken</Nav.Normaltekst>
   </div>
 );
 
-const SideDialogBesvarSed = ({ behandlingID, kodeverk }) => {
+const SideDialogBesvarSed = ({ behandlingID }) => {
   const [bucer, setBucer] = useState([]);
   const [feilmelding, setFeilmelding] = useState('');
   const [henterData, setHenterData] = useState(true);
@@ -90,13 +106,18 @@ const SideDialogBesvarSed = ({ behandlingID, kodeverk }) => {
     if (behandlingID !== -1 && bucer.length === 0) {
       try {
         setHenterData(true);
-        const data = await Api.Eessi.hentBucerForBehandling(behandlingID);
+
+        const {
+          UTKAST, AVBRUTT, SENDT, MOTTATT,
+        } = KV.Koder.SedStatus;
+        const data = await Api.Eessi.bucer.hentBucerForBehandling(behandlingID, [UTKAST, AVBRUTT, SENDT, MOTTATT]);
+
         setBucer(data.bucer);
         setHenterData(false);
       } catch (e) {
         setHenterData(false);
         Utils.logger.error(e);
-        setFeilmelding('Kunne ikke hente BUCer under arbeid');
+        setFeilmelding('Kunne ikke hente BUCer knyttet til saken');
       }
     }
   };
@@ -107,34 +128,23 @@ const SideDialogBesvarSed = ({ behandlingID, kodeverk }) => {
 
   const kanViseListe = liste => !henterData && !feilmelding && liste && liste.length > 0;
 
-  const getKomponent = () => {
+  const hentKomponent = () => {
     if (kanViseListe(bucer)) {
-      return bucer.map(buc => <EnkeltBuc key={buc.id} buc={buc} kodeverk={kodeverk} />);
+      return sorterEtterDato(bucer).map(buc => <EnkeltBuc key={buc.id} buc={buc} />);
     } else if (henterData) {
       return <HenterOpplysningerSpinner />;
     }
 
     return (
-      <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding || 'For øyeblikket ingen BUCer under arbeid'}</Nav.AlertStripe>
+      <Nav.AlertStripe type="advarsel" className="varsel">{feilmelding || 'For øyeblikket ingen BUCer knyttet til denne saken'}</Nav.AlertStripe>
     );
   };
 
-  return <div className="besvar_sed">{ getKomponent() }</div>;
+  return <div className="besvar_sed">{ hentKomponent() }</div>;
 };
 
 SideDialogBesvarSed.propTypes = {
   behandlingID: PT.number.isRequired,
-  kodeverk: PT.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  kodeverk: {
-    bucTypeTerm: bucType => Object.values(EessiKodeverkSelectors.alleBUCtyperSelector(state))
-      .reduce((acc, val) => acc.concat(val)) // flatten
-      .filter(buc => buc.kode === bucType).map(buc => buc.term),
-    sedTypeTerm: sedType => EessiKodeverkSelectors.alleSEDtyperSelector(state)
-      .filter(sed => sed.kode === sedType).map(sed => sed.term),
-  },
-});
-
-export default connect(mapStateToProps)(SideDialogBesvarSed);
+export default SideDialogBesvarSed;

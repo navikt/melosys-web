@@ -25,6 +25,7 @@ import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { PersonSelectors, PersonOperations } from '../../../ducks/personer';
 import { soknadSelectors } from '../../../ducks/soknad';
 import { formSelectors } from '../../../ducks/form';
+import { redigerbartSelectors } from '../../../ducks/redigerbart';
 
 const ikonFraKjonn = kjoenn => {
   switch (kjoenn) {
@@ -96,7 +97,7 @@ AdresseHeader.propTypes = {
   adresseTittel: PT.string.isRequired,
 };
 
-export const ExpandableList = props => {
+export const ExpandableTable = props => {
   const {
     renderElement, elements, header, defaultMax, altMax, btnTextExpanded, btnTextCollapsed, chevron, expandable,
   } = props;
@@ -133,7 +134,7 @@ export const ExpandableList = props => {
   );
 };
 
-ExpandableList.propTypes = {
+ExpandableTable.propTypes = {
   renderElement: PT.func.isRequired,
   header: PT.node.isRequired,
   elements: PT.array.isRequired,
@@ -145,7 +146,7 @@ ExpandableList.propTypes = {
   expandable: PT.bool,
 };
 
-ExpandableList.defaultProps = {
+ExpandableTable.defaultProps = {
   chevron: false,
   expandable: true,
 };
@@ -209,7 +210,7 @@ class Personopplysninger extends Component {
             </Nav.Row>
             <Nav.Row className="person__seksjon">
               <Nav.Column xs="12">
-                <ExpandableList
+                <ExpandableTable
                   defaultMax={1}
                   altMax={100}
                   btnTextExpanded="Vis mindre"
@@ -222,7 +223,7 @@ class Personopplysninger extends Component {
                     <AdresseRad key={uuid()} adresseKomponent={<GeneriskAdresse adresse={element.bostedsadresse} />} periode={element.periode} />
                   )}
                 />
-                <ExpandableList
+                <ExpandableTable
                   defaultMax={1}
                   altMax={100}
                   btnTextExpanded="Vis mindre"
@@ -235,7 +236,7 @@ class Personopplysninger extends Component {
                     <AdresseRad key={uuid()} adresseKomponent={<UstrukturertAdresse adresse={element.postadresse} />} periode={element.periode} />
                   )}
                 />
-                <ExpandableList
+                <ExpandableTable
                   defaultMax={1}
                   altMax={100}
                   btnTextExpanded="Vis mindre"
@@ -290,7 +291,7 @@ const mapStateToProps = state => ({
   personOpplysninger: soknadSelectors.PersonOpplysningerSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
   medfolgendeAndre: soknadSelectors.MedfolgendeAndreSelector(state),
   oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
 });

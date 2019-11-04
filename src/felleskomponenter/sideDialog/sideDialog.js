@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import classnames from 'classnames';
 import PT from 'prop-types';
 import { Panel } from 'nav-frontend-paneler';
@@ -14,10 +13,50 @@ import './sideDialog.css';
 
 const uuid = require('uuid/v4');
 
+export const FaneViser = ({
+  navn,
+  behandlingID,
+  saksnummer,
+  brevBestillingRedigerbartIArtikkel13,
+  brevBestillingRedigerbart,
+}) => {
+  switch (navn) {
+    case 'dokumenter':
+      return <SideDialogDokumenter saksnummer={saksnummer} />;
+    case 'brevbestilling':
+      return <SideDialogBrevBestilling
+        behandlingID={behandlingID}
+        redigerbart={brevBestillingRedigerbart}
+        brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+      />;
+    case 'sedbestilling':
+      return <SideDialogSedBestilling behandlingID={behandlingID} />;
+    case 'besvarsed':
+      return <SideDialogBesvarSed behandlingID={behandlingID} />;
+    default:
+      throw new Error('Navn er en påkrevd prop');
+  }
+};
+
+FaneViser.propTypes = {
+  navn: PT.string,
+  behandlingID: PT.number.isRequired,
+  saksnummer: PT.string.isRequired,
+  brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
+  brevBestillingRedigerbart: PT.bool.isRequired,
+};
+
+FaneViser.defaultProps = {
+  navn: '',
+};
+
 class SideDialog extends Component {
   static propTypes = {
     faner: PT.array,
+    saksnummer: PT.string.isRequired,
     behandlingID: PT.number.isRequired,
+    brevBestillingRedigerbart: PT.bool.isRequired,
+    brevBestillingRedigerbartIArtikkel13: PT.bool.isRequired,
   };
 
   static defaultProps = {
@@ -33,28 +72,19 @@ class SideDialog extends Component {
     faner: this.props.faner,
   };
 
-  componentDidMount() {
-    Utils.feature.namespaceToggle('q2', 't8')
-      .then(skalVises => {
-        if (skalVises) {
-          this.leggTilFane({ navn: 'sedbestilling', tittel: 'Opprett ny BUC' });
-          this.leggTilFane({ navn: 'besvarsed', tittel: 'Besvar SED' });
-        }
-      });
+  async componentDidMount() {
+    const skalVises = await Utils.feature.toggle([
+      { namespace: 'default', cluster: 'prod-fss' },
+      { namespace: 'q2', cluster: 'dev-fss' },
+      { namespace: 't8', cluster: 'dev-fss' },
+    ]);
+
+    if (skalVises) {
+      this.leggTilFane({ navn: 'sedbestilling', tittel: 'Opprett ny BUC' });
+      this.leggTilFane({ navn: 'besvarsed', tittel: 'SED-utveksling' });
+    }
   }
 
-  getFaneKomponent = (navn, behandlingID) => {
-    if (navn === 'dokumenter') {
-      return <SideDialogDokumenter key={uuid()} />;
-    } else if (navn === 'brevbestilling') {
-      return <SideDialogBrevBestilling key={uuid()} behandlingID={behandlingID} />;
-    } else if (navn === 'sedbestilling') {
-      return <SideDialogSedBestilling key={uuid()} behandlingID={behandlingID} />;
-    } else if (navn === 'besvarsed') {
-      return <SideDialogBesvarSed key={uuid()} behandlingID={behandlingID} />;
-    }
-    return <SideDialogDokumenter key={uuid()} />;
-  };
   /**  Trigges når brukeren klikker en annen fane (historikk, melding eller dokumenter)
    * slik at riktig komponent under menyen vises. Data fra komponenten slik som navn ligger under
    * props.faner-objektet.
@@ -70,8 +100,15 @@ class SideDialog extends Component {
   };
 
   render() {
-    const { behandlingID } = this.props;
+    const {
+      behandlingID,
+      saksnummer,
+      brevBestillingRedigerbart,
+      brevBestillingRedigerbartIArtikkel13,
+    } = this.props;
+
     const { navn } = this.state.faner.find(item => item.navn === this.state.aktivFane);
+
     return (
       <div className="dialog panelSeksjon">
         <Panel>
@@ -84,16 +121,17 @@ class SideDialog extends Component {
               </button>))}
           </div>
           <div>
-            { this.getFaneKomponent(navn, behandlingID)}
+            <FaneViser
+              navn={navn}
+              behandlingID={behandlingID}
+              saksnummer={saksnummer}
+              brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
+              brevBestillingRedigerbart={brevBestillingRedigerbart}
+            />
           </div>
         </Panel>
       </div>
     );
   }
 }
-
-const mapStateToProps = () => ({});
-
-const mapDispatchToProps = () => ({});
-
-export default connect(mapStateToProps, mapDispatchToProps)(SideDialog);
+export default SideDialog;

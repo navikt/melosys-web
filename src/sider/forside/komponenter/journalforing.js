@@ -19,19 +19,20 @@ class Journalforing extends Component {
     event.preventDefault();
   };
   render() {
+    const { redigerbart } = this.props;
     return (
       <Nav.Panel className="forside__sidepanel">
         <Nav.Systemtittel>Journalføring</Nav.Systemtittel>
-        <p>Velg type, og klikk &quot;journalfør sak&quot; for å starte en journalføringsoppgave.</p>
+        <p>Velg saksområde for å starte en journalføringsoppgave.</p>
 
         <form onSubmit={this.overrideDefaultSubmit}>
-          <Skjema.RadioGruppe feltNavn="Behandlingstype" label="Velg journalføringstype">
+          <Skjema.RadioGruppe feltNavn="Behandlingstype">
             <div className="skjema__horisontalefelter">
-              <Skjema.Radio feltNavn="fagomrade" label="Medlemsskap" value="MED" />
+              <Skjema.Radio feltNavn="fagomrade" label="Medlemskap" value="MED" disabled={!redigerbart} />
               <Skjema.Radio feltNavn="fagomrade" label="Unntak" value="UFM" disabled />
             </div>
           </Skjema.RadioGruppe>
-          <Nav.Knapp onClick={this.props.handleSubmit(this.submitOgVideresend)}>Journalfør sak</Nav.Knapp>
+          <Nav.Knapp onClick={this.props.handleSubmit(this.submitOgVideresend)} disabled={!redigerbart}>Journalfør dokument</Nav.Knapp>
         </form>
       </Nav.Panel>
     );
@@ -42,6 +43,11 @@ Journalforing.propTypes = {
   handleSubmit: PT.func.isRequired,
   sendSkjema: PT.func.isRequired,
   history: PT.object.isRequired,
+  redigerbart: PT.bool,
+};
+
+Journalforing.defaultProps = {
+  redigerbart: false,
 };
 
 const mapStateToProps = () => ({

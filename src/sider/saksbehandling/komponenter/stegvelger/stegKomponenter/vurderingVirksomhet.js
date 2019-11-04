@@ -22,16 +22,17 @@ const VirksomheterLinje = props => {
   useEffect(() => {
     oppdaterData(konverterTilStegData(KV.Koder.avklartefaktaKoder.VIRKSOMHET, avklartVirksomhet));
 
-    return function cleanup() {
+    const cleanup = () => {
       slettData(slettAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET));
     };
+    return cleanup;
   }, []);
 
   const virksomhetErValgt = avklartVirksomhet && avklartVirksomhet.fakta.includes('TRUE');
 
   const virksomhetKlikkHandler = () => {
     const verdi = virksomhetErValgt ? 'FALSE' : 'TRUE';
-    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.orgnr, verdi));
+    oppdaterData(lagAvklartfakta(KV.Koder.avklartefaktaKoder.VIRKSOMHET, virksomheten.virksomhetId, verdi));
   };
 
   return (
@@ -42,7 +43,7 @@ const VirksomheterLinje = props => {
 };
 
 VirksomheterLinje.propTypes = {
-  virksomheten: MPT.Organisasjon.isRequired,
+  virksomheten: MPT.Virksomhet.isRequired,
   avklartVirksomhet: MPT.Avklartefakta,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
@@ -66,16 +67,15 @@ const VirksomheterListe = props => {
   } = props;
 
   const ingenVirksomheterVarsel = virksomheterIPerioden.length === 0 && (
-    <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere, selvsetendig næringsdrivende eller frilansere fra saksopplysninger.</Nav.AlertStripe>
+    <Nav.AlertStripe type="advarsel">Finner ingen arbeidsgivere, selvstendig næringsdrivende eller frilansere fra saksopplysninger.</Nav.AlertStripe>
   );
 
   return (
     <div>
       {virksomheterIPerioden.map(virksomheten => {
-        const avklartfaktaForVirksomhet = avklarteVirksomheter.find(enkeltAvklaring => enkeltAvklaring.subjektID === virksomheten.orgnr);
+        const avklartfaktaForVirksomhet = avklarteVirksomheter.find(enkeltAvklaring => enkeltAvklaring.subjektID === virksomheten.virksomhetId);
 
-
-        const key = `avklartVirksomhet${virksomheten.orgnr}`;
+        const key = `avklartVirksomhet${virksomheten.virksomhetId}`;
         return <VirksomheterLinje
           virksomheten={virksomheten}
           avklartVirksomhet={avklartfaktaForVirksomhet}
@@ -92,7 +92,7 @@ const VirksomheterListe = props => {
 };
 
 VirksomheterListe.propTypes = {
-  virksomheterIPerioden: PT.array,
+  virksomheterIPerioden: PT.arrayOf(MPT.Virksomhet),
   avklarteVirksomheter: PT.array,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
@@ -132,7 +132,7 @@ const VurderingVirksomhet = props => {
           {...props}
         />
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     </div>
@@ -144,9 +144,10 @@ VurderingVirksomhet.propTypes = {
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
   tilstand: PT.shape({
+    virksomheter: PT.array,
     harAvklaring: PT.bool,
   }).isRequired,
-  virksomheterIPerioden: MPT.Organisasjoner.isRequired,
+  virksomheterIPerioden: PT.arrayOf(MPT.Virksomhet).isRequired,
   redigerbart: PT.bool.isRequired,
 };
 

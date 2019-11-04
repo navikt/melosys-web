@@ -4,35 +4,39 @@ import { connect } from 'react-redux';
 import { FieldArray, reduxForm } from 'redux-form';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import * as EKV from 'eessi-kodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
-import * as Skjema from '../../../../../felleskomponenter/skjema';
 import * as MPT from '../../../../../proptypes';
 import * as Utils from '../../../../../utils';
 import * as KV from '../../../../../kodeverk';
 
 import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
-import { formSelectors } from '../../../../../ducks/form';
 import { anmodningsperioderSelectors } from '../../../../../ducks/anmodningsperioder';
 import { behandlingsperioderSelectors } from '../../../../../ducks/behandlingsperioder';
 
 import { datoDiffMenneskelig, formatterDatoTilNorsk } from '../../../../../utils/dato';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
-import ListevelgerFlervalg from '../../../../../felleskomponenter/ui/listevelgerFlervalg';
+import * as Mui from '../../../../../felleskomponenter/ui';
+
 
 import { konverterTilStegData, lagBegrunnelse } from '../../../../../regler/vilkar';
 import { konverterLovvalgsbestemmelseTilStegData } from '../../../../../regler/lovvalgsbestemmelser';
+import {
+  konverterUnntakFraBestemmelseTilStegData,
+  lagUnntakFraBestemmelse,
+} from '../../../../../regler/unntakfrabestemmelse';
 
 import './vurderingArtikkel16Anmodning.css';
 
 const uuid = require('uuid/v4');
 
 const alleLovvalg = [
-  ...MKV.KTObjects.lovvalgsbestemmelser.forordning_883_2004,
-  ...MKV.KTObjects.lovvalgsbestemmelser.forordning_987_2009,
-  ...MKV.KTObjects.lovvalgsbestemmelser.tillegg,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004,
+  ...MKV.KTObjects.lovvalgsbestemmelser.lovvalgbestemmelser_987_2009,
+  ...MKV.KTObjects.lovvalgsbestemmelser.tilleggsbestemmelser_883_2004,
 ];
 
 const TidligereMedlemPeriodeLinje = ({
@@ -131,9 +135,10 @@ class VurderingArtikkel16Anmodning extends Component {
   };
 
   componentDidMount() {
-    const { oppdaterData, tilstand: { art16_1 } } = this.props;
+    const { oppdaterData, tilstand: { art16_1 }, unntakFraBestemmelse } = this.props;
     oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
-    oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART16_1));
+    oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1));
+    oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
   }
 
   componentWillUnmount() {
@@ -150,11 +155,22 @@ class VurderingArtikkel16Anmodning extends Component {
     }
   };
 
-  lagreAnmodningsperioder = async () => {
+  vedUnntakFraBestemmelseEndring = async event => {
+    const { oppdaterData } = this.props;
     const { byggAnmodningsperioderHandler, lagreAnmodningsperioderHandler } = this.props;
+
+    oppdaterData(lagUnntakFraBestemmelse(event.target.value));
 
     await byggAnmodningsperioderHandler();
     await lagreAnmodningsperioderHandler();
+
+    this.setState({ lovvalgFeilmelding: undefined });
+  };
+
+  byggAnmodningsperioder = () => {
+    const { byggAnmodningsperioderHandler } = this.props;
+
+    byggAnmodningsperioderHandler();
 
     this.setState({ lovvalgFeilmelding: undefined });
   };
@@ -189,15 +205,15 @@ class VurderingArtikkel16Anmodning extends Component {
     this.lagreVilkar();
   };
 
-  validerLovvalg = () => {
+  validerUnntakFraBestemmelse = () => {
     const valid = this.props.unntakFraBestemmelse;
     if (!valid) this.setState({ lovvalgFeilmelding: { feilmelding: 'Velg lovvalg' } });
     return valid;
   };
 
   validerBegrunnelser = () => {
-    const { tilstand } = this.props;
-    const valid = tilstand.art16_1.begrunnelseKoder.length !== 0;
+    const { begrunnelseKoder } = this.props.tilstand.art16_1;
+    const valid = begrunnelseKoder.length !== 0;
     if (!valid) this.setState({ begrunnelserFeilmelding: 'Velg begrunnelser' });
     return valid;
   };
@@ -209,18 +225,18 @@ class VurderingArtikkel16Anmodning extends Component {
   };
 
   validerAlt = () => {
-    const { tilstand } = this.props;
+    const { begrunnelseKoder } = this.props.tilstand.art16_1;
 
-    const lovvalgValid = this.validerLovvalg();
+    const lovvalgValid = this.validerUnntakFraBestemmelse();
     const begrunnelserValid = this.validerBegrunnelser();
-    const fritekstValid = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
+    const fritekstValid = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN) ? this.validerFritekst() : true;
 
     return lovvalgValid && begrunnelserValid && fritekstValid;
   };
 
   validerOgLagreBehandling = async () => {
     if (this.validerAlt()) {
-      await this.lagreAnmodningsperioder();
+      await this.byggAnmodningsperioder();
       this.lagreBehandlingerOgBestillAnmodningsperioder();
     }
   };
@@ -233,6 +249,7 @@ class VurderingArtikkel16Anmodning extends Component {
       medlemskap,
       redigerbart,
       tilstand,
+      unntakFraBestemmelse,
     } = this.props;
 
     const {
@@ -241,7 +258,7 @@ class VurderingArtikkel16Anmodning extends Component {
       validerOgLagreBehandling,
       fritekstFokusFlyttetHandler,
       fritekstEndretHandler,
-      lagreAnmodningsperioder,
+      vedUnntakFraBestemmelseEndring,
     } = this;
 
     const {
@@ -254,14 +271,15 @@ class VurderingArtikkel16Anmodning extends Component {
 
     const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
-    const dokumenter = [
+    const pdfDokumenter = [
       { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
       { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
+      { navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true },
     ];
 
-    const visFritekstfelt = tilstand.art16_1.begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
+    const { art16_1: { begrunnelseFritekst, begrunnelseKoder }, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt } = tilstand;
 
-    const { art16_1, art16_1: { begrunnelseFritekst } } = tilstand;
+    const visFritekstfelt = begrunnelseKoder.includes(MKV.Koder.begrunnelser.art16_1_anmodning.SAERLIG_GRUNN);
 
     const art16fritekst = begrunnelseFritekst || '';
 
@@ -270,9 +288,27 @@ class VurderingArtikkel16Anmodning extends Component {
       <div>
         <Nav.Undertittel>Anmodning om unntak etter artikkel 16.1</Nav.Undertittel>
         <div className="artikkel16">
+          {
+            erIDirekteTilArtikkel16Flyt &&
+            <Nav.Row className="vilAnmode">
+              <Nav.Column xs="6">
+                <Nav.Radio
+                  name="vilAnmode"
+                  label="Ja, jeg vil anmode om unntak"
+                  defaultChecked
+                  disabled={!redigerbart}
+                />
+                <Nav.Radio
+                  name="vilAnmode"
+                  label="Nei, jeg vil avslå"
+                  disabled
+                />
+              </Nav.Column>
+            </Nav.Row>
+          }
           <Nav.Row className="artikkel16__ekstratopp">
             <Nav.Column xs="6">
-              <Nav.Element type="element">Lands lovgivning det søkes unntak fra:</Nav.Element>
+              <Nav.Element type="element">Det lands lovgivning det søkes unntak fra:</Nav.Element>
               <Nav.Normaltekst>{landSomTekstListe}</Nav.Normaltekst>
             </Nav.Column>
             <Nav.Column xs="6">
@@ -283,27 +319,28 @@ class VurderingArtikkel16Anmodning extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="7">
-              <Skjema.Select
+              <Nav.Select
                 feil={lovvalgFeilmelding}
-                onBlur={lagreAnmodningsperioder}
+                onChange={vedUnntakFraBestemmelseEndring}
+                value={unntakFraBestemmelse || ''}
                 disabled={!redigerbart}
-                feltNavn="unntakFraBestemmelse"
                 label="Artikkelen det søkes unntak fra:"
               >
+                <option key={uuid()} value="" >Velg...</option>
                 { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
-              </Skjema.Select>
+              </Nav.Select>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="7">
-              <ListevelgerFlervalg
+              <Mui.ListevelgerFlervalg
                 disabled={!redigerbart}
                 feil={begrunnelserFeilmelding}
-                muligeValg={MKV.KTObjects.begrunnelser.art16_1_anmodning}
+                muligeValg={muligeBegrunnelseValg}
                 tillatFritekst={false}
                 label="Legg til begrunnelse:"
                 onChange={begrunnelserEndringHandler}
-                defaultElementer={art16_1.begrunnelseKoder}
+                defaultElementer={begrunnelseKoder}
               />
             </Nav.Column>
           </Nav.Row>
@@ -313,7 +350,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 visFritekstfelt &&
                 <Nav.Textarea
                   id="art16_1_anmodning"
-                  label="Begrunnelse til utenlandsk myndighet (engelsk):"
+                  label="Utdyp særlig grunn til bruker og utenlandsk myndighet"
                   disabled={!redigerbart}
                   onBlur={fritekstFokusFlyttetHandler}
                   onChange={fritekstEndretHandler}
@@ -334,7 +371,7 @@ class VurderingArtikkel16Anmodning extends Component {
           </Nav.Row>
           <Nav.Row>
             <Nav.Column xs="6">
-              {redigerbart && <PdfLenkeListe vedKlikk={validerAlt} behandlingID={behandlingID} dokumenter={dokumenter} />}
+              {redigerbart && <PdfLenkeListe vedKlikk={validerAlt} behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
             </Nav.Column>
           </Nav.Row>
           <Nav.Row className="artikkel16__ekstratopp">
@@ -360,17 +397,19 @@ VurderingArtikkel16Anmodning.propTypes = {
   redigerbart: PT.bool.isRequired,
   oppdaterOgLagreBehandlinger: PT.func.isRequired,
   unntakFraBestemmelse: PT.string,
-  art16begrunnelserFritekst: PT.string,
   lagreVilkarHandler: PT.func.isRequired,
   lagreAnmodningsperioderHandler: PT.func.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,
-  tilstand: PT.object.isRequired,
+  tilstand: PT.shape({
+    muligeBegrunnelseValg: PT.arrayOf(MPT.Kodeverk).isRequired,
+    erIDirekteTilArtikkel16Flyt: PT.bool.isRequired,
+    art16_1: PT.object.isRequired,
+  }).isRequired,
   byggAnmodningsperioderHandler: PT.func.isRequired,
 };
 
 VurderingArtikkel16Anmodning.defaultProps = {
-  art16begrunnelserFritekst: '',
   unntakFraBestemmelse: '',
   anmodningsperiode: {},
 };
@@ -381,10 +420,8 @@ const mapStateToProps = state => ({
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   lovvalgKode: avklartefaktaSelectors.AvklartefaktaLovvalgKodeSelector(state),
   medlemskap: behandlingerSelectors.MedlemskapSelector(state),
-  art16begrunnelserFritekst: formSelectors.Art16BegrunnelseFritekstSelector(state),
-  unntakFraBestemmelse: formSelectors.UnntakFraBestemmelseSelector(state),
+  unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
   initialValues: {
-    unntakFraBestemmelse: anmodningsperioderSelectors.UnntakFraBestemmelseSelector(state),
     tidligeremedlemskap: behandlingsperioderSelectors.tidligereMedlemskap(state),
   },
 });

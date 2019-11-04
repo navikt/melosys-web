@@ -5,7 +5,7 @@ import * as KV from '../../../../../../kodeverk';
 import Steg from '../steg';
 import { FANE_STATUS, STEG } from '../typer';
 import VurderingArtikkel16Anmodning from '../../stegKomponenter/vurderingArtikkel16Anmodning';
-import { hentVilkar } from '../../../../../../regler/vilkar';
+import { hentVilkar, hentBegrunnelser } from '../../../../../../regler/vilkar';
 
 class Artikkel16Anmodning extends Steg {
   constructor(propsLight, stegPosisjon) {
@@ -13,7 +13,7 @@ class Artikkel16Anmodning extends Steg {
     this.kriterier = [
       {
         beskrivelse: 'mottatt svar',
-        exec: () => Artikkel16Anmodning.harAvklaring(propsLight) && Artikkel16Anmodning.erUnderBehandling(propsLight),
+        exec: () => Artikkel16Anmodning.skalArt16SvarstegVaereSynlig(propsLight),
         nesteSteg: STEG.ARTIKKEL_16_MOTTA_SVAR,
       },
       {
@@ -26,12 +26,18 @@ class Artikkel16Anmodning extends Steg {
     this.tittel = 'Artikkel 16.1';
     this.komponent = VurderingArtikkel16Anmodning;
     this.samleRelevanteData = _propsLight => ({
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
-    this.beregnRelevantUI = _propsLight => ({
-      art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
-      harAvklaring: Artikkel16Anmodning.harAvklaring(_propsLight),
-    });
+    this.beregnRelevantUI = _propsLight => {
+      const muligeBegrunnelseValg = _propsLight.erIDirekteTilArtikkel16Flyt ? MKV.KTObjects.begrunnelser.art16_1_anmodning_uten_art12 : MKV.KTObjects.begrunnelser.art16_1_anmodning;
+
+      return {
+        muligeBegrunnelseValg,
+        erIDirekteTilArtikkel16Flyt: _propsLight.erIDirekteTilArtikkel16Flyt,
+        art16_1: hentVilkar(MKV.Koder.vilkaar.FO_883_2004_ART16_1, _propsLight.vilkar),
+        harAvklaring: Artikkel16Anmodning.harAvklaring(_propsLight),
+      };
+    };
     this.handlers = {
       lagreOgBestillAnmodningsperioder: this._propsLight.tilgjengeligeHandlers.lagreOgBestillAnmodningsperioder,
       byggAnmodningsperioderHandler: this._propsLight.tilgjengeligeHandlers.byggAnmodningsperioderHandler,
@@ -44,15 +50,29 @@ class Artikkel16Anmodning extends Steg {
     this._status = FANE_STATUS.OK;
   }
 
-  static erUnderBehandling({ behandlingsstatus }) {
-    return KV.objektTilKode(behandlingsstatus) === MKV.Koder.behandlinger.status.UNDER_BEHANDLING;
+  static skalArt16SvarstegVaereSynlig(propsLight) {
+    return this.erUnderBehandlingEllerAvsluttet(propsLight) && this.anmodningErSendtUtland(propsLight);
   }
 
-  static harAvklaring({ anmodningsperioder }) {
+  static erUnderBehandlingEllerAvsluttet({ behandlingsstatus }) {
+    return [
+      MKV.Koder.behandlinger.behandlingsstatus.UNDER_BEHANDLING,
+      MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET,
+    ].includes(KV.objektTilKode(behandlingsstatus));
+  }
+
+  static anmodningErSendtUtland({ anmodningsperioder }) {
     return (
       anmodningsperioder.length > 0 &&
-      anmodningsperioder.every(anmodningsperiode => anmodningsperiode.anmodningSaksflytSendt)
+      anmodningsperioder.every(anmodningsperiode => anmodningsperiode.sendtUtland)
     );
+  }
+
+  static harAvklaring({ anmodningsperioder, vilkar }) {
+    const unntakFraBestemmelseErSatt = anmodningsperioder.some(anmodningsperiode => anmodningsperiode.unntakFraBestemmelse);
+    const minstEnBegrunnelseErValgt = hentBegrunnelser(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1, vilkar).length > 0;
+
+    return unntakFraBestemmelseErSatt && minstEnBegrunnelseErValgt;
   }
 }
 

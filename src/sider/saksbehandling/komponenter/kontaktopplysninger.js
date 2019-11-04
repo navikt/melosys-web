@@ -8,7 +8,6 @@ import * as Utils from '../../../utils';
 
 import OrganisasjonsAdresse from '../../../felleskomponenter/adresser/organisasjonsAdresse';
 import { fagsakSelectors } from '../../../ducks/fagsaker';
-import { behandlingerSelectors } from '../../../ducks/behandlinger';
 import { erOrgnrGyldig } from '../../../felleskomponenter/skjema/validering/generisk/organisasjon';
 
 import './kontaktopplysninger.css';
@@ -208,7 +207,6 @@ KontaktOpplysninger.defaultProps = {
 
 const mapStateToProps = state => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
 });
 
 const hentOrg = orgNr => Api.Organisasjoner.hentOrganisasjon(orgNr);

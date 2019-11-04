@@ -9,6 +9,7 @@ function SelectWrappedComponent({
   label,
   children,
   meta,
+  emptyFieldDisabled,
   ...rest
 }) {
   const feil = meta.error ? { feilmelding: meta.error } : undefined;
@@ -18,7 +19,7 @@ function SelectWrappedComponent({
   };
   return (
     <Nav.Select label={label} feil={feil} {...inputProps}>
-      <option />
+      <option disabled={emptyFieldDisabled} />
       {children}
     </Nav.Select>
   );
@@ -28,6 +29,7 @@ SelectWrappedComponent.defaultProps = {
   children: <option disabled value="0">ingen valg tilgjengelig</option>,
   input: undefined,
   meta: undefined,
+  emptyFieldDisabled: true,
 };
 
 SelectWrappedComponent.propTypes = {
@@ -35,6 +37,7 @@ SelectWrappedComponent.propTypes = {
   children: PT.node,
   input: PT.object, // eslint-disable-line react/forbid-prop-types
   meta: PT.object, // eslint-disable-line react/forbid-prop-types
+  emptyFieldDisabled: PT.bool,
 };
 
 function Select({

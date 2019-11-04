@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
@@ -7,7 +6,6 @@ import * as MPT from '../../proptypes';
 import * as API from '../../services/api';
 import { formatterDatoTilNorsk } from '../../utils/dato';
 import * as Ikoner from '../../resources/images';
-import * as fagsakSelectors from '../../ducks/fagsaker/selectors';
 import './sideDialogDokumenter.css';
 
 const uuid = require('uuid/v4');
@@ -120,15 +118,15 @@ class SideDialogDokumenter extends Component {
   state = { oversiktDokumenter: [] };
 
   async componentDidMount() {
-    const { fagsak: { saksnummer } } = this.props;
+    const { saksnummer } = this.props;
     if (saksnummer) {
       await this.hentDokumentOversikt(saksnummer);
     }
   }
 
   async componentDidUpdate(prevProps) {
-    const { fagsak: { saksnummer: prevSaksnummer } } = prevProps;
-    const { fagsak: { saksnummer } } = this.props;
+    const { saksnummer: prevSaksnummer } = prevProps;
+    const { saksnummer } = this.props;
 
     if (prevSaksnummer !== saksnummer) {
       await this.hentDokumentOversikt(saksnummer);
@@ -138,7 +136,7 @@ class SideDialogDokumenter extends Component {
   settOversikt = oversiktDokumenter => this.setState({ oversiktDokumenter });
 
   hentDokumentOversikt = async snr => {
-    const oversiktDokumenter = await API.Dokumenter.hentOversiktDokumenter(snr);
+    const oversiktDokumenter = await API.Dokumenter.dokument.hentOversikt(snr);
     this.settOversikt(oversiktDokumenter);
   };
   render() {
@@ -162,12 +160,7 @@ class SideDialogDokumenter extends Component {
   }
 }
 SideDialogDokumenter.propTypes = {
-  fagsak: PT.object.isRequired,
+  saksnummer: PT.string.isRequired,
 };
 
-const mapStateToProps = state => ({
-  fagsak: fagsakSelectors.FagsakSelector(state),
-});
-
-const mapDispatchToProps = () => ({});
-export default connect(mapStateToProps, mapDispatchToProps)(SideDialogDokumenter);
+export default SideDialogDokumenter;

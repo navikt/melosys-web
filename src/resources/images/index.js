@@ -16,6 +16,9 @@ import Inntekt from './ikon-inntekt.svg';
 import Binders from './paperclip.svg';
 import Svar from './reply.svg';
 import BrevSendt from './emailsend.svg';
+import AccountCircle from './line-version-account-circle.svg';
+import Globe from './line-version-globe-1.svg';
+import ParagraphTwoColumns from './line-version-paragraph-two-columns.svg';
 
 export { Ubehandlet };
 export { Ferdig };
@@ -35,4 +38,6 @@ export { IkonSak };
 export { Binders };
 export { Svar };
 export { BrevSendt as InnBrev };
-
+export { AccountCircle };
+export { Globe };
+export { ParagraphTwoColumns };

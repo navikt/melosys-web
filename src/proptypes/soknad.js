@@ -16,7 +16,6 @@ const ArbeidsgiversBekreftelse = PT.shape({
 });
 const ArbeidsinntektPropType = PT.shape({
   inntektErInnrapporteringspliktig: PT.bool,
-  inntektNaeringIPerioden: PT.number,
   inntektNaturalytelser: PT.shape({
     friAnnet: PT.string,
     friBil: PT.bool,
@@ -49,7 +48,6 @@ const JuridiskArbeidsgiverNorgePropType = PT.shape({
   antallAnsatte: PT.number,
   arbeidstakereRekruttertILand: PT.string,
   ekstraArbeidsgivere: PT.arrayOf(PT.string),
-  oppdragsKontrakterIHovedsakInngaattILand: PT.string,
   utsendteNeste12Mnd: PT.number,
 });
 const MaritimtArbeidPropType = PT.arrayOf(PT.shape({

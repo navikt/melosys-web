@@ -17,7 +17,7 @@ export const SKIP = 'SKIP';
 
 export const Unntaksperiode = {
   GODKJENT: 'GODKJENT',
-  INNHENT: 'INNHENT',
+  DELVIS_GODKJENT: 'DELVIS_GODKJENT',
   AVSLAG: 'AVSLAG',
 };
 export const VurderingSokkelSkipTyper = {
@@ -66,6 +66,7 @@ export const VurderingYrkesgruppeTyper = {
   FLYENDE_PERSONELL: 'YRKESAKTIV_FLYVENDE',
   IKKE_YRKESAKTIV: 'IKKE_YRKESAKTIV',
   KONTANTYTELSESMOTTAKER: 'KONTANTYTELSESMOTTAKER',
+  ORDINAER_UTEN_ART12: 'ORDINAER_UTEN_ART12',
 };
 
 export const VurderingSkiftesvisSekvensieltArbeid = {

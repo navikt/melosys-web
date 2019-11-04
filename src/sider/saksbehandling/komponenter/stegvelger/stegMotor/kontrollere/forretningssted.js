@@ -8,9 +8,29 @@ import * as Utils from '../../../../../../utils';
 import { hentLovvalgsbestemmelse } from '../../../../../../regler/lovvalgsbestemmelser';
 
 class Forretningssted extends Steg {
-  constructor(avklartefakta) {
-    super(avklartefakta);
+  constructor(propsLight, stegPosisjon) {
+    super(propsLight, stegPosisjon);
+
+    const harLovvalgsbestemmelse = this.harLovvalgsbestemmelse(propsLight);
+    const harAvklartForretningsland = this.harAvklartForretningsland(propsLight);
+    const erOmfattetINorge = hentFaktaVerdi(hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta)) === KV.Koder.BoolskAvklartfaktaType.SANN;
+    const erOmfattetNorgeVurdert = this.omfattetNorgeVurdert(propsLight);
+
+    const omfattetILandFakta = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, propsLight.avklartefakta);
+    const omfattetILandFaktaVerdi = hentFaktaVerdi(omfattetILandFakta);
+    const erOmfattetILandIkkeNorge = omfattetILandFaktaVerdi && omfattetILandFaktaVerdi !== 'NO';
+
     this.kriterier = [
+      {
+        beskrivelse: 'vedtaksteg',
+        exec: () => harLovvalgsbestemmelse && harAvklartForretningsland && erOmfattetNorgeVurdert && erOmfattetINorge,
+        nesteSteg: STEG.ARTIKKEL_13_1_B_VEDTAK,
+      },
+      {
+        beskrivelse: '',
+        exec: () => harLovvalgsbestemmelse && harAvklartForretningsland && erOmfattetNorgeVurdert && erOmfattetILandIkkeNorge,
+        nesteSteg: STEG.ARTIKKEL_13_1_B_UTPEK_LAND,
+      },
       {
         beskrivelse: 'dead end',
         exec: () => true,
@@ -22,7 +42,7 @@ class Forretningssted extends Steg {
     this.komponent = VurderingForretningssted;
     this.samleRelevanteData = _propsLight => ({
       valgteVirksomheter: _propsLight.valgteVirksomheter,
-      redigerbart: _propsLight.redigerbart,
+      redigerbart: _propsLight.generiskStegRedigerbart,
     });
 
     this.beregnRelevantUI = _propsLight => {
@@ -30,14 +50,7 @@ class Forretningssted extends Steg {
       const avklarteForretningsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, _propsLight.avklartefakta);
       const omfattetINorge = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, _propsLight.avklartefakta);
       const omfattetILand = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, _propsLight.avklartefakta);
-
-      const harLovvalgsbestemmelse = !Utils._isNil(lovvalgsbestemmelse);
-      const harOmfattetAvklaring = this.harOmfattetAvklaring(omfattetINorge, omfattetILand);
-      const harAvklartForretningsland = _propsLight.valgteVirksomheter.every(vv => (
-        avklarteForretningsland.some(afl => (
-          afl.subjektID === vv.orgnr && !Utils._isNil(hentFaktaVerdi(afl))
-        ))
-      ));
+      const harOmfattetAvklaring = this.harOmfattetAvklaring(_propsLight);
 
       return {
         lovvalgsbestemmelse,
@@ -55,8 +68,15 @@ class Forretningssted extends Steg {
     };
     this.status = FANE_STATUS.OK;
   }
+  harLovvalgsbestemmelse = propsLight => {
+    const lovvalgsbestemmelse = hentLovvalgsbestemmelse(propsLight.lovvalgsperioder);
+    return !Utils._isNil(lovvalgsbestemmelse);
+  };
 
-  harOmfattetAvklaring = (omfattetINorge, omfattetILand) => {
+  harOmfattetAvklaring = propsLight => {
+    const omfattetINorge = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta);
+    const omfattetILand = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_LAND, propsLight.avklartefakta);
+
     const sokerOmfattetINorge = hentFaktaVerdi(omfattetINorge);
     if (Utils._isNil(sokerOmfattetINorge)) {
       return false;
@@ -68,6 +88,20 @@ class Forretningssted extends Steg {
 
     return !Utils._isNil(hentFaktaVerdi(omfattetILand));
   };
+
+  omfattetNorgeVurdert = propsLight => {
+    const omfattetNorgeAvklarteFakta = hentFakta(KV.Koder.avklartefaktaKoder.OMFATTES_I_NORGE, propsLight.avklartefakta);
+    return !Utils._isEmpty(omfattetNorgeAvklarteFakta);
+  };
+  harAvklartForretningsland = propsLight => {
+    const avklarteForretningsland = hentFaktaListe(KV.Koder.avklartefaktaKoder.ARBEIDSGIVERS_FORRETNINGSSTED, propsLight.avklartefakta);
+
+    return propsLight.valgteVirksomheter.every(vv => (
+      avklarteForretningsland.some(afl => (
+        afl.subjektID === vv.virksomhetId && !Utils._isNil(hentFaktaVerdi(afl))
+      ))
+    ));
+  }
 }
 
 export default Forretningssted;
