@@ -30,7 +30,9 @@ const Oppsummering = props => {
     sammensattNavn,
   } = person;
 
-  const landTilSetning = land => (land && land.length > 0 ? Utils.streng.arrayTilKonjunksjon(land.map(enkeltLand => enkeltLand.term)) : 'Ukjent');
+  const arbeidslandTilSetning = land => (land && land.length > 0 ? Utils.streng.arrayTilKonjunksjon(land.map(enkeltLand => enkeltLand.term)) : 'Ukjent');
+
+  const lovvalgslandTilSetning = landObject => (landObject.term ? Utils.streng.arrayTilKonjunksjon(landObject.term) : 'Ukjent');
 
   return (
     <dl aria-label="behandlingsinformasjon" className="oppsummering__detaljer--rad">
@@ -49,13 +51,13 @@ const Oppsummering = props => {
       { arbeidsland.length > 0 &&
         <Fragment>
           <dt>Arbeidsland:</dt>
-          <dd>{landTilSetning(arbeidsland)}</dd>
+          <dd>{arbeidslandTilSetning(arbeidsland)}</dd>
         </Fragment>
       }
-      { lovvalgsland.length > 0 &&
+      { !Utils._isEmpty(lovvalgsland) &&
         <Fragment>
           <dt>Lovvalgsland:</dt>
-          <dd>{landTilSetning(lovvalgsland)}</dd>
+          <dd>{lovvalgslandTilSetning(lovvalgsland)}</dd>
         </Fragment>
       }
       { (soknadsperiodeFom || soknadsperiodeTom) &&
@@ -80,7 +82,7 @@ const Oppsummering = props => {
 
 Oppsummering.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk),
-  lovvalgsland: PT.arrayOf(MPT.Kodeverk),
+  lovvalgsland: MPT.Kodeverk,
   fagsak: MPT.Fagsak.isRequired,
   oppsummering: MPT.Behandlinger.Oppsummering.isRequired,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
@@ -91,7 +93,7 @@ Oppsummering.propTypes = {
 };
 Oppsummering.defaultProps = {
   arbeidsland: [],
-  lovvalgsland: [],
+  lovvalgsland: {},
   soknadsperiodeFom: undefined,
   soknadsperiodeTom: undefined,
   lovvalgsperiodeFom: undefined,

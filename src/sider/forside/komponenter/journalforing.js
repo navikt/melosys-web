@@ -19,6 +19,7 @@ class Journalforing extends Component {
     event.preventDefault();
   };
   render() {
+    const { redigerbart } = this.props;
     return (
       <Nav.Panel className="forside__sidepanel">
         <Nav.Systemtittel>Journalføring</Nav.Systemtittel>
@@ -27,11 +28,11 @@ class Journalforing extends Component {
         <form onSubmit={this.overrideDefaultSubmit}>
           <Skjema.RadioGruppe feltNavn="Behandlingstype">
             <div className="skjema__horisontalefelter">
-              <Skjema.Radio feltNavn="fagomrade" label="Medlemskap" value="MED" />
+              <Skjema.Radio feltNavn="fagomrade" label="Medlemskap" value="MED" disabled={!redigerbart} />
               <Skjema.Radio feltNavn="fagomrade" label="Unntak" value="UFM" disabled />
             </div>
           </Skjema.RadioGruppe>
-          <Nav.Knapp onClick={this.props.handleSubmit(this.submitOgVideresend)}>Journalfør dokument</Nav.Knapp>
+          <Nav.Knapp onClick={this.props.handleSubmit(this.submitOgVideresend)} disabled={!redigerbart}>Journalfør dokument</Nav.Knapp>
         </form>
       </Nav.Panel>
     );
@@ -42,6 +43,11 @@ Journalforing.propTypes = {
   handleSubmit: PT.func.isRequired,
   sendSkjema: PT.func.isRequired,
   history: PT.object.isRequired,
+  redigerbart: PT.bool,
+};
+
+Journalforing.defaultProps = {
+  redigerbart: false,
 };
 
 const mapStateToProps = () => ({

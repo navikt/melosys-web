@@ -1,10 +1,13 @@
 import * as Validering from '../../felleskomponenter/skjema/validering';
 import * as Api from '../../services/api';
+import * as Utils from '../../utils';
 import * as Actions from './actions';
 import * as Types from './types';
+import * as Selectors from './selectors';
 
 import { doThenDispatch } from '../../services/utils';
 import { formSelectors } from '../form';
+import { behandlingerSelectors } from '../behandlinger';
 
 /**
  * Operations
@@ -42,7 +45,19 @@ export function oppdaterSoknadState() {
       ...formSelectors.InngangFormSelector(getState()).values,
     };
 
+    if (Utils._isEmpty(soknadData)) return;
+
     dispatch(Actions.oppdaterSoknadState(soknadData));
+  };
+}
+
+export function lagre() {
+  return (dispatch, getState) => {
+    dispatch(oppdaterSoknadState());
+
+    const soknad = Selectors.SoknadSelector(getState());
+    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    dispatch(send(bid, soknad));
   };
 }
 

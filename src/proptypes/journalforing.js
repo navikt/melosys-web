@@ -2,6 +2,7 @@
 import PT from 'prop-types';
 
 import { Dokument, Vedlegg } from './dokument';
+import { Kodeverk } from './kodeverk';
 
 const JournalforingPropType = PT.shape({
   avsenderID: PT.string,
@@ -25,6 +26,11 @@ const JournalforingSkjemaVerdierPropType = PT.shape({
   journalpostID: PT.string,
   respresentantID: PT.string,
   vedleggsTittler: PT.arrayOf(PT.string),
+  sedBehandling: PT.shape({
+    automatisk: PT.bool,
+    sakstype: Kodeverk,
+    behandlingstyp: Kodeverk,
+  }),
 });
 export {
   JournalforingPropType as Journalforing,

@@ -294,6 +294,6 @@ export const ErIArtikkel13_1FlytSelector = createSelector(
 export const ErIDirekteTilArtikkel16FlytSelector = createSelector(
   AvklartefaktaSelector,
   avklarteFakta => (
-    avklarteFakta.some(avklartFakta => avklartFakta.fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.YRKESAKTIV_DIREKTE_TIL_ARTIKKEL_16))
+    avklarteFakta.some(avklartFakta => avklartFakta.fakta.includes(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER_UTEN_ART12))
   )
 );
