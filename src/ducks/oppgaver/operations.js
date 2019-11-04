@@ -36,17 +36,13 @@ export const tilbakelegg = (behandlingID, venterPaaDokumentasjon) => {
   return Api.Oppgaver.tilbakelegg(oppgaveObjekt).catch(error => error);
 };
 
-export const sendBehandlingsOppgave = async checkboxliste => {
-  const { sakstyper: sakstyperListe = [], behandlingstyper: behandlingstyperListe = [] } = checkboxliste;
-  if (sakstyperListe.length === 0) { return false; }
-
-  const sakstyper = Object.keys(sakstyperListe).filter(sakstype => sakstyperListe[sakstype]);
-  const behandlingstyper = Object.keys(behandlingstyperListe).filter(behandlingstype => behandlingstyperListe[behandlingstype]);
+export const sendBehandlingsOppgave = async form => {
+  const { sakstype, behandlingstype: valgtBehandlingstype } = form;
+  if (!sakstype) { return false; }
 
   const oppgave = {
-    oppgavetype: null,
-    sakstyper,
-    behandlingstyper,
+    sakstype,
+    behandlingstype: valgtBehandlingstype,
   };
 
   const response = await Api.Oppgaver.sendPlukk(oppgave);
