@@ -350,7 +350,8 @@ class VurderingArtikkel16Anmodning extends Component {
                 visFritekstfelt &&
                 <Nav.Textarea
                   id="art16_1_anmodning"
-                  label="Utdyp særlig grunn til bruker og utenlandsk myndighet"
+                  label="Utdyp særlig grunn i fritekstfeltet. Teksten vil også vises i SED, så unngå om mulig direkte tiltale med du/deg."
+                  placeholder="Vi har bedt trygdemyndighetene i [land] om en avtale for deg, fordi [fullfør setningen]"
                   disabled={!redigerbart}
                   onBlur={fritekstFokusFlyttetHandler}
                   onChange={fritekstEndretHandler}
