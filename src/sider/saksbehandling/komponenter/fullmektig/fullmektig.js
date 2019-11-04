@@ -21,15 +21,18 @@ function Fullmektig(props) {
     slettFullmektigLokalt,
     lagreNyFullmektigOgOppdaterLokalt,
     hentOrg,
+    index,
+    settRepresentant,
   } = props;
-  const [representererKode, settRepresentererKode] = useState(null);
   const [org, settOrg] = useState(null);
 
   const vedRolleEndring = async event => {
     event.persist();
+    const representererKode = event.target.value;
+
     try {
-      if (org) await lagreFullmektig(event.target.value, org.orgnr, databaseID);
-      settRepresentererKode(event.target.value);
+      if (org) await lagreFullmektig(representererKode, org.orgnr, databaseID);
+      settRepresentant(index, representererKode);
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -40,7 +43,7 @@ function Fullmektig(props) {
   };
 
   useEffect(() => {
-    if (fullmektig.representererKode) settRepresentererKode(fullmektig.representererKode);
+    if (fullmektig.representererKode) settRepresentant(index, fullmektig.representererKode);
     hentOrgFraApi();
   }, [fullmektig.representererKode, fullmektig.orgnr]);
 
@@ -66,39 +69,39 @@ function Fullmektig(props) {
           </Fragment>
         }
         {
-          !org && <SokFullmektigOrg lagreNyFullmektigOgOppdaterLokalt={orgnr => lagreNyFullmektigOgOppdaterLokalt(representererKode, orgnr)} />
+          !org && <SokFullmektigOrg lagreNyFullmektigOgOppdaterLokalt={orgnr => lagreNyFullmektigOgOppdaterLokalt(fullmektig.representererKode, orgnr)} />
         }
         {
           org &&
           <Nav.Fieldset disabled={!redigerbart} legend="Hvem er dette fullmektig for?" className="radioknapper">
             <Nav.Radio
               onChange={vedRolleEndring}
-              checked={representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
+              checked={fullmektig.representererKode === MKV.Koder.representerer.ARBEIDSGIVER}
               label="Arbeidsgiver"
               value={MKV.Koder.representerer.ARBEIDSGIVER}
               name={databaseIDString}
             />
             <Nav.Radio
               onChange={vedRolleEndring}
-              checked={representererKode === MKV.Koder.representerer.BRUKER}
+              checked={fullmektig.representererKode === MKV.Koder.representerer.BRUKER}
               label="Arbeidstaker"
               value={MKV.Koder.representerer.BRUKER}
               name={databaseIDString}
             />
             <Nav.Radio
               onChange={vedRolleEndring}
-              checked={representererKode === MKV.Koder.representerer.BEGGE}
+              checked={fullmektig.representererKode === MKV.Koder.representerer.BEGGE}
               label="Både arbeidstaker og arbeidsgiver"
               value={MKV.Koder.representerer.BEGGE}
               name={databaseIDString}
             />
           </Nav.Fieldset>
         }
-        <Nav.Knapp disabled={!redigerbart} onClick={slettFullmektig} type="mini">&times; FJERN FULLMEKTIG</Nav.Knapp>
+        <Nav.Knapp disabled={!redigerbart} onClick={slettFullmektig} type="standard">&times; FJERN FULLMEKTIG</Nav.Knapp>
       </Nav.Column>
       <Nav.Column xs="6">
         {
-          org && <Kontaktopplysninger juridiskOrg={org} />
+          org && <Kontaktopplysninger juridiskOrg={org} redigerbart={redigerbart} />
         }
       </Nav.Column>
     </Nav.Row>
@@ -110,10 +113,12 @@ Fullmektig.propTypes = {
   lagreFullmektig: PT.func.isRequired,
   redigerbart: PT.bool.isRequired,
   databaseID: PT.number,
+  index: PT.number.isRequired,
   slettAktoer: PT.func.isRequired,
   slettFullmektigLokalt: PT.func.isRequired,
   lagreNyFullmektigOgOppdaterLokalt: PT.func.isRequired,
   hentOrg: PT.func.isRequired,
+  settRepresentant: PT.func.isRequired,
 };
 
 Fullmektig.defaultProps = {

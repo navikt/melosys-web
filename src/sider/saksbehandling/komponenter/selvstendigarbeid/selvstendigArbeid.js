@@ -7,8 +7,6 @@ import * as Nav from '../../../../utils/navFrontend';
 import * as Ikoner from '../../../../resources/images';
 import * as Skjema from '../../../../felleskomponenter/skjema';
 import * as formSelectors from '../../../../ducks/form/selectors';
-import * as soknadActions from '../../../../ducks/soknad/actions';
-import { behandlingerSelectors } from '../../../../ducks/behandlinger';
 import * as KV from '../../../../kodeverk';
 
 import SelvstendigeForetak from './selvstendigeforetak';
@@ -17,6 +15,8 @@ import { BOOLSK } from '../../../../constants';
 import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
 
 import { OrganisasjonSelectors, OrganisasjonOperations } from '../../../../ducks/organisasjoner';
+import { redigerbartSelectors } from '../../../../ducks/redigerbart';
+import { soknadOperations } from '../../../../ducks/soknad';
 
 import './selvstendigArbeid.css';
 
@@ -38,6 +38,7 @@ const SelvstendigArbeid = props => {
       hentOrganisasjon={hentOrganisasjon}
       oppdaterSoknadState={oppdaterSoknadState}
       skjema={soknadVerdier}
+      redigerbart={redigerbart}
     />
     : null;
 
@@ -49,7 +50,7 @@ const SelvstendigArbeid = props => {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="12">
-              <Skjema.RadioGruppe feltNavn="erSelvstendig" label="Oppgir søker at han eller hun jobber som selvstendig næringsdrivende?">
+              <Skjema.RadioGruppe feltNavn="erSelvstendig" label="Oppgir søkeren å være selvstendig næringsdrivende?">
                 <Skjema.Radio feltNavn="erSelvstendig" value={BOOLSK.SANN} label="Ja" disabled={!redigerbart} />
                 <Skjema.Radio feltNavn="erSelvstendig" value={BOOLSK.USANN} label="Nei" disabled={!redigerbart} />
               </Skjema.RadioGruppe>
@@ -77,12 +78,12 @@ SelvstendigArbeid.defaultProps = {
 const mapStateToProps = state => ({
   soknadForm: formSelectors.SoknadenFormSelector(state),
   organisasjoner: OrganisasjonSelectors.organisasjonerSelector(state),
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   hentOrganisasjon: orgnr => dispatch(OrganisasjonOperations.hent(orgnr)),
-  oppdaterSoknadState: skjema => dispatch(soknadActions.oppdaterSoknadState(skjema)),
+  oppdaterSoknadState: () => dispatch(soknadOperations.oppdaterSoknadState()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SelvstendigArbeid);

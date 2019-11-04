@@ -2,12 +2,12 @@ import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
 import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 
 import * as MPT from '../../proptypes';
 import * as Ikoner from '../../resources/images';
 import * as Nav from '../../utils/navFrontend';
 import * as KV from '../../kodeverk';
+import * as Utils from '../../utils';
 
 import PanelHeader from '../panelHeader/panelHeader';
 import EnkeltDato from '../datoOmrade/enkeltDato';
@@ -44,7 +44,7 @@ const BehandlingOppgave = ({ sak }) => {
     saksnummer,
     behandling,
     aktivTil,
-    soknadsperiode,
+    periode,
     land,
     fnr,
   } = sak;
@@ -58,13 +58,9 @@ const BehandlingOppgave = ({ sak }) => {
     registrertDato,
   } = behandling;
 
-  const { fom, tom } = soknadsperiode;
+  const { fom, tom } = periode;
   const tittel = `${KV.objektTilTerm(sakstype)} - ${sammensattNavn} - ${fnr}`;
-  let rute = 'saksbehandling';
-  if (behandlingstype.kode === MKV.Koder.behandlinger.typer.REGISTRERING_UNNTAK_NORSK_TRYGD || behandlingstype.kode === MKV.Koder.behandlinger.typer.UTL_MYND_UTPEKT_SEG_SELV) {
-    rute = 'registrering';
-  }
-  const link = `/${rute}/${saksnummer}/?behandlingID=${behandlingID}`;
+  const link = Utils.url.lagUrl(saksnummer, behandlingID, behandlingstype.kode);
   const landListeSomStreng = land ? land.join(', ') : '(ukjent)';
   const oppdateringStatus = erUnderOppdatering && '(oppdateres nå)';
 
@@ -89,7 +85,7 @@ const BehandlingOppgave = ({ sak }) => {
                       <dd className="behandlingOppgave__meta__detalj">{KV.objektTilTerm(behandlingstype) || '(ukjent)'}</dd>
                     </Nav.Column>
                     <Nav.Column xs="12" md="7">
-                      <dt className="behandlingOppgave__meta__term">Søknadsperiode: </dt>
+                      <dt className="behandlingOppgave__meta__term">Periode: </dt>
                       <dd className="behandlingOppgave__meta__detalj">{fom && <EnkeltDato dato={fom} />} - {tom && <EnkeltDato dato={tom} />}</dd>
                     </Nav.Column>
                   </dl>

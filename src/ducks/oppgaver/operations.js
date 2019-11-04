@@ -25,41 +25,31 @@ export const oversikt = () =>
     PENDING: Types.PENDING,
   });
 
-export const tilbakelegge = (behandlingID, venterPaaDokumentasjon) => {
+export const tilbakelegg = (behandlingID, venterPaaDokumentasjon) => {
   const oppgaveObjekt = {
     behandlingID,
     begrunnelse: null, // Ingen begrunnelse i Melosys 1.0
     venterPaaDokumentasjon,
   };
 
-  return Api.Oppgaver.tilbakelegge(oppgaveObjekt).catch(error => error);
+  // TODO legge på logging
+  return Api.Oppgaver.tilbakelegg(oppgaveObjekt).catch(error => error);
 };
 
-export const sendBehandlingsOppgave = async checkboxliste => {
-  const { sakstyper: sakstyperListe = [], behandlingstyper: behandlingstyperListe = [] } = checkboxliste;
-  if (sakstyperListe.length === 0) { return false; }
-
-  const sakstyper = Object.keys(sakstyperListe).filter(sakstype => sakstyperListe[sakstype]);
-  const behandlingstyper = Object.keys(behandlingstyperListe).filter(behandlingstype => behandlingstyperListe[behandlingstype]);
+export const sendBehandlingsOppgave = async form => {
+  const { sakstype, behandlingstype: valgtBehandlingstype } = form;
+  if (!sakstype) { return false; }
 
   const oppgave = {
-    oppgavetype: null,
-    sakstyper,
-    behandlingstyper,
+    sakstype,
+    behandlingstype: valgtBehandlingstype,
   };
 
-  const response = await Api.Oppgaver.send(oppgave);
-  const { saksnummer, behandlingID, oppgavetype } = response;
+  const response = await Api.Oppgaver.sendPlukk(oppgave);
+  const { saksnummer, behandlingID, behandlingstype } = response;
   if (!saksnummer) { return false; }
 
-  if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SAK_MK || oppgavetype === MKV.Koder.oppgavetyper.VUR) {
-    return `/saksbehandling/${saksnummer}/?behandlingID=${behandlingID}`;
-  } else if (oppgavetype === MKV.Koder.oppgavetyper.BEH_SED) {
-    return `/registrering/${saksnummer}/?behandlingID=${behandlingID}`;
-  }
-
-  Utils.logger.error(`Ukjent oppgavetype ${oppgavetype} kan ikke åpnes.`);
-  return null;
+  return Utils.url.lagUrl(saksnummer, behandlingID, behandlingstype);
 };
 
 export const sendJournalOppgave = async fagomrade => {
@@ -70,7 +60,7 @@ export const sendJournalOppgave = async fagomrade => {
     sakstyper: [],
     behandlingstyper,
   };
-  const response = await Api.Oppgaver.send(oppgave);
+  const response = await Api.Oppgaver.sendPlukk(oppgave);
   const { oppgaveID, journalpostID } = response;
   if (!(oppgaveID || journalpostID)) { return false; }
   return `/journalforing/${journalpostID}/${oppgaveID}`;

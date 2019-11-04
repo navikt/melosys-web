@@ -12,7 +12,11 @@ const erVedtakSteg = id => (
   id === STEG.VEDTAK ||
   id === STEG.ENDRET_PERIODE ||
   id === STEG.AVSLAG_12_X_OG_16 ||
-  id === STEG.ARTIKKEL_16_VEDTAK
+  id === STEG.ARTIKKEL_16_VEDTAK ||
+  id === STEG.ARTIKKEL_13_1_A_VEDTAK ||
+  id === STEG.VIDERESEND ||
+  id === STEG.ARTIKKEL_13_1_B_VEDTAK ||
+  id === STEG.ARTIKKEL_13_1_B_UTPEK_LAND
 );
 
 const ikonVelger = (id, status) => {
@@ -58,6 +62,7 @@ const StegIkon = props => {
     stegIkon__vedtak: erVedtakSteg(id),
   });
 
+  /* eslint-disable react/no-danger */
   return (
     <li className={cl}>
       <button onClick={onClick} className="stegIkon__knapp">
@@ -66,10 +71,11 @@ const StegIkon = props => {
           style={{ backgroundImage: `url(${ikon})` }}
           aria-disabled={!tilgjengelig}
         />
-        <div className="stegIkon__tittel">{tittel}</div>
+        <div className="stegIkon__tittel" dangerouslySetInnerHTML={{ __html: tittel }} />
       </button>
     </li>
   );
+  /* eslint-enable react/no-danger */
 };
 
 StegIkon.propTypes = {

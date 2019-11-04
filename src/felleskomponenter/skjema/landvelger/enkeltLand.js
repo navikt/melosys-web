@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
 import PT from 'prop-types';
 import { Field } from 'redux-form';
-import { connect } from 'react-redux';
 
 import * as Utils from '../../../utils';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes';
 
 import { kodeTilObjekt, landTekstFormat } from './LandVelger';
-
-import { formSelectors } from '../../../ducks/form';
 
 import './landvelger.css';
 
@@ -24,7 +21,11 @@ export class EnkeltLand extends Component {
     const { landkoder } = this.props;
     const landkodeObjekt = value && kodeTilObjekt(value, landkoder);
     const inputVerdi = landkodeObjekt ? landTekstFormat(landkodeObjekt) : '';
-    this.setState({ inputVerdi });
+    this.setInputVerdi(inputVerdi);
+  };
+
+  setInputVerdi = verdi => {
+    this.setState({ inputVerdi: verdi });
   };
 
   reduxOppdaterLand = landkode => {
@@ -115,23 +116,18 @@ export class EnkeltLand extends Component {
     } = this;
 
     const {
-      label, meta, dataListID, disabled, bredde, feltFeil,
+      label, meta, dataListID, disabled, bredde,
     } = this.props;
 
     const { inputVerdi } = this.state;
 
-    let { error: skjemaError = '' } = meta;
-    /* Vi forventer at meta.error er en string eller et objekt */
-    if (Utils._isObject(skjemaError)) skjemaError = skjemaError.melding;
-    const { error: landError = '' } = this.state;
-    let feilObjekt = skjemaError || landError ? { feilmelding: `${skjemaError} ${landError}` } : null;
+    const { error, touched, active } = meta;
 
-    /* Fikser feil hvor redux-form ikke sender inn noe meta.error-objekt. */
-    if (!feilObjekt) {
-      const feltFeilmelding = feltFeil ? feltFeil.melding : null;
+    let skjemaError = Utils._isObject(meta.error) ? error.melding : error;
+    if (!touched || active) skjemaError = undefined;
 
-      if (feltFeilmelding) feilObjekt = { feilmelding: feltFeilmelding };
-    }
+    const { error: internError = '' } = this.state;
+    const feilObjekt = skjemaError || internError ? { feilmelding: `${skjemaError || ''} ${internError || ''}` } : null;
 
     return (
       <div>
@@ -162,7 +158,6 @@ EnkeltLand.propTypes = {
   input: PT.object.isRequired,
   disabled: PT.bool,
   bredde: PT.string,
-  feltFeil: PT.object.isRequired,
   onChange: PT.func,
 };
 
@@ -174,13 +169,7 @@ EnkeltLand.defaultProps = {
   onChange: null,
 };
 
-const mapStateToProps = (state, ownProps) => ({
-  feltFeil: formSelectors.FormSelector(state)[ownProps.meta.form].syncErrors ? formSelectors.FormSelector(state)[ownProps.meta.form].syncErrors[ownProps.feltNavn] : null,
-});
-
-const ConnectedEnkeltLand = connect(mapStateToProps)(EnkeltLand);
-
-const EnkeltLandWrapper = props => (<Field name={props.feltNavn} component={ConnectedEnkeltLand} props={props} />);
+const EnkeltLandWrapper = props => (<Field name={props.feltNavn} component={EnkeltLand} props={props} />);
 
 EnkeltLandWrapper.propTypes = {
   feltNavn: PT.string.isRequired,

@@ -10,9 +10,10 @@ import { doThenDispatch } from '../../services/utils';
 import * as Api from '../../services/api';
 import * as Types from './types';
 import * as Actions from './actions';
+import * as Selectors from './selectors';
 
 export function hentBehandling(behandlingID) {
-  return doThenDispatch(() => Api.Behandlinger.hentBehandling(behandlingID), {
+  return doThenDispatch(() => Api.Behandlinger.behandling.hentBehandling(behandlingID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
@@ -24,4 +25,13 @@ export function oppdaterBehandlingsStatus(status) {
 }
 export function resetBehandlingerState() {
   return Actions.resetBenadlingerState();
+}
+
+export function apneTidligereBehandlinger() {
+  return (dispatch, getState) => {
+    const person = Selectors.PersonSelector(getState());
+
+    const URI_SOK = `/sok/${person.fnr}`;
+    window.open(URI_SOK);
+  };
 }

@@ -1,23 +1,21 @@
 import React, { useState } from 'react';
-import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import * as EKV from 'eessi-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
 import * as Api from '../../services/api';
 import * as Utils from '../../utils';
-import { createValidator } from '../skjema/validering/skjemaer/createValidator';
+import { lagYupToReduxformErrorMapper } from '../skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
 import { sed as sedSchema } from '../skjema/validering/skjemaer/sed';
-import { behandlingerSelectors } from '../../ducks/behandlinger';
-import { EessiKodeverkSelectors } from '../../ducks/eessikodeverk';
+import { kodeTilObjekt } from '../../kodeverk';
 import './sedBestilling.css';
 
-const TomtFelt = ({ redigerbart, tekst }) => (
-  <option value="" disabled={!redigerbart}>{tekst}</option>
+const TomtFelt = ({ tekst }) => (
+  <option value="">{tekst}</option>
 );
 
 TomtFelt.propTypes = {
-  redigerbart: PT.bool.isRequired,
   tekst: PT.string,
 };
 
@@ -25,10 +23,10 @@ TomtFelt.defaultProps = {
   tekst: 'Velg...',
 };
 
-const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
+const SideDialogSedBestilling = ({ behandlingID }) => {
   const [mottakerinstitusjoner, setMottakerinstitusjoner] = useState([]);
 
-  const [valgtFagomrade, setValgtFagomrade] = useState(kodeverk.fagomradeLovvalg.kode);
+  const [valgtFagomrade, setValgtFagomrade] = useState(EKV.Koder.sektor.LA);
   const [valgtBuc, setValgtBuc] = useState('');
   const [valgtSed, setValgtSed] = useState('');
   const [valgtLand, setValgtLand] = useState('');
@@ -44,7 +42,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   const hentMottakerinstitusjoner = async bucType => {
     if (bucType) {
       try {
-        const institusjoner = await Api.Eessi.hentMottakerinstitusjoner(bucType);
+        const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(bucType);
         setMottakerinstitusjoner(institusjoner);
       } catch (e) {
         Utils.logger.error(e);
@@ -58,11 +56,11 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   };
 
   const resetForm = () => {
-    setValgtFagomrade(kodeverk.fagomradeLovvalg.kode);
     setValgtBuc('');
     setValgtSed('');
     setValgtLand('');
     setValgtMottakerinstitusjon('');
+    setValgtFagomrade(EKV.Koder.sektor.LA);
     setFeilmeldinger({ buc: undefined, land: undefined, mottakerinstitusjon: undefined });
     setOppdaterteFelt({ buc: false, land: false, mottakerinstitusjon: false });
   };
@@ -86,13 +84,13 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
   });
 
   const valider = ({ buc = valgtBuc, land = valgtLand, mottakerinstitusjon = valgtMottakerinstitusjon }) =>
-    setFeilmeldinger(createValidator(sedSchema)({ buc, land, mottakerinstitusjon }));
+    setFeilmeldinger(lagYupToReduxformErrorMapper(sedSchema)({ buc, land, mottakerinstitusjon }));
 
   const sendSed = async () => {
     if (erValidert()) {
       try {
         setOppretterBuc(true);
-        const sedResponse = await Api.Eessi.opprettBuc(behandlingID, {
+        const sedResponse = await Api.Eessi.bucer.opprett(behandlingID, {
           bucType: valgtBuc,
           mottakerLand: valgtLand,
           mottakerId: valgtMottakerinstitusjon,
@@ -100,7 +98,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
 
         setBucOpprettet(true);
         if (sedResponse) {
-          setOpprettetBucUrl(sedResponse);
+          setOpprettetBucUrl(sedResponse.rinaUrl);
           setAlertmelding('');
           resetForm();
         }
@@ -116,6 +114,18 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
     setOppretterBuc(false);
   };
 
+  const tilgjengeligeFagomrader = [
+    kodeTilObjekt(EKV.Koder.sektor.LA, EKV.KTObjects.sektor),
+    kodeTilObjekt(EKV.Koder.sektor.HZ, EKV.KTObjects.sektor),
+  ];
+
+  const tilgjengeligeHBucer = [EKV.Koder.buctyper.horizontal.H_BUC_02a];
+  const ignorerteHBucer = EKV.KTObjects.buctyper.horizontal.filter(({ kode }) => !tilgjengeligeHBucer.includes(kode));
+
+  const tilgjengeligeBucer = fagomrade => EKV.Selectors.hentBucTyperForFagomrade(fagomrade).filter(buc => !ignorerteHBucer.includes(buc));
+
+  const tilgjengeligeSeder = buc => EKV.Selectors.hentSedTyperForBuc(buc);
+
   const tilgjengeligeMottakerinstitusjoner = land => (land ? mottakerinstitusjoner.filter(institusjon => institusjon.landkode === land) : []);
 
   const hentValgtKode = event => event.target.value;
@@ -128,6 +138,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
 
   const fagomradeEndret = event => {
     const fagomrade = hentValgtKode(event);
+    setValgtBuc('');
     setValgtFagomrade(fagomrade);
   };
 
@@ -137,7 +148,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
     oppdaterFelt('buc');
     valider({ buc });
 
-    setValgtSed(buc ? kodeverk.tilgjengeligeSeder(buc, valgtFagomrade)[0].kode : '');
+    setValgtSed(buc ? tilgjengeligeSeder(buc)[0].kode : '');
     hentMottakerinstitusjoner(buc);
   };
 
@@ -163,28 +174,28 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
     <div className="sedbestilling">
       <form onSubmit={overstyrSubmit}>
         <Nav.Fieldset legend="">
-          <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade} disabled >
-            <TomtFelt redigerbart={redigerbart} />
-            { kodeverk.tilgjengeligeFagomrader.map(fagomrade => <option key={fagomrade.kode} value={fagomrade.kode}>{fagomrade.term}</option>) }
+          <Nav.Select bredde="fullbredde" label="Fagområde" onChange={fagomradeEndret} value={valgtFagomrade}>
+            <TomtFelt />
+            { tilgjengeligeFagomrader.map(fagomrade => <option key={fagomrade.kode} value={fagomrade.kode}>{fagomrade.term}</option>) }
           </Nav.Select>
-          <Nav.Select bredde="fullbredde" label="BUC" disabled={!redigerbart} onChange={bucEndret} value={valgtBuc} feil={feil('buc')}>
-            <TomtFelt redigerbart={redigerbart} />
-            { kodeverk.tilgjengeligeBucer(valgtFagomrade).map(buc => <option key={buc.kode} value={buc.kode}>{displayName(buc)}</option>) }
+          <Nav.Select bredde="fullbredde" label="BUC" onChange={bucEndret} value={valgtBuc} feil={feil('buc')}>
+            <TomtFelt />
+            { tilgjengeligeBucer(valgtFagomrade).map(buc => <option key={buc.kode} value={buc.kode}>{displayName(buc)}</option>) }
           </Nav.Select>
           <Nav.Select bredde="fullbredde" label="SED" value={valgtSed} disabled>
-            <TomtFelt redigerbart={redigerbart} tekst="" />
-            { kodeverk.tilgjengeligeSeder(valgtBuc, valgtFagomrade).map(forsteSed => <option key={forsteSed.kode} value={forsteSed.kode}>{displayName(forsteSed)}</option>) }
+            <TomtFelt tekst="" />
+            { tilgjengeligeSeder(valgtBuc).map(forsteSed => <option key={forsteSed.kode} value={forsteSed.kode}>{displayName(forsteSed)}</option>) }
           </Nav.Select>
-          <Nav.Select bredde="fullbredde" label="Land" disabled={!redigerbart} onChange={landEndret} value={valgtLand} feil={feil('land')}>
-            <TomtFelt redigerbart={redigerbart} />
+          <Nav.Select bredde="fullbredde" label="Land" onChange={landEndret} value={valgtLand} feil={feil('land')}>
+            <TomtFelt />
             {MKV.KTObjects.landkoder.map(item => (<option key={item.kode} value={item.kode}>{`${item.term} (${item.kode})`}</option>))}
           </Nav.Select>
-          <Nav.Select bredde="fullbredde" label="Mottaker institusjon" disabled={!redigerbart} onChange={mottakerinstitusjonEndret} value={valgtMottakerinstitusjon} feil={feil('mottakerinstitusjon')}>
-            <TomtFelt redigerbart={redigerbart} />
+          <Nav.Select bredde="fullbredde" label="Mottaker institusjon" onChange={mottakerinstitusjonEndret} value={valgtMottakerinstitusjon} feil={feil('mottakerinstitusjon')}>
+            <TomtFelt />
             { tilgjengeligeMottakerinstitusjoner(valgtLand).map(elem => <option key={elem.id} value={elem.id}>{elem.navn}</option>) }
           </Nav.Select>
-          <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" disabled={!redigerbart} onClick={sendSed}>Opprett BUC</Nav.Hovedknapp>&nbsp;
-          <Nav.Knapp type="standard" disabled={!redigerbart} onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
+          <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>Opprett ny BUC</Nav.Hovedknapp>&nbsp;
+          <Nav.Knapp type="standard" onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
         </Nav.Fieldset>
         {(opprettetBucUrl && bucOpprettet) &&
           <Nav.AlertStripe type="suksess" className="varsel">
@@ -198,24 +209,7 @@ const SideDialogSedBestilling = ({ redigerbart, behandlingID, kodeverk }) => {
 };
 
 SideDialogSedBestilling.propTypes = {
-  redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
-  kodeverk: PT.object.isRequired,
 };
 
-const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
-  kodeverk: {
-    fagomradeLovvalg: EessiKodeverkSelectors.sektorSelector(state).filter(el => el.kode === 'LA')[0],
-    tilgjengeligeFagomrader: EessiKodeverkSelectors.sektorSelector(state),
-    tilgjengeligeBucer: fagomrade => EessiKodeverkSelectors.alleBUCtyperSelector(state)[EessiKodeverkSelectors.kodemapsSelector(state).SEKTOR2BUC[fagomrade]],
-    tilgjengeligeSeder: (buc, fagomrade) => (
-      (buc && fagomrade)
-        ? EessiKodeverkSelectors.alleSEDtyperSelector(state)
-          .filter(el => EessiKodeverkSelectors.kodemapsSelector(state).BUC2SEDS[fagomrade][buc].includes(el.kode))
-        : []
-    ),
-  },
-});
-
-export default connect(mapStateToProps)(SideDialogSedBestilling);
+export default SideDialogSedBestilling;

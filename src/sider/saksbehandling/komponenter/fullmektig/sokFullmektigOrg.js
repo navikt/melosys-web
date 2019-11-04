@@ -38,7 +38,7 @@ function SokFullmektigOrg(props) {
         />
       </Nav.Column>
       <Nav.Column xs="3">
-        <Nav.Knapp onClick={sok} type="mini" className="sokKnapp">SØK</Nav.Knapp>
+        <Nav.Knapp onClick={sok} type="standard" className="sokKnapp">SØK</Nav.Knapp>
       </Nav.Column>
     </Nav.Row>
   );

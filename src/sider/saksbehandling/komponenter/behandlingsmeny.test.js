@@ -12,8 +12,9 @@ describe('behandlingsmeny', () => {
       tilbakeleggeHandle: jest.fn(),
       oppfriskSaksopplysningerHandle: jest.fn(),
       visHenleggDialogHandle: jest.fn(),
-      avsluttSakSomBortfalt: jest.fn(),
+      visAvsluttSakSomBortfaltDialogHandle: jest.fn(),
       apneTidligereBehandlinger: jest.fn(),
+      visAvslagSoknadDialogHandle: jest.fn(),
       redigerbart: true,
       visHenleggSak: true,
     };
@@ -35,7 +36,7 @@ describe('behandlingsmeny', () => {
     expect(props.tilbakeleggeHandle).toHaveBeenCalledTimes(1);
     expect(props.oppfriskSaksopplysningerHandle).toHaveBeenCalledTimes(1);
     expect(props.visHenleggDialogHandle).toHaveBeenCalledTimes(1);
-    expect(props.avsluttSakSomBortfalt).toHaveBeenCalledTimes(1);
+    expect(props.visAvsluttSakSomBortfaltDialogHandle).toHaveBeenCalledTimes(1);
     expect(props.apneTidligereBehandlinger).toHaveBeenCalledTimes(1);
   });
 });

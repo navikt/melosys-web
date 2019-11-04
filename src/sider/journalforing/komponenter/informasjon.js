@@ -9,10 +9,10 @@ import * as Skjema from '../../../felleskomponenter/skjema/';
 import * as Nav from '../../../utils/navFrontend';
 import * as MPT from '../../../proptypes/';
 import * as Konstanter from '../../../constants';
-
 import * as Api from '../../../services/api';
-
 import * as Person from '../../../felleskomponenter/skjema/validering/generisk/person';
+
+import AvsenderVelger from './avsendervelger';
 
 import { PersonSelectors } from '../../../ducks/personer';
 import { OrganisasjonSelectors } from '../../../ducks/organisasjoner';
@@ -36,7 +36,10 @@ const dokumenttitler = [
  * slik som informasjon om bruker, informasjon om dokument etc.
  */
 class Informasjon extends Component {
-  state = { spinner: {} };
+  state = {
+    spinner: {},
+  };
+
   async componentDidMount() {
     await this.oppdaterFelter(this.props, true);
   }
@@ -48,13 +51,11 @@ class Informasjon extends Component {
     const {
       brukerID: gammelBrukerID,
       avsenderID: gammelAvsenderID,
-      erBrukerAvsender: gammelErBrukerAvsender,
     } = props.journalforingSkjemaVerdier;
     const {
-      brukerID = '', avsenderID = '', erBrukerAvsender, brukerNavn,
+      brukerID = '', avsenderID = '',
     } = this.props.journalforingSkjemaVerdier;
     const { hentOgVisBruker, hentOgVisAvsender } = this.props;
-    const { kopierBrukerTilAvsender, tomAvsender } = this;
 
     if ((gammelBrukerID !== brukerID) || tvingOppdatering) {
       await hentOgVisBruker(brukerID);
@@ -62,14 +63,6 @@ class Informasjon extends Component {
 
     if ((gammelAvsenderID !== avsenderID) || tvingOppdatering) {
       await hentOgVisAvsender(avsenderID);
-    }
-
-    if ((gammelErBrukerAvsender !== erBrukerAvsender) || tvingOppdatering) {
-      if (erBrukerAvsender) {
-        kopierBrukerTilAvsender(brukerID, brukerNavn);
-      } else {
-        tomAvsender();
-      }
     }
   };
 
@@ -80,11 +73,11 @@ class Informasjon extends Component {
 
   kopierBrukerTilAvsender = (
     brukerID = this.props.journalforingSkjemaVerdier.brukerID,
-    sammensattNavn = this.props.journalforingSkjemaVerdier.sammensattNavn
+    brukerNavn = this.props.journalforingSkjemaVerdier.brukerNavn
   ) => {
     const { settFeltInnhold } = this.props;
     settFeltInnhold('avsenderID', brukerID);
-    settFeltInnhold('avsenderNavn', sammensattNavn);
+    settFeltInnhold('avsenderNavn', brukerNavn);
   };
 
   tomAvsender = () => {
@@ -142,32 +135,19 @@ class Informasjon extends Component {
     this.setState(this.toggleSpinn(navn, false));
   };
 
-  /** Noen felter skal disables dersom andre felter er fylt inn eller andre
-   * forutsetninger for disabling er tilstede.
-   * @param feltNavn {string} Navnet på feltet som skal disables.
-   * @returns {boolean} Hvorvidt feltet skal disables eller ikke
-   */
-  skalFeltetDisables = feltNavn => {
-    const { journalforingSkjemaVerdier } = this.props;
-
-    switch (feltNavn) {
-      case 'avsenderNavn': { return journalforingSkjemaVerdier.avsenderID !== ''; }
-      case 'avsenderID': { return journalforingSkjemaVerdier.erBrukerAvsender; }
-      default: return false;
-    }
-  };
-
   render() {
     const {
-      journalpostID, dokumentID, vedlegg,
+      journalpostID,
+      dokumentID,
+      vedlegg,
+      settFeltInnhold,
     } = this.props;
     const {
       spinner: { brukerNavn: visBrukerSpinner },
       spinner: { avsenderNavn: visAvsenderSpinner },
     } = this.state;
-    const { skalFeltetDisables } = this;
 
-    const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdfURI(jpostID, dokID);
+    const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
     return (
       <div className="informasjon">
         <Nav.Fieldset legend="Informasjon om brukeren">
@@ -175,13 +155,17 @@ class Informasjon extends Component {
           <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
-        <Nav.Fieldset legend="Informasjon om dokument">
-          <Skjema.Checkbox feltNavn="erBrukerAvsender" label="Bruker er avsender" />
-          <Skjema.Input feltNavn="avsenderID" label="Avsenders fnr, dnr eller orgnr:" disabled={skalFeltetDisables('avsenderID')} onKeyUp={this.IDFeltTastOppHandler} />
-          <Skjema.Input feltNavn="avsenderNavn" label="Avsenders navn eller firmanavn:" disabled={skalFeltetDisables('avsenderNavn')} />
-          { visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-          <Skjema.Input feltNavn="mottattDato" label="Registrert dato:" disabled />
 
+        <Nav.Element className="informasjonOmAvsenderTittel">Informasjon om avsender</Nav.Element>
+        <AvsenderVelger
+          className="avsenderVelger"
+          kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}
+          tomAvsender={this.tomAvsender}
+          settFeltInnhold={settFeltInnhold}
+          visAvsenderSpinner={visAvsenderSpinner}
+        />
+
+        <Nav.Fieldset legend="Informasjon om dokument">
           <Nav.Fieldset legend="Hoveddokument:">
             <Skjema.ListeVelger
               feltNavn="hoveddokumentTittel"
@@ -195,7 +179,7 @@ class Informasjon extends Component {
           {vedlegg.length > 0 &&
             <Nav.Fieldset legend="Fysiske Vedlegg:">
               {vedlegg.map((elem, index) =>
-                <Fragment>
+                <Fragment key={elem.dokumentID}>
                   <Skjema.ListeVelger
                     feltNavn={`vedlegg.pdf.tittel_${index}`}
                     label={`Tittel på vedlegg: ${index + 1}`}

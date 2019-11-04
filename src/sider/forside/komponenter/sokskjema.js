@@ -10,7 +10,7 @@ import * as Nav from '../../../utils/navFrontend';
 import './sokskjema.css';
 
 class SokSkjema extends Component {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const { fnr } = this.props.match.params;
     this.oppdaterLokalSokState(fnr);
   }
@@ -35,7 +35,8 @@ class SokSkjema extends Component {
   render () {
     return (
       <Nav.Panel>
-        <Nav.Systemtittel>Søke etter saker</Nav.Systemtittel>
+        <Nav.Systemtittel>Søke etter person</Nav.Systemtittel>
+        <p>Oversikt over alle saker og behandlinger på en person</p>
         <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
           <Nav.Input
             label=""
@@ -43,7 +44,7 @@ class SokSkjema extends Component {
             bredde="XL"
             onChange={this.vedEndretSokFelt}
             ref={this.state.sokStreng}
-            placeholder="fnr / dnr"
+            placeholder="F.nr./d-nr."
           />
           <Nav.Knapp className="sokeskjema__knapp">Søk</Nav.Knapp>
         </form>

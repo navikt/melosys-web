@@ -22,7 +22,7 @@ export const EndretPeriodeTomSelector = createSelector(
 
 export const BegrunnelseFritekstSelector = createSelector(
   AnmodningsperiodesvarSelector,
-  anmodningsperiodesvar => anmodningsperiodesvar.begrunnelseFritekst
+  anmodningsperiodesvar => anmodningsperiodesvar.begrunnelseFritekst || ''
 );
 
 export const AnmodningsperiodeSvarTypeSelector = createSelector(

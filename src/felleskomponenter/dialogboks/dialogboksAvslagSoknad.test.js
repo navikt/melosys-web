@@ -3,6 +3,7 @@ import React from 'react';
 import * as Nav from '../../utils/navFrontend';
 
 import { DialogboksAvslagSoknad } from './dialogboksAvslagSoknad';
+import Knapperad from '../knapperad';
 
 describe('DialogboksAvslagSoknad', () => {
   let props = null;
@@ -18,18 +19,20 @@ describe('DialogboksAvslagSoknad', () => {
   });
 
   it('viser en Nav Modal', () => {
-    const komponent = mount(<DialogboksAvslagSoknad {...props} />);
-    expect(komponent.exists('Modal')).toBe(true);
+    const dialogboks = shallow(<DialogboksAvslagSoknad {...props} />);
+    expect(dialogboks.exists(Nav.Modal)).toBe(true);
   });
 
-  it('passer handlere til knapper', () => {
-    const komponent = mount(<DialogboksAvslagSoknad {...props} />);
+  it('sender korrekte handlere til en knapperad', () => {
+    const dialogboks = shallow(<DialogboksAvslagSoknad {...props} />);
+    const knapperad = dialogboks.find(Knapperad);
 
-    komponent.find(Nav.Knapp).forEach(knapp => knapp.simulate('click'));
-    komponent.find(Nav.Hovedknapp).forEach(knapp => knapp.simulate('click'));
+    expect(knapperad).toHaveLength(1);
 
-    expect(props.avbryt).toHaveBeenCalledTimes(1);
-    expect(props.avslaaSoknad).toHaveBeenCalledTimes(1);
+    const { avbryt, bekreft } = knapperad.props();
+
+    expect(avbryt).toBe(props.avbryt);
+    expect(bekreft).toBe(props.avslaaSoknad);
   });
 });
 

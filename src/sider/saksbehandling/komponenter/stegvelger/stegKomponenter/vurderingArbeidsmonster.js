@@ -9,7 +9,7 @@ import * as KV from '../../../../../kodeverk';
 import EnkeltAvklartfakta from './felles/enkeltAvklartfakta';
 import { BoolskAvklartfaktaType, VurderingVesentligAktivitetINorgeTyper } from '../../../../../kodeverk/koder';
 import { hentFaktaVerdi, konverterTilStegData, lagAvklartfakta } from '../../../../../regler/avklartefakta';
-import { lagLovvalgsbestemmelse, slettLovvalgsbestemmelse } from '../../../../../regler/lovvalgsbestemmelser';
+import { lagLovvalgsbestemmelse, slettLovvalgsbestemmelse, konverterLovvalgsbestemmelseTilStegData } from '../../../../../regler/lovvalgsbestemmelser';
 
 import './vurderingArbeidsmonster.css';
 
@@ -136,52 +136,43 @@ const VurderingArbeidsmonster = props => {
     bekreftOgFortsett, arbeidsland, tilstand, redigerbart, oppdaterData, slettData,
   } = props;
   const {
-    arbeidsmonster, marginaltArbeid, aktivitetINorge,
+    marginaltArbeid, aktivitetINorge,
     aktivitetINorgeNodvendig, harAvklaring,
   } = tilstand;
 
 
-  const oppdaterLovvalgsperiode = avklartAktivitetINorge => {
+  const endreLovvalgsperiode = avklartAktivitetINorge => {
     if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
-      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.forordning_883_2004.FO_883_2004_ART13_1A));
+      oppdaterData(lagLovvalgsbestemmelse(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
     } else {
       slettData(slettLovvalgsbestemmelse());
     }
   };
 
+  const oppdaterLovvalgsperiodeVedMount = avklartAktivitetINorge => {
+    if (avklartAktivitetINorge === VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT) {
+      oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART13_1A));
+    }
+  };
+
   useEffect(() => {
     const avklartAktivitetINorge = hentFaktaVerdi(aktivitetINorge);
-    oppdaterLovvalgsperiode(avklartAktivitetINorge);
-    return function cleanup() {
+    oppdaterLovvalgsperiodeVedMount(avklartAktivitetINorge);
+
+    return () => {
       slettData();
     };
   }, []);
-
-  const skiftesvisSekvensieltValg = [
-    { label: 'Skiftesvis eller med regelmessig veksling av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS },
-    { label: 'Sekvensielt, uten regelmessig skifte av arbeidsland', type: KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SEKVENSIELT },
-  ];
 
   const vesentligAktivitetINorgeValg = [
     { label: '25% eller mer', type: VurderingVesentligAktivitetINorgeTyper.OVER_25_PROSENT },
     { label: 'Mindre enn 25%', type: VurderingVesentligAktivitetINorgeTyper.UNDER_25_PROSENT },
   ];
 
-  const visMarginaltArbeid = hentFaktaVerdi(arbeidsmonster) === KV.Koder.VurderingSkiftesvisSekvensieltArbeid.SKIFTESVIS;
-
   return (
     <div className="vurderingArbeidsmonster">
       <Nav.Undertittel>Vurdering av arbeidsmønster og fordeling</Nav.Undertittel>
       <div className="arbeidsmonster">
-        <EnkeltAvklartfakta
-          redigerbart={redigerbart}
-          avklartfakta={arbeidsmonster}
-          avklartfaktaKode={KV.Koder.avklartefaktaKoder.ARBEIDSMONSTER}
-          avklartefaktaTyper={skiftesvisSekvensieltValg}
-          tittel="Hvordan utføres arbeidet?"
-          oppdaterData={oppdaterData}
-        />
-        { visMarginaltArbeid &&
         <MarginaltArbeid
           redigerbart={redigerbart}
           marginaltArbeid={marginaltArbeid}
@@ -189,8 +180,7 @@ const VurderingArbeidsmonster = props => {
           oppdaterData={oppdaterData}
           {...tilstand}
         />
-        }
-        { visMarginaltArbeid && aktivitetINorgeNodvendig &&
+        { aktivitetINorgeNodvendig &&
         <EnkeltAvklartfakta
           redigerbart={redigerbart}
           avklartfakta={aktivitetINorge}
@@ -199,11 +189,11 @@ const VurderingArbeidsmonster = props => {
           tittel="Vurdering av vesentlig aktivitet i Norge"
           oppdaterData={oppdaterData}
           slettData={slettData}
-          onChange={oppdaterLovvalgsperiode}
+          onChange={endreLovvalgsperiode}
         />
         }
         <div className="fane__knapplinje">
-          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+          <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
         </div>
       </div>
     </div>
@@ -216,6 +206,9 @@ VurderingArbeidsmonster.propTypes = {
   slettData: PT.func.isRequired,
   arbeidsland: PT.array.isRequired,
   tilstand: PT.shape({
+    marginaltArbeid: PT.array,
+    aktivitetINorge: PT.object,
+    aktivitetINorgeNodvendig: PT.bool,
     harAvklaring: PT.bool,
   }).isRequired,
   redigerbart: PT.bool.isRequired,

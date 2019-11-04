@@ -14,33 +14,46 @@ import * as Actions from './actions';
 
 /* eslint-disable import/prefer-default-export */
 export function hentDokument(journalpostID, dokumentID) {
-  return doThenDispatch(() => Api.Dokumenter.hentDokument(journalpostID, dokumentID), {
+  return doThenDispatch(() => Api.Dokumenter.pdf.hent(journalpostID, dokumentID), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 export function opprettDokument(behandlingID, dokumenttypeKode, dokument) {
-  return doThenDispatch(() => Api.Dokumenter.opprettDokument(behandlingID, dokumenttypeKode, dokument), {
+  return doThenDispatch(() => Api.Dokumenter.dokument.opprett(behandlingID, dokumenttypeKode, dokument), {
     OK: Types.OK,
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
 }
 
-export async function forhandsvisPDF(behandlingID, dokumenttypeKode, data) {
+async function getObjectURL(response) {
+  const arrayBuffer = await response.arrayBuffer();
+  const file = new Blob([arrayBuffer], { type: 'application/pdf' });
+  return URL.createObjectURL(file);
+}
+
+export async function forhandsvisBrev(behandlingID, dokumenttypeKode, data) {
   const utfyltdata = {
     mottaker: data.mottaker ? data.mottaker : null,
     fritekst: data.fritekst ? data.fritekst : null,
     begrunnelseKode: data.begrunnelseKode ? data.begrunnelseKode : null,
   };
 
-  const response = await Api.Dokumenter.forhandsvisPDF(behandlingID, dokumenttypeKode, utfyltdata);
+  const response = await Api.Dokumenter.pdf.forhandsvisBrev(behandlingID, dokumenttypeKode, utfyltdata);
 
   if (response.ok) {
-    const arrayBuffer = await response.arrayBuffer();
-    const file = new Blob([arrayBuffer], { type: 'application/pdf' });
-    return URL.createObjectURL(file);
+    return getObjectURL(response);
+  }
+  return false;
+}
+
+export async function forhandsvisSed(behandlingID, sedType) {
+  const response = await Api.Dokumenter.pdf.forhandsvisSed(behandlingID, sedType);
+
+  if (response.ok) {
+    return getObjectURL(response);
   }
   return false;
 }

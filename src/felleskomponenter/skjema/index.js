@@ -8,6 +8,7 @@ import { Fieldset } from '../../utils/navFrontend';
 import * as Validering from './validering';
 import CustomRadioPanelGruppe from './customRadioPanelGruppe';
 import ListeVelger from './listevelger';
+import LandVelger from './landvelger';
 
 export {
   Checkbox,
@@ -20,4 +21,5 @@ export {
   Fieldset,
   CustomRadioPanelGruppe,
   ListeVelger,
+  LandVelger,
 };

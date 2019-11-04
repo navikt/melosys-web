@@ -4,12 +4,13 @@ import { connect } from 'react-redux';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../utils/navFrontend';
+import * as Ikon from '../../resources/images';
 
 import PdfLenkeListe from '../pdfLenkeListe';
+import Knapperad from '../knapperad';
 
 import { behandlingerSelectors } from '../../ducks/behandlinger';
-
-import * as Ikon from '../../resources/images';
+import { redigerbartSelectors } from '../../ducks/redigerbart';
 
 import './dialogboksAvslagSoknad.css';
 
@@ -22,7 +23,7 @@ export const DialogboksAvslagSoknad = props => {
     avslaaSoknad,
   } = props;
 
-  const dokumenter = [{
+  const pdfDokumenter = [{
     navn: 'Forhåndsvis vedtaksbrev',
     type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_MANGLENDE_OPPLYSNINGER,
     data: {
@@ -49,13 +50,16 @@ export const DialogboksAvslagSoknad = props => {
         <div>
           <Nav.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.Systemtittel>
           {
-            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={dokumenter} />
+            redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
           }
-          <div className="dialogboksAvslagSoknad__container__knapperad">
-            <Nav.Hovedknapp onClick={avslaaSoknad} disabled={!redigerbart}>
-                AVSLÅ SØKNAD
-            </Nav.Hovedknapp>
-            <Nav.Knapp disabled={!redigerbart} onClick={avbryt}>Avbryt</Nav.Knapp>
+          <div className="knapperadcontainer">
+            <Knapperad
+              avbryt={avbryt}
+              avbrytTekst="AVBRYT"
+              bekreft={avslaaSoknad}
+              bekreftTekst="AVSLÅ SØKNAD"
+              redigerbart={redigerbart}
+            />
           </div>
         </div>
       </div>
@@ -76,7 +80,7 @@ DialogboksAvslagSoknad.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  redigerbart: behandlingerSelectors.RedigerbartSelector(state),
+  redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
 });
 

@@ -4,13 +4,15 @@
  * Målet med selectorer er å samle funksjonalitet som behandler, itererer og omformer
  * data slik at denne logikken kan benyttes flere steder i applikasjonen - ikke bare ett sted.
  */
-import * as MKV from 'melosys-kodeverk';
 
 import { createSelector } from 'reselect';
 import moment from 'moment/moment';
+import * as MKV from 'melosys-kodeverk';
+
 import { datoDiff } from '../../utils/dato';
 import * as KV from '../../kodeverk';
 import * as soknadSelectors from '../soknad/selectors';
+import { anmodningsperioderSelectors } from '../anmodningsperioder';
 
 /* eslint import/prefer-default-export:"off" */
 export const BehandlingerSelector = createSelector(
@@ -29,14 +31,10 @@ export const BehandlingstypeKodeSelector = createSelector(
   OppsummeringSelector,
   oppsummering => (oppsummering.behandlingstype ? oppsummering.behandlingstype.kode : '')
 );
-export const RedigerbartSelector = createSelector(
-  state => BehandlingerSelector(state).redigerbart || false,
-  BehandlingstypeKodeSelector,
-  (redigerbart, behandlingstypeKode) => redigerbart && behandlingstypeKode !== MKV.Koder.behandlinger.typer.ENDRET_PERIODE
-);
-export const EndreLovvalgsPeriodeRedigerbartSelector = createSelector(
-  state => BehandlingerSelector(state).redigerbart || false,
-  redigerbart => redigerbart
+
+export const ErArtikkel16AnmodningSendtSelector = createSelector(
+  anmodningsperioderSelectors.AlleAnmodningsperioderSendtUtlandSelector,
+  anmodningsperioderSendtUtland => anmodningsperioderSendtUtland
 );
 
 export const SaksopplysningerSelector = createSelector(
@@ -61,6 +59,13 @@ export const SEDSelector = createSelector(
   sed => sed
 );
 export const LovvalgsperiodeSelector = createSelector(state => SEDSelector(state).lovvalgsperiode || {}, lovvalgsperiode => lovvalgsperiode);
+
+const landkodeTilKodeverksobjekt = landkode => KV.kodeTilObjekt(landkode, MKV.KTObjects.landkoder);
+export const LovvalgslandSelector = createSelector(
+  state => SEDSelector(state).lovvalgslandKode || '',
+  lovvalgsland => landkodeTilKodeverksobjekt(lovvalgsland) || {}
+);
+
 export const OrganisasjonerSelector = createSelector(
   state => SaksopplysningerSelector(state).organisasjoner || [],
   organisasjoner => organisasjoner

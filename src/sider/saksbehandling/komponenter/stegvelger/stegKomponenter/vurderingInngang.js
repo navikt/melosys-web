@@ -13,15 +13,16 @@ import SoknadslandListe from './inngang/soknadslandListe';
 
 const VurderingInngang = props => {
   const {
-    bekreftOgFortsett, inngangsvilkar, alleLandkoder, begrunnelser, avklartefakta,
+    bekreftOgFortsett, alleLandkoder, begrunnelser, avklartefakta,
     tilstand, redigerbart, oppdaterData, slettData,
   } = props;
 
-  useEffect(() => function cleanup() {
-    slettData();
-  }, []);
+  useEffect(() => (
+    function cleanup() {
+      slettData();
+    }
+  ), []);
 
-  const { vurdering } = inngangsvilkar;
   const soknadslandBegrunnelser = begrunnelser.opphold;
   const { harAvklaring } = tilstand;
 
@@ -30,10 +31,10 @@ const VurderingInngang = props => {
       <Nav.Undertittel>Kontroller inngangsvilkår</Nav.Undertittel>
       <ul className="betingelser__liste">
         <li className="liste__element liste__element--oppfylt">
-          { KV.objektTilTerm(vurdering) }
+          Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.
         </li>
         <li className="liste__element liste__element--varsel">
-          Sjekk at land er innenfor et territorium / område som dekkes av forordningen.
+          Sjekk eventuelt at området dekkes av forordningen.
         </li>
       </ul>
       <FieldArray
@@ -46,7 +47,7 @@ const VurderingInngang = props => {
         oppdaterData={oppdaterData}
       />
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} type="hoved" className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!(redigerbart && harAvklaring)} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
@@ -58,9 +59,6 @@ VurderingInngang.propTypes = {
   alleLandkoder: PT.arrayOf(MPT.Kodeverk).isRequired,
   begrunnelser: PT.object.isRequired,
   tilstand: PT.object.isRequired,
-  inngangsvilkar: PT.shape({
-    vurdering: MPT.Kodeverk,
-  }).isRequired,
   redigerbart: PT.bool.isRequired,
   oppdaterData: PT.func.isRequired,
   slettData: PT.func.isRequired,

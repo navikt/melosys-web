@@ -18,7 +18,7 @@ import './organisasjon.css';
  * @param props Et objekt med det aktuelle arbeidsforholdet.
  */
 const Organisasjon = props => {
-  const { organisasjon, slettHandle } = props;
+  const { organisasjon, slettHandle, redigerbart } = props;
 
   if (!organisasjon) { return null; }
   const {
@@ -43,9 +43,9 @@ const Organisasjon = props => {
               </dl>
             </Nav.Column>
             <Nav.Column xs="6" className="organisasjon__slettwrapper">
-              <KontaktOpplysninger juridiskOrg={organisasjon} />
+              <KontaktOpplysninger juridiskOrg={organisasjon} redigerbart={redigerbart} />
               <div className="organisasjon__slettknapp">
-                { slettHandle && <Nav.Knapp onClick={slettHandle}>Slett</Nav.Knapp> }
+                { slettHandle && <Nav.Knapp disabled={!redigerbart} onClick={slettHandle}>Slett</Nav.Knapp> }
               </div>
             </Nav.Column>
           </Nav.Row>
@@ -58,6 +58,7 @@ const Organisasjon = props => {
 Organisasjon.propTypes = {
   organisasjon: MPT.Organisasjon.isRequired,
   slettHandle: PT.func,
+  redigerbart: PT.bool.isRequired,
 };
 
 Organisasjon.defaultProps = {

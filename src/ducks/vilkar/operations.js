@@ -12,6 +12,9 @@ import { doThenDispatch } from '../../services/utils';
 
 import * as Types from './types';
 import * as Actions from '../vilkar/actions';
+import * as Selectors from './selectors';
+
+import { behandlingerSelectors } from '../behandlinger';
 
 export function hent(behandlingID) {
   return doThenDispatch(() => Api.Vilkar.hent(behandlingID), {
@@ -27,6 +30,14 @@ export function send(behandlingID, body) {
     FEILET: Types.FEILET,
     PENDING: Types.PENDING,
   });
+}
+
+export function lagre() {
+  return (dispatch, getState) => {
+    const vilkar = Selectors.VilkarSelector(getState());
+    const bid = behandlingerSelectors.BehandlingIDSelector(getState());
+    dispatch(send(bid, vilkar));
+  };
 }
 
 export function oppdaterVilkarState(skjema) {
