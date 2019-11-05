@@ -158,17 +158,6 @@ class Personopplysninger extends Component {
 
   settVisAnnenAdresseFelterTrue = () => this.setState({ visAnnenAdresseFelter: true });
 
-  sjekkPerson = fnr => {
-    const { alleRelevantePersoner } = this.props;
-    const { hentPerson } = this.props;
-
-    const eksistererPersonenLokalt = alleRelevantePersoner.some(person => person.fnr === fnr);
-
-    if (!eksistererPersonenLokalt) {
-      hentPerson(fnr);
-    }
-  };
-
   render() {
     const { redigerbart, person, personhistorikk } = this.props;
 
@@ -272,8 +261,6 @@ class Personopplysninger extends Component {
 Personopplysninger.propTypes = {
   registrering: PT.bool,
   redigerbart: PT.bool.isRequired,
-  alleRelevantePersoner: PT.arrayOf(MPT.Behandlinger.Saksopplysninger.Person).isRequired,
-  hentPerson: PT.func.isRequired,
   medfolgendeAndre: MPT.Behandlinger.Saksopplysninger.Person,
   person: MPT.Behandlinger.Saksopplysninger.Person.isRequired,
   personhistorikk: MPT.Personhistorikk.isRequired,
@@ -287,7 +274,6 @@ Personopplysninger.defaultProps = {
 };
 
 const mapStateToProps = state => ({
-  alleRelevantePersoner: PersonSelectors.personerSelector(state),
   personOpplysninger: soknadSelectors.PersonOpplysningerSelector(state),
   person: behandlingerSelectors.PersonSelector(state),
   personhistorikk: behandlingerSelectors.PersonhistorikkSelector(state),
@@ -296,8 +282,4 @@ const mapStateToProps = state => ({
   oppgittAdresseHarVerdier: formSelectors.OppgittAdresseHarVerdierSelector(state),
 });
 
-const mapDispatchToProps = dispatch => ({
-  hentPerson: fnr => dispatch(PersonOperations.hent(fnr)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Personopplysninger);
+export default connect(mapStateToProps)(Personopplysninger);
