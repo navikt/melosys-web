@@ -31,3 +31,7 @@ export function oppdaterPeriode(periode) {
 export function resetSoknadState() {
   return { type: Types.RESET };
 }
+
+export function OK(data) {
+  return { type: Types.OK, data };
+}
