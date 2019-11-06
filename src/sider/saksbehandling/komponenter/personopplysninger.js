@@ -22,7 +22,6 @@ import UtenlandskIdent from './personopplysninger/utenlandskIdent';
 
 import './personopplysninger.css';
 import { behandlingerSelectors } from '../../../ducks/behandlinger';
-import { PersonSelectors, PersonOperations } from '../../../ducks/personer';
 import { soknadSelectors } from '../../../ducks/soknad';
 import { formSelectors } from '../../../ducks/form';
 import { redigerbartSelectors } from '../../../ducks/redigerbart';
