@@ -16,13 +16,13 @@ describe('personer reducer', () => {
   it('returnerer ny state med gamle og nye personer, status OK ved ok action', () => {
     initialState = {
       data: [
-        { fnr: 20 },
+        { fnr: 17117802280 },
       ],
     };
-    const data = { fnr: 10 };
+    const data = { fnr: 19117220349 };
 
     const reducedState = reducer(initialState, actions.OK(data));
-    expect(reducedState).toEqual({ data: [{ fnr: 20 }, { fnr: 10 }], status: Utils.STATUS.OK });
+    expect(reducedState).toEqual({ data: [{ fnr: 17117802280 }, { fnr: 19117220349 }], status: Utils.STATUS.OK });
   });
 
   it('returnerer ny state ved soknad/ok action når initialState er satt til feilobjekt', () => {
@@ -35,13 +35,13 @@ describe('personer reducer', () => {
     const data = {
       tilleggsData: {
         personer: [
-          { fnr: 10 },
+          { fnr: 19117220349 },
         ],
       },
     };
 
     const reducedState = reducer(initialState, SoknadActions.OK(data));
-    expect(reducedState).toEqual({ data: [{ fnr: 10 }], status: Utils.STATUS.OK });
+    expect(reducedState).toEqual({ data: [{ fnr: 19117220349 }], status: Utils.STATUS.OK });
   });
 
   it('returnerer ny state ved ok action når initialState er satt til feilobjekt', () => {
@@ -51,10 +51,10 @@ describe('personer reducer', () => {
         status: 404,
       },
     };
-    const data = { fnr: 10 };
+    const data = { fnr: 19117220349 };
 
     const reducedState = reducer(initialState, actions.OK(data));
-    expect(reducedState).toEqual({ data: [{ fnr: 10 }], status: Utils.STATUS.OK });
+    expect(reducedState).toEqual({ data: [{ fnr: 19117220349 }], status: Utils.STATUS.OK });
   });
 
   it('returnerer ny state med status PENDING ved pending action', () => {
