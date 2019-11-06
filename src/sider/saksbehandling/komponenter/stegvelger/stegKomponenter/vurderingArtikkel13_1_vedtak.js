@@ -19,25 +19,27 @@ import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../
 import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
 import { soknadSelectors } from '../../../../../ducks/soknad';
 
+import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
+
 import './vurderingArtikkel13_1_vedtak.css';
 
-export const VurderingArtikkel13_1_Vedtak = props => {
-  const {
-    redigerbart,
-    behandlingID,
-    lovvalgsperiode,
-    lagreOgFatteVedtak,
-    formIsValid,
-    formValues,
-    touch,
-    endreLovvalgsPeriode,
-    tilstand: { overskrift },
-    lagreLovvalgsperioder,
-    byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
-  } = props;
+export const VurderingArtikkel13_1_Vedtak = ({
+  redigerbart,
+  behandlingID,
+  lovvalgsperiode,
+  lagreOgFatteVedtak,
+  formIsValid,
+  formValues,
+  touch,
+  endreLovvalgsPeriode,
+  tilstand: { overskrift },
+  lagreLovvalgsperioder,
+  byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
+}) => {
+  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
 
   const vedCheck = e => {
-    if (e.target.value === 'true') {
+    if (!e.target.checked) {
       gjenopprettOpprinneligLovvalgsperiode();
     }
   };
@@ -56,7 +58,7 @@ export const VurderingArtikkel13_1_Vedtak = props => {
       await forkortLovvalgsperiode();
     }
 
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND);
+    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND, vedtaksbrevFritekst);
   };
 
   const vedKlikkForhandsvis = async () => {
@@ -77,6 +79,7 @@ export const VurderingArtikkel13_1_Vedtak = props => {
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV_FLERE_LAND,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
+        fritekst: vedtaksbrevFritekst,
       },
     },
     {
@@ -103,14 +106,14 @@ export const VurderingArtikkel13_1_Vedtak = props => {
         redigerbart &&
         <Fragment>
           <Nav.Element className="undertittel">Lovvalgsperiode</Nav.Element>
-          <Nav.Row className="lovvalgsperiodeRow">
+          <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}
             </Nav.Column>
           </Nav.Row>
         </Fragment>
       }
-      <Nav.Row className="checkboxRow">
+      <Nav.Row className="forkortLovvalgsperiode">
         <Nav.Column xs="6">
           <Skjema.Checkbox feltNavn="forkortLovvalgsperiode" label="Lovvalgsperioden er avkortet." disabled={!redigerbart} onClick={vedCheck} />
         </Nav.Column>
@@ -139,6 +142,18 @@ export const VurderingArtikkel13_1_Vedtak = props => {
           </Nav.Row>
         </Fragment>
       }
+      <Nav.Row className="fritekst">
+        <Nav.Column xs="8">
+          <Nav.Textarea
+            label="Fritekst til vedtaksbrev"
+            placeholder="Skriv inn tekst til vedtaksbrevet..."
+            value={vedtaksbrevFritekst}
+            onChange={setVedtaksbrevFritekst}
+            maxLength={500}
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6">
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} vedKlikk={vedKlikkForhandsvis} />}

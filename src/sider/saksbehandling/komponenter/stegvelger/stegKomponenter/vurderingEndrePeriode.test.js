@@ -14,7 +14,7 @@ describe('vurderingEndrePeriode', () => {
       behandlingID: 1,
       lovvalgsPeriode: {},
       endreDatoOgSendLovvalgsperioderHandler: jest.fn(),
-      vedtaEndretPeriode: jest.fn(),
+      endreVedtak: jest.fn(),
       tilForsiden: jest.fn(),
       redigerbart: true,
       tilstand: {
