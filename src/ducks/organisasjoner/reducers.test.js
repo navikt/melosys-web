@@ -16,13 +16,13 @@ describe('organisasjoner reducer', () => {
   it('returnerer ny state med gamle og nye organisasjoner, status OK ved ok action', () => {
     initialState = {
       data: [
-        { orgnr: 20 },
+        { orgnr: 810072512 },
       ],
     };
-    const data = { orgnr: 10 };
+    const data = { orgnr: 873152362 };
 
     const reducedState = reducer(initialState, actions.OK(data));
-    expect(reducedState).toEqual({ data: [{ orgnr: 20 }, { orgnr: 10 }], status: Utils.STATUS.OK });
+    expect(reducedState).toEqual({ data: [{ orgnr: 810072512 }, { orgnr: 873152362 }], status: Utils.STATUS.OK });
   });
 
   it('returnerer ny state ved soknad/ok action når initialState er satt til feilobjekt', () => {
@@ -35,13 +35,13 @@ describe('organisasjoner reducer', () => {
     const data = {
       tilleggsData: {
         organisasjoner: [
-          { orgnr: 10 },
+          { orgnr: 873152362 },
         ],
       },
     };
 
     const reducedState = reducer(initialState, SoknadActions.OK(data));
-    expect(reducedState).toEqual({ data: [{ orgnr: 10 }], status: Utils.STATUS.OK });
+    expect(reducedState).toEqual({ data: [{ orgnr: 873152362 }], status: Utils.STATUS.OK });
   });
 
   it('returnerer ny state ved ok action når initialState er satt til feilobjekt', () => {
@@ -51,10 +51,10 @@ describe('organisasjoner reducer', () => {
         status: 404,
       },
     };
-    const data = { orgnr: 10 };
+    const data = { orgnr: 873152362 };
 
     const reducedState = reducer(initialState, actions.OK(data));
-    expect(reducedState).toEqual({ data: [{ orgnr: 10 }], status: Utils.STATUS.OK });
+    expect(reducedState).toEqual({ data: [{ orgnr: 873152362 }], status: Utils.STATUS.OK });
   });
 
   it('returnerer ny state med status PENDING ved pending action', () => {
