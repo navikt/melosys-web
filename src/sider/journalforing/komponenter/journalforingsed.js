@@ -12,29 +12,10 @@ import * as MPT from '../../../proptypes';
 import * as KV from '../../../kodeverk';
 import * as Ikoner from '../../../resources/images';
 
+import { Overskrift } from './overskrift';
 import { journalforingSelectors } from '../../../ducks/journalforing';
 
 import './journalforingsed.css';
-
-const Overskrift = ({
-  ikon,
-  tekst,
-  className,
-}) => (
-  <Nav.Undertittel className={className}>
-    <img src={ikon} height={25} alt={tekst} />{tekst}
-  </Nav.Undertittel>
-);
-
-Overskrift.propTypes = {
-  ikon: PT.any.isRequired,
-  tekst: PT.string.isRequired,
-  className: PT.string,
-};
-
-Overskrift.defaultProps = {
-  className: undefined,
-};
 
 const JournalforingSED = ({
   avsenderID,
