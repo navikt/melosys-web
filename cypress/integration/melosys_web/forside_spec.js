@@ -1,15 +1,16 @@
 /* eslint-disable no-undef */
-describe('Home', () => {
+describe('Forsiden', () => {
   beforeEach(() => {
     cy.visit('/');
   });
   it('Laste startsiden', () => {
-    cy.wait(1000);
-  });
+    cy.get('.journalOppgave__link')
+      .should('have.length', 3);
+    cy.get('.behandlingOppgave__link')
+      .should('have.length', 5);
+    cy.get('[name="behandlingsortering"]:checked')
+      .should('have.value', 'descending');
 
-  it('Søke etter person', () => {
-    cy.get('#sokeskjema_id')
-      .type('17117802280')
-      .type('{enter}');
+    cy.wait(2000);
   });
 });

@@ -39,7 +39,7 @@ class SokSkjema extends Component {
         <p>Oversikt over alle saker og behandlinger på en person</p>
         <form className="sokeskjema" onSubmit={this.vedSokSubmit}>
           <Nav.Input
-            id="sokeskjema_id"
+            id="id-sokeskjema"
             label=""
             className="sokeskjema__input"
             bredde="XL"
