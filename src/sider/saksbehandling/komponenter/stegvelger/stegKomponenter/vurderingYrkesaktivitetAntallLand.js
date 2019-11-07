@@ -50,7 +50,7 @@ const VurderingYrkesaktivitetAntallLand = props => {
           label="To eller flere land (med regelmessig veksling)" />
       </Nav.Fieldset>
       <div className="fane__knapplinje">
-        <Nav.Knapp disabled={!redigerbart || !harAvklaring} className="fane__navigasjonsknapp" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
+        <Nav.Knapp disabled={!redigerbart || !harAvklaring} className="fane__navigasjonsknapp" cy_nesteknapp="knapp_steg2" onClick={bekreftOgFortsett}>Bekreft og fortsett</Nav.Knapp>
       </div>
     </div>
   );
