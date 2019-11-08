@@ -24,7 +24,7 @@ class ErrorBoundary extends React.Component {
     this.setState({
       hasError: true,
     });
-    Utils.logger.error({ error, stack: errorInfo.componentStack });
+    window.frontendlogger.error({ error, stack: errorInfo.componentStack });
   }
 
   render() {
