@@ -25,14 +25,26 @@ export default function reducer(state = initalState, action) {
     case SoknadTypes.OK: {
       if (!action.data.tilleggsData) { return state; }
       const { personer } = action.data.tilleggsData;
-      return { ...state, status: STATUS.OK, data: flettPersoner(personer, state.data) };
+      const eksisterendePersoner = Array.isArray(state.data) ? state.data : [];
+
+      return {
+        ...state,
+        status: STATUS.OK,
+        data: flettPersoner(personer, eksisterendePersoner),
+      };
     }
     case Types.PENDING:
       return { ...state, status: STATUS.PENDING };
     case Types.FEILET:
       return { ...state, status: STATUS.ERROR, data: action.data };
     case Types.OK: {
-      return { ...state, status: STATUS.OK, data: flettPersoner(action.data, state.data) };
+      const eksisterendePersoner = Array.isArray(state.data) ? state.data : [];
+
+      return {
+        ...state,
+        status: STATUS.OK,
+        data: flettPersoner(action.data, eksisterendePersoner),
+      };
     }
     default:
       return state;

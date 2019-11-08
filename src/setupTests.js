@@ -14,7 +14,15 @@ global.mount = mount;
 global.each = each;
 
 // Mocker frontendlogger
-global.frontendlogger = {};
-global.frontendlogger.info = () => {};
-global.frontendlogger.warn = () => {};
-global.frontendlogger.error = () => {};
+global.frontendlogger = {
+  info: jest.fn(),
+  warn: jest.fn(),
+  error: jest.fn(),
+};
+
+// Mocker localStorage
+global.localStorage = {
+  removeItem: jest.fn(),
+  setItem: jest.fn(),
+  getItem: jest.fn(),
+};
