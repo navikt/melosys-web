@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
-describe.only('12.1 Utsending til annet land', () => {
+describe('12.1 utsending arbeidstaker', () => {
   beforeEach(() => {
     cy.visit('/saksbehandling/4/?behandlingID=4');
   });
-  it('Kontroller inngangsvilkår', () => {
+  it('Kontroller stegvelger flyten', () => {
     cy.get('[cy_nesteknapp="knapp_steg0"]')
       .click();
 

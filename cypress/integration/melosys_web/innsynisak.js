@@ -5,6 +5,7 @@ describe('Innsyn i sak', () => {
       // eslint-disable-next-line no-param-reassign
       win.fetch = null;
     });
+    cy.fixture('innsynisak');
     cy.visit('/');
     cy.get('#id-sokeskjema')
       .type('17117802280')
