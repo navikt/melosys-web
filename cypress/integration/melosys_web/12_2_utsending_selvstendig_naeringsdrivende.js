@@ -6,16 +6,19 @@ describe('12.2 utsending næringsdrivende', () => {
     cy.visit('/saksbehandling/4/?behandlingID=4');
   });
   it('Kontroller stegvelger flyten', () => {
-    cy.get('[cy_nesteknapp="knapp_steg0"]')
+    cy.get('.panel.stegFane.steg0.stegFane--aktiv')
+      .find('[cy_nesteknapp="knapp_steg0"]')
       .click();
 
-    cy.get('.skjemaelement__input.radioknapp')
+    cy.get('.panel.stegFane.steg1.stegFane--aktiv')
+      .find('.skjemaelement__input.radioknapp')
       .check(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER, { force: true })
       .should('be.checked');
     cy.get('[cy_nesteknapp="knapp_steg1"]')
       .click();
 
-    cy.get('[name="yrkesaktivitetAntallLand"]')
+    cy.get('.panel.stegFane.steg2.stegFane--aktiv')
+      .find('[name="yrkesaktivitetAntallLand"]')
       .eq(1)
       .check(KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE, { force: true })
       .should('be.checked');

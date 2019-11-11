@@ -1,26 +1,31 @@
 /* eslint-disable no-undef */
+import * as KV from '../../../src/kodeverk';
+
 describe('12.1 utsending arbeidstaker', () => {
   beforeEach(() => {
     cy.visit('/saksbehandling/4/?behandlingID=4');
   });
   it('Kontroller stegvelger flyten', () => {
-    cy.get('[cy_nesteknapp="knapp_steg0"]')
+    cy.get('.panel.stegFane.steg0.stegFane--aktiv')
+      .find('[cy_nesteknapp="knapp_steg0"]')
       .click();
 
-    cy.get('.skjemaelement__input.radioknapp')
-      .check('ORDINAER', { force: true })
+    cy.get('.panel.stegFane.steg1.stegFane--aktiv')
+      .find('.skjemaelement__input.radioknapp')
+      .check(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER, { force: true })
       .should('be.checked');
     cy.get('[cy_nesteknapp="knapp_steg1"]')
       .click();
 
-    cy.get('[name="yrkesaktivitetAntallLand"]')
+    cy.get('.panel.stegFane.steg2.stegFane--aktiv')
+      .find('[name="yrkesaktivitetAntallLand"]')
       .eq(1)
-      .check('ETT_LAND_IKKE_NORGE', { force: true })
+      .check(KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE, { force: true })
       .should('be.checked');
     cy.get('[cy_nesteknapp="knapp_steg2"]')
       .click();
 
-    cy.get('.panel.stegFane.steg3')
+    cy.get('.panel.stegFane.steg3.stegFane--aktiv')
       .find('[type="checkbox"]')
       .eq(0)
       .check({ force: true })
@@ -28,38 +33,43 @@ describe('12.1 utsending arbeidstaker', () => {
     cy.get('[cy_nesteknapp="knapp_steg3"]')
       .click();
 
-    cy.get('[name="yrkesaktivitet"]')
-      .check('ORDINAER_ARBEIDSTAKER', { force: true })
+    cy.get('.panel.stegFane.steg4.stegFane--aktiv')
+      .find('[name="yrkesaktivitet"]')
+      .check(KV.Koder.VurderingYrkesaktivitetTyper.ORDINAER_ARBEIDSTAKER, { force: true })
       .should('be.checked');
     cy.get('[cy_nesteknapp="knapp_steg4"]')
       .click();
 
-    cy.get('[name="forutgaendeMedlemskap"]')
+    cy.get('.panel.stegFane.steg5.stegFane--aktiv')
+      .find('[name="forutgaendeMedlemskap"]')
       .eq(0)
       .check({ force: true })
       .should('be.checked');
     cy.get('[cy_nesteknapp="knapp_steg5"]')
       .click();
 
-    cy.get('[name="vesentligVirksomhet"]')
+    cy.get('.panel.stegFane.steg6.stegFane--aktiv')
+      .find('[name="vesentligVirksomhet"]')
       .eq(0)
       .check({ force: true })
       .should('be.checked');
     cy.get('[cy_nesteknapp="knapp_steg6"]')
       .click({ force: true });
 
-    cy.get('[name="artikkel12"]')
-      .eq(0)
-      .check({ force: true });
-
-    cy.get('.panel.stegFane.steg7')
-      .find('[type="radio"]')
+    cy.get('.panel.stegFane.steg7.stegFane--aktiv')
+      .find('[name="artikkel12"]')
       .eq(0)
       .check({ force: true })
       .should('be.checked');
-    cy.get('.panel.stegFane.steg7')
+
+    cy.get('.panel.stegFane.steg7.stegFane--aktiv')
       .find('button')
-      .click({ force: true });
+      .click();
+
+    cy.get('.panel.stegFane.steg8.stegFane--aktiv')
+      .find('textarea')
+      .type('fritekst til vedtaksbrev')
+      .blur();
     cy.contains('Fatt vedtak')
       .click();
   });
