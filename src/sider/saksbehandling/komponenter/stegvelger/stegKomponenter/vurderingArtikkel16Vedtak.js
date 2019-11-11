@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useCallback } from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
@@ -15,7 +15,13 @@ import { anmodningsperioderSelectors } from '../../../../../ducks/anmodningsperi
 import { anmodningsperiodesvarSelectors } from '../../../../../ducks/anmodningsperiodesvar';
 import { vilkarSelectors } from '../../../../../ducks/vilkar';
 
-export const VurderingArtikkel16VedtakBegrunnelser = ({ art12_1_begrunnelser, art12_2_begrunnelser, vilkarBegrunnelser }) => {
+import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
+
+export const VurderingArtikkel16VedtakBegrunnelser = ({
+  art12_1_begrunnelser,
+  art12_2_begrunnelser,
+  vilkarBegrunnelser,
+}) => {
   const muligeVirksomhetBegrunnelser = [
     ...MKV.KTObjects.begrunnelser.art12_2_normalt_virksomhet,
     ...MKV.KTObjects.begrunnelser.art12_1_vesentlig_virksomhet,
@@ -60,20 +66,19 @@ VurderingArtikkel16VedtakBegrunnelser.propTypes = {
   vilkarBegrunnelser: PT.arrayOf(PT.string).isRequired,
 };
 
-export const Innvilgelse = props => {
-  const {
-    redigerbart,
-    behandlingID,
-    gjeldendePeriode,
-    begrunnelseFritekst,
-  } = props;
-
+export const Innvilgelse = ({
+  redigerbart,
+  behandlingID,
+  gjeldendePeriode,
+  renderFritekstFelt,
+  vedtaksbrevFritekst,
+}) => {
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
-        begrunnelseFritekst,
+        fritekst: vedtaksbrevFritekst,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
@@ -81,7 +86,6 @@ export const Innvilgelse = props => {
       navn: 'Brev til arbeidsgiver',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
-        begrunnelseFritekst,
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
@@ -97,6 +101,11 @@ export const Innvilgelse = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
+          { renderFritekstFelt() }
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
         </Nav.Column>
       </Nav.Row>
@@ -108,28 +117,24 @@ Innvilgelse.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   gjeldendePeriode: MPT.Periode.isRequired,
-  begrunnelseFritekst: PT.string,
+  vedtaksbrevFritekst: PT.string.isRequired,
+  renderFritekstFelt: PT.func.isRequired,
 };
 
-Innvilgelse.defaultProps = {
-  begrunnelseFritekst: '',
-};
-
-export const DelvisInnvilgelse = props => {
-  const {
-    redigerbart,
-    behandlingID,
-    gjeldendePeriode,
-    begrunnelseFritekst,
-    renderBegrunnelser,
-  } = props;
-
+export const DelvisInnvilgelse = ({
+  redigerbart,
+  behandlingID,
+  gjeldendePeriode,
+  vedtaksbrevFritekst,
+  renderFritekstFelt,
+  renderBegrunnelser,
+}) => {
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev og A1',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV,
       data: {
-        begrunnelseFritekst,
+        fritekst: vedtaksbrevFritekst,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
@@ -137,7 +142,6 @@ export const DelvisInnvilgelse = props => {
       navn: 'Brev til arbeidsgiver',
       type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER,
       data: {
-        begrunnelseFritekst,
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
@@ -158,6 +162,11 @@ export const DelvisInnvilgelse = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
+          { renderFritekstFelt() }
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
         </Nav.Column>
       </Nav.Row>
@@ -169,28 +178,24 @@ DelvisInnvilgelse.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
   gjeldendePeriode: MPT.Periode.isRequired,
-  begrunnelseFritekst: PT.string,
+  vedtaksbrevFritekst: PT.string.isRequired,
+  renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
 };
 
-DelvisInnvilgelse.defaultProps = {
-  begrunnelseFritekst: '',
-};
-
-export const Avslag = props => {
-  const {
-    redigerbart,
-    behandlingID,
-    begrunnelseFritekst,
-    renderBegrunnelser,
-  } = props;
-
+export const Avslag = ({
+  redigerbart,
+  behandlingID,
+  vedtaksbrevFritekst,
+  renderFritekstFelt,
+  renderBegrunnelser,
+}) => {
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
-        begrunnelseFritekst,
+        fritekst: vedtaksbrevFritekst,
         mottaker: MKV.Koder.aktoersroller.BRUKER,
       },
     },
@@ -198,7 +203,6 @@ export const Avslag = props => {
       navn: 'Brev til arbeidsgiver',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_ARBEIDSGIVER,
       data: {
-        begrunnelseFritekst,
         mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER,
       },
     },
@@ -214,6 +218,11 @@ export const Avslag = props => {
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="7">
+          { renderFritekstFelt() }
+        </Nav.Column>
+      </Nav.Row>
+      <Nav.Row>
+        <Nav.Column xs="7">
           {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
         </Nav.Column>
       </Nav.Row>
@@ -224,32 +233,54 @@ export const Avslag = props => {
 Avslag.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
-  begrunnelseFritekst: PT.string,
+  vedtaksbrevFritekst: PT.string.isRequired,
+  renderFritekstFelt: PT.func.isRequired,
   renderBegrunnelser: PT.func.isRequired,
 };
 
-Avslag.defaultProps = {
-  begrunnelseFritekst: '',
-};
+export const VurderingArtikkel16Vedtak = ({
+  lagreOgFatteVedtak,
+  redigerbart,
+  behandlingID,
+  anmodningsperiodesvar,
+  anmodningsperiode,
+  art_12_1_begrunnelser,
+  art_12_2_begrunnelser,
+  vilkarBegrunnelser,
+}) => {
+  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
 
-export const VurderingArtikkel16Vedtak = props => {
-  const {
-    lagreOgFatteVedtak, redigerbart, behandlingID, anmodningsperiodesvar, anmodningsperiode, art_12_1_begrunnelser, art_12_2_begrunnelser, vilkarBegrunnelser,
-  } = props;
+  const { anmodningsperiodeSvarType, endretPeriode } = anmodningsperiodesvar;
 
-  const { anmodningsperiodeSvarType, endretPeriode, begrunnelseFritekst } = anmodningsperiodesvar;
+  const vedKlikk = useCallback(() => {
+    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND, vedtaksbrevFritekst);
+  }, [vedtaksbrevFritekst]);
 
-  const vedKlikk = () => {
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND);
-  };
-
-  const renderBegrunnelser = () => (
+  const renderBegrunnelser = useCallback(() => (
     <VurderingArtikkel16VedtakBegrunnelser
       art12_1_begrunnelser={art_12_1_begrunnelser}
       art12_2_begrunnelser={art_12_2_begrunnelser}
       vilkarBegrunnelser={vilkarBegrunnelser}
     />
-  );
+  ), [
+    art_12_1_begrunnelser,
+    art_12_2_begrunnelser,
+    vilkarBegrunnelser,
+  ]);
+
+  const renderFritekstFelt = useCallback(() => (
+    <Nav.Textarea
+      label="Fritekst til vedtaksbrev"
+      placeholder="Skriv inn tekst til vedtaksbrevet..."
+      value={vedtaksbrevFritekst}
+      onChange={setVedtaksbrevFritekst}
+      maxLength={500}
+      disabled={!redigerbart}
+    />
+  ), [
+    vedtaksbrevFritekst,
+    redigerbart,
+  ]);
 
   const finnVedtakInnhold = svarType => {
     switch (svarType) {
@@ -257,14 +288,16 @@ export const VurderingArtikkel16Vedtak = props => {
         return <Innvilgelse
           redigerbart={redigerbart}
           behandlingID={behandlingID}
-          begrunnelseFritekst={begrunnelseFritekst}
+          renderFritekstFelt={renderFritekstFelt}
+          vedtaksbrevFritekst={vedtaksbrevFritekst}
           gjeldendePeriode={{ fom: anmodningsperiode.fomDato, tom: anmodningsperiode.tomDato }}
         />;
       case MKV.Koder.anmodningsperiodesvartyper.DELVIS_INNVILGELSE:
         return <DelvisInnvilgelse
           redigerbart={redigerbart}
           behandlingID={behandlingID}
-          begrunnelseFritekst={begrunnelseFritekst}
+          renderFritekstFelt={renderFritekstFelt}
+          vedtaksbrevFritekst={vedtaksbrevFritekst}
           gjeldendePeriode={endretPeriode}
           renderBegrunnelser={renderBegrunnelser}
         />;
@@ -272,7 +305,8 @@ export const VurderingArtikkel16Vedtak = props => {
         return <Avslag
           redigerbart={redigerbart}
           behandlingID={behandlingID}
-          begrunnelseFritekst={begrunnelseFritekst}
+          renderFritekstFelt={renderFritekstFelt}
+          vedtaksbrevFritekst={vedtaksbrevFritekst}
           renderBegrunnelser={renderBegrunnelser}
         />;
       default:
@@ -286,7 +320,7 @@ export const VurderingArtikkel16Vedtak = props => {
     <Fragment>
       { vedtakInnhold }
       <Nav.Row>
-        <Nav.Column xs="7">
+        <Nav.Column xs="7" className="fane__fot">
           <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikk}>FATT VEDTAK</Nav.Hovedknapp>
         </Nav.Column>
       </Nav.Row>

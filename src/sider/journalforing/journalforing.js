@@ -250,7 +250,7 @@ class Journalforing extends Component {
     const { sokFnrDnr, settFeltInnhold, hentFagsakListe } = this.props;
     settFeltInnhold('brukerNavn', '');
     const response = await sokFnrDnr(brukerID);
-    if (!response.data) { return false; }
+    if (!response || !response.data) { return false; }
     const { sammensattNavn = '' } = response.data;
     if (!sammensattNavn) { return false; }
     settFeltInnhold('brukerNavn', sammensattNavn);
@@ -270,7 +270,7 @@ class Journalforing extends Component {
     if (value.length === ANTALL_TALL_I_ORGNR) {
       settFeltInnhold('avsenderNavn', '');
       const response = await sokOrgnr(value);
-      if (!response.data) { return false; }
+      if (!response || !response.data) { return false; }
       const { navn = '' } = response.data;
       settFeltInnhold('avsenderNavn', navn);
     }
@@ -278,7 +278,7 @@ class Journalforing extends Component {
     if (Person.erGyldigFnr(value) || Person.erGyldigDnr(value)) {
       settFeltInnhold('avsenderNavn', '');
       const response = await sokFnrDnr(value);
-      if (!response.data) { return false; }
+      if (!response || !response.data) { return false; }
       const { sammensattNavn = '' } = response.data;
       settFeltInnhold('avsenderNavn', sammensattNavn);
     }

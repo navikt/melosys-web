@@ -10,6 +10,8 @@ import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import Begrunnelser from '../../begrunnelser';
 
+import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
+
 const VurderingAvslag12_x_og_16 = ({
   valgte_art_12_1_begrunnelser,
   valgte_art_12_2_begrunnelser,
@@ -20,12 +22,15 @@ const VurderingAvslag12_x_og_16 = ({
   fattVedtak,
   redigerbart,
 }) => {
+  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
+
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis vedtaksbrev',
       type: MKV.Koder.brev.produserbaredokumenter.AVSLAG_YRKESAKTIV,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
+        fritekst: vedtaksbrevFritekst,
       },
     },
     {
@@ -77,8 +82,20 @@ const VurderingAvslag12_x_og_16 = ({
           fritekst={art16_1_fritekst}
         />
       }
+      <Nav.Row>
+        <Nav.Column xs="8">
+          <Nav.Textarea
+            label="Fritekst til vedtaksbrev"
+            placeholder="Skriv inn tekst til vedtaksbrevet..."
+            value={vedtaksbrevFritekst}
+            onChange={setVedtaksbrevFritekst}
+            maxLength={500}
+            disabled={!redigerbart}
+          />
+        </Nav.Column>
+      </Nav.Row>
       {redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
-      <Nav.Hovedknapp disabled={!redigerbart} onClick={() => fattVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND)}>
+      <Nav.Hovedknapp disabled={!redigerbart} onClick={() => fattVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND, vedtaksbrevFritekst)}>
         Fatt vedtak
       </Nav.Hovedknapp>
     </div>
