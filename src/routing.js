@@ -121,8 +121,8 @@ const Routing = ({
     tilForsiden();
   };
 
-  const lagreOgLukk = () => {
-    lagreAllData();
+  const lagreOgLukk = async () => {
+    await lagreAllData();
     tilForsiden();
   };
 
