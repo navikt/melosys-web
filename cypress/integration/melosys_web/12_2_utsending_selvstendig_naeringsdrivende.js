@@ -7,14 +7,14 @@ describe('12.2 utsending næringsdrivende', () => {
   });
   it('Kontroller stegvelger flyten', () => {
     cy.get('.panel.stegFane.steg0.stegFane--aktiv')
-      .find('[cy_nesteknapp="knapp_steg0"]')
+      .find('[data-cy-nesteknapp="knapp_steg0"]')
       .click();
 
     cy.get('.panel.stegFane.steg1.stegFane--aktiv')
       .find('.skjemaelement__input.radioknapp')
       .check(KV.Koder.VurderingYrkesgruppeTyper.ORDINAER, { force: true })
       .should('be.checked');
-    cy.get('[cy_nesteknapp="knapp_steg1"]')
+    cy.get('[data-cy-nesteknapp="knapp_steg1"]')
       .click();
 
     cy.get('.panel.stegFane.steg2.stegFane--aktiv')
@@ -22,27 +22,27 @@ describe('12.2 utsending næringsdrivende', () => {
       .eq(1)
       .check(KV.Koder.VurderingYrkesaktivitetAntallLandTyper.ETT_LAND_IKKE_NORGE, { force: true })
       .should('be.checked');
-    cy.get('[cy_nesteknapp="knapp_steg2"]').click();
+    cy.get('[data-cy-nesteknapp="knapp_steg2"]').click();
 
     cy.get('.panel.stegFane.steg3.stegFane--aktiv')
       .find('[type="checkbox"]')
       .eq(2) // MULTICONSULT
       .check({ force: true })
       .should('be.checked');
-    cy.get('[cy_nesteknapp="knapp_steg3"]').click();
+    cy.get('[data-cy-nesteknapp="knapp_steg3"]').click();
 
     cy.get('.panel.stegFane.steg4.stegFane--aktiv')
       .find('[name="yrkesaktivitet"]')
       .check(KV.Koder.VurderingYrkesaktivitetTyper.SELVSTENDIG_NAERINGSDRIVENDE, { force: true })
       .should('be.checked');
-    cy.get('[cy_nesteknapp="knapp_steg4"]').click();
+    cy.get('[data-cy-nesteknapp="knapp_steg4"]').click();
 
     cy.get('.panel.stegFane.steg5.stegFane--aktiv')
       .find('[name="normaltDriverVirksomhet"]')
       .first()
       .check('true', { force: true })
       .should('be.checked');
-    cy.get('[cy_nesteknapp="knapp_steg5"]').click();
+    cy.get('[data-cy-nesteknapp="knapp_steg5"]').click();
 
     cy.get('.panel.stegFane.steg6.stegFane--aktiv')
       .find('[name="artikkel12"]')
