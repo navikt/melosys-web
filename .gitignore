@@ -15,6 +15,10 @@
 # mocha + coverage
 /test
 
+#cypress
+/cypress/screenshots
+/cypress/videos
+
 # misc
 .idea
 !.idea/runConfigurations/
