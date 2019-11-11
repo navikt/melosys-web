@@ -99,7 +99,6 @@ const cachedFetch = async (url, cacheDurationSec) => {
     }
     // --------------------------------------------
     // We need to clean up this old key, before fetching fresh data
-    console.log('Delete/invalidate cache, due to stale cacheDuration'); // eslint-disable-line no-console
     removeCachedItem(cacheKey);
   }
 

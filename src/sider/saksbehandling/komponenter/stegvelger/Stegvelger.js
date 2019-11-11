@@ -157,9 +157,9 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  fatteVedtakHandler = async behandlingsresultatTypeKode => {
+  fatteVedtakHandler = async (behandlingsresultatTypeKode, fritekst) => {
     const { behandlingID, fattVedtak } = this.props;
-    const vedtakBody = { behandlingsresultatTypeKode };
+    const vedtakBody = { behandlingsresultatTypeKode, fritekst };
     try {
       await fattVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
@@ -168,10 +168,10 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = behandlingsresultatTypeKode => {
+  lagreOgFatteVedtak = (behandlingsresultatTypeKode, fritekst) => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.fatteVedtakHandler(behandlingsresultatTypeKode);
+      this.fatteVedtakHandler(behandlingsresultatTypeKode, fritekst);
     });
   };
 
@@ -248,10 +248,16 @@ class Stegvelger extends Component {
     Api.Lovvalgsperioder.send(behandlingID, forkortetPeriode).catch(e => Utils.logger.error(e));
   };
 
-  vedtaEndretPeriode = begrunnelseKode => {
+  endreVedtak = data => {
     const { behandlingID } = this.props;
 
-    Api.Saksflyt.Vedtak.endrePeriode(behandlingID, { begrunnelseKode }).catch(e => Utils.logger.error(e));
+    const utfyltData = {
+      behandlingstype: data.behandlingstype || null,
+      begrunnelseKode: data.begrunnelseKode || null,
+      fritekst: data.fritekst || null,
+    };
+
+    return Api.Saksflyt.Vedtak.endre(behandlingID, utfyltData).catch(Utils.logger.error);
   };
 
   tilForsiden = () => {
@@ -273,7 +279,7 @@ class Stegvelger extends Component {
       slettStegData: this.slettStegData,
       lagreVilkarHandler: this.props.lagreVilkarHandler,
       lagreAnmodningsperioderHandler: this.props.lagreAnmodningsperioderHandler,
-      vedtaEndretPeriode: this.vedtaEndretPeriode,
+      endreVedtak: this.endreVedtak,
       endreDatoOgSendLovvalgsperioderHandler: this.endreDatoOgSendLovvalgsperioderHandler,
       tilForsiden: this.tilForsiden,
       lagreOgBestillAnmodningsperioder: this.lagreOgBestillAnmodningsperioder,

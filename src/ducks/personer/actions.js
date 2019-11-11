@@ -1,7 +1,7 @@
+import * as types from './types';
 
-/**
- * Actions
- * -----------------------------------------------------------------------
- * Dette er action creators som returnerer Redux-klargjorte actions
- * uten support for asynkrone kall.
- */
+export const OK = data => ({ type: types.OK, data });
+
+export const PENDING = () => ({ type: types.PENDING });
+
+export const FEILET = data => ({ type: types.FEILET, data });
