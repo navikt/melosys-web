@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-describe('Innsyn i sak', () => {
+describe.skip('Innsyn i sak', () => {
   beforeEach(() => {
     Cypress.on('window:before:load', win => {
       // eslint-disable-next-line no-param-reassign
