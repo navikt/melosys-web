@@ -325,6 +325,7 @@ class VurderingArtikkel16Anmodning extends Component {
                 value={unntakFraBestemmelse || ''}
                 disabled={!redigerbart}
                 label="Artikkelen det søkes unntak fra:"
+                data-cy="unntakArtikkel"
               >
                 <option key={uuid()} value="" >Velg...</option>
                 { alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
@@ -337,10 +338,11 @@ class VurderingArtikkel16Anmodning extends Component {
                 disabled={!redigerbart}
                 feil={begrunnelserFeilmelding}
                 muligeValg={muligeBegrunnelseValg}
-                tillatFritekst={false}
+                tillatFritekst
                 label="Legg til begrunnelse:"
                 onChange={begrunnelserEndringHandler}
                 defaultElementer={begrunnelseKoder}
+                data_cy="begrunnelse"
               />
             </Nav.Column>
           </Nav.Row>
