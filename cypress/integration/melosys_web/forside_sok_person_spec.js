@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 describe('Forsiden personsøk', () => {
   beforeEach(() => {
     cy.visit('/');
