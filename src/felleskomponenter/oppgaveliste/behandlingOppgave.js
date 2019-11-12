@@ -71,7 +71,7 @@ const BehandlingOppgave = ({ sak }) => {
 
   return (
     <BehandlingOppgavesLinjeWrapper link={link} stengt={erUnderOppdatering}>
-      <Nav.Panel className={cl}>
+      <Nav.Panel data-cy-behandlingstype={behandlingstype.kode} className={cl}>
         <PanelHeader
           ikon={Ikoner.IkonSak}
           tittel={tittel}
