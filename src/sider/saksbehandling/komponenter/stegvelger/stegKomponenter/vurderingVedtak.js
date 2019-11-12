@@ -71,9 +71,7 @@ const VurderingVedtak = ({
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, alleLovvalg);
   const skalSendeSed = mottakerinstitusjoner.length > 0;
 
-  const pdfDokumenter = skalSendeSed ? [
-    { navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true },
-  ] : [
+  const pdfDokumenter = [
     { navn: 'Forhåndsvis vedtaksbrev og A1', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_YRKESAKTIV, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
   ];
 
@@ -84,6 +82,10 @@ const VurderingVedtak = ({
 
   if (lovvalgSomKodeTerm && visSedLenkeForLovvalgsbestemmelser.includes(lovvalgSomKodeTerm.kode)) {
     pdfDokumenter.push({ navn: 'Orienteringsbrev til arbeidsgiver', type: MKV.Koder.brev.produserbaredokumenter.INNVILGELSE_ARBEIDSGIVER, data: { mottaker: MKV.Koder.aktoersroller.ARBEIDSGIVER } });
+  }
+
+  if (skalSendeSed) {
+    pdfDokumenter.push({ navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true });
   }
 
   const fattVedtak = () => lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND, valgtMottakerinstitusjon);
