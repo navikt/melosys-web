@@ -3,6 +3,7 @@ import Arbeidsgiver from './ikon-arbeidsgiver.svg';
 import Arbeidsforhold from './ikon-arbeidsforhold.svg';
 import Binders from './paperclip.svg';
 import BrevSendt from './emailsend.svg';
+import CheckList from './check-list.svg';
 import Ferdig from './ikon-steg-ferdig.svg';
 import Feil from './ikon-steg-feil.svg';
 import Filenew from './line-version-file-new-1.svg';
@@ -28,6 +29,7 @@ export {
   Arbeidsforhold,
   Binders,
   BrevSendt as InnBrev,
+  CheckList,
   Feil,
   Ferdig,
   Filenew,

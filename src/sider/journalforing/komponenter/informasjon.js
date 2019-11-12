@@ -171,13 +171,12 @@ class Informasjon extends Component {
     const dokumentURI = (jpostID, dokID) => Api.Dokumenter.pdf.uriPath(jpostID, dokID);
     return (
       <div className="informasjon">
-        <Nav.Fieldset legend="Informasjon om brukeren">
-          <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
-          <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
-          { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
-        </Nav.Fieldset>
+        <Overskrift tekst="Informasjon om bruker" ikon={Ikoner.AccountCircle} className="undertittel oversteUndertittel" />
+        <Skjema.Input feltNavn="brukerID" label="Brukers fnr eller dnr:" onKeyUp={this.IDFeltTastOppHandler} />
+        <Skjema.Input feltNavn="brukerNavn" label="Brukers navn:" disabled />
+        { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
 
-        <Nav.Element className="informasjonOmAvsenderTittel">Informasjon om avsender</Nav.Element>
+        <Overskrift tekst="Informasjon om avsender" ikon={Ikoner.Globe} className="undertittel" />
         <AvsenderVelger
           className="avsenderVelger"
           kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}

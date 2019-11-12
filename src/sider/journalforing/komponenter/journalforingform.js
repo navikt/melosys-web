@@ -4,16 +4,16 @@ import { connect } from 'react-redux';
 import { reduxForm, getFormValues } from 'redux-form';
 import * as MKV from 'melosys-kodeverk';
 
+import * as Ikoner from '../../../resources/images';
 import * as KV from '../../../kodeverk';
 import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
-
+import { journalforingSelectors } from '../../../ducks/journalforing';
 import Informasjon from '../komponenter/informasjon';
 import EksisterendeSaker from '../komponenter/eksisterendeSaker';
 import OpprettNyFagSak from '../komponenter/opprettnyfagsak';
-
-import { journalforingSelectors } from '../../../ducks/journalforing';
+import { Overskrift } from './overskrift';
 
 const JournalforingForm = ({
   journalpostID,
@@ -38,6 +38,7 @@ const JournalforingForm = ({
       hentOgVisAvsender={hentOgVisAvsender}
       hentOgVisBruker={hentOgVisBruker}
     />
+    <Overskrift tekst="Knytt til brukers eksisterende sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
     <EksisterendeSaker
       behandlingstyper={behandlingstyper}
       fagsakListe={fagsakListe}
