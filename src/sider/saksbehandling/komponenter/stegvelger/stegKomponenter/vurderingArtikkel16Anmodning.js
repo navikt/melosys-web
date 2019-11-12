@@ -143,7 +143,7 @@ class VurderingArtikkel16Anmodning extends Component {
     oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1));
     oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
 
-    await this.hentMottakerinstitusjoner();
+    this.hentMottakerinstitusjoner();
   }
 
   componentWillUnmount() {

@@ -189,7 +189,7 @@ class Stegvelger extends Component {
   lagreOgBestillAnmodningsperioder = mottakerinstitusjon => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      await this.bestillAnmodningsperioder(mottakerinstitusjon);
+      this.bestillAnmodningsperioder(mottakerinstitusjon);
     });
   };
 
