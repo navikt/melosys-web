@@ -10,6 +10,7 @@ import * as Nav from '../../../../../utils/navFrontend';
 import * as MPT from '../../../../../proptypes';
 import * as Utils from '../../../../../utils';
 import * as KV from '../../../../../kodeverk';
+import * as Api from '../../../../../services/api';
 
 import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
@@ -132,24 +133,45 @@ class VurderingArtikkel16Anmodning extends Component {
     lovvalgFeilmelding: undefined,
     begrunnelserFeilmelding: undefined,
     fritekstFeilmelding: undefined,
+    mottakerinstitusjoner: [],
+    valgtMottakerinstitusjon: null,
   };
 
-  componentDidMount() {
+  async componentDidMount() {
     const { oppdaterData, tilstand: { art16_1 }, unntakFraBestemmelse } = this.props;
     oppdaterData(konverterTilStegData('art16_1_anmodning', art16_1));
     oppdaterData(konverterLovvalgsbestemmelseTilStegData(MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1));
     oppdaterData(konverterUnntakFraBestemmelseTilStegData(unntakFraBestemmelse));
+
+    this.hentMottakerinstitusjoner();
   }
 
   componentWillUnmount() {
     this.props.slettData();
   }
 
+  hentMottakerinstitusjoner = async () => {
+    try {
+      const soknadsland = this.props.gyldigeSoknadsland[0].kode;
+      const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(EKV.Koder.buctyper.legislation.LA_BUC_01, soknadsland);
+      this.setState({ mottakerinstitusjoner: institusjoner });
+
+      if (institusjoner.length > 0) {
+        this.setState({ valgtMottakerinstitusjon: institusjoner[0].id });
+      }
+    } catch (e) {
+      Utils.logger.error(e);
+    }
+  };
+
+  valgtMottakerinstitusjonHandler = e => this.setState({ valgtMottakerinstitusjon: e.target.value });
+
   lagreBehandlingerOgBestillAnmodningsperioder = async () => {
     const { oppdaterOgLagreBehandlinger, lagreOgBestillAnmodningsperioder } = this.props;
+    const { valgtMottakerinstitusjon } = this.state;
     try {
       await oppdaterOgLagreBehandlinger();
-      lagreOgBestillAnmodningsperioder();
+      lagreOgBestillAnmodningsperioder(valgtMottakerinstitusjon);
     } catch (e) {
       Utils.logger.error(e);
     }
@@ -265,16 +287,21 @@ class VurderingArtikkel16Anmodning extends Component {
       begrunnelserFeilmelding,
       fritekstFeilmelding,
       lovvalgFeilmelding,
+      mottakerinstitusjoner,
     } = this.state;
 
     const antallManeder = datoDiffMenneskelig(anmodningsperiode.fomDato, anmodningsperiode.tomDato);
 
     const landSomTekstListe = gyldigeSoknadsland.map(enkeltLandObjekt => enkeltLandObjekt.term).join(', ');
 
-    const pdfDokumenter = [
+    const skalSendeSed = mottakerinstitusjoner.length > 0;
+
+    const pdfDokumenter = skalSendeSed ? [
+      { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
+      { navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true },
+    ] : [
       { navn: 'Forhåndsvis orienteringsbrev til bruker', type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.BRUKER } },
       { navn: 'Forhåndsvis anmodning til utenlandsk myndighet', type: MKV.Koder.brev.produserbaredokumenter.ANMODNING_UNNTAK, data: { mottaker: MKV.Koder.aktoersroller.MYNDIGHET } },
-      { navn: 'Forhåndsvis SED A001', type: EKV.Koder.sedtyper.A001, erSed: true },
     ];
 
     const { art16_1: { begrunnelseFritekst, begrunnelseKoder }, muligeBegrunnelseValg, erIDirekteTilArtikkel16Flyt } = tilstand;
@@ -369,6 +396,17 @@ class VurderingArtikkel16Anmodning extends Component {
               </Nav.Fieldset>
             </Nav.Column>
           </Nav.Row>
+          {
+            skalSendeSed &&
+            <Nav.Row className="mottakerinstitusjoner">
+              <Nav.Column xs="7">
+                <Nav.Select label="Velg utenlandsk institusjon som skal motta SED" onChange={this.valgtMottakerinstitusjonHandler}>
+                  <option key={uuid()} value="" disabled>Velg...</option>
+                  {mottakerinstitusjoner.map(institusjon => <option key={institusjon.id} value={institusjon.id}>{institusjon.navn}</option>)}
+                </Nav.Select>
+              </Nav.Column>
+            </Nav.Row>
+          }
           <Nav.Row>
             <Nav.Column xs="6">
               {redigerbart && <PdfLenkeListe vedKlikk={validerAlt} behandlingID={behandlingID} dokumenter={pdfDokumenter} />}
