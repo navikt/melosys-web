@@ -64,10 +64,8 @@ const EksisterendeSaker = props => {
 
   return (
     <div className="eksisterendeSaker">
-      <Nav.Systemtittel>Knytt til brukers eksisterende sak</Nav.Systemtittel>
       {<Skjema.CustomRadioPanelGruppe
         feltNavn="saksnummer"
-        legend="Velg fra listen over saker:"
         radios={radioValg}
       />}
       { fagsakListe.length === 0 && 'Ingen eksisterende saker funnet.'}
