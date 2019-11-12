@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 describe.skip('Innsyn i sak', () => {
   beforeEach(() => {
     Cypress.on('window:before:load', win => {

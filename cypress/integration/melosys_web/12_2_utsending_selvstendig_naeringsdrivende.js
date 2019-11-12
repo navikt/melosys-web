@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import * as KV from '../../../src/kodeverk';
 
 describe('12.2 utsending næringsdrivende', () => {
