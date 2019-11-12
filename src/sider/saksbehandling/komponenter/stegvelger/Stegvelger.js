@@ -157,9 +157,9 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  fatteVedtakHandler = async behandlingsresultatTypeKode => {
+  fatteVedtakHandler = async (behandlingsresultatTypeKode, mottakerinstitusjon = null) => {
     const { behandlingID, fattVedtak } = this.props;
-    const vedtakBody = { behandlingsresultatTypeKode };
+    const vedtakBody = { behandlingsresultatTypeKode, mottakerinstitusjon };
     try {
       await fattVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
@@ -168,28 +168,28 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = behandlingsresultatTypeKode => {
+  lagreOgFatteVedtak = (behandlingsresultatTypeKode, mottakerinstitusjon) => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.fatteVedtakHandler(behandlingsresultatTypeKode);
+      this.fatteVedtakHandler(behandlingsresultatTypeKode, mottakerinstitusjon);
     });
   };
 
-  bestillAnmodningsperioder = () => {
+  bestillAnmodningsperioder = async (mottakerinstitusjon = null) => {
     const { behandlingID } = this.props;
-
+    const bestillAnmodningsperioderBody = { mottakerinstitusjon };
     try {
-      Api.Saksflyt.Anmodningsperioder.bestill(behandlingID);
+      await Api.Saksflyt.Anmodningsperioder.bestill(behandlingID, bestillAnmodningsperioderBody);
       this.tilForsiden();
     } catch (e) {
       Utils.logger.error(e);
     }
   };
 
-  lagreOgBestillAnmodningsperioder = () => {
+  lagreOgBestillAnmodningsperioder = mottakerinstitusjon => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.bestillAnmodningsperioder();
+      this.bestillAnmodningsperioder(mottakerinstitusjon);
     });
   };
 
