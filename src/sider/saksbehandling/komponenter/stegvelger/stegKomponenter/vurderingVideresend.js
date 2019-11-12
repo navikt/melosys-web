@@ -1,36 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
-import * as MPT from '../../../../../proptypes';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 
-import { konverterTilStegData, lagAvklartefaktaBegrunnelse } from '../../../../../regler/avklartefakta';
+import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
 
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 
 export const VurderingVideresend = ({
   redigerbart,
-  lagreAvklartefakta,
-  lagreAvklartefaktaOgVideresendSoknad,
+  videresendSoknad,
   behandlingID,
-  tilstand,
-  oppdaterData,
-  slettData,
 }) => {
-  const { bostedslandFakta = {} } = tilstand;
-  const { begrunnelseFritekst } = bostedslandFakta;
-
-  useEffect(() => {
-    oppdaterData(konverterTilStegData(MKV.Koder.avklartefaktatyper.IKKE_BOSATT_NORGE, bostedslandFakta));
-
-    return () => {
-      slettData();
-    };
-  }, []);
+  const [fritekst, setFritekst] = useEventTargetValueState('');
 
   const pdfDokumenter = [
     {
@@ -38,7 +24,7 @@ export const VurderingVideresend = ({
       type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
-        fritekst: begrunnelseFritekst,
+        fritekst,
       },
     },
     {
@@ -46,13 +32,13 @@ export const VurderingVideresend = ({
       type: MKV.Koder.brev.produserbaredokumenter.VIDERESENDT_SOEKNAD_UTLAND,
       data: {
         mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-        fritekst: begrunnelseFritekst,
+        fritekst,
       },
     },
   ];
 
-  const fritekstEndret = e => {
-    oppdaterData(lagAvklartefaktaBegrunnelse(MKV.Koder.avklartefaktatyper.IKKE_BOSATT_NORGE, null, null, e.target.value));
+  const vedKlikkVideresend = () => {
+    videresendSoknad(fritekst);
   };
 
   return (
@@ -63,22 +49,21 @@ export const VurderingVideresend = ({
           <Nav.Textarea
             disabled={!redigerbart}
             label="Begrunnelse og informasjon til utenlandske myndigheter"
-            value={begrunnelseFritekst || ''}
-            onChange={fritekstEndret}
+            value={fritekst || ''}
+            onChange={setFritekst}
           />
           {
             redigerbart &&
             <PdfLenkeListe
               dokumenter={pdfDokumenter}
               behandlingID={behandlingID}
-              vedKlikk={lagreAvklartefakta}
             />
           }
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
         <Nav.Column xs="6" className="fane__fot">
-          <Nav.Hovedknapp disabled={!redigerbart} onClick={lagreAvklartefaktaOgVideresendSoknad}>
+          <Nav.Hovedknapp disabled={!redigerbart} onClick={vedKlikkVideresend}>
             VIDERESEND SØKNAD
           </Nav.Hovedknapp>
         </Nav.Column>
@@ -90,13 +75,7 @@ export const VurderingVideresend = ({
 VurderingVideresend.propTypes = {
   redigerbart: PT.bool.isRequired,
   behandlingID: PT.number.isRequired,
-  tilstand: PT.shape({
-    bostedslandFakta: MPT.Avklartefakta,
-  }).isRequired,
-  oppdaterData: PT.func.isRequired,
-  slettData: PT.func.isRequired,
-  lagreAvklartefaktaOgVideresendSoknad: PT.func.isRequired,
-  lagreAvklartefakta: PT.func.isRequired,
+  videresendSoknad: PT.func.isRequired,
 };
 
 const mapStateToProps = state => ({
