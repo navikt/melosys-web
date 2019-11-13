@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import PT from 'prop-types';
 import * as MKV from 'melosys-kodeverk';
+import * as EKV from 'eessi-kodeverk';
 
 import * as Nav from '../../../../../utils/navFrontend';
 
@@ -34,6 +35,11 @@ export const VurderingVideresend = ({
         mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
         fritekst,
       },
+    },
+    {
+      navn: 'Forhåndsvis SED A008',
+      type: EKV.Koder.sedtyper.A008,
+      erSed: true,
     },
   ];
 
