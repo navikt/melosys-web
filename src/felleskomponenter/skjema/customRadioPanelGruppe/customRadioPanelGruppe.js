@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import PT from 'prop-types';
 import classNames from 'classnames';
 import { Field } from 'redux-form';
@@ -34,24 +34,38 @@ class CustomRadioPanel extends Component {
       'customRadioPanel--focused': hasFocus === true && !disabled,
       'customRadioPanel--disabled': disabled === true,
     });
-
+    const clsBehandlingsPanel = {
+      background: 'lightgray',
+      border: '1px solid #b7b1a9',
+      borderRadius: '3px',
+      margin: '0.5em 0',
+      padding: '0.5em',
+    };
     return (
-      <label className={cls} htmlFor={`${feltNavn}-${value}`}>
-        <input
-          {...inputProps}
-          className="radioPanel__Input"
-          type="radio"
-          id={`${feltNavn}-${value}`}
-          name={feltNavn}
-          checked={checked}
-          disabled={disabled}
-          value={value}
-          onFocus={() => this.toggleOutline()}
-          onBlur={() => this.toggleOutline()}
-          onChange={onChange}
-        />
-        <div className="radioPanel__innhold">{innhold}</div>
-      </label>
+      <Fragment>
+        <label className={cls} htmlFor={`${feltNavn}-${value}`}>
+          <input
+            {...inputProps}
+            className="radioPanel__Input"
+            type="radio"
+            id={`${feltNavn}-${value}`}
+            name={feltNavn}
+            checked={checked}
+            disabled={disabled}
+            value={value}
+            onFocus={() => this.toggleOutline()}
+            onBlur={() => this.toggleOutline()}
+            onChange={onChange}
+          />
+          <div className="radioPanel__innhold">{innhold}</div>
+        </label>
+        { checked &&
+          <div style={clsBehandlingsPanel}>
+            <p>Tidligere behandlinger er avsluttet. Velg hva du vil gøre med domument(ene)</p>
+            <p>{feltNavn}-{value}</p>
+          </div>
+        }
+      </Fragment>
     );
   }
 }
