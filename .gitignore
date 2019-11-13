@@ -15,7 +15,7 @@
 # mocha + coverage
 /test
 
-#cypress
+# cypress
 /cypress/screenshots
 /cypress/videos
 
