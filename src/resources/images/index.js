@@ -14,6 +14,7 @@ import Inntekt from './ikon-inntekt.svg';
 import Kvinne from './ikon-kvinne.svg';
 import Mann from './ikon-mann.svg';
 import Medlemskap from './ikon-medlemsskap.svg';
+import PaperPlane from './paperplane.svg';
 import Pencil from './pencil-2.svg';
 import ParagraphTwoColumns from './line-version-paragraph-two-columns.svg';
 import Svar from './reply.svg';
@@ -39,6 +40,7 @@ export {
   Kvinne,
   Mann,
   Medlemskap,
+  PaperPlane,
   Pencil,
   ParagraphTwoColumns,
   Svar,

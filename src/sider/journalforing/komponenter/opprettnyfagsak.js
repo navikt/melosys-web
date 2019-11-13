@@ -78,7 +78,7 @@ class OpprettNyFagSak extends Component {
     return (
       <div className="opprettnysak">
         <Nav.Systemtittel>Opprett ny sak</Nav.Systemtittel>
-        <Nav.Row>
+        <Nav.Row className="">
           <Nav.Column xs="6">
             <Skjema.Select feltNavn="sakstype" bredde="fullbredde" label="Sakstype" disabled>
               { sakstyper.map(elem => (<option key={elem.kode} value={elem.kode}>{elem.term}</option>)) }
@@ -97,7 +97,7 @@ class OpprettNyFagSak extends Component {
         </Nav.Row>
         { this.skalViseSoknadsperiodeOgLand(valgtBehandlingstype) &&
         <Fragment>
-          <Nav.Row>
+          <Nav.Row className="">
             <Nav.Column xs="6">
               <Skjema.Input feltNavn="representantID" label="Fullmektigens organisasjonsnummer" onKeyUp={this.IDFeltTastOppHandler} />
               <Skjema.Input feltNavn="representantNavn" label="Organisasjonsnavn" disabled />
@@ -106,7 +106,7 @@ class OpprettNyFagSak extends Component {
             </Nav.Column>
           </Nav.Row>
           <Nav.Fieldset legend="Soknadperiode:" className="opprettnysak__soknadsperiode">
-            <Nav.Row>
+            <Nav.Row className="">
               <Nav.Column xs="6">
                 <Skjema.Input datoFelt label="Fra" feltNavn="journalforingPeriodeFraOgMed" />
               </Nav.Column>
@@ -116,7 +116,7 @@ class OpprettNyFagSak extends Component {
             </Nav.Row>
           </Nav.Fieldset>
           <Nav.Fieldset legend="Land:">
-            <Nav.Row>
+            <Nav.Row className="">
               <Nav.Column xs="12">
                 <LandVelger feltNavn="journalforingSoknadsland" multiLand />
               </Nav.Column>
@@ -125,14 +125,14 @@ class OpprettNyFagSak extends Component {
           { valgtBehandlingstype === MKV.Koder.behandlinger.behandlingstyper.ANMODNING_OM_UNNTAK_HOVEDREGEL &&
             <Fragment>
               <Nav.Fieldset legend="Unntak fra lovvalgsland:">
-                <Nav.Row>
+                <Nav.Row className="">
                   <Nav.Column xs="12">
                     <LandVelger label="Velg ett land:" feltNavn="journalforingUnntakFraLovvalgsland" multiLand={false} />
                   </Nav.Column>
                 </Nav.Row>
               </Nav.Fieldset>
               <Nav.Fieldset legend="Lovvalgsbestemmelse">
-                <Nav.Row>
+                <Nav.Row className="">
                   <Nav.Column xs="12">
                     <Skjema.Select label="Artikkelen det gjelder:" feltNavn="journalforingLovvalgsbestemmelse">
                       { this.art16.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
@@ -141,7 +141,7 @@ class OpprettNyFagSak extends Component {
                 </Nav.Row>
               </Nav.Fieldset>
               <Nav.Fieldset legend="Unntak fra lovvalgsbestemmelse">
-                <Nav.Row>
+                <Nav.Row className="">
                   <Nav.Column xs="12">
                     <Skjema.Select label="Artikkelen det søkes unntak fra:" feltNavn="journalforingUnntakFraLovvalgsbestemmelse">
                       { this.alleLovvalg.map(kodeObjekt => <option key={uuid()} value={kodeObjekt.kode}>{kodeObjekt.term}</option>)}
@@ -164,7 +164,7 @@ class OpprettNyFagSak extends Component {
 }
 
 OpprettNyFagSak.propTypes = {
-  opprettFagsak: PT.func.isRequired,
+  opprettFagsak: PT.func,
   settFeltInnhold: PT.func.isRequired,
   hentOgVisRepresentant: PT.func.isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,
@@ -174,6 +174,7 @@ OpprettNyFagSak.propTypes = {
 
 OpprettNyFagSak.defaultProps = {
   journalforingSkjemaVerdier: {},
+  opprettFagsak: () => {},
 };
 
 const mapStateToProps = state => ({

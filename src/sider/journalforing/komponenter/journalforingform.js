@@ -11,9 +11,8 @@ import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
 import { journalforingSelectors } from '../../../ducks/journalforing';
 import Informasjon from '../komponenter/informasjon';
-import EksisterendeSaker from '../komponenter/eksisterendeSaker';
-import OpprettNyFagSak from '../komponenter/opprettnyfagsak';
 import FagsakVelger from './fagsakVelger';
+import SendForvaltningsMelding from './sendForvaltningsMelding';
 import { Overskrift } from './overskrift';
 
 const JournalforingForm = ({
@@ -24,9 +23,9 @@ const JournalforingForm = ({
   hentOgVisAvsender,
   hentOgVisBruker,
   fagsakListe,
-  knyttTilEksisterendeSak,
-  opprettFagsak,
-  hentOgVisRepresentant,
+  // knyttTilEksisterendeSak,
+  // opprettFagsak,
+  // hentOgVisRepresentant,
   overstyrSubmit,
   behandlingstyper,
 }) => (
@@ -41,15 +40,18 @@ const JournalforingForm = ({
     />
     <Overskrift tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
     <FagsakVelger
+      sakstyper={MKV.KTObjects.sakstyper}
       behandlingstyper={behandlingstyper}
       fagsakListe={fagsakListe}
     />
-    <OpprettNyFagSak
+    <Overskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
+    <SendForvaltningsMelding />
+    {/* <OpprettNyFagSak
       sakstyper={MKV.KTObjects.sakstyper}
       behandlingstyper={behandlingstyper}
       opprettFagsak={opprettFagsak}
       hentOgVisRepresentant={hentOgVisRepresentant}
-    />
+    /> */}
   </form>
 );
 
@@ -61,9 +63,9 @@ JournalforingForm.propTypes = {
   hentOgVisAvsender: PT.func.isRequired,
   hentOgVisBruker: PT.func.isRequired,
   fagsakListe: PT.array.isRequired,
-  knyttTilEksisterendeSak: PT.func.isRequired,
-  opprettFagsak: PT.func.isRequired,
-  hentOgVisRepresentant: PT.func.isRequired,
+  // knyttTilEksisterendeSak: PT.func.isRequired,
+  // opprettFagsak: PT.func.isRequired,
+  // hentOgVisRepresentant: PT.func.isRequired,
   formValues: PT.object,
   overstyrSubmit: PT.func.isRequired,
   behandlingstyper: PT.arrayOf(MPT.Kodeverk).isRequired,

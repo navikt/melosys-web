@@ -1,14 +1,16 @@
 import React from 'react';
-import PT from 'prop-types';
-import * as MKV from 'melosys-kodeverk';
 
-import * as KV from '../../../kodeverk';
-import EnkeltDato from '../../../felleskomponenter/datoOmrade/enkeltDato';
-import { DatoOmradeDescription } from '../../../felleskomponenter/datoOmrade/datoOmrade';
+const KnyttTilSak = () => {
+  const clsBehandlingsPanel = {
+    background: 'lightgray',
+    border: '1px solid #b7b1a9',
+    borderRadius: '3px',
+    margin: '0.5em 0',
+    padding: '0.5em',
+  };
 
-const KnyttTilSak = props => {
   return (
-    <p>Knytt til sak</p>
+    <div style={clsBehandlingsPanel}>Knytt til sak panel</div>
   );
 };
 

@@ -24,7 +24,7 @@ class CustomRadioPanel extends Component {
 
   render() {
     const {
-      checked, disabled, innhold, feltNavn, inputProps, value, onChange,
+      checked, disabled, innhold, footer, feltNavn, inputProps, value, onChange,
     } = this.props;
 
     const { hasFocus } = this.state;
@@ -34,13 +34,6 @@ class CustomRadioPanel extends Component {
       'customRadioPanel--focused': hasFocus === true && !disabled,
       'customRadioPanel--disabled': disabled === true,
     });
-    const clsBehandlingsPanel = {
-      background: 'lightgray',
-      border: '1px solid #b7b1a9',
-      borderRadius: '3px',
-      margin: '0.5em 0',
-      padding: '0.5em',
-    };
     return (
       <Fragment>
         <label className={cls} htmlFor={`${feltNavn}-${value}`}>
@@ -59,11 +52,8 @@ class CustomRadioPanel extends Component {
           />
           <div className="radioPanel__innhold">{innhold}</div>
         </label>
-        { checked &&
-          <div style={clsBehandlingsPanel}>
-            <p>Tidligere behandlinger er avsluttet. Velg hva du vil gøre med domument(ene)</p>
-            <p>{feltNavn}-{value}</p>
-          </div>
+        {
+          checked && footer
         }
       </Fragment>
     );
@@ -73,6 +63,7 @@ class CustomRadioPanel extends Component {
 CustomRadioPanel.propTypes = {
   feltNavn: PT.string.isRequired,
   innhold: PT.node.isRequired,
+  footer: PT.node.isRequired,
   checked: PT.bool,
   inputProps: PT.object,
   disabled: PT.bool,
