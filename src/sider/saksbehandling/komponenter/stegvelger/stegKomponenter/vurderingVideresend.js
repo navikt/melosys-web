@@ -29,14 +29,6 @@ export const VurderingVideresend = ({
       },
     },
     {
-      navn: 'Forhåndsvis brev til utenlandske trygdemyndigheter:',
-      type: MKV.Koder.brev.produserbaredokumenter.VIDERESENDT_SOEKNAD_UTLAND,
-      data: {
-        mottaker: MKV.Koder.aktoersroller.MYNDIGHET,
-        fritekst,
-      },
-    },
-    {
       navn: 'Forhåndsvis SED A008',
       type: EKV.Koder.sedtyper.A008,
       erSed: true,
