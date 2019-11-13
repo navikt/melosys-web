@@ -13,6 +13,7 @@ import { journalforingSelectors } from '../../../ducks/journalforing';
 import Informasjon from '../komponenter/informasjon';
 import EksisterendeSaker from '../komponenter/eksisterendeSaker';
 import OpprettNyFagSak from '../komponenter/opprettnyfagsak';
+import FagsakVelger from './fagsakVelger';
 import { Overskrift } from './overskrift';
 
 const JournalforingForm = ({
@@ -38,11 +39,10 @@ const JournalforingForm = ({
       hentOgVisAvsender={hentOgVisAvsender}
       hentOgVisBruker={hentOgVisBruker}
     />
-    <Overskrift tekst="Knytt til brukers eksisterende sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
-    <EksisterendeSaker
+    <Overskrift tekst="Knytt til brukers eksisterende sak eller opprett ny sak" ikon={Ikoner.CheckList} className="undertittel oversteUndertittel" />
+    <FagsakVelger
       behandlingstyper={behandlingstyper}
       fagsakListe={fagsakListe}
-      knyttTilEksisterendeSak={knyttTilEksisterendeSak}
     />
     <OpprettNyFagSak
       sakstyper={MKV.KTObjects.sakstyper}
