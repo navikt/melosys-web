@@ -159,7 +159,7 @@ class Stegvelger extends Component {
 
   fatteVedtakHandler = async (behandlingsresultatTypeKode, fritekst, mottakerinstitusjon = null) => {
     const { behandlingID, fattVedtak } = this.props;
-    const vedtakBody = { behandlingsresultatTypeKode, fritekst, mottakerinstitusjon};
+    const vedtakBody = { behandlingsresultatTypeKode, fritekst, mottakerinstitusjon };
     try {
       await fattVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
