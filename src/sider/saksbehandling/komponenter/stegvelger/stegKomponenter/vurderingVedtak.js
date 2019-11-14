@@ -15,6 +15,8 @@ import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder
 import { datoDiffMenneskelig } from '../../../../../utils/dato';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 import DatoOmrade from '../../../../../felleskomponenter/datoOmrade/datoOmrade';
+import Vedtaktype from '../../vedtaktype';
+import Vedtaktypebegrunnelse from '../../vedtaktypebegrunnelse';
 
 import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
 
@@ -31,12 +33,15 @@ const VurderingVedtak = ({
   redigerbart,
   behandlingID,
   lagreOgFatteVedtak,
+  behandlingstype,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
   // 3. Vise oppsummmeringen av kriteriene for artikkelen (kodeverk og avklartefakta)
 
   const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
+  const [vedtakstype, setVedtakstype] = useEventTargetValueState(MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK);
+  const [vedtakstypeBegrunnelse, setVedtakstypeBegrunnelse] = useEventTargetValueState('');
 
   const lovvalget = lovvalgsperioder[0] || {};
 
@@ -86,6 +91,22 @@ const VurderingVedtak = ({
             <Nav.Normaltekst>{antallManeder}</Nav.Normaltekst>
           </Nav.Column>
         </Nav.Row>
+        {
+          behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
+          <Nav.Row>
+            <Nav.Column xs="6">
+              <Vedtaktype
+                className="vedtaktype"
+                onChange={setVedtakstype}
+                value={vedtakstype}
+              />
+              <Vedtaktypebegrunnelse
+                onChange={setVedtakstypeBegrunnelse}
+                value={vedtakstypeBegrunnelse}
+              />
+            </Nav.Column>
+          </Nav.Row>
+        }
         <Nav.Row className="fritekst">
           <Nav.Column xs="8">
             <Nav.Textarea
@@ -125,6 +146,7 @@ VurderingVedtak.propTypes = {
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
+  behandlingstype: PT.string.isRequired,
 };
 
 VurderingVedtak.defaultProps = {
@@ -135,6 +157,7 @@ const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
   gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
 });
 
