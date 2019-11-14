@@ -11,12 +11,13 @@ import * as KV from '../../../../kodeverk';
 import * as MPT from '../../../../proptypes';
 
 import PanelHeader from '../../../../felleskomponenter/panelHeader/panelHeader';
+import { saksbehandlerSelectors } from '../../../../ducks/saksbehandler';
 import { fagsakSelectors } from '../../../../ducks/fagsaker';
 import { behandlingerSelectors } from '../../../../ducks/behandlinger';
+
 import { redigerbartSelectors } from '../../../../ducks/redigerbart';
 
 import Fullmektig from './fullmektig';
-
 import './fullmektig.css';
 
 const aktoerTemplate = {
@@ -34,9 +35,8 @@ class FullmektigPanel extends Component {
     fullmektige: [],
     disableLeggTilFullmektig: false,
   };
-
-  componentDidMount() {
-    this.hentFullmektige();
+  async componentDidMount() {
+    await this.hentFullmektige();
   }
 
   settRepresentant = (endretIndex, representererKode) => {
@@ -84,10 +84,15 @@ class FullmektigPanel extends Component {
   hentFullmektige = async () => {
     const { hentAktoer, fagsak } = this.props;
     const { saksnummer } = fagsak;
-
+    Utils.logger.info({
+      srcfile: 'fullmektigPanel.js@87',
+      saksbehandler: this.props.saksbehandler,
+      jira: 'MELOSYS-3385',
+      stack: this.props.fagsak,
+    });
     try {
       if (!saksnummer) {
-        throw new Error('fagsak.saksnummer er undefined', 'fullmektigPanel', '80');
+        throw new Error('fagsak.saksnummer er undefined', 'fullmektigPanel', '95');
       }
       const fullmektige = await hentAktoer(saksnummer, MKV.Koder.aktoersroller.REPRESENTANT);
       this.setState({ fullmektige });
@@ -149,6 +154,7 @@ class FullmektigPanel extends Component {
 }
 
 FullmektigPanel.propTypes = {
+  saksbehandler: MPT.Saksbehandler.isRequired,
   fagsak: MPT.Fagsak.isRequired,
   hentOrg: PT.func.isRequired,
   hentAktoer: PT.func.isRequired,
@@ -158,6 +164,7 @@ FullmektigPanel.propTypes = {
 };
 
 const mapStateToProps = state => ({
+  saksbehandler: saksbehandlerSelectors.SaksbehandlerSelector(state),
   arbeidsgivereNorge: behandlingerSelectors.ArbeidsgivereNorgeSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
   redigerbart: redigerbartSelectors.PanelerRedigerbartSelector(state),
