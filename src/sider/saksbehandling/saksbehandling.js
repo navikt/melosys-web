@@ -14,6 +14,7 @@ import SideOppsummering from '../../felleskomponenter/sideOppsummering';
 import Behandlingsstatus from '../../felleskomponenter/behandlingsstatus';
 import Behandlingsmeny from './komponenter/behandlingsmeny';
 
+import { saksbehandlerSelectors } from '../../ducks/saksbehandler';
 import { fagsakOperations, fagsakSelectors } from '../../ducks/fagsaker';
 import { behandlingsresultatOperations } from '../../ducks/behandlingsresultat';
 import { behandlingerOperations, behandlingerSelectors } from '../../ducks/behandlinger';
@@ -80,7 +81,13 @@ class Saksbehandling extends Component {
 
     try {
       await hentFagsaker(snr);
-
+      Utils.logger.info({
+        loaded: true,
+        srcfile: 'saksbehandling.js@85',
+        saksbehandler: this.props.saksbehandler,
+        jira: 'MELOSYS-3385',
+        stack: this.props.fagsak,
+      });
       const response = await hentBehandling(behandlingID);
       const behandling = response.data;
       if (!behandling) return false;
@@ -242,6 +249,7 @@ Saksbehandling.propTypes = {
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool,
   avklartefakta: MPT.AvklartefaktaListe,
+  saksbehandler: MPT.Saksbehandler.isRequired,
   fagsak: MPT.Fagsak,
   soknad: MPT.Soknad,
   vilkar: PT.array, // TODO lag proptype
@@ -321,6 +329,7 @@ Saksbehandling.defaultProps = {
  * @param state
  */
 const mapStateToProps = state => ({
+  saksbehandler: saksbehandlerSelectors.SaksbehandlerSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   avklartefakta: avklartefaktaSelectors.AvklartefaktaSelector(state),
   fagsak: fagsakSelectors.FagsakSelector(state),
