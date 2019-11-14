@@ -9,6 +9,7 @@ import Feil from './ikon-steg-feil.svg';
 import Filenew from './line-version-file-new-1.svg';
 import Varsel from './ikon-steg-varsel.svg';
 import Globe from './line-version-globe-1.svg';
+import InformationCircle from './infomationcircle.svg';
 import IkonSak from './ikon-sak.svg';
 import Inntekt from './ikon-inntekt.svg';
 import Kvinne from './ikon-kvinne.svg';
@@ -36,6 +37,7 @@ export {
   Filenew,
   Globe,
   IkonSak,
+  InformationCircle,
   Inntekt,
   Kvinne,
   Mann,

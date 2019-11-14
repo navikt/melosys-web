@@ -17,7 +17,7 @@ const FagsakVelger = props => {
     ([...samling, {
       value: sak.saksnummer,
       innhold: <EnkeltSak sak={sak} />,
-      footer: <KnyttTilSak sak={sak} />,
+      footer: <KnyttTilSak sak={sak} behandlingstyper={behandlingstyper} />,
     }]), []);
   radioValg.push({
     value: '-1',

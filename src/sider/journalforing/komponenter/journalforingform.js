@@ -9,11 +9,14 @@ import * as KV from '../../../kodeverk';
 import * as Validering from '../../../felleskomponenter/skjema/validering';
 import * as Utils from '../../../utils';
 import * as MPT from '../../../proptypes';
+import * as Skjema from '../../../felleskomponenter/skjema';
+
+import { BOOLSK } from '../../../constants';
 import { journalforingSelectors } from '../../../ducks/journalforing';
+import { Overskrift } from './overskrift';
 import Informasjon from '../komponenter/informasjon';
 import FagsakVelger from './fagsakVelger';
 import SendForvaltningsMelding from './sendForvaltningsMelding';
-import { Overskrift } from './overskrift';
 
 const JournalforingForm = ({
   journalpostID,
@@ -46,12 +49,8 @@ const JournalforingForm = ({
     />
     <Overskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
     <SendForvaltningsMelding />
-    {/* <OpprettNyFagSak
-      sakstyper={MKV.KTObjects.sakstyper}
-      behandlingstyper={behandlingstyper}
-      opprettFagsak={opprettFagsak}
-      hentOgVisRepresentant={hentOgVisRepresentant}
-    /> */}
+    <p />
+    <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
   </form>
 );
 
@@ -96,6 +95,7 @@ const mapStateToProps = state => ({
       logiskeTitler: [],
     },
     sakstype: MKV.Koder.sakstyper.EU_EOS,
+    opprettBehandling: BOOLSK.USANN,
     opprettnysak_behandlingstype: MKV.Koder.behandlinger.behandlingstyper.SOEKNAD,
     ingenVurdering: false,
     ikkeSendForvaltingsmelding: false,
