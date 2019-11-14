@@ -170,6 +170,7 @@ class Saksbehandling extends Component {
       arbeidsland,
       soknadsperiodeFom,
       soknadsperiodeTom,
+      visRevurderVedtakDialogHandle,
     } = this.props;
     const { params: { snr: saksnummer } } = match;
     const { behandlingID } = this.state;
@@ -215,6 +216,7 @@ class Saksbehandling extends Component {
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
+                  visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
                 />}
                 renderBehandlingsstatus={() => <Behandlingsstatus
                   behandlingID={behandlingID}
@@ -301,6 +303,7 @@ Saksbehandling.propTypes = {
   arbeidsland: PT.arrayOf(MPT.Kodeverk).isRequired,
   soknadsperiodeFom: PT.string.isRequired,
   soknadsperiodeTom: PT.string.isRequired,
+  visRevurderVedtakDialogHandle: PT.func.isRequired,
 };
 
 Saksbehandling.defaultProps = {
