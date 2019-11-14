@@ -9,7 +9,7 @@ import * as Utils from '../../utils';
 import { lagYupToReduxformErrorMapper } from '../skjema/validering/skjemaer/lagYupToReduxformErrorMapper';
 import { sed as sedSchema } from '../skjema/validering/skjemaer/sed';
 import { kodeTilObjekt } from '../../kodeverk';
-import './sedBestilling.css';
+import './sideDialogOpprettNyBuc.css';
 
 const TomtFelt = ({ tekst }) => (
   <option value="">{tekst}</option>
@@ -23,7 +23,7 @@ TomtFelt.defaultProps = {
   tekst: 'Velg...',
 };
 
-const SideDialogSedBestilling = ({ behandlingID }) => {
+const SideDialogOpprettNyBuc = ({ behandlingID }) => {
   const [mottakerinstitusjoner, setMottakerinstitusjoner] = useState([]);
 
   const [valgtFagomrade, setValgtFagomrade] = useState(EKV.Koder.sektor.LA);
@@ -39,15 +39,17 @@ const SideDialogSedBestilling = ({ behandlingID }) => {
   const [oppdaterteFelt, setOppdaterteFelt] = useState({ buc: false, land: false, mottakerinstitusjon: false });
   const [alertmelding, setAlertmelding] = useState('');
 
-  const hentMottakerinstitusjoner = async bucType => {
-    if (bucType) {
+  const hentMottakerinstitusjoner = async (buc, landkode) => {
+    if (buc && landkode) {
       try {
-        const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(bucType);
+        const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(buc, landkode);
         setMottakerinstitusjoner(institusjoner);
       } catch (e) {
         Utils.logger.error(e);
         setAlertmelding('Finner ingen mottakerinstitusjoner');
       }
+    } else {
+      setMottakerinstitusjoner([]);
     }
   };
 
@@ -126,8 +128,6 @@ const SideDialogSedBestilling = ({ behandlingID }) => {
 
   const tilgjengeligeSeder = buc => EKV.Selectors.hentSedTyperForBuc(buc);
 
-  const tilgjengeligeMottakerinstitusjoner = land => (land ? mottakerinstitusjoner.filter(institusjon => institusjon.landkode === land) : []);
-
   const hentValgtKode = event => event.target.value;
 
   const oppdaterFelt = felt => {
@@ -149,7 +149,7 @@ const SideDialogSedBestilling = ({ behandlingID }) => {
     valider({ buc });
 
     setValgtSed(buc ? tilgjengeligeSeder(buc)[0].kode : '');
-    hentMottakerinstitusjoner(buc);
+    hentMottakerinstitusjoner(buc, valgtLand);
   };
 
   const landEndret = event => {
@@ -157,6 +157,7 @@ const SideDialogSedBestilling = ({ behandlingID }) => {
     setValgtLand(land);
     oppdaterFelt('land');
     valider({ land });
+    hentMottakerinstitusjoner(valgtBuc, land);
   };
 
   const mottakerinstitusjonEndret = event => {
@@ -192,7 +193,7 @@ const SideDialogSedBestilling = ({ behandlingID }) => {
           </Nav.Select>
           <Nav.Select bredde="fullbredde" label="Mottaker institusjon" onChange={mottakerinstitusjonEndret} value={valgtMottakerinstitusjon} feil={feil('mottakerinstitusjon')}>
             <TomtFelt />
-            { tilgjengeligeMottakerinstitusjoner(valgtLand).map(elem => <option key={elem.id} value={elem.id}>{elem.navn}</option>) }
+            { mottakerinstitusjoner.map(elem => <option key={elem.id} value={elem.id}>{elem.navn}</option>) }
           </Nav.Select>
           <Nav.Hovedknapp spinner={oppretterBuc} htmlType="submit" onClick={sendSed}>Opprett ny BUC</Nav.Hovedknapp>&nbsp;
           <Nav.Knapp type="standard" onClick={resetKomponent}>Avbryt utfylling</Nav.Knapp>
@@ -208,8 +209,8 @@ const SideDialogSedBestilling = ({ behandlingID }) => {
   );
 };
 
-SideDialogSedBestilling.propTypes = {
+SideDialogOpprettNyBuc.propTypes = {
   behandlingID: PT.number.isRequired,
 };
 
-export default SideDialogSedBestilling;
+export default SideDialogOpprettNyBuc;
