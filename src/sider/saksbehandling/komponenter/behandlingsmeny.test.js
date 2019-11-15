@@ -15,6 +15,7 @@ describe('behandlingsmeny', () => {
       visAvsluttSakSomBortfaltDialogHandle: jest.fn(),
       apneTidligereBehandlinger: jest.fn(),
       visAvslagSoknadDialogHandle: jest.fn(),
+      visRevurderVedtakDialogHandle: jest.fn(),
       redigerbart: true,
       visHenleggSak: true,
     };
@@ -27,10 +28,9 @@ describe('behandlingsmeny', () => {
   });
 
   it('kaller handlere ved klikk på knapper', () => {
-    const behandlingsmeny = shallow(<Behandlingsmeny {...props} />);
+    let behandlingsmeny = shallow(<Behandlingsmeny {...props} />);
 
-    const knapper = behandlingsmeny.find('Knapp');
-    knapper.forEach(knapp => knapp.simulate('click'));
+    behandlingsmeny.find('Knapp').forEach(knapp => knapp.simulate('click'));
 
     expect(props.lagreOgLukkHandle).toHaveBeenCalledTimes(1);
     expect(props.tilbakeleggeHandle).toHaveBeenCalledTimes(1);
@@ -38,5 +38,11 @@ describe('behandlingsmeny', () => {
     expect(props.visHenleggDialogHandle).toHaveBeenCalledTimes(1);
     expect(props.visAvsluttSakSomBortfaltDialogHandle).toHaveBeenCalledTimes(1);
     expect(props.apneTidligereBehandlinger).toHaveBeenCalledTimes(1);
+
+    props.redigerbart = false;
+    behandlingsmeny = shallow(<Behandlingsmeny {...props} />);
+    behandlingsmeny.find('Knapp').forEach(knapp => knapp.simulate('click'));
+
+    expect(props.visRevurderVedtakDialogHandle).toHaveBeenCalledTimes(1);
   });
 });
