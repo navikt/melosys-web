@@ -8,7 +8,7 @@ const PanelHeader = ({ ikon, tittel, undertittel }) => (
   <div className="panelheader">
     { ikon && <div className="panelheader__ikon" style={{ backgroundImage: `url('${ikon}')` }} /> }
     <div className="panelheader__tittel">
-      <Nav.Undertittel className="panelheader__tittel__hoved">{tittel}</Nav.Undertittel>
+      <Nav.typo.Undertittel className="panelheader__tittel__hoved">{tittel}</Nav.typo.Undertittel>
       <span className="panelheader__tittel__under">{undertittel}</span>
     </div>
   </div>

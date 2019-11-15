@@ -28,7 +28,7 @@ const VurderingInngang = props => {
 
   return (
     <div className="vurderingInngang">
-      <Nav.Undertittel>Kontroller inngangsvilkår</Nav.Undertittel>
+      <Nav.typo.Undertittel>Kontroller inngangsvilkår</Nav.typo.Undertittel>
       <ul className="betingelser__liste">
         <li className="liste__element liste__element--oppfylt">
           Søknaden oppfyller inngangsvilkårene for EU/EØS-saker etter forordning 883/2004.

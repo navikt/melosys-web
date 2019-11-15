@@ -101,11 +101,11 @@ export const VurderingArtikkel13_1_Vedtak = ({
 
   return (
     <Fragment>
-      <Nav.Undertittel>{overskrift}</Nav.Undertittel>
+      <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
       {
         redigerbart &&
         <Fragment>
-          <Nav.Element className="undertittel">Lovvalgsperiode</Nav.Element>
+          <Nav.typo.Element className="undertittel">Lovvalgsperiode</Nav.typo.Element>
           <Nav.Row className="lovvalgsperiode">
             <Nav.Column xs="6">
               {fom} - {tom}

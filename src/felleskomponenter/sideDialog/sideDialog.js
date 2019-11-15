@@ -6,7 +6,7 @@ import { Panel } from 'nav-frontend-paneler';
 import * as Utils from '../../utils';
 import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestilling from './brevBestilling';
-import SideDialogSedBestilling from './sedBestilling';
+import SideDialogOpprettNyBuc from './sideDialogOpprettNyBuc';
 import SideDialogBesvarSed from './sideDialogBesvarSed';
 
 import './sideDialog.css';
@@ -30,7 +30,7 @@ export const FaneViser = ({
         brevBestillingRedigerbartIArtikkel13={brevBestillingRedigerbartIArtikkel13}
       />;
     case 'sedbestilling':
-      return <SideDialogSedBestilling behandlingID={behandlingID} />;
+      return <SideDialogOpprettNyBuc behandlingID={behandlingID} />;
     case 'besvarsed':
       return <SideDialogBesvarSed behandlingID={behandlingID} />;
     default:
