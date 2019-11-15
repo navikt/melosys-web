@@ -16,7 +16,7 @@ describe('StegerstatterBase', () => {
   it('viser tittel-prop', () => {
     const stegerstatterBase = shallow(<StegerstatterBase {...props} />);
 
-    expect(stegerstatterBase.find(Nav.Systemtittel).childAt(0).text()).toBe(props.tittel);
+    expect(stegerstatterBase.find(Nav.typo.Systemtittel).childAt(0).text()).toBe(props.tittel);
   });
 
   it('Viser beskrivelse-prop', () => {

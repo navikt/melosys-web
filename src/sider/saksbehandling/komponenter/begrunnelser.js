@@ -13,9 +13,9 @@ const Begrunnelser = ({
   fritekst,
 }) => (
   <div className="begrunnelser">
-    <Nav.Element className="begrunnelseTittel">
+    <Nav.typo.Element className="begrunnelseTittel">
       {label}
-    </Nav.Element>
+    </Nav.typo.Element>
     {
       valgteBegrunnelser.map(begrunnelse => <div className="begrunnelse" key={begrunnelse}>{KV.kodeTilTerm(begrunnelse, muligeBegrunnelser)}</div>)
     }

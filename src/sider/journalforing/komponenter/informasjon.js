@@ -177,7 +177,7 @@ class Informasjon extends Component {
           { visBrukerSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" /> }
         </Nav.Fieldset>
 
-        <Nav.Element className="informasjonOmAvsenderTittel">Informasjon om avsender</Nav.Element>
+        <Nav.typo.Element className="informasjonOmAvsenderTittel">Informasjon om avsender</Nav.typo.Element>
         <AvsenderVelger
           className="avsenderVelger"
           kopierBrukerTilAvsender={this.kopierBrukerTilAvsender}

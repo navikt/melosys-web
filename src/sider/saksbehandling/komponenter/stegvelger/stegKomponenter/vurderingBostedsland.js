@@ -96,7 +96,7 @@ const VurderingBostedsland = props => {
 
   return (
     <div className="vurderingBostedsland">
-      <Nav.Undertittel>Vurdering av bosted</Nav.Undertittel>
+      <Nav.typo.Undertittel>Vurdering av bosted</Nav.typo.Undertittel>
       <div className="vurderingBostedsland__skjemafelt">
         <Nav.Row>
           <Nav.Column xs="12">
