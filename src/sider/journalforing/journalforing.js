@@ -423,7 +423,7 @@ class Journalforing extends Component {
         ],
       },
     ];
-    const nyliste = [...fagsakListe, ...dummy]
+    const nyliste = [...fagsakListe, ...dummy];
     const {
       knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant, journalforSed,
     } = this;
@@ -442,7 +442,7 @@ class Journalforing extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="4">
-              <h1>Journalføring</h1>
+              <Nav.Sidetittel className="journalforing__sidetittel">Journalføring</Nav.Sidetittel>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>

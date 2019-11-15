@@ -1,17 +1,12 @@
-import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
-import { formValueSelector } from 'redux-form';
-import PT from 'prop-types';
+import React from 'react';
 
 import * as MKV from 'melosys-kodeverk';
 import * as KV from '../../../kodeverk';
+import * as MPT from '../../../proptypes/';
 import EnkeltDato from '../../../felleskomponenter/datoOmrade/enkeltDato';
 
 import { DatoOmradeDescription } from '../../../felleskomponenter/datoOmrade/datoOmrade';
 import './eksisterendeSaker.css';
-import KnyttTilSak from './knyttTilSak';
-import { fagsakSelectors } from '../../../ducks/fagsaker';
-import { formSelectors } from '../../../ducks/form';
 
 const hentAktivBehandling = behandlinger => behandlinger.find(behandling => behandling.behandlingsstatus !== MKV.Koder.behandlinger.behandlingsstatus.AVSLUTTET);
 
@@ -19,7 +14,7 @@ const hentAktivBehandling = behandlinger => behandlinger.find(behandling => beha
  */
 const EnkeltSak = props => {
   const {
-    opprettetDato, behandlingOversikter, sakstype, saksstatus,
+    opprettetDato, behandlingOversikter, sakstype, saksstatus, saksnummer,
   } = props.sak;
   const aktivBehandling = hentAktivBehandling(behandlingOversikter);
   const {
@@ -32,6 +27,8 @@ const EnkeltSak = props => {
         <dd>{KV.objektTilTerm(sakstype)}</dd>
         <dt>Saksstatus: </dt>
         <dd>{KV.objektTilTerm(saksstatus)}</dd>
+        <dt>Saksnummer: </dt>
+        <dd>{saksnummer}</dd>
         <dt>Behandlingstype: </dt>
         <dd>{KV.objektTilTerm(behandlingstype)}</dd>
         <dt>Behandlingsstatus: </dt>
@@ -47,7 +44,7 @@ const EnkeltSak = props => {
 };
 
 EnkeltSak.propTypes = {
-  sak: PT.object.isRequired,
+  sak: MPT.Fagsak.isRequired,
 };
 
 export default EnkeltSak;
