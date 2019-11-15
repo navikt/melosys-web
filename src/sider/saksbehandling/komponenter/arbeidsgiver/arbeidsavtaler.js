@@ -55,7 +55,7 @@ class Arbeidsavtaler extends Component {
       </Nav.Knapp>) : null;
 
     const historiskeArbeidsAvtalerElement = visHistoriskeArbeidsavtaler ? (
-      <div><Nav.Undertittel className="arbeidsavtaler__historisk__overskrift">Tidligere arbeidsavtaler</Nav.Undertittel><Tabell
+      <div><Nav.typo.Undertittel className="arbeidsavtaler__historisk__overskrift">Tidligere arbeidsavtaler</Nav.typo.Undertittel><Tabell
         tabellData={tabellTilpassetArbeidsavtaler}
         kolonneNavn={['Gyldig til', 'Yrke', 'Arbeidsordning', 'Timer pr uke', 'Timer gammelt reg.', 'Stillingsprosent', 'Sist endret']}
         linjerPerSide={5}

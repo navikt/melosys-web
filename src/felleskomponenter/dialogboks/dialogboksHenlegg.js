@@ -122,7 +122,7 @@ export class DialogboksHenleggSak extends Component {
         shouldCloseOnOverlayClick
         ariaHideApp={ariaHideApp}>
         <div>
-          <Nav.Systemtittel className="overskrift">Henlegg saken</Nav.Systemtittel>
+          <Nav.typo.Systemtittel className="overskrift">Henlegg saken</Nav.typo.Systemtittel>
           <Mui.KodeTermSelect
             feil={feilmeldingSelect}
             onChange={this.velgBegrunnelseHandle}

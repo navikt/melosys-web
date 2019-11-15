@@ -48,7 +48,7 @@ export const DialogboksAvslagSoknad = props => {
           style={{ backgroundImage: `url(${Ikon.VedtakGodkjent})` }}
         />
         <div>
-          <Nav.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.Systemtittel>
+          <Nav.typo.Systemtittel className="overskrift">Avslå søknaden på grunn av manglende opplysninger</Nav.typo.Systemtittel>
           {
             redigerbart && <PdfLenkeListe behandlingID={behandlingID} dokumenter={pdfDokumenter} />
           }

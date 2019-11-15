@@ -19,13 +19,13 @@ const DatoOmrade = ({ periode, label }) => (
       label &&
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Element>{label}</Nav.Element>
+          <Nav.typo.Element>{label}</Nav.typo.Element>
         </Nav.Column>
       </Nav.Row>
     }
     <Nav.Row>
-      <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Fra</Nav.Element><EnkeltDato dato={periode.fom} /></Nav.Column>
-      <Nav.Column xs="6" className="blokk-xs"><Nav.Element>Til</Nav.Element><EnkeltDato dato={periode.tom} /></Nav.Column>
+      <Nav.Column xs="6" className="blokk-xs"><Nav.typo.Element>Fra</Nav.typo.Element><EnkeltDato dato={periode.fom} /></Nav.Column>
+      <Nav.Column xs="6" className="blokk-xs"><Nav.typo.Element>Til</Nav.typo.Element><EnkeltDato dato={periode.tom} /></Nav.Column>
     </Nav.Row>
   </Fragment>
 );
@@ -46,12 +46,12 @@ export const DatoOmradeMedVarighet = ({ periode, label }) => {
     <div className="datoomradevarighet">
       <Nav.Row>
         <Nav.Column xs="12">
-          <Nav.Element>{label}</Nav.Element>
+          <Nav.typo.Element>{label}</Nav.typo.Element>
         </Nav.Column>
       </Nav.Row>
       <Nav.Row>
-        <Nav.Column xs="4"><Nav.Element tag="span">Fra </Nav.Element><EnkeltDato dato={periode.fom} /></Nav.Column>
-        <Nav.Column xs="4"><Nav.Element tag="span">Til </Nav.Element><EnkeltDato dato={periode.tom} /></Nav.Column>
+        <Nav.Column xs="4"><Nav.typo.Element tag="span">Fra </Nav.typo.Element><EnkeltDato dato={periode.fom} /></Nav.Column>
+        <Nav.Column xs="4"><Nav.typo.Element tag="span">Til </Nav.typo.Element><EnkeltDato dato={periode.tom} /></Nav.Column>
         <Nav.Column xs="4">{varighet}</Nav.Column>
       </Nav.Row>
     </div>

@@ -64,7 +64,7 @@ function Fullmektig(props) {
         {
           org &&
           <Fragment>
-            <Nav.Element>Juridisk enhet</Nav.Element>
+            <Nav.typo.Element>Juridisk enhet</Nav.typo.Element>
             <OrganisasjonsAdresse organisasjon={org} className="adresse" />
           </Fragment>
         }
