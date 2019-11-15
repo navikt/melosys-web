@@ -22,7 +22,7 @@ class Journalforing extends Component {
     const { redigerbart } = this.props;
     return (
       <Nav.Panel className="forside__sidepanel">
-        <Nav.Systemtittel>Journalføring</Nav.Systemtittel>
+        <Nav.typo.Systemtittel>Journalføring</Nav.typo.Systemtittel>
         <p>Velg saksområde for å starte en journalføringsoppgave.</p>
 
         <form onSubmit={this.overrideDefaultSubmit}>

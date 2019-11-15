@@ -18,10 +18,10 @@ const PreutfyltAvsender = ({
   avsenderNavn,
 }) => (
   <div className={className}>
-    <Nav.Element className="linje">Avsender ID</Nav.Element>
-    <Nav.Normaltekst className="linje">{avsenderID}</Nav.Normaltekst>
-    <Nav.Element className="linje">Avsenders navn</Nav.Element>
-    <Nav.Normaltekst className="linje">{avsenderNavn}</Nav.Normaltekst>
+    <Nav.typo.Element className="linje">Avsender ID</Nav.typo.Element>
+    <Nav.typo.Normaltekst className="linje">{avsenderID}</Nav.typo.Normaltekst>
+    <Nav.typo.Element className="linje">Avsenders navn</Nav.typo.Element>
+    <Nav.typo.Normaltekst className="linje">{avsenderNavn}</Nav.typo.Normaltekst>
   </div>
 );
 
@@ -111,8 +111,8 @@ const AvsenderVelger = ({
           {
             formValues.avsenderNavn &&
             <Fragment>
-              <Nav.Element>Avsenders firmanavn</Nav.Element>
-              <Nav.Normaltekst>{formValues.avsenderNavn}{visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}</Nav.Normaltekst>
+              <Nav.typo.Element>Avsenders firmanavn</Nav.typo.Element>
+              <Nav.typo.Normaltekst>{formValues.avsenderNavn}{visAvsenderSpinner && <Nav.NavFrontendSpinner className="informasjon__spinner" />}</Nav.typo.Normaltekst>
             </Fragment>
           }
         </Fragment>
@@ -124,8 +124,8 @@ const AvsenderVelger = ({
           {
             formValues.utenlandskTrygdemyndighetLandkode &&
             <Fragment>
-              <Nav.Element>Avsender</Nav.Element>
-              <Nav.Normaltekst>Trygdemyndighet i {KV.kodeTilTerm(formValues.utenlandskTrygdemyndighetLandkode, MKV.KTObjects.landkoder)}</Nav.Normaltekst>
+              <Nav.typo.Element>Avsender</Nav.typo.Element>
+              <Nav.typo.Normaltekst>Trygdemyndighet i {KV.kodeTilTerm(formValues.utenlandskTrygdemyndighetLandkode, MKV.KTObjects.landkoder)}</Nav.typo.Normaltekst>
             </Fragment>
           }
         </Fragment>

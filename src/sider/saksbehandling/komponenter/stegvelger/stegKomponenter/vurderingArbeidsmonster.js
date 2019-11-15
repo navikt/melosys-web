@@ -87,8 +87,8 @@ const MarginaltArbeid = props => {
       <div className="marginaltArbeid">
         <div className="landliste_innhold">
           <div className="land__enkeltlinje">
-            <Nav.UndertekstBold>Land</Nav.UndertekstBold>
-            <Nav.UndertekstBold>Marginalt arbeid? <br /> {'(<5%)'}</Nav.UndertekstBold>
+            <Nav.typo.UndertekstBold>Land</Nav.typo.UndertekstBold>
+            <Nav.typo.UndertekstBold>Marginalt arbeid? <br /> {'(<5%)'}</Nav.typo.UndertekstBold>
           </div>
           {arbeidsland.map(arbeidslandet => {
             const avklartMarginaltArbeidILand = marginaltArbeid.find(enkeltAvklaring => enkeltAvklaring.subjektID === arbeidslandet.kode);
@@ -171,7 +171,7 @@ const VurderingArbeidsmonster = props => {
 
   return (
     <div className="vurderingArbeidsmonster">
-      <Nav.Undertittel>Vurdering av arbeidsmønster og fordeling</Nav.Undertittel>
+      <Nav.typo.Undertittel>Vurdering av arbeidsmønster og fordeling</Nav.typo.Undertittel>
       <div className="arbeidsmonster">
         <MarginaltArbeid
           redigerbart={redigerbart}

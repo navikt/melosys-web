@@ -39,7 +39,7 @@ export const VurderingVideresend = ({
     <div>
       <Nav.Row>
         <Nav.Column xs="6">
-          <Nav.Undertittel>Videresending av søknad</Nav.Undertittel>
+          <Nav.typo.Undertittel>Videresending av søknad</Nav.typo.Undertittel>
           {
             redigerbart &&
             <PdfLenkeListe
