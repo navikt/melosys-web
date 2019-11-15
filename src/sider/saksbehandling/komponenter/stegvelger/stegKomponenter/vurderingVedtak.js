@@ -42,6 +42,7 @@ const VurderingVedtak = ({
   behandlingstype,
   lagretVedtakstype,
   begrunnelseKode,
+  behandlingsresultatBegrunnelseFritekst,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
@@ -69,7 +70,7 @@ const VurderingVedtak = ({
 
   const valgtMottakerinstitusjonHandler = e => setValgtMottakerinstitusjon(e.target.value);
 
-  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
+  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState(behandlingsresultatBegrunnelseFritekst || '');
   const [vedtakstype, setVedtakstype] = useEventTargetValueState(lagretVedtakstype || '');
   const [vedtakstypeFeil, setVedtakstypeFeil] = useState(undefined);
   const [vedtakstypeBegrunnelse, setVedtakstypeBegrunnelse] = useEventTargetValueState(begrunnelseKode || '');
@@ -233,12 +234,14 @@ VurderingVedtak.propTypes = {
   behandlingstype: PT.string.isRequired,
   lagretVedtakstype: MPT.Vedtakstype,
   begrunnelseKode: PT.string,
+  behandlingsresultatBegrunnelseFritekst: PT.string,
 };
 
 VurderingVedtak.defaultProps = {
   lovvalgsland: '',
   lagretVedtakstype: undefined,
   begrunnelseKode: '',
+  behandlingsresultatBegrunnelseFritekst: '',
 };
 
 const mapStateToProps = state => ({
@@ -249,6 +252,7 @@ const mapStateToProps = state => ({
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
   lagretVedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   begrunnelseKode: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+  behandlingsresultatBegrunnelseFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
 });
 
 export default connect(mapStateToProps)(VurderingVedtak);
