@@ -9,13 +9,18 @@ const Vedtaktypebegrunnelse = ({
   onChange,
   className,
   value,
+  feil,
+  redigerbart,
 }) => (
   <Nav.Select
     label="Bakgrunn for nytt vedtak"
     onChange={onChange}
     value={value}
     className={className}
+    feil={feil}
+    disabled={!redigerbart}
   >
+    <option key="VELG" value="" disabled>Velg...</option>
     <option>Mangler koder</option>
   </Nav.Select>
 );
@@ -24,10 +29,13 @@ Vedtaktypebegrunnelse.propTypes = {
   onChange: PT.func.isRequired,
   value: PT.string.isRequired,
   className: PT.string,
+  feil: PT.object,
+  redigerbart: PT.bool.isRequired,
 };
 
 Vedtaktypebegrunnelse.defaultProps = {
   className: undefined,
+  feil: undefined,
 };
 
 export default Vedtaktypebegrunnelse;
