@@ -16,17 +16,6 @@ describe('Vurderingvideresend', () => {
     };
   });
 
-  describe('viser en nav textarea', () => {
-    it('har korrekte props', () => {
-      const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
-
-      const textarea = vurderingVideresend.find(Nav.Textarea);
-      const textareaProps = textarea.props();
-      expect(textarea).toHaveLength(1);
-      expect(textareaProps.disabled).toBe(!props.redigerbart);
-    });
-  });
-
   it('viser en PdfLenkeListe med korrekte props', () => {
     const vurderingVideresend = shallow(<VurderingVideresend {...props} />);
 

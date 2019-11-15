@@ -193,15 +193,11 @@ class Stegvelger extends Component {
     });
   };
 
-  videresendSoknad = fritekst => {
+  videresendSoknad = () => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       try {
         const { saksnummer } = this.props;
-        const data = {
-          fritekst: fritekst || null,
-        };
-
-        await Api.Fagsaker.fagsak.videresend(saksnummer, data);
+        await Api.Fagsaker.fagsak.videresend(saksnummer);
       } catch (e) {
         Utils.logger.error(e);
       } finally {
