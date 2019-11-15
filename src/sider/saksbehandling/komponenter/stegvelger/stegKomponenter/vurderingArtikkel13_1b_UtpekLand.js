@@ -84,18 +84,18 @@ export const VurderingArtikkel13_1b_UtpekLand = props => {
   const tom = Utils.dato.formatterDatoTilNorsk(lovvalgsperiode.tomDato);
   return (
     <Fragment>
-      <Nav.Undertittel>{overskrift}</Nav.Undertittel>
-      <Nav.Undertittel>
-        <Nav.Element className="undertittel">Lovvalgsland:</Nav.Element>
-      </Nav.Undertittel>
+      <Nav.typo.Undertittel>{overskrift}</Nav.typo.Undertittel>
+      <Nav.typo.Undertittel>
+        <Nav.typo.Element className="undertittel">Lovvalgsland:</Nav.typo.Element>
+      </Nav.typo.Undertittel>
       <Nav.Row className="lovvalgsperiodeRow">
         <Nav.Column xs="6">
           <div>{lovvalgsland && lovvalgsland.term}</div>
         </Nav.Column>
       </Nav.Row>
-      <Nav.Undertittel>
-        <Nav.Element className="undertittel">Lovvalgsperiode</Nav.Element>
-      </Nav.Undertittel>
+      <Nav.typo.Undertittel>
+        <Nav.typo.Element className="undertittel">Lovvalgsperiode</Nav.typo.Element>
+      </Nav.typo.Undertittel>
       <Nav.Row className="lovvalgsperiodeRow">
         <Nav.Column xs="6">
           {fom} - {tom}

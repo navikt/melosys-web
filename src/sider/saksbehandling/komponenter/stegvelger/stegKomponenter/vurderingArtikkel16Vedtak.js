@@ -93,7 +93,7 @@ export const Innvilgelse = ({
 
   return (
     <Fragment>
-      <Nav.Undertittel>Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.</Nav.Undertittel>
+      <Nav.typo.Undertittel>Omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1.</Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
@@ -149,7 +149,7 @@ export const DelvisInnvilgelse = ({
 
   return (
     <Fragment>
-      <Nav.Undertittel>Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden</Nav.Undertittel>
+      <Nav.typo.Undertittel>Delvis innvilgelse - omfattet av norsk trygdelovgivning etter Fo 883/2004 Artikkel 16 nr. 1. i deler av søknadsperioden</Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           <DatoOmrade periode={gjeldendePeriode} label="Lovvalgsperiode" />
@@ -210,7 +210,7 @@ export const Avslag = ({
 
   return (
     <Fragment>
-      <Nav.Undertittel>Avslag</Nav.Undertittel>
+      <Nav.typo.Undertittel>Avslag</Nav.typo.Undertittel>
       <Nav.Row>
         <Nav.Column xs="7">
           { renderBegrunnelser() }

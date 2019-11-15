@@ -4,7 +4,7 @@ import AlertStripe, { AlertStripeAdvarsel, AlertStripeInfo } from 'nav-frontend-
 import EtikettBase from 'nav-frontend-etiketter';
 import { Container, Row, Column } from 'nav-frontend-grid';
 import { Checkbox, Radio, RadioPanelGruppe, SkjemaGruppe, Fieldset, Select, Input, Textarea } from 'nav-frontend-skjema';
-import { Sidetittel, Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold } from 'nav-frontend-typografi';
+import * as typo from 'nav-frontend-typografi';
 import { Knapp, Hovedknapp, Flatknapp } from 'nav-frontend-knapper';
 import Lesmerpanel from 'nav-frontend-lesmerpanel';
 import Icons from 'nav-frontend-ikoner-assets';
@@ -22,7 +22,7 @@ export {
   Checkbox, Radio, RadioPanelGruppe, SkjemaGruppe, Fieldset, Select, Input, Textarea,
   EkspanderbartpanelBase, Panel,
   EtikettBase,
-  Sidetittel, Innholdstittel, Systemtittel, Undertittel, Element, Normaltekst, UndertekstBold,
+  typo,
   Knapp, Hovedknapp, Flatknapp,
   Lesmerpanel,
   Stegindikator,

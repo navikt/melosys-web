@@ -8,9 +8,9 @@ export const Overskrift = ({
   tekst,
   className,
 }) => (
-  <Nav.Undertittel className={className}>
+  <Nav.typo.Undertittel className={className}>
     <img src={ikon} height={25} alt={tekst} />{tekst}
-  </Nav.Undertittel>
+  </Nav.typo.Undertittel>
 );
 
 Overskrift.propTypes = {
