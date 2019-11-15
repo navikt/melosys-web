@@ -8,8 +8,6 @@ import * as Nav from '../../../../../utils/navFrontend';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
 
-import useEventTargetValueState from '../../../../../hooks/useEventTargetValueState';
-
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 
 export const VurderingVideresend = ({
@@ -17,15 +15,12 @@ export const VurderingVideresend = ({
   videresendSoknad,
   behandlingID,
 }) => {
-  const [fritekst, setFritekst] = useEventTargetValueState('');
-
   const pdfDokumenter = [
     {
       navn: 'Forhåndsvis orienteringsbrev',
       type: MKV.Koder.brev.produserbaredokumenter.ORIENTERING_VIDERESENDT_SOEKNAD,
       data: {
         mottaker: MKV.Koder.aktoersroller.BRUKER,
-        fritekst,
       },
     },
     {
@@ -36,7 +31,7 @@ export const VurderingVideresend = ({
   ];
 
   const vedKlikkVideresend = () => {
-    videresendSoknad(fritekst);
+    videresendSoknad();
   };
 
   return (
@@ -44,12 +39,6 @@ export const VurderingVideresend = ({
       <Nav.Row>
         <Nav.Column xs="6">
           <Nav.Undertittel>Videresending av søknad</Nav.Undertittel>
-          <Nav.Textarea
-            disabled={!redigerbart}
-            label="Begrunnelse og informasjon til utenlandske myndigheter"
-            value={fritekst || ''}
-            onChange={setFritekst}
-          />
           {
             redigerbart &&
             <PdfLenkeListe
