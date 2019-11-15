@@ -13,6 +13,7 @@ import * as Utils from '../../../../../utils';
 import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
+import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
 
 import { datoDiffMenneskelig } from '../../../../../utils/dato';
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
@@ -39,6 +40,8 @@ const VurderingVedtak = ({
   behandlingID,
   lagreOgFatteVedtak,
   behandlingstype,
+  lagretVedtakstype,
+  begrunnelseKode,
 }) => {
   // 1. Motta vedtakskode (kodeverk og avklartefakta)
   // 2. Motta begrunnelsene fra forrige steg (kodeverk og avklartefakta)
@@ -67,9 +70,9 @@ const VurderingVedtak = ({
   const valgtMottakerinstitusjonHandler = e => setValgtMottakerinstitusjon(e.target.value);
 
   const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
-  const [vedtakstype, setVedtakstype] = useEventTargetValueState('');
+  const [vedtakstype, setVedtakstype] = useEventTargetValueState(lagretVedtakstype || '');
   const [vedtakstypeFeil, setVedtakstypeFeil] = useState(undefined);
-  const [vedtakstypeBegrunnelse, setVedtakstypeBegrunnelse] = useEventTargetValueState('');
+  const [vedtakstypeBegrunnelse, setVedtakstypeBegrunnelse] = useEventTargetValueState(begrunnelseKode || '');
   const [vedtakstypeBegrunnelseFeil, setVedtakstypeBegrunnelseFeil] = useState(undefined);
 
   const lovvalget = lovvalgsperioder[0] || {};
@@ -198,7 +201,7 @@ const VurderingVedtak = ({
           skalSendeSed &&
           <Nav.Row className="mottakerinstitusjoner">
             <Nav.Column xs="7">
-              <Nav.Select label="Velg utenlandsk institusjon som skal motta SED" onChange={valgtMottakerinstitusjonHandler}>
+              <Nav.Select disabled={!redigerbart} label="Velg utenlandsk institusjon som skal motta SED" onChange={valgtMottakerinstitusjonHandler}>
                 <option key={uuid()} value="" disabled>Velg...</option>
                 {mottakerinstitusjoner.map(institusjon => <option key={institusjon.id} value={institusjon.id}>{institusjon.navn}</option>)}
               </Nav.Select>
@@ -228,10 +231,14 @@ VurderingVedtak.propTypes = {
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
   behandlingstype: PT.string.isRequired,
+  lagretVedtakstype: MPT.Vedtakstype,
+  begrunnelseKode: PT.string,
 };
 
 VurderingVedtak.defaultProps = {
   lovvalgsland: '',
+  lagretVedtakstype: undefined,
+  begrunnelseKode: '',
 };
 
 const mapStateToProps = state => ({
@@ -240,6 +247,8 @@ const mapStateToProps = state => ({
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
+  lagretVedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
+  begrunnelseKode: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
 });
 
 export default connect(mapStateToProps)(VurderingVedtak);
