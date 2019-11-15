@@ -49,7 +49,7 @@ const JournalforingForm = ({
     />
     <Overskrift tekst="Melding om saksbehandlingstid" ikon={Ikoner.PaperPlane} className="undertittel oversteUndertittel" />
     <SendForvaltningsMelding />
-    <p />
+    <Skjema.Checkbox feltNavn="ingenVurdering" label="Dokumentet trenger ingen vurdering" />
     <Skjema.Checkbox feltNavn="skalTilordnes" label="Legg til behandlingen i mine oppgaver" />
   </form>
 );
