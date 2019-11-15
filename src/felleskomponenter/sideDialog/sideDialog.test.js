@@ -4,7 +4,7 @@ import { FaneViser } from './sideDialog';
 
 import SideDialogDokumenter from './sideDialogDokumenter';
 import SideDialogBrevBestillilng from './brevBestilling';
-import SideDialogSedBestilling from './sedBestilling';
+import SideDialogSedBestilling from './sideDialogOpprettNyBuc';
 import SideDialogBesvarSed from './sideDialogBesvarSed';
 
 describe('SideDialog', () => {
