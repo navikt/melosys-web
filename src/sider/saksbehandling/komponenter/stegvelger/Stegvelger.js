@@ -157,9 +157,16 @@ class Stegvelger extends Component {
     this.oppdaterAktuelleSteg(aktivtStegNummer);
   };
 
-  fatteVedtakHandler = async (behandlingsresultatTypeKode, fritekst, mottakerinstitusjon = null) => {
+  fatteVedtakHandler = async data => {
     const { behandlingID, fattVedtak } = this.props;
-    const vedtakBody = { behandlingsresultatTypeKode, fritekst, mottakerinstitusjon };
+    const vedtakBody = {
+      behandlingsresultatTypeKode: data.behandlingsresultatTypeKode,
+      fritekst: data.fritekst || null,
+      mottakerinstitusjon: data.mottakerinstitusjon || null,
+      vedtakstype: data.vedtakstype,
+      revurderBegrunnelse: data.revurderBegrunnelse || null,
+    };
+
     try {
       await fattVedtak(behandlingID, vedtakBody);
       this.tilForsiden();
@@ -168,10 +175,10 @@ class Stegvelger extends Component {
     }
   };
 
-  lagreOgFatteVedtak = (behandlingsresultatTypeKode, fritekst, mottakerinstitusjon) => {
+  lagreOgFatteVedtak = data => {
     this.sjekkOgVisSoknadFeilmeldinger(async () => {
       await this.props.lagreAllData();
-      this.fatteVedtakHandler(behandlingsresultatTypeKode, fritekst, mottakerinstitusjon);
+      this.fatteVedtakHandler(data);
     });
   };
 

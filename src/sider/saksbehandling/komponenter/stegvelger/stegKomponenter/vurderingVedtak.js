@@ -67,8 +67,10 @@ const VurderingVedtak = ({
   const valgtMottakerinstitusjonHandler = e => setValgtMottakerinstitusjon(e.target.value);
 
   const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
-  const [vedtakstype, setVedtakstype] = useEventTargetValueState(MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK);
+  const [vedtakstype, setVedtakstype] = useEventTargetValueState('');
+  const [vedtakstypeFeil, setVedtakstypeFeil] = useState(undefined);
   const [vedtakstypeBegrunnelse, setVedtakstypeBegrunnelse] = useEventTargetValueState('');
+  const [vedtakstypeBegrunnelseFeil, setVedtakstypeBegrunnelseFeil] = useState(undefined);
 
   const lovvalget = lovvalgsperioder[0] || {};
 
@@ -79,6 +81,7 @@ const VurderingVedtak = ({
   const antallManeder = datoDiffMenneskelig(fomDato, tomDato);
   const lovvalgSomKodeTerm = KV.finnEnkeltKodeFraListe(lovvalgsbestemmelse, alleLovvalg);
   const skalSendeSed = mottakerinstitusjoner.length > 0;
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const pdfDokumenter = [
     {
@@ -104,7 +107,45 @@ const VurderingVedtak = ({
     pdfDokumenter.push({ navn: 'Forhåndsvis SED A009', type: EKV.Koder.sedtyper.A009, erSed: true });
   }
 
-  const fattVedtak = () => lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND, vedtaksbrevFritekst, valgtMottakerinstitusjon);
+  const vedtakstypeEndret = e => {
+    setVedtakstypeFeil(undefined);
+    setVedtakstype(e);
+  };
+
+  const vedtakstypeBegrunnelseEndret = e => {
+    setVedtakstypeBegrunnelseFeil(undefined);
+    setVedtakstypeBegrunnelse(e);
+  };
+
+  const validerVedtakstype = () => {
+    const vedtakstypeValid = vedtakstype !== '';
+    if (!vedtakstypeValid) setVedtakstypeFeil({ feilmelding: 'Velg en vedtakstype' });
+    return vedtakstypeValid;
+  };
+
+  const validerVedtakstypeBegrunnelse = () => {
+    const vedtakstypeBegrunnelseValid = vedtakstypeBegrunnelse !== '';
+    if (!vedtakstypeBegrunnelseValid) setVedtakstypeBegrunnelseFeil({ feilmelding: 'Velg en begrunnelse' });
+    return vedtakstypeBegrunnelseValid;
+  };
+
+  const validerAlt = () => {
+    const vedtakstypeFeilValid = erNyVurdering ? validerVedtakstype() : true;
+    const vedtakstypeBegrunnelseFeilValid = erNyVurdering ? validerVedtakstypeBegrunnelse() : true;
+
+    return vedtakstypeFeilValid && vedtakstypeBegrunnelseFeilValid;
+  };
+
+  const fattVedtak = () => {
+    if (!validerAlt()) return;
+
+    lagreOgFatteVedtak({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekst: vedtaksbrevFritekst,
+      mottakerinstitusjon: valgtMottakerinstitusjon,
+      vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+    });
+  };
 
   return (
     <div className="vedtak">
@@ -122,17 +163,21 @@ const VurderingVedtak = ({
           </Nav.Column>
         </Nav.Row>
         {
-          behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING &&
+          erNyVurdering &&
           <Nav.Row>
             <Nav.Column xs="6">
               <Vedtaktype
                 className="vedtaktype"
-                onChange={setVedtakstype}
+                onChange={vedtakstypeEndret}
                 value={vedtakstype}
+                redigerbart={redigerbart}
+                feil={vedtakstypeFeil}
               />
               <Vedtaktypebegrunnelse
-                onChange={setVedtakstypeBegrunnelse}
+                onChange={vedtakstypeBegrunnelseEndret}
                 value={vedtakstypeBegrunnelse}
+                redigerbart={redigerbart}
+                feil={vedtakstypeBegrunnelseFeil}
               />
             </Nav.Column>
           </Nav.Row>
