@@ -71,9 +71,9 @@ const VurderingVedtak = ({
   const valgtMottakerinstitusjonHandler = e => setValgtMottakerinstitusjon(e.target.value);
 
   const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState(behandlingsresultatBegrunnelseFritekst || '');
-  const [vedtakstype, setVedtakstype] = useEventTargetValueState(lagretVedtakstype || '');
+  const [vedtakstype, setVedtakstype] = useEventTargetValueState(redigerbart ? '' : lagretVedtakstype);
   const [vedtakstypeFeil, setVedtakstypeFeil] = useState(undefined);
-  const [vedtakstypeBegrunnelse, setVedtakstypeBegrunnelse] = useEventTargetValueState(begrunnelseKode || '');
+  const [vedtakstypeBegrunnelse, setVedtakstypeBegrunnelse] = useEventTargetValueState(redigerbart ? '' : begrunnelseKode);
   const [vedtakstypeBegrunnelseFeil, setVedtakstypeBegrunnelseFeil] = useState(undefined);
 
   const lovvalget = lovvalgsperioder[0] || {};
