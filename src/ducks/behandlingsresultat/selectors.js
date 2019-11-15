@@ -22,3 +22,8 @@ export const BegrunnelseKoderSelector = createSelector(
   BehandlingsresultatSelector,
   behandlingsresultat => behandlingsresultat.begrunnelseKoder
 );
+
+export const BegrunnelseFritekstSelector = createSelector(
+  BehandlingsresultatSelector,
+  behandlingsresultat => behandlingsresultat.begrunnelseFritekst
+);
