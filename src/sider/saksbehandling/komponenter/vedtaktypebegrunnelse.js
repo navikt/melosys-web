@@ -21,7 +21,9 @@ const Vedtaktypebegrunnelse = ({
     disabled={!redigerbart}
   >
     <option key="VELG" value="" disabled>Velg...</option>
-    <option>Mangler koder</option>
+    {
+      ['test', 'begrunnelse'].map(begrunnelse => <option key={begrunnelse} value={begrunnelse}>{begrunnelse}</option>)
+    }
   </Nav.Select>
 );
 

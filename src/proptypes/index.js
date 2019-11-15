@@ -31,6 +31,7 @@ import { Soknadsland } from './soknadsland';
 import { Soknadsperiode } from './soknadsperiode';
 import { TimerTimelonnet, TimerTimelonnetLinje } from './timerTimelonnet';
 import { Utenlandsopphold } from './utenlandsopphold';
+import { Vedtakstype } from './vedtakstype';
 import { Virksomhet } from './virksomhet';
 import { Yrkesgruppe } from './yrkesgruppe';
 
@@ -91,6 +92,7 @@ export {
   Yrkesgruppe,
   Utenlandsopphold,
   Vedlegg,
+  Vedtakstype,
   Virksomhet,
   Vurdering,
 };
