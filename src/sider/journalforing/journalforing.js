@@ -477,14 +477,14 @@ class Journalforing extends Component {
                       />
                     }
                     <div className="journalforing__fotknapper">
-                      {
-                        /*
-                          TODO: Quick fix, viser denne knappen for Sed-journalføring.
-                          Denne knappen burde også brukes for det vanlige journalføringsbildet når vi skriver om journalføringen.
-                        */
-                        visSedJournalforing && <Nav.Hovedknapp onClick={journalforSed}>JOURNALFØR</Nav.Hovedknapp>
-                      }
-                      <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt</Nav.Knapp>
+                      <Nav.Row>
+                        <Nav.Column xs="6">
+                          <Nav.Hovedknapp onClick={journalforSed}>JOURNALFØR</Nav.Hovedknapp>
+                        </Nav.Column>
+                        <Nav.Column xs="6">
+                          <Nav.Knapp onClick={this.avbrytJournalforing}>Avbryt Journalføring</Nav.Knapp>
+                        </Nav.Column>
+                      </Nav.Row>
                     </div>
                   </div>
                 </Nav.Panel>
