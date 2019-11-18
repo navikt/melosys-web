@@ -50,7 +50,9 @@ describe('SelectWrappedComponent', () => {
     expect(selectWrappedComponent.find('Select').props().label).toBe(props.label);
   });
 
-  it('setter feil-prop dersom meta.error prop finnes', () => {
+  it.only('setter feil-prop dersom meta.error prop finnes', () => {
+    props.meta.touched = true;
+    props.meta.active = false;
     props.meta.error = 'err';
     const selectWrappedComponent = shallow(<SelectWrappedComponent {...props} />);
 

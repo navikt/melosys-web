@@ -13,8 +13,11 @@ import * as KV from '../../../../../kodeverk';
 import * as MPT from '../../../../../proptypes';
 
 import PdfLenkeListe from '../../../../../felleskomponenter/pdfLenkeListe';
+import VedtaktypeSkjema from '../../vedtaktypeskjema';
+import VedtaketypeBegrunnelseSkjema from '../../vedtaktypebegrunnelseskjema';
 
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
+import { behandlingsresultatSelectors } from '../../../../../ducks/behandlingsresultat';
 import { lovvalgsperioderSelectors, lovvalgsperioderOperations } from '../../../../../ducks/lovvalgsperioder';
 import { redigerbartSelectors } from '../../../../../ducks/redigerbart';
 import { soknadSelectors } from '../../../../../ducks/soknad';
@@ -35,8 +38,12 @@ export const VurderingArtikkel13_1_Vedtak = ({
   tilstand: { overskrift },
   lagreLovvalgsperioder,
   byggLovvalgsperioder: gjenopprettOpprinneligLovvalgsperiode,
+  behandlingstype,
+  lagretFritekst,
 }) => {
-  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState('');
+  const [vedtaksbrevFritekst, setVedtaksbrevFritekst] = useEventTargetValueState(lagretFritekst || '');
+
+  const erNyVurdering = behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING;
 
   const vedCheck = e => {
     if (!e.target.checked) {
@@ -46,6 +53,8 @@ export const VurderingArtikkel13_1_Vedtak = ({
 
   const validerForm = () => {
     touch('tomDato');
+    touch('vedtakstype');
+    touch('vedtakstypebegrunnelse');
     return formIsValid;
   };
 
@@ -58,7 +67,13 @@ export const VurderingArtikkel13_1_Vedtak = ({
       await forkortLovvalgsperiode();
     }
 
-    lagreOgFatteVedtak(MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND, vedtaksbrevFritekst);
+    lagreOgFatteVedtak({
+      behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.FASTSATT_LOVVALGSLAND,
+      fritekst: vedtaksbrevFritekst,
+      mottakerinstitusjon: null,
+      vedtakstype: formValues.vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      revurderBegrunnelse: formValues.vedtakstypebegrunnelse,
+    });
   };
 
   const vedKlikkForhandsvis = async () => {
@@ -142,6 +157,19 @@ export const VurderingArtikkel13_1_Vedtak = ({
           </Nav.Row>
         </Fragment>
       }
+      {
+        erNyVurdering &&
+        <Nav.Row>
+          <Nav.Column xs="6">
+            <VedtaktypeSkjema
+              redigerbart={redigerbart}
+            />
+            <VedtaketypeBegrunnelseSkjema
+              redigerbart={redigerbart}
+            />
+          </Nav.Column>
+        </Nav.Row>
+      }
       <Nav.Row className="fritekst">
         <Nav.Column xs="8">
           <Nav.Textarea
@@ -178,14 +206,19 @@ VurderingArtikkel13_1_Vedtak.propTypes = {
   endreLovvalgsPeriode: PT.func.isRequired,
   byggLovvalgsperioder: PT.func.isRequired,
   lagreLovvalgsperioder: PT.func.isRequired,
+  behandlingstype: PT.string.isRequired,
+  lagretFritekst: PT.string,
 };
 
 VurderingArtikkel13_1_Vedtak.defaultProps = {
   lovvalgsperiode: {},
   formValues: {},
+  lagretFritekst: '',
 };
 
 const mapStateToProps = (state, ownProps) => ({
+  lagretFritekst: behandlingsresultatSelectors.BegrunnelseFritekstSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
   redigerbart: redigerbartSelectors.RedigerbartSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsperiode: lovvalgsperioderSelectors.LovvalgsperiodeSelector(state),
@@ -199,6 +232,8 @@ const mapStateToProps = (state, ownProps) => ({
     ) !== 0,
     tomDato: ownProps.redigerbart ? '' : Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.TomDatoSelector(state)),
     fomDato: Utils.dato.formatterDatoTilNorsk(lovvalgsperioderSelectors.FomDatoSelector(state)),
+    vedtakstypebegrunnelse: behandlingsresultatSelectors.BegrunnelseKoderSelector(state)[0],
+    vedtakstype: behandlingsresultatSelectors.VedtakstypeSelector(state),
   },
 });
 
@@ -215,6 +250,7 @@ const VurderingArtikkel13_1_vedtak_form = reduxForm({
   validate: (values, props) => Validering.Skjemaer.lagYupToReduxformErrorMapper(Validering.Skjemaer.artikkel13_1_vedtak, {
     context: {
       lovvalgsperiode: props.lovvalgsperiode,
+      behandlingstype: props.behandlingstype,
     },
   })(values),
 })(VurderingArtikkel13_1_Vedtak);
