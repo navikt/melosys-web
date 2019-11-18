@@ -148,6 +148,7 @@ const VurderingVedtak = ({
       fritekst: vedtaksbrevFritekst,
       mottakerinstitusjon: valgtMottakerinstitusjon,
       vedtakstype: vedtakstype || MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+      revurderBegrunnelse: vedtakstypeBegrunnelse,
     });
   };
 
