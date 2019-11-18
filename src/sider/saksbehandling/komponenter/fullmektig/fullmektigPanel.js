@@ -85,8 +85,8 @@ class FullmektigPanel extends Component {
     const { hentAktoer, fagsak } = this.props;
     const { saksnummer } = fagsak;
     Utils.logger.info({
-      srcfile: 'fullmektigPanel.js@87',
-      saksbehandler: this.props.saksbehandler,
+      srcfile: 'fullmektigPanel.js@88',
+      saksbehandler: this.props.saksbehandler.brukernavn,
       jira: 'MELOSYS-3385',
       stack: this.props.fagsak,
     });
