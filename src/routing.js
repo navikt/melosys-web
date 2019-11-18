@@ -23,7 +23,7 @@ import { datalastingOperations } from './ducks/datalasting';
 import { vedtakOperations } from './ducks/vedtak';
 import { saksopplysningerOperations } from './ducks/saksopplysninger';
 import { fagsakSelectors } from './ducks/fagsaker';
-import { behandlingerOperations } from './ducks/behandlinger';
+import { behandlingerOperations, behandlingerSelectors } from './ducks/behandlinger';
 
 const SideLoadingStatus = <div>Laster inn side komponenten!</div>;
 const SideLoadingFailMessage = 'Beklager, kan ikke laste inn side komponenten.';
@@ -50,6 +50,7 @@ const Routing = ({
   lagreSoknad,
   saksnummer,
   apneTidligereBehandlinger,
+  behandlingstype,
 }) => {
   const [visHenleggDialog, setVisHenleggDialog] = useState(false);
   const [visAvsluttSakSomBortfaltDialog, setVisAvsluttSakSomBortfaltDialog] = useState(false);
@@ -178,7 +179,13 @@ const Routing = ({
     }
   };
 
-  const avslaaSoknad = () => fattVedtak(behandlingID, { behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL });
+  const avslaaSoknad = () => fattVedtak(behandlingID, {
+    behandlingsresultatTypeKode: MKV.Koder.behandlinger.behandlingsresultattyper.AVSLAG_MANGLENDE_OPPL,
+    fritekst: null,
+    mottakerinstitusjon: null,
+    vedtakstype: behandlingstype === MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING ? MKV.Koder.vedtakstyper.KORRIGERT_VEDTAK : MKV.Koder.vedtakstyper.FØRSTEGANGSVEDTAK,
+    revurderBegrunnelse: null,
+  });
 
   const avslaaSoknadHandle = async () => {
     try {
@@ -292,6 +299,7 @@ Routing.propTypes = {
   lagreSoknad: PT.func.isRequired,
   saksnummer: PT.string,
   apneTidligereBehandlinger: PT.func.isRequired,
+  behandlingstype: PT.string.isRequired,
 };
 
 Routing.defaultProps = {
@@ -300,6 +308,7 @@ Routing.defaultProps = {
 
 const mapStateToProps = state => ({
   saksnummer: fagsakSelectors.SaksnummerSelector(state),
+  behandlingstype: behandlingerSelectors.BehandlingstypeKodeSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
