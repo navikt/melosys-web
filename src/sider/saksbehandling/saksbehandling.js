@@ -83,8 +83,8 @@ class Saksbehandling extends Component {
       await hentFagsaker(snr);
       Utils.logger.info({
         loaded: true,
-        srcfile: 'saksbehandling.js@85',
-        saksbehandler: this.props.saksbehandler,
+        srcfile: 'saksbehandling.js@86',
+        saksbehandler: this.props.saksbehandler.brukernavn,
         jira: 'MELOSYS-3385',
         stack: this.props.fagsak,
       });
