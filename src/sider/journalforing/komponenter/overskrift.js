@@ -28,9 +28,9 @@ export const Elementskrift = ({
   tekst,
   className,
 }) => (
-  <Nav.Element className={className}>
+  <Nav.typo.Element className={className}>
     <img src={ikon} height={20} alt={tekst} />{tekst}
-  </Nav.Element>
+  </Nav.typo.Element>
 );
 
 Elementskrift.propTypes = {

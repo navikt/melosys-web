@@ -442,7 +442,7 @@ class Journalforing extends Component {
         <Nav.Container fluid>
           <Nav.Row>
             <Nav.Column xs="4">
-              <Nav.Sidetittel className="journalforing__sidetittel">Journalføring</Nav.Sidetittel>
+              <Nav.typo.Sidetittel className="journalforing__sidetittel">Journalføring</Nav.typo.Sidetittel>
             </Nav.Column>
           </Nav.Row>
           <Nav.Row>

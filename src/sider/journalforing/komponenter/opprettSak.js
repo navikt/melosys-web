@@ -15,7 +15,7 @@ import LandVelger from '../../../felleskomponenter/skjema/landvelger';
 
 export const OpprettSakTittel = () => (
   <div className="enkeltSak__meta">
-    <Nav.Element>Opprett ny sak</Nav.Element>
+    <Nav.typo.Element>Opprett ny sak</Nav.typo.Element>
   </div>
 );
 const OpprettFagsak = props => {
