@@ -6,11 +6,10 @@ import * as EKV from 'eessi-kodeverk';
 
 import * as KV from '../../../../../kodeverk';
 import * as Nav from '../../../../../utils/navFrontend';
-import * as MPT from '../../../../../proptypes';
 import * as Api from '../../../../../services/api';
 import * as Utils from '../../../../../utils';
 
-import { avklartefaktaSelectors } from '../../../../../ducks/avklartefakta';
+import { soknadSelectors } from '../../../../../ducks/soknad';
 import { behandlingerSelectors } from '../../../../../ducks/behandlinger';
 import { lovvalgsperioderSelectors } from '../../../../../ducks/lovvalgsperioder';
 
@@ -30,7 +29,7 @@ const alleLovvalg = [
 
 const VurderingVedtak = ({
   lovvalgsperioder,
-  gyldigeSoknadsland,
+  soknadsland,
   redigerbart,
   behandlingID,
   lagreOgFatteVedtak,
@@ -43,8 +42,7 @@ const VurderingVedtak = ({
 
   const hentMottakerinstitusjoner = async () => {
     try {
-      const soknadsland = gyldigeSoknadsland[0].kode;
-      const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(EKV.Koder.buctyper.legislation.LA_BUC_04, soknadsland);
+      const institusjoner = await Api.Eessi.mottakerinstitusjoner.hent(EKV.Koder.buctyper.legislation.LA_BUC_04, soknadsland[0]);
       setMottakerinstitusjoner(institusjoner);
 
       if (institusjoner.length > 0) {
@@ -134,7 +132,7 @@ const VurderingVedtak = ({
 VurderingVedtak.propTypes = {
   lagreOgFatteVedtak: PT.func.isRequired,
   lovvalgsperioder: PT.array.isRequired,
-  gyldigeSoknadsland: MPT.Soknadsland.isRequired,
+  soknadsland: PT.arrayOf(PT.string).isRequired,
   behandlingID: PT.number.isRequired,
   redigerbart: PT.bool.isRequired,
   lovvalgsland: PT.string,
@@ -146,7 +144,7 @@ VurderingVedtak.defaultProps = {
 
 const mapStateToProps = state => ({
   lovvalgsperioder: lovvalgsperioderSelectors.LovvalgsperioderSelector(state),
-  gyldigeSoknadsland: avklartefaktaSelectors.ArbeidslandKTSelector(state),
+  soknadsland: soknadSelectors.SoknadslandSelector(state),
   behandlingID: behandlingerSelectors.BehandlingIDSelector(state),
   lovvalgsland: lovvalgsperioderSelectors.LovvalgslandSelector(state),
 });
