@@ -1,5 +1,6 @@
 import React from 'react';
 import PT from 'prop-types';
+import * as MKV from 'melosys-kodeverk';
 
 import * as Skjema from '../../../felleskomponenter/skjema';
 
@@ -15,9 +16,8 @@ const VedtaktypebegrunnelseSkjema = ({
     className={className}
     disabled={!redigerbart}
   >
-    <option key="VELG" value="" disabled>Velg...</option>
     {
-      ['test', 'begrunnelse'].map(begrunnelse => <option key={begrunnelse} value={begrunnelse}>{begrunnelse}</option>)
+      MKV.KTObjects.begrunnelser.nyvurderingbakgrunner.map(({ kode, term }) => <option key={kode} value={kode}>{term}</option>)
     }
   </Skjema.Select>
 );
