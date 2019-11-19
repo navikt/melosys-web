@@ -407,7 +407,44 @@ class Journalforing extends Component {
       },
       fagsakListe,
     } = this.props;
-
+    const dummy = [
+      {
+        saksnummer: '6',
+        sammensattNavn: 'Joe Moe',
+        opprettetDato: '2017-11-01T12:31:36.123Z',
+        sakstype: {
+          kode: 'EU_EOS',
+          term: 'EU/EØS',
+        },
+        saksstatus: {
+          kode: 'AVSLUTTET',
+          term: 'Avsluttet',
+        },
+        behandlingOversikter: [
+          {
+            behandlingID: 6,
+            opprettetDato: '2017-10-01T12:31:36.123Z',
+            behandlingstype: {
+              kode: 'SOEKNAD',
+              term: 'Søknad',
+            },
+            behandlingsstatus: {
+              kode: 'AVSLUTTET',
+              term: 'Avsluttet',
+            },
+            periode: {
+              fom: '2018-08-01',
+              tom: '2018-12-31',
+            },
+            land: [
+              'GB',
+            ],
+          },
+        ],
+      },
+    ];
+    const nyliste = [...fagsakListe, ...dummy];
+    // const nyliste = [...fagsakListe];
     const {
       knyttTilEksisterendeSak, opprettFagsak, hentOgVisAvsender, hentOgVisBruker, hentOgVisRepresentant,
     } = this;
@@ -452,7 +489,7 @@ class Journalforing extends Component {
                         vedlegg={vedlegg}
                         hentOgVisAvsender={hentOgVisAvsender}
                         hentOgVisBruker={hentOgVisBruker}
-                        fagsakListe={fagsakListe}
+                        fagsakListe={nyliste}
                         knyttTilEksisterendeSak={knyttTilEksisterendeSak}
                         opprettFagsak={opprettFagsak}
                         hentOgVisRepresentant={hentOgVisRepresentant}
