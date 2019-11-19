@@ -214,6 +214,7 @@ class Saksbehandling extends Component {
                   visAvsluttSakSomBortfaltDialogHandle={visAvsluttSakSomBortfaltDialogHandle}
                   visHenleggSak
                   visAvslagSoknadDialogHandle={visAvslagSoknadDialogHandle}
+                  visAvslagManglendeOpplysninger={behandlingstype !== MKV.Koder.behandlinger.behandlingstyper.NY_VURDERING}
                   visOppfriskSaksopplysninger
                   oppfriskSaksopplysningerHandle={visOppfriskBekreftelse}
                   visRevurderVedtakDialogHandle={visRevurderVedtakDialogHandle}
