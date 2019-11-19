@@ -18,6 +18,7 @@ describe('behandlingsmeny', () => {
       visRevurderVedtakDialogHandle: jest.fn(),
       redigerbart: true,
       visHenleggSak: true,
+      visAvslagManglendeOpplysninger: true,
     };
   });
 

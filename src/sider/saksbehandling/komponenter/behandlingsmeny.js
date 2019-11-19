@@ -15,6 +15,7 @@ const Behandlingsmeny = ({
   visAvsluttSakSomBortfaltDialogHandle,
   visHenleggSak,
   visAvslagSoknadDialogHandle,
+  visAvslagManglendeOpplysninger,
   visOppfriskSaksopplysninger,
   visRevurderVedtakDialogHandle,
 }) => (
@@ -26,7 +27,7 @@ const Behandlingsmeny = ({
       <Nav.Knapp disabled={!redigerbart} mini className="innhold__element" onClick={oppfriskSaksopplysningerHandle}>Oppdater saksopplysninger</Nav.Knapp>}
       { redigerbart && visHenleggSak && <Nav.Knapp mini className="innhold__element" onClick={visHenleggDialogHandle}>Henlegg sak</Nav.Knapp> }
       { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={visAvsluttSakSomBortfaltDialogHandle}>Avslutt sak som bortfalt</Nav.Knapp>}
-      { redigerbart && <Nav.Knapp mini className="innhold__element" onClick={visAvslagSoknadDialogHandle}>Avslå søknad pga. manglende opplysninger</Nav.Knapp>}
+      { redigerbart && visAvslagManglendeOpplysninger && <Nav.Knapp mini className="innhold__element" onClick={visAvslagSoknadDialogHandle}>Avslå søknad pga. manglende opplysninger</Nav.Knapp> }
       { <Nav.Knapp mini className="innhold__element" onClick={apneTidligereBehandlinger}>Vis tidligere behandlinger</Nav.Knapp> }
       { !redigerbart && <Nav.Knapp mini className="innhold__element" onClick={visRevurderVedtakDialogHandle} >Vurder vedtak på nytt</Nav.Knapp> }
     </div>
@@ -45,6 +46,7 @@ Behandlingsmeny.propTypes = {
   visHenleggSak: PT.bool.isRequired,
   visOppfriskSaksopplysninger: PT.bool,
   visRevurderVedtakDialogHandle: PT.func.isRequired,
+  visAvslagManglendeOpplysninger: PT.bool.isRequired,
 };
 
 Behandlingsmeny.defaultProps = {
