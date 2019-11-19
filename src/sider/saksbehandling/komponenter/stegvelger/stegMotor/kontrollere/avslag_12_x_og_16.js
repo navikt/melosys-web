@@ -17,7 +17,7 @@ class Avslag_12_x_og_16 extends Steg {
     this.tittel = 'Vedtak';
     this.komponent = VurderingAvslag12_x_og_16;
     this.samleRelevanteData = _propsLight => ({
-      fattVedtak: _propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
+      lagreOgFatteVedtak: _propsLight.tilgjengeligeHandlers.lagreOgFatteVedtak,
       redigerbart: _propsLight.redigerbart,
     });
     this.beregnRelevantUI = _propsLight => {
