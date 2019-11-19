@@ -184,7 +184,7 @@ class Informasjon extends Component {
           settFeltInnhold={settFeltInnhold}
           visAvsenderSpinner={visAvsenderSpinner}
         />
-        <Overskrift tekst="Dokumenter" ikon={Ikoner.IkonSak} className="undertittel oversteUndertittel" />
+        <Overskrift tekst="Dokumenter" ikon={Ikoner.Filenew} className="undertittel oversteUndertittel" />
         <Nav.Input
           label="Mottatt dato"
           type="dato"
