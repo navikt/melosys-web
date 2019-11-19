@@ -8,6 +8,7 @@ export const SOKNAD = 'soknad';
 export const SOK_ETTER_SAK = 'sokEtterSak';
 export const ARTIKKEL_16_ANMODNING = 'artikkel_16_anmodning';
 export const INNGANG = 'inngang';
+export const AVSLAG_ARTIKKEL_12_OG_16 = 'AVSLAG_ARTIKKEL_12_OG_16';
 export const ARTIKKEL_16_MOTTA_SVAR = 'artikkel_16_motta_svar';
 export const ARTIKKEL_16_1_VEDTAK = 'artikkel_16_1_vedtak';
 export const ARTIKKEL_13_1_VEDTAK = 'artikkel_13_1_vedtak';
