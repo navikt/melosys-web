@@ -82,6 +82,7 @@ const mapStateToProps = state => ({
   initialValues: {
     avsenderType: journalforingSelectors.AvsenderTypeSelector(state),
     behandlingstype: null,
+    saksnummer: '',
     brukerID: journalforingSelectors.BrukerIDSelector(state),
     erBrukerAvsender: journalforingSelectors.ErBrukerAvsenderSelector(state),
     avsenderID: journalforingSelectors.AvsenderIDSelector(state),
@@ -102,6 +103,7 @@ const mapStateToProps = state => ({
     skalTilordnes: false,
     journalforingUnntakFraLovvalgsland: MKV.Koder.landkoder.NO,
     journalforingLovvalgsbestemmelse: MKV.Koder.lovvalgsbestemmelser.lovvalgbestemmelser_883_2004.FO_883_2004_ART16_1,
+    submittable: false,
   },
 });
 
