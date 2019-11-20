@@ -42,10 +42,10 @@ const MaritimtEnkelt = ({
     <Fragment>
       <Nav.Row>
         <Nav.Column xs="6">
-          <Skjema.Input className="boldLabel" feltNavn={`${navn}.foretakNavn`} label="Navn på foretak i arbeidslandet" redigerbart={!redigerbart} />
+          <Skjema.Input className="boldLabel" feltNavn={`${navn}.foretakNavn`} label="Navn på foretak i arbeidslandet" disabled={!redigerbart} />
         </Nav.Column>
         <Nav.Column xs="6">
-          <Skjema.Input className="boldLabel" feltNavn={`${navn}.foretakOrgnr`} label="Organisasjonsnummer/ID-nummer" redigerbart={!redigerbart} />
+          <Skjema.Input className="boldLabel" feltNavn={`${navn}.foretakOrgnr`} label="Organisasjonsnummer/ID-nummer" disabled={!redigerbart} />
         </Nav.Column>
       </Nav.Row>
       <Nav.Fieldset legend="">

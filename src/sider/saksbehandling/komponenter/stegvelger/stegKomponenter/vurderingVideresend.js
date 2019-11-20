@@ -60,7 +60,7 @@ export const VurderingVideresend = ({
 
   return (
     <div>
-      <Nav.Undertittel>Videresending av søknad</Nav.Undertittel>
+      <Nav.typo.Undertittel>Videresending av søknad</Nav.typo.Undertittel>
       {
         skalSendeSed &&
         <Nav.Row className="mottakerinstitusjoner">

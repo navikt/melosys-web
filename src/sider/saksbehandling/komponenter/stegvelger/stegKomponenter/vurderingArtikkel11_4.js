@@ -88,7 +88,7 @@ class VurderingArtikkel11_4 extends Component {
 
     return (
       <div className="vurderingArtikkel11_4">
-        <Nav.Undertittel>Vurdering av artikkel 11.4</Nav.Undertittel>
+        <Nav.typo.Undertittel>Vurdering av artikkel 11.4</Nav.typo.Undertittel>
         <div>
           <Nav.Row>
             <Nav.Column xs="12">

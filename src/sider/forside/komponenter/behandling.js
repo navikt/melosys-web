@@ -39,7 +39,7 @@ class Behandling extends Component {
   render() {
     return (
       <Nav.Panel className="forside__sidepanel sidepanel__behandling">
-        <Nav.Systemtittel>Behandle sak</Nav.Systemtittel>
+        <Nav.typo.Systemtittel>Behandle sak</Nav.typo.Systemtittel>
         <p>Velg sakstype og behandlingstype for å få tildelt en sak.</p>
         <form className="behandling__skjema" onSubmit={this.submitOgVideresend}>
           <Nav.Row>
