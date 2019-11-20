@@ -57,7 +57,6 @@ class Saksbehandling extends Component {
   componentDidMount() {
     this.lastInnSaksopplysninger();
   }
-
   componentWillUnmount() {
     this.props.resetFagsakState();
     this.props.resetBehandlingerState();
@@ -81,6 +80,7 @@ class Saksbehandling extends Component {
 
     try {
       await hentFagsaker(snr);
+      // TODO Fjern: logger Henter fagsak fra redux store og logger
       Utils.logger.info({
         loaded: true,
         srcfile: 'saksbehandling.js@86',
